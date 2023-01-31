@@ -14,6 +14,7 @@ import { SupportedChainId } from 'constants/chains'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
 import { useCurrency } from 'hooks/Tokens'
 import { useBestTrade } from 'hooks/useBestTrade'
+import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useBag } from 'nft/hooks/useBag'
 import { useTokenInput } from 'nft/hooks/useTokenInput'
@@ -214,6 +215,8 @@ export const BagFooter = ({
     inputCurrency ?? undefined
   )
 
+  const usdcValue = useStablecoinValue(swapTrade?.inputAmount)
+
   return (
     <FooterContainer>
       <Footer>
@@ -244,7 +247,7 @@ export const BagFooter = ({
                 &nbsp;{activeCurrency?.symbol ?? 'ETH'}
               </ThemedText.HeadlineSmall>
               <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
-                {`${ethNumberStandardFormatter(totalUsdPrice, true)}`}
+                {`${ethNumberStandardFormatter(inputCurrency ? usdcValue?.toExact() : totalUsdPrice, true)}`}
               </ThemedText.BodySmall>
             </TotalColumn>
           </CurrencyRow>
