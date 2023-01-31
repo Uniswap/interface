@@ -28,7 +28,7 @@ export const SUGGESTED_WALLETS: WalletSearchResult[] = [
   },
   {
     type: SearchResultType.Wallet,
-    address: '0x11E4857Bb9993a50c685A79AFad4E6F65D518DDa',
+    address: '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3',
     ensName: 'hayden.eth',
     category: WalletCategory.Builder,
   },

@@ -74,7 +74,7 @@ export function NotificationToast({
     if (notifications.length > 1) {
       bannerOffset.value = withDelay(100, withSpring(showOffset, SPRING_ANIMATION))
     }
-  }, [dispatch, bannerOffset, notifications, showOffset, address])
+  }, [address, bannerOffset, dispatch, notifications, showOffset])
 
   // If there is another notification in the queue then hide the current one immediately
   const delay = hasQueuedNotification ? 0 : hideDelay ?? DEFAULT_HIDE_DELAY
@@ -171,7 +171,7 @@ export function NotificationContent({
           justifyContent="flex-start">
           {icon}
           <Flex row shrink alignItems="center">
-            <Text adjustsFontSizeToFit numberOfLines={2} variant="bodySmall">
+            <Text numberOfLines={2} variant="bodySmall">
               {title}
             </Text>
           </Flex>
