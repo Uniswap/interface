@@ -30,7 +30,7 @@ export type AssetLogoBaseProps = {
   backupImg?: string | null
   size?: string
   style?: React.CSSProperties
-  showL2Logo?: boolean
+  hideL2Icon?: boolean
 }
 type AssetLogoProps = AssetLogoBaseProps & { isNative?: boolean; address?: string | null; chainId?: number }
 
@@ -41,13 +41,13 @@ type AssetLogoProps = AssetLogoBaseProps & { isNative?: boolean; address?: strin
 
 const LogoContainer = styled.div`
   position: relative;
-  align-items: center;
   display: flex;
 `
 
 const L2NetworkLogo = styled.div<{ networkUrl?: string; parentSize: string }>`
-  width: ${({ parentSize }) => `calc(${parentSize} / 2)`};
-  height: ${({ parentSize }) => `calc(${parentSize} / 2)`};
+  --size: ${({ parentSize }) => `calc(${parentSize} / 2)`};
+  width: var(--size);
+  height: var(--size);
   position: absolute;
   left: 50%;
   bottom: 0;
@@ -65,21 +65,18 @@ export default function AssetLogo({
   backupImg,
   size = '24px',
   style,
-  showL2Logo = true,
-  ...rest
+  hideL2Icon = false,
 }: AssetLogoProps) {
   const imageProps = {
     alt: `${symbol ?? 'token'} logo`,
     size,
-    style,
-    ...rest,
   }
 
   const [src, nextSrc] = useTokenLogoSource(address, chainId, isNative, backupImg)
   const L2Icon = getChainInfo(chainId)?.circleLogoUrl
 
   return (
-    <LogoContainer>
+    <LogoContainer style={style}>
       {src ? (
         <LogoImage {...imageProps} src={src} onError={nextSrc} />
       ) : (
@@ -88,7 +85,7 @@ export default function AssetLogo({
           {symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
         </MissingImageLogo>
       )}
-      {showL2Logo && <L2NetworkLogo networkUrl={L2Icon} parentSize={size} />}
+      {!hideL2Icon && <L2NetworkLogo networkUrl={L2Icon} parentSize={size} />}
     </LogoContainer>
   )
 }
