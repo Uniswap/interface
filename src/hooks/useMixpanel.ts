@@ -222,14 +222,20 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
           break
         }
         case MIXPANEL_TYPE.SWAP_CONFIRMED: {
+          const { gasUsd, inputAmount, priceImpact } = (payload || {}) as {
+            gasUsd: number | undefined
+            inputAmount: CurrencyAmount<Currency> | undefined
+            priceImpact: number | undefined
+          }
+
           mixpanel.track('Swap Confirmed', {
             input_token: inputSymbol,
             output_token: outputSymbol,
-            estimated_gas: trade?.gasUsd?.toFixed(4),
+            estimated_gas: gasUsd?.toFixed(4),
             max_return_or_low_gas: saveGas ? 'Lowest Gas' : 'Maximum Return',
-            trade_qty: trade?.inputAmount.toExact(),
+            trade_qty: inputAmount?.toExact(),
             slippage_setting: allowedSlippage ? allowedSlippage / 100 : 0,
-            price_impact: trade && trade?.priceImpact > 0.01 ? trade?.priceImpact.toFixed(2) : '<0.01',
+            price_impact: priceImpact && priceImpact > 0.01 ? priceImpact.toFixed(2) : '<0.01',
           })
 
           break

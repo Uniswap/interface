@@ -441,7 +441,11 @@ export default function Swap() {
     if (!swapCallback) {
       return
     }
-    mixpanelHandler(MIXPANEL_TYPE.SWAP_CONFIRMED)
+    mixpanelHandler(MIXPANEL_TYPE.SWAP_CONFIRMED, {
+      gasUsd: trade?.gasUsd,
+      inputAmount: trade?.inputAmount,
+      priceImpact: trade?.priceImpact,
+    })
     setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined })
     swapCallback()
       .then(hash => {
@@ -456,7 +460,15 @@ export default function Swap() {
           txHash: undefined,
         })
       })
-  }, [swapCallback, tradeToConfirm, showConfirm, mixpanelHandler])
+  }, [
+    swapCallback,
+    tradeToConfirm,
+    showConfirm,
+    mixpanelHandler,
+    trade?.gasUsd,
+    trade?.inputAmount,
+    trade?.priceImpact,
+  ])
 
   // show approve flow when: no error on inputs, not approved or pending, or approved in current session
   // never show if price impact is above threshold in non expert mode
