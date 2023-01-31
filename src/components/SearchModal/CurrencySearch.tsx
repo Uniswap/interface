@@ -45,6 +45,7 @@ interface CurrencySearchProps {
   showCommonBases?: boolean
   showCurrencyAmount?: boolean
   disableNonToken?: boolean
+  onlyShowCurrenciesWithBalance?: boolean
 }
 
 export function CurrencySearch({
@@ -56,6 +57,7 @@ export function CurrencySearch({
   disableNonToken,
   onDismiss,
   isOpen,
+  onlyShowCurrenciesWithBalance,
 }: CurrencySearchProps) {
   const { chainId } = useWeb3React()
   const theme = useTheme()
@@ -92,6 +94,10 @@ export function CurrencySearch({
       !balancesAreLoading
         ? filteredTokens
             .filter((token) => {
+              if (onlyShowCurrenciesWithBalance) {
+                return balances[token.address]?.greaterThan(0)
+              }
+
               // If there is no query, filter out unselected user-added tokens with no balance.
               if (!debouncedQuery && token instanceof UserAddedToken) {
                 if (selectedCurrency?.equals(token) || otherSelectedCurrency?.equals(token)) return true
@@ -101,7 +107,15 @@ export function CurrencySearch({
             })
             .sort(tokenComparator.bind(null, balances))
         : [],
-    [balances, balancesAreLoading, debouncedQuery, filteredTokens, otherSelectedCurrency, selectedCurrency]
+    [
+      balances,
+      balancesAreLoading,
+      debouncedQuery,
+      filteredTokens,
+      otherSelectedCurrency,
+      selectedCurrency,
+      onlyShowCurrenciesWithBalance,
+    ]
   )
   const isLoading = Boolean(balancesAreLoading && !tokenLoaderTimerElapsed)
 
@@ -114,11 +128,13 @@ export function CurrencySearch({
     const s = debouncedQuery.toLowerCase().trim()
 
     const tokens = filteredSortedTokens.filter((t) => !(t.equals(wrapped) || (disableNonToken && t.isNative)))
-    const natives = (disableNonToken || native.equals(wrapped) ? [wrapped] : [native, wrapped]).filter(
-      (n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1
-    )
+    const shouldShowWrapped = !onlyShowCurrenciesWithBalance || balances[wrapped.address]?.greaterThan(0)
+    const natives = (
+      disableNonToken || native.equals(wrapped) ? [wrapped] : shouldShowWrapped ? [native, wrapped] : [native]
+    ).filter((n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1)
+
     return [...natives, ...tokens]
-  }, [debouncedQuery, filteredSortedTokens, wrapped, disableNonToken, native])
+  }, [debouncedQuery, filteredSortedTokens, onlyShowCurrenciesWithBalance, balances, wrapped, disableNonToken, native])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency, hasWarning?: boolean) => {

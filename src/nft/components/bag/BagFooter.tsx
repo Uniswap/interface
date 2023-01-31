@@ -10,6 +10,7 @@ import Column from 'components/Column'
 import Loader from 'components/Loader'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
+import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { SupportedChainId } from 'constants/chains'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
 import { useCurrency } from 'hooks/Tokens'
@@ -21,15 +22,13 @@ import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { useWalletBalance } from 'nft/hooks/useWalletBalance'
 import { BagStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
-import { PropsWithChildren, useMemo, useReducer } from 'react'
+import { PropsWithChildren, useMemo, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
-
-import { BagTokenSelectorModal } from './tokenSelector/BagTokenSelectorModal'
 
 const FooterContainer = styled.div`
   padding: 0px 12px;
@@ -153,7 +152,7 @@ export const BagFooter = ({
   const defaultCurrency = useCurrency('ETH')
 
   const setBagExpanded = useBag((state) => state.setBagExpanded)
-  const [showTokenSelector, toggleTokenSelector] = useReducer((state) => !state, false)
+  const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
 
   const { balance: balanceInEth } = useWalletBalance()
   const sufficientBalance = useMemo(() => {
@@ -226,7 +225,7 @@ export const BagFooter = ({
               <ThemedText.SubHeaderSmall>
                 <Trans>Pay with</Trans>
               </ThemedText.SubHeaderSmall>
-              <CurrencyInput onClick={toggleTokenSelector}>
+              <CurrencyInput onClick={() => setTokenSelectorOpen(true)}>
                 <CurrencyLogo currency={activeCurrency} size="24px" />
                 <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
                   {activeCurrency?.symbol}
@@ -286,16 +285,13 @@ export const BagFooter = ({
           </ActionButton>
         </TraceEvent>
       </Footer>
-      {showTokenSelector && (
-        <BagTokenSelectorModal
-          selectedCurrency={activeCurrency ?? undefined}
-          handleCurrencySelect={(currency: Currency | undefined) => {
-            setInputCurrency(currency)
-            toggleTokenSelector()
-          }}
-          overlayClick={toggleTokenSelector}
-        />
-      )}
+      <CurrencySearchModal
+        isOpen={tokenSelectorOpen}
+        onDismiss={() => setTokenSelectorOpen(false)}
+        onCurrencySelect={(currency: Currency) => setInputCurrency(currency.isNative ? undefined : currency)}
+        selectedCurrency={activeCurrency ?? undefined}
+        onlyShowCurrenciesWithBalance={true}
+      />
     </FooterContainer>
   )
 }
