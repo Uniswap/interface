@@ -1,14 +1,19 @@
 import gql from 'graphql-tag'
 
-// TODO: Implemnt this as a refetchable fragment on tokenQuery when backend adds support
 gql`
-  query TokenPrice($contract: ContractInput!, $duration: HistoryDuration!) {
-    tokens(contracts: [$contract]) {
+  query TokenPrice($chain: Chain!, $address: String, $duration: HistoryDuration!) {
+    token(chain: $chain, address: $address) {
+      id
+      address
+      chain
       market(currency: USD) {
+        id
         price {
+          id
           value
         }
         priceHistory(duration: $duration) {
+          id
           timestamp
           value
         }
