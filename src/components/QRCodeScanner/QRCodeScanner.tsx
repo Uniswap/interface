@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, LayoutChangeEvent, LayoutRectangle, StyleSheet, ViewStyle } from 'react-native'
 import { FadeIn, FadeOut, runOnJS } from 'react-native-reanimated'
+import { Defs, LinearGradient, Rect, Stop, Svg } from 'react-native-svg'
 import {
   Camera,
   CameraPermissionRequestResult,
@@ -129,6 +130,15 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             zoom={backCamera.neutralZoom}
           />
         )}
+        <Svg height="100%" width="100%">
+          <Defs>
+            <LinearGradient id="scan-top-fadeout" x1="0" x2="0" y1="0" y2="1">
+              <Stop offset="0" stopColor={theme.colors.background0} stopOpacity="1" />
+              <Stop offset="0.4" stopColor={theme.colors.background0} stopOpacity="0" />
+            </LinearGradient>
+          </Defs>
+          <Rect fill="url(#scan-top-fadeout)" height="100%" width="100%" x="0" y="0" />
+        </Svg>
       </MaskedView>
       <Flex centered gap="xxl" style={StyleSheet.absoluteFill}>
         <Flex alignItems="center" gap="none">

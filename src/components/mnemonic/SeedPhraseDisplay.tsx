@@ -75,12 +75,12 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss }: Props): JSX.Element
 
       {showSeedPhraseViewWarningModal && (
         <WarningModal
+          hideHandlebar
           caption={t(
             'Please only view your recovery phrase in a private place. Anyone who knows your recovery phrase can access your wallet and funds.'
           )}
           closeText={t('Go back')}
           confirmText={t('View phrase')}
-          hideHandlebar={true}
           isDismissible={false}
           modalName={ModalName.ViewSeedPhraseWarning}
           title={t('Be careful')}

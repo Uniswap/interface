@@ -26,7 +26,7 @@ import { useAppTheme } from 'src/app/hooks'
 import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'src/assets'
 import { Button } from 'src/components/buttons/Button'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
-import { UniconThemedRadial } from 'src/components/gradients/UniconThemedRadial'
+import { UniconThemedGradient } from 'src/components/gradients/UniconThemedGradient'
 import { Box, Flex } from 'src/components/layout'
 import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
 import { Text } from 'src/components/Text'
@@ -167,12 +167,11 @@ export function OnboardingCompleteAnimation({
     <>
       <Animated.View entering={realQrTopGlowFadeIn} style={[styles.qrGlow]}>
         <GradientBackground>
-          <UniconThemedRadial
+          <UniconThemedGradient
             borderRadius="lg"
-            gradientEndColor={uniconColors.gradientEnd}
-            gradientStartColor={uniconColors.glow}
-            opacity={0.4}
-            // we use the glow color here, since otherwise that color doesn't show up at all on the screen, which can look weird if it's a dominant color in the Unicon (the QR code gradient uses the start / end colors but not glow)
+            gradientEndColor={uniconColors.glow}
+            gradientStartColor={theme.colors.background0}
+            opacity={isDarkMode ? 0.3 : 0.2}
           />
         </GradientBackground>
       </Animated.View>
@@ -208,9 +207,10 @@ export function OnboardingCompleteAnimation({
                     width={QR_CONTAINER_SIZE}>
                     <Animated.View entering={realQrFadeIn} style={[styles.qrCodeContainer]}>
                       <QRCodeDisplay
+                        hideOutline
                         address={activeAddress}
-                        backgroundColor="none"
-                        containerBackgroundColor="none"
+                        backgroundColor="background0"
+                        containerBackgroundColor="background0"
                         logoSize={UNICON_SIZE}
                         overlayOpacityPercent={10}
                         safeAreaColor="background0"

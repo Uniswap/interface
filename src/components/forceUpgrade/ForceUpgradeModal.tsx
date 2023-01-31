@@ -81,8 +81,8 @@ export function ForceUpgradeModal(): JSX.Element {
       {mnemonicId && showSeedPhrase && (
         <BottomSheetModal
           fullScreen
+          hideHandlebar
           backgroundColor={theme.colors.background0}
-          hideHandlebar={true}
           name={ModalName.ForceUpgradeModal}>
           <Box flex={1} px="lg" py="lg">
             <Flex row alignItems="center" justifyContent="flex-start">

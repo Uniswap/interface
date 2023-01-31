@@ -28,16 +28,33 @@ type Props = PropsWithChildren<{
 }> &
   TelemetryTraceProps
 
+const HANDLEBAR_HEIGHT = spacing.xxs
+const HANDLEBAR_WIDTH = spacing.xl
+
 const HandleBar = (): JSX.Element => {
   return (
     <Box
       alignSelf="center"
-      backgroundColor="background3"
-      borderRadius="xs"
-      height={4}
+      backgroundColor="backgroundOutline"
+      borderRadius="sm"
+      height={HANDLEBAR_HEIGHT}
       mb="sm"
       mt="md"
-      width={32}
+      width={HANDLEBAR_WIDTH}
+    />
+  )
+}
+
+const HiddenHandleBar = (): JSX.Element => {
+  return (
+    // same height and width as the handlebar but without a background color, so it takes up the same screen space
+    <Box
+      alignSelf="center"
+      backgroundColor="none"
+      borderRadius="xs"
+      height={HANDLEBAR_HEIGHT}
+      mb="sm"
+      mt="md"
     />
   )
 }
@@ -93,7 +110,7 @@ export function BottomSheetModal({
       contentHeight={animatedContentHeight}
       enableContentPanningGesture={isDismissible}
       enableHandlePanningGesture={isDismissible}
-      handleComponent={hideHandlebar ? null : HandleBar}
+      handleComponent={hideHandlebar ? HiddenHandleBar : HandleBar}
       handleHeight={animatedHandleHeight}
       snapPoints={animatedSnapPoints}
       stackBehavior={stackBehavior}
@@ -143,7 +160,7 @@ export function BottomSheetDetachedModal({
       bottomInset={theme.spacing.xxl}
       contentHeight={animatedContentHeight}
       detached={true}
-      handleComponent={hideHandlebar ? null : HandleBar}
+      handleComponent={hideHandlebar ? HiddenHandleBar : HandleBar}
       handleHeight={animatedHandleHeight}
       snapPoints={animatedSnapPoints}
       stackBehavior={stackBehavior}

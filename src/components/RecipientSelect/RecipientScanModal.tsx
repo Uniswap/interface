@@ -8,7 +8,7 @@ import Scan from 'src/assets/icons/qr-code.svg'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
-import { Box, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
@@ -71,7 +71,6 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
   return (
     <BottomSheetModal
       fullScreen
-      hideHandlebar
       backgroundColor={theme.colors.background0}
       name={ModalName.WalletConnectScan}
       onClose={onClose}>
@@ -116,9 +115,6 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
             <Chevron color={theme.colors.textSecondary} direction="e" height="20" width="15" />
           </Flex>
         </TouchableArea>
-      </Flex>
-      <Flex centered mt="md" position="absolute" width="100%">
-        <Box bg="backgroundOutline" borderRadius="sm" height={4} width={40} />
       </Flex>
     </BottomSheetModal>
   )

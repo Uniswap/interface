@@ -133,7 +133,6 @@ export function WalletConnectModal({
   return (
     <BottomSheetModal
       fullScreen
-      hideHandlebar
       backgroundColor={theme.colors.background0}
       name={ModalName.WalletConnectScan}
       onClose={onClose}>
@@ -206,9 +205,6 @@ export function WalletConnectModal({
           </Flex>
         </>
       )}
-      <Flex centered mt="md" position="absolute" width="100%">
-        <Box bg="backgroundOutline" borderRadius="sm" height={4} width={40} />
-      </Flex>
     </BottomSheetModal>
   )
 }

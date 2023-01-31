@@ -1,13 +1,14 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Share } from 'react-native'
+import { Share, useColorScheme } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { useAppTheme } from 'src/app/hooks'
 import ShareIcon from 'src/assets/icons/share.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { CopyTextButton } from 'src/components/buttons/CopyTextButton'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
-import { UniconThemedRadial } from 'src/components/gradients/UniconThemedRadial'
+import { UniconThemedGradient } from 'src/components/gradients/UniconThemedGradient'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
 import { useUniconColors } from 'src/components/unicons/utils'
@@ -22,6 +23,8 @@ interface Props {
 
 export function WalletQRCode({ address }: Props): JSX.Element | null {
   const { t } = useTranslation()
+  const theme = useAppTheme()
+  const isDarkMode = useColorScheme() === 'dark'
 
   const gradientData = useUniconColors(address)
 
@@ -41,13 +44,13 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
   return (
     <>
       <GradientBackground>
-        <UniconThemedRadial
+        <UniconThemedGradient
+          middleOut
           borderRadius="lg"
-          gradientEndColor={gradientData.gradientEnd}
+          gradientEndColor={theme.colors.background0}
           gradientStartColor={gradientData.glow}
-          // we use the glow color here, since otherwise that color doesn't show up at all on the screen, which can look weird if it's a dominant color in the Unicon (the QR code gradient uses the start / end colors but not glow)
+          opacity={isDarkMode ? 0.24 : 0.12}
         />
-        {/* TODO (MOB-2993): make the background sheet slightly transparent and blurred */}
       </GradientBackground>
       <AnimatedFlex centered grow entering={FadeIn} exiting={FadeOut} py="lg">
         <AddressDisplay

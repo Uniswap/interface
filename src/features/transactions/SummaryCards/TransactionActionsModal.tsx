@@ -139,8 +139,8 @@ export default function TransactionActionsModal({
 
   return (
     <BottomSheetModal
+      hideHandlebar
       backgroundColor="accentCritical"
-      hideHandlebar={true}
       name={ModalName.TransactionActions}
       onClose={handleClose}>
       <Flex pb="lg" px="sm">

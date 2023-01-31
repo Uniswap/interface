@@ -93,6 +93,7 @@ type QRCodeDisplayProps = {
   safeAreaColor?: keyof Theme['colors']
   logoSize?: number
   overlayOpacityPercent?: number
+  hideOutline?: boolean
 }
 
 const _QRCodeDisplay = ({
@@ -105,6 +106,7 @@ const _QRCodeDisplay = ({
   overlayOpacityPercent,
   logoSize = 32,
   safeAreaColor,
+  hideOutline = false,
 }: QRCodeDisplayProps): JSX.Element => {
   const theme = useAppTheme()
 
@@ -112,7 +114,9 @@ const _QRCodeDisplay = ({
     <Box
       alignItems="center"
       backgroundColor={containerBackgroundColor}
-      borderRadius="lg"
+      borderColor="backgroundOutline"
+      borderRadius="xxxl"
+      borderWidth={hideOutline ? 0 : 2}
       justifyContent="center"
       padding="lg"
       position="relative">
