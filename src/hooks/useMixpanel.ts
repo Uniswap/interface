@@ -1,4 +1,4 @@
-import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
 import { formatUnits, isAddress } from 'ethers/lib/utils'
 import mixpanel from 'mixpanel-browser'
 import { useCallback, useEffect, useMemo } from 'react'
@@ -28,7 +28,6 @@ import { useSwapState } from 'state/swap/hooks'
 import { checkedSubgraph } from 'state/transactions/actions'
 import { TransactionDetails } from 'state/transactions/type'
 import { useUserSlippageTolerance } from 'state/user/hooks'
-import { Aggregator } from 'utils/aggregator'
 
 export enum MIXPANEL_TYPE {
   PAGE_VIEWED,
@@ -172,7 +171,7 @@ export const NEED_CHECK_SUBGRAPH_TRANSACTION_TYPES = [
   'Elastic Create pool',
 ]
 
-export default function useMixpanel(trade?: Aggregator | undefined, currencies?: { [field in Field]?: Currency }) {
+export default function useMixpanel(currencies?: { [field in Field]?: Currency }) {
   const { chainId, account, isEVM, networkInfo } = useActiveWeb3React()
   const { saveGas } = useSwapState()
   const network = networkInfo.name
@@ -201,14 +200,20 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           mixpanel.track('Wallet Connected')
           break
         case MIXPANEL_TYPE.SWAP_INITIATED: {
+          const { gasUsd, inputAmount, priceImpact } = (payload || {}) as {
+            gasUsd: number | undefined
+            inputAmount: CurrencyAmount<Currency> | undefined
+            priceImpact: number | undefined
+          }
+
           mixpanel.track('Swap Initiated', {
             input_token: inputSymbol,
             output_token: outputSymbol,
-            estimated_gas: trade?.gasUsd?.toFixed(4),
+            estimated_gas: gasUsd?.toFixed(4),
             max_return_or_low_gas: saveGas ? 'Lowest Gas' : 'Maximum Return',
-            trade_qty: trade?.inputAmount.toExact(),
+            trade_qty: inputAmount?.toExact(),
             slippage_setting: allowedSlippage ? allowedSlippage / 100 : 0,
-            price_impact: trade && trade?.priceImpact > 0.01 ? trade?.priceImpact.toFixed(2) : '<0.01',
+            price_impact: priceImpact && priceImpact > 0.01 ? priceImpact.toFixed(2) : '<0.01',
           })
 
           break
@@ -794,7 +799,7 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currencies, network, saveGas, account, trade, mixpanel.hasOwnProperty('get_distinct_id'), ethPrice?.currentPrice],
+    [currencies, network, saveGas, account, mixpanel.hasOwnProperty('get_distinct_id'), ethPrice?.currentPrice],
   )
   const subgraphMixpanelHandler = useCallback(
     async (transaction: TransactionDetails) => {
