@@ -24,7 +24,7 @@ import { useAccounts, usePendingAccounts } from 'src/features/wallet/hooks'
 import {
   PendingAccountActions,
   pendingAccountActions,
-} from 'src/features/wallet/pendingAcccountsSaga'
+} from 'src/features/wallet/pendingAccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { Theme } from 'src/styles/theme'
 import { openSettings } from 'src/utils/linking'

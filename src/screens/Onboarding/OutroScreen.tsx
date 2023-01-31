@@ -11,7 +11,7 @@ import { useActiveAccount, usePendingAccounts } from 'src/features/wallet/hooks'
 import {
   pendingAccountActions,
   PendingAccountActions,
-} from 'src/features/wallet/pendingAcccountsSaga'
+} from 'src/features/wallet/pendingAccountsSaga'
 import { setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { OnboardingCompleteAnimation } from 'src/screens/Onboarding/OnboardingCompleteAnimation/OnboardingCompleteAnimation'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'

@@ -5,6 +5,7 @@ import {
   addAccount,
   markAsNonPending,
   removeAccount,
+  removeAccounts,
   walletReducer,
   WalletState,
 } from 'src/features/wallet/walletSlice'
@@ -44,12 +45,12 @@ describe(walletReducer, () => {
 
   it('marks account as non-pending', () => {
     store.dispatch(addAccount(ACCOUNT_1))
-    store.dispatch(markAsNonPending(ACCOUNT_1.address))
+    store.dispatch(markAsNonPending([ACCOUNT_1.address]))
     expect(store.getState().accounts[getChecksumAddress(ACCOUNT_1.address)]?.pending).toBe(false)
   })
 
   it('throws when marking unknown account as non-pending', () => {
-    expect(() => store.dispatch(markAsNonPending(ACCOUNT_1.address))).toThrow(
+    expect(() => store.dispatch(markAsNonPending([ACCOUNT_1.address]))).toThrow(
       `Cannot enable missing account ${getChecksumAddress(ACCOUNT_1.address)}`
     )
   })
@@ -84,8 +85,28 @@ describe(walletReducer, () => {
     expect(store.getState().accounts).toEqual({})
   })
 
+  it('removes all accounts from wallet and resets active account', () => {
+    store.dispatch(addAccount(ACCOUNT_1))
+    store.dispatch(addAccount(ACCOUNT_2))
+    expect(Object.values(store.getState().accounts).length).toEqual(2)
+
+    store.dispatch(activateAccount(ACCOUNT_2.address))
+    expect(store.getState().activeAccountAddress).toBe(getChecksumAddress(ACCOUNT_2.address))
+
+    // Removing both accounts should set the active account to null
+    store.dispatch(removeAccounts([ACCOUNT_1.address, ACCOUNT_2.address]))
+    expect(store.getState().activeAccountAddress).toBeNull()
+    expect(store.getState().accounts).toEqual({})
+  })
+
   it('throws when removing unknown active account', () => {
     expect(() => store.dispatch(removeAccount(ACCOUNT_1.address))).toThrow(
+      `Cannot remove missing account ${getChecksumAddress(ACCOUNT_1.address)}`
+    )
+  })
+
+  it('throws when removing unknown active accounts', () => {
+    expect(() => store.dispatch(removeAccounts([ACCOUNT_1.address, ACCOUNT_2.address]))).toThrow(
       `Cannot remove missing account ${getChecksumAddress(ACCOUNT_1.address)}`
     )
   })

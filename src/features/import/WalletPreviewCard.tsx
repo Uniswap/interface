@@ -57,9 +57,11 @@ export default function WalletPreviewCard({
             variant="bodyLarge"
           />
         </Flex>
-        <Text color="textSecondary" variant="subheadSmall">
-          {formatUSDPrice(balance, NumberType.FiatTokenQuantity)}
-        </Text>
+        {balance ? (
+          <Text color="textSecondary" variant="subheadSmall">
+            {formatUSDPrice(balance, NumberType.FiatTokenQuantity)}
+          </Text>
+        ) : null}
       </Flex>
     </TouchableArea>
   )

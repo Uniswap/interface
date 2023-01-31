@@ -15,7 +15,7 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import {
   PendingAccountActions,
   pendingAccountActions,
-} from 'src/features/wallet/pendingAcccountsSaga'
+} from 'src/features/wallet/pendingAccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { shortenAddress } from 'src/utils/addresses'
 import { formatDate } from 'src/utils/format'

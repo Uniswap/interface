@@ -16,7 +16,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import {
   PendingAccountActions,
   pendingAccountActions,
-} from 'src/features/wallet/pendingAcccountsSaga'
+} from 'src/features/wallet/pendingAccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
 import { useTimeout } from 'src/utils/timing'

@@ -49,7 +49,7 @@ import {
   pendingAccountReducer,
   pendingAccountSaga,
   pendingAccountSagaName,
-} from 'src/features/wallet/pendingAcccountsSaga'
+} from 'src/features/wallet/pendingAccountsSaga'
 import { signWcRequestSaga, walletConnectSaga } from 'src/features/walletConnect/saga'
 import { SagaState } from 'src/utils/saga'
 

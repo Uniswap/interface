@@ -21,7 +21,7 @@ import { usePendingAccounts } from 'src/features/wallet/hooks'
 import {
   PendingAccountActions,
   pendingAccountActions,
-} from 'src/features/wallet/pendingAcccountsSaga'
+} from 'src/features/wallet/pendingAccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { shortenAddress } from 'src/utils/addresses'
 

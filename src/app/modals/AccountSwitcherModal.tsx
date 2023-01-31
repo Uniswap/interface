@@ -36,7 +36,7 @@ import {
 import {
   PendingAccountActions,
   pendingAccountActions,
-} from 'src/features/wallet/pendingAcccountsSaga'
+} from 'src/features/wallet/pendingAccountsSaga'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'

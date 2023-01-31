@@ -55,12 +55,25 @@ const slice = createSlice({
         state.activeAccountAddress = firstAccountId ?? null
       }
     },
-    markAsNonPending: (state, action: PayloadAction<Address>) => {
-      const address = action.payload
-      const id = getChecksumAddress(address)
-      const account = state.accounts[id]
-      if (!account) throw new Error(`Cannot enable missing account ${id}`)
-      account.pending = false
+    removeAccounts: (state, action: PayloadAction<Address[]>) => {
+      const addresses = action.payload
+      addresses.forEach((address) => {
+        const id = getChecksumAddress(address)
+        if (!state.accounts[id]) throw new Error(`Cannot remove missing account ${id}`)
+        delete state.accounts[id]
+      })
+      // Reset active account to first account if it exists
+      const firstAccountId = Object.keys(state.accounts)[0]
+      state.activeAccountAddress = firstAccountId ?? null
+    },
+    markAsNonPending: (state, action: PayloadAction<Address[]>) => {
+      const addresses = action.payload
+      addresses.forEach((address) => {
+        const id = getChecksumAddress(address)
+        const account = state.accounts[id]
+        if (!account) throw new Error(`Cannot enable missing account ${id}`)
+        account.pending = false
+      })
     },
     editAccount: (state, action: PayloadAction<{ address: Address; updatedAccount: Account }>) => {
       const { address, updatedAccount } = action.payload
@@ -104,6 +117,7 @@ export const {
   addAccount,
   addAccounts,
   removeAccount,
+  removeAccounts,
   markAsNonPending,
   editAccount,
   activateAccount,

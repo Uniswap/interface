@@ -10,7 +10,7 @@ import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loader } from 'src/components/loading'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { useSelectWalletScreenQuery } from 'src/data/__generated__/types-and-hooks'
-import { importAccountSagaName } from 'src/features/import/importAccountSaga'
+import { IMPORT_WALLET_AMOUNT } from 'src/features/import/importAccountSaga'
 import WalletPreviewCard from 'src/features/import/WalletPreviewCard'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -20,11 +20,9 @@ import { usePendingAccounts } from 'src/features/wallet/hooks'
 import {
   PendingAccountActions,
   pendingAccountActions,
-} from 'src/features/wallet/pendingAcccountsSaga'
+} from 'src/features/wallet/pendingAccountsSaga'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { SagaStatus } from 'src/utils/saga'
-import { useSagaStatus } from 'src/utils/useSagaStatus'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SelectWallet>
 
@@ -32,8 +30,6 @@ const FALLBACK_ID = 'fallback'
 export function SelectWalletScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const { status } = useSagaStatus(importAccountSagaName)
-  const isLoadingAccounts = status === SagaStatus.Started
 
   const pendingAccounts = usePendingAccounts()
   const addresses = Object.values(pendingAccounts)
@@ -44,11 +40,15 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
     )
     .map((account) => account.address)
 
+  const isImportingAccounts = addresses.length !== IMPORT_WALLET_AMOUNT
+
   const { data, loading, refetch, error } = useSelectWalletScreenQuery({
     variables: { ownerAddresses: addresses },
-    // Wait until all the addresses have been added to the store before querying. Because the accounts get added one at a time but we want to just make one call
-    // to get all the balances.
-    skip: isLoadingAccounts,
+    /*
+     * Wait until all the addresses have been added to the store before querying.
+     * Also prevents an extra API call when user navigates back and clears pending accounts.
+     */
+    skip: isImportingAccounts,
   })
 
   const onRetry = useCallback(() => refetch(), [refetch])
@@ -66,13 +66,14 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
       return filtered
     }
 
+    // if all addresses have 0 total token value, show the first address
     if (allAddressBalances?.length) {
       return [allAddressBalances?.[0]]
     }
 
-    // if none of the addresses have a balance then just display the first one
+    // if query for address balances returned null, show the first address
     if (addresses.length) {
-      return [{ id: FALLBACK_ID, ownerAddress: addresses[0], tokensTotalDenominatedValue: null }] // if query returned null, fallback to the first address
+      return [{ id: FALLBACK_ID, ownerAddress: addresses[0], tokensTotalDenominatedValue: null }]
     }
 
     return EMPTY_ARRAY
@@ -91,6 +92,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
   )
 
   useEffect(() => {
+    // Remove all pending accounts when navigating back
     const beforeRemoveListener = (): void => {
       dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
     }
@@ -99,14 +101,16 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
   }, [dispatch, navigation])
 
   useEffect(() => {
-    // In the event that the initial state of `selectedAddresses` is empty due to delay in saga loading,
-    // we need to set this after the loading so that the fallback account is selected.
-    if (isLoadingAccounts || loading || selectedAddresses.length > 0) return
+    /*
+     * In the event that the initial state of `selectedAddresses` is empty due to
+     * delay in importAccountSaga, we need to set the fallback account as selected
+     */
+    if (isImportingAccounts || loading || selectedAddresses.length > 0) return
 
     initialShownAccounts
       ?.filter((a) => a != null && a?.ownerAddress != null)
       .map((a) => setSelectedAddresses(a.ownerAddress))
-  }, [initialShownAccounts, isLoadingAccounts, loading, selectedAddresses.length])
+  }, [initialShownAccounts, isImportingAccounts, loading, selectedAddresses.length])
 
   const onPress = (address: string): void => {
     if (initialShownAccounts?.length === 1 && selectedAddresses.length === 1) return
@@ -171,7 +175,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
             title={t("Couldn't load addresses")}
             onRetry={onRetry}
           />
-        ) : isLoadingAccounts || loading ? (
+        ) : isImportingAccounts || loading ? (
           <Flex grow justifyContent="space-between">
             <Loader.Wallets repeat={5} />
           </Flex>
@@ -197,7 +201,9 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
         )}
         <Box opacity={showError ? 0 : 1}>
           <Button
-            disabled={isLoadingAccounts || loading || !!showError || selectedAddresses.length === 0}
+            disabled={
+              isImportingAccounts || loading || !!showError || selectedAddresses.length === 0
+            }
             label={t('Continue')}
             name={ElementName.Next}
             onPress={onSubmit}
