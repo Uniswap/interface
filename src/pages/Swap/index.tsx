@@ -235,6 +235,9 @@ export default function Swap({ className }: { className?: string }) {
   const fiatValueInput = useStablecoinValue(parsedAmounts[Field.INPUT])
   const fiatValueOutput = useStablecoinValue(parsedAmounts[Field.OUTPUT])
 
+  console.log(parsedAmounts[Field.INPUT])
+  console.log(fiatValueInput)
+
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
     () => [!trade?.swaps, TradeState.LOADING === tradeState, TradeState.SYNCING === tradeState],
     [trade, tradeState]
