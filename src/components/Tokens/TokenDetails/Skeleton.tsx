@@ -6,7 +6,6 @@ import styled, { useTheme } from 'styled-components/macro'
 import { textFadeIn } from 'theme/styles'
 
 import { LoadingBubble } from '../loading'
-import { LogoContainer } from '../TokenTable/TokenRow'
 import { AboutContainer, AboutHeader } from './About'
 import { BreadcrumbNavLink } from './BreadcrumbNavLink'
 import { TokenPrice } from './PriceChart'
@@ -227,9 +226,7 @@ export default function TokenDetailsSkeleton() {
       </BreadcrumbNavLink>
       <TokenInfoContainer>
         <TokenNameCell>
-          <LogoContainer>
-            <TokenLogoBubble />
-          </LogoContainer>
+          <TokenLogoBubble />
           <TitleBubble />
         </TokenNameCell>
       </TokenInfoContainer>

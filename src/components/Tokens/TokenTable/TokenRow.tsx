@@ -279,12 +279,6 @@ export const SparkLineLoadingBubble = styled(LongLoadingBubble)`
   height: 4px;
 `
 
-export const LogoContainer = styled.div`
-  position: relative;
-  align-items: center;
-  display: flex;
-`
-
 const InfoIconContainer = styled.div`
   margin-left: 2px;
   display: flex;
