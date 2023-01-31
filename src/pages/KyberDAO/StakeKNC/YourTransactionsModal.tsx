@@ -122,6 +122,7 @@ export default function YourTransactionsModal() {
             [ActionType.ClaimReward]: 'Claim',
             [ActionType.Deposit]: 'Stake',
             [ActionType.Withdraw]: 'Unstake',
+            [ActionType.Delegate]: 'Delegate',
           }[action.type] as string,
           description: (() => {
             switch (action.type) {

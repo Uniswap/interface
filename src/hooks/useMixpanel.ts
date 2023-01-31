@@ -33,6 +33,7 @@ export enum MIXPANEL_TYPE {
   PAGE_VIEWED,
   WALLET_CONNECTED,
   SWAP_INITIATED,
+  SWAP_CONFIRMED,
   SWAP_COMPLETED,
   ADVANCED_MODE_ON,
   ADD_RECIPIENT_CLICKED,
@@ -146,6 +147,8 @@ export enum MIXPANEL_TYPE {
   KYBER_DAO_UNSTAKE_CLICK,
   KYBER_DAO_DELEGATE_CLICK,
   KYBER_DAO_VOTE_CLICK,
+  KYBER_DAO_CLAIM_CLICK,
+  KYBER_DAO_FEATURE_REQUEST_CLICK,
 
   // notification
   NOTIFICATION_CLICK_MENU,
@@ -214,6 +217,19 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
             trade_qty: inputAmount?.toExact(),
             slippage_setting: allowedSlippage ? allowedSlippage / 100 : 0,
             price_impact: priceImpact && priceImpact > 0.01 ? priceImpact.toFixed(2) : '<0.01',
+          })
+
+          break
+        }
+        case MIXPANEL_TYPE.SWAP_CONFIRMED: {
+          mixpanel.track('Swap Confirmed', {
+            input_token: inputSymbol,
+            output_token: outputSymbol,
+            estimated_gas: trade?.gasUsd?.toFixed(4),
+            max_return_or_low_gas: saveGas ? 'Lowest Gas' : 'Maximum Return',
+            trade_qty: trade?.inputAmount.toExact(),
+            slippage_setting: allowedSlippage ? allowedSlippage / 100 : 0,
+            price_impact: trade && trade?.priceImpact > 0.01 ? trade?.priceImpact.toFixed(2) : '<0.01',
           })
 
           break
@@ -765,6 +781,14 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
         }
         case MIXPANEL_TYPE.KYBER_DAO_VOTE_CLICK: {
           mixpanel.track('KyberDAO - Vote Click', payload)
+          break
+        }
+        case MIXPANEL_TYPE.KYBER_DAO_CLAIM_CLICK: {
+          mixpanel.track('KyberDAO - Claim Reward Click', payload)
+          break
+        }
+        case MIXPANEL_TYPE.KYBER_DAO_FEATURE_REQUEST_CLICK: {
+          mixpanel.track('KyberDAO - Feature Request Click', payload)
           break
         }
         case MIXPANEL_TYPE.LO_CLICK_PLACE_ORDER: {

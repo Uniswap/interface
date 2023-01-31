@@ -20,7 +20,6 @@ import TransactionConfirmationModal, { TransactionErrorContent } from 'component
 import { useActiveWeb3React } from 'hooks'
 import { useClaimRewardActions, useVotingActions, useVotingInfo } from 'hooks/kyberdao'
 import useTotalVotingReward from 'hooks/kyberdao/useTotalVotingRewards'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
 import { useToggleModal, useWalletModalToggle } from 'state/application/hooks'
@@ -128,7 +127,6 @@ const formatVotingPower = (votingPowerNumber: number) => {
 
 export default function Vote() {
   const theme = useTheme()
-  const { mixpanelHandler } = useMixpanel()
   const { account } = useActiveWeb3React()
   const { daoInfo, remainingCumulativeAmount, userRewards, stakerInfo, stakerInfoNextEpoch } = useVotingInfo()
   const { knc, usd, kncPriceETH } = useTotalVotingReward()
@@ -202,7 +200,6 @@ export default function Vote() {
       setAttemptingTxn(true)
       try {
         const tx = await vote(proposal_id, option)
-        mixpanelHandler(MIXPANEL_TYPE.KYBER_DAO_VOTE_CLICK, { proposal_id: proposal_id, option: option })
         setAttemptingTxn(false)
         setTxHash(tx)
         return Promise.resolve(true)
@@ -213,7 +210,7 @@ export default function Vote() {
         return Promise.reject(error)
       }
     },
-    [vote, mixpanelHandler],
+    [vote],
   )
 
   return (

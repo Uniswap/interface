@@ -16,7 +16,7 @@ import ExpandableBox from 'components/ExpandableBox'
 import AccountDetails from 'components/Header/web3/AccountDetails'
 import WarningIcon from 'components/Icons/WarningIcon'
 import Modal from 'components/Modal'
-import Row, { AutoRow, RowFixed } from 'components/Row'
+import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { APP_PATHS, TERM_FILES_PATH } from 'constants/index'
 import { SUPPORTED_WALLET, SUPPORTED_WALLETS, WalletInfo } from 'constants/wallets'
 import { useActiveWeb3React, useWeb3React } from 'hooks'
@@ -37,16 +37,10 @@ const CloseIcon = styled.div`
   position: absolute;
   right: 1rem;
   top: 16px;
-  padding: 8px;
+  cursor: pointer;
+  color: ${({ theme }) => theme.text};
   &:hover {
-    cursor: pointer;
     opacity: 0.6;
-  }
-`
-
-const CloseColor = styled(Close)`
-  path {
-    stroke: ${({ theme }) => theme.text4};
   }
 `
 
@@ -69,8 +63,6 @@ const HeaderRow = styled.div<{ padding?: string }>`
 const ContentWrapper = styled.div`
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`padding: 1rem`};
 `
 
 const TermAndCondition = styled.div`
@@ -92,6 +84,7 @@ const TermAndCondition = styled.div`
 
 const UpperSection = styled.div`
   padding: 24px;
+  position: relative;
 `
 
 const gap = '1rem'
@@ -288,12 +281,14 @@ export default function WalletModal() {
     if (error) {
       return (
         <UpperSection>
-          <CloseIcon onClick={toggleWalletModal}>
-            <CloseColor />
-          </CloseIcon>
-          <HeaderRow padding="1rem">
-            <Trans>Error connecting</Trans>
-          </HeaderRow>
+          <RowBetween>
+            <HeaderRow padding="1rem">
+              <Trans>Error connecting</Trans>
+            </HeaderRow>
+            <CloseIcon onClick={toggleWalletModal}>
+              <Close />
+            </CloseIcon>
+          </RowBetween>
           <ContentWrapper>
             <Trans>Error connecting. Try refreshing the page.</Trans>
           </ContentWrapper>
@@ -311,11 +306,8 @@ export default function WalletModal() {
 
     return (
       <UpperSection>
-        <CloseIcon onClick={toggleWalletModal}>
-          <CloseColor />
-        </CloseIcon>
-        <Row marginBottom="26px">
-          {(walletView === WALLET_VIEWS.CHANGE_WALLET || walletView === WALLET_VIEWS.PENDING) && (
+        <RowBetween marginBottom="26px">
+          {walletView === WALLET_VIEWS.PENDING && (
             <HoverText
               onClick={() => {
                 setPendingError(false)
@@ -329,13 +321,14 @@ export default function WalletModal() {
           <HoverText>
             {walletView === WALLET_VIEWS.ACCOUNT ? (
               <Trans>Connect your Wallet</Trans>
-            ) : walletView === WALLET_VIEWS.CHANGE_WALLET ? (
-              <Trans>Change Wallet</Trans>
             ) : (
               <Trans>Connecting Wallet</Trans>
             )}
           </HoverText>
-        </Row>
+          <CloseIcon onClick={toggleWalletModal}>
+            <Close />
+          </CloseIcon>
+        </RowBetween>
         {(walletView === WALLET_VIEWS.ACCOUNT || walletView === WALLET_VIEWS.CHANGE_WALLET) && (
           <TermAndCondition onClick={() => setIsAcceptedTerm(!isAcceptedTerm)}>
             <input

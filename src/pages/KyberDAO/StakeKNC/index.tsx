@@ -16,6 +16,7 @@ import Divider from 'components/Divider'
 import { RowBetween, RowFit } from 'components/Row'
 import { APP_PATHS } from 'constants/index'
 import useTotalVotingReward from 'hooks/kyberdao/useTotalVotingRewards'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
 import { useToggleModal } from 'state/application/hooks'
@@ -111,7 +112,7 @@ export default function StakeKNC() {
   const { switchToEthereum } = useSwitchToEthereum()
   const { kncPriceETH } = useTotalVotingReward()
   const navigate = useNavigate()
-
+  const { mixpanelHandler } = useMixpanel()
   const handleMigrateClick = () => {
     switchToEthereum().then(() => {
       toggleMigrationModal()
@@ -166,7 +167,14 @@ export default function StakeKNC() {
                 <Trans>The more you stake and vote, the more KNC you will earn. </Trans>
               </Text>
             </CardInfo>
-            <ButtonPrimary onClick={() => navigate('/kyberdao/vote')} width="120px" height="44px">
+            <ButtonPrimary
+              onClick={() => {
+                mixpanelHandler(MIXPANEL_TYPE.KYBER_DAO_VOTE_CLICK)
+                navigate('/kyberdao/vote')
+              }}
+              width="120px"
+              height="44px"
+            >
               Vote
             </ButtonPrimary>
           </Card>
