@@ -139,6 +139,17 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   `};
 `
 
+const ResponsiveButtonConfirmed = styled(ButtonConfirmed)`
+  border-radius: 12px;
+  padding: 6px 8px;
+  width: fit-content;
+  font-size: 16px;
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+    flex: 1 1 auto;
+    width: 49%;
+  `};
+`
+
 const NFTGrid = styled.div`
   display: grid;
   grid-template: 'overlap';
@@ -768,7 +779,7 @@ export function PositionPage() {
                         </AutoColumn>
                         {ownsNFT &&
                         (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash) ? (
-                          <ButtonConfirmed
+                          <ResponsiveButtonConfirmed
                             disabled={collecting || !!collectMigrationHash}
                             confirmed={!!collectMigrationHash && !isCollectPending}
                             width="fit-content"
@@ -794,7 +805,7 @@ export function PositionPage() {
                                 </ThemedText.DeprecatedMain>
                               </>
                             )}
-                          </ButtonConfirmed>
+                          </ResponsiveButtonConfirmed>
                         ) : null}
                       </RowBetween>
                     </AutoColumn>
