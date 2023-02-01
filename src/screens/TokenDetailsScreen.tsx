@@ -8,8 +8,8 @@ import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { AnimatedBox, AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
-import { CurrencyPriceChart } from 'src/components/PriceChart'
-import { useTokenPriceGraphs } from 'src/components/PriceChart/TokenModel'
+import { PriceExplorer } from 'src/components/PriceExplorer/PriceExplorer'
+import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
 import { Text } from 'src/components/Text'
 import { useCrossChainBalances } from 'src/components/TokenDetails/hooks'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
@@ -95,11 +95,12 @@ export function TokenDetailsScreen({
 }: AppStackScreenProp<Screens.TokenDetails>): JSX.Element {
   const { currencyId: _currencyId } = route.params
 
+  // Token details screen query
   const { data, refetch, networkStatus } = useTokenDetailsScreenQuery({
     variables: {
       contract: currencyIdToContractInput(_currencyId),
     },
-    pollInterval: PollingInterval.Fast,
+    pollInterval: PollingInterval.Normal,
     notifyOnNetworkStatusChange: true,
   })
 
@@ -109,11 +110,14 @@ export function TokenDetailsScreen({
 
   const isLoading = !data && isNonPollingRequestInFlight(networkStatus)
 
+  // Preload token price graphs
+  const tokenPriceHistoryResponse = useTokenPriceHistory(_currencyId)
+
   return (
     <TokenDetails
       _currencyId={_currencyId}
       data={data}
-      error={isError(networkStatus, !!data)}
+      error={isError(networkStatus, !!data) || !!tokenPriceHistoryResponse.error}
       loading={isLoading}
       retry={retry}
     />
@@ -146,22 +150,20 @@ function TokenDetails({
     crossChainTokens
   )
 
-  const tokenPriceGraphResponse = useTokenPriceGraphs(_currencyId)
-  const priceGraphError = tokenPriceGraphResponse.error !== undefined
-
   const token = data?.tokens?.[0]
   const tokenLogoUrl = token?.project?.logoUrl
 
   const { tokenColor, tokenColorLoading } = useExtractedTokenColor(
     tokenLogoUrl,
-    theme.colors.background0,
-    theme.colors.textTertiary
+    /*background=*/ theme.colors.background0,
+    /*default=*/ theme.colors.textTertiary
   )
 
   const onPriceChartRetry = (): void => {
-    if (error) {
-      retry()
+    if (!error) {
+      return
     }
+    retry()
   }
 
   // set if attempting buy or sell, use for warning modal
@@ -281,15 +283,17 @@ function TokenDetails({
               loading={loading}
               onPressWarningIcon={(): void => setShowWarningModal(true)}
             />
-            <CurrencyPriceChart
+            <PriceExplorer
               currencyId={_currencyId}
-              tokenColor={tokenColor}
-              tokenColorLoading={tokenColorLoading}
-              tokenPriceGraphResult={tokenPriceGraphResponse}
+              tokenColor={
+                tokenColorLoading
+                  ? theme.colors.textTertiary
+                  : tokenColor ?? theme.colors.magentaVibrant
+              }
               onRetry={onPriceChartRetry}
             />
           </Flex>
-          {error && !priceGraphError ? (
+          {error ? (
             <AnimatedBox entering={FadeInDown} exiting={FadeOutDown} paddingHorizontal="lg">
               <BaseCard.InlineErrorState onRetry={retry} />
             </AnimatedBox>

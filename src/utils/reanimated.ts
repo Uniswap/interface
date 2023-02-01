@@ -8,8 +8,6 @@
  * https://github.com/willsp/polyfill-Number.toLocaleString-with-Locales/blob/master/polyfill.number.toLocaleString.js
  */
 
-import { round } from 'react-native-redash'
-
 function replaceSeparators(
   sNum: string,
   separators: { decimal: string; thousands: string }
@@ -313,7 +311,7 @@ export function numberToLocaleStringWorklet(
     return '-'
   }
 
-  let sNum
+  let sNum: string
 
   // if we encounter any coins with a unit price over $1M then add a shorthand case
   if (value < 0) {
@@ -350,22 +348,21 @@ const DEFAULT_PRECISION = 2
 const DEFAULT_ABSOLUTE = false
 
 export function numberToPercentWorklet(
-  value: number,
+  value?: number,
   options: {
-    precision?: number
-    absolute?: boolean
-  }
+    precision: number
+    absolute: boolean
+  } = { precision: DEFAULT_PRECISION, absolute: DEFAULT_ABSOLUTE }
 ): string {
   'worklet'
 
-  const precision = options.precision ?? DEFAULT_PRECISION
-  const absolute = options.absolute || DEFAULT_ABSOLUTE
+  const { precision, absolute } = options
 
   if (precision < 0) {
     throw new Error('numberToPercentWorklet does not handle negative precision values')
   }
 
-  if (isNaN(value)) {
+  if (value === undefined || isNaN(value)) {
     return '-'
   }
 
@@ -394,4 +391,15 @@ export function numberToPercentWorklet(
   }
 
   return `${shapedValue}${endingZeros}%`
+}
+
+/**
+ * @summary Computes animation node rounded to precision.
+ * from https://github.com/wcandillon/react-native-redash/blob/master/src/Math.ts
+ * @worklet
+ */
+export const round = (value: number, precision = 0): number => {
+  'worklet'
+  const p = Math.pow(10, precision)
+  return Math.round(value * p) / p
 }

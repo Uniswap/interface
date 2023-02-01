@@ -233,6 +233,18 @@ export const TokenProjects: [TokenProject] = [
           id: faker.datatype.uuid(),
           value: 50,
         },
+        priceHistory: [
+          {
+            id: faker.datatype.uuid(),
+            timestamp: faker.date.past(/*year=*/ 2).getMilliseconds(),
+            value: Number(faker.random.numeric(10)),
+          },
+          {
+            id: faker.datatype.uuid(),
+            timestamp: faker.date.past(/*year=*/ 2).getMilliseconds(),
+            value: Number(faker.random.numeric(10)),
+          },
+        ],
       },
     ],
   },

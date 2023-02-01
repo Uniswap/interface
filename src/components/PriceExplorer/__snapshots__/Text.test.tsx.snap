@@ -1,0 +1,285 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DatetimeText renders loading state 1`] = `null`;
+
+exports[`DatetimeText renders without error 1`] = `
+<TextInput
+  allowFontScaling={true}
+  animatedProps={
+    Object {
+      "text": "Thursday, November 1st, 2023",
+    }
+  }
+  editable={false}
+  maxFontSizeMultiplier={1.4}
+  style={
+    Array [
+      Array [
+        Object {
+          "color": "#505A78",
+          "fontFamily": "Inter-Medium",
+          "fontSize": 16,
+          "lineHeight": 24,
+        },
+      ],
+    ]
+  }
+  underlineColorAndroid="transparent"
+  value="Thursday, November 1st, 2023"
+/>
+`;
+
+exports[`PriceText renders loading state 1`] = `
+<View
+  onLayout={[Function]}
+>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "flexDirection": "row",
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+            "position": "relative",
+          },
+        ]
+      }
+    >
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+      >
+        <Text
+          allowFontScaling={true}
+          maxFontSizeMultiplier={1.2}
+          style={
+            Array [
+              Object {
+                "color": "transparent",
+                "display": "flex",
+                "fontFamily": "Inter-SemiBold",
+                "fontSize": 40,
+                "lineHeight": 48,
+                "opacity": 0,
+              },
+            ]
+          }
+        >
+          $10,000
+        </Text>
+      </View>
+      <View
+        style={
+          Array [
+            Object {
+              "backgroundColor": "#E8ECFB",
+              "borderRadius": 4,
+              "bottom": "5%",
+              "display": "flex",
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": "5%",
+            },
+          ]
+        }
+      />
+    </View>
+  </View>
+</View>
+`;
+
+exports[`PriceText renders without error 1`] = `
+<TextInput
+  allowFontScaling={true}
+  animatedProps={
+    Object {
+      "text": "$55.00",
+    }
+  }
+  editable={false}
+  maxFontSizeMultiplier={1.2}
+  style={
+    Array [
+      Array [
+        Object {
+          "color": "#0D111C",
+          "fontFamily": "Inter-SemiBold",
+          "fontSize": 40,
+          "lineHeight": 48,
+        },
+      ],
+    ]
+  }
+  testID="price-text"
+  underlineColorAndroid="transparent"
+  value="$55.00"
+/>
+`;
+
+exports[`RelativeChangeText renders loading state 1`] = `
+<View
+  onLayout={[Function]}
+>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "flexDirection": "row",
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+            "position": "relative",
+          },
+        ]
+      }
+    >
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+      >
+        <Text
+          allowFontScaling={true}
+          maxFontSizeMultiplier={1.4}
+          style={
+            Array [
+              Object {
+                "color": "transparent",
+                "display": "flex",
+                "fontFamily": "Inter-Medium",
+                "fontSize": 16,
+                "lineHeight": 24,
+                "opacity": 0,
+              },
+            ]
+          }
+        >
+          00.00%
+        </Text>
+      </View>
+      <View
+        style={
+          Array [
+            Object {
+              "backgroundColor": "#E8ECFB",
+              "borderRadius": 4,
+              "bottom": "5%",
+              "display": "flex",
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": "5%",
+            },
+          ]
+        }
+      />
+    </View>
+  </View>
+</View>
+`;
+
+exports[`RelativeChangeText renders without error 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "stretch",
+        "display": "flex",
+        "flexDirection": "row",
+        "justifyContent": "flex-start",
+      },
+    ]
+  }
+>
+  <TextInput
+    allowFontScaling={true}
+    animatedProps={
+      Object {
+        "text": "↗",
+      }
+    }
+    editable={false}
+    maxFontSizeMultiplier={1.4}
+    style={
+      Array [
+        Array [
+          Object {
+            "color": "#0D111C",
+            "fontFamily": "Inter-Medium",
+            "fontSize": 16,
+            "lineHeight": 24,
+          },
+          Object {
+            "color": "#40B66B",
+          },
+        ],
+      ]
+    }
+    testID="relative-change-icon"
+    underlineColorAndroid="transparent"
+    value="↗"
+  />
+  <View
+    style={
+      Array [
+        Object {
+          "display": "flex",
+          "flexGrow": 0,
+          "flexShrink": 0,
+          "height": 2,
+          "width": 2,
+        },
+      ]
+    }
+  />
+  <TextInput
+    allowFontScaling={true}
+    animatedProps={
+      Object {
+        "text": "55.00%",
+      }
+    }
+    editable={false}
+    maxFontSizeMultiplier={1.4}
+    style={
+      Array [
+        Array [
+          Object {
+            "color": "#0D111C",
+            "fontFamily": "Inter-Medium",
+            "fontSize": 16,
+            "lineHeight": 24,
+          },
+          Object {
+            "color": "#40B66B",
+          },
+        ],
+      ]
+    }
+    testID="relative-change-text"
+    underlineColorAndroid="transparent"
+    value="55.00%"
+  />
+</View>
+`;

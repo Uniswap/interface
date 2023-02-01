@@ -2,10 +2,10 @@ import React, { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { CHART_HEIGHT } from 'src/components/PriceChart/utils'
+import { CHART_HEIGHT } from 'src/components/PriceExplorer/constants'
 import { Text } from 'src/components/Text'
 
-export function PriceChartError({
+export function PriceExplorerError({
   showRetry,
   onRetry,
 }: Pick<ComponentProps<typeof BaseCard.ErrorState>, 'onRetry'> & {

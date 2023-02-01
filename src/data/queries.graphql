@@ -290,50 +290,6 @@ query TokenDetailsScreen($contract: ContractInput!) {
   }
 }
 
-query TokenPriceCharts($contract: ContractInput!) {
-  tokenProjects(contracts: [$contract]) {
-    id
-    name
-    markets(currencies: [USD]) {
-      id
-      # Data supported for all durations
-      # - HOUR: 5m interval data
-      # - DAY: 5m interval data
-      # - WEEK: hourly interval data
-      # - MONTH: hourly interval data
-      # - YEAR: daily interval data
-      # - MAX: 5m/hourly/daily depending on history duration
-      priceHistory1H: priceHistory(duration: HOUR) {
-        timestamp
-        close: value
-      }
-      priceHistory1D: priceHistory(duration: DAY) {
-        timestamp
-        close: value
-      }
-      priceHistory1W: priceHistory(duration: WEEK) {
-        timestamp
-        close: value
-      }
-      priceHistory1M: priceHistory(duration: MONTH) {
-        timestamp
-        close: value
-      }
-      priceHistory1Y: priceHistory(duration: YEAR) {
-        timestamp
-        close: value
-      }
-    }
-    tokens {
-      id
-      chain
-      address
-      symbol
-      decimals
-    }
-  }
-}
-
 query TokenProjects($contracts: [ContractInput!]!) {
   tokenProjects(contracts: $contracts) {
     id
