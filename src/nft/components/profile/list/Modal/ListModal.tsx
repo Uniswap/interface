@@ -8,7 +8,7 @@ import { useNFTList } from 'nft/hooks'
 import { useReducer } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { BREAKPOINTS, ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 
 import { ListModalSection, Section } from './ListModalSection'
@@ -28,6 +28,11 @@ const ListModalWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    width: 100%;
+    height: 100%;
+  }
 `
 
 const TitleRow = styled(Row)`

@@ -9,13 +9,13 @@ import { BackArrowIcon } from 'nft/components/icons'
 import { headlineLarge, headlineSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
-import { LIST_PAGE_MARGIN } from 'nft/pages/profile/shared'
+import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from 'nft/pages/profile/shared'
 import { ListingStatus, ProfilePageStateType } from 'nft/types'
 import { fetchPrice, formatEth, formatUsdPrice } from 'nft/utils'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import styled, { css } from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { BREAKPOINTS, ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 
 import { ListModal } from './Modal/ListModal'
@@ -98,6 +98,12 @@ const FloatingConfirmationBar = styled(Row)`
   transform: translateX(-50%);
   max-width: 1200px;
   z-index: ${Z_INDEX.under_dropdown};
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    width: calc(100% - ${LIST_PAGE_MARGIN_MOBILE * 2}px);
+    bottom: 68px;
+    padding: 16px 12px;
+  }
 `
 
 const Overlay = styled.div`
@@ -111,6 +117,10 @@ const Overlay = styled.div`
 const ProceedsAndButtonWrapper = styled(Row)`
   width: min-content;
   gap: 40px;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    gap: 20px;
+  }
 `
 
 const ProceedsWrapper = styled(Row)`
@@ -118,8 +128,24 @@ const ProceedsWrapper = styled(Row)`
   gap: 16px;
 `
 
+const EthValueWrapper = styled.span<{ totalEthListingValue: boolean }>`
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 28px;
+  color: ${({ theme, totalEthListingValue }) => (totalEthListingValue ? theme.textPrimary : theme.textSecondary)};
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 16px;
+    line-height: 24px;
+  }
+`
+
 const ListingButtonWrapper = styled.div`
   width: 170px;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    width: 95px;
+  }
 `
 
 export const ListPage = () => {
@@ -165,6 +191,16 @@ export const ListPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMarkets])
 
+  const BannerText = isMobile ? (
+    <ThemedText.SubHeader lineHeight="24px">
+      <Trans>Proceeds</Trans>
+    </ThemedText.SubHeader>
+  ) : (
+    <ThemedText.HeadlineSmall lineHeight="28px">
+      <Trans>Proceeds if sold</Trans>
+    </ThemedText.HeadlineSmall>
+  )
+
   return (
     <Column>
       <MarketWrap isNftListV2={isNftListV2}>
@@ -191,27 +227,22 @@ export const ListPage = () => {
       {isNftListV2 && (
         <>
           <FloatingConfirmationBar>
-            <ThemedText.HeadlineSmall lineHeight="28px">
-              <Trans>Proceeds if sold</Trans>
-            </ThemedText.HeadlineSmall>
+            {BannerText}
             <ProceedsAndButtonWrapper>
               <ProceedsWrapper>
-                <ThemedText.HeadlineSmall
-                  lineHeight="28px"
-                  color={totalEthListingValue ? 'textPrimary' : 'textTertiary'}
-                >
+                <EthValueWrapper totalEthListingValue={!!totalEthListingValue}>
                   {totalEthListingValue > 0 ? formatEth(totalEthListingValue) : '-'} ETH
-                </ThemedText.HeadlineSmall>
-                {!!totalEthListingValue && !!ethPriceInUSD && (
-                  <ThemedText.HeadlineSmall lineHeight="28px" color="textSecondary">
+                </EthValueWrapper>
+                {!!totalEthListingValue && !!ethPriceInUSD && !isMobile && (
+                  <ThemedText.SubHeader lineHeight="24px" color="textSecondary">
                     {formatUsdPrice(totalEthListingValue * ethPriceInUSD)}
-                  </ThemedText.HeadlineSmall>
+                  </ThemedText.SubHeader>
                 )}
               </ProceedsWrapper>
               <ListingButtonWrapper>
                 <ListingButton
                   onClick={isNftListV2 ? toggleShowListModal : toggleBag}
-                  buttonText={anyListingsMissingPrice ? t`Set prices to continue` : t`Start listing`}
+                  buttonText={anyListingsMissingPrice && !isMobile ? t`Set prices to continue` : t`Start listing`}
                 />
               </ListingButtonWrapper>
             </ProceedsAndButtonWrapper>
