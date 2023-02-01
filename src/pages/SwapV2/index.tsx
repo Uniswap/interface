@@ -107,6 +107,7 @@ import { formattedNum, getLimitOrderContract } from 'utils'
 import { Aggregator } from 'utils/aggregator'
 import { currencyId } from 'utils/currencyId'
 import { halfAmountSpend, maxAmountSpend } from 'utils/maxAmountSpend'
+import { captureSwapError } from 'utils/sentry'
 import { getSymbolSlug } from 'utils/string'
 import { checkPairInWhiteList } from 'utils/tokenInfo'
 
@@ -452,6 +453,7 @@ export default function Swap() {
         setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
       })
       .catch(error => {
+        if (error?.code !== 4001 && error?.code !== 'ACTION_REJECTED') captureSwapError(error)
         setSwapState({
           attemptingTxn: false,
           tradeToConfirm,

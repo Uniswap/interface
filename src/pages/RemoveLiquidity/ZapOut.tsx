@@ -59,6 +59,7 @@ import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { formatJSBIValue } from 'utils/formatBalance'
 import { getZapContract } from 'utils/getContract'
 import { computePriceImpactWithoutFee, warningSeverity } from 'utils/prices'
+import { ErrorName } from 'utils/sentry'
 import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
 
 import {
@@ -379,6 +380,11 @@ export default function ZapOut({
               setZapOutError(t`Insufficient Liquidity in the Liquidity Pool to Swap`)
             } else {
               setZapOutError(err?.message)
+              if ((err as any)?.code !== 4001 && (err as any)?.code !== 'ACTION_REJECTED') {
+                const e = new Error('estimate gas zap out failed', { cause: err })
+                e.name = ErrorName.RemoveClassicLiquidityError
+                captureException(e, { extra: { args } })
+              }
             }
 
             return undefined
@@ -428,12 +434,11 @@ export default function ZapOut({
         })
         .catch((err: Error) => {
           setAttemptingTxn(false)
-          const e = new Error('zap out failed', { cause: err })
-          e.name = 'ZapError'
-          captureException(e, { extra: { args } })
           // we only care if the error is something _other_ than the user rejected the tx
-          if ((err as any)?.code !== 4001) {
-            console.error(err)
+          if ((err as any)?.code !== 4001 && (err as any)?.code !== 'ACTION_REJECTED') {
+            const e = new Error('zap out failed', { cause: err })
+            e.name = ErrorName.RemoveClassicLiquidityError
+            captureException(e, { extra: { args } })
           }
 
           if (err.message.includes('INSUFFICIENT_OUTPUT_AMOUNT')) {

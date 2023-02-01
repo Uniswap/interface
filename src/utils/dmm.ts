@@ -536,11 +536,17 @@ export function errorFriendly(text: string): string {
   ) {
     return t`An error occurred. Try refreshing the price rate or increase max slippage`
   }
-  if (error.includes('header not found') || error.includes('swap failed') || error.includes('json-rpc error')) {
+  if (error.includes('header not found') || error.includes('swap failed')) {
     return t`An error occurred. Refresh the page and try again. If the issue still persists, it might be an issue with your RPC node settings in Metamask.`
   }
   if (error.includes('user rejected transaction')) {
     return t`User rejected transaction.`
   }
-  return text
+
+  // classic/elastic remove liquidity error
+  if (error.includes('insufficient')) {
+    return t`An error occurred. Please try increasing max slippage`
+  }
+
+  return t`An error occurred`
 }

@@ -53,6 +53,7 @@ import { TRANSACTION_TYPE } from 'state/transactions/type'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { MEDIA_WIDTHS } from 'theme'
 import { basisPointsToPercent, calculateGasMargin, formattedNum, formattedNumLong, shortenAddress } from 'utils'
+import { ErrorName } from 'utils/sentry'
 import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 
@@ -247,6 +248,24 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     ) {
       setAttemptingTxn(false)
       setRemoveLiquidityError('Some things went wrong')
+
+      const e = new Error('Remove Elastic Liquidity Error')
+      e.name = ErrorName.RemoveElasticLiquidityError
+      captureException(e, {
+        extra: {
+          positionManager,
+          liquidityValue0,
+          liquidityValue1,
+          deadline,
+          account,
+          chainId,
+          feeValue0,
+          feeValue1,
+          positionSDK,
+          liquidityPercentage,
+        },
+      })
+
       return
     }
     // const partialPosition = new Position({
@@ -315,15 +334,18 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       .catch((error: any) => {
         setAttemptingTxn(false)
 
-        const e = new Error('Remove Elastic Liquidity Error', { cause: error })
-        e.name = 'RemoveElasticLiquidityError'
-        captureException(e, {
-          extra: {
-            calldata,
-            value,
-            to: positionManager.address,
-          },
-        })
+        if (error?.code !== 'ACTION_REJECTED') {
+          const e = new Error('Remove Elastic Liquidity Error', { cause: error })
+          e.name = ErrorName.RemoveElasticLiquidityError
+          captureException(e, {
+            extra: {
+              calldata,
+              value,
+              to: positionManager.address,
+            },
+          })
+        }
+
         setRemoveLiquidityError(error?.message || JSON.stringify(error))
       })
   }, [

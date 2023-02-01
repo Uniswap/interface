@@ -2,7 +2,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { t } from '@lingui/macro'
-import { captureException } from '@sentry/react'
 import { SignerWalletAdapter } from '@solana/wallet-adapter-base'
 import { Transaction, VersionedTransaction } from '@solana/web3.js'
 import { ethers } from 'ethers'
@@ -10,8 +9,9 @@ import { ethers } from 'ethers'
 import connection from 'state/connection/connection'
 import { SolanaEncode } from 'state/swap/types'
 import { TRANSACTION_TYPE, TransactionHistory } from 'state/transactions/type'
-// import connection from 'state/connection/connection'
 import { calculateGasMargin } from 'utils'
+
+import { TransactionError } from './sentry'
 
 export async function sendEVMTransaction(
   account: string,
@@ -36,27 +36,7 @@ export async function sendEVMTransaction(
     gasEstimate = await library.getSigner().estimateGas(estimateGasOption)
     if (!gasEstimate) throw new Error('gasEstimate is nullish value')
   } catch (error) {
-    const e = new Error('Swap failed', { cause: error })
-    e.name = 'SwapError'
-
-    const tmp = JSON.stringify(error)
-    const tag = tmp.includes('minTotalAmountOut')
-      ? 'minTotalAmountOut'
-      : tmp.includes('ERR_LIMIT_OUT')
-      ? 'ERR_LIMIT_OUT'
-      : tmp.toLowerCase().includes('1inch')
-      ? 'call1InchFailed'
-      : 'other'
-
-    captureException(e, {
-      level: 'fatal',
-      extra: estimateGasOption,
-      tags: {
-        type: tag,
-      },
-    })
-
-    throw new Error('gasEstimate not found: Unexpected error. Please contact support: none of the calls threw an error')
+    throw new TransactionError(error, estimateGasOption)
   }
 
   const sendTransactionOption = {
@@ -72,33 +52,7 @@ export async function sendEVMTransaction(
     handler?.(response)
     return response
   } catch (error) {
-    // if the user rejected the tx, pass this along
-    if (error?.code === 4001 || error?.code === 'ACTION_REJECTED') {
-      throw new Error('Transaction rejected.')
-    } else {
-      const e = new Error('Swap failed', { cause: error })
-      e.name = 'SwapError'
-
-      const tmp = JSON.stringify(error)
-      const tag = tmp.includes('minTotalAmountOut')
-        ? 'minTotalAmountOut'
-        : tmp.includes('ERR_LIMIT_OUT')
-        ? 'ERR_LIMIT_OUT'
-        : tmp.toLowerCase().includes('1inch')
-        ? 'call1InchFailed'
-        : 'other'
-
-      captureException(e, {
-        level: 'error',
-        extra: sendTransactionOption,
-        tags: {
-          type: tag,
-        },
-      })
-
-      // Otherwise, the error was unexpected, and we need to convey that.
-      throw new Error(error)
-    }
+    throw new TransactionError(error, sendTransactionOption)
   }
 }
 

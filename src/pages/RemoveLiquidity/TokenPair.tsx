@@ -50,6 +50,7 @@ import {
   getOldStaticFeeRouterContract,
   getStaticFeeRouterContract,
 } from 'utils/getContract'
+import { ErrorName } from 'utils/sentry'
 import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
 
 import {
@@ -336,7 +337,11 @@ export default function TokenPair({
           .then(calculateGasMargin)
           .catch(error => {
             console.error(`estimateGas failed`, methodName, args, error)
-            setRemoveLiquidityError(error.toString())
+            const e = new Error('Remove Classic Liquidity Error', { cause: error })
+            e.name = ErrorName.RemoveClassicLiquidityError
+            captureException(e, { extra: { methodName, args } })
+
+            setRemoveLiquidityError(error?.message || JSON.stringify(error))
             return undefined
           }),
       ),
@@ -390,18 +395,19 @@ export default function TokenPair({
         })
         .catch((err: Error) => {
           setAttemptingTxn(false)
-          const e = new Error('Remove Liquidity Error', { cause: err })
-          e.name = 'RemoveLiquidityError'
-          captureException(e, { extra: { args } })
           // we only care if the error is something _other_ than the user rejected the tx
-          if ((err as any)?.code !== 4001) {
-            console.error(err)
+          if ((err as any)?.code !== 4001 && (err as any)?.code !== 'ACTION_REJECTED') {
+            const e = new Error('Remove Classic Liquidity Error', { cause: err })
+            e.name = ErrorName.RemoveClassicLiquidityError
+            captureException(e, { extra: { args } })
           }
 
           if (err.message.includes('INSUFFICIENT')) {
-            setRemoveLiquidityError(t`Insufficient liquidity available. Please reload page and try again!`)
+            setRemoveLiquidityError(
+              t`Insufficient liquidity available. Please reload page or increase max slippage and try again!`,
+            )
           } else {
-            setRemoveLiquidityError(err?.message)
+            setRemoveLiquidityError(err?.message || JSON.stringify(err))
           }
         })
     }

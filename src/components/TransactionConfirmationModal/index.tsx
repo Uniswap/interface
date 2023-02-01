@@ -269,7 +269,9 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
               >
                 Show more details
               </Text>
-              {showDetail && <ErrorDetail>{message}</ErrorDetail>}
+              {showDetail && (
+                <ErrorDetail>{typeof message === 'string' ? message : JSON.stringify(message)}</ErrorDetail>
+              )}
             </AutoColumn>
           )}
         </AutoColumn>
