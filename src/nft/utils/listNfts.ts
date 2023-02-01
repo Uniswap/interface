@@ -92,7 +92,7 @@ export async function approveCollection(
   // setApprovalForAll() method
   const ERC721Contract = new Contract(collectionAddress, ERC721, signer)
   const signerAddress = await signer.getAddress()
-  setStatus(ListingStatus.PENDING)
+
   try {
     const approved = await ERC721Contract.isApprovedForAll(signerAddress, operator)
     if (approved) {
