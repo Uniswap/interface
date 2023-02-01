@@ -1,9 +1,10 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import { rgba } from 'polished'
-import React, { useRef, useState } from 'react'
+import { stringify } from 'querystring'
+import React, { useEffect, useRef, useState } from 'react'
 import { ArrowDown, ChevronDown, Repeat, X } from 'react-feather'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Image, Text } from 'rebass'
 import styled, { keyframes } from 'styled-components'
@@ -33,6 +34,7 @@ import { TRANSAK_API_KEY, TRANSAK_URL } from 'constants/env'
 import { SUPPORTED_WALLETS } from 'constants/wallets'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import useParsedQueryString from 'hooks/useParsedQueryString'
 import useTheme from 'hooks/useTheme'
 import { KSStatistic } from 'pages/About/AboutKyberSwap'
 import { useWalletModalToggle } from 'state/application/hooks'
@@ -266,6 +268,20 @@ function BuyCrypto() {
         break
     }
   }
+
+  const qs = useParsedQueryString<{ step?: string }>()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    setTimeout(() => {
+      const { step, ...rest } = qs
+      const stepNumber = Number(step)
+      if (!isNaN(stepNumber)) {
+        handleStepClick(stepNumber)
+        navigate({ search: stringify(rest) })
+      }
+    }, 500)
+  }, [qs, navigate])
 
   return (
     <>

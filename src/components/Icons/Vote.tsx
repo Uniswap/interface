@@ -1,6 +1,6 @@
-export default function VoteIcon({ size }: { size?: string | number }) {
+export default function VoteIcon({ size = 16 }: { size?: string | number }) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
       <g clipPath="url(#clip0_736_23115)">
         <path
           d="M12 8.11914L11 9.21247L12.3333 10.6658H3.66667L5 9.21247L4 8.11914L2 10.2991V13.3325C2 14.0658 2.6 14.6658 3.33333 14.6658H12.6667C13.4 14.6658 14 14.0658 14 13.3325V10.3058L12 8.11914Z"

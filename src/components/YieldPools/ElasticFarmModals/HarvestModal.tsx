@@ -105,7 +105,7 @@ function HarvestModal({
         }
       })
 
-    const tx = await harvest(nftIds, poolIds)
+    const tx = await harvest(nftIds, poolIds, selectedPool, Object.values(rewards))
     if (tx) {
       onDismiss()
       if (poolId === null) {

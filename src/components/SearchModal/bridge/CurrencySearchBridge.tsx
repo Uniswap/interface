@@ -41,7 +41,7 @@ export default function CurrencySearchBridge({
   const [{ listTokenIn, listTokenOut }] = useBridgeState()
 
   const fetchedTokens = isOutput ? listTokenOut : listTokenIn
-  const tokenComparator = useTokenComparator(false, true)
+  const tokenComparator = useTokenComparator(false)
 
   const isAddressSearch = isAddress(chainId, debouncedQuery)
 

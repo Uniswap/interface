@@ -6,7 +6,6 @@ import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 
 import { EVMNetworkInfo } from 'constants/networks/type'
-import { NativeCurrencies } from 'constants/tokens'
 import { useTokenAllowance } from 'data/Allowances'
 import { Field } from 'state/swap/actions'
 import { useHasPendingApproval, useTransactionAdder } from 'state/transactions/hooks'
@@ -31,7 +30,7 @@ export function useApproveCallback(
   spender?: string,
   forceApprove = false,
 ): [ApprovalState, () => Promise<void>] {
-  const { account, chainId, isSolana } = useActiveWeb3React()
+  const { account, isSolana } = useActiveWeb3React()
   const token = amountToApprove?.currency.wrapped
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
@@ -113,17 +112,18 @@ export function useApproveCallback(
         addTransactionWithType({
           hash: response.hash,
           type: TRANSACTION_TYPE.APPROVE,
-          summary: amountToApprove?.currency?.isNative
-            ? NativeCurrencies[chainId].symbol
-            : amountToApprove?.currency?.symbol,
-          approval: { tokenAddress: token.address, spender: spender },
+          extraInfo: {
+            tokenSymbol: token.symbol ?? '',
+            tokenAddress: token.address,
+            contract: spender,
+          },
         })
       })
       .catch((error: Error) => {
         console.debug('Failed to approve token', error)
         throw error
       })
-  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransactionWithType, chainId, forceApprove])
+  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransactionWithType, forceApprove])
 
   return [approvalState, approve]
 }

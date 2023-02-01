@@ -526,7 +526,8 @@ export function errorFriendly(text: string): string {
   const error = text?.toLowerCase() || ''
   if (!error || error.includes('router: expired')) {
     return 'An error occurred. Refresh the page and try again '
-  } else if (
+  }
+  if (
     error.includes('mintotalamountout') ||
     error.includes('err_limit_out') ||
     error.includes('return amount is not enough') ||
@@ -534,7 +535,12 @@ export function errorFriendly(text: string): string {
     error.includes('none of the calls threw an error')
   ) {
     return t`An error occurred. Try refreshing the price rate or increase max slippage`
-  } else if (error.includes('header not found') || error.includes('swap failed') || error.includes('json-rpc error')) {
+  }
+  if (error.includes('header not found') || error.includes('swap failed') || error.includes('json-rpc error')) {
     return t`An error occurred. Refresh the page and try again. If the issue still persists, it might be an issue with your RPC node settings in Metamask.`
-  } else return text
+  }
+  if (error.includes('user rejected transaction')) {
+    return t`User rejected transaction.`
+  }
+  return text
 }

@@ -77,11 +77,11 @@ interface CurrencySearchProps {
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency | null
   showCommonBases?: boolean
-  showManageView: () => void
-  showImportView: () => void
   setImportToken: (token: Token) => void
   customChainId?: ChainId
   filterWrap?: boolean
+  title?: string
+  tooltip?: ReactNode
 }
 
 const PAGE_SIZE = 20
@@ -133,10 +133,11 @@ export function CurrencySearch({
   showCommonBases,
   onDismiss,
   isOpen,
-  showImportView,
   setImportToken,
   customChainId,
   filterWrap = false,
+  title,
+  tooltip,
 }: CurrencySearchProps) {
   const { chainId: web3ChainId } = useActiveWeb3React()
   const chainId = customChainId || web3ChainId
@@ -379,17 +380,21 @@ export function CurrencySearch({
       <PaddedColumn gap="14px">
         <RowBetween>
           <Text fontWeight={500} fontSize={20} display="flex">
-            <Trans>Select a token</Trans>
+            {title || <Trans>Select a token</Trans>}
             <InfoHelper
               zIndexTooltip={Z_INDEXS.MODAL}
               size={16}
+              fontSize={14}
               text={
-                <Trans>
-                  Find a token by searching for its name or symbol or by pasting its address below
-                  <br />
-                  <br />
-                  You can select and trade any token on KyberSwap.
-                </Trans>
+                tooltip || (
+                  <Text>
+                    <Trans>
+                      Find a token by searching for its name or symbol or by pasting its address below.
+                      <br />
+                      You can select and trade any token on KyberSwap.
+                    </Trans>
+                  </Text>
+                )
               }
             />
           </Text>
@@ -417,7 +422,6 @@ export function CurrencySearch({
 
         {showCommonBases && (
           <CommonBases
-            chainId={chainId}
             tokens={filteredCommonTokens}
             handleToggleFavorite={handleClickFavorite}
             onSelect={handleCurrencySelect}
@@ -475,12 +479,11 @@ export function CurrencySearch({
           listTokenRef={listTokenRef}
           removeImportedToken={removeImportedToken}
           currencies={visibleCurrencies}
-          isImportedTab={isImportedTab}
+          showImported={isImportedTab}
           handleClickFavorite={handleClickFavorite}
           onCurrencySelect={handleCurrencySelect}
           otherCurrency={otherSelectedCurrency}
           selectedCurrency={selectedCurrency}
-          showImportView={showImportView}
           setImportToken={setImportToken}
           loadMoreRows={fetchListTokens}
           hasMore={hasMoreToken}

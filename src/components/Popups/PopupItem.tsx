@@ -145,9 +145,9 @@ export default function PopupItem({
       break
     }
     case PopupType.TRANSACTION: {
-      const { hash, type, summary, notiType: _notiType = NotificationType.ERROR } = content as PopupContentTxn
+      const { hash, notiType: _notiType = NotificationType.ERROR } = content as PopupContentTxn
       notiType = _notiType
-      popupContent = <TransactionPopup hash={hash} notiType={notiType} type={type} summary={summary} />
+      popupContent = <TransactionPopup hash={hash} notiType={notiType} />
       break
     }
   }

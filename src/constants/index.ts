@@ -43,7 +43,10 @@ export const PROMM_ANALYTICS_URL: { [chainId in ChainId]: string } = SUPPORTED_N
   if (isEVM(cur))
     return {
       ...acc,
-      [cur]: `${PROMM_ANALYTICS}/${NETWORKS_INFO[cur].route}`,
+      [cur]:
+        cur === ChainId.AURORA
+          ? `${DMM_ANALYTICS}/${NETWORKS_INFO[cur].route}`
+          : `${PROMM_ANALYTICS}/${NETWORKS_INFO[cur].route}`,
     }
   return {
     ...acc,

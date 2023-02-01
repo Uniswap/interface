@@ -1,10 +1,11 @@
 import { Trans, t } from '@lingui/macro'
-import { ChangeEvent, useCallback } from 'react'
+import { ChangeEvent, ReactNode, useCallback } from 'react'
 import { Flex, Text } from 'rebass'
-import styled from 'styled-components'
+import styled, { CSSProperties } from 'styled-components'
 
 import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
 import { AutoColumn } from 'components/Column'
+import Row from 'components/Row'
 import { useActiveWeb3React } from 'hooks'
 import useENS from 'hooks/useENS'
 import useTheme from 'hooks/useTheme'
@@ -71,6 +72,51 @@ const DropdownIcon = styled(DropdownSVG)<{ open: boolean }>`
   transform: rotate(${({ open }) => (open ? '-180deg' : 0)});
 `
 
+export const AddressInput = ({
+  onChange,
+  value,
+  error = false,
+  placeholder,
+  icon,
+  disabled = false,
+  style = {},
+  className,
+}: {
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+  error?: boolean
+  value: string | null
+  placeholder?: string
+  icon?: ReactNode
+  disabled?: boolean
+  className?: string
+  style?: CSSProperties
+}) => {
+  return (
+    <ContainerRow error={error} className={className}>
+      <InputContainer>
+        <Row gap="5px">
+          <Input
+            style={style}
+            disabled={disabled}
+            className="recipient-address-input"
+            type="text"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck="false"
+            placeholder={placeholder || t`Wallet Address or ENS name`}
+            error={error}
+            pattern="^(0x[a-fA-F0-9]{40})$"
+            onChange={onChange}
+            value={value || ''}
+          />
+          {icon}
+        </Row>
+      </InputContainer>
+    </ContainerRow>
+  )
+}
+
 export default function AddressInputPanel({
   id,
   value,
@@ -116,25 +162,7 @@ export default function AddressInputPanel({
       </Flex>
 
       <InputPanel id={id} style={{ maxHeight: value === null ? 0 : '44px' }}>
-        <ContainerRow error={error}>
-          <InputContainer>
-            <AutoColumn gap="md">
-              <Input
-                className="recipient-address-input"
-                type="text"
-                autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="off"
-                spellCheck="false"
-                placeholder={t`Wallet Address or ENS name`}
-                error={error}
-                pattern="^(0x[a-fA-F0-9]{40})$"
-                onChange={handleInput}
-                value={value || ''}
-              />
-            </AutoColumn>
-          </InputContainer>
-        </ContainerRow>
+        <AddressInput onChange={handleInput} value={value || ''} error={error} />
       </InputPanel>
     </AutoColumn>
   )

@@ -3,10 +3,26 @@ import { useCallback } from 'react'
 
 import { CONTRACT_NOT_FOUND_MSG } from 'constants/messages'
 import { useFairLaunchContract } from 'hooks/useContract'
+import { Farm, Reward } from 'state/farms/types'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import { TRANSACTION_TYPE } from 'state/transactions/type'
+import { TRANSACTION_TYPE, TransactionExtraInfoHarvestFarm } from 'state/transactions/type'
 import { calculateGasMargin } from 'utils'
 import { getFullDisplayBalance } from 'utils/formatBalance'
+
+const getTransactionExtraInfo = (farm: Farm | null, farmRewards: Reward[]): TransactionExtraInfoHarvestFarm => {
+  return {
+    contract: farm?.id,
+    tokenAddressIn: farm?.token0?.id,
+    tokenAddressOut: farm?.token1?.id,
+    tokenSymbolIn: farm?.token0?.symbol,
+    tokenSymbolOut: farm?.token1?.symbol,
+    rewards: farmRewards.map(reward => ({
+      tokenSymbol: reward.token.symbol ?? '',
+      tokenAmount: getFullDisplayBalance(reward.amount, reward.token.decimals),
+      tokenAddress: reward.token.address,
+    })),
+  }
+}
 
 const useFairLaunch = (address: string) => {
   const addTransactionWithType = useTransactionAdder()
@@ -62,7 +78,7 @@ const useFairLaunch = (address: string) => {
       addTransactionWithType({
         hash: tx.hash,
         type: TRANSACTION_TYPE.STAKE,
-        summary: `${getFullDisplayBalance(amount)} ${name} Tokens`,
+        extraInfo: { summary: `${getFullDisplayBalance(amount)} ${name} Tokens` },
       })
 
       return tx.hash
@@ -84,7 +100,7 @@ const useFairLaunch = (address: string) => {
       addTransactionWithType({
         hash: tx.hash,
         type: TRANSACTION_TYPE.UNSTAKE,
-        summary: `${getFullDisplayBalance(amount)} ${name} Tokens`,
+        extraInfo: { summary: `${getFullDisplayBalance(amount)} ${name} Tokens` },
       })
 
       return tx.hash
@@ -93,7 +109,7 @@ const useFairLaunch = (address: string) => {
   )
 
   const harvest = useCallback(
-    async (pid: number, _name: string) => {
+    async (pid: number, farm: Farm, farmRewards: Reward[]) => {
       if (!fairLaunchContract) {
         throw new Error(CONTRACT_NOT_FOUND_MSG)
       }
@@ -102,7 +118,12 @@ const useFairLaunch = (address: string) => {
       const tx = await fairLaunchContract.harvest(pid, {
         gasLimit: calculateGasMargin(estimateGas),
       })
-      addTransactionWithType({ hash: tx.hash, type: TRANSACTION_TYPE.HARVEST })
+
+      addTransactionWithType({
+        hash: tx.hash,
+        type: TRANSACTION_TYPE.HARVEST,
+        extraInfo: getTransactionExtraInfo(farm, farmRewards),
+      })
 
       return tx.hash
     },
@@ -110,7 +131,7 @@ const useFairLaunch = (address: string) => {
   )
 
   const harvestMultiplePools = useCallback(
-    async (pids: number[]) => {
+    async (pids: number[], farmRewards: Reward[]) => {
       if (!fairLaunchContract) {
         throw new Error(CONTRACT_NOT_FOUND_MSG)
       }
@@ -119,7 +140,11 @@ const useFairLaunch = (address: string) => {
       const tx = await fairLaunchContract.harvestMultiplePools(pids, {
         gasLimit: calculateGasMargin(estimateGas),
       })
-      addTransactionWithType({ hash: tx.hash, type: TRANSACTION_TYPE.HARVEST })
+      addTransactionWithType({
+        hash: tx.hash,
+        type: TRANSACTION_TYPE.HARVEST,
+        extraInfo: getTransactionExtraInfo(null, farmRewards),
+      })
 
       return tx.hash
     },

@@ -1,7 +1,8 @@
 import { Currency } from '@kyberswap/ks-sdk-core'
-import styled from 'styled-components'
+import styled, { CSSProperties } from 'styled-components'
 
 import CurrencyLogo from 'components/CurrencyLogo'
+import Logo from 'components/Logo'
 
 const Wrapper = styled.div<{ margin: boolean; sizeraw: number }>`
   position: relative;
@@ -47,6 +48,35 @@ export default function DoubleCurrencyLogo({
       {currency1 && (
         <CoveredLogo sizeraw={size}>
           <CurrencyLogo currency={currency1} size={size.toString() + 'px'} />
+        </CoveredLogo>
+      )}
+    </Wrapper>
+  )
+}
+
+export function DoubleCurrencyLogoV2({
+  logoUrl1,
+  logoUrl2,
+  size = 16,
+  margin = true,
+  style = {},
+}: {
+  logoUrl1: string
+  logoUrl2: string
+  size: number
+  margin?: boolean
+  style?: CSSProperties
+}) {
+  return (
+    <Wrapper sizeraw={size} margin={margin} style={style}>
+      {logoUrl1 && (
+        <HigherLogo>
+          <Logo srcs={[logoUrl1]} style={{ width: size, height: size }} />
+        </HigherLogo>
+      )}
+      {logoUrl2 && (
+        <CoveredLogo sizeraw={size}>
+          <Logo srcs={[logoUrl2]} style={{ width: size, height: size }} />
         </CoveredLogo>
       )}
     </Wrapper>

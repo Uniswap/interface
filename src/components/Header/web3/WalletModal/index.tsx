@@ -13,10 +13,10 @@ import styled from 'styled-components'
 import { ReactComponent as Close } from 'assets/images/x.svg'
 import { AutoColumn } from 'components/Column'
 import ExpandableBox from 'components/ExpandableBox'
-import AccountDetails from 'components/Header/web3/AccountDetails'
 import WarningIcon from 'components/Icons/WarningIcon'
 import Modal from 'components/Modal'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
+import WalletPopup from 'components/WalletPopup'
 import { APP_PATHS, TERM_FILES_PATH } from 'constants/index'
 import { SUPPORTED_WALLET, SUPPORTED_WALLETS, WalletInfo } from 'constants/wallets'
 import { useActiveWeb3React, useWeb3React } from 'hooks'
@@ -25,7 +25,13 @@ import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import usePrevious from 'hooks/usePrevious'
 import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
-import { useModalOpen, useOpenNetworkModal, useWalletModalToggle } from 'state/application/hooks'
+import {
+  useCloseModal,
+  useModalOpen,
+  useOpenModal,
+  useOpenNetworkModal,
+  useWalletModalToggle,
+} from 'state/application/hooks'
 import { useIsAcceptedTerm, useIsUserManuallyDisconnect } from 'state/user/hooks'
 import { ExternalLink } from 'theme'
 import { isEVMWallet, isOverriddenWallet, isSolanaWallet } from 'utils'
@@ -83,6 +89,7 @@ const TermAndCondition = styled.div`
 `
 
 const UpperSection = styled.div`
+  position: relative;
   padding: 24px;
   position: relative;
 `
@@ -157,6 +164,8 @@ export default function WalletModal() {
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()
+  const closeWalletModal = useCloseModal(ApplicationModal.WALLET)
+  const openWalletModal = useOpenModal(ApplicationModal.WALLET)
   const openNetworkModal = useOpenNetworkModal()
 
   const previousAccount = usePrevious(account)
@@ -277,6 +286,9 @@ export default function WalletModal() {
     )
   }
 
+  const showAccount = account && walletView === WALLET_VIEWS.ACCOUNT
+  const [isPinnedPopupWallet, setPinnedPopupWallet] = useState(false)
+
   function getModalContent() {
     if (error) {
       return (
@@ -293,14 +305,6 @@ export default function WalletModal() {
             <Trans>Error connecting. Try refreshing the page.</Trans>
           </ContentWrapper>
         </UpperSection>
-      )
-    }
-    if (account && walletView === WALLET_VIEWS.ACCOUNT) {
-      return (
-        <AccountDetails
-          toggleWalletModal={toggleWalletModal}
-          openOptions={() => setWalletView(WALLET_VIEWS.CHANGE_WALLET)}
-        />
       )
     }
 
@@ -432,8 +436,20 @@ export default function WalletModal() {
     )
   }
 
+  if (showAccount) {
+    return (
+      <WalletPopup
+        isPinned={isPinnedPopupWallet}
+        setPinned={setPinnedPopupWallet}
+        isModalOpen={walletModalOpen}
+        onDismissModal={closeWalletModal}
+        onOpenModal={openWalletModal}
+      />
+    )
+  }
+
   return (
-    <Modal isOpen={walletModalOpen} onDismiss={toggleWalletModal} minHeight={false} maxHeight={90} maxWidth={600}>
+    <Modal isOpen={walletModalOpen} onDismiss={closeWalletModal} minHeight={false} maxHeight={90} maxWidth={600}>
       <Wrapper>{getModalContent()}</Wrapper>
     </Modal>
   )

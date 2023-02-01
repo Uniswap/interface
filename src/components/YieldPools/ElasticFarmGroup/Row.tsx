@@ -62,7 +62,7 @@ const Row = ({
   isApprovedForAll: boolean
   fairlaunchAddress: string
   pool: Pool
-  onOpenModal: (modalType: 'deposit' | 'withdraw' | 'stake' | 'unstake', pid?: number | string) => void
+  onOpenModal: (modalType: 'deposit' | 'withdraw' | 'stake' | 'unstake', pool?: FarmingPool) => void
   onHarvest: () => void
   tokenPrices: { [key: string]: number }
 }) => {
@@ -212,7 +212,7 @@ const Row = ({
         placement="top"
         width="300px"
       >
-        <MinimalActionButton onClick={() => onOpenModal('stake', Number(farmingPool.pid))}>
+        <MinimalActionButton onClick={() => onOpenModal('stake', farmingPool)}>
           <Plus size={16} />
         </MinimalActionButton>
       </MouseoverTooltipDesktopOnly>
@@ -234,10 +234,7 @@ const Row = ({
         placement="top"
         width="300px"
       >
-        <MinimalActionButton
-          colorScheme={ButtonColorScheme.Red}
-          onClick={() => onOpenModal('unstake', Number(farmingPool.pid))}
-        >
+        <MinimalActionButton colorScheme={ButtonColorScheme.Red} onClick={() => onOpenModal('unstake', farmingPool)}>
           <Minus size={16} />
         </MinimalActionButton>
       </MouseoverTooltipDesktopOnly>
@@ -276,9 +273,9 @@ const Row = ({
         rewardValue={rewardValue}
         rewardPendings={rewardPendings}
         onHarvest={onHarvest}
-        onStake={() => onOpenModal('stake', Number(farmingPool.pid))}
+        onStake={() => onOpenModal('stake', farmingPool)}
         disableStake={!isApprovedForAll || !canStake || !isFarmStarted}
-        onUnstake={() => onOpenModal('unstake', Number(farmingPool.pid))}
+        onUnstake={() => onOpenModal('unstake', farmingPool)}
         disableUnstake={!canUnstake}
         farmAddress={fairlaunchAddress}
         tokenPrices={tokenPrices}

@@ -8,7 +8,7 @@ import { NativeCurrencies } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import connection from 'state/connection/connection'
 import { useAllTransactions } from 'state/transactions/hooks'
-import { isAddress } from 'utils'
+import { isAddress, isWalletAddressSolana } from 'utils'
 import { wait } from 'utils/retry'
 
 export const useSOLBalance = (uncheckedAddress?: string): CurrencyAmount<Currency> | undefined => {
@@ -161,4 +161,23 @@ export function useTokensBalanceSolana(tokens?: Token[]): [TokenAmount | undefin
     () => tokens?.map(token => [tokensBalance[token.address] || undefined, !tokensBalance[token.address]]) ?? [],
     [tokensBalance, tokens],
   )
+}
+
+export function useCheckAddressSolana(addr: string) {
+  const [loading, setLoading] = useState(true)
+  const [address, setAddress] = useState<string | null>(null)
+
+  useEffect(() => {
+    setLoading(true)
+    isWalletAddressSolana(addr)
+      .then(() => {
+        setAddress(addr)
+      })
+      .catch(() => setAddress(null))
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [addr])
+
+  return { address, loading }
 }

@@ -13,9 +13,11 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import Loader from 'components/Loader'
 import { RowBetween, RowFixed } from 'components/Row'
 import { useActiveWeb3React } from 'hooks'
+import useTheme from 'hooks/useTheme'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { useUserAddedTokens, useUserFavoriteTokens } from 'state/user/hooks'
 import { useCurrencyBalances } from 'state/wallet/hooks'
+import { formattedNum } from 'utils'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 
 import ImportRow from './ImportRow'
@@ -51,20 +53,19 @@ const DeleteButton = styled(Trash)`
   }
 `
 
-const CurrencyRowWrapper = styled(RowBetween)`
+const CurrencyRowWrapper = styled(RowBetween)<{ hoverColor?: string }>`
   padding: 4px 20px;
   height: 56px;
   display: flex;
   gap: 16px;
   cursor: pointer;
-
   &[data-selected='true'] {
     background: ${({ theme }) => rgba(theme.bg8, 0.15)};
   }
 
   @media (hover: hover) {
     :hover {
-      background: ${({ theme }) => theme.buttonBlack};
+      background: ${({ theme, hoverColor }) => hoverColor || theme.buttonBlack};
     }
   }
 `
@@ -86,35 +87,37 @@ export const getDisplayTokenInfo = (currency: Currency) => {
 }
 export function CurrencyRow({
   currency,
-  isImportedTab,
+  showImported,
   currencyBalance,
   onSelect,
   isSelected,
   otherSelected,
-  style,
+  style = {},
   handleClickFavorite,
   removeImportedToken,
   showFavoriteIcon = true,
-  showBalance = true,
   customName,
-  poolLiquidity,
+  customBalance,
+  usdBalance,
+  hoverColor,
 }: {
-  isImportedTab?: boolean
-  showBalance?: boolean
+  showImported?: boolean
   showFavoriteIcon?: boolean
   currency: Currency
   currencyBalance: CurrencyAmount<Currency>
-  onSelect: () => void
+  onSelect?: (currency: Currency) => void
   isSelected: boolean
-  otherSelected: boolean
-  style: CSSProperties
+  otherSelected?: boolean
+  style?: CSSProperties
   handleClickFavorite?: (e: React.MouseEvent, currency: Currency) => void
   removeImportedToken?: (token: Token) => void
   customName?: ReactNode
-  poolLiquidity?: number | string | undefined
+  customBalance?: ReactNode
+  usdBalance?: number
+  hoverColor?: string
 }) {
   const { chainId, account } = useActiveWeb3React()
-
+  const theme = useTheme()
   const nativeCurrency = useCurrencyConvertedToNative(currency || undefined)
 
   const { favoriteTokens } = useUserFavoriteTokens(chainId)
@@ -143,29 +146,41 @@ export function CurrencyRow({
   const balanceComponent = currencyBalance ? <Balance balance={currencyBalance} /> : account ? <Loader /> : null
   const { symbol } = getDisplayTokenInfo(currency)
   return (
-    <CurrencyRowWrapper style={style} onClick={() => onSelect()} data-selected={isSelected || otherSelected}>
+    <CurrencyRowWrapper
+      style={style}
+      hoverColor={hoverColor}
+      onClick={() => onSelect?.(currency)}
+      data-selected={isSelected || otherSelected}
+    >
       <Flex alignItems="center" style={{ gap: 8 }}>
         <CurrencyLogo currency={currency} size={'24px'} />
-        <Column>
+        <Column gap="2px">
           <Text title={currency.name} fontWeight={500}>
             {customName || symbol}
           </Text>
-          <DescText>{isImportedTab ? balanceComponent : nativeCurrency?.name}</DescText>
+          <DescText>{showImported ? balanceComponent : nativeCurrency?.name}</DescText>
         </Column>
       </Flex>
 
-      <RowFixed style={{ justifySelf: 'flex-end', gap: 15 }}>
-        {isImportedTab ? (
-          <DeleteButton onClick={onClickRemove} />
-        ) : showBalance ? (
-          balanceComponent
-        ) : poolLiquidity ? (
-          poolLiquidity
-        ) : null}
-        {showFavoriteIcon && (
-          <FavoriteButton onClick={e => handleClickFavorite?.(e, currency)} data-active={isFavorite} />
+      <Column style={{ alignItems: 'flex-end', gap: 2 }}>
+        <RowFixed style={{ justifySelf: 'flex-end', gap: 15 }}>
+          {showImported ? (
+            <DeleteButton onClick={onClickRemove} />
+          ) : customBalance !== undefined ? (
+            customBalance
+          ) : (
+            balanceComponent
+          )}
+          {showFavoriteIcon && (
+            <FavoriteButton onClick={e => handleClickFavorite?.(e, currency)} data-active={isFavorite} />
+          )}
+        </RowFixed>
+        {usdBalance !== undefined && (
+          <Text fontSize={'12px'} color={theme.subText}>
+            {formattedNum(usdBalance + '', true)}
+          </Text>
         )}
-      </RowFixed>
+      </Column>
     </CurrencyRowWrapper>
   )
 }
@@ -180,29 +195,31 @@ interface TokenRowProps {
 function CurrencyList({
   currencies,
   selectedCurrency,
-  isImportedTab,
+  showImported,
   onCurrencySelect,
   otherCurrency,
-  showImportView,
   setImportToken,
   handleClickFavorite,
   removeImportedToken,
   loadMoreRows,
   hasMore,
   listTokenRef,
+  showFavoriteIcon,
+  itemStyle = {},
 }: {
-  isImportedTab: boolean
-  hasMore: boolean
+  showFavoriteIcon?: boolean
+  showImported?: boolean
+  hasMore?: boolean
   currencies: Currency[]
   selectedCurrency?: Currency | null
-  onCurrencySelect: (currency: Currency) => void
+  onCurrencySelect?: (currency: Currency) => void
   otherCurrency?: Currency | null
-  showImportView: () => void
-  setImportToken: (token: Token) => void
-  handleClickFavorite: (e: React.MouseEvent, currency: Currency) => void
-  removeImportedToken: (token: Token) => void
-  loadMoreRows: () => Promise<void>
-  listTokenRef: React.Ref<HTMLDivElement>
+  setImportToken?: (token: Token) => void
+  handleClickFavorite?: (e: React.MouseEvent, currency: Currency) => void
+  removeImportedToken?: (token: Token) => void
+  loadMoreRows?: () => Promise<void>
+  listTokenRef?: React.Ref<HTMLDivElement>
+  itemStyle?: CSSProperties
 }) {
   const currencyBalances = useCurrencyBalances(currencies)
 
@@ -210,7 +227,6 @@ function CurrencyList({
     function TokenRow({ style, currency, currencyBalance }: TokenRowProps) {
       const isSelected = Boolean(selectedCurrency && currency && selectedCurrency.equals(currency))
       const otherSelected = Boolean(otherCurrency && currency && otherCurrency.equals(currency))
-      const handleSelect = () => currency && onCurrencySelect(currency)
 
       const token = currency?.wrapped
       const extendCurrency = currency as WrappedTokenInfo
@@ -221,30 +237,24 @@ function CurrencyList({
         !tokenImports.find(importedToken => importedToken.address === token.address) &&
         !currency.isNative
 
-      if (showImport && token) {
-        return (
-          <ImportRow
-            style={style}
-            token={token}
-            showImportView={showImportView}
-            setImportToken={setImportToken}
-            dim={true}
-          />
-        )
+      if (showImport && token && setImportToken) {
+        return <ImportRow style={style} token={token} setImportToken={setImportToken} dim={true} />
       }
 
       if (currency) {
         // whitelist
+
         return (
           <CurrencyRow
-            isImportedTab={isImportedTab}
+            showImported={showImported}
             handleClickFavorite={handleClickFavorite}
             removeImportedToken={removeImportedToken}
-            style={style}
+            style={{ ...style, ...itemStyle }}
             currency={currency}
             currencyBalance={currencyBalance}
             isSelected={isSelected}
-            onSelect={handleSelect}
+            showFavoriteIcon={showFavoriteIcon}
+            onSelect={onCurrencySelect}
             otherSelected={otherSelected}
           />
         )
@@ -257,14 +267,14 @@ function CurrencyList({
       otherCurrency,
       selectedCurrency,
       setImportToken,
-      showImportView,
       handleClickFavorite,
-      isImportedTab,
+      showImported,
       removeImportedToken,
+      itemStyle,
+      showFavoriteIcon,
     ],
   )
-  const loadMoreItems = useCallback(() => loadMoreRows(), [loadMoreRows])
-  if (currencies.length === 1 && currencies[0].isNative) return null
+  const loadMoreItems = useCallback(() => loadMoreRows?.(), [loadMoreRows])
   const itemCount = hasMore ? currencies.length + 1 : currencies.length // If there are more items to be loaded then add an extra row to hold a loading indicator.
   const isItemLoaded = (index: number) => !hasMore || index < currencies.length
   return (

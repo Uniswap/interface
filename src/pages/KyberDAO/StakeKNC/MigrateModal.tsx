@@ -49,7 +49,12 @@ export default function MigrateModal({
   const [error, setError] = useState('')
   const [approval, approveCallback] = useApproveCallback(
     TokenAmount.fromRawAmount(
-      new Token(chainId === ChainId.GÖRLI ? ChainId.GÖRLI : ChainId.MAINNET, kyberDAOInfo?.KNCLAddress || '', 18),
+      new Token(
+        chainId === ChainId.GÖRLI ? ChainId.GÖRLI : ChainId.MAINNET,
+        kyberDAOInfo?.KNCLAddress || '',
+        18,
+        'KNCL',
+      ),
       MaxUint256,
     ),
     kyberDAOInfo?.KNCAddress,
@@ -82,7 +87,7 @@ export default function MigrateModal({
         setShowConfirm(true)
         setAttemptingTxn(true)
         toggleModal()
-        migrate(parseUnits(value, 18))
+        migrate(parseUnits(value, 18), value)
           .then(tx => {
             setAttemptingTxn(false)
             setTxHash(tx)

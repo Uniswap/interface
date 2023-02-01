@@ -180,7 +180,16 @@ export default function Vote() {
     setAttemptingTxn(true)
     toggleClaimConfirmModal()
 
-    claim(cycle, index, account, tokens, cumulativeAmounts, proof)
+    const params = {
+      cycle,
+      index,
+      address: account,
+      tokens,
+      cumulativeAmounts,
+      merkleProof: proof,
+      formatAmount: formatUnitsToFixed(remainingCumulativeAmount),
+    }
+    claim(params)
       .then(tx => {
         setAttemptingTxn(false)
         setTxHash(tx)

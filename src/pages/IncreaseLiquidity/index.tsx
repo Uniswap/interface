@@ -224,22 +224,24 @@ export default function AddLiquidity() {
             .sendTransaction(newTxn)
             .then((response: TransactionResponse) => {
               setAttemptingTxn(false)
+              const tokenAmountIn = parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) || '0'
+              const tokenAmountOut = parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) || '0'
+              const tokenSymbolIn = baseCurrency?.symbol ?? ''
+              const tokenSymbolOut = quoteCurrency?.symbol ?? ''
               addTransactionWithType({
                 hash: response.hash,
-                type: TRANSACTION_TYPE.INCREASE_LIQUIDITY,
-                summary:
-                  (parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) || 0) +
-                  ' ' +
-                  baseCurrency?.symbol +
-                  ' and ' +
-                  (parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) || 0) +
-                  ' ' +
-                  quoteCurrency?.symbol,
-                //  ' with fee ' +  position.pool.fee / 100 + '%' +
-                // (tokenId ? ' Token ID: (' + tokenId + ')' : ''),
-                arbitrary: {
-                  token_1: baseCurrency?.symbol,
-                  token_2: quoteCurrency?.symbol,
+                type: TRANSACTION_TYPE.ELASTIC_INCREASE_LIQUIDITY,
+                extraInfo: {
+                  tokenAmountIn,
+                  tokenAmountOut,
+                  tokenAddressIn: baseCurrency.wrapped.address,
+                  tokenAddressOut: quoteCurrency.wrapped.address,
+                  tokenSymbolIn,
+                  tokenSymbolOut,
+                  arbitrary: {
+                    token_1: tokenSymbolIn,
+                    token_2: tokenSymbolOut,
+                  },
                 },
               })
               setTxHash(response.hash)

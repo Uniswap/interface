@@ -22,6 +22,7 @@ import {
   PopupContentTxn,
   PopupType,
   addPopup,
+  closeModal,
   removePopup,
   setOpenModal,
   updateETHPrice,
@@ -33,6 +34,16 @@ export function useBlockNumber(): number | undefined {
   const { chainId } = useActiveWeb3React()
 
   return useSelector((state: AppState) => state.application.blockNumber[chainId])
+}
+
+export const useCloseModal = (modal: ApplicationModal) => {
+  const dispatch = useDispatch<AppDispatch>()
+
+  const onCloseModal = useCallback(() => {
+    dispatch(closeModal(modal))
+  }, [dispatch, modal])
+
+  return onCloseModal
 }
 
 export function useModalOpen(modal: ApplicationModal): boolean {

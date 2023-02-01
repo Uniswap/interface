@@ -8,7 +8,7 @@ import { useActiveWeb3React, useWeb3React } from 'hooks/index'
 import useENS from 'hooks/useENS'
 import { useEncodeSolana, useSwapState } from 'state/swap/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import { TRANSACTION_TYPE } from 'state/transactions/type'
+import { TRANSACTION_TYPE, TransactionExtraInfo2Token } from 'state/transactions/type'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { isAddress, shortenAddress } from 'utils'
 import { Aggregator } from 'utils/aggregator'
@@ -64,9 +64,9 @@ export function useSwapV2Callback(
     const inputAmount = formatCurrencyAmount(trade.inputAmount, 6)
     const outputAmount = formatCurrencyAmount(trade.outputAmount, 6)
 
-    const base = `${
+    const inputAmountFormat =
       feeConfig && feeConfig.chargeFeeBy === 'currency_in' && feeConfig.isInBps ? typedValue : inputAmount
-    } ${inputSymbol} for ${outputAmount} ${outputSymbol}`
+
     const withRecipient =
       recipient === account
         ? undefined
@@ -79,20 +79,27 @@ export function useSwapV2Callback(
     return {
       hash: '',
       type: TRANSACTION_TYPE.SWAP,
-      summary: `${base} ${withRecipient ?? ''}`,
-      arbitrary: {
-        inputSymbol,
-        outputSymbol,
-        inputAddress,
-        outputAddress,
-        inputDecimals: trade.inputAmount.currency.decimals,
-        outputDecimals: trade.outputAmount.currency.decimals,
-        withRecipient,
-        saveGas,
-        inputAmount: trade.inputAmount.toExact(),
-        slippageSetting: allowedSlippage ? allowedSlippage / 100 : 0,
-        priceImpact: trade && trade?.priceImpact > 0.01 ? trade?.priceImpact.toFixed(2) : '<0.01',
-      },
+      extraInfo: {
+        tokenAmountIn: inputAmountFormat,
+        tokenAmountOut: outputAmount,
+        tokenSymbolIn: inputSymbol,
+        tokenSymbolOut: outputSymbol,
+        tokenAddressIn: inputAddress,
+        tokenAddressOut: outputAddress,
+        arbitrary: {
+          inputSymbol,
+          outputSymbol,
+          inputAddress,
+          outputAddress,
+          inputDecimals: trade.inputAmount.currency.decimals,
+          outputDecimals: trade.outputAmount.currency.decimals,
+          withRecipient,
+          saveGas,
+          inputAmount: trade.inputAmount.toExact(),
+          slippageSetting: allowedSlippage ? allowedSlippage / 100 : 0,
+          priceImpact: trade && trade?.priceImpact > 0.01 ? trade?.priceImpact.toFixed(2) : '<0.01',
+        },
+      } as TransactionExtraInfo2Token,
     }
   }, [account, allowedSlippage, chainId, feeConfig, recipient, recipientAddressOrName, saveGas, trade, typedValue])
 

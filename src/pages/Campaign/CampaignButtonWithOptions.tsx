@@ -167,9 +167,12 @@ export default function CampaignButtonWithOptions({
               .join(' ' + t`and` + ' ')
             addTransactionWithType({
               hash: transactionResponse.hash,
-              type: TRANSACTION_TYPE.CLAIM,
+              type: TRANSACTION_TYPE.CLAIM_REWARD,
               desiredChainId: claimChainId,
-              summary: `${rewardString} from campaign "${campaign?.name}"`,
+              extraInfo: {
+                summary: `${rewardString} from campaign "${campaign?.name}"`,
+                contract: rewardContractAddress,
+              },
             })
             const newRef2Hash = refs
               .filter(ref => !!ref)

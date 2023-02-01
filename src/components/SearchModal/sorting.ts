@@ -55,7 +55,7 @@ function getTokenComparator(
     }
   }
 }
-export function useTokenComparator(inverted: boolean, containsETH = false): (tokenA: Token, tokenB: Token) => number {
+export function useTokenComparator(inverted: boolean): (tokenA: Token, tokenB: Token) => number {
   const balances = useAllTokenBalances()
   const { chainId } = useActiveWeb3React()
   const ethBalance = useETHBalance()

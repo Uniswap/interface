@@ -360,24 +360,28 @@ export default function TokenPair({
         .then((response: TransactionResponse) => {
           if (!!currencyA && !!currencyB) {
             setAttemptingTxn(false)
-
+            const tokenAmountIn = parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) ?? ''
+            const tokenAmountOut = parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) ?? ''
+            const tokenSymbolIn = currencyAIsWETH ? NativeCurrencies[chainId].symbol : currencyA.symbol
+            const tokenSymbolOut = currencyBIsWETH ? NativeCurrencies[chainId].symbol : currencyB.symbol
             addTransactionWithType({
               hash: response.hash,
-              type: TRANSACTION_TYPE.REMOVE_LIQUIDITY,
-              summary:
-                parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) +
-                ' ' +
-                (currencyAIsWETH ? NativeCurrencies[chainId].symbol : currencyA.symbol) +
-                ' and ' +
-                parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) +
-                ' ' +
-                (currencyBIsWETH ? NativeCurrencies[chainId].symbol : currencyB.symbol),
-              arbitrary: {
-                poolAddress: pairAddress,
-                token_1: currencyA.symbol,
-                token_2: currencyB.symbol,
-                remove_liquidity_method: 'token pair',
-                amp: new Fraction(amp).divide(JSBI.BigInt(10000)).toSignificant(5),
+              type: TRANSACTION_TYPE.CLASSIC_REMOVE_LIQUIDITY,
+              extraInfo: {
+                tokenAmountIn,
+                tokenAmountOut,
+                tokenSymbolIn,
+                tokenSymbolOut,
+                tokenAddressIn: currencyA.wrapped.address,
+                tokenAddressOut: currencyB.wrapped.address,
+                contract: pairAddress,
+                arbitrary: {
+                  poolAddress: pairAddress,
+                  token_1: currencyA.symbol,
+                  token_2: currencyB.symbol,
+                  remove_liquidity_method: 'token pair',
+                  amp: new Fraction(amp).divide(JSBI.BigInt(10000)).toSignificant(5),
+                },
               },
             })
 

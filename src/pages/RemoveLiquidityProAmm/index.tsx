@@ -287,22 +287,26 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
           .sendTransaction(newTxn)
           .then((response: TransactionResponse) => {
             setAttemptingTxn(false)
-
+            const tokenAmountIn = liquidityValue0?.toSignificant(6)
+            const tokenAmountOut = liquidityValue1?.toSignificant(6)
+            const tokenSymbolIn = liquidityValue0?.currency.symbol ?? ''
+            const tokenSymbolOut = liquidityValue1?.currency.symbol ?? ''
             addTransactionWithType({
               hash: response.hash,
               type: TRANSACTION_TYPE.ELASTIC_REMOVE_LIQUIDITY,
-              summary:
-                liquidityValue0?.toSignificant(6) +
-                ' ' +
-                liquidityValue0?.currency.symbol +
-                ' and ' +
-                liquidityValue1?.toSignificant(6) +
-                ' ' +
-                liquidityValue1?.currency.symbol,
-              arbitrary: {
-                poolAddress: poolAddress,
-                token_1: token0Shown?.symbol,
-                token_2: token1Shown?.symbol,
+              extraInfo: {
+                tokenAmountIn,
+                tokenAmountOut,
+                tokenSymbolIn,
+                tokenSymbolOut,
+                tokenAddressIn: liquidityValue0?.currency.wrapped.address,
+                tokenAddressOut: liquidityValue1?.currency.wrapped.address,
+                contract: poolAddress,
+                arbitrary: {
+                  poolAddress,
+                  token_1: token0Shown?.symbol,
+                  token_2: token1Shown?.symbol,
+                },
               },
             })
             setTxnHash(response.hash)

@@ -1,8 +1,8 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import axios from 'axios'
 
-import { TokenMap } from 'hooks/Tokens'
-import { TokenInfo, WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import { TokenMap, formatAndCacheToken } from 'hooks/Tokens'
+import { TokenInfo } from 'state/lists/wrappedTokenInfo'
 import { isAddress } from 'utils'
 
 import { getFormattedAddress } from './tokenInfo'
@@ -32,7 +32,8 @@ function listToTokenMap(list: TokenInfo[], chainId: ChainId): TokenMap {
     if (!tokenInfo || tokenMap[formattedAddress] || !isAddress(chainId, tokenInfo.address)) {
       return tokenMap
     }
-    tokenMap[formattedAddress] = new WrappedTokenInfo(tokenInfo)
+    const token = formatAndCacheToken(tokenInfo)
+    if (token) tokenMap[formattedAddress] = token
     return tokenMap
   }, {} as TokenMap)
   return map

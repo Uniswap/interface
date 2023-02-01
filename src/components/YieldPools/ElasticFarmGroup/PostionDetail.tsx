@@ -91,7 +91,7 @@ const PositionDetail = ({
         <MinimalActionButton
           colorScheme={ButtonColorScheme.Red}
           onClick={() =>
-            unstake(BigNumber.from(pool.pid), [item.nftId], [BigNumber.from(joinedInfo.liquidity.toString())])
+            unstake(BigNumber.from(pool.pid), [{ available: item, staked: joinedInfo, poolAddress: pool.poolAddress }])
           }
         >
           <Minus size={16} />

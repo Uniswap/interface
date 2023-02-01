@@ -282,11 +282,18 @@ export default function StakeKNCComponent() {
   const { mixpanelHandler } = useMixpanel()
   const [approvalKNC, approveCallback] = useApproveCallback(
     TokenAmount.fromRawAmount(
-      new Token(chainId === ChainId.GÖRLI ? ChainId.GÖRLI : ChainId.MAINNET, kyberDAOInfo?.KNCAddress || '', 18),
+      new Token(chainId === ChainId.GÖRLI ? ChainId.GÖRLI : ChainId.MAINNET, kyberDAOInfo?.KNCAddress || '', 18, 'KNC'),
       MaxUint256,
     ),
     kyberDAOInfo?.staking,
   )
+
+  const currentVotingPower = calculateVotingPower(formatUnits(stakedBalance))
+  const newVotingPower = parseFloat(
+    calculateVotingPower(formatUnits(stakedBalance), (activeTab === STAKE_TAB.Unstake ? '-' : '') + inputValue),
+  )
+  const deltaVotingPower = Math.abs(newVotingPower - parseFloat(currentVotingPower)).toPrecision(3)
+
   const handleStake = () => {
     switchToEthereum()
       .then(() => {
@@ -294,7 +301,7 @@ export default function StakeKNCComponent() {
         setShowConfirm(true)
         setAttemptingTxn(true)
         mixpanelHandler(MIXPANEL_TYPE.KYBER_DAO_STAKE_CLICK, { amount: inputValue })
-        stake(parseUnits(inputValue, 18))
+        stake(parseUnits(inputValue, 18), deltaVotingPower)
           .then(tx => {
             setAttemptingTxn(false)
             setTxHash(tx)
@@ -626,20 +633,11 @@ export default function StakeKNCComponent() {
                 />
               </Text>
               <Text>
-                {calculateVotingPower(formatUnits(stakedBalance))}%
+                {currentVotingPower}%
                 {activeTab !== STAKE_TAB.Delegate && (
                   <>
                     {' '}
-                    &rarr;{' '}
-                    <span style={{ color: theme.text }}>
-                      {parseFloat(
-                        calculateVotingPower(
-                          formatUnits(stakedBalance),
-                          (activeTab === STAKE_TAB.Unstake ? '-' : '') + inputValue,
-                        ),
-                      )}
-                      %
-                    </span>
+                    &rarr; <span style={{ color: theme.text }}>{newVotingPower}%</span>
                   </>
                 )}
               </Text>

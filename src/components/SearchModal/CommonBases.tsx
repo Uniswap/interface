@@ -1,4 +1,4 @@
-import { ChainId, Currency, Token } from '@kyberswap/ks-sdk-core'
+import { Currency, Token } from '@kyberswap/ks-sdk-core'
 import { rgba } from 'polished'
 import { useState } from 'react'
 import { isMobile } from 'react-device-detect'
@@ -57,13 +57,11 @@ const CloseBtn = styled(XCircle)<{ $forceShow: boolean }>`
 `
 
 export default function CommonBases({
-  chainId,
   onSelect,
   selectedCurrency,
   tokens = [],
   handleToggleFavorite,
 }: {
-  chainId: ChainId
   selectedCurrency?: Currency | null
   tokens: Currency[]
   onSelect: (currency: Currency) => void
@@ -78,15 +76,14 @@ export default function CommonBases({
       <AutoRow gap="4px">
         {(tokens as Token[]).map((token: Token) => {
           const selected = selectedCurrency instanceof Token && selectedCurrency.address === token.address
-          const showWToken = token
-          const { symbol } = getDisplayTokenInfo(showWToken)
+          const { symbol } = getDisplayTokenInfo(token)
           return (
             <BaseWrapper
-              onClick={() => !selected && onSelect(showWToken)}
+              onClick={() => !selected && onSelect(token)}
               data-selected={selected}
               key={(token.address || token?.wrapped?.address) + token.symbol}
             >
-              <CurrencyLogo currency={showWToken} size={isHeightSmall ? '15px' : '20px'} />
+              <CurrencyLogo currency={token} size={isHeightSmall ? '15px' : '20px'} />
               <TokenName>{symbol}</TokenName>
               <CloseBtn
                 $forceShow={isEditMode}

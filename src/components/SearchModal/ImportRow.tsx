@@ -33,13 +33,11 @@ export default function ImportRow({
   token,
   style,
   dim,
-  showImportView,
   setImportToken,
 }: {
   token: Token
   style?: CSSProperties
   dim?: boolean
-  showImportView: () => void
   setImportToken: (token: Token) => void
 }) {
   return (
@@ -58,10 +56,7 @@ export default function ImportRow({
         padding="6px 12px"
         fontWeight={500}
         fontSize="14px"
-        onClick={() => {
-          setImportToken && setImportToken(token)
-          showImportView()
-        }}
+        onClick={() => setImportToken(token)}
       >
         <Trans>Import</Trans>
       </ButtonPrimary>

@@ -30,7 +30,6 @@ export interface IUserReward {
   reward: IReward | undefined
 }
 
-// eslint-disable react-hooks/exhaustive-deps
 export default function useClaimReward() {
   const { chainId, account } = useActiveWeb3React()
   const { library } = useWeb3React()
@@ -96,7 +95,7 @@ export default function useClaimReward() {
       allTransactions
         ? Object.values(allTransactions)
             .flat()
-            .find(item => item && item.type === 'Claim reward' && !item.receipt)
+            .find(item => item && item.type === TRANSACTION_TYPE.CLAIM_REWARD && !item.receipt)
         : undefined,
     [allTransactions],
   )
@@ -164,7 +163,11 @@ export default function useClaimReward() {
           addTransactionWithType({
             hash: tx.hash,
             type: TRANSACTION_TYPE.CLAIM_REWARD,
-            summary: rewardAmounts + ' KNC',
+            extraInfo: {
+              tokenAddress: KNC[chainId].address,
+              tokenAmount: rewardAmounts,
+              tokenSymbol: 'KNC',
+            },
           })
         })
         .catch((err: any) => {

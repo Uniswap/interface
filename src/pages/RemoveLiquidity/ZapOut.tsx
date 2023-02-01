@@ -404,17 +404,22 @@ export default function ZapOut({
         .then((response: TransactionResponse) => {
           if (!!currencyA && !!currencyB) {
             setAttemptingTxn(false)
-
+            const tokenAmount = parsedAmounts[independentTokenField]?.toSignificant(6)
             addTransactionWithType({
               hash: response.hash,
-              type: TRANSACTION_TYPE.REMOVE_LIQUIDITY,
-              summary: parsedAmounts[independentTokenField]?.toSignificant(6) + ' ' + independentToken?.symbol,
-              arbitrary: {
-                poolAddress: pairAddress,
-                token_1: currencyA.symbol,
-                token_2: currencyB.symbol,
-                remove_liquidity_method: 'single token',
-                amp: new Fraction(amp).divide(JSBI.BigInt(10000)).toSignificant(5),
+              type: TRANSACTION_TYPE.CLASSIC_REMOVE_LIQUIDITY,
+              extraInfo: {
+                tokenSymbol: independentToken?.symbol ?? '',
+                tokenAmount,
+                tokenAddressOut: independentToken?.wrapped?.address ?? '',
+                contract: pairAddress,
+                arbitrary: {
+                  poolAddress: pairAddress,
+                  token_1: currencyA.symbol,
+                  token_2: currencyB.symbol,
+                  remove_liquidity_method: 'single token',
+                  amp: new Fraction(amp).divide(JSBI.BigInt(10000)).toSignificant(5),
+                },
               },
             })
 

@@ -244,7 +244,7 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
     dispatch(setTxHash(''))
 
     try {
-      const txHash = await harvest(pid, pairSymbol)
+      const txHash = await harvest(pid, farm, farmRewards)
       if (txHash) {
         mixpanelHandler(MIXPANEL_TYPE.INDIVIDUAL_REWARD_HARVESTED, {
           reward_tokens_and_amounts: JSON.stringify(
@@ -430,9 +430,7 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
                     ) : (
                       <CurrencyInputPanel
                         value={withdrawValue}
-                        onUserInput={value => {
-                          setWithdrawValue(value)
-                        }}
+                        onUserInput={setWithdrawValue}
                         onMax={() => {
                           setWithdrawValue(fixedFormatting(staked.value, staked.decimals))
                         }}

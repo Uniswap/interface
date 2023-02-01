@@ -290,28 +290,34 @@ export default function AddLiquidity() {
             .then((response: TransactionResponse) => {
               setAttemptingTxn(false)
               if (noLiquidity) {
+                const tokenAmountIn = parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) ?? '0'
+                const tokenAmountOut = parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) ?? '0'
                 addTransactionWithType({
                   hash: response.hash,
                   type: TRANSACTION_TYPE.ELASTIC_CREATE_POOL,
-                  summary: `${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) ?? '0'} ${baseCurrency.symbol} and ${
-                    parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) ?? '0'
-                  } ${quoteCurrency.symbol} `,
-                  arbitrary: {
-                    token_1: baseCurrency.symbol,
-                    token_2: quoteCurrency.symbol,
+                  extraInfo: {
+                    tokenSymbolIn: baseCurrency.symbol ?? '',
+                    tokenSymbolOut: quoteCurrency.symbol ?? '',
+                    tokenAmountIn,
+                    tokenAmountOut,
+                    tokenAddressIn: baseCurrency.wrapped.address,
+                    tokenAddressOut: quoteCurrency.wrapped.address,
                   },
                 })
               } else {
+                const tokenAmountIn = parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) ?? '0'
+                const tokenAmountOut = parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) ?? '0'
                 addTransactionWithType({
                   hash: response.hash,
                   type: TRANSACTION_TYPE.ELASTIC_ADD_LIQUIDITY,
-                  summary: `${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) ?? '0'} ${baseCurrency.symbol} and ${
-                    parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) ?? '0'
-                  } ${quoteCurrency.symbol} `,
-                  arbitrary: {
-                    poolAddress: poolAddress,
-                    token_1: baseCurrency.symbol,
-                    token_2: quoteCurrency.symbol,
+                  extraInfo: {
+                    contract: poolAddress,
+                    tokenAmountIn,
+                    tokenAmountOut,
+                    tokenSymbolIn: baseCurrency.symbol,
+                    tokenSymbolOut: quoteCurrency.symbol,
+                    tokenAddressIn: baseCurrency.wrapped.address,
+                    tokenAddressOut: quoteCurrency.wrapped.address,
                   },
                 })
               }

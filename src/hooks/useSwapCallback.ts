@@ -12,8 +12,7 @@ import useENS from 'hooks/useENS'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TRANSACTION_TYPE } from 'state/transactions/type'
-import { calculateGasMargin, isAddress, shortenAddress } from 'utils'
-import { formatCurrencyAmount } from 'utils/formatBalance'
+import { calculateGasMargin } from 'utils'
 import { getDynamicFeeRouterContract } from 'utils/getContract'
 import isZero from 'utils/isZero'
 
@@ -215,23 +214,7 @@ export function useSwapCallback(
             ...(value && !isZero(value) ? { value } : {}),
           })
           .then((response: any) => {
-            const inputSymbol = trade.inputAmount.currency.symbol
-            const outputSymbol = trade.outputAmount.currency.symbol
-            const inputAmount = formatCurrencyAmount(trade.inputAmount)
-            const outputAmount = formatCurrencyAmount(trade.outputAmount)
-
-            const base = `${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
-            const withRecipient =
-              recipient === account
-                ? base
-                : `${base} to ${
-                    recipientAddressOrName && isAddress(chainId, recipientAddressOrName)
-                      ? shortenAddress(chainId, recipientAddressOrName)
-                      : recipientAddressOrName
-                  }`
-
-            addTransactionWithType({ hash: response.hash, type: TRANSACTION_TYPE.SWAP, summary: withRecipient })
-
+            addTransactionWithType({ hash: response.hash, type: TRANSACTION_TYPE.SWAP })
             return response.hash
           })
           .catch((error: any) => {

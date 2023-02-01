@@ -3,6 +3,7 @@ import { t } from '@lingui/macro'
 import { ethers } from 'ethers'
 import JSBI from 'jsbi'
 
+import { RESERVE_USD_DECIMALS } from 'constants/index'
 import { tryParseAmount } from 'state/swap/hooks'
 import { formatNumberWithPrecisionRange, formattedNum } from 'utils'
 import { toFixed } from 'utils/numbers'
@@ -13,7 +14,7 @@ export const isActiveStatus = (status: LimitOrderStatus) =>
   [LimitOrderStatus.ACTIVE, LimitOrderStatus.OPEN, LimitOrderStatus.PARTIALLY_FILLED].includes(status)
 
 // js number to fraction
-function parseFraction(value: string, decimals = 18) {
+function parseFraction(value: string, decimals = RESERVE_USD_DECIMALS) {
   try {
     return new Fraction(
       ethers.utils.parseUnits(value, decimals).toString(),
@@ -27,7 +28,7 @@ function parseFraction(value: string, decimals = 18) {
 // 1.00010000 => 1.0001
 export const removeTrailingZero = (value: string) => parseFloat(value).toString()
 
-const uint256ToFraction = (value: string, decimals = 18) =>
+const uint256ToFraction = (value: string, decimals = RESERVE_USD_DECIMALS) =>
   new Fraction(value, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals)))
 
 export function calcOutput(input: string, rate: string, decimalsOut: number) {

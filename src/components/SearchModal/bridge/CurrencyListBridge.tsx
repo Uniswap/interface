@@ -47,7 +47,6 @@ const CurrencyListBridge = memo(function CurrencyListV2({
 
       return (
         <CurrencyRow
-          showBalance={!isOutput}
           showFavoriteIcon={false}
           style={style}
           currency={currency}
@@ -55,7 +54,7 @@ const CurrencyListBridge = memo(function CurrencyListV2({
           isSelected={isSelected}
           onSelect={handleSelect}
           otherSelected={false}
-          poolLiquidity={poolLiquidity}
+          customBalance={isOutput ? poolLiquidity : undefined}
           customName={
             sortId !== undefined ? (
               <Flex>

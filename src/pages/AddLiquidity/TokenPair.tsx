@@ -274,25 +274,28 @@ const TokenPair = ({
           const cA = currencies[Field.CURRENCY_A]
           const cB = currencies[Field.CURRENCY_B]
           if (!!cA && !!cB) {
+            const tokenAmountIn = parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) ?? ''
+            const tokenAmountOut = parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) ?? ''
             setAttemptingTxn(false)
             addTransactionWithType({
               hash: response.hash,
-              type: TRANSACTION_TYPE.ADD_LIQUIDITY,
-              summary:
-                parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) +
-                ' ' +
-                cA.symbol +
-                ' and ' +
-                parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) +
-                ' ' +
-                cB.symbol,
-              arbitrary: {
-                poolAddress: pairAddress,
-                token_1: cA.symbol,
-                token_2: cB.symbol,
-                add_liquidity_method: 'token pair',
-                amp: new Fraction(amp).divide(JSBI.BigInt(10000)).toSignificant(5),
-                txHash: response.hash,
+              type: TRANSACTION_TYPE.CLASSIC_ADD_LIQUIDITY,
+              extraInfo: {
+                tokenSymbolIn: cA.symbol ?? '',
+                tokenSymbolOut: cB.symbol ?? '',
+                tokenAmountIn,
+                tokenAmountOut,
+                tokenAddressIn: cA.wrapped.address,
+                tokenAddressOut: cB.wrapped.address,
+                contract: pairAddress,
+                arbitrary: {
+                  poolAddress: pairAddress,
+                  token_1: cA.symbol,
+                  token_2: cB.symbol,
+                  add_liquidity_method: 'token pair',
+                  amp: new Fraction(amp).divide(JSBI.BigInt(10000)).toSignificant(5),
+                  txHash: response.hash,
+                },
               },
             })
             setTxHash(response.hash)

@@ -48,10 +48,9 @@ const PositionRow = ({
 }: {
   selected: boolean
   position: PositionDetails
-  onChange: (value: boolean) => void
+  onChange: (value: boolean, position: Position | undefined) => void
 }) => {
   const { token0: token0Address, token1: token1Address, fee: feeAmount, liquidity, tickLower, tickUpper } = position
-
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
   const currency0 = token0 ? unwrappedToken(token0) : undefined
@@ -84,7 +83,7 @@ const PositionRow = ({
     <TableRow>
       <Checkbox
         onChange={e => {
-          onChange(e.currentTarget.checked)
+          onChange(e.currentTarget.checked, positionSDK)
         }}
         checked={selected}
       />
@@ -162,7 +161,8 @@ function ProMMDepositNFTModal({
       .filter(pool => (tab === 'active' ? pool.endTime > +new Date() / 1000 : pool.endTime < +new Date() / 1000))
       .map(pool => pool.poolAddress.toLowerCase()) || []
 
-  const [selectedNFTs, setSeletedNFTs] = useState<string[]>([])
+  const [selectedNFTs, setSeletedNFTs] = useState<PositionDetails[]>([])
+  const mapPositionInfo = useRef<{ [tokenId: string]: Position }>({})
 
   const { deposit } = useFarmAction(selectedFarmAddress)
 
@@ -195,12 +195,18 @@ function ProMMDepositNFTModal({
   }, [selectedNFTs.length, eligiblePositions])
 
   const { mixpanelHandler } = useMixpanel()
+
   if (!selectedFarmAddress) return null
 
   const handleDeposit = async () => {
-    const txHash = await deposit(selectedNFTs.map(item => BigNumber.from(item)))
+    const txHash = await deposit(
+      selectedNFTs,
+      selectedNFTs.map(item => mapPositionInfo.current[item.tokenId.toString()]),
+    )
     if (txHash) {
-      const finishedPoses = eligiblePositions.filter(pos => selectedNFTs.includes(pos.tokenId.toString()))
+      const finishedPoses = eligiblePositions.filter(pos =>
+        selectedNFTs.find(e => e.tokenId.toString() === pos.tokenId.toString()),
+      )
       finishedPoses.forEach(pos => {
         mixpanelHandler(MIXPANEL_TYPE.ELASTIC_DEPOSIT_LIQUIDITY_COMPLETED, {
           token_1: pos.token0,
@@ -290,7 +296,7 @@ function ProMMDepositNFTModal({
                 ref={checkboxGroupRef}
                 onChange={e => {
                   if (e.currentTarget.checked) {
-                    setSeletedNFTs(eligiblePositions?.map(pos => pos.tokenId.toString()) || [])
+                    setSeletedNFTs(eligiblePositions || [])
                   } else {
                     setSeletedNFTs([])
                   }
@@ -313,13 +319,15 @@ function ProMMDepositNFTModal({
             <div style={{ overflowY: 'scroll', minHeight: '100px' }}>
               {eligiblePositions.map(pos => (
                 <PositionRow
-                  selected={selectedNFTs.includes(pos.tokenId.toString())}
+                  selected={selectedNFTs.some(e => e.tokenId.toString() === pos.tokenId.toString())}
                   key={pos.tokenId.toString()}
                   position={pos}
-                  onChange={(selected: boolean) => {
-                    if (selected) setSeletedNFTs(prev => [...prev, pos.tokenId.toString()])
+                  onChange={(selected: boolean, position: Position | undefined) => {
+                    const tokenId: string = pos.tokenId.toString()
+                    if (position) mapPositionInfo.current[tokenId] = position
+                    if (selected) setSeletedNFTs(prev => [...prev, pos])
                     else {
-                      setSeletedNFTs(prev => prev.filter(item => item !== pos.tokenId.toString()))
+                      setSeletedNFTs(prev => prev.filter(item => item.tokenId.toString() !== tokenId))
                     }
                   }}
                 />

@@ -7,6 +7,7 @@ import {
   PopupContent,
   PopupType,
   addPopup,
+  closeModal,
   removePopup,
   setLoadingNotification,
   setOpenModal,
@@ -70,6 +71,11 @@ export default createReducer(initialState, builder =>
     })
     .addCase(setOpenModal, (state, action) => {
       state.openModal = action.payload
+    })
+    .addCase(closeModal, (state, action) => {
+      if (state.openModal === action.payload) {
+        state.openModal = null
+      }
     })
     .addCase(addPopup, (state, { payload: { content, key, removeAfterMs = 15000, popupType } }) => {
       state.popupList = (key ? state.popupList.filter(popup => popup.key !== key) : state.popupList).concat([

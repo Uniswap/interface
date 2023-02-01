@@ -1,7 +1,8 @@
-import { Currency, CurrencyAmount, Token, TokenAmount } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency, CurrencyAmount, Token, TokenAmount } from '@kyberswap/ks-sdk-core'
 import JSBI from 'jsbi'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
+import { useTokenComparator } from 'components/SearchModal/sorting'
 import ERC20_INTERFACE from 'constants/abis/erc20'
 import { EMPTY_ARRAY, EMPTY_OBJECT } from 'constants/index'
 import { NativeCurrencies } from 'constants/tokens'
@@ -9,6 +10,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useAllTokens } from 'hooks/Tokens'
 import { useMulticallContract } from 'hooks/useContract'
 import { useMultipleContractSingleData, useSingleCallResult } from 'state/multicall/hooks'
+import { useTokenPrices } from 'state/tokenPrices/hooks'
 import { isAddress } from 'utils'
 import { isTokenNative } from 'utils/tokenInfo'
 
@@ -76,9 +78,14 @@ function useTokensBalanceEVM(tokens?: Token[]): [TokenAmount | undefined, boolea
  * Returns a map of token addresses to their eventually consistent token balances for a single account.
  */
 export function useTokenBalancesWithLoadingIndicator(
-  tokens?: Token[],
+  tokenParams?: Token[],
 ): [{ [tokenAddress: string]: TokenAmount | undefined }, boolean] {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
+
+  const tokens = useMemo(() => {
+    return tokenParams?.[0]?.chainId === chainId ? tokenParams : []
+  }, [tokenParams, chainId])
+
   const balances = useTokensBalance(tokens)
 
   const anyLoading: boolean = useMemo(() => balances.some(balanceCall => balanceCall[1]), [balances])
@@ -150,4 +157,61 @@ export function useAllTokenBalances(): { [tokenAddress: string]: TokenAmount | u
   const allTokens = useAllTokens()
   const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
   return useTokenBalances(allTokensArray) ?? EMPTY_OBJECT
+}
+
+// return list token has balance
+export const useTokensHasBalance = () => {
+  const { chainId } = useActiveWeb3React()
+  const whitelistTokens = useAllTokens()
+
+  const currencies: Currency[] = useMemo(() => Object.values(whitelistTokens), [whitelistTokens])
+  const currencyBalances = useAllTokenBalances()
+  const ethBalance = useNativeBalance()
+
+  const loadBalanceDone =
+    chainId === ChainId.GÖRLI
+      ? ethBalance && Object.values(currencyBalances).length
+      : Object.values(currencyBalances).length === currencies.length && ethBalance
+
+  const [tokensHasBalance, setTokensHasBalance] = useState<Currency[]>([])
+  const tokensHasBalanceAddresses = useMemo(() => tokensHasBalance.map(e => e.wrapped.address), [tokensHasBalance])
+
+  useEffect(() => {
+    if (loadBalanceDone && ethBalance) {
+      // call once per chain
+      const list = currencies.filter(
+        currency => !currencyBalances[currency.wrapped.address]?.equalTo(CurrencyAmount.fromRawAmount(currency, '0')),
+      )
+      if (!ethBalance.equalTo(CurrencyAmount.fromRawAmount(NativeCurrencies[chainId], '0'))) {
+        list.push(NativeCurrencies[chainId])
+      }
+      setTokensHasBalance(list)
+    }
+  }, [loadBalanceDone, currencies, currencyBalances, ethBalance, chainId])
+
+  const tokensPrices = useTokenPrices(tokensHasBalanceAddresses)
+
+  const totalBalanceInUsd = useMemo(() => {
+    if (!loadBalanceDone && !tokensHasBalance.length) return null
+    return tokensHasBalance.reduce((total, token) => {
+      const balance = currencyBalances[token.wrapped.address]
+      if (!balance || !ethBalance) return total
+      const usdPrice = tokensPrices[balance.currency.wrapped.address] ?? 0
+      const tokenBalance = token.isNative ? ethBalance.toExact() : balance.toExact()
+      return total + parseFloat(tokenBalance) * usdPrice
+    }, 0)
+  }, [tokensPrices, loadBalanceDone, tokensHasBalance, currencyBalances, ethBalance])
+
+  const tokenComparator = useTokenComparator(false)
+  const tokensHasBalanceSorted = useMemo(() => {
+    return (tokensHasBalance as Token[]).sort(tokenComparator)
+  }, [tokenComparator, tokensHasBalance])
+
+  return {
+    loading: !loadBalanceDone,
+    totalBalanceInUsd,
+    currencies: tokensHasBalanceSorted,
+    currencyBalances,
+    usdBalances: tokensPrices,
+  }
 }

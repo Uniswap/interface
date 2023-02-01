@@ -95,7 +95,11 @@ const ScheduleCard = ({ schedules }: { schedules: Schedule[] }) => {
       gasLimit: calculateGasMargin(estimateGas),
     })
     if (tx) {
-      addTransactionWithType({ hash: tx.hash, type: TRANSACTION_TYPE.CLAIM, summary: 'all rewards' })
+      addTransactionWithType({
+        hash: tx.hash,
+        type: TRANSACTION_TYPE.CLAIM_REWARD,
+        extraInfo: { summary: 'all rewards' },
+      })
       mixpanelHandler(MIXPANEL_TYPE.ELASTIC_ALL_REWARD_CLAIMED, {
         reward_tokens_and_qty: Object.assign(
           {},

@@ -258,22 +258,24 @@ export default function CreatePool() {
             const cA = currencies[Field.CURRENCY_A]
             const cB = currencies[Field.CURRENCY_B]
             if (!!cA && !!cB) {
+              const tokenAmountIn = parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) ?? ''
+              const tokenAmountOut = parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) ?? ''
               setAttemptingTxn(false)
               addTransactionWithType({
                 hash: response.hash,
-                type: TRANSACTION_TYPE.CREATE_POOL,
-                summary:
-                  parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) +
-                  ' ' +
-                  cA.symbol +
-                  ' and ' +
-                  parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) +
-                  ' ' +
-                  cB.symbol,
-                arbitrary: {
-                  token_1: cA.symbol,
-                  token_2: cB.symbol,
-                  amp,
+                type: TRANSACTION_TYPE.CLASSIC_CREATE_POOL,
+                extraInfo: {
+                  tokenAddressIn: cA.wrapped.address,
+                  tokenAddressOut: cB.wrapped.address,
+                  tokenAmountIn,
+                  tokenAmountOut,
+                  tokenSymbolIn: cA.symbol ?? '',
+                  tokenSymbolOut: cB.symbol ?? '',
+                  arbitrary: {
+                    token_1: cA.symbol,
+                    token_2: cB.symbol,
+                    amp,
+                  },
                 },
               })
               setTxHash(response.hash)

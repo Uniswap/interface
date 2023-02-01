@@ -86,12 +86,18 @@ export default function useWrapCallback(
                     hash = await provider.sendAndConfirm(tx)
                   }
                   if (hash) {
+                    const tokenAmount = inputAmount.toSignificant(6)
                     addTransactionWithType({
                       hash,
-                      type: TRANSACTION_TYPE.WRAP,
-                      summary: `${inputAmount.toSignificant(6)} ${nativeTokenSymbol} to ${inputAmount.toSignificant(
-                        6,
-                      )} W${nativeTokenSymbol}`,
+                      type: TRANSACTION_TYPE.WRAP_TOKEN,
+                      extraInfo: {
+                        tokenAmountIn: tokenAmount,
+                        tokenAmountOut: tokenAmount,
+                        tokenSymbolIn: nativeTokenSymbol ?? '',
+                        tokenSymbolOut: WETH[chainId].symbol ?? '',
+                        tokenAddressIn: WETH[chainId].address,
+                        tokenAddressOut: WETH[chainId].address,
+                      },
                     })
                     return hash
                   }
@@ -141,12 +147,18 @@ export default function useWrapCallback(
                     }
                   }
                   if (hash) {
+                    const tokenAmount = inputAmount.toSignificant(6)
                     addTransactionWithType({
                       hash,
-                      type: TRANSACTION_TYPE.UNWRAP,
-                      summary: `${inputAmount.toSignificant(6)} W${nativeTokenSymbol} to ${inputAmount.toSignificant(
-                        6,
-                      )} ${nativeTokenSymbol}`,
+                      type: TRANSACTION_TYPE.UNWRAP_TOKEN,
+                      extraInfo: {
+                        tokenAmountIn: tokenAmount,
+                        tokenAmountOut: tokenAmount,
+                        tokenSymbolIn: WETH[chainId].symbol ?? '',
+                        tokenSymbolOut: nativeTokenSymbol ?? '',
+                        tokenAddressIn: WETH[chainId].address,
+                        tokenAddressOut: WETH[chainId].address,
+                      },
                     })
                     return hash
                   }

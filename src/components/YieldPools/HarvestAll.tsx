@@ -81,7 +81,7 @@ const HarvestAll = ({ totalRewards, onHarvestAll }: { totalRewards: Reward[]; on
           <ButtonPrimary
             margin="8px 0 0"
             onClick={() => {
-              onHarvestAll && onHarvestAll()
+              onHarvestAll?.()
               setShow(false)
             }}
           >

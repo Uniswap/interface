@@ -100,7 +100,7 @@ export function useTradeExactInV2(
   const { account, chainId, networkInfo, isEVM } = useActiveWeb3React()
   const controller = useRef(new AbortController())
   const [allowedSlippage] = useUserSlippageTolerance()
-  const allTransactions = useAllTransactions()
+  const txsInChain = useAllTransactions()
   const [, setEncodeSolana] = useEncodeSolana()
 
   const allDexes = useAllDexes()
@@ -122,8 +122,6 @@ export function useTradeExactInV2(
   const ttl = useSelector<AppState, number>(state => state.user.userDeadline)
 
   const { feeConfig, saveGas } = useSwapState()
-
-  const txsInChain = allTransactions
 
   // refresh aggregator data on new sent tx
   const allTxGroup = useMemo(() => JSON.stringify(Object.keys(txsInChain || {})), [txsInChain])

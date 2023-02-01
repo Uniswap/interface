@@ -228,9 +228,14 @@ export function useToken(tokenAddress?: string): Token | NativeCurrency | undefi
 }
 
 const cacheTokens: TokenMap = {}
+export const findCacheToken = (address: string) => {
+  if (!address) return
+  return cacheTokens[address] || cacheTokens[address.toLowerCase()]
+}
+
 export const fetchTokenByAddress = async (address: string, chainId: ChainId) => {
   if (address === ZERO_ADDRESS) return NativeCurrencies[chainId]
-  const findToken = cacheTokens[address] || cacheTokens[address.toLowerCase()]
+  const findToken = findCacheToken(address)
   if (findToken && findToken.chainId === chainId) return findToken
   const response = await axios.get(`${KS_SETTING_API}/v1/tokens?query=${address}&chainIds=${chainId}`)
   const token = response?.data?.data?.tokens?.[0]

@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId, Currency, CurrencyAmount, Percent, Token, WETH } from '@kyberswap/ks-sdk-core'
+import { PublicKey } from '@solana/web3.js'
 import dayjs from 'dayjs'
 import JSBI from 'jsbi'
 import Numeral from 'numeral'
@@ -14,6 +15,16 @@ import { EVMWalletInfo, SUPPORTED_WALLET, SolanaWalletInfo, WalletInfo } from 'c
 import store from 'state'
 import { GroupedTxsByHash, TransactionDetails } from 'state/transactions/type'
 import checkForBraveBrowser from 'utils/checkForBraveBrowser'
+
+export const isWalletAddressSolana = async (addr: string) => {
+  try {
+    if (!addr) return false
+    const publicKey = new PublicKey(addr)
+    return await PublicKey.isOnCurve(publicKey.toBytes())
+  } catch (err) {
+    return false
+  }
+}
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(chainId: ChainId, value: any): string | false {
@@ -57,12 +68,13 @@ export function getEtherscanLink(
 }
 
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
-export function shortenAddress(chainId: ChainId, address: string, chars = 4): string {
+export function shortenAddress(chainId: ChainId, address: string, chars = 4, checksum = true): string {
   const parsed = isAddress(chainId, address)
-  if (!parsed) {
+  if (!parsed && checksum) {
     throw Error(`Invalid 'address' parameter '${address}' on chain ${chainId}.`)
   }
-  return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
+  const value = (checksum && parsed ? parsed : address) ?? ''
+  return `${value.substring(0, chars + 2)}...${value.substring(42 - chars)}`
 }
 
 /**
