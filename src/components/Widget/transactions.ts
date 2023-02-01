@@ -12,7 +12,6 @@ import {
   TransactionType as WidgetTransactionType,
 } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
-import { WrapType } from 'hooks/useWrapCallback'
 import {
   formatPercentInBasisPointsNumber,
   formatSwapSignedAnalyticsEventProperties,
@@ -91,7 +90,7 @@ export function useSyncWidgetTransactions() {
           amount: transactionAmount
             ? formatToDecimal(transactionAmount, transactionAmount?.currency.decimals)
             : undefined,
-          type: type === WidgetTransactionType.WRAP ? WrapType.WRAP : WrapType.UNWRAP,
+          type: type === WidgetTransactionType.WRAP ? TransactionType.WRAP : TransactionType.UNWRAP,
           ...trace,
         }
         sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, eventProperties)

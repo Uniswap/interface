@@ -1,12 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { Protocol } from '@uniswap/router-sdk'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row, { AutoRow } from 'components/Row'
-import { RoutingDiagramEntry } from 'components/swap/SwapRoute'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { Box } from 'rebass'
 import styled from 'styled-components/macro'
@@ -15,6 +14,12 @@ import { Z_INDEX } from 'theme/zIndex'
 
 import { ReactComponent as DotLine } from '../../assets/svg/dot_line.svg'
 import { MouseoverTooltip } from '../Tooltip'
+
+interface RoutingDiagramEntry {
+  percent: Percent
+  path: [Currency, Currency, FeeAmount][]
+  protocol: Protocol
+}
 
 const Wrapper = styled(Box)`
   align-items: center;

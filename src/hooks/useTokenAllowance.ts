@@ -1,11 +1,7 @@
-import { BigNumberish } from '@ethersproject/bignumber'
-import { ContractTransaction } from '@ethersproject/contracts'
-import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useTokenContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { ApproveTransactionInfo, TransactionType } from 'state/transactions/types'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { useEffect, useMemo, useState } from 'react'
 
 export function useTokenAllowance(
   token?: Token,
@@ -34,40 +30,4 @@ export function useTokenAllowance(
   useEffect(() => setBlocksPerFetch(allowance?.equalTo(0) ? 1 : undefined), [allowance])
 
   return useMemo(() => ({ tokenAllowance: allowance, isSyncing }), [allowance, isSyncing])
-}
-
-export function useUpdateTokenAllowance(
-  amount: CurrencyAmount<Token> | undefined,
-  spender: string
-): () => Promise<{ response: ContractTransaction; info: ApproveTransactionInfo }> {
-  const contract = useTokenContract(amount?.currency.address)
-
-  return useCallback(async () => {
-    try {
-      if (!amount) throw new Error('missing amount')
-      if (!contract) throw new Error('missing contract')
-      if (!spender) throw new Error('missing spender')
-
-      let allowance: BigNumberish = MaxUint256.toString()
-      const estimatedGas = await contract.estimateGas.approve(spender, allowance).catch(() => {
-        // Fallback for tokens which restrict approval amounts:
-        allowance = amount.quotient.toString()
-        return contract.estimateGas.approve(spender, allowance)
-      })
-
-      const gasLimit = calculateGasMargin(estimatedGas)
-      const response = await contract.approve(spender, allowance, { gasLimit })
-      return {
-        response,
-        info: {
-          type: TransactionType.APPROVAL,
-          tokenAddress: contract.address,
-          spender,
-        },
-      }
-    } catch (e: unknown) {
-      const symbol = amount?.currency.symbol ?? 'Token'
-      throw new Error(`${symbol} token allowance failed: ${e instanceof Error ? e.message : e}`)
-    }
-  }, [amount, contract, spender])
 }

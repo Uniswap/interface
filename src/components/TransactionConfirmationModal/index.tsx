@@ -6,7 +6,7 @@ import { getChainInfo } from 'constants/chainInfo'
 import { SupportedL2ChainId } from 'constants/chains'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { ReactNode, useCallback, useState } from 'react'
-import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
+import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { Text } from 'rebass'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
@@ -194,31 +194,6 @@ export function ConfirmationModalContent({
         {topContent()}
       </Section>
       {bottomContent && <BottomSection gap="12px">{bottomContent()}</BottomSection>}
-    </Wrapper>
-  )
-}
-
-export function TransactionErrorContent({ message, onDismiss }: { message: ReactNode; onDismiss: () => void }) {
-  const theme = useTheme()
-  return (
-    <Wrapper>
-      <Section>
-        <RowBetween>
-          <Text fontWeight={600} fontSize={16}>
-            <Trans>Error</Trans>
-          </Text>
-          <CloseIcon onClick={onDismiss} />
-        </RowBetween>
-        <AutoColumn style={{ marginTop: 20, padding: '2rem 0' }} gap="24px" justify="center">
-          <AlertTriangle color={theme.accentCritical} style={{ strokeWidth: 1 }} size={90} />
-          <ThemedText.MediumHeader textAlign="center">{message}</ThemedText.MediumHeader>
-        </AutoColumn>
-      </Section>
-      <BottomSection gap="12px">
-        <ButtonPrimary onClick={onDismiss}>
-          <Trans>Dismiss</Trans>
-        </ButtonPrimary>
-      </BottomSection>
     </Wrapper>
   )
 }

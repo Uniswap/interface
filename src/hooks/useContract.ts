@@ -16,8 +16,7 @@ import ERC20_ABI from 'abis/erc20.json'
 import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
 import ERC721_ABI from 'abis/erc721.json'
 import ERC1155_ABI from 'abis/erc1155.json'
-import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Erc721, Erc1155, Weth } from 'abis/types'
-import WETH_ABI from 'abis/weth.json'
+import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Erc721, Erc1155 } from 'abis/types'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
   ENS_REGISTRAR_ADDRESSES,
@@ -28,7 +27,6 @@ import {
   V2_ROUTER_ADDRESS,
   V3_MIGRATOR_ADDRESSES,
 } from 'constants/addresses'
-import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, Quoter, QuoterV2, TickLens, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
@@ -73,15 +71,6 @@ export function useV2MigratorContract() {
 
 export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean) {
   return useContract<Erc20>(tokenAddress, ERC20_ABI, withSignerIfPossible)
-}
-
-export function useWETHContract(withSignerIfPossible?: boolean) {
-  const { chainId } = useWeb3React()
-  return useContract<Weth>(
-    chainId ? WRAPPED_NATIVE_CURRENCY[chainId]?.address : undefined,
-    WETH_ABI,
-    withSignerIfPossible
-  )
 }
 
 export function useERC721Contract(nftAddress?: string) {
