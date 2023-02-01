@@ -21,6 +21,7 @@ import { useEffect, useMemo, useReducer, useState } from 'react'
 import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import shallow from 'zustand/shallow'
 
 import { ListModal } from './Modal/ListModal'
 import { NFTListingsGrid } from './NFTListingsGrid'
@@ -128,26 +129,50 @@ const ListingButtonWrapper = styled.div`
 
 export const ListPage = () => {
   const { setProfilePageState: setSellPageState } = useProfilePageState()
-  const setGlobalMarketplaces = useSellAsset((state) => state.setGlobalMarketplaces)
-  const [selectedMarkets, setSelectedMarkets] = useState([ListingMarkets[0]]) // default marketplace: x2y2
-  const toggleBag = useBag((s) => s.toggleBag)
-  const listings = useNFTList((state) => state.listings)
-  const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
-  const listingStatus = useNFTList((state) => state.listingStatus)
-  const setListingStatus = useNFTList((state) => state.setListingStatus)
-  const setLooksRareNonce = useNFTList((state) => state.setLooksRareNonce)
-  const setCollectionsRequiringApproval = useNFTList((state) => state.setCollectionsRequiringApproval)
   const { provider } = useWeb3React()
-  const sellAssets = useSellAsset((state) => state.sellAssets)
-  const signer = provider?.getSigner()
+  const toggleBag = useBag((s) => s.toggleBag)
   const isMobile = useIsMobile()
   const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
   const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
+  const { setGlobalMarketplaces, sellAssets } = useSellAsset(
+    ({ setGlobalMarketplaces, sellAssets }) => ({
+      setGlobalMarketplaces,
+      sellAssets,
+    }),
+    shallow
+  )
+  const {
+    listings,
+    collectionsRequiringApproval,
+    listingStatus,
+    setListingStatus,
+    setLooksRareNonce,
+    setCollectionsRequiringApproval,
+  } = useNFTList(
+    ({
+      listings,
+      collectionsRequiringApproval,
+      listingStatus,
+      setListingStatus,
+      setLooksRareNonce,
+      setCollectionsRequiringApproval,
+    }) => ({
+      listings,
+      collectionsRequiringApproval,
+      listingStatus,
+      setListingStatus,
+      setLooksRareNonce,
+      setCollectionsRequiringApproval,
+    }),
+    shallow
+  )
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const anyListingsMissingPrice = useMemo(() => !!listings.find((listing) => !listing.price), [listings])
-  const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
   const [showListModal, toggleShowListModal] = useReducer((s) => !s, false)
+  const [selectedMarkets, setSelectedMarkets] = useState([ListingMarkets[0]]) // default marketplace: x2y2
+  const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
+  const signer = provider?.getSigner()
 
   useEffect(() => {
     fetchPrice().then((price) => {
