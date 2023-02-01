@@ -9,7 +9,7 @@ import { BackArrowIcon } from 'nft/components/icons'
 import { headlineLarge, headlineSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
-import { LIST_PAGE_MARGIN } from 'nft/pages/profile/shared'
+import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from 'nft/pages/profile/shared'
 import { ListingStatus, ProfilePageStateType } from 'nft/types'
 import { fetchPrice, formatEth, formatUsdPrice } from 'nft/utils'
 import { ListingMarkets } from 'nft/utils/listNfts'
@@ -100,7 +100,7 @@ const FloatingConfirmationBar = styled(Row)`
   z-index: ${Z_INDEX.under_dropdown};
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
-    width: calc(100% - ${16 * 2}px);
+    width: calc(100% - ${LIST_PAGE_MARGIN_MOBILE * 2}px);
     bottom: 68px;
     padding: 16px 12px;
   }

@@ -31,6 +31,7 @@ const ListModalWrapper = styled.div`
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     width: 100%;
+    height: 100%;
   }
 `
 
