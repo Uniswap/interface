@@ -1,5 +1,6 @@
 import { Trans, t } from '@lingui/macro'
 import { useMemo, useRef } from 'react'
+import { isMobile } from 'react-device-detect'
 import { Download } from 'react-feather'
 import { QRCode, IProps as QRCodeProps } from 'react-qrcode-logo'
 import { Flex, Text } from 'rebass'
@@ -77,9 +78,11 @@ export default function ReceiveToken() {
       const link = document.createElement('a')
       link.download = 'your_qrcode-logo.png'
 
-      link.href = canvas.toDataURL()
+      link.href = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream')
       link.click()
-    } catch (error) {}
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const theme = useTheme()
@@ -126,7 +129,7 @@ export default function ReceiveToken() {
         >
           {qrElement}
 
-          {!error && (
+          {!error && !isMobile && (
             <Flex
               onClick={downloadQR}
               color={theme.primary}
