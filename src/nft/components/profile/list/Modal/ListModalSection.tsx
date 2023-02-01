@@ -4,7 +4,6 @@ import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import {
-  ApprovedCheckmarkIcon,
   ChevronUpIcon,
   ListingModalWindowActive,
   ListingModalWindowClosed,
@@ -13,7 +12,7 @@ import {
 } from 'nft/components/icons'
 import { AssetRow, CollectionRow, ListingStatus } from 'nft/types'
 import { useMemo } from 'react'
-import { Info } from 'react-feather'
+import { Check, Info } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { colors } from 'theme/colors'
@@ -202,7 +201,7 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
                       </ProceedText>
                     ) : (
                       row.status === ListingStatus.APPROVED && (
-                        <ApprovedCheckmarkIcon height="20" width="20" fill={theme.accentSuccess} />
+                        <Check height="20" width="20" stroke={theme.accentSuccess} />
                       )
                     )}
                   </IconWrapper>
