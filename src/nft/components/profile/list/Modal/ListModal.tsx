@@ -88,6 +88,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
       signListings()
       openSection === Section.APPROVE && toggleOpenSection()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allCollectionsApproved])
 
   return (

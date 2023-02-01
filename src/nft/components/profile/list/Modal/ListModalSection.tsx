@@ -97,6 +97,13 @@ const ContentName = styled(ThemedText.SubHeaderSmall)`
   max-width: 50%;
 `
 
+const ProceedText = styled.span`
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  color: ${({ theme }) => theme.textSecondary};
+`
+
 const StyledVerifiedIcon = styled(VerifiedIcon)`
   height: 16px;
   width: 16px;
@@ -147,15 +154,11 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
             )}
           </SectionTitle>
         </Row>
-        {allContentApproved ? (
-          <ApprovedCheckmarkIcon height="24" width="24" fill={theme.accentSuccess} />
-        ) : (
-          <SectionArrow
-            active={active}
-            secondaryColor={active ? theme.textPrimary : theme.textSecondary}
-            onClick={toggleSection}
-          />
-        )}
+        <SectionArrow
+          active={active}
+          secondaryColor={active ? theme.textPrimary : theme.textSecondary}
+          onClick={toggleSection}
+        />
       </SectionHeader>
       {active && (
         <SectionBody>
@@ -174,7 +177,10 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
           <ContentRowContainer>
             {content.map((row) => {
               return (
-                <ContentRow key={row.name} active={row.status === ListingStatus.SIGNING}>
+                <ContentRow
+                  key={row.name}
+                  active={row.status === ListingStatus.SIGNING || row.status === ListingStatus.APPROVED}
+                >
                   {isCollectionApprovalSection ? (
                     <CollectionIcon src={row.images[0]} />
                   ) : (
@@ -184,15 +190,20 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
                   <ContentName>{row.name}</ContentName>
                   {isCollectionApprovalSection && (row as CollectionRow).isVerified && <StyledVerifiedIcon />}
                   <IconWrapper>
-                    {(row.status === ListingStatus.SIGNING || row.status === ListingStatus.PENDING) && (
+                    {row.status === ListingStatus.DEFINED || row.status === ListingStatus.PENDING ? (
                       <LoadingIcon
                         height="14px"
                         width="14px"
-                        stroke={row.status === ListingStatus.SIGNING ? theme.accentAction : theme.textTertiary}
+                        stroke={row.status === ListingStatus.PENDING ? theme.accentAction : theme.textTertiary}
                       />
-                    )}
-                    {row.status === ListingStatus.APPROVED && (
-                      <ApprovedCheckmarkIcon height="14" width="14" fill={theme.accentSuccess} />
+                    ) : row.status === ListingStatus.SIGNING ? (
+                      <ProceedText>
+                        <Trans>Proceed in wallet</Trans>
+                      </ProceedText>
+                    ) : (
+                      row.status === ListingStatus.APPROVED && (
+                        <ApprovedCheckmarkIcon height="20" width="20" fill={theme.accentSuccess} />
+                      )
                     )}
                   </IconWrapper>
                 </ContentRow>
