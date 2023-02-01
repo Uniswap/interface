@@ -132,8 +132,8 @@ export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean):
   )
 }
 
-export function useQuoter(useQuoterV2: boolean) {
-  return useContract<Quoter | QuoterV2>(QUOTER_ADDRESSES, useQuoterV2 ? QuoterV2ABI : QuoterABI)
+export function useQuoter() {
+  return useContract<Quoter | QuoterV2>(QUOTER_ADDRESSES, QuoterV2ABI)
 }
 
 export function useTickLens(): TickLens | null {
