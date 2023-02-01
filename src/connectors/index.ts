@@ -1,5 +1,6 @@
 import { Web3Provider } from '@ethersproject/providers'
 import { SafeAppConnector } from '@gnosis.pm/safe-apps-web3-react'
+import { UAuthConnector } from '@uauth/web3-react'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { PortisConnector } from '@web3-react/portis-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
@@ -53,4 +54,16 @@ export const walletlink = new WalletLinkConnector({
   url: INFURA_NETWORK_URLS[SupportedChainId.MAINNET],
   appName: 'Kromatika',
   appLogoUrl: UNISWAP_LOGO_URL,
+})
+
+export const unstopabbledomains = new UAuthConnector({
+  clientID: process.env.REACT_APP_UD_CLIENT_ID,
+  redirectUri: process.env.REACT_APP_UD_REDIRECT_URI,
+  postLogoutRedirectUri: process.env.REACT_APP_UD_POST_LOGOUT_REDIRECT_URI,
+
+  // Scope must include openid and wallet
+  scope: 'openid wallet',
+
+  // Injected and walletconnect connectors are required.
+  connectors: { injected, walletconnect },
 })
