@@ -82,7 +82,7 @@ export async function signListingRow(
   provider: Web3Provider,
   getLooksRareNonce: () => number,
   setLooksRareNonce: (nonce: number) => void,
-  pauseAllRows: () => void
+  pauseAllRows?: () => void
 ) {
   const looksRareNonce = getLooksRareNonce()
   updateStatus({
@@ -112,7 +112,7 @@ export async function signListingRow(
       setRows: setListings as Dispatch<AssetRow[]>,
     })
   )
-  if (listing.status === ListingStatus.REJECTED) pauseAllRows()
+  if (listing.status === ListingStatus.REJECTED && pauseAllRows) pauseAllRows()
   else {
     res && listing.marketplace.name === 'LooksRare' && setLooksRareNonce(looksRareNonce + 1)
     const newStatus = res ? ListingStatus.APPROVED : ListingStatus.FAILED
