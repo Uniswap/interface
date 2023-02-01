@@ -22,14 +22,14 @@ import {
   ENS_REGISTRAR_ADDRESSES,
   MULTICALL_ADDRESS,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
-  QUOTER_ADDRESSES,
+  QUOTER_V2_ADDRESSES,
   TICK_LENS_ADDRESSES,
   V2_ROUTER_ADDRESS,
   V3_MIGRATOR_ADDRESSES,
 } from 'constants/addresses'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useMemo } from 'react'
-import { NonfungiblePositionManager, Quoter, QuoterV2, TickLens, UniswapInterfaceMulticall } from 'types/v3'
+import { NonfungiblePositionManager, QuoterV2, TickLens, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
 
 import { getContract } from '../utils'
@@ -131,7 +131,7 @@ export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean):
 }
 
 export function useQuoter() {
-  return useContract<Quoter | QuoterV2>(QUOTER_ADDRESSES, QuoterV2ABI)
+  return useContract<QuoterV2>(QUOTER_V2_ADDRESSES, QuoterV2ABI)
 }
 
 export function useTickLens(): TickLens | null {
