@@ -162,7 +162,7 @@ export function NetworkAlert() {
     return (
     <RootWrapper>
       <ContentWrapper chainId={SupportedChainId.SCROLL_PREALPHA} darkMode={darkMode} logoUrl="">
-        <LinkOutToBridge href="https://gov.uniswap.org/t/temperature-check-deploy-uniswap-v3-on-scroll/18114">
+        <LinkOutToBridge href="https://snapshot.org/#/uniswap/proposal/0x5ad7208d9ccad93dbc96abc12bfeffcfe83e96b9782e5135727cdaaf494d70f3">
           <BodyText color={darkMode ? textColor : "black"}>
             <AlertTriangle size={24} style={{marginRight: "16px"}} />
             <AutoRow>
@@ -205,7 +205,7 @@ export function NetworkAlert() {
       </ContentWrapper>
 <div style={{height:"16px"}} />
       <ContentWrapper chainId={chainId} darkMode={darkMode} logoUrl={logoUrl}>
-        <LinkOutToBridge href="https://gov.uniswap.org/t/temperature-check-deploy-uniswap-v3-on-scroll/18114">
+        <LinkOutToBridge href="https://snapshot.org/#/uniswap/proposal/0x5ad7208d9ccad93dbc96abc12bfeffcfe83e96b9782e5135727cdaaf494d70f3">
           <BodyText color={textColor}>
             {/* <L2Icon src={logoUrl} /> */}
             <AlertTriangle size={24} style={{marginRight: "16px"}} />
