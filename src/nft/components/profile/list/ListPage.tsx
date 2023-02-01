@@ -180,6 +180,7 @@ export const ListPage = () => {
     })
   }, [])
 
+  // TODO with removal of list v1 see if this logic can be removed
   useEffect(() => {
     const state = getListingState(collectionsRequiringApproval, listings)
 
@@ -196,8 +197,7 @@ export const ListPage = () => {
 
   useEffect(() => {
     setGlobalMarketplaces(selectedMarkets)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedMarkets])
+  }, [selectedMarkets, setGlobalMarketplaces])
 
   const startListingEventProperties = {
     collection_addresses: sellAssets.map((asset) => asset.asset_contract.address),
