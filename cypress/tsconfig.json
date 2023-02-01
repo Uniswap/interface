@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
+    "esModuleInterop": true,
     "strict": true,
     "target": "es5",
     "lib": ["es5", "dom"],
-    "types": ["cypress"]
+    "types": ["cypress",  "@nomiclabs/hardhat-ethers"]
   },
   "include": ["**/*.ts"]
 }

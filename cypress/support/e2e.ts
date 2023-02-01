@@ -6,8 +6,9 @@
 // ***********************************************************
 
 // Import commands.ts using ES2015 syntax:
-import { injected } from './ethereum'
 import assert = require('assert')
+import { JsonRpcProvider } from '@ethersproject/providers'
+import { ethers } from 'ethers'
 
 import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
 
@@ -15,7 +16,7 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface ApplicationWindow {
-      ethereum: typeof injected
+      ethereum: ethers.providers.ExternalProvider
     }
     interface VisitOptions {
       serviceWorker?: true
@@ -36,10 +37,15 @@ Cypress.Commands.overwrite(
     cy.intercept('/service-worker.js', options?.serviceWorker ? undefined : { statusCode: 404 }).then(() => {
       original({
         ...options,
-        url: (url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url) + '?chain=goerli',
+        url: url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url,
         onBeforeLoad(win) {
           options?.onBeforeLoad?.(win)
           win.localStorage.clear()
+
+          // Hardhat forked testnet
+          const provider = new JsonRpcProvider('http://localhost:8545')
+          // @ts-ignore
+          const bridge = new Eip1193Bridge(provider.getSigner(), provider)
 
           const userState = {
             selectedWallet: options?.noWallet !== true ? options?.selectedWallet || 'INJECTED' : undefined,
@@ -58,7 +64,7 @@ Cypress.Commands.overwrite(
             win.localStorage.setItem('featureFlags', JSON.stringify(featureFlags))
           }
 
-          win.ethereum = injected
+          win.ethereum = bridge
         },
       })
     })
