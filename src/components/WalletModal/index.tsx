@@ -201,11 +201,11 @@ export default function WalletModal({
   }, [pendingConnector, walletView])
 
   // Keep the network connector in sync with any active user connector to prevent chain-switching on wallet disconnection.
-  // useEffect(() => {
-  //   if (chainId && connector !== networkConnection.connector) {
-  //     networkConnection.connector.activate(chainId)
-  //   }
-  // }, [chainId, connector])
+  useEffect(() => {
+    if (chainId && connector !== networkConnection.connector) {
+      networkConnection.connector.activate(chainId)
+    }
+  }, [chainId, connector])
 
   // When new wallet is successfully set by the user, trigger logging of Amplitude analytics event.
   useEffect(() => {
