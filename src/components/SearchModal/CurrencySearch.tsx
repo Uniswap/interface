@@ -194,7 +194,9 @@ export function CurrencySearch({
 
   // if no results on main list, show option to expand into inactive
   const filteredInactiveTokens = useSearchInactiveTokenLists(
-    filteredTokens.length === 0 || (debouncedQuery.length > 2 && !isAddressSearch) ? debouncedQuery : undefined
+    !onlyShowCurrenciesWithBalance && (filteredTokens.length === 0 || (debouncedQuery.length > 2 && !isAddressSearch))
+      ? debouncedQuery
+      : undefined
   )
 
   // Timeout token loader after 3 seconds to avoid hanging in a loading state.
