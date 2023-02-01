@@ -160,6 +160,7 @@ export async function signListing(
         )
 
         const order = await executeAllActions()
+        setStatus(ListingStatus.PENDING)
         const res = await PostOpenSeaSellOrder(order)
         if (res) setStatus(ListingStatus.APPROVED)
         return res
