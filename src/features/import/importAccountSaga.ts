@@ -144,7 +144,7 @@ function* importRestoreBackupAccounts(
       return call(generateAndStorePrivateKey, mnemonicId, index)
     })
   )
-  const accounts = addresses.slice(1, addresses.length).map((address, index) => {
+  const accounts = addresses.map((address, index) => {
     const account: Account = {
       type: AccountType.SignerMnemonic,
       address,
