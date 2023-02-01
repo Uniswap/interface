@@ -183,8 +183,8 @@ export function DappLogoWithTxStatus({
   const fill = theme.colors.background0
 
   const dappImageSize = size
-  const statusSize = dappImageSize * (2 / 3)
-  const totalSize = dappImageSize + statusSize * (1 / 3)
+  const statusSize = dappImageSize * (1 / 2)
+  const totalSize = dappImageSize + statusSize * (1 / 4)
 
   const getStatusIcon = (): JSX.Element | undefined => {
     switch (event) {
@@ -245,7 +245,7 @@ export function DappLogoWithWCBadge({
   const gray = theme.colors.textSecondary
   const dappImageSize = size
   const statusSize = dappImageSize * (1 / 2)
-  const totalSize = dappImageSize + statusSize * (1 / 3)
+  const totalSize = dappImageSize + statusSize * (1 / 4)
   const dappImage = dappImageUrl ? (
     <RemoteImage
       borderRadius={theme.borderRadii.full}
