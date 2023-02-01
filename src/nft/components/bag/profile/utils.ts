@@ -1,4 +1,5 @@
 import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
+import { addressesByNetwork, SupportedChainId } from '@looksrare/sdk'
 import { LOOKSRARE_MARKETPLACE_CONTRACT, X2Y2_TRANSFER_CONTRACT } from 'nft/queries'
 import { OPENSEA_CROSS_CHAIN_CONDUIT } from 'nft/queries/openSea'
 import { AssetRow, CollectionRow, ListingMarket, ListingRow, ListingStatus, WalletAsset } from 'nft/types'
@@ -31,8 +32,7 @@ export async function approveCollectionRow(
   collectionsRequiringApproval: CollectionRow[],
   setCollectionsRequiringApproval: Dispatch<CollectionRow[]>,
   signer: JsonRpcSigner,
-  looksRareAddress: string,
-  pauseAllRows: () => void
+  pauseAllRows?: () => void
 ) {
   updateStatus({
     listing: collectionRow,
@@ -45,11 +45,11 @@ export async function approveCollectionRow(
         collectionsRequiringApproval,
         setCollectionsRequiringApproval,
         signer,
-        looksRareAddress,
         pauseAllRows
       ),
   })
   const { marketplace, collectionAddress } = collectionRow
+  const addresses = addressesByNetwork[SupportedChainId.MAINNET]
   const spender =
     marketplace.name === 'OpenSea'
       ? OPENSEA_CROSS_CHAIN_CONDUIT
@@ -57,7 +57,7 @@ export async function approveCollectionRow(
       ? LOOKSRARE_MARKETPLACE_CONTRACT
       : marketplace.name === 'X2Y2'
       ? X2Y2_TRANSFER_CONTRACT
-      : looksRareAddress
+      : addresses.TRANSFER_MANAGER_ERC721
   !!collectionAddress &&
     (await approveCollection(spender, collectionAddress, signer, (newStatus: ListingStatus) =>
       updateStatus({
@@ -67,7 +67,11 @@ export async function approveCollectionRow(
         setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
       })
     ))
-  if (collectionRow.status === ListingStatus.REJECTED || collectionRow.status === ListingStatus.FAILED) pauseAllRows()
+  if (
+    (collectionRow.status === ListingStatus.REJECTED || collectionRow.status === ListingStatus.FAILED) &&
+    pauseAllRows
+  )
+    pauseAllRows()
 }
 
 export async function signListingRow(
@@ -78,7 +82,7 @@ export async function signListingRow(
   provider: Web3Provider,
   getLooksRareNonce: () => number,
   setLooksRareNonce: (nonce: number) => void,
-  pauseAllRows: () => void
+  pauseAllRows?: () => void
 ) {
   const looksRareNonce = getLooksRareNonce()
   updateStatus({
@@ -108,7 +112,7 @@ export async function signListingRow(
       setRows: setListings as Dispatch<AssetRow[]>,
     })
   )
-  if (listing.status === ListingStatus.REJECTED) pauseAllRows()
+  if (listing.status === ListingStatus.REJECTED && pauseAllRows) pauseAllRows()
   else {
     res && listing.marketplace.name === 'LooksRare' && setLooksRareNonce(looksRareNonce + 1)
     const newStatus = res ? ListingStatus.APPROVED : ListingStatus.FAILED

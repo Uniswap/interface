@@ -118,8 +118,3 @@ export enum ProfilePageStateType {
   VIEWING,
   LISTING,
 }
-
-export enum ListingResponse {
-  TRY_AGAIN,
-  SUCCESS,
-}
