@@ -71,6 +71,7 @@ export const enum ModalName {
   NftCollection = 'nft-collection',
   RecoveryWarning = 'recovery-warning',
   RemoveWallet = 'remove-wallet-modal',
+  RemoveSeedPhraseWarningModal = 'remove-seed-phrase-warning-modal',
   ReimportUninstall = 'reimport-uninstall-modal',
   ScreenshotWarning = 'screenshot-warning',
   Send = 'send-modal',
