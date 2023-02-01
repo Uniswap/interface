@@ -123,7 +123,6 @@ const Warning = ({ children }: PropsWithChildren<unknown>) => {
 
 interface BagFooterProps {
   totalEthPrice: BigNumber
-  totalUsdPrice: number | undefined
   bagStatus: BagStatus
   fetchAssets: () => void
   eventProperties: Record<string, unknown>
@@ -136,13 +135,7 @@ const PENDING_BAG_STATUSES = [
   BagStatus.PROCESSING_TRANSACTION,
 ]
 
-export const BagFooter = ({
-  totalEthPrice,
-  totalUsdPrice,
-  bagStatus,
-  fetchAssets,
-  eventProperties,
-}: BagFooterProps) => {
+export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperties }: BagFooterProps) => {
   const toggleWalletModal = useToggleWalletModal()
   const theme = useTheme()
   const { account, chainId, connector } = useWeb3React()
@@ -205,9 +198,8 @@ export const BagFooter = ({
   const activeCurrency = inputCurrency ?? defaultCurrency
 
   const parsedAmount = useMemo(() => {
-    if (!inputCurrency) return undefined
     return tryParseCurrencyAmount(formatEther(totalEthPrice.toString()), defaultCurrency ?? undefined)
-  }, [defaultCurrency, totalEthPrice, inputCurrency])
+  }, [defaultCurrency, totalEthPrice])
 
   const { state: swapState, trade: swapTrade } = useBestTrade(
     TradeType.EXACT_OUTPUT,
@@ -215,7 +207,7 @@ export const BagFooter = ({
     inputCurrency ?? undefined
   )
 
-  const usdcValue = useStablecoinValue(swapTrade?.inputAmount)
+  const usdcValue = useStablecoinValue(inputCurrency ? swapTrade?.inputAmount : parsedAmount)
 
   return (
     <FooterContainer>
@@ -247,7 +239,7 @@ export const BagFooter = ({
                 &nbsp;{activeCurrency?.symbol ?? 'ETH'}
               </ThemedText.HeadlineSmall>
               <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
-                {`${ethNumberStandardFormatter(inputCurrency ? usdcValue?.toExact() : totalUsdPrice, true)}`}
+                {`${ethNumberStandardFormatter(usdcValue?.toExact(), true)}`}
               </ThemedText.BodySmall>
             </TotalColumn>
           </CurrencyRow>
@@ -266,7 +258,7 @@ export const BagFooter = ({
             </Row>
             <Row justify="flex-end">
               <ThemedText.BodySmall color="textSecondary" lineHeight="20px">{`${ethNumberStandardFormatter(
-                totalUsdPrice,
+                usdcValue?.toExact(),
                 true
               )}`}</ThemedText.BodySmall>
             </Row>
