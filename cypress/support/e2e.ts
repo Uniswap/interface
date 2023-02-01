@@ -7,8 +7,8 @@
 
 // Import commands.ts using ES2015 syntax:
 import assert = require('assert')
+import ethers = require('ethers')
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { ethers } from 'ethers'
 
 import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
 
