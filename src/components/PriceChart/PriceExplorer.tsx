@@ -90,7 +90,7 @@ export const PriceExplorer = ({
   // retrieves price and formats it
   const price = useDerivedValue(() => {
     if (!currentIndexData.value) {
-      return 0 // Return 0 as a placeholder. In this case though the UI would just show loading so the number doesn't matter won't appear
+      return headerCustomPrice ?? 0
     }
 
     if (isPanning.value) {
@@ -107,7 +107,7 @@ export const PriceExplorer = ({
   // retrieves percent change and formats it
   const percentChange = useDerivedValue(() => {
     if (!graphs || !currentIndexData.value) {
-      return 0
+      return headerCustomPercentChange ?? 0
     }
 
     if (
