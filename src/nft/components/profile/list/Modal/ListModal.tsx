@@ -5,6 +5,7 @@ import Row from 'components/Row'
 import { Portal } from 'nft/components/common/Portal'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { useNFTList } from 'nft/hooks'
+import { ListingStatus } from 'nft/types'
 import { useReducer } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -38,32 +39,42 @@ const TitleRow = styled(Row)`
 export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   const listings = useNFTList((state) => state.listings)
   const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
+  const listingStatus = useNFTList((state) => state.listingStatus)
   const [openSection, toggleOpenSection] = useReducer(
     (s) => (s === Section.APPROVE ? Section.SIGN : Section.APPROVE),
     Section.APPROVE
   )
+
+  // TODO:  useeffect, if allCollectionsApproved start signing listings
   return (
     <Portal>
       <Trace modal={InterfaceModalName.NFT_LISTING}>
         <ListModalWrapper>
-          <TitleRow>
-            <ThemedText.HeadlineSmall lineHeight="28px">
-              <Trans>List NFTs</Trans>
-            </ThemedText.HeadlineSmall>
-            <X size={24} cursor="pointer" onClick={overlayClick} />
-          </TitleRow>
-          <ListModalSection
-            sectionType={Section.APPROVE}
-            active={openSection === Section.APPROVE}
-            content={collectionsRequiringApproval}
-            toggleSection={toggleOpenSection}
-          />
-          <ListModalSection
-            sectionType={Section.SIGN}
-            active={openSection === Section.SIGN}
-            content={listings}
-            toggleSection={toggleOpenSection}
-          />
+          {listingStatus === ListingStatus.APPROVED ? (
+            // TODO
+            <>Success Screen</>
+          ) : (
+            <>
+              <TitleRow>
+                <ThemedText.HeadlineSmall lineHeight="28px">
+                  <Trans>List NFTs</Trans>
+                </ThemedText.HeadlineSmall>
+                <X size={24} cursor="pointer" onClick={overlayClick} />
+              </TitleRow>
+              <ListModalSection
+                sectionType={Section.APPROVE}
+                active={openSection === Section.APPROVE}
+                content={collectionsRequiringApproval}
+                toggleSection={toggleOpenSection}
+              />
+              <ListModalSection
+                sectionType={Section.SIGN}
+                active={openSection === Section.SIGN}
+                content={listings}
+                toggleSection={toggleOpenSection}
+              />
+            </>
+          )}
         </ListModalWrapper>
       </Trace>
       <Overlay onClick={overlayClick} />
