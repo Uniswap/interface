@@ -20,7 +20,7 @@ import { NETWORKS_INFO, isEVM } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
-import { useElasticFarms, useFarmAction } from 'state/farms/elastic/hooks'
+import { StakeParam, useElasticFarms, useFarmAction } from 'state/farms/elastic/hooks'
 import { NFTPosition } from 'state/farms/elastic/types'
 import { useTokenPrices } from 'state/tokenPrices/hooks'
 import { StyledInternalLink } from 'theme'
@@ -301,8 +301,14 @@ function StakeModal({
   }, [selectedNFTs.length, eligibleNfts])
 
   const handleClick = async () => {
+    const params: StakeParam[] = selectedNFTs.map(e => ({
+      nftId: e.available.nftId,
+      position: e.available,
+      poolAddress: e.poolAddress,
+      stakedLiquidity: e.staked.liquidity.toString(),
+    }))
     if (type === 'stake') {
-      const txhash = await stake(BigNumber.from(poolId), selectedNFTs)
+      const txhash = await stake(BigNumber.from(poolId), params)
       if (txhash) {
         mixpanelHandler(MIXPANEL_TYPE.ELASTIC_STAKE_LIQUIDITY_COMPLETED, {
           token_1: token0?.symbol,
@@ -310,7 +316,7 @@ function StakeModal({
         })
       }
     } else {
-      const txhash = await unstake(BigNumber.from(poolId), selectedNFTs)
+      const txhash = await unstake(BigNumber.from(poolId), params)
       if (txhash) {
         mixpanelHandler(MIXPANEL_TYPE.ELASTIC_UNSTAKE_LIQUIDITY_COMPLETED, {
           token_1: token0?.symbol,

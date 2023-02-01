@@ -3,7 +3,7 @@ import { Flex, Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
 import { ReactComponent as Down } from 'assets/svg/down.svg'
-import { ButtonEmpty, ButtonLight } from 'components/Button'
+import { ButtonLight } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 
 export const PageWrapper = styled(AutoColumn)`
@@ -96,39 +96,11 @@ export const TabContainer = styled.div`
   align-items: center;
   margin-bottom: 24px;
   gap: 24px;
-`
 
-export const TabWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`
-
-export const Tab = styled(ButtonEmpty)<{ isActive: boolean }>`
-  width: fit-content;
-  margin-right: 1.5rem;
-  font-weight: 500;
-  padding: 0;
-  font-size: 1rem;
-  padding-bottom: 4px;
-  color: ${({ theme, isActive }) => (isActive ? theme.primary : theme.subText)};
-  border-radius: 0;
-
-  &:hover {
-    text-decoration: none;
-  }
-
-  &:focus {
-    text-decoration: none;
-  }
-
-  &:last-child {
-    margin-right: 0;
-  }
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    margin-right: 12px;
-  `}
+  ${({ theme }) => theme.mediaWidth.upToXL`
+    flex-direction: column;
+    align-items: flex-start;
+  `};
 `
 
 export const PoolTitleContainer = styled.div`
@@ -140,8 +112,9 @@ export const StakedOnlyToggleWrapper = styled.div`
   display: flex;
   align-items: center;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    margin-top: 20px;
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    width: 100%;
+    justify-content: space-between;
   `}
 `
 
@@ -186,28 +159,28 @@ export const HeadingContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 16px;
+  gap: 1rem;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    gap: 0;
-    display: flex;
-    flex-direction: column-reverse;
+  ${({ theme }) => theme.mediaWidth.upToXL`
+    width: 100%;
+  `}
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    flex-direction: column;
     align-items: flex-start;
   `}
 `
 export const HeadingRight = styled.div`
   display: flex;
-  gap: 20px;
+  gap: 1rem;
+  justify-content: space-between;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     width: 100%;
   `}
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: flex;
-    flex-direction: column-reverse;
-    gap: 0;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex-direction: column;
   `}
 `
 export const TotalRewardsContainer = styled.div<{ disabled?: boolean }>`
@@ -530,11 +503,12 @@ export const DataTitle = styled.div`
 export const SearchContainer = styled.div`
   background: ${({ theme }) => theme.background};
   border-radius: 999px;
-  width: 320px;
+  width: 280px;
   font-size: 12px;
   display: flex;
   align-items: center;
-  padding: 8px 12px;
+  padding: 6px 12px;
+  height: 36px;
   gap: 8px;
 
   > svg {

@@ -29,7 +29,7 @@ function ClassicElasticTab() {
   const isFarmpage = location.pathname.includes('/farms')
 
   return (
-    <Flex>
+    <Flex width="max-content">
       <MouseoverTooltip text={notSupportedMsg || ''}>
         <Flex
           alignItems={'center'}

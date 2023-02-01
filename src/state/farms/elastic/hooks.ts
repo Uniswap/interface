@@ -5,7 +5,6 @@ import { t } from '@lingui/macro'
 import { BigNumber } from 'ethers'
 import { useCallback, useMemo, useState } from 'react'
 
-import { ExplicitNFT } from 'components/YieldPools/ElasticFarmModals/StakeModal'
 import { CONTRACT_NOT_FOUND_MSG } from 'constants/messages'
 import { useActiveWeb3React } from 'hooks'
 import { useTokens } from 'hooks/Tokens'
@@ -34,11 +33,20 @@ export const useElasticFarms = () => {
     [isEVM, elasticFarm, chainId],
   )
 }
+export type StakeParam = {
+  nftId: BigNumber
+  position: NFTPosition | Position
+  stakedLiquidity: string
+  poolAddress: string
+}
 
 const getTransactionExtraInfo = (
   positions: Position[] | NFTPosition[],
   poolIds: string[],
 ): TransactionExtraInfoStakeFarm => {
+  if (!positions[0]?.amount0) {
+    return { pairs: [] }
+  }
   const pairs = positions.map((item, index) => {
     const { amount0, amount1 } = item
     return {
@@ -150,13 +158,13 @@ export const useFarmAction = (address: string) => {
   )
 
   const stake = useCallback(
-    async (pid: BigNumber, selectedNFTs: ExplicitNFT[]) => {
+    async (pid: BigNumber, selectedNFTs: StakeParam[]) => {
       if (!contract) {
         throw new Error(CONTRACT_NOT_FOUND_MSG)
       }
 
-      const nftIds = selectedNFTs.map(item => item.available.nftId)
-      const liqs = selectedNFTs.map(item => BigNumber.from(item.available.liquidity.toString()))
+      const nftIds = selectedNFTs.map(item => item.nftId)
+      const liqs = selectedNFTs.map(item => BigNumber.from(item.position.liquidity.toString()))
 
       const estimateGas = await contract.estimateGas.join(pid, nftIds, liqs)
       const tx = await contract.join(pid, nftIds, liqs, {
@@ -166,7 +174,7 @@ export const useFarmAction = (address: string) => {
         hash: tx.hash,
         type: TRANSACTION_TYPE.STAKE,
         extraInfo: getTransactionExtraInfo(
-          selectedNFTs.map(e => e.available),
+          selectedNFTs.map(e => e.position),
           selectedNFTs.map(e => e.poolAddress),
         ),
       })
@@ -177,13 +185,13 @@ export const useFarmAction = (address: string) => {
   )
 
   const unstake = useCallback(
-    async (pid: BigNumber, selectedNFTs: ExplicitNFT[]) => {
+    async (pid: BigNumber, selectedNFTs: StakeParam[]) => {
       if (!contract) {
         throw new Error(CONTRACT_NOT_FOUND_MSG)
       }
       try {
-        const nftIds = selectedNFTs.map(item => item.available.nftId)
-        const liqs = selectedNFTs.map(item => BigNumber.from(item.staked.liquidity.toString()))
+        const nftIds = selectedNFTs.map(item => item.nftId)
+        const liqs = selectedNFTs.map(item => BigNumber.from(item.stakedLiquidity))
         const estimateGas = await contract.estimateGas.exit(pid, nftIds, liqs)
         const tx = await contract.exit(pid, nftIds, liqs, {
           gasLimit: calculateGasMargin(estimateGas),
@@ -192,7 +200,7 @@ export const useFarmAction = (address: string) => {
           hash: tx.hash,
           type: TRANSACTION_TYPE.UNSTAKE,
           extraInfo: getTransactionExtraInfo(
-            selectedNFTs.map(e => e.available),
+            selectedNFTs.map(e => e.position),
             selectedNFTs.map(e => e.poolAddress),
           ),
         })

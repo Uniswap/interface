@@ -16,7 +16,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
 
 const Wrapper = styled.div`
-  padding: 10px 12px;
+  padding: 0 12px;
   background: ${({ theme }) => theme.background};
   font-size: 12px;
   font-weight: 500;
@@ -26,7 +26,8 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-width: 180px;
+  min-width: 140px;
+  height: 36px;
   cursor: pointer;
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`

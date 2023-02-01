@@ -2,7 +2,7 @@ import { Position, computePoolAddress } from '@kyberswap/ks-sdk-elastic'
 import { Trans } from '@lingui/macro'
 import { BigNumber } from 'ethers'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { X } from 'react-feather'
+import { Minus, X } from 'react-feather'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 
@@ -29,6 +29,7 @@ import { PositionDetails } from 'types/position'
 import { formatDollarAmount } from 'utils/numbers'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 
+import { Button } from '../ElasticFarmGroup/styleds'
 import {
   DropdownIcon,
   ModalContentWrapper,
@@ -45,13 +46,28 @@ const PositionRow = ({
   onChange,
   selected,
   forced,
+  farmAddress,
 }: {
   selected: boolean
   position: UserPositionFarm
   onChange: (value: boolean, position: Position | undefined) => void
   forced: boolean
+  farmAddress: string
 }) => {
   const { token0: token0Address, token1: token1Address, fee: feeAmount, liquidity, tickLower, tickUpper } = position
+
+  const { unstake } = useFarmAction(farmAddress)
+  const { userFarmInfo } = useElasticFarms()
+
+  const joinedPositions = userFarmInfo?.[farmAddress]?.joinedPositions
+  let pid: null | string = null
+  if (joinedPositions) {
+    Object.keys(joinedPositions).forEach(key => {
+      joinedPositions[key].forEach(pos => {
+        if (pos.nftId.toString() === position.tokenId.toString()) pid = key
+      })
+    })
+  }
 
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
@@ -114,9 +130,10 @@ const PositionRow = ({
       )}
       {above768 ? (
         <>
-          <Flex alignItems="center">
+          <Flex alignItems="center" sx={{ gap: '4px' }}>
             {/* <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={16} />*/}
             <Text>{position.tokenId.toString()}</Text>
+            <RangeBadge removed={removed} inRange={!outOfRange} hideText size={12} />
           </Flex>
           <Text>{formatDollarAmount(usd)}</Text>
           <Flex justifyContent="flex-end" sx={{ gap: '4px' }} alignItems="center">
@@ -130,7 +147,24 @@ const PositionRow = ({
           </Flex>
 
           <Flex justifyContent="flex-end">
-            <RangeBadge removed={removed} inRange={!outOfRange} />
+            <Button
+              color={theme.red}
+              style={{ height: '28px' }}
+              disabled={position.stakedLiquidity.eq(BigNumber.from(0))}
+              onClick={() => {
+                if (!!pid && positionSDK)
+                  unstake(BigNumber.from(pid), [
+                    {
+                      nftId: position.tokenId,
+                      stakedLiquidity: position.stakedLiquidity.toString(),
+                      poolAddress: position.poolId,
+                      position: positionSDK,
+                    },
+                  ])
+              }}
+            >
+              <Minus size={16} /> Unstake
+            </Button>
           </Flex>
         </>
       ) : (
@@ -370,7 +404,7 @@ function WithdrawModal({
             <>
               <Text textAlign="right">Token 1</Text>
               <Text textAlign="right">Token 2</Text>
-              <Text textAlign="right">Status</Text>
+              <Text textAlign="right">Action</Text>
             </>
           )}
         </TableHeader>
@@ -389,6 +423,7 @@ function WithdrawModal({
                 selected={selectedNFTs.some(e => e.tokenId.toString() === pos.tokenId.toString())}
                 key={pos.tokenId.toString()}
                 position={pos}
+                farmAddress={selectedFarmAddress}
                 forced={forced}
                 onChange={(selected: boolean, position: Position | undefined) => {
                   const tokenId = pos.tokenId.toString()

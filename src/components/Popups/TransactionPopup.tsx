@@ -57,7 +57,7 @@ const summaryClaim = (txs: TransactionDetails) => {
 }
 
 const summaryStakeUnstakeFarm = (txs: TransactionDetails) => {
-  const { summary } = (txs.extraInfo || {}) as TransactionExtraBaseInfo
+  const { summary = 'liquidity' } = (txs.extraInfo || {}) as TransactionExtraBaseInfo
   return txs.type === TRANSACTION_TYPE.STAKE ? `Stake ${summary} into farm` : `Unstake ${summary} from farm`
 }
 

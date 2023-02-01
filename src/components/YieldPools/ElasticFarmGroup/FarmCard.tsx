@@ -1,15 +1,15 @@
 import { ChainId, Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import dayjs from 'dayjs'
-import { darken } from 'polished'
+import { rgba } from 'polished'
 import { useState } from 'react'
-import { Minus, Plus, Share2 } from 'react-feather'
+import { Info, Minus, Plus, Share2 } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import { ReactComponent as DropIcon } from 'assets/svg/drop.svg'
-import { ButtonEmpty, ButtonLight } from 'components/Button'
+import { ButtonEmpty } from 'components/Button'
 import CopyHelper from 'components/Copy'
 import CurrencyLogo from 'components/CurrencyLogo'
 import Divider from 'components/Divider'
@@ -32,32 +32,19 @@ import { APRTooltipContent } from '../FarmingPoolAPRCell'
 import { useSharePoolContext } from '../SharePoolContext'
 import FeeTarget from './FeeTarget'
 import PositionDetail from './PostionDetail'
-import { FeeTag, FlipCard, FlipCardBack, FlipCardFront } from './styleds'
+import { Button, FeeTag, FlipCard, FlipCardBack, FlipCardFront } from './styleds'
 
-const Button = styled(ButtonLight)<{ color: string }>`
-  background: ${({ color }) => color + '33'};
-  color: ${({ color }) => color};
-  height: 36px;
-  font-size: 12px;
+const Range = styled.div<{ inrange?: boolean }>`
+  align-self: flex-end;
+  align-items: center;
+  color: ${({ theme, inrange }) => (inrange ? theme.primary : theme.warning)};
+  padding: 3px 4px;
   gap: 4px;
-  width: fit-content;
-  padding: 10px 12px;
-
-  &:hover {
-    background-color: ${({ color, disabled }) => !disabled && darken(0.03, `${color}33`)};
-  }
-  &:active {
-    box-shadow: 0 0 0 1pt ${({ color, disabled }) => !disabled && darken(0.05, `${color}33`)};
-    background-color: ${({ color, disabled }) => !disabled && darken(0.05, `${color}33`)};
-  }
-  :disabled {
-    cursor: not-allowed;
-    background-color: ${({ theme }) => `${theme.buttonGray}`};
-    color: ${({ theme }) => theme.border};
-    box-shadow: none;
-    border: 1px solid transparent;
-    outline: none;
-  }
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  border-radius: 999px;
+  background: ${({ theme, inrange }) => rgba(inrange ? theme.primary : theme.warning, 0.3)};
 `
 
 interface Pool extends FarmingPool {
@@ -122,6 +109,13 @@ const FarmCard = ({
       ? representedPostion.pool.priceOf(representedPostion.pool.token1)
       : representedPostion.pool.priceOf(representedPostion.pool.token0))
 
+  const numberOutRangePos = depositedPositions.filter(
+    pos => pos.pool.tickCurrent < pos.tickLower || pos.pool.tickCurrent >= pos.tickUpper,
+  ).length
+
+  const numberInRangePos = depositedPositions.filter(
+    pos => pos.pool.tickCurrent >= pos.tickLower && pos.pool.tickCurrent < pos.tickUpper,
+  ).length
   //TODO namgold/vietnv: remove this hardcode
   const token0Symbol =
     chainId === ChainId.OPTIMISM &&
@@ -135,23 +129,55 @@ const FarmCard = ({
       : pool.token1.symbol
 
   return (
-    <FlipCard flip={showPosition}>
+    <FlipCard flip={showPosition} joined={!!depositedPositions.length}>
       {!showPosition && (
         <FlipCardFront>
-          <Flex alignItems="center">
-            <DoubleCurrencyLogo currency0={pool.token0} currency1={pool.token1} size={20} />
-            <Link
-              to={addliquidityElasticPool}
-              style={{
-                textDecoration: 'none',
-              }}
-            >
-              <Text fontSize={16} fontWeight={500}>
-                {token0Symbol} - {token1Symbol}
-              </Text>
-            </Link>
+          <Flex alignItems="center" justifyContent="space-between">
+            <Flex alignItems="center">
+              <DoubleCurrencyLogo currency0={pool.token0} currency1={pool.token1} size={20} />
+              <Link
+                to={addliquidityElasticPool}
+                style={{
+                  textDecoration: 'none',
+                }}
+              >
+                <Text fontSize={16} fontWeight={500}>
+                  {token0Symbol} - {token1Symbol}
+                </Text>
+              </Link>
 
-            <FeeTag style={{ fontSize: '12px' }}>FEE {(pool.pool.fee * 100) / ELASTIC_BASE_FEE_UNIT}%</FeeTag>
+              <FeeTag style={{ fontSize: '12px' }}>FEE {(pool.pool.fee * 100) / ELASTIC_BASE_FEE_UNIT}%</FeeTag>
+            </Flex>
+
+            <Flex sx={{ gap: '4px' }}>
+              {!!numberOutRangePos && (
+                <MouseoverTooltip
+                  text={
+                    <Text fontSize="12px" fontStyle="italic">
+                      <Trans>You have {numberOutRangePos} out-of-range position(s)</Trans>
+                    </Text>
+                  }
+                >
+                  <Range>
+                    {numberOutRangePos} <Info size={12} />
+                  </Range>
+                </MouseoverTooltip>
+              )}
+
+              {!!numberInRangePos && (
+                <MouseoverTooltip
+                  text={
+                    <Text fontSize="12px" fontStyle="italic">
+                      <Trans>You have {numberInRangePos} in-range position(s)</Trans>
+                    </Text>
+                  }
+                >
+                  <Range inrange>
+                    {numberInRangePos} <Info size={12} />
+                  </Range>
+                </MouseoverTooltip>
+              )}
+            </Flex>
           </Flex>
 
           <Flex

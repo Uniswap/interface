@@ -1,7 +1,8 @@
-import { rgba } from 'polished'
+import { darken, rgba } from 'polished'
 import styled, { css } from 'styled-components'
 
 import bgimg from 'assets/images/card-background.png'
+import { ButtonLight } from 'components/Button'
 
 export const RewardAndDepositInfo = styled.div`
   display: flex;
@@ -108,7 +109,7 @@ export const FeeTag = styled.div`
   color: ${({ theme }) => theme.darkBlue};
   font-size: 10px;
   font-weight: 500;
-  padding: 2px 4px;
+  padding: 3px 4px;
   margin-left: 6px;
   min-width: 36px;
   display: flex;
@@ -158,15 +159,24 @@ export const Dot = styled.div<{ isCurrentPrice?: boolean; outOfRange?: boolean }
     isCurrentPrice ? theme.text : outOfRange ? theme.warning : theme.primary};
 `
 
-export const FlipCard = styled.div<{ flip: boolean }>`
+export const FlipCard = styled.div<{ flip: boolean; joined?: boolean }>`
   border-radius: 20px;
   padding: 16px;
   width: 100%;
   min-height: 380px;
-  background-image: url(${bgimg});
-  background-size: cover;
-  background-repeat: no-repeat;
   background-color: ${({ theme }) => theme.buttonBlack};
+
+  ${({ joined = true }) =>
+    joined &&
+    css`
+      background-image: ${({ theme }) =>
+        `url(${bgimg}),
+        linear-gradient(to right, ${rgba(theme.apr, 0.12)}, ${rgba(theme.apr, 0.12)}),
+        linear-gradient(to right, ${theme.buttonBlack}, ${theme.buttonBlack})`};
+
+      background-size: cover, cover, cover;
+      background-repeat: no-repeat, no-repeat, no-repeat;
+    `}
   position: relative;
   transition: transform 0.6s;
   transform-style: preserve-3d;
@@ -187,4 +197,30 @@ export const FlipCardBack = styled.div`
   flex-direction: column;
   backface-visibility: hidden;
   transform: rotateY(180deg);
+`
+
+export const Button = styled(ButtonLight)<{ color: string }>`
+  background: ${({ color }) => color + '33'};
+  color: ${({ color }) => color};
+  height: 36px;
+  font-size: 12px;
+  gap: 4px;
+  width: fit-content;
+  padding: 10px 12px;
+
+  &:hover {
+    background-color: ${({ color, disabled }) => !disabled && darken(0.03, `${color}33`)};
+  }
+  &:active {
+    box-shadow: 0 0 0 1pt ${({ color, disabled }) => !disabled && darken(0.05, `${color}33`)};
+    background-color: ${({ color, disabled }) => !disabled && darken(0.05, `${color}33`)};
+  }
+  :disabled {
+    cursor: not-allowed;
+    background-color: ${({ theme }) => `${theme.buttonGray}`};
+    color: ${({ theme }) => theme.border};
+    box-shadow: none;
+    border: 1px solid transparent;
+    outline: none;
+  }
 `

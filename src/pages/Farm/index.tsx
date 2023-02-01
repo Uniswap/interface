@@ -1,32 +1,49 @@
 import { Currency } from '@kyberswap/ks-sdk-core'
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import { stringify } from 'querystring'
-import { useMemo } from 'react'
-import { Share2 } from 'react-feather'
+import { useCallback, useMemo, useState } from 'react'
+import { Search, Share2 } from 'react-feather'
 import { useSelector } from 'react-redux'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 
 import { ReactComponent as TutorialIcon } from 'assets/svg/play_circle_outline.svg'
 import ClassicElasticTab from 'components/ClassicElasticTab'
 import Loader from 'components/Loader'
+import PoolsCurrencyInputPanel from 'components/PoolsCurrencyInputPanel'
 import RewardTokenPrices from 'components/RewardTokenPrices'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import Toggle from 'components/Toggle'
 import Tutorial, { TutorialType } from 'components/Tutorial'
 import Vesting from 'components/Vesting'
 import ProMMVesting from 'components/Vesting/ProMMVesting'
 import YieldPools from 'components/YieldPools'
 import ElasticFarms from 'components/YieldPools/ElasticFarms'
 import FarmGuide from 'components/YieldPools/FarmGuide'
-import { PageWrapper, PoolTitleContainer, Tab, TabContainer, TabWrapper, TopBar } from 'components/YieldPools/styleds'
+import FarmSort from 'components/YieldPools/FarmPoolSort'
+import ListGridViewGroup from 'components/YieldPools/ListGridViewGroup'
+import {
+  HeadingContainer,
+  HeadingRight,
+  PageWrapper,
+  PoolTitleContainer,
+  SearchContainer,
+  SearchInput,
+  StakedOnlyToggleText,
+  StakedOnlyToggleWrapper,
+  TabContainer,
+  TopBar,
+} from 'components/YieldPools/styleds'
 import { FARM_TAB, ZERO_ADDRESS } from 'constants/index'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
+import { useCurrency } from 'hooks/Tokens'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useSyncNetworkParamWithStore } from 'hooks/useSyncNetworkParamWithStore'
 import useTheme from 'hooks/useTheme'
+import { CurrencyWrapper, Tab } from 'pages/Pools/styleds'
 import { AppState } from 'state'
 import { ApplicationModal } from 'state/application/actions'
 import { useBlockNumber, useOpenModal } from 'state/application/hooks'
@@ -39,24 +56,70 @@ const Farm = () => {
   const { loading } = useFarmsData()
   const theme = useTheme()
   const qs = useParsedQueryString<{ type: string; tab: string }>()
-  const { type = FARM_TAB.ACTIVE, tab = VERSION.ELASTIC } = qs
-  const farmType = isInEnum(tab, VERSION) ? tab : VERSION.ELASTIC
+  // const { type = FARM_TAB.ACTIVE, tab = VERSION.ELASTIC } = qs
   const navigate = useNavigate()
+
+  const [searchParams, setSearchParams] = useSearchParams()
+  const type: string = searchParams.get('type') || FARM_TAB.ACTIVE
+  const tab: string = searchParams.get('tab') || VERSION.ELASTIC
+  const search: string = searchParams.get('search') || ''
+  const farmType = isInEnum(tab, VERSION) ? tab : VERSION.ELASTIC
+
+  const above1000 = useMedia('(min-width: 1000px)')
 
   const openShareModal = useOpenModal(ApplicationModal.SHARE)
 
   const vestingLoading = useSelector<AppState, boolean>(state => state.vesting.loading)
 
+  const [stakedOnly, setStakedOnly] = useState({
+    active: false,
+    ended: true,
+  })
+
+  const stakedOnlyKey = type === FARM_TAB.ACTIVE ? 'active' : 'ended'
+
+  const navigateTab = (nextTab: FARM_TAB) => {
+    const newQs = { ...qs, type: nextTab }
+    navigate({
+      search: stringify(newQs),
+    })
+  }
+
+  const location = useLocation()
+  const handleSearch = useCallback(
+    (search: string) => {
+      const target = {
+        ...location,
+        search: stringify({ ...qs, search }),
+      }
+
+      navigate(target, { replace: true })
+    },
+    [navigate, location, qs],
+  )
+
   const renderTabContent = () => {
     switch (type) {
       case FARM_TAB.ACTIVE:
-        return farmType === VERSION.ELASTIC ? <ElasticFarms /> : <YieldPools loading={loading} active />
+        return farmType === VERSION.ELASTIC ? (
+          <ElasticFarms stakedOnly={stakedOnly} />
+        ) : (
+          <YieldPools loading={loading} active />
+        )
       case FARM_TAB.ENDED:
-        return farmType === VERSION.ELASTIC ? <ElasticFarms /> : <YieldPools loading={loading} active={false} />
+        return farmType === VERSION.ELASTIC ? (
+          <ElasticFarms stakedOnly={stakedOnly} />
+        ) : (
+          <YieldPools loading={loading} active={false} />
+        )
       case FARM_TAB.VESTING:
         return farmType === VERSION.ELASTIC ? <ProMMVesting /> : <Vesting loading={vestingLoading} />
       case FARM_TAB.MY_FARMS:
-        return farmType === VERSION.ELASTIC ? <ElasticFarms /> : <YieldPools loading={loading} active={false} />
+        return farmType === VERSION.ELASTIC ? (
+          <ElasticFarms stakedOnly={stakedOnly} />
+        ) : (
+          <YieldPools loading={loading} active={false} />
+        )
 
       default:
         return <YieldPools loading={loading} active />
@@ -68,7 +131,7 @@ const Farm = () => {
   // Total rewards for Classic pool
   const { data: farmsByFairLaunch } = useFarmsData()
 
-  const below768 = useMedia('(max-width: 768px)')
+  const below992 = useMedia('(max-width: 992px)')
   const below1500 = useMedia('(max-width: 1500px)')
 
   const blockNumber = useBlockNumber()
@@ -107,7 +170,7 @@ const Farm = () => {
   const rewardPrice = !!rewardTokens.length && (
     <Flex
       flex={1}
-      width={below768 ? 'calc(100vw - 32px)' : below1500 ? 'calc(100vw - 412px)' : '1088px'}
+      width={below1500 ? 'calc(100vw - 706px)' : '796px'}
       sx={{ gap: '4px' }}
       alignItems="center"
       justifyContent="flex-end"
@@ -119,7 +182,46 @@ const Farm = () => {
     </Flex>
   )
 
+  const token0Id = searchParams.get('token0') || undefined
+  const token1Id = searchParams.get('token1') || undefined
+
+  const token0 = useCurrency(token0Id)
+  const token1 = useCurrency(token1Id)
+
   if (!isEVM) return <Navigate to="/" />
+
+  const selectTokenFilter = (
+    <CurrencyWrapper>
+      <PoolsCurrencyInputPanel
+        onCurrencySelect={currency => {
+          searchParams.set('token0', currency.wrapped.address)
+          setSearchParams(searchParams)
+        }}
+        onClearCurrency={() => {
+          searchParams.set('token0', '')
+          setSearchParams(searchParams)
+        }}
+        currency={token0}
+        id="input-tokena"
+        showCommonBases
+      />
+      <Text marginX="6px">-</Text>
+      <PoolsCurrencyInputPanel
+        onCurrencySelect={currency => {
+          searchParams.set('token1', currency.wrapped.address)
+          setSearchParams(searchParams)
+        }}
+        onClearCurrency={() => {
+          searchParams.set('token1', '')
+          setSearchParams(searchParams)
+        }}
+        currency={token1}
+        id="input-tokenb"
+        showCommonBases
+      />
+    </CurrencyWrapper>
+  )
+
   return (
     <>
       <FarmUpdater />
@@ -128,75 +230,75 @@ const Farm = () => {
           <TopBar>
             <ClassicElasticTab />
 
-            {!below768 && (
-              <Flex sx={{ gap: '24px' }}>
-                <Tutorial
-                  type={farmType === VERSION.ELASTIC ? TutorialType.ELASTIC_FARMS : TutorialType.CLASSIC_FARMS}
-                  customIcon={
-                    <Flex
-                      sx={{ gap: '4px', cursor: 'pointer' }}
-                      fontSize="14px"
-                      alignItems="center"
-                      fontWeight="500"
-                      color={theme.subText}
-                      role="button"
-                    >
-                      <TutorialIcon />
-                      <Trans>Video Tutorial</Trans>
-                    </Flex>
-                  }
-                />
+            {!below992 && (
+              <>
+                {rewardPrice}
 
-                <Flex
-                  sx={{ gap: '4px', cursor: 'pointer' }}
-                  fontSize="14px"
-                  alignItems="center"
-                  fontWeight="500"
-                  color={theme.subText}
-                  onClick={() => openShareModal()}
-                >
-                  <Share2 size={20} />
-                  Share
+                <Flex sx={{ gap: '24px' }} width="max-content">
+                  <Tutorial
+                    type={farmType === VERSION.ELASTIC ? TutorialType.ELASTIC_FARMS : TutorialType.CLASSIC_FARMS}
+                    customIcon={
+                      <Flex
+                        sx={{ gap: '4px', cursor: 'pointer' }}
+                        fontSize="14px"
+                        alignItems="center"
+                        fontWeight="500"
+                        color={theme.subText}
+                        role="button"
+                      >
+                        <TutorialIcon />
+                        <Trans>Video Tutorial</Trans>
+                      </Flex>
+                    }
+                  />
+
+                  <Flex
+                    sx={{ gap: '4px', cursor: 'pointer' }}
+                    fontSize="14px"
+                    alignItems="center"
+                    fontWeight="500"
+                    color={theme.subText}
+                    onClick={() => openShareModal()}
+                  >
+                    <Share2 size={20} />
+                    Share
+                  </Flex>
                 </Flex>
-              </Flex>
+              </>
             )}
           </TopBar>
 
           <FarmGuide farmType={farmType} />
         </div>
-        {below768 && (
-          <Flex alignItems="center" sx={{ gap: '6px' }}>
+        {below992 && (
+          <Flex sx={{ gap: '1rem' }}>
             {rewardPrice}
-
-            <Flex sx={{ gap: '16px' }} alignItems="center">
-              <Tutorial
-                type={farmType === VERSION.ELASTIC ? TutorialType.ELASTIC_FARMS : TutorialType.CLASSIC_FARMS}
-                customIcon={<TutorialIcon color={theme.subText} style={{ width: '20px', height: '20px' }} />}
-              />
-              <Share2 color={theme.subText} size={20} onClick={() => openShareModal()} />
+            <Flex alignItems="center" sx={{ gap: '6px' }}>
+              <Flex sx={{ gap: '16px' }} alignItems="center">
+                <Tutorial
+                  type={farmType === VERSION.ELASTIC ? TutorialType.ELASTIC_FARMS : TutorialType.CLASSIC_FARMS}
+                  customIcon={<TutorialIcon color={theme.subText} style={{ width: '20px', height: '20px' }} />}
+                />
+                <Share2 color={theme.subText} size={20} onClick={() => openShareModal()} />
+              </Flex>
             </Flex>
           </Flex>
         )}
 
         <div>
           <TabContainer>
-            <TabWrapper>
+            <Flex sx={{ gap: '8px' }}>
               <Tab
                 onClick={() => {
                   if (type && type !== 'active') {
                     mixpanelHandler(MIXPANEL_TYPE.FARMS_ACTIVE_VIEWED)
                   }
-                  const newQs = { ...qs, type: 'active' }
-                  navigate({
-                    search: stringify(newQs),
-                  })
+                  navigateTab(FARM_TAB.ACTIVE)
                 }}
-                isActive={!type || type === 'active'}
+                active={!type || type === 'active'}
               >
                 <PoolTitleContainer>
-                  <span>
-                    <Trans>Active</Trans>
-                  </span>
+                  <Trans>Active</Trans>
                 </PoolTitleContainer>
               </Tab>
               <Tab
@@ -204,28 +306,20 @@ const Farm = () => {
                   if (type !== 'ended') {
                     mixpanelHandler(MIXPANEL_TYPE.FARMS_ENDING_VIEWED)
                   }
-                  const newQs = { ...qs, type: 'ended' }
-                  navigate({
-                    search: stringify(newQs),
-                  })
+                  navigateTab(FARM_TAB.ENDED)
                 }}
-                isActive={type === 'ended'}
+                active={type === FARM_TAB.ENDED}
               >
                 <PoolTitleContainer>
-                  <span>
-                    <Trans>Ended</Trans>
-                  </span>
+                  <Trans>Ended</Trans>
                 </PoolTitleContainer>
               </Tab>
 
               <Tab
                 onClick={() => {
-                  const newQs = { ...qs, type: FARM_TAB.MY_FARMS }
-                  navigate({
-                    search: stringify(newQs),
-                  })
+                  navigateTab(FARM_TAB.MY_FARMS)
                 }}
-                isActive={type === FARM_TAB.MY_FARMS}
+                active={type === FARM_TAB.MY_FARMS}
               >
                 <PoolTitleContainer>
                   <Trans>My Farms</Trans>
@@ -237,12 +331,9 @@ const Farm = () => {
                   if (type !== 'vesting') {
                     mixpanelHandler(MIXPANEL_TYPE.FARMS_MYVESTING_VIEWED)
                   }
-                  const newQs = { ...qs, type: 'vesting' }
-                  navigate({
-                    search: stringify(newQs),
-                  })
+                  navigateTab(FARM_TAB.VESTING)
                 }}
-                isActive={type === 'vesting'}
+                active={type === FARM_TAB.VESTING}
               >
                 <PoolTitleContainer>
                   <Text>
@@ -251,9 +342,44 @@ const Farm = () => {
                   {vestingLoading && <Loader style={{ marginLeft: '4px' }} />}
                 </PoolTitleContainer>
               </Tab>
-            </TabWrapper>
+            </Flex>
 
-            {!below768 && rewardPrice}
+            <HeadingContainer>
+              <StakedOnlyToggleWrapper>
+                <Flex alignItems="center">
+                  {above1000 && (
+                    <Flex marginRight="0.75rem">
+                      <ListGridViewGroup />
+                    </Flex>
+                  )}
+
+                  {type !== FARM_TAB.MY_FARMS && (
+                    <>
+                      <StakedOnlyToggleText>
+                        <Trans>Staked Only</Trans>
+                      </StakedOnlyToggleText>
+                      <Toggle
+                        isActive={stakedOnly[stakedOnlyKey]}
+                        toggle={() => setStakedOnly(prev => ({ ...prev, [type]: !prev[stakedOnlyKey] }))}
+                      />
+                    </>
+                  )}
+                </Flex>
+                <FarmSort />
+              </StakedOnlyToggleWrapper>
+              <HeadingRight>
+                {selectTokenFilter}
+                <SearchContainer>
+                  <SearchInput
+                    placeholder={t`Search by token name or pool address`}
+                    maxLength={255}
+                    value={search}
+                    onChange={e => handleSearch(e.target.value)}
+                  />
+                  <Search color={theme.subText} size={16} />
+                </SearchContainer>
+              </HeadingRight>
+            </HeadingContainer>
           </TabContainer>
 
           {renderTabContent()}
