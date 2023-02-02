@@ -47,6 +47,17 @@ function renderFormat(
   return template
 }
 
+/**
+ * @summary Computes animation node rounded to precision.
+ * from https://github.com/wcandillon/react-native-redash/blob/master/src/Math.ts
+ * @worklet
+ */
+const round = (value: number, precision = 0): number => {
+  'worklet'
+  const p = Math.pow(10, precision)
+  return Math.round(value * p) / p
+}
+
 function mapMatch(
   map: { [key in Language]: string | ((key: string, options?: OptionsType) => string) },
   locale: Language
@@ -391,15 +402,4 @@ export function numberToPercentWorklet(
   }
 
   return `${shapedValue}${endingZeros}%`
-}
-
-/**
- * @summary Computes animation node rounded to precision.
- * from https://github.com/wcandillon/react-native-redash/blob/master/src/Math.ts
- * @worklet
- */
-export const round = (value: number, precision = 0): number => {
-  'worklet'
-  const p = Math.pow(10, precision)
-  return Math.round(value * p) / p
 }
