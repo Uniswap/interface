@@ -1,7 +1,8 @@
 import { rgba } from 'polished'
-import { Flex, Text } from 'rebass'
+import { Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
+import bgimg from 'assets/images/card-background.png'
 import { ReactComponent as Down } from 'assets/svg/down.svg'
 import { ButtonLight } from 'components/Button'
 import { AutoColumn } from 'components/Column'
@@ -129,32 +130,6 @@ export const StakedOnlyToggleText = styled.div`
   `}
 `
 
-export const AdContainer = styled.div`
-  margin-bottom: 1.75rem;
-  border-radius: 0.5rem;
-  position: relative;
-`
-
-export const LearnMoreBtn = styled.a`
-  outline: none;
-  border: none;
-  text-decoration: none;
-  background-color: #244641;
-  color: ${({ theme }) => theme.primary};
-  position: absolute;
-  bottom: 0.25rem;
-  right: 0;
-  font-size: 0.875rem;
-  font-weight: 500;
-  padding: 0.25rem 0.5rem;
-  border-top-left-radius: 0.5rem;
-  border-bottom-right-radius: 0.5rem;
-
-  :hover {
-    text-decoration: underline;
-  }
-`
-
 export const HeadingContainer = styled.div`
   display: flex;
   align-items: center;
@@ -183,134 +158,40 @@ export const HeadingRight = styled.div`
     flex-direction: column;
   `}
 `
-export const TotalRewardsContainer = styled.div<{ disabled?: boolean }>`
-  display: flex;
-  gap: 0.75rem;
-  align-items: center;
-  border-radius: 4px;
-  padding: 0.625rem 0.75rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  position: relative;
-  background-color: ${({ theme }) => theme.apr};
-  color: ${({ theme }) => theme.textReverse};
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    justify-content: space-between
-  `};
-
-  ${({ disabled }) =>
-    disabled &&
-    css`
-      background-color: ${({ theme }) => theme.buttonGray};
-      color: ${({ theme }) => theme.disableText};
-      cursor: not-allowed;
-    `};
-`
-
-export const HarvestAllButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    justify-content: flex-start;
-  `}
-`
-
-export const HarvestAllInstruction = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: fit-content;
-  font-size: 14px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  font-weight: 500;
-  color: ${({ theme }) => theme.text7};
-  background-color: ${({ theme }) => theme.buttonBlack};
-  padding: 20px;
-  border-radius: 8px;
-`
-
-export const RewardNumberContainer = styled.div`
-  font-size: 24px;
-  font-weight: 500;
-  color: ${({ theme }) => theme.text11};
-  margin-right: 12px;
-`
-
-export const RewardToken = styled.span`
-  @media (min-width: 1200px) {
-    display: block;
-    margin-bottom: 4px;
-  }
-`
-
-export const HistoryButton = styled.div`
-  background: ${({ theme }) => theme.background};
-  color: ${({ theme }) => theme.subText};
-  padding: 10px 14px;
-  border-radius: 4px;
-  margin-left: auto;
-  cursor: pointer;
-  white-space: nowrap;
-
-  svg {
-    vertical-align: bottom;
-    margin-right: 8px;
-  }
-`
-
-export const FairLaunchPoolsWrapper = styled.div`
+export const ClassicFarmWrapper = styled.div`
+  border-radius: 24px;
+  border: 1px solid ${({ theme }) => theme.border};
   background-color: ${({ theme }) => theme.background};
-  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
-  :last-child {
-    border-bottom-left-radius: 1.25rem;
-    border-bottom-right-radius: 1.25rem;
-  }
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    border-radius: 1.25rem;
-    margin-bottom: 1.5rem;
-  `};
-`
-
-export const FairLaunchPoolsTitle = styled.div<{ justify?: string }>`
-  padding: 12px 24px;
+  padding: 24px;
+  margin-bottom: 24px;
   display: flex;
-  justify-content: ${({ justify }) => justify || 'space-between'};
-  align-items: center;
-  background-color: ${({ theme }) => rgba(theme.buttonBlack, 0.4)};
-  gap: 24px;
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    flex-direction: column;
-    align-items: flex-end;
-    padding: 16px;
-  `}
+  flex-direction: column;
+  gap: 20px;
 `
 
 export const ListItemWrapper = styled.div`
-  padding: 0 24px 24px;
-
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 0;
   `};
+
+  div:last-child {
+    border-radius: 0 0 16px 16px;
+    border-bottom: none;
+  }
 `
 
 export const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1rem;
-  grid-template-columns: 1.5fr 1fr 0.75fr 1fr 1.5fr 1fr 140px;
-  grid-template-areas: 'pools liq apy vesting_duration reward staked_balance action';
-  padding: 16px 24px;
+  grid-template-columns: 1.75fr 0.75fr 0.75fr 1fr 1.25fr 0.75fr 160px;
+  padding: 16px;
   font-size: 12px;
   align-items: center;
   height: fit-content;
   position: relative;
   opacity: ${({ fade }) => (fade ? '0.6' : '1')};
-  background-color: ${({ theme }) => theme.tableHeader};
+  background-color: ${({ theme }) => theme.buttonGray};
   border-top-left-radius: 1.25rem;
   border-top-right-radius: 1.25rem;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
@@ -365,52 +246,29 @@ export const ClickableText = styled(Text)`
   }
 `
 
-export const MenuFlyout = styled.span`
-  min-width: 14rem;
-  background-color: ${({ theme }) => theme.background};
-  filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.2));
-  border-radius: 5px;
-  padding: 12px 16px;
-  display: flex;
-  flex-direction: column;
-  font-size: 16px;
-  position: absolute;
-  top: 2.5rem !important;
-  left: 0 !important;
-  z-index: 10000;
-`
-
-export const Tag = styled.div<{ tag?: string }>`
-  display: flex;
-  position: relative;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 12px;
-  border-radius: 4px;
-  font-size: 14px;
-  color: ${({ tag }) => (tag === 'active' ? '#1f292e' : 'inherit')};
-  background-color: ${({ theme, tag }) => (tag === 'active' ? '#4aff8c' : theme.bg11)};
-  box-sizing: border-box;
-  @media screen and (max-width: 500px) {
-    box-shadow: none;
-  }
-`
-
-export const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
+export const TableRow = styled.div<{ fade?: boolean; joined?: boolean }>`
   display: grid;
   grid-gap: 1rem;
-  grid-template-columns: 1.5fr 1fr 0.75fr 1fr 1.5fr 1fr 140px;
-  grid-template-areas: 'pools liq apy vesting_duration reward staked_balance action';
-  padding: 15px 0 13px;
+  grid-template-columns: 1.75fr 0.75fr 0.75fr 1fr 1.25fr 0.75fr 160px;
+  padding: 14px 16px;
   font-size: 14px;
   align-items: center;
   height: fit-content;
   position: relative;
   opacity: ${({ fade }) => (fade ? '0.6' : '1')};
   background-color: ${({ theme }) => theme.background};
+  transition: all 0.15s ease;
   border: 1px solid transparent;
-  border-bottom: 1px solid ${({ theme, isExpanded }) => (isExpanded ? 'transparent' : theme.border)};
+  border-bottom: 1px solid ${({ theme }) => theme.border};
+
+  ${({ joined }) =>
+    joined &&
+    css`
+      background: url(/static/media/card-background.77fbb037.png),
+        linear-gradient(to right, rgba(15, 170, 162, 0.12), rgba(15, 170, 162, 0.12)), #0f0f0f;
+      background-size: cover;
+      background-position: center;
+    `}
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-gap: 1rem;
@@ -423,28 +281,12 @@ export const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToLarge`
     grid-gap: 1.5rem;
   `};
-
-  &:hover {
-    cursor: pointer;
-  }
 `
 
 export const GetLP = styled.span`
   font-size: 14px;
   font-weight: 600;
   color: ${({ theme }) => theme.primary};
-`
-
-export const StyledItemCard = styled.div`
-  border-bottom: ${({ theme }) => `1px solid ${theme.border}`};
-  margin-bottom: 24px;
-  padding: 16px;
-  background-color: ${({ theme }) => theme.background};
-
-  :last-child {
-    border-bottom: none;
-    border-radius: 1rem;
-  }
 `
 
 export const RewardBalanceWrapper = styled.div`
@@ -459,45 +301,6 @@ export const RewardBalanceWrapper = styled.div`
   background-color: ${({ theme }) => theme.buttonBlack};
   margin-top: 0.75rem;
   margin-bottom: 1rem;
-`
-
-export const PoolRewardUSD = styled.div`
-  color: ${({ theme }) => theme.subText};
-`
-
-export const DataText = styled(Flex)<{ align?: string }>`
-  color: ${({ theme }) => theme.text};
-  justify-content: ${({ align }) => (align === 'right' ? 'flex-end' : 'flex-start')};
-  font-weight: 500;
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    font-size: 14px;
-  `}
-`
-
-export const APY = styled(DataText)`
-  color: ${({ theme }) => theme.apr};
-`
-
-export const GridItem = styled.div<{ noBorder?: boolean }>`
-  position: relative;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  border-bottom: ${({ theme, noBorder }) => (noBorder ? 'none' : `1px dashed ${theme.border}`)};
-  padding-bottom: 12px;
-`
-
-export const DataTitle = styled.div`
-  display: flex;
-  align-items: flex-start;
-  color: ${({ theme }) => theme.subText};
-  &:hover {
-    opacity: 0.6;
-  }
-  user-select: none;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-  font-size: 12px;
 `
 
 export const SearchContainer = styled.div`
@@ -535,14 +338,118 @@ export const SearchInput = styled.input`
   }
 `
 
-export const ActionButton = styled(ButtonLight)<{ backgroundColor?: string }>`
-  background-color: ${({ theme, backgroundColor }) => backgroundColor || theme.primary + '33'};
+export const ActionButton = styled.button<{ color?: string }>`
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: ${({ theme, color }) => (color || theme.primary) + '33'};
+  color: ${({ theme, color }) => color || theme.primary};
   width: 28px;
   height: 28px;
-
+  :hover:enabled {
+    filter: brightness(0.8);
+  }
+  :active:enabled {
+    box-shadow: 0 0 0 1px ${({ theme, color }) => (color || theme.primary) + '33'};
+    filter: brightness(1.1);
+  }
   :disabled {
     background: ${({ theme }) => theme.buttonGray};
+    color: ${({ theme }) => theme.subText};
     cursor: not-allowed;
-    opacity: 0.4;
+    opacity: 0.5;
+  }
+`
+
+export const ClassicFarmGridWrapper = styled.div`
+  --gap: 24px;
+  --card-per-row: 3;
+  @media screen and (max-width: 1200px) {
+    --card-per-row: 2;
+  }
+  @media screen and (max-width: 768px) {
+    --card-per-row: 1;
+  }
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  & > * {
+    flex: 0 0 calc((100% / var(--card-per-row)) - (var(--gap) * (var(--card-per-row) - 1) / var(--card-per-row)));
+  }
+`
+
+export const FarmCard = styled.div<{ joined?: boolean }>`
+  display: flex;
+  background-color: ${({ theme }) => theme.buttonBlack};
+  padding: 16px;
+  flex-direction: column;
+  height: fit-content;
+  border-radius: 24px;
+
+  ${({ joined = true }) =>
+    joined &&
+    css`
+      background-image: ${({ theme }) =>
+        `url(${bgimg}),
+        linear-gradient(to right, ${rgba(theme.apr, 0.12)}, ${rgba(theme.apr, 0.12)}),
+        linear-gradient(to right, ${theme.buttonBlack}, ${theme.buttonBlack})`};
+
+      background-size: cover, cover, cover;
+      background-repeat: no-repeat, no-repeat, no-repeat;
+    `}
+`
+
+export const ToggleButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  background-color: ${({ theme }) => rgba(theme.subText, 0.2)};
+  cursor: pointer;
+  &,
+  * {
+    transition: all 0.1s ease;
+  }
+  :hover {
+    filter: brightness(0.9);
+  }
+  :active {
+    filter: brightness(1.1);
+    box-shadow: 0 0 0 1px ${({ theme }) => rgba(theme.subText, 0.2)};
+  }
+`
+
+export const ExpandableWrapper = styled.div<{ expanded: boolean }>`
+  display: ${({ expanded }) => (expanded ? `block` : 'none')};
+`
+
+export const CardButton = styled(ButtonLight)<{ color?: string }>`
+  height: 36px;
+  border-radius: 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  color: ${({ color, theme }) => color || theme.primary};
+  background-color: ${({ color, theme }) => (color || theme.primary) + '20'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 16px;
+  cursor: pointer;
+  outline: none;
+  :hover:enabled {
+    filter: brightness(0.9);
+    background-color: ${({ color, theme }) => (color || theme.primary) + '20'};
+  }
+  :active:enabled {
+    filter: brightness(1.1);
+    box-shadow: 0 0 0 1px ${({ color, theme }) => (color || theme.primary) + '20'};
   }
 `

@@ -4,7 +4,7 @@ import { Trans, t } from '@lingui/macro'
 import { rgba } from 'polished'
 import { useMemo, useState } from 'react'
 import { Info } from 'react-feather'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useSearchParams } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled, { keyframes } from 'styled-components'
@@ -31,7 +31,6 @@ import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useSyncNetworkParamWithStore } from 'hooks/useSyncNetworkParamWithStore'
 import useTheme from 'hooks/useTheme'
-import { useWindowSize } from 'hooks/useWindowSize'
 import ProAmmPool from 'pages/ProAmmPool'
 import { useFarmsData, useTotalApr } from 'state/farms/hooks'
 import { Farm } from 'state/farms/types'
@@ -184,17 +183,20 @@ export default function PoolCombination() {
 function Pool() {
   const theme = useTheme()
   const { account, chainId, isEVM, networkInfo } = useActiveWeb3React()
-  const { width } = useWindowSize()
 
-  const under768 = width && width <= 768
-
+  const under768 = useMedia('(max-width:768px)')
   const liquidityPositionTokenPairs = useLiquidityPositionTokenPairs()
   const { loading: loadingUserLiquidityPositions, data: userLiquidityPositions } = useUserLiquidityPositions()
 
   const { data: farms, loading: farmLoading } = useFarmsData()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const searchValue = searchParams.get('search') || ''
+  const debouncedSearchText = useDebounce(searchValue.trim().toLowerCase(), 300)
 
-  const [searchText, setSearchText] = useState('')
-  const debouncedSearchText = useDebounce(searchText.trim().toLowerCase(), 300)
+  const onSearch = (search: string) => {
+    searchParams.set('search', search)
+    setSearchParams(searchParams)
+  }
 
   useSyncNetworkParamWithStore()
 
@@ -250,7 +252,7 @@ function Pool() {
     [v2Pairs],
   )
 
-  // // remove any pairs that also are included in pairs with stake in mining pool
+  // remove any pairs that also are included in pairs with stake in mining pool
   const v2PairsWithoutStakedAmount = useMemo(
     () =>
       allV2PairsWithLiquidity
@@ -361,8 +363,8 @@ function Pool() {
                 <Search
                   style={{ width: 'unset', flex: under768 ? 1 : undefined }}
                   minWidth={under768 ? '224px' : '254px'}
-                  searchValue={searchText}
-                  onSearch={(newSearchText: string) => setSearchText(newSearchText)}
+                  searchValue={searchValue}
+                  onSearch={onSearch}
                   placeholder={t`Search by token name or pool address`}
                 />
 

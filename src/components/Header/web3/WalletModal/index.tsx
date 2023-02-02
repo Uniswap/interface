@@ -40,9 +40,8 @@ import Option from './Option'
 import PendingView from './PendingView'
 
 const CloseIcon = styled.div`
-  position: absolute;
-  right: 1rem;
-  top: 16px;
+  height: 24px;
+  align-self: flex-end;
   cursor: pointer;
   color: ${({ theme }) => theme.text};
   &:hover {
@@ -310,14 +309,14 @@ export default function WalletModal() {
 
     return (
       <UpperSection>
-        <RowBetween marginBottom="26px">
+        <RowBetween marginBottom="26px" gap="20px">
           {walletView === WALLET_VIEWS.PENDING && (
             <HoverText
               onClick={() => {
                 setPendingError(false)
                 setWalletView(WALLET_VIEWS.ACCOUNT)
               }}
-              style={{ marginRight: '1rem' }}
+              style={{ marginRight: '1rem', flex: 1 }}
             >
               <ChevronLeft color={theme.primary} />
             </HoverText>

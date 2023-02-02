@@ -3,10 +3,14 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
+import { useMedia } from 'react-use'
 import { Text } from 'rebass'
 
+import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
+import InfoHelper from 'components/InfoHelper'
+import Row, { RowBetween, RowFit } from 'components/Row'
 import ShareModal from 'components/ShareModal'
-import { OUTSIDE_FAIRLAUNCH_ADDRESSES } from 'constants/index'
+import { AMP_HINT, OUTSIDE_FAIRLAUNCH_ADDRESSES } from 'constants/index'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { useActiveWeb3React } from 'hooks'
 import { useFairLaunchVersion } from 'hooks/useContract'
@@ -18,22 +22,44 @@ import { useBlockNumber, useModalOpen, useOpenModal } from 'state/application/ho
 import { setAttemptingTxn, setShowConfirm, setTxHash, setYieldPoolsError } from 'state/farms/actions'
 import { FairLaunchVersion, Farm } from 'state/farms/types'
 import { useAppDispatch } from 'state/hooks'
-import { ExternalLink } from 'theme'
+import { useViewMode } from 'state/user/hooks'
+import { VIEW_MODE } from 'state/user/reducer'
+import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { useFarmRewards } from 'utils/dmm'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 
 import HarvestAll from './HarvestAll'
 import ListItem from './ListItem'
-import { FairLaunchPoolsTitle, FairLaunchPoolsWrapper, ListItemWrapper } from './styleds'
+import {
+  ClassicFarmGridWrapper,
+  ClassicFarmWrapper,
+  ClickableText,
+  ExpandableWrapper,
+  ListItemWrapper,
+  TableHeader,
+  ToggleButtonWrapper,
+} from './styleds'
 
 interface FarmsListProps {
   fairLaunchAddress: string
   farms?: Farm[]
+  active?: boolean
 }
 
-const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
+const ToggleButton = ({ isOpen, onClick }: { isOpen: boolean; onClick: () => void }) => {
+  return (
+    <ToggleButtonWrapper onClick={onClick}>
+      <DropdownSVG style={{ rotate: isOpen ? '180deg' : 'none' }} />
+    </ToggleButtonWrapper>
+  )
+}
+
+const FairLaunchPools = ({ fairLaunchAddress, farms, active }: FarmsListProps) => {
   const dispatch = useAppDispatch()
+  const [viewMode] = useViewMode()
+  const above1200 = useMedia(`(min-width:${MEDIA_WIDTHS.upToLarge}px)`)
+  const above768 = useMedia(`(min-width:${MEDIA_WIDTHS.upToSmall}px)`)
   const { chainId, account, isEVM, networkInfo } = useActiveWeb3React()
   const networkRoute = networkInfo.route || undefined
   const theme = useTheme()
@@ -44,6 +70,8 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
   const { mixpanelHandler } = useMixpanel()
 
   const [sharedPoolAddress, setSharedPoolAddress] = useState('')
+  const [expanded, setExpanded] = useState(true)
+
   const openShareModal = useOpenModal(ApplicationModal.SHARE)
   const isShareModalOpen = useModalOpen(ApplicationModal.SHARE)
 
@@ -129,22 +157,16 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
           const isFarmEnded = farm && blockNumber && farm.endBlock < blockNumber
 
           let remainingBlocks: number | false | undefined
-          let estimatedRemainingSeconds: number | false | undefined
-          let formattedEstimatedRemainingTime: string | false | 0 | undefined
 
           if (!isFarmStarted) {
             remainingBlocks = farm && blockNumber && farm.startBlock - blockNumber
-            estimatedRemainingSeconds =
-              remainingBlocks && remainingBlocks * (networkInfo as EVMNetworkInfo).averageBlockTimeInSeconds
-            formattedEstimatedRemainingTime =
-              estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
           } else {
             remainingBlocks = farm && blockNumber && farm.endBlock - blockNumber
-            estimatedRemainingSeconds =
-              remainingBlocks && remainingBlocks * (networkInfo as EVMNetworkInfo).averageBlockTimeInSeconds
-            formattedEstimatedRemainingTime =
-              estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
           }
+          const estimatedRemainingSeconds =
+            remainingBlocks && remainingBlocks * (networkInfo as EVMNetworkInfo).averageBlockTimeInSeconds
+          const formattedEstimatedRemainingTime =
+            estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
 
           return {
             ...farm,
@@ -179,40 +201,109 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
 
   const outsideFarm = OUTSIDE_FAIRLAUNCH_ADDRESSES[fairLaunchAddress]
 
+  const ConditionListWrapper = viewMode === VIEW_MODE.LIST && above1200 ? ListItemWrapper : ClassicFarmGridWrapper
+
   return (
-    <FairLaunchPoolsWrapper>
+    <ClassicFarmWrapper>
       {!!displayFarms.length && (
         <>
-          <FairLaunchPoolsTitle justify={outsideFarm ? 'space-between' : 'flex-end'}>
-            {outsideFarm && (
-              <Text fontSize={14} fontStyle="italic" color={theme.subText}>
-                <Trans>
-                  This pool require {outsideFarm.name} LP Tokens. Get the LP Tokens{' '}
-                  <ExternalLink href={outsideFarm.getLPTokenLink}>here ↗</ExternalLink>{' '}
-                </Trans>
+          <RowBetween gap="16px">
+            <RowFit style={{ whiteSpace: 'nowrap' }}>
+              <Text fontSize={16} lineHeight="20px" color={theme.subText}>
+                <Trans>Farming Contract</Trans>
               </Text>
+              {outsideFarm && (
+                <Text fontSize={14} fontStyle="italic" color={theme.subText}>
+                  <Trans>
+                    This pool require {outsideFarm.name} LP Tokens. Get the LP Tokens{' '}
+                    <ExternalLink href={outsideFarm.getLPTokenLink}>here ↗</ExternalLink>{' '}
+                  </Trans>
+                </Text>
+              )}
+            </RowFit>
+            {above768 && (
+              <Row justify="flex-end">
+                <HarvestAll totalRewards={totalRewards} onHarvestAll={handleHarvestAll} />
+              </Row>
             )}
-
-            <HarvestAll totalRewards={totalRewards} onHarvestAll={handleHarvestAll} />
-          </FairLaunchPoolsTitle>
-
-          <ListItemWrapper>
-            {displayFarms.map((farm, index) => {
-              return (
-                <ListItem
-                  key={`${farm.fairLaunchAddress}_${farm.stakeToken}`}
-                  farm={farm}
-                  oddRow={(index + 1) % 2 !== 0}
-                  setSharedPoolAddress={setSharedPoolAddress}
-                />
-              )
-            })}
-          </ListItemWrapper>
+            <RowFit flex="0 0 36px">
+              <ToggleButton isOpen={expanded} onClick={() => setExpanded(prev => !prev)} />
+            </RowFit>
+          </RowBetween>
+          {!above768 && (
+            <Row justify="flex-end">
+              <HarvestAll totalRewards={totalRewards} onHarvestAll={handleHarvestAll} />
+            </Row>
+          )}
+          <ExpandableWrapper expanded={expanded}>
+            <ConditionListWrapper>
+              {viewMode === VIEW_MODE.LIST && above1200 && (
+                <TableHeader>
+                  <Row>
+                    <ClickableText>
+                      <Trans>Pools | AMP</Trans>
+                    </ClickableText>
+                    <InfoHelper text={AMP_HINT} />
+                  </Row>
+                  <Row>
+                    <ClickableText>
+                      <Trans>Staked TVL</Trans>
+                    </ClickableText>
+                  </Row>
+                  <Row>
+                    <ClickableText>
+                      <Trans>AVG APR</Trans>
+                    </ClickableText>
+                    <InfoHelper
+                      text={
+                        active
+                          ? t`Total estimated return based on yearly fees and bonus rewards of the pool`
+                          : t`Estimated return based on yearly fees of the pool`
+                      }
+                    />
+                  </Row>
+                  <Row>
+                    <ClickableText>
+                      <Trans>Ending in</Trans>
+                    </ClickableText>
+                    <InfoHelper
+                      text={t`After harvesting, your rewards will unlock linearly over the indicated time period`}
+                    />
+                  </Row>
+                  <Row>
+                    <ClickableText>
+                      <Trans>My Deposit | Target Volume</Trans>
+                    </ClickableText>
+                  </Row>
+                  <Row justify="flex-end">
+                    <ClickableText>
+                      <Trans>My Rewards</Trans>
+                    </ClickableText>
+                  </Row>
+                  <Row justify="flex-end">
+                    <ClickableText>
+                      <Trans>Actions</Trans>
+                    </ClickableText>
+                  </Row>
+                </TableHeader>
+              )}
+              {displayFarms.map((farm, index) => {
+                return (
+                  <ListItem
+                    key={`${farm.fairLaunchAddress}_${farm.stakeToken}`}
+                    farm={farm}
+                    oddRow={(index + 1) % 2 !== 0}
+                    setSharedPoolAddress={setSharedPoolAddress}
+                  />
+                )
+              })}
+            </ConditionListWrapper>
+          </ExpandableWrapper>
         </>
       )}
 
       <ShareModal title={t`Share this farm with your friends!`} url={shareUrl} />
-    </FairLaunchPoolsWrapper>
+    </ClassicFarmWrapper>
   )
 }
 
