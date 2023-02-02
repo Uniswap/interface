@@ -31,6 +31,7 @@ import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
 import { CurrencyId } from 'src/utils/currencyId'
+import { useSuspendUpdatesWhenBlured } from 'src/utils/hooks'
 
 type TokenBalanceListProps = {
   owner: Address
@@ -61,12 +62,14 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
       setIsWarmLoading(false)
     }
 
-    const { data, networkStatus, refetch } = useSortedPortfolioBalances(
-      owner,
-      /*shouldPoll=*/ true,
-      hideSmallBalances,
-      hideSpamTokens,
-      onCompleted
+    const { data, networkStatus, refetch } = useSuspendUpdatesWhenBlured(
+      useSortedPortfolioBalances(
+        owner,
+        /*shouldPoll=*/ true,
+        hideSmallBalances,
+        hideSpamTokens,
+        onCompleted
+      )
     )
 
     const [isWarmLoading, setIsWarmLoading] = useState(false)

@@ -22,6 +22,7 @@ import {
 } from 'src/features/wallet/selectors'
 import { Screens } from 'src/screens/Screens'
 import { CurrencyId } from 'src/utils/currencyId'
+import { useSuspendUpdatesWhenBlured } from 'src/utils/hooks'
 
 type Props = NativeStackScreenProps<AppStackParamList, Screens.HiddenTokens>
 
@@ -35,11 +36,8 @@ export function HiddenTokensScreen({
   const hideSmallBalances = useAppSelector<boolean>(makeSelectAccountHideSmallBalances(address))
   const hideSpamTokens = useAppSelector<boolean>(makeSelectAccountHideSpamTokens(address))
 
-  const { data, networkStatus, refetch } = useSortedPortfolioBalances(
-    address,
-    /*shouldPoll=*/ true,
-    hideSmallBalances,
-    hideSpamTokens
+  const { data, networkStatus, refetch } = useSuspendUpdatesWhenBlured(
+    useSortedPortfolioBalances(address, /*shouldPoll=*/ true, hideSmallBalances, hideSpamTokens)
   )
 
   const onPressToken = useCallback(
