@@ -2,8 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useTrace } from '@uniswap/analytics'
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { useTrendingTokensQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { chainIdToBackendName } from 'graphql/data/util'
+import useTrendingTokens from 'graphql/data/TrendingTokens'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -143,14 +142,10 @@ export const SearchBarDropdown = ({
     [isNFTPage, trendingCollectionResults]
   )
 
-  const { chainId } = useWeb3React()
-  const { data: trendingTokenData } = useTrendingTokensQuery({
-    variables: { chain: chainIdToBackendName(chainId) },
-    fetchPolicy: 'cache-and-network',
-  })
+  const { data: trendingTokenData } = useTrendingTokens(useWeb3React().chainId)
 
   const trendingTokenResults = useMemo(
-    () => trendingTokenData?.topTokens && parseFungibleTokens(trendingTokenData.topTokens),
+    () => trendingTokenData && parseFungibleTokens(trendingTokenData),
     [trendingTokenData]
   )
 
