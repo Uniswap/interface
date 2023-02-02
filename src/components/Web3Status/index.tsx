@@ -270,8 +270,6 @@ function Web3StatusInner() {
       <TraceEvent
         events={[BrowserEvent.onClick]}
         name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
-        // todo: figure out how to get this to work with the widget, or remove
-        // properties={{ received_swap_quote: validSwapQuote }}
         element={InterfaceElementName.CONNECT_WALLET_BUTTON}
       >
         <Web3StatusConnectWrapper faded={!account}>
