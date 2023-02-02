@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { AnimatedTouchableArea } from 'src/components/buttons/TouchableArea'
 import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import RemoveButton from 'src/components/explore/RemoveButton'
@@ -20,7 +20,6 @@ import { isNonPollingRequestInFlight } from 'src/data/utils'
 import { useFavoriteTokenCardQuery } from 'src/data/__generated__/types-and-hooks'
 import { AssetType } from 'src/entities/assets'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
-import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { removeFavoriteToken } from 'src/features/favorites/slice'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -51,8 +50,6 @@ function FavoriteTokenCard({
   const dispatch = useAppDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
-  const favoriteCurrencyIdsSet = useAppSelector(selectFavoriteTokensSet)
-
   const favoriteCurrencyContractInputs = useMemo(
     () => currencyIdToContractInput(currencyId),
     [currencyId]
@@ -76,13 +73,10 @@ function FavoriteTokenCard({
   const pricePercentChange = token?.project?.markets?.[0]?.pricePercentChange24h?.value
 
   const onRemove = useCallback(() => {
-    if (favoriteCurrencyIdsSet.size === 1) {
-      setIsEditing(false)
-    }
     if (currencyId) {
       dispatch(removeFavoriteToken({ currencyId }))
     }
-  }, [currencyId, dispatch, favoriteCurrencyIdsSet.size, setIsEditing])
+  }, [currencyId, dispatch])
 
   const navigateToSwapSell = useCallback(() => {
     if (!token?.address || !chainId) return

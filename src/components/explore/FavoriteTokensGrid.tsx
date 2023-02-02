@@ -1,4 +1,4 @@
-import { default as React, useCallback, useMemo } from 'react'
+import { default as React, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
@@ -21,18 +21,19 @@ const ITEM_FLEX = { flex: 1 / NUM_COLUMNS }
 const renderItemSeparator = (): JSX.Element => <Box height={GAP_SIZE} />
 
 /** Renders the favorite tokens section on the Explore tab */
-export function FavoriteTokensGrid({
-  isEditing,
-  setIsEditing,
-  showLoading,
-}: {
-  isEditing: boolean
-  setIsEditing: (update: boolean) => void
-  showLoading: boolean
-}): JSX.Element {
+export function FavoriteTokensGrid({ showLoading }: { showLoading: boolean }): JSX.Element | null {
   const { t } = useTranslation()
+
+  const [isEditing, setIsEditing] = useState(false)
   const favoriteCurrencyIdsSet = useAppSelector(selectFavoriteTokensSet)
   const currencyIds = useMemo(() => Array.from(favoriteCurrencyIdsSet), [favoriteCurrencyIdsSet])
+
+  // Reset edit mode when there are no favorite tokens
+  useEffect(() => {
+    if (favoriteCurrencyIdsSet.size === 0) {
+      setIsEditing(false)
+    }
+  }, [favoriteCurrencyIdsSet.size])
 
   const renderItem = useCallback(
     ({ item, index }: ListRenderItemInfo<CurrencyId>) => {

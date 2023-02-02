@@ -1,4 +1,4 @@
-import { default as React, useCallback, useMemo } from 'react'
+import { default as React, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
@@ -15,18 +15,19 @@ const GAP_SIZE = theme.spacing.xs
 const ITEM_FLEX = { flex: 1 / NUM_COLUMNS }
 
 /** Renders the favorite wallets section on the Explore tab */
-export function FavoriteWalletsGrid({
-  isEditing,
-  setIsEditing,
-  showLoading,
-}: {
-  isEditing: boolean
-  setIsEditing: (update: boolean) => void
-  showLoading: boolean
-}): JSX.Element {
+export function FavoriteWalletsGrid({ showLoading }: { showLoading: boolean }): JSX.Element {
   const { t } = useTranslation()
+
+  const [isEditing, setIsEditing] = useState(false)
   const watchedWalletsSet = useAppSelector(selectWatchedAddressSet)
   const watchedWalletsList = useMemo(() => Array.from(watchedWalletsSet), [watchedWalletsSet])
+
+  // Reset edit mode when there are no favorite wallets
+  useEffect(() => {
+    if (watchedWalletsSet.size === 0) {
+      setIsEditing(false)
+    }
+  }, [watchedWalletsSet.size])
 
   const renderItem = useCallback(
     ({ item: address, index }: ListRenderItemInfo<string>) => {

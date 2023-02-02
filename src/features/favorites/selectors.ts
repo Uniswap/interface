@@ -11,6 +11,12 @@ export const selectHasFavoriteTokens = createSelector(selectFavoriteTokens, (tok
   Boolean(tokens?.length > 0)
 )
 
+// Used to reference specific token without depending on entire array
+export const selectHasFavoriteToken = createSelector(
+  [selectFavoriteTokens, (_, address): string => address],
+  (tokens, address) => tokens?.includes(address.toLowerCase())
+)
+
 const selectWatchedAddresses = (state: RootState): string[] => state.favorites.watchedAddresses
 export const selectWatchedAddressSet = createSelector(
   selectWatchedAddresses,

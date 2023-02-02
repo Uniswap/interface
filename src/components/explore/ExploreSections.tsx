@@ -1,6 +1,6 @@
 import { NetworkStatus } from '@apollo/client'
 import { FlashList, ListRenderItem, ListRenderItemInfo } from '@shopify/flash-list'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
@@ -26,11 +26,7 @@ import {
   getTokenMetadataDisplayType,
   getTokensOrderByValues,
 } from 'src/features/explore/utils'
-import {
-  selectFavoriteTokensSet,
-  selectHasFavoriteTokens,
-  selectHasWatchedWallets,
-} from 'src/features/favorites/selectors'
+import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'src/features/favorites/selectors'
 import { selectTokensOrderBy } from 'src/features/wallet/selectors'
 import { flex } from 'src/styles/flex'
 import { dimensions } from 'src/styles/sizing'
@@ -53,15 +49,6 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
   const orderBy = useAppSelector(selectTokensOrderBy)
   const tokenMetadataDisplayType = getTokenMetadataDisplayType(orderBy)
   const { clientOrderBy, serverOrderBy } = getTokensOrderByValues(orderBy)
-
-  // Favorite tokens
-  const [isEditingTokens, setIsEditingTokens] = useState(false)
-  const favoriteCurrencyIdsSet = useAppSelector(selectFavoriteTokensSet)
-  const hasFavoritedTokens = useAppSelector(selectHasFavoriteTokens)
-
-  // Favorite wallets
-  const [isEditingWallets, setIsEditingWallets] = useState(false)
-  const hasFavoritedWallets = useAppSelector(selectHasWatchedWallets)
 
   const {
     data,
@@ -114,26 +101,15 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
 
   const renderItem: ListRenderItem<TokenItemData> = useCallback(
     ({ item, index }: ListRenderItemInfo<TokenItemData>) => {
-      // Disable the row if editing and already favorited.
-      // Avoid doing this within TokenItem so we can memoize
-      // (referencing favorites within item will cause rerenders for each item as we add/remove favorites)
-      const { chainId, address } = item
-      const _currencyId = address
-        ? buildCurrencyId(chainId, address)
-        : buildNativeCurrencyId(chainId)
-      const isFavorited = favoriteCurrencyIdsSet.has(_currencyId.toLocaleLowerCase())
-
       return (
         <TokenItem
           index={index}
-          isEditing={isEditingTokens}
-          isFavorited={isFavorited}
           metadataDisplayType={tokenMetadataDisplayType}
           tokenItemData={item}
         />
       )
     },
-    [favoriteCurrencyIdsSet, isEditingTokens, tokenMetadataDisplayType]
+    [tokenMetadataDisplayType]
   )
 
   // Don't want to show full screen loading state when changing tokens sort, which triggers NetworkStatus.setVariable request
@@ -167,24 +143,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
       ref={listRef}
       contentContainerStyle={{ ...flex.grow, backgroundColor: theme.colors.background0 }}
       style={flex.fill}>
-      {hasFavoritedTokens || hasFavoritedWallets ? (
-        <Flex bg="backgroundBranded" gap="md" pb="md" pt="xs" px="sm">
-          {hasFavoritedTokens ? (
-            <FavoriteTokensGrid
-              isEditing={isEditingTokens}
-              setIsEditing={setIsEditingTokens}
-              showLoading={showLoading}
-            />
-          ) : null}
-          {hasFavoritedWallets ? (
-            <FavoriteWalletsGrid
-              isEditing={isEditingWallets}
-              setIsEditing={setIsEditingWallets}
-              showLoading={showLoading}
-            />
-          ) : null}
-        </Flex>
-      ) : null}
+      <FavoritesSection showLoading={showLoading} />
       <FlashList
         ListEmptyComponent={
           <Box mx="lg" my="sm">
@@ -252,4 +211,18 @@ function gqlTokenToTokenItemData(
     volume24h: market?.volume?.value,
     totalValueLocked: market?.totalValueLocked?.value,
   } as TokenItemData
+}
+
+function FavoritesSection({ showLoading }: { showLoading: boolean }): JSX.Element | null {
+  const hasFavoritedTokens = useAppSelector(selectHasFavoriteTokens)
+  const hasFavoritedWallets = useAppSelector(selectHasWatchedWallets)
+
+  if (!hasFavoritedTokens && !hasFavoritedWallets) return null
+
+  return (
+    <Flex bg="backgroundBranded" gap="md" pb="md" pt="xs" px="sm">
+      {hasFavoritedTokens && <FavoriteTokensGrid showLoading={showLoading} />}
+      {hasFavoritedWallets && <FavoriteWalletsGrid showLoading={showLoading} />}
+    </Flex>
+  )
 }
