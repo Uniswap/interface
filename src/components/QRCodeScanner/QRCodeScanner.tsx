@@ -17,6 +17,7 @@ import WalletConnectLogo from 'src/assets/icons/walletconnect.svg'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import PasteButton from 'src/components/buttons/PasteButton'
 import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
+import { SimulatedViewfinder } from 'src/components/DevelopmentOnly/SimulatedViewfinder'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { dimensions } from 'src/styles/sizing'
@@ -121,7 +122,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
           </Box>
         }
         style={StyleSheet.absoluteFill}>
-        {backCamera && (
+        {backCamera ? (
           <Camera
             device={backCamera}
             frameProcessor={frameProcessor}
@@ -129,6 +130,10 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             style={StyleSheet.absoluteFill}
             zoom={backCamera.neutralZoom}
           />
+        ) : (
+          <DevelopmentOnly>
+            <SimulatedViewfinder />
+          </DevelopmentOnly>
         )}
         <Svg height="100%" width="100%">
           <Defs>
@@ -163,9 +168,6 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
                     {t('Connect to an app with WalletConnect')}
                   </Text>
                 </Flex>
-                <DevelopmentOnly>
-                  <PasteButton onPress={onScanCode} />
-                </DevelopmentOnly>
               </>
             ) : (
               <Text color="textPrimary" variant="buttonLabelMicro">
@@ -179,6 +181,24 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             strokeWidth={5}
             width={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO}
           />
+          <DevelopmentOnly>
+            {!backCamera ? (
+              <Flex
+                centered
+                height={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO}
+                p="lg"
+                style={[StyleSheet.absoluteFill]}
+                width={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO}>
+                <Flex gap="lg" px="sm">
+                  <Text color="textPrimary" textAlign="center" variant="bodyLarge">
+                    This paste button and the rainbow colors will only show up in development mode
+                    when the back camera isn't available
+                  </Text>
+                  <PasteButton onPress={onScanCode} />
+                </Flex>
+              </Flex>
+            ) : null}
+          </DevelopmentOnly>
           {isWalletConnectModal && props.numConnections > 0 && (
             <Box
               bottom={0}
