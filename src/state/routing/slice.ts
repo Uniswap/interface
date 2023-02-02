@@ -90,8 +90,6 @@ export const routingApi = createApi({
         const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, routerPreference, type } =
           args
 
-        let result
-
         try {
           if (routerPreference === RouterPreference.API) {
             const query = qs.stringify({
@@ -103,19 +101,19 @@ export const routingApi = createApi({
               amount,
               type,
             })
-            result = await fetch(`quote?${query}`)
+            const { data } = await fetch(`quote?${query}`)
+            return { data: data as GetQuoteResult }
           } else {
             const router = getRouter(args.tokenInChainId)
-            result = await getClientSideQuote(
+            const data = await getClientSideQuote(
               args,
               router,
               // TODO(zzmp): Use PRICE_PARAMS for RouterPreference.PRICE.
               // This change is intentionally being deferred to first see what effect router caching has.
               CLIENT_PARAMS
             )
+            return { data }
           }
-
-          return { data: result.data as GetQuoteResult }
         } catch (e) {
           // TODO: fall back to client-side quoter when auto router fails.
           // deprecate 'legacy' v2/v3 routers first.

@@ -49,7 +49,7 @@ export type V2PoolInRoute = {
   address?: string
 }
 
-export interface GetQuoteResult {
+interface QuoteResult {
   quoteId?: string
   blockNumber: string
   amount: string
@@ -67,6 +67,10 @@ export interface GetQuoteResult {
   route: Array<(V3PoolInRoute | V2PoolInRoute)[]>
   routeString: string
 }
+
+export const NO_ROUTE = 'No Route'
+
+export type GetQuoteResult = QuoteResult | typeof NO_ROUTE
 
 export class InterfaceTrade<
   TInput extends Currency,

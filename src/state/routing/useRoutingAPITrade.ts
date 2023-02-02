@@ -49,7 +49,8 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     pollingInterval: routerPreference === RouterPreference.PRICE ? ms`2m` : AVERAGE_L1_BLOCK_TIME,
   })
 
-  const quoteResult: GetQuoteResult | undefined = useIsValidBlock(Number(data?.blockNumber) || 0) ? data : undefined
+  const quote = typeof data === 'object' ? data : undefined
+  const quoteResult: GetQuoteResult | undefined = useIsValidBlock(Number(quote?.blockNumber) || 0) ? quote : undefined
 
   const route = useMemo(
     () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),

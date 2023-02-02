@@ -4,7 +4,7 @@ import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { AlphaRouter, AlphaRouterConfig, ChainId } from '@uniswap/smart-order-router'
 import { SupportedChainId } from 'constants/chains'
 import JSBI from 'jsbi'
-import { GetQuoteResult } from 'state/routing/types'
+import { GetQuoteResult, NO_ROUTE } from 'state/routing/types'
 import { transformSwapRouteToGetQuoteResult } from 'utils/transformSwapRouteToGetQuoteResult'
 
 export function toSupportedChainId(chainId: ChainId): SupportedChainId | undefined {
@@ -31,7 +31,7 @@ async function getQuote(
   },
   router: AlphaRouter,
   config: Partial<AlphaRouterConfig>
-): Promise<{ data: GetQuoteResult; error?: unknown }> {
+): Promise<GetQuoteResult> {
   const currencyIn = new Token(tokenIn.chainId, tokenIn.address, tokenIn.decimals, tokenIn.symbol)
   const currencyOut = new Token(tokenOut.chainId, tokenOut.address, tokenOut.decimals, tokenOut.symbol)
 
@@ -47,9 +47,9 @@ async function getQuote(
     config
   )
 
-  if (!swapRoute) throw new Error('Failed to generate client side quote')
+  if (!swapRoute) return NO_ROUTE
 
-  return { data: transformSwapRouteToGetQuoteResult(type, amount, swapRoute) }
+  return transformSwapRouteToGetQuoteResult(type, amount, swapRoute)
 }
 
 interface QuoteArguments {
