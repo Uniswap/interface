@@ -49,7 +49,7 @@ export type V2PoolInRoute = {
   address?: string
 }
 
-interface QuoteResult {
+export interface QuoteResult {
   quoteId?: string
   blockNumber: string
   amount: string
