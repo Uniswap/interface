@@ -30,6 +30,7 @@ import {
   v29Schema,
   v2Schema,
   v31Schema,
+  v32Schema,
   v3Schema,
   v4Schema,
   v5Schema,
@@ -964,5 +965,14 @@ describe('Redux state migrations', () => {
     const v32 = migrations[32](v31Stub)
 
     expect(v32[ensApi.reducerPath]).toBe(undefined)
+  })
+
+  it('migrates from v32 to 33', () => {
+    const v32Stub = { ...v32Schema }
+
+    const v33 = migrations[33](v32Stub)
+
+    expect(v33.wallet.replaceAccountOptions.isReplacingAccount).toBe(false)
+    expect(v33.wallet.replaceAccountOptions.skipToSeedPhrase).toBe(false)
   })
 })

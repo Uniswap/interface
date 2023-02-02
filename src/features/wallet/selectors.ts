@@ -68,6 +68,16 @@ export const selectUserPalette = createSelector(
 
 export const selectFinishedOnboarding = (state: RootState): boolean | undefined =>
   state.wallet.finishedOnboarding
+
+export const selectReplaceAccountOptions = (
+  state: RootState
+):
+  | {
+      isReplacingAccount: boolean
+      skipToSeedPhrase: boolean
+    }
+  | undefined => state.wallet.replaceAccountOptions
+
 export const selectFlashbotsEnabled = (state: RootState): boolean => state.wallet.flashbotsEnabled
 
 export const selectTokensOrderBy = (state: RootState): TokensOrderBy =>

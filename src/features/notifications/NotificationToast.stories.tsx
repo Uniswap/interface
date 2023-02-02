@@ -17,6 +17,10 @@ const store = setupStore({
     flashbotsEnabled: false,
     isUnlocked: true,
     settings: {},
+    replaceAccountOptions: {
+      isReplacingAccount: false,
+      skipToSeedPhrase: false,
+    },
   },
   notifications: {
     notificationQueue: [

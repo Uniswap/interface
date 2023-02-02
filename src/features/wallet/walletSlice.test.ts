@@ -35,6 +35,10 @@ describe(walletReducer, () => {
       flashbotsEnabled: false,
       isUnlocked: false,
       settings: {},
+      replaceAccountOptions: {
+        isReplacingAccount: false,
+        skipToSeedPhrase: false,
+      },
     })
   })
 

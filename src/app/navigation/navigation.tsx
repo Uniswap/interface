@@ -43,7 +43,11 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ModalName } from 'src/features/telemetry/constants'
-import { selectActiveAccount, selectFinishedOnboarding } from 'src/features/wallet/selectors'
+import {
+  selectActiveAccount,
+  selectFinishedOnboarding,
+  selectReplaceAccountOptions,
+} from 'src/features/wallet/selectors'
 import { ActivityScreen } from 'src/screens/ActivityScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
@@ -279,6 +283,7 @@ const renderEmptyBackImage = (): JSX.Element => <></>
 export function OnboardingStackNavigator(): JSX.Element {
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
+  const replaceAccountOptions = useAppSelector(selectReplaceAccountOptions)
 
   const renderHeaderBackImage = useCallback(
     () => <Chevron color={theme.colors.textSecondary} height={28} width={28} />,
@@ -301,6 +306,9 @@ export function OnboardingStackNavigator(): JSX.Element {
         }}>
         <OnboardingStack.Screen
           component={LandingScreen}
+          initialParams={{
+            shouldSkipToSeedPhraseInput: replaceAccountOptions?.skipToSeedPhrase,
+          }}
           name={OnboardingScreens.Landing}
           options={{ headerShown: false }}
         />
@@ -372,14 +380,14 @@ export function OnboardingStackNavigator(): JSX.Element {
 
 export function AppStackNavigator(): JSX.Element {
   const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
+  const replaceAccountOptions = useAppSelector(selectReplaceAccountOptions)
 
   // preload home screen queries before `finishedOnboarding` is truthy
   // this helps load the home screen fast from a fresh install
   usePreloadedHomeScreenQueries()
-
   return (
     <AppStack.Navigator screenOptions={{ headerShown: false }}>
-      {finishedOnboarding && (
+      {finishedOnboarding && !replaceAccountOptions?.isReplacingAccount && (
         <AppStack.Screen component={TabNavigator} name={Screens.TabNavigator} />
       )}
       <AppStack.Screen
@@ -387,7 +395,9 @@ export function AppStackNavigator(): JSX.Element {
         name={Screens.OnboardingStack}
         navigationKey={
           finishedOnboarding
-            ? OnboardingEntryPoint.Sidebar.valueOf()
+            ? replaceAccountOptions?.isReplacingAccount
+              ? OnboardingEntryPoint.Sidebar.valueOf()
+              : OnboardingEntryPoint.ReplaceAccount.valueOf()
             : OnboardingEntryPoint.FreshInstall.valueOf()
         }
       />

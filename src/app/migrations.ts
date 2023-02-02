@@ -461,4 +461,14 @@ export const migrations = {
 
     return newState
   },
+
+  33: function addReplaceAccount(state: any) {
+    const newState = { ...state }
+
+    newState.wallet.replaceAccountOptions = {
+      isReplacingAccount: false,
+      skipToSeedPhrase: false,
+    }
+    return newState
+  },
 }

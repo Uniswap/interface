@@ -43,7 +43,9 @@ export type SettingsStackParamList = {
   [Screens.SettingsCloudBackupScreen]: { address: Address }
   [Screens.SettingsCloudBackupStatus]: { address: Address }
   [Screens.SettingsViewSeedPhrase]: { address: Address }
-  [OnboardingScreens.Landing]: undefined // temporary to be able to view onboarding from settings
+  [OnboardingScreens.Landing]: {
+    shouldSkipToSeedPhraseInput?: boolean
+  } // temporary to be able to view onboarding from settings
 }
 
 export type OnboardingStackBaseParams =
@@ -60,7 +62,9 @@ export type OnboardingStackParamList = {
   [OnboardingScreens.BackupManual]: OnboardingStackBaseParams
   [OnboardingScreens.BackupCloudPassword]: OnboardingStackBaseParams
   [OnboardingScreens.Backup]: OnboardingStackBaseParams
-  [OnboardingScreens.Landing]: OnboardingStackBaseParams
+  [OnboardingScreens.Landing]: OnboardingStackBaseParams & {
+    shouldSkipToSeedPhraseInput?: boolean
+  }
   [OnboardingScreens.EditName]: OnboardingStackBaseParams
   [OnboardingScreens.SelectColor]: OnboardingStackBaseParams
   [OnboardingScreens.Notifications]: OnboardingStackBaseParams

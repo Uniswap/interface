@@ -40,6 +40,10 @@ const walletSlice = {
   flashbotsEnabled: false,
   isUnlocked: false,
   settings: {},
+  replaceAccountOptions: {
+    isReplacingAccount: false,
+    skipToSeedPhrase: false,
+  },
 }
 
 const assetActivities = [
