@@ -8,7 +8,7 @@ import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import styled from 'styled-components/macro'
 
 import tokenLogo from '../../assets/images/krom_logo.png'
-import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
+import KromatikaLogo from '../../assets/images/KROM_Transparent_1.png'
 import { ReactComponent as PhoneScreenLogo } from '../../assets/svg/phone-logo.svg'
 import { KROM } from '../../constants/tokens'
 import useUSDCPrice from '../../hooks/useUSDCPrice'
@@ -60,8 +60,11 @@ const MainLogo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  max-height: 54px;
-
+  max-height: 40px;
+  img {
+    width: auto;
+    height: 40px;
+  }
   svg {
     height: 54px;
     width: 54px;
@@ -269,11 +272,7 @@ export default function Header() {
         <Title href=".">
           <UniIcon>
             <MainLogo>
-              <Logo title="logo" z-index="1" />
-              <LogoTextWrapper>
-                <LogoTitle>Kromatika</LogoTitle>
-                <LogoSubTitle>Finance</LogoSubTitle>
-              </LogoTextWrapper>
+              <img src={KromatikaLogo} alt={'KromatikaL logo'} />
             </MainLogo>
             <PhoneLogo>
               <PhoneScreenLogo width="48px" height="48px" title="logo" z-index="1" />

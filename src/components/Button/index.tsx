@@ -23,7 +23,7 @@ export const BaseButton = styled(RebassButton)<
   position: relative;
   border: 1px solid transparent;
   border-radius: ${({ $borderRadius }) => $borderRadius ?? '20px'};
-  padding: ${({ padding }) => padding ?? '16px'};
+  padding: ${({ padding }) => padding ?? '12px'};
   color: white;
   cursor: pointer;
   outline: none;

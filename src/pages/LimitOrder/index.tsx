@@ -91,7 +91,7 @@ const ClassicModeContainer = styled.div`
   :nth-child(4) {
     width: 100%;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: center;
 
     > div:nth-child(1) {
       flex: 1;
@@ -100,11 +100,13 @@ const ClassicModeContainer = styled.div`
       ${({ theme }) => theme.mediaWidth.upToMedium`
         min-width: 100%;
         max-width: 100%;
+        order: 1;
       `};
     }
 
     > div:nth-child(2) {
       flex: 2;
+      order: 0;
     }
 
     > div:nth-child(3) {
@@ -114,6 +116,7 @@ const ClassicModeContainer = styled.div`
       ${({ theme }) => theme.mediaWidth.upToMedium`
         min-width: 100%;
         max-width: 100%;
+        order: 2;
       `};
     }
   }
@@ -122,7 +125,7 @@ const ClassicModeContainer = styled.div`
 const SwapModalContainer = styled(AppBody)`
   flex: 1;
   width: 100%;
-  max-width: 704px;
+  max-width: 475px;
   ${({ theme }) => theme.mediaWidth.upToLarge`
     width: 100%;
     max-width: 100%;
@@ -534,6 +537,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                 <AutoColumn gap={'md'}>
                   <div style={{ display: 'relative' }}>
                     <CurrencyInputPanel
+                      actionLabel="You send:"
                       label={
                         independentField === Field.OUTPUT && !showWrap ? (
                           <Trans>From (at most)</Trans>
@@ -588,6 +592,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                     </ArrowWrapper>
 
                     <CurrencyInputPanel
+                      actionLabel="You receive at least:"
                       value={formattedAmounts.output}
                       onUserInput={handleTypeOutput}
                       label={
@@ -948,6 +953,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
           <AutoColumn gap={'md'}>
             <div style={{ display: 'relative' }}>
               <CurrencyInputPanel
+                actionLabel="You send:"
                 label={
                   independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
                 }
@@ -998,6 +1004,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
               </ArrowWrapper>
 
               <CurrencyInputPanel
+                actionLabel="You receive at least:"
                 value={formattedAmounts.output}
                 onUserInput={handleTypeOutput}
                 label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}

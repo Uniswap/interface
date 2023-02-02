@@ -60,6 +60,9 @@ export const Input = React.memo(function InnerInput({
     }
   }
 
+  // Limit value to max 6 floating points
+  value = value > 0 ? parseFloat(Number(value).toFixed(6)) : value
+
   return (
     <StyledInput
       {...rest}

@@ -7,6 +7,7 @@ import TradePrice from 'components/swap/TradePrice'
 import { darken } from 'polished'
 import { Fragment, ReactNode, useCallback, useEffect, useState } from 'react'
 import { Lock, Minus, Plus } from 'react-feather'
+import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
@@ -75,7 +76,7 @@ const CurrencySelect = styled(ButtonGray)<{ visible: boolean; selected: boolean;
   align-items: center;
   font-size: 24px;
   font-weight: 500;
-  background-color: ${({ selected, theme }) => (selected ? theme.bg0 : theme.primary1)};
+  background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.primary1)};
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
   border-radius: 16px;
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
@@ -99,7 +100,7 @@ const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   justify-content: space-between;
-  padding: ${({ selected }) => (selected ? ' 1rem 1rem 0.75rem 1rem' : '1rem 1rem 0.75rem 1rem')};
+  padding: 1rem;
 `
 
 const LabelRow = styled.div`
@@ -170,17 +171,19 @@ const StyledNumericalInput = styled(NumericalInput)<{ $loading: boolean }>`
 
 const StyledButtonGroup = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
+  gap: 6px;
+  margin-left: 10px;
 `
 
 const SmallButton = styled(ButtonGray)`
   background-color: ${({ theme }) => theme.primary1};
-  border-radius: 8px;
+  border-radius: 4px;
   padding: 0;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
 
   :hover {
     background-color: ${({ theme }) => darken(0.05, theme.primary1)};
@@ -192,6 +195,13 @@ const ButtonLabel = styled(TYPE.white)<{ disabled: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
+`
+
+const ActionLabel = styled(Text)`
+  font-size: 14px;
+  font-weight: 400;
+  color: ${({ theme }) => theme.text2};
+  padding: 10px 16px 0;
 `
 
 interface CurrencyInputPanelProps {
@@ -223,6 +233,7 @@ interface CurrencyInputPanelProps {
   showRate?: boolean
   isInvertedRate?: boolean
   price?: Price<Currency, Currency> | undefined
+  actionLabel?: string
 }
 
 export default function CurrencyInputPanel({
@@ -249,6 +260,7 @@ export default function CurrencyInputPanel({
   showRate = false,
   isInvertedRate = false,
   price,
+  actionLabel,
   ...rest
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
@@ -299,6 +311,11 @@ export default function CurrencyInputPanel({
         </FixedContainer>
       )}
       <Container hideInput={hideInput}>
+        {actionLabel && (
+          <ActionLabel>
+            <Trans>{actionLabel}</Trans>
+          </ActionLabel>
+        )}
         <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
           {showCurrencySelector ? (
             <CurrencySelect
@@ -341,16 +358,32 @@ export default function CurrencyInputPanel({
           ) : null}
           {showRate && (
             <RowFixed style={{ height: '17px', marginRight: '12px' }}>
-              <TYPE.main>{'Limit Buy Price'}</TYPE.main>
+              <TYPE.main>Limit Price</TYPE.main>
             </RowFixed>
           )}
           {!hideInput && (
-            <StyledNumericalInput
-              className="token-amount-input"
-              value={localValue}
-              onUserInput={onUserInput}
-              $loading={loading}
-            />
+            <Fragment>
+              <StyledNumericalInput
+                className="token-amount-input"
+                value={localValue}
+                onUserInput={onUserInput}
+                $loading={loading}
+              />
+              {showRate && value && price && (
+                <StyledButtonGroup>
+                  <SmallButton onClick={handleIncrement} disabled={false}>
+                    <ButtonLabel disabled={false} fontSize="12px">
+                      <Plus size={18} />
+                    </ButtonLabel>
+                  </SmallButton>
+                  <SmallButton onClick={handleDecrement} disabled={false}>
+                    <ButtonLabel disabled={false} fontSize="12px">
+                      <Minus size={18} />
+                    </ButtonLabel>
+                  </SmallButton>
+                </StyledButtonGroup>
+              )}
+            </Fragment>
           )}
         </InputRow>
         {!hideInput && !hideBalance && !showRate && (
@@ -362,7 +395,7 @@ export default function CurrencyInputPanel({
                     onClick={onMax}
                     color={theme.text2}
                     fontWeight={400}
-                    fontSize={16}
+                    fontSize={14}
                     style={{ display: 'inline', cursor: 'pointer' }}
                   >
                     {!hideBalance && currency && selectedCurrencyBalance ? (
@@ -396,23 +429,6 @@ export default function CurrencyInputPanel({
             <FiatRow>
               <RowBetween>
                 <TradePrice price={price} showInverted={isInvertedRate} setShowInverted={setShowInverted} />
-                <StyledButtonGroup>
-                  <RowFixed gap={'sm'}>
-                    <TYPE.main fontSize={16} fontWeight={400}>
-                      {'~1%'}
-                    </TYPE.main>
-                    <SmallButton onClick={handleDecrement} disabled={false}>
-                      <ButtonLabel disabled={false} fontSize="12px">
-                        <Minus size={18} />
-                      </ButtonLabel>
-                    </SmallButton>
-                    <SmallButton onClick={handleIncrement} disabled={false}>
-                      <ButtonLabel disabled={false} fontSize="12px">
-                        <Plus size={18} />
-                      </ButtonLabel>
-                    </SmallButton>
-                  </RowFixed>
-                </StyledButtonGroup>
               </RowBetween>
             </FiatRow>
           </Fragment>

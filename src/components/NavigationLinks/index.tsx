@@ -58,14 +58,15 @@ const StyledNavLink = styled(NavLink).attrs({
   font-weight: 400;
   text-align: center;
   text-decoration: none;
-  padding: 0.5rem 2rem;
+  padding: 8px 16px;
   word-break: break-word;
   white-space: nowrap;
   color: ${({ theme }) => theme.text2};
-  height: 44px;
+  height: 40px;
 
   &.${activeClassName} {
-    background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg0)};
+    background-color: ${({ theme }) => theme.white};
+    color: ${({ theme }) => darken(0.3, theme.text2)};
 
     div {
       font-weight: 700;
@@ -73,7 +74,7 @@ const StyledNavLink = styled(NavLink).attrs({
   }
 
   :hover {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
+    color: ${({ theme }) => darken(0.2, theme.text2)};
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -108,7 +109,7 @@ const StyledNavLinkAlt = styled.button`
   padding: 8px 16px;
   word-break: break-word;
   white-space: nowrap;
-  height: 44px;
+  height: 40px;
 
   &.${activeClassName} {
     background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg0)};
@@ -118,7 +119,7 @@ const StyledNavLinkAlt = styled.button`
   }
 
   :hover {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
+    color: ${({ theme }) => darken(0.2, theme.text2)};
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
