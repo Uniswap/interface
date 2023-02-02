@@ -1,24 +1,29 @@
 import { t, Trans } from '@lingui/macro'
+import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { SMALL_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
 import { ListingButton } from 'nft/components/bag/profile/ListingButton'
-import { getListingState, getTotalEthValue } from 'nft/components/bag/profile/utils'
+import { approveCollectionRow, getListingState, getTotalEthValue, verifyStatus } from 'nft/components/bag/profile/utils'
 import { BackArrowIcon } from 'nft/components/icons'
 import { headlineLarge, headlineSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
-import { LIST_PAGE_MARGIN } from 'nft/pages/profile/shared'
+import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from 'nft/pages/profile/shared'
+import { looksRareNonceFetcher } from 'nft/queries'
 import { ListingStatus, ProfilePageStateType } from 'nft/types'
 import { fetchPrice, formatEth, formatUsdPrice } from 'nft/utils'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import styled, { css } from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { BREAKPOINTS, ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import shallow from 'zustand/shallow'
 
-import { ListModal } from './ListModal'
+import { ListModal } from './Modal/ListModal'
 import { NFTListingsGrid } from './NFTListingsGrid'
 import { SelectMarketplacesDropdown } from './SelectMarketplacesDropdown'
 import { SetDurationModal } from './SetDurationModal'
@@ -98,6 +103,12 @@ const FloatingConfirmationBar = styled(Row)`
   transform: translateX(-50%);
   max-width: 1200px;
   z-index: ${Z_INDEX.under_dropdown};
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    width: calc(100% - ${LIST_PAGE_MARGIN_MOBILE * 2}px);
+    bottom: 68px;
+    padding: 16px 12px;
+  }
 `
 
 const Overlay = styled.div`
@@ -111,6 +122,10 @@ const Overlay = styled.div`
 const ProceedsAndButtonWrapper = styled(Row)`
   width: min-content;
   gap: 40px;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    gap: 20px;
+  }
 `
 
 const ProceedsWrapper = styled(Row)`
@@ -118,27 +133,72 @@ const ProceedsWrapper = styled(Row)`
   gap: 16px;
 `
 
+const EthValueWrapper = styled.span<{ totalEthListingValue: boolean }>`
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 28px;
+  color: ${({ theme, totalEthListingValue }) => (totalEthListingValue ? theme.textPrimary : theme.textSecondary)};
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 16px;
+    line-height: 24px;
+  }
+`
+
 const ListingButtonWrapper = styled.div`
   width: 170px;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    width: 95px;
+  }
 `
 
 export const ListPage = () => {
   const { setProfilePageState: setSellPageState } = useProfilePageState()
-  const setGlobalMarketplaces = useSellAsset((state) => state.setGlobalMarketplaces)
-  const [selectedMarkets, setSelectedMarkets] = useState([ListingMarkets[0]]) // default marketplace: x2y2
+  const { provider } = useWeb3React()
   const toggleBag = useBag((s) => s.toggleBag)
-  const listings = useNFTList((state) => state.listings)
-  const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
-  const listingStatus = useNFTList((state) => state.listingStatus)
-  const setListingStatus = useNFTList((state) => state.setListingStatus)
-  const sellAssets = useSellAsset((state) => state.sellAssets)
   const isMobile = useIsMobile()
   const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
+  const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
+  const { setGlobalMarketplaces, sellAssets } = useSellAsset(
+    ({ setGlobalMarketplaces, sellAssets }) => ({
+      setGlobalMarketplaces,
+      sellAssets,
+    }),
+    shallow
+  )
+  const {
+    listings,
+    collectionsRequiringApproval,
+    listingStatus,
+    setListingStatus,
+    setLooksRareNonce,
+    setCollectionsRequiringApproval,
+  } = useNFTList(
+    ({
+      listings,
+      collectionsRequiringApproval,
+      listingStatus,
+      setListingStatus,
+      setLooksRareNonce,
+      setCollectionsRequiringApproval,
+    }) => ({
+      listings,
+      collectionsRequiringApproval,
+      listingStatus,
+      setListingStatus,
+      setLooksRareNonce,
+      setCollectionsRequiringApproval,
+    }),
+    shallow
+  )
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const anyListingsMissingPrice = useMemo(() => !!listings.find((listing) => !listing.price), [listings])
-  const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
   const [showListModal, toggleShowListModal] = useReducer((s) => !s, false)
+  const [selectedMarkets, setSelectedMarkets] = useState([ListingMarkets[0]]) // default marketplace: x2y2
+  const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
+  const signer = provider?.getSigner()
 
   useEffect(() => {
     fetchPrice().then((price) => {
@@ -146,6 +206,7 @@ export const ListPage = () => {
     })
   }, [])
 
+  // TODO with removal of list v1 see if this logic can be removed
   useEffect(() => {
     const state = getListingState(collectionsRequiringApproval, listings)
 
@@ -162,8 +223,53 @@ export const ListPage = () => {
 
   useEffect(() => {
     setGlobalMarketplaces(selectedMarkets)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedMarkets])
+  }, [selectedMarkets, setGlobalMarketplaces])
+
+  const startListingEventProperties = {
+    collection_addresses: sellAssets.map((asset) => asset.asset_contract.address),
+    token_ids: sellAssets.map((asset) => asset.tokenId),
+    marketplaces: Array.from(new Set(listings.map((asset) => asset.marketplace.name))),
+    list_quantity: listings.length,
+    usd_value: ethPriceInUSD * totalEthListingValue,
+    ...trace,
+  }
+
+  const startListingFlow = async () => {
+    if (!signer) return
+    sendAnalyticsEvent(NFTEventName.NFT_SELL_START_LISTING, { ...startListingEventProperties })
+    setListingStatus(ListingStatus.SIGNING)
+    const signerAddress = await signer.getAddress()
+    const nonce = await looksRareNonceFetcher(signerAddress)
+    setLooksRareNonce(nonce ?? 0)
+
+    // for all unique collection, marketplace combos -> approve collections
+    for (const collectionRow of collectionsRequiringApproval) {
+      verifyStatus(collectionRow.status) &&
+        (isMobile
+          ? await approveCollectionRow(
+              collectionRow,
+              collectionsRequiringApproval,
+              setCollectionsRequiringApproval,
+              signer
+            )
+          : approveCollectionRow(collectionRow, collectionsRequiringApproval, setCollectionsRequiringApproval, signer))
+    }
+  }
+
+  const handleV2Click = () => {
+    toggleShowListModal()
+    startListingFlow()
+  }
+
+  const BannerText = isMobile ? (
+    <ThemedText.SubHeader lineHeight="24px">
+      <Trans>Proceeds</Trans>
+    </ThemedText.SubHeader>
+  ) : (
+    <ThemedText.HeadlineSmall lineHeight="28px">
+      <Trans>Proceeds if sold</Trans>
+    </ThemedText.HeadlineSmall>
+  )
 
   return (
     <Column>
@@ -191,27 +297,22 @@ export const ListPage = () => {
       {isNftListV2 && (
         <>
           <FloatingConfirmationBar>
-            <ThemedText.HeadlineSmall lineHeight="28px">
-              <Trans>Proceeds if sold</Trans>
-            </ThemedText.HeadlineSmall>
+            {BannerText}
             <ProceedsAndButtonWrapper>
               <ProceedsWrapper>
-                <ThemedText.HeadlineSmall
-                  lineHeight="28px"
-                  color={totalEthListingValue ? 'textPrimary' : 'textTertiary'}
-                >
+                <EthValueWrapper totalEthListingValue={!!totalEthListingValue}>
                   {totalEthListingValue > 0 ? formatEth(totalEthListingValue) : '-'} ETH
-                </ThemedText.HeadlineSmall>
-                {!!totalEthListingValue && !!ethPriceInUSD && (
-                  <ThemedText.HeadlineSmall lineHeight="28px" color="textSecondary">
+                </EthValueWrapper>
+                {!!totalEthListingValue && !!ethPriceInUSD && !isMobile && (
+                  <ThemedText.SubHeader lineHeight="24px" color="textSecondary">
                     {formatUsdPrice(totalEthListingValue * ethPriceInUSD)}
-                  </ThemedText.HeadlineSmall>
+                  </ThemedText.SubHeader>
                 )}
               </ProceedsWrapper>
               <ListingButtonWrapper>
                 <ListingButton
-                  onClick={isNftListV2 ? toggleShowListModal : toggleBag}
-                  buttonText={anyListingsMissingPrice ? t`Set prices to continue` : t`Start listing`}
+                  onClick={handleV2Click}
+                  buttonText={anyListingsMissingPrice && !isMobile ? t`Set prices to continue` : t`Start listing`}
                 />
               </ListingButtonWrapper>
             </ProceedsAndButtonWrapper>

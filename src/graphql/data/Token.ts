@@ -14,8 +14,8 @@ The difference between Token and TokenProject:
     TokenProjectMarket is aggregated market data (aggregated over multiple dexes and centralized exchanges) that we get from coingecko.
 */
 gql`
-  query Token($contract: ContractInput!) {
-    tokens(contracts: [$contract]) {
+  query Token($chain: Chain!, $address: String) {
+    token(chain: $chain, address: $address) {
       id
       decimals
       name
@@ -23,31 +23,39 @@ gql`
       address
       symbol
       market(currency: USD) {
+        id
         totalValueLocked {
+          id
           value
           currency
         }
         price {
+          id
           value
           currency
         }
         volume24H: volume(duration: DAY) {
+          id
           value
           currency
         }
         priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
+          id
           value
         }
         priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
+          id
           value
         }
       }
       project {
+        id
         description
         homepageUrl
         twitterName
         logoUrl
         tokens {
+          id
           chain
           address
         }
@@ -58,7 +66,7 @@ gql`
 
 export type { Chain, TokenQuery } from './__generated__/types-and-hooks'
 
-export type TokenQueryData = NonNullable<TokenQuery['tokens']>[number]
+export type TokenQueryData = TokenQuery['token']
 
 // TODO: Return a QueryToken from useTokenQuery instead of TokenQueryData to make it more usable in Currency-centric interfaces.
 export class QueryToken extends WrappedTokenInfo {

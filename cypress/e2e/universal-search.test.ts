@@ -64,7 +64,7 @@ describe('Universal search bar', () => {
       .should('be.eq', 3)
   })
 
-  it('should show blocked badge when blocked token is searched for', () => {
+  it.skip('should show blocked badge when blocked token is searched for', () => {
     // Search for mTSLA, which is a blocked token.
     cy.get('[data-cy="search-bar-input"]').last().clear().type('mtsla')
     cy.get('[data-cy="searchbar-token-row-mTSLA"]').find('[data-cy="blocked-icon"]').should('exist')

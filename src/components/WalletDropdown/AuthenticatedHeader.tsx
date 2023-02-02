@@ -126,15 +126,6 @@ const FiatOnrampAvailabilityExternalLink = styled(ExternalLink)`
   margin-left: 6px;
   width: 14px;
 `
-const FlexContainer = styled.div`
-  display: flex;
-`
-
-const StatusWrapper = styled.div`
-  display: inline-block;
-  margin-top: 4px;
-  width: 70%;
-`
 
 const TruncatedTextStyle = css`
   text-overflow: ellipsis;
@@ -142,8 +133,14 @@ const TruncatedTextStyle = css`
   white-space: nowrap;
 `
 
-const AccountNamesWrapper = styled.div`
+const FlexContainer = styled.div`
   ${TruncatedTextStyle}
+  padding-right: 4px;
+  display: inline-flex;
+`
+
+const AccountNamesWrapper = styled.div`
+  min-width: 0;
   margin-right: 8px;
 `
 
@@ -280,19 +277,17 @@ const AuthenticatedHeader = () => {
   return (
     <>
       <HeaderWrapper>
-        <StatusWrapper>
-          <FlexContainer>
-            <StatusIcon connectionType={connectionType} size={24} />
-            {ENSName ? (
-              <AccountNamesWrapper>
-                <ENSNameContainer>{ENSName}</ENSNameContainer>
-                <AccountContainer>{account && shortenAddress(account, 2, 4)}</AccountContainer>
-              </AccountNamesWrapper>
-            ) : (
-              <ThemedText.SubHeader marginTop="2.5px">{account && shortenAddress(account, 2, 4)}</ThemedText.SubHeader>
-            )}
-          </FlexContainer>
-        </StatusWrapper>
+        <FlexContainer>
+          <StatusIcon connectionType={connectionType} size={24} />
+          {ENSName ? (
+            <AccountNamesWrapper>
+              <ENSNameContainer>{ENSName}</ENSNameContainer>
+              <AccountContainer>{account && shortenAddress(account, 2, 4)}</AccountContainer>
+            </AccountNamesWrapper>
+          ) : (
+            <ThemedText.SubHeader marginTop="2.5px">{account && shortenAddress(account, 2, 4)}</ThemedText.SubHeader>
+          )}
+        </FlexContainer>
         <IconContainer>
           <IconButton onClick={copy} Icon={Copy}>
             {isCopied ? <Trans>Copied!</Trans> : <Trans>Copy</Trans>}
