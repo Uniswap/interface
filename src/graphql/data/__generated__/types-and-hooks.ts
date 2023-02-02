@@ -469,11 +469,44 @@ export enum NftRarityProvider {
   RaritySniper = 'RARITY_SNIPER'
 }
 
+export type NftRouteResponse = {
+  __typename?: 'NftRouteResponse';
+  calldata: Scalars['String'];
+  id: Scalars['ID'];
+  route?: Maybe<Array<NftTrade>>;
+  sendAmount: TokenAmount;
+  toAddress: Scalars['String'];
+};
+
 export enum NftStandard {
   Erc721 = 'ERC721',
   Erc1155 = 'ERC1155',
   Noncompliant = 'NONCOMPLIANT'
 }
+
+export type NftTrade = {
+  __typename?: 'NftTrade';
+  amount: Scalars['Int'];
+  contractAddress: Scalars['String'];
+  id: Scalars['ID'];
+  marketplace: NftMarketplace;
+  /**   price represents the current price of the NFT, which can be different from quotePrice */
+  price: TokenAmount;
+  /**   quotePrice represents the last quoted price of the NFT */
+  quotePrice?: Maybe<TokenAmount>;
+  tokenId: Scalars['String'];
+  tokenType: NftStandard;
+};
+
+export type NftTradeInput = {
+  amount: Scalars['Int'];
+  contractAddress: Scalars['String'];
+  id: Scalars['ID'];
+  marketplace: NftMarketplace;
+  quotePrice?: InputMaybe<TokenAmountInput>;
+  tokenId: Scalars['String'];
+  tokenType: NftStandard;
+};
 
 export type NftTransfer = {
   __typename?: 'NftTransfer';
@@ -503,6 +536,22 @@ export type PageInfo = {
   hasNextPage?: Maybe<Scalars['Boolean']>;
   hasPreviousPage?: Maybe<Scalars['Boolean']>;
   startCursor?: Maybe<Scalars['String']>;
+};
+
+/**   v2 pool parameters as defined by https://github.com/Uniswap/v2-sdk/blob/main/src/entities/pair.ts */
+export type PairInput = {
+  tokenAmountA: TokenAmountInput;
+  tokenAmountB: TokenAmountInput;
+};
+
+/**   v3 pool parameters as defined by https://github.com/Uniswap/v3-sdk/blob/main/src/entities/pool.ts */
+export type PoolInput = {
+  fee: Scalars['Int'];
+  liquidity: Scalars['String'];
+  sqrtRatioX96: Scalars['String'];
+  tickCurrent: Scalars['String'];
+  tokenA: TokenInput;
+  tokenB: TokenInput;
 };
 
 export type Portfolio = {
@@ -535,6 +584,7 @@ export type Query = {
   nftBalances?: Maybe<NftBalanceConnection>;
   nftCollections?: Maybe<NftCollectionConnection>;
   nftCollectionsById?: Maybe<Array<Maybe<NftCollection>>>;
+  nftRoute?: Maybe<NftRouteResponse>;
   portfolios?: Maybe<Array<Maybe<Portfolio>>>;
   searchTokenProjects?: Maybe<Array<Maybe<TokenProject>>>;
   searchTokens?: Maybe<Array<Maybe<Token>>>;
@@ -587,6 +637,14 @@ export type QueryNftCollectionsArgs = {
 
 export type QueryNftCollectionsByIdArgs = {
   collectionIds?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+
+export type QueryNftRouteArgs = {
+  chain?: InputMaybe<Chain>;
+  nftTrades: Array<NftTradeInput>;
+  senderAddress: Scalars['String'];
+  tokenTrades?: InputMaybe<Array<TokenTradeInput>>;
 };
 
 
@@ -662,6 +720,18 @@ export type TokenMarketArgs = {
   currency?: InputMaybe<Currency>;
 };
 
+export type TokenAmount = {
+  __typename?: 'TokenAmount';
+  currency: Currency;
+  id: Scalars['ID'];
+  value: Scalars['String'];
+};
+
+export type TokenAmountInput = {
+  amount: Scalars['String'];
+  token: TokenInput;
+};
+
 export type TokenApproval = {
   __typename?: 'TokenApproval';
   approvedAddress: Scalars['String'];
@@ -682,6 +752,13 @@ export type TokenBalance = {
   quantity?: Maybe<Scalars['Float']>;
   token?: Maybe<Token>;
   tokenProjectMarket?: Maybe<TokenProjectMarket>;
+};
+
+export type TokenInput = {
+  address: Scalars['String'];
+  chainId: Scalars['Int'];
+  decimals: Scalars['Int'];
+  isNative: Scalars['Boolean'];
 };
 
 export type TokenMarket = {
@@ -789,6 +866,30 @@ export enum TokenStandard {
   Native = 'NATIVE'
 }
 
+export type TokenTradeInput = {
+  routes?: InputMaybe<TokenTradeRoutesInput>;
+  slippageToleranceBasisPoints?: InputMaybe<Scalars['Int']>;
+  tokenAmount: TokenAmountInput;
+};
+
+export type TokenTradeRouteInput = {
+  inputAmount: TokenAmountInput;
+  outputAmount: TokenAmountInput;
+  pools: Array<TradePoolInput>;
+};
+
+export type TokenTradeRoutesInput = {
+  mixedRoutes?: InputMaybe<Array<TokenTradeRouteInput>>;
+  tradeType: TokenTradeType;
+  v2Routes?: InputMaybe<Array<TokenTradeRouteInput>>;
+  v3Routes?: InputMaybe<Array<TokenTradeRouteInput>>;
+};
+
+export enum TokenTradeType {
+  ExactInput = 'EXACT_INPUT',
+  ExactOutput = 'EXACT_OUTPUT'
+}
+
 export type TokenTransfer = {
   __typename?: 'TokenTransfer';
   asset: Token;
@@ -799,6 +900,11 @@ export type TokenTransfer = {
   sender: Scalars['String'];
   tokenStandard: TokenStandard;
   transactedValue?: Maybe<Amount>;
+};
+
+export type TradePoolInput = {
+  pair?: InputMaybe<PairInput>;
+  pool?: InputMaybe<PoolInput>;
 };
 
 export type Transaction = {
