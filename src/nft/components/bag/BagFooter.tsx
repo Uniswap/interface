@@ -2,10 +2,9 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther } from '@ethersproject/units'
 import { parseEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, InterfaceEventName, NFTEventName } from '@uniswap/analytics-events'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
-import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import Loader from 'components/Loader'
@@ -17,21 +16,21 @@ import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/fla
 import { useCurrency } from 'hooks/Tokens'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useBestTrade } from 'hooks/useBestTrade'
-import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
+import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useBag } from 'nft/hooks/useBag'
+import usePermit2Approval from 'nft/hooks/usePermit2Approval'
 import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { useWalletBalance } from 'nft/hooks/useWalletBalance'
 import { BagStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
-import { PropsWithChildren, useCallback, useMemo, useState } from 'react'
+import { PropsWithChildren, useMemo, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import invariant from 'tiny-invariant'
 import { switchChain } from 'utils/switchChain'
 
 const FooterContainer = styled.div`
@@ -169,34 +168,15 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
 
   const { state: swapState, trade } = useBestTrade(TradeType.EXACT_OUTPUT, parsedAmount, inputCurrency ?? undefined)
   const allowedSlippage = useAutoSlippageTolerance(trade)
-
   const maximumAmountIn = useMemo(() => {
     const maximumAmountIn = trade?.maximumAmountIn(allowedSlippage)
     return maximumAmountIn?.currency.isToken ? (maximumAmountIn as CurrencyAmount<Token>) : undefined
   }, [allowedSlippage, trade])
-  const allowance = usePermit2Allowance(
-    maximumAmountIn ??
-      (trade?.inputAmount.currency.isToken ? (trade?.inputAmount as CurrencyAmount<Token>) : undefined),
-    chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
+
+  const { allowance, isAllowancePending, isApprovalLoading, updateAllowance } = usePermit2Approval(
+    trade?.inputAmount.currency.isToken ? (trade?.inputAmount as CurrencyAmount<Token>) : undefined,
+    maximumAmountIn
   )
-  const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
-  const [isAllowancePending, setIsAllowancePending] = useState(false)
-  const updateAllowance = useCallback(async () => {
-    invariant(allowance.state === AllowanceState.REQUIRED)
-    setIsAllowancePending(true)
-    try {
-      await allowance.approveAndPermit()
-      sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
-        chain_id: chainId,
-        token_symbol: maximumAmountIn?.currency.symbol,
-        token_address: maximumAmountIn?.currency.address,
-      })
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setIsAllowancePending(false)
-    }
-  }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol])
 
   const usdcValue = useStablecoinValue(usingPayWithAnyToken ? trade?.inputAmount : parsedAmount)
 
