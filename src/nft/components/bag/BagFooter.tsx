@@ -4,7 +4,7 @@ import { parseEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import Loader from 'components/Loader'
@@ -14,12 +14,11 @@ import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { SupportedChainId } from 'constants/chains'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
 import { useCurrency } from 'hooks/Tokens'
-import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
-import { useBestTrade } from 'hooks/useBestTrade'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useBag } from 'nft/hooks/useBag'
+import usePayWithAnyTokenSwap from 'nft/hooks/usePayWithAnyTokenSwap'
 import usePermit2Approval from 'nft/hooks/usePermit2Approval'
 import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { useWalletBalance } from 'nft/hooks/useWalletBalance'
@@ -162,23 +161,16 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
   const activeCurrency = inputCurrency ?? defaultCurrency
   const usingPayWithAnyToken = !!inputCurrency && shouldUsePayWithAnyToken
 
-  const parsedAmount = useMemo(() => {
+  const parsedOutputAmount = useMemo(() => {
     return tryParseCurrencyAmount(formatEther(totalEthPrice.toString()), defaultCurrency ?? undefined)
   }, [defaultCurrency, totalEthPrice])
-
-  const { state: swapState, trade } = useBestTrade(TradeType.EXACT_OUTPUT, parsedAmount, inputCurrency ?? undefined)
-  const allowedSlippage = useAutoSlippageTolerance(trade)
-  const maximumAmountIn = useMemo(() => {
-    const maximumAmountIn = trade?.maximumAmountIn(allowedSlippage)
-    return maximumAmountIn?.currency.isToken ? (maximumAmountIn as CurrencyAmount<Token>) : undefined
-  }, [allowedSlippage, trade])
-
+  const { state: swapState, trade, maximumAmountIn } = usePayWithAnyTokenSwap(inputCurrency, parsedOutputAmount)
   const { allowance, isAllowancePending, isApprovalLoading, updateAllowance } = usePermit2Approval(
     trade?.inputAmount.currency.isToken ? (trade?.inputAmount as CurrencyAmount<Token>) : undefined,
     maximumAmountIn
   )
 
-  const usdcValue = useStablecoinValue(usingPayWithAnyToken ? trade?.inputAmount : parsedAmount)
+  const usdcValue = useStablecoinValue(usingPayWithAnyToken ? trade?.inputAmount : parsedOutputAmount)
 
   const { buttonText, disabled, warningText, handleClick } = useMemo(() => {
     let handleClick = fetchAssets
