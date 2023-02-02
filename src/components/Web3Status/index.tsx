@@ -272,6 +272,7 @@ function Web3StatusInner() {
       ...CHEVRON_PROPS,
       color: theme.accentAction,
       'data-testid': 'navbar-wallet-dropdown',
+      'aria-label': `${walletIsOpen ? 'close' : 'open'} wallet connection options`,
     }
     return (
       <TraceEvent
