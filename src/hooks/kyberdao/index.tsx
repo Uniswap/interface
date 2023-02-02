@@ -367,42 +367,6 @@ export function useVotingInfo() {
   const { data: userRewards } = useSWRImmutable(
     account && merkleDataFileUrl ? [merkleDataFileUrl, account] : null,
     (url: string, address: string) => {
-      // TODO dieppham: remove later
-      if (url === 'testWalletUI') {
-        const res: any = {
-          cycle: 1,
-          merkleRoot: '0xc47392ae592fa71969c384de16da4cc29a104e377d34781e2d682b53a9035a00',
-          userRewards: {
-            '0xeF09879057A9Ad798438f3BA561bcDd293D72FC7': {
-              index: 0,
-              tokens: ['0x03010458f00F1B9fEb6Ad5d67A065971126fBBc1'],
-              cumulativeAmounts: ['0x3635c9adc5dea00000'],
-              proof: ['0xf964f9ef09f247694bf4247dd5ff10dc9ab4f585ebc890ed5b48a91416f3bb6f'],
-            },
-            '0x9d49033a19238F9FB6e8229Eaa913C48b6758998': {
-              index: 1,
-              tokens: ['0x03010458f00F1B9fEb6Ad5d67A065971126fBBc1'],
-              cumulativeAmounts: ['0x3643aa647986040000'],
-              proof: [
-                '0xc39342f05004459f63c95660e4119df7d07151ce53032a62dc2708f589ea334e',
-                '0xed91268c2d81d362b61916390e120f0b2a26c53111731ffbc3f64f6516cbe136',
-              ],
-            },
-            '0x1Df0C07B865eb0F63861AEA166a257184606B008': {
-              index: 2,
-              tokens: ['0x03010458f00F1B9fEb6Ad5d67A065971126fBBc1'],
-              cumulativeAmounts: ['0x36518b1b2d2d680000'],
-              proof: [
-                '0xa104c646e052630caf0c7b7301e341ac310bf95a5fa156647a84710a600ef479',
-                '0xed91268c2d81d362b61916390e120f0b2a26c53111731ffbc3f64f6516cbe136',
-              ],
-            },
-          },
-        }
-        res.userReward = address ? res.userRewards[address] : undefined
-        delete res.userRewards
-        return res
-      }
       return fetch(url)
         .then(res => res.json())
         .then(res => {
