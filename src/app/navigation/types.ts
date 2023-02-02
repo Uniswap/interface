@@ -98,9 +98,6 @@ export type AppStackParamList = {
   [Screens.ExternalProfile]: {
     address: string
   }
-  [Screens.HiddenTokens]: {
-    address: string
-  }
   [Screens.Activity]: undefined
   [Screens.WebView]: { headerTitle: string; uriLink: string }
 }

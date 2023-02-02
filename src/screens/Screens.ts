@@ -5,7 +5,6 @@ export enum Screens {
   Dev = 'Dev',
   Education = 'Education',
   Explore = 'Explore',
-  HiddenTokens = 'HiddenTokens',
   Home = 'Home',
   Notifications = 'Notifications',
   NFTItem = 'NFTItem',

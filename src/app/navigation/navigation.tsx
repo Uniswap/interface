@@ -49,7 +49,6 @@ import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
 import { ExternalProfileScreen } from 'src/screens/ExternalProfileScreen'
-import { HiddenTokensScreen } from 'src/screens/HiddenTokensScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
 import { RestoreCloudBackupLoadingScreen } from 'src/screens/Import/RestoreCloudBackupLoadingScreen'
@@ -393,7 +392,6 @@ export function AppStackNavigator(): JSX.Element {
         }
       />
       <AppStack.Screen component={ExternalProfileScreen} name={Screens.ExternalProfile} />
-      <AppStack.Screen component={HiddenTokensScreen} name={Screens.HiddenTokens} />
       <AppStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
       <AppStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
       <AppStack.Screen component={ActivityScreen} name={Screens.Activity} />
