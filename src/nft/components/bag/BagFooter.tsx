@@ -4,13 +4,14 @@ import { parseEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import Loader from 'components/Loader'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import { LoadingBubble } from 'components/Tokens/loading'
 import { SupportedChainId } from 'constants/chains'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
 import { useCurrency } from 'hooks/Tokens'
@@ -27,7 +28,7 @@ import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
 import { PropsWithChildren, useMemo, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
 import { useToggleWalletModal } from 'state/application/hooks'
-import { TradeState } from 'state/routing/types'
+import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
@@ -52,9 +53,9 @@ const FooterHeader = styled(Column)<{ warningText?: boolean }>`
   padding-bottom: ${({ warningText }) => (warningText ? '8px' : '20px')};
 `
 
-const CurrencyRow = styled(Row)<{ warningText?: boolean }>`
+const CurrencyRow = styled(Row)`
   padding-top: 4px;
-  padding-bottom: ${({ warningText }) => (warningText ? '8px' : '20px')};
+  padding-bottom: 20px;
   justify-content: space-between;
   align-items: start;
 `
@@ -73,8 +74,16 @@ const WarningText = styled(ThemedText.BodyPrimary)`
   color: ${({ theme }) => theme.accentWarning};
   display: flex;
   justify-content: center;
-  margin: 12px 0 !important;
+  margin-bottom: 10px !important;
   text-align: center;
+`
+
+const HelperText = styled(ThemedText.Caption)`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 10px !important;
 `
 
 const CurrencyInput = styled(Row)`
@@ -95,6 +104,12 @@ const PayButton = styled(Row)<{ disabled?: boolean }>`
   padding: 12px 0px;
   opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
   cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
+`
+const FiatLoadingBubble = styled(LoadingBubble)`
+  border-radius: 4px;
+  width: 4rem;
+  height: 1rem;
+  align-self: end;
 `
 
 interface ActionButtonProps {
@@ -119,6 +134,67 @@ const Warning = ({ children }: PropsWithChildren<unknown>) => {
       <WarningIcon />
       {children}
     </WarningText>
+  )
+}
+
+const Helper = ({ children }: PropsWithChildren<unknown>) => {
+  if (!children) {
+    return null
+  }
+  return (
+    <HelperText lineHeight="16px" color="textSecondary">
+      {children}
+    </HelperText>
+  )
+}
+
+// TODO: ask design about no route found
+const InputCurrencyValue = ({
+  usingPayWithAnyToken,
+  totalEthPrice,
+  activeCurrency,
+  swapState,
+  trade,
+}: {
+  usingPayWithAnyToken: boolean
+  totalEthPrice: BigNumber
+  activeCurrency: Currency | undefined | null
+  swapState: TradeState
+  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
+}) => {
+  if (!usingPayWithAnyToken) {
+    return (
+      <ThemedText.HeadlineSmall>
+        {formatWeiToDecimal(totalEthPrice.toString())}
+        &nbsp;{activeCurrency?.symbol ?? 'ETH'}
+      </ThemedText.HeadlineSmall>
+    )
+  }
+
+  if (swapState === TradeState.VALID) {
+    return (
+      <ThemedText.HeadlineSmall color={swapState === TradeState.VALID ? 'textPrimary' : 'textTertiary'}>
+        {ethNumberStandardFormatter(trade?.inputAmount.toExact())}
+      </ThemedText.HeadlineSmall>
+    )
+  }
+
+  return (
+    <ThemedText.BodyPrimary color="textTertiary" lineHeight="20px" fontWeight="500">
+      Fetching price...
+    </ThemedText.BodyPrimary>
+  )
+}
+
+const FiatValue = ({ usdcValue }: { usdcValue: CurrencyAmount<Token> | null }) => {
+  if (!usdcValue) {
+    return <FiatLoadingBubble />
+  }
+
+  return (
+    <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
+      {`${ethNumberStandardFormatter(usdcValue?.toExact(), true)}`}
+    </ThemedText.BodySmall>
   )
 }
 
@@ -172,11 +248,12 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
 
   const usdcValue = useStablecoinValue(usingPayWithAnyToken ? trade?.inputAmount : parsedOutputAmount)
 
-  const { buttonText, disabled, warningText, handleClick } = useMemo(() => {
+  const { buttonText, disabled, warningText, helperText, handleClick } = useMemo(() => {
     let handleClick = fetchAssets
     let buttonText = <Trans>Something went wrong</Trans>
     let disabled = true
-    let warningText = null
+    let warningText = undefined
+    let helperText = undefined
 
     if (connected && chainId !== SupportedChainId.MAINNET) {
       handleClick = () => switchChain(connector, SupportedChainId.MAINNET)
@@ -210,7 +287,8 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
       } else if (isApprovalLoading) {
         buttonText = <Trans>Approval pending</Trans>
       } else {
-        buttonText = <Trans>Approve use of {trade?.inputAmount.currency.symbol}</Trans>
+        helperText = <Trans>An approval is needed to use this token. </Trans>
+        buttonText = <Trans>Approve</Trans>
       }
     } else if (bagStatus === BagStatus.FETCHING_FINAL_ROUTE || bagStatus === BagStatus.CONFIRMING_IN_WALLET) {
       disabled = true
@@ -223,7 +301,7 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
       buttonText = <Trans>Pay</Trans>
     }
 
-    return { buttonText, disabled, warningText, handleClick }
+    return { buttonText, disabled, warningText, helperText, handleClick }
   }, [
     fetchAssets,
     connected,
@@ -239,7 +317,6 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
     isAllowancePending,
     isApprovalLoading,
     updateAllowance,
-    trade?.inputAmount.currency.symbol,
   ])
 
   return (
@@ -263,37 +340,35 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
               <ThemedText.SubHeaderSmall marginBottom="4px">
                 <Trans>Total</Trans>
               </ThemedText.SubHeaderSmall>
-              <ThemedText.HeadlineSmall>
-                {usingPayWithAnyToken
-                  ? swapState !== TradeState.VALID
-                    ? '-'
-                    : ethNumberStandardFormatter(trade?.inputAmount.toExact())
-                  : formatWeiToDecimal(totalEthPrice.toString())}
-                &nbsp;{activeCurrency?.symbol ?? 'ETH'}
-              </ThemedText.HeadlineSmall>
-              <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
-                {`${ethNumberStandardFormatter(usdcValue?.toExact(), true)}`}
-              </ThemedText.BodySmall>
+              <InputCurrencyValue
+                usingPayWithAnyToken={usingPayWithAnyToken}
+                totalEthPrice={totalEthPrice}
+                activeCurrency={activeCurrency}
+                swapState={swapState}
+                trade={trade}
+              />
+              <FiatValue usdcValue={usdcValue} />
             </TotalColumn>
           </CurrencyRow>
         )}
         {!shouldUsePayWithAnyToken && (
-          <FooterHeader gap="xs" warningText={!!warningText}>
+          <FooterHeader gap="xs" warningText={!!warningText || !!helperText}>
             <Row justify="space-between">
               <div>
                 <ThemedText.HeadlineSmall>Total</ThemedText.HeadlineSmall>
               </div>
               <div>
-                <ThemedText.HeadlineSmall>
-                  {formatWeiToDecimal(totalEthPrice.toString())}&nbsp;ETH
-                </ThemedText.HeadlineSmall>
+                <InputCurrencyValue
+                  usingPayWithAnyToken={usingPayWithAnyToken}
+                  totalEthPrice={totalEthPrice}
+                  activeCurrency={activeCurrency}
+                  swapState={swapState}
+                  trade={trade}
+                />
               </div>
             </Row>
             <Row justify="flex-end">
-              <ThemedText.BodySmall color="textSecondary" lineHeight="20px">{`${ethNumberStandardFormatter(
-                usdcValue?.toExact(),
-                true
-              )}`}</ThemedText.BodySmall>
+              <FiatValue usdcValue={usdcValue} />
             </Row>
           </FooterHeader>
         )}
@@ -305,6 +380,7 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
           shouldLogImpression={connected && !disabled}
         >
           <Warning>{warningText}</Warning>
+          <Helper>{helperText}</Helper>
           <ActionButton onClick={handleClick} disabled={disabled}>
             {isPending && <Loader size="20px" stroke="white" />}
             {buttonText}
