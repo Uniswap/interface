@@ -80,6 +80,7 @@ import { SettingsWalletEdit } from 'src/screens/SettingsWalletEdit'
 import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManageConnection'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
+import { invokeImpact } from 'src/utils/haptic'
 
 const Tab = createBottomTabNavigator<TabParamList>()
 const OnboardingStack = createStackNavigator<OnboardingStackParamList>()
@@ -155,7 +156,8 @@ function TabNavigator(): JSX.Element {
       tabBar={renderTabBar}>
       <Tab.Screen
         component={HomeStackNavigator}
-        listeners={({ navigation }): { tabLongPress: () => void } => ({
+        listeners={({ navigation }): { tabPress: () => void; tabLongPress: () => void } => ({
+          tabPress: (): void => invokeImpact[ImpactFeedbackStyle.Medium](),
           tabLongPress: (): void => {
             const currentIndex = navigation.getState().index
             const homeTabIndex = navigation
@@ -183,6 +185,9 @@ function TabNavigator(): JSX.Element {
       />
       <Tab.Screen
         component={ExploreStackNavigator}
+        listeners={{
+          tabPress: (): void => invokeImpact[ImpactFeedbackStyle.Medium](),
+        }}
         name={Tabs.Explore}
         options={{
           tabBarLabel: t('Explore'),

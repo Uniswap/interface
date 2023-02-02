@@ -110,7 +110,10 @@ export function AccountHeader(): JSX.Element {
       </TouchableArea>
       <Flex alignItems="center" flexDirection="row" gap="md" justifyContent="flex-end">
         <QRScannerIconButton onPress={onPressScan} />
-        <TouchableArea onPress={onPressNotifications} onPressIn={onPressInNotifications}>
+        <TouchableArea
+          hapticFeedback
+          onPress={onPressNotifications}
+          onPressIn={onPressInNotifications}>
           {sortedPendingTransactions?.length ? (
             <PendingNotificationBadge sortedPendingTransactions={sortedPendingTransactions} />
           ) : (
