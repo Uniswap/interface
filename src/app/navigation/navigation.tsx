@@ -38,11 +38,12 @@ import WalletIcon from 'src/assets/icons/wallet.svg'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box } from 'src/components/layout'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
+import { useHighestBalanceNativeCurrencyId } from 'src/features/dataApi/balances'
 import { openModal } from 'src/features/modals/modalSlice'
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ModalName } from 'src/features/telemetry/constants'
-import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
+import { selectActiveAccount, selectFinishedOnboarding } from 'src/features/wallet/selectors'
 import { ActivityScreen } from 'src/screens/ActivityScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
@@ -119,7 +120,19 @@ const renderTabBarSearchIcon = ({ focused }: { focused: boolean }): JSX.Element 
   />
 )
 
-const renderSwapTabBarButton = (): JSX.Element => <SwapTabBarButton />
+const renderSwapTabBarButton = (): JSX.Element => {
+  return <SwapTabBarButton />
+}
+
+const renderSwapTabBarButtonWithInputCurrency =
+  (activeAccountAddress: Address) => (): JSX.Element => {
+    // We do it here and not inside SwapModal for two reasons:
+    // 1) To avoid flickering and/or rendering delays in SwapModal
+    // 2) When we open SwapModal from other places we pass input currency inside modal's initialState.
+    //    Inside SwapTabBarButton we do it the same way to avoid additional complexity.
+    const inputCurrencyId = useHighestBalanceNativeCurrencyId(activeAccountAddress)
+    return <SwapTabBarButton inputCurrencyId={inputCurrencyId} />
+  }
 
 function TabNavigator(): JSX.Element {
   const { t } = useTranslation()
@@ -133,6 +146,8 @@ function TabNavigator(): JSX.Element {
     }) ?? TAB_NAVIGATOR_HEIGHT_SM
 
   useLowPriorityPreloadedQueries()
+
+  const activeAccount = useAppSelector(selectActiveAccount)
 
   return (
     <Tab.Navigator
@@ -180,7 +195,9 @@ function TabNavigator(): JSX.Element {
         component={NullComponent}
         name={Tabs.SwapButton}
         options={{
-          tabBarButton: renderSwapTabBarButton,
+          tabBarButton: activeAccount
+            ? renderSwapTabBarButtonWithInputCurrency(activeAccount.address)
+            : renderSwapTabBarButton,
         }}
       />
       <Tab.Screen

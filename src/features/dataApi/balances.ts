@@ -110,6 +110,19 @@ export function usePortfolioBalances(
 }
 
 /**
+ * Returns NativeCurrency with highest balance.
+ *
+ * @param address to get portfolio balances for
+ * @returns CurrencyId of the NativeCurrency with highest balance
+ *
+ */
+export function useHighestBalanceNativeCurrencyId(address: Address): CurrencyId | undefined {
+  const { data } = useSortedPortfolioBalances(address, /*shouldPoll=*/ false)
+  return data?.balances.find((balance) => balance.currencyInfo.currency.isNative)?.currencyInfo
+    .currencyId
+}
+
+/**
  * Returns portfolio balances for a given address sorted by USD value.
  * Can optionally split out small balances and spam balances into separate arrays.
  *

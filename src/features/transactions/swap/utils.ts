@@ -3,6 +3,7 @@ import { BigNumber, BigNumberish } from 'ethers'
 import { TFunction } from 'i18next'
 import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
+import { AssetType } from 'src/entities/assets'
 import { DEFAULT_SLIPPAGE_TOLERANCE_PERCENT } from 'src/features/transactions/swap/hooks'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
@@ -12,8 +13,14 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { areAddressesEqual } from 'src/utils/addresses'
-import { currencyId } from 'src/utils/currencyId'
+import {
+  CurrencyId,
+  currencyId,
+  currencyIdToAddress,
+  currencyIdToChain,
+} from 'src/utils/currencyId'
 import { formatPrice, NumberType } from 'src/utils/format'
+import { CurrencyField, TransactionState } from '../transactionState/transactionState'
 
 export function serializeQueryParams(
   params: Record<string, Parameters<typeof encodeURIComponent>[0]>
@@ -141,4 +148,23 @@ export const clearStaleTrades = (
   // if the addresses entered by the user don't match what is being returned by the quote endpoint
   // then set `trade` to null
   return inputsMatch && outputsMatch ? trade : null
+}
+
+export const prepareSwapFormState = ({
+  inputCurrencyId,
+}: {
+  inputCurrencyId?: CurrencyId
+}): TransactionState | undefined => {
+  return inputCurrencyId
+    ? {
+        exactCurrencyField: CurrencyField.INPUT,
+        exactAmountToken: '',
+        [CurrencyField.INPUT]: {
+          address: currencyIdToAddress(inputCurrencyId),
+          chainId: currencyIdToChain(inputCurrencyId) ?? ChainId.Mainnet,
+          type: AssetType.Currency,
+        },
+        [CurrencyField.OUTPUT]: null,
+      }
+    : undefined
 }
