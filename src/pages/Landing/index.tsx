@@ -258,21 +258,18 @@ const LandingSwapContainer = styled.div`
   z-index: 1;
 `
 
-const LandingSwap = styled(Swap)`
+const Link = styled(NativeLink)`
+  text-decoration: none;
+  max-width: 480px;
+  width: 100%;
   * {
     pointer-events: none;
   }
 
   &:hover {
-    border: 1px solid ${({ theme }) => theme.accentAction};
     transform: translateY(-4px);
+    transition: ${({ theme }) => `transform ${theme.transition.duration.medium} ${theme.transition.timing.ease}`};
   }
-`
-
-const Link = styled(NativeLink)`
-  text-decoration: none;
-  max-width: 480px;
-  width: 100%;
 `
 
 export default function Landing() {
@@ -308,7 +305,7 @@ export default function Landing() {
               element={InterfaceElementName.LANDING_PAGE_SWAP_ELEMENT}
             >
               <Link to="/swap">
-                <LandingSwap />
+                <Swap />
               </Link>
             </TraceEvent>
           </LandingSwapContainer>
