@@ -34,11 +34,6 @@ export type AssetLogoBaseProps = {
 }
 type AssetLogoProps = AssetLogoBaseProps & { isNative?: boolean; address?: string | null; chainId?: number }
 
-// TODO(cartcrom): add prop to optionally render an L2Icon w/ the logo
-/**
- * Renders an image by prioritizing a list of sources, and then eventually a fallback triangle alert
- */
-
 const LogoContainer = styled.div`
   position: relative;
   display: flex;
@@ -57,6 +52,9 @@ const L2NetworkLogo = styled.div<{ networkUrl?: string; parentSize: string }>`
   display: ${({ networkUrl }) => !networkUrl && 'none'};
 `
 
+/**
+ * Renders an image by prioritizing a list of sources, and then eventually a fallback triangle alert
+ */
 export default function AssetLogo({
   isNative,
   address,
