@@ -3,19 +3,11 @@ import { InterfaceEventName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
-import usePermit2Allowance, { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
+import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useCallback, useMemo, useState } from 'react'
 import invariant from 'tiny-invariant'
 
-export default function usePermit2Approval(
-  amount?: CurrencyAmount<Token>,
-  maximumAmount?: CurrencyAmount<Token>
-): {
-  allowance: Allowance
-  isApprovalLoading: boolean
-  isAllowancePending: boolean
-  updateAllowance: () => Promise<void>
-} {
+export default function usePermit2Approval(amount?: CurrencyAmount<Token>, maximumAmount?: CurrencyAmount<Token>) {
   const { chainId } = useWeb3React()
 
   const allowance = usePermit2Allowance(
