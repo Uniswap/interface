@@ -42,7 +42,7 @@ const GlobalPriceIcon = styled.div`
   background-color: ${({ theme }) => theme.backgroundSurface};
 `
 
-const WarningMessage = styled(Row)<{ warningType: WarningType }>`
+const WarningMessage = styled(Row)<{ color: string }>`
   top: 52px;
   width: max-content;
   position: absolute;
@@ -50,7 +50,7 @@ const WarningMessage = styled(Row)<{ warningType: WarningType }>`
   font-weight: 600;
   font-size: 10px;
   line-height: 12px;
-  color: ${({ warningType, theme }) => (warningType === WarningType.BELOW_FLOOR ? colors.red400 : theme.textSecondary)};
+  color: ${({ color }) => color};
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     right: unset;
@@ -58,7 +58,7 @@ const WarningMessage = styled(Row)<{ warningType: WarningType }>`
 `
 
 const WarningAction = styled.div<{ warningType: WarningType }>`
-  margin-left: 8px;
+  margin-left: 4px;
   cursor: pointer;
   color: ${({ warningType, theme }) => (warningType === WarningType.BELOW_FLOOR ? theme.accentAction : colors.red400)};
 `
@@ -73,10 +73,10 @@ const getWarningMessage = (warning: WarningType) => {
   let message = <></>
   switch (warning) {
     case WarningType.BELOW_FLOOR:
-      message = <Trans>LISTING BELOW FLOOR </Trans>
+      message = <Trans>below floor price.</Trans>
       break
     case WarningType.ALREADY_LISTED:
-      message = <Trans>ALREADY LISTED FOR </Trans>
+      message = <Trans>Already listed at</Trans>
       break
   }
   return message
@@ -121,9 +121,13 @@ export const PriceTextInput = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listPrice])
 
-  const borderColor =
+  const percentBelowFloor = (1 - (listPrice ?? 0) / (asset.floorPrice ?? 0)) * 100
+
+  const warningColor =
     warningType !== WarningType.NONE && !focused
-      ? colors.red400
+      ? warningType === WarningType.BELOW_FLOOR && percentBelowFloor >= 20
+        ? colors.red400
+        : theme.accentWarning
       : isGlobalPrice
       ? theme.accentAction
       : listPrice != null
@@ -132,7 +136,7 @@ export const PriceTextInput = ({
 
   return (
     <PriceTextInputWrapper>
-      <InputWrapper borderColor={borderColor}>
+      <InputWrapper borderColor={warningColor}>
         <NumericInput
           as="input"
           pattern="[0-9]"
@@ -164,17 +168,15 @@ export const PriceTextInput = ({
           </GlobalPriceIcon>
         )}
       </InputWrapper>
-      <WarningMessage warningType={warningType}>
+      <WarningMessage color={warningColor}>
         {warning
           ? warning.message
           : warningType !== WarningType.NONE && (
               <>
+                {warningType === WarningType.BELOW_FLOOR && `${percentBelowFloor.toFixed(0)}% `}
                 {getWarningMessage(warningType)}
                 &nbsp;
-                {warningType === WarningType.BELOW_FLOOR
-                  ? formatEth(asset?.floorPrice ?? 0)
-                  : formatEth(asset?.floor_sell_order_price ?? 0)}
-                ETH
+                {warningType === WarningType.ALREADY_LISTED && `${formatEth(asset?.floor_sell_order_price ?? 0)} ETH`}
                 <WarningAction
                   warningType={warningType}
                   onClick={() => {
@@ -182,7 +184,7 @@ export const PriceTextInput = ({
                     setWarningType(WarningType.NONE)
                   }}
                 >
-                  {warningType === WarningType.BELOW_FLOOR ? <Trans>DISMISS</Trans> : <Trans>REMOVE ITEM</Trans>}
+                  {warningType === WarningType.BELOW_FLOOR ? <Trans>Dismiss</Trans> : <Trans>Remove item</Trans>}
                 </WarningAction>
               </>
             )}
