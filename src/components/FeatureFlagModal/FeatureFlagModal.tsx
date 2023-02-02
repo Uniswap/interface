@@ -3,6 +3,7 @@ import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
 import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
 import { Permit2Variant, usePermit2Flag } from 'featureFlags/flags/permit2'
+import { SwapWidgetVariant, useSwapWidgetFlag } from 'featureFlags/flags/swapWidget'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
@@ -228,6 +229,12 @@ export default function FeatureFlagModal() {
         value={usePayWithAnyTokenFlag()}
         featureFlag={FeatureFlag.payWithAnyToken}
         label="Pay With Any Token"
+      />
+      <FeatureFlagOption
+        variant={SwapWidgetVariant}
+        value={useSwapWidgetFlag()}
+        featureFlag={FeatureFlag.swapWidget}
+        label="Swap Widget"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
