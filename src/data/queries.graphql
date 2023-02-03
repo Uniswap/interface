@@ -174,15 +174,14 @@ query PortfolioBalances($ownerAddress: String!) {
         name
         symbol
         decimals
-      }
-      tokenProjectMarket {
-        id
-        tokenProject {
+        project {
           id
           logoUrl
           safetyLevel
           isSpam
         }
+      }
+      tokenProjectMarket {
         relativeChange24: pricePercentChange(duration: DAY) {
           id
           value
@@ -231,8 +230,8 @@ query Token($chain: Chain!, $address: String) {
   }
 }
 
-query TokenDetailsScreen($contract: ContractInput!) {
-  tokens(contracts: [$contract]) {
+query TokenDetailsScreen($chain: Chain!, $address:String) {
+  token(chain: $chain, address: $address) {
     id
     address
     chain
@@ -250,7 +249,6 @@ query TokenDetailsScreen($contract: ContractInput!) {
       description
       homepageUrl
       twitterName
-      name
       safetyLevel
       logoUrl
       markets(currencies: [USD]) {
@@ -258,27 +256,22 @@ query TokenDetailsScreen($contract: ContractInput!) {
         price {
           id
           value
-          currency
         }
         marketCap {
           id
           value
-          currency
         }
         fullyDilutedMarketCap {
           id
           value
-          currency
         }
         priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
           id
           value
-          currency
         }
         priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
           id
           value
-          currency
         }
       }
       tokens {
@@ -523,13 +516,13 @@ query ExploreTokensTab($topTokensOrderBy: TokenSortableField!) {
   }
   # `topTokens` returns WETH rather than ETH
   # here we retrieve ETH information to swap out in the UI
-  eth: tokens(contracts: [{ address: null, chain: ETHEREUM }]) {
+  eth: token(address: null, chain: ETHEREUM) {
     ...TopTokenParts
   }
 }
 
-query FavoriteTokenCard($favoriteTokenContract: ContractInput!) {
-  tokens(contracts: [$favoriteTokenContract]) {
+query FavoriteTokenCard($chain:Chain!, $address:String) {
+  token(chain:$chain,address:$address) {
     id
     name
     symbol

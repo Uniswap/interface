@@ -20,7 +20,7 @@ export function TokenDetailsHeader({
   loading = false,
   onPressWarningIcon,
 }: TokenDetailsHeaderProps): JSX.Element {
-  const token = data?.tokens?.[0]
+  const token = data?.token
   const tokenProject = token?.project
 
   return (
@@ -37,7 +37,7 @@ export function TokenDetailsHeader({
           numberOfLines={1}
           style={flex.shrink}
           variant="subheadLarge">
-          {tokenProject?.name ?? '—'}
+          {token?.name ?? '—'}
         </Text>
         {/* Suppress warning icon on low warning level */}
         {(tokenProject?.safetyLevel === SafetyLevel.StrongWarning ||

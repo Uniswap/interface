@@ -43,11 +43,7 @@ import { currencyIdToAddress, currencyIdToChain } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
 
 type Price = NonNullable<
-  NonNullable<
-    NonNullable<
-      NonNullable<NonNullable<TokenDetailsScreenQuery['tokens']>[0]>['project']
-    >['markets']
-  >[0]
+  NonNullable<NonNullable<NonNullable<TokenDetailsScreenQuery['token']>['project']>['markets']>[0]
 >['price']
 
 function HeaderPriceLabel({ price }: { price: Price }): JSX.Element {
@@ -63,7 +59,7 @@ function HeaderPriceLabel({ price }: { price: Price }): JSX.Element {
 function HeaderTitleElement({ data }: { data: TokenDetailsScreenQuery | undefined }): JSX.Element {
   const { t } = useTranslation()
 
-  const token = data?.tokens?.[0]
+  const token = data?.token
   const tokenProject = token?.project
 
   return (
@@ -97,15 +93,14 @@ export function TokenDetailsScreen({
 
   // Token details screen query
   const { data, refetch, networkStatus } = useTokenDetailsScreenQuery({
-    variables: {
-      contract: currencyIdToContractInput(_currencyId),
-    },
+    variables: currencyIdToContractInput(_currencyId),
     pollInterval: PollingInterval.Normal,
     notifyOnNetworkStatusChange: true,
+    returnPartialData: true,
   })
 
   const retry = useCallback(() => {
-    refetch({ contract: currencyIdToContractInput(_currencyId) })
+    refetch(currencyIdToContractInput(_currencyId))
   }, [_currencyId, refetch])
 
   const isLoading = !data && isNonPollingRequestInFlight(networkStatus)
@@ -144,14 +139,14 @@ function TokenDetails({
   const currencyChainId = currencyIdToChain(_currencyId) ?? ChainId.Mainnet
   const currencyAddress = currencyIdToAddress(_currencyId)
 
-  const crossChainTokens = data?.tokens?.[0]?.project?.tokens
+  const token = data?.token
+  const tokenLogoUrl = token?.project?.logoUrl
+
+  const crossChainTokens = token?.project?.tokens
   const { currentChainBalance, otherChainBalances } = useCrossChainBalances(
     _currencyId,
     crossChainTokens
   )
-
-  const token = data?.tokens?.[0]
-  const tokenLogoUrl = token?.project?.logoUrl
 
   const { tokenColor, tokenColorLoading } = useExtractedTokenColor(
     tokenLogoUrl,
@@ -174,7 +169,7 @@ function TokenDetails({
   const [showWarningModal, setShowWarningModal] = useState(false)
   const { tokenWarningDismissed, dismissWarningCallback } = useTokenWarningDismissed(_currencyId)
 
-  const safetyLevel = data?.tokens?.[0]?.project?.safetyLevel
+  const safetyLevel = token?.project?.safetyLevel
 
   const initialSendState = useMemo((): TransactionState => {
     return {

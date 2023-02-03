@@ -5,14 +5,14 @@ import {
   NormalizedCacheObject,
   useApolloClient,
 } from '@apollo/client'
-import { MMKVWrapper, persistCache } from 'apollo3-cache-persist'
+import { MMKVWrapper } from 'apollo3-cache-persist'
 import { useCallback, useEffect, useState } from 'react'
 import { MMKV } from 'react-native-mmkv'
 import { config } from 'src/config'
 import { uniswapUrls } from 'src/constants/urls'
-import { setupCache, setupErrorLink } from 'src/data/utils'
+import { initAndPersistCache } from 'src/data/cache'
+import { setupErrorLink } from 'src/data/utils'
 import { isNonJestDev } from 'src/utils/environment'
-import { logger } from 'src/utils/logger'
 
 const mmkv = new MMKV()
 if (isNonJestDev()) {
@@ -26,17 +26,8 @@ export const usePersistedApolloClient = (): ApolloClient<NormalizedCacheObject> 
 
   useEffect(() => {
     async function init(): Promise<void> {
-      const cache = setupCache()
-
-      try {
-        await persistCache({
-          cache,
-          storage: new MMKVWrapper(mmkv),
-        })
-      } catch (e) {
-        // non-fatal error, simply log
-        logger.error('data/hooks', 'init', `Error while restoring Apollo cache: ${e}`)
-      }
+      const storage = new MMKVWrapper(mmkv)
+      const cache = await initAndPersistCache(storage)
 
       const httpLink = createHttpLink({
         uri: uniswapUrls.graphQLUrl,

@@ -58,9 +58,7 @@ export function useTokenDetailsNavigation(): {
 
   const preload = (currencyId: CurrencyId): void => {
     load({
-      variables: {
-        contract: currencyIdToContractInput(currencyId),
-      },
+      variables: currencyIdToContractInput(currencyId),
     })
   }
 

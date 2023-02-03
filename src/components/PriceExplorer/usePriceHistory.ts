@@ -1,8 +1,12 @@
 import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
-import { TLineChartData, TLineChartPoint } from 'react-native-wagmi-charts'
+import { TLineChartData } from 'react-native-wagmi-charts'
 import { PollingInterval } from 'src/constants/misc'
 import { isError, isNonPollingRequestInFlight } from 'src/data/utils'
-import { HistoryDuration, useTokenPriceHistoryQuery } from 'src/data/__generated__/types-and-hooks'
+import {
+  HistoryDuration,
+  TimestampedAmount,
+  useTokenPriceHistoryQuery,
+} from 'src/data/__generated__/types-and-hooks'
 import { GqlResult } from 'src/features/dataApi/types'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 
@@ -44,7 +48,7 @@ export function useTokenPriceHistory(
   const formattedPriceHistory = useMemo(
     () =>
       priceHistory
-        ?.filter((x): x is TLineChartPoint => Boolean(x))
+        ?.filter((x): x is TimestampedAmount => Boolean(x))
         .map((x) => ({ timestamp: x.timestamp * 1000, value: x.value })),
     [priceHistory]
   )

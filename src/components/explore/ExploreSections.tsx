@@ -73,7 +73,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
     // special case to replace weth with eth because the backend does not return eth data
     // eth will be defined only if all the required data is available
     // when eth data is not fully available, we do not replace weth with eth
-    const eth = data?.eth && data?.eth.length > 0 && data?.eth?.[0]?.project ? data.eth[0] : null
+    const { eth } = data
     const weth = WRAPPED_NATIVE_CURRENCY[ChainId.Mainnet]
 
     const topTokens = data.topTokens

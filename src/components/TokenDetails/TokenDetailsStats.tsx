@@ -83,7 +83,7 @@ export function TokenDetailsStats({
   const { t } = useTranslation()
   const theme = useAppTheme()
 
-  const tokenData = data?.tokens?.[0]
+  const tokenData = data?.token
   const tokenProjectData = tokenData?.project
 
   const marketData = tokenProjectData?.markets ? tokenProjectData.markets[0] : null
@@ -103,9 +103,9 @@ export function TokenDetailsStats({
         volume={tokenData?.market?.volume?.value}
       />
       <Flex gap="xxs">
-        {tokenProjectData?.name ? (
+        {tokenData?.name ? (
           <Text color="textTertiary" variant="subheadSmall">
-            {t('About {{ token }}', { token: tokenProjectData.name })}
+            {t('About {{ token }}', { token: tokenData.name })}
           </Text>
         ) : null}
         <Flex gap="md">

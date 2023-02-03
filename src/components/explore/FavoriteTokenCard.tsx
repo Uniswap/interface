@@ -50,21 +50,16 @@ function FavoriteTokenCard({
   const dispatch = useAppDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
-  const favoriteCurrencyContractInputs = useMemo(
-    () => currencyIdToContractInput(currencyId),
-    [currencyId]
-  )
   const { data, networkStatus, startPolling, stopPolling } = useFavoriteTokenCardQuery({
-    variables: {
-      favoriteTokenContract: favoriteCurrencyContractInputs,
-    },
+    variables: currencyIdToContractInput(currencyId),
     // Rely on cache for fast favoriting UX, and poll for updates.
     fetchPolicy: 'cache-first',
+    returnPartialData: true,
   })
 
   usePollOnFocusOnly(startPolling, stopPolling, PollingInterval.Fast)
 
-  const token = data?.tokens?.[0]
+  const token = data?.token
 
   // Mirror behavior in top tokens list, use first chain the token is on for the symbol
   const chainId = fromGraphQLChain(token?.chain)

@@ -69,7 +69,7 @@ export function usePortfolioBalances(
           balance.denominatedValue?.value < HIDE_SMALL_USD_BALANCES_THRESHOLD)
       )
         return null
-      if (hideSpamTokens && balance.tokenProjectMarket?.tokenProject?.isSpam) return null
+      if (hideSpamTokens && balance.token?.project?.isSpam) return null
 
       const currency = balance.token.address
         ? new Token(
@@ -86,9 +86,9 @@ export function usePortfolioBalances(
       const currencyInfo: CurrencyInfo = {
         currency,
         currencyId: currencyId(currency),
-        logoUrl: balance.tokenProjectMarket?.tokenProject?.logoUrl,
-        isSpam: balance.tokenProjectMarket?.tokenProject?.isSpam,
-        safetyLevel: balance.tokenProjectMarket?.tokenProject.safetyLevel,
+        logoUrl: balance.token?.project?.logoUrl,
+        isSpam: balance.token?.project?.isSpam,
+        safetyLevel: balance.token?.project?.safetyLevel,
       }
 
       const portfolioBalance: PortfolioBalance = {

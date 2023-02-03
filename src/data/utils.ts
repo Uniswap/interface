@@ -1,6 +1,5 @@
-import { ApolloLink, InMemoryCache, NetworkStatus } from '@apollo/client'
+import { ApolloLink, NetworkStatus } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
-import { Reference, relayStylePagination } from '@apollo/client/utilities'
 import { logger } from 'src/utils/logger'
 
 export function isNonPollingRequestInFlight(networkStatus: NetworkStatus): boolean {
@@ -51,47 +50,4 @@ export function setupErrorLink(
   })
 
   return errorLink
-}
-
-export function setupCache(): InMemoryCache {
-  const cache = new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          // relayStylePagination function unfortunately generates a field policy that ignores args
-          nftBalances: relayStylePagination(['ownerAddress']),
-
-          // tell apollo client how to reference Token items in the cache after being fetched by queries that return Token[]
-          token: {
-            read(_, { args, toReference }): Reference | undefined {
-              return toReference({
-                __typename: 'Token',
-                chain: args?.chain,
-                address: args?.address,
-              })
-            },
-          },
-        },
-      },
-      Token: {
-        // key by chain, address combination so that Token(chain, address) endpoint can read from cache
-        /**
-         * NOTE: In any query for `token` or `tokens`, you must include the `chain` and `address` fields
-         * in order for result to normalize properly in the cache.
-         */
-        keyFields: ['chain', 'address'],
-        fields: {
-          address: {
-            read(address: string | null): string | null {
-              // backend endpoint sometimes returns checksummed, sometimes lowercased addresses
-              // always use lowercased addresses in our app for consistency
-              return address?.toLowerCase() ?? null
-            },
-          },
-        },
-      },
-    },
-  })
-
-  return cache
 }
