@@ -1,3 +1,5 @@
+import { Plural, t } from '@lingui/macro'
+import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import ms from 'ms.macro'
 import { Box } from 'nft/components/Box'
@@ -8,7 +10,8 @@ import { themeVars } from 'nft/css/sprinkles.css'
 import { useNFTList, useSellAsset } from 'nft/hooks'
 import { Listing, ListingStatus, WalletAsset } from 'nft/types'
 import { pluralize } from 'nft/utils/roundAndPluralize'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import { useTheme } from 'styled-components/macro'
 
 import * as styles from './ListingModal.css'
 import { getListings } from './utils'
@@ -27,8 +30,12 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
   const setListingStatus = useNFTList((state) => state.setListingStatus)
   const setListings = useNFTList((state) => state.setListings)
   const setCollectionsRequiringApproval = useNFTList((state) => state.setCollectionsRequiringApproval)
+  const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
   const [showWarning, setShowWarning] = useState(false)
   const [canContinue, setCanContinue] = useState(false)
+  const [issues, setIssues] = useState(0)
+  const theme = useTheme()
+  const [showResolveIssues, toggleShowResolveIssues] = useReducer((s) => !s, false)
   const warningRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(warningRef, () => {
     setShowWarning(false)
@@ -78,6 +85,20 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
         }
       }
     }
+    // set number of issues
+    if (isNftListV2) {
+      const foundIssues =
+        Number(missingExpiration) +
+        Number(overMaxExpiration) +
+        listingsMissingPrice.length +
+        listingsAboveSellOrderFloor.length
+      setIssues(foundIssues)
+      !foundIssues && showResolveIssues && toggleShowResolveIssues()
+      // Only show Resolve Issue text if there was a user submitted error (ie not when page loads with no prices set)
+      if ((missingExpiration || overMaxExpiration || listingsAboveSellOrderFloor.length) && !showResolveIssues)
+        toggleShowResolveIssues()
+    }
+
     const continueCheck = listingsBelowFloor.length === 0 && listingsAboveSellOrderFloor.length === 0
     setCanContinue(continueCheck)
     return [
@@ -90,7 +111,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
       listingsAboveSellOrderFloor,
       invalidPrices,
     ]
-  }, [sellAssets])
+  }, [isNftListV2, sellAssets, showResolveIssues])
 
   const [disableListButton, warningMessage] = useMemo(() => {
     const disableListButton =
@@ -158,8 +179,10 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
   }
 
   const warningWrappedClick = () => {
-    if ((!disableListButton && canContinue) || showWarningOverride) onClick()
-    else addWarningMessages()
+    if ((!disableListButton && canContinue) || showWarningOverride) {
+      if (issues && isNftListV2) !showResolveIssues && toggleShowResolveIssues()
+      else onClick()
+    } else addWarningMessages()
   }
 
   return (
@@ -210,21 +233,21 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
       <Box
         as="button"
         border="none"
-        backgroundColor="accentAction"
+        backgroundColor={showResolveIssues ? 'accentFailure' : 'accentAction'}
         cursor={
           [ListingStatus.APPROVED, ListingStatus.PENDING, ListingStatus.SIGNING].includes(listingStatus) ||
           disableListButton
             ? 'default'
             : 'pointer'
         }
-        color="explicitWhite"
         className={styles.button}
         onClick={() => listingStatus !== ListingStatus.APPROVED && warningWrappedClick()}
         type="button"
         style={{
+          color: showResolveIssues ? theme.accentTextDarkPrimary : theme.white,
           opacity:
             ![ListingStatus.DEFINED, ListingStatus.FAILED, ListingStatus.CONTINUE].includes(listingStatus) ||
-            disableListButton
+            (disableListButton && !showResolveIssues)
               ? 0.3
               : 1,
         }}
@@ -242,6 +265,8 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
           'Try again'
         ) : listingStatus === ListingStatus.CONTINUE ? (
           'Continue'
+        ) : showResolveIssues ? (
+          <Plural value={issues !== 1 ? 2 : 1} _1="Resolve issue" other={t`Resolve ${issues} issues`} />
         ) : (
           buttonText
         )}

@@ -8,6 +8,7 @@ import { useSellAsset } from 'nft/hooks'
 import { ListingWarning, WalletAsset } from 'nft/types'
 import { formatEth } from 'nft/utils/currency'
 import { Dispatch, FormEvent, useEffect, useRef, useState } from 'react'
+import { AlertTriangle } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { colors } from 'theme/colors'
@@ -42,6 +43,10 @@ const GlobalPriceIcon = styled.div`
   background-color: ${({ theme }) => theme.backgroundSurface};
 `
 
+const WarningRow = styled(Row)`
+  gap: 4px;
+`
+
 const WarningMessage = styled(Row)<{ color: string }>`
   top: 52px;
   width: max-content;
@@ -57,10 +62,9 @@ const WarningMessage = styled(Row)<{ color: string }>`
   }
 `
 
-const WarningAction = styled.div<{ warningType: WarningType }>`
-  margin-left: 4px;
+const WarningAction = styled.div`
   cursor: pointer;
-  color: ${({ warningType, theme }) => (warningType === WarningType.BELOW_FLOOR ? theme.accentAction : colors.red400)};
+  color: ${({ theme }) => theme.accentAction};
 `
 
 enum WarningType {
@@ -125,7 +129,8 @@ export const PriceTextInput = ({
 
   const warningColor =
     warningType !== WarningType.NONE && !focused
-      ? warningType === WarningType.BELOW_FLOOR && percentBelowFloor >= 20
+      ? (warningType === WarningType.BELOW_FLOOR && percentBelowFloor >= 20) ||
+        warningType === WarningType.ALREADY_LISTED
         ? colors.red400
         : theme.accentWarning
       : isGlobalPrice
@@ -172,13 +177,15 @@ export const PriceTextInput = ({
         {warning
           ? warning.message
           : warningType !== WarningType.NONE && (
-              <>
-                {warningType === WarningType.BELOW_FLOOR && `${percentBelowFloor.toFixed(0)}% `}
-                {getWarningMessage(warningType)}
-                &nbsp;
-                {warningType === WarningType.ALREADY_LISTED && `${formatEth(asset?.floor_sell_order_price ?? 0)} ETH`}
+              <WarningRow>
+                <AlertTriangle height={16} width={16} color={warningColor} />
+                <span>
+                  {warningType === WarningType.BELOW_FLOOR && `${percentBelowFloor.toFixed(0)}% `}
+                  {getWarningMessage(warningType)}
+                  &nbsp;
+                  {warningType === WarningType.ALREADY_LISTED && `${formatEth(asset?.floor_sell_order_price ?? 0)} ETH`}
+                </span>
                 <WarningAction
-                  warningType={warningType}
                   onClick={() => {
                     warningType === WarningType.ALREADY_LISTED && removeSellAsset(asset)
                     setWarningType(WarningType.NONE)
@@ -186,7 +193,7 @@ export const PriceTextInput = ({
                 >
                   {warningType === WarningType.BELOW_FLOOR ? <Trans>Dismiss</Trans> : <Trans>Remove item</Trans>}
                 </WarningAction>
-              </>
+              </WarningRow>
             )}
       </WarningMessage>
     </PriceTextInputWrapper>

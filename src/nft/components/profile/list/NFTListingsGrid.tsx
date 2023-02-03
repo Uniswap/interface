@@ -47,7 +47,7 @@ const PriceInfoHeader = styled.div`
   display: none;
   flex: 1;
 
-  @media screen and (min-width: ${BREAKPOINTS.xl}px) {
+  @media screen and (min-width: ${BREAKPOINTS.xxl}px) {
     display: flex;
   }
 `
