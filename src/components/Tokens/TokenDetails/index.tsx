@@ -21,7 +21,6 @@ import TokenDetailsSkeleton, {
   TokenNameCell,
 } from 'components/Tokens/TokenDetails/Skeleton'
 import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
-import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget from 'components/Widget'
@@ -169,8 +168,6 @@ export default function TokenDetails({
     [continueSwap, setContinueSwap]
   )
 
-  const L2Icon = getChainInfo(pageChainId)?.circleLogoUrl
-
   // address will never be undefined if token is defined; address is checked here to appease typechecker
   if (token === undefined || !address) {
     return <InvalidTokenDetails chainName={address && getChainInfo(pageChainId)?.label} />
@@ -189,10 +186,8 @@ export default function TokenDetails({
             </BreadcrumbNavLink>
             <TokenInfoContainer data-testid="token-info-container">
               <TokenNameCell>
-                <LogoContainer>
-                  <CurrencyLogo currency={token} size="32px" />
-                  <L2NetworkLogo networkUrl={L2Icon} size="16px" />
-                </LogoContainer>
+                <CurrencyLogo currency={token} size="32px" hideL2Icon={false} />
+
                 {token.name ?? <Trans>Name not found</Trans>}
                 <TokenSymbol>{token.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
               </TokenNameCell>
