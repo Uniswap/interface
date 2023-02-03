@@ -2,7 +2,7 @@ import { ONE_MINUTE_MS } from 'src/utils/time'
 import { isDevBuild } from 'src/utils/version'
 
 export const DEFAULT_SLIPPAGE_TOLERANCE = 5
-export const DEFAULT_DEADLINE_S = 30 * ONE_MINUTE_MS
+export const DEFAULT_DEADLINE_S = 60 * 30 // 30 minutes in seconds
 
 // temporarily increase polling on dev builds to test out performance assumptions
 const scalingFactor = isDevBuild() ? 5 : 1
