@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { Defs, LinearGradient, Rect, Stop, Svg } from 'react-native-svg'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import Checkmark from 'src/assets/icons/check.svg'
 import X from 'src/assets/icons/x.svg'
@@ -8,6 +9,7 @@ import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
+import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { Chevron } from 'src/components/icons/Chevron'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
@@ -188,6 +190,17 @@ export const PendingConnection = ({ pendingSession, onClose }: Props): JSX.Eleme
         overflow="hidden"
         px="lg"
         py="xxxl">
+        <GradientBackground>
+          <Svg height="100%" width="100%">
+            <Defs>
+              <LinearGradient id="scan-top-fadeout" x1="0" x2="0" y1="0" y2="1">
+                <Stop offset="0" stopColor={theme.colors.background0} stopOpacity="1" />
+                <Stop offset="0.1" stopColor={theme.colors.background0} stopOpacity="0" />
+              </LinearGradient>
+            </Defs>
+            <Rect fill="url(#scan-top-fadeout)" height="100%" width="100%" x="0" y="0" />
+          </Svg>
+        </GradientBackground>
         <Flex alignItems="center" flex={1} gap="md" justifyContent="flex-end">
           <HeaderIcon dapp={pendingSession.dapp} showChain={false} />
           <Text textAlign="center" variant="headlineSmall">

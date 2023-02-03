@@ -19,6 +19,7 @@ import PasteButton from 'src/components/buttons/PasteButton'
 import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
 import { SimulatedViewfinder } from 'src/components/DevelopmentOnly/SimulatedViewfinder'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Text } from 'src/components/Text'
 import { dimensions } from 'src/styles/sizing'
 import { openSettings } from 'src/utils/linking'
@@ -103,6 +104,9 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
     runOnJS(setBarcodes)(detectedBarcodes)
   }, [])
 
+  const LOADER_SIZE = theme.iconSizes.xxxl
+  const SCANNER_SIZE = dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO
+
   return (
     <AnimatedFlex grow borderRadius="md" entering={FadeIn} exiting={FadeOut} overflow="hidden">
       <MaskedView
@@ -113,16 +117,20 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             justifyContent="center"
             position="absolute"
             style={StyleSheet.absoluteFill}>
-            <Box
-              bg="white"
-              height={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO - SCAN_ICON_MASK_OFFSET}
-              style={scanIconMaskStyle}
-              width={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO - SCAN_ICON_MASK_OFFSET}
-            />
+            {!shouldFreezeCamera ? (
+              // don't cut out the center scan area if the camera is frozen (has seen a barcode)
+              <Box
+                bg="white"
+                height={SCANNER_SIZE - SCAN_ICON_MASK_OFFSET}
+                style={scanIconMaskStyle}
+                width={SCANNER_SIZE - SCAN_ICON_MASK_OFFSET}
+              />
+            ) : null}
           </Box>
         }
         style={StyleSheet.absoluteFill}>
         {backCamera ? (
+          // show the camera viewfinder if there's a camera available
           <Camera
             device={backCamera}
             frameProcessor={frameProcessor}
@@ -131,6 +139,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             zoom={backCamera.neutralZoom}
           />
         ) : (
+          // otherwise (only in dev mode) show a simulated viewfinder (cycles through different colors)
           <DevelopmentOnly>
             <SimulatedViewfinder />
           </DevelopmentOnly>
@@ -139,10 +148,25 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
           <Defs>
             <LinearGradient id="scan-top-fadeout" x1="0" x2="0" y1="0" y2="1">
               <Stop offset="0" stopColor={theme.colors.background0} stopOpacity="1" />
-              <Stop offset="0.4" stopColor={theme.colors.background0} stopOpacity="0" />
+              <Stop
+                offset="0.4"
+                stopColor={theme.colors.background0}
+                stopOpacity={shouldFreezeCamera ? '0.5' : '0'}
+              />
+            </LinearGradient>
+            <LinearGradient id="scan-bottom-fadeout" x1="0" x2="0" y1="1" y2="0">
+              <Stop offset="0" stopColor={theme.colors.background0} stopOpacity="1" />
+              <Stop
+                offset="0.4"
+                stopColor={theme.colors.background0}
+                stopOpacity={shouldFreezeCamera ? '0.5' : '0'}
+              />
             </LinearGradient>
           </Defs>
+          {/* gradient from top of modal to top of QR code, of color background0 to transparent */}
           <Rect fill="url(#scan-top-fadeout)" height="100%" width="100%" x="0" y="0" />
+          {/* gradient from bottom of modal to bottom of QR code, of color background0 to transparent */}
+          <Rect fill="url(#scan-bottom-fadeout)" height="100%" width="100%" x="0" y="0" />
         </Svg>
       </MaskedView>
       <Flex centered gap="xxl" style={StyleSheet.absoluteFill}>
@@ -150,6 +174,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
           <Flex
             centered
             gap="sm"
+            opacity={shouldFreezeCamera ? 0.4 : 1}
             position="absolute"
             style={{
               transform: [{ translateY: infoLayout ? -infoLayout.height - theme.spacing.lg : 0 }],
@@ -175,14 +200,39 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
               </Text>
             )}
           </Flex>
-          <CameraScan
-            color={theme.colors.white}
-            height={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO}
-            strokeWidth={5}
-            width={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO}
-          />
+          {!shouldFreezeCamera ? (
+            // camera isn't frozen (after seeing barcode) — show the camera scan icon (the four white corners)
+            <CameraScan
+              color={theme.colors.white}
+              height={SCANNER_SIZE}
+              strokeWidth={5}
+              width={SCANNER_SIZE}
+            />
+          ) : (
+            // camera has been frozen (has seen a barcode) — show the loading spinner and "Connecting..." or "Loading..."
+            <Box height={SCANNER_SIZE} width={SCANNER_SIZE}>
+              <Flex
+                alignItems="center"
+                height="100%"
+                justifyContent="center"
+                position="absolute"
+                width="100%">
+                <Flex
+                  left={SCANNER_SIZE / 2 - LOADER_SIZE / 2}
+                  position="absolute"
+                  top={SCANNER_SIZE / 2 - LOADER_SIZE / 2}>
+                  <SpinningLoader color="textPrimary" size={theme.iconSizes.xxxl} />
+                </Flex>
+                <Box style={{ marginTop: LOADER_SIZE + theme.spacing.lg }} />
+                <Text color="textPrimary" textAlign="center" variant="bodyLarge">
+                  {isWalletConnectModal ? t('Connecting...') : t('Loading...')}
+                </Text>
+              </Flex>
+            </Box>
+          )}
           <DevelopmentOnly>
-            {!backCamera ? (
+            {/* when in development mode AND there's no camera (using iOS Simulator), add a paste button */}
+            {!backCamera && !shouldFreezeCamera ? (
               <Flex
                 centered
                 height={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO}

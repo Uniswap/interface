@@ -9,7 +9,7 @@ import React, { ComponentProps, PropsWithChildren, useCallback, useEffect, useRe
 import { StyleSheet } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
-import { Box } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { Trace } from 'src/components/telemetry/Trace'
 import { ModalName } from 'src/features/telemetry/constants'
 import { TelemetryTraceProps } from 'src/features/telemetry/types'
@@ -31,31 +31,36 @@ type Props = PropsWithChildren<{
 const HANDLEBAR_HEIGHT = spacing.xxs
 const HANDLEBAR_WIDTH = spacing.xl
 
-const HandleBar = (): JSX.Element => {
-  return (
-    <Box
-      alignSelf="center"
-      backgroundColor="backgroundOutline"
-      borderRadius="sm"
-      height={HANDLEBAR_HEIGHT}
-      mb="sm"
-      mt="md"
-      width={HANDLEBAR_WIDTH}
-    />
-  )
-}
+const HandleBar = ({
+  backgroundColor,
+  hidden,
+}: {
+  // string instead of keyof Theme['colors] because this is passed down from the modal
+  // backgroundColor prop which expects an actual hex string instead of a named color
+  backgroundColor: string
+  hidden: boolean
+}): JSX.Element => {
+  const theme = useAppTheme()
+  const bg = hidden ? 'transparent' : backgroundColor ?? theme.colors.background0
 
-const HiddenHandleBar = (): JSX.Element => {
   return (
-    // same height and width as the handlebar but without a background color, so it takes up the same screen space
-    <Box
-      alignSelf="center"
-      backgroundColor="none"
-      borderRadius="xs"
-      height={HANDLEBAR_HEIGHT}
-      mb="sm"
-      mt="md"
-    />
+    <Flex
+      alignItems="center"
+      borderRadius="xl"
+      justifyContent="center"
+      style={{
+        backgroundColor: bg,
+      }}>
+      <Box
+        alignSelf="center"
+        backgroundColor={hidden ? 'none' : 'backgroundOutline'}
+        borderRadius="sm"
+        height={HANDLEBAR_HEIGHT}
+        mb="sm"
+        mt="md"
+        width={HANDLEBAR_WIDTH}
+      />
+    </Flex>
   )
 }
 
@@ -97,11 +102,19 @@ export function BottomSheetModal({
     [isDismissible]
   )
 
+  const renderHandleBar = useCallback(
+    (props) => {
+      return <HandleBar {...props} backgroundColor={backgroundColor} hidden={hideHandlebar} />
+    },
+    [backgroundColor, hideHandlebar]
+  )
+
   useEffect(() => {
     modalRef.current?.present()
   }, [modalRef])
 
   const fullScreenContentHeight = FULL_HEIGHT * dimensions.fullHeight
+
   return (
     <BaseModal
       ref={modalRef}
@@ -110,7 +123,7 @@ export function BottomSheetModal({
       contentHeight={animatedContentHeight}
       enableContentPanningGesture={isDismissible}
       enableHandlePanningGesture={isDismissible}
-      handleComponent={hideHandlebar ? HiddenHandleBar : HandleBar}
+      handleComponent={renderHandleBar}
       handleHeight={animatedHandleHeight}
       snapPoints={animatedSnapPoints}
       stackBehavior={stackBehavior}
@@ -152,6 +165,13 @@ export function BottomSheetDetachedModal({
     modalRef.current?.present()
   }, [modalRef])
 
+  const renderHandleBar = useCallback(
+    (props) => {
+      return <HandleBar {...props} backgroundColor={backgroundColor} hidden={hideHandlebar} />
+    },
+    [backgroundColor, hideHandlebar]
+  )
+
   return (
     <BaseModal
       ref={modalRef}
@@ -160,7 +180,7 @@ export function BottomSheetDetachedModal({
       bottomInset={theme.spacing.xxl}
       contentHeight={animatedContentHeight}
       detached={true}
-      handleComponent={hideHandlebar ? HiddenHandleBar : HandleBar}
+      handleComponent={renderHandleBar}
       handleHeight={animatedHandleHeight}
       snapPoints={animatedSnapPoints}
       stackBehavior={stackBehavior}
