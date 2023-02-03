@@ -15,7 +15,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import NumericalInput from 'components/NumericalInput'
 import { RowBetween } from 'components/Row'
 import Select from 'components/Select'
-import Tooltip from 'components/Tooltip'
+import Tooltip, { MouseoverTooltip } from 'components/Tooltip'
 import ActionButtonLimitOrder from 'components/swapv2/LimitOrder/ActionButtonLimitOrder'
 import DeltaRate, { useGetDeltaRateLimitOrder } from 'components/swapv2/LimitOrder/DeltaRate'
 import ConfirmOrderModal from 'components/swapv2/LimitOrder/Modals/ConfirmOrderModal'
@@ -277,11 +277,12 @@ const LimitOrderForm = function LimitOrderForm({
   }, [balance])
 
   const handleMaxInput = useCallback(() => {
-    if (!parsedActiveOrderMakingAmount || !maxAmountInput) return
+    if (!parsedActiveOrderMakingAmount || !maxAmountInput || !currencyIn) return
     try {
-      onSetInput(maxAmountInput.subtract(parsedActiveOrderMakingAmount)?.toExact())
+      const rest = maxAmountInput.subtract(parsedActiveOrderMakingAmount)
+      onSetInput(rest.greaterThan(CurrencyAmount.fromRawAmount(currencyIn, 0)) ? rest?.toExact() : '0')
     } catch (error) {}
-  }, [maxAmountInput, onSetInput, parsedActiveOrderMakingAmount])
+  }, [maxAmountInput, onSetInput, parsedActiveOrderMakingAmount, currencyIn])
 
   const enoughAllowance = useMemo(() => {
     try {
@@ -713,7 +714,7 @@ const LimitOrderForm = function LimitOrderForm({
             </Flex>
             <Flex alignItems={'center'} style={{ background: theme.buttonBlack, borderRadius: 12 }}>
               <NumericalInput
-                maxLength={16}
+                maxLength={50}
                 style={{ fontSize: 14, height: INPUT_HEIGHT }}
                 value={displayRate}
                 onUserInput={onChangeRate}
@@ -743,11 +744,16 @@ const LimitOrderForm = function LimitOrderForm({
               menuStyle={isEdit ? { paddingTop: 8, paddingBottom: 8 } : {}}
               style={{ width: '100%', padding: 0, height: INPUT_HEIGHT }}
               options={[...EXPIRED_OPTIONS, { label: 'Custom', onSelect: toggleDatePicker }]}
-              activeRender={item => (
-                <Text color={theme.text} fontSize={14}>
-                  {customDateExpire ? dayjs(customDateExpire).format('DD/MM/YYYY HH:mm') : item?.label}
-                </Text>
-              )}
+              activeRender={item => {
+                const displayTime = customDateExpire ? dayjs(customDateExpire).format('DD/MM/YYYY HH:mm') : item?.label
+                return (
+                  <MouseoverTooltip text={customDateExpire ? displayTime : ''} width="130px">
+                    <Text color={theme.text} fontSize={14}>
+                      {displayTime}
+                    </Text>
+                  </MouseoverTooltip>
+                )
+              }}
             />
           </InputWrapper>
         </RowBetween>

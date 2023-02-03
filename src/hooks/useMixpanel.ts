@@ -1105,74 +1105,30 @@ export const useGlobalMixpanelEvents = () => {
 
   useEffect(() => {
     if (pathName) {
-      let pageName = ''
-      switch (pathName) {
-        case 'swap':
-          pageName = 'Swap'
-          break
-        case 'find':
-          pageName = 'Pool Finder'
-          break
-        case 'pools':
-          pageName = 'Pools'
-          break
-        case 'farms':
-          pageName = 'Farms'
-          break
-        case 'myPools':
-          pageName = 'My Pools'
-          break
-        case 'migration':
-          pageName = 'Migration'
-          break
-        case 'create':
-          pageName = 'Create Pool'
-          break
-        case 'add':
-          pageName = 'Add Liquidity'
-          break
-        case 'remove':
-          pageName = 'Remove Liquidity'
-          break
-        case 'about':
-          pageName = 'About'
-          break
-        case 'referral':
-          pageName = 'Referral'
-          break
-        case 'discover':
-          pageName = 'Discover'
-          break
-        case 'campaigns':
-          pageName = 'Campaign'
-          break
-        case 'elastic/remove':
-          pageName = 'Elastic - Remove Liquidity'
-          break
-        case 'elastic/add':
-          pageName = 'Elastic - Add Liquidity'
-          break
-        case 'elastic/increase':
-          pageName = 'Elastic - Increase Liquidity'
-          break
-        case 'buy-crypto':
-          pageName = 'Buy Crypto'
-          break
-        case 'bridge':
-          pageName = 'Bridge'
-          break
-        case 'kyberdao/stake-knc':
-          pageName = 'KyberDAO Stake'
-          break
-        case 'kyberdao/vote':
-          pageName = 'KyberDAO Vote'
-          break
-        case 'limit':
-          pageName = 'Limit Order'
-          break
-        default:
-          break
+      const map: { [key: string]: string } = {
+        swap: 'Swap',
+        find: 'Pool Finder',
+        pools: 'Pools',
+        farms: 'Farms',
+        myPools: 'My Pools',
+        migration: 'Migration',
+        create: 'Create Pool',
+        add: 'Add Liquidity',
+        remove: 'Remove Liquidity',
+        about: 'About',
+        referral: 'Referral',
+        discover: 'Discover',
+        campaigns: 'Campaign',
+        'elastic/remove': 'Elastic - Remove Liquidity',
+        'elastic/add': 'Elastic - Add Liquidity',
+        'elastic/increase': 'Elastic - Increase Liquidity',
+        'buy-crypto': 'Buy Crypto',
+        bridge: 'Bridge',
+        'kyberdao/stake-knc': 'KyberDAO Stake',
+        'kyberdao/vote': 'KyberDAO Vote',
+        limit: 'Limit Order',
       }
+      const pageName = map[pathName]
       pageName && mixpanelHandler(MIXPANEL_TYPE.PAGE_VIEWED, { page: pageName })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

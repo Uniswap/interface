@@ -9,6 +9,7 @@ import { AddressInput } from 'components/AddressInputPanel'
 import { ButtonPrimary } from 'components/Button'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import { RowBetween } from 'components/Row'
+import { MouseoverTooltip } from 'components/Tooltip'
 import TransactionConfirmationModal, { TransactionErrorContent } from 'components/TransactionConfirmationModal'
 import CurrencyListHasBalance from 'components/WalletPopup/SendToken/CurrencyListSelect'
 import WarningBrave from 'components/WalletPopup/SendToken/WarningBrave'
@@ -189,7 +190,11 @@ export default function SendToken({
             onChange={e => setRecipient(e.target.value)}
             value={recipient}
             placeholder={isEVM ? '0x...' : 'Wallet address'}
-            icon={<Clipboard size={20} cursor="pointer" color={theme.subText} onClick={onPaste} />}
+            icon={
+              <MouseoverTooltip text={t`Paste from clipboard`} width="150px">
+                <Clipboard size={20} cursor="pointer" color={theme.subText} onClick={onPaste} />
+              </MouseoverTooltip>
+            }
           />
           <Label color={theme.red} style={{ opacity: recipientError ? 1 : 0, transition: '0.3s' }}>
             {recipientError}

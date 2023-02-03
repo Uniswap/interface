@@ -278,7 +278,7 @@ function BuyCrypto() {
       const stepNumber = Number(step)
       if (!isNaN(stepNumber)) {
         handleStepClick(stepNumber)
-        navigate({ search: stringify(rest) })
+        navigate({ search: stringify(rest) }, { replace: true })
       }
     }, 500)
   }, [qs, navigate])

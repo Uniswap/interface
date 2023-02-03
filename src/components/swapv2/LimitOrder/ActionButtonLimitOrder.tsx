@@ -86,7 +86,7 @@ export default function ActionButtonLimitOrder({
             <ButtonApprove
               forceApprove={!enoughAllowance}
               tokenSymbol={currencyIn?.symbol}
-              tooltipMsg={t`You need to first allow KyberSwaps smart contracts to use your ${currencyIn?.symbol}. This has to be done only once for each token.`}
+              tooltipMsg={t`You need to first allow KyberSwap smart contracts to use your ${currencyIn?.symbol}. This has to be done only once for each token.`}
               onClick={approveCallback}
               disabled={!!disableBtnApproved}
               approval={approval}
@@ -107,12 +107,7 @@ export default function ActionButtonLimitOrder({
       {checkingAllowance ? <Trans>Checking Allowance...</Trans> : <Trans>Review Order</Trans>}
     </Text>
   )
-  if (showWarning)
-    return (
-      <ButtonWarning onClick={showPreview} disabled={disableBtnReview}>
-        {contentButton}
-      </ButtonWarning>
-    )
+  if (showWarning && !disableBtnReview) return <ButtonWarning onClick={showPreview}>{contentButton}</ButtonWarning>
   return (
     <ButtonPrimary onClick={showPreview} disabled={disableBtnReview}>
       {contentButton}
