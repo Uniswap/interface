@@ -3,13 +3,15 @@ import { TradeType } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
 import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
-import { DEFAULT_DEADLINE_S, DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
+import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/transactions'
 import { uniswapUrls } from 'src/constants/urls'
 import { QuoteResult, TradeQuoteResult } from 'src/features/routing/types'
 import { transformQuoteToTrade } from 'src/features/transactions/swap/routeUtils'
 import { PermitSignatureInfo } from 'src/features/transactions/swap/usePermit2Signature'
 import { serializeQueryParams } from 'src/features/transactions/swap/utils'
 import { SwapRouterNativeAssets } from 'src/utils/currencyId'
+
+const DEFAULT_DEADLINE_S = 60 * 30 // 30 minutes in seconds
 
 const protocols: string[] = ['v2', 'v3', 'mixed']
 
