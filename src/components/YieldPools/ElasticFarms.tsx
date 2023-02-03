@@ -129,7 +129,7 @@ function ElasticFarms({ stakedOnly }: { stakedOnly: { active: boolean; ended: bo
       }
     }
 
-    if (stakedOnly[stakedOnlyKey] && isEVM) {
+    if ((stakedOnly[stakedOnlyKey] || activeTab === FARM_TAB.MY_FARMS) && isEVM) {
       result = result?.map(item => {
         if (!userFarmInfo?.[item.id].depositedPositions.length) {
           return { ...item, pools: [] }

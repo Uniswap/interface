@@ -41,7 +41,7 @@ import PositionDetail from './PostionDetail'
 import { ButtonColorScheme, MinimalActionButton } from './buttons'
 import { FeeTag, NFTListWrapper, RowWrapper } from './styleds'
 
-interface Pool extends FarmingPool {
+export interface Pool extends FarmingPool {
   tvl: number
   poolAPR: number
   farmAPR: number
