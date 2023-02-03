@@ -10,7 +10,8 @@ import {
   LoadingIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
-import { AssetRow, CollectionRow, ListingStatus } from 'nft/types'
+import { useSellAsset } from 'nft/hooks'
+import { AssetRow, CollectionRow, ListingRow, ListingStatus } from 'nft/types'
 import { useMemo } from 'react'
 import { Check, Info, XOctagon } from 'react-feather'
 import styled, { css, useTheme } from 'styled-components/macro'
@@ -176,8 +177,24 @@ interface ListModalSectionProps {
 
 export const ListModalSection = ({ sectionType, active, content, toggleSection }: ListModalSectionProps) => {
   const theme = useTheme()
+  const sellAssets = useSellAsset((state) => state.sellAssets)
+  const removeAssetMarketplace = useSellAsset((state) => state.removeAssetMarketplace)
   const allContentApproved = useMemo(() => !content.some((row) => row.status !== ListingStatus.APPROVED), [content])
   const isCollectionApprovalSection = sectionType === Section.APPROVE
+  const removeRow = (row: AssetRow) => {
+    // collections
+    if (isCollectionApprovalSection) {
+      const collectionRow = row as CollectionRow
+      for (const asset of sellAssets)
+        if (asset.asset_contract.address === collectionRow.collectionAddress)
+          removeAssetMarketplace(asset, collectionRow.marketplace)
+    }
+    // listings
+    else {
+      const listingRow = row as ListingRow
+      removeAssetMarketplace(listingRow.asset, listingRow.marketplace)
+    }
+  }
   return (
     <Column>
       <SectionHeader>
@@ -265,10 +282,10 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
                   </ContentRow>
                   {failed && (
                     <ButtonRow justify="space-between">
-                      <RemoveButton>
+                      <RemoveButton onClick={() => removeRow(row)}>
                         <Trans>Remove</Trans>
                       </RemoveButton>
-                      <RetryButton>
+                      <RetryButton onClick={row.callback}>
                         <Trans>Retry</Trans>
                       </RetryButton>
                     </ButtonRow>
