@@ -1,10 +1,16 @@
 import { Trans } from '@lingui/macro'
+import Column from 'components/Column'
 import Row from 'components/Row'
+import useStablecoinPrice from 'hooks/useStablecoinPrice'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import { getTotalEthValue } from 'nft/components/bag/profile/utils'
 import { useSellAsset } from 'nft/hooks'
-import { pluralize } from 'nft/utils'
+import { formatEth, pluralize } from 'nft/utils'
+import { useMemo } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { formatDollar, priceToPreciseFloat } from 'utils/formatNumbers'
 
 import { TitleRow } from '../shared'
 
@@ -21,8 +27,17 @@ const SuccessImageWrapper = styled(Row)`
   margin-bottom: 16px;
 `
 
+const ProceedsColumn = styled(Column)`
+  text-align: right;
+`
+
 export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) => {
   const sellAssets = useSellAsset((state) => state.sellAssets)
+  const nativeCurrency = useNativeCurrency()
+  const nativeCurrencyPrice = useStablecoinPrice(nativeCurrency ?? undefined)
+
+  const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
+
   return (
     <>
       <TitleRow>
@@ -41,6 +56,22 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
           />
         ))}
       </SuccessImageWrapper>
+      <Row justify="space-between" align="flex-start">
+        <ThemedText.SubHeader lineHeight="24px">
+          <Trans>Proceeds if sold</Trans>
+        </ThemedText.SubHeader>
+        <ProceedsColumn>
+          <ThemedText.SubHeader lineHeight="24px">{formatEth(totalEthListingValue)} ETH</ThemedText.SubHeader>
+          {nativeCurrencyPrice && (
+            <ThemedText.BodySmall lineHeight="20px" color="textSecondary">
+              {formatDollar({
+                num: priceToPreciseFloat(nativeCurrencyPrice) ?? 0 * totalEthListingValue,
+                isPrice: true,
+              })}
+            </ThemedText.BodySmall>
+          )}
+        </ProceedsColumn>
+      </Row>
     </>
   )
 }
