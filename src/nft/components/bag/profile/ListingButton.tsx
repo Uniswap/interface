@@ -113,7 +113,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
       listingsAboveSellOrderFloor,
       invalidPrices,
     ]
-  }, [isNftListV2, sellAssets, showResolveIssues])
+  }, [isNftListV2, sellAssets, showResolveIssues, toggleShowResolveIssues])
 
   const [disableListButton, warningMessage] = useMemo(() => {
     const disableListButton =
