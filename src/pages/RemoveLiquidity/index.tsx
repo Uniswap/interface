@@ -19,19 +19,18 @@ import { Container, LiquidityProviderModeWrapper, PageWrapper, PoolName, TopBar 
 
 export default function RemoveLiquidity() {
   const { currencyIdA = '', currencyIdB = '', pairAddress = '' } = useParams()
-  const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
+  const currencyA = useCurrency(currencyIdA) ?? undefined
+  const currencyB = useCurrency(currencyIdB) ?? undefined
   const { chainId, isEVM } = useActiveWeb3React()
 
   const nativeA = useCurrencyConvertedToNative(currencyA)
   const nativeB = useCurrencyConvertedToNative(currencyB)
 
-  const { pair } = useDerivedBurnInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
+  const { pair } = useDerivedBurnInfo(currencyA, currencyB, pairAddress)
 
   const amp = pair?.amp || JSBI.BigInt(0)
 
-  const oneCurrencyIsWETH = Boolean(
-    chainId && ((currencyA && currencyA.equals(WETH[chainId])) || (currencyB && currencyB.equals(WETH[chainId]))),
-  )
+  const oneCurrencyIsWETH = Boolean(chainId && (currencyA?.equals(WETH[chainId]) || currencyB?.equals(WETH[chainId])))
 
   const [activeTab, setActiveTab] = useState(0)
   const { mixpanelHandler } = useMixpanel()

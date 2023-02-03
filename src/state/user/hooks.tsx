@@ -240,21 +240,15 @@ export function useToV2LiquidityTokens(
   const oldStaticContract = useOldStaticFeeFactoryContract()
   const staticContract = useStaticFeeFactoryContract()
   const dynamicContract = useDynamicFeeFactoryContract()
-  const result1 = useSingleContractMultipleData(
-    staticContract,
-    'getPools',
-    tokenCouples.map(([tokenA, tokenB]) => [tokenA.address, tokenB.address]),
+
+  const addresses = useMemo(
+    () => tokenCouples.map(([tokenA, tokenB]) => [tokenA.address, tokenB.address]),
+    [tokenCouples],
   )
-  const result2 = useSingleContractMultipleData(
-    dynamicContract,
-    'getPools',
-    tokenCouples.map(([tokenA, tokenB]) => [tokenA.address, tokenB.address]),
-  )
-  const result3 = useSingleContractMultipleData(
-    oldStaticContract,
-    'getPools',
-    tokenCouples.map(([tokenA, tokenB]) => [tokenA.address, tokenB.address]),
-  )
+
+  const result1 = useSingleContractMultipleData(staticContract, 'getPools', addresses)
+  const result2 = useSingleContractMultipleData(dynamicContract, 'getPools', addresses)
+  const result3 = useSingleContractMultipleData(oldStaticContract, 'getPools', addresses)
   const result = useMemo(
     () =>
       result1?.map((call, index) => {

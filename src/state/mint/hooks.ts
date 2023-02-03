@@ -76,7 +76,8 @@ export function useDerivedMintInfo(
     (tokenA?.symbol !== WETH[chainId].symbol || tokenB?.symbol !== WETH[chainId].symbol)
 
   // balances
-  const balances = useCurrencyBalances([currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B]])
+  const tokens = useMemo(() => [currencyA, currencyB], [currencyA, currencyB])
+  const balances = useCurrencyBalances(tokens)
   const currencyBalances: { [field in Field]?: CurrencyAmount<Currency> } = {
     [Field.CURRENCY_A]: balances[0],
     [Field.CURRENCY_B]: balances[1],

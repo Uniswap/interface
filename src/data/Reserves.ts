@@ -127,21 +127,12 @@ export function usePairsByAddress(
   pairInfo: { address: string | undefined; currencies: [Currency | undefined, Currency | undefined] }[],
 ): [PairState, Pair | null, boolean?, boolean?][] {
   const { isEVM, networkInfo } = useActiveWeb3React()
-  const results = useMultipleContractSingleData(
-    pairInfo.map(info => info.address),
-    DMM_POOL_INTERFACE,
-    'getTradeInfo',
-  )
-  const ampResults = useMultipleContractSingleData(
-    pairInfo.map(info => info.address),
-    DMM_POOL_INTERFACE,
-    'ampBps',
-  )
-  const factories = useMultipleContractSingleData(
-    pairInfo.map(info => info.address),
-    DMM_POOL_INTERFACE,
-    'factory',
-  )
+
+  const addresses = useMemo(() => pairInfo.map(info => info.address), [pairInfo])
+
+  const results = useMultipleContractSingleData(addresses, DMM_POOL_INTERFACE, 'getTradeInfo')
+  const ampResults = useMultipleContractSingleData(addresses, DMM_POOL_INTERFACE, 'ampBps')
+  const factories = useMultipleContractSingleData(addresses, DMM_POOL_INTERFACE, 'factory')
 
   return useMemo(() => {
     if (!isEVM) return []

@@ -121,7 +121,8 @@ export function useTokenBalances(tokens?: Token[]): { [tokenAddress: string]: To
 
 // get the balance for a single token/account combo
 export function useTokenBalance(token?: Token): TokenAmount | undefined {
-  const tokenBalances = useTokenBalances(token && [token])
+  const param = useMemo(() => token && [token], [token])
+  const tokenBalances = useTokenBalances(param)
   if (!token) return undefined
   return tokenBalances[token.address]
 }
