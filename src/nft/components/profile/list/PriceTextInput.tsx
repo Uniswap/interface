@@ -111,6 +111,7 @@ export const PriceTextInput = ({
   const [warningType, setWarningType] = useState(WarningType.NONE)
   const removeMarketplaceWarning = useSellAsset((state) => state.removeMarketplaceWarning)
   const removeSellAsset = useSellAsset((state) => state.removeSellAsset)
+  const showResolveIssues = useSellAsset((state) => state.showResolveIssues)
   const inputRef = useRef() as React.MutableRefObject<HTMLInputElement>
   const theme = useTheme()
 
@@ -128,7 +129,9 @@ export const PriceTextInput = ({
   const percentBelowFloor = (1 - (listPrice ?? 0) / (asset.floorPrice ?? 0)) * 100
 
   const warningColor =
-    warningType !== WarningType.NONE && !focused
+    showResolveIssues && !listPrice
+      ? colors.red400
+      : warningType !== WarningType.NONE && !focused
       ? (warningType === WarningType.BELOW_FLOOR && percentBelowFloor >= 20) ||
         warningType === WarningType.ALREADY_LISTED
         ? colors.red400

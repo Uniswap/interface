@@ -11,7 +11,7 @@ import { themeVars } from 'nft/css/sprinkles.css'
 import { useNFTList, useSellAsset } from 'nft/hooks'
 import { Listing, ListingStatus, WalletAsset } from 'nft/types'
 import { pluralize } from 'nft/utils/roundAndPluralize'
-import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTheme } from 'styled-components/macro'
 
 import * as styles from './ListingModal.css'
@@ -27,6 +27,8 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const addMarketplaceWarning = useSellAsset((state) => state.addMarketplaceWarning)
   const removeAllMarketplaceWarnings = useSellAsset((state) => state.removeAllMarketplaceWarnings)
+  const showResolveIssues = useSellAsset((state) => state.showResolveIssues)
+  const toggleShowResolveIssues = useSellAsset((state) => state.toggleShowResolveIssues)
   const listingStatus = useNFTList((state) => state.listingStatus)
   const setListingStatus = useNFTList((state) => state.setListingStatus)
   const setListings = useNFTList((state) => state.setListings)
@@ -36,7 +38,6 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
   const [canContinue, setCanContinue] = useState(false)
   const [issues, setIssues] = useState(0)
   const theme = useTheme()
-  const [showResolveIssues, toggleShowResolveIssues] = useReducer((s) => !s, false)
   const warningRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(warningRef, () => {
     !isNftListV2 && setShowWarning(false)
