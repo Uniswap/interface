@@ -154,7 +154,7 @@ export const ContentRow = ({
           ) : row.status === ListingStatus.APPROVED ? (
             <Check height="20" width="20" stroke={theme.accentSuccess} />
           ) : (
-            (row.status === ListingStatus.FAILED || row.status === ListingStatus.REJECTED) && (
+            failed && (
               <Row>
                 <XOctagon height="20" width="20" color={theme.accentCritical} />
                 <FailedText>
