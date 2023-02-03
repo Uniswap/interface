@@ -23,7 +23,7 @@ type CurrentInputPanelProps = {
   currencyAmount: NullUndefined<CurrencyAmount<Currency>>
   currencyBalance: NullUndefined<CurrencyAmount<Currency>>
   onShowTokenSelector: () => void
-  onSetAmount: (amount: string) => void
+  onSetExactAmount: (amount: string) => void
   value?: string
   showNonZeroBalancesOnly?: boolean
   showSoftInputOnFocus?: boolean
@@ -93,7 +93,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element {
     currencyAmount,
     currencyBalance,
     currencyInfo,
-    onSetAmount,
+    onSetExactAmount,
     onSetMax,
     onShowTokenSelector,
     value,
@@ -149,20 +149,21 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element {
     MIN_INPUT_FONT_SIZE
   )
 
+  // Handle native numpad keyboard input
   const onChangeText = useCallback(
     (newAmount: string) => {
       onSetFontSize(newAmount)
-      onSetAmount(newAmount)
+      onSetExactAmount(newAmount)
     },
-    [onSetFontSize, onSetAmount]
+    [onSetFontSize, onSetExactAmount]
   )
 
   // This is needed to ensure that the text resizes when modified from outside the component (e.g. custom numpad)
   useEffect(() => {
     if (value) {
-      onChangeText(value)
+      onSetFontSize(value)
     }
-  }, [value, onChangeText])
+  }, [value, onSetFontSize])
 
   const handleSetMax = useCallback(
     (amount: string) => {

@@ -259,7 +259,7 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>): {
   onSelectCurrency: (field: CurrencyField, currency: Currency) => void
   onSwitchCurrencies: () => void
   onToggleUSDInput: (isUSDInput: boolean) => void
-  onSetAmount: (field: CurrencyField, value: string, isUSDInput?: boolean) => void
+  onSetExactAmount: (field: CurrencyField, value: string, isUSDInput?: boolean) => void
   onSetMax: (amount: string) => void
   onShowTokenSelector: (field: CurrencyField) => void
 } {
@@ -299,7 +299,7 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>): {
     [dispatch]
   )
 
-  const onSetAmount = useCallback(
+  const onSetExactAmount = useCallback(
     (field: CurrencyField, value: string, isUSDInput?: boolean) => {
       const updater = isUSDInput ? onUpdateExactUSDAmount : onUpdateExactTokenAmount
       updater(field, value)
@@ -355,7 +355,7 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>): {
     onSelectCurrency,
     onSwitchCurrencies,
     onToggleUSDInput,
-    onSetAmount,
+    onSetExactAmount,
     onSetMax,
     onShowTokenSelector,
   }

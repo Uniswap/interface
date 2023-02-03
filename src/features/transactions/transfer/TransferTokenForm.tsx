@@ -89,7 +89,7 @@ export function TransferTokenForm({
     hasWarning: false,
   })
 
-  const { onShowTokenSelector, onSetAmount, onSetMax } = useSwapActionHandlers(dispatch)
+  const { onShowTokenSelector, onSetExactAmount, onSetMax } = useSwapActionHandlers(dispatch)
   const onToggleShowRecipientSelector = createOnToggleShowRecipientSelector(dispatch)
 
   const { isBlocked, isBlockedLoading } = useIsBlockedActiveAddress()
@@ -237,7 +237,9 @@ export function TransferTokenForm({
                     ? undefined
                     : (start, end): void => setInputSelection({ start, end })
                 }
-                onSetAmount={(value): void => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
+                onSetExactAmount={(value): void =>
+                  onSetExactAmount(CurrencyField.INPUT, value, isUSDInput)
+                }
                 onSetMax={onSetMax}
                 onShowTokenSelector={(): void => onShowTokenSelector(CurrencyField.INPUT)}
               />
@@ -338,7 +340,9 @@ export function TransferTokenForm({
               hasCurrencyPrefix={isUSDInput}
               resetSelection={resetSelection}
               selection={inputSelection}
-              setValue={(newValue): void => onSetAmount(CurrencyField.INPUT, newValue, isUSDInput)}
+              setValue={(newValue): void =>
+                onSetExactAmount(CurrencyField.INPUT, newValue, isUSDInput)
+              }
               value={isUSDInput ? exactAmountUSD : exactAmountToken}
             />
           )}

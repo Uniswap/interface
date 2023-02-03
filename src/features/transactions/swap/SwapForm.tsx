@@ -76,7 +76,7 @@ function _SwapForm({
     onFocusInput,
     onFocusOutput,
     onSwitchCurrencies,
-    onSetAmount,
+    onSetExactAmount,
     onSetMax,
     onCreateTxId,
     onShowTokenSelector,
@@ -114,8 +114,8 @@ function _SwapForm({
   }
 
   const [inputSelection, setInputSelection] = useState<TextInputProps['selection']>()
-
   const [outputSelection, setOutputSelection] = useState<TextInputProps['selection']>()
+
   const selection = useMemo(
     () => ({
       [CurrencyField.INPUT]: inputSelection,
@@ -199,7 +199,7 @@ function _SwapForm({
                     ? undefined
                     : (start, end): void => setInputSelection({ start, end })
                 }
-                onSetAmount={(value): void => onSetAmount(CurrencyField.INPUT, value)}
+                onSetExactAmount={(value): void => onSetExactAmount(CurrencyField.INPUT, value)}
                 onSetMax={onSetMax}
                 onShowTokenSelector={(): void => onShowTokenSelector(CurrencyField.INPUT)}
               />
@@ -264,7 +264,7 @@ function _SwapForm({
                       ? undefined
                       : (start, end): void => setOutputSelection({ start, end })
                   }
-                  onSetAmount={(value): void => onSetAmount(CurrencyField.OUTPUT, value)}
+                  onSetExactAmount={(value): void => onSetExactAmount(CurrencyField.OUTPUT, value)}
                   onShowTokenSelector={(): void => onShowTokenSelector(CurrencyField.OUTPUT)}
                 />
               </Flex>
@@ -375,7 +375,7 @@ function _SwapForm({
             <DecimalPad
               resetSelection={resetSelection}
               selection={selection[focusOnCurrencyField]}
-              setValue={(value: string): void => onSetAmount(focusOnCurrencyField, value)}
+              setValue={(value: string): void => onSetExactAmount(focusOnCurrencyField, value)}
               value={
                 focusOnCurrencyField === exactCurrencyField ? exactValue : formattedDerivedValue
               }
