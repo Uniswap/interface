@@ -5,6 +5,7 @@ import ms from 'ms.macro'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { ArrowRightIcon, HazardIcon, LoadingIcon, XMarkIcon } from 'nft/components/icons'
+import { BelowFloorWarningModal } from 'nft/components/profile/list/Modal/WarningModal'
 import { bodySmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useNFTList, useSellAsset } from 'nft/hooks'
@@ -38,7 +39,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
   const [showResolveIssues, toggleShowResolveIssues] = useReducer((s) => !s, false)
   const warningRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(warningRef, () => {
-    setShowWarning(false)
+    !isNftListV2 && setShowWarning(false)
   })
 
   useEffect(() => {
@@ -181,96 +182,106 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
   const warningWrappedClick = () => {
     if ((!disableListButton && canContinue) || showWarningOverride) {
       if (issues && isNftListV2) !showResolveIssues && toggleShowResolveIssues()
+      else if (listingsBelowFloor.length) setShowWarning(true)
       else onClick()
     } else addWarningMessages()
   }
 
   return (
-    <Box position="relative" width="full">
-      {!showWarningOverride && showWarning && warningMessage.length > 0 && (
-        <Row
-          className={`${bodySmall} ${styles.warningTooltip}`}
-          transition="250"
-          onClick={() => setShowWarning(false)}
-          color="textSecondary"
-          zIndex="3"
-          borderRadius="4"
-          backgroundColor="backgroundSurface"
-          height={!disableListButton ? '64' : '36'}
-          maxWidth="276"
-          position="absolute"
-          left="24"
-          bottom="52"
-          flexWrap={!disableListButton ? 'wrap' : 'nowrap'}
-          style={{ maxWidth: !disableListButton ? '225px' : '' }}
-          ref={warningRef}
-        >
-          <HazardIcon />
-          <Box marginLeft="4" marginRight="8">
-            {warningMessage}
-          </Box>
-          {disableListButton ? (
-            <Box paddingTop="6">
-              <XMarkIcon fill={themeVars.colors.textSecondary} height="20" width="20" />
+    <>
+      <Box position="relative" width="full">
+        {!showWarningOverride && showWarning && warningMessage.length > 0 && (
+          <Row
+            className={`${bodySmall} ${styles.warningTooltip}`}
+            transition="250"
+            onClick={() => setShowWarning(false)}
+            color="textSecondary"
+            zIndex="3"
+            borderRadius="4"
+            backgroundColor="backgroundSurface"
+            height={!disableListButton ? '64' : '36'}
+            maxWidth="276"
+            position="absolute"
+            left="24"
+            bottom="52"
+            flexWrap={!disableListButton ? 'wrap' : 'nowrap'}
+            style={{ maxWidth: !disableListButton ? '225px' : '' }}
+            ref={warningRef}
+          >
+            <HazardIcon />
+            <Box marginLeft="4" marginRight="8">
+              {warningMessage}
             </Box>
-          ) : (
-            <Row
-              marginLeft="72"
-              cursor="pointer"
-              color="accentAction"
-              onClick={() => {
-                setShowWarning(false)
-                setCanContinue(true)
-                onClick()
-              }}
-            >
-              Continue
-              <ArrowRightIcon height="20" width="20" />
-            </Row>
-          )}
-        </Row>
-      )}
-      <Box
-        as="button"
-        border="none"
-        backgroundColor={showResolveIssues ? 'accentFailure' : 'accentAction'}
-        cursor={
-          [ListingStatus.APPROVED, ListingStatus.PENDING, ListingStatus.SIGNING].includes(listingStatus) ||
-          disableListButton
-            ? 'default'
-            : 'pointer'
-        }
-        className={styles.button}
-        onClick={() => listingStatus !== ListingStatus.APPROVED && warningWrappedClick()}
-        type="button"
-        style={{
-          color: showResolveIssues ? theme.accentTextDarkPrimary : theme.white,
-          opacity:
-            ![ListingStatus.DEFINED, ListingStatus.FAILED, ListingStatus.CONTINUE].includes(listingStatus) ||
-            (disableListButton && !showResolveIssues)
-              ? 0.3
-              : 1,
-        }}
-      >
-        {listingStatus === ListingStatus.SIGNING || listingStatus === ListingStatus.PENDING ? (
-          <Row gap="8">
-            <LoadingIcon stroke="backgroundSurface" height="20" width="20" />
-            {listingStatus === ListingStatus.PENDING ? 'Pending' : 'Proceed in wallet'}
+            {disableListButton ? (
+              <Box paddingTop="6">
+                <XMarkIcon fill={themeVars.colors.textSecondary} height="20" width="20" />
+              </Box>
+            ) : (
+              <Row
+                marginLeft="72"
+                cursor="pointer"
+                color="accentAction"
+                onClick={() => {
+                  setShowWarning(false)
+                  setCanContinue(true)
+                  onClick()
+                }}
+              >
+                Continue
+                <ArrowRightIcon height="20" width="20" />
+              </Row>
+            )}
           </Row>
-        ) : listingStatus === ListingStatus.APPROVED ? (
-          'Complete!'
-        ) : listingStatus === ListingStatus.PAUSED ? (
-          'Paused'
-        ) : listingStatus === ListingStatus.FAILED ? (
-          'Try again'
-        ) : listingStatus === ListingStatus.CONTINUE ? (
-          'Continue'
-        ) : showResolveIssues ? (
-          <Plural value={issues !== 1 ? 2 : 1} _1="Resolve issue" other={t`Resolve ${issues} issues`} />
-        ) : (
-          buttonText
         )}
+        <Box
+          as="button"
+          border="none"
+          backgroundColor={showResolveIssues ? 'accentFailure' : 'accentAction'}
+          cursor={
+            [ListingStatus.APPROVED, ListingStatus.PENDING, ListingStatus.SIGNING].includes(listingStatus) ||
+            disableListButton
+              ? 'default'
+              : 'pointer'
+          }
+          className={styles.button}
+          onClick={() => listingStatus !== ListingStatus.APPROVED && warningWrappedClick()}
+          type="button"
+          style={{
+            color: showResolveIssues ? theme.accentTextDarkPrimary : theme.white,
+            opacity:
+              ![ListingStatus.DEFINED, ListingStatus.FAILED, ListingStatus.CONTINUE].includes(listingStatus) ||
+              (disableListButton && !showResolveIssues)
+                ? 0.3
+                : 1,
+          }}
+        >
+          {listingStatus === ListingStatus.SIGNING || listingStatus === ListingStatus.PENDING ? (
+            <Row gap="8">
+              <LoadingIcon stroke="backgroundSurface" height="20" width="20" />
+              {listingStatus === ListingStatus.PENDING ? 'Pending' : 'Proceed in wallet'}
+            </Row>
+          ) : listingStatus === ListingStatus.APPROVED ? (
+            'Complete!'
+          ) : listingStatus === ListingStatus.PAUSED ? (
+            'Paused'
+          ) : listingStatus === ListingStatus.FAILED ? (
+            'Try again'
+          ) : listingStatus === ListingStatus.CONTINUE ? (
+            'Continue'
+          ) : showResolveIssues ? (
+            <Plural value={issues !== 1 ? 2 : 1} _1="Resolve issue" other={t`Resolve ${issues} issues`} />
+          ) : (
+            buttonText
+          )}
+        </Box>
       </Box>
-    </Box>
+      {showWarning && (
+        <BelowFloorWarningModal
+          listingsBelowFloor={listingsBelowFloor}
+          closeModal={() => setShowWarning(false)}
+          startListing={onClick}
+        />
+      )}
+    </>
   )
 }
