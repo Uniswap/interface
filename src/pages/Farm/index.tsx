@@ -36,7 +36,7 @@ import {
   TabContainer,
   TopBar,
 } from 'components/YieldPools/styleds'
-import { FARM_TAB, ZERO_ADDRESS } from 'constants/index'
+import { FARM_TAB } from 'constants/index'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
@@ -160,7 +160,7 @@ const Farm = () => {
       farm.pools.forEach(pool => {
         if (pool.endTime > Date.now() / 1000)
           pool.totalRewards.forEach(reward => {
-            tokenMap[reward.currency.isNative ? ZERO_ADDRESS : reward.currency.wrapped.address] = reward.currency
+            tokenMap[reward.currency.wrapped.address] = reward.currency
           })
       })
     })
