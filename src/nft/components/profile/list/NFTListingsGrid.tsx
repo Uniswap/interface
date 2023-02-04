@@ -137,7 +137,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
   const [globalPrice, setGlobalPrice] = useState<number>()
   const [showDropdown, toggleShowDropdown] = useReducer((s) => !s, false)
   const dropdownRef = useRef() as React.MutableRefObject<HTMLDivElement>
-  useOnClickOutside(dropdownRef, toggleShowDropdown)
+  useOnClickOutside(dropdownRef, showDropdown ? toggleShowDropdown : undefined)
 
   const priceDropdownOptions: DropDownOption[] = useMemo(
     () => [
