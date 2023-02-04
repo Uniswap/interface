@@ -7,9 +7,9 @@ import { getTotalEthValue } from 'nft/components/bag/profile/utils'
 import { useSellAsset } from 'nft/hooks'
 import { formatEth, pluralize } from 'nft/utils'
 import { useMemo } from 'react'
-import { X } from 'react-feather'
-import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { Twitter, X } from 'react-feather'
+import styled, { css, useTheme } from 'styled-components/macro'
+import { BREAKPOINTS, ThemedText } from 'theme'
 import { formatDollar, priceToPreciseFloat } from 'utils/formatNumbers'
 
 import { TitleRow } from '../shared'
@@ -31,10 +31,49 @@ const ProceedsColumn = styled(Column)`
   text-align: right;
 `
 
+const buttonStyle = css`
+  width: 182px;
+  cursor: pointer;
+  padding: 12px 0px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  border-radius: 12px;
+  border: none;
+
+  &:hover {
+    opacity: 0.6;
+  }
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+`
+
+const ReturnButton = styled.button`
+  background-color: ${({ theme }) => theme.backgroundInteractive};
+  color: ${({ theme }) => theme.textPrimary};
+  ${buttonStyle}
+`
+
+const TweetButton = styled.button`
+  background-color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.textPrimary};
+  ${buttonStyle}
+`
+
+const TweetRow = styled(Row)`
+  justify-content: center;
+  gap: 4px;
+`
+
 export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) => {
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const nativeCurrency = useNativeCurrency()
   const nativeCurrencyPrice = useStablecoinPrice(nativeCurrency ?? undefined)
+  const theme = useTheme()
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
 
@@ -56,7 +95,7 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
           />
         ))}
       </SuccessImageWrapper>
-      <Row justify="space-between" align="flex-start">
+      <Row justify="space-between" align="flex-start" marginBottom="16px">
         <ThemedText.SubHeader lineHeight="24px">
           <Trans>Proceeds if sold</Trans>
         </ThemedText.SubHeader>
@@ -71,6 +110,17 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
             </ThemedText.BodySmall>
           )}
         </ProceedsColumn>
+      </Row>
+      <Row justify="space-between" flexWrap="wrap">
+        <ReturnButton onClick={() => window.location.reload()}>
+          <Trans>Return to My NFTs</Trans>
+        </ReturnButton>
+        <TweetButton>
+          <TweetRow>
+            <Twitter height={20} width={20} color={theme.textPrimary} fill={theme.textPrimary} />
+            <Trans>Share on Twitter</Trans>
+          </TweetRow>
+        </TweetButton>
       </Row>
     </>
   )
