@@ -50,14 +50,31 @@ function getMinListingPrice(listings: Listing[]): number {
   return min(listings.map((listing) => listing.price ?? 0)) ?? 0
 }
 
+function mapAssetsToCollections(assets: WalletAsset[]): { collection: string; items: string[] }[] {
+  const collections = assets.map((asset) => asset.collection?.twitterUrl ?? asset.collection?.name ?? '')
+  const uniqueCollections = [...new Set(collections)]
+  return uniqueCollections.map((collection) => {
+    return {
+      collection,
+      items: assets
+        .filter((asset) => asset.collection?.twitterUrl === collection || asset.collection?.name === collection)
+        .map((asset) => asset.name ?? ''),
+    }
+  })
+}
+
 export const generateTweetForList = (assets: WalletAsset[]): string => {
   const tweetText =
     assets.length == 1
-      ? `I just listed ${assets[0].collection?.twitterUrl ? `@${assets[0].collection?.twitterUrl} ` : ''}${
+      ? `I just listed ${assets[0].collection?.twitterUrl ? `${assets[0].collection?.twitterUrl} ` : ''}${
           assets[0].name
         } for ${getMinListingPrice(assets[0].newListings ?? [])} ETH on ${assets[0].marketplaces
           ?.map((market) => market.name)
           .join(', ')}. Buy it on @Uniswap at https://app.uniswap.org/#${getAssetHref(assets[0])}`
-      : ``
+      : `I just listed ${
+          assets.length
+        } items on @Uniswap at https://app.uniswap.org/#/nfts/profile\n\nCollections: ${mapAssetsToCollections(assets)
+          .map(({ collection, items }) => `${collection} ${items.map((item) => item).join(', ')}`)
+          .join(', ')} \n\nMarketplaces: ${assets[0].marketplaces?.map((market) => market.name).join(', ')}`
   return `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`
 }
