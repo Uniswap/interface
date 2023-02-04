@@ -92,6 +92,11 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allCollectionsApproved])
 
+  // In the case that a user removes all listings via retry logic, close modal
+  useEffect(() => {
+    !listings.length && overlayClick()
+  }, [listings, overlayClick])
+
   return (
     <Portal>
       <Trace modal={InterfaceModalName.NFT_LISTING}>
