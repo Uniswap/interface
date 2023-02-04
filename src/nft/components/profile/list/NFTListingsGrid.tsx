@@ -52,8 +52,9 @@ const PriceInfoHeader = styled.div`
   }
 `
 
-const DropdownWrapper = styled.div`
+const DropdownAndHeaderWrapper = styled(Row)`
   flex: 2;
+  gap: 4px;
 `
 
 const FeeUserReceivesSharedStyles = css`
@@ -87,30 +88,53 @@ export enum SetPriceMethod {
   SAME_PRICE,
   FLOOR_PRICE,
   PREV_LISTING,
+  CUSTOM,
 }
 
 export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingMarket[] }) => {
   const sellAssets = useSellAsset((state) => state.sellAssets)
-  const [globalPriceMethod, setGlobalPriceMethod] = useState<SetPriceMethod>()
+  const [globalPriceMethod, setGlobalPriceMethod] = useState(SetPriceMethod.CUSTOM)
   const [globalPrice, setGlobalPrice] = useState<number>()
 
   const priceDropdownOptions: DropDownOption[] = useMemo(
     () => [
       {
-        displayText: 'Same price',
-        onClick: () => setGlobalPriceMethod(SetPriceMethod.SAME_PRICE),
+        displayText: 'Custom',
+        onClick: () => setGlobalPriceMethod(SetPriceMethod.CUSTOM),
       },
       {
         displayText: 'Floor price',
         onClick: () => setGlobalPriceMethod(SetPriceMethod.FLOOR_PRICE),
       },
       {
-        displayText: 'Prev. listing',
+        displayText: 'Last price',
         onClick: () => setGlobalPriceMethod(SetPriceMethod.PREV_LISTING),
+      },
+      {
+        displayText: 'Same price',
+        onClick: () => setGlobalPriceMethod(SetPriceMethod.SAME_PRICE),
       },
     ],
     []
   )
+
+  let prompt
+  switch (globalPriceMethod) {
+    case SetPriceMethod.CUSTOM:
+      prompt = t`Custom`
+      break
+    case SetPriceMethod.FLOOR_PRICE:
+      prompt = t`Floor price`
+      break
+    case SetPriceMethod.PREV_LISTING:
+      prompt = t`Last Price`
+      break
+    case SetPriceMethod.SAME_PRICE:
+      prompt = t`Same Price`
+      break
+    default:
+      break
+  }
 
   return (
     <Column>
@@ -126,9 +150,10 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
             <Trans>Last</Trans>
           </PriceInfoHeader>
 
-          <DropdownWrapper>
-            <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt={t`Set price by`} />
-          </DropdownWrapper>
+          <DropdownAndHeaderWrapper>
+            <Trans>Price:</Trans>
+            <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt={prompt} />
+          </DropdownAndHeaderWrapper>
 
           <FeeHeader>
             <Trans>Fees</Trans>
