@@ -29,11 +29,7 @@ const TableHeader = styled.div`
 `
 
 const NFTHeader = styled.div`
-  flex: 2;
-
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    flex: 1.5;
-  }
+  flex: 1.5;
 `
 
 const PriceHeaders = styled(Row)`
@@ -60,6 +56,9 @@ const DropdownAndHeaderWrapper = styled(Row)`
 
 const DropdownPromptContainer = styled(Column)`
   position: relative;
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    display: none;
+  }
 `
 
 const DropdownPrompt = styled(Row)`
@@ -211,7 +210,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           </PriceInfoHeader>
 
           <DropdownAndHeaderWrapper ref={dropdownRef}>
-            <Trans>Price:</Trans>
+            <Trans>Price</Trans>
             <DropdownPromptContainer>
               <DropdownPrompt onClick={toggleShowDropdown}>
                 {prompt} <DropdownChevron isOpen={showDropdown} />
