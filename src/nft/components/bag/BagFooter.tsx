@@ -319,6 +319,11 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
     updateAllowance,
   ])
 
+  const traceEventProperties = {
+    usd_value: usdcValue?.toExact(),
+    ...eventProperties,
+  }
+
   return (
     <FooterContainer>
       <Footer>
