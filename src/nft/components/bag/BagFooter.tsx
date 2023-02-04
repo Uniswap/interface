@@ -376,7 +376,7 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
           events={[BrowserEvent.onClick]}
           name={NFTEventName.NFT_BUY_BAG_PAY}
           element={InterfaceElementName.NFT_BUY_BAG_PAY_BUTTON}
-          properties={{ ...eventProperties }}
+          properties={{ ...traceEventProperties }}
           shouldLogImpression={connected && !disabled}
         >
           <Warning>{warningText}</Warning>

@@ -10,6 +10,7 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import {
   AddEthereumChainParameter,
   EMPTY_TOKEN_LIST,
+  Field,
   OnReviewSwapClick,
   SwapWidget,
   SwapWidgetSkeleton,
@@ -36,7 +37,7 @@ import { useSyncWidgetSettings } from './settings'
 import { DARK_THEME, LIGHT_THEME } from './theme'
 import { useSyncWidgetTransactions } from './transactions'
 
-export const WIDGET_WIDTH = 360
+export const DEFAULT_WIDGET_WIDTH = 360
 
 const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
@@ -46,15 +47,23 @@ function useWidgetTheme() {
 
 interface WidgetProps {
   token?: Currency
+  width?: number | string
+  defaultField: Field
   onTokenChange?: (token: Currency) => void
   onReviewSwapClick?: OnReviewSwapClick
 }
 
-export default function Widget({ token, onTokenChange, onReviewSwapClick }: WidgetProps) {
+export default function Widget({
+  token,
+  width = DEFAULT_WIDGET_WIDTH,
+  defaultField,
+  onTokenChange,
+  onReviewSwapClick,
+}: WidgetProps) {
   const { connector, provider } = useWeb3React()
   const locale = useActiveLocale()
   const theme = useWidgetTheme()
-  const { inputs, tokenSelector } = useSyncWidgetInputs({ token, onTokenChange })
+  const { inputs, tokenSelector } = useSyncWidgetInputs({ token, onTokenChange, defaultField })
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
 
@@ -159,7 +168,7 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
         routerUrl={WIDGET_ROUTER_URL}
         locale={locale}
         theme={theme}
-        width={WIDGET_WIDTH}
+        width={width}
         // defaultChainId is excluded - it is always inferred from the passed provider
         onConnectWalletClick={onConnectWalletClick}
         provider={provider}
@@ -182,5 +191,5 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
 
 export function WidgetSkeleton() {
   const theme = useWidgetTheme()
-  return <SwapWidgetSkeleton theme={theme} width={WIDGET_WIDTH} />
+  return <SwapWidgetSkeleton theme={theme} width={DEFAULT_WIDGET_WIDTH} />
 }
