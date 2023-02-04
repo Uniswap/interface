@@ -135,7 +135,7 @@ export const MarketplaceRow = ({
     if (globalPriceMethod === SetPriceMethod.FLOOR_PRICE) {
       setListPrice(asset?.floorPrice)
       setGlobalPrice(asset.floorPrice)
-    } else if (globalPriceMethod === SetPriceMethod.PREV_LISTING) {
+    } else if (globalPriceMethod === SetPriceMethod.LAST_PRICE) {
       setListPrice(asset.lastPrice)
       setGlobalPrice(asset.lastPrice)
     } else if (globalPriceMethod === SetPriceMethod.SAME_PRICE)

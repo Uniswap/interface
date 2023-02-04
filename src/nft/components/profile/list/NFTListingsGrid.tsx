@@ -1,15 +1,16 @@
 import { Trans } from '@lingui/macro'
 // eslint-disable-next-line no-restricted-imports
-import { t } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { SortDropdown } from 'nft/components/common/SortDropdown'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption, ListingMarket } from 'nft/types'
-import { useMemo, useState } from 'react'
+import { useMemo, useReducer, useRef, useState } from 'react'
+import { ChevronDown } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
+import { Dropdown } from './Dropdown'
 import { NFTListRow } from './NFTListRow'
 
 const TableHeader = styled.div`
@@ -57,6 +58,46 @@ const DropdownAndHeaderWrapper = styled(Row)`
   gap: 4px;
 `
 
+const DropdownPromptContainer = styled(Column)`
+  position: relative;
+`
+
+const DropdownPrompt = styled(Row)`
+  gap: 4px;
+  background-color: ${({ theme }) => theme.backgroundInteractive};
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  border-radius: 4px;
+  padding: 2px 6px;
+  width: min-content;
+  white-space: nowrap;
+  color: ${({ theme }) => theme.textPrimary};
+
+  &:hover {
+    opacity: 0.6;
+  }
+`
+
+const DropdownChevron = styled(ChevronDown)<{ isOpen: boolean }>`
+  height: 16px;
+  width: 16px;
+  color: ${({ theme }) => theme.textSecondary};
+  transform: ${({ isOpen }) => isOpen && 'rotate(180deg)'};
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `transform ${duration.fast} ${timing.ease}`};
+`
+
+const DropdownContainer = styled.div`
+  position: absolute;
+  top: 36px;
+  right: 0px;
+`
+
 const FeeUserReceivesSharedStyles = css`
   display: none;
   justify-content: flex-end;
@@ -87,7 +128,7 @@ const RowDivider = styled.hr`
 export enum SetPriceMethod {
   SAME_PRICE,
   FLOOR_PRICE,
-  PREV_LISTING,
+  LAST_PRICE,
   CUSTOM,
 }
 
@@ -95,42 +136,61 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const [globalPriceMethod, setGlobalPriceMethod] = useState(SetPriceMethod.CUSTOM)
   const [globalPrice, setGlobalPrice] = useState<number>()
+  const [showDropdown, toggleShowDropdown] = useReducer((s) => !s, false)
+  const dropdownRef = useRef() as React.MutableRefObject<HTMLDivElement>
+  useOnClickOutside(dropdownRef, toggleShowDropdown)
 
   const priceDropdownOptions: DropDownOption[] = useMemo(
     () => [
       {
         displayText: 'Custom',
-        onClick: () => setGlobalPriceMethod(SetPriceMethod.CUSTOM),
+        isSelected: globalPriceMethod === SetPriceMethod.CUSTOM,
+        onClick: () => {
+          setGlobalPriceMethod(SetPriceMethod.CUSTOM)
+          toggleShowDropdown()
+        },
       },
       {
         displayText: 'Floor price',
-        onClick: () => setGlobalPriceMethod(SetPriceMethod.FLOOR_PRICE),
+        isSelected: globalPriceMethod === SetPriceMethod.FLOOR_PRICE,
+        onClick: () => {
+          setGlobalPriceMethod(SetPriceMethod.FLOOR_PRICE)
+          toggleShowDropdown()
+        },
       },
       {
         displayText: 'Last price',
-        onClick: () => setGlobalPriceMethod(SetPriceMethod.PREV_LISTING),
+        isSelected: globalPriceMethod === SetPriceMethod.LAST_PRICE,
+        onClick: () => {
+          setGlobalPriceMethod(SetPriceMethod.LAST_PRICE)
+          toggleShowDropdown()
+        },
       },
       {
         displayText: 'Same price',
-        onClick: () => setGlobalPriceMethod(SetPriceMethod.SAME_PRICE),
+        isSelected: globalPriceMethod === SetPriceMethod.SAME_PRICE,
+        onClick: () => {
+          setGlobalPriceMethod(SetPriceMethod.SAME_PRICE)
+          toggleShowDropdown()
+        },
       },
     ],
-    []
+    [globalPriceMethod]
   )
 
   let prompt
   switch (globalPriceMethod) {
     case SetPriceMethod.CUSTOM:
-      prompt = t`Custom`
+      prompt = <Trans>Custom</Trans>
       break
     case SetPriceMethod.FLOOR_PRICE:
-      prompt = t`Floor price`
+      prompt = <Trans>Floor price</Trans>
       break
-    case SetPriceMethod.PREV_LISTING:
-      prompt = t`Last Price`
+    case SetPriceMethod.LAST_PRICE:
+      prompt = <Trans>Last Price</Trans>
       break
     case SetPriceMethod.SAME_PRICE:
-      prompt = t`Same Price`
+      prompt = <Trans>Same Price</Trans>
       break
     default:
       break
@@ -150,9 +210,18 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
             <Trans>Last</Trans>
           </PriceInfoHeader>
 
-          <DropdownAndHeaderWrapper>
+          <DropdownAndHeaderWrapper ref={dropdownRef}>
             <Trans>Price:</Trans>
-            <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt={prompt} />
+            <DropdownPromptContainer>
+              <DropdownPrompt onClick={toggleShowDropdown}>
+                {prompt} <DropdownChevron isOpen={showDropdown} />
+              </DropdownPrompt>
+              {showDropdown && (
+                <DropdownContainer>
+                  <Dropdown dropDownOptions={priceDropdownOptions} width={200} />
+                </DropdownContainer>
+              )}
+            </DropdownPromptContainer>
           </DropdownAndHeaderWrapper>
 
           <FeeHeader>

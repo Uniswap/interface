@@ -171,6 +171,7 @@ export interface DropDownOption {
   reverseIndex?: number
   reverseOnClick?: () => void
   sortBy?: SortBy
+  isSelected?: boolean
 }
 
 export enum DetailsOrigin {
