@@ -1,4 +1,5 @@
-import { signTypedData } from '@uniswap/conedison/provider'
+import 'utils/signTypedData'
+
 import { AllowanceTransfer, MaxAllowanceTransferAmount, PERMIT2_ADDRESS, PermitSingle } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -76,8 +77,7 @@ export function useUpdatePermitAllowance(
       }
 
       const { domain, types, values } = AllowanceTransfer.getPermitData(permit, PERMIT2_ADDRESS, chainId)
-      // Use conedison's signTypedData for better x-wallet compatibility.
-      const signature = await signTypedData(provider.getSigner(account), domain, types, values)
+      const signature = await provider.getSigner(account)._signTypedData(domain, types, values)
       onPermitSignature?.({ ...permit, signature })
       return
     } catch (e: unknown) {

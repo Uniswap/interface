@@ -6,7 +6,6 @@ import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
 import { BaseButton } from 'components/Button'
-import { useSwapWidgetEnabled } from 'featureFlags/flags/swapWidget'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
 import { useEffect, useRef, useState } from 'react'
@@ -15,7 +14,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
 import { useAppSelector } from 'state/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
-import styled, { css } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 
@@ -256,40 +255,23 @@ const LandingSwapContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 1;
 `
 
-const SwapCss = css`
+const LandingSwap = styled(Swap)`
   * {
     pointer-events: none;
   }
 
   &:hover {
-    transform: translateY(-4px);
-    transition: ${({ theme }) => `transform ${theme.transition.duration.medium} ${theme.transition.timing.ease}`};
-  }
-`
-
-const LinkCss = css`
-  text-decoration: none;
-  max-width: 480px;
-  width: 100%;
-`
-
-const LandingSwap = styled(Swap)`
-  ${SwapCss}
-  &:hover {
     border: 1px solid ${({ theme }) => theme.accentAction};
+    transform: translateY(-4px);
   }
 `
 
 const Link = styled(NativeLink)`
-  ${LinkCss}
-`
-
-const WidgetLandingLink = styled(NativeLink)`
-  ${LinkCss}
-  ${SwapCss}
+  text-decoration: none;
+  max-width: 480px;
+  width: 100%;
 `
 
 export default function Landing() {
@@ -304,8 +286,6 @@ export default function Landing() {
   const queryParams = parse(location.search, {
     ignoreQueryPrefix: true,
   })
-
-  const swapWidgetEnabled = useSwapWidgetEnabled()
 
   // This can be simplified significantly once the flag is removed! For now being explicit is clearer.
   useEffect(() => {
@@ -326,15 +306,9 @@ export default function Landing() {
               name={SharedEventName.ELEMENT_CLICKED}
               element={InterfaceElementName.LANDING_PAGE_SWAP_ELEMENT}
             >
-              {swapWidgetEnabled ? (
-                <WidgetLandingLink to="/swap">
-                  <Swap />
-                </WidgetLandingLink>
-              ) : (
-                <Link to="/swap">
-                  <LandingSwap />
-                </Link>
-              )}
+              <Link to="/swap">
+                <LandingSwap />
+              </Link>
             </TraceEvent>
           </LandingSwapContainer>
           <Gradient isDarkMode={isDarkMode} />

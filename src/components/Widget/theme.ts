@@ -1,10 +1,5 @@
 import { Theme } from '@uniswap/widgets'
 import { darkTheme, lightTheme } from 'theme/colors'
-import { Z_INDEX } from 'theme/zIndex'
-
-const zIndex = {
-  modal: Z_INDEX.modal,
-}
 
 const fonts = {
   fontFamily: 'Inter custom',
@@ -36,7 +31,6 @@ export const LIGHT_THEME: Theme = {
   error: lightTheme.accentCritical,
 
   ...fonts,
-  zIndex,
 }
 
 export const DARK_THEME: Theme = {
@@ -64,5 +58,4 @@ export const DARK_THEME: Theme = {
   error: darkTheme.accentCritical,
 
   ...fonts,
-  zIndex,
 }

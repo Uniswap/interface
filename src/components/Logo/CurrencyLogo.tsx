@@ -15,7 +15,6 @@ export default function CurrencyLogo(
       address={props.currency?.wrapped.address}
       symbol={props.symbol ?? props.currency?.symbol}
       backupImg={(props.currency as TokenInfo)?.logoURI}
-      hideL2Icon={props.hideL2Icon ?? true}
       {...props}
     />
   )
