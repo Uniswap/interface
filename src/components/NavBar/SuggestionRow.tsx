@@ -4,7 +4,6 @@ import { formatUSDPrice } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import AssetLogo from 'components/Logo/AssetLogo'
-import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
@@ -25,9 +24,6 @@ import styled from 'styled-components/macro'
 import { getDeltaArrow } from '../Tokens/TokenDetails/PriceChart'
 import * as styles from './SearchBar.css'
 
-const StyledLogoContainer = styled(LogoContainer)`
-  margin-right: 8px;
-`
 const PriceChangeContainer = styled.div`
   display: flex;
   align-items: center;
@@ -160,7 +156,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [addToSearchHistory, toggleOpen, token, eventProperties])
 
-  const [bridgedAddress, bridgedChain, L2Icon] = useBridgedAddress(token)
+  const [bridgedAddress, bridgedChain] = useBridgedAddress(token)
   const tokenDetailsPath = getTokenDetailsURL(bridgedAddress ?? token.address, undefined, bridgedChain ?? token.chainId)
   // Close the modal on escape
   useEffect(() => {
@@ -190,17 +186,15 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
       style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
     >
       <Row style={{ width: '65%' }}>
-        <StyledLogoContainer>
-          <AssetLogo
-            isNative={token.address === NATIVE_CHAIN_ID}
-            address={token.address}
-            chainId={token.chainId}
-            symbol={token.symbol}
-            size="36px"
-            backupImg={token.logoURI}
-          />
-          <L2NetworkLogo networkUrl={L2Icon} size="16px" />
-        </StyledLogoContainer>
+        <AssetLogo
+          isNative={token.address === NATIVE_CHAIN_ID}
+          address={token.address}
+          chainId={token.chainId}
+          symbol={token.symbol}
+          size="36px"
+          backupImg={token.logoURI}
+          style={{ margin: '8px 8px 8px 0' }}
+        />
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{token.name}</Box>

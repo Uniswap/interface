@@ -301,6 +301,7 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
       buttonText = <Trans>Pay</Trans>
     }
 
+<<<<<<< HEAD
     return { buttonText, disabled, warningText, helperText, handleClick }
   }, [
     fetchAssets,
@@ -318,6 +319,29 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
     isApprovalLoading,
     updateAllowance,
   ])
+=======
+    return { buttonText, disabled, warningText, handleClick }
+  }, [bagStatus, chainId, connected, connector, fetchAssets, setBagExpanded, sufficientBalance, toggleWalletModal])
+
+  const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
+  const activeCurrency = inputCurrency ?? defaultCurrency
+
+  const parsedAmount = useMemo(() => {
+    return tryParseCurrencyAmount(formatEther(totalEthPrice.toString()), defaultCurrency ?? undefined)
+  }, [defaultCurrency, totalEthPrice])
+
+  const { state: swapState, trade: swapTrade } = useBestTrade(
+    TradeType.EXACT_OUTPUT,
+    parsedAmount,
+    inputCurrency ?? undefined
+  )
+
+  const usdcValue = useStablecoinValue(inputCurrency ? swapTrade?.inputAmount : parsedAmount)
+  const traceEventProperties = {
+    usd_value: usdcValue?.toExact(),
+    ...eventProperties,
+  }
+>>>>>>> main
 
   return (
     <FooterContainer>
@@ -376,7 +400,7 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
           events={[BrowserEvent.onClick]}
           name={NFTEventName.NFT_BUY_BAG_PAY}
           element={InterfaceElementName.NFT_BUY_BAG_PAY_BUTTON}
-          properties={{ ...eventProperties }}
+          properties={{ ...traceEventProperties }}
           shouldLogImpression={connected && !disabled}
         >
           <Warning>{warningText}</Warning>
