@@ -49,38 +49,20 @@ import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { LoadingRows } from './styleds'
 
 const PageWrapper = styled.div`
-  padding: 68px 8px 0px;
+  padding: 68px 16px 16px 16px;
 
   min-width: 800px;
   max-width: 960px;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    padding: 48px 8px 0px;
+    min-width: 100%;
+    padding: 16px;
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    padding-top: 20px;
+    min-width: 100%;
+    padding: 16px;
   }
-
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
-    min-width: 680px;
-    max-width: 680px;
-  `};
-
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    min-width: 600px;
-    max-width: 600px;
-  `};
-
-  @media only screen and (max-width: 620px) {
-    min-width: 500px;
-    max-width: 500px;
-  }
-
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
-    min-width: 340px;
-    max-width: 340px;
-  `};
 `
 
 const BadgeText = styled.div`
@@ -120,23 +102,34 @@ const DoubleArrow = styled.span`
   margin: 0 1rem;
 `
 const ResponsiveRow = styled(RowBetween)`
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     flex-direction: column;
     align-items: flex-start;
     row-gap: 16px;
-    width: 100%:
-  `};
+    width: 100%;
+  }
+`
+
+const ActionButtonResponsiveRow = styled(ResponsiveRow)`
+  width: 50%;
+  justify-content: flex-end;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    width: 100%;
+    * {
+      width: 100%;
+    }
+  }
 `
 
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   border-radius: 12px;
   padding: 6px 8px;
-  width: fit-content;
   font-size: 16px;
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    flex: 1 1 auto;
-    width: 49%;
-  `};
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    width: 100%;
+  }
 `
 
 const ResponsiveButtonConfirmed = styled(ButtonConfirmed)`
@@ -144,10 +137,14 @@ const ResponsiveButtonConfirmed = styled(ButtonConfirmed)`
   padding: 6px 8px;
   width: fit-content;
   font-size: 16px;
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    flex: 1 1 auto;
-    width: 49%;
-  `};
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    width: fit-content;
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    width: fit-content;
+  }
 `
 
 const NFTGrid = styled.div`
@@ -635,13 +632,13 @@ export function PositionPage() {
                   <RangeBadge removed={removed} inRange={inRange} />
                 </RowFixed>
                 {ownsNFT && (
-                  <RowFixed>
+                  <ActionButtonResponsiveRow>
                     {currency0 && currency1 && feeAmount && tokenId ? (
                       <ButtonGray
                         as={Link}
                         to={`/increase/${currencyId(currency0)}/${currencyId(currency1)}/${feeAmount}/${tokenId}`}
-                        width="fit-content"
                         padding="6px 8px"
+                        width="fit-content"
                         $borderRadius="12px"
                         style={{ marginRight: '8px' }}
                       >
@@ -652,14 +649,14 @@ export function PositionPage() {
                       <ResponsiveButtonPrimary
                         as={Link}
                         to={`/remove/${tokenId}`}
-                        width="fit-content"
                         padding="6px 8px"
+                        width="fit-content"
                         $borderRadius="12px"
                       >
                         <Trans>Remove Liquidity</Trans>
                       </ResponsiveButtonPrimary>
                     ) : null}
-                  </RowFixed>
+                  </ActionButtonResponsiveRow>
                 )}
               </ResponsiveRow>
               <RowBetween></RowBetween>
@@ -725,7 +722,7 @@ export function PositionPage() {
                             </ThemedText.DeprecatedMain>
                             {typeof ratio === 'number' && !removed ? (
                               <Badge style={{ marginLeft: '10px' }}>
-                                <ThemedText.DeprecatedMain fontSize={11}>
+                                <ThemedText.DeprecatedMain color={theme.textSecondary} fontSize={11}>
                                   <Trans>{inverted ? ratio : 100 - ratio}%</Trans>
                                 </ThemedText.DeprecatedMain>
                               </Badge>
