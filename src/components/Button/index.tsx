@@ -97,7 +97,7 @@ export const ButtonPrimary = styled(BaseButton)`
 export const SmallButtonPrimary = styled(ButtonPrimary)`
   width: auto;
   font-size: 16px;
-  padding: 10px 16px;
+  padding: 6px 8px;
   border-radius: 12px;
 `
 

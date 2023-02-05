@@ -39,6 +39,7 @@ import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 import RangeBadge from '../../components/Badge/RangeBadge'
+import { SmallButtonPrimary } from '../../components/Button/index'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
 import RateToggle from '../../components/RateToggle'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
@@ -119,16 +120,6 @@ const ActionButtonResponsiveRow = styled(ResponsiveRow)`
     * {
       width: 100%;
     }
-  }
-`
-
-const ResponsiveButtonPrimary = styled(ButtonPrimary)`
-  border-radius: 12px;
-  padding: 6px 8px;
-  font-size: 16px;
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    width: 100%;
   }
 `
 
@@ -646,7 +637,7 @@ export function PositionPage() {
                       </ButtonGray>
                     ) : null}
                     {tokenId && !removed ? (
-                      <ResponsiveButtonPrimary
+                      <SmallButtonPrimary
                         as={Link}
                         to={`/remove/${tokenId}`}
                         padding="6px 8px"
@@ -654,7 +645,7 @@ export function PositionPage() {
                         $borderRadius="12px"
                       >
                         <Trans>Remove Liquidity</Trans>
-                      </ResponsiveButtonPrimary>
+                      </SmallButtonPrimary>
                     ) : null}
                   </ActionButtonResponsiveRow>
                 )}

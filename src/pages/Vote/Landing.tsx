@@ -3,7 +3,7 @@ import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { ButtonPrimary } from 'components/Button'
+import { ButtonPrimary, SmallButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/styled'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
@@ -223,14 +223,14 @@ export default function Landing() {
                 ) : (
                   ''
                 )}
-                <ButtonPrimary
+                <SmallButtonPrimary
                   as={Link}
                   to="/create-proposal"
                   style={{ width: 'fit-content', borderRadius: '8px' }}
                   padding="8px"
                 >
                   <Trans>Create Proposal</Trans>
-                </ButtonPrimary>
+                </SmallButtonPrimary>
               </AutoRow>
             </WrapSmall>
             {!showUnlockVoting && (
