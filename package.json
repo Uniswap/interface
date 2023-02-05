@@ -99,6 +99,7 @@
     "jest-fetch-mock": "^3.0.3",
     "jest-styled-components": "^7.0.8",
     "ms.macro": "^2.0.0",
+    "msw": "^1.0.0",
     "patch-package": "^6.4.7",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.7.1",

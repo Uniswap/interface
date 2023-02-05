@@ -1,6 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
 import AddressClaimModal from 'components/claim/AddressClaimModal'
-import ConnectedAccountBlocked from 'components/ConnectedAccountBlocked'
 import FiatOnrampModal from 'components/FiatOnrampModal'
 import { BaseVariant } from 'featureFlags'
 import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
@@ -9,6 +8,7 @@ import { lazy } from 'react'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 
+const ConnectedAccountBlocked = lazy(() => import('components/ConnectedAccountBlocked'))
 const Bag = lazy(() => import('nft/components/bag/Bag'))
 const TransactionCompleteModal = lazy(() => import('nft/components/collection/TransactionCompleteModal'))
 const AirdropModal = lazy(() => import('components/AirdropModal'))
