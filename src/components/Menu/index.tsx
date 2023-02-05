@@ -70,7 +70,7 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   max-height: 350px;
   overflow: auto;
   background-color: ${({ theme }) => theme.bg1};
-  box-shadow: 0 0 12px 6px ${({ theme }) => theme.shadow2};
+  box-shadow: 0 0 2px 2px ${({ theme }) => theme.shadow2};
   border: 1px solid ${({ theme }) => theme.bg1};
   border-radius: 20px;
   padding: 0.5rem;

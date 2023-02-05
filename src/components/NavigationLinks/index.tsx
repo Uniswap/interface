@@ -65,16 +65,15 @@ const StyledNavLink = styled(NavLink).attrs({
   height: 40px;
 
   &.${activeClassName} {
-    background-color: ${({ theme }) => theme.white};
-    color: ${({ theme }) => darken(0.3, theme.text2)};
-
+    color: ${({ theme }) => theme.text1};
+    background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg0)};
     div {
       font-weight: 700;
     }
   }
 
   :hover {
-    color: ${({ theme }) => darken(0.2, theme.text2)};
+    color: ${({ theme }) => darken(0.1, theme.text1)};
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -112,14 +111,14 @@ const StyledNavLinkAlt = styled.button`
   height: 40px;
 
   &.${activeClassName} {
+    color: ${({ theme }) => theme.text1};
     background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg0)};
     border-radius: 20px;
     font-weight: 600;
-    color: ${({ theme }) => theme.text1};
   }
 
   :hover {
-    color: ${({ theme }) => darken(0.2, theme.text2)};
+    color: ${({ theme }) => darken(0.1, theme.text1)};
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`

@@ -700,6 +700,7 @@ export default function Market({ history }: RouteComponentProps) {
                             <Trans>From</Trans>
                           )
                         }
+                        actionLabel="You sell"
                         value={formattedAmounts[Field.INPUT]}
                         showMaxButton={showMaxButton}
                         currency={currencies[Field.INPUT]}
@@ -723,6 +724,7 @@ export default function Market({ history }: RouteComponentProps) {
                         />
                       </ArrowWrapper>
                       <CurrencyInputPanel
+                        actionLabel="You buy"
                         value={formattedAmounts[Field.OUTPUT]}
                         onUserInput={handleTypeOutput}
                         label={
@@ -1225,6 +1227,7 @@ export default function Market({ history }: RouteComponentProps) {
             <AutoColumn gap={'md'}>
               <div style={{ display: 'relative' }}>
                 <CurrencyInputPanel
+                  actionLabel="You sell"
                   label={
                     independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
                   }
@@ -1251,6 +1254,7 @@ export default function Market({ history }: RouteComponentProps) {
                   />
                 </ArrowWrapper>
                 <CurrencyInputPanel
+                  actionLabel="You buy"
                   value={formattedAmounts[Field.OUTPUT]}
                   onUserInput={handleTypeOutput}
                   label={

@@ -50,7 +50,7 @@ const FlyoutHeader = styled.div`
 const FlyoutMenu = styled.div`
   align-items: flex-start;
   background-color: ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg0)};
-  box-shadow: 0 0 12px 6px ${({ theme }) => theme.shadow2};
+  box-shadow: 0 0 2px 2px ${({ theme }) => theme.shadow2};
   border-radius: 20px;
   display: flex;
   flex-direction: column;

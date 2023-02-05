@@ -15,6 +15,7 @@ import { useNetworkGasPrice } from 'state/user/hooks'
 import styled, { keyframes } from 'styled-components/macro'
 
 import { CHAIN_INFO, NetworkType, SupportedChainId } from '../../constants/chains'
+import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useBlockNumber } from '../../state/application/hooks'
 import { ExternalLink, TYPE } from '../../theme'
@@ -155,6 +156,10 @@ export default function Polling() {
   const { networkType, explorer } = CHAIN_INFO[chainId ?? SupportedChainId.MAINNET]
   const gasTracker = networkType === NetworkType.L1 ? explorer + 'gasTracker' : explorer
 
+  const total = useTotalSupply(kromToken)
+  const feePercentageBurned =
+    total && feeValue0 && ((Number(feeValue0.toFixed(0)) * 100) / Number(total.toFixed(0))).toFixed(2)
+
   return (
     <>
       <StyledPolling
@@ -168,6 +173,7 @@ export default function Polling() {
               <StyledPollingText>
                 <span>🔥</span>
                 {feeValue0?.toFixed(0, { groupSeparator: ',' })} KROM
+                <span> ({feePercentageBurned}%)</span>
               </StyledPollingText>
               <StyledGasDot />
             </RowFixed>

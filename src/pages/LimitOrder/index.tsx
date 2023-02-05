@@ -100,7 +100,7 @@ const ClassicModeContainer = styled.div`
       ${({ theme }) => theme.mediaWidth.upToMedium`
         min-width: 100%;
         max-width: 100%;
-        order: 1;
+        order: 2;
       `};
     }
 
@@ -116,7 +116,7 @@ const ClassicModeContainer = styled.div`
       ${({ theme }) => theme.mediaWidth.upToMedium`
         min-width: 100%;
         max-width: 100%;
-        order: 2;
+        order: 1;
       `};
     }
   }
@@ -537,7 +537,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                 <AutoColumn gap={'md'}>
                   <div style={{ display: 'relative' }}>
                     <CurrencyInputPanel
-                      actionLabel="You send:"
+                      actionLabel="You send"
                       label={
                         independentField === Field.OUTPUT && !showWrap ? (
                           <Trans>From (at most)</Trans>
@@ -592,7 +592,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                     </ArrowWrapper>
 
                     <CurrencyInputPanel
-                      actionLabel="You receive at least:"
+                      actionLabel="You receive at least"
                       value={formattedAmounts.output}
                       onUserInput={handleTypeOutput}
                       label={
@@ -953,7 +953,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
           <AutoColumn gap={'md'}>
             <div style={{ display: 'relative' }}>
               <CurrencyInputPanel
-                actionLabel="You send:"
+                actionLabel="You send"
                 label={
                   independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
                 }
@@ -1004,7 +1004,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
               </ArrowWrapper>
 
               <CurrencyInputPanel
-                actionLabel="You receive at least:"
+                actionLabel="You receive at least"
                 value={formattedAmounts.output}
                 onUserInput={handleTypeOutput}
                 label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
