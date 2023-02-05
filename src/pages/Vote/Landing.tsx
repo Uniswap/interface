@@ -106,12 +106,12 @@ const TextButton = styled(ThemedText.DeprecatedMain)`
 `
 
 const AddressButton = styled.div`
-  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
   padding: 2px 4px;
   border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
+  color: ${({ theme }) => theme.accentAction};
 `
 
 const StyledExternalLink = styled(ExternalLink)`
@@ -263,6 +263,7 @@ export default function Landing() {
 
             {allProposals?.length > 0 && (
               <AutoColumn gap="md">
+                <RowBetween></RowBetween>
                 <RowBetween>
                   <ThemedText.DeprecatedMain>
                     <Trans>Show Cancelled</Trans>
