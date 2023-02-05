@@ -30,6 +30,11 @@ jobs:
       - uses: ./.github/actions/setup
       - run: yarn prepare
       - run: yarn test
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+          verbose: true
 
   cypress-build:
     runs-on: ubuntu-latest

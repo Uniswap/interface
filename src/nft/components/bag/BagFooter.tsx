@@ -10,6 +10,7 @@ import Column from 'components/Column'
 import Loader from 'components/Loader'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
+import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { SupportedChainId } from 'constants/chains'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
 import { useCurrency } from 'hooks/Tokens'
@@ -21,15 +22,13 @@ import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { useWalletBalance } from 'nft/hooks/useWalletBalance'
 import { BagStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
-import { PropsWithChildren, useMemo, useReducer } from 'react'
+import { PropsWithChildren, useMemo, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
-
-import { BagTokenSelectorModal } from './tokenSelector/BagTokenSelectorModal'
 
 const FooterContainer = styled.div`
   padding: 0px 12px;
@@ -123,7 +122,6 @@ const Warning = ({ children }: PropsWithChildren<unknown>) => {
 
 interface BagFooterProps {
   totalEthPrice: BigNumber
-  totalUsdPrice: number | undefined
   bagStatus: BagStatus
   fetchAssets: () => void
   eventProperties: Record<string, unknown>
@@ -136,13 +134,7 @@ const PENDING_BAG_STATUSES = [
   BagStatus.PROCESSING_TRANSACTION,
 ]
 
-export const BagFooter = ({
-  totalEthPrice,
-  totalUsdPrice,
-  bagStatus,
-  fetchAssets,
-  eventProperties,
-}: BagFooterProps) => {
+export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperties }: BagFooterProps) => {
   const toggleWalletModal = useToggleWalletModal()
   const theme = useTheme()
   const { account, chainId, connector } = useWeb3React()
@@ -153,7 +145,7 @@ export const BagFooter = ({
   const defaultCurrency = useCurrency('ETH')
 
   const setBagExpanded = useBag((state) => state.setBagExpanded)
-  const [showTokenSelector, toggleTokenSelector] = useReducer((state) => !state, false)
+  const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
 
   const { balance: balanceInEth } = useWalletBalance()
   const sufficientBalance = useMemo(() => {
@@ -205,9 +197,8 @@ export const BagFooter = ({
   const activeCurrency = inputCurrency ?? defaultCurrency
 
   const parsedAmount = useMemo(() => {
-    if (!inputCurrency) return undefined
     return tryParseCurrencyAmount(formatEther(totalEthPrice.toString()), defaultCurrency ?? undefined)
-  }, [defaultCurrency, totalEthPrice, inputCurrency])
+  }, [defaultCurrency, totalEthPrice])
 
   const { state: swapState, trade: swapTrade } = useBestTrade(
     TradeType.EXACT_OUTPUT,
@@ -215,7 +206,11 @@ export const BagFooter = ({
     inputCurrency ?? undefined
   )
 
-  const usdcValue = useStablecoinValue(swapTrade?.inputAmount)
+  const usdcValue = useStablecoinValue(inputCurrency ? swapTrade?.inputAmount : parsedAmount)
+  const traceEventProperties = {
+    usd_value: usdcValue?.toExact(),
+    ...eventProperties,
+  }
 
   return (
     <FooterContainer>
@@ -226,7 +221,7 @@ export const BagFooter = ({
               <ThemedText.SubHeaderSmall>
                 <Trans>Pay with</Trans>
               </ThemedText.SubHeaderSmall>
-              <CurrencyInput onClick={toggleTokenSelector}>
+              <CurrencyInput onClick={() => setTokenSelectorOpen(true)}>
                 <CurrencyLogo currency={activeCurrency} size="24px" />
                 <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
                   {activeCurrency?.symbol}
@@ -247,7 +242,7 @@ export const BagFooter = ({
                 &nbsp;{activeCurrency?.symbol ?? 'ETH'}
               </ThemedText.HeadlineSmall>
               <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
-                {`${ethNumberStandardFormatter(inputCurrency ? usdcValue?.toExact() : totalUsdPrice, true)}`}
+                {`${ethNumberStandardFormatter(usdcValue?.toExact(), true)}`}
               </ThemedText.BodySmall>
             </TotalColumn>
           </CurrencyRow>
@@ -266,7 +261,7 @@ export const BagFooter = ({
             </Row>
             <Row justify="flex-end">
               <ThemedText.BodySmall color="textSecondary" lineHeight="20px">{`${ethNumberStandardFormatter(
-                totalUsdPrice,
+                usdcValue?.toExact(),
                 true
               )}`}</ThemedText.BodySmall>
             </Row>
@@ -276,7 +271,7 @@ export const BagFooter = ({
           events={[BrowserEvent.onClick]}
           name={NFTEventName.NFT_BUY_BAG_PAY}
           element={InterfaceElementName.NFT_BUY_BAG_PAY_BUTTON}
-          properties={{ ...eventProperties }}
+          properties={{ ...traceEventProperties }}
           shouldLogImpression={connected && !disabled}
         >
           <Warning>{warningText}</Warning>
@@ -286,16 +281,13 @@ export const BagFooter = ({
           </ActionButton>
         </TraceEvent>
       </Footer>
-      {showTokenSelector && (
-        <BagTokenSelectorModal
-          selectedCurrency={activeCurrency ?? undefined}
-          handleCurrencySelect={(currency: Currency | undefined) => {
-            setInputCurrency(currency)
-            toggleTokenSelector()
-          }}
-          overlayClick={toggleTokenSelector}
-        />
-      )}
+      <CurrencySearchModal
+        isOpen={tokenSelectorOpen}
+        onDismiss={() => setTokenSelectorOpen(false)}
+        onCurrencySelect={(currency: Currency) => setInputCurrency(currency.isNative ? undefined : currency)}
+        selectedCurrency={activeCurrency ?? undefined}
+        onlyShowCurrenciesWithBalance={true}
+      />
     </FooterContainer>
   )
 }

@@ -10,8 +10,9 @@ import {
   LoadingIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
-import { AssetRow, CollectionRow } from 'nft/types'
-import { Info } from 'react-feather'
+import { AssetRow, CollectionRow, ListingStatus } from 'nft/types'
+import { useMemo } from 'react'
+import { Check, Info } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { colors } from 'theme/colors'
@@ -21,9 +22,10 @@ const SectionHeader = styled(Row)`
   justify-content: space-between;
 `
 
-const SectionTitle = styled(ThemedText.SubHeader)<{ active: boolean }>`
+const SectionTitle = styled(ThemedText.SubHeader)<{ active: boolean; approved: boolean }>`
   line-height: 24px;
-  color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
+  color: ${({ theme, active, approved }) =>
+    approved ? theme.accentSuccess : active ? theme.textPrimary : theme.textSecondary};
 `
 
 const SectionArrow = styled(ChevronUpIcon)<{ active: boolean }>`
@@ -56,11 +58,11 @@ const ContentRowContainer = styled(Column)`
   gap: 8px;
 `
 
-const ContentRow = styled(Row)`
+const ContentRow = styled(Row)<{ active: boolean }>`
   padding: 16px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 12px;
-  opacity: 0.6;
+  opacity: ${({ active }) => (active ? '1' : '0.6')};
 `
 
 const CollectionIcon = styled.img`
@@ -94,16 +96,20 @@ const ContentName = styled(ThemedText.SubHeaderSmall)`
   max-width: 50%;
 `
 
+const ProceedText = styled.span`
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  color: ${({ theme }) => theme.textSecondary};
+`
+
 const StyledVerifiedIcon = styled(VerifiedIcon)`
   height: 16px;
   width: 16px;
   margin-left: 4px;
 `
 
-const StyledLoadingIconBackground = styled(LoadingIcon)`
-  height: 14px;
-  width: 14px;
-  stroke: ${({ theme }) => theme.textTertiary};
+const IconWrapper = styled.div`
   margin-left: auto;
   margin-right: 0px;
 `
@@ -122,13 +128,18 @@ interface ListModalSectionProps {
 
 export const ListModalSection = ({ sectionType, active, content, toggleSection }: ListModalSectionProps) => {
   const theme = useTheme()
+  const allContentApproved = useMemo(() => !content.some((row) => row.status !== ListingStatus.APPROVED), [content])
   const isCollectionApprovalSection = sectionType === Section.APPROVE
   return (
     <Column>
       <SectionHeader>
         <Row>
-          {active ? <ListingModalWindowActive /> : <ListingModalWindowClosed />}
-          <SectionTitle active={active} marginLeft="12px">
+          {active || allContentApproved ? (
+            <ListingModalWindowActive fill={allContentApproved ? theme.accentSuccess : theme.accentAction} />
+          ) : (
+            <ListingModalWindowClosed />
+          )}
+          <SectionTitle active={active} marginLeft="12px" approved={allContentApproved}>
             {isCollectionApprovalSection ? (
               <>
                 <Trans>Approve</Trans>&nbsp;{content.length}&nbsp;
@@ -165,7 +176,10 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
           <ContentRowContainer>
             {content.map((row) => {
               return (
-                <ContentRow key={row.name}>
+                <ContentRow
+                  key={row.name}
+                  active={row.status === ListingStatus.SIGNING || row.status === ListingStatus.APPROVED}
+                >
                   {isCollectionApprovalSection ? (
                     <CollectionIcon src={row.images[0]} />
                   ) : (
@@ -174,7 +188,23 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
                   <MarketplaceIcon src={row.images[1]} />
                   <ContentName>{row.name}</ContentName>
                   {isCollectionApprovalSection && (row as CollectionRow).isVerified && <StyledVerifiedIcon />}
-                  <StyledLoadingIconBackground />
+                  <IconWrapper>
+                    {row.status === ListingStatus.DEFINED || row.status === ListingStatus.PENDING ? (
+                      <LoadingIcon
+                        height="14px"
+                        width="14px"
+                        stroke={row.status === ListingStatus.PENDING ? theme.accentAction : theme.textTertiary}
+                      />
+                    ) : row.status === ListingStatus.SIGNING ? (
+                      <ProceedText>
+                        <Trans>Proceed in wallet</Trans>
+                      </ProceedText>
+                    ) : (
+                      row.status === ListingStatus.APPROVED && (
+                        <Check height="20" width="20" stroke={theme.accentSuccess} />
+                      )
+                    )}
+                  </IconWrapper>
                 </ContentRow>
               )
             })}

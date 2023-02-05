@@ -12,6 +12,7 @@ interface SellAssetState {
   setAssetListPrice: (asset: WalletAsset, price?: number, marketplace?: ListingMarket) => void
   setGlobalMarketplaces: (marketplaces: ListingMarket[]) => void
   removeAssetMarketplace: (asset: WalletAsset, marketplace: ListingMarket) => void
+  // TODO: After merging v2, see if this marketplace logic can be removed
   addMarketplaceWarning: (asset: WalletAsset, warning: ListingWarning) => void
   removeMarketplaceWarning: (asset: WalletAsset, warning: ListingWarning, setGlobalOverride?: boolean) => void
   removeAllMarketplaceWarnings: () => void

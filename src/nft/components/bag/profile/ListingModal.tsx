@@ -1,4 +1,3 @@
-import { addressesByNetwork, SupportedChainId } from '@looksrare/sdk'
 import { sendAnalyticsEvent, Trace, useTrace } from '@uniswap/analytics'
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
@@ -109,7 +108,6 @@ const ListingModal = () => {
     if (!signer) return
     sendAnalyticsEvent(NFTEventName.NFT_SELL_START_LISTING, { ...startListingEventProperties })
     setListingStatus(ListingStatus.SIGNING)
-    const addresses = addressesByNetwork[SupportedChainId.MAINNET]
     const signerAddress = await signer.getAddress()
     const nonce = await looksRareNonceFetcher(signerAddress)
     setLooksRareNonce(nonce ?? 0)
@@ -118,7 +116,6 @@ const ListingModal = () => {
       setListingStatus(ListingStatus.SIGNING)
       setOpenIndex(1)
     }
-    const looksRareAddress = addresses.TRANSFER_MANAGER_ERC721
     // for all unique collection, marketplace combos -> approve collections
     for (const collectionRow of collectionsRequiringApproval) {
       verifyStatus(collectionRow.status) &&
@@ -128,7 +125,6 @@ const ListingModal = () => {
               collectionsRequiringApproval,
               setCollectionsRequiringApproval,
               signer,
-              looksRareAddress,
               pauseAllRows
             )
           : approveCollectionRow(
@@ -136,7 +132,6 @@ const ListingModal = () => {
               collectionsRequiringApproval,
               setCollectionsRequiringApproval,
               signer,
-              looksRareAddress,
               pauseAllRows
             ))
     }
