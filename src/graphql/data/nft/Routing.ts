@@ -36,7 +36,6 @@ gql`
   }
 `
 
-// eslint-disable-next-line import/no-unused-modules
 export function useNftRoute(senderAddress: string, nftTrades: NftTradeInput[], tokenTrades?: TokenTradeInput[]) {
   return useNftRouteQuery({
     variables: {
