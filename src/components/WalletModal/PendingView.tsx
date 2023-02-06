@@ -81,13 +81,12 @@ export default function PendingView({
           {error ? (
             <ErrorGroup>
               <AlertTriangleIcon />
-              <ThemedText.MediumHeader marginBottom={18}>
-                <Trans>Error connecting</Trans>
+              <ThemedText.MediumHeader marginBottom={12}>
+                <Trans>Connection failed</Trans>
               </ThemedText.MediumHeader>
-              <ThemedText.BodyPrimary marginBottom={12} textAlign="center">
-                <Trans>The connection attempt failed.</Trans>
+              <ThemedText.BodyPrimary marginBottom={36} textAlign="center">
+                {error}
               </ThemedText.BodyPrimary>
-              <ThemedText.BodySecondary marginBottom={36}>{error}</ThemedText.BodySecondary>
               <ButtonPrimary
                 $borderRadius="12px"
                 onClick={() => {
