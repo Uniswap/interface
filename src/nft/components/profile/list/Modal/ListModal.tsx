@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, Trace, useTrace } from '@uniswap/analytics'
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import Row from 'components/Row'
 import { getTotalEthValue, signListingRow } from 'nft/components/bag/profile/utils'
 import { Portal } from 'nft/components/common/Portal'
 import { Overlay } from 'nft/components/modals/Overlay'
@@ -15,7 +14,9 @@ import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 
+import { TitleRow } from '../shared'
 import { ListModalSection, Section } from './ListModalSection'
+import { SuccessScreen } from './SuccessScreen'
 
 const ListModalWrapper = styled.div`
   position: fixed;
@@ -37,11 +38,6 @@ const ListModalWrapper = styled.div`
     width: 100%;
     height: 100%;
   }
-`
-
-const TitleRow = styled(Row)`
-  justify-content: space-between;
-  margin-bottom: 8px;
 `
 
 export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
@@ -101,7 +97,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
       <Trace modal={InterfaceModalName.NFT_LISTING}>
         <ListModalWrapper>
           {listingStatus === ListingStatus.APPROVED ? (
-            <>TODO Success Screen</>
+            <SuccessScreen overlayClick={overlayClick} />
           ) : (
             <>
               <TitleRow>
