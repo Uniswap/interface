@@ -78,9 +78,9 @@ const SecondaryLinkedText = ({
   )
 }
 
-const Separator = () => {
-  return <Box className={styles.Separator} />
-}
+// const Separator = () => {
+//   return <Box className={styles.Separator} />
+// }
 
 const IconRow = ({ children }: { children: ReactNode }) => {
   return <Row className={styles.IconRow}>{children}</Row>
