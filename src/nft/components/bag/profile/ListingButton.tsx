@@ -1,17 +1,24 @@
+import { Plural, t } from '@lingui/macro'
+import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import ms from 'ms.macro'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { ArrowRightIcon, HazardIcon, LoadingIcon, XMarkIcon } from 'nft/components/icons'
+import { BelowFloorWarningModal } from 'nft/components/profile/list/Modal/BelowFloorWarningModal'
 import { bodySmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useNFTList, useSellAsset } from 'nft/hooks'
 import { Listing, ListingStatus, WalletAsset } from 'nft/types'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useTheme } from 'styled-components/macro'
+import shallow from 'zustand/shallow'
 
 import * as styles from './ListingModal.css'
 import { getListings } from './utils'
+
+const BELOW_FLOOR_PRICE_THRESHOLD = 0.8
 
 interface ListingButtonProps {
   onClick: () => void
@@ -20,18 +27,46 @@ interface ListingButtonProps {
 }
 
 export const ListingButton = ({ onClick, buttonText, showWarningOverride = false }: ListingButtonProps) => {
-  const sellAssets = useSellAsset((state) => state.sellAssets)
-  const addMarketplaceWarning = useSellAsset((state) => state.addMarketplaceWarning)
-  const removeAllMarketplaceWarnings = useSellAsset((state) => state.removeAllMarketplaceWarnings)
-  const listingStatus = useNFTList((state) => state.listingStatus)
-  const setListingStatus = useNFTList((state) => state.setListingStatus)
-  const setListings = useNFTList((state) => state.setListings)
-  const setCollectionsRequiringApproval = useNFTList((state) => state.setCollectionsRequiringApproval)
+  const {
+    addMarketplaceWarning,
+    sellAssets,
+    removeAllMarketplaceWarnings,
+    showResolveIssues,
+    toggleShowResolveIssues,
+  } = useSellAsset(
+    ({
+      addMarketplaceWarning,
+      sellAssets,
+      removeAllMarketplaceWarnings,
+      showResolveIssues,
+      toggleShowResolveIssues,
+    }) => ({
+      addMarketplaceWarning,
+      sellAssets,
+      removeAllMarketplaceWarnings,
+      showResolveIssues,
+      toggleShowResolveIssues,
+    }),
+    shallow
+  )
+  const { listingStatus, setListingStatus, setListings, setCollectionsRequiringApproval } = useNFTList(
+    ({ listingStatus, setListingStatus, setListings, setCollectionsRequiringApproval }) => ({
+      listingStatus,
+      setListingStatus,
+      setListings,
+      setCollectionsRequiringApproval,
+    }),
+    shallow
+  )
+
+  const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
   const [showWarning, setShowWarning] = useState(false)
   const [canContinue, setCanContinue] = useState(false)
+  const [issues, setIssues] = useState(0)
+  const theme = useTheme()
   const warningRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(warningRef, () => {
-    setShowWarning(false)
+    !isNftListV2 && setShowWarning(false)
   })
 
   useEffect(() => {
@@ -71,13 +106,30 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
         for (const listing of asset.newListings) {
           if (!listing.price) listingsMissingPrice.push([asset, listing])
           else if (isNaN(listing.price) || listing.price < 0) invalidPrices.push([asset, listing])
-          else if (listing.price < (asset?.floorPrice ?? 0) && !listing.overrideFloorPrice)
+          else if (
+            listing.price < (asset?.floorPrice ?? 0) * BELOW_FLOOR_PRICE_THRESHOLD &&
+            !listing.overrideFloorPrice
+          )
             listingsBelowFloor.push([asset, listing])
           else if (asset.floor_sell_order_price && listing.price > asset.floor_sell_order_price)
             listingsAboveSellOrderFloor.push([asset, listing])
         }
       }
     }
+    // set number of issues
+    if (isNftListV2) {
+      const foundIssues =
+        Number(missingExpiration) +
+        Number(overMaxExpiration) +
+        listingsMissingPrice.length +
+        listingsAboveSellOrderFloor.length
+      setIssues(foundIssues)
+      !foundIssues && showResolveIssues && toggleShowResolveIssues()
+      // Only show Resolve Issue text if there was a user submitted error (ie not when page loads with no prices set)
+      if ((missingExpiration || overMaxExpiration || listingsAboveSellOrderFloor.length) && !showResolveIssues)
+        toggleShowResolveIssues()
+    }
+
     const continueCheck = listingsBelowFloor.length === 0 && listingsAboveSellOrderFloor.length === 0
     setCanContinue(continueCheck)
     return [
@@ -90,7 +142,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
       listingsAboveSellOrderFloor,
       invalidPrices,
     ]
-  }, [sellAssets])
+  }, [isNftListV2, sellAssets, showResolveIssues, toggleShowResolveIssues])
 
   const [disableListButton, warningMessage] = useMemo(() => {
     const disableListButton =
@@ -158,94 +210,108 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
   }
 
   const warningWrappedClick = () => {
-    if ((!disableListButton && canContinue) || showWarningOverride) onClick()
-    else addWarningMessages()
+    if ((!disableListButton && canContinue) || showWarningOverride) {
+      if (issues && isNftListV2 && !showResolveIssues) toggleShowResolveIssues()
+      else if (listingsBelowFloor.length) setShowWarning(true)
+      else onClick()
+    } else addWarningMessages()
   }
 
   return (
-    <Box position="relative" width="full">
-      {!showWarningOverride && showWarning && warningMessage.length > 0 && (
-        <Row
-          className={`${bodySmall} ${styles.warningTooltip}`}
-          transition="250"
-          onClick={() => setShowWarning(false)}
-          color="textSecondary"
-          zIndex="3"
-          borderRadius="4"
-          backgroundColor="backgroundSurface"
-          height={!disableListButton ? '64' : '36'}
-          maxWidth="276"
-          position="absolute"
-          left="24"
-          bottom="52"
-          flexWrap={!disableListButton ? 'wrap' : 'nowrap'}
-          style={{ maxWidth: !disableListButton ? '225px' : '' }}
-          ref={warningRef}
-        >
-          <HazardIcon />
-          <Box marginLeft="4" marginRight="8">
-            {warningMessage}
-          </Box>
-          {disableListButton ? (
-            <Box paddingTop="6">
-              <XMarkIcon fill={themeVars.colors.textSecondary} height="20" width="20" />
+    <>
+      <Box position="relative" width="full">
+        {!showWarningOverride && showWarning && warningMessage.length > 0 && (
+          <Row
+            className={`${bodySmall} ${styles.warningTooltip}`}
+            transition="250"
+            onClick={() => setShowWarning(false)}
+            color="textSecondary"
+            zIndex="3"
+            borderRadius="4"
+            backgroundColor="backgroundSurface"
+            height={!disableListButton ? '64' : '36'}
+            maxWidth="276"
+            position="absolute"
+            left="24"
+            bottom="52"
+            flexWrap={!disableListButton ? 'wrap' : 'nowrap'}
+            style={{ maxWidth: !disableListButton ? '225px' : '' }}
+            ref={warningRef}
+          >
+            <HazardIcon />
+            <Box marginLeft="4" marginRight="8">
+              {warningMessage}
             </Box>
-          ) : (
-            <Row
-              marginLeft="72"
-              cursor="pointer"
-              color="accentAction"
-              onClick={() => {
-                setShowWarning(false)
-                setCanContinue(true)
-                onClick()
-              }}
-            >
-              Continue
-              <ArrowRightIcon height="20" width="20" />
-            </Row>
-          )}
-        </Row>
-      )}
-      <Box
-        as="button"
-        border="none"
-        backgroundColor="accentAction"
-        cursor={
-          [ListingStatus.APPROVED, ListingStatus.PENDING, ListingStatus.SIGNING].includes(listingStatus) ||
-          disableListButton
-            ? 'default'
-            : 'pointer'
-        }
-        color="explicitWhite"
-        className={styles.button}
-        onClick={() => listingStatus !== ListingStatus.APPROVED && warningWrappedClick()}
-        type="button"
-        style={{
-          opacity:
-            ![ListingStatus.DEFINED, ListingStatus.FAILED, ListingStatus.CONTINUE].includes(listingStatus) ||
-            disableListButton
-              ? 0.3
-              : 1,
-        }}
-      >
-        {listingStatus === ListingStatus.SIGNING || listingStatus === ListingStatus.PENDING ? (
-          <Row gap="8">
-            <LoadingIcon stroke="backgroundSurface" height="20" width="20" />
-            {listingStatus === ListingStatus.PENDING ? 'Pending' : 'Proceed in wallet'}
+            {disableListButton ? (
+              <Box paddingTop="6">
+                <XMarkIcon fill={themeVars.colors.textSecondary} height="20" width="20" />
+              </Box>
+            ) : (
+              <Row
+                marginLeft="72"
+                cursor="pointer"
+                color="accentAction"
+                onClick={() => {
+                  setShowWarning(false)
+                  setCanContinue(true)
+                  onClick()
+                }}
+              >
+                Continue
+                <ArrowRightIcon height="20" width="20" />
+              </Row>
+            )}
           </Row>
-        ) : listingStatus === ListingStatus.APPROVED ? (
-          'Complete!'
-        ) : listingStatus === ListingStatus.PAUSED ? (
-          'Paused'
-        ) : listingStatus === ListingStatus.FAILED ? (
-          'Try again'
-        ) : listingStatus === ListingStatus.CONTINUE ? (
-          'Continue'
-        ) : (
-          buttonText
         )}
+        <Box
+          as="button"
+          border="none"
+          backgroundColor={showResolveIssues ? 'accentFailure' : 'accentAction'}
+          cursor={
+            [ListingStatus.APPROVED, ListingStatus.PENDING, ListingStatus.SIGNING].includes(listingStatus) ||
+            disableListButton
+              ? 'default'
+              : 'pointer'
+          }
+          className={styles.button}
+          onClick={() => listingStatus !== ListingStatus.APPROVED && warningWrappedClick()}
+          type="button"
+          style={{
+            color: showResolveIssues ? theme.accentTextDarkPrimary : theme.white,
+            opacity:
+              ![ListingStatus.DEFINED, ListingStatus.FAILED, ListingStatus.CONTINUE].includes(listingStatus) ||
+              (disableListButton && !showResolveIssues)
+                ? 0.3
+                : 1,
+          }}
+        >
+          {listingStatus === ListingStatus.SIGNING || listingStatus === ListingStatus.PENDING ? (
+            <Row gap="8">
+              <LoadingIcon stroke="backgroundSurface" height="20" width="20" />
+              {listingStatus === ListingStatus.PENDING ? 'Pending' : 'Proceed in wallet'}
+            </Row>
+          ) : listingStatus === ListingStatus.APPROVED ? (
+            'Complete!'
+          ) : listingStatus === ListingStatus.PAUSED ? (
+            'Paused'
+          ) : listingStatus === ListingStatus.FAILED ? (
+            'Try again'
+          ) : listingStatus === ListingStatus.CONTINUE ? (
+            'Continue'
+          ) : showResolveIssues ? (
+            <Plural value={issues !== 1 ? 2 : 1} _1="Resolve issue" other={t`Resolve ${issues} issues`} />
+          ) : (
+            buttonText
+          )}
+        </Box>
       </Box>
-    </Box>
+      {showWarning && (
+        <BelowFloorWarningModal
+          listingsBelowFloor={listingsBelowFloor}
+          closeModal={() => setShowWarning(false)}
+          startListing={onClick}
+        />
+      )}
+    </>
   )
 }

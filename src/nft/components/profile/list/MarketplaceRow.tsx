@@ -22,7 +22,7 @@ const PastPriceInfo = styled(Column)`
   display: none;
   flex: 1;
 
-  @media screen and (min-width: ${BREAKPOINTS.xxl}px) {
+  @media screen and (min-width: ${BREAKPOINTS.xl}px) {
     display: flex;
   }
 `

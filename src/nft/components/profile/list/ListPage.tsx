@@ -314,6 +314,7 @@ export const ListPage = () => {
                 <ListingButton
                   onClick={handleV2Click}
                   buttonText={anyListingsMissingPrice && !isMobile ? t`Set prices to continue` : t`Start listing`}
+                  showWarningOverride={true}
                 />
               </ListingButtonWrapper>
             </ProceedsAndButtonWrapper>
