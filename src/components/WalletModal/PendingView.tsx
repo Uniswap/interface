@@ -93,7 +93,7 @@ export default function PendingView({
                   tryActivation(connector)
                 }}
               >
-                <Trans>Try Again</Trans>
+                <Trans>Try again</Trans>
               </ButtonPrimary>
               <ButtonEmpty width="fit-content" padding="0" marginTop={20}>
                 <ThemedText.Link onClick={openOptions}>
