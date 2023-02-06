@@ -3,7 +3,7 @@ import {
   GOVERNANCE_ALPHA_V1_ADDRESSES,
   GOVERNANCE_BRAVO_ADDRESSES,
   TIMELOCK_ADDRESS,
-  UNI_ADDRESS,
+  UNI_ADDRESS
 } from './addresses'
 import { SupportedChainId } from './chains'
 
@@ -20,7 +20,7 @@ export const COMMON_CONTRACT_NAMES: Record<number, { [address: string]: string }
   },
 }
 
-export const DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS = 13
+export const DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS = 12
 
 // Block time here is slightly higher (~1s) than average in order to avoid ongoing proposals past the displayed time
 export const AVERAGE_BLOCK_TIME_IN_SECS: { [chainId: number]: number } = {
