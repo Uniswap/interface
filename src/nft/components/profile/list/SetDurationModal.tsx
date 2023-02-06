@@ -69,6 +69,7 @@ const ErrorMessage = styled(Row)`
   gap: 4px;
   position: absolute;
   top: 44px;
+  white-space: nowrap;
 `
 
 const WarningIcon = styled(AlertTriangle)`
