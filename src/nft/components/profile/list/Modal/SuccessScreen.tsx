@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
+import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -15,7 +16,7 @@ import { formatDollar, priceToPreciseFloat } from 'utils/formatNumbers'
 import { TitleRow } from '../shared'
 
 const SuccessImage = styled.img<{ numImages: number }>`
-  width: calc(${({ numImages }) => (numImages > 1 ? (numImages > 2 ? '33%' : '50%') : '100%')} - 16px);
+  width: calc(${({ numImages }) => (numImages > 1 ? (numImages > 2 ? '33%' : '50%') : '100%')} - 12px);
   border-radius: 12px;
 `
 
@@ -25,6 +26,7 @@ const SuccessImageWrapper = styled(Row)`
   justify-content: center;
   overflow-y: scroll;
   margin-bottom: 16px;
+  ${ScrollBarStyles}
 `
 
 const ProceedsColumn = styled(Column)`
