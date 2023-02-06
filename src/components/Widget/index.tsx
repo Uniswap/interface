@@ -37,6 +37,7 @@ import { useSyncWidgetSettings } from './settings'
 import { DARK_THEME, LIGHT_THEME } from './theme'
 import { useSyncWidgetTransactions } from './transactions'
 
+// eslint-disable-next-line import/no-unused-modules
 export const DEFAULT_WIDGET_WIDTH = 360
 
 const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
