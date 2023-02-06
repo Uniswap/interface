@@ -47,7 +47,7 @@ const WarningRow = styled(Row)`
   gap: 4px;
 `
 
-const WarningMessage = styled(Row)<{ color: string }>`
+const WarningMessage = styled(Row)<{ $color: string }>`
   top: 52px;
   width: max-content;
   position: absolute;
@@ -55,7 +55,7 @@ const WarningMessage = styled(Row)<{ color: string }>`
   font-weight: 600;
   font-size: 10px;
   line-height: 12px;
-  color: ${({ color }) => color};
+  color: ${({ $color }) => $color};
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     right: unset;
@@ -176,7 +176,7 @@ export const PriceTextInput = ({
           </GlobalPriceIcon>
         )}
       </InputWrapper>
-      <WarningMessage color={warningColor}>
+      <WarningMessage $color={warningColor}>
         {warning
           ? warning.message
           : warningType !== WarningType.NONE && (
