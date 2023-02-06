@@ -1,7 +1,8 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
+import Loader from 'components/Loader'
 import Row from 'components/Row'
-import { LoadingIcon, VerifiedIcon } from 'nft/components/icons'
+import { VerifiedIcon } from 'nft/components/icons'
 import { AssetRow, CollectionRow, ListingStatus } from 'nft/types'
 import { useEffect, useRef } from 'react'
 import { Check, XOctagon } from 'react-feather'
@@ -142,7 +143,7 @@ export const ContentRow = ({
         {isCollectionApprovalSection && (row as CollectionRow).isVerified && <StyledVerifiedIcon />}
         <IconWrapper>
           {row.status === ListingStatus.DEFINED || row.status === ListingStatus.PENDING ? (
-            <LoadingIcon
+            <Loader
               height="14px"
               width="14px"
               stroke={row.status === ListingStatus.PENDING ? theme.accentAction : theme.textTertiary}
