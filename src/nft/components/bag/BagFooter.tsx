@@ -37,12 +37,6 @@ import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { warningSeverity } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
 
-enum PriceImpactWarnings {
-  NONE,
-  LOW,
-  SEVERE,
-}
-
 const FooterContainer = styled.div`
   padding: 0px 12px;
 `
