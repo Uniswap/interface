@@ -205,7 +205,7 @@ const InputCurrencyValue = ({
 
   return (
     <ThemedText.BodyPrimary color="textTertiary" lineHeight="20px" fontWeight="500">
-      Fetching price...
+      <Trans>Fetching price...</Trans>
     </ThemedText.BodyPrimary>
   )
 }
