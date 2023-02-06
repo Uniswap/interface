@@ -14,10 +14,6 @@ import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import {
-  useLowPriorityPreloadedQueries,
-  usePreloadedHomeScreenQueries,
-} from 'src/app/navigation/hooks'
-import {
   SwapTabBarButton,
   TabBarButton,
   TAB_NAVIGATOR_HEIGHT_SM,
@@ -37,6 +33,9 @@ import WalletIconFilled from 'src/assets/icons/wallet-filled.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box } from 'src/components/layout'
+import { TokenDetailsPreloaders } from 'src/data/preload/TokenDetailsPreloader'
+import { useLowPriorityPreloadedQueries } from 'src/data/preload/useLowPriorityPreloadedQueries'
+import { usePreloadedHomeScreenQueries } from 'src/data/preload/usePreloadedHomeScreenQueries'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { useHighestBalanceNativeCurrencyId } from 'src/features/dataApi/balances'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -153,69 +152,72 @@ function TabNavigator(): JSX.Element {
   const activeAccount = useAppSelector(selectActiveAccount)
 
   return (
-    <Tab.Navigator
-      sceneContainerStyle={{ paddingBottom: TAB_NAVIGATOR_HEIGHT }}
-      screenOptions={{
-        tabBarActiveTintColor: theme.colors.textPrimary,
-        tabBarInactiveTintColor: theme.colors.textTertiary,
-        tabBarShowLabel: false,
-        headerShown: false,
-        tabBarStyle: {
-          alignItems: 'center',
-          paddingBottom: 0,
-          backgroundColor: 'textPrimary',
-          borderTopWidth: 1,
-          display: 'flex',
-          borderTopColor: theme.colors.background3,
-          height: TAB_NAVIGATOR_HEIGHT,
-          justifyContent: 'center',
-        },
-      }}
-      tabBar={renderTabBar}>
-      <Tab.Screen
-        component={HomeStackNavigator}
-        listeners={({ navigation }): { tabPress: () => void; tabLongPress: () => void } => ({
-          tabPress: (): void => invokeImpact[ImpactFeedbackStyle.Medium](),
-          tabLongPress: (): void => {
-            const currentIndex = navigation.getState().index
-            const homeTabIndex = navigation
-              .getState()
-              .routes.findIndex((r: NavigationRoute) => r.name === Tabs.Home)
-
-            if (currentIndex === homeTabIndex) {
-              impactAsync(ImpactFeedbackStyle.Heavy)
-              dispatch(openModal({ name: ModalName.AccountSwitcher }))
-            }
-          },
-        })}
-        name={Tabs.Home}
-        options={{
-          tabBarLabel: t('Home'),
-          tabBarIcon: renderTabBarWalletIcon,
-        }}
-      />
-      <Tab.Screen
-        component={NullComponent}
-        name={Tabs.SwapButton}
-        options={{
-          tabBarButton: activeAccount
-            ? renderSwapTabBarButtonWithInputCurrency(activeAccount.address)
-            : renderSwapTabBarButton,
-        }}
-      />
-      <Tab.Screen
-        component={ExploreStackNavigator}
-        listeners={{
-          tabPress: (): void => invokeImpact[ImpactFeedbackStyle.Medium](),
-        }}
-        name={Tabs.Explore}
-        options={{
-          tabBarLabel: t('Explore'),
+    <>
+      <Tab.Navigator
+        sceneContainerStyle={{ paddingBottom: TAB_NAVIGATOR_HEIGHT }}
+        screenOptions={{
+          tabBarActiveTintColor: theme.colors.textPrimary,
+          tabBarInactiveTintColor: theme.colors.textTertiary,
           tabBarShowLabel: false,
-          tabBarIcon: renderTabBarSearchIcon,
+          headerShown: false,
+          tabBarStyle: {
+            alignItems: 'center',
+            paddingBottom: 0,
+            backgroundColor: 'textPrimary',
+            borderTopWidth: 1,
+            display: 'flex',
+            borderTopColor: theme.colors.background3,
+            height: TAB_NAVIGATOR_HEIGHT,
+            justifyContent: 'center',
+          },
         }}
-      />
-    </Tab.Navigator>
+        tabBar={renderTabBar}>
+        <Tab.Screen
+          component={HomeStackNavigator}
+          listeners={({ navigation }): { tabPress: () => void; tabLongPress: () => void } => ({
+            tabPress: (): void => invokeImpact[ImpactFeedbackStyle.Medium](),
+            tabLongPress: (): void => {
+              const currentIndex = navigation.getState().index
+              const homeTabIndex = navigation
+                .getState()
+                .routes.findIndex((r: NavigationRoute) => r.name === Tabs.Home)
+
+              if (currentIndex === homeTabIndex) {
+                impactAsync(ImpactFeedbackStyle.Heavy)
+                dispatch(openModal({ name: ModalName.AccountSwitcher }))
+              }
+            },
+          })}
+          name={Tabs.Home}
+          options={{
+            tabBarLabel: t('Home'),
+            tabBarIcon: renderTabBarWalletIcon,
+          }}
+        />
+        <Tab.Screen
+          component={NullComponent}
+          name={Tabs.SwapButton}
+          options={{
+            tabBarButton: activeAccount
+              ? renderSwapTabBarButtonWithInputCurrency(activeAccount.address)
+              : renderSwapTabBarButton,
+          }}
+        />
+        <Tab.Screen
+          component={ExploreStackNavigator}
+          listeners={{
+            tabPress: (): void => invokeImpact[ImpactFeedbackStyle.Medium](),
+          }}
+          name={Tabs.Explore}
+          options={{
+            tabBarLabel: t('Explore'),
+            tabBarShowLabel: false,
+            tabBarIcon: renderTabBarSearchIcon,
+          }}
+        />
+      </Tab.Navigator>
+      <TokenDetailsPreloaders />
+    </>
   )
 }
 

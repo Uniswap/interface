@@ -828,7 +828,7 @@ export enum TransactionStatus {
 
 export type TokenPriceHistoryQueryVariables = Exact<{
   contract: ContractInput;
-  duration: HistoryDuration;
+  duration?: InputMaybe<HistoryDuration>;
 }>;
 
 
@@ -1016,7 +1016,7 @@ export const TopTokenPartsFragmentDoc = gql`
 }
     `;
 export const TokenPriceHistoryDocument = gql`
-    query TokenPriceHistory($contract: ContractInput!, $duration: HistoryDuration!) {
+    query TokenPriceHistory($contract: ContractInput!, $duration: HistoryDuration = DAY) {
   tokenProjects(contracts: [$contract]) {
     id
     name

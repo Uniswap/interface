@@ -106,13 +106,13 @@ export function TokenDetailsScreen({
   const isLoading = !data && isNonPollingRequestInFlight(networkStatus)
 
   // Preload token price graphs
-  const tokenPriceHistoryResponse = useTokenPriceHistory(_currencyId)
+  const { error: tokenPriceHistoryError } = useTokenPriceHistory(_currencyId)
 
   return (
     <TokenDetails
       _currencyId={_currencyId}
       data={data}
-      error={isError(networkStatus, !!data) || !!tokenPriceHistoryResponse.error}
+      error={isError(networkStatus, !!data) || !!tokenPriceHistoryError}
       loading={isLoading}
       retry={retry}
     />

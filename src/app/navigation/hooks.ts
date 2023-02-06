@@ -1,22 +1,8 @@
 import { NavigationContainerRefContext, NavigationContext } from '@react-navigation/core'
-import { useCallback, useContext, useEffect } from 'react'
-import { InteractionManager } from 'react-native'
-import { useAppSelector } from 'src/app/hooks'
+import { useCallback, useContext } from 'react'
 import { navigate as rootNavigate } from 'src/app/navigation/rootNavigation'
 import { useAppStackNavigation, useExploreStackNavigation } from 'src/app/navigation/types'
-import { baseCurrencyIds } from 'src/components/TokenSelector/hooks'
-import {
-  useExploreTokensTabLazyQuery,
-  usePortfolioBalanceLazyQuery,
-  usePortfolioBalancesLazyQuery,
-  useTokenProjectsLazyQuery,
-  useTopTokensLazyQuery,
-  useTransactionListLazyQuery,
-} from 'src/data/__generated__/types-and-hooks'
-import { currencyIdToContractInput } from 'src/features/dataApi/utils'
-import { getTokensOrderByValues } from 'src/features/explore/utils'
-import { useActiveAccountAddress } from 'src/features/wallet/hooks'
-import { selectTokensOrderBy } from 'src/features/wallet/selectors'
+import { useTransactionListLazyQuery } from 'src/data/__generated__/types-and-hooks'
 import { Screens } from 'src/screens/Screens'
 
 /**
@@ -97,54 +83,6 @@ export function useEagerExternalProfileRootNavigation(): {
   }, [])
 
   return { preload, navigate }
-}
-
-/** Preloaded home screen queries that reload on active account change */
-export function usePreloadedHomeScreenQueries(): void {
-  const [loadPortfolioBalance] = usePortfolioBalanceLazyQuery()
-  const [loadPortfolioBalances] = usePortfolioBalancesLazyQuery()
-  const [loadTransactionHistory] = useTransactionListLazyQuery()
-
-  const activeAccountAddress = useActiveAccountAddress()
-
-  useEffect(() => {
-    if (!activeAccountAddress) {
-      return
-    }
-
-    loadPortfolioBalance({ variables: { owner: activeAccountAddress } })
-    loadPortfolioBalances({ variables: { ownerAddress: activeAccountAddress } })
-    loadTransactionHistory({ variables: { address: activeAccountAddress } })
-  }, [activeAccountAddress, loadPortfolioBalance, loadPortfolioBalances, loadTransactionHistory])
-}
-
-/** Set of queries that should be preloaded, but can wait for idle time. */
-export function useLowPriorityPreloadedQueries(): void {
-  // Explore screen
-  const [loadExploreTokens] = useExploreTokensTabLazyQuery()
-  const orderBy = useAppSelector(selectTokensOrderBy)
-
-  useEffect(() => {
-    InteractionManager.runAfterInteractions(() => {
-      const { serverOrderBy } = getTokensOrderByValues(orderBy)
-      loadExploreTokens({ variables: { topTokensOrderBy: serverOrderBy } })
-    })
-    // only want to preload on app mount once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadExploreTokens])
-
-  // Token selector
-  const [loadTopTokens] = useTopTokensLazyQuery()
-  const [loadTokenProjects] = useTokenProjectsLazyQuery()
-
-  useEffect(() => {
-    const baseCurrencyContracts = baseCurrencyIds.map((id) => currencyIdToContractInput(id))
-
-    InteractionManager.runAfterInteractions(() => {
-      loadTokenProjects({ variables: { contracts: baseCurrencyContracts } })
-      loadTopTokens()
-    })
-  }, [loadTopTokens, loadTokenProjects])
 }
 
 /**
