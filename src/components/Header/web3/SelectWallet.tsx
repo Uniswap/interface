@@ -14,6 +14,7 @@ import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
 import { SUPPORTED_WALLETS } from 'constants/wallets'
 import { useActiveWeb3React, useWeb3React } from 'hooks'
 import useENSName from 'hooks/useENSName'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { useNetworkModalToggle, useWalletModalToggle } from 'state/application/hooks'
 import { isTransactionRecent, newTransactionsFirst, useAllTransactions } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/type'
@@ -100,6 +101,7 @@ function Web3StatusInner() {
   const { chainId, account, walletKey, isEVM } = useActiveWeb3React()
   const { error } = useWeb3React()
   const isDarkMode = useIsDarkMode()
+  const { mixpanelHandler } = useMixpanel()
 
   const { ENSName } = useENSName(isEVM ? account ?? undefined : undefined)
 
@@ -123,7 +125,10 @@ function Web3StatusInner() {
     return (
       <Web3StatusConnected
         id={TutorialIds.BUTTON_ADDRESS_WALLET}
-        onClick={toggleWalletModal}
+        onClick={() => {
+          toggleWalletModal()
+          mixpanelHandler(MIXPANEL_TYPE.WUI_WALLET_CLICK)
+        }}
         pending={hasPendingTransactions}
       >
         {hasPendingTransactions ? (

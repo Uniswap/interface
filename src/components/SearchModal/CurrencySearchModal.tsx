@@ -19,6 +19,7 @@ interface CurrencySearchModalProps {
   filterWrap?: boolean
   title?: string
   tooltip?: ReactNode
+  onCurrencyImport?: (token: Token) => void
 }
 
 enum CurrencyModalView {
@@ -36,6 +37,7 @@ export default function CurrencySearchModal({
   filterWrap,
   title,
   tooltip,
+  onCurrencyImport,
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.search)
   const lastOpen = useLast(isOpen)
@@ -65,10 +67,14 @@ export default function CurrencySearchModal({
 
   const isMobileHorizontal = Math.abs(window.orientation) === 90 && isMobile
 
-  const onImportToken = useCallback((token: Token) => {
-    setImportToken(token)
-    setModalView(CurrencyModalView.importToken)
-  }, [])
+  const onImportToken = useCallback(
+    (token: Token) => {
+      setImportToken(token)
+      setModalView(CurrencyModalView.importToken)
+      onCurrencyImport?.(token)
+    },
+    [onCurrencyImport],
+  )
 
   return (
     <Modal

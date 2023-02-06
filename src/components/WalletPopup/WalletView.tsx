@@ -14,6 +14,7 @@ import MyAssets from 'components/WalletPopup/MyAssets'
 import PinButton from 'components/WalletPopup/PinButton'
 import SendToken from 'components/WalletPopup/SendToken'
 import { APP_PATHS } from 'constants/index'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { useTokensHasBalance } from 'state/wallet/hooks'
 
@@ -95,6 +96,7 @@ let storedView = View.ASSETS
 export default function WalletView({ onDismiss, onPin, isPinned, blurBackground = false, onUnpin }: Props) {
   const [view, setView] = useState<string>(storedView)
   const theme = useTheme()
+  const { mixpanelHandler } = useMixpanel()
   const navigate = useNavigate()
   const nodeRef = useRef<HTMLDivElement>(null)
   const [isMinimal, setMinimal] = useState(false)
@@ -106,7 +108,13 @@ export default function WalletView({ onDismiss, onPin, isPinned, blurBackground 
       <TabItem active={view === View.ASSETS} onClick={() => setView(View.ASSETS)}>
         <StopCircle size={16} /> <Trans>Assets</Trans>
       </TabItem>
-      <TabItem active={view === View.TRANSACTIONS} onClick={() => setView(View.TRANSACTIONS)}>
+      <TabItem
+        active={view === View.TRANSACTIONS}
+        onClick={() => {
+          mixpanelHandler(MIXPANEL_TYPE.WUI_TRANSACTION_CLICK)
+          setView(View.TRANSACTIONS)
+        }}
+      >
         <FileText size={16} /> <Trans>Transactions</Trans>
       </TabItem>
     </Row>
@@ -116,9 +124,16 @@ export default function WalletView({ onDismiss, onPin, isPinned, blurBackground 
     const handleClickBuy = () => {
       navigate(`${APP_PATHS.BUY_CRYPTO}?step=3`)
       onDismiss()
+      mixpanelHandler(MIXPANEL_TYPE.WUI_BUTTON_CLICK, { button_name: 'Buy' })
     }
-    const handleClickReceive = () => setView(View.RECEIVE_TOKEN)
-    const handleClickSend = () => setView(View.SEND_TOKEN)
+    const handleClickReceive = () => {
+      setView(View.RECEIVE_TOKEN)
+      mixpanelHandler(MIXPANEL_TYPE.WUI_BUTTON_CLICK, { button_name: 'Receive' })
+    }
+    const handleClickSend = () => {
+      setView(View.SEND_TOKEN)
+      mixpanelHandler(MIXPANEL_TYPE.WUI_BUTTON_CLICK, { button_name: 'Send' })
+    }
 
     return (
       <AccountInfo

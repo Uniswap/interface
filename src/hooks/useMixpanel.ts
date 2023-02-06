@@ -163,6 +163,15 @@ export enum MIXPANEL_TYPE {
   LO_CANCEL_ORDER_SUBMITTED,
   LO_CLICK_REVIEW_PLACE_ORDER,
   LO_CLICK_EDIT_ORDER,
+
+  // Wallet UI
+  WUI_WALLET_CLICK,
+  WUI_PINNED_WALLET,
+  WUI_UNPINNED_WALLET,
+  WUI_BUTTON_CLICK,
+  WUI_IMPORT_TOKEN_CLICK,
+  WUI_TRANSACTION_CLICK,
+  WUI_IMPORT_TOKEN_BUTTON_CLICK,
 }
 
 export const NEED_CHECK_SUBGRAPH_TRANSACTION_TYPES: readonly TRANSACTION_TYPE[] = [
@@ -824,6 +833,34 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
         }
         case MIXPANEL_TYPE.LO_CLICK_EDIT_ORDER: {
           mixpanel.track('Limit Order -  Update Order Click', payload)
+          break
+        }
+        case MIXPANEL_TYPE.WUI_WALLET_CLICK: {
+          mixpanel.track('Wallet UI - Wallet Click')
+          break
+        }
+        case MIXPANEL_TYPE.WUI_PINNED_WALLET: {
+          mixpanel.track('Wallet UI - Pinned Wallet')
+          break
+        }
+        case MIXPANEL_TYPE.WUI_UNPINNED_WALLET: {
+          mixpanel.track('Wallet UI - Unpinned Wallet')
+          break
+        }
+        case MIXPANEL_TYPE.WUI_BUTTON_CLICK: {
+          mixpanel.track('Wallet UI - Button click', payload)
+          break
+        }
+        case MIXPANEL_TYPE.WUI_IMPORT_TOKEN_CLICK: {
+          mixpanel.track('Wallet UI - Import Token click')
+          break
+        }
+        case MIXPANEL_TYPE.WUI_TRANSACTION_CLICK: {
+          mixpanel.track('Wallet UI - Transaction click')
+          break
+        }
+        case MIXPANEL_TYPE.WUI_IMPORT_TOKEN_BUTTON_CLICK: {
+          mixpanel.track('Wallet UI - Import Token - Import button click', payload)
           break
         }
       }

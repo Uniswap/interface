@@ -264,7 +264,7 @@ function AboutKyberSwap() {
         </Text>
 
         <ButtonEmpty padding="0" width="fit-content">
-          <ExternalLink href="https://docs.kyberswap.com">
+          <ExternalLink href="https://docs.kyberswap.com/Classic/introduction">
             <Text color={theme.primary} fontSize="14px" fontWeight={600}>
               <Trans>Learn More</Trans>↗
             </Text>
@@ -324,7 +324,7 @@ function AboutKyberSwap() {
       </Text>
 
       <ButtonEmpty padding="0" width="fit-content">
-        <ExternalLink href="https://docs.kyberswap.com/dynamic-fee">
+        <ExternalLink href="https://docs.kyberswap.com/Classic/overview/dynamic-fee">
           <Text color={theme.primary} fontSize="14px" fontWeight={600} marginTop="24px">
             <Trans>Learn More</Trans>↗
           </Text>
@@ -355,7 +355,7 @@ function AboutKyberSwap() {
       </Text>
 
       <ButtonEmpty padding="0" width="fit-content">
-        <ExternalLink href="https://docs.kyberswap.com/guides/yield-farming">
+        <ExternalLink href="https://docs.kyberswap.com/Classic/introduction">
           <Text color={theme.primary} fontSize="14px" fontWeight={600} marginTop="24px">
             <Trans>Learn More</Trans>↗
           </Text>
