@@ -25,7 +25,7 @@ const StyledMenuIcon = styled(MenuIcon)`
   width: 20px;
 
   path {
-    fill: ${({ theme }) => theme.text2};
+    stroke: ${({ theme }) => theme.text1};
   }
 `
 
@@ -47,7 +47,7 @@ const StyledMenuButton = styled.button`
     border: 2px solid ${({ theme }) => theme.bg3};
 
     path {
-      fill: ${({ theme }) => theme.text1};
+      stroke: ${({ theme }) => theme.text1};
     }
   }
 

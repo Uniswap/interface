@@ -1,0 +1,40 @@
+import { Skeleton, SkeletonText } from '@chakra-ui/react'
+import { useActiveWeb3React } from 'hooks/web3'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import ReactDOM from 'react-dom'
+import { MousePointer } from 'react-feather'
+import { Redirect, RouteComponentProps } from 'react-router-dom'
+import { useAppDispatch } from 'state/hooks'
+import { useDarkModeManager } from 'state/user/hooks'
+import styled from 'styled-components/macro'
+
+const StyledIframe = styled.iframe`
+  border: none;
+  min-width: 100%;
+  border-radius: 24px;
+  min-height: 92vh;
+  loading: lazy;
+`
+
+const StyledIframeComponent = styled.div`
+  flex-grow: 1;
+  width: 100%;
+`
+
+export function CandleSticks(props: { networkName: string; poolAddress: string; children?: React.ReactNode }) {
+  const [darkMode] = useDarkModeManager()
+
+  return (
+    <StyledIframeComponent>
+      <Skeleton height="100%">Loading ... </Skeleton>
+      <StyledIframe
+        loading="lazy"
+        src={`https://dexscreener.com/${props.networkName}/${props.poolAddress}?embed=1&theme=${
+          darkMode ? 'dark' : 'light'
+        }&info=0`}
+      />
+    </StyledIframeComponent>
+  )
+}
+
+export const MemoizedCandleSticks = React.memo(CandleSticks)
