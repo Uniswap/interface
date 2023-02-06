@@ -50,6 +50,12 @@ export type EventProperties = {
     wallet_type?: ImportType
     accounts_imported_count: number
   } & BaseEventProperty
+  [EventName.PerformanceGraphql]: {
+    dataSize: number
+    duration: number
+    operationName: string
+    operationType?: string
+  }
   [EventName.WalletAdded]: {
     wallet_type?: ImportType
     accounts_imported_count: number

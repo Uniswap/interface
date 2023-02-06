@@ -11,7 +11,7 @@ import { MMKV } from 'react-native-mmkv'
 import { config } from 'src/config'
 import { uniswapUrls } from 'src/constants/urls'
 import { initAndPersistCache } from 'src/data/cache'
-import { setupErrorLink } from 'src/data/utils'
+import { setupErrorLink, setupPerformanceLink } from 'src/data/utils'
 import { isNonJestDev } from 'src/utils/environment'
 
 const mmkv = new MMKV()
@@ -41,7 +41,7 @@ export const usePersistedApolloClient = (): ApolloClient<NormalizedCacheObject> 
 
       setClient(
         new ApolloClient({
-          link: from([setupErrorLink(), httpLink]),
+          link: from([setupErrorLink(), setupPerformanceLink(), httpLink]),
           cache,
           defaultOptions: {
             watchQuery: {

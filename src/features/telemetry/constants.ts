@@ -19,6 +19,7 @@ export enum EventName {
   MarkMeasure = 'mark-measure',
   Moonpay = 'Moonpay', // Moonpay-specific events
   OnboardingCompleted = 'onboarding-completed',
+  PerformanceGraphql = 'performance-graphql',
   SwapQuoteReceived = 'Swap Quote Received',
   SwapSubmitButtonPressed = 'Swap Submit Button Pressed',
   SwapSubmitted = 'Swap Submitted to Provider',
