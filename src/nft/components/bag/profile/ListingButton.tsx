@@ -13,6 +13,7 @@ import { Listing, ListingStatus, WalletAsset } from 'nft/types'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTheme } from 'styled-components/macro'
+import shallow from 'zustand/shallow'
 
 import * as styles from './ListingModal.css'
 import { getListings } from './utils'
@@ -24,15 +25,38 @@ interface ListingButtonProps {
 }
 
 export const ListingButton = ({ onClick, buttonText, showWarningOverride = false }: ListingButtonProps) => {
-  const sellAssets = useSellAsset((state) => state.sellAssets)
-  const addMarketplaceWarning = useSellAsset((state) => state.addMarketplaceWarning)
-  const removeAllMarketplaceWarnings = useSellAsset((state) => state.removeAllMarketplaceWarnings)
-  const showResolveIssues = useSellAsset((state) => state.showResolveIssues)
-  const toggleShowResolveIssues = useSellAsset((state) => state.toggleShowResolveIssues)
-  const listingStatus = useNFTList((state) => state.listingStatus)
-  const setListingStatus = useNFTList((state) => state.setListingStatus)
-  const setListings = useNFTList((state) => state.setListings)
-  const setCollectionsRequiringApproval = useNFTList((state) => state.setCollectionsRequiringApproval)
+  const {
+    addMarketplaceWarning,
+    sellAssets,
+    removeAllMarketplaceWarnings,
+    showResolveIssues,
+    toggleShowResolveIssues,
+  } = useSellAsset(
+    ({
+      addMarketplaceWarning,
+      sellAssets,
+      removeAllMarketplaceWarnings,
+      showResolveIssues,
+      toggleShowResolveIssues,
+    }) => ({
+      addMarketplaceWarning,
+      sellAssets,
+      removeAllMarketplaceWarnings,
+      showResolveIssues,
+      toggleShowResolveIssues,
+    }),
+    shallow
+  )
+  const { listingStatus, setListingStatus, setListings, setCollectionsRequiringApproval } = useNFTList(
+    ({ listingStatus, setListingStatus, setListings, setCollectionsRequiringApproval }) => ({
+      listingStatus,
+      setListingStatus,
+      setListings,
+      setCollectionsRequiringApproval,
+    }),
+    shallow
+  )
+
   const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
   const [showWarning, setShowWarning] = useState(false)
   const [canContinue, setCanContinue] = useState(false)
