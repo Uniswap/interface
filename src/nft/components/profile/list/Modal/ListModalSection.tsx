@@ -3,20 +3,17 @@ import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
-import {
-  ChevronUpIcon,
-  ListingModalWindowActive,
-  ListingModalWindowClosed,
-  LoadingIcon,
-  VerifiedIcon,
-} from 'nft/components/icons'
-import { AssetRow, CollectionRow, ListingStatus } from 'nft/types'
+import { ChevronUpIcon, ListingModalWindowActive, ListingModalWindowClosed } from 'nft/components/icons'
+import { useSellAsset } from 'nft/hooks'
+import { AssetRow, CollectionRow, ListingRow, ListingStatus } from 'nft/types'
 import { useMemo } from 'react'
-import { Check, Info } from 'react-feather'
+import { Info } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { colors } from 'theme/colors'
 import { TRANSITION_DURATIONS } from 'theme/styles'
+
+import { ContentRow } from './ContentRow'
 
 const SectionHeader = styled(Row)`
   justify-content: space-between;
@@ -56,62 +53,7 @@ const StyledInfoIcon = styled(Info)`
 
 const ContentRowContainer = styled(Column)`
   gap: 8px;
-`
-
-const ContentRow = styled(Row)<{ active: boolean }>`
-  padding: 16px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  border-radius: 12px;
-  opacity: ${({ active }) => (active ? '1' : '0.6')};
-`
-
-const CollectionIcon = styled.img`
-  border-radius: 100px;
-  height: 24px;
-  width: 24px;
-  z-index: 1;
-`
-
-const AssetIcon = styled.img`
-  border-radius: 4px;
-  height: 24px;
-  width: 24px;
-  z-index: 1;
-`
-
-const MarketplaceIcon = styled.img`
-  border-radius: 4px;
-  height: 24px;
-  width: 24px;
-  margin-left: -4px;
-  margin-right: 12px;
-`
-
-const ContentName = styled(ThemedText.SubHeaderSmall)`
-  color: ${({ theme }) => theme.textPrimary};
-  line-height: 20px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  max-width: 50%;
-`
-
-const ProceedText = styled.span`
-  font-weight: 600;
-  font-size: 12px;
-  line-height: 16px;
-  color: ${({ theme }) => theme.textSecondary};
-`
-
-const StyledVerifiedIcon = styled(VerifiedIcon)`
-  height: 16px;
-  width: 16px;
-  margin-left: 4px;
-`
-
-const IconWrapper = styled.div`
-  margin-left: auto;
-  margin-right: 0px;
+  scroll-behavior: smooth;
 `
 
 export const enum Section {
@@ -128,8 +70,24 @@ interface ListModalSectionProps {
 
 export const ListModalSection = ({ sectionType, active, content, toggleSection }: ListModalSectionProps) => {
   const theme = useTheme()
+  const sellAssets = useSellAsset((state) => state.sellAssets)
+  const removeAssetMarketplace = useSellAsset((state) => state.removeAssetMarketplace)
   const allContentApproved = useMemo(() => !content.some((row) => row.status !== ListingStatus.APPROVED), [content])
   const isCollectionApprovalSection = sectionType === Section.APPROVE
+  const removeRow = (row: AssetRow) => {
+    // collections
+    if (isCollectionApprovalSection) {
+      const collectionRow = row as CollectionRow
+      for (const asset of sellAssets)
+        if (asset.asset_contract.address === collectionRow.collectionAddress)
+          removeAssetMarketplace(asset, collectionRow.marketplace)
+    }
+    // listings
+    else {
+      const listingRow = row as ListingRow
+      removeAssetMarketplace(listingRow.asset, listingRow.marketplace)
+    }
+  }
   return (
     <Column>
       <SectionHeader>
@@ -174,40 +132,14 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
             </Row>
           )}
           <ContentRowContainer>
-            {content.map((row) => {
-              return (
-                <ContentRow
-                  key={row.name}
-                  active={row.status === ListingStatus.SIGNING || row.status === ListingStatus.APPROVED}
-                >
-                  {isCollectionApprovalSection ? (
-                    <CollectionIcon src={row.images[0]} />
-                  ) : (
-                    <AssetIcon src={row.images[0]} />
-                  )}
-                  <MarketplaceIcon src={row.images[1]} />
-                  <ContentName>{row.name}</ContentName>
-                  {isCollectionApprovalSection && (row as CollectionRow).isVerified && <StyledVerifiedIcon />}
-                  <IconWrapper>
-                    {row.status === ListingStatus.DEFINED || row.status === ListingStatus.PENDING ? (
-                      <LoadingIcon
-                        height="14px"
-                        width="14px"
-                        stroke={row.status === ListingStatus.PENDING ? theme.accentAction : theme.textTertiary}
-                      />
-                    ) : row.status === ListingStatus.SIGNING ? (
-                      <ProceedText>
-                        <Trans>Proceed in wallet</Trans>
-                      </ProceedText>
-                    ) : (
-                      row.status === ListingStatus.APPROVED && (
-                        <Check height="20" width="20" stroke={theme.accentSuccess} />
-                      )
-                    )}
-                  </IconWrapper>
-                </ContentRow>
-              )
-            })}
+            {content.map((row: AssetRow) => (
+              <ContentRow
+                row={row}
+                key={row.name}
+                removeRow={removeRow}
+                isCollectionApprovalSection={isCollectionApprovalSection}
+              />
+            ))}
           </ContentRowContainer>
         </SectionBody>
       )}

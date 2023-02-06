@@ -47,6 +47,8 @@ export const useNFTList = create<NFTListState>()(
                 return ListingStatus.APPROVED
               case ListingStatus.FAILED:
                 return listing.status === ListingStatus.SIGNING ? ListingStatus.SIGNING : ListingStatus.FAILED
+              case ListingStatus.REJECTED:
+                return listing.status === ListingStatus.SIGNING ? ListingStatus.SIGNING : ListingStatus.REJECTED
               default:
                 return listing.status
             }
