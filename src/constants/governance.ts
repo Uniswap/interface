@@ -3,7 +3,7 @@ import {
   GOVERNANCE_ALPHA_V1_ADDRESSES,
   GOVERNANCE_BRAVO_ADDRESSES,
   TIMELOCK_ADDRESS,
-  UNI_ADDRESS
+  UNI_ADDRESS,
 } from './addresses'
 import { SupportedChainId } from './chains'
 
