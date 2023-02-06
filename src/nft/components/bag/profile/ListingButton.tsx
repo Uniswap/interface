@@ -111,7 +111,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
             !listing.overrideFloorPrice
           )
             listingsBelowFloor.push([asset, listing])
-          else if (asset.floor_sell_order_price && listing.price > asset.floor_sell_order_price)
+          else if (asset.floor_sell_order_price && listing.price >= asset.floor_sell_order_price)
             listingsAboveSellOrderFloor.push([asset, listing])
         }
       }
