@@ -81,7 +81,6 @@ export const BelowFloorWarningModal = ({
 }) => {
   const theme = useTheme()
   const clickContinue: React.MouseEventHandler<HTMLElement> = (e) => {
-    console.log('click')
     e.preventDefault()
     e.stopPropagation()
     startListing()
