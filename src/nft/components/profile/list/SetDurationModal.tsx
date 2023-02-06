@@ -41,7 +41,7 @@ const DropdownPrompt = styled(Row)`
   color: ${({ theme }) => theme.textPrimary};
 
   &:hover {
-    opacity: 0.6;
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
 `
 
@@ -95,7 +95,7 @@ export const SetDurationModal = () => {
   const [errorState, setErrorState] = useState(ErrorState.valid)
   const setGlobalExpiration = useSellAsset((state) => state.setGlobalExpiration)
   const [showDropdown, toggleShowDropdown] = useReducer((s) => !s, false)
-  const durationDropdownRef = useRef() as React.MutableRefObject<HTMLDivElement>
+  const durationDropdownRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(durationDropdownRef, showDropdown ? toggleShowDropdown : undefined)
 
   const setCustomExpiration = (event: React.ChangeEvent<HTMLInputElement>) => {

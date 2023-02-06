@@ -82,7 +82,7 @@ const HeaderButtonWrap = styled(Row)`
   background: ${({ theme }) => theme.backgroundInteractive};
   cursor: pointer;
   &:hover {
-    opacity: 0.6;
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
   @media screen and (min-width: ${SMALL_MEDIA_BREAKPOINT}) {
     width: 220px;

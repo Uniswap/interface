@@ -75,7 +75,7 @@ const DropdownPrompt = styled(Row)`
   color: ${({ theme }) => theme.textPrimary};
 
   &:hover {
-    opacity: 0.6;
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
 `
 
@@ -136,7 +136,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
   const [globalPriceMethod, setGlobalPriceMethod] = useState(SetPriceMethod.CUSTOM)
   const [globalPrice, setGlobalPrice] = useState<number>()
   const [showDropdown, toggleShowDropdown] = useReducer((s) => !s, false)
-  const dropdownRef = useRef() as React.MutableRefObject<HTMLDivElement>
+  const dropdownRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(dropdownRef, showDropdown ? toggleShowDropdown : undefined)
 
   const priceDropdownOptions: DropDownOption[] = useMemo(

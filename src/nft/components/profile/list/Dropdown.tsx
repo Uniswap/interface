@@ -5,11 +5,11 @@ import { Check } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-const DropdownWrapper = styled(Column)<{ width: number }>`
+const DropdownWrapper = styled(Column)<{ $width: number }>`
   gap: 4px;
   background: ${({ theme }) => theme.backgroundSurface};
   padding: 8px;
-  width: ${({ width }) => width}px;
+  width: ${({ $width }) => $width}px;
   border-radius: 12px;
   box-shadow: ${({ theme }) => theme.deepShadow};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
@@ -34,7 +34,7 @@ interface DropdownArgs {
 export const Dropdown = ({ dropDownOptions, width }: DropdownArgs) => {
   const theme = useTheme()
   return (
-    <DropdownWrapper width={width}>
+    <DropdownWrapper $width={width}>
       {dropDownOptions.map((option) => (
         <DropdownRow key={option.displayText} onClick={option.onClick}>
           <ThemedText.BodyPrimary lineHeight="24px">{option.displayText}</ThemedText.BodyPrimary>
