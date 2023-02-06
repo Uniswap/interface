@@ -153,29 +153,33 @@ const InputCurrencyValue = ({
   usingPayWithAnyToken,
   totalEthPrice,
   activeCurrency,
-  swapState,
+  tradeState,
   trade,
 }: {
   usingPayWithAnyToken: boolean
   totalEthPrice: BigNumber
   activeCurrency: Currency | undefined | null
-  swapState: TradeState
+  tradeState: TradeState
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
 }) => {
   if (!usingPayWithAnyToken) {
     return (
-      <ThemedText.HeadlineSmall>
+      <ThemedText.BodyPrimary lineHeight="20px" fontWeight="500">
         {formatWeiToDecimal(totalEthPrice.toString())}
         &nbsp;{activeCurrency?.symbol ?? 'ETH'}
-      </ThemedText.HeadlineSmall>
+      </ThemedText.BodyPrimary>
     )
   }
 
-  if (swapState === TradeState.VALID) {
+  if (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING) {
     return (
-      <ThemedText.HeadlineSmall color={swapState === TradeState.VALID ? 'textPrimary' : 'textTertiary'}>
+      <ThemedText.BodyPrimary
+        lineHeight="20px"
+        fontWeight="500"
+        color={tradeState === TradeState.VALID ? 'textPrimary' : 'textTertiary'}
+      >
         {ethNumberStandardFormatter(trade?.inputAmount.toExact())}
-      </ThemedText.HeadlineSmall>
+      </ThemedText.BodyPrimary>
     )
   }
 
@@ -240,7 +244,7 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
   const parsedOutputAmount = useMemo(() => {
     return tryParseCurrencyAmount(formatEther(totalEthPrice.toString()), defaultCurrency ?? undefined)
   }, [defaultCurrency, totalEthPrice])
-  const { state: swapState, trade, maximumAmountIn } = usePayWithAnyTokenSwap(inputCurrency, parsedOutputAmount)
+  const { state: tradeState, trade, maximumAmountIn } = usePayWithAnyTokenSwap(inputCurrency, parsedOutputAmount)
   const { allowance, isAllowancePending, isApprovalLoading, updateAllowance } = usePermit2Approval(
     trade?.inputAmount.currency.isToken ? (trade?.inputAmount as CurrencyAmount<Token>) : undefined,
     maximumAmountIn
@@ -273,7 +277,7 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
       }
       disabled = false
       buttonText = <Trans>Connect wallet</Trans>
-    } else if (usingPayWithAnyToken && swapState !== TradeState.VALID) {
+    } else if (usingPayWithAnyToken && tradeState !== TradeState.VALID) {
       disabled = true
       buttonText = <Trans>Fetching Route</Trans>
     } else if (allowance.state === AllowanceState.REQUIRED || allowance.state === AllowanceState.LOADING) {
@@ -309,7 +313,7 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
     sufficientBalance,
     bagStatus,
     usingPayWithAnyToken,
-    swapState,
+    tradeState,
     allowance.state,
     connector,
     toggleWalletModal,
@@ -349,7 +353,7 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
                 usingPayWithAnyToken={usingPayWithAnyToken}
                 totalEthPrice={totalEthPrice}
                 activeCurrency={activeCurrency}
-                swapState={swapState}
+                tradeState={tradeState}
                 trade={trade}
               />
               <FiatValue usdcValue={usdcValue} />
@@ -363,13 +367,10 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
                 <ThemedText.HeadlineSmall>Total</ThemedText.HeadlineSmall>
               </div>
               <div>
-                <InputCurrencyValue
-                  usingPayWithAnyToken={usingPayWithAnyToken}
-                  totalEthPrice={totalEthPrice}
-                  activeCurrency={activeCurrency}
-                  swapState={swapState}
-                  trade={trade}
-                />
+                <ThemedText.HeadlineSmall>
+                  {formatWeiToDecimal(totalEthPrice.toString())}
+                  &nbsp;{activeCurrency?.symbol ?? 'ETH'}
+                </ThemedText.HeadlineSmall>
               </div>
             </Row>
             <Row justify="flex-end">
