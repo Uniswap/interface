@@ -487,13 +487,13 @@ export const TagIcon = (props: SVGProps) => (
   </svg>
 )
 
-export const BarChartIcon = (props: SVGProps) => (
-  <svg fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path d="M12 20V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M6 20V4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M18 20V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-)
+// export const BarChartIcon = (props: SVGProps) => (
+//   <svg fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+//     <path d="M12 20V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+//     <path d="M6 20V4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+//     <path d="M18 20V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+//   </svg>
+// )
 
 export const DiscordIcon = (props: SVGProps) => (
   <svg role="img" width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" {...props} fill="none">
@@ -556,26 +556,26 @@ export const CheckMarkIcon = (props: SVGProps) => (
   </svg>
 )
 
-export const GovernanceIcon = (props: SVGProps) => (
-  <svg fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path
-      d="M18.75 16.5V6.00002C18.7512 5.7042 18.6939 5.41106 18.5813 5.13752C18.4686 4.86397 18.3029 4.61544 18.0938 4.40626C17.8846 4.19708 17.636 4.0314 17.3625 3.91876C17.089 3.80613 16.7958 3.74878 16.5 3.75002H3.75"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path d="M9.75 8.75H15.75" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M9.75 12.75H15.75" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    <path
-      d="M2.07187 7.49977C1.829 7.22785 1.65585 6.90097 1.56733 6.54728C1.4788 6.19359 1.47756 5.82369 1.56369 5.46941C1.64983 5.11513 1.82077 4.7871 2.0618 4.51353C2.30283 4.23997 2.60673 4.02908 2.94734 3.89902C3.28795 3.76895 3.65507 3.72361 4.01709 3.76689C4.37911 3.81017 4.72519 3.94077 5.02554 4.14747C5.32589 4.35416 5.57151 4.63074 5.74126 4.95342C5.91101 5.27609 5.9998 5.63518 6 5.99977V17.9998C6.00019 18.3644 6.08899 18.7235 6.25874 19.0461C6.42849 19.3688 6.67411 19.6454 6.97446 19.8521C7.27481 20.0588 7.62089 20.1894 7.98291 20.2327C8.34493 20.2759 8.71205 20.2306 9.05266 20.1005C9.39327 19.9705 9.69717 19.7596 9.9382 19.486C10.1792 19.2125 10.3502 18.8844 10.4363 18.5301C10.5224 18.1759 10.5212 17.806 10.4327 17.4523C10.3441 17.0986 10.171 16.7717 9.92813 16.4998H20.4281C20.7177 16.8236 20.9074 17.2243 20.9743 17.6536C21.0411 18.0828 20.9823 18.5223 20.8048 18.9188C20.6274 19.3154 20.3389 19.6521 19.9743 19.8882C19.6096 20.1244 19.1844 20.25 18.75 20.2498H8.25"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-)
+// export const GovernanceIcon = (props: SVGProps) => (
+//   <svg fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+//     <path
+//       d="M18.75 16.5V6.00002C18.7512 5.7042 18.6939 5.41106 18.5813 5.13752C18.4686 4.86397 18.3029 4.61544 18.0938 4.40626C17.8846 4.19708 17.636 4.0314 17.3625 3.91876C17.089 3.80613 16.7958 3.74878 16.5 3.75002H3.75"
+//       stroke="currentColor"
+//       strokeWidth="2"
+//       strokeLinecap="round"
+//       strokeLinejoin="round"
+//     />
+//     <path d="M9.75 8.75H15.75" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+//     <path d="M9.75 12.75H15.75" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+//     <path
+//       d="M2.07187 7.49977C1.829 7.22785 1.65585 6.90097 1.56733 6.54728C1.4788 6.19359 1.47756 5.82369 1.56369 5.46941C1.64983 5.11513 1.82077 4.7871 2.0618 4.51353C2.30283 4.23997 2.60673 4.02908 2.94734 3.89902C3.28795 3.76895 3.65507 3.72361 4.01709 3.76689C4.37911 3.81017 4.72519 3.94077 5.02554 4.14747C5.32589 4.35416 5.57151 4.63074 5.74126 4.95342C5.91101 5.27609 5.9998 5.63518 6 5.99977V17.9998C6.00019 18.3644 6.08899 18.7235 6.25874 19.0461C6.42849 19.3688 6.67411 19.6454 6.97446 19.8521C7.27481 20.0588 7.62089 20.1894 7.98291 20.2327C8.34493 20.2759 8.71205 20.2306 9.05266 20.1005C9.39327 19.9705 9.69717 19.7596 9.9382 19.486C10.1792 19.2125 10.3502 18.8844 10.4363 18.5301C10.5224 18.1759 10.5212 17.806 10.4327 17.4523C10.3441 17.0986 10.171 16.7717 9.92813 16.4998H20.4281C20.7177 16.8236 20.9074 17.2243 20.9743 17.6536C21.0411 18.0828 20.9823 18.5223 20.8048 18.9188C20.6274 19.3154 20.3389 19.6521 19.9743 19.8882C19.6096 20.1244 19.1844 20.25 18.75 20.2498H8.25"
+//       stroke="currentColor"
+//       strokeWidth="2"
+//       strokeLinecap="round"
+//       strokeLinejoin="round"
+//     />
+//   </svg>
+// )
 
 export const MinusIconLarge = (props: SVGProps) => (
   <svg {...props} fill="none" xmlns="http://www.w3.org/2000/svg">

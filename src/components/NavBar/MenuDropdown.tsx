@@ -78,9 +78,9 @@ const SecondaryLinkedText = ({
   )
 }
 
-const Separator = () => {
-  return <Box className={styles.Separator} />
-}
+// const Separator = () => {
+//   return <Box className={styles.Separator} />
+// }
 
 const IconRow = ({ children }: { children: ReactNode }) => {
   return <Row className={styles.IconRow}>{children}</Row>
@@ -111,7 +111,7 @@ const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
 
 export const MenuDropdown = () => {
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
-  const togglePrivacyPolicy = useToggleModal(ApplicationModal.PRIVACY_POLICY)
+  // const togglePrivacyPolicy = useToggleModal(ApplicationModal.PRIVACY_POLICY)
   const openFeatureFlagsModal = useToggleModal(ApplicationModal.FEATURE_FLAGS)
 
   const ref = useRef<HTMLDivElement>(null)
