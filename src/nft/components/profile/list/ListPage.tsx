@@ -318,7 +318,7 @@ export const ListPage = () => {
                 <EthValueWrapper totalEthListingValue={!!totalEthListingValue}>
                   {totalEthListingValue > 0 ? formatEth(totalEthListingValue) : '-'} ETH
                 </EthValueWrapper>
-                {!!totalEthListingValue && !!ethPriceInUSD && !isMobile && (
+                {!!totalEthListingValue && !!ethPriceInUSD && (
                   <UsdValue>{formatUsdPrice(totalEthListingValue * ethPriceInUSD)}</UsdValue>
                 )}
               </ProceedsWrapper>
