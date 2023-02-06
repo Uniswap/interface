@@ -1,10 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther } from '@ethersproject/units'
 import { parseEther } from '@ethersproject/units'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { formatPriceImpact } from '@uniswap/conedison/format'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import Loader from 'components/Loader'
@@ -12,6 +13,7 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { LoadingBubble } from 'components/Tokens/loading'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { SupportedChainId } from 'constants/chains'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
 import { useCurrency } from 'hooks/Tokens'
@@ -31,7 +33,14 @@ import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
+import { warningSeverity } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
+
+enum PriceImpactWarnings {
+  LOW,
+  SEVERE,
+}
 
 const FooterContainer = styled.div`
   padding: 0px 12px;
@@ -48,14 +57,13 @@ const Footer = styled.div`
   border-bottom-right-radius: 12px;
 `
 
-const FooterHeader = styled(Column)<{ warningText?: boolean }>`
+const FooterHeader = styled(Column)<{ warningText?: boolean; usingPayWithAnyToken?: boolean }>`
   padding-top: 8px;
-  padding-bottom: ${({ warningText }) => (warningText ? '8px' : '20px')};
+  padding-bottom: ${({ warningText, usingPayWithAnyToken }) =>
+    warningText ? (usingPayWithAnyToken ? '16px' : '8px') : usingPayWithAnyToken ? '16px' : '20px'};
 `
 
 const CurrencyRow = styled(Row)`
-  padding-top: 4px;
-  padding-bottom: 20px;
   justify-content: space-between;
   align-items: start;
 `
@@ -110,6 +118,17 @@ const FiatLoadingBubble = styled(LoadingBubble)`
   width: 4rem;
   height: 1rem;
   align-self: end;
+`
+const PriceImpactContainer = styled(Row)`
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: flex-end;
+`
+
+const PriceImpactRow = styled(Row)`
+  align-items: center;
+  gap: 8px;
 `
 
 interface ActionButtonProps {
@@ -190,15 +209,54 @@ const InputCurrencyValue = ({
   )
 }
 
-const FiatValue = ({ usdcValue }: { usdcValue: CurrencyAmount<Token> | null }) => {
+const FiatValue = ({
+  usdcValue,
+  priceImpact,
+}: {
+  usdcValue: CurrencyAmount<Token> | null
+  priceImpact: Percent | undefined
+}) => {
+  const theme = useTheme()
+
+  const priceImpactColor = useMemo(() => {
+    if (!priceImpact) {
+      return undefined
+    }
+
+    const severity = warningSeverity(priceImpact)
+    if (severity < 1) {
+      return undefined
+    }
+
+    if (severity < 3) {
+      return theme.accentWarning
+    }
+
+    return theme.accentCritical
+  }, [priceImpact, theme.accentCritical, theme.accentWarning])
+
   if (!usdcValue) {
     return <FiatLoadingBubble />
   }
 
   return (
-    <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
-      {`${ethNumberStandardFormatter(usdcValue?.toExact(), true)}`}
-    </ThemedText.BodySmall>
+    <PriceImpactContainer>
+      {priceImpact && priceImpactColor && (
+        <>
+          <MouseoverTooltip text={t`The estimated difference between the USD values of input and output amounts.`}>
+            <PriceImpactRow>
+              <AlertTriangle color={priceImpactColor} size="16px" />
+              <ThemedText.BodySmall style={{ color: priceImpactColor }} lineHeight="20px">
+                (<Trans>{formatPriceImpact(priceImpact)}</Trans>)
+              </ThemedText.BodySmall>
+            </PriceImpactRow>
+          </MouseoverTooltip>
+        </>
+      )}
+      <ThemedText.BodySmall color="textTertiary" lineHeight="20px">
+        {`${ethNumberStandardFormatter(usdcValue?.toExact(), true)}`}
+      </ThemedText.BodySmall>
+    </PriceImpactContainer>
   )
 }
 
@@ -250,7 +308,16 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
     maximumAmountIn
   )
 
-  const usdcValue = useStablecoinValue(usingPayWithAnyToken ? trade?.inputAmount : parsedOutputAmount)
+  const fiatValueTradeInput = useStablecoinValue(trade?.inputAmount)
+  const fiatValueTradeOutput = useStablecoinValue(parsedOutputAmount)
+  const usdcValue = usingPayWithAnyToken ? fiatValueTradeInput : fiatValueTradeOutput
+  const stablecoinPriceImpact = useMemo(
+    () =>
+      tradeState === TradeState.SYNCING || !trade
+        ? undefined
+        : computeFiatValuePriceImpact(fiatValueTradeInput, fiatValueTradeOutput),
+    [fiatValueTradeInput, fiatValueTradeOutput, tradeState, trade]
+  )
 
   const { buttonText, disabled, warningText, helperText, handleClick } = useMemo(() => {
     let handleClick = fetchAssets
@@ -332,33 +399,39 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
     <FooterContainer>
       <Footer>
         {shouldUsePayWithAnyToken && (
-          <CurrencyRow>
-            <Column gap="xs">
-              <ThemedText.SubHeaderSmall>
-                <Trans>Pay with</Trans>
-              </ThemedText.SubHeaderSmall>
-              <CurrencyInput onClick={() => setTokenSelectorOpen(true)}>
-                <CurrencyLogo currency={activeCurrency} size="24px" />
-                <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
-                  {activeCurrency?.symbol}
-                </ThemedText.HeadlineSmall>
-                <ChevronDown size={20} color={theme.textSecondary} />
-              </CurrencyInput>
-            </Column>
-            <TotalColumn gap="xs">
-              <ThemedText.SubHeaderSmall marginBottom="4px">
-                <Trans>Total</Trans>
-              </ThemedText.SubHeaderSmall>
-              <InputCurrencyValue
-                usingPayWithAnyToken={usingPayWithAnyToken}
-                totalEthPrice={totalEthPrice}
-                activeCurrency={activeCurrency}
-                tradeState={tradeState}
-                trade={trade}
-              />
-              <FiatValue usdcValue={usdcValue} />
-            </TotalColumn>
-          </CurrencyRow>
+          <FooterHeader
+            gap="xs"
+            warningText={!!warningText || !!helperText}
+            usingPayWithAnyToken={shouldUsePayWithAnyToken}
+          >
+            <CurrencyRow>
+              <Column gap="xs">
+                <ThemedText.SubHeaderSmall>
+                  <Trans>Pay with</Trans>
+                </ThemedText.SubHeaderSmall>
+                <CurrencyInput onClick={() => setTokenSelectorOpen(true)}>
+                  <CurrencyLogo currency={activeCurrency} size="24px" />
+                  <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
+                    {activeCurrency?.symbol}
+                  </ThemedText.HeadlineSmall>
+                  <ChevronDown size={20} color={theme.textSecondary} />
+                </CurrencyInput>
+              </Column>
+              <TotalColumn gap="xs">
+                <ThemedText.SubHeaderSmall marginBottom="4px">
+                  <Trans>Total</Trans>
+                </ThemedText.SubHeaderSmall>
+                <InputCurrencyValue
+                  usingPayWithAnyToken={usingPayWithAnyToken}
+                  totalEthPrice={totalEthPrice}
+                  activeCurrency={activeCurrency}
+                  tradeState={tradeState}
+                  trade={trade}
+                />
+              </TotalColumn>
+            </CurrencyRow>
+            <FiatValue usdcValue={usdcValue} priceImpact={stablecoinPriceImpact} />
+          </FooterHeader>
         )}
         {!shouldUsePayWithAnyToken && (
           <FooterHeader gap="xs" warningText={!!warningText || !!helperText}>
@@ -373,9 +446,7 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
                 </ThemedText.HeadlineSmall>
               </div>
             </Row>
-            <Row justify="flex-end">
-              <FiatValue usdcValue={usdcValue} />
-            </Row>
+            <FiatValue usdcValue={usdcValue} priceImpact={stablecoinPriceImpact} />
           </FooterHeader>
         )}
         <TraceEvent
