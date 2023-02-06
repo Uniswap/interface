@@ -12,7 +12,7 @@ if (typeof global.TextEncoder === 'undefined') {
 }
 
 beforeAll(() => {
-  server.listen({ onUnhandledRequest: console.log })
+  server.listen()
 })
 afterEach(() => {
   server.resetHandlers()

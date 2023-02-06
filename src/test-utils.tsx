@@ -5,11 +5,11 @@ import Web3Provider from 'components/Web3Provider'
 import { DEFAULT_LOCALE } from 'constants/locales'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { en } from 'make-plural/plurals'
+import { createTestStore } from 'mocks/store'
 import { ReactElement, ReactNode } from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
-import store from 'state'
 import ThemeProvider from 'theme'
 
 import catalog from './locales/en-US'
@@ -28,7 +28,7 @@ const queryClient = new QueryClient()
 const WithProviders = ({ children }: { children?: ReactNode }) => {
   return (
     <MockedI18nProvider>
-      <Provider store={store}>
+      <Provider store={createTestStore()}>
         <QueryClientProvider client={queryClient}>
           <HashRouter>
             <Web3Provider>

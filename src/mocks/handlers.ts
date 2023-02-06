@@ -25,4 +25,7 @@ export const handlers = [
   rest.get('https://api.coinbase.com/v2/exchange-rates', (_req, res, ctx) => {
     return res(ctx.json({ data: { rates: { USD: 1 } } }))
   }),
+  rest.post('https://mainnet.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847', (_req, res, ctx) => {
+    return res(ctx.json({ data: [] }))
+  }),
 ]
