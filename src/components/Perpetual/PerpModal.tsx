@@ -27,9 +27,9 @@ const PerpText = styled(TYPE.body)`
 
 export const StyledInput = styled.input`
   cursor: pointer;
-  width: 32px;
-  height: 32px;
-  margin-right: 1rem;
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
   accent-color: ${({ theme }) => theme.primary1};
   border-radius: 20px;
   outline: none;

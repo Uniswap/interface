@@ -56,27 +56,27 @@ export function AdvancedSwapDetails({
       </TransactionDetailsLabel>
       <RowBetween>
         <RowFixed>
-          <TYPE.small color={theme.text1}>
+          <TYPE.darkGray fontSize={14}>
             <Trans>Service Fee</Trans>
-          </TYPE.small>
+          </TYPE.darkGray>
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={65}>
-          <TYPE.black textAlign="right" fontSize={14}>
+          <TYPE.darkGray textAlign="right" fontSize={14}>
             {serviceFee ? `${serviceFee.toSignificant(8)} ${serviceFee.currency.symbol}` : '-'}
-          </TYPE.black>
+          </TYPE.darkGray>
         </TextWithLoadingPlaceholder>
       </RowBetween>
 
       <RowBetween>
         <RowFixed>
-          <TYPE.small color={theme.text1}>
+          <TYPE.darkGray fontSize={14}>
             <Trans>Minimum received</Trans>
-          </TYPE.small>
+          </TYPE.darkGray>
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={70}>
-          <TYPE.black textAlign="right" fontSize={14}>
+          <TYPE.darkGray textAlign="right" fontSize={14}>
             {outputAmount?.toSignificant(6)} {outputAmount?.currency.symbol}
-          </TYPE.black>
+          </TYPE.darkGray>
         </TextWithLoadingPlaceholder>
       </RowBetween>
     </AutoColumn>

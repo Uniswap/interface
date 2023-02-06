@@ -7,6 +7,7 @@ import Popover, { PopoverProps } from '../Popover'
 export const TooltipContainer = styled.div`
   width: 256px;
   padding: 0.6rem 1rem;
+  font-size: 14px;
   font-weight: 400;
   word-break: break-word;
 

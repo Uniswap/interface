@@ -135,7 +135,7 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
   margin-top: 8px;
 `
 
-export const TransactionDetailsLabel = styled(TYPE.black)`
+export const TransactionDetailsLabel = styled(TYPE.darkGray)`
   border-bottom: 1px solid ${({ theme }) => theme.bg2};
   padding-bottom: 0.5rem;
 `

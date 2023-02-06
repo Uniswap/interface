@@ -83,8 +83,8 @@ const StyledMenu = styled.div`
 const MenuFlyout = styled.span`
   min-width: 20.125rem;
   background-color: ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg0)};
-  box-shadow: 0 0 12px 6px ${({ theme }) => theme.shadow2};
-  border: 1px solid ${({ theme }) => theme.bg3};
+  //box-shadow: 0 0 2px 2px ${({ theme }) => theme.shadow2};
+  border: 2px solid ${({ theme }) => theme.bg3};
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -220,7 +220,9 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                   }
                 />
               ) : (
-                <Trans>Coming Soon</Trans>
+                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                  <Trans>Coming Soon</Trans>
+                </TYPE.black>
               )}
             </RowBetween>
             <RowBetween>
@@ -230,7 +232,9 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                 </TYPE.black>
                 <QuestionHelper text={<Trans>Prevents front-running of swaps</Trans>} />
               </RowFixed>
-              <Trans>Coming Soon</Trans>
+              <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                <Trans>Coming Soon</Trans>
+              </TYPE.black>
               {/* <Toggle
                 id="toggle-expert-mode-button"
                 isActive={expertMode}

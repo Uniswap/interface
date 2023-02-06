@@ -773,7 +773,11 @@ export default function Market({ history }: RouteComponentProps) {
                                         <Trans>Allowed Slippage:</Trans>
                                       </Text>
                                     </RowFixed>
-                                    <RowFixed>{allowedSlippage.toSignificant(2)}%</RowFixed>
+                                    <RowFixed>
+                                      <Text fontSize={14} fontWeight={400}>
+                                        {allowedSlippage.toSignificant(2)}%
+                                      </Text>
+                                    </RowFixed>
                                   </Row>
                                   <Row justify={!trade ? 'center' : 'space-between'}>
                                     <RowFixed>
@@ -782,7 +786,7 @@ export default function Market({ history }: RouteComponentProps) {
                                       </Text>
                                     </RowFixed>
                                     <RowFixed>
-                                      <span style={{ font: '10px' }}>
+                                      <Text fontSize={14} fontWeight={400}>
                                         {isGaslessMode ? (
                                           <span>
                                             {amountToReceive?.toSignificant(6)} {trade?.outputAmount.currency.symbol}
@@ -793,7 +797,7 @@ export default function Market({ history }: RouteComponentProps) {
                                             {trade?.outputAmount.currency.symbol}
                                           </span>
                                         )}
-                                      </span>
+                                      </Text>
                                     </RowFixed>
                                   </Row>
                                 </ResponsiveTooltipContainer>
@@ -1299,7 +1303,11 @@ export default function Market({ history }: RouteComponentProps) {
                                   <Trans>Allowed Slippage:</Trans>
                                 </Text>
                               </RowFixed>
-                              <RowFixed>{allowedSlippage.toSignificant(2)}%</RowFixed>
+                              <RowFixed>
+                                <Text fontSize={14} fontWeight={400}>
+                                  <Trans>{allowedSlippage.toSignificant(2)}%</Trans>
+                                </Text>
+                              </RowFixed>
                             </Row>
                             <Row justify={!trade ? 'center' : 'space-between'}>
                               <RowFixed>
@@ -1308,9 +1316,9 @@ export default function Market({ history }: RouteComponentProps) {
                                 </Text>
                               </RowFixed>
                               <RowFixed>
-                                <span style={{ font: '10px' }}>
+                                <Text fontSize={14} fontWeight={400}>
                                   {isGaslessMode ? (
-                                    <span style={{ font: '10px' }}>
+                                    <span>
                                       {amountToReceive?.toSignificant(6)} {trade?.outputAmount.currency.symbol}
                                     </span>
                                   ) : (
@@ -1322,7 +1330,7 @@ export default function Market({ history }: RouteComponentProps) {
                                         : '-'}
                                     </span>
                                   )}
-                                </span>
+                                </Text>
                               </RowFixed>
                             </Row>
                           </ResponsiveTooltipContainer>

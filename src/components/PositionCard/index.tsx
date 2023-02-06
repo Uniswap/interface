@@ -327,12 +327,12 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
       </AccountStatusCard>
       <ButtonGroup>
         <StyledButtonSecondary as={Link} to={`/add/${kromToken?.address}`}>
-          <Text fontSize={16} fontWeight={700}>
+          <Text fontSize={16} fontWeight={600}>
             <Trans>Deposit KROM</Trans>
           </Text>
         </StyledButtonSecondary>
         <StyledButtonSecondary as={Link} to={`/add/${kromToken?.address}/remove`}>
-          <Text fontSize={16} fontWeight={700}>
+          <Text fontSize={16} fontWeight={600}>
             <Trans>Withdraw KROM</Trans>
           </Text>
         </StyledButtonSecondary>
