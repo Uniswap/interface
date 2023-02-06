@@ -32,7 +32,7 @@ import { Link, useParams } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
-import { ExternalLink, HideExtraSmall, ThemedText } from 'theme'
+import { ExternalLink, HideExtraSmall, HideSmall, ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { formatTickPrice } from 'utils/formatTickPrice'
@@ -117,6 +117,7 @@ const ActionButtonResponsiveRow = styled(ResponsiveRow)`
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     width: 100%;
+    flex-direction: row;
     * {
       width: 100%;
     }
@@ -653,39 +654,42 @@ export function PositionPage() {
               <RowBetween></RowBetween>
             </AutoColumn>
             <ResponsiveRow align="flex-start">
-              {'result' in metadata ? (
-                <DarkCard
-                  width="100%"
-                  height="100%"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexDirection: 'column',
-                    justifyContent: 'space-around',
-                    marginRight: '12px',
-                  }}
-                >
-                  <div style={{ marginRight: 12 }}>
+              <HideSmall
+                style={{
+                  marginRight: '12px',
+                }}
+              >
+                {'result' in metadata ? (
+                  <DarkCard
+                    width="100%"
+                    height="100%"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      flexDirection: 'column',
+                      justifyContent: 'space-around',
+                      minWidth: '340px',
+                    }}
+                  >
                     <NFT image={metadata.result.image} height={400} />
-                  </div>
-                  {typeof chainId === 'number' && owner && !ownsNFT ? (
-                    <ExternalLink href={getExplorerLink(chainId, owner, ExplorerDataType.ADDRESS)}>
-                      <Trans>Owner</Trans>
-                    </ExternalLink>
-                  ) : null}
-                </DarkCard>
-              ) : (
-                <DarkCard
-                  width="100%"
-                  height="100%"
-                  style={{
-                    marginRight: '12px',
-                    minWidth: '340px',
-                  }}
-                >
-                  <Loader />
-                </DarkCard>
-              )}
+                    {typeof chainId === 'number' && owner && !ownsNFT ? (
+                      <ExternalLink href={getExplorerLink(chainId, owner, ExplorerDataType.ADDRESS)}>
+                        <Trans>Owner</Trans>
+                      </ExternalLink>
+                    ) : null}
+                  </DarkCard>
+                ) : (
+                  <DarkCard
+                    width="100%"
+                    height="100%"
+                    style={{
+                      minWidth: '340px',
+                    }}
+                  >
+                    <Loader />
+                  </DarkCard>
+                )}
+              </HideSmall>
               <AutoColumn gap="sm" style={{ width: '100%', height: '100%' }}>
                 <DarkCard>
                   <AutoColumn gap="md" style={{ width: '100%' }}>
