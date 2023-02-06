@@ -171,7 +171,7 @@ export function useNftBalance(
         name: asset.collection?.name,
         isVerified: asset.collection?.isVerified,
         imageUrl: asset.collection?.image?.url,
-        twitterUrl: `@${asset.collection?.twitterName}`,
+        twitterUrl: asset.collection?.twitterName ? `@${asset.collection?.twitterName}` : undefined,
       } as GenieCollection,
       collectionIsVerified: asset?.collection?.isVerified,
       lastPrice: queryAsset.node.lastPrice?.value,
