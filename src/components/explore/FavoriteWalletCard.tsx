@@ -80,6 +80,7 @@ export default function FavoriteWalletCard({
         hapticFeedback
         borderRadius="lg"
         hapticStyle={ImpactFeedbackStyle.Light}
+        m="xxs"
         onPress={(): void => {
           preload(address)
           navigate(address)

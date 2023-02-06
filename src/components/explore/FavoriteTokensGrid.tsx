@@ -1,6 +1,5 @@
-import { default as React, useCallback, useEffect, useMemo, useState } from 'react'
+import { default as React, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
 import { useAppSelector } from 'src/app/hooks'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
@@ -10,15 +9,10 @@ import FavoriteTokenCard, {
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
-import { flex } from 'src/styles/flex'
-import { theme as FixedTheme } from 'src/styles/theme'
-import { CurrencyId } from 'src/utils/currencyId'
 
 const NUM_COLUMNS = 2
-const GAP_SIZE = FixedTheme.spacing.xs
 const ITEM_FLEX = { flex: 1 / NUM_COLUMNS }
-
-const renderItemSeparator = (): JSX.Element => <Box height={GAP_SIZE} />
+const HALF_WIDTH = { width: '50%' }
 
 /** Renders the favorite tokens section on the Explore tab */
 export function FavoriteTokensGrid({ showLoading }: { showLoading: boolean }): JSX.Element | null {
@@ -35,24 +29,6 @@ export function FavoriteTokensGrid({ showLoading }: { showLoading: boolean }): J
     }
   }, [favoriteCurrencyIdsSet.size])
 
-  const renderItem = useCallback(
-    ({ item, index }: ListRenderItemInfo<CurrencyId>) => {
-      const lastColumn = (index + 1) % NUM_COLUMNS === 0
-      return (
-        <>
-          <FavoriteTokenCard
-            currencyId={item}
-            isEditing={isEditing}
-            setIsEditing={setIsEditing}
-            style={ITEM_FLEX}
-          />
-          {lastColumn ? null : <Box width={GAP_SIZE} />}
-        </>
-      )
-    },
-    [isEditing, setIsEditing]
-  )
-
   return (
     <AnimatedBox entering={FadeIn}>
       <FavoriteHeaderRow
@@ -64,16 +40,17 @@ export function FavoriteTokensGrid({ showLoading }: { showLoading: boolean }): J
       {showLoading ? (
         <FavoriteTokensGridLoader />
       ) : (
-        <FlatList
-          ItemSeparatorComponent={renderItemSeparator}
-          contentContainerStyle={flex.grow}
-          data={currencyIds}
-          listKey="explore-favorite-tokens"
-          numColumns={NUM_COLUMNS}
-          renderItem={renderItem}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-        />
+        <Box flexDirection="row" flexWrap="wrap">
+          {currencyIds.map((currencyId) => (
+            <FavoriteTokenCard
+              key={currencyId}
+              currencyId={currencyId}
+              isEditing={isEditing}
+              setIsEditing={setIsEditing}
+              style={HALF_WIDTH}
+            />
+          ))}
+        </Box>
       )}
     </AnimatedBox>
   )

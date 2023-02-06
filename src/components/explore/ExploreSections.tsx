@@ -9,7 +9,6 @@ import { SortButton } from 'src/components/explore/SortButton'
 import { TokenItem, TokenItemData } from 'src/components/explore/TokenItem'
 import { Box, Flex, Inset } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
@@ -28,7 +27,6 @@ import {
 } from 'src/features/explore/utils'
 import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'src/features/favorites/selectors'
 import { selectTokensOrderBy } from 'src/features/wallet/selectors'
-import { flex } from 'src/styles/flex'
 import { dimensions } from 'src/styles/sizing'
 import { areAddressesEqual } from 'src/utils/addresses'
 import { fromGraphQLChain } from 'src/utils/chainId'
@@ -139,19 +137,17 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
   }
 
   return (
-    <VirtualizedList
+    <FlashList
       ref={listRef}
-      contentContainerStyle={{ ...flex.grow, backgroundColor: theme.colors.background0 }}
-      style={flex.fill}>
-      <FavoritesSection showLoading={showLoading} />
-      <FlashList
-        ListEmptyComponent={
-          <Box mx="lg" my="sm">
-            <Loader.Token repeat={5} />
-          </Box>
-        }
-        ListFooterComponent={<Inset all="sm" />}
-        ListHeaderComponent={
+      ListEmptyComponent={
+        <Box mx="lg" my="sm">
+          <Loader.Token repeat={5} />
+        </Box>
+      }
+      ListFooterComponent={<Inset all="sm" />}
+      ListHeaderComponent={
+        <>
+          <FavoritesSection showLoading={showLoading} />
           <Flex
             row
             alignItems="center"
@@ -166,19 +162,20 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
             </Text>
             <SortButton orderBy={orderBy} />
           </Flex>
-        }
-        data={showLoading ? EMPTY_ARRAY : topTokenItems}
-        estimatedItemSize={ESTIMATED_TOKEN_ITEM_SIZE}
-        estimatedListSize={{
-          width: dimensions.fullWidth,
-          height: dimensions.fullHeight,
-        }}
-        keyExtractor={tokenKey}
-        renderItem={renderItem}
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-      />
-    </VirtualizedList>
+        </>
+      }
+      contentContainerStyle={{ backgroundColor: theme.colors.background0 }}
+      data={showLoading ? EMPTY_ARRAY : topTokenItems}
+      estimatedItemSize={ESTIMATED_TOKEN_ITEM_SIZE}
+      estimatedListSize={{
+        width: dimensions.fullWidth,
+        height: dimensions.fullHeight,
+      }}
+      keyExtractor={tokenKey}
+      renderItem={renderItem}
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
+    />
   )
 }
 
@@ -220,7 +217,7 @@ function FavoritesSection({ showLoading }: { showLoading: boolean }): JSX.Elemen
   if (!hasFavoritedTokens && !hasFavoritedWallets) return null
 
   return (
-    <Flex bg="backgroundBranded" gap="md" pb="md" pt="xs" px="sm">
+    <Flex bg="backgroundBranded" gap="sm" pb="sm" pt="xs" px="sm">
       {hasFavoritedTokens && <FavoriteTokensGrid showLoading={showLoading} />}
       {hasFavoritedWallets && <FavoriteWalletsGrid showLoading={showLoading} />}
     </Flex>

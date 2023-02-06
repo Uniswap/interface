@@ -134,6 +134,7 @@ function FavoriteTokenCard({
         entering={FadeIn}
         exiting={FadeOut}
         hapticStyle={ImpactFeedbackStyle.Light}
+        m="xxs"
         testID={`token-box-${token?.symbol}`}
         onPress={onPress}>
         <BaseCard.Shadow>
