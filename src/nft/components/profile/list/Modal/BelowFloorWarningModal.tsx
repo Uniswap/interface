@@ -4,6 +4,7 @@ import Column from 'components/Column'
 import { Portal } from 'nft/components/common/Portal'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { Listing, WalletAsset } from 'nft/types'
+import React from 'react'
 import { AlertTriangle, X } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
@@ -80,7 +81,7 @@ export const BelowFloorWarningModal = ({
   startListing: () => void
 }) => {
   const theme = useTheme()
-  const clickContinue: React.MouseEventHandler<HTMLElement> = (e) => {
+  const clickContinue = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
     startListing()
