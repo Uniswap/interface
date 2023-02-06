@@ -1,15 +1,17 @@
+import { Plural } from '@lingui/macro'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import ms from 'ms.macro'
-import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Column, Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
-import { bodySmall, buttonTextMedium, caption } from 'nft/css/common.css'
+import { bodySmall, caption } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
-import { pluralize } from 'nft/utils/roundAndPluralize'
-import { useEffect, useMemo, useState } from 'react'
-import { AlertTriangle } from 'react-feather'
+import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import { AlertTriangle, ChevronDown } from 'react-feather'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { Z_INDEX } from 'theme/zIndex'
+
+import { Dropdown } from './Dropdown'
 
 const ModalWrapper = styled(Column)`
   gap: 4px;
@@ -25,17 +27,41 @@ const InputWrapper = styled(Row)<{ isInvalid: boolean }>`
   border-color: ${({ isInvalid, theme }) => (isInvalid ? theme.accentCritical : theme.backgroundOutline)};
 `
 
-const DropdownWrapper = styled(ThemedText.BodyPrimary)`
+const DropdownPrompt = styled(Row)`
+  gap: 4px;
+  background-color: ${({ theme }) => theme.backgroundInteractive};
   cursor: pointer;
-  display: flex;
-  justify-content: flex-end;
-  height: min-content;
-  width: 80px;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  border-radius: 8px;
+  padding: 6px 4px 6px 8px;
+  width: min-content;
+  white-space: nowrap;
+  color: ${({ theme }) => theme.textPrimary};
+
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundInteractive};
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
-  border-radius: 12px;
-  padding: 8px;
+`
+
+const DropdownChevron = styled(ChevronDown)<{ isOpen: boolean }>`
+  height: 16px;
+  width: 16px;
+  color: ${({ theme }) => theme.textSecondary};
+  transform: ${({ isOpen }) => isOpen && 'rotate(180deg)'};
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `transform ${duration.fast} ${timing.ease}`};
+`
+
+const DropdownContainer = styled.div`
+  position: absolute;
+  top: 48px;
+  right: 0px;
+  z-index: ${Z_INDEX.dropdown};
 `
 
 const ErrorMessage = styled(Row)`
@@ -65,39 +91,73 @@ enum ErrorState {
 
 export const SetDurationModal = () => {
   const [duration, setDuration] = useState(Duration.day)
-  const [displayDuration, setDisplayDuration] = useState(Duration.day)
   const [amount, setAmount] = useState('7')
   const [errorState, setErrorState] = useState(ErrorState.valid)
   const setGlobalExpiration = useSellAsset((state) => state.setGlobalExpiration)
+  const [showDropdown, toggleShowDropdown] = useReducer((s) => !s, false)
+  const durationDropdownRef = useRef<HTMLDivElement>(null)
+  useOnClickOutside(durationDropdownRef, showDropdown ? toggleShowDropdown : undefined)
+
   const setCustomExpiration = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAmount(event.target.value.length ? event.target.value : '')
-    setDuration(displayDuration)
   }
-  const selectDuration = (duration: Duration) => {
-    setDuration(duration)
-    setDisplayDuration(duration)
-  }
+
   const durationOptions: DropDownOption[] = useMemo(
     () => [
       {
-        displayText: 'Hours',
-        onClick: () => selectDuration(Duration.hour),
+        displayText: 'hours',
+        isSelected: duration === Duration.hour,
+        onClick: () => {
+          setDuration(Duration.hour)
+          toggleShowDropdown()
+        },
       },
       {
-        displayText: 'Days',
-        onClick: () => selectDuration(Duration.day),
+        displayText: 'days',
+        isSelected: duration === Duration.day,
+        onClick: () => {
+          setDuration(Duration.day)
+          toggleShowDropdown()
+        },
       },
       {
-        displayText: 'Weeks',
-        onClick: () => selectDuration(Duration.week),
+        displayText: 'weeks',
+        isSelected: duration === Duration.week,
+        onClick: () => {
+          setDuration(Duration.week)
+          toggleShowDropdown()
+        },
       },
       {
-        displayText: 'Months',
-        onClick: () => selectDuration(Duration.month),
+        displayText: 'months',
+        isSelected: duration === Duration.month,
+        onClick: () => {
+          setDuration(Duration.month)
+          toggleShowDropdown()
+        },
       },
     ],
-    []
+    [duration]
   )
+
+  let prompt
+  switch (duration) {
+    case Duration.hour:
+      prompt = <Plural value={amount} _1="hour" other="hours" />
+      break
+    case Duration.day:
+      prompt = <Plural value={amount} _1="day" other="days" />
+      break
+    case Duration.week:
+      prompt = <Plural value={amount} _1="week" other="weeks" />
+      break
+    case Duration.month:
+      prompt = <Plural value={amount} _1="month" other="months" />
+      break
+    default:
+      break
+  }
+
   useEffect(() => {
     const expiration = convertDurationToExpiration(parseFloat(amount), duration)
 
@@ -108,7 +168,7 @@ export const SetDurationModal = () => {
   }, [amount, duration, setGlobalExpiration])
 
   return (
-    <ModalWrapper>
+    <ModalWrapper ref={durationDropdownRef}>
       <InputWrapper isInvalid={errorState !== ErrorState.valid}>
         <NumericInput
           as="input"
@@ -124,15 +184,14 @@ export const SetDurationModal = () => {
           onChange={setCustomExpiration}
           flexShrink="0"
         />
-        <DropdownWrapper className={buttonTextMedium}>
-          <SortDropdown
-            dropDownOptions={durationOptions}
-            mini
-            miniPrompt={displayDuration + (displayDuration === duration ? pluralize(parseFloat(amount)) : 's')}
-            left={38}
-            top={38}
-          />
-        </DropdownWrapper>
+        <DropdownPrompt onClick={toggleShowDropdown}>
+          {prompt} <DropdownChevron isOpen={showDropdown} />
+        </DropdownPrompt>
+        {showDropdown && (
+          <DropdownContainer>
+            <Dropdown dropDownOptions={durationOptions} width={125} />
+          </DropdownContainer>
+        )}
       </InputWrapper>
       {errorState !== ErrorState.valid && (
         <ErrorMessage className={caption}>
