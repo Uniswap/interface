@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
-import useStablecoinPrice from 'hooks/useStablecoinPrice'
+import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { getTotalEthValue } from 'nft/components/bag/profile/utils'
 import { useSellAsset } from 'nft/hooks'
 import { formatEth, generateTweetForList, pluralize } from 'nft/utils'
@@ -11,7 +13,6 @@ import { useMemo } from 'react'
 import { Twitter, X } from 'react-feather'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
-import { formatDollar, priceToPreciseFloat } from 'utils/formatNumbers'
 
 import { TitleRow } from '../shared'
 
@@ -73,12 +74,13 @@ const TweetRow = styled(Row)`
 `
 
 export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) => {
+  const theme = useTheme()
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const nativeCurrency = useNativeCurrency()
-  const nativeCurrencyPrice = useStablecoinPrice(nativeCurrency ?? undefined)
-  const theme = useTheme()
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
+  const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
+  const usdcValue = useStablecoinValue(parsedAmount)
 
   return (
     <>
@@ -104,12 +106,9 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
         </ThemedText.SubHeader>
         <ProceedsColumn>
           <ThemedText.SubHeader lineHeight="24px">{formatEth(totalEthListingValue)} ETH</ThemedText.SubHeader>
-          {nativeCurrencyPrice && (
+          {usdcValue && (
             <ThemedText.BodySmall lineHeight="20px" color="textSecondary">
-              {formatDollar({
-                num: priceToPreciseFloat(nativeCurrencyPrice) ?? 0 * totalEthListingValue,
-                isPrice: true,
-              })}
+              {formatCurrencyAmount(usdcValue, NumberType.FiatTokenPrice)}
             </ThemedText.BodySmall>
           )}
         </ProceedsColumn>
