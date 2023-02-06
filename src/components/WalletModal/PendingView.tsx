@@ -65,12 +65,12 @@ const LoadingWrapper = styled.div`
 
 export default function PendingView({
   connector,
-  error = false,
+  error,
   tryActivation,
   openOptions,
 }: {
   connector: Connector
-  error?: boolean
+  error?: string
   tryActivation: (connector: Connector) => void
   openOptions: () => void
 }) {
@@ -81,14 +81,13 @@ export default function PendingView({
           {error ? (
             <ErrorGroup>
               <AlertTriangleIcon />
-              <ThemedText.MediumHeader marginBottom={12}>
+              <ThemedText.MediumHeader marginBottom={18}>
                 <Trans>Error connecting</Trans>
               </ThemedText.MediumHeader>
-              <ThemedText.BodyPrimary fontSize={16} marginBottom={36} textAlign="center">
-                <Trans>
-                  The connection attempt failed. Please click try again and follow the steps to connect in your wallet.
-                </Trans>
+              <ThemedText.BodyPrimary marginBottom={12} textAlign="center">
+                <Trans>The connection attempt failed.</Trans>
               </ThemedText.BodyPrimary>
+              <ThemedText.BodySecondary marginBottom={36}>{error}</ThemedText.BodySecondary>
               <ButtonPrimary
                 $borderRadius="12px"
                 onClick={() => {

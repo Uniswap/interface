@@ -355,7 +355,7 @@ export default function WalletModal({
               <PendingView
                 openOptions={openOptions}
                 connector={pendingConnector}
-                error={!!pendingError}
+                error={pendingError}
                 tryActivation={tryActivation}
               />
             )}
