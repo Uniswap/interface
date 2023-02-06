@@ -77,7 +77,7 @@ const ClassicModeContainer = styled.div`
   align-items: flex-start;
   gap: 2rem;
   border: none;
-  padding: 1rem 4rem 8rem;
+  padding: 1rem 4rem 7rem;
   margin-top: 60px;
   width: calc(100% - 1rem);
   height: 100%;
@@ -190,7 +190,7 @@ const GridContainer = styled.div`
   margin-top: 60px;
 
   border: none;
-  padding: 1rem 4rem 8rem;
+  padding: 1rem 4rem 7rem;
   width: 100%;
   height: 100%;
   min-height: 75vh;
