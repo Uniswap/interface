@@ -1,4 +1,3 @@
-import { min } from 'd3'
 import { DetailsOrigin, GenieAsset, Listing, UpdatedGenieAsset, WalletAsset } from 'nft/types'
 
 export function getRarityStatus(
@@ -47,7 +46,7 @@ export const generateTweetForPurchase = (assets: UpdatedGenieAsset[], txHashUrl:
 }
 
 function getMinListingPrice(listings: Listing[]): number {
-  return min(listings.map((listing) => listing.price ?? 0)) ?? 0
+  return Math.min(...listings.map((listing) => listing.price ?? 0)) ?? 0
 }
 
 function mapAssetsToCollections(assets: WalletAsset[]): { collection: string; items: string[] }[] {
