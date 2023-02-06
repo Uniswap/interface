@@ -18,6 +18,8 @@ import shallow from 'zustand/shallow'
 import * as styles from './ListingModal.css'
 import { getListings } from './utils'
 
+const BELOW_FLOOR_PRICE_THRESHOLD = 0.8
+
 interface ListingButtonProps {
   onClick: () => void
   buttonText: string
@@ -104,7 +106,10 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
         for (const listing of asset.newListings) {
           if (!listing.price) listingsMissingPrice.push([asset, listing])
           else if (isNaN(listing.price) || listing.price < 0) invalidPrices.push([asset, listing])
-          else if (listing.price < (asset?.floorPrice ?? 0) * 0.8 && !listing.overrideFloorPrice)
+          else if (
+            listing.price < (asset?.floorPrice ?? 0) * BELOW_FLOOR_PRICE_THRESHOLD &&
+            !listing.overrideFloorPrice
+          )
             listingsBelowFloor.push([asset, listing])
           else if (asset.floor_sell_order_price && listing.price > asset.floor_sell_order_price)
             listingsAboveSellOrderFloor.push([asset, listing])
