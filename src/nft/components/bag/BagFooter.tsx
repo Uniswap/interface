@@ -38,6 +38,7 @@ import { warningSeverity } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
 
 enum PriceImpactWarnings {
+  NONE,
   LOW,
   SEVERE,
 }
@@ -86,7 +87,8 @@ const WarningText = styled(ThemedText.BodyPrimary)`
   text-align: center;
 `
 
-const HelperText = styled(ThemedText.Caption)`
+const HelperText = styled(ThemedText.Caption)<{ $color: string }>`
+  color: ${({ $color }) => $color};
   align-items: center;
   display: flex;
   justify-content: center;
@@ -99,8 +101,8 @@ const CurrencyInput = styled(Row)`
   cursor: pointer;
 `
 
-const PayButton = styled(Row)<{ disabled?: boolean }>`
-  background: ${({ theme }) => theme.accentAction};
+const PayButton = styled(Row)<{ disabled?: boolean; $backgroundColor: string }>`
+  background: ${({ $backgroundColor }) => $backgroundColor};
   color: ${({ theme }) => theme.accentTextLightPrimary};
   font-weight: 600;
   line-height: 24px;
@@ -134,11 +136,12 @@ const PriceImpactRow = styled(Row)`
 interface ActionButtonProps {
   disabled?: boolean
   onClick: () => void
+  backgroundColor: string
 }
 
-const ActionButton = ({ disabled, children, onClick }: PropsWithChildren<ActionButtonProps>) => {
+const ActionButton = ({ disabled, children, onClick, backgroundColor }: PropsWithChildren<ActionButtonProps>) => {
   return (
-    <PayButton disabled={disabled} onClick={onClick}>
+    <PayButton disabled={disabled} onClick={onClick} $backgroundColor={backgroundColor}>
       {children}
     </PayButton>
   )
@@ -156,12 +159,16 @@ const Warning = ({ children }: PropsWithChildren<unknown>) => {
   )
 }
 
-const Helper = ({ children }: PropsWithChildren<unknown>) => {
+interface HelperTextProps {
+  color: string
+}
+
+const Helper = ({ children, color }: PropsWithChildren<HelperTextProps>) => {
   if (!children) {
     return null
   }
   return (
-    <HelperText lineHeight="16px" color="textSecondary">
+    <HelperText lineHeight="16px" $color={color}>
       {children}
     </HelperText>
   )
@@ -212,29 +219,12 @@ const InputCurrencyValue = ({
 const FiatValue = ({
   usdcValue,
   priceImpact,
+  priceImpactColor,
 }: {
   usdcValue: CurrencyAmount<Token> | null
   priceImpact: Percent | undefined
+  priceImpactColor: string | undefined
 }) => {
-  const theme = useTheme()
-
-  const priceImpactColor = useMemo(() => {
-    if (!priceImpact) {
-      return undefined
-    }
-
-    const severity = warningSeverity(priceImpact)
-    if (severity < 1) {
-      return undefined
-    }
-
-    if (severity < 3) {
-      return theme.accentWarning
-    }
-
-    return theme.accentCritical
-  }, [priceImpact, theme.accentCritical, theme.accentWarning])
-
   if (!usdcValue) {
     return <FiatLoadingBubble />
   }
@@ -318,13 +308,28 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
         : computeFiatValuePriceImpact(fiatValueTradeInput, fiatValueTradeOutput),
     [fiatValueTradeInput, fiatValueTradeOutput, tradeState, trade]
   )
+  const { priceImpactWarning, priceImpactColor } = useMemo(() => {
+    const severity = warningSeverity(stablecoinPriceImpact)
 
-  const { buttonText, disabled, warningText, helperText, handleClick } = useMemo(() => {
+    if (severity < 1) {
+      return { priceImpactWarning: false, priceImpactColor: undefined }
+    }
+
+    if (severity < 3) {
+      return { priceImpactWarning: false, priceImpactColor: theme.accentWarning }
+    }
+
+    return { priceImpactWarning: true, priceImpactColor: theme.accentCritical }
+  }, [stablecoinPriceImpact, theme.accentCritical, theme.accentWarning])
+
+  const { buttonText, disabled, warningText, helperText, helperTextColor, handleClick, buttonColor } = useMemo(() => {
     let handleClick = fetchAssets
     let buttonText = <Trans>Something went wrong</Trans>
     let disabled = true
     let warningText = undefined
     let helperText = undefined
+    let helperTextColor = theme.textSecondary
+    let buttonColor = theme.accentAction
 
     if (connected && chainId !== SupportedChainId.MAINNET) {
       handleClick = () => switchChain(connector, SupportedChainId.MAINNET)
@@ -367,14 +372,22 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
     } else if (bagStatus === BagStatus.PROCESSING_TRANSACTION) {
       disabled = true
       buttonText = <Trans>Transaction pending</Trans>
+    } else if (priceImpactWarning && priceImpactColor) {
+      disabled = false
+      buttonColor = priceImpactColor
+      helperText = <Trans>Price impact warning</Trans>
+      helperTextColor = priceImpactColor
+      buttonText = <Trans>Pay Anyway</Trans>
     } else if (sufficientBalance === true) {
       disabled = false
       buttonText = <Trans>Pay</Trans>
     }
 
-    return { buttonText, disabled, warningText, helperText, handleClick }
+    return { buttonText, disabled, warningText, helperText, helperTextColor, handleClick, buttonColor }
   }, [
     fetchAssets,
+    theme.textSecondary,
+    theme.accentAction,
     connected,
     chainId,
     sufficientBalance,
@@ -382,6 +395,8 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
     usingPayWithAnyToken,
     tradeState,
     allowance.state,
+    priceImpactWarning,
+    priceImpactColor,
     connector,
     toggleWalletModal,
     setBagExpanded,
@@ -430,7 +445,7 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
                 />
               </TotalColumn>
             </CurrencyRow>
-            <FiatValue usdcValue={usdcValue} priceImpact={stablecoinPriceImpact} />
+            <FiatValue usdcValue={usdcValue} priceImpact={stablecoinPriceImpact} priceImpactColor={priceImpactColor} />
           </FooterHeader>
         )}
         {!shouldUsePayWithAnyToken && (
@@ -446,7 +461,7 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
                 </ThemedText.HeadlineSmall>
               </div>
             </Row>
-            <FiatValue usdcValue={usdcValue} priceImpact={stablecoinPriceImpact} />
+            <FiatValue usdcValue={usdcValue} priceImpact={stablecoinPriceImpact} priceImpactColor={priceImpactColor} />
           </FooterHeader>
         )}
         <TraceEvent
@@ -457,8 +472,8 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
           shouldLogImpression={connected && !disabled}
         >
           <Warning>{warningText}</Warning>
-          <Helper>{helperText}</Helper>
-          <ActionButton onClick={handleClick} disabled={disabled}>
+          <Helper color={helperTextColor}>{helperText}</Helper>
+          <ActionButton onClick={handleClick} disabled={disabled} backgroundColor={buttonColor}>
             {isPending && <Loader size="20px" stroke="white" />}
             {buttonText}
           </ActionButton>
