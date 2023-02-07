@@ -162,7 +162,7 @@ export async function signListing(
         const order = await executeAllActions()
         setStatus(ListingStatus.PENDING)
         const res = await PostOpenSeaSellOrder(order)
-        if (res) setStatus(ListingStatus.APPROVED)
+        res ? setStatus(ListingStatus.APPROVED) : setStatus(ListingStatus.FAILED)
         return res
       } catch (error) {
         if (error.code === 4001) setStatus(ListingStatus.REJECTED)
