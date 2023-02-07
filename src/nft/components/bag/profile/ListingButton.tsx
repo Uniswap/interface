@@ -211,7 +211,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
 
   const warningWrappedClick = () => {
     if ((!disableListButton && canContinue) || showWarningOverride) {
-      if (issues && isNftListV2 && !showResolveIssues) toggleShowResolveIssues()
+      if (issues && isNftListV2) !showResolveIssues && toggleShowResolveIssues()
       else if (listingsBelowFloor.length) setShowWarning(true)
       else onClick()
     } else addWarningMessages()
