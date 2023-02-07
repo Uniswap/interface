@@ -241,7 +241,7 @@ export default function FeatureFlagModal() {
         variant={GqlRoutingVariant}
         value={useGqlRoutingFlag()}
         featureFlag={FeatureFlag.gqlRouting}
-        label="GraphQL Routing"
+        label="GraphQL NFT Routing"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
