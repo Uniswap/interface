@@ -26,7 +26,7 @@ export function swapErrorToUserReadableMessage(error: any): string {
   // so we need to parse the reason for these special cases:
   if (
     // For rainbow wallet:
-    (reason?.match(/request/i) && reason.match(/reject/i)) ||
+    (reason?.match(/request/i) && reason?.match(/reject/i)) ||
     // For frame wallet: https://frame.sh/
     reason?.match(/declined/i) ||
     // For safepal:
