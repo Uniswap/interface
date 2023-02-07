@@ -12,7 +12,7 @@ import { BackArrowIcon } from 'nft/components/icons'
 import { headlineLarge, headlineSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
-import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from 'nft/pages/profile/shared'
+import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE, LIST_PAGE_MARGIN_TABLET } from 'nft/pages/profile/shared'
 import { looksRareNonceFetcher } from 'nft/queries'
 import { ListingStatus, ProfilePageStateType } from 'nft/types'
 import { fetchPrice, formatEth, formatUsdPrice } from 'nft/utils'
@@ -105,10 +105,14 @@ const FloatingConfirmationBar = styled(Row)`
   max-width: 1200px;
   z-index: ${Z_INDEX.under_dropdown};
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
-    width: calc(100% - ${LIST_PAGE_MARGIN_MOBILE * 2}px);
+  @media screen and (max-width: ${BREAKPOINTS.lg}px) {
+    width: calc(100% - ${LIST_PAGE_MARGIN_TABLET * 2}px);
     bottom: 68px;
     padding: 16px 12px;
+  }
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    width: calc(100% - ${LIST_PAGE_MARGIN_MOBILE * 2}px);
   }
 `
 
@@ -118,6 +122,16 @@ const Overlay = styled.div`
   height: 158px;
   width: 100vw;
   background: ${({ theme }) => `linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, ${theme.backgroundBackdrop} 100%)`};
+`
+
+const UsdValue = styled(ThemedText.SubHeader)`
+  line-height: 24px;
+  color: ${({ theme }) => theme.textSecondary};
+  display: none;
+
+  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+    display: flex;
+  }
 `
 
 const ProceedsAndButtonWrapper = styled(Row)`
@@ -150,7 +164,7 @@ const ListingButtonWrapper = styled.div`
   width: 170px;
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
-    width: 95px;
+    width: max-content;
   }
 `
 
@@ -304,10 +318,8 @@ export const ListPage = () => {
                 <EthValueWrapper totalEthListingValue={!!totalEthListingValue}>
                   {totalEthListingValue > 0 ? formatEth(totalEthListingValue) : '-'} ETH
                 </EthValueWrapper>
-                {!!totalEthListingValue && !!ethPriceInUSD && !isMobile && (
-                  <ThemedText.SubHeader lineHeight="24px" color="textSecondary">
-                    {formatUsdPrice(totalEthListingValue * ethPriceInUSD)}
-                  </ThemedText.SubHeader>
+                {!!totalEthListingValue && !!ethPriceInUSD && (
+                  <UsdValue>{formatUsdPrice(totalEthListingValue * ethPriceInUSD)}</UsdValue>
                 )}
               </ProceedsWrapper>
               <ListingButtonWrapper>

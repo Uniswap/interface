@@ -49,7 +49,7 @@ const FeeColumnWrapper = styled(Column)`
   align-items: flex-end;
   display: none;
 
-  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
     display: flex;
   }
 `
@@ -63,7 +63,7 @@ const ReturnColumn = styled(Column)`
   flex: 1.5;
   display: none;
 
-  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
     display: flex;
   }
 `
