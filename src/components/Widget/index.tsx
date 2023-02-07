@@ -25,9 +25,11 @@ import {
   getPriceUpdateBasisPoints,
   getTokenAddress,
 } from 'lib/utils/analytics'
-import { useCallback, useState } from 'react'
+import { forwardRef, PropsWithChildren, useCallback, useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
+import styled from 'styled-components/macro'
 import { computeRealizedPriceImpact } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
 
@@ -156,12 +158,27 @@ export default function Widget({
 
   const permit2Enabled = usePermit2Enabled()
 
+  const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
+  const [dialogVisible, setDialogVisible] = useState(false)
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setDialogVisible((dialog?.childElementCount ?? 0) > 0)
+    })
+    if (dialog) {
+      observer.observe(dialog, { childList: true })
+    }
+    return () => {
+      observer.disconnect()
+    }
+  }, [dialog])
+
   if (!(inputs.value.INPUT || inputs.value.OUTPUT)) {
-    return <WidgetSkeleton />
+    return <WidgetSkeleton width={width} />
   }
 
   return (
     <>
+      <DialogPortal ref={setDialog} visible={dialogVisible} />
       <SwapWidget
         hideConnectionUI
         brandedFooter={false}
@@ -170,6 +187,7 @@ export default function Widget({
         locale={locale}
         theme={theme}
         width={width}
+        dialog={dialog}
         // defaultChainId is excluded - it is always inferred from the passed provider
         onConnectWalletClick={onConnectWalletClick}
         provider={provider}
@@ -189,6 +207,32 @@ export default function Widget({
     </>
   )
 }
+
+const DialogContainer = styled.div<{ visible: boolean }>`
+  position: absolute;
+  top: calc(100% / 2 - 250px);
+  left: calc(100% / 2 - 180px);
+  height: 500px;
+  width: ${DEFAULT_WIDGET_WIDTH}px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: ${({ visible }) => (visible ? 'all' : 'none')};
+`
+
+const DialogPortal = forwardRef<HTMLDivElement, PropsWithChildren<{ visible: boolean }>>(function RootWrapper(
+  { children, visible }: PropsWithChildren<{ visible: boolean }>,
+  ref
+) {
+  return createPortal(
+    <>
+      <DialogContainer ref={ref} visible={visible}>
+        {children}
+      </DialogContainer>
+    </>,
+    document.body
+  )
+})
 
 export function WidgetSkeleton({ width = DEFAULT_WIDGET_WIDTH }: { width?: number | string }) {
   const theme = useWidgetTheme()
