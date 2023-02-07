@@ -162,7 +162,7 @@ export async function signListing(
         const order = await executeAllActions()
         setStatus(ListingStatus.PENDING)
         const res = await PostOpenSeaSellOrder(order)
-        if (res) setStatus(ListingStatus.APPROVED)
+        res ? setStatus(ListingStatus.APPROVED) : setStatus(ListingStatus.FAILED)
         return res
       } catch (error) {
         if (error.code === 4001) setStatus(ListingStatus.REJECTED)
@@ -229,7 +229,7 @@ export async function signListing(
           params: [],
         }
         const res = await createLooksRareOrder(payload)
-        if (res) setStatus(ListingStatus.APPROVED)
+        res ? setStatus(ListingStatus.APPROVED) : setStatus(ListingStatus.FAILED)
         return res
       } catch (error) {
         if (error.code === 4001) setStatus(ListingStatus.REJECTED)
@@ -263,7 +263,7 @@ export async function signListing(
         setStatus(ListingStatus.PENDING)
         // call server api
         const resp = await newX2Y2Order(payload)
-        if (resp) setStatus(ListingStatus.APPROVED)
+        resp ? setStatus(ListingStatus.APPROVED) : setStatus(ListingStatus.FAILED)
         return resp
       } catch (error) {
         if (error.code === 4001) setStatus(ListingStatus.REJECTED)
