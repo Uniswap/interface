@@ -22,7 +22,8 @@ export function swapErrorToUserReadableMessage(error: any): string {
     error = error.error ?? error.data?.originalError
   }
 
-  // The 4001 error code doesn't capture the case where users reject a transaction for all wallets.
+  // The 4001 error code doesn't capture the case where users reject a transaction for all wallets,
+  // so we need to parse the reason for these special cases:
   if (
     // For rainbow wallet:
     (reason?.toLowerCase().includes('request') && reason?.toLowerCase().includes('reject')) ||
