@@ -22,6 +22,16 @@ export function swapErrorToUserReadableMessage(error: any): string {
     error = error.error ?? error.data?.originalError
   }
 
+  // The 4001 error code doesn't capture the case where users reject a transaction for all wallets.
+  if (
+    // For rainbow wallet:
+    (reason?.toLowerCase().includes('request') && reason?.toLowerCase().includes('reject')) ||
+    // For frame wallet: https://frame.sh/
+    reason?.toLowerCase().includes('declined')
+  ) {
+    return t`Transaction rejected`
+  }
+
   if (reason?.indexOf('execution reverted: ') === 0) reason = reason.substr('execution reverted: '.length)
 
   switch (reason) {
