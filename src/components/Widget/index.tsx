@@ -10,7 +10,6 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import {
   AddEthereumChainParameter,
   EMPTY_TOKEN_LIST,
-  Field,
   OnReviewSwapClick,
   SwapWidget,
   SwapWidgetSkeleton,
@@ -46,24 +45,26 @@ function useWidgetTheme() {
 }
 
 interface WidgetProps {
-  token?: Currency
+  inputToken?: Currency
+  outputToken?: Currency
+  defaultToken?: Currency
   width?: number | string
-  defaultField: Field
-  onTokenChange?: (token: Currency) => void
+  onDefaultTokenChange?: (token: Currency) => void
   onReviewSwapClick?: OnReviewSwapClick
 }
 
 export default function Widget({
-  token,
+  inputToken,
+  outputToken,
+  defaultToken,
   width = DEFAULT_WIDGET_WIDTH,
-  defaultField,
-  onTokenChange,
+  onDefaultTokenChange,
   onReviewSwapClick,
 }: WidgetProps) {
   const { connector, provider } = useWeb3React()
   const locale = useActiveLocale()
   const theme = useWidgetTheme()
-  const { inputs, tokenSelector } = useSyncWidgetInputs({ token, onTokenChange, defaultField })
+  const { inputs, tokenSelector } = useSyncWidgetInputs({ inputToken, outputToken, defaultToken, onDefaultTokenChange })
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
 
@@ -189,7 +190,7 @@ export default function Widget({
   )
 }
 
-export function WidgetSkeleton() {
+export function WidgetSkeleton({ width = DEFAULT_WIDGET_WIDTH }: { width?: number | string }) {
   const theme = useWidgetTheme()
-  return <SwapWidgetSkeleton theme={theme} width={DEFAULT_WIDGET_WIDTH} />
+  return <SwapWidgetSkeleton theme={theme} width={width} />
 }
