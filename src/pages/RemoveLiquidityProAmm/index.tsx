@@ -280,8 +280,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       slippageTolerance: basisPointsToPercent(allowedSlippage[0]),
       deadline: deadline.toString(),
       collectOptions: {
-        expectedCurrencyOwed0: feeValue0,
-        expectedCurrencyOwed1: feeValue1,
+        expectedCurrencyOwed0: feeValue0.subtract(feeValue0.multiply(basisPointsToPercent(allowedSlippage[0]))),
+        expectedCurrencyOwed1: feeValue1.subtract(feeValue1.multiply(basisPointsToPercent(allowedSlippage[0]))),
         recipient: account,
         deadline: deadline.toString(),
         isRemovingLiquid: true,
