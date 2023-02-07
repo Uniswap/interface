@@ -26,9 +26,11 @@ export function swapErrorToUserReadableMessage(error: any): string {
   // so we need to parse the reason for these special cases:
   if (
     // For rainbow wallet:
-    (reason?.toLowerCase().includes('request') && reason?.toLowerCase().includes('reject')) ||
+    (reason?.match(/request/i) && reason.match(/reject/i)) ||
     // For frame wallet: https://frame.sh/
-    reason?.toLowerCase().includes('declined')
+    reason?.match(/declined/i) ||
+    // For safepal:
+    reason?.toLowerCase().includes('cancelled by user')
   ) {
     return t`Transaction rejected`
   }
