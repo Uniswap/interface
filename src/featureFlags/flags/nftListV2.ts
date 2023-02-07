@@ -1,7 +1,7 @@
-import { BaseVariant, FeatureFlag, useBaseFlag } from '../index'
+import { BaseVariant } from '../index'
 
 export function useNftListV2Flag(): BaseVariant {
-  return useBaseFlag(FeatureFlag.nftListV2)
+  return BaseVariant.Enabled
 }
 
 export { BaseVariant as NftListV2Variant }
