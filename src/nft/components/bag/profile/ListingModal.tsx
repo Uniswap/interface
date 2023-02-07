@@ -27,6 +27,7 @@ const ListingModal = () => {
   const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
   const setCollectionsRequiringApproval = useNFTList((state) => state.setCollectionsRequiringApproval)
   const setListingStatusAndCallback = useNFTList((state) => state.setListingStatusAndCallback)
+  const setCollectionStatusAndCallback = useNFTList((state) => state.setCollectionStatusAndCallback)
   const [openIndex, setOpenIndex] = useState(0)
   const listingStatus = useNFTList((state) => state.listingStatus)
   const setListingStatus = useNFTList((state) => state.setListingStatus)
@@ -121,20 +122,8 @@ const ListingModal = () => {
     for (const collectionRow of collectionsRequiringApproval) {
       verifyStatus(collectionRow.status) &&
         (isMobile
-          ? await approveCollectionRow(
-              collectionRow,
-              collectionsRequiringApproval,
-              setCollectionsRequiringApproval,
-              signer,
-              pauseAllRows
-            )
-          : approveCollectionRow(
-              collectionRow,
-              collectionsRequiringApproval,
-              setCollectionsRequiringApproval,
-              signer,
-              pauseAllRows
-            ))
+          ? await approveCollectionRow(collectionRow, signer, setCollectionStatusAndCallback, pauseAllRows)
+          : approveCollectionRow(collectionRow, signer, setCollectionStatusAndCallback, pauseAllRows))
     }
   }
 

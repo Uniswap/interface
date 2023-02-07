@@ -29,25 +29,16 @@ const updateStatus = ({
 
 export async function approveCollectionRow(
   collectionRow: CollectionRow,
-  collectionsRequiringApproval: CollectionRow[],
-  setCollectionsRequiringApproval: Dispatch<CollectionRow[]>,
   signer: JsonRpcSigner,
+  setCollectionStatusAndCallback: (
+    collection: CollectionRow,
+    status: ListingStatus,
+    callback?: () => Promise<void>
+  ) => void,
   pauseAllRows?: () => void
 ) {
-  updateStatus({
-    listing: collectionRow,
-    newStatus: ListingStatus.SIGNING,
-    rows: collectionsRequiringApproval,
-    setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
-    callback: () =>
-      approveCollectionRow(
-        collectionRow,
-        collectionsRequiringApproval,
-        setCollectionsRequiringApproval,
-        signer,
-        pauseAllRows
-      ),
-  })
+  const callback = () => approveCollectionRow(collectionRow, signer, setCollectionStatusAndCallback, pauseAllRows)
+  setCollectionStatusAndCallback(collectionRow, ListingStatus.SIGNING, callback)
   const { marketplace, collectionAddress } = collectionRow
   const addresses = addressesByNetwork[SupportedChainId.MAINNET]
   const spender =
@@ -60,12 +51,7 @@ export async function approveCollectionRow(
       : addresses.TRANSFER_MANAGER_ERC721
   !!collectionAddress &&
     (await approveCollection(spender, collectionAddress, signer, (newStatus: ListingStatus) =>
-      updateStatus({
-        listing: collectionRow,
-        newStatus,
-        rows: collectionsRequiringApproval,
-        setRows: setCollectionsRequiringApproval as Dispatch<AssetRow[]>,
-      })
+      setCollectionStatusAndCallback(collectionRow, newStatus, callback)
     ))
   if (
     (collectionRow.status === ListingStatus.REJECTED || collectionRow.status === ListingStatus.FAILED) &&
