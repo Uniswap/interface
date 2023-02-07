@@ -13,6 +13,7 @@ import { X } from 'react-feather'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import shallow from 'zustand/shallow'
 
 import { TitleRow } from '../shared'
 import { ListModalSection, Section } from './ListModalSection'
@@ -45,12 +46,31 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   const signer = provider?.getSigner()
   const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
   const sellAssets = useSellAsset((state) => state.sellAssets)
-  const listings = useNFTList((state) => state.listings)
-  const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
-  const listingStatus = useNFTList((state) => state.listingStatus)
-  const setLooksRareNonce = useNFTList((state) => state.setLooksRareNonce)
-  const getLooksRareNonce = useNFTList((state) => state.getLooksRareNonce)
-  const setListingStatusAndCallback = useNFTList((state) => state.setListingStatusAndCallback)
+  const {
+    listingStatus,
+    setListingStatusAndCallback,
+    setLooksRareNonce,
+    getLooksRareNonce,
+    collectionsRequiringApproval,
+    listings,
+  } = useNFTList(
+    ({
+      listingStatus,
+      setListingStatusAndCallback,
+      setLooksRareNonce,
+      getLooksRareNonce,
+      collectionsRequiringApproval,
+      listings,
+    }) => ({
+      listingStatus,
+      setListingStatusAndCallback,
+      setLooksRareNonce,
+      getLooksRareNonce,
+      collectionsRequiringApproval,
+      listings,
+    }),
+    shallow
+  )
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const [openSection, toggleOpenSection] = useReducer(
