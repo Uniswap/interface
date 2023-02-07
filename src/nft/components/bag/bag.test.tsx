@@ -1,3 +1,4 @@
+import { MockedProvider } from '@apollo/client/testing'
 import { render } from 'test-utils'
 
 import Bag from './Bag'
@@ -15,7 +16,11 @@ jest.mock('@web3-react/core', () => {
 
 describe('Bag.tsx', () => {
   it('matches base snapshot', () => {
-    const { asFragment } = render(<Bag />)
+    const { asFragment } = render(
+      <MockedProvider>
+        <Bag />
+      </MockedProvider>
+    )
     expect(asFragment()).toMatchSnapshot()
   })
 })
