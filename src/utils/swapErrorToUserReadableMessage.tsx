@@ -30,7 +30,7 @@ export function swapErrorToUserReadableMessage(error: any): string {
     // For frame wallet: https://frame.sh/
     reason?.match(/declined/i) ||
     // For safepal:
-    reason?.toLowerCase().includes('cancelled by user')
+    reason?.match('cancelled by user')
   ) {
     return t`Transaction rejected`
   }
