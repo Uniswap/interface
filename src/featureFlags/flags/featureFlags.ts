@@ -5,4 +5,5 @@ export enum FeatureFlag {
   nftListV2 = 'nftListV2',
   payWithAnyToken = 'payWithAnyToken',
   swapWidget = 'swapWidget',
+  gqlRouting = 'gqlRouting',
 }
