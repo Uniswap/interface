@@ -76,52 +76,34 @@ export async function approveCollectionRow(
 
 export async function signListingRow(
   listing: ListingRow,
-  listings: ListingRow[],
-  setListings: Dispatch<ListingRow[]>,
   signer: JsonRpcSigner,
   provider: Web3Provider,
   getLooksRareNonce: () => number,
   setLooksRareNonce: (nonce: number) => void,
+  setListingStatusAndCallback: (listing: ListingRow, status: ListingStatus, callback?: () => Promise<void>) => void,
   pauseAllRows?: () => void
 ) {
   const looksRareNonce = getLooksRareNonce()
-  updateStatus({
-    listing,
-    newStatus: ListingStatus.SIGNING,
-    rows: listings,
-    setRows: setListings as Dispatch<AssetRow[]>,
-    callback: () => {
-      return signListingRow(
-        listing,
-        listings,
-        setListings,
-        signer,
-        provider,
-        getLooksRareNonce,
-        setLooksRareNonce,
-        pauseAllRows
-      )
-    },
-  })
+  const callback = () => {
+    return signListingRow(
+      listing,
+      signer,
+      provider,
+      getLooksRareNonce,
+      setLooksRareNonce,
+      setListingStatusAndCallback,
+      pauseAllRows
+    )
+  }
+  setListingStatusAndCallback(listing, ListingStatus.SIGNING, callback)
   const { asset, marketplace } = listing
   const res = await signListing(marketplace, asset, signer, provider, looksRareNonce, (newStatus: ListingStatus) =>
-    updateStatus({
-      listing,
-      newStatus,
-      rows: listings,
-      setRows: setListings as Dispatch<AssetRow[]>,
-    })
+    setListingStatusAndCallback(listing, newStatus, callback)
   )
-  if (listing.status === ListingStatus.REJECTED && pauseAllRows) pauseAllRows()
-  else {
+  if (listing.status === ListingStatus.REJECTED && pauseAllRows) {
+    pauseAllRows()
+  } else {
     res && listing.marketplace.name === 'LooksRare' && setLooksRareNonce(looksRareNonce + 1)
-    const newStatus = res ? ListingStatus.APPROVED : ListingStatus.FAILED
-    updateStatus({
-      listing,
-      newStatus,
-      rows: listings,
-      setRows: setListings as Dispatch<AssetRow[]>,
-    })
   }
 }
 

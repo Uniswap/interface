@@ -12,6 +12,7 @@ interface NFTListState {
   setListingStatus: (status: ListingStatus) => void
   setListings: (listings: ListingRow[]) => void
   setCollectionsRequiringApproval: (collections: CollectionRow[]) => void
+  setListingStatusAndCallback: (listing: ListingRow, status: ListingStatus, callback?: () => Promise<void>) => void
 }
 
 export const useNFTList = create<NFTListState>()(
@@ -34,13 +35,15 @@ export const useNFTList = create<NFTListState>()(
     setListings: (listings) =>
       set(() => {
         const updatedListings = listings.map((listing) => {
-          const oldStatus = get().listings.find(
+          const oldListing = get().listings.find(
             (oldListing) =>
               oldListing.asset.asset_contract.address === listing.asset.asset_contract.address &&
               oldListing.asset.tokenId === listing.asset.tokenId &&
               oldListing.marketplace.name === listing.marketplace.name &&
               oldListing.price === listing.price
-          )?.status
+          )
+          const oldStatus = oldListing?.status
+          const oldCallback = oldListing?.callback
           const status = () => {
             switch (oldStatus) {
               case ListingStatus.APPROVED:
@@ -56,6 +59,7 @@ export const useNFTList = create<NFTListState>()(
           return {
             ...listing,
             status: status(),
+            callback: oldCallback ?? listing.callback,
           }
         })
         return {
@@ -65,11 +69,13 @@ export const useNFTList = create<NFTListState>()(
     setCollectionsRequiringApproval: (collections) =>
       set(() => {
         const updatedCollections = collections.map((collection) => {
-          const oldStatus = get().collectionsRequiringApproval.find(
+          const oldCollection = get().collectionsRequiringApproval.find(
             (oldCollection) =>
               oldCollection.collectionAddress === collection.collectionAddress &&
               oldCollection.marketplace.name === collection.marketplace.name
-          )?.status
+          )
+          const oldStatus = oldCollection?.status
+          const oldCallback = oldCollection?.callback
           const status = () => {
             switch (oldStatus) {
               case ListingStatus.APPROVED:
@@ -85,10 +91,33 @@ export const useNFTList = create<NFTListState>()(
           return {
             ...collection,
             status: status(),
+            callback: oldCallback ?? collection.callback,
           }
         })
         return {
           collectionsRequiringApproval: updatedCollections,
+        }
+      }),
+    setListingStatusAndCallback: (listing, status, callback) =>
+      set(() => {
+        const listings = get().listings
+        const listingsCopy = [...listings]
+        const oldListingIndex = listings.findIndex(
+          (oldListing) =>
+            oldListing.name === listing.name &&
+            oldListing.price === listing.price &&
+            oldListing.marketplace.name === listing.marketplace.name
+        )
+        if (oldListingIndex > -1) {
+          const updatedListing = {
+            ...listings[oldListingIndex],
+            status,
+            callback: callback ?? listings[oldListingIndex].callback,
+          }
+          listingsCopy.splice(oldListingIndex, 1, updatedListing)
+        }
+        return {
+          listings: listingsCopy,
         }
       }),
   }))

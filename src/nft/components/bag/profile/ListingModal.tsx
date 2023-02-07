@@ -26,6 +26,7 @@ const ListingModal = () => {
   const setListings = useNFTList((state) => state.setListings)
   const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
   const setCollectionsRequiringApproval = useNFTList((state) => state.setCollectionsRequiringApproval)
+  const setListingStatusAndCallback = useNFTList((state) => state.setListingStatusAndCallback)
   const [openIndex, setOpenIndex] = useState(0)
   const listingStatus = useNFTList((state) => state.listingStatus)
   const setListingStatus = useNFTList((state) => state.setListingStatus)
@@ -146,12 +147,11 @@ const ListingModal = () => {
       verifyStatus(listing.status) &&
         (await signListingRow(
           listing,
-          listings,
-          setListings,
           signer,
           provider,
           getLooksRareNonce,
           setLooksRareNonce,
+          setListingStatusAndCallback,
           pauseAllRows
         ))
     }

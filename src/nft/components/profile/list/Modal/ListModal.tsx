@@ -48,9 +48,9 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   const listings = useNFTList((state) => state.listings)
   const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
   const listingStatus = useNFTList((state) => state.listingStatus)
-  const setListings = useNFTList((state) => state.setListings)
   const setLooksRareNonce = useNFTList((state) => state.setLooksRareNonce)
   const getLooksRareNonce = useNFTList((state) => state.getLooksRareNonce)
+  const setListingStatusAndCallback = useNFTList((state) => state.setListingStatusAndCallback)
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const [openSection, toggleOpenSection] = useReducer(
@@ -74,7 +74,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
     if (!signer || !provider) return
     // sign listings
     for (const listing of listings) {
-      await signListingRow(listing, listings, setListings, signer, provider, getLooksRareNonce, setLooksRareNonce)
+      await signListingRow(listing, signer, provider, getLooksRareNonce, setLooksRareNonce, setListingStatusAndCallback)
     }
     sendAnalyticsEvent(NFTEventName.NFT_LISTING_COMPLETED, {
       signatures_approved: listings.filter((asset) => asset.status === ListingStatus.APPROVED),
