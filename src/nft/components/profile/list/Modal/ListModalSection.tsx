@@ -135,7 +135,7 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
             {content.map((row: AssetRow) => (
               <ContentRow
                 row={row}
-                key={row.name}
+                key={(row?.name ?? '') + row?.images[1]}
                 removeRow={removeRow}
                 isCollectionApprovalSection={isCollectionApprovalSection}
               />
