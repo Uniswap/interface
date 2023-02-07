@@ -1,3 +1,6 @@
+import type { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
+import { _TypedDataEncoder } from '@ethersproject/hash'
+import type { JsonRpcSigner } from '@ethersproject/providers'
 import { AllowanceTransfer, MaxAllowanceTransferAmount, PERMIT2_ADDRESS, PermitSingle } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
