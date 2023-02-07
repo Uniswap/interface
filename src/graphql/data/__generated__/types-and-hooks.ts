@@ -1008,7 +1008,7 @@ export type NftBalanceQuery = { __typename?: 'Query', nftBalances?: { __typename
 
 
 export const TokenDocument = gql`
-    query Token($chain: Chain!, $address: String) {
+    query Token($chain: Chain!, $address: String = null) {
   token(chain: $chain, address: $address) {
     id
     decimals
@@ -1087,7 +1087,7 @@ export type TokenQueryHookResult = ReturnType<typeof useTokenQuery>;
 export type TokenLazyQueryHookResult = ReturnType<typeof useTokenLazyQuery>;
 export type TokenQueryResult = Apollo.QueryResult<TokenQuery, TokenQueryVariables>;
 export const TokenPriceDocument = gql`
-    query TokenPrice($chain: Chain!, $address: String, $duration: HistoryDuration!) {
+    query TokenPrice($chain: Chain!, $address: String = null, $duration: HistoryDuration!) {
   token(chain: $chain, address: $address) {
     id
     address
