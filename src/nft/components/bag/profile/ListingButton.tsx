@@ -111,7 +111,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
             !listing.overrideFloorPrice
           )
             listingsBelowFloor.push([asset, listing])
-          else if (asset.floor_sell_order_price && listing.price > asset.floor_sell_order_price)
+          else if (asset.floor_sell_order_price && listing.price >= asset.floor_sell_order_price)
             listingsAboveSellOrderFloor.push([asset, listing])
         }
       }
@@ -286,10 +286,18 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
           }}
         >
           {listingStatus === ListingStatus.SIGNING || listingStatus === ListingStatus.PENDING ? (
-            <Row gap="8">
-              <LoadingIcon stroke="backgroundSurface" height="20" width="20" />
-              {listingStatus === ListingStatus.PENDING ? 'Pending' : 'Proceed in wallet'}
-            </Row>
+            isNftListV2 ? (
+              listingStatus === ListingStatus.PENDING ? (
+                'Pending'
+              ) : (
+                'Proceed in wallet'
+              )
+            ) : (
+              <Row gap="8">
+                <LoadingIcon stroke="backgroundSurface" height="20" width="20" />
+                {listingStatus === ListingStatus.PENDING ? 'Pending' : 'Proceed in wallet'}
+              </Row>
+            )
           ) : listingStatus === ListingStatus.APPROVED ? (
             'Complete!'
           ) : listingStatus === ListingStatus.PAUSED ? (

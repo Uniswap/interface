@@ -33,7 +33,11 @@ const NFTHeader = styled.div`
 `
 
 const PriceHeaders = styled(Row)`
-  flex: 1;
+  flex: 1.5;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    flex: 2;
+  }
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     flex: 3;
@@ -100,7 +104,7 @@ const DropdownContainer = styled.div`
 const FeeUserReceivesSharedStyles = css`
   display: none;
   justify-content: flex-end;
-  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
     display: flex;
   }
 `

@@ -19,12 +19,8 @@ const NFTListRowWrapper = styled(Row)`
 const NFTInfoWrapper = styled(Row)`
   align-items: center;
   min-width: 0px;
-  flex: 2;
+  flex: 1.5;
   margin-bottom: auto;
-
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    flex: 1.5;
-  }
 `
 
 const ExpandMarketIconWrapper = styled.div`
@@ -77,7 +73,11 @@ const CollectionName = styled(ThemedText.BodySmall)`
 
 const MarketPlaceRowWrapper = styled(Column)`
   gap: 24px;
-  flex: 1;
+  flex: 1.5;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    flex: 2;
+  }
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     flex: 3;
