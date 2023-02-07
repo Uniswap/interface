@@ -37,6 +37,9 @@ import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { warningSeverity } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
 
+const LOW_SEVERITY_THRESHOLD = 1
+const MEDIUM_SEVERITY_THRESHOLD = 3
+
 const FooterContainer = styled.div`
   padding: 0px 12px;
 `
@@ -55,7 +58,7 @@ const Footer = styled.div`
 const FooterHeader = styled(Column)<{ warningText?: boolean; usingPayWithAnyToken?: boolean }>`
   padding-top: 8px;
   padding-bottom: ${({ warningText, usingPayWithAnyToken }) =>
-    warningText ? (usingPayWithAnyToken ? '16px' : '8px') : usingPayWithAnyToken ? '16px' : '20px'};
+    usingPayWithAnyToken ? '16px' : warningText ? '20px' : '8px'};
 `
 
 const CurrencyRow = styled(Row)`
@@ -83,7 +86,6 @@ const WarningText = styled(ThemedText.BodyPrimary)`
 
 const HelperText = styled(ThemedText.Caption)<{ $color: string }>`
   color: ${({ $color }) => $color};
-  align-items: center;
   display: flex;
   justify-content: center;
   text-align: center;
@@ -135,7 +137,7 @@ interface ActionButtonProps {
 
 const ActionButton = ({ disabled, children, onClick, backgroundColor }: PropsWithChildren<ActionButtonProps>) => {
   return (
-    <PayButton disabled={disabled} onClick={onClick} $backgroundColor={backgroundColor}>
+    <PayButton disabled={disabled} onClick={() => !disabled && onClick()} $backgroundColor={backgroundColor}>
       {children}
     </PayButton>
   )
@@ -305,11 +307,11 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
   const { priceImpactWarning, priceImpactColor } = useMemo(() => {
     const severity = warningSeverity(stablecoinPriceImpact)
 
-    if (severity < 1) {
+    if (severity < LOW_SEVERITY_THRESHOLD) {
       return { priceImpactWarning: false, priceImpactColor: undefined }
     }
 
-    if (severity < 3) {
+    if (severity < MEDIUM_SEVERITY_THRESHOLD) {
       return { priceImpactWarning: false, priceImpactColor: theme.accentWarning }
     }
 
@@ -403,6 +405,8 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
     usd_value: usdcValue?.toExact(),
     ...eventProperties,
   }
+
+  console.log('disabled', disabled)
 
   return (
     <FooterContainer>
