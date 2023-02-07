@@ -63,7 +63,6 @@ const fixedFormatting = (value: BigNumber, decimals: number) => {
 
 interface ListItemProps {
   farm: Farm
-  oddRow?: boolean
   setSharedPoolAddress: (addr: string) => void
 }
 
@@ -155,7 +154,6 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
   const staked = useStakedBalance(farm.fairLaunchAddress, farm.pid)
   const rewardUSD = useFarmRewardsUSD(farmRewards)
 
-  const isAbleToStake = !balance.value.gt(0)
   const isNotStaked = !staked.value.gt(0)
 
   const amountToApprove = useMemo(
@@ -449,7 +447,7 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
               </ActionButton>
               <ActionButton
                 color={theme.primary}
-                disabled={type === 'ended' || isAbleToStake}
+                disabled={type === 'ended'}
                 onClick={() => {
                   setModalType('stake')
                 }}
@@ -606,7 +604,7 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
               <Trans>Unstake</Trans>
             </CardButton>
             <CardButton
-              disabled={type === 'ended' || isAbleToStake}
+              disabled={type === 'ended'}
               flex={1}
               onClick={() => setModalType('stake')}
               color={theme.primary}
