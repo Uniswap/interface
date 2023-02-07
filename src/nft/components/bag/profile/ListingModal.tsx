@@ -12,6 +12,7 @@ import { AssetRow, CollectionRow, ListingRow, ListingStatus } from 'nft/types'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { Dispatch, useEffect, useMemo, useRef, useState } from 'react'
+import shallow from 'zustand/shallow'
 
 import { ListingButton } from './ListingButton'
 import * as styles from './ListingModal.css'
@@ -21,18 +22,49 @@ import { approveCollectionRow, getTotalEthValue, pauseRow, resetRow, signListing
 const ListingModal = () => {
   const { provider } = useWeb3React()
   const sellAssets = useSellAsset((state) => state.sellAssets)
+  const {
+    listingStatus,
+    setListingStatus,
+    setListings,
+    setCollectionsRequiringApproval,
+    setListingStatusAndCallback,
+    setCollectionStatusAndCallback,
+    looksRareNonce,
+    setLooksRareNonce,
+    getLooksRareNonce,
+    collectionsRequiringApproval,
+    listings,
+  } = useNFTList(
+    ({
+      listingStatus,
+      setListingStatus,
+      setListings,
+      setCollectionsRequiringApproval,
+      setListingStatusAndCallback,
+      setCollectionStatusAndCallback,
+      looksRareNonce,
+      setLooksRareNonce,
+      getLooksRareNonce,
+      collectionsRequiringApproval,
+      listings,
+    }) => ({
+      listingStatus,
+      setListingStatus,
+      setListings,
+      setCollectionsRequiringApproval,
+      setListingStatusAndCallback,
+      setCollectionStatusAndCallback,
+      looksRareNonce,
+      setLooksRareNonce,
+      getLooksRareNonce,
+      collectionsRequiringApproval,
+      listings,
+    }),
+    shallow
+  )
   const signer = provider?.getSigner()
-  const listings = useNFTList((state) => state.listings)
-  const setListings = useNFTList((state) => state.setListings)
-  const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
-  const setCollectionsRequiringApproval = useNFTList((state) => state.setCollectionsRequiringApproval)
   const [openIndex, setOpenIndex] = useState(0)
-  const listingStatus = useNFTList((state) => state.listingStatus)
-  const setListingStatus = useNFTList((state) => state.setListingStatus)
   const [allCollectionsApproved, setAllCollectionsApproved] = useState(false)
-  const looksRareNonce = useNFTList((state) => state.looksRareNonce)
-  const setLooksRareNonce = useNFTList((state) => state.setLooksRareNonce)
-  const getLooksRareNonce = useNFTList((state) => state.getLooksRareNonce)
   const toggleCart = useBag((state) => state.toggleBag)
   const looksRareNonceRef = useRef(looksRareNonce)
   const isMobile = useIsMobile()
@@ -120,20 +152,8 @@ const ListingModal = () => {
     for (const collectionRow of collectionsRequiringApproval) {
       verifyStatus(collectionRow.status) &&
         (isMobile
-          ? await approveCollectionRow(
-              collectionRow,
-              collectionsRequiringApproval,
-              setCollectionsRequiringApproval,
-              signer,
-              pauseAllRows
-            )
-          : approveCollectionRow(
-              collectionRow,
-              collectionsRequiringApproval,
-              setCollectionsRequiringApproval,
-              signer,
-              pauseAllRows
-            ))
+          ? await approveCollectionRow(collectionRow, signer, setCollectionStatusAndCallback, pauseAllRows)
+          : approveCollectionRow(collectionRow, signer, setCollectionStatusAndCallback, pauseAllRows))
     }
   }
 
@@ -146,12 +166,11 @@ const ListingModal = () => {
       verifyStatus(listing.status) &&
         (await signListingRow(
           listing,
-          listings,
-          setListings,
           signer,
           provider,
           getLooksRareNonce,
           setLooksRareNonce,
+          setListingStatusAndCallback,
           pauseAllRows
         ))
     }

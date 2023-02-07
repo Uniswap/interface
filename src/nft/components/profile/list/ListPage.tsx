@@ -188,7 +188,7 @@ export const ListPage = () => {
     listingStatus,
     setListingStatus,
     setLooksRareNonce,
-    setCollectionsRequiringApproval,
+    setCollectionStatusAndCallback,
   } = useNFTList(
     ({
       listings,
@@ -196,14 +196,14 @@ export const ListPage = () => {
       listingStatus,
       setListingStatus,
       setLooksRareNonce,
-      setCollectionsRequiringApproval,
+      setCollectionStatusAndCallback,
     }) => ({
       listings,
       collectionsRequiringApproval,
       listingStatus,
       setListingStatus,
       setLooksRareNonce,
-      setCollectionsRequiringApproval,
+      setCollectionStatusAndCallback,
     }),
     shallow
   )
@@ -261,13 +261,8 @@ export const ListPage = () => {
     for (const collectionRow of collectionsRequiringApproval) {
       verifyStatus(collectionRow.status) &&
         (isMobile
-          ? await approveCollectionRow(
-              collectionRow,
-              collectionsRequiringApproval,
-              setCollectionsRequiringApproval,
-              signer
-            )
-          : approveCollectionRow(collectionRow, collectionsRequiringApproval, setCollectionsRequiringApproval, signer))
+          ? await approveCollectionRow(collectionRow, signer, setCollectionStatusAndCallback)
+          : approveCollectionRow(collectionRow, signer, setCollectionStatusAndCallback))
     }
   }
 
