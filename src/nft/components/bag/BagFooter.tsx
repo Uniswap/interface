@@ -55,10 +55,9 @@ const Footer = styled.div`
   border-bottom-right-radius: 12px;
 `
 
-const FooterHeader = styled(Column)<{ warningText?: boolean; usingPayWithAnyToken?: boolean }>`
+const FooterHeader = styled(Column)<{ usingPayWithAnyToken?: boolean }>`
   padding-top: 8px;
-  padding-bottom: ${({ warningText, usingPayWithAnyToken }) =>
-    usingPayWithAnyToken ? '16px' : warningText ? '20px' : '8px'};
+  padding-bottom: ${({ usingPayWithAnyToken }) => (usingPayWithAnyToken ? '16px' : '20px')};
 `
 
 const CurrencyRow = styled(Row)`
@@ -97,7 +96,7 @@ const CurrencyInput = styled(Row)`
   cursor: pointer;
 `
 
-const PayButton = styled(Row)<{ disabled?: boolean; $backgroundColor: string }>`
+const PayButton = styled.button<{ $backgroundColor: string }>`
   background: ${({ $backgroundColor }) => $backgroundColor};
   color: ${({ theme }) => theme.accentTextLightPrimary};
   font-weight: 600;
@@ -108,8 +107,12 @@ const PayButton = styled(Row)<{ disabled?: boolean; $backgroundColor: string }>`
   border: none;
   border-radius: 12px;
   padding: 12px 0px;
-  opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
-  cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: auto;
+  }
 `
 const FiatLoadingBubble = styled(LoadingBubble)`
   border-radius: 4px;
@@ -137,7 +140,7 @@ interface ActionButtonProps {
 
 const ActionButton = ({ disabled, children, onClick, backgroundColor }: PropsWithChildren<ActionButtonProps>) => {
   return (
-    <PayButton disabled={disabled} onClick={() => !disabled && onClick()} $backgroundColor={backgroundColor}>
+    <PayButton disabled={disabled} onClick={onClick} $backgroundColor={backgroundColor}>
       {children}
     </PayButton>
   )
@@ -406,17 +409,11 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
     ...eventProperties,
   }
 
-  console.log('disabled', disabled)
-
   return (
     <FooterContainer>
       <Footer>
         {shouldUsePayWithAnyToken && (
-          <FooterHeader
-            gap="xs"
-            warningText={!!warningText || !!helperText}
-            usingPayWithAnyToken={shouldUsePayWithAnyToken}
-          >
+          <FooterHeader gap="xs" usingPayWithAnyToken={shouldUsePayWithAnyToken}>
             <CurrencyRow>
               <Column gap="xs">
                 <ThemedText.SubHeaderSmall>
@@ -447,7 +444,7 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
           </FooterHeader>
         )}
         {!shouldUsePayWithAnyToken && (
-          <FooterHeader gap="xs" warningText={!!warningText || !!helperText}>
+          <FooterHeader gap="xs">
             <Row justify="space-between">
               <div>
                 <ThemedText.HeadlineSmall>Total</ThemedText.HeadlineSmall>
