@@ -8,20 +8,14 @@ directive @aws_auth(
 ) on FIELD_DEFINITION
 
 """
-Tells the service which subscriptions will be published to when this mutation is
-called. This directive is deprecated use @aws_susbscribe directive instead.
-"""
-directive @aws_publish(
-  """
-  List of subscriptions which will be published to when this mutation is called.
-  """
-  subscriptions: [String]
-) on FIELD_DEFINITION
-
-"""
 Tells the service this field/object has access authorized by a Lambda Authorizer.
 """
 directive @aws_lambda on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by sigv4 signing.
+"""
+directive @aws_iam on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service this field/object has access authorized by an OIDC token.
@@ -37,22 +31,28 @@ directive @aws_subscribe(
 ) on FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by an API key.
-"""
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by sigv4 signing.
-"""
-directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""
 Tells the service this field/object has access authorized by a Cognito User Pools token.
 """
 directive @aws_cognito_user_pools(
   """List of cognito user pool groups which have access on this field"""
   cognito_groups: [String]
 ) on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service which subscriptions will be published to when this mutation is
+called. This directive is deprecated use @aws_susbscribe directive instead.
+"""
+directive @aws_publish(
+  """
+  List of subscriptions which will be published to when this mutation is called.
+  """
+  subscriptions: [String]
+) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an API key.
+"""
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
 
 enum ActivityType {
   APPROVE
@@ -130,6 +130,11 @@ input ContractInput {
 enum Currency {
   USD
   ETH
+}
+
+enum DatasourceProvider {
+  UNISWAP
+  NXYZ
 }
 
 type Dimensions {
@@ -447,10 +452,44 @@ enum NftRarityProvider {
   RARITY_SNIPER
 }
 
+type NftRouteResponse {
+  id: ID!
+  calldata: String!
+  toAddress: String!
+  sendAmount: TokenAmount!
+  route: [NftTrade!]
+}
+
 enum NftStandard {
   ERC721
   ERC1155
   NONCOMPLIANT
+}
+
+type NftTrade {
+  id: ID!
+  contractAddress: String!
+  tokenId: String!
+  tokenType: NftStandard!
+  marketplace: NftMarketplace!
+  amount: Int!
+
+  """  quotePrice represents the last quoted price of the NFT"""
+  quotePrice: TokenAmount
+
+  """  price represents the current price of the NFT, which can be different from quotePrice
+  """
+  price: TokenAmount!
+}
+
+input NftTradeInput {
+  id: ID!
+  contractAddress: String!
+  tokenId: String!
+  tokenType: NftStandard!
+  marketplace: NftMarketplace!
+  amount: Int!
+  quotePrice: TokenAmountInput
 }
 
 type NftTransfer {
@@ -481,6 +520,24 @@ type PageInfo {
   endCursor: String
 }
 
+"""  v2 pool parameters as defined by https://github.com/Uniswap/v2-sdk/blob/main/src/entities/pair.ts
+"""
+input PairInput {
+  tokenAmountA: TokenAmountInput!
+  tokenAmountB: TokenAmountInput!
+}
+
+"""  v3 pool parameters as defined by https://github.com/Uniswap/v3-sdk/blob/main/src/entities/pool.ts
+"""
+input PoolInput {
+  tokenA: TokenInput!
+  tokenB: TokenInput!
+  fee: Int!
+  sqrtRatioX96: String!
+  liquidity: String!
+  tickCurrent: String!
+}
+
 type Portfolio {
   id: ID!
   ownerAddress: String!
@@ -499,13 +556,13 @@ type Query {
   tokenProjects(contracts: [ContractInput!]!): [TokenProject]
   searchTokens(searchQuery: String!): [Token]
   searchTokenProjects(searchQuery: String!): [TokenProject]
-  assetActivities(address: String!, page: Int, pageSize: Int): [AssetActivity]
   portfolios(ownerAddresses: [String!]!, useAltDataSource: Boolean): [Portfolio]
   nftCollectionsById(collectionIds: [String]): [NftCollection]
   topTokens(chain: Chain, page: Int, pageSize: Int, orderBy: TokenSortableField): [Token]
   nftAssets(chain: Chain, address: String!, orderBy: NftAssetSortableField, asc: Boolean, filter: NftAssetsFilterInput, first: Int, last: Int, after: String, before: String): NftAssetConnection
   nftCollections(filter: NftCollectionsFilterInput, first: Int, last: Int, after: String, before: String): NftCollectionConnection
   nftBalances(chain: Chain, ownerAddress: String!, filter: NftBalancesFilterInput, first: Int, last: Int, after: String, before: String): NftBalanceConnection
+  nftRoute(chain: Chain, senderAddress: String!, nftTrades: [NftTradeInput!]!, tokenTrades: [TokenTradeInput!]): NftRouteResponse
 }
 
 enum SafetyLevel {
@@ -534,6 +591,17 @@ type Token implements IContract {
   market(currency: Currency): TokenMarket
 }
 
+type TokenAmount {
+  id: ID!
+  value: String!
+  currency: Currency!
+}
+
+input TokenAmountInput {
+  token: TokenInput!
+  amount: String!
+}
+
 type TokenApproval {
   id: ID!
   tokenStandard: TokenStandard!
@@ -553,6 +621,13 @@ type TokenBalance {
   ownerAddress: String!
   token: Token
   tokenProjectMarket: TokenProjectMarket
+}
+
+input TokenInput {
+  chainId: Int!
+  address: String!
+  decimals: Int!
+  isNative: Boolean!
 }
 
 type TokenMarket {
@@ -610,6 +685,30 @@ enum TokenStandard {
   ERC1155
 }
 
+input TokenTradeInput {
+  tokenAmount: TokenAmountInput!
+  routes: TokenTradeRoutesInput
+  slippageToleranceBasisPoints: Int
+}
+
+input TokenTradeRouteInput {
+  pools: [TradePoolInput!]!
+  inputAmount: TokenAmountInput!
+  outputAmount: TokenAmountInput!
+}
+
+input TokenTradeRoutesInput {
+  v2Routes: [TokenTradeRouteInput!]
+  v3Routes: [TokenTradeRouteInput!]
+  mixedRoutes: [TokenTradeRouteInput!]
+  tradeType: TokenTradeType!
+}
+
+enum TokenTradeType {
+  EXACT_INPUT
+  EXACT_OUTPUT
+}
+
 type TokenTransfer {
   id: ID!
   tokenStandard: TokenStandard!
@@ -619,6 +718,11 @@ type TokenTransfer {
   quantity: String!
   direction: TransactionDirection!
   transactedValue: Amount
+}
+
+input TradePoolInput {
+  pair: PairInput
+  pool: PoolInput
 }
 
 type Transaction {
