@@ -25,12 +25,14 @@ export function swapErrorToUserReadableMessage(error: any): string {
   // The 4001 error code doesn't capture the case where users reject a transaction for all wallets,
   // so we need to parse the reason for these special cases:
   if (
-    // For rainbow wallet:
+    // For Rainbow :
     (reason?.match(/request/i) && reason?.match(/reject/i)) ||
-    // For frame wallet: https://frame.sh/
+    // For Frame:
     reason?.match(/declined/i) ||
-    // For safepal:
-    reason?.match('cancelled by user')
+    // For SafePal:
+    reason?.match(/cancelled by user/i) ||
+    // For Coinbase:
+    reason?.match(/user denied/i)
   ) {
     return t`Transaction rejected`
   }
