@@ -2,7 +2,7 @@ import { FlashList } from '@shopify/flash-list'
 import React, { forwardRef, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
-import { FadeIn, FadeInDown, FadeOut } from 'react-native-reanimated'
+import { FadeInDown, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppSelector } from 'src/app/hooks'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
@@ -14,7 +14,6 @@ import {
   TAB_VIEW_SCROLL_THROTTLE,
 } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
-import { Text } from 'src/components/Text'
 import { HiddenTokensRow } from 'src/components/TokenBalanceList/HiddenTokensRow'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { EMPTY_ARRAY } from 'src/constants/misc'
@@ -35,10 +34,6 @@ type TokenBalanceListProps = {
   onPressToken: (currencyId: CurrencyId) => void
   containerProps?: TabContentProps
   scrollHandler?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
-}
-
-type SectionHeader = {
-  title: string
 }
 
 const ESTIMATED_TOKEN_ITEM_HEIGHT = 64
@@ -72,6 +67,7 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
         onCompleted
       )
     )
+
     const hasOnlyHiddenTokens =
       !data?.balances.length && (!!data?.smallBalances.length || !!data?.spamBalances.length)
 
@@ -89,24 +85,24 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
       }
     }, [data, networkStatus])
 
-    const listItems: (SectionHeader | PortfolioBalance | string)[] = useMemo(() => {
+    const listItems: (PortfolioBalance | string)[] = useMemo(() => {
       if (!data) return EMPTY_ARRAY
 
       const { balances, smallBalances, spamBalances } = data
 
+      // No balances
+      if (!balances.length && !smallBalances.length && !spamBalances.length) return EMPTY_ARRAY
+
+      // No hidden tokens
+      if (balances.length > 0 && smallBalances.length === 0 && spamBalances.length === 0)
+        return balances
+
+      // Show non-hidden tokens and hidden tokens row
       if (!hiddenTokensExpanded) return [...balances, HIDDEN_TOKENS_ROW]
 
-      const smallBalancesHeader: SectionHeader = { title: t('Small balances') }
-      const unknownTokensHeader: SectionHeader = { title: t('Unknown tokens') }
-
-      const smallBalancesItems =
-        smallBalances.length > 0 ? [smallBalancesHeader, ...smallBalances] : EMPTY_ARRAY
-      const spamBalancesItems =
-        spamBalances.length > 0 ? [unknownTokensHeader, ...spamBalances] : EMPTY_ARRAY
-      const hiddenTokensItems = [...smallBalancesItems, ...spamBalancesItems]
-
-      return [...balances, HIDDEN_TOKENS_ROW, ...hiddenTokensItems]
-    }, [t, data, hiddenTokensExpanded])
+      // Show all tokens including hidden
+      return [...balances, HIDDEN_TOKENS_ROW, ...smallBalances, ...spamBalances]
+    }, [data, hiddenTokensExpanded])
 
     if (!data) {
       if (isNonPollingRequestInFlight(networkStatus)) {
@@ -173,14 +169,6 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
                 onPress={(): void => setHiddenTokensExpanded(!hiddenTokensExpanded)}
               />
             )
-          } else if (isSectionHeader(item)) {
-            return (
-              <AnimatedBox entering={FadeIn} exiting={FadeOut}>
-                <Text color="textSecondary" my="xs" variant="subheadSmall">
-                  {item.title}
-                </Text>
-              </AnimatedBox>
-            )
           } else if (isPortfolioBalance(item)) {
             return (
               <TokenBalanceItem
@@ -202,18 +190,11 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
   }
 )
 
-function isSectionHeader(obj: string | SectionHeader | PortfolioBalance): obj is SectionHeader {
-  return (obj as SectionHeader).title !== undefined
-}
-
-function isPortfolioBalance(
-  obj: string | SectionHeader | PortfolioBalance
-): obj is PortfolioBalance {
+function isPortfolioBalance(obj: string | PortfolioBalance): obj is PortfolioBalance {
   return (obj as PortfolioBalance).currencyInfo !== undefined
 }
 
-function key(item: PortfolioBalance | SectionHeader | string): string {
-  if (isSectionHeader(item)) return item.title
+function key(item: PortfolioBalance | string): string {
   if (isPortfolioBalance(item)) return item.currencyInfo.currencyId
   return item
 }

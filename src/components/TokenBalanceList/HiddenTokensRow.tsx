@@ -38,13 +38,26 @@ export function HiddenTokensRow({
 
   return (
     <TouchableArea hapticFeedback hapticStyle={ImpactFeedbackStyle.Light} onPress={onPressRow}>
-      <Flex row alignItems="center" justifyContent="space-between" mt="xs">
+      <Flex row alignItems="center" justifyContent="space-between" my="xxs">
         <Text color="textPrimary" variant="subheadSmall">
           {t('Hidden ({{numHidden}})', { numHidden })}
         </Text>
-        <AnimatedBox style={chevronAnimatedStyle}>
-          <Chevron color={theme.colors.textPrimary} direction="s" />
-        </AnimatedBox>
+        <Flex
+          row
+          alignItems="center"
+          bg="background2"
+          borderRadius="full"
+          gap="none"
+          pl="sm"
+          pr="xs"
+          py="xxs">
+          <Text color="textSecondary" variant="subheadSmall">
+            {isExpanded ? t('Hide') : t('Show')}
+          </Text>
+          <AnimatedBox style={chevronAnimatedStyle}>
+            <Chevron color={theme.colors.textSecondary} direction="s" />
+          </AnimatedBox>
+        </Flex>
       </Flex>
     </TouchableArea>
   )
