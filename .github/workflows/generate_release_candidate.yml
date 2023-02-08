@@ -1,0 +1,35 @@
+name: 2 | Generate releases/[versionNumber] branch
+
+# This CI job is responsible for generating a new release candidate branch, branched off of `main` branch.
+# It will automatically kick off a beta build, and so will subsequent pushes to the branch. 
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-release-branch:
+    name: 'Generate release branch for new version'
+    runs-on: macos-latest
+    
+    steps:
+      - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
+        with:
+          token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
+      - name: Setup git
+        run: |
+          git config user.name "UL Mobile Service Account"
+          git config user.email "hello-happy-puppy@users.noreply.github.com"
+      
+      - name: Get marketing version number
+        run: |
+          fastlane ios getMarketingVersionNumber
+        env:
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
+          CI: true
+          
+      - name: Checkout and push to releases/[$IOS_VERSION_NUMBER]
+        run: |
+          git checkout -b releases/$IOS_VERSION_NUMBER
+          git push -u origin releases/$IOS_VERSION_NUMBER:releases/$IOS_VERSION_NUMBER

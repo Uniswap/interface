@@ -195,4 +195,26 @@ end
     end
 
   end
+
+  # get version for release candiate
+  lane :getMarketingVersionNumber do
+
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+      key_content: ENV["APP_STORE_CONNECT_KEY_CONTENT"],
+    )
+
+    current_marketing_version = get_version_number(
+      xcodeproj: XCODE_PROJECT,
+      target: PROJECT_NAME,
+      configuration: "Release"
+    )
+
+    # Setting env variables to be used in the next step of the workflow
+    if ENV["CI"]
+      sh "echo IOS_VERSION_NUMBER=#{current_marketing_version} >> $GITHUB_ENV"
+    end
+    
+  end
 end
