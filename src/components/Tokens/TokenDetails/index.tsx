@@ -218,7 +218,7 @@ export default function TokenDetails({
           <TokenDetailsSkeleton />
         )}
 
-        <RightPanel onClick={isBlockedToken ? () => setOpenTokenSafetyModal(true) : null}>
+        <RightPanel onClick={() => isBlockedToken && setOpenTokenSafetyModal(true)}>
           <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto' }}>
             <Widget
               token={token ?? undefined}
