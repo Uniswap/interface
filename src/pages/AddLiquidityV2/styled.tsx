@@ -1,30 +1,33 @@
 import { Flex } from 'rebass'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
+import { ButtonOutlined } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import Input from 'components/NumericalInput'
 
-export const PageWrapper = styled.div`
-  margin: 64px 12px;
+export const PageWrapper = styled(AutoColumn)`
+  padding: 0 2rem 1rem;
+  width: 100%;
+  max-width: calc(1500px + 2rem * 2);
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin: 24px 12px;
+    padding: 0 12px;
+    max-width: calc(500px + 12px * 2);
   `};
 `
 export const Container = styled.div`
-  max-width: 880px;
   width: 100%;
-  border-radius: 0.75rem;
+  border-radius: 20px;
+  border: 1px solid ${({ theme }) => theme.border};
   background: ${({ theme }) => theme.background};
-
-  padding: 4px 20px 28px;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  gap: 24px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    max-width: 480px;
-  `};
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 0 16px 24px;
+    padding: 16px;
+    gap: 16px;
   `};
 `
 
@@ -40,45 +43,40 @@ export const StyledInput = styled(Input)`
   width: 100%;
 `
 
-/* two-column layout where DepositAmount is moved at the very end on mobile. */
-export const ResponsiveTwoColumns = styled.div`
-  margin-top: 6px;
-  display: grid;
-  grid-row-gap: 24px;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: max-content;
-  grid-auto-flow: row;
-
-  padding-top: 20px;
-
-  border-top: 1px solid ${({ theme }) => theme.border};
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-template-columns: 1fr;
+export const RightContainer = styled(AutoColumn)`
+  height: fit-content;
+  min-width: 600px;
+  width: 100%;
+  gap: 0;
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    min-width: 450px;
   `};
 `
 
-export const RightContainer = styled(AutoColumn)`
-  grid-row: 1 / 3;
-  grid-column: 2;
-  height: fit-content;
+export const ChartWrapper = styled.div`
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: ${({ theme }) => theme.buttonBlack};
+  height: 100%;
+  width: 100%;
+`
 
-  padding-left: 24px;
-  border-left: 1px solid ${({ theme }) => theme.border};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-row: 2 / 3;
-    grid-column: 1;
-    border-left: none;
-    padding-left: 0px;
-  `};
+export const ChartBody = styled.div`
+  background-color: ${({ theme }) => theme.buttonBlack};
+  padding: 16px;
+  width: 100%;
 `
 
 export const FlexLeft = styled(Flex)`
+  flex-shrink: 0;
   flex-direction: column;
   gap: 24px;
-  padding-right: 24px;
+
+  width: calc(100vw / 26 * 9 - 64px);
+  max-width: 425px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding-right: 0px;
+    width: 100%;
+    max-width: 500px;
   `};
 `
 
@@ -93,16 +91,46 @@ export const StackedItem = styled.div<{ zIndex?: number }>`
   z-index: ${({ zIndex }) => zIndex};
 `
 
-export const MediumOnly = styled.div`
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    display: none;
-  `};
+export const RangeBtn = styled(ButtonOutlined)<{ isSelected: boolean }>`
+  width: 100%;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  ${({ isSelected, theme }) =>
+    isSelected
+      ? css`
+          border-color: ${theme.primary};
+          color: ${theme.primary};
+          box-shadow: none;
+          &:focus {
+            box-shadow: none;
+          }
+          &:hover {
+            box-shadow: none;
+          }
+          &:active {
+            box-shadow: none;
+          }
+        `
+      : ''}
 `
 
-export const HideMedium = styled.div`
-  display: none;
+export const ArrowWrapper = styled.div<{ rotated?: boolean; isVertical?: boolean; size?: number }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  height: fit-content;
+  cursor: pointer;
+  border-radius: 999px;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    display: block;
-  `};
+  transform: rotate(
+    ${({ rotated, isVertical }) => {
+      if (isVertical) return rotated ? '270deg' : '90deg'
+      return rotated ? '180deg' : '0'
+    }}
+  );
+  transition: transform 300ms;
+  :hover {
+    opacity: 0.8;
+  }
 `

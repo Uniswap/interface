@@ -12,6 +12,7 @@ import { useSetClaimingCampaignRewardId } from 'state/campaigns/hooks'
 import connection from 'state/connection/connection'
 import { AppDispatch, AppState } from 'state/index'
 import { findTx } from 'utils'
+import { includes } from 'utils/array'
 
 import { checkedTransaction, finalizeTransaction, removeTx, replaceTx } from './actions'
 import { SerializableTransactionReceipt, TRANSACTION_TYPE, TransactionDetails } from './type'
@@ -44,9 +45,11 @@ export default function Updater(): null {
 
   const lastBlockNumber = useBlockNumber()
   const dispatch = useDispatch<AppDispatch>()
-  const state = useSelector<AppState, AppState['transactions']>(state => state.transactions)
+  const transactionsState = useSelector<AppState, AppState['transactions'][number]>(
+    state => state.transactions[chainId],
+  )
 
-  const transactions = useMemo(() => (chainId ? state[chainId] ?? {} : {}), [chainId, state])
+  const transactions = useMemo(() => transactionsState ?? {}, [transactionsState])
 
   // show popup on confirm
 
@@ -121,9 +124,7 @@ export default function Updater(): null {
                       blockHash: receipt.blockHash,
                       status: receipt.status,
                     },
-                    needCheckSubgraph: NEED_CHECK_SUBGRAPH_TRANSACTION_TYPES.includes(
-                      transaction.type as TRANSACTION_TYPE,
-                    ),
+                    needCheckSubgraph: includes(NEED_CHECK_SUBGRAPH_TRANSACTION_TYPES, transaction.type),
                   }),
                 )
 

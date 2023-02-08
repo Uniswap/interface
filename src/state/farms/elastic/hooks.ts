@@ -27,11 +27,8 @@ export { default as FarmUpdater } from './updaters'
 
 export const useElasticFarms = () => {
   const { chainId, isEVM } = useActiveWeb3React()
-  const elasticFarm = useAppSelector(state => state.elasticFarm)
-  return useMemo(
-    () => (isEVM ? elasticFarm[chainId] || defaultChainData : defaultChainData),
-    [isEVM, elasticFarm, chainId],
-  )
+  const elasticFarm = useAppSelector(state => state.elasticFarm[chainId])
+  return useMemo(() => (isEVM ? elasticFarm || defaultChainData : defaultChainData), [isEVM, elasticFarm])
 }
 export type StakeParam = {
   nftId: BigNumber

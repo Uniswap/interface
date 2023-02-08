@@ -1,6 +1,7 @@
 import { WETH } from '@kyberswap/ks-sdk-core'
 import { Navigate, useParams } from 'react-router-dom'
 
+import { APP_PATHS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 
 import ProAmmAddLiquidity from './index'
@@ -19,7 +20,7 @@ export function RedirectDuplicateTokenIds() {
     currencyIdB &&
     (currencyIdA.toLowerCase() === currencyIdB.toLowerCase() || (isETHOrWETHA && isETHOrWETHB))
   ) {
-    return <Navigate to={`/elastic/add/${currencyIdA}`} replace />
+    return <Navigate to={`${APP_PATHS.ELASTIC_CREATE_POOL}/${currencyIdA}`} replace />
   }
   return <ProAmmAddLiquidity />
 }

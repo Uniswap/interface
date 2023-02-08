@@ -121,6 +121,10 @@ export default function App() {
         chainId: chainId,
         network: networkInfo.name,
       })
+      datadogRum.setGlobalContext({
+        chainId,
+        networkName: networkInfo.name,
+      })
     }
   }, [chainId, networkInfo.name])
 

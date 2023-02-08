@@ -1,5 +1,6 @@
-import React, { CSSProperties, forwardRef } from 'react'
+import React, { CSSProperties, ReactNode, forwardRef } from 'react'
 import { CheckCircle, Copy } from 'react-feather'
+import { Flex } from 'rebass'
 import styled from 'styled-components'
 
 import useCopyClipboard from 'hooks/useCopyClipboard'
@@ -31,10 +32,13 @@ type Props = {
   margin?: string
   style?: CSSProperties
   size?: string
+  text?: ReactNode
 }
 
-const CopyHelper = forwardRef<HTMLDivElement, Props>(function CopyHelper(props, ref) {
-  const { toCopy, margin, style = {}, size = '14' } = props
+const CopyHelper = forwardRef<HTMLDivElement, Props>(function CopyHelper(
+  { toCopy, margin, style = {}, size = '14', text },
+  ref,
+) {
   const [isCopied, setCopied] = useCopyClipboard()
 
   const onCopy = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -42,16 +46,18 @@ const CopyHelper = forwardRef<HTMLDivElement, Props>(function CopyHelper(props, 
     setCopied(toCopy)
   }
 
+  const copyIcon = (
+    <TransactionStatusText>{isCopied ? <CheckCircle size={size} /> : <Copy size={size} />}</TransactionStatusText>
+  )
+
   return (
     <CopyIcon ref={ref} onClick={onCopy} margin={margin} style={style}>
-      {isCopied ? (
-        <TransactionStatusText>
-          <CheckCircle size={size} />
-        </TransactionStatusText>
+      {text ? (
+        <Flex>
+          {copyIcon}&nbsp;{text}
+        </Flex>
       ) : (
-        <TransactionStatusText>
-          <Copy size={size} />
-        </TransactionStatusText>
+        copyIcon
       )}
     </CopyIcon>
   )

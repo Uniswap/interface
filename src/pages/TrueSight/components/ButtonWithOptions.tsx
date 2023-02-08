@@ -8,6 +8,7 @@ import { Flex, Text } from 'rebass'
 import { ReactComponent as ChevronDown } from 'assets/svg/down.svg'
 import { ButtonPrimary } from 'components/Button'
 import Cart from 'components/Icons/Cart'
+import { APP_PATHS } from 'constants/index'
 import { NETWORKS_INFO, TRUESIGHT_NETWORK_TO_CHAINID } from 'constants/networks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -49,7 +50,7 @@ const ButtonWithOptions = ({
 
   const location = useLocation()
   const navigate = useNavigate()
-  const isInSwapPage = location.pathname === '/swap'
+  const isInSwapPage = location.pathname.startsWith(APP_PATHS.SWAP)
   const toggleTrendingSoonTokenDetailModal = useToggleModal(ApplicationModal.TRENDING_SOON_TOKEN_DETAIL)
 
   return (

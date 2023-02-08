@@ -1,6 +1,7 @@
 import { gql } from '@apollo/client'
 
 import { BUNDLE_ID } from 'constants/index'
+import { Block } from 'data/type'
 
 export const ETH_PRICE = (block?: number) => {
   const queryString = block
@@ -107,8 +108,8 @@ export const GET_BLOCK = gql`
   }
 `
 
-export const GET_BLOCKS = (timestamps: number[]) => {
-  let queryString = 'query blocks {'
+export const GET_BLOCKS = (timestamps: number[]): import('graphql').DocumentNode => {
+  let queryString = 'query blocksByTimestamps {'
   queryString += timestamps.map(timestamp => {
     return `t${timestamp}:blocks(first: 1, orderBy: timestamp, orderDirection: desc, where: { timestamp_gt: ${timestamp}, timestamp_lt: ${
       timestamp + 600
@@ -213,6 +214,21 @@ export const POOL_DATA = (poolAddress: string, block: number, withFee?: boolean)
     }
     `
 
+  return gql(queryString)
+}
+
+export const HOURLY_POOL_RATES = (blocks: Block[], poolAddress: string): import('graphql').DocumentNode => {
+  let queryString = 'query poolPriceByBlocks {'
+  queryString += blocks.map(
+    block => `
+      t${block.timestamp}: pool(id:"${poolAddress.toLowerCase()}", block: { number: ${block.number} }) {
+        token0Price
+        token1Price
+      }
+    `,
+  )
+
+  queryString += '}'
   return gql(queryString)
 }
 

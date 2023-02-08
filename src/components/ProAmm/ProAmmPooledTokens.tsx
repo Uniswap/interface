@@ -39,8 +39,8 @@ export default function ProAmmPooledTokens({
     layout === 0 ? (
       <OutlineCard marginTop="1rem" padding="1rem">
         <AutoColumn gap="md">
-          <Text fontSize="16px" fontWeight="500">
-            {title ? <Trans>{title}</Trans> : <Trans>Your Liquidity</Trans>}
+          <Text fontSize="12px" fontWeight="500">
+            {title || <Trans>Your Liquidity</Trans>}
           </Text>
 
           <Divider />

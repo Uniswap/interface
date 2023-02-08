@@ -31,6 +31,7 @@ import Cart from 'components/Icons/Cart'
 import Deposit from 'components/Icons/Deposit'
 import Modal from 'components/Modal'
 import { TRANSAK_API_KEY, TRANSAK_URL } from 'constants/env'
+import { APP_PATHS } from 'constants/index'
 import { SUPPORTED_WALLETS } from 'constants/wallets'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
@@ -183,7 +184,7 @@ function BuyCrypto() {
   const upToMedium = useMedia('(max-width: 992px)')
   const upToSmall = useMedia('(max-width: 768px)')
 
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId, networkInfo } = useActiveWeb3React()
 
   const toggleWalletModal = useWalletModalToggle()
 
@@ -635,7 +636,7 @@ function BuyCrypto() {
                   width={upToSmall ? '100%' : '50%'}
                   padding="10px"
                   as={Link}
-                  to="/swap"
+                  to={APP_PATHS.SWAP + '/' + networkInfo.route}
                   onClick={() => {
                     mixpanelHandler(MIXPANEL_TYPE.TRANSAK_SWAP_NOW_CLICKED)
                   }}

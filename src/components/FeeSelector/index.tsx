@@ -107,6 +107,7 @@ const FeeSelectorWrapper = styled.div`
   position: relative;
   cursor: pointer;
   border-radius: 16px;
+  z-index: 3;
 `
 
 const SelectWrapper = styled.div<{ show: boolean }>`

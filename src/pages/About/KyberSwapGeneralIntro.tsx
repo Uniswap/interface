@@ -11,11 +11,11 @@ import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 
-const KyberSwapGeneralIntro = ({ isSolana }: { isSolana: boolean }) => {
+const KyberSwapGeneralIntro = () => {
+  const { networkInfo, isSolana } = useActiveWeb3React()
   const above768 = useMedia('(min-width: 768px)')
   const theme = useTheme()
   const { mixpanelHandler } = useMixpanel()
-  const { networkInfo } = useActiveWeb3React()
 
   const renderKyberSwapIntroDEX = () => {
     return (

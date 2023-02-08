@@ -69,6 +69,7 @@ export interface EVMNetworkInfo extends NetworkInfo {
   }
   readonly elastic: {
     readonly client: ApolloClient<NormalizedCacheObject>
+    readonly startBlock: number
     readonly coreFactory: string
     readonly nonfungiblePositionManager: string
     readonly tickReader: string

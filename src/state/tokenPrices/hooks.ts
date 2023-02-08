@@ -11,7 +11,12 @@ import { updatePrices } from '.'
 
 const getAddress = (address: string, isEVM: boolean) => (isEVM ? address.toLowerCase() : address)
 
-const useTokenPricesLocal = (addresses: Array<string>) => {
+const useTokenPricesLocal = (
+  addresses: Array<string>,
+): {
+  data: { [address: string]: number }
+  loading: boolean
+} => {
   const tokenPrices = useAppSelector(state => state.tokenPrices)
   const dispatch = useAppDispatch()
   const { chainId, isEVM } = useActiveWeb3React()
@@ -74,7 +79,9 @@ const useTokenPricesLocal = (addresses: Array<string>) => {
     }
   }, [unknownPriceList, chainId, dispatch, isEVM])
 
-  const data = useMemo(() => {
+  const data: {
+    [address: string]: number
+  } = useMemo(() => {
     return tokenList.reduce((acc, address) => {
       const key = `${address}_${chainId}`
       return {
@@ -88,7 +95,11 @@ const useTokenPricesLocal = (addresses: Array<string>) => {
   return { data, loading }
 }
 
-export const useTokenPrices = (addresses: Array<string>) => {
+export const useTokenPrices = (
+  addresses: Array<string>,
+): {
+  [address: string]: number
+} => {
   const { data } = useTokenPricesLocal(addresses)
   return data
 }

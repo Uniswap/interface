@@ -176,7 +176,7 @@ export async function getBulkPoolDataFromPoolList(
             let oneDayHistory = oneDayData?.[pool.id]
             if (!oneDayHistory) {
               const newData = await apolloClient.query({
-                query: POOL_DATA(pool.id, b1, chainId && !ONLY_DYNAMIC_FEE_CHAINS.includes(chainId)),
+                query: POOL_DATA(pool.id, b1, !ONLY_DYNAMIC_FEE_CHAINS.includes(chainId)),
                 fetchPolicy: 'network-only',
               })
               oneDayHistory = newData.data.pools[0]

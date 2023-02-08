@@ -332,4 +332,13 @@ export const ThemedGlobalStyle = createGlobalStyle`
   input[type=number] {
     -moz-appearance: textfield; /* Firefox */
   }
+
+  .tv-lightweight-charts{
+    width: 100% !important;
+
+    & > * {
+      width: 100% !important;
+    }
+  }
+
 `

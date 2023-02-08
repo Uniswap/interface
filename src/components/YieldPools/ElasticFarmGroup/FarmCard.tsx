@@ -98,9 +98,9 @@ const FarmCard = ({
   const setSharePoolAddress = useSharePoolContext()
   const [showPosition, setShowPosition] = useState(false)
 
-  const addliquidityElasticPool = `/elastic/add/${pool.token0.isNative ? pool.token0.symbol : pool.token0.address}/${
-    pool.token1.isNative ? pool.token1.symbol : pool.token1.address
-  }/${pool.pool.fee}`
+  const addliquidityElasticPool = `${APP_PATHS.ELASTIC_CREATE_POOL}/${
+    pool.token0.isNative ? pool.token0.symbol : pool.token0.address
+  }/${pool.token1.isNative ? pool.token1.symbol : pool.token1.address}/${pool.pool.fee}`
 
   const representedPostion = depositedPositions?.[0] as NFTPosition | undefined
   const price =
@@ -384,9 +384,9 @@ const FarmCard = ({
           <Flex alignItems="center" height="36px">
             <DoubleCurrencyLogo currency0={pool.token0} currency1={pool.token1} size={20} />
             <Link
-              to={`/elastic/add/${pool.token0.isNative ? pool.token0.symbol : pool.token0.address}/${
-                pool.token1.isNative ? pool.token1.symbol : pool.token1.address
-              }/${pool.pool.fee}`}
+              to={`${APP_PATHS.ELASTIC_CREATE_POOL}/${
+                pool.token0.isNative ? pool.token0.symbol : pool.token0.address
+              }/${pool.token1.isNative ? pool.token1.symbol : pool.token1.address}/${pool.pool.fee}`}
               style={{
                 textDecoration: 'none',
               }}

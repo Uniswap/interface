@@ -7,18 +7,19 @@ import { Flex, Text } from 'rebass'
 import RangeBadge from 'components/Badge/RangeBadge'
 import CurrencyLogo from 'components/CurrencyLogo'
 import HoverDropdown from 'components/HoverDropdown'
+import PriceVisualize from 'components/ProAmm/PriceVisualize'
 import { MouseoverTooltipDesktopOnly } from 'components/Tooltip'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import useTheme from 'hooks/useTheme'
 import { useElasticFarms, useFarmAction } from 'state/farms/elastic/hooks'
 import { FarmingPool, NFTPosition } from 'state/farms/elastic/types'
-import { Bound } from 'state/mint/proamm/actions'
+import { Bound } from 'state/mint/proamm/type'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { formatDollarAmount } from 'utils/numbers'
 
 import FeeTarget from './FeeTarget'
 import { ButtonColorScheme, MinimalActionButton } from './buttons'
-import { Dot, NFTWrapper, PriceVisualize } from './styleds'
+import { NFTWrapper } from './styleds'
 
 type Props = {
   isRevertPrice: boolean
@@ -66,12 +67,6 @@ const PositionDetail = ({
     (usd, am) => usd + +am.toExact() * (tokenPrices[am.currency.wrapped.address] || 0),
     0,
   )
-
-  const minPrice = priceLower.lessThan(price) ? priceLower : price
-  const maxPrice = priceUpper.greaterThan(price) ? priceUpper : price
-  const middlePrice = priceLower.lessThan(price) ? (priceUpper.greaterThan(price) ? price : priceUpper) : priceLower
-
-  const delta = middlePrice.subtract(minPrice).divide(maxPrice.subtract(minPrice)).toSignificant(6)
 
   const renderUnstakeButton = () => {
     if (!canUnstake) {
@@ -190,27 +185,7 @@ const PositionDetail = ({
 
       {targetPercent && <FeeTarget percent={targetPercent} style={{ maxWidth: '100%' }} />}
 
-      <PriceVisualize>
-        <Flex width="20%" />
-        <Dot isCurrentPrice={minPrice.equalTo(price)} outOfRange={outOfRange} />
-        <Flex
-          height="2px"
-          width={(+delta * 60).toString() + '%'}
-          backgroundColor={
-            middlePrice.equalTo(priceUpper) ? theme.warning : middlePrice.equalTo(price) ? theme.primary : theme.border
-          }
-        />
-        <Dot isCurrentPrice={middlePrice.equalTo(price)} outOfRange={outOfRange} />
-        <Flex
-          height="2px"
-          flex={1}
-          backgroundColor={
-            middlePrice.equalTo(priceLower) ? theme.warning : middlePrice.equalTo(price) ? theme.primary : theme.border
-          }
-        />
-        <Dot isCurrentPrice={maxPrice.equalTo(price)} outOfRange={outOfRange} />
-        <Flex width="20%" />
-      </PriceVisualize>
+      <PriceVisualize priceLower={priceLower} priceUpper={priceUpper} price={price} />
 
       <Flex justifyContent="space-between" fontSize="12px" fontWeight="500" marginTop="8px">
         <Text>

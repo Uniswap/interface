@@ -391,9 +391,7 @@ function PositionListItem({
             )}
           </>
         )}
-        {activeTab === TAB.PRICE_RANGE && (
-          <ProAmmPriceRange position={position} ticksAtLimit={tickAtLimit} layout={1} />
-        )}
+        {activeTab === TAB.PRICE_RANGE && <ProAmmPriceRange position={position} ticksAtLimit={tickAtLimit} />}
         <div style={{ marginTop: '20px' }} />
         <Flex flexDirection={'column'} marginTop="auto">
           {stakedLayout ? (

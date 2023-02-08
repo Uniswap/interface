@@ -10,7 +10,8 @@ import { usePoolBlocks } from 'state/prommPools/hooks'
 import { useProAmmTickReader } from './useContract'
 import useProAmmPoolInfo from './useProAmmPoolInfo'
 
-const isNullOrUndefined = <T>(value: T) => value === null || value === undefined
+// use this to prevent filter tick 0
+const isNullOrUndefinedOrEmptyString = <T>(value: T) => value === null || value === undefined || value === ''
 
 export default function useProAmmPreviousTicks(
   pool: Pool | null | undefined,
@@ -19,16 +20,14 @@ export default function useProAmmPreviousTicks(
   const tickReader = useProAmmTickReader()
 
   const poolAddress = useProAmmPoolInfo(position?.pool.token0, position?.pool.token1, position?.pool.fee)
-
   const results = useSingleContractMultipleData(
     tickReader,
     'getNearestInitializedTicks',
     [
       [poolAddress, position?.tickLower],
       [poolAddress, position?.tickUpper],
-    ].filter(item => !!pool && !isNullOrUndefined(item[0]) && !isNullOrUndefined(item[1])),
+    ].filter(item => !!pool && !isNullOrUndefinedOrEmptyString(item[0]) && !isNullOrUndefinedOrEmptyString(item[1])),
   )
-
   const loading = useMemo(() => results.some(({ loading }) => loading), [results])
   const error = useMemo(() => results.some(({ error }) => error), [results])
   return useMemo(() => {
@@ -41,6 +40,47 @@ export default function useProAmmPreviousTicks(
     }
     return undefined
   }, [results, loading, error, pool])
+}
+export function useProAmmMultiplePreviousTicks(
+  pool: Pool | null | undefined,
+  positions: (Position | undefined)[],
+): number[][] | undefined {
+  const tickReader = useProAmmTickReader()
+
+  const poolAddress = useProAmmPoolInfo(
+    positions?.[0]?.pool.token0,
+    positions?.[0]?.pool.token1,
+    positions?.[0]?.pool.fee,
+  )
+
+  const results = useSingleContractMultipleData(
+    tickReader,
+    'getNearestInitializedTicks',
+    positions
+      .map(position =>
+        [
+          [poolAddress, position?.tickLower],
+          [poolAddress, position?.tickUpper],
+        ].filter(
+          item => !!pool && !isNullOrUndefinedOrEmptyString(item[0]) && !isNullOrUndefinedOrEmptyString(item[1]),
+        ),
+      )
+      .flat()
+      .filter(i => i?.length),
+  )
+  const loading = useMemo(() => results.some(({ loading }) => loading), [results])
+  const error = useMemo(() => results.some(({ error }) => error), [results])
+  return useMemo(() => {
+    if (!pool) return [[TickMath.MIN_TICK, TickMath.MIN_TICK]]
+    if (!loading && !error && !!pool) {
+      const result = results.map((call, index) => {
+        const result = call.result as Result
+        return result.previous
+      })
+      return positions.map((_, index) => [result[2 * index], result[2 * index + 1]])
+    }
+    return undefined
+  }, [pool, loading, error, results, positions])
 }
 
 export function useProAmmTotalFeeOwedByPosition(pool: Pool | null | undefined, tokenID: string | undefined) {

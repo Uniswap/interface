@@ -9,6 +9,11 @@ import {
 } from '@kyberswap/ks-sdk-elastic'
 import JSBI from 'jsbi'
 
+import { rangeData } from 'pages/AddLiquidityV2/constants'
+import { PairFactor } from 'state/topTokens/type'
+
+import { RANGE } from './type'
+
 export function tryParsePrice(baseToken?: Token, quoteToken?: Token, value?: string) {
   if (!baseToken || !quoteToken || !value) {
     return undefined
@@ -62,4 +67,24 @@ export function tryParseTick(
   }
 
   return nearestUsableTick(tick, TICK_SPACINGS[feeAmount])
+}
+
+const log10001 = (num: number) => Math.log(num) / Math.log(1.0001)
+
+export const getRangeTicks = (
+  range: RANGE,
+  tokenA: Token,
+  tokenB: Token,
+  currentTick: number,
+  pairFactor: PairFactor,
+) => {
+  const rangeFactor = rangeData[range].factor
+  const leftRange = 1 - (pairFactor * rangeFactor) / 10000
+  const rightRange = 1 + (pairFactor * rangeFactor) / 10000
+
+  const result1 = [currentTick + Math.floor(log10001(leftRange)), currentTick + Math.ceil(log10001(rightRange))]
+  const result2 = [currentTick + Math.floor(log10001(1 / leftRange)), currentTick + Math.ceil(log10001(1 / rightRange))]
+  const result = tokenA.sortsBefore(tokenB) ? result1 : result2
+
+  return result
 }

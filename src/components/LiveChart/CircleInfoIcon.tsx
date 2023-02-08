@@ -1,6 +1,6 @@
-export default function CircleInfoIcon() {
+export default function CircleInfoIcon({ size = '52' }: { size?: string }) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52" fill="none">
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 52 52" fill="none">
       <path
         fillRule="evenodd"
         clipRule="evenodd"

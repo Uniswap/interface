@@ -60,9 +60,13 @@ const useGetUserFarmingInfo = (interval?: boolean) => {
       const multicallRes = await multicallContract.callStatic.tryBlockAndAggregate(false, chunks)
       const returnData = multicallRes.returnData
       // listNFTs by contract
-      const nftResults: Array<Array<BigNumber>> = returnData.map((data: [boolean, string]) =>
-        data[0] ? farmInterface.decodeFunctionResult(userDepositedNFTsFragment, data[1]).listNFTs : [],
-      )
+      const nftResults: Array<Array<BigNumber>> = returnData.map((data: [boolean, string]) => {
+        try {
+          return data[0] ? farmInterface.decodeFunctionResult(userDepositedNFTsFragment, data[1]).listNFTs : []
+        } catch {
+          return []
+        }
+      })
 
       /*
        * GET DETAIL NFT

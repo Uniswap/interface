@@ -26,7 +26,7 @@ export const isInEnum = <T extends Record<string, string>>(str: string, enumPara
 }
 
 // hello world => hello...
-export const shortString = (str: string, n: number) => {
+export const shortString = (str: string | undefined, n: number) => {
   if (!str) return ''
   return str.length <= n ? str : str.substring(0, n) + '...'
 }

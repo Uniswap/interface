@@ -1,3 +1,4 @@
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId, Currency, CurrencyAmount, Percent, Token, WETH } from '@kyberswap/ks-sdk-core'
 import { PublicKey } from '@solana/web3.js'
@@ -228,7 +229,18 @@ export function getTimestampsForChanges(): [number, number, number] {
   return [t1, t2, tWeek]
 }
 
-export async function splitQuery(query: any, localClient: any, vars: any, list: any, skipCount = 100): Promise<any> {
+export async function splitQuery<ResultType, T, U>(
+  query: (values: T[], ...vars: U[]) => import('graphql').DocumentNode,
+  localClient: ApolloClient<NormalizedCacheObject>,
+  list: T[],
+  vars: U[],
+  skipCount = 100,
+): Promise<
+  | {
+      [key: string]: ResultType
+    }
+  | undefined
+> {
   let fetchedData = {}
   let allFound = false
   let skip = 0
@@ -240,7 +252,7 @@ export async function splitQuery(query: any, localClient: any, vars: any, list: 
     }
     const sliced = list.slice(skip, end)
     const result = await localClient.query({
-      query: query(...vars, sliced),
+      query: query(sliced, ...vars),
       fetchPolicy: 'no-cache',
     })
     fetchedData = {
@@ -293,7 +305,13 @@ export async function getBlocksFromTimestamps(
     return []
   }
 
-  const fetchedData = await splitQuery(GET_BLOCKS, NETWORKS_INFO[chainId].blockClient, [], timestamps, skipCount)
+  const fetchedData = await splitQuery<{ number: number }[], number, any>(
+    GET_BLOCKS,
+    NETWORKS_INFO[chainId].blockClient,
+    timestamps,
+    [],
+    skipCount,
+  )
   const blocks: { timestamp: string; number: number }[] = []
   if (fetchedData) {
     for (const t in fetchedData) {

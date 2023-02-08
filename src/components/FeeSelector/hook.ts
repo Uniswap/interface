@@ -17,7 +17,7 @@ export const useFeeTierDistribution = (
     return [FeeAmount.HIGH, FeeAmount.LOW, FeeAmount.LOWEST, FeeAmount.STABLE, FeeAmount.MEDIUM]
   }, [])
 
-  const poolIds = useProAmmPoolInfos(currencyA, currencyB, feeAmounts)
+  const poolIds = useProAmmPoolInfos(currencyA, currencyB, feeAmounts).filter(Boolean)
 
   const initState = useMemo(() => {
     return {
@@ -38,14 +38,15 @@ export const useFeeTierDistribution = (
 
   useEffect(() => {
     if (!isEVM) return
+    if (!poolIds.length) return
     ;(networkInfo as EVMNetworkInfo).elastic.client
       .query({
         query: POOL_POSITION_COUNT(poolIds),
       })
       .then(res => {
         const feeArray: { feeTier: string; activePositions: number }[] = res?.data?.pools?.map(
-          (item: { positionCount: string; closedPostionCount: string; feeTier: string }) => {
-            const activePositions = Number(item.positionCount) - Number(item.closedPostionCount)
+          (item: { positionCount: string; closedPositionCount: string; feeTier: string }) => {
+            const activePositions = Number(item.positionCount) - Number(item.closedPositionCount)
             return {
               feeTier: item.feeTier,
               activePositions,
@@ -66,7 +67,9 @@ export const useFeeTierDistribution = (
           }, initState),
         )
       })
-  }, [initState, poolIds, isEVM, networkInfo])
+      .catch(err => console.warn({ err }))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initState, JSON.stringify(poolIds), isEVM, networkInfo])
 
   return feeTierDistribution
 }

@@ -5,27 +5,35 @@ import { Trans, t } from '@lingui/macro'
 import { BigNumber } from 'ethers'
 import JSBI from 'jsbi'
 import { useCallback, useEffect, useState } from 'react'
+import { ChevronLeft } from 'react-feather'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import { Flex, Text } from 'rebass'
+import { useMedia } from 'react-use'
+import { Box, Flex, Text } from 'rebass'
 
+import { ReactComponent as TutorialIcon } from 'assets/svg/play_circle_outline.svg'
+import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
+import { BlackCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import Copy from 'components/Copy'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
+import CurrencyLogo from 'components/CurrencyLogo'
 import Divider from 'components/Divider'
+import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
 import Loader from 'components/Loader'
-import { AddRemoveTabs, LiquidityAction } from 'components/NavigationTabs'
+import { StyledMenuButton } from 'components/NavigationTabs'
 import ProAmmPoolInfo from 'components/ProAmm/ProAmmPoolInfo'
 import ProAmmPooledTokens from 'components/ProAmm/ProAmmPooledTokens'
-import ProAmmPriceRange from 'components/ProAmm/ProAmmPriceRange'
+import ProAmmPriceRangeConfirm from 'components/ProAmm/ProAmmPriceRangeConfirm'
+import Rating from 'components/Rating'
 import { RowBetween } from 'components/Row'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-import { TutorialType } from 'components/Tutorial'
+import TransactionSettings from 'components/TransactionSettings'
+import Tutorial, { TutorialType } from 'components/Tutorial'
 import { Dots } from 'components/swap/styleds'
 import { APP_PATHS } from 'constants/index'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { NativeCurrencies } from 'constants/tokens'
-import { VERSION } from 'constants/v2'
 import { useActiveWeb3React, useWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
@@ -36,18 +44,29 @@ import { useProAmmPositionsFromTokenId } from 'hooks/useProAmmPositions'
 import useProAmmPreviousTicks from 'hooks/useProAmmPreviousTicks'
 import useTheme from 'hooks/useTheme'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
-import { useTokensPrice, useWalletModalToggle } from 'state/application/hooks'
-import { Field } from 'state/mint/proamm/actions'
+import {
+  Container,
+  Content,
+  FirstColumn,
+  GridColumn,
+  SecondColumn,
+  TokenId,
+  TokenInputWrapper,
+} from 'pages/RemoveLiquidityProAmm/styled'
+import { useWalletModalToggle } from 'state/application/hooks'
 import { useProAmmDerivedMintInfo, useProAmmMintActionHandlers, useProAmmMintState } from 'state/mint/proamm/hooks'
+import { Field } from 'state/mint/proamm/type'
 import { useSingleCallResult } from 'state/multicall/hooks'
+import { useTokenPrices } from 'state/tokenPrices/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TRANSACTION_TYPE } from 'state/transactions/type'
 import { useExpertModeManager, useUserSlippageTolerance } from 'state/user/hooks'
-import { calculateGasMargin, formattedNum, isAddressString, shortenAddress } from 'utils'
+import { MEDIA_WIDTHS } from 'theme'
+import { calculateGasMargin, formattedNum, formattedNumLong, isAddressString, shortenAddress } from 'utils'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 
-import { Container, FirstColumn, GridColumn, SecondColumn } from './styled'
+import Chart from './Chart'
 
 export default function AddLiquidity() {
   const { currencyIdB, currencyIdA, feeAmount: feeAmountFromUrl, tokenId } = useParams()
@@ -82,6 +101,8 @@ export default function AddLiquidity() {
 
   const { position: existingPosition } = useProAmmDerivedPositionInfo(existingPositionDetails)
 
+  const removed = existingPositionDetails?.liquidity?.eq(0)
+
   // fee selection from url
   const feeAmount: FeeAmount | undefined =
     feeAmountFromUrl && Object.values(FeeAmount).includes(parseFloat(feeAmountFromUrl))
@@ -92,8 +113,10 @@ export default function AddLiquidity() {
   // prevent an error if they input ETH/WETH
   const quoteCurrency =
     baseCurrency && currencyB && baseCurrency.wrapped.equals(currencyB.wrapped) ? undefined : currencyB
+
   // mint state
-  const { independentField, typedValue } = useProAmmMintState()
+  const { positions } = useProAmmMintState()
+  const { independentField, typedValue } = positions[0]
   const {
     pool,
     // ticks,
@@ -106,38 +129,58 @@ export default function AddLiquidity() {
     errorMessage,
     // invalidPool,
     invalidRange,
-    // outOfRange,
+    outOfRange,
     depositADisabled,
     depositBDisabled,
     ticksAtLimit,
+    riskPoint,
+    profitPoint,
   } = useProAmmDerivedMintInfo(
+    0,
     baseCurrency ?? undefined,
     quoteCurrency ?? undefined,
     feeAmount,
     baseCurrency ?? undefined,
     existingPosition,
   )
+
   const baseCurrencyIsETHER = !!(chainId && baseCurrency && baseCurrency.isNative)
   const baseCurrencyIsWETH = !!(chainId && baseCurrency && baseCurrency.equals(WETH[chainId]))
   const quoteCurrencyIsETHER = !!(chainId && quoteCurrency && quoteCurrency.isNative)
   const quoteCurrencyIsWETH = !!(chainId && quoteCurrency && quoteCurrency.equals(WETH[chainId]))
 
-  const usdPrices = useTokensPrice([baseCurrency?.wrapped, quoteCurrency?.wrapped], VERSION.ELASTIC)
+  const address0 = baseCurrency?.wrapped.address || ''
+  const address1 = quoteCurrency?.wrapped.address || ''
+  const usdPrices = useTokenPrices([address0, address1])
 
   const estimatedUsdCurrencyA =
-    parsedAmounts[Field.CURRENCY_A] && usdPrices[0]
-      ? parseFloat((parsedAmounts[Field.CURRENCY_A] as CurrencyAmount<Currency>).toSignificant(6)) * usdPrices[0]
+    parsedAmounts[Field.CURRENCY_A] && usdPrices[address0]
+      ? parseFloat(parsedAmounts[Field.CURRENCY_A]?.toExact() || '0') * usdPrices[address0]
       : 0
 
   const estimatedUsdCurrencyB =
-    parsedAmounts[Field.CURRENCY_B] && usdPrices[1]
-      ? parseFloat((parsedAmounts[Field.CURRENCY_B] as CurrencyAmount<Currency>).toSignificant(6)) * usdPrices[1]
+    parsedAmounts[Field.CURRENCY_B] && usdPrices[address1]
+      ? parseFloat(parsedAmounts[Field.CURRENCY_B]?.toExact() || '0') * usdPrices[address1]
       : 0
+  const pooledAmount0 =
+    existingPosition &&
+    CurrencyAmount.fromRawAmount(unwrappedToken(existingPosition.pool.token0), existingPosition.amount0.quotient)
+  const pooledAmount1 =
+    existingPosition &&
+    CurrencyAmount.fromRawAmount(unwrappedToken(existingPosition.pool.token1), existingPosition.amount1.quotient)
+
+  const totalPooledUSD =
+    parseFloat(pooledAmount0?.toExact() || '0') * usdPrices[pooledAmount0?.currency?.wrapped.address || ''] +
+    parseFloat(pooledAmount1?.toExact() || '0') * usdPrices[pooledAmount1?.currency?.wrapped.address || '']
 
   const previousTicks =
     // : number[] = []
     useProAmmPreviousTicks(pool, position)
-  const { onFieldAInput, onFieldBInput } = useProAmmMintActionHandlers(noLiquidity)
+  const { onFieldAInput, onFieldBInput, onResetMintState } = useProAmmMintActionHandlers(noLiquidity, 0)
+
+  useEffect(() => {
+    onResetMintState()
+  }, [onResetMintState])
 
   const isValid = !errorMessage && !invalidRange
 
@@ -178,7 +221,6 @@ export default function AddLiquidity() {
 
   const allowedSlippage = useUserSlippageTolerance()
 
-  //TODO: on add
   async function onAdd() {
     if (!isEVM || !library || !account || !tokenId) {
       return
@@ -295,46 +337,49 @@ export default function AddLiquidity() {
         <Trans>Connect Wallet</Trans>
       </ButtonLight>
     ) : (
-      <Flex sx={{ gap: '16px' }} flexDirection={isValid && showApprovalA && showApprovalB ? 'column' : 'row'}>
+      <>
         {(approvalA === ApprovalState.NOT_APPROVED ||
           approvalA === ApprovalState.PENDING ||
           approvalB === ApprovalState.NOT_APPROVED ||
           approvalB === ApprovalState.PENDING) &&
           isValid && (
-            <RowBetween>
-              {showApprovalA && (
-                <ButtonPrimary
-                  onClick={approveACallback}
-                  disabled={approvalA === ApprovalState.PENDING}
-                  width={showApprovalB ? '48%' : '100%'}
-                >
-                  {approvalA === ApprovalState.PENDING ? (
-                    <Dots>
-                      <Trans>Approving {currencies[Field.CURRENCY_A]?.symbol}</Trans>
-                    </Dots>
-                  ) : (
-                    <Trans>Approve {currencies[Field.CURRENCY_A]?.symbol}</Trans>
-                  )}
-                </ButtonPrimary>
-              )}
-              {showApprovalB && (
-                <ButtonPrimary
-                  onClick={approveBCallback}
-                  disabled={approvalB === ApprovalState.PENDING}
-                  width={showApprovalA ? '48%' : '100%'}
-                >
-                  {approvalB === ApprovalState.PENDING ? (
-                    <Dots>
-                      <Trans>Approving {currencies[Field.CURRENCY_B]?.symbol}</Trans>
-                    </Dots>
-                  ) : (
-                    <Trans>Approve {currencies[Field.CURRENCY_B]?.symbol}</Trans>
-                  )}
-                </ButtonPrimary>
-              )}
-            </RowBetween>
+            <Flex sx={{ gap: '16px' }} flexDirection={isValid && showApprovalA && showApprovalB ? 'column' : 'row'}>
+              <RowBetween>
+                {showApprovalA && (
+                  <ButtonPrimary
+                    onClick={approveACallback}
+                    disabled={approvalA === ApprovalState.PENDING}
+                    width={showApprovalB ? '48%' : '100%'}
+                  >
+                    {approvalA === ApprovalState.PENDING ? (
+                      <Dots>
+                        <Trans>Approving {currencies[Field.CURRENCY_A]?.symbol}</Trans>
+                      </Dots>
+                    ) : (
+                      <Trans>Approve {currencies[Field.CURRENCY_A]?.symbol}</Trans>
+                    )}
+                  </ButtonPrimary>
+                )}
+                {showApprovalB && (
+                  <ButtonPrimary
+                    onClick={approveBCallback}
+                    disabled={approvalB === ApprovalState.PENDING}
+                    width={showApprovalA ? '48%' : '100%'}
+                  >
+                    {approvalB === ApprovalState.PENDING ? (
+                      <Dots>
+                        <Trans>Approving {currencies[Field.CURRENCY_B]?.symbol}</Trans>
+                      </Dots>
+                    ) : (
+                      <Trans>Approve {currencies[Field.CURRENCY_B]?.symbol}</Trans>
+                    )}
+                  </ButtonPrimary>
+                )}
+              </RowBetween>
+            </Flex>
           )}
         <ButtonError
+          style={{ width: upToMedium ? '100%' : 'fit-content', minWidth: '164px' }}
           onClick={() => {
             expertMode ? onAdd() : setShowConfirm(true)
           }}
@@ -347,8 +392,10 @@ export default function AddLiquidity() {
         >
           <Text fontWeight={500}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
         </ButtonError>
-      </Flex>
+      </>
     )
+
+  const upToMedium = useMedia(`(max-width: ${MEDIA_WIDTHS.upToMedium}px)`)
 
   if (!isEVM) return <Navigate to="/" />
   return (
@@ -365,19 +412,13 @@ export default function AddLiquidity() {
             topContent={() =>
               existingPosition && (
                 <div style={{ marginTop: '1rem' }}>
-                  {/* <PositionPreview
-                    position={position}
-                    title={<Trans>Selected Range</Trans>}
-                    inRange={!outOfRange}
-                    ticksAtLimit={ticksAtLimit}
-                  /> */}
-                  <ProAmmPoolInfo position={existingPosition} />
+                  <ProAmmPoolInfo position={existingPosition} tokenId={tokenId} />
                   <ProAmmPooledTokens
                     liquidityValue0={parsedAmounts[Field.CURRENCY_A]}
                     liquidityValue1={parsedAmounts[Field.CURRENCY_B]}
                     title={t`Increase Amount`}
                   />
-                  <ProAmmPriceRange position={existingPosition} ticksAtLimit={ticksAtLimit} hideChart />
+                  <ProAmmPriceRangeConfirm position={existingPosition} ticksAtLimit={ticksAtLimit} />
                 </div>
               )
             }
@@ -393,128 +434,219 @@ export default function AddLiquidity() {
         pendingText={pendingText}
       />
       <Container>
-        <AddRemoveTabs
-          action={LiquidityAction.INCREASE}
-          showTooltip={false}
-          hideShare
-          tutorialType={TutorialType.ELASTIC_INCREASE_LIQUIDITY}
-        />
-        {owner && account && !ownsNFT && !ownByFarm ? (
-          <Text
-            fontSize="12px"
-            fontWeight="500"
-            paddingTop={'10px'}
-            paddingBottom={'10px'}
-            backgroundColor={theme.bg3Opacity4}
-            color={theme.subText}
-            style={{ borderRadius: '4px', marginBottom: '1.25rem' }}
+        <Flex justifyContent="space-between" alignItems="center" marginTop="32px" marginBottom="24px">
+          <Flex
+            role="button"
+            onClick={() => navigate(-1)}
+            alignItems="center"
+            sx={{ cursor: 'pointer', ':hover': { opacity: '0.8' } }}
           >
-            The owner of this liquidity position is {shortenAddress(chainId, owner)}
-            <span style={{ display: 'inline-block' }}>
-              <Copy toCopy={owner}></Copy>
-            </span>
-          </Text>
-        ) : (
-          <Divider style={{ marginBottom: '1.25rem' }} />
-        )}
+            <ChevronLeft size={28} color={theme.subText} />
+            <Text fontSize="24px" fontWeight="500" marginLeft="8px">
+              <Trans>Increase Liquidity</Trans>
+            </Text>
+          </Flex>
 
-        {existingPosition ? (
-          <AutoColumn gap="md" style={{ textAlign: 'left' }}>
-            <ProAmmPoolInfo position={existingPosition} tokenId={tokenId} />
-            <GridColumn>
-              <FirstColumn>
-                <ProAmmPooledTokens
-                  pooled
-                  liquidityValue0={CurrencyAmount.fromRawAmount(
-                    unwrappedToken(existingPosition.pool.token0),
-                    existingPosition.amount0.quotient,
-                  )}
-                  liquidityValue1={CurrencyAmount.fromRawAmount(
-                    unwrappedToken(existingPosition.pool.token1),
-                    existingPosition.amount1.quotient,
-                  )}
-                />
+          <Flex>
+            {owner && account && !ownsNFT && !ownByFarm && (
+              <Text
+                fontSize="12px"
+                fontWeight="500"
+                color={theme.subText}
+                display="flex"
+                alignItems="center"
+                marginRight="8px"
+              >
+                <Trans>The owner of this liquidity position is {shortenAddress(chainId, owner)}</Trans>
+                <Copy toCopy={owner}></Copy>
+              </Text>
+            )}
 
-                <AutoColumn gap="md">
-                  <CurrencyInputPanel
-                    value={formattedAmounts[Field.CURRENCY_A]}
-                    onUserInput={onFieldAInput}
-                    onMax={() => {
-                      onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
-                    }}
-                    onHalf={() => {
-                      onFieldAInput(currencyBalances[Field.CURRENCY_A]?.divide(2)?.toExact() ?? '')
-                    }}
-                    currency={currencies[Field.CURRENCY_A] ?? null}
-                    id="add-liquidity-input-tokena"
-                    showCommonBases
-                    positionMax="top"
-                    locked={depositADisabled}
-                    estimatedUsd={formattedNum(estimatedUsdCurrencyA.toString(), true) || undefined}
-                    disableCurrencySelect={!baseCurrencyIsETHER && !baseCurrencyIsWETH}
-                    isSwitchMode={baseCurrencyIsETHER || baseCurrencyIsWETH}
-                    onSwitchCurrency={() => {
-                      chainId &&
-                        navigate(
-                          `/elastic/increase/${
-                            baseCurrencyIsETHER ? WETH[chainId].address : NativeCurrencies[chainId].symbol
-                          }/${currencyIdB}/${feeAmount}/${tokenId}`,
-                          {
-                            replace: true,
-                          },
-                        )
-                    }}
-                  />
-                  <CurrencyInputPanel
-                    value={formattedAmounts[Field.CURRENCY_B]}
-                    onUserInput={onFieldBInput}
-                    onMax={() => {
-                      onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
-                    }}
-                    onHalf={() => {
-                      onFieldBInput(currencyBalances[Field.CURRENCY_B]?.divide(2).toExact() ?? '')
-                    }}
-                    currency={currencies[Field.CURRENCY_B] ?? null}
-                    id="add-liquidity-input-tokenb"
-                    showCommonBases
-                    positionMax="top"
-                    locked={depositBDisabled}
-                    estimatedUsd={formattedNum(estimatedUsdCurrencyB.toString(), true) || undefined}
-                    disableCurrencySelect={!quoteCurrencyIsETHER && !quoteCurrencyIsWETH}
-                    isSwitchMode={quoteCurrencyIsETHER || quoteCurrencyIsWETH}
-                    onSwitchCurrency={() => {
-                      chainId &&
-                        navigate(
-                          `/elastic/increase/${currencyIdA}/${
-                            quoteCurrencyIsETHER ? WETH[chainId].address : NativeCurrencies[chainId].symbol
-                          }/${feeAmount}/${tokenId}`,
-                          { replace: true },
-                        )
-                    }}
-                  />
-                </AutoColumn>
-                {/* <PositionPreview
-                  position={existingPosition}
-                  title={<Trans>Selected Range</Trans>}
-                  inRange={!outOfRange}
-                  ticksAtLimit={ticksAtLimit}
-                /> */}
-              </FirstColumn>
-              <SecondColumn>
-                <ProAmmPriceRange position={existingPosition} ticksAtLimit={ticksAtLimit} />
-                <Buttons />
-              </SecondColumn>
-            </GridColumn>
-          </AutoColumn>
-        ) : (
-          // <PositionPreview
-          //   position={existingPosition}
-          //   title={<Trans>Selected Range</Trans>}
-          //   inRange={!outOfRange}
-          //   ticksAtLimit={ticksAtLimit}
-          // />
-          <Loader />
-        )}
+            <Tutorial
+              type={TutorialType.ELASTIC_INCREASE_LIQUIDITY}
+              customIcon={
+                <StyledMenuButton>
+                  <TutorialIcon />
+                </StyledMenuButton>
+              }
+            />
+            <TransactionSettings hoverBg={theme.buttonBlack} />
+          </Flex>
+        </Flex>
+
+        <Content>
+          {existingPosition ? (
+            <AutoColumn gap="md" style={{ textAlign: 'left' }}>
+              <GridColumn>
+                <FirstColumn style={{ height: 'calc(100% - 56px)' }}>
+                  <ProAmmPoolInfo position={existingPosition} tokenId={tokenId} showRangeInfo={false} />
+
+                  <BlackCard style={{ borderRadius: '1rem', padding: '1rem' }}>
+                    <Flex alignItems="center" sx={{ gap: '4px' }}>
+                      <TokenId color={removed ? theme.red : outOfRange ? theme.warning : theme.primary}>
+                        #{tokenId?.toString()}
+                      </TokenId>
+                      <RangeBadge removed={removed} inRange={!outOfRange} hideText size={14} />
+                    </Flex>
+
+                    <Flex
+                      justifyContent="space-between"
+                      fontSize="12px"
+                      fontWeight="500"
+                      marginTop="1rem"
+                      marginBottom="0.75rem"
+                    >
+                      <Text>
+                        <Trans>My Liquidity</Trans>
+                      </Text>
+                      <Text>{formattedNumLong(totalPooledUSD, true)}</Text>
+                    </Flex>
+
+                    <Divider />
+
+                    <Flex justifyContent="space-between" fontSize="12px" marginTop="0.75rem">
+                      <Text color={theme.subText}>Pooled {existingPosition.pool.token0.symbol}</Text>
+                      <Flex alignItems="center">
+                        <CurrencyLogo currency={existingPosition.pool.token0} size="16px" />
+                        <Text fontWeight="500" marginLeft="4px">
+                          <FormattedCurrencyAmount
+                            currencyAmount={CurrencyAmount.fromRawAmount(
+                              unwrappedToken(existingPosition.pool.token0),
+                              existingPosition.amount0.quotient,
+                            )}
+                          />{' '}
+                          {existingPosition.pool.token0.symbol}
+                        </Text>
+                      </Flex>
+                    </Flex>
+
+                    <Flex justifyContent="space-between" fontSize="12px" marginTop="0.75rem">
+                      <Text color={theme.subText}>Pooled {existingPosition.pool.token1.symbol}</Text>
+                      <Flex alignItems="center">
+                        <CurrencyLogo currency={existingPosition.pool.token1} size="16px" />
+                        <Text fontWeight="500" marginLeft="4px">
+                          <FormattedCurrencyAmount
+                            currencyAmount={CurrencyAmount.fromRawAmount(
+                              unwrappedToken(existingPosition.pool.token1),
+                              existingPosition.amount1.quotient,
+                            )}
+                          />{' '}
+                          {existingPosition.pool.token1.symbol}
+                        </Text>
+                      </Flex>
+                    </Flex>
+                  </BlackCard>
+                </FirstColumn>
+
+                <SecondColumn>
+                  <BlackCard style={{ marginBottom: '1rem' }}>
+                    <Box
+                      sx={{
+                        display: 'grid',
+                        gridGap: upToMedium ? '12px' : '24px',
+                        gridTemplateColumns: `repeat(${upToMedium ? 1 : 2} , fit-content(100%) fit-content(100%))`,
+                      }}
+                    >
+                      <Text fontSize={12} color={theme.red}>
+                        <Trans>Estimated Risk</Trans>
+                      </Text>
+                      <Rating point={riskPoint} color={theme.red} />
+                      <Text fontSize={12} color={theme.primary}>
+                        <Trans>Estimated Profit</Trans>
+                      </Text>
+                      <Rating point={profitPoint} color={theme.primary} />
+                    </Box>
+                    <Flex marginTop="1rem" />
+                    <Chart position={existingPosition} ticksAtLimit={ticksAtLimit} />
+
+                    <TokenInputWrapper>
+                      <div
+                        style={{
+                          flex: 1,
+                          border: `1px solid ${theme.border}`,
+                          borderRadius: '1rem',
+                        }}
+                      >
+                        <CurrencyInputPanel
+                          value={formattedAmounts[Field.CURRENCY_A]}
+                          onUserInput={onFieldAInput}
+                          onMax={() => {
+                            onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
+                          }}
+                          onHalf={() => {
+                            onFieldAInput(currencyBalances[Field.CURRENCY_A]?.divide(2)?.toExact() ?? '')
+                          }}
+                          currency={currencies[Field.CURRENCY_A] ?? null}
+                          id="add-liquidity-input-tokena"
+                          showCommonBases
+                          positionMax="top"
+                          locked={depositADisabled}
+                          estimatedUsd={formattedNum(estimatedUsdCurrencyA.toString(), true) || undefined}
+                          disableCurrencySelect={!baseCurrencyIsETHER && !baseCurrencyIsWETH}
+                          isSwitchMode={baseCurrencyIsETHER || baseCurrencyIsWETH}
+                          onSwitchCurrency={() => {
+                            chainId &&
+                              navigate(
+                                `/elastic/increase/${
+                                  baseCurrencyIsETHER ? WETH[chainId].address : NativeCurrencies[chainId].symbol
+                                }/${currencyIdB}/${feeAmount}/${tokenId}`,
+                                {
+                                  replace: true,
+                                },
+                              )
+                          }}
+                        />
+                      </div>
+
+                      <div
+                        style={{
+                          flex: 1,
+                          border: `1px solid ${theme.border}`,
+                          borderRadius: '1rem',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <CurrencyInputPanel
+                          value={formattedAmounts[Field.CURRENCY_B]}
+                          onUserInput={onFieldBInput}
+                          onMax={() => {
+                            onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
+                          }}
+                          onHalf={() => {
+                            onFieldBInput(currencyBalances[Field.CURRENCY_B]?.divide(2).toExact() ?? '')
+                          }}
+                          currency={currencies[Field.CURRENCY_B] ?? null}
+                          id="add-liquidity-input-tokenb"
+                          showCommonBases
+                          positionMax="top"
+                          locked={depositBDisabled}
+                          estimatedUsd={formattedNum(estimatedUsdCurrencyB.toString(), true) || undefined}
+                          disableCurrencySelect={!quoteCurrencyIsETHER && !quoteCurrencyIsWETH}
+                          isSwitchMode={quoteCurrencyIsETHER || quoteCurrencyIsWETH}
+                          onSwitchCurrency={() => {
+                            chainId &&
+                              navigate(
+                                `/elastic/increase/${currencyIdA}/${
+                                  quoteCurrencyIsETHER ? WETH[chainId].address : NativeCurrencies[chainId].symbol
+                                }/${feeAmount}/${tokenId}`,
+                                { replace: true },
+                              )
+                          }}
+                        />
+                      </div>
+                    </TokenInputWrapper>
+                  </BlackCard>
+
+                  <Flex justifyContent="flex-end">
+                    <Buttons />
+                  </Flex>
+                </SecondColumn>
+              </GridColumn>
+            </AutoColumn>
+          ) : (
+            <Loader />
+          )}
+        </Content>
       </Container>
     </>
   )

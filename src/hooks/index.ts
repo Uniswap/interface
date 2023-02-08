@@ -87,7 +87,7 @@ export function useActiveWeb3React(): {
 
   return {
     chainId: chainIdState,
-    account: isEVM ? mockAccountEVM || addressEVM : mockAccountSolana || addressSolana,
+    account: isEVM ? mockAccountEVM || addressEVM : (isConnectedSolana && mockAccountSolana) || addressSolana,
     walletKey: isEVM ? walletKeyEVM : walletKeySolana,
     walletEVM: useMemo(() => {
       return {

@@ -60,7 +60,8 @@ const parsedPoolData = (
     : {}
 
   // format data and calculate daily changes
-  const formatted = poolAddresses.reduce((acc: { [address: string]: ElasticPoolDetail }, address) => {
+  const formatted = poolAddresses.reduce((acc: { [address: string]: ElasticPoolDetail }, upperCaseAddress) => {
+    const address = upperCaseAddress.toLowerCase()
     const current: ProMMPoolFields | undefined = parsed[address]
     const oneDay: ProMMPoolFields | undefined = parsed24[address]
 

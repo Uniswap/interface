@@ -347,6 +347,7 @@ const parsedPoolData = (
   return formatted
 }
 
+// todo: deprecated
 /**
  * Fetch top addresses by volume
  */

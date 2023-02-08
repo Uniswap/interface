@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro'
 import { darken, lighten, rgba } from 'polished'
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { Box, Flex, Text } from 'rebass'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
 import { ReactComponent as Lock } from 'assets/svg/ic_lock.svg'
@@ -33,7 +33,12 @@ const StyledSwitchIcon = styled(SwitchIcon)<{ selected: boolean }>`
   }
 `
 
-export const CurrencySelect = styled.button<{ selected: boolean; hideInput?: boolean; isDisable?: boolean }>`
+export const CurrencySelect = styled.button<{
+  tight?: boolean
+  selected: boolean
+  hideInput?: boolean
+  isDisable?: boolean
+}>`
   align-items: center;
   height: ${({ hideInput }) => (hideInput ? '2.5rem' : 'unset')};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
@@ -49,7 +54,7 @@ export const CurrencySelect = styled.button<{ selected: boolean; hideInput?: boo
   user-select: none;
   border: none;
   padding: 6px 8px;
-  padding-right: ${({ hideInput }) => (hideInput ? '8px' : 0)};
+  padding-right: ${({ hideInput, tight }) => (hideInput && !tight ? '8px' : 0)};
   cursor: ${({ isDisable: disabled }) => (disabled ? 'default' : 'pointer')};
   :focus,
   :hover {
@@ -89,15 +94,29 @@ const FixedContainer = styled.div`
   z-index: 2;
 `
 
-export const Container = styled.div<{ selected: boolean; hideInput: boolean; error?: boolean }>`
+export const Container = styled.div<{ selected: boolean; hideInput: boolean; error?: boolean; $outline?: boolean }>`
   border-radius: 16px;
   background-color: ${({ theme, hideInput }) => (hideInput ? 'transparent' : theme.buttonBlack)};
   padding: ${({ hideInput }) => (hideInput ? 0 : '0.75rem')};
-  border: ${({ error, theme }) => (error ? `1px solid ${theme.red}` : 'none')};
+  ${({ error, theme, $outline }) =>
+    error
+      ? css`
+          border: 1px solid ${theme.red};
+        `
+      : $outline
+      ? css`
+          border: 1px solid ${theme.border};
+        `
+      : ''}
 `
 
-export const StyledTokenName = styled.span<{ active?: boolean; fontSize?: string }>`
-  margin-left: 0.5rem;
+export const StyledTokenName = styled.span<{ tight?: boolean; active?: boolean; fontSize?: string }>`
+  ${({ tight }) =>
+    tight
+      ? ''
+      : css`
+          margin-left: 0.5rem;
+        `}
   font-size: ${({ active, fontSize }) => (fontSize ? fontSize : active ? '20px' : '16px')};
   overflow: hidden;
   text-overflow: ellipsis;
@@ -178,9 +197,11 @@ interface CurrencyInputPanelProps {
   maxCurrencySymbolLength?: number
   error?: boolean
   maxLength?: number
+  outline?: boolean
   filterWrap?: boolean
   loadingText?: string
   lockIcon?: boolean
+  tight?: boolean
 }
 
 export default function CurrencyInputPanel({
@@ -213,10 +234,13 @@ export default function CurrencyInputPanel({
   locked = false,
   maxCurrencySymbolLength,
   maxLength,
+  outline,
   filterWrap,
   lockIcon = false, // lock when need approve
+  tight: tightProp,
   loadingText,
 }: CurrencyInputPanelProps) {
+  const tight = Boolean(tightProp && !currency)
   const [modalOpen, setModalOpen] = useState(false)
   const { chainId, account } = useActiveWeb3React()
 
@@ -254,7 +278,7 @@ export default function CurrencyInputPanel({
       )}
       <InputPanel id={id} hideInput={hideInput}>
         {locked && PoolLockContent}
-        <Container hideInput={hideInput} selected={disableCurrencySelect} error={error}>
+        <Container hideInput={hideInput} selected={disableCurrencySelect} error={error} $outline={outline}>
           {!hideBalance && (
             <Flex justifyContent="space-between" fontSize="12px" marginBottom="12px" alignItems="center">
               {label && positionLabel === 'in' ? (
@@ -327,14 +351,16 @@ export default function CurrencyInputPanel({
                   }
                   onClickSelect?.()
                 }}
+                tight={tight}
               >
                 <Aligner>
                   <RowFixed>
                     {currency && !hideLogo ? <CurrencyLogo currency={currency} size={'20px'} /> : null}
                     <StyledTokenName
+                      tight={tight}
                       className="token-symbol-container"
                       active={Boolean(currency && currency.symbol)}
-                      fontSize={fontSize}
+                      fontSize={tight ? '14px' : fontSize}
                       style={{ paddingRight: disableCurrencySelect ? '8px' : 0 }}
                     >
                       {(nativeCurrency?.symbol && maxCurrencySymbolLength
@@ -343,7 +369,9 @@ export default function CurrencyInputPanel({
                         loadingText || <Trans>Select a token</Trans>}
                     </StyledTokenName>
                   </RowFixed>
-                  {!disableCurrencySelect && !isSwitchMode && <DropdownSVG />}
+                  {!disableCurrencySelect && !isSwitchMode && (
+                    <DropdownSVG style={{ marginLeft: tight ? '-8px' : undefined }} />
+                  )}
                   {!disableCurrencySelect && isSwitchMode && <StyledSwitchIcon selected={!!currency} />}
                 </Aligner>
               </CurrencySelect>

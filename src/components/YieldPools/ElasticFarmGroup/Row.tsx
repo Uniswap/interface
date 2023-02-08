@@ -18,7 +18,7 @@ import { MoneyBag, Swap2 as SwapIcon } from 'components/Icons'
 import Harvest from 'components/Icons/Harvest'
 import InfoHelper from 'components/InfoHelper'
 import { MouseoverTooltip, MouseoverTooltipDesktopOnly } from 'components/Tooltip'
-import { ELASTIC_BASE_FEE_UNIT } from 'constants/index'
+import { APP_PATHS, ELASTIC_BASE_FEE_UNIT } from 'constants/index'
 import { NETWORKS_INFO, isEVM } from 'constants/networks'
 import { TOBE_EXTENDED_FARMING_POOLS } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
@@ -293,7 +293,7 @@ const Row = ({
           <Flex alignItems="center">
             <DoubleCurrencyLogo currency0={farmingPool.token0} currency1={farmingPool.token1} />
             <Link
-              to={`/elastic/add/${
+              to={`${APP_PATHS.ELASTIC_CREATE_POOL}/${
                 farmingPool.token0.isNative ? farmingPool.token0.symbol : farmingPool.token0.address
               }/${farmingPool.token1.isNative ? farmingPool.token1.symbol : farmingPool.token1.address}/${
                 farmingPool.pool.fee

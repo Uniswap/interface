@@ -25,7 +25,8 @@ export function useProAmmPoolInfos(
             })
           : ''
       }),
-    [currencyA, currencyB, proAmmCoreFactoryAddress, feeAmount, networkInfo],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currencyA, currencyB, proAmmCoreFactoryAddress, JSON.stringify(feeAmount), networkInfo],
   )
 }
 

@@ -1,8 +1,8 @@
 import { ChainId, Currency, Token } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import React, { useState } from 'react'
-import { ArrowUpCircle } from 'react-feather'
-import { Text } from 'rebass'
+import { ArrowUpCircle, BarChart2 } from 'react-feather'
+import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import { ReactComponent as Alert } from 'assets/images/alert.svg'
@@ -12,11 +12,13 @@ import { AutoColumn, ColumnCenter } from 'components/Column'
 import Loader from 'components/Loader'
 import Modal from 'components/Modal'
 import { RowBetween, RowFixed } from 'components/Row'
+import ListGridViewGroup from 'components/YieldPools/ListGridViewGroup'
 import HurryUpBanner from 'components/swapv2/HurryUpBanner'
 import { SUPPORTED_WALLETS } from 'constants/wallets'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { useIsDarkMode } from 'state/user/hooks'
+import { VIEW_MODE } from 'state/user/reducer'
 import { ExternalLink } from 'theme'
 import { CloseIcon } from 'theme/components'
 import { getEtherscanLink, getTokenLogoURL } from 'utils'
@@ -189,11 +191,13 @@ function TransactionSubmittedContent({
 
 export function ConfirmationModalContent({
   title,
+  showGridListOption = false,
   bottomContent,
   onDismiss,
   topContent,
 }: {
   title: string
+  showGridListOption?: boolean
   onDismiss: () => void
   topContent: () => React.ReactNode
   bottomContent: () => React.ReactNode
@@ -205,7 +209,15 @@ export function ConfirmationModalContent({
           <Text fontWeight={500} fontSize={20}>
             {title}
           </Text>
-          <CloseIcon onClick={onDismiss} />
+          <Flex
+            sx={{
+              gap: '18px',
+              alignItems: 'center',
+            }}
+          >
+            {showGridListOption && <ListGridViewGroup customIcons={{ [VIEW_MODE.GRID]: <BarChart2 size="28px" /> }} />}
+            <CloseIcon onClick={onDismiss} />
+          </Flex>
         </RowBetween>
         {topContent()}
       </Section>
@@ -295,7 +307,8 @@ interface ConfirmationModalProps {
   tokenAddToMetaMask?: Currency
   showTxBanner?: boolean
   startedTime?: number
-  maxWidth?: number
+  maxWidth?: string | number
+  width?: string
 }
 
 export default function TransactionConfirmationModal({
@@ -309,13 +322,20 @@ export default function TransactionConfirmationModal({
   showTxBanner,
   startedTime,
   maxWidth = 420,
+  width,
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 
   if (!chainId) return null
 
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90} maxWidth={maxWidth}>
+    <Modal
+      isOpen={isOpen}
+      onDismiss={onDismiss}
+      maxHeight={90}
+      maxWidth={!attemptingTxn && !hash ? maxWidth : undefined}
+      width={!attemptingTxn && !hash ? width : undefined}
+    >
       {attemptingTxn ? (
         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} startedTime={startedTime} />
       ) : hash ? (

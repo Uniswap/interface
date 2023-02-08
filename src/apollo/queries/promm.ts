@@ -6,7 +6,7 @@ export const PROMM_POOLS_BULK = (block: number | undefined, pools: string[]) => 
   const queryString =
     `
     query pools {
-      pools(where: {id_in: ${poolString}},` +
+      pools(where: {id_in: ${poolString.toLowerCase()}},` +
     (block ? `block: {number: ${block}} ,` : ``) +
     ` orderBy: totalValueLockedUSD, orderDirection: desc, subgraphError: allow) {
         id
@@ -102,7 +102,7 @@ export const POOL_POSITION_COUNT = (poolAddresses: string[]) => {
         id
         positionCount
         feeTier
-        closedPostionCount
+        closedPositionCount
       }
     }
   `
@@ -154,6 +154,21 @@ export const PROMM_GET_MINT_VALUES_AFTER_CREATE_POOL_SUCCESS = gql`
         amount1
         amountUSD
       }
+    }
+  }
+`
+
+export const RECENT_POOL_TX = (poolAddress: string) => gql`
+  query recentPoolTxs {
+    mints(where: { pool: "${poolAddress}", timestamp_gte: ${Math.trunc(
+  Date.now() / 1000 - 86400,
+)} }, subgraphError: allow) {
+      id
+    }
+    burns(where: { pool: "${poolAddress}", timestamp_gte: ${Math.trunc(
+  Date.now() / 1000 - 86400,
+)} }, subgraphError: allow) {
+      id
     }
   }
 `

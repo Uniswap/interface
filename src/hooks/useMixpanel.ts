@@ -924,15 +924,15 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
             },
             fetchPolicy: 'network-only',
           })
-          if (transaction.confirmedTime && new Date().getTime() - transaction.confirmedTime < 3600000) {
+          if (transaction.confirmedTime && new Date().getTime() - transaction.confirmedTime < 3_600_000) {
             if (
               !res.data?.pool?.mints ||
               res.data.pool.mints.every((mint: { id: string }) => !mint.id.startsWith(transaction.hash))
             )
               break
           }
-          const { totalValueLockedToken0, totalValueLockedToken1, totalValueLockedUSD, feeTier } = res.data.pool
-          const mint = res.data.pool.mints.find((mint: { id: string }) => mint.id.startsWith(transaction.hash))
+          const { totalValueLockedToken0, totalValueLockedToken1, totalValueLockedUSD, feeTier, mints } = res.data.pool
+          const mint = mints.find((mint: { id: string }) => mint.id.startsWith(transaction.hash))
           mixpanelHandler(MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_COMPLETED, {
             token_1_pool_qty: totalValueLockedToken0,
             token_2_pool_qty: totalValueLockedToken1,

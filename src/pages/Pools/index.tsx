@@ -19,6 +19,7 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import Tutorial, { TutorialType } from 'components/Tutorial'
 import FarmPoolSort from 'components/YieldPools/FarmPoolSort'
 import ListGridViewGroup from 'components/YieldPools/ListGridViewGroup'
+import { APP_PATHS } from 'constants/index'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
@@ -160,7 +161,7 @@ const Pools = () => {
     const url =
       tab === VERSION.CLASSIC
         ? `/create/${currencyIdA === '' ? undefined : currencyIdA}/${currencyIdB === '' ? undefined : currencyIdB}`
-        : `/elastic/add${
+        : `${APP_PATHS.ELASTIC_CREATE_POOL}${
             currencyIdA && currencyIdB
               ? `/${currencyIdA}/${currencyIdB}`
               : currencyIdA || currencyIdB

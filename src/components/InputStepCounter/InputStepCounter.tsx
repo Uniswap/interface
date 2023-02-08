@@ -1,13 +1,13 @@
 import { FeeAmount } from '@kyberswap/ks-sdk-elastic'
-import { Trans } from '@lingui/macro'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
-import styled, { keyframes } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 
 import { ButtonGray } from 'components/Button'
 import { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { Input as NumericalInput } from 'components/NumericalInput'
+import { RowBetween } from 'components/Row'
 import useTheme from 'hooks/useTheme'
 import { TYPE } from 'theme'
 
@@ -27,31 +27,35 @@ const pulse = (color: string) => keyframes`
 
 const InputRow = styled.div`
   display: grid;
-  grid-template-columns: 30px 1fr 30px;
+  grid-template-columns: 32px 1fr 32px;
 `
 
-const SmallButton = styled(ButtonGray)`
+const SmallButton = styled(ButtonGray)<{ right?: boolean }>`
   background: ${({ theme }) => theme.subText + '33'};
   border-radius: 999px;
   padding: 4px;
   width: 24px;
   height: 24px;
+  ${({ right }) =>
+    right
+      ? css`
+          margin-left: auto;
+        `
+      : ''}
 `
 
 const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boolean }>`
-  border-color: #00000000;
-  padding: 12px;
-  border-radius: 16px;
+  border-color: ${({ theme }) => theme.border};
+  padding: 8px;
+  border-radius: 20px;
+  height: 40px;
   background-color: ${({ theme }) => theme.buttonBlack};
   animation: ${({ pulsing, theme }) => pulsing && pulse(theme.blue1)} 0.8s linear;
 `
 
 const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
   background-color: transparent;
-  text-align: center;
-  width: 100%;
   font-weight: 500;
-  padding: 0 10px;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     font-size: 16px;
@@ -140,43 +144,42 @@ const StepCounter = ({
   const theme = useTheme()
 
   return (
-    <FocusedOutlineCard pulsing={pulsing} active={active} onFocus={handleOnFocus} onBlur={handleOnBlur} width={width}>
-      <AutoColumn gap="6px">
-        <InputTitle fontSize={12} textAlign="center" style={{ textTransform: 'uppercase' }}>
-          {title}
-        </InputTitle>
+    <AutoColumn gap="8px" style={{ width }}>
+      <InputTitle fontSize={12}>{title}</InputTitle>
 
-        <InputRow>
-          {!locked && (
-            <SmallButton onClick={handleDecrement} disabled={decrementDisabled}>
-              <Minus size={18} color={decrementDisabled ? theme.subText : theme.text} />
-            </SmallButton>
-          )}
+      <FocusedOutlineCard pulsing={pulsing} active={active} onFocus={handleOnFocus} onBlur={handleOnBlur}>
+        <AutoColumn gap="6px">
+          <InputRow>
+            {!locked && (
+              <SmallButton onClick={handleDecrement} disabled={decrementDisabled}>
+                <Minus size={18} color={decrementDisabled ? theme.subText : theme.text} />
+              </SmallButton>
+            )}
 
-          <StyledInput
-            className="rate-input-0"
-            value={localValue}
-            fontSize="20px"
-            disabled={locked}
-            onUserInput={val => {
-              setLocalValue(val)
-            }}
-          />
+            <RowBetween>
+              <StyledInput
+                className="rate-input-0"
+                value={localValue}
+                fontSize="20px"
+                disabled={locked}
+                onUserInput={val => {
+                  setLocalValue(val)
+                }}
+              />
+              <InputTitle fontSize={12}>
+                {tokenB}/{tokenA}
+              </InputTitle>
+            </RowBetween>
 
-          {!locked && (
-            <SmallButton onClick={handleIncrement} disabled={incrementDisabled}>
-              <Plus size={18} color={incrementDisabled ? theme.subText : theme.text} />
-            </SmallButton>
-          )}
-        </InputRow>
-
-        <InputTitle fontSize={12} textAlign="center">
-          <Trans>
-            {tokenB} per {tokenA}
-          </Trans>
-        </InputTitle>
-      </AutoColumn>
-    </FocusedOutlineCard>
+            {!locked && (
+              <SmallButton onClick={handleIncrement} disabled={incrementDisabled} right>
+                <Plus size={18} color={incrementDisabled ? theme.subText : theme.text} />
+              </SmallButton>
+            )}
+          </InputRow>
+        </AutoColumn>
+      </FocusedOutlineCard>
+    </AutoColumn>
   )
 }
 

@@ -70,7 +70,7 @@ export const BtnPrimary = styled(ButtonPrimary)`
 
 export const OverflowStatisticWrapper = styled.div`
   margin-top: 160px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`    
+  ${({ theme }) => theme.mediaWidth.upToMedium`
     margin-left: 0;
     margin-right: 0;
   `}

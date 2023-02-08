@@ -16,7 +16,7 @@ export type CommonReturn = {
 const useGetElasticPools = (poolAddresses: string[]): CommonReturn => {
   const { chainId } = useActiveWeb3React()
 
-  const shouldRunV2 = chainId && CHAINS_SUPPORT_NEW_POOL_FARM_API.includes(chainId)
+  const shouldRunV2 = CHAINS_SUPPORT_NEW_POOL_FARM_API.includes(chainId)
   const responseV1 = useGetElasticPoolsV1(poolAddresses, shouldRunV2)
   const responseV2 = useGetElasticPoolsV2()
 

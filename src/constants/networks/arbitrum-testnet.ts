@@ -51,6 +51,7 @@ const arbitrumTestnetInfo: EVMNetworkInfo = {
   },
   elastic: {
     client: createClient('https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-arbitrum-one'),
+    startBlock: 14137735,
     coreFactory: '0x5F1dddbf348aC2fbe22a163e30F99F9ECE3DD50a',
     nonfungiblePositionManager: '0x2B1c7b41f6A8F2b2bc45C3233a5d5FB3cD6dC9A8',
     tickReader: '0xe3AC3fd66EB31cAf4EE0831b262D837c479FFCe5',

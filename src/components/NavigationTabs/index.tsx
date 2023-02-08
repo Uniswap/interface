@@ -1,5 +1,5 @@
 import { Trans, t } from '@lingui/macro'
-import { ArrowLeft, Trash } from 'react-feather'
+import { ArrowLeft, ChevronLeft, Trash } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex } from 'rebass'
@@ -39,8 +39,8 @@ const StyledArrowLeft = styled(ArrowLeft)`
 `
 
 const ButtonBack = styled(ButtonEmpty)`
-  width: 36px;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   justify-content: center;
   :hover,
   :focus {
@@ -48,6 +48,7 @@ const ButtonBack = styled(ButtonEmpty)`
     outline: none;
     background-color: ${({ theme }) => theme.buttonBlack};
   }
+  margin-right: 8px;
 `
 
 export const StyledMenuButton = styled.button<{ active?: boolean }>`
@@ -114,6 +115,7 @@ export enum LiquidityAction {
 
 export function AddRemoveTabs({
   action,
+  alignTitle = 'center',
   showTooltip = true,
   hideShare = false,
   onShared,
@@ -123,6 +125,7 @@ export function AddRemoveTabs({
   tutorialType,
 }: {
   action: LiquidityAction
+  alignTitle?: 'center' | 'left'
   showTooltip?: boolean
   hideShare?: boolean
   onShared?: () => void
@@ -140,7 +143,7 @@ export function AddRemoveTabs({
   const theme = useTheme()
   const arrow = (
     <ButtonBack width="fit-content" padding="0" onClick={!!onBack ? onBack : goBack}>
-      <StyledArrowLeft />
+      {alignTitle === 'left' ? <ChevronLeft color={theme.subText} /> : <StyledArrowLeft />}
     </ButtonBack>
   )
   const title = (
@@ -164,10 +167,10 @@ export function AddRemoveTabs({
               : action === LiquidityAction.ADD
               ? t`Add liquidity for a token pair and earn fees on the trades that are in your selected price range`
               : action === LiquidityAction.INCREASE
-              ? t``
+              ? ''
               : action === LiquidityAction.REMOVE
               ? t`Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive`
-              : t``)
+              : '')
           }
         />
       )}
@@ -176,14 +179,17 @@ export function AddRemoveTabs({
   return (
     <Tabs>
       <Wrapper>
-        {below768 && (
+        {below768 || alignTitle === 'left' ? (
           <Flex alignItems={'center'}>
             {arrow}
             {title}
           </Flex>
+        ) : (
+          <>
+            {arrow}
+            {title}
+          </>
         )}
-        {!below768 && arrow}
-        {!below768 && title}
         <Flex style={{ gap: '0px' }}>
           {tutorialType && (
             <Tutorial

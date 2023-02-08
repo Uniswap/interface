@@ -3,7 +3,7 @@ import { FeeAmount } from '@kyberswap/ks-sdk-elastic'
 import { Trans } from '@lingui/macro'
 import { format } from 'd3'
 import { saturate } from 'polished'
-import { CSSProperties, ReactNode, useCallback, useMemo } from 'react'
+import { CSSProperties, ReactNode, useCallback, useMemo, useState } from 'react'
 import { BarChart2, Inbox } from 'react-feather'
 import { batch } from 'react-redux'
 import { Text } from 'rebass'
@@ -14,7 +14,7 @@ import WarningIcon from 'components/LiveChart/WarningIcon'
 import Loader from 'components/Loader'
 import { useColor } from 'hooks/useColor'
 import useTheme from 'hooks/useTheme'
-import { Bound } from 'state/mint/proamm/actions'
+import { Bound } from 'state/mint/proamm/type'
 
 import { Chart } from './Chart'
 import { useDensityChartData } from './hooks'
@@ -27,7 +27,6 @@ const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
     min: 0.00001,
     max: 1.5,
   },
-
   [FeeAmount.LOWEST]: {
     initialMin: 0.999,
     initialMax: 1.001,
@@ -86,6 +85,7 @@ export default function LiquidityChartRangeInput({
   onRightRangeInput,
   interactive,
   style = {},
+  height,
 }: {
   currencyA: Currency | undefined
   currencyB: Currency | undefined
@@ -98,8 +98,10 @@ export default function LiquidityChartRangeInput({
   onRightRangeInput: (typedValue: string) => void
   interactive: boolean
   style?: CSSProperties
+  height?: string
 }) {
   const theme = useTheme()
+  const [ref, setRef] = useState<HTMLDivElement | null>(null)
 
   const tokenAColor = useColor(currencyA?.wrapped)
   const tokenBColor = useColor(currencyB?.wrapped)
@@ -164,8 +166,14 @@ export default function LiquidityChartRangeInput({
     [isSorted, price, ticksAtLimit],
   )
 
+  const viewBoxWidth = useMemo(() => {
+    if (!height) return 400
+    if (ref?.clientWidth) return ref.clientWidth * 0.8
+    return 400
+  }, [height, ref])
+
   return (
-    <AutoColumn gap="md" style={{ minHeight: '200px', ...style }}>
+    <AutoColumn ref={newRef => setRef(newRef)} gap="md" style={{ minHeight: '237px', ...style }}>
       {isUninitialized ? (
         <InfoBox
           message={<Trans>Your position will appear here.</Trans>}
@@ -184,7 +192,7 @@ export default function LiquidityChartRangeInput({
         <ChartWrapper>
           <Chart
             data={{ series: formattedData, current: price }}
-            dimensions={{ width: 400, height: 200 }}
+            dimensions={{ viewBoxWidth, height }}
             margins={{ top: 10, right: 2, bottom: 20, left: 0 }}
             styles={{
               area: {
