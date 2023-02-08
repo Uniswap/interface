@@ -16,7 +16,7 @@ export default function usePermit2Approval(
 
   const allowance = usePermit2Allowance(
     enabled ? maximumAmount ?? (amount?.currency.isToken ? (amount as CurrencyAmount<Token>) : undefined) : undefined,
-    chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
+    enabled && chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
   )
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
   const [isAllowancePending, setIsAllowancePending] = useState(false)
