@@ -41,7 +41,7 @@ export function useSyncWidgetInputs({
   })
 
   useEffect(() => {
-    if ((inputToken || outputToken) && !tokens[Field.INPUT] && !tokens[Field.OUTPUT]) {
+    if (!tokens[Field.INPUT] && !tokens[Field.OUTPUT]) {
       setTokens((tokens) => {
         const update = {
           ...tokens,

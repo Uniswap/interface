@@ -217,7 +217,6 @@ export default function TokenDetails({
 
         <RightPanel>
           <Widget
-            outputToken={token ?? undefined}
             defaultToken={token ?? undefined}
             onDefaultTokenChange={navigateToWidgetSelectedToken}
             onReviewSwapClick={onReviewSwapClick}
