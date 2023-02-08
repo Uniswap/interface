@@ -12,6 +12,7 @@ import { useENS } from 'src/features/ens/useENS'
 import { EthMethod, EthTransaction } from 'src/features/walletConnect/types'
 import {
   isTransactionRequest,
+  SignRequest,
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { Theme } from 'src/styles/theme'
@@ -177,10 +178,14 @@ type Props = {
   request: WalletConnectRequest
 }
 
+function isSignTypedDataRequest(request: WalletConnectRequest): request is SignRequest {
+  return request.type === EthMethod.SignTypedData || request.type === EthMethod.SignTypedDataV4
+}
+
 function RequestDetailsContent({ request }: Props): JSX.Element {
   const { t } = useTranslation()
 
-  if (request.type === EthMethod.SignTypedData) {
+  if (isSignTypedDataRequest(request)) {
     try {
       const data = JSON.parse(request.rawMessage)
       return getParsedObjectDisplay(request.dapp.chain_id, data.message, 0)
