@@ -25,8 +25,7 @@ import {
   getPriceUpdateBasisPoints,
   getTokenAddress,
 } from 'lib/utils/analytics'
-import { forwardRef, PropsWithChildren, useCallback, useEffect, useState } from 'react'
-import { createPortal } from 'react-dom'
+import { useCallback, useEffect, useState } from 'react'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
@@ -178,7 +177,7 @@ export default function Widget({
 
   return (
     <>
-      <DialogPortal ref={setDialog} visible={dialogVisible} />
+      <DialogContainer ref={setDialog} visible={dialogVisible} />
       <SwapWidget
         hideConnectionUI
         brandedFooter={false}
@@ -210,29 +209,15 @@ export default function Widget({
 
 const DialogContainer = styled.div<{ visible: boolean }>`
   position: absolute;
-  top: calc(100% / 2 - 250px);
-  left: calc(100% / 2 - 180px);
-  height: 500px;
-  width: ${DEFAULT_WIDGET_WIDTH}px;
+  top: 48;
+  left: 0;
+  height: 100%;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: ${({ visible }) => (visible ? 'all' : 'none')};
 `
-
-const DialogPortal = forwardRef<HTMLDivElement, PropsWithChildren<{ visible: boolean }>>(function RootWrapper(
-  { children, visible }: PropsWithChildren<{ visible: boolean }>,
-  ref
-) {
-  return createPortal(
-    <>
-      <DialogContainer ref={ref} visible={visible}>
-        {children}
-      </DialogContainer>
-    </>,
-    document.body
-  )
-})
 
 export function WidgetSkeleton({ width = DEFAULT_WIDGET_WIDTH }: { width?: number | string }) {
   const theme = useWidgetTheme()
