@@ -15,7 +15,7 @@ import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { SupportedChainId } from 'constants/chains'
-import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
+import { usePayWithAnyTokenEnabled } from 'featureFlags/flags/payWithAnyToken'
 import { useCurrency } from 'hooks/Tokens'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
@@ -268,7 +268,7 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
   const theme = useTheme()
   const { account, chainId, connector } = useWeb3React()
   const connected = Boolean(account && chainId)
-  const shouldUsePayWithAnyToken = usePayWithAnyTokenFlag() === PayWithAnyTokenVariant.Enabled
+  const shouldUsePayWithAnyToken = usePayWithAnyTokenEnabled()
   const inputCurrency = useTokenInput((state) => state.inputCurrency)
   const setInputCurrency = useTokenInput((state) => state.setInputCurrency)
   const defaultCurrency = useCurrency('ETH')
@@ -294,7 +294,8 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
   const { state: tradeState, trade, maximumAmountIn } = usePayWithAnyTokenSwap(inputCurrency, parsedOutputAmount)
   const { allowance, isAllowancePending, isApprovalLoading, updateAllowance } = usePermit2Approval(
     trade?.inputAmount.currency.isToken ? (trade?.inputAmount as CurrencyAmount<Token>) : undefined,
-    maximumAmountIn
+    maximumAmountIn,
+    shouldUsePayWithAnyToken
   )
 
   const fiatValueTradeInput = useStablecoinValue(trade?.inputAmount)

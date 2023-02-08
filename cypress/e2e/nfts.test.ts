@@ -46,8 +46,7 @@ describe('Testing nfts', () => {
     cy.get(getTestSelector('nft-details-description-text')).should('exist')
     cy.get(getTestSelector('nft-details-description')).click()
     cy.get(getTestSelector('nft-details-description-text')).should('not.exist')
-    // TODO: Enable when universal router is deployed to goerli these tests fail because it is not deployed there
-    // cy.get(getTestSelector('nft-details-toggle-bag')).eq(1).click()
-    // cy.get(getTestSelector('nft-bag')).should('exist')
+    cy.get(getTestSelector('nft-details-toggle-bag')).eq(1).click()
+    cy.get(getTestSelector('nft-bag')).should('exist')
   })
 })

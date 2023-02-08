@@ -7,11 +7,15 @@ import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useCallback, useMemo, useState } from 'react'
 import invariant from 'tiny-invariant'
 
-export default function usePermit2Approval(amount?: CurrencyAmount<Token>, maximumAmount?: CurrencyAmount<Token>) {
+export default function usePermit2Approval(
+  amount?: CurrencyAmount<Token>,
+  maximumAmount?: CurrencyAmount<Token>,
+  enabled?: boolean
+) {
   const { chainId } = useWeb3React()
 
   const allowance = usePermit2Allowance(
-    maximumAmount ?? (amount?.currency.isToken ? (amount as CurrencyAmount<Token>) : undefined),
+    enabled ? maximumAmount ?? (amount?.currency.isToken ? (amount as CurrencyAmount<Token>) : undefined) : undefined,
     chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
   )
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
