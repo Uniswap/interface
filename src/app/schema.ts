@@ -206,10 +206,13 @@ export const v33Schema = {
   ...v32Schema,
   wallet: {
     ...v32Schema.wallet,
-    replaceAccountOptions: {},
+    replaceAccountOptions: {
+      isReplacingAccount: false,
+      skipToSeedPhrase: false,
+    },
   },
 }
 
 // TODO: [MOB-3864] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v32Schema => v32Schema
+export const getSchema = (): typeof v33Schema => v33Schema
