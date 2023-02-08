@@ -117,6 +117,6 @@ ignore:
         reason: >-
           Vulnerability just disclosed and no update path available, ignoring
           for 7 days
-        expires: 2023-02-07T00:00:00.000Z
-        created: 2023-01-30T18:41:14.232Z
+        expires: 2023-02-14T00:00:00.000Z
+        created: 2023-02-07T19:38:26.109Z
 patch: {}
