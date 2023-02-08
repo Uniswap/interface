@@ -4,7 +4,6 @@ import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { GqlRoutingVariant, useGqlRoutingFlag } from 'featureFlags/flags/gqlRouting'
 import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
-import { useNftRoute } from 'graphql/data/nft/Routing'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
 import ListingModal from 'nft/components/bag/profile/ListingModal'
@@ -21,6 +20,7 @@ import {
   useSendTransaction,
   useTransactionResponse,
 } from 'nft/hooks'
+import useNftBagRouting from 'nft/hooks/useNftBagRouting'
 import { fetchRoute } from 'nft/queries'
 import { BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType } from 'nft/types'
 import {
@@ -197,7 +197,7 @@ const Bag = () => {
     setBagExpanded({ bagExpanded: false, manualClose: true })
   }, [setBagExpanded])
 
-  useNftRoute(usingGqlRouting ? account ?? '' : '', [])
+  useNftBagRouting(itemsInBag, usingGqlRouting)
   const fetchAssets = async () => {
     const itemsToBuy = itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset)
     const ethSellObject = buildSellObject(
