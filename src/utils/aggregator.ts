@@ -242,7 +242,7 @@ export class Aggregator {
         tokenOut: tokenOutAddress,
         amountIn: currencyAmountIn.quotient?.toString(),
         saveGas: saveGas ? '1' : '0',
-        gasInclude: saveGas ? '1' : '0',
+        gasInclude: '1',
         ...(dexes ? { dexes } : {}),
         slippageTolerance: slippageTolerance?.toString() ?? '',
         deadline: deadline?.toString() ?? '',
