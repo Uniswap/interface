@@ -523,7 +523,7 @@ export function useCheckIsFarmingPool(address: string): boolean {
 }
 
 export function errorFriendly(text: string): string {
-  const error = text?.toLowerCase() || ''
+  const error = text?.toLowerCase?.() || ''
   if (!error || error.includes('router: expired')) {
     return 'An error occurred. Refresh the page and try again '
   }

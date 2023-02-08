@@ -25,6 +25,7 @@ export type TransactionExtraInfo2Token = {
   contract?: string // recipient, contract, spender, ...
   chainIdIn?: ChainId
   chainIdOut?: ChainId
+  nftId?: string
 }
 
 export type TransactionExtraInfoHarvestFarm = {
@@ -45,6 +46,7 @@ export type TransactionExtraInfoStakeFarm = {
     tokenAmountIn: string
     tokenAmountOut: string
     poolAddress: string
+    nftId: string
   }[]
   contract?: string // recipient, contract, spender, ...
 }

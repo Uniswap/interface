@@ -408,16 +408,18 @@ export default function ZapOut({
         gasLimit: safeGasEstimate,
       })
         .then((response: TransactionResponse) => {
-          if (!!currencyA && !!currencyB) {
+          if (currencyA && currencyB) {
             setAttemptingTxn(false)
             const tokenAmount = parsedAmounts[independentTokenField]?.toSignificant(6)
             addTransactionWithType({
               hash: response.hash,
               type: TRANSACTION_TYPE.CLASSIC_REMOVE_LIQUIDITY,
               extraInfo: {
-                tokenSymbol: independentToken?.symbol ?? '',
-                tokenAmount,
-                tokenAddressOut: independentToken?.wrapped?.address ?? '',
+                tokenAddressIn: currencyA.wrapped.address,
+                tokenAddressOut: currencyB.wrapped.address,
+                tokenSymbolIn: currencyA.symbol,
+                tokenSymbolOut: currencyB.symbol,
+                tokenAmountIn: tokenAmount,
                 contract: pairAddress,
                 arbitrary: {
                   poolAddress: pairAddress,

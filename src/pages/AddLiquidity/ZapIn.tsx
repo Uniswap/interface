@@ -247,16 +247,18 @@ const ZapIn = ({
         }).then(tx => {
           const cA = currencies[Field.CURRENCY_A]
           const cB = currencies[Field.CURRENCY_B]
-          if (!!cA && !!cB) {
+          if (cA && cB) {
             const tokenAmount = userInCurrencyAmount?.toSignificant(6)
             setAttemptingTxn(false)
             addTransactionWithType({
               hash: tx.hash,
               type: TRANSACTION_TYPE.CLASSIC_ADD_LIQUIDITY,
               extraInfo: {
-                tokenSymbol: independentToken?.symbol ?? '',
-                tokenAmount,
-                tokenAddress: independentToken?.wrapped?.address ?? '',
+                tokenAddressIn: cA.wrapped.address,
+                tokenAddressOut: cB.wrapped.address,
+                tokenSymbolIn: cA.symbol,
+                tokenSymbolOut: cB.symbol,
+                tokenAmountIn: tokenAmount,
                 contract: pairAddress,
                 arbitrary: {
                   poolAddress: pairAddress,

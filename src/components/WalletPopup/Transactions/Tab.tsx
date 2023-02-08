@@ -95,6 +95,7 @@ const TabWrapper = styled(Row).attrs<WrapperProps>(props => ({
 
 const tabActiveCSS = css`
   border-radius: 20px;
+  color: ${({ theme }) => theme.text};
   background-color: ${({ theme }) => (theme.darkMode ? theme.tabActive : theme.buttonGray)};
 `
 
@@ -106,6 +107,7 @@ const TabItem = styled.div<{ active: boolean }>`
   text-align: center;
   cursor: pointer;
   user-select: none;
+  color: ${({ theme }) => theme.subText};
   :hover {
     ${tabActiveCSS}
   }

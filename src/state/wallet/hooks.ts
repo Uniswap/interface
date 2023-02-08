@@ -2,7 +2,6 @@ import { ChainId, Currency, CurrencyAmount, Token, TokenAmount } from '@kyberswa
 import JSBI from 'jsbi'
 import { useEffect, useMemo, useState } from 'react'
 
-import { useTokenComparator } from 'components/SearchModal/sorting'
 import ERC20_INTERFACE from 'constants/abis/erc20'
 import { EMPTY_ARRAY, EMPTY_OBJECT } from 'constants/index'
 import { NativeCurrencies } from 'constants/tokens'
@@ -203,10 +202,23 @@ export const useTokensHasBalance = () => {
     }, 0)
   }, [tokensPrices, loadBalanceDone, tokensHasBalance, currencyBalances, ethBalance])
 
-  const tokenComparator = useTokenComparator(false)
+  // sort by usd
   const tokensHasBalanceSorted = useMemo(() => {
-    return (tokensHasBalance as Token[]).sort(tokenComparator)
-  }, [tokenComparator, tokensHasBalance])
+    return (tokensHasBalance as Token[]).sort((a, b) => {
+      const addressA = a.wrapped.address
+      const addressB = b.wrapped.address
+
+      const usdPriceA = tokensPrices[addressA] ?? 0
+      const usdPriceB = tokensPrices[addressB] ?? 0
+
+      const tokenBalanceA = a.isNative ? ethBalance?.toExact() : currencyBalances[addressA]?.toExact()
+      const tokenBalanceB = b.isNative ? ethBalance?.toExact() : currencyBalances[addressB]?.toExact()
+
+      const usdA = parseFloat(tokenBalanceA ?? '0') * usdPriceA
+      const usdB = parseFloat(tokenBalanceB ?? '0') * usdPriceB
+      return usdA > usdB ? -1 : 1
+    })
+  }, [tokensHasBalance, tokensPrices, currencyBalances, ethBalance])
 
   return {
     loading: !loadBalanceDone,

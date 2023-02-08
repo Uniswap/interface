@@ -157,7 +157,7 @@ export default function AccountInfo({
               }}
             >
               <BalanceTitle>
-                <Trans>Current Balance</Trans>
+                <Trans>Total Balance</Trans>
               </BalanceTitle>
 
               <BalanceValue>

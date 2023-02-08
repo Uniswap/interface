@@ -147,11 +147,7 @@ const RewardTokenPrices = ({ style = {}, rewardTokens }: { style?: React.CSSProp
         <RewardTokensList ref={contentRef}>
           {rewardTokens.map((token, index) => {
             return (
-              <TokenWrapper
-                key={token.wrapped.address}
-                isFirstItem={index === 0}
-                isLastItem={index === rewardTokens?.length - 1}
-              >
+              <TokenWrapper key={index} isFirstItem={index === 0} isLastItem={index === rewardTokens?.length - 1}>
                 <CurrencyLogo currency={token} size="20px" />
                 <TokenSymbol>{token.symbol}:</TokenSymbol>
                 <span>

@@ -1,5 +1,5 @@
 import { Trans, t } from '@lingui/macro'
-import { ChangeEvent, ReactNode, useCallback } from 'react'
+import { ChangeEvent, DOMAttributes, ReactNode, useCallback } from 'react'
 import { Flex, Text } from 'rebass'
 import styled, { CSSProperties } from 'styled-components'
 
@@ -72,17 +72,7 @@ const DropdownIcon = styled(DropdownSVG)<{ open: boolean }>`
   transform: rotate(${({ open }) => (open ? '-180deg' : 0)});
 `
 
-export const AddressInput = ({
-  onChange,
-  value,
-  error = false,
-  placeholder,
-  icon,
-  disabled = false,
-  style = {},
-  className,
-}: {
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+type Props = {
   error?: boolean
   value: string | null
   placeholder?: string
@@ -90,7 +80,20 @@ export const AddressInput = ({
   disabled?: boolean
   className?: string
   style?: CSSProperties
-}) => {
+} & Pick<DOMAttributes<HTMLInputElement>, 'onBlur' | 'onFocus' | 'onChange'>
+
+export const AddressInput = function AddressInput({
+  onChange,
+  onFocus,
+  onBlur,
+  value,
+  error = false,
+  placeholder,
+  icon,
+  disabled = false,
+  style = {},
+  className,
+}: Props) {
   return (
     <ContainerRow error={error} className={className}>
       <InputContainer>
@@ -107,6 +110,8 @@ export const AddressInput = ({
             placeholder={placeholder || t`Wallet Address or ENS name`}
             error={error}
             pattern="^(0x[a-fA-F0-9]{40})$"
+            onBlur={onBlur}
+            onFocus={onFocus}
             onChange={onChange}
             value={value || ''}
           />

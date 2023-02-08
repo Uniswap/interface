@@ -57,14 +57,18 @@ const summaryClaim = (txs: TransactionDetails) => {
 }
 
 const summaryStakeUnstakeFarm = (txs: TransactionDetails) => {
-  const { summary = 'liquidity' } = (txs.extraInfo || {}) as TransactionExtraBaseInfo
-  return txs.type === TRANSACTION_TYPE.STAKE ? `Stake ${summary} into farm` : `Unstake ${summary} from farm`
+  return txs.type === TRANSACTION_TYPE.STAKE ? t`Stake liquidity into farm` : t`Unstake liquidity from farm`
 }
 
 // ex: elastic add liquidity 30 knc and 40 usdt
 const summaryLiquidity = (txs: TransactionDetails) => {
   const extraInfo = txs.extraInfo || {}
-  const { tokenAmountIn, tokenAmountOut, tokenSymbolIn, tokenSymbolOut } = extraInfo as TransactionExtraInfo2Token
+  const {
+    tokenAmountIn = '',
+    tokenAmountOut = '',
+    tokenSymbolIn,
+    tokenSymbolOut,
+  } = extraInfo as TransactionExtraInfo2Token
   const { tokenSymbol, tokenAmount } = extraInfo as TransactionExtraInfo1Token
   return `${txs.type} ${
     tokenSymbol && tokenAmount

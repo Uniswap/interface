@@ -268,7 +268,7 @@ export default function WalletView({ onDismiss, onPin, isPinned, blurBackground 
                 </Flex>
               </>
             ) : (
-              <Text fontWeight={'500'} fontSize="20px">
+              <Text fontWeight={'500'} fontSize="20px" color={theme.subText}>
                 <Trans>Your Account</Trans>
               </Text>
             )}

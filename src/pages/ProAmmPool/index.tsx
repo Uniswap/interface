@@ -148,14 +148,18 @@ export default function ProAmmPool() {
 
   const theme = useTheme()
 
-  const { search: searchValueInQs = '', tab = VERSION.ELASTIC } = useParsedQueryString<{
+  const {
+    search: searchValueInQs = '',
+    tab = VERSION.ELASTIC,
+    nftId,
+  } = useParsedQueryString<{
     search: string
     tab: string
+    nftId: string
   }>()
 
   const navigate = useNavigate()
   const location = useLocation()
-
   const onSearch = (search: string) => {
     navigate(location.pathname + '?search=' + search + '&tab=' + tab, { replace: true })
   }
@@ -186,6 +190,7 @@ export default function ProAmmPool() {
         : [...openPositions, ...filteredFarmPositions, ...closedPositions]
       )
         .filter(position => {
+          if (nftId) return position.tokenId.toString() === nftId
           return (
             debouncedSearchText.trim().length === 0 ||
             (!!tokenAddressSymbolMap.current[position.token0.toLowerCase()] &&
@@ -196,7 +201,7 @@ export default function ProAmmPool() {
           )
         })
         .filter((pos, index, array) => array.findIndex(pos2 => pos2.tokenId.eq(pos.tokenId)) === index),
-    [showClosed, openPositions, closedPositions, debouncedSearchText, filteredFarmPositions],
+    [showClosed, openPositions, closedPositions, debouncedSearchText, filteredFarmPositions, nftId],
   )
 
   const [showStaked, setShowStaked] = useState(false)

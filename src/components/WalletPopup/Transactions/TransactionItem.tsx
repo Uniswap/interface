@@ -1,11 +1,13 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import dayjs from 'dayjs'
-import { ReactNode, forwardRef } from 'react'
+import { Fragment, ReactNode, forwardRef } from 'react'
 import { Flex, Text } from 'rebass'
 import styled, { CSSProperties } from 'styled-components'
 
 import { ReactComponent as ArrowDown } from 'assets/svg/arrow_down.svg'
+import { ReactComponent as NftIcon } from 'assets/svg/nft_icon.svg'
+import SendIcon from 'components/Icons/SendIcon'
 import { NetworkLogo } from 'components/Logo'
 import Row from 'components/Row'
 import ContractAddress from 'components/WalletPopup/Transactions/ContractAddress'
@@ -16,6 +18,7 @@ import PoolFarmLink from 'components/WalletPopup/Transactions/PoolFarmLink'
 import Status from 'components/WalletPopup/Transactions/Status'
 import { isTxsPendingTooLong } from 'components/WalletPopup/Transactions/helper'
 import { CancellingOrderInfo } from 'components/swapv2/LimitOrder/useCancellingOrders'
+import { APP_PATHS } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
 import useTheme from 'hooks/useTheme'
 import {
@@ -24,8 +27,10 @@ import {
   TransactionExtraBaseInfo,
   TransactionExtraInfo1Token,
   TransactionExtraInfo2Token,
+  TransactionExtraInfoHarvestFarm,
+  TransactionExtraInfoStakeFarm,
 } from 'state/transactions/type'
-import { ExternalLinkIcon } from 'theme'
+import { ExternalLink, ExternalLinkIcon } from 'theme'
 import { getEtherscanLink } from 'utils'
 
 const ItemWrapper = styled.div`
@@ -54,14 +59,14 @@ export const PrimaryText = styled(Text)`
   color: ${({ theme }) => theme.subText};
 `
 
-const renderDescriptionBasic = (transaction: TransactionDetails) => {
+const DescriptionBasic = (transaction: TransactionDetails) => {
   const { extraInfo = {} } = transaction
   const { summary = '' } = extraInfo as TransactionExtraBaseInfo
   return <PrimaryText>{summary}</PrimaryText>
 }
 
 // ex: claim 3knc
-const renderDescription1Token = (transaction: TransactionDetails) => {
+const Description1Token = (transaction: TransactionDetails) => {
   const { extraInfo = {}, type } = transaction
   const { tokenSymbol, tokenAmount, tokenAddress } = extraInfo as TransactionExtraInfo1Token
   // +10KNC or -10KNC
@@ -70,7 +75,7 @@ const renderDescription1Token = (transaction: TransactionDetails) => {
 }
 
 //ex: +3knc -2usdt
-const renderDescription2Token = (transaction: TransactionDetails) => {
+const Description2Token = (transaction: TransactionDetails) => {
   const { extraInfo = {} } = transaction
   const { tokenAmountIn, tokenAmountOut, tokenSymbolIn, tokenSymbolOut, tokenAddressIn, tokenAddressOut } =
     extraInfo as TransactionExtraInfo2Token
@@ -83,7 +88,7 @@ const renderDescription2Token = (transaction: TransactionDetails) => {
 }
 
 // ex: stake -3knc
-const renderDescriptionKyberDaoStake = (transaction: TransactionDetails) => {
+const DescriptionKyberDaoStake = (transaction: TransactionDetails) => {
   const { extraInfo = {}, type } = transaction
   const { tokenSymbol, tokenAmount, tokenAddress } = extraInfo as TransactionExtraInfo1Token
   const votingPower = extraInfo?.arbitrary?.votingPower
@@ -96,17 +101,69 @@ const renderDescriptionKyberDaoStake = (transaction: TransactionDetails) => {
   )
 }
 
-const renderDescriptionLiquidity = (transaction: TransactionDetails) => {
-  const { extraInfo = {} } = transaction
-  const { tokenSymbol, tokenAmount } = extraInfo as TransactionExtraInfo1Token
+const StyledLink = styled(ExternalLink)`
+  &:hover {
+    text-decoration: none;
+  }
+`
+const NftLink = ({
+  nftId,
+  canNavigate = true,
+  type,
+}: {
+  nftId: string
+  canNavigate?: boolean
+  type: TRANSACTION_TYPE
+}) => {
+  const theme = useTheme()
+  const plus = [TRANSACTION_TYPE.ELASTIC_WITHDRAW_LIQUIDITY, TRANSACTION_TYPE.UNSTAKE].includes(type)
+  const icon = (
+    <Flex alignItems={'center'} color={theme.subText} height={14}>
+      <NftIcon />
+      <PrimaryText>
+        &nbsp;{plus ? '+' : '-'} #{nftId}
+      </PrimaryText>
+      &nbsp;{canNavigate && <SendIcon size={10} />}
+    </Flex>
+  )
+  if (!canNavigate) return icon
+  return (
+    <StyledLink key={nftId} href={`${APP_PATHS.MY_POOLS}?nftId=${nftId}`}>
+      {icon}
+    </StyledLink>
+  )
+}
+
+const DescriptionLiquidity = (transaction: TransactionDetails) => {
+  const { nftId } = (transaction.extraInfo ?? {}) as TransactionExtraInfo2Token
   return {
-    leftComponent:
-      tokenSymbol && tokenAmount ? renderDescription1Token(transaction) : renderDescription2Token(transaction),
-    rightComponent: <PoolFarmLink transaction={transaction} />,
+    leftComponent: Description2Token(transaction),
+    rightComponent: nftId ? (
+      <NftLink type={transaction.type} nftId={nftId} canNavigate={false} />
+    ) : (
+      <PoolFarmLink transaction={transaction} />
+    ),
   }
 }
 
-const renderDescriptionBridge = (transaction: TransactionDetails) => {
+const DescriptionHarvestFarmReward = (transaction: TransactionDetails) => {
+  const { rewards = [] } = (transaction.extraInfo ?? {}) as TransactionExtraInfoHarvestFarm
+  return (
+    <>
+      {rewards.map(item => (
+        <DeltaTokenAmount
+          plus
+          amount={item.tokenAmount}
+          symbol={item.tokenSymbol}
+          tokenAddress={item.tokenAddress}
+          key={item.tokenAddress}
+        />
+      ))}
+    </>
+  )
+}
+
+const DescriptionBridge = (transaction: TransactionDetails) => {
   const { extraInfo = {} } = transaction
   const {
     tokenAmountIn,
@@ -139,7 +196,7 @@ const renderDescriptionBridge = (transaction: TransactionDetails) => {
 }
 
 // ex: approve elastic farm, approve knc, claim 3knc
-const renderDescriptionApproveClaim = (transaction: TransactionDetails) => {
+const DescriptionApproveClaim = (transaction: TransactionDetails) => {
   const { extraInfo = {}, type } = transaction
   const { tokenSymbol, tokenAmount, tokenAddress } = extraInfo as TransactionExtraInfo1Token
   const { summary = '' } = extraInfo as TransactionExtraBaseInfo
@@ -152,7 +209,7 @@ const renderDescriptionApproveClaim = (transaction: TransactionDetails) => {
   )
 }
 
-const renderDescriptionLimitOrder = (transaction: TransactionDetails) => {
+const DescriptionLimitOrder = (transaction: TransactionDetails) => {
   const { extraInfo = {} } = transaction
   const { tokenAmountIn, tokenAmountOut, tokenSymbolIn, tokenSymbolOut } = extraInfo as TransactionExtraInfo2Token
   if (!tokenAmountIn)
@@ -172,46 +229,63 @@ const renderDescriptionLimitOrder = (transaction: TransactionDetails) => {
   )
 }
 
-const RENDER_DESCRIPTION_MAP: {
+const DescriptionStakeFarm = (transaction: TransactionDetails) => {
+  const { extraInfo = {}, type } = transaction
+  const { pairs = [] } = extraInfo as TransactionExtraInfoStakeFarm
+  if (pairs?.length)
+    return (
+      <>
+        {pairs.map(({ nftId }) => (
+          <NftLink key={nftId} nftId={nftId} type={type} />
+        ))}
+      </>
+    )
+  const { tokenAmount, tokenSymbol } = extraInfo as TransactionExtraInfo1Token
+  return <DeltaTokenAmount plus={type === TRANSACTION_TYPE.UNSTAKE} amount={tokenAmount} symbol={tokenSymbol} />
+}
+
+const DESCRIPTION_MAP: {
   [type in TRANSACTION_TYPE]: (
     txs: TransactionDetails,
   ) => null | JSX.Element | { leftComponent: ReactNode; rightComponent: ReactNode }
 } = {
-  [TRANSACTION_TYPE.STAKE]: renderDescriptionBasic,
-  [TRANSACTION_TYPE.ELASTIC_FORCE_WITHDRAW_LIQUIDITY]: renderDescriptionBasic,
-  [TRANSACTION_TYPE.ELASTIC_DEPOSIT_LIQUIDITY]: renderDescriptionBasic,
-  [TRANSACTION_TYPE.ELASTIC_WITHDRAW_LIQUIDITY]: renderDescriptionBasic,
-  [TRANSACTION_TYPE.KYBERDAO_CLAIM]: renderDescription1Token,
-  [TRANSACTION_TYPE.UNSTAKE]: renderDescriptionBasic,
-  [TRANSACTION_TYPE.KYBERDAO_VOTE]: renderDescriptionBasic,
-  [TRANSACTION_TYPE.KYBERDAO_DELEGATE]: renderDescriptionBasic,
-  [TRANSACTION_TYPE.KYBERDAO_UNDELEGATE]: renderDescriptionBasic,
+  [TRANSACTION_TYPE.ELASTIC_FORCE_WITHDRAW_LIQUIDITY]: DescriptionBasic,
+  [TRANSACTION_TYPE.KYBERDAO_VOTE]: DescriptionBasic,
+  [TRANSACTION_TYPE.KYBERDAO_DELEGATE]: DescriptionBasic,
+  [TRANSACTION_TYPE.KYBERDAO_UNDELEGATE]: DescriptionBasic,
 
-  [TRANSACTION_TYPE.APPROVE]: renderDescriptionApproveClaim,
-  [TRANSACTION_TYPE.CLAIM_REWARD]: renderDescriptionApproveClaim,
+  [TRANSACTION_TYPE.UNSTAKE]: DescriptionStakeFarm,
+  [TRANSACTION_TYPE.STAKE]: DescriptionStakeFarm,
+  [TRANSACTION_TYPE.ELASTIC_DEPOSIT_LIQUIDITY]: DescriptionStakeFarm,
+  [TRANSACTION_TYPE.ELASTIC_WITHDRAW_LIQUIDITY]: DescriptionStakeFarm,
 
-  [TRANSACTION_TYPE.KYBERDAO_STAKE]: renderDescriptionKyberDaoStake,
-  [TRANSACTION_TYPE.KYBERDAO_UNSTAKE]: renderDescriptionKyberDaoStake,
-  [TRANSACTION_TYPE.TRANSFER_TOKEN]: renderDescription1Token,
+  [TRANSACTION_TYPE.KYBERDAO_CLAIM]: Description1Token,
 
-  [TRANSACTION_TYPE.UNWRAP_TOKEN]: renderDescription2Token,
-  [TRANSACTION_TYPE.WRAP_TOKEN]: renderDescription2Token,
-  [TRANSACTION_TYPE.SWAP]: renderDescription2Token,
-  [TRANSACTION_TYPE.KYBERDAO_MIGRATE]: renderDescription2Token,
+  [TRANSACTION_TYPE.APPROVE]: DescriptionApproveClaim,
+  [TRANSACTION_TYPE.CLAIM_REWARD]: DescriptionApproveClaim,
 
-  [TRANSACTION_TYPE.BRIDGE]: renderDescriptionBridge,
-  [TRANSACTION_TYPE.CANCEL_LIMIT_ORDER]: renderDescriptionLimitOrder,
+  [TRANSACTION_TYPE.KYBERDAO_STAKE]: DescriptionKyberDaoStake,
+  [TRANSACTION_TYPE.KYBERDAO_UNSTAKE]: DescriptionKyberDaoStake,
+  [TRANSACTION_TYPE.TRANSFER_TOKEN]: Description1Token,
 
-  [TRANSACTION_TYPE.CLASSIC_CREATE_POOL]: renderDescriptionLiquidity,
-  [TRANSACTION_TYPE.ELASTIC_CREATE_POOL]: renderDescriptionLiquidity,
-  [TRANSACTION_TYPE.ELASTIC_ADD_LIQUIDITY]: renderDescriptionLiquidity,
-  [TRANSACTION_TYPE.CLASSIC_ADD_LIQUIDITY]: renderDescriptionLiquidity,
-  [TRANSACTION_TYPE.CLASSIC_REMOVE_LIQUIDITY]: renderDescriptionLiquidity,
-  [TRANSACTION_TYPE.ELASTIC_REMOVE_LIQUIDITY]: renderDescriptionLiquidity,
-  [TRANSACTION_TYPE.ELASTIC_INCREASE_LIQUIDITY]: renderDescriptionLiquidity,
-  [TRANSACTION_TYPE.ELASTIC_COLLECT_FEE]: renderDescriptionLiquidity,
+  [TRANSACTION_TYPE.UNWRAP_TOKEN]: Description2Token,
+  [TRANSACTION_TYPE.WRAP_TOKEN]: Description2Token,
+  [TRANSACTION_TYPE.SWAP]: Description2Token,
+  [TRANSACTION_TYPE.KYBERDAO_MIGRATE]: Description2Token,
 
-  [TRANSACTION_TYPE.HARVEST]: renderDescriptionBasic,
+  [TRANSACTION_TYPE.BRIDGE]: DescriptionBridge,
+  [TRANSACTION_TYPE.CANCEL_LIMIT_ORDER]: DescriptionLimitOrder,
+
+  [TRANSACTION_TYPE.CLASSIC_CREATE_POOL]: DescriptionLiquidity,
+  [TRANSACTION_TYPE.ELASTIC_CREATE_POOL]: DescriptionLiquidity,
+  [TRANSACTION_TYPE.ELASTIC_ADD_LIQUIDITY]: DescriptionLiquidity,
+  [TRANSACTION_TYPE.CLASSIC_ADD_LIQUIDITY]: DescriptionLiquidity,
+  [TRANSACTION_TYPE.CLASSIC_REMOVE_LIQUIDITY]: DescriptionLiquidity,
+  [TRANSACTION_TYPE.ELASTIC_REMOVE_LIQUIDITY]: DescriptionLiquidity,
+  [TRANSACTION_TYPE.ELASTIC_INCREASE_LIQUIDITY]: DescriptionLiquidity,
+  [TRANSACTION_TYPE.ELASTIC_COLLECT_FEE]: DescriptionLiquidity,
+
+  [TRANSACTION_TYPE.HARVEST]: DescriptionHarvestFarmReward,
 
   // to make sure you don't forgot setup
   [TRANSACTION_TYPE.SETUP_SOLANA_SWAP]: () => null,
@@ -231,7 +305,7 @@ export default forwardRef<HTMLDivElement, Prop>(function TransactionItem(
   const { type, addedTime, hash, chainId } = transaction
   const theme = useTheme()
 
-  const info: any = RENDER_DESCRIPTION_MAP?.[type]?.(transaction)
+  const info: any = DESCRIPTION_MAP?.[type]?.(transaction)
   const leftComponent: ReactNode = info?.leftComponent !== undefined ? info?.leftComponent : info
   const rightComponent: ReactNode = info?.rightComponent
   const isStalled = isTxsPendingTooLong(transaction)

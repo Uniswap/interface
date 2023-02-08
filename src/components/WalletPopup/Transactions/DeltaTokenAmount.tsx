@@ -35,6 +35,7 @@ const DeltaTokenAmount = ({
   const sign = amount === undefined || !withSign ? null : plus ? '+' : '-'
   const color = whiteColor ? theme.text : plus ? theme.primary : theme.subText
   const logoUrl = getTokenLogo(tokenAddress)
+  if (!amount) return null
   return (
     <TokenAmountWrapper>
       {logoUrl && <TokenLogo srcs={[logoUrl]} />}

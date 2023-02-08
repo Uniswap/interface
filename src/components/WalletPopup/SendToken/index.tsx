@@ -1,6 +1,7 @@
-import { Currency, TokenAmount } from '@kyberswap/ks-sdk-core'
+import { Currency, TokenAmount, WETH } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { isMobile } from 'react-device-detect'
 import { Clipboard } from 'react-feather'
 import { Flex } from 'rebass'
 import styled from 'styled-components'
@@ -14,16 +15,16 @@ import TransactionConfirmationModal, { TransactionErrorContent } from 'component
 import CurrencyListHasBalance from 'components/WalletPopup/SendToken/CurrencyListSelect'
 import WarningBrave from 'components/WalletPopup/SendToken/WarningBrave'
 import useSendToken from 'components/WalletPopup/SendToken/useSendToken'
-import { NativeCurrencies } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import useENS from 'hooks/useENS'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
 import { tryParseAmount } from 'state/swap/hooks'
+import { useTokenPrices } from 'state/tokenPrices/hooks'
 import { useCurrencyBalance } from 'state/wallet/hooks'
 import { useCheckAddressSolana } from 'state/wallet/solanaHooks'
 import { TRANSACTION_STATE_DEFAULT, TransactionFlowState } from 'types'
-import { formatNumberWithPrecisionRange } from 'utils'
+import { formattedNum, shortenAddress } from 'utils'
 import { errorFriendly } from 'utils/dmm'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
@@ -66,10 +67,12 @@ export default function SendToken({
   currencyBalances: { [address: string]: TokenAmount | undefined }
 }) {
   const [recipient, setRecipient] = useState('')
+  const [displayRecipient, setDisplayRecipient] = useState('')
+
   const [currencyIn, setCurrency] = useState<Currency>()
   const [inputAmount, setInputAmount] = useState<string>('')
   const [showListToken, setShowListToken] = useState(false)
-  const { account, chainId, isEVM, isSolana } = useActiveWeb3React()
+  const { account, isEVM, isSolana, chainId } = useActiveWeb3React()
   const [flowState, setFlowState] = useState<TransactionFlowState>(TRANSACTION_STATE_DEFAULT)
 
   const theme = useTheme()
@@ -132,7 +135,7 @@ export default function SendToken({
       await sendToken()
       hideModalConfirm()
       setInputAmount('')
-      setRecipient('')
+      onChangeRecipient('')
     } catch (error) {
       console.error(error)
       setFlowState(state => ({
@@ -155,7 +158,7 @@ export default function SendToken({
   const onPaste = async () => {
     try {
       const text = await navigator.clipboard.readText()
-      setRecipient(text)
+      onChangeRecipient(text)
     } catch (error) {}
   }
 
@@ -176,6 +179,39 @@ export default function SendToken({
     )
   }
 
+  const addressParam = useMemo(
+    () => [WETH[chainId].wrapped.address, currencyIn?.wrapped.address].filter(Boolean) as string[],
+    [chainId, currencyIn],
+  )
+
+  const tokensPrices = useTokenPrices(addressParam)
+
+  const usdPriceNative = tokensPrices[WETH[chainId].wrapped.address] ?? 0
+  const usdPriceCurrencyIn = currencyIn ? tokensPrices[currencyIn.wrapped.address] : 0
+
+  const estimateUsd = usdPriceCurrencyIn * parseFloat(inputAmount)
+
+  const formatRecipient = (val: string) => {
+    try {
+      setDisplayRecipient(shortenAddress(chainId, val, isSolana || isMobile ? 14 : 16))
+    } catch {
+      setDisplayRecipient(val)
+    }
+  }
+
+  const onChangeRecipient = (val: string) => {
+    setRecipient(val)
+    formatRecipient(val)
+  }
+
+  const onFocus = () => {
+    setDisplayRecipient(recipient)
+  }
+
+  const onBlur = () => {
+    formatRecipient(recipient)
+  }
+
   return (
     <Wrapper>
       <Flex flexDirection={'column'} style={{ gap: 18 }}>
@@ -185,10 +221,12 @@ export default function SendToken({
 
         <div>
           <AddressInput
-            style={{ color: theme.subText }}
+            style={{ color: theme.subText, textOverflow: 'unset' }}
             error={!!recipientError}
-            onChange={e => setRecipient(e.target.value)}
-            value={recipient}
+            onChange={e => onChangeRecipient(e.currentTarget.value)}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            value={displayRecipient}
             placeholder={isEVM ? '0x...' : 'Wallet address'}
             icon={
               <MouseoverTooltip text={t`Paste from clipboard`} width="150px">
@@ -214,6 +252,7 @@ export default function SendToken({
             onHalf={handleHalfInput}
             onClickSelect={() => setShowListToken(!showListToken)}
             loadingText={loadingTokens ? t`Loading token...` : undefined}
+            estimatedUsd={estimateUsd ? formattedNum(estimateUsd.toString(), true).toString() : undefined}
           />
 
           {showListToken && (
@@ -232,18 +271,16 @@ export default function SendToken({
 
         <WarningBrave token={currencyIn} />
 
-        {estimateGas && (
-          <RowBetween>
-            <Label>
-              <Trans>Gas Fee</Trans>
-            </Label>
-            <Label>
-              {estimateGas
-                ? `~ ${formatNumberWithPrecisionRange(estimateGas, 0, 10)} ${NativeCurrencies[chainId].symbol}`
-                : '-'}{' '}
-            </Label>
-          </RowBetween>
-        )}
+        <RowBetween>
+          <Label>
+            <Trans>Gas Fee</Trans>
+          </Label>
+          <Label color={theme.text}>
+            {estimateGas && usdPriceNative
+              ? `~ ${formattedNum((estimateGas * usdPriceNative).toString(), true)} `
+              : '-'}
+          </Label>
+        </RowBetween>
       </Flex>
       <ButtonPrimary height="44px" onClick={onSendToken} disabled={disableButtonSend}>
         {inputError ? inputError : isSending ? <Trans>Sending token</Trans> : <Trans>Send</Trans>}

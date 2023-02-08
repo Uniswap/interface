@@ -55,7 +55,6 @@ import { MEDIA_WIDTHS } from 'theme'
 import { basisPointsToPercent, calculateGasMargin, formattedNum, formattedNumLong, shortenAddress } from 'utils'
 import { ErrorName } from 'utils/sentry'
 import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
-import { unwrappedToken } from 'utils/wrappedCurrency'
 
 import {
   AmoutToRemoveContent,
@@ -176,8 +175,6 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     positionSDK?.pool?.token1,
     positionSDK?.pool?.fee as FeeAmount,
   )
-  const token0Shown = positionSDK && unwrappedToken(positionSDK.pool.token0)
-  const token1Shown = positionSDK && unwrappedToken(positionSDK.pool.token1)
   // boilerplate for the slider
   const liquidityPercentChangeCallback = useCallback(
     (value: number) => {
@@ -321,11 +318,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                 tokenAddressIn: liquidityValue0?.currency.wrapped.address,
                 tokenAddressOut: liquidityValue1?.currency.wrapped.address,
                 contract: poolAddress,
-                arbitrary: {
-                  poolAddress,
-                  token_1: token0Shown?.symbol,
-                  token_2: token1Shown?.symbol,
-                },
+                nftId: tokenId.toString(),
               },
             })
             setTxnHash(response.hash)
@@ -364,8 +357,6 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     allowedSlippage,
     addTransactionWithType,
     poolAddress,
-    token0Shown,
-    token1Shown,
   ])
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirm(false)
