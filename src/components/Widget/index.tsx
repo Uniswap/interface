@@ -9,6 +9,7 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import {
   AddEthereumChainParameter,
+  DialogAnimationType,
   EMPTY_TOKEN_LIST,
   OnReviewSwapClick,
   SwapWidget,
@@ -187,6 +188,9 @@ export default function Widget({
         theme={theme}
         width={width}
         dialog={dialog}
+        dialogOptions={{
+          animationType: DialogAnimationType.FADE,
+        }}
         // defaultChainId is excluded - it is always inferred from the passed provider
         onConnectWalletClick={onConnectWalletClick}
         provider={provider}

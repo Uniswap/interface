@@ -49,7 +49,7 @@ import Loader from '../../components/Loader'
 import { AutoRow } from '../../components/Row'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
-import { ArrowWrapper, PageWrapper, SwapCallbackError, SwapWrapper } from '../../components/swap/styleds'
+import { ArrowWrapper, SwapCallbackError, SwapComponentWrapper, SwapWrapper } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
@@ -561,7 +561,7 @@ export default function Swap({ className }: { className?: string }) {
           onCancel={handleDismissTokenWarning}
           showCancel={true}
         />
-        <PageWrapper>
+        <SwapComponentWrapper>
           {swapWidgetEnabled ? (
             <Widget
               inputToken={loadedInputCurrency ?? undefined}
@@ -890,7 +890,7 @@ export default function Swap({ className }: { className?: string }) {
             </SwapWrapper>
           )}
           <NetworkAlert />
-        </PageWrapper>
+        </SwapComponentWrapper>
         <SwitchLocaleLink />
         {!swapIsUnsupported ? null : (
           <UnsupportedCurrencyFooter
