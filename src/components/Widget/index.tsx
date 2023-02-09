@@ -216,9 +216,6 @@ const DialogContainer = styled.div<{ visible: boolean }>`
   left: 0;
   height: 100%;
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   pointer-events: ${({ visible }) => (visible ? 'all' : 'none')};
 `
 
