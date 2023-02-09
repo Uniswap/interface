@@ -27,7 +27,7 @@ export function LongText(props: LongTextProps): JSX.Element {
   const {
     initialDisplayedLines = 3,
     text,
-    gap = 'xs',
+    gap = 'spacing8',
     color = theme.colors.textPrimary,
     linkColor = theme.colors.accentAction,
     readMoreOrLessColor = theme.colors.accentAction,
@@ -76,7 +76,7 @@ export function LongText(props: LongTextProps): JSX.Element {
                 height:
                   !textLengthExceedsLimit || maximized
                     ? 'auto'
-                    : maxVisibleHeight - theme.spacing.xxxs,
+                    : maxVisibleHeight - theme.spacing.spacing2,
                 overflow: 'hidden',
               }
             : { color }

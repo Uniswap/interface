@@ -93,7 +93,7 @@ function SectionContainer({
   style,
 }: PropsWithChildren<{ style?: StyleProp<ViewStyle> }>): JSX.Element | null {
   return children ? (
-    <Box p="md" style={style}>
+    <Box p="spacing16" style={style}>
       {children}
     </Box>
   ) : null
@@ -237,17 +237,17 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
 
   return (
     <BottomSheetModal name={ModalName.WCSignRequest} onClose={handleClose}>
-      <Flex gap="lg" paddingBottom="xxl" paddingHorizontal="md" paddingTop="xl">
+      <Flex gap="spacing24" paddingBottom="spacing48" paddingHorizontal="spacing16" pt="spacing36">
         <ClientDetails permitInfo={permitInfo} request={request} />
-        <Flex gap="sm">
+        <Flex gap="spacing12">
           <Flex
             backgroundColor="background2"
-            borderRadius="lg"
+            borderRadius="rounded16"
             gap="none"
             spacerProps={spacerProps}>
             {!permitInfo && (
               <SectionContainer style={requestMessageStyle}>
-                <Flex gap="sm">
+                <Flex gap="spacing12">
                   <RequestDetails request={request} />
                 </Flex>
               </SectionContainer>
@@ -261,7 +261,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
               <SectionContainer>
                 <AccountDetails address={request.account} />
                 {!hasSufficientFunds && (
-                  <Text color="accentWarning" paddingTop="xs" variant="bodySmall">
+                  <Text color="accentWarning" paddingTop="spacing8" variant="bodySmall">
                     {t("You don't have enough {{symbol}} to complete this transaction.", {
                       symbol: nativeCurrency?.symbol,
                     })}
@@ -276,8 +276,8 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
               icon={
                 <AlertTriangle
                   color={theme.colors.accentWarning}
-                  height={theme.iconSizes.sm}
-                  width={theme.iconSizes.sm}
+                  height={theme.iconSizes.icon16}
+                  width={theme.iconSizes.icon16}
                 />
               }
               textColor="accentWarning"
@@ -290,7 +290,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
               showUnsafeWarning={isPotentiallyUnsafe(request)}
             />
           )}
-          <Flex row gap="sm">
+          <Flex row gap="spacing12">
             <Button
               fill
               emphasis={ButtonEmphasis.Tertiary}
@@ -339,11 +339,11 @@ function WarningSection({
   }
 
   return (
-    <Flex centered row alignSelf="center" gap="xs">
+    <Flex centered row alignSelf="center" gap="spacing8">
       <AlertTriangle
         color={theme.colors.accentWarning}
-        height={iconSizes.sm}
-        width={iconSizes.sm}
+        height={iconSizes.icon16}
+        width={iconSizes.icon16}
       />
       <Text color="textSecondary" fontStyle="italic" variant="bodyMicro">
         {t('Be careful: this {{ requestType }} authorizes assets', {

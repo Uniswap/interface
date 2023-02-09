@@ -141,14 +141,14 @@ export function WalletConnectModal({
       ) : (
         <>
           {currentScreenState === ScannerModalState.ConnectedDapps && (
-            <Box flex={1} pt="lg">
+            <Box flex={1} pt="spacing24">
               <ConnectedDappsList
                 backButton={
                   <TouchableArea hapticFeedback onPress={onPressShowScanQr}>
                     <Chevron
                       color={theme.colors.textSecondary}
-                      height={theme.iconSizes.lg}
-                      width={theme.iconSizes.lg}
+                      height={theme.iconSizes.icon24}
+                      width={theme.iconSizes.icon24}
                     />
                   </TouchableArea>
                 }
@@ -167,17 +167,17 @@ export function WalletConnectModal({
           {currentScreenState === ScannerModalState.WalletQr && (
             <WalletQRCode address={activeAddress} />
           )}
-          <Flex mb="xl" mt="md" mx="md">
+          <Flex mb="spacing36" mt="spacing16" mx="spacing16">
             <TouchableArea
               hapticFeedback
               borderColor="backgroundOutline"
-              borderRadius="lg"
+              borderRadius="rounded16"
               borderWidth={1}
               name={ElementName.QRCodeModalToggle}
-              p="md"
+              p="spacing16"
               style={{ backgroundColor: theme.colors.background2 }}
               onPress={onPressBottomToggle}>
-              <Flex row alignItems="center" gap="sm">
+              <Flex row alignItems="center" gap="spacing12">
                 {currentScreenState === ScannerModalState.ScanQr ? (
                   <Scan color={theme.colors.textSecondary} height={24} width={24} />
                 ) : (

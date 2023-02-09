@@ -104,11 +104,16 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
     runOnJS(setBarcodes)(detectedBarcodes)
   }, [])
 
-  const LOADER_SIZE = theme.iconSizes.xxxl
+  const LOADER_SIZE = theme.iconSizes.icon40
   const SCANNER_SIZE = dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO
 
   return (
-    <AnimatedFlex grow borderRadius="md" entering={FadeIn} exiting={FadeOut} overflow="hidden">
+    <AnimatedFlex
+      grow
+      borderRadius="rounded12"
+      entering={FadeIn}
+      exiting={FadeOut}
+      overflow="hidden">
       <MaskedView
         maskElement={
           <Box
@@ -169,15 +174,17 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
           <Rect fill="url(#scan-bottom-fadeout)" height="100%" width="100%" x="0" y="0" />
         </Svg>
       </MaskedView>
-      <Flex centered gap="xxl" style={StyleSheet.absoluteFill}>
+      <Flex centered gap="spacing48" style={StyleSheet.absoluteFill}>
         <Flex alignItems="center" gap="none">
           <Flex
             centered
-            gap="sm"
+            gap="spacing12"
             opacity={shouldFreezeCamera ? 0.4 : 1}
             position="absolute"
             style={{
-              transform: [{ translateY: infoLayout ? -infoLayout.height - theme.spacing.lg : 0 }],
+              transform: [
+                { translateY: infoLayout ? -infoLayout.height - theme.spacing.spacing24 : 0 },
+              ],
             }}
             top={0}
             width="100%"
@@ -187,7 +194,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             </Text>
             {isWalletConnectModal ? (
               <>
-                <Flex centered row gap="sm">
+                <Flex centered row gap="spacing12">
                   <WalletConnectLogo height={16} width={16} />
                   <Text color="textPrimary" variant="bodySmall">
                     {t('Connect to an app with WalletConnect')}
@@ -221,9 +228,9 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
                   left={SCANNER_SIZE / 2 - LOADER_SIZE / 2}
                   position="absolute"
                   top={SCANNER_SIZE / 2 - LOADER_SIZE / 2}>
-                  <SpinningLoader color="textPrimary" size={theme.iconSizes.xxxl} />
+                  <SpinningLoader color="textPrimary" size={theme.iconSizes.icon40} />
                 </Flex>
-                <Box style={{ marginTop: LOADER_SIZE + theme.spacing.lg }} />
+                <Box style={{ marginTop: LOADER_SIZE + theme.spacing.spacing24 }} />
                 <Text color="textPrimary" textAlign="center" variant="bodyLarge">
                   {isWalletConnectModal ? t('Connecting...') : t('Loading...')}
                 </Text>
@@ -236,10 +243,10 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
               <Flex
                 centered
                 height={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO}
-                p="lg"
+                p="spacing24"
                 style={[StyleSheet.absoluteFill]}
                 width={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO}>
-                <Flex gap="lg" px="sm">
+                <Flex gap="spacing24" px="spacing12">
                   <Text color="textPrimary" textAlign="center" variant="bodyLarge">
                     This paste button and the rainbow colors will only show up in development mode
                     when the back camera isn't available
@@ -256,7 +263,9 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
               style={{
                 transform: [
                   {
-                    translateY: connectionLayout ? connectionLayout.height + theme.spacing.lg : 0,
+                    translateY: connectionLayout
+                      ? connectionLayout.height + theme.spacing.spacing24
+                      : 0,
                   },
                 ],
               }}

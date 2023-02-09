@@ -16,7 +16,7 @@ export function TransferArrowButton({
   onPress,
   disabled,
   bg = 'background1',
-  padding = 'sm',
+  padding = 'spacing12',
   ...rest
 }: ArrowDownButtonProps): JSX.Element {
   const theme = useAppTheme()
@@ -26,7 +26,7 @@ export function TransferArrowButton({
       alignSelf="center"
       bg={bg}
       borderColor="background1"
-      borderRadius="lg"
+      borderRadius="rounded16"
       borderWidth={4}
       disabled={disabled}
       justifyContent="center"
@@ -35,7 +35,7 @@ export function TransferArrowButton({
       p={padding}
       onPress={onPress}
       {...rest}>
-      <Box alignItems="center" justifyContent="center" p="xxxs">
+      <Box alignItems="center" justifyContent="center" p="spacing2">
         <Arrow color={theme.colors.textSecondary} direction="s" size={ICON_SIZE} />
       </Box>
     </TouchableArea>

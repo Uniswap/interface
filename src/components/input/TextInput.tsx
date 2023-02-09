@@ -48,10 +48,10 @@ export const TextInput = forwardRef<TextInputBase, TextInputProps>(
 
     // Set defaults for style values
     rest.backgroundColor ??= 'background0'
-    rest.px ??= 'md'
-    rest.py ??= 'sm'
+    rest.px ??= 'spacing16'
+    rest.py ??= 'spacing12'
     rest.color ??= 'textPrimary'
-    rest.borderRadius ??= 'md'
+    rest.borderRadius ??= 'rounded12'
 
     // restyle doesn't parse placeholderTextColorCorrectly
     rest.placeholderTextColor ??= theme.colors.textTertiary

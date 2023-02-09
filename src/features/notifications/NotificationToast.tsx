@@ -107,10 +107,10 @@ export function NotificationToast({
     <FlingGestureHandler direction={Directions.UP} onHandlerStateChange={onFling}>
       <AnimatedBox
         borderColor={useSmallDisplay ? 'none' : 'background3'}
-        borderRadius="lg"
+        borderRadius="rounded16"
         borderWidth={1}
         left={0}
-        marginHorizontal="md"
+        marginHorizontal="spacing16"
         pointerEvents="box-none"
         position="absolute"
         right={0}
@@ -153,21 +153,21 @@ export function NotificationContent({
     <TouchableArea
       alignItems="center"
       bg="background0"
-      borderRadius="lg"
+      borderRadius="rounded16"
       flex={1}
       flexDirection="row"
       minHeight={NOTIFICATION_HEIGHT}
-      px="md"
-      py="md"
+      px="spacing16"
+      py="spacing16"
       onPress={onPress}
       onPressIn={onPressIn}>
-      <Flex row alignItems="center" gap="xs" justifyContent="space-between" width="100%">
+      <Flex row alignItems="center" gap="spacing8" justifyContent="space-between" width="100%">
         <Flex
           row
           shrink
           alignItems="center"
           flexBasis={endAdornment ? '75%' : '100%'}
-          gap="xs"
+          gap="spacing8"
           justifyContent="flex-start">
           {icon}
           <Flex row shrink alignItems="center">
@@ -177,11 +177,11 @@ export function NotificationContent({
           </Flex>
         </Flex>
         {endAdornment ? (
-          <Flex shrink alignItems="flex-end" flexBasis="25%" gap="xxs">
+          <Flex shrink alignItems="flex-end" flexBasis="25%" gap="spacing4">
             {balanceUpdate ? (
               balanceUpdate
             ) : actionButton ? (
-              <TouchableArea p="xs" onPress={actionButton.onPress}>
+              <TouchableArea p="spacing8" onPress={actionButton.onPress}>
                 <Text color="accentActive">{actionButton.title}</Text>
               </TouchableArea>
             ) : null}
@@ -203,12 +203,12 @@ export function NotificationContentSmall({
       <TouchableArea
         bg="background0"
         borderColor="background3"
-        borderRadius="full"
+        borderRadius="roundedFull"
         borderWidth={1.5}
-        p="sm"
+        p="spacing12"
         onPress={onPress}
         onPressIn={onPressIn}>
-        <Flex row alignItems="center" gap="xs" justifyContent="flex-start">
+        <Flex row alignItems="center" gap="spacing8" justifyContent="flex-start">
           {icon}
           <Text adjustsFontSizeToFit numberOfLines={1} variant="subheadSmall">
             {title}

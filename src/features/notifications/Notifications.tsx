@@ -57,7 +57,7 @@ import { iconSizes } from 'src/styles/sizing'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId } from 'src/utils/currencyId'
 
-export const NOTIFICATION_ICON_SIZE = iconSizes.xxl
+export const NOTIFICATION_ICON_SIZE = iconSizes.icon36
 
 // Helpers to preload profile data, and dismiss swap and navigate
 const useNavigateToProfileTab = (
@@ -107,7 +107,7 @@ export function WCNotification({
       chainId={validChainId}
       dappImageUrl={imageUrl}
       event={event}
-      size={useSmallDisplay ? iconSizes.lg : NOTIFICATION_ICON_SIZE}
+      size={useSmallDisplay ? iconSizes.icon24 : NOTIFICATION_ICON_SIZE}
     />
   )
 
@@ -494,8 +494,8 @@ export function CopiedNotification({
       icon={
         <CheckCircle
           color={theme.colors.accentSuccess}
-          height={iconSizes.lg}
-          width={iconSizes.lg}
+          height={iconSizes.icon24}
+          width={iconSizes.icon24}
         />
       }
       title={t('Copied to clipboard')}
@@ -515,7 +515,7 @@ export function SwapNetworkNotification({
     <NotificationToast
       useSmallDisplay
       hideDelay={hideDelay}
-      icon={<NetworkLogo chainId={chainId} size={iconSizes.lg} />}
+      icon={<NetworkLogo chainId={chainId} size={iconSizes.icon24} />}
       title={t('Swapping on {{ network }}', { network })}
     />
   )

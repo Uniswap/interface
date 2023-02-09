@@ -37,8 +37,13 @@ export const PendingConnectionSwitchNetworkModal = ({
           render: () => (
             <>
               <Separator />
-              <Flex row alignItems="center" justifyContent="space-between" px="lg" py="md">
-                <NetworkLogo chainId={chainId} size={iconSizes.lg} />
+              <Flex
+                row
+                alignItems="center"
+                justifyContent="space-between"
+                px="spacing24"
+                py="spacing16">
+                <NetworkLogo chainId={chainId} size={iconSizes.icon24} />
                 <Text color="textPrimary" variant="bodyLarge">
                   {info.label}
                 </Text>
@@ -58,7 +63,7 @@ export const PendingConnectionSwitchNetworkModal = ({
   return (
     <ActionSheetModal
       header={
-        <Flex centered gap="xxs" py="md">
+        <Flex centered gap="spacing4" py="spacing16">
           <Text variant="buttonLabelMedium">{t('Switch Network')}</Text>
         </Flex>
       }

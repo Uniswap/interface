@@ -44,9 +44,15 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
       hapticStyle={ImpactFeedbackStyle.Light}
       name={ElementName.SearchEtherscanItem}
       onPress={onPressViewEtherscan}>
-      <Flex row alignItems="center" gap="sm" justifyContent="space-between" px="xs" py="sm">
-        <Flex centered row gap="sm">
-          <EtherscanIcon size={theme.iconSizes.xxxl} />
+      <Flex
+        row
+        alignItems="center"
+        gap="spacing12"
+        justifyContent="space-between"
+        px="spacing8"
+        py="spacing12">
+        <Flex centered row gap="spacing12">
+          <EtherscanIcon size={theme.iconSizes.icon40} />
           <Text variant="bodyLarge">{shortenAddress(address)}</Text>
         </Flex>
         <Arrow color={theme.colors.textSecondary} direction="ne" size={24} />

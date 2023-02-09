@@ -33,7 +33,7 @@ const ViewOnlyHeader = (): JSX.Element => {
   const { t } = useTranslation()
   return (
     <Flex row alignItems="center" borderBottomColor="backgroundOutline">
-      <Box flex={1} px="lg">
+      <Box flex={1} px="spacing24">
         <Text color="textSecondary" variant="bodySmall">
           {t('View only')}
         </Text>
@@ -121,7 +121,7 @@ export function AccountList({
         {signerAccounts.map(renderAccountCardItem)}
         {hasViewOnlyAccounts && (
           <>
-            <Spacer height={theme.spacing.xs} />
+            <Spacer height={theme.spacing.spacing8} />
             <ViewOnlyHeader />
             {viewOnlyAccounts.map(renderAccountCardItem)}
           </>
@@ -140,13 +140,13 @@ export function AccountList({
 const ListSheet = StyleSheet.create({
   bottomGradient: {
     bottom: 0,
-    height: spacing.md,
+    height: spacing.spacing16,
     left: 0,
     position: 'absolute',
     width: '100%',
   },
   topGradient: {
-    height: spacing.md,
+    height: spacing.spacing16,
     left: 0,
     position: 'absolute',
     top: 0,

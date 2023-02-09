@@ -161,11 +161,11 @@ export function HomeScreen(): JSX.Element {
 
   const contentHeader = useMemo(() => {
     return (
-      <Flex bg="backgroundBranded" gap="md" pb="md" px="lg">
-        <Box pb="xxs">
+      <Flex bg="backgroundBranded" gap="spacing16" pb="spacing16" px="spacing24">
+        <Box pb="spacing4">
           <AccountHeader />
         </Box>
-        <Box pb="xxs">
+        <Box pb="spacing4">
           <PortfolioBalance owner={activeAccount.address} />
         </Box>
         <QuickActions />
@@ -347,7 +347,7 @@ function QuickActions(): JSX.Element {
     useFiatOnRampEnabled() && activeAccount.type === AccountType.SignerMnemonic
 
   return (
-    <Flex centered row gap="xs">
+    <Flex centered row gap="spacing8">
       {fiatOnRampShown && (
         <ActionButton
           Icon={DollarIcon}
@@ -394,23 +394,23 @@ function ActionButton({
       hapticFeedback
       backgroundColor="backgroundOverlay"
       borderColor="brandedAccentSoft"
-      borderRadius="lg"
+      borderRadius="rounded16"
       borderWidth={1}
       eventName={eventName}
       flex={1}
       name={name}
-      padding="sm"
+      padding="spacing12"
       shadowColor={isDarkMode ? 'black' : 'brandedAccentSoft'}
       shadowOffset={SHADOW_OFFSET_SMALL}
       shadowOpacity={0.4}
       shadowRadius={6}
       onPress={onPress}>
-      <Flex centered row gap="xxs">
+      <Flex centered row gap="spacing4">
         <Icon
           color={theme.colors.magentaVibrant}
-          height={theme.iconSizes.md}
+          height={theme.iconSizes.icon20}
           strokeWidth={2}
-          width={theme.iconSizes.md}
+          width={theme.iconSizes.icon20}
         />
         <Text color="accentAction" variant="buttonLabelMedium">
           {label}

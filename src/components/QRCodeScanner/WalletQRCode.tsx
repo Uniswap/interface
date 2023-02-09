@@ -46,13 +46,13 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
       <GradientBackground>
         <UniconThemedGradient
           middleOut
-          borderRadius="lg"
+          borderRadius="rounded16"
           gradientEndColor={theme.colors.background0}
           gradientStartColor={gradientData.glow}
           opacity={isDarkMode ? 0.24 : 0.12}
         />
       </GradientBackground>
-      <AnimatedFlex centered grow entering={FadeIn} exiting={FadeOut} py="lg">
+      <AnimatedFlex centered grow entering={FadeIn} exiting={FadeOut} py="spacing24">
         <AddressDisplay
           address={address}
           captionVariant="bodySmall"
@@ -69,7 +69,7 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
           safeAreaSize={UNICON_SIZE + UNICON_SIZE / 2}
           size={QR_CODE_SIZE}
         />
-        <Flex row gap="sm">
+        <Flex row gap="spacing12">
           <CopyTextButton copyText={address} />
           <Button
             IconName={ShareIcon}

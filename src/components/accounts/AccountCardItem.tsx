@@ -64,13 +64,18 @@ export function AccountCardItem({
         address={address}
         avatarUri={avatar}
         showViewOnlyBadge={isViewOnly}
-        size={iconSizes.xxxl}
+        size={iconSizes.icon40}
       />
     )
   }, [address, avatar, isViewOnly])
 
   return (
-    <TouchableArea hapticFeedback pb="sm" pt="xs" px="lg" onPress={(): void => onPress(address)}>
+    <TouchableArea
+      hapticFeedback
+      pb="spacing12"
+      pt="spacing8"
+      px="spacing24"
+      onPress={(): void => onPress(address)}>
       <Flex row alignItems="center" testID={`account_item/${address}`}>
         <Flex row shrink alignItems="center">
           <NotificationBadge showIndicator={hasNotifications}>{icon}</NotificationBadge>
@@ -88,21 +93,21 @@ export function AccountCardItem({
           {isActive && (
             <Check
               color={theme.colors.userThemeMagenta}
-              height={theme.iconSizes.md}
-              width={theme.iconSizes.md}
+              height={theme.iconSizes.icon20}
+              width={theme.iconSizes.icon20}
             />
           )}
           <TouchableArea
             name={ElementName.Edit}
-            pl="sm"
-            py="md"
+            pl="spacing12"
+            py="spacing16"
             onPress={(): void => onPressEdit(address)}>
             <TripleDots
               color={theme.colors.textTertiary}
-              height={iconSizes.xs}
+              height={iconSizes.icon12}
               strokeLinecap="round"
               strokeWidth="1"
-              width={iconSizes.sm}
+              width={iconSizes.icon16}
             />
           </TouchableArea>
         </Flex>

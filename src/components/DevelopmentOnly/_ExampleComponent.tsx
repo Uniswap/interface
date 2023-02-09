@@ -12,8 +12,11 @@ export const ExampleComponent = ({
   success,
 }: ExampleComponentProps): JSX.Element => {
   return (
-    <Box bg={success ? 'accentSuccessSoft' : 'accentCriticalSoft'} borderRadius="md" p="md">
-      <Flex flexDirection="column" gap="md">
+    <Box
+      bg={success ? 'accentSuccessSoft' : 'accentCriticalSoft'}
+      borderRadius="rounded12"
+      p="spacing16">
+      <Flex flexDirection="column" gap="spacing16">
         {header}
         {children}
       </Flex>

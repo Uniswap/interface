@@ -26,7 +26,7 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
     semanticColor,
     positiveChangeColor = 'accentSuccess',
     negativeChangeColor = 'accentCritical',
-    arrowSize = theme.iconSizes.sm,
+    arrowSize = theme.iconSizes.icon16,
     loading = false,
   } = props
 
@@ -41,7 +41,7 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
     : ''
 
   return (
-    <Flex row alignItems="center" gap="xxxs">
+    <Flex row alignItems="center" gap="spacing2">
       {change !== undefined && (
         <Arrow color={arrowColor} direction={isPositiveChange ? 'ne' : 'se'} size={arrowSize} />
       )}

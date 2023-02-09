@@ -90,12 +90,12 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
       <Flex grow>
         <BackupOptions backupMethods={activeAccountBackups} params={params} />
         <TouchableArea alignSelf="flex-start" py="none" onPress={onPressEducationButton}>
-          <Flex centered row gap="xxs">
-            <Box px="xxs">
+          <Flex centered row gap="spacing4">
+            <Box px="spacing4">
               <InfoCircle
                 color={theme.colors.textSecondary}
-                height={theme.iconSizes.lg}
-                width={theme.iconSizes.lg}
+                height={theme.iconSizes.icon24}
+                width={theme.iconSizes.icon24}
               />
             </Box>
             <Text color="textPrimary" variant="subheadSmall">
@@ -211,14 +211,14 @@ function BackupOptionButton({
   })
 
   return (
-    <Flex row alignItems="center" py="md">
+    <Flex row alignItems="center" py="spacing16">
       <Flex
         centered
         borderColor="accentBranded"
-        borderRadius="md"
+        borderRadius="rounded12"
         borderWidth={1.25}
         height={32}
-        padding="md"
+        padding="spacing16"
         width={32}>
         <Icon color={theme.colors.textPrimary} height={16} strokeWidth={1.5} width={16} />
       </Flex>
@@ -227,11 +227,11 @@ function BackupOptionButton({
       </Text>
       <Flex grow alignItems="flex-end">
         {completed ? (
-          <Flex row alignItems="center" gap="xxs">
+          <Flex row alignItems="center" gap="spacing4">
             <Check
               color={theme.colors.accentSuccess}
-              height={theme.iconSizes.md}
-              width={theme.iconSizes.md}
+              height={theme.iconSizes.icon20}
+              width={theme.iconSizes.icon20}
             />
             <Text fontWeight="600" variant="bodyMicro">
               {t('Completed')}
@@ -241,8 +241,8 @@ function BackupOptionButton({
           <TouchableArea
             hapticFeedback
             backgroundColor="magentaDark"
-            borderRadius="full"
-            p="sm"
+            borderRadius="roundedFull"
+            p="spacing12"
             testID={name}
             onPress={onPress}>
             <Flex row>

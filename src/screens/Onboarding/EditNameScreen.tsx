@@ -96,7 +96,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
         'It has a public address that starts with 0x but you can set a private nickname to remember it by'
       )}
       title={t('Say hello to your new wallet')}>
-      <Box paddingTop="xl">
+      <Box pt="spacing36">
         {pendingAccount ? (
           <CustomizationSection
             accountName={newAccountName}
@@ -137,7 +137,7 @@ function CustomizationSection({
   }
 
   return (
-    <Flex centered gap="lg">
+    <Flex centered gap="spacing24">
       <Flex centered gap="none" width="100%">
         <Flex centered row gap="none">
           <TextInput

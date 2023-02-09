@@ -25,7 +25,7 @@ function _CheckmarkCircle({ color, size, ...rest }: Props): JSX.Element {
   return (
     <Box
       alignItems="center"
-      borderRadius="full"
+      borderRadius="roundedFull"
       height={size}
       justifyContent="center"
       width={size}

@@ -84,7 +84,7 @@ export function ForceUpgradeModal(): JSX.Element {
           hideHandlebar
           backgroundColor={theme.colors.background0}
           name={ModalName.ForceUpgradeModal}>
-          <Box flex={1} px="lg" py="lg">
+          <Box flex={1} px="spacing24" py="spacing24">
             <Flex row alignItems="center" justifyContent="flex-start">
               <TouchableArea onPress={onDismiss}>
                 <BackButtonView size={BACK_BUTTON_SIZE} />

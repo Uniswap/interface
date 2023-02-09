@@ -31,17 +31,17 @@ export default function WalletPreviewCard({
     <TouchableArea
       backgroundColor={selected ? 'background3' : 'background1'}
       borderColor={selected ? 'accentActive' : 'none'}
-      borderRadius="lg"
+      borderRadius="rounded16"
       borderWidth={1}
-      px="md"
-      py="sm"
+      px="spacing16"
+      py="spacing12"
       onPress={(): void => onSelect(address)}
       {...rest}>
       <Flex row alignItems="center" justifyContent="space-between">
         <Flex
           row
           alignItems="center"
-          gap="sm"
+          gap="spacing12"
           height={ADDRESS_WRAPPER_HEIGHT}
           justifyContent="flex-start">
           {selected && (

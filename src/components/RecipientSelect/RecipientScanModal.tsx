@@ -80,17 +80,17 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
       {currentScreenState === ScannerModalState.WalletQr && activeAddress && (
         <WalletQRCode address={activeAddress} />
       )}
-      <Flex mb="xl" mt="md" mx="md">
+      <Flex mb="none" mt="spacing16" mx="spacing16">
         <TouchableArea
           hapticFeedback
           borderColor="backgroundOutline"
-          borderRadius="lg"
+          borderRadius="rounded16"
           borderWidth={1}
           name={ElementName.QRCodeModalToggle}
-          p="md"
+          p="spacing16"
           style={{ backgroundColor: theme.colors.background2 }}
           onPress={onPressBottomToggle}>
-          <Flex row alignItems="center" gap="sm">
+          <Flex row alignItems="center" gap="spacing12">
             {currentScreenState === ScannerModalState.ScanQr ? (
               <Scan color={theme.colors.textSecondary} height={24} width={24} />
             ) : (

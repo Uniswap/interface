@@ -129,11 +129,11 @@ const TransferRecipient = ({
     <Flex
       centered
       borderColor="backgroundOutline"
-      borderRadius="md"
+      borderRadius="rounded12"
       borderWidth={1}
-      gap="xs"
-      px="md"
-      py="sm">
+      gap="spacing8"
+      px="spacing16"
+      py="spacing12">
       <Text color="textPrimary" textAlign="center" variant="subheadSmall">
         {type === 'ens' ? displayName : address}
       </Text>

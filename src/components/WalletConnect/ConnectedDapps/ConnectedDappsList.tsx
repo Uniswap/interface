@@ -29,10 +29,10 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
     </Text>
   )
   const header = backButton ? (
-    <Flex row alignItems="center" justifyContent="space-between" pb="xs">
+    <Flex row alignItems="center" justifyContent="space-between" pb="spacing8">
       {backButton}
       {headerText}
-      <Box width={theme.iconSizes.lg} />
+      <Box width={theme.iconSizes.icon24} />
     </Flex>
   ) : (
     <BackHeader alignment="center">{headerText}</BackHeader>
@@ -40,7 +40,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
 
   return (
     <>
-      <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} pt="lg" px="lg">
+      <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} pt="spacing24" px="spacing24">
         {header}
 
         {sessions.length > 0 ? (
@@ -59,7 +59,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
             )}
           />
         ) : (
-          <Flex fill alignItems="center" gap="xs" style={emptyCardStyle}>
+          <Flex fill alignItems="center" gap="spacing8" style={emptyCardStyle}>
             <Text color="textPrimary" variant="subheadLarge">
               {t('No apps connected')}
             </Text>

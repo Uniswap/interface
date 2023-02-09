@@ -48,10 +48,10 @@ export function SearchWalletItem({ wallet }: SearchWalletItemProps): JSX.Element
         name={ElementName.SearchWalletItem}
         testID={`wallet-item-${address}`}
         onPress={onPress}>
-        <Flex row justifyContent="space-between" px="xs" py="sm">
+        <Flex row justifyContent="space-between" px="spacing8" py="spacing12">
           <AddressDisplay
             address={address}
-            size={theme.iconSizes.xxxl}
+            size={theme.iconSizes.icon40}
             subtitleOverrideText={wallet.category}
             variant="bodyLarge"
           />

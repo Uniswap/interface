@@ -24,7 +24,7 @@ function renderOptionItem(
       <Separator />
       <Text
         color={textColorOverride ?? 'textPrimary'}
-        p="md"
+        p="spacing16"
         textAlign="center"
         variant="bodyLarge">
         {label}
@@ -143,10 +143,10 @@ export default function TransactionActionsModal({
       backgroundColor="accentCritical"
       name={ModalName.TransactionActions}
       onClose={handleClose}>
-      <Flex pb="lg" px="sm">
+      <Flex pb="spacing24" px="spacing12">
         <ActionSheetModalContent
           header={
-            <Text color="textTertiary" p="md" variant="bodySmall">
+            <Text color="textTertiary" p="spacing16" variant="bodySmall">
               {t('Submitted on') + ' ' + dateString}
             </Text>
           }

@@ -28,10 +28,10 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps): JS
   const { header, closeButtonLabel = t('Cancel'), options, onClose } = props
 
   return (
-    <Flex gap="sm" justifyContent="flex-end">
-      <Flex centered bg="background1" borderRadius="lg" gap="none" overflow="hidden">
+    <Flex gap="spacing12" justifyContent="flex-end">
+      <Flex centered bg="background1" borderRadius="rounded16" gap="none" overflow="hidden">
         {typeof header === 'string' ? (
-          <Flex centered gap="xxs" py="md">
+          <Flex centered gap="spacing4" py="spacing16">
             <Text variant="buttonLabelMedium">{header}</Text>
           </Flex>
         ) : (
@@ -50,9 +50,9 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps): JS
           </ScrollView>
         </Flex>
       </Flex>
-      <Flex bg="background1" borderRadius="md">
+      <Flex bg="background1" borderRadius="rounded12">
         <TouchableArea hapticFeedback onPress={onClose}>
-          <Flex centered bg="background3" borderRadius="md" py="md">
+          <Flex centered bg="background3" borderRadius="rounded12" py="spacing16">
             <Text color="textPrimary" variant="buttonLabelMedium">
               {closeButtonLabel}
             </Text>

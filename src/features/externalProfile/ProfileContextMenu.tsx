@@ -52,10 +52,10 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
       }}>
       <TouchableArea
         backgroundColor="textOnDimTertiary"
-        borderRadius="full"
+        borderRadius="roundedFull"
         opacity={0.8}
-        padding="xs">
-        <Flex centered grow height={theme.iconSizes.sm} width={theme.iconSizes.sm}>
+        padding="spacing8">
+        <Flex centered grow height={theme.iconSizes.icon16} width={theme.iconSizes.icon16}>
           <TripleDot color="white" size={3.5} />
         </Flex>
       </TouchableArea>

@@ -14,7 +14,7 @@ export function PasswordError({ errorText, style }: PasswordErrorProps): JSX.Ele
   const theme = useAppTheme()
 
   return (
-    <AnimatedFlex centered row gap="xs" pt="sm" px="xs" style={style}>
+    <AnimatedFlex centered row gap="spacing8" pt="spacing12" px="spacing8" style={style}>
       <AlertTriangle
         color={theme.colors.accentCritical}
         height={ERROR_ICON_HEIGHT}

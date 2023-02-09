@@ -122,7 +122,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
         return typeof item === 'string' ? (
           <Loader.NFT />
         ) : (
-          <Box flex={1} justifyContent="flex-start" m="xs">
+          <Box flex={1} justifyContent="flex-start" m="spacing8">
             <TouchableArea
               hapticFeedback
               activeOpacity={1}
@@ -132,7 +132,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
                 alignItems="center"
                 aspectRatio={1}
                 backgroundColor="backgroundOutline"
-                borderRadius="md"
+                borderRadius="rounded12"
                 // eslint-disable-next-line react-native/no-inline-styles
                 style={{ overflow: 'hidden' }}
                 width="100%">
@@ -143,11 +143,11 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
                   uri={item.imageUrl ?? ''}
                 />
               </Box>
-              <Flex gap="none" py="xs">
+              <Flex gap="none" py="spacing8">
                 <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
                   {item.name ?? '-'}
                 </Text>
-                <Flex row alignItems="center" gap="xs" justifyContent="flex-start">
+                <Flex row alignItems="center" gap="spacing8" justifyContent="flex-start">
                   <Flex row shrink>
                     <Text ellipsizeMode="tail" numberOfLines={1} variant="bodySmall">
                       {item.collectionName}

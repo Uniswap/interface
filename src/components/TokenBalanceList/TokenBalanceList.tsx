@@ -107,7 +107,7 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
     if (!data) {
       if (isNonPollingRequestInFlight(networkStatus)) {
         return (
-          <Box my="sm" style={containerProps?.loadingContainerStyle}>
+          <Box my="spacing12" style={containerProps?.loadingContainerStyle}>
             <Loader.Token repeat={4} />
           </Box>
         )
@@ -149,7 +149,7 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
         }
         ListHeaderComponent={
           isError(networkStatus, !!data) ? (
-            <AnimatedBox entering={FadeInDown} exiting={FadeOut} py="xs">
+            <AnimatedBox entering={FadeInDown} exiting={FadeOut} py="spacing8">
               <BaseCard.InlineErrorState
                 title={t('Failed to fetch token balances')}
                 onRetry={refetch}

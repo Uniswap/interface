@@ -10,7 +10,7 @@ type Props = {
   size?: number
 }
 
-function _TxHistoryIconWithStatus({ size = iconSizes.lg }: Props): JSX.Element {
+function _TxHistoryIconWithStatus({ size = iconSizes.icon24 }: Props): JSX.Element {
   const theme = useAppTheme()
   const address = useActiveAccountAddressWithThrow()
   const hasNotifications = useSelectAddressHasNotifications(address)

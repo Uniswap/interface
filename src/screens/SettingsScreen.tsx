@@ -145,16 +145,16 @@ export function SettingsScreen(): JSX.Element {
     <HeaderScrollScreen
       alwaysShowCenterElement
       centerElement={<Text variant="bodyLarge">{t('Settings')}</Text>}>
-      <Flex px="lg" py="sm">
+      <Flex px="spacing24" py="spacing12">
         <SectionList
           ItemSeparatorComponent={renderItemSeparator}
           ListFooterComponent={<FooterSettings />}
           ListHeaderComponent={<WalletSettings />}
           keyExtractor={(_item, index): string => 'settings' + index}
           renderItem={renderItem}
-          renderSectionFooter={(): JSX.Element => <Flex pt="lg" />}
+          renderSectionFooter={(): JSX.Element => <Flex pt="spacing24" />}
           renderSectionHeader={({ section: { subTitle } }): JSX.Element => (
-            <Box bg="background0" pb="sm">
+            <Box bg="background0" pb="spacing12">
               <Text color="textSecondary" variant="bodyLarge">
                 {subTitle}
               </Text>
@@ -168,7 +168,7 @@ export function SettingsScreen(): JSX.Element {
   )
 }
 
-const renderItemSeparator = (): JSX.Element => <Flex pt="xs" />
+const renderItemSeparator = (): JSX.Element => <Flex pt="spacing8" />
 
 function OnboardingRow({ iconProps }: { iconProps: SvgProps }): JSX.Element {
   const theme = useTheme()
@@ -183,12 +183,12 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }): JSX.Element {
         dispatch(resetWallet())
         dispatch(setFinishedOnboarding({ finishedOnboarding: false }))
       }}>
-      <Box alignItems="center" flexDirection="row" justifyContent="space-between" py="xxs">
+      <Box alignItems="center" flexDirection="row" justifyContent="space-between" py="spacing4">
         <Box alignItems="center" flexDirection="row">
           <Flex centered height={32} width={32}>
             <FlashbotsIcon {...iconProps} />
           </Flex>
-          <Text ml="sm" variant="bodyLarge">
+          <Text ml="spacing12" variant="bodyLarge">
             {t('Onboarding')}
           </Text>
         </Box>
@@ -231,14 +231,14 @@ function WalletSettings(): JSX.Element {
   }
 
   return (
-    <Box flexDirection="column" mb="md">
+    <Box flexDirection="column" mb="spacing16">
       <Flex row justifyContent="space-between">
         <Text color="textSecondary" variant="bodyLarge">
           {t('Wallet settings')}
         </Text>
         {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
           <TouchableArea onPress={toggleViewAll}>
-            <Text color="textSecondary" mb="sm" variant="subheadSmall">
+            <Text color="textSecondary" mb="spacing12" variant="subheadSmall">
               {showAll ? t('View less') : t('View all')}
             </Text>
           </TouchableArea>
@@ -249,8 +249,8 @@ function WalletSettings(): JSX.Element {
         .map((account) => (
           <TouchableArea
             key={account.address}
-            pl="xxs"
-            py="sm"
+            pl="spacing4"
+            py="spacing12"
             onPress={(): void => handleNavigation(account.address)}>
             <Box alignItems="center" flexDirection="row" justifyContent="space-between">
               <Flex shrink>
@@ -285,15 +285,15 @@ function FooterSettings(): JSX.Element {
   )
 
   return (
-    <Flex gap="sm">
+    <Flex gap="spacing12">
       {showSignature ? (
         <AnimatedFlex
           alignItems="center"
           entering={FadeInDown}
           exiting={FadeOutUp}
           gap="none"
-          mt="md">
-          <Flex gap="xxs">
+          mt="spacing16">
+          <Flex gap="spacing4">
             <Text color="textTertiary" textAlign="center" variant="bodySmall">
               {t('Made with love, ')}
             </Text>
@@ -310,7 +310,7 @@ function FooterSettings(): JSX.Element {
       ) : null}
       <Text
         color="textTertiary"
-        marginTop="xs"
+        mt="spacing8"
         variant="bodySmall"
         onLongPress={(): void => {
           setShowSignature(true)

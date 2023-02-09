@@ -13,8 +13,8 @@ export function SettingsTestConfigs(): JSX.Element {
   const [testConfigs, toggleLocalConfig] = useTestConfigManager()
 
   return (
-    <SheetScreen px="lg">
-      <ScrollView contentContainerStyle={{ ...flex.fill, paddingTop: theme.spacing.xxl }}>
+    <SheetScreen px="spacing24">
+      <ScrollView contentContainerStyle={{ ...flex.fill, paddingTop: theme.spacing.spacing48 }}>
         <Flex>
           <BackHeader alignment="left">
             <Text variant="subheadLarge">Test Configs</Text>

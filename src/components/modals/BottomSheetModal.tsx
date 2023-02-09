@@ -28,8 +28,8 @@ type Props = PropsWithChildren<{
 }> &
   TelemetryTraceProps
 
-const HANDLEBAR_HEIGHT = spacing.xxs
-const HANDLEBAR_WIDTH = spacing.xl
+const HANDLEBAR_HEIGHT = spacing.spacing4
+const HANDLEBAR_WIDTH = spacing.spacing36
 
 const HandleBar = ({
   backgroundColor,
@@ -46,7 +46,7 @@ const HandleBar = ({
   return (
     <Flex
       alignItems="center"
-      borderRadius="xl"
+      borderRadius="rounded20"
       justifyContent="center"
       style={{
         backgroundColor: bg,
@@ -54,10 +54,10 @@ const HandleBar = ({
       <Box
         alignSelf="center"
         backgroundColor={hidden ? 'none' : 'backgroundOutline'}
-        borderRadius="sm"
+        borderRadius="rounded8"
         height={HANDLEBAR_HEIGHT}
-        mb="sm"
-        mt="md"
+        mb="spacing12"
+        mt="spacing16"
         width={HANDLEBAR_WIDTH}
       />
     </Flex>
@@ -177,7 +177,7 @@ export function BottomSheetDetachedModal({
       ref={modalRef}
       backdropComponent={Backdrop}
       backgroundStyle={{ backgroundColor: backgroundColor ?? theme.colors.background0 }}
-      bottomInset={theme.spacing.xxl}
+      bottomInset={theme.spacing.spacing48}
       contentHeight={animatedContentHeight}
       detached={true}
       handleComponent={renderHandleBar}
@@ -205,7 +205,7 @@ export function BottomSheetDetachedModal({
 
 const BottomSheetStyle = StyleSheet.create({
   detached: {
-    marginHorizontal: spacing.sm,
+    marginHorizontal: spacing.spacing12,
   },
   view: {
     flex: 1,

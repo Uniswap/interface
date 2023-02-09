@@ -50,21 +50,21 @@ export function TransactionDetails({
   return (
     <Box>
       {showWarning && warning && onShowWarning && (
-        <TouchableArea mb="xs" onPress={onShowWarning}>
+        <TouchableArea mb="spacing8" onPress={onShowWarning}>
           <Flex
             row
             alignItems="center"
             backgroundColor={warningColor.background}
-            borderRadius="md"
+            borderRadius="rounded12"
             flexGrow={1}
-            gap="xs"
-            p="sm">
+            gap="spacing8"
+            p="spacing12">
             <AlertTriangle
               color={theme.colors[warningColor?.text]}
               height={ALERT_ICONS_SIZE}
               width={ALERT_ICONS_SIZE}
             />
-            <Flex flexGrow={1} py="xxxs">
+            <Flex flexGrow={1} py="spacing2">
               <Text color={warningColor.text} variant="subheadSmall">
                 {warning.title}
               </Text>
@@ -77,8 +77,8 @@ export function TransactionDetails({
           </Flex>
         </TouchableArea>
       )}
-      {!showWarning && <Box mb="xs">{banner}</Box>}
-      <Flex backgroundColor="background2" borderRadius="lg" gap="none">
+      {!showWarning && <Box mb="spacing8">{banner}</Box>}
+      <Flex backgroundColor="background2" borderRadius="rounded16" gap="none">
         {children}
         <NetworkFee
           chainId={chainId}
@@ -89,7 +89,7 @@ export function TransactionDetails({
         <Box
           borderTopColor={TRANSACTION_DETAILS_SPACER.color}
           borderTopWidth={TRANSACTION_DETAILS_SPACER.width}
-          p="md">
+          p="spacing16">
           <AccountDetails address={userAddress} iconSize={24} />
         </Box>
       </Flex>

@@ -28,8 +28,8 @@ function QRScannerIconButton({ onPress }: { onPress: () => void }): JSX.Element 
     <TouchableArea hapticFeedback name={ElementName.SelectRecipient} onPress={onPress}>
       <ScanQRIcon
         color={theme.colors.textSecondary}
-        height={theme.iconSizes.md}
-        width={theme.iconSizes.md}
+        height={theme.iconSizes.icon20}
+        width={theme.iconSizes.icon20}
       />
     </TouchableArea>
   )
@@ -66,7 +66,7 @@ export function RecipientSelect({
 
   return (
     <>
-      <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="sm" px="md" width="100%">
+      <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="spacing12" px="spacing16" width="100%">
         <SearchBar
           autoFocus
           backgroundColor="background2"
@@ -79,7 +79,7 @@ export function RecipientSelect({
         />
         {loading && <RecipientLoadingRow />}
         {noResults ? (
-          <Flex centered gap="sm" mt="lg" px="lg">
+          <Flex centered gap="spacing12" mt="spacing24" px="spacing24">
             <Text variant="buttonLabelMedium">{t('No results found')}</Text>
             <Text color="textTertiary" textAlign="center" variant="bodyLarge">
               {t('The address you typed either does not exist or is spelled incorrectly.')}

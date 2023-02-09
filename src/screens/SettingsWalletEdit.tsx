@@ -53,10 +53,10 @@ export function SettingsWalletEdit({
 
   return (
     <Screen>
-      <BackHeader alignment="center" mx="md" pt="md">
+      <BackHeader alignment="center" mx="spacing16" pt="spacing16">
         <Text variant="bodyLarge">{t('Nickname')}</Text>
       </BackHeader>
-      <Flex gap="xl" px="lg" py="lg">
+      <Flex gap="spacing36" px="spacing24" py="spacing24">
         <Flex gap="none">
           <Flex alignItems="center" flexDirection="row">
             {showEditInput ? (
@@ -87,7 +87,7 @@ export function SettingsWalletEdit({
                   </Text>
                 </Flex>
                 {!ensName && (
-                  <Box ml="sm">
+                  <Box ml="spacing12">
                     <Button
                       IconName={PencilIcon}
                       emphasis={ButtonEmphasis.Secondary}

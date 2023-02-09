@@ -186,7 +186,7 @@ export function useAllTransactionsBetweenAddresses(
   }, [recipient, sender, txnsToSearch])
 }
 
-const MIN_INPUT_DECIMALPAD_GAP = theme.spacing.sm
+const MIN_INPUT_DECIMALPAD_GAP = theme.spacing.spacing12
 
 export function useShouldShowNativeKeyboard(): {
   onInputPanelLayout: (event: LayoutChangeEvent) => void

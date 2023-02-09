@@ -20,7 +20,7 @@ export function TokenLogo({
   url,
   symbol,
   chainId,
-  size = iconSizes.xxxl,
+  size = iconSizes.icon40,
   hideNetworkLogo,
 }: TokenLogoProps): JSX.Element {
   const theme = useAppTheme()
@@ -47,10 +47,10 @@ export function TokenLogo({
         <Box
           alignItems="center"
           bg="backgroundOutline"
-          borderRadius="full"
+          borderRadius="roundedFull"
           height={size}
           justifyContent="center"
-          px="xs"
+          px="spacing8"
           width={size}>
           <Text adjustsFontSizeToFit color="textPrimary" numberOfLines={1} textAlign="center">
             {symbol?.slice(0, 3).toUpperCase()}

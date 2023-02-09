@@ -181,7 +181,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
           </Flex>
         ) : (
           <ScrollView>
-            <Flex gap="sm">
+            <Flex gap="spacing12">
               {initialShownAccounts?.map((portfolio, i) => {
                 const { ownerAddress, tokensTotalDenominatedValue } = portfolio
                 return (

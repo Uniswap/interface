@@ -9,7 +9,7 @@ export default {
   component: Button,
   decorators: [
     (Story): JSX.Element => (
-      <Box m="lg">
+      <Box m="spacing24">
         <Story />
       </Box>
     ),

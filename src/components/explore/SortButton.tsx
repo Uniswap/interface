@@ -67,13 +67,20 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
 
         dispatch(setTokensOrderBy({ newTokensOrderBy: selectedMenuAction.orderBy }))
       }}>
-      <Flex row alignItems="center" bg="background2" borderRadius="full" gap="xxs" px="sm" py="xs">
+      <Flex
+        row
+        alignItems="center"
+        bg="background2"
+        borderRadius="roundedFull"
+        gap="spacing4"
+        px="spacing12"
+        py="spacing8">
         {(orderBy === TokenSortableField.Volume ||
           orderBy === TokenSortableField.TotalValueLocked) && (
           <UniswapLogo
             color={theme.colors.textSecondary}
-            height={theme.iconSizes.md}
-            width={theme.iconSizes.md}
+            height={theme.iconSizes.icon20}
+            width={theme.iconSizes.icon20}
           />
         )}
         <Text color="textSecondary" variant="buttonLabelSmall">
@@ -82,8 +89,8 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
         <Chevron
           color={theme.colors.textSecondary}
           direction="s"
-          height={theme.iconSizes.md}
-          width={theme.iconSizes.md}
+          height={theme.iconSizes.icon20}
+          width={theme.iconSizes.icon20}
         />
       </Flex>
     </ContextMenu>

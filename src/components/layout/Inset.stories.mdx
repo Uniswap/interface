@@ -8,7 +8,7 @@ import { Text } from '../Text'
   component={Inset}
   decorators={[
     (Story) => (
-      <Box bg="background3" borderRadius="md">
+      <Box bg="background3" borderRadius="rounded12">
         <Inset>
           {/* calls function directly to preserve displayName */}
           {Story()}
@@ -41,7 +41,7 @@ export const Template = (args) => (
 <Canvas>
   <Story name="variants" args={{}}>
     <Flex>
-      {['xs', 'sm', 'md', 'lg', 'xl'].map((size) => (
+      {['spacing8', 'spacing12', 'spacing16', 'lg', 'xl'].map((size) => (
         <Box bg="black">
           <Inset all={size}>
             <Box bg="background3">

@@ -23,7 +23,7 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>((props,
       row
       backgroundColor="background1"
       borderColor="backgroundOutline"
-      borderRadius="md"
+      borderRadius="rounded12"
       borderWidth={1}
       gap="none">
       <AnimatedFlex fill grow row alignItems="center" gap="none" minHeight={48}>
@@ -48,19 +48,19 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>((props,
           onSubmitEditing={onSubmitEditing}
           {...rest} // apply any textinputprops
         />
-        <AnimatedFlex mx="sm">
-          <TouchableArea p="xxs" onPress={onPressEyeIcon}>
+        <AnimatedFlex mx="spacing12">
+          <TouchableArea p="spacing4" onPress={onPressEyeIcon}>
             {showPassword ? (
               <EyeIcon
                 color={theme.colors.textSecondary}
-                height={theme.iconSizes.sm}
-                width={theme.iconSizes.sm}
+                height={theme.iconSizes.icon16}
+                width={theme.iconSizes.icon16}
               />
             ) : (
               <EyeOffIcon
                 color={theme.colors.textSecondary}
-                height={theme.iconSizes.sm}
-                width={theme.iconSizes.sm}
+                height={theme.iconSizes.icon16}
+                width={theme.iconSizes.icon16}
               />
             )}
           </TouchableArea>

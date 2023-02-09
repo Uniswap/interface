@@ -24,9 +24,9 @@ type PriceTextProps = {
 
 function PriceTextSection({ loading, spotPrice, relativeChange }: PriceTextProps): JSX.Element {
   return (
-    <Box mx="sm">
+    <Box mx="spacing12">
       <PriceText loading={loading} spotPrice={spotPrice} />
-      <Flex row gap="xxs">
+      <Flex row gap="spacing4">
         <RelativeChangeText loading={loading} spotRelativeChange={relativeChange} />
         <DatetimeText loading={loading} />
       </Flex>
@@ -64,13 +64,13 @@ export function PriceExplorer({
         <LineChartProvider
           data={data.priceHistory}
           onCurrentIndexChange={invokeImpact[ImpactFeedbackStyle.Light]}>
-          <Flex gap="xs">
+          <Flex gap="spacing8">
             <PriceTextSection
               loading={loading}
               relativeChange={data.spot.relativeChange}
               spotPrice={data.spot.value}
             />
-            <Box my="lg">
+            <Box my="spacing24">
               <LineChart height={CHART_HEIGHT}>
                 <LineChart.Path color={tokenColor} />
 
@@ -87,9 +87,9 @@ export function PriceExplorer({
           </Flex>
         </LineChartProvider>
       ) : (
-        <Flex gap="xs">
+        <Flex gap="spacing8">
           <PriceTextSection loading={loading} />
-          <Box my="lg">
+          <Box my="spacing24">
             <Loader.Graph />
           </Box>
         </Flex>

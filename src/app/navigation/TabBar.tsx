@@ -27,7 +27,7 @@ import { CurrencyId } from 'src/utils/currencyId'
 export const TAB_NAVIGATOR_HEIGHT_XS = 52
 export const TAB_NAVIGATOR_HEIGHT_SM = 72
 
-const SWAP_BUTTON_CONTAINER_WIDTH = dimensions.fullWidth / 3 + FixedTheme.spacing.lg
+const SWAP_BUTTON_CONTAINER_WIDTH = dimensions.fullWidth / 3 + FixedTheme.spacing.spacing24
 
 export const SWAP_BUTTON_HEIGHT = 56
 const SWAP_BUTTON_WIDTH = 108
@@ -51,18 +51,18 @@ export const TabBarButton = memo(
         alignItems="center"
         flex={1}
         justifyContent="center"
-        mb={{ xs: 'xxs', sm: 'md' }}
+        mb={{ xs: 'spacing4', sm: 'spacing16' }}
         position="relative"
         {...rest}>
         {focused ? (
-          <IconFilled color={appTheme.colors.magentaVibrant} height={appTheme.iconSizes.lg} />
+          <IconFilled color={appTheme.colors.magentaVibrant} height={appTheme.iconSizes.icon24} />
         ) : (
-          <Icon color={appTheme.colors.textTertiary} height={appTheme.iconSizes.lg} />
+          <Icon color={appTheme.colors.textTertiary} height={appTheme.iconSizes.icon24} />
         )}
         <Box
           backgroundColor="userThemeColor"
-          borderRadius="full"
-          bottom={-1 * appTheme.spacing.xxs}
+          borderRadius="roundedFull"
+          bottom={-1 * appTheme.spacing.spacing4}
           height={4}
           opacity={focused ? 1 : 0}
           width={4}
@@ -92,8 +92,11 @@ export const SwapTabBarButton = memo(
     const buttonOffset = useResponsiveProp({
       xs:
         -1 *
-        (TAB_NAVIGATOR_HEIGHT_XS - SWAP_BUTTON_HEIGHT + appTheme.spacing.lg + appTheme.spacing.xxs),
-      sm: -1 * (TAB_NAVIGATOR_HEIGHT_SM - SWAP_BUTTON_HEIGHT + appTheme.spacing.xxxs),
+        (TAB_NAVIGATOR_HEIGHT_XS -
+          SWAP_BUTTON_HEIGHT +
+          appTheme.spacing.spacing24 +
+          appTheme.spacing.spacing4),
+      sm: -1 * (TAB_NAVIGATOR_HEIGHT_SM - SWAP_BUTTON_HEIGHT + appTheme.spacing.spacing2),
     })
 
     const onPress = useCallback(() => {
@@ -144,7 +147,7 @@ export const SwapTabBarButton = memo(
             top={buttonOffset}
             width={SWAP_BUTTON_WIDTH}>
             <Box
-              borderRadius="xxxl"
+              borderRadius="rounded32"
               bottom={0}
               left={0}
               overflow="hidden"

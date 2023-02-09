@@ -92,14 +92,14 @@ export function RestoreCloudBackupLoadingScreen({
   // Handle no backups found error state
   if (!isLoading && backups.length === 0) {
     return (
-      <Box alignSelf="center" px="md">
+      <Box alignSelf="center" px="spacing16">
         <BaseCard.ErrorState
           description={t(`It looks like you haven't backed up any of your seed phrases to iCloud.`)}
           icon={
             <CloudIcon
               color={theme.colors.textTertiary}
-              height={theme.imageSizes.xxl}
-              width={theme.imageSizes.xxl}
+              height={theme.imageSizes.image48}
+              width={theme.imageSizes.image48}
             />
           }
           retryButtonLabel={t('Retry')}

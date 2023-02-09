@@ -13,7 +13,7 @@ type PillProps = {
 } & FlexProps
 
 export function Pill({
-  borderRadius = 'full',
+  borderRadius = 'roundedFull',
   children,
   customBackgroundColor,
   customBorderColor,
@@ -21,8 +21,8 @@ export function Pill({
   foregroundColor,
   icon,
   label,
-  px = 'sm',
-  py = 'xs',
+  px = 'spacing12',
+  py = 'spacing8',
   textVariant = 'bodySmall',
   ...rest
 }: PillProps): JSX.Element {
@@ -34,7 +34,7 @@ export function Pill({
       borderRadius={borderRadius}
       borderWidth={1}
       flexDirection={flexDirection}
-      gap="xs"
+      gap="spacing8"
       justifyContent="center"
       px={px}
       py={py}

@@ -26,12 +26,12 @@ export function SpendingDetails({
   const usdValue = useUSDValue(chainId, value)
 
   return (
-    <Flex row alignItems="center" gap="md">
+    <Flex row alignItems="center" gap="spacing16">
       <Text color="textSecondary" variant="bodySmall">
         {t('Sending')}:
       </Text>
-      <Flex row alignItems="center" gap="xxs">
-        <CurrencyLogo currencyInfo={nativeCurrencyInfo} size={iconSizes.sm} />
+      <Flex row alignItems="center" gap="spacing4">
+        <CurrencyLogo currencyInfo={nativeCurrencyInfo} size={iconSizes.icon16} />
         <Text variant="bodySmall">
           {formatCurrencyAmount(nativeCurrencyAmount, NumberType.TokenTx)}{' '}
           {nativeCurrencyInfo?.currency.symbol}

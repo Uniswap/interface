@@ -17,7 +17,7 @@ export function BackButtonView({ size, color, showButtonLabel }: Props): JSX.Ele
   const theme = useTheme<Theme>()
 
   return (
-    <Flex row alignItems="center" gap="xs">
+    <Flex row alignItems="center" gap="spacing8">
       <Chevron
         color={color ? theme.colors[color] : theme.colors.textSecondary}
         height={size}

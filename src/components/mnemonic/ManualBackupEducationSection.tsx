@@ -13,10 +13,10 @@ export function ManualBackupEducationSection(): JSX.Element {
   const spacer = <Box borderTopColor="backgroundOutline" borderTopWidth={0.5} />
   const theme = useAppTheme()
 
-  const ICON_SIZE = theme.iconSizes.md
+  const ICON_SIZE = theme.iconSizes.icon20
 
   return (
-    <Flex gap="md" mt="md" mx="md">
+    <Flex gap="spacing16" mt="spacing16" mx="spacing16">
       <EducationRow
         icon={
           <EyeIcon
@@ -69,7 +69,7 @@ function EducationRow({ icon, label, sublabel }: EducationRowProps): JSX.Element
     sm: theme.textVariants.bodyMicro.maxFontSizeMultiplier,
   })
   return (
-    <Flex row alignItems="center" gap="md">
+    <Flex row alignItems="center" gap="spacing16">
       <Box>{icon}</Box>
       <Flex flex={1} gap="none">
         <Text
@@ -78,7 +78,7 @@ function EducationRow({ icon, label, sublabel }: EducationRowProps): JSX.Element
           variant="bodyLarge">
           {label}
         </Text>
-        <Flex pr="xl">
+        <Flex pr="spacing36">
           <Text
             color="textSecondary"
             maxFontSizeMultiplier={sublabelMaxFontSizeMultiplier}

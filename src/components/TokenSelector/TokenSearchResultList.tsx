@@ -313,7 +313,7 @@ function _TokenSearchResultList({
 
   if (error) {
     return (
-      <Box justifyContent="center" pt="xxxl">
+      <Box justifyContent="center" pt="spacing60">
         <BaseCard.ErrorState
           icon={
             <AlertTriangle
@@ -334,7 +334,7 @@ function _TokenSearchResultList({
   if (loading) {
     return (
       <Box>
-        <Box py="md" width={80}>
+        <Box py="spacing16" width={80}>
           <Loader.Box height={theme.textVariants.subheadSmall.lineHeight} />
         </Box>
         <Loader.Token repeat={5} />
@@ -377,7 +377,7 @@ function _TokenSearchResultList({
 
 function SectionHeader({ title }: { title: string }): JSX.Element {
   return (
-    <Flex backgroundColor="background1" py="md">
+    <Flex backgroundColor="background1" py="spacing16">
       <Text color="textSecondary" variant="subheadSmall">
         {title}
       </Text>
@@ -387,8 +387,8 @@ function SectionHeader({ title }: { title: string }): JSX.Element {
 
 function Footer(): JSX.Element {
   return (
-    <Inset all="xxl">
-      <Inset all="md" />
+    <Inset all="spacing48">
+      <Inset all="spacing16" />
     </Inset>
   )
 }

@@ -87,9 +87,9 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
         icon={
           <EyeIcon
             color={theme.colors.textSecondary}
-            height={theme.iconSizes.lg}
+            height={theme.iconSizes.icon24}
             strokeWidth={1.5}
-            width={theme.iconSizes.lg}
+            width={theme.iconSizes.icon24}
           />
         }
         modalName={ModalName.WCViewOnlyWarning}
@@ -97,8 +97,12 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
         title={t('This wallet is in view only mode')}
         onCancel={onClose}
         onClose={onClose}>
-        <Box alignSelf="stretch" backgroundColor="background2" borderRadius="lg" p="md">
-          <AccountDetails address={currRequest.account} iconSize={theme.iconSizes.lg} />
+        <Box
+          alignSelf="stretch"
+          backgroundColor="background2"
+          borderRadius="rounded16"
+          p="spacing16">
+          <AccountDetails address={currRequest.account} iconSize={theme.iconSizes.icon24} />
         </Box>
       </WarningModal>
     )

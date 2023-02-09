@@ -77,19 +77,19 @@ export default function TokenWarningModal({
 
   return (
     <BottomSheetModal name={ModalName.TokenWarningModal} onClose={onClose}>
-      <Flex centered gap="md" mb="md" p="lg">
+      <Flex centered gap="spacing16" mb="spacing16" p="spacing24">
         <Flex
           centered
-          borderRadius="md"
+          borderRadius="rounded12"
           borderWidth={1}
-          p="sm"
+          p="spacing12"
           style={{
             borderColor: opacify(60, theme.colors[warningColor]),
           }}>
-          <WarningIcon safetyLevel={safetyLevel} width={theme.iconSizes.md} />
+          <WarningIcon safetyLevel={safetyLevel} width={theme.iconSizes.icon20} />
         </Flex>
         <Text variant="buttonLabelMedium">{getTokenSafetyHeaderText(safetyLevel, t)}</Text>
-        <Flex centered gap="xxs" width="90%">
+        <Flex centered gap="spacing4" width="90%">
           <Text color="textSecondary" textAlign="center" variant="bodySmall">
             {getTokenSafetyBodyText(safetyLevel, t)}{' '}
             <TouchableArea height={18} onPress={onPressLearnMore}>
@@ -102,23 +102,23 @@ export default function TokenWarningModal({
         <TouchableArea
           alignItems="center"
           bg="accentActiveSoft"
-          borderRadius="lg"
+          borderRadius="rounded16"
           flexDirection="row"
-          mx="xxl"
-          px="sm"
-          py="xs"
+          mx="spacing48"
+          px="spacing12"
+          py="spacing8"
           onPress={(): Promise<void> => openUri(explorerLink)}>
           <Text
             color="accentActive"
             ellipsizeMode="tail"
-            mx="xs"
+            mx="spacing8"
             numberOfLines={1}
             variant="buttonLabelMicro">
             {explorerLink}
           </Text>
           <ExternalLinkIcon fill={theme.colors.accentActive} height={12} width={12} />
         </TouchableArea>
-        <Flex centered row mt="md">
+        <Flex centered row mt="spacing16">
           <Button
             fill
             emphasis={ButtonEmphasis.Tertiary}

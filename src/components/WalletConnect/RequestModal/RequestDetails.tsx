@@ -40,10 +40,10 @@ const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps): JSX.E
   return (
     <LinkButton
       backgroundColor="backgroundOutline"
-      borderRadius="xs"
+      borderRadius="rounded4"
       label={name || shortenAddress(address)}
-      px="xs"
-      py="xxs"
+      px="spacing8"
+      py="spacing4"
       textVariant="bodySmall"
       url={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}
       {...rest}
@@ -61,13 +61,13 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): JSX.Eleme
   }
 
   return (
-    <Flex gap="xxs">
+    <Flex gap="spacing4">
       {Object.keys(obj).map((objKey) => {
         const childValue = obj[objKey]
 
         if (typeof childValue === 'object') {
           return (
-            <Flex gap="xxs">
+            <Flex gap="spacing4">
               <Text color="textTertiary" style={{ marginLeft: depth * 10 }} variant="monospace">
                 {objKey}
               </Text>
@@ -78,15 +78,15 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): JSX.Eleme
 
         if (typeof childValue === 'string') {
           return (
-            <Flex row alignItems="flex-start" gap="xs" style={{ marginLeft: depth * 10 }}>
-              <Text color="textTertiary" py="xxs" variant="monospace">
+            <Flex row alignItems="flex-start" gap="spacing8" style={{ marginLeft: depth * 10 }}>
+              <Text color="textTertiary" py="spacing4" variant="monospace">
                 {objKey}
               </Text>
               <Flex flexShrink={1}>
                 {getValidAddress(childValue, true) ? (
                   <AddressButton address={childValue} chainId={chainId} textVariant="monospace" />
                 ) : (
-                  <Text py="xxs" variant="monospace">
+                  <Text py="spacing4" variant="monospace">
                     {childValue}
                   </Text>
                 )}
@@ -144,27 +144,27 @@ function TransactionDetails({
   }, [data, from, parser, to, transaction, value])
 
   return (
-    <Flex gap="sm">
+    <Flex gap="spacing12">
       {value && !BigNumber.from(value).eq(0) ? (
         <SpendingDetails chainId={chainId} value={value} />
       ) : null}
       {to ? (
-        <Flex row alignItems="center" gap="md">
+        <Flex row alignItems="center" gap="spacing16">
           <Text color="textSecondary" variant="bodySmall">
             {t('To')}:
           </Text>
           <AddressButton address={to} chainId={chainId} />
         </Flex>
       ) : null}
-      <Flex row alignItems="center" gap="md">
+      <Flex row alignItems="center" gap="spacing16">
         <Text color="textSecondary" variant="bodySmall">
           {t('Function')}:
         </Text>
         <Box
           backgroundColor={isLoading ? 'none' : 'backgroundOutline'}
-          borderRadius="xs"
-          px="xs"
-          py="xxs">
+          borderRadius="rounded4"
+          px="spacing8"
+          py="spacing4">
           <Text color="textPrimary" loading={isLoading} variant="monospace">
             {parsedData ? parsedData.name : t('Unknown')}
           </Text>

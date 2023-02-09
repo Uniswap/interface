@@ -79,11 +79,11 @@ export function FiatOnRampModal(): JSX.Element {
 
   return (
     <BottomSheetModal disableSwipe name={ModalName.FiatOnRamp} onClose={onClose}>
-      <Screen bg="background1" edges={['bottom']} mb="lg" pt="md" px="lg">
-        <Flex gap="lg">
+      <Screen bg="background1" edges={['bottom']} mb="spacing24" pt="spacing16" px="spacing24">
+        <Flex gap="spacing24">
           <FiatOnRampModalBackground color={theme.colors.background1} width="100%" />
-          <Flex alignItems="center" gap="lg">
-            <Flex alignItems="center" gap="sm">
+          <Flex alignItems="center" gap="spacing24">
+            <Flex alignItems="center" gap="spacing12">
               <Text color="textPrimary" textAlign="center" variant="headlineSmall">
                 {t('Buy crypto with your bank account or card')}
               </Text>
@@ -102,7 +102,7 @@ export function FiatOnRampModal(): JSX.Element {
                   ) : eligible === false ? (
                     <TouchableArea
                       onPress={(): Promise<void> => openUri(MOONPAY_UNSUPPORTED_REGION_HELP_URL)}>
-                      <InformationIcon color={theme.colors.white} width={theme.iconSizes.md} />
+                      <InformationIcon color={theme.colors.white} width={theme.iconSizes.icon20} />
                     </TouchableArea>
                   ) : undefined
                 }

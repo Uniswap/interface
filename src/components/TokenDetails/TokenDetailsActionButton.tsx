@@ -35,10 +35,10 @@ export function TokenDetailsActionButtons({
       bg="background0"
       borderTopColor="backgroundOutline"
       borderTopWidth={1}
-      gap="xs"
-      pb="md"
-      pt="sm"
-      px="md">
+      gap="spacing8"
+      pb="spacing16"
+      pt="spacing12"
+      px="spacing16">
       <TouchableArea
         hapticFeedback
         alignItems="center"

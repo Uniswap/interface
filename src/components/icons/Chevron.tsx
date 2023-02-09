@@ -45,7 +45,7 @@ function _Chevron({
   }
 
   return (
-    <CenterBox borderRadius="full" style={{ transform: [{ rotate: degree }] }} {...rest}>
+    <CenterBox borderRadius="roundedFull" style={{ transform: [{ rotate: degree }] }} {...rest}>
       <Svg fill="none" height={height} viewBox="0 0 26 24" width={width}>
         <Path
           d="M15 6L9 12L15 18"

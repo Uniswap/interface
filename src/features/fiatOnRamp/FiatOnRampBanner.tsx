@@ -21,10 +21,10 @@ export function FiatOnRampBanner(props: BoxProps): JSX.Element {
 
   return (
     <TouchableArea
-      borderRadius="md"
+      borderRadius="rounded12"
       eventName={EventName.FiatOnRampBannerPressed}
       overflow="hidden"
-      p="sm"
+      p="spacing12"
       style={styles.container}
       onPress={onPress}
       {...props}
@@ -32,7 +32,7 @@ export function FiatOnRampBanner(props: BoxProps): JSX.Element {
       <Box flex={1} position="absolute" right={0} top={0}>
         <FiatOnRampBackground color={theme.colors.white} />
       </Box>
-      <Flex gap="xxs">
+      <Flex gap="spacing4">
         <Flex row justifyContent="space-between">
           <Text color="textOnBrightPrimary" variant="buttonLabelMedium">
             {t('Buy crypto')}
@@ -40,7 +40,7 @@ export function FiatOnRampBanner(props: BoxProps): JSX.Element {
           <Chevron
             color={theme.colors.textOnBrightPrimary}
             direction="e"
-            width={theme.iconSizes.md}
+            width={theme.iconSizes.icon20}
           />
         </Flex>
 

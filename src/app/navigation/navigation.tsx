@@ -108,7 +108,7 @@ const renderTabBarWalletIcon = ({ focused }: { focused: boolean }): JSX.Element 
     IconFilled={WalletIconFilled}
     focused={focused}
     // swap takes `xxs` more space than other buttons
-    pl="lg"
+    pl="spacing24"
   />
 )
 
@@ -118,7 +118,7 @@ const renderTabBarSearchIcon = ({ focused }: { focused: boolean }): JSX.Element 
     IconFilled={SearchIconFocused}
     focused={focused}
     // swap takes `xxs` more space than other buttons
-    pr="lg"
+    pr="spacing24"
   />
 )
 
@@ -300,11 +300,11 @@ export function OnboardingStackNavigator(): JSX.Element {
           headerTitle: renderHeaderTitle,
           headerBackTitleVisible: false,
           headerBackImage: renderHeaderBackImage,
-          headerStatusBarHeight: insets.top + theme.spacing.xs,
+          headerStatusBarHeight: insets.top + theme.spacing.spacing8,
           headerTransparent: true,
           headerTintColor: theme.colors.textSecondary,
-          headerLeftContainerStyle: { paddingLeft: theme.spacing.md },
-          headerRightContainerStyle: { paddingRight: theme.spacing.md },
+          headerLeftContainerStyle: { paddingLeft: theme.spacing.spacing16 },
+          headerRightContainerStyle: { paddingRight: theme.spacing.spacing16 },
         }}>
         <OnboardingStack.Screen
           component={LandingScreen}

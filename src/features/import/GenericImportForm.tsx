@@ -63,8 +63,8 @@ export function GenericImportForm({
   const INPUT_MAX_FONT_SIZE_MULTIPLIER = theme.textVariants.bodyLarge.maxFontSizeMultiplier
 
   const minHeight = useResponsiveProp({ xs: 90, sm: 120 })
-  const px = useResponsiveProp({ xs: 'lg', sm: 'xl' })
-  const py = useResponsiveProp({ xs: 'xs', sm: 'md' })
+  const px = useResponsiveProp({ xs: 'spacing24', sm: 'spacing36' })
+  const py = useResponsiveProp({ xs: 'spacing8', sm: 'spacing16' })
 
   const handleBlur = (): void => {
     setFocused(false)
@@ -84,7 +84,7 @@ export function GenericImportForm({
 
   return (
     <Trace section={SectionName.ImportAccountForm}>
-      <Flex gap="md" onTouchEnd={handleFocus}>
+      <Flex gap="spacing16" onTouchEnd={handleFocus}>
         <Flex
           centered
           backgroundColor="background1"
@@ -95,7 +95,7 @@ export function GenericImportForm({
               ? 'accentCritical'
               : 'background2'
           }
-          borderRadius="xl"
+          borderRadius="rounded20"
           borderWidth={1}
           flexShrink={1}
           gap="none"
@@ -131,7 +131,7 @@ export function GenericImportForm({
               testID="import_account_form/input"
               textAlign={inputAlignment === 'center' || !value ? 'left' : 'center'}
               value={value}
-              width={value ? 'auto' : (layout?.width || 0) + theme.spacing.xs}
+              width={value ? 'auto' : (layout?.width || 0) + theme.spacing.spacing8}
               onBlur={handleBlur}
               onChangeText={onChange}
               onFocus={handleFocus}
@@ -161,9 +161,9 @@ export function GenericImportForm({
               centered
               grow
               row
-              gap="xs"
+              gap="spacing8"
               position="absolute"
-              pt="xxs"
+              pt="spacing4"
               onLayout={(event: LayoutChangeEvent): void => setLayout(event.nativeEvent.layout)}>
               <Text
                 adjustsFontSizeToFit
@@ -194,7 +194,7 @@ export function GenericImportForm({
         </Flex>
         <Flex>
           {errorMessage && value && (liveCheck || !focused) && (
-            <Flex centered row gap="sm">
+            <Flex centered row gap="spacing12">
               <AlertTriangle color={theme.colors.accentCritical} />
               <Text color="accentCritical" variant="bodyLarge">
                 {errorMessage}

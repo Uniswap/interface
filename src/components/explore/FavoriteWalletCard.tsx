@@ -42,7 +42,7 @@ export default function FavoriteWalletCard({
         address={address}
         avatarUri={avatar}
         showViewOnlyBadge={false}
-        size={theme.iconSizes.md}
+        size={theme.iconSizes.icon20}
       />
     )
   }, [address, avatar])
@@ -63,7 +63,7 @@ export default function FavoriteWalletCard({
     <ContextMenu
       actions={menuActions}
       disabled={isEditing}
-      style={{ borderRadius: theme.borderRadii.lg }}
+      style={{ borderRadius: theme.borderRadii.rounded16 }}
       onPress={(e): void => {
         // Emitted index based on order of menu action array
         // remove favorite action
@@ -78,22 +78,26 @@ export default function FavoriteWalletCard({
       {...rest}>
       <TouchableArea
         hapticFeedback
-        borderRadius="lg"
+        borderRadius="rounded16"
         hapticStyle={ImpactFeedbackStyle.Light}
-        m="xxs"
+        m="spacing4"
         onPress={(): void => {
           preload(address)
           navigate(address)
         }}>
         <BaseCard.Shadow>
-          <Flex row gap="xxs" justifyContent="space-between">
-            <Flex row shrink alignItems="center" gap="xs">
+          <Flex row gap="spacing4" justifyContent="space-between">
+            <Flex row shrink alignItems="center" gap="spacing8">
               {icon}
               <Text color="textPrimary" numberOfLines={1} style={flex.shrink} variant="bodyLarge">
                 {displayName?.name}
               </Text>
             </Flex>
-            {isEditing ? <RemoveButton onPress={onRemove} /> : <Box height={theme.imageSizes.md} />}
+            {isEditing ? (
+              <RemoveButton onPress={onRemove} />
+            ) : (
+              <Box height={theme.imageSizes.image24} />
+            )}
           </Flex>
         </BaseCard.Shadow>
       </TouchableArea>

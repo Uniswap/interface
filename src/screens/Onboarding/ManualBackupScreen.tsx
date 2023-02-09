@@ -73,7 +73,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
     case View.Education:
       return (
         <OnboardingScreen
-          paddingTop="xs"
+          paddingTop="spacing8"
           title={t('Instructions for backing up your recovery phrase')}>
           <ManualBackupEducationSection />
           <Flex justifyContent="flex-end">
@@ -110,7 +110,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
             />
           )}
           <Flex grow justifyContent="space-between">
-            <Flex mx="md">
+            <Flex mx="spacing16">
               <MnemonicDisplay mnemonicId={mnemonicId} />
             </Flex>
             <Flex grow justifyContent="flex-end">

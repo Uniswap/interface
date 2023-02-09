@@ -39,16 +39,16 @@ export function ExperimentsModal(): JSX.Element {
       }
       name={ModalName.Experiments}
       onClose={(): Action => dispatch(closeModal({ name: ModalName.Experiments }))}>
-      <Flex gap="lg" justifyContent="flex-start" pb="xl">
+      <Flex gap="spacing24" justifyContent="flex-start" pb="spacing36">
         <Flex>
-          <Text color="textPrimary" px="lg">
+          <Text color="textPrimary" px="spacing24">
             Overidden feature flags and experiment variants will remain until you restart the app.
             Remote config is refreshed every time you cold-start the app, and differences show in
             color.
           </Text>
         </Flex>
 
-        <Flex justifyContent="flex-start" px="lg">
+        <Flex justifyContent="flex-start" px="spacing24">
           <SectionHeader
             emoji="🏴"
             title="Feature Flags"
@@ -69,7 +69,7 @@ export function ExperimentsModal(): JSX.Element {
           })}
         </Flex>
 
-        <Flex justifyContent="flex-start" px="lg">
+        <Flex justifyContent="flex-start" px="spacing24">
           <SectionHeader
             emoji="🧪"
             title="Experiments"
@@ -110,10 +110,10 @@ function SectionHeader({
       alignItems="center"
       borderBottomColor="textPrimary"
       borderBottomWidth={0.5}
-      gap="sm"
+      gap="spacing12"
       justifyContent="space-between"
-      py="xs">
-      <Flex row gap="sm">
+      py="spacing8">
+      <Flex row gap="spacing12">
         <Text variant="subheadLarge">{emoji}</Text>
         <Text variant="subheadLarge">{title}</Text>
       </Flex>
@@ -142,7 +142,7 @@ function ExperimentRow({
   const isExperimentOverridden = localExperiments[name] !== remoteExperiments?.[name]
 
   return (
-    <Flex gap="xs">
+    <Flex gap="spacing8">
       <Flex row alignItems="center" flexWrap="wrap" gap="none" justifyContent="space-between">
         <Text m="none" p="none" variant="bodyLarge">
           {name}

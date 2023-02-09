@@ -16,10 +16,10 @@ export function TokenDetailsFavoriteButton({ currencyId }: { currencyId: string 
     <TouchableArea hapticFeedback onPress={onFavoritePress}>
       <HeartIcon
         fill={isFavoriteToken ? theme.colors.accentAction : theme.colors.none}
-        height={theme.iconSizes.lg}
+        height={theme.iconSizes.icon24}
         stroke={isFavoriteToken ? theme.colors.accentAction : theme.colors.textSecondary}
         strokeWidth={2}
-        width={theme.iconSizes.lg}
+        width={theme.iconSizes.icon24}
       />
     </TouchableArea>
   )

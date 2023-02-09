@@ -41,10 +41,10 @@ export class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> 
 function ErrorScreen({ error }: { error: Error }): JSX.Element {
   const { t } = useTranslation()
   return (
-    <Flex alignItems="center" flex={1} justifyContent="center" px="md" py="xxl">
-      <Flex centered grow gap="xl">
+    <Flex alignItems="center" flex={1} justifyContent="center" px="spacing16" py="spacing48">
+      <Flex centered grow gap="spacing36">
         <DeadLuni />
-        <Flex centered gap="sm">
+        <Flex centered gap="spacing12">
           <Text variant="subheadLarge">{t('Uh oh!')}</Text>
           <Text variant="bodySmall">{t('Something crashed.')}</Text>
         </Flex>

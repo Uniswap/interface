@@ -50,17 +50,22 @@ export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProp
           render: () => (
             <>
               <Separator />
-              <Flex row alignItems="center" justifyContent="space-between" px="lg" py="md">
-                <Box height={iconSizes.lg} width={iconSizes.lg} />
+              <Flex
+                row
+                alignItems="center"
+                justifyContent="space-between"
+                px="spacing24"
+                py="spacing16">
+                <Box height={iconSizes.icon24} width={iconSizes.icon24} />
                 <Text color="textPrimary" variant="bodyLarge">
                   {t('All networks')}
                 </Text>
-                <Box height={iconSizes.lg} width={iconSizes.lg}>
+                <Box height={iconSizes.icon24} width={iconSizes.icon24}>
                   {!selectedChain && (
                     <Check
                       color={theme.colors.accentActive}
-                      height={iconSizes.lg}
-                      width={iconSizes.lg}
+                      height={iconSizes.icon24}
+                      width={iconSizes.icon24}
                     />
                   )}
                 </Box>
@@ -75,14 +80,14 @@ export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProp
   return (
     <>
       <TouchableArea
-        py="xs"
+        py="spacing8"
         onPress={(): void => {
           Keyboard.dismiss()
           setShowModal(true)
         }}>
-        <Flex centered row bg="background2" borderRadius="xl" gap="xxs" p="xs">
-          {selectedChain && <NetworkLogo chainId={selectedChain} size={iconSizes.sm} />}
-          <Text color="textSecondary" pl="xxxs" textAlign="center" variant="buttonLabelSmall">
+        <Flex centered row bg="background2" borderRadius="rounded20" gap="spacing4" p="spacing8">
+          {selectedChain && <NetworkLogo chainId={selectedChain} size={iconSizes.icon16} />}
+          <Text color="textSecondary" pl="spacing2" textAlign="center" variant="buttonLabelSmall">
             {selectedChain ? CHAIN_INFO[selectedChain].label : t('All networks')}
           </Text>
           <Chevron color={theme.colors.textSecondary} direction="s" height={16} width={16} />
@@ -91,7 +96,7 @@ export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProp
 
       <ActionSheetModal
         header={
-          <Flex centered gap="xxs" py="md">
+          <Flex centered gap="spacing4" py="spacing16">
             <Text variant="buttonLabelMedium">{t('Switch Network')}</Text>
           </Flex>
         }

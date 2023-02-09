@@ -15,7 +15,7 @@ export function CopyTextButton({ copyText }: Props): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
-  const ICON_SIZE = theme.iconSizes.md
+  const ICON_SIZE = theme.iconSizes.icon20
   const RESET_COPY_STATE_DELAY = 1500
 
   const [isCopied, setIsCopied] = useState(false)

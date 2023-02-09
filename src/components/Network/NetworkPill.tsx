@@ -27,7 +27,9 @@ export function NetworkPill({
       customBackgroundColor={showBackgroundColor ? colors?.background : undefined}
       customBorderColor={showBorder ? colors.foreground : 'transparent'}
       foregroundColor={colors.foreground}
-      icon={showIcon ? <NetworkLogo chainId={chainId} mr="xs" size={iconSizes.sm} /> : null}
+      icon={
+        showIcon ? <NetworkLogo chainId={chainId} mr="spacing8" size={iconSizes.icon16} /> : null
+      }
       label={info.label}
       {...rest}
     />
@@ -37,9 +39,9 @@ export function NetworkPill({
 export function InlineNetworkPill(props: NetworkPillProps): JSX.Element {
   return (
     <NetworkPill
-      borderRadius="xs"
-      px="xxs"
-      py="xxxs"
+      borderRadius="rounded4"
+      px="spacing4"
+      py="spacing2"
       showIcon={false}
       textVariant="buttonLabelMicro"
       {...props}

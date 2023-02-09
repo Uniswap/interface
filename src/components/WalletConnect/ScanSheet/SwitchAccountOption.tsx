@@ -23,7 +23,7 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props): JSX.Elem
   return (
     <>
       <Separator />
-      <Flex row alignItems="center" justifyContent="space-between" px="lg" py="xs">
+      <Flex row alignItems="center" justifyContent="space-between" px="spacing24" py="spacing8">
         <Unicon address={account.address} size={ICON_SIZE} />
         <Flex shrink alignItems="center" gap="none" p="none">
           <Text

@@ -39,11 +39,11 @@ export default function AlertBanner({
       backgroundColor="background2"
       borderBottomColor="backgroundOutline"
       borderBottomWidth={1}
-      borderTopLeftRadius="lg"
-      borderTopRightRadius="lg"
+      borderTopLeftRadius="rounded16"
+      borderTopRightRadius="rounded16"
       justifyContent="space-between"
-      p="md">
-      <Flex centered row gap="xs">
+      p="spacing16">
+      <Flex centered row gap="spacing8">
         {status === TransactionStatus.FailedCancel ? (
           <AlertTriangle color={theme.colors.textSecondary} height={ICON_SIZE} width={ICON_SIZE} />
         ) : (
@@ -54,7 +54,7 @@ export default function AlertBanner({
         </Text>
       </Flex>
       {status === TransactionStatus.FailedCancel && (
-        <TooltipInfoButton content={failedCancelTooltipContent} size={theme.iconSizes.lg} />
+        <TooltipInfoButton content={failedCancelTooltipContent} size={theme.iconSizes.icon24} />
       )}
     </Flex>
   )

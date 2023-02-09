@@ -13,7 +13,7 @@ export const TokenMetadata = ({
 }: TokenMetadataProps): JSX.Element => {
   return (
     <Flex row>
-      <Flex alignItems={align} gap="xxs" minWidth={70}>
+      <Flex alignItems={align} gap="spacing4" minWidth={70}>
         {children}
       </Flex>
     </Flex>

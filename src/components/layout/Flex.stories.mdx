@@ -8,7 +8,7 @@ import { FlexWithChildren } from 'src/stories/Fixtures'
   component={Flex}
   decorators={[
     (Story) => (
-      <Box bg="background0" borderRadius="md">
+      <Box bg="background0" borderRadius="rounded12">
         <Inset>
           {/* calls function directly to preserve displayName */}
           {Story()}
@@ -25,7 +25,7 @@ export const Template = (args) => <FlexWithChildren {...args} />
 `Flex` offers horizontal or vertical spacing _between_ children.
 
 <Canvas>
-  <Story name="default" args={{ centered: true, flexDirection: 'column', gap: 'sm' }}>
+  <Story name="default" args={{ centered: true, flexDirection: 'column', gap: 'spacing12' }}>
     {Template.bind({})}
   </Story>
 </Canvas>

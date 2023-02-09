@@ -57,15 +57,15 @@ export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProp
         opacity={safetyLevel === SafetyLevel.Blocked ? 0.5 : 1}
         testID={`token-option-${currency.chainId}-${currency.symbol}`}
         onPress={onPressTokenOption}>
-        <Flex row alignItems="center" gap="xs" justifyContent="space-between" py="sm">
-          <Flex row shrink alignItems="center" gap="sm">
+        <Flex row alignItems="center" gap="spacing8" justifyContent="space-between" py="spacing12">
+          <Flex row shrink alignItems="center" gap="spacing12">
             <TokenLogo
               chainId={currency.chainId}
               symbol={currency.symbol}
               url={currencyInfo.logoUrl ?? undefined}
             />
             <Flex shrink alignItems="flex-start" gap="none">
-              <Flex centered row gap="xs">
+              <Flex centered row gap="spacing8">
                 <Flex shrink>
                   <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
                     {currency.name}
@@ -74,14 +74,14 @@ export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProp
                 {(safetyLevel === SafetyLevel.Blocked ||
                   safetyLevel === SafetyLevel.StrongWarning) && (
                   <WarningIcon
-                    height={theme.iconSizes.sm}
+                    height={theme.iconSizes.icon16}
                     safetyLevel={safetyLevel}
                     strokeColorOverride="textSecondary"
-                    width={theme.iconSizes.sm}
+                    width={theme.iconSizes.icon16}
                   />
                 )}
               </Flex>
-              <Flex centered row gap="xs">
+              <Flex centered row gap="spacing8">
                 <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
                   {currency.symbol}
                 </Text>

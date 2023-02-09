@@ -99,7 +99,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 
   if (error) {
     return (
-      <Flex pt="lg">
+      <Flex pt="spacing24">
         <BaseCard.ErrorState
           retryButtonLabel="Retry"
           title={t("Couldn't load search results")}
@@ -111,7 +111,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 
   if (noResults) {
     return (
-      <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs" mx="xs">
+      <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="spacing8" mx="spacing8">
         <Text color="textSecondary" variant="bodyLarge">
           <Trans t={t}>
             No results found for <Text color="textPrimary">"{searchQuery}"</Text>
@@ -125,11 +125,11 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
   const hasEOAResult = validAddress && !isSmartContractAddress
 
   return (
-    <Flex grow gap="xs">
+    <Flex grow gap="spacing8">
       {tokenResults.length > 0 && (
         <FlatList
           ListHeaderComponent={
-            <Text color="textSecondary" mb="xxs" mx="xs" variant="subheadSmall">
+            <Text color="textSecondary" mb="spacing4" mx="spacing8" variant="subheadSmall">
               {t('Tokens')}
             </Text>
           }
@@ -141,7 +141,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
       )}
       {(hasENSResult || hasEOAResult) && (
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="none">
-          <Text color="textSecondary" mx="xs" variant="subheadSmall">
+          <Text color="textSecondary" mx="spacing8" variant="subheadSmall">
             {t('Wallets')}
           </Text>
           {hasENSResult ? (
@@ -155,7 +155,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
       )}
       {validAddress && (
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="none">
-          <Text color="textSecondary" mx="xs" variant="subheadSmall">
+          <Text color="textSecondary" mx="spacing8" variant="subheadSmall">
             {t('View on Etherscan')}
           </Text>
           <SearchEtherscanItem
@@ -170,14 +170,14 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 const SearchResultsLoader = (): JSX.Element => {
   const { t } = useTranslation()
   return (
-    <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="md" mx="xs">
-      <Flex gap="sm">
+    <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="spacing16" mx="spacing8">
+      <Flex gap="spacing12">
         <Text color="textSecondary" variant="subheadSmall">
           {t('Tokens')}
         </Text>
         <Loader.Token repeat={2} />
       </Flex>
-      <Flex gap="sm">
+      <Flex gap="spacing12">
         <Text color="textSecondary" variant="subheadSmall">
           {t('Wallets')}
         </Text>

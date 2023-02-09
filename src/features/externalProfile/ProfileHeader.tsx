@@ -89,7 +89,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
   }, [dispatch, initialSendState])
 
   return (
-    <Flex bg="background0" gap="md" pt="xl" px="lg">
+    <Flex bg="background0" gap="spacing16" pt="spacing36" px="spacing24">
       {/* fixed gradient */}
       <AnimatedBox
         bottom={0}
@@ -108,14 +108,14 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
         {hasAvatar && avatarColors?.primary ? <HeaderRadial color={avatarColors.primary} /> : null}
       </AnimatedBox>
       {/* header row */}
-      <Flex row alignItems="center" justifyContent="space-between" mx="xxs">
+      <Flex row alignItems="center" justifyContent="space-between" mx="spacing4">
         <TouchableArea
           backgroundColor="textOnDimTertiary"
-          borderRadius="full"
+          borderRadius="roundedFull"
           opacity={0.8}
-          padding="xs">
-          <Flex centered grow height={theme.iconSizes.sm} width={theme.iconSizes.sm}>
-            <BackButton color="white" size={theme.iconSizes.lg} />
+          padding="spacing8">
+          <Flex centered grow height={theme.iconSizes.icon16} width={theme.iconSizes.icon16}>
+            <BackButton color="white" size={theme.iconSizes.icon24} />
           </Flex>
         </TouchableArea>
         <ProfileContextMenu address={address} />
@@ -135,22 +135,22 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
           textAlign="flex-start"
           variant="headlineSmall"
         />
-        <Flex centered row gap="xs" mt="sm">
+        <Flex centered row gap="spacing8" mt="spacing12">
           <TouchableArea
             hapticFeedback
             activeOpacity={1}
             backgroundColor="background0"
             borderColor="backgroundOutline"
-            borderRadius="lg"
+            borderRadius="rounded16"
             borderWidth={1}
             name={ElementName.Send}
-            padding="sm"
+            padding="spacing12"
             onPress={onPressSend}>
             <SendIcon
               color={theme.colors.textSecondary}
-              height={theme.iconSizes.lg}
+              height={theme.iconSizes.icon24}
               strokeWidth={2}
-              width={theme.iconSizes.lg}
+              width={theme.iconSizes.icon24}
             />
           </TouchableArea>
           <TouchableArea
@@ -158,10 +158,10 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
             activeOpacity={1}
             backgroundColor="background0"
             borderColor="backgroundOutline"
-            borderRadius="lg"
+            borderRadius="rounded16"
             borderWidth={1}
             name={ElementName.Favorite}
-            padding="sm"
+            padding="spacing12"
             onPress={onPressFavorite}>
             {isFavorited ? <HeartIconFilled /> : <HeartIconEmpty />}
           </TouchableArea>
@@ -175,10 +175,10 @@ const HeartIconEmpty = (): JSX.Element => {
   const theme = useAppTheme()
   return (
     <HeartIcon
-      height={theme.iconSizes.lg}
+      height={theme.iconSizes.icon24}
       stroke={theme.colors.textSecondary}
       strokeWidth={2.5}
-      width={theme.iconSizes.lg}
+      width={theme.iconSizes.icon24}
     />
   )
 }
@@ -188,10 +188,10 @@ const HeartIconFilled = (): JSX.Element => {
   return (
     <HeartIcon
       fill={theme.colors.accentAction}
-      height={theme.iconSizes.lg}
+      height={theme.iconSizes.icon24}
       stroke={theme.colors.accentAction}
       strokeWidth={2}
-      width={theme.iconSizes.lg}
+      width={theme.iconSizes.icon24}
     />
   )
 }

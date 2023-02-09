@@ -48,7 +48,7 @@ const LOADING_DATA = [
 const key = (info: TransactionDetails): string => info.id
 
 const SectionTitle: SectionList['props']['renderSectionHeader'] = ({ section: { title } }) => (
-  <Box pb="xxxs" pt="sm" px="sm">
+  <Box pb="spacing2" pt="spacing12" px="spacing12">
     <Text
       color="textSecondary"
       loading={title === LOADING_ITEM_TITLE}
@@ -103,7 +103,7 @@ export default function TransactionList(props: TransactionListProps): JSX.Elemen
 
   if (!showLoading && !hasData && isError) {
     return (
-      <Box height="100%" pb="xxxl">
+      <Box height="100%" pb="spacing60">
         <BaseCard.ErrorState
           retryButtonLabel={t('Retry')}
           title={t('Couldn’t load activity')}
@@ -205,7 +205,7 @@ function TransactionListInner({
     ({ item }: { item: TransactionDetails }) => {
       if (isLoadingItem(item)) {
         return (
-          <Box p="sm">
+          <Box p="spacing12">
             <Loader.Token repeat={4} />
           </Box>
         )

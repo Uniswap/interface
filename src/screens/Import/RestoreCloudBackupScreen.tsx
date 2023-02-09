@@ -48,7 +48,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
       subtitle={t('There are multiple recovery phrases backed up to your iCloud.')}
       title={t('Select backup to restore')}>
       <ScrollView>
-        <Flex gap="xs">
+        <Flex gap="spacing8">
           {sortedBackups.map((backup, index) => {
             const { mnemonicId, createdAt } = backup
             return (
@@ -56,12 +56,12 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                 key={backup.mnemonicId}
                 backgroundColor="background2"
                 borderColor="background3"
-                borderRadius="lg"
+                borderRadius="rounded16"
                 borderWidth={1}
-                p="md"
+                p="spacing16"
                 onPress={(): Promise<void> => onPressRestoreBackup(backup)}>
                 <Flex row alignItems="center" justifyContent="space-between">
-                  <Flex centered row gap="sm">
+                  <Flex centered row gap="spacing12">
                     <Unicon address={mnemonicId} size={32} />
                     <Flex gap="none">
                       <Text numberOfLines={1} variant="subheadSmall">
@@ -72,8 +72,8 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                       </Text>
                     </Flex>
                   </Flex>
-                  <Flex row gap="sm">
-                    <Flex alignItems="flex-end" gap="xxs">
+                  <Flex row gap="spacing12">
+                    <Flex alignItems="flex-end" gap="spacing4">
                       <Text color="textSecondary" variant="buttonLabelMicro">
                         {t('Backed up on:')}
                       </Text>

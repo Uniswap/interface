@@ -78,13 +78,18 @@ export default function WarningModal({
       isDismissible={isDismissible}
       name={modalName}
       onClose={onClose}>
-      <Flex centered gap="md" mb="lg" p="lg">
-        <Flex centered borderColor={alertColor.text} borderRadius="md" borderWidth={1} p="sm">
+      <Flex centered gap="spacing16" mb="spacing24" p="spacing24">
+        <Flex
+          centered
+          borderColor={alertColor.text}
+          borderRadius="rounded12"
+          borderWidth={1}
+          p="spacing12">
           {icon ?? (
             <AlertTriangleIcon
               color={theme.colors[alertColor.text]}
-              height={theme.iconSizes.lg}
-              width={theme.iconSizes.lg}
+              height={theme.iconSizes.icon24}
+              width={theme.iconSizes.icon24}
             />
           )}
         </Flex>
@@ -97,7 +102,7 @@ export default function WarningModal({
           </Text>
         )}
         {children}
-        <Flex centered row gap="sm" pt={children ? 'sm' : 'lg'}>
+        <Flex centered row gap="spacing12" pt={children ? 'spacing12' : 'spacing24'}>
           {closeText && (
             <Button
               fill

@@ -79,7 +79,12 @@ export function DevScreen(): JSX.Element {
 
   return (
     <SheetScreen>
-      <Box flexDirection="row" justifyContent="flex-end" pb="sm" pt="xl" px="md">
+      <Box
+        flexDirection="row"
+        justifyContent="flex-end"
+        pb="spacing12"
+        pt="spacing36"
+        px="spacing16">
         <BackButton />
       </Box>
       <ScrollView>
@@ -87,21 +92,21 @@ export function DevScreen(): JSX.Element {
           <Text color="textPrimary" textAlign="center" variant="headlineSmall">
             {`Your Account: ${activeAccount?.address || 'none'}`}
           </Text>
-          <Text mt="md" textAlign="center" variant="headlineSmall">
+          <Text mt="spacing16" textAlign="center" variant="headlineSmall">
             🌀🌀Screen Stargate🌀🌀
           </Text>
           <Box alignItems="center" flexDirection="row" flexWrap="wrap" justifyContent="center">
             {Object.values(Screens).map((s) => (
               <TouchableArea
                 key={s}
-                m="xs"
+                m="spacing8"
                 testID={`dev_screen/${s}`}
                 onPress={(): void => activateWormhole(s)}>
                 <Text color="textPrimary">{s}</Text>
               </TouchableArea>
             ))}
           </Box>
-          <Text mt="sm" textAlign="center" variant="bodyLarge">
+          <Text mt="spacing12" textAlign="center" variant="bodyLarge">
             🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀
           </Text>
           <Flex row alignItems="center" justifyContent="space-between">
@@ -111,25 +116,25 @@ export function DevScreen(): JSX.Element {
               onValueChange={(): void => onToggleFlashbots(!flashbotsEnabled)}
             />
           </Flex>
-          <TouchableArea mt="md" onPress={onPressCreate}>
+          <TouchableArea mt="spacing16" onPress={onPressCreate}>
             <Text color="textPrimary">Create account</Text>
           </TouchableArea>
-          <TouchableArea mt="sm" onPress={onPressToggleTestnets}>
+          <TouchableArea mt="spacing12" onPress={onPressToggleTestnets}>
             <Text color="textPrimary">Toggle testnets</Text>
           </TouchableArea>
-          <TouchableArea mt="sm" onPress={onPressResetTokenWarnings}>
+          <TouchableArea mt="spacing12" onPress={onPressResetTokenWarnings}>
             <Text color="textPrimary">Reset token warnings</Text>
           </TouchableArea>
-          <TouchableArea mt="sm" onPress={onPressShowError}>
+          <TouchableArea mt="spacing12" onPress={onPressShowError}>
             <Text color="textPrimary">Show global error</Text>
           </TouchableArea>
-          <TouchableArea mt="sm" onPress={onPressResetOnboarding}>
+          <TouchableArea mt="spacing12" onPress={onPressResetOnboarding}>
             <Text color="textPrimary">Reset onboarding</Text>
           </TouchableArea>
-          <Text color="textPrimary" mt="xl" textAlign="center">
+          <Text color="textPrimary" mt="spacing36" textAlign="center">
             {`Active Chains: ${activeChains}`}
           </Text>
-          <Text color="textPrimary" mt="sm" textAlign="center">
+          <Text color="textPrimary" mt="spacing12" textAlign="center">
             {`Current Chain: ${currentChain}`}
           </Text>
         </Box>

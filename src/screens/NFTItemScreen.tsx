@@ -104,14 +104,14 @@ export function NFTItemScreen({
           <TouchableOpacity onPress={onShare}>
             <ShareIcon
               color={theme.colors.textSecondary}
-              height={iconSizes.lg}
-              width={iconSizes.lg}
+              height={iconSizes.icon24}
+              width={iconSizes.icon24}
             />
           </TouchableOpacity>
         }>
-        <Flex gap="lg" mb="xxl" mt="md" mx="lg" pb="xxl">
-          <Flex gap="lg">
-            <Flex centered borderRadius="lg" overflow="hidden">
+        <Flex gap="spacing24" mb="spacing48" mt="spacing16" mx="spacing24" pb="spacing48">
+          <Flex gap="spacing24">
+            <Flex centered borderRadius="rounded16" overflow="hidden">
               {nftLoading ? (
                 <Box aspectRatio={1} width="100%">
                   <Loader.Image />
@@ -129,7 +129,7 @@ export function NFTItemScreen({
               )}
             </Flex>
 
-            <Flex gap="xxs">
+            <Flex gap="spacing4">
               <Text
                 loading={nftLoading}
                 loadingPlaceholderText="#0000 NFT Title"
@@ -146,26 +146,26 @@ export function NFTItemScreen({
           {/* Collection info */}
           <TouchableArea disabled={!asset?.collection} onPress={onPressCollection}>
             {nftLoading ? (
-              <Loader.Box borderRadius="lg" height={64} />
+              <Loader.Box borderRadius="rounded16" height={64} />
             ) : (
               <Flex
                 row
                 alignItems="center"
                 backgroundColor="background2"
-                borderRadius="lg"
-                gap="xs"
-                px="md"
-                py="sm">
+                borderRadius="rounded16"
+                gap="spacing8"
+                px="spacing16"
+                py="spacing12">
                 {nftLoading ? (
                   <Loader.Box height={40} />
                 ) : (
-                  <Flex row alignItems="center" gap="sm" overflow="hidden">
+                  <Flex row alignItems="center" gap="spacing12" overflow="hidden">
                     {asset?.collection?.image?.url ? (
                       <Box
-                        borderRadius="full"
-                        height={imageSizes.lg}
+                        borderRadius="roundedFull"
+                        height={imageSizes.image32}
                         overflow="hidden"
-                        width={imageSizes.lg}>
+                        width={imageSizes.image32}>
                         <NFTViewer squareGridView maxHeight={60} uri={asset.collection.image.url} />
                       </Box>
                     ) : null}
@@ -173,7 +173,7 @@ export function NFTItemScreen({
                       <Text color="textTertiary" variant="buttonLabelMicro">
                         {t('Collection')}
                       </Text>
-                      <Flex row alignItems="center" gap="xs">
+                      <Flex row alignItems="center" gap="spacing8">
                         <Box flexShrink={1}>
                           <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
                             {asset?.collection?.name || '-'}
@@ -182,8 +182,8 @@ export function NFTItemScreen({
                         {asset?.collection?.isVerified && (
                           <VerifiedIcon
                             color={theme.colors.userThemeMagenta}
-                            height={iconSizes.sm}
-                            width={iconSizes.sm}
+                            height={iconSizes.icon16}
+                            width={iconSizes.icon16}
                           />
                         )}
                       </Flex>
@@ -214,13 +214,17 @@ export function NFTItemScreen({
           {/* TODO(MOB-2841): add back SendButton when we fix Send NFT flow */}
 
           {/* Metadata */}
-          <Flex gap="xxs">
+          <Flex gap="spacing4">
             <Text color="textTertiary" variant="subheadSmall">
               {t('Description')}
             </Text>
             {nftLoading ? (
-              <Box mt="sm">
-                <Loader.Box height={theme.textVariants.bodySmall.lineHeight} mb="xxs" repeat={6} />
+              <Box mt="spacing12">
+                <Loader.Box
+                  height={theme.textVariants.bodySmall.lineHeight}
+                  mb="spacing4"
+                  repeat={6}
+                />
               </Box>
             ) : asset?.description ? (
               <LongText
@@ -275,7 +279,7 @@ function AssetMetadata({
   const itemWidth = '45%' // works with flexWrap to make 2 columns. It needs to be slightly less than 50% to account for padding on the entire section
 
   return (
-    <Flex gap="xxs" mb="lg" width={itemWidth}>
+    <Flex gap="spacing4" mb="spacing24" width={itemWidth}>
       <Text color="textTertiary" variant="subheadSmall">
         {header}
       </Text>

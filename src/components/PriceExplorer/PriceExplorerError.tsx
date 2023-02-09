@@ -13,8 +13,8 @@ export function PriceExplorerError({
 }): JSX.Element {
   const { t } = useTranslation()
   return (
-    <Flex gap="md" mx="lg">
-      <Flex gap="sm">
+    <Flex gap="spacing16" mx="spacing24">
+      <Flex gap="spacing12">
         <Text color="textTertiary" variant="headlineLarge">
           {
             // em dash
@@ -27,7 +27,7 @@ export function PriceExplorerError({
       </Flex>
       <Box
         alignItems="center"
-        borderRadius="lg"
+        borderRadius="rounded16"
         height={CHART_HEIGHT}
         justifyContent="center"
         overflow="hidden">

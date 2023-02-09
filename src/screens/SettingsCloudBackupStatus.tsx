@@ -77,13 +77,13 @@ export function SettingsCloudBackupStatus({
   const { trigger: biometricTrigger } = useBiometricPrompt(deleteBackup)
 
   return (
-    <Screen mx="md" my="md">
-      <BackHeader alignment="center" mb="md">
+    <Screen mx="spacing16" my="spacing16">
+      <BackHeader alignment="center" mb="spacing16">
         <Text variant="bodyLarge">{t('iCloud backup')}</Text>
       </BackHeader>
 
-      <Flex grow alignItems="stretch" justifyContent="space-evenly" mt="md">
-        <Flex grow gap="lg" justifyContent="flex-start">
+      <Flex grow alignItems="stretch" justifyContent="space-evenly" mt="spacing16">
+        <Flex grow gap="spacing24" justifyContent="flex-start">
           <Text color="textSecondary" variant="bodySmall">
             {t(
               'By having your recovery phrase backed up to iCloud, you can recover your wallet just by being logged into your iCloud on any device.'
@@ -91,7 +91,7 @@ export function SettingsCloudBackupStatus({
           </Text>
           <Flex row justifyContent="space-between">
             <Text variant="bodyLarge">{t('Recovery phrase')}</Text>
-            <Flex row alignItems="center" gap="sm" justifyContent="space-around">
+            <Flex row alignItems="center" gap="spacing12" justifyContent="space-around">
               <Text color="textSecondary" variant="buttonLabelMicro">
                 {t('Backed up')}
               </Text>

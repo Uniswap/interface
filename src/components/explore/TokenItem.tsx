@@ -146,9 +146,14 @@ export const TokenItem = memo(({ tokenItemData, index, metadataDisplayType }: To
           tokenDetailsNavigation.preload(_currencyId)
           tokenDetailsNavigation.navigate(_currencyId)
         }}>
-        <AnimatedFlex row alignItems="flex-start" justifyContent="space-between" px="lg" py="xs">
-          <Flex centered row flexShrink={1} gap="xs" overflow="hidden">
-            <Flex centered row gap="xxs" overflow="hidden">
+        <AnimatedFlex
+          row
+          alignItems="flex-start"
+          justifyContent="space-between"
+          px="spacing24"
+          py="spacing8">
+          <Flex centered row flexShrink={1} gap="spacing8" overflow="hidden">
+            <Flex centered row gap="spacing4" overflow="hidden">
               {index !== undefined && (
                 <Box minWidth={16}>
                   <Text color="textSecondary" variant="buttonLabelMicro">
@@ -158,7 +163,7 @@ export const TokenItem = memo(({ tokenItemData, index, metadataDisplayType }: To
               )}
               <TokenLogo symbol={symbol} url={logoUrl} />
             </Flex>
-            <Flex alignItems="flex-start" flexShrink={1} gap="xxxs" marginLeft="xxs">
+            <Flex alignItems="flex-start" flexShrink={1} gap="spacing2" ml="spacing4">
               <Text numberOfLines={1} variant="bodyLarge">
                 {name}
               </Text>

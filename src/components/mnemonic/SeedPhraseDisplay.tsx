@@ -54,8 +54,8 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss }: Props): JSX.Element
   return (
     <>
       {showSeedPhrase ? (
-        <Flex grow alignItems="stretch" justifyContent="space-evenly" mt="md">
-          <Flex grow mx="md" my="sm">
+        <Flex grow alignItems="stretch" justifyContent="space-evenly" mt="spacing16">
+          <Flex grow mx="spacing16" my="spacing12">
             <MnemonicDisplay mnemonicId={mnemonicId} />
           </Flex>
           <Flex justifyContent="center">

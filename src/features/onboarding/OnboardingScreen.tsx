@@ -40,9 +40,9 @@ export function OnboardingScreen({
         behavior="padding"
         enabled={keyboardAvoidingViewEnabled}
         style={[WrapperStyle.base, { marginBottom: insets.bottom }]}>
-        <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} pb="md" px="md">
+        <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} pb="spacing16" px="spacing16">
           {/* Text content */}
-          <Flex centered gap="sm" m="sm">
+          <Flex centered gap="spacing12" m="spacing12">
             <Text
               allowFontScaling={false}
               paddingTop={paddingTop}

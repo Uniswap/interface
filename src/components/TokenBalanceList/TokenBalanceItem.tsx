@@ -35,7 +35,7 @@ export const TokenBalanceItem = memo(
         hapticStyle={ImpactFeedbackStyle.Light}
         justifyContent="space-between"
         minHeight={56}
-        py="xs"
+        py="spacing8"
         onPress={onPress}>
         <AnimatedFlex
           row
@@ -43,7 +43,7 @@ export const TokenBalanceItem = memo(
           entering={FadeIn}
           exiting={FadeOut}
           flexShrink={1}
-          gap="sm"
+          gap="spacing12"
           overflow="hidden">
           <TokenLogo
             chainId={currency.chainId}
@@ -54,7 +54,7 @@ export const TokenBalanceItem = memo(
             <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
               {currency.name ?? currency.symbol}
             </Text>
-            <Flex row alignItems="center" gap="xs" minHeight={20}>
+            <Flex row alignItems="center" gap="spacing8" minHeight={20}>
               <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
                 {`${formatNumber(quantity, NumberType.TokenNonTx)}`} {currency.symbol}
               </Text>
@@ -63,7 +63,7 @@ export const TokenBalanceItem = memo(
         </AnimatedFlex>
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} justifyContent="space-between">
           <WarmLoadingShimmer isWarmLoading={isWarmLoading}>
-            <Flex alignItems="flex-end" gap="xxs" pl="xs">
+            <Flex alignItems="flex-end" gap="spacing4" pl="spacing8">
               <Text
                 color={isWarmLoading ? 'textSecondary' : 'textPrimary'}
                 numberOfLines={1}

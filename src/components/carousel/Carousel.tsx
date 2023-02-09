@@ -51,7 +51,7 @@ export const Carousel = ({ slides, ...flatListProps }: CarouselProps): JSX.Eleme
 
   return (
     <CarouselContext.Provider value={{ goToNext, goToPrev, current: 0 }}>
-      <Flex grow mb="lg">
+      <Flex grow mb="spacing24">
         <AnimatedIndicator scroll={scroll} stepCount={slides.length} />
         <AnimatedFlatList
           horizontal
@@ -61,7 +61,7 @@ export const Carousel = ({ slides, ...flatListProps }: CarouselProps): JSX.Eleme
           {...flatListProps}
           ref={myRef}
           renderItem={({ item }: ListRenderItemInfo<ReactNode>): JSX.Element => (
-            <Flex centered grow p="lg" pt="none" width={fullWidth}>
+            <Flex centered grow p="spacing24" pt="none" width={fullWidth}>
               {item}
             </Flex>
           )}

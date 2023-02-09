@@ -70,7 +70,7 @@ export function ExploreScreen({ navigation }: Props): JSX.Element {
     <Screen
       bg={isSearchMode ? 'background0' : 'backgroundBranded'}
       edges={['top', 'left', 'right']}>
-      <Box p="sm">
+      <Box p="spacing12">
         <SearchTextInput
           ref={textInputRef}
           showCancelButton
@@ -85,9 +85,9 @@ export function ExploreScreen({ navigation }: Props): JSX.Element {
       </Box>
       {isSearchMode ? (
         <KeyboardAvoidingView behavior="height" style={flex.fill}>
-          <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} mx="md">
+          <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} mx="spacing16">
             <VirtualizedList>
-              <Box p="xxs" />
+              <Box p="spacing4" />
               {debouncedSearchQuery.length === 0 ? (
                 <SearchEmptySection />
               ) : (

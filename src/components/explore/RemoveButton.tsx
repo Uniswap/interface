@@ -12,14 +12,14 @@ export default function RemoveButton(props: BaseButtonProps): JSX.Element {
       hapticFeedback
       alignItems="center"
       backgroundColor="textTertiary"
-      borderRadius="full"
+      borderRadius="roundedFull"
       entering={FadeIn}
       exiting={FadeOut}
-      height={theme.imageSizes.md}
+      height={theme.imageSizes.image24}
       justifyContent="center"
-      width={theme.imageSizes.md}
+      width={theme.imageSizes.image24}
       zIndex="tooltip">
-      <Box backgroundColor="background0" borderRadius="md" height={2} width={10} />
+      <Box backgroundColor="background0" borderRadius="rounded12" height={2} width={10} />
     </AnimatedTouchableArea>
   )
 }

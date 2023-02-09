@@ -49,7 +49,7 @@ export const TAB_STYLES = StyleSheet.create({
     // add inactive border to bottom of tab bar
     borderBottomWidth: 1,
     margin: 0,
-    marginHorizontal: FixedTheme.spacing.lg,
+    marginHorizontal: FixedTheme.spacing.spacing24,
     padding: 0,
     // remove default shadow border under tab bar
     shadowColor: FixedTheme.colors.none,
@@ -59,11 +59,11 @@ export const TAB_STYLES = StyleSheet.create({
   },
   // For container components that wrap lists within tabs.
   tabListContainer: {
-    paddingHorizontal: FixedTheme.spacing.lg,
+    paddingHorizontal: FixedTheme.spacing.spacing24,
   },
   // For padding on the list components themselves within tabs.
   tabListInner: {
-    paddingTop: FixedTheme.spacing.xs,
+    paddingTop: FixedTheme.spacing.spacing8,
   },
 })
 

@@ -54,10 +54,10 @@ export function ActivityScreen(): JSX.Element {
 
   return (
     <Screen edges={['top', 'left', 'right']}>
-      <BackHeader p="md">
+      <BackHeader p="spacing16">
         <Text variant="buttonLabelMedium">{t('Activity')}</Text>
       </BackHeader>
-      <Flex fill px="md">
+      <Flex fill px="spacing16">
         <TransactionList
           emptyStateContent={
             <Flex centered grow height="100%">

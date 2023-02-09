@@ -11,10 +11,10 @@ const CenterElement = <Text variant="headlineLarge">Screen Title</Text>
 const RightElement = (
   <HeartIcon
     fill={theme.colors.none}
-    height={theme.iconSizes.lg}
+    height={theme.iconSizes.icon24}
     stroke={theme.colors.textSecondary}
     strokeWidth={2}
-    width={theme.iconSizes.lg}
+    width={theme.iconSizes.icon24}
   />
 )
 
@@ -33,7 +33,7 @@ export default {
 const Template: ComponentStory<typeof HeaderScrollScreen> = (args) => {
   return (
     <HeaderScrollScreen {...args}>
-      <Flex row bg="background2" m="md" p="md">
+      <Flex row bg="background2" m="spacing16" p="spacing16">
         <Text variant="bodyLarge">Body content</Text>
       </Flex>
     </HeaderScrollScreen>

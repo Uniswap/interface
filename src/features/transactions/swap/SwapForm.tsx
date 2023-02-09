@@ -148,9 +148,9 @@ function _SwapForm({
   const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
     useShouldShowNativeKeyboard()
 
-  const SWAP_DIRECTION_BUTTON_SIZE = theme.iconSizes.md
-  const SWAP_DIRECTION_BUTTON_INNER_PADDING = theme.spacing.xs + theme.spacing.xxxs
-  const SWAP_DIRECTION_BUTTON_BORDER_WIDTH = theme.spacing.xxs
+  const SWAP_DIRECTION_BUTTON_SIZE = theme.iconSizes.icon20
+  const SWAP_DIRECTION_BUTTON_INNER_PADDING = theme.spacing.spacing8 + theme.spacing.spacing2
+  const SWAP_DIRECTION_BUTTON_BORDER_WIDTH = theme.spacing.spacing4
 
   useSwapAnalytics(derivedSwapInfo)
   const SwapWarningIcon = swapWarning?.icon ?? AlertTriangleIcon
@@ -164,8 +164,8 @@ function _SwapForm({
           icon={
             <SwapWarningIcon
               color={theme.colors[swapWarningColor.text]}
-              height={theme.iconSizes.lg}
-              width={theme.iconSizes.lg}
+              height={theme.iconSizes.icon24}
+              width={theme.iconSizes.icon24}
             />
           }
           modalName={ModalName.SwapWarning}
@@ -175,10 +175,14 @@ function _SwapForm({
           onConfirm={(): void => setShowWarningModal(false)}
         />
       )}
-      <Flex grow gap="xs" justifyContent="space-between">
-        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xxxs" onLayout={onInputPanelLayout}>
+      <Flex grow gap="spacing8" justifyContent="space-between">
+        <AnimatedFlex
+          entering={FadeIn}
+          exiting={FadeOut}
+          gap="spacing2"
+          onLayout={onInputPanelLayout}>
           <Trace section={SectionName.CurrencyInputPanel}>
-            <Flex backgroundColor="background2" borderRadius="xl">
+            <Flex backgroundColor="background2" borderRadius="rounded20">
               <CurrencyInputPanel
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
@@ -235,10 +239,12 @@ function _SwapForm({
             <Box>
               <Flex
                 backgroundColor="background2"
-                borderBottomLeftRadius={swapWarning || showRate || isBlocked ? 'none' : 'xl'}
-                borderBottomRightRadius={swapWarning || showRate || isBlocked ? 'none' : 'xl'}
-                borderTopLeftRadius="xl"
-                borderTopRightRadius="xl"
+                borderBottomLeftRadius={swapWarning || showRate || isBlocked ? 'none' : 'rounded20'}
+                borderBottomRightRadius={
+                  swapWarning || showRate || isBlocked ? 'none' : 'rounded20'
+                }
+                borderTopLeftRadius="rounded20"
+                borderTopRightRadius="rounded20"
                 gap="none"
                 overflow="hidden"
                 position="relative">
@@ -269,23 +275,23 @@ function _SwapForm({
                 />
               </Flex>
               {swapWarning && !isBlocked ? (
-                <TouchableArea mt="xxxxs" onPress={onSwapWarningClick}>
+                <TouchableArea mt="spacing1" onPress={onSwapWarningClick}>
                   <Flex
                     row
                     alignItems="center"
                     alignSelf="stretch"
                     backgroundColor={swapWarningColor.background}
-                    borderBottomLeftRadius="lg"
-                    borderBottomRightRadius="lg"
+                    borderBottomLeftRadius="rounded16"
+                    borderBottomRightRadius="rounded16"
                     flexGrow={1}
-                    gap="xs"
-                    px="md"
-                    py="sm">
+                    gap="spacing8"
+                    px="spacing16"
+                    py="spacing12">
                     <SwapWarningIcon
                       color={theme.colors[swapWarningColor.text]}
-                      height={theme.iconSizes.sm}
+                      height={theme.iconSizes.icon16}
                       strokeWidth={1.5}
-                      width={theme.iconSizes.sm}
+                      width={theme.iconSizes.icon16}
                     />
                     <Flex row gap="none">
                       <Text color={swapWarningColor.text} variant="subheadSmall">
@@ -309,12 +315,12 @@ function _SwapForm({
                   alignItems="center"
                   alignSelf="stretch"
                   backgroundColor="background2"
-                  borderBottomLeftRadius="lg"
-                  borderBottomRightRadius="lg"
+                  borderBottomLeftRadius="rounded16"
+                  borderBottomRightRadius="rounded16"
                   flexGrow={1}
-                  mt="xxxs"
-                  px="md"
-                  py="sm"
+                  mt="spacing2"
+                  px="spacing16"
+                  py="spacing12"
                 />
               )}
               {showRate && !isBlocked ? (
@@ -324,21 +330,21 @@ function _SwapForm({
                     alignItems="center"
                     alignSelf="stretch"
                     backgroundColor="background2"
-                    borderBottomLeftRadius="lg"
-                    borderBottomRightRadius="lg"
+                    borderBottomLeftRadius="rounded16"
+                    borderBottomRightRadius="rounded16"
                     borderTopColor="background0"
                     borderTopWidth={1}
                     flexGrow={1}
-                    gap="xs"
-                    px="md"
-                    py="sm">
+                    gap="spacing8"
+                    px="spacing16"
+                    py="spacing12">
                     {swapDataRefreshing ? (
-                      <SpinningLoader size={theme.iconSizes.sm} />
+                      <SpinningLoader size={theme.iconSizes.icon16} />
                     ) : (
                       <InfoCircle
                         color={theme.colors.textSecondary}
-                        height={theme.iconSizes.sm}
-                        width={theme.iconSizes.sm}
+                        height={theme.iconSizes.icon16}
+                        width={theme.iconSizes.icon16}
                       />
                     )}
                     <Flex row gap="none">
@@ -365,7 +371,7 @@ function _SwapForm({
         <AnimatedFlex
           bottom={0}
           exiting={FadeOutDown}
-          gap="xs"
+          gap="spacing8"
           left={0}
           opacity={isLayoutPending ? 0 : 1}
           position="absolute"

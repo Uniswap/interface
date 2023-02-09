@@ -11,7 +11,7 @@ interface CurrencyLogoProps {
 
 export function CurrencyLogo({
   currencyInfo,
-  size = iconSizes.xxxl,
+  size = iconSizes.icon40,
   hideNetworkLogo,
 }: CurrencyLogoProps): JSX.Element | null {
   if (!currencyInfo) return null

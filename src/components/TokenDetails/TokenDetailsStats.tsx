@@ -39,28 +39,28 @@ export function TokenDetailsMarketData({
 
   return (
     <Flex row justifyContent="space-between">
-      <Flex flex={1} gap="lg">
-        <Flex gap="xxs">
+      <Flex flex={1} gap="spacing24">
+        <Flex gap="spacing4">
           <Text color="textTertiary" variant="subheadSmall">
             {t('Market cap')}
           </Text>
           <FormattedValue numberType={NumberType.FiatTokenStats} value={marketCap} />
         </Flex>
-        <Flex gap="xxs">
+        <Flex gap="spacing4">
           <Text color="textTertiary" variant="subheadSmall">
             {t('52W low')}
           </Text>
           <FormattedValue numberType={NumberType.FiatTokenDetails} value={priceLow52W} />
         </Flex>
       </Flex>
-      <Flex flex={1} gap="lg">
-        <Flex gap="xxs">
+      <Flex flex={1} gap="spacing24">
+        <Flex gap="spacing4">
           <Text color="textTertiary" variant="subheadSmall">
             {t('24h Uniswap volume')}
           </Text>
           <FormattedValue numberType={NumberType.FiatTokenStats} value={volume} />
         </Flex>
-        <Flex gap="xxs">
+        <Flex gap="spacing4">
           <Text color="textTertiary" variant="subheadSmall">
             {t('52W high')}
           </Text>
@@ -94,7 +94,7 @@ export function TokenDetailsStats({
   const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)
 
   return (
-    <Flex gap="lg">
+    <Flex gap="spacing24">
       <Text variant="subheadLarge">{t('Stats')}</Text>
       <TokenDetailsMarketData
         marketCap={marketData?.marketCap?.value}
@@ -102,16 +102,16 @@ export function TokenDetailsStats({
         priceLow52W={marketData?.priceLow52W?.value}
         volume={tokenData?.market?.volume?.value}
       />
-      <Flex gap="xxs">
+      <Flex gap="spacing4">
         {tokenData?.name ? (
           <Text color="textTertiary" variant="subheadSmall">
             {t('About {{ token }}', { token: tokenData.name })}
           </Text>
         ) : null}
-        <Flex gap="md">
+        <Flex gap="spacing16">
           {tokenProjectData?.description && (
             <LongText
-              gap="xxxs"
+              gap="spacing2"
               initialDisplayedLines={5}
               linkColor={tokenColor ?? theme.colors.textPrimary}
               readMoreOrLessColor={tokenColor ?? theme.colors.accentAction}

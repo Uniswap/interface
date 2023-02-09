@@ -53,55 +53,55 @@ function getButtonTextSizeVariant(size: ButtonSize): keyof Theme['textVariants']
 function getButtonPaddingY(size: ButtonSize): keyof Theme['spacing'] {
   switch (size) {
     case ButtonSize.Large:
-      return 'md'
+      return 'spacing16'
     case ButtonSize.Medium:
-      return 'sm'
+      return 'spacing12'
     case ButtonSize.Small:
-      return 'xs'
+      return 'spacing8'
   }
 }
 
 function getButtonPaddingX(size: ButtonSize): keyof Theme['spacing'] {
   switch (size) {
     case ButtonSize.Large:
-      return 'md'
+      return 'spacing16'
     case ButtonSize.Medium:
-      return 'sm'
+      return 'spacing12'
     case ButtonSize.Small:
-      return 'xs'
+      return 'spacing8'
   }
 }
 
 function getButtonIconPadding(size: ButtonSize): keyof Theme['spacing'] {
   switch (size) {
     case ButtonSize.Large:
-      return 'sm'
+      return 'spacing12'
     case ButtonSize.Medium:
-      return 'xs'
+      return 'spacing8'
     case ButtonSize.Small:
-      return 'xxs'
+      return 'spacing4'
   }
 }
 
 function getButtonBorderRadius(size: ButtonSize): keyof Theme['borderRadii'] {
   switch (size) {
     case ButtonSize.Large:
-      return 'lg'
+      return 'rounded16'
     case ButtonSize.Medium:
-      return 'md'
+      return 'rounded12'
     case ButtonSize.Small:
-      return 'sm'
+      return 'rounded8'
   }
 }
 
 function getButtonIconSize(size: ButtonSize): keyof Theme['iconSizes'] {
   switch (size) {
     case ButtonSize.Large:
-      return 'lg'
+      return 'icon24'
     case ButtonSize.Medium:
-      return 'md'
+      return 'icon20'
     case ButtonSize.Small:
-      return 'sm'
+      return 'icon16'
   }
 }
 

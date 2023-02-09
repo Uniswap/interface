@@ -28,8 +28,13 @@ export function useNetworkOptions(
           render: () => (
             <>
               <Separator />
-              <Flex row alignItems="center" justifyContent="space-between" px="lg" py="md">
-                <NetworkLogo chainId={chainId} size={iconSizes.lg} />
+              <Flex
+                row
+                alignItems="center"
+                justifyContent="space-between"
+                px="spacing24"
+                py="spacing16">
+                <NetworkLogo chainId={chainId} size={iconSizes.icon24} />
                 <Text color="textPrimary" variant="bodyLarge">
                   {info.label}
                 </Text>
@@ -37,8 +42,8 @@ export function useNetworkOptions(
                   {selectedChain === chainId && (
                     <Check
                       color={theme.colors.accentActive}
-                      height={iconSizes.lg}
-                      width={iconSizes.lg}
+                      height={iconSizes.icon24}
+                      width={iconSizes.icon24}
                     />
                   )}
                 </Box>

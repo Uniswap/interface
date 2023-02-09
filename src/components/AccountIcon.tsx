@@ -17,7 +17,7 @@ interface Props {
   showBackground?: boolean // Display images with solid background.
 }
 
-const INSET_PADDING = FixedTheme.spacing.md
+const INSET_PADDING = FixedTheme.spacing.spacing16
 
 export function AccountIcon({
   size,
@@ -37,7 +37,7 @@ export function AccountIcon({
   // Color for gradient background.
   const { gradientStart: uniconColor } = useUniconColors(address)
 
-  const iconPadding = FixedTheme.spacing.xxs
+  const iconPadding = FixedTheme.spacing.spacing4
   const iconEyeContainerSize = size * 0.45
   const iconEyeSize = iconEyeContainerSize - iconPadding
 
@@ -54,7 +54,7 @@ export function AccountIcon({
     <Box
       backgroundColor={showBackground ? 'background0' : 'none'}
       borderColor={showBackground ? 'background0' : 'none'}
-      borderRadius="full"
+      borderRadius="roundedFull"
       borderWidth={showBackground ? 2 : 0}
       position="relative"
       style={{
@@ -76,11 +76,11 @@ export function AccountIcon({
           alignContent="center"
           alignItems="center"
           backgroundColor={isDarkMode ? 'background3' : 'background1'}
-          borderRadius="full"
+          borderRadius="roundedFull"
           bottom={0}
           height={iconEyeContainerSize}
           justifyContent="center"
-          p="xxs"
+          p="spacing4"
           position="absolute"
           right={0}
           shadowColor="black"

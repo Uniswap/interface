@@ -6,7 +6,7 @@ export type BoxLoaderProps = { repeat?: number } & BoxProps & ViewProps
 export function BoxLoader({
   repeat = 1,
   backgroundColor = 'background3',
-  borderRadius = 'md',
+  borderRadius = 'rounded12',
   width = '100%',
   height,
   ...props

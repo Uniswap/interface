@@ -41,9 +41,9 @@ export function LandingScreen({ navigation, route: { params } }: Props): JSX.Ele
     navigation.navigate(OnboardingScreens.ImportMethod)
   }
 
-  const outerGap = useResponsiveProp({ xs: 'sm', sm: 'lg' })
+  const outerGap = useResponsiveProp({ xs: 'spacing12', sm: 'spacing24' })
   const buttonSize = useResponsiveProp({ xs: ButtonSize.Medium, sm: ButtonSize.Large })
-  const pb = useResponsiveProp({ xs: 'sm', sm: 'none' })
+  const pb = useResponsiveProp({ xs: 'spacing12', sm: 'none' })
 
   // Hides lock screen on next js render cycle, ensuring this component is loaded when the screen is hidden
   useTimeout(SplashScreen.hideAsync, 1)
@@ -55,7 +55,7 @@ export function LandingScreen({ navigation, route: { params } }: Props): JSX.Ele
       </Flex>
       <Flex grow height="auto">
         <Flex gap={outerGap} justifyContent="flex-end">
-          <Flex mx="md">
+          <Flex mx="spacing16">
             <Button
               label={t('Get started')}
               name={ElementName.GetStarted}
@@ -63,8 +63,8 @@ export function LandingScreen({ navigation, route: { params } }: Props): JSX.Ele
               onPress={onPressGetStarted}
             />
           </Flex>
-          <Box mx="lg" pb={pb}>
-            <Text color="textTertiary" mx="xxs" textAlign="center" variant="buttonLabelMicro">
+          <Box mx="spacing24" pb={pb}>
+            <Text color="textTertiary" mx="spacing4" textAlign="center" variant="buttonLabelMicro">
               <Trans t={t}>
                 By continuing, I agree to the{' '}
                 <Text

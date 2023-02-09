@@ -70,7 +70,7 @@ export function AddressDisplay({
   contentAlign = 'center', // vertical aligment of all items
   showIconBackground,
   disableViewOnlyIcon,
-  horizontalGap = 'sm',
+  horizontalGap = 'spacing12',
 }: AddressDisplayProps): JSX.Element {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
@@ -112,7 +112,7 @@ export function AddressDisplay({
       <Box alignItems={itemAlignment} flexShrink={1}>
         <CopyButtonWrapper
           onPress={showCopy && !showAddressAsSubtitle ? onPressCopyAddress : undefined}>
-          <Flex centered row gap="sm">
+          <Flex centered row gap="spacing12">
             <Text
               color="textPrimary"
               ellipsizeMode="tail"
@@ -134,7 +134,7 @@ export function AddressDisplay({
         ) : (
           showAddressAsSubtitle && (
             <CopyButtonWrapper onPress={showCopy ? onPressCopyAddress : undefined}>
-              <Flex centered row gap="xxs">
+              <Flex centered row gap="spacing4">
                 <Text color="textSecondary" variant={captionVariant}>
                   {sanitizeAddressText(shortenAddress(address))}
                 </Text>

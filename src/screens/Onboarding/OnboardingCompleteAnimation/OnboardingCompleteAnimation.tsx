@@ -152,7 +152,7 @@ export function OnboardingCompleteAnimation({
 
   const UNICON_SIZE = 48
 
-  const mt = useResponsiveProp({ xs: 'xl', sm: 'none' })
+  const mt = useResponsiveProp({ xs: 'spacing36', sm: 'spacing12' })
   const finalTitleMaxFontSizeMultiplier = useResponsiveProp({
     xs: 1.1,
     sm: theme.textVariants.headlineSmall.maxFontSizeMultiplier,
@@ -168,16 +168,16 @@ export function OnboardingCompleteAnimation({
       <Animated.View entering={realQrTopGlowFadeIn} style={[styles.qrGlow]}>
         <GradientBackground>
           <UniconThemedGradient
-            borderRadius="lg"
+            borderRadius="rounded16"
             gradientEndColor={uniconColors.glow}
             gradientStartColor={theme.colors.background0}
             opacity={isDarkMode ? 0.3 : 0.2}
           />
         </GradientBackground>
       </Animated.View>
-      <Flex grow justifyContent="space-between" px="md" py="lg">
-        <Flex centered grow gap="xl" mb="sm" mt={mt}>
-          <Flex centered gap="sm" pt="xxl">
+      <Flex grow justifyContent="space-between" px="spacing16" py="spacing24">
+        <Flex centered grow gap="spacing36" mb="spacing12" mt={mt}>
+          <Flex centered gap="spacing12" pt="spacing48">
             <Animated.View entering={qrSlideUpAndFadeIn}>
               <Animated.View entering={qrSlideUpAtEnd}>
                 <Animated.View entering={flashWipeAnimation} style={styles.behindQrBlur}>
@@ -200,7 +200,7 @@ export function OnboardingCompleteAnimation({
                   <Box
                     bg="background0"
                     borderColor="backgroundOutline"
-                    borderRadius="xl"
+                    borderRadius="rounded20"
                     borderWidth={2}
                     height={QR_CONTAINER_SIZE}
                     overflow="hidden"
@@ -250,7 +250,7 @@ export function OnboardingCompleteAnimation({
                   </Animated.View>
                   <Animated.View entering={flashWipeAnimation} style={styles.glow}>
                     <Flex
-                      borderRadius="xl"
+                      borderRadius="rounded20"
                       height="100%"
                       style={{ backgroundColor: uniconColors.glow }}
                       width="100%"
@@ -263,7 +263,7 @@ export function OnboardingCompleteAnimation({
           <Animated.View entering={textSlideUpAtEnd} style={[styles.textContainer]}>
             <Text
               maxFontSizeMultiplier={finalTitleMaxFontSizeMultiplier}
-              pb="sm"
+              pb="spacing12"
               variant="headlineSmall">
               {t("You're ready to go!")}
             </Text>

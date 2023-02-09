@@ -244,7 +244,7 @@ export function SettingsWallet({
 
   return (
     <Screen>
-      <BackHeader alignment="center" mx="md" pt="md">
+      <BackHeader alignment="center" mx="spacing16" pt="spacing16">
         <Flex shrink>
           <AddressDisplay
             hideAddressInSubtitle
@@ -255,15 +255,15 @@ export function SettingsWallet({
         </Flex>
       </BackHeader>
 
-      <Flex fill p="lg">
+      <Flex fill p="spacing24">
         <Box flex={1}>
           <SectionList
             ItemSeparatorComponent={renderItemSeparator}
             keyExtractor={(_item, index): string => 'wallet_settings' + index}
             renderItem={renderItem}
-            renderSectionFooter={(): JSX.Element => <Flex pt="lg" />}
+            renderSectionFooter={(): JSX.Element => <Flex pt="spacing24" />}
             renderSectionHeader={({ section: { subTitle } }): JSX.Element => (
-              <Box bg="background0" pb="sm">
+              <Box bg="background0" pb="spacing12">
                 <Text color="textSecondary" variant="bodyLarge">
                   {subTitle}
                 </Text>
@@ -301,4 +301,4 @@ export function SettingsWallet({
   )
 }
 
-const renderItemSeparator = (): JSX.Element => <Flex pt="xs" />
+const renderItemSeparator = (): JSX.Element => <Flex pt="spacing8" />

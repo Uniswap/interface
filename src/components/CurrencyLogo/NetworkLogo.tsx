@@ -18,7 +18,7 @@ type NetworkLogoProps = {
 export function NetworkLogo({
   chainId,
   borderWidth = 0,
-  size = iconSizes.md,
+  size = iconSizes.icon20,
   ...rest
 }: NetworkLogoProps): JSX.Element {
   const { logo } = CHAIN_INFO[chainId]
@@ -26,7 +26,7 @@ export function NetworkLogo({
 
   return (
     <Box
-      borderRadius="full"
+      borderRadius="roundedFull"
       borderWidth={borderWidth}
       style={{ borderColor: foreground }}
       {...rest}>

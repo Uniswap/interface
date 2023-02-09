@@ -27,7 +27,7 @@ export function AccountDetails({
           variant="subheadSmall"
         />
       </Flex>
-      <Flex row shrink flex={1} gap="xxs" justifyContent="flex-end">
+      <Flex row shrink flex={1} gap="spacing4" justifyContent="flex-end">
         <Text color="textSecondary" variant="bodySmall">
           {shortenAddress(address)}
         </Text>

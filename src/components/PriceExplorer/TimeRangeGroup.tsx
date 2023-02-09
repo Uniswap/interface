@@ -75,7 +75,7 @@ export function TimeRangeGroup({
       <View style={StyleSheet.absoluteFill}>
         <AnimatedBox
           bg="background3"
-          borderRadius="xl"
+          borderRadius="rounded20"
           style={[StyleSheet.absoluteFillObject, sliderStyle]}
           width={LABEL_WIDTH}
         />
@@ -84,7 +84,7 @@ export function TimeRangeGroup({
         return (
           <TouchableArea
             key={label}
-            p="xxs"
+            p="spacing4"
             width={BUTTON_WIDTH}
             onPress={(): void => {
               setDuration(duration)

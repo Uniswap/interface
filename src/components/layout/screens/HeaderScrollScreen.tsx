@@ -26,7 +26,7 @@ type HeaderScrollScreenProps = {
 
 export function HeaderScrollScreen({
   centerElement,
-  rightElement = <Box width={theme.iconSizes.lg} />,
+  rightElement = <Box width={theme.iconSizes.icon24} />,
   alwaysShowCenterElement,
   children,
 }: PropsWithChildren<HeaderScrollScreenProps>): JSX.Element {
@@ -64,7 +64,12 @@ export function HeaderScrollScreen({
     () => (
       <Box bg="background0">
         <WithScrollToTop ref={listRef}>
-          <Flex row alignItems="center" justifyContent="space-between" mx="md" my="sm">
+          <Flex
+            row
+            alignItems="center"
+            justifyContent="space-between"
+            mx="spacing16"
+            my="spacing12">
             <BackButton />
             <Flex shrink>
               {alwaysShowCenterElement ? (

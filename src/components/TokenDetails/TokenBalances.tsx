@@ -48,7 +48,7 @@ export function TokenBalances({
   if (!hasCurrentChainBalances && !hasOtherChainBalances) return null
 
   return (
-    <Flex borderRadius="sm" gap="lg" px="md">
+    <Flex borderRadius="rounded8" gap="spacing24" px="spacing16">
       {currentChainBalance && (
         <CurrentChainBalance
           balance={currentChainBalance}
@@ -61,7 +61,7 @@ export function TokenBalances({
           <Text color="textTertiary" variant="subheadSmall">
             {t('Balances on other networks')}
           </Text>
-          <Flex gap="sm">
+          <Flex gap="spacing12">
             {otherChainBalances.map((balance) => {
               return (
                 <OtherChainBalance
@@ -91,11 +91,11 @@ export function CurrentChainBalance({
   const { t } = useTranslation()
 
   return (
-    <Flex gap="xs">
+    <Flex gap="spacing8">
       <Text color="textTertiary" variant="subheadSmall">
         {isReadonly ? t("{{owner}}'s balance", { owner: displayName }) : t('Your balance')}
       </Text>
-      <Flex row alignItems="center" gap="xs">
+      <Flex row alignItems="center" gap="spacing8">
         <Text variant="subheadLarge">
           {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
         </Text>
@@ -121,15 +121,15 @@ function OtherChainBalance({
       eventName={EventName.TokenDetailsOtherChainButtonPressed}
       onPress={(): void => navigate(balance.currencyInfo.currencyId)}>
       <Flex row alignItems="center" justifyContent="space-between">
-        <Flex row alignItems="center" gap="xxs">
+        <Flex row alignItems="center" gap="spacing4">
           <TokenLogo
             chainId={balance.currencyInfo.currency.chainId}
-            size={iconSizes.xxl}
+            size={iconSizes.icon36}
             symbol={balance.currencyInfo.currency.symbol}
             url={balance.currencyInfo.logoUrl ?? undefined}
           />
           <Box>
-            <Text px="xxs" variant="bodyLarge">
+            <Text px="spacing4" variant="bodyLarge">
               {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
             </Text>
             <InlineNetworkPill

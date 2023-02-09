@@ -13,7 +13,7 @@ export default function ProfileActivityTab({
 }): JSX.Element {
   const { t } = useTranslation()
   return (
-    <Flex grow style={{ paddingHorizontal: theme.spacing.sm }}>
+    <Flex grow style={{ paddingHorizontal: theme.spacing.spacing12 }}>
       <TransactionList
         emptyStateContent={
           <Flex centered grow height="100%">

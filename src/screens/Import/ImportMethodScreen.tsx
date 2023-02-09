@@ -167,7 +167,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
 
   return (
     <OnboardingScreen title={t('How do you want to get started?')}>
-      <Flex grow gap="sm">
+      <Flex grow gap="spacing12">
         {importOptions.map(({ title, blurb, icon, nav, importType, name }) => (
           <OptionCard
             key={'connection-option-' + title}
@@ -179,7 +179,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
           />
         ))}
       </Flex>
-      <Flex alignItems="center" mb="sm">
+      <Flex alignItems="center" mb="spacing12">
         <Text
           color="accentAction"
           variant="buttonLabelMedium"
@@ -214,29 +214,29 @@ function OptionCard({
     <TouchableArea
       backgroundColor="background2"
       borderColor="backgroundOutline"
-      borderRadius="lg"
+      borderRadius="rounded16"
       borderWidth={1}
       disabled={disabled}
       name={name}
       opacity={opacity}
-      px="md"
-      py="lg"
+      px="spacing16"
+      py="spacing24"
       testID={name}
       onPress={onPress}>
-      <Flex row alignContent="center" alignItems="center" gap="md">
+      <Flex row alignContent="center" alignItems="center" gap="spacing16">
         <Box
           alignItems="center"
           borderColor="accentBranded"
-          borderRadius="md"
+          borderRadius="rounded12"
           borderWidth={1.25}
           height={40}
           justifyContent="center"
-          padding="md"
+          padding="spacing16"
           width={40}>
           {icon}
         </Box>
-        <Flex row alignItems="center" gap="xxs">
-          <Flex fill alignItems="flex-start" gap="xxs" justifyContent="space-around">
+        <Flex row alignItems="center" gap="spacing4">
+          <Flex fill alignItems="flex-start" gap="spacing4" justifyContent="space-around">
             <Text allowFontScaling={false} variant="subheadLarge">
               {title}
             </Text>

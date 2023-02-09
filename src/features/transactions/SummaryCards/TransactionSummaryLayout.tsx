@@ -25,7 +25,7 @@ import {
 import { iconSizes } from 'src/styles/sizing'
 import { openMoonpayTransactionLink, openTransactionLink } from 'src/utils/linking'
 
-export const TXN_HISTORY_ICON_SIZE = iconSizes.xxl
+export const TXN_HISTORY_ICON_SIZE = iconSizes.icon36
 const LOADING_SPINNER_SIZE = 20
 
 function TransactionSummaryLayout({
@@ -107,21 +107,27 @@ function TransactionSummaryLayout({
           row
           alignItems="flex-start"
           bg={showBackground ? 'background2' : bg ?? 'background0'}
-          borderRadius="lg"
-          borderTopLeftRadius={showAlertBanner ? 'none' : 'lg'}
-          borderTopRightRadius={showAlertBanner ? 'none' : 'lg'}
-          gap="md"
+          borderRadius="rounded16"
+          borderTopLeftRadius={showAlertBanner ? 'none' : 'rounded16'}
+          borderTopRightRadius={showAlertBanner ? 'none' : 'rounded16'}
+          gap="spacing16"
           justifyContent="space-between"
-          mb={showBackground ? 'sm' : 'none'}
-          p="sm">
-          <Flex row shrink alignItems="center" gap="sm" height="100%" justifyContent="flex-start">
+          mb={showBackground ? 'spacing12' : 'none'}
+          p="spacing12">
+          <Flex
+            row
+            shrink
+            alignItems="center"
+            gap="spacing12"
+            height="100%"
+            justifyContent="flex-start">
             {icon && (
               <Flex centered height={TXN_HISTORY_ICON_SIZE} width={TXN_HISTORY_ICON_SIZE}>
                 {icon}
               </Flex>
             )}
             <Flex shrink gap="none">
-              <Flex row alignItems="center" gap="xxs">
+              <Flex row alignItems="center" gap="spacing4">
                 <Text numberOfLines={1} variant="bodyLarge">
                   {title}
                 </Text>
@@ -135,7 +141,7 @@ function TransactionSummaryLayout({
             </Flex>
           </Flex>
           {inProgress ? (
-            <Flex alignItems="flex-end" gap="xxxs">
+            <Flex alignItems="flex-end" gap="spacing2">
               <SpinningLoader disabled={queued} size={LOADING_SPINNER_SIZE} />
               {queued ? (
                 <Text color="textSecondary" variant="subheadSmall">

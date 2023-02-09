@@ -14,7 +14,7 @@ export default {
   // Decorators allow you to mock up context around the story component (e.g. a margin)
   decorators: [
     (Story): JSX.Element => (
-      <Box m="lg">
+      <Box m="spacing24">
         <Story />
       </Box>
     ),

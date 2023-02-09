@@ -20,7 +20,7 @@ function _NotificationBadge({
         <>
           <Box
             backgroundColor="userThemeMagenta"
-            borderRadius="full"
+            borderRadius="roundedFull"
             height={NOTIFICATION_DOT_SIZE - 2}
             position="absolute"
             right={1}
@@ -31,7 +31,7 @@ function _NotificationBadge({
           <Box
             backgroundColor="none"
             borderColor={borderColor}
-            borderRadius="full"
+            borderRadius="roundedFull"
             borderWidth={2}
             height={NOTIFICATION_DOT_SIZE}
             position="absolute"

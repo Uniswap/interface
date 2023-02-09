@@ -31,7 +31,7 @@ const TextLoaderWrapper = ({ children }: PropsWithChildren<unknown>): JSX.Elemen
           <HiddenFromScreenReaders>{children}</HiddenFromScreenReaders>
           <Box
             bg="background3"
-            borderRadius="xs"
+            borderRadius="rounded4"
             bottom="5%"
             left={0}
             position="absolute"

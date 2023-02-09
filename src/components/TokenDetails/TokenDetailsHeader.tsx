@@ -24,13 +24,13 @@ export function TokenDetailsHeader({
   const tokenProject = token?.project
 
   return (
-    <Flex gap="sm" mx="md">
+    <Flex gap="spacing12" mx="spacing16">
       <TokenLogo
         chainId={fromGraphQLChain(token?.chain) ?? undefined}
         symbol={token?.symbol ?? undefined}
         url={tokenProject?.logoUrl ?? undefined}
       />
-      <Flex row alignItems="center" gap="xs">
+      <Flex row alignItems="center" gap="spacing8">
         <Text
           color="textPrimary"
           loading={loading}
@@ -44,10 +44,10 @@ export function TokenDetailsHeader({
           tokenProject?.safetyLevel === SafetyLevel.Blocked) && (
           <TouchableArea onPress={onPressWarningIcon}>
             <WarningIcon
-              height={theme.iconSizes.md}
+              height={theme.iconSizes.icon20}
               safetyLevel={tokenProject?.safetyLevel}
               strokeColorOverride="textSecondary"
-              width={theme.imageSizes.sm}
+              width={theme.imageSizes.image20}
             />
           </TouchableArea>
         )}

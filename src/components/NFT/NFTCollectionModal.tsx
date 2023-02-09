@@ -52,26 +52,26 @@ export function NFTCollectionModal({
 
   return (
     <BottomSheetModal name={ModalName.NftCollection} properties={traceProps} onClose={onClose}>
-      <Screen bg="background1" edges={['bottom']} pt="xs" px="lg">
+      <Screen bg="background1" edges={['bottom']} pt="spacing8" px="spacing24">
         <Flex>
-          <Flex gap="sm">
+          <Flex gap="spacing12">
             {/* Collection image and name */}
-            <Flex alignItems="center" gap="sm">
+            <Flex alignItems="center" gap="spacing12">
               {collection.image?.url && (
-                <Box borderRadius="full" height={60} overflow="hidden" width={60}>
+                <Box borderRadius="roundedFull" height={60} overflow="hidden" width={60}>
                   <NFTViewer squareGridView maxHeight={60} uri={collection.image.url} />
                 </Box>
               )}
-              <Flex centered row gap="xxs">
+              <Flex centered row gap="spacing4">
                 <Box flexShrink={1}>
                   <Text color="textPrimary" variant="subheadLarge">
                     {collection.name}{' '}
                     {collection.isVerified && (
-                      <Box pt="xxxs">
+                      <Box pt="spacing2">
                         <VerifiedIcon
                           color={theme.colors.userThemeMagenta}
-                          height={theme.iconSizes.sm}
-                          width={theme.iconSizes.sm}
+                          height={theme.iconSizes.icon16}
+                          width={theme.iconSizes.icon16}
                         />
                       </Box>
                     )}
@@ -82,8 +82,8 @@ export function NFTCollectionModal({
           </Flex>
 
           {/* Collection stats */}
-          <Flex row gap="xxs" justifyContent="space-between">
-            <Flex fill alignItems="center" gap="xxs">
+          <Flex row gap="spacing4" justifyContent="space-between">
+            <Flex fill alignItems="center" gap="spacing4">
               <Text color="textTertiary" variant="subheadSmall">
                 {t('Items')}
               </Text>
@@ -91,7 +91,7 @@ export function NFTCollectionModal({
                 {formatNumber(collection.numAssets, NumberType.NFTCollectionStats)}
               </Text>
             </Flex>
-            <Flex fill alignItems="center" gap="xxs">
+            <Flex fill alignItems="center" gap="spacing4">
               <Text color="textTertiary" variant="subheadSmall">
                 {t('Owners')}
               </Text>
@@ -100,7 +100,7 @@ export function NFTCollectionModal({
               </Text>
             </Flex>
             {stats?.floorPrice && (
-              <Flex fill alignItems="center" gap="xxs">
+              <Flex fill alignItems="center" gap="spacing4">
                 <Text color="textTertiary" variant="subheadSmall">
                   {t('Floor')}
                 </Text>
@@ -112,7 +112,7 @@ export function NFTCollectionModal({
               </Flex>
             )}
             {stats?.totalVolume && (
-              <Flex fill alignItems="center" gap="xxs">
+              <Flex fill alignItems="center" gap="spacing4">
                 <Text color="textTertiary" variant="subheadSmall">
                   {t('Volume')}
                 </Text>

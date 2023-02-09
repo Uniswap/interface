@@ -188,7 +188,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
             alignItems="center"
             borderBottomColor="backgroundOutline"
             borderBottomWidth={1}
-            p="md">
+            p="spacing16">
             <Text variant="bodyLarge">{t('Wallet settings')}</Text>
           </Box>
         ),
@@ -201,7 +201,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
             alignItems="center"
             borderBottomColor="backgroundOutline"
             borderBottomWidth={shouldHideRemoveOption ? 0 : 1}
-            p="md">
+            p="spacing16">
             <Text variant="bodyLarge">{t('Copy wallet address')}</Text>
           </Box>
         ),
@@ -220,7 +220,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         key: ElementName.Remove,
         onPress: onPressRemove,
         render: () => (
-          <Box alignItems="center" p="md">
+          <Box alignItems="center" p="spacing16">
             <Text color="accentCritical" variant="bodyLarge">
               {t('Remove wallet')}
             </Text>
@@ -317,7 +317,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
             alignItems="center"
             borderBottomColor="backgroundOutline"
             borderBottomWidth={1}
-            p="md">
+            p="spacing16">
             <Text variant="bodyLarge">{t('Create a new wallet')}</Text>
           </Box>
         ),
@@ -326,7 +326,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         key: ElementName.AddViewOnlyWallet,
         onPress: onPressAddViewOnlyWallet,
         render: () => (
-          <Box alignItems="center" p="md">
+          <Box alignItems="center" p="spacing16">
             <Text variant="bodyLarge">{t('Add a view-only wallet')}</Text>
           </Box>
         ),
@@ -335,7 +335,11 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         key: ElementName.ImportAccount,
         onPress: onPressImportWallet,
         render: () => (
-          <Box alignItems="center" borderTopColor="backgroundOutline" borderTopWidth={1} p="md">
+          <Box
+            alignItems="center"
+            borderTopColor="backgroundOutline"
+            borderTopWidth={1}
+            p="spacing16">
             <Text variant="bodyLarge">{t('Import a wallet')}</Text>
           </Box>
         ),
@@ -347,7 +351,11 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         key: ElementName.RestoreFromICloud,
         onPress: onPressRestore,
         render: () => (
-          <Box alignItems="center" borderTopColor="backgroundOutline" borderTopWidth={1} p="md">
+          <Box
+            alignItems="center"
+            borderTopColor="backgroundOutline"
+            borderTopWidth={1}
+            p="spacing16">
             <Text variant="bodyLarge">{t('Restore from iCloud')}</Text>
           </Box>
         ),
@@ -364,22 +372,22 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const fullScreenContentHeight = 0.89 * dimensions.fullHeight
 
   return (
-    <Flex fill gap="none" marginBottom="sm" maxHeight={fullScreenContentHeight}>
-      <Flex row alignItems="center" borderBottomColor="backgroundOutline" mb="md">
-        <Box flex={1} pl="lg">
+    <Flex fill gap="none" maxHeight={fullScreenContentHeight} mb="spacing12">
+      <Flex row alignItems="center" borderBottomColor="backgroundOutline" mb="spacing16">
+        <Box flex={1} pl="spacing24">
           <Text color="textPrimary" textAlign="left" variant="bodyLarge">
             {t('Your wallets')}
           </Text>
         </Box>
         <TouchableArea onPress={onPressSettings}>
           <Flex row alignItems="center">
-            <Box mr="md">
-              <Box mr="xxs">
-                <Box mr="xxxs">
+            <Box mr="spacing16">
+              <Box mr="spacing4">
+                <Box mr="spacing2">
                   <SettingsIcon
                     color={theme.colors.textTertiary}
-                    height={theme.iconSizes.md}
-                    width={theme.iconSizes.md}
+                    height={theme.iconSizes.icon20}
+                    width={theme.iconSizes.icon20}
                   />
                 </Box>
               </Box>
@@ -393,13 +401,17 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         onPress={onPressAccount}
         onPressEdit={onPressEdit}
       />
-      <TouchableArea my="lg" onPress={onPressAddWallet}>
-        <Flex row alignItems="center" ml="lg">
-          <Box borderColor="backgroundOutline" borderRadius="full" borderWidth={1} p="sm">
+      <TouchableArea my="spacing24" onPress={onPressAddWallet}>
+        <Flex row alignItems="center" ml="spacing24">
+          <Box
+            borderColor="backgroundOutline"
+            borderRadius="roundedFull"
+            borderWidth={1}
+            p="spacing12">
             <PlusIcon
               color={theme.colors.textPrimary}
-              height={theme.iconSizes.sm}
-              width={theme.iconSizes.sm}
+              height={theme.iconSizes.icon16}
+              width={theme.iconSizes.icon16}
             />
           </Box>
           <Text color="textPrimary" variant="bodyLarge">

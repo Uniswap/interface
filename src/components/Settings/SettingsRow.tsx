@@ -56,7 +56,7 @@ export function SettingsRow({
   return (
     <TouchableArea disabled={Boolean(action)} onPress={handleRow}>
       <Flex row alignItems="center" minHeight={40}>
-        <Flex grow row alignItems={subText ? 'flex-start' : 'center'} flexBasis={0} gap="sm">
+        <Flex grow row alignItems={subText ? 'flex-start' : 'center'} flexBasis={0} gap="spacing12">
           <Flex centered height={32} width={32}>
             {icon}
           </Flex>

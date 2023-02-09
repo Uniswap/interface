@@ -31,8 +31,8 @@ export function OfflineBanner(): JSX.Element | null {
       icon={
         <InfoCircle
           color={theme.colors.textPrimary}
-          height={theme.iconSizes.lg}
-          width={theme.iconSizes.lg}
+          height={theme.iconSizes.icon24}
+          width={theme.iconSizes.icon24}
         />
       }
       text={t('You are in offline mode')}

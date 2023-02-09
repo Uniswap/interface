@@ -37,7 +37,7 @@ export const PendingConnectionSwitchAccountModal = ({
   return (
     <ActionSheetModal
       header={
-        <Flex centered gap="xxs" py="md">
+        <Flex centered gap="spacing4" py="spacing16">
           <Text variant="buttonLabelMedium">{t('Switch Account')}</Text>
         </Flex>
       }

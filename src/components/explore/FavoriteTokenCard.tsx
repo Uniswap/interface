@@ -111,7 +111,7 @@ function FavoriteTokenCard({
     <ContextMenu
       actions={menuActions}
       disabled={isEditing}
-      style={{ borderRadius: theme.borderRadii.lg }}
+      style={{ borderRadius: theme.borderRadii.rounded16 }}
       onPress={(e): void => {
         // Emitted index based on order of menu action array
         // remove favorite action
@@ -130,20 +130,20 @@ function FavoriteTokenCard({
       {...rest}>
       <AnimatedTouchableArea
         hapticFeedback
-        borderRadius="lg"
+        borderRadius="rounded16"
         entering={FadeIn}
         exiting={FadeOut}
         hapticStyle={ImpactFeedbackStyle.Light}
-        m="xxs"
+        m="spacing4"
         testID={`token-box-${token?.symbol}`}
         onPress={onPress}>
         <BaseCard.Shadow>
-          <Flex alignItems="flex-start" gap="xs">
-            <Flex row gap="xxs" justifyContent="space-between">
-              <Flex grow row alignItems="center" gap="xxs">
+          <Flex alignItems="flex-start" gap="spacing8">
+            <Flex row gap="spacing4" justifyContent="space-between">
+              <Flex grow row alignItems="center" gap="spacing4">
                 <TokenLogo
                   chainId={chainId ?? undefined}
-                  size={theme.imageSizes.sm}
+                  size={theme.imageSizes.image20}
                   symbol={token?.symbol ?? undefined}
                   url={token?.project?.logoUrl ?? undefined}
                 />
@@ -152,15 +152,15 @@ function FavoriteTokenCard({
               {isEditing ? (
                 <RemoveButton onPress={onRemove} />
               ) : (
-                <Box height={theme.imageSizes.md} />
+                <Box height={theme.imageSizes.image24} />
               )}
             </Flex>
-            <Flex gap="xxxs">
+            <Flex gap="spacing2">
               <Text adjustsFontSizeToFit numberOfLines={1} variant="subheadLarge">
                 {formatUSDPrice(usdPrice)}
               </Text>
               <RelativeChange
-                arrowSize={theme.iconSizes.md}
+                arrowSize={theme.iconSizes.icon20}
                 change={pricePercentChange ?? undefined}
                 semanticColor={true}
                 variant="subheadSmall"

@@ -29,21 +29,21 @@ export function SelectTokenButton({
     <TouchableArea
       hapticFeedback
       bg={selectedCurrencyInfo ? 'background3' : 'magentaVibrant'}
-      borderRadius="full"
+      borderRadius="roundedFull"
       name={ElementName.TokenSelectorToggle}
       testID={`currency-selector-toggle-${showNonZeroBalancesOnly ? 'in' : 'out'}`}
       onPress={onPress}>
       {selectedCurrencyInfo ? (
-        <Flex centered row flexDirection="row" gap="xxs" p="xxs">
-          <CurrencyLogo currencyInfo={selectedCurrencyInfo} size={iconSizes.xl} />
-          <Text color="textPrimary" pl="xxs" variant="buttonLabelLarge">
+        <Flex centered row flexDirection="row" gap="spacing4" p="spacing4">
+          <CurrencyLogo currencyInfo={selectedCurrencyInfo} size={iconSizes.icon28} />
+          <Text color="textPrimary" pl="spacing4" variant="buttonLabelLarge">
             {selectedCurrencyInfo.currency.symbol}
           </Text>
           <Chevron color={theme.colors.textTertiary} direction="e" />
         </Flex>
       ) : (
-        <Flex centered row py="xxs">
-          <Flex centered row gap="xs" pl="sm" pr="xs" py="xxxs">
+        <Flex centered row py="spacing4">
+          <Flex centered row gap="spacing8" pl="spacing12" pr="spacing8" py="spacing2">
             <Text color="textOnBrightPrimary" variant="buttonLabelLarge">
               {t('Choose token')}
             </Text>

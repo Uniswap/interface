@@ -180,9 +180,9 @@ export function TransferTokenForm({
   const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
     useShouldShowNativeKeyboard()
 
-  const TRANSFER_DIRECTION_BUTTON_SIZE = theme.iconSizes.md
-  const TRANSFER_DIRECTION_BUTTON_INNER_PADDING = theme.spacing.sm
-  const TRANSFER_DIRECTION_BUTTON_BORDER_WIDTH = theme.spacing.xxs
+  const TRANSFER_DIRECTION_BUTTON_SIZE = theme.iconSizes.icon20
+  const TRANSFER_DIRECTION_BUTTON_INNER_PADDING = theme.spacing.spacing12
+  const TRANSFER_DIRECTION_BUTTON_BORDER_WIDTH = theme.spacing.spacing4
   const SendWarningIcon = transferWarning?.icon ?? AlertTriangleIcon
 
   return (
@@ -194,8 +194,8 @@ export function TransferTokenForm({
           icon={
             <SendWarningIcon
               color={theme.colors[transferWarningColor.text]}
-              height={theme.iconSizes.lg}
-              width={theme.iconSizes.lg}
+              height={theme.iconSizes.icon24}
+              width={theme.iconSizes.icon24}
             />
           }
           modalName={ModalName.SendWarning}
@@ -214,12 +214,16 @@ export function TransferTokenForm({
         showSpeedbumpModal={showSpeedbumpModal}
         onNext={goToNext}
       />
-      <Flex grow gap="xs" justifyContent="space-between">
-        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xxxs" onLayout={onInputPanelLayout}>
+      <Flex grow gap="spacing8" justifyContent="space-between">
+        <AnimatedFlex
+          entering={FadeIn}
+          exiting={FadeOut}
+          gap="spacing2"
+          onLayout={onInputPanelLayout}>
           {nftIn ? (
             <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 4} />
           ) : (
-            <Box backgroundColor="background2" borderRadius="xl" justifyContent="center">
+            <Box backgroundColor="background2" borderRadius="rounded20" justifyContent="center">
               <CurrencyInputPanel
                 focus
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
@@ -262,7 +266,7 @@ export function TransferTokenForm({
                 <TransferArrowButton
                   disabled
                   bg={recipient ? 'background2' : 'background1'}
-                  padding="xs"
+                  padding="spacing8"
                 />
               </Box>
             </Box>
@@ -271,13 +275,13 @@ export function TransferTokenForm({
           <Box>
             <Flex
               backgroundColor={recipient ? 'background2' : 'none'}
-              borderBottomLeftRadius={transferWarning || isBlocked ? 'none' : 'xl'}
-              borderBottomRightRadius={transferWarning || isBlocked ? 'none' : 'xl'}
-              borderTopLeftRadius="xl"
-              borderTopRightRadius="xl"
+              borderBottomLeftRadius={transferWarning || isBlocked ? 'none' : 'rounded20'}
+              borderBottomRightRadius={transferWarning || isBlocked ? 'none' : 'rounded20'}
+              borderTopLeftRadius="rounded20"
+              borderTopRightRadius="rounded20"
               justifyContent="center"
-              px="md"
-              py="lg">
+              px="spacing16"
+              py="spacing24">
               {recipient && (
                 <RecipientInputPanel
                   recipientAddress={recipient}
@@ -286,23 +290,23 @@ export function TransferTokenForm({
               )}
             </Flex>
             {transferWarning && !isBlocked ? (
-              <TouchableArea mt="xxxxs" onPress={onTransferWarningClick}>
+              <TouchableArea mt="spacing1" onPress={onTransferWarningClick}>
                 <Flex
                   row
                   alignItems="center"
                   alignSelf="stretch"
                   backgroundColor={transferWarningColor.background}
-                  borderBottomLeftRadius="lg"
-                  borderBottomRightRadius="lg"
+                  borderBottomLeftRadius="rounded16"
+                  borderBottomRightRadius="rounded16"
                   flexGrow={1}
-                  gap="xs"
-                  px="md"
-                  py="sm">
+                  gap="spacing8"
+                  px="spacing16"
+                  py="spacing12">
                   <SendWarningIcon
                     color={theme.colors[transferWarningColor.text]}
-                    height={theme.iconSizes.sm}
+                    height={theme.iconSizes.icon16}
                     strokeWidth={1.5}
-                    width={theme.iconSizes.sm}
+                    width={theme.iconSizes.icon16}
                   />
                   <Text color={transferWarningColor.text} variant="subheadSmall">
                     {transferWarning.title}
@@ -316,12 +320,12 @@ export function TransferTokenForm({
                 alignItems="center"
                 alignSelf="stretch"
                 backgroundColor="background2"
-                borderBottomLeftRadius="lg"
-                borderBottomRightRadius="lg"
+                borderBottomLeftRadius="rounded16"
+                borderBottomRightRadius="rounded16"
                 flexGrow={1}
-                mt="xxxs"
-                px="md"
-                py="sm"
+                mt="spacing2"
+                px="spacing16"
+                py="spacing12"
               />
             ) : null}
           </Box>
@@ -329,7 +333,7 @@ export function TransferTokenForm({
         <AnimatedFlex
           bottom={0}
           exiting={FadeOutDown}
-          gap="xs"
+          gap="spacing8"
           left={0}
           opacity={isLayoutPending ? 0 : 1}
           position="absolute"

@@ -51,7 +51,7 @@ export function Flex({
   flexGrow,
   flexShrink,
   flexWrap,
-  gap = 'md',
+  gap = 'spacing16',
   grow,
   justifyContent = 'flex-start',
   row,

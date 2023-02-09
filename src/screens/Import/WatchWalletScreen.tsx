@@ -110,7 +110,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
         'Enter an Ethereum wallet address (starting with 0x) or ENS name (ending in .eth).'
       )}
       title={t('Enter a wallet address')}>
-      <Flex gap="xs" pt="lg">
+      <Flex gap="spacing8" pt="spacing24">
         <GenericImportForm
           blurOnSubmit
           errorMessage={errorText}
@@ -125,7 +125,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           }}
         />
         <Flex>
-          <Text color="textTertiary" mx="xxs" textAlign="center" variant="subheadSmall">
+          <Text color="textTertiary" mx="spacing4" textAlign="center" variant="subheadSmall">
             Not sure? Try adding{' '}
             <Text color="accentAction" variant="buttonLabelSmall" onPress={onPressDemoWallet}>
               uniswapdemo.eth

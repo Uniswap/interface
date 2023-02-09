@@ -6,7 +6,7 @@ import { Box } from 'src/components/layout'
 import { theme } from 'src/styles/theme'
 
 export const NoTransactions = memo(() => (
-  <Box mb="lg">
+  <Box mb="spacing24">
     <OverlayIcon
       bottom={-23}
       icon={<NoTransactionBgIcon color={theme.colors.textSecondary} />}

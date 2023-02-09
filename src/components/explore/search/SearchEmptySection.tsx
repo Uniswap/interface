@@ -45,12 +45,17 @@ export function SearchEmptySection(): JSX.Element {
 
   // Show search history (if applicable), trending tokens, and wallets
   return (
-    <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="sm">
+    <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="spacing12">
       {searchHistory.length > 0 && (
         <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
           <FlatList
             ListHeaderComponent={
-              <Flex row alignItems="center" justifyContent="space-between" mb="xxs" ml="xs">
+              <Flex
+                row
+                alignItems="center"
+                justifyContent="space-between"
+                mb="spacing4"
+                ml="spacing8">
                 <Text color="textSecondary" variant="subheadSmall">
                   {t('Recent searches')}
                 </Text>
@@ -66,15 +71,15 @@ export function SearchEmptySection(): JSX.Element {
           />
         </AnimatedFlex>
       )}
-      <Flex gap="xxs">
-        <Text color="textSecondary" mx="xs" variant="subheadSmall">
+      <Flex gap="spacing4">
+        <Text color="textSecondary" mx="spacing8" variant="subheadSmall">
           {t('Popular tokens')}
         </Text>
         <SearchPopularTokens />
       </Flex>
       <FlatList
         ListHeaderComponent={
-          <Text color="textSecondary" mb="xxs" mx="xs" variant="subheadSmall">
+          <Text color="textSecondary" mb="spacing4" mx="spacing8" variant="subheadSmall">
             {t('Suggested wallets')}
           </Text>
         }

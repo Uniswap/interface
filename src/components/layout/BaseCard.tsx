@@ -25,7 +25,7 @@ export function Container({
       <Box
         bg="background1"
         borderColor="backgroundOutline"
-        borderRadius="lg"
+        borderRadius="rounded16"
         borderWidth={0.25}
         overflow="visible"
         shadowColor="black"
@@ -43,8 +43,8 @@ export function Shadow({ children, ...rest }: BoxProps): JSX.Element {
   return (
     <Box
       bg={rest?.bg ?? isDarkMode ? 'background2' : 'background1'}
-      borderRadius="lg"
-      p="sm"
+      borderRadius="rounded16"
+      p="spacing12"
       shadowColor={isDarkMode ? 'black' : 'brandedAccentSoft'}
       shadowOffset={SHADOW_OFFSET_SMALL}
       shadowOpacity={0.4}
@@ -70,13 +70,13 @@ function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps)
     <TouchableArea
       borderBottomColor="backgroundOutline"
       borderBottomWidth={0.25}
-      px="md"
-      py="sm"
+      px="spacing16"
+      py="spacing12"
       onPress={onPress}
       {...buttonProps}>
       <Flex row alignItems="center" justifyContent="space-between">
-        <Flex gap="xxs">
-          <Flex row alignItems="center" gap="xs">
+        <Flex gap="spacing4">
+          <Flex row alignItems="center" gap="spacing8">
             {icon}
             {typeof title === 'string' ? (
               <Text color="textSecondary" variant="subheadSmall">
@@ -121,10 +121,10 @@ function EmptyState({
   icon,
 }: EmptyStateProps): JSX.Element {
   return (
-    <Flex centered gap="lg" p="sm" width="100%">
+    <Flex centered gap="spacing24" p="spacing12" width="100%">
       <Flex centered>
         {icon}
-        <Flex centered gap="xs">
+        <Flex centered gap="spacing8">
           {title && (
             <Text textAlign="center" variant="buttonLabelMedium">
               {title}
@@ -175,16 +175,16 @@ function ErrorState(props: ErrorStateProps): JSX.Element {
     icon = (
       <ErrorLoadingIcon
         color={theme.colors.textTertiary}
-        height={theme.imageSizes.xxl}
-        width={theme.imageSizes.xxl}
+        height={theme.imageSizes.image48}
+        width={theme.imageSizes.image48}
       />
     ),
   } = props
   return (
-    <Flex centered grow gap="lg" p="sm" width="100%">
+    <Flex centered grow gap="spacing24" p="spacing12" width="100%">
       <Flex centered>
         {icon}
-        <Flex centered gap="xs">
+        <Flex centered gap="spacing8">
           {title ? (
             <Text textAlign="center" variant="buttonLabelMedium">
               {title}
@@ -225,8 +225,8 @@ function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
     icon = (
       <AlertTriangle
         color={theme.colors.textTertiary}
-        height={theme.iconSizes.sm}
-        width={theme.iconSizes.sm}
+        height={theme.iconSizes.icon16}
+        width={theme.iconSizes.icon16}
       />
     ),
   } = props
@@ -237,12 +237,12 @@ function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
       row
       alignItems="center"
       bg={backgroundColor}
-      borderRadius="lg"
-      gap="lg"
+      borderRadius="rounded16"
+      gap="spacing24"
       justifyContent="space-between"
-      p="sm"
+      p="spacing12"
       width="100%">
-      <Flex row shrink alignItems="center" gap="xs">
+      <Flex row shrink alignItems="center" gap="spacing8">
         {icon}
         <Text
           color={textColor}

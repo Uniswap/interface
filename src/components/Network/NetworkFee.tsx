@@ -27,12 +27,12 @@ export function NetworkFee({
   const showNetworkPill = chainId !== ChainId.Mainnet
 
   return (
-    <Flex row alignItems="center" justifyContent="space-between" p="md">
+    <Flex row alignItems="center" justifyContent="space-between" p="spacing16">
       <Text variant="subheadSmall">{t('Network fee')}</Text>
       <Flex row gap="none" justifyContent="flex-end">
-        <Flex row alignItems="center" gap="xs">
+        <Flex row alignItems="center" gap="spacing8">
           {gasFeeUSD && showNetworkPill ? (
-            <Flex row alignItems="center" gap="xs">
+            <Flex row alignItems="center" gap="spacing8">
               <InlineNetworkPill chainId={chainId} />
               <Text variant="subheadSmall">•</Text>
             </Flex>
@@ -49,11 +49,11 @@ export function NetworkFee({
               {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
             </Text>
             {gasFallbackUsed && gasFeeUSD && (
-              <Box ml="xxs">
+              <Box ml="spacing4">
                 <InfoCircleSVG
                   color={theme.colors.accentWarning}
-                  height={theme.iconSizes.md}
-                  width={theme.iconSizes.md}
+                  height={theme.iconSizes.icon20}
+                  width={theme.iconSizes.icon20}
                 />
               </Box>
             )}

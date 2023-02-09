@@ -51,7 +51,7 @@ export function RelativeChangeText({
   }
 
   return (
-    <Flex row gap="xxxs">
+    <Flex row gap="spacing2">
       <AnimatedText style={styles} testID="relative-change-icon" text={icon} variant="bodyLarge" />
       <AnimatedText
         style={styles}

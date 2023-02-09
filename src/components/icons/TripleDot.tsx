@@ -9,10 +9,10 @@ type Props = {
 
 export const TripleDot = memo(({ size = 5, color = 'textSecondary' }: Props) => {
   return (
-    <Flex row gap="xxs">
-      <Box bg={color} borderRadius="full" height={size} width={size} />
-      <Box bg={color} borderRadius="full" height={size} width={size} />
-      <Box bg={color} borderRadius="full" height={size} width={size} />
+    <Flex row gap="spacing4">
+      <Box bg={color} borderRadius="roundedFull" height={size} width={size} />
+      <Box bg={color} borderRadius="roundedFull" height={size} width={size} />
+      <Box bg={color} borderRadius="roundedFull" height={size} width={size} />
     </Flex>
   )
 })

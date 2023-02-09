@@ -46,7 +46,7 @@ export const AddressQRCode = ({
         logo: { uri: '' },
         // this could eventually be set to an SVG version of the Unicon which would ensure it's perfectly centered, but for now we can just use an empty logo image to create a blank circle in the middle of the QR code
         logoBackgroundColor: theme.colors.background0,
-        logoBorderRadius: theme.borderRadii.full,
+        logoBorderRadius: theme.borderRadii.roundedFull,
         // note: this QR code library doesn't actually create a "safe" space in the middle, it just adds the logo on top, so that's why ecl is set to H (high error correction level) by default to ensure the QR code is still readable even if the middle of the QR code is partially obscured
       }
     }
@@ -115,10 +115,10 @@ const _QRCodeDisplay = ({
       alignItems="center"
       backgroundColor={containerBackgroundColor}
       borderColor="backgroundOutline"
-      borderRadius="xxxl"
+      borderRadius="rounded32"
       borderWidth={hideOutline ? 0 : 2}
       justifyContent="center"
-      padding="lg"
+      padding="spacing24"
       position="relative">
       <Box>
         <AddressQRCode
@@ -146,9 +146,9 @@ const _QRCodeDisplay = ({
       <Box
         alignItems="center"
         backgroundColor="none"
-        borderRadius="full"
-        paddingLeft="xxxs"
-        paddingTop="xxxs"
+        borderRadius="roundedFull"
+        paddingLeft="spacing2"
+        paddingTop="spacing2"
         position="absolute">
         <Unicon address={address} size={logoSize} />
       </Box>

@@ -41,12 +41,12 @@ export function TransactionPending({
   }
 
   return (
-    <AnimatedFlex grow px="sm">
-      <Flex grow alignItems="center" justifyContent="flex-start" paddingTop="xxxl">
-        <Flex alignItems="center" justifyContent="flex-end" paddingTop="md">
+    <AnimatedFlex grow px="spacing12">
+      <Flex grow alignItems="center" justifyContent="flex-start" paddingTop="spacing60">
+        <Flex alignItems="center" justifyContent="flex-end" paddingTop="spacing16">
           <StatusAnimation status={transaction?.status} transactionType={transactionType} />
         </Flex>
-        <Flex alignItems="center" gap="sm" justifyContent="flex-start">
+        <Flex alignItems="center" gap="spacing12" justifyContent="flex-start">
           <Text variant="headlineSmall">{title}</Text>
           <Text color="textTertiary" textAlign="center" variant="bodyLarge">
             {description}

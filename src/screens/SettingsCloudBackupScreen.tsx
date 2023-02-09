@@ -77,9 +77,9 @@ export function SettingsCloudBackupScreen({
   }, [accountBackups, address, navigation])
 
   return (
-    <Screen mx="md" my="md">
-      <BackHeader mb="md" />
-      <Flex alignItems="center" justifyContent="space-between" mb="lg" mx="sm">
+    <Screen mx="spacing16" my="spacing16">
+      <BackHeader mb="spacing16" />
+      <Flex alignItems="center" justifyContent="space-between" mb="spacing24" mx="spacing12">
         <Text variant="headlineSmall">{t('Back up to iCloud')}</Text>
         <Text color="textSecondary" textAlign="center" variant="bodySmall">
           {t(
@@ -92,9 +92,13 @@ export function SettingsCloudBackupScreen({
         <BottomSheetModal
           backgroundColor={theme.colors.background1}
           name={ModalName.ICloudBackupInfo}>
-          <Flex gap="none" mb="xl" px="md" py="sm">
-            <Flex centered gap="md">
-              <Box borderColor="accentAction" borderRadius="md" borderWidth={1} padding="sm">
+          <Flex gap="none" mb="spacing36" px="spacing16" py="spacing12">
+            <Flex centered gap="spacing16">
+              <Box
+                borderColor="accentAction"
+                borderRadius="rounded12"
+                borderWidth={1}
+                padding="spacing12">
                 <CloudIcon color={theme.colors.accentAction} />
               </Box>
               <Text textAlign="center" variant="buttonLabelMedium">
@@ -106,7 +110,7 @@ export function SettingsCloudBackupScreen({
                 )}
               </Text>
             </Flex>
-            <Flex centered row gap="sm" pt="lg">
+            <Flex centered row gap="spacing12" pt="spacing24">
               <Button
                 fill
                 emphasis={ButtonEmphasis.Tertiary}

@@ -25,14 +25,19 @@ function Page({ text }: { text: ReactNode }): JSX.Element {
             event.nativeEvent.locationX < fullWidth * 0.33 ? context.goToPrev() : context.goToNext()
           }>
           <Flex centered>
-            <Flex row alignItems="center" justifyContent="space-between" px="lg" width={fullWidth}>
+            <Flex
+              row
+              alignItems="center"
+              justifyContent="space-between"
+              px="spacing24"
+              width={fullWidth}>
               <Text color="textSecondary" variant="subheadSmall">
                 <Trans>What’s a recovery phrase?</Trans>
               </Text>
               <CloseButton color="textSecondary" onPress={onDismiss} />
             </Flex>
             <Flex flex={0.2} />
-            <Flex flex={0.8} px="lg">
+            <Flex flex={0.8} px="spacing24">
               <Text fontSize={28} lineHeight={34} variant="headlineMedium">
                 {text}
               </Text>

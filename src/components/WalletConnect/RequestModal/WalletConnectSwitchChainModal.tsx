@@ -64,8 +64,8 @@ export function WalletConnectSwitchChainModal({ onClose, request }: Props): JSX.
 
   return (
     <BottomSheetModal name={ModalName.WCSwitchChainRequest} onClose={handleClose}>
-      <Flex gap="lg" paddingBottom="xxl" paddingHorizontal="md" paddingTop="xl">
-        <Flex alignItems="center" gap="md">
+      <Flex gap="spacing24" paddingBottom="spacing48" paddingHorizontal="spacing16" pt="spacing36">
+        <Flex alignItems="center" gap="spacing16">
           <HeaderIcon showChain dapp={{ ...dapp, chain_id: newChainId }} />
           <Text textAlign="center" variant="headlineSmall">
             <Trans t={t}>
@@ -75,29 +75,29 @@ export function WalletConnectSwitchChainModal({ onClose, request }: Props): JSX.
           </Text>
           <LinkButton
             backgroundColor="accentActiveSoft"
-            borderRadius="sm"
+            borderRadius="rounded8"
             color={theme.colors.accentActive}
             label={dapp.url}
-            p="xs"
+            p="spacing8"
             textVariant="buttonLabelMicro"
             url={dapp.url}
           />
         </Flex>
-        <Flex gap="sm">
+        <Flex gap="spacing12">
           <Flex
             backgroundColor="background2"
-            borderRadius="lg"
+            borderRadius="rounded16"
             gap="none"
             spacerProps={spacerProps}>
-            <Flex row alignItems="center" justifyContent="space-between" p="md">
+            <Flex row alignItems="center" justifyContent="space-between" p="spacing16">
               <Text variant="subheadSmall">{t('Network')}</Text>
               <InlineNetworkPill chainId={newChainId} />
             </Flex>
-            <Box p="md">
+            <Box p="spacing16">
               <AccountDetails address={request.account} />
             </Box>
           </Flex>
-          <Flex row gap="sm">
+          <Flex row gap="spacing12">
             <Button
               fill
               emphasis={ButtonEmphasis.Tertiary}

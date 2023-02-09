@@ -32,14 +32,14 @@ export function DappConnectionItem({
   return (
     <Flex
       bg={isDarkMode ? 'background1' : 'background2'}
-      borderRadius="md"
-      gap="md"
+      borderRadius="rounded12"
+      gap="spacing16"
       justifyContent="space-between"
-      mb="sm"
-      p="md"
+      mb="spacing12"
+      p="spacing16"
       width="48%">
       <TouchableArea name={ElementName.WCOpenDapp} onPress={(): Promise<void> => openUri(dapp.url)}>
-        <Flex centered gap="xs">
+        <Flex centered gap="spacing8">
           {dapp.icon ? (
             <Flex>
               <RemoteImage
@@ -67,13 +67,13 @@ export function DappConnectionItem({
           row
           shrink
           borderColor="backgroundOutline"
-          borderRadius="lg"
+          borderRadius="rounded16"
           borderWidth={1}
           gap="none"
           justifyContent="space-between"
-          p="xs">
+          p="spacing8">
           {chainId ? (
-            <Flex fill row shrink gap="xs">
+            <Flex fill row shrink gap="spacing8">
               <NetworkLogo chainId={chainId} />
               <Flex shrink>
                 <Text color="textSecondary" numberOfLines={1} variant="buttonLabelSmall">

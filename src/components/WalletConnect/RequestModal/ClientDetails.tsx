@@ -25,9 +25,9 @@ export function ClientDetails({
   const permitCurrencyInfo = useCurrencyInfo(permitInfo?.currencyId)
 
   return (
-    <Flex centered gap="md">
+    <Flex centered gap="spacing16">
       <HeaderIcon dapp={dapp} permitCurrencyInfo={permitCurrencyInfo} />
-      <Flex centered gap="sm">
+      <Flex centered gap="spacing12">
         <HeaderText
           permitAmount={permitInfo?.amount}
           permitCurrency={permitCurrencyInfo?.currency}
@@ -35,13 +35,13 @@ export function ClientDetails({
         />
         <LinkButton
           backgroundColor="accentActiveSoft"
-          borderRadius="sm"
+          borderRadius="rounded8"
           color={theme.colors.accentActive}
           iconColor={theme.colors.textSecondary}
           label={dapp.url}
-          mt="xs"
-          px="xs"
-          py="xxs"
+          mt="spacing8"
+          px="spacing8"
+          py="spacing4"
           textVariant="bodyMicro"
           url={dapp.url}
         />

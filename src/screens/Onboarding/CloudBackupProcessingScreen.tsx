@@ -107,7 +107,7 @@ export function CloudBackupProcessingScreen({
   return (
     <Screen>
       {processing ? (
-        <Flex centered grow gap="xl">
+        <Flex centered grow gap="spacing36">
           <ActivityIndicator size="large" />
           <Text variant="headlineSmall">{t('Backing up to iCloud...')}</Text>
         </Flex>

@@ -54,12 +54,12 @@ export function SwapDetails({
             row
             alignItems="center"
             backgroundColor="accentActiveSoft"
-            borderRadius="md"
+            borderRadius="rounded12"
             flexShrink={1}
-            gap="sm"
+            gap="spacing12"
             justifyContent="space-between"
-            p="xs"
-            pl="md">
+            p="spacing8"
+            pl="spacing16">
             <Flex centered row gap="none">
               <Text color="accentActive" variant="subheadSmall">
                 {t('New rate')}
@@ -80,9 +80,9 @@ export function SwapDetails({
             <Flex centered row gap="none">
               <TouchableArea
                 backgroundColor="accentActive"
-                borderRadius="sm"
-                px="xs"
-                py="xs"
+                borderRadius="rounded8"
+                px="spacing8"
+                py="spacing8"
                 onPress={onAcceptTrade}>
                 <Text color="textOnBrightPrimary" variant="buttonLabelSmall">
                   {t('Accept')}
@@ -104,9 +104,9 @@ export function SwapDetails({
         alignItems="center"
         borderBottomColor={TRANSACTION_DETAILS_SPACER.color}
         borderBottomWidth={TRANSACTION_DETAILS_SPACER.width}
-        gap="xs"
+        gap="spacing8"
         justifyContent="space-between"
-        p="md">
+        p="spacing16">
         <Text variant="subheadSmall">{t('Rate')}</Text>
         <Flex row flex={1} flexBasis="100%" flexShrink={1} gap="none" justifyContent="flex-end">
           <TouchableOpacity onPress={(): void => setShowInverseRate(!showInverseRate)}>

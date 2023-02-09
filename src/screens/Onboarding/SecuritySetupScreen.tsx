@@ -88,7 +88,11 @@ export function SecuritySetupScreen({ navigation, route: { params } }: Props): J
         )}
         title={t('Protect your wallet')}>
         <Flex centered grow>
-          <Box borderColor="background3" borderRadius="xl" borderWidth={4} style={styles.iconView}>
+          <Box
+            borderColor="background3"
+            borderRadius="rounded20"
+            borderWidth={4}
+            style={styles.iconView}>
             {isTouchIdDevice ? (
               <FingerprintIcon color={theme.colors.textSecondary} height={58} width={58} />
             ) : (

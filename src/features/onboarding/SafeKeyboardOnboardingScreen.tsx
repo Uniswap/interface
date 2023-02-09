@@ -31,7 +31,7 @@ export function SafeKeyboardOnboardingScreen({
   const keyboard = useKeyboardLayout()
 
   const header = (
-    <Flex gap="sm" m="sm">
+    <Flex gap="spacing12" m="spacing12">
       <Text paddingTop={paddingTop} textAlign="center" variant="headlineSmall">
         {title}
       </Text>
@@ -74,8 +74,8 @@ export function SafeKeyboardOnboardingScreen({
           entering={FadeIn}
           exiting={FadeOut}
           minHeight={minHeight}
-          pb="md"
-          px="md"
+          pb="spacing16"
+          px="spacing16"
           style={[containerStyle, { paddingTop: headerHeight }]}>
           {header}
           {page}

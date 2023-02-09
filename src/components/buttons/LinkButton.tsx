@@ -26,7 +26,7 @@ export function LinkButton({
   iconColor,
   openExternalBrowser = false,
   isSafeUri = false,
-  size = iconSizes.md,
+  size = iconSizes.icon20,
   justifyContent = 'center',
   ...rest
 }: LinkButtonProps): JSX.Element {
@@ -42,7 +42,7 @@ export function LinkButton({
     <TouchableArea
       onPress={(): Promise<void> => openUri(url, openExternalBrowser, isSafeUri)}
       {...rest}>
-      <Flex row alignItems="center" gap="xxxs" justifyContent={justifyContent}>
+      <Flex row alignItems="center" gap="spacing2" justifyContent={justifyContent}>
         <Text {...colorStyles} variant={textVariant}>
           {label}
         </Text>

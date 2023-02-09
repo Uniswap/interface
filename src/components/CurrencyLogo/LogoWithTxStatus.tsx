@@ -68,7 +68,7 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps): J
       <Box
         alignItems="center"
         backgroundColor="background2"
-        borderRadius="xs"
+        borderRadius="rounded4"
         height={size}
         justifyContent="center"
         overflow="hidden"
@@ -210,7 +210,7 @@ export function DappLogoWithTxStatus({
     <Box
       alignItems="center"
       backgroundColor="background2"
-      borderRadius="xs"
+      borderRadius="rounded4"
       height={dappImageSize}
       justifyContent="center"
       overflow="hidden"
@@ -248,7 +248,7 @@ export function DappLogoWithWCBadge({
   const totalSize = dappImageSize + statusSize * (1 / 4)
   const dappImage = dappImageUrl ? (
     <RemoteImage
-      borderRadius={theme.borderRadii.full}
+      borderRadius={theme.borderRadii.roundedFull}
       height={dappImageSize}
       uri={dappImageUrl}
       width={dappImageSize}
@@ -264,7 +264,7 @@ export function DappLogoWithWCBadge({
       </Box>
       <Box
         backgroundColor="background1"
-        borderRadius="full"
+        borderRadius="roundedFull"
         bottom={0}
         position="absolute"
         right={0}>

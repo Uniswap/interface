@@ -18,7 +18,7 @@ function Graph(): JSX.Element {
 function Wallets({ repeat = 1 }: { repeat?: number }): JSX.Element {
   return (
     <Shimmer>
-      <Flex gap="sm">
+      <Flex gap="spacing12">
         {new Array(repeat).fill(null).map((_, i, { length }) => (
           <React.Fragment key={i}>
             <WalletLoader opacity={(length - i) / length} />
@@ -89,7 +89,11 @@ function Image(): JSX.Element {
 function Favorite({ height }: { height?: number }): JSX.Element {
   return (
     <Shimmer>
-      <BoxLoader backgroundColor="backgroundOutline" borderRadius="lg" height={height ?? 50} />
+      <BoxLoader
+        backgroundColor="backgroundOutline"
+        borderRadius="rounded16"
+        height={height ?? 50}
+      />
     </Shimmer>
   )
 }

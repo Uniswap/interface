@@ -17,7 +17,7 @@ interface RecipientListProps {
 export function RecipientList({ onPress, sections }: RecipientListProps): JSX.Element {
   const renderItem = function ({ item }: ListRenderItemInfo<SearchableRecipient>): JSX.Element {
     return (
-      <AnimatedFlex entering={FadeIn} exiting={FadeOut} py="sm">
+      <AnimatedFlex entering={FadeIn} exiting={FadeOut} py="spacing12">
         <RecipientRow recipient={item} onPress={onPress} />
       </AnimatedFlex>
     )
@@ -36,7 +36,7 @@ export function RecipientList({ onPress, sections }: RecipientListProps): JSX.El
 
 function SectionHeader(info: { section: SectionListData<SearchableRecipient> }): JSX.Element {
   return (
-    <AnimatedFlex backgroundColor="background1" entering={FadeIn} exiting={FadeOut} py="xs">
+    <AnimatedFlex backgroundColor="background1" entering={FadeIn} exiting={FadeOut} py="spacing8">
       <Text color="textSecondary" variant="subheadSmall">
         {info.section.title}
       </Text>
@@ -64,7 +64,7 @@ export function RecipientRow({ recipient, onPress }: RecipientProps): JSX.Elemen
 export function RecipientLoadingRow(): JSX.Element {
   const { t } = useTranslation()
   return (
-    <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="xs">
+    <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="spacing8">
       <Text color="textTertiary" variant="bodySmall">
         {t('Search Results')}
       </Text>

@@ -56,7 +56,7 @@ export function FavoriteWalletsGrid({ showLoading }: { showLoading: boolean }): 
 
 function FavoriteWalletsGridLoader(): JSX.Element {
   return (
-    <Flex row gap="xs">
+    <Flex row gap="spacing8">
       <Box style={ITEM_FLEX}>
         <Loader.Favorite height={48} />
       </Box>

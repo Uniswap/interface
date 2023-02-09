@@ -27,7 +27,7 @@ export function HeaderIcon({
     <Box>
       {/* TODO: [MOB-3880] Add placeholder logo here for dapps without icons */}
       {dapp.icon ? (
-        <Image source={{ uri: dapp.icon, height: iconSizes.xxxl, width: iconSizes.xxxl }} />
+        <Image source={{ uri: dapp.icon, height: iconSizes.icon40, width: iconSizes.icon40 }} />
       ) : null}
       {showChain && (
         <Box bottom={-4} position="absolute" right={-4}>

@@ -26,7 +26,7 @@ function QRScannerIconButton({ onPress }: { onPress: () => void }): JSX.Element 
     <TouchableArea hapticFeedback name={ElementName.WalletConnectScan} onPress={onPress}>
       <ScanQRWCIcon
         color={theme.colors.textSecondary}
-        height={theme.iconSizes.lg}
+        height={theme.iconSizes.icon24}
         strokeWidth={2}
       />
     </TouchableArea>
@@ -71,7 +71,7 @@ export function AccountHeader(): JSX.Element {
       alignItems="center"
       flexDirection="row"
       justifyContent="space-between"
-      mt="md"
+      mt="spacing16"
       testID="account-header">
       <TouchableArea
         hapticFeedback
@@ -79,7 +79,7 @@ export function AccountHeader(): JSX.Element {
         flex={1}
         flexDirection="row"
         hapticStyle={ImpactFeedbackStyle.Medium}
-        mr="sm"
+        mr="spacing12"
         name={ElementName.Manage}
         testID={ElementName.Manage}
         onLongPress={(): void => {
@@ -90,25 +90,25 @@ export function AccountHeader(): JSX.Element {
         }}
         onPress={onPressAccountHeader}>
         {activeAddress && (
-          <Flex row alignItems="center" gap="xxs">
+          <Flex row alignItems="center" gap="spacing4">
             <Flex shrink>
               <AddressDisplay
                 hideAddressInSubtitle
                 address={activeAddress}
-                horizontalGap="xs"
-                size={iconSizes.xl}
+                horizontalGap="spacing8"
+                size={iconSizes.icon28}
                 variant="subheadLarge"
               />
             </Flex>
             <DoubleChevron
               color={theme.colors.textSecondary}
-              height={iconSizes.sm}
-              width={iconSizes.sm}
+              height={iconSizes.icon16}
+              width={iconSizes.icon16}
             />
           </Flex>
         )}
       </TouchableArea>
-      <Flex alignItems="center" flexDirection="row" gap="md" justifyContent="flex-end">
+      <Flex alignItems="center" flexDirection="row" gap="spacing16" justifyContent="flex-end">
         <QRScannerIconButton onPress={onPressScan} />
         <TouchableArea
           hapticFeedback

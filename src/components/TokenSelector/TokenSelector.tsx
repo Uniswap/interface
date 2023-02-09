@@ -42,9 +42,9 @@ function _TokenSelector({
     <AnimatedFlex
       entering={FadeIn}
       exiting={FadeOut}
-      gap="sm"
+      gap="spacing12"
       overflow="hidden"
-      px="md"
+      px="spacing16"
       width="100%">
       <SearchBar
         autoFocus

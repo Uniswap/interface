@@ -121,26 +121,36 @@ export function TransactionFlow({
   return (
     <TouchableWithoutFeedback>
       <AnimatedFlex grow row gap="none" height="100%" style={wrapperStyle}>
-        <Flex gap="md" pb="md" px="md" style={{ marginBottom: insets.bottom }} width="100%">
+        <Flex
+          gap="spacing16"
+          pb="spacing16"
+          px="spacing16"
+          style={{ marginBottom: insets.bottom }}
+          width="100%">
           {step !== TransactionStep.SUBMITTED && (
-            <Flex row alignItems="center" justifyContent="space-between" pt="xs" px="sm">
+            <Flex
+              row
+              alignItems="center"
+              justifyContent="space-between"
+              pt="spacing8"
+              px="spacing12">
               <Text textAlign="left" variant={{ xs: 'subheadSmall', sm: 'subheadLarge' }}>
                 {flowName}
               </Text>
-              <Flex row gap="xxs">
+              <Flex row gap="spacing4">
                 {step === TransactionStep.FORM && showUSDToggle ? (
                   <TouchableArea
                     hapticFeedback
                     bg={isUSDInput ? 'background3' : 'none'}
-                    borderRadius="sm"
-                    px="sm"
-                    py="xxs"
+                    borderRadius="rounded8"
+                    px="spacing12"
+                    py="spacing4"
                     onPress={(): void => onToggleUSDInput(!isUSDInput)}>
-                    <Flex row alignItems="center" gap="xxxs">
+                    <Flex row alignItems="center" gap="spacing2">
                       <SortIcon
                         color={theme.colors.textSecondary}
-                        height={theme.iconSizes.sm}
-                        width={theme.iconSizes.sm}
+                        height={theme.iconSizes.icon16}
+                        width={theme.iconSizes.icon16}
                       />
                       <Text
                         color={isUSDInput ? 'textSecondary' : 'textSecondary'}
@@ -153,16 +163,16 @@ export function TransactionFlow({
                 {account?.type === AccountType.Readonly ? (
                   <TouchableArea
                     bg="background3"
-                    borderRadius="sm"
+                    borderRadius="rounded8"
                     justifyContent="center"
-                    px="xs"
-                    py="xxs"
+                    px="spacing8"
+                    py="spacing4"
                     onPress={(): void => setShowViewOnlyModal(true)}>
-                    <Flex row alignItems="center" gap="xxs">
+                    <Flex row alignItems="center" gap="spacing4">
                       <EyeIcon
                         color={theme.colors.textSecondary}
-                        height={theme.iconSizes.sm}
-                        width={theme.iconSizes.sm}
+                        height={theme.iconSizes.icon16}
+                        width={theme.iconSizes.icon16}
                       />
                       <Text color="textSecondary" variant="buttonLabelSmall">
                         {t('View-only')}
@@ -199,8 +209,8 @@ export function TransactionFlow({
             icon={
               <EyeIcon
                 color={theme.colors.textSecondary}
-                height={theme.iconSizes.lg}
-                width={theme.iconSizes.lg}
+                height={theme.iconSizes.icon24}
+                width={theme.iconSizes.icon24}
               />
             }
             modalName={ModalName.SwapWarning}

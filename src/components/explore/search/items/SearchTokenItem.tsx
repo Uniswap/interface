@@ -52,19 +52,19 @@ export function SearchTokenItem({ token }: SearchTokenItemProps): JSX.Element {
       hapticStyle={ImpactFeedbackStyle.Light}
       name={ElementName.SearchTokenItem}
       onPress={onPress}>
-      <Flex row alignItems="center" gap="sm" px="xs" py="sm">
+      <Flex row alignItems="center" gap="spacing12" px="spacing8" py="spacing12">
         <TokenLogo chainId={chainId} symbol={symbol} url={logoUrl ?? undefined} />
         <Flex gap="none">
-          <Flex row alignItems="center" gap="xxs">
+          <Flex row alignItems="center" gap="spacing4">
             <Text color="textPrimary" variant="bodyLarge">
               {name}
             </Text>
             {(safetyLevel === SafetyLevel.Blocked || safetyLevel === SafetyLevel.StrongWarning) && (
               <WarningIcon
-                height={theme.iconSizes.sm}
+                height={theme.iconSizes.icon16}
                 safetyLevel={safetyLevel}
                 strokeColorOverride="textSecondary"
-                width={theme.iconSizes.sm}
+                width={theme.iconSizes.icon16}
               />
             )}
           </Flex>

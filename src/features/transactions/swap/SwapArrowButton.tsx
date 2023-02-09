@@ -11,7 +11,14 @@ type SwapArrowButtonProps = Pick<
 
 export function SwapArrowButton(props: SwapArrowButtonProps): JSX.Element {
   const theme = useAppTheme()
-  const { name, onPress, disabled, bg = 'background1', size = theme.iconSizes.md, ...rest } = props
+  const {
+    name,
+    onPress,
+    disabled,
+    bg = 'background1',
+    size = theme.iconSizes.icon20,
+    ...rest
+  } = props
   return useMemo(
     () => (
       <TouchableArea
@@ -20,17 +27,17 @@ export function SwapArrowButton(props: SwapArrowButtonProps): JSX.Element {
         alignSelf="center"
         bg={bg}
         borderColor="background1"
-        borderRadius="lg"
+        borderRadius="rounded16"
         borderWidth={4}
         disabled={disabled}
         justifyContent="center"
         // border width applies inside the element so add more padding to account for it
         name={name}
-        p="xs"
+        p="spacing8"
         onPress={onPress}
         {...rest}>
         {/* hack to add 2px more padding without adjusting design system values */}
-        <Box alignItems="center" justifyContent="center" p="xxxs">
+        <Box alignItems="center" justifyContent="center" p="spacing2">
           <SwapArrow color={theme.colors.textSecondary} height={size} width={size} />
         </Box>
       </TouchableArea>

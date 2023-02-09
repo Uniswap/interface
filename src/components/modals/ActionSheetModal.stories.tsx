@@ -10,7 +10,7 @@ const options = [
     key: '1',
     onPress: (): undefined => undefined,
     render: (): JSX.Element => (
-      <Flex row flex={1} justifyContent="space-between" p="md">
+      <Flex row flex={1} justifyContent="space-between" p="spacing16">
         <Text variant="bodyLarge">Market Cap</Text>
         <Check height={18} width={18} />
       </Flex>
@@ -20,7 +20,7 @@ const options = [
     key: '2',
     onPress: (): undefined => undefined,
     render: (): JSX.Element => (
-      <Box p="md">
+      <Box p="spacing16">
         <Text variant="bodyLarge">Volume</Text>
       </Box>
     ),
@@ -29,7 +29,7 @@ const options = [
     key: '3',
     onPress: (): undefined => undefined,
     render: (): JSX.Element => (
-      <Box p="md">
+      <Box p="spacing16">
         <Text variant="bodyLarge">Percent Change</Text>
       </Box>
     ),
@@ -41,7 +41,7 @@ export default {
   component: ActionSheetModalContent,
   decorators: [
     (Story): JSX.Element => (
-      <Box bg="background0" p="lg" width={300}>
+      <Box bg="background0" p="spacing24" width={300}>
         <Story />
       </Box>
     ),

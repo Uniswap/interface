@@ -63,25 +63,25 @@ const getSwapPanelPaddingValues = (
   const outerPadding: DynamicSwapPanelPaddingValues = hasCurrencyValue
     ? {
         // when there is a currency value, and the box is on the top, add a bit more
-        // padding (lg) to account for the swap direction button
-        paddingBottom: isOutputBox ? 'md' : 'lg',
-        paddingTop: isOutputBox ? 'lg' : 'md',
-        paddingHorizontal: 'md',
+        // padding (spacing24) to account for the swap direction button
+        paddingBottom: isOutputBox ? 'spacing16' : 'spacing24',
+        paddingTop: isOutputBox ? 'spacing24' : 'spacing16',
+        paddingHorizontal: 'spacing16',
       }
     : {
-        // xxl to account for the direction button (on the top or the bottom, depending
+        // spacing48 to account for the direction button (on the top or the bottom, depending
         // on whether this component is the top or bottom swap box)
-        paddingBottom: isOutputBox ? 'xl' : 'xxl',
-        paddingTop: isOutputBox ? 'xxl' : 'xl',
-        paddingHorizontal: 'md',
+        paddingBottom: isOutputBox ? 'spacing36' : 'spacing48',
+        paddingTop: isOutputBox ? 'spacing48' : 'spacing36',
+        paddingHorizontal: 'spacing16',
       }
 
   const innerPadding: DynamicSwapPanelPaddingValues = {
     // when there is a currency value, and the box is on the top, add a bit more
-    // 20px is the desired amount, so we're adding outer padding and inner padding md(16px) + xxs(4px)
-    paddingBottom: isOutputBox ? 'xxs' : 'none',
-    // 20px is the desired amount, so we're adding outer padding and inner padding md(16px) + xxs(4px)
-    paddingTop: isOutputBox ? 'none' : 'xxs',
+    // 20px is the desired amount, so we're adding outer padding and inner padding (16px + 4px)
+    paddingBottom: isOutputBox ? 'spacing4' : 'none',
+    // 20px is the desired amount, so we're adding outer padding and inner padding (16px + 4px)
+    paddingTop: isOutputBox ? 'none' : 'spacing4',
   }
 
   return { outerPadding, innerPadding }
@@ -195,11 +195,16 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element {
   const { paddingBottom: innerPaddingBottom, paddingTop: innerPaddingTop } = innerPadding
 
   return (
-    <Flex gap="sm" {...transformedProps} pb={paddingBottom} pt={paddingTop} px={paddingHorizontal}>
+    <Flex
+      gap="spacing12"
+      {...transformedProps}
+      pb={paddingBottom}
+      pt={paddingTop}
+      px={paddingHorizontal}>
       <Flex
         row
         alignItems="center"
-        gap="xs"
+        gap="spacing8"
         justifyContent={!currencyInfo ? 'center' : 'space-between'}
         paddingBottom={innerPaddingBottom}
         paddingTop={innerPaddingTop}>
@@ -244,13 +249,13 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element {
       </Flex>
 
       {currencyInfo && (
-        <Flex row alignItems="center" gap="xs" justifyContent="space-between" mb="xxs">
+        <Flex row alignItems="center" gap="spacing8" justifyContent="space-between" mb="spacing4">
           <Flex shrink>
             <Text color="textSecondary" numberOfLines={1} variant="bodySmall">
               {!isUSDInput ? formattedUSDValue : formattedCurrencyAmount}
             </Text>
           </Flex>
-          <Flex row alignItems="center" gap="xs" justifyContent="flex-end">
+          <Flex row alignItems="center" gap="spacing8" justifyContent="flex-end">
             {showInsufficientBalanceWarning && (
               <Text color="accentWarning" variant="bodySmall">
                 {insufficientBalanceWarning.title}

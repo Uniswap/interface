@@ -6,7 +6,7 @@ import { TokenDetailsFavoriteButton } from 'src/components/TokenDetails/TokenDet
 export function TokenDetailsBackButtonRow({ currencyId }: { currencyId: string }): JSX.Element {
   return (
     <>
-      <Flex row alignItems="center" justifyContent="space-between" pt="sm" px="md">
+      <Flex row alignItems="center" justifyContent="space-between" pt="spacing12" px="spacing16">
         <BackButton />
         <TokenDetailsFavoriteButton currencyId={currencyId} />
       </Flex>

@@ -51,7 +51,7 @@ export function DappSwitchNetworkModal({
           render: () => (
             <>
               <Separator />
-              <Flex centered row px="lg" py="md">
+              <Flex centered row px="spacing24" py="spacing16">
                 <Text color="accentCritical" variant="bodyLarge">
                   {t('Disconnect')}
                 </Text>
@@ -66,7 +66,7 @@ export function DappSwitchNetworkModal({
   return (
     <ActionSheetModal
       header={
-        <Flex centered gap="xxs" py="md">
+        <Flex centered gap="spacing4" py="spacing16">
           <Text variant="buttonLabelMedium">{t('Switch Network')}</Text>
           <Text color="accentActive" variant="buttonLabelMicro">
             {selectedSession.dapp.url}

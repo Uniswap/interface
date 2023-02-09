@@ -50,12 +50,12 @@ const SitePermissions = (): JSX.Element => {
   const { t } = useTranslation()
 
   return (
-    <Flex gap="sm" p="md">
+    <Flex gap="spacing12" p="spacing16">
       <Text color="textSecondary" variant="subheadSmall">
         {t('App permissions')}
       </Text>
-      <Flex row alignItems="flex-start" gap="xs">
-        <Box mt="xxxs">
+      <Flex row alignItems="flex-start" gap="spacing8">
+        <Box mt="spacing2">
           <Checkmark color={theme.colors.accentSuccess} height={16} width={16} />
         </Box>
         <Box flex={1}>
@@ -64,8 +64,8 @@ const SitePermissions = (): JSX.Element => {
           </Text>
         </Box>
       </Flex>
-      <Flex row alignItems="flex-start" gap="xs">
-        <Box mt="xxxs">
+      <Flex row alignItems="flex-start" gap="spacing8">
+        <Box mt="spacing2">
           <Checkmark color={theme.colors.accentSuccess} height={16} width={16} />
         </Box>
         <Box flex={1}>
@@ -74,8 +74,8 @@ const SitePermissions = (): JSX.Element => {
           </Text>
         </Box>
       </Flex>
-      <Flex row alignItems="flex-start" gap="xs">
-        <Box mt="xxxs">
+      <Flex row alignItems="flex-start" gap="spacing8">
+        <Box mt="spacing2">
           <X color={theme.colors.accentCritical} height={16} width={16} />
         </Box>
         <Box flex={1}>
@@ -102,8 +102,14 @@ const SwitchNetworkRow = ({ selectedChainId, setModalState }: SwitchNetworkProps
 
   return (
     <TouchableArea m="none" name={ElementName.WCDappSwitchNetwork} p="none" onPress={onPress}>
-      <Flex row shrink alignItems="center" gap="sm" justifyContent="space-between" p="sm">
-        <Flex row shrink gap="sm">
+      <Flex
+        row
+        shrink
+        alignItems="center"
+        gap="spacing12"
+        justifyContent="space-between"
+        p="spacing12">
+        <Flex row shrink gap="spacing12">
           <NetworkLogo chainId={selectedChainId} />
           <Text color="textPrimary" variant="subheadSmall">
             {CHAIN_INFO[selectedChainId].label}
@@ -133,7 +139,7 @@ const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps):
       disabled={!accountIsSwitchable}
       m="none"
       name={ElementName.WCDappSwitchAccount}
-      p="sm"
+      p="spacing12"
       onPress={onPress}>
       <AccountDetails address={activeAddress} chevron={accountIsSwitchable} />
     </TouchableArea>
@@ -184,12 +190,12 @@ export const PendingConnection = ({ pendingSession, onClose }: Props): JSX.Eleme
     <>
       <AnimatedFlex
         backgroundColor="translucentBackground"
-        borderRadius="md"
+        borderRadius="rounded12"
         flex={1}
-        gap="lg"
+        gap="spacing24"
         overflow="hidden"
-        px="lg"
-        py="xxxl">
+        px="spacing24"
+        py="spacing60">
         <GradientBackground>
           <Svg height="100%" width="100%">
             <Defs>
@@ -201,7 +207,7 @@ export const PendingConnection = ({ pendingSession, onClose }: Props): JSX.Eleme
             <Rect fill="url(#scan-top-fadeout)" height="100%" width="100%" x="0" y="0" />
           </Svg>
         </GradientBackground>
-        <Flex alignItems="center" flex={1} gap="md" justifyContent="flex-end">
+        <Flex alignItems="center" flex={1} gap="spacing16" justifyContent="flex-end">
           <HeaderIcon dapp={pendingSession.dapp} showChain={false} />
           <Text textAlign="center" variant="headlineSmall">
             <Trans t={t}>
@@ -211,16 +217,16 @@ export const PendingConnection = ({ pendingSession, onClose }: Props): JSX.Eleme
           </Text>
           <LinkButton
             backgroundColor="accentActiveSoft"
-            borderRadius="sm"
+            borderRadius="rounded8"
             color={theme.colors.accentActive}
             label={pendingSession.dapp.url}
-            mb="sm"
-            p="xs"
+            mb="spacing12"
+            p="spacing8"
             textVariant="buttonLabelMicro"
             url={pendingSession.dapp.url}
           />
         </Flex>
-        <Flex bg="translucentBackground" borderRadius="lg" gap="xxxs">
+        <Flex bg="translucentBackground" borderRadius="rounded16" gap="spacing2">
           <SitePermissions />
           <Separator />
           <SwitchNetworkRow selectedChainId={selectedChainId} setModalState={setModalState} />
@@ -228,7 +234,7 @@ export const PendingConnection = ({ pendingSession, onClose }: Props): JSX.Eleme
           <SwitchAccountRow activeAddress={activeAddress} setModalState={setModalState} />
           <Box />
         </Flex>
-        <Flex flexDirection="row" gap="xs" justifyContent="space-between">
+        <Flex flexDirection="row" gap="spacing8" justifyContent="space-between">
           <Button
             fill
             emphasis={ButtonEmphasis.Secondary}

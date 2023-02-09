@@ -105,7 +105,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
   const textInputStyle = useAnimatedStyle(() => {
     return {
       marginRight: withSpring(
-        showCancelButton && isFocus.value ? cancelButtonWidth.value + theme.spacing.sm : 0,
+        showCancelButton && isFocus.value ? cancelButtonWidth.value + theme.spacing.spacing12 : 0,
         springConfig
       ),
     }
@@ -154,12 +154,12 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
         row
         alignItems="center"
         backgroundColor={backgroundColor}
-        borderRadius="lg"
+        borderRadius="rounded16"
         flex={1}
         flexGrow={1}
         gap="none"
         minHeight={48}
-        px="sm"
+        px="spacing12"
         style={textInputStyle}
         {...shadowProps}>
         <SearchIcon color={theme.colors.textTertiary} height={20} width={20} />
@@ -176,7 +176,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           maxFontSizeMultiplier={theme.textVariants.bodyLarge.maxFontSizeMultiplier}
           placeholder={placeholder}
           placeholderTextColor={theme.colors.textTertiary}
-          px="xs"
+          px="spacing8"
           returnKeyType="done"
           textContentType="none"
           value={value}
@@ -224,8 +224,8 @@ function ClearButton(props: ClearButtonProps): JSX.Element {
   return (
     <TouchableArea
       backgroundColor="backgroundOutline"
-      borderRadius="full"
-      p="xxs"
+      borderRadius="roundedFull"
+      p="spacing4"
       onPress={onPress}>
       {clearIcon}
     </TouchableArea>

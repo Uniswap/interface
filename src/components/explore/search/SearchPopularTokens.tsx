@@ -48,7 +48,7 @@ export function SearchPopularTokens(): JSX.Element {
 
   if (loading) {
     return (
-      <Inset all="xs">
+      <Inset all="spacing8">
         <Loader.Token repeat={3} />
       </Inset>
     )

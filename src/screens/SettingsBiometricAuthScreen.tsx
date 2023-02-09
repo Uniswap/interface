@@ -174,12 +174,12 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
         />
       )}
       <Screen>
-        <BackHeader alignment="center" mx="md" pt="md">
+        <BackHeader alignment="center" mx="spacing16" pt="spacing16">
           <Text variant="bodyLarge">
             {t('{{authenticationTypeName}} ID', { authenticationTypeName })}
           </Text>
         </BackHeader>
-        <Box p="lg">
+        <Box p="spacing24">
           <FlatList
             ItemSeparatorComponent={renderItemSeparator}
             data={options}
@@ -192,4 +192,6 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
   )
 }
 
-const renderItemSeparator = (): JSX.Element => <Box bg="backgroundOutline" height={1} my="md" />
+const renderItemSeparator = (): JSX.Element => (
+  <Box bg="backgroundOutline" height={1} my="spacing16" />
+)

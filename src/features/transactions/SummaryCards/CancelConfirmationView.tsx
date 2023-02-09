@@ -58,11 +58,23 @@ export function CancelConfirmationView({
   }, [onCancelConfirm, requiredForTransactions, actionButtonTrigger])
 
   return (
-    <Flex centered grow bg="background1" borderRadius="xl" gap="lg" p="lg" pb="xxl">
-      <Flex centered borderColor="textSecondary" borderRadius="md" borderWidth={1} padding="xs">
+    <Flex
+      centered
+      grow
+      bg="background1"
+      borderRadius="rounded20"
+      gap="spacing24"
+      p="spacing24"
+      pb="spacing48">
+      <Flex
+        centered
+        borderColor="textSecondary"
+        borderRadius="rounded12"
+        borderWidth={1}
+        padding="spacing8">
         <SlashCircleIcon fill="none" height={24} />
       </Flex>
-      <Flex centered gap="xs">
+      <Flex centered gap="spacing8">
         <Text variant="buttonLabelMedium">{t('Cancel this transaction?')}</Text>
         <Text color="textSecondary" textAlign="center" variant="bodySmall">
           {t(
@@ -70,13 +82,18 @@ export function CancelConfirmationView({
           )}
         </Text>
       </Flex>
-      <Flex bg="background2" borderRadius="xl" gap="none" spacerProps={spacerProps} width="100%">
-        <Flex grow row justifyContent="space-between" p="md">
+      <Flex
+        bg="background2"
+        borderRadius="rounded20"
+        gap="none"
+        spacerProps={spacerProps}
+        width="100%">
+        <Flex grow row justifyContent="space-between" p="spacing16">
           <Text variant="bodySmall">{t('Network fee')}</Text>
           {!gasFeeUSD ? <ActivityIndicator /> : <Text variant="bodySmall">{gasFeeUSD}</Text>}
         </Flex>
         {accountAddress && (
-          <Flex grow row justifyContent="space-between" padding="md">
+          <Flex grow row justifyContent="space-between" padding="spacing16">
             <AddressDisplay hideAddressInSubtitle address={transactionDetails.from} />
             <Text color="textSecondary" variant="bodySmall">
               {shortenAddress(transactionDetails.from)}
@@ -84,7 +101,7 @@ export function CancelConfirmationView({
           </Flex>
         )}
       </Flex>
-      <Flex grow row gap="xs" px="xxs">
+      <Flex grow row gap="spacing8" px="spacing4">
         <Button fill emphasis={ButtonEmphasis.Tertiary} label={t('Back')} onPress={onBack} />
         <Button
           fill

@@ -65,10 +65,10 @@ function HeaderTitleElement({ data }: { data: TokenDetailsScreenQuery | undefine
   return (
     <Flex alignItems="center" gap="none" justifyContent="space-between">
       <HeaderPriceLabel price={tokenProject?.markets?.[0]?.price} />
-      <Flex centered row gap="xxs">
+      <Flex centered row gap="spacing4">
         <TokenLogo
           chainId={fromGraphQLChain(token?.chain) ?? undefined}
-          size={iconSizes.sm}
+          size={iconSizes.icon16}
           symbol={token?.symbol ?? undefined}
           url={tokenProject?.logoUrl ?? undefined}
         />
@@ -264,15 +264,15 @@ function TokenDetails({
     navigateToSwapSell,
   ])
 
-  const pb = useResponsiveProp({ xs: 'none', sm: 'md' })
+  const pb = useResponsiveProp({ xs: 'none', sm: 'spacing16' })
 
   return (
     <AnimatedBox flexGrow={1} pb={pb}>
       <HeaderScrollScreen
         centerElement={<HeaderTitleElement data={data} />}
         rightElement={<TokenDetailsFavoriteButton currencyId={_currencyId} />}>
-        <Flex gap="xl" my="xs">
-          <Flex gap="xxs">
+        <Flex gap="spacing36" my="spacing8">
+          <Flex gap="spacing4">
             <TokenDetailsHeader
               data={data}
               loading={loading}
@@ -289,16 +289,16 @@ function TokenDetails({
             />
           </Flex>
           {error ? (
-            <AnimatedBox entering={FadeInDown} exiting={FadeOutDown} paddingHorizontal="lg">
+            <AnimatedBox entering={FadeInDown} exiting={FadeOutDown} paddingHorizontal="spacing24">
               <BaseCard.InlineErrorState onRetry={retry} />
             </AnimatedBox>
           ) : null}
-          <Flex gap="lg">
+          <Flex gap="spacing24">
             <TokenBalances
               currentChainBalance={currentChainBalance}
               otherChainBalances={otherChainBalances}
             />
-            <Box mb="xs" mx="md">
+            <Box mb="spacing8" mx="spacing16">
               <TokenDetailsStats currencyId={_currencyId} data={data} tokenColor={tokenColor} />
             </Box>
           </Flex>

@@ -233,8 +233,8 @@ export function SwapReview({
           icon={
             <InfoCircleSVG
               color={theme.colors.accentWarning}
-              height={theme.iconSizes.lg}
-              width={theme.iconSizes.lg}
+              height={theme.iconSizes.icon24}
+              width={theme.iconSizes.icon24}
             />
           }
           modalName={ModalName.GasEstimateWarning}

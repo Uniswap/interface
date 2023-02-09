@@ -15,7 +15,7 @@ type KeyProps = {
   disabled?: (value: string) => boolean
   label: string
   hidden?: boolean
-  paddingTop?: 'sm'
+  paddingTop?: 'spacing12'
   align: 'flex-start' | 'center' | 'flex-end'
 }
 
@@ -47,21 +47,21 @@ export function DecimalPad({
         label: '1',
         action: KeyAction.Insert,
         align: 'center',
-        paddingTop: 'sm',
+        paddingTop: 'spacing12',
         disabled: () => disabled,
       },
       {
         label: '2',
         action: KeyAction.Insert,
         align: 'center',
-        paddingTop: 'sm',
+        paddingTop: 'spacing12',
         disabled: () => disabled,
       },
       {
         label: '3',
         action: KeyAction.Insert,
         align: 'center',
-        paddingTop: 'sm',
+        paddingTop: 'spacing12',
         disabled: () => disabled,
       },
       { label: '4', action: KeyAction.Insert, align: 'center', disabled: () => disabled },
@@ -191,7 +191,7 @@ function KeyButton({
       disabled={isDisabled}
       hapticStyle={ImpactFeedbackStyle.Light}
       justifyContent="center"
-      padding="md"
+      padding="spacing16"
       paddingTop={paddingTop}
       scaleTo={1.75}
       testID={'decimal-pad-' + label}

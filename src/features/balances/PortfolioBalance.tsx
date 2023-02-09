@@ -40,7 +40,7 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
 
   return (
     <WarmLoadingShimmer isWarmLoading={isWarmLoading && !isLoading}>
-      <Flex gap="xxs">
+      <Flex gap="spacing4">
         <DecimalNumber
           adjustsFontSizeToFit={!isLoading}
           color={isWarmLoading ? 'textSecondary' : undefined}
@@ -56,7 +56,7 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
         />
         <RelativeChange
           absoluteChange={portfolioChange?.absolute?.value}
-          arrowSize={theme.iconSizes.md}
+          arrowSize={theme.iconSizes.icon20}
           change={portfolioChange?.percentage?.value}
           loading={isLoading}
           negativeChangeColor={isWarmLoading ? 'textSecondary' : 'accentCritical'}

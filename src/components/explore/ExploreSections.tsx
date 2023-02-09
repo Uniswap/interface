@@ -126,7 +126,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
 
   if (!hasAllData && error) {
     return (
-      <Box height="100%" pb="xxxl">
+      <Box height="100%" pb="spacing60">
         <BaseCard.ErrorState
           retryButtonLabel={t('Retry')}
           title={t('Couldn’t load tokens')}
@@ -140,11 +140,11 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
     <FlashList
       ref={listRef}
       ListEmptyComponent={
-        <Box mx="lg" my="sm">
+        <Box mx="spacing24" my="spacing12">
           <Loader.Token repeat={5} />
         </Box>
       }
-      ListFooterComponent={<Inset all="sm" />}
+      ListFooterComponent={<Inset all="spacing12" />}
       ListHeaderComponent={
         <>
           <FavoritesSection showLoading={showLoading} />
@@ -152,11 +152,11 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
             row
             alignItems="center"
             justifyContent="space-between"
-            mb="xs"
-            ml="md"
-            mr="sm"
-            mt="md"
-            pl="xxs">
+            mb="spacing8"
+            ml="spacing16"
+            mr="spacing12"
+            mt="spacing16"
+            pl="spacing4">
             <Text color="textSecondary" variant="subheadSmall">
               {t('Top tokens')}
             </Text>
@@ -217,7 +217,7 @@ function FavoritesSection({ showLoading }: { showLoading: boolean }): JSX.Elemen
   if (!hasFavoritedTokens && !hasFavoritedWallets) return null
 
   return (
-    <Flex bg="backgroundBranded" gap="sm" pb="sm" pt="xs" px="sm">
+    <Flex bg="backgroundBranded" gap="spacing12" pb="spacing12" pt="spacing8" px="spacing12">
       {hasFavoritedTokens && <FavoriteTokensGrid showLoading={showLoading} />}
       {hasFavoritedWallets && <FavoriteWalletsGrid showLoading={showLoading} />}
     </Flex>
