@@ -16,6 +16,9 @@ export const Dot = styled.div<{ isCurrentPrice?: boolean; outOfRange?: boolean }
   border-radius: 50%;
   background: ${({ theme, outOfRange, isCurrentPrice }) =>
     isCurrentPrice ? theme.text : outOfRange ? theme.warning : theme.primary};
+  margin-left: -4px;
+  margin-right: -4px;
+  z-index: ${({ isCurrentPrice }) => (isCurrentPrice ? 3 : 2)};
 `
 
 const PriceVisualizeWrapper = styled.div<{ center?: boolean }>`
@@ -50,7 +53,7 @@ const PriceVisualize = ({
   center?: boolean
 }) => {
   const theme = useTheme()
-  const reverted = !priceLowerProp.baseCurrency.wrapped.sortsBefore(priceLowerProp.quoteCurrency.wrapped)
+  const reverted = priceUpperProp.lessThan(priceLowerProp)
 
   const [priceLower, priceUpper] = reverted ? [priceUpperProp, priceLowerProp] : [priceLowerProp, priceUpperProp]
   const outOfRange = price.lessThan(priceLower) || price.greaterThan(priceUpper)
@@ -84,7 +87,7 @@ const PriceVisualize = ({
       <Dot isCurrentPrice={minPrice.equalTo(price)} outOfRange={outOfRange} />
       <Flex
         height="2px"
-        width={(delta * 50).toString() + '%'}
+        width={(delta * 60).toString() + '%'}
         backgroundColor={
           middlePrice.equalTo(priceUpper) ? theme.warning : middlePrice.equalTo(price) ? theme.primary : theme.border
         }
