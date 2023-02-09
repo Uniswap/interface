@@ -22,7 +22,17 @@ import {
   useTransactionResponse,
 } from 'nft/hooks'
 import { fetchRoute } from 'nft/queries'
-import { BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType } from 'nft/types'
+import {
+  BagItemStatus,
+  BagStatus,
+  Markets,
+  ProfilePageStateType,
+  RouteResponse,
+  RoutingActions,
+  RoutingItem,
+  TokenType,
+  TxStateType,
+} from 'nft/types'
 import {
   buildNftTradeInputFromBagItems,
   buildSellObject,
@@ -219,11 +229,92 @@ const Bag = () => {
             nftTrades: usingGqlRouting ? buildNftTradeInputFromBagItems(itemsInBag) : [],
           },
           onCompleted: (data) => {
-            console.log('completed gql route', data)
+            if (!data.nftRoute?.route) {
+              setBagStatus(BagStatus.ADDING_TO_BAG)
+              return
+            }
+
+            const route: RoutingItem[] = data.nftRoute?.route?.map((routingItem) => ({
+              action: RoutingActions.Buy,
+              marketplace: routingItem.marketplace.toLowerCase(),
+              amountIn: routingItem.price.value,
+              assetIn: {
+                ETHPrice: routingItem.price.value,
+                baseAsset: routingItem.price.currency,
+                basePrice: routingItem.price.value,
+                baseDecimals: '18',
+              },
+              amountOut: routingItem.amount.toString(),
+              assetOut: {
+                id: routingItem.id,
+                decimals: 18,
+                address: routingItem.contractAddress,
+                priceInfo: {
+                  ETHPrice: routingItem.price.value,
+                  baseAsset: routingItem.price.currency,
+                  basePrice: routingItem.price.value,
+                  baseDecimals: '18',
+                },
+                tokenType: routingItem.tokenType as unknown as TokenType,
+                tokenId: routingItem.tokenId,
+                amount: routingItem.amount.toString(),
+                marketplace: routingItem.marketplace.toLowerCase() as Markets,
+                orderSource: 'api',
+              },
+            }))
+            const routeResponse: RouteResponse = {
+              route,
+              valueToSend: data.nftRoute.sendAmount.value,
+              data: data.nftRoute.calldata,
+              to: data.nftRoute.toAddress,
+            }
+
+            const updatedAssets = combineBuyItemsWithTxRoute(itemsToBuy, route)
+
+            const fetchedPriceChangedAssets = updatedAssets
+              .filter((asset) => asset.updatedPriceInfo)
+              .sort(sortUpdatedAssets)
+            const fetchedUnavailableAssets = updatedAssets.filter((asset) => asset.isUnavailable)
+            const fetchedUnchangedAssets = updatedAssets.filter(
+              (asset) => !asset.updatedPriceInfo && !asset.isUnavailable
+            )
+            const hasReviewedAssets = fetchedUnchangedAssets.length > 0
+            const hasAssetsInReview = fetchedPriceChangedAssets.length > 0
+            const hasUnavailableAssets = fetchedUnavailableAssets.length > 0
+            const hasAssets = hasReviewedAssets || hasAssetsInReview || hasUnavailableAssets
+            const shouldReview = hasAssetsInReview || hasUnavailableAssets
+
+            setItemsInBag([
+              ...fetchedUnavailableAssets.map((unavailableAsset) => ({
+                asset: unavailableAsset,
+                status: BagItemStatus.UNAVAILABLE,
+              })),
+              ...fetchedPriceChangedAssets.map((changedAsset) => ({
+                asset: changedAsset,
+                status: BagItemStatus.REVIEWING_PRICE_CHANGE,
+              })),
+              ...fetchedUnchangedAssets.map((unchangedAsset) => ({
+                asset: unchangedAsset,
+                status: BagItemStatus.REVIEWED,
+              })),
+            ])
+            setLocked(false)
+
+            if (hasAssets) {
+              if (!shouldReview) {
+                purchaseAssets(routeResponse)
+                setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
+              } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
+              else {
+                setBagStatus(BagStatus.IN_REVIEW)
+              }
+            } else {
+              setBagStatus(BagStatus.ADDING_TO_BAG)
+            }
           },
         })
       } else {
-        const data = await queryClient.fetchQuery(['assetsRoute', ethSellObject, itemsToBuy, account], () =>
+        const routeData = await queryClient.fetchQuery(['assetsRoute', ethSellObject, itemsToBuy, account], () =>
           fetchRoute({
             toSell: [ethSellObject],
             toBuy: itemsToBuy,
@@ -231,7 +322,7 @@ const Bag = () => {
           })
         )
 
-        const updatedAssets = combineBuyItemsWithTxRoute(itemsToBuy, data.route)
+        const updatedAssets = combineBuyItemsWithTxRoute(itemsToBuy, routeData.route)
 
         const fetchedPriceChangedAssets = updatedAssets
           .filter((asset) => asset.updatedPriceInfo)
@@ -262,7 +353,7 @@ const Bag = () => {
 
         if (hasAssets) {
           if (!shouldReview) {
-            purchaseAssets(data)
+            purchaseAssets(routeData)
             setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
           } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
           else {

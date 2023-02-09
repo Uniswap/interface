@@ -30,7 +30,7 @@ export type SellItem = {
 export type BuyItem = {
   id?: string
   symbol?: string
-  name: string
+  name?: string
   decimals: number
   address: string
   priceInfo: PriceInfo
