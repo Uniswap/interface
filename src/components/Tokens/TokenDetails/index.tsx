@@ -152,6 +152,8 @@ export default function TokenDetails({
 
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
 
+  const [openTokenSafetyModal, setOpenTokenSafetyModal] = useState(false)
+
   // Show token safety modal if Swap-reviewing a warning token, at all times if the current token is blocked
   const shouldShowSpeedbump = !useIsUserAddedTokenOnChain(address, pageChainId) && tokenWarning !== null
   const onReviewSwapClick = useCallback(
@@ -215,15 +217,12 @@ export default function TokenDetails({
           <TokenDetailsSkeleton />
         )}
 
-        <RightPanel>
-          <div
-            style={{
-              position: 'relative',
-            }}
-          >
+        <RightPanel onClick={() => isBlockedToken && setOpenTokenSafetyModal(true)}>
+          <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto', position: 'relative' }}>
             <Widget
-              outputToken={token ?? undefined}
-              defaultToken={token ?? undefined}
+              defaultTokens={{
+                default: token ?? undefined,
+              }}
               onDefaultTokenChange={navigateToWidgetSelectedToken}
               onReviewSwapClick={onReviewSwapClick}
             />
@@ -234,10 +233,12 @@ export default function TokenDetails({
         {token && <MobileBalanceSummaryFooter token={token} />}
 
         <TokenSafetyModal
-          isOpen={isBlockedToken || !!continueSwap}
+          isOpen={openTokenSafetyModal || !!continueSwap}
           tokenAddress={address}
           onContinue={() => onResolveSwap(true)}
-          onBlocked={() => navigate(-1)}
+          onBlocked={() => {
+            setOpenTokenSafetyModal(false)
+          }}
           onCancel={() => onResolveSwap(false)}
           showCancel={true}
         />

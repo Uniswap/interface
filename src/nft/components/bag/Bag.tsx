@@ -2,7 +2,9 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { GqlRoutingVariant, useGqlRoutingFlag } from 'featureFlags/flags/gqlRouting'
 import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
+import { useNftRoute } from 'graphql/data/nft/Routing'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
 import ListingModal from 'nft/components/bag/profile/ListingModal'
@@ -134,6 +136,7 @@ const Bag = () => {
   const isNFTPage = useIsNftPage()
   const isMobile = useIsMobile()
   const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
+  const usingGqlRouting = useGqlRoutingFlag() === GqlRoutingVariant.Enabled
 
   const sendTransaction = useSendTransaction((state) => state.sendTransaction)
   const transactionState = useSendTransaction((state) => state.state)
@@ -194,6 +197,7 @@ const Bag = () => {
     setBagExpanded({ bagExpanded: false, manualClose: true })
   }, [setBagExpanded])
 
+  useNftRoute(usingGqlRouting ? account ?? '' : '', [])
   const fetchAssets = async () => {
     const itemsToBuy = itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset)
     const ethSellObject = buildSellObject(

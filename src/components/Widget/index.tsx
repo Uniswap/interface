@@ -33,7 +33,7 @@ import styled from 'styled-components/macro'
 import { computeRealizedPriceImpact } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
 
-import { useSyncWidgetInputs } from './inputs'
+import { DefaultTokens, useSyncWidgetInputs } from './inputs'
 import { useSyncWidgetSettings } from './settings'
 import { DARK_THEME, LIGHT_THEME } from './theme'
 import { useSyncWidgetTransactions } from './transactions'
@@ -47,18 +47,14 @@ function useWidgetTheme() {
 }
 
 interface WidgetProps {
-  inputToken?: Currency
-  outputToken?: Currency
-  defaultToken?: Currency
+  defaultTokens: DefaultTokens
   width?: number | string
   onDefaultTokenChange?: (token: Currency) => void
   onReviewSwapClick?: OnReviewSwapClick
 }
 
 export default function Widget({
-  inputToken,
-  outputToken,
-  defaultToken,
+  defaultTokens,
   width = DEFAULT_WIDGET_WIDTH,
   onDefaultTokenChange,
   onReviewSwapClick,
@@ -66,7 +62,10 @@ export default function Widget({
   const { connector, provider } = useWeb3React()
   const locale = useActiveLocale()
   const theme = useWidgetTheme()
-  const { inputs, tokenSelector } = useSyncWidgetInputs({ inputToken, outputToken, defaultToken, onDefaultTokenChange })
+  const { inputs, tokenSelector } = useSyncWidgetInputs({
+    defaultTokens,
+    onDefaultTokenChange,
+  })
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
 

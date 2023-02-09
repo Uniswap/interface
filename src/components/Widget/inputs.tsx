@@ -8,10 +8,11 @@ const EMPTY_AMOUNT = ''
 
 type SwapValue = Required<SwapController>['value']
 type SwapTokens = Pick<SwapValue, Field.INPUT | Field.OUTPUT> & { default?: Currency }
+export type DefaultTokens = Partial<SwapTokens>
 
 function missingDefaultToken(tokens: SwapTokens) {
   if (!tokens.default) return false
-  return !(tokens[Field.INPUT]?.equals(tokens.default) || tokens[Field.OUTPUT]?.equals(tokens.default))
+  return !tokens[Field.INPUT]?.equals(tokens.default) && !tokens[Field.OUTPUT]?.equals(tokens.default)
 }
 
 /**
@@ -20,39 +21,31 @@ function missingDefaultToken(tokens: SwapTokens) {
  * Enforces that token is a part of the returned value.
  */
 export function useSyncWidgetInputs({
-  inputToken,
-  outputToken,
-  defaultToken,
+  defaultTokens,
   onDefaultTokenChange,
 }: {
-  inputToken?: Currency
-  outputToken?: Currency
-  defaultToken?: Currency
+  defaultTokens: DefaultTokens
   onDefaultTokenChange?: (token: Currency) => void
 }) {
   const trace = useTrace({ section: InterfaceSectionName.WIDGET })
 
   const [type, setType] = useState<SwapValue['type']>(TradeType.EXACT_INPUT)
   const [amount, setAmount] = useState<SwapValue['amount']>(EMPTY_AMOUNT)
-  const [tokens, setTokens] = useState<SwapTokens>({
-    [Field.INPUT]: inputToken,
-    [Field.OUTPUT]: outputToken,
-    default: defaultToken,
-  })
+  const [tokens, setTokens] = useState<SwapTokens>(defaultTokens)
 
   useEffect(() => {
-    if ((inputToken || outputToken) && !tokens[Field.INPUT] && !tokens[Field.OUTPUT]) {
+    if (!tokens[Field.INPUT] && !tokens[Field.OUTPUT]) {
       setTokens((tokens) => {
         const update = {
           ...tokens,
-          [Field.INPUT]: inputToken ?? tokens[Field.INPUT],
-          [Field.OUTPUT]: outputToken ?? tokens[Field.OUTPUT] ?? defaultToken,
-          default: defaultToken,
+          [Field.INPUT]: defaultTokens[Field.INPUT] ?? tokens[Field.INPUT],
+          [Field.OUTPUT]: defaultTokens[Field.OUTPUT] ?? tokens[Field.OUTPUT] ?? defaultTokens.default,
+          default: defaultTokens.default,
         }
         return update
       })
     }
-  }, [defaultToken, inputToken, outputToken, tokens])
+  }, [defaultTokens, tokens])
 
   const onAmountChange = useCallback(
     (field: Field, amount: string, origin?: 'max') => {
@@ -115,6 +108,7 @@ export function useSyncWidgetInputs({
     },
     [onDefaultTokenChange, selectingField, tokens]
   )
+
   const tokenSelector = (
     <CurrencySearchModal
       isOpen={selectingField !== undefined}
@@ -122,6 +116,7 @@ export function useSyncWidgetInputs({
       selectedCurrency={selectingField && tokens[selectingField]}
       otherSelectedCurrency={selectingField && tokens[invertField(selectingField)]}
       onCurrencySelect={onTokenSelect}
+      showCommonBases
     />
   )
 
