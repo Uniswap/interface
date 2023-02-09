@@ -9,7 +9,7 @@ import { ListingMarket, ListingWarning, WalletAsset } from 'nft/types'
 import { LOOKS_RARE_CREATOR_BASIS_POINTS } from 'nft/utils'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
-import React, { Dispatch, useEffect, useMemo, useState } from 'react'
+import React, { Dispatch, useEffect, useMemo, useReducer, useState } from 'react'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
@@ -112,8 +112,8 @@ export const MarketplaceRow = ({
   const showGlobalPrice = globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride && globalPrice
   const setAssetListPrice = useSellAsset((state) => state.setAssetListPrice)
   const removeAssetMarketplace = useSellAsset((state) => state.removeAssetMarketplace)
-  const [hovered, setHovered] = useState(false)
-  const handleHover = () => setHovered(!hovered)
+  const [marketIconHovered, toggleMarketIconHovered] = useReducer((s) => !s, false)
+  const [marketRowHovered, toggleMarketRowHovered] = useReducer((s) => !s, false)
 
   const price = showGlobalPrice ? globalPrice : listPrice
 
@@ -197,7 +197,7 @@ export const MarketplaceRow = ({
   }
 
   return (
-    <Row>
+    <Row onMouseEnter={toggleMarketRowHovered} onMouseLeave={toggleMarketRowHovered}>
       <PastPriceInfo>
         <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
           {asset.floorPrice ? `${asset.floorPrice.toFixed(3)} ETH` : '-'}
@@ -213,8 +213,8 @@ export const MarketplaceRow = ({
         {/* change this logic to be show multiple stacked or single or none */}
         {showMarketplaceLogo && (
           <MarketIconWrapper
-            onMouseEnter={handleHover}
-            onMouseLeave={handleHover}
+            onMouseEnter={toggleMarketIconHovered}
+            onMouseLeave={toggleMarketIconHovered}
             onClick={(e) => {
               e.stopPropagation()
               removeAssetMarketplace(asset, selectedMarkets[0])
@@ -222,7 +222,7 @@ export const MarketplaceRow = ({
             }}
           >
             <MarketIcon alt={selectedMarkets[0].name} src={selectedMarkets[0].icon} />
-            <RemoveMarketplaceWrap hovered={hovered}>
+            <RemoveMarketplaceWrap hovered={marketIconHovered}>
               <img width="32px" src="/nft/svgs/minusCircle.svg" alt="Remove item" />
             </RemoveMarketplaceWrap>
           </MarketIconWrapper>
@@ -250,7 +250,7 @@ export const MarketplaceRow = ({
             shrink={expandMarketplaceRows}
           />
         )}
-        {rowHovered && (showMarketplaceLogo || selectedMarkets.length > 1) && (
+        {rowHovered && ((showMarketplaceLogo && marketRowHovered) || selectedMarkets.length > 1) && (
           <ExpandMarketIconWrapper onClick={toggleExpandMarketplaceRows}>
             {expandMarketplaceRows ? <RowsExpandedIcon /> : <RowsCollpsedIcon />}
           </ExpandMarketIconWrapper>
