@@ -37,7 +37,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*A merge has been detected into the <https://github.com/Uniswap/mobile/tree/${{ github.ref }}|${{ github.ref_name }}> branch:*\n"
+                    "text": "*Code merged to <https://github.com/Uniswap/mobile/tree/${{ github.ref }}|${{ github.ref_name }}> branch:*\n"
                   }
                 },
                 {
@@ -47,14 +47,14 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Actor*: <https://github.com/${{ github.triggering_actor }}/|${{ github.triggering_actor }}>\n*Force Pushed*: ${{ github.event.forced || false }}\n"
+                    "text": "*Actor*: <https://github.com/${{ github.triggering_actor }}/|${{ github.triggering_actor }}>\n*Force pushed*: ${{ github.event.forced || false }}\n"
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "${{ env.SLACK_COMMITS }}"
+                    "text": "${{ env.SLACK_COMMITS || 'New branch created' }}"
                   }
                 },
                 {

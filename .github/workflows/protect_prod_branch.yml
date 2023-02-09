@@ -2,7 +2,7 @@ name: Commit protection for releases/prod
 
 # This CI job will review the contents of any PR that is targeting the releases/prod branch
 # for merging. It reviews all of the commits in the PR in question and confirms that each of
-# those commits exists on the releases/beta branch. Thus
+# those commits exists on the releases/[marketingVersionNumber] branch. Thus
 
 on:
   pull_request:
@@ -11,16 +11,28 @@ on:
 
 jobs:
   prod-test-commits:
-    name: 'Check that commits exist on releases/beta branch'
+    name: 'Check that commits exist on releases/[marketingVersionNumber] branch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
         with:
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
-          ref: releases/beta
+          ref: main
+      - name: Get marketing version number
+        run: |
+          fastlane ios getMarketingVersionNumber
+        env:
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
+          CI: true
+      - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
+        with:
+          token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
+          ref: releases/$IOS_VERSION_NUMBER
           fetch-depth: 0
-      - name: 'Test for presence of commits on releases/beta branch'
+      - name: 'Test for presence of commits on releases/[marketingVersionNumber] branch'
         env:
           GH_TOKEN: ${{ secrets.SERVICE_ACCOUNT_PAT }}
         run: |
-          gh pr view ${{github.event.number}} --json commits | jq '.commits[].oid' | sed 's/"//g' | xargs -I % sh -c 'echo "Testing for presence of commit % on releases/beta branch..." && git branch --contains % | grep releases/beta && echo "Found commit % on releases/beta branch" && exit 0 || echo "Could not find commit % on releases/beta branch - failing!" && exit 1'
+          gh pr view ${{github.event.number}} --json commits | jq '.commits[].oid' | sed 's/"//g' | xargs -I % sh -c 'echo "Testing for presence of commit % on releases/$IOS_VERSION_NUMBER branch..." && git branch --contains % | grep releases/$IOS_VERSION_NUMBER && echo "Found commit % on releases/$IOS_VERSION_NUMBER branch" && exit 0 || echo "Could not find commit % on releases/$IOS_VERSION_NUMBER branch - failing!" && exit 1'

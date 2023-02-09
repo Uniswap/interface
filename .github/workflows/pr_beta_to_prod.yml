@@ -1,6 +1,6 @@
-name: 3 | Generate PR for releases/beta to releases/prod
+name: 3 | Generate PR for releases/[versionNumber] to releases/prod
 
-# This CI job is responsible for generating PRs that bring the HEAD of releases/beta into releases/prod.
+# This CI job is responsible for generating PRs that bring the HEAD of releases/[marketingVersionNumber] into releases/prod.
 # These PRs are meant to be the only (standard) way that code is merged into the releases/prod
 # branch.
 #
@@ -17,11 +17,23 @@ jobs:
       - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
         with:
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
+          ref: main
+      - name: Get marketing version number
+        run: |
+          fastlane ios getMarketingVersionNumber
+        env:
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
+          CI: true
+      - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
+        with:
+          token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
           ref: releases/prod
       - name: Reset promotion branch
         run: |
-          git fetch origin releases/beta:releases/beta
-          git reset --hard releases/beta
+          git fetch origin releases/$IOS_VERSION_NUMBER:releases/$IOS_VERSION_NUMBER
+          git reset --hard releases/$IOS_VERSION_NUMBER
       - name: Setup git
         run: |
           git config user.name "UL Mobile Service Account"
@@ -53,7 +65,7 @@ jobs:
         run: |
           echo "### Description" > /tmp/foo
           echo "" >> /tmp/foo
-          echo "This PR promotes the following commits from beta to prod." >> /tmp/foo
+          echo "This PR promotes the following commits from releases/$IOS_VERSION_NUMBER to prod." >> /tmp/foo
           echo "" >> /tmp/foo
           gh pr view ${{ steps.cpr.outputs.pull-request-number }} --json commits | jq '.commits[] | [.oid, .messageHeadline] | @tsv' | sed 's/"//g' | sed 's/\\t/ - /g' >> /tmp/foo
           echo "" >> /tmp/foo
