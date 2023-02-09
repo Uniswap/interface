@@ -4,6 +4,7 @@ import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { GqlRoutingVariant, useGqlRoutingFlag } from 'featureFlags/flags/gqlRouting'
 import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
+import { useNftRouteLazyQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
 import ListingModal from 'nft/components/bag/profile/ListingModal'
@@ -20,10 +21,10 @@ import {
   useSendTransaction,
   useTransactionResponse,
 } from 'nft/hooks'
-import useNftBagRouting from 'nft/hooks/useNftBagRouting'
 import { fetchRoute } from 'nft/queries'
 import { BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType } from 'nft/types'
 import {
+  buildNftTradeInputFromBagItems,
   buildSellObject,
   formatAssetEventProperties,
   recalculateBagUsingPooledAssets,
@@ -197,7 +198,8 @@ const Bag = () => {
     setBagExpanded({ bagExpanded: false, manualClose: true })
   }, [setBagExpanded])
 
-  useNftBagRouting(itemsInBag, usingGqlRouting)
+  const [fetchGqlRoute] = useNftRouteLazyQuery()
+
   const fetchAssets = async () => {
     const itemsToBuy = itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset)
     const ethSellObject = buildSellObject(
@@ -210,48 +212,65 @@ const Bag = () => {
     !bagIsLocked && setLocked(true)
     setBagStatus(BagStatus.FETCHING_ROUTE)
     try {
-      const data = await queryClient.fetchQuery(['assetsRoute', ethSellObject, itemsToBuy, account], () =>
-        fetchRoute({
-          toSell: [ethSellObject],
-          toBuy: itemsToBuy,
-          senderAddress: account ?? '',
+      if (usingGqlRouting) {
+        fetchGqlRoute({
+          variables: {
+            senderAddress: usingGqlRouting && account ? account : '',
+            nftTrades: usingGqlRouting ? buildNftTradeInputFromBagItems(itemsInBag) : [],
+          },
+          onCompleted: (data) => {
+            console.log('completed gql route', data)
+          },
         })
-      )
-
-      const updatedAssets = combineBuyItemsWithTxRoute(itemsToBuy, data.route)
-
-      const fetchedPriceChangedAssets = updatedAssets.filter((asset) => asset.updatedPriceInfo).sort(sortUpdatedAssets)
-      const fetchedUnavailableAssets = updatedAssets.filter((asset) => asset.isUnavailable)
-      const fetchedUnchangedAssets = updatedAssets.filter((asset) => !asset.updatedPriceInfo && !asset.isUnavailable)
-      const hasReviewedAssets = fetchedUnchangedAssets.length > 0
-      const hasAssetsInReview = fetchedPriceChangedAssets.length > 0
-      const hasUnavailableAssets = fetchedUnavailableAssets.length > 0
-      const hasAssets = hasReviewedAssets || hasAssetsInReview || hasUnavailableAssets
-      const shouldReview = hasAssetsInReview || hasUnavailableAssets
-
-      setItemsInBag([
-        ...fetchedUnavailableAssets.map((unavailableAsset) => ({
-          asset: unavailableAsset,
-          status: BagItemStatus.UNAVAILABLE,
-        })),
-        ...fetchedPriceChangedAssets.map((changedAsset) => ({
-          asset: changedAsset,
-          status: BagItemStatus.REVIEWING_PRICE_CHANGE,
-        })),
-        ...fetchedUnchangedAssets.map((unchangedAsset) => ({ asset: unchangedAsset, status: BagItemStatus.REVIEWED })),
-      ])
-      setLocked(false)
-
-      if (hasAssets) {
-        if (!shouldReview) {
-          purchaseAssets(data)
-          setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
-        } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
-        else {
-          setBagStatus(BagStatus.IN_REVIEW)
-        }
       } else {
-        setBagStatus(BagStatus.ADDING_TO_BAG)
+        const data = await queryClient.fetchQuery(['assetsRoute', ethSellObject, itemsToBuy, account], () =>
+          fetchRoute({
+            toSell: [ethSellObject],
+            toBuy: itemsToBuy,
+            senderAddress: account ?? '',
+          })
+        )
+
+        const updatedAssets = combineBuyItemsWithTxRoute(itemsToBuy, data.route)
+
+        const fetchedPriceChangedAssets = updatedAssets
+          .filter((asset) => asset.updatedPriceInfo)
+          .sort(sortUpdatedAssets)
+        const fetchedUnavailableAssets = updatedAssets.filter((asset) => asset.isUnavailable)
+        const fetchedUnchangedAssets = updatedAssets.filter((asset) => !asset.updatedPriceInfo && !asset.isUnavailable)
+        const hasReviewedAssets = fetchedUnchangedAssets.length > 0
+        const hasAssetsInReview = fetchedPriceChangedAssets.length > 0
+        const hasUnavailableAssets = fetchedUnavailableAssets.length > 0
+        const hasAssets = hasReviewedAssets || hasAssetsInReview || hasUnavailableAssets
+        const shouldReview = hasAssetsInReview || hasUnavailableAssets
+
+        setItemsInBag([
+          ...fetchedUnavailableAssets.map((unavailableAsset) => ({
+            asset: unavailableAsset,
+            status: BagItemStatus.UNAVAILABLE,
+          })),
+          ...fetchedPriceChangedAssets.map((changedAsset) => ({
+            asset: changedAsset,
+            status: BagItemStatus.REVIEWING_PRICE_CHANGE,
+          })),
+          ...fetchedUnchangedAssets.map((unchangedAsset) => ({
+            asset: unchangedAsset,
+            status: BagItemStatus.REVIEWED,
+          })),
+        ])
+        setLocked(false)
+
+        if (hasAssets) {
+          if (!shouldReview) {
+            purchaseAssets(data)
+            setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
+          } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
+          else {
+            setBagStatus(BagStatus.IN_REVIEW)
+          }
+        } else {
+          setBagStatus(BagStatus.ADDING_TO_BAG)
+        }
       }
     } catch (error) {
       setBagStatus(BagStatus.ADDING_TO_BAG)
