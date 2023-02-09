@@ -3,7 +3,7 @@ import Row from 'components/Row'
 import { VerifiedIcon } from 'nft/components/icons'
 import { useIsMobile, useSellAsset } from 'nft/hooks'
 import { ListingMarket, WalletAsset } from 'nft/types'
-import { Dispatch, useEffect, useState } from 'react'
+import React, { Dispatch, useEffect, useReducer, useState } from 'react'
 import { Trash2 } from 'react-feather'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
@@ -23,7 +23,11 @@ const NFTListRowWrapper = styled(Row)`
 
 const RemoveIconContainer = styled.div`
   width: 40px;
+  height: 44px;
   padding-left: 10px;
+  align-self: flex-start;
+  align-items: center;
+  display: flex;
 `
 
 const NFTInfoWrapper = styled(Row)`
@@ -31,11 +35,6 @@ const NFTInfoWrapper = styled(Row)`
   min-width: 0px;
   flex: 1.5;
   margin-bottom: auto;
-`
-
-const ExpandMarketIconWrapper = styled.div`
-  cursor: pointer;
-  margin-right: 8px;
 `
 
 const NFTImage = styled.img`
@@ -102,21 +101,27 @@ export const NFTListRow = ({
   setGlobalPrice,
   selectedMarkets,
 }: NFTListRowProps) => {
-  const [expandMarketplaceRows, setExpandMarketplaceRows] = useState(false)
+  const [expandMarketplaceRows, toggleExpandMarketplaceRows] = useReducer((s) => !s, false)
   const removeAsset = useSellAsset((state) => state.removeSellAsset)
-  const [localMarkets, setLocalMarkets] = useState([])
-  const [hovered, setHovered] = useState(false)
-  const handleHover = () => setHovered(!hovered)
+  const [localMarkets, setLocalMarkets] = useState<ListingMarket[]>([])
+  const [hovered, toggleHovered] = useReducer((s) => !s, false)
   const theme = useTheme()
   const isMobile = useIsMobile()
 
   useEffect(() => {
     setLocalMarkets(JSON.parse(JSON.stringify(selectedMarkets)))
-    selectedMarkets.length < 2 && setExpandMarketplaceRows(false)
-  }, [selectedMarkets])
+    selectedMarkets.length < 2 && expandMarketplaceRows && toggleExpandMarketplaceRows()
+  }, [expandMarketplaceRows, selectedMarkets])
 
   return (
-    <NFTListRowWrapper onMouseEnter={handleHover} onMouseLeave={handleHover}>
+    <NFTListRowWrapper
+      onMouseEnter={() => {
+        !hovered && toggleHovered()
+      }}
+      onMouseLeave={() => {
+        hovered && toggleHovered()
+      }}
+    >
       {!isMobile && (
         <RemoveIconContainer>
           {hovered && (
@@ -133,11 +138,6 @@ export const NFTListRow = ({
         </RemoveIconContainer>
       )}
       <NFTInfoWrapper>
-        {/* {localMarkets.length > 1 && (
-          <ExpandMarketIconWrapper onClick={() => setExpandMarketplaceRows(!expandMarketplaceRows)}>
-            {expandMarketplaceRows ? <RowsExpandedIcon /> : <RowsCollpsedIcon />}
-          </ExpandMarketIconWrapper>
-        )} */}
         <NFTImage alt={asset.name} src={asset.imageUrl || '/nft/svgs/image-placeholder.svg'} />
         <TokenInfoWrapper>
           <TokenName>{asset.name ? asset.name : `#${asset.tokenId}`}</TokenName>
@@ -159,8 +159,10 @@ export const NFTListRow = ({
                 removeMarket={() => localMarkets.splice(index, 1)}
                 asset={asset}
                 showMarketplaceLogo={true}
-                key={index}
+                key={asset.name + market.name}
                 expandMarketplaceRows={expandMarketplaceRows}
+                rowHovered={hovered}
+                toggleExpandMarketplaceRows={toggleExpandMarketplaceRows}
               />
             )
           })
@@ -172,6 +174,8 @@ export const NFTListRow = ({
             selectedMarkets={localMarkets}
             asset={asset}
             showMarketplaceLogo={false}
+            rowHovered={hovered}
+            toggleExpandMarketplaceRows={toggleExpandMarketplaceRows}
           />
         )}
       </MarketPlaceRowWrapper>

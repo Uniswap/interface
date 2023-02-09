@@ -3,12 +3,13 @@ import { t } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { RowsCollpsedIcon, RowsExpandedIcon } from 'nft/components/icons'
 import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, ListingWarning, WalletAsset } from 'nft/types'
 import { LOOKS_RARE_CREATOR_BASIS_POINTS } from 'nft/utils'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
-import { Dispatch, useEffect, useMemo, useState } from 'react'
+import React, { Dispatch, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
@@ -42,6 +43,12 @@ const MarketIcon = styled.img`
   height: 28px;
   border-radius: 4px;
   object-fit: cover;
+`
+
+const ExpandMarketIconWrapper = styled.div`
+  cursor: pointer;
+  margin-left: 14px;
+  height: 28px;
 `
 
 const FeeColumnWrapper = styled(Column)`
@@ -84,6 +91,8 @@ interface MarketplaceRowProps {
   asset: WalletAsset
   showMarketplaceLogo: boolean
   expandMarketplaceRows?: boolean
+  rowHovered?: boolean
+  toggleExpandMarketplaceRows: React.DispatchWithoutAction
 }
 
 export const MarketplaceRow = ({
@@ -95,6 +104,8 @@ export const MarketplaceRow = ({
   asset,
   showMarketplaceLogo,
   expandMarketplaceRows,
+  toggleExpandMarketplaceRows,
+  rowHovered,
 }: MarketplaceRowProps) => {
   const [listPrice, setListPrice] = useState<number>()
   const [globalOverride, setGlobalOverride] = useState(false)
@@ -199,6 +210,7 @@ export const MarketplaceRow = ({
       </PastPriceInfo>
 
       <Row flex="2">
+        {/* change this logic to be show multiple stacked or single or none */}
         {showMarketplaceLogo && (
           <MarketIconWrapper
             onMouseEnter={handleHover}
@@ -237,6 +249,11 @@ export const MarketplaceRow = ({
             asset={asset}
             shrink={expandMarketplaceRows}
           />
+        )}
+        {rowHovered && (showMarketplaceLogo || selectedMarkets.length > 1) && (
+          <ExpandMarketIconWrapper onClick={toggleExpandMarketplaceRows}>
+            {expandMarketplaceRows ? <RowsExpandedIcon /> : <RowsCollpsedIcon />}
+          </ExpandMarketIconWrapper>
         )}
       </Row>
 
