@@ -1,7 +1,7 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { VerifiedIcon } from 'nft/components/icons'
-import { useIsMobile, useSellAsset } from 'nft/hooks'
+import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import React, { Dispatch, useEffect, useReducer, useState } from 'react'
 import { Trash2 } from 'react-feather'
@@ -28,6 +28,10 @@ const RemoveIconContainer = styled.div`
   align-self: flex-start;
   align-items: center;
   display: flex;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    display: none;
+  }
 `
 
 const NFTInfoWrapper = styled(Row)`
@@ -106,7 +110,6 @@ export const NFTListRow = ({
   const [localMarkets, setLocalMarkets] = useState<ListingMarket[]>([])
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
   const theme = useTheme()
-  const isMobile = useIsMobile()
 
   useEffect(() => {
     setLocalMarkets(JSON.parse(JSON.stringify(selectedMarkets)))
@@ -122,21 +125,20 @@ export const NFTListRow = ({
         hovered && toggleHovered()
       }}
     >
-      {!isMobile && (
-        <RemoveIconContainer>
-          {hovered && (
-            <Trash2
-              height={20}
-              width={20}
-              color={theme.textSecondary}
-              cursor="pointer"
-              onClick={() => {
-                removeAsset(asset)
-              }}
-            />
-          )}
-        </RemoveIconContainer>
-      )}
+      <RemoveIconContainer>
+        {hovered && (
+          <Trash2
+            height={20}
+            width={20}
+            color={theme.textSecondary}
+            cursor="pointer"
+            onClick={() => {
+              removeAsset(asset)
+            }}
+          />
+        )}
+      </RemoveIconContainer>
+
       <NFTInfoWrapper>
         <NFTImage alt={asset.name} src={asset.imageUrl || '/nft/svgs/image-placeholder.svg'} />
         <TokenInfoWrapper>
