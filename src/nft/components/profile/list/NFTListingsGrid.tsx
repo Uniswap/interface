@@ -54,7 +54,7 @@ const PriceInfoHeader = styled.div`
 `
 
 const DropdownAndHeaderWrapper = styled(Row)`
-  flex: 2;
+  flex: 3;
   gap: 4px;
 `
 

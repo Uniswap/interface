@@ -29,20 +29,30 @@ const PastPriceInfo = styled(Column)`
 `
 
 const RemoveMarketplaceWrap = styled(RemoveIconWrap)`
-  top: 11px;
+  top: 8px;
+  left: 16px;
+  z-index: 3;
+`
+
+const MarketIconsWrapper = styled(Row)`
+  position: relative;
+  margin-right: 12px;
+  width: 44px;
+  justify-content: flex-end;
 `
 
 const MarketIconWrapper = styled(Column)`
   position: relative;
   cursor: pointer;
-  margin-right: 16px;
 `
 
-const MarketIcon = styled.img`
-  width: 28px;
-  height: 28px;
+const MarketIcon = styled.img<{ index: number }>`
+  width: 20px;
+  height: 20px;
   border-radius: 4px;
   object-fit: cover;
+  z-index: ${({ index }) => 2 - index};
+  margin-left: ${({ index }) => `${index === 0 ? 0 : -8}px`};
 `
 
 const ExpandMarketIconWrapper = styled.div`
@@ -209,23 +219,26 @@ export const MarketplaceRow = ({
         </ThemedText.BodySmall>
       </PastPriceInfo>
 
-      <Row flex="2">
-        {/* change this logic to be show multiple stacked or single or none */}
-        {showMarketplaceLogo && (
-          <MarketIconWrapper
-            onMouseEnter={toggleMarketIconHovered}
-            onMouseLeave={toggleMarketIconHovered}
-            onClick={(e) => {
-              e.stopPropagation()
-              removeAssetMarketplace(asset, selectedMarkets[0])
-              removeMarket && removeMarket()
-            }}
-          >
-            <MarketIcon alt={selectedMarkets[0].name} src={selectedMarkets[0].icon} />
-            <RemoveMarketplaceWrap hovered={marketIconHovered}>
-              <img width="32px" src="/nft/svgs/minusCircle.svg" alt="Remove item" />
-            </RemoveMarketplaceWrap>
-          </MarketIconWrapper>
+      <Row flex="3">
+        {(expandMarketplaceRows || selectedMarkets.length > 1) && (
+          <MarketIconsWrapper onMouseEnter={toggleMarketIconHovered} onMouseLeave={toggleMarketIconHovered}>
+            {selectedMarkets.map((market, index) => (
+              <MarketIconWrapper
+                key={market.name + index}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  removeAssetMarketplace(asset, selectedMarkets[0])
+                  removeMarket && removeMarket()
+                }}
+              >
+                <MarketIcon alt={selectedMarkets[0].name} src={market.icon} index={index} />
+                <RemoveMarketplaceWrap hovered={marketIconHovered && (expandMarketplaceRows ?? false)}>
+                  <img width="20px" src="/nft/svgs/minusCircle.svg" alt="Remove item" />
+                </RemoveMarketplaceWrap>
+              </MarketIconWrapper>
+            ))}
+            {/* */}
+          </MarketIconsWrapper>
         )}
         {globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride ? (
           <PriceTextInput
@@ -236,7 +249,6 @@ export const MarketplaceRow = ({
             globalOverride={globalOverride}
             warning={warning}
             asset={asset}
-            shrink={expandMarketplaceRows}
           />
         ) : (
           <PriceTextInput
@@ -247,10 +259,9 @@ export const MarketplaceRow = ({
             globalOverride={globalOverride}
             warning={warning}
             asset={asset}
-            shrink={expandMarketplaceRows}
           />
         )}
-        {rowHovered && ((showMarketplaceLogo && marketRowHovered) || selectedMarkets.length > 1) && (
+        {rowHovered && ((expandMarketplaceRows && marketRowHovered) || selectedMarkets.length > 1) && (
           <ExpandMarketIconWrapper onClick={toggleExpandMarketplaceRows}>
             {expandMarketplaceRows ? <RowsExpandedIcon /> : <RowsCollpsedIcon />}
           </ExpandMarketIconWrapper>
