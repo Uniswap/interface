@@ -53,7 +53,6 @@ const PriceVisualize = ({
   center?: boolean
 }) => {
   const theme = useTheme()
-  // const reverted = !priceLowerProp.baseCurrency.wrapped.sortsBefore(priceLowerProp.quoteCurrency.wrapped)
   const reverted = priceUpperProp.lessThan(priceLowerProp)
 
   const [priceLower, priceUpper] = reverted ? [priceUpperProp, priceLowerProp] : [priceLowerProp, priceUpperProp]
