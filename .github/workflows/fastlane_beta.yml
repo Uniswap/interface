@@ -51,7 +51,7 @@ jobs:
       - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
         with:
           fetch-depth: 0
-          ref: releases/$IOS_VERSION_NUMBER
+          ref: releases/${{ env.IOS_VERSION_NUMBER }}
       # Set path variables needed for caches
       - name: Set workflow variables
         id: workflow-variables
