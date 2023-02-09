@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
-import { Field } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
@@ -153,6 +152,8 @@ export default function TokenDetails({
 
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
 
+  const [openTokenSafetyModal, setOpenTokenSafetyModal] = useState(false)
+
   // Show token safety modal if Swap-reviewing a warning token, at all times if the current token is blocked
   const shouldShowSpeedbump = !useIsUserAddedTokenOnChain(address, pageChainId) && tokenWarning !== null
   const onReviewSwapClick = useCallback(
@@ -216,23 +217,28 @@ export default function TokenDetails({
           <TokenDetailsSkeleton />
         )}
 
-        <RightPanel>
-          <Widget
-            token={token ?? undefined}
-            defaultField={Field.OUTPUT}
-            onTokenChange={navigateToWidgetSelectedToken}
-            onReviewSwapClick={onReviewSwapClick}
-          />
+        <RightPanel onClick={() => isBlockedToken && setOpenTokenSafetyModal(true)}>
+          <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto' }}>
+            <Widget
+              defaultTokens={{
+                default: token ?? undefined,
+              }}
+              onDefaultTokenChange={navigateToWidgetSelectedToken}
+              onReviewSwapClick={onReviewSwapClick}
+            />
+          </div>
           {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}
           {token && <BalanceSummary token={token} />}
         </RightPanel>
         {token && <MobileBalanceSummaryFooter token={token} />}
 
         <TokenSafetyModal
-          isOpen={isBlockedToken || !!continueSwap}
+          isOpen={openTokenSafetyModal || !!continueSwap}
           tokenAddress={address}
           onContinue={() => onResolveSwap(true)}
-          onBlocked={() => navigate(-1)}
+          onBlocked={() => {
+            setOpenTokenSafetyModal(false)
+          }}
           onCancel={() => onResolveSwap(false)}
           showCancel={true}
         />

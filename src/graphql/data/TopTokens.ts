@@ -139,7 +139,7 @@ export type TopToken = NonNullable<NonNullable<TopTokens100Query>['topTokens']>[
 
 interface UseTopTokensReturnValue {
   tokens: TopToken[] | undefined
-  tokenVolumeRank: Record<string, number>
+  tokenSortRank: Record<string, number>
   loadingTokens: boolean
   sparklines: SparklineMap
 }
@@ -172,26 +172,21 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   )
 
   const unwrappedTokens = useMemo(() => data?.topTokens?.map((token) => unwrapToken(chainId, token)), [chainId, data])
-  const tokenVolumeRank = useMemo(
+  const sortedTokens = useSortedTokens(unwrappedTokens)
+  const tokenSortRank = useMemo(
     () =>
-      unwrappedTokens
-        ?.sort((a, b) => {
-          if (!a.market?.volume || !b.market?.volume) return 0
-          return a.market.volume.value > b.market.volume.value ? -1 : 1
-        })
-        .reduce((acc, cur, i) => {
-          if (!cur.address) return acc
-          return {
-            ...acc,
-            [cur.address]: i + 1,
-          }
-        }, {}) ?? {},
-    [unwrappedTokens]
+      sortedTokens?.reduce((acc, cur, i) => {
+        if (!cur.address) return acc
+        return {
+          ...acc,
+          [cur.address]: i + 1,
+        }
+      }, {}) ?? {},
+    [sortedTokens]
   )
-  const filteredTokens = useFilteredTokens(unwrappedTokens)
-  const sortedTokens = useSortedTokens(filteredTokens)
+  const filteredTokens = useFilteredTokens(sortedTokens)
   return useMemo(
-    () => ({ tokens: sortedTokens, tokenVolumeRank, loadingTokens, sparklines }),
-    [loadingTokens, tokenVolumeRank, sortedTokens, sparklines]
+    () => ({ tokens: filteredTokens, tokenSortRank, loadingTokens, sparklines }),
+    [filteredTokens, tokenSortRank, loadingTokens, sparklines]
   )
 }
