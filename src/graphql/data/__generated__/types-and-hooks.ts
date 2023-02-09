@@ -95,6 +95,11 @@ export enum Currency {
   Usd = 'USD'
 }
 
+export enum DatasourceProvider {
+  Nxyz = 'NXYZ',
+  Uniswap = 'UNISWAP'
+}
+
 export type Dimensions = {
   __typename?: 'Dimensions';
   height?: Maybe<Scalars['Float']>;
