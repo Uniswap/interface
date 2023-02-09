@@ -15,6 +15,7 @@ import { SetPriceMethod } from './NFTListingsGrid'
 const NFTListRowWrapper = styled(Row)`
   padding: 24px 0px;
   align-items: center;
+  border-radius: 8px;
 
   &:hover {
     background: ${({ theme }) => opacify(24, theme.backgroundOutline)};
@@ -22,9 +23,9 @@ const NFTListRowWrapper = styled(Row)`
 `
 
 const RemoveIconContainer = styled.div`
-  width: 40px;
+  width: 48px;
   height: 44px;
-  padding-left: 10px;
+  padding-left: 12px;
   align-self: flex-start;
   align-items: center;
   display: flex;
@@ -76,6 +77,7 @@ const CollectionName = styled(ThemedText.BodySmall)`
 const MarketPlaceRowWrapper = styled(Column)`
   gap: 24px;
   flex: 1.5;
+  margin-right: 12px;
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     flex: 2;
