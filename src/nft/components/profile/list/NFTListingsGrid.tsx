@@ -125,6 +125,7 @@ const RowDivider = styled.hr`
   border-radius: 20px;
   border-width: 0.5px;
   border-style: solid;
+  margin: 0;
   border-color: ${({ theme }) => theme.backgroundInteractive};
 `
 
