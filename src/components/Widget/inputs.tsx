@@ -108,6 +108,7 @@ export function useSyncWidgetInputs({
     },
     [onDefaultTokenChange, selectingField, tokens]
   )
+
   const tokenSelector = (
     <CurrencySearchModal
       isOpen={selectingField !== undefined}
@@ -115,6 +116,7 @@ export function useSyncWidgetInputs({
       selectedCurrency={selectingField && tokens[selectingField]}
       otherSelectedCurrency={selectingField && tokens[invertField(selectingField)]}
       onCurrencySelect={onTokenSelect}
+      showCommonBases
     />
   )
 
