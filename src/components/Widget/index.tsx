@@ -10,7 +10,6 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import {
   AddEthereumChainParameter,
   EMPTY_TOKEN_LIST,
-  Field,
   OnReviewSwapClick,
   SwapWidget,
   SwapWidgetSkeleton,
@@ -32,7 +31,7 @@ import { useIsDarkMode } from 'state/user/hooks'
 import { computeRealizedPriceImpact } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
 
-import { useSyncWidgetInputs } from './inputs'
+import { DefaultSwapTokens, useSyncWidgetInputs } from './inputs'
 import { useSyncWidgetSettings } from './settings'
 import { DARK_THEME, LIGHT_THEME } from './theme'
 import { useSyncWidgetTransactions } from './transactions'
@@ -46,18 +45,14 @@ function useWidgetTheme() {
 }
 
 interface WidgetProps {
-  initialInputToken?: Currency
-  initialOutputToken?: Currency
-  defaultToken?: Currency
+  defaultTokens: DefaultSwapTokens
   width?: number | string
   onDefaultTokenChange?: (token: Currency) => void
   onReviewSwapClick?: OnReviewSwapClick
 }
 
 export default function Widget({
-  initialInputToken,
-  initialOutputToken,
-  defaultToken,
+  defaultTokens,
   width = DEFAULT_WIDGET_WIDTH,
   onDefaultTokenChange,
   onReviewSwapClick,
@@ -66,11 +61,7 @@ export default function Widget({
   const locale = useActiveLocale()
   const theme = useWidgetTheme()
   const { inputs, tokenSelector } = useSyncWidgetInputs({
-    defaultTokens: {
-      [Field.INPUT]: initialInputToken,
-      [Field.OUTPUT]: initialOutputToken,
-      default: defaultToken,
-    },
+    defaultTokens,
     onDefaultTokenChange,
   })
   const { settings } = useSyncWidgetSettings()

@@ -564,8 +564,10 @@ export default function Swap({ className }: { className?: string }) {
         <PageWrapper>
           {swapWidgetEnabled ? (
             <Widget
-              initialInputToken={loadedInputCurrency ?? undefined}
-              initialOutputToken={loadedOutputCurrency ?? undefined}
+              defaultTokens={{
+                [Field.INPUT]: loadedInputCurrency ?? undefined,
+                [Field.OUTPUT]: loadedOutputCurrency ?? undefined,
+              }}
               width="100%"
             />
           ) : (
