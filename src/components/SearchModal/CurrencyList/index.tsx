@@ -2,6 +2,7 @@ import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { ScrollBarStyles } from 'components/Common'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkWarning } from 'constants/tokenSafety'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
@@ -20,6 +21,7 @@ import CurrencyLogo from '../../Logo/CurrencyLogo'
 import Row, { RowFixed } from '../../Row'
 import { MouseoverTooltip } from '../../Tooltip'
 import { LoadingRows, MenuItem } from '../styleds'
+import * as styles from './index.css'
 
 function currencyKey(currency: Currency): string {
   return currency.isToken ? currency.address : 'ETHER'
@@ -37,6 +39,10 @@ const StyledBalanceText = styled(Text)`
   overflow: hidden;
   max-width: 5rem;
   text-overflow: ellipsis;
+`
+
+const StyledFixedSizeList = styled.div`
+  ${ScrollBarStyles}
 `
 
 const CurrencyName = styled(Text)`
@@ -288,21 +294,34 @@ export default function CurrencyList({
     return currencyKey(currency)
   }, [])
 
-  return isLoading ? (
-    <FixedSizeList height={height} ref={fixedListRef as any} width="100%" itemData={[]} itemCount={10} itemSize={56}>
-      {LoadingRow}
-    </FixedSizeList>
-  ) : (
-    <FixedSizeList
-      height={height}
-      ref={fixedListRef as any}
-      width="100%"
-      itemData={itemData}
-      itemCount={itemData.length}
-      itemSize={56}
-      itemKey={itemKey}
-    >
-      {Row}
-    </FixedSizeList>
+  return (
+    <div style={{ paddingRight: '8px', paddingTop: '8px' }}>
+      {isLoading ? (
+        <FixedSizeList
+          className={styles.scrollbarStyle}
+          height={height}
+          ref={fixedListRef as any}
+          width="100%"
+          itemData={[]}
+          itemCount={10}
+          itemSize={56}
+        >
+          {LoadingRow}
+        </FixedSizeList>
+      ) : (
+        <FixedSizeList
+          className={styles.scrollbarStyle}
+          height={height}
+          ref={fixedListRef as any}
+          width="100%"
+          itemData={itemData}
+          itemCount={itemData.length}
+          itemSize={56}
+          itemKey={itemKey}
+        >
+          {Row}
+        </FixedSizeList>
+      )}
+    </div>
   )
 }
