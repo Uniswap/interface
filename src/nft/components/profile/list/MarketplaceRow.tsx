@@ -237,7 +237,6 @@ export const MarketplaceRow = ({
                 </RemoveMarketplaceWrap>
               </MarketIconWrapper>
             ))}
-            {/* */}
           </MarketIconsWrapper>
         )}
         {globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride ? (
