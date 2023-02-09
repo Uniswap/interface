@@ -10,6 +10,7 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import {
   AddEthereumChainParameter,
   EMPTY_TOKEN_LIST,
+  Field,
   OnReviewSwapClick,
   SwapWidget,
   SwapWidgetSkeleton,
@@ -45,8 +46,8 @@ function useWidgetTheme() {
 }
 
 interface WidgetProps {
-  inputToken?: Currency
-  outputToken?: Currency
+  initialInputToken?: Currency
+  initialOutputToken?: Currency
   defaultToken?: Currency
   width?: number | string
   onDefaultTokenChange?: (token: Currency) => void
@@ -54,8 +55,8 @@ interface WidgetProps {
 }
 
 export default function Widget({
-  inputToken,
-  outputToken,
+  initialInputToken,
+  initialOutputToken,
   defaultToken,
   width = DEFAULT_WIDGET_WIDTH,
   onDefaultTokenChange,
@@ -64,7 +65,14 @@ export default function Widget({
   const { connector, provider } = useWeb3React()
   const locale = useActiveLocale()
   const theme = useWidgetTheme()
-  const { inputs, tokenSelector } = useSyncWidgetInputs({ inputToken, outputToken, defaultToken, onDefaultTokenChange })
+  const { inputs, tokenSelector } = useSyncWidgetInputs({
+    defaultTokens: {
+      [Field.INPUT]: initialInputToken,
+      [Field.OUTPUT]: initialOutputToken,
+      default: defaultToken,
+    },
+    onDefaultTokenChange,
+  })
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
 
