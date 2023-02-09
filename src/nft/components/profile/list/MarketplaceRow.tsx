@@ -39,6 +39,10 @@ const MarketIconsWrapper = styled(Row)`
   margin-right: 12px;
   width: 44px;
   justify-content: flex-end;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    display: none;
+  }
 `
 
 const MarketIconWrapper = styled(Column)`
@@ -59,6 +63,10 @@ const ExpandMarketIconWrapper = styled.div`
   cursor: pointer;
   margin-left: 4px;
   height: 28px;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    display: none;
+  }
 `
 
 const FeeColumnWrapper = styled(Column)`
