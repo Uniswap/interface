@@ -3,7 +3,7 @@ import Row from 'components/Row'
 import { VerifiedIcon } from 'nft/components/icons'
 import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, WalletAsset } from 'nft/types'
-import React, { Dispatch, useEffect, useReducer, useState } from 'react'
+import { Dispatch, useEffect, useReducer, useState } from 'react'
 import { Trash2 } from 'react-feather'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
@@ -32,6 +32,10 @@ const RemoveIconContainer = styled.div`
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     display: none;
+  }
+
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
 `
 
@@ -130,8 +134,7 @@ export const NFTListRow = ({
       <RemoveIconContainer>
         {hovered && (
           <Trash2
-            height={20}
-            width={20}
+            size={20}
             color={theme.textSecondary}
             cursor="pointer"
             onClick={() => {

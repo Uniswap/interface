@@ -9,7 +9,7 @@ import { ListingMarket, ListingWarning, WalletAsset } from 'nft/types'
 import { LOOKS_RARE_CREATOR_BASIS_POINTS } from 'nft/utils'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
-import React, { Dispatch, useEffect, useMemo, useReducer, useState } from 'react'
+import React, { Dispatch, DispatchWithoutAction, useEffect, useMemo, useReducer, useState } from 'react'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
@@ -57,6 +57,7 @@ const MarketIcon = styled.img<{ index: number }>`
   object-fit: cover;
   z-index: ${({ index }) => 2 - index};
   margin-left: ${({ index }) => `${index === 0 ? 0 : -8}px`};
+  outline: 1px solid ${({ theme }) => theme.backgroundInteractive};
 `
 
 const ExpandMarketIconWrapper = styled.div`
@@ -110,7 +111,7 @@ interface MarketplaceRowProps {
   showMarketplaceLogo: boolean
   expandMarketplaceRows?: boolean
   rowHovered?: boolean
-  toggleExpandMarketplaceRows: React.DispatchWithoutAction
+  toggleExpandMarketplaceRows: DispatchWithoutAction
 }
 
 export const MarketplaceRow = ({
@@ -232,7 +233,7 @@ export const MarketplaceRow = ({
           <MarketIconsWrapper onMouseEnter={toggleMarketIconHovered} onMouseLeave={toggleMarketIconHovered}>
             {selectedMarkets.map((market, index) => (
               <MarketIconWrapper
-                key={market.name + index}
+                key={market.name + asset.collection?.address + asset.tokenId}
                 onClick={(e) => {
                   e.stopPropagation()
                   removeAssetMarketplace(asset, selectedMarkets[0])
