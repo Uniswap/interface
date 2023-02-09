@@ -47,7 +47,7 @@ const MarketIcon = styled.img`
 
 const ExpandMarketIconWrapper = styled.div`
   cursor: pointer;
-  margin-left: 14px;
+  margin-left: 4px;
   height: 28px;
 `
 
