@@ -155,7 +155,7 @@ const Bag = () => {
   const setTransactionState = useSendTransaction((state) => state.setState)
   const transactionStateRef = useRef(transactionState)
   const [setTransactionResponse] = useTransactionResponse((state) => [state.setTransactionResponse])
-  const inputCurrency = useTokenInput((state) => state.inputCurrency)
+  const tokenTradeInput = useTokenInput((state) => state.tokenTradeInput)
 
   const queryClient = useQueryClient()
 
@@ -229,11 +229,12 @@ const Bag = () => {
           variables: {
             senderAddress: usingGqlRouting && account ? account : '',
             nftTrades: usingGqlRouting ? buildNftTradeInputFromBagItems(itemsInBag) : [],
-            tokenTrades: inputCurrency ? undefined : undefined,
+            tokenTrades: tokenTradeInput ? tokenTradeInput : undefined,
           },
           onCompleted: (data) => {
             if (!data.nftRoute?.route) {
               setBagStatus(BagStatus.ADDING_TO_BAG)
+              setLocked(false)
               return
             }
 

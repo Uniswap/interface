@@ -5,7 +5,6 @@ import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useBestTrade } from 'hooks/useBestTrade'
 import { useEffect, useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
-import shallow from 'zustand/shallow'
 
 import { useTokenInput } from './useTokenInput'
 
@@ -17,13 +16,7 @@ export default function usePayWithAnyTokenSwap(
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
   maximumAmountIn: CurrencyAmount<Token> | undefined
 } {
-  const { setRoutes, setSlippageToleranceBasisPoints } = useTokenInput(
-    ({ setRoutes, setSlippageToleranceBasisPoints }) => ({
-      setRoutes,
-      setSlippageToleranceBasisPoints,
-    }),
-    shallow
-  )
+  const setTokenTradeInput = useTokenInput((state) => state.setTokenTradeInput)
   const { state, trade } = useBestTrade(TradeType.EXACT_OUTPUT, parsedOutputAmount, inputCurrency ?? undefined)
   const allowedSlippage = useAutoSlippageTolerance(trade)
   const maximumAmountIn = useMemo(() => {
@@ -31,13 +24,15 @@ export default function usePayWithAnyTokenSwap(
     return maximumAmountIn?.currency.isToken ? (maximumAmountIn as CurrencyAmount<Token>) : undefined
   }, [allowedSlippage, trade])
 
-  useEffect(() => {
-    setSlippageToleranceBasisPoints(parseInt(allowedSlippage.multiply(100).toSignificant(2)))
+  console.log(trade)
 
-    if (!trade || !trade?.routes) {
-      setRoutes(undefined)
+  useEffect(() => {
+    if (!trade || !trade?.routes || !trade.inputAmount || !trade.inputAmount.currency.isToken) {
+      setTokenTradeInput(undefined)
       return
     }
+
+    const slippage = parseInt(allowedSlippage.multiply(100).toSignificant(2))
 
     let mixedTokenTradeRouteInputs: TokenTradeRouteInput[] | undefined
     let v2TokenTradeRouteInputs: TokenTradeRouteInput[] | undefined
@@ -50,7 +45,7 @@ export default function usePayWithAnyTokenSwap(
     if (mixedRoutes.length > 0) {
       mixedTokenTradeRouteInputs = mixedRoutes.map((swap) => ({
         inputAmount: {
-          amount: swap.inputAmount.toExact(),
+          amount: swap.inputAmount.quotient.toString(),
           token: {
             address: swap.inputAmount.currency.isToken
               ? swap.inputAmount.currency.address
@@ -61,7 +56,7 @@ export default function usePayWithAnyTokenSwap(
           },
         },
         outputAmount: {
-          amount: swap.outputAmount.toExact(),
+          amount: swap.outputAmount.quotient.toString(),
           token: {
             address: swap.outputAmount.currency.isToken
               ? swap.outputAmount.currency.address
@@ -77,7 +72,7 @@ export default function usePayWithAnyTokenSwap(
               ? undefined
               : {
                   tokenAmountA: {
-                    amount: pool.getInputAmount(swap.outputAmount as CurrencyAmount<Token>)[0].toExact(),
+                    amount: pool.getInputAmount(swap.outputAmount as CurrencyAmount<Token>)[0].quotient.toString(),
                     token: {
                       address: pool.token0.address,
                       chainId: pool.token0.chainId,
@@ -86,7 +81,7 @@ export default function usePayWithAnyTokenSwap(
                     },
                   },
                   tokenAmountB: {
-                    amount: pool.getOutputAmount(swap.inputAmount as CurrencyAmount<Token>)[0].toExact(),
+                    amount: pool.getOutputAmount(swap.inputAmount as CurrencyAmount<Token>)[0].quotient.toString(),
                     token: {
                       address: pool.token1.address,
                       chainId: pool.token1.chainId,
@@ -123,7 +118,7 @@ export default function usePayWithAnyTokenSwap(
     if (v2Routes.length > 0) {
       v2TokenTradeRouteInputs = v2Routes.map((swap) => ({
         inputAmount: {
-          amount: swap.inputAmount.toExact(),
+          amount: swap.inputAmount.quotient.toString(),
           token: {
             address: swap.inputAmount.currency.isToken
               ? swap.inputAmount.currency.address
@@ -134,7 +129,7 @@ export default function usePayWithAnyTokenSwap(
           },
         },
         outputAmount: {
-          amount: swap.outputAmount.toExact(),
+          amount: swap.outputAmount.quotient.toString(),
           token: {
             address: swap.outputAmount.currency.isToken
               ? swap.outputAmount.currency.address
@@ -150,7 +145,7 @@ export default function usePayWithAnyTokenSwap(
               ? undefined
               : {
                   tokenAmountA: {
-                    amount: pool.getInputAmount(swap.outputAmount as CurrencyAmount<Token>)[0].toExact(),
+                    amount: pool.getInputAmount(swap.outputAmount as CurrencyAmount<Token>)[0].quotient.toString(),
                     token: {
                       address: pool.token0.address,
                       chainId: pool.token0.chainId,
@@ -159,7 +154,7 @@ export default function usePayWithAnyTokenSwap(
                     },
                   },
                   tokenAmountB: {
-                    amount: pool.getOutputAmount(swap.inputAmount as CurrencyAmount<Token>)[0].toExact(),
+                    amount: pool.getOutputAmount(swap.inputAmount as CurrencyAmount<Token>)[0].quotient.toString(),
                     token: {
                       address: pool.token1.address,
                       chainId: pool.token1.chainId,
@@ -176,7 +171,7 @@ export default function usePayWithAnyTokenSwap(
     if (v3Routes.length > 0) {
       v3TokenTradeRouteInputs = v3Routes.map((swap) => ({
         inputAmount: {
-          amount: swap.inputAmount.toExact(),
+          amount: swap.inputAmount.quotient.toString(),
           token: {
             address: swap.inputAmount.currency.isToken
               ? swap.inputAmount.currency.address
@@ -187,7 +182,7 @@ export default function usePayWithAnyTokenSwap(
           },
         },
         outputAmount: {
-          amount: swap.outputAmount.toExact(),
+          amount: swap.outputAmount.quotient.toString(),
           token: {
             address: swap.outputAmount.currency.isToken
               ? swap.outputAmount.currency.address
@@ -231,8 +226,20 @@ export default function usePayWithAnyTokenSwap(
       v3Routes: v3TokenTradeRouteInputs,
     }
 
-    setRoutes(routes)
-  }, [allowedSlippage, setRoutes, setSlippageToleranceBasisPoints, trade])
+    setTokenTradeInput({
+      routes,
+      slippageToleranceBasisPoints: slippage,
+      tokenAmount: {
+        amount: trade.inputAmount.quotient.toString(),
+        token: {
+          address: trade.inputAmount.currency.address,
+          chainId: trade.inputAmount.currency.chainId,
+          decimals: trade.inputAmount.currency.decimals,
+          isNative: trade.inputAmount.currency.isNative,
+        },
+      },
+    })
+  }, [allowedSlippage, setTokenTradeInput, trade])
 
   return useMemo(() => {
     return {
