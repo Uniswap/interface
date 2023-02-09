@@ -154,7 +154,7 @@ export const SearchBarDropdown = ({
 
   const trendingTokensLength = isTokenPage ? 3 : 2
   const trendingTokens = useMemo(
-    () => trendingTokenData?.topTokens?.slice(0, trendingTokensLength) ?? [...Array<SearchToken>(trendingTokensLength)],
+    () => trendingTokenData?.slice(0, trendingTokensLength) ?? [...Array<SearchToken>(trendingTokensLength)],
     [trendingTokenData, trendingTokensLength]
   )
 
