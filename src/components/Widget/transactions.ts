@@ -1,15 +1,23 @@
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfaceEventName, InterfaceSectionName, SwapEventName } from '@uniswap/analytics-events'
+import { Trade } from '@uniswap/router-sdk'
+import { Currency, Percent } from '@uniswap/sdk-core'
 import {
+  OnTxSuccess,
   TradeType,
   Transaction,
   TransactionEventHandlers,
   TransactionInfo,
+  TransactionType,
   TransactionType as WidgetTransactionType,
 } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
-import { WrapType } from 'hooks/useWrapCallback'
-import { formatSwapSignedAnalyticsEventProperties, formatToDecimal, getTokenAddress } from 'lib/utils/analytics'
+import {
+  formatPercentInBasisPointsNumber,
+  formatSwapSignedAnalyticsEventProperties,
+  formatToDecimal,
+  getTokenAddress,
+} from 'lib/utils/analytics'
 import { useCallback, useMemo } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import {
@@ -19,6 +27,42 @@ import {
   WrapTransactionInfo,
 } from 'state/transactions/types'
 import { currencyId } from 'utils/currencyId'
+import { computeRealizedPriceImpact } from 'utils/prices'
+
+interface AnalyticsEventProps {
+  trade: Trade<Currency, Currency, TradeType>
+  gasUsed: string | undefined
+  blockNumber: number | undefined
+  hash: string | undefined
+  allowedSlippage: Percent
+  succeeded: boolean
+}
+
+const formatAnalyticsEventProperties = ({
+  trade,
+  hash,
+  allowedSlippage,
+  succeeded,
+  gasUsed,
+  blockNumber,
+}: AnalyticsEventProps) => ({
+  estimated_network_fee_usd: gasUsed,
+  transaction_hash: hash,
+  token_in_address: getTokenAddress(trade.inputAmount.currency),
+  token_out_address: getTokenAddress(trade.outputAmount.currency),
+  token_in_symbol: trade.inputAmount.currency.symbol,
+  token_out_symbol: trade.outputAmount.currency.symbol,
+  token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
+  token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
+  price_impact_basis_points: formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)),
+  allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
+  chain_id:
+    trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
+      ? trade.inputAmount.currency.chainId
+      : undefined,
+  swap_quote_block_number: blockNumber,
+  succeeded,
+})
 
 /** Integrates the Widget's transactions, showing the widget's transactions in the app. */
 export function useSyncWidgetTransactions() {
@@ -46,7 +90,7 @@ export function useSyncWidgetTransactions() {
           amount: transactionAmount
             ? formatToDecimal(transactionAmount, transactionAmount?.currency.decimals)
             : undefined,
-          type: type === WidgetTransactionType.WRAP ? WrapType.WRAP : WrapType.UNWRAP,
+          type: type === WidgetTransactionType.WRAP ? TransactionType.WRAP : TransactionType.UNWRAP,
           ...trace,
         }
         sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, eventProperties)
@@ -94,7 +138,24 @@ export function useSyncWidgetTransactions() {
     [addTransaction, chainId, trace]
   )
 
-  const txHandlers: TransactionEventHandlers = useMemo(() => ({ onTxSubmit }), [onTxSubmit])
+  const onTxSuccess: OnTxSuccess = useCallback((hash: string, tx) => {
+    if (tx.info.type === TransactionType.SWAP) {
+      const { trade, slippageTolerance } = tx.info
+      sendAnalyticsEvent(
+        SwapEventName.SWAP_TRANSACTION_COMPLETED,
+        formatAnalyticsEventProperties({
+          trade,
+          hash,
+          gasUsed: tx.receipt?.gasUsed?.toString(),
+          blockNumber: tx.receipt?.blockNumber,
+          allowedSlippage: slippageTolerance,
+          succeeded: tx.receipt?.status === 1,
+        })
+      )
+    }
+  }, [])
+
+  const txHandlers: TransactionEventHandlers = useMemo(() => ({ onTxSubmit, onTxSuccess }), [onTxSubmit, onTxSuccess])
 
   return { transactions: { ...txHandlers } }
 }

@@ -469,11 +469,44 @@ export enum NftRarityProvider {
   RaritySniper = 'RARITY_SNIPER'
 }
 
+export type NftRouteResponse = {
+  __typename?: 'NftRouteResponse';
+  calldata: Scalars['String'];
+  id: Scalars['ID'];
+  route?: Maybe<Array<NftTrade>>;
+  sendAmount: TokenAmount;
+  toAddress: Scalars['String'];
+};
+
 export enum NftStandard {
   Erc721 = 'ERC721',
   Erc1155 = 'ERC1155',
   Noncompliant = 'NONCOMPLIANT'
 }
+
+export type NftTrade = {
+  __typename?: 'NftTrade';
+  amount: Scalars['Int'];
+  contractAddress: Scalars['String'];
+  id: Scalars['ID'];
+  marketplace: NftMarketplace;
+  /**   price represents the current price of the NFT, which can be different from quotePrice */
+  price: TokenAmount;
+  /**   quotePrice represents the last quoted price of the NFT */
+  quotePrice?: Maybe<TokenAmount>;
+  tokenId: Scalars['String'];
+  tokenType: NftStandard;
+};
+
+export type NftTradeInput = {
+  amount: Scalars['Int'];
+  contractAddress: Scalars['String'];
+  id: Scalars['ID'];
+  marketplace: NftMarketplace;
+  quotePrice?: InputMaybe<TokenAmountInput>;
+  tokenId: Scalars['String'];
+  tokenType: NftStandard;
+};
 
 export type NftTransfer = {
   __typename?: 'NftTransfer';
@@ -505,6 +538,22 @@ export type PageInfo = {
   startCursor?: Maybe<Scalars['String']>;
 };
 
+/**   v2 pool parameters as defined by https://github.com/Uniswap/v2-sdk/blob/main/src/entities/pair.ts */
+export type PairInput = {
+  tokenAmountA: TokenAmountInput;
+  tokenAmountB: TokenAmountInput;
+};
+
+/**   v3 pool parameters as defined by https://github.com/Uniswap/v3-sdk/blob/main/src/entities/pool.ts */
+export type PoolInput = {
+  fee: Scalars['Int'];
+  liquidity: Scalars['String'];
+  sqrtRatioX96: Scalars['String'];
+  tickCurrent: Scalars['String'];
+  tokenA: TokenInput;
+  tokenB: TokenInput;
+};
+
 export type Portfolio = {
   __typename?: 'Portfolio';
   assetActivities?: Maybe<Array<Maybe<AssetActivity>>>;
@@ -530,11 +579,11 @@ export type PortfolioTokensTotalDenominatedValueChangeArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  assetActivities?: Maybe<Array<Maybe<AssetActivity>>>;
   nftAssets?: Maybe<NftAssetConnection>;
   nftBalances?: Maybe<NftBalanceConnection>;
   nftCollections?: Maybe<NftCollectionConnection>;
   nftCollectionsById?: Maybe<Array<Maybe<NftCollection>>>;
+  nftRoute?: Maybe<NftRouteResponse>;
   portfolios?: Maybe<Array<Maybe<Portfolio>>>;
   searchTokenProjects?: Maybe<Array<Maybe<TokenProject>>>;
   searchTokens?: Maybe<Array<Maybe<Token>>>;
@@ -542,13 +591,6 @@ export type Query = {
   tokenProjects?: Maybe<Array<Maybe<TokenProject>>>;
   tokens?: Maybe<Array<Maybe<Token>>>;
   topTokens?: Maybe<Array<Maybe<Token>>>;
-};
-
-
-export type QueryAssetActivitiesArgs = {
-  address: Scalars['String'];
-  page?: InputMaybe<Scalars['Int']>;
-  pageSize?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -587,6 +629,14 @@ export type QueryNftCollectionsArgs = {
 
 export type QueryNftCollectionsByIdArgs = {
   collectionIds?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+
+export type QueryNftRouteArgs = {
+  chain?: InputMaybe<Chain>;
+  nftTrades: Array<NftTradeInput>;
+  senderAddress: Scalars['String'];
+  tokenTrades?: InputMaybe<Array<TokenTradeInput>>;
 };
 
 
@@ -662,6 +712,18 @@ export type TokenMarketArgs = {
   currency?: InputMaybe<Currency>;
 };
 
+export type TokenAmount = {
+  __typename?: 'TokenAmount';
+  currency: Currency;
+  id: Scalars['ID'];
+  value: Scalars['String'];
+};
+
+export type TokenAmountInput = {
+  amount: Scalars['String'];
+  token: TokenInput;
+};
+
 export type TokenApproval = {
   __typename?: 'TokenApproval';
   approvedAddress: Scalars['String'];
@@ -682,6 +744,13 @@ export type TokenBalance = {
   quantity?: Maybe<Scalars['Float']>;
   token?: Maybe<Token>;
   tokenProjectMarket?: Maybe<TokenProjectMarket>;
+};
+
+export type TokenInput = {
+  address: Scalars['String'];
+  chainId: Scalars['Int'];
+  decimals: Scalars['Int'];
+  isNative: Scalars['Boolean'];
 };
 
 export type TokenMarket = {
@@ -789,6 +858,30 @@ export enum TokenStandard {
   Native = 'NATIVE'
 }
 
+export type TokenTradeInput = {
+  routes?: InputMaybe<TokenTradeRoutesInput>;
+  slippageToleranceBasisPoints?: InputMaybe<Scalars['Int']>;
+  tokenAmount: TokenAmountInput;
+};
+
+export type TokenTradeRouteInput = {
+  inputAmount: TokenAmountInput;
+  outputAmount: TokenAmountInput;
+  pools: Array<TradePoolInput>;
+};
+
+export type TokenTradeRoutesInput = {
+  mixedRoutes?: InputMaybe<Array<TokenTradeRouteInput>>;
+  tradeType: TokenTradeType;
+  v2Routes?: InputMaybe<Array<TokenTradeRouteInput>>;
+  v3Routes?: InputMaybe<Array<TokenTradeRouteInput>>;
+};
+
+export enum TokenTradeType {
+  ExactInput = 'EXACT_INPUT',
+  ExactOutput = 'EXACT_OUTPUT'
+}
+
 export type TokenTransfer = {
   __typename?: 'TokenTransfer';
   asset: Token;
@@ -799,6 +892,11 @@ export type TokenTransfer = {
   sender: Scalars['String'];
   tokenStandard: TokenStandard;
   transactedValue?: Maybe<Amount>;
+};
+
+export type TradePoolInput = {
+  pair?: InputMaybe<PairInput>;
+  pool?: InputMaybe<PoolInput>;
 };
 
 export type Transaction = {
@@ -905,7 +1003,17 @@ export type NftBalanceQueryVariables = Exact<{
 }>;
 
 
-export type NftBalanceQuery = { __typename?: 'Query', nftBalances?: { __typename?: 'NftBalanceConnection', edges: Array<{ __typename?: 'NftBalanceEdge', node: { __typename?: 'NftBalance', listedMarketplaces?: Array<NftMarketplace>, ownedAsset?: { __typename?: 'NftAsset', id: string, animationUrl?: string, description?: string, flaggedBy?: string, name?: string, ownerAddress?: string, suspiciousFlag?: boolean, tokenId: string, collection?: { __typename?: 'NftCollection', isVerified?: boolean, name?: string, image?: { __typename?: 'Image', url: string }, nftContracts?: Array<{ __typename?: 'NftContract', address: string, chain: Chain, name?: string, standard?: NftStandard, symbol?: string, totalSupply?: number }>, markets?: Array<{ __typename?: 'NftCollectionMarket', floorPrice?: { __typename?: 'TimestampedAmount', value: number } }> }, image?: { __typename?: 'Image', url: string }, originalImage?: { __typename?: 'Image', url: string }, smallImage?: { __typename?: 'Image', url: string }, thumbnail?: { __typename?: 'Image', url: string }, listings?: { __typename?: 'NftOrderConnection', edges: Array<{ __typename?: 'NftOrderEdge', node: { __typename?: 'NftOrder', createdAt: number, marketplace: NftMarketplace, endAt?: number, price: { __typename?: 'Amount', value: number, currency?: Currency } } }> } }, listingFees?: Array<{ __typename?: 'NftFee', payoutAddress: string, basisPoints: number }>, lastPrice?: { __typename?: 'TimestampedAmount', currency?: Currency, timestamp: number, value: number } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string, hasNextPage?: boolean, hasPreviousPage?: boolean, startCursor?: string } } };
+export type NftBalanceQuery = { __typename?: 'Query', nftBalances?: { __typename?: 'NftBalanceConnection', edges: Array<{ __typename?: 'NftBalanceEdge', node: { __typename?: 'NftBalance', listedMarketplaces?: Array<NftMarketplace>, ownedAsset?: { __typename?: 'NftAsset', id: string, animationUrl?: string, description?: string, flaggedBy?: string, name?: string, ownerAddress?: string, suspiciousFlag?: boolean, tokenId: string, collection?: { __typename?: 'NftCollection', isVerified?: boolean, name?: string, twitterName?: string, image?: { __typename?: 'Image', url: string }, nftContracts?: Array<{ __typename?: 'NftContract', address: string, chain: Chain, name?: string, standard?: NftStandard, symbol?: string, totalSupply?: number }>, markets?: Array<{ __typename?: 'NftCollectionMarket', floorPrice?: { __typename?: 'TimestampedAmount', value: number } }> }, image?: { __typename?: 'Image', url: string }, originalImage?: { __typename?: 'Image', url: string }, smallImage?: { __typename?: 'Image', url: string }, thumbnail?: { __typename?: 'Image', url: string }, listings?: { __typename?: 'NftOrderConnection', edges: Array<{ __typename?: 'NftOrderEdge', node: { __typename?: 'NftOrder', createdAt: number, marketplace: NftMarketplace, endAt?: number, price: { __typename?: 'Amount', value: number, currency?: Currency } } }> } }, listingFees?: Array<{ __typename?: 'NftFee', payoutAddress: string, basisPoints: number }>, lastPrice?: { __typename?: 'TimestampedAmount', currency?: Currency, timestamp: number, value: number } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string, hasNextPage?: boolean, hasPreviousPage?: boolean, startCursor?: string } } };
+
+export type NftRouteQueryVariables = Exact<{
+  chain?: InputMaybe<Chain>;
+  senderAddress: Scalars['String'];
+  nftTrades: Array<NftTradeInput> | NftTradeInput;
+  tokenTrades?: InputMaybe<Array<TokenTradeInput> | TokenTradeInput>;
+}>;
+
+
+export type NftRouteQuery = { __typename?: 'Query', nftRoute?: { __typename?: 'NftRouteResponse', calldata: string, toAddress: string, route?: Array<{ __typename?: 'NftTrade', amount: number, contractAddress: string, id: string, marketplace: NftMarketplace, tokenId: string, tokenType: NftStandard, price: { __typename?: 'TokenAmount', currency: Currency, value: string }, quotePrice?: { __typename?: 'TokenAmount', currency: Currency, value: string } }>, sendAmount: { __typename?: 'TokenAmount', currency: Currency, value: string } } };
 
 
 export const SearchTokensDocument = gql`
@@ -972,7 +1080,7 @@ export type SearchTokensQueryHookResult = ReturnType<typeof useSearchTokensQuery
 export type SearchTokensLazyQueryHookResult = ReturnType<typeof useSearchTokensLazyQuery>;
 export type SearchTokensQueryResult = Apollo.QueryResult<SearchTokensQuery, SearchTokensQueryVariables>;
 export const TokenDocument = gql`
-    query Token($chain: Chain!, $address: String) {
+    query Token($chain: Chain!, $address: String = null) {
   token(chain: $chain, address: $address) {
     id
     decimals
@@ -1051,7 +1159,7 @@ export type TokenQueryHookResult = ReturnType<typeof useTokenQuery>;
 export type TokenLazyQueryHookResult = ReturnType<typeof useTokenLazyQuery>;
 export type TokenQueryResult = Apollo.QueryResult<TokenQuery, TokenQueryVariables>;
 export const TokenPriceDocument = gql`
-    query TokenPrice($chain: Chain!, $address: String, $duration: HistoryDuration!) {
+    query TokenPrice($chain: Chain!, $address: String = null, $duration: HistoryDuration!) {
   token(chain: $chain, address: $address) {
     id
     address
@@ -1586,6 +1694,7 @@ export const NftBalanceDocument = gql`
               url
             }
             name
+            twitterName
             nftContracts {
               address
               chain
@@ -1686,3 +1795,67 @@ export function useNftBalanceLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type NftBalanceQueryHookResult = ReturnType<typeof useNftBalanceQuery>;
 export type NftBalanceLazyQueryHookResult = ReturnType<typeof useNftBalanceLazyQuery>;
 export type NftBalanceQueryResult = Apollo.QueryResult<NftBalanceQuery, NftBalanceQueryVariables>;
+export const NftRouteDocument = gql`
+    query NftRoute($chain: Chain = ETHEREUM, $senderAddress: String!, $nftTrades: [NftTradeInput!]!, $tokenTrades: [TokenTradeInput!]) {
+  nftRoute(
+    chain: $chain
+    senderAddress: $senderAddress
+    nftTrades: $nftTrades
+    tokenTrades: $tokenTrades
+  ) {
+    calldata
+    route {
+      amount
+      contractAddress
+      id
+      marketplace
+      price {
+        currency
+        value
+      }
+      quotePrice {
+        currency
+        value
+      }
+      tokenId
+      tokenType
+    }
+    sendAmount {
+      currency
+      value
+    }
+    toAddress
+  }
+}
+    `;
+
+/**
+ * __useNftRouteQuery__
+ *
+ * To run a query within a React component, call `useNftRouteQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNftRouteQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNftRouteQuery({
+ *   variables: {
+ *      chain: // value for 'chain'
+ *      senderAddress: // value for 'senderAddress'
+ *      nftTrades: // value for 'nftTrades'
+ *      tokenTrades: // value for 'tokenTrades'
+ *   },
+ * });
+ */
+export function useNftRouteQuery(baseOptions: Apollo.QueryHookOptions<NftRouteQuery, NftRouteQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NftRouteQuery, NftRouteQueryVariables>(NftRouteDocument, options);
+      }
+export function useNftRouteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NftRouteQuery, NftRouteQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NftRouteQuery, NftRouteQueryVariables>(NftRouteDocument, options);
+        }
+export type NftRouteQueryHookResult = ReturnType<typeof useNftRouteQuery>;
+export type NftRouteLazyQueryHookResult = ReturnType<typeof useNftRouteLazyQuery>;
+export type NftRouteQueryResult = Apollo.QueryResult<NftRouteQuery, NftRouteQueryVariables>;

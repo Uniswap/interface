@@ -20,6 +20,7 @@ import CurrencyLogo from '../../Logo/CurrencyLogo'
 import Row, { RowFixed } from '../../Row'
 import { MouseoverTooltip } from '../../Tooltip'
 import { LoadingRows, MenuItem } from '../styleds'
+import * as styles from './index.css'
 
 function currencyKey(currency: Currency): string {
   return currency.isToken ? currency.address : 'ETHER'
@@ -288,21 +289,34 @@ export default function CurrencyList({
     return currencyKey(currency)
   }, [])
 
-  return isLoading ? (
-    <FixedSizeList height={height} ref={fixedListRef as any} width="100%" itemData={[]} itemCount={10} itemSize={56}>
-      {LoadingRow}
-    </FixedSizeList>
-  ) : (
-    <FixedSizeList
-      height={height}
-      ref={fixedListRef as any}
-      width="100%"
-      itemData={itemData}
-      itemCount={itemData.length}
-      itemSize={56}
-      itemKey={itemKey}
-    >
-      {Row}
-    </FixedSizeList>
+  return (
+    <div style={{ paddingRight: '8px', paddingTop: '8px' }}>
+      {isLoading ? (
+        <FixedSizeList
+          className={styles.scrollbarStyle}
+          height={height}
+          ref={fixedListRef as any}
+          width="100%"
+          itemData={[]}
+          itemCount={10}
+          itemSize={56}
+        >
+          {LoadingRow}
+        </FixedSizeList>
+      ) : (
+        <FixedSizeList
+          className={styles.scrollbarStyle}
+          height={height}
+          ref={fixedListRef as any}
+          width="100%"
+          itemData={itemData}
+          itemCount={itemData.length}
+          itemSize={56}
+          itemKey={itemKey}
+        >
+          {Row}
+        </FixedSizeList>
+      )}
+    </div>
   )
 }

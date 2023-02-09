@@ -166,6 +166,9 @@ export const MenuDropdown = () => {
                 <SecondaryLinkedText href="https://docs.uniswap.org/">
                   <Trans>Documentation</Trans> ↗
                 </SecondaryLinkedText>
+                <SecondaryLinkedText href="https://uniswap.canny.io/feature-requests">
+                  <Trans>Feedback</Trans> ↗
+                </SecondaryLinkedText>
                 <SecondaryLinkedText
                   onClick={() => {
                     toggleOpen()

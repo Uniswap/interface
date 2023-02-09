@@ -105,234 +105,239 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
 }
 
 <div
-    style="position: relative; height: 10px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+    style="padding-right: 8px; padding-top: 8px;"
   >
     <div
-      style="height: 168px; width: 100%;"
+      class="CurrencyList_scrollbarStyle__1pi21y70"
+      style="position: relative; height: 10px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
     >
       <div
-        class="c0 c1 c2 c3 token-item-0x6B175474E89094C44Da98b954EedeAC495271d0F"
-        style="position: absolute; left: 0px; top: 0px; height: 56px; width: 100%;"
-        tabindex="0"
+        style="height: 168px; width: 100%;"
       >
         <div
-          class="c4"
-        >
-          CurrencyLogo currency=DAI
-        </div>
-        <div
-          class="c5"
-          style="opacity: 1;"
+          class="c0 c1 c2 c3 token-item-0x6B175474E89094C44Da98b954EedeAC495271d0F"
+          style="position: absolute; left: 0px; top: 0px; height: 56px; width: 100%;"
+          tabindex="0"
         >
           <div
-            class="c0 c1"
+            class="c4"
+          >
+            CurrencyLogo currency=DAI
+          </div>
+          <div
+            class="c5"
+            style="opacity: 1;"
           >
             <div
-              class="c6 css-vurnku"
-              title="Dai Stablecoin"
-            >
-              Dai Stablecoin
-            </div>
-            <div
-              class="c7"
+              class="c0 c1"
             >
               <div
-                class="c8"
+                class="c6 css-vurnku"
+                title="Dai Stablecoin"
               >
-                <svg
-                  class="c9"
-                  fill="none"
-                  height="24"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="24"
-                  xmlns="http://www.w3.org/2000/svg"
+                Dai Stablecoin
+              </div>
+              <div
+                class="c7"
+              >
+                <div
+                  class="c8"
                 >
-                  <path
-                    d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-                  />
-                  <line
-                    x1="12"
-                    x2="12"
-                    y1="9"
-                    y2="13"
-                  />
-                  <line
-                    x1="12"
-                    x2="12.01"
-                    y1="17"
-                    y2="17"
-                  />
-                </svg>
+                  <svg
+                    class="c9"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                    />
+                    <line
+                      x1="12"
+                      x2="12"
+                      y1="9"
+                      y2="13"
+                    />
+                    <line
+                      x1="12"
+                      x2="12.01"
+                      y1="17"
+                      y2="17"
+                    />
+                  </svg>
+                </div>
               </div>
             </div>
-          </div>
-          <div
-            class="c10 css-yfjwjl"
-          >
-            DAI
-          </div>
-        </div>
-        <div
-          class="c4"
-        >
-          <div
-            class="c0 c1 c11"
-            style="justify-self: flex-end;"
-          />
-        </div>
-      </div>
-      <div
-        class="c0 c1 c2 c3 token-item-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
-        style="position: absolute; left: 0px; top: 56px; height: 56px; width: 100%;"
-        tabindex="0"
-      >
-        <div
-          class="c4"
-        >
-          CurrencyLogo currency=USDC
-        </div>
-        <div
-          class="c5"
-          style="opacity: 1;"
-        >
-          <div
-            class="c0 c1"
-          >
             <div
-              class="c6 css-vurnku"
-              title="USD//C"
+              class="c10 css-yfjwjl"
             >
-              USD//C
+              DAI
             </div>
+          </div>
+          <div
+            class="c4"
+          >
             <div
-              class="c7"
+              class="c0 c1 c11"
+              style="justify-self: flex-end;"
+            />
+          </div>
+        </div>
+        <div
+          class="c0 c1 c2 c3 token-item-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+          style="position: absolute; left: 0px; top: 56px; height: 56px; width: 100%;"
+          tabindex="0"
+        >
+          <div
+            class="c4"
+          >
+            CurrencyLogo currency=USDC
+          </div>
+          <div
+            class="c5"
+            style="opacity: 1;"
+          >
+            <div
+              class="c0 c1"
             >
               <div
-                class="c8"
+                class="c6 css-vurnku"
+                title="USD//C"
               >
-                <svg
-                  class="c9"
-                  fill="none"
-                  height="24"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="24"
-                  xmlns="http://www.w3.org/2000/svg"
+                USD//C
+              </div>
+              <div
+                class="c7"
+              >
+                <div
+                  class="c8"
                 >
-                  <path
-                    d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-                  />
-                  <line
-                    x1="12"
-                    x2="12"
-                    y1="9"
-                    y2="13"
-                  />
-                  <line
-                    x1="12"
-                    x2="12.01"
-                    y1="17"
-                    y2="17"
-                  />
-                </svg>
+                  <svg
+                    class="c9"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                    />
+                    <line
+                      x1="12"
+                      x2="12"
+                      y1="9"
+                      y2="13"
+                    />
+                    <line
+                      x1="12"
+                      x2="12.01"
+                      y1="17"
+                      y2="17"
+                    />
+                  </svg>
+                </div>
               </div>
             </div>
-          </div>
-          <div
-            class="c10 css-yfjwjl"
-          >
-            USDC
-          </div>
-        </div>
-        <div
-          class="c4"
-        >
-          <div
-            class="c0 c1 c11"
-            style="justify-self: flex-end;"
-          />
-        </div>
-      </div>
-      <div
-        class="c0 c1 c2 c3 token-item-0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
-        style="position: absolute; left: 0px; top: 112px; height: 56px; width: 100%;"
-        tabindex="0"
-      >
-        <div
-          class="c4"
-        >
-          CurrencyLogo currency=WBTC
-        </div>
-        <div
-          class="c5"
-          style="opacity: 1;"
-        >
-          <div
-            class="c0 c1"
-          >
             <div
-              class="c6 css-vurnku"
-              title="Wrapped BTC"
+              class="c10 css-yfjwjl"
             >
-              Wrapped BTC
+              USDC
             </div>
+          </div>
+          <div
+            class="c4"
+          >
             <div
-              class="c7"
+              class="c0 c1 c11"
+              style="justify-self: flex-end;"
+            />
+          </div>
+        </div>
+        <div
+          class="c0 c1 c2 c3 token-item-0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
+          style="position: absolute; left: 0px; top: 112px; height: 56px; width: 100%;"
+          tabindex="0"
+        >
+          <div
+            class="c4"
+          >
+            CurrencyLogo currency=WBTC
+          </div>
+          <div
+            class="c5"
+            style="opacity: 1;"
+          >
+            <div
+              class="c0 c1"
             >
               <div
-                class="c8"
+                class="c6 css-vurnku"
+                title="Wrapped BTC"
               >
-                <svg
-                  class="c9"
-                  fill="none"
-                  height="24"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-                  />
-                  <line
-                    x1="12"
-                    x2="12"
-                    y1="9"
-                    y2="13"
-                  />
-                  <line
-                    x1="12"
-                    x2="12.01"
-                    y1="17"
-                    y2="17"
-                  />
-                </svg>
+                Wrapped BTC
               </div>
+              <div
+                class="c7"
+              >
+                <div
+                  class="c8"
+                >
+                  <svg
+                    class="c9"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                    />
+                    <line
+                      x1="12"
+                      x2="12"
+                      y1="9"
+                      y2="13"
+                    />
+                    <line
+                      x1="12"
+                      x2="12.01"
+                      y1="17"
+                      y2="17"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div
+              class="c10 css-yfjwjl"
+            >
+              WBTC
             </div>
           </div>
           <div
-            class="c10 css-yfjwjl"
+            class="c4"
           >
-            WBTC
+            <div
+              class="c0 c1 c11"
+              style="justify-self: flex-end;"
+            />
           </div>
-        </div>
-        <div
-          class="c4"
-        >
-          <div
-            class="c0 c1 c11"
-            style="justify-self: flex-end;"
-          />
         </div>
       </div>
     </div>
@@ -383,31 +388,36 @@ exports[`renders loading rows when isLoading is true 1`] = `
 }
 
 <div
-    style="position: relative; height: 10px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+    style="padding-right: 8px; padding-top: 8px;"
   >
     <div
-      style="height: 560px; width: 100%;"
+      class="CurrencyList_scrollbarStyle__1pi21y70"
+      style="position: relative; height: 10px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
     >
       <div
-        class="c0 c1"
+        style="height: 560px; width: 100%;"
       >
-        <div />
-        <div />
-        <div />
-      </div>
-      <div
-        class="c0 c1"
-      >
-        <div />
-        <div />
-        <div />
-      </div>
-      <div
-        class="c0 c1"
-      >
-        <div />
-        <div />
-        <div />
+        <div
+          class="c0 c1"
+        >
+          <div />
+          <div />
+          <div />
+        </div>
+        <div
+          class="c0 c1"
+        >
+          <div />
+          <div />
+          <div />
+        </div>
+        <div
+          class="c0 c1"
+        >
+          <div />
+          <div />
+          <div />
+        </div>
       </div>
     </div>
   </div>
