@@ -3,12 +3,13 @@ import { t } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { RowsCollpsedIcon, RowsExpandedIcon } from 'nft/components/icons'
 import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, ListingWarning, WalletAsset } from 'nft/types'
 import { LOOKS_RARE_CREATOR_BASIS_POINTS } from 'nft/utils'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
-import { Dispatch, useEffect, useMemo, useState } from 'react'
+import React, { Dispatch, DispatchWithoutAction, useEffect, useMemo, useReducer, useState } from 'react'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
@@ -28,20 +29,45 @@ const PastPriceInfo = styled(Column)`
 `
 
 const RemoveMarketplaceWrap = styled(RemoveIconWrap)`
-  top: 11px;
+  top: 8px;
+  left: 16px;
+  z-index: 3;
+`
+
+const MarketIconsWrapper = styled(Row)`
+  position: relative;
+  margin-right: 12px;
+  width: 44px;
+  justify-content: flex-end;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    display: none;
+  }
 `
 
 const MarketIconWrapper = styled(Column)`
   position: relative;
   cursor: pointer;
-  margin-right: 16px;
 `
 
-const MarketIcon = styled.img`
-  width: 28px;
-  height: 28px;
+const MarketIcon = styled.img<{ index: number }>`
+  width: 20px;
+  height: 20px;
   border-radius: 4px;
   object-fit: cover;
+  z-index: ${({ index }) => 2 - index};
+  margin-left: ${({ index }) => `${index === 0 ? 0 : -8}px`};
+  outline: 1px solid ${({ theme }) => theme.backgroundInteractive};
+`
+
+const ExpandMarketIconWrapper = styled.div`
+  cursor: pointer;
+  margin-left: 4px;
+  height: 28px;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    display: none;
+  }
 `
 
 const FeeColumnWrapper = styled(Column)`
@@ -84,6 +110,8 @@ interface MarketplaceRowProps {
   asset: WalletAsset
   showMarketplaceLogo: boolean
   expandMarketplaceRows?: boolean
+  rowHovered?: boolean
+  toggleExpandMarketplaceRows: DispatchWithoutAction
 }
 
 export const MarketplaceRow = ({
@@ -95,14 +123,16 @@ export const MarketplaceRow = ({
   asset,
   showMarketplaceLogo,
   expandMarketplaceRows,
+  toggleExpandMarketplaceRows,
+  rowHovered,
 }: MarketplaceRowProps) => {
   const [listPrice, setListPrice] = useState<number>()
   const [globalOverride, setGlobalOverride] = useState(false)
   const showGlobalPrice = globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride && globalPrice
   const setAssetListPrice = useSellAsset((state) => state.setAssetListPrice)
   const removeAssetMarketplace = useSellAsset((state) => state.removeAssetMarketplace)
-  const [hovered, setHovered] = useState(false)
-  const handleHover = () => setHovered(!hovered)
+  const [marketIconHovered, toggleMarketIconHovered] = useReducer((s) => !s, false)
+  const [marketRowHovered, toggleMarketRowHovered] = useReducer((s) => !s, false)
 
   const price = showGlobalPrice ? globalPrice : listPrice
 
@@ -186,7 +216,7 @@ export const MarketplaceRow = ({
   }
 
   return (
-    <Row>
+    <Row onMouseEnter={toggleMarketRowHovered} onMouseLeave={toggleMarketRowHovered}>
       <PastPriceInfo>
         <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
           {asset.floorPrice ? `${asset.floorPrice.toFixed(3)} ETH` : '-'}
@@ -198,22 +228,25 @@ export const MarketplaceRow = ({
         </ThemedText.BodySmall>
       </PastPriceInfo>
 
-      <Row flex="2">
-        {showMarketplaceLogo && (
-          <MarketIconWrapper
-            onMouseEnter={handleHover}
-            onMouseLeave={handleHover}
-            onClick={(e) => {
-              e.stopPropagation()
-              removeAssetMarketplace(asset, selectedMarkets[0])
-              removeMarket && removeMarket()
-            }}
-          >
-            <MarketIcon alt={selectedMarkets[0].name} src={selectedMarkets[0].icon} />
-            <RemoveMarketplaceWrap hovered={hovered}>
-              <img width="32px" src="/nft/svgs/minusCircle.svg" alt="Remove item" />
-            </RemoveMarketplaceWrap>
-          </MarketIconWrapper>
+      <Row flex="3">
+        {(expandMarketplaceRows || selectedMarkets.length > 1) && (
+          <MarketIconsWrapper onMouseEnter={toggleMarketIconHovered} onMouseLeave={toggleMarketIconHovered}>
+            {selectedMarkets.map((market, index) => (
+              <MarketIconWrapper
+                key={market.name + asset.collection?.address + asset.tokenId}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  removeAssetMarketplace(asset, selectedMarkets[0])
+                  removeMarket && removeMarket()
+                }}
+              >
+                <MarketIcon alt={selectedMarkets[0].name} src={market.icon} index={index} />
+                <RemoveMarketplaceWrap hovered={marketIconHovered && (expandMarketplaceRows ?? false)}>
+                  <img width="20px" src="/nft/svgs/minusCircle.svg" alt="Remove item" />
+                </RemoveMarketplaceWrap>
+              </MarketIconWrapper>
+            ))}
+          </MarketIconsWrapper>
         )}
         {globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride ? (
           <PriceTextInput
@@ -224,7 +257,6 @@ export const MarketplaceRow = ({
             globalOverride={globalOverride}
             warning={warning}
             asset={asset}
-            shrink={expandMarketplaceRows}
           />
         ) : (
           <PriceTextInput
@@ -235,8 +267,12 @@ export const MarketplaceRow = ({
             globalOverride={globalOverride}
             warning={warning}
             asset={asset}
-            shrink={expandMarketplaceRows}
           />
+        )}
+        {rowHovered && ((expandMarketplaceRows && marketRowHovered) || selectedMarkets.length > 1) && (
+          <ExpandMarketIconWrapper onClick={toggleExpandMarketplaceRows}>
+            {expandMarketplaceRows ? <RowsExpandedIcon /> : <RowsCollpsedIcon />}
+          </ExpandMarketIconWrapper>
         )}
       </Row>
 

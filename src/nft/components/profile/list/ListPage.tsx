@@ -74,10 +74,6 @@ const ListingHeader = styled(Row)`
 const GridWrapper = styled.div`
   margin-top: 24px;
   margin-bottom: 48px;
-
-  @media screen and (min-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    margin-left: 40px;
-  }
 `
 
 const MobileListButtonWrapper = styled.div`
