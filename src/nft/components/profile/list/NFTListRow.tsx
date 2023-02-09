@@ -6,14 +6,23 @@ import { ListingMarket, WalletAsset } from 'nft/types'
 import { Dispatch, useEffect, useState } from 'react'
 import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
+import { opacify } from 'theme/utils'
 
 import { MarketplaceRow } from './MarketplaceRow'
 import { SetPriceMethod } from './NFTListingsGrid'
 import { RemoveIconWrap } from './shared'
 
 const NFTListRowWrapper = styled(Row)`
-  margin: 24px 0px;
+  padding: 24px 0px;
   align-items: center;
+
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    padding-left: 40px;
+  }
+
+  &:hover {
+    background: ${({ theme }) => opacify(24, theme.backgroundOutline)};
+  }
 `
 
 const NFTInfoWrapper = styled(Row)`

@@ -26,6 +26,10 @@ const TableHeader = styled.div`
   font-size: 14px;
   font-weight: normal;
   line-height: 20px;
+
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    margin-left: 40px;
+  }
 `
 
 const NFTHeader = styled.div`
@@ -34,10 +38,6 @@ const NFTHeader = styled.div`
 
 const PriceHeaders = styled(Row)`
   flex: 1.5;
-
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    flex: 2;
-  }
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     flex: 3;
