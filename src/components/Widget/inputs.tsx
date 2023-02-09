@@ -8,7 +8,7 @@ const EMPTY_AMOUNT = ''
 
 type SwapValue = Required<SwapController>['value']
 type SwapTokens = Pick<SwapValue, Field.INPUT | Field.OUTPUT> & { default?: Currency }
-export type DefaultSwapTokens = Partial<SwapTokens>
+export type DefaultTokens = Partial<SwapTokens>
 
 function missingDefaultToken(tokens: SwapTokens) {
   if (!tokens.default) return false
@@ -24,7 +24,7 @@ export function useSyncWidgetInputs({
   defaultTokens,
   onDefaultTokenChange,
 }: {
-  defaultTokens: DefaultSwapTokens
+  defaultTokens: DefaultTokens
   onDefaultTokenChange?: (token: Currency) => void
 }) {
   const trace = useTrace({ section: InterfaceSectionName.WIDGET })

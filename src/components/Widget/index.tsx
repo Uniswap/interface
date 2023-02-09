@@ -31,7 +31,7 @@ import { useIsDarkMode } from 'state/user/hooks'
 import { computeRealizedPriceImpact } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
 
-import { DefaultSwapTokens, useSyncWidgetInputs } from './inputs'
+import { DefaultTokens, useSyncWidgetInputs } from './inputs'
 import { useSyncWidgetSettings } from './settings'
 import { DARK_THEME, LIGHT_THEME } from './theme'
 import { useSyncWidgetTransactions } from './transactions'
@@ -45,7 +45,7 @@ function useWidgetTheme() {
 }
 
 interface WidgetProps {
-  defaultTokens: DefaultSwapTokens
+  defaultTokens: DefaultTokens
   width?: number | string
   onDefaultTokenChange?: (token: Currency) => void
   onReviewSwapClick?: OnReviewSwapClick
