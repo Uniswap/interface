@@ -97,6 +97,7 @@ const CurrencyInput = styled(Row)`
 `
 
 const PayButton = styled.button<{ $backgroundColor: string }>`
+  display: flex;
   background: ${({ $backgroundColor }) => $backgroundColor};
   color: ${({ theme }) => theme.accentTextLightPrimary};
   font-weight: 600;
@@ -108,6 +109,7 @@ const PayButton = styled.button<{ $backgroundColor: string }>`
   border-radius: 12px;
   padding: 12px 0px;
   cursor: pointer;
+  align-items: center;
 
   &:disabled {
     opacity: 0.6;
