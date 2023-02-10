@@ -5,6 +5,7 @@ import {
   useNavigation,
 } from '@react-navigation/native'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
+import { useProfiledNavigation } from '@shopify/react-native-performance-navigation'
 import { EducationContentType } from 'src/components/education'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
@@ -148,7 +149,7 @@ export type RootParamList = TabParamList &
 export const useAppStackNavigation = (): AppStackNavigationProp =>
   useNavigation<AppStackNavigationProp>()
 export const useHomeStackNavigation = (): HomeStackNavigationProp =>
-  useNavigation<HomeStackNavigationProp>()
+  useProfiledNavigation<HomeStackNavigationProp>()
 export const useExploreStackNavigation = (): ExploreStackNavigationProp =>
   useNavigation<ExploreStackNavigationProp>()
 export const useSettingsStackNavigation = (): SettingsStackNavigationProp =>

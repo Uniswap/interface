@@ -1,3 +1,4 @@
+import { RenderPassReport } from '@shopify/react-native-performance'
 import { TraceProps } from 'src/components/telemetry/Trace'
 import { TraceEventProps } from 'src/components/telemetry/TraceEvent'
 import { MoonpayIPAddressesResponse } from 'src/features/fiatOnRamp/types'
@@ -50,6 +51,7 @@ export type EventProperties = {
     wallet_type?: ImportType
     accounts_imported_count: number
   } & BaseEventProperty
+  [EventName.PerformanceReport]: RenderPassReport
   [EventName.PerformanceGraphql]: {
     dataSize: number
     duration: number

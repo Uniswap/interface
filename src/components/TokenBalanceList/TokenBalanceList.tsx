@@ -1,4 +1,5 @@
 import { FlashList } from '@shopify/flash-list'
+import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
 import React, { forwardRef, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
@@ -24,6 +25,7 @@ import {
   makeSelectAccountHideSmallBalances,
   makeSelectAccountHideSpamTokens,
 } from 'src/features/wallet/selectors'
+import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 import { CurrencyId } from 'src/utils/currencyId'
 import { useSuspendUpdatesWhenBlured } from 'src/utils/hooks'
@@ -104,88 +106,92 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
       return [...balances, HIDDEN_TOKENS_ROW, ...smallBalances, ...spamBalances]
     }, [data, hiddenTokensExpanded])
 
-    if (!data) {
-      if (isNonPollingRequestInFlight(networkStatus)) {
-        return (
-          <Box my="spacing12" style={containerProps?.loadingContainerStyle}>
-            <Loader.Token repeat={4} />
-          </Box>
-        )
-      }
-
-      return (
-        <Box
-          flex={1}
-          flexGrow={1}
-          justifyContent="center"
-          style={containerProps?.loadingContainerStyle}>
-          <BaseCard.ErrorState
-            retryButtonLabel="Retry"
-            title={t("Couldn't load token balances")}
-            onRetry={(): void | undefined => refetch?.()}
-          />
-        </Box>
-      )
-    }
-
     const estimatedContentHeight = dimensions.fullHeight - TAB_BAR_HEIGHT - insets.top
-    const numHiddenTokens = data.smallBalances.length + data.spamBalances.length
+    const numHiddenTokens = data?.smallBalances?.length ?? 0 + (data?.spamBalances?.length ?? 0)
 
-    return listItems.length === 0 ? (
-      <Flex grow style={containerProps?.loadingContainerStyle}>
-        {empty}
-      </Flex>
-    ) : (
-      <AnimatedFlashList
-        ref={ref}
-        ListFooterComponent={
-          <Box
-            height={
-              // We need this since FlashList doesn't support minHeight as part of its contentContainerStyle.
-              // Ensures content fills remainder of screen to support smooth tab switching
-              estimatedContentHeight - (listItems.length + 1) * ESTIMATED_TOKEN_ITEM_HEIGHT
+    // Note: `PerformanceView` must wrap the entire return statement to properly track interactive states.
+    return (
+      <ReactNavigationPerformanceView
+        interactive={data !== undefined}
+        screenName={
+          // Marks the home screen as intereactive when balances are defined
+          Screens.Home
+        }>
+        {!data ? (
+          isNonPollingRequestInFlight(networkStatus) ? (
+            <Box my="spacing12" style={containerProps?.loadingContainerStyle}>
+              <Loader.Token repeat={4} />
+            </Box>
+          ) : (
+            <Box
+              flex={1}
+              flexGrow={1}
+              justifyContent="center"
+              style={containerProps?.loadingContainerStyle}>
+              <BaseCard.ErrorState
+                retryButtonLabel="Retry"
+                title={t("Couldn't load token balances")}
+                onRetry={(): void | undefined => refetch?.()}
+              />
+            </Box>
+          )
+        ) : listItems.length === 0 ? (
+          <Flex grow style={containerProps?.loadingContainerStyle}>
+            {empty}
+          </Flex>
+        ) : (
+          <AnimatedFlashList
+            ref={ref}
+            ListFooterComponent={
+              <Box
+                height={
+                  // We need this since FlashList doesn't support minHeight as part of its contentContainerStyle.
+                  // Ensures content fills remainder of screen to support smooth tab switching
+                  estimatedContentHeight - (listItems.length + 1) * ESTIMATED_TOKEN_ITEM_HEIGHT
+                }
+              />
             }
+            ListHeaderComponent={
+              isError(networkStatus, !!data) ? (
+                <AnimatedBox entering={FadeInDown} exiting={FadeOut} py="spacing8">
+                  <BaseCard.InlineErrorState
+                    title={t('Failed to fetch token balances')}
+                    onRetry={refetch}
+                  />
+                </AnimatedBox>
+              ) : null
+            }
+            data={listItems}
+            estimatedItemSize={ESTIMATED_TOKEN_ITEM_HEIGHT}
+            keyExtractor={key}
+            renderItem={({ item }): JSX.Element | null => {
+              if (item === HIDDEN_TOKENS_ROW) {
+                return (
+                  <HiddenTokensRow
+                    isExpanded={hiddenTokensExpanded}
+                    numHidden={numHiddenTokens}
+                    onPress={(): void => setHiddenTokensExpanded(!hiddenTokensExpanded)}
+                  />
+                )
+              } else if (isPortfolioBalance(item)) {
+                return (
+                  <TokenBalanceItem
+                    isWarmLoading={isWarmLoading}
+                    portfolioBalance={item}
+                    onPressToken={onPressToken}
+                  />
+                )
+              }
+              return null
+            }}
+            scrollEventThrottle={TAB_VIEW_SCROLL_THROTTLE}
+            showsVerticalScrollIndicator={false}
+            windowSize={5}
+            onScroll={scrollHandler}
+            {...containerProps}
           />
-        }
-        ListHeaderComponent={
-          isError(networkStatus, !!data) ? (
-            <AnimatedBox entering={FadeInDown} exiting={FadeOut} py="spacing8">
-              <BaseCard.InlineErrorState
-                title={t('Failed to fetch token balances')}
-                onRetry={refetch}
-              />
-            </AnimatedBox>
-          ) : null
-        }
-        data={listItems}
-        estimatedItemSize={ESTIMATED_TOKEN_ITEM_HEIGHT}
-        keyExtractor={key}
-        renderItem={({ item }): JSX.Element | null => {
-          if (item === HIDDEN_TOKENS_ROW) {
-            return (
-              <HiddenTokensRow
-                isExpanded={hiddenTokensExpanded}
-                numHidden={numHiddenTokens}
-                onPress={(): void => setHiddenTokensExpanded(!hiddenTokensExpanded)}
-              />
-            )
-          } else if (isPortfolioBalance(item)) {
-            return (
-              <TokenBalanceItem
-                isWarmLoading={isWarmLoading}
-                portfolioBalance={item}
-                onPressToken={onPressToken}
-              />
-            )
-          }
-          return null
-        }}
-        scrollEventThrottle={TAB_VIEW_SCROLL_THROTTLE}
-        showsVerticalScrollIndicator={false}
-        windowSize={5}
-        onScroll={scrollHandler}
-        {...containerProps}
-      />
+        )}
+      </ReactNavigationPerformanceView>
     )
   }
 )

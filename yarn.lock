@@ -4349,6 +4349,18 @@
     recyclerlistview "4.1.2"
     tslib "2.4.0"
 
+"@shopify/react-native-performance-navigation@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@shopify/react-native-performance-navigation/-/react-native-performance-navigation-3.0.0.tgz#029735cefd30382239825479869187affa2157ec"
+  integrity sha512-KhXXi3Rau2KWqwAXnW77gGuKEvWcMEmh+B5mdfRd9+oJ9QIoCkLPnnGcZYsMh0t3jFrmLFNmWTqScEB3CxkopQ==
+  dependencies:
+    lodash.isequal "^4.5.0"
+
+"@shopify/react-native-performance@4.1.2":
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/@shopify/react-native-performance/-/react-native-performance-4.1.2.tgz#bd111af291b85ee125feaccd54c8e5f237a76ce7"
+  integrity sha512-1Xu2xo+hAxg75iuX5akVqAgc3h/J1ohfi7JKXlGsprP4ylpW7kHMfq/7AstL7FoUC8xcHsTUvUFhoZ94ot8g6Q==
+
 "@shopify/react-native-skia@0.1.153":
   version "0.1.153"
   resolved "https://registry.yarnpkg.com/@shopify/react-native-skia/-/react-native-skia-0.1.153.tgz#59eb0e58c300d7e5dc74732bc60b3a14a721dc70"

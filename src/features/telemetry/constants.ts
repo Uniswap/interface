@@ -19,6 +19,7 @@ export enum EventName {
   MarkMeasure = 'mark-measure',
   Moonpay = 'Moonpay', // Moonpay-specific events
   OnboardingCompleted = 'onboarding-completed',
+  PerformanceReport = 'performance-report',
   PerformanceGraphql = 'performance-graphql',
   SwapQuoteReceived = 'Swap Quote Received',
   SwapSubmitButtonPressed = 'Swap Submit Button Pressed',
@@ -159,10 +160,7 @@ export const enum ElementName {
   // alphabetize additional values.
 }
 
-export const enum MarkNames {
-  AppStartup = 'AppStartup',
-  // alphabetize additional values.
-}
+export const enum MarkNames {}
 
 export enum UserPropertyName {
   ActiveWalletAddress = 'active_wallet_address',

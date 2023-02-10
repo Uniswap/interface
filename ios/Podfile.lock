@@ -899,6 +899,8 @@ PODS:
     - React-jsi (= 0.70.6)
     - React-logger (= 0.70.6)
     - React-perflogger (= 0.70.6)
+  - ReactNativePerformance (4.1.2):
+    - React-Core
   - rive-react-native (3.0.41):
     - React-Core
     - RiveRuntime (= 2.0.12)
@@ -1057,6 +1059,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "ReactNativePerformance (from `../node_modules/@shopify/react-native-performance`)"
   - rive-react-native (from `../node_modules/rive-react-native`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
@@ -1245,6 +1248,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  ReactNativePerformance:
+    :path: "../node_modules/@shopify/react-native-performance"
   rive-react-native:
     :path: "../node_modules/rive-react-native"
   RNCAsyncStorage:
@@ -1382,6 +1387,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: c75ceef7aa60a33b2d5731ebe5800ddde40cefc4
   React-runtimeexecutor: 15437b576139df27635400de0599d9844f1ab817
   ReactCommon: 349be31adeecffc7986a0de875d7fb0dcf4e251c
+  ReactNativePerformance: ab7dee4c4862623d72c1530a9fc71b55458edf71
   rive-react-native: c87587ed13ad58b8d6c57d1e4500a429128865cd
   RiveRuntime: 00c431bf347aaad3a3d0ed381241cf945b537e1a
   RNCAsyncStorage: 0c357f3156fcb16c8589ede67cc036330b6698ca
@@ -1409,6 +1415,6 @@ SPEC CHECKSUMS:
   WalletConnectSwift: 1fbff8f5315bd8d41596773ca1b384aa873b6824
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc
 
-PODFILE CHECKSUM: 4399b0b46881ca2795caddafc73dcda062b98f8c
+PODFILE CHECKSUM: 0030a9b8f881530f36fc182d9a9a3ac546db3be5
 
 COCOAPODS: 1.11.3

@@ -1,6 +1,7 @@
 import { ApolloProvider } from '@apollo/client'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
+import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { StrictMode, useCallback, useEffect } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
@@ -23,7 +24,8 @@ import { BiometricContextProvider } from 'src/features/biometrics/context'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { initializeRemoteConfig } from 'src/features/remoteConfig'
-import { MarkNames } from 'src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { EventName } from 'src/features/telemetry/constants'
 import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
 import { useTrmPrefetch } from 'src/features/trm/api'
 import { useSignerAccounts } from 'src/features/wallet/hooks'
@@ -57,13 +59,17 @@ initOneSignal()
 function App(): JSX.Element | null {
   const client = usePersistedApolloClient()
 
+  const onReportPrepared = useCallback((report: RenderPassReport) => {
+    sendAnalyticsEvent(EventName.PerformanceReport, report)
+  }, [])
+
   if (!client) {
     // TODO: [MOB-3515] delay splash screen until client is rehydated
     return null
   }
 
   return (
-    <Trace startMark={MarkNames.AppStartup}>
+    <Trace>
       <StrictMode>
         <SafeAreaProvider>
           <Provider store={store}>
@@ -77,7 +83,9 @@ function App(): JSX.Element | null {
                           <DataUpdaters />
                           <BottomSheetModalProvider>
                             <AppModals />
-                            <AppInner />
+                            <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                              <AppInner />
+                            </PerformanceProfiler>
                           </BottomSheetModalProvider>
                         </LockScreenContextProvider>
                       </BiometricContextProvider>
@@ -96,11 +104,7 @@ function App(): JSX.Element | null {
 function AppInner(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark'
 
-  return (
-    <Trace endMark={MarkNames.AppStartup}>
-      <NavStack isDarkMode={isDarkMode} />
-    </Trace>
-  )
+  return <NavStack isDarkMode={isDarkMode} />
 }
 
 const PREFETCH_OPTIONS = {

@@ -1,3 +1,4 @@
+import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
 import { useResponsiveProp } from '@shopify/restyle'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -109,13 +110,15 @@ export function TokenDetailsScreen({
   const { error: tokenPriceHistoryError } = useTokenPriceHistory(_currencyId)
 
   return (
-    <TokenDetails
-      _currencyId={_currencyId}
-      data={data}
-      error={isError(networkStatus, !!data) || !!tokenPriceHistoryError}
-      loading={isLoading}
-      retry={retry}
-    />
+    <ReactNavigationPerformanceView interactive={isLoading} screenName={Screens.TokenDetails}>
+      <TokenDetails
+        _currencyId={_currencyId}
+        data={data}
+        error={isError(networkStatus, !!data) || !!tokenPriceHistoryError}
+        loading={isLoading}
+        retry={retry}
+      />
+    </ReactNavigationPerformanceView>
   )
 }
 
