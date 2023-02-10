@@ -549,6 +549,20 @@ export type PairInput = {
   tokenAmountB: TokenAmountInput;
 };
 
+export type PermitDetailsInput = {
+  amount: Scalars['String'];
+  expiration: Scalars['String'];
+  nonce: Scalars['String'];
+  token: Scalars['String'];
+};
+
+export type PermitInput = {
+  details: PermitDetailsInput;
+  sigDeadline: Scalars['String'];
+  signature: Scalars['String'];
+  spender: Scalars['String'];
+};
+
 /**   v3 pool parameters as defined by https://github.com/Uniswap/v3-sdk/blob/main/src/entities/pool.ts */
 export type PoolInput = {
   fee: Scalars['Int'];
@@ -864,6 +878,7 @@ export enum TokenStandard {
 }
 
 export type TokenTradeInput = {
+  permit?: InputMaybe<PermitInput>;
   routes?: InputMaybe<TokenTradeRoutesInput>;
   slippageToleranceBasisPoints?: InputMaybe<Scalars['Int']>;
   tokenAmount: TokenAmountInput;

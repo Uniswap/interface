@@ -1,37 +1,34 @@
 import { Protocol } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, NativeCurrency, Token, TradeType } from '@uniswap/sdk-core'
-import { TokenTradeRouteInput, TokenTradeRoutesInput, TokenTradeType } from 'graphql/data/__generated__/types-and-hooks'
-import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
-import { useBestTrade } from 'hooks/useBestTrade'
-import { useEffect, useMemo } from 'react'
-import { InterfaceTrade, TradeState } from 'state/routing/types'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import {
+  PermitInput,
+  TokenTradeRouteInput,
+  TokenTradeRoutesInput,
+  TokenTradeType,
+} from 'graphql/data/__generated__/types-and-hooks'
+import { Allowance } from 'hooks/usePermit2Allowance'
+import { useEffect } from 'react'
+import { InterfaceTrade } from 'state/routing/types'
 
 import { useTokenInput } from './useTokenInput'
 
 export default function usePayWithAnyTokenSwap(
-  inputCurrency?: Currency,
-  parsedOutputAmount?: CurrencyAmount<NativeCurrency | Token>
-): {
-  state: TradeState
-  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
-  maximumAmountIn: CurrencyAmount<Token> | undefined
-} {
+  trade?: InterfaceTrade<Currency, Currency, TradeType> | undefined,
+  allowance?: Allowance,
+  allowedSlippage?: Percent
+) {
   const setTokenTradeInput = useTokenInput((state) => state.setTokenTradeInput)
-  const { state, trade } = useBestTrade(TradeType.EXACT_OUTPUT, parsedOutputAmount, inputCurrency ?? undefined)
-  const allowedSlippage = useAutoSlippageTolerance(trade)
-  const maximumAmountIn = useMemo(() => {
-    const maximumAmountIn = trade?.maximumAmountIn(allowedSlippage)
-    return maximumAmountIn?.currency.isToken ? (maximumAmountIn as CurrencyAmount<Token>) : undefined
-  }, [allowedSlippage, trade])
+  const hasRoutes = !!trade && trade.routes
+  const hasInputAmount = !!trade && !!trade.inputAmount && trade.inputAmount.currency.isToken
+  const hasAllowance = !!allowedSlippage && !!allowance && 'permitSignature' in allowance
 
   useEffect(() => {
-    if (!trade || !trade?.routes || !trade.inputAmount || !trade.inputAmount.currency.isToken) {
+    if (!hasRoutes || !hasInputAmount || !hasAllowance || !allowance.permitSignature) {
       setTokenTradeInput(undefined)
       return
     }
 
     const slippage = parseInt(allowedSlippage.multiply(100).toSignificant(2))
-
     let mixedTokenTradeRouteInputs: TokenTradeRouteInput[] | undefined
     let v2TokenTradeRouteInputs: TokenTradeRouteInput[] | undefined
     let v3TokenTradeRouteInputs: TokenTradeRouteInput[] | undefined
@@ -224,7 +221,20 @@ export default function usePayWithAnyTokenSwap(
       v3Routes: v3TokenTradeRouteInputs,
     }
 
+    const permitInput: PermitInput = {
+      details: {
+        amount: allowance.permitSignature.details.amount.toString(),
+        expiration: allowance.permitSignature.details.expiration.toString(),
+        nonce: allowance.permitSignature.details.nonce.toString(),
+        token: allowance.permitSignature.details.token,
+      },
+      sigDeadline: allowance.permitSignature.sigDeadline.toString(),
+      signature: allowance.permitSignature.signature,
+      spender: allowance.permitSignature.spender,
+    }
+
     setTokenTradeInput({
+      permit: permitInput,
       routes,
       slippageToleranceBasisPoints: slippage,
       tokenAmount: {
@@ -237,13 +247,5 @@ export default function usePayWithAnyTokenSwap(
         },
       },
     })
-  }, [allowedSlippage, setTokenTradeInput, trade])
-
-  return useMemo(() => {
-    return {
-      state,
-      trade,
-      maximumAmountIn,
-    }
-  }, [maximumAmountIn, state, trade])
+  }, [allowance, allowedSlippage, hasAllowance, hasInputAmount, hasRoutes, setTokenTradeInput, trade])
 }

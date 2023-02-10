@@ -21,6 +21,7 @@ import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useBag } from 'nft/hooks/useBag'
+import useDerivedPayWithAnyTokenSwapInfo from 'nft/hooks/useDerivedPayWithAnyTokenSwapInfo'
 import usePayWithAnyTokenSwap from 'nft/hooks/usePayWithAnyTokenSwap'
 import usePermit2Approval from 'nft/hooks/usePermit2Approval'
 import { useTokenInput } from 'nft/hooks/useTokenInput'
@@ -293,12 +294,18 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
   const parsedOutputAmount = useMemo(() => {
     return tryParseCurrencyAmount(formatEther(totalEthPrice.toString()), defaultCurrency ?? undefined)
   }, [defaultCurrency, totalEthPrice])
-  const { state: tradeState, trade, maximumAmountIn } = usePayWithAnyTokenSwap(inputCurrency, parsedOutputAmount)
+  const {
+    state: tradeState,
+    trade,
+    maximumAmountIn,
+    allowedSlippage,
+  } = useDerivedPayWithAnyTokenSwapInfo(inputCurrency, parsedOutputAmount)
   const { allowance, isAllowancePending, isApprovalLoading, updateAllowance } = usePermit2Approval(
     trade?.inputAmount.currency.isToken ? (trade?.inputAmount as CurrencyAmount<Token>) : undefined,
     maximumAmountIn,
     shouldUsePayWithAnyToken
   )
+  usePayWithAnyTokenSwap(trade, allowance, allowedSlippage)
 
   const fiatValueTradeInput = useStablecoinValue(trade?.inputAmount)
   const fiatValueTradeOutput = useStablecoinValue(parsedOutputAmount)
