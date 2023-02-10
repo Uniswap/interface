@@ -1,3 +1,4 @@
+import { getSdkError } from '@walletconnect/utils'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Defs, LinearGradient, Rect, Stop, Svg } from 'react-native-svg'
@@ -18,6 +19,8 @@ import { HeaderIcon } from 'src/components/WalletConnect/RequestModal/HeaderIcon
 import { PendingConnectionSwitchAccountModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionSwitchAccountModal'
 import { PendingConnectionSwitchNetworkModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionSwitchNetworkModal'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
+import { pushNotification } from 'src/features/notifications/notificationSlice'
+import { AppNotificationType } from 'src/features/notifications/types'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, EventName } from 'src/features/telemetry/constants'
 import {
@@ -26,13 +29,18 @@ import {
   useSignerAccounts,
 } from 'src/features/wallet/hooks'
 import { activateAccount } from 'src/features/wallet/walletSlice'
+import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { WCEventType, WCRequestOutcome } from 'src/features/walletConnect/types'
 import { settlePendingSession } from 'src/features/walletConnect/WalletConnect'
 import {
+  addSession,
   removePendingSession,
   WalletConnectSession,
 } from 'src/features/walletConnect/walletConnectSlice'
+import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
+import { getSessionNamespaces } from 'src/features/walletConnectV2/utils'
 import { toSupportedChainId } from 'src/utils/chainId'
+import { ONE_SECOND_MS } from 'src/utils/time'
 
 type Props = {
   pendingSession: WalletConnectSession
@@ -159,27 +167,83 @@ export const PendingConnection = ({ pendingSession, onClose }: Props): JSX.Eleme
   const [selectedChainId, setSelectedChainId] = useState<ChainId>(ChainId.Mainnet)
 
   useEffect(() => {
-    if (pendingSession) {
+    // Only WC v1.0 supports one chain per session
+    if (pendingSession && pendingSession.version === '1') {
       const dappChain = toSupportedChainId(pendingSession.dapp.chain_id)
       if (dappChain) setSelectedChainId(dappChain)
     }
   }, [pendingSession])
 
   const onPressSettleConnection = useCallback(
-    (approved: boolean) => {
-      settlePendingSession(selectedChainId, activeAddress, approved)
-
+    async (approved: boolean) => {
       sendAnalyticsEvent(EventName.WalletConnectSheetCompleted, {
         request_type: WCEventType.SessionPending,
         dapp_url: pendingSession.dapp.url,
         dapp_name: pendingSession.dapp.name,
-        chain_id: pendingSession.dapp.chain_id,
+        wc_version: pendingSession.version,
+        chain_id: pendingSession.version === '1' ? pendingSession.dapp.chain_id : undefined,
         outcome: approved ? WCRequestOutcome.Confirm : WCRequestOutcome.Reject,
       })
 
+      // Handle WC 1.0 session request
+      if (pendingSession.version === '1') {
+        settlePendingSession(selectedChainId, activeAddress, approved)
+        if (approved) {
+          onClose()
+        } else {
+          dispatch(removePendingSession())
+        }
+
+        return
+      }
+
+      // Handle WC 2.0 session request
       if (approved) {
+        const { namespaces, chains } = getSessionNamespaces(
+          activeAddress,
+          pendingSession.proposalNamespaces
+        )
+
+        const session = await wcWeb3Wallet.approveSession({
+          id: Number(pendingSession.id),
+          namespaces,
+        })
+
+        dispatch(
+          addSession({
+            wcSession: {
+              id: session.topic,
+              dapp: {
+                name: session.peer.metadata.name,
+                url: session.peer.metadata.url,
+                icon: session.peer.metadata.icons[0] ?? null,
+                version: '2',
+              },
+              chains,
+              proposalNamespaces: pendingSession.proposalNamespaces,
+              version: '2',
+            },
+            account: activeAddress,
+          })
+        )
+
+        dispatch(
+          pushNotification({
+            type: AppNotificationType.WalletConnect,
+            address: activeAddress,
+            event: WalletConnectEvent.Connected,
+            dappName: session.peer.metadata.name,
+            imageUrl: session.peer.metadata.icons[0] ?? null,
+            hideDelay: 3 * ONE_SECOND_MS,
+          })
+        )
+
         onClose()
       } else {
+        wcWeb3Wallet.rejectSession({
+          id: Number(pendingSession.id),
+          reason: getSdkError('USER_REJECTED'),
+        })
         dispatch(removePendingSession())
       }
     },
@@ -189,7 +253,7 @@ export const PendingConnection = ({ pendingSession, onClose }: Props): JSX.Eleme
   return (
     <>
       <AnimatedFlex
-        backgroundColor="translucentBackground"
+        backgroundColor="background1"
         borderRadius="rounded12"
         flex={1}
         gap="spacing24"
@@ -211,8 +275,10 @@ export const PendingConnection = ({ pendingSession, onClose }: Props): JSX.Eleme
           <HeaderIcon dapp={pendingSession.dapp} showChain={false} />
           <Text textAlign="center" variant="headlineSmall">
             <Trans t={t}>
-              <Text fontWeight="bold">{{ dapp: pendingSession.dapp.name }}</Text> wants to connect
-              to your wallet
+              <Text fontWeight="bold">
+                {{ dapp: pendingSession.dapp.name || pendingSession.dapp.url }}
+              </Text>{' '}
+              wants to connect to your wallet
             </Trans>
           </Text>
           <LinkButton
@@ -226,11 +292,15 @@ export const PendingConnection = ({ pendingSession, onClose }: Props): JSX.Eleme
             url={pendingSession.dapp.url}
           />
         </Flex>
-        <Flex bg="translucentBackground" borderRadius="rounded16" gap="spacing2">
+        <Flex bg="background2" borderRadius="rounded16" gap="spacing2">
           <SitePermissions />
           <Separator />
-          <SwitchNetworkRow selectedChainId={selectedChainId} setModalState={setModalState} />
-          <Separator />
+          {pendingSession.version === '1' && (
+            <>
+              <SwitchNetworkRow selectedChainId={selectedChainId} setModalState={setModalState} />
+              <Separator />
+            </>
+          )}
           <SwitchAccountRow activeAddress={activeAddress} setModalState={setModalState} />
           <Box />
         </Flex>
@@ -239,9 +309,13 @@ export const PendingConnection = ({ pendingSession, onClose }: Props): JSX.Eleme
             fill
             emphasis={ButtonEmphasis.Secondary}
             label={t('Cancel')}
-            onPress={(): void => onPressSettleConnection(false)}
+            onPress={(): Promise<void> => onPressSettleConnection(false)}
           />
-          <Button fill label={t('Connect')} onPress={(): void => onPressSettleConnection(true)} />
+          <Button
+            fill
+            label={t('Connect')}
+            onPress={(): Promise<void> => onPressSettleConnection(true)}
+          />
         </Flex>
       </AnimatedFlex>
       {modalState === PendingConnectionModalState.SwitchNetwork && (

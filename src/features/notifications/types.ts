@@ -34,7 +34,7 @@ export interface WalletConnectNotification extends AppNotificationBase {
   event: WalletConnectEvent
   dappName: string
   imageUrl: string | null
-  chainId: number
+  chainId?: number
 }
 
 export interface TransactionNotificationBase extends AppNotificationBase {

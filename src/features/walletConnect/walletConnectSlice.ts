@@ -1,16 +1,30 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { ProposalTypes } from '@walletconnect/types'
+import { ChainId } from 'src/constants/chains'
 import {
   DappInfo,
+  DappInfoV2,
   EthMethod,
   EthSignMethod,
   EthTransaction,
   EthTransactionMethod,
 } from 'src/features/walletConnect/types'
 
-export interface WalletConnectSession {
+export type WalletConnectSessionV1 = {
   id: string
   dapp: DappInfo
+  version: '1'
 }
+
+export type WalletConnectSessionV2 = {
+  id: string
+  chains: ChainId[]
+  dapp: DappInfoV2
+  proposalNamespaces: ProposalTypes.RequiredNamespaces
+  version: '2'
+}
+
+export type WalletConnectSession = WalletConnectSessionV1 | WalletConnectSessionV2
 
 interface SessionMapping {
   [sessionId: string]: WalletConnectSession

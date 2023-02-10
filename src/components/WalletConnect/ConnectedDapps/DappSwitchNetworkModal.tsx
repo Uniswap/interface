@@ -9,11 +9,11 @@ import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { changeChainId, disconnectFromApp } from 'src/features/walletConnect/WalletConnect'
-import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
+import { WalletConnectSessionV1 } from 'src/features/walletConnect/walletConnectSlice'
 import { toSupportedChainId } from 'src/utils/chainId'
 
 interface DappSwitchNetworkModalProps {
-  selectedSession: WalletConnectSession
+  selectedSession: WalletConnectSessionV1
   onClose: () => void
 }
 

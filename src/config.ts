@@ -15,6 +15,7 @@ import {
   UNISWAP_API_KEY,
   UNISWAP_APP_URL,
   VERSION,
+  WALLETCONNECT_PROJECT_ID,
 } from 'react-native-dotenv'
 import { ChainIdTo } from 'src/constants/chains'
 import { ChainState } from 'src/features/chains/types'
@@ -38,6 +39,7 @@ export interface Config {
   onesignalAppId: string
   sentryDsn: string
   version: string
+  walletConnectProjectId: string
 }
 
 const _config: Config = {
@@ -58,6 +60,7 @@ const _config: Config = {
   onesignalAppId: process.env.ONESIGNAL_APP_ID || ONESIGNAL_APP_ID,
   sentryDsn: process.env.SENTRY_DSN || SENTRY_DSN,
   version: VERSION,
+  walletConnectProjectId: process.env.WALLETCONNECT_PROJECT_ID || WALLETCONNECT_PROJECT_ID,
 }
 
 function parseBoolean(value: string): boolean {

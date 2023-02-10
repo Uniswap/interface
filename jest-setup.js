@@ -77,6 +77,14 @@ jest.mock('src/features/providers/providerSaga')
 
 jest.mock('src/lib/RNEthersRs')
 
+// Mock WalletConnect v2 packages
+jest.mock('@walletconnect/web3wallet', () => ({
+  Web3Wallet: { init: () => ({ on: jest.fn() }) },
+}))
+jest.mock('@walletconnect/core', () => ({
+  Core: jest.fn().mockImplementation(() => ({})),
+}))
+
 // Mock OneSignal package
 jest.mock('react-native-onesignal', () => {
   return {

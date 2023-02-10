@@ -17,4 +17,5 @@ declare module 'react-native-dotenv' {
   export const SENTRY_DSN: string
   export const VERSION: string
   export const ONESIGNAL_APP_ID: string
+  export const WALLETCONNECT_PROJECT_ID: string
 }

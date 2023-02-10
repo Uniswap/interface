@@ -9,7 +9,8 @@ import Scan from 'src/assets/icons/qr-code.svg'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
-import { Box, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
+import { BackButtonView } from 'src/components/layout/BackButtonView'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
@@ -24,8 +25,10 @@ import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { connectToApp } from 'src/features/walletConnect/WalletConnect'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
+import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
+import { ONE_SECOND_MS } from 'src/utils/time'
 
-const WC_TIMEOUT_DURATION_MS = 10000 // timeout after 10 seconds
+const WC_TIMEOUT_DURATION_MS = 10 * ONE_SECOND_MS // timeout after 10 seconds
 
 type Props = {
   initialScreenState?: ScannerModalState
@@ -87,6 +90,11 @@ export function WalletConnectModal({
         connectToApp(supportedURI.value)
       }
 
+      if (supportedURI.type === URIType.WalletConnectV2URL) {
+        setShouldFreezeCamera(true)
+        wcWeb3Wallet.core.pairing.pair({ uri: supportedURI.value })
+      }
+
       if (supportedURI.type === URIType.EasterEgg) {
         setShouldFreezeCamera(true)
         Alert.alert('Have you tried full-sending lately?', 'Highly recommend it', [
@@ -141,20 +149,14 @@ export function WalletConnectModal({
       ) : (
         <>
           {currentScreenState === ScannerModalState.ConnectedDapps && (
-            <Box flex={1} pt="spacing24">
-              <ConnectedDappsList
-                backButton={
-                  <TouchableArea hapticFeedback onPress={onPressShowScanQr}>
-                    <Chevron
-                      color={theme.colors.textSecondary}
-                      height={theme.iconSizes.icon24}
-                      width={theme.iconSizes.icon24}
-                    />
-                  </TouchableArea>
-                }
-                sessions={sessions}
-              />
-            </Box>
+            <ConnectedDappsList
+              backButton={
+                <TouchableArea hapticFeedback onPress={onPressShowScanQr}>
+                  <BackButtonView />
+                </TouchableArea>
+              }
+              sessions={sessions}
+            />
           )}
           {currentScreenState === ScannerModalState.ScanQr && (
             <QRCodeScanner

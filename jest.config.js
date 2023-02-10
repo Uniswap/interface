@@ -28,7 +28,7 @@ module.exports = {
     '\\.svg$': 'jest-transformer-svg',
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|react-native-reanimated|@react-native|@react-native-firebase|react-native-webview|@gorhom|expo.*|react-native-flipper|d3-(array|color|format|interpolate|path|scale|shape|time-format|time)|internmap|react-native-qrcode-svg|react-native-modal|react-native-animatable|react-native-masked-view|redux-persist|react-native-url-polyfill|react-native-context-menu-view|react-native-wagmi-charts|react-native-markdown-display|react-native-redash)/)',
+    'node_modules/(?!(react-native|react-native-reanimated|@react-native|@react-native-firebase|react-native-webview|@gorhom|expo.*|react-native-flipper|d3-(array|color|format|interpolate|path|scale|shape|time-format|time)|internmap|react-native-qrcode-svg|react-native-modal|react-native-animatable|react-native-masked-view|redux-persist|react-native-url-polyfill|react-native-context-menu-view|react-native-wagmi-charts|react-native-markdown-display|react-native-redash|@walletconnect)/)',
   ],
   // define environment variables
   globals: {
@@ -47,5 +47,6 @@ module.exports = {
     SHAKE_CLIENT_SECRET: 123,
     UNISWAP_API_KEY: 123,
     UNISWAP_API_BASE_URL: 'https://api.uniswap.org',
+    WALLETCONNECT_PROJECT_ID: 123,
   },
 }

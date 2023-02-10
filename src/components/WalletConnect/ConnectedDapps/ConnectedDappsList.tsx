@@ -9,7 +9,10 @@ import { BackHeader } from 'src/components/layout/BackHeader'
 import { Text } from 'src/components/Text'
 import { DappConnectionItem } from 'src/components/WalletConnect/ConnectedDapps/DappConnectionItem'
 import { DappSwitchNetworkModal } from 'src/components/WalletConnect/ConnectedDapps/DappSwitchNetworkModal'
-import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
+import {
+  WalletConnectSession,
+  WalletConnectSessionV1,
+} from 'src/features/walletConnect/walletConnectSlice'
 import { dimensions } from 'src/styles/sizing'
 
 type ConnectedDappsProps = {
@@ -21,7 +24,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
   const { t } = useTranslation()
   const theme = useAppTheme()
 
-  const [selectedSession, setSelectedSession] = useState<WalletConnectSession>()
+  const [selectedSession, setSelectedSession] = useState<WalletConnectSessionV1>()
 
   const headerText = (
     <Text color="textPrimary" variant="bodyLarge">
@@ -29,7 +32,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
     </Text>
   )
   const header = backButton ? (
-    <Flex row alignItems="center" justifyContent="space-between" pb="spacing8">
+    <Flex row alignItems="center" justifyContent="space-between">
       {backButton}
       {headerText}
       <Box width={theme.iconSizes.icon24} />
@@ -40,7 +43,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
 
   return (
     <>
-      <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} pt="spacing24" px="spacing24">
+      <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} pt="spacing16" px="spacing24">
         {header}
 
         {sessions.length > 0 ? (
@@ -49,12 +52,10 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
             data={sessions}
             keyExtractor={(item): string => item.id}
             numColumns={2}
-            renderItem={(item): JSX.Element => (
+            renderItem={({ item }): JSX.Element => (
               <DappConnectionItem
-                wrapped={item}
-                onPressChangeNetwork={(): void => {
-                  setSelectedSession(item.item)
-                }}
+                session={item}
+                onPressChangeNetwork={(session): void => setSelectedSession(session)}
               />
             )}
           />

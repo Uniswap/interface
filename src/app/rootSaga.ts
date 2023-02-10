@@ -51,6 +51,7 @@ import {
   pendingAccountSagaName,
 } from 'src/features/wallet/pendingAccountsSaga'
 import { signWcRequestSaga, walletConnectSaga } from 'src/features/walletConnect/saga'
+import { walletConnectV2Saga } from 'src/features/walletConnectV2/saga'
 import { SagaState } from 'src/utils/saga'
 
 // All regular sagas must be included here
@@ -63,6 +64,7 @@ const sagas = [
   firebaseDataWatcher,
   notificationWatcher,
   walletConnectSaga,
+  walletConnectV2Saga,
   signWcRequestSaga,
   cloudBackupsManagerSaga,
 ]

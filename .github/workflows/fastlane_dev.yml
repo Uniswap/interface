@@ -21,6 +21,7 @@ jobs:
       MOONPAY_API_URL: ${{ secrets.MOONPAY_API_URL }}
       MOONPAY_WIDGET_API_URL: ${{ secrets.MOONPAY_WIDGET_API_URL }}
       ONESIGNAL_APP_ID: ${{ secrets.ONESIGNAL_APP_ID_DEV }}
+      WALLETCONNECT_PROJECT_ID: ${{ secrets.WALLETCONNECT_PROJECT_ID }}
     steps:
       - uses: styfle/cancel-workflow-action@860d4c7374d6e4a1c482e80897cb913ae46692ac
         with:

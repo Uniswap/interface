@@ -166,6 +166,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
       dapp_name: request.dapp.name,
       chain_id: request.dapp.chain_id,
       outcome: WCRequestOutcome.Reject,
+      wc_version: '1',
     })
 
     onClose()
@@ -212,6 +213,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
       dapp_name: request.dapp.name,
       chain_id: request.dapp.chain_id,
       outcome: WCRequestOutcome.Confirm,
+      wc_version: '1',
     })
 
     onClose()

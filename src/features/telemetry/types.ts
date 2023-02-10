@@ -84,7 +84,8 @@ export type EventProperties = {
     eth_method?: EthMethod
     dapp_url: string
     dapp_name: string
-    chain_id: number
+    wc_version: '1' | '2'
+    chain_id?: number
     outcome: WCRequestOutcome
   }
 }

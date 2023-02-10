@@ -71,6 +71,14 @@ export interface DappInfo {
   url: string
   icon: string | null
   chain_id: number
+  version: '1'
+}
+
+export interface DappInfoV2 {
+  name: string
+  url: string
+  icon: string | null
+  version: '2'
 }
 
 export interface EthTransaction {

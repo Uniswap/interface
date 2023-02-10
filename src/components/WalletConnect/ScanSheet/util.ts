@@ -1,8 +1,10 @@
+import { parseUri } from '@walletconnect/utils'
 import { isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
 import { getValidAddress } from 'src/utils/addresses'
 
 export enum URIType {
   WalletConnectURL = 'walletconnect',
+  WalletConnectV2URL = 'walletconnect-v2',
   Address = 'address',
   EasterEgg = 'easter-egg',
 }
@@ -20,7 +22,7 @@ export async function getSupportedURI(uri: string): Promise<URIFormat | undefine
     return undefined
   }
 
-  const maybeAddress = getValidAddress(uri, true)
+  const maybeAddress = getValidAddress(uri, /*withChecksum=*/ true, /*log=*/ false)
   if (maybeAddress) {
     return { type: URIType.Address, value: maybeAddress }
   }
@@ -32,6 +34,10 @@ export async function getSupportedURI(uri: string): Promise<URIFormat | undefine
 
   if (await isValidWCUrl(uri)) {
     return { type: URIType.WalletConnectURL, value: uri }
+  }
+
+  if (parseUri(uri).version === 2) {
+    return { type: URIType.WalletConnectV2URL, value: uri }
   }
 
   const maybeCustomWcUri = await getCustomUniswapWcCode(uri)
@@ -64,5 +70,5 @@ function getMetamaskAddress(uri: string): Nullable<string> {
     return null
   }
 
-  return getValidAddress(uriParts[1], true)
+  return getValidAddress(uriParts[1], /*withChecksum=*/ true, /*log=*/ false)
 }
