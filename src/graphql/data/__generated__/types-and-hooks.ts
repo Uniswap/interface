@@ -95,6 +95,11 @@ export enum Currency {
   Usd = 'USD'
 }
 
+export enum DatasourceProvider {
+  Nxyz = 'NXYZ',
+  Uniswap = 'UNISWAP'
+}
+
 export type Dimensions = {
   __typename?: 'Dimensions';
   height?: Maybe<Scalars['Float']>;
@@ -924,6 +929,14 @@ export enum TransactionStatus {
   Pending = 'PENDING'
 }
 
+export type RecentlySearchedAssetsQueryVariables = Exact<{
+  collectionAddresses: Array<Scalars['String']> | Scalars['String'];
+  contracts: Array<ContractInput> | ContractInput;
+}>;
+
+
+export type RecentlySearchedAssetsQuery = { __typename?: 'Query', nftCollections?: { __typename?: 'NftCollectionConnection', edges: Array<{ __typename?: 'NftCollectionEdge', node: { __typename?: 'NftCollection', collectionId: string, isVerified?: boolean, name?: string, numAssets?: number, image?: { __typename?: 'Image', url: string }, nftContracts?: Array<{ __typename?: 'NftContract', address: string }>, markets?: Array<{ __typename?: 'NftCollectionMarket', floorPrice?: { __typename?: 'TimestampedAmount', currency?: Currency, value: number } }> } }> }, tokens?: Array<{ __typename?: 'Token', id: string, decimals?: number, name?: string, chain: Chain, standard?: TokenStandard, address?: string, symbol?: string, market?: { __typename?: 'TokenMarket', id: string, price?: { __typename?: 'Amount', id: string, value: number, currency?: Currency }, pricePercentChange?: { __typename?: 'Amount', id: string, value: number }, volume24H?: { __typename?: 'Amount', id: string, value: number, currency?: Currency } }, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string, safetyLevel?: SafetyLevel } }> };
+
 export type SearchTokensQueryVariables = Exact<{
   searchQuery: Scalars['String'];
 }>;
@@ -1023,6 +1036,92 @@ export type NftRouteQueryVariables = Exact<{
 export type NftRouteQuery = { __typename?: 'Query', nftRoute?: { __typename?: 'NftRouteResponse', calldata: string, toAddress: string, route?: Array<{ __typename?: 'NftTrade', amount: number, contractAddress: string, id: string, marketplace: NftMarketplace, tokenId: string, tokenType: NftStandard, price: { __typename?: 'TokenAmount', currency: Currency, value: string }, quotePrice?: { __typename?: 'TokenAmount', currency: Currency, value: string } }>, sendAmount: { __typename?: 'TokenAmount', currency: Currency, value: string } } };
 
 
+export const RecentlySearchedAssetsDocument = gql`
+    query RecentlySearchedAssets($collectionAddresses: [String!]!, $contracts: [ContractInput!]!) {
+  nftCollections(filter: {addresses: $collectionAddresses}) {
+    edges {
+      node {
+        collectionId
+        image {
+          url
+        }
+        isVerified
+        name
+        numAssets
+        nftContracts {
+          address
+        }
+        markets(currencies: ETH) {
+          floorPrice {
+            currency
+            value
+          }
+        }
+      }
+    }
+  }
+  tokens(contracts: $contracts) {
+    id
+    decimals
+    name
+    chain
+    standard
+    address
+    symbol
+    market(currency: USD) {
+      id
+      price {
+        id
+        value
+        currency
+      }
+      pricePercentChange(duration: DAY) {
+        id
+        value
+      }
+      volume24H: volume(duration: DAY) {
+        id
+        value
+        currency
+      }
+    }
+    project {
+      id
+      logoUrl
+      safetyLevel
+    }
+  }
+}
+    `;
+
+/**
+ * __useRecentlySearchedAssetsQuery__
+ *
+ * To run a query within a React component, call `useRecentlySearchedAssetsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRecentlySearchedAssetsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRecentlySearchedAssetsQuery({
+ *   variables: {
+ *      collectionAddresses: // value for 'collectionAddresses'
+ *      contracts: // value for 'contracts'
+ *   },
+ * });
+ */
+export function useRecentlySearchedAssetsQuery(baseOptions: Apollo.QueryHookOptions<RecentlySearchedAssetsQuery, RecentlySearchedAssetsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RecentlySearchedAssetsQuery, RecentlySearchedAssetsQueryVariables>(RecentlySearchedAssetsDocument, options);
+      }
+export function useRecentlySearchedAssetsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecentlySearchedAssetsQuery, RecentlySearchedAssetsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RecentlySearchedAssetsQuery, RecentlySearchedAssetsQueryVariables>(RecentlySearchedAssetsDocument, options);
+        }
+export type RecentlySearchedAssetsQueryHookResult = ReturnType<typeof useRecentlySearchedAssetsQuery>;
+export type RecentlySearchedAssetsLazyQueryHookResult = ReturnType<typeof useRecentlySearchedAssetsLazyQuery>;
+export type RecentlySearchedAssetsQueryResult = Apollo.QueryResult<RecentlySearchedAssetsQuery, RecentlySearchedAssetsQueryVariables>;
 export const SearchTokensDocument = gql`
     query SearchTokens($searchQuery: String!) {
   searchTokens(searchQuery: $searchQuery) {

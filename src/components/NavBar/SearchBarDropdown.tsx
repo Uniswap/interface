@@ -7,7 +7,6 @@ import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { subheadSmall } from 'nft/css/common.css'
-import { useSearchHistory } from 'nft/hooks'
 import { fetchTrendingCollections } from 'nft/queries'
 import { FungibleToken, GenieCollection, parseFungibleTokens, TimePeriod, TrendingCollection } from 'nft/types'
 import { formatEthPrice } from 'nft/utils/currency'
@@ -16,6 +15,7 @@ import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
+import { useRecentlySearchedAssets } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
 import { CollectionRow, SkeletonRow, TokenRow } from './SuggestionRow'
 
@@ -111,8 +111,11 @@ export const SearchBarDropdown = ({
   isLoading,
 }: SearchBarDropdownProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
-  const { history: searchHistory, updateItem: updateSearchHistory } = useSearchHistory()
-  const shortenedHistory = useMemo(() => searchHistory.slice(0, 2), [searchHistory])
+
+  const { data: searchHistory } = useRecentlySearchedAssets()
+  const shortenedHistory = useMemo(() => searchHistory?.slice(0, 2) ?? [...Array<FungibleToken>(2)], [searchHistory])
+  console.log(searchHistory)
+
   const { pathname } = useLocation()
   const isNFTPage = useIsNftPage()
   const isTokenPage = pathname.includes('/tokens')
@@ -148,10 +151,6 @@ export const SearchBarDropdown = ({
     () => trendingTokenData && parseFungibleTokens(trendingTokenData),
     [trendingTokenData]
   )
-
-  useEffect(() => {
-    trendingTokenResults?.forEach(updateSearchHistory)
-  }, [trendingTokenResults, updateSearchHistory])
 
   const trendingTokensLength = isTokenPage ? 3 : 2
   const trendingTokens = useMemo(
@@ -276,6 +275,7 @@ export const SearchBarDropdown = ({
                 }}
                 header={<Trans>Recent searches</Trans>}
                 headerIcon={<ClockIcon />}
+                isLoading={!searchHistory}
               />
             )}
             {!isNFTPage && (
@@ -333,6 +333,7 @@ export const SearchBarDropdown = ({
     queryText,
     totalSuggestions,
     trace,
+    searchHistory,
   ])
 
   return (
