@@ -5,7 +5,7 @@ import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
 import { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
-import { SupportedChainId } from 'constants/chains'
+import { NETWORK_SELECTOR_CHAINS, SupportedChainId } from 'constants/chains'
 
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
 import { RPC_URLS } from '../constants/networks'
@@ -23,6 +23,11 @@ export interface Connection {
   connector: Connector
   hooks: Web3ReactHooks
   type: ConnectionType
+}
+
+const WALLETCONNECT_PROJECT_ID = process.env.REACT_APP_WALLETCONNECT_PROJECT_ID
+if (typeof WALLETCONNECT_PROJECT_ID === 'undefined') {
+  throw new Error(`REACT_APP_WALLETCONNECT_PROJECT_ID must be a defined environment variable`)
 }
 
 function onError(error: Error) {
@@ -65,8 +70,9 @@ const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletCo
   return new WalletConnect({
     actions,
     options: {
-      rpc: RPC_URLS_WITHOUT_FALLBACKS,
-      qrcode: true,
+      rpcMap: RPC_URLS_WITHOUT_FALLBACKS,
+      chains: NETWORK_SELECTOR_CHAINS,
+      projectId: WALLETCONNECT_PROJECT_ID,
     },
     onError,
   })

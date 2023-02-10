@@ -174,7 +174,7 @@
     "@web3-react/network": "8.0.27-beta.0",
     "@web3-react/types": "8.0.20-beta.0",
     "@web3-react/url": "8.0.25-beta.0",
-    "@web3-react/walletconnect": "8.0.37-beta.0",
+    "@web3-react/walletconnect": "file:../web3-react/packages/walletconnect",
     "array.prototype.flat": "^1.2.4",
     "array.prototype.flatmap": "^1.2.4",
     "cids": "^1.0.0",
