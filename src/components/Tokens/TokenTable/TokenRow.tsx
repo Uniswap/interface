@@ -6,7 +6,6 @@ import { ParentSize } from '@visx/responsive'
 import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { getChainInfo } from 'constants/chainInfo'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
@@ -279,23 +278,6 @@ export const SparkLineLoadingBubble = styled(LongLoadingBubble)`
   height: 4px;
 `
 
-export const L2NetworkLogo = styled.div<{ networkUrl?: string; size?: string }>`
-  height: ${({ size }) => size ?? '12px'};
-  width: ${({ size }) => size ?? '12px'};
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  background: url(${({ networkUrl }) => networkUrl});
-  background-repeat: no-repeat;
-  background-size: ${({ size }) => (size ? `${size} ${size}` : '12px 12px')};
-  display: ${({ networkUrl }) => !networkUrl && 'none'};
-`
-export const LogoContainer = styled.div`
-  position: relative;
-  align-items: center;
-  display: flex;
-`
-
 const InfoIconContainer = styled.div`
   margin-left: 2px;
   display: flex;
@@ -442,18 +424,17 @@ interface LoadedRowProps {
   tokenListLength: number
   token: NonNullable<TopToken>
   sparklineMap: SparklineMap
-  volumeRank: number
+  sortRank: number
 }
 
 /* Loaded State: row component with token information */
 export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
-  const { tokenListIndex, tokenListLength, token, volumeRank } = props
+  const { tokenListIndex, tokenListLength, token, sortRank } = props
   const filterString = useAtomValue(filterStringAtom)
 
   const lowercaseChainName = useParams<{ chainName?: string }>().chainName?.toUpperCase() ?? 'ethereum'
   const filterNetwork = lowercaseChainName.toUpperCase()
   const chainId = CHAIN_NAME_TO_CHAIN_ID[filterNetwork]
-  const L2Icon = getChainInfo(chainId)?.circleLogoUrl
   const timePeriod = useAtomValue(filterTimeAtom)
   const delta = token.market?.pricePercentChange?.value
   const arrow = getDeltaArrow(delta)
@@ -465,7 +446,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
     token_address: token.address,
     token_symbol: token.symbol,
     token_list_index: tokenListIndex,
-    token_list_rank: volumeRank,
+    token_list_rank: sortRank,
     token_list_length: tokenListLength,
     time_frame: timePeriod,
     search_token_address_input: filterString,
@@ -482,13 +463,10 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
       >
         <TokenRow
           header={false}
-          listNumber={volumeRank}
+          listNumber={sortRank}
           tokenInfo={
             <ClickableName>
-              <LogoContainer>
-                <QueryTokenLogo token={token} />
-                <L2NetworkLogo networkUrl={L2Icon} />
-              </LogoContainer>
+              <QueryTokenLogo token={token} />
               <TokenInfoCell>
                 <TokenName data-cy="token-name">{token.name}</TokenName>
                 <TokenSymbol>{token.symbol}</TokenSymbol>

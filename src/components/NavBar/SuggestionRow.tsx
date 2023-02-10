@@ -3,13 +3,11 @@ import { InterfaceEventName } from '@uniswap/analytics-events'
 import { formatUSDPrice } from '@uniswap/conedison/format'
 import clsx from 'clsx'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
-import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
-import { getChainInfo } from 'constants/chainInfo'
 import { checkSearchTokenWarning } from 'constants/tokenSafety'
 import { Chain, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
-import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
+import { getTokenDetailsURL } from 'graphql/data/util'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
@@ -25,9 +23,6 @@ import { getDeltaArrow } from '../Tokens/TokenDetails/PriceChart'
 import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
 
-const StyledLogoContainer = styled(LogoContainer)`
-  margin-right: 8px;
-`
 const PriceChangeContainer = styled.div`
   display: flex;
   align-items: center;
@@ -150,7 +145,6 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [addRecentlySearchedAsset, token, toggleOpen, eventProperties])
 
-  const L2Icon = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[token.chain])?.circleLogoUrl
   const tokenDetailsPath = getTokenDetailsURL(token)
   // Close the modal on escape
   useEffect(() => {
@@ -180,10 +174,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
       style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
     >
       <Row style={{ width: '65%' }}>
-        <StyledLogoContainer>
-          <QueryTokenLogo token={token} symbol={token.symbol} size="36px" backupImg={token.project?.logoUrl} />
-          <L2NetworkLogo networkUrl={L2Icon} size="16px" />
-        </StyledLogoContainer>
+        <QueryTokenLogo token={token} symbol={token.symbol} size="36px" backupImg={token.project?.logoUrl} />
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{token.name}</Box>

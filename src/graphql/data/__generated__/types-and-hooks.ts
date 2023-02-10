@@ -1023,8 +1023,76 @@ export type NftBalanceQueryVariables = Exact<{
 }>;
 
 
-export type NftBalanceQuery = { __typename?: 'Query', nftBalances?: { __typename?: 'NftBalanceConnection', edges: Array<{ __typename?: 'NftBalanceEdge', node: { __typename?: 'NftBalance', listedMarketplaces?: Array<NftMarketplace>, ownedAsset?: { __typename?: 'NftAsset', id: string, animationUrl?: string, description?: string, flaggedBy?: string, name?: string, ownerAddress?: string, suspiciousFlag?: boolean, tokenId: string, collection?: { __typename?: 'NftCollection', isVerified?: boolean, name?: string, image?: { __typename?: 'Image', url: string }, nftContracts?: Array<{ __typename?: 'NftContract', address: string, chain: Chain, name?: string, standard?: NftStandard, symbol?: string, totalSupply?: number }>, markets?: Array<{ __typename?: 'NftCollectionMarket', floorPrice?: { __typename?: 'TimestampedAmount', value: number } }> }, image?: { __typename?: 'Image', url: string }, originalImage?: { __typename?: 'Image', url: string }, smallImage?: { __typename?: 'Image', url: string }, thumbnail?: { __typename?: 'Image', url: string }, listings?: { __typename?: 'NftOrderConnection', edges: Array<{ __typename?: 'NftOrderEdge', node: { __typename?: 'NftOrder', createdAt: number, marketplace: NftMarketplace, endAt?: number, price: { __typename?: 'Amount', value: number, currency?: Currency } } }> } }, listingFees?: Array<{ __typename?: 'NftFee', payoutAddress: string, basisPoints: number }>, lastPrice?: { __typename?: 'TimestampedAmount', currency?: Currency, timestamp: number, value: number } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string, hasNextPage?: boolean, hasPreviousPage?: boolean, startCursor?: string } } };
+export type NftBalanceQuery = { __typename?: 'Query', nftBalances?: { __typename?: 'NftBalanceConnection', edges: Array<{ __typename?: 'NftBalanceEdge', node: { __typename?: 'NftBalance', listedMarketplaces?: Array<NftMarketplace>, ownedAsset?: { __typename?: 'NftAsset', id: string, animationUrl?: string, description?: string, flaggedBy?: string, name?: string, ownerAddress?: string, suspiciousFlag?: boolean, tokenId: string, collection?: { __typename?: 'NftCollection', isVerified?: boolean, name?: string, twitterName?: string, image?: { __typename?: 'Image', url: string }, nftContracts?: Array<{ __typename?: 'NftContract', address: string, chain: Chain, name?: string, standard?: NftStandard, symbol?: string, totalSupply?: number }>, markets?: Array<{ __typename?: 'NftCollectionMarket', floorPrice?: { __typename?: 'TimestampedAmount', value: number } }> }, image?: { __typename?: 'Image', url: string }, originalImage?: { __typename?: 'Image', url: string }, smallImage?: { __typename?: 'Image', url: string }, thumbnail?: { __typename?: 'Image', url: string }, listings?: { __typename?: 'NftOrderConnection', edges: Array<{ __typename?: 'NftOrderEdge', node: { __typename?: 'NftOrder', createdAt: number, marketplace: NftMarketplace, endAt?: number, price: { __typename?: 'Amount', value: number, currency?: Currency } } }> } }, listingFees?: Array<{ __typename?: 'NftFee', payoutAddress: string, basisPoints: number }>, lastPrice?: { __typename?: 'TimestampedAmount', currency?: Currency, timestamp: number, value: number } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string, hasNextPage?: boolean, hasPreviousPage?: boolean, startCursor?: string } } };
 
+export type NftRouteQueryVariables = Exact<{
+  chain?: InputMaybe<Chain>;
+  senderAddress: Scalars['String'];
+  nftTrades: Array<NftTradeInput> | NftTradeInput;
+  tokenTrades?: InputMaybe<Array<TokenTradeInput> | TokenTradeInput>;
+}>;
+
+
+export type NftRouteQuery = { __typename?: 'Query', nftRoute?: { __typename?: 'NftRouteResponse', calldata: string, toAddress: string, route?: Array<{ __typename?: 'NftTrade', amount: number, contractAddress: string, id: string, marketplace: NftMarketplace, tokenId: string, tokenType: NftStandard, price: { __typename?: 'TokenAmount', currency: Currency, value: string }, quotePrice?: { __typename?: 'TokenAmount', currency: Currency, value: string } }>, sendAmount: { __typename?: 'TokenAmount', currency: Currency, value: string } } };
+
+
+export const RecentlySearchedAssetsDocument = gql`
+    query RecentlySearchedAssets($collectionAddresses: [String!]!, $contracts: [ContractInput!]!) {
+  nftCollections(filter: {addresses: $collectionAddresses}) {
+    edges {
+      node {
+        collectionId
+        image {
+          url
+        }
+        isVerified
+        name
+        numAssets
+        nftContracts {
+          address
+        }
+        markets(currencies: ETH) {
+          floorPrice {
+            currency
+            value
+          }
+        }
+      }
+    }
+  }
+  tokens(contracts: $contracts) {
+    id
+    decimals
+    name
+    chain
+    standard
+    address
+    symbol
+    market(currency: USD) {
+      id
+      price {
+        id
+        value
+        currency
+      }
+      pricePercentChange(duration: DAY) {
+        id
+        value
+      }
+      volume24H: volume(duration: DAY) {
+        id
+        value
+        currency
+      }
+    }
+    project {
+      id
+      logoUrl
+      safetyLevel
+    }
+  }
+}
+    `;
 
 export const RecentlySearchedAssetsDocument = gql`
     query RecentlySearchedAssets($collectionAddresses: [String!]!, $contracts: [ContractInput!]!) {
@@ -1176,7 +1244,7 @@ export type SearchTokensQueryHookResult = ReturnType<typeof useSearchTokensQuery
 export type SearchTokensLazyQueryHookResult = ReturnType<typeof useSearchTokensLazyQuery>;
 export type SearchTokensQueryResult = Apollo.QueryResult<SearchTokensQuery, SearchTokensQueryVariables>;
 export const TokenDocument = gql`
-    query Token($chain: Chain!, $address: String) {
+    query Token($chain: Chain!, $address: String = null) {
   token(chain: $chain, address: $address) {
     id
     decimals
@@ -1256,7 +1324,7 @@ export type TokenQueryHookResult = ReturnType<typeof useTokenQuery>;
 export type TokenLazyQueryHookResult = ReturnType<typeof useTokenLazyQuery>;
 export type TokenQueryResult = Apollo.QueryResult<TokenQuery, TokenQueryVariables>;
 export const TokenPriceDocument = gql`
-    query TokenPrice($chain: Chain!, $address: String, $duration: HistoryDuration!) {
+    query TokenPrice($chain: Chain!, $address: String = null, $duration: HistoryDuration!) {
   token(chain: $chain, address: $address) {
     id
     address
@@ -1855,6 +1923,7 @@ export const NftBalanceDocument = gql`
               url
             }
             name
+            twitterName
             nftContracts {
               address
               chain
@@ -1955,3 +2024,67 @@ export function useNftBalanceLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type NftBalanceQueryHookResult = ReturnType<typeof useNftBalanceQuery>;
 export type NftBalanceLazyQueryHookResult = ReturnType<typeof useNftBalanceLazyQuery>;
 export type NftBalanceQueryResult = Apollo.QueryResult<NftBalanceQuery, NftBalanceQueryVariables>;
+export const NftRouteDocument = gql`
+    query NftRoute($chain: Chain = ETHEREUM, $senderAddress: String!, $nftTrades: [NftTradeInput!]!, $tokenTrades: [TokenTradeInput!]) {
+  nftRoute(
+    chain: $chain
+    senderAddress: $senderAddress
+    nftTrades: $nftTrades
+    tokenTrades: $tokenTrades
+  ) {
+    calldata
+    route {
+      amount
+      contractAddress
+      id
+      marketplace
+      price {
+        currency
+        value
+      }
+      quotePrice {
+        currency
+        value
+      }
+      tokenId
+      tokenType
+    }
+    sendAmount {
+      currency
+      value
+    }
+    toAddress
+  }
+}
+    `;
+
+/**
+ * __useNftRouteQuery__
+ *
+ * To run a query within a React component, call `useNftRouteQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNftRouteQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNftRouteQuery({
+ *   variables: {
+ *      chain: // value for 'chain'
+ *      senderAddress: // value for 'senderAddress'
+ *      nftTrades: // value for 'nftTrades'
+ *      tokenTrades: // value for 'tokenTrades'
+ *   },
+ * });
+ */
+export function useNftRouteQuery(baseOptions: Apollo.QueryHookOptions<NftRouteQuery, NftRouteQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NftRouteQuery, NftRouteQueryVariables>(NftRouteDocument, options);
+      }
+export function useNftRouteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NftRouteQuery, NftRouteQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NftRouteQuery, NftRouteQueryVariables>(NftRouteDocument, options);
+        }
+export type NftRouteQueryHookResult = ReturnType<typeof useNftRouteQuery>;
+export type NftRouteLazyQueryHookResult = ReturnType<typeof useNftRouteLazyQuery>;
+export type NftRouteQueryResult = Apollo.QueryResult<NftRouteQuery, NftRouteQueryVariables>;

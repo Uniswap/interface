@@ -31,12 +31,12 @@ import { useIsDarkMode } from 'state/user/hooks'
 import { computeRealizedPriceImpact } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
 
-import { useSyncWidgetInputs } from './inputs'
+import { DefaultTokens, useSyncWidgetInputs } from './inputs'
 import { useSyncWidgetSettings } from './settings'
 import { DARK_THEME, LIGHT_THEME } from './theme'
 import { useSyncWidgetTransactions } from './transactions'
 
-export const WIDGET_WIDTH = 360
+export const DEFAULT_WIDGET_WIDTH = 360
 
 const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
@@ -45,16 +45,25 @@ function useWidgetTheme() {
 }
 
 interface WidgetProps {
-  token?: Currency
-  onTokenChange?: (token: Currency) => void
+  defaultTokens: DefaultTokens
+  width?: number | string
+  onDefaultTokenChange?: (token: Currency) => void
   onReviewSwapClick?: OnReviewSwapClick
 }
 
-export default function Widget({ token, onTokenChange, onReviewSwapClick }: WidgetProps) {
+export default function Widget({
+  defaultTokens,
+  width = DEFAULT_WIDGET_WIDTH,
+  onDefaultTokenChange,
+  onReviewSwapClick,
+}: WidgetProps) {
   const { connector, provider } = useWeb3React()
   const locale = useActiveLocale()
   const theme = useWidgetTheme()
-  const { inputs, tokenSelector } = useSyncWidgetInputs({ token, onTokenChange })
+  const { inputs, tokenSelector } = useSyncWidgetInputs({
+    defaultTokens,
+    onDefaultTokenChange,
+  })
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
 
@@ -159,7 +168,7 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
         routerUrl={WIDGET_ROUTER_URL}
         locale={locale}
         theme={theme}
-        width={WIDGET_WIDTH}
+        width={width}
         // defaultChainId is excluded - it is always inferred from the passed provider
         onConnectWalletClick={onConnectWalletClick}
         provider={provider}
@@ -180,7 +189,7 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
   )
 }
 
-export function WidgetSkeleton() {
+export function WidgetSkeleton({ width = DEFAULT_WIDGET_WIDTH }: { width?: number | string }) {
   const theme = useWidgetTheme()
-  return <SwapWidgetSkeleton theme={theme} width={WIDGET_WIDTH} />
+  return <SwapWidgetSkeleton theme={theme} width={width} />
 }

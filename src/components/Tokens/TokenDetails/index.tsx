@@ -20,7 +20,6 @@ import TokenDetailsSkeleton, {
   TokenNameCell,
 } from 'components/Tokens/TokenDetails/Skeleton'
 import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
-import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget from 'components/Widget'
@@ -153,6 +152,8 @@ export default function TokenDetails({
 
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
 
+  const [openTokenSafetyModal, setOpenTokenSafetyModal] = useState(false)
+
   // Show token safety modal if Swap-reviewing a warning token, at all times if the current token is blocked
   const shouldShowSpeedbump = !useIsUserAddedTokenOnChain(address, pageChainId) && tokenWarning !== null
   const onReviewSwapClick = useCallback(
@@ -167,8 +168,6 @@ export default function TokenDetails({
     },
     [continueSwap, setContinueSwap]
   )
-
-  const L2Icon = getChainInfo(pageChainId)?.circleLogoUrl
 
   // address will never be undefined if token is defined; address is checked here to appease typechecker
   if (token === undefined || !address) {
@@ -188,10 +187,8 @@ export default function TokenDetails({
             </BreadcrumbNavLink>
             <TokenInfoContainer data-testid="token-info-container">
               <TokenNameCell>
-                <LogoContainer>
-                  <CurrencyLogo currency={token} size="32px" />
-                  <L2NetworkLogo networkUrl={L2Icon} size="16px" />
-                </LogoContainer>
+                <CurrencyLogo currency={token} size="32px" hideL2Icon={false} />
+
                 {token.name ?? <Trans>Name not found</Trans>}
                 <TokenSymbol>{token.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
               </TokenNameCell>
@@ -220,22 +217,28 @@ export default function TokenDetails({
           <TokenDetailsSkeleton />
         )}
 
-        <RightPanel>
-          <Widget
-            token={token ?? undefined}
-            onTokenChange={navigateToWidgetSelectedToken}
-            onReviewSwapClick={onReviewSwapClick}
-          />
+        <RightPanel onClick={() => isBlockedToken && setOpenTokenSafetyModal(true)}>
+          <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto' }}>
+            <Widget
+              defaultTokens={{
+                default: token ?? undefined,
+              }}
+              onDefaultTokenChange={navigateToWidgetSelectedToken}
+              onReviewSwapClick={onReviewSwapClick}
+            />
+          </div>
           {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}
           {token && <BalanceSummary token={token} />}
         </RightPanel>
         {token && <MobileBalanceSummaryFooter token={token} />}
 
         <TokenSafetyModal
-          isOpen={isBlockedToken || !!continueSwap}
+          isOpen={openTokenSafetyModal || !!continueSwap}
           tokenAddress={address}
           onContinue={() => onResolveSwap(true)}
-          onBlocked={() => navigate(-1)}
+          onBlocked={() => {
+            setOpenTokenSafetyModal(false)
+          }}
           onCancel={() => onResolveSwap(false)}
           showCancel={true}
         />

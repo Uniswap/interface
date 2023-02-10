@@ -3,7 +3,7 @@ import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { ButtonPrimary } from 'components/Button'
+import { ButtonPrimary, SmallButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/styled'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
@@ -106,12 +106,12 @@ const TextButton = styled(ThemedText.DeprecatedMain)`
 `
 
 const AddressButton = styled.div`
-  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
   padding: 2px 4px;
   border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
+  color: ${({ theme }) => theme.accentAction};
 `
 
 const StyledExternalLink = styled(ExternalLink)`
@@ -223,14 +223,14 @@ export default function Landing() {
                 ) : (
                   ''
                 )}
-                <ButtonPrimary
+                <SmallButtonPrimary
                   as={Link}
                   to="/create-proposal"
                   style={{ width: 'fit-content', borderRadius: '8px' }}
-                  padding="8px"
+                  padding="6px 8px"
                 >
                   <Trans>Create Proposal</Trans>
-                </ButtonPrimary>
+                </SmallButtonPrimary>
               </AutoRow>
             </WrapSmall>
             {!showUnlockVoting && (
@@ -263,6 +263,7 @@ export default function Landing() {
 
             {allProposals?.length > 0 && (
               <AutoColumn gap="md">
+                <RowBetween></RowBetween>
                 <RowBetween>
                   <ThemedText.DeprecatedMain>
                     <Trans>Show Cancelled</Trans>
