@@ -268,7 +268,7 @@ const Bag = () => {
             }))
             const routeResponse: RouteResponse = {
               route,
-              valueToSend: tokenTradeInput ? '0' : data.nftRoute.sendAmount.value,
+              valueToSend: tokenTradeInput ? undefined : data.nftRoute.sendAmount.value,
               data: data.nftRoute.calldata,
               to: data.nftRoute.toAddress,
             }
@@ -307,6 +307,7 @@ const Bag = () => {
             if (hasAssets) {
               if (!shouldReview) {
                 purchaseAssets(routeResponse)
+                console.log(routeResponse)
                 setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
               } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
               else {

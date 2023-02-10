@@ -52,7 +52,7 @@ export type RoutingItem = {
 }
 
 export interface RouteResponse {
-  valueToSend: string
+  valueToSend?: string
   route: RoutingItem[]
   data: any
   to: any
