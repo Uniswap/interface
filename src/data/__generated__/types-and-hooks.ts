@@ -861,6 +861,15 @@ export type NftItemScreenQueryVariables = Exact<{
 
 export type NftItemScreenQuery = { __typename?: 'Query', nftAssets?: { __typename?: 'NftAssetConnection', edges: Array<{ __typename?: 'NftAssetEdge', node: { __typename?: 'NftAsset', id: string, description?: string | null, name?: string | null, tokenId: string, collection?: { __typename?: 'NftCollection', id: string, collectionId: string, description?: string | null, isVerified?: boolean | null, name?: string | null, numAssets?: number | null, image?: { __typename?: 'Image', id: string, url: string } | null, markets?: Array<{ __typename?: 'NftCollectionMarket', id: string, owners?: number | null, floorPrice?: { __typename?: 'TimestampedAmount', id: string, value: number } | null, totalVolume?: { __typename?: 'TimestampedAmount', id: string, value: number } | null }> | null, nftContracts?: Array<{ __typename?: 'NftContract', id: string, address: string }> | null } | null, image?: { __typename?: 'Image', id: string, url: string } | null, nftContract?: { __typename?: 'NftContract', id: string, address: string, chain: Chain, standard?: NftStandard | null } | null, creator?: { __typename?: 'NftProfile', id: string, address: string, username?: string | null } | null } }> } | null };
 
+export type NftCollectionScreenQueryVariables = Exact<{
+  contractAddress: Scalars['String'];
+  first?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type NftCollectionScreenQuery = { __typename?: 'Query', nftCollections?: { __typename?: 'NftCollectionConnection', edges: Array<{ __typename?: 'NftCollectionEdge', node: { __typename?: 'NftCollection', id: string, isVerified?: boolean | null, numAssets?: number | null, description?: string | null, homepageUrl?: string | null, twitterName?: string | null, name?: string | null, bannerImage?: { __typename?: 'Image', id: string, url: string } | null, image?: { __typename?: 'Image', id: string, url: string } | null, markets?: Array<{ __typename?: 'NftCollectionMarket', id: string, owners?: number | null, floorPrice?: { __typename?: 'TimestampedAmount', id: string, value: number } | null, volume24h?: { __typename?: 'Amount', id: string, value: number } | null, totalVolume?: { __typename?: 'TimestampedAmount', id: string, value: number } | null }> | null } }> } | null, nftAssets?: { __typename?: 'NftAssetConnection', edges: Array<{ __typename?: 'NftAssetEdge', node: { __typename?: 'NftAsset', ownerAddress?: string | null, id: string, name?: string | null, tokenId: string, nftContract?: { __typename?: 'NftContract', id: string, address: string } | null, collection?: { __typename?: 'NftCollection', id: string, collectionId: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, url: string } | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null, hasPreviousPage?: boolean | null, startCursor?: string | null } } | null };
+
 export type NftsTabQueryVariables = Exact<{
   ownerAddress: Scalars['String'];
   first?: InputMaybe<Scalars['Int']>;
@@ -1344,6 +1353,106 @@ export function useNftItemScreenLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type NftItemScreenQueryHookResult = ReturnType<typeof useNftItemScreenQuery>;
 export type NftItemScreenLazyQueryHookResult = ReturnType<typeof useNftItemScreenLazyQuery>;
 export type NftItemScreenQueryResult = Apollo.QueryResult<NftItemScreenQuery, NftItemScreenQueryVariables>;
+export const NftCollectionScreenDocument = gql`
+    query NftCollectionScreen($contractAddress: String!, $first: Int, $after: String) {
+  nftCollections(filter: {addresses: [$contractAddress]}) {
+    edges {
+      node {
+        id
+        bannerImage {
+          id
+          url
+        }
+        isVerified
+        numAssets
+        description
+        homepageUrl
+        twitterName
+        image {
+          id
+          url
+        }
+        name
+        markets(currencies: [USD]) {
+          id
+          floorPrice {
+            id
+            value
+          }
+          owners
+          volume24h {
+            id
+            value
+          }
+          totalVolume {
+            id
+            value
+          }
+        }
+      }
+    }
+  }
+  nftAssets(address: $contractAddress, first: $first, after: $after) {
+    edges {
+      node {
+        ownerAddress
+        id
+        name
+        tokenId
+        nftContract {
+          id
+          address
+        }
+        collection {
+          id
+          collectionId
+          name
+        }
+        image {
+          id
+          url
+        }
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+      hasPreviousPage
+      startCursor
+    }
+  }
+}
+    `;
+
+/**
+ * __useNftCollectionScreenQuery__
+ *
+ * To run a query within a React component, call `useNftCollectionScreenQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNftCollectionScreenQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNftCollectionScreenQuery({
+ *   variables: {
+ *      contractAddress: // value for 'contractAddress'
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *   },
+ * });
+ */
+export function useNftCollectionScreenQuery(baseOptions: Apollo.QueryHookOptions<NftCollectionScreenQuery, NftCollectionScreenQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NftCollectionScreenQuery, NftCollectionScreenQueryVariables>(NftCollectionScreenDocument, options);
+      }
+export function useNftCollectionScreenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NftCollectionScreenQuery, NftCollectionScreenQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NftCollectionScreenQuery, NftCollectionScreenQueryVariables>(NftCollectionScreenDocument, options);
+        }
+export type NftCollectionScreenQueryHookResult = ReturnType<typeof useNftCollectionScreenQuery>;
+export type NftCollectionScreenLazyQueryHookResult = ReturnType<typeof useNftCollectionScreenLazyQuery>;
+export type NftCollectionScreenQueryResult = Apollo.QueryResult<NftCollectionScreenQuery, NftCollectionScreenQueryVariables>;
 export const NftsTabDocument = gql`
     query NftsTab($ownerAddress: String!, $first: Int, $after: String) {
   nftBalances(ownerAddress: $ownerAddress, first: $first, after: $after) {

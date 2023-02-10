@@ -60,6 +60,7 @@ import { RestoreCloudBackupScreen } from 'src/screens/Import/RestoreCloudBackupS
 import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen'
 import { SelectWalletScreen } from 'src/screens/Import/SelectWalletScreen'
 import { WatchWalletScreen } from 'src/screens/Import/WatchWalletScreen'
+import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'
 import { NFTItemScreen } from 'src/screens/NFTItemScreen'
 import { BackupScreen } from 'src/screens/Onboarding/BackupScreen'
 import { CloudBackupPasswordScreen } from 'src/screens/Onboarding/CloudBackupPasswordScreen'
@@ -406,6 +407,7 @@ export function AppStackNavigator(): JSX.Element {
       <AppStack.Screen component={ExternalProfileScreen} name={Screens.ExternalProfile} />
       <AppStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
       <AppStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
+      <AppStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
       <AppStack.Screen component={ActivityScreen} name={Screens.Activity} />
       <AppStack.Screen component={WebViewScreen} name={Screens.WebView} />
       <AppStack.Screen component={SettingsStackGroup} name={Screens.SettingsStack} />

@@ -116,6 +116,79 @@ query NFTItemScreen($contractAddress: String!, $filter: NftAssetsFilterInput) {
   }
 }
 
+query NftCollectionScreen(
+  $contractAddress: String!
+  $first: Int
+  $after: String
+) {
+  nftCollections(filter: { addresses: [$contractAddress] }) {
+    edges {
+      node {
+        id
+        bannerImage {
+          id
+          url
+        }
+        isVerified
+        numAssets
+        description
+        homepageUrl
+        twitterName
+        image {
+          id
+          url
+        }
+        name
+        markets(currencies: [USD]) {
+          id
+          floorPrice {
+            id
+            value
+          }
+          owners
+          volume24h {
+            id
+            value
+          }
+          totalVolume {
+            id
+            value
+          }
+        }
+      }
+    }
+  }
+  nftAssets(address: $contractAddress, first: $first, after: $after) {
+    edges {
+      node {
+        ownerAddress
+        id
+        name
+        tokenId
+        nftContract {
+          id
+          address
+        }
+        collection {
+          id
+          collectionId
+          name
+        }
+        image {
+          id
+          url
+        }
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+      hasPreviousPage
+      startCursor
+    }
+  }
+}
+
 query NftsTab($ownerAddress: String!, $first: Int, $after: String) {
   nftBalances(ownerAddress: $ownerAddress, first: $first, after: $after) {
     edges {
@@ -230,7 +303,7 @@ query Token($chain: Chain!, $address: String) {
   }
 }
 
-query TokenDetailsScreen($chain: Chain!, $address:String) {
+query TokenDetailsScreen($chain: Chain!, $address: String) {
   token(chain: $chain, address: $address) {
     id
     address
@@ -521,8 +594,8 @@ query ExploreTokensTab($topTokensOrderBy: TokenSortableField!) {
   }
 }
 
-query FavoriteTokenCard($chain:Chain!, $address:String) {
-  token(chain:$chain,address:$address) {
+query FavoriteTokenCard($chain: Chain!, $address: String) {
+  token(chain: $chain, address: $address) {
     id
     name
     symbol

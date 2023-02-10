@@ -7,4 +7,5 @@ export type NFTItem = {
   collectionName?: string
   isVerifiedCollection?: boolean
   floorPrice?: number
+  ownerAddress?: string
 }

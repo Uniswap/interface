@@ -1,4 +1,4 @@
-import { FlashList } from '@shopify/flash-list'
+import { FlashList, FlashListProps } from '@shopify/flash-list'
 import React, { forwardRef } from 'react'
 import { FlatListProps } from 'react-native'
 import Animated from 'react-native-reanimated'
@@ -8,9 +8,12 @@ import Animated from 'react-native-reanimated'
 const ReanimatedFlashList = Animated.createAnimatedComponent(FlashList as any) as any
 
 // difficult to properly type
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const AnimatedFlashList = forwardRef<typeof ReanimatedFlashList, FlatListProps<any>>(
-  ({ ...restProps }, ref) => {
-    return <ReanimatedFlashList ref={ref} {...restProps} />
-  }
-)
+export const AnimatedFlashList = forwardRef<
+  typeof ReanimatedFlashList,
+  // We use `any` to make list work with forwardRef, but lose correct typing.
+  // Need to extend manually Pick props from FlashListProps (if not included in FlatListProps)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  FlatListProps<any> & Pick<FlashListProps<any>, 'estimatedItemSize' | 'estimatedListSize'>
+>(({ ...restProps }, ref) => {
+  return <ReanimatedFlashList ref={ref} {...restProps} />
+})

@@ -8,6 +8,7 @@ export enum Screens {
   Home = 'Home',
   Notifications = 'Notifications',
   NFTItem = 'NFTItem',
+  NFTCollection = 'NFTCollection',
   OnboardingStack = 'OnboardingStack',
   Settings = 'Settings',
   SettingsCloudBackupStatus = 'SettingsCloudBackupStatus',

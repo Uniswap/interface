@@ -30,6 +30,7 @@ function setupCache(): InMemoryCache {
         fields: {
           // relayStylePagination function unfortunately generates a field policy that ignores args
           nftBalances: relayStylePagination(['ownerAddress']),
+          nftAssets: relayStylePagination(['address']),
 
           /*
            * CACHE REDIRECTS

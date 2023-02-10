@@ -1,10 +1,10 @@
 import { ApolloQueryResult } from '@apollo/client'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Share } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useAppTheme } from 'src/app/hooks'
-import { AppStackScreenProp } from 'src/app/navigation/types'
+import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import ShareIcon from 'src/assets/icons/share.svg'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
 import { LinkButton } from 'src/components/buttons/LinkButton'
@@ -14,7 +14,6 @@ import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Loader } from 'src/components/loading'
-import { NFTCollectionModal } from 'src/components/NFT/NFTCollectionModal'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import { CHAIN_INFO } from 'src/constants/chains'
@@ -38,7 +37,7 @@ export function NFTItemScreen({
   const theme = useAppTheme()
   const { t } = useTranslation()
 
-  const [showCollectionModal, setShowCollectionModal] = useState(false)
+  const navigation = useAppStackNavigation()
 
   const {
     data,
@@ -89,8 +88,13 @@ export function NFTItemScreen({
     }
   }, [asset, assetChainId])
 
-  const onPressCollection = (): void => setShowCollectionModal(true)
-  const onCloseCollectionModal = (): void => setShowCollectionModal(false)
+  const onPressCollection = useCallback(() => {
+    if (asset && asset.collection?.collectionId && asset.nftContract?.address) {
+      navigation.navigate(Screens.NFTCollection, {
+        collectionAddress: asset.nftContract?.address,
+      })
+    }
+  }, [asset, navigation])
 
   return (
     <>
@@ -260,9 +264,6 @@ export function NFTItemScreen({
           </Flex>
         </Flex>
       </HeaderScrollScreen>
-      {showCollectionModal && asset?.collection ? (
-        <NFTCollectionModal collection={asset.collection} onClose={onCloseCollectionModal} />
-      ) : null}
     </>
   )
 }

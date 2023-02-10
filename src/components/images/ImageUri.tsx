@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Image, StyleSheet } from 'react-native'
 import FastImage, { ImageStyle, ResizeMode } from 'react-native-fast-image'
+import { Box, BoxProps } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 
 export function ImageUri({
@@ -9,12 +10,14 @@ export function ImageUri({
   fallback,
   imageStyle,
   resizeMode,
+  loadingContainerStyle,
 }: {
   maxHeight?: number
   uri?: string
   fallback?: JSX.Element
   imageStyle?: ImageStyle
   resizeMode?: ResizeMode
+  loadingContainerStyle?: BoxProps['style']
 }): JSX.Element | null {
   const [height, setHeight] = useState<number | null>(null)
   const [width, setWidth] = useState<number | null>(null)
@@ -41,6 +44,13 @@ export function ImageUri({
   }
 
   if (!width || !height || !uri) {
+    if (loadingContainerStyle) {
+      return (
+        <Box style={loadingContainerStyle}>
+          <Loader.Image />
+        </Box>
+      )
+    }
     return <Loader.Image />
   }
 

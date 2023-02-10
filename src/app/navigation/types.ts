@@ -99,6 +99,7 @@ export type AppStackParamList = {
     currencyId: string
   }
   [Screens.NFTItem]: NFTItem
+  [Screens.NFTCollection]: { collectionAddress: string }
   [Screens.ExternalProfile]: {
     address: string
   }

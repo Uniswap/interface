@@ -1,18 +1,12 @@
 import { useScrollToTop } from '@react-navigation/native'
-import React, { PropsWithChildren, useMemo, useRef } from 'react'
-import {
-  Extrapolate,
-  interpolate,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated'
-import { BackButton } from 'src/components/buttons/BackButton'
-import { AnimatedBox, Box, Flex } from 'src/components/layout'
+import React, { PropsWithChildren, useRef } from 'react'
+import { useAnimatedScrollHandler, useSharedValue, withTiming } from 'react-native-reanimated'
+import { Box } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
-import { WithScrollToTop } from 'src/components/layout/screens/WithScrollToTop'
+import { ScrollHeader } from 'src/components/layout/screens/ScrollHeader'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
+import { EMPTY_ARRAY } from 'src/constants/misc'
+import { flex } from 'src/styles/flex'
 import { theme } from 'src/styles/theme'
 
 // Distance to scroll to show scrolled state header elements
@@ -22,12 +16,14 @@ type HeaderScrollScreenProps = {
   centerElement?: JSX.Element
   rightElement?: JSX.Element
   alwaysShowCenterElement?: boolean
+  fullScreen?: boolean // Expand to device edges
 }
 
 export function HeaderScrollScreen({
   centerElement,
   rightElement = <Box width={theme.iconSizes.icon24} />,
   alwaysShowCenterElement,
+  fullScreen = false,
   children,
 }: PropsWithChildren<HeaderScrollScreenProps>): JSX.Element {
   // difficult to properly type
@@ -49,58 +45,24 @@ export function HeaderScrollScreen({
     },
   })
 
-  const visibleOnScrollStyle = useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(
-        scrollY.value,
-        [0, SHOW_HEADER_SCROLL_Y_DISTANCE],
-        [0, 1],
-        Extrapolate.CLAMP
-      ),
-    }
-  })
-
-  const FixedHeaderBar = useMemo(
-    () => (
-      <Box bg="background0">
-        <WithScrollToTop ref={listRef}>
-          <Flex
-            row
-            alignItems="center"
-            justifyContent="space-between"
-            mx="spacing16"
-            my="spacing12">
-            <BackButton />
-            <Flex shrink>
-              {alwaysShowCenterElement ? (
-                centerElement
-              ) : (
-                <AnimatedBox style={visibleOnScrollStyle}>{centerElement}</AnimatedBox>
-              )}
-            </Flex>
-            {rightElement}
-          </Flex>
-          <AnimatedBox
-            borderBottomColor="backgroundOutline"
-            borderBottomWidth={0.25}
-            height={1}
-            overflow="visible"
-            style={visibleOnScrollStyle}
-          />
-        </WithScrollToTop>
-      </Box>
-    ),
-    [centerElement, rightElement, alwaysShowCenterElement, visibleOnScrollStyle]
-  )
-
   return (
-    <Screen edges={['top', 'left', 'right']}>
-      {FixedHeaderBar}
+    <Screen edges={fullScreen ? EMPTY_ARRAY : ['top', 'left', 'right']}>
+      <ScrollHeader
+        alwaysShowCenterElement={alwaysShowCenterElement}
+        centerElement={centerElement}
+        fullScreen={fullScreen}
+        listRef={listRef}
+        rightElement={rightElement}
+        scrollY={scrollY}
+        showHeaderScrollYDistance={SHOW_HEADER_SCROLL_Y_DISTANCE}
+      />
       <VirtualizedList
         ref={listRef}
+        contentContainerStyle={flex.grow}
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
+        style={flex.fill}
         onScroll={scrollHandler}>
         {children}
       </VirtualizedList>

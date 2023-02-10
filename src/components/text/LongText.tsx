@@ -35,8 +35,9 @@ export function LongText(props: LongTextProps): JSX.Element {
     variant = 'bodySmall',
     ...rest
   } = props
-  const [maximized, toggleMaximized] = useReducer(
-    (isMaximized) => !isMaximized,
+
+  const [expanded, toggleExpanded] = useReducer(
+    (isExpanded) => !isExpanded,
     renderAsMarkdown ? true : false
   )
   const [textLengthExceedsLimit, setTextLengthExceedsLimit] = useState(false)
@@ -50,7 +51,7 @@ export function LongText(props: LongTextProps): JSX.Element {
       if (!renderAsMarkdown || initialContentHeight !== undefined) return
       const textContentHeight = event.nativeEvent.layout.height
       setTextLengthExceedsLimit(textContentHeight > maxVisibleHeight)
-      toggleMaximized()
+      toggleExpanded()
       setInitialContentHeight(textContentHeight)
     },
     [initialContentHeight, maxVisibleHeight, renderAsMarkdown]
@@ -68,15 +69,12 @@ export function LongText(props: LongTextProps): JSX.Element {
   return (
     <Flex gap={gap}>
       <Text
-        numberOfLines={maximized ? undefined : initialDisplayedLines}
+        numberOfLines={expanded ? undefined : initialDisplayedLines}
         style={
           renderAsMarkdown
             ? {
                 color,
-                height:
-                  !textLengthExceedsLimit || maximized
-                    ? 'auto'
-                    : maxVisibleHeight - theme.spacing.spacing2,
+                height: !textLengthExceedsLimit || expanded ? 'auto' : maxVisibleHeight,
                 overflow: 'hidden',
               }
             : { color }
@@ -109,15 +107,16 @@ export function LongText(props: LongTextProps): JSX.Element {
         )}
       </Text>
 
-      {textLengthExceedsLimit ? (
-        <Text
-          style={{ color: readMoreOrLessColor }}
-          testID="read-more-button"
-          variant="buttonLabelSmall"
-          onPress={toggleMaximized}>
-          {maximized ? 'Read less' : 'Read more'}
-        </Text>
-      ) : null}
+      <Text
+        my="none"
+        opacity={textLengthExceedsLimit ? 1 : 0}
+        py="none"
+        style={{ color: readMoreOrLessColor }}
+        testID="read-more-button"
+        variant="buttonLabelSmall"
+        onPress={toggleExpanded}>
+        {expanded ? 'Read less' : 'Read more'}
+      </Text>
     </Flex>
   )
 }
