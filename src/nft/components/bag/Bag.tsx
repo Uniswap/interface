@@ -307,7 +307,6 @@ const Bag = () => {
             if (hasAssets) {
               if (!shouldReview) {
                 purchaseAssets(routeResponse)
-                console.log(routeResponse)
                 setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
               } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
               else {
