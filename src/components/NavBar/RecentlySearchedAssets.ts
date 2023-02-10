@@ -40,7 +40,7 @@ export function useRecentlySearchedAssets() {
       contracts: shortenedHistory
         .filter((asset) => !asset.isNft)
         .map((token) => ({
-          address: token.address === NATIVE_CHAIN_ID ? (null as unknown as string) : token.address,
+          address: token.address === NATIVE_CHAIN_ID ? undefined : token.address,
           chain: token.chain,
         })),
     },
