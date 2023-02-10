@@ -24,8 +24,6 @@ export default function usePayWithAnyTokenSwap(
     return maximumAmountIn?.currency.isToken ? (maximumAmountIn as CurrencyAmount<Token>) : undefined
   }, [allowedSlippage, trade])
 
-  console.log(trade)
-
   useEffect(() => {
     if (!trade || !trade?.routes || !trade.inputAmount || !trade.inputAmount.currency.isToken) {
       setTokenTradeInput(undefined)
