@@ -424,12 +424,12 @@ interface LoadedRowProps {
   tokenListLength: number
   token: NonNullable<TopToken>
   sparklineMap: SparklineMap
-  volumeRank: number
+  sortRank: number
 }
 
 /* Loaded State: row component with token information */
 export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
-  const { tokenListIndex, tokenListLength, token, volumeRank } = props
+  const { tokenListIndex, tokenListLength, token, sortRank } = props
   const filterString = useAtomValue(filterStringAtom)
 
   const lowercaseChainName = useParams<{ chainName?: string }>().chainName?.toUpperCase() ?? 'ethereum'
@@ -446,7 +446,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
     token_address: token.address,
     token_symbol: token.symbol,
     token_list_index: tokenListIndex,
-    token_list_rank: volumeRank,
+    token_list_rank: sortRank,
     token_list_length: tokenListLength,
     time_frame: timePeriod,
     search_token_address_input: filterString,
@@ -463,7 +463,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
       >
         <TokenRow
           header={false}
-          listNumber={volumeRank}
+          listNumber={sortRank}
           tokenInfo={
             <ClickableName>
               <QueryTokenLogo token={token} />

@@ -26,6 +26,10 @@ const TableHeader = styled.div`
   font-size: 14px;
   font-weight: normal;
   line-height: 20px;
+
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    margin-left: 48px;
+  }
 `
 
 const NFTHeader = styled.div`
@@ -34,10 +38,7 @@ const NFTHeader = styled.div`
 
 const PriceHeaders = styled(Row)`
   flex: 1.5;
-
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    flex: 2;
-  }
+  margin-right: 12px;
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     flex: 3;
@@ -54,7 +55,7 @@ const PriceInfoHeader = styled.div`
 `
 
 const DropdownAndHeaderWrapper = styled(Row)`
-  flex: 2;
+  flex: 3;
   gap: 4px;
 `
 
@@ -125,6 +126,7 @@ const RowDivider = styled.hr`
   border-radius: 20px;
   border-width: 0.5px;
   border-style: solid;
+  margin: 0;
   border-color: ${({ theme }) => theme.backgroundInteractive};
 `
 
