@@ -268,7 +268,7 @@ const Bag = () => {
             }))
             const routeResponse: RouteResponse = {
               route,
-              valueToSend: data.nftRoute.sendAmount.value,
+              valueToSend: tokenTradeInput ? '0' : data.nftRoute.sendAmount.value,
               data: data.nftRoute.calldata,
               to: data.nftRoute.toAddress,
             }
