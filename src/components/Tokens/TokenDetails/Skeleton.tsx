@@ -1,12 +1,11 @@
 import { WidgetSkeleton } from 'components/Widget'
-import { WIDGET_WIDTH } from 'components/Widget'
+import { DEFAULT_WIDGET_WIDTH } from 'components/Widget'
 import { ArrowLeft } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 import { textFadeIn } from 'theme/styles'
 
 import { LoadingBubble } from '../loading'
-import { LogoContainer } from '../TokenTable/TokenRow'
 import { AboutContainer, AboutHeader } from './About'
 import { BreadcrumbNavLink } from './BreadcrumbNavLink'
 import { TokenPrice } from './PriceChart'
@@ -44,7 +43,7 @@ export const RightPanel = styled.div`
   display: none;
   flex-direction: column;
   gap: 20px;
-  width: ${WIDGET_WIDTH}px;
+  width: ${DEFAULT_WIDGET_WIDTH}px;
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
     display: flex;
@@ -227,9 +226,7 @@ export default function TokenDetailsSkeleton() {
       </BreadcrumbNavLink>
       <TokenInfoContainer>
         <TokenNameCell>
-          <LogoContainer>
-            <TokenLogoBubble />
-          </LogoContainer>
+          <TokenLogoBubble />
           <TitleBubble />
         </TokenNameCell>
       </TokenInfoContainer>

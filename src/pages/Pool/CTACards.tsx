@@ -97,7 +97,7 @@ export default function CTACards() {
 
   return (
     <CTASection>
-      <CTA1 href="https://support.uniswap.org/hc/en-us/articles/7423608592781">
+      <CTA1 href="https://support.uniswap.org/hc/en-us/categories/8122334631437-Providing-Liquidity-">
         <ResponsiveColumn>
           <HeaderText>
             <Trans>Learn about providing liquidity</Trans> ↗

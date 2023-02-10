@@ -1,9 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatEther } from '@ethersproject/units'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { GqlRoutingVariant, useGqlRoutingFlag } from 'featureFlags/flags/gqlRouting'
 import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
+import { useNftRoute } from 'graphql/data/nft/Routing'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
 import ListingModal from 'nft/components/bag/profile/ListingModal'
@@ -24,14 +25,13 @@ import { fetchRoute } from 'nft/queries'
 import { BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType } from 'nft/types'
 import {
   buildSellObject,
-  fetchPrice,
   formatAssetEventProperties,
   recalculateBagUsingPooledAssets,
   sortUpdatedAssets,
 } from 'nft/utils'
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useQuery, useQueryClient } from 'react-query'
+import { useQueryClient } from 'react-query'
 import styled from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
 import shallow from 'zustand/shallow'
@@ -127,7 +127,6 @@ const Bag = () => {
     bagExpanded,
     toggleBag,
     setTotalEthPrice,
-    setTotalUsdPrice,
     setBagExpanded,
   } = useBag((state) => ({ ...state, bagIsLocked: state.isLocked, uncheckedItemsInBag: state.itemsInBag }), shallow)
   const { uncheckedItemsInBag } = useBag(({ itemsInBag }) => ({ uncheckedItemsInBag: itemsInBag }))
@@ -137,6 +136,7 @@ const Bag = () => {
   const isNFTPage = useIsNftPage()
   const isMobile = useIsMobile()
   const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
+  const usingGqlRouting = useGqlRoutingFlag() === GqlRoutingVariant.Enabled
 
   const sendTransaction = useSendTransaction((state) => state.sendTransaction)
   const transactionState = useSendTransaction((state) => state.state)
@@ -158,9 +158,7 @@ const Bag = () => {
     }
   }
 
-  const { data: fetchedPriceData } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
-
-  const { totalEthPrice, totalUsdPrice } = useMemo(() => {
+  const { totalEthPrice } = useMemo(() => {
     const totalEthPrice = itemsInBag.reduce(
       (total, item) =>
         item.status !== BagItemStatus.UNAVAILABLE
@@ -172,10 +170,9 @@ const Bag = () => {
           : total,
       BigNumber.from(0)
     )
-    const totalUsdPrice = fetchedPriceData ? parseFloat(formatEther(totalEthPrice)) * fetchedPriceData : undefined
 
-    return { totalEthPrice, totalUsdPrice }
-  }, [itemsInBag, fetchedPriceData])
+    return { totalEthPrice }
+  }, [itemsInBag])
 
   const purchaseAssets = async (routingData: RouteResponse) => {
     if (!provider || !routingData) return
@@ -200,6 +197,7 @@ const Bag = () => {
     setBagExpanded({ bagExpanded: false, manualClose: true })
   }, [setBagExpanded])
 
+  useNftRoute(usingGqlRouting ? account ?? '' : '', [])
   const fetchAssets = async () => {
     const itemsToBuy = itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset)
     const ethSellObject = buildSellObject(
@@ -283,8 +281,7 @@ const Bag = () => {
 
   useEffect(() => {
     setTotalEthPrice(totalEthPrice)
-    setTotalUsdPrice(totalUsdPrice)
-  }, [totalEthPrice, totalUsdPrice, setTotalEthPrice, setTotalUsdPrice])
+  }, [totalEthPrice, setTotalEthPrice])
 
   const hasAssetsToShow = itemsInBag.length > 0
 
@@ -305,10 +302,9 @@ const Bag = () => {
 
   const eventProperties = useMemo(
     () => ({
-      usd_value: totalUsdPrice,
       ...formatAssetEventProperties(itemsInBag.map((item) => item.asset)),
     }),
-    [itemsInBag, totalUsdPrice]
+    [itemsInBag]
   )
 
   if (!bagExpanded || !isNFTPage) {
@@ -334,7 +330,6 @@ const Bag = () => {
             {hasAssetsToShow && !isProfilePage && (
               <BagFooter
                 totalEthPrice={totalEthPrice}
-                totalUsdPrice={totalUsdPrice}
                 bagStatus={bagStatus}
                 fetchAssets={fetchAssets}
                 eventProperties={eventProperties}

@@ -109,6 +109,7 @@ export interface ListingRow extends AssetRow {
 
 export interface CollectionRow extends AssetRow {
   collectionAddress?: string
+  isVerified?: boolean
   marketplace: ListingMarket
 }
 
@@ -116,9 +117,4 @@ export interface CollectionRow extends AssetRow {
 export enum ProfilePageStateType {
   VIEWING,
   LISTING,
-}
-
-export enum ListingResponse {
-  TRY_AGAIN,
-  SUCCESS,
 }

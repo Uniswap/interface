@@ -4945,10 +4945,10 @@
     react "^18.2.0"
     react-dom "^18.2.0"
 
-"@uniswap/conedison@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.2.1.tgz#c3dbfe14f4320fc5c60cde23c4bd70ed8a39c782"
-  integrity sha512-ir6j7RQOyREXtW5YlmPjskfl7oDeHWtMFai57snThAkKgrb+8KTX5b0a5nbXeIuaW2RNHAaWTGoSoTneIHCAnQ==
+"@uniswap/conedison@^1.2.1", "@uniswap/conedison@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.3.0.tgz#998aca2bad27f0780a05b40e4512acfcadfece79"
+  integrity sha512-zpZ52svBJ2btwl09mLOw7HlBxFDuYAjAZXLAR7WQZJeRgjD1yD2QuI3v7JliXvHzJh3ePYH6820EMp7xQbdAGQ==
 
 "@uniswap/default-token-list@^2.0.0":
   version "2.2.0"
@@ -5194,10 +5194,10 @@
     "@uniswap/v3-core" "1.0.0"
     "@uniswap/v3-periphery" "^1.0.1"
 
-"@uniswap/widgets@^2.26.0":
-  version "2.26.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.26.0.tgz#ed2d2b0965fc2139874a5eaca44c8070184d9e74"
-  integrity sha512-LIfd3wgJxNiPXduyxXAihOzye5LrayyPDt0/OErSr1hF3BIiQqdVc3KyHDFJ4PC0pCp4+dfE2HPH1FrClO54Uw==
+"@uniswap/widgets@^2.27.0":
+  version "2.27.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.27.0.tgz#debd946e6ff736a501a98321a2b8f98d7b055f22"
+  integrity sha512-CHOoIORI0nYWN29s0ZrjGRVPiOWGy3hy8ZFhKM+CSz+mDNPWnlVssmDNBYhzM+tl2g/PcJpR49ggY+QWPlyDEQ==
   dependencies:
     "@babel/runtime" ">=7.17.0"
     "@fontsource/ibm-plex-mono" "^4.5.1"
@@ -5743,10 +5743,10 @@
   dependencies:
     "@walletconnect/window-getters" "^1.0.0"
 
-"@web3-react/coinbase-wallet@8.0.34-beta.0":
-  version "8.0.34-beta.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/coinbase-wallet/-/coinbase-wallet-8.0.34-beta.0.tgz#43d51bb440fb4b98cc2c33782714da30ab8e1fb6"
-  integrity sha512-eGgtGtAqcRL64U1lcWeICB9CmpUycVl/mWD/b2Nd7yE0hXFUbPGLZHNvBTpnOpkANkjHI5ufFoyDGzzoxdw12A==
+"@web3-react/coinbase-wallet@8.0.35-beta.0":
+  version "8.0.35-beta.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/coinbase-wallet/-/coinbase-wallet-8.0.35-beta.0.tgz#903df113a0987f0b28c07941a82c05f227cbccf8"
+  integrity sha512-wSITb75xIfERw1rZA8t35mJ3Lq459Emt2ybraWvT0TAIVTzHGCKvEm3WglEVWj5CMy1X1lrJvWJ0ZfWUj1/0Lg==
   dependencies:
     "@web3-react/types" "^8.0.20-beta.0"
 
@@ -5765,6 +5765,13 @@
   version "8.0.26-beta.0"
   resolved "https://registry.yarnpkg.com/@web3-react/eip1193/-/eip1193-8.0.26-beta.0.tgz#2e36423bab637a1fbc57b36d4f0f38ac531fd541"
   integrity sha512-n/2ajjABcP8DktZfXxSHrxtPIxeSRJ9tsgfmd9XPEIW9FO7xLzLrF+nloTSghtZ8H+ZKKcswlKjYq4rbX/oqHg==
+  dependencies:
+    "@web3-react/types" "^8.0.20-beta.0"
+
+"@web3-react/eip1193@8.0.27-beta.0":
+  version "8.0.27-beta.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/eip1193/-/eip1193-8.0.27-beta.0.tgz#b768fc3ae6e234627e6a8ecd4d5c473c371a816b"
+  integrity sha512-8aca1NDP+qigh/LOxSiC5N44qvVo1z5V7QI4T5iUpNrzbXEXV3G2JXutoW5fNEm+oK5fkHK64p9eZ6lo0qyMbQ==
   dependencies:
     "@web3-react/types" "^8.0.20-beta.0"
 
@@ -5792,10 +5799,10 @@
     "@metamask/detect-provider" "^1.2.0"
     "@web3-react/types" "^8.0.20-beta.0"
 
-"@web3-react/metamask@8.0.29-beta.0":
-  version "8.0.29-beta.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/metamask/-/metamask-8.0.29-beta.0.tgz#536536b8d4f22f21d3e109efaa8149939833f21b"
-  integrity sha512-UPaVmNum6cJ/CwW5WYFMrm6GwiuY1hnuCYB+bV1Bs0xghdag2Laj8/mSfpFCsCHcvg1ZWTcr4bH+WyuYAHgUxw==
+"@web3-react/metamask@8.0.30-beta.0":
+  version "8.0.30-beta.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/metamask/-/metamask-8.0.30-beta.0.tgz#afab5d7cf556e3ec77836ff2b4753f6f301cfbeb"
+  integrity sha512-SzL8/RUmLHEQCdd6KNjEIHXwuYiQrKX5e1Bgipvtm8MKBRk1ty17Aj7MKWNRcl/Qt06pLSxbcEJeT9kPIrc0mg==
   dependencies:
     "@metamask/detect-provider" "^1.2.0"
     "@web3-react/types" "^8.0.20-beta.0"
@@ -5836,6 +5843,14 @@
   version "8.0.36-beta.0"
   resolved "https://registry.yarnpkg.com/@web3-react/walletconnect/-/walletconnect-8.0.36-beta.0.tgz#a0dbb5286b9011c6c221cc143322822a7387978f"
   integrity sha512-u+yNWCm8nz5pZn8SyU5+9pI5hakKcfhUF1TYwj7HVTTMHdMlLXhk19YyaycsFkgbX9zWzouItwxXF8obGt+rCg==
+  dependencies:
+    "@web3-react/types" "^8.0.20-beta.0"
+    eventemitter3 "^4.0.7"
+
+"@web3-react/walletconnect@8.0.37-beta.0":
+  version "8.0.37-beta.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/walletconnect/-/walletconnect-8.0.37-beta.0.tgz#d375dc75f34e9bb225d26a88b16aa2a001b4e3bc"
+  integrity sha512-BW8tKE0dlFWSLBC/AWKULZbS1axToN7kMREKVY3YK1uj8bMRsoWcOQPceQl21WuEyVXax2V8My8SJgWuxcumvw==
   dependencies:
     "@web3-react/types" "^8.0.20-beta.0"
     eventemitter3 "^4.0.7"

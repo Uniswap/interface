@@ -81,7 +81,7 @@ export default function BalanceSummary({ token }: { token: Currency }) {
           <Trans>Your balance on {label}</Trans>
         </ThemedText.SubHeaderSmall>
         <BalanceRow>
-          <CurrencyLogo currency={token} size="2rem" />
+          <CurrencyLogo currency={token} size="2rem" hideL2Icon={false} />
           <BalanceContainer>
             <BalanceAmountsContainer>
               <BalanceItem>

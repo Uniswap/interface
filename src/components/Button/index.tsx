@@ -97,7 +97,8 @@ export const ButtonPrimary = styled(BaseButton)`
 export const SmallButtonPrimary = styled(ButtonPrimary)`
   width: auto;
   font-size: 16px;
-  padding: 10px 16px;
+  padding: ${({ padding }) => padding ?? '8px 12px'};
+
   border-radius: 12px;
 `
 

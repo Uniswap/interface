@@ -34,6 +34,7 @@ gql`
                 url
               }
               name
+              twitterName
               nftContracts {
                 address
                 chain
@@ -166,7 +167,12 @@ export function useNftBalance(
         image_url: asset?.collection?.image?.url,
         payout_address: queryAsset?.node?.listingFees?.[0]?.payoutAddress,
       },
-      collection: asset?.collection as unknown as GenieCollection,
+      collection: {
+        name: asset.collection?.name,
+        isVerified: asset.collection?.isVerified,
+        imageUrl: asset.collection?.image?.url,
+        twitterUrl: asset.collection?.twitterName ? `@${asset.collection?.twitterName}` : undefined,
+      } as GenieCollection,
       collectionIsVerified: asset?.collection?.isVerified,
       lastPrice: queryAsset.node.lastPrice?.value,
       floorPrice: asset?.collection?.markets?.[0]?.floorPrice?.value,
