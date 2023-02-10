@@ -1,10 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
-import {
-  NftMarketplace,
-  NftTradeInput,
-  TokenAmountInput,
-  TokenTradeInput,
-} from 'graphql/data/__generated__/types-and-hooks'
+import { NftMarketplace, NftTradeInput, TokenAmountInput } from 'graphql/data/__generated__/types-and-hooks'
 import { BagItem, BagItemStatus, UpdatedGenieAsset } from 'nft/types'
 
 export const buildSellObject = (amount: string) => {
@@ -57,8 +51,4 @@ const buildNftTradeInput = (assets: UpdatedGenieAsset[]): NftTradeInput[] => {
       },
     ]
   })
-}
-
-export const buildTokenTradeInput = (currency: Currency): TokenTradeInput[] => {
-  return []
 }
