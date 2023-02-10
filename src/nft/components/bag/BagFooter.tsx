@@ -19,6 +19,7 @@ import { usePayWithAnyTokenEnabled } from 'featureFlags/flags/payWithAnyToken'
 import { useCurrency } from 'hooks/Tokens'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
+import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useBag } from 'nft/hooks/useBag'
 import useDerivedPayWithAnyTokenSwapInfo from 'nft/hooks/useDerivedPayWithAnyTokenSwapInfo'
@@ -275,17 +276,13 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
   const inputCurrency = useTokenInput((state) => state.inputCurrency)
   const setInputCurrency = useTokenInput((state) => state.setInputCurrency)
   const defaultCurrency = useCurrency('ETH')
+  const inputCurrencyBalance = useTokenBalance(
+    account ?? undefined,
+    !!inputCurrency && inputCurrency.isToken ? inputCurrency : undefined
+  )
 
   const setBagExpanded = useBag((state) => state.setBagExpanded)
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
-
-  const { balance: balanceInEth } = useWalletBalance()
-  const sufficientBalance = useMemo(() => {
-    if (!connected || chainId !== SupportedChainId.MAINNET) {
-      return undefined
-    }
-    return parseEther(balanceInEth).gte(totalEthPrice)
-  }, [connected, chainId, balanceInEth, totalEthPrice])
 
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
   const activeCurrency = inputCurrency ?? defaultCurrency
@@ -330,6 +327,25 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
 
     return { priceImpactWarning: true, priceImpactColor: theme.accentCritical }
   }, [stablecoinPriceImpact, theme.accentCritical, theme.accentWarning])
+
+  const { balance: balanceInEth } = useWalletBalance()
+  const sufficientBalance = useMemo(() => {
+    if (!connected || chainId !== SupportedChainId.MAINNET) {
+      return undefined
+    }
+
+    if (inputCurrency) {
+      const inputAmount = trade?.inputAmount
+
+      if (!inputCurrencyBalance || !inputAmount) {
+        return undefined
+      }
+
+      return !inputCurrencyBalance.lessThan(inputAmount)
+    }
+
+    return parseEther(balanceInEth).gte(totalEthPrice)
+  }, [connected, chainId, inputCurrency, balanceInEth, totalEthPrice, trade?.inputAmount, inputCurrencyBalance])
 
   const { buttonText, disabled, warningText, helperText, helperTextColor, handleClick, buttonColor } = useMemo(() => {
     let handleClick = fetchAssets
