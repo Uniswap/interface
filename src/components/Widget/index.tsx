@@ -26,10 +26,9 @@ import {
   getPriceUpdateBasisPoints,
   getTokenAddress,
 } from 'lib/utils/analytics'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
-import styled from 'styled-components/macro'
 import { computeRealizedPriceImpact } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
 
@@ -48,6 +47,7 @@ function useWidgetTheme() {
 
 interface WidgetProps {
   defaultTokens: DefaultTokens
+  dialog?: HTMLDivElement | null
   width?: number | string
   onDefaultTokenChange?: (token: Currency) => void
   onReviewSwapClick?: OnReviewSwapClick
@@ -55,6 +55,7 @@ interface WidgetProps {
 
 export default function Widget({
   defaultTokens,
+  dialog,
   width = DEFAULT_WIDGET_WIDTH,
   onDefaultTokenChange,
   onReviewSwapClick,
@@ -157,27 +158,12 @@ export default function Widget({
 
   const permit2Enabled = usePermit2Enabled()
 
-  const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
-  const [dialogVisible, setDialogVisible] = useState(false)
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      setDialogVisible((dialog?.childElementCount ?? 0) > 0)
-    })
-    if (dialog) {
-      observer.observe(dialog, { childList: true })
-    }
-    return () => {
-      observer.disconnect()
-    }
-  }, [dialog])
-
   if (!(inputs.value.INPUT || inputs.value.OUTPUT)) {
     return <WidgetSkeleton width={width} />
   }
 
   return (
     <>
-      <DialogContainer ref={setDialog} visible={dialogVisible} />
       <SwapWidget
         hideConnectionUI
         brandedFooter={false}
@@ -209,15 +195,6 @@ export default function Widget({
     </>
   )
 }
-
-const DialogContainer = styled.div<{ visible: boolean }>`
-  position: absolute;
-  top: 48;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  pointer-events: ${({ visible }) => (visible ? 'all' : 'none')};
-`
 
 export function WidgetSkeleton({ width = DEFAULT_WIDGET_WIDTH }: { width?: number | string }) {
   const theme = useWidgetTheme()

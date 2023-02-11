@@ -132,6 +132,15 @@ const DetailsSwapSection = styled(SwapSection)`
   border-top-right-radius: 0;
 `
 
+const DialogContainer = styled.div<{ visible: boolean }>`
+  position: absolute;
+  top: 48;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  pointer-events: ${({ visible }) => (visible ? 'all' : 'none')};
+`
+
 export function getIsValidSwapQuote(
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined,
   tradeState: TradeState,
@@ -543,6 +552,20 @@ export default function Swap({ className }: { className?: string }) {
     setSwapQuoteReceivedDate,
   ])
 
+  const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
+  const [dialogVisible, setDialogVisible] = useState(false)
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setDialogVisible((dialog?.childElementCount ?? 0) > 0)
+    })
+    if (dialog) {
+      observer.observe(dialog, { childList: true })
+    }
+    return () => {
+      observer.disconnect()
+    }
+  }, [dialog])
+
   const approveTokenButtonDisabled =
     approvalState !== ApprovalState.NOT_APPROVED || approvalSubmitted || signatureState === UseERC20PermitState.SIGNED
 
@@ -563,13 +586,17 @@ export default function Swap({ className }: { className?: string }) {
         />
         <SwapComponentWrapper>
           {swapWidgetEnabled ? (
-            <Widget
-              defaultTokens={{
-                [Field.INPUT]: loadedInputCurrency ?? undefined,
-                [Field.OUTPUT]: loadedOutputCurrency ?? undefined,
-              }}
-              width="100%"
-            />
+            <>
+              <DialogContainer visible={dialogVisible} ref={setDialog} />
+              <Widget
+                dialog={dialog}
+                defaultTokens={{
+                  [Field.INPUT]: loadedInputCurrency ?? undefined,
+                  [Field.OUTPUT]: loadedOutputCurrency ?? undefined,
+                }}
+                width="100%"
+              />
+            </>
           ) : (
             <SwapWrapper className={className} id="swap-page">
               <SwapHeader allowedSlippage={allowedSlippage} />
