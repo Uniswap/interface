@@ -33,6 +33,7 @@ gql`
       chain
       address
       symbol
+      standard
       market(currency: USD) {
         id
         totalValueLocked {

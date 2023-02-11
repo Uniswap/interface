@@ -133,19 +133,19 @@ export default function TokenDetails({
       if (!address) return
       const bridgedAddress = crossChainMap[update]
       if (bridgedAddress) {
-        startTokenTransition(() => navigate(getTokenDetailsURL(bridgedAddress, update)))
+        startTokenTransition(() => navigate(getTokenDetailsURL({ address: bridgedAddress, chain })))
       } else if (didFetchFromChain || token?.isNative) {
-        startTokenTransition(() => navigate(getTokenDetailsURL(address, update)))
+        startTokenTransition(() => navigate(getTokenDetailsURL({ address, chain })))
       }
     },
-    [address, crossChainMap, didFetchFromChain, navigate, token?.isNative]
+    [address, chain, crossChainMap, didFetchFromChain, navigate, token?.isNative]
   )
   useOnGlobalChainSwitch(navigateToTokenForChain)
 
   const navigateToWidgetSelectedToken = useCallback(
     (token: Currency) => {
       const address = token.isNative ? NATIVE_CHAIN_ID : token.address
-      startTokenTransition(() => navigate(getTokenDetailsURL(address, chain)))
+      startTokenTransition(() => navigate(getTokenDetailsURL({ address, chain })))
     },
     [chain, navigate]
   )
