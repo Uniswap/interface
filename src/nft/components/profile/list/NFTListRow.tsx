@@ -23,7 +23,7 @@ const NFTListRowWrapper = styled(Row)`
 `
 
 const RemoveIconContainer = styled.div`
-  width: 48px;
+  width: 44px;
   height: 44px;
   padding-left: 12px;
   align-self: flex-start;
@@ -47,8 +47,8 @@ const NFTInfoWrapper = styled(Row)`
 `
 
 const NFTImage = styled.img`
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 8px;
   margin-right: 8px;
 `
@@ -60,7 +60,6 @@ const HideTextOverflow = css`
 `
 
 const TokenInfoWrapper = styled(Column)`
-  gap: 4px;
   margin-right: 8px;
   min-width: 0px;
 `
