@@ -10,6 +10,7 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { isSupportedChain } from 'constants/chains'
 import { useV3Positions } from 'hooks/useV3Positions'
+import { useMemo } from 'react'
 import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useToggleWalletModal } from 'state/application/hooks'
@@ -202,10 +203,6 @@ export default function Pool() {
 
   const { positions, loading: positionsLoading } = useV3Positions(account)
 
-  if (!isSupportedChain(chainId)) {
-    return <WrongNetworkCard />
-  }
-
   const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(
     (acc, p) => {
       acc[p.liquidity?.isZero() ? 1 : 0].push(p)
@@ -214,7 +211,15 @@ export default function Pool() {
     [[], []]
   ) ?? [[], []]
 
-  const filteredPositions = [...openPositions, ...(userHideClosedPositions ? [] : closedPositions)]
+  const filteredPositions = useMemo(
+    () => [...openPositions, ...(userHideClosedPositions ? [] : closedPositions)],
+    [closedPositions, openPositions, userHideClosedPositions]
+  )
+
+  if (!isSupportedChain(chainId)) {
+    return <WrongNetworkCard />
+  }
+
   const showConnectAWallet = Boolean(!account)
   const showV2Features = Boolean(V2_FACTORY_ADDRESSES[chainId])
 
