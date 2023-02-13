@@ -255,7 +255,7 @@ export default function TokenDetails({
         )}
 
         <RightPanel onClick={() => isBlockedToken && setOpenTokenSafetyModal(true)}>
-          <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto', position: 'relative' }}>
+          <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto' }}>
             <Widget
               dialog={dialog}
               defaultTokens={{
@@ -268,7 +268,6 @@ export default function TokenDetails({
           {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}
           {token && <BalanceSummary token={token} />}
         </RightPanel>
-
         {token && <MobileBalanceSummaryFooter token={token} />}
 
         <TokenSafetyModal

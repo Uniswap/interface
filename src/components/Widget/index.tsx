@@ -174,7 +174,7 @@ export default function Widget({
         width={width}
         dialog={dialog}
         dialogOptions={{
-          animationType: DialogAnimationType.FADE,
+          animationType: dialog ? DialogAnimationType.FADE : DialogAnimationType.SLIDE,
         }}
         // defaultChainId is excluded - it is always inferred from the passed provider
         onConnectWalletClick={onConnectWalletClick}
