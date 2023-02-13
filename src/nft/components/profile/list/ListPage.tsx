@@ -262,7 +262,7 @@ export const ListPage = () => {
 
   const BannerText = isMobile ? (
     <ThemedText.SubHeader lineHeight="24px">
-      <Trans>Proceeds</Trans>
+      <Trans>Receive</Trans>
     </ThemedText.SubHeader>
   ) : (
     <ThemedText.HeadlineSmall lineHeight="28px">
