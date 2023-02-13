@@ -86,7 +86,7 @@ const MobileListButtonWrapper = styled.div`
 `
 
 const FloatingConfirmationBar = styled(Row)<{ issues: boolean }>`
-  padding: 12px 12px 12px 32px;
+  padding: 8px 8px 8px 16px;
   border: 1px solid;
   border-color: ${({ theme, issues }) => (issues ? theme.backgroundOutline : theme.accentAction)};
   border-radius: 20px;
