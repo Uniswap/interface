@@ -96,8 +96,8 @@ export enum Currency {
 }
 
 export enum DatasourceProvider {
-  Nxyz = 'NXYZ',
-  Uniswap = 'UNISWAP'
+  Alternate = 'ALTERNATE',
+  Legacy = 'LEGACY'
 }
 
 export type Dimensions = {
