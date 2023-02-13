@@ -27,7 +27,7 @@ import {
   POLYGON_START_BLOCK,
   UNISWAP_GRANTS_START_BLOCK,
 } from '../../constants/proposals'
-import { UNI } from '../../constants/tokens'
+import { GRG, UNI } from '../../constants/tokens'
 import { useLogs } from '../logs/hooks'
 import { useTransactionAdder } from '../transactions/hooks'
 import { TransactionType } from '../transactions/types'
@@ -339,13 +339,13 @@ export function useUserDelegatee(): string {
 // gets the users current votes
 export function useUserVotes(): { loading: boolean; votes: CurrencyAmount<Token> | undefined } {
   const { account, chainId } = useWeb3React()
-  const uniContract = useUniContract()
+  const governance = useGovernanceProxyContract()
 
   // check for available votes
-  const { result, loading } = useSingleCallResult(uniContract, 'getCurrentVotes', [account ?? undefined])
+  const { result, loading } = useSingleCallResult(governance, 'getVotingPower', [account ?? undefined])
   return useMemo(() => {
-    const uni = chainId ? UNI[chainId] : undefined
-    return { loading, votes: uni && result ? CurrencyAmount.fromRawAmount(uni, result?.[0]) : undefined }
+    const grg = chainId ? GRG[chainId] : undefined
+    return { loading, votes: grg && result ? CurrencyAmount.fromRawAmount(grg, result?.[0]) : undefined }
   }, [chainId, loading, result])
 }
 
@@ -515,11 +515,11 @@ export function useProposalThreshold(): CurrencyAmount<Token> | undefined {
   const { chainId } = useWeb3React()
 
   const latestGovernanceContract = useLatestGovernanceContract()
-  const res = useSingleCallResult(latestGovernanceContract, 'proposalCount')
-  const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
+  const res = useSingleCallResult(latestGovernanceContract, 'governanceParameters')
+  const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
 
-  if (res?.result?.[0].quorumThreshold && uni) {
-    return CurrencyAmount.fromRawAmount(uni, res.result[0])
+  if (res?.result?.[0].params?.quorumThreshold && grg) {
+    return CurrencyAmount.fromRawAmount(grg, res.result[0].params.proposalThreshold)
   }
 
   return undefined

@@ -293,7 +293,7 @@ export default function Landing() {
           </TopSection>
 
           <ThemedText.DeprecatedSubHeader color="text3">
-            <Trans>A minimum threshold of 100k GRG is required to submit proposals on L1, 50k GRG on L2s</Trans>
+            <Trans>A minimum threshold of 105k GRG is required to submit proposals on L1, 50k GRG on L2s</Trans>
           </ThemedText.DeprecatedSubHeader>
         </PageWrapper>
       </Trace>

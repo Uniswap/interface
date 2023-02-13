@@ -1,7 +1,7 @@
 import { Currency, Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core'
 import invariant from 'tiny-invariant'
 
-import { UNI_ADDRESS } from './addresses'
+import { GRG_ADDRESS, UNI_ADDRESS } from './addresses'
 import { SupportedChainId } from './chains'
 
 export const NATIVE_CHAIN_ID = 'NATIVE'
@@ -349,6 +349,14 @@ export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.ROPSTEN]: new Token(SupportedChainId.ROPSTEN, UNI_ADDRESS[3], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.GOERLI]: new Token(SupportedChainId.GOERLI, UNI_ADDRESS[5], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.KOVAN]: new Token(SupportedChainId.KOVAN, UNI_ADDRESS[42], 18, 'UNI', 'Uniswap'),
+}
+
+export const GRG: { [chainId: number]: Token } = {
+  [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, GRG_ADDRESS[1], 18, 'GRG', 'Rigo'),
+  [SupportedChainId.GOERLI]: new Token(SupportedChainId.GOERLI, GRG_ADDRESS[5], 18, 'GRG', 'Rigo'),
+  [SupportedChainId.OPTIMISM]: new Token(SupportedChainId.OPTIMISM, GRG_ADDRESS[10], 18, 'GRG', 'Rigo'),
+  [SupportedChainId.POLYGON]: new Token(SupportedChainId.POLYGON, GRG_ADDRESS[137], 18, 'GRG', 'Rigo'),
+  [SupportedChainId.ARBITRUM_ONE]: new Token(SupportedChainId.ARBITRUM_ONE, GRG_ADDRESS[42161], 18, 'GRG', 'Rigo'),
 }
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {

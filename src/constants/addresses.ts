@@ -8,6 +8,14 @@ type AddressMap = { [chainId: number]: string }
 
 export const UNI_ADDRESS: AddressMap = constructSameAddressMap('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
 
+export const GRG_ADDRESS: AddressMap = {
+  [SupportedChainId.MAINNET]: '0x4FbB350052Bca5417566f188eB2EBCE5b19BC964',
+  [SupportedChainId.GOERLI]: '0x076C619e7ebaBe40746106B66bFBed731F2c1339',
+  [SupportedChainId.ARBITRUM_ONE]: '0x7F4638A58C0615037deCc86f1daE60E55fE92874',
+  [SupportedChainId.OPTIMISM]: '0xEcF46257ed31c329F204Eb43E254C609dee143B3',
+  [SupportedChainId.POLYGON]: '0xBC0BEA8E634ec838a2a45F8A43E7E16Cd2a8BA99',
+}
+
 export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS)
 export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D')
 

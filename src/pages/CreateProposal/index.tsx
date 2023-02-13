@@ -221,7 +221,6 @@ ${bodyValue}
       }
     }
 
-    // TODO: check if we want to initialize empty value for each acions.data in the array
     createProposalData.actions = []
     for (let i = 0; i < createProposalData.actions.length; i++) {
       createProposalData.actions[i].data = defaultAbiCoder.encode(types[i], values[i])
