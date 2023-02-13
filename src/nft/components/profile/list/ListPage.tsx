@@ -100,6 +100,7 @@ const FloatingConfirmationBar = styled(Row)`
   transform: translateX(-50%);
   max-width: 1200px;
   z-index: ${Z_INDEX.under_dropdown};
+  box-shadow: ${({ theme }) => theme.shallowShadow};
 
   @media screen and (max-width: ${BREAKPOINTS.lg}px) {
     width: calc(100% - ${LIST_PAGE_MARGIN_TABLET * 2}px);
@@ -153,14 +154,6 @@ const EthValueWrapper = styled.span<{ totalEthListingValue: boolean }>`
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     font-size: 16px;
     line-height: 24px;
-  }
-`
-
-const ListingButtonWrapper = styled.div`
-  width: 170px;
-
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
-    width: max-content;
   }
 `
 
@@ -273,7 +266,7 @@ export const ListPage = () => {
     </ThemedText.SubHeader>
   ) : (
     <ThemedText.HeadlineSmall lineHeight="28px">
-      <Trans>Proceeds if sold</Trans>
+      <Trans>You receive</Trans>
     </ThemedText.HeadlineSmall>
   )
 
@@ -313,13 +306,11 @@ export const ListPage = () => {
                   <UsdValue>{formatUsdPrice(totalEthListingValue * ethPriceInUSD)}</UsdValue>
                 )}
               </ProceedsWrapper>
-              <ListingButtonWrapper>
-                <ListingButton
-                  onClick={handleV2Click}
-                  buttonText={anyListingsMissingPrice && !isMobile ? t`Set prices to continue` : t`Start listing`}
-                  showWarningOverride={true}
-                />
-              </ListingButtonWrapper>
+              <ListingButton
+                onClick={handleV2Click}
+                buttonText={anyListingsMissingPrice && !isMobile ? t`Set prices to continue` : t`Start listing`}
+                showWarningOverride={true}
+              />
             </ProceedsAndButtonWrapper>
           </FloatingConfirmationBar>
           <Overlay />

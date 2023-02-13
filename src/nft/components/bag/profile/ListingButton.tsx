@@ -219,7 +219,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
 
   return (
     <>
-      <Box position="relative" width="full">
+      <Box position="relative">
         {!showWarningOverride && showWarning && warningMessage.length > 0 && (
           <Row
             className={`${bodySmall} ${styles.warningTooltip}`}
