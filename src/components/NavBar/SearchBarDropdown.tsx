@@ -1,30 +1,33 @@
 import { Trans } from '@lingui/macro'
 import { useTrace } from '@uniswap/analytics'
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
+import { SafetyLevel } from 'graphql/data/__generated__/types-and-hooks'
+import { SearchToken } from 'graphql/data/SearchTokens'
+import useTrendingTokens from 'graphql/data/TrendingTokens'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { subheadSmall } from 'nft/css/common.css'
-import { useSearchHistory } from 'nft/hooks'
 import { fetchTrendingCollections } from 'nft/queries'
-import { fetchTrendingTokens } from 'nft/queries/genie/TrendingTokensFetcher'
-import { FungibleToken, GenieCollection, TimePeriod, TrendingCollection } from 'nft/types'
+import { GenieCollection, TimePeriod, TrendingCollection } from 'nft/types'
 import { formatEthPrice } from 'nft/utils/currency'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
+import { useRecentlySearchedAssets } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
 import { CollectionRow, SkeletonRow, TokenRow } from './SuggestionRow'
 
-function isCollection(suggestion: GenieCollection | FungibleToken | TrendingCollection) {
-  return (suggestion as FungibleToken).decimals === undefined
+function isCollection(suggestion: GenieCollection | SearchToken | TrendingCollection) {
+  return (suggestion as SearchToken).decimals === undefined
 }
 
 interface SearchBarDropdownSectionProps {
   toggleOpen: () => void
-  suggestions: (GenieCollection | FungibleToken)[]
+  suggestions: (GenieCollection | SearchToken)[]
   header: JSX.Element
   headerIcon?: JSX.Element
   hoveredIndex: number | undefined
@@ -73,7 +76,7 @@ const SearchBarDropdownSection = ({
           ) : (
             <TokenRow
               key={suggestion.address}
-              token={suggestion as FungibleToken}
+              token={suggestion as SearchToken}
               isHovered={hoveredIndex === index + startingIndex}
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}
@@ -92,9 +95,13 @@ const SearchBarDropdownSection = ({
   )
 }
 
+function isKnownToken(token: SearchToken) {
+  return token.project?.safetyLevel == SafetyLevel.Verified || token.project?.safetyLevel == SafetyLevel.MediumWarning
+}
+
 interface SearchBarDropdownProps {
   toggleOpen: () => void
-  tokens: FungibleToken[]
+  tokens: SearchToken[]
   collections: GenieCollection[]
   queryText: string
   hasInput: boolean
@@ -110,8 +117,10 @@ export const SearchBarDropdown = ({
   isLoading,
 }: SearchBarDropdownProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
-  const { history: searchHistory, updateItem: updateSearchHistory } = useSearchHistory()
-  const shortenedHistory = useMemo(() => searchHistory.slice(0, 2), [searchHistory])
+
+  const { data: searchHistory } = useRecentlySearchedAssets()
+  const shortenedHistory = useMemo(() => searchHistory?.slice(0, 2) ?? [...Array<SearchToken>(2)], [searchHistory])
+
   const { pathname } = useLocation()
   const isNFTPage = useIsNftPage()
   const isTokenPage = pathname.includes('/tokens')
@@ -141,26 +150,12 @@ export const SearchBarDropdown = ({
     [isNFTPage, trendingCollectionResults]
   )
 
-  const { data: trendingTokenResults, isLoading: trendingTokensAreLoading } = useQuery(
-    ['trendingTokens'],
-    () => fetchTrendingTokens(4),
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-    }
-  )
-  useEffect(() => {
-    trendingTokenResults?.forEach(updateSearchHistory)
-  }, [trendingTokenResults, updateSearchHistory])
+  const { data: trendingTokenData } = useTrendingTokens(useWeb3React().chainId)
 
   const trendingTokensLength = isTokenPage ? 3 : 2
   const trendingTokens = useMemo(
-    () =>
-      trendingTokenResults
-        ? trendingTokenResults.slice(0, trendingTokensLength)
-        : [...Array<FungibleToken>(trendingTokensLength)],
-    [trendingTokenResults, trendingTokensLength]
+    () => trendingTokenData?.slice(0, trendingTokensLength) ?? [...Array<SearchToken>(trendingTokensLength)],
+    [trendingTokenData, trendingTokensLength]
   )
 
   const totalSuggestions = hasInput
@@ -197,10 +192,9 @@ export const SearchBarDropdown = ({
   }, [toggleOpen, hoveredIndex, totalSuggestions])
 
   const hasVerifiedCollection = collections.some((collection) => collection.isVerified)
-  const hasVerifiedToken = tokens.some((token) => token.onDefaultList)
+  const hasKnownToken = tokens.some(isKnownToken)
   const showCollectionsFirst =
-    (isNFTPage && (hasVerifiedCollection || !hasVerifiedToken)) ||
-    (!isNFTPage && !hasVerifiedToken && hasVerifiedCollection)
+    (isNFTPage && (hasVerifiedCollection || !hasKnownToken)) || (!isNFTPage && !hasKnownToken && hasVerifiedCollection)
 
   const trace = JSON.stringify(useTrace({ section: InterfaceSectionName.NAVBAR_SEARCH }))
 
@@ -277,6 +271,7 @@ export const SearchBarDropdown = ({
                 }}
                 header={<Trans>Recent searches</Trans>}
                 headerIcon={<ClockIcon />}
+                isLoading={!searchHistory}
               />
             )}
             {!isNFTPage && (
@@ -292,7 +287,7 @@ export const SearchBarDropdown = ({
                 }}
                 header={<Trans>Popular tokens</Trans>}
                 headerIcon={<TrendingArrow />}
-                isLoading={trendingTokensAreLoading}
+                isLoading={!trendingTokenData}
               />
             )}
             {!isTokenPage && (
@@ -323,7 +318,7 @@ export const SearchBarDropdown = ({
     trendingCollections,
     trendingCollectionsAreLoading,
     trendingTokens,
-    trendingTokensAreLoading,
+    trendingTokenData,
     hoveredIndex,
     toggleOpen,
     shortenedHistory,
@@ -334,6 +329,7 @@ export const SearchBarDropdown = ({
     queryText,
     totalSuggestions,
     trace,
+    searchHistory,
   ])
 
   return (

@@ -1,20 +1,18 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { formatUSDPrice } from '@uniswap/conedison/format'
-import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
-import AssetLogo from 'components/Logo/AssetLogo'
+import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
-import { getChainInfo } from 'constants/chainInfo'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { checkWarning } from 'constants/tokenSafety'
+import { checkSearchTokenWarning } from 'constants/tokenSafety'
+import { Chain, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
+import { SearchToken } from 'graphql/data/SearchTokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
 import { vars } from 'nft/css/sprinkles.css'
-import { useSearchHistory } from 'nft/hooks'
-import { FungibleToken, GenieCollection } from 'nft/types'
+import { GenieCollection } from 'nft/types'
 import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useEffect, useState } from 'react'
@@ -22,6 +20,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { getDeltaArrow } from '../Tokens/TokenDetails/PriceChart'
+import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
 
 const PriceChangeContainer = styled.div`
@@ -59,16 +58,15 @@ export const CollectionRow = ({
 }: CollectionRowProps) => {
   const [brokenImage, setBrokenImage] = useState(false)
   const [loaded, setLoaded] = useState(false)
-  const addToSearchHistory = useSearchHistory(
-    (state: { addItem: (item: FungibleToken | GenieCollection) => void }) => state.addItem
-  )
+
+  const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
   const navigate = useNavigate()
 
   const handleClick = useCallback(() => {
-    addToSearchHistory(collection)
+    addRecentlySearchedAsset({ ...collection, isNft: true, chain: Chain.Ethereum })
     toggleOpen()
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
-  }, [addToSearchHistory, collection, toggleOpen, eventProperties])
+  }, [addRecentlySearchedAsset, collection, toggleOpen, eventProperties])
 
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -126,17 +124,8 @@ export const CollectionRow = ({
   )
 }
 
-function useBridgedAddress(token: FungibleToken): [string | undefined, number | undefined, string | undefined] {
-  const { chainId: connectedChainId } = useWeb3React()
-  const bridgedAddress = connectedChainId ? token.extensions?.bridgeInfo?.[connectedChainId]?.tokenAddress : undefined
-  if (bridgedAddress && connectedChainId) {
-    return [bridgedAddress, connectedChainId, getChainInfo(connectedChainId)?.circleLogoUrl]
-  }
-  return [undefined, undefined, undefined]
-}
-
 interface TokenRowProps {
-  token: FungibleToken
+  token: SearchToken
   isHovered: boolean
   setHoveredIndex: (index: number | undefined) => void
   toggleOpen: () => void
@@ -145,19 +134,18 @@ interface TokenRowProps {
 }
 
 export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, eventProperties }: TokenRowProps) => {
-  const addToSearchHistory = useSearchHistory(
-    (state: { addItem: (item: FungibleToken | GenieCollection) => void }) => state.addItem
-  )
+  const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
   const navigate = useNavigate()
 
   const handleClick = useCallback(() => {
-    addToSearchHistory(token)
+    const address = !token.address && token.standard === TokenStandard.Native ? 'NATIVE' : token.address
+    address && addRecentlySearchedAsset({ address, chain: token.chain })
+
     toggleOpen()
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
-  }, [addToSearchHistory, toggleOpen, token, eventProperties])
+  }, [addRecentlySearchedAsset, token, toggleOpen, eventProperties])
 
-  const [bridgedAddress, bridgedChain] = useBridgedAddress(token)
-  const tokenDetailsPath = getTokenDetailsURL(bridgedAddress ?? token.address, undefined, bridgedChain ?? token.chainId)
+  const tokenDetailsPath = getTokenDetailsURL(token)
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -173,7 +161,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     }
   }, [toggleOpen, isHovered, token, navigate, handleClick, tokenDetailsPath])
 
-  const arrow = getDeltaArrow(token.price24hChange, 18)
+  const arrow = getDeltaArrow(token.market?.pricePercentChange?.value, 18)
 
   return (
     <Link
@@ -186,35 +174,33 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
       style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
     >
       <Row style={{ width: '65%' }}>
-        <AssetLogo
-          isNative={token.address === NATIVE_CHAIN_ID}
-          address={token.address}
-          chainId={token.chainId}
+        <QueryTokenLogo
+          token={token}
           symbol={token.symbol}
           size="36px"
-          backupImg={token.logoURI}
-          style={{ margin: '8px 8px 8px 0' }}
+          backupImg={token.project?.logoUrl}
+          style={{ paddingRight: '8px' }}
         />
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{token.name}</Box>
-            <TokenSafetyIcon warning={checkWarning(token.address)} />
+            <TokenSafetyIcon warning={checkSearchTokenWarning(token)} />
           </Row>
           <Box className={styles.secondaryText}>{token.symbol}</Box>
         </Column>
       </Row>
 
       <Column className={styles.suggestionSecondaryContainer}>
-        {token.priceUsd && (
+        {token.market?.price?.value && (
           <Row gap="4">
-            <Box className={styles.primaryText}>{formatUSDPrice(token.priceUsd)}</Box>
+            <Box className={styles.primaryText}>{formatUSDPrice(token.market.price.value)}</Box>
           </Row>
         )}
-        {token.price24hChange && (
+        {token.market?.pricePercentChange?.value && (
           <PriceChangeContainer>
             <ArrowCell>{arrow}</ArrowCell>
-            <PriceChangeText isNegative={token.price24hChange < 0}>
-              {Math.abs(token.price24hChange).toFixed(2)}%
+            <PriceChangeText isNegative={token.market.pricePercentChange.value < 0}>
+              {Math.abs(token.market.pricePercentChange.value).toFixed(2)}%
             </PriceChangeText>
           </PriceChangeContainer>
         )}
