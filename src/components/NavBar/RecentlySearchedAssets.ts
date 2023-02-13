@@ -1,15 +1,24 @@
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { SupportedChainId } from 'constants/chains'
+import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { Chain, NftCollection, useRecentlySearchedAssetsQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { SearchToken } from 'graphql/data/SearchTokens'
+import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 import { useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { GenieCollection } from 'nft/types'
 import { useCallback, useMemo } from 'react'
+import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 type RecentlySearchedAsset = {
   isNft?: boolean
   address: string
   chain: Chain
+}
+
+// Temporary measure used until backend supports addressing by "NATIVE"
+const NATIVE_QUERY_ADDRESS_INPUT = null as unknown as string
+function getQueryAddress(chain: Chain) {
+  return getNativeTokenDBAddress(chain) ?? NATIVE_QUERY_ADDRESS_INPUT
 }
 
 const recentlySearchedAssetsAtom = atomWithStorage<RecentlySearchedAsset[]>('recentlySearchedAssets', [])
@@ -40,7 +49,7 @@ export function useRecentlySearchedAssets() {
       contracts: shortenedHistory
         .filter((asset) => !asset.isNft)
         .map((token) => ({
-          address: token.address === NATIVE_CHAIN_ID ? undefined : token.address,
+          address: token.address === NATIVE_CHAIN_ID ? getQueryAddress(token.chain) : token.address,
           chain: token.chain,
         })),
     },
@@ -69,14 +78,22 @@ export function useRecentlySearchedAssets() {
       [queryCollections]
     )
     collections?.forEach((collection) => (resultsMap[collection.address] = collection))
-    queryData.tokens?.forEach((token) => {
+    queryData.tokens?.filter(Boolean).forEach((token) => {
       resultsMap[token.address ?? `NATIVE-${token.chain}`] = token
     })
 
     const data: (SearchToken | GenieCollection)[] = []
     shortenedHistory.forEach((asset) => {
-      const address = asset.address === 'NATIVE' ? `NATIVE-${asset.chain}` : asset.address
-      if (resultsMap[address]) data.push(resultsMap[address])
+      if (asset.address === 'NATIVE') {
+        // Handles special case where wMATIC data needs to be used for MATIC
+        const native = nativeOnChain(CHAIN_NAME_TO_CHAIN_ID[asset.chain] ?? SupportedChainId.MAINNET)
+        const queryAddress = getQueryAddress(asset.chain)?.toLowerCase() ?? `NATIVE-${asset.chain}`
+        const result = resultsMap[queryAddress]
+        if (result) data.push({ ...result, address: 'NATIVE', ...native })
+      } else {
+        const result = resultsMap[asset.address]
+        if (result) data.push(result)
+      }
     })
     return data
   }, [queryData, shortenedHistory])

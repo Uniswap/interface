@@ -174,7 +174,13 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
       style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
     >
       <Row style={{ width: '65%' }}>
-        <QueryTokenLogo token={token} symbol={token.symbol} size="36px" backupImg={token.project?.logoUrl} />
+        <QueryTokenLogo
+          token={token}
+          symbol={token.symbol}
+          size="36px"
+          backupImg={token.project?.logoUrl}
+          style={{ paddingRight: '8px' }}
+        />
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{token.name}</Box>
