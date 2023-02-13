@@ -32,8 +32,9 @@ import { QueryToken } from 'graphql/data/Token'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
+import { useWidgetDialog } from 'hooks/useWidgetDialog'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
-import { useCallback, useEffect, useMemo, useState, useTransition } from 'react'
+import { useCallback, useMemo, useState, useTransition } from 'react'
 import { createPortal } from 'react-dom'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
@@ -76,8 +77,8 @@ const StyledDialogContainer = styled.div<{ visible: boolean }>`
 const Dialog = styled.div`
   margin: 8rem 0;
   position: relative;
-  width: 600px;
-  height: 600px;
+  width: 480px;
+  height: 500px;
 `
 
 function useOnChainToken(address: string | undefined, skip: boolean) {
@@ -197,19 +198,7 @@ export default function TokenDetails({
     [continueSwap, setContinueSwap]
   )
 
-  const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
-  const [dialogVisible, setDialogVisible] = useState(false)
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      setDialogVisible((dialog?.childElementCount ?? 0) > 0)
-    })
-    if (dialog) {
-      observer.observe(dialog, { childList: true })
-    }
-    return () => {
-      observer.disconnect()
-    }
-  }, [dialog])
+  const { dialog, dialogVisible, setDialog } = useWidgetDialog()
 
   // address will never be undefined if token is defined; address is checked here to appease typechecker
   if (token === undefined || !address) {

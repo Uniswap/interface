@@ -26,6 +26,7 @@ import { useSwapWidgetEnabled } from 'featureFlags/flags/swapWidget'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
+import { useWidgetDialog } from 'hooks/useWidgetDialog'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -552,19 +553,7 @@ export default function Swap({ className }: { className?: string }) {
     setSwapQuoteReceivedDate,
   ])
 
-  const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
-  const [dialogVisible, setDialogVisible] = useState(false)
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      setDialogVisible((dialog?.childElementCount ?? 0) > 0)
-    })
-    if (dialog) {
-      observer.observe(dialog, { childList: true })
-    }
-    return () => {
-      observer.disconnect()
-    }
-  }, [dialog])
+  const { dialog, dialogVisible, setDialog } = useWidgetDialog()
 
   const approveTokenButtonDisabled =
     approvalState !== ApprovalState.NOT_APPROVED || approvalSubmitted || signatureState === UseERC20PermitState.SIGNED
