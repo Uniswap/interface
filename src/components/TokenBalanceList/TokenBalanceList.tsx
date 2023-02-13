@@ -77,9 +77,10 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
     const [hiddenTokensExpanded, setHiddenTokensExpanded] = useState(hasOnlyHiddenTokens)
 
     useEffect(() => {
+      // Reset hidden tokens expanded state when owner changes
       // Expand hidden tokens section if there are only hidden tokens
       setHiddenTokensExpanded(hasOnlyHiddenTokens)
-    }, [hasOnlyHiddenTokens])
+    }, [hasOnlyHiddenTokens, owner])
 
     useEffect(() => {
       if (!!data && isWarmLoadingStatus(networkStatus)) {
