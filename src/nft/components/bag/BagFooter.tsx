@@ -65,10 +65,12 @@ const FooterHeader = styled(Column)<{ usingPayWithAnyToken?: boolean }>`
 const CurrencyRow = styled(Row)`
   justify-content: space-between;
   align-items: start;
+  gap: 8px;
 `
 
 const TotalColumn = styled(Column)`
   text-align: end;
+  overflow-x: hidden;
 `
 
 const WarningIcon = styled(AlertTriangle)`
@@ -134,6 +136,17 @@ const PriceImpactContainer = styled(Row)`
 const PriceImpactRow = styled(Row)`
   align-items: center;
   gap: 8px;
+`
+
+const ValueText = styled(ThemedText.BodyPrimary)`
+  line-height: 20px;
+  font-weight: 500;
+  overflow-x: scroll;
+  scrollbar-width: none;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 interface ActionButtonProps {
@@ -202,13 +215,9 @@ const InputCurrencyValue = ({
 
   if (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING) {
     return (
-      <ThemedText.BodyPrimary
-        lineHeight="20px"
-        fontWeight="500"
-        color={tradeState === TradeState.VALID ? 'textPrimary' : 'textTertiary'}
-      >
+      <ValueText color={tradeState === TradeState.VALID ? 'textPrimary' : 'textTertiary'}>
         {ethNumberStandardFormatter(trade?.inputAmount.toExact())}
-      </ThemedText.BodyPrimary>
+      </ValueText>
     )
   }
 

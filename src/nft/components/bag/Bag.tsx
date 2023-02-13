@@ -74,7 +74,7 @@ const BagContainer = styled.div<{ raiseZIndex: boolean }>`
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 16px;
   box-shadow: ${({ theme }) => theme.shallowShadow};
-  z-index: ${({ raiseZIndex }) => (raiseZIndex ? Z_INDEX.modalOverTooltip : 3)};
+  z-index: ${({ raiseZIndex }) => (raiseZIndex ? Z_INDEX.fixed : 3)};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     right: 0px;
