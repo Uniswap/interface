@@ -85,10 +85,10 @@ const MobileListButtonWrapper = styled.div`
   }
 `
 
-const FloatingConfirmationBar = styled(Row)`
+const FloatingConfirmationBar = styled(Row)<{ issues: boolean }>`
   padding: 20px 32px;
   border: 1px solid;
-  border-color: ${({ theme }) => theme.backgroundOutline};
+  border-color: ${({ theme, issues }) => (issues ? theme.backgroundOutline : theme.accentAction)};
   border-radius: 20px;
   white-space: nowrap;
   justify-content: space-between;
@@ -164,10 +164,11 @@ export const ListPage = () => {
   const isMobile = useIsMobile()
   const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
   const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
-  const { setGlobalMarketplaces, sellAssets } = useSellAsset(
-    ({ setGlobalMarketplaces, sellAssets }) => ({
+  const { setGlobalMarketplaces, sellAssets, issues } = useSellAsset(
+    ({ setGlobalMarketplaces, sellAssets, issues }) => ({
       setGlobalMarketplaces,
       sellAssets,
+      issues,
     }),
     shallow
   )
@@ -295,7 +296,7 @@ export const ListPage = () => {
       </MarketWrap>
       {isNftListV2 && (
         <>
-          <FloatingConfirmationBar>
+          <FloatingConfirmationBar issues={!!issues}>
             {BannerText}
             <ProceedsAndButtonWrapper>
               <ProceedsWrapper>

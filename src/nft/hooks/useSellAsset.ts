@@ -5,6 +5,7 @@ import { ListingMarket, ListingWarning, WalletAsset } from '../types'
 
 interface SellAssetState {
   sellAssets: WalletAsset[]
+  issues: number
   showResolveIssues: boolean
   selectSellAsset: (asset: WalletAsset) => void
   removeSellAsset: (asset: WalletAsset) => void
@@ -13,17 +14,19 @@ interface SellAssetState {
   setAssetListPrice: (asset: WalletAsset, price?: number, marketplace?: ListingMarket) => void
   setGlobalMarketplaces: (marketplaces: ListingMarket[]) => void
   removeAssetMarketplace: (asset: WalletAsset, marketplace: ListingMarket) => void
+  toggleShowResolveIssues: () => void
+  setIssues: (issues: number) => void
   // TODO: After merging v2, see if this marketplace logic can be removed
   addMarketplaceWarning: (asset: WalletAsset, warning: ListingWarning) => void
   removeMarketplaceWarning: (asset: WalletAsset, warning: ListingWarning, setGlobalOverride?: boolean) => void
   removeAllMarketplaceWarnings: () => void
-  toggleShowResolveIssues: () => void
 }
 
 export const useSellAsset = create<SellAssetState>()(
   devtools(
     (set) => ({
       sellAssets: [],
+      issues: 0,
       showResolveIssues: false,
       selectSellAsset: (asset) =>
         set(({ sellAssets }) => {
@@ -161,6 +164,10 @@ export const useSellAsset = create<SellAssetState>()(
           return { showResolveIssues: !showResolveIssues }
         })
       },
+      setIssues: (issues) =>
+        set(() => ({
+          issues,
+        })),
     }),
     { name: 'useSelectAsset' }
   )
