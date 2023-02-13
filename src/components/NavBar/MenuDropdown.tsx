@@ -9,7 +9,7 @@ import {
   DiscordIconMenu,
   EllipsisIcon,
   GithubIconMenu,
-  //GovernanceIcon,
+  GovernanceIcon,
   TwitterIconMenu,
 } from 'nft/components/icons'
 import { body, bodySmall } from 'nft/css/common.css'
@@ -80,9 +80,9 @@ const SecondaryLinkedText = ({
   )
 }
 
-/*const Separator = () => {
+const Separator = () => {
   return <Box className={styles.Separator} />
-}*/
+}
 
 const IconRow = ({ children }: { children: ReactNode }) => {
   return <Row className={styles.IconRow}>{children}</Row>
@@ -129,7 +129,6 @@ export const MenuDropdown = () => {
         {isOpen && (
           <NavDropdown top={{ sm: 'unset', lg: '56' }} bottom={{ sm: '56', lg: 'unset' }} right="0">
             <Column gap="16">
-              {/*
               <Column paddingX="8" gap="4">
                 <PrimaryMenuRow to="/vote" close={toggleOpen}>
                   <Icon>
@@ -139,6 +138,7 @@ export const MenuDropdown = () => {
                     <Trans>Vote in governance</Trans>
                   </PrimaryMenuRow.Text>
                 </PrimaryMenuRow>
+                {/*
                 <PrimaryMenuRow href="https://info.uniswap.org/#/">
                   <Icon>
                     <BarChartIcon width={24} height={24} />
@@ -147,9 +147,9 @@ export const MenuDropdown = () => {
                     <Trans>View more analytics</Trans>
                   </PrimaryMenuRow.Text>
                 </PrimaryMenuRow>
+                */}
               </Column>
               <Separator />
-              */}
               <Box
                 display="flex"
                 flexDirection={{ sm: 'row', md: 'column' }}
