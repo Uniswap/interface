@@ -160,14 +160,14 @@ export default function Landing() {
                 <AutoColumn gap="md">
                   <RowBetween>
                     <ThemedText.DeprecatedWhite fontWeight={600}>
-                      <Trans>Uniswap Governance</Trans>
+                      <Trans>Rigoblock Governance</Trans>
                     </ThemedText.DeprecatedWhite>
                   </RowBetween>
                   <RowBetween>
                     <ThemedText.DeprecatedWhite fontSize={14}>
                       <Trans>
-                        UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself
-                        or delegate your votes to a third party.
+                        GRG staked delegated tokens represent voting power in Rigoblock governance. You can vote on each
+                        proposal yourself or for a Rigoblock pool operated by yourself.
                       </Trans>
                     </ThemedText.DeprecatedWhite>
                   </RowBetween>
@@ -176,11 +176,11 @@ export default function Landing() {
                       color: theme.deprecated_white,
                       textDecoration: 'underline',
                     }}
-                    href="https://uniswap.org/blog/uni"
+                    href="https://docs.rigoblock.com/governance/rigoblock-governance"
                     target="_blank"
                   >
                     <ThemedText.DeprecatedWhite fontSize={14}>
-                      <Trans>Read more about Uniswap governance</Trans>
+                      <Trans>Read more about Rigoblock governance</Trans>
                     </ThemedText.DeprecatedWhite>
                   </ExternalLink>
                 </AutoColumn>
@@ -293,7 +293,7 @@ export default function Landing() {
           </TopSection>
 
           <ThemedText.DeprecatedSubHeader color="text3">
-            <Trans>A minimum threshold of 0.25% of the total UNI supply is required to submit proposals</Trans>
+            <Trans>A minimum threshold of 100k GRG is required to submit proposals on L1, 50k GRG on L2s</Trans>
           </ThemedText.DeprecatedSubHeader>
         </PageWrapper>
       </Trace>

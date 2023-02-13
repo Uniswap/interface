@@ -14,10 +14,7 @@ import { Wrapper } from 'pages/Pool/styleds'
 import { useCallback, useMemo, useState } from 'react'
 import {
   CreateProposalData,
-  ProposalState,
   useCreateProposalCallback,
-  useLatestProposalId,
-  useProposalData,
   useProposalThreshold,
   useUserVotes,
 } from 'state/governance/hooks'
@@ -25,7 +22,6 @@ import styled from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 
 import { CreateProposalTabs } from '../../components/NavigationTabs'
-import { LATEST_GOVERNOR_INDEX } from '../../constants/governance'
 import { UNI } from '../../constants/tokens'
 import AppBody from '../AppBody'
 import { ProposalActionDetail } from './ProposalActionDetail'
@@ -100,10 +96,8 @@ const AutonomousProposalCTA = styled.div`
 `
 
 export default function CreateProposal() {
-  const { account, chainId } = useWeb3React()
+  const { chainId } = useWeb3React()
 
-  const latestProposalId = useLatestProposalId(account ?? undefined) ?? '0'
-  const latestProposalData = useProposalData(LATEST_GOVERNOR_INDEX, latestProposalId)
   const { votes: availableVotes } = useUserVotes()
   const proposalThreshold: CurrencyAmount<Token> | undefined = useProposalThreshold()
 
@@ -201,8 +195,8 @@ export default function CreateProposal() {
     const tokenAmount = tryParseCurrencyAmount(amountValue, currencyValue)
     if (!tokenAmount) return
 
-    createProposalData.targets = [currencyValue.address]
-    createProposalData.values = ['0']
+    createProposalData.actions[0].target = currencyValue.address
+    createProposalData.actions[0].value = '0'
     createProposalData.description = `# ${titleValue}
 
 ${bodyValue}
@@ -210,25 +204,27 @@ ${bodyValue}
 
     let types: string[][]
     let values: string[][]
+    // TODO: add all governance owned methods
     switch (proposalAction) {
       case ProposalAction.TRANSFER_TOKEN: {
         types = [['address', 'uint256']]
         values = [[getAddress(toAddressValue), tokenAmount.quotient.toString()]]
-        createProposalData.signatures = [`transfer(${types[0].join(',')})`]
+        //createProposalData.signatures = [`transfer(${types[0].join(',')})`]
         break
       }
 
       case ProposalAction.APPROVE_TOKEN: {
         types = [['address', 'uint256']]
         values = [[getAddress(toAddressValue), tokenAmount.quotient.toString()]]
-        createProposalData.signatures = [`approve(${types[0].join(',')})`]
+        //createProposalData.signatures = [`approve(${types[0].join(',')})`]
         break
       }
     }
 
-    createProposalData.calldatas = []
-    for (let i = 0; i < createProposalData.signatures.length; i++) {
-      createProposalData.calldatas[i] = defaultAbiCoder.encode(types[i], values[i])
+    // TODO: check if we want to initialize empty value for each acions.data in the array
+    createProposalData.actions = []
+    for (let i = 0; i < createProposalData.actions.length; i++) {
+      createProposalData.actions[i].data = defaultAbiCoder.encode(types[i], values[i])
     }
 
     const hash = await createProposalCallback(createProposalData ?? undefined)?.catch(() => {
@@ -250,8 +246,8 @@ ${bodyValue}
                   <Trans>
                     <strong>Tip:</strong> Select an action and describe your proposal for the community. The proposal
                     cannot be modified after submission, so please verify all information before submitting. The voting
-                    period will begin immediately and last for 7 days. To propose a custom action,{' '}
-                    <ExternalLink href="https://docs.uniswap.org/protocol/reference/Governance/governance-reference#propose">
+                    period will begin after the new epoch starts and last for 7 days. To propose a custom action,{' '}
+                    <ExternalLink href="https://docs.rigoblock.com/readme-1/governance/solidity-api#propose">
                       read the docs
                     </ExternalLink>
                     .
@@ -278,18 +274,15 @@ ${bodyValue}
             />
             <CreateProposalButton
               proposalThreshold={proposalThreshold}
-              hasActiveOrPendingProposal={
-                latestProposalData?.status === ProposalState.ACTIVE ||
-                latestProposalData?.status === ProposalState.PENDING
-              }
+              hasActiveOrPendingProposal={false}
               hasEnoughVote={hasEnoughVote}
               isFormInvalid={isFormInvalid}
               handleCreateProposal={handleCreateProposal}
             />
             {!hasEnoughVote ? (
               <AutonomousProposalCTA>
-                Don’t have 2.5M votes? Anyone can create an autonomous proposal using{' '}
-                <ExternalLink href="https://fish.vote">fish.vote</ExternalLink>
+                Don’t have 100K votes? Earn GRG rewards by{' '}
+                <ExternalLink href="https://app.rigoblock.com/#/swap">operating a pool</ExternalLink>
               </AutonomousProposalCTA>
             ) : null}
           </CreateProposalWrapper>

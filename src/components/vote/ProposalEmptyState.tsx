@@ -38,14 +38,21 @@ const EmptyState = ({ HeaderContent, SubHeaderContent }: EmptyStateProps) => (
 
 export default function ProposalEmptyState() {
   const { chainId } = useWeb3React()
-  if (chainId && chainId !== SupportedChainId.MAINNET) {
+  // TODO: add bsc support
+  if (
+    (chainId && chainId !== SupportedChainId.MAINNET) ||
+    (chainId && chainId !== SupportedChainId.GOERLI) ||
+    (chainId && chainId !== SupportedChainId.ARBITRUM_ONE) ||
+    (chainId && chainId !== SupportedChainId.OPTIMISM) ||
+    (chainId && chainId !== SupportedChainId.POLYGON)
+  ) {
     return (
       <EmptyState
-        HeaderContent={() => <Trans>Please connect to Layer 1 Ethereum</Trans>}
+        HeaderContent={() => <Trans>Please connect to a supported network</Trans>}
         SubHeaderContent={() => (
           <Trans>
-            Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals
-            and Vote.
+            Rigoblock governance is only available on Ethereum, Arbitrum, Optimism and Polygon. Switch your network to a
+            supported one to view Proposals and Vote.
           </Trans>
         )}
       />

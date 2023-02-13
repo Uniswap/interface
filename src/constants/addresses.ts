@@ -71,6 +71,7 @@ export const SWAP_ROUTER_ADDRESSES: AddressMap = {
   [SupportedChainId.CELO_ALFAJORES]: CELO_ROUTER_ADDRESS,
 }
 
+// TODO: remove uniswap addresses
 /**
  * The oldest V0 governance address
  */
@@ -88,6 +89,15 @@ export const GOVERNANCE_ALPHA_V1_ADDRESSES: AddressMap = {
  */
 export const GOVERNANCE_BRAVO_ADDRESSES: AddressMap = {
   [SupportedChainId.MAINNET]: '0x408ED6354d4973f66138C91495F2f2FCbd8724C3',
+}
+
+/* V1 Governance Addresses */
+export const GOVERNANCE_PROXY_ADDRESSES: AddressMap = {
+  ...constructSameAddressMap('0x5F8607739c2D2d0b57a4292868C368AB1809767a', [
+    SupportedChainId.OPTIMISM,
+    SupportedChainId.ARBITRUM_ONE,
+    SupportedChainId.POLYGON,
+  ]),
 }
 
 export const TIMELOCK_ADDRESS: AddressMap = constructSameAddressMap('0x1a9C8182C09F50C8318d769245beA52c32BE35BC')
