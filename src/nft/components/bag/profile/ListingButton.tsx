@@ -94,7 +94,10 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
   ] = useMemo(() => {
     const noMarketplacesSelected = sellAssets.some((asset: WalletAsset) => asset.marketplaces === undefined)
     const missingExpiration = sellAssets.some((asset) => {
-      return asset.expirationTime != null && asset.expirationTime * 1000 - Date.now() < ms`60 seconds`
+      return (
+        asset.expirationTime != null &&
+        (asset.expirationTime * 1000 - Date.now() < ms`60 seconds` || isNaN(asset.expirationTime))
+      )
     })
     const invalidExpiration = sellAssets.some((asset) => {
       return asset.expirationTime != null && isNaN(asset.expirationTime)
@@ -129,6 +132,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
         listingsMissingPrice.length +
         listingsAboveSellOrderFloor.length
       setIssues(foundIssues)
+      console.log(foundIssues, issues)
       !foundIssues && showResolveIssues && toggleShowResolveIssues()
       // Only show Resolve Issue text if there was a user submitted error (ie not when page loads with no prices set)
       if ((missingExpiration || overMaxExpiration || listingsAboveSellOrderFloor.length) && !showResolveIssues)
@@ -147,7 +151,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
       listingsAboveSellOrderFloor,
       invalidPrices,
     ]
-  }, [isNftListV2, sellAssets, setIssues, showResolveIssues, toggleShowResolveIssues])
+  }, [isNftListV2, sellAssets, showResolveIssues, toggleShowResolveIssues])
 
   const [disableListButton, warningMessage] = useMemo(() => {
     const disableListButton =
