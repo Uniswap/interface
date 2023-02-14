@@ -314,7 +314,7 @@ ${bodyValue}
             />
             {!hasEnoughVote ? (
               <AutonomousProposalCTA>
-                Don’t have 105K votes? Earn GRG rewards by{' '}
+                Don’t have enough votes? Earn GRG rewards by{' '}
                 <ExternalLink href="https://app.rigoblock.com/#/swap">operating a pool</ExternalLink>
               </AutonomousProposalCTA>
             ) : null}
