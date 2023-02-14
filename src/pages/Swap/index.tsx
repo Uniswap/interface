@@ -20,6 +20,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import Widget from 'components/Widget'
+import { WidgetDialogContainer } from 'components/Widget/WidgetDialogContainer'
 import { isSupportedChain } from 'constants/chains'
 import { usePermit2Enabled } from 'featureFlags/flags/permit2'
 import { useSwapWidgetEnabled } from 'featureFlags/flags/swapWidget'
@@ -131,15 +132,6 @@ const DetailsSwapSection = styled(SwapSection)`
   padding: 0;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-`
-
-const DialogContainer = styled.div<{ visible: boolean }>`
-  position: absolute;
-  top: 48;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  pointer-events: ${({ visible }) => (visible ? 'all' : 'none')};
 `
 
 export function getIsValidSwapQuote(
@@ -576,7 +568,7 @@ export default function Swap({ className }: { className?: string }) {
         <SwapComponentWrapper>
           {swapWidgetEnabled ? (
             <>
-              <DialogContainer visible={dialogVisible} ref={setDialog} />
+              <WidgetDialogContainer visible={dialogVisible} ref={setDialog} />
               <Widget
                 dialog={dialog}
                 defaultTokens={{

@@ -23,6 +23,7 @@ import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget from 'components/Widget'
+import { WidgetDialogContainer } from 'components/Widget/WidgetDialogContainer'
 import { getChainInfo } from 'constants/chainInfo'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
@@ -35,11 +36,9 @@ import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useWidgetDialog } from 'hooks/useWidgetDialog'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
 import { useCallback, useMemo, useState, useTransition } from 'react'
-import { createPortal } from 'react-dom'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { Z_INDEX } from 'theme/zIndex'
 import { isAddress } from 'utils'
 
 import { OnChangeTimePeriod } from './ChartSection'
@@ -53,32 +52,6 @@ const TokenActions = styled.div`
   display: flex;
   gap: 16px;
   color: ${({ theme }) => theme.textSecondary};
-`
-
-const StyledDialogContainer = styled.div<{ visible: boolean }>`
-  background-color: ${({ theme }) => theme.backgroundScrim};
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
-  transition: background-color 0.125s ease-in-out;
-  transition: visibility 0s linear 0s, opacity 0.125s;
-  visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
-
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  align-items: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: ${({ visible }) => (visible ? 'all' : 'none')};
-  z-index: ${Z_INDEX.modal};
-`
-
-const Dialog = styled.div`
-  margin: 8rem 0;
-  position: relative;
-  width: 480px;
-  height: 500px;
 `
 
 function useOnChainToken(address: string | undefined, skip: boolean) {
@@ -210,12 +183,7 @@ export default function TokenDetails({
       properties={{ tokenAddress: address, tokenName: token?.name }}
       shouldLogImpression
     >
-      {createPortal(
-        <StyledDialogContainer visible={dialogVisible}>
-          <Dialog ref={setDialog} />
-        </StyledDialogContainer>,
-        document.body
-      )}
+      <WidgetDialogContainer visible={dialogVisible} ref={setDialog} />
       <TokenDetailsLayout>
         {token && !isPending ? (
           <LeftPanel>
