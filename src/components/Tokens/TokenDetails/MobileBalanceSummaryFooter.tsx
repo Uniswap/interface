@@ -88,7 +88,6 @@ export default function MobileBalanceSummaryFooter({ token }: { token: Currency 
   const formattedUsdValue = formatCurrencyAmount(useStablecoinValue(balance), NumberType.FiatTokenStats)
   const chain = CHAIN_ID_TO_BACKEND_NAME[token.chainId].toLowerCase()
   const enabled = useGate('web_first_feature_flag')
-  console.log({ enabled })
 
   return (
     <Wrapper>
@@ -104,7 +103,7 @@ export default function MobileBalanceSummaryFooter({ token }: { token: Currency 
         </BalanceInfo>
       )}
       <SwapButton to={`/swap?chainName=${chain}&outputCurrency=${token.isNative ? NATIVE_CHAIN_ID : token.address}`}>
-        <Trans>Swap</Trans>
+        <Trans>{enabled ? 'Go to Swap' : 'Swap'}</Trans>
       </SwapButton>
     </Wrapper>
   )
