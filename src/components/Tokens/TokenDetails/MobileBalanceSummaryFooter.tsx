@@ -6,6 +6,7 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
+import { useGate } from 'statsig-react'
 import styled from 'styled-components/macro'
 import { StyledInternalLink } from 'theme'
 
@@ -86,6 +87,8 @@ export default function MobileBalanceSummaryFooter({ token }: { token: Currency 
   const formattedBalance = formatCurrencyAmount(balance, NumberType.TokenNonTx)
   const formattedUsdValue = formatCurrencyAmount(useStablecoinValue(balance), NumberType.FiatTokenStats)
   const chain = CHAIN_ID_TO_BACKEND_NAME[token.chainId].toLowerCase()
+  const enabled = useGate('web_first_feature_flag')
+  console.log({ enabled })
 
   return (
     <Wrapper>

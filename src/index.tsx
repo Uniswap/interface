@@ -14,7 +14,8 @@ import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
-import { isSentryEnabled } from 'utils/env'
+import { StatsigProvider } from 'statsig-react'
+import { getEnvName, isSentryEnabled } from 'utils/env'
 
 import Web3Provider from './components/Web3Provider'
 import { LanguageProvider } from './i18n'
@@ -61,25 +62,34 @@ const container = document.getElementById('root') as HTMLElement
 createRoot(container).render(
   <StrictMode>
     <Provider store={store}>
-      <FeatureFlagsProvider>
-        <QueryClientProvider client={queryClient}>
-          <HashRouter>
-            <LanguageProvider>
-              <Web3Provider>
-                <ApolloProvider client={apolloClient}>
-                  <BlockNumberProvider>
-                    <Updaters />
-                    <ThemeProvider>
-                      <ThemedGlobalStyle />
-                      <App />
-                    </ThemeProvider>
-                  </BlockNumberProvider>
-                </ApolloProvider>
-              </Web3Provider>
-            </LanguageProvider>
-          </HashRouter>
-        </QueryClientProvider>
-      </FeatureFlagsProvider>
+      <StatsigProvider
+        user={{}}
+        sdkKey="client-1rY92WZGidd2hgW4x1lsZ7afqm1Qfr3sJfH3A5b8eJa"
+        waitForInitialization={true}
+        options={{
+          environment: { tier: getEnvName() },
+        }}
+      >
+        <FeatureFlagsProvider>
+          <QueryClientProvider client={queryClient}>
+            <HashRouter>
+              <LanguageProvider>
+                <Web3Provider>
+                  <ApolloProvider client={apolloClient}>
+                    <BlockNumberProvider>
+                      <Updaters />
+                      <ThemeProvider>
+                        <ThemedGlobalStyle />
+                        <App />
+                      </ThemeProvider>
+                    </BlockNumberProvider>
+                  </ApolloProvider>
+                </Web3Provider>
+              </LanguageProvider>
+            </HashRouter>
+          </QueryClientProvider>
+        </FeatureFlagsProvider>
+      </StatsigProvider>
     </Provider>
   </StrictMode>
 )
