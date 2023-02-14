@@ -7,7 +7,6 @@ import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import InformationIcon from 'src/assets/icons/i-icon.svg'
 import PlusIcon from 'src/assets/icons/plus.svg'
-import SettingsIcon from 'src/assets/icons/settings.svg'
 import { AccountList } from 'src/components/accounts/AccountList'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
@@ -146,11 +145,6 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
 
   const onCloseAddWallet = (): void => {
     setShowAddWalletModal(false)
-  }
-
-  const onPressSettings = (): void => {
-    navigate(Screens.SettingsStack, { screen: Screens.Settings })
-    onClose()
   }
 
   const editAccountOptions = useMemo<MenuItemProp[]>(() => {
@@ -379,21 +373,6 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
             {t('Your wallets')}
           </Text>
         </Box>
-        <TouchableArea onPress={onPressSettings}>
-          <Flex row alignItems="center">
-            <Box mr="spacing16">
-              <Box mr="spacing4">
-                <Box mr="spacing2">
-                  <SettingsIcon
-                    color={theme.colors.textTertiary}
-                    height={theme.iconSizes.icon20}
-                    width={theme.iconSizes.icon20}
-                  />
-                </Box>
-              </Box>
-            </Box>
-          </Flex>
-        </TouchableArea>
       </Flex>
       <AccountList
         accounts={accountsData}

@@ -69,7 +69,6 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
         onCompleted
       )
     )
-
     const hasOnlyHiddenTokens =
       !data?.balances.length && (!!data?.smallBalances.length || !!data?.spamBalances.length)
 

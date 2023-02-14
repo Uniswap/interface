@@ -1,11 +1,14 @@
-import { TransactionListQueryResponse } from 'src/components/TransactionList/TransactionList'
 import { AssetType } from 'src/entities/assets'
 import {
   deriveCurrencyAmountFromAssetResponse,
   getAddressFromAsset,
   parseUSDValueFromAssetChange,
 } from 'src/features/transactions/history/utils'
-import { SendTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
+import {
+  SendTokenTransactionInfo,
+  TransactionListQueryResponse,
+  TransactionType,
+} from 'src/features/transactions/types'
 
 export default function parseSendTransaction(
   transaction: TransactionListQueryResponse

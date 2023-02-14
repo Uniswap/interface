@@ -1,6 +1,7 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { ChainId, ChainIdTo } from 'src/constants/chains'
+import { TransactionListQuery } from 'src/data/__generated__/types-and-hooks'
 import { AssetType } from 'src/entities/assets'
 import { MoonpayCurrency } from 'src/features/fiatOnRamp/types'
 import { DappInfo } from 'src/features/walletConnect/types'
@@ -12,6 +13,10 @@ export interface TransactionId {
   chainId: ChainId
   id: string
 }
+
+export type TransactionListQueryResponse = NonNullable<
+  NonNullable<NonNullable<TransactionListQuery['portfolios']>[0]>['assetActivities']
+>[0]
 
 export interface TransactionDetails extends TransactionId {
   from: Address

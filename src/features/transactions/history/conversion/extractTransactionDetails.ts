@@ -1,4 +1,3 @@
-import { TransactionListQueryResponse } from 'src/components/TransactionList/TransactionList'
 import { ChainId } from 'src/constants/chains'
 import { ActivityType } from 'src/data/__generated__/types-and-hooks'
 import parseApproveTransaction from 'src/features/transactions/history/conversion/parseApproveTransaction'
@@ -8,6 +7,7 @@ import parseSendTransaction from 'src/features/transactions/history/conversion/p
 import parseTradeTransaction from 'src/features/transactions/history/conversion/parseTradeTransaction'
 import {
   TransactionDetails,
+  TransactionListQueryResponse,
   TransactionStatus,
   TransactionType,
   TransactionTypeInfo,

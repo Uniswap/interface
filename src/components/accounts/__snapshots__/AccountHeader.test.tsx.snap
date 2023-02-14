@@ -387,15 +387,17 @@ exports[`AccountHeader renders without error 1`] = `
         style={
           Array [
             Object {
+              "alignItems": "center",
               "display": "flex",
-              "position": "relative",
+              "flexDirection": "row",
+              "justifyContent": "flex-start",
             },
           ]
         }
       >
         <svg
           color="#505A78"
-          data-file-name="SvgBell"
+          data-file-name="SvgSettings"
           height={24}
           width={24}
         />

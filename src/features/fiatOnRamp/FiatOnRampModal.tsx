@@ -78,7 +78,11 @@ export function FiatOnRampModal(): JSX.Element {
   const buttonEnabled = eligible && !isError && fiatOnRampHostUrl
 
   return (
-    <BottomSheetModal disableSwipe name={ModalName.FiatOnRamp} onClose={onClose}>
+    <BottomSheetModal
+      disableSwipe
+      backgroundColor={theme.colors.background1}
+      name={ModalName.FiatOnRamp}
+      onClose={onClose}>
       <Screen bg="background1" edges={['bottom']} mb="spacing24" pt="spacing16" px="spacing24">
         <Flex gap="spacing24">
           <FiatOnRampModalBackground color={theme.colors.background1} width="100%" />

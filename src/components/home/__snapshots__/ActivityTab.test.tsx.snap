@@ -1,0 +1,498 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ActivityTab renders without error 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "display": "flex",
+        "flexDirection": "column",
+        "flexGrow": 1,
+        "height": "100%",
+        "justifyContent": "center",
+      },
+    ]
+  }
+>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "flexDirection": "column",
+          "justifyContent": "center",
+          "padding": 12,
+          "width": "100%",
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "column",
+            "justifyContent": "center",
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          Array [
+            Object {
+              "display": "flex",
+              "marginBottom": 24,
+            },
+          ]
+        }
+      >
+        <svg
+          color="#505A78"
+          data-file-name="SvgEmptyStateTransaction"
+        />
+        <View
+          style={
+            Array [
+              Object {
+                "bottom": -23,
+                "display": "flex",
+                "left": 5,
+                "position": "absolute",
+              },
+            ]
+          }
+        >
+          <svg
+            color="#E8ECFB"
+            data-file-name="SvgEmptyStateCoin"
+            fill="#FC72FF"
+          />
+        </View>
+      </View>
+      <View
+        style={
+          Array [
+            Object {
+              "display": "flex",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "height": 16,
+            },
+          ]
+        }
+      />
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "flexDirection": "column",
+              "justifyContent": "center",
+            },
+          ]
+        }
+      >
+        <Text
+          allowFontScaling={true}
+          maxFontSizeMultiplier={1.2}
+          style={
+            Array [
+              Object {
+                "color": "#0D111C",
+                "display": "flex",
+                "fontFamily": "Inter-SemiBold",
+                "fontSize": 16,
+                "lineHeight": 20,
+                "textAlign": "center",
+              },
+            ]
+          }
+        >
+          No activity yet
+        </Text>
+        <View
+          style={
+            Array [
+              Object {
+                "display": "flex",
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "height": 8,
+              },
+            ]
+          }
+        />
+        <Text
+          allowFontScaling={true}
+          maxFontSizeMultiplier={1.4}
+          style={
+            Array [
+              Object {
+                "color": "#505A78",
+                "display": "flex",
+                "fontFamily": "Inter-Regular",
+                "fontSize": 14,
+                "lineHeight": 20,
+                "textAlign": "center",
+              },
+            ]
+          }
+        >
+          When this wallet makes transactions, they’ll appear here.
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        Array [
+          Object {
+            "display": "flex",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "height": 24,
+          },
+        ]
+      }
+    />
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "stretch",
+            "display": "flex",
+            "flexDirection": "row",
+            "justifyContent": "flex-start",
+          },
+        ]
+      }
+    />
+  </View>
+</View>
+`;
+
+exports[`ActivityTab renders without error 2`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "stretch",
+        "display": "flex",
+        "flexDirection": "column",
+        "flexGrow": 1,
+        "justifyContent": "flex-start",
+      },
+      Object {
+        "paddingHorizontal": 24,
+      },
+    ]
+  }
+>
+  <View
+    style={
+      Object {
+        "flex": 1,
+      }
+    }
+  >
+    <RCTScrollView
+      ListFooterComponent={
+        <ForwardRef
+          height={184}
+        />
+      }
+      applyWindowCorrection={[Function]}
+      canChangeSize={true}
+      contentContainerStyle={
+        Object {
+          "backgroundColor": undefined,
+          "minHeight": 1,
+          "minWidth": 1,
+        }
+      }
+      contentHeight={0}
+      contentWidth={0}
+      data={
+        Array [
+          Object {
+            "itemType": "HEADER",
+            "title": "February 1990",
+          },
+          Object {
+            "addedTime": 634722508000,
+            "chainId": 1,
+            "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+            "hash": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
+            "id": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
+            "options": Object {
+              "request": Object {},
+            },
+            "status": "confirmed",
+            "typeInfo": Object {
+              "approvalAmount": "1",
+              "spender": "0x1234567890123456789012345678901234567890",
+              "tokenAddress": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+              "type": "approve",
+            },
+          },
+          Object {
+            "addedTime": 634722508000,
+            "chainId": 1,
+            "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+            "hash": "0x8123abfa76b2bd459df69d4cffefde0e51b81cf2",
+            "id": "0x8123abfa76b2bd459df69d4cffefde0e51b81cf2",
+            "options": Object {
+              "request": Object {},
+            },
+            "status": "confirmed",
+            "typeInfo": Object {
+              "expectedOutputCurrencyAmountRaw": "1000000000000000000",
+              "inputCurrencyAmountRaw": "1000000000000000000",
+              "inputCurrencyId": "1-0x6B175474E89094C44Da98b954EedeAC495271d0F",
+              "minimumOutputCurrencyAmountRaw": "1000000000000000000",
+              "outputCurrencyId": "1-0x6B175474E89094C44Da98b954EedeAC495271d0F",
+              "tradeType": 0,
+              "transactedUSDValue": 1,
+              "type": "swap",
+            },
+          },
+        ]
+      }
+      dataProvider={
+        DataProvider {
+          "_data": Array [
+            Object {
+              "itemType": "HEADER",
+              "title": "February 1990",
+            },
+            Object {
+              "addedTime": 634722508000,
+              "chainId": 1,
+              "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+              "hash": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
+              "id": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
+              "options": Object {
+                "request": Object {},
+              },
+              "status": "confirmed",
+              "typeInfo": Object {
+                "approvalAmount": "1",
+                "spender": "0x1234567890123456789012345678901234567890",
+                "tokenAddress": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+                "type": "approve",
+              },
+            },
+            Object {
+              "addedTime": 634722508000,
+              "chainId": 1,
+              "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+              "hash": "0x8123abfa76b2bd459df69d4cffefde0e51b81cf2",
+              "id": "0x8123abfa76b2bd459df69d4cffefde0e51b81cf2",
+              "options": Object {
+                "request": Object {},
+              },
+              "status": "confirmed",
+              "typeInfo": Object {
+                "expectedOutputCurrencyAmountRaw": "1000000000000000000",
+                "inputCurrencyAmountRaw": "1000000000000000000",
+                "inputCurrencyId": "1-0x6B175474E89094C44Da98b954EedeAC495271d0F",
+                "minimumOutputCurrencyAmountRaw": "1000000000000000000",
+                "outputCurrencyId": "1-0x6B175474E89094C44Da98b954EedeAC495271d0F",
+                "tradeType": 0,
+                "transactedUSDValue": 1,
+                "type": "swap",
+              },
+            },
+          ],
+          "_firstIndexToProcess": 0,
+          "_hasStableIds": true,
+          "_requiresDataChangeHandling": false,
+          "_size": 3,
+          "getStableId": [Function],
+          "rowHasChanged": [Function],
+        }
+      }
+      disableRecycling={false}
+      estimatedItemSize={92}
+      extendedState={Object {}}
+      externalScrollView={[Function]}
+      finalRenderAheadOffset={250}
+      forceNonDeterministicRendering={true}
+      horizontal={false}
+      initialOffset={0}
+      initialRenderIndex={0}
+      isHorizontal={false}
+      keyExtractor={[Function]}
+      layoutProvider={
+        GridLayoutProviderWithProps {
+          "_acceptableRelayoutDelta": 1,
+          "_getHeightOrWidth": [Function],
+          "_getLayoutTypeForIndex": [Function],
+          "_getSpan": [Function],
+          "_maxSpan": 1,
+          "_setLayoutForType": [Function],
+          "_tempDim": Object {
+            "height": 0,
+            "width": 0,
+          },
+          "averageWindow": AverageWindow {
+            "currentAverage": 92,
+            "currentCount": 1,
+            "inputValues": Array [
+              92,
+            ],
+            "nextIndex": 1,
+          },
+          "defaultEstimatedItemSize": 100,
+          "layoutObject": Object {
+            "size": undefined,
+            "span": undefined,
+          },
+          "props": Object {
+            "ListFooterComponent": <ForwardRef
+              height={184}
+            />,
+            "data": Array [
+              Object {
+                "itemType": "HEADER",
+                "title": "February 1990",
+              },
+              Object {
+                "addedTime": 634722508000,
+                "chainId": 1,
+                "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                "hash": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
+                "id": "0xaef17b4b697be91ab3d7eca4b92fa53efeb2da6b",
+                "options": Object {
+                  "request": Object {},
+                },
+                "status": "confirmed",
+                "typeInfo": Object {
+                  "approvalAmount": "1",
+                  "spender": "0x1234567890123456789012345678901234567890",
+                  "tokenAddress": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+                  "type": "approve",
+                },
+              },
+              Object {
+                "addedTime": 634722508000,
+                "chainId": 1,
+                "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                "hash": "0x8123abfa76b2bd459df69d4cffefde0e51b81cf2",
+                "id": "0x8123abfa76b2bd459df69d4cffefde0e51b81cf2",
+                "options": Object {
+                  "request": Object {},
+                },
+                "status": "confirmed",
+                "typeInfo": Object {
+                  "expectedOutputCurrencyAmountRaw": "1000000000000000000",
+                  "inputCurrencyAmountRaw": "1000000000000000000",
+                  "inputCurrencyId": "1-0x6B175474E89094C44Da98b954EedeAC495271d0F",
+                  "minimumOutputCurrencyAmountRaw": "1000000000000000000",
+                  "outputCurrencyId": "1-0x6B175474E89094C44Da98b954EedeAC495271d0F",
+                  "tradeType": 0,
+                  "transactedUSDValue": 1,
+                  "type": "swap",
+                },
+              },
+            ],
+            "estimatedItemSize": 92,
+            "keyExtractor": [Function],
+            "numColumns": 1,
+            "onScroll": [Function],
+            "renderItem": [Function],
+            "showsVerticalScrollIndicator": false,
+          },
+          "shouldRefreshWithAnchoring": true,
+        }
+      }
+      maxRenderAhead={750}
+      numColumns={1}
+      onEndReached={[Function]}
+      onEndReachedThreshold={0}
+      onEndReachedThresholdRelative={0}
+      onItemLayout={[Function]}
+      onLayout={[Function]}
+      onScroll={[Function]}
+      onScrollBeginDrag={[Function]}
+      onSizeChanged={[Function]}
+      onVisibleIndicesChanged={[Function]}
+      removeClippedSubviews={false}
+      renderAheadOffset={0}
+      renderAheadStep={250}
+      renderContentContainer={[Function]}
+      renderItem={[Function]}
+      renderItemContainer={[Function]}
+      rowRenderer={[Function]}
+      scrollEventThrottle={16}
+      scrollThrottle={16}
+      scrollViewProps={
+        Object {
+          "contentContainerStyle": Object {
+            "backgroundColor": undefined,
+            "minHeight": 1,
+            "minWidth": 1,
+          },
+          "onLayout": [Function],
+          "onScrollBeginDrag": [Function],
+          "refreshControl": undefined,
+          "style": Object {
+            "minHeight": 1,
+            "minWidth": 1,
+          },
+        }
+      }
+      showsVerticalScrollIndicator={false}
+      style={
+        Object {
+          "minHeight": 1,
+          "minWidth": 1,
+        }
+      }
+      suppressBoundedSizeException={true}
+      windowCorrectionConfig={
+        Object {
+          "applyToInitialOffset": true,
+          "applyToItemScroll": true,
+          "value": Object {
+            "endCorrection": 0,
+            "startCorrection": 0,
+            "windowShift": -0,
+          },
+        }
+      }
+    >
+      <View>
+        <View
+          style={
+            Object {
+              "flexDirection": "column",
+            }
+          }
+        >
+          <AutoLayoutView
+            enableInstrumentation={false}
+            horizontal={false}
+            onBlankAreaEvent={[Function]}
+            onLayout={[Function]}
+            renderAheadOffset={0}
+            scrollOffset={0}
+            style={
+              Object {
+                "height": 0,
+                "width": 0,
+              }
+            }
+            windowSize={0}
+          />
+        </View>
+      </View>
+    </RCTScrollView>
+  </View>
+</View>
+`;

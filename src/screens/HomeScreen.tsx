@@ -1,9 +1,9 @@
 import { useScrollToTop } from '@react-navigation/native'
 import { FlashList } from '@shopify/flash-list'
 import * as SplashScreen from 'expo-splash-screen'
-import { default as React, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleProp, useColorScheme, View, ViewProps, ViewStyle } from 'react-native'
+import { StyleProp, View, ViewProps, ViewStyle } from 'react-native'
 import Animated, {
   interpolateColor,
   useAnimatedRef,
@@ -16,11 +16,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { SvgProps } from 'react-native-svg'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import DollarIcon from 'src/assets/icons/dollar-sign.svg'
-import ReceiveArrow from 'src/assets/icons/receive-arrow.svg'
-import SendIcon from 'src/assets/icons/send.svg'
+import DollarIcon from 'src/assets/icons/buy.svg'
+import ReceiveArrow from 'src/assets/icons/receive.svg'
+import SendIcon from 'src/assets/icons/send-action.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
+import { ActivityTab } from 'src/components/home/ActivityTab'
 import { NftsTab } from 'src/components/home/NftsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
@@ -70,6 +71,7 @@ export function HomeScreen(): JSX.Element {
     () => [
       { key: SectionName.HomeTokensTab, title: t('Tokens') },
       { key: SectionName.HomeNFTsTab, title: t('NFTs') },
+      { key: SectionName.HomeActivityTab, title: t('Activity') },
     ],
     [t]
   )
@@ -98,25 +100,39 @@ export function HomeScreen(): JSX.Element {
   const nftsTabScrollHandler = useAnimatedScrollHandler(
     (event) => (nftsTabScrollValue.value = event.contentOffset.y)
   )
+  const activityTabScrollValue = useSharedValue(0)
+  const activityTabScrollHandler = useAnimatedScrollHandler(
+    (event) => (activityTabScrollValue.value = event.contentOffset.y)
+  )
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const tokensTabScrollRef = useAnimatedRef<FlashList<any>>()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const nftsTabScrollRef = useAnimatedRef<FlashList<any>>()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const activityTabScrollRef = useAnimatedRef<FlashList<any>>()
 
-  const сurrentScrollValue = useDerivedValue(
-    () => (tabIndex === 0 ? tokensTabScrollValue.value : nftsTabScrollValue.value),
-    [tabIndex]
-  )
+  const сurrentScrollValue = useDerivedValue(() => {
+    if (tabIndex === 0) {
+      return tokensTabScrollValue.value
+    } else if (tabIndex === 1) {
+      return nftsTabScrollValue.value
+    }
+    return activityTabScrollValue.value
+  }, [tabIndex])
 
   // If accounts are switched, we want to scroll to top and show full header
   useEffect(() => {
     nftsTabScrollValue.value = 0
     tokensTabScrollValue.value = 0
+    activityTabScrollValue.value = 0
     nftsTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
     tokensTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
+    activityTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
   }, [
     activeAccount,
+    activityTabScrollRef,
+    activityTabScrollValue,
     nftsTabScrollRef,
     nftsTabScrollValue,
     tokensTabScrollRef,
@@ -126,6 +142,7 @@ export function HomeScreen(): JSX.Element {
   // Need to create a derived value for tab index so it can be referenced from a static ref
   const currentTabIndex = useDerivedValue(() => tabIndex, [tabIndex])
   const isNftTabsAtTop = useDerivedValue(() => nftsTabScrollValue.value === 0)
+  const isActivityTabAtTop = useDerivedValue(() => activityTabScrollValue.value === 0)
 
   useScrollToTop(
     useRef({
@@ -134,6 +151,10 @@ export function HomeScreen(): JSX.Element {
           setTabIndex(0)
         } else if (currentTabIndex.value === 1) {
           nftsTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
+        } else if (currentTabIndex.value === 2 && isActivityTabAtTop.value) {
+          setTabIndex(1)
+        } else if (currentTabIndex.value === 2) {
+          activityTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
         } else {
           tokensTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
         }
@@ -153,15 +174,23 @@ export function HomeScreen(): JSX.Element {
     () => [
       { list: tokensTabScrollRef, position: tokensTabScrollValue, index: 0 },
       { list: nftsTabScrollRef, position: nftsTabScrollValue, index: 1 },
+      { list: activityTabScrollRef, position: activityTabScrollValue, index: 2 },
     ],
-    [nftsTabScrollRef, nftsTabScrollValue, tokensTabScrollRef, tokensTabScrollValue]
+    [
+      activityTabScrollRef,
+      activityTabScrollValue,
+      nftsTabScrollRef,
+      nftsTabScrollValue,
+      tokensTabScrollRef,
+      tokensTabScrollValue,
+    ]
   )
 
   const { sync } = useScrollSync(tabIndex, scrollPairs, headerConfig)
 
   const contentHeader = useMemo(() => {
     return (
-      <Flex bg="backgroundBranded" gap="spacing16" pb="spacing16" px="spacing24">
+      <Flex bg="background0" gap="spacing16" pb="spacing16" px="spacing24">
         <Box pb="spacing4">
           <AccountHeader />
         </Box>
@@ -215,19 +244,20 @@ export function HomeScreen(): JSX.Element {
     backgroundColor: interpolateColor(
       сurrentScrollValue.value,
       [0, headerHeightDiff],
-      [theme.colors.backgroundBranded, theme.colors.background0]
+      [theme.colors.background0, theme.colors.background0]
     ),
   }))
 
   const renderTabBar = useCallback(
     (sceneProps: SceneRendererProps) => {
+      const style = { width: 'auto' }
       return (
         <>
           <Animated.View style={headerContainerStyle} onLayout={handleHeaderLayout}>
             {contentHeader}
           </Animated.View>
           <Animated.View style={[TAB_STYLES.header, tabBarStyle]}>
-            <Box bg="background0">
+            <Box bg="background0" paddingLeft="spacing12">
               <TabBar
                 {...sceneProps}
                 indicatorStyle={TAB_STYLES.activeTabIndicator}
@@ -240,6 +270,7 @@ export function HomeScreen(): JSX.Element {
                     borderBottomColor: theme.colors.backgroundOutline,
                   },
                 ]}
+                tabStyle={style}
               />
             </Box>
           </Animated.View>
@@ -261,15 +292,6 @@ export function HomeScreen(): JSX.Element {
   const renderTab = useCallback(
     ({ route }) => {
       switch (route?.key) {
-        case SectionName.HomeNFTsTab:
-          return (
-            <NftsTab
-              ref={nftsTabScrollRef}
-              containerProps={sharedProps}
-              owner={activeAccount?.address}
-              scrollHandler={nftsTabScrollHandler}
-            />
-          )
         case SectionName.HomeTokensTab:
           return (
             <TokensTab
@@ -279,11 +301,31 @@ export function HomeScreen(): JSX.Element {
               scrollHandler={tokensTabScrollHandler}
             />
           )
+        case SectionName.HomeNFTsTab:
+          return (
+            <NftsTab
+              ref={nftsTabScrollRef}
+              containerProps={sharedProps}
+              owner={activeAccount?.address}
+              scrollHandler={nftsTabScrollHandler}
+            />
+          )
+        case SectionName.HomeActivityTab:
+          return (
+            <ActivityTab
+              ref={activityTabScrollRef}
+              containerProps={sharedProps}
+              owner={activeAccount?.address}
+              scrollHandler={activityTabScrollHandler}
+            />
+          )
       }
       return null
     },
     [
       activeAccount?.address,
+      activityTabScrollHandler,
+      activityTabScrollRef,
       nftsTabScrollHandler,
       nftsTabScrollRef,
       sharedProps,
@@ -348,7 +390,7 @@ function QuickActions(): JSX.Element {
 
   return (
     <Flex centered row gap="spacing8">
-      {fiatOnRampShown && (
+      {fiatOnRampShown ? (
         <ActionButton
           Icon={DollarIcon}
           eventName={EventName.FiatOnRampQuickActionButtonPressed}
@@ -356,7 +398,7 @@ function QuickActions(): JSX.Element {
           name={ElementName.Buy}
           onPress={onPressBuy}
         />
-      )}
+      ) : null}
       <ActionButton
         Icon={SendIcon}
         label={t('Send')}
@@ -387,22 +429,19 @@ function ActionButton({
   onPress: () => void
 }): JSX.Element {
   const theme = useAppTheme()
-  const isDarkMode = useColorScheme() === 'dark'
 
   return (
     <TouchableArea
       hapticFeedback
-      backgroundColor="backgroundOverlay"
-      borderColor="brandedAccentSoft"
-      borderRadius="rounded16"
-      borderWidth={1}
+      backgroundColor="background2"
+      borderRadius="rounded24"
       eventName={eventName}
       flex={1}
       name={name}
       padding="spacing12"
-      shadowColor={isDarkMode ? 'black' : 'brandedAccentSoft'}
+      shadowColor="white"
       shadowOffset={SHADOW_OFFSET_SMALL}
-      shadowOpacity={0.4}
+      shadowOpacity={0.1}
       shadowRadius={6}
       onPress={onPress}>
       <Flex centered row gap="spacing4">
@@ -412,7 +451,7 @@ function ActionButton({
           strokeWidth={2}
           width={theme.iconSizes.icon20}
         />
-        <Text color="accentAction" variant="buttonLabelMedium">
+        <Text color="textPrimary" variant="bodyLarge">
           {label}
         </Text>
       </Flex>

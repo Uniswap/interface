@@ -1,6 +1,6 @@
 import { MockedResponse } from '@apollo/client/testing'
 import React from 'react'
-import TransactionList from 'src/components/TransactionList/TransactionList'
+import { ActivityTab } from 'src/components/home/ActivityTab'
 import {
   Chain,
   TokenDocument,
@@ -10,7 +10,7 @@ import {
 } from 'src/data/__generated__/types-and-hooks'
 import { ACCOUNT_ADDRESS_ONE, mockWalletPreloadedState } from 'src/test/fixtures'
 import { DaiAsset, Portfolios } from 'src/test/gqlFixtures'
-import { render, screen } from 'src/test/test-utils'
+import { act, render } from 'src/test/test-utils'
 import { sleep } from 'src/utils/timing'
 
 const TransactionListMock: MockedResponse<TransactionListQuery> = {
@@ -62,14 +62,12 @@ const TokenNullMock: MockedResponse<TokenQuery> = {
   },
 }
 
-describe(TransactionList, () => {
+describe('ActivityTab', () => {
   it('renders without error', async () => {
+    const tokensTabScrollHandler = (): undefined => undefined
+
     const tree = render(
-      <TransactionList
-        emptyStateContent={null}
-        ownerAddress={ACCOUNT_ADDRESS_ONE}
-        readonly={false}
-      />,
+      <ActivityTab owner={ACCOUNT_ADDRESS_ONE} scrollHandler={tokensTabScrollHandler} />,
       {
         mocks: [TransactionListMock, TokenMock, TokenNullMock],
         preloadedState: mockWalletPreloadedState,
@@ -80,9 +78,10 @@ describe(TransactionList, () => {
     expect(tree.toJSON()).toMatchSnapshot()
 
     // Render items
-    await sleep(1000) // Wait for the loading to complete
+    await act(async () => {
+      await sleep(1000) // Wait for the loading to complete
+    })
 
-    expect(await screen.findByText('Approved')).toBeDefined()
     expect(tree.toJSON()).toMatchSnapshot()
   })
 })

@@ -42,6 +42,7 @@ export const enum SectionName {
   ExploreTokensTab = 'explore-tokens-tab',
   ExploreWalletsTab = 'explore-wallets-tab',
   ExploreSearch = 'explore-search',
+  HomeActivityTab = 'home-activity-tab',
   HomeNFTsTab = 'home-nfts-tab',
   HomeTokensTab = 'home-tokens-tab',
   ImportAccountForm = 'import-account-form',

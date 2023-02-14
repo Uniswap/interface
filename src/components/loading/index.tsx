@@ -1,9 +1,10 @@
-import React, { useMemo } from 'react'
+import React, { memo, useMemo } from 'react'
 import { Box as BoxComponent, Flex } from 'src/components/layout'
 import { BoxLoader, BoxLoaderProps } from 'src/components/loading/BoxLoader'
 import { NftCardLoader } from 'src/components/loading/NftCardLoader'
 import { Shimmer } from 'src/components/loading/Shimmer'
 import { TokenLoader } from 'src/components/loading/TokenLoader'
+import { TransactionLoader } from 'src/components/loading/TransactionLoader'
 import { WalletLoader } from 'src/components/loading/WalletLoader'
 import { WaveLoader } from 'src/components/loading/WaveLoader'
 
@@ -42,6 +43,20 @@ function Token({ repeat = 1 }: { repeat?: number }): JSX.Element {
     </Shimmer>
   )
 }
+
+export const Transaction = memo(({ repeat = 1 }: { repeat?: number }): JSX.Element => {
+  return (
+    <Shimmer>
+      <Flex>
+        {new Array(repeat).fill(null).map((_, i, { length }) => (
+          <React.Fragment key={i}>
+            <TransactionLoader opacity={(length - i) / length} />
+          </React.Fragment>
+        ))}
+      </Flex>
+    </Shimmer>
+  )
+})
 
 function NFT({ repeat = 1 }: { repeat?: number }): JSX.Element {
   const loader = useMemo(
@@ -102,6 +117,7 @@ export const Loader = {
   Box,
   NFT,
   Token,
+  Transaction,
   Wallets,
   Graph,
   Image,

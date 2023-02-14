@@ -1,7 +1,7 @@
-import { TransactionListQueryResponse } from 'src/components/TransactionList/TransactionList'
 import {
   ApproveTransactionInfo,
   NFTApproveTransactionInfo,
+  TransactionListQueryResponse,
   TransactionType,
 } from 'src/features/transactions/types'
 

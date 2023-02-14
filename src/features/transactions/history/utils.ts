@@ -68,7 +68,7 @@ export function formatTransactionsByDate(
     return nonceA && nonceB ? (nonceA < nonceB ? -1 : 1) : -1
   })
 
-  // For all transaction before current month, group by month
+  // For all transactions before current month, group by month
   const priorByMonthTransactionList = beforeCurrentMonth.reduce(
     (accum: Record<string, TransactionDetails[]>, item) => {
       const isPreviousYear = item.addedTime < msTimestampCutoffYear

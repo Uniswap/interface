@@ -1,5 +1,4 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { TransactionListQueryResponse } from 'src/components/TransactionList/TransactionList'
 import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
@@ -18,7 +17,11 @@ import parseNFTMintTransaction from 'src/features/transactions/history/conversio
 import parseReceiveTransaction from 'src/features/transactions/history/conversion/parseReceiveTransaction'
 import parseSendTransaction from 'src/features/transactions/history/conversion/parseSendTransaction'
 import parseTradeTransaction from 'src/features/transactions/history/conversion/parseTradeTransaction'
-import { NFTTradeType, TransactionType } from 'src/features/transactions/types'
+import {
+  NFTTradeType,
+  TransactionListQueryResponse,
+  TransactionType,
+} from 'src/features/transactions/types'
 
 /**
  * Testing for API transaction parsing utils.

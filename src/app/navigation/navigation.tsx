@@ -47,7 +47,6 @@ import {
   selectFinishedOnboarding,
   selectReplaceAccountOptions,
 } from 'src/features/wallet/selectors'
-import { ActivityScreen } from 'src/screens/ActivityScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
@@ -408,7 +407,6 @@ export function AppStackNavigator(): JSX.Element {
       <AppStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
       <AppStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
       <AppStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
-      <AppStack.Screen component={ActivityScreen} name={Screens.Activity} />
       <AppStack.Screen component={WebViewScreen} name={Screens.WebView} />
       <AppStack.Screen component={SettingsStackGroup} name={Screens.SettingsStack} />
       <AppStack.Screen

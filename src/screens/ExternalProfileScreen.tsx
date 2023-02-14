@@ -1,15 +1,16 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { StyleSheet } from 'react-native'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useAppTheme } from 'src/app/hooks'
 import { AppStackParamList } from 'src/app/navigation/types'
+import { ActivityTab } from 'src/components/home/ActivityTab'
 import { NftsTab } from 'src/components/home/NftsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { renderTabLabel, TabContentProps, TAB_STYLES } from 'src/components/layout/TabHelpers'
-import ProfileActivityTab from 'src/components/profile/tabs/ProfileActivityTab'
 import TraceTabView from 'src/components/telemetry/TraceTabView'
 import ProfileHeader from 'src/features/externalProfile/ProfileHeader'
 import { SectionName } from 'src/features/telemetry/constants'
@@ -47,7 +48,7 @@ export function ExternalProfileScreen({
     ({ route }) => {
       switch (route?.key) {
         case SectionName.ProfileActivityTab:
-          return <ProfileActivityTab ownerAddress={address} />
+          return <ActivityTab containerProps={sharedProps} owner={address} />
         case SectionName.ProfileNftsTab:
           return <NftsTab containerProps={sharedProps} owner={address} />
         case SectionName.ProfileTokensTab:
@@ -61,19 +62,22 @@ export function ExternalProfileScreen({
   const renderTabBar = useCallback(
     (sceneProps: SceneRendererProps) => {
       return (
-        <TabBar
-          {...sceneProps}
-          indicatorStyle={TAB_STYLES.activeTabIndicator}
-          navigationState={{ index: tabIndex, routes: tabs }}
-          renderLabel={renderTabLabel}
-          style={[
-            TAB_STYLES.tabBar,
-            {
-              backgroundColor: theme.colors.background0,
-              borderBottomColor: theme.colors.backgroundOutline,
-            },
-          ]}
-        />
+        <Box bg="background0" paddingLeft="spacing12">
+          <TabBar
+            {...sceneProps}
+            indicatorStyle={TAB_STYLES.activeTabIndicator}
+            navigationState={{ index: tabIndex, routes: tabs }}
+            renderLabel={renderTabLabel}
+            style={[
+              TAB_STYLES.tabBar,
+              {
+                backgroundColor: theme.colors.background0,
+                borderBottomColor: theme.colors.backgroundOutline,
+              },
+            ]}
+            tabStyle={styles.tabStyle}
+          />
+        </Box>
       )
     },
     [tabIndex, tabs, theme]
@@ -94,3 +98,7 @@ export function ExternalProfileScreen({
     </Screen>
   )
 }
+
+const styles = StyleSheet.create({
+  tabStyle: { width: 'auto' },
+})

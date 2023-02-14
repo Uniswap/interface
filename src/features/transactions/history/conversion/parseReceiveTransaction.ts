@@ -1,4 +1,3 @@
-import { TransactionListQueryResponse } from 'src/components/TransactionList/TransactionList'
 import { AssetType } from 'src/entities/assets'
 import {
   deriveCurrencyAmountFromAssetResponse,
@@ -8,6 +7,7 @@ import {
 import {
   FiatPurchaseTransactionInfo,
   ReceiveTokenTransactionInfo,
+  TransactionListQueryResponse,
   TransactionType,
 } from 'src/features/transactions/types'
 import { fromGraphQLChain } from 'src/utils/chainId'

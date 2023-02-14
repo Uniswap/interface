@@ -22,8 +22,8 @@ export const SWIPE_THRESHOLD = 5
 export const TAB_STYLES = StyleSheet.create({
   activeTabIndicator: {
     backgroundColor: FixedTheme.colors.userThemeMagenta,
-    bottom: -1,
-    height: 2,
+    bottom: 0,
+    height: 0,
     position: 'absolute',
   },
   container: {
@@ -47,9 +47,9 @@ export const TAB_STYLES = StyleSheet.create({
   },
   tabBar: {
     // add inactive border to bottom of tab bar
-    borderBottomWidth: 1,
+    borderBottomWidth: 0,
     margin: 0,
-    marginHorizontal: FixedTheme.spacing.spacing24,
+    marginHorizontal: 0,
     padding: 0,
     // remove default shadow border under tab bar
     shadowColor: FixedTheme.colors.none,
@@ -91,7 +91,7 @@ export const renderTabLabel = ({
   focused: boolean
 }): JSX.Element => {
   return (
-    <Text color={focused ? 'textPrimary' : 'textTertiary'} variant="buttonLabelMedium">
+    <Text color={focused ? 'textPrimary' : 'textTertiary'} fontSize={18} variant="bodyLarge">
       {route.title}
     </Text>
   )

@@ -43,8 +43,9 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
       <Flex gap="spacing4">
         <DecimalNumber
           adjustsFontSizeToFit={!isLoading}
-          color={isWarmLoading ? 'textSecondary' : undefined}
           // initially set color to textSecondary when isWarm because the shimmer mask takes a second to load, resulting in a flash of the underlying color
+          color={isWarmLoading ? 'textSecondary' : undefined}
+          fontSize={48}
           fontWeight="600"
           loading={isLoading}
           number={formatUSDPrice(

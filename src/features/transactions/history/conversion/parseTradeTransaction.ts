@@ -1,7 +1,6 @@
 // TODO(MOB-3866): reduce component complexity
 /* eslint-disable complexity */
 import { TradeType } from '@uniswap/sdk-core'
-import { TransactionListQueryResponse } from 'src/components/TransactionList/TransactionList'
 import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import {
@@ -12,6 +11,7 @@ import {
   ExactInputSwapTransactionInfo,
   NFTTradeTransactionInfo,
   NFTTradeType,
+  TransactionListQueryResponse,
   TransactionType,
   WrapTransactionInfo,
 } from 'src/features/transactions/types'

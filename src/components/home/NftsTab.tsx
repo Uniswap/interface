@@ -223,7 +223,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
         />
       </Flex>
     ) : (
-      <Flex flexGrow={1}>
+      <Flex grow>
         <AnimatedFlashList
           ref={ref}
           ListFooterComponent={
