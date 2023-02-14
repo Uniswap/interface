@@ -1,5 +1,5 @@
 import { Protocol } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import {
   PermitInput,
   TokenTradeRouteInput,
@@ -67,7 +67,7 @@ export default function usePayWithAnyTokenSwap(
               ? undefined
               : {
                   tokenAmountA: {
-                    amount: pool.getInputAmount(swap.outputAmount as CurrencyAmount<Token>)[0].quotient.toString(),
+                    amount: pool.reserve0.quotient.toString(),
                     token: {
                       address: pool.token0.address,
                       chainId: pool.token0.chainId,
@@ -76,7 +76,7 @@ export default function usePayWithAnyTokenSwap(
                     },
                   },
                   tokenAmountB: {
-                    amount: pool.getOutputAmount(swap.inputAmount as CurrencyAmount<Token>)[0].quotient.toString(),
+                    amount: pool.reserve1.quotient.toString(),
                     token: {
                       address: pool.token1.address,
                       chainId: pool.token1.chainId,
@@ -140,7 +140,7 @@ export default function usePayWithAnyTokenSwap(
               ? undefined
               : {
                   tokenAmountA: {
-                    amount: pool.getInputAmount(swap.outputAmount as CurrencyAmount<Token>)[0].quotient.toString(),
+                    amount: pool.reserve0.quotient.toString(),
                     token: {
                       address: pool.token0.address,
                       chainId: pool.token0.chainId,
@@ -149,7 +149,7 @@ export default function usePayWithAnyTokenSwap(
                     },
                   },
                   tokenAmountB: {
-                    amount: pool.getOutputAmount(swap.inputAmount as CurrencyAmount<Token>)[0].quotient.toString(),
+                    amount: pool.reserve1.quotient.toString(),
                     token: {
                       address: pool.token1.address,
                       chainId: pool.token1.chainId,
