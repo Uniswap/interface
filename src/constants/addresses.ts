@@ -102,6 +102,17 @@ export const GOVERNANCE_BRAVO_ADDRESSES: AddressMap = {
 /* V1 Governance Addresses */
 export const GOVERNANCE_PROXY_ADDRESSES: AddressMap = {
   ...constructSameAddressMap('0x5F8607739c2D2d0b57a4292868C368AB1809767a', [
+    SupportedChainId.MAINNET,
+    SupportedChainId.OPTIMISM,
+    SupportedChainId.ARBITRUM_ONE,
+    SupportedChainId.POLYGON,
+  ]),
+}
+
+/* Rigoblock Pool Factory Addresses */
+export const RB_FACTORY_ADDRESSES: AddressMap = {
+  ...constructSameAddressMap('0x8DE8895ddD702d9a216E640966A98e08c9228f24', [
+    SupportedChainId.MAINNET,
     SupportedChainId.OPTIMISM,
     SupportedChainId.ARBITRUM_ONE,
     SupportedChainId.POLYGON,

@@ -1,13 +1,16 @@
-import { defaultAbiCoder } from '@ethersproject/abi'
+import { defaultAbiCoder, Interface } from '@ethersproject/abi'
 import { getAddress, isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { PageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import GOVERNANCE_RB_ABI from 'abis/governance.json'
+import RB_POOL_FACTORY_ABI from 'abis/rb-pool-factory.json'
 import { ButtonError } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
+import { GOVERNANCE_PROXY_ADDRESSES, RB_FACTORY_ADDRESSES } from 'constants/addresses'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Wrapper } from 'pages/Pool/styleds'
@@ -22,7 +25,7 @@ import styled from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 
 import { CreateProposalTabs } from '../../components/NavigationTabs'
-import { UNI } from '../../constants/tokens'
+import { GRG } from '../../constants/tokens'
 import AppBody from '../AppBody'
 import { ProposalActionDetail } from './ProposalActionDetail'
 import { ProposalAction, ProposalActionSelector, ProposalActionSelectorModal } from './ProposalActionSelector'
@@ -104,9 +107,10 @@ export default function CreateProposal() {
   const [modalOpen, setModalOpen] = useState(false)
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
-  const [proposalAction, setProposalAction] = useState(ProposalAction.TRANSFER_TOKEN)
+  const [proposalAction, setProposalAction] = useState(ProposalAction.UPGRADE_IMPLEMENTATION)
   const [toAddressValue, setToAddressValue] = useState('')
-  const [currencyValue, setCurrencyValue] = useState<Currency>(UNI[chainId ?? 1])
+  // TODO: check we are covering all chains
+  const [currencyValue, setCurrencyValue] = useState<Currency>(GRG[chainId ?? 1])
   const [amountValue, setAmountValue] = useState('')
   const [titleValue, setTitleValue] = useState('')
   const [bodyValue, setBodyValue] = useState('')
@@ -219,11 +223,41 @@ ${bodyValue}
         //createProposalData.signatures = [`approve(${types[0].join(',')})`]
         break
       }
+
+      case ProposalAction.UPGRADE_IMPLEMENTATION: {
+        types = [['address']]
+        values = [[getAddress(toAddressValue)]]
+        //createProposalData.signatures = [`approve(${types[0].join(',')})`]
+        break
+      }
+
+      case ProposalAction.UPGRADE_GOVERNANCE: {
+        types = [['address']]
+        values = [[getAddress(toAddressValue)]]
+        //createProposalData.signatures = [`approve(${types[0].join(',')})`]
+        break
+      }
     }
 
     createProposalData.actions = []
+    //let ContractInterface: Interface
     for (let i = 0; i < createProposalData.actions.length; i++) {
-      createProposalData.actions[i].data = defaultAbiCoder.encode(types[i], values[i])
+      if (ProposalAction.UPGRADE_GOVERNANCE) {
+        const ContractInterface = new Interface(GOVERNANCE_RB_ABI)
+        // TODO: check if we want to write createProposalData.actions[i] = new ProposedAction({...})
+        createProposalData.actions[i].data = ContractInterface.encodeFunctionData('upgradeImplementation', [values[i]])
+        // TODO: check we are covering all chains
+        createProposalData.actions[i].target = GOVERNANCE_PROXY_ADDRESSES[chainId ?? 1]
+        createProposalData.actions[i].value = '0'
+      } else if (ProposalAction.UPGRADE_IMPLEMENTATION) {
+        const ContractInterface = new Interface(RB_POOL_FACTORY_ABI)
+        // TODO: check if we want to write createProposalData.actions[i] = new ProposedAction({...})
+        createProposalData.actions[i].data = ContractInterface.encodeFunctionData('upgradeImplementation', [values[i]])
+        createProposalData.actions[i].target = RB_FACTORY_ADDRESSES[chainId ?? 1]
+        createProposalData.actions[i].value = '0'
+      } else {
+        createProposalData.actions[i].data = defaultAbiCoder.encode(types[i], values[i])
+      }
     }
 
     const hash = await createProposalCallback(createProposalData ?? undefined)?.catch(() => {
@@ -280,7 +314,7 @@ ${bodyValue}
             />
             {!hasEnoughVote ? (
               <AutonomousProposalCTA>
-                Don’t have 100K votes? Earn GRG rewards by{' '}
+                Don’t have 105K votes? Earn GRG rewards by{' '}
                 <ExternalLink href="https://app.rigoblock.com/#/swap">operating a pool</ExternalLink>
               </AutonomousProposalCTA>
             ) : null}

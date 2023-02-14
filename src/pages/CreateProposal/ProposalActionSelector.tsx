@@ -12,6 +12,8 @@ import { CloseIcon } from 'theme'
 export enum ProposalAction {
   TRANSFER_TOKEN = 'Transfer Token',
   APPROVE_TOKEN = 'Approve Token',
+  UPGRADE_IMPLEMENTATION = 'Upgrade Pool Implementation',
+  UPGRADE_GOVERNANCE = 'Upgrade Governance',
 }
 
 interface ProposalActionSelectorModalProps {
@@ -109,6 +111,7 @@ export function ProposalActionSelectorModal({
           </RowBetween>
         </PaddedColumn>
         <Separator />
+        {/*
         <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.TRANSFER_TOKEN)}>
           <Column>
             <Text fontWeight={500}>
@@ -120,6 +123,21 @@ export function ProposalActionSelectorModal({
           <Column>
             <Text fontWeight={500}>
               <Trans>Approve Token</Trans>
+            </Text>
+          </Column>
+        </MenuItem>
+        */}
+        <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.UPGRADE_IMPLEMENTATION)}>
+          <Column>
+            <Text fontWeight={500}>
+              <Trans>Upgrade Pool Implementation</Trans>
+            </Text>
+          </Column>
+        </MenuItem>
+        <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.UPGRADE_GOVERNANCE)}>
+          <Column>
+            <Text fontWeight={500}>
+              <Trans>Upgrade Governance</Trans>
             </Text>
           </Column>
         </MenuItem>

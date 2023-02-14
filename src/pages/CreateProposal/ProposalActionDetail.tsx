@@ -57,6 +57,18 @@ export const ProposalActionDetail = ({
         type: ProposalActionDetailField.CURRENCY,
       },
     ],
+    [ProposalAction.UPGRADE_IMPLEMENTATION]: [
+      {
+        type: ProposalActionDetailField.ADDRESS,
+        label: <Trans>New Pool Implementation</Trans>,
+      },
+    ],
+    [ProposalAction.UPGRADE_GOVERNANCE]: [
+      {
+        type: ProposalActionDetailField.ADDRESS,
+        label: <Trans>New Governance Implementation</Trans>,
+      },
+    ],
   }
 
   return (
