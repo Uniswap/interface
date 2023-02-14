@@ -16,7 +16,7 @@ import { fetchPrice, formatEth, formatUsdPrice } from 'nft/utils'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
-import styled, { css, useTheme } from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import shallow from 'zustand/shallow'
@@ -245,7 +245,6 @@ export const ListPage = () => {
   const [selectedMarkets, setSelectedMarkets] = useState([ListingMarkets[0]]) // default marketplace: x2y2
   const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
   const signer = provider?.getSigner()
-  const theme = useTheme()
 
   useEffect(() => {
     fetchPrice().then((price) => {

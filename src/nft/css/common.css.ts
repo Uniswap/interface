@@ -9,7 +9,6 @@ export const center = sprinkles({
 })
 
 // TYPOGRAPHY
-export const headlineLarge = sprinkles({ fontWeight: 'semibold', fontSize: '36', lineHeight: '44' })
 export const headlineMedium = sprinkles({ fontWeight: 'semibold', fontSize: '28', lineHeight: '36' })
 export const headlineSmall = sprinkles({ fontWeight: 'semibold', fontSize: '20', lineHeight: '28' })
 
