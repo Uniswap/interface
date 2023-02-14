@@ -41,6 +41,7 @@ export enum ActivityType {
   Send = 'SEND',
   Stake = 'STAKE',
   Swap = 'SWAP',
+  Swapx = 'SWAPX',
   Staking = 'Staking',
   Unknown = 'UNKNOWN',
   Unstake = 'UNSTAKE',
@@ -587,6 +588,7 @@ export type Portfolio = {
 
 
 export type PortfolioAssetActivitiesArgs = {
+  includeOffChain?: InputMaybe<Scalars['Boolean']>;
   page?: InputMaybe<Scalars['Int']>;
   pageSize?: InputMaybe<Scalars['Int']>;
 };

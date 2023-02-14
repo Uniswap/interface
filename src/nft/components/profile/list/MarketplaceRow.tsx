@@ -18,12 +18,22 @@ import { PriceTextInput } from './PriceTextInput'
 import { RoyaltyTooltip } from './RoyaltyTooltip'
 import { RemoveIconWrap } from './shared'
 
-const PastPriceInfo = styled(Column)`
+const LastPriceInfo = styled(Column)`
   text-align: left;
   display: none;
   flex: 1;
 
-  @media screen and (min-width: ${BREAKPOINTS.xl}px) {
+  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+    display: flex;
+  }
+`
+
+const FloorPriceInfo = styled(Column)`
+  text-align: left;
+  display: none;
+  flex: 1;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
     display: flex;
   }
 `
@@ -217,18 +227,18 @@ export const MarketplaceRow = ({
 
   return (
     <Row onMouseEnter={toggleMarketRowHovered} onMouseLeave={toggleMarketRowHovered}>
-      <PastPriceInfo>
+      <FloorPriceInfo>
         <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
           {asset.floorPrice ? `${asset.floorPrice.toFixed(3)} ETH` : '-'}
         </ThemedText.BodySmall>
-      </PastPriceInfo>
-      <PastPriceInfo>
+      </FloorPriceInfo>
+      <LastPriceInfo>
         <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
           {asset.lastPrice ? `${asset.lastPrice.toFixed(3)} ETH` : '-'}
         </ThemedText.BodySmall>
-      </PastPriceInfo>
+      </LastPriceInfo>
 
-      <Row flex="3">
+      <Row flex="2">
         {(expandMarketplaceRows || selectedMarkets.length > 1) && (
           <MarketIconsWrapper onMouseEnter={toggleMarketIconHovered} onMouseLeave={toggleMarketIconHovered}>
             {selectedMarkets.map((market, index) => (

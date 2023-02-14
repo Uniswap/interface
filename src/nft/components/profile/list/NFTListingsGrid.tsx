@@ -33,7 +33,11 @@ const TableHeader = styled.div`
 `
 
 const NFTHeader = styled.div`
-  flex: 1.5;
+  flex: 2;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    flex: 1.5;
+  }
 `
 
 const PriceHeaders = styled(Row)`
@@ -45,17 +49,26 @@ const PriceHeaders = styled(Row)`
   }
 `
 
-const PriceInfoHeader = styled.div`
+const LastPriceHeader = styled.div`
   display: none;
   flex: 1;
 
-  @media screen and (min-width: ${BREAKPOINTS.xl}px) {
+  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+    display: flex;
+  }
+`
+
+const FloorPriceHeader = styled.div`
+  display: none;
+  flex: 1;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
     display: flex;
   }
 `
 
 const DropdownAndHeaderWrapper = styled(Row)`
-  flex: 3;
+  flex: 2;
   gap: 4px;
 `
 
@@ -208,12 +221,12 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           <Trans>NFT</Trans>
         </NFTHeader>
         <PriceHeaders>
-          <PriceInfoHeader>
+          <FloorPriceHeader>
             <Trans>Floor</Trans>
-          </PriceInfoHeader>
-          <PriceInfoHeader>
+          </FloorPriceHeader>
+          <LastPriceHeader>
             <Trans>Last</Trans>
-          </PriceInfoHeader>
+          </LastPriceHeader>
 
           <DropdownAndHeaderWrapper ref={dropdownRef}>
             <Trans>Price</Trans>

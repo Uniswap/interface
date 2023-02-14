@@ -42,8 +42,12 @@ const RemoveIconContainer = styled.div`
 const NFTInfoWrapper = styled(Row)`
   align-items: center;
   min-width: 0px;
-  flex: 1.5;
+  flex: 2;
   margin-bottom: auto;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    flex: 1.5;
+  }
 `
 
 const NFTImage = styled.img`
