@@ -103,16 +103,39 @@ export const GOVERNANCE_BRAVO_ADDRESSES: AddressMap = {
 export const GOVERNANCE_PROXY_ADDRESSES: AddressMap = {
   ...constructSameAddressMap('0x5F8607739c2D2d0b57a4292868C368AB1809767a', [
     SupportedChainId.MAINNET,
+    SupportedChainId.GOERLI,
     SupportedChainId.OPTIMISM,
     SupportedChainId.ARBITRUM_ONE,
     SupportedChainId.POLYGON,
   ]),
 }
 
+/* Staking Proxy Addresses */
+export const STAKING_PROXY_ADDRESSES: AddressMap = {
+  [SupportedChainId.MAINNET]: '0x730dDf7b602dB822043e0409d8926440395e07fE',
+  [SupportedChainId.GOERLI]: '0x6C4594aa0CBcb8315E88EFdb11675c09A7a5f444',
+  [SupportedChainId.OPTIMISM]: '0xB844bDCC64a748fDC8c9Ee74FA4812E4BC28FD70',
+  [SupportedChainId.ARBITRUM_ONE]: '0xD495296510257DAdf0d74846a8307bf533a0fB48',
+  [SupportedChainId.POLYGON]: '0xC87d1B952303ae3A9218727692BAda6723662dad',
+}
+
+/* GRG Transfer Proxy Addresses */
+export const GRG_TRANSFER_PROXY_ADDRESSES: AddressMap = {
+  ...constructSameAddressMap('0x28891F41eA506Ba7eA3Be9f2075AB0aa8b81dD29', [
+    SupportedChainId.MAINNET,
+    SupportedChainId.GOERLI,
+    SupportedChainId.OPTIMISM,
+    SupportedChainId.ARBITRUM_ONE,
+    SupportedChainId.POLYGON,
+  ]),
+  [SupportedChainId.MAINNET]: '0x8C96182c1B2FE5c49b1bc9d9e039e369f131ED37',
+}
+
 /* Rigoblock Pool Factory Addresses */
 export const RB_FACTORY_ADDRESSES: AddressMap = {
   ...constructSameAddressMap('0x8DE8895ddD702d9a216E640966A98e08c9228f24', [
     SupportedChainId.MAINNET,
+    SupportedChainId.GOERLI,
     SupportedChainId.OPTIMISM,
     SupportedChainId.ARBITRUM_ONE,
     SupportedChainId.POLYGON,
