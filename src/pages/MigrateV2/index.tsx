@@ -173,7 +173,7 @@ export default function MigrateV2() {
             <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
               <Trans>
                 Don’t see one of your v2 positions?{' '}
-                <StyledInternalLink id="import-pool-link" to="/find?origin=/migrate/v2">
+                <StyledInternalLink id="import-pool-link" to="/pool/v2/find">
                   Import it.
                 </StyledInternalLink>
               </Trans>
