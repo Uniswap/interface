@@ -4945,6 +4945,14 @@
     react "^18.2.0"
     react-dom "^18.2.0"
 
+"@uniswap/analytics@file:uniswap-analytics-dev.tgz":
+  version "0.0.1"
+  resolved "file:uniswap-analytics-dev.tgz#2943972c903b32ea581f375b79ca33b2c1e13bd5"
+  dependencies:
+    "@amplitude/analytics-browser" "^1.5.8"
+    react "^18.2.0"
+    react-dom "^18.2.0"
+
 "@uniswap/conedison@^1.2.1", "@uniswap/conedison@^1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.3.0.tgz#998aca2bad27f0780a05b40e4512acfcadfece79"
