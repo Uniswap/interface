@@ -29,7 +29,7 @@ import { shortenAddress } from 'utils'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { ZERO_ADDRESS } from '../../constants/misc'
-import { UNI } from '../../constants/tokens'
+import { GRG } from '../../constants/tokens'
 import { ProposalStatus } from './styled'
 
 const PageWrapper = styled(AutoColumn)`
@@ -133,15 +133,15 @@ export default function Landing() {
 
   // user data
   const { loading: loadingAvailableVotes, votes: availableVotes } = useUserVotes()
-  const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
+  const grgBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
     account ?? undefined,
-    chainId ? UNI[chainId] : undefined
+    chainId ? GRG[chainId] : undefined
   )
   const userDelegatee: string | undefined = useUserDelegatee()
 
   // show delegation option if they have have a balance, but have not delegated
   const showUnlockVoting = Boolean(
-    uniBalance && JSBI.notEqual(uniBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
+    grgBalance && JSBI.notEqual(grgBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
   )
   return (
     <>
@@ -166,7 +166,7 @@ export default function Landing() {
                   <RowBetween>
                     <ThemedText.DeprecatedWhite fontSize={14}>
                       <Trans>
-                        GRG staked delegated tokens represent voting power in Rigoblock governance. You can vote on each
+                        Actively staked GRG tokens represent voting power in Rigoblock governance. You can vote on each
                         proposal yourself or for a Rigoblock pool operated by yourself.
                       </Trans>
                     </ThemedText.DeprecatedWhite>
@@ -211,13 +211,13 @@ export default function Landing() {
                       <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
                     </Trans>
                   </ThemedText.DeprecatedBody>
-                ) : uniBalance &&
+                ) : grgBalance &&
                   userDelegatee &&
                   userDelegatee !== ZERO_ADDRESS &&
-                  JSBI.notEqual(JSBI.BigInt(0), uniBalance?.quotient) ? (
+                  JSBI.notEqual(JSBI.BigInt(0), grgBalance?.quotient) ? (
                   <ThemedText.DeprecatedBody fontWeight={500} mr="6px">
                     <Trans>
-                      <FormattedCurrencyAmount currencyAmount={uniBalance} /> Votes
+                      <FormattedCurrencyAmount currencyAmount={grgBalance} /> Votes
                     </Trans>
                   </ThemedText.DeprecatedBody>
                 ) : (
@@ -293,7 +293,7 @@ export default function Landing() {
           </TopSection>
 
           <ThemedText.DeprecatedSubHeader color="text3">
-            <Trans>A minimum threshold of 105k GRG is required to submit proposals on L1, 50k GRG on L2s</Trans>
+            <Trans>Minimum threshold required to submit proposals: 105k GRG on L1; 50k GRG on L2s</Trans>
           </ThemedText.DeprecatedSubHeader>
         </PageWrapper>
       </Trace>

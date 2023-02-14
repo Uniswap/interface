@@ -1,5 +1,5 @@
 export enum VoteOption {
-  Against,
   For,
+  Against,
   Abstain,
 }

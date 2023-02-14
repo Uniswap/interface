@@ -6,7 +6,7 @@ import { X } from 'react-feather'
 import styled from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
-import { UNI } from '../../constants/tokens'
+import { GRG } from '../../constants/tokens'
 import useENS from '../../hooks/useENS'
 import { useTokenBalance } from '../../state/connection/hooks'
 import { useDelegateCallback } from '../../state/governance/hooks'
@@ -57,7 +57,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
   const { address: parsedAddress } = useENS(activeDelegate)
 
   // get the number of votes available to delegate
-  const uniBalance = useTokenBalance(account ?? undefined, chainId ? UNI[chainId] : undefined)
+  const grgBalance = useTokenBalance(account ?? undefined, chainId ? GRG[chainId] : undefined)
 
   const delegateCallback = useDelegateCallback()
 
@@ -99,20 +99,31 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
               <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
             </RowBetween>
             <ThemedText.DeprecatedBody>
-              <Trans>GRG staked delegated tokens represent voting power in Rigoblock governance.</Trans>
+              <Trans>Actively staked GRG tokens represent voting power in Rigoblock governance.</Trans>
             </ThemedText.DeprecatedBody>
             <ThemedText.DeprecatedBody>
-              <Trans>You can either vote on each proposal yourself or delegate your votes to a third party.</Trans>
+              <Trans>
+                You must stake to a Rigoblock Pool in order to activate your voting power. You keep 100% of votes, your
+                votes are not delegated.
+              </Trans>
+            </ThemedText.DeprecatedBody>
+            <ThemedText.DeprecatedBody>
+              <Trans>
+                You may also use GRG in a Rigoblock Pool operated by yourself and directly stake from the pool.
+              </Trans>
+            </ThemedText.DeprecatedBody>
+            <ThemedText.DeprecatedBody>
+              <Trans>Your voting power will unlock at the beginning of the next Rigoblock epoch.</Trans>
             </ThemedText.DeprecatedBody>
             {usingDelegate && <AddressInputPanel value={typed} onChange={handleRecipientType} />}
             <ButtonPrimary disabled={!isAddress(parsedAddress ?? '')} onClick={onDelegate}>
               <ThemedText.DeprecatedMediumHeader color="white">
-                {usingDelegate ? <Trans>Delegate Votes</Trans> : <Trans>Self Delegate</Trans>}
+                {usingDelegate ? <Trans>Stake From Pool</Trans> : <Trans>Stake For Yourself</Trans>}
               </ThemedText.DeprecatedMediumHeader>
             </ButtonPrimary>
             <TextButton onClick={() => setUsingDelegate(!usingDelegate)}>
               <ThemedText.DeprecatedBlue>
-                {usingDelegate ? <Trans>Remove Delegate</Trans> : <Trans>Add Delegate +</Trans>}
+                {usingDelegate ? <Trans>Stake For Yourself</Trans> : <Trans>Stake From Your Rigoblock Pool</Trans>}
               </ThemedText.DeprecatedBlue>
             </TextButton>
           </AutoColumn>
@@ -122,9 +133,9 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify="center">
             <ThemedText.DeprecatedLargeHeader>
-              {usingDelegate ? <Trans>Delegating votes</Trans> : <Trans>Unlocking Votes</Trans>}
+              {usingDelegate ? <Trans>Staking From Pool</Trans> : <Trans>Unlocking Votes</Trans>}
             </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}> {formatCurrencyAmount(uniBalance, 4)}</ThemedText.DeprecatedMain>
+            <ThemedText.DeprecatedMain fontSize={36}> {formatCurrencyAmount(grgBalance, 4)}</ThemedText.DeprecatedMain>
           </AutoColumn>
         </LoadingView>
       )}
@@ -134,7 +145,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
             <ThemedText.DeprecatedLargeHeader>
               <Trans>Transaction Submitted</Trans>
             </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(uniBalance, 4)}</ThemedText.DeprecatedMain>
+            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(grgBalance, 4)}</ThemedText.DeprecatedMain>
           </AutoColumn>
         </SubmittedView>
       )}

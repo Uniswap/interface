@@ -8,6 +8,7 @@ const handleColorType = (status: ProposalState, theme: DefaultTheme) => {
     case ProposalState.PENDING:
     case ProposalState.ACTIVE:
       return theme.deprecated_blue1
+    case ProposalState.QUALIFIED:
     case ProposalState.SUCCEEDED:
     case ProposalState.EXECUTED:
       return theme.deprecated_green1
@@ -27,6 +28,8 @@ function StatusText({ status }: { status: ProposalState }) {
       return <Trans>Pending</Trans>
     case ProposalState.ACTIVE:
       return <Trans>Active</Trans>
+    case ProposalState.QUALIFIED:
+      return <Trans>Qualified</Trans>
     case ProposalState.SUCCEEDED:
       return <Trans>Succeeded</Trans>
     case ProposalState.EXECUTED:

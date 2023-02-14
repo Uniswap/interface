@@ -10,7 +10,8 @@ import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import GOVERNANCE_RB_ABI from 'abis/governance.json'
-import { GOVERNANCE_PROXY_ADDRESSES } from 'constants/addresses'
+import STAKING_PROXY_ABI from 'abis/grg-staking.json'
+import { GOVERNANCE_PROXY_ADDRESSES, STAKING_PROXY_ADDRESSES } from 'constants/addresses'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
 import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
@@ -43,6 +44,10 @@ export function useUniContract() {
   const { chainId } = useWeb3React()
   const uniAddress = useMemo(() => (chainId ? UNI[chainId]?.address : undefined), [chainId])
   return useContract(uniAddress, UNI_ABI, true)
+}
+
+function useStakingContract(): Contract | null {
+  return useContract(STAKING_PROXY_ADDRESSES, STAKING_PROXY_ABI, true)
 }
 
 // TODO: update structs interfaces
@@ -361,20 +366,24 @@ export function useUserVotesAsOfBlock(block: number | undefined): CurrencyAmount
   return votes && uni ? CurrencyAmount.fromRawAmount(uni, votes) : undefined
 }
 
+// TODO: here we should use an additional optional input as delegatee is pool itself, like bool self or another address
+//  also we should set allowances to grg transfer proxy if staking for self
 export function useDelegateCallback(): (delegatee: string | undefined) => undefined | Promise<string> {
   const { account, chainId, provider } = useWeb3React()
   const addTransaction = useTransactionAdder()
 
-  const uniContract = useUniContract()
+  const stakingContract = useStakingContract()
 
+  // TODO: we must batchExecute([stake(amount), moveStake(fromInfo, toInfo, amount)])
   return useCallback(
     (delegatee: string | undefined) => {
       if (!provider || !chainId || !account || !delegatee || !isAddress(delegatee ?? '')) return undefined
-      const args = [delegatee]
-      if (!uniContract) throw new Error('No UNI Contract!')
-      return uniContract.estimateGas.delegate(...args, {}).then((estimatedGasLimit) => {
-        return uniContract
-          .delegate(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+      //const args = [delegatee]
+      const args = ['0']
+      if (!stakingContract) throw new Error('No Staking Contract!')
+      return stakingContract.estimateGas.stake(...args, {}).then((estimatedGasLimit) => {
+        return stakingContract
+          .stake(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
               type: TransactionType.DELEGATE,
@@ -384,7 +393,7 @@ export function useDelegateCallback(): (delegatee: string | undefined) => undefi
           })
       })
     },
-    [account, addTransaction, chainId, provider, uniContract]
+    [account, addTransaction, chainId, provider, stakingContract]
   )
 }
 
