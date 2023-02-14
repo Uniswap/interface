@@ -86,7 +86,7 @@ const MobileListButtonWrapper = styled.div`
 `
 
 const FloatingConfirmationBar = styled(Row)<{ issues: boolean }>`
-  padding: 8px 8px 8px 16px;
+  padding: 12px 12px 12px 32px;
   border: 1px solid;
   border-color: ${({ theme, issues }) => (issues ? theme.backgroundOutline : theme.accentAction)};
   border-radius: 20px;
@@ -105,11 +105,11 @@ const FloatingConfirmationBar = styled(Row)<{ issues: boolean }>`
   @media screen and (max-width: ${BREAKPOINTS.lg}px) {
     width: calc(100% - ${LIST_PAGE_MARGIN_TABLET * 2}px);
     bottom: 68px;
-    padding: 16px 12px;
   }
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     width: calc(100% - ${LIST_PAGE_MARGIN_MOBILE * 2}px);
+    padding: 8px 8px 8px 16px;
   }
 `
 
