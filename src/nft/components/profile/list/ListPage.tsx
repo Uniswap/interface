@@ -8,9 +8,6 @@ import { SMALL_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
 import { ListingButton } from 'nft/components/bag/profile/ListingButton'
 import { approveCollectionRow, getListingState, getTotalEthValue, verifyStatus } from 'nft/components/bag/profile/utils'
-import { BackArrowIcon } from 'nft/components/icons'
-import { headlineLarge, headlineSmall } from 'nft/css/common.css'
-import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from 'nft/pages/profile/shared'
 import { looksRareNonceFetcher } from 'nft/queries'
@@ -18,7 +15,8 @@ import { ListingStatus, ProfilePageStateType } from 'nft/types'
 import { fetchPrice, formatEth, formatUsdPrice } from 'nft/utils'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { useEffect, useMemo, useReducer, useState } from 'react'
-import styled, { css } from 'styled-components/macro'
+import { ArrowLeft } from 'react-feather'
+import styled, { css, useTheme } from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import shallow from 'zustand/shallow'
@@ -28,14 +26,53 @@ import { NFTListingsGrid } from './NFTListingsGrid'
 import { SelectMarketplacesDropdown } from './SelectMarketplacesDropdown'
 import { SetDurationModal } from './SetDurationModal'
 
+const ListingHeader = styled(Column)`
+  gap: 16px;
+  margin-top: 36px;
+
+  @media screen and (min-width: ${BREAKPOINTS.xs}px) {
+    gap: 4px;
+  }
+`
+
+const ArrowContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 4px;
+
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    height: 40px;
+    width: 40px;
+  }
+`
+
+const BackArrow = styled(ArrowLeft)`
+  height: 16px;
+  width: 16px;
+  cursor: pointer;
+  color: ${({ theme }) => theme.textSecondary};
+
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    height: 20px;
+    width: 20px;
+  }
+`
+
 const TitleWrapper = styled(Row)`
   gap: 4px;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
   white-space: nowrap;
   width: min-content;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 28px;
 
-  @media screen and (min-width: ${SMALL_MEDIA_BREAKPOINT}) {
+  @media screen and (min-width: ${BREAKPOINTS.xs}px) {
     margin-bottom: 0px;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 36px;
   }
 `
 
@@ -60,14 +97,13 @@ const v1Padding = css`
   }
 `
 
-const ListingHeader = styled(Row)`
+const ListingHeaderRow = styled(Row)`
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin-top: 18px;
 
-  @media screen and (min-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    margin-top: 16px;
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    padding-left: 40px;
   }
 `
 
@@ -209,6 +245,7 @@ export const ListPage = () => {
   const [selectedMarkets, setSelectedMarkets] = useState([ListingMarkets[0]]) // default marketplace: x2y2
   const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
   const signer = provider?.getSigner()
+  const theme = useTheme()
 
   useEffect(() => {
     fetchPrice().then((price) => {
@@ -280,20 +317,23 @@ export const ListPage = () => {
     <Column>
       <MarketWrap isNftListV2={isNftListV2}>
         <ListingHeader>
-          <TitleWrapper>
-            <BackArrowIcon
-              height={isMobile ? 20 : 32}
-              width={isMobile ? 20 : 32}
-              fill={themeVars.colors.textSecondary}
-              onClick={() => setSellPageState(ProfilePageStateType.VIEWING)}
-              cursor="pointer"
-            />
-            <div className={isMobile ? headlineSmall : headlineLarge}>Sell NFTs</div>
-          </TitleWrapper>
-          <ButtonsWrapper>
-            <SelectMarketplacesDropdown setSelectedMarkets={setSelectedMarkets} selectedMarkets={selectedMarkets} />
-            <SetDurationModal />
-          </ButtonsWrapper>
+          <Row>
+            <ArrowContainer>
+              <BackArrow onClick={() => setSellPageState(ProfilePageStateType.VIEWING)} />
+            </ArrowContainer>
+            <ThemedText.BodySmall lineHeight="20px" color="textSecondary">
+              <Trans>My NFTs</Trans>
+            </ThemedText.BodySmall>
+          </Row>
+          <ListingHeaderRow>
+            <TitleWrapper>
+              <Trans>Sell NFTs</Trans>
+            </TitleWrapper>
+            <ButtonsWrapper>
+              <SelectMarketplacesDropdown setSelectedMarkets={setSelectedMarkets} selectedMarkets={selectedMarkets} />
+              <SetDurationModal />
+            </ButtonsWrapper>
+          </ListingHeaderRow>
         </ListingHeader>
         <GridWrapper>
           <NFTListingsGrid selectedMarkets={selectedMarkets} />
