@@ -201,7 +201,6 @@ const TxCompleteModal = () => {
                 >
                   <Box className={styles.mixedRefundModal} onClick={stopPropagation}>
                     <Box
-                      height="full"
                       display="inline-flex"
                       flexWrap="wrap"
                       width={{ sm: 'full', md: 'half' }}
