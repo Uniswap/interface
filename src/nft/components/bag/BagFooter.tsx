@@ -190,7 +190,6 @@ const Helper = ({ children, color }: PropsWithChildren<HelperTextProps>) => {
   )
 }
 
-// TODO: ask design about no route found
 const InputCurrencyValue = ({
   usingPayWithAnyToken,
   totalEthPrice,
@@ -213,18 +212,18 @@ const InputCurrencyValue = ({
     )
   }
 
-  if (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING) {
+  if (tradeState === TradeState.LOADING) {
     return (
-      <ValueText color={tradeState === TradeState.VALID ? 'textPrimary' : 'textTertiary'}>
-        {ethNumberStandardFormatter(trade?.inputAmount.toExact())}
-      </ValueText>
+      <ThemedText.BodyPrimary color="textTertiary" lineHeight="20px" fontWeight="500">
+        <Trans>Fetching price...</Trans>
+      </ThemedText.BodyPrimary>
     )
   }
 
   return (
-    <ThemedText.BodyPrimary color="textTertiary" lineHeight="20px" fontWeight="500">
-      <Trans>Fetching price...</Trans>
-    </ThemedText.BodyPrimary>
+    <ValueText color={tradeState === TradeState.SYNCING ? 'textTertiary' : 'textPrimary'}>
+      {ethNumberStandardFormatter(trade?.inputAmount.toExact())}
+    </ValueText>
   )
 }
 
@@ -386,6 +385,12 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
     } else if (usingPayWithAnyToken && tradeState !== TradeState.VALID) {
       disabled = true
       buttonText = <Trans>Fetching Route</Trans>
+
+      if (tradeState === TradeState.INVALID || tradeState === TradeState.NO_ROUTE_FOUND) {
+        buttonText = <Trans>Insufficient liquidity</Trans>
+        buttonColor = theme.backgroundInteractive
+        helperText = <Trans>Insufficient pool liquidity to complete transaction</Trans>
+      }
     } else if (allowance.state === AllowanceState.REQUIRED || allowance.state === AllowanceState.LOADING) {
       handleClick = () => updateAllowance()
       disabled = isAllowancePending || isApprovalLoading || allowance.state === AllowanceState.LOADING
@@ -422,6 +427,7 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
     fetchAssets,
     theme.textSecondary,
     theme.accentAction,
+    theme.backgroundInteractive,
     connected,
     chainId,
     sufficientBalance,
