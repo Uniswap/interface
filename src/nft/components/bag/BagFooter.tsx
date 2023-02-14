@@ -141,7 +141,9 @@ const PriceImpactRow = styled(Row)`
 const ValueText = styled(ThemedText.BodyPrimary)`
   line-height: 20px;
   font-weight: 500;
-  overflow-x: scroll;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   scrollbar-width: none;
 
   ::-webkit-scrollbar {
