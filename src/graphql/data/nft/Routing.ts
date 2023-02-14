@@ -8,6 +8,7 @@ gql`
     $tokenTrades: [TokenTradeInput!]
   ) {
     nftRoute(chain: $chain, senderAddress: $senderAddress, nftTrades: $nftTrades, tokenTrades: $tokenTrades) {
+      id
       calldata
       route {
         amount
@@ -15,10 +16,12 @@ gql`
         id
         marketplace
         price {
+          id
           currency
           value
         }
         quotePrice {
+          id
           currency
           value
         }
@@ -26,6 +29,7 @@ gql`
         tokenType
       }
       sendAmount {
+        id
         currency
         value
       }

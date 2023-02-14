@@ -23,17 +23,7 @@ import {
 } from 'nft/hooks'
 import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { fetchRoute } from 'nft/queries'
-import {
-  BagItemStatus,
-  BagStatus,
-  Markets,
-  ProfilePageStateType,
-  RouteResponse,
-  RoutingActions,
-  RoutingItem,
-  TokenType,
-  TxStateType,
-} from 'nft/types'
+import { BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType } from 'nft/types'
 import {
   buildNftTradeInputFromBagItems,
   buildSellObject,
@@ -41,6 +31,7 @@ import {
   recalculateBagUsingPooledAssets,
   sortUpdatedAssets,
 } from 'nft/utils'
+import { buildRouteResponse } from 'nft/utils/nftRoute'
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useQueryClient } from 'react-query'
@@ -232,46 +223,13 @@ const Bag = () => {
             tokenTrades: tokenTradeInput ? tokenTradeInput : undefined,
           },
           onCompleted: (data) => {
-            if (!data.nftRoute?.route) {
+            if (!data.nftRoute || !data.nftRoute.route) {
               setBagStatus(BagStatus.ADDING_TO_BAG)
               setLocked(false)
               return
             }
 
-            const route: RoutingItem[] = data.nftRoute?.route?.map((routingItem) => ({
-              action: RoutingActions.Buy,
-              marketplace: routingItem.marketplace.toLowerCase(),
-              amountIn: routingItem.price.value,
-              assetIn: {
-                ETHPrice: routingItem.price.value,
-                baseAsset: routingItem.price.currency,
-                basePrice: routingItem.price.value,
-                baseDecimals: '18',
-              },
-              amountOut: routingItem.amount.toString(),
-              assetOut: {
-                id: routingItem.id,
-                decimals: 18,
-                address: routingItem.contractAddress,
-                priceInfo: {
-                  ETHPrice: routingItem.price.value,
-                  baseAsset: routingItem.price.currency,
-                  basePrice: routingItem.price.value,
-                  baseDecimals: '18',
-                },
-                tokenType: routingItem.tokenType as unknown as TokenType,
-                tokenId: routingItem.tokenId,
-                amount: routingItem.amount.toString(),
-                marketplace: routingItem.marketplace.toLowerCase() as Markets,
-                orderSource: 'api',
-              },
-            }))
-            const routeResponse: RouteResponse = {
-              route,
-              valueToSend: tokenTradeInput ? undefined : data.nftRoute.sendAmount.value,
-              data: data.nftRoute.calldata,
-              to: data.nftRoute.toAddress,
-            }
+            const { route, routeResponse } = buildRouteResponse(data.nftRoute, !!tokenTradeInput)
 
             const updatedAssets = combineBuyItemsWithTxRoute(itemsToBuy, route)
 
