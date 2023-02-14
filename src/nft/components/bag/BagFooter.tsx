@@ -231,12 +231,20 @@ const FiatValue = ({
   usdcValue,
   priceImpact,
   priceImpactColor,
+  tradeState,
+  usingPayWithAnyToken,
 }: {
   usdcValue: CurrencyAmount<Token> | null
   priceImpact: Percent | undefined
   priceImpactColor: string | undefined
+  tradeState: TradeState
+  usingPayWithAnyToken: boolean
 }) => {
   if (!usdcValue) {
+    if (usingPayWithAnyToken && (tradeState === TradeState.INVALID || tradeState === TradeState.NO_ROUTE_FOUND)) {
+      return null
+    }
+
     return <FiatLoadingBubble />
   }
 
@@ -481,7 +489,13 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
                 />
               </TotalColumn>
             </CurrencyRow>
-            <FiatValue usdcValue={usdcValue} priceImpact={stablecoinPriceImpact} priceImpactColor={priceImpactColor} />
+            <FiatValue
+              usdcValue={usdcValue}
+              priceImpact={stablecoinPriceImpact}
+              priceImpactColor={priceImpactColor}
+              tradeState={tradeState}
+              usingPayWithAnyToken={usingPayWithAnyToken}
+            />
           </FooterHeader>
         )}
         {!shouldUsePayWithAnyToken && (
@@ -497,7 +511,13 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
                 </ThemedText.HeadlineSmall>
               </div>
             </Row>
-            <FiatValue usdcValue={usdcValue} priceImpact={stablecoinPriceImpact} priceImpactColor={priceImpactColor} />
+            <FiatValue
+              usdcValue={usdcValue}
+              priceImpact={stablecoinPriceImpact}
+              priceImpactColor={priceImpactColor}
+              tradeState={tradeState}
+              usingPayWithAnyToken={usingPayWithAnyToken}
+            />
           </FooterHeader>
         )}
         <TraceEvent
