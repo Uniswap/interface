@@ -6,7 +6,11 @@ const BONSAI_COLLECTION_ADDRESS = '0xec9c519d49856fd2f8133a0741b4dbe002ce211b'
 describe('Testing nfts', () => {
   beforeEach(() => {
     cy.visit('/')
-    cy.get(getTestSelector('FiatOnrampAnnouncement-close')).first().click()
+    cy.find(getTestSelector('FiatOnrampAnnouncement-close')).then((result) => {
+      if (result.length) {
+        cy.get(getTestSelector('FiatOnrampAnnouncement-close')).click()
+      }
+    })
   })
 
   it('should load nft leaderboard', () => {
