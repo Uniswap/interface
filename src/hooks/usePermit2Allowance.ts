@@ -27,7 +27,7 @@ interface AllowanceRequired {
   approveAndPermit: () => Promise<void>
 }
 
-type Allowance =
+export type Allowance =
   | { state: AllowanceState.LOADING }
   | {
       state: AllowanceState.ALLOWED

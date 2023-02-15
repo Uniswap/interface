@@ -1,4 +1,5 @@
 import { style } from '@vanilla-extract/css'
+import { Z_INDEX } from 'theme/zIndex'
 
 import { sprinkles } from '../../css/sprinkles.css'
 
@@ -11,10 +12,10 @@ export const overlay = style([
     position: 'fixed',
     display: 'block',
     background: 'black',
-    zIndex: 'modalBackdrop',
   }),
   {
     opacity: 0.72,
     overflow: 'hidden',
+    zIndex: Z_INDEX.modalBackdrop - 1,
   },
 ])

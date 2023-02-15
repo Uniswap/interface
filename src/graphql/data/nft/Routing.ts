@@ -1,7 +1,5 @@
 import gql from 'graphql-tag'
 
-import { NftTradeInput, TokenTradeInput, useNftRouteQuery } from '../__generated__/types-and-hooks'
-
 gql`
   query NftRoute(
     $chain: Chain = ETHEREUM
@@ -10,6 +8,7 @@ gql`
     $tokenTrades: [TokenTradeInput!]
   ) {
     nftRoute(chain: $chain, senderAddress: $senderAddress, nftTrades: $nftTrades, tokenTrades: $tokenTrades) {
+      id
       calldata
       route {
         amount
@@ -17,10 +16,12 @@ gql`
         id
         marketplace
         price {
+          id
           currency
           value
         }
         quotePrice {
+          id
           currency
           value
         }
@@ -28,6 +29,7 @@ gql`
         tokenType
       }
       sendAmount {
+        id
         currency
         value
       }
@@ -35,13 +37,3 @@ gql`
     }
   }
 `
-
-export function useNftRoute(senderAddress: string, nftTrades: NftTradeInput[], tokenTrades?: TokenTradeInput[]) {
-  return useNftRouteQuery({
-    variables: {
-      senderAddress,
-      nftTrades,
-      tokenTrades,
-    },
-  })
-}

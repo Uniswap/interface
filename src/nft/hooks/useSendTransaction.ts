@@ -38,7 +38,7 @@ export const useSendTransaction = create<TxState>()(
         try {
           const txNoGasLimit = {
             to: transactionData.to,
-            value: BigNumber.from(transactionData.valueToSend),
+            value: transactionData.valueToSend ? BigNumber.from(transactionData.valueToSend) : undefined,
             data: transactionData.data,
           }
 

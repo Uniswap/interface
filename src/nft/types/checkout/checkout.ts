@@ -30,7 +30,7 @@ export type SellItem = {
 export type BuyItem = {
   id?: string
   symbol?: string
-  name: string
+  name?: string
   decimals: number
   address: string
   priceInfo: PriceInfo
@@ -52,7 +52,7 @@ export type RoutingItem = {
 }
 
 export interface RouteResponse {
-  valueToSend: string
+  valueToSend?: string
   route: RoutingItem[]
   data: any
   to: any
