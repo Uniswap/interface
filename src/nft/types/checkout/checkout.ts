@@ -96,4 +96,5 @@ export enum BagStatus {
   FETCHING_FINAL_ROUTE = 'Fetching final route',
   CONFIRMING_IN_WALLET = 'Confirming in wallet',
   PROCESSING_TRANSACTION = 'Processing',
+  CONFIRM_QUOTE = 'Confirm quote',
 }

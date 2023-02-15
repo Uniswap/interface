@@ -281,7 +281,6 @@ const FiatValue = ({
 
 interface BagFooterProps {
   totalEthPrice: BigNumber
-  bagStatus: BagStatus
   fetchAssets: () => void
   eventProperties: Record<string, unknown>
 }
@@ -293,7 +292,7 @@ const PENDING_BAG_STATUSES = [
   BagStatus.PROCESSING_TRANSACTION,
 ]
 
-export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperties }: BagFooterProps) => {
+export const BagFooter = ({ totalEthPrice, fetchAssets, eventProperties }: BagFooterProps) => {
   const toggleWalletModal = useToggleWalletModal()
   const theme = useTheme()
   const { account, chainId, connector } = useWeb3React()
@@ -309,11 +308,13 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
 
   const {
     isLocked: bagIsLocked,
+    bagStatus,
     setBagExpanded,
     setBagStatus,
   } = useBag(
-    ({ isLocked, setBagExpanded, setBagStatus }) => ({
+    ({ isLocked, bagStatus, setBagExpanded, setBagStatus }) => ({
       isLocked,
+      bagStatus,
       setBagExpanded,
       setBagStatus,
     }),
@@ -446,6 +447,10 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
           helperText = <Trans>An approval is needed to use this token. </Trans>
           buttonText = <Trans>Approve</Trans>
         }
+      } else if (bagStatus === BagStatus.CONFIRM_QUOTE) {
+        disabled = false
+        helperText = <Trans>Updated price</Trans>
+        buttonText = <Trans>Pay</Trans>
       } else if (bagStatus === BagStatus.FETCHING_FINAL_ROUTE || bagStatus === BagStatus.CONFIRMING_IN_WALLET) {
         disabled = true
         buttonText = <Trans>Proceed in wallet</Trans>

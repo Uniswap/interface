@@ -143,7 +143,7 @@ const findNFTsPurchased = (
     )
   })
 
-  return combineBuyItemsWithTxRoute(transferredItems, txRoute)
+  return combineBuyItemsWithTxRoute(transferredItems, txRoute).updatedAssets
 }
 
 const findNFTsNotPurchased = (toBuy: GenieAsset[], nftsPurchased: UpdatedGenieAsset[]) => {
