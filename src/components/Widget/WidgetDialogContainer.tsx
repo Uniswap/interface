@@ -6,8 +6,7 @@ import { Z_INDEX } from 'theme/zIndex'
 const StyledDialogContainer = styled.div<{ visible: boolean }>`
   background-color: ${({ theme }) => theme.backgroundScrim};
   opacity: ${({ visible }) => (visible ? 1 : 0)};
-  transition: background-color 0.125s ease-in-out;
-  transition: visibility 0s linear 0s, opacity 0.125s;
+  transition: visibility 0.25s linear, opacity 0.25s;
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
 
   display: flex;
