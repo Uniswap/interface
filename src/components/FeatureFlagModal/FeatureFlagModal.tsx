@@ -1,5 +1,4 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
-import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
 import { GqlRoutingVariant, useGqlRoutingFlag } from 'featureFlags/flags/gqlRouting'
 import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
@@ -212,12 +211,6 @@ export default function FeatureFlagModal() {
         value={usePermit2Flag()}
         featureFlag={FeatureFlag.permit2}
         label="Permit 2 / Universal Router"
-      />
-      <FeatureFlagOption
-        variant={BaseVariant}
-        value={useFiatOnrampFlag()}
-        featureFlag={FeatureFlag.fiatOnramp}
-        label="Fiat on-ramp"
       />
       <FeatureFlagOption
         variant={NftListV2Variant}
