@@ -13,7 +13,7 @@ const FeeWrap = styled(Row)`
 
 const RoyaltyContainer = styled(Column)`
   gap: 12px;
-  padding 4px 0px;
+  padding: 4px 0px;
 `
 
 const MarketIcon = styled.img`
