@@ -419,6 +419,12 @@ export const BagFooter = ({ totalEthPrice, fetchAssets, eventProperties }: BagFo
         }
         disabled = false
         buttonText = <Trans>Connect wallet</Trans>
+      } else if (bagStatus === BagStatus.FETCHING_FINAL_ROUTE || bagStatus === BagStatus.CONFIRMING_IN_WALLET) {
+        disabled = true
+        buttonText = <Trans>Proceed in wallet</Trans>
+      } else if (bagStatus === BagStatus.PROCESSING_TRANSACTION) {
+        disabled = true
+        buttonText = <Trans>Transaction pending</Trans>
       } else if (usingPayWithAnyToken && tradeState !== TradeState.VALID) {
         disabled = true
         buttonText = <Trans>Fetching Route</Trans>
@@ -451,12 +457,6 @@ export const BagFooter = ({ totalEthPrice, fetchAssets, eventProperties }: BagFo
         disabled = false
         helperText = <Trans>Updated price</Trans>
         buttonText = <Trans>Pay</Trans>
-      } else if (bagStatus === BagStatus.FETCHING_FINAL_ROUTE || bagStatus === BagStatus.CONFIRMING_IN_WALLET) {
-        disabled = true
-        buttonText = <Trans>Proceed in wallet</Trans>
-      } else if (bagStatus === BagStatus.PROCESSING_TRANSACTION) {
-        disabled = true
-        buttonText = <Trans>Transaction pending</Trans>
       } else if (priceImpactWarning && priceImpactColor) {
         disabled = false
         buttonColor = priceImpactColor
