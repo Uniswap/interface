@@ -3,6 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
+import { useIsDarkMode } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { CustomLightSpinner, ThemedText } from 'theme'
 
@@ -67,6 +68,7 @@ const MOONPAY_SUPPORTED_CURRENCY_CODES = [
 export default function FiatOnrampModal() {
   const { account } = useWeb3React()
   const theme = useTheme()
+  const isDarkMode = useIsDarkMode()
   const closeModal = useCloseModal()
   const fiatOnrampModalOpen = useModalIsOpen(ApplicationModal.FIAT_ONRAMP)
 
@@ -82,7 +84,9 @@ export default function FiatOnrampModal() {
     setLoading(true)
     setError(null)
     try {
-      const signedIframeUrlFetchEndpoint = process.env.REACT_APP_MOONPAY_LINK as string
+      const signedIframeUrlFetchEndpoint = `${process.env.REACT_APP_MOONPAY_LINK as string}&theme=${
+        isDarkMode ? 'dark' : 'light'
+      }`
       const res = await fetch(signedIframeUrlFetchEndpoint, {
         headers: {
           Accept: 'application/json',
@@ -112,7 +116,7 @@ export default function FiatOnrampModal() {
     } finally {
       setLoading(false)
     }
-  }, [account, theme.accentAction])
+  }, [account, isDarkMode, theme.accentAction])
 
   useEffect(() => {
     fetchSignedIframeUrl()
