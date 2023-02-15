@@ -27,6 +27,7 @@ import { WidgetDialogContainer } from 'components/Widget/WidgetDialogContainer'
 import { getChainInfo } from 'constants/chainInfo'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
+import { useSwapWidgetEnabled } from 'featureFlags/flags/swapWidget'
 import { TokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { Chain, TokenQuery, TokenQueryData } from 'graphql/data/Token'
 import { QueryToken } from 'graphql/data/Token'
@@ -123,6 +124,7 @@ export default function TokenDetails({
   )
 
   const { token, didFetchFromChain } = useRelevantToken(address, pageChainId, tokenQueryData)
+  const swapWidgetEnabled = useSwapWidgetEnabled()
 
   const tokenWarning = address ? checkWarning(address) : null
   const isBlockedToken = tokenWarning?.canProceed === false
@@ -225,7 +227,7 @@ export default function TokenDetails({
         <RightPanel onClick={() => isBlockedToken && setOpenTokenSafetyModal(true)}>
           <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto' }}>
             <Widget
-              dialog={dialog}
+              dialog={swapWidgetEnabled ? dialog : null}
               defaultTokens={{
                 default: token ?? undefined,
               }}
