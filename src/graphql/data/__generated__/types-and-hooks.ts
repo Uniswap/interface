@@ -82,7 +82,8 @@ export enum Chain {
   Ethereum = 'ETHEREUM',
   EthereumGoerli = 'ETHEREUM_GOERLI',
   Optimism = 'OPTIMISM',
-  Polygon = 'POLYGON'
+  Polygon = 'POLYGON',
+  UnknownChain = 'UNKNOWN_CHAIN'
 }
 
 export type ContractInput = {
@@ -587,6 +588,7 @@ export type Portfolio = {
 
 
 export type PortfolioAssetActivitiesArgs = {
+  includeOffChain?: InputMaybe<Scalars['Boolean']>;
   page?: InputMaybe<Scalars['Int']>;
   pageSize?: InputMaybe<Scalars['Int']>;
 };
@@ -630,9 +632,12 @@ export type QueryNftBalancesArgs = {
   after?: InputMaybe<Scalars['String']>;
   before?: InputMaybe<Scalars['String']>;
   chain?: InputMaybe<Chain>;
+  cursor?: InputMaybe<Scalars['String']>;
+  datasource?: InputMaybe<DatasourceProvider>;
   filter?: InputMaybe<NftBalancesFilterInput>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
   ownerAddress: Scalars['String'];
 };
 
