@@ -422,7 +422,11 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
         disabled = true
         buttonText = <Trans>Fetching Route</Trans>
 
-        if (tradeState === TradeState.INVALID || tradeState === TradeState.NO_ROUTE_FOUND) {
+        if (tradeState === TradeState.INVALID) {
+          buttonText = <Trans>Pay</Trans>
+        }
+
+        if (tradeState === TradeState.NO_ROUTE_FOUND) {
           buttonText = <Trans>Insufficient liquidity</Trans>
           buttonColor = theme.backgroundInteractive
           buttonTextColor = theme.textPrimary
@@ -457,6 +461,7 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
       } else if (sufficientBalance === true) {
         disabled = false
         buttonText = <Trans>Pay</Trans>
+        helperText = <Trans>Refunds for unavailable items will be given in ETH</Trans>
       }
 
       return {
