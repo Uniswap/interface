@@ -209,7 +209,13 @@ export function SwapCallbackError({ error }: { error: string }) {
           </Text>
         )}
         {showDetail && (
-          <Text color={theme.text} fontSize="10px" margin={'10px 0 4px 0'} lineHeight={'16px'}>
+          <Text
+            color={theme.text}
+            fontSize="10px"
+            margin="10px 0 4px 0"
+            lineHeight="16px"
+            sx={{ wordBreak: 'break-word' }}
+          >
             {error}
           </Text>
         )}
