@@ -19,15 +19,17 @@ import { usePayWithAnyTokenEnabled } from 'featureFlags/flags/payWithAnyToken'
 import { useCurrency } from 'hooks/Tokens'
 import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
+import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useBag } from 'nft/hooks/useBag'
+import useDerivedPayWithAnyTokenSwapInfo from 'nft/hooks/useDerivedPayWithAnyTokenSwapInfo'
 import usePayWithAnyTokenSwap from 'nft/hooks/usePayWithAnyTokenSwap'
 import usePermit2Approval from 'nft/hooks/usePermit2Approval'
 import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { useWalletBalance } from 'nft/hooks/useWalletBalance'
 import { BagStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
-import { PropsWithChildren, useMemo, useState } from 'react'
+import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
@@ -36,6 +38,7 @@ import { ThemedText } from 'theme'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { warningSeverity } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
+import shallow from 'zustand/shallow'
 
 const LOW_SEVERITY_THRESHOLD = 1
 const MEDIUM_SEVERITY_THRESHOLD = 3
@@ -63,10 +66,12 @@ const FooterHeader = styled(Column)<{ usingPayWithAnyToken?: boolean }>`
 const CurrencyRow = styled(Row)`
   justify-content: space-between;
   align-items: start;
+  gap: 8px;
 `
 
 const TotalColumn = styled(Column)`
   text-align: end;
+  overflow-x: hidden;
 `
 
 const WarningIcon = styled(AlertTriangle)`
@@ -96,10 +101,10 @@ const CurrencyInput = styled(Row)`
   cursor: pointer;
 `
 
-const PayButton = styled.button<{ $backgroundColor: string }>`
+const PayButton = styled.button<{ $backgroundColor: string; $color: string }>`
   display: flex;
   background: ${({ $backgroundColor }) => $backgroundColor};
-  color: ${({ theme }) => theme.accentTextLightPrimary};
+  color: ${({ $color }) => $color};
   font-weight: 600;
   line-height: 24px;
   font-size: 16px;
@@ -134,15 +139,35 @@ const PriceImpactRow = styled(Row)`
   gap: 8px;
 `
 
+const ValueText = styled(ThemedText.BodyPrimary)`
+  line-height: 20px;
+  font-weight: 500;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  scrollbar-width: none;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`
+
 interface ActionButtonProps {
   disabled?: boolean
   onClick: () => void
   backgroundColor: string
+  textColor: string
 }
 
-const ActionButton = ({ disabled, children, onClick, backgroundColor }: PropsWithChildren<ActionButtonProps>) => {
+const ActionButton = ({
+  disabled,
+  children,
+  onClick,
+  backgroundColor,
+  textColor,
+}: PropsWithChildren<ActionButtonProps>) => {
   return (
-    <PayButton disabled={disabled} onClick={onClick} $backgroundColor={backgroundColor}>
+    <PayButton disabled={disabled} onClick={onClick} $backgroundColor={backgroundColor} $color={textColor}>
       {children}
     </PayButton>
   )
@@ -175,7 +200,6 @@ const Helper = ({ children, color }: PropsWithChildren<HelperTextProps>) => {
   )
 }
 
-// TODO: ask design about no route found
 const InputCurrencyValue = ({
   usingPayWithAnyToken,
   totalEthPrice,
@@ -198,22 +222,18 @@ const InputCurrencyValue = ({
     )
   }
 
-  if (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING) {
+  if (tradeState === TradeState.LOADING) {
     return (
-      <ThemedText.BodyPrimary
-        lineHeight="20px"
-        fontWeight="500"
-        color={tradeState === TradeState.VALID ? 'textPrimary' : 'textTertiary'}
-      >
-        {ethNumberStandardFormatter(trade?.inputAmount.toExact())}
+      <ThemedText.BodyPrimary color="textTertiary" lineHeight="20px" fontWeight="500">
+        <Trans>Fetching price...</Trans>
       </ThemedText.BodyPrimary>
     )
   }
 
   return (
-    <ThemedText.BodyPrimary color="textTertiary" lineHeight="20px" fontWeight="500">
-      <Trans>Fetching price...</Trans>
-    </ThemedText.BodyPrimary>
+    <ValueText color={tradeState === TradeState.SYNCING ? 'textTertiary' : 'textPrimary'}>
+      {ethNumberStandardFormatter(trade?.inputAmount.toExact())}
+    </ValueText>
   )
 }
 
@@ -221,12 +241,20 @@ const FiatValue = ({
   usdcValue,
   priceImpact,
   priceImpactColor,
+  tradeState,
+  usingPayWithAnyToken,
 }: {
   usdcValue: CurrencyAmount<Token> | null
   priceImpact: Percent | undefined
   priceImpactColor: string | undefined
+  tradeState: TradeState
+  usingPayWithAnyToken: boolean
 }) => {
   if (!usdcValue) {
+    if (usingPayWithAnyToken && (tradeState === TradeState.INVALID || tradeState === TradeState.NO_ROUTE_FOUND)) {
+      return null
+    }
+
     return <FiatLoadingBubble />
   }
 
@@ -274,31 +302,45 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
   const inputCurrency = useTokenInput((state) => state.inputCurrency)
   const setInputCurrency = useTokenInput((state) => state.setInputCurrency)
   const defaultCurrency = useCurrency('ETH')
+  const inputCurrencyBalance = useTokenBalance(
+    account ?? undefined,
+    !!inputCurrency && inputCurrency.isToken ? inputCurrency : undefined
+  )
 
-  const setBagExpanded = useBag((state) => state.setBagExpanded)
+  const {
+    isLocked: bagIsLocked,
+    setBagExpanded,
+    setBagStatus,
+  } = useBag(
+    ({ isLocked, setBagExpanded, setBagStatus }) => ({
+      isLocked,
+      setBagExpanded,
+      setBagStatus,
+    }),
+    shallow
+  )
+
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
-
-  const { balance: balanceInEth } = useWalletBalance()
-  const sufficientBalance = useMemo(() => {
-    if (!connected || chainId !== SupportedChainId.MAINNET) {
-      return undefined
-    }
-    return parseEther(balanceInEth).gte(totalEthPrice)
-  }, [connected, chainId, balanceInEth, totalEthPrice])
 
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
   const activeCurrency = inputCurrency ?? defaultCurrency
-  const usingPayWithAnyToken = !!inputCurrency && shouldUsePayWithAnyToken
+  const usingPayWithAnyToken = !!inputCurrency && shouldUsePayWithAnyToken && chainId === SupportedChainId.MAINNET
 
   const parsedOutputAmount = useMemo(() => {
     return tryParseCurrencyAmount(formatEther(totalEthPrice.toString()), defaultCurrency ?? undefined)
   }, [defaultCurrency, totalEthPrice])
-  const { state: tradeState, trade, maximumAmountIn } = usePayWithAnyTokenSwap(inputCurrency, parsedOutputAmount)
+  const {
+    state: tradeState,
+    trade,
+    maximumAmountIn,
+    allowedSlippage,
+  } = useDerivedPayWithAnyTokenSwapInfo(usingPayWithAnyToken ? inputCurrency : undefined, parsedOutputAmount)
   const { allowance, isAllowancePending, isApprovalLoading, updateAllowance } = usePermit2Approval(
     trade?.inputAmount.currency.isToken ? (trade?.inputAmount as CurrencyAmount<Token>) : undefined,
     maximumAmountIn,
     shouldUsePayWithAnyToken
   )
+  usePayWithAnyTokenSwap(trade, allowance, allowedSlippage)
 
   const fiatValueTradeInput = useStablecoinValue(trade?.inputAmount)
   const fiatValueTradeOutput = useStablecoinValue(parsedOutputAmount)
@@ -324,88 +366,139 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
     return { priceImpactWarning: true, priceImpactColor: theme.accentCritical }
   }, [stablecoinPriceImpact, theme.accentCritical, theme.accentWarning])
 
-  const { buttonText, disabled, warningText, helperText, helperTextColor, handleClick, buttonColor } = useMemo(() => {
-    let handleClick = fetchAssets
-    let buttonText = <Trans>Something went wrong</Trans>
-    let disabled = true
-    let warningText = undefined
-    let helperText = undefined
-    let helperTextColor = theme.textSecondary
-    let buttonColor = theme.accentAction
-
-    if (connected && chainId !== SupportedChainId.MAINNET) {
-      handleClick = () => switchChain(connector, SupportedChainId.MAINNET)
-      buttonText = <Trans>Switch networks</Trans>
-      disabled = false
-      warningText = <Trans>Wrong network</Trans>
-    } else if (sufficientBalance === false) {
-      buttonText = <Trans>Pay</Trans>
-      disabled = true
-      warningText = <Trans>Insufficient funds</Trans>
-    } else if (bagStatus === BagStatus.WARNING) {
-      warningText = <Trans>Something went wrong. Please try again.</Trans>
-    } else if (!connected) {
-      handleClick = () => {
-        toggleWalletModal()
-        setBagExpanded({ bagExpanded: false })
-      }
-      disabled = false
-      buttonText = <Trans>Connect wallet</Trans>
-    } else if (usingPayWithAnyToken && tradeState !== TradeState.VALID) {
-      disabled = true
-      buttonText = <Trans>Fetching Route</Trans>
-    } else if (allowance.state === AllowanceState.REQUIRED || allowance.state === AllowanceState.LOADING) {
-      handleClick = () => updateAllowance()
-      disabled = isAllowancePending || isApprovalLoading || allowance.state === AllowanceState.LOADING
-
-      if (allowance.state === AllowanceState.LOADING) {
-        buttonText = <Trans>Loading Allowance</Trans>
-      } else if (isAllowancePending) {
-        buttonText = <Trans>Approve in your wallet</Trans>
-      } else if (isApprovalLoading) {
-        buttonText = <Trans>Approval pending</Trans>
-      } else {
-        helperText = <Trans>An approval is needed to use this token. </Trans>
-        buttonText = <Trans>Approve</Trans>
-      }
-    } else if (bagStatus === BagStatus.FETCHING_FINAL_ROUTE || bagStatus === BagStatus.CONFIRMING_IN_WALLET) {
-      disabled = true
-      buttonText = <Trans>Proceed in wallet</Trans>
-    } else if (bagStatus === BagStatus.PROCESSING_TRANSACTION) {
-      disabled = true
-      buttonText = <Trans>Transaction pending</Trans>
-    } else if (priceImpactWarning && priceImpactColor) {
-      disabled = false
-      buttonColor = priceImpactColor
-      helperText = <Trans>Price impact warning</Trans>
-      helperTextColor = priceImpactColor
-      buttonText = <Trans>Pay Anyway</Trans>
-    } else if (sufficientBalance === true) {
-      disabled = false
-      buttonText = <Trans>Pay</Trans>
+  const { balance: balanceInEth } = useWalletBalance()
+  const sufficientBalance = useMemo(() => {
+    if (!connected || chainId !== SupportedChainId.MAINNET) {
+      return undefined
     }
 
-    return { buttonText, disabled, warningText, helperText, helperTextColor, handleClick, buttonColor }
-  }, [
-    fetchAssets,
-    theme.textSecondary,
-    theme.accentAction,
-    connected,
-    chainId,
-    sufficientBalance,
-    bagStatus,
-    usingPayWithAnyToken,
-    tradeState,
-    allowance.state,
-    priceImpactWarning,
-    priceImpactColor,
-    connector,
-    toggleWalletModal,
-    setBagExpanded,
-    isAllowancePending,
-    isApprovalLoading,
-    updateAllowance,
-  ])
+    if (inputCurrency) {
+      const inputAmount = trade?.inputAmount
+
+      if (!inputCurrencyBalance || !inputAmount) {
+        return undefined
+      }
+
+      return !inputCurrencyBalance.lessThan(inputAmount)
+    }
+
+    return parseEther(balanceInEth).gte(totalEthPrice)
+  }, [connected, chainId, inputCurrency, balanceInEth, totalEthPrice, trade?.inputAmount, inputCurrencyBalance])
+
+  useEffect(() => {
+    setBagStatus(BagStatus.ADDING_TO_BAG)
+  }, [inputCurrency, setBagStatus])
+
+  const { buttonText, buttonTextColor, disabled, warningText, helperText, helperTextColor, handleClick, buttonColor } =
+    useMemo(() => {
+      let handleClick = fetchAssets
+      let buttonText = <Trans>Something went wrong</Trans>
+      let disabled = true
+      let warningText = undefined
+      let helperText = undefined
+      let helperTextColor = theme.textSecondary
+      let buttonColor = theme.accentAction
+      let buttonTextColor = theme.accentTextLightPrimary
+
+      if (connected && chainId !== SupportedChainId.MAINNET) {
+        handleClick = () => switchChain(connector, SupportedChainId.MAINNET)
+        buttonText = <Trans>Switch networks</Trans>
+        disabled = false
+        warningText = <Trans>Wrong network</Trans>
+      } else if (sufficientBalance === false) {
+        buttonText = <Trans>Pay</Trans>
+        disabled = true
+        warningText = <Trans>Insufficient funds</Trans>
+      } else if (bagStatus === BagStatus.WARNING) {
+        warningText = <Trans>Something went wrong. Please try again.</Trans>
+      } else if (!connected) {
+        handleClick = () => {
+          toggleWalletModal()
+          setBagExpanded({ bagExpanded: false })
+        }
+        disabled = false
+        buttonText = <Trans>Connect wallet</Trans>
+      } else if (usingPayWithAnyToken && tradeState !== TradeState.VALID) {
+        disabled = true
+        buttonText = <Trans>Fetching Route</Trans>
+
+        if (tradeState === TradeState.INVALID) {
+          buttonText = <Trans>Pay</Trans>
+        }
+
+        if (tradeState === TradeState.NO_ROUTE_FOUND) {
+          buttonText = <Trans>Insufficient liquidity</Trans>
+          buttonColor = theme.backgroundInteractive
+          buttonTextColor = theme.textPrimary
+          helperText = <Trans>Insufficient pool liquidity to complete transaction</Trans>
+        }
+      } else if (allowance.state === AllowanceState.REQUIRED || allowance.state === AllowanceState.LOADING) {
+        handleClick = () => updateAllowance()
+        disabled = isAllowancePending || isApprovalLoading || allowance.state === AllowanceState.LOADING
+
+        if (allowance.state === AllowanceState.LOADING) {
+          buttonText = <Trans>Loading Allowance</Trans>
+        } else if (isAllowancePending) {
+          buttonText = <Trans>Approve in your wallet</Trans>
+        } else if (isApprovalLoading) {
+          buttonText = <Trans>Approval pending</Trans>
+        } else {
+          helperText = <Trans>An approval is needed to use this token. </Trans>
+          buttonText = <Trans>Approve</Trans>
+        }
+      } else if (bagStatus === BagStatus.FETCHING_FINAL_ROUTE || bagStatus === BagStatus.CONFIRMING_IN_WALLET) {
+        disabled = true
+        buttonText = <Trans>Proceed in wallet</Trans>
+      } else if (bagStatus === BagStatus.PROCESSING_TRANSACTION) {
+        disabled = true
+        buttonText = <Trans>Transaction pending</Trans>
+      } else if (priceImpactWarning && priceImpactColor) {
+        disabled = false
+        buttonColor = priceImpactColor
+        helperText = <Trans>Price impact warning</Trans>
+        helperTextColor = priceImpactColor
+        buttonText = <Trans>Pay Anyway</Trans>
+      } else if (sufficientBalance === true) {
+        disabled = false
+        buttonText = <Trans>Pay</Trans>
+        helperText = usingPayWithAnyToken ? (
+          <Trans>Refunds for unavailable items will be given in ETH</Trans>
+        ) : undefined
+      }
+
+      return {
+        buttonText,
+        buttonTextColor,
+        disabled,
+        warningText,
+        helperText,
+        helperTextColor,
+        handleClick,
+        buttonColor,
+      }
+    }, [
+      fetchAssets,
+      theme.textSecondary,
+      theme.accentAction,
+      theme.accentTextLightPrimary,
+      theme.backgroundInteractive,
+      theme.textPrimary,
+      connected,
+      chainId,
+      sufficientBalance,
+      bagStatus,
+      usingPayWithAnyToken,
+      tradeState,
+      allowance.state,
+      priceImpactWarning,
+      priceImpactColor,
+      connector,
+      toggleWalletModal,
+      setBagExpanded,
+      isAllowancePending,
+      isApprovalLoading,
+      updateAllowance,
+    ])
 
   const traceEventProperties = {
     usd_value: usdcValue?.toExact(),
@@ -422,7 +515,7 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
                 <ThemedText.SubHeaderSmall>
                   <Trans>Pay with</Trans>
                 </ThemedText.SubHeaderSmall>
-                <CurrencyInput onClick={() => setTokenSelectorOpen(true)}>
+                <CurrencyInput onClick={() => (bagIsLocked ? undefined : setTokenSelectorOpen(true))}>
                   <CurrencyLogo currency={activeCurrency} size="24px" />
                   <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
                     {activeCurrency?.symbol}
@@ -443,7 +536,13 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
                 />
               </TotalColumn>
             </CurrencyRow>
-            <FiatValue usdcValue={usdcValue} priceImpact={stablecoinPriceImpact} priceImpactColor={priceImpactColor} />
+            <FiatValue
+              usdcValue={usdcValue}
+              priceImpact={stablecoinPriceImpact}
+              priceImpactColor={priceImpactColor}
+              tradeState={tradeState}
+              usingPayWithAnyToken={usingPayWithAnyToken}
+            />
           </FooterHeader>
         )}
         {!shouldUsePayWithAnyToken && (
@@ -459,7 +558,13 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
                 </ThemedText.HeadlineSmall>
               </div>
             </Row>
-            <FiatValue usdcValue={usdcValue} priceImpact={stablecoinPriceImpact} priceImpactColor={priceImpactColor} />
+            <FiatValue
+              usdcValue={usdcValue}
+              priceImpact={stablecoinPriceImpact}
+              priceImpactColor={priceImpactColor}
+              tradeState={tradeState}
+              usingPayWithAnyToken={usingPayWithAnyToken}
+            />
           </FooterHeader>
         )}
         <TraceEvent
@@ -471,7 +576,12 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
         >
           <Warning>{warningText}</Warning>
           <Helper color={helperTextColor}>{helperText}</Helper>
-          <ActionButton onClick={handleClick} disabled={disabled} backgroundColor={buttonColor}>
+          <ActionButton
+            onClick={handleClick}
+            disabled={disabled}
+            backgroundColor={buttonColor}
+            textColor={buttonTextColor}
+          >
             {isPending && <Loader size="20px" stroke="white" />}
             {buttonText}
           </ActionButton>
