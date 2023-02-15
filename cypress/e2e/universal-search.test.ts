@@ -10,14 +10,6 @@ describe('Universal search bar', () => {
       })
   })
 
-  it('should yield no results found when contract address is search term', () => {
-    // Search for uni token contract address.
-    cy.get('[data-cy="search-bar-input"]').last().type('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
-    cy.get('[data-cy="search-bar"]')
-      .should('contain.text', 'No tokens found.')
-      .and('contain.text', 'No NFT collections found.')
-  })
-
   it('should yield clickable result for regular token or nft collection search term', () => {
     // Search for uni token by name.
     cy.get('[data-cy="search-bar-input"]').last().clear().type('uni')

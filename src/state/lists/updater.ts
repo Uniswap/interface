@@ -1,7 +1,8 @@
 import { getVersionUpgrade, minVersionBump, VersionUpgrade } from '@uniswap/token-lists'
 import { useWeb3React } from '@web3-react/core'
-import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
+import { DEFAULT_LIST_OF_LISTS, UNSUPPORTED_LIST_URLS } from 'constants/lists'
 import useInterval from 'lib/hooks/useInterval'
+import ms from 'ms.macro'
 import { useCallback, useEffect } from 'react'
 import { useAppDispatch } from 'state/hooks'
 import { useAllLists } from 'state/lists/hooks'
@@ -20,15 +21,15 @@ export default function Updater(): null {
   const fetchList = useFetchListCallback()
   const fetchAllListsCallback = useCallback(() => {
     if (!isWindowVisible) return
-    Object.keys(lists).forEach((url) => {
+    DEFAULT_LIST_OF_LISTS.forEach((url) => {
       // Skip validation on unsupported lists
       const isUnsupportedList = UNSUPPORTED_LIST_URLS.includes(url)
-      fetchList(url, false, isUnsupportedList).catch((error) => console.debug('interval list fetching error', error))
+      fetchList(url, isUnsupportedList).catch((error) => console.debug('interval list fetching error', error))
     })
-  }, [fetchList, isWindowVisible, lists])
+  }, [fetchList, isWindowVisible])
 
   // fetch all lists every 10 minutes, but only after we initialize provider
-  useInterval(fetchAllListsCallback, provider ? 1000 * 60 * 10 : null)
+  useInterval(fetchAllListsCallback, provider ? ms`10m` : null)
 
   // whenever a list is not loaded and not loading, try again to load it
   useEffect(() => {
@@ -45,7 +46,9 @@ export default function Updater(): null {
     UNSUPPORTED_LIST_URLS.forEach((listUrl) => {
       const list = lists[listUrl]
       if (!list || (!list.current && !list.loadingRequestId && !list.error)) {
-        fetchList(listUrl, undefined, true).catch((error) => console.debug('list added fetching error', error))
+        fetchList(listUrl, /* isUnsupportedList= */ true).catch((error) =>
+          console.debug('list added fetching error', error)
+        )
       }
     })
   }, [dispatch, fetchList, lists])

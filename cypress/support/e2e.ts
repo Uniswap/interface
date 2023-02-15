@@ -70,6 +70,7 @@ beforeEach(() => {
   // These are stripped by cypress because chromeWebSecurity === false; this adds them back in.
   cy.intercept(/infura.io/, (res) => {
     res.headers['origin'] = 'http://localhost:3000'
+    res.alias = res.body.method
     res.continue()
   })
 
