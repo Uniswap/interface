@@ -29,7 +29,7 @@ import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { useWalletBalance } from 'nft/hooks/useWalletBalance'
 import { BagStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
-import { PropsWithChildren, useMemo, useState } from 'react'
+import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
@@ -307,6 +307,7 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
   )
 
   const setBagExpanded = useBag((state) => state.setBagExpanded)
+  const setBagStatus = useBag((state) => state.setBagStatus)
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
 
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
@@ -371,6 +372,10 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
 
     return parseEther(balanceInEth).gte(totalEthPrice)
   }, [connected, chainId, inputCurrency, balanceInEth, totalEthPrice, trade?.inputAmount, inputCurrencyBalance])
+
+  useEffect(() => {
+    setBagStatus(BagStatus.ADDING_TO_BAG)
+  }, [inputCurrency, setBagStatus])
 
   const { buttonText, buttonTextColor, disabled, warningText, helperText, helperTextColor, handleClick, buttonColor } =
     useMemo(() => {
