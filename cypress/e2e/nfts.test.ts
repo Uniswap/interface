@@ -6,8 +6,8 @@ const BONSAI_COLLECTION_ADDRESS = '0xec9c519d49856fd2f8133a0741b4dbe002ce211b'
 describe('Testing nfts', () => {
   beforeEach(() => {
     cy.visit('/')
-    cy.find(getTestSelector('FiatOnrampAnnouncement-close')).then((result) => {
-      if (result.length) {
+    cy.get('body').then((body) => {
+      if (body.find(getTestSelector('FiatOnrampAnnouncement-close')).length > 0) {
         cy.get(getTestSelector('FiatOnrampAnnouncement-close')).click()
       }
     })
