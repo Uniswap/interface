@@ -15,6 +15,7 @@
   },
   "main": "lib/index.js",
   "dependencies": {
+    "@amplitude/analytics-node": "1.0.0",
     "cors": "2.8.5",
     "firebase-admin": "10.3.0",
     "firebase-functions": "3.18.0"

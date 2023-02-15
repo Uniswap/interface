@@ -44,6 +44,7 @@
     "pod": "./scripts/podinstall.sh"
   },
   "dependencies": {
+    "@amplitude/analytics-node": "1.0.0",
     "@amplitude/analytics-react-native": "0.5.0",
     "@amplitude/analytics-types": "0.13.0",
     "@amplitude/experiment-react-native-client": "1.0.0",
