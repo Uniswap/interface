@@ -461,7 +461,9 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
       } else if (sufficientBalance === true) {
         disabled = false
         buttonText = <Trans>Pay</Trans>
-        helperText = <Trans>Refunds for unavailable items will be given in ETH</Trans>
+        helperText = usingPayWithAnyToken ? (
+          <Trans>Refunds for unavailable items will be given in ETH</Trans>
+        ) : undefined
       }
 
       return {
