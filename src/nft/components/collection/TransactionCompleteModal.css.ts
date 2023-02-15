@@ -5,7 +5,6 @@ export const modalContainer = style([
   sprinkles({
     display: 'flex',
     position: 'fixed',
-    flexWrap: 'wrap',
     height: 'full',
     width: { sm: 'full', md: 'min' },
     left: { sm: '0', md: '1/2' },
