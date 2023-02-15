@@ -87,7 +87,7 @@ export default function MobileBalanceSummaryFooter({ token }: { token: Currency 
   const formattedBalance = formatCurrencyAmount(balance, NumberType.TokenNonTx)
   const formattedUsdValue = formatCurrencyAmount(useStablecoinValue(balance), NumberType.FiatTokenStats)
   const chain = CHAIN_ID_TO_BACKEND_NAME[token.chainId].toLowerCase()
-  const enabled = useGate('web_dummy_gate_amplitude_id')
+  const { value: enabled } = useGate('web_dummy_gate_amplitude_id')
 
   return (
     <Wrapper>
