@@ -261,12 +261,14 @@ const Bag = () => {
                 status: BagItemStatus.REVIEWED,
               })),
             ])
-            setLocked(false)
+
+            let shouldLock = false
 
             if (hasAssets) {
               if (!shouldReview) {
                 purchaseAssets(routeResponse)
                 setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
+                shouldLock = true
               } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
               else {
                 setBagStatus(BagStatus.IN_REVIEW)
@@ -274,6 +276,8 @@ const Bag = () => {
             } else {
               setBagStatus(BagStatus.ADDING_TO_BAG)
             }
+
+            setLocked(shouldLock)
           },
         })
       } else {

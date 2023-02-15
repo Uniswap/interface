@@ -38,6 +38,7 @@ import { ThemedText } from 'theme'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { warningSeverity } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
+import shallow from 'zustand/shallow'
 
 const LOW_SEVERITY_THRESHOLD = 1
 const MEDIUM_SEVERITY_THRESHOLD = 3
@@ -306,8 +307,19 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
     !!inputCurrency && inputCurrency.isToken ? inputCurrency : undefined
   )
 
-  const setBagExpanded = useBag((state) => state.setBagExpanded)
-  const setBagStatus = useBag((state) => state.setBagStatus)
+  const {
+    isLocked: bagIsLocked,
+    setBagExpanded,
+    setBagStatus,
+  } = useBag(
+    ({ isLocked, setBagExpanded, setBagStatus }) => ({
+      isLocked,
+      setBagExpanded,
+      setBagStatus,
+    }),
+    shallow
+  )
+
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
 
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
@@ -496,7 +508,7 @@ export const BagFooter = ({ totalEthPrice, bagStatus, fetchAssets, eventProperti
                 <ThemedText.SubHeaderSmall>
                   <Trans>Pay with</Trans>
                 </ThemedText.SubHeaderSmall>
-                <CurrencyInput onClick={() => setTokenSelectorOpen(true)}>
+                <CurrencyInput onClick={() => (bagIsLocked ? undefined : setTokenSelectorOpen(true))}>
                   <CurrencyLogo currency={activeCurrency} size="24px" />
                   <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
                     {activeCurrency?.symbol}
