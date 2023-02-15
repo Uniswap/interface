@@ -15,6 +15,7 @@ const StyledDialogContainer = styled.div<{ visible: boolean }>`
   height: 100%;
   width: 100%;
   align-items: center;
+  justify-content: center;
   position: absolute;
   top: 0;
   left: 0;
@@ -23,10 +24,9 @@ const StyledDialogContainer = styled.div<{ visible: boolean }>`
 `
 
 const Dialog = styled.div`
-  margin: 8rem 0;
   position: relative;
   width: 480px;
-  height: 500px;
+  height: 460px;
 `
 
 interface WidgetDialogContainerProps {
