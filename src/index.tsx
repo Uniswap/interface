@@ -5,7 +5,7 @@ import 'components/analytics'
 
 import { ApolloProvider } from '@apollo/client'
 import * as Sentry from '@sentry/react'
-import { getDeviceId, getSessionId, getUserId, initializeAnalytics, OriginApplication } from '@uniswap/analytics'
+import { getDeviceId, getSessionId, initializeAnalytics, OriginApplication } from '@uniswap/analytics'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { FeatureFlagsProvider } from 'featureFlags'
 import { apolloClient } from 'graphql/data/apollo'
@@ -78,8 +78,8 @@ createRoot(container).render(
       <FeatureFlagsProvider>
         <StatsigProvider
           user={{
-            userID: getUserId(),
-            customIDs: { device_id: getDeviceId() ?? '', session_id: String(getSessionId() ?? -1) },
+            userID: getDeviceId(),
+            customIDs: { session_id: String(getSessionId() ?? -1) },
           }}
           // TODO: replace with proxy and cycle key
           sdkKey="client-1rY92WZGidd2hgW4x1lsZ7afqm1Qfr3sJfH3A5b8eJa"
