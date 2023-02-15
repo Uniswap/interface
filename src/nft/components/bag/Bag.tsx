@@ -53,7 +53,7 @@ interface SeparatorProps {
   show?: boolean
 }
 
-const BagContainer = styled.div<{ raiseZIndex: boolean }>`
+const BagContainer = styled.div<{ raiseZIndex: boolean; isProfilePage: boolean }>`
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -65,7 +65,8 @@ const BagContainer = styled.div<{ raiseZIndex: boolean }>`
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 16px;
   box-shadow: ${({ theme }) => theme.shallowShadow};
-  z-index: ${({ raiseZIndex }) => (raiseZIndex ? Z_INDEX.modalBackdrop : 3)};
+  z-index: ${({ raiseZIndex, isProfilePage }) =>
+    raiseZIndex ? (isProfilePage ? Z_INDEX.modalOverTooltip : Z_INDEX.modalBackdrop) : 3};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     right: 0px;
@@ -385,7 +386,7 @@ const Bag = () => {
 
   return (
     <Portal>
-      <BagContainer data-testid="nft-bag" raiseZIndex={isMobile || isModalOpen}>
+      <BagContainer data-testid="nft-bag" raiseZIndex={isMobile || isModalOpen} isProfilePage={isProfilePage}>
         {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (
           <>
             <BagHeader
