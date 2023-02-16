@@ -13,9 +13,10 @@ const Wrapper = styled.div`
   align-content: center;
   align-items: center;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-bottom: none;
   background-color: ${({ theme }) => theme.backgroundSurface};
   border-radius: 20px 20px 0px 0px;
-  bottom: 56px;
+  bottom: 52px;
   color: ${({ theme }) => theme.textSecondary};
   display: flex;
   flex-direction: row;

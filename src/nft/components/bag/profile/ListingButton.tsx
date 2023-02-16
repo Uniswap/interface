@@ -33,6 +33,8 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
     removeAllMarketplaceWarnings,
     showResolveIssues,
     toggleShowResolveIssues,
+    issues,
+    setIssues,
   } = useSellAsset(
     ({
       addMarketplaceWarning,
@@ -40,12 +42,16 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
       removeAllMarketplaceWarnings,
       showResolveIssues,
       toggleShowResolveIssues,
+      issues,
+      setIssues,
     }) => ({
       addMarketplaceWarning,
       sellAssets,
       removeAllMarketplaceWarnings,
       showResolveIssues,
       toggleShowResolveIssues,
+      issues,
+      setIssues,
     }),
     shallow
   )
@@ -62,7 +68,6 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
   const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
   const [showWarning, setShowWarning] = useState(false)
   const [canContinue, setCanContinue] = useState(false)
-  const [issues, setIssues] = useState(0)
   const theme = useTheme()
   const warningRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(warningRef, () => {
@@ -89,7 +94,10 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
   ] = useMemo(() => {
     const noMarketplacesSelected = sellAssets.some((asset: WalletAsset) => asset.marketplaces === undefined)
     const missingExpiration = sellAssets.some((asset) => {
-      return asset.expirationTime != null && asset.expirationTime * 1000 - Date.now() < ms`60 seconds`
+      return (
+        asset.expirationTime != null &&
+        (isNaN(asset.expirationTime) || asset.expirationTime * 1000 - Date.now() < ms`60 seconds`)
+      )
     })
     const invalidExpiration = sellAssets.some((asset) => {
       return asset.expirationTime != null && isNaN(asset.expirationTime)
@@ -142,7 +150,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
       listingsAboveSellOrderFloor,
       invalidPrices,
     ]
-  }, [isNftListV2, sellAssets, showResolveIssues, toggleShowResolveIssues])
+  }, [isNftListV2, sellAssets, setIssues, showResolveIssues, toggleShowResolveIssues])
 
   const [disableListButton, warningMessage] = useMemo(() => {
     const disableListButton =
@@ -219,7 +227,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
 
   return (
     <>
-      <Box position="relative" width="full">
+      <Box position="relative">
         {!showWarningOverride && showWarning && warningMessage.length > 0 && (
           <Row
             className={`${bodySmall} ${styles.warningTooltip}`}

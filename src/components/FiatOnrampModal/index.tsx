@@ -3,6 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
+import { useIsDarkMode } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { CustomLightSpinner, ThemedText } from 'theme'
 
@@ -67,6 +68,7 @@ const MOONPAY_SUPPORTED_CURRENCY_CODES = [
 export default function FiatOnrampModal() {
   const { account } = useWeb3React()
   const theme = useTheme()
+  const isDarkMode = useIsDarkMode()
   const closeModal = useCloseModal()
   const fiatOnrampModalOpen = useModalIsOpen(ApplicationModal.FIAT_ONRAMP)
 
@@ -90,6 +92,7 @@ export default function FiatOnrampModal() {
         },
         method: 'POST',
         body: JSON.stringify({
+          theme: isDarkMode ? 'dark' : 'light',
           colorCode: theme.accentAction,
           defaultCurrencyCode: 'eth',
           redirectUrl: 'https://app.uniswap.org/#/swap',
@@ -112,7 +115,7 @@ export default function FiatOnrampModal() {
     } finally {
       setLoading(false)
     }
-  }, [account, theme.accentAction])
+  }, [account, isDarkMode, theme.accentAction])
 
   useEffect(() => {
     fetchSignedIframeUrl()
