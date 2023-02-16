@@ -10,8 +10,10 @@ import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import GOVERNANCE_RB_ABI from 'abis/governance.json'
+import RB_REGISTRY_ABI from 'abis/rb-registry.json'
+import STAKING_ABI from 'abis/staking-impl.json'
 import STAKING_PROXY_ABI from 'abis/staking-proxy.json'
-import { GOVERNANCE_PROXY_ADDRESSES, STAKING_PROXY_ADDRESSES } from 'constants/addresses'
+import { GOVERNANCE_PROXY_ADDRESSES, RB_REGISTRY_ADDRESSES, STAKING_PROXY_ADDRESSES } from 'constants/addresses'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
 import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
@@ -46,7 +48,15 @@ export function useUniContract() {
   return useContract(uniAddress, UNI_ABI, true)
 }
 
+export function useRegistryContract(): Contract | null {
+  return useContract(RB_REGISTRY_ADDRESSES, RB_REGISTRY_ABI, true)
+}
+
 function useStakingContract(): Contract | null {
+  return useContract(STAKING_PROXY_ADDRESSES, STAKING_ABI, true)
+}
+
+function useStakingProxyContract(): Contract | null {
   return useContract(STAKING_PROXY_ADDRESSES, STAKING_PROXY_ABI, true)
 }
 
@@ -81,6 +91,23 @@ export interface ProposedAction {
 export interface CreateProposalData {
   actions: ProposedAction[]
   description: string
+}
+
+// TODO: check if we are using these 2
+export enum StakeStatus {
+  UNDELEGATED,
+  DELEGATED,
+}
+
+export interface StakeInfo {
+  stakeStatus: StakeStatus
+  poolId: string
+}
+
+export interface StakeData {
+  amount: string | undefined
+  pool: string | null
+  poolId: string | undefined
 }
 
 export enum ProposalState {
@@ -366,24 +393,39 @@ export function useUserVotesAsOfBlock(block: number | undefined): CurrencyAmount
   return votes && uni ? CurrencyAmount.fromRawAmount(uni, votes) : undefined
 }
 
-// TODO: here we should use an additional optional input as delegatee is pool itself, like bool self or another address
-//  also we should set allowances to grg transfer proxy if staking for self
-export function useDelegateCallback(): (delegatee: string | undefined) => undefined | Promise<string> {
+export function usePoolIdByAddress(pool: string | undefined): string {
+  const registryContract = useRegistryContract()
+  const poolId = useSingleCallResult(registryContract ?? undefined, 'getPoolIdFromAddress', [pool ?? undefined])
+    ?.result?.[0]
+  return poolId
+}
+
+export function useDelegateCallback(): (stakeData: StakeData | undefined) => undefined | Promise<string> {
   const { account, chainId, provider } = useWeb3React()
   const addTransaction = useTransactionAdder()
-
   const stakingContract = useStakingContract()
+  const stakingProxy = useStakingProxyContract()
 
-  // TODO: we must batchExecute([stake(amount), moveStake(fromInfo, toInfo, amount)])
   return useCallback(
-    (delegatee: string | undefined) => {
-      if (!provider || !chainId || !account || !delegatee || !isAddress(delegatee ?? '')) return undefined
+    (stakeData: StakeData | undefined) => {
+      if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) return undefined
+      //if (!stakeData.amount) return
+      const stakeCall = stakingContract?.interface.encodeFunctionData('stake', [stakeData.amount])
+      const fromInfo = { status: '0', poolId: stakeData.poolId }
+      const toInfo = { status: '1', poolId: stakeData.poolId }
+      const moveStakeCall = stakingContract?.interface.encodeFunctionData('moveStake', [
+        fromInfo,
+        toInfo,
+        stakeData.amount,
+      ])
+      const delegatee = stakeData.pool
+      if (!delegatee) return
       //const args = [delegatee]
-      const args = ['0']
-      if (!stakingContract) throw new Error('No Staking Contract!')
-      return stakingContract.estimateGas.stake(...args, {}).then((estimatedGasLimit) => {
-        return stakingContract
-          .stake(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+      const args = [[stakeCall, moveStakeCall]]
+      if (!stakingProxy) throw new Error('No Staking Contract!')
+      return stakingProxy.estimateGas.batchExecute(...args, {}).then((estimatedGasLimit) => {
+        return stakingProxy
+          .batchExecute(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
               type: TransactionType.DELEGATE,
@@ -393,7 +435,7 @@ export function useDelegateCallback(): (delegatee: string | undefined) => undefi
           })
       })
     },
-    [account, addTransaction, chainId, provider, stakingContract]
+    [account, addTransaction, chainId, provider, stakingContract, stakingProxy]
   )
 }
 
