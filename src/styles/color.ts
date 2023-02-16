@@ -347,6 +347,7 @@ export interface Palette {
   backgroundScrim: string
   backgroundBranded: string
   backgroundOverlay: string
+  backgroundActionButton: string
 
   textPrimary: string
   textSecondary: string
@@ -414,6 +415,7 @@ export const colorsLight: Palette = {
   backgroundOutline: colors.gray150,
   backgroundScrim: opacify(50, colors.gray150),
   backgroundBranded: '#FCF7FF',
+  backgroundActionButton: colors.magenta50,
   backgroundOverlay: opacify(80, colors.white),
 
   textPrimary: colors.gray900,
@@ -479,6 +481,7 @@ export const colorsDark: Palette = {
   backgroundOutline: colors.gray750,
   backgroundScrim: opacify(50, colors.gray750),
   backgroundBranded: '#100D1C',
+  backgroundActionButton: colors.gray800,
   backgroundOverlay: opacify(10, colors.white),
 
   textPrimary: colors.white,

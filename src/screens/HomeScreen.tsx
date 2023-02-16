@@ -17,7 +17,7 @@ import { SvgProps } from 'react-native-svg'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
-import DollarIcon from 'src/assets/icons/buy.svg'
+import BuyIcon from 'src/assets/icons/buy.svg'
 import ReceiveArrow from 'src/assets/icons/receive.svg'
 import SendIcon from 'src/assets/icons/send-action.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
@@ -410,8 +410,9 @@ function QuickActions(): JSX.Element {
     <Flex centered row gap="spacing8">
       {fiatOnRampShown ? (
         <ActionButton
-          Icon={DollarIcon}
+          Icon={BuyIcon}
           eventName={EventName.FiatOnRampQuickActionButtonPressed}
+          flex={3}
           label={t('Buy')}
           name={ElementName.Buy}
           onPress={onPressBuy}
@@ -419,12 +420,15 @@ function QuickActions(): JSX.Element {
       ) : null}
       <ActionButton
         Icon={SendIcon}
+        flex={3}
         label={t('Send')}
         name={ElementName.Send}
         onPress={onPressSend}
       />
       <ActionButton
         Icon={ReceiveArrow}
+        // we need to make more room for Receive button if there are 3 buttons
+        flex={fiatOnRampShown ? 4 : 3}
         label={t('Receive')}
         name={ElementName.Receive}
         onPress={onPressReceive}
@@ -439,22 +443,24 @@ function ActionButton({
   label,
   Icon,
   onPress,
+  flex,
 }: {
   eventName?: EventName
   name: ElementName
   label: string
   Icon: React.FC<SvgProps>
   onPress: () => void
+  flex: number
 }): JSX.Element {
   const theme = useAppTheme()
 
   return (
     <TouchableArea
       hapticFeedback
-      backgroundColor="background2"
+      backgroundColor="backgroundActionButton"
       borderRadius="rounded24"
       eventName={eventName}
-      flex={1}
+      flex={flex}
       name={name}
       padding="spacing12"
       shadowColor="white"
@@ -469,7 +475,7 @@ function ActionButton({
           strokeWidth={2}
           width={theme.iconSizes.icon20}
         />
-        <Text color="textPrimary" variant="bodyLarge">
+        <Text color="accentAction" marginLeft="spacing8" variant="buttonLabelMedium">
           {label}
         </Text>
       </Flex>
