@@ -172,4 +172,5 @@ export const SUGGESTED_BASES: ChainTokenList = {
     DAI[ChainId.OPTIMISM],
     new Token(ChainId.OPTIMISM, '0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb', 18, 'wstETH', 'Lido Wrapped Staked ETH"'),
   ],
+  [ChainId.SOLANA]: [...WETH_ONLY[ChainId.SOLANA], USDC[ChainId.SOLANA], USDT[ChainId.SOLANA]],
 }
