@@ -9,7 +9,7 @@ import { ListingMarket, ListingWarning, WalletAsset } from 'nft/types'
 import { LOOKS_RARE_CREATOR_BASIS_POINTS } from 'nft/utils'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
-import React, { Dispatch, DispatchWithoutAction, useEffect, useMemo, useReducer, useState } from 'react'
+import { Dispatch, DispatchWithoutAction, useEffect, useMemo, useReducer, useState } from 'react'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
@@ -278,9 +278,7 @@ export const MarketplaceRow = ({
 
       <FeeColumnWrapper>
         <MouseoverTooltip
-          text={selectedMarkets.map((selectedMarket, index) => {
-            return <RoyaltyTooltip selectedMarket={selectedMarket} key={index} />
-          })}
+          text={<RoyaltyTooltip selectedMarkets={selectedMarkets} asset={asset} fees={feeInEth} />}
           placement="left"
         >
           <FeeWrapper>
