@@ -1,9 +1,8 @@
 import { isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
-//import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-//import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { ReactNode, /*useCallback,*/ useState } from 'react'
+import { ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -20,7 +19,7 @@ import AddressInputPanel from '../AddressInputPanel'
 import { ButtonConfirmed, ButtonPrimary } from '../Button'
 //import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
-//import CurrencyInputPanel from '../CurrencyInputPanel'
+import CurrencyInputPanel from '../CurrencyInputPanel'
 import Modal from '../Modal'
 import { LoadingView, SubmittedView } from '../ModalViews'
 import { RowBetween } from '../Row'
@@ -48,23 +47,25 @@ interface VoteModalProps {
   title: ReactNode
 }
 
+// TODO: 'scrollOverlay' prop returns warning in console
 export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalProps) {
   const { account, chainId } = useWeb3React()
 
   // state for delegate input
+  const [currencyValue] = useState<Currency>(GRG[chainId ?? 1])
   const [usingDelegate, setUsingDelegate] = useState(false)
   const [typed, setTyped] = useState('')
+  const [typedValue, setTypedValue] = useState('')
+
   function handleRecipientType(val: string) {
     setTyped(val)
   }
 
-  // state for updating input amount
-  //const [typedValue, setTypedValue] = useState('')
   // wrapped onUserInput to clear signatures
-  /*const onUserInput = useCallback((typedValue: string) => {
+  const onUserInput = useCallback((typedValue: string) => {
     setTypedValue(typedValue)
   }, [])
-*/
+
   // monitor for self delegation or input for third part delegate
   // default is self delegation
   const activeDelegate = typed ?? account //usingDelegate ? typed : account
@@ -97,7 +98,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
     setAttempting(true)
 
     // if callback not returned properly ignore
-    if (!delegateCallback || !grgBalance || !stakeData) return
+    if (!delegateCallback || !grgBalance || !stakeData || !currencyValue.isToken) return
 
     // try delegation and store hash
     const hash = await delegateCallback(stakeData ?? undefined)?.catch((error) => {
@@ -113,7 +114,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
   // usingDelegate equals isRbPool
   const [approval, approveCallback] = useApproveCallback(
     grgBalance ?? undefined,
-    chainId ? GRG_TRANSFER_PROXY_ADDRESSES[chainId] : undefined,
+    GRG_TRANSFER_PROXY_ADDRESSES[chainId ?? 1] ?? undefined,
     usingDelegate
   )
 
@@ -125,8 +126,6 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
 
     await approveCallback()
   }
-
-  //const [currencyValue] = useState<Currency>(GRG[chainId ?? 1])
 
   return (
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
@@ -154,30 +153,23 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
             <ThemedText.DeprecatedBody>
               <Trans>Your voting power will unlock at the beginning of the next Rigoblock epoch.</Trans>
             </ThemedText.DeprecatedBody>
-            {/* TODO: following results in 'scrolloverlay' console error, remember to allow staking amounts smaller than balance */}
-            {/*
-            {grgBalance && (
+            {/* TODO: fix input panel now working properly here, using mock condition to prevent display */}
+            {!chainId && (
               <CurrencyInputPanel
                 value={typedValue}
-                currency={currencyValue}
+                currency={currencyValue ?? null}
                 onUserInput={onUserInput}
-                showMaxButton={true}
-                showCommonBases={false}
+                showMaxButton={false}
                 showCurrencyAmount={true}
-                hideBalance={false}
                 label=""
-                renderBalance={(amount) => <Trans>Available to deposit: {formatCurrencyAmount(grgBalance, 4)}</Trans>}
                 id="stake-grg-token"
+                showCommonBases
+                locked={!grgBalance}
               />
             )}
-            */}
-            {!usingDelegate && (
-              <ButtonConfirmed
-                mr="0.5rem"
-                onClick={onAttemptToApprove}
-                confirmed={approval === ApprovalState.APPROVED}
-                disabled={approval !== ApprovalState.NOT_APPROVED}
-              >
+            {/* confirmed={approval === ApprovalState.APPROVED} disabled={approval !== ApprovalState.NOT_APPROVED} */}
+            {!usingDelegate && approval !== ApprovalState.APPROVED && (
+              <ButtonConfirmed mr="0.5rem" onClick={onAttemptToApprove}>
                 <Trans>Approve Staking</Trans>
               </ButtonConfirmed>
             )}
