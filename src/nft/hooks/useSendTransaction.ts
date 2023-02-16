@@ -22,7 +22,8 @@ interface TxState {
   sendTransaction: (
     signer: JsonRpcSigner,
     selectedAssets: UpdatedGenieAsset[],
-    transactionData: RouteResponse
+    transactionData: RouteResponse,
+    purchasedWithErc20: boolean
   ) => Promise<TxResponse | undefined>
 }
 
@@ -33,7 +34,7 @@ export const useSendTransaction = create<TxState>()(
       txHash: '',
       clearTxHash: () => set({ txHash: '' }),
       setState: (newState) => set(() => ({ state: newState })),
-      sendTransaction: async (signer, selectedAssets, transactionData) => {
+      sendTransaction: async (signer, selectedAssets, transactionData, purchasedWithErc20) => {
         const address = await signer.getAddress()
         try {
           const txNoGasLimit = {
@@ -63,6 +64,7 @@ export const useSendTransaction = create<TxState>()(
               nftsPurchased,
               nftsNotPurchased,
               txReceipt,
+              purchasedWithErc20,
             }
           } else {
             set({ state: TxStateType.Failed })
@@ -70,6 +72,7 @@ export const useSendTransaction = create<TxState>()(
               nftsPurchased: [],
               nftsNotPurchased: selectedAssets,
               txReceipt,
+              purchasedWithErc20,
             }
           }
         } catch (e) {

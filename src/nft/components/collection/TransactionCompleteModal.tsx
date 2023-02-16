@@ -68,6 +68,7 @@ const TxCompleteModal = () => {
     totalRefundValue,
     totalUSDRefund,
     txFeeFiat,
+    purchasedWithErc20,
   } = useMemo(() => {
     return parseTransactionResponse(transactionResponse, ethPrice)
   }, [transactionResponse, ethPrice])
@@ -115,6 +116,7 @@ const TxCompleteModal = () => {
                   buy_quantity: nftsPurchased.length,
                   usd_value: parseFloat(formatEther(totalPurchaseValue)) * ethPrice,
                   transaction_hash: txHash,
+                  using_erc20: purchasedWithErc20,
                   ...formatAssetEventProperties(nftsPurchased),
                   ...trace,
                 }}

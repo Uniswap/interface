@@ -12,9 +12,15 @@ export const parseTransactionResponse = (transactionResponse: TxResponse | undef
   let totalRefundValue = BigNumber.from(0)
   let totalUSDRefund = 0
   let txFeeFiat = 0
+  let purchasedWithErc20 = false
 
   if (transactionResponse !== undefined) {
-    const { nftsPurchased: purchasedNfts, nftsNotPurchased: notPurchasedNfts, txReceipt } = transactionResponse
+    const {
+      nftsPurchased: purchasedNfts,
+      nftsNotPurchased: notPurchasedNfts,
+      txReceipt,
+      purchasedWithErc20: usedErc20,
+    } = transactionResponse
     if (nftsPurchased && nftsNotPurchased && txReceipt) {
       nftsPurchased = purchasedNfts
       nftsNotPurchased = notPurchasedNfts
@@ -27,6 +33,7 @@ export const parseTransactionResponse = (transactionResponse: TxResponse | undef
         BigNumber.from(txReceipt ? txReceipt.effectiveGasPrice : 0)
       )
       txFeeFiat = parseFloat(formatEther(txFee)) * ethPrice
+      purchasedWithErc20 = usedErc20
     }
   }
 
@@ -39,6 +46,7 @@ export const parseTransactionResponse = (transactionResponse: TxResponse | undef
     totalRefundValue,
     totalUSDRefund,
     txFeeFiat,
+    purchasedWithErc20,
   }
 }
 

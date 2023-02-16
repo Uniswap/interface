@@ -62,6 +62,7 @@ export interface TxResponse {
   nftsPurchased: UpdatedGenieAsset[]
   nftsNotPurchased: UpdatedGenieAsset[]
   txReceipt: ContractReceipt
+  purchasedWithErc20: boolean
 }
 
 export enum TxStateType {

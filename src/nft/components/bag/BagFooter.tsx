@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther } from '@ethersproject/units'
 import { parseEther } from '@ethersproject/units'
 import { t, Trans } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
+import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { formatPriceImpact } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
@@ -518,8 +518,26 @@ export const BagFooter = ({ totalEthPrice, fetchAssets, eventProperties }: BagFo
 
   const traceEventProperties = {
     usd_value: usdcValue?.toExact(),
+    using_erc20: !!inputCurrency,
     ...eventProperties,
   }
+
+  const tokenSelectedEventProperties = useMemo(() => {
+    if (!inputCurrency || inputCurrency.isNative) {
+      return undefined
+    }
+
+    return {
+      token_address: inputCurrency.address,
+      token_symbol: inputCurrency.symbol,
+    }
+  }, [inputCurrency])
+
+  useEffect(() => {
+    if (!!inputCurrency && !!tokenSelectedEventProperties) {
+      sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTED, tokenSelectedEventProperties)
+    }
+  }, [inputCurrency, tokenSelectedEventProperties])
 
   return (
     <FooterContainer>
@@ -531,7 +549,14 @@ export const BagFooter = ({ totalEthPrice, fetchAssets, eventProperties }: BagFo
                 <ThemedText.SubHeaderSmall>
                   <Trans>Pay with</Trans>
                 </ThemedText.SubHeaderSmall>
-                <CurrencyInput onClick={() => (bagIsLocked ? undefined : setTokenSelectorOpen(true))}>
+                <CurrencyInput
+                  onClick={() => {
+                    if (bagIsLocked) return
+
+                    setTokenSelectorOpen(true)
+                    sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
+                  }}
+                >
                   <CurrencyLogo currency={activeCurrency} size="24px" />
                   <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
                     {activeCurrency?.symbol}
