@@ -47,8 +47,12 @@ export function ExploreScreen(): JSX.Element {
   }
 
   // Handle special case with design system light colors because background1 is the same as background0
-  const contrastBackgroundColor: keyof Theme['colors'] = isDarkMode ? 'background1' : 'background2'
-  const searchBarBackgroundColor: keyof Theme['colors'] = isDarkMode ? 'background2' : 'background1'
+  const contrastBackgroundColor: keyof Theme['colors'] = isDarkMode
+    ? 'backgroundOverlay'
+    : 'background1'
+  const searchBarBackgroundColor: keyof Theme['colors'] = isDarkMode
+    ? 'backgroundOverlay'
+    : 'background1'
 
   return (
     <Screen bg="none" edges={['top']}>

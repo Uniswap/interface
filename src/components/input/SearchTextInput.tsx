@@ -161,11 +161,15 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
         flexGrow={1}
         gap="spacing8"
         minHeight={48}
-        px="spacing24"
+        px="spacing16"
         py="spacing16"
         style={textInputStyle}
         {...shadowProps}>
-        <SearchIcon color={theme.colors.textTertiary} height={20} width={20} />
+        <SearchIcon
+          color={isDarkMode ? theme.colors.textSecondary : theme.colors.textTertiary}
+          height={20}
+          width={20}
+        />
         <TextInput
           ref={ref}
           autoCapitalize="none"
@@ -178,7 +182,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           fontSize={theme.textVariants.bodyLarge.fontSize}
           maxFontSizeMultiplier={theme.textVariants.bodyLarge.maxFontSizeMultiplier}
           placeholder={placeholder}
-          placeholderTextColor={theme.colors.textTertiary}
+          placeholderTextColor={isDarkMode ? theme.colors.textSecondary : theme.colors.textTertiary}
           px="none"
           py="none"
           returnKeyType="done"

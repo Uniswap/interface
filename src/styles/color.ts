@@ -414,7 +414,7 @@ export const colorsLight: Palette = {
   backgroundOutline: colors.gray150,
   backgroundScrim: opacify(50, colors.gray150),
   backgroundBranded: '#FCF7FF',
-  backgroundOverlay: opacify(75, colors.white),
+  backgroundOverlay: opacify(80, colors.white),
 
   textPrimary: colors.gray900,
   textSecondary: colors.gray550,
@@ -479,7 +479,7 @@ export const colorsDark: Palette = {
   backgroundOutline: colors.gray750,
   backgroundScrim: opacify(50, colors.gray750),
   backgroundBranded: '#100D1C',
-  backgroundOverlay: opacify(3, colors.white),
+  backgroundOverlay: opacify(10, colors.white),
 
   textPrimary: colors.white,
   textSecondary: colors.gray200,

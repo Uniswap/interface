@@ -11,6 +11,7 @@ import { Box, BoxProps, Flex } from 'src/components/layout'
 import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
+import { opacify } from 'src/utils/colors'
 
 const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 4, height: 8 }
 export const SHADOW_OFFSET_SMALL: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }
@@ -40,15 +41,17 @@ export function Container({
 
 export function Shadow({ children, ...rest }: BoxProps): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark'
+  const theme = useAppTheme()
   return (
     <Box
-      bg={rest?.bg ?? isDarkMode ? 'background2' : 'background1'}
+      // bg={rest?.bg ?? isDarkMode ? 'backgroundOutline' : 'background1'}
       borderRadius="rounded16"
       p="spacing12"
-      shadowColor={isDarkMode ? 'black' : 'brandedAccentSoft'}
+      shadowColor={isDarkMode ? 'black' : 'none'}
       shadowOffset={SHADOW_OFFSET_SMALL}
       shadowOpacity={0.4}
       shadowRadius={6}
+      style={{ backgroundColor: opacify(isDarkMode ? 10 : 100, theme.colors.white) }}
       {...rest}>
       {children}
     </Box>

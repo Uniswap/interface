@@ -66,7 +66,7 @@ export function BottomSheetModal({
         {...props}
         appearsOnIndex={0}
         disappearsOnIndex={-1}
-        opacity={blurredBackground ? 0.15 : 0.4}
+        opacity={blurredBackground ? 0.2 : 0.4}
         pressBehavior={isDismissible ? 'close' : 'none'}
       />
     ),

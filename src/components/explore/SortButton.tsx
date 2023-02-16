@@ -1,8 +1,8 @@
 import React, { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useColorScheme } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import UniswapLogo from 'src/assets/icons/uniswap-logo.svg'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -20,6 +20,7 @@ interface FilterGroupProps {
 
 function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
   const theme = useAppTheme()
+  const isDarkMode = useColorScheme() === 'dark'
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
@@ -70,19 +71,12 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
       <Flex
         row
         alignItems="center"
-        bg="background2"
+        backgroundColor={isDarkMode ? 'backgroundOverlay' : 'background0'}
         borderRadius="roundedFull"
         gap="spacing4"
         px="spacing12"
         py="spacing8">
-        {(orderBy === TokenSortableField.Volume ||
-          orderBy === TokenSortableField.TotalValueLocked) && (
-          <UniswapLogo
-            color={theme.colors.textSecondary}
-            height={theme.iconSizes.icon20}
-            width={theme.iconSizes.icon20}
-          />
-        )}
+        {orderBy === TokenSortableField.Volume || orderBy === TokenSortableField.TotalValueLocked}
         <Text color="textSecondary" variant="buttonLabelSmall">
           {getTokensOrderBySelectedLabel(orderBy, t)}
         </Text>
