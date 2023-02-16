@@ -4,7 +4,7 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { RowsCollpsedIcon, RowsExpandedIcon } from 'nft/components/icons'
-import { useIsMobile, useSellAsset } from 'nft/hooks'
+import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, ListingWarning, WalletAsset } from 'nft/types'
 import { LOOKS_RARE_CREATOR_BASIS_POINTS } from 'nft/utils'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
@@ -143,7 +143,6 @@ export const MarketplaceRow = ({
   const removeAssetMarketplace = useSellAsset((state) => state.removeAssetMarketplace)
   const [marketIconHovered, toggleMarketIconHovered] = useReducer((s) => !s, false)
   const [marketRowHovered, toggleMarketRowHovered] = useReducer((s) => !s, false)
-  const isMobile = useIsMobile()
 
   const price = showGlobalPrice ? globalPrice : listPrice
 
@@ -268,7 +267,6 @@ export const MarketplaceRow = ({
             globalOverride={globalOverride}
             warning={warning}
             asset={asset}
-            shrink={isMobile}
           />
         ) : (
           <PriceTextInput
@@ -279,7 +277,6 @@ export const MarketplaceRow = ({
             globalOverride={globalOverride}
             warning={warning}
             asset={asset}
-            shrink={isMobile}
           />
         )}
         {rowHovered && ((expandMarketplaceRows && marketRowHovered) || selectedMarkets.length > 1) && (

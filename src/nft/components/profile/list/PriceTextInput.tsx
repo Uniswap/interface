@@ -93,7 +93,6 @@ interface PriceTextInputProps {
   globalOverride: boolean
   warning?: ListingWarning
   asset: WalletAsset
-  shrink?: boolean
 }
 
 export const PriceTextInput = ({
@@ -104,7 +103,6 @@ export const PriceTextInput = ({
   globalOverride,
   warning,
   asset,
-  shrink,
 }: PriceTextInputProps) => {
   const [focused, setFocused] = useState(false)
   const [warningType, setWarningType] = useState(WarningType.NONE)
@@ -152,7 +150,7 @@ export const PriceTextInput = ({
           color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
           placeholder="0"
           backgroundColor="none"
-          style={{ width: shrink ? '54px' : '68px' }}
+          width={{ sm: '54', md: '68' }}
           onFocus={() => setFocused(true)}
           onBlur={() => {
             setFocused(false)
