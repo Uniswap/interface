@@ -13,7 +13,7 @@ import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { Box } from 'nft/components/Box'
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import { StatsigProvider } from 'statsig-react'
@@ -192,15 +192,20 @@ export default function App() {
 
   const isHeaderTransparent = !scrolledState
 
+  const statsigUser = useMemo(
+    () => ({
+      userID: getDeviceId(),
+    }),
+    []
+  )
+
   return (
     <ErrorBoundary>
       <DarkModeQueryParamReader />
       <ApeModeQueryParamReader />
       <Trace page={currentPage}>
         <StatsigProvider
-          user={{
-            userID: getDeviceId(),
-          }}
+          user={statsigUser}
           // TODO: replace with proxy and cycle key
           sdkKey="client-1rY92WZGidd2hgW4x1lsZ7afqm1Qfr3sJfH3A5b8eJa"
           waitForInitialization={true}

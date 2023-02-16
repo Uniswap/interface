@@ -6,3 +6,7 @@ export enum FeatureFlag {
   swapWidget = 'swapWidget',
   gqlRouting = 'gqlRouting',
 }
+
+export enum FeatureGate {
+  DUMMY = 'web_dummy_gate_amplitude_id',
+}

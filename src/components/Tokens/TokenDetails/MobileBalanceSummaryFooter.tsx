@@ -3,6 +3,7 @@ import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { FeatureGate } from 'featureFlags/flags/featureFlags'
 import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
@@ -88,7 +89,7 @@ export default function MobileBalanceSummaryFooter({ token }: { token: Currency 
   const formattedBalance = formatCurrencyAmount(balance, NumberType.TokenNonTx)
   const formattedUsdValue = formatCurrencyAmount(useStablecoinValue(balance), NumberType.FiatTokenStats)
   const chain = CHAIN_ID_TO_BACKEND_NAME[token.chainId].toLowerCase()
-  const { value: enabled } = useGate('web_dummy_gate_amplitude_id')
+  const { value: isDummyGateFlagEnabled } = useGate(FeatureGate.DUMMY)
 
   return (
     <Wrapper>
@@ -104,7 +105,7 @@ export default function MobileBalanceSummaryFooter({ token }: { token: Currency 
         </BalanceInfo>
       )}
       <SwapButton to={`/swap?chainName=${chain}&outputCurrency=${token.isNative ? NATIVE_CHAIN_ID : token.address}`}>
-        <Trans>{enabled ? 'Go to Swap' : 'Swap'}</Trans>
+        <Trans>{isDummyGateFlagEnabled ? 'Go to Swap' : 'Swap'}</Trans>
       </SwapButton>
     </Wrapper>
   )
