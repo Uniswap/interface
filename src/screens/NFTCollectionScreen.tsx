@@ -148,6 +148,7 @@ export function NFTCollectionScreen({
           <TouchableArea
             hapticFeedback
             activeOpacity={1}
+            alignItems="center"
             flex={1}
             hapticStyle={ImpactFeedbackStyle.Light}
             onPress={(): void => onPressItem(item)}>
