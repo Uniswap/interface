@@ -64,7 +64,6 @@ export default function ConfirmSwapModal({
   outputAmount: CurrencyAmount<Currency> | undefined
 }) {
   const { chainId } = useActiveWeb3React()
-
   const showAcceptChanges = useMemo(
     () =>
       Boolean(
@@ -98,7 +97,7 @@ export default function ConfirmSwapModal({
       <SwapModalFooter
         onConfirm={onConfirm}
         trade={trade}
-        disabledConfirm={showAcceptChanges || chainId === 137}
+        disabledConfirm={showAcceptChanges}
         swapErrorMessage={swapErrorMessage}
       />
     ) : null

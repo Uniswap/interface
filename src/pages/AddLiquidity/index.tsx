@@ -322,7 +322,7 @@ export default function AddLiquidity({
       <AutoColumn gap={'md'}>
         {(approvalA === ApprovalState.NOT_APPROVED || approvalA === ApprovalState.PENDING) && isValid && (
           <RowBetween>
-            {showApprovalA && chainId !== 137 ? (
+            {showApprovalA ? (
               <ButtonPrimary onClick={approveACallback} disabled={approvalA === ApprovalState.PENDING} width={'100%'}>
                 {approvalA === ApprovalState.PENDING ? (
                   <Dots>
