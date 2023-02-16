@@ -41,7 +41,6 @@ export enum ActivityType {
   Send = 'SEND',
   Stake = 'STAKE',
   Swap = 'SWAP',
-  Swapx = 'SWAPX',
   Staking = 'Staking',
   Unknown = 'UNKNOWN',
   Unstake = 'UNSTAKE',
