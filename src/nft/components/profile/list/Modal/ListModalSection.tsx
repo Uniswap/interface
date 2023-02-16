@@ -74,6 +74,14 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
   const removeAssetMarketplace = useSellAsset((state) => state.removeAssetMarketplace)
   const allContentApproved = useMemo(() => !content.some((row) => row.status !== ListingStatus.APPROVED), [content])
   const isCollectionApprovalSection = sectionType === Section.APPROVE
+  const uniqueCollections = useMemo(() => {
+    if (isCollectionApprovalSection) {
+      const collections = content.map((collection) => (collection as CollectionRow).collectionAddress)
+      const uniqueCollections = [...new Set(collections)]
+      return uniqueCollections.length
+    }
+    return undefined
+  }, [content, isCollectionApprovalSection])
   const removeRow = (row: AssetRow) => {
     // collections
     if (isCollectionApprovalSection) {
@@ -100,8 +108,8 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
           <SectionTitle active={active} marginLeft="12px" approved={allContentApproved}>
             {isCollectionApprovalSection ? (
               <>
-                <Trans>Approve</Trans>&nbsp;{content.length}&nbsp;
-                <Plural value={content.length} _1="collection" other="collections" />
+                <Trans>Approve</Trans>&nbsp;
+                <Plural value={uniqueCollections} _1="collection" other="collections" />
               </>
             ) : (
               <>
