@@ -13,7 +13,7 @@ export default function useDerivedPayWithAnyTokenSwapInfo(
   maximumAmountIn: CurrencyAmount<Token> | undefined
   allowedSlippage: Percent
 } {
-  const { state, trade } = useBestTrade(TradeType.EXACT_OUTPUT, parsedOutputAmount, inputCurrency ?? undefined, true)
+  const { state, trade } = useBestTrade(TradeType.EXACT_OUTPUT, parsedOutputAmount, inputCurrency ?? undefined)
   const allowedSlippage = useAutoSlippageTolerance(trade)
   const maximumAmountIn = useMemo(() => {
     const maximumAmountIn = trade?.maximumAmountIn(allowedSlippage)

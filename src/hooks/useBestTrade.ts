@@ -19,8 +19,7 @@ import useIsWindowVisible from './useIsWindowVisible'
 export function useBestTrade(
   tradeType: TradeType,
   amountSpecified?: CurrencyAmount<Currency>,
-  otherCurrency?: Currency,
-  disableDebounce?: boolean
+  otherCurrency?: Currency
 ): {
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
@@ -30,7 +29,7 @@ export function useBestTrade(
 
   const [debouncedAmount, debouncedOtherCurrency] = useDebounce(
     useMemo(() => [amountSpecified, otherCurrency], [amountSpecified, otherCurrency]),
-    disableDebounce ? 0 : 200
+    200
   )
 
   const [clientSideRouter] = useClientSideRouter()
