@@ -210,7 +210,7 @@ export default function App() {
         <StatsigProvider
           user={statsigUser}
           // TODO: replace with proxy and cycle key
-          sdkKey="client-1rY92WZGidd2hgW4x1lsZ7afqm1Qfr3sJfH3A5b8eJa"
+          sdkKey={process.env.STATSIG_API_KEY ?? ''}
           waitForInitialization={!isDevelopmentEnv()}
           options={{
             environment: { tier: getEnvName() },
