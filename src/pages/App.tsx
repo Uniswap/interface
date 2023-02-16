@@ -7,6 +7,7 @@ import {
   user,
 } from '@uniswap/analytics'
 import { CustomUserProperties, getBrowser, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
 import Loader from 'components/Loader'
 import { MenuDropdown } from 'components/NavBar/MenuDropdown'
 import TopLevelModals from 'components/TopLevelModals'
@@ -16,12 +17,12 @@ import { Box } from 'nft/components/Box'
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
-import { StatsigProvider } from 'statsig-react'
+import { StatsigProvider, StatsigUser } from 'statsig-react'
 import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { getEnvName, isProductionEnv } from 'utils/env'
+import { getEnvName, isDevelopmentEnv, isProductionEnv } from 'utils/env'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
@@ -192,11 +193,13 @@ export default function App() {
 
   const isHeaderTransparent = !scrolledState
 
-  const statsigUser = useMemo(
+  const { account } = useWeb3React()
+  const statsigUser: StatsigUser = useMemo(
     () => ({
       userID: getDeviceId(),
+      customIDs: { address: account ?? '' },
     }),
-    []
+    [account]
   )
 
   return (
@@ -208,7 +211,7 @@ export default function App() {
           user={statsigUser}
           // TODO: replace with proxy and cycle key
           sdkKey="client-1rY92WZGidd2hgW4x1lsZ7afqm1Qfr3sJfH3A5b8eJa"
-          waitForInitialization={true}
+          waitForInitialization={!isDevelopmentEnv()}
           options={{
             environment: { tier: getEnvName() },
           }}
