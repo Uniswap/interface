@@ -142,6 +142,17 @@ export const RB_FACTORY_ADDRESSES: AddressMap = {
   ]),
 }
 
+/* Rigoblock Pool Registry Addresses */
+export const RB_REGISTRY_ADDRESSES: AddressMap = {
+  ...constructSameAddressMap('0x06767e8090bA5c4Eca89ED00C3A719909D503ED6', [
+    SupportedChainId.MAINNET,
+    SupportedChainId.GOERLI,
+    SupportedChainId.OPTIMISM,
+    SupportedChainId.ARBITRUM_ONE,
+    SupportedChainId.POLYGON,
+  ]),
+}
+
 export const TIMELOCK_ADDRESS: AddressMap = constructSameAddressMap('0x1a9C8182C09F50C8318d769245beA52c32BE35BC')
 
 export const MERKLE_DISTRIBUTOR_ADDRESS: AddressMap = {
