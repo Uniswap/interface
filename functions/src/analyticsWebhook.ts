@@ -2,7 +2,7 @@ import { flush, init, track, Types } from '@amplitude/analytics-node'
 import * as functions from 'firebase-functions'
 import pickAnalyticsProperties from './utils/pickAnalyticsProperties'
 
-const initializeAnalytics = (apiKey: string) => {
+const initializeAnalytics = (apiKey: string): Promise<void> => {
   return init(apiKey, {
     logLevel: Types.LogLevel.Warn,
   }).promise

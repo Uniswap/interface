@@ -1,4 +1,23 @@
-const pickAnalyticsProperties = (txResponse: Record<string, unknown>) => {
+const pickAnalyticsProperties = (
+  txResponse: Record<string, unknown>
+): {
+  baseCurrency: unknown
+  baseCurrencyAmount: unknown
+  country: unknown
+  createdAt: unknown
+  currency: unknown
+  extraFeeAmount: unknown
+  failureReason: unknown
+  feeAmount: unknown
+  id: unknown
+  networkFeeAmount: unknown
+  paymentMethod: unknown
+  quoteCurrencyAmount: unknown
+  status: unknown
+  type: unknown
+  updatedAt: unknown
+  usdRate: unknown
+} => {
   return {
     baseCurrency: txResponse.baseCurrency,
     baseCurrencyAmount: txResponse.baseCurrencyAmount,
