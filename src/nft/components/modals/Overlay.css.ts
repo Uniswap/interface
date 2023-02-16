@@ -16,6 +16,6 @@ export const overlay = style([
   {
     opacity: 0.72,
     overflow: 'hidden',
-    zIndex: Z_INDEX.modalBackdrop - 1,
+    zIndex: Z_INDEX.modalBackdrop + 1,
   },
 ])

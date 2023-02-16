@@ -66,7 +66,7 @@ const BagContainer = styled.div<{ raiseZIndex: boolean; isProfilePage: boolean }
   border-radius: 16px;
   box-shadow: ${({ theme }) => theme.shallowShadow};
   z-index: ${({ raiseZIndex, isProfilePage }) =>
-    raiseZIndex ? (isProfilePage ? Z_INDEX.modalOverTooltip : Z_INDEX.modalBackdrop) : 3};
+    raiseZIndex ? (isProfilePage ? Z_INDEX.modalOverTooltip : Z_INDEX.modalBackdrop + 2) : 3};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     right: 0px;
