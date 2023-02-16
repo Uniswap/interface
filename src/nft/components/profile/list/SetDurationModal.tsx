@@ -3,7 +3,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import ms from 'ms.macro'
 import { Column, Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
-import { buttonTextSmall, caption } from 'nft/css/common.css'
+import { body, caption } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
@@ -33,12 +33,11 @@ const DropdownPrompt = styled(Row)`
   gap: 4px;
   background-color: ${({ theme }) => theme.backgroundInteractive};
   cursor: pointer;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 16px;
   border-radius: 8px;
   padding: 6px 4px 6px 8px;
-  width: min-content;
   white-space: nowrap;
   color: ${({ theme }) => theme.textPrimary};
 
@@ -48,8 +47,8 @@ const DropdownPrompt = styled(Row)`
 `
 
 const DropdownChevron = styled(ChevronDown)<{ isOpen: boolean }>`
-  height: 16px;
-  width: 16px;
+  height: 20px;
+  width: 20px;
   color: ${({ theme }) => theme.textSecondary};
   transform: ${({ isOpen }) => isOpen && 'rotate(180deg)'};
   transition: ${({
@@ -178,7 +177,7 @@ export const SetDurationModal = () => {
           type="number"
           pattern="[0-9]"
           borderStyle="none"
-          className={buttonTextSmall}
+          className={body}
           color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
           value={amount}
           width="40"

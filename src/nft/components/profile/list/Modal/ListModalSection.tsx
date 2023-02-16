@@ -101,12 +101,12 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
             {isCollectionApprovalSection ? (
               <>
                 <Trans>Approve</Trans>&nbsp;{content.length}&nbsp;
-                <Plural value={content.length} _1="Collection" other="Collections" />
+                <Plural value={content.length} _1="collection" other="collections" />
               </>
             ) : (
               <>
                 <Trans>Sign</Trans> &nbsp;{content.length}&nbsp;{' '}
-                <Plural value={content.length} _1="Listing" other="Listings" />
+                <Plural value={content.length} _1="listing" other="listings" />
               </>
             )}
           </SectionTitle>
