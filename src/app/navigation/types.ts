@@ -5,25 +5,22 @@ import {
   useNavigation,
 } from '@react-navigation/native'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
-import { useProfiledNavigation } from '@shopify/react-native-performance-navigation'
 import { EducationContentType } from 'src/components/education'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
-import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
+import { OnboardingScreens, Screens } from 'src/screens/Screens'
 
 type NFTItem = { owner: Address; address: string; tokenId: string }
 
-export type TabParamList = {
-  [Tabs.Home]: undefined
-  [Tabs.Explore]: undefined | { screen: Screens; params: { address: string } }
-  [Tabs.SwapButton]: undefined
-}
-
-export type HomeStackParamList = {
-  [Screens.Home]: undefined
-}
-
 export type ExploreStackParamList = {
   [Screens.Explore]: undefined
+  [Screens.ExternalProfile]: {
+    address: string
+  }
+  [Screens.NFTItem]: NFTItem
+  [Screens.NFTCollection]: { collectionAddress: string }
+  [Screens.TokenDetails]: {
+    currencyId: string
+  }
 }
 
 export type AccountStackParamList = {
@@ -91,11 +88,11 @@ export type AppStackParamList = {
   [Screens.Education]: {
     type: EducationContentType
   }
+  [Screens.Home]: undefined
   [Screens.SettingsWalletManageConnection]: { address: Address }
   [Screens.Notifications]: undefined | { txHash: string }
   [Screens.OnboardingStack]: NavigatorScreenParams<OnboardingStackParamList>
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
-  [Screens.TabNavigator]: NavigatorScreenParams<TabParamList>
   [Screens.TokenDetails]: {
     currencyId: string
   }
@@ -113,11 +110,6 @@ export type AppStackScreenProps = NativeStackScreenProps<AppStackParamList>
 export type AppStackScreenProp<Screen extends keyof AppStackParamList> = NativeStackScreenProps<
   AppStackParamList,
   Screen
->
-
-export type HomeStackNavigationProp = CompositeNavigationProp<
-  NativeStackNavigationProp<HomeStackParamList>,
-  AppStackNavigationProp
 >
 
 export type ExploreStackNavigationProp = CompositeNavigationProp<
@@ -138,18 +130,14 @@ export type OnboardingStackNavigationProp = CompositeNavigationProp<
   AppStackNavigationProp
 >
 
-export type RootParamList = TabParamList &
-  HomeStackParamList &
+export type RootParamList = AccountStackParamList &
+  AppStackParamList &
   ExploreStackParamList &
-  AccountStackParamList &
-  SettingsStackParamList &
   OnboardingStackParamList &
-  AppStackParamList
+  SettingsStackParamList
 
 export const useAppStackNavigation = (): AppStackNavigationProp =>
   useNavigation<AppStackNavigationProp>()
-export const useHomeStackNavigation = (): HomeStackNavigationProp =>
-  useProfiledNavigation<HomeStackNavigationProp>()
 export const useExploreStackNavigation = (): ExploreStackNavigationProp =>
   useNavigation<ExploreStackNavigationProp>()
 export const useSettingsStackNavigation = (): SettingsStackNavigationProp =>

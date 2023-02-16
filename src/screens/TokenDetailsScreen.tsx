@@ -3,7 +3,7 @@ import { useResponsiveProp } from '@shopify/restyle'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { AnimatedBox, AnimatedFlex, Box, Flex } from 'src/components/layout'
@@ -29,7 +29,7 @@ import {
 } from 'src/data/__generated__/types-and-hooks'
 import { AssetType } from 'src/entities/assets'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
-import { openModal } from 'src/features/modals/modalSlice'
+import { openModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
 import {
@@ -157,12 +157,12 @@ function TokenDetails({
     /*default=*/ theme.colors.textTertiary
   )
 
-  const onPriceChartRetry = (): void => {
+  const onPriceChartRetry = useCallback((): void => {
     if (!error) {
       return
     }
     retry()
-  }
+  }, [error, retry])
 
   // set if attempting buy or sell, use for warning modal
   const [activeTransactionType, setActiveTransactionType] = useState<TransactionType | undefined>(
@@ -269,11 +269,15 @@ function TokenDetails({
 
   const pb = useResponsiveProp({ xs: 'none', sm: 'spacing16' })
 
+  const inModal = useAppSelector(selectModalState(ModalName.Explore)).isOpen
+
   return (
-    <AnimatedBox flexGrow={1} pb={pb}>
+    <AnimatedBox bg="background1" flexGrow={1} pb={pb}>
       <HeaderScrollScreen
         centerElement={<HeaderTitleElement data={data} />}
-        rightElement={<TokenDetailsFavoriteButton currencyId={_currencyId} />}>
+        renderedInModal={inModal}
+        rightElement={<TokenDetailsFavoriteButton currencyId={_currencyId} />}
+        showHandleBar={inModal}>
         <Flex gap="spacing36" my="spacing8">
           <Flex gap="spacing4">
             <TokenDetailsHeader

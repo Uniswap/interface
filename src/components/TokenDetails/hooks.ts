@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useHomeStackNavigation } from 'src/app/navigation/types'
+import { useAppStackNavigation } from 'src/app/navigation/types'
 import { Chain, useTokenDetailsScreenLazyQuery } from 'src/data/__generated__/types-and-hooks'
 import { useMultipleBalances, useSingleBalance } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
@@ -53,7 +53,7 @@ export function useTokenDetailsNavigation(): {
   navigate: (currencyId: CurrencyId) => void
   navigateWithPop: (currencyId: CurrencyId) => void
 } {
-  const navigation = useHomeStackNavigation()
+  const navigation = useAppStackNavigation()
   const [load] = useTokenDetailsScreenLazyQuery()
 
   const preload = (currencyId: CurrencyId): void => {

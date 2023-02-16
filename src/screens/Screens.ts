@@ -22,7 +22,6 @@ export enum Screens {
   SettingsTestConfigs = 'SettingsTestConfigs',
   SettingsBiometricAuth = 'SettingsBiometricAuth',
   SettingsViewSeedPhrase = 'SettingsViewSeedPhrase',
-  TabNavigator = 'TabNavigator',
   TokenDetails = 'TokenDetails',
   ExternalProfile = 'ExternalProfile',
   WebView = 'WebView',

@@ -5,7 +5,7 @@ import React, { forwardRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, NativeScrollEvent, NativeSyntheticEvent, View } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { useHomeStackNavigation } from 'src/app/navigation/types'
+import { useAppStackNavigation } from 'src/app/navigation/types'
 import NoNFTsIcon from 'src/assets/icons/empty-state-picture.svg'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -68,7 +68,7 @@ const keyExtractor = (item: NFTItem | string): string =>
 
 export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
   ({ owner, containerProps, scrollHandler }, ref) => {
-    const navigation = useHomeStackNavigation()
+    const navigation = useAppStackNavigation()
     const { t } = useTranslation()
     const theme = useAppTheme()
     const dispatch = useAppDispatch()
@@ -213,7 +213,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
     }
 
     return nftDataItems.length === 0 ? (
-      <Flex centered grow flex={1} style={containerProps?.loadingContainerStyle}>
+      <Flex centered grow flex={1} style={containerProps?.emptyContainerStyle}>
         <BaseCard.EmptyState
           buttonLabel={t('Receive NFTs')}
           description={t('Transfer NFTs from another wallet to get started.')}

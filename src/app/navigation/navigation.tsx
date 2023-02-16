@@ -1,49 +1,24 @@
-import {
-  BottomTabBar,
-  BottomTabBarProps,
-  createBottomTabNavigator,
-} from '@react-navigation/bottom-tabs'
 import { HeaderTitleProps } from '@react-navigation/elements'
+import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator } from '@react-navigation/stack'
-import { NavigationRoute } from '@sentry/react-native/dist/js/tracing/reactnavigation'
-import { useResponsiveProp } from '@shopify/restyle'
-import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics'
 import React, { useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
-import {
-  SwapTabBarButton,
-  TabBarButton,
-  TAB_NAVIGATOR_HEIGHT_SM,
-  TAB_NAVIGATOR_HEIGHT_XS,
-} from 'src/app/navigation/TabBar'
+import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import {
   AppStackParamList,
   ExploreStackParamList,
-  HomeStackParamList,
   OnboardingStackParamList,
   SettingsStackParamList,
-  TabParamList,
 } from 'src/app/navigation/types'
-import SearchIconFocused from 'src/assets/icons/search-focused.svg'
-import SearchIcon from 'src/assets/icons/search.svg'
-import WalletIconFilled from 'src/assets/icons/wallet-filled.svg'
-import WalletIcon from 'src/assets/icons/wallet.svg'
 import { Chevron } from 'src/components/icons/Chevron'
-import { Box } from 'src/components/layout'
 import { TokenDetailsPreloaders } from 'src/data/preload/TokenDetailsPreloader'
 import { useLowPriorityPreloadedQueries } from 'src/data/preload/useLowPriorityPreloadedQueries'
 import { usePreloadedHomeScreenQueries } from 'src/data/preload/usePreloadedHomeScreenQueries'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
-import { useHighestBalanceNativeCurrencyId } from 'src/features/dataApi/balances'
-import { openModal } from 'src/features/modals/modalSlice'
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
-import { ModalName } from 'src/features/telemetry/constants'
 import {
-  selectActiveAccount,
   selectFinishedOnboarding,
   selectReplaceAccountOptions,
 } from 'src/features/wallet/selectors'
@@ -70,7 +45,7 @@ import { ManualBackupScreen } from 'src/screens/Onboarding/ManualBackupScreen'
 import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { OutroScreen } from 'src/screens/Onboarding/OutroScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
-import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
+import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { SettingsBiometricAuthScreen } from 'src/screens/SettingsBiometricAuthScreen'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
 import { SettingsCloudBackupScreen } from 'src/screens/SettingsCloudBackupScreen'
@@ -83,143 +58,11 @@ import { SettingsWalletEdit } from 'src/screens/SettingsWalletEdit'
 import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManageConnection'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
-import { invokeImpact } from 'src/utils/haptic'
 
-const Tab = createBottomTabNavigator<TabParamList>()
 const OnboardingStack = createStackNavigator<OnboardingStackParamList>()
 const AppStack = createNativeStackNavigator<AppStackParamList>()
-const HomeStack = createNativeStackNavigator<HomeStackParamList>()
 const ExploreStack = createNativeStackNavigator<ExploreStackParamList>()
 const SettingsStack = createNativeStackNavigator<SettingsStackParamList>()
-
-const NullComponent = (): null => {
-  return null
-}
-
-const renderTabBar = (props: BottomTabBarProps): JSX.Element => (
-  <Box bottom={0} left={0} position="absolute" right={0}>
-    <BottomTabBar {...props} />
-  </Box>
-)
-
-const renderTabBarWalletIcon = ({ focused }: { focused: boolean }): JSX.Element => (
-  <TabBarButton
-    Icon={WalletIcon}
-    IconFilled={WalletIconFilled}
-    focused={focused}
-    // swap takes `xxs` more space than other buttons
-    pl="spacing24"
-  />
-)
-
-const renderTabBarSearchIcon = ({ focused }: { focused: boolean }): JSX.Element => (
-  <TabBarButton
-    Icon={SearchIcon}
-    IconFilled={SearchIconFocused}
-    focused={focused}
-    // swap takes `xxs` more space than other buttons
-    pr="spacing24"
-  />
-)
-
-const renderSwapTabBarButton = (): JSX.Element => {
-  return <SwapTabBarButton />
-}
-
-const renderSwapTabBarButtonWithInputCurrency =
-  (activeAccountAddress: Address) => (): JSX.Element => {
-    // We do it here and not inside SwapModal for two reasons:
-    // 1) To avoid flickering and/or rendering delays in SwapModal
-    // 2) When we open SwapModal from other places we pass input currency inside modal's initialState.
-    //    Inside SwapTabBarButton we do it the same way to avoid additional complexity.
-    const inputCurrencyId = useHighestBalanceNativeCurrencyId(activeAccountAddress)
-    return <SwapTabBarButton inputCurrencyId={inputCurrencyId} />
-  }
-
-function TabNavigator(): JSX.Element {
-  const { t } = useTranslation()
-  const theme = useAppTheme()
-  const dispatch = useAppDispatch()
-  useBiometricCheck()
-  const TAB_NAVIGATOR_HEIGHT =
-    useResponsiveProp({
-      xs: TAB_NAVIGATOR_HEIGHT_XS,
-      sm: TAB_NAVIGATOR_HEIGHT_SM,
-    }) ?? TAB_NAVIGATOR_HEIGHT_SM
-
-  useLowPriorityPreloadedQueries()
-
-  const activeAccount = useAppSelector(selectActiveAccount)
-
-  return (
-    <>
-      <Tab.Navigator
-        sceneContainerStyle={{ paddingBottom: TAB_NAVIGATOR_HEIGHT }}
-        screenOptions={{
-          tabBarActiveTintColor: theme.colors.textPrimary,
-          tabBarInactiveTintColor: theme.colors.textTertiary,
-          tabBarShowLabel: false,
-          headerShown: false,
-          tabBarStyle: {
-            alignItems: 'center',
-            paddingBottom: 0,
-            backgroundColor: 'textPrimary',
-            borderTopWidth: 1,
-            display: 'flex',
-            borderTopColor: theme.colors.background3,
-            height: TAB_NAVIGATOR_HEIGHT,
-            justifyContent: 'center',
-          },
-        }}
-        tabBar={renderTabBar}>
-        <Tab.Screen
-          component={HomeStackNavigator}
-          listeners={({ navigation }): { tabPress: () => void; tabLongPress: () => void } => ({
-            tabPress: (): void => invokeImpact[ImpactFeedbackStyle.Medium](),
-            tabLongPress: (): void => {
-              const currentIndex = navigation.getState().index
-              const homeTabIndex = navigation
-                .getState()
-                .routes.findIndex((r: NavigationRoute) => r.name === Tabs.Home)
-
-              if (currentIndex === homeTabIndex) {
-                impactAsync(ImpactFeedbackStyle.Heavy)
-                dispatch(openModal({ name: ModalName.AccountSwitcher }))
-              }
-            },
-          })}
-          name={Tabs.Home}
-          options={{
-            tabBarLabel: t('Home'),
-            tabBarIcon: renderTabBarWalletIcon,
-          }}
-        />
-        <Tab.Screen
-          component={NullComponent}
-          name={Tabs.SwapButton}
-          options={{
-            tabBarButton: activeAccount
-              ? renderSwapTabBarButtonWithInputCurrency(activeAccount.address)
-              : renderSwapTabBarButton,
-          }}
-        />
-        <Tab.Screen
-          component={ExploreStackNavigator}
-          listeners={{
-            tabPress: (): void => invokeImpact[ImpactFeedbackStyle.Medium](),
-          }}
-          name={Tabs.Explore}
-          options={{
-            tabBarLabel: t('Explore'),
-            tabBarShowLabel: false,
-            tabBarIcon: renderTabBarSearchIcon,
-          }}
-        />
-      </Tab.Navigator>
-      <TokenDetailsPreloaders />
-    </>
-  )
-}
 
 function SettingsStackGroup(): JSX.Element {
   return (
@@ -255,27 +98,47 @@ function SettingsStackGroup(): JSX.Element {
   )
 }
 
-export function HomeStackNavigator(): JSX.Element {
+export function WrappedHomeScreen(): JSX.Element {
+  useBiometricCheck()
+  useLowPriorityPreloadedQueries()
+
   return (
-    <HomeStack.Navigator
-      initialRouteName={Screens.Home}
-      screenOptions={{
-        ...navOptions.noHeader,
-      }}>
-      <HomeStack.Screen component={HomeScreen} name={Screens.Home} />
-    </HomeStack.Navigator>
+    <>
+      <TokenDetailsPreloaders />
+      <HomeScreen />
+    </>
   )
 }
 
 export function ExploreStackNavigator(): JSX.Element {
   return (
-    <ExploreStack.Navigator
-      initialRouteName={Screens.Explore}
-      screenOptions={{
-        ...navOptions.noHeader,
+    <NavigationContainer
+      independent={true}
+      theme={{
+        dark: false,
+        colors: {
+          primary: 'transparent',
+          background: 'transparent',
+          card: 'transparent',
+          text: 'transparent',
+          border: 'transparent',
+          notification: 'transparent',
+        },
       }}>
-      <ExploreStack.Screen component={ExploreScreen} name={Screens.Explore} />
-    </ExploreStack.Navigator>
+      <ExploreStack.Navigator
+        initialRouteName={Screens.Explore}
+        screenOptions={{
+          ...navOptions.noHeader,
+        }}>
+        <ExploreStack.Screen component={ExploreScreen} name={Screens.Explore} />
+        <ExploreStack.Group>
+          <ExploreStack.Screen component={ExternalProfileScreen} name={Screens.ExternalProfile} />
+          <ExploreStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
+          <ExploreStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
+          <ExploreStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
+        </ExploreStack.Group>
+      </ExploreStack.Navigator>
+    </NavigationContainer>
   )
 }
 
@@ -387,10 +250,12 @@ export function AppStackNavigator(): JSX.Element {
   // preload home screen queries before `finishedOnboarding` is truthy
   // this helps load the home screen fast from a fresh install
   usePreloadedHomeScreenQueries()
+
   return (
-    <AppStack.Navigator screenOptions={{ headerShown: false }}>
+    <AppStack.Navigator
+      screenOptions={{ headerShown: false, fullScreenGestureEnabled: true, gestureEnabled: true }}>
       {finishedOnboarding && !replaceAccountOptions?.isReplacingAccount && (
-        <AppStack.Screen component={TabNavigator} name={Screens.TabNavigator} />
+        <AppStack.Screen component={WrappedHomeScreen} name={Screens.Home} />
       )}
       <AppStack.Screen
         component={OnboardingStackNavigator}

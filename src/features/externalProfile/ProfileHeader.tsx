@@ -107,6 +107,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
         />
         {hasAvatar && avatarColors?.primary ? <HeaderRadial color={avatarColors.primary} /> : null}
       </AnimatedBox>
+
       {/* header row */}
       <Flex row alignItems="center" justifyContent="space-between" mx="spacing4">
         <TouchableArea

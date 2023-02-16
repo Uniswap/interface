@@ -1,11 +1,7 @@
 import { useNavigationState } from '@react-navigation/core'
 import { useResponsiveProp } from '@shopify/restyle'
 import React, { useEffect } from 'react'
-import {
-  SWAP_BUTTON_HEIGHT,
-  TAB_NAVIGATOR_HEIGHT_SM,
-  TAB_NAVIGATOR_HEIGHT_XS,
-} from 'src/app/navigation/TabBar'
+import { NAV_BAR_HEIGHT_SM, NAV_BAR_HEIGHT_XS, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import { BANNER_HEIGHT, BottomBanner, BottomBannerProps } from 'src/components/banners/BottomBanner'
 import { Screens, Stacks } from 'src/screens/Screens'
 
@@ -25,8 +21,7 @@ export function TabsAwareBottomBanner({ icon, text, ...rest }: BottomBannerProps
   const [bannerTranslateY, setBannerTranslateY] = React.useState(0)
 
   const TAB_NAVIGATOR_HEIGHT =
-    useResponsiveProp({ xs: TAB_NAVIGATOR_HEIGHT_XS, sm: TAB_NAVIGATOR_HEIGHT_SM }) ??
-    TAB_NAVIGATOR_HEIGHT_SM
+    useResponsiveProp({ xs: NAV_BAR_HEIGHT_XS, sm: NAV_BAR_HEIGHT_SM }) ?? NAV_BAR_HEIGHT_SM
 
   useEffect(() => {
     const appStack = routes?.find((route) => route.name === Stacks.AppStack)

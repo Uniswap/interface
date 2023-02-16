@@ -1,13 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Adds ForwardRef to Animated.FlaList
 // https://github.com/software-mansion/react-native-reanimated/issues/2976
 
+import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import React, { forwardRef } from 'react'
 import { FlatList, FlatListProps, LayoutChangeEvent, View } from 'react-native'
 import Animated, { ILayoutAnimationBuilder } from 'react-native-reanimated'
 
 // difficult to properly type
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ReanimatedFlatList = Animated.createAnimatedComponent(FlatList as any) as any
+const ReanimatedBottomSheetFlatList = Animated.createAnimatedComponent(
+  BottomSheetFlatList as any
+) as any
 const AnimatedView = Animated.createAnimatedComponent(View)
 
 const createCellRenderer = (
@@ -30,6 +34,7 @@ const createCellRenderer = (
 
 interface ReanimatedFlatlistProps<T> extends FlatListProps<T> {
   itemLayoutAnimation?: ILayoutAnimationBuilder
+  FlatListComponent?: FlatList
 }
 
 /**
@@ -39,12 +44,21 @@ interface ReanimatedFlatlistProps<T> extends FlatListProps<T> {
  *
  * TODO: [MOB-3870] remove this and use Animated.FlatList directly when can use refs with it. Also type the generic T properly for FlatList and dont use `any`
  */
-// difficult to properly type
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const AnimatedFlatList = forwardRef<Animated.FlatList<any>, ReanimatedFlatlistProps<any>>(
-  ({ itemLayoutAnimation, ...restProps }, ref) => {
+  ({ itemLayoutAnimation, FlatListComponent = ReanimatedFlatList, ...restProps }, ref) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const cellRenderer = React.useMemo(() => createCellRenderer(itemLayoutAnimation), [])
-    return <ReanimatedFlatList ref={ref} {...restProps} CellRendererComponent={cellRenderer} />
+    return <FlatListComponent ref={ref} {...restProps} CellRendererComponent={cellRenderer} />
   }
 )
+
+/**
+ * In bottom sheet contexts, this will support pull to dismiss.
+ * See AnimatedFlatList for other props.
+ */
+export const AnimatedBottomSheetFlatList = forwardRef<
+  Animated.FlatList<any>,
+  ReanimatedFlatlistProps<any>
+>((props, ref) => (
+  <AnimatedFlatList {...props} ref={ref} FlatListComponent={ReanimatedBottomSheetFlatList} />
+))

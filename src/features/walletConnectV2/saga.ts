@@ -91,9 +91,7 @@ function createWalletConnectV2Channel(): EventChannel<Action<unknown>> {
       )
     }
 
-    const sessionRequestHandler = async (
-      request: Web3WalletTypes.SessionRequest
-    ): Promise<void> => {
+    const sessionRequestHandler = async (): Promise<void> => {
       // TODO: Handle session method requests, such as "eth_sign", "eth_sendTransaction", etc.
     }
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import { AccountSwitcherModal } from 'src/app/modals/AccountSwitcherModal'
 import { ExperimentsModal } from 'src/app/modals/ExperimentsModal'
+import { ExploreModal } from 'src/app/modals/ExploreModal'
 import { SwapModal } from 'src/app/modals/SwapModal'
 import { TransferTokenModal } from 'src/app/modals/TransferTokenModal'
 import { LazyModalRenderer } from 'src/app/modals/utils'
@@ -19,6 +20,10 @@ export function AppModals(): JSX.Element {
 
       <LazyModalRenderer name={ModalName.FiatOnRamp}>
         <FiatOnRampModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.Explore}>
+        <ExploreModal />
       </LazyModalRenderer>
 
       <ForceUpgradeModal />

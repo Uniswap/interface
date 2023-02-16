@@ -7,9 +7,9 @@ exports[`ActivityTab renders without error 1`] = `
       Object {
         "alignItems": "center",
         "display": "flex",
+        "flex": 1,
         "flexDirection": "column",
         "flexGrow": 1,
-        "height": "100%",
         "justifyContent": "center",
       },
     ]

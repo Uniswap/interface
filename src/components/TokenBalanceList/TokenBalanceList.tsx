@@ -127,7 +127,7 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
               flex={1}
               flexGrow={1}
               justifyContent="center"
-              style={containerProps?.loadingContainerStyle}>
+              style={containerProps?.emptyContainerStyle}>
               <BaseCard.ErrorState
                 retryButtonLabel="Retry"
                 title={t("Couldn't load token balances")}
@@ -136,7 +136,7 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
             </Box>
           )
         ) : listItems.length === 0 ? (
-          <Flex grow style={containerProps?.loadingContainerStyle}>
+          <Flex grow style={containerProps?.emptyContainerStyle}>
             {empty}
           </Flex>
         ) : (

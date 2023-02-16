@@ -66,6 +66,7 @@ export const enum ModalName {
   AddWallet = 'add-wallet-modal',
   BlockedAddress = 'blocked-address',
   Experiments = 'experiments',
+  Explore = 'explore-modal',
   FaceIDWarning = 'face-id-warning',
   FiatOnRamp = 'fiat-on-ramp',
   ForceUpgradeModal = 'force-upgrade-modal',

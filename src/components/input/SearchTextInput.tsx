@@ -44,7 +44,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
   const { t } = useTranslation()
   const {
     autoFocus,
-    backgroundColor = 'background1',
+    backgroundColor,
     clearIcon,
     disableClearable,
     endAdornment,
@@ -68,6 +68,8 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     onChangeText?.('')
     onCancel?.()
   }
+
+  const backgroundColorValue = backgroundColor ?? 'background1'
 
   const onCancelLayout = useCallback(
     (event: LayoutChangeEvent) => {
@@ -153,13 +155,14 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       <AnimatedFlex
         row
         alignItems="center"
-        backgroundColor={backgroundColor}
-        borderRadius="rounded16"
+        backgroundColor={backgroundColorValue}
+        borderRadius="roundedFull"
         flex={1}
         flexGrow={1}
-        gap="none"
+        gap="spacing8"
         minHeight={48}
-        px="spacing12"
+        px="spacing24"
+        py="spacing16"
         style={textInputStyle}
         {...shadowProps}>
         <SearchIcon color={theme.colors.textTertiary} height={20} width={20} />
@@ -176,7 +179,8 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           maxFontSizeMultiplier={theme.textVariants.bodyLarge.maxFontSizeMultiplier}
           placeholder={placeholder}
           placeholderTextColor={theme.colors.textTertiary}
-          px="spacing8"
+          px="none"
+          py="none"
           returnKeyType="done"
           textContentType="none"
           value={value}

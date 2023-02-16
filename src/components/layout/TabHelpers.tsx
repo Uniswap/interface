@@ -80,6 +80,7 @@ export type ScrollPair = {
 
 export type TabContentProps = Partial<FlatListProps<unknown>> & {
   loadingContainerStyle: StyleProp<ViewStyle>
+  emptyContainerStyle: StyleProp<ViewStyle>
   estimatedItemSize?: number
 }
 

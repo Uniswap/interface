@@ -1,8 +1,9 @@
 import { NetworkStatus } from '@apollo/client'
-import { FlashList, ListRenderItem, ListRenderItemInfo } from '@shopify/flash-list'
+import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import { ListRenderItem, ListRenderItemInfo } from 'react-native'
+import { useAppSelector } from 'src/app/hooks'
 import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
 import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
 import { SortButton } from 'src/components/explore/SortButton'
@@ -27,7 +28,6 @@ import {
 } from 'src/features/explore/utils'
 import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'src/features/favorites/selectors'
 import { selectTokensOrderBy } from 'src/features/wallet/selectors'
-import { dimensions } from 'src/styles/sizing'
 import { areAddressesEqual } from 'src/utils/addresses'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
@@ -37,11 +37,8 @@ type ExploreSectionsProps = {
   listRef?: React.MutableRefObject<null>
 }
 
-const ESTIMATED_TOKEN_ITEM_SIZE = 82 // provided from FlashList
-
 export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
 
   // Top tokens sorting
   const orderBy = useAppSelector(selectTokensOrderBy)
@@ -137,7 +134,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
   }
 
   return (
-    <FlashList
+    <BottomSheetFlatList
       ref={listRef}
       ListEmptyComponent={
         <Box mx="spacing24" my="spacing12">
@@ -164,13 +161,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
           </Flex>
         </>
       }
-      contentContainerStyle={{ backgroundColor: theme.colors.background0 }}
       data={showLoading ? EMPTY_ARRAY : topTokenItems}
-      estimatedItemSize={ESTIMATED_TOKEN_ITEM_SIZE}
-      estimatedListSize={{
-        width: dimensions.fullWidth,
-        height: dimensions.fullHeight,
-      }}
       keyExtractor={tokenKey}
       renderItem={renderItem}
       showsHorizontalScrollIndicator={false}
@@ -217,7 +208,7 @@ function FavoritesSection({ showLoading }: { showLoading: boolean }): JSX.Elemen
   if (!hasFavoritedTokens && !hasFavoritedWallets) return null
 
   return (
-    <Flex bg="backgroundBranded" gap="spacing12" pb="spacing12" pt="spacing8" px="spacing12">
+    <Flex bg="none" gap="spacing12" pb="spacing12" pt="spacing8" px="spacing12">
       {hasFavoritedTokens && <FavoriteTokensGrid showLoading={showLoading} />}
       {hasFavoritedWallets && <FavoriteWalletsGrid showLoading={showLoading} />}
     </Flex>

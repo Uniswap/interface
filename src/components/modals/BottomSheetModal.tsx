@@ -5,15 +5,17 @@ import {
   BottomSheetView,
   useBottomSheetDynamicSnapPoints,
 } from '@gorhom/bottom-sheet'
+import { BlurView } from 'expo-blur'
 import React, { ComponentProps, PropsWithChildren, useCallback, useEffect, useRef } from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, useColorScheme } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
-import { Box, Flex } from 'src/components/layout'
+import { HandleBar } from 'src/components/modals/HandleBar'
 import { Trace } from 'src/components/telemetry/Trace'
 import { ModalName } from 'src/features/telemetry/constants'
 import { TelemetryTraceProps } from 'src/features/telemetry/types'
 import { dimensions, spacing } from 'src/styles/sizing'
+import { theme as FixedTheme } from 'src/styles/theme'
 
 type Props = PropsWithChildren<{
   disableSwipe?: boolean
@@ -24,45 +26,11 @@ type Props = PropsWithChildren<{
   stackBehavior?: ComponentProps<typeof BaseModal>['stackBehavior']
   fullScreen?: boolean
   backgroundColor?: string
+  blurredBackground?: boolean
   isDismissible?: boolean
+  renderBehindInset?: boolean
 }> &
   TelemetryTraceProps
-
-const HANDLEBAR_HEIGHT = spacing.spacing4
-const HANDLEBAR_WIDTH = spacing.spacing36
-
-const HandleBar = ({
-  backgroundColor,
-  hidden,
-}: {
-  // string instead of keyof Theme['colors] because this is passed down from the modal
-  // backgroundColor prop which expects an actual hex string instead of a named color
-  backgroundColor: string
-  hidden: boolean
-}): JSX.Element => {
-  const theme = useAppTheme()
-  const bg = hidden ? 'transparent' : backgroundColor ?? theme.colors.background0
-
-  return (
-    <Flex
-      alignItems="center"
-      borderRadius="rounded20"
-      justifyContent="center"
-      style={{
-        backgroundColor: bg,
-      }}>
-      <Box
-        alignSelf="center"
-        backgroundColor={hidden ? 'none' : 'backgroundOutline'}
-        borderRadius="rounded8"
-        height={HANDLEBAR_HEIGHT}
-        mb="spacing12"
-        mt="spacing16"
-        width={HANDLEBAR_WIDTH}
-      />
-    </Flex>
-  )
-}
 
 const Backdrop = (props: BottomSheetBackdropProps): JSX.Element => {
   return <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} opacity={0.4} />
@@ -81,13 +49,16 @@ export function BottomSheetModal({
   fullScreen,
   hideHandlebar,
   backgroundColor,
+  blurredBackground = false,
   isDismissible = true,
+  renderBehindInset = false,
 }: Props): JSX.Element {
   const insets = useSafeAreaInsets()
   const modalRef = useRef<BaseModal>(null)
   const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
     useBottomSheetDynamicSnapPoints(snapPoints)
   const theme = useAppTheme()
+  const isDarkMode = useColorScheme() === 'dark'
 
   const renderBackdrop = useCallback(
     (props) => (
@@ -95,31 +66,61 @@ export function BottomSheetModal({
         {...props}
         appearsOnIndex={0}
         disappearsOnIndex={-1}
-        opacity={0.4}
+        opacity={blurredBackground ? 0.15 : 0.4}
         pressBehavior={isDismissible ? 'close' : 'none'}
       />
     ),
-    [isDismissible]
+    [blurredBackground, isDismissible]
   )
 
   const renderHandleBar = useCallback(
     (props) => {
-      return <HandleBar {...props} backgroundColor={backgroundColor} hidden={hideHandlebar} />
+      // This adds an extra gap of unwanted space
+      if (renderBehindInset && hideHandlebar) {
+        return null
+      }
+      return (
+        <HandleBar
+          {...props}
+          backgroundColor={backgroundColor}
+          containerFlexStyles={{
+            marginBottom: FixedTheme.spacing.spacing12,
+            marginTop: FixedTheme.spacing.spacing16,
+          }}
+          hidden={hideHandlebar}
+        />
+      )
     },
-    [backgroundColor, hideHandlebar]
+    [backgroundColor, hideHandlebar, renderBehindInset]
   )
 
   useEffect(() => {
     modalRef.current?.present()
   }, [modalRef])
 
-  const fullScreenContentHeight = FULL_HEIGHT * dimensions.fullHeight
+  const fullScreenContentHeight = (renderBehindInset ? 1 : FULL_HEIGHT) * dimensions.fullHeight
+
+  const renderBlurredBg = useCallback(
+    () => (
+      <BlurView intensity={90} style={BlurViewStyle.base} tint={isDarkMode ? 'dark' : 'light'} />
+    ),
+    [isDarkMode]
+  )
+
+  const background = blurredBackground ? { backgroundComponent: renderBlurredBg } : undefined
+  const backdrop = { backdropComponent: renderBackdrop }
+  const backgroundColorValue = blurredBackground
+    ? theme.colors.none
+    : backgroundColor ?? theme.colors.background1
 
   return (
     <BaseModal
+      {...background}
+      {...backdrop}
       ref={modalRef}
-      backdropComponent={renderBackdrop}
-      backgroundStyle={{ backgroundColor: backgroundColor ?? theme.colors.background1 }}
+      backgroundStyle={{
+        backgroundColor: backgroundColorValue,
+      }}
       contentHeight={animatedContentHeight}
       enableContentPanningGesture={isDismissible}
       enableHandlePanningGesture={isDismissible}
@@ -127,13 +128,14 @@ export function BottomSheetModal({
       handleHeight={animatedHandleHeight}
       snapPoints={animatedSnapPoints}
       stackBehavior={stackBehavior}
-      topInset={insets.top}
+      topInset={renderBehindInset ? undefined : insets.top}
       onDismiss={onClose}>
       <Trace logImpression modal={name} properties={properties}>
         <BottomSheetView
           style={[
             { height: fullScreen ? fullScreenContentHeight : undefined },
             BottomSheetStyle.view,
+            renderBehindInset ? BottomSheetStyle.rounded : undefined,
           ]}
           onLayout={handleContentLayout}>
           {children}
@@ -207,7 +209,19 @@ const BottomSheetStyle = StyleSheet.create({
   detached: {
     marginHorizontal: spacing.spacing12,
   },
+  rounded: {
+    borderRadius: FixedTheme.borderRadii.rounded24,
+    overflow: 'hidden',
+  },
   view: {
     flex: 1,
+  },
+})
+
+const BlurViewStyle = StyleSheet.create({
+  base: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: FixedTheme.borderRadii.rounded24,
+    overflow: 'hidden',
   },
 })

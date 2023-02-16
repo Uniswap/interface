@@ -16,6 +16,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { SvgProps } from 'react-native-svg'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import DollarIcon from 'src/assets/icons/buy.svg'
 import ReceiveArrow from 'src/assets/icons/receive.svg'
 import SendIcon from 'src/assets/icons/send-action.svg'
@@ -205,10 +206,10 @@ export function HomeScreen(): JSX.Element {
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
       paddingTop: headerHeight + TAB_BAR_HEIGHT + TAB_STYLES.tabListInner.paddingTop,
-      paddingBottom: insets.bottom,
+      paddingBottom: insets.bottom + SWAP_BUTTON_HEIGHT + theme.spacing.spacing12,
       minHeight: dimensions.fullHeight + headerHeightDiff,
     }),
-    [headerHeight, insets.bottom, headerHeightDiff]
+    [headerHeight, insets.bottom, theme.spacing.spacing12, headerHeightDiff]
   )
 
   const loadingContainerStyle = useMemo<StyleProp<ViewStyle>>(
@@ -219,15 +220,25 @@ export function HomeScreen(): JSX.Element {
     [headerHeight, insets.bottom]
   )
 
+  const emptyContainerStyle = useMemo<StyleProp<ViewStyle>>(
+    () => ({
+      paddingTop: headerHeight - TAB_BAR_HEIGHT - TAB_STYLES.tabListInner.paddingTop,
+      paddingHorizontal: theme.spacing.spacing60,
+      paddingBottom: insets.bottom,
+    }),
+    [headerHeight, insets.bottom, theme.spacing.spacing60]
+  )
+
   const sharedProps = useMemo<TabContentProps>(
     () => ({
       loadingContainerStyle,
+      emptyContainerStyle,
       contentContainerStyle,
       onMomentumScrollEnd: sync,
       onScrollEndDrag: sync,
       scrollEventThrottle: TAB_VIEW_SCROLL_THROTTLE,
     }),
-    [contentContainerStyle, loadingContainerStyle, sync]
+    [contentContainerStyle, emptyContainerStyle, loadingContainerStyle, sync]
   )
 
   const tabBarStyle = useMemo<StyleProp<ViewStyle>>(
@@ -352,6 +363,7 @@ export function HomeScreen(): JSX.Element {
           onIndexChange={setTabIndex}
         />
       </View>
+      <NavBar />
       <AnimatedBox
         height={insets.top}
         position="absolute"

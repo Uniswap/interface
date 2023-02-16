@@ -40,6 +40,7 @@ export function ExternalProfileScreen({
     () => ({
       contentContainerStyle: TAB_STYLES.tabListInner,
       loadingContainerStyle: TAB_STYLES.tabListInner,
+      emptyContainerStyle: TAB_STYLES.tabListInner,
     }),
     []
   )
