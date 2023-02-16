@@ -66,7 +66,7 @@ const BagContainer = styled.div<{ raiseZIndex: boolean; isProfilePage: boolean }
   border-radius: 16px;
   box-shadow: ${({ theme }) => theme.shallowShadow};
   z-index: ${({ raiseZIndex, isProfilePage }) =>
-    raiseZIndex ? (isProfilePage ? Z_INDEX.modalOverTooltip : Z_INDEX.modalBackdrop) : 3};
+    raiseZIndex ? (isProfilePage ? Z_INDEX.modalOverTooltip : Z_INDEX.modalBackdrop + 2) : 3};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     right: 0px;
@@ -232,7 +232,8 @@ const Bag = () => {
 
             const { route, routeResponse } = buildRouteResponse(data.nftRoute, !!tokenTradeInput)
 
-            const updatedAssets = combineBuyItemsWithTxRoute(itemsToBuy, route)
+            const { hasPriceAdjustment, updatedAssets } = combineBuyItemsWithTxRoute(itemsToBuy, route)
+            const shouldRefetchCalldata = hasPriceAdjustment && !!tokenTradeInput
 
             const fetchedPriceChangedAssets = updatedAssets
               .filter((asset) => asset.updatedPriceInfo)
@@ -266,9 +267,13 @@ const Bag = () => {
 
             if (hasAssets) {
               if (!shouldReview) {
-                purchaseAssets(routeResponse)
-                setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
-                shouldLock = true
+                if (shouldRefetchCalldata) {
+                  setBagStatus(BagStatus.CONFIRM_QUOTE)
+                } else {
+                  purchaseAssets(routeResponse)
+                  setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
+                  shouldLock = true
+                }
               } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
               else {
                 setBagStatus(BagStatus.IN_REVIEW)
@@ -289,7 +294,7 @@ const Bag = () => {
           })
         )
 
-        const updatedAssets = combineBuyItemsWithTxRoute(itemsToBuy, routeData.route)
+        const { updatedAssets } = combineBuyItemsWithTxRoute(itemsToBuy, routeData.route)
 
         const fetchedPriceChangedAssets = updatedAssets
           .filter((asset) => asset.updatedPriceInfo)
@@ -405,12 +410,7 @@ const Bag = () => {
               {isProfilePage ? <ProfileBagContent /> : <BagContent />}
             </Column>
             {hasAssetsToShow && !isProfilePage && (
-              <BagFooter
-                totalEthPrice={totalEthPrice}
-                bagStatus={bagStatus}
-                fetchAssets={fetchAssets}
-                eventProperties={eventProperties}
-              />
+              <BagFooter totalEthPrice={totalEthPrice} fetchAssets={fetchAssets} eventProperties={eventProperties} />
             )}
             {isSellingAssets && isProfilePage && (
               <Box
