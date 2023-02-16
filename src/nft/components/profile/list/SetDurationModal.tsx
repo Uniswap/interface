@@ -3,7 +3,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import ms from 'ms.macro'
 import { Column, Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
-import { bodySmall, caption } from 'nft/css/common.css'
+import { buttonTextSmall, caption } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
@@ -19,21 +19,23 @@ const ModalWrapper = styled(Column)`
 `
 
 const InputWrapper = styled(Row)<{ isInvalid: boolean }>`
-  padding: 12px 8px 12px 12px;
+  padding: 6px 6px 6px 12px;
   border: 1px solid;
   position: relative;
   height: 44px;
   border-radius: 8px;
   border-color: ${({ isInvalid, theme }) => (isInvalid ? theme.accentCritical : theme.backgroundOutline)};
+  width: 160px;
+  justify-content: space-between;
 `
 
 const DropdownPrompt = styled(Row)`
   gap: 4px;
   background-color: ${({ theme }) => theme.backgroundInteractive};
   cursor: pointer;
-  font-weight: 600;
-  font-size: 12px;
-  line-height: 16px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
   border-radius: 8px;
   padding: 6px 4px 6px 8px;
   width: min-content;
@@ -176,10 +178,10 @@ export const SetDurationModal = () => {
           type="number"
           pattern="[0-9]"
           borderStyle="none"
-          className={bodySmall}
+          className={buttonTextSmall}
           color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
           value={amount}
-          width="32"
+          width="40"
           marginRight="4"
           backgroundColor="none"
           onChange={setCustomExpiration}
