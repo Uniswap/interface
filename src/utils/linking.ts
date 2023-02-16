@@ -128,6 +128,13 @@ export function getExplorerLink(
   }
 }
 
+export function getUniswapCollectionUrl(
+  contractAddress: NullUndefined<string>
+): string | undefined {
+  if (!contractAddress) return undefined
+  return `${uniswapUrls.nftUrl}/collection/${contractAddress}`
+}
+
 export function getTwitterLink(twitterName: string): string {
   return `https://twitter.com/${twitterName}`
 }

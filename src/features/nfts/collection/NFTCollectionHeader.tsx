@@ -31,9 +31,11 @@ export type NFTCollectionData = NullUndefined<
 export function NFTCollectionHeader({
   loading = false,
   data,
+  collectionAddress,
 }: {
   loading: boolean
-  data: NFTCollectionData
+  data: NullUndefined<NFTCollectionData>
+  collectionAddress?: NullUndefined<string>
 }): ReactElement {
   const theme = useAppTheme()
   const { t } = useTranslation()
@@ -102,7 +104,12 @@ export function NFTCollectionHeader({
               <BackButton color="white" size={theme.iconSizes.icon24} />
             </Flex>
           </TouchableArea>
-          <NFTCollectionContextMenu data={data} iconColor="white" showButtonOutline={true} />
+          <NFTCollectionContextMenu
+            collectionAddress={collectionAddress}
+            data={data}
+            iconColor="white"
+            showButtonOutline={true}
+          />
         </Flex>
 
         {/* Profile image */}
@@ -139,7 +146,7 @@ export function NFTCollectionHeader({
           pt="spacing12"
           px="spacing24"
           style={{ marginTop: PROFILE_IMAGE_WRAPPER_SIZE }}>
-          <Flex row alignItems="center" gap="spacing4">
+          <Flex row alignItems="center" gap="spacing8">
             <Text loading={loading} loadingPlaceholderText="Collection Name" variant="subheadLarge">
               {data?.name ?? '-'}
             </Text>

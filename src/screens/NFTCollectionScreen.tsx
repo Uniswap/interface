@@ -72,7 +72,6 @@ export function NFTCollectionScreen({
   const { data, networkStatus, fetchMore, refetch } = useNftCollectionScreenQuery({
     variables: { contractAddress: collectionAddress, first: ASSET_FETCH_PAGE_SIZE },
     notifyOnNetworkStatusChange: true,
-    returnPartialData: true,
     fetchPolicy: 'cache-and-network',
   })
 
@@ -82,9 +81,9 @@ export function NFTCollectionScreen({
     return gqlNFTAssetToNFTItem(data)
   }, [data])
 
-  // Add additional loading rows to list if we're fetching more on scroll, and account for incomplete rows.
+  // Fill in grid with loading boxes if we have incomplete data and are loading more
   const extraLoadingItemAmount =
-    networkStatus === NetworkStatus.fetchMore
+    networkStatus === NetworkStatus.fetchMore || networkStatus === NetworkStatus.loading
       ? LOADING_BUFFER_AMOUNT + (3 - (collectionItems.length % 3))
       : undefined
 
@@ -113,7 +112,7 @@ export function NFTCollectionScreen({
   })
 
   const onPressItem = (asset: NFTItem): void => {
-    navigation.navigate(Screens.NFTItem, {
+    navigation.push(Screens.NFTItem, {
       owner: asset.ownerAddress ?? '',
       address: asset.contractAddress ?? '',
       tokenId: asset.tokenId ?? '',
@@ -134,6 +133,7 @@ export function NFTCollectionScreen({
       marginRight: middle ? theme.spacing.spacing8 : last ? theme.spacing.spacing16 : 0,
       marginBottom: theme.spacing.spacing8,
     }
+
     return (
       <Box
         aspectRatio={1}
@@ -148,13 +148,14 @@ export function NFTCollectionScreen({
           <TouchableArea
             hapticFeedback
             activeOpacity={1}
+            flex={1}
             hapticStyle={ImpactFeedbackStyle.Light}
             onPress={(): void => onPressItem(item)}>
             <NFTViewer
               autoplay
+              squareGridView
               placeholderContent={item.name || item.collectionName}
-              squareGridView={true}
-              uri={item.imageUrl ?? ''}
+              uri={item.imageUrl}
             />
           </TouchableArea>
         )}
@@ -200,7 +201,9 @@ export function NFTCollectionScreen({
           collectionData?.name ? <Text variant="bodyLarge">{collectionData.name}</Text> : undefined
         }
         listRef={listRef}
-        rightElement={<NFTCollectionContextMenu data={collectionData} />}
+        rightElement={
+          <NFTCollectionContextMenu collectionAddress={collectionAddress} data={collectionData} />
+        }
         scrollY={scrollY}
         showHeaderScrollYDistance={NFT_BANNER_HEIGHT}
       />
@@ -210,7 +213,11 @@ export function NFTCollectionScreen({
           gridDataLoading ? null : <BaseCard.EmptyState description={t('No NFTs found')} />
         }
         ListHeaderComponent={
-          <NFTCollectionHeader data={collectionData} loading={headerDataLoading} />
+          <NFTCollectionHeader
+            collectionAddress={collectionAddress}
+            data={collectionData}
+            loading={headerDataLoading}
+          />
         }
         data={gridDataWithLoadingElements}
         estimatedItemSize={ESTIMATED_ITEM_SIZE}

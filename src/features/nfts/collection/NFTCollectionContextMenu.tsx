@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NativeSyntheticEvent } from 'react-native'
+import { NativeSyntheticEvent, Share } from 'react-native'
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -8,7 +8,8 @@ import { TripleDot } from 'src/components/icons/TripleDot'
 import { Flex } from 'src/components/layout/Flex'
 import { NFTCollectionData } from 'src/features/nfts/collection/NFTCollectionHeader'
 import { Theme } from 'src/styles/theme'
-import { getTwitterLink, openUri } from 'src/utils/linking'
+import { getTwitterLink, getUniswapCollectionUrl, openUri } from 'src/utils/linking'
+import { logger } from 'src/utils/logger'
 
 type MenuOption = {
   title: string
@@ -18,10 +19,12 @@ type MenuOption = {
 
 export function NFTCollectionContextMenu({
   data,
+  collectionAddress,
   showButtonOutline = false,
   iconColor = 'textSecondary',
 }: {
   data: NFTCollectionData
+  collectionAddress?: NullUndefined<string>
   showButtonOutline?: boolean
   iconColor?: keyof Theme['colors']
 }): Nullable<JSX.Element> {
@@ -30,6 +33,7 @@ export function NFTCollectionContextMenu({
 
   const twitterURL = data?.twitterName ? getTwitterLink(data.twitterName) : undefined
   const homepageUrl = data?.homepageUrl
+  const shareURL = getUniswapCollectionUrl(collectionAddress)
 
   const onSocialPress = (): void => {
     if (!twitterURL) return
@@ -40,6 +44,17 @@ export function NFTCollectionContextMenu({
     if (!homepageUrl) return
     openUri(homepageUrl)
   }
+
+  const onSharePress = useCallback(async () => {
+    if (!shareURL) return
+    try {
+      await Share.share({
+        message: shareURL,
+      })
+    } catch (e) {
+      logger.error('NFTCollectionScreen', 'onShare', (e as unknown as Error).message)
+    }
+  }, [shareURL])
 
   const menuActions: {
     title: string
@@ -54,8 +69,14 @@ export function NFTCollectionContextMenu({
       : undefined,
     homepageUrl
       ? {
-          title: t('Collection Website'),
+          title: t('Collection website'),
           action: openExplorerLink,
+        }
+      : undefined,
+    shareURL
+      ? {
+          title: t('Share'),
+          action: onSharePress,
         }
       : undefined,
   ].filter((option): option is MenuOption => !!option)
