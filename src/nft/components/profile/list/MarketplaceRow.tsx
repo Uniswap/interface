@@ -236,11 +236,11 @@ export const MarketplaceRow = ({
                 key={market.name + asset.collection?.address + asset.tokenId}
                 onClick={(e) => {
                   e.stopPropagation()
-                  removeAssetMarketplace(asset, selectedMarkets[0])
+                  removeAssetMarketplace(asset, market)
                   removeMarket && removeMarket()
                 }}
               >
-                <MarketIcon alt={selectedMarkets[0].name} src={market.icon} index={index} />
+                <MarketIcon alt={market.name} src={market.icon} index={index} />
                 <RemoveMarketplaceWrap hovered={marketIconHovered && (expandMarketplaceRows ?? false)}>
                   <img width="20px" src="/nft/svgs/minusCircle.svg" alt="Remove item" />
                 </RemoveMarketplaceWrap>
