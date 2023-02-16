@@ -1,5 +1,7 @@
 import { ChainId, Currency, NativeCurrency, Token, WETH } from '@kyberswap/ks-sdk-core'
+import axios from 'axios'
 
+import { KS_SETTING_API } from 'constants/env'
 import { NETWORKS_INFO } from 'constants/networks'
 import { MAP_TOKEN_HAS_MULTI_BY_NETWORK, WHITE_LIST_TOKEN_INFO_PAIR } from 'constants/tokenLists/token-info'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
@@ -63,4 +65,14 @@ export const isTokenNative = (
         currency instanceof WrappedTokenInfo &&
         currency.multichainInfo?.tokenType === 'NATIVE'
     : false
+}
+
+export const importTokensToKsSettings = async (tokens: Array<{ chainId: string; address: string }>) => {
+  try {
+    await axios.post(`${KS_SETTING_API}/v1/tokens/import`, {
+      tokens,
+    })
+  } catch (e) {
+    console.error(e)
+  }
 }

@@ -2,7 +2,7 @@ import { parseBytes32String } from '@ethersproject/strings'
 import { ChainId, Currency, NativeCurrency, Token } from '@kyberswap/ks-sdk-core'
 import axios from 'axios'
 import { arrayify } from 'ethers/lib/utils'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import useSWR from 'swr'
 
@@ -11,7 +11,7 @@ import { KS_SETTING_API } from 'constants/env'
 import { ZERO_ADDRESS } from 'constants/index'
 import { NativeCurrencies } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks/index'
-import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
+import { useBytes32TokenContract, useMulticallContract, useTokenContract } from 'hooks/useContract'
 import { AppState } from 'state'
 import { TokenAddressMap } from 'state/lists/reducer'
 import { TokenInfo, WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
@@ -202,7 +202,7 @@ export function useToken(tokenAddress?: string): Token | NativeCurrency | undefi
     if (token) return token
     if (!chainId || !address) return undefined
     if (decimals.loading || symbol.loading || tokenName.loading) return null
-    if (decimalsResult) {
+    if (typeof decimalsResult === 'number') {
       return new Token(
         chainId,
         address,
@@ -225,6 +225,59 @@ export function useToken(tokenAddress?: string): Token | NativeCurrency | undefi
     tokenNameResult,
     tokenNameBytes32Result,
   ])
+}
+
+// This function is intended to use for EVM chains only
+export function useFetchERC20TokenFromRPC() {
+  const { chainId } = useActiveWeb3React()
+  const multicallContract = useMulticallContract()
+
+  const fetcher = useCallback(
+    async (tokenAddress: string) => {
+      try {
+        const address = isAddress(chainId, tokenAddress)
+
+        if (!multicallContract) {
+          console.error('No multicall contract found')
+          return undefined
+        }
+
+        if (!address) {
+          console.error('Invalid token address')
+          return undefined
+        }
+
+        const returnData = await multicallContract.callStatic
+          .tryBlockAndAggregate(false, [
+            {
+              target: address,
+              callData: ERC20_INTERFACE.encodeFunctionData('name'),
+            },
+            {
+              target: address,
+              callData: ERC20_INTERFACE.encodeFunctionData('symbol'),
+            },
+            {
+              target: address,
+              callData: ERC20_INTERFACE.encodeFunctionData('decimals'),
+            },
+          ])
+          .then(resp => resp.returnData.map((item: [boolean, string]) => item[1]))
+
+        const name = ERC20_INTERFACE.decodeFunctionResult('name', returnData[0])[0]
+        const symbol = ERC20_INTERFACE.decodeFunctionResult('symbol', returnData[1])[0]
+        const decimals = ERC20_INTERFACE.decodeFunctionResult('decimals', returnData[2])[0]
+
+        return new Token(chainId, address, decimals, symbol, name)
+      } catch (e) {
+        console.error(e)
+        return undefined
+      }
+    },
+    [chainId, multicallContract],
+  )
+
+  return fetcher
 }
 
 const cacheTokens: TokenMap = {}

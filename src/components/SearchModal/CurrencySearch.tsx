@@ -12,10 +12,17 @@ import Column from 'components/Column'
 import InfoHelper from 'components/InfoHelper'
 import { RowBetween } from 'components/Row'
 import { KS_SETTING_API } from 'constants/env'
+import { isEVM, isSolana } from 'constants/networks'
 import { Z_INDEXS } from 'constants/styles'
 import { NativeCurrencies } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
-import { fetchListTokenByAddresses, fetchTokenByAddress, formatAndCacheToken, useAllTokens } from 'hooks/Tokens'
+import {
+  fetchListTokenByAddresses,
+  fetchTokenByAddress,
+  formatAndCacheToken,
+  useAllTokens,
+  useFetchERC20TokenFromRPC,
+} from 'hooks/Tokens'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import usePrevious from 'hooks/usePrevious'
@@ -26,6 +33,7 @@ import { useRemoveUserAddedToken, useUserAddedTokens, useUserFavoriteTokens } fr
 import { ButtonText, CloseIcon, TYPE } from 'theme'
 import { filterTruthy, isAddress } from 'utils'
 import { filterTokens } from 'utils/filtering'
+import { importTokensToKsSettings } from 'utils/tokenInfo'
 
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
@@ -146,6 +154,8 @@ export function CurrencySearch({
 
   const [searchQuery, setSearchQuery] = useState<string>('')
   const debouncedQuery = useDebounce(searchQuery, 200)
+  const isQueryValidEVMAddress = isEVM(chainId) && !!isAddress(chainId, debouncedQuery)
+  const isQueryValidSolanaAddress = isSolana(chainId) && !!isAddress(chainId, debouncedQuery)
 
   const { favoriteTokens, toggleFavoriteToken } = useUserFavoriteTokens(chainId)
 
@@ -163,6 +173,8 @@ export function CurrencySearch({
   const tokenImportsFiltered = useMemo(() => {
     return (debouncedQuery ? filterTokens(chainId, tokenImports, debouncedQuery) : tokenImports).sort(tokenComparator)
   }, [debouncedQuery, chainId, tokenImports, tokenComparator])
+
+  const fetchERC20TokenFromRPC = useFetchERC20TokenFromRPC()
 
   // input eth => output filter weth, input weth => output filter eth
   const filterWrapFunc = useCallback(
@@ -319,16 +331,47 @@ export function CurrencySearch({
 
   const fetchListTokens = useCallback(
     async (page?: number) => {
-      if (fetchingToken.current) return
+      if (fetchingToken.current) {
+        return
+      }
+
       const fetchId = Date.now()
       fetchingToken.current = fetchId
+
       const nextPage = (page ?? pageCount) + 1
       let tokens: WrappedTokenInfo[] = []
+
       if (debouncedQuery) {
         tokens = await fetchTokens(debouncedQuery, nextPage, chainId)
+
+        if (tokens.length === 0 && isQueryValidEVMAddress) {
+          const rawToken = await fetchERC20TokenFromRPC(debouncedQuery)
+
+          if (rawToken) {
+            tokens.push(
+              new WrappedTokenInfo({
+                chainId: rawToken.chainId,
+                address: rawToken.address,
+                name: rawToken.name || 'Unknown Token',
+                decimals: rawToken.decimals,
+                symbol: rawToken.symbol || 'UNKNOWN',
+              }),
+            )
+
+            importTokensToKsSettings([
+              {
+                chainId: String(rawToken.chainId),
+                address: rawToken.address,
+              },
+            ])
+          }
+        } else if (tokens.length === 0 && isQueryValidSolanaAddress) {
+          // TODO: query tokens from Solana token db
+        }
       } else {
         tokens = Object.values(defaultTokens) as WrappedTokenInfo[]
       }
+
       if (fetchingToken.current === fetchId) {
         // sometimes, API slow, api fetch later has response sooner.
         setPageCount(nextPage)
@@ -337,7 +380,15 @@ export function CurrencySearch({
         fetchingToken.current = null
       }
     },
-    [chainId, debouncedQuery, defaultTokens, pageCount],
+    [
+      chainId,
+      debouncedQuery,
+      defaultTokens,
+      fetchERC20TokenFromRPC,
+      isQueryValidEVMAddress,
+      isQueryValidSolanaAddress,
+      pageCount,
+    ],
   )
 
   const [hasMoreToken, setHasMoreToken] = useState(false)
