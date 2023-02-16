@@ -84,9 +84,7 @@ export default function FiatOnrampModal() {
     setLoading(true)
     setError(null)
     try {
-      const signedIframeUrlFetchEndpoint = `${process.env.REACT_APP_MOONPAY_LINK as string}&theme=${
-        isDarkMode ? 'dark' : 'light'
-      }`
+      const signedIframeUrlFetchEndpoint = process.env.REACT_APP_MOONPAY_LINK as string
       const res = await fetch(signedIframeUrlFetchEndpoint, {
         headers: {
           Accept: 'application/json',
@@ -94,6 +92,7 @@ export default function FiatOnrampModal() {
         },
         method: 'POST',
         body: JSON.stringify({
+          theme: isDarkMode ? 'dark' : 'light',
           colorCode: theme.accentAction,
           defaultCurrencyCode: 'eth',
           redirectUrl: 'https://app.uniswap.org/#/swap',
