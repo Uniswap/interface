@@ -167,7 +167,9 @@ export const ActivityTab = forwardRef<FlashList<unknown>, ActivityTabProps>(
         return EMPTY_ARRAY
       }
       return [
-        ...(pending.length > 0 ? [PENDING_TITLE(t), ...pending] : EMPTY_ARRAY),
+        ...(pending.length > 0
+          ? [{ itemType: 'HEADER', title: PENDING_TITLE(t) }, ...pending]
+          : EMPTY_ARRAY),
         ...(todayTransactionList.length > 0
           ? [{ itemType: 'HEADER', title: TODAY_TITLE(t) }, ...todayTransactionList]
           : EMPTY_ARRAY),
