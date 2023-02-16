@@ -106,7 +106,6 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element {
     onPressIn,
     warnings,
     dimTextColor,
-    selection,
     onSelectionChange: selectionChange,
     usdValue,
     isOnScreen,
@@ -228,7 +227,6 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element {
               px="none"
               py="none"
               returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
-              selection={selection}
               showCurrencySign={isUSDInput}
               showSoftInputOnFocus={showSoftInputOnFocus}
               testID={isOutput ? 'amount-input-out' : 'amount-input-in'}

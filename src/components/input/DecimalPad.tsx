@@ -181,6 +181,7 @@ function KeyButton({
     if (action !== KeyAction.Delete) return
 
     setValue('')
+    resetSelection?.(0, 0)
   }
 
   return (

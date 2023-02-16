@@ -190,7 +190,6 @@ function _SwapForm({
                 dimTextColor={exactCurrencyField === CurrencyField.OUTPUT && swapDataRefreshing}
                 focus={focusOnCurrencyField === CurrencyField.INPUT}
                 isOnScreen={!showingSelectorScreen}
-                selection={showNativeKeyboard ? undefined : inputSelection}
                 showSoftInputOnFocus={showNativeKeyboard}
                 usdValue={inputCurrencyUSDValue}
                 value={
@@ -256,7 +255,6 @@ function _SwapForm({
                   dimTextColor={exactCurrencyField === CurrencyField.INPUT && swapDataRefreshing}
                   focus={focusOnCurrencyField === CurrencyField.OUTPUT}
                   isOnScreen={!showingSelectorScreen}
-                  selection={showNativeKeyboard ? undefined : outputSelection}
                   showNonZeroBalancesOnly={false}
                   showSoftInputOnFocus={showNativeKeyboard}
                   usdValue={outputCurrencyUSDValue}

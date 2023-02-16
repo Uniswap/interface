@@ -231,7 +231,6 @@ export function TransferTokenForm({
                 currencyInfo={currencyInInfo}
                 isOnScreen={!showingSelectorScreen}
                 isUSDInput={isUSDInput}
-                selection={inputSelection}
                 showSoftInputOnFocus={showNativeKeyboard}
                 usdValue={inputCurrencyUSDValue}
                 value={isUSDInput ? exactAmountUSD : exactAmountToken}
