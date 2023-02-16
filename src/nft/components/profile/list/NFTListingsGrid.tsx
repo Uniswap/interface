@@ -20,7 +20,7 @@ const TableHeader = styled.div`
   top: 72px;
   padding-top: 24px;
   padding-bottom: 24px;
-  z-index: 1;
+  z-index: 3;
   background-color: ${({ theme }) => theme.backgroundBackdrop};
   color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
