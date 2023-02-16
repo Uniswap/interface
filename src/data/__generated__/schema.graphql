@@ -1,26 +1,10 @@
 """This directive allows results to be deferred during execution"""
 directive @defer on FIELD
 
-"""Directs the schema to enforce authorization on a field"""
-directive @aws_auth(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on FIELD_DEFINITION
-
 """
 Tells the service this field/object has access authorized by a Lambda Authorizer.
 """
 directive @aws_lambda on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by sigv4 signing.
-"""
-directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an OIDC token.
-"""
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
 
 """Tells the service which mutation triggers this subscription."""
 directive @aws_subscribe(
@@ -29,6 +13,22 @@ directive @aws_subscribe(
   """
   mutations: [String]
 ) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an OIDC token.
+"""
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
+
+"""Directs the schema to enforce authorization on a field"""
+directive @aws_auth(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an API key.
+"""
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service this field/object has access authorized by a Cognito User Pools token.
@@ -50,9 +50,9 @@ directive @aws_publish(
 ) on FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by an API key.
+Tells the service this field/object has access authorized by sigv4 signing.
 """
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
+directive @aws_iam on OBJECT | FIELD_DEFINITION
 
 enum ActivityType {
   APPROVE
@@ -61,6 +61,7 @@ enum ActivityType {
   SEND
   RECEIVE
   SWAP
+  SWAPX
   DEPLOYMENT
   UNKNOWN
   money
@@ -133,8 +134,8 @@ enum Currency {
 }
 
 enum DatasourceProvider {
-  UNISWAP
-  NXYZ
+  LEGACY
+  ALTERNATE
 }
 
 type Dimensions {
@@ -527,6 +528,20 @@ input PairInput {
   tokenAmountB: TokenAmountInput!
 }
 
+input PermitDetailsInput {
+  token: String!
+  amount: String!
+  expiration: String!
+  nonce: String!
+}
+
+input PermitInput {
+  signature: String!
+  details: PermitDetailsInput!
+  spender: String!
+  sigDeadline: String!
+}
+
 """  v3 pool parameters as defined by https://github.com/Uniswap/v3-sdk/blob/main/src/entities/pool.ts
 """
 input PoolInput {
@@ -547,7 +562,7 @@ type Portfolio {
 
   """  TODO: (michael.zhang) replace with paginated query"""
   nftBalances: [NftBalance]
-  assetActivities(page: Int, pageSize: Int): [AssetActivity]
+  assetActivities(page: Int, pageSize: Int, includeOffChain: Boolean): [AssetActivity]
 }
 
 type Query {
@@ -689,6 +704,7 @@ input TokenTradeInput {
   tokenAmount: TokenAmountInput!
   routes: TokenTradeRoutesInput
   slippageToleranceBasisPoints: Int
+  permit: PermitInput
 }
 
 input TokenTradeRouteInput {
