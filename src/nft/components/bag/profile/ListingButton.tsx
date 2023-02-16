@@ -96,7 +96,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
     const missingExpiration = sellAssets.some((asset) => {
       return (
         asset.expirationTime != null &&
-        (asset.expirationTime * 1000 - Date.now() < ms`60 seconds` || isNaN(asset.expirationTime))
+        (isNaN(asset.expirationTime) || asset.expirationTime * 1000 - Date.now() < ms`60 seconds`)
       )
     })
     const invalidExpiration = sellAssets.some((asset) => {
