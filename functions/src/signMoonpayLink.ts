@@ -51,6 +51,7 @@ export const signMoonpayLink = functions
         externalTransactionId,
         externalCustomerId,
         redirectURL,
+        theme,
         walletAddress,
         walletAddresses,
       } = request.body
@@ -65,6 +66,7 @@ export const signMoonpayLink = functions
           externalTransactionId,
           externalCustomerId,
           redirectURL,
+          theme,
           walletAddress,
           walletAddresses,
         })
