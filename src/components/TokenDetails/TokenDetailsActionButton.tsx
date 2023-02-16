@@ -26,7 +26,7 @@ export function TokenDetailsActionButtons({
 
   const { textVariant, paddingX, paddingY, borderRadius, borderColor } = getButtonProperties(
     ButtonEmphasis.Secondary,
-    ButtonSize.Medium
+    ButtonSize.Large
   )
 
   return (
@@ -64,6 +64,7 @@ export function TokenDetailsActionButtons({
           disabled={!onPressSend}
           emphasis={ButtonEmphasis.Secondary}
           name={ElementName.Send}
+          size={ButtonSize.Large}
           onPress={onPressSend}
         />
       )}

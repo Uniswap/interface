@@ -2,11 +2,11 @@ import { ImpactFeedbackStyle, selectionAsync } from 'expo-haptics'
 import React, { useCallback } from 'react'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import DoubleChevron from 'src/assets/icons/double-chevron.svg'
 import ScanQRWCIcon from 'src/assets/icons/scan-qr-wc.svg'
 import SettingsIcon from 'src/assets/icons/settings.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
+import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
@@ -23,8 +23,9 @@ function QRScannerIconButton({ onPress }: { onPress: () => void }): JSX.Element 
   return (
     <TouchableArea hapticFeedback name={ElementName.WalletConnectScan} onPress={onPress}>
       <ScanQRWCIcon
-        color={theme.colors.textSecondary}
+        color={theme.colors.textTertiary}
         height={theme.iconSizes.icon24}
+        opacity="0.8"
         strokeWidth={2}
       />
     </TouchableArea>
@@ -86,10 +87,11 @@ export function AccountHeader(): JSX.Element {
                 variant="subheadLarge"
               />
             </Flex>
-            <DoubleChevron
-              color={theme.colors.textSecondary}
-              height={iconSizes.icon16}
-              width={iconSizes.icon16}
+            <Chevron
+              color={theme.colors.textTertiary}
+              direction="s"
+              height={iconSizes.icon20}
+              width={iconSizes.icon20}
             />
           </Flex>
         )}
@@ -99,9 +101,10 @@ export function AccountHeader(): JSX.Element {
         <TouchableArea onPress={onPressSettings}>
           <Flex row alignItems="center">
             <SettingsIcon
-              color={theme.colors.textSecondary}
-              height={theme.iconSizes.icon24}
-              width={theme.iconSizes.icon24}
+              color={theme.colors.textTertiary}
+              height={theme.iconSizes.icon28}
+              opacity="0.8"
+              width={theme.iconSizes.icon28}
             />
           </Flex>
         </TouchableArea>

@@ -499,7 +499,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               "alignItems": "center",
               "backgroundColor": "#FC72FF",
               "borderColor": "transparent",
-              "borderRadius": 12,
+              "borderRadius": 16,
               "borderWidth": 1,
               "display": "flex",
               "opacity": 1,
@@ -512,7 +512,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               Array [
                 Object {
                   "alignItems": "stretch",
-                  "borderRadius": 12,
+                  "borderRadius": 16,
                   "display": "flex",
                   "flexDirection": "column",
                   "height": "100%",

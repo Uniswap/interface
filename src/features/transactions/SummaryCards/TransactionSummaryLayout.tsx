@@ -113,7 +113,7 @@ function TransactionSummaryLayout({
           gap="spacing16"
           justifyContent="space-between"
           mb={showBackground ? 'spacing12' : 'none'}
-          p="spacing12">
+          py="spacing12">
           <Flex
             row
             shrink

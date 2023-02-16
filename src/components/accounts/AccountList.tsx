@@ -34,7 +34,7 @@ const ViewOnlyHeader = (): JSX.Element => {
   return (
     <Flex row alignItems="center" borderBottomColor="backgroundOutline">
       <Box flex={1} px="spacing24">
-        <Text color="textSecondary" variant="bodySmall">
+        <Text color="textSecondary" variant="subheadSmall">
           {t('View only')}
         </Text>
       </Box>

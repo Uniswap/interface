@@ -6,7 +6,6 @@ exports[`NetworkPill renders a NetworkPill with border 1`] = `
     Array [
       Object {
         "alignItems": "center",
-        "backgroundColor": "#FFFFFF",
         "borderColor": "transparent",
         "borderRadius": 999999,
         "borderWidth": 1,
@@ -99,7 +98,6 @@ exports[`NetworkPill renders a NetworkPill without image 1`] = `
     Array [
       Object {
         "alignItems": "center",
-        "backgroundColor": "#FFFFFF",
         "borderColor": "transparent",
         "borderRadius": 999999,
         "borderWidth": 1,
@@ -192,7 +190,6 @@ exports[`NetworkPill renders an InlineNetworkPill 1`] = `
     Array [
       Object {
         "alignItems": "center",
-        "backgroundColor": "#FFFFFF",
         "borderColor": "transparent",
         "borderRadius": 4,
         "borderWidth": 1,

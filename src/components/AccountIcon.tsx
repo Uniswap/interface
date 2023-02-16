@@ -11,7 +11,7 @@ import { theme as FixedTheme } from 'src/styles/theme'
 
 interface Props {
   size: number
-  showViewOnlyBadge: boolean
+  showViewOnlyBadge?: boolean
   address: string
   avatarUri?: string | null
   showBackground?: boolean // Display images with solid background.
@@ -37,7 +37,7 @@ export function AccountIcon({
   // Color for gradient background.
   const { gradientStart: uniconColor } = useUniconColors(address)
 
-  const iconPadding = FixedTheme.spacing.spacing4
+  const iconPadding = FixedTheme.spacing.spacing2
   const iconEyeContainerSize = size * 0.45
   const iconEyeSize = iconEyeContainerSize - iconPadding
 
@@ -88,7 +88,7 @@ export function AccountIcon({
           shadowOpacity={0.2}
           shadowRadius={10}
           width={iconEyeContainerSize}>
-          <Eye color={theme.colors.textPrimary} width={iconEyeSize} />
+          <Eye color={theme.colors.textTertiary} width={iconEyeSize} />
         </Box>
       )}
     </Box>

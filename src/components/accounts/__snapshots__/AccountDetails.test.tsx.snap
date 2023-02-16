@@ -642,7 +642,7 @@ exports[`AccountDetails renders without error with chevron 1`] = `
             stroke={4283456120}
             strokeLinecap={1}
             strokeLinejoin={1}
-            strokeWidth="2"
+            strokeWidth="3"
           />
         </RNSVGGroup>
       </RNSVGSvgView>

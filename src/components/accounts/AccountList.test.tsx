@@ -3,7 +3,6 @@ import { fireEvent } from '@testing-library/react-native'
 import React from 'react'
 import { AccountList } from 'src/components/accounts/AccountList'
 import { AccountListDocument, AccountListQuery } from 'src/data/__generated__/types-and-hooks'
-import { ElementName } from 'src/features/telemetry/constants'
 import { account } from 'src/test/fixtures'
 import { Portfolios } from 'src/test/gqlFixtures'
 import { render, screen } from 'src/test/test-utils'
@@ -58,25 +57,6 @@ describe(AccountList, () => {
       )
     ).toBeDefined()
     fireEvent.press(screen.getByTestId(`account_item/${account.address}`))
-
-    expect(onPressSpy).toHaveBeenCalledTimes(1)
-  })
-
-  it('handles press on edit account', async () => {
-    const onPressSpy = jest.fn()
-    render(<AccountList accounts={[account]} onPress={jest.fn()} onPressEdit={onPressSpy} />, {
-      mocks: [mock],
-    })
-    // go to success state
-    expect(
-      await screen.findByText(
-        formatUSDPrice(
-          Portfolios[0].tokensTotalDenominatedValue?.value,
-          NumberType.PortfolioBalance
-        )
-      )
-    ).toBeDefined()
-    fireEvent.press(screen.getByTestId(ElementName.Edit))
 
     expect(onPressSpy).toHaveBeenCalledTimes(1)
   })

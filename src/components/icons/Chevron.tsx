@@ -52,7 +52,7 @@ function _Chevron({
           stroke={color || '#000000'}
           strokeLinecap="round"
           strokeLinejoin="round"
-          strokeWidth="2"
+          strokeWidth="3"
         />
       </Svg>
     </CenterBox>

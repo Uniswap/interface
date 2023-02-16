@@ -193,7 +193,7 @@ export function HomeScreen(): JSX.Element {
   const contentHeader = useMemo(() => {
     return (
       <Flex bg="background0" gap="spacing16" pb="spacing16" px="spacing24">
-        <Box pb="spacing4">
+        <Box pb="spacing12">
           <AccountHeader />
         </Box>
         <Box pb="spacing4">
@@ -215,10 +215,11 @@ export function HomeScreen(): JSX.Element {
 
   const loadingContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
-      paddingTop: headerHeight + TAB_BAR_HEIGHT + TAB_STYLES.tabListInner.paddingTop,
+      paddingTop: headerHeight - TAB_BAR_HEIGHT - TAB_STYLES.tabListInner.paddingTop,
+      paddingHorizontal: theme.spacing.spacing60,
       paddingBottom: insets.bottom,
     }),
-    [headerHeight, insets.bottom]
+    [headerHeight, insets.bottom, theme.spacing.spacing60]
   )
 
   const emptyContainerStyle = useMemo<StyleProp<ViewStyle>>(

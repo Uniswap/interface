@@ -6,7 +6,6 @@ exports[`renders a Pill with border 1`] = `
     Array [
       Object {
         "alignItems": "center",
-        "backgroundColor": "#FFFFFF",
         "borderColor": "#40B66B",
         "borderRadius": 999999,
         "borderWidth": 1,

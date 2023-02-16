@@ -119,7 +119,12 @@ export function NFTItemScreen({
           </TouchableOpacity>
         }>
         <Flex gap="spacing24" mb="spacing48" mt="spacing16" mx="spacing24" pb="spacing48">
-          <Flex gap="spacing24">
+          <Flex
+            gap="spacing24"
+            shadowColor="black"
+            shadowOffset={{ width: 0, height: 16 }}
+            shadowOpacity={0.2}
+            shadowRadius={16}>
             <Flex centered borderRadius="rounded16" overflow="hidden">
               {nftLoading ? (
                 <Box aspectRatio={1} width="100%">

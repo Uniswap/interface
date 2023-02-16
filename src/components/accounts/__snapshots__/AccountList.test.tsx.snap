@@ -30,47 +30,49 @@ exports[`AccountList renders without error 1`] = `
     }
   >
     <View>
-      <View
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        hitSlop={
-          Object {
-            "bottom": 5,
-            "left": 5,
-            "right": 5,
-            "top": 5,
-          }
+      <ContextMenu
+        actions={
+          Array [
+            Object {
+              "systemIcon": "doc.on.doc",
+              "title": "Copy wallet address",
+            },
+            Object {
+              "systemIcon": "gearshape",
+              "title": "Wallet settings",
+            },
+          ]
         }
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          Object {
-            "display": "flex",
-            "opacity": 1,
-            "paddingBottom": 12,
-            "paddingHorizontal": 24,
-            "paddingTop": 8,
-          }
-        }
+        onPress={[Function]}
       >
         <View
-          style={
-            Array [
-              Object {
-                "alignItems": "center",
-                "display": "flex",
-                "flexDirection": "row",
-                "justifyContent": "flex-start",
-              },
-            ]
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          hitSlop={
+            Object {
+              "bottom": 5,
+              "left": 5,
+              "right": 5,
+              "top": 5,
+            }
           }
-          testID="account_item/0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "display": "flex",
+              "opacity": 1,
+              "paddingBottom": 12,
+              "paddingHorizontal": 24,
+              "paddingTop": 8,
+            }
+          }
         >
           <View
             style={
@@ -79,18 +81,21 @@ exports[`AccountList renders without error 1`] = `
                   "alignItems": "center",
                   "display": "flex",
                   "flexDirection": "row",
-                  "flexShrink": 1,
                   "justifyContent": "flex-start",
                 },
               ]
             }
+            testID="account_item/0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
           >
             <View
               style={
                 Array [
                   Object {
+                    "alignItems": "center",
                     "display": "flex",
-                    "position": "relative",
+                    "flexDirection": "row",
+                    "flexShrink": 1,
+                    "justifyContent": "flex-start",
                   },
                 ]
               }
@@ -99,15 +104,8 @@ exports[`AccountList renders without error 1`] = `
                 style={
                   Array [
                     Object {
-                      "backgroundColor": "transparent",
-                      "borderColor": "transparent",
-                      "borderRadius": 999999,
-                      "borderWidth": 0,
                       "display": "flex",
                       "position": "relative",
-                    },
-                    Object {
-                      "padding": 0,
                     },
                   ]
                 }
@@ -116,120 +114,212 @@ exports[`AccountList renders without error 1`] = `
                   style={
                     Array [
                       Object {
+                        "backgroundColor": "transparent",
+                        "borderColor": "transparent",
+                        "borderRadius": 999999,
+                        "borderWidth": 0,
                         "display": "flex",
-                        "height": 40,
-                        "width": 40,
+                        "position": "relative",
+                      },
+                      Object {
+                        "padding": 0,
                       },
                     ]
                   }
                 >
                   <View
                     style={
-                      Object {
-                        "flex": 1,
-                      }
+                      Array [
+                        Object {
+                          "display": "flex",
+                          "height": 40,
+                          "width": 40,
+                        },
+                      ]
                     }
                   >
                     <View
-                      clip={true}
-                      mask={
-                        <UniconMask
-                          attributeData={
-                            Object {
-                              "0": "#5CFE9D",
-                              "1": "#B8C3B7",
-                              "2": Array [
-                                Object {
-                                  "path": "M34 20C34 28.8366 26.8366 36 18 36C9.16344 36 2 28.8366 2 20L2 -3.8147e-06L34 -1.01717e-06V20Z",
-                                },
-                              ],
-                              "3": Array [
-                                Object {
-                                  "fillType": "evenOdd",
-                                  "path": "M16 8C12.2937 6.62854 9.37146 3.70632 8 0C6.62854 3.70632 3.70632 6.62854 0 8C3.70632 9.37146 6.62854 12.2937 8 16C9.37146 12.2937 12.2937 9.37146 16 8ZM8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z",
-                                },
-                              ],
-                            }
-                          }
-                          size={40}
-                        />
+                      style={
+                        Object {
+                          "flex": 1,
+                        }
                       }
                     >
                       <View
-                        transform={
-                          Array [
-                            Object {
-                              "scale": 1.0810810810810811,
-                            },
-                          ]
+                        clip={true}
+                        mask={
+                          <UniconMask
+                            attributeData={
+                              Object {
+                                "0": "#5CFE9D",
+                                "1": "#B8C3B7",
+                                "2": Array [
+                                  Object {
+                                    "path": "M34 20C34 28.8366 26.8366 36 18 36C9.16344 36 2 28.8366 2 20L2 -3.8147e-06L34 -1.01717e-06V20Z",
+                                  },
+                                ],
+                                "3": Array [
+                                  Object {
+                                    "fillType": "evenOdd",
+                                    "path": "M16 8C12.2937 6.62854 9.37146 3.70632 8 0C6.62854 3.70632 3.70632 6.62854 0 8C3.70632 9.37146 6.62854 12.2937 8 16C9.37146 12.2937 12.2937 9.37146 16 8ZM8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z",
+                                  },
+                                ],
+                              }
+                            }
+                            size={40}
+                          />
                         }
                       >
                         <View
+                          transform={
+                            Array [
+                              Object {
+                                "scale": 1.0810810810810811,
+                              },
+                            ]
+                          }
+                        >
+                          <View
+                            height={37}
+                            width={37}
+                            x={0}
+                            y={0}
+                          >
+                            <View
+                              colors={
+                                Array [
+                                  "#5CFE9D",
+                                  "#B8C3B7",
+                                ]
+                              }
+                              end={null}
+                              start={null}
+                            />
+                          </View>
+                          <View
+                            color="#EDE590"
+                            cx={18.5}
+                            cy={-13.36111111111111}
+                            r={30.833333333333336}
+                          >
+                            <View
+                              blur={15}
+                            />
+                          </View>
+                        </View>
+                      </View>
+                      <View
+                        clip={true}
+                        mask={
+                          <UniconMask
+                            attributeData={
+                              Object {
+                                "0": "#5CFE9D",
+                                "1": "#B8C3B7",
+                                "2": Array [
+                                  Object {
+                                    "path": "M34 20C34 28.8366 26.8366 36 18 36C9.16344 36 2 28.8366 2 20L2 -3.8147e-06L34 -1.01717e-06V20Z",
+                                  },
+                                ],
+                                "3": Array [
+                                  Object {
+                                    "fillType": "evenOdd",
+                                    "path": "M16 8C12.2937 6.62854 9.37146 3.70632 8 0C6.62854 3.70632 3.70632 6.62854 0 8C3.70632 9.37146 6.62854 12.2937 8 16C9.37146 12.2937 12.2937 9.37146 16 8ZM8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z",
+                                  },
+                                ],
+                              }
+                            }
+                            overlay={true}
+                            size={40}
+                          />
+                        }
+                      >
+                        <View
+                          color="#000000"
                           height={37}
+                          opacity={0.08}
                           width={37}
                           x={0}
                           y={0}
-                        >
-                          <View
-                            colors={
-                              Array [
-                                "#5CFE9D",
-                                "#B8C3B7",
-                              ]
-                            }
-                            end={null}
-                            start={null}
-                          />
-                        </View>
-                        <View
-                          color="#EDE590"
-                          cx={18.5}
-                          cy={-13.36111111111111}
-                          r={30.833333333333336}
-                        >
-                          <View
-                            blur={15}
-                          />
-                        </View>
-                      </View>
-                    </View>
-                    <View
-                      clip={true}
-                      mask={
-                        <UniconMask
-                          attributeData={
-                            Object {
-                              "0": "#5CFE9D",
-                              "1": "#B8C3B7",
-                              "2": Array [
-                                Object {
-                                  "path": "M34 20C34 28.8366 26.8366 36 18 36C9.16344 36 2 28.8366 2 20L2 -3.8147e-06L34 -1.01717e-06V20Z",
-                                },
-                              ],
-                              "3": Array [
-                                Object {
-                                  "fillType": "evenOdd",
-                                  "path": "M16 8C12.2937 6.62854 9.37146 3.70632 8 0C6.62854 3.70632 3.70632 6.62854 0 8C3.70632 9.37146 6.62854 12.2937 8 16C9.37146 12.2937 12.2937 9.37146 16 8ZM8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z",
-                                },
-                              ],
-                            }
-                          }
-                          overlay={true}
-                          size={40}
                         />
-                      }
-                    >
-                      <View
-                        color="#000000"
-                        height={37}
-                        opacity={0.08}
-                        width={37}
-                        x={0}
-                        y={0}
-                      />
+                      </View>
                     </View>
                   </View>
                 </View>
+              </View>
+              <View
+                style={
+                  Array [
+                    Object {
+                      "display": "flex",
+                      "flexGrow": 0,
+                      "flexShrink": 0,
+                      "height": 16,
+                      "width": 16,
+                    },
+                  ]
+                }
+              />
+              <View
+                style={
+                  Array [
+                    Object {
+                      "alignItems": "stretch",
+                      "display": "flex",
+                      "flex": 1,
+                      "flexDirection": "column",
+                      "justifyContent": "flex-start",
+                    },
+                  ]
+                }
+              >
+                <Text
+                  allowFontScaling={true}
+                  maxFontSizeMultiplier={1.4}
+                  numberOfLines={1}
+                  style={
+                    Array [
+                      Object {
+                        "color": "#0D111C",
+                        "display": "flex",
+                        "fontFamily": "Inter-Medium",
+                        "fontSize": 20,
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  0x​f39F...2266
+                </Text>
+                <View
+                  style={
+                    Array [
+                      Object {
+                        "display": "flex",
+                        "flexGrow": 0,
+                        "flexShrink": 0,
+                        "height": 0,
+                      },
+                    ]
+                  }
+                />
+                <Text
+                  allowFontScaling={true}
+                  maxFontSizeMultiplier={1.4}
+                  style={
+                    Array [
+                      Object {
+                        "color": "#888FAB",
+                        "display": "flex",
+                        "fontFamily": "Inter-Medium",
+                        "fontSize": 14,
+                        "lineHeight": 20,
+                      },
+                    ]
+                  }
+                >
+                  $55.00
+                </Text>
               </View>
             </View>
             <View
@@ -249,148 +339,17 @@ exports[`AccountList renders without error 1`] = `
               style={
                 Array [
                   Object {
-                    "alignItems": "stretch",
+                    "alignItems": "center",
                     "display": "flex",
-                    "flex": 1,
-                    "flexDirection": "column",
+                    "flexDirection": "row",
                     "justifyContent": "flex-start",
                   },
                 ]
               }
-            >
-              <Text
-                allowFontScaling={true}
-                maxFontSizeMultiplier={1.4}
-                numberOfLines={1}
-                style={
-                  Array [
-                    Object {
-                      "color": "#0D111C",
-                      "display": "flex",
-                      "fontFamily": "Inter-Medium",
-                      "fontSize": 16,
-                      "lineHeight": 24,
-                    },
-                  ]
-                }
-              >
-                0x​f39F...2266
-              </Text>
-              <View
-                style={
-                  Array [
-                    Object {
-                      "display": "flex",
-                      "flexGrow": 0,
-                      "flexShrink": 0,
-                      "height": 0,
-                    },
-                  ]
-                }
-              />
-              <Text
-                allowFontScaling={true}
-                maxFontSizeMultiplier={1.4}
-                style={
-                  Array [
-                    Object {
-                      "color": "#505A78",
-                      "display": "flex",
-                      "fontFamily": "Inter-Regular",
-                      "fontSize": 14,
-                      "lineHeight": 20,
-                    },
-                  ]
-                }
-              >
-                $55
-                <Text
-                  allowFontScaling={true}
-                  maxFontSizeMultiplier={1.4}
-                  style={
-                    Array [
-                      Object {
-                        "color": "#888FAB",
-                        "display": "flex",
-                        "fontFamily": "Inter-Regular",
-                        "fontSize": 14,
-                        "lineHeight": 20,
-                      },
-                    ]
-                  }
-                >
-                  .
-                  00
-                </Text>
-              </Text>
-            </View>
-          </View>
-          <View
-            style={
-              Array [
-                Object {
-                  "display": "flex",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "height": 16,
-                  "width": 16,
-                },
-              ]
-            }
-          />
-          <View
-            style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "display": "flex",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                },
-              ]
-            }
-          >
-            <View
-              accessible={true}
-              collapsable={false}
-              focusable={true}
-              hitSlop={
-                Object {
-                  "bottom": 5,
-                  "left": 5,
-                  "right": 5,
-                  "top": 5,
-                }
-              }
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              style={
-                Object {
-                  "display": "flex",
-                  "opacity": 1,
-                  "paddingLeft": 12,
-                  "paddingVertical": 16,
-                }
-              }
-              testID="edit"
-            >
-              <svg
-                color="#888FAB"
-                data-file-name="SvgTripleDots"
-                height={12}
-                strokeLinecap="round"
-                strokeWidth="1"
-                width={16}
-              />
-            </View>
+            />
           </View>
         </View>
-      </View>
+      </ContextMenu>
     </View>
   </RCTScrollView>
   ExpoLinearGradient

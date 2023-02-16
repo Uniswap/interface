@@ -86,9 +86,9 @@ function getButtonIconPadding(size: ButtonSize): keyof Theme['spacing'] {
 function getButtonBorderRadius(size: ButtonSize): keyof Theme['borderRadii'] {
   switch (size) {
     case ButtonSize.Large:
-      return 'rounded16'
+      return 'rounded20'
     case ButtonSize.Medium:
-      return 'rounded12'
+      return 'rounded16'
     case ButtonSize.Small:
       return 'rounded8'
   }

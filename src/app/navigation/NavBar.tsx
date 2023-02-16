@@ -1,4 +1,5 @@
 import { ShadowProps } from '@shopify/restyle'
+import { BlurView } from 'expo-blur'
 import { selectionAsync } from 'expo-haptics'
 import React, { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -35,16 +36,17 @@ const SWAP_BUTTON_SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 0
 export const NavBar = (): JSX.Element => {
   const insets = useSafeAreaInsets()
   const theme = useAppTheme()
+  const isDarkMode = useColorScheme() === 'dark'
 
   return (
     <>
       <Box pointerEvents="none" style={StyleSheet.absoluteFill}>
         <GradientBackground overflow="hidden">
-          <Svg height="100%" width="100%">
+          <Svg height="100%" opacity={isDarkMode ? '1' : '0.3'} width="100%">
             <Defs>
               <LinearGradient id="background" x1="0%" x2="0%" y1="85%" y2="100%">
-                <Stop offset="0" stopColor={theme.colors.background0} stopOpacity="0" />
-                <Stop offset="1" stopColor={theme.colors.background0} stopOpacity="0.75" />
+                <Stop offset="0" stopColor={theme.colors.black} stopOpacity="0" />
+                <Stop offset="1" stopColor={theme.colors.black} stopOpacity="0.5" />
               </LinearGradient>
             </Defs>
             <Rect fill="url(#background)" height="100%" opacity={1} width="100%" x="0" y="0" />
@@ -178,24 +180,29 @@ function ExploreTabBarButton(): JSX.Element {
       activeOpacity={0.9}
       style={[styles.searchBar, { borderRadius: theme.borderRadii.roundedFull }]}
       onPress={onPress}>
-      <Flex
-        grow
-        row
-        alignItems="center"
-        bg={isDarkMode ? 'background2' : 'background1'}
-        borderRadius="roundedFull"
-        flex={1}
-        gap="spacing8"
-        justifyContent="flex-start"
-        p="spacing16"
-        shadowColor={isDarkMode ? 'background3' : 'textTertiary'}
-        shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
-        shadowOpacity={isDarkMode ? 0.6 : 0.4}
-        shadowRadius={theme.borderRadii.rounded20}>
-        <SearchIcon color={theme.colors.textTertiary} height={20} width={20} />
-        <Text color="textSecondary" variant="bodyLarge">
-          {t('Explore web3')}
-        </Text>
+      <Flex borderRadius="roundedFull" overflow="hidden">
+        <BlurView intensity={100}>
+          <Flex
+            grow
+            row
+            alignItems="center"
+            bg={isDarkMode ? 'background2' : 'background1'}
+            borderRadius="roundedFull"
+            flex={1}
+            gap="spacing8"
+            justifyContent="flex-start"
+            opacity={isDarkMode ? 0.6 : 0.8}
+            p="spacing16"
+            shadowColor={isDarkMode ? 'background3' : 'textTertiary'}
+            shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
+            shadowOpacity={isDarkMode ? 0.6 : 0.4}
+            shadowRadius={theme.borderRadii.rounded20}>
+            <SearchIcon color={theme.colors.textSecondary} />
+            <Text color="textSecondary" variant="bodyLarge">
+              {t('Search web3')}
+            </Text>
+          </Flex>
+        </BlurView>
       </Flex>
     </TouchableOpacity>
   )

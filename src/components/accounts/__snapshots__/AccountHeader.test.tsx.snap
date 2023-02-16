@@ -291,12 +291,78 @@ exports[`AccountHeader renders without error 1`] = `
           ]
         }
       />
-      <svg
-        color="#505A78"
-        data-file-name="SvgDoubleChevron"
-        height={16}
-        width={16}
-      />
+      <View
+        style={
+          Array [
+            Object {
+              "alignItems": "center",
+              "borderRadius": 999999,
+              "display": "flex",
+              "justifyContent": "center",
+            },
+            Object {
+              "transform": Array [
+                Object {
+                  "rotate": "270deg",
+                },
+              ],
+            },
+          ]
+        }
+      >
+        <RNSVGSvgView
+          align="xMidYMid"
+          bbHeight={20}
+          bbWidth={20}
+          fill="none"
+          focusable={false}
+          height={20}
+          meetOrSlice={0}
+          minX={0}
+          minY={0}
+          style={
+            Array [
+              Object {
+                "backgroundColor": "transparent",
+                "borderWidth": 0,
+              },
+              Object {
+                "flex": 0,
+                "height": 20,
+                "width": 20,
+              },
+            ]
+          }
+          vbHeight={24}
+          vbWidth={26}
+          width={20}
+        >
+          <RNSVGGroup
+            fill={null}
+            propList={
+              Array [
+                "fill",
+              ]
+            }
+          >
+            <RNSVGPath
+              d="M15 6L9 12L15 18"
+              propList={
+                Array [
+                  "stroke",
+                  "strokeWidth",
+                  "strokeLinecap",
+                  "strokeLinejoin",
+                ]
+              }
+              stroke={4287139755}
+              strokeLinecap={1}
+              strokeLinejoin={1}
+              strokeWidth="3"
+            />
+          </RNSVGGroup>
+        </RNSVGSvgView>
+      </View>
     </View>
   </View>
   <View
@@ -339,9 +405,10 @@ exports[`AccountHeader renders without error 1`] = `
       testID="wallet-connect-scan"
     >
       <svg
-        color="#505A78"
+        color="#888FAB"
         data-file-name="SvgScanQrWc"
         height={24}
+        opacity="0.8"
         strokeWidth={2}
       />
     </View>
@@ -396,10 +463,11 @@ exports[`AccountHeader renders without error 1`] = `
         }
       >
         <svg
-          color="#505A78"
+          color="#888FAB"
           data-file-name="SvgSettings"
-          height={24}
-          width={24}
+          height={28}
+          opacity="0.8"
+          width={28}
         />
       </View>
     </View>

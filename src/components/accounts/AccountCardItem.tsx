@@ -1,18 +1,24 @@
 import React, { useMemo } from 'react'
-import { useAppTheme } from 'src/app/hooks'
+import { useTranslation } from 'react-i18next'
+import ContextMenu from 'react-native-context-menu-view'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import Check from 'src/assets/icons/check.svg'
-import TripleDots from 'src/assets/icons/triple-dots.svg'
 import { AccountIcon } from 'src/components/AccountIcon'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { NotificationBadge } from 'src/components/notifications/Badge'
 import { Text } from 'src/components/Text'
-import { DecimalNumber } from 'src/components/text/DecimalNumber'
 import { useENSAvatar } from 'src/features/ens/api'
+import { closeModal } from 'src/features/modals/modalSlice'
 import { useSelectAddressHasNotifications } from 'src/features/notifications/hooks'
-import { ElementName } from 'src/features/telemetry/constants'
+import { pushNotification } from 'src/features/notifications/notificationSlice'
+import { AppNotificationType } from 'src/features/notifications/types'
+import { ModalName } from 'src/features/telemetry/constants'
 import { useDisplayName } from 'src/features/wallet/hooks'
+import { Screens } from 'src/screens/Screens'
 import { iconSizes } from 'src/styles/sizing'
+import { setClipboard } from 'src/utils/clipboard'
 import { formatUSDPrice, NumberType } from 'src/utils/format'
 
 type AccountCardItemProps = {
@@ -35,12 +41,13 @@ function PortfolioValue({
   const isLoading = isPortfolioValueLoading && portfolioValue === undefined
 
   return (
-    <DecimalNumber
-      color="textSecondary"
+    <Text
+      color="textTertiary"
       loading={isLoading}
-      number={formatUSDPrice(portfolioValue, NumberType.PortfolioBalance)}
-      variant="bodySmall"
-    />
+      loadingPlaceholderText="$000.00"
+      variant="subheadSmall">
+      {formatUSDPrice(portfolioValue, NumberType.PortfolioBalance)}
+    </Text>
   )
 }
 
@@ -51,12 +58,14 @@ export function AccountCardItem({
   isPortfolioValueLoading,
   portfolioValue,
   onPress,
-  onPressEdit,
 }: AccountCardItemProps): JSX.Element {
+  const { t } = useTranslation()
+
   const theme = useAppTheme()
   const displayName = useDisplayName(address)
   const { data: avatar } = useENSAvatar(address)
   const hasNotifications = useSelectAddressHasNotifications(address)
+  const dispatch = useAppDispatch()
 
   const icon = useMemo(() => {
     return (
@@ -69,49 +78,70 @@ export function AccountCardItem({
     )
   }, [address, avatar, isViewOnly])
 
+  const onPressCopyAddress = (): void => {
+    setClipboard(address)
+    dispatch(pushNotification({ type: AppNotificationType.Copied }))
+  }
+
+  const onPressWalletSettings = (): void => {
+    dispatch(closeModal({ name: ModalName.AccountSwitcher }))
+    navigate(Screens.SettingsStack, {
+      screen: Screens.SettingsWallet,
+      params: { address },
+    })
+  }
+
+  const menuActions = useMemo(() => {
+    return [
+      { title: t('Copy wallet address'), systemIcon: 'doc.on.doc' },
+      { title: t('Wallet settings'), systemIcon: 'gearshape' },
+    ]
+  }, [t])
+
   return (
-    <TouchableArea
-      hapticFeedback
-      pb="spacing12"
-      pt="spacing8"
-      px="spacing24"
-      onPress={(): void => onPress(address)}>
-      <Flex row alignItems="center" testID={`account_item/${address}`}>
-        <Flex row shrink alignItems="center">
-          <NotificationBadge showIndicator={hasNotifications}>{icon}</NotificationBadge>
-          <Flex fill gap="none">
-            <Text numberOfLines={1} variant="bodyLarge">
-              {displayName?.name}
-            </Text>
-            <PortfolioValue
-              isPortfolioValueLoading={isPortfolioValueLoading}
-              portfolioValue={portfolioValue}
-            />
+    <ContextMenu
+      actions={menuActions}
+      onPress={(e): void => {
+        // Emitted index based on order of menu action array
+        // Copy address
+        if (e.nativeEvent.index === 0) {
+          onPressCopyAddress()
+        }
+        // Navigate to settings
+        if (e.nativeEvent.index === 1) {
+          onPressWalletSettings()
+        }
+      }}>
+      <TouchableArea
+        hapticFeedback
+        pb="spacing12"
+        pt="spacing8"
+        px="spacing24"
+        onPress={(): void => onPress(address)}>
+        <Flex row alignItems="center" testID={`account_item/${address}`}>
+          <Flex row shrink alignItems="center">
+            <NotificationBadge showIndicator={hasNotifications}>{icon}</NotificationBadge>
+            <Flex fill gap="none">
+              <Text numberOfLines={1} variant="subheadLarge">
+                {displayName?.name}
+              </Text>
+              <PortfolioValue
+                isPortfolioValueLoading={isPortfolioValueLoading}
+                portfolioValue={portfolioValue}
+              />
+            </Flex>
+          </Flex>
+          <Flex row alignItems="center" gap="none">
+            {isActive && (
+              <Check
+                color={theme.colors.userThemeMagenta}
+                height={theme.iconSizes.icon24}
+                width={theme.iconSizes.icon24}
+              />
+            )}
           </Flex>
         </Flex>
-        <Flex row alignItems="center" gap="none">
-          {isActive && (
-            <Check
-              color={theme.colors.userThemeMagenta}
-              height={theme.iconSizes.icon20}
-              width={theme.iconSizes.icon20}
-            />
-          )}
-          <TouchableArea
-            name={ElementName.Edit}
-            pl="spacing12"
-            py="spacing16"
-            onPress={(): void => onPressEdit(address)}>
-            <TripleDots
-              color={theme.colors.textTertiary}
-              height={iconSizes.icon12}
-              strokeLinecap="round"
-              strokeWidth="1"
-              width={iconSizes.icon16}
-            />
-          </TouchableArea>
-        </Flex>
-      </Flex>
-    </TouchableArea>
+      </TouchableArea>
+    </ContextMenu>
   )
 }

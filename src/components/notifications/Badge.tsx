@@ -2,7 +2,7 @@ import React, { memo, PropsWithChildren } from 'react'
 import { Box } from 'src/components/layout/Box'
 import { Theme } from 'src/styles/theme'
 
-const NOTIFICATION_DOT_SIZE = 10
+const NOTIFICATION_DOT_SIZE = 12
 
 type Props = PropsWithChildren<{
   showIndicator?: boolean

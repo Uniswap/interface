@@ -7,7 +7,6 @@ import { ListRenderItemInfo, NativeScrollEvent, NativeSyntheticEvent, View } fro
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import NoNFTsIcon from 'src/assets/icons/empty-state-picture.svg'
-import VerifiedIcon from 'src/assets/icons/verified.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
@@ -17,7 +16,6 @@ import { Flex } from 'src/components/layout/Flex'
 import { TabContentProps } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
-import { Text } from 'src/components/Text'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { isError, isNonPollingRequestInFlight } from 'src/data/utils'
 import { NftsTabQuery, useNftsTabQuery } from 'src/data/__generated__/types-and-hooks'
@@ -27,7 +25,6 @@ import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
-import { formatNumber, NumberType } from 'src/utils/format'
 
 const MAX_NFT_IMAGE_SIZE = 375
 const ESTIMATED_ITEM_SIZE = 251 // heuristic provided by FlashList
@@ -122,7 +119,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
         return typeof item === 'string' ? (
           <Loader.NFT />
         ) : (
-          <Box flex={1} justifyContent="flex-start" m="spacing8">
+          <Box flex={1} justifyContent="flex-start" m="spacing4">
             <TouchableArea
               hapticFeedback
               activeOpacity={1}
@@ -143,37 +140,11 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
                   uri={item.imageUrl ?? ''}
                 />
               </Box>
-              <Flex gap="none" py="spacing8">
-                <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
-                  {item.name ?? '-'}
-                </Text>
-                <Flex row alignItems="center" gap="spacing8" justifyContent="flex-start">
-                  <Flex row shrink>
-                    <Text ellipsizeMode="tail" numberOfLines={1} variant="bodySmall">
-                      {item.collectionName}
-                    </Text>
-                  </Flex>
-                  {item.isVerifiedCollection && (
-                    <VerifiedIcon color={theme.colors.userThemeMagenta} height={16} width={16} />
-                  )}
-                </Flex>
-                {item.floorPrice && (
-                  <Text
-                    color="textSecondary"
-                    ellipsizeMode="tail"
-                    numberOfLines={1}
-                    variant="bodySmall">
-                    {t('Floor: {{floorPrice}} ETH', {
-                      floorPrice: formatNumber(item.floorPrice, NumberType.NFTTokenFloorPrice),
-                    })}
-                  </Text>
-                )}
-              </Flex>
             </TouchableArea>
           </Box>
         )
       },
-      [onPressItem, theme.colors.userThemeMagenta, t]
+      [onPressItem]
     )
 
     /**
@@ -223,7 +194,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
         />
       </Flex>
     ) : (
-      <Flex grow>
+      <Flex grow px="spacing12">
         <AnimatedFlashList
           ref={ref}
           ListFooterComponent={

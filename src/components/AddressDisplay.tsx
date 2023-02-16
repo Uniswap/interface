@@ -100,11 +100,10 @@ export function AddressDisplay({
         address={address}
         avatarUri={avatar}
         showBackground={showIconBackground}
-        showViewOnlyBadge={isViewOnly}
         size={size}
       />
     )
-  }, [address, avatar, isViewOnly, showIconBackground, size])
+  }, [address, avatar, showIconBackground, size])
 
   return (
     <Flex alignItems={contentAlign} flexDirection={direction} gap={horizontalGap}>
