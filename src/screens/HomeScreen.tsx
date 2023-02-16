@@ -27,6 +27,7 @@ import { NftsTab } from 'src/components/home/NftsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
 import { SHADOW_OFFSET_SMALL } from 'src/components/layout/BaseCard'
+import { Delay, Delayed } from 'src/components/layout/Delayed'
 import { Screen } from 'src/components/layout/Screen'
 import {
   HeaderConfig,
@@ -314,21 +315,25 @@ export function HomeScreen(): JSX.Element {
           )
         case SectionName.HomeNFTsTab:
           return (
-            <NftsTab
-              ref={nftsTabScrollRef}
-              containerProps={sharedProps}
-              owner={activeAccount?.address}
-              scrollHandler={nftsTabScrollHandler}
-            />
+            <Delayed waitBeforeShow={Delay.Normal}>
+              <NftsTab
+                ref={nftsTabScrollRef}
+                containerProps={sharedProps}
+                owner={activeAccount?.address}
+                scrollHandler={nftsTabScrollHandler}
+              />
+            </Delayed>
           )
         case SectionName.HomeActivityTab:
           return (
-            <ActivityTab
-              ref={activityTabScrollRef}
-              containerProps={sharedProps}
-              owner={activeAccount?.address}
-              scrollHandler={activityTabScrollHandler}
-            />
+            <Delayed waitBeforeShow={Delay.Normal}>
+              <ActivityTab
+                ref={activityTabScrollRef}
+                containerProps={sharedProps}
+                owner={activeAccount?.address}
+                scrollHandler={activityTabScrollHandler}
+              />
+            </Delayed>
           )
       }
       return null

@@ -16,7 +16,7 @@ interface PortfolioBalanceProps {
 export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element {
   const { data, loading, networkStatus } = usePortfolioBalanceQuery({
     variables: { owner },
-    pollInterval: PollingInterval.Fast,
+    pollInterval: PollingInterval.Normal,
     notifyOnNetworkStatusChange: true,
     // This is better than using network status to check, because doing it that way we would have to wait
     // for the network status to go back to "ready", which results in the numbers updating, and _then_ the

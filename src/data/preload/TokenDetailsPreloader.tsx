@@ -1,4 +1,6 @@
 import React, { memo, useEffect, useState } from 'react'
+import { InteractionManager } from 'react-native'
+import { Delay, Delayed } from 'src/components/layout/Delayed'
 import {
   useTokenDetailsScreenLazyQuery,
   useTokenPriceHistoryLazyQuery,
@@ -38,7 +40,9 @@ export const TokenDetailsPreloaders = memo(({ count = 10 }: { count?: number }) 
     <>
       {stableData?.slice(0, count).map((b) => (
         <React.Fragment key={b.currencyInfo.currencyId}>
-          <TokenDetailsPreloader currencyId={b.currencyInfo.currencyId} />
+          <Delayed waitBeforeShow={Delay.Long}>
+            <TokenDetailsPreloader currencyId={b.currencyInfo.currencyId} />
+          </Delayed>
         </React.Fragment>
       ))}
     </>
@@ -51,7 +55,7 @@ const TokenDetailsPreloader = memo(({ currencyId }: { currencyId: CurrencyId }) 
   const [loadTokenPriceChartData] = useTokenPriceHistoryLazyQuery()
 
   useEffect(() => {
-    setTimeout(() => {
+    InteractionManager.runAfterInteractions(() => {
       loadTokenDetails({
         variables: currencyIdToContractInput(currencyId),
         fetchPolicy: 'network-only',
@@ -60,9 +64,9 @@ const TokenDetailsPreloader = memo(({ currencyId }: { currencyId: CurrencyId }) 
         variables: { contract: currencyIdToContractInput(currencyId) },
         fetchPolicy: 'network-only',
       })
-    }, 1500)
+    })
   }, [currencyId, loadTokenDetails, loadTokenPriceChartData])
 
   // Dummy fragment
-  return <></>
+  return null
 })

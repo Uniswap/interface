@@ -12,7 +12,7 @@ import { BaseCard } from 'src/components/layout/BaseCard'
 import { TabContentProps, TAB_STYLES } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
-import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
+import { EMPTY_ARRAY } from 'src/constants/misc'
 import { isNonPollingRequestInFlight } from 'src/data/utils'
 import { useTransactionListQuery } from 'src/data/__generated__/types-and-hooks'
 import { usePersistedError } from 'src/features/dataApi/utils'
@@ -26,7 +26,6 @@ import { TransactionDetails } from 'src/features/transactions/types'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { makeSelectAccountHideSpamTokens } from 'src/features/wallet/selectors'
-import { usePollOnFocusOnly } from 'src/utils/hooks'
 
 type ActivityTabProps = {
   owner: string
@@ -117,14 +116,12 @@ export const ActivityTab = forwardRef<FlashList<unknown>, ActivityTabProps>(
       loading: requestLoading,
       data,
       error: requestError,
-      startPolling,
-      stopPolling,
     } = useTransactionListQuery({
       variables: { address: owner },
       notifyOnNetworkStatusChange: true,
+      // rely on TransactionHistoryUpdater for polling
+      pollInterval: undefined,
     })
-
-    usePollOnFocusOnly(startPolling, stopPolling, PollingInterval.Fast)
 
     // Hide all spam transactions if active wallet has enabled setting.
     const activeAccount = useActiveAccountWithThrow()
