@@ -27,7 +27,7 @@ export function useEagerActivityNavigation(): {
     [load]
   )
 
-  const navigate = useCallback(() => navigation.navigate(Screens.Activity), [navigation])
+  const navigate = useCallback(() => navigation.navigate(Screens.Home), [navigation])
 
   return { preload, navigate }
 }

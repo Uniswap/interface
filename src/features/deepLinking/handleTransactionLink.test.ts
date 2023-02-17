@@ -5,9 +5,9 @@ import { handleTransactionLink } from 'src/features/deepLinking/handleTransactio
 import { Screens } from 'src/screens/Screens'
 
 describe(handleTransactionLink, () => {
-  it('Navigates to the notification screen', () => {
+  it('Navigates to the home screen when opening a transaction notification', () => {
     return expectSaga(handleTransactionLink)
-      .provide([[call(navigate, Screens.Notifications), undefined]])
+      .provide([[call(navigate, Screens.Home), undefined]])
       .silentRun()
   })
 })

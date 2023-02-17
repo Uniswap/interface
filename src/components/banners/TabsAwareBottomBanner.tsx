@@ -10,7 +10,6 @@ const EXTRA_MARGIN = 5
 const NO_NAV_SCREENS = [
   Screens.SettingsStack,
   Screens.OnboardingStack,
-  Screens.Activity,
   Screens.ExternalProfile,
   Screens.NFTItem,
 ]

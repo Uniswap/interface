@@ -4,5 +4,5 @@ import { Screens } from 'src/screens/Screens'
 import { call } from 'typed-redux-saga'
 
 export function* handleTransactionLink(): Generator<CallEffect<never>, void, unknown> {
-  yield* call(navigate, Screens.Activity)
+  yield* call(navigate, Screens.Home)
 }

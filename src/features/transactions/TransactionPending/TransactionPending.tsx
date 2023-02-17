@@ -36,7 +36,7 @@ export function TransactionPending({
   const { t } = useTranslation()
 
   const onPressViewTransaction = (): void => {
-    navigate(Screens.Activity)
+    navigate(Screens.Home)
     onNext()
   }
 

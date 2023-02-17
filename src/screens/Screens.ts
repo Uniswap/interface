@@ -1,12 +1,10 @@
 export enum Screens {
   Accounts = 'Accounts',
   AccountStack = 'AccountStack',
-  Activity = 'Activity',
   Dev = 'Dev',
   Education = 'Education',
   Explore = 'Explore',
   Home = 'Home',
-  Notifications = 'Notifications',
   NFTItem = 'NFTItem',
   NFTCollection = 'NFTCollection',
   OnboardingStack = 'OnboardingStack',

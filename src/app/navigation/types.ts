@@ -90,7 +90,6 @@ export type AppStackParamList = {
   }
   [Screens.Home]: undefined
   [Screens.SettingsWalletManageConnection]: { address: Address }
-  [Screens.Notifications]: undefined | { txHash: string }
   [Screens.OnboardingStack]: NavigatorScreenParams<OnboardingStackParamList>
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
   [Screens.TokenDetails]: {
@@ -101,7 +100,6 @@ export type AppStackParamList = {
   [Screens.ExternalProfile]: {
     address: string
   }
-  [Screens.Activity]: undefined
   [Screens.WebView]: { headerTitle: string; uriLink: string }
 }
 
