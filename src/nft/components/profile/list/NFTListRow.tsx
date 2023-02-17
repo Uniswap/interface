@@ -12,6 +12,8 @@ import { opacify } from 'theme/utils'
 import { MarketplaceRow } from './MarketplaceRow'
 import { SetPriceMethod } from './NFTListingsGrid'
 
+const IMAGE_THUMBNAIL_SIZE = 60
+
 const NFTListRowWrapper = styled(Row)`
   padding: 24px 0px;
   align-items: center;
@@ -23,8 +25,8 @@ const NFTListRowWrapper = styled(Row)`
 `
 
 const RemoveIconContainer = styled.div`
-  width: 44px;
-  height: 44px;
+  width: ${IMAGE_THUMBNAIL_SIZE}px;
+  height: ${IMAGE_THUMBNAIL_SIZE}px;
   padding-left: 12px;
   align-self: flex-start;
   align-items: center;
@@ -51,8 +53,8 @@ const NFTInfoWrapper = styled(Row)`
 `
 
 const NFTImage = styled.img`
-  width: 44px;
-  height: 44px;
+  width: ${IMAGE_THUMBNAIL_SIZE}px;
+  height: ${IMAGE_THUMBNAIL_SIZE}px;
   border-radius: 8px;
   margin-right: 8px;
 `
@@ -85,6 +87,7 @@ const MarketPlaceRowWrapper = styled(Column)`
   gap: 24px;
   flex: 1.5;
   margin-right: 12px;
+  padding: 6px 0px;
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     flex: 2;

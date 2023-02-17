@@ -19,7 +19,7 @@ const PriceTextInputWrapper = styled(Column)`
 `
 
 const InputWrapper = styled(Row)<{ borderColor: string }>`
-  height: 44px;
+  height: 48px;
   color: ${({ theme }) => theme.textTertiary};
   padding: 12px;
   border: 2px solid;
