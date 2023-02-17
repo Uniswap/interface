@@ -109,7 +109,6 @@ export const PriceTextInput = ({
   warning,
   asset,
 }: PriceTextInputProps) => {
-  const [focused, setFocused] = useState(false)
   const [warningType, setWarningType] = useState(WarningType.NONE)
   const removeMarketplaceWarning = useSellAsset((state) => state.removeMarketplaceWarning)
   const removeSellAsset = useSellAsset((state) => state.removeSellAsset)
@@ -156,10 +155,6 @@ export const PriceTextInput = ({
           placeholder="0"
           backgroundColor="none"
           width={{ sm: '54', md: '68' }}
-          onFocus={() => setFocused(true)}
-          onBlur={() => {
-            setFocused(false)
-          }}
           ref={inputRef}
           onChange={(v: FormEvent<HTMLInputElement>) => {
             if (!listPrice && v.currentTarget.value.includes('.') && parseFloat(v.currentTarget.value) === 0) {
