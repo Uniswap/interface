@@ -28,7 +28,7 @@ const TableHeader = styled.div`
   line-height: 20px;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
-    margin-left: 48px;
+    padding-left: 48px;
   }
 `
 
