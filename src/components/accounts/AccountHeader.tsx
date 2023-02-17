@@ -1,4 +1,4 @@
-import { ImpactFeedbackStyle, selectionAsync } from 'expo-haptics'
+import { impactAsync, ImpactFeedbackStyle, selectionAsync } from 'expo-haptics'
 import React, { useCallback } from 'react'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
@@ -11,12 +11,16 @@ import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { openModal } from 'src/features/modals/modalSlice'
+import { pushNotification } from 'src/features/notifications/notificationSlice'
+import { AppNotificationType } from 'src/features/notifications/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { iconSizes } from 'src/styles/sizing'
+import { setClipboard } from 'src/utils/clipboard'
 import { isDevBuild } from 'src/utils/version'
+
 function QRScannerIconButton({ onPress }: { onPress: () => void }): JSX.Element {
   const theme = useAppTheme()
 
@@ -53,6 +57,14 @@ export function AccountHeader(): JSX.Element {
     )
   }, [dispatch])
 
+  const onPressCopyAddress = (): void => {
+    if (activeAddress) {
+      impactAsync()
+      setClipboard(activeAddress)
+      dispatch(pushNotification({ type: AppNotificationType.Copied }))
+    }
+  }
+
   return (
     <Box
       alignItems="center"
@@ -70,6 +82,7 @@ export function AccountHeader(): JSX.Element {
         name={ElementName.Manage}
         testID={ElementName.Manage}
         onLongPress={(): void => {
+          onPressCopyAddress()
           if (isDevBuild()) {
             selectionAsync()
             dispatch(openModal({ name: ModalName.Experiments }))

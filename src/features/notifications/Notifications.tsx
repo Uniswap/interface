@@ -499,7 +499,7 @@ export function CopiedNotification({
           width={iconSizes.icon24}
         />
       }
-      title={t('Copied to clipboard')}
+      title={t('Address copied')}
     />
   )
 }

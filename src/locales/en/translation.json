@@ -220,7 +220,7 @@
   "Items": "Items",
   "Owners": "Owners",
   "Floor": "Floor",
-  "Copied to clipboard": "Copied to clipboard",
+  "Address copied": "Address copied",
   "Swapping on {{ network }}": "Swapping on {{ network }}",
   "Connected": "Connected",
   "Disconnected": "Disconnected",
