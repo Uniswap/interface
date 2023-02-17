@@ -165,14 +165,16 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
         gap="spacing8"
         minHeight={48}
         px="spacing16"
-        py="spacing16"
+        py="spacing12"
         style={textInputStyle}
         {...shadowProps}>
-        <SearchIcon
-          color={isDarkMode ? theme.colors.textSecondary : theme.colors.textTertiary}
-          height={20}
-          width={20}
-        />
+        <Box py="spacing4">
+          <SearchIcon
+            color={isDarkMode ? theme.colors.textSecondary : theme.colors.textTertiary}
+            height={theme.iconSizes.icon20}
+            width={theme.iconSizes.icon20}
+          />
+        </Box>
         <TextInput
           ref={ref}
           autoCapitalize="none"
