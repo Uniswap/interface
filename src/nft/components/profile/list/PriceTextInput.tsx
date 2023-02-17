@@ -1,14 +1,14 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { AttachPriceIcon, EditPriceIcon } from 'nft/components/icons'
+import { BrokenLinkIcon } from 'nft/components/icons'
 import { NumericInput } from 'nft/components/layout/Input'
 import { body } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { ListingWarning, WalletAsset } from 'nft/types'
 import { formatEth } from 'nft/utils/currency'
 import { Dispatch, FormEvent, useEffect, useRef, useState } from 'react'
-import { AlertTriangle } from 'react-feather'
+import { AlertTriangle, Link } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { colors } from 'theme/colors'
@@ -34,12 +34,17 @@ const CurrencyWrapper = styled.div<{ listPrice: number | undefined }>`
 `
 
 const GlobalPriceIcon = styled.div`
-  display: block;
+  display: flex;
   cursor: pointer;
   position: absolute;
-  top: -6px;
-  right: -4px;
+  bottom: 32px;
+  right: -10px;
   background-color: ${({ theme }) => theme.backgroundSurface};
+  border-radius: 50%;
+  height: 28px;
+  width: 28px;
+  align-items: center;
+  justify-content: center;
 `
 
 const WarningRow = styled(Row)`
@@ -167,7 +172,7 @@ export const PriceTextInput = ({
         <CurrencyWrapper listPrice={listPrice}>&nbsp;ETH</CurrencyWrapper>
         {(isGlobalPrice || globalOverride) && (
           <GlobalPriceIcon onClick={() => setGlobalOverride(!globalOverride)}>
-            {globalOverride ? <AttachPriceIcon /> : <EditPriceIcon />}
+            {globalOverride ? <BrokenLinkIcon /> : <Link size={20} color={warningColor} />}
           </GlobalPriceIcon>
         )}
       </InputWrapper>
