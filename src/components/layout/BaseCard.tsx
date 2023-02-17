@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { useColorScheme } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
-import ErrorLoadingIcon from 'src/assets/icons/error-loading.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, BoxProps, Flex } from 'src/components/layout'
@@ -169,20 +168,7 @@ type ErrorStateProps = {
 
 function ErrorState(props: ErrorStateProps): JSX.Element {
   const { t } = useTranslation()
-  const theme = useAppTheme()
-  const {
-    title,
-    description = t('Something went wrong'),
-    retryButtonLabel,
-    onRetry,
-    icon = (
-      <ErrorLoadingIcon
-        color={theme.colors.textTertiary}
-        height={theme.imageSizes.image48}
-        width={theme.imageSizes.image48}
-      />
-    ),
-  } = props
+  const { title, description = t('Something went wrong'), retryButtonLabel, onRetry, icon } = props
   return (
     <Flex centered grow gap="spacing24" p="spacing12" width="100%">
       <Flex centered>
