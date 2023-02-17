@@ -41,7 +41,7 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
     : ''
 
   return (
-    <Flex row alignItems="center" gap="spacing2">
+    <Flex row alignItems="center" gap="spacing2" justifyContent="flex-end">
       {change !== undefined && (
         <Arrow color={arrowColor} direction={isPositiveChange ? 'ne' : 'se'} size={arrowSize} />
       )}
