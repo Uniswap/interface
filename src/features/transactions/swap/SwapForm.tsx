@@ -183,12 +183,12 @@ function _SwapForm({
   )
 
   const onShowTokenSelectorInput = useCallback(
-    () => (): void => onShowTokenSelector(CurrencyField.INPUT),
+    (): void => onShowTokenSelector(CurrencyField.INPUT),
     [onShowTokenSelector]
   )
 
   const onShowTokenSelectorOutput = useCallback(
-    () => (): void => onShowTokenSelector(CurrencyField.OUTPUT),
+    (): void => onShowTokenSelector(CurrencyField.OUTPUT),
     [onShowTokenSelector]
   )
 

@@ -50,7 +50,6 @@ interface TransactionFlowProps {
   step: TransactionStep
   setStep: (newStep: TransactionStep) => void
   warnings: Warning[]
-  modalOpened: boolean
   exactValue: string
   isUSDInput?: boolean
   showUSDToggle?: boolean
@@ -98,7 +97,6 @@ export function TransactionFlow({
   exactValue,
   isUSDInput,
   showUSDToggle,
-  modalOpened,
 }: TransactionFlowProps): JSX.Element {
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
@@ -108,7 +106,13 @@ export function TransactionFlow({
   const [showViewOnlyModal, setShowViewOnlyModal] = useState(false)
   const isSwap = isSwapInfo(derivedInfo)
   const hideInnerContentRouter = showTokenSelector || showRecipientSelector
-  const renderInnerContentRouter = !hideInnerContentRouter || modalOpened
+
+  // optimisation for not rendering InnerContent initially,
+  // when modal is opened with recipient or token selector presented
+  const [renderInnerContentRouter, setRenderInnerContentRouter] = useState(!hideInnerContentRouter)
+  useEffect(() => {
+    setRenderInnerContentRouter(renderInnerContentRouter || !hideInnerContentRouter)
+  }, [showTokenSelector, showRecipientSelector, renderInnerContentRouter, hideInnerContentRouter])
 
   const screenXOffset = useSharedValue(hideInnerContentRouter ? -dimensions.fullWidth : 0)
   useEffect(() => {

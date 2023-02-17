@@ -26,14 +26,9 @@ import { useTransferWarnings } from './useTransferWarnings'
 interface TransferFormProps {
   prefilledState?: TransactionState
   onClose: () => void
-  modalOpened: boolean
 }
 
-export function TransferFlow({
-  prefilledState,
-  onClose,
-  modalOpened,
-}: TransferFormProps): JSX.Element {
+export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JSX.Element {
   const [state, dispatch] = useReducer(transactionStateReducer, prefilledState || emptyState)
   const { t } = useTranslation()
   const { onSelectCurrency, onHideTokenSelector } = useSwapActionHandlers(dispatch)
@@ -70,7 +65,6 @@ export function TransferFlow({
       flowName={t('Send')}
       gasFallbackUsed={false}
       isUSDInput={derivedTransferInfo.isUSDInput}
-      modalOpened={modalOpened}
       recipientSelector={
         <RecipientSelect
           recipient={state.recipient}

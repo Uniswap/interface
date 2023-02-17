@@ -22,7 +22,6 @@ type Props = PropsWithChildren<{
   hideHandlebar?: boolean
   name: ModalName
   onClose?: () => void
-  onOpenComplete?: () => void
   snapPoints?: Array<string | number>
   stackBehavior?: ComponentProps<typeof BaseModal>['stackBehavior']
   fullScreen?: boolean
@@ -55,7 +54,6 @@ export function BottomSheetModal({
   name,
   properties,
   onClose,
-  onOpenComplete,
   snapPoints = CONTENT_HEIGHT_SNAP_POINTS,
   stackBehavior = 'push',
   fullScreen,
@@ -126,15 +124,6 @@ export function BottomSheetModal({
   const background = blurredBackground ? { backgroundComponent: renderBlurredBg } : undefined
   const backdrop = { backdropComponent: renderBackdrop }
 
-  const onChange = useCallback(
-    (idx) => {
-      if (onOpenComplete && idx === APPEARS_ON_INDEX) {
-        onOpenComplete()
-      }
-    },
-    [onOpenComplete]
-  )
-
   return (
     <BaseModal
       {...background}
@@ -151,7 +140,6 @@ export function BottomSheetModal({
       snapPoints={animatedSnapPoints}
       stackBehavior={stackBehavior}
       topInset={renderBehindInset ? undefined : insets.top}
-      onChange={onChange}
       onDismiss={onClose}>
       <Trace logImpression modal={name} properties={properties}>
         <BottomSheetView

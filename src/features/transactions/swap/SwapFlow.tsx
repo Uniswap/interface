@@ -21,14 +21,13 @@ import { useTransactionGasWarning } from 'src/features/transactions/useTransacti
 interface SwapFormProps {
   prefilledState?: TransactionState
   onClose: () => void
-  modalOpened: boolean
 }
 
 function otherCurrencyField(field: CurrencyField): CurrencyField {
   return field === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
 }
 
-export function SwapFlow({ prefilledState, onClose, modalOpened }: SwapFormProps): JSX.Element {
+export function SwapFlow({ prefilledState, onClose }: SwapFormProps): JSX.Element {
   const { t } = useTranslation()
   const [state, dispatch] = useReducer(transactionStateReducer, prefilledState || emptyState)
   const derivedSwapInfo = useDerivedSwapInfo(state)
@@ -87,7 +86,6 @@ export function SwapFlow({ prefilledState, onClose, modalOpened }: SwapFormProps
       exactValue={exactValue ?? ''}
       flowName={t('Swap')}
       gasFallbackUsed={gasFallbackUsed}
-      modalOpened={modalOpened}
       setStep={setStep}
       showTokenSelector={!!selectingCurrencyField}
       step={step}

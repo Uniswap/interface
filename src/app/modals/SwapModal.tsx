@@ -4,7 +4,6 @@ import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { closeModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { SwapFlow } from 'src/features/transactions/swap/SwapFlow'
-import { useModalOpenComplete } from './hooks'
 
 export function SwapModal(): JSX.Element {
   const theme = useAppTheme()
@@ -15,20 +14,13 @@ export function SwapModal(): JSX.Element {
     appDispatch(closeModal({ name: ModalName.Swap }))
   }, [appDispatch])
 
-  const { onOpenComplete, modalOpened } = useModalOpenComplete()
-
   return (
     <BottomSheetModal
       fullScreen
       backgroundColor={theme.colors.background1}
       name={ModalName.Swap}
-      onClose={onClose}
-      onOpenComplete={onOpenComplete}>
-      <SwapFlow
-        modalOpened={modalOpened}
-        prefilledState={modalState.initialState}
-        onClose={onClose}
-      />
+      onClose={onClose}>
+      <SwapFlow prefilledState={modalState.initialState} onClose={onClose} />
     </BottomSheetModal>
   )
 }
