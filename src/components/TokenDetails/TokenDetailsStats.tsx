@@ -72,17 +72,17 @@ export function TokenDetailsMarketData({
 
   return (
     <Flex gap="spacing8">
-      <StatsRow label={t('Market cap')} tokenColor={tokenColor}>
-        <FormattedValue numberType={NumberType.FiatTokenStats} value={marketCap} />
-      </StatsRow>
-      <StatsRow label={t('52W low')} tokenColor={tokenColor}>
-        <FormattedValue numberType={NumberType.FiatTokenDetails} value={priceLow52W} />
-      </StatsRow>
       <StatsRow label={t('24h Uniswap volume')} tokenColor={tokenColor}>
         <FormattedValue numberType={NumberType.FiatTokenStats} value={volume} />
       </StatsRow>
+      <StatsRow label={t('Market cap')} tokenColor={tokenColor}>
+        <FormattedValue numberType={NumberType.FiatTokenStats} value={marketCap} />
+      </StatsRow>
       <StatsRow label={t('52W high')} tokenColor={tokenColor}>
         <FormattedValue numberType={NumberType.FiatTokenDetails} value={priceHight52W} />
+      </StatsRow>
+      <StatsRow label={t('52W low')} tokenColor={tokenColor}>
+        <FormattedValue numberType={NumberType.FiatTokenDetails} value={priceLow52W} />
       </StatsRow>
     </Flex>
   )
