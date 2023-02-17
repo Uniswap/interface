@@ -454,7 +454,6 @@ export function useDelegatePoolCallback(): (stakeData: StakeData | undefined) =>
     (stakeData: StakeData | undefined) => {
       if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) return undefined
       //if (!stakeData.amount) return
-      //const stakeCall = stakingContract?.interface.encodeFunctionData('stake', [stakeData.amount])
       const delegatee = stakeData.pool
       const poolInstance = stakeData.poolContract ?? undefined
       if (!delegatee) return
