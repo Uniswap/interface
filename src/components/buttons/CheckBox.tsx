@@ -41,7 +41,7 @@ export function CheckBox({ text, checked, onCheckPressed }: CheckBoxProps): JSX.
           ) : null}
         </Box>
         <Box flexShrink={1}>
-          <Text variant="buttonLabelMicro">{text}</Text>
+          <Text variant="subheadSmall">{text}</Text>
         </Box>
       </Flex>
     </TouchableArea>

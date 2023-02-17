@@ -217,12 +217,17 @@ function BackupOptionButton({
         borderColor="accentBranded"
         borderRadius="rounded12"
         borderWidth={1.25}
-        height={32}
+        height={theme.iconSizes.icon40}
         padding="spacing16"
-        width={32}>
-        <Icon color={theme.colors.textPrimary} height={16} strokeWidth={1.5} width={16} />
+        width={theme.iconSizes.icon40}>
+        <Icon
+          color={theme.colors.textPrimary}
+          height={theme.iconSizes.icon20}
+          strokeWidth={1.5}
+          width={theme.iconSizes.icon20}
+        />
       </Flex>
-      <Text maxFontSizeMultiplier={labelMaxFontSizeMultiplier} variant="subheadSmall">
+      <Text maxFontSizeMultiplier={labelMaxFontSizeMultiplier} variant="bodyLarge">
         {label}
       </Text>
       <Flex grow alignItems="flex-end">

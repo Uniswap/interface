@@ -186,10 +186,10 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       "borderWidth": 1.25,
                       "display": "flex",
                       "flexDirection": "column",
-                      "height": 32,
+                      "height": 40,
                       "justifyContent": "center",
                       "padding": 16,
-                      "width": 32,
+                      "width": 40,
                     },
                   ]
                 }
@@ -197,9 +197,9 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 <svg
                   color="#0D111C"
                   data-file-name="SvgCloud"
-                  height={16}
+                  height={20}
                   strokeWidth={1.5}
-                  width={16}
+                  width={20}
                 />
               </View>
               <View
@@ -224,8 +224,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       "color": "#0D111C",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
-                      "fontSize": 15,
-                      "lineHeight": 20,
+                      "fontSize": 17,
+                      "lineHeight": 24,
                     },
                   ]
                 }
@@ -359,10 +359,10 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       "borderWidth": 1.25,
                       "display": "flex",
                       "flexDirection": "column",
-                      "height": 32,
+                      "height": 40,
                       "justifyContent": "center",
                       "padding": 16,
-                      "width": 32,
+                      "width": 40,
                     },
                   ]
                 }
@@ -370,9 +370,9 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 <svg
                   color="#0D111C"
                   data-file-name="SvgPencil"
-                  height={16}
+                  height={20}
                   strokeWidth={1.5}
-                  width={16}
+                  width={20}
                 />
               </View>
               <View
@@ -397,8 +397,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       "color": "#0D111C",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
-                      "fontSize": 15,
-                      "lineHeight": 20,
+                      "fontSize": 17,
+                      "lineHeight": 24,
                     },
                   ]
                 }
@@ -965,10 +965,10 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       "borderWidth": 1.25,
                       "display": "flex",
                       "flexDirection": "column",
-                      "height": 32,
+                      "height": 40,
                       "justifyContent": "center",
                       "padding": 16,
-                      "width": 32,
+                      "width": 40,
                     },
                   ]
                 }
@@ -976,9 +976,9 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 <svg
                   color="#0D111C"
                   data-file-name="SvgCloud"
-                  height={16}
+                  height={20}
                   strokeWidth={1.5}
-                  width={16}
+                  width={20}
                 />
               </View>
               <View
@@ -1003,8 +1003,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       "color": "#0D111C",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
-                      "fontSize": 15,
-                      "lineHeight": 20,
+                      "fontSize": 17,
+                      "lineHeight": 24,
                     },
                   ]
                 }
@@ -1126,10 +1126,10 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       "borderWidth": 1.25,
                       "display": "flex",
                       "flexDirection": "column",
-                      "height": 32,
+                      "height": 40,
                       "justifyContent": "center",
                       "padding": 16,
-                      "width": 32,
+                      "width": 40,
                     },
                   ]
                 }
@@ -1137,9 +1137,9 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 <svg
                   color="#0D111C"
                   data-file-name="SvgPencil"
-                  height={16}
+                  height={20}
                   strokeWidth={1.5}
-                  width={16}
+                  width={20}
                 />
               </View>
               <View
@@ -1164,8 +1164,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       "color": "#0D111C",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
-                      "fontSize": 15,
-                      "lineHeight": 20,
+                      "fontSize": 17,
+                      "lineHeight": 24,
                     },
                   ]
                 }

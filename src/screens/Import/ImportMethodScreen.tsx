@@ -64,7 +64,7 @@ const options: ImportMethodOption[] = [
     title: (t: TFunction) => t('Add a view-only wallet'),
     blurb: (t: TFunction) => t('Explore the contents of any wallet'),
     icon: (theme: Theme) => (
-      <EyeIcon color={theme.colors.textPrimary} height={20} strokeWidth="1.5" width={20} />
+      <EyeIcon color={theme.colors.textPrimary} height={24} strokeWidth="1.5" width={24} />
     ),
     nav: OnboardingScreens.WatchWallet,
     importType: ImportType.Watch,
@@ -210,6 +210,7 @@ function OptionCard({
   disabled?: boolean
   opacity?: number
 }): JSX.Element {
+  const theme = useAppTheme()
   return (
     <TouchableArea
       backgroundColor="background2"
@@ -229,10 +230,10 @@ function OptionCard({
           borderColor="accentBranded"
           borderRadius="rounded12"
           borderWidth={1.25}
-          height={40}
+          height={theme.iconSizes.icon40}
           justifyContent="center"
           padding="spacing16"
-          width={40}>
+          width={theme.iconSizes.icon40}>
           {icon}
         </Box>
         <Flex row alignItems="center" gap="spacing4">

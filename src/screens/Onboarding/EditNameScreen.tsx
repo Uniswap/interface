@@ -93,7 +93,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
   return (
     <OnboardingScreen
       subtitle={t(
-        'It has a public address that starts with 0x but you can set a private nickname to remember it by'
+        'It has a public address that starts with 0x but you can set a private nickname for yourself.'
       )}
       title={t('Say hello to your new wallet')}>
       <Box pt="spacing36">
