@@ -448,7 +448,6 @@ export function useDelegateCallback(): (stakeData: StakeData | undefined) => und
 export function useDelegatePoolCallback(): (stakeData: StakeData | undefined) => undefined | Promise<string> {
   const { account, chainId, provider } = useWeb3React()
   const addTransaction = useTransactionAdder()
-  const stakingContract = useStakingContract()
 
   return useCallback(
     (stakeData: StakeData | undefined) => {
@@ -473,7 +472,7 @@ export function useDelegatePoolCallback(): (stakeData: StakeData | undefined) =>
           })
       })
     },
-    [account, addTransaction, chainId, provider, stakingContract]
+    [account, addTransaction, chainId, provider]
   )
 }
 
