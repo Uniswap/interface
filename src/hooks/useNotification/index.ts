@@ -11,7 +11,7 @@ import { setLoadingNotification, setSubscribedNotificationTopic } from 'state/ap
 import { useNotificationModalToggle } from 'state/application/hooks'
 
 const getAllTopicUrl = (account: string | null | undefined) =>
-  `${KS_SETTING_API}/v1/notification/topic-groups${account ? `?walletAddress=${account}` : ''}`
+  `${KS_SETTING_API}/v1/topic-groups${account ? `?walletAddress=${account}` : ''}`
 
 export type Topic = {
   id: number
