@@ -10,6 +10,7 @@ import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import GOVERNANCE_RB_ABI from 'abis/governance.json'
+import POOL_EXTENDED_ABI from 'abis/pool-extended.json'
 import RB_REGISTRY_ABI from 'abis/rb-registry.json'
 import STAKING_ABI from 'abis/staking-impl.json'
 import STAKING_PROXY_ABI from 'abis/staking-proxy.json'
@@ -60,6 +61,10 @@ function useStakingProxyContract(): Contract | null {
   return useContract(STAKING_PROXY_ADDRESSES, STAKING_PROXY_ABI, true)
 }
 
+export function usePoolExtendedContract(poolAddress: string | undefined): Contract | null {
+  return useContract(poolAddress, POOL_EXTENDED_ABI, true)
+}
+
 // TODO: update structs interfaces
 interface ProposalDetail {
   target: string
@@ -108,6 +113,7 @@ export interface StakeData {
   amount: string | undefined
   pool: string | null
   poolId: string | undefined
+  poolContract?: Contract | null
 }
 
 export enum ProposalState {
@@ -436,6 +442,46 @@ export function useDelegateCallback(): (stakeData: StakeData | undefined) => und
       })
     },
     [account, addTransaction, chainId, provider, stakingContract, stakingProxy]
+  )
+}
+
+export function useDelegatePoolCallback(): (stakeData: StakeData | undefined) => undefined | Promise<string> {
+  const { account, chainId, provider } = useWeb3React()
+  const addTransaction = useTransactionAdder()
+  const stakingContract = useStakingContract()
+
+  return useCallback(
+    (stakeData: StakeData | undefined) => {
+      if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) return undefined
+      //if (!stakeData.amount) return
+      const stakeCall = stakingContract?.interface.encodeFunctionData('stake', [stakeData.amount])
+      const fromInfo = { status: '0', poolId: stakeData.poolId }
+      const toInfo = { status: '1', poolId: stakeData.poolId }
+      const moveStakeCall = stakingContract?.interface.encodeFunctionData('moveStake', [
+        fromInfo,
+        toInfo,
+        stakeData.amount,
+      ])
+      console.log(Number(stakeData.amount))
+      const delegatee = stakeData.pool
+      const poolInstance = stakeData.poolContract ?? undefined
+      if (!delegatee) return
+      //const args = [delegatee]
+      const args = [[stakeCall], [moveStakeCall]]
+      if (!poolInstance) throw new Error('No Pool Contract!')
+      return poolInstance.estimateGas.multicall(...args, {}).then((estimatedGasLimit) => {
+        return poolInstance
+          .multicall(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+          .then((response: TransactionResponse) => {
+            addTransaction(response, {
+              type: TransactionType.DELEGATE,
+              delegatee,
+            })
+            return response.hash
+          })
+      })
+    },
+    [account, addTransaction, chainId, provider, stakingContract]
   )
 }
 

@@ -13,7 +13,12 @@ import { GRG } from '../../constants/tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import useENS from '../../hooks/useENS'
 import { useTokenBalance } from '../../state/connection/hooks'
-import { useDelegateCallback, usePoolIdByAddress } from '../../state/governance/hooks'
+import {
+  useDelegateCallback,
+  useDelegatePoolCallback,
+  usePoolExtendedContract,
+  usePoolIdByAddress,
+} from '../../state/governance/hooks'
 import { ThemedText } from '../../theme'
 import AddressInputPanel from '../AddressInputPanel'
 import { ButtonConfirmed, ButtonPrimary } from '../Button'
@@ -68,20 +73,28 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
 
   // monitor for self delegation or input for third part delegate
   // default is self delegation
-  const activeDelegate = typed ?? account //usingDelegate ? typed : account
+  const activeDelegate = typed ?? account
   const { address: parsedAddress } = useENS(activeDelegate)
 
+  // TODO: in the context of pool grg balance is balance of pool
   // get the number of votes available to delegate
-  const grgBalance = useTokenBalance(account ?? undefined, chainId ? GRG[chainId] : undefined)
-  const rpoolId = usePoolIdByAddress(parsedAddress ?? undefined)
+  const grgUserBalance = useTokenBalance(account ?? undefined, chainId ? GRG[chainId] : undefined)
+  const grgPoolBalance = useTokenBalance(parsedAddress ?? undefined, chainId ? GRG[chainId] : undefined)
+  const poolId = usePoolIdByAddress(parsedAddress ?? undefined)
+  // we only pass the pool extended instance if we have to call the pool directly
+  const poolContract = usePoolExtendedContract(parsedAddress ?? undefined)
+  const grgBalance = usingDelegate ? grgPoolBalance : grgUserBalance
 
   const stakeData = {
     amount: grgBalance?.quotient.toString(),
     pool: parsedAddress,
-    poolId: rpoolId,
+    poolId,
+    poolContract: usingDelegate ? poolContract : undefined,
   }
 
-  const delegateCallback = useDelegateCallback()
+  const delegateUserCallback = useDelegateCallback()
+  const delegatePoolCallback = useDelegatePoolCallback()
+  const delegateCallback = usingDelegate ? delegatePoolCallback : delegateUserCallback
 
   // monitor call to help UI loading state
   const [hash, setHash] = useState<string | undefined>()
