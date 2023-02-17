@@ -22,7 +22,7 @@ import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { getEnvName, isDevelopmentEnv, isProductionEnv } from 'utils/env'
+import { getEnvName, isDevelopmentEnv, isProductionEnv, isTestEnv } from 'utils/env'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
@@ -210,8 +210,8 @@ export default function App() {
         <StatsigProvider
           user={statsigUser}
           // TODO: replace with proxy and cycle key
-          sdkKey={process.env.STATSIG_API_KEY ?? ''}
-          waitForInitialization={!isDevelopmentEnv()}
+          sdkKey={process.env.REACT_APP_STATSIG_API_KEY ?? ''}
+          waitForInitialization={!isDevelopmentEnv() && !isTestEnv()}
           options={{
             environment: { tier: getEnvName() },
           }}
