@@ -136,13 +136,16 @@ export const MarketplaceRow = ({
   toggleExpandMarketplaceRows,
   rowHovered,
 }: MarketplaceRowProps) => {
-  const [listPrice, setListPrice] = useState<number>()
-  const [globalOverride, setGlobalOverride] = useState(false)
-  const showGlobalPrice = globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride && globalPrice
   const setAssetListPrice = useSellAsset((state) => state.setAssetListPrice)
   const removeAssetMarketplace = useSellAsset((state) => state.removeAssetMarketplace)
   const [marketIconHovered, toggleMarketIconHovered] = useReducer((s) => !s, false)
   const [marketRowHovered, toggleMarketRowHovered] = useReducer((s) => !s, false)
+  const existingPrice = asset.newListings?.find((listing) =>
+    expandMarketplaceRows ? listing.marketplace.name === selectedMarkets?.[0].name : !!listing.price
+  )?.price
+  const [listPrice, setListPrice] = useState<number | undefined>(existingPrice)
+  const [globalOverride, setGlobalOverride] = useState(false)
+  const showGlobalPrice = globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride && globalPrice
 
   const price = showGlobalPrice ? globalPrice : listPrice
 
@@ -198,7 +201,7 @@ export const MarketplaceRow = ({
       if (!listPrice) setListPrice(globalPrice)
       price = listPrice ? listPrice : globalPrice
     } else {
-      price = globalPrice
+      price = listPrice
     }
     if (selectedMarkets.length) for (const marketplace of selectedMarkets) setAssetListPrice(asset, price, marketplace)
     else setAssetListPrice(asset, price)
