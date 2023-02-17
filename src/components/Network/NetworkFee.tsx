@@ -41,7 +41,7 @@ export function NetworkFee({
             alignItems="center"
             flexDirection="row"
             justifyContent="space-between"
-            onPress={onShowGasWarning}>
+            onPress={gasFallbackUsed ? onShowGasWarning : undefined}>
             <Text
               color={gasFallbackUsed && gasFeeUSD ? 'accentWarning' : 'textPrimary'}
               loading={!gasFeeUSD}
