@@ -6,9 +6,9 @@ import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Chevron } from 'src/components/icons/Chevron'
-import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { HeaderIcon } from 'src/components/WalletConnect/HeaderIcon'
 import { CHAIN_INFO } from 'src/constants/chains'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
@@ -43,16 +43,9 @@ export function DappConnectionItem({
         name={ElementName.WCOpenDapp}
         onPress={(): Promise<void> => openUri(dapp.url)}>
         <Flex centered grow gap="spacing8">
-          {dapp.icon ? (
-            <Flex>
-              <RemoteImage
-                borderRadius={theme.borderRadii.none}
-                height={40}
-                uri={dapp.icon}
-                width={40}
-              />
-            </Flex>
-          ) : null}
+          <Flex fill>
+            <HeaderIcon dapp={dapp} showChain={false} />
+          </Flex>
           <Text numberOfLines={2} textAlign="center" variant="buttonLabelMedium">
             {dapp.name || dapp.url}
           </Text>

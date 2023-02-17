@@ -2,7 +2,8 @@ import React from 'react'
 import { Image } from 'react-native'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
-import { Box } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
+import { Text } from 'src/components/Text'
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { DappInfo, DappInfoV2 } from 'src/features/walletConnect/types'
 import { iconSizes } from 'src/styles/sizing'
@@ -28,12 +29,31 @@ export function HeaderIcon({
       {/* TODO: [MOB-3880] Add placeholder logo here for dapps without icons */}
       {dapp.icon ? (
         <Image source={{ uri: dapp.icon, height: iconSizes.icon40, width: iconSizes.icon40 }} />
-      ) : null}
+      ) : (
+        <HeaderIconPlaceholder name={dapp.name} />
+      )}
       {showChain && chainId && (
         <Box bottom={-4} position="absolute" right={-4}>
           <NetworkLogo chainId={chainId} />
         </Box>
       )}
     </Box>
+  )
+}
+
+function HeaderIconPlaceholder({ name }: { name: string }): JSX.Element {
+  return (
+    <Flex
+      centered
+      row
+      backgroundColor="background3"
+      borderRadius="roundedFull"
+      flex={1}
+      height={iconSizes.icon40}
+      width={iconSizes.icon40}>
+      <Text color="textSecondary" textAlign="center" variant="subheadLarge">
+        {name.length > 0 ? name.charAt(0) : ' '}
+      </Text>
+    </Flex>
   )
 }
