@@ -5,173 +5,240 @@ exports[`ActivityTab renders without error 1`] = `
   style={
     Array [
       Object {
-        "alignItems": "center",
+        "alignItems": "stretch",
         "display": "flex",
-        "flex": 1,
         "flexDirection": "column",
         "flexGrow": 1,
-        "justifyContent": "center",
+        "justifyContent": "flex-start",
+      },
+      Object {
+        "paddingHorizontal": 24,
       },
     ]
   }
 >
   <View
     style={
-      Array [
-        Object {
-          "alignItems": "center",
-          "display": "flex",
-          "flexDirection": "column",
-          "justifyContent": "center",
-          "padding": 12,
-          "width": "100%",
-        },
-      ]
+      Object {
+        "flex": 1,
+      }
     }
   >
-    <View
-      style={
+    <RCTScrollView
+      ListFooterComponent={
+        <ForwardRef
+          height={276}
+        />
+      }
+      applyWindowCorrection={[Function]}
+      canChangeSize={true}
+      contentContainerStyle={
+        Object {
+          "backgroundColor": undefined,
+          "minHeight": 1,
+          "minWidth": 1,
+        }
+      }
+      contentHeight={0}
+      contentWidth={0}
+      data={
         Array [
           Object {
-            "alignItems": "center",
-            "display": "flex",
-            "flexDirection": "column",
-            "justifyContent": "center",
+            "id": 1,
+            "itemType": "LOADING",
+          },
+          Object {
+            "id": 2,
+            "itemType": "LOADING",
+          },
+          Object {
+            "id": 3,
+            "itemType": "LOADING",
+          },
+          Object {
+            "id": 4,
+            "itemType": "LOADING",
           },
         ]
       }
-    >
-      <View
-        style={
-          Array [
+      dataProvider={
+        DataProvider {
+          "_data": Array [
             Object {
-              "display": "flex",
-              "marginBottom": 24,
+              "id": 1,
+              "itemType": "LOADING",
             },
-          ]
+            Object {
+              "id": 2,
+              "itemType": "LOADING",
+            },
+            Object {
+              "id": 3,
+              "itemType": "LOADING",
+            },
+            Object {
+              "id": 4,
+              "itemType": "LOADING",
+            },
+          ],
+          "_firstIndexToProcess": 0,
+          "_hasStableIds": true,
+          "_requiresDataChangeHandling": false,
+          "_size": 4,
+          "getStableId": [Function],
+          "rowHasChanged": [Function],
         }
-      >
-        <svg
-          color="#505A78"
-          data-file-name="SvgEmptyStateTransaction"
-        />
+      }
+      disableRecycling={false}
+      estimatedItemSize={92}
+      extendedState={Object {}}
+      externalScrollView={[Function]}
+      finalRenderAheadOffset={250}
+      forceNonDeterministicRendering={true}
+      horizontal={false}
+      initialOffset={0}
+      initialRenderIndex={0}
+      isHorizontal={false}
+      keyExtractor={[Function]}
+      layoutProvider={
+        GridLayoutProviderWithProps {
+          "_acceptableRelayoutDelta": 1,
+          "_getHeightOrWidth": [Function],
+          "_getLayoutTypeForIndex": [Function],
+          "_getSpan": [Function],
+          "_maxSpan": 1,
+          "_setLayoutForType": [Function],
+          "_tempDim": Object {
+            "height": 0,
+            "width": 0,
+          },
+          "averageWindow": AverageWindow {
+            "currentAverage": 92,
+            "currentCount": 1,
+            "inputValues": Array [
+              92,
+            ],
+            "nextIndex": 1,
+          },
+          "defaultEstimatedItemSize": 100,
+          "layoutObject": Object {
+            "size": undefined,
+            "span": undefined,
+          },
+          "props": Object {
+            "ListFooterComponent": <ForwardRef
+              height={276}
+            />,
+            "data": Array [
+              Object {
+                "id": 1,
+                "itemType": "LOADING",
+              },
+              Object {
+                "id": 2,
+                "itemType": "LOADING",
+              },
+              Object {
+                "id": 3,
+                "itemType": "LOADING",
+              },
+              Object {
+                "id": 4,
+                "itemType": "LOADING",
+              },
+            ],
+            "estimatedItemSize": 92,
+            "keyExtractor": [Function],
+            "numColumns": 1,
+            "onScroll": [Function],
+            "renderItem": [Function],
+            "showsVerticalScrollIndicator": false,
+          },
+          "shouldRefreshWithAnchoring": true,
+        }
+      }
+      maxRenderAhead={750}
+      numColumns={1}
+      onEndReached={[Function]}
+      onEndReachedThreshold={0}
+      onEndReachedThresholdRelative={0}
+      onItemLayout={[Function]}
+      onLayout={[Function]}
+      onScroll={[Function]}
+      onScrollBeginDrag={[Function]}
+      onSizeChanged={[Function]}
+      onVisibleIndicesChanged={[Function]}
+      removeClippedSubviews={false}
+      renderAheadOffset={0}
+      renderAheadStep={250}
+      renderContentContainer={[Function]}
+      renderItem={[Function]}
+      renderItemContainer={[Function]}
+      rowRenderer={[Function]}
+      scrollEventThrottle={16}
+      scrollThrottle={16}
+      scrollViewProps={
+        Object {
+          "contentContainerStyle": Object {
+            "backgroundColor": undefined,
+            "minHeight": 1,
+            "minWidth": 1,
+          },
+          "onLayout": [Function],
+          "onScrollBeginDrag": [Function],
+          "refreshControl": undefined,
+          "style": Object {
+            "minHeight": 1,
+            "minWidth": 1,
+          },
+        }
+      }
+      showsVerticalScrollIndicator={false}
+      style={
+        Object {
+          "minHeight": 1,
+          "minWidth": 1,
+        }
+      }
+      suppressBoundedSizeException={true}
+      windowCorrectionConfig={
+        Object {
+          "applyToInitialOffset": true,
+          "applyToItemScroll": true,
+          "value": Object {
+            "endCorrection": 0,
+            "startCorrection": 0,
+            "windowShift": -0,
+          },
+        }
+      }
+    >
+      <View>
         <View
           style={
-            Array [
-              Object {
-                "bottom": -23,
-                "display": "flex",
-                "left": 5,
-                "position": "absolute",
-              },
-            ]
+            Object {
+              "flexDirection": "column",
+            }
           }
         >
-          <svg
-            color="#E8ECFB"
-            data-file-name="SvgEmptyStateCoin"
-            fill="#FC72FF"
+          <AutoLayoutView
+            enableInstrumentation={false}
+            horizontal={false}
+            onBlankAreaEvent={[Function]}
+            onLayout={[Function]}
+            renderAheadOffset={0}
+            scrollOffset={0}
+            style={
+              Object {
+                "height": 0,
+                "width": 0,
+              }
+            }
+            windowSize={0}
           />
         </View>
       </View>
-      <View
-        style={
-          Array [
-            Object {
-              "display": "flex",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "height": 16,
-            },
-          ]
-        }
-      />
-      <View
-        style={
-          Array [
-            Object {
-              "alignItems": "center",
-              "display": "flex",
-              "flexDirection": "column",
-              "justifyContent": "center",
-            },
-          ]
-        }
-      >
-        <Text
-          allowFontScaling={true}
-          maxFontSizeMultiplier={1.2}
-          style={
-            Array [
-              Object {
-                "color": "#0D111C",
-                "display": "flex",
-                "fontFamily": "Inter-SemiBold",
-                "fontSize": 17,
-                "lineHeight": 20,
-                "textAlign": "center",
-              },
-            ]
-          }
-        >
-          No activity yet
-        </Text>
-        <View
-          style={
-            Array [
-              Object {
-                "display": "flex",
-                "flexGrow": 0,
-                "flexShrink": 0,
-                "height": 8,
-              },
-            ]
-          }
-        />
-        <Text
-          allowFontScaling={true}
-          maxFontSizeMultiplier={1.4}
-          style={
-            Array [
-              Object {
-                "color": "#505A78",
-                "display": "flex",
-                "fontFamily": "Inter-Regular",
-                "fontSize": 15,
-                "lineHeight": 20,
-                "textAlign": "center",
-              },
-            ]
-          }
-        >
-          When this wallet makes transactions, they’ll appear here.
-        </Text>
-      </View>
-    </View>
-    <View
-      style={
-        Array [
-          Object {
-            "display": "flex",
-            "flexGrow": 0,
-            "flexShrink": 0,
-            "height": 24,
-          },
-        ]
-      }
-    />
-    <View
-      style={
-        Array [
-          Object {
-            "alignItems": "stretch",
-            "display": "flex",
-            "flexDirection": "row",
-            "justifyContent": "flex-start",
-          },
-        ]
-      }
-    />
+    </RCTScrollView>
   </View>
 </View>
 `;
@@ -311,7 +378,7 @@ exports[`ActivityTab renders without error 2`] = `
           ],
           "_firstIndexToProcess": 0,
           "_hasStableIds": true,
-          "_requiresDataChangeHandling": false,
+          "_requiresDataChangeHandling": true,
           "_size": 3,
           "getStableId": [Function],
           "rowHasChanged": [Function],
