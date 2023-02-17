@@ -226,7 +226,7 @@ export const ActivityTab = forwardRef<FlashList<unknown>, ActivityTabProps>(
       )
     }
 
-    return transactions.length === 0 ? (
+    return transactions.length === 0 && !isLoading ? (
       <Flex centered grow flex={1} style={containerProps?.emptyContainerStyle}>
         <BaseCard.EmptyState
           description={t('When this wallet makes transactions, they’ll appear here.')}
