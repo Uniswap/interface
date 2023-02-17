@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-01-16 17:04\n"
+"PO-Revision-Date: 2023-02-17 00:17\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -33,7 +33,7 @@ msgstr ""
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
-msgstr "(عرض على Explorer)"
+msgstr ""
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
@@ -45,19 +45,19 @@ msgstr "(تعديل)"
 
 #: src/components/swap/TradePrice.tsx
 msgid "({0})"
-msgstr "({0})"
+msgstr ""
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove recipient"
-msgstr "- إزالة المستلم"
+msgstr ""
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
-msgstr "حجم 24H"
+msgstr ""
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours."
-msgstr "حجم 24 ساعة هو مقدار الأصل الذي تم تداوله على Uniswap v3 خلال الـ 24 ساعة الماضية."
+msgstr ""
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -69,11 +69,11 @@ msgstr "50%"
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "52W high"
-msgstr "ارتفاع 52 واط"
+msgstr ""
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "52W low"
-msgstr "52 واط منخفض"
+msgstr ""
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "75%"
@@ -94,7 +94,7 @@ msgstr "<0>تحليلات الحساب والرسوم المتراكمة</0><1> 
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
-msgstr "<0> السعر الحالي:</0> <1> <2 /></1> <3>{0} لكل {1}</3>"
+msgstr ""
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
@@ -102,7 +102,7 @@ msgstr "<0>تلميح:</0> إزالة رموز المجموعة تحول مرك�
 
 #: src/pages/CreateProposal/index.tsx
 msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
-msgstr "<0> نصيحة:</0> حدد إجراء ووصف اقتراحك للمجتمع. لا يمكن تعديل العرض بعد التقديم ، لذا يرجى التحقق من جميع المعلومات قبل التقديم. ستبدأ فترة التصويت على الفور وتستمر لمدة 7 أيام. لاقتراح إجراء مخصص ، <1> اقرأ المستندات</1> ."
+msgstr ""
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -116,20 +116,12 @@ msgstr "<0>نصيحة:</0> عندما تضيف السيولة، سوف تتلق�
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
 msgstr "<0>افتح التصويت </0> للتحضير للاقتراح التالي."
 
-#: src/components/MetaMaskConnectionErrorModal/index.tsx
-msgid "A MetaMask error caused your wallet to disconnect. Reload the page to reconnect."
-msgstr ""
-
 #: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
-msgstr "مطلوب حد أدنى قدره 0.25٪ من إجمالي إمداد UNI لتقديم العروض"
+msgstr ""
 
 #: src/components/swap/PriceImpactWarning.tsx
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
-msgstr "قد يكون لمقايضة بهذا الحجم تأثير كبير على السعر ، بالنظر إلى السيولة الحالية في المجمع. قد يكون هناك اختلاف كبير بين مقدار رمز الإدخال الخاص بك وما ستحصل عليه في رمز الإخراج"
-
-#: src/nft/components/profile/list/PriceTextInput.tsx
-msgid "ALREADY LISTED FOR"
 msgstr ""
 
 #: src/components/Tokens/TokenDetails/About.tsx
@@ -177,11 +169,11 @@ msgstr "إضافة سيولة."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add more liquidity"
-msgstr "أضف المزيد من السيولة"
+msgstr ""
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0}"
-msgstr "أضف {0}"
+msgstr ""
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
@@ -189,7 +181,7 @@ msgstr "إضافة سيولة {0}/{1} V3"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Added"
-msgstr "مضاف"
+msgstr ""
 
 #: src/nft/components/collection/CollectionAsset.tsx
 #: src/nft/components/profile/view/ViewMyNftsAsset.tsx
@@ -202,11 +194,11 @@ msgstr "تم إضافة {0}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Adding"
-msgstr "مضيفا"
+msgstr ""
 
 #: src/components/vote/QueueModal.tsx
 msgid "Adding this proposal to the queue will allow it to be executed, after a delay."
-msgstr "ستسمح إضافة هذا الاقتراح إلى قائمة الانتظار بتنفيذه بعد تأخير."
+msgstr ""
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
@@ -232,6 +224,10 @@ msgstr "السماح لبروتوكول Uniswap باستخدام {0} الخاص 
 msgid "Allowed"
 msgstr "مسموح"
 
+#: src/nft/components/profile/list/PriceTextInput.tsx
+msgid "Already listed at"
+msgstr ""
+
 #: src/constants/tokenSafety.tsx
 #: src/constants/tokenSafety.tsx
 msgid "Always conduct your own research before trading."
@@ -241,31 +237,35 @@ msgstr "قم دائمًا بإجراء البحث الخاص بك قبل الت�
 msgid "Amount"
 msgstr "المبلغ"
 
+#: src/nft/components/bag/BagFooter.tsx
+msgid "An approval is needed to use this token."
+msgstr ""
+
 #: src/components/Tokens/TokenTable/TokenTable.tsx
 msgid "An error occurred loading tokens. Please try again."
-msgstr "حدث خطأ أثناء تحميل الرموز المميزة. حاول مرة اخرى."
+msgstr ""
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "حدث خطأ أثناء محاولة تنفيذ هذا التبادل. قد تحتاج إلى زيادة تحملك للانزلاق. إذا لم يفلح ذلك ، فقد يكون هناك عدم توافق مع الرمز الذي تتداوله. ملاحظة: رسوم النقل وإعادة الرموز المميزة غير متوافقة مع Uniswap V3."
 
-#: src/pages/Swap/index.tsx
-msgid "Approval failed. Try again."
-msgstr ""
-
+#: src/nft/components/bag/BagFooter.tsx
 #: src/pages/Swap/index.tsx
 msgid "Approval pending"
 msgstr "في انتظار الموافقة"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "الموافقة"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Approve Token"
-msgstr "الموافقة على رمز"
+msgstr ""
 
+#: src/nft/components/bag/BagFooter.tsx
 #: src/pages/Swap/index.tsx
 msgid "Approve in your wallet"
 msgstr "الموافقة في محفظتك"
@@ -314,20 +314,20 @@ msgstr "تلقائي"
 
 #: src/components/Settings/index.tsx
 msgid "Auto Router API"
-msgstr "API جهاز التوجيه التلقائي"
+msgstr ""
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
-msgstr "العودة إلى اختيار المحفظة"
+msgstr ""
 
 #: src/nft/components/bag/BagHeader.tsx
 msgid "Bag"
-msgstr "شنطة"
+msgstr ""
 
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
-msgstr "التوازن: {0}"
+msgstr ""
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
@@ -347,11 +347,11 @@ msgstr "الأفضل للأزواج المستقرة جدًا."
 
 #: src/components/swap/SwapRoute.tsx
 msgid "Best price route costs ~{formattedGasPriceString} in gas."
-msgstr "تكاليف مسار أفضل الأسعار ~{formattedGasPriceString} في الغاز."
+msgstr ""
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "Blocked Address"
-msgstr "العنوان المحظور"
+msgstr ""
 
 #: src/nft/components/profile/view/ViewMyNftsAsset.tsx
 msgid "Blocked from trading"
@@ -372,11 +372,11 @@ msgstr "من خلال إضافة السيولة ستكسب 0.3٪ من جميع �
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and consent to its <1>Privacy Policy</1>."
-msgstr "من خلال ربط المحفظة ، فإنك توافق على شروط الخدمة <0>الخاصة بـ</1>Labs وتوافق على</0> سياسة الخصوصية <1>."
+msgstr ""
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
-msgstr "ألغيت"
+msgstr ""
 
 #: src/constants/tokenSafety.tsx
 msgid "Caution"
@@ -388,7 +388,7 @@ msgstr "تغيير"
 
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "Check network status"
-msgstr "تحقق من حالة الشبكة"
+msgstr ""
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
@@ -464,7 +464,7 @@ msgstr "اجمع"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Collect as {nativeWrappedSymbol}"
-msgstr "اجمع كـ {nativeWrappedSymbol}"
+msgstr ""
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
@@ -511,7 +511,7 @@ msgstr "تأكيد المبادلة"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Confirm this connection in your wallet"
-msgstr "قم بتأكيد هذا الاتصال في محفظتك"
+msgstr ""
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -524,11 +524,11 @@ msgstr "تأكيد هذه المعاملة في محفظتك"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Confirm transaction in wallet"
-msgstr "تأكيد المعاملة في المحفظة"
+msgstr ""
 
 #: src/components/Web3Status/index.tsx
 msgid "Connect"
-msgstr "الاتصال"
+msgstr ""
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -565,20 +565,24 @@ msgstr "توصيل بمحفظة"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with"
-msgstr "متصل مع"
+msgstr ""
+
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "Continue"
+msgstr ""
 
 #: src/components/Tokens/TokenDetails/AddressSection.tsx
 msgid "Contract address"
-msgstr "عنوان العقد"
+msgstr ""
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components/index.tsx
 msgid "Copied!"
-msgstr "نسخ!"
+msgstr ""
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Copy"
-msgstr "ينسخ"
+msgstr ""
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -586,11 +590,11 @@ msgstr "نسخ العنوان"
 
 #: src/components/Tokens/TokenDetails/ShareButton.tsx
 msgid "Copy Link"
-msgstr "انسخ الرابط"
+msgstr ""
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Create"
-msgstr "خلق"
+msgstr ""
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
@@ -599,7 +603,7 @@ msgstr "إنشاء مجموعة وإمدادات"
 #: src/pages/CreateProposal/index.tsx
 #: src/pages/Vote/Landing.tsx
 msgid "Create Proposal"
-msgstr "إنشاء اقتراح"
+msgstr ""
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
@@ -624,14 +628,10 @@ msgstr "خلق {0}/{1} تجمع V3"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Created"
-msgstr "مخلوق"
+msgstr ""
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Creating"
-msgstr "خلق"
-
-#: src/nft/components/profile/list/RoyaltyTooltip.tsx
-msgid "Creator royalties"
 msgstr ""
 
 #: src/components/PositionPreview/index.tsx
@@ -643,17 +643,17 @@ msgstr "السعر الحالي"
 msgid "Current {0} Price:"
 msgstr "سعر {0} الحالي:"
 
-#: src/nft/components/profile/list/PriceTextInput.tsx
-msgid "DISMISS"
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Custom"
 msgstr ""
 
 #: src/components/WalletDropdown/DefaultMenu.tsx
 msgid "Dark theme"
-msgstr "مظهر داكن"
+msgstr ""
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
-msgstr "هزم"
+msgstr ""
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
@@ -681,7 +681,7 @@ msgstr "إيداع السيولة"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit tokens to the {label} network."
-msgstr "إيداع الرموز في شبكة {label}"
+msgstr ""
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
@@ -701,12 +701,13 @@ msgid "Disconnect"
 msgstr "قطع الاتصال"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/nft/components/profile/list/PriceTextInput.tsx
 msgid "Dismiss"
 msgstr "تجاهل"
 
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Documentation"
-msgstr "توثيق"
+msgstr ""
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
@@ -718,11 +719,15 @@ msgstr "تمثل رموز UNI التي تم الحصول عليها حصص ال�
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
-msgstr "يحرر"
+msgstr ""
+
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "Edit listings"
+msgstr ""
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Efficiency Comparison"
-msgstr "مقارنة الكفاءة"
+msgstr ""
 
 #: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
@@ -768,11 +773,11 @@ msgstr "خطأ في الاتصال"
 
 #: src/components/swap/GasEstimateBadge.tsx
 msgid "Estimate may differ due to your wallet gas settings"
-msgstr "قد يختلف التقدير بسبب إعدادات الغاز في محفظتك"
+msgstr ""
 
 #: src/components/swap/GasEstimateBadge.tsx
 msgid "Estimated network fee"
-msgstr "رسوم الشبكة المقدرة"
+msgstr ""
 
 #: src/nft/components/details/AssetActivity.tsx
 msgid "Event"
@@ -781,11 +786,11 @@ msgstr ""
 #: src/components/vote/ExecuteModal.tsx
 #: src/pages/Vote/VotePage.tsx
 msgid "Execute"
-msgstr "نفذ - اعدم"
+msgstr ""
 
 #: src/components/vote/ExecuteModal.tsx
 msgid "Execute Proposal {proposalId}"
-msgstr "تنفيذ الاقتراح {proposalId}"
+msgstr ""
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Execute proposal {proposalKey}."
@@ -793,27 +798,27 @@ msgstr "تنفيذ الاقتراح {proposalKey}."
 
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
-msgstr "أعدم"
+msgstr ""
 
 #: src/components/vote/ExecuteModal.tsx
 msgid "Executing"
-msgstr "التنفيذ"
+msgstr ""
 
 #: src/components/vote/ExecuteModal.tsx
 msgid "Executing this proposal will enact the calldata on-chain."
-msgstr "سيؤدي تنفيذ هذا الاقتراح إلى تفعيل Calldata على السلسلة."
+msgstr ""
 
 #: src/components/vote/ExecuteModal.tsx
 msgid "Execution Submitted"
-msgstr "تم تقديم التنفيذ"
+msgstr ""
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Expected Output"
-msgstr "الناتج المتوقع"
+msgstr ""
 
 #: src/components/Settings/index.tsx
 msgid "Expert Mode"
-msgstr "وضع الخبراء"
+msgstr ""
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
@@ -821,11 +826,11 @@ msgstr "وضع الخبراء يلغي تأكيد سرعة المعاملات و
 
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
-msgstr "منتهي الصلاحية"
+msgstr ""
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Explore"
-msgstr "يكتشف"
+msgstr ""
 
 #: src/nft/components/profile/view/EmptyWalletContent.tsx
 msgid "Explore NFTs"
@@ -833,10 +838,14 @@ msgstr ""
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
-msgstr "اكتشف تحليلات Uniswap."
+msgstr ""
 
 #: src/components/Tokens/TokenDetails/InvalidTokenDetails.tsx
 msgid "Explore tokens"
+msgstr ""
+
+#: src/nft/components/profile/list/Modal/ContentRow.tsx
+msgid "Failed"
 msgstr ""
 
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
@@ -845,7 +854,7 @@ msgstr ""
 
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Feature Flags"
-msgstr "أعلام الميزة"
+msgstr ""
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -853,22 +862,38 @@ msgstr "مستوى الرسوم"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Fee tier"
-msgstr "فئة الرسوم"
+msgstr ""
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Feedback"
+msgstr ""
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Fees"
 msgstr ""
 
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Fetching Route"
+msgstr ""
+
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
-msgstr "جارٍ الحصول على أفضل سعر ..."
+msgstr ""
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Fetching price..."
+msgstr ""
 
 #: src/components/Tokens/TokenTable/SearchBar.tsx
 msgid "Filter tokens"
-msgstr "تصفية الرموز"
+msgstr ""
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Floor"
+msgstr ""
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Floor price"
 msgstr ""
 
 #: src/pages/Vote/VotePage.tsx
@@ -889,11 +914,11 @@ msgstr "من (على الأكثر)"
 
 #: src/components/RangeSelector/PresetsButtons.tsx
 msgid "Full Range"
-msgstr "مجموعة كاملة"
+msgstr ""
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
-msgstr "قد تكسب المراكز الكاملة النطاق رسومًا أقل من المراكز المركزة. تعلم المزيد <0> هنا</0> ."
+msgstr ""
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support"
@@ -905,12 +930,12 @@ msgstr ""
 
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Help center"
-msgstr "مركز المساعدة"
+msgstr ""
 
 #: src/components/FeeSelector/index.tsx
 #: src/components/Tokens/TokenDetails/About.tsx
 msgid "Hide"
-msgstr "يخفي"
+msgstr ""
 
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
@@ -928,7 +953,7 @@ msgstr "أنا أفهم"
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "If you believe this is an error, please send an email including your address to"
-msgstr "إذا كنت تعتقد أن هذا خطأ ، يرجى إرسال بريد إلكتروني يتضمن عنوانك إلى"
+msgstr ""
 
 #: src/pages/Pool/v2.tsx
 msgid "Import Pool"
@@ -960,11 +985,19 @@ msgstr "قم بتثبيت MetaMask"
 
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Insufficient funds"
-msgstr "رصيد غير كاف"
+msgstr ""
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Insufficient liquidity"
+msgstr ""
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "السيولة غير كافية لهذه التجارة."
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Insufficient pool liquidity to complete transaction"
+msgstr ""
 
 #: src/hooks/useWrapCallback.tsx
 #: src/hooks/useWrapCallback.tsx
@@ -1003,17 +1036,17 @@ msgstr "النطاق المحدد غير صالح. يجب أن يكون الحد
 msgid "Invalid recipient"
 msgstr "مستلم غير صالح"
 
-#: src/nft/components/profile/list/PriceTextInput.tsx
-msgid "LISTING BELOW FLOOR"
-msgstr ""
-
 #: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/components/WalletDropdown/LanguageMenu.tsx
 msgid "Language"
-msgstr "لغة"
+msgstr ""
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Last"
+msgstr ""
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Last Price"
 msgstr ""
 
 #: src/pages/Pool/index.tsx
@@ -1022,7 +1055,7 @@ msgstr "تعلم"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
-msgstr "تعرف على توفير السيولة"
+msgstr ""
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
@@ -1030,20 +1063,20 @@ msgstr "تعرف على توفير السيولة"
 #: src/components/TokenSafety/index.tsx
 #: src/pages/Landing/index.tsx
 msgid "Learn more"
-msgstr "يتعلم أكثر"
+msgstr ""
 
 #: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Legal & Privacy"
-msgstr "الشؤون القانونية والخصوصية"
+msgstr ""
 
 #: src/components/WalletDropdown/DefaultMenu.tsx
 msgid "Light theme"
-msgstr "مظهر خفيف"
+msgstr ""
 
 #: src/components/Tokens/TokenDetails/About.tsx
 msgid "Links"
-msgstr "الروابط"
+msgstr ""
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
@@ -1051,7 +1084,7 @@ msgstr "السيولة"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
-msgstr "بيانات السيولة غير متوفرة."
+msgstr ""
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
@@ -1060,6 +1093,14 @@ msgstr "مكافآت موفر السيولة"
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "يحصل مقدمو خدمات السيولة على رسم بنسبة 0.3٪ من جميع المهن يتناسب مع نصيبهم من المجموعة. تضاف الرسوم إلى المجموعة، تتراكم في الوقت الحقيقي ويمكن المطالبة بها بسحب السيولة الخاصة بك."
+
+#: src/nft/components/profile/list/Modal/ListModal.tsx
+msgid "List NFTs"
+msgstr ""
+
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+msgid "Listing an NFT requires a one-time marketplace approval for each NFT collection."
+msgstr ""
 
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1071,9 +1112,17 @@ msgstr "يحصل مقدمو خدمات السيولة على رسم بنسبة 0
 msgid "Loading"
 msgstr "جاري التحميل"
 
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Loading Allowance"
+msgstr ""
+
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "Low listing price"
+msgstr ""
+
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
-msgstr "الأعلى"
+msgstr ""
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1099,6 +1148,14 @@ msgstr "الحد الأقصى"
 #: src/components/RangeSelector/index.tsx
 msgid "Max Price"
 msgstr "الحد الأقصى للسعر"
+
+#: src/nft/components/profile/list/RoyaltyTooltip.tsx
+msgid "Max creator royalties"
+msgstr ""
+
+#: src/nft/components/profile/list/RoyaltyTooltip.tsx
+msgid "Max fees"
+msgstr ""
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Max price"
@@ -1160,7 +1217,7 @@ msgstr "تلقى الحد الأدنى"
 
 #: src/components/Tokens/TokenDetails/PriceChart.tsx
 msgid "Missing chart data"
-msgstr "بيانات الرسم البياني مفقودة"
+msgstr ""
 
 #: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
@@ -1182,6 +1239,10 @@ msgstr ""
 msgid "More"
 msgstr "المزيد"
 
+#: src/nft/components/profile/list/ListPage.tsx
+msgid "My NFTs"
+msgstr ""
+
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "NFT"
 msgstr ""
@@ -1192,19 +1253,19 @@ msgstr "مجموعات NFT"
 
 #: src/components/NavBar/index.tsx
 msgid "NFTs"
-msgstr "NFTs"
+msgstr ""
 
 #: src/components/Tokens/TokenDetails/index.tsx
 msgid "Name not found"
-msgstr "الاسم غير موجود"
+msgstr ""
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Network Fee"
-msgstr "رسوم الشبكة"
+msgstr ""
 
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "Network Warning"
-msgstr "تحذير الشبكة"
+msgstr ""
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1212,7 +1273,7 @@ msgstr "موضع جديد"
 
 #: src/nft/components/profile/view/EmptyWalletContent.tsx
 msgid "No NFTs in"
-msgstr "لا توجد NFTs في"
+msgstr ""
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
@@ -1244,11 +1305,11 @@ msgstr "لا توجد نتائج."
 
 #: src/components/Tokens/TokenDetails/About.tsx
 msgid "No token information available"
-msgstr "لا توجد معلومات رمزية متاحة"
+msgstr ""
 
 #: src/components/Tokens/TokenTable/TokenTable.tsx
 msgid "No tokens found"
-msgstr "لم يتم العثور على الرموز المميزة"
+msgstr ""
 
 #: src/components/NavBar/SearchBarDropdown.tsx
 msgid "No tokens found."
@@ -1273,6 +1334,10 @@ msgstr "فقط استخدم هذا الخيار مع ما تعلمونه من أ
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
 msgstr "بعد أن تكون راضيًا عن السعر، انقر على الإمداد للمراجعة."
+
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "One NFT is listed {0}%"
+msgstr ""
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
@@ -1309,8 +1374,14 @@ msgstr ""
 
 #: src/nft/components/bag/BagFooter.tsx
 #: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/bag/BagFooter.tsx
 msgid "Pay"
-msgstr "يدفع"
+msgstr ""
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Pay Anyway"
+msgstr ""
 
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Pay with"
@@ -1319,7 +1390,7 @@ msgstr ""
 #: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
-msgstr "قيد الانتظار"
+msgstr ""
 
 #: src/pages/Swap/index.tsx
 msgid "Permission is required for Uniswap to swap each token. This will expire after one month for your security."
@@ -1327,7 +1398,7 @@ msgstr ""
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
-msgstr "يرجى الاتصال بـ Layer 1 Ethereum"
+msgstr ""
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1361,7 +1432,7 @@ msgstr "مجمّع {0}:"
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Pools"
-msgstr "حمامات السباحة"
+msgstr ""
 
 #: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Popular NFT collections"
@@ -1373,9 +1444,10 @@ msgstr "الرموز الشعبية"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
-msgstr "معاينة"
+msgstr ""
 
 #: src/nft/components/details/AssetActivity.tsx
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "السعر"
@@ -1397,12 +1469,17 @@ msgid "Price Updated"
 msgstr "تم تحديث السعر"
 
 #: src/components/swap/PriceImpactWarning.tsx
+#: src/nft/components/bag/BagFooter.tsx
 msgid "Price impact warning"
-msgstr "تحذير من تأثير السعر"
+msgstr ""
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
 msgstr "نطاق السعر"
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Price updated"
+msgstr "تم تحديث السعر"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
@@ -1414,27 +1491,28 @@ msgstr "الأسعار وحصة المجموعة"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Privacy Policy"
-msgstr "سياسة الخصوصية"
+msgstr ""
 
 #: src/nft/components/bag/BagFooter.tsx
+#: src/nft/components/profile/list/Modal/ContentRow.tsx
 msgid "Proceed in wallet"
-msgstr "المضي قدما في المحفظة"
+msgstr ""
 
-#: src/nft/components/profile/list/ListPage.tsx
+#: src/nft/components/profile/list/Modal/SuccessScreen.tsx
 msgid "Proceeds if sold"
 msgstr ""
 
 #: src/pages/CreateProposal/ProposalEditor.tsx
 msgid "Proposal"
-msgstr "عرض"
+msgstr ""
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Proposal Submitted"
-msgstr "تم تقديم الاقتراح"
+msgstr ""
 
 #: src/pages/CreateProposal/ProposalEditor.tsx
 msgid "Proposal Title"
-msgstr "عنوان الاقتراح"
+msgstr ""
 
 #: src/pages/Vote/Landing.tsx
 msgid "Proposals"
@@ -1446,7 +1524,7 @@ msgstr "وسترد هنا المقترحات المقدمة من أعضاء ال
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Proposed Action"
-msgstr "الإجراء المقترح"
+msgstr ""
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
@@ -1455,11 +1533,11 @@ msgstr "المقترح"
 #: src/components/vote/QueueModal.tsx
 #: src/pages/Vote/VotePage.tsx
 msgid "Queue"
-msgstr "طابور"
+msgstr ""
 
 #: src/components/vote/QueueModal.tsx
 msgid "Queue Proposal {proposalId}"
-msgstr "اقتراح قائمة الانتظار {proposalId}"
+msgstr ""
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Queue proposal {proposalKey}."
@@ -1467,14 +1545,10 @@ msgstr "اقتراح قائمة الانتظار {proposalKey}."
 
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
-msgstr "في قائمة الانتظار"
+msgstr ""
 
 #: src/components/vote/QueueModal.tsx
 msgid "Queueing"
-msgstr "قائمة الانتظار"
-
-#: src/nft/components/profile/list/PriceTextInput.tsx
-msgid "REMOVE ITEM"
 msgstr ""
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -1493,6 +1567,10 @@ msgstr "اقرأ المزيد عن توفير السيولة"
 msgid "Read more about unsupported assets"
 msgstr "اقرأ المزيد عن الأصول غير المدعومة"
 
+#: src/nft/components/profile/list/ListPage.tsx
+msgid "Receive"
+msgstr ""
+
 #: src/components/AccountDetails/index.tsx
 msgid "Recent Transactions"
 msgstr "المعاملات الأخيرة"
@@ -1503,10 +1581,14 @@ msgstr "عمليات البحث الأخيرة"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
-msgstr "متلقي"
+msgstr ""
 
-#: src/components/MetaMaskConnectionErrorModal/index.tsx
-msgid "Reload"
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Refunds for unavailable items will be given in ETH"
+msgstr ""
+
+#: src/nft/components/profile/list/Modal/ContentRow.tsx
+msgid "Rejected"
 msgstr ""
 
 #: src/components/ErrorBoundary/index.tsx
@@ -1516,6 +1598,7 @@ msgstr ""
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
+#: src/nft/components/profile/list/Modal/ContentRow.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1540,9 +1623,13 @@ msgstr "إزالة التفويض"
 msgid "Remove Liquidity"
 msgstr "إزالة السيولة"
 
+#: src/nft/components/profile/list/PriceTextInput.tsx
+msgid "Remove item"
+msgstr ""
+
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Removed"
-msgstr "إزالة"
+msgstr ""
 
 #: src/nft/components/collection/CollectionAsset.tsx
 #: src/nft/components/profile/view/ViewMyNftsAsset.tsx
@@ -1551,7 +1638,7 @@ msgstr ""
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Removing"
-msgstr "إزالة"
+msgstr ""
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Removing {0} {1} and {2} {3}"
@@ -1559,13 +1646,29 @@ msgstr "إزالة {0} {1} و {2} {3}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and{2} {3}"
-msgstr "إزالة {0} {1} و{2} {3}"
+msgstr ""
+
+#: src/nft/components/bag/profile/ListingButton.tsx
+msgid "Resolve {issues} issues"
+msgstr ""
+
+#: src/nft/components/profile/list/Modal/ContentRow.tsx
+msgid "Retry"
+msgstr ""
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "رجوع"
+
+#: src/nft/components/profile/list/Modal/SuccessScreen.tsx
+msgid "Return to My NFTs"
+msgstr ""
+
+#: src/nft/components/profile/list/NFTListingsGrid.tsx
+msgid "Same Price"
+msgstr ""
 
 #: src/components/NavBar/SearchBar.tsx
 msgid "Search"
@@ -1577,11 +1680,11 @@ msgstr "البحث عن اسم أو لصق العنوان"
 
 #: src/components/NavBar/SearchBar.tsx
 msgid "Search tokens and NFT collections"
-msgstr "البحث عن الرموز ومجموعات NFT"
+msgstr ""
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
-msgstr "حدد زوج"
+msgstr ""
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1597,11 +1700,11 @@ msgstr "حدد رمزًا للعثور على سيولة v2 الخاصة بك."
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
-msgstr "حدد إجراء"
+msgstr ""
 
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 msgid "Select token"
-msgstr "حدد رمز"
+msgstr ""
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
@@ -1617,7 +1720,11 @@ msgstr "تفويض ذاتي"
 
 #: src/nft/components/bag/BagHeader.tsx
 msgid "Sell"
-msgstr "باع"
+msgstr ""
+
+#: src/nft/components/profile/list/ListPage.tsx
+msgid "Sell NFTs"
+msgstr ""
 
 #: src/nft/components/profile/view/ViewMyNftsAsset.tsx
 msgid "Selling ERC-1155s coming soon"
@@ -1633,17 +1740,13 @@ msgstr "تعيين نطاق السعر"
 msgid "Set Starting Price"
 msgstr "تعيين سعر البدء"
 
-#: src/nft/components/profile/list/NFTListingsGrid.tsx
-msgid "Set price by"
-msgstr ""
-
 #: src/nft/components/profile/list/ListPage.tsx
 msgid "Set prices to continue"
 msgstr ""
 
 #: src/components/Settings/index.tsx
 msgid "Settings"
-msgstr "إعدادات"
+msgstr ""
 
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
@@ -1653,23 +1756,31 @@ msgstr "حصة من المجموعة"
 msgid "Share of Pool:"
 msgstr "مشاركة المجموعة:"
 
+#: src/nft/components/profile/list/Modal/SuccessScreen.tsx
+msgid "Share on Twitter"
+msgstr ""
+
 #: src/components/Tokens/TokenDetails/ShareButton.tsx
 msgid "Share to Twitter"
-msgstr "شارك على تويتر"
+msgstr ""
 
 #: src/pages/Vote/Landing.tsx
 msgid "Show Cancelled"
-msgstr "إظهار الملغاة"
+msgstr ""
 
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
-msgstr "إظهار المراكز المغلقة"
+msgstr ""
 
 #: src/components/Tokens/TokenDetails/About.tsx
 msgid "Show more"
-msgstr "أظهر المزيد"
+msgstr ""
+
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+msgid "Sign"
+msgstr ""
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
@@ -1691,7 +1802,7 @@ msgstr "حدث خطأ ما"
 
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Something went wrong. Please try again."
-msgstr "هناك خطأ ما. حاول مرة اخرى."
+msgstr ""
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Sorry, an error occured while processing your request. If you request support, be sure to copy the details of this error."
@@ -1707,7 +1818,7 @@ msgstr ""
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "Stats"
-msgstr "احصائيات"
+msgstr ""
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Submit new proposal"
@@ -1715,7 +1826,7 @@ msgstr "إرسال اقتراح جديد"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
-msgstr "تقديم الاقتراح"
+msgstr ""
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -1723,11 +1834,15 @@ msgstr "تقديم التصويت"
 
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
-msgstr "نجح"
+msgstr ""
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Success"
 msgstr "النجاح"
+
+#: src/nft/components/profile/list/Modal/SuccessScreen.tsx
+msgid "Successfully listed"
+msgstr ""
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1767,11 +1882,11 @@ msgstr "فشل المبادلة: {0}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Swapped"
-msgstr "مبادلة"
+msgstr ""
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Swapping"
-msgstr "مبادلة"
+msgstr ""
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1779,15 +1894,15 @@ msgstr "مبادلة {0} {1} مقابل {2} {3}"
 
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Switch networks"
-msgstr "تبديل الشبكات"
+msgstr ""
 
 #: src/components/Tokens/TokenDetails/index.tsx
 msgid "Symbol not found"
-msgstr "لم يتم العثور على الرمز"
+msgstr ""
 
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "TVL"
-msgstr "TVL"
+msgstr ""
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
@@ -1795,7 +1910,7 @@ msgstr "نشكرك على كونك جزءًا من مجتمع Uniswap <0/>"
 
 #: src/components/FeeSelector/index.tsx
 msgid "The % you will earn in fees."
-msgstr "النسبة التي ستكسبها في الرسوم."
+msgstr ""
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -1803,47 +1918,44 @@ msgstr "الثابت Uniswap x*y=k لم يكن راضيًا عن المبادل�
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "The amount you expect to receive at the current market price. You may receive less or more if the market price changes while your transaction is pending."
-msgstr "المبلغ الذي تتوقع الحصول عليه بسعر السوق الحالي. قد تتلقى أقل أو أكثر إذا تغير سعر السوق أثناء تعليق معاملتك."
+msgstr ""
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches blockchain data from The Graph’s hosted service."
-msgstr "يجلب التطبيق بيانات blockchain من خدمة The Graph المستضافة."
+msgstr ""
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches on-chain data and constructs contract calls with an Infura API."
-msgstr "يجلب التطبيق البيانات على السلسلة وينشئ مكالمات تعاقدية باستخدام واجهة برمجة تطبيقات Infura."
+msgstr ""
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches the optimal trade route from a Uniswap Labs server."
-msgstr "يجلب التطبيق المسار التجاري الأمثل من خادم Uniswap Labs."
+msgstr ""
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app logs anonymized usage statistics in order to improve over time."
-msgstr "يسجل التطبيق إحصاءات الاستخدام مجهولة المصدر من أجل التحسين بمرور الوقت."
+msgstr ""
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
-msgstr "يجمع التطبيق عنوان محفظتك بأمان ويشاركه مع TRM Labs Inc. لأسباب تتعلق بالمخاطر والامتثال."
+msgstr ""
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
-msgstr "فشلت محاولة الاتصال. الرجاء النقر فوق المحاولة مرة أخرى واتباع الخطوات للاتصال في محفظتك."
-
-#: src/components/Polling/index.tsx
-msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
-msgstr "مقدار الغاز السريع الحالي لإرسال معاملة على L1. تُدفع رسوم الغاز بعملة Ethereum الأصلية ETH (ETH) والمُقومة بعملة GWEI."
+msgstr ""
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/nft/components/bag/BagFooter.tsx
 msgid "The estimated difference between the USD values of input and output amounts."
-msgstr "الفرق المقدر بين قيم المدخلات والمخرجات بالدولار الأمريكي."
+msgstr ""
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "The fee paid to miners who process your transaction. This must be paid in {0}."
-msgstr "الرسوم المدفوعة لعمال المناجم الذين يعالجون معاملتك. يجب دفع هذا في {0}."
+msgstr ""
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "The impact your trade has on the market price of this pool."
-msgstr "تأثير تجارتك على سعر السوق لهذا التجمع."
+msgstr ""
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
@@ -1856,11 +1968,11 @@ msgstr "سعر السوق خارج نطاق السعر المحدد الخاص �
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert."
-msgstr "الحد الأدنى للمبلغ الذي يضمن لك الحصول عليه. إذا انخفض السعر أكثر ، فستعود معاملتك."
+msgstr ""
 
 #: src/components/Polling/index.tsx
 msgid "The most recent block number on this network. Prices update on every block."
-msgstr "أحدث رقم كتلة على هذه الشبكة. يتم تحديث الأسعار في كل كتلة."
+msgstr ""
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
@@ -1888,15 +2000,15 @@ msgstr "تعذر إرسال المعاملة لانتهاء الموعد الم�
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "There is no liquidity data."
-msgstr "لا توجد بيانات سيولة."
+msgstr ""
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
-msgstr "هذا العنوان محظور في واجهة Uniswap Labs لأنه مرتبط بواحد أو أكثر"
+msgstr ""
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "This app uses the following third-party APIs:"
-msgstr "يستخدم هذا التطبيق واجهات برمجة التطبيقات الخارجية التالية:"
+msgstr ""
 
 #: src/nft/components/collection/CollectionAsset.tsx
 msgid "This item is not for sale"
@@ -1904,15 +2016,15 @@ msgstr ""
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
-msgstr "يجب تهيئة هذا المستودع قبل أن تتمكن من إضافة السيولة. للتهيئة ، حدد سعر البداية للمجمع. ثم أدخل نطاق سعر السيولة ومبلغ الإيداع. ستكون رسوم الغاز أعلى من المعتاد بسبب معاملة التهيئة."
+msgstr ""
 
 #: src/pages/Vote/VotePage.tsx
 msgid "This proposal may be executed after {0}."
-msgstr "يمكن تنفيذ هذا الاقتراح بعد {0}."
+msgstr ""
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
-msgstr "يعمل هذا المسار على تحسين إنتاجك الإجمالي من خلال مراعاة المسارات المنقسمة والقفزات المتعددة وتكلفة الغاز لكل خطوة."
+msgstr ""
 
 #: src/pages/Tokens/index.tsx
 msgid "This table contains the top tokens by Uniswap volume, sorted based on your input."
@@ -1959,7 +2071,7 @@ msgstr ""
 
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token name"
-msgstr "اسم الرمز"
+msgstr ""
 
 #: src/components/NavBar/SearchBarDropdown.tsx
 #: src/components/NavBar/index.tsx
@@ -1972,19 +2084,19 @@ msgstr "أفضل المجموعات"
 
 #: src/pages/Tokens/index.tsx
 msgid "Top tokens on Uniswap"
-msgstr "أعلى الرموز على Uniswap"
+msgstr ""
 
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Total"
 msgstr ""
 
 #: src/components/Tokens/TokenTable/TokenRow.tsx
-msgid "Total value locked (TVL) is the amount of the asset that’s currently in a Uniswap v3 liquidity pool."
-msgstr "إجمالي القيمة المقفلة (TVL) هو مقدار الأصل الموجود حاليًا في تجمع سيولة Uniswap v3."
+msgid "Total value locked (TVL) is the aggregate amount of the asset available across all Uniswap v3 liquidity pools."
+msgstr ""
 
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
-msgstr "طريق التجارة"
+msgstr ""
 
 #: src/components/Settings/index.tsx
 msgid "Transaction Settings"
@@ -1999,7 +2111,7 @@ msgstr "تم إرسال المعاملة"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Transaction completed in"
-msgstr "اكتملت المعاملة في"
+msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
@@ -2007,10 +2119,11 @@ msgstr "الموعد النهائي للمعاملة"
 
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Transaction pending"
-msgstr "المعاملة معلقة"
+msgstr ""
 
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
+#: src/utils/swapErrorToUserReadableMessage.tsx
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Transaction rejected"
 msgstr "الصفقة مرفوضة"
@@ -2022,11 +2135,11 @@ msgstr "تم إرسال المعاملة"
 #: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/components/WalletDropdown/TransactionMenu.tsx
 msgid "Transactions"
-msgstr "المعاملات"
+msgstr ""
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
-msgstr "رمز التحويل"
+msgstr ""
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
@@ -2054,7 +2167,7 @@ msgstr "الرسوم غير المطالب بها"
 
 #: src/pages/Vote/styled.tsx
 msgid "Undetermined"
-msgstr "غير محدد"
+msgstr ""
 
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Unexpected error. Could not estimate gas for the swap."
@@ -2070,7 +2183,7 @@ msgstr "إدارة Uniswitp"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Uniswap Labs' Terms of Service"
-msgstr "شروط خدمة Uniswap Labs"
+msgstr ""
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
@@ -2078,7 +2191,7 @@ msgstr "Uniswap متاح في: <0>{0}</0>"
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
-msgstr "حوكمة Uniswap متاحة فقط في الطبقة 1. قم بتبديل شبكتك إلى Ethereum Mainnet لعرض الاقتراحات والتصويت."
+msgstr ""
 
 #: src/nft/components/collection/TransactionCompleteModal.tsx
 msgid "Uniswap has granted your wish!"
@@ -2087,10 +2200,6 @@ msgstr ""
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "عقد ترحيل Uniswap ↗"
-
-#: src/utils/swapErrorToUserReadableMessage.tsx
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "خطأ غير معروف{0}. حاول زيادة تحملك للانزلاق. ملاحظة: رسوم النقل وإعادة الرموز المميزة غير متوافقة مع Uniswap V3."
 
 #: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -2130,11 +2239,11 @@ msgstr "قم بفك التفاف <0/> إلى {0}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Unwrapped"
-msgstr "يفك ربطة"
+msgstr ""
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Unwrapping"
-msgstr "فك"
+msgstr ""
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2142,11 +2251,11 @@ msgstr "تحديث التفويض"
 
 #: src/components/Settings/index.tsx
 msgid "Use the Uniswap Labs API to get faster quotes."
-msgstr "استخدم Uniswap Labs API للحصول على عروض أسعار أسرع."
+msgstr ""
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum."
-msgstr "V2 Pool غير متاح في الطبقة 2. قم بالتبديل إلى Layer 1 Ethereum."
+msgstr ""
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -2163,11 +2272,11 @@ msgstr "عرض الرسوم المتراكمة والتحليلات <0>↗</0>"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "View and sell NFTs"
-msgstr "عرض وبيع NFTs"
+msgstr ""
 
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "View more analytics"
-msgstr "عرض المزيد من التحليلات"
+msgstr ""
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/nft/components/collection/TransactionCompleteModal.tsx
@@ -2190,7 +2299,7 @@ msgstr "عرض المعاملة على Explorer"
 
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame."
-msgstr "الحجم هو مقدار الأصل الذي تم تداوله على Uniswap v3 خلال الإطار الزمني المحدد."
+msgstr ""
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
@@ -2228,12 +2337,12 @@ msgstr "التصويت على الاقتراح {proposalKey} مع السبب \"{
 
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Vote in governance"
-msgstr "التصويت في الحكم"
+msgstr ""
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
-msgstr "التصويت على الامتناع عن التصويت {proposalId}"
+msgstr ""
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote to abstain on proposal {proposalKey}"
@@ -2253,22 +2362,18 @@ msgstr "التصويت ينتهي تقريبًا {0}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting starts approximately {0}"
-msgstr "يبدأ التصويت تقريبًا {0}"
+msgstr ""
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting for confirmation"
-msgstr "في انتظار التأكيد"
+msgstr ""
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Waiting to connect"
-msgstr "في انتظار الاتصال"
+msgstr ""
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
-msgstr "عنوان المحفظة أو اسم ENS"
-
-#: src/components/MetaMaskConnectionErrorModal/index.tsx
-msgid "Wallet disconnected"
 msgstr ""
 
 #: src/constants/tokenSafety.tsx
@@ -2278,6 +2383,10 @@ msgstr "تحذير"
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
 msgstr "مرحبًا بكم في فريق Unicorn :)"
+
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+msgid "Why is a transaction required?"
+msgstr ""
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
@@ -2294,19 +2403,19 @@ msgstr "لف من <0/> إلى {0}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Wrapped"
-msgstr "مغطى"
+msgstr ""
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Wrapping"
-msgstr "يلف"
+msgstr ""
 
 #: src/nft/components/bag/BagFooter.tsx
 msgid "Wrong network"
-msgstr "شبكة خاطئة"
+msgstr ""
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You already have an active or pending proposal"
-msgstr "لديك بالفعل اقتراح نشط أو معلق"
+msgstr ""
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are creating a pool"
@@ -2330,7 +2439,7 @@ msgstr "يمكنك الآن التداول {0}"
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You don't have enough votes to submit a proposal"
-msgstr "ليس لديك ما يكفي من الأصوات لتقديم اقتراح"
+msgstr ""
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
@@ -2338,7 +2447,7 @@ msgstr "ليس لديك سيولة في هذه المجموعة حتى الآن.
 
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."
-msgstr "ربما تكون قد فقدت اتصالك بالشبكة."
+msgstr ""
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -2350,8 +2459,9 @@ msgstr "يجب عليك منح العقود الذكية لـ Uniswap الإذن
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
-msgstr "يجب أن يكون لديك {formattedProposalThreshold} أصوات لتقديم اقتراح"
+msgstr ""
 
+#: src/nft/components/profile/list/ListPage.tsx
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "You receive"
 msgstr ""
@@ -2375,7 +2485,7 @@ msgstr "سيولة V2 الخاصة بك"
 
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
-msgstr "ستظهر مراكز سيولة V3 النشطة الخاصة بك هنا."
+msgstr ""
 
 #: src/components/Tokens/TokenDetails/BalanceSummary.tsx
 msgid "Your balance on {label}"
@@ -2383,7 +2493,7 @@ msgstr ""
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
-msgstr "شبكتك المتصلة غير مدعومة."
+msgstr ""
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -2401,7 +2511,7 @@ msgstr "مركزك لديه سيولة صفر، ولا يحصل على رسوم.
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Your position will appear here."
-msgstr "سيظهر موقعك هنا."
+msgstr ""
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -2423,6 +2533,8 @@ msgstr "مركزك لن يكسب رسوماً أو يستخدم في التدا�
 msgid "Your positions"
 msgstr "مراكزك"
 
+#: src/hooks/useUniversalRouter.ts
+#: src/hooks/useUniversalRouter.ts
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds."
@@ -2455,7 +2567,7 @@ msgstr "سيتم عودة معاملتك إذا تغير السعر بشكل غ�
 
 #: src/components/WalletDropdown/TransactionMenu.tsx
 msgid "Your transactions will appear here"
-msgstr "ستظهر معاملاتك هنا"
+msgstr ""
 
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
@@ -2463,21 +2575,29 @@ msgstr "المعاملات الخاصة بك ستظهر هنا..."
 
 #: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 msgid "Your {0} balance"
-msgstr "رصيدك {0}"
+msgstr ""
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"
-msgstr "بعد الانزلاق السعري"
+msgstr ""
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "and"
-msgstr "و"
+msgstr ""
+
+#: src/nft/components/profile/list/PriceTextInput.tsx
+msgid "below floor price."
+msgstr ""
+
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "below the collection’s floor price. Are you sure you want to continue?"
+msgstr ""
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "blocked activities"
-msgstr "الأنشطة المحظورة"
+msgstr ""
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
@@ -2485,28 +2605,28 @@ msgstr "تأكيد"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "failed"
-msgstr "باءت بالفشل"
+msgstr ""
+
+#: src/nft/components/profile/list/RoyaltyTooltip.tsx
+msgid "fee"
+msgstr ""
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "fees"
-msgstr "مصاريف"
+msgstr ""
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "for"
-msgstr "إلى عن على"
+msgstr ""
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "لـ {0}"
 
-#: src/components/Polling/index.tsx
-msgid "gwei"
-msgstr "gwei"
-
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "here."
-msgstr "هنا."
+msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
@@ -2514,7 +2634,7 @@ msgstr "دقائق"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "reward"
-msgstr "جائزة"
+msgstr ""
 
 #: src/components/FiatOnrampModal/index.tsx
 msgid "something went wrong!"
@@ -2522,7 +2642,11 @@ msgstr ""
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "to"
-msgstr "إلى"
+msgstr ""
+
+#: src/nft/components/bag/profile/ListingButton.tsx
+msgid "{0, plural, =1 {Resolve issue} other {{1}}}"
+msgstr ""
 
 #: src/constants/tokenSafety.tsx
 msgid "{0, plural, =1 {This token isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.} other {These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.}}"
@@ -2536,10 +2660,19 @@ msgstr "{0, plural, =1 {لا يتم تداول هذا الرمز المميز ف
 msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
 msgstr "{0, plural, =1 {لا يمكنك تداول هذا الرمز المميز باستخدام تطبيق Uniswap.} other {لا يمكنك تداول هذه الرموز المميزة باستخدام تطبيق Uniswap.}}"
 
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+msgid "{0, plural, =1 {listing} other {listings}}"
+msgstr ""
+
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "{0, plural, =1 {{1}} other {{2}}}"
+msgstr ""
+
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/ErrorBoundary/index.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
+#: src/nft/components/bag/BagFooter.tsx
 msgid "{0}"
 msgstr "{0}"
 
@@ -2563,6 +2696,10 @@ msgstr "{0} مودعة"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{0} Fees Earned:"
 msgstr "{0} رسوم مكتسبة:"
+
+#: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
+msgid "{0} NFTs are listed significantly"
+msgstr ""
 
 #: src/components/Web3Status/index.tsx
 msgid "{0} Pending"
@@ -2606,15 +2743,20 @@ msgstr "{0}%"
 
 #: src/components/FeeSelector/index.tsx
 msgid "{0}% fee tier"
-msgstr "{0}٪ فئة الرسوم"
+msgstr ""
 
 #: src/components/RoutingDiagram/RoutingDiagram.tsx
 msgid "{0}% pool"
-msgstr "{0}٪ تجمع"
+msgstr ""
 
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}٪ حدد"
+
+#: src/utils/swapErrorToUserReadableMessage.tsx
+msgid "{0}. Try increasing your slippage tolerance.\n"
+"Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr ""
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP NFT"
@@ -2624,13 +2766,29 @@ msgstr "{0}/{1} LP NFT"
 msgid "{0}/{1} LP Tokens"
 msgstr "{0}/{1} رموز LP"
 
+#: src/nft/components/profile/list/SetDurationModal.tsx
+msgid "{amount, plural, =1 {day} other {days}}"
+msgstr ""
+
+#: src/nft/components/profile/list/SetDurationModal.tsx
+msgid "{amount, plural, =1 {hour} other {hours}}"
+msgstr ""
+
+#: src/nft/components/profile/list/SetDurationModal.tsx
+msgid "{amount, plural, =1 {month} other {months}}"
+msgstr ""
+
+#: src/nft/components/profile/list/SetDurationModal.tsx
+msgid "{amount, plural, =1 {week} other {weeks}}"
+msgstr ""
+
 #: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "{label} might be down right now, or you may have lost your network connection."
-msgstr "قد يكون الرقم {label} معطلاً الآن ، أو ربما فقدت اتصالك بالشبكة."
+msgstr ""
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"
-msgstr "{label} جسر رمزي"
+msgstr ""
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
@@ -2640,7 +2798,11 @@ msgstr "{percentForSlider}%"
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} لكل {tokenA}"
 
+#: src/nft/components/profile/list/Modal/ListModalSection.tsx
+msgid "{uniqueCollections, plural, =1 {collection} other {collections}}"
+msgstr ""
+
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools"
-msgstr "← الرجوع إلى حمامات السباحة"
+msgstr ""
 
