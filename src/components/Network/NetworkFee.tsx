@@ -26,6 +26,26 @@ export function NetworkFee({
   const gasFeeUSD = useUSDValue(chainId, gasFee)
   const showNetworkPill = chainId !== ChainId.Mainnet
 
+  const feeSectionContent = (
+    <>
+      <Text
+        color={gasFallbackUsed && gasFeeUSD ? 'accentWarning' : 'textPrimary'}
+        loading={!gasFeeUSD}
+        variant="subheadSmall">
+        {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
+      </Text>
+      {gasFallbackUsed && gasFeeUSD && (
+        <Box ml="spacing4">
+          <InfoCircleSVG
+            color={theme.colors.accentWarning}
+            height={theme.iconSizes.icon20}
+            width={theme.iconSizes.icon20}
+          />
+        </Box>
+      )}
+    </>
+  )
+
   return (
     <Flex row alignItems="center" justifyContent="space-between" p="spacing16">
       <Text variant="subheadSmall">{t('Network fee')}</Text>
@@ -37,27 +57,19 @@ export function NetworkFee({
               <Text variant="subheadSmall">•</Text>
             </Flex>
           ) : null}
-          <TouchableArea
-            alignItems="center"
-            flexDirection="row"
-            justifyContent="space-between"
-            onPress={gasFallbackUsed ? onShowGasWarning : undefined}>
-            <Text
-              color={gasFallbackUsed && gasFeeUSD ? 'accentWarning' : 'textPrimary'}
-              loading={!gasFeeUSD}
-              variant="subheadSmall">
-              {formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}
-            </Text>
-            {gasFallbackUsed && gasFeeUSD && (
-              <Box ml="spacing4">
-                <InfoCircleSVG
-                  color={theme.colors.accentWarning}
-                  height={theme.iconSizes.icon20}
-                  width={theme.iconSizes.icon20}
-                />
-              </Box>
-            )}
-          </TouchableArea>
+          {gasFallbackUsed && onShowGasWarning ? (
+            <TouchableArea
+              alignItems="center"
+              flexDirection="row"
+              justifyContent="space-between"
+              onPress={onShowGasWarning}>
+              {feeSectionContent}
+            </TouchableArea>
+          ) : (
+            <Flex row alignItems="center" justifyContent="space-between">
+              {feeSectionContent}
+            </Flex>
+          )}
         </Flex>
       </Flex>
     </Flex>
