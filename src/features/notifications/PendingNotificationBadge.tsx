@@ -4,7 +4,6 @@ import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import AlertCircle from 'src/assets/icons/alert-circle.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
-import { TxHistoryIconWithStatus } from 'src/components/icons/TxHistoryIconWithStatus'
 import { Box } from 'src/components/layout/Box'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Text } from 'src/components/Text'
@@ -12,19 +11,21 @@ import { selectActiveAccountNotifications } from 'src/features/notifications/sel
 import { AppNotificationType } from 'src/features/notifications/types'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
+import { theme as FixedTheme } from 'src/styles/theme'
 
 const PENDING_TX_TIME_LIMIT = 60_000 * 5 // 5 mins
-const LOADING_SPINNER_SIZE = 24
+const LOADING_SPINNER_SIZE = FixedTheme.iconSizes.icon16
 
 interface Props {
   size?: number
+  // TODO: [MOB-4023] can we just get these in this component rather than passing them in?
   sortedPendingTransactions: TransactionDetails[]
 }
 
 export function PendingNotificationBadge({
-  size = 24,
+  size = LOADING_SPINNER_SIZE,
   sortedPendingTransactions,
-}: Props): JSX.Element {
+}: Props): JSX.Element | null {
   const theme = useAppTheme()
   const activeAccountAddress = useAppSelector(selectActiveAccountAddress)
   const notifications = useAppSelector(selectActiveAccountNotifications)
@@ -55,7 +56,7 @@ export function PendingNotificationBadge({
 
   // If a transaction has been pending for longer than 5 mins, then show the normal tx history icon
   if (pendingTransactionCount < 1 || pendingTransactionCount > 99 || txPendingLongerThanLimit) {
-    return <TxHistoryIconWithStatus />
+    return null
   }
 
   const countToDisplay = pendingTransactionCount === 1 ? undefined : pendingTransactionCount

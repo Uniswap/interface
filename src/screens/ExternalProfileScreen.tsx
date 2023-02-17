@@ -70,7 +70,9 @@ export function ExternalProfileScreen({
             {...sceneProps}
             indicatorStyle={TAB_STYLES.activeTabIndicator}
             navigationState={{ index: tabIndex, routes: tabs }}
-            renderLabel={renderTabLabel}
+            renderLabel={({ route, focused }): JSX.Element =>
+              renderTabLabel({ route, focused, isExternalProfile: true })
+            }
             style={[
               TAB_STYLES.tabBar,
               {

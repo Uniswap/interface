@@ -46,6 +46,7 @@ import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
 import { useFiatOnRampEnabled } from 'src/features/experiments/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, EventName, ModalName, SectionName } from 'src/features/telemetry/constants'
+import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
@@ -67,6 +68,10 @@ export function HomeScreen(): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
+
+  // TODO: [MOB-4023] evaluate if this has a performance impact with rerenders when transactions are updating. It might make sense
+  // to just move into the PendingNotificationBadge component.
+  const sortedPendingTransactions = useSortedPendingTransactions(activeAccount.address)
 
   const [tabIndex, setTabIndex] = useState(0)
   const routes = useMemo(
@@ -275,7 +280,9 @@ export function HomeScreen(): JSX.Element {
                 {...sceneProps}
                 indicatorStyle={TAB_STYLES.activeTabIndicator}
                 navigationState={{ index: tabIndex, routes }}
-                renderLabel={renderTabLabel}
+                renderLabel={({ route, focused }): JSX.Element =>
+                  renderTabLabel({ route, focused, sortedPendingTransactions })
+                }
                 style={[
                   TAB_STYLES.tabBar,
                   {
@@ -295,6 +302,7 @@ export function HomeScreen(): JSX.Element {
       handleHeaderLayout,
       headerContainerStyle,
       routes,
+      sortedPendingTransactions,
       tabBarStyle,
       tabIndex,
       theme.colors.background0,

@@ -105,6 +105,7 @@ exports[`AccountList renders without error 1`] = `
                   Array [
                     Object {
                       "display": "flex",
+                      "height": "100%",
                       "position": "relative",
                     },
                   ]
