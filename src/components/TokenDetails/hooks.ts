@@ -5,7 +5,6 @@ import { useMultipleBalances, useSingleBalance } from 'src/features/dataApi/bala
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { Screens } from 'src/screens/Screens'
-import { getChecksumAddress } from 'src/utils/addresses'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import {
   buildCurrencyId,
@@ -32,8 +31,7 @@ export function useCrossChainBalances(
           const chainId = fromGraphQLChain(chain)
           if (!chainId || chainId === currentChainId) return null
           if (!address) return buildNativeCurrencyId(chainId)
-          // Use checksummed address for useMultipleBalances to lookup portfolio balances
-          return buildCurrencyId(chainId, getChecksumAddress(address))
+          return buildCurrencyId(chainId, address)
         })
         .filter((b): b is string => !!b),
 

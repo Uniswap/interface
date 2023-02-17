@@ -77,7 +77,8 @@ export function usePortfolioBalances(
             balance.token.address,
             balance.token.decimals,
             balance.token.symbol,
-            balance.token.name
+            balance.token.name,
+            /* bypassChecksum:*/ true
           )
         : NativeCurrency.onChain(chainId)
 
