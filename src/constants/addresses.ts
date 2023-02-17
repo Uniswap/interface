@@ -8,6 +8,14 @@ type AddressMap = { [chainId: number]: string }
 
 export const UNI_ADDRESS: AddressMap = constructSameAddressMap('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
 
+export const GRG_ADDRESS: AddressMap = {
+  [SupportedChainId.MAINNET]: '0x4FbB350052Bca5417566f188eB2EBCE5b19BC964',
+  [SupportedChainId.GOERLI]: '0x076C619e7ebaBe40746106B66bFBed731F2c1339',
+  [SupportedChainId.ARBITRUM_ONE]: '0x7F4638A58C0615037deCc86f1daE60E55fE92874',
+  [SupportedChainId.OPTIMISM]: '0xEcF46257ed31c329F204Eb43E254C609dee143B3',
+  [SupportedChainId.POLYGON]: '0xBC0BEA8E634ec838a2a45F8A43E7E16Cd2a8BA99',
+}
+
 export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS)
 export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D')
 
@@ -71,6 +79,7 @@ export const SWAP_ROUTER_ADDRESSES: AddressMap = {
   [SupportedChainId.CELO_ALFAJORES]: CELO_ROUTER_ADDRESS,
 }
 
+// TODO: remove uniswap addresses
 /**
  * The oldest V0 governance address
  */
@@ -88,6 +97,60 @@ export const GOVERNANCE_ALPHA_V1_ADDRESSES: AddressMap = {
  */
 export const GOVERNANCE_BRAVO_ADDRESSES: AddressMap = {
   [SupportedChainId.MAINNET]: '0x408ED6354d4973f66138C91495F2f2FCbd8724C3',
+}
+
+/* V1 Governance Addresses */
+export const GOVERNANCE_PROXY_ADDRESSES: AddressMap = {
+  ...constructSameAddressMap('0x5F8607739c2D2d0b57a4292868C368AB1809767a', [
+    SupportedChainId.MAINNET,
+    SupportedChainId.GOERLI,
+    SupportedChainId.OPTIMISM,
+    SupportedChainId.ARBITRUM_ONE,
+    SupportedChainId.POLYGON,
+  ]),
+}
+
+/* Staking Proxy Addresses */
+export const STAKING_PROXY_ADDRESSES: AddressMap = {
+  [SupportedChainId.MAINNET]: '0x730dDf7b602dB822043e0409d8926440395e07fE',
+  [SupportedChainId.GOERLI]: '0x6C4594aa0CBcb8315E88EFdb11675c09A7a5f444',
+  [SupportedChainId.OPTIMISM]: '0xB844bDCC64a748fDC8c9Ee74FA4812E4BC28FD70',
+  [SupportedChainId.ARBITRUM_ONE]: '0xD495296510257DAdf0d74846a8307bf533a0fB48',
+  [SupportedChainId.POLYGON]: '0xC87d1B952303ae3A9218727692BAda6723662dad',
+}
+
+/* GRG Transfer Proxy Addresses */
+export const GRG_TRANSFER_PROXY_ADDRESSES: AddressMap = {
+  ...constructSameAddressMap('0x28891F41eA506Ba7eA3Be9f2075AB0aa8b81dD29', [
+    SupportedChainId.MAINNET,
+    SupportedChainId.GOERLI,
+    SupportedChainId.OPTIMISM,
+    SupportedChainId.ARBITRUM_ONE,
+    SupportedChainId.POLYGON,
+  ]),
+  [SupportedChainId.MAINNET]: '0x8C96182c1B2FE5c49b1bc9d9e039e369f131ED37',
+}
+
+/* Rigoblock Pool Factory Addresses */
+export const RB_FACTORY_ADDRESSES: AddressMap = {
+  ...constructSameAddressMap('0x8DE8895ddD702d9a216E640966A98e08c9228f24', [
+    SupportedChainId.MAINNET,
+    SupportedChainId.GOERLI,
+    SupportedChainId.OPTIMISM,
+    SupportedChainId.ARBITRUM_ONE,
+    SupportedChainId.POLYGON,
+  ]),
+}
+
+/* Rigoblock Pool Registry Addresses */
+export const RB_REGISTRY_ADDRESSES: AddressMap = {
+  ...constructSameAddressMap('0x06767e8090bA5c4Eca89ED00C3A719909D503ED6', [
+    SupportedChainId.MAINNET,
+    SupportedChainId.GOERLI,
+    SupportedChainId.OPTIMISM,
+    SupportedChainId.ARBITRUM_ONE,
+    SupportedChainId.POLYGON,
+  ]),
 }
 
 export const TIMELOCK_ADDRESS: AddressMap = constructSameAddressMap('0x1a9C8182C09F50C8318d769245beA52c32BE35BC')

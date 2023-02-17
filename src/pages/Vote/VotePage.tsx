@@ -31,7 +31,7 @@ import {
   DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
 } from '../../constants/governance'
 import { ZERO_ADDRESS } from '../../constants/misc'
-import { UNI } from '../../constants/tokens'
+import { GRG } from '../../constants/tokens'
 import {
   useModalIsOpen,
   useToggleDelegateModal,
@@ -218,7 +218,7 @@ export default function VotePage() {
     timeZoneName: 'short',
   }
   // convert the eta to milliseconds before it's a date
-  const eta = proposalData?.eta ? new Date(proposalData.eta.mul(ms`1 second`).toNumber()) : undefined
+  //const eta = proposalData?.eta ? new Date(proposalData.eta.mul(ms`1 second`).toNumber()) : undefined
 
   // get total votes and format percentages for UI
   const totalVotes = proposalData?.forCount?.add(proposalData.againstCount)
@@ -238,20 +238,22 @@ export default function VotePage() {
     proposalData.status === ProposalState.ACTIVE
 
   // we only show the button if there's an account connected and the proposal state is correct
-  const showQueueButton = account && proposalData?.status === ProposalState.SUCCEEDED
+  //const showQueueButton = account && proposalData?.status === ProposalState.SUCCEEDED
 
   // we only show the button if there's an account connected and the proposal state is correct
-  const showExecuteButton = account && proposalData?.status === ProposalState.QUEUED
+  const showExecuteButton =
+    (account && proposalData?.status === ProposalState.SUCCEEDED) ||
+    (account && proposalData?.status === ProposalState.QUALIFIED)
 
-  const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
+  const grgBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
     account ?? undefined,
-    chainId ? UNI[chainId] : undefined
+    chainId ? GRG[chainId] : undefined
   )
   const userDelegatee: string | undefined = useUserDelegatee()
 
   // in blurb link to home page if they are able to unlock
   const showLinkForUnlock = Boolean(
-    uniBalance && JSBI.notEqual(uniBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
+    grgBalance && JSBI.notEqual(grgBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
   )
 
   // show links in propsoal details if content is an address
@@ -321,7 +323,7 @@ export default function VotePage() {
                 <GrayCard>
                   <ThemedText.DeprecatedBlack>
                     <Trans>
-                      Only UNI votes that were self delegated or delegated to another address before block{' '}
+                      Only GRG tokens that were actively staked to a Rigoblock Pool before block{' '}
                       {proposalData.startBlock} are eligible for voting.
                     </Trans>{' '}
                     {showLinkForUnlock && (
@@ -358,21 +360,32 @@ export default function VotePage() {
                 >
                   <Trans>Vote Against</Trans>
                 </ButtonPrimary>
+                <ButtonPrimary
+                  padding="8px"
+                  $borderRadius="8px"
+                  onClick={() => {
+                    setVoteOption(VoteOption.Abstain)
+                    toggleVoteModal()
+                  }}
+                >
+                  <Trans>Abstain</Trans>
+                </ButtonPrimary>
               </RowFixed>
             )}
-            {showQueueButton && (
+            {showExecuteButton && (
               <RowFixed style={{ width: '100%', gap: '12px' }}>
                 <ButtonPrimary
                   padding="8px"
                   $borderRadius="8px"
                   onClick={() => {
-                    toggleQueueModal()
+                    toggleExecuteModal()
                   }}
                 >
-                  <Trans>Queue</Trans>
+                  <Trans>Execute</Trans>
                 </ButtonPrimary>
               </RowFixed>
             )}
+            {/*
             {showExecuteButton && (
               <>
                 {eta && (
@@ -397,6 +410,7 @@ export default function VotePage() {
                 </RowFixed>
               </>
             )}
+            */}
             <CardWrapper>
               <StyledDataCard>
                 <CardSection>

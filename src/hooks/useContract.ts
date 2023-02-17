@@ -17,6 +17,7 @@ import ERC20_ABI from 'abis/erc20.json'
 import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
 import ERC721_ABI from 'abis/erc721.json'
 import ERC1155_ABI from 'abis/erc1155.json'
+import RB_REGISTRY_ABI from 'abis/rb-registry.json'
 import {
   ArgentWalletDetector,
   AUniswap,
@@ -87,6 +88,10 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 
 export function usePoolContract(poolAddress?: string) {
   return useContract<AUniswap>(poolAddress, AUNISWAP_ABI, true)
+}
+
+export function useRegistryContract(registryAddress?: string) {
+  return useContract(registryAddress, RB_REGISTRY_ABI, false)
 }
 
 export function useWETHContract(withSignerIfPossible?: boolean) {

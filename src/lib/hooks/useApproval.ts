@@ -5,7 +5,7 @@ import { EventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useTokenContract } from 'hooks/useContract'
-//import { useTokenAllowance } from 'hooks/useTokenAllowance'
+import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import { getTokenAddress } from 'lib/utils/analytics'
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -20,21 +20,37 @@ export enum ApprovalState {
 function useApprovalStateForSpender(
   amountToApprove: CurrencyAmount<Currency> | undefined,
   spender: string | undefined,
-  useIsPendingApproval: (token?: Token, spender?: string) => boolean
+  useIsPendingApproval: (token?: Token, spender?: string) => boolean,
+  isRbPool: boolean | undefined
 ): ApprovalState {
+  // TODO: check how we can skip RPC call if Rigoblock pool
+  const { account } = useWeb3React()
+  const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
+
+  const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
+  const pendingApproval = useIsPendingApproval(token, spender)
+
   return useMemo(() => {
     if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
     if (amountToApprove.currency.isNative) return ApprovalState.APPROVED
-
     // Rigoblock automatically sets and resets approvals
-    return ApprovalState.APPROVED
-  }, [amountToApprove, spender])
+    if (isRbPool) return ApprovalState.APPROVED
+    // we might not have enough data to know whether or not we need to approve
+    if (!currentAllowance) return ApprovalState.UNKNOWN
+
+    return currentAllowance.lessThan(amountToApprove)
+      ? pendingApproval
+        ? ApprovalState.PENDING
+        : ApprovalState.NOT_APPROVED
+      : ApprovalState.APPROVED
+  }, [amountToApprove, currentAllowance, isRbPool, pendingApproval, spender])
 }
 
 export function useApproval(
   amountToApprove: CurrencyAmount<Currency> | undefined,
   spender: string | undefined,
-  useIsPendingApproval: (token?: Token, spender?: string) => boolean
+  useIsPendingApproval: (token?: Token, spender?: string) => boolean,
+  isRbPool: boolean | undefined
 ): [
   ApprovalState,
   () => Promise<{ response: TransactionResponse; tokenAddress: string; spenderAddress: string } | undefined>
@@ -43,7 +59,7 @@ export function useApproval(
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
 
   // check the current approval status
-  const approvalState = useApprovalStateForSpender(amountToApprove, spender, useIsPendingApproval)
+  const approvalState = useApprovalStateForSpender(amountToApprove, spender, useIsPendingApproval, isRbPool)
 
   const tokenContract = useTokenContract(token?.address)
 

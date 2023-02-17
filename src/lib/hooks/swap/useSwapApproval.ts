@@ -23,5 +23,6 @@ export default function useSwapApproval(
   )
   const spender = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
 
-  return useApproval(amountToApprove, spender, useIsPendingApproval)
+  // TODO: modify last param if want to allow both user and rigoblock pool swaps
+  return useApproval(amountToApprove, spender, useIsPendingApproval, true)
 }
