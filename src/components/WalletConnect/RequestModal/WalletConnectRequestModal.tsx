@@ -19,7 +19,7 @@ import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biomet
 import { useTransactionGasFee } from 'src/features/gas/hooks'
 import { GasSpeed } from 'src/features/gas/types'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { ElementName, EventName, ModalName } from 'src/features/telemetry/constants'
+import { ElementName, MobileEventName, ModalName } from 'src/features/telemetry/constants'
 import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useIsBlocked } from 'src/features/trm/hooks'
@@ -157,7 +157,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     rejectRequest(request.internalId)
     rejectOnCloseRef.current = false
 
-    sendAnalyticsEvent(EventName.WalletConnectSheetCompleted, {
+    sendAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
       request_type: isTransactionRequest(request)
         ? WCEventType.TransactionRequest
         : WCEventType.SignRequest,
@@ -204,7 +204,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
 
     rejectOnCloseRef.current = false
 
-    sendAnalyticsEvent(EventName.WalletConnectSheetCompleted, {
+    sendAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
       request_type: isTransactionRequest(request)
         ? WCEventType.TransactionRequest
         : WCEventType.SignRequest,

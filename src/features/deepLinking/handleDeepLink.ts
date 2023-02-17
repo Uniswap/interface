@@ -5,7 +5,7 @@ import { appSelect } from 'src/app/hooks'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLink'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLink'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { EventName } from 'src/features/telemetry/constants'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { selectAccounts } from 'src/features/wallet/selectors'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
@@ -66,7 +66,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>): Genera
         throw new Error('Invalid or unsupported screen')
     }
 
-    yield* call(sendAnalyticsEvent, EventName.DeepLinkOpened, {
+    yield* call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
       url: url.toString(),
       screen,
       is_cold_start: coldStart,

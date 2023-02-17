@@ -38,14 +38,6 @@ export async function initAnalytics(): Promise<void> {
   }
 }
 
-/** Logs a generic event with payload. */
-export async function logEvent(name: string, params: Record<string, unknown>): Promise<void> {
-  if (__DEV__) {
-    logger.debug('telemetry', 'logEvent', `${name}: ${JSON.stringify(params)}`)
-    return
-  }
-}
-
 //#region ------------------------------ Sentry ------------------------------
 
 /**

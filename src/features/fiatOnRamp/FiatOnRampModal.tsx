@@ -17,7 +17,7 @@ import {
 } from 'src/features/fiatOnRamp/api'
 import { useFiatOnRampTransactionCreator } from 'src/features/fiatOnRamp/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
-import { ElementName, EventName, ModalName } from 'src/features/telemetry/constants'
+import { ElementName, MobileEventName, ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { openUri } from 'src/utils/linking'
 
@@ -112,7 +112,7 @@ export function FiatOnRampModal(): JSX.Element {
                 }
                 disabled={!buttonEnabled}
                 emphasis={ButtonEmphasis.Primary}
-                eventName={EventName.FiatOnRampWidgetOpened}
+                eventName={MobileEventName.FiatOnRampWidgetOpened}
                 label={
                   isLoading
                     ? undefined

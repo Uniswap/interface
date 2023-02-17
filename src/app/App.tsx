@@ -25,7 +25,7 @@ import { NotificationToastWrapper } from 'src/features/notifications/Notificatio
 import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { initializeRemoteConfig } from 'src/features/remoteConfig'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { EventName } from 'src/features/telemetry/constants'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
 import { useTrmPrefetch } from 'src/features/trm/api'
 import { useSignerAccounts } from 'src/features/wallet/hooks'
@@ -60,7 +60,7 @@ function App(): JSX.Element | null {
   const client = usePersistedApolloClient()
 
   const onReportPrepared = useCallback((report: RenderPassReport) => {
-    sendAnalyticsEvent(EventName.PerformanceReport, report)
+    sendAnalyticsEvent(MobileEventName.PerformanceReport, report)
   }, [])
 
   if (!client) {

@@ -1,8 +1,8 @@
+import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
 import { useEffect, useRef } from 'react'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { EventName } from 'src/features/telemetry/constants'
 import { SwapTradeBaseProperties } from 'src/features/telemetry/types'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { Trade } from 'src/features/transactions/swap/useTrade'
@@ -37,7 +37,10 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
     const currTrade = tradeRef.current
     if (!currTrade || !inputAmount) return
 
-    sendAnalyticsEvent(EventName.SwapQuoteReceived, getBaseTradeAnalyticsProperties(currTrade))
+    sendAnalyticsEvent(
+      SwapEventName.SWAP_QUOTE_RECEIVED,
+      getBaseTradeAnalyticsProperties(currTrade)
+    )
   }, [inputAmount, inputCurrencyId, outputCurrencyId, tradeType])
 
   return

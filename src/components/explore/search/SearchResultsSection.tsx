@@ -1,3 +1,6 @@
+/* eslint-disable complexity */
+// TODO: Complexity was increased when tracking numTotalResults for analytics
+// should decrease complexity when possible using subcomponents
 import { default as React, useCallback, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
@@ -20,6 +23,12 @@ import { fromGraphQLChain } from 'src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
 const MAX_TOKEN_RESULTS_COUNT = 5
+
+export interface SearchContext {
+  query: string
+  position: number
+  suggestionCount: number
+}
 
 export function SearchResultsSection({ searchQuery }: { searchQuery: string }): JSX.Element {
   const { t } = useTranslation()
@@ -124,6 +133,15 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
   const hasENSResult = ensName && ensAddress
   const hasEOAResult = validAddress && !isSmartContractAddress
 
+  const numTotalResults = tokenResults.length + (hasENSResult || hasEOAResult ? 1 : 0)
+
+  const renderTokenItem = ({ item, index }: ListRenderItemInfo<TokenSearchResult>): JSX.Element => (
+    <SearchTokenItem
+      searchContext={{ position: index + 1, suggestionCount: numTotalResults, query: searchQuery }}
+      token={item}
+    />
+  )
+
   return (
     <Flex grow gap="spacing8">
       {tokenResults.length > 0 && (
@@ -146,10 +164,22 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
           </Text>
           {hasENSResult ? (
             <SearchWalletItem
+              searchContext={{
+                query: searchQuery,
+                position: numTotalResults,
+                suggestionCount: numTotalResults,
+              }}
               wallet={{ type: SearchResultType.Wallet, address: ensAddress, ensName }}
             />
           ) : hasEOAResult ? (
-            <SearchWalletItem wallet={{ type: SearchResultType.Wallet, address: validAddress }} />
+            <SearchWalletItem
+              searchContext={{
+                query: searchQuery,
+                position: numTotalResults,
+                suggestionCount: numTotalResults,
+              }}
+              wallet={{ type: SearchResultType.Wallet, address: validAddress }}
+            />
           ) : null}
         </AnimatedFlex>
       )}
@@ -186,10 +216,6 @@ const SearchResultsLoader = (): JSX.Element => {
     </AnimatedFlex>
   )
 }
-
-const renderTokenItem = ({ item }: ListRenderItemInfo<TokenSearchResult>): JSX.Element => (
-  <SearchTokenItem token={item} />
-)
 
 const tokenKey = (token: TokenSearchResult): string => {
   return token.address

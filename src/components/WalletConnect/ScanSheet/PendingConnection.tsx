@@ -22,7 +22,7 @@ import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { ElementName, EventName } from 'src/features/telemetry/constants'
+import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
 import {
   useActiveAccountAddressWithThrow,
   useActiveAccountWithThrow,
@@ -176,7 +176,7 @@ export const PendingConnection = ({ pendingSession, onClose }: Props): JSX.Eleme
 
   const onPressSettleConnection = useCallback(
     async (approved: boolean) => {
-      sendAnalyticsEvent(EventName.WalletConnectSheetCompleted, {
+      sendAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
         request_type: WCEventType.SessionPending,
         dapp_url: pendingSession.dapp.url,
         dapp_name: pendingSession.dapp.name,

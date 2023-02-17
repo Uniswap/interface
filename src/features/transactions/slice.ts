@@ -106,7 +106,7 @@ const slice = createSlice({
         case TransactionStatus.Unknown:
           // treat canceled as tx never sent to Moonpay
           // on success, tx should be reflected on chain
-          // in both caes, safe to stop tracking this tx
+          // in both cases, safe to stop tracking this tx
           delete state[from]?.[chainId]?.[id]
           break
         case TransactionStatus.Failed:

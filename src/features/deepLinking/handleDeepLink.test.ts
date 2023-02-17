@@ -5,7 +5,7 @@ import {
 } from 'src/features/deepLinking/handleDeepLink'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLink'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { EventName } from 'src/features/telemetry/constants'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { account } from 'src/test/fixtures'
 import { logger } from 'src/utils/logger'
@@ -31,7 +31,7 @@ describe(handleDeepLink, () => {
       })
       .call(parseAndValidateUserAddress, account.address)
       .put(activateAccount(account.address))
-      .call(sendAnalyticsEvent, EventName.DeepLinkOpened, {
+      .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
         url: swapDeepLinkPayload.url,
         screen: 'swap',
         is_cold_start: swapDeepLinkPayload.coldStart,
@@ -49,7 +49,7 @@ describe(handleDeepLink, () => {
         },
       })
       .call(handleTransactionLink)
-      .call(sendAnalyticsEvent, EventName.DeepLinkOpened, {
+      .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
         url: transactionDeepLinkPayload.url,
         screen: 'transaction',
         is_cold_start: transactionDeepLinkPayload.coldStart,

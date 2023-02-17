@@ -1,4 +1,5 @@
 import { useScrollToTop } from '@react-navigation/native'
+import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, TextInput, useColorScheme } from 'react-native'
@@ -12,7 +13,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { EventName, SectionName } from 'src/features/telemetry/constants'
+import { SectionName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
 import { Theme } from 'src/styles/theme'
@@ -36,7 +37,7 @@ export function ExploreScreen(): JSX.Element {
 
   const onSearchFocus = (): void => {
     setIsSearchMode(true)
-    sendAnalyticsEvent(EventName.Impression, {
+    sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
       section: SectionName.ExploreSearch,
       screen: Screens.Explore,
     })

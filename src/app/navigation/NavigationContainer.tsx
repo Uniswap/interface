@@ -5,6 +5,7 @@ import {
   NavigationContainerRefWithCurrent,
 } from '@react-navigation/native'
 import { AnyAction } from '@reduxjs/toolkit'
+import { SharedEventName } from '@uniswap/analytics-events'
 import React, { Dispatch, FC, useEffect, useState } from 'react'
 import { Linking } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -12,7 +13,6 @@ import { RootParamList } from 'src/app/navigation/types'
 import { Trace } from 'src/components/telemetry/Trace'
 import { DeepLink, openDeepLink } from 'src/features/deepLinking/handleDeepLink'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { EventName } from 'src/features/telemetry/constants'
 import { getImpressionEventParams } from 'src/features/telemetry/utils'
 import { AppScreen } from 'src/screens/Screens'
 
@@ -42,7 +42,7 @@ export const NavigationContainer: FC<Props> = ({ children, onReady }) => {
       }}
       onReady={(): void => {
         onReady(navigationRef)
-        sendAnalyticsEvent(EventName.AppLoaded)
+        sendAnalyticsEvent(SharedEventName.APP_LOADED)
 
         // setting initial route name for telemetry
         const initialRoute = navigationRef.getCurrentRoute()?.name as AppScreen

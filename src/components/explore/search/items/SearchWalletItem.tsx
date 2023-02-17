@@ -6,29 +6,44 @@ import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
+import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
 import { Flex } from 'src/components/layout/Flex'
 import { addToSearchHistory, WalletSearchResult } from 'src/features/explore/searchHistorySlice'
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
-import { ElementName } from 'src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
+import { useDisplayName } from 'src/features/wallet/hooks'
 
 type SearchWalletItemProps = {
   wallet: WalletSearchResult
+  searchContext?: SearchContext
 }
 
-export function SearchWalletItem({ wallet }: SearchWalletItemProps): JSX.Element {
+export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProps): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const { preload, navigate } = useEagerExternalProfileNavigation()
 
   const { address } = wallet
+  const displayName = useDisplayName(address)
 
   const isFavorited = useAppSelector(selectWatchedAddressSet).has(address)
 
   const onPress = (): void => {
     preload(address)
     navigate(address)
+    if (searchContext) {
+      sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
+        query: searchContext.query,
+        selected_name: displayName?.name ?? address,
+        selected_address: address ?? '',
+        type: 'address',
+        suggestion_count: searchContext.suggestionCount,
+        position: searchContext.position,
+      })
+    }
     dispatch(addToSearchHistory({ searchResult: wallet }))
   }
 

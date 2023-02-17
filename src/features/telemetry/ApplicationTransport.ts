@@ -1,5 +1,6 @@
 import { BaseTransport } from '@amplitude/analytics-core'
 import { Payload, Response, Transport } from '@amplitude/analytics-types'
+import DeviceInfo from 'react-native-device-info'
 import { uniswapUrls } from 'src/constants/urls'
 
 const MOBILE_ORIGIN_APPLICATION = 'mobile-analytics-uniswap'
@@ -27,7 +28,7 @@ export class ApplicationTransport extends BaseTransport implements Transport {
         'Content-Type': 'application/json',
         Accept: '*/*',
         Origin: uniswapUrls.apiBaseUrl,
-        'x-application-build': !__DEV__ ? 'PROD' : 'DEV',
+        'x-application-build': !__DEV__ ? DeviceInfo.getBundleId() : 'DEV',
       },
       keepalive: true, // allow the request to outlive the page
       body: JSON.stringify(payload),

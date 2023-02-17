@@ -3,6 +3,7 @@ import { default as React } from 'react'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
+import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
@@ -13,14 +14,16 @@ import {
   SearchResultType,
   TokenSearchResult,
 } from 'src/features/explore/searchHistorySlice'
-import { ElementName } from 'src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
 type SearchTokenItemProps = {
   token: TokenSearchResult
+  searchContext?: SearchContext
 }
 
-export function SearchTokenItem({ token }: SearchTokenItemProps): JSX.Element {
+export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps): JSX.Element {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
@@ -31,6 +34,16 @@ export function SearchTokenItem({ token }: SearchTokenItemProps): JSX.Element {
   const onPress = (): void => {
     tokenDetailsNavigation.preload(currencyId)
     tokenDetailsNavigation.navigate(currencyId)
+    if (searchContext) {
+      sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
+        query: searchContext.query,
+        selected_name: name,
+        selected_address: address ?? '',
+        type: 'token',
+        suggestion_count: searchContext.suggestionCount,
+        position: searchContext.position,
+      })
+    }
     dispatch(
       addToSearchHistory({
         searchResult: {

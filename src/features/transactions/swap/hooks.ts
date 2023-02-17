@@ -1,6 +1,7 @@
 // TODO(MOB-3867): reduce file length
 /* eslint-disable max-lines */
 import { MaxUint256 } from '@ethersproject/constants'
+import { SwapEventName } from '@uniswap/analytics-events'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { SwapRouter } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
@@ -31,7 +32,6 @@ import { AppNotificationType } from 'src/features/notifications/types'
 import { useSimulatedGasLimit } from 'src/features/routing/hooks'
 import { STABLECOIN_AMOUNT_OUT, useUSDCPrice } from 'src/features/routing/useUSDCPrice'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { EventName } from 'src/features/telemetry/constants'
 import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import { PERMITTABLE_TOKENS } from 'src/features/transactions/permit/permittableTokens'
 import { usePermitSignature } from 'src/features/transactions/permit/usePermitSignature'
@@ -802,7 +802,7 @@ export function useSwapCallback(
       )
       onSubmit()
 
-      sendAnalyticsEvent(EventName.SwapSubmitButtonPressed, {
+      sendAnalyticsEvent(SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED, {
         ...getBaseTradeAnalyticsProperties(trade),
         estimated_network_fee_wei: totalGasFee,
         gas_limit: toStringish(swapTxRequest.gasLimit),

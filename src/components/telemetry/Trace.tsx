@@ -1,8 +1,9 @@
 import { useFocusEffect } from '@react-navigation/core'
+import { SharedEventName } from '@uniswap/analytics-events'
 import React, { createContext, memo, PropsWithChildren, useEffect, useMemo, useRef } from 'react'
 import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { EventName, MarkNames, ModalName, SectionName } from 'src/features/telemetry/constants'
+import { MarkNames, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { useTrace } from 'src/features/telemetry/hooks'
 import { AppScreen } from 'src/screens/Screens'
 import { logger } from 'src/utils/logger'
@@ -94,7 +95,7 @@ function _Trace({
   // Log impression on mount for elements that are not part of the navigation tree
   useEffect(() => {
     if (logImpression && !isPartOfNavigationTree) {
-      sendAnalyticsEvent(EventName.Impression, { ...combinedProps, ...properties })
+      sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, { ...combinedProps, ...properties })
     }
     // Impressions should only be logged on mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -145,7 +146,7 @@ function NavAwareTrace({
   useFocusEffect(
     React.useCallback(() => {
       if (logImpression) {
-        sendAnalyticsEvent(EventName.Impression, { ...combinedProps, ...properties })
+        sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, { ...combinedProps, ...properties })
       }
     }, [combinedProps, logImpression, properties])
   )

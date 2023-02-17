@@ -6,7 +6,7 @@ import { getProvider, getSignerManager } from 'src/app/walletContext'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { isFlashbotsSupportedChainId } from 'src/features/providers/flashbotsProvider'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { EventName } from 'src/features/telemetry/constants'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { transactionActions } from 'src/features/transactions/slice'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { formatAsHexString } from 'src/features/transactions/swap/utils'
@@ -163,7 +163,7 @@ function* addTransaction(
   }
 
   if (transaction.typeInfo.type === TransactionType.Swap && trade) {
-    yield* call(sendAnalyticsEvent, EventName.SwapSubmitted, {
+    yield* call(sendAnalyticsEvent, MobileEventName.SwapSubmitted, {
       transaction_hash: hash,
       chain_id: chainId,
       price_impact_basis_points: trade.priceImpact.multiply(100).toSignificant(),

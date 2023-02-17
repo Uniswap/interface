@@ -3,30 +3,24 @@
  *
  * Subject to change as new features are added and new events are defined and logged.
  */
-export enum EventName {
+export enum MobileEventName {
   // keep these alphabetized or else you will go to JAIL!
 
   // some of these values are Title Cased to match shared repo event format:
   // https://github.com/Uniswap/analytics-events/blob/main/src/primitives.ts
-  AppLoaded = 'app-loaded',
   DeepLinkOpened = 'Deep Link Opened',
+  ExploreSearchResultClicked = 'Explore Search Result Clicked',
+  ExploreSearchCancel = 'Explore Search Cancel',
   // General fiat onramp events like in-app buttons and modals
   FiatOnRampBannerPressed = 'Fiat OnRamp Banner Pressed',
   FiatOnRampQuickActionButtonPressed = 'Fiat OnRamp QuickAction Button Pressed',
-  FiatOnRampRegionCheck = 'Fiat OnRamp Widget Check',
   FiatOnRampWidgetOpened = 'Fiat OnRamp Widget Opened',
-  Impression = 'impression',
-  MarkMeasure = 'mark-measure',
-  Moonpay = 'Moonpay', // Moonpay-specific events
-  OnboardingCompleted = 'onboarding-completed',
-  PerformanceReport = 'performance-report',
-  PerformanceGraphql = 'performance-graphql',
-  SwapQuoteReceived = 'Swap Quote Received',
-  SwapSubmitButtonPressed = 'Swap Submit Button Pressed',
+  OnboardingCompleted = 'Onboarding Completed',
+  PerformanceReport = 'Performance Report',
+  PerformanceGraphql = 'Performance GraphQL',
   SwapSubmitted = 'Swap Submitted to Provider',
-  TokenDetailsOtherChainButtonPressed = 'TokenDetailsOtherChainButtonPressed',
-  UserEvent = 'user-event',
-  WalletAdded = 'wallet-added',
+  TokenDetailsOtherChainButtonPressed = 'Token Details Other Chain Button Pressed',
+  WalletAdded = 'Wallet Added',
   WalletConnectSheetCompleted = 'Wallet Connect Sheet Completed',
 }
 

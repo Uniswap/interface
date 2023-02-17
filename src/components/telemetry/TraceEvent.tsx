@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from 'react'
 import { NativeSyntheticEvent, NativeTouchEvent } from 'react-native'
 import { ITraceContext, Trace, TraceContext } from 'src/components/telemetry/Trace'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { ElementName, EventName, ReactNativeEvent } from 'src/features/telemetry/constants'
+import { ElementName, MobileEventName, ReactNativeEvent } from 'src/features/telemetry/constants'
 
 export type TraceEventProps = {
   // Element name used to identify events sources
@@ -11,7 +11,7 @@ export type TraceEventProps = {
   elementName?: ElementName
   // event name to log
   // TODO: [MOB-3878] Enforce EventName type only
-  eventName: EventName
+  eventName: MobileEventName
   // Known components' events that trigger callbacks to be augmented with telemetry logging
   events: ReactNativeEvent[]
   // extra properties to log with the event
@@ -60,7 +60,7 @@ function getEventHandlers(
   child: React.ReactElement,
   consumedProps: ITraceContext,
   events: ReactNativeEvent[],
-  eventName: EventName,
+  eventName: MobileEventName,
   elementName?: ElementName,
   properties?: Record<string, unknown>
 ): Partial<Record<ReactNativeEvent, (e: NativeSyntheticEvent<NativeTouchEvent>) => void>> {

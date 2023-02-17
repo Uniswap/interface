@@ -15,6 +15,8 @@ import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { AnimatedBox, AnimatedFlex, Box } from 'src/components/layout'
 import { SHADOW_OFFSET_SMALL } from 'src/components/layout/BaseCard'
 import { Text } from 'src/components/Text'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { dimensions } from 'src/styles/sizing'
 import SearchIcon from '../../assets/icons/search.svg'
 
@@ -65,6 +67,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     isFocus.value = false
     showClearButton.value = false
     Keyboard.dismiss()
+    sendAnalyticsEvent(MobileEventName.ExploreSearchCancel, { query: value })
     onChangeText?.('')
     onCancel?.()
   }

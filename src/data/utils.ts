@@ -1,7 +1,7 @@
 import { ApolloLink, NetworkStatus } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { EventName } from 'src/features/telemetry/constants'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { logger } from 'src/utils/logger'
 import { isDevBuild } from 'src/utils/version'
 
@@ -81,7 +81,7 @@ export function setupPerformanceLink(samplingRate = APOLLO_PERFORMANCE_SAMPLING_
 
       sample(
         () =>
-          sendAnalyticsEvent(EventName.PerformanceGraphql, {
+          sendAnalyticsEvent(MobileEventName.PerformanceGraphql, {
             dataSize,
             duration,
             operationName: operation.operationName,
