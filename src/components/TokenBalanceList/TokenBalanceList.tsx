@@ -107,7 +107,7 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
     }, [data, hiddenTokensExpanded])
 
     const estimatedContentHeight = dimensions.fullHeight - TAB_BAR_HEIGHT - insets.top
-    const numHiddenTokens = data?.smallBalances?.length ?? 0 + (data?.spamBalances?.length ?? 0)
+    const numHiddenTokens = (data?.smallBalances?.length ?? 0) + (data?.spamBalances?.length ?? 0)
 
     // Note: `PerformanceView` must wrap the entire return statement to properly track interactive states.
     return (
