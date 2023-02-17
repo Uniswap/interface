@@ -26,7 +26,6 @@ export function HeaderIcon({
 
   return (
     <Box>
-      {/* TODO: [MOB-3880] Add placeholder logo here for dapps without icons */}
       {dapp.icon ? (
         <Image source={{ uri: dapp.icon, height: iconSizes.icon40, width: iconSizes.icon40 }} />
       ) : (
