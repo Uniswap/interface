@@ -522,23 +522,6 @@ export const BagFooter = ({ totalEthPrice, fetchAssets, eventProperties }: BagFo
     ...eventProperties,
   }
 
-  const tokenSelectedEventProperties = useMemo(() => {
-    if (!inputCurrency || inputCurrency.isNative) {
-      return undefined
-    }
-
-    return {
-      token_address: inputCurrency.address,
-      token_symbol: inputCurrency.symbol,
-    }
-  }, [inputCurrency])
-
-  useEffect(() => {
-    if (!!inputCurrency && !!tokenSelectedEventProperties) {
-      sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTED, tokenSelectedEventProperties)
-    }
-  }, [inputCurrency, tokenSelectedEventProperties])
-
   return (
     <FooterContainer>
       <Footer>
@@ -631,7 +614,15 @@ export const BagFooter = ({ totalEthPrice, fetchAssets, eventProperties }: BagFo
       <CurrencySearchModal
         isOpen={tokenSelectorOpen}
         onDismiss={() => setTokenSelectorOpen(false)}
-        onCurrencySelect={(currency: Currency) => setInputCurrency(currency.isNative ? undefined : currency)}
+        onCurrencySelect={(currency: Currency) => {
+          setInputCurrency(currency.isNative ? undefined : currency)
+          if (currency.isToken) {
+            sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTED, {
+              token_address: currency.address,
+              token_symbol: currency.symbol,
+            })
+          }
+        }}
         selectedCurrency={activeCurrency ?? undefined}
         onlyShowCurrenciesWithBalance={true}
       />
