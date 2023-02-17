@@ -41,7 +41,6 @@ export enum ActivityType {
   Send = 'SEND',
   Stake = 'STAKE',
   Swap = 'SWAP',
-  Swapx = 'SWAPX',
   Staking = 'Staking',
   Unknown = 'UNKNOWN',
   Unstake = 'UNSTAKE',
@@ -197,6 +196,7 @@ export type NftAssetListingsArgs = {
   after?: InputMaybe<Scalars['String']>;
   asc?: InputMaybe<Scalars['Boolean']>;
   before?: InputMaybe<Scalars['String']>;
+  datasource?: InputMaybe<DatasourceProvider>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
 };
@@ -311,6 +311,7 @@ export type NftCollection = {
 
 export type NftCollectionMarketsArgs = {
   currencies: Array<Currency>;
+  datasource?: InputMaybe<DatasourceProvider>;
 };
 
 export type NftCollectionConnection = {
@@ -622,6 +623,7 @@ export type QueryNftAssetsArgs = {
   asc?: InputMaybe<Scalars['Boolean']>;
   before?: InputMaybe<Scalars['String']>;
   chain?: InputMaybe<Chain>;
+  datasource?: InputMaybe<DatasourceProvider>;
   filter?: InputMaybe<NftAssetsFilterInput>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
@@ -646,6 +648,7 @@ export type QueryNftBalancesArgs = {
 export type QueryNftCollectionsArgs = {
   after?: InputMaybe<Scalars['String']>;
   before?: InputMaybe<Scalars['String']>;
+  datasource?: InputMaybe<DatasourceProvider>;
   filter?: InputMaybe<NftCollectionsFilterInput>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
@@ -836,6 +839,7 @@ export type TokenProjectMarketsArgs = {
 export type TokenProjectMarket = {
   __typename?: 'TokenProjectMarket';
   currency: Currency;
+  /** @deprecated Use marketCap */
   fullyDilutedMarketCap?: Maybe<Amount>;
   id: Scalars['ID'];
   marketCap?: Maybe<Amount>;
@@ -843,9 +847,12 @@ export type TokenProjectMarket = {
   priceHighLow?: Maybe<Amount>;
   priceHistory?: Maybe<Array<Maybe<TimestampedAmount>>>;
   pricePercentChange?: Maybe<Amount>;
+  /** @deprecated Use pricePercentChange */
   pricePercentChange24h?: Maybe<Amount>;
   tokenProject: TokenProject;
+  /** @deprecated Use TokenMarket.volume for Uniswap volume */
   volume?: Maybe<Amount>;
+  /** @deprecated Use TokenMarket.volume with duration DAY for Uniswap volume */
   volume24h?: Maybe<Amount>;
 };
 

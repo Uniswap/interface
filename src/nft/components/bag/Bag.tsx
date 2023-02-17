@@ -66,7 +66,7 @@ const BagContainer = styled.div<{ raiseZIndex: boolean; isProfilePage: boolean }
   border-radius: 16px;
   box-shadow: ${({ theme }) => theme.shallowShadow};
   z-index: ${({ raiseZIndex, isProfilePage }) =>
-    raiseZIndex ? (isProfilePage ? Z_INDEX.modalOverTooltip : Z_INDEX.modalBackdrop) : 3};
+    raiseZIndex ? (isProfilePage ? Z_INDEX.modalOverTooltip : Z_INDEX.modalBackdrop + 2) : 3};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     right: 0px;
@@ -179,12 +179,13 @@ const Bag = () => {
     return { totalEthPrice }
   }, [itemsInBag])
 
-  const purchaseAssets = async (routingData: RouteResponse) => {
+  const purchaseAssets = async (routingData: RouteResponse, purchasingWithErc20: boolean) => {
     if (!provider || !routingData) return
     const purchaseResponse = await sendTransaction(
       provider?.getSigner(),
       itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset),
-      routingData
+      routingData,
+      purchasingWithErc20
     )
     if (
       purchaseResponse &&
@@ -230,9 +231,11 @@ const Bag = () => {
               return
             }
 
-            const { route, routeResponse } = buildRouteResponse(data.nftRoute, !!tokenTradeInput)
+            const purchasingWithErc20 = !!tokenTradeInput
+            const { route, routeResponse } = buildRouteResponse(data.nftRoute, purchasingWithErc20)
 
-            const updatedAssets = combineBuyItemsWithTxRoute(itemsToBuy, route)
+            const { hasPriceAdjustment, updatedAssets } = combineBuyItemsWithTxRoute(itemsToBuy, route)
+            const shouldRefetchCalldata = hasPriceAdjustment && purchasingWithErc20
 
             const fetchedPriceChangedAssets = updatedAssets
               .filter((asset) => asset.updatedPriceInfo)
@@ -266,9 +269,13 @@ const Bag = () => {
 
             if (hasAssets) {
               if (!shouldReview) {
-                purchaseAssets(routeResponse)
-                setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
-                shouldLock = true
+                if (shouldRefetchCalldata) {
+                  setBagStatus(BagStatus.CONFIRM_QUOTE)
+                } else {
+                  purchaseAssets(routeResponse, purchasingWithErc20)
+                  setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
+                  shouldLock = true
+                }
               } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
               else {
                 setBagStatus(BagStatus.IN_REVIEW)
@@ -289,7 +296,7 @@ const Bag = () => {
           })
         )
 
-        const updatedAssets = combineBuyItemsWithTxRoute(itemsToBuy, routeData.route)
+        const { updatedAssets } = combineBuyItemsWithTxRoute(itemsToBuy, routeData.route)
 
         const fetchedPriceChangedAssets = updatedAssets
           .filter((asset) => asset.updatedPriceInfo)
@@ -320,7 +327,7 @@ const Bag = () => {
 
         if (hasAssets) {
           if (!shouldReview) {
-            purchaseAssets(routeData)
+            purchaseAssets(routeData, false)
             setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
           } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
           else {
@@ -405,12 +412,7 @@ const Bag = () => {
               {isProfilePage ? <ProfileBagContent /> : <BagContent />}
             </Column>
             {hasAssetsToShow && !isProfilePage && (
-              <BagFooter
-                totalEthPrice={totalEthPrice}
-                bagStatus={bagStatus}
-                fetchAssets={fetchAssets}
-                eventProperties={eventProperties}
-              />
+              <BagFooter totalEthPrice={totalEthPrice} fetchAssets={fetchAssets} eventProperties={eventProperties} />
             )}
             {isSellingAssets && isProfilePage && (
               <Box

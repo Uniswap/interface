@@ -14,7 +14,7 @@ import { useToggleWalletModal } from 'state/application/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
-import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE, LIST_PAGE_MARGIN_TABLET } from './shared'
+import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from './shared'
 
 const ProfilePageWrapper = styled.div`
   height: 100%;
@@ -33,11 +33,6 @@ const LoadedAccountPage = styled.div<{ cartExpanded: boolean; isOnV2ListPage: bo
         isOnV2ListPage ? LIST_PAGE_MARGIN * 2 : cartExpanded ? XXXL_BAG_WIDTH : 0}px
   );
   margin: 0px ${({ isOnV2ListPage }) => (isOnV2ListPage ? LIST_PAGE_MARGIN : 0)}px;
-
-  @media screen and (max-width: ${BREAKPOINTS.lg}px) {
-    width: calc(100% - ${({ isOnV2ListPage }) => (isOnV2ListPage ? LIST_PAGE_MARGIN_TABLET * 2 : 0)}px);
-    margin: 0px ${({ isOnV2ListPage }) => (isOnV2ListPage ? LIST_PAGE_MARGIN_TABLET : 0)}px;
-  }
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     width: calc(100% - ${({ isOnV2ListPage }) => (isOnV2ListPage ? LIST_PAGE_MARGIN_MOBILE * 2 : 0)}px);

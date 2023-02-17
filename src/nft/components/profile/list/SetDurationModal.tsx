@@ -3,7 +3,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import ms from 'ms.macro'
 import { Column, Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
-import { bodySmall, caption } from 'nft/css/common.css'
+import { body, caption } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
@@ -19,12 +19,14 @@ const ModalWrapper = styled(Column)`
 `
 
 const InputWrapper = styled(Row)<{ isInvalid: boolean }>`
-  padding: 12px 8px 12px 12px;
+  padding: 6px 6px 6px 12px;
   border: 1px solid;
   position: relative;
   height: 44px;
   border-radius: 8px;
   border-color: ${({ isInvalid, theme }) => (isInvalid ? theme.accentCritical : theme.backgroundOutline)};
+  width: 160px;
+  justify-content: space-between;
 `
 
 const DropdownPrompt = styled(Row)`
@@ -32,11 +34,10 @@ const DropdownPrompt = styled(Row)`
   background-color: ${({ theme }) => theme.backgroundInteractive};
   cursor: pointer;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 16px;
   border-radius: 8px;
   padding: 6px 4px 6px 8px;
-  width: min-content;
   white-space: nowrap;
   color: ${({ theme }) => theme.textPrimary};
 
@@ -46,8 +47,8 @@ const DropdownPrompt = styled(Row)`
 `
 
 const DropdownChevron = styled(ChevronDown)<{ isOpen: boolean }>`
-  height: 16px;
-  width: 16px;
+  height: 20px;
+  width: 20px;
   color: ${({ theme }) => theme.textSecondary};
   transform: ${({ isOpen }) => isOpen && 'rotate(180deg)'};
   transition: ${({
@@ -176,10 +177,10 @@ export const SetDurationModal = () => {
           type="number"
           pattern="[0-9]"
           borderStyle="none"
-          className={bodySmall}
+          className={body}
           color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
           value={amount}
-          width="32"
+          width="40"
           marginRight="4"
           backgroundColor="none"
           onChange={setCustomExpiration}

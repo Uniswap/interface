@@ -50,6 +50,7 @@ const TxCompleteModal = () => {
   const [ethPrice, setEthPrice] = useState(3000)
   const [showUnavailable, setShowUnavailable] = useState(false)
   const txHash = useSendTransaction((state) => state.txHash)
+  const purchasedWithErc20 = useSendTransaction((state) => state.purchasedWithErc20)
   const setTxState = useSendTransaction((state) => state.setState)
   const txState = useSendTransaction((state) => state.state)
   const transactionStateRef = useRef(txState)
@@ -115,6 +116,7 @@ const TxCompleteModal = () => {
                   buy_quantity: nftsPurchased.length,
                   usd_value: parseFloat(formatEther(totalPurchaseValue)) * ethPrice,
                   transaction_hash: txHash,
+                  using_erc20: purchasedWithErc20,
                   ...formatAssetEventProperties(nftsPurchased),
                   ...trace,
                 }}

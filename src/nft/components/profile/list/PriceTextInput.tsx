@@ -21,7 +21,7 @@ const PriceTextInputWrapper = styled(Column)`
 const InputWrapper = styled(Row)<{ borderColor: string }>`
   height: 44px;
   color: ${({ theme }) => theme.textTertiary};
-  padding: 4px;
+  padding: 12px;
   border: 2px solid;
   border-radius: 8px;
   border-color: ${({ borderColor }) => borderColor};
@@ -30,7 +30,6 @@ const InputWrapper = styled(Row)<{ borderColor: string }>`
 `
 
 const CurrencyWrapper = styled.div<{ listPrice: number | undefined }>`
-  margin-right: 16px;
   color: ${({ listPrice, theme }) => (listPrice ? theme.textPrimary : theme.textSecondary)};
 `
 
@@ -94,7 +93,6 @@ interface PriceTextInputProps {
   globalOverride: boolean
   warning?: ListingWarning
   asset: WalletAsset
-  shrink?: boolean
 }
 
 export const PriceTextInput = ({
@@ -105,7 +103,6 @@ export const PriceTextInput = ({
   globalOverride,
   warning,
   asset,
-  shrink,
 }: PriceTextInputProps) => {
   const [focused, setFocused] = useState(false)
   const [warningType, setWarningType] = useState(WarningType.NONE)
@@ -152,10 +149,8 @@ export const PriceTextInput = ({
           className={body}
           color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
           placeholder="0"
-          marginRight="0"
-          marginLeft="14"
           backgroundColor="none"
-          style={{ width: shrink ? '54px' : '68px' }}
+          width={{ sm: '54', md: '68' }}
           onFocus={() => setFocused(true)}
           onBlur={() => {
             setFocused(false)
