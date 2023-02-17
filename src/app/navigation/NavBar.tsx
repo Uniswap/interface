@@ -18,7 +18,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
-import { AnimatedBox, Box, Flex } from 'src/components/layout'
+import { AnimatedBox, AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -166,6 +166,7 @@ const SwapFAB = memo(({ activeScale = 0.95, inputCurrencyId }: SwapTabBarButtonP
   )
 })
 
+const ACTIVE_SEARCH_BUTTON_SCALE = 0.985
 function ExploreTabBarButton(): JSX.Element {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
@@ -175,35 +176,54 @@ function ExploreTabBarButton(): JSX.Element {
   const onPress = (): void => {
     dispatch(openModal({ name: ModalName.Explore }))
   }
+  const scale = useSharedValue(1)
+
+  const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }), [scale])
+  const onGestureEvent = useAnimatedGestureHandler<TapGestureHandlerGestureEvent>({
+    onStart: () => {
+      cancelAnimation(scale)
+      scale.value = withSpring(ACTIVE_SEARCH_BUTTON_SCALE)
+    },
+    onEnd: () => {
+      runOnJS(onPress)()
+    },
+    onFinish: () => {
+      cancelAnimation(scale)
+      scale.value = withSpring(1)
+    },
+  })
+
   return (
     <TouchableOpacity
-      activeOpacity={0.9}
+      activeOpacity={1}
       style={[styles.searchBar, { borderRadius: theme.borderRadii.roundedFull }]}
       onPress={onPress}>
-      <Flex borderRadius="roundedFull" overflow="hidden">
-        <BlurView intensity={100}>
-          <Flex
-            grow
-            row
-            alignItems="center"
-            bg={isDarkMode ? 'background2' : 'background1'}
-            borderRadius="roundedFull"
-            flex={1}
-            gap="spacing8"
-            justifyContent="flex-start"
-            opacity={isDarkMode ? 0.6 : 0.8}
-            p="spacing16"
-            shadowColor={isDarkMode ? 'background3' : 'textTertiary'}
-            shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
-            shadowOpacity={isDarkMode ? 0.6 : 0.4}
-            shadowRadius={theme.borderRadii.rounded20}>
-            <SearchIcon color={theme.colors.textSecondary} />
-            <Text color="textSecondary" variant="bodyLarge">
-              {t('Search web3')}
-            </Text>
-          </Flex>
-        </BlurView>
-      </Flex>
+      <TapGestureHandler onGestureEvent={onGestureEvent}>
+        <AnimatedFlex borderRadius="roundedFull" overflow="hidden" style={animatedStyle}>
+          <BlurView intensity={100}>
+            <Flex
+              grow
+              row
+              alignItems="center"
+              bg={isDarkMode ? 'background2' : 'background1'}
+              borderRadius="roundedFull"
+              flex={1}
+              gap="spacing8"
+              justifyContent="flex-start"
+              opacity={isDarkMode ? 0.6 : 0.8}
+              p="spacing16"
+              shadowColor={isDarkMode ? 'background3' : 'textTertiary'}
+              shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
+              shadowOpacity={isDarkMode ? 0.6 : 0.4}
+              shadowRadius={theme.borderRadii.rounded20}>
+              <SearchIcon color={theme.colors.textSecondary} />
+              <Text color="textSecondary" variant="bodyLarge">
+                {t('Search web3')}
+              </Text>
+            </Flex>
+          </BlurView>
+        </AnimatedFlex>
+      </TapGestureHandler>
     </TouchableOpacity>
   )
 }
