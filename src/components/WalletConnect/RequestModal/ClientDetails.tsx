@@ -37,11 +37,12 @@ export function ClientDetails({
           backgroundColor="accentActiveSoft"
           borderRadius="rounded8"
           color={theme.colors.accentActive}
-          iconColor={theme.colors.textSecondary}
+          iconColor={theme.colors.accentActive}
           label={dapp.url}
           mt="spacing8"
           px="spacing8"
           py="spacing4"
+          size={theme.iconSizes.icon16}
           textVariant="bodyMicro"
           url={dapp.url}
         />

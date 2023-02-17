@@ -2,7 +2,6 @@ import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, Share } from 'react-native'
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TripleDot } from 'src/components/icons/TripleDot'
 import { Box } from 'src/components/layout'
@@ -33,7 +32,6 @@ export function NFTCollectionContextMenu({
   iconColor?: keyof Theme['colors']
 }): Nullable<JSX.Element> {
   const { t } = useTranslation()
-  const theme = useAppTheme()
 
   const twitterURL = data?.twitterName ? getTwitterLink(data.twitterName) : undefined
   const homepageUrl = data?.homepageUrl

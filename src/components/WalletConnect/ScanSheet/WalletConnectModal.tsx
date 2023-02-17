@@ -19,7 +19,7 @@ import { ConnectedDappsList } from 'src/components/WalletConnect/ConnectedDapps/
 import { PendingConnection } from 'src/components/WalletConnect/ScanSheet/PendingConnection'
 import { getSupportedURI, URIType } from 'src/components/WalletConnect/ScanSheet/util'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { useDisplayName, useWCTimeoutError } from 'src/features/wallet/hooks'
+import { useWCTimeoutError } from 'src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { connectToApp } from 'src/features/walletConnect/WalletConnect'
@@ -44,7 +44,6 @@ export function WalletConnectModal({
   const theme = useAppTheme()
   const isDarkMode = useColorScheme() === 'dark'
   const activeAddress = useAppSelector(selectActiveAccountAddress)
-  const displayName = useDisplayName(activeAddress)
   const { sessions } = useWalletConnect(activeAddress)
   const [currentScreenState, setCurrentScreenState] =
     useState<ScannerModalState>(initialScreenState)
