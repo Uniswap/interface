@@ -112,7 +112,8 @@ function TransactionSummaryLayout({
           borderTopRightRadius={showAlertBanner ? 'none' : 'rounded16'}
           gap="spacing16"
           justifyContent="space-between"
-          mb={showBackground ? 'spacing12' : 'none'}
+          mt={showBackground ? 'spacing12' : 'none'}
+          px={showBackground ? 'spacing12' : 'none'}
           py="spacing12">
           <Flex
             row
