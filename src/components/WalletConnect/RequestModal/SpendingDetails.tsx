@@ -32,11 +32,11 @@ export function SpendingDetails({
       </Text>
       <Flex row alignItems="center" gap="spacing4">
         <CurrencyLogo currencyInfo={nativeCurrencyInfo} size={iconSizes.icon16} />
-        <Text variant="bodySmall">
+        <Text variant="subheadSmall">
           {formatCurrencyAmount(nativeCurrencyAmount, NumberType.TokenTx)}{' '}
           {nativeCurrencyInfo?.currency.symbol}
         </Text>
-        <Text color="textSecondary" loading={!usdValue} variant="bodySmall">
+        <Text color="textSecondary" loading={!usdValue} variant="subheadSmall">
           ({formatUSDPrice(usdValue)})
         </Text>
       </Flex>

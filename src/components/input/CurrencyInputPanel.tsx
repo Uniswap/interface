@@ -46,7 +46,7 @@ type CurrentInputPanelProps = {
 } & RestyleProps
 
 const MAX_INPUT_FONT_SIZE = 36
-const MIN_INPUT_FONT_SIZE = 18
+const MIN_INPUT_FONT_SIZE = 32
 
 // if font changes from `fontFamily.sansSerif.regular` or `MAX_INPUT_FONT_SIZE`
 // changes from 36 then width value must be adjusted
@@ -81,7 +81,7 @@ const getSwapPanelPaddingValues = (
   const innerPadding: DynamicSwapPanelPaddingValues = {
     // when there is a currency value, and the box is on the top, add a bit more
     // 20px is the desired amount, so we're adding outer padding and inner padding (16px + 4px)
-    paddingBottom: isOutputBox ? 'spacing4' : 'none',
+    paddingBottom: 'none',
     // 20px is the desired amount, so we're adding outer padding and inner padding (16px + 4px)
     paddingTop: isOutputBox ? 'none' : 'spacing4',
   }
@@ -174,6 +174,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
       if (!onSetMax) {
         return
       }
+
       onSetMax(amount)
       onChangeText(amount)
     },
@@ -200,7 +201,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
 
   return (
     <Flex
-      gap="spacing12"
+      gap="spacing8"
       {...transformedProps}
       pb={paddingBottom}
       pt={paddingTop}
@@ -222,13 +223,13 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
               borderWidth={0}
               dimTextColor={dimTextColor}
               flex={1}
-              fontFamily={theme.textVariants.headlineLarge.fontFamily}
+              fontFamily={theme.textVariants.headlineMedium.fontFamily}
               fontSize={fontSize}
               height={MAX_INPUT_FONT_SIZE}
-              maxFontSizeMultiplier={theme.textVariants.headlineLarge.maxFontSizeMultiplier}
+              maxFontSizeMultiplier={theme.textVariants.headlineMedium.maxFontSizeMultiplier}
               overflow="visible"
               placeholder="0"
-              placeholderTextColor={theme.colors.textSecondary}
+              placeholderTextColor={theme.colors.textTertiary}
               px="none"
               py="none"
               returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
@@ -254,21 +255,17 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
       {currencyInfo && (
         <Flex row alignItems="center" gap="spacing8" justifyContent="space-between" mb="spacing4">
           <Flex shrink>
-            <Text color="textSecondary" numberOfLines={1} variant="bodySmall">
+            <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
               {!isUSDInput ? formattedUSDValue : formattedCurrencyAmount}
             </Text>
           </Flex>
           <Flex row alignItems="center" gap="spacing8" justifyContent="flex-end">
-            {showInsufficientBalanceWarning && (
-              <Text color="accentWarning" variant="bodySmall">
-                {insufficientBalanceWarning.title}
-              </Text>
-            )}
-            {!showInsufficientBalanceWarning && (
-              <Text color="textSecondary" variant="bodySmall">
-                {t('Balance')}: {formatCurrencyAmount(currencyBalance, NumberType.TokenTx)}
-              </Text>
-            )}
+            <Text
+              color={showInsufficientBalanceWarning ? 'accentWarning' : 'textSecondary'}
+              variant="subheadSmall">
+              {t('Balance')}: {formatCurrencyAmount(currencyBalance, NumberType.TokenNonTx)}
+            </Text>
+
             {onSetMax && (
               <MaxAmountButton
                 currencyAmount={currencyAmount}

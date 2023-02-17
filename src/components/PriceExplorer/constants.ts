@@ -6,7 +6,7 @@ import { theme as FixedTheme } from 'src/styles/theme'
 // "Your balance" section will always show above the fold
 // we can't use useResponsiveProps for this because CHART_HEIGHT gets
 // used in non-component code related to chart functionality
-export const CHART_HEIGHT = dimensions.fullHeight < FixedTheme.breakpoints.sm.height ? 180 : 280
+export const CHART_HEIGHT = dimensions.fullHeight < FixedTheme.breakpoints.sm.height ? 180 : 264
 export const CHART_WIDTH = dimensions.fullWidth
 
 export const NUM_GRAPHS = 5

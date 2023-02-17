@@ -19,7 +19,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#0D111C",
+          "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 17,
@@ -36,7 +36,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#0D111C",
+          "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 17,
@@ -87,7 +87,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#0D111C",
+          "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 17,
@@ -104,7 +104,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#0D111C",
+          "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 17,
@@ -121,7 +121,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#0D111C",
+          "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 17,
@@ -138,7 +138,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#0D111C",
+          "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 17,
@@ -155,7 +155,7 @@ exports[`renders text with few matches 1`] = `
     style={
       Array [
         Object {
-          "color": "#0D111C",
+          "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 17,
@@ -398,7 +398,7 @@ exports[`renders text without matches 1`] = `
   style={
     Array [
       Object {
-        "color": "#0D111C",
+        "color": "#0E1524",
         "display": "flex",
         "fontFamily": "Inter-Medium",
         "fontSize": 17,

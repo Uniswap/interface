@@ -68,7 +68,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
           style={
             Array [
               Object {
-                "color": "#0D111C",
+                "color": "#0E1524",
                 "display": "flex",
                 "fontFamily": "Inter-Medium",
                 "fontSize": 24,
@@ -99,7 +99,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
           style={
             Array [
               Object {
-                "color": "#505A78",
+                "color": "#5D6785",
                 "display": "flex",
                 "fontFamily": "Inter-Regular",
                 "fontSize": 15,
@@ -195,7 +195,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 }
               >
                 <svg
-                  color="#0D111C"
+                  color="#0E1524"
                   data-file-name="SvgCloud"
                   height={20}
                   strokeWidth={1.5}
@@ -221,7 +221,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#0D111C",
+                      "color": "#0E1524",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
                       "fontSize": 17,
@@ -368,7 +368,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 }
               >
                 <svg
-                  color="#0D111C"
+                  color="#0E1524"
                   data-file-name="SvgPencil"
                   height={20}
                   strokeWidth={1.5}
@@ -394,7 +394,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#0D111C",
+                      "color": "#0E1524",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
                       "fontSize": 17,
@@ -559,7 +559,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 }
               >
                 <svg
-                  color="#505A78"
+                  color="#5D6785"
                   data-file-name="SvgInfoCircle"
                   height={24}
                   width={24}
@@ -584,7 +584,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#0D111C",
+                      "color": "#0E1524",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
                       "fontSize": 15,
@@ -704,7 +704,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                             0,
                             -958215,
                             1,
-                            -313648,
+                            -2011415,
                           ]
                         }
                         gradientTransform={null}
@@ -847,7 +847,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
           style={
             Array [
               Object {
-                "color": "#0D111C",
+                "color": "#0E1524",
                 "display": "flex",
                 "fontFamily": "Inter-Medium",
                 "fontSize": 24,
@@ -878,7 +878,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
           style={
             Array [
               Object {
-                "color": "#505A78",
+                "color": "#5D6785",
                 "display": "flex",
                 "fontFamily": "Inter-Regular",
                 "fontSize": 15,
@@ -974,7 +974,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 }
               >
                 <svg
-                  color="#0D111C"
+                  color="#0E1524"
                   data-file-name="SvgCloud"
                   height={20}
                   strokeWidth={1.5}
@@ -1000,7 +1000,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#0D111C",
+                      "color": "#0E1524",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
                       "fontSize": 17,
@@ -1074,7 +1074,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     style={
                       Array [
                         Object {
-                          "color": "#0D111C",
+                          "color": "#0E1524",
                           "display": "flex",
                           "fontFamily": "Inter-Regular",
                           "fontSize": 12,
@@ -1135,7 +1135,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 }
               >
                 <svg
-                  color="#0D111C"
+                  color="#0E1524"
                   data-file-name="SvgPencil"
                   height={20}
                   strokeWidth={1.5}
@@ -1161,7 +1161,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#0D111C",
+                      "color": "#0E1524",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
                       "fontSize": 17,
@@ -1326,7 +1326,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 }
               >
                 <svg
-                  color="#505A78"
+                  color="#5D6785"
                   data-file-name="SvgInfoCircle"
                   height={24}
                   width={24}
@@ -1351,7 +1351,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#0D111C",
+                      "color": "#0E1524",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
                       "fontSize": 15,
@@ -1471,7 +1471,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                             0,
                             -958215,
                             1,
-                            -313648,
+                            -2011415,
                           ]
                         }
                         gradientTransform={null}

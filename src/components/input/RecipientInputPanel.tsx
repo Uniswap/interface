@@ -28,9 +28,9 @@ export function RecipientInputPanel({
   return (
     <TouchableArea
       name={ElementName.SelectRecipient}
-      p="spacing8"
+      p="spacing16"
       onPress={onToggleShowRecipientSelector}>
-      <Flex gap="spacing2">
+      <Flex gap="spacing8">
         <Flex centered row gap="spacing4">
           <AddressDisplay
             hideAddressInSubtitle
@@ -39,6 +39,7 @@ export function RecipientInputPanel({
           />
           <Chevron color={theme.colors.textPrimary} direction="e" />
         </Flex>
+
         {recipientAddress && <RecipientPrevTransfers recipient={recipientAddress} />}
       </Flex>
     </TouchableArea>
@@ -51,7 +52,7 @@ export function RecipientPrevTransfers({ recipient }: { recipient: string }): JS
   const prevTxns = useAllTransactionsBetweenAddresses(activeAddress, recipient).length
 
   return (
-    <Text color="textSecondary" textAlign="center" variant="bodySmall">
+    <Text color="textTertiary" textAlign="center" variant="subheadSmall">
       {prevTxns === 1
         ? t('{{ prevTxns }} previous transfer', { prevTxns })
         : t('{{ prevTxns }} previous transfers', { prevTxns })}

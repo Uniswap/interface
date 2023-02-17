@@ -269,12 +269,15 @@ export const PendingConnection = ({ pendingSession, onClose }: Props): JSX.Eleme
             </Trans>
           </Text>
           <LinkButton
-            backgroundColor="accentActiveSoft"
-            borderRadius="rounded8"
+            backgroundColor="background2"
+            borderRadius="rounded16"
             color={theme.colors.accentActive}
+            iconColor={theme.colors.accentActive}
             label={pendingSession.dapp.url}
             mb="spacing12"
-            p="spacing8"
+            px="spacing8"
+            py="spacing4"
+            size={theme.iconSizes.icon12}
             textVariant="buttonLabelMicro"
             url={pendingSession.dapp.url}
           />

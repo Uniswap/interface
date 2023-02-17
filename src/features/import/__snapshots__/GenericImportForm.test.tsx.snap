@@ -64,14 +64,14 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         placeholderTextColor="#888FAB"
         returnKeyType="done"
         scrollEnabled={false}
-        selectionColor="#0D111C"
+        selectionColor="#0E1524"
         spellCheck={false}
         style={
           Array [
             Object {
               "backgroundColor": "transparent",
               "borderRadius": 12,
-              "color": "#0D111C",
+              "color": "#0E1524",
               "fontSize": 17,
               "justifyContent": "center",
               "lineHeight": 17,
@@ -121,7 +121,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         style={
           Array [
             Object {
-              "color": "#505A78",
+              "color": "#5D6785",
               "display": "flex",
               "fontFamily": "Inter-Medium",
               "fontSize": 17,
@@ -199,7 +199,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
           }
         >
           <svg
-            color="#0D111C"
+            color="#0E1524"
             data-file-name="SvgPaste"
             height={16}
             strokeWidth={2}
@@ -224,7 +224,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
             style={
               Array [
                 Object {
-                  "color": "#0D111C",
+                  "color": "#0E1524",
                   "display": "flex",
                   "fontFamily": "Inter-SemiBold",
                   "fontSize": 15,
@@ -259,7 +259,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         style={
           Array [
             Object {
-              "color": "#505A78",
+              "color": "#5D6785",
               "display": "flex",
               "fontFamily": "Inter-Medium",
               "fontSize": 17,

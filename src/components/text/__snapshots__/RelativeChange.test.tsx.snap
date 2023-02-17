@@ -15,14 +15,14 @@ exports[`renders a relative change 1`] = `
 >
   <svg
     color="#40B66B"
-    data-file-name="SvgArrowDown"
+    data-file-name="SvgArrowChange"
     height={16}
     strokeWidth={2}
     style={
       Object {
         "transform": Array [
           Object {
-            "rotate": "225deg",
+            "rotate": "180deg",
           },
         ],
       }
@@ -48,7 +48,7 @@ exports[`renders a relative change 1`] = `
     style={
       Array [
         Object {
-          "color": "#505A78",
+          "color": "#5D6785",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 15,
@@ -77,14 +77,14 @@ exports[`renders placeholders with absolute change 1`] = `
 >
   <svg
     color="#40B66B"
-    data-file-name="SvgArrowDown"
+    data-file-name="SvgArrowChange"
     height={16}
     strokeWidth={2}
     style={
       Object {
         "transform": Array [
           Object {
-            "rotate": "225deg",
+            "rotate": "180deg",
           },
         ],
       }
@@ -110,7 +110,7 @@ exports[`renders placeholders with absolute change 1`] = `
     style={
       Array [
         Object {
-          "color": "#505A78",
+          "color": "#5D6785",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 15,
@@ -143,7 +143,7 @@ exports[`renders placeholders without a change 1`] = `
     style={
       Array [
         Object {
-          "color": "#505A78",
+          "color": "#5D6785",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 15,

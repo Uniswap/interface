@@ -12,7 +12,7 @@ exports[`renders a Pill with border 1`] = `
         "display": "flex",
         "flexDirection": "row",
         "justifyContent": "center",
-        "paddingHorizontal": 12,
+        "paddingHorizontal": 4,
         "paddingVertical": 8,
       },
       Object {},
@@ -50,7 +50,7 @@ exports[`renders a Pill with border 1`] = `
     style={
       Array [
         Object {
-          "color": "#0D111C",
+          "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 15,
@@ -80,7 +80,7 @@ exports[`renders a Pill without image 1`] = `
         "display": "flex",
         "flexDirection": "row",
         "justifyContent": "center",
-        "paddingHorizontal": 12,
+        "paddingHorizontal": 4,
         "paddingVertical": 8,
       },
       Object {},
@@ -93,7 +93,7 @@ exports[`renders a Pill without image 1`] = `
     style={
       Array [
         Object {
-          "color": "#0D111C",
+          "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 15,

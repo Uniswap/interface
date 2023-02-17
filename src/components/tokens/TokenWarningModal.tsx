@@ -81,12 +81,11 @@ export default function TokenWarningModal({
         <Flex
           centered
           borderRadius="rounded12"
-          borderWidth={1}
           p="spacing12"
           style={{
-            borderColor: opacify(60, theme.colors[warningColor]),
+            backgroundColor: opacify(12, theme.colors[warningColor]),
           }}>
-          <WarningIcon safetyLevel={safetyLevel} width={theme.iconSizes.icon20} />
+          <WarningIcon safetyLevel={safetyLevel} width={theme.iconSizes.icon24} />
         </Flex>
         <Text variant="buttonLabelMedium">{getTokenSafetyHeaderText(safetyLevel, t)}</Text>
         <Flex centered gap="spacing4" width="90%">
@@ -101,7 +100,7 @@ export default function TokenWarningModal({
         </Flex>
         <TouchableArea
           alignItems="center"
-          bg="accentActiveSoft"
+          bg="background2"
           borderRadius="rounded16"
           flexDirection="row"
           mx="spacing48"
@@ -109,7 +108,7 @@ export default function TokenWarningModal({
           py="spacing8"
           onPress={(): Promise<void> => openUri(explorerLink)}>
           <Text
-            color="accentActive"
+            color="textSecondary"
             ellipsizeMode="tail"
             mx="spacing8"
             numberOfLines={1}

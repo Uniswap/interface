@@ -74,11 +74,13 @@ export function WalletConnectSwitchChainModal({ onClose, request }: Props): JSX.
             </Trans>
           </Text>
           <LinkButton
-            backgroundColor="accentActiveSoft"
-            borderRadius="rounded8"
+            backgroundColor="background2"
+            borderRadius="rounded12"
             color={theme.colors.accentActive}
+            iconColor={theme.colors.accentActive}
             label={dapp.url}
             p="spacing8"
+            size={theme.iconSizes.icon12}
             textVariant="buttonLabelMicro"
             url={dapp.url}
           />

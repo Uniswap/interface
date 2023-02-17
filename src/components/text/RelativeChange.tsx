@@ -1,6 +1,6 @@
 import React from 'react'
 import { useAppTheme } from 'src/app/hooks'
-import { Arrow } from 'src/components/icons/Arrow'
+import { Caret } from 'src/components/icons/Caret'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
@@ -49,7 +49,7 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
       gap="spacing2"
       justifyContent={alignRight ? 'flex-end' : 'flex-start'}>
       {change !== undefined && (
-        <Arrow color={arrowColor} direction={isPositiveChange ? 'ne' : 'se'} size={arrowSize} />
+        <Caret color={arrowColor} direction={isPositiveChange ? 'n' : 's'} size={arrowSize} />
       )}
       <Text
         color={

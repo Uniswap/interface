@@ -418,8 +418,8 @@ export const colorsLight: Palette = {
   backgroundActionButton: colors.magenta50,
   backgroundOverlay: opacify(60, colors.white),
 
-  textPrimary: colors.gray900,
-  textSecondary: colors.gray550,
+  textPrimary: colors.gray850,
+  textSecondary: colors.gray500,
   textTertiary: colors.gray350,
 
   accentAction: colors.magentaVibrant,
@@ -498,7 +498,7 @@ export const colorsDark: Palette = {
   // TODO(MOB-3591): accommodate one-off color in cleaner way
   shadowBranded: '#B60ACF',
 
-  accentActionSoft: opacify(24, colors.blue400),
+  accentActionSoft: opacify(24, colors.magentaVibrant),
   accentActiveSoft: opacify(24, colors.blue400),
   accentSuccessSoft: opacify(24, colors.green400),
   accentWarningSoft: opacify(24, colors.gold200),

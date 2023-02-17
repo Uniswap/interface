@@ -300,6 +300,7 @@ function AssetMetadata({
           label={value}
           mx="none"
           px="none"
+          size={iconSizes.icon16}
           textVariant="bodyLarge"
           url={link}
         />

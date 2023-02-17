@@ -6,8 +6,8 @@ import { TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
+import DollarSign from 'src/assets/icons/dollar.svg'
 import EyeIcon from 'src/assets/icons/eye.svg'
-import SortIcon from 'src/assets/icons/sort.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Warning, WarningSeverity } from 'src/components/modals/WarningModal/types'
@@ -149,19 +149,19 @@ export function TransactionFlow({
                 {step === TransactionStep.FORM && showUSDToggle ? (
                   <TouchableArea
                     hapticFeedback
-                    bg={isUSDInput ? 'background3' : 'none'}
-                    borderRadius="rounded8"
-                    px="spacing12"
+                    bg={isUSDInput ? 'accentActionSoft' : 'background2'}
+                    borderRadius="rounded16"
+                    px="spacing8"
                     py="spacing4"
                     onPress={(): void => onToggleUSDInput(!isUSDInput)}>
-                    <Flex row alignItems="center" gap="spacing2">
-                      <SortIcon
-                        color={theme.colors.textSecondary}
+                    <Flex row alignItems="center" gap="spacing4">
+                      <DollarSign
+                        color={isUSDInput ? theme.colors.accentAction : theme.colors.textSecondary}
                         height={theme.iconSizes.icon16}
                         width={theme.iconSizes.icon16}
                       />
                       <Text
-                        color={isUSDInput ? 'textSecondary' : 'textSecondary'}
+                        color={isUSDInput ? 'accentAction' : 'textSecondary'}
                         variant="buttonLabelSmall">
                         {t('USD')}
                       </Text>
@@ -170,19 +170,19 @@ export function TransactionFlow({
                 ) : null}
                 {account?.type === AccountType.Readonly ? (
                   <TouchableArea
-                    bg="background3"
-                    borderRadius="rounded8"
+                    bg="background2"
+                    borderRadius="rounded12"
                     justifyContent="center"
                     px="spacing8"
                     py="spacing4"
                     onPress={(): void => setShowViewOnlyModal(true)}>
                     <Flex row alignItems="center" gap="spacing4">
                       <EyeIcon
-                        color={theme.colors.textSecondary}
+                        color={theme.colors.textTertiary}
                         height={theme.iconSizes.icon16}
                         width={theme.iconSizes.icon16}
                       />
-                      <Text color="textSecondary" variant="buttonLabelSmall">
+                      <Text color="textTertiary" variant="buttonLabelSmall">
                         {t('View-only')}
                       </Text>
                     </Flex>

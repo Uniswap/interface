@@ -154,7 +154,7 @@ const SwapFAB = memo(({ activeScale = 0.95, inputCurrencyId }: SwapTabBarButtonP
               <Defs>
                 <LinearGradient id="background" x1="0%" x2="0%" y1="0%" y2="100%">
                   <Stop offset="0" stopColor="#F160F9" stopOpacity="1" />
-                  <Stop offset="1" stopColor="#FB36D0" stopOpacity="1" />
+                  <Stop offset="1" stopColor="#e14ee9" stopOpacity="1" />
                 </LinearGradient>
               </Defs>
               <Rect fill="url(#background)" height="100%" opacity={1} width="100%" x="0" y="0" />
@@ -220,7 +220,7 @@ function ExploreTabBarButton(): JSX.Element {
               shadowOpacity={isDarkMode ? 0.6 : 0.4}
               shadowRadius={theme.borderRadii.rounded20}>
               <SearchIcon color={theme.colors.textSecondary} />
-              <Text color="textSecondary" variant="bodyLarge">
+              <Text color="textPrimary" variant="bodyLarge">
                 {t('Search web3')}
               </Text>
             </Flex>

@@ -21,7 +21,7 @@ export function Pill({
   foregroundColor,
   icon,
   label,
-  px = 'spacing12',
+  px = 'spacing4',
   py = 'spacing8',
   textVariant = 'bodySmall',
   ...rest

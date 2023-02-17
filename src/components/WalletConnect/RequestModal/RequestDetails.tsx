@@ -3,6 +3,7 @@ import { Transaction, TransactionDescription } from 'no-yolo-signatures'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
+import { useAppTheme } from 'src/app/hooks'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -37,13 +38,16 @@ type AddressButtonProps = {
 
 const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps): JSX.Element => {
   const { name } = useENS(chainId, address, false)
+  const theme = useAppTheme()
+
   return (
     <LinkButton
       backgroundColor="backgroundOutline"
-      borderRadius="rounded4"
+      borderRadius="rounded12"
       label={name || shortenAddress(address)}
       px="spacing8"
       py="spacing4"
+      size={theme.iconSizes.icon12}
       textVariant="bodySmall"
       url={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}
       {...rest}
@@ -162,7 +166,7 @@ function TransactionDetails({
         </Text>
         <Box
           backgroundColor={isLoading ? 'none' : 'backgroundOutline'}
-          borderRadius="rounded4"
+          borderRadius="rounded12"
           px="spacing8"
           py="spacing4">
           <Text color="textPrimary" loading={isLoading} variant="monospace">

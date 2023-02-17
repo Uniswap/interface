@@ -68,7 +68,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
           style={
             Array [
               Object {
-                "color": "#0D111C",
+                "color": "#0E1524",
                 "display": "flex",
                 "fontFamily": "Inter-Medium",
                 "fontSize": 24,
@@ -99,7 +99,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
           style={
             Array [
               Object {
-                "color": "#505A78",
+                "color": "#5D6785",
                 "display": "flex",
                 "fontFamily": "Inter-Regular",
                 "fontSize": 15,

@@ -348,7 +348,7 @@ function WarningSection({
         width={iconSizes.icon16}
       />
       <Text color="textSecondary" fontStyle="italic" variant="bodyMicro">
-        {t('Be careful: this {{ requestType }} authorizes assets', {
+        {t('Be careful: this {{ requestType }} may transfer assets', {
           requestType: isTransactionRequest(request) ? 'transaction' : 'message',
         })}
       </Text>

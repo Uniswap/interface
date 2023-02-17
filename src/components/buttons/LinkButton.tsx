@@ -1,12 +1,13 @@
 import React, { useMemo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
+import ExternalLinkIcon from 'src/assets/icons/external-link.svg'
 import { BaseButtonProps, TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Arrow } from 'src/components/icons/Arrow'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { iconSizes } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
 import { openUri } from 'src/utils/linking'
+
 interface LinkButtonProps extends Omit<BaseButtonProps, 'onPress'> {
   label: string
   url: string
@@ -42,14 +43,14 @@ export function LinkButton({
     <TouchableArea
       onPress={(): Promise<void> => openUri(url, openExternalBrowser, isSafeUri)}
       {...rest}>
-      <Flex row alignItems="center" gap="spacing2" justifyContent={justifyContent}>
+      <Flex row alignItems="center" gap="spacing4" justifyContent={justifyContent}>
         <Text {...colorStyles} variant={textVariant}>
           {label}
         </Text>
-        <Arrow
-          color={iconColor ?? color ?? theme.colors.textSecondary}
-          direction="ne"
-          size={size}
+        <ExternalLinkIcon
+          color={iconColor ?? color ?? theme.colors.accentActive}
+          height={size}
+          width={size}
         />
       </Flex>
     </TouchableArea>

@@ -307,7 +307,7 @@ function _SwapForm({
                     row
                     alignItems="center"
                     alignSelf="stretch"
-                    backgroundColor={swapWarningColor.background}
+                    backgroundColor="background2"
                     borderBottomLeftRadius="rounded16"
                     borderBottomRightRadius="rounded16"
                     flexGrow={1}
@@ -363,15 +363,15 @@ function _SwapForm({
                     borderTopWidth={1}
                     flexGrow={1}
                     gap="spacing8"
-                    px="spacing16"
+                    px="spacing12"
                     py="spacing12">
                     {swapDataRefreshing ? (
-                      <SpinningLoader size={theme.iconSizes.icon16} />
+                      <SpinningLoader size={theme.iconSizes.icon20} />
                     ) : (
                       <InfoCircle
-                        color={theme.colors.textSecondary}
-                        height={theme.iconSizes.icon16}
-                        width={theme.iconSizes.icon16}
+                        color={theme.colors.textPrimary}
+                        height={theme.iconSizes.icon20}
+                        width={theme.iconSizes.icon20}
                       />
                     )}
                     <Flex row gap="none">
@@ -384,7 +384,7 @@ function _SwapForm({
                       </Text>
                       <Text
                         color={swapDataRefreshing ? 'textTertiary' : 'textSecondary'}
-                        variant="bodySmall">
+                        variant="subheadSmall">
                         {rateUnitPrice &&
                           ` (${formatPrice(rateUnitPrice, NumberType.FiatTokenPrice)})`}
                       </Text>

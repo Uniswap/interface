@@ -23,12 +23,13 @@ export function AccountDetails({
         <AddressDisplay
           hideAddressInSubtitle
           address={address}
+          horizontalGap="spacing8"
           size={iconSize}
           variant="subheadSmall"
         />
       </Flex>
       <Flex row shrink flex={1} gap="spacing4" justifyContent="flex-end">
-        <Text color="textSecondary" variant="bodySmall">
+        <Text color="textSecondary" variant="subheadSmall">
           {shortenAddress(address)}
         </Text>
         {chevron && (

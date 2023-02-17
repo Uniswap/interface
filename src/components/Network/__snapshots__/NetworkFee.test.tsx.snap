@@ -9,7 +9,8 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
         "display": "flex",
         "flexDirection": "row",
         "justifyContent": "space-between",
-        "padding": 16,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
       },
     ]
   }
@@ -20,7 +21,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
     style={
       Array [
         Object {
-          "color": "#0D111C",
+          "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 15,
@@ -116,7 +117,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
                   style={
                     Array [
                       Object {
-                        "color": "#0D111C",
+                        "color": "#0E1524",
                         "display": "flex",
                         "fontFamily": "Inter-Medium",
                         "fontSize": 15,
@@ -163,7 +164,8 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
         "display": "flex",
         "flexDirection": "row",
         "justifyContent": "space-between",
-        "padding": 16,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
       },
     ]
   }
@@ -174,7 +176,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
     style={
       Array [
         Object {
-          "color": "#0D111C",
+          "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 15,
@@ -270,7 +272,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
                   style={
                     Array [
                       Object {
-                        "color": "#0D111C",
+                        "color": "#0E1524",
                         "display": "flex",
                         "fontFamily": "Inter-Medium",
                         "fontSize": 15,
@@ -317,7 +319,8 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
         "display": "flex",
         "flexDirection": "row",
         "justifyContent": "space-between",
-        "padding": 16,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
       },
     ]
   }
@@ -328,7 +331,7 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
     style={
       Array [
         Object {
-          "color": "#0D111C",
+          "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 15,
@@ -424,7 +427,7 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
                   style={
                     Array [
                       Object {
-                        "color": "#0D111C",
+                        "color": "#0E1524",
                         "display": "flex",
                         "fontFamily": "Inter-Medium",
                         "fontSize": 15,

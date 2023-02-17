@@ -39,8 +39,8 @@ export function NetworkPill({
 export function InlineNetworkPill(props: NetworkPillProps): JSX.Element {
   return (
     <NetworkPill
-      borderRadius="rounded4"
-      px="spacing4"
+      borderRadius="rounded12"
+      px="spacing8"
       py="spacing2"
       showIcon={false}
       textVariant="buttonLabelMicro"

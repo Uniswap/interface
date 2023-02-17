@@ -97,7 +97,7 @@ export function TransactionReview({
 
   const equivalentValueTextVariant = useResponsiveProp({
     xs: 'bodySmall',
-    sm: 'subheadLarge',
+    sm: 'bodyLarge',
   })
 
   const arrowPadding = useResponsiveProp({ xs: 'spacing4', sm: 'spacing8' })
@@ -117,6 +117,9 @@ export function TransactionReview({
         {currencyInInfo ? (
           <Flex centered gap={innerGap}>
             <Flex centered gap={amountAndEquivalentValueGap}>
+              <Text color="textTertiary" variant="bodyLarge">
+                {recipient ? t('Sending') : t('You pay')}
+              </Text>
               <AmountInput
                 alignSelf="stretch"
                 backgroundColor="none"
@@ -137,12 +140,12 @@ export function TransactionReview({
                 value={formattedAmountIn}
               />
               {inputCurrencyUSDValue && !isUSDInput ? (
-                <Text color="textSecondary" variant={equivalentValueTextVariant}>
+                <Text color="textTertiary" variant={equivalentValueTextVariant}>
                   {formattedInputUsdValue}
                 </Text>
               ) : null}
               {isUSDInput ? (
-                <Text color="textSecondary" variant={equivalentValueTextVariant}>
+                <Text color="textTertiary" variant={equivalentValueTextVariant}>
                   {/* when sending a token with USD input, show the amount of the token being sent */}
                   {usdTokenEquivalentAmount}
                 </Text>
@@ -159,6 +162,9 @@ export function TransactionReview({
         {currencyOutInfo && formattedAmountOut ? (
           <Flex centered gap={innerGap} pb={{ xs: 'spacing4', sm: 'none' }}>
             <Flex centered gap={amountAndEquivalentValueGap}>
+              <Text color="textTertiary" variant="bodyLarge">
+                {t('You receive')}
+              </Text>
               <AmountInput
                 alignSelf="stretch"
                 backgroundColor="none"
@@ -175,7 +181,7 @@ export function TransactionReview({
                 value={formattedAmountOut}
               />
               {outputCurrencyUSDValue ? (
-                <Text color="textSecondary" variant={equivalentValueTextVariant}>
+                <Text color="textTertiary" variant={equivalentValueTextVariant}>
                   {formattedOutputUsdValue}
                 </Text>
               ) : null}
@@ -238,7 +244,7 @@ export function TransactionReview({
 
 function CurrencyLogoWithLabel({ currencyInfo }: { currencyInfo: CurrencyInfo }): JSX.Element {
   const gap = useResponsiveProp({ xs: 'spacing4', sm: 'spacing8' })
-  const size = useResponsiveProp({ xs: iconSizes.icon20, sm: iconSizes.icon28 })
+  const size = useResponsiveProp({ xs: iconSizes.icon20, sm: iconSizes.icon24 })
   return (
     <Flex centered row gap={gap}>
       <CurrencyLogo currencyInfo={currencyInfo} size={size} />

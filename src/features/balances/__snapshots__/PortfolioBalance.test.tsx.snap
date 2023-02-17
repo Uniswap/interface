@@ -54,7 +54,7 @@ exports[`PortfolioBalance renders without error 1`] = `
               style={
                 Array [
                   Object {
-                    "color": "#0D111C",
+                    "color": "#0E1524",
                     "display": "flex",
                     "fontFamily": "Inter-SemiBold",
                     "fontSize": 48,
@@ -147,7 +147,7 @@ exports[`PortfolioBalance renders without error 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#505A78",
+                      "color": "#5D6785",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
                       "fontSize": 17,
@@ -208,7 +208,7 @@ exports[`PortfolioBalance renders without error 2`] = `
       style={
         Array [
           Object {
-            "color": "#0D111C",
+            "color": "#0E1524",
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 48,
@@ -264,14 +264,14 @@ exports[`PortfolioBalance renders without error 2`] = `
     >
       <svg
         color="#40B66B"
-        data-file-name="SvgArrowDown"
+        data-file-name="SvgArrowChange"
         height={20}
         strokeWidth={2}
         style={
           Object {
             "transform": Array [
               Object {
-                "rotate": "225deg",
+                "rotate": "180deg",
               },
             ],
           }
@@ -297,7 +297,7 @@ exports[`PortfolioBalance renders without error 2`] = `
         style={
           Array [
             Object {
-              "color": "#505A78",
+              "color": "#5D6785",
               "display": "flex",
               "fontFamily": "Inter-Medium",
               "fontSize": 17,

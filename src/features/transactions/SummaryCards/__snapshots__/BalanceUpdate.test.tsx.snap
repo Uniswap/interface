@@ -21,7 +21,7 @@ exports[`BalanceUpdate renders without error after fetching data 1`] = `
     style={
       Array [
         Object {
-          "color": "#0D111C",
+          "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 17,
@@ -51,7 +51,7 @@ exports[`BalanceUpdate renders without error after fetching data 1`] = `
     style={
       Array [
         Object {
-          "color": "#505A78",
+          "color": "#5D6785",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 15,
@@ -86,7 +86,7 @@ exports[`BalanceUpdate skips fetching data when passing in the USD value 1`] = `
     style={
       Array [
         Object {
-          "color": "#0D111C",
+          "color": "#0E1524",
           "display": "flex",
           "fontFamily": "Inter-Medium",
           "fontSize": 17,
@@ -116,7 +116,7 @@ exports[`BalanceUpdate skips fetching data when passing in the USD value 1`] = `
     style={
       Array [
         Object {
-          "color": "#505A78",
+          "color": "#5D6785",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 15,

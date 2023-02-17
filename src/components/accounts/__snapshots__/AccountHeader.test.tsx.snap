@@ -262,7 +262,7 @@ exports[`AccountHeader renders without error 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#0D111C",
+                      "color": "#0E1524",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
                       "fontSize": 20,

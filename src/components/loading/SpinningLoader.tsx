@@ -39,7 +39,7 @@ export function SpinningLoader({
     rotation.value = withRepeat(
       withTiming(360, {
         duration: 1000,
-        easing: Easing.linear,
+        easing: Easing.bezier(0.83, 0, 0.17, 1),
       }),
       -1
     )
@@ -47,11 +47,11 @@ export function SpinningLoader({
   }, [rotation])
 
   if (disabled) {
-    return <EmptySpinner height={size} width={size} />
+    return <EmptySpinner color="textTertiary" height={size} width={size} />
   }
   return (
     <AnimatedBox style={[animatedStyles]}>
-      <Loader color={theme.colors[color ?? 'accentActive']} height={size} width={size} />
+      <Loader color={theme.colors[color ?? 'textPrimary']} height={size} width={size} />
     </AnimatedBox>
   )
 }

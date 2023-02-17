@@ -124,7 +124,7 @@ const _Button = ({
             <Defs>
               <LinearGradient id="background" x1="0%" x2="0%" y1="0%" y2="100%">
                 <Stop offset="0" stopColor="#F160F9" stopOpacity="1" />
-                <Stop offset="1" stopColor="#FB36D0" stopOpacity="1" />
+                <Stop offset="1" stopColor="#e14ee9" stopOpacity="1" />
               </LinearGradient>
             </Defs>
             <Rect fill="url(#background)" height="150%" opacity={1} width="100%" x="0" y="0" />

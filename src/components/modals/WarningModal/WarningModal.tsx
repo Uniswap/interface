@@ -10,6 +10,7 @@ import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
+import { opacify } from 'src/utils/colors'
 
 export type WarningModalProps = {
   onClose?: () => void
@@ -81,10 +82,12 @@ export default function WarningModal({
       <Flex centered gap="spacing16" mb="spacing24" p="spacing24">
         <Flex
           centered
-          borderColor={alertColor.text}
           borderRadius="rounded12"
           borderWidth={1}
-          p="spacing12">
+          p="spacing12"
+          style={{
+            backgroundColor: opacify(12, theme.colors[alertColor.text]),
+          }}>
           {icon ?? (
             <AlertTriangleIcon
               color={theme.colors[alertColor.text]}

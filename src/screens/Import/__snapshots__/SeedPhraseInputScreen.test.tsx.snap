@@ -77,7 +77,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
           style={
             Array [
               Object {
-                "color": "#0D111C",
+                "color": "#0E1524",
                 "display": "flex",
                 "fontFamily": "Inter-Medium",
                 "fontSize": 24,
@@ -108,7 +108,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
           style={
             Array [
               Object {
-                "color": "#505A78",
+                "color": "#5D6785",
                 "display": "flex",
                 "fontFamily": "Inter-Regular",
                 "fontSize": 15,
@@ -221,14 +221,14 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                   placeholderTextColor="#888FAB"
                   returnKeyType="done"
                   scrollEnabled={false}
-                  selectionColor="#0D111C"
+                  selectionColor="#0E1524"
                   spellCheck={false}
                   style={
                     Array [
                       Object {
                         "backgroundColor": "transparent",
                         "borderRadius": 12,
-                        "color": "#0D111C",
+                        "color": "#0E1524",
                         "fontSize": 17,
                         "justifyContent": "center",
                         "lineHeight": 17,
@@ -278,7 +278,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                   style={
                     Array [
                       Object {
-                        "color": "#505A78",
+                        "color": "#5D6785",
                         "display": "flex",
                         "fontFamily": "Inter-Medium",
                         "fontSize": 17,
@@ -356,7 +356,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                     }
                   >
                     <svg
-                      color="#0D111C"
+                      color="#0E1524"
                       data-file-name="SvgPaste"
                       height={16}
                       strokeWidth={2}
@@ -381,7 +381,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       style={
                         Array [
                           Object {
-                            "color": "#0D111C",
+                            "color": "#0E1524",
                             "display": "flex",
                             "fontFamily": "Inter-SemiBold",
                             "fontSize": 15,
@@ -416,7 +416,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                   style={
                     Array [
                       Object {
-                        "color": "#505A78",
+                        "color": "#5D6785",
                         "display": "flex",
                         "fontFamily": "Inter-Medium",
                         "fontSize": 17,
@@ -552,7 +552,7 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                         0,
                         -958215,
                         1,
-                        -313648,
+                        -2011415,
                       ]
                     }
                     gradientTransform={null}

@@ -16,7 +16,7 @@ exports[`DatetimeText renders without error 1`] = `
     Array [
       Array [
         Object {
-          "color": "#505A78",
+          "color": "#5D6785",
           "fontFamily": "Inter-Medium",
           "fontSize": 17,
           "lineHeight": 24,
@@ -108,7 +108,7 @@ exports[`PriceText renders without error 1`] = `
   style={
     Array [
       Object {
-        "color": "#0D111C",
+        "color": "#0E1524",
         "display": "flex",
         "fontFamily": "Inter-SemiBold",
         "fontSize": 40,
@@ -154,7 +154,7 @@ exports[`PriceText renders without error less than a dollar 1`] = `
     Array [
       Array [
         Object {
-          "color": "#0D111C",
+          "color": "#0E1524",
           "fontFamily": "Inter-SemiBold",
           "fontSize": 40,
           "lineHeight": 48,
@@ -265,7 +265,7 @@ exports[`RelativeChangeText renders without error 1`] = `
       Array [
         Array [
           Object {
-            "color": "#0D111C",
+            "color": "#0E1524",
             "fontFamily": "Inter-Medium",
             "fontSize": 17,
             "lineHeight": 24,
@@ -306,7 +306,7 @@ exports[`RelativeChangeText renders without error 1`] = `
       Array [
         Array [
           Object {
-            "color": "#0D111C",
+            "color": "#0E1524",
             "fontFamily": "Inter-Medium",
             "fontSize": 17,
             "lineHeight": 24,

@@ -47,7 +47,7 @@ export function NetworkFee({
   )
 
   return (
-    <Flex row alignItems="center" justifyContent="space-between" p="spacing16">
+    <Flex row alignItems="center" justifyContent="space-between" px="spacing12" py="spacing8">
       <Text variant="subheadSmall">{t('Network fee')}</Text>
       <Flex row gap="none" justifyContent="flex-end">
         <Flex row alignItems="center" gap="spacing8">

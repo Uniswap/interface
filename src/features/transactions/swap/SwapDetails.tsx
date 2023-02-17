@@ -9,10 +9,7 @@ import { Text } from 'src/components/Text'
 import { useUSDCPrice } from 'src/features/routing/useUSDCPrice'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { getRateToDisplay } from 'src/features/transactions/swap/utils'
-import {
-  TransactionDetails,
-  TRANSACTION_DETAILS_SPACER,
-} from 'src/features/transactions/TransactionDetails'
+import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { formatPrice, NumberType } from 'src/utils/format'
 
 interface SwapDetailsProps {
@@ -53,13 +50,13 @@ export function SwapDetails({
           <Flex
             row
             alignItems="center"
-            backgroundColor="accentActiveSoft"
-            borderRadius="rounded12"
+            backgroundColor="background2"
+            borderRadius="rounded16"
             flexShrink={1}
             gap="spacing12"
             justifyContent="space-between"
             p="spacing8"
-            pl="spacing16">
+            pl="spacing12">
             <Flex centered row gap="none">
               <Text color="accentActive" variant="subheadSmall">
                 {t('New rate')}
@@ -82,7 +79,7 @@ export function SwapDetails({
                 backgroundColor="accentActive"
                 borderRadius="rounded8"
                 px="spacing8"
-                py="spacing8"
+                py="spacing4"
                 onPress={onAcceptTrade}>
                 <Text color="textOnBrightPrimary" variant="buttonLabelSmall">
                   {t('Accept')}
@@ -102,11 +99,10 @@ export function SwapDetails({
       <Flex
         row
         alignItems="center"
-        borderBottomColor={TRANSACTION_DETAILS_SPACER.color}
-        borderBottomWidth={TRANSACTION_DETAILS_SPACER.width}
         gap="spacing8"
         justifyContent="space-between"
-        p="spacing16">
+        px="spacing12"
+        py="spacing8">
         <Text variant="subheadSmall">{t('Rate')}</Text>
         <Flex row flex={1} flexBasis="100%" flexShrink={1} gap="none" justifyContent="flex-end">
           <TouchableOpacity onPress={(): void => setShowInverseRate(!showInverseRate)}>

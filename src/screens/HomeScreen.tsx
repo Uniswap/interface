@@ -475,7 +475,8 @@ function ActionButton({
       eventName={eventName}
       flex={flex}
       name={name}
-      padding="spacing12"
+      px="spacing12"
+      py="spacing12"
       shadowColor="white"
       shadowOffset={SHADOW_OFFSET_SMALL}
       shadowOpacity={0.1}

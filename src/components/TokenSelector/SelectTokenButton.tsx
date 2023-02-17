@@ -43,9 +43,9 @@ export function SelectTokenButton({
         </Flex>
       ) : (
         <Flex centered row py="spacing4">
-          <Flex centered row gap="spacing8" pl="spacing12" pr="spacing8" py="spacing2">
+          <Flex centered row gap="spacing4" pl="spacing12" pr="spacing8" py="spacing2">
             <Text color="textOnBrightPrimary" variant="buttonLabelLarge">
-              {t('Choose token')}
+              {t('Choose a token')}
             </Text>
             <Chevron color={theme.colors.textOnBrightPrimary} direction="e" />
           </Flex>
