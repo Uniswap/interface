@@ -1,4 +1,4 @@
-import { ShadowProps } from '@shopify/restyle'
+import { ShadowProps, useResponsiveProp } from '@shopify/restyle'
 import { BlurView } from 'expo-blur'
 import { selectionAsync } from 'expo-haptics'
 import React, { memo, useCallback } from 'react'
@@ -38,6 +38,9 @@ export const NavBar = (): JSX.Element => {
   const theme = useAppTheme()
   const isDarkMode = useColorScheme() === 'dark'
 
+  const BUTTONS_OFFSET =
+    useResponsiveProp({ xs: theme.spacing.spacing24, sm: theme.spacing.none }) ?? theme.spacing.none
+
   return (
     <>
       <Box pointerEvents="none" style={StyleSheet.absoluteFill}>
@@ -63,7 +66,7 @@ export const NavBar = (): JSX.Element => {
         pointerEvents="box-none"
         position="absolute"
         right={0}
-        style={{ paddingBottom: insets.bottom }}>
+        style={{ paddingBottom: insets.bottom + BUTTONS_OFFSET }}>
         <Flex
           row
           alignItems="center"
