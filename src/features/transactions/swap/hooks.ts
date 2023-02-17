@@ -78,7 +78,7 @@ export type DerivedSwapInfo<
   currencyBalances: BaseDerivedInfo<TInput>['currencyBalances'] & {
     [CurrencyField.OUTPUT]: NullUndefined<CurrencyAmount<Currency>>
   }
-  focusOnCurrencyField: CurrencyField
+  focusOnCurrencyField: CurrencyField | null
   trade: ReturnType<typeof useTrade>
   wrapType: WrapType
   selectingCurrencyField?: CurrencyField
@@ -315,6 +315,8 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>): {
       dispatch(
         transactionStateActions.updateExactAmountToken({ field: CurrencyField.INPUT, amount })
       )
+      // Unfocus the CurrencyInputField by setting focusOnCurrencyField to null
+      dispatch(transactionStateActions.onFocus(null))
     },
     [dispatch]
   )
@@ -346,7 +348,6 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>): {
     () => dispatch(transactionStateActions.onFocus(CurrencyField.OUTPUT)),
     [dispatch]
   )
-
   return {
     onCreateTxId,
     onFocusInput,

@@ -16,7 +16,7 @@ export interface TransactionState {
   exactCurrencyField: CurrencyField
   exactAmountToken: string
   exactAmountUSD?: string
-  focusOnCurrencyField?: CurrencyField
+  focusOnCurrencyField?: CurrencyField | null
   recipient?: string
   isUSDInput?: boolean
   selectingCurrencyField?: CurrencyField
@@ -123,7 +123,7 @@ const slice = createSlice({
     clearRecipient: (state) => {
       state.recipient = undefined
     },
-    onFocus: (state, action: PayloadAction<CurrencyField>) => {
+    onFocus: (state, action: PayloadAction<CurrencyField | null>) => {
       state.focusOnCurrencyField = action.payload
     },
     toggleUSDInput: (state, action: PayloadAction<boolean>) => {

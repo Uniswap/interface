@@ -125,9 +125,11 @@ function _SwapForm({
   )
   const resetSelection = useCallback(
     (start: number, end?: number) => {
-      const reset =
-        focusOnCurrencyField === CurrencyField.INPUT ? setInputSelection : setOutputSelection
-      reset({ start, end: end ?? start })
+      if (focusOnCurrencyField === CurrencyField.INPUT) {
+        setInputSelection({ start, end: end ?? start })
+      } else if (focusOnCurrencyField === CurrencyField.OUTPUT) {
+        setOutputSelection({ start, end: end ?? start })
+      }
     },
     [focusOnCurrencyField]
   )
@@ -378,8 +380,11 @@ function _SwapForm({
           {!showNativeKeyboard && (
             <DecimalPad
               resetSelection={resetSelection}
-              selection={selection[focusOnCurrencyField]}
-              setValue={(value: string): void => onSetExactAmount(focusOnCurrencyField, value)}
+              selection={focusOnCurrencyField ? selection[focusOnCurrencyField] : undefined}
+              setValue={(value: string): void => {
+                if (!focusOnCurrencyField) return
+                onSetExactAmount(focusOnCurrencyField, value)
+              }}
               value={
                 focusOnCurrencyField === exactCurrencyField ? exactValue : formattedDerivedValue
               }
