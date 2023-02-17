@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther } from '@ethersproject/units'
 import { parseEther } from '@ethersproject/units'
 import { t, Trans } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
+import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { formatPriceImpact } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
@@ -518,6 +518,7 @@ export const BagFooter = ({ totalEthPrice, fetchAssets, eventProperties }: BagFo
 
   const traceEventProperties = {
     usd_value: usdcValue?.toExact(),
+    using_erc20: !!inputCurrency,
     ...eventProperties,
   }
 
@@ -531,7 +532,14 @@ export const BagFooter = ({ totalEthPrice, fetchAssets, eventProperties }: BagFo
                 <ThemedText.SubHeaderSmall>
                   <Trans>Pay with</Trans>
                 </ThemedText.SubHeaderSmall>
-                <CurrencyInput onClick={() => (bagIsLocked ? undefined : setTokenSelectorOpen(true))}>
+                <CurrencyInput
+                  onClick={() => {
+                    if (!bagIsLocked) {
+                      setTokenSelectorOpen(true)
+                      sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
+                    }
+                  }}
+                >
                   <CurrencyLogo currency={activeCurrency} size="24px" />
                   <ThemedText.HeadlineSmall fontWeight={500} lineHeight="24px">
                     {activeCurrency?.symbol}
@@ -606,7 +614,15 @@ export const BagFooter = ({ totalEthPrice, fetchAssets, eventProperties }: BagFo
       <CurrencySearchModal
         isOpen={tokenSelectorOpen}
         onDismiss={() => setTokenSelectorOpen(false)}
-        onCurrencySelect={(currency: Currency) => setInputCurrency(currency.isNative ? undefined : currency)}
+        onCurrencySelect={(currency: Currency) => {
+          setInputCurrency(currency.isNative ? undefined : currency)
+          if (currency.isToken) {
+            sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTED, {
+              token_address: currency.address,
+              token_symbol: currency.symbol,
+            })
+          }
+        }}
         selectedCurrency={activeCurrency ?? undefined}
         onlyShowCurrenciesWithBalance={true}
       />

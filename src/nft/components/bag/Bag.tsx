@@ -179,12 +179,13 @@ const Bag = () => {
     return { totalEthPrice }
   }, [itemsInBag])
 
-  const purchaseAssets = async (routingData: RouteResponse) => {
+  const purchaseAssets = async (routingData: RouteResponse, purchasingWithErc20: boolean) => {
     if (!provider || !routingData) return
     const purchaseResponse = await sendTransaction(
       provider?.getSigner(),
       itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset),
-      routingData
+      routingData,
+      purchasingWithErc20
     )
     if (
       purchaseResponse &&
@@ -230,10 +231,11 @@ const Bag = () => {
               return
             }
 
-            const { route, routeResponse } = buildRouteResponse(data.nftRoute, !!tokenTradeInput)
+            const purchasingWithErc20 = !!tokenTradeInput
+            const { route, routeResponse } = buildRouteResponse(data.nftRoute, purchasingWithErc20)
 
             const { hasPriceAdjustment, updatedAssets } = combineBuyItemsWithTxRoute(itemsToBuy, route)
-            const shouldRefetchCalldata = hasPriceAdjustment && !!tokenTradeInput
+            const shouldRefetchCalldata = hasPriceAdjustment && purchasingWithErc20
 
             const fetchedPriceChangedAssets = updatedAssets
               .filter((asset) => asset.updatedPriceInfo)
@@ -270,7 +272,7 @@ const Bag = () => {
                 if (shouldRefetchCalldata) {
                   setBagStatus(BagStatus.CONFIRM_QUOTE)
                 } else {
-                  purchaseAssets(routeResponse)
+                  purchaseAssets(routeResponse, purchasingWithErc20)
                   setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
                   shouldLock = true
                 }
@@ -325,7 +327,7 @@ const Bag = () => {
 
         if (hasAssets) {
           if (!shouldReview) {
-            purchaseAssets(routeData)
+            purchaseAssets(routeData, false)
             setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
           } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
           else {
