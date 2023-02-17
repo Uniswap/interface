@@ -45,13 +45,13 @@ import { Text } from 'src/components/Text'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
 import { useFiatOnRampEnabled } from 'src/features/experiments/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
+import { setNotificationStatus } from 'src/features/notifications/notificationSlice'
 import {
   ElementName,
   MobileEventName,
   ModalName,
   SectionName,
 } from 'src/features/telemetry/constants'
-import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
@@ -73,10 +73,7 @@ export function HomeScreen(): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
-
-  // TODO: [MOB-4023] evaluate if this has a performance impact with rerenders when transactions are updating. It might make sense
-  // to just move into the PendingNotificationBadge component.
-  const sortedPendingTransactions = useSortedPendingTransactions(activeAccount.address)
+  const dispatch = useAppDispatch()
 
   const [tabIndex, setTabIndex] = useState(0)
   const routes = useMemo(
@@ -132,6 +129,13 @@ export function HomeScreen(): JSX.Element {
     }
     return activityTabScrollValue.value
   }, [tabIndex])
+
+  useEffect(() => {
+    // clear the notification indicator if the user is on the activity tab
+    if (tabIndex === 2) {
+      dispatch(setNotificationStatus({ address: activeAccount.address, hasNotifications: false }))
+    }
+  }, [dispatch, activeAccount.address, tabIndex])
 
   // If accounts are switched, we want to scroll to top and show full header
   useEffect(() => {
@@ -284,9 +288,7 @@ export function HomeScreen(): JSX.Element {
                 {...sceneProps}
                 indicatorStyle={TAB_STYLES.activeTabIndicator}
                 navigationState={{ index: tabIndex, routes }}
-                renderLabel={({ route, focused }): JSX.Element =>
-                  renderTabLabel({ route, focused, sortedPendingTransactions })
-                }
+                renderLabel={renderTabLabel}
                 style={[
                   TAB_STYLES.tabBar,
                   {
@@ -306,7 +308,6 @@ export function HomeScreen(): JSX.Element {
       handleHeaderLayout,
       headerContainerStyle,
       routes,
-      sortedPendingTransactions,
       tabBarStyle,
       tabIndex,
       theme.colors.background0,
