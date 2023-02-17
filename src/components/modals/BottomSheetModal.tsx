@@ -60,6 +60,10 @@ export function BottomSheetModal({
   const theme = useAppTheme()
   const isDarkMode = useColorScheme() === 'dark'
 
+  const backgroundColorValue = blurredBackground
+    ? theme.colors.none
+    : backgroundColor ?? theme.colors.background1
+
   const renderBackdrop = useCallback(
     (props) => (
       <BottomSheetBackdrop
@@ -82,7 +86,7 @@ export function BottomSheetModal({
       return (
         <HandleBar
           {...props}
-          backgroundColor={backgroundColor}
+          backgroundColor={backgroundColorValue}
           containerFlexStyles={{
             marginBottom: FixedTheme.spacing.spacing12,
             marginTop: FixedTheme.spacing.spacing16,
@@ -91,7 +95,7 @@ export function BottomSheetModal({
         />
       )
     },
-    [backgroundColor, hideHandlebar, renderBehindInset]
+    [backgroundColorValue, hideHandlebar, renderBehindInset]
   )
 
   useEffect(() => {
@@ -109,9 +113,6 @@ export function BottomSheetModal({
 
   const background = blurredBackground ? { backgroundComponent: renderBlurredBg } : undefined
   const backdrop = { backdropComponent: renderBackdrop }
-  const backgroundColorValue = blurredBackground
-    ? theme.colors.none
-    : backgroundColor ?? theme.colors.background1
 
   return (
     <BaseModal
