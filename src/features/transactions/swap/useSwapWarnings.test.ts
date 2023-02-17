@@ -8,12 +8,13 @@ import { getSwapWarnings } from 'src/features/transactions/swap/useSwapWarnings'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import {
-  account,
   daiCurrencyInfo,
   ethCurrencyInfo,
   networkDown,
+  networkUnknown,
   networkUp,
 } from 'src/test/fixtures'
+import { isOffline } from '../utils'
 
 const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 
@@ -90,7 +91,7 @@ const mockTranslate = jest.fn()
 
 describe(getSwapWarnings, () => {
   it('catches incomplete form errors', async () => {
-    const warnings = getSwapWarnings(mockTranslate, account, swapState, networkUp)
+    const warnings = getSwapWarnings(mockTranslate, swapState, isOffline(networkUp))
     expect(warnings.length).toBe(1)
     expect(warnings[0]?.type).toEqual(WarningLabel.FormIncomplete)
   })
@@ -99,9 +100,8 @@ describe(getSwapWarnings, () => {
     const warnings = getSwapWarnings(
       mockTranslate,
 
-      account,
       insufficientBalanceState,
-      networkUp
+      isOffline(networkUp)
     )
     expect(warnings.length).toBe(1)
     expect(warnings[0]?.type).toEqual(WarningLabel.InsufficientFunds)
@@ -119,20 +119,24 @@ describe(getSwapWarnings, () => {
     const warnings = getSwapWarnings(
       mockTranslate,
 
-      account,
       incompleteAndInsufficientBalanceState,
-      networkUp
+      isOffline(networkUp)
     )
     expect(warnings.length).toBe(2)
   })
 
   it('catches errors returned by the routing api', () => {
-    const warnings = getSwapWarnings(mockTranslate, account, tradeErrorState, networkUp)
+    const warnings = getSwapWarnings(mockTranslate, tradeErrorState, isOffline(networkUp))
     expect(warnings.find((warning) => warning.type === WarningLabel.SwapRouterError)).toBeTruthy()
   })
 
   it('errors if there is no internet', () => {
-    const warnings = getSwapWarnings(mockTranslate, account, tradeErrorState, networkDown)
+    const warnings = getSwapWarnings(mockTranslate, tradeErrorState, isOffline(networkDown))
     expect(warnings.find((warning) => warning.type === WarningLabel.NetworkError)).toBeTruthy()
+  })
+
+  it('does not error when network state is unknown', () => {
+    const warnings = getSwapWarnings(mockTranslate, tradeErrorState, isOffline(networkUnknown))
+    expect(warnings.find((warning) => warning.type === WarningLabel.NetworkError)).toBeFalsy()
   })
 })

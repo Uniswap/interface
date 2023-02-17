@@ -17,27 +17,26 @@ import {
   transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
 import { useTransactionGasWarning } from 'src/features/transactions/useTransactionGasWarning'
-import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 
 interface SwapFormProps {
   prefilledState?: TransactionState
   onClose: () => void
+  modalOpened: boolean
 }
 
 function otherCurrencyField(field: CurrencyField): CurrencyField {
   return field === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
 }
 
-export function SwapFlow({ prefilledState, onClose }: SwapFormProps): JSX.Element {
+export function SwapFlow({ prefilledState, onClose, modalOpened }: SwapFormProps): JSX.Element {
   const { t } = useTranslation()
-  const account = useActiveAccountWithThrow()
   const [state, dispatch] = useReducer(transactionStateReducer, prefilledState || emptyState)
   const derivedSwapInfo = useDerivedSwapInfo(state)
   const { onSelectCurrency, onHideTokenSelector } = useSwapActionHandlers(dispatch)
   const { selectingCurrencyField, currencies } = derivedSwapInfo
   const [step, setStep] = useState<TransactionStep>(TransactionStep.FORM)
 
-  const warnings = useSwapWarnings(t, account, derivedSwapInfo)
+  const warnings = useSwapWarnings(t, derivedSwapInfo)
   const { txRequest, approveTxRequest, totalGasFee, gasFallbackUsed } = useSwapTxAndGasInfo(
     derivedSwapInfo,
     step === TransactionStep.SUBMITTED ||
@@ -88,6 +87,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps): JSX.Elemen
       exactValue={exactValue ?? ''}
       flowName={t('Swap')}
       gasFallbackUsed={gasFallbackUsed}
+      modalOpened={modalOpened}
       setStep={setStep}
       showTokenSelector={!!selectingCurrencyField}
       step={step}

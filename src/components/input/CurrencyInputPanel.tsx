@@ -1,6 +1,7 @@
 import { backgroundColor, BackgroundColorProps, useRestyle } from '@shopify/restyle'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import _ from 'lodash'
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TextInput, TextInputProps } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
@@ -14,6 +15,7 @@ import { CurrencyInfo } from 'src/features/dataApi/types'
 import { useDynamicFontSizing } from 'src/features/transactions/hooks'
 import { Theme } from 'src/styles/theme'
 import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'src/utils/format'
+import { useMemoCompare } from 'src/utils/hooks'
 
 const restyleFunctions = [backgroundColor]
 type RestyleProps = BackgroundColorProps<Theme>
@@ -88,7 +90,7 @@ const getSwapPanelPaddingValues = (
 }
 
 /** Input panel for a single side of a transfer action. */
-export function CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element {
+export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element {
   const {
     currencyAmount,
     currencyBalance,
@@ -114,7 +116,10 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element {
 
   const theme = useAppTheme()
   const { t } = useTranslation()
-  const transformedProps = useRestyle(restyleFunctions, rest)
+  const transformedProps = useRestyle(
+    restyleFunctions,
+    useMemoCompare(() => rest, _.isEqual)
+  )
   const inputRef = useRef<TextInput>(null)
 
   const insufficientBalanceWarning = warnings.find(
@@ -277,3 +282,5 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element {
     </Flex>
   )
 }
+
+export const CurrencyInputPanel = memo(_CurrencyInputPanel)

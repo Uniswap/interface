@@ -27,9 +27,11 @@ import {
   CurrencyField,
   transactionStateActions,
 } from 'src/features/transactions/transactionState/transactionState'
-import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
+import {
+  DerivedTransferInfo,
+  useOnToggleShowRecipientSelector,
+} from 'src/features/transactions/transfer/hooks'
 import { TransferFormSpeedbumps } from 'src/features/transactions/transfer/TransferFormWarnings'
-import { createOnToggleShowRecipientSelector } from 'src/features/transactions/transfer/utils'
 import { createTransactionId } from 'src/features/transactions/utils'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useIsBlockedActiveAddress } from 'src/features/trm/hooks'
@@ -91,7 +93,7 @@ export function TransferTokenForm({
   })
 
   const { onShowTokenSelector, onSetExactAmount, onSetMax } = useSwapActionHandlers(dispatch)
-  const onToggleShowRecipientSelector = createOnToggleShowRecipientSelector(dispatch)
+  const onToggleShowRecipientSelector = useOnToggleShowRecipientSelector(dispatch)
 
   const { isBlocked, isBlockedLoading } = useIsBlockedActiveAddress()
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -35,7 +35,7 @@ function QRScannerIconButton({ onPress }: { onPress: () => void }): JSX.Element 
   )
 }
 
-export function RecipientSelect({
+export function _RecipientSelect({
   onSelectRecipient,
   onToggleShowRecipientSelector,
   recipient,
@@ -99,3 +99,5 @@ export function RecipientSelect({
     </>
   )
 }
+
+export const RecipientSelect = memo(_RecipientSelect)

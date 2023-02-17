@@ -1,5 +1,6 @@
+import { AnyAction } from '@reduxjs/toolkit'
 import { providers } from 'ethers'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
 import { useProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
@@ -13,6 +14,8 @@ import { GQLNftAsset, useNFT } from 'src/features/nfts/hooks'
 import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import {
   CurrencyField,
+  selectRecipient,
+  toggleShowRecipientSelector,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
@@ -229,4 +232,23 @@ export function useIsSmartContractAddress(
     })
   }, [address, provider])
   return state
+}
+
+export function useOnToggleShowRecipientSelector(dispatch: React.Dispatch<AnyAction>): () => void {
+  return useCallback(() => {
+    dispatch(toggleShowRecipientSelector())
+  }, [dispatch])
+}
+
+export function useOnSelectRecipient(
+  dispatch: React.Dispatch<AnyAction>
+): (recipient: Address) => void {
+  const onToggleShowRecipientSelector = useOnToggleShowRecipientSelector(dispatch)
+  return useCallback(
+    (recipient: Address) => {
+      onToggleShowRecipientSelector()
+      dispatch(selectRecipient({ recipient }))
+    },
+    [dispatch, onToggleShowRecipientSelector]
+  )
 }

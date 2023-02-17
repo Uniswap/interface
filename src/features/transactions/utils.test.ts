@@ -1,6 +1,6 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { hasSufficientFundsIncludingGas } from 'src/features/transactions/utils'
-import { ETH } from 'src/test/fixtures'
+import { hasSufficientFundsIncludingGas, isOffline } from 'src/features/transactions/utils'
+import { ETH, networkDown, networkUnknown, networkUp } from 'src/test/fixtures'
 
 const ZERO_ETH = CurrencyAmount.fromRawAmount(ETH, 0)
 const ONE_ETH = CurrencyAmount.fromRawAmount(ETH, 1e18)
@@ -45,5 +45,17 @@ describe(hasSufficientFundsIncludingGas, () => {
     }
 
     expect(hasSufficientFundsIncludingGas(mockParams)).toBe(false)
+  })
+})
+
+describe(isOffline, () => {
+  it('returns true for not connected state', () => {
+    expect(isOffline(networkDown)).toBe(true)
+  })
+  it('returns false for connected state', () => {
+    expect(isOffline(networkUp)).toBe(false)
+  })
+  it('returns true for unknown state', () => {
+    expect(isOffline(networkUnknown)).toBe(false)
   })
 })

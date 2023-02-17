@@ -77,3 +77,27 @@ export function useSuspendUpdatesWhenBlured<T>(data: T): T {
   }
   return ref.current
 }
+
+// modified from https://usehooks.com/useMemoCompare/
+export function useMemoCompare<T>(next: () => T, compare: (a: T | undefined, b: T) => boolean): T {
+  // Ref for storing previous value
+  const previousRef = useRef<T>()
+  const previous = previousRef.current
+  const nextValue = next()
+
+  // Pass previous and next value to compare function
+  // to determine whether to consider them equal.
+  const isEqual = compare(previous, nextValue)
+
+  // If not equal update previousRef to next value.
+  // We only update if not equal so that this hook continues to return
+  // the same old value if compare keeps returning true.
+  useEffect(() => {
+    if (!isEqual) {
+      previousRef.current = nextValue
+    }
+  })
+
+  // Finally, if equal then return the previous value if it's set
+  return isEqual && previous ? previous : nextValue
+}

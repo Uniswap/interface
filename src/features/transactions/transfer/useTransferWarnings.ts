@@ -1,5 +1,5 @@
-import { NetInfoState, useNetInfo } from '@react-native-community/netinfo'
-import { useMemo } from 'react'
+import { useNetInfo } from '@react-native-community/netinfo'
+import _ from 'lodash'
 import { TFunction } from 'react-i18next'
 import { getNetworkWarning } from 'src/components/modals/WarningModal/constants'
 import {
@@ -13,17 +13,18 @@ import { CurrencyInfo } from 'src/features/dataApi/types'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
-import { Account } from 'src/features/wallet/accounts/types'
 import { currencyAddress } from 'src/utils/currencyId'
+import { useMemoCompare } from 'src/utils/hooks'
+import { isOffline } from '../utils'
 
 export function getTransferWarnings(
   t: TFunction,
-  account: Account,
   derivedTransferInfo: DerivedTransferInfo,
-  networkStatus: NetInfoState
+  offline: boolean
 ): Warning[] {
   const warnings: Warning[] = []
-  if (!networkStatus.isConnected) {
+
+  if (offline) {
     warnings.push(getNetworkWarning(t))
   }
 
@@ -71,13 +72,17 @@ export function getTransferWarnings(
 
 export function useTransferWarnings(
   t: TFunction,
-  account: Account,
   derivedTransferInfo: DerivedTransferInfo
 ): Warning[] {
   const networkStatus = useNetInfo()
-  return useMemo(() => {
-    return getTransferWarnings(t, account, derivedTransferInfo, networkStatus)
-  }, [account, derivedTransferInfo, networkStatus, t])
+  // First `useNetInfo` call always results with unknown state,
+  // which we want to ignore here until state is determined,
+  // otherwise it leads to immediate re-renders of views dependent on useTransferWarnings.
+  //
+  // See for more here: https://github.com/react-native-netinfo/react-native-netinfo/pull/444
+  const offline = isOffline(networkStatus)
+
+  return useMemoCompare(() => getTransferWarnings(t, derivedTransferInfo, offline), _.isEqual)
 }
 
 const checkIsMissingRequiredParams = (

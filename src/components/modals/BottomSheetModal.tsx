@@ -22,6 +22,7 @@ type Props = PropsWithChildren<{
   hideHandlebar?: boolean
   name: ModalName
   onClose?: () => void
+  onOpenComplete?: () => void
   snapPoints?: Array<string | number>
   stackBehavior?: ComponentProps<typeof BaseModal>['stackBehavior']
   fullScreen?: boolean
@@ -32,8 +33,18 @@ type Props = PropsWithChildren<{
 }> &
   TelemetryTraceProps
 
+const APPEARS_ON_INDEX = 0
+const DISAPPEARS_ON_INDEX = -1
+
 const Backdrop = (props: BottomSheetBackdropProps): JSX.Element => {
-  return <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} opacity={0.4} />
+  return (
+    <BottomSheetBackdrop
+      {...props}
+      appearsOnIndex={APPEARS_ON_INDEX}
+      disappearsOnIndex={DISAPPEARS_ON_INDEX}
+      opacity={0.4}
+    />
+  )
 }
 
 const CONTENT_HEIGHT_SNAP_POINTS = ['CONTENT_HEIGHT']
@@ -44,6 +55,7 @@ export function BottomSheetModal({
   name,
   properties,
   onClose,
+  onOpenComplete,
   snapPoints = CONTENT_HEIGHT_SNAP_POINTS,
   stackBehavior = 'push',
   fullScreen,
@@ -68,8 +80,8 @@ export function BottomSheetModal({
     (props) => (
       <BottomSheetBackdrop
         {...props}
-        appearsOnIndex={0}
-        disappearsOnIndex={-1}
+        appearsOnIndex={APPEARS_ON_INDEX}
+        disappearsOnIndex={DISAPPEARS_ON_INDEX}
         opacity={blurredBackground ? 0.2 : 0.4}
         pressBehavior={isDismissible ? 'close' : 'none'}
       />
@@ -114,6 +126,15 @@ export function BottomSheetModal({
   const background = blurredBackground ? { backgroundComponent: renderBlurredBg } : undefined
   const backdrop = { backdropComponent: renderBackdrop }
 
+  const onChange = useCallback(
+    (idx) => {
+      if (onOpenComplete && idx === APPEARS_ON_INDEX) {
+        onOpenComplete()
+      }
+    },
+    [onOpenComplete]
+  )
+
   return (
     <BaseModal
       {...background}
@@ -130,6 +151,7 @@ export function BottomSheetModal({
       snapPoints={animatedSnapPoints}
       stackBehavior={stackBehavior}
       topInset={renderBehindInset ? undefined : insets.top}
+      onChange={onChange}
       onDismiss={onClose}>
       <Trace logImpression modal={name} properties={properties}>
         <BottomSheetView

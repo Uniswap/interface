@@ -107,11 +107,11 @@ function _SwapForm({
     setShowWarningModal(true)
   }
 
-  const onReview = (): void => {
+  const onReview = useCallback((): void => {
     const txId = createTransactionId()
     onCreateTxId(txId)
     onNext()
-  }
+  }, [onCreateTxId, onNext])
 
   const [inputSelection, setInputSelection] = useState<TextInputProps['selection']>()
   const [outputSelection, setOutputSelection] = useState<TextInputProps['selection']>()
@@ -157,6 +157,41 @@ function _SwapForm({
   useSwapAnalytics(derivedSwapInfo)
   const SwapWarningIcon = swapWarning?.icon ?? AlertTriangleIcon
 
+  const setValue = useCallback(
+    (value: string): void => {
+      if (!focusOnCurrencyField) return
+      onSetExactAmount(focusOnCurrencyField, value)
+    },
+
+    [focusOnCurrencyField, onSetExactAmount]
+  )
+
+  const onInputSelectionChange = useCallback((start, end) => setInputSelection({ start, end }), [])
+  const onOutputSelectionChange = useCallback(
+    (start, end) => setOutputSelection({ start, end }),
+    []
+  )
+
+  const onSetExactAmountInput = useCallback(
+    (value): void => onSetExactAmount(CurrencyField.INPUT, value),
+    [onSetExactAmount]
+  )
+
+  const onSetExactAmountOutput = useCallback(
+    (value): void => onSetExactAmount(CurrencyField.OUTPUT, value),
+    [onSetExactAmount]
+  )
+
+  const onShowTokenSelectorInput = useCallback(
+    () => (): void => onShowTokenSelector(CurrencyField.INPUT),
+    [onShowTokenSelector]
+  )
+
+  const onShowTokenSelectorOutput = useCallback(
+    () => (): void => onShowTokenSelector(CurrencyField.OUTPUT),
+    [onShowTokenSelector]
+  )
+
   return (
     <>
       {showWarningModal && swapWarning?.title && (
@@ -199,14 +234,10 @@ function _SwapForm({
                 }
                 warnings={warnings}
                 onPressIn={onFocusInput}
-                onSelectionChange={
-                  showNativeKeyboard
-                    ? undefined
-                    : (start, end): void => setInputSelection({ start, end })
-                }
-                onSetExactAmount={(value): void => onSetExactAmount(CurrencyField.INPUT, value)}
+                onSelectionChange={showNativeKeyboard ? undefined : onInputSelectionChange}
+                onSetExactAmount={onSetExactAmountInput}
                 onSetMax={onSetMax}
-                onShowTokenSelector={(): void => onShowTokenSelector(CurrencyField.INPUT)}
+                onShowTokenSelector={onShowTokenSelectorInput}
               />
             </Flex>
           </Trace>
@@ -265,13 +296,9 @@ function _SwapForm({
                   }
                   warnings={warnings}
                   onPressIn={onFocusOutput}
-                  onSelectionChange={
-                    showNativeKeyboard
-                      ? undefined
-                      : (start, end): void => setOutputSelection({ start, end })
-                  }
-                  onSetExactAmount={(value): void => onSetExactAmount(CurrencyField.OUTPUT, value)}
-                  onShowTokenSelector={(): void => onShowTokenSelector(CurrencyField.OUTPUT)}
+                  onSelectionChange={showNativeKeyboard ? undefined : onOutputSelectionChange}
+                  onSetExactAmount={onSetExactAmountOutput}
+                  onShowTokenSelector={onShowTokenSelectorOutput}
                 />
               </Flex>
               {swapWarning && !isBlocked ? (
@@ -381,10 +408,7 @@ function _SwapForm({
             <DecimalPad
               resetSelection={resetSelection}
               selection={focusOnCurrencyField ? selection[focusOnCurrencyField] : undefined}
-              setValue={(value: string): void => {
-                if (!focusOnCurrencyField) return
-                onSetExactAmount(focusOnCurrencyField, value)
-              }}
+              setValue={setValue}
               value={
                 focusOnCurrencyField === exactCurrencyField ? exactValue : formattedDerivedValue
               }

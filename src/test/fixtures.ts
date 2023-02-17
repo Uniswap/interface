@@ -1,7 +1,8 @@
 import {
+  NetInfoConnectedStates,
   NetInfoNoConnectionState,
-  NetInfoState,
   NetInfoStateType,
+  NetInfoUnknownState,
 } from '@react-native-community/netinfo'
 import { TradeType } from '@uniswap/sdk-core'
 import { BigNumber, providers } from 'ethers'
@@ -264,6 +265,13 @@ export const unknownNotification = {
   tokenAddress: '0x939C8d89EBC11fA45e576215E2353673AD0bA18A',
 }
 
+export const networkUnknown: NetInfoUnknownState = {
+  isConnected: null,
+  type: NetInfoStateType.unknown,
+  isInternetReachable: null,
+  details: null,
+}
+
 export const networkDown: NetInfoNoConnectionState = {
   isConnected: false,
   type: NetInfoStateType.none,
@@ -273,7 +281,7 @@ export const networkDown: NetInfoNoConnectionState = {
 
 export const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 
-export const networkUp: NetInfoState = {
+export const networkUp: NetInfoConnectedStates = {
   isConnected: true,
   type: NetInfoStateType.other,
   isInternetReachable: true,

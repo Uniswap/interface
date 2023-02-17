@@ -23,10 +23,10 @@ import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { TransferReview } from 'src/features/transactions/transfer/TransferReview'
 import { TransferStatus } from 'src/features/transactions/transfer/TransferStatus'
 import { TransferTokenForm } from 'src/features/transactions/transfer/TransferTokenForm'
-import { ANIMATE_SPRING_CONFIG } from 'src/features/transactions/utils'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { dimensions } from 'src/styles/sizing'
+import { ANIMATE_SPRING_CONFIG } from './utils'
 
 export enum TransactionStep {
   FORM,
@@ -50,6 +50,7 @@ interface TransactionFlowProps {
   step: TransactionStep
   setStep: (newStep: TransactionStep) => void
   warnings: Warning[]
+  modalOpened: boolean
   exactValue: string
   isUSDInput?: boolean
   showUSDToggle?: boolean
@@ -97,6 +98,7 @@ export function TransactionFlow({
   exactValue,
   isUSDInput,
   showUSDToggle,
+  modalOpened,
 }: TransactionFlowProps): JSX.Element {
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
@@ -105,12 +107,14 @@ export function TransactionFlow({
 
   const [showViewOnlyModal, setShowViewOnlyModal] = useState(false)
   const isSwap = isSwapInfo(derivedInfo)
+  const hideInnerContentRouter = showTokenSelector || showRecipientSelector
+  const renderInnerContentRouter = !hideInnerContentRouter || modalOpened
 
-  const screenXOffset = useSharedValue(showTokenSelector || showRecipientSelector ? 1 : 0)
+  const screenXOffset = useSharedValue(hideInnerContentRouter ? -dimensions.fullWidth : 0)
   useEffect(() => {
-    const screenOffset = showTokenSelector || showRecipientSelector ? 1 : 0
+    const screenOffset = hideInnerContentRouter ? 1 : 0
     screenXOffset.value = withSpring(-(dimensions.fullWidth * screenOffset), ANIMATE_SPRING_CONFIG)
-  }, [screenXOffset, showTokenSelector, showRecipientSelector])
+  }, [screenXOffset, showTokenSelector, showRecipientSelector, hideInnerContentRouter])
 
   const wrapperStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: screenXOffset.value }],
@@ -183,20 +187,22 @@ export function TransactionFlow({
               </Flex>
             </Flex>
           )}
-          <InnerContentRouter
-            approveTxRequest={approveTxRequest}
-            derivedInfo={derivedInfo}
-            dispatch={dispatch}
-            exactValue={exactValue}
-            gasFallbackUsed={gasFallbackUsed}
-            setStep={setStep}
-            showingSelectorScreen={showRecipientSelector || showTokenSelector}
-            step={step}
-            totalGasFee={totalGasFee}
-            txRequest={txRequest}
-            warnings={warnings}
-            onClose={onClose}
-          />
+          {renderInnerContentRouter && (
+            <InnerContentRouter
+              approveTxRequest={approveTxRequest}
+              derivedInfo={derivedInfo}
+              dispatch={dispatch}
+              exactValue={exactValue}
+              gasFallbackUsed={gasFallbackUsed}
+              setStep={setStep}
+              showingSelectorScreen={showRecipientSelector || showTokenSelector}
+              step={step}
+              totalGasFee={totalGasFee}
+              txRequest={txRequest}
+              warnings={warnings}
+              onClose={onClose}
+            />
+          )}
         </Flex>
         {showViewOnlyModal && (
           <WarningModal

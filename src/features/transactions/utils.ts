@@ -1,3 +1,4 @@
+import { NetInfoState } from '@react-native-community/netinfo'
 import { CurrencyAmount, NativeCurrency, TradeType } from '@uniswap/sdk-core'
 import { BigNumber, providers } from 'ethers'
 import { ChainId } from 'src/constants/chains'
@@ -78,4 +79,12 @@ export const ANIMATE_SPRING_CONFIG = {
   stiffness: 90,
   damping: 15,
   mass: 0.8,
+}
+
+export function isOffline(networkStatus: NetInfoState): boolean {
+  return (
+    networkStatus.type !== 'unknown' &&
+    typeof networkStatus.isInternetReachable === 'boolean' &&
+    networkStatus.isConnected === false
+  )
 }

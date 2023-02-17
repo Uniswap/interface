@@ -1,6 +1,6 @@
-import { NetInfoState, useNetInfo } from '@react-native-community/netinfo'
+import { useNetInfo } from '@react-native-community/netinfo'
 import { Percent } from '@uniswap/sdk-core'
-import { useMemo } from 'react'
+import _ from 'lodash'
 import { TFunction } from 'react-i18next'
 import { getNetworkWarning } from 'src/components/modals/WarningModal/constants'
 import {
@@ -12,20 +12,21 @@ import {
 import { API_RATE_LIMIT_ERROR, SWAP_NO_ROUTE_ERROR } from 'src/features/routing/routingApi'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
-import { Account } from 'src/features/wallet/accounts/types'
 import { formatPriceImpact } from 'src/utils/format'
+import { useMemoCompare } from 'src/utils/hooks'
+import { isOffline } from '../utils'
 
 const PRICE_IMPACT_THRESHOLD_MEDIUM = new Percent(3, 100) // 3%
 const PRICE_IMPACT_THRESHOLD_HIGH = new Percent(5, 100) // 5%
 
 export function getSwapWarnings(
   t: TFunction,
-  account: Account,
   derivedSwapInfo: DerivedSwapInfo,
-  networkStatus: NetInfoState
+  offline: boolean
 ): Warning[] {
   const warnings: Warning[] = []
-  if (!networkStatus.isConnected) {
+
+  if (offline) {
     warnings.push(getNetworkWarning(t))
   }
 
@@ -119,15 +120,16 @@ export function getSwapWarnings(
   return warnings
 }
 
-export function useSwapWarnings(
-  t: TFunction,
-  account: Account,
-  derivedSwapInfo: DerivedSwapInfo
-): Warning[] {
+export function useSwapWarnings(t: TFunction, derivedSwapInfo: DerivedSwapInfo): Warning[] {
   const networkStatus = useNetInfo()
-  return useMemo(() => {
-    return getSwapWarnings(t, account, derivedSwapInfo, networkStatus)
-  }, [account, derivedSwapInfo, t, networkStatus])
+  // First `useNetInfo` call always results with unknown state,
+  // which we want to ignore here until state is determined,
+  // otherwise it leads to immediate re-renders of views dependent on useTransferWarnings.
+  //
+  // See for more here: https://github.com/react-native-netinfo/react-native-netinfo/pull/444
+  const offline = isOffline(networkStatus)
+
+  return useMemoCompare(() => getSwapWarnings(t, derivedSwapInfo, offline), _.isEqual)
 }
 
 const formIncomplete = (derivedSwapInfo: DerivedSwapInfo): boolean => {
