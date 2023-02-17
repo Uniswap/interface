@@ -194,7 +194,7 @@ function KeyButton({
       justifyContent="center"
       padding="spacing16"
       paddingTop={paddingTop}
-      scaleTo={1.75}
+      scaleTo={1.125}
       testID={'decimal-pad-' + label}
       width={index % 3 === 1 ? '50%' : '25%'}
       onLongPress={onLongPress}
