@@ -228,14 +228,14 @@ export const MarketplaceRow = ({
   return (
     <Row onMouseEnter={toggleMarketRowHovered} onMouseLeave={toggleMarketRowHovered}>
       <FloorPriceInfo>
-        <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
+        <ThemedText.BodyPrimary color="textSecondary" lineHeight="24px">
           {asset.floorPrice ? `${asset.floorPrice.toFixed(3)} ETH` : '-'}
-        </ThemedText.BodySmall>
+        </ThemedText.BodyPrimary>
       </FloorPriceInfo>
       <LastPriceInfo>
-        <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
+        <ThemedText.BodyPrimary color="textSecondary" lineHeight="24px">
           {asset.lastPrice ? `${asset.lastPrice.toFixed(3)} ETH` : '-'}
-        </ThemedText.BodySmall>
+        </ThemedText.BodyPrimary>
       </LastPriceInfo>
 
       <Row flex="2">
