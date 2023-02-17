@@ -534,10 +534,10 @@ export const BagFooter = ({ totalEthPrice, fetchAssets, eventProperties }: BagFo
                 </ThemedText.SubHeaderSmall>
                 <CurrencyInput
                   onClick={() => {
-                    if (bagIsLocked) return
-
-                    setTokenSelectorOpen(true)
-                    sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
+                    if (!bagIsLocked) {
+                      setTokenSelectorOpen(true)
+                      sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
+                    }
                   }}
                 >
                   <CurrencyLogo currency={activeCurrency} size="24px" />
