@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { Box, Flex } from 'src/components/layout'
@@ -14,6 +15,7 @@ import { useActiveAccount, useDisplayName } from 'src/features/wallet/hooks'
 import { iconSizes } from 'src/styles/sizing'
 import { CurrencyId } from 'src/utils/currencyId'
 import { formatNumber, NumberType } from 'src/utils/format'
+import { SendButton } from './SendButton'
 
 /**
  * Renders token balances for current chain (if any) and other chains (if any).
@@ -22,9 +24,11 @@ import { formatNumber, NumberType } from 'src/utils/format'
 export function TokenBalances({
   currentChainBalance,
   otherChainBalances,
+  onPressSend,
 }: {
   currentChainBalance: PortfolioBalance | null
   otherChainBalances: PortfolioBalance[] | null
+  onPressSend: () => void
 }): JSX.Element | null {
   const { t } = useTranslation()
 
@@ -54,6 +58,7 @@ export function TokenBalances({
           balance={currentChainBalance}
           displayName={displayName}
           isReadonly={isReadonly}
+          onPressSend={onPressSend}
         />
       )}
       {hasOtherChainBalances && otherChainBalances ? (
@@ -83,26 +88,32 @@ export function CurrentChainBalance({
   balance,
   isReadonly,
   displayName,
+  onPressSend,
 }: {
   balance: PortfolioBalance
   isReadonly: boolean
   displayName?: string
+  onPressSend: () => void
 }): JSX.Element {
   const { t } = useTranslation()
+  const theme = useAppTheme()
 
   return (
-    <Flex gap="spacing8">
-      <Text color="textTertiary" variant="subheadSmall">
-        {isReadonly ? t("{{owner}}'s balance", { owner: displayName }) : t('Your balance')}
-      </Text>
-      <Flex row alignItems="center" gap="spacing8">
+    <Flex row>
+      <Flex fill gap="spacing4">
+        <Text color="textTertiary" variant="subheadSmall">
+          {isReadonly ? t("{{owner}}'s balance", { owner: displayName }) : t('Your balance')}
+        </Text>
         <Text variant="subheadLarge">
           {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
         </Text>
-        <Text color="textSecondary" variant="subheadLarge">
-          ({formatNumber(balance.quantity, NumberType.TokenNonTx)}{' '}
-          {balance.currencyInfo.currency.symbol})
+        <Text color="textSecondary" variant="bodySmall">
+          {formatNumber(balance.quantity, NumberType.TokenNonTx)}{' '}
+          {balance.currencyInfo.currency.symbol}
         </Text>
+      </Flex>
+      <Flex alignItems="flex-end" justifyContent="center">
+        <SendButton color={theme.colors.textPrimary} onPress={onPressSend} />
       </Flex>
     </Flex>
   )

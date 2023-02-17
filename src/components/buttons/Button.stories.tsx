@@ -1,6 +1,6 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import React from 'react'
-import SendIcon from 'src/assets/icons/send.svg'
+import SendIcon from 'src/assets/icons/send-action.svg'
 import { Box } from 'src/components/layout'
 import { Button, ButtonEmphasis, ButtonSize } from './Button'
 

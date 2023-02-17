@@ -34,6 +34,14 @@ describe(PriceText, () => {
     expect(tree).toMatchSnapshot()
   })
 
+  it('renders without error less than a dollar', () => {
+    mockedUseLineChartPrice.mockReturnValue({ value: '' })
+
+    const tree = render(<PriceText loading={false} spotPrice={Amounts.xs.value} />)
+
+    expect(tree).toMatchSnapshot()
+  })
+
   it('renders loading state', () => {
     mockedUseLineChartPrice.mockReturnValue({ value: '' })
 
@@ -48,7 +56,17 @@ describe(PriceText, () => {
     const tree = render(<PriceText loading={false} spotPrice={Amounts.md.value} />)
 
     const text = await tree.findByTestId('price-text')
-    expect(text.props.value).toBe(`$${Amounts.sm.value}.00`)
+    expect(text.props.children[0]).toBe(`$${Amounts.sm.value}`)
+    expect(text.props.children[1].props.children).toStrictEqual(['.', '00'])
+  })
+
+  it('shows active price when scrubbing less than a dollar', async () => {
+    mockedUseLineChartPrice.mockReturnValue({ value: { value: Amounts.xs.value.toString() } })
+
+    const tree = render(<PriceText loading={false} spotPrice={Amounts.xs.value} />)
+
+    const text = await tree.findByTestId('price-text')
+    expect(text.props.value).toBe(`$${Amounts.xs.value}00`)
   })
 })
 

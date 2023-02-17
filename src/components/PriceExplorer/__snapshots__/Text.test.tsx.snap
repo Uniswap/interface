@@ -101,11 +101,51 @@ exports[`PriceText renders loading state 1`] = `
 `;
 
 exports[`PriceText renders without error 1`] = `
+<Text
+  allowFontScaling={true}
+  maxFontSizeMultiplier={1.2}
+  numberOfLines={1}
+  style={
+    Array [
+      Object {
+        "color": "#0D111C",
+        "display": "flex",
+        "fontFamily": "Inter-SemiBold",
+        "fontSize": 40,
+        "lineHeight": 48,
+      },
+    ]
+  }
+  testID="price-text"
+>
+  $55
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.2}
+    style={
+      Array [
+        Object {
+          "color": "#888FAB",
+          "display": "flex",
+          "fontFamily": "Inter-SemiBold",
+          "fontSize": 40,
+          "lineHeight": 48,
+        },
+      ]
+    }
+  >
+    .
+    00
+  </Text>
+</Text>
+`;
+
+exports[`PriceText renders without error less than a dollar 1`] = `
 <TextInput
   allowFontScaling={true}
   animatedProps={
     Object {
-      "text": "$55.00",
+      "text": "$0.0500",
     }
   }
   editable={false}
@@ -124,7 +164,7 @@ exports[`PriceText renders without error 1`] = `
   }
   testID="price-text"
   underlineColorAndroid="transparent"
-  value="$55.00"
+  value="$0.0500"
 />
 `;
 

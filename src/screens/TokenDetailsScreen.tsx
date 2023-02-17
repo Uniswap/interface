@@ -304,6 +304,7 @@ function TokenDetails({
             <TokenBalances
               currentChainBalance={currentChainBalance}
               otherChainBalances={otherChainBalances}
+              onPressSend={onPressSend}
             />
             <Box mb="spacing8" mx="spacing16">
               <TokenDetailsStats currencyId={_currencyId} data={data} tokenColor={tokenColor} />
@@ -315,9 +316,7 @@ function TokenDetails({
       {!loading && !tokenColorLoading ? (
         <AnimatedFlex entering={FadeInDown}>
           <TokenDetailsActionButtons
-            showSend={!!currentChainBalance}
             tokenColor={tokenColor}
-            onPressSend={onPressSend}
             onPressSwap={
               safetyLevel === SafetyLevel.Blocked
                 ? undefined

@@ -1,7 +1,10 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
-import { LinkButton } from 'src/components/buttons/LinkButton'
+import StatsIcon from 'src/assets/icons/chart-bar.svg'
+import GlobeIcon from 'src/assets/icons/globe-filled.svg'
+import EtherscanIcon from 'src/assets/icons/sticky-note-text-square.svg'
+import TwitterIcon from 'src/assets/icons/twitter.svg'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
@@ -9,6 +12,34 @@ import { TokenDetailsScreenQuery } from 'src/data/__generated__/types-and-hooks'
 import { currencyIdToAddress, currencyIdToChain } from 'src/utils/currencyId'
 import { formatNumber, NumberType } from 'src/utils/format'
 import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'src/utils/linking'
+import { LinkButtonWithIcon } from './LinkButtonWithIcon'
+
+function StatsRow({
+  label,
+  children,
+  tokenColor,
+}: {
+  label: string
+  children: JSX.Element
+  tokenColor?: Nullable<string>
+}): JSX.Element {
+  const theme = useAppTheme()
+  return (
+    <Flex row justifyContent="space-between" paddingLeft="spacing2">
+      <Flex row alignItems="center" gap="spacing8" justifyContent="flex-start">
+        <StatsIcon
+          color={tokenColor ?? theme.colors.textTertiary}
+          height={theme.iconSizes.icon12}
+          width={theme.iconSizes.icon12}
+        />
+        <Text color="textPrimary" variant="bodySmall">
+          {label}
+        </Text>
+      </Flex>
+      {children}
+    </Flex>
+  )
+}
 
 export function TokenDetailsMarketData({
   marketCap,
@@ -16,12 +47,14 @@ export function TokenDetailsMarketData({
   priceLow52W,
   priceHight52W,
   isLoading = false,
+  tokenColor,
 }: {
   marketCap?: number
   volume?: number
   priceLow52W?: number
   priceHight52W?: number
   isLoading?: boolean
+  tokenColor?: Nullable<string>
 }): JSX.Element {
   const { t } = useTranslation()
 
@@ -29,7 +62,7 @@ export function TokenDetailsMarketData({
   const FormattedValue = useCallback(
     ({ value, numberType }: { value?: number; numberType: NumberType }) => {
       return (
-        <Text loading={isLoading} variant="bodyLarge">
+        <Text loading={isLoading} variant="buttonLabelSmall">
           {formatNumber(value, numberType)}
         </Text>
       )
@@ -38,35 +71,19 @@ export function TokenDetailsMarketData({
   )
 
   return (
-    <Flex row justifyContent="space-between">
-      <Flex flex={1} gap="spacing24">
-        <Flex gap="spacing4">
-          <Text color="textTertiary" variant="subheadSmall">
-            {t('Market cap')}
-          </Text>
-          <FormattedValue numberType={NumberType.FiatTokenStats} value={marketCap} />
-        </Flex>
-        <Flex gap="spacing4">
-          <Text color="textTertiary" variant="subheadSmall">
-            {t('52W low')}
-          </Text>
-          <FormattedValue numberType={NumberType.FiatTokenDetails} value={priceLow52W} />
-        </Flex>
-      </Flex>
-      <Flex flex={1} gap="spacing24">
-        <Flex gap="spacing4">
-          <Text color="textTertiary" variant="subheadSmall">
-            {t('24h Uniswap volume')}
-          </Text>
-          <FormattedValue numberType={NumberType.FiatTokenStats} value={volume} />
-        </Flex>
-        <Flex gap="spacing4">
-          <Text color="textTertiary" variant="subheadSmall">
-            {t('52W high')}
-          </Text>
-          <FormattedValue numberType={NumberType.FiatTokenDetails} value={priceHight52W} />
-        </Flex>
-      </Flex>
+    <Flex gap="spacing8">
+      <StatsRow label={t('Market cap')} tokenColor={tokenColor}>
+        <FormattedValue numberType={NumberType.FiatTokenStats} value={marketCap} />
+      </StatsRow>
+      <StatsRow label={t('52W low')} tokenColor={tokenColor}>
+        <FormattedValue numberType={NumberType.FiatTokenDetails} value={priceLow52W} />
+      </StatsRow>
+      <StatsRow label={t('24h Uniswap volume')} tokenColor={tokenColor}>
+        <FormattedValue numberType={NumberType.FiatTokenStats} value={volume} />
+      </StatsRow>
+      <StatsRow label={t('52W high')} tokenColor={tokenColor}>
+        <FormattedValue numberType={NumberType.FiatTokenDetails} value={priceHight52W} />
+      </StatsRow>
     </Flex>
   )
 }
@@ -95,13 +112,6 @@ export function TokenDetailsStats({
 
   return (
     <Flex gap="spacing24">
-      <Text variant="subheadLarge">{t('Stats')}</Text>
-      <TokenDetailsMarketData
-        marketCap={marketData?.marketCap?.value}
-        priceHight52W={marketData?.priceHigh52W?.value}
-        priceLow52W={marketData?.priceLow52W?.value}
-        volume={tokenData?.market?.volume?.value}
-      />
       <Flex gap="spacing4">
         {tokenData?.name ? (
           <Text color="textTertiary" variant="subheadSmall">
@@ -118,30 +128,40 @@ export function TokenDetailsStats({
               text={tokenProjectData.description.trim()}
             />
           )}
-          <Flex row>
-            {tokenProjectData?.homepageUrl && (
-              <LinkButton
-                color={tokenColor ?? theme.colors.textSecondary}
-                label={t('Website')}
-                textVariant="buttonLabelSmall"
-                url={tokenProjectData.homepageUrl}
-              />
-            )}
-            {tokenProjectData?.twitterName && (
-              <LinkButton
-                color={tokenColor ?? theme.colors.textSecondary}
-                label={t('Twitter')}
-                textVariant="buttonLabelSmall"
-                url={getTwitterLink(tokenProjectData.twitterName)}
-              />
-            )}
-            <LinkButton
-              color={tokenColor ?? theme.colors.textSecondary}
-              label={t('Etherscan')}
-              textVariant="buttonLabelSmall"
-              url={explorerLink}
+        </Flex>
+      </Flex>
+      <Flex gap="spacing4">
+        <Text color="textTertiary" variant="subheadSmall">
+          {t('Stats')}
+        </Text>
+        <TokenDetailsMarketData
+          marketCap={marketData?.marketCap?.value}
+          priceHight52W={marketData?.priceHigh52W?.value}
+          priceLow52W={marketData?.priceLow52W?.value}
+          tokenColor={tokenColor}
+          volume={tokenData?.market?.volume?.value}
+        />
+      </Flex>
+      <Flex gap="spacing8">
+        <Text color="textTertiary" variant="subheadSmall">
+          {t('Links')}
+        </Text>
+        <Flex row gap="spacing8">
+          {tokenProjectData?.homepageUrl && (
+            <LinkButtonWithIcon
+              Icon={GlobeIcon}
+              label={t('Website')}
+              url={tokenProjectData.homepageUrl}
             />
-          </Flex>
+          )}
+          {tokenProjectData?.twitterName && (
+            <LinkButtonWithIcon
+              Icon={TwitterIcon}
+              label={t('Twitter')}
+              url={getTwitterLink(tokenProjectData.twitterName)}
+            />
+          )}
+          <LinkButtonWithIcon Icon={EtherscanIcon} label={t('Etherscan')} url={explorerLink} />
         </Flex>
       </Flex>
     </Flex>
