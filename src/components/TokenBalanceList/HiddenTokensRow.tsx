@@ -55,7 +55,12 @@ export function HiddenTokensRow({
             {isExpanded ? t('Hide') : t('Show')}
           </Text>
           <AnimatedBox style={chevronAnimatedStyle}>
-            <Chevron color={theme.colors.textSecondary} direction="s" />
+            <Chevron
+              color={theme.colors.textSecondary}
+              direction="s"
+              height={theme.iconSizes.icon20}
+              width={theme.iconSizes.icon20}
+            />
           </AnimatedBox>
         </Flex>
       </Flex>

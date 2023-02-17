@@ -495,6 +495,7 @@ export function CopiedNotification({
         <CheckCircle
           color={theme.colors.accentSuccess}
           height={iconSizes.icon24}
+          strokeWidth={1.5}
           width={iconSizes.icon24}
         />
       }

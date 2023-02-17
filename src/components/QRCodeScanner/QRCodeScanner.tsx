@@ -13,7 +13,6 @@ import {
 import { useAppTheme } from 'src/app/hooks'
 import CameraScan from 'src/assets/icons/camera-scan.svg'
 import GlobalIcon from 'src/assets/icons/global.svg'
-import WalletConnectLogo from 'src/assets/icons/walletconnect.svg'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import PasteButton from 'src/components/buttons/PasteButton'
 import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
@@ -152,18 +151,18 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
         <Svg height="100%" width="100%">
           <Defs>
             <LinearGradient id="scan-top-fadeout" x1="0" x2="0" y1="0" y2="1">
-              <Stop offset="0" stopColor={theme.colors.background0} stopOpacity="1" />
+              <Stop offset="0" stopColor={theme.colors.background1} stopOpacity="1" />
               <Stop
                 offset="0.4"
-                stopColor={theme.colors.background0}
+                stopColor={theme.colors.background1}
                 stopOpacity={shouldFreezeCamera ? '0.5' : '0'}
               />
             </LinearGradient>
             <LinearGradient id="scan-bottom-fadeout" x1="0" x2="0" y1="1" y2="0">
-              <Stop offset="0" stopColor={theme.colors.background0} stopOpacity="1" />
+              <Stop offset="0" stopColor={theme.colors.background1} stopOpacity="1" />
               <Stop
                 offset="0.4"
-                stopColor={theme.colors.background0}
+                stopColor={theme.colors.background1}
                 stopOpacity={shouldFreezeCamera ? '0.5' : '0'}
               />
             </LinearGradient>
@@ -192,20 +191,6 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             <Text color="textPrimary" variant="subheadLarge">
               {t('Scan a QR code')}
             </Text>
-            {isWalletConnectModal ? (
-              <>
-                <Flex centered row gap="spacing12">
-                  <WalletConnectLogo height={16} width={16} />
-                  <Text color="textPrimary" variant="bodySmall">
-                    {t('Connect to an app with WalletConnect')}
-                  </Text>
-                </Flex>
-              </>
-            ) : (
-              <Text color="textPrimary" variant="buttonLabelMicro">
-                {t('Scan a wallet address to send tokens')}
-              </Text>
-            )}
           </Flex>
           {!shouldFreezeCamera ? (
             // camera isn't frozen (after seeing barcode) — show the camera scan icon (the four white corners)

@@ -38,12 +38,12 @@ export function useNetworkOptions(
                 <Text color="textPrimary" variant="bodyLarge">
                   {info.label}
                 </Text>
-                <Box height={24} width={24}>
+                <Box height={iconSizes.icon20} width={iconSizes.icon20}>
                   {selectedChain === chainId && (
                     <Check
                       color={theme.colors.accentActive}
-                      height={iconSizes.icon24}
-                      width={iconSizes.icon24}
+                      height={iconSizes.icon20}
+                      width={iconSizes.icon20}
                     />
                   )}
                 </Box>

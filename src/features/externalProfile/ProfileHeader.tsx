@@ -126,10 +126,9 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
       <Flex row alignItems="flex-start" justifyContent="space-between">
         <AddressDisplay
           address={address}
-          captionVariant="buttonLabelMedium"
+          captionVariant="subheadSmall"
           contentAlign="flex-start"
           direction="column"
-          disableViewOnlyIcon={true}
           showCopy={true}
           showIconBackground={true}
           size={HEADER_ICON_SIZE}

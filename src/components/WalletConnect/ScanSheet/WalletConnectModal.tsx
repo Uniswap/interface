@@ -1,14 +1,13 @@
 import { selectionAsync } from 'expo-haptics'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert } from 'react-native'
+import { Alert, useColorScheme } from 'react-native'
 import 'react-native-reanimated'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { useEagerExternalProfileRootNavigation } from 'src/app/navigation/hooks'
-import Scan from 'src/assets/icons/qr-code.svg'
-import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
+import Scan from 'src/assets/icons/receive.svg'
+import ScanQRIcon from 'src/assets/icons/scan.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { BackButtonView } from 'src/components/layout/BackButtonView'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -43,6 +42,7 @@ export function WalletConnectModal({
 }: Props): JSX.Element | null {
   const { t } = useTranslation()
   const theme = useAppTheme()
+  const isDarkMode = useColorScheme() === 'dark'
   const activeAddress = useAppSelector(selectActiveAccountAddress)
   const displayName = useDisplayName(activeAddress)
   const { sessions } = useWalletConnect(activeAddress)
@@ -51,7 +51,6 @@ export function WalletConnectModal({
   const { hasScanError, setHasScanError, shouldFreezeCamera, setShouldFreezeCamera } =
     useWCTimeoutError(pendingSession, WC_TIMEOUT_DURATION_MS)
   const { preload, navigate } = useEagerExternalProfileRootNavigation()
-
   const onScanCode = useCallback(
     async (uri: string) => {
       // don't scan any QR codes if there is an error popup open or camera is frozen
@@ -141,7 +140,7 @@ export function WalletConnectModal({
   return (
     <BottomSheetModal
       fullScreen
-      backgroundColor={theme.colors.background0}
+      backgroundColor={theme.colors.background1}
       name={ModalName.WalletConnectScan}
       onClose={onClose}>
       {pendingSession ? (
@@ -169,39 +168,28 @@ export function WalletConnectModal({
           {currentScreenState === ScannerModalState.WalletQr && (
             <WalletQRCode address={activeAddress} />
           )}
-          <Flex mb="spacing36" mt="spacing16" mx="spacing16">
+          <Flex centered mb="spacing36" mt="spacing16" mx="spacing16">
             <TouchableArea
               hapticFeedback
-              borderColor="backgroundOutline"
-              borderRadius="rounded16"
+              borderColor={isDarkMode ? 'none' : 'backgroundOutline'}
+              borderRadius="roundedFull"
               borderWidth={1}
               name={ElementName.QRCodeModalToggle}
               p="spacing16"
-              style={{ backgroundColor: theme.colors.background2 }}
+              paddingEnd="spacing24"
+              style={{ backgroundColor: theme.colors.backgroundOverlay }}
               onPress={onPressBottomToggle}>
               <Flex row alignItems="center" gap="spacing12">
                 {currentScreenState === ScannerModalState.ScanQr ? (
-                  <Scan color={theme.colors.textSecondary} height={24} width={24} />
+                  <Scan color={theme.colors.textPrimary} height={24} width={24} />
                 ) : (
-                  <ScanQRIcon color={theme.colors.textSecondary} height={24} width={24} />
+                  <ScanQRIcon color={theme.colors.textPrimary} height={24} width={24} />
                 )}
-                <Flex shrink flexGrow={1} gap="none">
-                  <Text color="textPrimary" variant="bodyLarge">
-                    {currentScreenState === ScannerModalState.ScanQr
-                      ? t('Show my QR code')
-                      : t('Scan a QR code')}
-                  </Text>
-                  <Text
-                    adjustsFontSizeToFit
-                    color="textSecondary"
-                    numberOfLines={1}
-                    variant="bodyMicro">
-                    {currentScreenState === ScannerModalState.ScanQr
-                      ? displayName?.name
-                      : t('Connect to an app with WalletConnect')}
-                  </Text>
-                </Flex>
-                <Chevron color={theme.colors.textSecondary} direction="e" height="20" width="15" />
+                <Text color="textPrimary" variant="buttonLabelMedium">
+                  {currentScreenState === ScannerModalState.ScanQr
+                    ? t('Show my QR code')
+                    : t('Scan a QR code')}
+                </Text>
               </Flex>
             </TouchableArea>
           </Flex>

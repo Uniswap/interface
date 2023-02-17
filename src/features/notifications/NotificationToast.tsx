@@ -152,7 +152,7 @@ export function NotificationContent({
   return (
     <TouchableArea
       alignItems="center"
-      bg="background0"
+      bg="background1"
       borderRadius="rounded16"
       flex={1}
       flexDirection="row"
@@ -201,16 +201,16 @@ export function NotificationContentSmall({
   return (
     <Flex row flexShrink={1} justifyContent="center" pointerEvents="box-none">
       <TouchableArea
-        bg="background0"
+        bg="background1"
         borderColor="background3"
         borderRadius="roundedFull"
-        borderWidth={1.5}
+        borderWidth={1}
         p="spacing12"
         onPress={onPress}
         onPressIn={onPressIn}>
-        <Flex row alignItems="center" gap="spacing8" justifyContent="flex-start">
+        <Flex row alignItems="center" gap="spacing8" justifyContent="flex-start" pr="spacing4">
           {icon}
-          <Text adjustsFontSizeToFit numberOfLines={1} variant="subheadSmall">
+          <Text adjustsFontSizeToFit numberOfLines={1} variant="bodyLarge">
             {title}
           </Text>
         </Flex>

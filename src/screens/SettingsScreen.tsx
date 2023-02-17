@@ -256,8 +256,8 @@ function WalletSettings(): JSX.Element {
               <Flex shrink>
                 <AddressDisplay
                   address={account.address}
-                  captionVariant="buttonLabelMicro"
-                  size={36}
+                  captionVariant="subheadSmall"
+                  size={theme.iconSizes.icon40}
                   variant="bodyLarge"
                 />
               </Flex>

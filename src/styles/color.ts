@@ -416,7 +416,7 @@ export const colorsLight: Palette = {
   backgroundScrim: opacify(50, colors.gray150),
   backgroundBranded: '#FCF7FF',
   backgroundActionButton: colors.magenta50,
-  backgroundOverlay: opacify(80, colors.white),
+  backgroundOverlay: opacify(60, colors.white),
 
   textPrimary: colors.gray900,
   textSecondary: colors.gray550,
