@@ -133,7 +133,7 @@ export const PriceTextInput = ({
   const warningColor =
     showResolveIssues && !listPrice
       ? colors.red400
-      : warningType !== WarningType.NONE && !focused
+      : warningType !== WarningType.NONE
       ? (warningType === WarningType.BELOW_FLOOR && percentBelowFloor >= 20) ||
         warningType === WarningType.ALREADY_LISTED
         ? colors.red400
