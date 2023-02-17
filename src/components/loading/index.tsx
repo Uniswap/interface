@@ -33,7 +33,7 @@ function Wallets({ repeat = 1 }: { repeat?: number }): JSX.Element {
 function Token({ repeat = 1 }: { repeat?: number }): JSX.Element {
   return (
     <Shimmer>
-      <Flex>
+      <Flex grow>
         {new Array(repeat).fill(null).map((_, i, { length }) => (
           <React.Fragment key={i}>
             <TokenLoader opacity={(length - i) / length} />
@@ -70,7 +70,7 @@ function NFT({ repeat = 1 }: { repeat?: number }): JSX.Element {
             const secondColOpacity = (repeat - ((repeat / 2) * i + 2) + 1) / repeat
             return (
               <React.Fragment key={i}>
-                <Flex row gap="none">
+                <Flex row gap="none" mx="spacing12">
                   <NftCardLoader opacity={firstColOpacity} width="50%" />
                   <NftCardLoader opacity={secondColOpacity} width="50%" />
                 </Flex>

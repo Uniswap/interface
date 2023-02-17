@@ -161,7 +161,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
 
     if (isError(networkStatus, !!data)) {
       return (
-        <Flex grow style={containerProps?.loadingContainerStyle}>
+        <Flex grow style={containerProps?.emptyContainerStyle}>
           <BaseCard.ErrorState
             description={t('Something went wrong.')}
             retryButtonLabel={t('Retry')}

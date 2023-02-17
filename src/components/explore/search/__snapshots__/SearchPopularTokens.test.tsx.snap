@@ -21,6 +21,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
             "alignItems": "stretch",
             "display": "flex",
             "flexDirection": "column",
+            "flexGrow": 1,
             "justifyContent": "flex-start",
           },
         ]
@@ -99,6 +100,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
               <Text
                 allowFontScaling={true}
                 maxFontSizeMultiplier={1.4}
+                numberOfLines={1}
                 style={
                   Array [
                     Object {
@@ -251,6 +253,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
               <Text
                 allowFontScaling={true}
                 maxFontSizeMultiplier={1.4}
+                numberOfLines={1}
                 style={
                   Array [
                     Object {
@@ -403,6 +406,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
               <Text
                 allowFontScaling={true}
                 maxFontSizeMultiplier={1.4}
+                numberOfLines={1}
                 style={
                   Array [
                     Object {

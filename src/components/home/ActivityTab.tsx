@@ -216,18 +216,18 @@ export const ActivityTab = forwardRef<FlashList<unknown>, ActivityTabProps>(
 
     if (!hasData && isError) {
       return (
-        <Box height="100%" pb="spacing60">
+        <Flex grow style={containerProps?.emptyContainerStyle}>
           <BaseCard.ErrorState
             retryButtonLabel={t('Retry')}
             title={t('Couldn’t load activity')}
             onRetry={onRetry}
           />
-        </Box>
+        </Flex>
       )
     }
 
     return transactions.length === 0 ? (
-      <Flex centered grow flex={1} style={containerProps?.loadingContainerStyle}>
+      <Flex centered grow flex={1} style={containerProps?.emptyContainerStyle}>
         <BaseCard.EmptyState
           description={t('When this wallet makes transactions, they’ll appear here.')}
           icon={<NoTransactions />}

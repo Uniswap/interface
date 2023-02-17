@@ -220,20 +220,19 @@ export function HomeScreen(): JSX.Element {
 
   const loadingContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
-      paddingTop: headerHeight - TAB_BAR_HEIGHT - TAB_STYLES.tabListInner.paddingTop,
-      paddingHorizontal: theme.spacing.spacing60,
+      paddingTop: headerHeight + TAB_BAR_HEIGHT + TAB_STYLES.tabListInner.paddingTop,
       paddingBottom: insets.bottom,
     }),
-    [headerHeight, insets.bottom, theme.spacing.spacing60]
+    [headerHeight, insets.bottom]
   )
 
   const emptyContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
       paddingTop: headerHeight - TAB_BAR_HEIGHT - TAB_STYLES.tabListInner.paddingTop,
-      paddingHorizontal: theme.spacing.spacing60,
+      paddingHorizontal: theme.spacing.spacing36,
       paddingBottom: insets.bottom,
     }),
-    [headerHeight, insets.bottom, theme.spacing.spacing60]
+    [headerHeight, insets.bottom, theme.spacing.spacing36]
   )
 
   const sharedProps = useMemo<TabContentProps>(

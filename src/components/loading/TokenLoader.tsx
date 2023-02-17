@@ -26,7 +26,7 @@ export function TokenLoader({ opacity }: TokenLoaderProps): JSX.Element {
       <Flex shrink alignItems="flex-start" gap="spacing8" width="100%">
         <Box bg="background3" borderRadius="rounded4" width="80%">
           <HiddenFromScreenReaders>
-            <Text color="none" opacity={0} variant="bodyLarge">
+            <Text color="none" numberOfLines={1} opacity={0} variant="bodyLarge">
               Token Name
             </Text>
           </HiddenFromScreenReaders>
