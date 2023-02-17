@@ -15,6 +15,7 @@ interface RelativeChangeProps {
   negativeChangeColor?: keyof Theme['colors']
   arrowSize?: number
   loading?: boolean
+  alignRight?: boolean
 }
 
 export function RelativeChange(props: RelativeChangeProps): JSX.Element {
@@ -28,6 +29,7 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
     negativeChangeColor = 'accentCritical',
     arrowSize = theme.iconSizes.icon16,
     loading = false,
+    alignRight = false,
   } = props
 
   const isPositiveChange = change !== undefined ? change >= 0 : undefined
@@ -41,7 +43,11 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
     : ''
 
   return (
-    <Flex row alignItems="center" gap="spacing2" justifyContent="flex-end">
+    <Flex
+      row
+      alignItems="center"
+      gap="spacing2"
+      justifyContent={alignRight ? 'flex-end' : 'flex-start'}>
       {change !== undefined && (
         <Arrow color={arrowColor} direction={isPositiveChange ? 'ne' : 'se'} size={arrowSize} />
       )}
