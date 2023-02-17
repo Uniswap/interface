@@ -24,7 +24,7 @@ exports[`BalanceUpdate renders without error after fetching data 1`] = `
           "color": "#0D111C",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -54,7 +54,7 @@ exports[`BalanceUpdate renders without error after fetching data 1`] = `
           "color": "#505A78",
           "display": "flex",
           "fontFamily": "Inter-Regular",
-          "fontSize": 14,
+          "fontSize": 15,
           "lineHeight": 20,
         },
       ]
@@ -89,7 +89,7 @@ exports[`BalanceUpdate skips fetching data when passing in the USD value 1`] = `
           "color": "#0D111C",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -119,7 +119,7 @@ exports[`BalanceUpdate skips fetching data when passing in the USD value 1`] = `
           "color": "#505A78",
           "display": "flex",
           "fontFamily": "Inter-Regular",
-          "fontSize": 14,
+          "fontSize": 15,
           "lineHeight": 20,
         },
       ]

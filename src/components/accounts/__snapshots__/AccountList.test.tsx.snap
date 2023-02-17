@@ -313,7 +313,7 @@ exports[`AccountList renders without error 1`] = `
                         "color": "#888FAB",
                         "display": "flex",
                         "fontFamily": "Inter-Medium",
-                        "fontSize": 14,
+                        "fontSize": 15,
                         "lineHeight": 20,
                       },
                     ]

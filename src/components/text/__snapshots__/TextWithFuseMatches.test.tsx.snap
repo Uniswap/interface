@@ -22,7 +22,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#0D111C",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -39,7 +39,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#0D111C",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -56,7 +56,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -73,7 +73,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -90,7 +90,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#0D111C",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -107,7 +107,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#0D111C",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -124,7 +124,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#0D111C",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -141,7 +141,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#0D111C",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -158,7 +158,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#0D111C",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -175,7 +175,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -192,7 +192,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -209,7 +209,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -226,7 +226,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -243,7 +243,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -260,7 +260,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -277,7 +277,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -294,7 +294,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -311,7 +311,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -328,7 +328,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -345,7 +345,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -362,7 +362,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -379,7 +379,7 @@ exports[`renders text with few matches 1`] = `
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -401,7 +401,7 @@ exports[`renders text without matches 1`] = `
         "color": "#0D111C",
         "display": "flex",
         "fontFamily": "Inter-Medium",
-        "fontSize": 16,
+        "fontSize": 17,
         "lineHeight": 24,
       },
     ]

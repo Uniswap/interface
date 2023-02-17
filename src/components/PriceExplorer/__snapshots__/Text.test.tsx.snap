@@ -18,7 +18,7 @@ exports[`DatetimeText renders without error 1`] = `
         Object {
           "color": "#505A78",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ],
@@ -208,7 +208,7 @@ exports[`RelativeChangeText renders loading state 1`] = `
                 "color": "transparent",
                 "display": "flex",
                 "fontFamily": "Inter-Medium",
-                "fontSize": 16,
+                "fontSize": 17,
                 "lineHeight": 24,
                 "opacity": 0,
               },
@@ -267,7 +267,7 @@ exports[`RelativeChangeText renders without error 1`] = `
           Object {
             "color": "#0D111C",
             "fontFamily": "Inter-Medium",
-            "fontSize": 16,
+            "fontSize": 17,
             "lineHeight": 24,
           },
           Object {
@@ -308,7 +308,7 @@ exports[`RelativeChangeText renders without error 1`] = `
           Object {
             "color": "#0D111C",
             "fontFamily": "Inter-Medium",
-            "fontSize": 16,
+            "fontSize": 17,
             "lineHeight": 24,
           },
           Object {

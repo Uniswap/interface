@@ -25,7 +25,7 @@ exports[`renders a LongText 1`] = `
           "color": "#0D111C",
           "display": "flex",
           "fontFamily": "Inter-Regular",
-          "fontSize": 14,
+          "fontSize": 15,
           "lineHeight": 20,
         },
         Object {
@@ -58,7 +58,7 @@ exports[`renders a LongText 1`] = `
           "color": "#0D111C",
           "display": "flex",
           "fontFamily": "Inter-SemiBold",
-          "fontSize": 14,
+          "fontSize": 15,
           "lineHeight": 20,
           "marginVertical": 0,
           "opacity": 0,

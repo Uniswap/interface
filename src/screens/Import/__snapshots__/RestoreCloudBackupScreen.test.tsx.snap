@@ -102,7 +102,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
                 "color": "#505A78",
                 "display": "flex",
                 "fontFamily": "Inter-Regular",
-                "fontSize": 14,
+                "fontSize": 15,
                 "lineHeight": 20,
                 "textAlign": "center",
               },

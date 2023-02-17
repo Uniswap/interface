@@ -10,7 +10,7 @@ exports[`renders a DecimalNumber 1`] = `
         "color": "#0D111C",
         "display": "flex",
         "fontFamily": "Inter-Medium",
-        "fontSize": 16,
+        "fontSize": 17,
         "lineHeight": 24,
       },
     ]
@@ -26,7 +26,7 @@ exports[`renders a DecimalNumber 1`] = `
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -48,7 +48,7 @@ exports[`renders a DecimalNumber without a comma separator 1`] = `
         "color": "#0D111C",
         "display": "flex",
         "fontFamily": "Inter-Medium",
-        "fontSize": 16,
+        "fontSize": 17,
         "lineHeight": 24,
       },
     ]
@@ -64,7 +64,7 @@ exports[`renders a DecimalNumber without a comma separator 1`] = `
           "color": "#888FAB",
           "display": "flex",
           "fontFamily": "Inter-Medium",
-          "fontSize": 16,
+          "fontSize": 17,
           "lineHeight": 24,
         },
       ]
@@ -86,7 +86,7 @@ exports[`renders a DecimalNumber without a decimal part 1`] = `
         "color": "#0D111C",
         "display": "flex",
         "fontFamily": "Inter-Medium",
-        "fontSize": 16,
+        "fontSize": 17,
         "lineHeight": 24,
       },
     ]

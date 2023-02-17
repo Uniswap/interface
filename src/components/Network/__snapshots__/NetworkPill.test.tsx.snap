@@ -78,7 +78,7 @@ exports[`NetworkPill renders a NetworkPill with border 1`] = `
           "color": "#0D111C",
           "display": "flex",
           "fontFamily": "Inter-Regular",
-          "fontSize": 14,
+          "fontSize": 15,
           "lineHeight": 20,
         },
         Object {
@@ -170,7 +170,7 @@ exports[`NetworkPill renders a NetworkPill without image 1`] = `
           "color": "#0D111C",
           "display": "flex",
           "fontFamily": "Inter-Regular",
-          "fontSize": 14,
+          "fontSize": 15,
           "lineHeight": 20,
         },
         Object {
@@ -216,7 +216,7 @@ exports[`NetworkPill renders an InlineNetworkPill 1`] = `
           "display": "flex",
           "fontFamily": "Inter-SemiBold",
           "fontSize": 12,
-          "lineHeight": 16,
+          "lineHeight": 17,
         },
         Object {
           "color": "#209853",

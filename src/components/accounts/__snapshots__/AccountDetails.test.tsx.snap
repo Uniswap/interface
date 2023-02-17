@@ -222,7 +222,7 @@ exports[`AccountDetails renders without error 1`] = `
                   "color": "#0D111C",
                   "display": "flex",
                   "fontFamily": "Inter-Medium",
-                  "fontSize": 14,
+                  "fontSize": 15,
                   "lineHeight": 20,
                 },
               ]
@@ -271,7 +271,7 @@ exports[`AccountDetails renders without error 1`] = `
             "color": "#505A78",
             "display": "flex",
             "fontFamily": "Inter-Regular",
-            "fontSize": 14,
+            "fontSize": 15,
             "lineHeight": 20,
           },
         ]
@@ -505,7 +505,7 @@ exports[`AccountDetails renders without error with chevron 1`] = `
                   "color": "#0D111C",
                   "display": "flex",
                   "fontFamily": "Inter-Medium",
-                  "fontSize": 14,
+                  "fontSize": 15,
                   "lineHeight": 20,
                 },
               ]
@@ -554,7 +554,7 @@ exports[`AccountDetails renders without error with chevron 1`] = `
             "color": "#505A78",
             "display": "flex",
             "fontFamily": "Inter-Regular",
-            "fontSize": 14,
+            "fontSize": 15,
             "lineHeight": 20,
           },
         ]

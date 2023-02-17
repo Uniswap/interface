@@ -102,7 +102,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 "color": "#505A78",
                 "display": "flex",
                 "fontFamily": "Inter-Regular",
-                "fontSize": 14,
+                "fontSize": 15,
                 "lineHeight": 20,
                 "textAlign": "center",
               },
@@ -224,7 +224,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       "color": "#0D111C",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
-                      "fontSize": 14,
+                      "fontSize": 15,
                       "lineHeight": 20,
                     },
                   ]
@@ -310,7 +310,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                             "display": "flex",
                             "fontFamily": "Inter-SemiBold",
                             "fontSize": 12,
-                            "lineHeight": 16,
+                            "lineHeight": 17,
                           },
                         ]
                       }
@@ -397,7 +397,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       "color": "#0D111C",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
-                      "fontSize": 14,
+                      "fontSize": 15,
                       "lineHeight": 20,
                     },
                   ]
@@ -483,7 +483,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                             "display": "flex",
                             "fontFamily": "Inter-SemiBold",
                             "fontSize": 12,
-                            "lineHeight": 16,
+                            "lineHeight": 17,
                           },
                         ]
                       }
@@ -587,7 +587,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       "color": "#0D111C",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
-                      "fontSize": 14,
+                      "fontSize": 15,
                       "lineHeight": 20,
                     },
                   ]
@@ -760,7 +760,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                         "color": "#FFFFFF",
                         "display": "flex",
                         "fontFamily": "Inter-SemiBold",
-                        "fontSize": 16,
+                        "fontSize": 17,
                         "lineHeight": 20,
                         "textAlign": "center",
                       },
@@ -881,7 +881,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 "color": "#505A78",
                 "display": "flex",
                 "fontFamily": "Inter-Regular",
-                "fontSize": 14,
+                "fontSize": 15,
                 "lineHeight": 20,
                 "textAlign": "center",
               },
@@ -1003,7 +1003,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       "color": "#0D111C",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
-                      "fontSize": 14,
+                      "fontSize": 15,
                       "lineHeight": 20,
                     },
                   ]
@@ -1079,7 +1079,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                           "fontFamily": "Inter-Regular",
                           "fontSize": 12,
                           "fontWeight": "600",
-                          "lineHeight": 16,
+                          "lineHeight": 17,
                         },
                       ]
                     }
@@ -1164,7 +1164,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       "color": "#0D111C",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
-                      "fontSize": 14,
+                      "fontSize": 15,
                       "lineHeight": 20,
                     },
                   ]
@@ -1250,7 +1250,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                             "display": "flex",
                             "fontFamily": "Inter-SemiBold",
                             "fontSize": 12,
-                            "lineHeight": 16,
+                            "lineHeight": 17,
                           },
                         ]
                       }
@@ -1354,7 +1354,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       "color": "#0D111C",
                       "display": "flex",
                       "fontFamily": "Inter-Medium",
-                      "fontSize": 14,
+                      "fontSize": 15,
                       "lineHeight": 20,
                     },
                   ]
@@ -1527,7 +1527,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                         "color": "#FFFFFF",
                         "display": "flex",
                         "fontFamily": "Inter-SemiBold",
-                        "fontSize": 16,
+                        "fontSize": 17,
                         "lineHeight": 20,
                         "textAlign": "center",
                       },
