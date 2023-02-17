@@ -286,7 +286,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
           onClick={() => listingStatus !== ListingStatus.APPROVED && warningWrappedClick()}
           type="button"
           style={{
-            color: showResolveIssues ? theme.accentTextDarkPrimary : theme.white,
+            color: showResolveIssues ? theme.accentTextLightPrimary : theme.white,
             opacity:
               ![ListingStatus.DEFINED, ListingStatus.FAILED, ListingStatus.CONTINUE].includes(listingStatus) ||
               (disableListButton && !showResolveIssues)
