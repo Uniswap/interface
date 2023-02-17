@@ -19,6 +19,7 @@ interface TxState {
   setState: (state: TxStateType) => void
   txHash: string
   clearTxHash: () => void
+  purchasedWithErc20: boolean
   sendTransaction: (
     signer: JsonRpcSigner,
     selectedAssets: UpdatedGenieAsset[],
@@ -32,6 +33,7 @@ export const useSendTransaction = create<TxState>()(
     (set) => ({
       state: TxStateType.New,
       txHash: '',
+      purchasedWithErc20: false,
       clearTxHash: () => set({ txHash: '' }),
       setState: (newState) => set(() => ({ state: newState })),
       sendTransaction: async (signer, selectedAssets, transactionData, purchasedWithErc20) => {
@@ -51,6 +53,7 @@ export const useSendTransaction = create<TxState>()(
           const res = await signer.sendTransaction(tx)
           set({ state: TxStateType.Confirming })
           set({ txHash: res.hash })
+          set({ purchasedWithErc20 })
           sendAnalyticsEvent(NFTEventName.NFT_BUY_BAG_SIGNED, { transaction_hash: res.hash })
 
           const txReceipt = await res.wait()
@@ -64,7 +67,6 @@ export const useSendTransaction = create<TxState>()(
               nftsPurchased,
               nftsNotPurchased,
               txReceipt,
-              purchasedWithErc20,
             }
           } else {
             set({ state: TxStateType.Failed })
@@ -72,7 +74,6 @@ export const useSendTransaction = create<TxState>()(
               nftsPurchased: [],
               nftsNotPurchased: selectedAssets,
               txReceipt,
-              purchasedWithErc20,
             }
           }
         } catch (e) {
