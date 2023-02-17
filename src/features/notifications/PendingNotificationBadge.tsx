@@ -6,7 +6,6 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
 import { Box } from 'src/components/layout/Box'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
-import { NotificationBadge } from 'src/components/notifications/Badge'
 import { Text } from 'src/components/Text'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { useSelectAddressHasNotifications } from 'src/features/notifications/hooks'
@@ -86,7 +85,14 @@ export function PendingNotificationBadge({
   }
 
   if (hasNotifications) {
-    return <NotificationBadge showIndicator />
+    return (
+      <Box
+        backgroundColor="userThemeMagenta"
+        borderRadius="roundedFull"
+        height={theme.iconSizes.icon8}
+        width={theme.iconSizes.icon8}
+      />
+    )
   }
 
   return null
