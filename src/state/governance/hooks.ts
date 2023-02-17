@@ -454,24 +454,17 @@ export function useDelegatePoolCallback(): (stakeData: StakeData | undefined) =>
     (stakeData: StakeData | undefined) => {
       if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) return undefined
       //if (!stakeData.amount) return
-      const stakeCall = stakingContract?.interface.encodeFunctionData('stake', [stakeData.amount])
-      const fromInfo = { status: '0', poolId: stakeData.poolId }
-      const toInfo = { status: '1', poolId: stakeData.poolId }
-      const moveStakeCall = stakingContract?.interface.encodeFunctionData('moveStake', [
-        fromInfo,
-        toInfo,
-        stakeData.amount,
-      ])
-      console.log(Number(stakeData.amount))
+      //const stakeCall = stakingContract?.interface.encodeFunctionData('stake', [stakeData.amount])
       const delegatee = stakeData.pool
       const poolInstance = stakeData.poolContract ?? undefined
       if (!delegatee) return
       //const args = [delegatee]
-      const args = [[stakeCall], [moveStakeCall]]
+      // Rigoblock executes move stake inside stake method, in just 1 call
+      const args = [stakeData.amount]
       if (!poolInstance) throw new Error('No Pool Contract!')
-      return poolInstance.estimateGas.multicall(...args, {}).then((estimatedGasLimit) => {
+      return poolInstance.estimateGas.stake(...args, {}).then((estimatedGasLimit) => {
         return poolInstance
-          .multicall(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+          .stake(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
               type: TransactionType.DELEGATE,
