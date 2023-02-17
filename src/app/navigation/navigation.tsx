@@ -12,6 +12,7 @@ import {
   SettingsStackParamList,
 } from 'src/app/navigation/types'
 import { Chevron } from 'src/components/icons/Chevron'
+import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { TokenDetailsPreloaders } from 'src/data/preload/TokenDetailsPreloader'
 import { useLowPriorityPreloadedQueries } from 'src/data/preload/useLowPriorityPreloadedQueries'
 import { usePreloadedHomeScreenQueries } from 'src/data/preload/usePreloadedHomeScreenQueries'
@@ -125,6 +126,7 @@ export function ExploreStackNavigator(): JSX.Element {
           notification: 'transparent',
         },
       }}>
+      <HorizontalEdgeGestureTarget />
       <ExploreStack.Navigator
         initialRouteName={Screens.Explore}
         screenOptions={{
@@ -135,7 +137,11 @@ export function ExploreStackNavigator(): JSX.Element {
           <ExploreStack.Screen component={ExternalProfileScreen} name={Screens.ExternalProfile} />
           <ExploreStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
           <ExploreStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
-          <ExploreStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
+          <ExploreStack.Screen
+            component={TokenDetailsScreen}
+            name={Screens.TokenDetails}
+            options={{ fullScreenGestureEnabled: true, gestureEnabled: true }}
+          />
         </ExploreStack.Group>
       </ExploreStack.Navigator>
     </NavigationContainer>

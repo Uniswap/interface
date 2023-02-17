@@ -195,7 +195,7 @@ export function NFTCollectionScreen({
   }
 
   return (
-    <Screen edges={[]}>
+    <Screen edges={EMPTY_ARRAY}>
       <ScrollHeader
         fullScreen
         centerElement={
