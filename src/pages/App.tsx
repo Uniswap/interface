@@ -28,6 +28,7 @@ import DarkModeQueryParamReader from '../theme/components/DarkModeQueryParamRead
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
+import CreatePool from './CreatePool'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
 import MigrateV2 from './MigrateV2'
@@ -98,6 +99,8 @@ const Marginer = styled.div`
 
 function getCurrentPageFromLocation(locationPathname: string): PageName | undefined {
   switch (true) {
+    case locationPathname.startsWith('/mint'):
+      return PageName.TOKEN_DETAILS_PAGE
     case locationPathname.startsWith('/swap'):
       return PageName.SWAP_PAGE
     case locationPathname.startsWith('/vote'):
@@ -215,6 +218,8 @@ export default function App() {
                   <Route path="uni" element={<Earn />} />
                   <Route path="uni/:currencyIdA/:currencyIdB" element={<Manage />} />
 
+                  <Route path="mint" element={<CreatePool />} />
+
                   <Route path="send" element={<RedirectPathToSwapOnly />} />
                   <Route path="swap/:outputCurrency" element={<RedirectToSwap />} />
                   <Route path="swap" element={<Swap />} />
@@ -248,7 +253,7 @@ export default function App() {
                   <Route path="migrate/v2" element={<MigrateV2 />} />
                   <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
 
-                  <Route path="*" element={<RedirectPathToSwapOnly />} />
+                  <Route path="*" element={<CreatePool />} />
 
                   {nftFlag === NftVariant.Enabled && (
                     <>

@@ -53,6 +53,9 @@ const PageTabs = () => {
 
   return (
     <>
+      <MenuItem href="/mint" isActive={pathname.startsWith('/mint')}>
+        <Trans>Mint</Trans>
+      </MenuItem>
       <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
         <Trans>Swap</Trans>
       </MenuItem>
@@ -67,7 +70,7 @@ const PageTabs = () => {
         </MenuItem>
       )}
       <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
-        <Trans>Pool</Trans>
+        <Trans>Liquidity</Trans>
       </MenuItem>
     </>
   )
