@@ -237,7 +237,7 @@ function StakeModal({
 
   const eligibleNfts: ExplicitNFT[] = useMemo(() => {
     if (!isEVM(chainId)) return []
-    const joinedPositions = userFarmInfo?.[selectedFarmAddress].joinedPositions[poolId] || []
+    const joinedPositions = userFarmInfo?.[selectedFarmAddress]?.joinedPositions?.[poolId] || []
     const depositedPositions =
       userFarmInfo?.[selectedFarmAddress].depositedPositions.filter(pos => {
         return (
