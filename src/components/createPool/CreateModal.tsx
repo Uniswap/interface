@@ -1,5 +1,4 @@
 import { isAddress } from '@ethersproject/address'
-import { parseBytes32String } from '@ethersproject/strings'
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { ReactNode, useCallback, useState } from 'react'
@@ -61,10 +60,6 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
 
   const { address: parsedAddress } = useENS(typed)
 
-  const name = parseBytes32String('testpool') ?? undefined
-  const symbol = parseBytes32String('TEST') ?? undefined
-  const baseCurrency = parsedAddress
-
   const createCallback = useCreateCallback()
 
   // monitor call to help UI loading state
@@ -82,10 +77,10 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
     setAttempting(true)
 
     // if callback not returned properly ignore
-    if (!account || !chainId || !createCallback || !baseCurrency || !name || !symbol) return
+    if (!account || !chainId || !createCallback || !parsedAddress) return
 
     // try delegation and store hash
-    const hash = await createCallback(name, symbol, baseCurrency)?.catch((error) => {
+    const hash = await createCallback(typedName, typedSymbol, parsedAddress)?.catch((error) => {
       setAttempting(false)
       console.log(error)
     })

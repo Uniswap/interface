@@ -428,13 +428,13 @@ export function useCreateCallback(): (
   return useCallback(
     (name: string | undefined, symbol: string | undefined, baseCurrency: string | undefined) => {
       //if (!provider || !chainId || !account || name === '' || symbol === '' || !isAddress(baseCurrency ?? ''))
-      if (!provider || !chainId || !account || !name || !symbol || !baseCurrency) return undefined
-      const args = [name, symbol, baseCurrency]
-      console.log(args)
+      if (!provider || !chainId || !account || !name || !symbol || !isAddress(baseCurrency ?? '')) return undefined
       if (!factoryContract) throw new Error('No Factory Contract!')
-      return factoryContract.estimateGas.createPool(...args, {}).then((estimatedGasLimit) => {
+      // TODO: check correctness of asserting is address before returning on no address
+      if (!baseCurrency) return
+      return factoryContract.estimateGas.createPool(name, symbol, baseCurrency, {}).then((estimatedGasLimit) => {
         return factoryContract
-          .createPool(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+          .createPool(name, symbol, baseCurrency, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
               // TODO: define correct transaction type
