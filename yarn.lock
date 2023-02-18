@@ -4936,10 +4936,10 @@
   resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-2.3.0.tgz#e4d6b29633c09872be3b9b760b1a192b96368887"
   integrity sha512-oShunkYEfa45RQAtl2aQfF91gfX4QirLa/fR+FyL5jfl+Ei4AZ1ihtyVjJ1VLOJlObX1p08JjlpA0yxqDwPYHw==
 
-"@uniswap/analytics@1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/analytics/-/analytics-1.2.0.tgz#38452f31ca249903e0bdc8739f42ed437fdc4911"
-  integrity sha512-oO9+mhDJVGm2tqFic6PVQ8v75snbLaGymqs3wauwMXrdy4fMeNSCrKfnaGAKElRUYus3eDLMy/cbXy3Md3iRZA==
+"@uniswap/analytics@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/analytics/-/analytics-1.3.0.tgz#42de08949a7d529ebba647d76801f143792c132a"
+  integrity sha512-cwx3HDxcqehr5uUnnAJ20lak9jA68e+l8ww/s4XxoJzedkdHz0TWXc4+ZZ2iukKEun4oU/d3clrU6u3Cu6xDpg==
   dependencies:
     "@amplitude/analytics-browser" "^1.5.8"
     react "^18.2.0"
@@ -13019,7 +13019,7 @@ js-base64@^3.7.2:
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-3.7.2.tgz#816d11d81a8aff241603d19ce5761e13e41d7745"
   integrity sha512-NnRs6dsyqUXejqk/yv2aiXlAvOs56sLkX6nUdeaNezI5LFFLlsZjOThmwnrcwh5ZZRwZlCMnVAY3CvhIhoVEKQ==
 
-js-sha256@0.9.0:
+js-sha256@0.9.0, js-sha256@^0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/js-sha256/-/js-sha256-0.9.0.tgz#0b89ac166583e91ef9123644bd3c5334ce9d0966"
   integrity sha512-sga3MHh9sgQN2+pJ9VYZ+1LPwXOxuBJBA5nrR5/ofPfuiJBE2hnjsaN8se8JznOmGLN2p49Pe5U/ttafcs/apA==
@@ -17901,6 +17901,22 @@ stats-lite@^2.2.0:
   dependencies:
     isnumber "~1.0.0"
 
+statsig-js@^4.28.1:
+  version "4.28.1"
+  resolved "https://registry.yarnpkg.com/statsig-js/-/statsig-js-4.28.1.tgz#07010f1cd51012087f3b5f7a51fe23767dd876dd"
+  integrity sha512-ZRmkWWsst06JWT9jQncLDLG1KGXnLtaHvMoeC6pLUa4n6sU0It0SpupVTeC+60wH3I/+PHU2y6C5u7bR1MFzMA==
+  dependencies:
+    js-sha256 "^0.9.0"
+    uuid "^8.3.2"
+    whatwg-fetch "^3.6.2"
+
+statsig-react@^1.22.0:
+  version "1.22.0"
+  resolved "https://registry.yarnpkg.com/statsig-react/-/statsig-react-1.22.0.tgz#3f4f1498dc78bba53d80d6eb4c9d507b2a3c16e5"
+  integrity sha512-10lg5dsEmLzS6zuIdKwrvZ9gZJAdncZlJteSmjTZSOpQZyobWBuO7TBqjGzkBv2+UQn0d+Pkoz3L4Hy2uPvhQA==
+  dependencies:
+    statsig-js "^4.28.1"
+
 "statuses@>= 1.4.0 < 2", "statuses@>= 1.5.0 < 2", statuses@~1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.5.0.tgz#161c7dac177659fd9811f43771fa99381478628c"
@@ -19573,7 +19589,7 @@ whatwg-fetch@2.0.4:
   resolved "https://registry.npmjs.org/whatwg-fetch/-/whatwg-fetch-2.0.4.tgz"
   integrity sha512-dcQ1GWpOD/eEQ97k66aiEVpNnapVj90/+R+SXTPYGHpYBBypfKJEQjLrvMZ7YXbKm21gXd4NcuxUTjiv1YtLng==
 
-whatwg-fetch@^3.4.1:
+whatwg-fetch@^3.4.1, whatwg-fetch@^3.6.2:
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.6.2.tgz#dced24f37f2624ed0281725d51d0e2e3fe677f8c"
   integrity sha512-bJlen0FcuU/0EMLrdbJ7zOnW6ITZLrZMIarMUVmdKtsGvZna8vxKYaexICWPfZ8qwf9fzNq+UEIZrnSaApt6RA==
