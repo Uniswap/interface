@@ -83,7 +83,7 @@ export default function CreatePool() {
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
           <ThemedText.DeprecatedMediumHeader style={{ marginTop: '0.5rem' }}>
-            <Trans>Your pools</Trans>
+            <Trans>Pools</Trans>
           </ThemedText.DeprecatedMediumHeader>
           <CreateModal isOpen={showDelegateModal} onDismiss={toggleCreateModal} title={<Trans>Create Pool</Trans>} />
           <ButtonPrimary style={{ width: 'fit-content' }} padding="8px" $borderRadius="8px" onClick={toggleCreateModal}>

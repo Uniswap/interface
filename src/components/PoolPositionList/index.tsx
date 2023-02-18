@@ -56,12 +56,12 @@ export default function PoolPositionList({ positions, filterByOperator, filterBy
     <>
       <DesktopHeader>
         <div>
-          <Trans>Your pools</Trans>
+          <Trans>All pools</Trans>
           {positions && ' (' + positions.length + ')'}
         </div>
       </DesktopHeader>
       <MobileHeader>
-        <Trans>Your pools</Trans>
+        <Trans>All pools</Trans>
       </MobileHeader>
       {positions.map((p) => {
         return <PoolPositionListItem key={p.id.toString()} positionDetails={p} />
