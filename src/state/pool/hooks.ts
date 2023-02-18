@@ -1,12 +1,8 @@
 import { Interface } from '@ethersproject/abi'
 import { isAddress } from '@ethersproject/address'
-//import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { parseBytes32String } from '@ethersproject/strings'
-// eslint-disable-next-line no-restricted-imports
-//import { t } from '@lingui/macro'
-//import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import POOL_EXTENDED_ABI from 'abis/pool-extended.json'
 import RB_POOL_FACTORY_ABI from 'abis/rb-pool-factory.json'
@@ -52,17 +48,6 @@ export interface PoolData {
   baseToken: string
 }
 
-/*
-const FOUR_BYTES_DIR: { [sig: string]: string } = {
-  '0x5ef2c7f0': 'setSubnodeRecord(bytes32,bytes32,address,address,uint64)',
-  '0x10f13a8c': 'setText(bytes32,string,string)',
-  '0xb4720477': 'sendMessageToChild(address,bytes)',
-  '0xa9059cbb': 'transfer(address,uint256)',
-  '0x095ea7b3': 'approve(address,uint256)',
-  '0x7b1837de': 'fund(address,uint256)',
-}
-*/
-
 // TODO: we must send array of pool addresses and query owners in a multicall, otherwise events query make 1 call per created pool
 export function usePoolOperator(poolAddress: string | undefined): string | undefined {
   const contract = usePoolExtendedContract(poolAddress)
@@ -105,7 +90,6 @@ export function useFormattedPoolCreatedLogs(
         // TODO: filter by pool operator, if cannot do efficient hook must query all "Pool Initialized"
         // events, filtered by group, then map those owned, but must add pools that changed ownership
         //.filter((parsed) => usePoolOperator(parsed.address) === operator)
-        //.filter((parsed) => parsed.name === 'mynewPool')
         ?.map((parsed) => {
           // TODO: can simply pass the array from above
           const group = parsed.group
@@ -149,7 +133,6 @@ export function useAllPoolsData(): { data: PoolRegisteredLog[]; loading: boolean
   // early return until events are fetched
   return useMemo(() => {
     const formattedLogs = [...(formattedLogsV1 ?? [])]
-    console.log(formattedLogs)
 
     if (registry && !formattedLogs) {
       return { data: [], loading: true }
@@ -158,100 +141,6 @@ export function useAllPoolsData(): { data: PoolRegisteredLog[]; loading: boolean
     return { data: formattedLogs, loading: false }
   }, [formattedLogsV1, registry])
 }
-
-/*
-function countToIndices(count: number | undefined, skip = 0) {
-  return typeof count === 'number' ? new Array(count - skip).fill(0).map((_, i) => [i + 1 + skip]) : []
-}
-
-// get data for all pools
-export function useAllPoolData(): { data: PoolData[]; loading: boolean } {
-  const { chainId } = useWeb3React()
-  const gov = useGovernanceProxyContract()
-
-  const proposalCount = useProposalCount(gov)
-
-  const govProposalIndexes = useMemo(() => {
-    return countToIndices(proposalCount)
-  }, [proposalCount])
-
-  // TODO: we can query all proposals by calling proposals()
-  //const proposals = useSingleContractMultipleData(gov, 'proposals', govProposalIndexes)
-  const proposals = useSingleContractMultipleData(gov, 'getProposalById', govProposalIndexes)
-
-  // get all proposal states
-  const proposalStates = useSingleContractMultipleData(gov, 'getProposalState', govProposalIndexes)
-
-  // get metadata from past events
-  let govStartBlock
-
-  if (chainId === SupportedChainId.MAINNET) {
-    govStartBlock = 16620590
-  } else if (chainId === SupportedChainId.GOERLI) {
-    govStartBlock = 8485377
-  } else if (chainId === SupportedChainId.ARBITRUM_ONE) {
-    govStartBlock = 60590354
-  } else if (chainId === SupportedChainId.OPTIMISM) {
-    govStartBlock = 74115128
-  } else if (chainId === SupportedChainId.POLYGON) {
-    govStartBlock = 39249858
-  }
-
-  const formattedLogsV1 = useFormattedProposalCreatedLogs(gov, govProposalIndexes, govStartBlock)
-
-  // TODO: we must use staked GRG instead
-  const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
-
-  // early return until events are fetched
-  return useMemo(() => {
-    const proposalsCallData = [...proposals]
-    const proposalStatesCallData = [...proposalStates]
-    // TODO: check what we are doing wrong here
-    const formattedLogs = [...(formattedLogsV1 ?? [])]
-
-    if (
-      !uni ||
-      proposalsCallData.some((p) => p.loading) ||
-      proposalStatesCallData.some((p) => p.loading) ||
-      (gov && !formattedLogs)
-    ) {
-      return { data: [], loading: true }
-    }
-
-    return {
-      data: proposalsCallData.map((proposal, i) => {
-        const startBlock = parseInt(proposal?.result?.startBlock?.toString())
-
-        let description = formattedLogs[i]?.description ?? ''
-        if (startBlock === UNISWAP_GRANTS_START_BLOCK) {
-          description = UNISWAP_GRANTS_PROPOSAL_DESCRIPTION
-        }
-
-        let title = description?.split(/#+\s|\n/g)[1]
-        if (startBlock === POLYGON_START_BLOCK) {
-          title = POLYGON_PROPOSAL_TITLE
-        }
-
-        return {
-          id: proposal?.result?.id.toString(),
-          title: title ?? t`Untitled`,
-          description: description ?? t`No description.`,
-          proposer: proposal?.result?.proposer,
-          status: proposalStatesCallData[i]?.result?.[0] ?? ProposalState.UNDETERMINED,
-          forCount: CurrencyAmount.fromRawAmount(uni, proposal?.result?.forVotes),
-          againstCount: CurrencyAmount.fromRawAmount(uni, proposal?.result?.againstVotes),
-          startBlock,
-          endBlock: parseInt(proposal?.result?.endBlock?.toString()),
-          eta: proposal?.result?.eta,
-          details: formattedLogs[i]?.details,
-          governorIndex: 0,
-        }
-      }),
-      loading: false,
-    }
-  }, [formattedLogsV1, gov, proposalStates, proposals, uni])
-}
-*/
 
 export function useCreateCallback(): (
   name: string | undefined,
