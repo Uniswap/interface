@@ -89,14 +89,15 @@ export default function NameInputPanel({
   const handleInput = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const input = event.target.value
-      const withoutSpaces = input.replace(/\s+/g, '')
+      // @notice name can have spaces
+      const withoutSpaces = label === 'Pool Symbol' ? input.replace(/\s+/g, '') : input
       onChange(withoutSpaces)
     },
     [onChange]
   )
 
   // max name length is 32, max symbol length is 5
-  const error = !label ? Boolean(value.length > 32) : Boolean(value.length > 5)
+  const error = !label ? Boolean(value.length > 31) : Boolean(value.length > 5)
 
   return (
     <InputPanel id={id}>
