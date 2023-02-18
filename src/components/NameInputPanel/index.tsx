@@ -96,8 +96,10 @@ export default function NameInputPanel({
     [onChange]
   )
 
-  // max name length is 32, max symbol length is 5
-  const error = !label ? Boolean(value.length > 31) : Boolean(value.length > 5)
+  // max name length is 31, max symbol length is 5
+  const error = !label
+    ? Boolean(value.length > 31) || Boolean(value.length < 4)
+    : Boolean(value.length > 5) || Boolean(value.length < 3)
 
   return (
     <InputPanel id={id}>
