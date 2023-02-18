@@ -15,3 +15,12 @@ export interface PositionDetails {
   tokensOwed0: BigNumber
   tokensOwed1: BigNumber
 }
+
+// TODO: this is same as Registered, we can change it to contain all pool data
+export interface PoolPositionDetails {
+  group: string
+  pool: string
+  name: string
+  symbol: string
+  id: string
+}

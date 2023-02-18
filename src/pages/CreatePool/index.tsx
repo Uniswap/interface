@@ -1,6 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
-import JSBI from 'jsbi'
 import styled from 'styled-components/macro'
 
 import { ButtonPrimary } from '../../components/Button'
@@ -10,11 +8,11 @@ import CreateModal from '../../components/createPool/CreateModal'
 //import PoolCard from '../../components/earn/PoolCard'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
 import Loader from '../../components/Loader'
+import PoolPositionList from '../../components/PoolPositionList'
 import { RowBetween } from '../../components/Row'
-import { BIG_INT_ZERO } from '../../constants/misc'
 import { useModalIsOpen, useToggleCreateModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
-import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
+import { useAllPoolsData } from '../../state/pool/hooks'
 import { ThemedText } from '../../theme'
 
 const PageWrapper = styled(AutoColumn)`
@@ -52,21 +50,10 @@ flex-direction: column;
 `
 
 export default function CreatePool() {
-  const { chainId } = useWeb3React()
-
-  // staking info for connected account
-  const stakingInfos = useStakingInfo()
   const showDelegateModal = useModalIsOpen(ApplicationModal.CREATE)
   const toggleCreateModal = useToggleCreateModal()
 
-  /**
-   * only show staking cards with balance
-   * @todo only account for this if rewards are inactive
-   */
-  const stakingInfosWithBalance = stakingInfos?.filter((s) => JSBI.greaterThan(s.stakedAmount.quotient, BIG_INT_ZERO))
-
-  // toggle copy if rewards are inactive
-  const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
+  const { data: allPools, loading: loadingPools } = useAllPoolsData()
 
   return (
     <PageWrapper gap="lg" justify="center">
@@ -105,13 +92,11 @@ export default function CreatePool() {
         </DataRow>
 
         <PoolSection>
-          {stakingRewardsExist && stakingInfos?.length === 0 ? (
+          {loadingPools && allPools?.length === 0 ? (
             <Loader style={{ margin: 'auto' }} />
-          ) : !stakingRewardsExist ? (
-            <OutlineCard>
-              <Trans>No pool found</Trans>
-            </OutlineCard>
-          ) : stakingInfos?.length !== 0 && stakingInfosWithBalance.length === 0 ? (
+          ) : !loadingPools && allPools?.length > 0 ? (
+            <PoolPositionList positions={allPools} />
+          ) : allPools?.length === 0 ? (
             <OutlineCard>
               <Trans>No pool found</Trans>
             </OutlineCard>
