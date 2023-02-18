@@ -93,13 +93,11 @@ export default function NameInputPanel({
       const withoutSpaces = label === 'Pool Symbol' ? input.replace(/\s+/g, '') : input
       onChange(withoutSpaces)
     },
-    [onChange]
+    [label, onChange]
   )
 
   // max name length is 31, max symbol length is 5
-  const error = !label
-    ? Boolean(value.length > 31) || Boolean(value.length < 4)
-    : Boolean(value.length > 5) || Boolean(value.length < 3)
+  const error = !label ? Boolean(value.length > 31) : Boolean(value.length > 5)
 
   return (
     <InputPanel id={id}>
