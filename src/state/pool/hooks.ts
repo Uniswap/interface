@@ -112,15 +112,15 @@ export function useAllPoolsData(): { data: PoolRegisteredLog[]; loading: boolean
   let registryStartBlock
 
   if (chainId === SupportedChainId.MAINNET) {
-    registryStartBlock = 16620590
+    registryStartBlock = 15834693
   } else if (chainId === SupportedChainId.GOERLI) {
     registryStartBlock = 7807806
   } else if (chainId === SupportedChainId.ARBITRUM_ONE) {
-    registryStartBlock = 60590354
+    registryStartBlock = 35439804
   } else if (chainId === SupportedChainId.OPTIMISM) {
-    registryStartBlock = 74115128
+    registryStartBlock = 34629059
   } else if (chainId === SupportedChainId.POLYGON) {
-    registryStartBlock = 39249858
+    registryStartBlock = 35228892
   }
 
   // we want to be able to filter by account
