@@ -40,14 +40,6 @@ const LinkRow = styled(Link)`
   `};
 `
 
-const BadgeText = styled.div`
-  font-weight: 500;
-  font-size: 14px;
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    font-size: 12px;
-  `};
-`
-
 const PrimaryPositionIdData = styled.div`
   display: flex;
   flex-direction: row;
@@ -71,7 +63,7 @@ interface PoolPositionListItemProps {
 }
 
 export default function PoolPositionListItem({ positionDetails }: PoolPositionListItemProps) {
-  const { pool, name, symbol } = positionDetails
+  const { name, symbol } = positionDetails
 
   // TODO: get some pool data like, all data with 1 call. Only problem this call will be made for each pool
   // therefore must first restrict pools by owner
