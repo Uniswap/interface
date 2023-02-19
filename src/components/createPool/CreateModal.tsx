@@ -110,7 +110,11 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
               placeholder="max 5 characters"
             />
             {/* TODO: add conditional field if base token not base currency, or CurrencyInputPanel */}
-            <AddressInputPanel value={typed} onChange={handleRecipientType} label="Base Currency (any token)" />
+            <AddressInputPanel
+              value={typed}
+              onChange={handleRecipientType}
+              label="Base Token (null address for currency)"
+            />
             <ButtonPrimary
               disabled={
                 typedName === '' ||

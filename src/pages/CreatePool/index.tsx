@@ -70,7 +70,7 @@ export default function CreatePool() {
               </RowBetween>
               <RowBetween>
                 <ThemedText.DeprecatedWhite fontSize={14}>
-                  <Trans>Unleash the force of smart pools for your tokens. No more allowances hassle!</Trans>
+                  <Trans>Unleash the force of smart pools for your portfolio. No more token allowances hassle!</Trans>
                 </ThemedText.DeprecatedWhite>
               </RowBetween>{' '}
             </AutoColumn>

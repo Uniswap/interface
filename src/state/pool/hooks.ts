@@ -11,14 +11,23 @@ import { RB_FACTORY_ADDRESSES, RB_REGISTRY_ADDRESSES } from 'constants/addresses
 import { useContract } from 'hooks/useContract'
 import { useSingleCallResult /*, useSingleContractMultipleData*/ } from 'lib/hooks/multicall'
 import { useCallback, useMemo } from 'react'
+import { useAppSelector } from 'state/hooks'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 import { SupportedChainId } from '../../constants/chains'
+import { AppState } from '../index'
 import { useLogs } from '../logs/hooks'
 import { useTransactionAdder } from '../transactions/hooks'
 import { TransactionType } from '../transactions/types'
 
 const RegistryInterface = new Interface(RB_REGISTRY_ABI)
+
+// TODO: create pool state in ../index and create pool reducer if we want to store pool data in state
+// actually we do want to store them in state as we want to query pool address and name from state
+//  check variable renaming to avoid confusion with liquidity pools
+export function usePoolState(): AppState['swap'] {
+  return useAppSelector((state) => state.swap)
+}
 
 export function useRegistryContract(): Contract | null {
   return useContract(RB_REGISTRY_ADDRESSES, RB_REGISTRY_ABI, true)

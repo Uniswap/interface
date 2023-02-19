@@ -73,7 +73,7 @@ export default function PoolPositionListItem({ positionDetails }: PoolPositionLi
   //  return new PoolPosition({ name, symbol, pool, id })
   //}, [name, symbol, pool, id])
 
-  const positionSummaryLink = '/create/' + positionDetails.pool
+  const positionSummaryLink = '/smart-pool/' + positionDetails.pool
 
   return (
     <LinkRow to={positionSummaryLink}>
