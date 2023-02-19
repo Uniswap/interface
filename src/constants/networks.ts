@@ -140,7 +140,7 @@ export const CHAINS_SUPPORT_NEW_POOL_FARM_API: readonly ChainId[] = [
   ChainId.MAINNET,
   // ChainId.ETHW,
   // ChainId.MUMBAI,
-  // ChainId.MATIC,
+  ChainId.MATIC,
   // ChainId.BSCTESTNET,
   ChainId.BSCMAINNET,
   // ChainId.AVAXTESTNET,
