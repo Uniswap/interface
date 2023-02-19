@@ -82,15 +82,6 @@ const banners: Banner[] = [
       'On Ethereum POW, you can withdraw liquidity from pools and make swaps. In the long run, KyberSwap will only maintain support for Ethereum (PoS) as the canonical chain ',
     ],
   },
-  {
-    key: 'matic-issues',
-    start: 'Sun, 18 Feb 2023 00:00:00 GMT',
-    end: 'Sun, 20 Feb 2023 00:00:00 GMT',
-    onlyChains: [ChainId.MATIC],
-    text: [
-      'Important Announcement: Polygon Network service is temporarily unavailable. All your funds are safe. Normal service will resume shortly!',
-    ],
-  },
 ]
 
 function TopBanner() {
