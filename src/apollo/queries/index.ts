@@ -7,14 +7,14 @@ export const ETH_PRICE = (block?: number) => {
   const queryString = block
     ? `
     query bundles {
-      bundles(where: { id: ${BUNDLE_ID} } block: {number: ${block}}) {
+      bundles(where: { id: ${BUNDLE_ID} }, block: {number: ${block}}, subgraphError: allow) {
         id
         ethPrice
       }
     }
   `
     : ` query bundles {
-      bundles(where: { id: ${BUNDLE_ID} }) {
+      bundles(where: { id: ${BUNDLE_ID} }, subgraphError: allow) {
         id
         ethPrice
       }
@@ -27,14 +27,14 @@ export const PROMM_ETH_PRICE = (block?: number) => {
   const queryString = block
     ? `
     query bundles {
-      bundles(where: { id: ${BUNDLE_ID} } block: {number: ${block}}) {
+      bundles(where: { id: ${BUNDLE_ID} }, block: {number: ${block}}, subgraphError: allow) {
         id
         ethPriceUSD
       }
     }
   `
     : ` query bundles {
-      bundles(where: { id: ${BUNDLE_ID} }) {
+      bundles(where: { id: ${BUNDLE_ID} }, subgraphError: allow) {
         id
         ethPriceUSD
       }
@@ -46,7 +46,7 @@ export const PROMM_ETH_PRICE = (block?: number) => {
 export const TOKEN_DERIVED_ETH = (tokenAddress: string) => {
   const queryString = `
     query tokens {
-      tokens(where: { id: "${tokenAddress.toLowerCase()}"} ) {
+      tokens(where: { id: "${tokenAddress.toLowerCase()}"}, subgraphError: allow) {
         derivedETH
       }
     }
@@ -57,7 +57,7 @@ export const TOKEN_DERIVED_ETH = (tokenAddress: string) => {
 
 export const GLOBAL_DATA_ELASTIC = () => {
   const queryString = `query factories {
-    factories {
+    factories(subgraphError: allow) {
         id
         poolCount
         txCount
@@ -75,7 +75,7 @@ export const GLOBAL_DATA_ELASTIC = () => {
 
 export const GLOBAL_DATA = (block?: number) => {
   const queryString = `query dmmFactories {
-    dmmFactories${block ? `(block: { number: ${block}})` : ``} {
+    dmmFactories${block ? `(block: { number: ${block}}, subgraphError: allow)` : `(subgraphError: allow)`} {
         id
         totalVolumeUSD
         totalFeeUSD
@@ -100,6 +100,7 @@ export const GET_BLOCK = gql`
       orderBy: timestamp
       orderDirection: asc
       where: { timestamp_gt: $timestampFrom, timestamp_lt: $timestampTo }
+      subgraphError: allow
     ) {
       id
       number
@@ -165,7 +166,7 @@ const PoolFields = (withFee?: boolean) => `
 
 export const USER_POSITIONS = gql`
   query liquidityPositions($user: Bytes!) {
-    liquidityPositions(where: { user: $user }) {
+    liquidityPositions(where: { user: $user }, subgraphError: allow) {
       pair {
         id
         reserve0
@@ -208,7 +209,7 @@ export const USER_POSITIONS = gql`
 export const POOL_DATA = (poolAddress: string, block: number, withFee?: boolean) => {
   const queryString = `
     query pools {
-      pools(${block ? `block: {number: ${block}}` : ``} where: { id: "${poolAddress}"} ) {
+      pools(${block ? `block: {number: ${block}}` : ``} where: { id: "${poolAddress}"}, subgraphError: allow) {
         ${PoolFields(withFee)}
       }
     }
@@ -221,7 +222,9 @@ export const HOURLY_POOL_RATES = (blocks: Block[], poolAddress: string): import(
   let queryString = 'query poolPriceByBlocks {'
   queryString += blocks.map(
     block => `
-      t${block.timestamp}: pool(id:"${poolAddress.toLowerCase()}", block: { number: ${block.number} }) {
+      t${block.timestamp}: pool(id:"${poolAddress.toLowerCase()}", block: { number: ${
+      block.number
+    } }, subgraphError: allow) {
         token0Price
         token1Price
       }
@@ -234,7 +237,7 @@ export const HOURLY_POOL_RATES = (blocks: Block[], poolAddress: string): import(
 
 export const POOL_COUNT = gql`
   {
-    dmmFactories {
+    dmmFactories(subgraphError: allow) {
       poolCount
     }
   }
@@ -249,7 +252,9 @@ export const POOLS_BULK_FROM_LIST = (pools: string[], withFee?: boolean) => {
 
   const queryString = `
   query pools {
-    pools(first: ${pools.length}, where: {id_in: ${poolsString}}, orderBy: reserveUSD, orderDirection: desc) {
+    pools(first: ${
+      pools.length
+    }, where: {id_in: ${poolsString}}, orderBy: reserveUSD, orderDirection: desc, subgraphError: allow) {
         ${PoolFields(withFee)}
     }
   }
@@ -263,7 +268,7 @@ export const POOLS_BULK_FROM_LIST = (pools: string[], withFee?: boolean) => {
 export const POOLS_BULK_WITH_PAGINATION = (first: number, skip: number, withFee?: boolean) => {
   const queryString = `
   query pools {
-    pools(first: ${first}, skip: ${skip}) {
+    pools(first: ${first}, skip: ${skip}, subgraphError: allow) {
       ${PoolFields(withFee)}
     }
   }
@@ -285,7 +290,7 @@ export const POOLS_HISTORICAL_BULK_FROM_LIST = (block: number, pools: string[], 
   query pools {
     pools(first: ${
       pools.length
-    }, where: {id_in: ${poolsString}}, block: {number: ${block}}, orderBy: reserveUSD, orderDirection: desc) {
+    }, where: {id_in: ${poolsString}}, block: {number: ${block}}, orderBy: reserveUSD, orderDirection: desc, subgraphError: allow) {
       id
       reserveUSD
       trackedReserveETH
@@ -309,7 +314,7 @@ export const POOLS_HISTORICAL_BULK_WITH_PAGINATION = (
 ) => {
   const queryString = `
   query pools {
-    pools(first: ${first}, skip: ${skip}, block: {number: ${block}}) {
+    pools(first: ${first}, skip: ${skip}, block: {number: ${block}}, subgraphError: allow) {
       id
       reserveUSD
       trackedReserveETH
