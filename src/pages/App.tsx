@@ -29,6 +29,7 @@ import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import CreatePool from './CreatePool'
+import { PoolPositionPage } from './CreatePool/PoolPositionPage'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
 import MigrateV2 from './MigrateV2'
@@ -219,6 +220,7 @@ export default function App() {
                   <Route path="uni/:currencyIdA/:currencyIdB" element={<Manage />} />
 
                   <Route path="mint" element={<CreatePool />} />
+                  <Route path="smart-pool/:poolAddress" element={<PoolPositionPage />} />
 
                   <Route path="send" element={<RedirectPathToSwapOnly />} />
                   <Route path="swap/:outputCurrency" element={<RedirectToSwap />} />

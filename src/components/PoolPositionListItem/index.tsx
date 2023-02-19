@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
-import Badge from 'components/Badge'
+//import { Trans } from '@lingui/macro'
+//import Badge from 'components/Badge'
 //import RangeBadge from 'components/Badge/RangeBadge'
 //import Loader from 'components/Loader'
 import { RowBetween } from 'components/Row'
@@ -40,14 +40,6 @@ const LinkRow = styled(Link)`
   `};
 `
 
-const BadgeText = styled.div`
-  font-weight: 500;
-  font-size: 14px;
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    font-size: 12px;
-  `};
-`
-
 const PrimaryPositionIdData = styled.div`
   display: flex;
   flex-direction: row;
@@ -71,7 +63,7 @@ interface PoolPositionListItemProps {
 }
 
 export default function PoolPositionListItem({ positionDetails }: PoolPositionListItemProps) {
-  const { pool, name, symbol } = positionDetails
+  const { name, symbol } = positionDetails
 
   // TODO: get some pool data like, all data with 1 call. Only problem this call will be made for each pool
   // therefore must first restrict pools by owner
@@ -81,22 +73,15 @@ export default function PoolPositionListItem({ positionDetails }: PoolPositionLi
   //  return new PoolPosition({ name, symbol, pool, id })
   //}, [name, symbol, pool, id])
 
-  const positionSummaryLink = '/create/' + positionDetails.pool
+  const positionSummaryLink = '/smart-pool/' + positionDetails.pool
 
   return (
     <LinkRow to={positionSummaryLink}>
       <RowBetween>
         <PrimaryPositionIdData>
-          <DataText>&nbsp;{name}</DataText>
-          &nbsp;
-          <DataText>&nbsp;{symbol}&nbsp;</DataText>
-          &nbsp;
-          <Badge>
-            <BadgeText>
-              <Trans>{pool}</Trans>
-            </BadgeText>
-          </Badge>
+          <DataText>&nbsp;{name}&nbsp;</DataText>
         </PrimaryPositionIdData>
+        <DataText>&nbsp;{symbol}&nbsp;</DataText>
       </RowBetween>
     </LinkRow>
   )

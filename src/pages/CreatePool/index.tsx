@@ -70,7 +70,7 @@ export default function CreatePool() {
               </RowBetween>
               <RowBetween>
                 <ThemedText.DeprecatedWhite fontSize={14}>
-                  <Trans>Operate with confidence on DeFi with less transactions and network impact.</Trans>
+                  <Trans>Unleash the force of smart pools for your portfolio. No more token allowances hassle!</Trans>
                 </ThemedText.DeprecatedWhite>
               </RowBetween>{' '}
             </AutoColumn>
