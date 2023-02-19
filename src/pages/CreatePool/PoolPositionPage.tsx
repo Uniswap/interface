@@ -8,7 +8,7 @@ import { Trans } from '@lingui/macro'
 //import { useWeb3React } from '@web3-react/core'
 //import { sendEvent } from 'components/analytics'
 //import Badge from 'components/Badge'
-import { /*ButtonConfirmed,*/ ButtonGray, ButtonPrimary } from 'components/Button'
+import { /*ButtonConfirmed, ButtonGray,*/ ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 //import Loader from 'components/Loader'
@@ -196,35 +196,38 @@ export function PoolPositionPage() {
             </Link>
             <ResponsiveRow>
               <RowFixed>
+                {/* &nbsp;{poolName}&nbsp; */}
                 <ThemedText.DeprecatedLabel fontSize="24px" mr="10px">
-                  &nbsp;should add name here&nbsp;
+                  &nbsp;Pool Name&nbsp;
                 </ThemedText.DeprecatedLabel>
               </RowFixed>
+              {poolAddressFromUrl && (
+                <ExternalLink href={getZapperLink(poolAddressFromUrl)}>
+                  <RowFixed>
+                    <ThemedText.DeprecatedMain>Pool Data ↗</ThemedText.DeprecatedMain>
+                  </RowFixed>
+                </ExternalLink>
+              )}
               <RowFixed>
-                <ButtonGray
+                <ResponsiveButtonPrimary
                   as={Link}
-                  to={`/increase/${'test'}`}
+                  to={`/smart-pool/${poolAddressFromUrl}`}
                   width="fit-content"
                   padding="6px 8px"
                   $borderRadius="12px"
                   style={{ marginRight: '8px' }}
                 >
-                  <Trans>Buy Pool</Trans>
-                </ButtonGray>
+                  <Trans>Buy</Trans>
+                </ResponsiveButtonPrimary>
                 <ResponsiveButtonPrimary
                   as={Link}
-                  to={`/remove/${'test'}`}
+                  to={`/smart-pool/${poolAddressFromUrl}`}
                   width="fit-content"
                   padding="6px 8px"
                   $borderRadius="12px"
                 >
-                  <Trans>Remove Liquidity</Trans>
+                  <Trans>Sell</Trans>
                 </ResponsiveButtonPrimary>
-                {poolAddressFromUrl && (
-                  <ExternalLink href={getZapperLink(poolAddressFromUrl)}>
-                    <Trans>Pool Data</Trans>
-                  </ExternalLink>
-                )}
               </RowFixed>
             </ResponsiveRow>
           </AutoColumn>
@@ -250,7 +253,7 @@ export function PoolPositionPage() {
                     <AutoColumn gap="md">
                       <RowBetween>
                         <RowFixed>
-                          <ThemedText.DeprecatedMain>what goes here?</ThemedText.DeprecatedMain>
+                          <ThemedText.DeprecatedMain>operate your pool</ThemedText.DeprecatedMain>
                         </RowFixed>
                       </RowBetween>
                     </AutoColumn>
