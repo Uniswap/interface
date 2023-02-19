@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
-import Badge from 'components/Badge'
+//import { Trans } from '@lingui/macro'
+//import Badge from 'components/Badge'
 //import RangeBadge from 'components/Badge/RangeBadge'
 //import Loader from 'components/Loader'
 import { RowBetween } from 'components/Row'
@@ -87,17 +87,9 @@ export default function PoolPositionListItem({ positionDetails }: PoolPositionLi
     <LinkRow to={positionSummaryLink}>
       <RowBetween>
         <PrimaryPositionIdData>
-          <DataText>&nbsp;{name}</DataText>
-          &nbsp;
-          <DataText>&nbsp;{symbol}</DataText>
+          <DataText>&nbsp;{name}&nbsp;</DataText>
         </PrimaryPositionIdData>
-      </RowBetween>
-      <RowBetween>
-        <Badge>
-          <BadgeText>
-            <Trans>{pool}</Trans>
-          </BadgeText>
-        </Badge>
+        <DataText>&nbsp;{symbol}&nbsp;</DataText>
       </RowBetween>
     </LinkRow>
   )

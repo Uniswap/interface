@@ -116,7 +116,7 @@ export default function NameInputPanel({
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
-              placeholder={placeholder ?? t`lowercase, max 32 characters`}
+              placeholder={placeholder ?? t`max 32 characters`}
               error={error}
               pattern="^(0x[a-fA-F0-9]{40})$"
               onChange={handleInput}

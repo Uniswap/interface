@@ -107,7 +107,7 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
               value={typedSymbol}
               onChange={onSymbolInput}
               label="Pool Symbol"
-              placeholder="uppercase, max 5 characters"
+              placeholder="max 5 characters"
             />
             {/* TODO: add conditional field if base token not base currency, or CurrencyInputPanel */}
             <AddressInputPanel value={typed} onChange={handleRecipientType} label="Base Currency (any token)" />
