@@ -136,7 +136,11 @@ export function ExploreStackNavigator(): JSX.Element {
         <ExploreStack.Group>
           <ExploreStack.Screen component={ExternalProfileScreen} name={Screens.ExternalProfile} />
           <ExploreStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
-          <ExploreStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
+          <ExploreStack.Screen
+            component={NFTItemScreen}
+            name={Screens.NFTItem}
+            options={{ fullScreenGestureEnabled: true, gestureEnabled: true }}
+          />
           <ExploreStack.Screen
             component={TokenDetailsScreen}
             name={Screens.TokenDetails}
