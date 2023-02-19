@@ -87,16 +87,16 @@ export default function PoolPositionListItem({ positionDetails }: PoolPositionLi
     <LinkRow to={positionSummaryLink}>
       <RowBetween>
         <PrimaryPositionIdData>
-          <DataText>&nbsp;{name}</DataText>
-          &nbsp;
-          <DataText>&nbsp;{symbol}&nbsp;</DataText>
-          &nbsp;
-          <Badge>
-            <BadgeText>
-              <Trans>{pool}</Trans>
-            </BadgeText>
-          </Badge>
+          <DataText>{symbol}</DataText>
         </PrimaryPositionIdData>
+        <PrimaryPositionIdData>
+          <DataText>{name}</DataText>
+        </PrimaryPositionIdData>
+        <Badge>
+          <BadgeText>
+            <Trans>{pool}</Trans>
+          </BadgeText>
+        </Badge>
       </RowBetween>
     </LinkRow>
   )
