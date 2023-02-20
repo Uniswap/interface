@@ -459,7 +459,7 @@ export default function SwapForm() {
                 <>
                   <RowBetween>
                     <ButtonApprove
-                      onClick={approveCallback}
+                      approveCallback={approveCallback}
                       disabled={disableBtnApproved}
                       tooltipMsg={t`You would need to first allow Multichain smart contract to use your ${tokenInfoIn?.symbol}. This has to be done only once for each token.`}
                       tokenSymbol={tokenInfoIn?.symbol}

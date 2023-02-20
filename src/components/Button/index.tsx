@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro'
 import { darken, rgba } from 'polished'
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useRef } from 'react'
 import { ChevronDown, Info } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import { ButtonProps, Button as RebassButton } from 'rebass/styled-components'
@@ -306,23 +306,36 @@ export const ButtonApprove = ({
   tooltipMsg,
   tokenSymbol,
   approval,
-  onClick,
+  approveCallback,
   disabled,
   forceApprove = false,
 }: {
   tooltipMsg: string
   tokenSymbol: string | undefined
   approval: ApprovalState
-  onClick: () => void
+  approveCallback: () => Promise<void>
   disabled: boolean
   forceApprove?: boolean
 }) => {
+  const loading = useRef(false)
+  const approveWrap = () => {
+    if (loading.current) return
+    loading.current = true
+    approveCallback()
+      .catch(() => {
+        // do nothing
+      })
+      .finally(() => {
+        loading.current = false
+      })
+  }
+
   return (
     <ButtonWithInfoHelper
       loading={approval === ApprovalState.PENDING}
       tooltipMsg={tooltipMsg}
       disabled={disabled}
-      onClick={onClick}
+      onClick={approveWrap}
       confirmed={approval === ApprovalState.APPROVED && !forceApprove}
       text={approval === ApprovalState.PENDING ? t`Approving` : t`Approve ${tokenSymbol}`}
     />

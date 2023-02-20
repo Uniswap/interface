@@ -16,5 +16,9 @@ export const getTransactionStatus = (transaction: TransactionDetails) => {
   const pending = !transaction?.receipt
   const success =
     !pending && transaction && (transaction.receipt?.status === 1 || typeof transaction.receipt?.status === 'undefined')
-  return { pending, success }
+  return {
+    pending,
+    success,
+    error: !pending && transaction?.receipt?.status !== 1,
+  }
 }

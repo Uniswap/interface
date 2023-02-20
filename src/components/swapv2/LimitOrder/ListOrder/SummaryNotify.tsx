@@ -1,10 +1,11 @@
+import { Currency } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { ReactNode } from 'react'
 import { Text } from 'rebass'
 
 import useTheme from 'hooks/useTheme'
 
-import { calcPercentFilledOrder, formatAmountOrder, formatRateOrder } from '../helpers'
+import { calcPercentFilledOrder, calcRate, formatAmountOrder, formatRateOrder } from '../helpers'
 import { LimitOrder, LimitOrderStatus } from '../type'
 
 export default function SummaryNotify({
@@ -140,6 +141,38 @@ export default function SummaryNotify({
   return (
     <Text color={theme.text} lineHeight="18px">
       {message || msg}
+    </Text>
+  )
+}
+
+export const SummaryNotifyOrderPlaced = ({
+  currencyIn,
+  currencyOut,
+  inputAmount,
+  outputAmount,
+}: {
+  currencyIn: Currency
+  currencyOut: Currency
+  inputAmount: string
+  outputAmount: string
+}) => {
+  const theme = useTheme()
+  return (
+    <Text color={theme.text} lineHeight="18px">
+      <Trans>
+        You have successfully placed an order to pay{' '}
+        <Text as="span" fontWeight={500}>
+          {formatAmountOrder(inputAmount)} {currencyIn.symbol}
+        </Text>{' '}
+        and receive{' '}
+        <Text as="span" fontWeight={500}>
+          {formatAmountOrder(outputAmount)} {currencyOut.symbol}{' '}
+        </Text>
+        <Text as="span" color={theme.subText}>
+          at {currencyIn.symbol} price of {calcRate(inputAmount, outputAmount, currencyOut.decimals)}{' '}
+          {currencyOut.symbol}.
+        </Text>
+      </Trans>
     </Text>
   )
 }

@@ -31,6 +31,7 @@ import {
   subscribeNotificationOrderFilled,
 } from 'utils/firebase'
 import { sendEVMTransaction } from 'utils/sendTransaction'
+import { getTransactionStatus } from 'utils/transaction'
 
 import EditOrderModal from '../EditOrderModal'
 import CancelOrderModal from '../Modals/CancelOrderModal'
@@ -201,7 +202,7 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
 
   const isTransactionFailed = (txHash: string) => {
     const transactionInfo = findTx(transactions, txHash)
-    return transactionInfo?.receipt !== undefined && transactionInfo?.receipt?.status !== 1
+    return transactionInfo ? getTransactionStatus(transactionInfo).error : false
   }
 
   const isTxFailed = useRef(isTransactionFailed)
