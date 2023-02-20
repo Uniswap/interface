@@ -27,12 +27,12 @@ const ProLiveChartWrapper = styled.div<{ fullscreen: boolean }>`
     `
     background-color: rgb(0,0,0,0.5);
     position: fixed;
-    top: -15px;
+    top: 0;
     left: 0;
     z-index: ${Z_INDEXS.LIVE_CHART};
     padding-top: 82px;
-    height: 100%!important;
-    width: 100%!important;
+    height: 100% !important;
+    width: 100% !important;
     border-radius: 0;
     margin:0;
   `}
@@ -143,7 +143,6 @@ function ProLiveChart({
         'drawing_templates',
       ],
       enabled_features: [
-        'study_templates',
         'create_volume_indicator_by_default',
         'use_localstorage_for_settings',
         'save_chart_properties_to_local_storage',
@@ -234,7 +233,7 @@ function ProLiveChart({
       ) : (
         <div
           ref={newRef => setRef(newRef)}
-          style={{ height: '100%', width: '100%', display: loading ? 'none' : 'block' }}
+          style={{ height: '100%', width: '100%', visibility: loading ? 'hidden' : 'visible' }}
           onClick={(e: any) => {
             e.stopPropagation()
           }}

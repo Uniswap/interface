@@ -101,9 +101,9 @@ export const useDatafeed = (poolDetail: PoolResponse, tokenId: string) => {
           data?.data?.data.map((item: any) => ({
             time: new Date(item.dt).getTime(),
             open: item.o,
-            high: item.h,
+            high: Math.min(item.h, item.c * 1.1),
             close: item.c,
-            low: item.l,
+            low: Math.max(item.l, item.c / 1.1),
             volume: item.v,
           })) || [],
           {
