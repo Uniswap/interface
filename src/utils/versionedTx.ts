@@ -1,4 +1,6 @@
 import {
+  AddressLookupTableAccount,
+  AddressLookupTableProgram,
   Commitment,
   Message,
   PublicKey,
@@ -11,7 +13,47 @@ import {
 import connection from 'state/connection/connection'
 import { filterTruthy } from 'utils'
 
-const lookupTablesByPool = import(/* webpackChunkName: 'lookupTablesByPool' */ 'constants/lookupTablesByPool')
+import { wait } from './retry'
+
+const lookupTablesByPoolPromise = (async () => {
+  let fetchCount = 0
+  const authority = new PublicKey('9YqphVt2hdE7RaL3YBCCP49thJbSovwgZQhyHjvgi1L3') // Kyber's lookuptable account owner
+  const fetch = async (): Promise<{ [tableAddress: string]: PublicKey }> => {
+    try {
+      fetchCount++
+      const result: { [tableAddress: string]: PublicKey } = {}
+      const tableAccs = await connection.getProgramAccounts(AddressLookupTableProgram.programId, {
+        commitment: 'confirmed',
+        filters: [
+          {
+            memcmp: {
+              offset:
+                4 + // Variant
+                8 + // DeactivationSlot
+                8 + // LastExtendedSlot
+                1 + // LastExtendedSlotStartIndex
+                1, // HasAuthority
+              bytes: authority.toBase58(),
+            },
+          },
+        ],
+      })
+      tableAccs.forEach(acc => {
+        AddressLookupTableAccount.deserialize(acc.account.data).addresses.forEach(
+          i => (result[i.toBase58()] = acc.pubkey),
+        )
+      })
+      return result
+    } catch {
+      if (fetchCount < 10) {
+        await wait(1000)
+        return fetch()
+      }
+      return {} as { [tableAddress: string]: PublicKey }
+    }
+  }
+  return fetch()
+})()
 /**
  * @param {Connection} connection Web3.js connection
  * @param {Commitment} commitment The level of commitment desired when querying state
@@ -28,12 +70,12 @@ export async function convertToVersionedTx(
   preTxs?: TransactionInstruction[] | null | undefined,
   postTxs?: TransactionInstruction[] | null | undefined,
 ): Promise<VersionedTransaction> {
-  const LOOKUP_TABLES_BY_POOL = (await lookupTablesByPool).LOOKUP_TABLES_BY_POOL
+  const lookupTablesByPool = await lookupTablesByPoolPromise
   // get tables that can be used in this message
   const lookupTableAddrs: Array<PublicKey> = []
   for (const pubkey of message.accountKeys) {
-    if (LOOKUP_TABLES_BY_POOL[pubkey.toBase58()]) {
-      lookupTableAddrs.push(new PublicKey(LOOKUP_TABLES_BY_POOL[pubkey.toBase58()]))
+    if (lookupTablesByPool[pubkey.toBase58()]) {
+      lookupTableAddrs.push(lookupTablesByPool[pubkey.toBase58()])
     }
   }
 
