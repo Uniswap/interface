@@ -3,7 +3,7 @@
 import { Trans } from '@lingui/macro'
 //import { Trace } from '@uniswap/analytics'
 //import { PageName } from '@uniswap/analytics-events'
-//import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount /*, Fraction, Percent, Price, Token*/ } from '@uniswap/sdk-core'
 //import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 //import { sendEvent } from 'components/analytics'
@@ -18,8 +18,10 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 //import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-//import { useToken } from 'hooks/Tokens'
+import { useToken } from 'hooks/Tokens'
 import { useSmartPoolFromAddress } from 'hooks/useSmartPools'
+// TODO: this import is from node modules
+import JSBI from 'jsbi'
 //import { PoolState, usePool } from 'hooks/usePools'
 //import useStablecoinPrice from 'hooks/useStablecoinPrice'
 //import { useSingleCallResult } from 'lib/hooks/multicall'
@@ -31,7 +33,7 @@ import { Link, useParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 import { ExternalLink, /*HideExtraSmall,*/ ThemedText } from 'theme'
 //import { currencyId } from 'utils/currencyId'
-//import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 //import { formatTickPrice } from 'utils/formatTickPrice'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 //import { unwrappedToken } from 'utils/unwrappedToken'
@@ -158,7 +160,11 @@ export function PoolPositionPage() {
 
   const { name, symbol, decimals /*, operator, baseToken*/ } = poolStorage?.poolInitParams || {}
   const { /*delay,*/ spread } = poolStorage?.poolVariables || {}
-  //const { unitaryValue, totalSupply } = poolStorage?.poolTokensInfo || {}
+  const { unitaryValue /*, totalSupply*/ } = poolStorage?.poolTokensInfo || {}
+
+  const token = useToken(poolAddressFromUrl) as Currency
+  const amount = unitaryValue ? JSBI.BigInt(unitaryValue) : undefined
+  const currencyBalance = amount ? CurrencyAmount.fromRawAmount(token ?? undefined, amount) : undefined
 
   //const addTransaction = useTransactionAdder()
 
@@ -251,9 +257,9 @@ export function PoolPositionPage() {
                         </ExternalLink>
                       ) : null}
                     </Label>
-                    {!showConfirm ? (
+                    {!showConfirm && token && currencyBalance ? (
                       <ThemedText.DeprecatedLargeHeader fontSize="36px" fontWeight={500}>
-                        <Trans>Pool Value: </Trans>
+                        <Trans>Pool Value: {formatCurrencyAmount(currencyBalance, 4)}</Trans>
                       </ThemedText.DeprecatedLargeHeader>
                     ) : (
                       <ThemedText.DeprecatedLargeHeader color={theme.deprecated_text1} fontSize="36px" fontWeight={500}>
