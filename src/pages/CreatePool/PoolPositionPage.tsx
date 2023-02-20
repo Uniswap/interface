@@ -166,11 +166,11 @@ export function PoolPositionPage() {
   let base = useCurrency(baseToken !== ZERO_ADDRESS ? baseToken : undefined)
 
   const amount = JSBI.BigInt(unitaryValue ?? 0)
-  const currencyBalance = CurrencyAmount.fromRawAmount(token ?? undefined, amount ?? undefined)
 
   if (baseToken === ZERO_ADDRESS) {
     base = nativeOnChain(chainId ?? 1)
   }
+  const poolPrice = CurrencyAmount.fromRawAmount(base ?? nativeOnChain(chainId ?? 1), amount ?? undefined)
   // TODO: check results on altchains
   const baseTokenSymbol = base?.isNative ? 'ETH' : base?.symbol
 
@@ -268,7 +268,7 @@ export function PoolPositionPage() {
                         </ExternalLink>
                       ) : null}
                     </Label>
-                    {!showConfirm && token && currencyBalance && baseTokenSymbol ? (
+                    {!showConfirm && token && poolPrice && baseTokenSymbol ? (
                       <ThemedText.DeprecatedLargeHeader fontSize="36px" fontWeight={500}>
                         {totalSupply && base && (
                           <Row>
@@ -291,7 +291,7 @@ export function PoolPositionPage() {
                         {baseTokenSymbol && (
                           <Row>
                             <Trans>
-                              Price: {formatCurrencyAmount(currencyBalance, 4)}&nbsp;{baseTokenSymbol}
+                              Price: {formatCurrencyAmount(poolPrice, 4)}&nbsp;{baseTokenSymbol}
                             </Trans>
                           </Row>
                         )}
