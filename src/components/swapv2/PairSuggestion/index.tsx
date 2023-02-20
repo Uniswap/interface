@@ -17,7 +17,7 @@ import useParsedQueryString from 'hooks/useParsedQueryString'
 import { NotificationType, useNotify } from 'state/application/hooks'
 import { filterTokens } from 'utils/filtering'
 
-import ListPair from './ListPair'
+import ListPair, { Props as ListPairProps } from './ListPair'
 import SearchInput from './SearchInput'
 import { SuggestionPairData, reqAddFavoritePair, reqGetSuggestionPair, reqRemoveFavoritePair } from './request'
 import { findLogoAndSortPair, getAddressParam, isActivePair, isFavoritePair } from './utils'
@@ -57,7 +57,7 @@ export default forwardRef<PairSuggestionHandle, Props>(function PairSuggestionIn
 ) {
   const [searchQuery, setSearchQuery] = useState('')
 
-  const [selectedIndex, setSelectedIndex] = useState(0) // index selected when press up/down arrow
+  const [selectedIndex, setSelectedIndex] = useState(-1) // index selected when press up/down arrow
   const [isShowListPair, setIsShowListPair] = useState(false)
 
   const [suggestedPairs, setSuggestions] = useState<SuggestionPairData[]>([])
@@ -166,7 +166,7 @@ export default forwardRef<PairSuggestionHandle, Props>(function PairSuggestionIn
 
   const hideListView = () => {
     setIsShowListPair(false)
-    setSelectedIndex(0)
+    setSelectedIndex(-1)
     refInput.current?.blur()
   }
   const showListView = useCallback(() => {
@@ -261,7 +261,7 @@ export default forwardRef<PairSuggestionHandle, Props>(function PairSuggestionIn
     }
   }
 
-  const propsListPair = {
+  const propsListPair: ListPairProps = {
     suggestedAmount,
     selectedIndex,
     isSearch: !!searchQuery,
@@ -271,6 +271,9 @@ export default forwardRef<PairSuggestionHandle, Props>(function PairSuggestionIn
     isFullFavoritePair: totalFavoritePair === MAX_FAVORITE_PAIRS,
     onClickStar,
     onSelectPair,
+    onMouseEnterItem: (index: number) => {
+      setSelectedIndex(index)
+    },
   }
 
   const propsSearch = {

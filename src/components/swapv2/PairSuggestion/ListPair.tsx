@@ -56,6 +56,19 @@ const TextWithIcon = ({ text, icon, color }: { text: string; icon?: JSX.Element;
   </Container>
 )
 
+export type Props = {
+  isFullFavoritePair: boolean
+  suggestedAmount: string
+  hasShadow?: boolean
+  selectedIndex: number
+  isShowListPair: boolean
+  favoritePairs: SuggestionPairData[]
+  suggestedPairs: SuggestionPairData[]
+  isSearch: boolean
+  onSelectPair: (item: SuggestionPairData) => void
+  onClickStar: (item: SuggestionPairData) => void
+  onMouseEnterItem: (index: number) => void
+}
 export default function ListPair({
   isShowListPair,
   isFullFavoritePair,
@@ -67,18 +80,8 @@ export default function ListPair({
   selectedIndex,
   onSelectPair,
   onClickStar,
-}: {
-  isFullFavoritePair: boolean
-  suggestedAmount: string
-  hasShadow?: boolean
-  selectedIndex: number
-  isShowListPair: boolean
-  favoritePairs: SuggestionPairData[]
-  suggestedPairs: SuggestionPairData[]
-  isSearch: boolean
-  onSelectPair: (item: SuggestionPairData) => void
-  onClickStar: (item: SuggestionPairData) => void
-}) {
+  onMouseEnterItem,
+}: Props) {
   const theme = useTheme()
   const { account } = useActiveWeb3React()
   const isShowNotfound = isSearch && !suggestedPairs.length && !favoritePairs.length
@@ -124,6 +127,7 @@ export default function ListPair({
               isFavorite
               key={item.tokenIn + item.tokenOut}
               isFullFavoritePair={isFullFavoritePair}
+              onMouseEnter={() => onMouseEnterItem(i)}
             />
           ))}
           {!isSearch && <Break />}
@@ -148,6 +152,7 @@ export default function ListPair({
               key={item.tokenIn + item.tokenOut + i}
               isFavorite={isFavoritePair(favoritePairs, item)}
               isFullFavoritePair={isFullFavoritePair}
+              onMouseEnter={() => onMouseEnterItem(favoritePairs.length + i)}
             />
           ))}
         </>

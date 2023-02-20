@@ -20,11 +20,8 @@ const ItemWrapper = styled.div<{ isActive: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: ${({ theme, isActive }) => (isActive ? rgba(theme.buttonBlack, 0.5) : 'transparent')};
+  background-color: ${({ theme, isActive }) => (isActive ? rgba(theme.buttonBlack, 0.6) : 'transparent')};
   padding: 1em;
-  &:hover {
-    background-color: ${({ theme }) => rgba(theme.buttonBlack, 0.5)};
-  }
 `
 
 const StyledLogo = styled(Logo)`
@@ -41,6 +38,7 @@ type PropsType = {
   amount: string
   isFavorite?: boolean
   isFullFavoritePair?: boolean
+  onMouseEnter: () => void
 }
 export default function SuggestItem({
   data,
@@ -50,6 +48,7 @@ export default function SuggestItem({
   amount,
   onClickStar,
   onSelectPair,
+  onMouseEnter,
 }: PropsType) {
   const theme = useTheme()
   const activeTokens = useAllTokens(true)
@@ -76,6 +75,7 @@ export default function SuggestItem({
       className={isTokenNotImport ? 'no-blur' : ''}
       onClick={onSelectPair}
       isActive={isActive && !isMobile}
+      onMouseEnter={onMouseEnter}
     >
       <Flex alignItems="center" style={{ gap: 10 }}>
         <Flex alignItems="flex-start" height="100%">
