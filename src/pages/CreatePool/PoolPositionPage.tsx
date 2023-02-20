@@ -12,13 +12,14 @@ import { /*ButtonConfirmed, ButtonGray,*/ ButtonPrimary } from 'components/Butto
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 //import Loader from 'components/Loader'
-//import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { RowBetween, RowFixed } from 'components/Row'
+import Row, { RowBetween, RowFixed } from 'components/Row'
 //import { Dots } from 'components/swap/styleds'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 //import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-import { useToken } from 'hooks/Tokens'
+import { ZERO_ADDRESS } from 'constants/misc'
+import { nativeOnChain } from 'constants/tokens'
+import { useCurrency, useToken } from 'hooks/Tokens'
 import { useSmartPoolFromAddress } from 'hooks/useSmartPools'
 // TODO: this import is from node modules
 import JSBI from 'jsbi'
@@ -149,22 +150,34 @@ function getZapperLink(data: string): string {
 
 export function PoolPositionPage() {
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
-  const { chainId /*, account, provider*/ } = useWeb3React()
+  const { chainId /*, account , provider*/ } = useWeb3React()
   const theme = useTheme()
 
   const [showConfirm, setShowConfirm] = useState(false)
   // TODO: check how can reduce number of calls by limit update of poolStorage
   //  id is stored in registry so we could save rpc call by using storing in state?
-  const poolStorage = useSmartPoolFromAddress(poolAddressFromUrl)
-  console.log(poolStorage)
+  const poolStorage = useSmartPoolFromAddress(poolAddressFromUrl ?? undefined)
 
-  const { name, symbol, decimals /*, operator, baseToken*/ } = poolStorage?.poolInitParams || {}
+  const { name, symbol, decimals, /*operator,*/ baseToken } = poolStorage?.poolInitParams || {}
   const { /*delay,*/ spread } = poolStorage?.poolVariables || {}
-  const { unitaryValue /*, totalSupply*/ } = poolStorage?.poolTokensInfo || {}
+  const { unitaryValue, totalSupply } = poolStorage?.poolTokensInfo || {}
 
-  const token = useToken(poolAddressFromUrl) as Currency
-  const amount = unitaryValue ? JSBI.BigInt(unitaryValue) : undefined
-  const currencyBalance = amount ? CurrencyAmount.fromRawAmount(token ?? undefined, amount) : undefined
+  const token = useToken(poolAddressFromUrl ?? undefined) as Currency
+  let base = useCurrency(baseToken !== ZERO_ADDRESS ? baseToken : undefined)
+
+  const amount = JSBI.BigInt(unitaryValue ?? 0)
+  const currencyBalance = CurrencyAmount.fromRawAmount(token ?? undefined, amount ?? undefined)
+
+  if (baseToken === ZERO_ADDRESS) {
+    base = nativeOnChain(chainId ?? 1)
+  }
+  // TODO: check results on altchains
+  const baseTokenSymbol = base?.isNative ? 'ETH' : base?.symbol
+
+  const poolValue = JSBI.divide(
+    JSBI.multiply(JSBI.BigInt(unitaryValue ?? 0), JSBI.BigInt(totalSupply ?? 0)),
+    JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals ?? 18))
+  )
 
   //const addTransaction = useTransactionAdder()
 
@@ -249,17 +262,39 @@ export function PoolPositionPage() {
                 <AutoColumn gap="md" style={{ width: '100%' }}>
                   <AutoColumn gap="md">
                     <Label>
-                      <Trans>Pool address:&nbsp;</Trans>
-                      &nbsp;
                       {typeof chainId === 'number' && poolAddressFromUrl ? (
                         <ExternalLink href={getExplorerLink(chainId, poolAddressFromUrl, ExplorerDataType.ADDRESS)}>
                           <Trans>{poolAddressFromUrl}</Trans>
                         </ExternalLink>
                       ) : null}
                     </Label>
-                    {!showConfirm && token && currencyBalance ? (
+                    {!showConfirm && token && currencyBalance && baseTokenSymbol ? (
                       <ThemedText.DeprecatedLargeHeader fontSize="36px" fontWeight={500}>
-                        <Trans>Pool Value: {formatCurrencyAmount(currencyBalance, 4)}</Trans>
+                        {totalSupply && base && (
+                          <Row>
+                            <Trans>
+                              Total Supply:&nbsp;
+                              {formatCurrencyAmount(CurrencyAmount.fromRawAmount(base, JSBI.BigInt(totalSupply)), 4)}
+                            </Trans>
+                            &nbsp;{symbol}
+                          </Row>
+                        )}
+                        {poolValue && base && (
+                          <Row>
+                            <Trans>
+                              PoolValue:&nbsp;
+                              {formatCurrencyAmount(CurrencyAmount.fromRawAmount(base, poolValue), 4)}&nbsp;
+                              {baseTokenSymbol}
+                            </Trans>
+                          </Row>
+                        )}
+                        {baseTokenSymbol && (
+                          <Row>
+                            <Trans>
+                              Price: {formatCurrencyAmount(currencyBalance, 4)}&nbsp;{baseTokenSymbol}
+                            </Trans>
+                          </Row>
+                        )}
                       </ThemedText.DeprecatedLargeHeader>
                     ) : (
                       <ThemedText.DeprecatedLargeHeader color={theme.deprecated_text1} fontSize="36px" fontWeight={500}>
@@ -272,9 +307,12 @@ export function PoolPositionPage() {
                       <RowBetween>
                         <RowFixed>
                           <ThemedText.DeprecatedMain>
-                            <Trans>
-                              &nbsp;Decimals:&nbsp;{decimals}&nbsp;Spread:&nbsp;{spread}&nbsp;
-                            </Trans>
+                            <Trans>&nbsp;Decimals:&nbsp;{decimals}</Trans>
+                          </ThemedText.DeprecatedMain>
+                        </RowFixed>
+                        <RowFixed>
+                          <ThemedText.DeprecatedMain>
+                            <Trans>&nbsp;Spread:&nbsp;{spread}&nbsp;</Trans>
                           </ThemedText.DeprecatedMain>
                         </RowFixed>
                       </RowBetween>
