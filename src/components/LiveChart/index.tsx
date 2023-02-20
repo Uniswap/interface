@@ -4,26 +4,20 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { Repeat } from 'react-feather'
 import { Flex, Text } from 'rebass'
-import { useGeckoTerminalSearchQuery, useGetPoolDetailQuery } from 'services/geckoTermial'
 import styled from 'styled-components'
 
-import { ReactComponent as GeckoTerminalSVG } from 'assets/svg/geckoterminal.svg'
-import { ReactComponent as GeckoTerminalLightSVG } from 'assets/svg/geckoterminal_light.svg'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import Loader from 'components/LocalLoader'
-import TradingViewChart from 'components/TradingViewChart'
 import { useActiveWeb3React } from 'hooks'
 import useBasicChartData, { LiveDataTimeframeEnum } from 'hooks/useBasicChartData'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { Field } from 'state/swap/actions'
-import { useIsDarkMode } from 'state/user/hooks'
+// import { useIsDarkMode } from 'state/user/hooks'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 
 import AnimatingNumber from './AnimatingNumber'
 import CircleInfoIcon from './CircleInfoIcon'
 import LineChart from './LineChart'
-import ProChartToggle from './ProChartToggle'
 import WarningIcon from './WarningIcon'
 
 const LiveChartWrapper = styled.div`
@@ -107,64 +101,64 @@ const getTimeFrameText = (timeFrame: LiveDataTimeframeEnum) => {
 
 function LiveChart({ currencies }: { currencies: { [field in Field]?: Currency } }) {
   const { isSolana } = useActiveWeb3React()
-  const isDarkMode = useIsDarkMode()
+  // const isDarkMode = useIsDarkMode()
   const theme = useTheme()
   const [currenciesState, setCurrenciesState] = useState(currencies)
 
-  const { data: dataToken0, isLoading: prochartLoading1 } = useGeckoTerminalSearchQuery(
-    currencies[Field.INPUT]?.wrapped.address || '',
-  )
-  const { data: dataToken1, isLoading: prochartLoading2 } = useGeckoTerminalSearchQuery(
-    currencies[Field.OUTPUT]?.wrapped.address || '',
-  )
-  const prochartLoading = prochartLoading1 || prochartLoading2
+  // const { data: dataToken0, isLoading: prochartLoading1 } = useGeckoTerminalSearchQuery(
+  //   currencies[Field.INPUT]?.wrapped.address || '',
+  // )
+  // const { data: dataToken1, isLoading: prochartLoading2 } = useGeckoTerminalSearchQuery(
+  //   currencies[Field.OUTPUT]?.wrapped.address || '',
+  // )
+  // const prochartLoading = prochartLoading1 || prochartLoading2
 
-  const pools0 = (dataToken0?.data?.attributes?.pools || [])
-    .filter(p => p?.tokens?.length === 2)
-    .reduce((acc, cur) => ({ ...acc, [cur.address]: true }), {} as { [key: string]: boolean })
-  const availablePools = (dataToken1?.data?.attributes?.pools || [])
-    .filter(p => pools0[p.address])
-    .sort((a, b) => +b?.reserve_in_usd - +a?.reserve_in_usd)
+  // const pools0 = (dataToken0?.data?.attributes?.pools || [])
+  //   .filter(p => p?.tokens?.length === 2)
+  //   .reduce((acc, cur) => ({ ...acc, [cur.address]: true }), {} as { [key: string]: boolean })
+  // const availablePools = (dataToken1?.data?.attributes?.pools || [])
+  //   .filter(p => pools0[p.address])
+  //   .sort((a, b) => +b?.reserve_in_usd - +a?.reserve_in_usd)
 
-  let poolAddress = availablePools[0]?.address
-  let network = availablePools[0]?.network?.identifier
+  // let poolAddress = availablePools[0]?.address
+  // let network = availablePools[0]?.network?.identifier
 
-  // in case 2 api search is not match, we get pool by symbol
-  if (!poolAddress) {
-    const pools0 = (dataToken0?.data?.attributes?.pools || [])
-      .filter(p => {
-        if (p?.tokens?.length !== 2) return false
-        const token0 = p?.tokens?.[0]?.symbol
-        const token1 = p?.tokens?.[1]?.symbol
+  // // in case 2 api search is not match, we get pool by symbol
+  // if (!poolAddress) {
+  //   const pools0 = (dataToken0?.data?.attributes?.pools || [])
+  //     .filter(p => {
+  //       if (p?.tokens?.length !== 2) return false
+  //       const token0 = p?.tokens?.[0]?.symbol
+  //       const token1 = p?.tokens?.[1]?.symbol
 
-        const symbol0 = currencies[Field.INPUT]?.wrapped.symbol
-        const symbol1 = currencies[Field.OUTPUT]?.wrapped.symbol
-        return (token0 === symbol0 && token1 === symbol1) || (token0 === symbol1 && token1 === symbol0)
-      })
-      .sort((a, b) => +b?.reserve_in_usd - +a?.reserve_in_usd)
+  //       const symbol0 = currencies[Field.INPUT]?.wrapped.symbol
+  //       const symbol1 = currencies[Field.OUTPUT]?.wrapped.symbol
+  //       return (token0 === symbol0 && token1 === symbol1) || (token0 === symbol1 && token1 === symbol0)
+  //     })
+  //     .sort((a, b) => +b?.reserve_in_usd - +a?.reserve_in_usd)
 
-    const pools1 = (dataToken1?.data?.attributes?.pools || [])
-      .filter(p => {
-        if (p?.tokens?.length !== 2) return false
-        const token0 = p?.tokens?.[0]?.symbol
-        const token1 = p?.tokens?.[1]?.symbol
+  //   const pools1 = (dataToken1?.data?.attributes?.pools || [])
+  //     .filter(p => {
+  //       if (p?.tokens?.length !== 2) return false
+  //       const token0 = p?.tokens?.[0]?.symbol
+  //       const token1 = p?.tokens?.[1]?.symbol
 
-        const symbol0 = currencies[Field.INPUT]?.wrapped.symbol
-        const symbol1 = currencies[Field.OUTPUT]?.wrapped.symbol
-        return (token0 === symbol0 && token1 === symbol1) || (token0 === symbol1 && token1 === symbol0)
-      })
-      .sort((a, b) => +b?.reserve_in_usd - +a?.reserve_in_usd)
+  //       const symbol0 = currencies[Field.INPUT]?.wrapped.symbol
+  //       const symbol1 = currencies[Field.OUTPUT]?.wrapped.symbol
+  //       return (token0 === symbol0 && token1 === symbol1) || (token0 === symbol1 && token1 === symbol0)
+  //     })
+  //     .sort((a, b) => +b?.reserve_in_usd - +a?.reserve_in_usd)
 
-    poolAddress = pools0?.[0]?.address || pools1?.[0]?.address
-    network = pools0?.[0]?.network?.identifier || pools1?.[0]?.network?.identifier
-  }
+  //   poolAddress = pools0?.[0]?.address || pools1?.[0]?.address
+  //   network = pools0?.[0]?.network?.identifier || pools1?.[0]?.network?.identifier
+  // }
 
-  const { data: poolDetail } = useGetPoolDetailQuery(
-    { poolAddress: poolAddress || '', network },
-    {
-      skip: !poolAddress,
-    },
-  )
+  // const { data: poolDetail } = useGetPoolDetailQuery(
+  //   { poolAddress: poolAddress || '', network },
+  //   {
+  //     skip: !poolAddress,
+  //   },
+  // )
 
   useEffect(() => {
     setCurrenciesState(currencies)
@@ -183,10 +177,10 @@ function LiveChart({ currencies }: { currencies: { [field in Field]?: Currency }
   const [timeFrame, setTimeFrame] = useState<LiveDataTimeframeEnum>(LiveDataTimeframeEnum.DAY)
 
   const { data: chartData, error: basicChartError, loading: basicChartLoading } = useBasicChartData(tokens, timeFrame)
-  const isProchartError = !poolAddress
+  // const isProchartError = !poolAddress
   const isBasicchartError = basicChartError && !basicChartLoading
-  const bothChartError = isProchartError && isBasicchartError
-  const { mixpanelHandler } = useMixpanel()
+  // const bothChartError = isProchartError && isBasicchartError
+  // const { mixpanelHandler } = useMixpanel()
 
   useEffect(() => {
     if (hoverValue !== null) {
@@ -199,13 +193,13 @@ function LiveChart({ currencies }: { currencies: { [field in Field]?: Currency }
 
   const { chartColor, different, differentPercent } = getDifferentValues(chartData, hoverValue)
 
-  const [isManualChange, setIsManualChange] = useState(false)
-  const [isShowProChart, setIsShowProChart] = useState(false)
+  // const [isManualChange, setIsManualChange] = useState(false)
+  // const [isShowProChart, setIsShowProChart] = useState(false)
 
-  useEffect(() => {
-    if (!!poolAddress && !isManualChange) setIsShowProChart(true)
-    if (!prochartLoading && !poolAddress) setIsShowProChart(false)
-  }, [isShowProChart, isManualChange, poolAddress, prochartLoading])
+  // useEffect(() => {
+  //   if (!!poolAddress && !isManualChange) setIsShowProChart(true)
+  //   if (!prochartLoading && !poolAddress) setIsShowProChart(false)
+  // }, [isShowProChart, isManualChange, poolAddress, prochartLoading])
 
   const renderTimeframes = () => {
     return (
@@ -221,30 +215,30 @@ function LiveChart({ currencies }: { currencies: { [field in Field]?: Currency }
     )
   }
 
-  const toggle = useMemo(() => {
-    return (
-      <ProChartToggle
-        activeName={isShowProChart ? 'pro' : 'basic'}
-        toggle={(name: string) => {
-          if (!bothChartError && name !== (isShowProChart ? 'pro' : 'basic')) {
-            if (name === 'pro') {
-              mixpanelHandler(MIXPANEL_TYPE.PRO_CHART_CLICKED)
-            } else {
-              mixpanelHandler(MIXPANEL_TYPE.BASIC_CHART_CLICKED)
-            }
-            setIsManualChange(true)
-            setIsShowProChart(prev => !prev)
-          }
-        }}
-        buttons={[
-          { name: 'basic', title: 'Basic', disabled: isBasicchartError },
-          { name: 'pro', title: 'Pro', disabled: isProchartError },
-        ]}
-      />
-    )
-  }, [isBasicchartError, isProchartError, isShowProChart, bothChartError, mixpanelHandler])
+  // const toggle = useMemo(() => {
+  //   return (
+  //     <ProChartToggle
+  //       activeName={isShowProChart ? 'pro' : 'basic'}
+  //       toggle={(name: string) => {
+  //         if (!bothChartError && name !== (isShowProChart ? 'pro' : 'basic')) {
+  //           if (name === 'pro') {
+  //             mixpanelHandler(MIXPANEL_TYPE.PRO_CHART_CLICKED)
+  //           } else {
+  //             mixpanelHandler(MIXPANEL_TYPE.BASIC_CHART_CLICKED)
+  //           }
+  //           setIsManualChange(true)
+  //           setIsShowProChart(prev => !prev)
+  //         }
+  //       }}
+  //       buttons={[
+  //         { name: 'basic', title: 'Basic', disabled: isBasicchartError },
+  //         { name: 'pro', title: 'Pro', disabled: isProchartError },
+  //       ]}
+  //     />
+  //   )
+  // }, [isBasicchartError, isProchartError, isShowProChart, bothChartError, mixpanelHandler])
 
-  const isReverse = poolDetail?.included?.[0]?.attributes?.symbol === nativeOutputCurrency?.wrapped?.symbol
+  // const isReverse = poolDetail?.included?.[0]?.attributes?.symbol === nativeOutputCurrency?.wrapped?.symbol
   return (
     <LiveChartWrapper>
       {isWrappedToken ? (
@@ -300,13 +294,13 @@ function LiveChart({ currencies }: { currencies: { [field in Field]?: Currency }
                 </SwitchButtonWrapper>
               </Flex>
             </Flex>
-            <Flex flex={1} justifyContent="flex-end">
+            {/* <Flex flex={1} justifyContent="flex-end">
               {toggle}
-            </Flex>
+            </Flex> */}
           </Flex>
 
           {/* Stop tradingview from rerender on isShowProChart change */}
-          <div style={{ display: isShowProChart && !!poolDetail ? 'block' : 'none', height: '100%' }}>
+          {/* <div style={{ display: isShowProChart && !!poolDetail ? 'block' : 'none', height: '100%' }}>
             {poolDetail && (
               <TradingViewChart poolDetail={poolDetail} tokenId={poolDetail.included[isReverse ? 1 : 0].id} />
             )}
@@ -320,80 +314,76 @@ function LiveChart({ currencies }: { currencies: { [field in Field]?: Currency }
                 <GeckoTerminalLightSVG style={{ width: '75px' }} />
               )}
             </Flex>
-          </div>
+          </div> */}
 
-          {!isShowProChart && (
-            <>
-              <Flex justifyContent="space-between" alignItems="flex-start" marginTop="12px">
-                <Flex flexDirection="column" alignItems="flex-start">
-                  {showingValue === 0 || basicChartError ? (
-                    <Text fontSize={28} color={theme.subText}>
-                      --
-                    </Text>
-                  ) : (
-                    <AnimatingNumber
-                      value={showingValue}
-                      symbol={nativeOutputCurrency?.symbol}
-                      fontSize={isMobile ? 24 : 28}
-                    />
-                  )}
-                  <Flex marginTop="2px">
-                    {showingValue === 0 || basicChartError ? (
-                      <Text fontSize={12} color={theme.disableText}>
-                        --
-                      </Text>
-                    ) : (
-                      <>
-                        <Text fontSize={12} color={different >= 0 ? '#31CB9E' : '#FF537B'} marginRight="5px">
-                          {different} ({differentPercent}%)
-                        </Text>
-                        {!hoverValue && (
-                          <Text fontSize={12} color={theme.disableText}>
-                            {getTimeFrameText(timeFrame)}
-                          </Text>
-                        )}
-                      </>
-                    )}
-                  </Flex>
-                </Flex>
-                {!isMobile && renderTimeframes()}
-              </Flex>
-              {isMobile && renderTimeframes()}
-              <div style={{ flex: 1, marginTop: '12px' }}>
-                {basicChartLoading || prochartLoading || isBasicchartError ? (
-                  <Flex
-                    minHeight={isMobile ? '300px' : '370px'}
-                    flexDirection={'column'}
-                    alignItems={'center'}
-                    justifyContent={'center'}
-                    color={theme.disableText}
-                    style={{ gap: '16px' }}
-                  >
-                    {basicChartLoading ? (
-                      <Loader />
-                    ) : (
-                      isBasicchartError && (
-                        <>
-                          <WarningIcon />
-                          <Text fontSize={16}>
-                            <Trans>Chart is unavailable right now</Trans>
-                          </Text>
-                        </>
-                      )
-                    )}
-                  </Flex>
+          <Flex justifyContent="space-between" alignItems="flex-start" marginTop="12px">
+            <Flex flexDirection="column" alignItems="flex-start">
+              {showingValue === 0 || basicChartError ? (
+                <Text fontSize={28} color={theme.subText}>
+                  --
+                </Text>
+              ) : (
+                <AnimatingNumber
+                  value={showingValue}
+                  symbol={nativeOutputCurrency?.symbol}
+                  fontSize={isMobile ? 24 : 28}
+                />
+              )}
+              <Flex marginTop="2px">
+                {showingValue === 0 || basicChartError ? (
+                  <Text fontSize={12} color={theme.disableText}>
+                    --
+                  </Text>
                 ) : (
-                  <LineChart
-                    data={chartData}
-                    setHoverValue={setHoverValue}
-                    color={chartColor}
-                    timeFrame={timeFrame}
-                    minHeight={370}
-                  />
+                  <>
+                    <Text fontSize={12} color={different >= 0 ? '#31CB9E' : '#FF537B'} marginRight="5px">
+                      {different} ({differentPercent}%)
+                    </Text>
+                    {!hoverValue && (
+                      <Text fontSize={12} color={theme.disableText}>
+                        {getTimeFrameText(timeFrame)}
+                      </Text>
+                    )}
+                  </>
                 )}
-              </div>
-            </>
-          )}
+              </Flex>
+            </Flex>
+            {!isMobile && renderTimeframes()}
+          </Flex>
+          {isMobile && renderTimeframes()}
+          <div style={{ flex: 1, marginTop: '12px' }}>
+            {basicChartLoading || isBasicchartError ? (
+              <Flex
+                minHeight={isMobile ? '300px' : '370px'}
+                flexDirection={'column'}
+                alignItems={'center'}
+                justifyContent={'center'}
+                color={theme.disableText}
+                style={{ gap: '16px' }}
+              >
+                {basicChartLoading ? (
+                  <Loader />
+                ) : (
+                  isBasicchartError && (
+                    <>
+                      <WarningIcon />
+                      <Text fontSize={16}>
+                        <Trans>Chart is unavailable right now</Trans>
+                      </Text>
+                    </>
+                  )
+                )}
+              </Flex>
+            ) : (
+              <LineChart
+                data={chartData}
+                setHoverValue={setHoverValue}
+                color={chartColor}
+                timeFrame={timeFrame}
+                minHeight={370}
+              />
+            )}
+          </div>
         </>
       )}
     </LiveChartWrapper>
