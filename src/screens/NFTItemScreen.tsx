@@ -90,13 +90,17 @@ export function NFTItemScreen({
     }
   }, [asset, assetChainId])
 
-  const onPressCollection = useCallback(() => {
+  const onPressCollection = (): void => {
     if (asset && asset.collection?.collectionId && asset.nftContract?.address) {
       navigation.navigate(Screens.NFTCollection, {
         collectionAddress: asset.nftContract?.address,
       })
     }
-  }, [asset, navigation])
+  }
+
+  const onPressOwner = (): void => {
+    navigation.navigate(Screens.ExternalProfile, { address: owner })
+  }
 
   const inModal = useAppSelector(selectModalState(ModalName.Explore)).isOpen
 
@@ -151,9 +155,11 @@ export function NFTItemScreen({
                 variant="subheadLarge">
                 {asset?.name || '-'}
               </Text>
-              <Text color="textSecondary" variant="subheadSmall">
-                {t('Owned by {{owner}}', { owner: ownerDisplayName?.name })}
-              </Text>
+              <TouchableArea onPress={onPressOwner}>
+                <Text color="textSecondary" variant="subheadSmall">
+                  {t('Owned by {{owner}}', { owner: ownerDisplayName?.name })}
+                </Text>
+              </TouchableArea>
             </Flex>
           </Flex>
 
