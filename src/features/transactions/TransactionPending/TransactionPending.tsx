@@ -1,6 +1,5 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { navigate } from 'src/app/navigation/rootNavigation'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex, Flex } from 'src/components/layout'
@@ -9,7 +8,7 @@ import { ChainId } from 'src/constants/chains'
 import { ElementName } from 'src/features/telemetry/constants'
 import { StatusAnimation } from 'src/features/transactions/TransactionPending/StatusAnimation'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
-import { Screens } from 'src/screens/Screens'
+import { openTransactionLink } from 'src/utils/linking'
 
 type TransactionStatusProps = {
   transaction: TransactionDetails | undefined
@@ -36,8 +35,9 @@ export function TransactionPending({
   const { t } = useTranslation()
 
   const onPressViewTransaction = (): void => {
-    navigate(Screens.Home)
-    onNext()
+    if (transaction) {
+      openTransactionLink(transaction.hash, transaction.chainId)
+    }
   }
 
   return (
