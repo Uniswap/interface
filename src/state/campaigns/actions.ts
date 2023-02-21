@@ -18,6 +18,7 @@ export enum CampaignState {
 export enum CampaignUserInfoStatus {
   Eligible = 'eligible',
   Ineligible = 'ineligible',
+  Banned = 'banned',
 }
 
 export type CampaignUserInfo = {

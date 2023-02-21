@@ -1,14 +1,15 @@
 /**
  * These actions are: Enter Now -> Swap Now -> Claim
  */
-import { memo } from 'react'
+import { Trans } from '@lingui/macro'
+import React, { memo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { BIG_INT_ZERO } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useTemporaryClaimedRefsManager from 'hooks/campaigns/useTemporaryClaimedRefsManager'
 import CampaignButtonEnterNow from 'pages/Campaign/CampaignButtonEnterNow'
-import CampaignButtonWithOptions from 'pages/Campaign/CampaignButtonWithOptions'
+import CampaignButtonWithOptions, { StyledPrimaryButton } from 'pages/Campaign/CampaignButtonWithOptions'
 import { AppState } from 'state'
 import {
   CampaignData,
@@ -38,6 +39,14 @@ const CampaignActions = ({ campaign, leaderboard, size = 'large', hideWhenDisabl
   const [temporaryClaimedRefs, addTemporaryClaimedRefs] = useTemporaryClaimedRefsManager()
 
   if (!campaignInfo || !account || !leaderboardInfo) return null
+
+  if (campaignInfo?.userInfo?.status === CampaignUserInfoStatus.Banned) {
+    return (
+      <StyledPrimaryButton disabled size="large">
+        <Trans>Banned</Trans>
+      </StyledPrimaryButton>
+    )
+  }
 
   if (
     campaignInfo.status === CampaignStatus.ONGOING &&
