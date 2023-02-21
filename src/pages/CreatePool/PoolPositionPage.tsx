@@ -3,7 +3,7 @@
 import { Trans } from '@lingui/macro'
 //import { Trace } from '@uniswap/analytics'
 //import { PageName } from '@uniswap/analytics-events'
-//import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
+import { /*Currency,*/ CurrencyAmount /*, Fraction*/, Percent /*, Price, Token*/ } from '@uniswap/sdk-core'
 //import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 //import { sendEvent } from 'components/analytics'
@@ -12,14 +12,17 @@ import { /*ButtonConfirmed, ButtonGray,*/ ButtonPrimary } from 'components/Butto
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 //import Loader from 'components/Loader'
-//import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { RowBetween, RowFixed } from 'components/Row'
 //import { Dots } from 'components/swap/styleds'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 //import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-//import { useToken } from 'hooks/Tokens'
+import { /*BIG_INT_ZERO,*/ ZERO_ADDRESS } from 'constants/misc'
+import { nativeOnChain } from 'constants/tokens'
+import { useCurrency } from 'hooks/Tokens'
 import { useSmartPoolFromAddress } from 'hooks/useSmartPools'
+// TODO: this import is from node modules
+import JSBI from 'jsbi'
 //import { PoolState, usePool } from 'hooks/usePools'
 //import useStablecoinPrice from 'hooks/useStablecoinPrice'
 //import { useSingleCallResult } from 'lib/hooks/multicall'
@@ -28,10 +31,11 @@ import { /*useCallback, useMemo, useRef,*/ useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 //import { Bound } from 'state/mint/v3/actions'
 //import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import styled /*, { useTheme }*/ from 'styled-components/macro'
 import { ExternalLink, /*HideExtraSmall,*/ ThemedText } from 'theme'
+import { shortenAddress } from 'utils'
 //import { currencyId } from 'utils/currencyId'
-//import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 //import { formatTickPrice } from 'utils/formatTickPrice'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 //import { unwrappedToken } from 'utils/unwrappedToken'
@@ -147,18 +151,36 @@ function getZapperLink(data: string): string {
 
 export function PoolPositionPage() {
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
-  const { chainId /*, account, provider*/ } = useWeb3React()
-  const theme = useTheme()
+  const { chainId /*, account , provider*/ } = useWeb3React()
+  //const theme = useTheme()
 
   const [showConfirm, setShowConfirm] = useState(false)
   // TODO: check how can reduce number of calls by limit update of poolStorage
   //  id is stored in registry so we could save rpc call by using storing in state?
-  const poolStorage = useSmartPoolFromAddress(poolAddressFromUrl)
-  console.log(poolStorage)
+  const poolStorage = useSmartPoolFromAddress(poolAddressFromUrl ?? undefined)
 
-  const { name, symbol, decimals /*, operator, baseToken*/ } = poolStorage?.poolInitParams || {}
-  const { /*delay,*/ spread } = poolStorage?.poolVariables || {}
-  //const { unitaryValue, totalSupply } = poolStorage?.poolTokensInfo || {}
+  const { name, symbol, decimals, /*owner,*/ baseToken } = poolStorage?.poolInitParams || {}
+  const { minPeriod, spread, transactionFee } = poolStorage?.poolVariables || {}
+  const { unitaryValue, totalSupply } = poolStorage?.poolTokensInfo || {}
+
+  //const token = useToken(poolAddressFromUrl ?? undefined) as Currency
+  let base = useCurrency(baseToken !== ZERO_ADDRESS ? baseToken : undefined)
+
+  const amount = JSBI.BigInt(unitaryValue ?? 0)
+
+  if (baseToken === ZERO_ADDRESS) {
+    base = nativeOnChain(chainId ?? 1)
+  }
+  const poolPrice = CurrencyAmount.fromRawAmount(base ?? nativeOnChain(chainId ?? 1), amount ?? undefined)
+  // TODO: check results on altchains
+  const baseTokenSymbol = base?.isNative ? 'ETH' : base?.symbol
+
+  const poolValue = JSBI.divide(
+    JSBI.multiply(JSBI.BigInt(unitaryValue ?? 0), JSBI.BigInt(totalSupply ?? 0)),
+    JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals ?? 18))
+  )
+
+  const lockup = JSBI.BigInt(minPeriod ?? 0).toLocaleString()
 
   //const addTransaction = useTransactionAdder()
 
@@ -239,41 +261,190 @@ export function PoolPositionPage() {
           </AutoColumn>
           <ResponsiveRow align="flex-start">
             <AutoColumn gap="sm" style={{ width: '100%', height: '100%' }}>
+              <DarkCard
+                width="100%"
+                height="100%"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  flexDirection: 'column',
+                  justifyContent: 'space-around',
+                  marginRight: '12px',
+                }}
+              >
+                <AutoColumn gap="md" style={{ width: '100%' }}>
+                  <AutoColumn gap="md">
+                    <Label>
+                      {typeof chainId === 'number' && poolAddressFromUrl ? (
+                        <ExternalLink href={getExplorerLink(chainId, poolAddressFromUrl, ExplorerDataType.ADDRESS)}>
+                          <Trans>Address: {shortenAddress(poolAddressFromUrl)}</Trans>
+                        </ExternalLink>
+                      ) : null}
+                    </Label>
+                  </AutoColumn>
+                  <LightCard padding="12px 16px">
+                    <AutoColumn gap="md">
+                      {poolValue && base && (
+                        <RowBetween>
+                          <RowFixed>
+                            <ThemedText.DeprecatedMain>
+                              <Trans>Total Value</Trans>
+                            </ThemedText.DeprecatedMain>
+                          </RowFixed>
+                          <RowFixed>
+                            <ThemedText.DeprecatedMain>
+                              <Trans>
+                                {formatCurrencyAmount(CurrencyAmount.fromRawAmount(base, poolValue), 4)}&nbsp;
+                                {baseTokenSymbol}
+                              </Trans>
+                            </ThemedText.DeprecatedMain>
+                          </RowFixed>
+                        </RowBetween>
+                      )}
+                      {baseTokenSymbol && (
+                        <RowBetween>
+                          <RowFixed>
+                            <ThemedText.DeprecatedMain>
+                              <Trans>Unitary Value</Trans>
+                            </ThemedText.DeprecatedMain>
+                          </RowFixed>
+                          <RowFixed>
+                            <ThemedText.DeprecatedMain>
+                              <Trans>
+                                {formatCurrencyAmount(poolPrice, 4)}&nbsp;{baseTokenSymbol}
+                              </Trans>
+                            </ThemedText.DeprecatedMain>
+                          </RowFixed>
+                        </RowBetween>
+                      )}
+                    </AutoColumn>
+                  </LightCard>
+                </AutoColumn>
+              </DarkCard>
+              <DarkCard>
+                <AutoColumn gap="sm" style={{ width: '100%', height: '100%' }}>
+                  <DarkCard>
+                    <AutoColumn gap="md" style={{ width: '100%' }}>
+                      <AutoColumn gap="md">
+                        <Label>
+                          <Trans>Issuance Data</Trans>
+                        </Label>
+                        <LightCard>
+                          <AutoColumn>
+                            {totalSupply && base && (
+                              <RowBetween>
+                                <RowFixed>
+                                  <ThemedText.DeprecatedMain>
+                                    <Trans>Total Supply</Trans>
+                                  </ThemedText.DeprecatedMain>
+                                </RowFixed>
+                                <RowFixed>
+                                  <ThemedText.DeprecatedMain>
+                                    <Trans>
+                                      {formatCurrencyAmount(
+                                        CurrencyAmount.fromRawAmount(base, JSBI.BigInt(totalSupply)),
+                                        4
+                                      )}
+                                    </Trans>
+                                    &nbsp;{symbol}
+                                  </ThemedText.DeprecatedMain>
+                                </RowFixed>
+                              </RowBetween>
+                            )}
+                          </AutoColumn>
+                        </LightCard>
+                      </AutoColumn>
+                    </AutoColumn>
+                  </DarkCard>
+                </AutoColumn>
+              </DarkCard>
+            </AutoColumn>
+            <RowBetween style={{ width: '2%' }}></RowBetween>
+            <AutoColumn gap="sm" style={{ width: '100%', height: '100%' }}>
               <DarkCard>
                 <AutoColumn gap="md" style={{ width: '100%' }}>
                   <AutoColumn gap="md">
                     <Label>
-                      <Trans>Pool address:&nbsp;</Trans>
-                      &nbsp;
-                      {typeof chainId === 'number' && poolAddressFromUrl ? (
-                        <ExternalLink href={getExplorerLink(chainId, poolAddressFromUrl, ExplorerDataType.ADDRESS)}>
-                          <Trans>{poolAddressFromUrl}</Trans>
-                        </ExternalLink>
-                      ) : null}
+                      <Trans>Cost Factors</Trans>
                     </Label>
-                    {!showConfirm ? (
-                      <ThemedText.DeprecatedLargeHeader fontSize="36px" fontWeight={500}>
-                        <Trans>Pool Value: </Trans>
-                      </ThemedText.DeprecatedLargeHeader>
-                    ) : (
-                      <ThemedText.DeprecatedLargeHeader color={theme.deprecated_text1} fontSize="36px" fontWeight={500}>
-                        <Trans>$-</Trans>
-                      </ThemedText.DeprecatedLargeHeader>
-                    )}
+                    <LightCard padding="12px 16px">
+                      <AutoColumn gap="md">
+                        {spread && (
+                          <RowBetween>
+                            <RowFixed>
+                              <ThemedText.DeprecatedMain>
+                                <Trans>Spread</Trans>
+                              </ThemedText.DeprecatedMain>
+                            </RowFixed>
+                            <RowFixed>
+                              <ThemedText.DeprecatedMain>
+                                <Trans>{new Percent(spread, 10_000).toSignificant()}%</Trans>
+                              </ThemedText.DeprecatedMain>
+                            </RowFixed>
+                          </RowBetween>
+                        )}
+                        {transactionFee && transactionFee !== 0 ? (
+                          <RowBetween>
+                            <RowFixed>
+                              <ThemedText.DeprecatedMain>
+                                <Trans>Distribution Fee</Trans>
+                              </ThemedText.DeprecatedMain>
+                            </RowFixed>
+                            <RowFixed>
+                              <ThemedText.DeprecatedMain>
+                                <Trans>{new Percent(transactionFee, 10_000).toSignificant()}%</Trans>
+                              </ThemedText.DeprecatedMain>
+                            </RowFixed>
+                          </RowBetween>
+                        ) : null}
+                        {lockup && (
+                          <RowBetween>
+                            <RowFixed>
+                              <ThemedText.DeprecatedMain>
+                                <Trans>Lockup</Trans>
+                              </ThemedText.DeprecatedMain>
+                            </RowFixed>
+                            <RowFixed>
+                              <ThemedText.DeprecatedMain>
+                                <Trans>{lockup} seconds</Trans>
+                              </ThemedText.DeprecatedMain>
+                            </RowFixed>
+                          </RowBetween>
+                        )}
+                      </AutoColumn>
+                    </LightCard>
                   </AutoColumn>
-                  <LightCard padding="12px 16px">
-                    <AutoColumn gap="md">
-                      <RowBetween>
-                        <RowFixed>
-                          <ThemedText.DeprecatedMain>
-                            <Trans>
-                              &nbsp;Decimals:&nbsp;{decimals}&nbsp;Spread:&nbsp;{spread}&nbsp;
-                            </Trans>
-                          </ThemedText.DeprecatedMain>
-                        </RowFixed>
-                      </RowBetween>
+                </AutoColumn>
+              </DarkCard>
+              <DarkCard>
+                <AutoColumn gap="sm" style={{ width: '100%', height: '100%' }}>
+                  <DarkCard>
+                    <AutoColumn gap="md" style={{ width: '100%' }}>
+                      <AutoColumn gap="md">
+                        <Label>
+                          <Trans>Pool Constants</Trans>
+                        </Label>
+                        <LightCard padding="12px 16px">
+                          <AutoColumn gap="md">
+                            {decimals && decimals !== 0 && (
+                              <RowBetween>
+                                <RowFixed>
+                                  <ThemedText.DeprecatedMain>
+                                    <Trans>Decimals</Trans>
+                                  </ThemedText.DeprecatedMain>
+                                </RowFixed>
+                                <RowFixed>
+                                  <ThemedText.DeprecatedMain>
+                                    <Trans>{decimals}</Trans>
+                                  </ThemedText.DeprecatedMain>
+                                </RowFixed>
+                              </RowBetween>
+                            )}
+                          </AutoColumn>
+                        </LightCard>
+                      </AutoColumn>
                     </AutoColumn>
-                  </LightCard>
+                  </DarkCard>
                 </AutoColumn>
               </DarkCard>
             </AutoColumn>

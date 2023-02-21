@@ -8,14 +8,15 @@ interface PoolInitParams {
   name: string
   symbol: string
   decimals: number
-  operator: string
+  owner: string
   baseToken: string
 }
 
 interface PoolVariables {
-  delay: BigNumber
+  minPeriod: BigNumber
   spread: number
-  feeRecipient: string
+  transactionFee: number
+  feeCollector: string
   kycProvider: string
 }
 
