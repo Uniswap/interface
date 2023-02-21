@@ -15,7 +15,6 @@ import {
   SearchResult,
   SearchResultType,
   selectSearchHistory,
-  WalletCategory,
   WalletSearchResult,
 } from 'src/features/explore/searchHistorySlice'
 
@@ -24,13 +23,11 @@ export const SUGGESTED_WALLETS: WalletSearchResult[] = [
     type: SearchResultType.Wallet,
     address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
     ensName: 'vitalik.eth',
-    category: WalletCategory.Builder,
   },
   {
     type: SearchResultType.Wallet,
     address: '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3',
     ensName: 'hayden.eth',
-    category: WalletCategory.Builder,
   },
 ]
 

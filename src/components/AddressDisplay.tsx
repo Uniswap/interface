@@ -22,7 +22,6 @@ type AddressDisplayProps = {
   variant?: keyof Theme['textVariants']
   captionVariant?: keyof Theme['textVariants']
   direction?: 'row' | 'column'
-  subtitleOverrideText?: string
   showCopy?: boolean
   showCopyWrapperButton?: boolean
   showAccountIcon?: boolean
@@ -62,7 +61,6 @@ export function AddressDisplay({
   variant = 'bodyLarge',
   captionVariant = 'subheadSmall',
   hideAddressInSubtitle,
-  subtitleOverrideText,
   direction = 'row',
   showCopy = false,
   showCopyWrapperButton = false,
@@ -122,36 +120,29 @@ export function AddressDisplay({
             )}
           </Flex>
         </CopyButtonWrapper>
-        {/* If subtitle is defined show it, otherwise revert to address logic */}
-        {subtitleOverrideText ? (
-          <Text color="textSecondary" variant={captionVariant}>
-            {subtitleOverrideText}
-          </Text>
-        ) : (
-          showAddressAsSubtitle && (
-            <CopyButtonWrapper onPress={showCopy ? onPressCopyAddress : undefined}>
-              <Flex
-                centered
-                row
-                backgroundColor={showCopyWrapperButton ? 'backgroundOverlay' : 'none'}
-                borderRadius="roundedFull"
-                gap="spacing4"
-                marginTop={showCopyWrapperButton ? 'spacing8' : 'none'}
-                px={showCopyWrapperButton ? 'spacing8' : 'none'}
-                py={showCopyWrapperButton ? 'spacing4' : 'none'}>
-                <Text color="textSecondary" variant={captionVariant}>
-                  {sanitizeAddressText(shortenAddress(address))}
-                </Text>
-                {showCopy && (
-                  <CopyIcon
-                    color={theme.colors.textSecondary}
-                    height={captionSize}
-                    width={captionSize}
-                  />
-                )}
-              </Flex>
-            </CopyButtonWrapper>
-          )
+        {showAddressAsSubtitle && (
+          <CopyButtonWrapper onPress={showCopy ? onPressCopyAddress : undefined}>
+            <Flex
+              centered
+              row
+              backgroundColor={showCopyWrapperButton ? 'backgroundOverlay' : 'none'}
+              borderRadius="roundedFull"
+              gap="spacing4"
+              marginTop={showCopyWrapperButton ? 'spacing8' : 'none'}
+              px={showCopyWrapperButton ? 'spacing8' : 'none'}
+              py={showCopyWrapperButton ? 'spacing4' : 'none'}>
+              <Text color="textSecondary" variant={captionVariant}>
+                {sanitizeAddressText(shortenAddress(address))}
+              </Text>
+              {showCopy && (
+                <CopyIcon
+                  color={theme.colors.textSecondary}
+                  height={captionSize}
+                  width={captionSize}
+                />
+              )}
+            </Flex>
+          </CopyButtonWrapper>
         )}
       </Box>
     </Flex>

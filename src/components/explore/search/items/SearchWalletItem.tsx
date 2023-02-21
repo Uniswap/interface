@@ -65,9 +65,9 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
         onPress={onPress}>
         <Flex row justifyContent="space-between" px="spacing8" py="spacing12">
           <AddressDisplay
+            hideAddressInSubtitle
             address={address}
             size={theme.iconSizes.icon40}
-            subtitleOverrideText={wallet.category}
             variant="bodyLarge"
           />
         </Flex>
