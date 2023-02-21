@@ -96,11 +96,6 @@ export enum Currency {
   Usd = 'USD'
 }
 
-export enum DatasourceProvider {
-  Alternate = 'ALTERNATE',
-  Legacy = 'LEGACY'
-}
-
 export type Dimensions = {
   __typename?: 'Dimensions';
   height?: Maybe<Scalars['Float']>;
@@ -143,6 +138,49 @@ export type Image = {
 export enum MarketSortableField {
   MarketCap = 'MARKET_CAP',
   Volume = 'VOLUME'
+}
+
+export type NftActivity = {
+  __typename?: 'NftActivity';
+  address: Scalars['String'];
+  asset?: Maybe<NftAsset>;
+  fromAddress: Scalars['String'];
+  id: Scalars['ID'];
+  marketplace?: Maybe<NftMarketplace>;
+  orderStatus?: Maybe<OrderStatus>;
+  price?: Maybe<Amount>;
+  quantity?: Maybe<Scalars['Int']>;
+  timestamp: Scalars['Int'];
+  toAddress?: Maybe<Scalars['String']>;
+  tokenId?: Maybe<Scalars['String']>;
+  transactionHash?: Maybe<Scalars['String']>;
+  type: NftActivityType;
+  url?: Maybe<Scalars['String']>;
+};
+
+export type NftActivityConnection = {
+  __typename?: 'NftActivityConnection';
+  edges: Array<NftActivityEdge>;
+  pageInfo: PageInfo;
+};
+
+export type NftActivityEdge = {
+  __typename?: 'NftActivityEdge';
+  cursor: Scalars['String'];
+  node: NftActivity;
+};
+
+export type NftActivityFilterInput = {
+  activityTypes?: InputMaybe<Array<NftActivityType>>;
+  address?: InputMaybe<Scalars['String']>;
+  tokenId?: InputMaybe<Scalars['String']>;
+};
+
+export enum NftActivityType {
+  CancelListing = 'CANCEL_LISTING',
+  Listing = 'LISTING',
+  Sale = 'SALE',
+  Transfer = 'TRANSFER'
 }
 
 export type NftApproval = {
@@ -196,7 +234,6 @@ export type NftAssetListingsArgs = {
   after?: InputMaybe<Scalars['String']>;
   asc?: InputMaybe<Scalars['Boolean']>;
   before?: InputMaybe<Scalars['String']>;
-  datasource?: InputMaybe<DatasourceProvider>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
 };
@@ -311,7 +348,6 @@ export type NftCollection = {
 
 export type NftCollectionMarketsArgs = {
   currencies: Array<Currency>;
-  datasource?: InputMaybe<DatasourceProvider>;
 };
 
 export type NftCollectionConnection = {
@@ -602,6 +638,7 @@ export type PortfolioTokensTotalDenominatedValueChangeArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  nftActivity?: Maybe<NftActivityConnection>;
   nftAssets?: Maybe<NftAssetConnection>;
   nftBalances?: Maybe<NftBalanceConnection>;
   nftCollections?: Maybe<NftCollectionConnection>;
@@ -617,13 +654,20 @@ export type Query = {
 };
 
 
+export type QueryNftActivityArgs = {
+  chain?: InputMaybe<Chain>;
+  cursor?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<NftActivityFilterInput>;
+  limit?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type QueryNftAssetsArgs = {
   address: Scalars['String'];
   after?: InputMaybe<Scalars['String']>;
   asc?: InputMaybe<Scalars['Boolean']>;
   before?: InputMaybe<Scalars['String']>;
   chain?: InputMaybe<Chain>;
-  datasource?: InputMaybe<DatasourceProvider>;
   filter?: InputMaybe<NftAssetsFilterInput>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
@@ -636,7 +680,6 @@ export type QueryNftBalancesArgs = {
   before?: InputMaybe<Scalars['String']>;
   chain?: InputMaybe<Chain>;
   cursor?: InputMaybe<Scalars['String']>;
-  datasource?: InputMaybe<DatasourceProvider>;
   filter?: InputMaybe<NftBalancesFilterInput>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
@@ -646,12 +689,10 @@ export type QueryNftBalancesArgs = {
 
 
 export type QueryNftCollectionsArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  datasource?: InputMaybe<DatasourceProvider>;
+  chain?: InputMaybe<Chain>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<NftCollectionsFilterInput>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -670,7 +711,6 @@ export type QueryNftRouteArgs = {
 
 export type QueryPortfoliosArgs = {
   ownerAddresses: Array<Scalars['String']>;
-  useAltDataSource?: InputMaybe<Scalars['Boolean']>;
 };
 
 

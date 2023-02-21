@@ -9,6 +9,7 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import {
   AddEthereumChainParameter,
+  DialogAnimationType,
   EMPTY_TOKEN_LIST,
   OnReviewSwapClick,
   SwapWidget,
@@ -177,6 +178,10 @@ export default function Widget({
         {...inputs}
         {...settings}
         {...transactions}
+        dialogOptions={{
+          pageCentered: true,
+          animationType: DialogAnimationType.FADE,
+        }}
         onExpandSwapDetails={onExpandSwapDetails}
         onReviewSwapClick={onReviewSwapClick}
         onSubmitSwapClick={onSubmitSwapClick}
