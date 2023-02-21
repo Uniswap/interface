@@ -92,6 +92,7 @@ export default function CreatePool() {
         </DataRow>
 
         <PoolSection>
+          {/* TODO: check why on some mobile wallets pool list not rendered */}
           {loadingPools && allPools?.length === 0 ? (
             <Loader style={{ margin: 'auto' }} />
           ) : !loadingPools && allPools?.length > 0 ? (
