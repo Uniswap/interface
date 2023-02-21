@@ -105,7 +105,7 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
 }
 
 <div
-    style="padding-right: 8px; padding-top: 8px;"
+    style="padding-right: 4px;"
   >
     <div
       class="CurrencyList_scrollbarStyle__1pi21y70"
@@ -388,7 +388,7 @@ exports[`renders loading rows when isLoading is true 1`] = `
 }
 
 <div
-    style="padding-right: 8px; padding-top: 8px;"
+    style="padding-right: 4px;"
   >
     <div
       class="CurrencyList_scrollbarStyle__1pi21y70"
