@@ -1,6 +1,5 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { GqlRoutingVariant, useGqlRoutingFlag } from 'featureFlags/flags/gqlRouting'
-import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
 import { Permit2Variant, usePermit2Flag } from 'featureFlags/flags/permit2'
 import { SwapWidgetVariant, useSwapWidgetFlag } from 'featureFlags/flags/swapWidget'
@@ -211,12 +210,6 @@ export default function FeatureFlagModal() {
         value={usePermit2Flag()}
         featureFlag={FeatureFlag.permit2}
         label="Permit 2 / Universal Router"
-      />
-      <FeatureFlagOption
-        variant={NftListV2Variant}
-        value={useNftListV2Flag()}
-        featureFlag={FeatureFlag.nftListV2}
-        label="NFT Listing Page v2"
       />
       <FeatureFlagOption
         variant={PayWithAnyTokenVariant}
