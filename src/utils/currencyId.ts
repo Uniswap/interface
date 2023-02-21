@@ -26,6 +26,10 @@ export function buildNativeCurrencyId(chainId: ChainId): string {
   return buildCurrencyId(chainId, nativeAddress)
 }
 
+export function areCurrencyIdsEqual(id1: CurrencyId, id2: CurrencyId): boolean {
+  return id1.toLowerCase() === id2.toLowerCase()
+}
+
 export function currencyAddressForSwapQuote(currency: Currency): string {
   if (currency.isNative) {
     return isPolygonChain(currency.chainId)

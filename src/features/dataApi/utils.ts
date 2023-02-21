@@ -34,14 +34,14 @@ export function tokenProjectToCurrencyInfos(
   return tokenProject
     ?.flatMap((project) =>
       project?.tokens.map((token) => {
-        const { logoUrl, name, safetyLevel } = project
-        const { chain, address, decimals, symbol } = token
+        const { logoUrl, safetyLevel } = project
+        const { chain, address, name, decimals, symbol } = token
         const chainId = fromGraphQLChain(chain)
         if (!chainId || !decimals || !symbol || !name) return null
 
         if (chainFilter && chainFilter !== chainId) return null
         const currency = isNonNativeAddress(chainId, address)
-          ? new Token(chainId, address, decimals, symbol.toLocaleUpperCase(), name)
+          ? new Token(chainId, address, decimals, symbol, name, /* bypassChecksum:*/ true)
           : NativeCurrency.onChain(chainId)
 
         const currencyInfo: CurrencyInfo = {
@@ -75,7 +75,7 @@ export function gqlTokenToCurrencyInfo(
   const { logoUrl, safetyLevel, isSpam } = project
 
   const currency = isNonNativeAddress(chainId, address)
-    ? new Token(chainId, address, decimals, symbol, name)
+    ? new Token(chainId, address, decimals, symbol, name, /* bypassChecksum:*/ true)
     : NativeCurrency.onChain(chainId)
 
   const currencyInfo: CurrencyInfo = {

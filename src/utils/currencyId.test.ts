@@ -3,6 +3,7 @@ import { ChainId } from 'src/constants/chains'
 import { DAI } from 'src/constants/tokens'
 import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
 import {
+  areCurrencyIdsEqual,
   buildCurrencyId,
   buildNativeCurrencyId,
   checksumCurrencyId,
@@ -44,6 +45,22 @@ describe(buildCurrencyId, () => {
 describe(buildNativeCurrencyId, () => {
   it('builds correct ID for native asset', () => {
     expect(buildNativeCurrencyId(ChainId.Mainnet)).toEqual(`${ChainId.Mainnet}-${NATIVE_ADDRESS}`)
+  })
+})
+
+describe(areCurrencyIdsEqual, () => {
+  it('returns correct comparison for the same currencyId', () => {
+    expect(areCurrencyIdsEqual(currencyId(DAI), currencyId(DAI))).toBe(true)
+  })
+
+  it('returns correct comparison between a checksummed and lowercased currencyId', () => {
+    expect(
+      areCurrencyIdsEqual(currencyId(DAI), `${ChainId.Mainnet}-${DAI.address.toLowerCase()}`)
+    ).toBe(true)
+  })
+
+  it('returns correct comparison for the different currencyIds', () => {
+    expect(areCurrencyIdsEqual(currencyId(DAI), currencyId(ETH))).toBe(false)
   })
 })
 

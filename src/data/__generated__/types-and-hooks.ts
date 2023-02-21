@@ -41,6 +41,7 @@ export enum ActivityType {
   Send = 'SEND',
   Stake = 'STAKE',
   Swap = 'SWAP',
+  Swapx = 'SWAPX',
   Staking = 'Staking',
   Unknown = 'UNKNOWN',
   Unstake = 'UNSTAKE',
@@ -96,8 +97,8 @@ export enum Currency {
 }
 
 export enum DatasourceProvider {
-  Nxyz = 'NXYZ',
-  Uniswap = 'UNISWAP'
+  Alternate = 'ALTERNATE',
+  Legacy = 'LEGACY'
 }
 
 export type Dimensions = {
@@ -549,6 +550,20 @@ export type PairInput = {
   tokenAmountB: TokenAmountInput;
 };
 
+export type PermitDetailsInput = {
+  amount: Scalars['String'];
+  expiration: Scalars['String'];
+  nonce: Scalars['String'];
+  token: Scalars['String'];
+};
+
+export type PermitInput = {
+  details: PermitDetailsInput;
+  sigDeadline: Scalars['String'];
+  signature: Scalars['String'];
+  spender: Scalars['String'];
+};
+
 /**   v3 pool parameters as defined by https://github.com/Uniswap/v3-sdk/blob/main/src/entities/pool.ts */
 export type PoolInput = {
   fee: Scalars['Int'];
@@ -573,6 +588,7 @@ export type Portfolio = {
 
 
 export type PortfolioAssetActivitiesArgs = {
+  includeOffChain?: InputMaybe<Scalars['Boolean']>;
   page?: InputMaybe<Scalars['Int']>;
   pageSize?: InputMaybe<Scalars['Int']>;
 };
@@ -864,6 +880,7 @@ export enum TokenStandard {
 }
 
 export type TokenTradeInput = {
+  permit?: InputMaybe<PermitInput>;
   routes?: InputMaybe<TokenTradeRoutesInput>;
   slippageToleranceBasisPoints?: InputMaybe<Scalars['Int']>;
   tokenAmount: TokenAmountInput;
@@ -1024,7 +1041,7 @@ export type TokenProjectsQueryVariables = Exact<{
 }>;
 
 
-export type TokenProjectsQuery = { __typename?: 'Query', tokenProjects?: Array<{ __typename?: 'TokenProject', id: string, logoUrl?: string | null, name?: string | null, safetyLevel?: SafetyLevel | null, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, decimals?: number | null, symbol?: string | null }> } | null> | null };
+export type TokenProjectsQuery = { __typename?: 'Query', tokenProjects?: Array<{ __typename?: 'TokenProject', id: string, logoUrl?: string | null, safetyLevel?: SafetyLevel | null, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, name?: string | null, decimals?: number | null, symbol?: string | null }> } | null> | null };
 
 export type TransactionListQueryVariables = Exact<{
   address: Scalars['String'];
@@ -1906,12 +1923,12 @@ export const TokenProjectsDocument = gql`
   tokenProjects(contracts: $contracts) {
     id
     logoUrl
-    name
     safetyLevel
     tokens {
       id
       chain
       address
+      name
       decimals
       symbol
     }

@@ -25,7 +25,7 @@ import {
   makeSelectAccountHideSpamTokens,
 } from 'src/features/wallet/selectors'
 import { differenceWith } from 'src/utils/array'
-import { CurrencyId } from 'src/utils/currencyId'
+import { areCurrencyIdsEqual, CurrencyId } from 'src/utils/currencyId'
 import { useDebounce } from 'src/utils/timing'
 
 interface TokenSearchResultListProps {
@@ -40,7 +40,10 @@ const tokenOptionComparator = (
   tokenOption: TokenOption,
   otherTokenOption: TokenOption
 ): boolean => {
-  return tokenOption.currencyInfo.currencyId === otherTokenOption.currencyInfo.currencyId
+  return areCurrencyIdsEqual(
+    tokenOption.currencyInfo.currencyId,
+    otherTokenOption.currencyInfo.currencyId
+  )
 }
 // get items in `currencies` that are not in `without`
 // e.g. difference([B, C, D], [A, B, C]) would return ([D])

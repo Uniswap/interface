@@ -360,12 +360,12 @@ query TokenProjects($contracts: [ContractInput!]!) {
   tokenProjects(contracts: $contracts) {
     id
     logoUrl
-    name
     safetyLevel
     tokens {
       id
       chain
       address
+      name
       decimals
       symbol
     }
