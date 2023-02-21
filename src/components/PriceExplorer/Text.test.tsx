@@ -2,7 +2,7 @@ import React from 'react'
 import * as charts from 'react-native-wagmi-charts'
 import { DatetimeText, PriceText, RelativeChangeText } from 'src/components/PriceExplorer/Text'
 import { Amounts } from 'src/test/gqlFixtures'
-import { render } from 'src/test/test-utils'
+import { render, within } from 'src/test/test-utils'
 
 jest.mock(
   'react-native-wagmi-charts'
@@ -51,22 +51,17 @@ describe(PriceText, () => {
   })
 
   it('shows active price when scrubbing', async () => {
-    mockedUseLineChartPrice.mockReturnValue({ value: { value: Amounts.sm.value.toString() } })
+    mockedUseLineChartPrice.mockReturnValue({
+      value: { value: Amounts.sm.value.toString() },
+    })
 
     const tree = render(<PriceText loading={false} spotPrice={Amounts.md.value} />)
 
-    const text = await tree.findByTestId('price-text')
-    expect(text.props.children[0]).toBe(`$${Amounts.sm.value}`)
-    expect(text.props.children[1].props.children).toStrictEqual(['.', '00'])
-  })
-
-  it('shows active price when scrubbing less than a dollar', async () => {
-    mockedUseLineChartPrice.mockReturnValue({ value: { value: Amounts.xs.value.toString() } })
-
-    const tree = render(<PriceText loading={false} spotPrice={Amounts.xs.value} />)
-
-    const text = await tree.findByTestId('price-text')
-    expect(text.props.value).toBe(`$${Amounts.xs.value}00`)
+    const animatedText = await tree.findByTestId('price-text')
+    const wholePart = await within(animatedText).findByTestId('wholePart')
+    const decimalPart = await within(animatedText).findByTestId('decimalPart')
+    expect(wholePart.props.animatedProps.text).toBe(`$${Amounts.sm.value}`)
+    expect(decimalPart.props.animatedProps.text).toBe(`.00`)
   })
 })
 

@@ -16,7 +16,10 @@ export type ValueAndFormatted<U = number, V = string> = {
  */
 export function useLineChartPrice({ spotPrice }: { spotPrice?: number }): ValueAndFormatted {
   // `price` when scrubbing the chart
-  const { value: activeCursorPrice } = useRNWagmiChartLineChartPrice()
+  const { value: activeCursorPrice } = useRNWagmiChartLineChartPrice({
+    // do not round
+    precision: 18,
+  })
 
   const price = useDerivedValue(() => {
     if (activeCursorPrice.value) {

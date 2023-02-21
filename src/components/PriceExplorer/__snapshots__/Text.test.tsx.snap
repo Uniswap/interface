@@ -101,71 +101,133 @@ exports[`PriceText renders loading state 1`] = `
 `;
 
 exports[`PriceText renders without error 1`] = `
-<Text
-  allowFontScaling={true}
-  maxFontSizeMultiplier={1.2}
-  numberOfLines={1}
+<View
   style={
     Array [
       Object {
-        "color": "#0E1524",
         "display": "flex",
-        "fontFamily": "Inter-SemiBold",
-        "fontSize": 40,
-        "lineHeight": 48,
+        "flexDirection": "row",
       },
     ]
   }
   testID="price-text"
 >
-  $55
-  <Text
+  <TextInput
     allowFontScaling={true}
+    animatedProps={
+      Object {
+        "text": "$55",
+      }
+    }
+    editable={false}
     maxFontSizeMultiplier={1.2}
     style={
       Array [
-        Object {
-          "color": "#888FAB",
-          "display": "flex",
-          "fontFamily": "Inter-SemiBold",
-          "fontSize": 40,
-          "lineHeight": 48,
-        },
+        Array [
+          Object {
+            "color": "#0E1524",
+            "fontFamily": "Inter-SemiBold",
+            "fontSize": 40,
+            "lineHeight": 48,
+          },
+        ],
       ]
     }
-  >
-    .
-    00
-  </Text>
-</Text>
+    testID="wholePart"
+    underlineColorAndroid="transparent"
+    value="$55"
+  />
+  <TextInput
+    allowFontScaling={true}
+    animatedProps={
+      Object {
+        "text": ".00",
+      }
+    }
+    editable={false}
+    maxFontSizeMultiplier={1.2}
+    style={
+      Array [
+        Array [
+          Object {
+            "color": "#888FAB",
+            "fontFamily": "Inter-SemiBold",
+            "fontSize": 40,
+            "lineHeight": 48,
+          },
+        ],
+      ]
+    }
+    testID="decimalPart"
+    underlineColorAndroid="transparent"
+    value=".00"
+  />
+</View>
 `;
 
 exports[`PriceText renders without error less than a dollar 1`] = `
-<TextInput
-  allowFontScaling={true}
-  animatedProps={
-    Object {
-      "text": "$0.0500",
-    }
-  }
-  editable={false}
-  maxFontSizeMultiplier={1.2}
+<View
   style={
     Array [
-      Array [
-        Object {
-          "color": "#0E1524",
-          "fontFamily": "Inter-SemiBold",
-          "fontSize": 40,
-          "lineHeight": 48,
-        },
-      ],
+      Object {
+        "display": "flex",
+        "flexDirection": "row",
+      },
     ]
   }
   testID="price-text"
-  underlineColorAndroid="transparent"
-  value="$0.0500"
-/>
+>
+  <TextInput
+    allowFontScaling={true}
+    animatedProps={
+      Object {
+        "text": "$0",
+      }
+    }
+    editable={false}
+    maxFontSizeMultiplier={1.2}
+    style={
+      Array [
+        Array [
+          Object {
+            "color": "#0E1524",
+            "fontFamily": "Inter-SemiBold",
+            "fontSize": 40,
+            "lineHeight": 48,
+          },
+        ],
+      ]
+    }
+    testID="wholePart"
+    underlineColorAndroid="transparent"
+    value="$0"
+  />
+  <TextInput
+    allowFontScaling={true}
+    animatedProps={
+      Object {
+        "text": ".0500",
+      }
+    }
+    editable={false}
+    maxFontSizeMultiplier={1.2}
+    style={
+      Array [
+        Array [
+          Object {
+            "color": "#0E1524",
+            "fontFamily": "Inter-SemiBold",
+            "fontSize": 40,
+            "lineHeight": 48,
+          },
+        ],
+      ]
+    }
+    testID="decimalPart"
+    underlineColorAndroid="transparent"
+    value=".0500"
+  />
+</View>
 `;
 
 exports[`RelativeChangeText renders loading state 1`] = `

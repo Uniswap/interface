@@ -5,7 +5,7 @@ import { useAppTheme } from 'src/app/hooks'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { AnimatedText } from 'src/components/text/AnimatedText'
-import { DecimalNumber } from '../text/DecimalNumber'
+import { AnimatedDecimalNumber } from './AnimatedDecimalNumber'
 import { useLineChartPrice, useLineChartRelativeChange } from './usePrice'
 
 export function PriceText({
@@ -22,22 +22,12 @@ export function PriceText({
   }
 
   return (
-    (price.value.value < 1 && (
-      <AnimatedText
-        color="textPrimary"
-        testID="price-text"
-        text={price.formatted}
-        variant="headlineLarge"
-      />
-    )) || (
-      <DecimalNumber
-        color="textPrimary"
-        number={price.formatted.value}
-        numberOfLines={1}
-        testID="price-text"
-        variant="headlineLarge"
-      />
-    )
+    <AnimatedDecimalNumber
+      decimalPartColor={price.value.value < 1 ? 'textPrimary' : 'textTertiary'}
+      number={price.formatted}
+      testID="price-text"
+      variant="headlineLarge"
+    />
   )
 }
 
