@@ -116,6 +116,7 @@ export function AccountList({
         style={ListSheet.topGradient}
       />
       <ScrollView
+        bounces={false}
         scrollEnabled={accountsWithPortfolioValue.length >= MIN_ACCOUNTS_TO_ENABLE_SCROLL}
         showsVerticalScrollIndicator={false}>
         {signerAccounts.map(renderAccountCardItem)}
