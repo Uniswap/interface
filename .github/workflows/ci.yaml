@@ -1,4 +1,4 @@
-name: "KyberSwap Interface CI"
+name: 'KyberSwap Interface CI'
 
 concurrency:
   group: ci-workflow-${{ github.ref }}-${{ github.event_name }}
@@ -14,11 +14,11 @@ env:
 
 jobs:
   prepare:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     outputs:
       current_branch: ${{ steps.current_branch.outputs.value }}
       head_sha: ${{ steps.head_sha.outputs.value }}
-      image_name: "asia.gcr.io/kyber-operation/core/${{ env.SERVICE }}"
+      image_name: 'asia.gcr.io/kyber-operation/core/${{ env.SERVICE }}'
       image_tag: ${{ steps.get_tag.outputs.image_tag }}
       image_tag_stg: ${{ steps.get_tag.outputs.image_tag_stg }}
       branch_tag: ${{ steps.get_tag.outputs.branch_tag }}
@@ -64,7 +64,7 @@ jobs:
           echo "::set-output name=branch_tag::$branch_tag-$short_sha"
 
   build-dev:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     needs:
       - prepare
     steps:
@@ -136,7 +136,7 @@ jobs:
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
   build-stg:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     needs:
       - prepare
     steps:

@@ -10,7 +10,7 @@ on:
 
 jobs:
   prepare:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     outputs:
       version_tag: ${{ steps.version_tag.outputs.value }}
       build_date: ${{ steps.build_date.outputs.value }}
@@ -31,7 +31,7 @@ jobs:
   build:
     needs:
       - prepare
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -75,7 +75,7 @@ jobs:
       SERVICE: kyberswap-interface
       VERSION_TAG: ${{ needs.prepare.outputs.version_tag }}
       BUILD_DATE: ${{ needs.prepare.outputs.build_date }}
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -134,7 +134,7 @@ jobs:
     needs:
       - prepare
       - docker
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     env:
       VERSION_TAG: ${{ needs.prepare.outputs.version_tag }}
     steps:

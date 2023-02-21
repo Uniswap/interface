@@ -16,7 +16,7 @@ env:
 
 jobs:
   prepare:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     outputs:
       current_branch: ${{ steps.current_branch.outputs.value }}
       head_sha: ${{ github.event.pull_request.head.sha }}
@@ -63,7 +63,7 @@ jobs:
           echo "::set-output name=image_tag::adpr-$short_sha"
 
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     needs:
       - prepare
     steps:
