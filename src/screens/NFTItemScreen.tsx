@@ -114,13 +114,15 @@ export function NFTItemScreen({
         }
         renderedInModal={inModal}
         rightElement={
-          <TouchableOpacity onPress={onShare}>
-            <ShareIcon
-              color={theme.colors.textSecondary}
-              height={iconSizes.icon24}
-              width={iconSizes.icon24}
-            />
-          </TouchableOpacity>
+          <Box mr="spacing4">
+            <TouchableOpacity onPress={onShare}>
+              <ShareIcon
+                color={theme.colors.textSecondary}
+                height={iconSizes.icon24}
+                width={iconSizes.icon24}
+              />
+            </TouchableOpacity>
+          </Box>
         }>
         <Flex gap="spacing24" mb="spacing48" mt="spacing16" mx="spacing24" pb="spacing48">
           <Flex
