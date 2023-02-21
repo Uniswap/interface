@@ -147,8 +147,16 @@ function getZapperLink(data: string): string {
   return `https://zapper.xyz/account/${data}`
 }
 
-function PoolAddressCard({ poolAddress, chainId }: { poolAddress?: string | null; chainId?: number | null }) {
-  if (!poolAddress || !chainId) {
+function AddressCard({
+  address,
+  chainId,
+  label,
+}: {
+  address?: string | null
+  chainId?: number | null
+  label?: string | null
+}) {
+  if (!address || !chainId || !label) {
     return null
   }
 
@@ -156,15 +164,15 @@ function PoolAddressCard({ poolAddress, chainId }: { poolAddress?: string | null
     <LightCard padding="12px ">
       <AutoColumn gap="md">
         <ExtentsText>
-          <Trans>Pool Address</Trans>
+          <Trans>{label}</Trans>
         </ExtentsText>
       </AutoColumn>
       {/*<AutoColumn gap="8px" justify="center">#*/}
       <AutoColumn gap="md">
         <ExtentsText>
-          {typeof chainId === 'number' && poolAddress ? (
-            <ExternalLink href={getExplorerLink(chainId, poolAddress, ExplorerDataType.ADDRESS)}>
-              <Trans>{shortenAddress(poolAddress)}</Trans>
+          {typeof chainId === 'number' && address ? (
+            <ExternalLink href={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}>
+              <Trans>{shortenAddress(address)}</Trans>
             </ExternalLink>
           ) : null}
         </ExtentsText>
@@ -179,20 +187,20 @@ function PoolAddressCard({ poolAddress, chainId }: { poolAddress?: string | null
 }
 
 export function PoolPositionPage() {
-  const { poolAddress: poolAddressFromUrl, poolId: poolIdFromUrl } = useParams<{
+  // TODO: we can implement all staking methods since we pass pool id, otherwise remove from url if not using
+  const { poolAddress: poolAddressFromUrl /*, poolId: poolIdFromUrl*/ } = useParams<{
     poolAddress?: string
     poolId?: string
   }>()
   const { chainId /*, account , provider*/ } = useWeb3React()
   //const theme = useTheme()
-  console.log(poolIdFromUrl)
 
   const [showConfirm, setShowConfirm] = useState(false)
   // TODO: check how can reduce number of calls by limit update of poolStorage
   //  id is stored in registry so we could save rpc call by using storing in state?
   const poolStorage = useSmartPoolFromAddress(poolAddressFromUrl ?? undefined)
 
-  const { name, symbol, decimals, /*owner,*/ baseToken } = poolStorage?.poolInitParams || {}
+  const { name, symbol, decimals, owner, baseToken } = poolStorage?.poolInitParams || {}
   const { minPeriod, spread, transactionFee } = poolStorage?.poolVariables || {}
   const { unitaryValue, totalSupply } = poolStorage?.poolTokensInfo || {}
 
@@ -478,7 +486,12 @@ export function PoolPositionPage() {
           </ResponsiveRow>
           <AutoColumn>
             <DarkCard>
-              <PoolAddressCard poolAddress={poolAddressFromUrl} chainId={chainId} />
+              <AddressCard address={poolAddressFromUrl} chainId={chainId} label="Smart Pool" />
+            </DarkCard>
+          </AutoColumn>
+          <AutoColumn>
+            <DarkCard>
+              <AddressCard address={owner} chainId={chainId} label="Pool Operator" />
             </DarkCard>
           </AutoColumn>
         </AutoColumn>
