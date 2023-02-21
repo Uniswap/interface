@@ -66,7 +66,7 @@ const SitePermissions = (): JSX.Element => {
         </Box>
         <Box flex={1}>
           <Text color="textPrimary" variant="bodySmall">
-            {t('View your wallet address and ENS name')}
+            {t('View your wallet address')}
           </Text>
         </Box>
       </Flex>
