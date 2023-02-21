@@ -25,6 +25,7 @@ export function RecipientList({ onPress, sections }: RecipientListProps): JSX.El
 
   return (
     <SectionList
+      bounces={false}
       keyExtractor={key}
       keyboardShouldPersistTaps="always"
       renderItem={renderItem}
