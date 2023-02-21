@@ -1,4 +1,4 @@
-//import { Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 //import Badge from 'components/Badge'
 //import RangeBadge from 'components/Badge/RangeBadge'
 //import Loader from 'components/Loader'
@@ -58,6 +58,32 @@ const DataText = styled.div`
   `};
 `
 
+const DataLineItem = styled.div`
+  font-size: 14px;
+`
+
+const RangeLineItem = styled(DataLineItem)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 4px;
+  width: 100%;
+`
+
+const RangeText = styled.span`
+  padding: 0.25rem 0.25rem;
+  border-radius: 8px;
+`
+
+const ExtentsText = styled.span`
+  color: ${({ theme }) => theme.deprecated_text3};
+  font-size: 14px;
+  margin-right: 4px;
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+    display: none;
+  `};
+`
+
 interface PoolPositionListItemProps {
   positionDetails: PoolPositionDetails
 }
@@ -73,16 +99,24 @@ export default function PoolPositionListItem({ positionDetails }: PoolPositionLi
   //  return new PoolPosition({ name, symbol, pool, id })
   //}, [name, symbol, pool, id])
 
-  const positionSummaryLink = '/smart-pool/' + positionDetails.pool
+  //const positionSummaryLink = '/smart-pool/' + positionDetails.pool '/' + positionDetails.id
+  const positionSummaryLink = `/smart-pool/${positionDetails.pool}/${positionDetails.id}`
 
   return (
     <LinkRow to={positionSummaryLink}>
       <RowBetween>
         <PrimaryPositionIdData>
-          <DataText>&nbsp;{name}&nbsp;</DataText>
+          <DataText>{name}</DataText>
         </PrimaryPositionIdData>
-        <DataText>&nbsp;{symbol}&nbsp;</DataText>
+        <DataText>{symbol}</DataText>
       </RowBetween>
+      <RangeLineItem>
+        <RangeText>
+          <ExtentsText>
+            <Trans>{positionDetails.pool}</Trans>
+          </ExtentsText>
+        </RangeText>
+      </RangeLineItem>
     </LinkRow>
   )
 }

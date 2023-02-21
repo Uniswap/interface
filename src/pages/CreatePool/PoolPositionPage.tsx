@@ -150,9 +150,13 @@ function getZapperLink(data: string): string {
 }
 
 export function PoolPositionPage() {
-  const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
+  const { poolAddress: poolAddressFromUrl, poolId: poolIdFromUrl } = useParams<{
+    poolAddress?: string
+    poolId?: string
+  }>()
   const { chainId /*, account , provider*/ } = useWeb3React()
   //const theme = useTheme()
+  console.log(poolIdFromUrl)
 
   const [showConfirm, setShowConfirm] = useState(false)
   // TODO: check how can reduce number of calls by limit update of poolStorage
