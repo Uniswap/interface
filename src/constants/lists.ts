@@ -1,4 +1,4 @@
-export const UNI_LIST = 'https://tokens.uniswap.org'
+export const UNI_LIST = 'https://gateway.ipfs.io/ipns/tokens.uniswap.org'
 export const UNI_EXTENDED_LIST = 'https://extendedtokens.uniswap.org/'
 const UNI_UNSUPPORTED_LIST = 'https://unsupportedtokens.uniswap.org/'
 const AAVE_LIST = 'tokenlist.aave.eth'
