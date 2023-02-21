@@ -3,7 +3,7 @@
 import { Trans } from '@lingui/macro'
 //import { Trace } from '@uniswap/analytics'
 //import { PageName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount /*, Fraction*/, Percent /*, Price, Token*/ } from '@uniswap/sdk-core'
+import { /*Currency,*/ CurrencyAmount /*, Fraction*/, Percent /*, Price, Token*/ } from '@uniswap/sdk-core'
 //import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 //import { sendEvent } from 'components/analytics'
@@ -19,7 +19,7 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { /*BIG_INT_ZERO,*/ ZERO_ADDRESS } from 'constants/misc'
 import { nativeOnChain } from 'constants/tokens'
-import { useCurrency, useToken } from 'hooks/Tokens'
+import { useCurrency } from 'hooks/Tokens'
 import { useSmartPoolFromAddress } from 'hooks/useSmartPools'
 // TODO: this import is from node modules
 import JSBI from 'jsbi'
@@ -31,7 +31,7 @@ import { /*useCallback, useMemo, useRef,*/ useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 //import { Bound } from 'state/mint/v3/actions'
 //import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import styled /*, { useTheme }*/ from 'styled-components/macro'
 import { ExternalLink, /*HideExtraSmall,*/ ThemedText } from 'theme'
 import { shortenAddress } from 'utils'
 //import { currencyId } from 'utils/currencyId'
@@ -152,7 +152,7 @@ function getZapperLink(data: string): string {
 export function PoolPositionPage() {
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
   const { chainId /*, account , provider*/ } = useWeb3React()
-  const theme = useTheme()
+  //const theme = useTheme()
 
   const [showConfirm, setShowConfirm] = useState(false)
   // TODO: check how can reduce number of calls by limit update of poolStorage
@@ -163,7 +163,7 @@ export function PoolPositionPage() {
   const { minPeriod, spread, transactionFee } = poolStorage?.poolVariables || {}
   const { unitaryValue, totalSupply } = poolStorage?.poolTokensInfo || {}
 
-  const token = useToken(poolAddressFromUrl ?? undefined) as Currency
+  //const token = useToken(poolAddressFromUrl ?? undefined) as Currency
   let base = useCurrency(baseToken !== ZERO_ADDRESS ? baseToken : undefined)
 
   const amount = JSBI.BigInt(unitaryValue ?? 0)
