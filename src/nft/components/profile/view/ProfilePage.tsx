@@ -26,7 +26,7 @@ import { easings, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
 import { shallow } from 'zustand/shallow'
 
-import { EmptyWalletContent } from './EmptyWalletContent'
+import { EmptyWalletModule } from './EmptyWalletContent'
 import * as styles from './ProfilePage.css'
 import { ProfileBodyLoadingSkeleton } from './ProfilePageLoadingSkeleton'
 import { ViewMyNftsAsset } from './ViewMyNftsAsset'
@@ -48,6 +48,10 @@ const ProfileHeader = styled.div`
     line-height: 28px;
     margin-bottom: 0px;
   }
+`
+
+const EmptyStateContainer = styled.div`
+  margin-top: 164px;
 `
 
 export const DEFAULT_WALLET_ASSET_QUERY_AMOUNT = 25
@@ -217,7 +221,9 @@ const ProfilePageNfts = ({
   return (
     <Column width="full">
       {ownerAssets?.length === 0 ? (
-        <EmptyWalletContent />
+        <EmptyStateContainer>
+          <EmptyWalletModule />
+        </EmptyStateContainer>
       ) : (
         <AnimatedBox
           flexShrink="0"

@@ -1,63 +1,40 @@
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import React from 'react'
-import { Check } from 'react-feather'
+import Loader from 'components/Icons/LoadingSpinner'
+import { Connection, ConnectionType } from 'connection'
 import styled from 'styled-components/macro'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 
-import { ExternalLink } from '../../theme'
+import NewBadge from './NewBadge'
 
-const InfoCard = styled.button<{ isActive?: boolean }>`
-  background-color: ${({ theme }) => theme.backgroundInteractive};
-  padding: 1rem;
-  outline: none;
-  border: 1px solid;
-  border-radius: 12px;
-  width: 100% !important;
-  &:focus {
-    background-color: ${({ theme }) => theme.hoverState};
-  }
-  border-color: ${({ theme, isActive }) => (isActive ? theme.accentActive : 'transparent')};
-`
-
-const CheckIcon = styled(Check)`
+const OptionCardLeft = styled.div`
   ${flexColumnNoWrap};
-  height: 20px;
-  width: 20px;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  color: ${({ theme }) => theme.accentAction};
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
-    align-items: flex-end;
-  `};
 `
 
-const OptionCard = styled(InfoCard as any)`
+const OptionCardClickable = styled.button<{ isActive?: boolean; clickable?: boolean }>`
+  background-color: ${({ theme }) => theme.backgroundModule};
+  width: 100% !important;
+  border-color: ${({ theme, isActive }) => (isActive ? theme.accentActive : 'transparent')};
+
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   margin-top: 2rem;
   padding: 1rem;
-`
 
-const OptionCardLeft = styled.div`
-  ${flexColumnNoWrap};
-  justify-content: center;
-  height: 100%;
-`
-
-const OptionCardClickable = styled(OptionCard as any)<{
-  active?: boolean
-  clickable?: boolean
-}>`
   margin-top: 0;
-  border: ${({ active, theme }) => active && `1px solid ${theme.accentActive}`};
+  transition: ${({ theme }) => theme.transition.duration.fast};
+  opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
   &:hover {
     cursor: ${({ clickable }) => clickable && 'pointer'};
-    background-color: ${({ theme }) => theme.hoverState};
+    background-color: ${({ theme, clickable }) => clickable && theme.hoverState};
   }
-  opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
+  &:focus {
+    background-color: ${({ theme, clickable }) => clickable && theme.hoverState};
+  }
 `
 
 const HeaderText = styled.div`
@@ -67,19 +44,13 @@ const HeaderText = styled.div`
   color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.accentAction : ({ theme }) => theme.textPrimary)};
   font-size: 16px;
   font-weight: 600;
-`
-
-const SubHeader = styled.div`
-  color: ${({ theme }) => theme.textPrimary};
-  margin-top: 10px;
-  font-size: 12px;
+  padding: 0 8px;
 `
 
 const IconWrapper = styled.div`
   ${flexColumnNoWrap};
   align-items: center;
   justify-content: center;
-  padding-right: 12px;
   & > img,
   span {
     height: 40px;
@@ -90,57 +61,37 @@ const IconWrapper = styled.div`
   `};
 `
 
-export default function Option({
-  link = null,
-  clickable = true,
-  onClick = null,
-  color,
-  header,
-  subheader,
-  icon,
-  isActive = false,
-  id,
-}: {
-  link?: string | null
-  clickable?: boolean
-  onClick?: null | (() => void)
-  color: string
-  header: React.ReactNode
-  subheader?: React.ReactNode
-  icon: string
-  isActive?: boolean
-  id: string
-}) {
+type OptionProps = {
+  connection: Connection
+  activate: () => void
+  pendingConnectionType?: ConnectionType
+}
+export default function Option({ connection, pendingConnectionType, activate }: OptionProps) {
+  const isPending = pendingConnectionType === connection.type
   const content = (
     <TraceEvent
       events={[BrowserEvent.onClick]}
       name={InterfaceEventName.WALLET_SELECTED}
-      properties={{ wallet_type: header }}
+      properties={{ wallet_type: connection.name }}
       element={InterfaceElementName.WALLET_TYPE_OPTION}
     >
       <OptionCardClickable
-        id={id}
-        onClick={onClick}
-        clickable={clickable && !isActive}
-        active={isActive}
+        onClick={!pendingConnectionType ? activate : undefined}
+        clickable={!pendingConnectionType}
+        disabled={Boolean(!isPending && !!pendingConnectionType)}
         data-testid="wallet-modal-option"
       >
         <OptionCardLeft>
-          <HeaderText color={color}>
-            <IconWrapper>
-              <img src={icon} alt="Icon" />
-            </IconWrapper>
-            {header}
-          </HeaderText>
-          {subheader && <SubHeader>{subheader}</SubHeader>}
+          <IconWrapper>
+            <img src={connection.icon} alt="Icon" />
+          </IconWrapper>
+          <HeaderText>{connection.name}</HeaderText>
+          {connection.isNew && <NewBadge />}
         </OptionCardLeft>
-        {isActive && <CheckIcon />}
+        {isPending && <Loader />}
       </OptionCardClickable>
     </TraceEvent>
   )
-  if (link) {
-    return <ExternalLink href={link}>{content}</ExternalLink>
-  }
 
   return content
 }

@@ -16,6 +16,10 @@ interface Window {
     isBraveWallet?: true
     // set by the MetaMask browser extension (also set by Brave browser when using built-in wallet)
     isMetaMask?: true
+    // set by the Rabby browser extension
+    isRabby?: true
+    // set by the Trust Wallet browser extension
+    isTrustWallet?: true
     autoRefreshOnNetworkChange?: boolean
   }
   web3?: Record<string, unknown>
@@ -29,4 +33,14 @@ declare module 'content-hash' {
 declare module 'multihashes' {
   declare function decode(buff: Uint8Array): { code: number; name: string; length: number; digest: Uint8Array }
   declare function toB58String(hash: Uint8Array): string
+}
+
+declare module '*.webm' {
+  const src: string
+  export default src
+}
+
+declare module '*.mov' {
+  const src: string
+  export default src
 }

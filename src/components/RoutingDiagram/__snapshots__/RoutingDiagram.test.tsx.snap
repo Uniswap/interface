@@ -2,28 +2,7 @@
 
 exports[`renders multi route 1`] = `
 <DocumentFragment>
-  .c7 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background-color: #E8ECFB;
-  border: unset;
-  border-radius: 0.5rem;
-  color: #000;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  padding: 4px 6px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  font-weight: 500;
-}
-
-.c1 {
+  .c1 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -54,14 +33,53 @@ exports[`renders multi route 1`] = `
 }
 
 .c12 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 1px;
+}
+
+.c13 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c12 > * {
+.c13 > * {
   margin: 1px !important;
+}
+
+.c7 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #E8ECFB;
+  border: unset;
+  border-radius: 0.5rem;
+  color: #000;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  padding: 4px 6px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-weight: 500;
 }
 
 .c0 {
@@ -180,7 +198,7 @@ exports[`renders multi route 1`] = `
           </div>
         </div>
         <div
-          class="c11 c2 c12"
+          class="c11 c12 c13"
           style="justify-content: space-evenly; z-index: 2;"
           width="100%"
         >
@@ -225,7 +243,7 @@ exports[`renders multi route 1`] = `
           </div>
         </div>
         <div
-          class="c11 c2 c12"
+          class="c11 c12 c13"
           style="justify-content: space-evenly; z-index: 2;"
           width="100%"
         >
@@ -240,28 +258,7 @@ exports[`renders multi route 1`] = `
 
 exports[`renders single route 1`] = `
 <DocumentFragment>
-  .c7 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background-color: #E8ECFB;
-  border: unset;
-  border-radius: 0.5rem;
-  color: #000;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  padding: 4px 6px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  font-weight: 500;
-}
-
-.c1 {
+  .c1 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -292,14 +289,53 @@ exports[`renders single route 1`] = `
 }
 
 .c12 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 1px;
+}
+
+.c13 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c12 > * {
+.c13 > * {
   margin: 1px !important;
+}
+
+.c7 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #E8ECFB;
+  border: unset;
+  border-radius: 0.5rem;
+  color: #000;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  padding: 4px 6px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-weight: 500;
 }
 
 .c0 {
@@ -418,7 +454,7 @@ exports[`renders single route 1`] = `
           </div>
         </div>
         <div
-          class="c11 c2 c12"
+          class="c11 c12 c13"
           style="justify-content: space-evenly; z-index: 2;"
           width="100%"
         >

@@ -1,5 +1,6 @@
+import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import Loader from 'components/Loader'
+import Loader from 'components/Icons/LoadingSpinner'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { CheckMarkIcon } from 'nft/components/icons'
@@ -7,29 +8,30 @@ import styled, { useTheme } from 'styled-components/macro'
 
 const LOGO_SIZE = 20
 
-const Container = styled.button`
-  display: grid;
-  background: none;
-  grid-template-columns: min-content 1fr min-content;
+const Container = styled.button<{ disabled: boolean }>`
   align-items: center;
-  text-align: left;
-  line-height: 24px;
+  background: none;
   border: none;
-  justify-content: space-between;
-  padding: 10px 8px;
-  cursor: pointer;
   border-radius: 12px;
   color: ${({ theme }) => theme.textPrimary};
-  width: 240px;
+  cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  justify-content: space-between;
+  line-height: 24px;
+  opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
+  padding: 10px 8px;
+  text-align: left;
   transition: ${({ theme }) => theme.transition.duration.medium} ${({ theme }) => theme.transition.timing.ease}
     background-color;
+  width: 240px;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     width: 100%;
   }
 
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundOutline};
+    background-color: ${({ disabled, theme }) => (disabled ? 'none' : theme.backgroundOutline)};
   }
 `
 
@@ -47,7 +49,7 @@ const Status = styled.div`
   width: ${LOGO_SIZE}px;
 `
 
-const ApproveText = styled.div`
+const CaptionText = styled.div`
   color: ${({ theme }) => theme.textSecondary};
   font-size: 12px;
   grid-column: 2;
@@ -59,16 +61,13 @@ const Logo = styled.img`
   width: ${LOGO_SIZE}px;
   margin-right: 12px;
 `
-
-export default function ChainSelectorRow({
-  targetChain,
-  onSelectChain,
-  isPending,
-}: {
+interface ChainSelectorRowProps {
+  disabled?: boolean
   targetChain: SupportedChainId
   onSelectChain: (targetChain: number) => void
   isPending: boolean
-}) {
+}
+export default function ChainSelectorRow({ disabled, targetChain, onSelectChain, isPending }: ChainSelectorRowProps) {
   const { chainId } = useWeb3React()
   const active = chainId === targetChain
   const { label, logoUrl } = getChainInfo(targetChain)
@@ -76,10 +75,25 @@ export default function ChainSelectorRow({
   const theme = useTheme()
 
   return (
-    <Container onClick={() => onSelectChain(targetChain)} data-testid={`chain-selector-option-${label.toLowerCase()}`}>
+    <Container
+      disabled={!!disabled}
+      onClick={() => {
+        if (!disabled) onSelectChain(targetChain)
+      }}
+      data-testid={`chain-selector-option-${label.toLowerCase()}`}
+    >
       <Logo src={logoUrl} alt={label} />
       <Label>{label}</Label>
-      {isPending && <ApproveText>Approve in wallet</ApproveText>}
+      {disabled && (
+        <CaptionText>
+          <Trans>Unsupported by your wallet</Trans>
+        </CaptionText>
+      )}
+      {isPending && (
+        <CaptionText>
+          <Trans>Approve in wallet</Trans>
+        </CaptionText>
+      )}
       <Status>
         {active && <CheckMarkIcon width={LOGO_SIZE} height={LOGO_SIZE} color={theme.accentActive} />}
         {isPending && <Loader width={LOGO_SIZE} height={LOGO_SIZE} />}

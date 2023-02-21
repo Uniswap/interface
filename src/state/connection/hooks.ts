@@ -8,7 +8,6 @@ import { useAllTokens } from '../../hooks/Tokens'
 export {
   default as useCurrencyBalance,
   useCurrencyBalances,
-  useCurrencyBalanceString,
   useNativeCurrencyBalances,
   useTokenBalance,
   useTokenBalances,

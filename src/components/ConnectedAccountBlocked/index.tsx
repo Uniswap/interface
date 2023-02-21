@@ -13,10 +13,6 @@ const ContentWrapper = styled(Column)`
   text-align: center;
   font-size: 12px;
 `
-const Copy = styled(CopyHelper)`
-  font-size: 12px;
-`
-
 interface ConnectedAccountBlockedProps {
   account: string | null | undefined
   isOpen: boolean
@@ -44,16 +40,16 @@ export default function ConnectedAccountBlocked(props: ConnectedAccountBlockedPr
         <ThemedText.DeprecatedMain fontSize={12}>
           <Trans>If you believe this is an error, please send an email including your address to </Trans>{' '}
         </ThemedText.DeprecatedMain>
-        <Copy
+
+        <CopyHelper
           toCopy="compliance@uniswap.org"
           fontSize={14}
           iconSize={16}
-          gap={6}
           color={theme.accentAction}
           iconPosition="right"
         >
           compliance@uniswap.org
-        </Copy>
+        </CopyHelper>
       </ContentWrapper>
     </Modal>
   )

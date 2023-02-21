@@ -25,6 +25,7 @@ describe('Landing Page', () => {
   })
 
   it('allows navigation to pool', () => {
+    cy.viewport(2000, 1600)
     cy.get(getTestSelector('pool-nav-link')).first().click()
     cy.url().should('include', '/pools')
   })

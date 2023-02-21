@@ -1,17 +1,14 @@
-import { getWalletMeta } from '@uniswap/conedison/provider/meta'
 import { useWeb3React } from '@web3-react/core'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Unicon } from 'components/Unicon'
-import { ConnectionType } from 'connection'
+import { Connection, ConnectionType } from 'connection'
 import useENSAvatar from 'hooks/useENSAvatar'
-import ms from 'ms.macro'
+import { useIsMobile } from 'nft/hooks'
 import { PropsWithChildren } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { flexColumnNoWrap } from 'theme/styles'
 
-import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
-import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import sockImg from '../../assets/svg/socks.svg'
 import { useHasSocks } from '../../hooks/useSocksBalance'
 import Identicon from '../Identicon'
@@ -32,27 +29,43 @@ export const IconWrapper = styled.div<{ size?: number }>`
   `};
 `
 
-const SockContainer = styled.div`
+const MiniIconContainer = styled.div<{ side: 'left' | 'right' }>`
   position: absolute;
   display: flex;
   justify-content: center;
-  border-radius: 50%;
+  align-items: center;
   width: 16px;
   height: 16px;
   bottom: -4px;
-  right: -4px;
+  ${({ side }) => `${side === 'left' ? 'left' : 'right'}: -4px;`}
+  border-radius: 50%;
+  outline: 2px solid ${({ theme }) => theme.backgroundSurface};
+  outline-offset: -0.1px;
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  overflow: hidden;
+  @supports (overflow: clip) {
+    overflow: clip;
+  }
 `
 
-const SockImg = styled.img`
+const MiniImg = styled.img`
   width: 16px;
   height: 16px;
 `
 
 const Socks = () => {
   return (
-    <SockContainer>
-      <SockImg src={sockImg} />
-    </SockContainer>
+    <MiniIconContainer side="left">
+      <MiniImg src={sockImg} />
+    </MiniIconContainer>
+  )
+}
+
+const MiniWalletIcon = ({ connection, side }: { connection: Connection; side: 'left' | 'right' }) => {
+  return (
+    <MiniIconContainer side={side}>
+      <MiniImg src={connection.icon} alt={`${connection.name} icon`} />
+    </MiniIconContainer>
   )
 }
 
@@ -64,7 +77,6 @@ const Divider = styled.div`
 function UniconTooltip({ children, enabled }: PropsWithChildren<{ enabled?: boolean }>) {
   return (
     <MouseoverTooltip
-      timeout={ms`3s`}
       offsetY={8}
       disableHover={!enabled}
       text={
@@ -86,46 +98,52 @@ function UniconTooltip({ children, enabled }: PropsWithChildren<{ enabled?: bool
   )
 }
 
-const useIcon = (connectionType: ConnectionType, size?: number, enableInfotips?: boolean) => {
-  const { account, provider } = useWeb3React()
-  const { avatar } = useENSAvatar(account ?? undefined)
-  const isUniswapWallet = Boolean(provider && getWalletMeta(provider)?.name === 'Uniswap Wallet')
-
-  if (!account) return null
-
-  if (avatar || connectionType === ConnectionType.INJECTED) {
-    return <Identicon />
-  } else if (connectionType === ConnectionType.WALLET_CONNECT) {
-    return isUniswapWallet ? (
-      <UniconTooltip enabled={enableInfotips}>
-        <Unicon address={account} size={size} />
-      </UniconTooltip>
-    ) : (
-      <img src={WalletConnectIcon} alt="WalletConnect" />
-    )
-  } else if (connectionType === ConnectionType.COINBASE_WALLET) {
-    return <img src={CoinbaseWalletIcon} alt="Coinbase Wallet" />
-  }
-
-  return undefined
-}
-
-export default function StatusIcon({
-  connectionType,
+const MainWalletIcon = ({
+  connection,
   size,
   enableInfotips,
 }: {
-  connectionType: ConnectionType
+  connection: Connection
+  size: number
+  enableInfotips?: boolean
+}) => {
+  const { account } = useWeb3React()
+  const { avatar } = useENSAvatar(account ?? undefined)
+  const isMobile = useIsMobile()
+
+  if (!account) {
+    return null
+  } else if (avatar || (connection.type === ConnectionType.INJECTED && connection.name === 'MetaMask')) {
+    return <Identicon size={size} />
+  } else {
+    return isMobile ? (
+      <Unicon address={account} size={size} />
+    ) : (
+      <UniconTooltip enabled={enableInfotips}>
+        <Unicon address={account} size={size} />
+      </UniconTooltip>
+    )
+  }
+}
+
+export default function StatusIcon({
+  connection,
+  size = 16,
+  enableInfotips,
+  showMiniIcons = true,
+}: {
+  connection: Connection
   size?: number
   enableInfotips?: boolean
+  showMiniIcons?: boolean
 }) {
   const hasSocks = useHasSocks()
-  const icon = useIcon(connectionType, size, enableInfotips)
 
   return (
-    <IconWrapper size={size ?? 16}>
-      {hasSocks && <Socks />}
-      {icon}
+    <IconWrapper size={size}>
+      {hasSocks && showMiniIcons && <Socks />}
+      <MainWalletIcon connection={connection} size={size} enableInfotips={enableInfotips} />
+      {showMiniIcons && <MiniWalletIcon connection={connection} side="right" />}
     </IconWrapper>
   )
 }

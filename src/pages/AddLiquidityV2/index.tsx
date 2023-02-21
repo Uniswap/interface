@@ -8,6 +8,7 @@ import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import { useToggleWalletDrawer } from 'components/WalletDropdown'
 import { useCallback, useState } from 'react'
 import { Plus } from 'react-feather'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -31,7 +32,6 @@ import { useV2RouterContract } from '../../hooks/useContract'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { PairState } from '../../hooks/useV2Pairs'
-import { useToggleWalletModal } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -67,7 +67,7 @@ export default function AddLiquidity() {
       ((currencyA && currencyA.equals(wrappedNativeCurrency)) || (currencyB && currencyB.equals(wrappedNativeCurrency)))
   )
 
-  const toggleWalletModal = useToggleWalletModal() // toggle wallet when disconnected
+  const toggleWalletDrawer = useToggleWalletDrawer() // toggle wallet when disconnected
 
   const expertMode = useIsExpertMode()
 
@@ -441,7 +441,7 @@ export default function AddLiquidity() {
                 properties={{ received_swap_quote: false }}
                 element={InterfaceElementName.CONNECT_WALLET_BUTTON}
               >
-                <ButtonLight onClick={toggleWalletModal}>
+                <ButtonLight onClick={toggleWalletDrawer}>
                   <Trans>Connect Wallet</Trans>
                 </ButtonLight>
               </TraceEvent>

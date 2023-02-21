@@ -1,4 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
+import Loader from 'components/Icons/LoadingSpinner'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { useMemo } from 'react'
@@ -8,7 +9,6 @@ import { ExternalLink } from 'theme'
 import { colors } from 'theme/colors'
 
 import { TransactionDetails } from '../../state/transactions/types'
-import Loader from '../Loader'
 import LogoView from './LogoView'
 import TransactionBody from './TransactionBody'
 
@@ -47,7 +47,8 @@ const IconStyleWrap = styled.span`
   margin-left: auto;
   height: 16px;
 `
-
+/* TODO(cartcrom): WEB-2920 reuse pool TX history from here for Mini Portfolio & then delete this component/folder */
+// eslint-disable-next-line import/no-unused-modules
 export const TransactionSummary = ({
   transactionDetails,
   isLastTransactionInList = false,

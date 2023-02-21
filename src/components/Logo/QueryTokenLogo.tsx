@@ -16,7 +16,12 @@ export default function QueryTokenLogo(
 
   return (
     <AssetLogo
-      isNative={props.token?.standard === TokenStandard.Native || props.token?.address === NATIVE_CHAIN_ID}
+      isNative={
+        // TODO(cartcrom): simplify this check after backend fixes token standard on assetActivities tokens
+        !props.token?.address ||
+        props.token?.standard === TokenStandard.Native ||
+        props.token?.address === NATIVE_CHAIN_ID
+      }
       chainId={chainId}
       address={props.token?.address}
       symbol={props.token?.symbol}
