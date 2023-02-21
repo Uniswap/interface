@@ -175,10 +175,12 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
     // Initial loading state or refetch
     if (isNonPollingRequestInFlight(networkStatus)) {
       return (
-        <View style={containerProps?.loadingContainerStyle}>
-          <Flex>
-            <Loader.NFT repeat={6} />
-          </Flex>
+        <View
+          style={[
+            containerProps?.loadingContainerStyle,
+            { paddingHorizontal: theme.spacing.spacing12 },
+          ]}>
+          <Loader.NFT repeat={6} />
         </View>
       )
     }
