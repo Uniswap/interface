@@ -5,7 +5,7 @@ type Props = PropsWithChildren<{
   showIndicator?: boolean
 }>
 
-const NOTIFICATION_DOT_SIZE = 8
+const NOTIFICATION_DOT_SIZE = 12
 
 function _NotificationBadge({ showIndicator, children }: Props): JSX.Element {
   return (
@@ -13,11 +13,13 @@ function _NotificationBadge({ showIndicator, children }: Props): JSX.Element {
       {showIndicator ? (
         <Box
           backgroundColor="userThemeMagenta"
+          borderColor="background1"
           borderRadius="roundedFull"
+          borderWidth={2}
           height={NOTIFICATION_DOT_SIZE}
           position="absolute"
-          right={-NOTIFICATION_DOT_SIZE}
-          top={NOTIFICATION_DOT_SIZE / 2}
+          right={-NOTIFICATION_DOT_SIZE / 4}
+          top={NOTIFICATION_DOT_SIZE / 8}
           width={NOTIFICATION_DOT_SIZE}
           zIndex="popover"
         />
