@@ -136,13 +136,18 @@ export const MarketplaceRow = ({
   toggleExpandMarketplaceRows,
   rowHovered,
 }: MarketplaceRowProps) => {
-  const [listPrice, setListPrice] = useState<number>()
-  const [globalOverride, setGlobalOverride] = useState(false)
-  const showGlobalPrice = globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride && globalPrice
   const setAssetListPrice = useSellAsset((state) => state.setAssetListPrice)
   const removeAssetMarketplace = useSellAsset((state) => state.removeAssetMarketplace)
   const [marketIconHovered, toggleMarketIconHovered] = useReducer((s) => !s, false)
   const [marketRowHovered, toggleMarketRowHovered] = useReducer((s) => !s, false)
+  const [listPrice, setListPrice] = useState<number | undefined>(
+    () =>
+      asset.newListings?.find((listing) =>
+        expandMarketplaceRows ? listing.marketplace.name === selectedMarkets?.[0].name : !!listing.price
+      )?.price
+  )
+  const [globalOverride, setGlobalOverride] = useState(false)
+  const showGlobalPrice = globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride && globalPrice
 
   const price = showGlobalPrice ? globalPrice : listPrice
 
@@ -198,7 +203,7 @@ export const MarketplaceRow = ({
       if (!listPrice) setListPrice(globalPrice)
       price = listPrice ? listPrice : globalPrice
     } else {
-      price = globalPrice
+      price = listPrice
     }
     if (selectedMarkets.length) for (const marketplace of selectedMarkets) setAssetListPrice(asset, price, marketplace)
     else setAssetListPrice(asset, price)
@@ -228,14 +233,14 @@ export const MarketplaceRow = ({
   return (
     <Row onMouseEnter={toggleMarketRowHovered} onMouseLeave={toggleMarketRowHovered}>
       <FloorPriceInfo>
-        <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
+        <ThemedText.BodyPrimary color="textSecondary" lineHeight="24px">
           {asset.floorPrice ? `${asset.floorPrice.toFixed(3)} ETH` : '-'}
-        </ThemedText.BodySmall>
+        </ThemedText.BodyPrimary>
       </FloorPriceInfo>
       <LastPriceInfo>
-        <ThemedText.BodySmall color="textSecondary" lineHeight="20px">
+        <ThemedText.BodyPrimary color="textSecondary" lineHeight="24px">
           {asset.lastPrice ? `${asset.lastPrice.toFixed(3)} ETH` : '-'}
-        </ThemedText.BodySmall>
+        </ThemedText.BodyPrimary>
       </LastPriceInfo>
 
       <Row flex="2">

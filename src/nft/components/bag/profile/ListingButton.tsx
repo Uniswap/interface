@@ -103,8 +103,9 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
       return asset.expirationTime != null && isNaN(asset.expirationTime)
     })
     const overMaxExpiration = sellAssets.some((asset) => {
-      return asset.expirationTime != null && asset.expirationTime - Date.now() > ms`180 days`
+      return asset.expirationTime != null && asset.expirationTime * 1000 - Date.now() > ms`180 days`
     })
+
     const listingsMissingPrice: [WalletAsset, Listing][] = []
     const listingsBelowFloor: [WalletAsset, Listing][] = []
     const listingsAboveSellOrderFloor: [WalletAsset, Listing][] = []
@@ -285,7 +286,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
           onClick={() => listingStatus !== ListingStatus.APPROVED && warningWrappedClick()}
           type="button"
           style={{
-            color: showResolveIssues ? theme.accentTextDarkPrimary : theme.white,
+            color: showResolveIssues ? theme.accentTextLightPrimary : theme.white,
             opacity:
               ![ListingStatus.DEFINED, ListingStatus.FAILED, ListingStatus.CONTINUE].includes(listingStatus) ||
               (disableListButton && !showResolveIssues)

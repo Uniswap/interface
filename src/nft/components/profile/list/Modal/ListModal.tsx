@@ -8,7 +8,7 @@ import { Overlay } from 'nft/components/modals/Overlay'
 import { useNFTList, useSellAsset } from 'nft/hooks'
 import { ListingStatus } from 'nft/types'
 import { fetchPrice } from 'nft/utils'
-import { useEffect, useMemo, useReducer, useState } from 'react'
+import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
@@ -112,24 +112,28 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allCollectionsApproved])
 
+  const closeModalOnClick = useCallback(() => {
+    listingStatus === ListingStatus.APPROVED ? window.location.reload() : overlayClick()
+  }, [listingStatus, overlayClick])
+
   // In the case that a user removes all listings via retry logic, close modal
   useEffect(() => {
-    !listings.length && overlayClick()
-  }, [listings, overlayClick])
+    !listings.length && closeModalOnClick()
+  }, [listings, closeModalOnClick])
 
   return (
     <Portal>
       <Trace modal={InterfaceModalName.NFT_LISTING}>
         <ListModalWrapper>
           {listingStatus === ListingStatus.APPROVED ? (
-            <SuccessScreen overlayClick={overlayClick} />
+            <SuccessScreen overlayClick={closeModalOnClick} />
           ) : (
             <>
               <TitleRow>
                 <ThemedText.HeadlineSmall lineHeight="28px">
                   <Trans>List NFTs</Trans>
                 </ThemedText.HeadlineSmall>
-                <X size={24} cursor="pointer" onClick={overlayClick} />
+                <X size={24} cursor="pointer" onClick={closeModalOnClick} />
               </TitleRow>
               <ListModalSection
                 sectionType={Section.APPROVE}
@@ -147,7 +151,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
           )}
         </ListModalWrapper>
       </Trace>
-      <Overlay onClick={overlayClick} />
+      <Overlay onClick={closeModalOnClick} />
     </Portal>
   )
 }
