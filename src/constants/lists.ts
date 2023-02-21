@@ -1,6 +1,6 @@
 export const UNI_LIST = 'https://gateway.ipfs.io/ipns/tokens.uniswap.org'
-export const UNI_EXTENDED_LIST = 'https://extendedtokens.uniswap.org/'
-const UNI_UNSUPPORTED_LIST = 'https://unsupportedtokens.uniswap.org/'
+export const UNI_EXTENDED_LIST = 'https://gateway.ipfs.io/ipns/extendedtokens.uniswap.org'
+const UNI_UNSUPPORTED_LIST = 'https://gateway.ipfs.io/ipns/unsupportedtokens.uniswap.org'
 const AAVE_LIST = 'tokenlist.aave.eth'
 const BA_LIST = 'https://raw.githubusercontent.com/The-Blockchain-Association/sec-notice-list/master/ba-sec-list.json'
 const CMC_ALL_LIST = 'https://api.coinmarketcap.com/data-api/v3/uniswap/all.json'
