@@ -34,7 +34,7 @@ export default function ApproveSummaryItem({
   const approvalAmountTitle = `${
     !approvalAmount || approvalAmount === 'INF'
       ? ''
-      : formatNumberOrString(transaction.typeInfo.approvalAmount, NumberType.TokenTx)
+      : formatNumberOrString(transaction.typeInfo.approvalAmount, NumberType.TokenNonTx)
   } ${currencyInfo?.currency.symbol ?? ''}`
 
   return (
