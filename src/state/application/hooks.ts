@@ -98,8 +98,8 @@ export function useOpenModal(modal: ApplicationModal): () => void {
   return useCallback(() => dispatch(setOpenModal(modal)), [dispatch, modal])
 }
 
-export function useToggleWalletModal(): () => void {
-  return useToggleModal(ApplicationModal.WALLET)
+export function useToggleUniwalletModal(): () => void {
+  return useToggleModal(ApplicationModal.UNIWALLET_CONNECT)
 }
 
 export function useToggleWalletDropdown(): () => void {

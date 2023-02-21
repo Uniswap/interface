@@ -7,6 +7,7 @@ import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { Box } from 'nft/components/Box'
+import { useBag } from 'nft/hooks/useBag'
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -46,6 +47,7 @@ import Tokens from './Tokens'
 
 const TokenDetails = lazy(() => import('./TokenDetails'))
 const Vote = lazy(() => import('./Vote'))
+const Wallet = lazy(() => import('./Wallet'))
 const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile/profile'))
@@ -178,7 +180,9 @@ export default function App() {
     return () => window.removeEventListener('scroll', scrollListener)
   }, [])
 
-  const isHeaderTransparent = !scrolledState
+  const isBagExpanded = useBag((state) => state.bagExpanded)
+  const isOnWalletPage = useLocation().pathname === '/wallet'
+  const isHeaderTransparent = (!scrolledState && !isBagExpanded) || isOnWalletPage
 
   const { account } = useWeb3React()
   const statsigUser: StatsigUser = useMemo(
@@ -205,7 +209,7 @@ export default function App() {
           }}
         >
           <HeaderWrapper transparent={isHeaderTransparent}>
-            <NavBar />
+            <NavBar blur={isHeaderTransparent} />
           </HeaderWrapper>
           <BodyWrapper>
             <Popups />
@@ -229,7 +233,7 @@ export default function App() {
                     }
                   />
                   <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
-
+                  <Route path="wallet" element={<Wallet />} />
                   <Route path="send" element={<RedirectPathToSwapOnly />} />
                   <Route path="swap" element={<Swap />} />
 

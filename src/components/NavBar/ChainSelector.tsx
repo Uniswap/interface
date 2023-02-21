@@ -1,4 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
+import { ConnectionType } from 'connection'
+import { getConnection } from 'connection'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -33,7 +35,7 @@ interface ChainSelectorProps {
 }
 
 export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
-  const { chainId } = useWeb3React()
+  const { chainId, connector } = useWeb3React()
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const isMobile = useIsMobile()
 
@@ -60,6 +62,9 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
     [selectChain, setIsOpen]
   )
 
+  const connectionType = getConnection(connector).type
+  const isUniWallet = connectionType === ConnectionType.UNIWALLET
+
   if (!chainId) {
     return null
   }
@@ -71,6 +76,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
       <Column paddingX="8">
         {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) => (
           <ChainSelectorRow
+            disabled={isUniWallet && chainId === SupportedChainId.CELO}
             onSelectChain={onSelectChain}
             targetChain={chainId}
             key={chainId}

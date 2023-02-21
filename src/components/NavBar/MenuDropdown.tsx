@@ -1,6 +1,8 @@
 import { t, Trans } from '@lingui/macro'
+import { ReactComponent as AppleLogo } from 'assets/svg/apple_logo.svg'
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
+import NewBadge from 'components/WalletModal/NewBadge'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -117,6 +119,20 @@ const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
   )
 }
 
+const StyledAppleLogo = styled(AppleLogo)`
+  fill: ${({ theme }) => (theme.darkMode ? theme.white : theme.black)};
+  padding: 2px;
+  width: 24px;
+  height: 24px;
+`
+
+const BadgeWrapper = styled.div`
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
 export const MenuDropdown = () => {
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
   const togglePrivacyPolicy = useToggleModal(ApplicationModal.PRIVACY_POLICY)
@@ -136,6 +152,19 @@ export const MenuDropdown = () => {
           <NavDropdown top={{ sm: 'unset', lg: '56' }} bottom={{ sm: '56', lg: 'unset' }} right="0">
             <Column gap="16">
               <Column paddingX="8" gap="4">
+                <Box display={{ sm: 'flex', md: 'none', xl: 'flex', xxl: 'none' }}>
+                  <PrimaryMenuRow to="/wallet" close={toggleOpen}>
+                    <Icon>
+                      <StyledAppleLogo />
+                    </Icon>
+                    <PrimaryMenuRow.Text>
+                      <Trans>Uniswap Wallet</Trans>
+                    </PrimaryMenuRow.Text>
+                    <BadgeWrapper>
+                      <NewBadge />
+                    </BadgeWrapper>
+                  </PrimaryMenuRow>
+                </Box>
                 <PrimaryMenuRow to="/vote" close={toggleOpen}>
                   <Icon>
                     <GovernanceIcon width={24} height={24} />

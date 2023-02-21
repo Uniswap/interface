@@ -33,7 +33,7 @@ import { BagStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
-import { useToggleWalletModal } from 'state/application/hooks'
+import { useToggleWalletDropdown } from 'state/application/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -287,7 +287,7 @@ const PENDING_BAG_STATUSES = [
 ]
 
 export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) => {
-  const toggleWalletModal = useToggleWalletModal()
+  const toggleWalletDropdown = useToggleWalletDropdown()
   const theme = useTheme()
   const { account, chainId, connector } = useWeb3React()
   const connected = Boolean(account && chainId)
@@ -400,7 +400,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
       warningText = <Trans>Something went wrong. Please try again.</Trans>
     } else if (!connected) {
       handleClick = () => {
-        toggleWalletModal()
+        toggleWalletDropdown()
         setBagExpanded({ bagExpanded: false })
       }
       disabled = false
@@ -484,7 +484,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     allowance.state,
     priceImpact,
     connector,
-    toggleWalletModal,
+    toggleWalletDropdown,
     setBagExpanded,
     isAllowancePending,
     isApprovalLoading,

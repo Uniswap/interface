@@ -1,6 +1,6 @@
 import { Connector } from '@web3-react/types'
 import { Connection, gnosisSafeConnection, networkConnection } from 'connection'
-import { getConnection } from 'connection/utils'
+import { getConnection } from 'connection'
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'

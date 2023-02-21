@@ -1,31 +1,26 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { TransactionSummary } from 'components/AccountDetailsV2'
-import { ButtonPrimary } from 'components/Button'
+import WalletModal from 'components/WalletModal'
+import NewBadge from 'components/WalletModal/NewBadge'
+import { ConnectionType, getConnection } from 'connection'
+import { isCoinbaseWallet, isMetaMaskWallet } from 'connection/utils'
 import { useActiveLocale } from 'hooks/useActiveLocale'
+import { atom } from 'jotai'
+import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 import { ChevronRight, Moon, Sun } from 'react-feather'
-import { useToggleWalletModal } from 'state/application/hooks'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
+import { isIOS } from 'utils/userAgent'
 
 import { useAllTransactions } from '../../state/transactions/hooks'
 import AuthenticatedHeader from './AuthenticatedHeader'
+import { APP_STORE_LINK } from './DownloadButton'
 import { MenuState } from './index'
 
-const ConnectButton = styled(ButtonPrimary)`
-  border-radius: 12px;
-  height: 44px;
-  width: 288px;
-  font-weight: 600;
-  font-size: 16px;
-  margin-left: auto;
-  margin-right: auto;
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    width: 100%;
-  }
-`
+export const connectionErrorAtom = atom<string | undefined>(undefined)
 
 const Divider = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
@@ -35,7 +30,6 @@ const Divider = styled.div`
 
 const ToggleMenuItem = styled.button`
   background-color: transparent;
-  margin: 0;
   border: none;
   cursor: pointer;
   display: flex;
@@ -47,11 +41,10 @@ const ToggleMenuItem = styled.button`
   font-size: 14px;
   font-weight: 400;
   width: 100%;
-  padding: 12px 8px;
+  padding: 8px 0;
   color: ${({ theme }) => theme.textSecondary};
   :hover {
     color: ${({ theme }) => theme.textPrimary};
-    background-color: ${({ theme }) => theme.backgroundModule};
     transition: ${({
       theme: {
         transition: { duration, timing },
@@ -103,14 +96,18 @@ const CenterVertically = styled.div`
   margin-bottom: auto;
 `
 
-const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) => {
-  const { account } = useWeb3React()
-  const isAuthenticated = !!account
+const IS_INJECTED_IOS_BROWSER = isIOS && (isCoinbaseWallet || isMetaMaskWallet)
+
+const DefaultMenu = ({ setMenu }: { setMenu: (state: MenuState) => void }) => {
   const [darkMode, toggleDarkMode] = useDarkModeManager()
+
+  const { account, connector } = useWeb3React()
+  const isAuthenticated = !!account
+  const isUniwallet = getConnection(connector).type === ConnectionType.UNIWALLET
+
   const activeLocale = useActiveLocale()
   const ISO = activeLocale.split('-')[0].toUpperCase()
   const allTransactions = useAllTransactions()
-  const toggleWalletModal = useToggleWalletModal()
 
   const pendingTransactions = useMemo(
     () => Object.values(allTransactions).filter((tx) => !tx.receipt),
@@ -121,61 +118,76 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) =>
       ? pendingTransactions.sort((tx1, tx2) => tx2.addedTime - tx1.addedTime)[0]
       : undefined
 
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
+  const isWalletPage = pathname.includes('/wallet')
+
   return (
     <DefaultMenuWrap>
-      {isAuthenticated ? (
-        <AuthenticatedHeader />
-      ) : (
-        <ConnectButton data-testid="wallet-connect-wallet" onClick={toggleWalletModal}>
-          Connect wallet
-        </ConnectButton>
-      )}
-      <Divider />
-      {isAuthenticated && (
+      {isAuthenticated ? <AuthenticatedHeader /> : <WalletModal />}
+      {!useAtomValue(connectionErrorAtom) && (
         <>
-          <ToggleMenuItem data-testid="wallet-transactions" onClick={() => setMenu(MenuState.TRANSACTIONS)}>
-            <DefaultText>
-              <Trans>Transactions</Trans>{' '}
-              {pendingTransactions.length > 0 && (
-                <PendingBadge>
-                  {pendingTransactions.length} <Trans>Pending</Trans>
-                </PendingBadge>
+          <Divider />
+          {isAuthenticated && (
+            <>
+              <ToggleMenuItem data-testid="wallet-transactions" onClick={() => setMenu(MenuState.TRANSACTIONS)}>
+                <DefaultText>
+                  <Trans>Transactions</Trans>{' '}
+                  {pendingTransactions.length > 0 && (
+                    <PendingBadge>
+                      {pendingTransactions.length} <Trans>Pending</Trans>
+                    </PendingBadge>
+                  )}
+                </DefaultText>
+                <IconWrap>
+                  <ChevronRight size={16} strokeWidth={3} />
+                </IconWrap>
+              </ToggleMenuItem>
+              {!!latestPendingTransaction && (
+                <LatestPendingTxnBox>
+                  <TransactionSummary
+                    key={latestPendingTransaction.hash}
+                    transactionDetails={latestPendingTransaction}
+                    isLastTransactionInList={true}
+                  />
+                </LatestPendingTxnBox>
               )}
+            </>
+          )}
+          <ToggleMenuItem data-testid="wallet-select-language" onClick={() => setMenu(MenuState.LANGUAGE)}>
+            <DefaultText>
+              <Trans>Language</Trans>
             </DefaultText>
-            <IconWrap>
-              <ChevronRight size={16} strokeWidth={3} />
-            </IconWrap>
+            <FlexContainer>
+              <CenterVertically>
+                <DefaultText>{ISO}</DefaultText>
+              </CenterVertically>
+              <IconWrap>
+                <ChevronRight size={16} strokeWidth={3} />
+              </IconWrap>
+            </FlexContainer>
           </ToggleMenuItem>
-          {!!latestPendingTransaction && (
-            <LatestPendingTxnBox>
-              <TransactionSummary
-                key={latestPendingTransaction.hash}
-                transactionDetails={latestPendingTransaction}
-                isLastTransactionInList={true}
-              />
-            </LatestPendingTxnBox>
+          {!isWalletPage && (
+            <ToggleMenuItem data-testid="wallet-select-theme" onClick={toggleDarkMode}>
+              <DefaultText>{darkMode ? <Trans> Light theme</Trans> : <Trans>Dark theme</Trans>}</DefaultText>
+              <IconWrap>{darkMode ? <Sun size={16} /> : <Moon size={16} />}</IconWrap>
+            </ToggleMenuItem>
+          )}
+          {Boolean((isAuthenticated && !isUniwallet) || IS_INJECTED_IOS_BROWSER) && (
+            <>
+              <Divider />
+              <ToggleMenuItem onClick={() => (isIOS ? window.open(APP_STORE_LINK) : navigate('/wallet'))}>
+                <DefaultText>
+                  <Trans>Download Uniswap Wallet for iOS</Trans>
+                </DefaultText>
+                <NewBadge />
+              </ToggleMenuItem>
+            </>
           )}
         </>
       )}
-      <ToggleMenuItem data-testid="wallet-select-language" onClick={() => setMenu(MenuState.LANGUAGE)}>
-        <DefaultText>
-          <Trans>Language</Trans>
-        </DefaultText>
-        <FlexContainer>
-          <CenterVertically>
-            <DefaultText>{ISO}</DefaultText>
-          </CenterVertically>
-          <IconWrap>
-            <ChevronRight size={16} strokeWidth={3} />
-          </IconWrap>
-        </FlexContainer>
-      </ToggleMenuItem>
-      <ToggleMenuItem data-testid="wallet-select-theme" onClick={toggleDarkMode}>
-        <DefaultText>{darkMode ? <Trans> Light theme</Trans> : <Trans>Dark theme</Trans>}</DefaultText>
-        <IconWrap>{darkMode ? <Sun size={16} /> : <Moon size={16} />}</IconWrap>
-      </ToggleMenuItem>
     </DefaultMenuWrap>
   )
 }
 
-export default WalletDropdown
+export default DefaultMenu

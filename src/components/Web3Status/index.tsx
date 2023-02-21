@@ -4,7 +4,7 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap
 import { useWeb3React } from '@web3-react/core'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import WalletDropdown from 'components/WalletDropdown'
-import { getConnection } from 'connection/utils'
+import { getConnection } from 'connection'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { getIsValidSwapQuote } from 'pages/Swap'
@@ -18,12 +18,7 @@ import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
 
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import {
-  useCloseModal,
-  useModalIsOpen,
-  useToggleWalletDropdown,
-  useToggleWalletModal,
-} from '../../state/application/hooks'
+import { useCloseModal, useModalIsOpen, useToggleWalletDropdown } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/types'
@@ -32,26 +27,17 @@ import { ButtonSecondary } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import Loader from '../Loader'
 import { RowBetween } from '../Row'
-import WalletModal from '../WalletModal'
 
 // https://stackoverflow.com/a/31617326
 const FULL_BORDER_RADIUS = 9999
 
 const ChevronWrapper = styled.button`
+  color: ${({ theme }) => theme.accentAction};
   background-color: transparent;
   border: none;
   cursor: pointer;
   display: flex;
-  padding: 10px 16px 10px 4px;
-
-  :hover {
-    color: ${({ theme }) => theme.accentActionSoft};
-  }
-  :hover,
-  :active,
-  :focus {
-    border: none;
-  }
+  padding: 10px 12px 10px 4px;
 `
 
 const Web3StatusGeneric = styled(ButtonSecondary)`
@@ -89,11 +75,17 @@ const Web3StatusConnectWrapper = styled.div<{ faded?: boolean }>`
   padding: 0;
   height: 40px;
 
-  :hover,
-  :active,
-  :focus {
-    border: none;
+  color: ${({ theme }) => theme.accentAction};
+  :hover {
+    color: ${({ theme }) => theme.accentActionSoft};
+    stroke: ${({ theme }) => theme.accentActionSoft};
   }
+
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `${duration.fast} color ${timing.in}`};
 `
 
 const Web3StatusConnected = styled(Web3StatusGeneric)<{
@@ -156,38 +148,16 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
 }
 
-const VerticalDivider = styled.div`
-  height: 20px;
-  margin: 0px;
-  width: 1px;
-  background-color: ${({ theme }) => theme.accentAction};
-`
-
 const StyledConnectButton = styled.button`
   background-color: transparent;
   border: none;
   border-top-left-radius: ${FULL_BORDER_RADIUS}px;
   border-bottom-left-radius: ${FULL_BORDER_RADIUS}px;
-  color: ${({ theme }) => theme.accentAction};
   cursor: pointer;
   font-weight: 600;
   font-size: 16px;
-  padding: 10px 8px 10px 12px;
-
-  transition: ${({
-    theme: {
-      transition: { duration, timing },
-    },
-  }) => `${duration.fast} color ${timing.in}`};
-
-  :hover,
-  :active,
-  :focus {
-    border: none;
-  }
-  :hover {
-    color: ${({ theme }) => theme.accentActionSoft};
-  }
+  padding: 10px 4px 10px 12px;
+  color: inherit;
 `
 
 const CHEVRON_PROPS = {
@@ -197,7 +167,7 @@ const CHEVRON_PROPS = {
 
 function Web3StatusInner() {
   const { account, connector, chainId, ENSName } = useWeb3React()
-  const connectionType = getConnection(connector).type
+  const connection = getConnection(connector)
   const {
     trade: { state: tradeState, trade },
     inputError: swapInputError,
@@ -209,11 +179,10 @@ function Web3StatusInner() {
     sendAnalyticsEvent(InterfaceEventName.ACCOUNT_DROPDOWN_BUTTON_CLICKED)
     toggleWalletDropdown()
   }, [toggleWalletDropdown])
-  const toggleWalletModal = useToggleWalletModal()
   const walletIsOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
-  const error = useAppSelector((state) => state.connection.errorByConnectionType[connectionType])
+  const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
 
   const allTransactions = useAllTransactions()
 
@@ -251,7 +220,7 @@ function Web3StatusInner() {
         pending={hasPendingTransactions}
         isClaimAvailable={isClaimAvailable}
       >
-        {!hasPendingTransactions && <StatusIcon enableInfotips={true} size={24} connectionType={connectionType} />}
+        {!hasPendingTransactions && <StatusIcon enableInfotips={true} size={24} connection={connection} />}
         {hasPendingTransactions ? (
           <RowBetween>
             <Text>
@@ -270,7 +239,6 @@ function Web3StatusInner() {
   } else {
     const chevronProps = {
       ...CHEVRON_PROPS,
-      color: theme.accentAction,
       'data-testid': 'navbar-wallet-dropdown',
       'aria-label': walletIsOpen ? t`Close wallet connection options` : t`Open wallet connection options`,
     }
@@ -281,12 +249,16 @@ function Web3StatusInner() {
         properties={{ received_swap_quote: validSwapQuote }}
         element={InterfaceElementName.CONNECT_WALLET_BUTTON}
       >
-        <Web3StatusConnectWrapper faded={!account}>
-          <StyledConnectButton data-testid="navbar-connect-wallet" onClick={toggleWalletModal}>
+        <Web3StatusConnectWrapper
+          tabIndex={0}
+          faded={!account}
+          onKeyPress={(e) => e.key === 'Enter' && handleWalletDropdownClick()}
+          onClick={handleWalletDropdownClick}
+        >
+          <StyledConnectButton tabIndex={-1} data-testid="navbar-connect-wallet">
             <Trans>Connect</Trans>
           </StyledConnectButton>
-          <VerticalDivider />
-          <ChevronWrapper onClick={handleWalletDropdownClick} data-testid="navbar-toggle-dropdown">
+          <ChevronWrapper tabIndex={-1}>
             {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
           </ChevronWrapper>
         </Web3StatusConnectWrapper>
@@ -296,9 +268,6 @@ function Web3StatusInner() {
 }
 
 export default function Web3Status() {
-  const { ENSName } = useWeb3React()
-
-  const allTransactions = useAllTransactions()
   const ref = useRef<HTMLDivElement>(null)
   const walletRef = useRef<HTMLDivElement>(null)
   const closeModal = useCloseModal()
@@ -306,18 +275,9 @@ export default function Web3Status() {
 
   useOnClickOutside(ref, isOpen ? closeModal : undefined, [walletRef])
 
-  const sortedRecentTransactions = useMemo(() => {
-    const txs = Object.values(allTransactions)
-    return txs.filter(isTransactionRecent).sort(newTransactionsFirst)
-  }, [allTransactions])
-
-  const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
-  const confirmed = sortedRecentTransactions.filter((tx) => tx.receipt).map((tx) => tx.hash)
-
   return (
     <span ref={ref}>
       <Web3StatusInner />
-      <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
       <Portal>
         <span ref={walletRef}>
           <WalletDropdown />

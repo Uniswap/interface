@@ -55,7 +55,6 @@ const StyledChevron = styled(ChevronLeft)`
 `
 
 const BackSection = styled.div`
-  position: absolute;
   background-color: ${({ theme }) => theme.backgroundSurface};
   width: fill-available;
   margin: 0px 2vw 0px 0px;
@@ -75,7 +74,7 @@ const BackSectionContainer = styled.div`
 `
 
 const ChildrenContainer = styled.div`
-  margin-top: 40px;
+  margin-top: 20px;
 `
 
 export const SlideOutMenu = ({

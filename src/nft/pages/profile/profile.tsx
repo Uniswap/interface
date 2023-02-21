@@ -10,7 +10,7 @@ import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfileP
 import { useBag, useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { Suspense, useEffect, useRef } from 'react'
-import { useToggleWalletModal } from 'state/application/hooks'
+import { useToggleWalletDropdown } from 'state/application/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
@@ -67,7 +67,7 @@ const ProfileContent = () => {
 
   const { account } = useWeb3React()
   const accountRef = useRef(account)
-  const toggleWalletModal = useToggleWalletModal()
+  const toggleWalletDropdown = useToggleWalletDropdown()
 
   useEffect(() => {
     if (accountRef.current !== account) {
@@ -92,7 +92,7 @@ const ProfileContent = () => {
             <ThemedText.HeadlineMedium lineHeight="36px" color="textSecondary" fontWeight="600" marginBottom="24px">
               <Trans>No items to display</Trans>
             </ThemedText.HeadlineMedium>
-            <ConnectWalletButton onClick={toggleWalletModal}>
+            <ConnectWalletButton onClick={toggleWalletDropdown}>
               <ThemedText.SubHeader color="white" lineHeight="20px">
                 <Trans>Connect Wallet</Trans>
               </ThemedText.SubHeader>

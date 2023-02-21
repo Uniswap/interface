@@ -18,6 +18,7 @@ import {
   addSerializedPair,
   addSerializedToken,
   updateHideClosedPositions,
+  updateHideUniswapWalletBanner,
   updateTaxServiceAcknowledgments,
   updateUserClientSideRouter,
   updateUserDarkMode,
@@ -258,6 +259,17 @@ export function usePairAdder(): (pair: Pair) => void {
 
 export function useURLWarningVisible(): boolean {
   return useAppSelector((state: AppState) => state.user.URLWarningVisible)
+}
+
+export function useHideUniswapWalletBanner(): [boolean, () => void] {
+  const dispatch = useAppDispatch()
+  const hideUniswapWalletBanner = useAppSelector((state) => state.user.hideUniswapWalletBanner)
+
+  const toggleHideUniswapWalletBanner = useCallback(() => {
+    dispatch(updateHideUniswapWalletBanner({ hideUniswapWalletBanner: true }))
+  }, [dispatch])
+
+  return [hideUniswapWalletBanner, toggleHideUniswapWalletBanner]
 }
 
 /**

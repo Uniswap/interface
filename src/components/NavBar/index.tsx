@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import NewBadge from 'components/WalletModal/NewBadge'
 import Web3Status from 'components/Web3Status'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useIsNftPage } from 'hooks/useIsNftPage'
@@ -14,6 +15,7 @@ import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-do
 import styled from 'styled-components/macro'
 
 import { Bag } from './Bag'
+import Blur from './Blur'
 import { ChainSelector } from './ChainSelector'
 import { MenuDropdown } from './MenuDropdown'
 import { SearchBar } from './SearchBar'
@@ -70,17 +72,24 @@ export const PageTabs = () => {
       <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
         <Trans>Pools</Trans>
       </MenuItem>
+      <Box display={{ sm: 'none', md: 'flex', xl: 'none', xxl: 'flex' }}>
+        <MenuItem href="/wallet" isActive={pathname.startsWith('/wallet')}>
+          <Trans>Wallet</Trans>
+          <NewBadge />
+        </MenuItem>
+      </Box>
     </>
   )
 }
 
-const Navbar = () => {
+const Navbar = ({ blur }: { blur: boolean }) => {
   const isNftPage = useIsNftPage()
   const sellPageState = useProfilePageState((state) => state.state)
   const navigate = useNavigate()
 
   return (
     <>
+      {blur && <Blur />}
       <Nav>
         <Box display="flex" height="full" flexWrap="nowrap">
           <Box className={styles.leftSideContainer}>
@@ -103,7 +112,7 @@ const Navbar = () => {
                 <ChainSelector leftAlign={true} />
               </Box>
             )}
-            <Row gap={{ xl: '0', xxl: '8' }} display={{ sm: 'none', lg: 'flex' }}>
+            <Row display={{ sm: 'none', lg: 'flex' }}>
               <PageTabs />
             </Row>
           </Box>

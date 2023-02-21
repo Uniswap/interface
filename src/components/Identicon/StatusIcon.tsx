@@ -2,7 +2,7 @@ import { getWalletMeta } from '@uniswap/conedison/provider/meta'
 import { useWeb3React } from '@web3-react/core'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Unicon } from 'components/Unicon'
-import { ConnectionType } from 'connection'
+import { Connection, ConnectionType } from 'connection'
 import useENSAvatar from 'hooks/useENSAvatar'
 import ms from 'ms.macro'
 import { PropsWithChildren } from 'react'
@@ -10,8 +10,6 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { flexColumnNoWrap } from 'theme/styles'
 
-import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
-import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import sockImg from '../../assets/svg/socks.svg'
 import { useHasSocks } from '../../hooks/useSocksBalance'
 import Identicon from '../Identicon'
@@ -86,44 +84,40 @@ function UniconTooltip({ children, enabled }: PropsWithChildren<{ enabled?: bool
   )
 }
 
-const useIcon = (connectionType: ConnectionType, size?: number, enableInfotips?: boolean) => {
+const useIcon = (connection: Connection, size: number, enableInfotips?: boolean) => {
   const { account, provider } = useWeb3React()
   const { avatar } = useENSAvatar(account ?? undefined)
-  const isUniswapWallet = Boolean(provider && getWalletMeta(provider)?.name === 'Uniswap Wallet')
+  const isUniswapWalletConnect = Boolean(provider && getWalletMeta(provider)?.name === 'Uniswap Wallet')
 
-  if (!account) return null
-
-  if (avatar || connectionType === ConnectionType.INJECTED) {
-    return <Identicon />
-  } else if (connectionType === ConnectionType.WALLET_CONNECT) {
-    return isUniswapWallet ? (
+  if (!account) {
+    return undefined
+  } else if (avatar || connection.type === ConnectionType.INJECTED) {
+    return <Identicon size={size} />
+  } else if (isUniswapWalletConnect) {
+    return (
       <UniconTooltip enabled={enableInfotips}>
         <Unicon address={account} size={size} />
       </UniconTooltip>
-    ) : (
-      <img src={WalletConnectIcon} alt="WalletConnect" />
     )
-  } else if (connectionType === ConnectionType.COINBASE_WALLET) {
-    return <img src={CoinbaseWalletIcon} alt="Coinbase Wallet" />
+  } else {
+    return <img src={connection.icon} alt={`${connection.name} icon`} />
   }
-
-  return undefined
 }
 
 export default function StatusIcon({
-  connectionType,
-  size,
+  connection,
+  size = 16,
   enableInfotips,
 }: {
-  connectionType: ConnectionType
+  connection: Connection
   size?: number
   enableInfotips?: boolean
 }) {
   const hasSocks = useHasSocks()
-  const icon = useIcon(connectionType, size, enableInfotips)
+  const icon = useIcon(connection, size, enableInfotips)
 
   return (
-    <IconWrapper size={size ?? 16}>
+    <IconWrapper size={size}>
       {hasSocks && <Socks />}
       {icon}
     </IconWrapper>

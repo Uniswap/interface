@@ -1,4 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
+import UniswapWalletBanner from 'components/Banner/UniswapWalletBanner'
 import AddressClaimModal from 'components/claim/AddressClaimModal'
 import ConnectedAccountBlocked from 'components/ConnectedAccountBlocked'
 import FiatOnrampModal from 'components/FiatOnrampModal'
@@ -36,6 +37,7 @@ export default function TopLevelModals() {
       <AddressClaimModal isOpen={addressClaimOpen} onDismiss={addressClaimToggle} />
       <ConnectedAccountBlocked account={account} isOpen={accountBlocked} />
       <Bag />
+      <UniswapWalletBanner />
       <TransactionCompleteModal />
       <AirdropModal />
       <FiatOnrampModal />

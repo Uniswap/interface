@@ -26,7 +26,7 @@ import {
   getTokenAddress,
 } from 'lib/utils/analytics'
 import { useCallback, useState } from 'react'
-import { useToggleWalletModal } from 'state/application/hooks'
+import { useToggleWalletDropdown } from 'state/application/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
 import { computeRealizedPriceImpact } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
@@ -67,7 +67,7 @@ export default function Widget({
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
 
-  const toggleWalletModal = useToggleWalletModal()
+  const toggleWalletModal = useToggleWalletDropdown()
   const onConnectWalletClick = useCallback(() => {
     toggleWalletModal()
     return false // prevents the in-widget wallet modal from opening

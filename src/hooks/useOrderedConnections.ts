@@ -1,9 +1,14 @@
 import { ConnectionType } from 'connection'
-import { getConnection } from 'connection/utils'
+import { getConnection } from 'connection'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 
-const SELECTABLE_WALLETS = [ConnectionType.INJECTED, ConnectionType.COINBASE_WALLET, ConnectionType.WALLET_CONNECT]
+const SELECTABLE_WALLETS = [
+  ConnectionType.UNIWALLET,
+  ConnectionType.INJECTED,
+  ConnectionType.WALLET_CONNECT,
+  ConnectionType.COINBASE_WALLET,
+]
 
 export default function useOrderedConnections() {
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
