@@ -4,7 +4,6 @@ import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { SMALL_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { ListingButton } from 'nft/components/bag/profile/ListingButton'
 import { approveCollectionRow, getListingState, getTotalEthValue, verifyStatus } from 'nft/components/bag/profile/utils'
 import { useIsMobile, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
@@ -100,15 +99,6 @@ const ListingHeaderRow = styled(Row)`
 const GridWrapper = styled.div`
   margin-top: 24px;
   margin-bottom: 48px;
-`
-
-const MobileListButtonWrapper = styled.div`
-  display: flex;
-  margin: 14px 16px 32px 16px;
-
-  @media screen and (min-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    display: none;
-  }
 `
 
 const FloatingConfirmationBar = styled(Row)<{ issues: boolean }>`
