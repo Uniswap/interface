@@ -100,7 +100,6 @@ const Label = styled(({ end, ...props }) => <ThemedText.DeprecatedLabel {...prop
   align-items: center;
 `
 
-/*
 const ExtentsText = styled.span`
   color: ${({ theme }) => theme.deprecated_text2};
   font-size: 14px;
@@ -108,7 +107,6 @@ const ExtentsText = styled.span`
   margin-right: 4px;
   font-weight: 500;
 `
-*/
 
 const HoverText = styled(ThemedText.DeprecatedMain)`
   text-decoration: none;
@@ -147,6 +145,37 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
 
 function getZapperLink(data: string): string {
   return `https://zapper.xyz/account/${data}`
+}
+
+function PoolAddressCard({ poolAddress, chainId }: { poolAddress?: string | null; chainId?: number | null }) {
+  if (!poolAddress || !chainId) {
+    return null
+  }
+
+  return (
+    <LightCard padding="12px ">
+      <AutoColumn gap="md">
+        <ExtentsText>
+          <Trans>Pool Address</Trans>
+        </ExtentsText>
+      </AutoColumn>
+      {/*<AutoColumn gap="8px" justify="center">#*/}
+      <AutoColumn gap="md">
+        <ExtentsText>
+          {typeof chainId === 'number' && poolAddress ? (
+            <ExternalLink href={getExplorerLink(chainId, poolAddress, ExplorerDataType.ADDRESS)}>
+              <Trans>{shortenAddress(poolAddress)}</Trans>
+            </ExternalLink>
+          ) : null}
+        </ExtentsText>
+        {/*</AutoColumn>
+        <ExtentsText>
+          <Trans>{poolAddress}</Trans>
+        </ExtentsText>
+      */}
+      </AutoColumn>
+    </LightCard>
+  )
 }
 
 export function PoolPositionPage() {
@@ -278,13 +307,7 @@ export function PoolPositionPage() {
               >
                 <AutoColumn gap="md" style={{ width: '100%' }}>
                   <AutoColumn gap="md">
-                    <Label>
-                      {typeof chainId === 'number' && poolAddressFromUrl ? (
-                        <ExternalLink href={getExplorerLink(chainId, poolAddressFromUrl, ExplorerDataType.ADDRESS)}>
-                          <Trans>Address: {shortenAddress(poolAddressFromUrl)}</Trans>
-                        </ExternalLink>
-                      ) : null}
-                    </Label>
+                    <Label>Pool Values</Label>
                   </AutoColumn>
                   <LightCard padding="12px 16px">
                     <AutoColumn gap="md">
@@ -453,6 +476,11 @@ export function PoolPositionPage() {
               </DarkCard>
             </AutoColumn>
           </ResponsiveRow>
+          <AutoColumn>
+            <DarkCard>
+              <PoolAddressCard poolAddress={poolAddressFromUrl} chainId={chainId} />
+            </DarkCard>
+          </AutoColumn>
         </AutoColumn>
       </PageWrapper>
       <SwitchLocaleLink />
