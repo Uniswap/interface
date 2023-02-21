@@ -184,7 +184,7 @@ export default function Widget({
         onInitialSwapQuote={onInitialSwapQuote}
         onSwapPriceUpdateAck={onSwapPriceUpdateAck}
         onError={(error, errorInfo) => {
-          sendAnalyticsEvent(InterfaceEventName.SWAP_ERROR, { error, errorInfo, ...trace })
+          sendAnalyticsEvent(SwapEventName.SWAP_ERROR, { error, errorInfo, ...trace })
         }}
       />
       {tokenSelector}
