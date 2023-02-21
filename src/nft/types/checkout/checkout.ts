@@ -30,7 +30,7 @@ export type SellItem = {
 export type BuyItem = {
   id?: string
   symbol?: string
-  name: string
+  name?: string
   decimals: number
   address: string
   priceInfo: PriceInfo
@@ -52,7 +52,7 @@ export type RoutingItem = {
 }
 
 export interface RouteResponse {
-  valueToSend: string
+  valueToSend?: string
   route: RoutingItem[]
   data: any
   to: any
@@ -96,4 +96,5 @@ export enum BagStatus {
   FETCHING_FINAL_ROUTE = 'Fetching final route',
   CONFIRMING_IN_WALLET = 'Confirming in wallet',
   PROCESSING_TRANSACTION = 'Processing',
+  CONFIRM_QUOTE = 'Confirm quote',
 }

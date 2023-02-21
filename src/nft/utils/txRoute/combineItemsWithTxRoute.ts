@@ -19,8 +19,11 @@ const isTheSame = (item: GenieAsset, routeAsset: BuyItem | PriceInfo) => {
   }
 }
 
-const isPriceDiff = (oldPrice: string, newPrice: string) => {
-  return formatWeiToDecimal(oldPrice) !== formatWeiToDecimal(newPrice)
+const getPriceDiff = (oldPrice: string, newPrice: string): { hasPriceDiff: boolean; hasVisiblePriceDiff: boolean } => {
+  const hasPriceDiff = oldPrice !== newPrice
+  const hasVisiblePriceDiff = formatWeiToDecimal(oldPrice) !== formatWeiToDecimal(newPrice)
+
+  return { hasPriceDiff, hasVisiblePriceDiff }
 }
 
 const isAveragePriceOfPooledAssets = (
@@ -28,7 +31,7 @@ const isAveragePriceOfPooledAssets = (
   numberOfAssetsInPool: number,
   expectedPrice: string
 ): boolean => {
-  return !isPriceDiff(calcAvgGroupPoolPrice(asset, numberOfAssetsInPool), expectedPrice)
+  return !getPriceDiff(calcAvgGroupPoolPrice(asset, numberOfAssetsInPool), expectedPrice).hasVisiblePriceDiff
 }
 
 const isAveragedPrice = (
@@ -74,11 +77,11 @@ const itemInRouteAndSamePool = (
 export const combineBuyItemsWithTxRoute = (
   items: UpdatedGenieAsset[],
   txRoute?: RoutingItem[]
-): UpdatedGenieAsset[] => {
-  return items.map((item) => {
+): { hasPriceAdjustment: boolean; updatedAssets: UpdatedGenieAsset[] } => {
+  let hasPriceAdjustment = false
+  const updatedAssets = items.map((item) => {
     const route = getRouteForItem(item, txRoute)
 
-    // if the item is not found in txRoute, it means it's no longer for sale
     if (txRoute && !route) {
       return {
         ...item,
@@ -86,15 +89,21 @@ export const combineBuyItemsWithTxRoute = (
       }
     }
 
-    const newPriceInfo = item.updatedPriceInfo ? item.updatedPriceInfo : item.priceInfo
+    let newPriceInfo = item.updatedPriceInfo ? item.updatedPriceInfo : item.priceInfo
 
-    // if the price changed
     if (route && 'priceInfo' in route.assetOut) {
-      if (isPriceDiff(newPriceInfo.basePrice, route.assetOut.priceInfo.basePrice)) {
+      const { hasPriceDiff, hasVisiblePriceDiff } = getPriceDiff(
+        newPriceInfo.basePrice,
+        route.assetOut.priceInfo.basePrice
+      )
+
+      newPriceInfo = route.assetOut.priceInfo
+      hasPriceAdjustment = hasPriceDiff
+      if (hasVisiblePriceDiff) {
         if (!isAveragedPrice(item, items, route, txRoute)) {
           return {
             ...item,
-            updatedPriceInfo: route.assetOut.priceInfo,
+            updatedPriceInfo: newPriceInfo,
           }
         }
       }
@@ -107,4 +116,6 @@ export const combineBuyItemsWithTxRoute = (
       orderSource: route && 'orderSource' in route.assetOut ? route.assetOut.orderSource : undefined,
     }
   })
+
+  return { hasPriceAdjustment, updatedAssets }
 }

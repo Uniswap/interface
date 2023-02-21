@@ -4,7 +4,7 @@ import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { GqlRoutingVariant, useGqlRoutingFlag } from 'featureFlags/flags/gqlRouting'
 import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
-import { useNftRoute } from 'graphql/data/nft/Routing'
+import { useNftRouteLazyQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
 import ListingModal from 'nft/components/bag/profile/ListingModal'
@@ -21,14 +21,17 @@ import {
   useSendTransaction,
   useTransactionResponse,
 } from 'nft/hooks'
+import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { fetchRoute } from 'nft/queries'
 import { BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType } from 'nft/types'
 import {
+  buildNftTradeInputFromBagItems,
   buildSellObject,
   formatAssetEventProperties,
   recalculateBagUsingPooledAssets,
   sortUpdatedAssets,
 } from 'nft/utils'
+import { buildRouteResponse } from 'nft/utils/nftRoute'
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useQueryClient } from 'react-query'
@@ -50,7 +53,7 @@ interface SeparatorProps {
   show?: boolean
 }
 
-const BagContainer = styled.div<{ raiseZIndex: boolean }>`
+const BagContainer = styled.div<{ raiseZIndex: boolean; isProfilePage: boolean }>`
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -62,7 +65,8 @@ const BagContainer = styled.div<{ raiseZIndex: boolean }>`
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 16px;
   box-shadow: ${({ theme }) => theme.shallowShadow};
-  z-index: ${({ raiseZIndex }) => (raiseZIndex ? Z_INDEX.modalOverTooltip : 3)};
+  z-index: ${({ raiseZIndex, isProfilePage }) =>
+    raiseZIndex ? (isProfilePage ? Z_INDEX.modalOverTooltip : Z_INDEX.modalBackdrop + 2) : 3};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     right: 0px;
@@ -143,6 +147,7 @@ const Bag = () => {
   const setTransactionState = useSendTransaction((state) => state.setState)
   const transactionStateRef = useRef(transactionState)
   const [setTransactionResponse] = useTransactionResponse((state) => [state.setTransactionResponse])
+  const tokenTradeInput = useTokenInput((state) => state.tokenTradeInput)
 
   const queryClient = useQueryClient()
 
@@ -174,12 +179,13 @@ const Bag = () => {
     return { totalEthPrice }
   }, [itemsInBag])
 
-  const purchaseAssets = async (routingData: RouteResponse) => {
+  const purchaseAssets = async (routingData: RouteResponse, purchasingWithErc20: boolean) => {
     if (!provider || !routingData) return
     const purchaseResponse = await sendTransaction(
       provider?.getSigner(),
       itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset),
-      routingData
+      routingData,
+      purchasingWithErc20
     )
     if (
       purchaseResponse &&
@@ -197,7 +203,8 @@ const Bag = () => {
     setBagExpanded({ bagExpanded: false, manualClose: true })
   }, [setBagExpanded])
 
-  useNftRoute(usingGqlRouting ? account ?? '' : '', [])
+  const [fetchGqlRoute] = useNftRouteLazyQuery()
+
   const fetchAssets = async () => {
     const itemsToBuy = itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset)
     const ethSellObject = buildSellObject(
@@ -210,48 +217,125 @@ const Bag = () => {
     !bagIsLocked && setLocked(true)
     setBagStatus(BagStatus.FETCHING_ROUTE)
     try {
-      const data = await queryClient.fetchQuery(['assetsRoute', ethSellObject, itemsToBuy, account], () =>
-        fetchRoute({
-          toSell: [ethSellObject],
-          toBuy: itemsToBuy,
-          senderAddress: account ?? '',
+      if (usingGqlRouting) {
+        fetchGqlRoute({
+          variables: {
+            senderAddress: usingGqlRouting && account ? account : '',
+            nftTrades: usingGqlRouting ? buildNftTradeInputFromBagItems(itemsInBag) : [],
+            tokenTrades: tokenTradeInput ? tokenTradeInput : undefined,
+          },
+          onCompleted: (data) => {
+            if (!data.nftRoute || !data.nftRoute.route) {
+              setBagStatus(BagStatus.ADDING_TO_BAG)
+              setLocked(false)
+              return
+            }
+
+            const purchasingWithErc20 = !!tokenTradeInput
+            const { route, routeResponse } = buildRouteResponse(data.nftRoute, purchasingWithErc20)
+
+            const { hasPriceAdjustment, updatedAssets } = combineBuyItemsWithTxRoute(itemsToBuy, route)
+            const shouldRefetchCalldata = hasPriceAdjustment && purchasingWithErc20
+
+            const fetchedPriceChangedAssets = updatedAssets
+              .filter((asset) => asset.updatedPriceInfo)
+              .sort(sortUpdatedAssets)
+            const fetchedUnavailableAssets = updatedAssets.filter((asset) => asset.isUnavailable)
+            const fetchedUnchangedAssets = updatedAssets.filter(
+              (asset) => !asset.updatedPriceInfo && !asset.isUnavailable
+            )
+            const hasReviewedAssets = fetchedUnchangedAssets.length > 0
+            const hasAssetsInReview = fetchedPriceChangedAssets.length > 0
+            const hasUnavailableAssets = fetchedUnavailableAssets.length > 0
+            const hasAssets = hasReviewedAssets || hasAssetsInReview || hasUnavailableAssets
+            const shouldReview = hasAssetsInReview || hasUnavailableAssets
+
+            setItemsInBag([
+              ...fetchedUnavailableAssets.map((unavailableAsset) => ({
+                asset: unavailableAsset,
+                status: BagItemStatus.UNAVAILABLE,
+              })),
+              ...fetchedPriceChangedAssets.map((changedAsset) => ({
+                asset: changedAsset,
+                status: BagItemStatus.REVIEWING_PRICE_CHANGE,
+              })),
+              ...fetchedUnchangedAssets.map((unchangedAsset) => ({
+                asset: unchangedAsset,
+                status: BagItemStatus.REVIEWED,
+              })),
+            ])
+
+            let shouldLock = false
+
+            if (hasAssets) {
+              if (!shouldReview) {
+                if (shouldRefetchCalldata) {
+                  setBagStatus(BagStatus.CONFIRM_QUOTE)
+                } else {
+                  purchaseAssets(routeResponse, purchasingWithErc20)
+                  setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
+                  shouldLock = true
+                }
+              } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
+              else {
+                setBagStatus(BagStatus.IN_REVIEW)
+              }
+            } else {
+              setBagStatus(BagStatus.ADDING_TO_BAG)
+            }
+
+            setLocked(shouldLock)
+          },
         })
-      )
-
-      const updatedAssets = combineBuyItemsWithTxRoute(itemsToBuy, data.route)
-
-      const fetchedPriceChangedAssets = updatedAssets.filter((asset) => asset.updatedPriceInfo).sort(sortUpdatedAssets)
-      const fetchedUnavailableAssets = updatedAssets.filter((asset) => asset.isUnavailable)
-      const fetchedUnchangedAssets = updatedAssets.filter((asset) => !asset.updatedPriceInfo && !asset.isUnavailable)
-      const hasReviewedAssets = fetchedUnchangedAssets.length > 0
-      const hasAssetsInReview = fetchedPriceChangedAssets.length > 0
-      const hasUnavailableAssets = fetchedUnavailableAssets.length > 0
-      const hasAssets = hasReviewedAssets || hasAssetsInReview || hasUnavailableAssets
-      const shouldReview = hasAssetsInReview || hasUnavailableAssets
-
-      setItemsInBag([
-        ...fetchedUnavailableAssets.map((unavailableAsset) => ({
-          asset: unavailableAsset,
-          status: BagItemStatus.UNAVAILABLE,
-        })),
-        ...fetchedPriceChangedAssets.map((changedAsset) => ({
-          asset: changedAsset,
-          status: BagItemStatus.REVIEWING_PRICE_CHANGE,
-        })),
-        ...fetchedUnchangedAssets.map((unchangedAsset) => ({ asset: unchangedAsset, status: BagItemStatus.REVIEWED })),
-      ])
-      setLocked(false)
-
-      if (hasAssets) {
-        if (!shouldReview) {
-          purchaseAssets(data)
-          setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
-        } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
-        else {
-          setBagStatus(BagStatus.IN_REVIEW)
-        }
       } else {
-        setBagStatus(BagStatus.ADDING_TO_BAG)
+        const routeData = await queryClient.fetchQuery(['assetsRoute', ethSellObject, itemsToBuy, account], () =>
+          fetchRoute({
+            toSell: [ethSellObject],
+            toBuy: itemsToBuy,
+            senderAddress: account ?? '',
+          })
+        )
+
+        const { updatedAssets } = combineBuyItemsWithTxRoute(itemsToBuy, routeData.route)
+
+        const fetchedPriceChangedAssets = updatedAssets
+          .filter((asset) => asset.updatedPriceInfo)
+          .sort(sortUpdatedAssets)
+        const fetchedUnavailableAssets = updatedAssets.filter((asset) => asset.isUnavailable)
+        const fetchedUnchangedAssets = updatedAssets.filter((asset) => !asset.updatedPriceInfo && !asset.isUnavailable)
+        const hasReviewedAssets = fetchedUnchangedAssets.length > 0
+        const hasAssetsInReview = fetchedPriceChangedAssets.length > 0
+        const hasUnavailableAssets = fetchedUnavailableAssets.length > 0
+        const hasAssets = hasReviewedAssets || hasAssetsInReview || hasUnavailableAssets
+        const shouldReview = hasAssetsInReview || hasUnavailableAssets
+
+        setItemsInBag([
+          ...fetchedUnavailableAssets.map((unavailableAsset) => ({
+            asset: unavailableAsset,
+            status: BagItemStatus.UNAVAILABLE,
+          })),
+          ...fetchedPriceChangedAssets.map((changedAsset) => ({
+            asset: changedAsset,
+            status: BagItemStatus.REVIEWING_PRICE_CHANGE,
+          })),
+          ...fetchedUnchangedAssets.map((unchangedAsset) => ({
+            asset: unchangedAsset,
+            status: BagItemStatus.REVIEWED,
+          })),
+        ])
+        setLocked(false)
+
+        if (hasAssets) {
+          if (!shouldReview) {
+            purchaseAssets(routeData, false)
+            setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
+          } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
+          else {
+            setBagStatus(BagStatus.IN_REVIEW)
+          }
+        } else {
+          setBagStatus(BagStatus.ADDING_TO_BAG)
+        }
       }
     } catch (error) {
       setBagStatus(BagStatus.ADDING_TO_BAG)
@@ -313,7 +397,7 @@ const Bag = () => {
 
   return (
     <Portal>
-      <BagContainer data-testid="nft-bag" raiseZIndex={isMobile || isModalOpen}>
+      <BagContainer data-testid="nft-bag" raiseZIndex={isMobile || isModalOpen} isProfilePage={isProfilePage}>
         {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (
           <>
             <BagHeader
@@ -328,12 +412,7 @@ const Bag = () => {
               {isProfilePage ? <ProfileBagContent /> : <BagContent />}
             </Column>
             {hasAssetsToShow && !isProfilePage && (
-              <BagFooter
-                totalEthPrice={totalEthPrice}
-                bagStatus={bagStatus}
-                fetchAssets={fetchAssets}
-                eventProperties={eventProperties}
-              />
+              <BagFooter totalEthPrice={totalEthPrice} fetchAssets={fetchAssets} eventProperties={eventProperties} />
             )}
             {isSellingAssets && isProfilePage && (
               <Box

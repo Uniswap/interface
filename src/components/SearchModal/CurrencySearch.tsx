@@ -35,6 +35,7 @@ const ContentWrapper = styled(Column)`
   overflow: hidden;
   flex: 1 1;
   position: relative;
+  border-radius: 20px;
 `
 
 interface CurrencySearchProps {

@@ -3,7 +3,7 @@ import { FeeAmount, nearestUsableTick, Pool, TICK_SPACINGS, tickToPrice } from '
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
-import useAllV3TicksQuery, { TickData } from 'graphql/thegraph/AllV3TicksQuery'
+import useAllV3TicksQuery, { TickData, Ticks } from 'graphql/thegraph/AllV3TicksQuery'
 import JSBI from 'jsbi'
 import { useSingleContractMultipleData } from 'lib/hooks/multicall'
 import ms from 'ms.macro'
@@ -140,7 +140,8 @@ function useTicksFromTickLens(
 function useTicksFromSubgraph(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
-  feeAmount: FeeAmount | undefined
+  feeAmount: FeeAmount | undefined,
+  skip = 0
 ) {
   const { chainId } = useWeb3React()
   const poolAddress =
@@ -154,9 +155,10 @@ function useTicksFromSubgraph(
         )
       : undefined
 
-  return useAllV3TicksQuery(poolAddress, 0, ms`30s`)
+  return useAllV3TicksQuery(poolAddress, skip, ms`30s`)
 }
 
+const MAX_THE_GRAPH_TICK_FETCH_VALUE = 1000
 // Fetches all ticks for a given pool
 function useAllV3Ticks(
   currencyA: Currency | undefined,
@@ -170,12 +172,31 @@ function useAllV3Ticks(
   const useSubgraph = currencyA ? !CHAIN_IDS_MISSING_SUBGRAPH_DATA.includes(currencyA.chainId) : true
 
   const tickLensTickData = useTicksFromTickLens(!useSubgraph ? currencyA : undefined, currencyB, feeAmount)
-  const subgraphTickData = useTicksFromSubgraph(useSubgraph ? currencyA : undefined, currencyB, feeAmount)
+
+  const [skipNumber, setSkipNumber] = useState(0)
+  const [subgraphTickData, setSubgraphTickData] = useState<Ticks>([])
+  const { data, error, isLoading } = useTicksFromSubgraph(
+    useSubgraph ? currencyA : undefined,
+    currencyB,
+    feeAmount,
+    skipNumber
+  )
+
+  useEffect(() => {
+    if (data?.ticks.length) {
+      setSubgraphTickData((tickData) => [...tickData, ...data.ticks])
+      if (data.ticks.length === MAX_THE_GRAPH_TICK_FETCH_VALUE) {
+        setSkipNumber((skipNumber) => skipNumber + MAX_THE_GRAPH_TICK_FETCH_VALUE)
+      }
+    }
+  }, [data?.ticks])
 
   return {
-    isLoading: useSubgraph ? subgraphTickData.isLoading : tickLensTickData.isLoading,
-    error: useSubgraph ? subgraphTickData.error : tickLensTickData.isError,
-    ticks: useSubgraph ? subgraphTickData.data?.ticks : tickLensTickData.tickData,
+    isLoading: useSubgraph
+      ? isLoading || data?.ticks.length === MAX_THE_GRAPH_TICK_FETCH_VALUE
+      : tickLensTickData.isLoading,
+    error: useSubgraph ? error : tickLensTickData.isError,
+    ticks: useSubgraph ? subgraphTickData : tickLensTickData.tickData,
   }
 }
 

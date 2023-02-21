@@ -24,7 +24,7 @@ export default function useAllV3TicksQuery(poolAddress: string | undefined, skip
     data,
     loading: isLoading,
     error,
-  } = useQuery(query, {
+  } = useQuery<Record<'ticks', Ticks>>(query, {
     variables: {
       poolAddress: poolAddress?.toLowerCase(),
       skip,
