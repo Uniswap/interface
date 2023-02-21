@@ -140,10 +140,12 @@ export const MarketplaceRow = ({
   const removeAssetMarketplace = useSellAsset((state) => state.removeAssetMarketplace)
   const [marketIconHovered, toggleMarketIconHovered] = useReducer((s) => !s, false)
   const [marketRowHovered, toggleMarketRowHovered] = useReducer((s) => !s, false)
-  const existingPrice = asset.newListings?.find((listing) =>
-    expandMarketplaceRows ? listing.marketplace.name === selectedMarkets?.[0].name : !!listing.price
-  )?.price
-  const [listPrice, setListPrice] = useState<number | undefined>(existingPrice)
+  const [listPrice, setListPrice] = useState<number | undefined>(
+    () =>
+      asset.newListings?.find((listing) =>
+        expandMarketplaceRows ? listing.marketplace.name === selectedMarkets?.[0].name : !!listing.price
+      )?.price
+  )
   const [globalOverride, setGlobalOverride] = useState(false)
   const showGlobalPrice = globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride && globalPrice
 
