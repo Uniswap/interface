@@ -196,7 +196,7 @@ export function NFTCollectionHeader({
               <Text color="textTertiary" variant="subheadSmall">
                 {t('Volume')}
               </Text>
-              <Flex row alignItems="center" gap="none">
+              <Flex row alignItems="center" gap="spacing4">
                 <Text loading={loading} pr="spacing1" variant="bodyLarge">
                   {`${formatNumber(
                     collectionStats?.totalVolume?.value,

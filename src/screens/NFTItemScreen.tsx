@@ -279,7 +279,7 @@ function AssetMetadata({
   link?: string
 }): JSX.Element {
   const itemWidth = '45%' // works with flexWrap to make 2 columns. It needs to be slightly less than 50% to account for padding on the entire section
-
+  const theme = useAppTheme()
   return (
     <Flex gap="spacing4" mb="spacing24" width={itemWidth}>
       <Text color="textTertiary" variant="subheadSmall">
@@ -287,11 +287,12 @@ function AssetMetadata({
       </Text>
       {link && value ? (
         <LinkButton
+          iconColor={theme.colors.textTertiary}
           justifyContent="flex-start"
           label={value}
           mx="none"
           px="none"
-          size={iconSizes.icon16}
+          size={iconSizes.icon20}
           textVariant="bodyLarge"
           url={link}
         />
