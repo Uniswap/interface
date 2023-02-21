@@ -1,12 +1,13 @@
 import React from 'react'
-import { Image } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
+import { ImageUri } from 'src/components/images/ImageUri'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { DappInfo, DappInfoV2 } from 'src/features/walletConnect/types'
-import { iconSizes } from 'src/styles/sizing'
+import { borderRadii, iconSizes } from 'src/styles/sizing'
 import { toSupportedChainId } from 'src/utils/chainId'
 
 export function HeaderIcon({
@@ -24,12 +25,14 @@ export function HeaderIcon({
 
   const chainId = dapp.version === '1' ? toSupportedChainId(dapp.chain_id) : null
 
+  const fallback = <HeaderIconPlaceholder name={dapp.name} />
+
   return (
     <Box>
       {dapp.icon ? (
-        <Image source={{ uri: dapp.icon, height: iconSizes.icon40, width: iconSizes.icon40 }} />
+        <ImageUri fallback={fallback} imageStyle={styles.icon} uri={dapp.icon} />
       ) : (
-        <HeaderIconPlaceholder name={dapp.name} />
+        { fallback }
       )}
       {showChain && chainId && (
         <Box bottom={-4} position="absolute" right={-4}>
@@ -56,3 +59,7 @@ function HeaderIconPlaceholder({ name }: { name: string }): JSX.Element {
     </Flex>
   )
 }
+
+const styles = StyleSheet.create({
+  icon: { borderRadius: borderRadii.rounded20, height: iconSizes.icon40, width: iconSizes.icon40 },
+})
