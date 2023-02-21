@@ -10,9 +10,10 @@ import { CustomLightSpinner, ThemedText } from 'theme'
 import Circle from '../../assets/images/blue-loader.svg'
 import Modal from '../Modal'
 
+const MOONPAY_DARK_BACKGROUND = '#1c1c1e'
 const Wrapper = styled.div<{ isDarkMode: boolean }>`
   // #1c1c1e is the background color for the darkmode moonpay iframe as of 2/16/2023
-  background-color: ${({ isDarkMode, theme }) => (isDarkMode ? '#1c1c1e' : theme.white)};
+  background-color: ${({ isDarkMode, theme }) => (isDarkMode ? MOONPAY_DARK_BACKGROUND : theme.white)};
   border-radius: 20px;
   box-shadow: ${({ theme }) => theme.deepShadow};
   display: flex;
@@ -32,7 +33,7 @@ const ErrorText = styled(ThemedText.BodyPrimary)`
 `
 const StyledIframe = styled.iframe<{ isDarkMode: boolean }>`
   // #1c1c1e is the background color for the darkmode moonpay iframe as of 2/16/2023
-  background-color: ${({ isDarkMode, theme }) => (isDarkMode ? '#1c1c1e' : theme.white)};
+  background-color: ${({ isDarkMode, theme }) => (isDarkMode ? MOONPAY_DARK_BACKGROUND : theme.white)};
   border-radius: 12px;
   bottom: 0;
   left: 0;
