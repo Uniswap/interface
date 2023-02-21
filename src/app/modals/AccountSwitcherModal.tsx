@@ -380,7 +380,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         onPress={onPressAccount}
         onPressEdit={onPressEdit}
       />
-      <TouchableArea my="spacing24" onPress={onPressAddWallet}>
+      <TouchableArea hapticFeedback my="spacing24" onPress={onPressAddWallet}>
         <Flex row alignItems="center" ml="spacing24">
           <Box
             borderColor="backgroundOutline"

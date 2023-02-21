@@ -23,6 +23,7 @@ export function LinkButtonWithIcon({
 
   return (
     <TouchableArea
+      hapticFeedback
       backgroundColor="background2"
       borderRadius="rounded20"
       paddingHorizontal="spacing12"

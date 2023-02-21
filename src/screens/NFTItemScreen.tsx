@@ -158,7 +158,7 @@ export function NFTItemScreen({
           </Flex>
 
           {/* Collection info */}
-          <TouchableArea disabled={!asset?.collection} onPress={onPressCollection}>
+          <TouchableArea hapticFeedback disabled={!asset?.collection} onPress={onPressCollection}>
             {nftLoading ? (
               <Loader.Box borderRadius="rounded16" height={64} />
             ) : (
@@ -168,7 +168,7 @@ export function NFTItemScreen({
                 backgroundColor="background2"
                 borderRadius="rounded16"
                 gap="spacing8"
-                px="spacing16"
+                px="spacing12"
                 py="spacing12">
                 {nftLoading ? (
                   <Loader.Box height={40} />
@@ -177,16 +177,13 @@ export function NFTItemScreen({
                     {asset?.collection?.image?.url ? (
                       <Box
                         borderRadius="roundedFull"
-                        height={imageSizes.image32}
+                        height={imageSizes.image40}
                         overflow="hidden"
-                        width={imageSizes.image32}>
+                        width={imageSizes.image40}>
                         <NFTViewer squareGridView maxHeight={60} uri={asset.collection.image.url} />
                       </Box>
                     ) : null}
-                    <Box flexShrink={1}>
-                      <Text color="textTertiary" variant="buttonLabelMicro">
-                        {t('Collection')}
-                      </Text>
+                    <Flex grow gap="none">
                       <Flex row alignItems="center" gap="spacing8">
                         <Box flexShrink={1}>
                           <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
@@ -201,14 +198,8 @@ export function NFTItemScreen({
                           />
                         )}
                       </Flex>
-                    </Box>
-                    {asset?.collection?.markets?.[0]?.floorPrice?.value && (
-                      <Box flexGrow={1}>
-                        <Text
-                          color="textSecondary"
-                          numberOfLines={1}
-                          textAlign="right"
-                          variant="buttonLabelMicro">
+                      {asset?.collection?.markets?.[0]?.floorPrice?.value && (
+                        <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
                           {t('Floor: {{floorPrice}} ETH', {
                             floorPrice: formatNumber(
                               asset.collection.markets?.[0].floorPrice?.value,
@@ -216,8 +207,8 @@ export function NFTItemScreen({
                             ),
                           })}
                         </Text>
-                      </Box>
-                    )}
+                      )}
+                    </Flex>
                   </Flex>
                 )}
               </Flex>

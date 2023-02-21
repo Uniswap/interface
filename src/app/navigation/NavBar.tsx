@@ -1,9 +1,9 @@
 import { ShadowProps, useResponsiveProp } from '@shopify/restyle'
 import { BlurView } from 'expo-blur'
-import { selectionAsync } from 'expo-haptics'
+import { impactAsync } from 'expo-haptics'
 import React, { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet, TouchableOpacity, useColorScheme } from 'react-native'
+import { StyleSheet, useColorScheme } from 'react-native'
 import { TapGestureHandler, TapGestureHandlerGestureEvent } from 'react-native-gesture-handler'
 import {
   cancelAnimation,
@@ -17,6 +17,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { AnimatedBox, AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -100,7 +101,7 @@ const SwapFAB = memo(({ activeScale = 0.95, inputCurrencyId }: SwapTabBarButtonP
   const isDarkMode = useColorScheme() === 'dark'
 
   const onPress = useCallback(() => {
-    selectionAsync()
+    impactAsync()
 
     dispatch(
       openModal({
@@ -197,7 +198,8 @@ function ExploreTabBarButton(): JSX.Element {
   })
 
   return (
-    <TouchableOpacity
+    <TouchableArea
+      hapticFeedback
       activeOpacity={1}
       style={[styles.searchBar, { borderRadius: theme.borderRadii.roundedFull }]}
       onPress={onPress}>
@@ -227,7 +229,7 @@ function ExploreTabBarButton(): JSX.Element {
           </BlurView>
         </AnimatedFlex>
       </TapGestureHandler>
-    </TouchableOpacity>
+    </TouchableArea>
   )
 }
 

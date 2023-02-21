@@ -111,7 +111,7 @@ export function AccountHeader(): JSX.Element {
       </TouchableArea>
       <Flex alignItems="center" flexDirection="row" gap="spacing16" justifyContent="flex-end">
         <QRScannerIconButton onPress={onPressScan} />
-        <TouchableArea onPress={onPressSettings}>
+        <TouchableArea hapticFeedback onPress={onPressSettings}>
           <Flex row alignItems="center">
             <SettingsIcon
               color={theme.colors.textTertiary}

@@ -13,7 +13,7 @@ type Props = {
 
 export function SendButton({ onPress, color, size = iconSizes.icon20 }: Props): JSX.Element {
   return (
-    <TouchableArea name={ElementName.Send} padding="spacing4" onPress={onPress}>
+    <TouchableArea hapticFeedback name={ElementName.Send} padding="spacing4" onPress={onPress}>
       <Flex centered row gap="spacing8">
         <SendIcon color={color} height={size} width={size} />
       </Flex>

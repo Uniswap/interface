@@ -1,5 +1,6 @@
 import { useScrollToTop } from '@react-navigation/native'
 import { FlashList } from '@shopify/flash-list'
+import { impactAsync } from 'expo-haptics'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -297,6 +298,9 @@ export function HomeScreen(): JSX.Element {
                   },
                 ]}
                 tabStyle={style}
+                onTabPress={(): void => {
+                  impactAsync()
+                }}
               />
             </Box>
           </Animated.View>
@@ -398,22 +402,19 @@ export function HomeScreen(): JSX.Element {
 function QuickActions(): JSX.Element {
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccountWithThrow()
-
   const { t } = useTranslation()
 
   const onPressBuy = (): void => {
     dispatch(openModal({ name: ModalName.FiatOnRamp }))
   }
-
   const onPressReceive = (): void => {
     dispatch(
       openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
     )
   }
-
-  const onPressSend = useCallback(() => {
+  const onPressSend = (): void => {
     dispatch(openModal({ name: ModalName.Send }))
-  }, [dispatch])
+  }
 
   // hide fiat onramp banner when active account isn't a signer account.
   const fiatOnRampShown =
@@ -466,17 +467,16 @@ function ActionButton({
   flex: number
 }): JSX.Element {
   const theme = useAppTheme()
-
   return (
     <TouchableArea
       hapticFeedback
       backgroundColor="backgroundActionButton"
-      borderRadius="rounded24"
+      borderRadius="roundedFull"
       eventName={eventName}
       flex={flex}
       name={name}
       px="spacing12"
-      py="spacing12"
+      py="spacing16"
       shadowColor="white"
       shadowOffset={SHADOW_OFFSET_SMALL}
       shadowOpacity={0.1}
