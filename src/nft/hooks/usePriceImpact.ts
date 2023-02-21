@@ -5,10 +5,13 @@ import { useTheme } from 'styled-components/macro'
 import { computeRealizedPriceImpact, getPriceImpactWarning } from 'utils/prices'
 
 export interface PriceImpact {
-  percent: Percent
-  warning?: 'warning' | 'error'
-  toString(): string
-  warningColor?: string
+  priceImpactSeverity: PriceImpactSeverity
+  displayPercentage(): string
+}
+
+interface PriceImpactSeverity {
+  type: 'warning' | 'error'
+  color: string
 }
 
 export function usePriceImpact(trade?: InterfaceTrade<Currency, Currency, TradeType>): PriceImpact | undefined {
@@ -24,12 +27,13 @@ export function usePriceImpact(trade?: InterfaceTrade<Currency, Currency, TradeT
         ? theme.accentWarning
         : undefined
 
-    return marketPriceImpact
+    return marketPriceImpact && priceImpactWarning && warningColor
       ? {
-          percent: marketPriceImpact,
-          warning: priceImpactWarning,
-          toString: () => toHumanReadablePercent(marketPriceImpact),
-          warningColor,
+          priceImpactSeverity: {
+            type: priceImpactWarning,
+            color: warningColor,
+          },
+          displayPercentage: () => toHumanReadablePercent(marketPriceImpact),
         }
       : undefined
   }, [theme.accentCritical, theme.accentWarning, trade])

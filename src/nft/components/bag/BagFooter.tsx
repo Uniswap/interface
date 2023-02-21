@@ -253,13 +253,13 @@ const FiatValue = ({
 
   return (
     <PriceImpactContainer>
-      {priceImpact && priceImpact.warningColor && (
+      {priceImpact && (
         <>
           <MouseoverTooltip text={t`The estimated difference between the USD values of input and output amounts.`}>
             <PriceImpactRow>
-              <AlertTriangle color={priceImpact.warningColor} size="16px" />
-              <ThemedText.BodySmall style={{ color: priceImpact.warningColor }} lineHeight="20px">
-                (<Trans>{priceImpact.toString()}</Trans>)
+              <AlertTriangle color={priceImpact.priceImpactSeverity.color} size="16px" />
+              <ThemedText.BodySmall style={{ color: priceImpact.priceImpactSeverity.color }} lineHeight="20px">
+                (<Trans>{priceImpact.displayPercentage()}</Trans>)
               </ThemedText.BodySmall>
             </PriceImpactRow>
           </MouseoverTooltip>
@@ -442,11 +442,11 @@ export const BagFooter = ({ totalEthPrice, fetchAssets, eventProperties }: BagFo
       warningTextColor = theme.accentAction
       warningText = <Trans>Price updated</Trans>
       buttonText = <Trans>Pay</Trans>
-    } else if (priceImpact && priceImpact.warning === 'error' && priceImpact.warningColor) {
+    } else if (priceImpact && priceImpact.priceImpactSeverity.type === 'error') {
       disabled = false
-      buttonColor = priceImpact.warningColor
+      buttonColor = priceImpact.priceImpactSeverity.color
       helperText = <Trans>Price impact warning</Trans>
-      helperTextColor = priceImpact.warningColor
+      helperTextColor = priceImpact.priceImpactSeverity.color
       buttonText = <Trans>Pay Anyway</Trans>
     } else if (sufficientBalance === true) {
       disabled = false
@@ -494,6 +494,8 @@ export const BagFooter = ({ totalEthPrice, fetchAssets, eventProperties }: BagFo
     using_erc20: !!inputCurrency,
     ...eventProperties,
   }
+
+  console.log(bagStatus)
 
   return (
     <FooterContainer>
@@ -573,7 +575,7 @@ export const BagFooter = ({ totalEthPrice, fetchAssets, eventProperties }: BagFo
           <Helper color={helperTextColor}>{helperText}</Helper>
           <ActionButton
             onClick={handleClick}
-            disabled={disabled}
+            disabled={disabled || isPending}
             backgroundColor={buttonColor}
             textColor={buttonTextColor}
           >
