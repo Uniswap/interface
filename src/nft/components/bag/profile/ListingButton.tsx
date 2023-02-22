@@ -1,4 +1,5 @@
 import { Plural, t, Trans } from '@lingui/macro'
+import { ButtonPrimary } from 'components/Button'
 import ms from 'ms.macro'
 import { Box } from 'nft/components/Box'
 import { BelowFloorWarningModal } from 'nft/components/profile/list/Modal/BelowFloorWarningModal'
@@ -6,6 +7,7 @@ import { useNFTList, useSellAsset } from 'nft/hooks'
 import { Listing, ListingStatus, WalletAsset } from 'nft/types'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { useEffect, useMemo, useState } from 'react'
+import styled from 'styled-components/macro'
 import { useTheme } from 'styled-components/macro'
 import shallow from 'zustand/shallow'
 
@@ -13,6 +15,8 @@ import * as styles from './ListingModal.css'
 import { getListings } from './utils'
 
 const BELOW_FLOOR_PRICE_THRESHOLD = 0.8
+
+const StyledListingButton = styled(ButtonPrimary)``
 
 interface ListingButtonProps {
   onClick: () => void
@@ -219,22 +223,13 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
         as="button"
         border="none"
         backgroundColor={showResolveIssues ? 'accentFailure' : 'accentAction'}
-        cursor={
-          [ListingStatus.APPROVED, ListingStatus.PENDING, ListingStatus.SIGNING].includes(listingStatus) ||
-          disableListButton
-            ? 'default'
-            : 'pointer'
-        }
+        cursor={disableListButton ? 'default' : 'pointer'}
         className={styles.button}
         onClick={() => listingStatus !== ListingStatus.APPROVED && warningWrappedClick()}
         type="button"
         style={{
           color: showResolveIssues ? theme.accentTextLightPrimary : theme.white,
-          opacity:
-            ![ListingStatus.DEFINED, ListingStatus.FAILED, ListingStatus.CONTINUE].includes(listingStatus) ||
-            (disableListButton && !showResolveIssues)
-              ? 0.3
-              : 1,
+          opacity: disableListButton && !showResolveIssues ? 0.3 : 1,
         }}
       >
         {listingStatus === ListingStatus.SIGNING ? (
