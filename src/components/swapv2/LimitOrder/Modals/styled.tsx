@@ -10,7 +10,7 @@ import TradePrice from 'components/swapv2/LimitOrder/TradePrice'
 import { BaseTradeInfo } from 'components/swapv2/LimitOrder/useBaseTradeInfo'
 import useTheme from 'hooks/useTheme'
 
-import { formatAmountOrder, formatRateOrder } from '../helpers'
+import { formatAmountOrder, formatRateLimitOrder } from '../helpers'
 import { LimitOrder, RateInfo } from '../type'
 
 export const Container = styled.div`
@@ -135,7 +135,7 @@ export const Rate = ({
     const { makerAssetSymbol, takerAssetSymbol } = order
     symbolIn = takerAssetSymbol
     symbolOut = makerAssetSymbol
-    rateStr = formatRateOrder(order, invertRate)
+    rateStr = formatRateLimitOrder(order, invertRate)
   } else {
     if (!currencyIn || !currencyOut || !rateInfo) return null
     symbolIn = currencyIn?.symbol

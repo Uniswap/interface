@@ -1,15 +1,18 @@
+import { rgba } from 'polished'
 import { useCallback, useEffect, useState } from 'react'
 import { X } from 'react-feather'
 import { animated, useSpring } from 'react-spring'
 import { Flex } from 'rebass'
 import styled, { DefaultTheme, keyframes } from 'styled-components'
 
+import { NotificationType, PopupContentSimple, PopupContentTxn, PopupType } from 'components/Announcement/type'
 import useTheme from 'hooks/useTheme'
-import { PopupContentSimple, PopupContentTxn, PopupType } from 'state/application/actions'
-import { NotificationType, useRemovePopup } from 'state/application/hooks'
+import { useRemovePopup } from 'state/application/hooks'
+import { PopupItemType } from 'state/application/reducer'
 
 import SimplePopup from './SimplePopup'
 import TransactionPopup from './TransactionPopup'
+import getPopupTopRightDescriptionByType from './getPopupTopRightDescriptionByType'
 
 const StyledClose = styled(X)`
   margin-left: 10px;
@@ -51,7 +54,7 @@ const getBackgroundColor = (theme: DefaultTheme, type: NotificationType = Notifi
   return mapColor[type]
 }
 
-export const Popup = styled.div<{ type?: NotificationType }>`
+const Popup = styled.div<{ type?: NotificationType }>`
   display: inline-block;
   width: 100%;
   background: ${({ theme, type }) => getBackgroundColor(theme, type)};
@@ -106,20 +109,26 @@ const WrappedAnimatedFader = ({ removeAfterMs }: { removeAfterMs: number | null 
   return <AnimatedFader style={faderStyle} />
 }
 
-export default function PopupItem({
-  removeAfterMs,
-  content,
-  popKey,
-  popupType,
-}: {
-  removeAfterMs: number | null
-  content: PopupContentTxn | PopupContentSimple
-  popKey: string
-  popupType: PopupType
-}) {
+const Overlay = styled.div`
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: ${({ theme }) =>
+    `linear-gradient(180deg, ${rgba(theme.darkMode ? theme.black : theme.white, 0)} 40.1%, ${rgba(
+      theme.darkMode ? theme.black : theme.white,
+      0.8,
+    )} 100%)`};
+`
+
+export default function PopupItem({ popup, hasOverlay }: { popup: PopupItemType; hasOverlay: boolean }) {
+  const { removeAfterMs, popupType, content } = popup
+
   const [isRestartAnimation, setRestartAnimation] = useState(false)
   const removePopup = useRemovePopup()
-  const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
+  const removeThisPopup = useCallback(() => removePopup(popup), [popup, removePopup])
   useEffect(() => {
     if (removeAfterMs === null) return
     const timeout = setTimeout(() => {
@@ -135,7 +144,7 @@ export default function PopupItem({
 
   const theme = useTheme()
 
-  let notiType: NotificationType
+  let notiType = NotificationType.SUCCESS
   let popupContent
   switch (popupType) {
     case PopupType.SIMPLE: {
@@ -145,9 +154,15 @@ export default function PopupItem({
       break
     }
     case PopupType.TRANSACTION: {
-      const { hash, notiType: _notiType = NotificationType.ERROR } = content as PopupContentTxn
-      notiType = _notiType
+      const { hash, type = NotificationType.ERROR } = content as PopupContentTxn
+      notiType = type
       popupContent = <TransactionPopup hash={hash} notiType={notiType} />
+      break
+    }
+    case PopupType.TOP_RIGHT: {
+      const { title, summary, type, link } = getPopupTopRightDescriptionByType(popup)
+      notiType = type
+      popupContent = <SimplePopup title={title} type={notiType} summary={summary} link={link} />
       break
     }
   }
@@ -163,6 +178,7 @@ export default function PopupItem({
         </Flex>
         {removeAfterMs && <WrappedAnimatedFader removeAfterMs={removeAfterMs} />}
       </Popup>
+      {hasOverlay && <Overlay />}
     </PopupWrapper>
   )
 }

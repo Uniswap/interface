@@ -1,28 +1,7 @@
 import { createAction } from '@reduxjs/toolkit'
-import { ReactNode } from 'react'
 
+import { PopupContent, PopupType } from 'components/Announcement/type'
 import { Topic } from 'hooks/useNotification'
-
-import { NotificationType } from './hooks'
-
-export type PopupContentTxn = {
-  hash: string
-  notiType: NotificationType
-}
-
-export type PopupContentSimple = {
-  title: string
-  summary?: ReactNode
-  icon?: ReactNode
-  type: NotificationType
-}
-
-export enum PopupType {
-  TRANSACTION,
-  SIMPLE,
-}
-
-export type PopupContent = PopupContentTxn | PopupContentSimple
 
 export enum ApplicationModal {
   NETWORK,
@@ -54,6 +33,7 @@ export enum ApplicationModal {
   REGISTER_CAMPAIGN_CAPTCHA,
   REGISTER_CAMPAIGN_SUCCESS,
   NOTIFICATION_SUBSCRIPTION,
+  NOTIFICATION_CENTER,
   YOUR_CAMPAIGN_TRANSACTIONS,
   ETH_POW_ACK,
 
@@ -77,6 +57,7 @@ export const addPopup = createAction<{
   popupType: PopupType
 }>('application/addPopup')
 export const removePopup = createAction<{ key: string }>('application/removePopup')
+
 export const updatePrommETHPrice = createAction<{
   currentPrice: string
   oneDayBackPrice: string

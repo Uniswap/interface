@@ -4,12 +4,13 @@ import { stringify } from 'querystring'
 import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { NotificationType } from 'components/Announcement/type'
 import MailIcon from 'components/Icons/MailIcon'
 import { NOTIFICATION_API } from 'constants/env'
 import useNotification from 'hooks/useNotification'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import useTheme from 'hooks/useTheme'
-import { NotificationType, useNotify } from 'state/application/hooks'
+import { useNotify } from 'state/application/hooks'
 
 // this component to verify email/telegram
 function VerifyComponent() {

@@ -1,6 +1,6 @@
 import { darken } from 'polished'
 import React, { HTMLProps, useCallback } from 'react'
-import { ArrowLeft, ExternalLink as LinkIconFeather, Trash, X } from 'react-feather'
+import { ArrowLeft, ExternalLink as LinkIconFeather, X } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css, keyframes } from 'styled-components'
 
@@ -162,22 +162,6 @@ export const LinkIcon = styled(LinkIconFeather)<{ color?: string }>`
   height: 16px;
   width: 18px;
   stroke: ${({ theme, color }) => color || theme.primary};
-`
-
-export const TrashIcon = styled(Trash)`
-  height: 16px;
-  width: 18px;
-  margin-left: 10px;
-  stroke: ${({ theme }) => theme.text3};
-
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-
-  :hover {
-    opacity: 0.7;
-  }
 `
 
 /**

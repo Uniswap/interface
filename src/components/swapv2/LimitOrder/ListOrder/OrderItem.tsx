@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import dayjs from 'dayjs'
 import { useState } from 'react'
 import { Repeat } from 'react-feather'
@@ -11,7 +11,7 @@ import ProgressBar from 'components/ProgressBar'
 import useTheme from 'hooks/useTheme'
 import { MEDIA_WIDTHS } from 'theme'
 
-import { calcPercentFilledOrder, formatAmountOrder, formatRateOrder } from '../helpers'
+import { calcPercentFilledOrder, formatAmountOrder, formatRateLimitOrder } from '../helpers'
 import { LimitOrder, LimitOrderStatus } from '../type'
 import ActionButtons from './ActionButtons'
 
@@ -140,13 +140,27 @@ const TradeRateOrder = ({ order, style = {} }: { order: LimitOrder; style?: CSSP
         <Text color={theme.subText}>{!invert ? `${symbolOut}/${symbolIn}` : `${symbolIn}/${symbolOut}`}</Text>
         <Repeat color={theme.subText} size={12} />
       </Flex>
-      <Text color={theme.text}>{formatRateOrder(order, invert)}</Text>
+      <Text color={theme.text}>{formatRateLimitOrder(order, invert)}</Text>
     </Colum>
   )
 }
+
 function formatStatus(status: string) {
   status = status.replace('_', ' ')
   return status.charAt(0).toUpperCase() + status.slice(1)
+}
+
+function formatStatusLimitOrder(order: LimitOrder, isCancelling = false) {
+  const { takingAmount, filledTakingAmount, takerAssetDecimals } = order
+  const filledPercent = calcPercentFilledOrder(filledTakingAmount, takingAmount, takerAssetDecimals)
+  const status = isCancelling ? LimitOrderStatus.CANCELLING : order.status
+  const partiallyFilled = status === LimitOrderStatus.PARTIALLY_FILLED
+  const expandTitle = [LimitOrderStatus.EXPIRED, LimitOrderStatus.CANCELLED, LimitOrderStatus.CANCELLING].includes(
+    status,
+  )
+    ? ` | ${formatStatus(status)}`
+    : ''
+  return `${partiallyFilled ? t`Partially Filled` : t`Filled`} ${filledPercent}% ${expandTitle}`
 }
 
 const getColorStatus = (status: LimitOrderStatus, theme: DefaultTheme) => {
@@ -195,20 +209,11 @@ export default function OrderItem({
   const status = isCancelling ? LimitOrderStatus.CANCELLING : order.status
   const filledPercent = calcPercentFilledOrder(filledTakingAmount, takingAmount, takerAssetDecimals)
   const theme = useTheme()
-  const partiallyFilled = status === LimitOrderStatus.PARTIALLY_FILLED
   const colorStatus = getColorStatus(status, theme)
-  const expandTitle = [LimitOrderStatus.EXPIRED, LimitOrderStatus.CANCELLED, LimitOrderStatus.CANCELLING].includes(
-    status,
-  )
-    ? ` | ${formatStatus(status)}`
-    : ''
 
   const progressComponent = (
     <Colum>
-      <Text color={colorStatus}>
-        {partiallyFilled ? <Trans>Partially Filled {filledPercent}%</Trans> : <Trans>Filled {filledPercent}%</Trans>}
-        {expandTitle}
-      </Text>
+      <Text color={colorStatus}>{formatStatusLimitOrder(order, isCancelling)}</Text>
       <ProgressBar
         width={upToSmall ? '160px' : 'unset'}
         backgroundColor={theme.subText}

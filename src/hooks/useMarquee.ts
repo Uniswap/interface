@@ -4,28 +4,24 @@ import { useDeepCompareEffect } from 'react-use'
 export default function useMarquee(...args: any): React.RefObject<HTMLDivElement> {
   const marqueeContainerRef = useRef<HTMLDivElement>(null)
   const [endScroll, setEndScroll] = useState(false)
-
   useDeepCompareEffect(() => {
     let itv: NodeJS.Timeout | undefined
-    if (marqueeContainerRef && marqueeContainerRef.current && !endScroll) {
-      let lastScrollLeft = marqueeContainerRef.current.scrollLeft
+    const container = marqueeContainerRef?.current
+    if (container && !endScroll) {
+      let lastScrollLeft = container.scrollLeft
       itv = setInterval(() => {
-        if (
-          marqueeContainerRef.current &&
-          marqueeContainerRef.current.scrollLeft + marqueeContainerRef.current.clientWidth <
-            marqueeContainerRef.current.scrollWidth - 1
-        ) {
-          const acceleration = Math.abs(lastScrollLeft - marqueeContainerRef.current.scrollLeft)
+        const { scrollLeft, clientWidth, scrollWidth } = container ?? {}
+        if (container && scrollLeft + clientWidth < scrollWidth - 1) {
+          const acceleration = Math.abs(lastScrollLeft - scrollLeft)
           if (acceleration >= 30) {
             setEndScroll(true)
             return
           }
-
           if (!endScroll) {
-            marqueeContainerRef.current.scrollTo({
-              left: marqueeContainerRef.current.scrollLeft + 1,
+            container.scrollTo({
+              left: scrollLeft + 1,
             })
-            lastScrollLeft = marqueeContainerRef.current.scrollLeft
+            lastScrollLeft = scrollLeft
           }
         } else {
           setEndScroll(true)

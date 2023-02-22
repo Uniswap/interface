@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
+import { NotificationType } from 'components/Announcement/type'
 import { ButtonPrimary } from 'components/Button'
 import Logo from 'components/Logo'
 import Modal from 'components/Modal'
@@ -17,13 +18,7 @@ import { useAllTokens } from 'hooks/Tokens'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
-import {
-  NotificationType,
-  useModalOpen,
-  useNotify,
-  useToggleModal,
-  useWalletModalToggle,
-} from 'state/application/hooks'
+import { useModalOpen, useNotify, useToggleModal, useWalletModalToggle } from 'state/application/hooks'
 import { CloseIcon } from 'theme'
 import { getTokenLogoURL, isAddress, shortenAddress } from 'utils'
 import { filterTokens } from 'utils/filtering'

@@ -2,6 +2,7 @@ import { Trans, t } from '@lingui/macro'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
+import Announcement from 'components/Announcement'
 import SelectNetwork from 'components/Header/web3/SelectNetwork'
 import SelectWallet from 'components/Header/web3/SelectWallet'
 import Menu from 'components/Menu'
@@ -87,6 +88,7 @@ const HeaderElement = styled.div`
 const HeaderElementWrap = styled.div`
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 `
 
 const HeaderRow = styled(RowFixed)`
@@ -223,6 +225,7 @@ export default function Header() {
           <SelectWallet />
         </HeaderElement>
         <HeaderElementWrap>
+          <Announcement />
           <Menu />
         </HeaderElementWrap>
       </HeaderControls>

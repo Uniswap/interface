@@ -1,5 +1,5 @@
 import { Trans, t } from '@lingui/macro'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import {
   Award,
@@ -146,20 +146,19 @@ const StyledMenuButton = styled.button<{ active?: boolean }>`
     cursor: pointer;
     outline: none;
     background-color: ${({ theme }) => theme.buttonBlack};
+    border: 1px solid ${({ theme }) => theme.primary};
   }
 
   ${({ active }) =>
-    active
-      ? css`
-          cursor: pointer;
-          outline: none;
-          background-color: ${({ theme }) => theme.buttonBlack};
-        `
-      : ''}
+    active &&
+    css`
+      cursor: pointer;
+      outline: none;
+      background-color: ${({ theme }) => theme.buttonBlack};
+    `}
 `
 
 const StyledMenu = styled.div`
-  margin-left: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -172,6 +171,10 @@ const MenuFlyoutBrowserStyle = css`
   min-width: unset;
   right: -8px;
   width: 230px;
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    top: unset;
+    bottom: 3.5rem;
+  `};
 `
 
 const MenuFlyoutMobileStyle = css`
@@ -214,7 +217,6 @@ const noop = () => {
 export default function Menu() {
   const { chainId, account, isEVM, networkInfo } = useActiveWeb3React()
   const theme = useTheme()
-  const node = useRef<HTMLDivElement>(null)
 
   const open = useModalOpen(ApplicationModal.MENU)
   const toggle = useToggleModal(ApplicationModal.MENU)
@@ -248,14 +250,14 @@ export default function Menu() {
   }, [open])
 
   return (
-    <StyledMenu ref={node}>
-      <StyledMenuButton active={open} onClick={toggle} aria-label="Menu" id={TutorialIds.BUTTON_MENU_HEADER}>
-        <StyledMenuIcon />
-      </StyledMenuButton>
-
+    <StyledMenu>
       <MenuFlyout
-        node={node}
-        browserCustomStyle={MenuFlyoutBrowserStyle}
+        trigger={
+          <StyledMenuButton active={open} onClick={toggle} aria-label="Menu" id={TutorialIds.BUTTON_MENU_HEADER}>
+            <StyledMenuIcon />
+          </StyledMenuButton>
+        }
+        customStyle={MenuFlyoutBrowserStyle}
         mobileCustomStyle={MenuFlyoutMobileStyle}
         isOpen={open}
         toggle={toggle}

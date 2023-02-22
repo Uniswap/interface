@@ -5,6 +5,7 @@ import { Check, X } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
+import { NotificationType } from 'components/Announcement/type'
 import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
 import Checkbox from 'components/CheckBox'
 import Column from 'components/Column'
@@ -19,13 +20,7 @@ import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useNotification, { Topic } from 'hooks/useNotification'
 import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
-import {
-  NotificationType,
-  useModalOpen,
-  useNotificationModalToggle,
-  useNotify,
-  useWalletModalToggle,
-} from 'state/application/hooks'
+import { useModalOpen, useNotificationModalToggle, useNotify, useWalletModalToggle } from 'state/application/hooks'
 import { pushUnique } from 'utils'
 import { subscribeTelegramSubscription } from 'utils/firebase'
 

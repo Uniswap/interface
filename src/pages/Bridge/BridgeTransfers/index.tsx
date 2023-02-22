@@ -1,4 +1,8 @@
+import { t } from '@lingui/macro'
 import styled from 'styled-components'
+
+import { RowBetween } from 'components/Row'
+import SubscribeNotificationButton from 'components/SubscribeButton'
 
 import BridgeTransferHistory from '../BridgeTransferHistory'
 import TabSelector from './TabSelector'
@@ -10,7 +14,12 @@ type Props = {
 const BridgeHistory: React.FC<Props> = ({ className }) => {
   return (
     <div className={className}>
-      <TabSelector />
+      <RowBetween>
+        <TabSelector />
+        <SubscribeNotificationButton
+          subscribeTooltip={t`Subscribe to receive notifications on your bridge transaction`}
+        />
+      </RowBetween>
       <BridgeTransferHistory />
     </div>
   )

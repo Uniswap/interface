@@ -4,10 +4,11 @@ import { findReplacementTx } from 'find-replacement-tx'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { NotificationType } from 'components/Announcement/type'
 import { APP_PATHS } from 'constants/index'
 import { useActiveWeb3React, useWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE, NEED_CHECK_SUBGRAPH_TRANSACTION_TYPES } from 'hooks/useMixpanel'
-import { NotificationType, useBlockNumber, useTransactionNotify } from 'state/application/hooks'
+import { useBlockNumber, useTransactionNotify } from 'state/application/hooks'
 import { useSetClaimingCampaignRewardId } from 'state/campaigns/hooks'
 import connection from 'state/connection/connection'
 import { AppDispatch, AppState } from 'state/index'
@@ -130,7 +131,7 @@ export default function Updater(): null {
 
                 transactionNotify({
                   hash: receipt.transactionHash,
-                  notiType: receipt.status === 1 ? NotificationType.SUCCESS : NotificationType.ERROR,
+                  type: receipt.status === 1 ? NotificationType.SUCCESS : NotificationType.ERROR,
                 })
                 if (receipt.status === 1 && transaction) {
                   const arbitrary = transaction.extraInfo?.arbitrary
@@ -218,7 +219,7 @@ export default function Updater(): null {
 
                 transactionNotify({
                   hash,
-                  notiType: tx.meta?.err ? NotificationType.ERROR : NotificationType.SUCCESS,
+                  type: tx.meta?.err ? NotificationType.ERROR : NotificationType.SUCCESS,
                 })
                 if (!tx.meta?.err && transaction) {
                   const arbitrary = transaction.extraInfo?.arbitrary

@@ -1,11 +1,10 @@
 import { createReducer, nanoid } from '@reduxjs/toolkit'
 
+import { PopupContent, PopupType } from 'components/Announcement/type'
 import { Topic } from 'hooks/useNotification'
 
 import {
   ApplicationModal,
-  PopupContent,
-  PopupType,
   addPopup,
   closeModal,
   removePopup,
@@ -19,13 +18,12 @@ import {
   updateServiceWorker,
 } from './actions'
 
-type PopupList = Array<{
+export type PopupItemType = {
   key: string
-  show: boolean
   content: PopupContent
   removeAfterMs: number | null
   popupType: PopupType
-}>
+}
 
 type ETHPrice = {
   currentPrice?: string
@@ -35,7 +33,7 @@ type ETHPrice = {
 
 export interface ApplicationState {
   readonly blockNumber: { readonly [chainId: number]: number }
-  readonly popupList: PopupList
+  readonly popupList: PopupItemType[]
   readonly openModal: ApplicationModal | null
   readonly ethPrice: ETHPrice
   readonly prommEthPrice: ETHPrice
@@ -78,10 +76,10 @@ export default createReducer(initialState, builder =>
       }
     })
     .addCase(addPopup, (state, { payload: { content, key, removeAfterMs = 15000, popupType } }) => {
-      state.popupList = (key ? state.popupList.filter(popup => popup.key !== key) : state.popupList).concat([
+      const { popupList } = state
+      state.popupList = (key ? popupList.filter(popup => popup.key !== key) : popupList).concat([
         {
           key: key || nanoid(),
-          show: true,
           content,
           removeAfterMs,
           popupType,
@@ -89,11 +87,7 @@ export default createReducer(initialState, builder =>
       ])
     })
     .addCase(removePopup, (state, { payload: { key } }) => {
-      state.popupList.forEach(p => {
-        if (p.key === key) {
-          p.show = false
-        }
-      })
+      state.popupList = state.popupList.filter(p => p.key !== key)
     })
     .addCase(updatePrommETHPrice, (state, { payload: { currentPrice, oneDayBackPrice, pricePercentChange } }) => {
       state.prommEthPrice.currentPrice = currentPrice

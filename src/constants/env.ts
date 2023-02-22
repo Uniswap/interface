@@ -9,15 +9,6 @@ const required = (envKey: string): string => {
   return envValue
 }
 
-// uncomment when needed
-// example of use: https://github.com/KyberNetwork/kyberswap-interface/blob/f7a8c56fc06fa75514b8ac59ff53e838e27cf4c5/src/constants/env.ts#L18
-// const validate = <T extends string>(envKey: string, validateValues: T[]): T => {
-//   const key = 'REACT_APP_' + envKey
-//   const envValue = required(envKey)
-//   invariant(validateValues.includes(envValue as any), `env ${key} is incorrect`)
-//   return envValue as T
-// }
-
 export const GOOGLE_RECAPTCHA_KEY = required('GOOGLE_RECAPTCHA_KEY')
 export const PRICE_API = required('PRICE_API')
 export const AGGREGATOR_API = required('AGGREGATOR_API')
@@ -26,12 +17,6 @@ export const REWARD_SERVICE_API = required('REWARD_SERVICE_API')
 export const KS_SETTING_API = required('KS_SETTING_API')
 export const PRICE_CHART_API = required('PRICE_CHART_API')
 export const AGGREGATOR_STATS_API = required('AGGREGATOR_STATS_API')
-export const FIREBASE_API_KEY = required('FIREBASE_API_KEY')
-export const FIREBASE_AUTH_DOMAIN = required('FIREBASE_AUTH_DOMAIN')
-export const FIREBASE_PROJECT_ID = required('FIREBASE_PROJECT_ID')
-export const FIREBASE_STORAGE_BUCKET = required('FIREBASE_STORAGE_BUCKET')
-export const FIREBASE_MESSAGING_SENDER_ID = required('FIREBASE_MESSAGING_SENDER_ID')
-export const FIREBASE_APP_ID = required('FIREBASE_APP_ID')
 export const NOTIFICATION_API = required('NOTIFICATION_API')
 export const TRUESIGHT_API = required('TRUESIGHT_API')
 export const TRANSAK_URL = required('TRANSAK_URL')
@@ -54,3 +39,57 @@ export const ENV_LEVEL = !process.env.REACT_APP_TAG
 export const LIMIT_ORDER_API_READ = required('LIMIT_ORDER_API_READ')
 export const LIMIT_ORDER_API_WRITE = required('LIMIT_ORDER_API_WRITE')
 export const KYBER_DAO_STATS_API = required('KYBER_DAO_STATS_API')
+
+export const NOTIFICATION_IGNORE_TEMPLATE_IDS = required('NOTIFICATION_IGNORE_TEMPLATE_IDS')
+
+type FirebaseConfig = {
+  apiKey: string
+  authDomain: string
+  projectId: string
+  storageBucket: string
+  messagingSenderId: string
+  databaseURL?: string
+  appId: string
+}
+
+export const FIREBASE: { [key: string]: { DEFAULT: FirebaseConfig; LIMIT_ORDER?: FirebaseConfig } } = {
+  development: {
+    LIMIT_ORDER: {
+      apiKey: 'AIzaSyBHRrinrQ3CXVrevZN442fjG0EZ-nYNNaU',
+      authDomain: 'limit-order-dev.firebaseapp.com',
+      projectId: 'limit-order-dev',
+      storageBucket: 'limit-order-dev.appspot.com',
+      messagingSenderId: '522790089501',
+      appId: '1:522790089501:web:524403003ae65c09c727f4',
+    },
+    DEFAULT: {
+      apiKey: 'AIzaSyDszHtJ4CJq0mwjBJ1pTt5OOzG5tiooEsg',
+      authDomain: 'test-bace2.firebaseapp.com',
+      databaseURL: 'https://test-bace2-default-rtdb.asia-southeast1.firebasedatabase.app',
+      projectId: 'test-bace2',
+      storageBucket: 'test-bace2.appspot.com',
+      messagingSenderId: '337703820408',
+      appId: '1:337703820408:web:2fb16ef71941817dec618d',
+    },
+  },
+  staging: {
+    DEFAULT: {
+      apiKey: 'AIzaSyDVtU3R0ZWgO4YzKbvjP372E8sgvz1vAqc',
+      authDomain: 'staging-339203.firebaseapp.com',
+      projectId: 'staging-339203',
+      storageBucket: 'staging-339203.appspot.com',
+      messagingSenderId: '641432115631',
+      appId: '1:641432115631:web:1ae29340e7e34e0c08f75a',
+    },
+  },
+  production: {
+    DEFAULT: {
+      apiKey: 'AIzaSyA1K_JAB8h0NIvjtFLHvZhfkFjW4Bls0bw',
+      authDomain: 'notification---production.firebaseapp.com',
+      projectId: 'notification---production',
+      storageBucket: 'notification---production.appspot.com',
+      messagingSenderId: '541963997326',
+      appId: '1:541963997326:web:a6cc676067bc65f32679df',
+    },
+  },
+}

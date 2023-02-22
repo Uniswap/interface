@@ -102,7 +102,7 @@ export const formatAmountOrder = (value: string, decimals?: number) => {
   )
 }
 
-export const formatRateOrder = (order: LimitOrder, invert: boolean) => {
+export const formatRateLimitOrder = (order: LimitOrder, invert: boolean) => {
   let rateValue = new Fraction(0)
   const { takingAmount, makingAmount, makerAssetDecimals, takerAssetDecimals } = order
   try {

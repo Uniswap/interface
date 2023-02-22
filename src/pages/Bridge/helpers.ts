@@ -129,3 +129,5 @@ export const formatPoolValue = (amount: string | number | undefined) => {
   } catch (error) {}
   return '0'
 }
+
+export const formatAmountBridge = (amount: string) => formatNumberWithPrecisionRange(parseFloat(amount ?? '0'), 0, 6)

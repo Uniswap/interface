@@ -6,9 +6,9 @@ import { Repeat } from 'react-feather'
 import { useDispatch } from 'react-redux'
 import { Flex } from 'rebass'
 
-import { ReactComponent as IconFailure } from 'assets/svg/notification_icon_failure.svg'
-import { ReactComponent as IconSuccess } from 'assets/svg/notification_icon_success.svg'
-import { ReactComponent as IconWarning } from 'assets/svg/notification_icon_warning.svg'
+import { CheckCircle } from 'components/Icons'
+import IconFailure from 'components/Icons/Failed'
+import WarningIcon from 'components/Icons/WarningIcon'
 import Loader from 'components/Loader'
 import { PrimaryText } from 'components/WalletPopup/Transactions/TransactionItem'
 import { isTxsPendingTooLong as isShowPendingWarning } from 'components/WalletPopup/Transactions/helper'
@@ -109,11 +109,10 @@ function StatusIcon({
 
   const pendingText = isPendingTooLong ? t`Pending` : t`Processing`
   const pendingIcon = isPendingTooLong ? (
-    <IconWarning width={'14px'} color={theme.red} />
+    <WarningIcon size={12} color={theme.red} solid />
   ) : (
     <Repeat size={14} color={theme.warning} />
   )
-
   return (
     <Flex style={{ gap: '4px', minWidth: 'unset' }} alignItems={'center'}>
       <PrimaryText color={theme.text}>
@@ -124,9 +123,9 @@ function StatusIcon({
       ) : pending ? (
         pendingIcon
       ) : success ? (
-        <IconSuccess width={'15px'} height="15px" />
+        <CheckCircle size="12px" color={theme.primary} />
       ) : (
-        <IconFailure width={'15px'} height="15px" />
+        <IconFailure size={15} color={theme.red} />
       )}
     </Flex>
   )

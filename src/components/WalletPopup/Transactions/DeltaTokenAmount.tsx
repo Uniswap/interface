@@ -12,9 +12,14 @@ export const TokenAmountWrapper = styled.div`
   font-size: 12px;
 `
 const TokenLogo = styled(Logo)`
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
   border-radius: 100%;
+  box-shadow: ${({ theme }) =>
+    (() => {
+      const color = theme.darkMode ? `rgba(256, 256, 256, 0.2)` : `rgba(0, 0, 0, 0.2)`
+      return `0 4px 5px 0 ${color}, 0 1px 70px 0 ${color};`
+    })()};
 `
 
 const DeltaTokenAmount = ({
@@ -22,19 +27,21 @@ const DeltaTokenAmount = ({
   amount,
   tokenAddress,
   plus,
-  whiteColor,
+  color: customColor,
+  logoURL,
 }: {
   symbol?: string
   amount?: string
   tokenAddress?: string
   plus?: boolean
-  whiteColor?: boolean
+  color?: string
+  logoURL?: string
 }) => {
   const withSign = plus !== undefined
   const theme = useTheme()
   const sign = amount === undefined || !withSign ? null : plus ? '+' : '-'
-  const color = whiteColor ? theme.text : plus ? theme.primary : theme.subText
-  const logoUrl = getTokenLogo(tokenAddress)
+  const color = customColor ?? (plus ? theme.primary : theme.subText)
+  const logoUrl = logoURL ?? getTokenLogo(tokenAddress)
   if (!amount) return null
   return (
     <TokenAmountWrapper>
