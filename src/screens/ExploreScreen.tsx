@@ -1,6 +1,6 @@
 import { useScrollToTop } from '@react-navigation/native'
 import { SharedEventName } from '@uniswap/analytics-events'
-import React, { useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, TextInput, useColorScheme } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -55,6 +55,10 @@ export function ExploreScreen(): JSX.Element {
     ? 'backgroundOverlay'
     : 'background1'
 
+  const onScroll = useCallback(() => {
+    textInputRef.current?.blur()
+  }, [])
+
   return (
     <Screen bg="none" edges={['top']}>
       <HandleBar backgroundColor="none" />
@@ -74,7 +78,7 @@ export function ExploreScreen(): JSX.Element {
       {isSearchMode ? (
         <KeyboardAvoidingView behavior="height" style={flex.fill}>
           <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} mx="spacing16">
-            <VirtualizedList bounces={false}>
+            <VirtualizedList bounces={false} onScroll={onScroll}>
               <Box p="spacing4" />
               {debouncedSearchQuery.length === 0 ? (
                 <SearchEmptySection />
