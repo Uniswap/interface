@@ -82,10 +82,9 @@ export function SecuritySetupScreen({ navigation, route: { params } }: Props): J
       )}
       <OnboardingScreen
         childrenGap="none"
-        subtitle={t(
-          '{{ authenticationTypeName }} ID will be required to open the Uniswap Wallet app and make transactions',
-          { authenticationTypeName }
-        )}
+        subtitle={t('{{ authenticationTypeName }} ID will be required to make transactions', {
+          authenticationTypeName,
+        })}
         title={t('Protect your wallet')}>
         <Flex centered grow>
           <Box
