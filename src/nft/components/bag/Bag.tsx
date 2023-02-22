@@ -6,7 +6,6 @@ import { GqlRoutingVariant, useGqlRoutingFlag } from 'featureFlags/flags/gqlRout
 import { useNftRouteLazyQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
-import ListingModal from 'nft/components/bag/profile/ListingModal'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Column } from 'nft/components/Flex'
@@ -113,10 +112,7 @@ const Bag = () => {
     shallow
   )
 
-  const { profilePageState, setProfilePageState } = useProfilePageState(
-    ({ setProfilePageState, state }) => ({ profilePageState: state, setProfilePageState }),
-    shallow
-  )
+  const { setProfilePageState } = useProfilePageState(({ setProfilePageState }) => ({ setProfilePageState }))
 
   const {
     bagStatus,
@@ -396,48 +392,42 @@ const Bag = () => {
   return (
     <Portal>
       <BagContainer data-testid="nft-bag" raiseZIndex={isMobile || isModalOpen} isProfilePage={isProfilePage}>
-        {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (
-          <>
-            <BagHeader
-              numberOfAssets={isProfilePage ? sellAssets.length : itemsInBag.length}
-              closeBag={handleCloseBag}
-              resetFlow={isProfilePage ? resetSellAssets : reset}
-              isProfilePage={isProfilePage}
-            />
-            {shouldRenderEmptyState && <EmptyState />}
-            <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
-            <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
-              {isProfilePage ? <ProfileBagContent /> : <BagContent />}
-            </Column>
-            {hasAssetsToShow && !isProfilePage && (
-              <BagFooter totalEthPrice={totalEthPrice} fetchAssets={fetchAssets} eventProperties={eventProperties} />
-            )}
-            {isSellingAssets && isProfilePage && (
-              <Box
-                marginTop="32"
-                marginX="28"
-                marginBottom="16"
-                paddingY="10"
-                className={`${buttonTextMedium} ${commonButtonStyles}`}
-                backgroundColor="accentAction"
-                color="white"
-                textAlign="center"
-                onClick={() => {
-                  toggleBag()
-                  setProfilePageState(ProfilePageStateType.LISTING)
-                  sendAnalyticsEvent(NFTEventName.NFT_PROFILE_PAGE_START_SELL, {
-                    list_quantity: sellAssets.length,
-                    collection_addresses: sellAssets.map((asset) => asset.asset_contract.address),
-                    token_ids: sellAssets.map((asset) => asset.tokenId),
-                  })
-                }}
-              >
-                Continue
-              </Box>
-            )}
-          </>
-        ) : (
-          <ListingModal />
+        <BagHeader
+          numberOfAssets={isProfilePage ? sellAssets.length : itemsInBag.length}
+          closeBag={handleCloseBag}
+          resetFlow={isProfilePage ? resetSellAssets : reset}
+          isProfilePage={isProfilePage}
+        />
+        {shouldRenderEmptyState && <EmptyState />}
+        <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
+        <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
+          {isProfilePage ? <ProfileBagContent /> : <BagContent />}
+        </Column>
+        {hasAssetsToShow && !isProfilePage && (
+          <BagFooter totalEthPrice={totalEthPrice} fetchAssets={fetchAssets} eventProperties={eventProperties} />
+        )}
+        {isSellingAssets && isProfilePage && (
+          <Box
+            marginTop="32"
+            marginX="28"
+            marginBottom="16"
+            paddingY="10"
+            className={`${buttonTextMedium} ${commonButtonStyles}`}
+            backgroundColor="accentAction"
+            color="white"
+            textAlign="center"
+            onClick={() => {
+              toggleBag()
+              setProfilePageState(ProfilePageStateType.LISTING)
+              sendAnalyticsEvent(NFTEventName.NFT_PROFILE_PAGE_START_SELL, {
+                list_quantity: sellAssets.length,
+                collection_addresses: sellAssets.map((asset) => asset.asset_contract.address),
+                token_ids: sellAssets.map((asset) => asset.tokenId),
+              })
+            }}
+          >
+            Continue
+          </Box>
         )}
       </BagContainer>
 
