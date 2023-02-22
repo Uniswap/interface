@@ -159,19 +159,6 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
 
     const onRetry = useCallback(() => refetch(), [refetch])
 
-    if (isError(networkStatus, !!data)) {
-      return (
-        <Flex grow style={containerProps?.emptyContainerStyle}>
-          <BaseCard.ErrorState
-            description={t('Something went wrong.')}
-            retryButtonLabel={t('Retry')}
-            title={t('Couldn’t load NFTs')}
-            onRetry={onRetry}
-          />
-        </Flex>
-      )
-    }
-
     // Initial loading state or refetch
     if (isNonPollingRequestInFlight(networkStatus)) {
       return (
@@ -182,6 +169,19 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
           ]}>
           <Loader.NFT repeat={6} />
         </View>
+      )
+    }
+
+    if (isError(networkStatus, !!data)) {
+      return (
+        <Flex grow style={containerProps?.emptyContainerStyle}>
+          <BaseCard.ErrorState
+            description={t('Something went wrong.')}
+            retryButtonLabel={t('Retry')}
+            title={t('Couldn’t load NFTs')}
+            onRetry={onRetry}
+          />
+        </Flex>
       )
     }
 
