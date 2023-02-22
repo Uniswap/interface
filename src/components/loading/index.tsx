@@ -70,10 +70,10 @@ function NFT({ repeat = 1 }: { repeat?: number }): JSX.Element {
             const secondColOpacity = (repeat - ((repeat / 2) * i + 2) + 1) / repeat
             return (
               <React.Fragment key={i}>
-                <Box flexDirection="row">
+                <Flex row gap="none">
                   <NftCardLoader opacity={firstColOpacity} width="50%" />
                   <NftCardLoader opacity={secondColOpacity} width="50%" />
-                </Box>
+                </Flex>
               </React.Fragment>
             )
           })}
