@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 import { Reference, relayStylePagination } from '@apollo/client/utilities'
 
-const GRAPHQL_URL = process.env.REACT_APP_AWS_API_ENDPOINT
+const GRAPHQL_URL = 'https://b6czhur0oe.execute-api.us-east-1.amazonaws.com/prod/graphql'
 if (!GRAPHQL_URL) {
   throw new Error('AWS URL MISSING FROM ENVIRONMENT')
 }
