@@ -85,7 +85,7 @@ const FiltersContainer = styled.div<{ isMobile: boolean; isFiltersExpanded: bool
   width: ${({ isMobile }) => (isMobile ? '100%' : '0px')};
   height: ${({ isMobile, isFiltersExpanded }) => (isMobile && isFiltersExpanded ? '100%' : undefined)};
   background: ${({ theme, isMobile }) => (isMobile ? theme.backgroundBackdrop : undefined)};
-  z-index: ${Z_INDEX.modalBackdrop};
+  z-index: ${Z_INDEX.modalBackdrop - 3};
   overflow-y: ${({ isMobile }) => (isMobile ? 'scroll' : undefined)};
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
