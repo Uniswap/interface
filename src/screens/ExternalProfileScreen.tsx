@@ -10,12 +10,12 @@ import { NftsTab } from 'src/components/home/NftsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
-import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { renderTabLabel, TabContentProps, TAB_STYLES } from 'src/components/layout/TabHelpers'
 import TraceTabView from 'src/components/telemetry/TraceTabView'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import ProfileHeader from 'src/features/externalProfile/ProfileHeader'
 import { SectionName } from 'src/features/telemetry/constants'
+import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
 
 type Props = NativeStackScreenProps<AppStackParamList, Screens.ExternalProfile>
@@ -89,19 +89,20 @@ export function ExternalProfileScreen({
   )
 
   return (
-    <Screen edges={EMPTY_ARRAY}>
-      <Flex grow>
-        <ProfileHeader address={address} />
-        <TraceTabView
-          navigationState={{ index: tabIndex, routes: tabs }}
-          renderScene={renderTab}
-          renderTabBar={renderTabBar}
-          screenName={Screens.ExternalProfile}
-          onIndexChange={setIndex}
-        />
-      </Flex>
-      <HorizontalEdgeGestureTarget />
-    </Screen>
+    <ExploreModalAwareView>
+      <Screen edges={EMPTY_ARRAY}>
+        <Flex grow pb="spacing16">
+          <ProfileHeader address={address} />
+          <TraceTabView
+            navigationState={{ index: tabIndex, routes: tabs }}
+            renderScene={renderTab}
+            renderTabBar={renderTabBar}
+            screenName={Screens.ExternalProfile}
+            onIndexChange={setIndex}
+          />
+        </Flex>
+      </Screen>
+    </ExploreModalAwareView>
   )
 }
 

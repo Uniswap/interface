@@ -131,21 +131,15 @@ export function ExploreStackNavigator(): JSX.Element {
         initialRouteName={Screens.Explore}
         screenOptions={{
           ...navOptions.noHeader,
+          fullScreenGestureEnabled: true,
+          gestureEnabled: true,
         }}>
         <ExploreStack.Screen component={ExploreScreen} name={Screens.Explore} />
         <ExploreStack.Group>
           <ExploreStack.Screen component={ExternalProfileScreen} name={Screens.ExternalProfile} />
           <ExploreStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
-          <ExploreStack.Screen
-            component={NFTItemScreen}
-            name={Screens.NFTItem}
-            options={{ fullScreenGestureEnabled: true, gestureEnabled: true }}
-          />
-          <ExploreStack.Screen
-            component={TokenDetailsScreen}
-            name={Screens.TokenDetails}
-            options={{ fullScreenGestureEnabled: true, gestureEnabled: true }}
-          />
+          <ExploreStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
+          <ExploreStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
         </ExploreStack.Group>
       </ExploreStack.Navigator>
     </NavigationContainer>

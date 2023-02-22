@@ -28,6 +28,7 @@ import {
 } from 'src/features/nfts/collection/NFTCollectionHeader'
 import { NFTItem } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
+import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 import { theme } from 'src/styles/theme'
@@ -195,45 +196,49 @@ export function NFTCollectionScreen({
   }
 
   return (
-    <Screen edges={EMPTY_ARRAY}>
-      <ScrollHeader
-        fullScreen
-        centerElement={
-          collectionData?.name ? <Text variant="bodyLarge">{collectionData.name}</Text> : undefined
-        }
-        listRef={listRef}
-        rightElement={
-          <NFTCollectionContextMenu collectionAddress={collectionAddress} data={collectionData} />
-        }
-        scrollY={scrollY}
-        showHeaderScrollYDistance={NFT_BANNER_HEIGHT}
-      />
-      <AnimatedFlashList
-        ref={listRef}
-        ListEmptyComponent={
-          gridDataLoading ? null : <BaseCard.EmptyState description={t('No NFTs found')} />
-        }
-        ListHeaderComponent={
-          <NFTCollectionHeader
-            collectionAddress={collectionAddress}
-            data={collectionData}
-            loading={headerDataLoading}
-          />
-        }
-        data={gridDataWithLoadingElements}
-        estimatedItemSize={ESTIMATED_ITEM_SIZE}
-        estimatedListSize={{
-          width: dimensions.fullWidth,
-          height: dimensions.fullHeight,
-        }}
-        keyExtractor={keyExtractor}
-        numColumns={3}
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-        onEndReached={onListEndReached}
-        onEndReachedThreshold={PREFETCH_ITEMS_THRESHOLD}
-        onScroll={scrollHandler}
-      />
-    </Screen>
+    <ExploreModalAwareView>
+      <Screen edges={EMPTY_ARRAY}>
+        <ScrollHeader
+          fullScreen
+          centerElement={
+            collectionData?.name ? (
+              <Text variant="bodyLarge">{collectionData.name}</Text>
+            ) : undefined
+          }
+          listRef={listRef}
+          rightElement={
+            <NFTCollectionContextMenu collectionAddress={collectionAddress} data={collectionData} />
+          }
+          scrollY={scrollY}
+          showHeaderScrollYDistance={NFT_BANNER_HEIGHT}
+        />
+        <AnimatedFlashList
+          ref={listRef}
+          ListEmptyComponent={
+            gridDataLoading ? null : <BaseCard.EmptyState description={t('No NFTs found')} />
+          }
+          ListHeaderComponent={
+            <NFTCollectionHeader
+              collectionAddress={collectionAddress}
+              data={collectionData}
+              loading={headerDataLoading}
+            />
+          }
+          data={gridDataWithLoadingElements}
+          estimatedItemSize={ESTIMATED_ITEM_SIZE}
+          estimatedListSize={{
+            width: dimensions.fullWidth,
+            height: dimensions.fullHeight,
+          }}
+          keyExtractor={keyExtractor}
+          numColumns={3}
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
+          onEndReached={onListEndReached}
+          onEndReachedThreshold={PREFETCH_ITEMS_THRESHOLD}
+          onScroll={scrollHandler}
+        />
+      </Screen>
+    </ExploreModalAwareView>
   )
 }
