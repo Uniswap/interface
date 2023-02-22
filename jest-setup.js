@@ -142,6 +142,31 @@ jest.mock('@amplitude/experiment-react-native-client', () => {
   }
 })
 
+jest.mock('statsig-react-native', () => {
+  const StatsigMock = {
+    useGate: () => {
+      return {
+        isLoading: false,
+        value: false,
+      }
+    },
+    useConfig: () => {
+      return {}
+    },
+
+    Statsig: {
+      checkGate: () => false,
+      getConfig: () => {
+        return {
+          get: (_name, fallback) => fallback,
+          getValue: (_name, fallback) => fallback,
+        }
+      },
+    },
+  }
+  return StatsigMock
+})
+
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: jest.fn().mockImplementation(() => ({})),
 }))

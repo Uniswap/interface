@@ -1,6 +1,7 @@
 import { useAppSelector } from 'src/app/hooks'
 import { EXPERIMENTS, EXP_VARIANTS, FEATURE_FLAGS } from 'src/features/experiments/constants'
-import { selectExperiment, selectFeatureFlag } from 'src/features/experiments/selectors'
+import { selectExperiment } from 'src/features/experiments/selectors'
+import { useGate } from 'statsig-react-native'
 
 export function useExperimentVariant(
   experimentName: EXPERIMENTS,
@@ -9,10 +10,13 @@ export function useExperimentVariant(
   return useAppSelector(selectExperiment(experimentName)) ?? defaultVariant
 }
 
-export function useFeatureFlag(flagName: FEATURE_FLAGS, defaultValue: boolean): boolean {
-  return useAppSelector(selectFeatureFlag(flagName)) ?? defaultValue
+// This is a custom hook that we created to make it easier to use feature flags, with better typing support for feature flags added in constants.ts.
+export function useFeatureFlag(flagName: FEATURE_FLAGS): boolean {
+  const { value } = useGate(flagName)
+  return value
 }
 
 export function useFiatOnRampEnabled(): boolean {
-  return useFeatureFlag(FEATURE_FLAGS.FiatOnRamp, false)
+  const { value } = useGate(FEATURE_FLAGS.FiatOnRamp)
+  return value
 }

@@ -44,8 +44,11 @@ jobs:
           command: yarn --frozen-lockfile --no-audit --prefer-offline
       - name: Typechain
         run: yarn contracts:compile
+      - name: Get number of CPU cores
+        id: cpu-cores
+        uses: SimenB/github-actions-cpu-cores@v1
       - name: Jest
-        run: yarn test --collectCoverage=true
+        run: yarn test --collectCoverage=true --max-workers=${{ steps.cpu-cores.outputs.count }}
         env:
           DEMO_SEED_PHRASE: ${{ secrets.DEMO_SEED_PHRASE }}
       - name: Upload coverage to Codecov

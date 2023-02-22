@@ -1,6 +1,14 @@
-import { flush, Identify, identify, init, track } from '@amplitude/analytics-react-native'
+import {
+  flush,
+  Identify,
+  identify,
+  init,
+  setDeviceId,
+  track,
+} from '@amplitude/analytics-react-native'
 import * as Sentry from '@sentry/react-native'
 import { Primitive, SeverityLevel } from '@sentry/types'
+import { getUniqueId } from 'react-native-device-info'
 import { uniswapUrls } from 'src/constants/urls'
 import { ApplicationTransport } from 'src/features/telemetry/ApplicationTransport'
 import { UserPropertyName } from 'src/features/telemetry/constants'
@@ -33,6 +41,7 @@ export async function initAnalytics(): Promise<void> {
         },
       }
     )
+    setDeviceId(await getUniqueId()) // Ensure we're using the same deviceId across Amplitude and Statsig
   } catch (err) {
     logger.error('telemetry/index', 'initiAnalytics', `${err}`)
   }

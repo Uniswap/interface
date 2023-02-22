@@ -23,3 +23,18 @@ export function isDevBuild(): boolean {
 export function isBetaBuild(): boolean {
   return DeviceInfo.getBundleId().endsWith('.beta')
 }
+export function getStatsigEnvironmentTier(): StatsigEnvironmentTier {
+  if (isDevBuild()) {
+    return StatsigEnvironmentTier.DEV
+  }
+  if (isBetaBuild()) {
+    return StatsigEnvironmentTier.BETA
+  }
+  return StatsigEnvironmentTier.PROD
+}
+
+enum StatsigEnvironmentTier {
+  DEV = 'development',
+  BETA = 'beta',
+  PROD = 'production',
+}

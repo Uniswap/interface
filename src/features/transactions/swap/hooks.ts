@@ -456,7 +456,7 @@ export function useTokenApprovalInfo(
   const address = useActiveAccountAddressWithThrow()
   const provider = useProvider(chainId)
   const contractManager = useContractManager()
-  const permit2Enabled = useFeatureFlag(FEATURE_FLAGS.SwapPermit2, false)
+  const permit2Enabled = useFeatureFlag(FEATURE_FLAGS.SwapPermit2)
 
   const transactionFetcher = useCallback(() => {
     if (!provider || !currencyInAmount || !currencyInAmount.currency) return
@@ -594,7 +594,7 @@ export function useSwapTransactionRequest(
     currencyAmounts,
   } = derivedSwapInfo
 
-  const permit2Enabled = useFeatureFlag(FEATURE_FLAGS.SwapPermit2, false)
+  const permit2Enabled = useFeatureFlag(FEATURE_FLAGS.SwapPermit2)
   const address = useActiveAccountAddressWithThrow()
 
   const { data: permitInfo, isLoading: permitInfoLoading } = usePermitSignature(

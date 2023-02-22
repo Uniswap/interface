@@ -14989,6 +14989,11 @@ jpeg-js@0.4.2, jpeg-js@0.4.4:
   resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.4.4.tgz#a9f1c6f1f9f0fa80cdb3484ed9635054d28936aa"
   integrity sha512-WZzeDOEtTOBK4Mdsar0IqEU5sMr3vSV2RqkAIzUEV2BHnUfKGyswWFPFwK5EeDo93K3FohSHbLAjj0s1Wzd+dg==
 
+js-sha256@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/js-sha256/-/js-sha256-0.9.0.tgz#0b89ac166583e91ef9123644bd3c5334ce9d0966"
+  integrity sha512-sga3MHh9sgQN2+pJ9VYZ+1LPwXOxuBJBA5nrR5/ofPfuiJBE2hnjsaN8se8JznOmGLN2p49Pe5U/ttafcs/apA==
+
 js-sha3@0.8.0, js-sha3@^0.8.0:
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/js-sha3/-/js-sha3-0.8.0.tgz#b9b7a5da73afad7dedd0f8c463954cbde6818840"
@@ -20660,6 +20665,30 @@ static-extend@^0.1.1:
   dependencies:
     define-property "^0.2.5"
     object-copy "^0.1.0"
+
+statsig-js@^4.28.1:
+  version "4.29.0"
+  resolved "https://registry.yarnpkg.com/statsig-js/-/statsig-js-4.29.0.tgz#2678fec35f33c40ae0df7159e3ae6d2d6053039a"
+  integrity sha512-xA3FISKOqzVHSmdJjlupiNTW7bkKoVHdSLSBSugZe4ARjrk8VCd2tIIq4v8EJB6ZWURxeYdDsmwln713UNNDyA==
+  dependencies:
+    js-sha256 "^0.9.0"
+    uuid "^8.3.2"
+
+statsig-react-native@4.9.2:
+  version "4.9.2"
+  resolved "https://registry.yarnpkg.com/statsig-react-native/-/statsig-react-native-4.9.2.tgz#ffb78081666a789d286c323c45e5c9dbd13c9824"
+  integrity sha512-QM98vyB+GLnnABgFvCoE+rEjUwd8VpNS0nSI7Py6wVJa5+1fqz6KMjfmVPiG+h2IuQOaPojag01mrZfeGjrhgw==
+  dependencies:
+    js-sha256 "^0.9.0"
+    statsig-react "^1.21.1"
+    uuid "^3.4.0"
+
+statsig-react@^1.21.1:
+  version "1.22.0"
+  resolved "https://registry.yarnpkg.com/statsig-react/-/statsig-react-1.22.0.tgz#3f4f1498dc78bba53d80d6eb4c9d507b2a3c16e5"
+  integrity sha512-10lg5dsEmLzS6zuIdKwrvZ9gZJAdncZlJteSmjTZSOpQZyobWBuO7TBqjGzkBv2+UQn0d+Pkoz3L4Hy2uPvhQA==
+  dependencies:
+    statsig-js "^4.28.1"
 
 statuses@2.0.1:
   version "2.0.1"

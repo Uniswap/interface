@@ -11,6 +11,7 @@ import {
   MOONPAY_WIDGET_API_URL,
   ONESIGNAL_APP_ID,
   SENTRY_DSN,
+  STATSIG_API_KEY,
   UNISWAP_API_BASE_URL,
   UNISWAP_API_KEY,
   UNISWAP_APP_URL,
@@ -38,6 +39,7 @@ export interface Config {
   infuraProjectId: string
   onesignalAppId: string
   sentryDsn: string
+  statSigApiKey: string
   version: string
   walletConnectProjectId: string
 }
@@ -59,6 +61,7 @@ const _config: Config = {
   infuraProjectId: process.env.INFURA_PROJECT_ID || INFURA_PROJECT_ID,
   onesignalAppId: process.env.ONESIGNAL_APP_ID || ONESIGNAL_APP_ID,
   sentryDsn: process.env.SENTRY_DSN || SENTRY_DSN,
+  statSigApiKey: process.env.STATSIG_API_KEY || STATSIG_API_KEY,
   version: VERSION,
   walletConnectProjectId: process.env.WALLETCONNECT_PROJECT_ID || WALLETCONNECT_PROJECT_ID,
 }

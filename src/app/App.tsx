@@ -3,8 +3,9 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
 import * as SplashScreen from 'expo-splash-screen'
-import React, { StrictMode, useCallback, useEffect } from 'react'
+import React, { StrictMode, useCallback, useEffect, useState } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
+import { getUniqueId } from 'react-native-device-info'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
@@ -31,6 +32,8 @@ import { useTrmPrefetch } from 'src/features/trm/api'
 import { useSignerAccounts } from 'src/features/wallet/hooks'
 import { DynamicThemeProvider } from 'src/styles/DynamicThemeProvider'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
+import { getStatsigEnvironmentTier } from 'src/utils/version'
+import { StatsigProvider } from 'statsig-react-native'
 
 // Keep the splash screen visible while we fetch resources until one of our landing pages loads
 SplashScreen.preventAutoHideAsync()
@@ -58,6 +61,16 @@ initOneSignal()
 
 function App(): JSX.Element | null {
   const client = usePersistedApolloClient()
+  const [deviceId, setDeviceId] = useState<string | null>(null)
+
+  // We want to ensure deviceID is used as the identifier to link with analytics
+  useEffect(() => {
+    async function fetchAndSetDeviceId(): Promise<void> {
+      const uniqueId = await getUniqueId()
+      setDeviceId(uniqueId)
+    }
+    fetchAndSetDeviceId()
+  }, [])
 
   const onReportPrepared = useCallback((report: RenderPassReport) => {
     sendAnalyticsEvent(MobileEventName.PerformanceReport, report)
@@ -68,34 +81,47 @@ function App(): JSX.Element | null {
     return null
   }
 
+  const statSigOptions = {
+    options: {
+      environment: {
+        tier: getStatsigEnvironmentTier(),
+      },
+    },
+    sdkKey: config.statSigApiKey,
+    user: deviceId ? { userID: deviceId } : {},
+    waitForInitialization: true,
+  }
+
   return (
     <Trace>
       <StrictMode>
-        <SafeAreaProvider>
-          <Provider store={store}>
-            <ApolloProvider client={client}>
-              <PersistGate loading={null} persistor={persistor}>
-                <DynamicThemeProvider>
-                  <ErrorBoundary>
-                    <WalletContextProvider>
-                      <BiometricContextProvider>
-                        <LockScreenContextProvider>
-                          <DataUpdaters />
-                          <BottomSheetModalProvider>
-                            <AppModals />
-                            <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                              <AppInner />
-                            </PerformanceProfiler>
-                          </BottomSheetModalProvider>
-                        </LockScreenContextProvider>
-                      </BiometricContextProvider>
-                    </WalletContextProvider>
-                  </ErrorBoundary>
-                </DynamicThemeProvider>
-              </PersistGate>
-            </ApolloProvider>
-          </Provider>
-        </SafeAreaProvider>
+        <StatsigProvider {...statSigOptions}>
+          <SafeAreaProvider>
+            <Provider store={store}>
+              <ApolloProvider client={client}>
+                <PersistGate loading={null} persistor={persistor}>
+                  <DynamicThemeProvider>
+                    <ErrorBoundary>
+                      <WalletContextProvider>
+                        <BiometricContextProvider>
+                          <LockScreenContextProvider>
+                            <DataUpdaters />
+                            <BottomSheetModalProvider>
+                              <AppModals />
+                              <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                                <AppInner />
+                              </PerformanceProfiler>
+                            </BottomSheetModalProvider>
+                          </LockScreenContextProvider>
+                        </BiometricContextProvider>
+                      </WalletContextProvider>
+                    </ErrorBoundary>
+                  </DynamicThemeProvider>
+                </PersistGate>
+              </ApolloProvider>
+            </Provider>
+          </SafeAreaProvider>
+        </StatsigProvider>
       </StrictMode>
     </Trace>
   )
