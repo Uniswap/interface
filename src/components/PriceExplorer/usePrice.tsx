@@ -11,22 +11,23 @@ export type ValueAndFormatted<U = number, V = string> = {
 }
 
 /**
- * Wrapper around react-native-wagmi-chart#useLineChartPrice that returns price
- * when not scrubbing.
+ * Wrapper around react-native-wagmi-chart#useLineChartPrice
+ * @returns latest price when not scrubbing and active price when scrubbing
  */
-export function useLineChartPrice({ spotPrice }: { spotPrice?: number }): ValueAndFormatted {
-  // `price` when scrubbing the chart
+export function useLineChartPrice(): ValueAndFormatted {
   const { value: activeCursorPrice } = useRNWagmiChartLineChartPrice({
     // do not round
     precision: 18,
   })
+  const { data } = useLineChart()
 
   const price = useDerivedValue(() => {
     if (activeCursorPrice.value) {
+      // active price when scrubbing the chart
       return Number(activeCursorPrice.value)
     }
 
-    return spotPrice ?? 0
+    return data[data.length - 1]?.value ?? 0
   })
 
   const priceFormatted = useDerivedValue(() => {
@@ -42,28 +43,43 @@ export function useLineChartPrice({ spotPrice }: { spotPrice?: number }): ValueA
   }
 }
 
+/**
+ * @returns % change for the active history duration when not scrubbing and %
+ *          change between active index and period start when scrubbing
+ */
 export function useLineChartRelativeChange({
   spotRelativeChange,
 }: {
-  spotRelativeChange?: number
+  spotRelativeChange?: SharedValue<number>
 }): ValueAndFormatted {
   const { currentIndex, data, isActive } = useLineChart()
 
   const relativeChange = useDerivedValue(() => {
-    // when not scrubbing, return relative change 24h
-    if (!isActive.value) {
-      return spotRelativeChange ?? 0
+    if (!isActive.value && Boolean(spotRelativeChange)) {
+      // break early when chart is not active (scrubbing) and spot relative
+      // change is available
+      // this should only happen for the daily HistoryDuration where calculating
+      // relative change from historical data leads to data inconsistencies in
+      // the ui
+      return spotRelativeChange?.value ?? 0
     }
 
-    // when scrubbing, compute relative change from close price
-    const activePrice = data[currentIndex.value]?.value
-    const closePrice = data[data.length - 1]?.value
+    // when scrubbing, compute relative change from open price
+    const openPrice = data[0]?.value
 
-    if (!activePrice || !closePrice) {
+    // scrubbing: close price is active price
+    // not scrubbing: close price is period end price
+    const closePrice = isActive.value
+      ? data[currentIndex.value]?.value
+      : data[data.length - 1]?.value
+
+    if (openPrice === undefined || closePrice === undefined || openPrice === 0) {
       return 0
     }
 
-    return ((activePrice - closePrice) / closePrice) * 100
+    const change = ((closePrice - openPrice) / openPrice) * 100
+
+    return change
   })
 
   const relativeChangeFormattted = useDerivedValue(() => {

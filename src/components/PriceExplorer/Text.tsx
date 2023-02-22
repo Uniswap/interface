@@ -1,5 +1,5 @@
 import React from 'react'
-import { useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
+import { SharedValue, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { useLineChartDatetime } from 'react-native-wagmi-charts'
 import { useAppTheme } from 'src/app/hooks'
 import { Flex } from 'src/components/layout'
@@ -8,14 +8,8 @@ import { AnimatedText } from 'src/components/text/AnimatedText'
 import { AnimatedDecimalNumber } from './AnimatedDecimalNumber'
 import { useLineChartPrice, useLineChartRelativeChange } from './usePrice'
 
-export function PriceText({
-  loading,
-  spotPrice,
-}: {
-  loading: boolean
-  spotPrice?: number
-}): JSX.Element {
-  const price = useLineChartPrice({ spotPrice })
+export function PriceText({ loading }: { loading: boolean }): JSX.Element {
+  const price = useLineChartPrice()
 
   if (loading) {
     return <Text loading loadingPlaceholderText="$10,000" variant="headlineLarge" />
@@ -29,7 +23,7 @@ export function RelativeChangeText({
   spotRelativeChange,
 }: {
   loading: boolean
-  spotRelativeChange?: number
+  spotRelativeChange?: SharedValue<number>
 }): JSX.Element {
   const theme = useAppTheme()
 

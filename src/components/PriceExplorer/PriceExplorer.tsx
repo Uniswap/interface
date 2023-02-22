@@ -1,5 +1,6 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import React from 'react'
+import { SharedValue } from 'react-native-reanimated'
 import { LineChart, LineChartProvider } from 'react-native-wagmi-charts'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
@@ -18,14 +19,13 @@ import { useTokenPriceHistory } from './usePriceHistory'
 
 type PriceTextProps = {
   loading: boolean
-  spotPrice?: number | undefined
-  relativeChange?: number | undefined
+  relativeChange?: SharedValue<number>
 }
 
-function PriceTextSection({ loading, spotPrice, relativeChange }: PriceTextProps): JSX.Element {
+function PriceTextSection({ loading, relativeChange }: PriceTextProps): JSX.Element {
   return (
     <Box mx="spacing12">
-      <PriceText loading={loading} spotPrice={spotPrice} />
+      <PriceText loading={loading} />
       <Flex row gap="spacing4">
         <RelativeChangeText loading={loading} spotRelativeChange={relativeChange} />
         <DatetimeText loading={loading} />
@@ -65,11 +65,7 @@ export function PriceExplorer({
           data={data.priceHistory}
           onCurrentIndexChange={invokeImpact[ImpactFeedbackStyle.Light]}>
           <Flex gap="spacing8">
-            <PriceTextSection
-              loading={loading}
-              relativeChange={data.spot.relativeChange}
-              spotPrice={data.spot.value}
-            />
+            <PriceTextSection loading={loading} relativeChange={data.spot?.relativeChange} />
             <Box my="spacing24">
               <LineChart height={CHART_HEIGHT}>
                 <LineChart.Path color={tokenColor} />
