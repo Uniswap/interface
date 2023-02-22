@@ -2,6 +2,7 @@ import { MockedResponse } from '@apollo/client/testing'
 import { fireEvent } from '@testing-library/react-native'
 import React from 'react'
 import { AccountList } from 'src/components/accounts/AccountList'
+import { ON_PRESS_EVENT_PAYLOAD } from 'src/components/buttons/TouchableArea.test'
 import { AccountListDocument, AccountListQuery } from 'src/data/__generated__/types-and-hooks'
 import { account } from 'src/test/fixtures'
 import { Portfolios } from 'src/test/gqlFixtures'
@@ -56,7 +57,7 @@ describe(AccountList, () => {
         )
       )
     ).toBeDefined()
-    fireEvent.press(screen.getByTestId(`account_item/${account.address}`))
+    fireEvent.press(screen.getByTestId(`account_item/${account.address}`), ON_PRESS_EVENT_PAYLOAD)
 
     expect(onPressSpy).toHaveBeenCalledTimes(1)
   })

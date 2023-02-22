@@ -1,5 +1,6 @@
 import React from 'react'
 import { BackButton } from 'src/components/buttons/BackButton'
+import { ON_PRESS_EVENT_PAYLOAD } from 'src/components/buttons/TouchableArea.test'
 import { fireEvent, render, screen } from 'src/test/test-utils'
 
 const mockedGoBack = jest.fn()
@@ -25,7 +26,7 @@ describe(BackButton, () => {
     render(<BackButton showButtonLabel />)
 
     const button = await screen.findByText('Back')
-    fireEvent.press(button)
+    fireEvent.press(button, ON_PRESS_EVENT_PAYLOAD)
 
     expect(mockedGoBack).toHaveBeenCalledTimes(1)
   })

@@ -1,6 +1,6 @@
 import { createBox } from '@shopify/restyle'
 import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics'
-import React, { ComponentProps, PropsWithChildren, useCallback, useMemo } from 'react'
+import React, { ComponentProps, PropsWithChildren, useCallback, useMemo, useRef } from 'react'
 import { GestureResponderEvent, TouchableOpacity, TouchableOpacityProps } from 'react-native'
 import {
   Easing,
@@ -50,11 +50,31 @@ export function TouchableArea({
   activeOpacity = 0.75,
   ...rest
 }: BaseButtonProps): JSX.Element {
+  const touchActivationPositionRef = useRef<Pick<
+    GestureResponderEvent['nativeEvent'],
+    'pageX' | 'pageY'
+  > | null>(null)
+
   const scale = useSharedValue(1)
 
   const onPressHandler = useCallback(
     (event: GestureResponderEvent) => {
       if (!onPress) return
+
+      const { pageX, pageY } = event.nativeEvent
+
+      const isDragEvent =
+        touchActivationPositionRef.current &&
+        isDrag(
+          touchActivationPositionRef.current.pageX,
+          touchActivationPositionRef.current.pageY,
+          pageX,
+          pageY
+        )
+
+      if (isDragEvent) {
+        return
+      }
 
       if (hapticFeedback) {
         impactAsync(hapticStyle)
@@ -66,8 +86,10 @@ export function TouchableArea({
   )
 
   const onPressInHandler = useMemo(() => {
-    if (!scaleTo) return
-    return () => {
+    return ({ nativeEvent: { pageX, pageY } }: GestureResponderEvent) => {
+      touchActivationPositionRef.current = { pageX, pageY }
+
+      if (!scaleTo) return
       scale.value = withTiming(scaleTo, ScaleTimingConfigIn)
     }
   }, [scale, scaleTo])
@@ -117,3 +139,22 @@ export function TouchableArea({
 }
 
 export const AnimatedTouchableArea = withAnimated(TouchableArea)
+
+/**
+ * @link https://github.com/satya164/react-native-tab-view/issues/1241#issuecomment-1022400366
+ * @returns true if press was after a drag gesture
+ */
+function isDrag(
+  activationX: number,
+  activationY: number,
+  releaseX: number,
+  releaseY: number,
+  threshold = 2
+): boolean {
+  const absX = Math.abs(activationX - releaseX)
+  const absY = Math.abs(activationY - releaseY)
+
+  const dragged = absX > threshold || absY > threshold
+
+  return dragged
+}
