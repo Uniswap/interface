@@ -15,6 +15,7 @@ import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPage
 import { BagCloseIcon } from 'nft/components/icons'
 import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
+import { blocklistedCollections } from 'nft/utils'
 import { Suspense, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { animated, easings, useSpring } from 'react-spring'
@@ -188,7 +189,7 @@ const Collection = () => {
             width: CollectionContainerWidthChange.to((x) => `calc(100% - ${x as number}px)`),
           }}
         >
-          {contractAddress ? (
+          {contractAddress && !blocklistedCollections.includes(contractAddress) ? (
             <>
               <BannerWrapper>
                 <Banner
