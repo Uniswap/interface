@@ -26,14 +26,14 @@ async function initializeWeb3Wallet(): Promise<void> {
     projectId: config.walletConnectProjectId,
   })
 
-  // TODO: [MOB-3872] update description, url values when ready
   wcWeb3Wallet = await Web3Wallet.init({
     core: wcCore,
     metadata: {
       name: 'Uniswap Wallet',
-      description: 'A very cool wallet!',
+      description:
+        'Built by the most trusted team in DeFi, Uniswap Wallet allows you to maintain full custody and control of your assets.',
       url: 'https://uniswap.org/app',
-      icons: [],
+      icons: ['https://gateway.pinata.cloud/ipfs/QmR1hYqhDMoyvJtwrQ6f1kVyfEKyK65XH3nbCimXBMkHJg'],
     },
   })
 }

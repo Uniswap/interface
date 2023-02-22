@@ -59,12 +59,11 @@ class WalletConnectServerWrapper {
     guard let completePendingSession = self.settlePendingSession else {
       throw WCSwiftError.pendingSessionNotFound
     }
-    // TODO: [MOB-3872] pass in client info on initialization, also update these values when link is ready
     
     let walletMeta = Session.ClientMeta(name: "Uniswap Wallet",
-                                        description: "A very cool wallet!",
-                                        icons: [],
-                                        url: URL(string: "https://uniswap.org")!)
+                                        description: "Built by the most trusted team in DeFi, Uniswap Wallet allows you to maintain full custody and control of your assets.",
+                                        icons: [URL(string:       "https://gateway.pinata.cloud/ipfs/QmR1hYqhDMoyvJtwrQ6f1kVyfEKyK65XH3nbCimXBMkHJg")!],
+                                        url: URL(string: "https://uniswap.org/wallet")!)
     let walletInfo = Session.WalletInfo(approved: approved,
                                         accounts: [account],
                                         chainId: chainId,
