@@ -236,7 +236,7 @@ function OptionCard({
           width={theme.iconSizes.icon40}>
           {icon}
         </Box>
-        <Flex row alignItems="center" gap="spacing4">
+        <Flex row alignItems="center" gap="spacing4" paddingRight="spacing60">
           <Flex fill alignItems="flex-start" gap="spacing4" justifyContent="space-around">
             <Text allowFontScaling={false} variant="subheadLarge">
               {title}
