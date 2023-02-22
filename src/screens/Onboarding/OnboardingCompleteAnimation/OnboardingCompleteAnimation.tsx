@@ -152,7 +152,6 @@ export function OnboardingCompleteAnimation({
 
   const UNICON_SIZE = 48
 
-  const mt = useResponsiveProp({ xs: 'spacing36', sm: 'spacing12' })
   const finalTitleMaxFontSizeMultiplier = useResponsiveProp({
     xs: 1.1,
     sm: theme.textVariants.headlineSmall.maxFontSizeMultiplier,
@@ -161,6 +160,11 @@ export function OnboardingCompleteAnimation({
   const finalBodyMaxFontSizeMultiplier = useResponsiveProp({
     xs: 1.1,
     sm: theme.textVariants.bodyLarge.maxFontSizeMultiplier,
+  })
+
+  const subheadSize = useResponsiveProp({
+    xs: 'bodySmall',
+    sm: 'bodyLarge',
   })
 
   return (
@@ -176,7 +180,7 @@ export function OnboardingCompleteAnimation({
         </GradientBackground>
       </Animated.View>
       <Flex grow justifyContent="space-between" px="spacing16" py="spacing24">
-        <Flex centered grow gap="spacing36" mb="spacing12" mt={mt}>
+        <Flex centered grow gap="spacing36" mb="spacing12" mt="spacing12">
           <Flex centered gap="spacing12" pt="spacing48">
             <Animated.View entering={qrSlideUpAndFadeIn}>
               <Animated.View entering={qrSlideUpAtEnd}>
@@ -271,7 +275,7 @@ export function OnboardingCompleteAnimation({
               color="textSecondary"
               maxFontSizeMultiplier={finalBodyMaxFontSizeMultiplier}
               textAlign="center"
-              variant="bodyLarge">
+              variant={subheadSize}>
               {isNewWallet
                 ? t(
                     "You've created, nicknamed, and backed up your wallet. Now, you can explore the world of crypto."
