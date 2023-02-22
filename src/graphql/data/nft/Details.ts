@@ -1,5 +1,4 @@
 import { parseEther } from '@ethersproject/units'
-import { NftDatasourceVariant, useNftDatasourceFlag } from 'featureFlags/flags/nftDatasource'
 import gql from 'graphql-tag'
 import { CollectionInfoForAsset, GenieAsset, Markets, SellOrder } from 'nft/types'
 import { useMemo } from 'react'
@@ -96,18 +95,10 @@ export function useNftAssetDetails(
   address: string,
   tokenId: string
 ): { data: [GenieAsset, CollectionInfoForAsset]; loading: boolean } {
-  const useAlternateDatasource = useNftDatasourceFlag() === NftDatasourceVariant.Enabled
   const { data: queryData, loading } = useDetailsQuery({
     variables: {
       address,
       tokenId,
-    },
-    defaultOptions: {
-      context: {
-        headers: {
-          'x-datasource': useAlternateDatasource ? 'ALTERNATE' : 'LEGACY',
-        },
-      },
     },
   })
 

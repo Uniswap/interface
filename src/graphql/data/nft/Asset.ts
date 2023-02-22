@@ -1,5 +1,4 @@
 import { parseEther } from 'ethers/lib/utils'
-import { NftDatasourceVariant, useNftDatasourceFlag } from 'featureFlags/flags/nftDatasource'
 import gql from 'graphql-tag'
 import { GenieAsset, Markets, Trait } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'
@@ -192,17 +191,9 @@ const defaultAssetFetcherParams: Omit<AssetQueryVariables, 'address'> = {
 
 export function useNftAssets(params: AssetFetcherParams) {
   const variables = useMemo(() => ({ ...defaultAssetFetcherParams, ...params }), [params])
-  const useAlternateDatasource = useNftDatasourceFlag() === NftDatasourceVariant.Enabled
 
   const { data, loading, fetchMore } = useAssetQuery({
     variables,
-    defaultOptions: {
-      context: {
-        headers: {
-          'x-datasource': useAlternateDatasource ? 'ALTERNATE' : 'LEGACY',
-        },
-      },
-    },
   })
   const hasNext = data?.nftAssets?.pageInfo?.hasNextPage
   const loadMore = useCallback(
@@ -276,18 +267,10 @@ function useSweepFetcherVars({ contractAddress, markets, price, traits }: SweepF
 
 export function useSweepNftAssets(params: SweepFetcherParams) {
   const variables = useSweepFetcherVars(params)
-  const useAlternateDatasource = useNftDatasourceFlag() === NftDatasourceVariant.Enabled
   const { data, loading } = useAssetQuery({
     variables,
     // This prevents overwriting the page's call to assets for cards shown
     fetchPolicy: 'no-cache',
-    defaultOptions: {
-      context: {
-        headers: {
-          'x-datasource': useAlternateDatasource ? 'ALTERNATE' : 'LEGACY',
-        },
-      },
-    },
   })
   const assets = useMemo<GenieAsset[] | undefined>(
     () =>

@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client'
+import { ApolloClient, ApolloLink, concat, HttpLink, InMemoryCache } from '@apollo/client'
 import { Reference, relayStylePagination } from '@apollo/client/utilities'
 
 const GRAPHQL_URL = process.env.REACT_APP_AWS_API_ENDPOINT
@@ -6,13 +6,32 @@ if (!GRAPHQL_URL) {
   throw new Error('AWS URL MISSING FROM ENVIRONMENT')
 }
 
+const httpLink = new HttpLink({
+  // TODO switch to GRAPHQL_URL before merging
+  uri: 'https://beta.api.uniswap.org/v1/graphql',
+})
+
+// This middleware will update headers depending on the data source feature flag
+// For more information: https://www.apollographql.com/docs/react/networking/advanced-http-networking/
+const headerMiddleware = new ApolloLink((operation, forward) => {
+  // TODO get working
+  // const useAlternateDatasource = useNftDatasourceFlag() === NftDatasourceVariant.Enabled
+  const useAlternateDatasource = true
+
+  operation.setContext(() => ({
+    headers: {
+      'Content-Type': 'application/json',
+      Origin: 'https://app.uniswap.org',
+      'x-datasource': useAlternateDatasource ? 'ALTERNATE' : 'LEGACY',
+    },
+  }))
+
+  return forward(operation)
+})
+
 export const apolloClient = new ApolloClient({
   connectToDevTools: true,
-  uri: GRAPHQL_URL,
-  headers: {
-    'Content-Type': 'application/json',
-    Origin: 'https://app.uniswap.org',
-  },
+  link: concat(headerMiddleware, httpLink),
   cache: new InMemoryCache({
     typePolicies: {
       Query: {

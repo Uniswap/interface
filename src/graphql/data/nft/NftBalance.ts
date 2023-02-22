@@ -1,5 +1,4 @@
 import { parseEther } from 'ethers/lib/utils'
-import { NftDatasourceVariant, useNftDatasourceFlag } from 'featureFlags/flags/nftDatasource'
 import gql from 'graphql-tag'
 import { GenieCollection, WalletAsset } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'
@@ -113,7 +112,6 @@ export function useNftBalance(
   last?: number,
   before?: string
 ) {
-  const useAlternateDatasource = useNftDatasourceFlag() === NftDatasourceVariant.Enabled
   const { data, loading, fetchMore } = useNftBalanceQuery({
     variables: {
       ownerAddress,
@@ -129,13 +127,6 @@ export function useNftBalance(
       after,
       last,
       before,
-    },
-    defaultOptions: {
-      context: {
-        headers: {
-          'x-datasource': useAlternateDatasource ? 'ALTERNATE' : 'LEGACY',
-        },
-      },
     },
   })
 

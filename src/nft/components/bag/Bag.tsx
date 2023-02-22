@@ -3,7 +3,6 @@ import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { GqlRoutingVariant, useGqlRoutingFlag } from 'featureFlags/flags/gqlRouting'
-import { NftDatasourceVariant, useNftDatasourceFlag } from 'featureFlags/flags/nftDatasource'
 import { useNftRouteLazyQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
@@ -202,7 +201,6 @@ const Bag = () => {
     setBagExpanded({ bagExpanded: false, manualClose: true })
   }, [setBagExpanded])
 
-  const useAlternateDatasource = useNftDatasourceFlag() === NftDatasourceVariant.Enabled
   const [fetchGqlRoute] = useNftRouteLazyQuery()
 
   const fetchAssets = async () => {
@@ -223,13 +221,6 @@ const Bag = () => {
             senderAddress: usingGqlRouting && account ? account : '',
             nftTrades: usingGqlRouting ? buildNftTradeInputFromBagItems(itemsInBag) : [],
             tokenTrades: tokenTradeInput ? tokenTradeInput : undefined,
-          },
-          defaultOptions: {
-            context: {
-              headers: {
-                'x-datasource': useAlternateDatasource ? 'ALTERNATE' : 'LEGACY',
-              },
-            },
           },
           onCompleted: (data) => {
             if (!data.nftRoute || !data.nftRoute.route) {
