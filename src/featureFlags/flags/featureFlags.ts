@@ -4,7 +4,6 @@ export enum FeatureFlag {
   payWithAnyToken = 'payWithAnyToken',
   swapWidget = 'swapWidget',
   gqlRouting = 'gqlRouting',
-  nftDatasource = 'nftDatasource',
 }
 
 export enum FeatureGate {
