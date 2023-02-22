@@ -73,13 +73,21 @@ export const FIREBASE: { [key: string]: { DEFAULT: FirebaseConfig; LIMIT_ORDER?:
     },
   },
   staging: {
-    DEFAULT: {
+    LIMIT_ORDER: {
       apiKey: 'AIzaSyDVtU3R0ZWgO4YzKbvjP372E8sgvz1vAqc',
       authDomain: 'staging-339203.firebaseapp.com',
       projectId: 'staging-339203',
       storageBucket: 'staging-339203.appspot.com',
       messagingSenderId: '641432115631',
       appId: '1:641432115631:web:1ae29340e7e34e0c08f75a',
+    },
+    DEFAULT: {
+      apiKey: 'AIzaSyAXTm2d_yT2r_hP-WJk68Aj_aGZOqPYIK8',
+      authDomain: 'notification---staging.firebaseapp.com',
+      projectId: 'notification---staging',
+      storageBucket: 'notification---staging.appspot.com',
+      messagingSenderId: '46809442918',
+      appId: '1:46809442918:web:b9775a502e72f395541ba7',
     },
   },
   production: {

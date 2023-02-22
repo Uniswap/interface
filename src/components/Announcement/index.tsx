@@ -14,7 +14,11 @@ import usePrevious from 'hooks/usePrevious'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleNotificationCenter } from 'state/application/hooks'
 import { MEDIA_WIDTHS } from 'theme'
-import { subscribePrivateAnnouncement } from 'utils/firebase'
+import {
+  subscribeNotificationOrderExpired,
+  subscribeNotificationOrderFilled,
+  subscribePrivateAnnouncement,
+} from 'utils/firebase'
 
 const StyledMenuButton = styled.button<{ active?: boolean }>`
   border: none;
@@ -79,7 +83,7 @@ const browserCustomStyle = css`
 const responseDefault = { numberOfUnread: 0, pagination: { totalItems: 0 }, notifications: [] }
 
 export default function AnnouncementComponent() {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const [activeTab, setActiveTab] = useState(Tab.ANNOUNCEMENT)
 
   const isOpenNotificationCenter = useModalOpen(ApplicationModal.NOTIFICATION_CENTER)
@@ -200,10 +204,20 @@ export default function AnnouncementComponent() {
   }, [account, prefetchPrivateAnnouncements, fetchGeneralAnnouncement, prevOpen, isOpenNotificationCenter])
 
   useEffect(() => {
-    if (!account) setPrivateAnnouncements([])
+    if (!account) {
+      setPrivateAnnouncements([])
+      return
+    }
     const unsubscribePrivate = subscribePrivateAnnouncement(account, prefetchPrivateAnnouncements)
-    return () => unsubscribePrivate?.()
-  }, [account, prefetchPrivateAnnouncements])
+    // special case: limit order locate at another db
+    const unsubscribeLOExpired = subscribeNotificationOrderExpired(account, chainId, prefetchPrivateAnnouncements)
+    const unsubscribeLOFilled = subscribeNotificationOrderFilled(account, chainId, prefetchPrivateAnnouncements)
+    return () => {
+      unsubscribePrivate?.()
+      unsubscribeLOExpired?.()
+      unsubscribeLOFilled?.()
+    }
+  }, [account, prefetchPrivateAnnouncements, chainId])
 
   const togglePopupWithAckAllMessage = () => {
     toggleNotificationCenter()
