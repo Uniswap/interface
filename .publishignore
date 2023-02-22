@@ -1,0 +1,12 @@
+.github
+.publishignore
+fastlane
+ios/GoogleServiceInfo
+scripts
+.env*
+.husky
+.storybook
+.vscode
+.yarn
+CODEOWNERS
+codecov.yml
