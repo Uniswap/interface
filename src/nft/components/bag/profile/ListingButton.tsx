@@ -215,48 +215,47 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
 
   return (
     <>
-      <Box position="relative">
-        <Box
-          as="button"
-          border="none"
-          backgroundColor={showResolveIssues ? 'accentFailure' : 'accentAction'}
-          cursor={
-            [ListingStatus.APPROVED, ListingStatus.PENDING, ListingStatus.SIGNING].includes(listingStatus) ||
-            disableListButton
-              ? 'default'
-              : 'pointer'
-          }
-          className={styles.button}
-          onClick={() => listingStatus !== ListingStatus.APPROVED && warningWrappedClick()}
-          type="button"
-          style={{
-            color: showResolveIssues ? theme.accentTextLightPrimary : theme.white,
-            opacity:
-              ![ListingStatus.DEFINED, ListingStatus.FAILED, ListingStatus.CONTINUE].includes(listingStatus) ||
-              (disableListButton && !showResolveIssues)
-                ? 0.3
-                : 1,
-          }}
-        >
-          {listingStatus === ListingStatus.SIGNING ? (
-            <Trans>Proceed in wallet</Trans>
-          ) : listingStatus === ListingStatus.PENDING ? (
-            <Trans>Pending</Trans>
-          ) : listingStatus === ListingStatus.APPROVED ? (
-            <Trans>Complete!</Trans>
-          ) : listingStatus === ListingStatus.PAUSED ? (
-            <Trans>Paused</Trans>
-          ) : listingStatus === ListingStatus.FAILED ? (
-            <Trans>Try again</Trans>
-          ) : listingStatus === ListingStatus.CONTINUE ? (
-            <Trans>Continue</Trans>
-          ) : showResolveIssues ? (
-            <Plural value={issues !== 1 ? 2 : 1} _1="Resolve issue" other={t`Resolve ${issues} issues`} />
-          ) : (
-            buttonText
-          )}
-        </Box>
+      <Box
+        as="button"
+        border="none"
+        backgroundColor={showResolveIssues ? 'accentFailure' : 'accentAction'}
+        cursor={
+          [ListingStatus.APPROVED, ListingStatus.PENDING, ListingStatus.SIGNING].includes(listingStatus) ||
+          disableListButton
+            ? 'default'
+            : 'pointer'
+        }
+        className={styles.button}
+        onClick={() => listingStatus !== ListingStatus.APPROVED && warningWrappedClick()}
+        type="button"
+        style={{
+          color: showResolveIssues ? theme.accentTextLightPrimary : theme.white,
+          opacity:
+            ![ListingStatus.DEFINED, ListingStatus.FAILED, ListingStatus.CONTINUE].includes(listingStatus) ||
+            (disableListButton && !showResolveIssues)
+              ? 0.3
+              : 1,
+        }}
+      >
+        {listingStatus === ListingStatus.SIGNING ? (
+          <Trans>Proceed in wallet</Trans>
+        ) : listingStatus === ListingStatus.PENDING ? (
+          <Trans>Pending</Trans>
+        ) : listingStatus === ListingStatus.APPROVED ? (
+          <Trans>Complete!</Trans>
+        ) : listingStatus === ListingStatus.PAUSED ? (
+          <Trans>Paused</Trans>
+        ) : listingStatus === ListingStatus.FAILED ? (
+          <Trans>Try again</Trans>
+        ) : listingStatus === ListingStatus.CONTINUE ? (
+          <Trans>Continue</Trans>
+        ) : showResolveIssues ? (
+          <Plural value={issues !== 1 ? 2 : 1} _1="Resolve issue" other={t`Resolve ${issues} issues`} />
+        ) : (
+          buttonText
+        )}
       </Box>
+
       {showWarning && (
         <BelowFloorWarningModal
           listingsBelowFloor={listingsBelowFloor}
