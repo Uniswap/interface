@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { useScrollToTop } from '@react-navigation/native'
 import { FlashList } from '@shopify/flash-list'
 import { impactAsync } from 'expo-haptics'
@@ -18,6 +19,7 @@ import { SvgProps } from 'react-native-svg'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
+import { AppStackScreenProp } from 'src/app/navigation/types'
 import BuyIcon from 'src/assets/icons/buy.svg'
 import ReceiveArrow from 'src/assets/icons/receive.svg'
 import SendIcon from 'src/assets/icons/send-action.svg'
@@ -62,21 +64,26 @@ import { useTimeout } from 'src/utils/timing'
 
 const CONTENT_HEADER_HEIGHT_ESTIMATE = 270
 
+export enum TabIndex {
+  Tokens = 0,
+  NFTs = 1,
+  Activity = 2,
+}
+
 /**
  * Home Screen hosts both Tokens and NFTs Tab
  * Manages TokensTabs and NftsTab scroll offsets when header is collapsed
  * Borrowed from: https://stormotion.io/blog/how-to-create-collapsing-tab-header-using-react-native/
  */
-export function HomeScreen(): JSX.Element {
-  // imports test account for easy development/testing
-  useTestAccount()
+export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Element {
+  useTestAccount() // imports test account for easy development/testing
   const activeAccount = useActiveAccountWithThrow()
   const { t } = useTranslation()
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
   const dispatch = useAppDispatch()
 
-  const [tabIndex, setTabIndex] = useState(0)
+  const [tabIndex, setTabIndex] = useState(props?.route?.params?.tab ?? TabIndex.Tokens)
   const routes = useMemo(
     () => [
       { key: SectionName.HomeTokensTab, title: t('Tokens') },
@@ -84,6 +91,15 @@ export function HomeScreen(): JSX.Element {
       { key: SectionName.HomeActivityTab, title: t('Activity') },
     ],
     [t]
+  )
+
+  useEffect(
+    function syncTabIndex() {
+      const newTabIndex = props?.route.params?.tab
+      if (newTabIndex === undefined) return
+      setTabIndex(newTabIndex)
+    },
+    [props?.route.params?.tab]
   )
 
   const [headerHeight, setHeaderHeight] = useState(CONTENT_HEADER_HEIGHT_ESTIMATE)
@@ -123,9 +139,9 @@ export function HomeScreen(): JSX.Element {
   const activityTabScrollRef = useAnimatedRef<FlashList<any>>()
 
   const сurrentScrollValue = useDerivedValue(() => {
-    if (tabIndex === 0) {
+    if (tabIndex === TabIndex.Tokens) {
       return tokensTabScrollValue.value
-    } else if (tabIndex === 1) {
+    } else if (tabIndex === TabIndex.NFTs) {
       return nftsTabScrollValue.value
     }
     return activityTabScrollValue.value
@@ -164,13 +180,13 @@ export function HomeScreen(): JSX.Element {
   useScrollToTop(
     useRef({
       scrollToTop: () => {
-        if (currentTabIndex.value === 1 && isNftTabsAtTop.value) {
-          setTabIndex(0)
-        } else if (currentTabIndex.value === 1) {
+        if (currentTabIndex.value === TabIndex.NFTs && isNftTabsAtTop.value) {
+          setTabIndex(TabIndex.Tokens)
+        } else if (currentTabIndex.value === TabIndex.NFTs) {
           nftsTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
-        } else if (currentTabIndex.value === 2 && isActivityTabAtTop.value) {
-          setTabIndex(1)
-        } else if (currentTabIndex.value === 2) {
+        } else if (currentTabIndex.value === TabIndex.Activity && isActivityTabAtTop.value) {
+          setTabIndex(TabIndex.NFTs)
+        } else if (currentTabIndex.value === TabIndex.Activity) {
           activityTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
         } else {
           tokensTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
@@ -441,8 +457,7 @@ function QuickActions(): JSX.Element {
       />
       <ActionButton
         Icon={ReceiveArrow}
-        // we need to make more room for Receive button if there are 3 buttons
-        flex={fiatOnRampShown ? 4 : 3}
+        flex={fiatOnRampShown ? 4 : 3} // we need to make more room for Receive button if there are 3 buttons
         label={t('Receive')}
         name={ElementName.Receive}
         onPress={onPressReceive}

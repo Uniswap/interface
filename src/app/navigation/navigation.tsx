@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import {
   AppStackParamList,
+  AppStackScreenProp,
   ExploreStackParamList,
   OnboardingStackParamList,
   SettingsStackParamList,
@@ -99,14 +100,14 @@ function SettingsStackGroup(): JSX.Element {
   )
 }
 
-export function WrappedHomeScreen(): JSX.Element {
+export function WrappedHomeScreen(props: AppStackScreenProp<Screens.Home>): JSX.Element {
   useBiometricCheck()
   useLowPriorityPreloadedQueries()
 
   return (
     <>
       <TokenDetailsPreloaders />
-      <HomeScreen />
+      <HomeScreen {...props} />
     </>
   )
 }

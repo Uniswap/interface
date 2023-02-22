@@ -15,7 +15,6 @@ import { WalletQRCode } from 'src/components/QRCodeScanner/WalletQRCode'
 import { Text } from 'src/components/Text'
 import { getSupportedURI, URIType } from 'src/components/WalletConnect/ScanSheet/util'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { useDisplayName } from 'src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 
 type Props = {
@@ -27,7 +26,6 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
   const { t } = useTranslation()
   const theme = useAppTheme()
   const activeAddress = useAppSelector(selectActiveAccountAddress)
-  const displayName = useDisplayName(activeAddress)
   const [currentScreenState, setCurrentScreenState] = useState<ScannerModalState>(
     ScannerModalState.ScanQr
   )

@@ -7,6 +7,7 @@ import {
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { EducationContentType } from 'src/components/education'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
+import { TabIndex } from 'src/screens/HomeScreen'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 
 type NFTItem = { owner: Address; address: string; tokenId: string }
@@ -79,8 +80,6 @@ export type OnboardingStackParamList = {
   [OnboardingScreens.SeedPhraseInput]: OnboardingStackBaseParams
   [OnboardingScreens.SelectWallet]: OnboardingStackBaseParams
   [OnboardingScreens.WatchWallet]: OnboardingStackBaseParams
-
-  [Screens.Home]: undefined
 }
 
 export type AppStackParamList = {
@@ -88,7 +87,7 @@ export type AppStackParamList = {
   [Screens.Education]: {
     type: EducationContentType
   }
-  [Screens.Home]: undefined
+  [Screens.Home]?: { tab?: TabIndex }
   [Screens.SettingsWalletManageConnection]: { address: Address }
   [Screens.OnboardingStack]: NavigatorScreenParams<OnboardingStackParamList>
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>

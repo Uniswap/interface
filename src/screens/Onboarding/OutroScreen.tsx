@@ -1,7 +1,8 @@
+import { CompositeScreenProps } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useAppDispatch } from 'src/app/hooks'
-import { OnboardingStackParamList } from 'src/app/navigation/types'
+import { AppStackParamList, OnboardingStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
@@ -16,7 +17,10 @@ import { setFinishedOnboarding, setReplaceAccountOptions } from 'src/features/wa
 import { OnboardingCompleteAnimation } from 'src/screens/Onboarding/OnboardingCompleteAnimation/OnboardingCompleteAnimation'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 
-type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Outro>
+type Props = CompositeScreenProps<
+  NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Outro>,
+  NativeStackScreenProps<AppStackParamList, Screens.Home, undefined>
+>
 
 export function OutroScreen({ navigation, route: { params } }: Props): JSX.Element {
   const dispatch = useAppDispatch()
