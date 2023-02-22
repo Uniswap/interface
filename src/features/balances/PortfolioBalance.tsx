@@ -37,6 +37,7 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
 
   const portfolioBalance = data?.portfolios?.[0]
   const portfolioChange = portfolioBalance?.tokensTotalDenominatedValueChange
+  const totalBalance = portfolioBalance?.tokensTotalDenominatedValue?.value
 
   return (
     <WarmLoadingShimmer isWarmLoading={isWarmLoading && !isLoading}>
@@ -47,11 +48,9 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
           color={isWarmLoading ? 'textSecondary' : undefined}
           fontSize={48}
           fontWeight="600"
+          formattedNumber={formatUSDPrice(totalBalance, NumberType.PortfolioBalance)}
           loading={isLoading}
-          number={formatUSDPrice(
-            portfolioBalance?.tokensTotalDenominatedValue?.value ?? undefined,
-            NumberType.PortfolioBalance
-          )}
+          number={totalBalance}
           numberOfLines={1}
           variant="headlineLarge"
         />

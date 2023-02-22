@@ -21,14 +21,7 @@ export function PriceText({
     return <Text loading loadingPlaceholderText="$10,000" variant="headlineLarge" />
   }
 
-  return (
-    <AnimatedDecimalNumber
-      decimalPartColor={price.value.value < 1 ? 'textPrimary' : 'textTertiary'}
-      number={price.formatted}
-      testID="price-text"
-      variant="headlineLarge"
-    />
-  )
+  return <AnimatedDecimalNumber number={price} testID="price-text" variant="headlineLarge" />
 }
 
 export function RelativeChangeText({

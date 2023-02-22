@@ -130,6 +130,9 @@ exports[`PriceText renders without error 1`] = `
             "fontSize": 40,
             "lineHeight": 48,
           },
+          Object {
+            "color": "#0E1524",
+          },
         ],
       ]
     }
@@ -150,10 +153,13 @@ exports[`PriceText renders without error 1`] = `
       Array [
         Array [
           Object {
-            "color": "#888FAB",
+            "color": "#0E1524",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 40,
             "lineHeight": 48,
+          },
+          Object {
+            "color": "#888FAB",
           },
         ],
       ]
@@ -195,6 +201,9 @@ exports[`PriceText renders without error less than a dollar 1`] = `
             "fontSize": 40,
             "lineHeight": 48,
           },
+          Object {
+            "color": "#0E1524",
+          },
         ],
       ]
     }
@@ -219,6 +228,9 @@ exports[`PriceText renders without error less than a dollar 1`] = `
             "fontFamily": "Inter-SemiBold",
             "fontSize": 40,
             "lineHeight": 48,
+          },
+          Object {
+            "color": "#0E1524",
           },
         ],
       ]

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Flex } from 'src/components/layout'
@@ -25,10 +25,16 @@ export default function RemoveSeedPhraseWarningModal({
   const { t } = useTranslation()
 
   const { data, loading } = useAccountListQuery({
-    variables: { addresses: associatedAccounts.map((account) => account.address) },
+    variables: {
+      addresses: associatedAccounts.map((account) => account.address),
+    },
     notifyOnNetworkStatusChange: true,
   })
 
+  const totalBalanceAtIndex = useCallback(
+    (index: number) => data?.portfolios?.at(index)?.tokensTotalDenominatedValue?.value,
+    [data?.portfolios]
+  )
   return (
     <WarningModal
       caption={
@@ -58,10 +64,9 @@ export default function RemoveSeedPhraseWarningModal({
               <AddressDisplay address={account.address} size={36} variant="subheadSmall" />
               <DecimalNumber
                 adjustsFontSizeToFit={!loading}
+                formattedNumber={formatUSDPrice(totalBalanceAtIndex(index))}
                 loading={loading}
-                number={formatUSDPrice(
-                  data?.portfolios?.at(index)?.tokensTotalDenominatedValue?.value
-                )}
+                number={totalBalanceAtIndex(index)}
                 numberOfLines={1}
                 variant="monospace"
               />
