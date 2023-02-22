@@ -28,7 +28,7 @@ export class ApplicationTransport extends BaseTransport implements Transport {
         'Content-Type': 'application/json',
         Accept: '*/*',
         Origin: uniswapUrls.apiBaseUrl,
-        'x-application-build': !__DEV__ ? DeviceInfo.getBundleId() : 'DEV',
+        'x-application-build': DeviceInfo.getBundleId(),
       },
       keepalive: true, // allow the request to outlive the page
       body: JSON.stringify(payload),
