@@ -162,7 +162,6 @@ export default function Widget({
   return (
     <>
       <SwapWidget
-        hideConnectionUI
         brandedFooter={false}
         permit2={permit2Enabled}
         routerUrl={WIDGET_ROUTER_URL}
