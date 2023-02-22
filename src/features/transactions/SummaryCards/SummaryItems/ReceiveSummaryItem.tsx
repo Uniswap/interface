@@ -25,7 +25,9 @@ export default function ReceiveSummaryItem({
 }): JSX.Element {
   const { t } = useTranslation()
   const currencyInfo = useCurrencyInfo(
-    buildCurrencyId(transaction.chainId, transaction.typeInfo.tokenAddress)
+    transaction.typeInfo.assetType === AssetType.Currency
+      ? buildCurrencyId(transaction.chainId, transaction.typeInfo.tokenAddress)
+      : undefined
   )
 
   const icon = useMemo(() => {
