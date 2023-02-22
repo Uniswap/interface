@@ -471,5 +471,7 @@
   "Security": "Security",
   "Invalid phrase": "Invalid phrase",
   "Invalid word: {{word}}": "Invalid word: {{word}}",
-  "Recovery phrase must be 12-24 words": "Recovery phrase must be 12-24 words"
+  "Recovery phrase must be 12-24 words": "Recovery phrase must be 12-24 words",
+  "Read more": "Read more",
+  "Read less": "Read less"
 }

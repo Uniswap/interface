@@ -1,5 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { ComponentProps, useCallback, useReducer, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent, NativeSyntheticEvent, TextLayoutEventData } from 'react-native'
 import Markdown from 'react-native-markdown-display'
 import { useAppTheme } from 'src/app/hooks'
@@ -24,6 +25,7 @@ type LongTextProps = {
 
 export function LongText(props: LongTextProps): JSX.Element {
   const theme = useAppTheme()
+  const { t } = useTranslation()
   const {
     initialDisplayedLines = 3,
     text,
@@ -107,16 +109,19 @@ export function LongText(props: LongTextProps): JSX.Element {
         )}
       </Text>
 
-      <Text
-        my="none"
-        opacity={textLengthExceedsLimit ? 1 : 0}
-        py="none"
-        style={{ color: readMoreOrLessColor }}
-        testID="read-more-button"
-        variant="buttonLabelSmall"
-        onPress={toggleExpanded}>
-        {expanded ? 'Read less' : 'Read more'}
-      </Text>
+      {/* Text is removed vs hidden using opacity to ensure spacing after the element is consistent in all cases.
+      This will cause mild thrash as data loads into a page but will ensure consistent spacing */}
+      {textLengthExceedsLimit ? (
+        <Text
+          my="none"
+          py="none"
+          style={{ color: readMoreOrLessColor }}
+          testID="read-more-button"
+          variant="buttonLabelSmall"
+          onPress={toggleExpanded}>
+          {expanded ? t('Read less') : t('Read more')}
+        </Text>
+      ) : null}
     </Flex>
   )
 }

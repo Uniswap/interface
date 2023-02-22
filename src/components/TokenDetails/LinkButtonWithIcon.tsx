@@ -35,7 +35,7 @@ export function LinkButtonWithIcon({
           height={theme.iconSizes.icon16}
           width={theme.iconSizes.icon16}
         />
-        <Text color="textPrimary" variant="buttonLabelSmall">
+        <Text color="textPrimary" variant="buttonLabelMicro">
           {label}
         </Text>
       </Flex>

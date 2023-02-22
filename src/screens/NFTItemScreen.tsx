@@ -193,7 +193,9 @@ export function NFTItemScreen({
                     ) : null}
                     <Flex grow gap="none">
                       <Flex row alignItems="center" gap="spacing8">
-                        <Box flexShrink={1}>
+                        {/* Width chosen to ensure truncation of collection name on both small
+                        and large screens with sufficient padding */}
+                        <Box flexShrink={1} maxWidth="82%">
                           <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
                             {asset?.collection?.name || '-'}
                           </Text>
@@ -250,7 +252,7 @@ export function NFTItemScreen({
             )}
           </Flex>
 
-          <Flex row flexWrap="wrap">
+          <Flex gap="spacing8">
             <AssetMetadata
               header={t('Creator')}
               link={creatorInfo?.link}
@@ -286,13 +288,14 @@ function AssetMetadata({
   value?: string
   link?: string
 }): JSX.Element {
-  const itemWidth = '45%' // works with flexWrap to make 2 columns. It needs to be slightly less than 50% to account for padding on the entire section
   const theme = useAppTheme()
   return (
-    <Flex gap="spacing4" mb="spacing24" width={itemWidth}>
-      <Text color="textTertiary" variant="subheadSmall">
-        {header}
-      </Text>
+    <Flex row alignItems="center" justifyContent="space-between" paddingLeft="spacing2">
+      <Flex row alignItems="center" gap="spacing8" justifyContent="flex-start" maxWidth="40%">
+        <Text color="textPrimary" variant="bodySmall">
+          {header}
+        </Text>
+      </Flex>
       {link && value ? (
         <LinkButton
           iconColor={theme.colors.textTertiary}
@@ -305,9 +308,11 @@ function AssetMetadata({
           url={link}
         />
       ) : (
-        <Text numberOfLines={1} variant="bodyLarge">
-          {value || '-'}
-        </Text>
+        <Box maxWidth="60%">
+          <Text numberOfLines={1} variant="bodyLarge">
+            {value || '-'}
+          </Text>
+        </Box>
       )}
     </Flex>
   )
