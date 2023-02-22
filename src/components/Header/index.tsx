@@ -399,12 +399,6 @@ export default function Header() {
   return (
     <>
       <HeaderFrame showBackground={true}>
-        <LimitWarningModal
-          isOpen={
-            localStorage.getItem('KromPolyLimitWarningTicked') == null && chainId == 137 && isPolygonWarningModalOpen
-          }
-          onDismiss={handleDismissPolygonWarning}
-        />
         <ClaimModal />
         <Title href=".">
           <UniIcon>
