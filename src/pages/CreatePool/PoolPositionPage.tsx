@@ -3,7 +3,7 @@
 import { Trans } from '@lingui/macro'
 //import { Trace } from '@uniswap/analytics'
 //import { PageName } from '@uniswap/analytics-events'
-import { /*Currency,*/ CurrencyAmount /*, Fraction*/, Percent /*, Price, Token*/ } from '@uniswap/sdk-core'
+import { /*Currency,*/ CurrencyAmount /*, Fraction*/, Percent /*, Price*/, Token } from '@uniswap/sdk-core'
 //import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 //import { sendEvent } from 'components/analytics'
@@ -11,6 +11,7 @@ import { useWeb3React } from '@web3-react/core'
 import { /*ButtonConfirmed, ButtonGray,*/ ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
+import BuyModal from 'components/createPool/BuyModal'
 //import Loader from 'components/Loader'
 import { RowBetween, RowFixed } from 'components/Row'
 //import { Dots } from 'components/swap/styleds'
@@ -27,9 +28,12 @@ import JSBI from 'jsbi'
 //import useStablecoinPrice from 'hooks/useStablecoinPrice'
 //import { useSingleCallResult } from 'lib/hooks/multicall'
 //import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { /*useCallback, useMemo, useRef,*/ useState } from 'react'
+import { useCallback, /*useMemo, useRef,*/ useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 //import { Bound } from 'state/mint/v3/actions'
+import { useToggleWalletModal } from 'state/application/hooks'
+import { BuyInfo } from 'state/buy/hooks'
+import { useTokenBalance } from 'state/connection/hooks'
 //import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled /*, { useTheme }*/ from 'styled-components/macro'
 import { ExternalLink, /*HideExtraSmall,*/ ThemedText } from 'theme'
@@ -192,10 +196,15 @@ export function PoolPositionPage() {
     poolAddress?: string
     poolId?: string
   }>()
-  const { chainId /*, account , provider*/ } = useWeb3React()
+  const { chainId, account /*, provider*/ } = useWeb3React()
   //const theme = useTheme()
 
   const [showConfirm, setShowConfirm] = useState(false)
+
+  // TODO
+  const [showBuyModal, setShowBuyModal] = useState(false)
+  //const [showUnstakingModal, setShowUnstakingModal] = useState(false)
+
   // TODO: check how can reduce number of calls by limit update of poolStorage
   //  id is stored in registry so we could save rpc call by using storing in state?
   const poolStorage = useSmartPoolFromAddress(poolAddressFromUrl ?? undefined)
@@ -223,7 +232,23 @@ export function PoolPositionPage() {
 
   const lockup = JSBI.BigInt(minPeriod ?? 0).toLocaleString()
 
+  // TODO: check how we should better organize these values
+  //const buyInfo = useBuyInfo(poolAddressFromUrl)
+  const baseTokenAmount = base ? CurrencyAmount.fromRawAmount(base, '0') : undefined
+  const buyInfo = { poolAddress: poolAddressFromUrl, recipient: account, purchaseAmount: baseTokenAmount } as BuyInfo
+  const userBaseTokenBalance = useTokenBalance(account ?? undefined, buyInfo?.purchaseAmount?.currency as Token)
+
   //const addTransaction = useTransactionAdder()
+
+  const toggleWalletModal = useToggleWalletModal()
+
+  const handleDepositClick = useCallback(() => {
+    if (account) {
+      setShowBuyModal(true)
+    } else {
+      toggleWalletModal()
+    }
+  }, [account, toggleWalletModal])
 
   function modalHeader() {
     return (
@@ -252,6 +277,23 @@ export function PoolPositionPage() {
           )}
           pendingText={<Trans>Collecting fees</Trans>}
         />
+        {buyInfo && (
+          <>
+            <BuyModal
+              isOpen={showBuyModal}
+              onDismiss={() => setShowBuyModal(false)}
+              buyInfo={buyInfo}
+              userBaseTokenBalance={userBaseTokenBalance}
+            />
+            {/*
+            <UnstakingModal
+              isOpen={showUnstakingModal}
+              onDismiss={() => setShowUnstakingModal(false)}
+              buyInfo={buyInfo}
+            />
+            */}
+          </>
+        )}
         <AutoColumn gap="md">
           <AutoColumn gap="sm">
             <Link
@@ -279,8 +321,7 @@ export function PoolPositionPage() {
               )}
               <RowFixed>
                 <ResponsiveButtonPrimary
-                  as={Link}
-                  to={`/smart-pool/${poolAddressFromUrl}`}
+                  onClick={handleDepositClick}
                   width="fit-content"
                   padding="6px 8px"
                   $borderRadius="12px"
@@ -289,8 +330,7 @@ export function PoolPositionPage() {
                   <Trans>Buy</Trans>
                 </ResponsiveButtonPrimary>
                 <ResponsiveButtonPrimary
-                  as={Link}
-                  to={`/smart-pool/${poolAddressFromUrl}`}
+                  onClick={() => setShowBuyModal(!true)}
                   width="fit-content"
                   padding="6px 8px"
                   $borderRadius="12px"

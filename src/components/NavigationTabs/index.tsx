@@ -57,12 +57,16 @@ export function FindPoolTabs({ origin }: { origin: string }) {
 export function AddRemoveTabs({
   adding,
   creating,
+  buying,
+  selling,
   defaultSlippage,
   positionID,
   children,
 }: {
   adding: boolean
   creating: boolean
+  buying?: boolean
+  selling?: boolean
   defaultSlippage: Percent
   positionID?: string | undefined
   showBackLink?: boolean
@@ -103,6 +107,10 @@ export function AddRemoveTabs({
             <Trans>Create a pair</Trans>
           ) : adding ? (
             <Trans>Add Liquidity</Trans>
+          ) : buying ? (
+            <Trans>Buy Smart Pool</Trans>
+          ) : selling ? (
+            <Trans>Sell Smart Pool</Trans>
           ) : (
             <Trans>Remove Liquidity</Trans>
           )}
