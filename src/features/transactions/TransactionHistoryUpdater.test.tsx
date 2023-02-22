@@ -1,5 +1,6 @@
 import { MockedResponse } from '@apollo/client/testing'
 import { faker } from '@faker-js/faker'
+import { waitFor } from '@testing-library/react-native'
 import dayjs from 'dayjs'
 import MockDate from 'mockdate'
 import React from 'react'
@@ -96,6 +97,11 @@ describe(TransactionHistoryUpdater, () => {
     expect(
       await tree.findByTestId(`AddressTransactionHistoryUpdater/${account.address}`)
     ).toBeDefined()
+    await waitFor(() =>
+      expect(
+        Object.keys(tree.store.getState().notifications.notificationStatus).length
+      ).toBeGreaterThan(0)
+    )
     const notificationStatusState = tree.store.getState().notifications.notificationStatus
     expect(notificationStatusState[account.address]).toBeTruthy()
     expect(notificationStatusState[account2.address]).toBeTruthy()
