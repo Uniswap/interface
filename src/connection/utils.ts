@@ -16,6 +16,11 @@ export function getIsBraveWallet(): boolean {
   return window.ethereum?.isBraveWallet ?? false
 }
 
+export function getIsSoulWallet(): boolean {
+  //TODO
+  return window.ethereum?.isMetaMask ?? false
+}
+
 export function getIsMetaMaskWallet(): boolean {
   // When using Brave browser, `isMetaMask` is set to true when using the built-in wallet
   // This function should return true only when using the MetaMask extension
@@ -63,6 +68,10 @@ export function getConnectionName(
 ) {
   switch (connectionType) {
     case ConnectionType.INJECTED:
+      const isSoul = getIsSoulWallet()
+      if(isSoul){
+        return 'SoulWallet'
+      }
       return hasMetaMaskExtension ? 'MetaMask' : 'Browser Wallet'
     case ConnectionType.COINBASE_WALLET:
       return 'Coinbase Wallet'
