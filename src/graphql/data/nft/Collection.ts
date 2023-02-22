@@ -1,3 +1,4 @@
+import { NftDatasourceVariant, useNftDatasourceFlag } from 'featureFlags/flags/nftDatasource'
 import gql from 'graphql-tag'
 import { GenieCollection, Trait } from 'nft/types'
 import { useMemo } from 'react'
@@ -92,9 +93,17 @@ interface useCollectionReturnProps {
 }
 
 export function useCollection(address: string): useCollectionReturnProps {
+  const useAlternateDatasource = useNftDatasourceFlag() === NftDatasourceVariant.Enabled
   const { data: queryData, loading } = useCollectionQuery({
     variables: {
       addresses: address,
+    },
+    defaultOptions: {
+      context: {
+        headers: {
+          'x-datasource': useAlternateDatasource ? 'ALTERNATE' : 'LEGACY',
+        },
+      },
     },
   })
 
