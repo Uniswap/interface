@@ -23,3 +23,12 @@ export enum FEATURE_FLAGS {
 export enum EXP_VARIANTS {
   Control = 'control',
 }
+
+/**
+ * Dynamic Configs
+ * These should match the dynamic config's `Config Name` on Statsig
+ * https://console.statsig.com/5M2TFMQiHkbY9RML95FAEa/dynamic_configs
+ */
+export enum DYNAMIC_CONFIGS {
+  ForceUpgrade = 'force_upgrade',
+}

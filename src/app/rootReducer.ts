@@ -10,7 +10,6 @@ import { experimentsReducer } from 'src/features/experiments/slice'
 import { searchHistoryReducer } from 'src/features/explore/searchHistorySlice'
 import { favoritesReducer } from 'src/features/favorites/slice'
 import { fiatOnRampApi } from 'src/features/fiatOnRamp/api'
-import { forceUpgradeApi } from 'src/features/forceUpgrade/forceUpgradeApi'
 import { gasApi } from 'src/features/gas/api'
 import { modalsReducer } from 'src/features/modals/modalSlice'
 import { notificationReducer } from 'src/features/notifications/notificationSlice'
@@ -25,7 +24,6 @@ import { walletConnectReducer } from 'src/features/walletConnect/walletConnectSl
 const reducers = {
   [ensApi.reducerPath]: ensApi.reducer,
   [fiatOnRampApi.reducerPath]: fiatOnRampApi.reducer,
-  [forceUpgradeApi.reducerPath]: forceUpgradeApi.reducer,
   [gasApi.reducerPath]: gasApi.reducer,
   [onChainBalanceApi.reducerPath]: onChainBalanceApi.reducer,
   [routingApi.reducerPath]: routingApi.reducer,

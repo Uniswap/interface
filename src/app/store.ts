@@ -12,7 +12,6 @@ import { config } from 'src/config'
 import { onChainBalanceApi } from 'src/features/balances/api'
 import { ensApi } from 'src/features/ens/api'
 import { fiatOnRampApi } from 'src/features/fiatOnRamp/api'
-import { forceUpgradeApi } from 'src/features/forceUpgrade/forceUpgradeApi'
 import { gasApi } from 'src/features/gas/api'
 import { routingApi } from 'src/features/routing/routingApi'
 import { trmApi } from 'src/features/trm/api'
@@ -105,7 +104,6 @@ export const setupStore = (
       }).concat(
         ensApi.middleware,
         fiatOnRampApi.middleware,
-        forceUpgradeApi.middleware,
         gasApi.middleware,
         onChainBalanceApi.middleware,
         routingApi.middleware,

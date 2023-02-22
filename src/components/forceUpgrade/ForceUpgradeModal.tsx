@@ -11,18 +11,20 @@ import { WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { Text } from 'src/components/Text'
 import { APP_STORE_LINK } from 'src/constants/urls'
-import { useCheckForceUpgradeQuery } from 'src/features/forceUpgrade/forceUpgradeApi'
+import { DYNAMIC_CONFIGS } from 'src/features/experiments/constants'
 import { UpgradeStatus } from 'src/features/forceUpgrade/types'
 import { ModalName } from 'src/features/telemetry/constants'
 import { SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { openUri } from 'src/utils/linking'
+import { Statsig } from 'statsig-react-native'
 
 export function ForceUpgradeModal(): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
   const [isVisible, setIsVisible] = useState(false)
+  const [upgradeStatus, setUpgradeStatus] = useState(UpgradeStatus.NotRequired)
 
   // account can be null if the user hasn't added any accounts yet (onboarding)
   const account = useActiveAccount()
@@ -30,13 +32,20 @@ export function ForceUpgradeModal(): JSX.Element {
 
   const [showSeedPhrase, setShowSeedPhrase] = useState(false)
 
-  const { data: upgradeStatus, isSuccess } = useCheckForceUpgradeQuery()
-
   useEffect(() => {
-    if (isSuccess && upgradeStatus !== UpgradeStatus.NotRequired) {
-      setIsVisible(true)
+    const config = Statsig.getConfig(DYNAMIC_CONFIGS.ForceUpgrade)
+    const statusString = config.getValue('status')?.toString()
+
+    let status = UpgradeStatus.NotRequired
+    if (statusString === 'recommended') {
+      status = UpgradeStatus.Recommended
+    } else if (statusString === 'required') {
+      status = UpgradeStatus.Required
     }
-  }, [isSuccess, upgradeStatus])
+
+    setUpgradeStatus(status)
+    setIsVisible(upgradeStatus !== UpgradeStatus.NotRequired)
+  }, [upgradeStatus])
 
   const onPressConfirm = (): void => {
     openUri(APP_STORE_LINK, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)
