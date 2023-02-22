@@ -8,7 +8,7 @@ exports[`BalanceUpdate renders without error after fetching data 1`] = `
         "alignItems": "flex-end",
         "display": "flex",
         "flexDirection": "column",
-        "flexGrow": 1,
+        "flexShrink": 1,
         "justifyContent": "flex-start",
       },
     ]
@@ -73,7 +73,7 @@ exports[`BalanceUpdate skips fetching data when passing in the USD value 1`] = `
         "alignItems": "flex-end",
         "display": "flex",
         "flexDirection": "column",
-        "flexGrow": 1,
+        "flexShrink": 1,
         "justifyContent": "flex-start",
       },
     ]

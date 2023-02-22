@@ -110,14 +110,13 @@ function TransactionSummaryLayout({
           borderRadius="rounded16"
           borderTopLeftRadius={showAlertBanner ? 'none' : 'rounded16'}
           borderTopRightRadius={showAlertBanner ? 'none' : 'rounded16'}
-          gap="spacing16"
           justifyContent="space-between"
           mt={showBackground ? 'spacing12' : 'none'}
           px={showBackground ? 'spacing12' : 'none'}
           py="spacing12">
           <Flex
+            grow
             row
-            shrink
             alignItems="center"
             gap="spacing12"
             height="100%"
@@ -127,7 +126,7 @@ function TransactionSummaryLayout({
                 {icon}
               </Flex>
             )}
-            <Flex shrink gap="none">
+            <Flex grow gap="none">
               <Flex row alignItems="center" gap="spacing4">
                 <Text numberOfLines={1} variant="bodyLarge">
                   {title}
@@ -215,7 +214,7 @@ export function AssetUpdateLayout({
   caption?: string | undefined
 }): JSX.Element {
   return (
-    <Flex grow alignItems="flex-end" gap="none">
+    <Flex shrink alignItems="flex-end" gap="none">
       <Text numberOfLines={1} variant="bodyLarge">
         {title}
       </Text>
