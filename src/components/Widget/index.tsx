@@ -57,7 +57,7 @@ export default function Widget({
   onDefaultTokenChange,
   onReviewSwapClick,
 }: WidgetProps) {
-  const { connector, provider } = useWeb3React()
+  const { connector, provider, chainId } = useWeb3React()
   const locale = useActiveLocale()
   const theme = useWidgetTheme()
   const { inputs, tokenSelector } = useSyncWidgetInputs({
@@ -168,7 +168,7 @@ export default function Widget({
         locale={locale}
         theme={theme}
         width={width}
-        // defaultChainId is excluded - it is always inferred from the passed provider
+        defaultChainId={chainId}
         onConnectWalletClick={onConnectWalletClick}
         provider={provider}
         onSwitchChain={onSwitchChain}
