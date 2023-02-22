@@ -50,6 +50,7 @@ export function LinkButton({
         <ExternalLinkIcon
           color={iconColor ?? color ?? theme.colors.accentActive}
           height={size}
+          strokeWidth={1.5}
           width={size}
         />
       </Flex>

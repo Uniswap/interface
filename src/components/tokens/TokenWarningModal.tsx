@@ -14,6 +14,7 @@ import { TOKEN_WARNING_HELP_PAGE_URL } from 'src/constants/urls'
 import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useTokenSafetyLevelColors } from 'src/features/tokens/safetyHooks'
+import { iconSizes } from 'src/styles/sizing'
 import { opacify } from 'src/utils/colors'
 import { currencyIdToAddress, currencyIdToChain } from 'src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink, openUri } from 'src/utils/linking'
@@ -115,7 +116,11 @@ export default function TokenWarningModal({
             variant="buttonLabelMicro">
             {explorerLink}
           </Text>
-          <ExternalLinkIcon fill={theme.colors.accentActive} height={12} width={12} />
+          <ExternalLinkIcon
+            color={theme.colors.textSecondary}
+            height={iconSizes.icon16}
+            width={iconSizes.icon16}
+          />
         </TouchableArea>
         <Flex centered row mt="spacing16">
           <Button

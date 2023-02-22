@@ -20,18 +20,18 @@ export function CheckBox({ text, checked, onCheckPressed }: CheckBoxProps): JSX.
 
   return (
     <TouchableArea onPress={onPress}>
-      <Flex row gap="spacing8">
+      <Flex row gap="spacing12">
         <Box
           alignItems="center"
-          backgroundColor={checked ? 'accentAction' : 'background1'}
-          borderColor={checked ? 'accentAction' : 'backgroundOutline'}
-          borderRadius="rounded4"
+          backgroundColor={checked ? 'textPrimary' : 'background1'}
+          borderColor={checked ? 'textPrimary' : 'backgroundOutline'}
+          borderRadius="roundedFull"
           borderWidth={1.5}
-          height={theme.iconSizes.icon20}
+          height={theme.iconSizes.icon24}
           justifyContent="center"
-          mt="spacing2"
+          mt="spacing4"
           p="spacing2"
-          width={theme.iconSizes.icon20}>
+          width={theme.iconSizes.icon24}>
           {checked ? (
             <Check
               color={theme.colors.white}

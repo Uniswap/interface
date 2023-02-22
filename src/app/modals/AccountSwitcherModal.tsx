@@ -5,8 +5,8 @@ import 'react-native-gesture-handler'
 import { Action } from 'redux'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import InformationIcon from 'src/assets/icons/i-icon.svg'
 import PlusIcon from 'src/assets/icons/plus.svg'
+import WalletIcon from 'src/assets/icons/wallet-filled.svg'
 import { AccountList } from 'src/components/accounts/AccountList'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
@@ -430,10 +430,10 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
             'Uniswap Wallet can only store one recovery phrase at a time. In order to import a new recovery phrase, you have to re-install the app. Your current recovery phrase will be permanently deleted, so make sure you’ve backed it up first.'
           )}
           closeText={t('Close')}
-          icon={<InformationIcon color={theme.colors.textSecondary} />}
+          icon={<WalletIcon color={theme.colors.textSecondary} />}
           modalName={ModalName.ReimportUninstall}
           severity={WarningSeverity.None}
-          title={t('Import a Wallet')}
+          title={t('Import a wallet')}
           onClose={(): void => setShowUninstallToImportModal(false)}
         />
       )}

@@ -83,7 +83,6 @@ export default function WarningModal({
         <Flex
           centered
           borderRadius="rounded12"
-          borderWidth={1}
           p="spacing12"
           style={{
             backgroundColor: opacify(12, theme.colors[alertColor.text]),
