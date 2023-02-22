@@ -1,4 +1,5 @@
 import { useHeaderHeight } from '@react-navigation/elements'
+import { useResponsiveProp } from '@shopify/restyle'
 import { LinearGradient } from 'expo-linear-gradient'
 import React, { PropsWithChildren } from 'react'
 import { KeyboardAvoidingView, StyleSheet } from 'react-native'
@@ -30,13 +31,23 @@ export function SafeKeyboardOnboardingScreen({
   const insets = useSafeAreaInsets()
   const keyboard = useKeyboardLayout()
 
+  const titleSize = useResponsiveProp({
+    xs: 'bodyLarge',
+    sm: 'headlineSmall',
+  })
+
+  const subtitleSize = useResponsiveProp({
+    xs: 'bodyMicro',
+    sm: 'bodySmall',
+  })
+
   const header = (
     <Flex gap="spacing12" m="spacing12">
-      <Text paddingTop={paddingTop} textAlign="center" variant="headlineSmall">
+      <Text paddingTop={paddingTop} textAlign="center" variant={titleSize}>
         {title}
       </Text>
       {subtitle ? (
-        <Text color="textSecondary" textAlign="center" variant="bodySmall">
+        <Text color="textSecondary" textAlign="center" variant={subtitleSize}>
           {subtitle}
         </Text>
       ) : null}
@@ -49,11 +60,20 @@ export function SafeKeyboardOnboardingScreen({
     </Flex>
   )
 
+  const normalGradientPadding = 1.5
+  const responsiveGradientPadding = useResponsiveProp({
+    xs: 1.25,
+    sm: normalGradientPadding,
+  })
+
   const topGradient = (
     <LinearGradient
       colors={[theme.colors.background0, opacify(0, theme.colors.background0)]}
       locations={[0.6, 0.8]}
-      style={[styles.gradient, { height: headerHeight * 1.5 }]}
+      style={[
+        styles.gradient,
+        { height: headerHeight * (responsiveGradientPadding ?? normalGradientPadding) },
+      ]}
     />
   )
 
@@ -64,17 +84,28 @@ export function SafeKeyboardOnboardingScreen({
   // there's enough space on the screen to show all components.
   const minHeight = compact ? keyboard.containerHeight : 0
 
+  const responsiveSpacing = useResponsiveProp({
+    xs: 'none',
+    sm: 'spacing16',
+  })
+
+  const responsiveBottom = useResponsiveProp({
+    xs: 10,
+    sm: insets.bottom,
+  })
+
   return (
     <Screen edges={['right', 'left']}>
       <KeyboardAvoidingView
         behavior="padding"
         contentContainerStyle={containerStyle}
-        style={[styles.base, { marginBottom: insets.bottom }]}>
+        style={[styles.base, { marginBottom: responsiveBottom }]}>
         <AnimatedFlex
           entering={FadeIn}
           exiting={FadeOut}
+          gap={responsiveSpacing}
           minHeight={minHeight}
-          pb="spacing16"
+          pb={responsiveSpacing}
           px="spacing16"
           style={[containerStyle, { paddingTop: headerHeight }]}>
           {header}

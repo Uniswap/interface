@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { importAccountActions, IMPORT_WALLET_AMOUNT } from 'src/features/import/importAccountSaga'
@@ -114,12 +114,14 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
           onChange={onChange}
         />
       </Flex>
-      <Button
-        disabled={!!errorMessage}
-        label={t('Continue')}
-        name={ElementName.Next}
-        onPress={onSubmit}
-      />
+      <Box pb="spacing4">
+        <Button
+          disabled={!!errorMessage}
+          label={t('Continue')}
+          name={ElementName.Next}
+          onPress={onSubmit}
+        />
+      </Box>
     </SafeKeyboardOnboardingScreen>
   )
 }

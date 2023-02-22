@@ -15,8 +15,13 @@ export function ManualBackupEducationSection(): JSX.Element {
 
   const ICON_SIZE = theme.iconSizes.icon24
 
+  const gapSize = useResponsiveProp({
+    xs: 'spacing8',
+    sm: 'spacing24',
+  })
+
   return (
-    <Flex gap="spacing24" mt="spacing16" mx="spacing12">
+    <Flex gap={gapSize} mt="spacing16" mx="spacing12">
       <EducationRow
         icon={
           <EyeIcon
@@ -60,14 +65,27 @@ interface EducationRowProps {
 
 function EducationRow({ icon, label, sublabel }: EducationRowProps): JSX.Element {
   const theme = useAppTheme()
+
+  const labelSize = useResponsiveProp({
+    xs: 'bodySmall',
+    sm: 'bodyLarge',
+  })
+
+  const sublabelSize = useResponsiveProp({
+    xs: 'bodyMicro',
+    sm: 'bodySmall',
+  })
+
   const labelMaxFontSizeMultiplier = useResponsiveProp({
     xs: 1.2,
     sm: theme.textVariants.bodyLarge.maxFontSizeMultiplier,
   })
+
   const sublabelMaxFontSizeMultiplier = useResponsiveProp({
     xs: 1.3,
     sm: theme.textVariants.bodyMicro.maxFontSizeMultiplier,
   })
+
   return (
     <Flex row alignItems="center" gap="spacing16">
       <Box>{icon}</Box>
@@ -75,14 +93,14 @@ function EducationRow({ icon, label, sublabel }: EducationRowProps): JSX.Element
         <Text
           color="textPrimary"
           maxFontSizeMultiplier={labelMaxFontSizeMultiplier}
-          variant="bodyLarge">
+          variant={labelSize}>
           {label}
         </Text>
         <Flex pr="spacing36">
           <Text
             color="textSecondary"
             maxFontSizeMultiplier={sublabelMaxFontSizeMultiplier}
-            variant="bodySmall">
+            variant={sublabelSize}>
             {sublabel}
           </Text>
         </Flex>

@@ -1,4 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { useResponsiveProp } from '@shopify/restyle'
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, TextInput as NativeTextInput } from 'react-native'
@@ -96,7 +97,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
         'It has a public address that starts with 0x but you can set a private nickname for yourself.'
       )}
       title={t('Say hello to your new wallet')}>
-      <Box pt="spacing12">
+      <Box>
         {pendingAccount ? (
           <CustomizationSection
             accountName={newAccountName}
@@ -136,15 +137,25 @@ function CustomizationSection({
     textInputRef.current?.focus()
   }
 
+  const gapSize = useResponsiveProp({
+    xs: 'none',
+    sm: 'spacing24',
+  })
+
+  const inputSize = useResponsiveProp({
+    xs: theme.textVariants.headlineSmall.fontSize,
+    sm: theme.textVariants.headlineMedium.fontSize,
+  })
+
   return (
-    <Flex centered gap="spacing24">
+    <Flex centered gap={gapSize}>
       <Flex centered gap="none" width="100%">
         <Flex centered row gap="none">
           <TextInput
             ref={textInputRef}
             autoFocus
             backgroundColor="none"
-            fontSize={theme.textVariants.headlineMedium.fontSize}
+            fontSize={inputSize}
             maxFontSizeMultiplier={theme.textVariants.headlineMedium.maxFontSizeMultiplier}
             maxLength={NICKNAME_MAX_LENGTH}
             placeholder="Nickname"
@@ -167,7 +178,7 @@ function CustomizationSection({
             />
           )}
         </Flex>
-        <Text color="textSecondary" variant="bodyLarge">
+        <Text color="textSecondary" variant="bodySmall">
           {shortenAddress(address)}
         </Text>
       </Flex>

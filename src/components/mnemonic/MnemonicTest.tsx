@@ -20,7 +20,7 @@ const mnemonicTestStyle = (shouldShowSmallVersion: boolean): StyleProp<BoxProps>
   return {
     // This is the min height needed for native component to function correctly.
     // We handle padding separately wherever the component is placed.
-    height: shouldShowSmallVersion ? 350 : 450,
+    height: shouldShowSmallVersion ? 380 : 450,
   }
 }
 

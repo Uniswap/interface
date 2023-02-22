@@ -1,8 +1,13 @@
+import { useResponsiveProp } from '@shopify/restyle'
 import { addScreenshotListener } from 'expo-screen-capture'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout/Flex'
+import {
+  DEFAULT_MNEMONIC_DISPLAY_HEIGHT,
+  FULL_MNEMONIC_DISPLAY_HEIGHT,
+} from 'src/components/mnemonic/constants'
 import { HiddenMnemonicWordView } from 'src/components/mnemonic/HiddenMnemonicWordView'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
@@ -51,12 +56,20 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss }: Props): JSX.Element
     }
   }, [onDismiss, showSeedPhrase, showSeedPhraseViewWarningModal])
 
+  const mnemonicDisplayHeight = useResponsiveProp({
+    xs: DEFAULT_MNEMONIC_DISPLAY_HEIGHT,
+    sm: FULL_MNEMONIC_DISPLAY_HEIGHT,
+  })
+
   return (
     <>
       {showSeedPhrase ? (
         <Flex grow alignItems="stretch" justifyContent="space-evenly" mt="spacing16">
           <Flex grow mx="spacing16" my="spacing12">
-            <MnemonicDisplay mnemonicId={mnemonicId} />
+            <MnemonicDisplay
+              height={mnemonicDisplayHeight ?? DEFAULT_MNEMONIC_DISPLAY_HEIGHT}
+              mnemonicId={mnemonicId}
+            />
           </Flex>
           <Flex justifyContent="center">
             <Button

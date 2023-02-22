@@ -1,5 +1,6 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { useResponsiveProp } from '@shopify/restyle'
 import { TFunction } from 'i18next'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -211,6 +212,17 @@ function OptionCard({
   opacity?: number
 }): JSX.Element {
   const theme = useAppTheme()
+
+  const titleSize = useResponsiveProp({
+    xs: 'subheadSmall',
+    sm: 'subheadLarge',
+  })
+
+  const verticalPadding = useResponsiveProp({
+    xs: 'spacing16',
+    sm: 'spacing24',
+  })
+
   return (
     <TouchableArea
       backgroundColor="background2"
@@ -221,7 +233,7 @@ function OptionCard({
       name={name}
       opacity={opacity}
       px="spacing16"
-      py="spacing24"
+      py={verticalPadding}
       testID={name}
       onPress={onPress}>
       <Flex row alignContent="center" alignItems="center" gap="spacing16">
@@ -238,7 +250,7 @@ function OptionCard({
         </Box>
         <Flex row alignItems="center" gap="spacing4" paddingRight="spacing60">
           <Flex fill alignItems="flex-start" gap="spacing4" justifyContent="space-around">
-            <Text allowFontScaling={false} variant="subheadLarge">
+            <Text allowFontScaling={false} variant={titleSize}>
               {title}
             </Text>
             <Text allowFontScaling={false} color="textSecondary" variant="bodySmall">

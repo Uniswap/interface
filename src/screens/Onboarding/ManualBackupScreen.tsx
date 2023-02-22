@@ -1,4 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { useResponsiveProp } from '@shopify/restyle'
 import { addScreenshotListener } from 'expo-screen-capture'
 import React, { useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -7,6 +8,10 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
 import { CheckBox } from 'src/components/buttons/CheckBox'
 import { Flex } from 'src/components/layout'
+import {
+  DEFAULT_MNEMONIC_DISPLAY_HEIGHT,
+  FULL_MNEMONIC_DISPLAY_HEIGHT,
+} from 'src/components/mnemonic/constants'
 import { ManualBackupEducationSection } from 'src/components/mnemonic/ManualBackupEducationSection'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import { MnemonicTest } from 'src/components/mnemonic/MnemonicTest'
@@ -69,6 +74,21 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
     }
   }, [activeAccount?.backups, navigation, params])
 
+  const mnemonicDisplayHeight = useResponsiveProp({
+    xs: DEFAULT_MNEMONIC_DISPLAY_HEIGHT,
+    sm: FULL_MNEMONIC_DISPLAY_HEIGHT,
+  })
+
+  const responsiveTitle = useResponsiveProp({
+    xs: undefined,
+    sm: t('Confirm your recovery phrase'),
+  })
+
+  const responsiveSubtitle = useResponsiveProp({
+    xs: t('Confirm your recovery phrase') + '. ' + t('Select the missing words in order.'),
+    sm: t('Select the missing words in order.'),
+  })
+
   switch (view) {
     case View.Education:
       return (
@@ -111,7 +131,10 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
           )}
           <Flex grow justifyContent="space-between">
             <Flex mx="spacing16">
-              <MnemonicDisplay mnemonicId={mnemonicId} />
+              <MnemonicDisplay
+                height={mnemonicDisplayHeight ?? DEFAULT_MNEMONIC_DISPLAY_HEIGHT}
+                mnemonicId={mnemonicId}
+              />
             </Flex>
             <Flex grow justifyContent="flex-end">
               <Button label={t('Continue')} name={ElementName.Next} onPress={nextView} />
@@ -122,10 +145,8 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
 
     case View.Test:
       return (
-        <OnboardingScreen
-          subtitle={t('Select the missing words in order.')}
-          title={t('Confirm your recovery phrase')}>
-          <Flex grow>
+        <OnboardingScreen subtitle={responsiveSubtitle} title={responsiveTitle}>
+          <Flex grow pt="spacing12">
             <MnemonicTest
               mnemonicId={mnemonicId}
               onTestComplete={(): void => setContinueButtonEnabled(true)}

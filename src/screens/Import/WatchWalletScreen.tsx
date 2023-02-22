@@ -1,4 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { useResponsiveProp } from '@shopify/restyle'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
@@ -104,13 +105,33 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
     }
   }, [value])
 
+  const subtitleSize = useResponsiveProp({
+    xs: 'bodyMicro',
+    sm: 'subheadSmall',
+  })
+
+  const addressSize = useResponsiveProp({
+    xs: 'buttonLabelMicro',
+    sm: 'buttonLabelSmall',
+  })
+
+  const entryPadding = useResponsiveProp({
+    xs: 'none',
+    sm: 'spacing24',
+  })
+
+  const itemSpacing = useResponsiveProp({
+    xs: 'none',
+    sm: 'spacing8',
+  })
+
   return (
     <SafeKeyboardOnboardingScreen
       subtitle={t(
         'Enter an Ethereum wallet address (starting with 0x) or ENS name (ending in .eth).'
       )}
       title={t('Enter a wallet address')}>
-      <Flex gap="spacing8" pt="spacing24">
+      <Flex gap={itemSpacing} pt={entryPadding}>
         <GenericImportForm
           blurOnSubmit
           errorMessage={errorText}
@@ -125,9 +146,9 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           }}
         />
         <Flex>
-          <Text color="textTertiary" mx="spacing4" textAlign="center" variant="subheadSmall">
+          <Text color="textTertiary" mx="spacing4" textAlign="center" variant={subtitleSize}>
             Not sure? Try adding{' '}
-            <Text color="accentAction" variant="buttonLabelSmall" onPress={onPressDemoWallet}>
+            <Text color="accentAction" variant={addressSize} onPress={onPressDemoWallet}>
               uniswapdemo.eth
             </Text>
           </Text>

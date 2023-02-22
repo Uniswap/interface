@@ -12,7 +12,7 @@ import { Theme } from 'src/styles/theme'
 
 type OnboardingScreenProps = {
   subtitle?: string
-  title: string
+  title?: string
   paddingTop?: keyof Theme['spacing']
   childrenGap?: keyof Theme['spacing']
   keyboardAvoidingViewEnabled?: boolean
@@ -34,28 +34,56 @@ export function OnboardingScreen({
     sm: theme.textVariants.bodySmall.maxFontSizeMultiplier,
   })
 
+  const titleSize = useResponsiveProp({
+    xs: 'bodyLarge',
+    sm: 'headlineSmall',
+  })
+
+  const subtitleSize = useResponsiveProp({
+    xs: 'bodyMicro',
+    sm: 'bodySmall',
+  })
+
+  const gapSize = useResponsiveProp({
+    xs: 'none',
+    sm: 'spacing16',
+  })
+
+  const responsiveHeaderHeight = useResponsiveProp({
+    xs: headerHeight * 0.75,
+    sm: headerHeight,
+  })
+
   return (
-    <Screen edges={['right', 'left']} style={{ paddingTop: headerHeight }}>
+    <Screen edges={['right', 'left']} style={{ paddingTop: responsiveHeaderHeight }}>
       <KeyboardAvoidingView
         behavior="padding"
         enabled={keyboardAvoidingViewEnabled}
         style={[WrapperStyle.base, { marginBottom: insets.bottom }]}>
-        <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} pb="spacing16" px="spacing16">
+        <AnimatedFlex
+          grow
+          entering={FadeIn}
+          exiting={FadeOut}
+          gap={gapSize}
+          pb="spacing16"
+          px="spacing16">
           {/* Text content */}
           <Flex centered gap="spacing12" m="spacing12">
-            <Text
-              allowFontScaling={false}
-              paddingTop={paddingTop}
-              textAlign="center"
-              variant="headlineSmall">
-              {title}
-            </Text>
+            {title && (
+              <Text
+                allowFontScaling={false}
+                paddingTop={paddingTop}
+                textAlign="center"
+                variant={titleSize}>
+                {title}
+              </Text>
+            )}
             {subtitle ? (
               <Text
                 color="textSecondary"
                 maxFontSizeMultiplier={subtitleMaxFontScaleMultiplier}
                 textAlign="center"
-                variant="bodySmall">
+                variant={subtitleSize}>
                 {subtitle}
               </Text>
             ) : null}
