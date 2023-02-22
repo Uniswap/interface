@@ -71,7 +71,7 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): JSX.Eleme
 
         if (typeof childValue === 'object') {
           return (
-            <Flex gap="spacing4">
+            <Flex key={objKey} gap="spacing4">
               <Text color="textTertiary" style={{ marginLeft: depth * 10 }} variant="monospace">
                 {objKey}
               </Text>
@@ -82,7 +82,12 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): JSX.Eleme
 
         if (typeof childValue === 'string') {
           return (
-            <Flex row alignItems="flex-start" gap="spacing8" style={{ marginLeft: depth * 10 }}>
+            <Flex
+              key={objKey}
+              row
+              alignItems="flex-start"
+              gap="spacing8"
+              style={{ marginLeft: depth * 10 }}>
               <Text color="textTertiary" py="spacing4" variant="monospace">
                 {objKey}
               </Text>
