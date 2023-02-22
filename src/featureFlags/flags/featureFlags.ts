@@ -9,4 +9,5 @@ export enum FeatureFlag {
 
 export enum FeatureGate {
   DUMMY = 'web_dummy_gate_amplitude_id',
+  WIDGET_REPLACEMENT = 'swap_widget_replacement_enabled',
 }

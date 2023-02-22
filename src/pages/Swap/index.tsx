@@ -21,6 +21,7 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import Widget from 'components/Widget'
 import { isSupportedChain } from 'constants/chains'
+import { FeatureGate } from 'featureFlags/flags/featureFlags'
 import { usePermit2Enabled } from 'featureFlags/flags/permit2'
 import { useSwapWidgetEnabled } from 'featureFlags/flags/swapWidget'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
@@ -36,6 +37,7 @@ import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
+import { useGate } from 'statsig-react'
 import styled, { useTheme } from 'styled-components/macro'
 import invariant from 'tiny-invariant'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
@@ -159,7 +161,8 @@ export default function Swap({ className }: { className?: string }) {
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
   const [fetchingSwapQuoteStartTime, setFetchingSwapQuoteStartTime] = useState<Date | undefined>()
-  const swapWidgetEnabled = useSwapWidgetEnabled()
+  const swapWidgetManualOverrideEnabled = useSwapWidgetEnabled()
+  const { value: swapWidgetEnabled } = useGate(FeatureGate.WIDGET_REPLACEMENT)
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -562,7 +565,7 @@ export default function Swap({ className }: { className?: string }) {
           showCancel={true}
         />
         <PageWrapper>
-          {swapWidgetEnabled ? (
+          {swapWidgetEnabled || swapWidgetManualOverrideEnabled ? (
             <Widget
               defaultTokens={{
                 [Field.INPUT]: loadedInputCurrency ?? undefined,
