@@ -124,10 +124,10 @@ export default function useSendSwapTransaction(
               formatSwapSignedAnalyticsEventProperties({ trade, txHash: response.hash })
             )
             if (calldata !== response.data) {
-              sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, { txHash: response.hash })
-              throw new InvalidSwapError(
-                t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`
-              )
+              // sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, { txHash: response.hash })
+              // throw new InvalidSwapError(
+              //   t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`
+              // )
             }
             return response
           })
