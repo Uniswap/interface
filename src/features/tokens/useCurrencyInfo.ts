@@ -9,7 +9,8 @@ import { buildNativeCurrencyId, currencyId } from 'src/utils/currencyId'
 export function useCurrencyInfo(_currencyId?: string): NullUndefined<CurrencyInfo> {
   const { data } = useTokenQuery({
     variables: currencyIdToContractInput(_currencyId ?? ''),
-    skip: !currencyId,
+    skip: !_currencyId,
+    fetchPolicy: 'cache-first',
   })
 
   return useMemo(() => {
