@@ -17,6 +17,7 @@ export function SwapModal(): JSX.Element {
   return (
     <BottomSheetModal
       fullScreen
+      hideKeyboardOnDismiss
       backgroundColor={theme.colors.background1}
       name={ModalName.Swap}
       onClose={onClose}>

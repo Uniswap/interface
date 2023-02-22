@@ -7,7 +7,7 @@ import {
 } from '@gorhom/bottom-sheet'
 import { BlurView } from 'expo-blur'
 import React, { ComponentProps, PropsWithChildren, useCallback, useEffect, useRef } from 'react'
-import { StyleSheet, useColorScheme } from 'react-native'
+import { Keyboard, StyleSheet, useColorScheme } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
 import { HandleBar } from 'src/components/modals/HandleBar'
@@ -29,6 +29,7 @@ type Props = PropsWithChildren<{
   blurredBackground?: boolean
   isDismissible?: boolean
   renderBehindInset?: boolean
+  hideKeyboardOnDismiss?: boolean
 }> &
   TelemetryTraceProps
 
@@ -62,6 +63,7 @@ export function BottomSheetModal({
   blurredBackground = false,
   isDismissible = true,
   renderBehindInset = false,
+  hideKeyboardOnDismiss = false,
 }: Props): JSX.Element {
   const insets = useSafeAreaInsets()
   const modalRef = useRef<BaseModal>(null)
@@ -124,6 +126,24 @@ export function BottomSheetModal({
   const background = blurredBackground ? { backgroundComponent: renderBlurredBg } : undefined
   const backdrop = { backdropComponent: renderBackdrop }
 
+  // onAnimated is called when the sheet is about to animate to a new position.
+  // `About to` is crucial here, cause we want to start hiding the keyboard during the process of hiding the sheet.
+  // See here: https://gorhom.github.io/react-native-bottom-sheet/props#onanimate
+  //
+  // onDismiss on the other hand is called when a sheet is already closed, hence too late for us here.
+  const onAnimate = useCallback(
+    (fromIndex: number, toIndex: number): void => {
+      if (
+        hideKeyboardOnDismiss &&
+        fromIndex === APPEARS_ON_INDEX &&
+        toIndex === DISAPPEARS_ON_INDEX
+      ) {
+        Keyboard.dismiss()
+      }
+    },
+    [hideKeyboardOnDismiss]
+  )
+
   return (
     <BaseModal
       {...background}
@@ -140,6 +160,7 @@ export function BottomSheetModal({
       snapPoints={animatedSnapPoints}
       stackBehavior={stackBehavior}
       topInset={renderBehindInset ? undefined : insets.top}
+      onAnimate={onAnimate}
       onDismiss={onClose}>
       <Trace logImpression modal={name} properties={properties}>
         <BottomSheetView
@@ -189,7 +210,9 @@ export function BottomSheetDetachedModal({
     <BaseModal
       ref={modalRef}
       backdropComponent={Backdrop}
-      backgroundStyle={{ backgroundColor: backgroundColor ?? theme.colors.background0 }}
+      backgroundStyle={{
+        backgroundColor: backgroundColor ?? theme.colors.background0,
+      }}
       bottomInset={theme.spacing.spacing48}
       contentHeight={animatedContentHeight}
       detached={true}

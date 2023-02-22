@@ -17,6 +17,7 @@ export function TransferTokenModal(): JSX.Element {
   return (
     <BottomSheetModal
       fullScreen
+      hideKeyboardOnDismiss
       backgroundColor={theme.colors.background1}
       name={ModalName.Send}
       onClose={onClose}>
