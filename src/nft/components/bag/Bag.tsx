@@ -4,7 +4,6 @@ import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { GqlRoutingVariant, useGqlRoutingFlag } from 'featureFlags/flags/gqlRouting'
 import { NftDatasourceVariant, useNftDatasourceFlag } from 'featureFlags/flags/nftDatasource'
-import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
 import { useNftRouteLazyQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
@@ -140,7 +139,6 @@ const Bag = () => {
   const isDetailsPage = useIsNftDetailsPage()
   const isNFTPage = useIsNftPage()
   const isMobile = useIsMobile()
-  const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
   const usingGqlRouting = useGqlRoutingFlag() === GqlRoutingVariant.Enabled
 
   const sendTransaction = useSendTransaction((state) => state.sendTransaction)
@@ -434,7 +432,7 @@ const Bag = () => {
                 color="white"
                 textAlign="center"
                 onClick={() => {
-                  ;(isMobile || isNftListV2) && toggleBag()
+                  toggleBag()
                   setProfilePageState(ProfilePageStateType.LISTING)
                   sendAnalyticsEvent(NFTEventName.NFT_PROFILE_PAGE_START_SELL, {
                     list_quantity: sellAssets.length,
