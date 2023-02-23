@@ -1,7 +1,7 @@
 import { BaseVariant, FeatureFlag, useBaseFlag } from '../index'
 
 function useDummyGateFlag(): BaseVariant {
-  return useBaseFlag(FeatureFlag.statsigDummy, BaseVariant.Control)
+  return useBaseFlag(FeatureFlag.statsigDummy)
 }
 
 export function useDummyGateEnabled(): boolean {
