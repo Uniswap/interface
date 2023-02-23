@@ -80,7 +80,6 @@ const TextContent = styled.div<{ isOverflow: boolean; animationDuration: number 
              animation: ${marquee} ${animationDuration || 15}s linear infinite;
            `
          : css`
-             width: 100%;
              text-align: center;
            `
      };
@@ -134,6 +133,15 @@ function TopBanner() {
     removeAllPopupByType(PopupType.TOP_BAR)
     mixpanelHandler(MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_CLOSE_POPUP, { message_title: name })
   }
+
+  const onClickCta = () => {
+    navigate(ctaUrl)
+    hideBanner()
+    mixpanelHandler(MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_CTA_POPUP, {
+      announcement_type: PopupType.TOP_BAR,
+      announcement_title: name,
+    })
+  }
   return (
     <BannerWrapper color={type === 'NORMAL' ? theme.apr : theme.warning}>
       {!isMobile && <div />}
@@ -151,16 +159,7 @@ function TopBanner() {
         </TextWrapper>
         {isMobile && <StyledClose size={24} onClick={hideBanner} />}
       </Content>
-      {ctaName && ctaUrl && (
-        <StyledCtaButton
-          data={ctas[0]}
-          color="gray"
-          onClick={() => {
-            navigate(ctaUrl)
-            hideBanner()
-          }}
-        />
-      )}
+      {ctaName && ctaUrl && <StyledCtaButton data={ctas[0]} color="gray" onClick={onClickCta} />}
       {!isMobile && <StyledClose size={24} onClick={hideBanner} style={{ marginLeft: 8, minWidth: '20px' }} />}
     </BannerWrapper>
   )

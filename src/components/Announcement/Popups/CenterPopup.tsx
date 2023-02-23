@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import CtaButton from 'components/Announcement/Popups/CtaButton'
 import { useNavigateCtaPopup } from 'components/Announcement/helper'
-import { AnnouncementTemplatePopup, PopupContentAnnouncement } from 'components/Announcement/type'
+import { AnnouncementTemplatePopup, PopupContentAnnouncement, PopupType } from 'components/Announcement/type'
 import Modal from 'components/Modal'
 import Row, { RowBetween } from 'components/Row'
 import { Z_INDEXS } from 'constants/styles'
@@ -87,6 +87,14 @@ export default function CenterPopup({ data, clearAll }: { data: PopupItemType; c
   } = templateBody as AnnouncementTemplatePopup
   const navigate = useNavigateCtaPopup()
   const trackingClose = () => mixpanelHandler(MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_CLOSE_POPUP, { message_title: name })
+  const onClickCta = (ctaUrl?: string) => {
+    clearAll()
+    ctaUrl && navigate(ctaUrl)
+    mixpanelHandler(MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_CTA_POPUP, {
+      announcement_type: PopupType.CENTER,
+      announcement_title: name,
+    })
+  }
 
   return (
     <Modal isOpen={true} maxWidth={isMobile ? undefined : '800px'} onDismiss={clearAll} zindex={Z_INDEXS.MODAL}>
@@ -119,8 +127,7 @@ export default function CenterPopup({ data, clearAll }: { data: PopupItemType; c
                   data={item}
                   color="primary"
                   onClick={() => {
-                    clearAll()
-                    navigate(item.url)
+                    onClickCta(item.url)
                   }}
                 />
               ))
@@ -129,7 +136,7 @@ export default function CenterPopup({ data, clearAll }: { data: PopupItemType; c
                 data={{ name: t`Close`, url: '' }}
                 color="primary"
                 onClick={() => {
-                  clearAll()
+                  onClickCta()
                 }}
               />
             )}
