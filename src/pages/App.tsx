@@ -2,6 +2,8 @@ import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
+import test from '../assets/images/Dapp-background-final-dark.png'
+import test2 from '../assets/images/Dapp-background-final-white.png'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import AddressClaimModal from '../components/claim/AddressClaimModal'
 import ErrorBoundary from '../components/ErrorBoundary'
@@ -31,7 +33,7 @@ const AppWrapper = styled.div`
   justify-content: flex-start;
   align-items: stretch;
   align-content: stretch;
-  min-height: 100vh;
+  min-height: 100vh;--++
 `
 
 const HeaderWrapper = styled.div`
@@ -53,7 +55,14 @@ const BodyWrapper = styled.div`
   flex-grow: 1;
   flex-shrink: 1;
   flex-basis: auto;
-  order: 1;
+  background: ${({ theme }) =>
+    theme.darkMode
+      ? 'url(images/Dapp-background-final-white.png) no-repeat center center fixed'
+      : 'url(images/Dapp-background-final-dark.png) no-repeat center center fixed'};
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 `
 
 const TopLevelModals = () => {
