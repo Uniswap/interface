@@ -157,7 +157,7 @@ export default function BuyModal({ isOpen, onDismiss, buyInfo, userBaseTokenBala
                 currency={userBaseTokenBalance.currency}
                 label=""
                 renderBalance={(amount) => <Trans>Available to deposit: {formatCurrencyAmount(amount, 4)}</Trans>}
-                id="stake-liquidity-token"
+                id="buy-pool-tokens"
               />
             </>
           )}
