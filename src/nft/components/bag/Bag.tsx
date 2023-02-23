@@ -93,20 +93,12 @@ const ContinueButton = styled.div`
   color: ${({ theme }) => theme.accentTextLightPrimary};
   margin: 32px 28px 16px;
   padding: 10px 0px;
-  border-radius: 10px;
+  border-radius: 12px;
   text-align: center;
   font-size: 16px;
   font-weight: 600;
   line-height: 20px;
-  transition: ${({ theme }) => theme.transition.duration.medium};
-
-  :hover {
-    cursor: pointer;
-  }
-
-  :disabled {
-    cursor: auto;
-  }
+  cursor: pointer;
 `
 
 const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
