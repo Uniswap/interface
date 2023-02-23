@@ -10,7 +10,7 @@ import SendIcon from 'src/assets/icons/send-action.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { AnimatedBox } from 'src/components/layout/Box'
+import { AnimatedBox, Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { useUniconColors } from 'src/components/unicons/utils'
@@ -139,41 +139,43 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
           textAlign="flex-start"
           variant="headlineSmall"
         />
-        <Flex centered row gap="spacing8" mt="spacing12">
-          <TouchableArea
-            hapticFeedback
-            activeOpacity={1}
-            backgroundColor="background0"
-            borderColor="backgroundOutline"
-            borderRadius="rounded20"
-            borderWidth={1}
-            name={ElementName.Favorite}
-            padding="spacing12"
-            onPress={onPressFavorite}>
-            <DynamicHeartIcon isFavorited={isFavorited} size={iconSizes.icon20} />
-          </TouchableArea>
-          <TouchableArea
-            hapticFeedback
-            activeOpacity={1}
-            backgroundColor="background0"
-            borderColor="backgroundOutline"
-            borderRadius="rounded20"
-            borderWidth={1}
-            name={ElementName.Send}
-            padding="spacing12"
-            onPress={onPressSend}>
-            <Flex row alignItems="center" gap="spacing8">
-              <SendIcon
-                color={theme.colors.textSecondary}
-                height={theme.iconSizes.icon20}
-                width={theme.iconSizes.icon20}
-              />
-              <Text color="textSecondary" variant="buttonLabelMedium">
-                {t('Send')}
-              </Text>
-            </Flex>
-          </TouchableArea>
-        </Flex>
+        <Box position="absolute" right={0}>
+          <Flex centered row gap="spacing8" mt="spacing12">
+            <TouchableArea
+              hapticFeedback
+              activeOpacity={1}
+              backgroundColor="background0"
+              borderColor="backgroundOutline"
+              borderRadius="rounded20"
+              borderWidth={1}
+              name={ElementName.Favorite}
+              padding="spacing12"
+              onPress={onPressFavorite}>
+              <DynamicHeartIcon isFavorited={isFavorited} size={iconSizes.icon20} />
+            </TouchableArea>
+            <TouchableArea
+              hapticFeedback
+              activeOpacity={1}
+              backgroundColor="background0"
+              borderColor="backgroundOutline"
+              borderRadius="rounded20"
+              borderWidth={1}
+              name={ElementName.Send}
+              padding="spacing12"
+              onPress={onPressSend}>
+              <Flex row alignItems="center" gap="spacing8">
+                <SendIcon
+                  color={theme.colors.textSecondary}
+                  height={theme.iconSizes.icon20}
+                  width={theme.iconSizes.icon20}
+                />
+                <Text color="textSecondary" variant="buttonLabelMedium">
+                  {t('Send')}
+                </Text>
+              </Flex>
+            </TouchableArea>
+          </Flex>
+        </Box>
       </Flex>
     </Flex>
   )
