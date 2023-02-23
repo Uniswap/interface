@@ -35,8 +35,8 @@ export function DappHeaderIcon({
           fallback={fallback}
           imageStyle={DappIconPlaceholderStyles.icon}
           loadingContainerStyle={{
-            ...DappIconPlaceholderStyles.loading,
             ...DappIconPlaceholderStyles.icon,
+            ...DappIconPlaceholderStyles.loading,
           }}
           uri={dapp.icon}
         />
@@ -80,7 +80,7 @@ export function DappIconPlaceholder({
   )
 }
 
-export const DappIconPlaceholderStyles = StyleSheet.create({
-  icon: { borderRadius: borderRadii.rounded20, height: iconSizes.icon40, width: iconSizes.icon40 },
-  loading: { overflow: 'hidden' },
+const DappIconPlaceholderStyles = StyleSheet.create({
+  icon: { borderRadius: borderRadii.rounded4, height: iconSizes.icon40, width: iconSizes.icon40 },
+  loading: { borderRadius: borderRadii.roundedFull, overflow: 'hidden' },
 })

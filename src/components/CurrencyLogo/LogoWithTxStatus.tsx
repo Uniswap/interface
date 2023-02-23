@@ -15,10 +15,7 @@ import { ImageUri } from 'src/components/images/ImageUri'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Box } from 'src/components/layout/Box'
-import {
-  DappIconPlaceholder,
-  DappIconPlaceholderStyles,
-} from 'src/components/WalletConnect/DappHeaderIcon'
+import { DappIconPlaceholder } from 'src/components/WalletConnect/DappHeaderIcon'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { CurrencyInfo } from 'src/features/dataApi/types'
@@ -213,20 +210,23 @@ export function DappLogoWithTxStatus({
     </Box>
   )
 
-  const loaderStyle = StyleSheet.create({
-    loaderContainer: {
-      borderRadius: dappImageSize / 2,
+  const style = StyleSheet.create({
+    icon: {
+      borderRadius: theme.borderRadii.rounded4,
       height: dappImageSize,
-      overflow: 'hidden',
       width: dappImageSize,
+    },
+    loaderContainer: {
+      borderRadius: theme.borderRadii.roundedFull,
+      overflow: 'hidden',
     },
   })
 
   const dappImage = dappImageUrl ? (
     <ImageUri
       fallback={fallback}
-      imageStyle={DappIconPlaceholderStyles.icon}
-      loadingContainerStyle={loaderStyle.loaderContainer}
+      imageStyle={style.icon}
+      loadingContainerStyle={{ ...style.icon, ...style.loaderContainer }}
       uri={dappImageUrl}
     />
   ) : (
@@ -263,7 +263,7 @@ export function DappLogoWithWCBadge({
   const totalSize = dappImageSize + statusSize * (1 / 4)
   const dappImage = dappImageUrl ? (
     <RemoteImage
-      borderRadius={theme.borderRadii.roundedFull}
+      borderRadius={theme.borderRadii.rounded4}
       height={dappImageSize}
       uri={dappImageUrl}
       width={dappImageSize}
@@ -279,7 +279,7 @@ export function DappLogoWithWCBadge({
       </Box>
       <Box
         backgroundColor="background1"
-        borderRadius="roundedFull"
+        borderRadius="rounded4"
         bottom={0}
         position="absolute"
         right={0}>
