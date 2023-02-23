@@ -16,7 +16,6 @@ export interface BuyInfo {
   totalSupplyAmount?: CurrencyAmount<Token>
   poolPriceAmount: CurrencyAmount<Token>
   spread?: number
-  // calculates a hypothetical amount of token distributed to the active account per second.
   getExpectedOutput?: (
     purchaseAmount: CurrencyAmount<Token>,
     poolPrice: CurrencyAmount<Token>,

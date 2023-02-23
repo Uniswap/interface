@@ -2,7 +2,8 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount /*, Token*/ } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { useCallback, useState } from 'react'
+import JSBI from 'jsbi'
+import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
@@ -58,14 +59,37 @@ export default function BuyModal({ isOpen, onDismiss, buyInfo, userBaseTokenBala
   const [approval, approveCallback] = useApproveCallback(parsedAmount, buyInfo?.pool?.address)
 
   const poolContract = usePoolExtendedContract(buyInfo?.pool?.address)
-  // TODO: must handle ETH purchases
+
+  const { expectedPoolTokens, minimumAmount } = useMemo(() => {
+    if (!parsedAmount || !buyInfo) {
+      return {
+        expectedPoolTokens: undefined,
+        minimumAmount: undefined,
+      }
+    }
+
+    const poolAmount = JSBI.divide(
+      JSBI.multiply(
+        parsedAmount.quotient, //: JSBI.BigInt(0),
+        JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(parsedAmount.currency.decimals ?? 18))
+      ),
+      buyInfo.poolPriceAmount.quotient //: JSBI.BigInt(1)
+    )
+    // we allow a 6.25% slippage from price (could actually use spread and extra 1% margin)
+    const minimumAmount = JSBI.subtract(poolAmount, JSBI.divide(poolAmount, JSBI.BigInt(16)))
+    return {
+      expectedPoolTokens: CurrencyAmount.fromRawAmount(buyInfo.poolPriceAmount.currency, poolAmount),
+      minimumAmount: CurrencyAmount.fromRawAmount(buyInfo.poolPriceAmount.currency, minimumAmount),
+    }
+  }, [parsedAmount, buyInfo])
+  console.log(expectedPoolTokens?.toSignificant(4), minimumAmount?.toSignificant(4))
+
   async function onBuy() {
     setAttempting(true)
     if (poolContract && parsedAmount && buyInfo /*&& deadline*/) {
       if (approval === ApprovalState.APPROVED) {
-        // TODO: add value if token is ether
         const value = userBaseTokenBalance?.currency.isNative ? parsedAmount.quotient.toString() : null
-        const args = [buyInfo.recipient, parsedAmount.quotient.toString(), 0]
+        const args = [buyInfo.recipient, parsedAmount.quotient.toString(), minimumAmount?.quotient.toString()]
 
         // mint method not unique in interface
         return poolContract.estimateGas['mint(address,uint256,uint256)'](...args, value ? { value } : {}).then(
