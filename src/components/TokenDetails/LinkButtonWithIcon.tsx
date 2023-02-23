@@ -1,3 +1,4 @@
+import { useResponsiveProp } from '@shopify/restyle'
 import React from 'react'
 import { SvgProps } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
@@ -21,6 +22,11 @@ export function LinkButtonWithIcon({
 }): JSX.Element {
   const theme = useAppTheme()
 
+  const fontSize = useResponsiveProp({
+    xs: 'buttonLabelMicro',
+    sm: 'buttonLabelSmall',
+  })
+
   return (
     <TouchableArea
       hapticFeedback
@@ -35,7 +41,7 @@ export function LinkButtonWithIcon({
           height={theme.iconSizes.icon16}
           width={theme.iconSizes.icon16}
         />
-        <Text color="textPrimary" variant="buttonLabelMicro">
+        <Text color="textPrimary" variant={fontSize}>
           {label}
         </Text>
       </Flex>
