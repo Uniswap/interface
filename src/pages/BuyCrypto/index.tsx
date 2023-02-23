@@ -209,7 +209,6 @@ function BuyCrypto() {
     [ChainId.MUMBAI]: null,
     [ChainId.BSCTESTNET]: null,
     [ChainId.AVAXTESTNET]: null,
-    [ChainId.ARBITRUM_TESTNET]: null,
     [ChainId.BTTC]: null,
     [ChainId.AURORA]: null,
     [ChainId.OASIS]: null,

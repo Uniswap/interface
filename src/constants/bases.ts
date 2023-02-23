@@ -22,7 +22,6 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.AURORA]: [WETH[ChainId.AURORA]],
   [ChainId.BTTC]: [WETH[ChainId.BTTC]],
   [ChainId.ARBITRUM]: [WETH[ChainId.ARBITRUM]],
-  [ChainId.ARBITRUM_TESTNET]: [WETH[ChainId.ARBITRUM_TESTNET]],
   [ChainId.VELAS]: [WETH[ChainId.VELAS]],
   [ChainId.OASIS]: [WETH[ChainId.OASIS]],
   [ChainId.OPTIMISM]: [WETH[ChainId.OPTIMISM]],
@@ -146,12 +145,6 @@ export const SUGGESTED_BASES: ChainTokenList = {
     USDC[ChainId.AURORA],
     USDT[ChainId.AURORA],
     new Token(ChainId.AURORA, '0x8BEc47865aDe3B172A928df8f990Bc7f2A3b9f79', 18, 'Aurora', 'Aurora'),
-  ],
-  [ChainId.ARBITRUM_TESTNET]: [
-    ...WETH_ONLY[ChainId.ARBITRUM_TESTNET],
-    DAI[ChainId.ARBITRUM_TESTNET],
-    USDC[ChainId.ARBITRUM_TESTNET],
-    USDT[ChainId.ARBITRUM_TESTNET],
   ],
   [ChainId.ARBITRUM]: [
     ...WETH_ONLY[ChainId.ARBITRUM],

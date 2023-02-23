@@ -12,13 +12,13 @@ import { FARM_HISTORIES } from 'apollo/queries'
 import FAIRLAUNCH_V2_ABI from 'constants/abis/fairlaunch-v2.json'
 import FAIRLAUNCH_ABI from 'constants/abis/fairlaunch.json'
 import {
-  DEFAULT_REWARDS,
   LP_TOKEN_DECIMALS,
   MAX_ALLOW_APY,
   OUTSIDE_FAIRLAUNCH_ADDRESSES,
   RESERVE_USD_DECIMALS,
   ZERO_ADDRESS,
 } from 'constants/index'
+import { DEFAULT_REWARDS } from 'constants/networks'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { NativeCurrencies } from 'constants/tokens'
 import { VERSION } from 'constants/v2'

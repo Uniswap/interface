@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 
 import { TRUESIGHT_API } from 'constants/env'
-import { TRENDING_SOON_SUPPORTED_NETWORKS } from 'constants/index'
+import { TRENDING_SOON_SUPPORTED_NETWORKS } from 'constants/networks'
 import { TrueSightTokenResponse } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
 import { TrueSightFilter, TrueSightTimeframe } from 'pages/TrueSight/index'
 

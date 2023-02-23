@@ -1,5 +1,4 @@
 export { default as arbitrum } from './arbitrum'
-export { default as arbitrumTestnet } from './arbitrum-testnet'
 export { default as aurora } from './aurora'
 export { default as avax } from './avax'
 export { default as avaxTestnet } from './avax-testnet'

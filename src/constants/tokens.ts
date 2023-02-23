@@ -136,7 +136,6 @@ export const STABLE_COINS_ADDRESS: { [chainId in ChainId]: string[] } = {
   [ChainId.MUMBAI]: [],
   [ChainId.BSCTESTNET]: [],
   [ChainId.AVAXTESTNET]: [],
-  [ChainId.ARBITRUM_TESTNET]: [],
 }
 
 export const SUPER_STABLE_COINS_ADDRESS: { [chainId in ChainId]: string[] } = {
@@ -227,7 +226,6 @@ export const SUPER_STABLE_COINS_ADDRESS: { [chainId in ChainId]: string[] } = {
   [ChainId.MUMBAI]: [],
   [ChainId.BSCTESTNET]: [],
   [ChainId.AVAXTESTNET]: [],
-  [ChainId.ARBITRUM_TESTNET]: [],
 }
 
 export const CORRELATED_COINS_ADDRESS: { [chainId in ChainId]: string[][] } = {
@@ -273,7 +271,6 @@ export const CORRELATED_COINS_ADDRESS: { [chainId in ChainId]: string[][] } = {
   [ChainId.MUMBAI]: [],
   [ChainId.BSCTESTNET]: [],
   [ChainId.AVAXTESTNET]: [],
-  [ChainId.ARBITRUM_TESTNET]: [],
 }
 
 export const DAI = {
@@ -332,13 +329,6 @@ export const DAI = {
   [ChainId.CRONOS]: new Token(
     ChainId.CRONOS,
     '0xF2001B145b43032AAF5Ee2884e456CCd805F677D',
-    18,
-    'DAI',
-    'Dai Stablecoin',
-  ),
-  [ChainId.ARBITRUM_TESTNET]: new Token(
-    ChainId.ARBITRUM_TESTNET,
-    '0x340eefA7154BF23e328F59E936568607841FE027',
     18,
     'DAI',
     'Dai Stablecoin',
@@ -414,14 +404,6 @@ export const USDC: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.FANTOM]: new Token(ChainId.FANTOM, '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75', 6, 'USDC', 'USD Coin'),
   [ChainId.CRONOS]: new Token(ChainId.CRONOS, '0xc21223249CA28397B4B6541dfFaEcC539BfF0c59', 6, 'USDC', 'USD Coin'),
-  [ChainId.ARBITRUM_TESTNET]: new Token(
-    ChainId.ARBITRUM_TESTNET,
-    '0xB4BbD0250618917b3679578C58f6440A227C8c03',
-    6,
-    'USDC',
-    'USD Coin',
-  ),
-
   [ChainId.ARBITRUM]: new Token(ChainId.ARBITRUM, '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8', 6, 'USDC', 'USD Coin'),
   [ChainId.BTTC]: new Token(ChainId.BTTC, '0xCa424b845497f7204D9301bd13Ff87C0E2e86FCF', 18, 'USDC_b', 'USD Coin_BSC'),
   [ChainId.AURORA]: new Token(ChainId.AURORA, '0xB12BFcA5A55806AaF64E99521918A4bf0fC40802', 6, 'USDC', 'USD Coin'),
@@ -473,13 +455,6 @@ export const USDT: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.FANTOM]: new Token(ChainId.FANTOM, '0x049d68029688eAbF473097a2fC38ef61633A3C7A', 6, 'fUSDT', 'Tether USD'),
   [ChainId.CRONOS]: new Token(ChainId.CRONOS, '0x66e428c3f67a68878562e79A0234c1F83c208770', 6, 'USDT', 'Tether USD'),
-  [ChainId.ARBITRUM_TESTNET]: new Token(
-    ChainId.ARBITRUM_TESTNET,
-    '0x41a56c30b881296859FB4db30Eb9a639B473619B',
-    6,
-    'USDT',
-    'Tether USD',
-  ),
   [ChainId.ARBITRUM]: new Token(
     ChainId.ARBITRUM,
     '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
@@ -565,14 +540,6 @@ export const KNC: { [chainId in ChainId]: Token } = {
   [ChainId.FANTOM]: new Token(ChainId.FANTOM, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.CRONOS]: new Token(ChainId.CRONOS, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.AURORA]: new Token(ChainId.AURORA, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
-
-  [ChainId.ARBITRUM_TESTNET]: new Token(
-    ChainId.ARBITRUM_TESTNET,
-    '0x7596961744096D12eFa3CfA58d1D30EDd82BD396',
-    18,
-    'KNC',
-    'Kyber Network Crystal',
-  ),
   [ChainId.BTTC]: new Token(
     ChainId.BTTC,
     '0x18fA72e0EE4C580a129b0CE5bD0694d716C7443E',

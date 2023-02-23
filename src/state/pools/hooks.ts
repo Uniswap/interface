@@ -12,8 +12,7 @@ import {
   POOL_DATA,
   USER_POSITIONS,
 } from 'apollo/queries'
-import { ONLY_DYNAMIC_FEE_CHAINS } from 'constants/index'
-import { NETWORKS_INFO } from 'constants/networks'
+import { NETWORKS_INFO, ONLY_DYNAMIC_FEE_CHAINS } from 'constants/networks'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { useActiveWeb3React } from 'hooks'
 import { useETHPrice } from 'state/application/hooks'

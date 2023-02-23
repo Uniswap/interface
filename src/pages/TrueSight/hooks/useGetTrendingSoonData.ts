@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 
 import { TRUESIGHT_API } from 'constants/env'
-import { TRENDING_SOON_SUPPORTED_NETWORKS } from 'constants/index'
+import { TRENDING_SOON_SUPPORTED_NETWORKS } from 'constants/networks'
 import { TrueSightFilter, TrueSightTimeframe } from 'pages/TrueSight/index'
 
 export interface TrueSightTokenData {

@@ -6,7 +6,7 @@ import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
 
-import { CLAIM_REWARDS_DATA_URL } from 'constants/index'
+import { CLAIM_REWARDS_DATA_URL } from 'constants/networks'
 import { KNC } from 'constants/tokens'
 import { useActiveWeb3React, useWeb3React } from 'hooks'
 import { useAllTransactions, useTransactionAdder } from 'state/transactions/hooks'

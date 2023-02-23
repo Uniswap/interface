@@ -21,13 +21,8 @@ import QuestionHelper from 'components/QuestionHelper'
 import Row, { AutoRow, RowBetween, RowFlat } from 'components/Row'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { TutorialType } from 'components/Tutorial'
-import {
-  APP_PATHS,
-  CREATE_POOL_AMP_HINT,
-  ONLY_DYNAMIC_FEE_CHAINS,
-  ONLY_STATIC_FEE_CHAINS,
-  STATIC_FEE_OPTIONS,
-} from 'constants/index'
+import { APP_PATHS, CREATE_POOL_AMP_HINT } from 'constants/index'
+import { ONLY_DYNAMIC_FEE_CHAINS, ONLY_STATIC_FEE_CHAINS, STATIC_FEE_OPTIONS } from 'constants/networks'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { NativeCurrencies } from 'constants/tokens'
 import { PairState } from 'data/Reserves'
