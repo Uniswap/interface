@@ -221,6 +221,7 @@ export default function App() {
 
                   <Route path="mint" element={<CreatePool />} />
                   <Route path="smart-pool/:poolAddress" element={<PoolPositionPage />} />
+                  <Route path="smart-pool/:poolAddress/:poolId" element={<PoolPositionPage />} />
 
                   <Route path="send" element={<RedirectPathToSwapOnly />} />
                   <Route path="swap/:outputCurrency" element={<RedirectToSwap />} />

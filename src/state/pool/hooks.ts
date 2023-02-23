@@ -109,6 +109,7 @@ export function useFormattedPoolCreatedLogs(
 
           return { group, pool, name, symbol, id }
         })
+        .reverse()
     )
   }, [useLogsResult])
 }

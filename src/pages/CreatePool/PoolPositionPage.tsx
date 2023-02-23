@@ -11,6 +11,7 @@ import { useWeb3React } from '@web3-react/core'
 import { /*ButtonConfirmed, ButtonGray,*/ ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
+import BuyModal from 'components/createPool/BuyModal'
 //import Loader from 'components/Loader'
 import { RowBetween, RowFixed } from 'components/Row'
 //import { Dots } from 'components/swap/styleds'
@@ -27,9 +28,13 @@ import JSBI from 'jsbi'
 //import useStablecoinPrice from 'hooks/useStablecoinPrice'
 //import { useSingleCallResult } from 'lib/hooks/multicall'
 //import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { /*useCallback, useMemo, useRef,*/ useState } from 'react'
+import { useCallback, /*useMemo, useRef,*/ useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 //import { Bound } from 'state/mint/v3/actions'
+import { useToggleWalletModal } from 'state/application/hooks'
+import { BuyInfo } from 'state/buy/hooks'
+//import { useTokenBalance } from 'state/connection/hooks'
+import { useCurrencyBalance } from 'state/connection/hooks'
 //import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled /*, { useTheme }*/ from 'styled-components/macro'
 import { ExternalLink, /*HideExtraSmall,*/ ThemedText } from 'theme'
@@ -100,7 +105,6 @@ const Label = styled(({ end, ...props }) => <ThemedText.DeprecatedLabel {...prop
   align-items: center;
 `
 
-/*
 const ExtentsText = styled.span`
   color: ${({ theme }) => theme.deprecated_text2};
   font-size: 14px;
@@ -108,7 +112,6 @@ const ExtentsText = styled.span`
   margin-right: 4px;
   font-weight: 500;
 `
-*/
 
 const HoverText = styled(ThemedText.DeprecatedMain)`
   text-decoration: none;
@@ -149,21 +152,69 @@ function getZapperLink(data: string): string {
   return `https://zapper.xyz/account/${data}`
 }
 
+function AddressCard({
+  address,
+  chainId,
+  label,
+}: {
+  address?: string | null
+  chainId?: number | null
+  label?: string | null
+}) {
+  if (!address || !chainId || !label) {
+    return null
+  }
+
+  return (
+    <LightCard padding="12px ">
+      <AutoColumn gap="md">
+        <ExtentsText>
+          <Trans>{label}</Trans>
+        </ExtentsText>
+      </AutoColumn>
+      {/*<AutoColumn gap="8px" justify="center">#*/}
+      <AutoColumn gap="md">
+        <ExtentsText>
+          {typeof chainId === 'number' && address ? (
+            <ExternalLink href={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}>
+              <Trans>{shortenAddress(address)}</Trans>
+            </ExternalLink>
+          ) : null}
+        </ExtentsText>
+        {/*</AutoColumn>
+        <ExtentsText>
+          <Trans>{poolAddress}</Trans>
+        </ExtentsText>
+      */}
+      </AutoColumn>
+    </LightCard>
+  )
+}
+
 export function PoolPositionPage() {
-  const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
-  const { chainId /*, account , provider*/ } = useWeb3React()
+  // TODO: we can implement all staking methods since we pass pool id, otherwise remove from url if not using
+  const { poolAddress: poolAddressFromUrl /*, poolId: poolIdFromUrl*/ } = useParams<{
+    poolAddress?: string
+    poolId?: string
+  }>()
+  const { chainId, account /*, provider*/ } = useWeb3React()
   //const theme = useTheme()
 
   const [showConfirm, setShowConfirm] = useState(false)
+
+  // TODO
+  const [showBuyModal, setShowBuyModal] = useState(false)
+  //const [showUnstakingModal, setShowUnstakingModal] = useState(false)
+
   // TODO: check how can reduce number of calls by limit update of poolStorage
   //  id is stored in registry so we could save rpc call by using storing in state?
   const poolStorage = useSmartPoolFromAddress(poolAddressFromUrl ?? undefined)
 
-  const { name, symbol, decimals, /*owner,*/ baseToken } = poolStorage?.poolInitParams || {}
+  const { name, symbol, decimals, owner, baseToken } = poolStorage?.poolInitParams || {}
   const { minPeriod, spread, transactionFee } = poolStorage?.poolVariables || {}
   const { unitaryValue, totalSupply } = poolStorage?.poolTokensInfo || {}
 
-  //const token = useToken(poolAddressFromUrl ?? undefined) as Currency
+  const pool = useCurrency(poolAddressFromUrl ?? undefined)
   let base = useCurrency(baseToken !== ZERO_ADDRESS ? baseToken : undefined)
 
   const amount = JSBI.BigInt(unitaryValue ?? 0)
@@ -171,7 +222,8 @@ export function PoolPositionPage() {
   if (baseToken === ZERO_ADDRESS) {
     base = nativeOnChain(chainId ?? 1)
   }
-  const poolPrice = CurrencyAmount.fromRawAmount(base ?? nativeOnChain(chainId ?? 1), amount ?? undefined)
+
+  const poolPrice = pool ? CurrencyAmount.fromRawAmount(pool, amount) : undefined
   // TODO: check results on altchains
   const baseTokenSymbol = base?.isNative ? 'ETH' : base?.symbol
 
@@ -182,7 +234,26 @@ export function PoolPositionPage() {
 
   const lockup = JSBI.BigInt(minPeriod ?? 0).toLocaleString()
 
+  // TODO: check if should move definitions in custom hook
+  //const buyInfo = useBuyInfo(poolAddressFromUrl)
+
+  // TODO: check how we should better organize these values
+  const baseTokenAmount = base ? CurrencyAmount.fromRawAmount(base, '0') : undefined
+  const buyInfo = { pool, recipient: account, purchaseAmount: baseTokenAmount, poolPriceAmount: poolPrice } as BuyInfo
+  //const userBaseTokenBalance = useTokenBalance(account ?? undefined, buyInfo?.purchaseAmount?.currency as Token)
+  const userBaseTokenBalance = useCurrencyBalance(account ?? undefined, buyInfo?.purchaseAmount?.currency)
+
   //const addTransaction = useTransactionAdder()
+
+  const toggleWalletModal = useToggleWalletModal()
+
+  const handleDepositClick = useCallback(() => {
+    if (account) {
+      setShowBuyModal(true)
+    } else {
+      toggleWalletModal()
+    }
+  }, [account, toggleWalletModal])
 
   function modalHeader() {
     return (
@@ -211,6 +282,23 @@ export function PoolPositionPage() {
           )}
           pendingText={<Trans>Collecting fees</Trans>}
         />
+        {buyInfo && (
+          <>
+            <BuyModal
+              isOpen={showBuyModal}
+              onDismiss={() => setShowBuyModal(false)}
+              buyInfo={buyInfo}
+              userBaseTokenBalance={userBaseTokenBalance}
+            />
+            {/*
+            <UnstakingModal
+              isOpen={showUnstakingModal}
+              onDismiss={() => setShowUnstakingModal(false)}
+              buyInfo={buyInfo}
+            />
+            */}
+          </>
+        )}
         <AutoColumn gap="md">
           <AutoColumn gap="sm">
             <Link
@@ -238,8 +326,7 @@ export function PoolPositionPage() {
               )}
               <RowFixed>
                 <ResponsiveButtonPrimary
-                  as={Link}
-                  to={`/smart-pool/${poolAddressFromUrl}`}
+                  onClick={handleDepositClick}
                   width="fit-content"
                   padding="6px 8px"
                   $borderRadius="12px"
@@ -248,8 +335,7 @@ export function PoolPositionPage() {
                   <Trans>Buy</Trans>
                 </ResponsiveButtonPrimary>
                 <ResponsiveButtonPrimary
-                  as={Link}
-                  to={`/smart-pool/${poolAddressFromUrl}`}
+                  onClick={() => setShowBuyModal(!true)}
                   width="fit-content"
                   padding="6px 8px"
                   $borderRadius="12px"
@@ -274,13 +360,7 @@ export function PoolPositionPage() {
               >
                 <AutoColumn gap="md" style={{ width: '100%' }}>
                   <AutoColumn gap="md">
-                    <Label>
-                      {typeof chainId === 'number' && poolAddressFromUrl ? (
-                        <ExternalLink href={getExplorerLink(chainId, poolAddressFromUrl, ExplorerDataType.ADDRESS)}>
-                          <Trans>Address: {shortenAddress(poolAddressFromUrl)}</Trans>
-                        </ExternalLink>
-                      ) : null}
-                    </Label>
+                    <Label>Pool Values</Label>
                   </AutoColumn>
                   <LightCard padding="12px 16px">
                     <AutoColumn gap="md">
@@ -449,6 +529,16 @@ export function PoolPositionPage() {
               </DarkCard>
             </AutoColumn>
           </ResponsiveRow>
+          <AutoColumn>
+            <DarkCard>
+              <AddressCard address={poolAddressFromUrl} chainId={chainId} label="Smart Pool" />
+            </DarkCard>
+          </AutoColumn>
+          <AutoColumn>
+            <DarkCard>
+              <AddressCard address={owner} chainId={chainId} label="Pool Operator" />
+            </DarkCard>
+          </AutoColumn>
         </AutoColumn>
       </PageWrapper>
       <SwitchLocaleLink />
