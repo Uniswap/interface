@@ -33,12 +33,13 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
 
   const onPress = (): void => {
     tokenDetailsNavigation.preload(currencyId)
-    tokenDetailsNavigation.navigate(currencyId)
+    tokenDetailsNavigation.navigate(currencyId, name)
     if (searchContext) {
       sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
         query: searchContext.query,
-        selected_name: name,
-        selected_address: address ?? '',
+        name,
+        chain: token.chainId,
+        address: address ?? '',
         type: 'token',
         suggestion_count: searchContext.suggestionCount,
         position: searchContext.position,

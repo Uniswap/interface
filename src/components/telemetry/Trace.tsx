@@ -3,7 +3,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import React, { createContext, memo, PropsWithChildren, useEffect, useMemo, useRef } from 'react'
 import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { MarkNames, ModalName, SectionName } from 'src/features/telemetry/constants'
+import { ElementName, MarkNames, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { useTrace } from 'src/features/telemetry/hooks'
 import { AppScreen } from 'src/screens/Screens'
 import { logger } from 'src/utils/logger'
@@ -16,6 +16,8 @@ export interface ITraceContext {
   section?: SectionName
 
   modal?: ModalName
+
+  element?: ElementName
 
   // Keeps track of start time for given marks
   marks?: Record<MarkNames, number>
@@ -59,6 +61,7 @@ function _Trace({
   logImpression,
   screen,
   section,
+  element,
   modal,
   startMark,
   endMark,
@@ -79,6 +82,7 @@ function _Trace({
           screen,
           section,
           modal,
+          element,
         })
       ),
       marks: startMark
@@ -89,7 +93,7 @@ function _Trace({
           }
         : parentTrace.marks,
     }),
-    [parentTrace, startMark, screen, section, modal]
+    [parentTrace, startMark, screen, section, modal, element]
   )
 
   // Log impression on mount for elements that are not part of the navigation tree

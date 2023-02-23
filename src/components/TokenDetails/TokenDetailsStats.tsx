@@ -9,6 +9,7 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import { TokenDetailsScreenQuery } from 'src/data/__generated__/types-and-hooks'
+import { ElementName } from 'src/features/telemetry/constants'
 import { currencyIdToAddress, currencyIdToChain } from 'src/utils/currencyId'
 import { formatNumber, NumberType } from 'src/utils/format'
 import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'src/utils/linking'
@@ -150,6 +151,7 @@ export function TokenDetailsStats({
           {tokenProjectData?.homepageUrl && (
             <LinkButtonWithIcon
               Icon={GlobeIcon}
+              element={ElementName.TokenLinkWebsite}
               label={t('Website')}
               url={tokenProjectData.homepageUrl}
             />
@@ -157,11 +159,17 @@ export function TokenDetailsStats({
           {tokenProjectData?.twitterName && (
             <LinkButtonWithIcon
               Icon={TwitterIcon}
+              element={ElementName.TokenLinkTwitter}
               label={t('Twitter')}
               url={getTwitterLink(tokenProjectData.twitterName)}
             />
           )}
-          <LinkButtonWithIcon Icon={EtherscanIcon} label={t('Etherscan')} url={explorerLink} />
+          <LinkButtonWithIcon
+            Icon={EtherscanIcon}
+            element={ElementName.TokenLinkEtherscan}
+            label={t('Etherscan')}
+            url={explorerLink}
+          />
         </Flex>
       </Flex>
     </Flex>

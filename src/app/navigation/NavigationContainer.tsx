@@ -13,7 +13,7 @@ import { RootParamList } from 'src/app/navigation/types'
 import { Trace } from 'src/components/telemetry/Trace'
 import { DeepLink, openDeepLink } from 'src/features/deepLinking/handleDeepLink'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { getImpressionEventParams } from 'src/features/telemetry/utils'
+import { getEventParams } from 'src/features/telemetry/utils'
 import { AppScreen } from 'src/screens/Screens'
 
 interface Props {
@@ -53,7 +53,7 @@ export const NavigationContainer: FC<Props> = ({ children, onReady }) => {
         const currentRouteName: AppScreen = navigationRef.getCurrentRoute()?.name as AppScreen
 
         if (currentRouteName && previousRouteName !== currentRouteName) {
-          const currentRouteParams = getImpressionEventParams(
+          const currentRouteParams = getEventParams(
             currentRouteName,
             navigationRef.getCurrentRoute()?.params as RootParamList[AppScreen]
           )

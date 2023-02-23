@@ -21,9 +21,10 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { AnimatedBox, AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { TracePressEvent } from 'src/components/telemetry/TraceEvent'
 import { Text } from 'src/components/Text'
 import { openModal } from 'src/features/modals/modalSlice'
-import { ModalName } from 'src/features/telemetry/constants'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { prepareSwapFormState } from 'src/features/transactions/swap/utils'
 import { Theme } from 'src/styles/theme'
 import { CurrencyId } from 'src/utils/currencyId'
@@ -169,9 +170,11 @@ const SwapFAB = memo(({ activeScale = 0.96, inputCurrencyId }: SwapTabBarButtonP
               <Rect fill="url(#background)" height="100%" opacity={1} width="100%" x="0" y="0" />
             </Svg>
           </Box>
-          <Text color="textOnBrightPrimary" variant="buttonLabelMedium">
-            {t('Swap')}
-          </Text>
+          <TracePressEvent element={ElementName.Swap}>
+            <Text color="textOnBrightPrimary" variant="buttonLabelMedium">
+              {t('Swap')}
+            </Text>
+          </TracePressEvent>
         </AnimatedBox>
       </TapGestureHandler>
     </Box>

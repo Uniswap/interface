@@ -5,7 +5,9 @@ import { ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { getButtonProperties } from 'src/components/buttons/utils'
 import { Flex } from 'src/components/layout'
+import { TracePressEvent } from 'src/components/telemetry/TraceEvent'
 import { Text } from 'src/components/Text'
+import { ElementName } from 'src/features/telemetry/constants'
 import { getContrastPassingTextColor } from 'src/utils/colors'
 
 export function TokenDetailsActionButtons({
@@ -45,11 +47,13 @@ export function TokenDetailsActionButtons({
         py={paddingY}
         style={{ backgroundColor: tokenColor ?? theme.colors.magentaVibrant }}
         onPress={onPressSwap}>
-        <Text
-          color={getContrastPassingTextColor(tokenColor ?? theme.colors.magentaVibrant)}
-          variant={textVariant}>
-          {t('Swap')}
-        </Text>
+        <TracePressEvent element={ElementName.Swap}>
+          <Text
+            color={getContrastPassingTextColor(tokenColor ?? theme.colors.magentaVibrant)}
+            variant={textVariant}>
+            {t('Swap')}
+          </Text>
+        </TracePressEvent>
       </TouchableArea>
     </Flex>
   )

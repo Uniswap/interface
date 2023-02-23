@@ -33,7 +33,7 @@ import { useSuspendUpdatesWhenBlured } from 'src/utils/hooks'
 type TokenBalanceListProps = {
   owner: Address
   empty?: JSX.Element | null
-  onPressToken: (currencyId: CurrencyId) => void
+  onPressToken: (currencyId: CurrencyId, tokenName?: string) => void
   containerProps?: TabContentProps
   scrollHandler?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
   isExternalProfile?: boolean

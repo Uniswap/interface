@@ -13,7 +13,7 @@ import { formatNumber, formatUSDPrice, NumberType } from 'src/utils/format'
 
 interface TokenBalanceItemProps {
   portfolioBalance: PortfolioBalance
-  onPressToken?: (currencyId: CurrencyId) => void
+  onPressToken?: (currencyId: CurrencyId, tokenName?: string) => void
   isWarmLoading?: boolean
 }
 
@@ -25,7 +25,7 @@ export const TokenBalanceItem = memo(
     const { currency } = currencyInfo
 
     const onPress = (): void => {
-      onPressToken?.(currencyInfo.currencyId)
+      onPressToken?.(currencyInfo.currencyId, currency.name)
     }
 
     return (

@@ -34,16 +34,32 @@ export type EventProperties = {
     screen: 'swap' | 'transaction'
     is_cold_start: boolean
   }
+  [MobileEventName.ExploreFilterSelected]: {
+    filter_type: string
+  }
   [MobileEventName.ExploreSearchResultClicked]: {
     query: string
     type: 'collection' | 'token' | 'address'
     suggestion_count: number
     position: number
-    selected_name: string
-    selected_address: string
+    name: string
+    address: string
+    chain?: number
   }
   [MobileEventName.ExploreSearchCancel]: {
     query: string
+  }
+  [MobileEventName.ExploreTokenItemSelected]: {
+    address: string
+    name?: string
+    position: number
+    chain: number
+  }
+  [MobileEventName.FavoriteItem]: {
+    address: string
+    name?: string
+    chain?: number
+    type: 'token' | 'wallet'
   }
   [MobileEventName.FiatOnRampQuickActionButtonPressed]: BaseEventProperty
   [MobileEventName.FiatOnRampBannerPressed]: BaseEventProperty
@@ -82,6 +98,7 @@ export type EventProperties = {
     networkError: boolean
   } & BaseEventProperty
   [SharedEventName.APP_LOADED]: BaseEventProperty
+  [SharedEventName.ELEMENT_CLICKED]: BaseEventProperty
   [SharedEventName.PAGE_VIEWED]: BaseEventProperty
   [SwapEventName.SWAP_QUOTE_RECEIVED]: {
     quote_latency_milliseconds?: number

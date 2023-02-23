@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -16,15 +17,26 @@ import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { TokenMetadataDisplayType } from 'src/features/explore/types'
+import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { selectHasFavoriteToken } from 'src/features/favorites/selectors'
-import { addFavoriteToken, removeFavoriteToken } from 'src/features/favorites/slice'
 import { openModal } from 'src/features/modals/modalSlice'
-import { ModalName } from 'src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import {
+  ElementName,
+  MobileEventName,
+  ModalName,
+  SectionName,
+} from 'src/features/telemetry/constants'
 import {
   CurrencyField,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
-import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
+import {
+  buildCurrencyId,
+  buildNativeCurrencyId,
+  currencyIdToAddress,
+  currencyIdToChain,
+} from 'src/utils/currencyId'
 import { formatNumber, formatUSDPrice, NumberType } from 'src/utils/format'
 
 const FAVORITE_ACTION_INDEX = 0
@@ -45,7 +57,7 @@ export type TokenItemData = {
 
 interface TokenItemProps {
   tokenItemData: TokenItemData
-  index?: number
+  index: number
   metadataDisplayType?: TokenMetadataDisplayType
 }
 
@@ -73,13 +85,7 @@ export const TokenItem = memo(({ tokenItemData, index, metadataDisplayType }: To
     selectHasFavoriteToken(state, _currencyId.toLocaleLowerCase())
   )
 
-  const toggleFavoriteToken = useCallback(() => {
-    if (isFavorited) {
-      dispatch(removeFavoriteToken({ currencyId: _currencyId }))
-    } else {
-      dispatch(addFavoriteToken({ currencyId: _currencyId }))
-    }
-  }, [_currencyId, dispatch, isFavorited])
+  const toggleFavoriteToken = useToggleFavoriteCallback(_currencyId)
 
   const navigateToSwapSell = useCallback(() => {
     if (!address) return
@@ -124,6 +130,17 @@ export const TokenItem = memo(({ tokenItemData, index, metadataDisplayType }: To
     }
   }
 
+  const onPress = (): void => {
+    tokenDetailsNavigation.preload(_currencyId)
+    tokenDetailsNavigation.navigate(_currencyId, name)
+    sendAnalyticsEvent(MobileEventName.ExploreTokenItemSelected, {
+      address: currencyIdToAddress(_currencyId),
+      chain: currencyIdToChain(_currencyId) as number,
+      name,
+      position: index + 1,
+    })
+  }
+
   return (
     <ContextMenu
       actions={menuActions}
@@ -136,16 +153,17 @@ export const TokenItem = memo(({ tokenItemData, index, metadataDisplayType }: To
         // Swap action
         if (e.nativeEvent.index === SWAP_ACTION_INDEX) {
           navigateToSwapSell()
+          sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+            element: ElementName.Swap,
+            section: SectionName.ExploreTopTokensSection,
+          })
         }
       }}>
       <TouchableArea
         hapticFeedback
         hapticStyle={ImpactFeedbackStyle.Light}
         testID={`token-item-${name}`}
-        onPress={(): void => {
-          tokenDetailsNavigation.preload(_currencyId)
-          tokenDetailsNavigation.navigate(_currencyId)
-        }}>
+        onPress={onPress}>
         <AnimatedFlex
           row
           alignItems="flex-start"

@@ -37,8 +37,8 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
     if (searchContext) {
       sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
         query: searchContext.query,
-        selected_name: displayName?.name ?? address,
-        selected_address: address ?? '',
+        name: displayName?.name ?? address,
+        address: address ?? '',
         type: 'address',
         suggestion_count: searchContext.suggestionCount,
         position: searchContext.position,

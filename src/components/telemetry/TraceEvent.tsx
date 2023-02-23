@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import React, { PropsWithChildren } from 'react'
 import { NativeSyntheticEvent, NativeTouchEvent } from 'react-native'
 import { ITraceContext, Trace, TraceContext } from 'src/components/telemetry/Trace'
@@ -8,10 +9,11 @@ export type TraceEventProps = {
   // Element name used to identify events sources
   // e.g. account-card, onboarding-create-wallet
   // TODO: [MOB-3877] Enforce ElementName type only
+  // TODO: [MOB-4085] Explore removing this prop now that it is in TraceContext
   elementName?: ElementName
   // event name to log
   // TODO: [MOB-3878] Enforce EventName type only
-  eventName: MobileEventName
+  eventName: MobileEventName | SharedEventName.ELEMENT_CLICKED
   // Known components' events that trigger callbacks to be augmented with telemetry logging
   events: ReactNativeEvent[]
   // extra properties to log with the event
@@ -52,6 +54,24 @@ function _TraceEvent(props: PropsWithChildren<TraceEventProps>): JSX.Element {
 
 export const TraceEvent = React.memo(_TraceEvent)
 
+const onPressEventArray = [ReactNativeEvent.OnPress]
+
+function _TracePressEvent(
+  props: PropsWithChildren<Pick<TraceEventProps, 'properties' | 'element'>>
+): JSX.Element {
+  return (
+    <TraceEvent
+      element={props.element}
+      eventName={SharedEventName.ELEMENT_CLICKED}
+      events={onPressEventArray}
+      properties={props.properties}>
+      {props.children}
+    </TraceEvent>
+  )
+}
+
+export const TracePressEvent = React.memo(_TracePressEvent)
+
 /**
  * Given a set of child element and action props, returns a spreadabble
  * object of the event handlers augmented with telemetry logging.
@@ -60,7 +80,7 @@ function getEventHandlers(
   child: React.ReactElement,
   consumedProps: ITraceContext,
   events: ReactNativeEvent[],
-  eventName: MobileEventName,
+  eventName: MobileEventName | SharedEventName.ELEMENT_CLICKED,
   elementName?: ElementName,
   properties?: Record<string, unknown>
 ): Partial<Record<ReactNativeEvent, (e: NativeSyntheticEvent<NativeTouchEvent>) => void>> {

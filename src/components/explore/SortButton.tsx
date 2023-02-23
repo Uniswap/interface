@@ -12,6 +12,8 @@ import {
   getTokensOrderByMenuLabel,
   getTokensOrderBySelectedLabel,
 } from 'src/features/explore/utils'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { setTokensOrderBy } from 'src/features/wallet/walletSlice'
 import { logger } from 'src/utils/logger'
 interface FilterGroupProps {
@@ -67,6 +69,9 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
         }
 
         dispatch(setTokensOrderBy({ newTokensOrderBy: selectedMenuAction.orderBy }))
+        sendAnalyticsEvent(MobileEventName.ExploreFilterSelected, {
+          filter_type: selectedMenuAction.orderBy,
+        })
       }}>
       <Flex
         row

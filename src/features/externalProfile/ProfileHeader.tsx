@@ -16,8 +16,8 @@ import { Text } from 'src/components/Text'
 import { useUniconColors } from 'src/components/unicons/utils'
 import { useENSAvatar } from 'src/features/ens/api'
 import { ProfileContextMenu } from 'src/features/externalProfile/ProfileContextMenu'
+import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
-import { addWatchedAddress, removeWatchedAddress } from 'src/features/favorites/slice'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
@@ -63,13 +63,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
     uniconGradientStart,
   ])
 
-  const onPressFavorite = (): void => {
-    if (isFavorited) {
-      dispatch(removeWatchedAddress({ address }))
-    } else {
-      dispatch(addWatchedAddress({ address }))
-    }
-  }
+  const onPressFavorite = useToggleWatchedWalletCallback(address)
 
   const initialSendState = useMemo(() => {
     return {

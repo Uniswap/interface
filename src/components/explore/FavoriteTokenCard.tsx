@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -22,7 +23,8 @@ import { AssetType } from 'src/entities/assets'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { removeFavoriteToken } from 'src/features/favorites/slice'
 import { openModal } from 'src/features/modals/modalSlice'
-import { ModalName } from 'src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
+import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import {
   CurrencyField,
   TransactionState,
@@ -100,7 +102,7 @@ function FavoriteTokenCard({
   const onPress = (): void => {
     if (isEditing || !currencyId) return
     tokenDetailsNavigation.preload(currencyId)
-    tokenDetailsNavigation.navigate(currencyId)
+    tokenDetailsNavigation.navigate(currencyId, token?.name ?? undefined)
   }
 
   if (isNonPollingRequestInFlight(networkStatus)) {
@@ -125,6 +127,10 @@ function FavoriteTokenCard({
         // Swap token action
         if (e.nativeEvent.index === 2) {
           navigateToSwapSell()
+          sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+            element: ElementName.Swap,
+            section: SectionName.ExploreFavoriteTokensSection,
+          })
         }
       }}
       {...rest}>

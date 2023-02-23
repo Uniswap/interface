@@ -10,7 +10,7 @@ import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { TabIndex } from 'src/screens/HomeScreen'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 
-type NFTItem = { owner: Address; address: string; tokenId: string }
+type NFTItem = { owner: Address; address: string; tokenId: string; collectionName: string }
 
 export type ExploreStackParamList = {
   [Screens.Explore]: undefined
@@ -21,6 +21,7 @@ export type ExploreStackParamList = {
   [Screens.NFTCollection]: { collectionAddress: string }
   [Screens.TokenDetails]: {
     currencyId: string
+    currencyName?: string
   }
 }
 
@@ -93,6 +94,7 @@ export type AppStackParamList = {
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
   [Screens.TokenDetails]: {
     currencyId: string
+    currencyName?: string
   }
   [Screens.NFTItem]: NFTItem
   [Screens.NFTCollection]: { collectionAddress: string }

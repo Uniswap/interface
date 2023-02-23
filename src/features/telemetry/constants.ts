@@ -9,8 +9,11 @@ export enum MobileEventName {
   // some of these values are Title Cased to match shared repo event format:
   // https://github.com/Uniswap/analytics-events/blob/main/src/primitives.ts
   DeepLinkOpened = 'Deep Link Opened',
+  ExploreFilterSelected = 'Explore Filter Selected',
   ExploreSearchResultClicked = 'Explore Search Result Clicked',
   ExploreSearchCancel = 'Explore Search Cancel',
+  ExploreTokenItemSelected = 'Explore Token Item Selected',
+  FavoriteItem = 'Favorite Item',
   // General fiat onramp events like in-app buttons and modals
   FiatOnRampBannerPressed = 'Fiat OnRamp Banner Pressed',
   FiatOnRampQuickActionButtonPressed = 'Fiat OnRamp QuickAction Button Pressed',
@@ -33,9 +36,9 @@ export enum MobileEventName {
 export const enum SectionName {
   CurrencyInputPanel = 'currency-input-panel',
   CurrencyOutputPanel = 'currency-output-panel',
-  ExploreTokensTab = 'explore-tokens-tab',
-  ExploreWalletsTab = 'explore-wallets-tab',
+  ExploreFavoriteTokensSection = 'explore-favorite-tokens-section',
   ExploreSearch = 'explore-search',
+  ExploreTopTokensSection = 'explore-top-tokens-section',
   HomeActivityTab = 'home-activity-tab',
   HomeNFTsTab = 'home-nfts-tab',
   HomeTokensTab = 'home-tokens-tab',
@@ -143,6 +146,14 @@ export const enum ElementName {
   Skip = 'skip',
   Submit = 'submit',
   Swap = 'swap',
+  TimeFrame1H = 'time-frame-1H',
+  TimeFrame1D = 'time-frame-1D',
+  TimeFrame1W = 'time-frame-1W',
+  TimeFrame1M = 'time-frame-1M',
+  TimeFrame1Y = 'time-frame-1Y',
+  TokenLinkEtherscan = 'token-link-etherscan',
+  TokenLinkTwitter = 'token-link-twitter',
+  TokenLinkWebsite = 'token-link-website',
   TokenSelectorToggle = 'token-selector-toggle',
   TokenWarningAccept = 'token-warning-accept',
   Unwrap = 'unwrap',
