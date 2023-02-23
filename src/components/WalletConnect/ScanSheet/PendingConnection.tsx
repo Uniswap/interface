@@ -13,7 +13,7 @@ import { Chevron } from 'src/components/icons/Chevron'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
-import { HeaderIcon } from 'src/components/WalletConnect/HeaderIcon'
+import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { PendingConnectionSwitchAccountModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionSwitchAccountModal'
 import { PendingConnectionSwitchNetworkModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionSwitchNetworkModal'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
@@ -259,7 +259,7 @@ export const PendingConnection = ({ pendingSession, onClose }: Props): JSX.Eleme
         px="spacing24"
         py="spacing60">
         <Flex alignItems="center" flex={1} gap="spacing16" justifyContent="flex-end">
-          <HeaderIcon dapp={pendingSession.dapp} showChain={false} />
+          <DappHeaderIcon dapp={pendingSession.dapp} showChain={false} />
           <Text textAlign="center" variant="headlineSmall">
             <Trans t={t}>
               <Text fontWeight="bold">

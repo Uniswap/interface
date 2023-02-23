@@ -8,7 +8,7 @@ import { Box, BoxProps, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
-import { HeaderIcon } from 'src/components/WalletConnect/HeaderIcon'
+import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { CHAIN_INFO } from 'src/constants/chains'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { confirmSwitchChainRequest, rejectRequest } from 'src/features/walletConnect/WalletConnect'
@@ -66,7 +66,7 @@ export function WalletConnectSwitchChainModal({ onClose, request }: Props): JSX.
     <BottomSheetModal name={ModalName.WCSwitchChainRequest} onClose={handleClose}>
       <Flex gap="spacing24" paddingBottom="spacing48" paddingHorizontal="spacing16" pt="spacing36">
         <Flex alignItems="center" gap="spacing16">
-          <HeaderIcon showChain dapp={{ ...dapp, chain_id: newChainId }} />
+          <DappHeaderIcon showChain dapp={{ ...dapp, chain_id: newChainId }} />
           <Text textAlign="center" variant="headlineSmall">
             <Trans t={t}>
               <Text fontWeight="bold">{{ dapp: dapp.name }}</Text> wants to connect to the{' '}

@@ -1,3 +1,4 @@
+import { useTheme } from '@shopify/restyle'
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
@@ -10,7 +11,7 @@ import { DappInfo, DappInfoV2 } from 'src/features/walletConnect/types'
 import { borderRadii, iconSizes } from 'src/styles/sizing'
 import { toSupportedChainId } from 'src/utils/chainId'
 
-export function HeaderIcon({
+export function DappHeaderIcon({
   dapp,
   permitCurrencyInfo,
   showChain = true,
@@ -25,12 +26,12 @@ export function HeaderIcon({
 
   const chainId = dapp.version === '1' ? toSupportedChainId(dapp.chain_id) : null
 
-  const fallback = <HeaderIconPlaceholder name={dapp.name} />
+  const fallback = <DappIconPlaceholder iconSize={iconSizes.icon40} name={dapp.name} />
 
   return (
-    <Box>
+    <Box height={iconSizes.icon40} width={iconSizes.icon40}>
       {dapp.icon ? (
-        <ImageUri fallback={fallback} imageStyle={styles.icon} uri={dapp.icon} />
+        <ImageUri fallback={fallback} imageStyle={DappIconPlaceholderStyles.icon} uri={dapp.icon} />
       ) : (
         { fallback }
       )}
@@ -43,7 +44,15 @@ export function HeaderIcon({
   )
 }
 
-function HeaderIconPlaceholder({ name }: { name: string }): JSX.Element {
+export function DappIconPlaceholder({
+  name,
+  iconSize,
+}: {
+  name: string
+  iconSize: number
+}): JSX.Element {
+  const theme = useTheme()
+
   return (
     <Flex
       centered
@@ -51,15 +60,18 @@ function HeaderIconPlaceholder({ name }: { name: string }): JSX.Element {
       backgroundColor="background3"
       borderRadius="roundedFull"
       flex={1}
-      height={iconSizes.icon40}
-      width={iconSizes.icon40}>
-      <Text color="textSecondary" textAlign="center" variant="subheadLarge">
+      height={iconSize}
+      width={iconSize}>
+      <Text
+        color="textSecondary"
+        textAlign="center"
+        variant={iconSize >= theme.iconSizes.icon40 ? 'subheadLarge' : 'bodySmall'}>
         {name.length > 0 ? name.charAt(0) : ' '}
       </Text>
     </Flex>
   )
 }
 
-const styles = StyleSheet.create({
+export const DappIconPlaceholderStyles = StyleSheet.create({
   icon: { borderRadius: borderRadii.rounded20, height: iconSizes.icon40, width: iconSizes.icon40 },
 })

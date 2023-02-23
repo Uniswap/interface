@@ -2,7 +2,7 @@ import React from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { Flex } from 'src/components/layout'
-import { HeaderIcon } from 'src/components/WalletConnect/HeaderIcon'
+import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { HeaderText } from 'src/components/WalletConnect/RequestModal/HeaderText'
 import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
@@ -26,7 +26,7 @@ export function ClientDetails({
 
   return (
     <Flex centered gap="spacing16">
-      <HeaderIcon dapp={dapp} permitCurrencyInfo={permitCurrencyInfo} />
+      <DappHeaderIcon dapp={dapp} permitCurrencyInfo={permitCurrencyInfo} />
       <Flex centered gap="spacing16">
         <HeaderText
           permitAmount={permitInfo?.amount}

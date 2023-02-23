@@ -90,7 +90,7 @@ export function WCNotification({
 }: {
   notification: WalletConnectNotification
 }): JSX.Element {
-  const { imageUrl, chainId, address, event, hideDelay } = notification
+  const { imageUrl, chainId, address, event, hideDelay, dappName } = notification
   const dispatch = useAppDispatch()
   const validChainId = toSupportedChainId(chainId)
   const title = formWCNotificationTitle(notification)
@@ -106,6 +106,7 @@ export function WCNotification({
     <DappLogoWithTxStatus
       chainId={validChainId}
       dappImageUrl={imageUrl}
+      dappName={dappName}
       event={event}
       size={useSmallDisplay ? iconSizes.icon24 : NOTIFICATION_ICON_SIZE}
     />

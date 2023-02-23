@@ -8,7 +8,7 @@ import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { HeaderIcon } from 'src/components/WalletConnect/HeaderIcon'
+import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { CHAIN_INFO } from 'src/constants/chains'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
@@ -44,7 +44,7 @@ export function DappConnectionItem({
         onPress={(): Promise<void> => openUri(dapp.url)}>
         <Flex centered grow gap="spacing8">
           <Flex fill>
-            <HeaderIcon dapp={dapp} showChain={false} />
+            <DappHeaderIcon dapp={dapp} showChain={false} />
           </Flex>
           <Text numberOfLines={2} textAlign="center" variant="buttonLabelMedium">
             {dapp.name || dapp.url}

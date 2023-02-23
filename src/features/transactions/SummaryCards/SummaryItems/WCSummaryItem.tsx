@@ -26,6 +26,7 @@ export default function WCSummaryItem({
       icon={
         <DappLogoWithWCBadge
           dappImageUrl={transaction.typeInfo.dapp.icon}
+          dappName={transaction.typeInfo.dapp.name}
           size={TXN_HISTORY_ICON_SIZE}
         />
       }
