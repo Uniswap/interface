@@ -100,7 +100,7 @@ function TransactionSummaryLayout({
 
   return (
     <>
-      <TouchableArea overflow="hidden" onPress={onPress} {...rest}>
+      <TouchableArea overflow="hidden" onPress={onPress} {...rest} mb="spacing24">
         {showAlertBanner && <AlertBanner status={status} />}
         <Flex
           grow
@@ -111,9 +111,8 @@ function TransactionSummaryLayout({
           borderTopLeftRadius={showAlertBanner ? 'none' : 'rounded16'}
           borderTopRightRadius={showAlertBanner ? 'none' : 'rounded16'}
           justifyContent="space-between"
-          mt={showBackground ? 'spacing12' : 'none'}
           px={showBackground ? 'spacing12' : 'none'}
-          py="spacing12">
+          py={showBackground ? 'spacing12' : 'none'}>
           <Flex
             grow
             row

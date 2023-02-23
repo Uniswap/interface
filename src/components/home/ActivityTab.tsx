@@ -58,7 +58,7 @@ const FOOTER_HEIGHT = 20
 const ESTIMATED_ITEM_SIZE = 92
 
 const SectionTitle = ({ title }: { title: string }): JSX.Element => (
-  <Box pb="spacing2" pt="spacing12">
+  <Box pb="spacing12">
     <Text color="textSecondary" variant="subheadSmall">
       {title}
     </Text>
