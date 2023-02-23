@@ -309,13 +309,13 @@ function AssetMetadata({
           label={value}
           mx="none"
           px="none"
-          size={iconSizes.icon20}
-          textVariant="bodyLarge"
+          size={iconSizes.icon16}
+          textVariant="buttonLabelSmall"
           url={link}
         />
       ) : (
         <Box maxWidth="60%">
-          <Text numberOfLines={1} variant="bodyLarge">
+          <Text numberOfLines={1} variant="buttonLabelSmall">
             {value || '-'}
           </Text>
         </Box>
