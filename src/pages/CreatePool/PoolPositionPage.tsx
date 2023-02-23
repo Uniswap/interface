@@ -18,9 +18,11 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 //import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
+import IconButton, { IconHoverText } from 'components/WalletDropdown/IconButton'
 import { /*BIG_INT_ZERO,*/ ZERO_ADDRESS } from 'constants/misc'
 import { nativeOnChain } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
+import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useSmartPoolFromAddress } from 'hooks/useSmartPools'
 // TODO: this import is from node modules
 import JSBI from 'jsbi'
@@ -29,6 +31,7 @@ import JSBI from 'jsbi'
 //import { useSingleCallResult } from 'lib/hooks/multicall'
 //import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useCallback, /*useMemo, useRef,*/ useState } from 'react'
+import { Copy } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
 //import { Bound } from 'state/mint/v3/actions'
 import { useToggleWalletModal } from 'state/application/hooks'
@@ -122,6 +125,35 @@ const HoverText = styled(ThemedText.DeprecatedMain)`
   }
 `
 
+const IconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  & > a,
+  & > button {
+    margin-right: 0px;
+    margin-left: 40px;
+  }
+
+  & > button:last-child {
+    margin-left: 8px;
+    ${IconHoverText}:last-child {
+      right: 0px;
+    }
+  }
+  justify-content: center;
+`
+
+/*
+display: -webkit-box;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    flex-direction: row;
+    margin-left: 12px;
+    flex-wrap: nowrap;
+    justify-content: center;
+*/
+
 /*
 const DoubleArrow = styled.span`
   color: ${({ theme }) => theme.deprecated_text3};
@@ -161,6 +193,11 @@ function AddressCard({
   chainId?: number | null
   label?: string | null
 }) {
+  const [isCopied, setCopied] = useCopyClipboard()
+  const copy = useCallback(() => {
+    setCopied(address || '')
+  }, [address, setCopied])
+
   if (!address || !chainId || !label) {
     return null
   }
@@ -176,16 +213,21 @@ function AddressCard({
       <AutoColumn gap="md">
         <ExtentsText>
           {typeof chainId === 'number' && address ? (
-            <ExternalLink href={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}>
-              <Trans>{shortenAddress(address)}</Trans>
-            </ExternalLink>
+            <IconContainer>
+              <ExternalLink href={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}>
+                <Trans>{shortenAddress(address)}</Trans>
+              </ExternalLink>
+              <IconButton onClick={copy} Icon={Copy}>
+                {isCopied ? <Trans>Copied!</Trans> : <Trans>Copy</Trans>}
+              </IconButton>
+            </IconContainer>
           ) : null}
         </ExtentsText>
         {/*</AutoColumn>
-        <ExtentsText>
-          <Trans>{poolAddress}</Trans>
-        </ExtentsText>
-      */}
+          <ExtentsText>
+            <Trans>{poolAddress}</Trans>
+          </ExtentsText>
+        */}
       </AutoColumn>
     </LightCard>
   )
