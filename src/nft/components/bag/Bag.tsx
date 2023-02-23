@@ -99,6 +99,11 @@ const ContinueButton = styled.div`
   font-weight: 600;
   line-height: 20px;
   cursor: pointer;
+  transition: ${({ theme }) => theme.transition.duration.medium};
+
+  :hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
 `
 
 const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
