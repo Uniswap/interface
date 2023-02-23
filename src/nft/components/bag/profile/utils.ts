@@ -211,27 +211,3 @@ export const getListingState = (
 export const verifyStatus = (status: ListingStatus) => {
   return status !== ListingStatus.PAUSED && status !== ListingStatus.APPROVED
 }
-
-export const pauseRow = (row: AssetRow, rows: AssetRow[], setRows: Dispatch<AssetRow[]>) => {
-  if (row.status === ListingStatus.PENDING || row.status === ListingStatus.DEFINED)
-    updateStatus({
-      listing: row,
-      newStatus: ListingStatus.PAUSED,
-      rows,
-      setRows,
-    })
-}
-
-export const resetRow = (row: AssetRow, rows: AssetRow[], setRows: Dispatch<AssetRow[]>) => {
-  if (
-    row.status === ListingStatus.PAUSED ||
-    row.status === ListingStatus.FAILED ||
-    row.status === ListingStatus.REJECTED
-  )
-    updateStatus({
-      listing: row,
-      newStatus: ListingStatus.DEFINED,
-      rows,
-      setRows,
-    })
-}

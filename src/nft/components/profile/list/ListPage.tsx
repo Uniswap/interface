@@ -212,7 +212,6 @@ export const ListPage = () => {
   )
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
-  const anyListingsMissingPrice = useMemo(() => !!listings.find((listing) => !listing.price), [listings])
   const [showListModal, toggleShowListModal] = useReducer((s) => !s, false)
   const [selectedMarkets, setSelectedMarkets] = useState([ListingMarkets[0]]) // default marketplace: x2y2
   const [ethPriceInUSD, setEthPriceInUSD] = useState(0)

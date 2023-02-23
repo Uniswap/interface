@@ -304,44 +304,11 @@ export const ClockIcon = () => (
   </svg>
 )
 
-export const LoadingIcon = (props: SVGProps) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    xmlnsXlink="http://www.w3.org/1999/xlink"
-    width="100px"
-    height="100px"
-    viewBox="0 0 100 100"
-    preserveAspectRatio="xMidYMid"
-    {...props}
-  >
-    <circle cx="50" cy="50" fill="none" strokeWidth="10" r="35" strokeDasharray="164.93361431346415 56.97787143782138">
-      <animateTransform
-        attributeName="transform"
-        type="rotate"
-        repeatCount="indefinite"
-        dur="1s"
-        values="0 50 50;360 50 50"
-        keyTimes="0;1"
-        {...props}
-      ></animateTransform>
-    </circle>
-  </svg>
-)
-
 export const ApprovedCheckmarkIcon = (props: SVGProps) => (
   <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       d="M13.7464 21.1101C13.3792 21.6796 12.8372 22 12.2076 22C11.5607 22 11.0536 21.733 10.5814 21.1101L6.45464 15.9844C6.15738 15.6107 6 15.2191 6 14.792C6 13.9021 6.66448 13.208 7.52131 13.208C8.0459 13.208 8.46557 13.4038 8.88525 13.9555L12.1377 18.1735L19.0448 6.88988C19.412 6.28476 19.8842 6 20.4087 6C21.2306 6 22 6.58732 22 7.4594C22 7.86874 21.7902 8.29588 21.5628 8.66963L13.7464 21.1101Z"
       fill="currentColor"
-    />
-  </svg>
-)
-
-export const FailedListingIcon = (props: SVGProps) => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path
-      d="M9.9933 16.2444C13.5529 16.2444 16.4909 13.3064 16.4909 9.75307C16.4909 6.19978 13.5466 3.26172 9.98703 3.26172C6.43373 3.26172 3.50195 6.19978 3.50195 9.75307C3.50195 13.3064 6.44001 16.2444 9.9933 16.2444ZM8.12877 12.3207C7.78976 12.3207 7.62653 12.1324 7.62653 11.8624V7.63742C7.62653 7.36747 7.78976 7.17913 8.12877 7.17913H8.80678C9.14579 7.17913 9.30901 7.36747 9.30901 7.63742V11.8624C9.30901 12.1324 9.14579 12.3207 8.80678 12.3207H8.12877ZM11.1798 12.3207C10.8471 12.3207 10.6776 12.1324 10.6776 11.8624V7.63742C10.6776 7.36747 10.8471 7.17913 11.1798 7.17913H11.8641C12.1906 7.17913 12.3538 7.36747 12.3538 7.63742V11.8624C12.3538 12.1324 12.1906 12.3207 11.8641 12.3207H11.1798Z"
-      fill={themeVars.colors.textSecondary}
     />
   </svg>
 )
