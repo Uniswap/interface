@@ -2,30 +2,8 @@ import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { addressesByNetwork, SupportedChainId } from '@looksrare/sdk'
 import { LOOKSRARE_MARKETPLACE_CONTRACT, X2Y2_TRANSFER_CONTRACT } from 'nft/queries'
 import { OPENSEA_CROSS_CHAIN_CONDUIT } from 'nft/queries/openSea'
-import { AssetRow, CollectionRow, ListingMarket, ListingRow, ListingStatus, WalletAsset } from 'nft/types'
+import { CollectionRow, ListingMarket, ListingRow, ListingStatus, WalletAsset } from 'nft/types'
 import { approveCollection, LOOKS_RARE_CREATOR_BASIS_POINTS, signListing } from 'nft/utils/listNfts'
-import { Dispatch } from 'react'
-
-const updateStatus = ({
-  listing,
-  newStatus,
-  rows,
-  setRows,
-  callback,
-}: {
-  listing: AssetRow
-  newStatus: ListingStatus
-  rows: AssetRow[]
-  setRows: Dispatch<AssetRow[]>
-  callback?: () => Promise<void>
-}) => {
-  const rowsCopy = [...rows]
-  const index = rows.findIndex((n) => n === listing)
-  listing.status = newStatus
-  if (callback) listing.callback = callback
-  rowsCopy[index] = listing
-  setRows(rowsCopy)
-}
 
 export async function approveCollectionRow(
   collectionRow: CollectionRow,
