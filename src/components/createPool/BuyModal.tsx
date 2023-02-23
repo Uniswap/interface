@@ -68,21 +68,21 @@ export default function BuyModal({ isOpen, onDismiss, buyInfo, userBaseTokenBala
       }
     }
 
+    // price plus spread
     const poolAmount = JSBI.divide(
       JSBI.multiply(
-        parsedAmount.quotient, //: JSBI.BigInt(0),
+        JSBI.subtract(parsedAmount.quotient, JSBI.divide(parsedAmount.quotient, JSBI.BigInt(20))), //parsedAmount.quotient,
         JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(parsedAmount.currency.decimals ?? 18))
       ),
       buyInfo.poolPriceAmount.quotient //: JSBI.BigInt(1)
     )
-    // we allow a 6.25% slippage from price (could actually use spread and extra 1% margin)
-    const minimumAmount = JSBI.subtract(poolAmount, JSBI.divide(poolAmount, JSBI.BigInt(16)))
+    // extra 2% margin
+    const minimumAmount = JSBI.subtract(poolAmount, JSBI.divide(poolAmount, JSBI.BigInt(50)))
     return {
       expectedPoolTokens: CurrencyAmount.fromRawAmount(buyInfo.poolPriceAmount.currency, poolAmount),
       minimumAmount: CurrencyAmount.fromRawAmount(buyInfo.poolPriceAmount.currency, minimumAmount),
     }
   }, [parsedAmount, buyInfo])
-  console.log(expectedPoolTokens?.toSignificant(4), minimumAmount?.toSignificant(4))
 
   async function onBuy() {
     setAttempting(true)
@@ -191,6 +191,11 @@ export default function BuyModal({ isOpen, onDismiss, buyInfo, userBaseTokenBala
             <ThemedText.DeprecatedBody fontSize={20}>
               <Trans>
                 {parsedAmount?.toSignificant(4)} {userBaseTokenBalance?.currency?.symbol}
+              </Trans>
+            </ThemedText.DeprecatedBody>
+            <ThemedText.DeprecatedBody fontSize={20}>
+              <Trans>
+                Expected {expectedPoolTokens?.toSignificant(4)} {buyInfo?.pool.symbol}
               </Trans>
             </ThemedText.DeprecatedBody>
           </AutoColumn>
