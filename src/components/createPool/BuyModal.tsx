@@ -144,7 +144,7 @@ export default function BuyModal({ isOpen, onDismiss, buyInfo, userBaseTokenBala
               <RowBetween>
                 <ThemedText.DeprecatedMediumHeader>
                   <Trans>
-                    Buy {buyInfo.pool.symbol ?? null} using {userBaseTokenBalance.currency.symbol}
+                    Buy {buyInfo.pool?.symbol ?? null} using {userBaseTokenBalance.currency?.symbol}
                   </Trans>
                 </ThemedText.DeprecatedMediumHeader>
                 <CloseIcon onClick={wrappedOnDismiss} />
