@@ -1,11 +1,11 @@
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { ListingButton } from 'nft/components/bag/profile/ListingButton'
 import { approveCollectionRow, getListingState, getTotalEthValue, verifyStatus } from 'nft/components/bag/profile/utils'
+import { ListingButton } from 'nft/components/profile/list/ListingButton'
 import { useIsMobile, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from 'nft/pages/profile/shared'
 import { looksRareNonceFetcher } from 'nft/queries'
@@ -269,7 +269,7 @@ export const ListPage = () => {
     }
   }
 
-  const handleV2Click = () => {
+  const showModalAndStartListing = () => {
     toggleShowListModal()
     startListingFlow()
   }
@@ -322,11 +322,7 @@ export const ListPage = () => {
               <UsdValue>{formatUsdPrice(totalEthListingValue * ethPriceInUSD)}</UsdValue>
             )}
           </ProceedsWrapper>
-          <ListingButton
-            onClick={handleV2Click}
-            buttonText={anyListingsMissingPrice && !isMobile ? t`Set prices to continue` : t`Start listing`}
-            showWarningOverride={true}
-          />
+          <ListingButton onClick={showModalAndStartListing} />
         </ProceedsAndButtonWrapper>
       </FloatingConfirmationBar>
       <Overlay />
