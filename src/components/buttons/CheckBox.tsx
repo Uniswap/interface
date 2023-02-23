@@ -1,5 +1,6 @@
 import { useResponsiveProp } from '@shopify/restyle'
 import React from 'react'
+import { useColorScheme } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import Check from 'src/assets/icons/check.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -14,6 +15,7 @@ export type CheckBoxProps = {
 
 export function CheckBox({ text, checked, onCheckPressed }: CheckBoxProps): JSX.Element {
   const theme = useAppTheme()
+  const isDarkMode = useColorScheme() === 'dark'
 
   const onPress = (): void => {
     onCheckPressed?.(checked)
@@ -40,7 +42,7 @@ export function CheckBox({ text, checked, onCheckPressed }: CheckBoxProps): JSX.
           width={theme.iconSizes.icon24}>
           {checked ? (
             <Check
-              color={theme.colors.white}
+              color={isDarkMode ? theme.colors.black : theme.colors.white}
               height={theme.iconSizes.icon16}
               width={theme.iconSizes.icon16}
             />

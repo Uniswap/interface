@@ -2,9 +2,9 @@ import { useResponsiveProp } from '@shopify/restyle'
 import React, { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
+import ClipboardIcon from 'src/assets/icons/clipboard.svg'
 import EyeIcon from 'src/assets/icons/eye.svg'
 import LockIcon from 'src/assets/icons/lock.svg'
-import MapIcon from 'src/assets/icons/map.svg'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 
@@ -43,7 +43,7 @@ export function ManualBackupEducationSection(): JSX.Element {
       {spacer}
       <EducationRow
         icon={
-          <MapIcon
+          <ClipboardIcon
             color={theme.colors.accentBranded}
             height={ICON_SIZE}
             strokeWidth={2}
