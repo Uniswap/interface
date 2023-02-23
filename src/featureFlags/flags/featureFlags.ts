@@ -1,5 +1,5 @@
 /**
- * The value here should match the value in the statsig dashboard, if you plan to use statsig.
+ * The value here must match the value in the statsig dashboard, if you plan to use statsig.
  */
 export enum FeatureFlag {
   traceJsonRpc = 'traceJsonRpc',
