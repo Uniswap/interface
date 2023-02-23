@@ -36,7 +36,7 @@ export const rangeData: {
     title: t`Common`,
     tooltip: {
       [PairFactor.SUPER_STABLE]: t`Suitable for stable pairs. Anticipating price to fluctuate within ~1%. You can earn fees even if the price goes up by 0.5% or goes down by 0.5%.`,
-      [PairFactor.STABLE]: t`Suitable for stablecoin or stable correlated pairs. Anticipating price to fluctuate within ~1%. You can earn fees even if the price goes up by 0.5% or goes down by 0.5%.`,
+      [PairFactor.STABLE]: t`Suitable for stablecoin or stable correlated pairs. Anticipating price to fluctuate within ~2%. You can earn fees even if the price goes up by 1% or goes down by 1%.`,
       [PairFactor.NOMAL]: t`Suitable for pairs with low price volatility. Anticipating price to fluctuate within ~30%. You can earn fees even if the price goes up by 15% or goes down by 15%.`,
       [PairFactor.EXOTIC]: t`Suitable for low-risk appetite LPs for pairs with high price volatility. Anticipating price to fluctuate within ~100%. You can earn fees even if the price goes up by 50% or goes down by 50%.`,
     },
