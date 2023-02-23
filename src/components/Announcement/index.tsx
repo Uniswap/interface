@@ -10,15 +10,11 @@ import NotificationIcon from 'components/Icons/NotificationIcon'
 import MenuFlyout from 'components/MenuFlyout'
 import Modal from 'components/Modal'
 import { useActiveWeb3React } from 'hooks'
+import useInterval from 'hooks/useInterval'
 import usePrevious from 'hooks/usePrevious'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleNotificationCenter } from 'state/application/hooks'
 import { MEDIA_WIDTHS } from 'theme'
-import {
-  subscribeNotificationOrderExpired,
-  subscribeNotificationOrderFilled,
-  subscribePrivateAnnouncement,
-} from 'utils/firebase'
 
 const StyledMenuButton = styled.button<{ active?: boolean }>`
   border: none;
@@ -206,18 +202,10 @@ export default function AnnouncementComponent() {
   useEffect(() => {
     if (!account) {
       setPrivateAnnouncements([])
-      return
     }
-    const unsubscribePrivate = subscribePrivateAnnouncement(account, prefetchPrivateAnnouncements)
-    // special case: limit order locate at another db
-    const unsubscribeLOExpired = subscribeNotificationOrderExpired(account, chainId, prefetchPrivateAnnouncements)
-    const unsubscribeLOFilled = subscribeNotificationOrderFilled(account, chainId, prefetchPrivateAnnouncements)
-    return () => {
-      unsubscribePrivate?.()
-      unsubscribeLOExpired?.()
-      unsubscribeLOFilled?.()
-    }
-  }, [account, prefetchPrivateAnnouncements, chainId])
+  }, [account, chainId])
+
+  useInterval(prefetchPrivateAnnouncements, 10_000)
 
   const togglePopupWithAckAllMessage = () => {
     toggleNotificationCenter()
