@@ -61,7 +61,7 @@ export const ListingButton = ({ onClick }: { onClick: () => void }) => {
     setListings(newListings)
     setCollectionsRequiringApproval(newCollectionsToApprove)
     setListingStatus(ListingStatus.DEFINED)
-  }, [sellAssets])
+  }, [sellAssets, setCollectionsRequiringApproval, setListingStatus, setListings])
 
   // Find issues with item listing data
   const [listingsMissingPrice, listingsBelowFloor] = useMemo(() => {
