@@ -36,6 +36,7 @@ type TokenBalanceListProps = {
   onPressToken: (currencyId: CurrencyId) => void
   containerProps?: TabContentProps
   scrollHandler?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
+  isExternalProfile?: boolean
 }
 
 const ESTIMATED_TOKEN_ITEM_HEIGHT = 64
@@ -44,7 +45,10 @@ const HIDDEN_TOKENS_ROW = 'HIDDEN_TOKENS_ROW'
 // accept any ref
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps>(
-  ({ owner, empty, onPressToken, containerProps, scrollHandler }, ref) => {
+  (
+    { owner, empty, onPressToken, containerProps, scrollHandler, isExternalProfile = false },
+    ref
+  ) => {
     const { t } = useTranslation()
     const insets = useSafeAreaInsets()
 
@@ -82,10 +86,10 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
     }, [hasOnlyHiddenTokens, owner])
 
     useEffect(() => {
-      if (!!data && isWarmLoadingStatus(networkStatus)) {
+      if (!!data && isWarmLoadingStatus(networkStatus) && !isExternalProfile) {
         setIsWarmLoading(true)
       }
-    }, [data, networkStatus])
+    }, [data, isExternalProfile, networkStatus])
 
     const listItems: (PortfolioBalance | string)[] = useMemo(() => {
       if (!data) return EMPTY_ARRAY

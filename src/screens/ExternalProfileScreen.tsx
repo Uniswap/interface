@@ -55,7 +55,7 @@ export function ExternalProfileScreen({
         case SectionName.ProfileNftsTab:
           return <NftsTab containerProps={sharedProps} owner={address} />
         case SectionName.ProfileTokensTab:
-          return <TokensTab containerProps={sharedProps} owner={address} />
+          return <TokensTab isExternalProfile containerProps={sharedProps} owner={address} />
       }
       return null
     },

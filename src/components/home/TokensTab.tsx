@@ -21,12 +21,13 @@ type TokensTabProps = {
   owner: string
   containerProps?: TabContentProps
   scrollHandler?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
+  isExternalProfile?: boolean
 }
 
 // ignore ref type
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const TokensTab = forwardRef<FlashList<any>, TokensTabProps>(
-  ({ owner, containerProps, scrollHandler }, ref) => {
+  ({ owner, containerProps, scrollHandler, isExternalProfile = false }, ref) => {
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
     const tokenDetailsNavigation = useTokenDetailsNavigation()
@@ -74,6 +75,7 @@ export const TokensTab = forwardRef<FlashList<any>, TokensTabProps>(
               />
             </Flex>
           }
+          isExternalProfile={isExternalProfile}
           owner={owner}
           scrollHandler={scrollHandler}
           onPressToken={onPressToken}
