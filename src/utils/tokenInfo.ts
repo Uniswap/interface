@@ -76,3 +76,19 @@ export const importTokensToKsSettings = async (tokens: Array<{ chainId: string; 
     console.error(e)
   }
 }
+
+export const getTokenSymbolWithHardcode = (
+  chainId: ChainId | undefined,
+  address: string | undefined,
+  defaultSymbol: string | undefined,
+) => {
+  if (
+    (chainId === ChainId.OPTIMISM &&
+      address?.toLowerCase() === '0x4518231a8fdf6ac553b9bbd51bbb86825b583263'.toLowerCase()) ||
+    (chainId === ChainId.ARBITRUM &&
+      address?.toLowerCase() === '0x316772cFEc9A3E976FDE42C3Ba21F5A13aAaFf12'.toLowerCase())
+  ) {
+    return 'mKNC'
+  }
+  return defaultSymbol ?? ''
+}

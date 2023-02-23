@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
+import { Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import dayjs from 'dayjs'
 import { rgba } from 'polished'
@@ -27,6 +27,7 @@ import { FarmingPool, NFTPosition } from 'state/farms/elastic/types'
 import { shortenAddress } from 'utils'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import { formatDollarAmount } from 'utils/numbers'
+import { getTokenSymbolWithHardcode } from 'utils/tokenInfo'
 
 import { APRTooltipContent } from '../FarmingPoolAPRCell'
 import { useSharePoolContext } from '../SharePoolContext'
@@ -116,17 +117,9 @@ const FarmCard = ({
   const numberInRangePos = depositedPositions.filter(
     pos => pos.pool.tickCurrent >= pos.tickLower && pos.pool.tickCurrent < pos.tickUpper,
   ).length
-  //TODO namgold/vietnv: remove this hardcode
-  const token0Symbol =
-    chainId === ChainId.OPTIMISM &&
-    pool?.token0?.wrapped?.address.toLowerCase() === '0x4518231a8fdf6ac553b9bbd51bbb86825b583263'.toLowerCase()
-      ? 'mKNC'
-      : pool.token0.symbol
-  const token1Symbol =
-    chainId === ChainId.OPTIMISM &&
-    pool?.token1?.wrapped?.address.toLowerCase() === '0x4518231a8fdf6ac553b9bbd51bbb86825b583263'.toLowerCase()
-      ? 'mKNC'
-      : pool.token1.symbol
+
+  const token0Symbol = getTokenSymbolWithHardcode(chainId, pool?.token0?.wrapped?.address, pool.token0.symbol)
+  const token1Symbol = getTokenSymbolWithHardcode(chainId, pool?.token1?.wrapped?.address, pool.token1.symbol)
 
   return (
     <FlipCard flip={showPosition} joined={!!depositedPositions.length}>

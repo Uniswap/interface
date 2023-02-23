@@ -31,6 +31,7 @@ import { VIEW_MODE } from 'state/user/reducer'
 import { shortenAddress } from 'utils'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import { formatDollarAmount } from 'utils/numbers'
+import { getTokenSymbolWithHardcode } from 'utils/tokenInfo'
 
 import { APRTooltipContent } from '../FarmingPoolAPRCell'
 import { useSharePoolContext } from '../SharePoolContext'
@@ -303,7 +304,8 @@ const Row = ({
               }}
             >
               <Text fontSize={14} fontWeight={500}>
-                {farmingPool.token0.symbol} - {farmingPool.token1.symbol}
+                {getTokenSymbolWithHardcode(chainId, farmingPool.token0.wrapped.address, farmingPool.token0.symbol)} -
+                {getTokenSymbolWithHardcode(chainId, farmingPool.token1.wrapped.address, farmingPool.token1.symbol)}
               </Text>
             </Link>
 

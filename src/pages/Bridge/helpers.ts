@@ -4,6 +4,7 @@ import axios from 'axios'
 
 import { NETWORKS_INFO_CONFIG } from 'constants/networks'
 import { formatNumberWithPrecisionRange, isAddress } from 'utils'
+import { getTokenSymbolWithHardcode } from 'utils/tokenInfo'
 
 import { MultiChainTokenInfo } from './type'
 
@@ -53,6 +54,11 @@ const filterTokenList = (tokens: { [key: string]: MultiChainTokenInfo }) => {
   try {
     // filter wrong address, to reduce trash token and local storage size
     Object.keys(tokens).forEach(key => {
+      tokens[key].symbol = getTokenSymbolWithHardcode(
+        Number(tokens[key].chainId),
+        tokens[key].address,
+        tokens[key].symbol,
+      )
       const token = { ...tokens[key] }
       const { destChains = {} } = token
       let hasChainSupport = false
@@ -60,6 +66,7 @@ const filterTokenList = (tokens: { [key: string]: MultiChainTokenInfo }) => {
         Object.keys(destChains[chain]).forEach(address => {
           const info = destChains[chain][address]
           info.chainId = Number(info.chainId)
+          info.symbol = getTokenSymbolWithHardcode(info.chainId, info.address, info.symbol)
           if (!isAddress(info.chainId, info.address)) {
             delete destChains[chain][address]
           }
