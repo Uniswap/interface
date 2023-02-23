@@ -24,6 +24,7 @@ import { NftItemScreenQuery, useNftItemScreenQuery } from 'src/data/__generated_
 import { selectModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccountAddressWithThrow, useDisplayName } from 'src/features/wallet/hooks'
+import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
 import { iconSizes, imageSizes } from 'src/styles/sizing'
 import { areAddressesEqual, shortenAddress } from 'src/utils/addresses'
@@ -111,7 +112,7 @@ export function NFTItemScreen({
   const inModal = useAppSelector(selectModalState(ModalName.Explore)).isOpen
 
   return (
-    <>
+    <ExploreModalAwareView>
       <HeaderScrollScreen
         centerElement={
           <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
@@ -281,7 +282,7 @@ export function NFTItemScreen({
           </Flex>
         </Flex>
       </HeaderScrollScreen>
-    </>
+    </ExploreModalAwareView>
   )
 }
 
