@@ -82,7 +82,7 @@ export function SecuritySetupScreen({ navigation, route: { params } }: Props): J
       )}
       <OnboardingScreen
         childrenGap="none"
-        subtitle={t('{{ authenticationTypeName }} ID will be required to make transactions', {
+        subtitle={t('{{ authenticationTypeName }} ID will be required to make transactions.', {
           authenticationTypeName,
         })}
         title={t('Protect your wallet')}>
