@@ -134,7 +134,8 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const onPressAccount = useCallback(
     (address: Address) => {
       dispatch(closeModal({ name: ModalName.AccountSwitcher }))
-      dispatch(activateAccount(address))
+      // allow close modal logic to finish in JS thread before `activateAccount` logic kicks in
+      setImmediate(() => dispatch(activateAccount(address)))
     },
     [dispatch]
   )
