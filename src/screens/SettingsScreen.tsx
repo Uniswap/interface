@@ -192,7 +192,7 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }): JSX.Element {
             {t('Onboarding')}
           </Text>
         </Box>
-        <Chevron color={theme.colors.textSecondary} direction="e" height={24} width={24} />
+        <Chevron color={theme.colors.textTertiary} direction="e" height={24} width={24} />
       </Box>
     </TouchableArea>
   )
@@ -261,7 +261,7 @@ function WalletSettings(): JSX.Element {
                   variant="bodyLarge"
                 />
               </Flex>
-              <Chevron color={theme.colors.textSecondary} direction="e" height={24} width={24} />
+              <Chevron color={theme.colors.textTertiary} direction="e" height={24} width={24} />
             </Box>
           </TouchableArea>
         ))}

@@ -117,7 +117,7 @@ export function NFTItemScreen({
           <Box mr="spacing4">
             <TouchableOpacity onPress={onShare}>
               <ShareIcon
-                color={theme.colors.textSecondary}
+                color={theme.colors.textTertiary}
                 height={iconSizes.icon24}
                 width={iconSizes.icon24}
               />

@@ -70,9 +70,9 @@ export function SettingsRow({
           </Flex>
         </Flex>
         {screen ? (
-          <Chevron color={theme.colors.textSecondary} direction="e" height={24} width={24} />
+          <Chevron color={theme.colors.textTertiary} direction="e" height={24} width={24} />
         ) : externalLink ? (
-          <Arrow color={theme.colors.textSecondary} direction="ne" size={24} />
+          <Arrow color={theme.colors.textTertiary} direction="ne" size={24} />
         ) : (
           action
         )}

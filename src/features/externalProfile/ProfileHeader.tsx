@@ -1,6 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient'
 import React, { memo, useCallback, useMemo } from 'react'
-import { StyleSheet } from 'react-native'
+import { useTranslation } from 'react-i18next'
+import { StyleSheet, useColorScheme } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
 import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
@@ -11,6 +12,7 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedBox } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
+import { Text } from 'src/components/Text'
 import { useUniconColors } from 'src/components/unicons/utils'
 import { useENSAvatar } from 'src/features/ens/api'
 import { ProfileContextMenu } from 'src/features/externalProfile/ProfileContextMenu'
@@ -19,6 +21,7 @@ import { addWatchedAddress, removeWatchedAddress } from 'src/features/favorites/
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
+import { iconSizes } from 'src/styles/sizing'
 import { useExtractedColors } from 'src/utils/colors'
 
 const HEADER_GRADIENT_HEIGHT = 137
@@ -88,6 +91,7 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
     )
   }, [dispatch, initialSendState])
 
+  const { t } = useTranslation()
   return (
     <Flex bg="background0" gap="spacing16" pt="spacing36" px="spacing24">
       {/* fixed gradient */}
@@ -141,29 +145,33 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
             activeOpacity={1}
             backgroundColor="background0"
             borderColor="backgroundOutline"
-            borderRadius="rounded16"
+            borderRadius="rounded20"
             borderWidth={1}
-            name={ElementName.Send}
+            name={ElementName.Favorite}
             padding="spacing12"
-            onPress={onPressSend}>
-            <SendIcon
-              color={theme.colors.textSecondary}
-              height={theme.iconSizes.icon24}
-              strokeWidth={2}
-              width={theme.iconSizes.icon24}
-            />
+            onPress={onPressFavorite}>
+            <DynamicHeartIcon isFavorited={isFavorited} size={iconSizes.icon20} />
           </TouchableArea>
           <TouchableArea
             hapticFeedback
             activeOpacity={1}
             backgroundColor="background0"
             borderColor="backgroundOutline"
-            borderRadius="rounded16"
+            borderRadius="rounded20"
             borderWidth={1}
-            name={ElementName.Favorite}
+            name={ElementName.Send}
             padding="spacing12"
-            onPress={onPressFavorite}>
-            {isFavorited ? <HeartIconFilled /> : <HeartIconEmpty />}
+            onPress={onPressSend}>
+            <Flex row alignItems="center" gap="spacing8">
+              <SendIcon
+                color={theme.colors.textSecondary}
+                height={theme.iconSizes.icon20}
+                width={theme.iconSizes.icon20}
+              />
+              <Text color="textSecondary" variant="buttonLabelMedium">
+                {t('Send')}
+              </Text>
+            </Flex>
           </TouchableArea>
         </Flex>
       </Flex>
@@ -171,29 +179,17 @@ export default function ProfileHeader({ address }: ProfileHeaderProps): JSX.Elem
   )
 }
 
-const HeartIconEmpty = (): JSX.Element => {
-  const theme = useAppTheme()
-  return (
-    <HeartIcon
-      height={theme.iconSizes.icon24}
-      stroke={theme.colors.textSecondary}
-      strokeWidth={2.5}
-      width={theme.iconSizes.icon24}
-    />
-  )
+interface HeartIconProps {
+  isFavorited: boolean
+  size: number
 }
 
-const HeartIconFilled = (): JSX.Element => {
+export const DynamicHeartIcon = ({ isFavorited, size }: HeartIconProps): JSX.Element => {
   const theme = useAppTheme()
-  return (
-    <HeartIcon
-      fill={theme.colors.accentAction}
-      height={theme.iconSizes.icon24}
-      stroke={theme.colors.accentAction}
-      strokeWidth={2}
-      width={theme.iconSizes.icon24}
-    />
-  )
+  const isDarkMode = useColorScheme() === 'dark'
+  const unfilledColor = isDarkMode ? theme.colors.textTertiary : theme.colors.backgroundOutline
+  const color = isFavorited ? theme.colors.accentAction : unfilledColor
+  return <HeartIcon color={color} height={size} width={size} />
 }
 
 function _HeaderRadial({ color }: { color: string }): JSX.Element {

@@ -10,10 +10,8 @@ const CenterElement = <Text variant="headlineLarge">Screen Title</Text>
 
 const RightElement = (
   <HeartIcon
-    fill={theme.colors.none}
+    color={theme.colors.textTertiary}
     height={theme.iconSizes.icon24}
-    stroke={theme.colors.textSecondary}
-    strokeWidth={2}
     width={theme.iconSizes.icon24}
   />
 )
