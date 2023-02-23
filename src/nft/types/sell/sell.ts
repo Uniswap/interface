@@ -8,10 +8,6 @@ export interface ListingMarket {
   icon: string
   royalty?: number
 }
-export interface ListingWarning {
-  marketplace: ListingMarket
-  message: string
-}
 
 export interface SellOrder {
   address: string
