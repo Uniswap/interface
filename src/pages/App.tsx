@@ -57,8 +57,8 @@ const BodyWrapper = styled.div`
   flex-basis: auto;
   background: ${({ theme }) =>
     theme.darkMode
-      ? 'url(images/Dapp-background-final-white.png) no-repeat center center fixed'
-      : 'url(images/Dapp-background-final-dark.png) no-repeat center center fixed'};
+      ? 'url(images/Dapp-background-final-dark.png) no-repeat center center fixed'
+      : 'url(images/Dapp-background-final-white.png) no-repeat center center fixed'};
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
