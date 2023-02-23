@@ -139,7 +139,7 @@ function OtherChainBalance({
             symbol={balance.currencyInfo.currency.symbol}
             url={balance.currencyInfo.logoUrl ?? undefined}
           />
-          <Box>
+          <Box alignItems="flex-start">
             <Text px="spacing4" variant="bodyLarge">
               {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
             </Text>

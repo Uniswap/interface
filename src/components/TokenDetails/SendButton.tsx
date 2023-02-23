@@ -11,7 +11,7 @@ type Props = {
   color?: string
 }
 
-export function SendButton({ onPress, color, size = iconSizes.icon20 }: Props): JSX.Element {
+export function SendButton({ onPress, color, size = iconSizes.icon24 }: Props): JSX.Element {
   return (
     <TouchableArea hapticFeedback name={ElementName.Send} padding="spacing4" onPress={onPress}>
       <Flex centered row gap="spacing8">
