@@ -49,6 +49,7 @@ const keyExtractor = (item: NFTItem | string, index: number): string =>
 function gqlNFTAssetToNFTItem(data: NftCollectionScreenQuery | undefined): NFTItem[] {
   const items = data?.nftAssets?.edges?.flatMap((item) => item.node)
   if (!items) return EMPTY_ARRAY
+
   return items.map((item): NFTItem => {
     return {
       name: item?.name ?? undefined,
@@ -57,6 +58,10 @@ function gqlNFTAssetToNFTItem(data: NftCollectionScreenQuery | undefined): NFTIt
       imageUrl: item?.image?.url ?? undefined,
       collectionName: item?.collection?.name ?? undefined,
       ownerAddress: item.ownerAddress ?? undefined,
+      imageDimensions:
+        item?.image?.dimensions?.height && item?.image?.dimensions?.width
+          ? { width: item.image.dimensions.width, height: item.image.dimensions.height }
+          : undefined,
     }
   })
 }
@@ -156,6 +161,8 @@ export function NFTCollectionScreen({
             <NFTViewer
               autoplay
               squareGridView
+              imageDimensions={item.imageDimensions}
+              limitGIFSize={ESTIMATED_ITEM_SIZE}
               placeholderContent={item.name || item.collectionName}
               uri={item.imageUrl}
             />

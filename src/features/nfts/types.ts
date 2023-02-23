@@ -4,6 +4,7 @@ export type NFTItem = {
   contractAddress?: string
   tokenId?: string
   imageUrl?: string
+  imageDimensions?: { width: number; height: number }
   collectionName?: string
   isVerifiedCollection?: boolean
   floorPrice?: number

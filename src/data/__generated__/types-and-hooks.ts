@@ -41,7 +41,6 @@ export enum ActivityType {
   Send = 'SEND',
   Stake = 'STAKE',
   Swap = 'SWAP',
-  Swapx = 'SWAPX',
   Staking = 'Staking',
   Unknown = 'UNKNOWN',
   Unstake = 'UNSTAKE',
@@ -83,7 +82,8 @@ export enum Chain {
   Ethereum = 'ETHEREUM',
   EthereumGoerli = 'ETHEREUM_GOERLI',
   Optimism = 'OPTIMISM',
-  Polygon = 'POLYGON'
+  Polygon = 'POLYGON',
+  UnknownChain = 'UNKNOWN_CHAIN'
 }
 
 export type ContractInput = {
@@ -94,11 +94,6 @@ export type ContractInput = {
 export enum Currency {
   Eth = 'ETH',
   Usd = 'USD'
-}
-
-export enum DatasourceProvider {
-  Alternate = 'ALTERNATE',
-  Legacy = 'LEGACY'
 }
 
 export type Dimensions = {
@@ -143,6 +138,49 @@ export type Image = {
 export enum MarketSortableField {
   MarketCap = 'MARKET_CAP',
   Volume = 'VOLUME'
+}
+
+export type NftActivity = {
+  __typename?: 'NftActivity';
+  address: Scalars['String'];
+  asset?: Maybe<NftAsset>;
+  fromAddress: Scalars['String'];
+  id: Scalars['ID'];
+  marketplace?: Maybe<NftMarketplace>;
+  orderStatus?: Maybe<OrderStatus>;
+  price?: Maybe<Amount>;
+  quantity?: Maybe<Scalars['Int']>;
+  timestamp: Scalars['Int'];
+  toAddress?: Maybe<Scalars['String']>;
+  tokenId?: Maybe<Scalars['String']>;
+  transactionHash?: Maybe<Scalars['String']>;
+  type: NftActivityType;
+  url?: Maybe<Scalars['String']>;
+};
+
+export type NftActivityConnection = {
+  __typename?: 'NftActivityConnection';
+  edges: Array<NftActivityEdge>;
+  pageInfo: PageInfo;
+};
+
+export type NftActivityEdge = {
+  __typename?: 'NftActivityEdge';
+  cursor: Scalars['String'];
+  node: NftActivity;
+};
+
+export type NftActivityFilterInput = {
+  activityTypes?: InputMaybe<Array<NftActivityType>>;
+  address?: InputMaybe<Scalars['String']>;
+  tokenId?: InputMaybe<Scalars['String']>;
+};
+
+export enum NftActivityType {
+  CancelListing = 'CANCEL_LISTING',
+  Listing = 'LISTING',
+  Sale = 'SALE',
+  Transfer = 'TRANSFER'
 }
 
 export type NftApproval = {
@@ -600,6 +638,7 @@ export type PortfolioTokensTotalDenominatedValueChangeArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  nftActivity?: Maybe<NftActivityConnection>;
   nftAssets?: Maybe<NftAssetConnection>;
   nftBalances?: Maybe<NftBalanceConnection>;
   nftCollections?: Maybe<NftCollectionConnection>;
@@ -612,6 +651,14 @@ export type Query = {
   tokenProjects?: Maybe<Array<Maybe<TokenProject>>>;
   tokens?: Maybe<Array<Maybe<Token>>>;
   topTokens?: Maybe<Array<Maybe<Token>>>;
+};
+
+
+export type QueryNftActivityArgs = {
+  chain?: InputMaybe<Chain>;
+  cursor?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<NftActivityFilterInput>;
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -632,19 +679,20 @@ export type QueryNftBalancesArgs = {
   after?: InputMaybe<Scalars['String']>;
   before?: InputMaybe<Scalars['String']>;
   chain?: InputMaybe<Chain>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<NftBalancesFilterInput>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
   ownerAddress: Scalars['String'];
 };
 
 
 export type QueryNftCollectionsArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
+  chain?: InputMaybe<Chain>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<NftCollectionsFilterInput>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -663,7 +711,6 @@ export type QueryNftRouteArgs = {
 
 export type QueryPortfoliosArgs = {
   ownerAddresses: Array<Scalars['String']>;
-  useAltDataSource?: InputMaybe<Scalars['Boolean']>;
 };
 
 
@@ -832,6 +879,7 @@ export type TokenProjectMarketsArgs = {
 export type TokenProjectMarket = {
   __typename?: 'TokenProjectMarket';
   currency: Currency;
+  /** @deprecated Use marketCap */
   fullyDilutedMarketCap?: Maybe<Amount>;
   id: Scalars['ID'];
   marketCap?: Maybe<Amount>;
@@ -839,9 +887,12 @@ export type TokenProjectMarket = {
   priceHighLow?: Maybe<Amount>;
   priceHistory?: Maybe<Array<Maybe<TimestampedAmount>>>;
   pricePercentChange?: Maybe<Amount>;
+  /** @deprecated Use pricePercentChange */
   pricePercentChange24h?: Maybe<Amount>;
   tokenProject: TokenProject;
+  /** @deprecated Use TokenMarket.volume for Uniswap volume */
   volume?: Maybe<Amount>;
+  /** @deprecated Use TokenMarket.volume with duration DAY for Uniswap volume */
   volume24h?: Maybe<Amount>;
 };
 
@@ -988,7 +1039,7 @@ export type NftCollectionScreenQueryVariables = Exact<{
 }>;
 
 
-export type NftCollectionScreenQuery = { __typename?: 'Query', nftCollections?: { __typename?: 'NftCollectionConnection', edges: Array<{ __typename?: 'NftCollectionEdge', node: { __typename?: 'NftCollection', id: string, isVerified?: boolean | null, numAssets?: number | null, description?: string | null, homepageUrl?: string | null, twitterName?: string | null, name?: string | null, bannerImage?: { __typename?: 'Image', id: string, url: string } | null, image?: { __typename?: 'Image', id: string, url: string } | null, markets?: Array<{ __typename?: 'NftCollectionMarket', id: string, owners?: number | null, floorPrice?: { __typename?: 'TimestampedAmount', id: string, value: number } | null, volume24h?: { __typename?: 'Amount', id: string, value: number } | null, totalVolume?: { __typename?: 'TimestampedAmount', id: string, value: number } | null }> | null } }> } | null, nftAssets?: { __typename?: 'NftAssetConnection', edges: Array<{ __typename?: 'NftAssetEdge', node: { __typename?: 'NftAsset', ownerAddress?: string | null, id: string, name?: string | null, tokenId: string, nftContract?: { __typename?: 'NftContract', id: string, address: string } | null, collection?: { __typename?: 'NftCollection', id: string, collectionId: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, url: string } | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null, hasPreviousPage?: boolean | null, startCursor?: string | null } } | null };
+export type NftCollectionScreenQuery = { __typename?: 'Query', nftCollections?: { __typename?: 'NftCollectionConnection', edges: Array<{ __typename?: 'NftCollectionEdge', node: { __typename?: 'NftCollection', id: string, isVerified?: boolean | null, numAssets?: number | null, description?: string | null, homepageUrl?: string | null, twitterName?: string | null, name?: string | null, bannerImage?: { __typename?: 'Image', id: string, url: string } | null, image?: { __typename?: 'Image', id: string, url: string } | null, markets?: Array<{ __typename?: 'NftCollectionMarket', id: string, owners?: number | null, floorPrice?: { __typename?: 'TimestampedAmount', id: string, value: number } | null, volume24h?: { __typename?: 'Amount', id: string, value: number } | null, totalVolume?: { __typename?: 'TimestampedAmount', id: string, value: number } | null }> | null } }> } | null, nftAssets?: { __typename?: 'NftAssetConnection', edges: Array<{ __typename?: 'NftAssetEdge', node: { __typename?: 'NftAsset', ownerAddress?: string | null, id: string, name?: string | null, tokenId: string, nftContract?: { __typename?: 'NftContract', id: string, address: string } | null, collection?: { __typename?: 'NftCollection', id: string, collectionId: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, url: string, dimensions?: { __typename?: 'Dimensions', id: string, width?: number | null, height?: number | null } | null } | null, smallImage?: { __typename?: 'Image', id: string, url: string, dimensions?: { __typename?: 'Dimensions', id: string, width?: number | null, height?: number | null } | null } | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null, hasPreviousPage?: boolean | null, startCursor?: string | null } } | null };
 
 export type NftsTabQueryVariables = Exact<{
   ownerAddress: Scalars['String'];
@@ -997,7 +1048,7 @@ export type NftsTabQueryVariables = Exact<{
 }>;
 
 
-export type NftsTabQuery = { __typename?: 'Query', nftBalances?: { __typename?: 'NftBalanceConnection', edges: Array<{ __typename?: 'NftBalanceEdge', node: { __typename?: 'NftBalance', ownedAsset?: { __typename?: 'NftAsset', id: string, name?: string | null, tokenId: string, description?: string | null, collection?: { __typename?: 'NftCollection', id: string, name?: string | null, isVerified?: boolean | null, markets?: Array<{ __typename?: 'NftCollectionMarket', id: string, floorPrice?: { __typename?: 'TimestampedAmount', value: number } | null }> | null } | null, image?: { __typename?: 'Image', id: string, url: string } | null, nftContract?: { __typename?: 'NftContract', id: string, address: string } | null } | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null, hasPreviousPage?: boolean | null, startCursor?: string | null } } | null };
+export type NftsTabQuery = { __typename?: 'Query', nftBalances?: { __typename?: 'NftBalanceConnection', edges: Array<{ __typename?: 'NftBalanceEdge', node: { __typename?: 'NftBalance', ownedAsset?: { __typename?: 'NftAsset', id: string, name?: string | null, tokenId: string, description?: string | null, collection?: { __typename?: 'NftCollection', id: string, name?: string | null, isVerified?: boolean | null, markets?: Array<{ __typename?: 'NftCollectionMarket', id: string, floorPrice?: { __typename?: 'TimestampedAmount', value: number } | null }> | null } | null, image?: { __typename?: 'Image', id: string, url: string, dimensions?: { __typename?: 'Dimensions', id: string, width?: number | null, height?: number | null } | null } | null, nftContract?: { __typename?: 'NftContract', id: string, address: string } | null } | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null, hasPreviousPage?: boolean | null, startCursor?: string | null } } | null };
 
 export type PortfolioBalancesQueryVariables = Exact<{
   ownerAddress: Scalars['String'];
@@ -1531,6 +1582,20 @@ export const NftCollectionScreenDocument = gql`
         image {
           id
           url
+          dimensions {
+            id
+            width
+            height
+          }
+        }
+        smallImage {
+          id
+          url
+          dimensions {
+            id
+            width
+            height
+          }
         }
       }
     }
@@ -1594,6 +1659,11 @@ export const NftsTabDocument = gql`
           image {
             id
             url
+            dimensions {
+              id
+              width
+              height
+            }
           }
           name
           tokenId

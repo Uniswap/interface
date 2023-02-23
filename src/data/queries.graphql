@@ -134,6 +134,7 @@ query NftCollectionScreen(
         description
         homepageUrl
         twitterName
+
         image {
           id
           url
@@ -177,6 +178,11 @@ query NftCollectionScreen(
         image {
           id
           url
+          dimensions {
+            id
+            width
+            height
+          }
         }
       }
     }
@@ -209,6 +215,11 @@ query NftsTab($ownerAddress: String!, $first: Int, $after: String) {
           image {
             id
             url
+            dimensions {
+              id
+              width
+              height
+            }
           }
           name
           tokenId

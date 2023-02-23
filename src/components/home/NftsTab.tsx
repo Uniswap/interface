@@ -53,6 +53,13 @@ function formatNftItems(data: NftsTabQuery | undefined): NFTItem[] {
         collectionName: item?.ownedAsset?.collection?.name ?? undefined,
         isVerifiedCollection: item?.ownedAsset?.collection?.isVerified ?? undefined,
         floorPrice: item?.ownedAsset?.collection?.markets?.[0]?.floorPrice?.value ?? undefined,
+        imageDimensions:
+          item?.ownedAsset?.image?.dimensions?.height && item?.ownedAsset?.image?.dimensions?.width
+            ? {
+                width: item?.ownedAsset?.image.dimensions.width,
+                height: item?.ownedAsset?.image.dimensions.height,
+              }
+            : undefined,
       }
     })
   return nfts
@@ -135,6 +142,8 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
                 style={{ overflow: 'hidden' }}
                 width="100%">
                 <NFTViewer
+                  imageDimensions={item.imageDimensions}
+                  limitGIFSize={ESTIMATED_ITEM_SIZE}
                   maxHeight={MAX_NFT_IMAGE_SIZE}
                   placeholderContent={item.name || item.collectionName}
                   squareGridView={true}

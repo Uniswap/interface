@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Image, StyleSheet } from 'react-native'
-import FastImage, { ImageStyle, ResizeMode } from 'react-native-fast-image'
+import FastImage, { FastImageProps, ImageStyle, ResizeMode } from 'react-native-fast-image'
 import { Box, BoxProps } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 
@@ -11,6 +11,8 @@ export function ImageUri({
   imageStyle,
   resizeMode,
   loadingContainerStyle,
+  imageDimensions,
+  ...rest
 }: {
   maxHeight?: number
   uri?: string
@@ -18,14 +20,19 @@ export function ImageUri({
   imageStyle?: ImageStyle
   resizeMode?: ResizeMode
   loadingContainerStyle?: BoxProps['style']
-}): JSX.Element | null {
-  const [height, setHeight] = useState<number | null>(null)
-  const [width, setWidth] = useState<number | null>(null)
+  /**
+   * Can optimize performance by prefetching dimensions in api request on Image field,
+   * which allows us to avoid setting state in this component
+   */
+  imageDimensions?: { width: number; height: number } | undefined
+} & Pick<FastImageProps, 'shouldRasterizeIOS'>): JSX.Element | null {
+  const [height, setHeight] = useState<number | null>(imageDimensions?.height ?? null)
+  const [width, setWidth] = useState<number | null>(imageDimensions?.width ?? null)
   const [isError, setIsError] = useState(false)
 
   useEffect(() => {
-    if (!uri) return
-
+    // If we know dimension, skip this effect
+    if (!uri || Boolean(imageDimensions)) return
     Image.getSize(
       uri,
       (calculatedWidth: number, calculatedHeight: number) => {
@@ -37,7 +44,7 @@ export function ImageUri({
         setIsError(true)
       }
     )
-  }, [uri])
+  }, [imageDimensions, uri])
 
   if (isError) {
     return fallback ?? null
@@ -57,7 +64,7 @@ export function ImageUri({
   return (
     <FastImage
       resizeMode={resizeMode ?? FastImage.resizeMode.contain}
-      source={{ uri, priority: FastImage.priority.high }} // Using priority high since it is referenced from scroll context where most recently scrolled image is highest priority
+      source={{ uri }}
       style={
         imageStyle ?? [
           {
@@ -67,6 +74,8 @@ export function ImageUri({
           styles.fullWidth,
         ]
       }
+      onError={(): void => setIsError(true)}
+      {...rest}
     />
   )
 }
