@@ -13,7 +13,6 @@ import { BackupType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { dimensions } from 'src/styles/sizing'
 import { logger } from 'src/utils/logger'
 import { ONE_SECOND_MS } from 'src/utils/time'
 import { promiseMinDelay } from 'src/utils/timing'
@@ -107,14 +106,20 @@ export function CloudBackupProcessingScreen({
   return (
     <Screen>
       {processing ? (
-        <Flex centered grow gap="spacing36">
+        <Flex centered grow gap="spacing24">
           <ActivityIndicator size="large" />
           <Text variant="headlineSmall">{t('Backing up to iCloud...')}</Text>
         </Flex>
       ) : (
-        <Flex centered grow gap="none">
-          <CheckmarkCircle color={theme.colors.accentAction} size={dimensions.fullWidth / 4} />
-          <Text variant="headlineSmall">{t('iCloud backup successful')}</Text>
+        <Flex centered grow gap="spacing24">
+          <CheckmarkCircle
+            borderColor="accentSuccess"
+            borderWidth={3}
+            checkmarkStrokeWidth={2}
+            color={theme.colors.accentSuccess}
+            size={theme.iconSizes.icon40}
+          />
+          <Text variant="headlineSmall">{t('Backed up to iCloud')}</Text>
         </Flex>
       )}
     </Screen>

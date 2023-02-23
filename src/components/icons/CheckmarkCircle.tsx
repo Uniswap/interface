@@ -13,6 +13,7 @@ import { Theme } from 'src/styles/theme'
 
 type Props = {
   size: number
+  checkmarkStrokeWidth?: number
   color?: string
 } & BorderProps<Theme> &
   BackgroundColorProps<Theme> &
@@ -20,7 +21,7 @@ type Props = {
   SpacingProps<Theme> &
   SpacingShorthandProps<Theme>
 
-function _CheckmarkCircle({ color, size, ...rest }: Props): JSX.Element {
+function _CheckmarkCircle({ color, checkmarkStrokeWidth = 3, size, ...rest }: Props): JSX.Element {
   const theme = useAppTheme()
   return (
     <Box
@@ -30,7 +31,12 @@ function _CheckmarkCircle({ color, size, ...rest }: Props): JSX.Element {
       justifyContent="center"
       width={size}
       {...rest}>
-      <Checkmark color={color ?? theme.colors.white} height={size / 2} width={size / 2} />
+      <Checkmark
+        color={color ?? theme.colors.white}
+        height={size / 2}
+        strokeWidth={checkmarkStrokeWidth}
+        width={size / 2}
+      />
     </Box>
   )
 }

@@ -43,6 +43,7 @@ export function PendingNotificationBadge({
         <CheckmarkCircle
           borderColor="accentSuccess"
           borderWidth={2}
+          checkmarkStrokeWidth={3}
           color={theme.colors.accentSuccess}
           size={size}
         />

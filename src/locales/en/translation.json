@@ -408,7 +408,7 @@
   "iCloud error": "iCloud error",
   "Unable to backup recovery phrase to iCloud. Please ensure you have iCloud enabled with available storage space and try again.": "Unable to backup recovery phrase to iCloud. Please ensure you have iCloud enabled with available storage space and try again.",
   "Backing up to iCloud...": "Backing up to iCloud...",
-  "iCloud backup successful": "iCloud backup successful",
+  "Backed up to iCloud": "Backed up to iCloud",
   "It has a public address that starts with 0x but you can set a private nickname for yourself.": "It has a public address that starts with 0x but you can set a private nickname for yourself.",
   "Say hello to your new wallet": "Say hello to your new wallet",
   "Get started": "Get started",
