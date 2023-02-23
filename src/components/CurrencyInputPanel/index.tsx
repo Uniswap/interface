@@ -220,8 +220,9 @@ export default function CurrencyInputPanel({
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
   const { account, chainId } = useWeb3React()
+  // TODO: we use recipient as placeholder for pool, we must check how to improve here
   const { recipient } = useSwapState()
-  const poolAddress = isAddress(recipient) ? recipient : undefined
+  const poolAddress = isAddress(recipient) ? recipient : account
   const selectedCurrencyBalance = useCurrencyBalance(poolAddress ?? undefined, currency ?? undefined)
   const theme = useTheme()
 
