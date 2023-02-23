@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
@@ -10,7 +11,6 @@ import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Column } from 'nft/components/Flex'
 import { Overlay } from 'nft/components/modals/Overlay'
-import { buttonTextMedium, commonButtonStyles } from 'nft/css/common.css'
 import {
   useBag,
   useIsMobile,
@@ -86,6 +86,27 @@ const DetailsPageBackground = styled.div`
   top: 0px;
   width: 100%;
   height: 100%;
+`
+
+const ContinueButton = styled.div`
+  background: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accentTextLightPrimary};
+  margin: 32px 28px 16px;
+  padding: 10px 0px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  transition: ${({ theme }) => theme.transition.duration.medium};
+
+  :hover {
+    cursor: pointer;
+  }
+
+  :disabled {
+    cursor: auto;
+  }
 `
 
 const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
@@ -407,15 +428,7 @@ const Bag = () => {
           <BagFooter totalEthPrice={totalEthPrice} fetchAssets={fetchAssets} eventProperties={eventProperties} />
         )}
         {isSellingAssets && isProfilePage && (
-          <Box
-            marginTop="32"
-            marginX="28"
-            marginBottom="16"
-            paddingY="10"
-            className={`${buttonTextMedium} ${commonButtonStyles}`}
-            backgroundColor="accentAction"
-            color="white"
-            textAlign="center"
+          <ContinueButton
             onClick={() => {
               toggleBag()
               setProfilePageState(ProfilePageStateType.LISTING)
@@ -426,8 +439,8 @@ const Bag = () => {
               })
             }}
           >
-            Continue
-          </Box>
+            <Trans>Continue</Trans>
+          </ContinueButton>
         )}
       </BagContainer>
 
