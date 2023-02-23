@@ -11,6 +11,7 @@ export const gasApi = createApi({
     prepareHeaders: (headers) => {
       // TODO: [MOB-3883] remove once gas service supports mobile origin URL
       headers.set('Origin', config.uniswapAppUrl)
+      headers.set('X-API-KEY', config.uniswapApiKey)
       return headers
     },
   }),

@@ -36,6 +36,7 @@ export const routingApi = createApi({
       // TODO: [MOB-3883] remove once routing api officially supports mobile
       // spoof origin to go around server permissions
       headers.set('Origin', config.uniswapAppUrl)
+      headers.set('X-API-KEY', config.uniswapApiKey)
       return headers
     },
   }),
