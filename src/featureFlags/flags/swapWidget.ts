@@ -1,5 +1,3 @@
-import { useGate } from 'statsig-react'
-
 import { BaseVariant, FeatureFlag, useBaseFlag } from '../index'
 
 export function useSwapWidgetFlag(): BaseVariant {
@@ -7,8 +5,7 @@ export function useSwapWidgetFlag(): BaseVariant {
 }
 
 export function useSwapWidgetEnabled(): boolean {
-  const { value: statsigValue } = useGate(FeatureFlag.swapWidget)
-  return useSwapWidgetFlag() === BaseVariant.Enabled || statsigValue
+  return useSwapWidgetFlag() === BaseVariant.Enabled
 }
 
 export { BaseVariant as SwapWidgetVariant }
