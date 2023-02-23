@@ -11,7 +11,7 @@ import useTheme from 'hooks/useTheme'
 
 export type PrivateAnnouncementProp = {
   announcement: PrivateAnnouncement
-  onRead: () => void
+  onRead: (data: PrivateAnnouncement, statusMessage: string) => void
   style: CSSProperties
   time?: ReactNode
 }

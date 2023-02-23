@@ -41,9 +41,11 @@ function InboxItemBridge({ announcement, onRead, style, time }: PrivateAnnouncem
   const theme = useTheme()
 
   const navigate = useNavigate()
+
+  const statusMessage = isSuccess ? t`Success` : t`Failed`
   const onClick = () => {
     navigate(APP_PATHS.BRIDGE)
-    onRead()
+    onRead(announcement, statusMessage)
   }
   return (
     <InboxItemWrapper isRead={isRead} onClick={onClick} style={style}>
@@ -56,7 +58,7 @@ function InboxItemBridge({ announcement, onRead, style, time }: PrivateAnnouncem
           {!isRead && <Dot />}
         </RowItem>
         <RowItem>
-          <PrimaryText>{isSuccess ? t`Success` : t`Failed`}</PrimaryText>
+          <PrimaryText>{statusMessage}</PrimaryText>
           {isSuccess ? <CheckCircle color={theme.primary} /> : <IconFailure color={theme.red} size={12} />}
         </RowItem>
       </InboxItemRow>

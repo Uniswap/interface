@@ -8,6 +8,7 @@ import CtaButton from 'components/Announcement/Popups/CtaButton'
 import { useNavigateCtaPopup } from 'components/Announcement/helper'
 import { AnnouncementTemplatePopup, PopupContentAnnouncement, PopupType } from 'components/Announcement/type'
 import Announcement from 'components/Icons/Announcement'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { useActivePopups, useRemoveAllPopupByType } from 'state/application/hooks'
 import { MEDIA_WIDTHS } from 'theme'
@@ -104,9 +105,9 @@ function TopBanner() {
   const isMobile = useMedia(`(max-width: ${MEDIA_WIDTHS.upToSmall}px)`)
   const { topPopups } = useActivePopups()
   const popupInfo = topPopups[topPopups.length - 1]
+  const { mixpanelHandler } = useMixpanel()
 
   const removeAllPopupByType = useRemoveAllPopupByType()
-  const hideBanner = () => removeAllPopupByType(PopupType.TOP_BAR)
 
   const refContent = useRef<HTMLDivElement>(null)
   const contentNode = refContent.current
@@ -125,9 +126,14 @@ function TopBanner() {
 
   if (!popupInfo) return null
   const { templateBody } = popupInfo.content as PopupContentAnnouncement
-  const { content, ctas = [], type } = templateBody as AnnouncementTemplatePopup
+  const { content, ctas = [], type, name } = templateBody as AnnouncementTemplatePopup
   const ctaUrl = ctas[0]?.url
   const ctaName = ctas[0]?.name
+
+  const hideBanner = () => {
+    removeAllPopupByType(PopupType.TOP_BAR)
+    mixpanelHandler(MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_CLOSE_POPUP, { message_title: name })
+  }
   return (
     <BannerWrapper color={type === 'NORMAL' ? theme.apr : theme.warning}>
       {!isMobile && <div />}

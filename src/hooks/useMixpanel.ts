@@ -155,6 +155,14 @@ export enum MIXPANEL_TYPE {
   NOTIFICATION_SELECT_TOPIC,
   NOTIFICATION_DESELECT_TOPIC,
 
+  ANNOUNCEMENT_CLICK_BELL_ICON_OPEN_POPUP,
+  ANNOUNCEMENT_CLICK_TAB_INBOX,
+  ANNOUNCEMENT_CLICK_TAB_ANNOUNCEMENT,
+  ANNOUNCEMENT_CLICK_ANNOUNCEMENT_MESSAGE,
+  ANNOUNCEMENT_CLICK_INBOX_MESSAGE,
+  ANNOUNCEMENT_CLICK_CLOSE_POPUP,
+  ANNOUNCEMENT_CLICK_CTA_POPUP,
+
   // limit order
   LO_CLICK_PLACE_ORDER,
   LO_PLACE_ORDER_SUCCESS,
@@ -782,6 +790,35 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
           mixpanel.track('Notification Features unselected and save', payload)
           break
         }
+        case MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_BELL_ICON_OPEN_POPUP: {
+          mixpanel.track('Notifications - Open Notification Pop Up')
+          break
+        }
+        case MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_TAB_INBOX: {
+          mixpanel.track('Notifications - Click on My Inbox', payload)
+          break
+        }
+        case MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_TAB_ANNOUNCEMENT: {
+          mixpanel.track('Notifications - Click on General', payload)
+          break
+        }
+        case MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_INBOX_MESSAGE: {
+          mixpanel.track('Notifications - Click on inbox messages', payload)
+          break
+        }
+        case MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_ANNOUNCEMENT_MESSAGE: {
+          mixpanel.track('Notifications - Click on announcement messages', payload)
+          break
+        }
+        case MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_CLOSE_POPUP: {
+          mixpanel.track('Notifications - Click to close pop up', payload)
+          break
+        }
+        case MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_CTA_POPUP: {
+          mixpanel.track('Notifications - Click on Announcement Pop Up CTA', payload)
+          break
+        }
+
         case MIXPANEL_TYPE.KYBER_DAO_STAKE_CLICK: {
           mixpanel.track('KyberDAO - Stake Click', payload)
           break

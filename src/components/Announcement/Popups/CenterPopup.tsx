@@ -9,6 +9,7 @@ import { AnnouncementTemplatePopup, PopupContentAnnouncement } from 'components/
 import Modal from 'components/Modal'
 import Row, { RowBetween } from 'components/Row'
 import { Z_INDEXS } from 'constants/styles'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { PopupItemType } from 'state/application/reducer'
 import { MEDIA_WIDTHS } from 'theme'
@@ -62,19 +63,21 @@ const Image = styled.img`
 `
 
 const StyledCtaButton = styled(CtaButton)`
-  width: 220px;
+  width: fit-content;
+  min-width: 220px;
   height: 36px;
   max-width: 100%;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 200px;
+    width: fit-content;
     min-width: 100px;
-    max-width: 45%;
+    max-width: 100%;
   `}
 `
 
 export default function CenterPopup({ data, clearAll }: { data: PopupItemType; clearAll: () => void }) {
   const theme = useTheme()
   const isMobile = useMedia(`(max-width: ${MEDIA_WIDTHS.upToMedium}px)`)
+  const { mixpanelHandler } = useMixpanel()
   const { templateBody = {} } = data.content as PopupContentAnnouncement
   const {
     name = t`Important Announcement!`,
@@ -83,12 +86,22 @@ export default function CenterPopup({ data, clearAll }: { data: PopupItemType; c
     thumbnailImageURL,
   } = templateBody as AnnouncementTemplatePopup
   const navigate = useNavigateCtaPopup()
+  const trackingClose = () => mixpanelHandler(MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_CLOSE_POPUP, { message_title: name })
+
   return (
     <Modal isOpen={true} maxWidth={isMobile ? undefined : '800px'} onDismiss={clearAll} zindex={Z_INDEXS.MODAL}>
       <Wrapper>
         <RowBetween align="center">
           <Title>{name}</Title>
-          <X cursor={'pointer'} color={theme.subText} onClick={clearAll} style={{ minWidth: '24px' }} />
+          <X
+            cursor={'pointer'}
+            color={theme.subText}
+            onClick={() => {
+              clearAll()
+              trackingClose()
+            }}
+            style={{ minWidth: '24px' }}
+          />
         </RowBetween>
         <ContentWrapper>
           {thumbnailImageURL && <Image src={thumbnailImageURL} />}

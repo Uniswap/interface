@@ -40,11 +40,18 @@ function InboxItemBridge({ announcement, onRead, style, time }: PrivateAnnouncem
   const isFilled = status === LimitOrderStatus.FILLED
   const isPartialFilled = status === LimitOrderStatus.PARTIALLY_FILLED
 
+  const statusMessage = isFilled
+    ? t`100% Filled`
+    : isPartialFilled
+    ? t`${filledPercent} Filled ${increasedFilledPercent}`
+    : `${filledPercent}% Filled | Expired`
+
   const navigate = useNavigate()
   const onClick = () => {
     navigate(APP_PATHS.LIMIT)
-    onRead()
+    onRead(announcement, statusMessage)
   }
+
   return (
     <InboxItemWrapper isRead={isRead} onClick={onClick} style={style}>
       <InboxItemRow>
@@ -56,13 +63,7 @@ function InboxItemBridge({ announcement, onRead, style, time }: PrivateAnnouncem
           {!isRead && <Dot />}
         </RowItem>
         <RowItem>
-          <PrimaryText>
-            {isFilled
-              ? t`100% Filled`
-              : isPartialFilled
-              ? t`${filledPercent} Filled ${increasedFilledPercent}`
-              : `${filledPercent}% Filled | Expired`}
-          </PrimaryText>
+          <PrimaryText>{statusMessage}</PrimaryText>
           {isFilled ? (
             <CheckCircle color={theme.primary} />
           ) : isPartialFilled ? (

@@ -18,7 +18,7 @@ function InboxItemBridge({ announcement, onRead, style, time }: PrivateAnnouncem
   const navigate = useNavigate()
   const onClick = () => {
     navigate(APP_PATHS.DISCOVER)
-    onRead()
+    onRead(announcement, 'trending_soon')
   }
   return (
     <InboxItemWrapper isRead={isRead} onClick={onClick} style={style}>

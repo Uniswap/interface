@@ -10,9 +10,10 @@ import { Swiper, SwiperSlide } from 'swiper/react/swiper-react'
 import NotificationImage from 'assets/images/notification_default.png'
 import CtaButton from 'components/Announcement/Popups/CtaButton'
 import { useNavigateCtaPopup } from 'components/Announcement/helper'
-import { AnnouncementTemplatePopup, PopupContentAnnouncement } from 'components/Announcement/type'
+import { AnnouncementTemplatePopup, PopupContentAnnouncement, PopupType } from 'components/Announcement/type'
 import { AutoColumn } from 'components/Column'
 import { Z_INDEXS } from 'constants/styles'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { useRemovePopup } from 'state/application/hooks'
 import { PopupItemType } from 'state/application/reducer'
@@ -111,7 +112,8 @@ const SeeMore = styled.div`
 `
 
 const StyledCtaButton = styled(CtaButton)`
-  width: 140px;
+  min-width: 140px;
+  width: fit-content;
   height: 36px;
 `
 
@@ -134,6 +136,14 @@ function SnippetPopupItem({
   const ctaInfo = { ...ctas[0], name: ctas[0]?.name || t`Close` }
   const isCtaClose = !ctas[0]?.name || !ctas[0]?.url
 
+  const { mixpanelHandler } = useMixpanel()
+  const trackingClickCta = () => {
+    mixpanelHandler(MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_CTA_POPUP, {
+      announcement_type: PopupType.SNIPPET,
+      announcement_title: name,
+    })
+  }
+
   return (
     <ItemWrapper expand={expand}>
       <Image expand={expand} src={thumbnailImageURL || NotificationImage} />
@@ -150,6 +160,7 @@ function SnippetPopupItem({
             onClick={() => {
               navigate(ctaInfo.url)
               if (isCtaClose) removePopup(data)
+              trackingClickCta()
             }}
           />
           <SeeMore onClick={toggle}>
@@ -239,6 +250,9 @@ const Close = styled(X)`
 export default function SnippetPopup({ data, clearAll }: { data: PopupItemType[]; clearAll: () => void }) {
   const theme = useTheme()
   const [expand, setExpand] = useState(false)
+  const { mixpanelHandler } = useMixpanel()
+  const trackingClose = () =>
+    mixpanelHandler(MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_CLOSE_POPUP, { message_title: 'snippet_popups' })
 
   return (
     <Wrapper expand={expand}>
@@ -258,7 +272,14 @@ export default function SnippetPopup({ data, clearAll }: { data: PopupItemType[]
           </SwiperSlide>
         ))}
       </Swiper>
-      <Close size={18} color={theme.subText} onClick={clearAll} />
+      <Close
+        size={18}
+        color={theme.subText}
+        onClick={() => {
+          clearAll()
+          trackingClose()
+        }}
+      />
     </Wrapper>
   )
 }
