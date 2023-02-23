@@ -11,6 +11,7 @@ import {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
+  withSequence,
   withSpring,
   WithSpringConfig,
 } from 'react-native-reanimated'
@@ -33,6 +34,17 @@ export const NAV_BAR_HEIGHT_SM = 72
 
 export const SWAP_BUTTON_HEIGHT = 56
 const SWAP_BUTTON_SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 4 }
+
+function pulseAnimation(
+  activeScale: number,
+  spingAnimationConfig: WithSpringConfig = { damping: 1, stiffness: 200 }
+): number {
+  'worklet'
+  return withSequence(
+    withSpring(activeScale, spingAnimationConfig),
+    withSpring(1, spingAnimationConfig)
+  )
+}
 
 export const NavBar = (): JSX.Element => {
   const insets = useSafeAreaInsets()
@@ -87,13 +99,13 @@ export const NavBar = (): JSX.Element => {
 type SwapTabBarButtonProps = {
   /**
    * The value to scale to when the Pressable is being pressed.
-   * @default 0.95
+   * @default 0.96
    */
   activeScale?: number
   inputCurrencyId?: CurrencyId
-} & WithSpringConfig
+}
 
-const SwapFAB = memo(({ activeScale = 0.95, inputCurrencyId }: SwapTabBarButtonProps) => {
+const SwapFAB = memo(({ activeScale = 0.96, inputCurrencyId }: SwapTabBarButtonProps) => {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
@@ -116,14 +128,10 @@ const SwapFAB = memo(({ activeScale = 0.95, inputCurrencyId }: SwapTabBarButtonP
   const onGestureEvent = useAnimatedGestureHandler<TapGestureHandlerGestureEvent>({
     onStart: () => {
       cancelAnimation(scale)
-      scale.value = withSpring(activeScale)
+      scale.value = pulseAnimation(activeScale)
     },
     onEnd: () => {
       runOnJS(onPress)()
-    },
-    onFinish: () => {
-      cancelAnimation(scale)
-      scale.value = withSpring(1)
     },
   })
 
@@ -170,8 +178,15 @@ const SwapFAB = memo(({ activeScale = 0.95, inputCurrencyId }: SwapTabBarButtonP
   )
 })
 
-const ACTIVE_SEARCH_BUTTON_SCALE = 0.985
-function ExploreTabBarButton(): JSX.Element {
+type ExploreTabBarButtonProps = {
+  /**
+   * The value to scale to when the Pressable is being pressed.
+   * @default 0.98
+   */
+  activeScale?: number
+}
+
+function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): JSX.Element {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
   const isDarkMode = useColorScheme() === 'dark'
@@ -186,14 +201,10 @@ function ExploreTabBarButton(): JSX.Element {
   const onGestureEvent = useAnimatedGestureHandler<TapGestureHandlerGestureEvent>({
     onStart: () => {
       cancelAnimation(scale)
-      scale.value = withSpring(ACTIVE_SEARCH_BUTTON_SCALE)
+      scale.value = pulseAnimation(activeScale)
     },
     onEnd: () => {
       runOnJS(onPress)()
-    },
-    onFinish: () => {
-      cancelAnimation(scale)
-      scale.value = withSpring(1)
     },
   })
 
