@@ -1,6 +1,6 @@
-//import type { TransactionResponse } from '@ethersproject/providers'
+import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount /*, Token*/ } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
@@ -9,8 +9,8 @@ import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallbac
 //import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { BuyInfo, useDerivedBuyInfo } from '../../state/buy/hooks'
 import { usePoolExtendedContract } from '../../state/pool/hooks'
-//import { useTransactionAdder } from '../../state/transactions/hooks'
-//import { TransactionType } from '../../state/transactions/types'
+import { useTransactionAdder } from '../../state/transactions/hooks'
+import { TransactionType } from '../../state/transactions/types'
 import { CloseIcon, ThemedText } from '../../theme'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { formatCurrencyAmount } from '../../utils/formatCurrencyAmount'
@@ -32,7 +32,7 @@ interface BuyModalProps {
   isOpen: boolean
   onDismiss: () => void
   buyInfo?: BuyInfo
-  userBaseTokenBalance?: CurrencyAmount<Token> | undefined
+  userBaseTokenBalance?: CurrencyAmount<Currency> | undefined
 }
 
 export default function BuyModal({ isOpen, onDismiss, buyInfo, userBaseTokenBalance }: BuyModalProps) {
@@ -42,7 +42,7 @@ export default function BuyModal({ isOpen, onDismiss, buyInfo, userBaseTokenBala
   const [typedValue, setTypedValue] = useState('')
 
   // state for pending and submitted txn views
-  //const addTransaction = useTransactionAdder()
+  const addTransaction = useTransactionAdder()
   const [attempting, setAttempting] = useState<boolean>(false)
   const [hash, setHash] = useState<string | undefined>()
   const wrappedOnDismiss = useCallback(() => {
@@ -55,24 +55,34 @@ export default function BuyModal({ isOpen, onDismiss, buyInfo, userBaseTokenBala
 
   // approval data for stake
   //const deadline = useTransactionDeadline()
-  const [approval, approveCallback] = useApproveCallback(parsedAmount, buyInfo?.poolAddress)
+  const [approval, approveCallback] = useApproveCallback(parsedAmount, buyInfo?.pool?.address)
 
-  const poolContract = usePoolExtendedContract(buyInfo?.poolAddress ?? undefined)
+  const poolContract = usePoolExtendedContract(buyInfo?.pool?.address)
   // TODO: must handle ETH purchases
   async function onBuy() {
     setAttempting(true)
     if (poolContract && parsedAmount && buyInfo /*&& deadline*/) {
       if (approval === ApprovalState.APPROVED) {
         // TODO: add value if token is ether
+        const value = userBaseTokenBalance?.currency.isNative ? parsedAmount.quotient.toString() : null
         const args = [buyInfo.recipient, parsedAmount.quotient.toString(), 0]
 
         // mint method not unique in interface
-        return poolContract.estimateGas['mint(address,uint256,uint256)'](...args, {}).then((estimatedGasLimit) => {
-          return poolContract['mint(address,uint256,uint256)'](...args, {
-            value: null,
-            gasLimit: calculateGasMargin(estimatedGasLimit),
-          })
-        })
+        return poolContract.estimateGas['mint(address,uint256,uint256)'](...args, value ? { value } : {}).then(
+          (estimatedGasLimit) => {
+            return poolContract['mint(address,uint256,uint256)'](...args, {
+              value,
+              gasLimit: calculateGasMargin(estimatedGasLimit),
+            }).then((response: TransactionResponse) => {
+              addTransaction(response, {
+                // TODO: define correct transaction type
+                type: TransactionType.DELEGATE,
+                delegatee: buyInfo.recipient,
+              })
+              return response.hash
+            })
+          }
+        )
       } else {
         setAttempting(false)
         throw new Error('Attempting to stake without approval. Please contact support.')
@@ -104,24 +114,28 @@ export default function BuyModal({ isOpen, onDismiss, buyInfo, userBaseTokenBala
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
-          <RowBetween>
-            <ThemedText.DeprecatedMediumHeader>
-              <Trans>Buy</Trans>
-            </ThemedText.DeprecatedMediumHeader>
-            <CloseIcon onClick={wrappedOnDismiss} />
-          </RowBetween>
           {/* TODO: check handling of user with null base token balance */}
-          {userBaseTokenBalance && (
-            <CurrencyInputPanel
-              value={typedValue}
-              onUserInput={onUserInput}
-              onMax={handleMax}
-              showMaxButton={!atMaxAmount}
-              currency={userBaseTokenBalance.currency}
-              label=""
-              renderBalance={(amount) => <Trans>Available to deposit: {formatCurrencyAmount(amount, 4)}</Trans>}
-              id="stake-liquidity-token"
-            />
+          {userBaseTokenBalance && buyInfo && (
+            <>
+              <RowBetween>
+                <ThemedText.DeprecatedMediumHeader>
+                  <Trans>
+                    Buy {buyInfo.pool.symbol ?? null} using {userBaseTokenBalance.currency.symbol}
+                  </Trans>
+                </ThemedText.DeprecatedMediumHeader>
+                <CloseIcon onClick={wrappedOnDismiss} />
+              </RowBetween>
+              <CurrencyInputPanel
+                value={typedValue}
+                onUserInput={onUserInput}
+                onMax={handleMax}
+                showMaxButton={!atMaxAmount}
+                currency={userBaseTokenBalance.currency}
+                label=""
+                renderBalance={(amount) => <Trans>Available to deposit: {formatCurrencyAmount(amount, 4)}</Trans>}
+                id="stake-liquidity-token"
+              />
+            </>
           )}
 
           <RowBetween>
@@ -151,7 +165,9 @@ export default function BuyModal({ isOpen, onDismiss, buyInfo, userBaseTokenBala
               <Trans>Depositing</Trans>
             </ThemedText.DeprecatedLargeHeader>
             <ThemedText.DeprecatedBody fontSize={20}>
-              <Trans>{parsedAmount?.toSignificant(4)} Base Token</Trans>
+              <Trans>
+                {parsedAmount?.toSignificant(4)} {userBaseTokenBalance?.currency?.symbol}
+              </Trans>
             </ThemedText.DeprecatedBody>
           </AutoColumn>
         </LoadingView>
@@ -163,7 +179,9 @@ export default function BuyModal({ isOpen, onDismiss, buyInfo, userBaseTokenBala
               <Trans>Transaction Submitted</Trans>
             </ThemedText.DeprecatedLargeHeader>
             <ThemedText.DeprecatedBody fontSize={20}>
-              <Trans>Deposited {parsedAmount?.toSignificant(4)} Base Token</Trans>
+              <Trans>
+                Deposited {parsedAmount?.toSignificant(4)} {userBaseTokenBalance?.currency?.symbol}
+              </Trans>
             </ThemedText.DeprecatedBody>
           </AutoColumn>
         </SubmittedView>

@@ -1,21 +1,20 @@
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode } from 'react'
 
 export interface BuyInfo {
-  // the address of the smart pool
-  poolAddress: string
-  recipient?: string
+  // the smart pool token
+  pool: Token
+  recipient: string
   // the amount of base tokens the user has available for purchase
   maxSlippage?: number
-  // the total amount of minted pool tokens
   purchaseAmount?: CurrencyAmount<Token>
   // the total amount of minted pool tokens
   totalSupplyAmount?: CurrencyAmount<Token>
-  poolPrice?: CurrencyAmount<Token>
+  poolPriceAmount: CurrencyAmount<Token>
   spread?: number
   // calculates a hypothetical amount of token distributed to the active account per second.
   getExpectedOutput?: (
@@ -28,15 +27,15 @@ export interface BuyInfo {
 // based on typed value
 export function useDerivedBuyInfo(
   typedValue: string,
-  baseToken: Token | undefined,
-  userBaseTokenBalance: CurrencyAmount<Token> | undefined
+  baseToken: Currency | undefined,
+  userBaseTokenBalance: CurrencyAmount<Currency> | undefined
 ): {
-  parsedAmount?: CurrencyAmount<Token>
+  parsedAmount?: CurrencyAmount<Currency>
   error?: ReactNode
 } {
   const { account } = useWeb3React()
 
-  const parsedInput: CurrencyAmount<Token> | undefined = tryParseCurrencyAmount(typedValue, baseToken)
+  const parsedInput: CurrencyAmount<Currency> | undefined = tryParseCurrencyAmount(typedValue, baseToken)
 
   const parsedAmount =
     parsedInput && userBaseTokenBalance && JSBI.lessThanOrEqual(parsedInput.quotient, userBaseTokenBalance.quotient)

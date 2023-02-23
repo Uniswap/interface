@@ -3,7 +3,7 @@
 import { Trans } from '@lingui/macro'
 //import { Trace } from '@uniswap/analytics'
 //import { PageName } from '@uniswap/analytics-events'
-import { /*Currency,*/ CurrencyAmount /*, Fraction*/, Percent /*, Price*/, Token } from '@uniswap/sdk-core'
+import { /*Currency,*/ CurrencyAmount /*, Fraction*/, Percent /*, Price, Token*/ } from '@uniswap/sdk-core'
 //import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 //import { sendEvent } from 'components/analytics'
@@ -33,7 +33,8 @@ import { Link, useParams } from 'react-router-dom'
 //import { Bound } from 'state/mint/v3/actions'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { BuyInfo } from 'state/buy/hooks'
-import { useTokenBalance } from 'state/connection/hooks'
+//import { useTokenBalance } from 'state/connection/hooks'
+import { useCurrencyBalance } from 'state/connection/hooks'
 //import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled /*, { useTheme }*/ from 'styled-components/macro'
 import { ExternalLink, /*HideExtraSmall,*/ ThemedText } from 'theme'
@@ -213,7 +214,7 @@ export function PoolPositionPage() {
   const { minPeriod, spread, transactionFee } = poolStorage?.poolVariables || {}
   const { unitaryValue, totalSupply } = poolStorage?.poolTokensInfo || {}
 
-  //const token = useToken(poolAddressFromUrl ?? undefined) as Currency
+  const pool = useCurrency(poolAddressFromUrl ?? undefined)
   let base = useCurrency(baseToken !== ZERO_ADDRESS ? baseToken : undefined)
 
   const amount = JSBI.BigInt(unitaryValue ?? 0)
@@ -221,7 +222,8 @@ export function PoolPositionPage() {
   if (baseToken === ZERO_ADDRESS) {
     base = nativeOnChain(chainId ?? 1)
   }
-  const poolPrice = CurrencyAmount.fromRawAmount(base ?? nativeOnChain(chainId ?? 1), amount ?? undefined)
+
+  const poolPrice = pool ? CurrencyAmount.fromRawAmount(pool, amount) : undefined
   // TODO: check results on altchains
   const baseTokenSymbol = base?.isNative ? 'ETH' : base?.symbol
 
@@ -232,11 +234,14 @@ export function PoolPositionPage() {
 
   const lockup = JSBI.BigInt(minPeriod ?? 0).toLocaleString()
 
-  // TODO: check how we should better organize these values
+  // TODO: check if should move definitions in custom hook
   //const buyInfo = useBuyInfo(poolAddressFromUrl)
+
+  // TODO: check how we should better organize these values
   const baseTokenAmount = base ? CurrencyAmount.fromRawAmount(base, '0') : undefined
-  const buyInfo = { poolAddress: poolAddressFromUrl, recipient: account, purchaseAmount: baseTokenAmount } as BuyInfo
-  const userBaseTokenBalance = useTokenBalance(account ?? undefined, buyInfo?.purchaseAmount?.currency as Token)
+  const buyInfo = { pool, recipient: account, purchaseAmount: baseTokenAmount, poolPriceAmount: poolPrice } as BuyInfo
+  //const userBaseTokenBalance = useTokenBalance(account ?? undefined, buyInfo?.purchaseAmount?.currency as Token)
+  const userBaseTokenBalance = useCurrencyBalance(account ?? undefined, buyInfo?.purchaseAmount?.currency)
 
   //const addTransaction = useTransactionAdder()
 
