@@ -61,7 +61,6 @@ export const ListingButton = ({ onClick }: { onClick: () => void }) => {
     setListings(newListings)
     setCollectionsRequiringApproval(newCollectionsToApprove)
     setListingStatus(ListingStatus.DEFINED)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sellAssets])
 
   // Find issues with item listing data
