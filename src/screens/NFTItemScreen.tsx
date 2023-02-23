@@ -1,4 +1,5 @@
 import { ApolloQueryResult } from '@apollo/client'
+import { isAddress } from 'ethers/lib/utils'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Share } from 'react-native'
@@ -22,10 +23,10 @@ import { uniswapUrls } from 'src/constants/urls'
 import { NftItemScreenQuery, useNftItemScreenQuery } from 'src/data/__generated__/types-and-hooks'
 import { selectModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
-import { useDisplayName } from 'src/features/wallet/hooks'
+import { useActiveAccountAddressWithThrow, useDisplayName } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { iconSizes, imageSizes } from 'src/styles/sizing'
-import { shortenAddress } from 'src/utils/addresses'
+import { areAddressesEqual, shortenAddress } from 'src/utils/addresses'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { formatNumber, NumberType } from 'src/utils/format'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
@@ -38,6 +39,7 @@ export function NFTItemScreen({
 }: AppStackScreenProp<Screens.NFTItem>): JSX.Element {
   const theme = useAppTheme()
   const { t } = useTranslation()
+  const activeAccountAddress = useActiveAccountAddressWithThrow()
 
   const navigation = useAppStackNavigation()
 
@@ -98,6 +100,10 @@ export function NFTItemScreen({
     }
   }
 
+  // Disable navigation to profile if user owns NFT or invalid owner
+  const disableProfileNavigation =
+    areAddressesEqual(owner, activeAccountAddress) || !isAddress(owner)
+
   const onPressOwner = (): void => {
     navigation.navigate(Screens.ExternalProfile, { address: owner })
   }
@@ -157,7 +163,7 @@ export function NFTItemScreen({
                 variant="subheadLarge">
                 {asset?.name || '-'}
               </Text>
-              <TouchableArea onPress={onPressOwner}>
+              <TouchableArea disabled={disableProfileNavigation} onPress={onPressOwner}>
                 <Text color="textSecondary" variant="subheadSmall">
                   {t('Owned by {{owner}}', { owner: ownerDisplayName?.name })}
                 </Text>
