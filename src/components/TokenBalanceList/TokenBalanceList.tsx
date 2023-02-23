@@ -119,7 +119,7 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
         }>
         {!data ? (
           isNonPollingRequestInFlight(networkStatus) ? (
-            <Box my="spacing12" style={containerProps?.loadingContainerStyle}>
+            <Box style={containerProps?.loadingContainerStyle}>
               <Loader.Token repeat={4} />
             </Box>
           ) : (

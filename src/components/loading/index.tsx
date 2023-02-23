@@ -33,7 +33,7 @@ function Wallets({ repeat = 1 }: { repeat?: number }): JSX.Element {
 function Token({ repeat = 1 }: { repeat?: number }): JSX.Element {
   return (
     <Shimmer>
-      <Flex grow>
+      <Flex grow gap="spacing4">
         {new Array(repeat).fill(null).map((_, i, { length }) => (
           <React.Fragment key={i}>
             <TokenLoader opacity={(length - i) / length} />

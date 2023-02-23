@@ -21,7 +21,7 @@ describe(SearchPopularTokens, () => {
     const tree = render(<SearchPopularTokens />, { mocks: [mock] })
 
     // Loading should show Token loader
-    expect(screen.getAllByText('Token Name')).toBeDefined()
+    expect(screen.getAllByText('Token Full Name')).toBeDefined()
     expect(tree.toJSON()).toMatchSnapshot()
 
     // Success where WETH result in topTokens is replaced by ETH

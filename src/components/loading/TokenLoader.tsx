@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { HiddenFromScreenReaders } from 'src/components/text/HiddenFromScreenReaders'
+import { TOKEN_BALANCE_ITEM_HEIGHT } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { iconSizes } from 'src/styles/sizing'
 
 interface TokenLoaderProps {
@@ -11,33 +11,35 @@ interface TokenLoaderProps {
 export function TokenLoader({ opacity }: TokenLoaderProps): JSX.Element {
   return (
     <Flex
-      row
-      alignItems="center"
-      gap="spacing12"
+      alignItems="flex-start"
+      flexDirection="row"
       justifyContent="space-between"
+      minHeight={TOKEN_BALANCE_ITEM_HEIGHT}
       opacity={opacity}
-      overflow="hidden">
-      <Box
-        bg="background3"
-        borderRadius="roundedFull"
-        height={iconSizes.icon40}
-        width={iconSizes.icon40}
-      />
-      <Flex shrink alignItems="flex-start" gap="spacing8" width="100%">
-        <Box bg="background3" borderRadius="rounded4" width="80%">
-          <HiddenFromScreenReaders>
-            <Text color="none" numberOfLines={1} opacity={0} variant="bodyLarge">
-              Token Name
-            </Text>
-          </HiddenFromScreenReaders>
-        </Box>
-        <Box bg="background3" borderRadius="rounded4" width="30%">
-          <HiddenFromScreenReaders>
-            <Text color="none" opacity={0} variant="subheadSmall">
-              Ticker
-            </Text>
-          </HiddenFromScreenReaders>
-        </Box>
+      py="spacing8">
+      <Flex row alignItems="center" flexShrink={1} gap="spacing12" overflow="hidden">
+        <Box
+          bg="background3"
+          borderRadius="roundedFull"
+          minHeight={iconSizes.icon40}
+          minWidth={iconSizes.icon40}
+        />
+        <Flex alignItems="flex-start" flexShrink={1} gap="none">
+          <Text
+            loading="no-shimmer"
+            loadingPlaceholderText="Token Full Name"
+            numberOfLines={1}
+            variant="bodyLarge"
+          />
+          <Flex row alignItems="center" gap="spacing8" minHeight={20}>
+            <Text
+              loading="no-shimmer"
+              loadingPlaceholderText="1,000 TFN"
+              numberOfLines={1}
+              variant="subheadSmall"
+            />
+          </Flex>
+        </Flex>
       </Flex>
     </Flex>
   )
