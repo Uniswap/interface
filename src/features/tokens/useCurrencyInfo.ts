@@ -7,11 +7,9 @@ import { currencyIdToContractInput, gqlTokenToCurrencyInfo } from 'src/features/
 import { buildNativeCurrencyId, currencyId } from 'src/utils/currencyId'
 
 export function useCurrencyInfo(_currencyId?: string): NullUndefined<CurrencyInfo> {
-  const currencyContractInput = currencyIdToContractInput(_currencyId ?? '')
-
   const { data } = useTokenQuery({
-    variables: currencyContractInput,
-    skip: !currencyContractInput.address,
+    variables: currencyIdToContractInput(_currencyId ?? ''),
+    skip: !_currencyId,
     fetchPolicy: 'cache-first',
   })
 
