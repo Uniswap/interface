@@ -12,6 +12,7 @@ import {
   ONESIGNAL_APP_ID,
   SENTRY_DSN,
   STATSIG_API_KEY,
+  STATSIG_PROXY_URL,
   UNISWAP_API_BASE_URL,
   UNISWAP_API_KEY,
   UNISWAP_APP_URL,
@@ -40,6 +41,7 @@ export interface Config {
   onesignalAppId: string
   sentryDsn: string
   statSigApiKey: string
+  statSigProxyUrl: string
   version: string
   walletConnectProjectId: string
 }
@@ -62,6 +64,7 @@ const _config: Config = {
   onesignalAppId: process.env.ONESIGNAL_APP_ID || ONESIGNAL_APP_ID,
   sentryDsn: process.env.SENTRY_DSN || SENTRY_DSN,
   statSigApiKey: process.env.STATSIG_API_KEY || STATSIG_API_KEY,
+  statSigProxyUrl: process.env.STATSIG_PROXY_URL || STATSIG_PROXY_URL,
   version: VERSION,
   walletConnectProjectId: process.env.WALLETCONNECT_PROJECT_ID || WALLETCONNECT_PROJECT_ID,
 }

@@ -41,6 +41,9 @@ SplashScreen.preventAutoHideAsync()
 // Construct a new instrumentation instance. This is needed to communicate between the integration and React
 const routingInstrumentation = new Sentry.ReactNavigationInstrumentation()
 
+// Dummy key since we use the reverse proxy will handle the real key
+const DUMMY_STATSIG_SDK_KEY = 'client-0000000000000000000000000000000000000000000'
+
 if (!__DEV__) {
   Sentry.init({
     dsn: config.sentryDsn,
@@ -86,8 +89,9 @@ function App(): JSX.Element | null {
       environment: {
         tier: getStatsigEnvironmentTier(),
       },
+      api: config.statSigProxyUrl,
     },
-    sdkKey: config.statSigApiKey,
+    sdkKey: DUMMY_STATSIG_SDK_KEY,
     user: deviceId ? { userID: deviceId } : {},
     waitForInitialization: true,
   }

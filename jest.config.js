@@ -46,6 +46,7 @@ module.exports = {
     SHAKE_CLIENT_ID: 123,
     SHAKE_CLIENT_SECRET: 123,
     STATSIG_API_KEY: 123,
+    STATSIG_PROXY_URL: 'https://api.statsig.com',
     UNISWAP_API_KEY: 123,
     UNISWAP_API_BASE_URL: 'https://api.uniswap.org',
     WALLETCONNECT_PROJECT_ID: 123,
