@@ -20,17 +20,19 @@ import { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
+import { useSendTransaction, useTransactionResponse } from 'nft/hooks'
 import { useBag } from 'nft/hooks/useBag'
 import { useBagTotalEthPrice } from 'nft/hooks/useBagTotalEthPrice'
 import useDerivedPayWithAnyTokenSwapInfo from 'nft/hooks/useDerivedPayWithAnyTokenSwapInfo'
+import { useFetchAssets } from 'nft/hooks/useFetchAssets'
 import usePayWithAnyTokenSwap from 'nft/hooks/usePayWithAnyTokenSwap'
 import usePermit2Approval from 'nft/hooks/usePermit2Approval'
 import { PriceImpact, usePriceImpact } from 'nft/hooks/usePriceImpact'
 import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { useWalletBalance } from 'nft/hooks/useWalletBalance'
-import { BagStatus } from 'nft/types'
-import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
-import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
+import { BagItemStatus, BagStatus, RouteResponse, TxStateType } from 'nft/types'
+import { ethNumberStandardFormatter, formatWeiToDecimal, recalculateBagUsingPooledAssets } from 'nft/utils'
+import { PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
@@ -274,7 +276,7 @@ const FiatValue = ({
 }
 
 interface BagFooterProps {
-  fetchAssets: () => void
+  setModalIsOpen: (open: boolean) => void
   eventProperties: Record<string, unknown>
 }
 
@@ -285,10 +287,10 @@ const PENDING_BAG_STATUSES = [
   BagStatus.PROCESSING_TRANSACTION,
 ]
 
-export const BagFooter = ({ fetchAssets, eventProperties }: BagFooterProps) => {
+export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) => {
   const toggleWalletModal = useToggleWalletModal()
   const theme = useTheme()
-  const { account, chainId, connector } = useWeb3React()
+  const { account, chainId, connector, provider } = useWeb3React()
   const connected = Boolean(account && chainId)
   const totalEthPrice = useBagTotalEthPrice()
   const shouldUsePayWithAnyToken = usePayWithAnyTokenEnabled()
@@ -300,16 +302,22 @@ export const BagFooter = ({ fetchAssets, eventProperties }: BagFooterProps) => {
     !!inputCurrency && inputCurrency.isToken ? inputCurrency : undefined
   )
   const {
+    itemsInBag: uncheckedItemsInBag,
     isLocked: bagIsLocked,
     bagStatus,
     setBagExpanded,
     setBagStatus,
+    setLocked: setBagLocked,
+    reset: resetBag,
   } = useBag(
-    ({ isLocked, bagStatus, setBagExpanded, setBagStatus }) => ({
+    ({ itemsInBag, isLocked, bagStatus, setBagExpanded, setBagStatus, setLocked, reset }) => ({
+      itemsInBag,
       isLocked,
       bagStatus,
       setBagExpanded,
       setBagStatus,
+      setLocked,
+      reset,
     }),
     shallow
   )
@@ -317,6 +325,51 @@ export const BagFooter = ({ fetchAssets, eventProperties }: BagFooterProps) => {
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
   const activeCurrency = inputCurrency ?? defaultCurrency
   const usingPayWithAnyToken = !!inputCurrency && shouldUsePayWithAnyToken && chainId === SupportedChainId.MAINNET
+
+  const itemsInBag = useMemo(() => recalculateBagUsingPooledAssets(uncheckedItemsInBag), [uncheckedItemsInBag])
+  const sendTransaction = useSendTransaction((state) => state.sendTransaction)
+  const transactionState = useSendTransaction((state) => state.state)
+  const setTransactionState = useSendTransaction((state) => state.setState)
+  const transactionStateRef = useRef(transactionState)
+  const [setTransactionResponse] = useTransactionResponse((state) => [state.setTransactionResponse])
+
+  const purchaseAssets = async (routingData: RouteResponse, purchasingWithErc20: boolean) => {
+    if (!provider || !routingData) return
+    const purchaseResponse = await sendTransaction(
+      provider?.getSigner(),
+      itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset),
+      routingData,
+      purchasingWithErc20
+    )
+    if (
+      purchaseResponse &&
+      (transactionStateRef.current === TxStateType.Success || transactionStateRef.current === TxStateType.Failed)
+    ) {
+      setBagLocked(false)
+      setModalIsOpen(false)
+      setTransactionResponse(purchaseResponse)
+      setBagExpanded({ bagExpanded: false })
+      resetBag()
+    }
+  }
+
+  useEffect(() => {
+    useSendTransaction.subscribe((state) => (transactionStateRef.current = state.state))
+  }, [])
+
+  useEffect(() => {
+    if (transactionStateRef.current === TxStateType.Confirming) setBagStatus(BagStatus.PROCESSING_TRANSACTION)
+    if (transactionStateRef.current === TxStateType.Denied || transactionStateRef.current === TxStateType.Invalid) {
+      if (transactionStateRef.current === TxStateType.Invalid) setBagStatus(BagStatus.WARNING)
+      else setBagStatus(BagStatus.CONFIRM_REVIEW)
+      setTransactionState(TxStateType.New)
+
+      setBagLocked(false)
+      setModalIsOpen(false)
+    }
+  }, [setBagLocked, setBagStatus, setModalIsOpen, setTransactionState])
+
+  const fetchAssets = useFetchAssets(itemsInBag, purchaseAssets)
 
   const parsedOutputAmount = useMemo(() => {
     return tryParseCurrencyAmount(formatEther(totalEthPrice.toString()), defaultCurrency ?? undefined)
@@ -373,7 +426,7 @@ export const BagFooter = ({ fetchAssets, eventProperties }: BagFooterProps) => {
     handleClick,
     buttonColor,
   } = useMemo(() => {
-    let handleClick = fetchAssets
+    let handleClick: (() => void) | (() => Promise<void>) = fetchAssets
     let buttonText = <Trans>Something went wrong</Trans>
     let disabled = true
     let warningText = undefined
