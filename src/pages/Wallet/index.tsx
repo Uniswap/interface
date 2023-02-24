@@ -18,11 +18,12 @@ import secureImg from 'assets/images/wallet/secure.svg'
 import screenImg1 from 'assets/images/wallet/swap.png'
 import walletImg from 'assets/images/wallet/wallet.svg'
 import { APP_STORE_LINK } from 'components/WalletDropdown/DownloadButton'
+import { useAtom } from 'jotai'
 import React, { PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react'
 import { useCloseModal } from 'state/application/hooks'
-import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { ThemeMode, themeModeAtom } from 'theme/components/ThemeToggle'
 
 import { VideoComponent } from './Video'
 
@@ -885,28 +886,28 @@ const VideoBackground = styled.div`
 `
 
 export default function WalletPage(): JSX.Element {
-  const [darkMode, toggleDarkMode] = useDarkModeManager()
-  const wasInitiallyDarkmode = useRef(darkMode)
+  const [themeMode, setThemeMode] = useAtom(themeModeAtom)
+  const initalThemeMode = useRef(themeMode)
 
   const closeWalletModal = useCloseModal()
   const isFirstRender = useRef(true)
 
   useEffect(() => {
     if (isFirstRender.current) {
+      isFirstRender.current = false
       closeWalletModal()
     }
-    isFirstRender.current = false
   }, [closeWalletModal])
 
   useEffect(() => {
-    if (darkMode) {
-      toggleDarkMode()
-    }
-    const wasDarkMode = wasInitiallyDarkmode.current
+    const initialMode = initalThemeMode.current
+    if (initialMode !== ThemeMode.LIGHT) setThemeMode(ThemeMode.LIGHT)
+
     return () => {
-      if (wasDarkMode) toggleDarkMode()
+      if (initialMode !== ThemeMode.LIGHT) setThemeMode(initialMode)
     }
-  }, [darkMode, toggleDarkMode, wasInitiallyDarkmode])
+  }, [setThemeMode])
+
   return (
     <Layout>
       <Reset />

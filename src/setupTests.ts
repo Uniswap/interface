@@ -9,3 +9,13 @@ if (typeof global.TextEncoder === 'undefined') {
   global.TextEncoder = TextEncoder
   global.TextDecoder = TextDecoder as typeof global.TextDecoder
 }
+
+global.matchMedia =
+  global.matchMedia ||
+  function () {
+    return {
+      matches: false,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    }
+  }

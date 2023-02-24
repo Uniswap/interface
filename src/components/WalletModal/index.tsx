@@ -1,30 +1,35 @@
+import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, user } from '@uniswap/analytics'
 import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { getWalletMeta } from '@uniswap/conedison/provider/meta'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
+import { AutoRow } from 'components/Row'
 import { connectionErrorAtom } from 'components/WalletDropdown/DefaultMenu'
+import IconButton from 'components/WalletDropdown/IconButton'
 import { Connection, CONNECTIONS, ConnectionType, networkConnection } from 'connection'
 import { getConnection } from 'connection'
 import { ErrorCode } from 'connection/utils'
 import { isSupportedChain } from 'constants/chains'
+import { useMgtmEnabled } from 'featureFlags/flags/mgtm'
 import { useAtom } from 'jotai'
 import { useCallback, useEffect, useState } from 'react'
+import { Settings } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import { useConnectedWallets } from 'state/wallets/hooks'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 import { flexColumnNoWrap } from 'theme/styles'
 
 import ConnectionErrorView from './ConnectionErrorView'
 import Option from './Option'
 import PrivacyPolicyNotice from './PrivacyPolicyNotice'
+
 const Wrapper = styled.div`
   ${flexColumnNoWrap};
   background-color: ${({ theme }) => theme.backgroundSurface};
-  margin: 0;
-  padding: 0;
   width: 100%;
 `
 
@@ -76,7 +81,7 @@ function didUserReject(connection: Connection, error: any): boolean {
   )
 }
 
-export default function WalletModal() {
+export default function WalletModal({ openSettings }: { openSettings: () => void }) {
   const dispatch = useAppDispatch()
   const { connector, account, chainId, provider } = useWeb3React()
 
@@ -151,8 +156,16 @@ export default function WalletModal() {
     [dispatch, setPendingError]
   )
 
+  const mgtmEnabled = useMgtmEnabled()
+
   return (
     <Wrapper data-testid="wallet-modal">
+      <AutoRow justify="space-between" width="100%" marginBottom="16px">
+        <ThemedText.SubHeader fontWeight={500}>Connect a wallet</ThemedText.SubHeader>
+        <IconButton Icon={Settings} onClick={openSettings} data-testid="wallet-settings">
+          <Trans>Settings</Trans>
+        </IconButton>
+      </AutoRow>
       {pendingError ? (
         pendingConnection && (
           <ConnectionErrorView openOptions={openOptions} retryActivation={() => tryActivation(pendingConnection)} />
@@ -161,7 +174,8 @@ export default function WalletModal() {
         <AutoColumn gap="16px">
           <OptionGrid data-testid="option-grid">
             {CONNECTIONS.map((connection) =>
-              connection.shouldDisplay ? (
+              // Hides Uniswap Wallet if mgtm is disabled
+              connection.shouldDisplay && !(connection.type === ConnectionType.UNIWALLET && !mgtmEnabled) ? (
                 <Option
                   key={connection.name}
                   connection={connection}

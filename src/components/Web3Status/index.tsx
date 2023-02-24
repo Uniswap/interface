@@ -4,6 +4,7 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap
 import { useWeb3React } from '@web3-react/core'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import WalletDropdown from 'components/WalletDropdown'
+import PrefetchBalancesWrapper from 'components/WalletDropdown/PrefetchBalancesWrapper'
 import { getConnection } from 'connection'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
@@ -267,6 +268,7 @@ function Web3StatusInner() {
   }
 }
 
+// eslint-disable-next-line import/no-unused-modules
 export default function Web3Status() {
   const ref = useRef<HTMLDivElement>(null)
   const walletRef = useRef<HTMLDivElement>(null)
@@ -276,13 +278,15 @@ export default function Web3Status() {
   useOnClickOutside(ref, isOpen ? closeModal : undefined, [walletRef])
 
   return (
-    <span ref={ref}>
-      <Web3StatusInner />
-      <Portal>
-        <span ref={walletRef}>
-          <WalletDropdown />
-        </span>
-      </Portal>
-    </span>
+    <PrefetchBalancesWrapper>
+      <span ref={ref}>
+        <Web3StatusInner />
+        <Portal>
+          <span ref={walletRef}>
+            <WalletDropdown />
+          </span>
+        </Portal>
+      </span>
+    </PrefetchBalancesWrapper>
   )
 }

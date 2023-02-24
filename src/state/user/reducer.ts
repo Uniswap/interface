@@ -16,9 +16,6 @@ export interface UserState {
   // the timestamp of the last updateVersion action
   lastUpdateVersionTimestamp?: number
 
-  matchesDarkMode: boolean // whether the dark mode media query matches
-
-  userDarkMode: boolean | null // the user's choice for dark mode or light mode
   userLocale: SupportedLocale | null
 
   userExpertMode: boolean
@@ -62,8 +59,6 @@ function pairKey(token0Address: string, token1Address: string) {
 export const initialState: UserState = {
   taxServiceDismissals: 0,
   selectedWallet: undefined,
-  matchesDarkMode: false,
-  userDarkMode: null,
   userExpertMode: false,
   userLocale: null,
   userClientSideRouter: false,
@@ -88,14 +83,6 @@ const userSlice = createSlice({
     },
     updateSelectedWallet(state, { payload: { wallet } }) {
       state.selectedWallet = wallet
-    },
-    updateUserDarkMode(state, action) {
-      state.userDarkMode = action.payload.userDarkMode
-      state.timestamp = currentTimestamp()
-    },
-    updateMatchesDarkMode(state, action) {
-      state.matchesDarkMode = action.payload.matchesDarkMode
-      state.timestamp = currentTimestamp()
     },
     updateUserExpertMode(state, action) {
       state.userExpertMode = action.payload.userExpertMode
@@ -185,9 +172,7 @@ export const {
   updateTaxServiceAcknowledgments,
   updateSelectedWallet,
   updateHideClosedPositions,
-  updateMatchesDarkMode,
   updateUserClientSideRouter,
-  updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
   updateUserLocale,

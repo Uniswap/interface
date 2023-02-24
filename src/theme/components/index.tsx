@@ -86,6 +86,12 @@ export const ButtonText = styled.button`
   }
 `
 
+export const EllipsisStyle = css`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+
 export const ClickableStyle = css`
   text-decoration: none;
   cursor: pointer;
@@ -342,9 +348,7 @@ const CopyHelperContainer = styled.div<{ clicked: boolean; color?: string; gap: 
 `
 
 const CopyHelperText = styled.div<{ fontSize?: number; offset: number }>`
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
+  ${EllipsisStyle}
   ${({ fontSize }) => (fontSize ? 'font-size: ' + fontSize + 'px' : 'inherit')};
   max-width: calc(100% - ${({ offset }) => offset + 'px'});
 `

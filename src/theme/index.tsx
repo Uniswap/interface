@@ -1,8 +1,8 @@
 import { rootCssString } from 'nft/css/cssStringFromTheme'
 import React, { useMemo } from 'react'
 import { createGlobalStyle, css, ThemeProvider as StyledComponentsThemeProvider } from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
-import { useIsDarkMode } from '../state/user/hooks'
 import { darkTheme, lightTheme } from './colors'
 import { darkDeprecatedTheme, lightDeprecatedTheme } from './deprecatedColors'
 

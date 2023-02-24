@@ -1,4 +1,5 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { useMGTMMicrositeEnabled } from 'featureFlags/flags/mgtm'
 import { PropsWithChildren, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -37,15 +38,17 @@ export const APP_STORE_LINK = 'https://apps.apple.com/us/app/uniswap-wallet-defi
 // Launches App Store if on an iOS device, else navigates to Uniswap Wallet microsite
 export function DownloadButton({ onClick, text = 'Download' }: { onClick?: () => void; text?: string }) {
   const navigate = useNavigate()
+  const micrositeEnabled = useMGTMMicrositeEnabled()
+
   const onButtonClick = useCallback(() => {
     // handles any actions required by the parent, i.e. cancelling wallet connection attempt or dismissing an ad
     onClick?.()
 
-    if (isIOS) {
+    if (isIOS || !micrositeEnabled) {
       sendAnalyticsEvent('Uniswap wallet download clicked')
       window.open(APP_STORE_LINK)
     } else navigate('/wallet')
-  }, [onClick, navigate])
+  }, [onClick, micrositeEnabled, navigate])
 
   return (
     <BaseButton branded onClick={onButtonClick}>

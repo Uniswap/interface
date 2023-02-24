@@ -2,28 +2,7 @@
 
 exports[`renders multi route 1`] = `
 <DocumentFragment>
-  .c7 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background: #E8ECFB;
-  border: unset;
-  border-radius: 0.5rem;
-  color: #000;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  padding: 4px 6px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  font-weight: 500;
-}
-
-.c1 {
+  .c1 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -62,6 +41,27 @@ exports[`renders multi route 1`] = `
 
 .c12 > * {
   margin: 1px !important;
+}
+
+.c7 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #E8ECFB;
+  border: unset;
+  border-radius: 0.5rem;
+  color: #000;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  padding: 4px 6px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-weight: 500;
 }
 
 .c0 {
@@ -240,28 +240,7 @@ exports[`renders multi route 1`] = `
 
 exports[`renders single route 1`] = `
 <DocumentFragment>
-  .c7 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background: #E8ECFB;
-  border: unset;
-  border-radius: 0.5rem;
-  color: #000;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  padding: 4px 6px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  font-weight: 500;
-}
-
-.c1 {
+  .c1 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -300,6 +279,27 @@ exports[`renders single route 1`] = `
 
 .c12 > * {
   margin: 1px !important;
+}
+
+.c7 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #E8ECFB;
+  border: unset;
+  border-radius: 0.5rem;
+  color: #000;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  padding: 4px 6px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-weight: 500;
 }
 
 .c0 {

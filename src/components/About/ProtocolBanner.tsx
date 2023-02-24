@@ -1,7 +1,7 @@
 import { ButtonEmpty } from 'components/Button'
-import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import meshSrc from './images/Mesh.png'
 

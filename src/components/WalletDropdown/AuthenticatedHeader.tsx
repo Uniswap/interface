@@ -1,26 +1,25 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName } from '@uniswap/analytics-events'
-import { formatUSDPrice } from '@uniswap/conedison/format'
+import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonEmphasis, ButtonSize, LoadingButtonSpinner, ThemeButton } from 'components/Button'
+import Column from 'components/Column'
+import { AutoRow } from 'components/Row'
+import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import Tooltip from 'components/Tooltip'
 import { getConnection } from 'connection'
-import { getChainInfoOrDefault } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
-import useStablecoinPrice from 'hooks/useStablecoinPrice'
-import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import { usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
-import { useCallback, useMemo, useState } from 'react'
-import { Copy, CreditCard, Info, Power, Settings } from 'react-feather'
+import { useCallback, useState } from 'react'
+import { ArrowDownRight, ArrowUpRight, Copy, CreditCard, IconProps, Info, Power, Settings } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
-import { useCurrencyBalanceString } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { CopyHelper, ExternalLink, ThemedText } from 'theme'
 
 import { shortenAddress } from '../../nft/utils/address'
@@ -29,6 +28,7 @@ import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import StatusIcon from '../Identicon/StatusIcon'
 import IconButton, { IconHoverText } from './IconButton'
+import MiniPortfolio from './MiniPortfolio'
 
 const BuyCryptoButton = styled(ThemeButton)`
   border-color: transparent;
@@ -57,12 +57,6 @@ const UNIButton = styled(WalletButton)`
   background: linear-gradient(to right, #9139b0 0%, #4261d6 100%);
 `
 
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-`
-
 const IconContainer = styled.div`
   display: flex;
   align-items: center;
@@ -77,13 +71,6 @@ const IconContainer = styled.div`
       left: 0px;
     }
   }
-`
-
-const USDText = styled.div`
-  font-size: 16px;
-  font-weight: 500;
-  color: ${({ theme }) => theme.textSecondary};
-  margin-top: 8px;
 `
 const FiatOnrampNotAvailableText = styled(ThemedText.Caption)`
   align-items: center;
@@ -102,7 +89,6 @@ const FiatOnrampAvailabilityExternalLink = styled(ExternalLink)`
 
 const StatusWrapper = styled.div`
   display: inline-block;
-  margin-top: 4px;
   width: 70%;
   padding-right: 4px;
   display: inline-flex;
@@ -126,17 +112,12 @@ const StyledInfoIcon = styled(Info)`
 const StyledLoadingButtonSpinner = styled(LoadingButtonSpinner)`
   fill: ${({ theme }) => theme.accentAction};
 `
-const BalanceWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 16px 0;
-`
 
 const HeaderWrapper = styled.div`
-  margin-bottom: 12px;
+  margin-bottom: 20px;
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
 `
 
 const CopyText = styled(CopyHelper).attrs({
@@ -147,13 +128,18 @@ const CopyText = styled(CopyHelper).attrs({
   iconPosition: 'right',
 })``
 
-const AuthenticatedHeader = () => {
-  const { account, chainId, connector, ENSName } = useWeb3React()
+export function PortfolioArrow({ change, ...rest }: { change: number } & IconProps) {
+  const theme = useTheme()
+  return change < 0 ? (
+    <ArrowDownRight color={theme.accentCritical} size={20} {...rest} />
+  ) : (
+    <ArrowUpRight color={theme.accentSuccess} size={20} {...rest} />
+  )
+}
+
+export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
+  const { connector, ENSName } = useWeb3React()
   const dispatch = useAppDispatch()
-  const balanceString = useCurrencyBalanceString(account ?? '')
-  const {
-    nativeCurrency: { symbol: nativeCurrencySymbol },
-  } = getChainInfoOrDefault(chainId ? chainId : SupportedChainId.MAINNET)
   const navigate = useNavigate()
   const closeModal = useCloseModal()
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
@@ -164,8 +150,6 @@ const AuthenticatedHeader = () => {
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
   const isUnclaimed = useUserHasAvailableClaim(account)
   const connection = getConnection(connector)
-  const nativeCurrency = useNativeCurrency()
-  const nativeCurrencyPrice = useStablecoinPrice(nativeCurrency ?? undefined)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const openNftModal = useToggleModal(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
   const disconnect = useCallback(() => {
@@ -175,13 +159,6 @@ const AuthenticatedHeader = () => {
     connector.resetState()
     dispatch(updateSelectedWallet({ wallet: undefined }))
   }, [connector, dispatch])
-
-  const amountUSD = useMemo(() => {
-    if (!nativeCurrencyPrice || !balanceString) return undefined
-    const price = parseFloat(nativeCurrencyPrice.toFixed(5))
-    const balance = parseFloat(balanceString)
-    return price * balance
-  }, [balanceString, nativeCurrencyPrice])
 
   const navigateToProfile = useCallback(() => {
     resetSellAssets()
@@ -219,6 +196,12 @@ const AuthenticatedHeader = () => {
   const openFiatOnrampUnavailableTooltip = useCallback(() => setShow(true), [setShow])
   const closeFiatOnrampUnavailableTooltip = useCallback(() => setShow(false), [setShow])
 
+  const { data: portfolioBalances } = usePortfolioBalancesQuery({ variables: { ownerAddress: account ?? '' } })
+  const portfolio = portfolioBalances?.portfolios?.[0]
+  const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
+  const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
+  const percentChange = portfolio?.tokensTotalDenominatedValueChange?.percentage?.value
+
   return (
     <>
       <HeaderWrapper>
@@ -239,7 +222,7 @@ const AuthenticatedHeader = () => {
           )}
         </StatusWrapper>
         <IconContainer>
-          <IconButton target="_blank" Icon={Settings}>
+          <IconButton data-testid="wallet-settings" onClick={openSettings} Icon={Settings}>
             <Trans>Settings</Trans>
           </IconButton>
           <IconButton data-testid="wallet-disconnect" onClick={disconnect} Icon={Power}>
@@ -248,13 +231,21 @@ const AuthenticatedHeader = () => {
         </IconContainer>
       </HeaderWrapper>
       <Column>
-        <BalanceWrapper>
-          <ThemedText.SubHeaderSmall>ETH Balance</ThemedText.SubHeaderSmall>
-          <ThemedText.HeadlineLarge fontSize={36} fontWeight={400}>
-            {balanceString} {nativeCurrencySymbol}
+        <Column gap="xs">
+          <ThemedText.HeadlineLarge fontWeight={500}>
+            {formatNumber(totalBalance, NumberType.PortfolioBalance)}
           </ThemedText.HeadlineLarge>
-          {amountUSD !== undefined && <USDText>{formatUSDPrice(amountUSD)} USD</USDText>}
-        </BalanceWrapper>
+          {absoluteChange && percentChange && (
+            <AutoRow marginBottom="20px">
+              <PortfolioArrow change={absoluteChange} />
+              <ThemedText.BodySecondary>
+                {`${formatNumber(Math.abs(absoluteChange), NumberType.PortfolioBalance)} (${formatDelta(
+                  percentChange
+                )})`}
+              </ThemedText.BodySecondary>
+            </AutoRow>
+          )}
+        </Column>
         <ProfileButton
           data-testid="nft-view-self-nfts"
           onClick={navigateToProfile}
@@ -300,6 +291,7 @@ const AuthenticatedHeader = () => {
             </Tooltip>
           </FiatOnrampNotAvailableText>
         )}
+        <MiniPortfolio account={account} />
         {isUnclaimed && (
           <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
             <Trans>Claim</Trans> {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} <Trans>reward</Trans>
@@ -314,5 +306,3 @@ const AuthenticatedHeader = () => {
     </>
   )
 }
-
-export default AuthenticatedHeader

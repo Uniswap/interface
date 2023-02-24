@@ -5,7 +5,8 @@ import { useWeb3React } from '@web3-react/core'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { isSupportedChain } from 'constants/chains'
 import usePrevious from 'hooks/usePrevious'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import shallow from 'zustand/shallow'
 
 const EMPTY_AMOUNT = ''
 
@@ -58,6 +59,7 @@ export function useSyncWidgetInputs({
   const [amount, setAmount] = useState<SwapValue['amount']>(EMPTY_AMOUNT)
   const [tokens, setTokens] = useState<SwapTokens>({
     ...defaultTokens,
+<<<<<<< HEAD
     [Field.OUTPUT]: defaultTokens[Field.OUTPUT] ?? defaultTokens.default,
   })
 
@@ -71,6 +73,26 @@ export function useSyncWidgetInputs({
       })
     }
   }, [baseTokens, defaultTokens])
+=======
+    [Field.OUTPUT]: defaultTokens.OUTPUT ?? defaultTokens.default,
+  })
+
+  const lastDefaultsRef = useRef(defaultTokens)
+  useEffect(() => {
+    if (!shallow(lastDefaultsRef.current, defaultTokens)) {
+      lastDefaultsRef.current = defaultTokens
+      setTokens((tokens) => {
+        const update = {
+          ...tokens,
+          [Field.INPUT]: defaultTokens[Field.INPUT] ?? tokens[Field.INPUT],
+          [Field.OUTPUT]: defaultTokens[Field.OUTPUT] ?? tokens[Field.OUTPUT] ?? defaultTokens.default,
+          default: defaultTokens.default,
+        }
+        return update
+      })
+    }
+  }, [defaultTokens])
+>>>>>>> 4242c8a8d (feat: new settings menu (#85))
 
   useEffect(() => {
     if (chainId !== previousChainId && !!previousChainId && isSupportedChain(chainId)) {

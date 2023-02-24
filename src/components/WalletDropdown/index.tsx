@@ -1,5 +1,6 @@
+import { ScrollBarStyles } from 'components/Common'
 import { useWindowSize } from 'hooks/useWindowSize'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
@@ -7,9 +8,6 @@ import { Z_INDEX } from 'theme/zIndex'
 import { useCloseModal, useModalIsOpen } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import DefaultMenu from './DefaultMenu'
-import LanguageMenu from './LanguageMenu'
-import { TransactionHistoryMenu } from './TransactionMenu'
-import UniwalletModal from './UniwalletModal'
 
 const ScrimBackground = styled.div`
   z-index: ${Z_INDEX.modalBackdrop};
@@ -41,7 +39,7 @@ const Scrim = ({ close }: { close: () => void }) => {
   return <ScrimBackground onClick={onClick} />
 }
 
-const WalletDropdownAnchor = styled.div`
+const WalletDropdownWrapper = styled.div`
   position: fixed;
   top: 72px;
   right: 20px;
@@ -53,59 +51,46 @@ const WalletDropdownAnchor = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-  }
-`
 
-const WalletDropdownWrapper = styled.div`
-  border-radius: 12px;
-  width: 320px;
-  display: flex;
-  flex-direction: column;
-  font-size: 16px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
-  padding: 12px 16px 16px;
-
-  box-shadow: ${({ theme }) => theme.deepShadow};
-  padding: 16px;
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     width: 100%;
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
     box-shadow: unset;
   }
+  overflow-y: auto;
+  ${ScrollBarStyles}
+  height: fit-content;
+  max-height: calc(100% - 80px);
+  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} max-height`};
+
+  ::-webkit-scrollbar-track {
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
+
+  border-radius: 12px;
+  width: 320px;
+  font-size: 16px;
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
+  padding: 14px 16px 16px;
+
+  box-shadow: ${({ theme }) => theme.deepShadow};
 `
 
-export enum MenuState {
-  DEFAULT = 'DEFAULT',
-  LANGUAGE = 'LANGUAGE',
-  TRANSACTIONS = 'TRANSACTIONS',
-}
-
 function WalletDropdown() {
-  const [menu, setMenu] = useState<MenuState>(MenuState.DEFAULT)
   const walletDropdownOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
-  const uniwalletDropdownOpen = useModalIsOpen(ApplicationModal.UNIWALLET_CONNECT)
+  const uniwalletModalOpen = useModalIsOpen(ApplicationModal.UNIWALLET_CONNECT)
   const closeWalletDropdown = useCloseModal()
 
-  return (
+  return walletDropdownOpen || uniwalletModalOpen ? (
     <>
-      <UniwalletModal />
-      {Boolean(walletDropdownOpen || uniwalletDropdownOpen) && (
-        <>
-          <Scrim close={closeWalletDropdown} />
-          <WalletDropdownAnchor>
-            <WalletDropdownWrapper>
-              {menu === MenuState.DEFAULT && <DefaultMenu setMenu={setMenu} />}
-              {menu === MenuState.TRANSACTIONS && <TransactionHistoryMenu onClose={() => setMenu(MenuState.DEFAULT)} />}
-              {menu === MenuState.LANGUAGE && <LanguageMenu onClose={() => setMenu(MenuState.DEFAULT)} />}
-            </WalletDropdownWrapper>
-          </WalletDropdownAnchor>
-        </>
-      )}
+      <Scrim close={closeWalletDropdown} />
+      <WalletDropdownWrapper>
+        <DefaultMenu />
+      </WalletDropdownWrapper>
     </>
-  )
+  ) : null
 }
 
 export default WalletDropdown

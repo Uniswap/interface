@@ -5,15 +5,16 @@ import Loader from 'components/Loader'
 import { MenuDropdown } from 'components/NavBar/MenuDropdown'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
+import { useMGTMMicrositeEnabled } from 'featureFlags/flags/mgtm'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { Box } from 'nft/components/Box'
 import { useBag } from 'nft/hooks/useBag'
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import { useIsDarkMode } from 'state/user/hooks'
 import { StatsigProvider, StatsigUser } from 'statsig-react'
 import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import { STATSIG_DUMMY_KEY } from 'tracing'
@@ -182,6 +183,7 @@ export default function App() {
 
   const isBagExpanded = useBag((state) => state.bagExpanded)
   const isOnWalletPage = useLocation().pathname === '/wallet'
+  const micrositeEnabled = useMGTMMicrositeEnabled()
   const isHeaderTransparent = (!scrolledState && !isBagExpanded) || isOnWalletPage
 
   const { account } = useWeb3React()
@@ -233,7 +235,7 @@ export default function App() {
                     }
                   />
                   <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
-                  <Route path="wallet" element={<Wallet />} />
+                  {micrositeEnabled && <Route path="wallet" element={<Wallet />} />}
                   <Route path="send" element={<RedirectPathToSwapOnly />} />
                   <Route path="swap" element={<Swap />} />
 

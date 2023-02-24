@@ -123,7 +123,7 @@ const commonTheme = {
   promotionalGradient: 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%);',
 
   hoverState: opacify(24, colors.blue200),
-  hoverDefault: opacify(8, colors.gray200),
+  hoverDefault: opacify(8, colors.gray300),
 }
 
 export const darkTheme = {

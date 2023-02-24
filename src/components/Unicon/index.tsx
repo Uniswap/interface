@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react'
-import { useIsDarkMode } from 'state/user/hooks'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import { blurs, UniconAttributeData, UniconAttributes, UniconAttributesToIndices } from './types'
 import { deriveUniconAttributeIndices, getUniconAttributeData, isEthAddress } from './utils'

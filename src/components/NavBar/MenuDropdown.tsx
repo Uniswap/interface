@@ -2,7 +2,9 @@ import { t, Trans } from '@lingui/macro'
 import { ReactComponent as AppleLogo } from 'assets/svg/apple_logo.svg'
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
+import { APP_STORE_LINK } from 'components/WalletDropdown/DownloadButton'
 import NewBadge from 'components/WalletModal/NewBadge'
+import { useMgtmEnabled, useMGTMMicrositeEnabled } from 'featureFlags/flags/mgtm'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -141,6 +143,9 @@ export const MenuDropdown = () => {
   useOnClickOutside(ref, isOpen ? toggleOpen : undefined)
   const toggleTaxServiceModal = useToggleTaxServiceModal()
 
+  const mgtmEnabled = useMgtmEnabled()
+  const micrositeEnabled = useMGTMMicrositeEnabled()
+
   return (
     <>
       <Box position="relative" ref={ref}>
@@ -152,19 +157,25 @@ export const MenuDropdown = () => {
           <NavDropdown top={{ sm: 'unset', lg: '56' }} bottom={{ sm: '56', lg: 'unset' }} right="0">
             <Column gap="16">
               <Column paddingX="8" gap="4">
-                <Box display={{ sm: 'flex', md: 'none', xl: 'flex', xxl: 'none' }}>
-                  <PrimaryMenuRow to="/wallet" close={toggleOpen}>
-                    <Icon>
-                      <StyledAppleLogo />
-                    </Icon>
-                    <PrimaryMenuRow.Text>
-                      <Trans>Uniswap Wallet</Trans>
-                    </PrimaryMenuRow.Text>
-                    <BadgeWrapper>
-                      <NewBadge />
-                    </BadgeWrapper>
-                  </PrimaryMenuRow>
-                </Box>
+                {mgtmEnabled && (
+                  <Box display={micrositeEnabled ? { sm: 'flex', md: 'none', xl: 'flex', xxl: 'none' } : 'flex'}>
+                    <PrimaryMenuRow
+                      to={micrositeEnabled ? '/wallet' : undefined}
+                      href={micrositeEnabled ? undefined : APP_STORE_LINK}
+                      close={toggleOpen}
+                    >
+                      <Icon>
+                        <StyledAppleLogo />
+                      </Icon>
+                      <PrimaryMenuRow.Text>
+                        <Trans>Uniswap Wallet</Trans>
+                      </PrimaryMenuRow.Text>
+                      <BadgeWrapper>
+                        <NewBadge />
+                      </BadgeWrapper>
+                    </PrimaryMenuRow>
+                  </Box>
+                )}
                 <PrimaryMenuRow to="/vote" close={toggleOpen}>
                   <Icon>
                     <GovernanceIcon width={24} height={24} />

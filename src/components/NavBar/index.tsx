@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import NewBadge from 'components/WalletModal/NewBadge'
 import Web3Status from 'components/Web3Status'
+import { useMGTMMicrositeEnabled } from 'featureFlags/flags/mgtm'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useIsPoolsPage } from 'hooks/useIsPoolsPage'
@@ -57,6 +58,7 @@ export const PageTabs = () => {
 
   const isPoolActive = useIsPoolsPage()
   const isNftPage = useIsNftPage()
+  const micrositeEnabled = useMGTMMicrositeEnabled()
 
   return (
     <>
@@ -72,12 +74,14 @@ export const PageTabs = () => {
       <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
         <Trans>Pools</Trans>
       </MenuItem>
-      <Box display={{ sm: 'none', md: 'flex', xl: 'none', xxl: 'flex' }}>
-        <MenuItem href="/wallet" isActive={pathname.startsWith('/wallet')}>
-          <Trans>Wallet</Trans>
-          <NewBadge />
-        </MenuItem>
-      </Box>
+      {micrositeEnabled && (
+        <Box display={{ sm: 'none', md: 'flex', xl: 'none', xxl: 'flex' }}>
+          <MenuItem href="/wallet" isActive={pathname.startsWith('/wallet')}>
+            <Trans>Wallet</Trans>
+            <NewBadge />
+          </MenuItem>
+        </Box>
+      )}
     </>
   )
 }

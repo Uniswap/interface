@@ -27,7 +27,7 @@ import {
 } from 'lib/utils/analytics'
 import { useCallback, useState } from 'react'
 import { useToggleWalletDropdown } from 'state/application/hooks'
-import { useIsDarkMode } from 'state/user/hooks'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { computeRealizedPriceImpact } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
 

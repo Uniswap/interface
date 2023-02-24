@@ -14,9 +14,9 @@ import { ArrowDownCircle } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
 import { useAppSelector } from 'state/hooks'
-import { useIsDarkMode } from 'state/user/hooks'
 import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { Z_INDEX } from 'theme/zIndex'
 
 const PageContainer = styled.div<{ isDarkMode: boolean }>`

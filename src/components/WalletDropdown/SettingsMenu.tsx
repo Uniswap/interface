@@ -3,38 +3,24 @@ import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/loca
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import { Check } from 'react-feather'
-import { Link } from 'react-router-dom'
-import { Text } from 'rebass'
+import { Link, useLocation } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
+import { ClickableStyle, ThemedText } from 'theme'
+import ThemeToggle from 'theme/components/ThemeToggle'
 
 import { SlideOutMenu } from './SlideOutMenu'
 
-const InternalMenuItem = styled(Link)`
+const InternalLinkMenuItem = styled(Link)`
+  ${ClickableStyle}
   flex: 1;
-  padding: 0.5rem 0.5rem;
   color: ${({ theme }) => theme.textTertiary};
-  :hover {
-    cursor: pointer;
-  }
-`
-
-const InternalLinkMenuItem = styled(InternalMenuItem)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 12px 16px;
+  padding: 12px 0;
   justify-content: space-between;
   text-decoration: none;
   color: ${({ theme }) => theme.textPrimary};
-  :hover {
-    cursor: pointer;
-    background-color: ${({ theme }) => theme.backgroundModule};
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `${duration.fast} background-color ${timing.in}`};
-  }
 `
 
 function LanguageMenuItem({ locale, isActive }: { locale: SupportedLocale; isActive: boolean }) {
@@ -45,24 +31,42 @@ function LanguageMenuItem({ locale, isActive }: { locale: SupportedLocale; isAct
 
   return (
     <InternalLinkMenuItem onClick={onClick} to={to}>
-      <Text data-testid="wallet-language-item" fontSize={16} fontWeight={400} lineHeight="24px">
-        {LOCALE_LABEL[locale]}
-      </Text>
+      <ThemedText.BodySmall data-testid="wallet-language-item">{LOCALE_LABEL[locale]}</ThemedText.BodySmall>
       {isActive && <Check color={theme.accentActive} opacity={1} size={20} />}
     </InternalLinkMenuItem>
   )
 }
 
-const LanguageMenu = ({ onClose }: { onClose: () => void }) => {
+const SectionTitle = styled(ThemedText.BodyPrimary)`
+  color: ${({ theme }) => theme.textSecondary};
+  padding-bottom: 12px;
+`
+
+const Divider = styled.div`
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+  margin-top: 16px;
+  margin-bottom: 16px;
+`
+
+export default function SettingsMenu({ onClose }: { onClose: () => void }) {
   const activeLocale = useActiveLocale()
 
+  const { pathname } = useLocation()
+  const isWalletPage = pathname.includes('/wallet')
+
   return (
-    <SlideOutMenu title={<Trans>Language</Trans>} onClose={onClose}>
+    <SlideOutMenu title={<Trans>Settings</Trans>} onClose={onClose}>
+      <SectionTitle>
+        <Trans>Theme</Trans>
+      </SectionTitle>
+      <ThemeToggle disabled={isWalletPage} />
+      <Divider />
+      <SectionTitle data-testid="wallet-header">
+        <Trans>Language</Trans>
+      </SectionTitle>
       {SUPPORTED_LOCALES.map((locale) => (
         <LanguageMenuItem locale={locale} isActive={activeLocale === locale} key={locale} />
       ))}
     </SlideOutMenu>
   )
 }
-
-export default LanguageMenu
