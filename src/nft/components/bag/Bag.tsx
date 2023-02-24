@@ -129,7 +129,6 @@ const Bag = () => {
     setItemsInBag,
     bagExpanded,
     toggleBag,
-    setTotalEthPrice,
     setBagExpanded,
   } = useBag((state) => ({ ...state, bagIsLocked: state.isLocked, uncheckedItemsInBag: state.itemsInBag }), shallow)
   const { uncheckedItemsInBag } = useBag(({ itemsInBag }) => ({ uncheckedItemsInBag: itemsInBag }))
@@ -160,22 +159,6 @@ const Bag = () => {
       canScroll !== userCanScroll && setUserCanScroll(canScroll)
     }
   }
-
-  const { totalEthPrice } = useMemo(() => {
-    const totalEthPrice = itemsInBag.reduce(
-      (total, item) =>
-        item.status !== BagItemStatus.UNAVAILABLE
-          ? total.add(
-              BigNumber.from(
-                item.asset.updatedPriceInfo ? item.asset.updatedPriceInfo.ETHPrice : item.asset.priceInfo.ETHPrice
-              )
-            )
-          : total,
-      BigNumber.from(0)
-    )
-
-    return { totalEthPrice }
-  }, [itemsInBag])
 
   const purchaseAssets = async (routingData: RouteResponse, purchasingWithErc20: boolean) => {
     if (!provider || !routingData) return
@@ -361,10 +344,6 @@ const Bag = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transactionStateRef.current])
 
-  useEffect(() => {
-    setTotalEthPrice(totalEthPrice)
-  }, [totalEthPrice, setTotalEthPrice])
-
   const hasAssetsToShow = itemsInBag.length > 0
 
   const scrollHandler = (event: React.UIEvent<HTMLDivElement>) => {
@@ -410,7 +389,7 @@ const Bag = () => {
               {isProfilePage ? <ProfileBagContent /> : <BagContent />}
             </Column>
             {hasAssetsToShow && !isProfilePage && (
-              <BagFooter totalEthPrice={totalEthPrice} fetchAssets={fetchAssets} eventProperties={eventProperties} />
+              <BagFooter fetchAssets={fetchAssets} eventProperties={eventProperties} />
             )}
             {isSellingAssets && isProfilePage && (
               <Box

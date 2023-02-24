@@ -21,6 +21,7 @@ import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useBag } from 'nft/hooks/useBag'
+import { useBagTotalEthPrice } from 'nft/hooks/useBagTotalEthPrice'
 import useDerivedPayWithAnyTokenSwapInfo from 'nft/hooks/useDerivedPayWithAnyTokenSwapInfo'
 import usePayWithAnyTokenSwap from 'nft/hooks/usePayWithAnyTokenSwap'
 import usePermit2Approval from 'nft/hooks/usePermit2Approval'
@@ -273,7 +274,6 @@ const FiatValue = ({
 }
 
 interface BagFooterProps {
-  totalEthPrice: BigNumber
   fetchAssets: () => void
   eventProperties: Record<string, unknown>
 }
@@ -285,11 +285,12 @@ const PENDING_BAG_STATUSES = [
   BagStatus.PROCESSING_TRANSACTION,
 ]
 
-export const BagFooter = ({ totalEthPrice, fetchAssets, eventProperties }: BagFooterProps) => {
+export const BagFooter = ({ fetchAssets, eventProperties }: BagFooterProps) => {
   const toggleWalletModal = useToggleWalletModal()
   const theme = useTheme()
   const { account, chainId, connector } = useWeb3React()
   const connected = Boolean(account && chainId)
+  const totalEthPrice = useBagTotalEthPrice()
   const shouldUsePayWithAnyToken = usePayWithAnyTokenEnabled()
   const inputCurrency = useTokenInput((state) => state.inputCurrency)
   const setInputCurrency = useTokenInput((state) => state.setInputCurrency)
@@ -298,7 +299,6 @@ export const BagFooter = ({ totalEthPrice, fetchAssets, eventProperties }: BagFo
     account ?? undefined,
     !!inputCurrency && inputCurrency.isToken ? inputCurrency : undefined
   )
-
   const {
     isLocked: bagIsLocked,
     bagStatus,
@@ -313,9 +313,7 @@ export const BagFooter = ({ totalEthPrice, fetchAssets, eventProperties }: BagFo
     }),
     shallow
   )
-
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
-
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
   const activeCurrency = inputCurrency ?? defaultCurrency
   const usingPayWithAnyToken = !!inputCurrency && shouldUsePayWithAnyToken && chainId === SupportedChainId.MAINNET
@@ -494,8 +492,6 @@ export const BagFooter = ({ totalEthPrice, fetchAssets, eventProperties }: BagFo
     using_erc20: !!inputCurrency,
     ...eventProperties,
   }
-
-  console.log(bagStatus)
 
   return (
     <FooterContainer>
