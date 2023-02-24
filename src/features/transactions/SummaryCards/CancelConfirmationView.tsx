@@ -13,6 +13,7 @@ import { useCancelationGasFeeInfo, useUSDValue } from 'src/features/gas/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { theme } from 'src/styles/theme'
 import { shortenAddress } from 'src/utils/addresses'
 import { formatUSDPrice, NumberType } from 'src/utils/format'
 
@@ -68,11 +69,16 @@ export function CancelConfirmationView({
       pb="spacing48">
       <Flex
         centered
+        backgroundColor="background2"
         borderColor="textSecondary"
         borderRadius="rounded12"
-        borderWidth={1}
-        padding="spacing8">
-        <SlashCircleIcon fill="none" height={24} />
+        padding="spacing12">
+        <SlashCircleIcon
+          color={theme.colors.textSecondary}
+          height={24}
+          strokeWidth="1"
+          width={24}
+        />
       </Flex>
       <Flex centered gap="spacing8">
         <Text variant="buttonLabelMedium">{t('Cancel this transaction?')}</Text>
@@ -84,18 +90,23 @@ export function CancelConfirmationView({
       </Flex>
       <Flex
         bg="background2"
-        borderRadius="rounded20"
+        borderRadius="rounded16"
         gap="none"
         spacerProps={spacerProps}
         width="100%">
-        <Flex grow row justifyContent="space-between" p="spacing16">
-          <Text variant="bodySmall">{t('Network fee')}</Text>
-          {!gasFeeUSD ? <ActivityIndicator /> : <Text variant="bodySmall">{gasFeeUSD}</Text>}
+        <Flex grow row justifyContent="space-between" p="spacing12">
+          <Text variant="subheadSmall">{t('Network fee')}</Text>
+          {!gasFeeUSD ? <ActivityIndicator /> : <Text variant="subheadSmall">{gasFeeUSD}</Text>}
         </Flex>
         {accountAddress && (
-          <Flex grow row justifyContent="space-between" padding="spacing16">
-            <AddressDisplay hideAddressInSubtitle address={transactionDetails.from} />
-            <Text color="textSecondary" variant="bodySmall">
+          <Flex grow row justifyContent="space-between" padding="spacing12">
+            <AddressDisplay
+              hideAddressInSubtitle
+              address={transactionDetails.from}
+              horizontalGap="spacing8"
+              variant="subheadSmall"
+            />
+            <Text color="textSecondary" variant="subheadSmall">
               {shortenAddress(transactionDetails.from)}
             </Text>
           </Flex>

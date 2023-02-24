@@ -93,7 +93,7 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps): J
     if (txStatus === TransactionStatus.Cancelled) {
       return (
         <SlashCircleIcon
-          color={theme.colors.backgroundOutline}
+          color={theme.colors.textSecondary}
           fill={theme.colors.background0}
           fillOpacity={1}
           height={statusSize}
