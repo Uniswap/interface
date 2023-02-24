@@ -61,11 +61,11 @@ export function formatTransactionsByDate(
       [[], [], [], []]
     )
 
-  // sort pending txns based on nonces
+  // sort pending txns based on nonce, highest nonce first for reverse chronological order
   const pendingSorted = pending.sort((a, b) => {
     const nonceA = a.options?.request?.nonce
     const nonceB = b.options?.request?.nonce
-    return nonceA && nonceB ? (nonceA < nonceB ? -1 : 1) : -1
+    return nonceA && nonceB ? (nonceA < nonceB ? 1 : -1) : 1
   })
 
   // For all transactions before current month, group by month

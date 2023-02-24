@@ -7,7 +7,7 @@ export function getTransactionTitle(
   pastText: string | undefined, // past tense form of the title
   t: TFunction
 ): string {
-  const prefixFail = status === TransactionStatus.Failed ? 'Failed ' : ''
+  const prefixFail = status === TransactionStatus.Failed ? t('Failed') : ''
 
   // For items with pending or alert banner UI (see AlertBanner.tsx), use present tense.
   const isPresentTense =
@@ -19,7 +19,8 @@ export function getTransactionTitle(
   const baseText = isPresentTense || !pastText ? presentText : pastText
 
   // Lowercase title if prefix
-  const title = prefixFail + (prefixFail ? baseText.toLocaleLowerCase() : baseText)
+  const title =
+    prefixFail + (prefixFail ? ' ' : '') + (prefixFail ? baseText.toLocaleLowerCase() : baseText)
 
-  return t(title)
+  return title
 }

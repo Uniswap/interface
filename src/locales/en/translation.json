@@ -291,6 +291,7 @@
   "Cancel transaction": "Cancel transaction",
   "Submitted on": "Submitted on",
   "Queued": "Queued",
+  "Failed": "Failed",
   "New rate": "New rate",
   "Rate": "Rate",
   "Fetching price...": "Fetching price...",

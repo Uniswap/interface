@@ -1,4 +1,3 @@
-import { useTheme } from '@shopify/restyle'
 import React, { useEffect } from 'react'
 import {
   cancelAnimation,
@@ -8,6 +7,7 @@ import {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
+import { useAppTheme } from 'src/app/hooks'
 import Loader from 'src/assets/icons/circle-spinner.svg'
 import EmptySpinner from 'src/assets/icons/empty-spinner.svg'
 import { AnimatedBox } from 'src/components/layout'
@@ -22,7 +22,7 @@ export function SpinningLoader({
   disabled?: boolean
   color?: keyof Theme['colors']
 }): JSX.Element {
-  const theme = useTheme()
+  const theme = useAppTheme()
   const rotation = useSharedValue(0)
 
   const animatedStyles = useAnimatedStyle(() => {
@@ -47,7 +47,7 @@ export function SpinningLoader({
   }, [rotation])
 
   if (disabled) {
-    return <EmptySpinner color="textTertiary" height={size} width={size} />
+    return <EmptySpinner color={theme.colors.textTertiary} height={size} width={size} />
   }
   return (
     <AnimatedBox style={[animatedStyles]}>
