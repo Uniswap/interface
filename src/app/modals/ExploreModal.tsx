@@ -17,6 +17,7 @@ export function ExploreModal(): JSX.Element {
     <BottomSheetModal
       blurredBackground
       fullScreen
+      hideKeyboardOnDismiss
       backgroundColor={theme.colors.none}
       hideHandlebar={true}
       name={ModalName.Explore}
