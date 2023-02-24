@@ -4,6 +4,9 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import { SupportedChainId } from './chains'
 import {
   AMPL,
+  BTC_BSC,
+  BUSD_BSC,
+  CAKE_BSC,
   CEUR_CELO,
   CEUR_CELO_ALFAJORES,
   CMC02_CELO,
@@ -11,12 +14,16 @@ import {
   CUSD_CELO_ALFAJORES,
   DAI,
   DAI_ARBITRUM_ONE,
+  DAI_BSC,
   DAI_OPTIMISM,
   DAI_POLYGON,
+  ETH_BSC,
   ETH2X_FLI,
   FEI,
   FRAX,
+  FRAX_BSC,
   FXS,
+  MATIC_BSC,
   nativeOnChain,
   PORTAL_ETH_CELO,
   PORTAL_USDC_CELO,
@@ -26,11 +33,13 @@ import {
   SWISE,
   TRIBE,
   USDC_ARBITRUM,
+  USDC_BSC,
   USDC_MAINNET,
   USDC_OPTIMISM,
   USDC_POLYGON,
   USDT,
   USDT_ARBITRUM_ONE,
+  USDT_BSC,
   USDT_OPTIMISM,
   USDT_POLYGON,
   WBTC,
@@ -85,6 +94,13 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDT_POLYGON,
     WETH_POLYGON,
   ],
+  [SupportedChainId.BSC]: [
+    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.BSC],
+    DAI_BSC,
+    USDC_BSC,
+    USDT_BSC,
+    BUSD_BSC,
+  ],
   [SupportedChainId.CELO]: [CUSD_CELO, CEUR_CELO, CMC02_CELO, PORTAL_USDC_CELO, PORTAL_ETH_CELO],
 }
 export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
@@ -98,6 +114,13 @@ export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: To
     [FXS.address]: [FRAX],
     [WBTC.address]: [renBTC],
     [renBTC.address]: [WBTC],
+  },
+  [SupportedChainId.BSC]: {
+    [ETH_BSC.address]: [ETH_BSC],
+    [BTC_BSC.address]: [BTC_BSC],
+    [FRAX_BSC.address]: [FRAX_BSC],
+    [MATIC_BSC.address]: [MATIC_BSC],
+    [CAKE_BSC.address]: [CAKE_BSC],
   },
 }
 /**
@@ -185,6 +208,16 @@ export const COMMON_BASES: ChainCurrencyList = {
     CUSD_CELO_ALFAJORES,
     CEUR_CELO_ALFAJORES,
   ],
+
+  [SupportedChainId.BSC]: [
+    nativeOnChain(SupportedChainId.BSC),
+    DAI_BSC,
+    USDC_BSC,
+    USDT_BSC,
+    ETH_BSC,
+    BTC_BSC,
+    BUSD_BSC,
+  ],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
@@ -196,6 +229,15 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
     USDC_MAINNET,
     USDT,
     WBTC,
+  ],
+  [SupportedChainId.BSC]: [
+    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.BSC],
+    DAI_BSC,
+    USDC_BSC,
+    USDT_BSC,
+    BTC_BSC,
+    BUSD_BSC,
+    ETH_BSC,
   ],
 }
 export const PINNED_PAIRS: { readonly [chainId: number]: [Token, Token][] } = {

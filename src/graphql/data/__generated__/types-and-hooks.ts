@@ -76,6 +76,7 @@ export type AssetActivity = {
 
 export type AssetChange = NftApproval | NftApproveForAll | NftTransfer | TokenApproval | TokenTransfer;
 
+
 export enum Chain {
   Arbitrum = 'ARBITRUM',
   Celo = 'CELO',
@@ -83,7 +84,8 @@ export enum Chain {
   EthereumGoerli = 'ETHEREUM_GOERLI',
   Optimism = 'OPTIMISM',
   Polygon = 'POLYGON',
-  UnknownChain = 'UNKNOWN_CHAIN'
+  UnknownChain = 'UNKNOWN_CHAIN',
+  Bsc = "Bsc"
 }
 
 export type ContractInput = {

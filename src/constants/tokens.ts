@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unused-modules */
 import { Currency, Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core'
 import invariant from 'tiny-invariant'
 
@@ -309,6 +310,66 @@ export const CEUR_CELO_ALFAJORES = new Token(
   'Celo Euro Stablecoin'
 )
 
+export const USDC_BSC = new Token(
+  SupportedChainId.BSC,
+  '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
+  18,
+  'USDC',
+  'USDC'
+)
+
+export const USDT_BSC = new Token(
+  SupportedChainId.BSC,
+  '0x55d398326f99059fF775485246999027B3197955',
+  18,
+  'USDT',
+  'USDT'
+)
+
+export const ETH_BSC = new Token(
+  SupportedChainId.BSC,
+  '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
+  18,
+  'ETH',
+  'Ethereum'
+)
+
+export const MATIC_BSC = new Token(
+  SupportedChainId.BSC,
+  '0xCC42724C6683B7E57334c4E856f4c9965ED682bD',
+  18,
+  'MATIC',
+  'Matic'
+)
+
+export const FRAX_BSC = new Token(
+  SupportedChainId.BSC,
+  '0x90C97F71E18723b0Cf0dfa30ee176Ab653E89F40',
+  18,
+  'FRAX',
+  'FRAX'
+)
+
+export const BTC_BSC = new Token(SupportedChainId.BSC, '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', 18, 'BTCB', 'BTCB')
+
+export const CAKE_BSC = new Token(
+  SupportedChainId.BSC,
+  '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82',
+  18,
+  'CAKE',
+  'Cake'
+)
+
+export const BUSD_BSC = new Token(
+  SupportedChainId.BSC,
+  '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
+  18,
+  'BUSD',
+  'BUSD'
+)
+
+export const DAI_BSC = new Token(SupportedChainId.BSC, '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3', 18, 'DAI', 'DAI')
+
 export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.RINKEBY]: new Token(SupportedChainId.RINKEBY, UNI_ADDRESS[4], 18, 'UNI', 'Uniswap'),
@@ -375,6 +436,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'CELO',
     'Celo native asset'
   ),
+  [SupportedChainId.BSC]: new Token(
+    SupportedChainId.BSC,
+    '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+    18,
+    'BNB',
+    'Wrapped BNB'
+  ),
 }
 
 export function isCelo(chainId: number): chainId is SupportedChainId.CELO | SupportedChainId.CELO_ALFAJORES {
@@ -414,6 +482,28 @@ class MaticNativeCurrency extends NativeCurrency {
   }
 }
 
+function isBsc(chainId: number): chainId is SupportedChainId.BSC {
+  return chainId === SupportedChainId.BSC
+}
+
+class BscNativeCurrency extends NativeCurrency {
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId
+  }
+
+  get wrapped(): Token {
+    if (!isBsc(this.chainId)) throw new Error('Not bnb')
+    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
+    invariant(wrapped instanceof Token)
+    return wrapped
+  }
+
+  public constructor(chainId: number) {
+    if (!isBsc(chainId)) throw new Error('Not bnb')
+    super(chainId, 18, 'BNB', 'BNB')
+  }
+}
+
 class ExtendedEther extends Ether {
   public get wrapped(): Token {
     const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
@@ -436,6 +526,8 @@ export function nativeOnChain(chainId: number): NativeCurrency | Token {
     nativeCurrency = new MaticNativeCurrency(chainId)
   } else if (isCelo(chainId)) {
     nativeCurrency = getCeloNativeCurrency(chainId)
+  } else if (isBsc(chainId)) {
+    nativeCurrency = new BscNativeCurrency(chainId)
   } else {
     nativeCurrency = ExtendedEther.onChain(chainId)
   }
@@ -451,6 +543,7 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedCha
     [SupportedChainId.OPTIMISM_GOERLI]: USDC_OPTIMISM_GOERLI.address,
     [SupportedChainId.POLYGON]: USDC_POLYGON.address,
     [SupportedChainId.POLYGON_MUMBAI]: USDC_POLYGON_MUMBAI.address,
+    [SupportedChainId.BSC]: USDC_BSC.address,
     [SupportedChainId.CELO]: PORTAL_USDC_CELO.address,
     [SupportedChainId.CELO_ALFAJORES]: PORTAL_USDC_CELO.address,
     [SupportedChainId.GOERLI]: USDC_GOERLI.address,

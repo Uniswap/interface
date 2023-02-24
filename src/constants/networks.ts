@@ -87,6 +87,15 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
     // "Safe" URLs
     `https://alfajores-forno.celo-testnet.org`,
   ],
+  [SupportedChainId.BSC]: [
+    // "Safe" URLs
+    'https://bsc-dataseed3.binance.org',
+    'https://bsc-dataseed2.defibit.io',
+    'https://bsc-dataseed1.ninicoin.io',
+    'https://binance.nodereal.io',
+    'https://bsc-dataseed4.defibit.io',
+    'https://rpc.ankr.com/bsc',
+  ],
 }
 
 /**
@@ -134,4 +143,5 @@ export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
   ],
   [SupportedChainId.CELO]: FALLBACK_URLS[SupportedChainId.CELO],
   [SupportedChainId.CELO_ALFAJORES]: FALLBACK_URLS[SupportedChainId.CELO_ALFAJORES],
+  [SupportedChainId.BSC]: FALLBACK_URLS[SupportedChainId.BSC],
 }
