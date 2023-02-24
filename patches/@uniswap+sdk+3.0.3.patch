@@ -1,0 +1,99 @@
+diff --git a/node_modules/@uniswap/sdk/dist/constants.d.ts b/node_modules/@uniswap/sdk/dist/constants.d.ts
+index 65a9f9b..c6fa499 100644
+--- a/node_modules/@uniswap/sdk/dist/constants.d.ts
++++ b/node_modules/@uniswap/sdk/dist/constants.d.ts
+@@ -5,7 +5,8 @@ export declare enum ChainId {
+     ROPSTEN = 3,
+     RINKEBY = 4,
+     GÖRLI = 5,
+-    KOVAN = 42
++    KOVAN = 42,
++    SEPOLIA = 11155111
+ }
+ export declare enum TradeType {
+     EXACT_INPUT = 0,
+@@ -16,8 +17,8 @@ export declare enum Rounding {
+     ROUND_HALF_UP = 1,
+     ROUND_UP = 2
+ }
+-export declare const FACTORY_ADDRESS = "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f";
+-export declare const INIT_CODE_HASH = "0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f";
++export declare const FACTORY_ADDRESS = "0x4f61b9049afaeeb4277bcb61c2ac86038fae1e94";
++export declare const INIT_CODE_HASH = "0xa5bc757fcb8e14c0f4a67328de94928124f2edc57d30d20d9b8a6b2b33adf140";
+ export declare const MINIMUM_LIQUIDITY: JSBI;
+ export declare const ZERO: JSBI;
+ export declare const ONE: JSBI;
+diff --git a/node_modules/@uniswap/sdk/dist/entities/token.d.ts b/node_modules/@uniswap/sdk/dist/entities/token.d.ts
+index 3b5b50b..508da3e 100644
+--- a/node_modules/@uniswap/sdk/dist/entities/token.d.ts
++++ b/node_modules/@uniswap/sdk/dist/entities/token.d.ts
+@@ -30,4 +30,5 @@ export declare const WETH: {
+     4: Token;
+     5: Token;
+     42: Token;
++    11155111: Token;
+ };
+diff --git a/node_modules/@uniswap/sdk/dist/sdk.cjs.development.js b/node_modules/@uniswap/sdk/dist/sdk.cjs.development.js
+index a4450f3..7453dfe 100644
+--- a/node_modules/@uniswap/sdk/dist/sdk.cjs.development.js
++++ b/node_modules/@uniswap/sdk/dist/sdk.cjs.development.js
+@@ -25,6 +25,7 @@ var _SOLIDITY_TYPE_MAXIMA;
+   ChainId[ChainId["RINKEBY"] = 4] = "RINKEBY";
+   ChainId[ChainId["G\xD6RLI"] = 5] = "G\xD6RLI";
+   ChainId[ChainId["KOVAN"] = 42] = "KOVAN";
++  ChainId[ChainId["SEPOLIA"] = 11155111] = "SEPOLIA";
+ })(exports.ChainId || (exports.ChainId = {}));
+ 
+ (function (TradeType) {
+@@ -38,8 +39,8 @@ var _SOLIDITY_TYPE_MAXIMA;
+   Rounding[Rounding["ROUND_UP"] = 2] = "ROUND_UP";
+ })(exports.Rounding || (exports.Rounding = {}));
+ 
+-var FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f';
+-var INIT_CODE_HASH = '0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f';
++var FACTORY_ADDRESS = '0x4f61b9049afaeeb4277bcb61c2ac86038fae1e94';
++var INIT_CODE_HASH = '0xa5bc757fcb8e14c0f4a67328de94928124f2edc57d30d20d9b8a6b2b33adf140';
+ var MINIMUM_LIQUIDITY = /*#__PURE__*/JSBI.BigInt(1000); // exports for internal consumption
+ 
+ var ZERO = /*#__PURE__*/JSBI.BigInt(0);
+@@ -438,7 +439,7 @@ function currencyEquals(currencyA, currencyB) {
+     return currencyA === currencyB;
+   }
+ }
+-var WETH = (_WETH = {}, _WETH[exports.ChainId.MAINNET] = /*#__PURE__*/new Token(exports.ChainId.MAINNET, '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.ROPSTEN] = /*#__PURE__*/new Token(exports.ChainId.ROPSTEN, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.RINKEBY] = /*#__PURE__*/new Token(exports.ChainId.RINKEBY, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.GÖRLI] = /*#__PURE__*/new Token(exports.ChainId.GÖRLI, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.KOVAN] = /*#__PURE__*/new Token(exports.ChainId.KOVAN, '0xd0A1E359811322d97991E03f863a0C30C2cF029C', 18, 'WETH', 'Wrapped Ether'), _WETH);
++var WETH = (_WETH = {}, _WETH[exports.ChainId.MAINNET] = /*#__PURE__*/new Token(exports.ChainId.MAINNET, '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.ROPSTEN] = /*#__PURE__*/new Token(exports.ChainId.ROPSTEN, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.RINKEBY] = /*#__PURE__*/new Token(exports.ChainId.RINKEBY, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.GÖRLI] = /*#__PURE__*/new Token(exports.ChainId.GÖRLI, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.KOVAN] = /*#__PURE__*/new Token(exports.ChainId.KOVAN, '0xd0A1E359811322d97991E03f863a0C30C2cF029C', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.SEPOLIA] = /*#__PURE__*/new Token(exports.ChainId.SEPOLIA, '0x00050EA132347e85CbF9F03fd7aDCb213A0Fda46', 18, 'WETH', 'Wrapped Ether'), _WETH);
+ 
+ var _toSignificantRoundin, _toFixedRounding;
+ var Decimal = /*#__PURE__*/toFormat(_Decimal);
+diff --git a/node_modules/@uniswap/sdk/dist/sdk.esm.js b/node_modules/@uniswap/sdk/dist/sdk.esm.js
+index 6c34a78..c147263 100644
+--- a/node_modules/@uniswap/sdk/dist/sdk.esm.js
++++ b/node_modules/@uniswap/sdk/dist/sdk.esm.js
+@@ -21,6 +21,7 @@ var ChainId;
+   ChainId[ChainId["RINKEBY"] = 4] = "RINKEBY";
+   ChainId[ChainId["G\xD6RLI"] = 5] = "G\xD6RLI";
+   ChainId[ChainId["KOVAN"] = 42] = "KOVAN";
++  ChainId[ChainId["SEPOLIA"] = 11155111] = "SEPOLIA";
+ })(ChainId || (ChainId = {}));
+ 
+ var TradeType;
+@@ -38,8 +39,8 @@ var Rounding;
+   Rounding[Rounding["ROUND_UP"] = 2] = "ROUND_UP";
+ })(Rounding || (Rounding = {}));
+ 
+-var FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f';
+-var INIT_CODE_HASH = '0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f';
++var FACTORY_ADDRESS = '0x4f61b9049afaeeb4277bcb61c2ac86038fae1e94';
++var INIT_CODE_HASH = '0xa5bc757fcb8e14c0f4a67328de94928124f2edc57d30d20d9b8a6b2b33adf140';
+ var MINIMUM_LIQUIDITY = /*#__PURE__*/JSBI.BigInt(1000); // exports for internal consumption
+ 
+ var ZERO = /*#__PURE__*/JSBI.BigInt(0);
+@@ -438,7 +439,7 @@ function currencyEquals(currencyA, currencyB) {
+     return currencyA === currencyB;
+   }
+ }
+-var WETH = (_WETH = {}, _WETH[ChainId.MAINNET] = /*#__PURE__*/new Token(ChainId.MAINNET, '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.ROPSTEN] = /*#__PURE__*/new Token(ChainId.ROPSTEN, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.RINKEBY] = /*#__PURE__*/new Token(ChainId.RINKEBY, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.GÖRLI] = /*#__PURE__*/new Token(ChainId.GÖRLI, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.KOVAN] = /*#__PURE__*/new Token(ChainId.KOVAN, '0xd0A1E359811322d97991E03f863a0C30C2cF029C', 18, 'WETH', 'Wrapped Ether'), _WETH);
++var WETH = (_WETH = {}, _WETH[ChainId.MAINNET] = /*#__PURE__*/new Token(ChainId.MAINNET, '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.ROPSTEN] = /*#__PURE__*/new Token(ChainId.ROPSTEN, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.RINKEBY] = /*#__PURE__*/new Token(ChainId.RINKEBY, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.GÖRLI] = /*#__PURE__*/new Token(ChainId.GÖRLI, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.KOVAN] = /*#__PURE__*/new Token(ChainId.KOVAN, '0xd0A1E359811322d97991E03f863a0C30C2cF029C', 18, 'WETH', 'Wrapped Ether'),  _WETH[ChainId.SEPOLIA] = /*#__PURE__*/new Token(ChainId.SEPOLIA, '0x00050EA132347e85CbF9F03fd7aDCb213A0Fda46', 18, 'WETH', 'Wrapped Ether'), _WETH);
+ 
+ var _toSignificantRoundin, _toFixedRounding;
+ var Decimal = /*#__PURE__*/toFormat(_Decimal);
