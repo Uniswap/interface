@@ -25,9 +25,9 @@ const selectNotificationStatus = (
 export const makeSelectHasNotifications = (
   address: Address | null
 ): ((state: RootState) => boolean | undefined) =>
-  createSelector(selectNotificationStatus, (notificationsCount) => {
+  createSelector(selectNotificationStatus, (notificationStatuses) => {
     if (!address) return undefined
-    return notificationsCount?.[address]
+    return notificationStatuses?.[address]
   })
 
 export const selectLastTxNotificationUpdate = (

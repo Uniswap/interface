@@ -35,6 +35,8 @@ export function PendingNotificationBadge({
 
   const { preload, navigate } = useEagerActivityNavigation()
 
+  /*************** In-app txn confirmed  **************/
+
   const currentNotification = notifications[0]
   if (currentNotification?.type === AppNotificationType.Transaction) {
     const { txStatus } = currentNotification
@@ -52,6 +54,8 @@ export function PendingNotificationBadge({
 
     return <AlertCircle color={theme.colors.accentWarning} height={size} width={size} />
   }
+
+  /*************** Pending in-app txn  **************/
 
   const pendingTransactionCount = sortedPendingTransactions.length
   const txPendingLongerThanLimit =
@@ -84,6 +88,11 @@ export function PendingNotificationBadge({
       </TouchableArea>
     )
   }
+
+  /**
+   Has unchecked notification status (triggered by Transaction history updater or transaction watcher saga). 
+   Aka, will flip status to true when any local or remote transaction is confirmed. 
+  **/
 
   if (hasNotifications) {
     return (

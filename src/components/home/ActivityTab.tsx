@@ -131,10 +131,7 @@ export const ActivityTab = forwardRef<FlashList<unknown>, ActivityTabProps>(
 
     const formattedTransactions = useMemo(() => {
       if (!data) return EMPTY_ARRAY
-
-      const parsedTxHistory = parseDataResponseToTransactionDetails(data, hideSpamTokens)
-
-      return parsedTxHistory
+      return parseDataResponseToTransactionDetails(data, hideSpamTokens)
     }, [data, hideSpamTokens])
 
     const transactions = useMergeLocalAndRemoteTransactions(owner, formattedTransactions)

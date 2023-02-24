@@ -21,6 +21,7 @@ import {
 import { selectLastTxNotificationUpdate } from 'src/features/notifications/selectors'
 import { buildReceiveNotification } from 'src/features/notifications/utils'
 import { parseDataResponseToTransactionDetails } from 'src/features/transactions/history/utils'
+import { useSelectAddressTransactions } from 'src/features/transactions/hooks'
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { useAccounts } from 'src/features/wallet/hooks'
 import {
@@ -84,8 +85,11 @@ function AddressTransactionHistoryUpdater({
   const lastTxNotificationUpdateTimestamp = useAppSelector(selectLastTxNotificationUpdate)[address]
 
   const fetchAndDispatchReceiveNotification = useFetchAndDispatchReceiveNotification()
+
   // dont show notifications on spam tokens if setting enabled
   const hideSpamTokens = useAppSelector<boolean>(makeSelectAccountHideSpamTokens(address))
+
+  const localTransactions = useSelectAddressTransactions(address)
 
   const refetchQueries = useRefetchQueries()
 
@@ -107,7 +111,16 @@ function AddressTransactionHistoryUpdater({
 
         if (hasNewTxn) {
           dispatch(setLastTxNotificationUpdate({ address, timestamp: updatedTimestampMs }))
-          dispatch(setNotificationStatus({ address, hasNotifications: true }))
+
+          // Dont flag notification status for txns submitted from app, this is handled in transactionWatcherSaga.
+          const confirmedLocally = localTransactions?.some(
+            // eslint-disable-next-line max-nested-callbacks
+            (localTx) => localTx.hash === activity.transaction.hash
+          )
+          if (!confirmedLocally) {
+            dispatch(setNotificationStatus({ address, hasNotifications: true }))
+          }
+
           // full send refetch all active (mounted) queries
           newTransactionsFound = true
         }
@@ -136,6 +149,7 @@ function AddressTransactionHistoryUpdater({
     fetchAndDispatchReceiveNotification,
     hideSpamTokens,
     lastTxNotificationUpdateTimestamp,
+    localTransactions,
     refetchQueries,
   ])
 

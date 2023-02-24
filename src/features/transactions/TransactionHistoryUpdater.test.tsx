@@ -47,20 +47,53 @@ const walletSlice = {
   },
 }
 
+const dummyTransaction = {
+  id: faker.datatype.uuid(),
+  hash: faker.datatype.uuid(),
+}
+
 const assetActivities = [
-  { id: faker.datatype.uuid(), timestamp: past.unix() },
-  { id: faker.datatype.uuid(), timestamp: past.add(1, 'day').unix() },
+  {
+    id: faker.datatype.uuid(),
+    timestamp: past.unix(),
+    transaction: dummyTransaction,
+  },
+  {
+    id: faker.datatype.uuid(),
+    timestamp: past.add(1, 'day').unix(),
+    transaction: dummyTransaction,
+  },
 ]
 
 const assetActivities2 = [
-  { id: faker.datatype.uuid(), timestamp: past.unix() },
-  { id: faker.datatype.uuid(), timestamp: past.add(1, 'day').unix() },
-  { id: faker.datatype.uuid(), timestamp: past.add(2, 'day').unix() },
+  {
+    id: faker.datatype.uuid(),
+    timestamp: past.unix(),
+    transaction: dummyTransaction,
+  },
+  {
+    id: faker.datatype.uuid(),
+    timestamp: past.add(1, 'day').unix(),
+    transaction: dummyTransaction,
+  },
+  {
+    id: faker.datatype.uuid(),
+    timestamp: past.add(2, 'day').unix(),
+    transaction: dummyTransaction,
+  },
 ]
 
 const portfolioData = [
-  { ...Portfolios[0], ownerAddress: account.address, assetActivities },
-  { ...Portfolios[1], ownerAddress: account2.address, assetActivities: assetActivities2 },
+  {
+    ...Portfolios[0],
+    ownerAddress: account.address,
+    assetActivities,
+  },
+  {
+    ...Portfolios[1],
+    ownerAddress: account2.address,
+    assetActivities: assetActivities2,
+  },
 ]
 
 const mock: MockedResponse<TransactionHistoryUpdaterQuery> = {

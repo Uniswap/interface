@@ -293,6 +293,10 @@ query TransactionHistoryUpdater($addresses: [String!]!) {
     assetActivities(pageSize: 1, page: 1) {
       id
       timestamp
+      transaction {
+        id
+        hash
+      }
     }
   }
 }

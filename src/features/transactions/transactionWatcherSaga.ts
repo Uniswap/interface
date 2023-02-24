@@ -6,7 +6,10 @@ import { getProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { PollingInterval } from 'src/constants/misc'
 import { fetchFiatOnRampTransaction } from 'src/features/fiatOnRamp/api'
-import { pushNotification } from 'src/features/notifications/notificationSlice'
+import {
+  pushNotification,
+  setNotificationStatus,
+} from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { fetchTransactionStatus } from 'src/features/providers/flashbotsProvider'
 import { waitForProvidersInitialized } from 'src/features/providers/providerSaga'
@@ -250,10 +253,14 @@ function* finalizeTransaction(
     | TransactionStatus.Failed
     | TransactionStatus.Cancelled
 ): Generator<
-  PutEffect<{
-    payload: FinalizedTransactionDetails
-    type: string
-  }>,
+  | PutEffect<{
+      payload: FinalizedTransactionDetails
+      type: string
+    }>
+  | PutEffect<{
+      payload: { address: string; hasNotifications: boolean }
+      type: string
+    }>,
   void,
   unknown
 > {
@@ -281,4 +288,7 @@ function* finalizeTransaction(
       receipt,
     })
   )
+
+  // Flip status to true so we can render Notification badge on home
+  yield* put(setNotificationStatus({ address: transaction.from, hasNotifications: true }))
 }
