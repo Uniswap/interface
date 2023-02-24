@@ -70,12 +70,15 @@ export function usePoolOperator(poolAddress: string | undefined): string | undef
  */
 export function useFormattedPoolCreatedLogs(
   contract: Contract | null,
-  operator?: string | undefined,
+  account: string | undefined,
   fromBlock?: number,
   toBlock?: number
 ): PoolRegisteredLog[] | undefined {
-  // create filters for ProposalCreated events
+  // create filters for Registered events
   const filter = useMemo(() => {
+    // we do not poll events until account is connected
+    if (!account) return undefined
+
     const filter = contract?.filters?.Registered()
     if (!filter) return undefined
     return {
@@ -83,7 +86,7 @@ export function useFormattedPoolCreatedLogs(
       fromBlock,
       toBlock,
     }
-  }, [contract, fromBlock, toBlock])
+  }, [account, contract, fromBlock, toBlock])
 
   const useLogsResult = useLogs(filter)
 
@@ -114,7 +117,7 @@ export function useFormattedPoolCreatedLogs(
   }, [useLogsResult])
 }
 
-export function useAllPoolsData(): { data: PoolRegisteredLog[]; loading: boolean } {
+export function useAllPoolsData(): { data: PoolRegisteredLog[] | undefined; loading: boolean } {
   const { account, chainId } = useWeb3React()
   const registry = useRegistryContract()
 
@@ -144,12 +147,21 @@ export function useAllPoolsData(): { data: PoolRegisteredLog[]; loading: boolean
   return useMemo(() => {
     const formattedLogs = [...(formattedLogsV1 ?? [])]
 
+    if (!account) {
+      return { data: undefined, loading: false }
+    }
+
+    // in case the wallet is not connected, we return empty array not loading
+    if (registry && !formattedLogs) {
+      return { data: [], loading: false }
+    }
+
     if (registry && !formattedLogs) {
       return { data: [], loading: true }
     }
 
     return { data: formattedLogs, loading: false }
-  }, [formattedLogsV1, registry])
+  }, [account, formattedLogsV1, registry])
 }
 
 export function useCreateCallback(): (
