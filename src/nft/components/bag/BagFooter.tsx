@@ -31,7 +31,7 @@ import { useSubscribeTransactionState } from 'nft/hooks/useSubscribeTransactionS
 import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { useWalletBalance } from 'nft/hooks/useWalletBalance'
 import { BagStatus } from 'nft/types'
-import { ethNumberStandardFormatter, formatWeiToDecimal, recalculateBagUsingPooledAssets } from 'nft/utils'
+import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
 import { useToggleWalletModal } from 'state/application/hooks'
@@ -302,14 +302,12 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     !!inputCurrency && inputCurrency.isToken ? inputCurrency : undefined
   )
   const {
-    itemsInBag: uncheckedItemsInBag,
     isLocked: bagIsLocked,
     bagStatus,
     setBagExpanded,
     setBagStatus,
   } = useBag(
-    ({ itemsInBag, isLocked, bagStatus, setBagExpanded, setBagStatus }) => ({
-      itemsInBag,
+    ({ isLocked, bagStatus, setBagExpanded, setBagStatus }) => ({
       isLocked,
       bagStatus,
       setBagExpanded,
@@ -322,10 +320,8 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const activeCurrency = inputCurrency ?? defaultCurrency
   const usingPayWithAnyToken = !!inputCurrency && shouldUsePayWithAnyToken && chainId === SupportedChainId.MAINNET
 
-  const itemsInBag = useMemo(() => recalculateBagUsingPooledAssets(uncheckedItemsInBag), [uncheckedItemsInBag])
-
   useSubscribeTransactionState(setModalIsOpen)
-  const fetchAssets = useFetchAssets(itemsInBag)
+  const fetchAssets = useFetchAssets()
 
   const parsedOutputAmount = useMemo(() => {
     return tryParseCurrencyAmount(formatEther(totalEthPrice.toString()), defaultCurrency ?? undefined)

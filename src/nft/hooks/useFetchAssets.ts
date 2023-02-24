@@ -3,11 +3,16 @@ import { useWeb3React } from '@web3-react/core'
 import { GqlRoutingVariant, useGqlRoutingFlag } from 'featureFlags/flags/gqlRouting'
 import { useNftRouteLazyQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { fetchRoute } from 'nft/queries'
-import { BagItem, BagItemStatus, BagStatus, RouteResponse } from 'nft/types'
-import { buildNftTradeInputFromBagItems, buildSellObject, sortUpdatedAssets } from 'nft/utils'
+import { BagItemStatus, BagStatus, RouteResponse } from 'nft/types'
+import {
+  buildNftTradeInputFromBagItems,
+  buildSellObject,
+  recalculateBagUsingPooledAssets,
+  sortUpdatedAssets,
+} from 'nft/utils'
 import { buildRouteResponse } from 'nft/utils/nftRoute'
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useQueryClient } from 'react-query'
 import shallow from 'zustand/shallow'
 
@@ -16,13 +21,14 @@ import { useSendTransaction } from './useSendTransaction'
 import { useTokenInput } from './useTokenInput'
 import { useTransactionResponse } from './useTransactionResponse'
 
-export function useFetchAssets(itemsInBag: BagItem[]): () => Promise<void> {
+export function useFetchAssets(): () => Promise<void> {
   const { account, provider } = useWeb3React()
   const usingGqlRouting = useGqlRoutingFlag() === GqlRoutingVariant.Enabled
   const sendTransaction = useSendTransaction((state) => state.sendTransaction)
   const setTransactionResponse = useTransactionResponse((state) => state.setTransactionResponse)
 
   const {
+    itemsInBag: uncheckedItemsInBag,
     setBagStatus,
     didOpenUnavailableAssets,
     setDidOpenUnavailableAssets,
@@ -33,6 +39,7 @@ export function useFetchAssets(itemsInBag: BagItem[]): () => Promise<void> {
     reset: resetBag,
   } = useBag(
     ({
+      itemsInBag,
       setBagStatus,
       didOpenUnavailableAssets,
       setDidOpenUnavailableAssets,
@@ -42,6 +49,7 @@ export function useFetchAssets(itemsInBag: BagItem[]): () => Promise<void> {
       setBagExpanded,
       reset,
     }) => ({
+      itemsInBag,
       setBagStatus,
       didOpenUnavailableAssets,
       setDidOpenUnavailableAssets,
@@ -54,6 +62,7 @@ export function useFetchAssets(itemsInBag: BagItem[]): () => Promise<void> {
     shallow
   )
   const tokenTradeInput = useTokenInput((state) => state.tokenTradeInput)
+  const itemsInBag = useMemo(() => recalculateBagUsingPooledAssets(uncheckedItemsInBag), [uncheckedItemsInBag])
 
   const queryClient = useQueryClient()
   const [fetchGqlRoute] = useNftRouteLazyQuery()
