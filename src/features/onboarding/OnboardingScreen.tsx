@@ -35,7 +35,7 @@ export function OnboardingScreen({
   })
 
   const titleSize = useResponsiveProp({
-    xs: 'bodyLarge',
+    xs: 'subheadLarge',
     sm: 'headlineSmall',
   })
 
@@ -50,7 +50,7 @@ export function OnboardingScreen({
   })
 
   const responsiveHeaderHeight = useResponsiveProp({
-    xs: headerHeight * 0.75,
+    xs: headerHeight * 0.88,
     sm: headerHeight,
   })
 

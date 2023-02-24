@@ -216,17 +216,17 @@ function BackupOptionButton({
   })
 
   const iconSize = useResponsiveProp({
-    xs: theme.iconSizes.icon12,
-    sm: theme.iconSizes.icon20,
+    xs: theme.iconSizes.icon20,
+    sm: theme.iconSizes.icon24,
   })
 
   const addSpacing = useResponsiveProp({
-    xs: 'spacing8',
+    xs: 'spacing4',
     sm: 'spacing12',
   })
 
   const textSize = useResponsiveProp({
-    xs: 'bodySmall',
+    xs: 'subheadSmall',
     sm: 'bodyLarge',
   })
 

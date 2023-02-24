@@ -16,7 +16,7 @@ export function ManualBackupEducationSection(): JSX.Element {
   const ICON_SIZE = theme.iconSizes.icon24
 
   const gapSize = useResponsiveProp({
-    xs: 'spacing8',
+    xs: 'spacing12',
     sm: 'spacing24',
   })
 
@@ -26,9 +26,9 @@ export function ManualBackupEducationSection(): JSX.Element {
         icon={
           <EyeIcon
             color={theme.colors.accentBranded}
-            height={theme.iconSizes.icon28}
+            height={theme.iconSizes.icon24}
             strokeWidth={1.5}
-            width={theme.iconSizes.icon28}
+            width={theme.iconSizes.icon24}
           />
         }
         label={t('Write it down in private')}
@@ -67,7 +67,7 @@ function EducationRow({ icon, label, sublabel }: EducationRowProps): JSX.Element
   const theme = useAppTheme()
 
   const labelSize = useResponsiveProp({
-    xs: 'bodySmall',
+    xs: 'subheadSmall',
     sm: 'bodyLarge',
   })
 
@@ -96,7 +96,7 @@ function EducationRow({ icon, label, sublabel }: EducationRowProps): JSX.Element
           variant={labelSize}>
           {label}
         </Text>
-        <Flex pr="spacing36">
+        <Flex>
           <Text
             color="textSecondary"
             maxFontSizeMultiplier={sublabelMaxFontSizeMultiplier}

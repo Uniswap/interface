@@ -53,14 +53,14 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>((props,
             {showPassword ? (
               <EyeIcon
                 color={theme.colors.textSecondary}
-                height={theme.iconSizes.icon16}
-                width={theme.iconSizes.icon16}
+                height={theme.iconSizes.icon20}
+                width={theme.iconSizes.icon20}
               />
             ) : (
               <EyeOffIcon
                 color={theme.colors.textSecondary}
-                height={theme.iconSizes.icon16}
-                width={theme.iconSizes.icon16}
+                height={theme.iconSizes.icon20}
+                width={theme.iconSizes.icon20}
               />
             )}
           </TouchableArea>

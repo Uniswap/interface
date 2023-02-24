@@ -197,9 +197,9 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 <svg
                   color="#0E1524"
                   data-file-name="SvgCloud"
-                  height={20}
+                  height={24}
                   strokeWidth={1.5}
-                  width={20}
+                  width={24}
                 />
               </View>
               <View
@@ -370,9 +370,9 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 <svg
                   color="#0E1524"
                   data-file-name="SvgPencil"
-                  height={20}
+                  height={24}
                   strokeWidth={1.5}
-                  width={20}
+                  width={24}
                 />
               </View>
               <View
@@ -976,9 +976,9 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 <svg
                   color="#0E1524"
                   data-file-name="SvgCloud"
-                  height={20}
+                  height={24}
                   strokeWidth={1.5}
-                  width={20}
+                  width={24}
                 />
               </View>
               <View
@@ -1052,8 +1052,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   <svg
                     color="#40B66B"
                     data-file-name="SvgCheck"
-                    height={20}
-                    width={20}
+                    height={24}
+                    width={24}
                   />
                   <View
                     style={
@@ -1137,9 +1137,9 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 <svg
                   color="#0E1524"
                   data-file-name="SvgPencil"
-                  height={20}
+                  height={24}
                   strokeWidth={1.5}
-                  width={20}
+                  width={24}
                 />
               </View>
               <View

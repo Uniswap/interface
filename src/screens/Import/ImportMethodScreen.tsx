@@ -43,7 +43,7 @@ interface ImportMethodOption {
 const options: ImportMethodOption[] = [
   {
     title: (t: TFunction) => t('Create a new wallet'),
-    blurb: (t: TFunction) => t('Start fresh with a new recovery phrase'),
+    blurb: (t: TFunction) => t('Start with a new recovery phrase'),
     icon: (theme: Theme) => (
       <SeedPhraseIcon color={theme.colors.textPrimary} height={22} strokeWidth="1.5" width={22} />
     ),
@@ -168,7 +168,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
 
   return (
     <OnboardingScreen title={t('How do you want to get started?')}>
-      <Flex grow gap="spacing12">
+      <Flex grow gap="spacing12" marginTop="spacing4">
         {importOptions.map(({ title, blurb, icon, nav, importType, name }) => (
           <OptionCard
             key={'connection-option-' + title}
@@ -218,6 +218,11 @@ function OptionCard({
     sm: 'subheadLarge',
   })
 
+  const iconSize = useResponsiveProp({
+    xs: theme.iconSizes.icon24,
+    sm: theme.iconSizes.icon40,
+  })
+
   const verticalPadding = useResponsiveProp({
     xs: 'spacing16',
     sm: 'spacing24',
@@ -242,10 +247,10 @@ function OptionCard({
           borderColor="accentBranded"
           borderRadius="rounded12"
           borderWidth={1.25}
-          height={theme.iconSizes.icon40}
+          height={iconSize}
           justifyContent="center"
           padding="spacing16"
-          width={theme.iconSizes.icon40}>
+          width={iconSize}>
           {icon}
         </Box>
         <Flex row alignItems="center" gap="spacing4" paddingRight="spacing60">
