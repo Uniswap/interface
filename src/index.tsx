@@ -9,12 +9,13 @@ import { FeatureFlagsProvider } from 'featureFlags'
 import { apolloClient } from 'graphql/data/apollo'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
-import { StrictMode } from 'react'
+import { StrictMode, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
-import { isSentryEnabled } from 'utils/env'
+import { StatsigProvider } from 'statsig-react'
+import { getEnvName, isSentryEnabled } from 'utils/env'
 
 import Web3Provider from './components/Web3Provider'
 import { LanguageProvider } from './i18n'
@@ -58,31 +59,50 @@ const queryClient = new QueryClient()
 
 const container = document.getElementById('root') as HTMLElement
 
-createRoot(container).render(
-  <StrictMode>
-    <Provider store={store}>
-      <FeatureFlagsProvider>
-        <QueryClientProvider client={queryClient}>
-          <HashRouter>
-            <LanguageProvider>
-              <Web3Provider>
-                <ApolloProvider client={apolloClient}>
-                  <BlockNumberProvider>
-                    <Updaters />
-                    <ThemeProvider>
-                      <ThemedGlobalStyle />
-                      <App />
-                    </ThemeProvider>
-                  </BlockNumberProvider>
-                </ApolloProvider>
-              </Web3Provider>
-            </LanguageProvider>
-          </HashRouter>
-        </QueryClientProvider>
-      </FeatureFlagsProvider>
-    </Provider>
-  </StrictMode>
-)
+const STATSIG_DUMMY_KEY = 'client-0000000000000000000000000000000000000000000'
+const STATSIG_PROXY_URL = process.env.REACT_APP_STATSIG_PROXY_URL
+
+const Main = () => {
+  const user = useMemo(() => ({}), [])
+  return (
+    <StrictMode>
+      <Provider store={store}>
+        <FeatureFlagsProvider>
+          <QueryClientProvider client={queryClient}>
+            <HashRouter>
+              <LanguageProvider>
+                <Web3Provider>
+                  <ApolloProvider client={apolloClient}>
+                    <BlockNumberProvider>
+                      <StatsigProvider
+                        user={user}
+                        // TODO: replace with proxy and cycle key
+                        sdkKey={STATSIG_DUMMY_KEY}
+                        waitForInitialization={false}
+                        options={{
+                          environment: { tier: getEnvName() },
+                          api: STATSIG_PROXY_URL,
+                        }}
+                      >
+                        <Updaters />
+                        <ThemeProvider>
+                          <ThemedGlobalStyle />
+                          <App />
+                        </ThemeProvider>
+                      </StatsigProvider>
+                    </BlockNumberProvider>
+                  </ApolloProvider>
+                </Web3Provider>
+              </LanguageProvider>
+            </HashRouter>
+          </QueryClientProvider>
+        </FeatureFlagsProvider>
+      </Provider>
+    </StrictMode>
+  )
+}
+
+createRoot(container).render(<Main />)
 
 if (process.env.REACT_APP_SERVICE_WORKER !== 'false') {
   serviceWorkerRegistration.register()
