@@ -58,11 +58,13 @@ const Profile = lazy(() => import('nft/pages/profile/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
 
 // Placeholder API key. Actual API key used in the proxy server
-const ANALYTICS_DUMMY_KEY = '00000000000000000000000000000000'
-const ANALYTICS_PROXY_URL = process.env.REACT_APP_AMPLITUDE_PROXY_URL
+const AMPLITUDE_DUMMY_KEY = '00000000000000000000000000000000'
+const AMPLITUDE_PROXY_URL = process.env.REACT_APP_AMPLITUDE_PROXY_URL
+const STATSIG_DUMMY_KEY = 'client-0000000000000000000000000000000000000000000'
+const STATSIG_PROXY_URL = process.env.REACT_APP_STATSIG_PROXY_URL
 const COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
-initializeAnalytics(ANALYTICS_DUMMY_KEY, OriginApplication.INTERFACE, {
-  proxyUrl: ANALYTICS_PROXY_URL,
+initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {
+  proxyUrl: AMPLITUDE_PROXY_URL,
   defaultEventName: SharedEventName.PAGE_VIEWED,
   commitHash: COMMIT_HASH,
   isProductionEnv: isProductionEnv(),
@@ -210,10 +212,11 @@ export default function App() {
         <StatsigProvider
           user={statsigUser}
           // TODO: replace with proxy and cycle key
-          sdkKey={process.env.REACT_APP_STATSIG_API_KEY ?? ''}
+          sdkKey={STATSIG_DUMMY_KEY}
           waitForInitialization={false}
           options={{
             environment: { tier: getEnvName() },
+            api: STATSIG_PROXY_URL,
           }}
         >
           <HeaderWrapper transparent={isHeaderTransparent}>
