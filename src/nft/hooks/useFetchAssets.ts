@@ -12,15 +12,15 @@ import { useQueryClient } from 'react-query'
 import shallow from 'zustand/shallow'
 
 import { useBag } from './useBag'
+import { useSendTransaction } from './useSendTransaction'
 import { useTokenInput } from './useTokenInput'
+import { useTransactionResponse } from './useTransactionResponse'
 
-// eslint-disable-next-line import/no-unused-modules
-export function useFetchAssets(
-  itemsInBag: BagItem[],
-  purchaseAssets: (routingData: RouteResponse, purchasingWithErc20: boolean) => Promise<void>
-) {
-  const { account } = useWeb3React()
+export function useFetchAssets(itemsInBag: BagItem[]) {
+  const { account, provider } = useWeb3React()
   const usingGqlRouting = useGqlRoutingFlag() === GqlRoutingVariant.Enabled
+  const sendTransaction = useSendTransaction((state) => state.sendTransaction)
+  const setTransactionResponse = useTransactionResponse((state) => state.setTransactionResponse)
 
   const {
     setBagStatus,
@@ -29,14 +29,27 @@ export function useFetchAssets(
     isLocked: bagIsLocked,
     setLocked: setBagLocked,
     setItemsInBag,
+    setBagExpanded,
+    reset: resetBag,
   } = useBag(
-    ({ setBagStatus, didOpenUnavailableAssets, setDidOpenUnavailableAssets, isLocked, setLocked, setItemsInBag }) => ({
+    ({
       setBagStatus,
       didOpenUnavailableAssets,
       setDidOpenUnavailableAssets,
       isLocked,
       setLocked,
       setItemsInBag,
+      setBagExpanded,
+      reset,
+    }) => ({
+      setBagStatus,
+      didOpenUnavailableAssets,
+      setDidOpenUnavailableAssets,
+      isLocked,
+      setLocked,
+      setItemsInBag,
+      setBagExpanded,
+      reset,
     }),
     shallow
   )
@@ -44,6 +57,24 @@ export function useFetchAssets(
 
   const queryClient = useQueryClient()
   const [fetchGqlRoute] = useNftRouteLazyQuery()
+
+  const purchaseAssets = useCallback(
+    async (routingData: RouteResponse, purchasingWithErc20: boolean) => {
+      if (!provider || !routingData) return
+      const purchaseResponse = await sendTransaction(
+        provider?.getSigner(),
+        itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset),
+        routingData,
+        purchasingWithErc20
+      )
+
+      setBagLocked(false)
+      setTransactionResponse(purchaseResponse)
+      setBagExpanded({ bagExpanded: false })
+      resetBag()
+    },
+    [itemsInBag, provider, resetBag, sendTransaction, setBagExpanded, setBagLocked, setTransactionResponse]
+  )
 
   return useCallback(async () => {
     const itemsToBuy = itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset)
