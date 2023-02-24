@@ -10,12 +10,11 @@ import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { Text } from 'src/components/Text'
-import { APP_STORE_LINK } from 'src/constants/urls'
 import { DYNAMIC_CONFIGS } from 'src/features/experiments/constants'
 import { UpgradeStatus } from 'src/features/forceUpgrade/types'
 import { ModalName } from 'src/features/telemetry/constants'
 import { SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
-import { useActiveAccount } from 'src/features/wallet/hooks'
+import { useNonPendingSignerAccounts } from 'src/features/wallet/hooks'
 import { openUri } from 'src/utils/linking'
 import { Statsig } from 'statsig-react-native'
 
@@ -26,15 +25,23 @@ export function ForceUpgradeModal(): JSX.Element {
   const [isVisible, setIsVisible] = useState(false)
   const [upgradeStatus, setUpgradeStatus] = useState(UpgradeStatus.NotRequired)
 
-  // account can be null if the user hasn't added any accounts yet (onboarding)
-  const account = useActiveAccount()
-  const mnemonicId = account ? (account as SignerMnemonicAccount)?.mnemonicId : undefined
+  // signerAccounts could be empty if no seed phrase imported or in onboarding
+  const signerAccounts = useNonPendingSignerAccounts()
+  const mnemonicId =
+    signerAccounts.length > 0
+      ? (signerAccounts?.[0] as SignerMnemonicAccount)?.mnemonicId
+      : undefined
 
   const [showSeedPhrase, setShowSeedPhrase] = useState(false)
+  const [deeplinkToAppStore, setDeeplinkToAppStore] = useState<string | undefined>() // could be app store or testflight deeplink
 
   useEffect(() => {
     const config = Statsig.getConfig(DYNAMIC_CONFIGS.ForceUpgrade)
     const statusString = config.getValue('status')?.toString()
+    const deeplink = config.getValue('upgradeLink')?.toString()
+    if (deeplink) {
+      setDeeplinkToAppStore(deeplink)
+    }
 
     let status = UpgradeStatus.NotRequired
     if (statusString === 'recommended') {
@@ -48,7 +55,8 @@ export function ForceUpgradeModal(): JSX.Element {
   }, [upgradeStatus])
 
   const onPressConfirm = (): void => {
-    openUri(APP_STORE_LINK, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)
+    if (!deeplinkToAppStore) return
+    openUri(deeplinkToAppStore, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)
   }
 
   const onClose = (): void => {
@@ -67,7 +75,7 @@ export function ForceUpgradeModal(): JSX.Element {
     <>
       {isVisible && (
         <WarningModal
-          confirmText={t('Update app')}
+          confirmText={deeplinkToAppStore ? t('Update app') : undefined}
           hideHandlebar={upgradeStatus === UpgradeStatus.Required}
           isDismissible={upgradeStatus !== UpgradeStatus.Required}
           modalName={ModalName.ForceUpgradeModal}
@@ -79,12 +87,12 @@ export function ForceUpgradeModal(): JSX.Element {
             {t(
               'The version of Uniswap Wallet you’re using is out of date and is missing critical upgrades. If you don’t update the app or you don’t have your recovery phrase written down, you won’t be able to access your assets.'
             )}
-            {mnemonicId && (
-              <Text color="white" onPress={onPressViewRecovery}>
-                {t('View recovery phrase')}
-              </Text>
-            )}
           </Text>
+          {mnemonicId && (
+            <Text color="accentActive" variant="buttonLabelSmall" onPress={onPressViewRecovery}>
+              {t('View recovery phrase')}
+            </Text>
+          )}
         </WarningModal>
       )}
       {mnemonicId && showSeedPhrase && (
