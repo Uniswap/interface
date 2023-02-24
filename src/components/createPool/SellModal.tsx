@@ -1,13 +1,11 @@
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount /*, Token*/ } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+//import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
 
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-//import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { PoolInfo, useDerivedPoolInfo } from '../../state/buy/hooks'
 import { usePoolExtendedContract } from '../../state/pool/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -16,7 +14,7 @@ import { CloseIcon, ThemedText } from '../../theme'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { formatCurrencyAmount } from '../../utils/formatCurrencyAmount'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { ButtonConfirmed, ButtonError } from '../Button'
+import { /*ButtonConfirmed,*/ ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import CurrencyInputPanel from '../CurrencyInputPanel'
 import Modal from '../Modal'
@@ -36,8 +34,8 @@ interface PoolModalProps {
   userBaseTokenBalance?: CurrencyAmount<Currency> | undefined
 }
 
-export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBalance }: PoolModalProps) {
-  const { provider } = useWeb3React()
+export default function SellModal({ isOpen, onDismiss, poolInfo, userBaseTokenBalance }: PoolModalProps) {
+  //const { provider } = useWeb3React()
 
   // track and parse user input
   const [typedValue, setTypedValue] = useState('')
@@ -52,66 +50,60 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
     onDismiss()
   }, [onDismiss])
 
-  const { parsedAmount, error } = useDerivedPoolInfo(typedValue, userBaseTokenBalance?.currency, userBaseTokenBalance)
-
-  // approval data for buy with tokens
-  //const deadline = useTransactionDeadline()
-  const [approval, approveCallback] = useApproveCallback(parsedAmount, poolInfo?.pool?.address)
+  // TODO: check if needed to send also currency as input to hook
+  const { parsedAmount, error } = useDerivedPoolInfo(
+    typedValue,
+    poolInfo?.userPoolBalance?.currency,
+    poolInfo?.userPoolBalance
+  )
 
   const poolContract = usePoolExtendedContract(poolInfo?.pool?.address)
 
-  const { expectedPoolTokens, minimumAmount } = useMemo(() => {
+  const { expectedBaseTokens, minimumAmount } = useMemo(() => {
     if (!parsedAmount || !poolInfo) {
       return {
-        expectedPoolTokens: undefined,
+        expectedBaseTokens: undefined,
         minimumAmount: undefined,
       }
     }
 
     // price plus spread
-    const poolAmount = JSBI.divide(
+    const baseTokenAmount = JSBI.divide(
       JSBI.multiply(
-        JSBI.subtract(parsedAmount.quotient, JSBI.divide(parsedAmount.quotient, JSBI.BigInt(20))), //parsedAmount.quotient,
-        JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(parsedAmount.currency.decimals ?? 18))
+        JSBI.subtract(parsedAmount.quotient, JSBI.divide(parsedAmount.quotient, JSBI.BigInt(20))),
+        poolInfo.poolPriceAmount.quotient
       ),
-      poolInfo.poolPriceAmount.quotient //: JSBI.BigInt(1)
+      JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(parsedAmount.currency.decimals ?? 18))
     )
     // extra 2% margin
-    const minimumAmount = JSBI.subtract(poolAmount, JSBI.divide(poolAmount, JSBI.BigInt(50)))
+    const minimumAmount = JSBI.subtract(baseTokenAmount, JSBI.divide(baseTokenAmount, JSBI.BigInt(50)))
+    // TODO: we use pool currency instead of base currency as same decimals, double check if changed
     return {
-      expectedPoolTokens: CurrencyAmount.fromRawAmount(poolInfo.poolPriceAmount.currency, poolAmount),
-      minimumAmount: CurrencyAmount.fromRawAmount(poolInfo.poolPriceAmount.currency, minimumAmount),
+      expectedBaseTokens: CurrencyAmount.fromRawAmount(parsedAmount.currency, baseTokenAmount),
+      minimumAmount: CurrencyAmount.fromRawAmount(parsedAmount.currency, minimumAmount),
     }
   }, [parsedAmount, poolInfo])
 
-  async function onBuy() {
+  async function onSell() {
     setAttempting(true)
     if (poolContract && parsedAmount && poolInfo /*&& deadline*/) {
-      if (approval === ApprovalState.APPROVED) {
-        const value = userBaseTokenBalance?.currency.isNative ? parsedAmount.quotient.toString() : null
-        const args = [poolInfo.recipient, parsedAmount.quotient.toString(), minimumAmount?.quotient.toString()]
+      const args = [parsedAmount.quotient.toString(), minimumAmount?.quotient.toString()]
 
-        // mint method not unique in interface
-        return poolContract.estimateGas['mint(address,uint256,uint256)'](...args, value ? { value } : {}).then(
-          (estimatedGasLimit) => {
-            return poolContract['mint(address,uint256,uint256)'](...args, {
-              value,
-              gasLimit: calculateGasMargin(estimatedGasLimit),
-            }).then((response: TransactionResponse) => {
-              addTransaction(response, {
-                // TODO: define correct transaction type
-                type: TransactionType.DELEGATE,
-                delegatee: poolInfo.recipient,
-              })
-              setHash(response.hash)
-              return response.hash
-            })
-          }
-        )
-      } else {
-        setAttempting(false)
-        throw new Error('Attempting to stake without approval. Please contact support.')
-      }
+      // mint method not unique in interface
+      return poolContract.estimateGas['burn(uint256,uint256)'](...args, {}).then((estimatedGasLimit) => {
+        return poolContract['burn(uint256,uint256)'](...args, {
+          value: null,
+          gasLimit: calculateGasMargin(estimatedGasLimit),
+        }).then((response: TransactionResponse) => {
+          addTransaction(response, {
+            // TODO: define correct transaction type
+            type: TransactionType.DELEGATE,
+            delegatee: poolInfo.recipient,
+          })
+          setHash(response.hash)
+          return response.hash
+        })
+      })
     }
   }
 
@@ -128,13 +120,6 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
     maxAmountInput && onUserInput(maxAmountInput.toExact())
   }, [maxAmountInput, onUserInput])
 
-  async function onAttemptToApprove() {
-    if (!poolContract || !provider /*|| !deadline*/) throw new Error('missing dependencies')
-    if (!parsedAmount) throw new Error('missing liquidity amount')
-
-    await approveCallback()
-  }
-
   return (
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
       {!attempting && !hash && (
@@ -145,7 +130,7 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
               <RowBetween>
                 <ThemedText.DeprecatedMediumHeader>
                   <Trans>
-                    Buy {poolInfo.pool?.symbol ?? null} using {userBaseTokenBalance.currency?.symbol}
+                    Sell {poolInfo.pool?.symbol ?? null} Receive {userBaseTokenBalance.currency?.symbol}
                   </Trans>
                 </ThemedText.DeprecatedMediumHeader>
                 <CloseIcon onClick={wrappedOnDismiss} />
@@ -155,48 +140,37 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
                 onUserInput={onUserInput}
                 onMax={handleMax}
                 showMaxButton={!atMaxAmount}
-                currency={userBaseTokenBalance.currency}
+                currency={poolInfo.poolPriceAmount.currency}
                 label=""
-                renderBalance={(amount) => <Trans>Available to deposit: {formatCurrencyAmount(amount, 4)}</Trans>}
+                renderBalance={(amount) => <Trans>Available to withdraw: {formatCurrencyAmount(amount, 4)}</Trans>}
                 id="buy-pool-tokens"
               />
             </>
           )}
 
           <RowBetween>
-            <ButtonConfirmed
-              mr="0.5rem"
-              onClick={onAttemptToApprove}
-              confirmed={approval === ApprovalState.APPROVED}
-              disabled={approval !== ApprovalState.NOT_APPROVED}
-            >
-              <Trans>Approve</Trans>
-            </ButtonConfirmed>
-            <ButtonError
-              disabled={!!error || approval !== ApprovalState.APPROVED}
-              error={!!error && !!parsedAmount}
-              onClick={onBuy}
-            >
-              {error ?? <Trans>Buy</Trans>}
+            <ButtonError disabled={!!error} error={!!error && !!parsedAmount} onClick={onSell}>
+              {error ?? <Trans>Sell</Trans>}
             </ButtonError>
           </RowBetween>
-          <ProgressCircles steps={[approval === ApprovalState.APPROVED]} disabled={true} />
+          {/* TODO: check these circles */}
+          <ProgressCircles steps={[typedValue !== undefined]} disabled={true} />
         </ContentWrapper>
       )}
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify="center">
             <ThemedText.DeprecatedLargeHeader>
-              <Trans>Depositing</Trans>
+              <Trans>Selling</Trans>
             </ThemedText.DeprecatedLargeHeader>
             <ThemedText.DeprecatedBody fontSize={20}>
               <Trans>
-                {parsedAmount?.toSignificant(4)} {userBaseTokenBalance?.currency?.symbol}
+                {parsedAmount?.toSignificant(4)} {poolInfo?.pool.symbol}
               </Trans>
             </ThemedText.DeprecatedBody>
             <ThemedText.DeprecatedBody fontSize={20}>
               <Trans>
-                Expected {expectedPoolTokens?.toSignificant(4)} {poolInfo?.pool.symbol}
+                Expected {expectedBaseTokens?.toSignificant(4)} {userBaseTokenBalance?.currency?.symbol}
               </Trans>
             </ThemedText.DeprecatedBody>
           </AutoColumn>
@@ -210,7 +184,7 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
             </ThemedText.DeprecatedLargeHeader>
             <ThemedText.DeprecatedBody fontSize={20}>
               <Trans>
-                Deposited {parsedAmount?.toSignificant(4)} {userBaseTokenBalance?.currency?.symbol}
+                Sold {parsedAmount?.toSignificant(4)} {poolInfo?.pool.symbol}
               </Trans>
             </ThemedText.DeprecatedBody>
           </AutoColumn>

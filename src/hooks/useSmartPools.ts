@@ -31,6 +31,11 @@ export interface PoolDetails {
   poolTokensInfo: PoolTokensInfo
 }
 
+export interface UserAccount {
+  userBalance: BigNumber
+  activation: BigNumber
+}
+
 export function useSmartPoolFromAddress(poolAddress: string | undefined): PoolDetails | undefined {
   const poolExtendedContract = usePoolExtendedContract(poolAddress)
   // we return entire "poolStorage", i.e. poolInitParams, poolVariables, poolTokensInfo
@@ -46,4 +51,21 @@ export function useSmartPoolFromAddress(poolAddress: string | undefined): PoolDe
 
     return poolStorage ?? undefined
   }, [result])
+}
+
+export function useUserPoolBalance(
+  poolAddress: string | undefined,
+  account: string | undefined
+): UserAccount | undefined {
+  const poolExtendedContract = usePoolExtendedContract(poolAddress)
+  // we return entire "poolStorage", i.e. poolInitParams, poolVariables, poolTokensInfo
+  //const result: PoolDetails[] | undefined = useSingleCallResult(poolExtendedContract, 'getPoolStorage')
+  const target = useMemo(() => [account ?? undefined], [account])
+  const { result } = useSingleCallResult(poolExtendedContract ?? undefined, 'getUserAccount', target)
+
+  return useMemo(() => {
+    if (!poolExtendedContract) return undefined
+
+    return result?.[0]
+  }, [poolExtendedContract, result])
 }

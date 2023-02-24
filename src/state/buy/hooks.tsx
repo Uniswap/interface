@@ -5,26 +5,20 @@ import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode } from 'react'
 
-export interface BuyInfo {
+export interface PoolInfo {
   // the smart pool token
   pool: Token
   recipient: string
   // the amount of base tokens the user has available for purchase
   maxSlippage?: number
-  purchaseAmount?: CurrencyAmount<Token>
-  // the total amount of minted pool tokens
-  totalSupplyAmount?: CurrencyAmount<Token>
+  // the total amount of pool tokens held by the account
+  userPoolBalance: CurrencyAmount<Token>
   poolPriceAmount: CurrencyAmount<Token>
   spread?: number
-  getExpectedOutput?: (
-    purchaseAmount: CurrencyAmount<Token>,
-    poolPrice: CurrencyAmount<Token>,
-    spread: number
-  ) => CurrencyAmount<Token>
 }
 
 // based on typed value
-export function useDerivedBuyInfo(
+export function useDerivedPoolInfo(
   typedValue: string,
   baseToken: Currency | undefined,
   userBaseTokenBalance: CurrencyAmount<Currency> | undefined
