@@ -1,7 +1,9 @@
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfaceSectionName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, Field, SwapController, SwapEventHandlers, TradeType } from '@uniswap/widgets'
+import { useWeb3React } from '@web3-react/core'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 const EMPTY_AMOUNT = ''
@@ -29,6 +31,9 @@ export function useSyncWidgetInputs({
 }) {
   const trace = useTrace({ section: InterfaceSectionName.WIDGET })
 
+  const { chainId } = useWeb3React()
+  const previousChainId = usePrevious(chainId)
+
   const [type, setType] = useState<SwapValue['type']>(TradeType.EXACT_INPUT)
   const [amount, setAmount] = useState<SwapValue['amount']>(EMPTY_AMOUNT)
   const [tokens, setTokens] = useState<SwapTokens>(defaultTokens)
@@ -46,6 +51,16 @@ export function useSyncWidgetInputs({
       })
     }
   }, [defaultTokens, tokens])
+
+  useEffect(() => {
+    if (chainId !== previousChainId && !!previousChainId) {
+      setTokens((tokens) => ({
+        ...tokens,
+        [Field.INPUT]: undefined,
+        [Field.OUTPUT]: undefined,
+      }))
+    }
+  }, [chainId, previousChainId])
 
   const onAmountChange = useCallback(
     (field: Field, amount: string, origin?: 'max') => {
