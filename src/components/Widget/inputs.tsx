@@ -40,27 +40,25 @@ export function useSyncWidgetInputs({
 
   useEffect(() => {
     if (!tokens[Field.INPUT] && !tokens[Field.OUTPUT]) {
-      setTokens((tokens) => {
-        const update = {
-          ...tokens,
-          [Field.INPUT]: defaultTokens[Field.INPUT] ?? tokens[Field.INPUT],
-          [Field.OUTPUT]: defaultTokens[Field.OUTPUT] ?? tokens[Field.OUTPUT] ?? defaultTokens.default,
-          default: defaultTokens.default,
-        }
-        return update
+      setTokens({
+        ...tokens,
+        [Field.INPUT]: defaultTokens[Field.INPUT] ?? tokens[Field.INPUT],
+        [Field.OUTPUT]: defaultTokens[Field.OUTPUT] ?? tokens[Field.OUTPUT] ?? defaultTokens.default,
+        default: defaultTokens.default,
       })
     }
   }, [defaultTokens, tokens])
 
   useEffect(() => {
     if (chainId !== previousChainId && !!previousChainId) {
-      setTokens((tokens) => ({
+      setTokens({
         ...tokens,
         [Field.INPUT]: undefined,
         [Field.OUTPUT]: undefined,
-      }))
+      })
+      setAmount(EMPTY_AMOUNT)
     }
-  }, [chainId, previousChainId])
+  }, [chainId, previousChainId, tokens])
 
   const onAmountChange = useCallback(
     (field: Field, amount: string, origin?: 'max') => {
