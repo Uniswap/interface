@@ -1,4 +1,5 @@
 import { ShadowProps, useResponsiveProp } from '@shopify/restyle'
+import { SharedEventName } from '@uniswap/analytics-events'
 import { BlurView } from 'expo-blur'
 import { impactAsync } from 'expo-haptics'
 import React, { memo, useCallback } from 'react'
@@ -21,11 +22,12 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { AnimatedBox, AnimatedFlex, Box, Flex } from 'src/components/layout'
-import { TracePressEvent } from 'src/components/telemetry/TraceEvent'
 import { Text } from 'src/components/Text'
 import { openModal } from 'src/features/modals/modalSlice'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { prepareSwapFormState } from 'src/features/transactions/swap/utils'
+import { Screens } from 'src/screens/Screens'
 import { Theme } from 'src/styles/theme'
 import { CurrencyId } from 'src/utils/currencyId'
 import SearchIcon from '../../assets/icons/search.svg'
@@ -45,6 +47,13 @@ function pulseAnimation(
     withSpring(activeScale, spingAnimationConfig),
     withSpring(1, spingAnimationConfig)
   )
+}
+
+function sendSwapPressAnalyticsEvent(): void {
+  sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+    screen: Screens.Home,
+    element: ElementName.Swap,
+  })
 }
 
 export const NavBar = (): JSX.Element => {
@@ -133,51 +142,50 @@ const SwapFAB = memo(({ activeScale = 0.96, inputCurrencyId }: SwapTabBarButtonP
     },
     onEnd: () => {
       runOnJS(onPress)()
+      runOnJS(sendSwapPressAnalyticsEvent)()
     },
   })
 
   return (
-    <TracePressEvent element={ElementName.Swap}>
-      <Box alignItems="center" bg="none" pointerEvents="box-none" position="relative">
-        <TapGestureHandler onGestureEvent={onGestureEvent}>
-          <AnimatedBox
-            alignItems="center"
-            height={SWAP_BUTTON_HEIGHT}
-            justifyContent="center"
+    <Box alignItems="center" bg="none" pointerEvents="box-none" position="relative">
+      <TapGestureHandler onGestureEvent={onGestureEvent}>
+        <AnimatedBox
+          alignItems="center"
+          height={SWAP_BUTTON_HEIGHT}
+          justifyContent="center"
+          pointerEvents="auto"
+          px="spacing24"
+          py="spacing16"
+          shadowColor="shadowBranded"
+          shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
+          shadowOpacity={isDarkMode ? 0.6 : 0.4}
+          shadowRadius={theme.borderRadii.rounded20}
+          style={[animatedStyle]}>
+          <Box
+            borderRadius="rounded32"
+            bottom={0}
+            left={0}
+            overflow="hidden"
             pointerEvents="auto"
-            px="spacing24"
-            py="spacing16"
-            shadowColor="shadowBranded"
-            shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
-            shadowOpacity={isDarkMode ? 0.6 : 0.4}
-            shadowRadius={theme.borderRadii.rounded20}
-            style={[animatedStyle]}>
-            <Box
-              borderRadius="rounded32"
-              bottom={0}
-              left={0}
-              overflow="hidden"
-              pointerEvents="auto"
-              position="absolute"
-              right={0}
-              top={0}>
-              <Svg height="100%" width="100%">
-                <Defs>
-                  <LinearGradient id="background" x1="0%" x2="0%" y1="0%" y2="100%">
-                    <Stop offset="0" stopColor="#F160F9" stopOpacity="1" />
-                    <Stop offset="1" stopColor="#e14ee9" stopOpacity="1" />
-                  </LinearGradient>
-                </Defs>
-                <Rect fill="url(#background)" height="100%" opacity={1} width="100%" x="0" y="0" />
-              </Svg>
-            </Box>
-            <Text color="textOnBrightPrimary" variant="buttonLabelMedium">
-              {t('Swap')}
-            </Text>
-          </AnimatedBox>
-        </TapGestureHandler>
-      </Box>
-    </TracePressEvent>
+            position="absolute"
+            right={0}
+            top={0}>
+            <Svg height="100%" width="100%">
+              <Defs>
+                <LinearGradient id="background" x1="0%" x2="0%" y1="0%" y2="100%">
+                  <Stop offset="0" stopColor="#F160F9" stopOpacity="1" />
+                  <Stop offset="1" stopColor="#e14ee9" stopOpacity="1" />
+                </LinearGradient>
+              </Defs>
+              <Rect fill="url(#background)" height="100%" opacity={1} width="100%" x="0" y="0" />
+            </Svg>
+          </Box>
+          <Text color="textOnBrightPrimary" variant="buttonLabelMedium">
+            {t('Swap')}
+          </Text>
+        </AnimatedBox>
+      </TapGestureHandler>
+    </Box>
   )
 })
 

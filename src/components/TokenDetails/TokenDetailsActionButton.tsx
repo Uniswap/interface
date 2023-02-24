@@ -26,16 +26,16 @@ export function TokenDetailsActionButtons({
   )
 
   return (
-    <TracePressEvent element={ElementName.Swap}>
-      <Flex
-        row
-        bg="background0"
-        borderTopColor="backgroundOutline"
-        borderTopWidth={1}
-        gap="spacing8"
-        pb="spacing16"
-        pt="spacing12"
-        px="spacing16">
+    <Flex
+      row
+      bg="background0"
+      borderTopColor="backgroundOutline"
+      borderTopWidth={1}
+      gap="spacing8"
+      pb="spacing16"
+      pt="spacing12"
+      px="spacing16">
+      <TracePressEvent element={ElementName.Swap}>
         <TouchableArea
           hapticFeedback
           alignItems="center"
@@ -54,7 +54,7 @@ export function TokenDetailsActionButtons({
             {t('Swap')}
           </Text>
         </TouchableArea>
-      </Flex>
-    </TracePressEvent>
+      </TracePressEvent>
+    </Flex>
   )
 }
