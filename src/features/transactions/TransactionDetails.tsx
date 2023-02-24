@@ -5,6 +5,7 @@ import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
+import { Separator } from 'src/components/layout/Separator'
 import { Warning } from 'src/components/modals/WarningModal/types'
 import { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
@@ -66,16 +67,23 @@ export function TransactionDetails({
           </Flex>
         </TouchableArea>
       )}
-      <Flex backgroundColor="background2" borderRadius="rounded16" gap="none" padding="spacing8">
-        {!showWarning && <Box mb="none">{banner}</Box>}
+      <Flex backgroundColor="background2" borderRadius="rounded16" gap="none">
+        {!showWarning && (
+          <>
+            {banner}
+            <Separator color="background1" width={1} />
+          </>
+        )}
         {children}
+        <Separator color="background1" width={1} />
         <NetworkFee
           chainId={chainId}
           gasFallbackUsed={gasFallbackUsed}
           gasFee={gasFee}
           onShowGasWarning={onShowGasWarning}
         />
-        <Box px="spacing12" py="spacing8">
+        <Separator color="background1" width={1} />
+        <Box px="spacing12" py="spacing12">
           <AccountDetails address={userAddress} iconSize={20} />
         </Box>
       </Flex>

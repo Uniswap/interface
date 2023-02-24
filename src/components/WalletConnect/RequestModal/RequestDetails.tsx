@@ -44,10 +44,11 @@ const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps): JSX.E
     <LinkButton
       backgroundColor="backgroundOutline"
       borderRadius="rounded12"
+      iconColor={theme.colors.textPrimary}
       label={name || shortenAddress(address)}
       px="spacing8"
       py="spacing4"
-      size={theme.iconSizes.icon12}
+      size={theme.iconSizes.icon16}
       textVariant="bodySmall"
       url={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}
       {...rest}

@@ -284,11 +284,11 @@ export const PendingConnection = ({ pendingSession, onClose }: Props): JSX.Eleme
         </Flex>
         <Flex bg="background2" borderRadius="rounded16" gap="spacing2">
           <SitePermissions />
-          <Separator />
+          <Separator color="background1" width={1} />
           {pendingSession.version === '1' && (
             <>
               <SwitchNetworkRow selectedChainId={selectedChainId} setModalState={setModalState} />
-              <Separator />
+              <Separator color="background1" width={1} />
             </>
           )}
           <SwitchAccountRow activeAddress={activeAddress} setModalState={setModalState} />

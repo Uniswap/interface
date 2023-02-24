@@ -100,7 +100,7 @@ function SectionContainer({
 }
 
 const spacerProps: BoxProps = {
-  borderBottomColor: 'backgroundOutline',
+  borderBottomColor: 'background1',
   borderBottomWidth: 1,
 }
 
@@ -259,18 +259,16 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
               <NetworkFee chainId={chainId} gasFee={gasFeeInfo?.gasFee} />
             )}
 
-            {signerAccounts.length > 1 && (
-              <SectionContainer>
-                <AccountDetails address={request.account} />
-                {!hasSufficientFunds && (
-                  <Text color="accentWarning" paddingTop="spacing8" variant="bodySmall">
-                    {t("You don't have enough {{symbol}} to complete this transaction.", {
-                      symbol: nativeCurrency?.symbol,
-                    })}
-                  </Text>
-                )}
-              </SectionContainer>
-            )}
+            <SectionContainer>
+              <AccountDetails address={request.account} />
+              {!hasSufficientFunds && (
+                <Text color="accentWarning" paddingTop="spacing8" variant="bodySmall">
+                  {t("You don't have enough {{symbol}} to complete this transaction.", {
+                    symbol: nativeCurrency?.symbol,
+                  })}
+                </Text>
+              )}
+            </SectionContainer>
           </Flex>
           {!netInfo.isInternetReachable ? (
             <BaseCard.InlineErrorState

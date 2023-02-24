@@ -55,8 +55,8 @@ export function SwapDetails({
             flexShrink={1}
             gap="spacing12"
             justifyContent="space-between"
-            p="spacing8"
-            pl="spacing12">
+            px="spacing12"
+            py="spacing12">
             <Flex centered row gap="none">
               <Text color="accentActive" variant="subheadSmall">
                 {t('New rate')}
@@ -102,7 +102,7 @@ export function SwapDetails({
         gap="spacing8"
         justifyContent="space-between"
         px="spacing12"
-        py="spacing8">
+        py="spacing12">
         <Text variant="subheadSmall">{t('Rate')}</Text>
         <Flex row flex={1} flexBasis="100%" flexShrink={1} gap="none" justifyContent="flex-end">
           <TouchableOpacity onPress={(): void => setShowInverseRate(!showInverseRate)}>

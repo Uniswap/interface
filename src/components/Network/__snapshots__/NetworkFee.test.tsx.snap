@@ -10,7 +10,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
         "flexDirection": "row",
         "justifyContent": "space-between",
         "paddingHorizontal": 12,
-        "paddingVertical": 8,
+        "paddingVertical": 12,
       },
     ]
   }
@@ -165,7 +165,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
         "flexDirection": "row",
         "justifyContent": "space-between",
         "paddingHorizontal": 12,
-        "paddingVertical": 8,
+        "paddingVertical": 12,
       },
     ]
   }
@@ -320,7 +320,7 @@ exports[`NetworkFee renders a NetworkFee with a warning 1`] = `
         "flexDirection": "row",
         "justifyContent": "space-between",
         "paddingHorizontal": 12,
-        "paddingVertical": 8,
+        "paddingVertical": 12,
       },
     ]
   }
