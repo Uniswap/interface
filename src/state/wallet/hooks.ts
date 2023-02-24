@@ -8,6 +8,7 @@ import { NativeCurrencies } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import { useAllTokens } from 'hooks/Tokens'
 import { useMulticallContract } from 'hooks/useContract'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { useMultipleContractSingleData, useSingleCallResult } from 'state/multicall/hooks'
 import { useTokenPrices } from 'state/tokenPrices/hooks'
 import { isAddress } from 'utils'
@@ -160,7 +161,7 @@ export function useAllTokenBalances(): { [tokenAddress: string]: TokenAmount | u
 }
 
 // return list token has balance
-export const useTokensHasBalance = () => {
+export const useTokensHasBalance = (includesImportToken = false) => {
   const { chainId } = useActiveWeb3React()
   const whitelistTokens = useAllTokens()
 
@@ -179,15 +180,18 @@ export const useTokensHasBalance = () => {
   useEffect(() => {
     if (loadBalanceDone && ethBalance) {
       // call once per chain
-      const list = currencies.filter(
-        currency => !currencyBalances[currency.wrapped.address]?.equalTo(CurrencyAmount.fromRawAmount(currency, '0')),
-      )
+      const list = currencies.filter(currency => {
+        const hasBalance = !currencyBalances[currency.wrapped.address]?.equalTo(
+          CurrencyAmount.fromRawAmount(currency, '0'),
+        )
+        return includesImportToken && !(currency as WrappedTokenInfo).isWhitelisted ? true : hasBalance
+      })
       if (!ethBalance.equalTo(CurrencyAmount.fromRawAmount(NativeCurrencies[chainId], '0'))) {
         list.push(NativeCurrencies[chainId])
       }
       setTokensHasBalance(list)
     }
-  }, [loadBalanceDone, currencies, currencyBalances, ethBalance, chainId])
+  }, [loadBalanceDone, currencies, currencyBalances, ethBalance, chainId, includesImportToken])
 
   const tokensPrices = useTokenPrices(tokensHasBalanceAddresses)
 

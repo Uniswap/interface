@@ -101,7 +101,13 @@ export default function WalletView({ onDismiss, onPin, isPinned, blurBackground 
   const nodeRef = useRef<HTMLDivElement>(null)
   const [isMinimal, setMinimal] = useState(false)
 
-  const { loading: loadingTokens, currencies, currencyBalances, totalBalanceInUsd, usdBalances } = useTokensHasBalance()
+  const {
+    loading: loadingTokens,
+    currencies,
+    currencyBalances,
+    totalBalanceInUsd,
+    usdBalances,
+  } = useTokensHasBalance(true)
 
   const underTab = (
     <Row gap="20px" style={{ borderBottom: `1px solid ${theme.border}` }}>
