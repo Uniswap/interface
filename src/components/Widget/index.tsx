@@ -182,6 +182,9 @@ export default function Widget({
         onSwapApprove={onApproveToken}
         onInitialSwapQuote={onInitialSwapQuote}
         onSwapPriceUpdateAck={onSwapPriceUpdateAck}
+        onError={(error, errorInfo) => {
+          sendAnalyticsEvent(SwapEventName.SWAP_ERROR, { error, errorInfo, ...trace })
+        }}
       />
       {tokenSelector}
     </>
