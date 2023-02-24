@@ -16,7 +16,7 @@ import { useSendTransaction } from './useSendTransaction'
 import { useTokenInput } from './useTokenInput'
 import { useTransactionResponse } from './useTransactionResponse'
 
-export function useFetchAssets(itemsInBag: BagItem[]) {
+export function useFetchAssets(itemsInBag: BagItem[]): () => Promise<void> {
   const { account, provider } = useWeb3React()
   const usingGqlRouting = useGqlRoutingFlag() === GqlRoutingVariant.Enabled
   const sendTransaction = useSendTransaction((state) => state.sendTransaction)
