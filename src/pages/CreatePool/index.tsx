@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import styled from 'styled-components/macro'
 
 import { ButtonPrimary } from '../../components/Button'
@@ -63,6 +64,8 @@ flex-direction: column;
 `
 
 export default function CreatePool() {
+  const { account } = useWeb3React()
+
   const showDelegateModal = useModalIsOpen(ApplicationModal.CREATE)
   const toggleCreateModal = useToggleCreateModal()
 
@@ -106,7 +109,11 @@ export default function CreatePool() {
 
         <MainContentWrapper>
           {/* TODO: check why on some mobile wallets pool list not rendered */}
-          {loadingPools ? (
+          {!account ? (
+            <OutlineCard>
+              <Trans>Please connect your wallet</Trans>
+            </OutlineCard>
+          ) : loadingPools ? (
             <Loader style={{ margin: 'auto' }} />
           ) : allPools?.length > 0 ? (
             <PoolPositionList positions={allPools} />
