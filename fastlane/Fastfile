@@ -134,6 +134,7 @@ end
       api_key: api_key,
       version: current_marketing_version,
       app_identifier: ENV["APP_IDENTIFIER"],
+      initial_build_number: 0, # used if a build does not exist for the current version
       )
 
     new_build_number = update_build_numbers_for_configuration(
