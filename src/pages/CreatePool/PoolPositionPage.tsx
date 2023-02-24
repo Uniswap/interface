@@ -12,27 +12,31 @@ import { /*ButtonConfirmed, ButtonGray,*/ ButtonPrimary } from 'components/Butto
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import BuyModal from 'components/createPool/BuyModal'
+import SellModal from 'components/createPool/SellModal'
 //import Loader from 'components/Loader'
 import { RowBetween, RowFixed } from 'components/Row'
 //import { Dots } from 'components/swap/styleds'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 //import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
+import IconButton, { IconHoverText } from 'components/WalletDropdown/IconButton'
 import { /*BIG_INT_ZERO,*/ ZERO_ADDRESS } from 'constants/misc'
 import { nativeOnChain } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
-import { useSmartPoolFromAddress } from 'hooks/useSmartPools'
+import useCopyClipboard from 'hooks/useCopyClipboard'
+import { useSmartPoolFromAddress, useUserPoolBalance } from 'hooks/useSmartPools'
 // TODO: this import is from node modules
 import JSBI from 'jsbi'
 //import { PoolState, usePool } from 'hooks/usePools'
 //import useStablecoinPrice from 'hooks/useStablecoinPrice'
 //import { useSingleCallResult } from 'lib/hooks/multicall'
 //import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { useCallback, /*useMemo, useRef,*/ useState } from 'react'
+import { useCallback, useMemo, /*useRef,*/ useState } from 'react'
+import { Copy } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
 //import { Bound } from 'state/mint/v3/actions'
 import { useToggleWalletModal } from 'state/application/hooks'
-import { BuyInfo } from 'state/buy/hooks'
+import { PoolInfo } from 'state/buy/hooks'
 //import { useTokenBalance } from 'state/connection/hooks'
 import { useCurrencyBalance } from 'state/connection/hooks'
 //import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
@@ -122,6 +126,24 @@ const HoverText = styled(ThemedText.DeprecatedMain)`
   }
 `
 
+const IconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  & > a,
+  & > button {
+    margin-right: 0px;
+    margin-left: 40px;
+  }
+
+  & > button:last-child {
+    margin-left: 8px;
+    ${IconHoverText}:last-child {
+      right: 0px;
+    }
+  }
+  justify-content: center;
+`
+
 /*
 const DoubleArrow = styled.span`
   color: ${({ theme }) => theme.deprecated_text3};
@@ -161,6 +183,11 @@ function AddressCard({
   chainId?: number | null
   label?: string | null
 }) {
+  const [isCopied, setCopied] = useCopyClipboard()
+  const copy = useCallback(() => {
+    setCopied(address || '')
+  }, [address, setCopied])
+
   if (!address || !chainId || !label) {
     return null
   }
@@ -176,16 +203,21 @@ function AddressCard({
       <AutoColumn gap="md">
         <ExtentsText>
           {typeof chainId === 'number' && address ? (
-            <ExternalLink href={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}>
-              <Trans>{shortenAddress(address)}</Trans>
-            </ExternalLink>
+            <IconContainer>
+              <ExternalLink href={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}>
+                <Trans>{shortenAddress(address)}</Trans>
+              </ExternalLink>
+              <IconButton onClick={copy} Icon={Copy}>
+                {isCopied ? <Trans>Copied!</Trans> : <Trans>Copy</Trans>}
+              </IconButton>
+            </IconContainer>
           ) : null}
         </ExtentsText>
         {/*</AutoColumn>
-        <ExtentsText>
-          <Trans>{poolAddress}</Trans>
-        </ExtentsText>
-      */}
+          <ExtentsText>
+            <Trans>{poolAddress}</Trans>
+          </ExtentsText>
+        */}
       </AutoColumn>
     </LightCard>
   )
@@ -197,33 +229,39 @@ export function PoolPositionPage() {
     poolAddress?: string
     poolId?: string
   }>()
-  const { chainId, account /*, provider*/ } = useWeb3React()
+  const { chainId, account } = useWeb3React()
   //const theme = useTheme()
 
   const [showConfirm, setShowConfirm] = useState(false)
 
-  // TODO
   const [showBuyModal, setShowBuyModal] = useState(false)
-  //const [showUnstakingModal, setShowUnstakingModal] = useState(false)
+  const [showSellModal, setShowSellModal] = useState(false)
 
   // TODO: check how can reduce number of calls by limit update of poolStorage
   //  id is stored in registry so we could save rpc call by using storing in state?
   const poolStorage = useSmartPoolFromAddress(poolAddressFromUrl ?? undefined)
+  // TODO: user account also stores activation
+  const userAccount = useUserPoolBalance(poolAddressFromUrl, account)
 
   const { name, symbol, decimals, owner, baseToken } = poolStorage?.poolInitParams || {}
   const { minPeriod, spread, transactionFee } = poolStorage?.poolVariables || {}
   const { unitaryValue, totalSupply } = poolStorage?.poolTokensInfo || {}
 
-  const pool = useCurrency(poolAddressFromUrl ?? undefined)
   let base = useCurrency(baseToken !== ZERO_ADDRESS ? baseToken : undefined)
-
-  const amount = JSBI.BigInt(unitaryValue ?? 0)
-
   if (baseToken === ZERO_ADDRESS) {
     base = nativeOnChain(chainId ?? 1)
   }
 
+  const pool = useCurrency(poolAddressFromUrl ?? undefined)
+  const amount = JSBI.BigInt(unitaryValue ?? 0)
   const poolPrice = pool ? CurrencyAmount.fromRawAmount(pool, amount) : undefined
+  const userPoolBalance = pool
+    ? CurrencyAmount.fromRawAmount(pool, JSBI.BigInt(userAccount?.userBalance ?? 0))
+    : undefined
+  const hasBalance = useMemo(
+    () => JSBI.greaterThan(JSBI.BigInt(userAccount?.userBalance ?? 0), JSBI.BigInt(0)),
+    [userAccount]
+  )
   // TODO: check results on altchains
   const baseTokenSymbol = base?.isNative ? 'ETH' : base?.symbol
 
@@ -235,21 +273,23 @@ export function PoolPositionPage() {
   const lockup = JSBI.BigInt(minPeriod ?? 0).toLocaleString()
 
   // TODO: check if should move definitions in custom hook
-  //const buyInfo = useBuyInfo(poolAddressFromUrl)
-
-  // TODO: check how we should better organize these values
-  const baseTokenAmount = base ? CurrencyAmount.fromRawAmount(base, '0') : undefined
-  const buyInfo = { pool, recipient: account, purchaseAmount: baseTokenAmount, poolPriceAmount: poolPrice } as BuyInfo
-  //const userBaseTokenBalance = useTokenBalance(account ?? undefined, buyInfo?.purchaseAmount?.currency as Token)
-  const userBaseTokenBalance = useCurrencyBalance(account ?? undefined, buyInfo?.purchaseAmount?.currency)
-
-  //const addTransaction = useTransactionAdder()
-
+  //const poolInfo= usePoolInfo(poolAddressFromUrl)
+  // TODO: pass recipient as optional parameter to check currency balance hook
+  const poolInfo = { pool, recipient: account, userPoolBalance, poolPriceAmount: poolPrice } as PoolInfo
+  const userBaseTokenBalance = useCurrencyBalance(account ?? undefined, base ?? undefined)
   const toggleWalletModal = useToggleWalletModal()
 
   const handleDepositClick = useCallback(() => {
     if (account) {
       setShowBuyModal(true)
+    } else {
+      toggleWalletModal()
+    }
+  }, [account, toggleWalletModal])
+
+  const handleWithdrawClick = useCallback(() => {
+    if (account) {
+      setShowSellModal(true)
     } else {
       toggleWalletModal()
     }
@@ -282,21 +322,20 @@ export function PoolPositionPage() {
           )}
           pendingText={<Trans>Collecting fees</Trans>}
         />
-        {buyInfo && (
+        {poolInfo && (
           <>
             <BuyModal
               isOpen={showBuyModal}
               onDismiss={() => setShowBuyModal(false)}
-              buyInfo={buyInfo}
+              poolInfo={poolInfo}
               userBaseTokenBalance={userBaseTokenBalance}
             />
-            {/*
-            <UnstakingModal
-              isOpen={showUnstakingModal}
-              onDismiss={() => setShowUnstakingModal(false)}
-              buyInfo={buyInfo}
+            <SellModal
+              isOpen={showSellModal}
+              onDismiss={() => setShowSellModal(false)}
+              poolInfo={poolInfo}
+              userBaseTokenBalance={userBaseTokenBalance}
             />
-            */}
           </>
         )}
         <AutoColumn gap="md">
@@ -312,7 +351,6 @@ export function PoolPositionPage() {
             </Link>
             <ResponsiveRow>
               <RowFixed>
-                {/* &nbsp;{poolName}&nbsp; */}
                 <ThemedText.DeprecatedLabel fontSize="24px" mr="10px">
                   &nbsp;{name}&nbsp;|&nbsp;{symbol}&nbsp;
                 </ThemedText.DeprecatedLabel>
@@ -334,14 +372,16 @@ export function PoolPositionPage() {
                 >
                   <Trans>Buy</Trans>
                 </ResponsiveButtonPrimary>
-                <ResponsiveButtonPrimary
-                  onClick={() => setShowBuyModal(!true)}
-                  width="fit-content"
-                  padding="6px 8px"
-                  $borderRadius="12px"
-                >
-                  <Trans>Sell</Trans>
-                </ResponsiveButtonPrimary>
+                {hasBalance && (
+                  <ResponsiveButtonPrimary
+                    onClick={handleWithdrawClick}
+                    width="fit-content"
+                    padding="6px 8px"
+                    $borderRadius="12px"
+                  >
+                    <Trans>Sell</Trans>
+                  </ResponsiveButtonPrimary>
+                )}
               </RowFixed>
             </ResponsiveRow>
           </AutoColumn>
