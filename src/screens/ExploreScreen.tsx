@@ -78,7 +78,7 @@ export function ExploreScreen(): JSX.Element {
       {isSearchMode ? (
         <KeyboardAvoidingView behavior="height" style={flex.fill}>
           <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} mx="spacing16">
-            <VirtualizedList bounces={false} onScroll={onScroll}>
+            <VirtualizedList onScroll={onScroll}>
               <Box p="spacing4" />
               {debouncedSearchQuery.length === 0 ? (
                 <SearchEmptySection />
