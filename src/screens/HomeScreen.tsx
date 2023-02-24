@@ -238,10 +238,10 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
       paddingTop: headerHeight + TAB_BAR_HEIGHT + TAB_STYLES.tabListInner.paddingTop,
-      paddingBottom: insets.bottom + SWAP_BUTTON_HEIGHT + theme.spacing.spacing12,
+      paddingBottom: insets.bottom + SWAP_BUTTON_HEIGHT + TAB_STYLES.tabListInner.paddingBottom,
       minHeight: dimensions.fullHeight + headerHeightDiff,
     }),
-    [headerHeight, insets.bottom, theme.spacing.spacing12, headerHeightDiff]
+    [headerHeight, insets.bottom, headerHeightDiff]
   )
 
   const loadingContainerStyle = useMemo<StyleProp<ViewStyle>>(

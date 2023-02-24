@@ -1,7 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet } from 'react-native'
+import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useAppTheme } from 'src/app/hooks'
 import { AppStackParamList } from 'src/app/navigation/types'
@@ -28,6 +29,7 @@ export function ExternalProfileScreen({
   const { t } = useTranslation()
   const theme = useAppTheme()
   const [tabIndex, setIndex] = useState(0)
+  const insets = useSafeAreaInsets()
 
   const tabs = useMemo(
     () => [
@@ -38,13 +40,21 @@ export function ExternalProfileScreen({
     [t]
   )
 
+  const containerStyle = useMemo<StyleProp<ViewStyle>>(
+    () => ({
+      ...TAB_STYLES.tabListInner,
+      paddingBottom: insets.bottom + TAB_STYLES.tabListInner.paddingBottom,
+    }),
+    [insets.bottom]
+  )
+
   const sharedProps = useMemo<TabContentProps>(
     () => ({
-      contentContainerStyle: TAB_STYLES.tabListInner,
-      loadingContainerStyle: TAB_STYLES.tabListInner,
-      emptyContainerStyle: TAB_STYLES.tabListInner,
+      contentContainerStyle: containerStyle,
+      loadingContainerStyle: containerStyle,
+      emptyContainerStyle: containerStyle,
     }),
-    []
+    [containerStyle]
   )
 
   const renderTab = useCallback(
@@ -91,7 +101,7 @@ export function ExternalProfileScreen({
   return (
     <ExploreModalAwareView>
       <Screen edges={EMPTY_ARRAY}>
-        <Flex grow pb="spacing16">
+        <Flex grow>
           <ProfileHeader address={address} />
           <TraceTabView
             navigationState={{ index: tabIndex, routes: tabs }}

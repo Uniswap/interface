@@ -65,6 +65,7 @@ export const TAB_STYLES = StyleSheet.create({
   },
   // For padding on the list components themselves within tabs.
   tabListInner: {
+    paddingBottom: FixedTheme.spacing.spacing12,
     paddingTop: FixedTheme.spacing.spacing8,
   },
 })
