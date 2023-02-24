@@ -1,0 +1,258 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://uniswap.org/tokenlist.schema.json",
+  "title": "Uniswap Token List",
+  "description": "Schema for lists of tokens compatible with the Uniswap Interface",
+  "definitions": {
+    "Version": {
+      "type": "object",
+      "description": "The version of the list, used in change detection",
+      "examples": [
+        {
+          "major": 1,
+          "minor": 0,
+          "patch": 0
+        }
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "major": {
+          "type": "integer",
+          "description": "The major version of the list. Must be incremented when tokens are removed from the list or token addresses are changed.",
+          "minimum": 0,
+          "examples": [
+            1,
+            2
+          ]
+        },
+        "minor": {
+          "type": "integer",
+          "description": "The minor version of the list. Must be incremented when tokens are added to the list.",
+          "minimum": 0,
+          "examples": [
+            0,
+            1
+          ]
+        },
+        "patch": {
+          "type": "integer",
+          "description": "The patch version of the list. Must be incremented for any changes to the list.",
+          "minimum": 0,
+          "examples": [
+            0,
+            1
+          ]
+        }
+      },
+      "required": [
+        "major",
+        "minor",
+        "patch"
+      ]
+    },
+    "TagIdentifier": {
+      "type": "string",
+      "description": "The unique identifier of a tag",
+      "minLength": 1,
+      "maxLength": 10,
+      "pattern": "^[\\w]+$",
+      "examples": [
+        "compound",
+        "stablecoin"
+      ]
+    },
+    "TagDefinition": {
+      "type": "object",
+      "description": "Definition of a tag that can be associated with a token via its identifier",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the tag",
+          "pattern": "^[ \\w]+$",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "description": {
+          "type": "string",
+          "description": "A user-friendly description of the tag",
+          "pattern": "^[ \\w\\.,]+$",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      },
+      "required": [
+        "name",
+        "description"
+      ],
+      "examples": [
+        {
+          "name": "Stablecoin",
+          "description": "A token with value pegged to another asset"
+        }
+      ]
+    },
+    "TokenInfo": {
+      "type": "object",
+      "description": "Metadata for a single token in a token list",
+      "additionalProperties": false,
+      "properties": {
+        "chainId": {
+          "type": "integer",
+          "description": "The chain ID of the Ethereum network where this token is deployed",
+          "minimum": 1,
+          "examples": [
+            1,
+            42
+          ]
+        },
+        "address": {
+          "type": "string",
+          "description": "The checksummed address of the token on the specified chain ID",
+          "pattern": "^0x[a-fA-F0-9]{40}$",
+          "examples": [
+            "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+          ]
+        },
+        "decimals": {
+          "type": "integer",
+          "description": "The number of decimals for the token balance",
+          "minimum": 0,
+          "maximum": 255,
+          "examples": [
+            18
+          ]
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the token",
+          "minLength": 1,
+          "maxLength": 40,
+          "pattern": "^[ \\w.'+\\-%/À-ÖØ-öø-ÿ]+$",
+          "examples": [
+            "USD Coin"
+          ]
+        },
+        "symbol": {
+          "type": "string",
+          "description": "The symbol for the token; must be alphanumeric",
+          "pattern": "^[a-zA-Z0-9+\\-%/]+$",
+          "minLength": 1,
+          "maxLength": 20,
+          "examples": [
+            "USDC"
+          ]
+        },
+        "logoURI": {
+          "type": "string",
+          "description": "A URI to the token logo asset; if not set, interface will attempt to find a logo based on the token address; suggest SVG or PNG of size 64x64",
+          "format": "uri",
+          "examples": [
+            "ipfs://QmXfzKRvjZz3u5JRgC4v5mGVbm9ahrUiB4DgzHBsnWbTMM"
+          ]
+        },
+        "tags": {
+          "type": "array",
+          "description": "An array of tag identifiers associated with the token; tags are defined at the list level",
+          "items": {
+            "$ref": "#/definitions/TagIdentifier"
+          },
+          "maxLength": 10,
+          "examples": [
+            "stablecoin",
+            "compound"
+          ]
+        }
+      },
+      "required": [
+        "chainId",
+        "address",
+        "decimals",
+        "name",
+        "symbol"
+      ]
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the token list",
+      "minLength": 1,
+      "maxLength": 20,
+      "pattern": "^[\\w ]+$",
+      "examples": [
+        "My Token List"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The timestamp of this list version; i.e. when this immutable version of the list was created"
+    },
+    "version": {
+      "$ref": "#/definitions/Version"
+    },
+    "tokens": {
+      "type": "array",
+      "description": "The list of tokens included in the list",
+      "items": {
+        "$ref": "#/definitions/TokenInfo"
+      },
+      "minItems": 1,
+      "maxItems": 1000
+    },
+    "keywords": {
+      "type": "array",
+      "description": "Keywords associated with the contents of the list; may be used in list discoverability",
+      "items": {
+        "type": "string",
+        "description": "A keyword to describe the contents of the list",
+        "minLength": 1,
+        "maxLength": 20,
+        "pattern": "^[\\w ]+$",
+        "examples": [
+          "compound",
+          "lending",
+          "personal tokens"
+        ]
+      },
+      "maxItems": 20,
+      "uniqueItems": true
+    },
+    "tags": {
+      "type": "object",
+      "description": "A mapping of tag identifiers to their name and description",
+      "propertyNames": {
+        "$ref": "#/definitions/TagIdentifier"
+      },
+      "additionalProperties": {
+        "$ref": "#/definitions/TagDefinition"
+      },
+      "maxProperties": 20,
+      "examples": [
+        {
+          "stablecoin": {
+            "name": "Stablecoin",
+            "description": "A token with value pegged to another asset"
+          }
+        }
+      ]
+    },
+    "logoURI": {
+      "type": "string",
+      "description": "A URI for the logo of the token list; prefer SVG or PNG of size 256x256",
+      "format": "uri",
+      "examples": [
+        "ipfs://QmXfzKRvjZz3u5JRgC4v5mGVbm9ahrUiB4DgzHBsnWbTMM"
+      ]
+    }
+  },
+  "required": [
+    "name",
+    "timestamp",
+    "version",
+    "tokens"
+  ]
+}
