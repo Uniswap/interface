@@ -92,7 +92,7 @@ export function requireAcceptNewTrade(
 
 export const getRateToDisplay = (trade: Trade, showInverseRate: boolean): string => {
   const price = showInverseRate ? trade.executionPrice.invert() : trade.executionPrice
-  const formattedPrice = formatPrice(price, NumberType.SwapTradeAmount)
+  const formattedPrice = formatPrice(price, NumberType.SwapPrice)
   const { quoteCurrency, baseCurrency } = trade.executionPrice
   const rate = `1 ${quoteCurrency.symbol} = ${formattedPrice} ${baseCurrency.symbol}`
   const inverseRate = `1 ${baseCurrency.symbol} = ${formattedPrice} ${quoteCurrency.symbol}`

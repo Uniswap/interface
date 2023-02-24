@@ -95,6 +95,25 @@ it('formats Swap text input/output numbers correctly', () => {
   expect(formatNumber(0, NumberType.SwapTradeAmount)).toBe('0')
 })
 
+it('formats Swap prices correctly', () => {
+  expect(formatNumber(1234567.8901, NumberType.SwapPrice)).toBe('1234570')
+  expect(formatNumber(765432.1, NumberType.SwapPrice)).toBe('765432')
+
+  expect(formatNumber(7654.321, NumberType.SwapPrice)).toBe('7654.32')
+  expect(formatNumber(765.4321, NumberType.SwapPrice)).toBe('765.432')
+  expect(formatNumber(76.54321, NumberType.SwapPrice)).toBe('76.5432')
+  expect(formatNumber(7.654321, NumberType.SwapPrice)).toBe('7.65432')
+  expect(formatNumber(7.60000054321, NumberType.SwapPrice)).toBe('7.60')
+  expect(formatNumber(7.6, NumberType.SwapPrice)).toBe('7.60')
+  expect(formatNumber(7, NumberType.SwapPrice)).toBe('7.00')
+
+  expect(formatNumber(0.987654321, NumberType.SwapPrice)).toBe('0.98765')
+  expect(formatNumber(0.9, NumberType.SwapPrice)).toBe('0.90')
+  expect(formatNumber(0.901000123, NumberType.SwapPrice)).toBe('0.901')
+  expect(formatNumber(0.000000001, NumberType.SwapPrice)).toBe('<0.00001')
+  expect(formatNumber(0, NumberType.SwapPrice)).toBe('0')
+})
+
 it('formats NFT numbers correctly', () => {
   expect(formatNumber(1234567000000000, NumberType.NFTTokenFloorPrice)).toBe('>999T')
   expect(formatNumber(1002345, NumberType.NFTTokenFloorPrice)).toBe('1.00M')

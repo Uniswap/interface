@@ -145,6 +145,12 @@ const swapTradeAmountFormatter: FormatterRule[] = [
   { upperBound: Infinity, formatter: SIX_SIG_FIGS_TWO_DECIMALS_NO_COMMAS },
 ]
 
+const swapPriceFormatter: FormatterRule[] = [
+  { exact: 0, formatter: '0' },
+  { upperBound: 0.00001, formatter: '<0.00001' },
+  ...swapTradeAmountFormatter,
+]
+
 const fiatTokenDetailsFormatter: FormatterRule[] = [
   { upperBound: 0.00000001, formatter: '<$0.00000001' },
   { upperBound: 0.1, formatter: THREE_SIG_FIGS_USD },
@@ -202,6 +208,10 @@ export enum NumberType {
   // used for token quantities in transaction contexts (e.g. swap, send)
   TokenTx = 'token-tx',
 
+  // this formatter is used for displaying swap price conversions
+  // below the input/output amounts
+  SwapPrice = 'swap-price',
+
   // this formatter is only used for displaying the swap trade output amount
   // in the text input boxes. Output amounts on review screen should use the above TokenTx formatter
   SwapTradeAmount = 'swap-trade-amount',
@@ -234,6 +244,7 @@ export enum NumberType {
 const TYPE_TO_FORMATTER_RULES = {
   [NumberType.TokenNonTx]: tokenNonTxFormatter,
   [NumberType.TokenTx]: tokenTxFormatter,
+  [NumberType.SwapPrice]: swapPriceFormatter,
   [NumberType.SwapTradeAmount]: swapTradeAmountFormatter,
   [NumberType.FiatTokenQuantity]: fiatTokenQuantityFormatter,
   [NumberType.FiatTokenDetails]: fiatTokenDetailsFormatter,
