@@ -49,7 +49,7 @@ export function TokenDetailsActionButtons({
           style={{ backgroundColor: tokenColor ?? theme.colors.magentaVibrant }}
           onPress={onPressSwap}>
           <Text
-            color={getContrastPassingTextColor(tokenColor ?? theme.colors.magentaVibrant)}
+            color={tokenColor ? getContrastPassingTextColor(tokenColor) : 'textOnBrightPrimary'}
             variant={textVariant}>
             {t('Swap')}
           </Text>
