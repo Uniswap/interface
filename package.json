@@ -60,6 +60,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-transform-async-to-generator": "^7.20.7",
     "@craco/craco": "6.4.3",
     "@ethersproject/experimental": "^5.4.0",
     "@lingui/cli": "^3.9.0",
@@ -236,6 +237,7 @@
     "workbox-navigation-preload": "^6.1.0",
     "workbox-precaching": "^6.1.0",
     "workbox-routing": "^6.1.0",
+    "zone.js": "^0.12.0",
     "zustand": "^4.0.0-rc.1"
   },
   "engines": {

@@ -7,7 +7,10 @@ const commitHash = require('child_process').execSync('git rev-parse HEAD')
 
 module.exports = {
   babel: {
-    plugins: ['@vanilla-extract/babel-plugin'],
+    plugins: [
+      '@vanilla-extract/babel-plugin',
+      '@babel/plugin-transform-async-to-generator', // required for logger
+    ],
   },
   jest: {
     configure(jestConfig) {
