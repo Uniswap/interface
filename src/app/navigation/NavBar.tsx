@@ -137,47 +137,47 @@ const SwapFAB = memo(({ activeScale = 0.96, inputCurrencyId }: SwapTabBarButtonP
   })
 
   return (
-    <Box alignItems="center" bg="none" pointerEvents="box-none" position="relative">
-      <TapGestureHandler onGestureEvent={onGestureEvent}>
-        <AnimatedBox
-          alignItems="center"
-          height={SWAP_BUTTON_HEIGHT}
-          justifyContent="center"
-          pointerEvents="auto"
-          px="spacing24"
-          py="spacing16"
-          shadowColor="shadowBranded"
-          shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
-          shadowOpacity={isDarkMode ? 0.6 : 0.4}
-          shadowRadius={theme.borderRadii.rounded20}
-          style={[animatedStyle]}>
-          <Box
-            borderRadius="rounded32"
-            bottom={0}
-            left={0}
-            overflow="hidden"
+    <TracePressEvent element={ElementName.Swap}>
+      <Box alignItems="center" bg="none" pointerEvents="box-none" position="relative">
+        <TapGestureHandler onGestureEvent={onGestureEvent}>
+          <AnimatedBox
+            alignItems="center"
+            height={SWAP_BUTTON_HEIGHT}
+            justifyContent="center"
             pointerEvents="auto"
-            position="absolute"
-            right={0}
-            top={0}>
-            <Svg height="100%" width="100%">
-              <Defs>
-                <LinearGradient id="background" x1="0%" x2="0%" y1="0%" y2="100%">
-                  <Stop offset="0" stopColor="#F160F9" stopOpacity="1" />
-                  <Stop offset="1" stopColor="#e14ee9" stopOpacity="1" />
-                </LinearGradient>
-              </Defs>
-              <Rect fill="url(#background)" height="100%" opacity={1} width="100%" x="0" y="0" />
-            </Svg>
-          </Box>
-          <TracePressEvent element={ElementName.Swap}>
+            px="spacing24"
+            py="spacing16"
+            shadowColor="shadowBranded"
+            shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
+            shadowOpacity={isDarkMode ? 0.6 : 0.4}
+            shadowRadius={theme.borderRadii.rounded20}
+            style={[animatedStyle]}>
+            <Box
+              borderRadius="rounded32"
+              bottom={0}
+              left={0}
+              overflow="hidden"
+              pointerEvents="auto"
+              position="absolute"
+              right={0}
+              top={0}>
+              <Svg height="100%" width="100%">
+                <Defs>
+                  <LinearGradient id="background" x1="0%" x2="0%" y1="0%" y2="100%">
+                    <Stop offset="0" stopColor="#F160F9" stopOpacity="1" />
+                    <Stop offset="1" stopColor="#e14ee9" stopOpacity="1" />
+                  </LinearGradient>
+                </Defs>
+                <Rect fill="url(#background)" height="100%" opacity={1} width="100%" x="0" y="0" />
+              </Svg>
+            </Box>
             <Text color="textOnBrightPrimary" variant="buttonLabelMedium">
               {t('Swap')}
             </Text>
-          </TracePressEvent>
-        </AnimatedBox>
-      </TapGestureHandler>
-    </Box>
+          </AnimatedBox>
+        </TapGestureHandler>
+      </Box>
+    </TracePressEvent>
   )
 })
 

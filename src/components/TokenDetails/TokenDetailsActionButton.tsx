@@ -26,35 +26,35 @@ export function TokenDetailsActionButtons({
   )
 
   return (
-    <Flex
-      row
-      bg="background0"
-      borderTopColor="backgroundOutline"
-      borderTopWidth={1}
-      gap="spacing8"
-      pb="spacing16"
-      pt="spacing12"
-      px="spacing16">
-      <TouchableArea
-        hapticFeedback
-        alignItems="center"
-        borderColor={borderColor}
-        borderRadius={borderRadius}
-        borderWidth={1}
-        disabled={!onPressSwap}
-        flexGrow={1}
-        px={paddingX}
-        py={paddingY}
-        style={{ backgroundColor: tokenColor ?? theme.colors.magentaVibrant }}
-        onPress={onPressSwap}>
-        <TracePressEvent element={ElementName.Swap}>
+    <TracePressEvent element={ElementName.Swap}>
+      <Flex
+        row
+        bg="background0"
+        borderTopColor="backgroundOutline"
+        borderTopWidth={1}
+        gap="spacing8"
+        pb="spacing16"
+        pt="spacing12"
+        px="spacing16">
+        <TouchableArea
+          hapticFeedback
+          alignItems="center"
+          borderColor={borderColor}
+          borderRadius={borderRadius}
+          borderWidth={1}
+          disabled={!onPressSwap}
+          flexGrow={1}
+          px={paddingX}
+          py={paddingY}
+          style={{ backgroundColor: tokenColor ?? theme.colors.magentaVibrant }}
+          onPress={onPressSwap}>
           <Text
             color={getContrastPassingTextColor(tokenColor ?? theme.colors.magentaVibrant)}
             variant={textVariant}>
             {t('Swap')}
           </Text>
-        </TracePressEvent>
-      </TouchableArea>
-    </Flex>
+        </TouchableArea>
+      </Flex>
+    </TracePressEvent>
   )
 }
