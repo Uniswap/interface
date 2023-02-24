@@ -113,8 +113,7 @@ export default function SellModal({ isOpen, onDismiss, poolInfo, userBaseTokenBa
   }, [])
 
   // used for max input button
-  //const maxAmountInput = maxAmountSpend(userLiquidityUnstaked)
-  const maxAmountInput = maxAmountSpend(userBaseTokenBalance)
+  const maxAmountInput = maxAmountSpend(poolInfo?.userPoolBalance)
   const atMaxAmount = Boolean(maxAmountInput && parsedAmount?.equalTo(maxAmountInput))
   const handleMax = useCallback(() => {
     maxAmountInput && onUserInput(maxAmountInput.toExact())
