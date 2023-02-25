@@ -33,7 +33,7 @@ const AppWrapper = styled.div`
   justify-content: flex-start;
   align-items: stretch;
   align-content: stretch;
-  min-height: 100vh;--++
+  min-height: 100vh;
 `
 
 const HeaderWrapper = styled.div`
@@ -57,12 +57,18 @@ const BodyWrapper = styled.div`
   flex-basis: auto;
   background: ${({ theme }) =>
     theme.darkMode
-      ? 'url(images/Dapp-background-final-dark.png) no-repeat center center fixed'
-      : 'url(images/Dapp-background-final-white.png) no-repeat center center fixed'};
+      ? 'url(images/Dapp-background-final-dark.png) no-repeat fixed'
+      : 'url(images/Dapp-background-final-white.png) no-repeat fixed'};
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  background-position: left bottom;
+
+  @media screen and (max-width: 1592px) {
+    background-position: left 0 bottom 90px;
+    background-size: 100% auto;
+  }
 `
 
 const TopLevelModals = () => {
