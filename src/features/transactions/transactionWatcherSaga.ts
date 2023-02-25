@@ -192,8 +192,9 @@ export function* watchTransaction(transaction: TransactionDetails): Generator<an
   const nonce = options.request.nonce
   const hasInvalidNonce = !nonce || highestConfirmedNonce > nonce
 
-  // Dont wait for receipt if tx is invalid, it wont get picked up
-  if (hasInvalidNonce) {
+  // Dont wait for receipt if tx is invalid, it wont get picked up. Only apply to Mainnet
+  // because L2s may confirm before this saga runs causing it to think the tx was invalid
+  if (hasInvalidNonce && chainId === ChainId.Mainnet) {
     yield* call(finalizeTransaction, transaction, undefined, undefined, hasInvalidNonce)
     return
   }
