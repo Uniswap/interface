@@ -103,7 +103,7 @@ export function* attemptReplaceTransaction(
       // Finalize and end attempts to replace.
       // TODO: [MOB-3898] Can we check for specific errors here?.  Sometimes this might mark actually succesful result.
       // TODO: [MOB-3898] should we even finalize this?
-      yield* put(finalizeTransaction({ ...transaction, status: TransactionStatus.Failed }))
+      yield* put(finalizeTransaction({ ...transaction, status: TransactionStatus.Success }))
     }
 
     yield* put(

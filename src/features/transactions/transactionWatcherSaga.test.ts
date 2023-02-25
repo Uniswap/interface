@@ -30,6 +30,7 @@ import {
   provider,
   txDetailsPending,
   txReceipt,
+  txRequest,
 } from 'src/test/fixtures'
 import { sleep } from 'src/utils/timing'
 
@@ -119,6 +120,7 @@ describe(watchTransaction, () => {
   it('Finalizes successful transaction', () => {
     const receiptProvider = {
       waitForTransaction: jest.fn(() => txReceipt),
+      getTransactionCount: jest.fn(() => txRequest.nonce),
     }
     return expectSaga(watchTransaction, txDetailsPending)
       .provide([[call(getProvider, chainId), receiptProvider]])
@@ -132,6 +134,7 @@ describe(watchTransaction, () => {
         await sleep(1000)
         return null
       }),
+      getTransactionCount: jest.fn(() => txRequest.nonce),
     }
     const cancelRequest = { to: from, from, value: '0x0' }
     return expectSaga(watchTransaction, txDetailsPending)
@@ -144,10 +147,17 @@ describe(watchTransaction, () => {
       .silentRun()
   })
 
-  it('Finalizes successful timed out transaction', () => {
+  it('Finalizes timed out transaction', () => {
     return expectSaga(watchTransaction, oldTx)
       .provide([[call(getProvider, chainId), mockProvider]])
-      .put(finalizeTransaction({ ...finalizedTxAction.payload, addedTime: oldTx.addedTime }))
+      .put(
+        finalizeTransaction({
+          ...finalizedTxAction.payload,
+          status: TransactionStatus.Failed,
+          addedTime: oldTx.addedTime,
+          receipt: undefined,
+        })
+      )
       .silentRun()
   })
 })
