@@ -91,7 +91,7 @@ function getEventHandlers(
   for (const event of Object.values(events)) {
     eventHandlers[event] = (eventHandlerArgs: unknown): void => {
       // call child event handler with original arguments
-      child.props[event]?.apply(child, eventHandlerArgs)
+      child.props[event].apply(child, [eventHandlerArgs])
 
       // augment handler with analytics logging
       // NOTE: on type error, ensure `EventProperties` contains a record for new `EventName`
@@ -102,7 +102,6 @@ function getEventHandlers(
       })
     }
   }
-
   // return a spreadable event handler object
   return eventHandlers
 }
