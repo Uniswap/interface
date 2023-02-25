@@ -29,7 +29,10 @@ export function getEventParams(
         chain: currencyIdToChain((params as RootParamList[Screens.TokenDetails]).currencyId),
       }
     case Screens.ExternalProfile:
-      return { address: (params as RootParamList[Screens.ExternalProfile]).address }
+      return {
+        address: (params as RootParamList[Screens.ExternalProfile]).address,
+        wallet_name: (params as RootParamList[Screens.ExternalProfile]).walletName,
+      }
     case Screens.NFTItem:
       return {
         address: (params as RootParamList[Screens.NFTItem]).address,

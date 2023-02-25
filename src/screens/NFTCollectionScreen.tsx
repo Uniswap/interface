@@ -14,6 +14,7 @@ import { BaseCard } from 'src/components/layout/BaseCard'
 import { Screen } from 'src/components/layout/Screen'
 import { ScrollHeader } from 'src/components/layout/screens/ScrollHeader'
 import { Loader } from 'src/components/loading'
+import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { isError } from 'src/data/utils'
@@ -187,6 +188,14 @@ export function NFTCollectionScreen({
     return collectionItems
   }, [collectionItems, extraLoadingItemAmount, gridDataLoading])
 
+  const traceProperties = useMemo(
+    () =>
+      collectionData?.name
+        ? { collectionAddress, collectionName: collectionData?.name }
+        : undefined,
+    [collectionAddress, collectionData?.name]
+  )
+
   if (isError(networkStatus, !!data)) {
     return (
       <Screen edges={[]}>
@@ -205,48 +214,57 @@ export function NFTCollectionScreen({
 
   return (
     <ExploreModalAwareView>
-      <Screen edges={EMPTY_ARRAY}>
-        <ScrollHeader
-          fullScreen
-          centerElement={
-            collectionData?.name ? (
-              <Text variant="bodyLarge">{collectionData.name}</Text>
-            ) : undefined
-          }
-          listRef={listRef}
-          rightElement={
-            <NFTCollectionContextMenu collectionAddress={collectionAddress} data={collectionData} />
-          }
-          scrollY={scrollY}
-          showHeaderScrollYDistance={NFT_BANNER_HEIGHT}
-        />
-        <AnimatedFlashList
-          ref={listRef}
-          ListEmptyComponent={
-            gridDataLoading ? null : <BaseCard.EmptyState description={t('No NFTs found')} />
-          }
-          ListHeaderComponent={
-            <NFTCollectionHeader
-              collectionAddress={collectionAddress}
-              data={collectionData}
-              loading={headerDataLoading}
-            />
-          }
-          data={gridDataWithLoadingElements}
-          estimatedItemSize={ESTIMATED_ITEM_SIZE}
-          estimatedListSize={{
-            width: dimensions.fullWidth,
-            height: dimensions.fullHeight,
-          }}
-          keyExtractor={keyExtractor}
-          numColumns={3}
-          renderItem={renderItem}
-          showsVerticalScrollIndicator={false}
-          onEndReached={onListEndReached}
-          onEndReachedThreshold={PREFETCH_ITEMS_THRESHOLD}
-          onScroll={scrollHandler}
-        />
-      </Screen>
+      <Trace
+        directFromPage
+        logImpression={!!traceProperties}
+        properties={traceProperties}
+        screen={Screens.NFTCollection}>
+        <Screen edges={EMPTY_ARRAY}>
+          <ScrollHeader
+            fullScreen
+            centerElement={
+              collectionData?.name ? (
+                <Text variant="bodyLarge">{collectionData.name}</Text>
+              ) : undefined
+            }
+            listRef={listRef}
+            rightElement={
+              <NFTCollectionContextMenu
+                collectionAddress={collectionAddress}
+                data={collectionData}
+              />
+            }
+            scrollY={scrollY}
+            showHeaderScrollYDistance={NFT_BANNER_HEIGHT}
+          />
+          <AnimatedFlashList
+            ref={listRef}
+            ListEmptyComponent={
+              gridDataLoading ? null : <BaseCard.EmptyState description={t('No NFTs found')} />
+            }
+            ListHeaderComponent={
+              <NFTCollectionHeader
+                collectionAddress={collectionAddress}
+                data={collectionData}
+                loading={headerDataLoading}
+              />
+            }
+            data={gridDataWithLoadingElements}
+            estimatedItemSize={ESTIMATED_ITEM_SIZE}
+            estimatedListSize={{
+              width: dimensions.fullWidth,
+              height: dimensions.fullHeight,
+            }}
+            keyExtractor={keyExtractor}
+            numColumns={3}
+            renderItem={renderItem}
+            showsVerticalScrollIndicator={false}
+            onEndReached={onListEndReached}
+            onEndReachedThreshold={PREFETCH_ITEMS_THRESHOLD}
+            onScroll={scrollHandler}
+          />
+        </Screen>
+      </Trace>
     </ExploreModalAwareView>
   )
 }

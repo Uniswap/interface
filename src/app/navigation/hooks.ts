@@ -38,7 +38,7 @@ export function useEagerActivityNavigation(): {
  */
 export function useEagerExternalProfileNavigation(): {
   preload: (address: string) => void
-  navigate: (address: string) => void
+  navigate: (address: string, walletName?: string) => void
 } {
   const navigation = useExploreStackNavigation()
 
@@ -52,7 +52,9 @@ export function useEagerExternalProfileNavigation(): {
   )
 
   const navigate = useCallback(
-    (address: string) => navigation.navigate(Screens.ExternalProfile, { address }),
+    (address: string, walletName?: string) => {
+      navigation.navigate(Screens.ExternalProfile, { address, walletName })
+    },
     [navigation]
   )
 

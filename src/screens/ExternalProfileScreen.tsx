@@ -12,10 +12,12 @@ import { TokensTab } from 'src/components/home/TokensTab'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { renderTabLabel, TabContentProps, TAB_STYLES } from 'src/components/layout/TabHelpers'
+import { Trace } from 'src/components/telemetry/Trace'
 import TraceTabView from 'src/components/telemetry/TraceTabView'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import ProfileHeader from 'src/features/externalProfile/ProfileHeader'
 import { SectionName } from 'src/features/telemetry/constants'
+import { useDisplayName } from 'src/features/wallet/hooks'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
 
@@ -30,6 +32,8 @@ export function ExternalProfileScreen({
   const theme = useAppTheme()
   const [tabIndex, setIndex] = useState(0)
   const insets = useSafeAreaInsets()
+
+  const displayName = useDisplayName(address)
 
   const tabs = useMemo(
     () => [
@@ -98,19 +102,30 @@ export function ExternalProfileScreen({
     [tabIndex, tabs, theme]
   )
 
+  const traceProperties = useMemo(
+    () => ({ address, walletName: displayName?.name }),
+    [address, displayName?.name]
+  )
+
   return (
     <ExploreModalAwareView>
       <Screen edges={EMPTY_ARRAY}>
-        <Flex grow>
-          <ProfileHeader address={address} />
-          <TraceTabView
-            navigationState={{ index: tabIndex, routes: tabs }}
-            renderScene={renderTab}
-            renderTabBar={renderTabBar}
-            screenName={Screens.ExternalProfile}
-            onIndexChange={setIndex}
-          />
-        </Flex>
+        <Trace
+          directFromPage
+          logImpression
+          properties={traceProperties}
+          screen={Screens.ExternalProfile}>
+          <Flex grow>
+            <ProfileHeader address={address} />
+            <TraceTabView
+              navigationState={{ index: tabIndex, routes: tabs }}
+              renderScene={renderTab}
+              renderTabBar={renderTabBar}
+              screenName={Screens.ExternalProfile}
+              onIndexChange={setIndex}
+            />
+          </Flex>
+        </Trace>
       </Screen>
     </ExploreModalAwareView>
   )

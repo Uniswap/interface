@@ -5,7 +5,7 @@ import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MarkNames, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { useTrace } from 'src/features/telemetry/hooks'
-import { AppScreen } from 'src/screens/Screens'
+import { AppScreen, Screens } from 'src/screens/Screens'
 import { logger } from 'src/utils/logger'
 
 export interface ITraceContext {
@@ -27,6 +27,9 @@ export const TraceContext = createContext<ITraceContext>({})
 
 export type TraceProps = {
   logImpression?: boolean // whether to log impression on mount
+
+  // verifies an impression has come from that page directly to override the direct only skip list
+  directFromPage?: boolean
 
   // additional properties to log with impression
   // (eg. TokenDetails Impression: { tokenAddress: 'address', tokenName: 'name' })
@@ -59,6 +62,7 @@ export type TraceProps = {
 function _Trace({
   children,
   logImpression,
+  directFromPage,
   screen,
   section,
   element,
@@ -99,11 +103,14 @@ function _Trace({
   // Log impression on mount for elements that are not part of the navigation tree
   useEffect(() => {
     if (logImpression && !isPartOfNavigationTree) {
-      sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, { ...combinedProps, ...properties })
+      const eventProps = { ...combinedProps, ...properties }
+      if (shouldLogScreen(directFromPage, (properties as ITraceContext | undefined)?.screen)) {
+        sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, eventProps)
+      }
     }
     // Impressions should only be logged on mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [logImpression])
+  }, [logImpression, directFromPage])
 
   // Measure marks if needed
   useEffect(() => {
@@ -127,6 +134,7 @@ function _Trace({
   return (
     <NavAwareTrace
       combinedProps={combinedProps}
+      directFromPage={directFromPage}
       logImpression={logImpression}
       properties={properties}>
       <TraceContext.Provider value={combinedProps}>{children}</TraceContext.Provider>
@@ -134,13 +142,14 @@ function _Trace({
   )
 }
 
-type NavAwareTraceProps = Pick<TraceProps, 'logImpression' | 'properties'>
+type NavAwareTraceProps = Pick<TraceProps, 'logImpression' | 'properties' | 'directFromPage'>
 
 // Internal component to keep track of navigation events
 // Needed since we need to rely on `navigation.useFocusEffect` to track
 // impressions of pages that are not unmounted when navigating away from them
 function NavAwareTrace({
   logImpression,
+  directFromPage,
   combinedProps,
   children,
   properties,
@@ -150,12 +159,29 @@ function NavAwareTrace({
   useFocusEffect(
     React.useCallback(() => {
       if (logImpression) {
-        sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, { ...combinedProps, ...properties })
+        const eventProps = { ...combinedProps, ...properties }
+        if (shouldLogScreen(directFromPage, (properties as ITraceContext | undefined)?.screen)) {
+          sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, eventProps)
+        }
       }
-    }, [combinedProps, logImpression, properties])
+    }, [combinedProps, directFromPage, logImpression, properties])
   )
 
   return <>{children}</>
 }
 
 export const Trace = memo(_Trace)
+
+export const DIRECT_LOG_ONLY_SCREENS: AppScreen[] = [
+  Screens.TokenDetails,
+  Screens.ExternalProfile,
+  Screens.NFTItem,
+  Screens.NFTCollection,
+]
+
+function shouldLogScreen(
+  directFromPage: boolean | undefined,
+  screen: AppScreen | undefined
+): boolean {
+  return directFromPage || screen === undefined || !DIRECT_LOG_ONLY_SCREENS.includes(screen)
+}

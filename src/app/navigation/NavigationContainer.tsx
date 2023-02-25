@@ -10,7 +10,7 @@ import React, { Dispatch, FC, useEffect, useState } from 'react'
 import { Linking } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { RootParamList } from 'src/app/navigation/types'
-import { Trace } from 'src/components/telemetry/Trace'
+import { DIRECT_LOG_ONLY_SCREENS, Trace } from 'src/components/telemetry/Trace'
 import { DeepLink, openDeepLink } from 'src/features/deepLinking/handleDeepLink'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { getEventParams } from 'src/features/telemetry/utils'
@@ -52,7 +52,11 @@ export const NavigationContainer: FC<Props> = ({ children, onReady }) => {
         const previousRouteName = routeName
         const currentRouteName: AppScreen = navigationRef.getCurrentRoute()?.name as AppScreen
 
-        if (currentRouteName && previousRouteName !== currentRouteName) {
+        if (
+          currentRouteName &&
+          previousRouteName !== currentRouteName &&
+          !DIRECT_LOG_ONLY_SCREENS.includes(currentRouteName)
+        ) {
           const currentRouteParams = getEventParams(
             currentRouteName,
             navigationRef.getCurrentRoute()?.params as RootParamList[AppScreen]

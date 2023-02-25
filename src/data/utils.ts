@@ -28,7 +28,7 @@ export function isError(networkStatus: NetworkStatus, hasData: boolean): boolean
 // Recurring errors that we must fix should have enough occurrences that we detect them still
 const APOLLO_GRAPHQL_ERROR_SAMPLING_RATE = 0.1
 const APOLLO_NETWORK_ERROR_SAMPLING_RATE = 0.01
-const APOLLO_PERFORMANCE_SAMPLING_RATE = 0.5
+const APOLLO_PERFORMANCE_SAMPLING_RATE = 0.01
 
 export function sample(cb: () => void, rate: number): void {
   if (Math.random() < rate) {

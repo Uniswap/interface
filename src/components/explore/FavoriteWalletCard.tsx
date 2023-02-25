@@ -83,7 +83,7 @@ export default function FavoriteWalletCard({
         m="spacing4"
         onPress={(): void => {
           preload(address)
-          navigate(address)
+          navigate(address, displayName?.name)
         }}>
         <BaseCard.Shadow>
           <Flex row gap="spacing4" justifyContent="space-between">

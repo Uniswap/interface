@@ -16,9 +16,10 @@ export type ExploreStackParamList = {
   [Screens.Explore]: undefined
   [Screens.ExternalProfile]: {
     address: string
+    walletName?: string
   }
   [Screens.NFTItem]: NFTItem
-  [Screens.NFTCollection]: { collectionAddress: string }
+  [Screens.NFTCollection]: { collectionAddress: string; collectionName?: string }
   [Screens.TokenDetails]: {
     currencyId: string
     currencyName?: string
@@ -100,6 +101,7 @@ export type AppStackParamList = {
   [Screens.NFTCollection]: { collectionAddress: string }
   [Screens.ExternalProfile]: {
     address: string
+    walletName?: string
   }
   [Screens.WebView]: { headerTitle: string; uriLink: string }
 }

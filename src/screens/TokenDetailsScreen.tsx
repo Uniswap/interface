@@ -110,15 +110,30 @@ export function TokenDetailsScreen({
   // Preload token price graphs
   const { error: tokenPriceHistoryError } = useTokenPriceHistory(_currencyId)
 
+  const traceProperties = useMemo(
+    () => ({
+      address: currencyIdToAddress(_currencyId),
+      chain: currencyIdToChain(_currencyId),
+      currencyName: data?.token?.name,
+    }),
+    [_currencyId, data?.token?.name]
+  )
+
   return (
     <ReactNavigationPerformanceView interactive={isLoading} screenName={Screens.TokenDetails}>
-      <TokenDetails
-        _currencyId={_currencyId}
-        data={data}
-        error={isError(networkStatus, !!data) || !!tokenPriceHistoryError}
-        loading={isLoading}
-        retry={retry}
-      />
+      <Trace
+        directFromPage
+        logImpression
+        properties={traceProperties}
+        screen={Screens.TokenDetails}>
+        <TokenDetails
+          _currencyId={_currencyId}
+          data={data}
+          error={isError(networkStatus, !!data) || !!tokenPriceHistoryError}
+          loading={isLoading}
+          retry={retry}
+        />
+      </Trace>
     </ReactNavigationPerformanceView>
   )
 }
