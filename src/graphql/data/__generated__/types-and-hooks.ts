@@ -85,7 +85,11 @@ export enum Chain {
   Optimism = 'OPTIMISM',
   Polygon = 'POLYGON',
   UnknownChain = 'UNKNOWN_CHAIN',
-  Bsc = "Bsc"
+  Bsc = "BSC"
+}
+
+export enum CollectionSortableField {
+  Volume = 'VOLUME'
 }
 
 export type ContractInput = {
@@ -373,6 +377,8 @@ export type NftCollectionMarket = {
   marketplaces?: Maybe<Array<NftCollectionMarketplace>>;
   nftContracts?: Maybe<Array<NftContract>>;
   owners?: Maybe<Scalars['Int']>;
+  percentListed?: Maybe<TimestampedAmount>;
+  percentUniqueOwners?: Maybe<TimestampedAmount>;
   sales?: Maybe<TimestampedAmount>;
   totalVolume?: Maybe<TimestampedAmount>;
   volume?: Maybe<TimestampedAmount>;
@@ -652,6 +658,7 @@ export type Query = {
   token?: Maybe<Token>;
   tokenProjects?: Maybe<Array<Maybe<TokenProject>>>;
   tokens?: Maybe<Array<Maybe<Token>>>;
+  topCollections?: Maybe<NftCollectionConnection>;
   topTokens?: Maybe<Array<Maybe<Token>>>;
 };
 
@@ -739,6 +746,15 @@ export type QueryTokenProjectsArgs = {
 
 export type QueryTokensArgs = {
   contracts: Array<ContractInput>;
+};
+
+
+export type QueryTopCollectionsArgs = {
+  chains?: InputMaybe<Array<Chain>>;
+  cursor?: InputMaybe<Scalars['String']>;
+  duration?: InputMaybe<HistoryDuration>;
+  limit?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<CollectionSortableField>;
 };
 
 
