@@ -63,7 +63,7 @@ export const CollectionRow = ({
   const navigate = useNavigate()
 
   const handleClick = useCallback(() => {
-    addRecentlySearchedAsset({ ...collection, isNft: true, chain: Chain.Ethereum })
+    addRecentlySearchedAsset({ ...collection, isNft: true, chain: Chain.Evmos })
     toggleOpen()
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [addRecentlySearchedAsset, collection, toggleOpen, eventProperties])

@@ -55,16 +55,8 @@ export function isPricePoint(p: PricePoint | null): p is PricePoint {
 }
 
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
-  [SupportedChainId.MAINNET]: Chain.Ethereum,
-  [SupportedChainId.GOERLI]: Chain.EthereumGoerli,
-  [SupportedChainId.POLYGON]: Chain.Polygon,
-  [SupportedChainId.POLYGON_MUMBAI]: Chain.Polygon,
-  [SupportedChainId.CELO]: Chain.Celo,
-  [SupportedChainId.CELO_ALFAJORES]: Chain.Celo,
-  [SupportedChainId.ARBITRUM_ONE]: Chain.Arbitrum,
-  [SupportedChainId.ARBITRUM_RINKEBY]: Chain.Arbitrum,
-  [SupportedChainId.OPTIMISM]: Chain.Optimism,
-  [SupportedChainId.OPTIMISM_GOERLI]: Chain.Optimism,
+  [SupportedChainId.MAINNET]: Chain.Evmos,
+  [SupportedChainId.FUJI]: Chain.Fuji,
 }
 
 export function chainIdToBackendName(chainId: number | undefined) {
@@ -74,26 +66,20 @@ export function chainIdToBackendName(chainId: number | undefined) {
 }
 
 const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
-  ethereum: Chain.Ethereum,
-  polygon: Chain.Polygon,
-  celo: Chain.Celo,
-  arbitrum: Chain.Arbitrum,
-  optimism: Chain.Optimism,
+  evmos: Chain.Evmos,
+  fuji: Chain.Fuji,
 }
 
 export function validateUrlChainParam(chainName: string | undefined) {
-  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum
+  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Evmos
 }
 
 export const CHAIN_NAME_TO_CHAIN_ID: { [key: string]: SupportedChainId } = {
-  ETHEREUM: SupportedChainId.MAINNET,
-  POLYGON: SupportedChainId.POLYGON,
-  CELO: SupportedChainId.CELO,
-  ARBITRUM: SupportedChainId.ARBITRUM_ONE,
-  OPTIMISM: SupportedChainId.OPTIMISM,
+  EVMOS: SupportedChainId.MAINNET,
+  FUJI: SupportedChainId.FUJI,
 }
 
-export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Ethereum, Chain.Polygon, Chain.Optimism, Chain.Arbitrum, Chain.Celo]
+export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Evmos, Chain.Fuji]
 
 export function getTokenDetailsURL({ address, chain }: { address?: string | null; chain: Chain }) {
   return `/tokens/${chain.toLowerCase()}/${address ?? NATIVE_CHAIN_ID}`

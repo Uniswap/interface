@@ -6,7 +6,9 @@ import { supportedChainId } from './supportedChainId'
 export function unwrappedToken(currency: Currency): Currency {
   if (currency.isNative) return currency
   const formattedChainId = supportedChainId(currency.chainId)
-  if (formattedChainId && WRAPPED_NATIVE_CURRENCY[formattedChainId]?.equals(currency))
-    return nativeOnChain(currency.chainId)
+  if (formattedChainId && WRAPPED_NATIVE_CURRENCY[formattedChainId]?.equals(currency)) {
+    const _nativeOnChain = nativeOnChain(currency.chainId)
+    return _nativeOnChain.wrapped ? _nativeOnChain.wrapped : _nativeOnChain
+  }
   return currency
 }

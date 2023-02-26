@@ -7,7 +7,6 @@ import { flexColumnNoWrap } from 'theme/styles'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import sockImg from '../../assets/svg/socks.svg'
-import { useHasSocks } from '../../hooks/useSocksBalance'
 import Identicon from '../Identicon'
 
 export const IconWrapper = styled.div<{ size?: number }>`
@@ -66,7 +65,7 @@ const useIcon = (connectionType: ConnectionType) => {
 }
 
 export default function StatusIcon({ connectionType, size }: { connectionType: ConnectionType; size?: number }) {
-  const hasSocks = useHasSocks()
+  const hasSocks = false
   const icon = useIcon(connectionType)
 
   return (
