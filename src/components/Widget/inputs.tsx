@@ -1,7 +1,9 @@
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfaceSectionName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, Field, SwapController, SwapEventHandlers, TradeType } from '@uniswap/widgets'
+import { useWeb3React } from '@web3-react/core'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 const EMPTY_AMOUNT = ''
@@ -29,23 +31,34 @@ export function useSyncWidgetInputs({
 }) {
   const trace = useTrace({ section: InterfaceSectionName.WIDGET })
 
+  const { chainId } = useWeb3React()
+  const previousChainId = usePrevious(chainId)
+
   const [type, setType] = useState<SwapValue['type']>(TradeType.EXACT_INPUT)
   const [amount, setAmount] = useState<SwapValue['amount']>(EMPTY_AMOUNT)
   const [tokens, setTokens] = useState<SwapTokens>(defaultTokens)
 
   useEffect(() => {
     if (!tokens[Field.INPUT] && !tokens[Field.OUTPUT]) {
-      setTokens((tokens) => {
-        const update = {
-          ...tokens,
-          [Field.INPUT]: defaultTokens[Field.INPUT] ?? tokens[Field.INPUT],
-          [Field.OUTPUT]: defaultTokens[Field.OUTPUT] ?? tokens[Field.OUTPUT] ?? defaultTokens.default,
-          default: defaultTokens.default,
-        }
-        return update
+      setTokens({
+        ...tokens,
+        [Field.INPUT]: defaultTokens[Field.INPUT] ?? tokens[Field.INPUT],
+        [Field.OUTPUT]: defaultTokens[Field.OUTPUT] ?? tokens[Field.OUTPUT] ?? defaultTokens.default,
+        default: defaultTokens.default,
       })
     }
   }, [defaultTokens, tokens])
+
+  useEffect(() => {
+    if (chainId !== previousChainId && !!previousChainId) {
+      setTokens({
+        ...tokens,
+        [Field.INPUT]: undefined,
+        [Field.OUTPUT]: undefined,
+      })
+      setAmount(EMPTY_AMOUNT)
+    }
+  }, [chainId, previousChainId, tokens])
 
   const onAmountChange = useCallback(
     (field: Field, amount: string, origin?: 'max') => {
