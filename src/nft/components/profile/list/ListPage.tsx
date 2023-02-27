@@ -195,14 +195,12 @@ export const ListPage = () => {
     ({
       listings,
       collectionsRequiringApproval,
-
       setListingStatus,
       setLooksRareNonce,
       setCollectionStatusAndCallback,
     }) => ({
       listings,
       collectionsRequiringApproval,
-
       setListingStatus,
       setLooksRareNonce,
       setCollectionStatusAndCallback,
