@@ -35,6 +35,8 @@ import {
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { colors } from 'theme/colors'
+import { opacify } from 'theme/utils'
 
 import * as styles from './Card.css'
 
@@ -166,6 +168,32 @@ const StyledImageContainer = styled.div<{ isDisabled?: boolean }>`
   cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
 `
 
+const CardContainer = styled.div<{ selected: boolean }>`
+  position: relative;
+  border-radius: ${BORDER_RADIUS}px;
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  overflow: hidden;
+  padding-bottom: 12px;
+  border-radius: 16px;
+  box-shadow: rgba(0, 0, 0, 10%) 0px 4px 12px;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  transition: ${({ theme }) => `${theme.transition.duration.medium}`};
+
+  :after {
+    content: '';
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    border: ${({ selected }) => (selected ? '2px' : '1px')} solid;
+    border-radius: 16px;
+    border-color: ${({ theme, selected }) => (selected ? theme.accentAction : opacify(12, colors.gray500))};
+    pointer-events: none;
+  }
+`
+
 /* -------- ASSET CARD -------- */
 interface CardProps {
   asset: GenieAsset | WalletAsset
@@ -220,19 +248,16 @@ const Container = ({
 
   return (
     <CardContext.Provider value={providerValue}>
-      <Box
-        position="relative"
+      <CardContainer
+        selected={selected}
         ref={assetRef}
-        borderRadius={BORDER_RADIUS}
-        className={selected ? styles.selectedCard : styles.card}
         draggable={false}
         onMouseEnter={toggleHover}
         onMouseLeave={toggleHover}
-        transition="250"
         onClick={isDisabled ? () => null : onClick ?? handleAssetInBag}
       >
         {children}
-      </Box>
+      </CardContainer>
     </CardContext.Provider>
   )
 }
