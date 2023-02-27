@@ -1,9 +1,9 @@
 /* eslint-disable import/no-unused-modules */
 import { Currency, Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core'
+import { SupportedChainId } from '@uniswap/sdk-core'
 import invariant from 'tiny-invariant'
 
 import { UNI_ADDRESS } from './addresses'
-import { SupportedChainId } from './chains'
 
 export const NATIVE_CHAIN_ID = 'NATIVE'
 
