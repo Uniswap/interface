@@ -129,7 +129,7 @@ export function PrivacyPolicy() {
                 <AutoRow gap="4px">
                   <Info size={20} />
                   <ThemedText.DeprecatedMain fontSize={14} color="deprecated_primaryText1">
-                    <Trans>Uniswap Labs&apos; Terms of Service</Trans>
+                    <Trans>Rigoblock&apos; Terms of Service</Trans>
                   </ThemedText.DeprecatedMain>
                 </AutoRow>
                 <StyledLinkOut size={20} />
@@ -137,7 +137,7 @@ export function PrivacyPolicy() {
             </ExternalLink>
           </StyledExternalCard>
           <StyledExternalCard>
-            <ExternalLink href="https://uniswap.org/privacy-policy/">
+            <ExternalLink href="https://rigoblock.com/legal">
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
