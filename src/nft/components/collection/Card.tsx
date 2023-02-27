@@ -259,19 +259,6 @@ const Container = ({
       >
         {children}
       </CardContainer>
-      <Box
-        position="relative"
-        ref={assetRef}
-        borderRadius={BORDER_RADIUS}
-        className={selected ? styles.selectedCard : styles.card}
-        draggable={false}
-        onMouseEnter={toggleHover}
-        onMouseLeave={toggleHover}
-        transition="250"
-        onClick={isDisabled ? () => null : onClick ?? handleAssetInBag}
-      >
-        {children}
-      </Box>
     </CardContext.Provider>
   )
 }
@@ -316,6 +303,13 @@ function getHeightFromAspectRatio(uniformAspectRatio: UniformAspectRatio, render
     : renderedHeight
 }
 
+function getMediaAspectRatio(
+  uniformAspectRatio?: UniformAspectRatio,
+  setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
+): string {
+  return uniformAspectRatio === UniformAspectRatios.square || !setUniformAspectRatio ? '1' : 'auto'
+}
+
 interface ImageProps {
   uniformAspectRatio?: UniformAspectRatio
   setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
@@ -333,12 +327,20 @@ const StyledImage = styled.img<{
   uniformAspectRatio?: UniformAspectRatio
   setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
   renderedHeight?: number
+  hovered: boolean
+  imageLoading: boolean
+  $hidden?: boolean
 }>`
   width: 100%;
   aspect-ratio: ${({ uniformAspectRatio, setUniformAspectRatio }) =>
-    `${uniformAspectRatio === UniformAspectRatios.square || !setUniformAspectRatio ? '1' : 'auto'}`};
+    `${getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}`};
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} transform`};
+  will-change: transform;
   object-fit: contain;
+  visibility: ${({ $hidden }) => ($hidden ? 'hidden' : 'visible')};
+  transform: ${({ hovered }) => hovered && 'scale(1.15)'};
+  background: ${({ theme, imageLoading }) =>
+    imageLoading && `linear-gradient(270deg, ${theme.backgroundOutline} 0%, ${theme.backgroundSurface} 100%)`};
 `
 
 const Image = ({
@@ -360,29 +362,27 @@ const Image = ({
     <StyledImageOverflowContainer>
       <StyledImage
         src={asset.imageUrl || asset.smallImageUrl}
+        hovered={hovered && !isMobile}
+        imageLoading={!loaded}
         draggable={false}
         onError={() => setNoContent(true)}
         onLoad={(e) => {
           handleUniformAspectRatio(uniformAspectRatio, e, setUniformAspectRatio, renderedHeight, setRenderedHeight)
           setLoaded(true)
         }}
-        className={clsx(hovered && !isMobile && styles.cardImageHover, !loaded && styles.loadingBackground)}
       />
     </StyledImageOverflowContainer>
   )
-}
-
-function getMediaAspectRatio(
-  uniformAspectRatio: UniformAspectRatio,
-  setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
-): string {
-  return uniformAspectRatio === UniformAspectRatios.square || !setUniformAspectRatio ? '1' : 'auto'
 }
 
 interface MediaProps {
   shouldPlay: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }
+
+const StyledVideoContainer = styled(Row)`
+  overflow: hidden;
+`
 
 const Video = ({
   uniformAspectRatio = UniformAspectRatios.square,
@@ -410,28 +410,21 @@ const Video = ({
 
   return (
     <>
-      <Box display="flex" overflow="hidden">
-        <Box
-          as="img"
-          alt={asset.name || asset.tokenId}
-          width="full"
-          style={{
-            aspectRatio: getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio),
-            transition: 'transform 0.25s ease 0s',
-            willChange: 'transform',
-          }}
+      <StyledVideoContainer>
+        <StyledImage
           src={asset.imageUrl || asset.smallImageUrl}
-          objectFit="contain"
+          alt={asset.name || asset.tokenId}
+          hovered={hovered && !isMobile}
+          imageLoading={!imageLoaded}
           draggable={false}
           onError={() => setNoContent(true)}
           onLoad={(e) => {
             handleUniformAspectRatio(uniformAspectRatio, e, setUniformAspectRatio, renderedHeight, setRenderedHeight)
             setImageLoaded(true)
           }}
-          visibility={shouldPlay ? 'hidden' : 'visible'}
-          className={clsx(hovered && !isMobile && styles.cardImageHover, !imageLoaded && styles.loadingBackground)}
+          $hidden={shouldPlay}
         />
-      </Box>
+      </StyledVideoContainer>
       {shouldPlay ? (
         <>
           <Box className={styles.playbackSwitch}>
