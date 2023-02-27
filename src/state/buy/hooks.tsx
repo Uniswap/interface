@@ -14,7 +14,7 @@ export interface PoolInfo {
   // the total amount of pool tokens held by the account
   userPoolBalance: CurrencyAmount<Token>
   poolPriceAmount: CurrencyAmount<Token>
-  spread?: number
+  spread: number
 }
 
 // based on typed value

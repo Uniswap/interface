@@ -70,7 +70,10 @@ export default function SellModal({ isOpen, onDismiss, poolInfo, userBaseTokenBa
     // price plus spread
     const baseTokenAmount = JSBI.divide(
       JSBI.multiply(
-        JSBI.subtract(parsedAmount.quotient, JSBI.divide(parsedAmount.quotient, JSBI.BigInt(20))),
+        JSBI.subtract(
+          parsedAmount.quotient,
+          JSBI.divide(JSBI.multiply(parsedAmount.quotient, JSBI.BigInt(poolInfo.spread)), JSBI.BigInt(10000))
+        ),
         poolInfo.poolPriceAmount.quotient
       ),
       JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(parsedAmount.currency.decimals ?? 18))
