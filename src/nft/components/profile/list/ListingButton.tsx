@@ -24,7 +24,7 @@ const StyledListingButton = styled(BaseButton)<{ showResolveIssues: boolean; mis
   width: min-content;
   border: none;
   cursor: ${({ missingPrices }) => (missingPrices ? 'auto' : 'pointer')};
-  opacity: ${({ showResolveIssues, missingPrices }) => (!showResolveIssues && missingPrices && '0.3')};
+  opacity: ${({ showResolveIssues, missingPrices }) => !showResolveIssues && missingPrices && '0.3'};
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     font-size: 16px;
