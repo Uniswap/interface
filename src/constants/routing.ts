@@ -1,7 +1,7 @@
 // a list of tokens by chain
 import { Currency, Token } from '@uniswap/sdk-core'
+import { SupportedChainId } from '@uniswap/sdk-core'
 
-import { SupportedChainId } from './chains'
 import {
   AMPL,
   CEUR_CELO,
