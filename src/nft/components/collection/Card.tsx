@@ -923,7 +923,7 @@ const NoContentText = styled(ThemedText.BodyPrimary)`
   left: 50%;
   top: 50%;
   transform: translate3d(-50%, -50%, 0);
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${colors.gray500};
 `
 
 const NoContentContainer = ({ height }: { height?: number }) => (
