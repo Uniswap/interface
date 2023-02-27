@@ -6,7 +6,7 @@ import { NumericInput } from 'nft/components/layout/Input'
 import { body, caption } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
-import { useMemo, useReducer, useRef, useState } from 'react'
+import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
 import styled from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
@@ -101,14 +101,7 @@ export const SetDurationModal = () => {
   useOnClickOutside(durationDropdownRef, showDropdown ? toggleShowDropdown : undefined)
 
   const setCustomExpiration = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const parsedAmount = event.target.value.length ? event.target.value : ''
-    setAmount(parsedAmount)
-
-    const expiration = convertDurationToExpiration(parseFloat(parsedAmount), duration)
-    if (expiration * 1000 - Date.now() < ms`60 seconds` || isNaN(expiration)) setErrorState(ErrorState.empty)
-    else if (expiration * 1000 - Date.now() > ms`180 days`) setErrorState(ErrorState.overMax)
-    else setErrorState(ErrorState.valid)
-    setGlobalExpiration(expiration)
+    setAmount(event.target.value.length ? event.target.value : '')
   }
 
   const durationOptions: DropDownOption[] = useMemo(
@@ -166,6 +159,15 @@ export const SetDurationModal = () => {
     default:
       break
   }
+
+  useEffect(() => {
+    const expiration = convertDurationToExpiration(parseFloat(amount), duration)
+
+    if (expiration * 1000 - Date.now() < ms`60 seconds` || isNaN(expiration)) setErrorState(ErrorState.empty)
+    else if (expiration * 1000 - Date.now() > ms`180 days`) setErrorState(ErrorState.overMax)
+    else setErrorState(ErrorState.valid)
+    setGlobalExpiration(expiration)
+  }, [amount, duration, setGlobalExpiration])
 
   return (
     <ModalWrapper ref={durationDropdownRef}>
