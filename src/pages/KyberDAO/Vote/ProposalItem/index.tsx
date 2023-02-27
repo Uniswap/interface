@@ -17,6 +17,7 @@ import useTheme from 'hooks/useTheme'
 import { useSwitchToEthereum } from 'pages/KyberDAO/StakeKNC/SwitchToEthereumModal'
 import { useWalletModalToggle } from 'state/application/hooks'
 
+import { readableTime } from '..'
 import VoteConfirmModal from '../VoteConfirmModal'
 import OptionButton from './OptionButton'
 import Participants from './Participants'
@@ -64,19 +65,17 @@ const Badged = css`
   align-items: center;
   justify-content: center;
   border-radius: 10px;
+  font-size: 12px;
+  padding: 2px 14px;
 `
 const IDBadged = styled.div`
   ${Badged}
-  font-size: 12px;
-  padding: 2px 14px;
   color: ${({ theme }) => theme.subText};
   background-color: ${({ theme }) => theme.buttonBlack};
 `
 
 const StatusBadged = styled.div<{ color?: string }>`
   ${Badged}
-  font-size: 12px;
-  padding: 2px 14px;
   cursor: pointer;
 
   :hover {
@@ -112,7 +111,7 @@ const OptionsWrapper = styled(RowBetween)<{ optionCount?: number }>`
         flex-wrap: wrap;
         justify-content: flex-start;
         > * {
-          width: calc(25% - 20px * 3 / 4);
+          width: calc(33.33% - 20px * 2 / 3);
         }
         ${theme.mediaWidth.upToMedium`
           > * {
@@ -308,7 +307,15 @@ function ProposalItem({
               title={option}
               checked={selectedOptions?.includes(index) || voted}
               onOptionClick={() => handleOptionClick(index)}
-              type={selectedOptions?.includes(index) ? 'Choosing' : voted ? 'Active' : 'Finished'}
+              type={
+                proposal.status === ProposalStatus.Pending
+                  ? 'Pending'
+                  : selectedOptions?.includes(index)
+                  ? 'Choosing'
+                  : voted
+                  ? 'Active'
+                  : 'Finished'
+              }
               isCheckBox={proposal.proposal_type === ProposalType.GenericProposal}
             />
           )
@@ -348,12 +355,28 @@ function ProposalItem({
               errorMessage={errorMessage}
               voted={!!votedOfCurrentProposal?.options && votedOfCurrentProposal.options.length > 0}
             />
-          ) : proposal.status !== ProposalStatus.Pending ? (
+          ) : proposal.status === ProposalStatus.Pending ? (
+            <RowFit gap="4px">
+              <Text color={theme.subText} fontSize={12}>
+                <Trans>Voting starts in: </Trans>
+              </Text>
+              <StatusBadged color={theme.primary}>
+                {readableTime(proposal.start_timestamp - Date.now() / 1000)}
+              </StatusBadged>
+            </RowFit>
+          ) : proposal.status === ProposalStatus.Active ? (
+            <RowFit gap="4px">
+              <Text color={theme.subText} fontSize={12}>
+                <Trans>Voting ends in: </Trans>
+              </Text>
+              <StatusBadged color={theme.primary}>
+                {readableTime(proposal.end_timestamp - Date.now() / 1000)}
+              </StatusBadged>
+            </RowFit>
+          ) : (
             <Text color={theme.subText} fontSize={12}>
               Ended {dayjs(proposal.end_timestamp * 1000).format('DD MMM YYYY')}
             </Text>
-          ) : (
-            <div></div>
           )}
           {!((show || isActive) && isMobile) && (
             <RowFixed gap="8px">

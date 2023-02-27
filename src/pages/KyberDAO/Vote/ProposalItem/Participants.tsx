@@ -1,14 +1,15 @@
 import { Trans } from '@lingui/macro'
 import { BigNumber } from 'ethers'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
 import Gold from 'assets/svg/gold_icon.svg'
 import Divider from 'components/Divider'
-import { RowBetween, RowFit } from 'components/Row'
+import Modal from 'components/Modal'
+import Row, { RowBetween, RowFit } from 'components/Row'
 import { useProposalInfoById } from 'hooks/kyberdao'
-import { ProposalType } from 'hooks/kyberdao/types'
+import { ProposalType, VoteDetail } from 'hooks/kyberdao/types'
 import useTheme from 'hooks/useTheme'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 
@@ -38,9 +39,19 @@ const Wrapper = styled.div`
     }
   `}
 `
-const OptionWrapper = styled.div<{ isWonOption?: boolean }>`
+const OptionWrapper = styled.div<{ isWonOption?: boolean; hasHoverStyle?: boolean }>`
   border-radius: 20px;
   padding: 12px 16px;
+  transition: all 0.1s ease;
+  ${({ hasHoverStyle }) =>
+    hasHoverStyle &&
+    css`
+      cursor: pointer;
+      :hover {
+        filter: brightness(1.2);
+        box-shadow: 0 2px 5px 2px ${({ theme }) => theme.buttonBlack};
+      }
+    `}
   ${({ theme, isWonOption }) => css`
     border: 1px solid ${theme.border};
     background-color: ${theme.buttonBlack};
@@ -82,9 +93,64 @@ const TableHeaderWrapper = styled(RowBetween)`
   }
 `
 
+const VotersListModal = ({
+  isOpen,
+  onDismiss,
+  participants,
+  isWonOption,
+  sumPower,
+  option,
+}: {
+  isOpen: boolean
+  onDismiss: () => void
+  participants: VoteDetail[]
+  isWonOption: boolean
+  sumPower: number | undefined
+  option: string
+}) => {
+  const theme = useTheme()
+
+  return (
+    <Modal isOpen={isOpen} onDismiss={onDismiss}>
+      <OptionWrapper isWonOption={isWonOption} style={{ width: '100%' }}>
+        <RowBetween>
+          <RowFit height={19}>
+            {isWonOption && <img alt="gold-medal" src={Gold} style={{ marginRight: '8px' }} />}
+            <Text style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{option}</Text>
+          </RowFit>
+
+          <Text style={{ paddingLeft: '10px' }}>{sumPower ? Math.round(sumPower).toLocaleString() : '--'}</Text>
+        </RowBetween>
+        <Divider margin="10px 0" />
+        <TableHeaderWrapper fontSize={12} color={theme.subText}>
+          <Text>
+            <Trans>Wallet</Trans>
+          </Text>
+          <Text>
+            <Trans>Amount</Trans>
+          </Text>
+        </TableHeaderWrapper>
+        <Divider margin="10px 0" />
+        <ParticipantWrapper style={{ height: 'fit-content', maxHeight: '70vh', minHeight: '200px' }}>
+          {participants.map(vote => {
+            return (
+              <InfoRow key={vote.staker}>
+                <Text>{vote.staker_name || vote.staker}</Text>
+                <Text color={theme.subText}>{vote.power}</Text>
+              </InfoRow>
+            )
+          })}
+        </ParticipantWrapper>
+      </OptionWrapper>
+    </Modal>
+  )
+}
+
 export default function Participants({ proposalId }: { proposalId?: number }) {
   const { proposalInfo } = useProposalInfoById(proposalId)
   const theme = useTheme()
+  const [modalIndex, setModalIndex] = useState<number | null>(null)
+
   const participants = useMemo(() => {
     if (!proposalInfo?.vote_stats?.votes) return
     return proposalInfo.vote_stats.votes
@@ -98,7 +164,6 @@ export default function Participants({ proposalId }: { proposalId?: number }) {
       })
   }, [proposalInfo])
   const options = proposalInfo?.options
-
   return (
     <Wrapper>
       {options && participants
@@ -108,8 +173,9 @@ export default function Participants({ proposalId }: { proposalId?: number }) {
               proposalInfo?.proposal_type === ProposalType.BinaryProposal &&
               proposalInfo?.vote_stats?.options.reduce((max, o) => (o.vote_count > max.vote_count ? o : max)).option ===
                 index
+            const filteredParticipants = participants.filter(p => p.option === index)
             return (
-              <OptionWrapper key={o} isWonOption={isWonOption}>
+              <OptionWrapper key={o} isWonOption={isWonOption} onClick={() => setModalIndex(index)} hasHoverStyle>
                 <RowBetween>
                   <RowFit height={19}>
                     {isWonOption && <img alt="gold-medal" src={Gold} style={{ marginRight: '8px' }} />}
@@ -130,17 +196,30 @@ export default function Participants({ proposalId }: { proposalId?: number }) {
                 <Divider margin="10px 0" />
 
                 <ParticipantWrapper>
-                  {participants
-                    .filter(p => p.option === index)
-                    .map(vote => {
-                      return (
-                        <InfoRow key={vote.staker}>
-                          <Text>{vote.staker_name || vote.staker}</Text>
-                          <Text color={theme.subText}>{vote.power}</Text>
-                        </InfoRow>
-                      )
-                    })}
+                  {filteredParticipants.slice(0, 5).map(vote => {
+                    return (
+                      <InfoRow key={vote.staker}>
+                        <Text>{vote.staker_name || vote.staker}</Text>
+                        <Text color={theme.subText}>{vote.power}</Text>
+                      </InfoRow>
+                    )
+                  })}
+                  {filteredParticipants.length > 5 && (
+                    <Row justify="center" marginTop="4px">
+                      <Text fontSize="12px" color={theme.primary}>
+                        View more
+                      </Text>
+                    </Row>
+                  )}
                 </ParticipantWrapper>
+                <VotersListModal
+                  participants={filteredParticipants}
+                  isOpen={index === modalIndex}
+                  onDismiss={() => setModalIndex(null)}
+                  isWonOption={isWonOption}
+                  sumPower={sumPower}
+                  option={o}
+                />
               </OptionWrapper>
             )
           })

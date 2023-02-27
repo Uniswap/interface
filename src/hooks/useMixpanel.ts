@@ -1207,13 +1207,13 @@ export const useGlobalMixpanelEvents = () => {
         'elastic/increase': 'Elastic - Increase Liquidity',
         'buy-crypto': 'Buy Crypto',
         bridge: 'Bridge',
-        'kyberdao/stake-knc': 'KyberDAO Stake',
-        'kyberdao/vote': 'KyberDAO Vote',
+        '/kyberdao/stake-knc': 'KyberDAO Stake',
+        '/kyberdao/vote': 'KyberDAO Vote',
         limit: 'Limit Order',
       }
-      const pageName = map[pathName]
+      const pageName = map[pathName] || map[location.pathname]
       pageName && mixpanelHandler(MIXPANEL_TYPE.PAGE_VIEWED, { page: pageName })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathName, account, chainId])
+  }, [pathName, account, chainId, location.pathname])
 }

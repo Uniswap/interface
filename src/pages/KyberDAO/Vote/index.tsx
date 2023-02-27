@@ -20,6 +20,7 @@ import TransactionConfirmationModal, { TransactionErrorContent } from 'component
 import { useActiveWeb3React } from 'hooks'
 import { useClaimRewardActions, useVotingActions, useVotingInfo } from 'hooks/kyberdao'
 import useTotalVotingReward from 'hooks/kyberdao/useTotalVotingRewards'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
 import { useToggleModal, useWalletModalToggle } from 'state/application/hooks'
@@ -89,7 +90,7 @@ const CardGroup = styled(RowBetween)`
   `}
 `
 
-function readableTime(seconds: number) {
+export function readableTime(seconds: number) {
   if (seconds < 60) return seconds + 's'
 
   const levels = [
@@ -128,6 +129,7 @@ const formatVotingPower = (votingPowerNumber: number) => {
 export default function Vote() {
   const theme = useTheme()
   const { account } = useActiveWeb3React()
+  const { mixpanelHandler } = useMixpanel()
   const { daoInfo, remainingCumulativeAmount, userRewards, stakerInfo, stakerInfoNextEpoch } = useVotingInfo()
   const { knc, usd, kncPriceETH } = useTotalVotingReward()
   const { claim } = useClaimRewardActions()
@@ -168,8 +170,9 @@ export default function Vote() {
   const isDelegated = stakerInfo && account ? stakerInfo.delegate?.toLowerCase() !== account.toLowerCase() : false
 
   const handleClaim = useCallback(() => {
+    mixpanelHandler(MIXPANEL_TYPE.KYBER_DAO_CLAIM_CLICK)
     toggleClaimConfirmModal()
-  }, [toggleClaimConfirmModal])
+  }, [toggleClaimConfirmModal, mixpanelHandler])
 
   const handleConfirmClaim = useCallback(async () => {
     if (!userRewards || !userRewards.userReward || !account) return

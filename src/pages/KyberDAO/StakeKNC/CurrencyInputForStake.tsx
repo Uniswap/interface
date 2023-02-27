@@ -52,11 +52,19 @@ export default function CurrencyInputForStake({
         <AutoRow gap="2px">
           {!disabled && (
             <>
-              <SmallButton onClick={() => setValue(getFullDisplayBalance(tokenBalance.value, tokenBalance.decimals))}>
+              <SmallButton
+                onClick={() =>
+                  setValue(getFullDisplayBalance(tokenBalance.value, tokenBalance.decimals, tokenBalance.decimals))
+                }
+              >
                 Max
               </SmallButton>
               <SmallButton
-                onClick={() => setValue(getFullDisplayBalance(tokenBalance.value.div(2), tokenBalance.decimals))}
+                onClick={() =>
+                  setValue(
+                    getFullDisplayBalance(tokenBalance.value.div(2), tokenBalance.decimals, tokenBalance.decimals),
+                  )
+                }
               >
                 Half
               </SmallButton>

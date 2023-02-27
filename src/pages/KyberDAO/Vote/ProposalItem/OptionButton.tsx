@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import { rgba } from 'polished'
 import { CheckSquare, Square } from 'react-feather'
 import { Text } from 'rebass'
@@ -6,8 +7,9 @@ import styled, { css, keyframes } from 'styled-components'
 import RadioButtonChecked from 'components/Icons/RadioButtonChecked'
 import RadioButtonUnchecked from 'components/Icons/RadioButtonUnchecked'
 import { RowBetween, RowFit } from 'components/Row'
+import { MouseoverTooltip } from 'components/Tooltip'
 
-const Wrapper = styled.div<{ type?: 'Finished' | 'Active' | 'Choosing'; disabled?: boolean }>`
+const Wrapper = styled.div<{ type?: 'Finished' | 'Active' | 'Choosing' | 'Pending'; disabled?: boolean }>`
   border-radius: 4px;
   overflow: hidden;
   position: relative;
@@ -21,19 +23,21 @@ const Wrapper = styled.div<{ type?: 'Finished' | 'Active' | 'Choosing'; disabled
   ${({ theme }) => css`
     background-color: ${theme.buttonBlack};
   `};
+  ${({ type, theme }) =>
+    type === 'Pending' &&
+    css`
+      color: ${theme.subText};
+      background-color: ${theme.buttonBlack};
+    `}
+  ${({ disabled }) =>
+    !disabled &&
+    css`
+      cursor: pointer;
 
-  ${({ disabled }) => {
-    if (!disabled) {
-      return css`
-        cursor: pointer;
-
-        :hover {
-          filter: brightness(1.1);
-        }
-      `
-    }
-    return ''
-  }}
+      :hover {
+        filter: brightness(1.1);
+      }
+    `}
 `
 const move = keyframes`
   0% {
@@ -105,7 +109,7 @@ export default function OptionButton({
   checked?: boolean
   percent?: number
   title?: string
-  type?: 'Finished' | 'Active' | 'Choosing'
+  type?: 'Finished' | 'Active' | 'Choosing' | 'Pending'
   onOptionClick?: () => void
   isCheckBox: boolean
   disabled?: boolean
@@ -115,22 +119,28 @@ export default function OptionButton({
     <Wrapper onClick={() => !disabled && onOptionClick?.()} disabled={disabled} type={type}>
       <div style={{ zIndex: 4, width: '100%' }}>
         <RowBetween style={{ zIndex: 1 }} alignItems="center">
-          <RowFit gap="5px" style={{ fontSize: '12px', overflow: 'hidden', wordBreak: 'break-word' }}>
-            <span style={{ width: '18px' }}>
-              {isCheckBox ? (
-                checked ? (
-                  <CheckSquare size={18} />
+          <MouseoverTooltip
+            text={type === 'Pending' && t`Cannot vote at this moment`}
+            placement="top"
+            width="fit-content"
+          >
+            <RowFit gap="5px" style={{ fontSize: '12px', overflow: 'hidden', wordBreak: 'break-word' }}>
+              <span style={{ width: '18px' }}>
+                {isCheckBox ? (
+                  checked ? (
+                    <CheckSquare size={18} />
+                  ) : (
+                    <Square size={18} />
+                  )
+                ) : checked ? (
+                  <RadioButtonChecked />
                 ) : (
-                  <Square size={18} />
-                )
-              ) : checked ? (
-                <RadioButtonChecked />
-              ) : (
-                <RadioButtonUnchecked />
-              )}{' '}
-            </span>
-            <Text>{title}</Text>
-          </RowFit>
+                  <RadioButtonUnchecked />
+                )}{' '}
+              </span>
+              <Text>{title}</Text>
+            </RowFit>
+          </MouseoverTooltip>
           <Text fontSize="12px" padding={'0 4px'}>
             {parsedPercent}%
           </Text>

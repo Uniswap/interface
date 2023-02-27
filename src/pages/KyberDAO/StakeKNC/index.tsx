@@ -1,5 +1,7 @@
+import { commify, formatUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { isMobile } from 'react-device-detect'
+import Skeleton from 'react-loading-skeleton'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
@@ -11,10 +13,11 @@ import kyberCrystal from 'assets/images/kyberdao/kyber_crystal.png'
 import kyberdaoPNG from 'assets/images/kyberdao/kyberdao.png'
 import migratePNG from 'assets/images/kyberdao/migrate.png'
 import stakevotePNG from 'assets/images/kyberdao/stake_vote.png'
-import { ButtonPrimary } from 'components/Button'
+import { ButtonLight, ButtonPrimary } from 'components/Button'
 import Divider from 'components/Divider'
-import { RowBetween, RowFit } from 'components/Row'
+import Row, { RowBetween, RowFit } from 'components/Row'
 import { APP_PATHS } from 'constants/index'
+import { useStakingInfo } from 'hooks/kyberdao'
 import useTotalVotingReward from 'hooks/kyberdao/useTotalVotingRewards'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
@@ -111,6 +114,7 @@ export default function StakeKNC() {
   const toggleMigrationModal = useToggleModal(ApplicationModal.MIGRATE_KNC)
   const { switchToEthereum } = useSwitchToEthereum()
   const { kncPriceETH } = useTotalVotingReward()
+  const { totalMigratedKNC } = useStakingInfo()
   const navigate = useNavigate()
   const { mixpanelHandler } = useMixpanel()
   const handleMigrateClick = () => {
@@ -189,19 +193,31 @@ export default function StakeKNC() {
               <Text fontSize={20} lineHeight="24px" fontWeight={500} color={theme.text}>
                 <Trans>Migrate</Trans>
               </Text>
-              <Text fontSize={12} lineHeight="16px" fontWeight={500} textAlign="left" color={theme.subText}>
-                <Trans>
-                  Migrate your KNCL tokens to KNC{' '}
-                  <Text
-                    style={{ cursor: 'pointer', display: 'inline-block' }}
-                    color={theme.primary}
-                    onClick={handleMigrateClick}
-                  >
-                    here ↗
+              <Row gap="4px">
+                <Text fontSize={12} lineHeight="16px" fontWeight={500} textAlign="left" color={theme.subText}>
+                  <Trans>Total KNC migrated from KNCL </Trans>
+                </Text>
+                {totalMigratedKNC ? (
+                  <Text fontSize={12} lineHeight="16px">
+                    {commify(formatUnits(totalMigratedKNC).split('.')[0]) + ' KNC'}
                   </Text>
-                </Trans>
-              </Text>
+                ) : (
+                  <div style={{ lineHeight: 1 }}>
+                    <Skeleton
+                      height="12px"
+                      width="90px"
+                      baseColor={theme.background}
+                      highlightColor={theme.buttonGray}
+                      borderRadius="1rem"
+                      inline
+                    />
+                  </div>
+                )}
+              </Row>
             </CardInfo>
+            <ButtonLight width="120px" height="44px" onClick={handleMigrateClick}>
+              Migrate
+            </ButtonLight>
           </Card>
           <Card>
             <Image src={kyberdaoPNG} alt="KyberDAO v1" />

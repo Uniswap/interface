@@ -125,8 +125,8 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
   return useContract(tokenAddress, ERC20_ABI, withSignerIfPossible)
 }
 
-export function useTokenContractForReading(tokenAddress?: string): Contract | null {
-  return useContractForReading(tokenAddress, ERC20_ABI)
+export function useTokenContractForReading(tokenAddress?: string, customChainId?: ChainId): Contract | null {
+  return useContractForReading(tokenAddress, ERC20_ABI, customChainId)
 }
 
 export function useWETHContract(withSignerIfPossible?: boolean): Contract | null {
