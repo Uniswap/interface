@@ -2,14 +2,15 @@ import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { body, bodySmall } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks'
-import { ethNumberStandardFormatter, formatWeiToDecimal, roundAndPluralize } from 'nft/utils'
+import { useBagTotalEthPrice, useBagTotalUsdPrice } from 'nft/hooks/useBagTotalEthPrice'
+import { formatWeiToDecimal, roundAndPluralize } from 'nft/utils'
 
 import * as styles from './MobileHoverBag.css'
 export const MobileHoverBag = () => {
   const itemsInBag = useBag((state) => state.itemsInBag)
   const toggleBag = useBag((state) => state.toggleBag)
-  const totalEthPrice = useBag((state) => state.totalEthPrice)
-  const totalUsdPrice = useBag((state) => state.totalUsdPrice)
+  const totalEthPrice = useBagTotalEthPrice()
+  const totalUsdPrice = useBagTotalUsdPrice()
 
   const shouldShowBag = itemsInBag.length > 0
 
@@ -48,10 +49,9 @@ export const MobileHoverBag = () => {
           </Box>
           <Row gap="8">
             <Box className={body}>{`${formatWeiToDecimal(totalEthPrice.toString())}`}</Box>
-            <Box color="textSecondary" className={bodySmall}>{`${ethNumberStandardFormatter(
-              totalUsdPrice,
-              true
-            )}`}</Box>
+            <Box color="textSecondary" className={bodySmall}>
+              {totalUsdPrice}
+            </Box>
           </Row>
         </Column>
       </Row>
