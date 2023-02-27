@@ -25,12 +25,14 @@ export function useSubscribeTransactionState(setModalIsOpen: (isOpen: boolean) =
   useEffect(() => {
     if (transactionStateRef.current === TxStateType.Confirming) setBagStatus(BagStatus.PROCESSING_TRANSACTION)
     if (transactionStateRef.current === TxStateType.Denied || transactionStateRef.current === TxStateType.Invalid) {
-      if (transactionStateRef.current === TxStateType.Invalid) setBagStatus(BagStatus.WARNING)
-      else setBagStatus(BagStatus.CONFIRM_REVIEW)
+      if (transactionStateRef.current === TxStateType.Invalid) {
+        setBagStatus(BagStatus.WARNING)
+      } else setBagStatus(BagStatus.CONFIRM_REVIEW)
       setTransactionState(TxStateType.New)
 
       setBagLocked(false)
       setModalIsOpen(false)
     }
-  }, [setBagLocked, setBagStatus, setModalIsOpen, setTransactionState])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setBagLocked, setBagStatus, setModalIsOpen, setTransactionState, transactionStateRef.current])
 }

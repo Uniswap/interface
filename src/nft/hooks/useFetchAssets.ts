@@ -77,10 +77,12 @@ export function useFetchAssets(): () => Promise<void> {
         purchasingWithErc20
       )
 
-      setBagLocked(false)
-      setTransactionResponse(purchaseResponse)
-      setBagExpanded({ bagExpanded: false })
-      resetBag()
+      if (purchaseResponse) {
+        setBagLocked(false)
+        setTransactionResponse(purchaseResponse)
+        setBagExpanded({ bagExpanded: false })
+        resetBag()
+      }
     },
     [itemsInBag, provider, resetBag, sendTransaction, setBagExpanded, setBagLocked, setTransactionResponse]
   )
