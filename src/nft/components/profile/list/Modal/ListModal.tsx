@@ -46,31 +46,23 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   const signer = provider?.getSigner()
   const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
   const sellAssets = useSellAsset((state) => state.sellAssets)
-  const {
-    listingStatus,
-    setListingStatusAndCallback,
-    setLooksRareNonce,
-    getLooksRareNonce,
-    collectionsRequiringApproval,
-    listings,
-  } = useNFTList(
-    ({
-      listingStatus,
-      setListingStatusAndCallback,
-      setLooksRareNonce,
-      getLooksRareNonce,
-      collectionsRequiringApproval,
-      listings,
-    }) => ({
-      listingStatus,
-      setListingStatusAndCallback,
-      setLooksRareNonce,
-      getLooksRareNonce,
-      collectionsRequiringApproval,
-      listings,
-    }),
-    shallow
-  )
+  const { setListingStatusAndCallback, setLooksRareNonce, getLooksRareNonce, collectionsRequiringApproval, listings } =
+    useNFTList(
+      ({
+        setListingStatusAndCallback,
+        setLooksRareNonce,
+        getLooksRareNonce,
+        collectionsRequiringApproval,
+        listings,
+      }) => ({
+        setListingStatusAndCallback,
+        setLooksRareNonce,
+        getLooksRareNonce,
+        collectionsRequiringApproval,
+        listings,
+      }),
+      shallow
+    )
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const [openSection, toggleOpenSection] = useReducer(
@@ -110,6 +102,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
     })
   }
 
+  // Once all collections have been approved, go to next section and start signing listings
   useEffect(() => {
     if (allCollectionsApproved) {
       signListings()
@@ -119,8 +112,8 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   }, [allCollectionsApproved])
 
   const closeModalOnClick = useCallback(() => {
-    listingStatus === ListingStatus.APPROVED ? window.location.reload() : overlayClick()
-  }, [listingStatus, overlayClick])
+    allListingsApproved ? window.location.reload() : overlayClick()
+  }, [allListingsApproved, overlayClick])
 
   // In the case that a user removes all listings via retry logic, close modal
   useEffect(() => {

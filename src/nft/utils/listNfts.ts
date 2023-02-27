@@ -121,7 +121,6 @@ export async function signListing(
   looksRareNonce = 0,
   setStatus: (newStatus: ListingStatus) => void
 ): Promise<boolean> {
-  console.log(asset.expirationTime)
   const seaport = new Seaport(provider, {
     conduitKeyToConduit: OPENSEA_KEY_TO_CONDUIT,
     overrides: {
