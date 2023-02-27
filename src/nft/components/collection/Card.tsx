@@ -1,10 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import clsx from 'clsx'
+import Column from 'components/Column'
 import { OpacityHoverState } from 'components/Common'
+import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { Box } from 'nft/components/Box'
-import { Row } from 'nft/components/Flex'
 import {
   MinusIconLarge,
   PauseButtonIcon,
@@ -562,27 +563,24 @@ interface CardDetailsContainerProps {
   children: ReactNode
 }
 
+const StyledDetailsContainer = styled(Column)`
+  position: relative;
+  padding: 12px 12px 0px;
+  justify-content: space-between;
+  transition: ${({ theme }) => `${theme.transition.duration.medium}`};
+`
+
 const DetailsContainer = ({ children }: CardDetailsContainerProps) => {
-  return (
-    <Row
-      position="relative"
-      paddingX="12"
-      paddingTop="12"
-      justifyContent="space-between"
-      flexDirection="column"
-      transition="250"
-    >
-      {children}
-    </Row>
-  )
+  return <StyledDetailsContainer>{children}</StyledDetailsContainer>
 }
 
+const StyledInfoContainer = styled.div`
+  overflow: hidden;
+  width: 100%;
+`
+
 const InfoContainer = ({ children }: { children: ReactNode }) => {
-  return (
-    <Box overflow="hidden" width="full">
-      {children}
-    </Box>
-  )
+  return <StyledInfoContainer>{children}</StyledInfoContainer>
 }
 
 const TruncatedTextRow = styled(Row)`
@@ -598,6 +596,10 @@ interface ProfileNftDetailsProps {
   asset: WalletAsset
   hideDetails: boolean
 }
+
+const ProfileAssetNameRow = styled(Row)`
+  justify-items: flex-start; ;
+`
 
 const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
   const assetName = () => {
@@ -618,7 +620,7 @@ const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
         </PrimaryDetails>
         {!hideDetails && <DetailsLink />}
       </PrimaryRow>
-      <Row justifyItems="flex-start">
+      <ProfileAssetNameRow>
         <TruncatedTextRow
           className={body}
           style={{
@@ -628,7 +630,7 @@ const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
           {assetName()}
         </TruncatedTextRow>
         {asset.susFlag && <Suspicious />}
-      </Row>
+      </ProfileAssetNameRow>
       <TruncatedTextRow className={buttonTextMedium} style={{ color: themeVars.colors.textPrimary }}>
         {shouldShowUserListedPrice && asset.floor_sell_order_price
           ? `${floorFormatter(asset.floor_sell_order_price)} ETH`
@@ -638,16 +640,21 @@ const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
   )
 }
 
-const PrimaryRow = ({ children }: { children: ReactNode }) => (
-  <Row gap="8" justifyContent="space-between">
-    {children}
-  </Row>
-)
+const StyledPrimaryRow = styled(Row)`
+  gap: 8px;
+  justify-content: space-between;
+`
+
+const PrimaryRow = ({ children }: { children: ReactNode }) => <StyledPrimaryRow>{children}</StyledPrimaryRow>
+
+const StyledPrimaryDetails = styled(Row)`
+  justify-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+`
 
 const PrimaryDetails = ({ children }: { children: ReactNode }) => (
-  <Row justifyItems="center" overflow="hidden" whiteSpace="nowrap">
-    {children}
-  </Row>
+  <StyledPrimaryDetails>{children}</StyledPrimaryDetails>
 )
 
 const PrimaryInfo = ({ children }: { children: ReactNode }) => {
@@ -658,16 +665,21 @@ const PrimaryInfo = ({ children }: { children: ReactNode }) => {
   )
 }
 
-const SecondaryRow = ({ children }: { children: ReactNode }) => (
-  <Row height="20" justifyContent="space-between" marginTop="6">
-    {children}
-  </Row>
-)
+const StyledSecondaryRow = styled(Row)`
+  height: 20px;
+  justify-content: space-between;
+  margin-top: 6px; ;
+`
+
+const SecondaryRow = ({ children }: { children: ReactNode }) => <StyledSecondaryRow>{children}</StyledSecondaryRow>
+
+const StyledSecondaryDetails = styled(Row)`
+  overflow: hidden;
+  white-space: nowrap;
+`
 
 const SecondaryDetails = ({ children }: { children: ReactNode }) => (
-  <Row overflow="hidden" whiteSpace="nowrap">
-    {children}
-  </Row>
+  <StyledSecondaryDetails>{children}</StyledSecondaryDetails>
 )
 
 const SecondaryInfo = ({ children }: { children: ReactNode }) => {
