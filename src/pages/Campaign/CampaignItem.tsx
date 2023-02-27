@@ -135,6 +135,9 @@ const CampaignItem = ({ campaign, onSelectCampaign, isSelected }: CampaignItemPr
     (isPassedVolume && !tradingNumberRequired) ||
     (isPassedNumberOfTrade && !tradingVolumeRequired)
 
+  const showProgressBarVolume = tradingVolumeRequired > 0
+  const showProgressBarNumberTrade = tradingNumberRequired > 1
+
   return (
     <CampaignItemWrapper onClick={() => onSelectCampaign(campaign)} selected={isSelected}>
       <Container>
@@ -175,12 +178,12 @@ const CampaignItem = ({ campaign, onSelectCampaign, isSelected }: CampaignItemPr
             </CampaignStatusText>
           </Flex>
         </Flex>
-      ) : isShowProgressBar ? (
+      ) : isShowProgressBar && (showProgressBarVolume || showProgressBarNumberTrade) ? (
         <Flex style={{ gap: 10 }} flexDirection="column">
           <Text fontSize={12}>
             <Trans>Condition(s) to qualify:</Trans>
           </Text>
-          {tradingVolumeRequired > 0 && (
+          {showProgressBarVolume && (
             <ProgressBar
               label={t`Your Trading Volume`}
               percent={percentTradingVolume}
@@ -189,7 +192,7 @@ const CampaignItem = ({ campaign, onSelectCampaign, isSelected }: CampaignItemPr
               color={isPassedVolume ? theme.primary : theme.warning}
             />
           )}
-          {tradingNumberRequired > 1 && (
+          {showProgressBarNumberTrade && (
             <ProgressBar
               label={t`Your Number of Trades`}
               percent={percentTradingNumber}

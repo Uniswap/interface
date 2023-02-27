@@ -27,7 +27,7 @@ export async function getTokenList(listUrl: string, chainId: ChainId): Promise<T
   return listToTokenMap(tokens, chainId)
 }
 function listToTokenMap(list: TokenInfo[], chainId: ChainId): TokenMap {
-  const map = list.reduce((tokenMap, tokenInfo) => {
+  const map = list.reduce<TokenMap>((tokenMap, tokenInfo) => {
     const formattedAddress = getFormattedAddress(chainId, tokenInfo.address)
     if (!tokenInfo || tokenMap[formattedAddress] || !isAddress(chainId, tokenInfo.address)) {
       return tokenMap
@@ -35,6 +35,6 @@ function listToTokenMap(list: TokenInfo[], chainId: ChainId): TokenMap {
     const token = formatAndCacheToken(tokenInfo)
     if (token) tokenMap[formattedAddress] = token
     return tokenMap
-  }, {} as TokenMap)
+  }, {})
   return map
 }

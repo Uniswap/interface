@@ -264,7 +264,7 @@ export function useMultipleContractSingleData(
   const { gasRequired } = useMemo(() => options ?? {}, [options])
   const calls = useMemo(
     () =>
-      isEVM && fragment && addresses && addresses.length > 0 && callData
+      isEVM && fragment && addresses?.length > 0 && callData
         ? addresses.map<Call | undefined>(address => {
             return address && callData
               ? {
