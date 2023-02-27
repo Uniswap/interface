@@ -3,7 +3,7 @@ import Row from 'components/Row'
 import { VerifiedIcon } from 'nft/components/icons'
 import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, WalletAsset } from 'nft/types'
-import { Dispatch, useEffect, useReducer, useState } from 'react'
+import { Dispatch, useReducer, useState } from 'react'
 import { Trash2 } from 'react-feather'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
@@ -119,14 +119,9 @@ export const NFTListRow = ({
 }: NFTListRowProps) => {
   const [expandMarketplaceRows, toggleExpandMarketplaceRows] = useReducer((s) => !s, false)
   const removeAsset = useSellAsset((state) => state.removeSellAsset)
-  const [localMarkets, setLocalMarkets] = useState<ListingMarket[]>([])
+  const [localMarkets, setLocalMarkets] = useState<ListingMarket[]>(JSON.parse(JSON.stringify(selectedMarkets)))
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
   const theme = useTheme()
-
-  useEffect(() => {
-    setLocalMarkets(JSON.parse(JSON.stringify(selectedMarkets)))
-    selectedMarkets.length < 2 && expandMarketplaceRows && toggleExpandMarketplaceRows()
-  }, [expandMarketplaceRows, selectedMarkets])
 
   return (
     <NFTListRowWrapper
@@ -161,15 +156,15 @@ export const NFTListRow = ({
         </TokenInfoWrapper>
       </NFTInfoWrapper>
       <MarketPlaceRowWrapper>
-        {expandMarketplaceRows ? (
-          localMarkets.map((market, index) => {
+        {expandMarketplaceRows && localMarkets.length > 1 ? (
+          localMarkets.map((market) => {
             return (
               <MarketplaceRow
                 globalPriceMethod={globalPriceMethod}
                 globalPrice={globalPrice}
                 setGlobalPrice={setGlobalPrice}
                 selectedMarkets={[market]}
-                removeMarket={() => localMarkets.splice(index, 1)}
+                removeMarket={() => setLocalMarkets(localMarkets.filter((oldMarket) => oldMarket.name !== market.name))}
                 asset={asset}
                 key={asset.name + market.name}
                 expandMarketplaceRows={expandMarketplaceRows}
