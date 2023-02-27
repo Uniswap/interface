@@ -1,27 +1,87 @@
 import { Trans } from '@lingui/macro'
-import { ListingMarket } from 'nft/types'
-// eslint-disable-next-line no-restricted-imports
+import Column from 'components/Column'
+import Row from 'components/Row'
+import { ListingMarket, WalletAsset } from 'nft/types'
+import { formatEth } from 'nft/utils'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-const FeeWrap = styled.div`
+const FeeWrap = styled(Row)`
   margin-bottom: 4px;
-  color: ${({ theme }) => theme.textPrimary};
+  justify-content: space-between;
 `
 
-const RoyaltyContainer = styled(ThemedText.BodySmall)`
-  margin-bottom: 8px;
+const RoyaltyContainer = styled(Column)`
+  gap: 12px;
+  padding: 4px 0px;
 `
 
-export const RoyaltyTooltip = ({ selectedMarket }: { selectedMarket: ListingMarket }) => {
+const MarketIcon = styled.img`
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  object-fit: cover;
+  outline: 1px solid ${({ theme }) => theme.backgroundInteractive};
+  margin-right: 8px;
+`
+
+const CollectionIcon = styled(MarketIcon)`
+  border-radius: 50%;
+`
+
+const FeePercent = styled(ThemedText.Caption)`
+  line-height: 16px;
+  color: ${({ theme }) => theme.textSecondary};
+  white-space: nowrap;
+`
+
+const MaxFeeContainer = styled(Row)`
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
+`
+
+export const RoyaltyTooltip = ({
+  selectedMarkets,
+  asset,
+  fees,
+}: {
+  selectedMarkets: ListingMarket[]
+  asset: WalletAsset
+  fees?: number
+}) => {
+  const maxRoyalty = Math.max(...selectedMarkets.map((market) => market.royalty ?? 0))
   return (
-    <RoyaltyContainer key={selectedMarket.name}>
+    <RoyaltyContainer>
+      {selectedMarkets.map((market) => (
+        <FeeWrap key={asset.collection?.address ?? '' + asset.tokenId + market.name + 'fee'}>
+          <Row>
+            <MarketIcon src={market.icon} />
+            <ThemedText.Caption lineHeight="16px" marginRight="12px">
+              {market.name}&nbsp;
+              <Trans>fee</Trans>
+            </ThemedText.Caption>
+          </Row>
+          <FeePercent>{market.fee}%</FeePercent>
+        </FeeWrap>
+      ))}
       <FeeWrap>
-        {selectedMarket.name}: {selectedMarket.fee}%
+        <Row>
+          <CollectionIcon src={asset.collection?.imageUrl} />
+          <ThemedText.Caption lineHeight="16px" marginRight="12px">
+            <Trans>Max creator royalties</Trans>
+          </ThemedText.Caption>
+        </Row>
+        <FeePercent>{maxRoyalty}%</FeePercent>
       </FeeWrap>
-      <FeeWrap>
-        <Trans>Creator royalties</Trans>: {selectedMarket.royalty}%
-      </FeeWrap>
+      <MaxFeeContainer>
+        <ThemedText.Caption lineHeight="16px">
+          <Trans>Max fees</Trans>
+        </ThemedText.Caption>
+        <ThemedText.Caption lineHeight="16px" color={fees ? 'textPrimary' : 'textSecondary'}>
+          {fees ? formatEth(fees) : '-'} ETH
+        </ThemedText.Caption>
+      </MaxFeeContainer>
     </RoyaltyContainer>
   )
 }

@@ -15,6 +15,7 @@ import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPage
 import { BagCloseIcon } from 'nft/components/icons'
 import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
+import { blocklistedCollections } from 'nft/utils'
 import { Suspense, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { animated, easings, useSpring } from 'react-spring'
@@ -85,7 +86,7 @@ const FiltersContainer = styled.div<{ isMobile: boolean; isFiltersExpanded: bool
   width: ${({ isMobile }) => (isMobile ? '100%' : '0px')};
   height: ${({ isMobile, isFiltersExpanded }) => (isMobile && isFiltersExpanded ? '100%' : undefined)};
   background: ${({ theme, isMobile }) => (isMobile ? theme.backgroundBackdrop : undefined)};
-  z-index: ${Z_INDEX.modalBackdrop};
+  z-index: ${Z_INDEX.modalBackdrop - 3};
   overflow-y: ${({ isMobile }) => (isMobile ? 'scroll' : undefined)};
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
@@ -188,7 +189,7 @@ const Collection = () => {
             width: CollectionContainerWidthChange.to((x) => `calc(100% - ${x as number}px)`),
           }}
         >
-          {contractAddress ? (
+          {contractAddress && !blocklistedCollections.includes(contractAddress) ? (
             <>
               <BannerWrapper>
                 <Banner

@@ -62,7 +62,7 @@ jobs:
         continue-on-error: true
         timeout-minutes: 2
         with:
-          cid: ${{ steps.upload.outputs.hash }}
+          cid: ${{ steps.pinata.outputs.hash }}
           seeds: ${{ secrets.CRUST_SEEDS }}
 
       - name: Convert CIDv0 to CIDv1
@@ -93,7 +93,7 @@ jobs:
             IPFS gateways:
             - https://${{ steps.convert-cidv0.outputs.cidv1 }}.ipfs.dweb.link/
             - https://${{ steps.convert-cidv0.outputs.cidv1 }}.ipfs.cf-ipfs.com/
-            - [ipfs://${{ steps.upload.outputs.hash }}/](ipfs://${{ steps.pinata.outputs.hash }}/)
+            - [ipfs://${{ steps.pinata.outputs.hash }}/](ipfs://${{ steps.pinata.outputs.hash }}/)
 
             ${{ needs.tag.outputs.changelog }}
 

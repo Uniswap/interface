@@ -2,20 +2,22 @@ import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, Trace, useTrace } from '@uniswap/analytics'
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import Row from 'components/Row'
 import { getTotalEthValue, signListingRow } from 'nft/components/bag/profile/utils'
 import { Portal } from 'nft/components/common/Portal'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { useNFTList, useSellAsset } from 'nft/hooks'
 import { ListingStatus } from 'nft/types'
 import { fetchPrice } from 'nft/utils'
-import { useEffect, useMemo, useReducer, useState } from 'react'
+import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import shallow from 'zustand/shallow'
 
+import { TitleRow } from '../shared'
 import { ListModalSection, Section } from './ListModalSection'
+import { SuccessScreen } from './SuccessScreen'
 
 const ListModalWrapper = styled.div`
   position: fixed;
@@ -39,22 +41,36 @@ const ListModalWrapper = styled.div`
   }
 `
 
-const TitleRow = styled(Row)`
-  justify-content: space-between;
-  margin-bottom: 8px;
-`
-
 export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   const { provider } = useWeb3React()
   const signer = provider?.getSigner()
   const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
   const sellAssets = useSellAsset((state) => state.sellAssets)
-  const listings = useNFTList((state) => state.listings)
-  const collectionsRequiringApproval = useNFTList((state) => state.collectionsRequiringApproval)
-  const listingStatus = useNFTList((state) => state.listingStatus)
-  const setListings = useNFTList((state) => state.setListings)
-  const setLooksRareNonce = useNFTList((state) => state.setLooksRareNonce)
-  const getLooksRareNonce = useNFTList((state) => state.getLooksRareNonce)
+  const {
+    listingStatus,
+    setListingStatusAndCallback,
+    setLooksRareNonce,
+    getLooksRareNonce,
+    collectionsRequiringApproval,
+    listings,
+  } = useNFTList(
+    ({
+      listingStatus,
+      setListingStatusAndCallback,
+      setLooksRareNonce,
+      getLooksRareNonce,
+      collectionsRequiringApproval,
+      listings,
+    }) => ({
+      listingStatus,
+      setListingStatusAndCallback,
+      setLooksRareNonce,
+      getLooksRareNonce,
+      collectionsRequiringApproval,
+      listings,
+    }),
+    shallow
+  )
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const [openSection, toggleOpenSection] = useReducer(
@@ -78,7 +94,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
     if (!signer || !provider) return
     // sign listings
     for (const listing of listings) {
-      await signListingRow(listing, listings, setListings, signer, provider, getLooksRareNonce, setLooksRareNonce)
+      await signListingRow(listing, signer, provider, getLooksRareNonce, setLooksRareNonce, setListingStatusAndCallback)
     }
     sendAnalyticsEvent(NFTEventName.NFT_LISTING_COMPLETED, {
       signatures_approved: listings.filter((asset) => asset.status === ListingStatus.APPROVED),
@@ -96,19 +112,28 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allCollectionsApproved])
 
+  const closeModalOnClick = useCallback(() => {
+    listingStatus === ListingStatus.APPROVED ? window.location.reload() : overlayClick()
+  }, [listingStatus, overlayClick])
+
+  // In the case that a user removes all listings via retry logic, close modal
+  useEffect(() => {
+    !listings.length && closeModalOnClick()
+  }, [listings, closeModalOnClick])
+
   return (
     <Portal>
       <Trace modal={InterfaceModalName.NFT_LISTING}>
         <ListModalWrapper>
           {listingStatus === ListingStatus.APPROVED ? (
-            <>TODO Success Screen</>
+            <SuccessScreen overlayClick={closeModalOnClick} />
           ) : (
             <>
               <TitleRow>
                 <ThemedText.HeadlineSmall lineHeight="28px">
                   <Trans>List NFTs</Trans>
                 </ThemedText.HeadlineSmall>
-                <X size={24} cursor="pointer" onClick={overlayClick} />
+                <X size={24} cursor="pointer" onClick={closeModalOnClick} />
               </TitleRow>
               <ListModalSection
                 sectionType={Section.APPROVE}
@@ -126,7 +151,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
           )}
         </ListModalWrapper>
       </Trace>
-      <Overlay onClick={overlayClick} />
+      <Overlay onClick={closeModalOnClick} />
     </Portal>
   )
 }

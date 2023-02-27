@@ -32,8 +32,10 @@ import { PaddedColumn, SearchInput, Separator } from './styleds'
 const ContentWrapper = styled(Column)`
   background-color: ${({ theme }) => theme.backgroundSurface};
   width: 100%;
+  overflow: hidden;
   flex: 1 1;
   position: relative;
+  border-radius: 20px;
 `
 
 interface CurrencySearchProps {

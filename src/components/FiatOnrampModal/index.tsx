@@ -3,14 +3,17 @@ import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useState } from 'react'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
+import { useIsDarkMode } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { CustomLightSpinner, ThemedText } from 'theme'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import Modal from '../Modal'
 
-const Wrapper = styled.div`
-  background-color: ${({ theme }) => theme.white};
+const MOONPAY_DARK_BACKGROUND = '#1c1c1e'
+const Wrapper = styled.div<{ isDarkMode: boolean }>`
+  // #1c1c1e is the background color for the darkmode moonpay iframe as of 2/16/2023
+  background-color: ${({ isDarkMode, theme }) => (isDarkMode ? MOONPAY_DARK_BACKGROUND : theme.white)};
   border-radius: 20px;
   box-shadow: ${({ theme }) => theme.deepShadow};
   display: flex;
@@ -28,8 +31,9 @@ const ErrorText = styled(ThemedText.BodyPrimary)`
   text-align: center;
   width: 90%;
 `
-const StyledIframe = styled.iframe`
-  background-color: ${({ theme }) => theme.white};
+const StyledIframe = styled.iframe<{ isDarkMode: boolean }>`
+  // #1c1c1e is the background color for the darkmode moonpay iframe as of 2/16/2023
+  background-color: ${({ isDarkMode, theme }) => (isDarkMode ? MOONPAY_DARK_BACKGROUND : theme.white)};
   border-radius: 12px;
   bottom: 0;
   left: 0;
@@ -67,6 +71,7 @@ const MOONPAY_SUPPORTED_CURRENCY_CODES = [
 export default function FiatOnrampModal() {
   const { account } = useWeb3React()
   const theme = useTheme()
+  const isDarkMode = useIsDarkMode()
   const closeModal = useCloseModal()
   const fiatOnrampModalOpen = useModalIsOpen(ApplicationModal.FIAT_ONRAMP)
 
@@ -90,6 +95,7 @@ export default function FiatOnrampModal() {
         },
         method: 'POST',
         body: JSON.stringify({
+          theme: isDarkMode ? 'dark' : 'light',
           colorCode: theme.accentAction,
           defaultCurrencyCode: 'eth',
           redirectUrl: 'https://app.uniswap.org/#/swap',
@@ -112,7 +118,7 @@ export default function FiatOnrampModal() {
     } finally {
       setLoading(false)
     }
-  }, [account, theme.accentAction])
+  }, [account, isDarkMode, theme.accentAction])
 
   useEffect(() => {
     fetchSignedIframeUrl()
@@ -120,7 +126,7 @@ export default function FiatOnrampModal() {
 
   return (
     <Modal isOpen={fiatOnrampModalOpen} onDismiss={closeModal} maxHeight={720}>
-      <Wrapper data-testid="fiat-onramp-modal">
+      <Wrapper data-testid="fiat-onramp-modal" isDarkMode={isDarkMode}>
         {error ? (
           <>
             <ThemedText.MediumHeader>
@@ -135,7 +141,12 @@ export default function FiatOnrampModal() {
         ) : loading ? (
           <StyledSpinner src={Circle} alt="loading spinner" size="90px" />
         ) : (
-          <StyledIframe src={signedIframeUrl ?? ''} frameBorder="0" title="fiat-onramp-iframe" />
+          <StyledIframe
+            src={signedIframeUrl ?? ''}
+            frameBorder="0"
+            title="fiat-onramp-iframe"
+            isDarkMode={isDarkMode}
+          />
         )}
       </Wrapper>
     </Modal>

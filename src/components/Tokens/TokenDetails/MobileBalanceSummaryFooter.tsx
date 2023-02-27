@@ -3,6 +3,7 @@ import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { useDummyGateEnabled } from 'featureFlags/flags/dummyFeatureGate'
 import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
@@ -13,9 +14,10 @@ const Wrapper = styled.div`
   align-content: center;
   align-items: center;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-bottom: none;
   background-color: ${({ theme }) => theme.backgroundSurface};
   border-radius: 20px 20px 0px 0px;
-  bottom: 56px;
+  bottom: 52px;
   color: ${({ theme }) => theme.textSecondary};
   display: flex;
   flex-direction: row;
@@ -86,6 +88,7 @@ export default function MobileBalanceSummaryFooter({ token }: { token: Currency 
   const formattedBalance = formatCurrencyAmount(balance, NumberType.TokenNonTx)
   const formattedUsdValue = formatCurrencyAmount(useStablecoinValue(balance), NumberType.FiatTokenStats)
   const chain = CHAIN_ID_TO_BACKEND_NAME[token.chainId].toLowerCase()
+  const isDummyGateFlagEnabled = useDummyGateEnabled()
 
   return (
     <Wrapper>
@@ -101,7 +104,7 @@ export default function MobileBalanceSummaryFooter({ token }: { token: Currency 
         </BalanceInfo>
       )}
       <SwapButton to={`/swap?chainName=${chain}&outputCurrency=${token.isNative ? NATIVE_CHAIN_ID : token.address}`}>
-        <Trans>Swap</Trans>
+        <Trans>{isDummyGateFlagEnabled ? 'Go to Swap' : 'Swap'}</Trans>
       </SwapButton>
     </Wrapper>
   )

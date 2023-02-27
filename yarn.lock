@@ -4931,24 +4931,24 @@
     "@typescript-eslint/types" "5.47.0"
     eslint-visitor-keys "^3.3.0"
 
-"@uniswap/analytics-events@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-2.1.0.tgz#0a112f642d0121fdf69b5dc9a17639f06aa63085"
-  integrity sha512-HkWyri7PxnIS6B5sysym1LCMPnenkeAFyI41fYGDUNq3a5aEDuD77jyyFSwdW4yZfUOxq3zBUTmeQOIf/GT+tQ==
+"@uniswap/analytics-events@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-2.4.0.tgz#910f727bf4c72f5d1890f17daec4687dc44ee6c0"
+  integrity sha512-oZl2KRCSTAO8C3sxEFX6BEdGujdPs8tk/Zyx7UwOZOUDcim3mxx6rsdRvnwsAgkZAJjV9I1HSUR7JEeJmQkRmQ==
 
-"@uniswap/analytics@1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/analytics/-/analytics-1.2.0.tgz#38452f31ca249903e0bdc8739f42ed437fdc4911"
-  integrity sha512-oO9+mhDJVGm2tqFic6PVQ8v75snbLaGymqs3wauwMXrdy4fMeNSCrKfnaGAKElRUYus3eDLMy/cbXy3Md3iRZA==
+"@uniswap/analytics@^1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/analytics/-/analytics-1.3.1.tgz#086a681fc483c08e1b3d896cce287bc162ad0c1d"
+  integrity sha512-wB8J+e9oeu+VSx3tgfA304g7MKf6zuAesFeEGKdD1pI2LNOoMQHczbnf8I8lPjPYnXxLvdbGVKRQZXWaI+jTGw==
   dependencies:
     "@amplitude/analytics-browser" "^1.5.8"
     react "^18.2.0"
     react-dom "^18.2.0"
 
-"@uniswap/conedison@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.2.1.tgz#c3dbfe14f4320fc5c60cde23c4bd70ed8a39c782"
-  integrity sha512-ir6j7RQOyREXtW5YlmPjskfl7oDeHWtMFai57snThAkKgrb+8KTX5b0a5nbXeIuaW2RNHAaWTGoSoTneIHCAnQ==
+"@uniswap/conedison@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.3.0.tgz#998aca2bad27f0780a05b40e4512acfcadfece79"
+  integrity sha512-zpZ52svBJ2btwl09mLOw7HlBxFDuYAjAZXLAR7WQZJeRgjD1yD2QuI3v7JliXvHzJh3ePYH6820EMp7xQbdAGQ==
 
 "@uniswap/default-token-list@^2.0.0":
   version "2.2.0"
@@ -5090,10 +5090,10 @@
   resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.30.tgz#2103ca23b8007c59ec71718d34cdc97861c409e5"
   integrity sha512-HwY2VvkQ8lNR6ks5NqQfAtg+4IZqz3KV1T8d2DlI8emIn9uMmaoFbIOg0nzjqAVKKnZSbMTRRtUoAh6mmjRvog==
 
-"@uniswap/universal-router-sdk@1.3.4", "@uniswap/universal-router-sdk@^1.3.4":
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/@uniswap/universal-router-sdk/-/universal-router-sdk-1.3.4.tgz#7b6b8e30d6faff812f224d32a832385378568160"
-  integrity sha512-RIWZm48N/fiAssMOj0nMLoeN5JATKOMfbFwyVnCaFHIVMJmKEZtZLKe3QOkl2LMVnQ/nP4LVCDwHU+mdP68jCQ==
+"@uniswap/universal-router-sdk@^1.3.6":
+  version "1.3.6"
+  resolved "https://registry.yarnpkg.com/@uniswap/universal-router-sdk/-/universal-router-sdk-1.3.6.tgz#01347070f69ca6b395723c614fc2a12a9a9a6db1"
+  integrity sha512-wdJLQgpj/Rl1+9LZ14N7ikJbQmVWnUoTPjyupc+lNyiX1a8jEVFwFiVGgSP/ERs5hdgWyApw5F67HljYEIWCDA==
   dependencies:
     "@uniswap/permit2-sdk" "^1.2.0"
     "@uniswap/router-sdk" "^1.4.0"
@@ -5194,34 +5194,34 @@
     "@uniswap/v3-core" "1.0.0"
     "@uniswap/v3-periphery" "^1.0.1"
 
-"@uniswap/widgets@^2.26.0":
-  version "2.26.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.26.0.tgz#ed2d2b0965fc2139874a5eaca44c8070184d9e74"
-  integrity sha512-LIfd3wgJxNiPXduyxXAihOzye5LrayyPDt0/OErSr1hF3BIiQqdVc3KyHDFJ4PC0pCp4+dfE2HPH1FrClO54Uw==
+"@uniswap/widgets@^2.39.0":
+  version "2.39.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.39.0.tgz#7dfb29f8bb1fc5f8e5ba51c0fab42fe0a9533cba"
+  integrity sha512-zmgq2pipKP+Ymamaf49idQ/2uEFTqjHFR28affR91McbWbzu8/JnbEs6uH1M0iy4ZTv+sWIySz57HHwXWeGpaQ==
   dependencies:
     "@babel/runtime" ">=7.17.0"
     "@fontsource/ibm-plex-mono" "^4.5.1"
     "@fontsource/inter" "^4.5.1"
     "@popperjs/core" "^2.4.4"
     "@reduxjs/toolkit" "^1.6.1"
-    "@uniswap/conedison" "^1.2.1"
+    "@uniswap/conedison" "^1.3.0"
     "@uniswap/permit2-sdk" "^1.2.0"
     "@uniswap/redux-multicall" "^1.1.8"
     "@uniswap/router-sdk" "^1.3.0"
     "@uniswap/sdk-core" "^3.0.1"
     "@uniswap/smart-order-router" "^2.10.0"
     "@uniswap/token-lists" "^1.0.0-beta.30"
-    "@uniswap/universal-router-sdk" "^1.3.4"
+    "@uniswap/universal-router-sdk" "^1.3.6"
     "@uniswap/v2-sdk" "^3.0.1"
     "@uniswap/v3-sdk" "^3.8.2"
     "@web3-react/core" "8.0.35-beta.0"
-    "@web3-react/eip1193" "8.0.26-beta.0"
+    "@web3-react/eip1193" "8.0.27-beta.0"
     "@web3-react/empty" "8.0.20-beta.0"
-    "@web3-react/metamask" "8.0.28-beta.0"
+    "@web3-react/metamask" "8.0.30-beta.0"
     "@web3-react/network" "8.0.27-beta.0"
     "@web3-react/types" "8.0.20-beta.0"
     "@web3-react/url" "8.0.25-beta.0"
-    "@web3-react/walletconnect" "8.0.36-beta.0"
+    "@web3-react/walletconnect" "8.0.37-beta.0"
     ajv "^8.11.0"
     ajv-formats "^2.1.1"
     cids "^1.0.0"
@@ -5743,10 +5743,10 @@
   dependencies:
     "@walletconnect/window-getters" "^1.0.0"
 
-"@web3-react/coinbase-wallet@8.0.34-beta.0":
-  version "8.0.34-beta.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/coinbase-wallet/-/coinbase-wallet-8.0.34-beta.0.tgz#43d51bb440fb4b98cc2c33782714da30ab8e1fb6"
-  integrity sha512-eGgtGtAqcRL64U1lcWeICB9CmpUycVl/mWD/b2Nd7yE0hXFUbPGLZHNvBTpnOpkANkjHI5ufFoyDGzzoxdw12A==
+"@web3-react/coinbase-wallet@8.0.35-beta.0":
+  version "8.0.35-beta.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/coinbase-wallet/-/coinbase-wallet-8.0.35-beta.0.tgz#903df113a0987f0b28c07941a82c05f227cbccf8"
+  integrity sha512-wSITb75xIfERw1rZA8t35mJ3Lq459Emt2ybraWvT0TAIVTzHGCKvEm3WglEVWj5CMy1X1lrJvWJ0ZfWUj1/0Lg==
   dependencies:
     "@web3-react/types" "^8.0.20-beta.0"
 
@@ -5761,10 +5761,10 @@
   optionalDependencies:
     "@ethersproject/providers" "^5"
 
-"@web3-react/eip1193@8.0.26-beta.0":
-  version "8.0.26-beta.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/eip1193/-/eip1193-8.0.26-beta.0.tgz#2e36423bab637a1fbc57b36d4f0f38ac531fd541"
-  integrity sha512-n/2ajjABcP8DktZfXxSHrxtPIxeSRJ9tsgfmd9XPEIW9FO7xLzLrF+nloTSghtZ8H+ZKKcswlKjYq4rbX/oqHg==
+"@web3-react/eip1193@8.0.27-beta.0":
+  version "8.0.27-beta.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/eip1193/-/eip1193-8.0.27-beta.0.tgz#b768fc3ae6e234627e6a8ecd4d5c473c371a816b"
+  integrity sha512-8aca1NDP+qigh/LOxSiC5N44qvVo1z5V7QI4T5iUpNrzbXEXV3G2JXutoW5fNEm+oK5fkHK64p9eZ6lo0qyMbQ==
   dependencies:
     "@web3-react/types" "^8.0.20-beta.0"
 
@@ -5784,18 +5784,10 @@
     "@gnosis.pm/safe-apps-sdk" "^7.6.0"
     "@web3-react/types" "^8.0.20-beta.0"
 
-"@web3-react/metamask@8.0.28-beta.0":
-  version "8.0.28-beta.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/metamask/-/metamask-8.0.28-beta.0.tgz#f7e9e0de446727a961745cbec75c8cbf6c961388"
-  integrity sha512-IXuVyj6vhRAhfGQ/sN4qgET8EEdqX844pB4kCDG9kjPD3LLm5kq47ykBosgTr9YCUtdHAXN0UaUimD0TbLMRFg==
-  dependencies:
-    "@metamask/detect-provider" "^1.2.0"
-    "@web3-react/types" "^8.0.20-beta.0"
-
-"@web3-react/metamask@8.0.29-beta.0":
-  version "8.0.29-beta.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/metamask/-/metamask-8.0.29-beta.0.tgz#536536b8d4f22f21d3e109efaa8149939833f21b"
-  integrity sha512-UPaVmNum6cJ/CwW5WYFMrm6GwiuY1hnuCYB+bV1Bs0xghdag2Laj8/mSfpFCsCHcvg1ZWTcr4bH+WyuYAHgUxw==
+"@web3-react/metamask@8.0.30-beta.0":
+  version "8.0.30-beta.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/metamask/-/metamask-8.0.30-beta.0.tgz#afab5d7cf556e3ec77836ff2b4753f6f301cfbeb"
+  integrity sha512-SzL8/RUmLHEQCdd6KNjEIHXwuYiQrKX5e1Bgipvtm8MKBRk1ty17Aj7MKWNRcl/Qt06pLSxbcEJeT9kPIrc0mg==
   dependencies:
     "@metamask/detect-provider" "^1.2.0"
     "@web3-react/types" "^8.0.20-beta.0"
@@ -5832,10 +5824,10 @@
     "@ethersproject/providers" "^5"
     "@web3-react/types" "^8.0.20-beta.0"
 
-"@web3-react/walletconnect@8.0.36-beta.0":
-  version "8.0.36-beta.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/walletconnect/-/walletconnect-8.0.36-beta.0.tgz#a0dbb5286b9011c6c221cc143322822a7387978f"
-  integrity sha512-u+yNWCm8nz5pZn8SyU5+9pI5hakKcfhUF1TYwj7HVTTMHdMlLXhk19YyaycsFkgbX9zWzouItwxXF8obGt+rCg==
+"@web3-react/walletconnect@8.0.37-beta.0":
+  version "8.0.37-beta.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/walletconnect/-/walletconnect-8.0.37-beta.0.tgz#d375dc75f34e9bb225d26a88b16aa2a001b4e3bc"
+  integrity sha512-BW8tKE0dlFWSLBC/AWKULZbS1axToN7kMREKVY3YK1uj8bMRsoWcOQPceQl21WuEyVXax2V8My8SJgWuxcumvw==
   dependencies:
     "@web3-react/types" "^8.0.20-beta.0"
     eventemitter3 "^4.0.7"
@@ -13027,7 +13019,7 @@ js-base64@^3.7.2:
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-3.7.2.tgz#816d11d81a8aff241603d19ce5761e13e41d7745"
   integrity sha512-NnRs6dsyqUXejqk/yv2aiXlAvOs56sLkX6nUdeaNezI5LFFLlsZjOThmwnrcwh5ZZRwZlCMnVAY3CvhIhoVEKQ==
 
-js-sha256@0.9.0:
+js-sha256@0.9.0, js-sha256@^0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/js-sha256/-/js-sha256-0.9.0.tgz#0b89ac166583e91ef9123644bd3c5334ce9d0966"
   integrity sha512-sga3MHh9sgQN2+pJ9VYZ+1LPwXOxuBJBA5nrR5/ofPfuiJBE2hnjsaN8se8JznOmGLN2p49Pe5U/ttafcs/apA==
@@ -17909,6 +17901,22 @@ stats-lite@^2.2.0:
   dependencies:
     isnumber "~1.0.0"
 
+statsig-js@^4.28.1:
+  version "4.28.1"
+  resolved "https://registry.yarnpkg.com/statsig-js/-/statsig-js-4.28.1.tgz#07010f1cd51012087f3b5f7a51fe23767dd876dd"
+  integrity sha512-ZRmkWWsst06JWT9jQncLDLG1KGXnLtaHvMoeC6pLUa4n6sU0It0SpupVTeC+60wH3I/+PHU2y6C5u7bR1MFzMA==
+  dependencies:
+    js-sha256 "^0.9.0"
+    uuid "^8.3.2"
+    whatwg-fetch "^3.6.2"
+
+statsig-react@^1.22.0:
+  version "1.22.0"
+  resolved "https://registry.yarnpkg.com/statsig-react/-/statsig-react-1.22.0.tgz#3f4f1498dc78bba53d80d6eb4c9d507b2a3c16e5"
+  integrity sha512-10lg5dsEmLzS6zuIdKwrvZ9gZJAdncZlJteSmjTZSOpQZyobWBuO7TBqjGzkBv2+UQn0d+Pkoz3L4Hy2uPvhQA==
+  dependencies:
+    statsig-js "^4.28.1"
+
 "statuses@>= 1.4.0 < 2", "statuses@>= 1.5.0 < 2", statuses@~1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.5.0.tgz#161c7dac177659fd9811f43771fa99381478628c"
@@ -19581,7 +19589,7 @@ whatwg-fetch@2.0.4:
   resolved "https://registry.npmjs.org/whatwg-fetch/-/whatwg-fetch-2.0.4.tgz"
   integrity sha512-dcQ1GWpOD/eEQ97k66aiEVpNnapVj90/+R+SXTPYGHpYBBypfKJEQjLrvMZ7YXbKm21gXd4NcuxUTjiv1YtLng==
 
-whatwg-fetch@^3.4.1:
+whatwg-fetch@^3.4.1, whatwg-fetch@^3.6.2:
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.6.2.tgz#dced24f37f2624ed0281725d51d0e2e3fe677f8c"
   integrity sha512-bJlen0FcuU/0EMLrdbJ7zOnW6ITZLrZMIarMUVmdKtsGvZna8vxKYaexICWPfZ8qwf9fzNq+UEIZrnSaApt6RA==

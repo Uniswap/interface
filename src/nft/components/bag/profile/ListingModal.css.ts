@@ -29,20 +29,18 @@ export const sectionDivider = style([
 
 export const button = style([
   sprinkles({
-    height: '40',
-    width: 'full',
+    paddingX: { sm: '12', md: '16' },
+    paddingY: { sm: '10', md: '16' },
     textAlign: 'center',
-    fontWeight: 'medium',
-    fontSize: '14',
+    fontWeight: 'semibold',
+    fontSize: { sm: '16', md: '20' },
+    lineHeight: { sm: '20', md: '24' },
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'flex-end',
     borderRadius: '12',
   }),
-  {
-    lineHeight: '18px',
-  },
 ])
 
 export const listingModalIcon = style([

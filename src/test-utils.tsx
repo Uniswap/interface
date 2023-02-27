@@ -1,3 +1,4 @@
+import { MockedProvider } from '@apollo/client/testing'
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import { render, renderHook } from '@testing-library/react'
@@ -32,9 +33,11 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
         <QueryClientProvider client={queryClient}>
           <HashRouter>
             <Web3Provider>
-              <BlockNumberProvider>
-                <ThemeProvider>{children}</ThemeProvider>
-              </BlockNumberProvider>
+              <MockedProvider>
+                <BlockNumberProvider>
+                  <ThemeProvider>{children}</ThemeProvider>
+                </BlockNumberProvider>
+              </MockedProvider>
             </Web3Provider>
           </HashRouter>
         </QueryClientProvider>
