@@ -4,7 +4,7 @@ import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { approveCollectionRow, getListingState, getTotalEthValue, verifyStatus } from 'nft/components/bag/profile/utils'
+import { approveCollectionRow, getTotalEthValue, verifyStatus } from 'nft/components/bag/profile/utils'
 import { ListingButton } from 'nft/components/profile/list/ListingButton'
 import { useIsMobile, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from 'nft/pages/profile/shared'
@@ -188,7 +188,6 @@ export const ListPage = () => {
   const {
     listings,
     collectionsRequiringApproval,
-    listingStatus,
     setListingStatus,
     setLooksRareNonce,
     setCollectionStatusAndCallback,
@@ -196,14 +195,14 @@ export const ListPage = () => {
     ({
       listings,
       collectionsRequiringApproval,
-      listingStatus,
+
       setListingStatus,
       setLooksRareNonce,
       setCollectionStatusAndCallback,
     }) => ({
       listings,
       collectionsRequiringApproval,
-      listingStatus,
+
       setListingStatus,
       setLooksRareNonce,
       setCollectionStatusAndCallback,
@@ -222,21 +221,6 @@ export const ListPage = () => {
       setEthPriceInUSD(price ?? 0)
     })
   }, [])
-
-  // TODO with removal of list v1 see if this logic can be removed
-  useEffect(() => {
-    const state = getListingState(collectionsRequiringApproval, listings)
-
-    if (state.allListingsApproved) setListingStatus(ListingStatus.APPROVED)
-    else if (state.anyPaused && !state.anyActiveFailures && !state.anyActiveSigning && !state.anyActiveRejections) {
-      setListingStatus(ListingStatus.CONTINUE)
-    } else if (state.anyPaused) setListingStatus(ListingStatus.PAUSED)
-    else if (state.anyActiveSigning) setListingStatus(ListingStatus.SIGNING)
-    else if (state.allListingsPending || (state.allCollectionsPending && state.allListingsDefined))
-      setListingStatus(ListingStatus.PENDING)
-    else if (state.anyActiveFailures && listingStatus !== ListingStatus.PAUSED) setListingStatus(ListingStatus.FAILED)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listings, collectionsRequiringApproval])
 
   useEffect(() => {
     setGlobalMarketplaces(selectedMarkets)

@@ -135,57 +135,6 @@ type ListingState = {
   anyPaused: boolean
 }
 
-export const getListingState = (
-  collectionsRequiringApproval: CollectionRow[],
-  listings: ListingRow[]
-): ListingState => {
-  let allListingsPending = true
-  let allListingsDefined = true
-  let allListingsApproved = true
-  let allCollectionsPending = true
-  let allCollectionsDefined = true
-  let anyActiveSigning = false
-  let anyActiveFailures = false
-  let anyActiveRejections = false
-  let anyPaused = false
-
-  if (collectionsRequiringApproval.length === 0) {
-    allCollectionsDefined = allCollectionsPending = false
-  }
-  for (const collection of collectionsRequiringApproval) {
-    if (collection.status !== ListingStatus.PENDING) allCollectionsPending = false
-    if (collection.status !== ListingStatus.DEFINED) allCollectionsDefined = false
-    if (collection.status === ListingStatus.SIGNING) anyActiveSigning = true
-    else if (collection.status === ListingStatus.FAILED) anyActiveFailures = true
-    else if (collection.status === ListingStatus.REJECTED) anyActiveRejections = true
-    else if (collection.status === ListingStatus.PAUSED) anyPaused = true
-  }
-
-  if (listings.length === 0) {
-    allListingsApproved = allListingsDefined = allListingsPending = false
-  }
-  for (const listing of listings) {
-    if (listing.status !== ListingStatus.PENDING) allListingsPending = false
-    if (listing.status !== ListingStatus.DEFINED) allListingsDefined = false
-    if (listing.status !== ListingStatus.APPROVED) allListingsApproved = false
-    if (listing.status === ListingStatus.SIGNING) anyActiveSigning = true
-    else if (listing.status === ListingStatus.FAILED) anyActiveFailures = true
-    else if (listing.status === ListingStatus.REJECTED) anyActiveRejections = true
-    else if (listing.status === ListingStatus.PAUSED) anyPaused = true
-  }
-  return {
-    allListingsPending,
-    allListingsDefined,
-    allListingsApproved,
-    allCollectionsPending,
-    allCollectionsDefined,
-    anyActiveSigning,
-    anyActiveFailures,
-    anyActiveRejections,
-    anyPaused,
-  }
-}
-
 export const verifyStatus = (status: ListingStatus) => {
   return status !== ListingStatus.PAUSED && status !== ListingStatus.APPROVED
 }

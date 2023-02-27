@@ -90,12 +90,18 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
     [collectionsRequiringApproval]
   )
 
+  const allListingsApproved = useMemo(
+    () => listings.every((listing) => listing.status === ListingStatus.APPROVED),
+    [listings]
+  )
+
   const signListings = async () => {
     if (!signer || !provider) return
     // sign listings
     for (const listing of listings) {
       await signListingRow(listing, signer, provider, getLooksRareNonce, setLooksRareNonce, setListingStatusAndCallback)
     }
+
     sendAnalyticsEvent(NFTEventName.NFT_LISTING_COMPLETED, {
       signatures_approved: listings.filter((asset) => asset.status === ListingStatus.APPROVED),
       list_quantity: listings.length,
@@ -125,7 +131,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
     <Portal>
       <Trace modal={InterfaceModalName.NFT_LISTING}>
         <ListModalWrapper>
-          {listingStatus === ListingStatus.APPROVED ? (
+          {allListingsApproved ? (
             <SuccessScreen overlayClick={closeModalOnClick} />
           ) : (
             <>
