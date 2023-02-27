@@ -171,7 +171,6 @@ export const NFTListRow = ({
                 selectedMarkets={[market]}
                 removeMarket={() => localMarkets.splice(index, 1)}
                 asset={asset}
-                showMarketplaceLogo={true}
                 key={asset.name + market.name}
                 expandMarketplaceRows={expandMarketplaceRows}
                 rowHovered={hovered}
@@ -186,7 +185,6 @@ export const NFTListRow = ({
             setGlobalPrice={setGlobalPrice}
             selectedMarkets={localMarkets}
             asset={asset}
-            showMarketplaceLogo={false}
             rowHovered={hovered}
             toggleExpandMarketplaceRows={toggleExpandMarketplaceRows}
           />

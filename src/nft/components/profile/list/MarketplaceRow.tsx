@@ -117,7 +117,6 @@ interface MarketplaceRowProps {
   selectedMarkets: ListingMarket[]
   removeMarket?: () => void
   asset: WalletAsset
-  showMarketplaceLogo: boolean
   expandMarketplaceRows?: boolean
   rowHovered?: boolean
   toggleExpandMarketplaceRows: DispatchWithoutAction
@@ -130,7 +129,6 @@ export const MarketplaceRow = ({
   selectedMarkets,
   removeMarket = undefined,
   asset,
-  showMarketplaceLogo,
   expandMarketplaceRows,
   toggleExpandMarketplaceRows,
   rowHovered,
