@@ -1,4 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { BagItem, BagItemStatus, BagStatus, UpdatedGenieAsset } from 'nft/types'
 import { v4 as uuidv4 } from 'uuid'
@@ -12,10 +11,6 @@ interface BagState {
   setBagStatus: (state: BagStatus) => void
   itemsInBag: BagItem[]
   setItemsInBag: (items: BagItem[]) => void
-  totalEthPrice: BigNumber
-  setTotalEthPrice: (totalEthPrice: BigNumber) => void
-  totalUsdPrice: number | undefined
-  setTotalUsdPrice: (totalUsdPrice: number | undefined) => void
   addAssetsToBag: (asset: UpdatedGenieAsset[], fromSweep?: boolean) => void
   removeAssetsFromBag: (assets: UpdatedGenieAsset[], fromSweep?: boolean) => void
   markAssetAsReviewed: (asset: UpdatedGenieAsset, toKeep: boolean) => void
@@ -71,16 +66,6 @@ export const useBag = create<BagState>()(
       setItemsInBag: (items) =>
         set(() => ({
           itemsInBag: items,
-        })),
-      totalEthPrice: BigNumber.from(0),
-      setTotalEthPrice: (totalEthPrice) =>
-        set(() => ({
-          totalEthPrice,
-        })),
-      totalUsdPrice: undefined,
-      setTotalUsdPrice: (totalUsdPrice) =>
-        set(() => ({
-          totalUsdPrice,
         })),
       addAssetsToBag: (assets, fromSweep = false) =>
         set(({ itemsInBag }) => {
