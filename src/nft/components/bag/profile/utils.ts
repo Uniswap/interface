@@ -123,18 +123,6 @@ export const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], Listin
   return [newCollectionsToApprove, newListings]
 }
 
-type ListingState = {
-  allListingsPending: boolean
-  allListingsDefined: boolean
-  allListingsApproved: boolean
-  allCollectionsPending: boolean
-  allCollectionsDefined: boolean
-  anyActiveSigning: boolean
-  anyActiveFailures: boolean
-  anyActiveRejections: boolean
-  anyPaused: boolean
-}
-
 export const verifyStatus = (status: ListingStatus) => {
   return status !== ListingStatus.PAUSED && status !== ListingStatus.APPROVED
 }
