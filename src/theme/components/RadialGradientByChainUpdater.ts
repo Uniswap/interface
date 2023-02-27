@@ -83,7 +83,7 @@ export default function RadialGradientByChainUpdater(): null {
       //     'radial-gradient(100% 100% at 50% 0%, rgba(20, 49, 37, 0.29) 0%, rgba(12, 31, 23, 0.6536) 49.48%, rgba(31, 33, 40, 0) 100%, rgba(31, 33, 40, 0) 100%), #0D0E0E'
       //   backgroundRadialGradientElement.style.background = darkMode ? celoDarkGradient : celoLightGradient
       //   break
-      case SupportedChainId.SCROLL_PREALPHA:
+      case SupportedChainId.SCROLL_ALPHA:
         setBackground(backgroundResetStyles)
         const scrollLightGradient = 'radial-gradient(142% 91% at 111% 84%, #EEE2D4FF 0%, #F8F2EAFF 100%), #FFFFFF'
         const scrollDarkGradient =

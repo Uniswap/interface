@@ -56,17 +56,17 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
   //   }
   // }
 
-  if (chainId === SupportedChainId.SCROLL_PREALPHA) {
+  if (chainId === SupportedChainId.SCROLL_ALPHA) {
     switch (type) {
       case ExplorerDataType.TRANSACTION:
-        return `https://l2scan.scroll.io/tx/${data}`
+        return `https://blockscout.scroll.io/tx/${data}`
       case ExplorerDataType.ADDRESS:
       case ExplorerDataType.TOKEN:
-        return `https://l2scan.scroll.io/address/${data}`
+        return `https://blockscout.scroll.io/address/${data}`
       case ExplorerDataType.BLOCK:
-        return `https://l2scan.scroll.io/block/${data}`
+        return `https://blockscout.scroll.io/block/${data}`
       default:
-        return `https://l2scan.scroll.io/`
+        return `https://blockscout.scroll.io/`
     }
   }
 

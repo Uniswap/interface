@@ -20,7 +20,7 @@ import ChainSelectorRow from './ChainSelectorRow'
 import { NavDropdown } from './NavDropdown'
 
 const NETWORK_SELECTOR_CHAINS = [
-  SupportedChainId.SCROLL_PREALPHA,
+  SupportedChainId.SCROLL_ALPHA,
   // SupportedChainId.MAINNET,
   // SupportedChainId.POLYGON,
   // SupportedChainId.OPTIMISM,
@@ -65,7 +65,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   }
 
   // const isSupported = !!info
-  const isSupported = !!info && chainId === SupportedChainId.SCROLL_PREALPHA;
+  const isSupported = !!info && chainId === SupportedChainId.SCROLL_ALPHA;
 
   const dropdown = (
     <NavDropdown top="56" left={leftAlign ? '0' : 'auto'} right={leftAlign ? 'auto' : '0'} ref={modalRef}>

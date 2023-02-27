@@ -38,7 +38,7 @@ describe('#anonymizeLink', () => {
       'https://rinkeby-explorer.arbitrum.io/0x/***'
     )
   })
-  it('works for scroll prealpha urls', () => {
-    expect(anonymizeLink('https://l2scan.scroll.io/0x/0xabc')).toEqual('https://l2scan.scroll.io/0x/***')
+  it('works for scroll alpha urls', () => {
+    expect(anonymizeLink('https://blockscout.scroll.io/0x/0xabc')).toEqual('https://blockscout.scroll.io/0x/***')
   })
 })

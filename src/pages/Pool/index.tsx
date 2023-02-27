@@ -202,7 +202,7 @@ export default function Pool() {
 
   const { positions, loading: positionsLoading } = useV3Positions(account)
 
-  if (chainId !== SupportedChainId.SCROLL_PREALPHA) {
+  if (chainId !== SupportedChainId.SCROLL_ALPHA) {
     return <WrongNetworkCard />
   }
 
