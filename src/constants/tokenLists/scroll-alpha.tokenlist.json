@@ -10,7 +10,7 @@
     {
       "logoURI": "https://assets.coingecko.com/coins/images/2518/thumb/weth.png?1628852295",
       "chainId": 534354,
-      "address": "0x6b29C65597Fa2aC80Ab181989969092971f1Fa4e",
+      "address": "0x5300000000000000000000000000000000000004",
       "name": "Wrapped Ether",
       "symbol": "WETH",
       "decimals": 18
@@ -19,7 +19,7 @@
       "logoURI": "https://assets.coingecko.com/coins/images/6319/thumb/USD_Coin_icon.png?1547042389",
       "chainId": 534354,
       "address": "0x38BA9a208F34Ddc9332f6DfC0E9d567f098958A4",
-      "name": "USD Coin (Scroll Pre-Alpha)",
+      "name": "USD Coin (Scroll Alpha)",
       "symbol": "USDC",
       "decimals": 6
     }

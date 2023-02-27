@@ -4,7 +4,7 @@ import ms from 'ms.macro'
 import { darkTheme } from 'theme/colors'
 
 import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from './chains'
-import { SCROLL_PREALPHA_LIST } from './lists'
+import { SCROLL_ALPHA_LIST } from './lists'
 
 export const AVERAGE_L1_BLOCK_TIME = ms`12s`
 
@@ -212,21 +212,21 @@ const CHAIN_INFO: ChainInfoMap = {
   //   nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
   //   defaultListUrl: CELO_LIST,
   // },
-  [SupportedChainId.SCROLL_PREALPHA]: {
+  [SupportedChainId.SCROLL_ALPHA]: {
     networkType: NetworkType.L2,
     docs: 'https://docs.uniswap.org/',
-    explorer: 'https://l2scan.scroll.io/',
+    explorer: 'https://blockscout.scroll.io/',
     infoLink: 'https://info.uniswap.org/#/',
-    label: 'Scroll Pre-Alpha',
+    label: 'Scroll Alpha',
     logoUrl: scrollLogo,
-    nativeCurrency: { name: 'Scroll Pre-Alpha Ether', symbol: 'TSETH', decimals: 18 },
+    nativeCurrency: { name: 'Scroll Alpha Ether', symbol: 'ETH', decimals: 18 },
     //TODO: Add Scroll Brand Color
     color: darkTheme.chain_5,
 
     // Required for L2 networks
     blockWaitMsBeforeWarning: ms`10m`,
-    bridge: 'https://scroll.io/prealpha/bridge/',
-    defaultListUrl: SCROLL_PREALPHA_LIST,
+    bridge: 'https://alpha--scroll-io.netlify.app/alpha/bridge',
+    defaultListUrl: SCROLL_ALPHA_LIST,
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
   },
 }

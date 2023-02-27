@@ -56,7 +56,7 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
   //   }
   // }
 
-  if (chainId === SupportedChainId.SCROLL_PREALPHA) {
+  if (chainId === SupportedChainId.SCROLL_ALPHA) {
     switch (type) {
       case ExplorerDataType.TRANSACTION:
         return `https://l2scan.scroll.io/tx/${data}`

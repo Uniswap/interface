@@ -87,9 +87,9 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
   //   // "Safe" URLs
   //   `https://alfajores-forno.celo-testnet.org`,
   // ],
-  [SupportedChainId.SCROLL_PREALPHA]: [
+  [SupportedChainId.SCROLL_ALPHA]: [
     // "Safe" URLs
-    'https://prealpha-rpc.scroll.io/l2',
+    'https://alpha-rpc.scroll.io/l2',
   ],
 }
 
@@ -138,5 +138,5 @@ export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
   // ],
   // [SupportedChainId.CELO]: FALLBACK_URLS[SupportedChainId.CELO],
   // [SupportedChainId.CELO_ALFAJORES]: FALLBACK_URLS[SupportedChainId.CELO_ALFAJORES],
-  [SupportedChainId.SCROLL_PREALPHA]: FALLBACK_URLS[SupportedChainId.SCROLL_PREALPHA],
+  [SupportedChainId.SCROLL_ALPHA]: FALLBACK_URLS[SupportedChainId.SCROLL_ALPHA],
 }

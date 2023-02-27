@@ -38,7 +38,7 @@ const SHOULD_SHOW_ALERT = {
   // [SupportedChainId.POLYGON_MUMBAI]: true,
   // [SupportedChainId.CELO]: true,
   // [SupportedChainId.CELO_ALFAJORES]: true,
-  [SupportedChainId.SCROLL_PREALPHA]: true,
+  [SupportedChainId.SCROLL_ALPHA]: true,
 }
 
 type NetworkAlertChains = keyof typeof SHOULD_SHOW_ALERT
@@ -63,7 +63,7 @@ const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
     //   'radial-gradient(285% 8200% at 30% 50%, rgba(40, 160, 240, 0.01) 0%, rgba(219, 255, 0, 0) 100%),radial-gradient(75% 75% at 0% 0%, rgba(150, 190, 220, 0.05) 0%, rgba(33, 114, 229, 0.05) 100%), hsla(0, 0%, 100%, 0.05)',
     // [SupportedChainId.ARBITRUM_RINKEBY]:
     //   'radial-gradient(285% 8200% at 30% 50%, rgba(40, 160, 240, 0.05) 0%, rgba(219, 255, 0, 0) 100%),radial-gradient(75% 75% at 0% 0%, rgba(150, 190, 220, 0.05) 0%, rgba(33, 114, 229, 0.1) 100%), hsla(0, 0%, 100%, 0.05)',
-    [SupportedChainId.SCROLL_PREALPHA]:
+    [SupportedChainId.SCROLL_ALPHA]:
       'radial-gradient(100% 93.36% at 0% 6.64%, rgba(120, 128, 247, 0.1) 0%, rgba(62, 62, 160, 0.1) 100%)',
   },
   light: {
@@ -83,7 +83,7 @@ const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
     //   'radial-gradient(285% 8200% at 30% 50%, rgba(40, 160, 240, 0.1) 0%, rgba(219, 255, 0, 0) 100%),radial-gradient(circle at top left, hsla(206, 50%, 75%, 0.01), hsla(215, 79%, 51%, 0.12)), hsla(0, 0%, 100%, 0.1)',
     // [SupportedChainId.ARBITRUM_RINKEBY]:
     //   'radial-gradient(285% 8200% at 30% 50%, rgba(40, 160, 240, 0.1) 0%, rgba(219, 255, 0, 0) 100%),radial-gradient(circle at top left, hsla(206, 50%, 75%, 0.01), hsla(215, 79%, 51%, 0.12)), hsla(0, 0%, 100%, 0.1)',
-    [SupportedChainId.SCROLL_PREALPHA]:
+    [SupportedChainId.SCROLL_ALPHA]:
       'radial-gradient(182.71% 205.59% at 2.81% 7.69%,#EEE2D4FF 0%, #E4D5C3FF 100%)',
   },
 }
@@ -144,7 +144,7 @@ const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
   // [SupportedChainId.OPTIMISM_GOERLI]: '#ff3856',
   // [SupportedChainId.ARBITRUM_ONE]: '#0490ed',
   // [SupportedChainId.ARBITRUM_RINKEBY]: '#0490ed',
-  [SupportedChainId.SCROLL_PREALPHA]: 'rgba(113, 98, 124)',
+  [SupportedChainId.SCROLL_ALPHA]: 'rgba(113, 98, 124)',
 }
 
 function shouldShowAlert(chainId: number | undefined): chainId is NetworkAlertChains {
@@ -157,29 +157,29 @@ export function NetworkAlert() {
 
   if (!shouldShowAlert(chainId)) {
 
-    const textColor = TEXT_COLORS[SupportedChainId.SCROLL_PREALPHA]
+    const textColor = TEXT_COLORS[SupportedChainId.SCROLL_ALPHA]
 
     return (
-    <RootWrapper>
-      <ContentWrapper chainId={SupportedChainId.SCROLL_PREALPHA} darkMode={darkMode} logoUrl="">
-        <LinkOutToBridge href="https://snapshot.org/#/uniswap/proposal/0x5ad7208d9ccad93dbc96abc12bfeffcfe83e96b9782e5135727cdaaf494d70f3">
-          <BodyText color={darkMode ? textColor : "black"}>
-            <AlertTriangle size={24} style={{marginRight: "16px"}} />
-            <AutoRow>
-              <Header>
-                <Trans>Intended for Demo Purposes Only</Trans>
-              </Header>
-              <HideSmall>
-                <Trans>This is not an official Uniswap release.</Trans>
-              </HideSmall>
-            </AutoRow>
-          </BodyText>
-          <StyledArrowUpRight color={darkMode ? textColor : "black"} />
-        </LinkOutToBridge>
-      </ContentWrapper>
-    </RootWrapper>
+      <RootWrapper>
+        <ContentWrapper chainId={SupportedChainId.SCROLL_ALPHA} darkMode={darkMode} logoUrl="">
+          <LinkOutToBridge href="https://snapshot.org/#/uniswap/proposal/0x5ad7208d9ccad93dbc96abc12bfeffcfe83e96b9782e5135727cdaaf494d70f3">
+            <BodyText color={darkMode ? textColor : "black"}>
+              <AlertTriangle size={24} style={{ marginRight: "16px" }} />
+              <AutoRow>
+                <Header>
+                  <Trans>Intended for Demo Purposes Only</Trans>
+                </Header>
+                <HideSmall>
+                  <Trans>This is not an official Uniswap release.</Trans>
+                </HideSmall>
+              </AutoRow>
+            </BodyText>
+            <StyledArrowUpRight color={darkMode ? textColor : "black"} />
+          </LinkOutToBridge>
+        </ContentWrapper>
+      </RootWrapper>
 
-  )
+    )
   }
 
   const { label, logoUrl, bridge } = getChainInfo(chainId)
@@ -203,12 +203,12 @@ export function NetworkAlert() {
           <StyledArrowUpRight color={textColor} />
         </LinkOutToBridge>
       </ContentWrapper>
-<div style={{height:"16px"}} />
+      <div style={{ height: "16px" }} />
       <ContentWrapper chainId={chainId} darkMode={darkMode} logoUrl={logoUrl}>
         <LinkOutToBridge href="https://snapshot.org/#/uniswap/proposal/0x5ad7208d9ccad93dbc96abc12bfeffcfe83e96b9782e5135727cdaaf494d70f3">
           <BodyText color={textColor}>
             {/* <L2Icon src={logoUrl} /> */}
-            <AlertTriangle size={24} style={{marginRight: "16px"}} />
+            <AlertTriangle size={24} style={{ marginRight: "16px" }} />
             <AutoRow>
               <Header>
                 <Trans>Intended for Demo Purposes Only</Trans>
