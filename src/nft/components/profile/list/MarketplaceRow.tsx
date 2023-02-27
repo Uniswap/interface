@@ -5,7 +5,7 @@ import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { RowsCollpsedIcon, RowsExpandedIcon } from 'nft/components/icons'
 import { useSellAsset } from 'nft/hooks'
-import { ListingMarket, ListingWarning, WalletAsset } from 'nft/types'
+import { ListingMarket, WalletAsset } from 'nft/types'
 import { LOOKS_RARE_CREATOR_BASIS_POINTS } from 'nft/utils'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
@@ -218,17 +218,6 @@ export const MarketplaceRow = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [globalPrice])
 
-  let warning: ListingWarning | undefined = undefined
-  if (asset.listingWarnings && asset.listingWarnings?.length > 0) {
-    if (showMarketplaceLogo) {
-      for (const listingWarning of asset.listingWarnings) {
-        if (listingWarning.marketplace.name === selectedMarkets[0].name) warning = listingWarning
-      }
-    } else {
-      warning = asset.listingWarnings[0]
-    }
-  }
-
   return (
     <Row onMouseEnter={toggleMarketRowHovered} onMouseLeave={toggleMarketRowHovered}>
       <FloorPriceInfo>
@@ -269,7 +258,6 @@ export const MarketplaceRow = ({
             isGlobalPrice={true}
             setGlobalOverride={setGlobalOverride}
             globalOverride={globalOverride}
-            warning={warning}
             asset={asset}
           />
         ) : (
@@ -279,7 +267,6 @@ export const MarketplaceRow = ({
             isGlobalPrice={false}
             setGlobalOverride={setGlobalOverride}
             globalOverride={globalOverride}
-            warning={warning}
             asset={asset}
           />
         )}
