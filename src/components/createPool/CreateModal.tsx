@@ -172,9 +172,6 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
               <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
             </RowBetween>
             <ThemedText.DeprecatedBody>
-              <Trans>Experience endless DeFi applications without the hassle of setting allowances.</Trans>
-            </ThemedText.DeprecatedBody>
-            <ThemedText.DeprecatedBody>
               <Trans>Choose a cool name, a symbol and the base token.</Trans>
             </ThemedText.DeprecatedBody>
             <NameInputPanel value={typedName} onChange={onNameInput} />
