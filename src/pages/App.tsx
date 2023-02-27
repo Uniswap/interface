@@ -65,7 +65,7 @@ const BodyWrapper = styled.div`
   background-size: cover;
   background-position: left bottom;
 
-  @media screen and (max-width: 1592px) {
+  @media screen and (max-width: 1280px) {
     background-position: left 0 bottom 90px;
     background-size: 100% auto;
   }
