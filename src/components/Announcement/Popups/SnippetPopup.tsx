@@ -10,13 +10,17 @@ import { Swiper, SwiperSlide } from 'swiper/react/swiper-react'
 import NotificationImage from 'assets/images/notification_default.png'
 import CtaButton from 'components/Announcement/Popups/CtaButton'
 import { useNavigateCtaPopup } from 'components/Announcement/helper'
-import { AnnouncementTemplatePopup, PopupContentAnnouncement, PopupType } from 'components/Announcement/type'
+import {
+  AnnouncementTemplatePopup,
+  PopupContentAnnouncement,
+  PopupItemType,
+  PopupType,
+} from 'components/Announcement/type'
 import { AutoColumn } from 'components/Column'
 import { Z_INDEXS } from 'constants/styles'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { useRemovePopup } from 'state/application/hooks'
-import { PopupItemType } from 'state/application/reducer'
 
 const IMAGE_HEIGHT = '140px'
 const PADDING_MOBILE = '16px'
@@ -80,7 +84,7 @@ const Desc = styled.div<{ expand: boolean }>`
       : css`
           line-height: 16px;
         `};
-  > p {
+  > * {
     margin: 0;
   }
 `
@@ -123,10 +127,10 @@ function SnippetPopupItem({
   setExpand,
 }: {
   expand: boolean
-  data: PopupItemType
+  data: PopupItemType<PopupContentAnnouncement>
   setExpand: (v: boolean) => void
 }) {
-  const { templateBody = {} } = data.content as PopupContentAnnouncement
+  const { templateBody = {} } = data.content
   const { ctas = [], name, content, thumbnailImageURL } = templateBody as AnnouncementTemplatePopup
   const removePopup = useRemovePopup()
   const toggle = () => {
@@ -247,7 +251,13 @@ const Close = styled(X)`
     right: calc(12px + ${PADDING_MOBILE});
   `}
 `
-export default function SnippetPopup({ data, clearAll }: { data: PopupItemType[]; clearAll: () => void }) {
+export default function SnippetPopup({
+  data,
+  clearAll,
+}: {
+  data: PopupItemType<PopupContentAnnouncement>[]
+  clearAll: () => void
+}) {
   const theme = useTheme()
   const [expand, setExpand] = useState(false)
   const { mixpanelHandler } = useMixpanel()
@@ -266,7 +276,7 @@ export default function SnippetPopup({ data, clearAll }: { data: PopupItemType[]
         observeParents
         modules={[Navigation, Pagination]}
       >
-        {data.map((banner: PopupItemType) => (
+        {data.map(banner => (
           <SwiperSlide key={banner.key}>
             <SnippetPopupItem expand={expand} setExpand={setExpand} data={banner} />
           </SwiperSlide>

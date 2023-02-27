@@ -5,13 +5,17 @@ import styled from 'styled-components'
 
 import CtaButton from 'components/Announcement/Popups/CtaButton'
 import { useNavigateCtaPopup } from 'components/Announcement/helper'
-import { AnnouncementTemplatePopup, PopupContentAnnouncement, PopupType } from 'components/Announcement/type'
+import {
+  AnnouncementTemplatePopup,
+  PopupContentAnnouncement,
+  PopupItemType,
+  PopupType,
+} from 'components/Announcement/type'
 import Modal from 'components/Modal'
 import Row, { RowBetween } from 'components/Row'
 import { Z_INDEXS } from 'constants/styles'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
-import { PopupItemType } from 'state/application/reducer'
 import { MEDIA_WIDTHS } from 'theme'
 
 const Wrapper = styled.div`
@@ -74,11 +78,17 @@ const StyledCtaButton = styled(CtaButton)`
   `}
 `
 
-export default function CenterPopup({ data, clearAll }: { data: PopupItemType; clearAll: () => void }) {
+export default function CenterPopup({
+  data,
+  clearAll,
+}: {
+  data: PopupItemType<PopupContentAnnouncement>
+  clearAll: () => void
+}) {
   const theme = useTheme()
   const isMobile = useMedia(`(max-width: ${MEDIA_WIDTHS.upToMedium}px)`)
   const { mixpanelHandler } = useMixpanel()
-  const { templateBody = {} } = data.content as PopupContentAnnouncement
+  const { templateBody = {} } = data.content
   const {
     name = t`Important Announcement!`,
     content,

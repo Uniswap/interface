@@ -1,6 +1,6 @@
 import { createReducer, nanoid } from '@reduxjs/toolkit'
 
-import { PopupContent, PopupType } from 'components/Announcement/type'
+import { PopupItemType } from 'components/Announcement/type'
 import { Topic } from 'hooks/useNotification'
 
 import {
@@ -17,13 +17,6 @@ import {
   updatePrommETHPrice,
   updateServiceWorker,
 } from './actions'
-
-export type PopupItemType = {
-  key: string
-  content: PopupContent
-  removeAfterMs: number | null
-  popupType: PopupType
-}
 
 type ETHPrice = {
   currentPrice?: string

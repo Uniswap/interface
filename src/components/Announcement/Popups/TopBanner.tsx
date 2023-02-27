@@ -6,7 +6,7 @@ import styled, { css, keyframes } from 'styled-components'
 
 import CtaButton from 'components/Announcement/Popups/CtaButton'
 import { useNavigateCtaPopup } from 'components/Announcement/helper'
-import { AnnouncementTemplatePopup, PopupContentAnnouncement, PopupType } from 'components/Announcement/type'
+import { AnnouncementTemplatePopup, PopupType } from 'components/Announcement/type'
 import Announcement from 'components/Icons/Announcement'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
@@ -86,7 +86,7 @@ const TextContent = styled.div<{ isOverflow: boolean; animationDuration: number 
     white-space: nowrap;
     position: absolute;
   `}
-  > p {
+  > * {
     margin: 0;
   }
 `
@@ -124,7 +124,7 @@ function TopBanner() {
   }, [contentNode])
 
   if (!popupInfo) return null
-  const { templateBody } = popupInfo.content as PopupContentAnnouncement
+  const { templateBody } = popupInfo.content
   const { content, ctas = [], type, name } = templateBody as AnnouncementTemplatePopup
   const ctaUrl = ctas[0]?.url
   const ctaName = ctas[0]?.name

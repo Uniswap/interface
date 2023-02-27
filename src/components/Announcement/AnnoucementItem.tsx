@@ -46,7 +46,7 @@ const Desc = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
 
-  > p {
+  > * {
     margin: 0;
   }
 `

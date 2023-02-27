@@ -3,8 +3,7 @@ import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLocalStorage } from 'react-use'
 
-import { AnnouncementTemplatePopup, PopupContentAnnouncement } from 'components/Announcement/type'
-import { PopupItemType } from 'state/application/reducer'
+import { AnnouncementTemplatePopup, PopupContentAnnouncement, PopupItemType } from 'components/Announcement/type'
 
 export const useAckAnnouncement = () => {
   const [announcementsMap, setAnnouncementsMap] = useLocalStorage<{ [id: string]: string }>('ack-announcements', {})
@@ -22,11 +21,11 @@ export const useAckAnnouncement = () => {
 export const formatNumberOfUnread = (num: number) => (num > 10 ? '10+' : num + '')
 
 export const isPopupCanShow = (
-  popupInfo: PopupItemType,
+  popupInfo: PopupItemType<PopupContentAnnouncement>,
   announcementsAckMap: { [id: string]: string },
   chainId: ChainId,
 ) => {
-  const { templateBody = {}, metaMessageId } = popupInfo.content as PopupContentAnnouncement
+  const { templateBody = {}, metaMessageId } = popupInfo.content
   const { endAt, startAt, chainIds = [] } = templateBody as AnnouncementTemplatePopup
   const isRightChain = chainIds.includes(chainId + '')
   const isRead = announcementsAckMap[metaMessageId]

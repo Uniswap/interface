@@ -12,6 +12,7 @@ import {
   PopupContentAnnouncement,
   PopupContentSimple,
   PopupContentTxn,
+  PopupItemType,
   PopupType,
 } from 'components/Announcement/type'
 import { OUTSITE_FARM_REWARDS_QUERY, ZERO_ADDRESS } from 'constants/index'
@@ -19,7 +20,6 @@ import { EVMNetworkInfo } from 'constants/networks/type'
 import { KNC } from 'constants/tokens'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks/index'
-import { PopupItemType } from 'state/application/reducer'
 import { useAppSelector } from 'state/hooks'
 import { AppDispatch, AppState } from 'state/index'
 import { getBlockFromTimestamp, getPercentChange } from 'utils'
@@ -245,7 +245,9 @@ export function useRemoveAllPopupByType() {
 
 // get the list of active popups
 export function useActivePopups() {
-  const popups = useSelector((state: AppState) => state.application.popupList)
+  const popups = useSelector(
+    (state: AppState) => state.application.popupList,
+  ) as PopupItemType<PopupContentAnnouncement>[]
   const { announcementsAckMap } = useAckAnnouncement()
   const { chainId } = useActiveWeb3React()
 

@@ -5,10 +5,16 @@ import { animated, useSpring } from 'react-spring'
 import { Flex } from 'rebass'
 import styled, { DefaultTheme, keyframes } from 'styled-components'
 
-import { NotificationType, PopupContentSimple, PopupContentTxn, PopupType } from 'components/Announcement/type'
+import {
+  NotificationType,
+  PopupContentAnnouncement,
+  PopupContentSimple,
+  PopupContentTxn,
+  PopupItemType,
+  PopupType,
+} from 'components/Announcement/type'
 import useTheme from 'hooks/useTheme'
 import { useRemovePopup } from 'state/application/hooks'
-import { PopupItemType } from 'state/application/reducer'
 
 import SimplePopup from './SimplePopup'
 import TransactionPopup from './TransactionPopup'
@@ -160,7 +166,9 @@ export default function PopupItem({ popup, hasOverlay }: { popup: PopupItemType;
       break
     }
     case PopupType.TOP_RIGHT: {
-      const { title, summary, type, link } = getPopupTopRightDescriptionByType(popup)
+      const { title, summary, type, link } = getPopupTopRightDescriptionByType(
+        popup as PopupItemType<PopupContentAnnouncement>,
+      )
       notiType = type
       popupContent = <SimplePopup title={title} type={notiType} summary={summary} link={link} />
       break

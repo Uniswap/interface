@@ -162,6 +162,7 @@ export enum MIXPANEL_TYPE {
   ANNOUNCEMENT_CLICK_INBOX_MESSAGE,
   ANNOUNCEMENT_CLICK_CLOSE_POPUP,
   ANNOUNCEMENT_CLICK_CTA_POPUP,
+  ANNOUNCEMENT_CLICK_CLEAR_ALL_INBOXES,
 
   // limit order
   LO_CLICK_PLACE_ORDER,
@@ -816,6 +817,10 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
         }
         case MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_CTA_POPUP: {
           mixpanel.track('Notifications - Click on Announcement Pop Up CTA', payload)
+          break
+        }
+        case MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_CLEAR_ALL_INBOXES: {
+          mixpanel.track('Notifications - Clear All Messages', payload)
           break
         }
 

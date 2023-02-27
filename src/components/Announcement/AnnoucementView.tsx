@@ -186,6 +186,9 @@ export default function AnnouncementView({
       .catch(err => {
         console.error('ack noti error', err)
       })
+    mixpanelHandler(MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_CLEAR_ALL_INBOXES, {
+      total_message_count: totalAnnouncement,
+    })
   }
 
   const hasMore = announcements.length !== totalAnnouncement

@@ -5,16 +5,16 @@ import {
   AnnouncementTemplateBridge,
   NotificationType,
   PopupContentAnnouncement,
+  PopupItemType,
   PrivateAnnouncementType,
 } from 'components/Announcement/type'
 import { APP_PATHS } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
 import { MultichainTransfer, MultichainTransferStatus } from 'hooks/bridge/useGetBridgeTransfers'
 import { formatAmountBridge } from 'pages/Bridge/helpers'
-import { PopupItemType } from 'state/application/reducer'
 
-const getDescriptionBridge = (popup: PopupItemType) => {
-  const { templateBody } = popup.content as PopupContentAnnouncement
+const getDescriptionBridge = (popup: PopupItemType<PopupContentAnnouncement>) => {
+  const { templateBody } = popup.content
   const { transaction = {} } = templateBody as AnnouncementTemplateBridge
   const { srcAmount, srcTokenSymbol, status, srcChainId, dstChainId } = transaction as MultichainTransfer
   const isSuccess = status === MultichainTransferStatus.Success
@@ -39,13 +39,13 @@ type Summary = {
   link: string
 }
 type SummaryMap = {
-  [type in PrivateAnnouncementType]: (popup: PopupItemType) => Summary
+  [type in PrivateAnnouncementType]: (popup: PopupItemType<PopupContentAnnouncement>) => Summary
 }
 const MAP_DESCRIPTION: Partial<SummaryMap> = {
   [PrivateAnnouncementType.BRIDGE]: getDescriptionBridge,
 }
 
-export default function getPopupTopRightDescriptionByType(popup: PopupItemType) {
-  const { templateType } = popup.content as PopupContentAnnouncement
+export default function getPopupTopRightDescriptionByType(popup: PopupItemType<PopupContentAnnouncement>) {
+  const { templateType } = popup.content
   return (MAP_DESCRIPTION[templateType]?.(popup) ?? {}) as Summary
 }

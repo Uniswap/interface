@@ -26,14 +26,13 @@ export type PrivateAnnouncement = {
 
 export type AnnouncementCTA = { name: string; url: string }
 
+// for private announcement
 export type TrueSightToken = {
   symbol: string
   price: string
   changePercentage: string
   logo: string
 }
-
-// for private announcement
 
 export type LimitOrderNotification = {
   walletAddress: string
@@ -55,9 +54,10 @@ export type LimitOrderNotification = {
 }
 export type AnnouncementTemplateLimitOrder = {
   order: LimitOrderNotification
+  popupType: PopupType
 }
-export type AnnouncementTemplateBridge = { transaction: MultichainTransfer }
-export type AnnouncementTemplateTrendingSoon = { tokens: TrueSightToken[] }
+export type AnnouncementTemplateBridge = { transaction: MultichainTransfer; popupType: PopupType }
+export type AnnouncementTemplateTrendingSoon = { tokens: TrueSightToken[]; popupType: PopupType }
 
 // for general announcement
 export type AnnouncementTemplatePopup = {
@@ -68,19 +68,16 @@ export type AnnouncementTemplatePopup = {
   startAt: number
   endAt: number
   chainIds: string[]
-
+  popupType: PopupType
   ctas: AnnouncementCTA[] // in popup
-  ctaURL: string // in noti center
+  ctaURL: string // in notification center
 }
 
-type AnnouncementTemplate = (
+type AnnouncementTemplate =
   | AnnouncementTemplateLimitOrder
   | AnnouncementTemplateBridge
   | AnnouncementTemplateTrendingSoon
   | AnnouncementTemplatePopup
-) & {
-  popupType: PopupType
-}
 
 export enum NotificationType {
   SUCCESS,
@@ -116,6 +113,13 @@ export type PopupContentAnnouncement = {
   startAt: number
   endAt: number
   createdAt: number
+}
+
+export type PopupItemType<T extends PopupContent = PopupContent> = {
+  key: string
+  content: T
+  removeAfterMs: number | null
+  popupType: PopupType
 }
 
 export type PopupContent = PopupContentTxn | PopupContentSimple | PopupContentAnnouncement
