@@ -71,7 +71,7 @@ const StyledTrendingSoonTokenItem = styled(Flex)`
   `}
 `
 
-export const SelectedHighlight = styled.div`
+const SelectedHighlight = styled.div`
   position: absolute;
   right: 0;
   top: 50%;

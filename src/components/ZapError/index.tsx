@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import useTheme from 'hooks/useTheme'
 
-export const ZapErrorWrapper = styled.div<{ warning?: boolean }>`
+const ZapErrorWrapper = styled.div<{ warning?: boolean }>`
   display: flex;
   align-items: center;
   gap: 8px;

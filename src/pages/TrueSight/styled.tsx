@@ -1,5 +1,5 @@
 import { Text } from 'rebass'
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 
 export const TrueSightPageWrapper = styled.div`
   display: flex;
@@ -120,41 +120,4 @@ export const TextTooltip = styled(Text)<{ color: string }>`
     height: 0;
     border-bottom: ${({ color }) => `1px dashed ${color}`};
   }
-`
-
-export const ButtonText = styled(Text)`
-  font-size: 14px;
-  font-weight: 500;
-  margin-left: 6px !important;
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: none;
-  `}
-`
-
-const rotate360 = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-`
-
-export const StyledSpinner = styled.div<{ color: string }>`
-  animation: ${rotate360} 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
-  transform: translateZ(0);
-
-  border-top: 1px solid transparent;
-  border-right: 1px solid transparent;
-  border-bottom: 1px solid transparent;
-  border-left: ${({ color }) => `1px solid  ${color}`};
-  background: transparent;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  position: relative;
-
-  top: 0px;
-  left: 0px;
 `

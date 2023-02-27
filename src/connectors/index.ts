@@ -23,7 +23,7 @@ const NETWORK_URLS: {
 
 const NETWORK_URL = NETWORKS_INFO[ChainId.MAINNET].rpcUrl
 
-export const NETWORK_CHAIN_ID = 1
+const NETWORK_CHAIN_ID = 1
 
 export const network = new NetworkConnector({
   urls: NETWORK_URLS,

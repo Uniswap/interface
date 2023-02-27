@@ -76,8 +76,6 @@ export const MAINNET_NETWORKS = [
   ChainId.ETHW,
 ] as const
 
-export type MAINNET_NETWORK = typeof MAINNET_NETWORKS[number]
-
 export const EVM_NETWORKS = SUPPORTED_NETWORKS.filter(chainId => getChainType(chainId) === ChainType.EVM) as Exclude<
   ChainId,
   ChainId.SOLANA
@@ -87,7 +85,6 @@ export type EVM_NETWORK = typeof EVM_NETWORKS[number]
 export const EVM_MAINNET_NETWORKS = MAINNET_NETWORKS.filter(
   chainId => getChainType(chainId) === ChainType.EVM,
 ) as Exclude<typeof MAINNET_NETWORKS[number], ChainId.SOLANA>[]
-export type EVM_MAINNET_NETWORK = typeof EVM_MAINNET_NETWORKS[number]
 
 export const WALLET_CONNECT_SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.MAINNET,

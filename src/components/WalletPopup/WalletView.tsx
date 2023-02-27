@@ -76,7 +76,7 @@ const ContentWrapper = styled.div`
   gap: 14px;
 `
 
-export const View = {
+const View = {
   ASSETS: t`Assets`,
   SEND_TOKEN: t`Send`,
   RECEIVE_TOKEN: t`Receive`,

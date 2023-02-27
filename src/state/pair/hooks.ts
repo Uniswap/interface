@@ -1,16 +1,10 @@
 import { Pair } from '@kyberswap/ks-sdk-classic'
 import { Currency } from '@kyberswap/ks-sdk-core'
 import { useMemo } from 'react'
-import { useSelector } from 'react-redux'
 
 import { PairState, usePair } from 'data/Reserves'
-import { AppState } from 'state/index'
 
 import { Field } from './actions'
-
-export function usePairState(): AppState['pair'] {
-  return useSelector<AppState, AppState['pair']>(state => state.pair)
-}
 
 export function useDerivedPairInfo(
   currencyA: Currency | undefined,

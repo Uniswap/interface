@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-export interface TokenPrice {
-  // format: [tokenAddress]_[chainId]
+interface TokenPrice {
   readonly [key: string]: number
 }
 

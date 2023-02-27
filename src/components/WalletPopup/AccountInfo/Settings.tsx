@@ -45,12 +45,6 @@ const IconWrapper = styled.div`
 
 const customStyleMenu = { padding: '8px 0px' }
 
-export type ClickHandlerProps = {
-  onClickBuy: () => void
-  onClickReceive: () => void
-  onClickSend: () => void
-}
-
 const Settings: React.FC = () => {
   const disconnectWallet = useDisconnectWallet()
   const { chainId, account = '' } = useActiveWeb3React()

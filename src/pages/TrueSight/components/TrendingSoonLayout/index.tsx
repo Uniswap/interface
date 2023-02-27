@@ -268,12 +268,12 @@ export const TrueSightContainer = styled.div`
   `}
 `
 
-export const TrendingSoonTokenListHeaderWrapper = styled.div`
+const TrendingSoonTokenListHeaderWrapper = styled.div`
   width: 100%;
   background: ${({ theme }) => theme.tableHeader};
 `
 
-export const TrendingSoonTokenListHeader = styled.div`
+const TrendingSoonTokenListHeader = styled.div`
   width: 40%;
   display: flex;
   align-items: center;
@@ -286,7 +286,7 @@ export const TrendingSoonTokenListHeader = styled.div`
   `}
 `
 
-export const TrendingSoonTokenListHeaderItem = styled.div`
+const TrendingSoonTokenListHeaderItem = styled.div`
   display: flex;
   align-items: center;
   font-size: 12px;
@@ -297,7 +297,7 @@ export const TrendingSoonTokenListHeaderItem = styled.div`
   height: 100%;
 `
 
-export const TrendingSoonTokenListBodyAndDetailContainer = styled(Flex)`
+const TrendingSoonTokenListBodyAndDetailContainer = styled(Flex)`
   min-height: 560px;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
@@ -305,7 +305,7 @@ export const TrendingSoonTokenListBodyAndDetailContainer = styled(Flex)`
   `}
 `
 
-export const TrendingSoonTokenListBody = styled.div`
+const TrendingSoonTokenListBody = styled.div`
   width: 40%;
   border-top: 1px solid ${({ theme }) => theme.border};
   border-bottom: 1px solid ${({ theme }) => theme.border};
@@ -320,7 +320,7 @@ export const TrendingSoonTokenListBody = styled.div`
   `}
 `
 
-export const TrendingSoonTokenDetailContainer = styled.div`
+const TrendingSoonTokenDetailContainer = styled.div`
   width: 60%;
   border-top: 1px solid ${({ theme }) => theme.border};
   border-left: 1px solid ${({ theme }) => theme.border};

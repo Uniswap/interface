@@ -88,7 +88,7 @@ async function fetchChunk(
  * @param allListeners the all listeners state
  * @param chainId the current chain id
  */
-export function activeListeningKeys(
+function activeListeningKeys(
   allListeners: AppState['multicall']['callListeners'],
   chainId?: number,
 ): { [callKey: string]: number } {
@@ -119,7 +119,7 @@ export function activeListeningKeys(
  * @param chainId the current chain id
  * @param latestBlockNumber the latest block number
  */
-export function outdatedListeningKeys(
+function outdatedListeningKeys(
   callResults: AppState['multicall']['callResults'],
   listeningKeys: { [callKey: string]: number },
   chainId: number | undefined,

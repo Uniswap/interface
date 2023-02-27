@@ -8,7 +8,7 @@ import { useContract } from 'hooks/useContract'
 import useTransactionStatus from 'hooks/useTransactionStatus'
 import { isAddress } from 'utils'
 
-export interface BalanceProps {
+interface BalanceProps {
   value: BigNumber
   decimals: number
 }

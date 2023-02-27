@@ -1,10 +1,5 @@
 import { Currency } from '@kyberswap/ks-sdk-core'
 import { Pool, Route } from '@kyberswap/ks-sdk-elastic'
-import { useMemo } from 'react'
-
-import { useActiveWeb3React } from 'hooks'
-
-import { useProAmmSwapPools } from './useProAmmSwapPools'
 
 function poolEquals(poolA: Pool, poolB: Pool): boolean {
   return (
@@ -48,19 +43,4 @@ function computeAllRoutes(
   }
 
   return allPaths
-}
-
-export function useProAmmAllRoutes(
-  currencyIn?: Currency,
-  currencyOut?: Currency,
-): { loading: boolean; routes: Route<Currency, Currency>[] } {
-  const { chainId } = useActiveWeb3React()
-  const { pools, loading: poolsLoading } = useProAmmSwapPools(currencyIn, currencyOut)
-  return useMemo(() => {
-    if (poolsLoading || !chainId || !pools || !currencyIn || !currencyOut) return { loading: true, routes: [] }
-
-    const routes = computeAllRoutes(currencyIn, currencyOut, pools, chainId, [], [], currencyIn, 1)
-
-    return { loading: false, routes }
-  }, [chainId, currencyIn, currencyOut, pools, poolsLoading])
 }

@@ -24,7 +24,7 @@ const validateAPI = (tokens: TopToken[]): boolean => {
   )
 }
 
-export const useTopTokens = (): {
+const useTopTokens = (): {
   [address: string]: Token
 } => {
   const { chainId } = useActiveWeb3React()

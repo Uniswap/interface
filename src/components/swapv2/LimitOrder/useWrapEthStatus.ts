@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
+import { usePrevious } from 'react-use'
 
-import usePrevious from 'hooks/usePrevious'
 import { useIsTransactionPending } from 'state/transactions/hooks'
 
 export default function useWrapEthStatus(switchToWeth: () => void) {

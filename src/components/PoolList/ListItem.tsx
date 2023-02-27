@@ -29,7 +29,7 @@ import { formattedNum, shortenAddress } from 'utils'
 import { currencyId } from 'utils/currencyId'
 import { getMyLiquidity, getTradingFeeAPR, parseSubgraphPoolData } from 'utils/dmm'
 
-export interface ListItemGroupProps {
+interface ListItemGroupProps {
   poolData: SubgraphPoolData
   userLiquidityPositions: { [key: string]: UserLiquidityPosition }
 }

@@ -10,7 +10,7 @@ export interface ToggleProps {
   style?: CSSProperties
 }
 
-export const Dot = styled.div`
+const Dot = styled.div`
   position: absolute;
   top: 50%;
   left: 4px;

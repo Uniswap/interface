@@ -13,18 +13,18 @@ import { useAllTransactions, useTransactionAdder } from 'state/transactions/hook
 import { TRANSACTION_TYPE } from 'state/transactions/type'
 import { getClaimRewardContract } from 'utils/getContract'
 
-export interface IReward {
+interface IReward {
   index: number
   amounts: string[]
   proof: string[]
 }
-export interface IPhaseData {
+interface IPhaseData {
   phaseId: number
   merkleRoot: string
   tokens: string[]
   userRewards: { [address: string]: IReward }
 }
-export interface IUserReward {
+interface IUserReward {
   phaseId: number
   tokens: string[]
   reward: IReward | undefined

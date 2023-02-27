@@ -43,32 +43,6 @@ export const TextTVL = styled.div`
   color: ${({ theme }) => theme.subText};
 `
 
-export const TextShowMorePools = styled.div<{ disabled: boolean }>`
-  cursor: pointer;
-  font-size: 12px;
-  color: ${({ theme }) => theme.primary};
-  grid-column: 2 / -1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-
-  ${({ disabled }) => (disabled ? `opacity: 0.5;` : ``)}
-  &:hover {
-    ${({ disabled }) => (!disabled ? `opacity: 0.7;` : ``)}
-  }
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 0;
-  `}
-`
-
-export const DashedDivider = styled.div`
-  ${({ theme }) => `
-    border-bottom: 1px dashed ${theme.bg14};
-  `}
-`
-
 export const TokenRatioContainer = styled.div`
   background: ${({ theme }) => theme.background};
   position: relative;
@@ -137,13 +111,4 @@ export const TabItem = styled.div<{ active?: boolean }>`
   flex-grow: 1;
   flex-basis: 0;
   transition: color 300ms;
-`
-
-export const ButtonGroupContainer = styled.div`
-  display: flex;
-  gap: 16px;
-
-  > * {
-    flex: 1;
-  }
 `

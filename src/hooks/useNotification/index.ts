@@ -22,11 +22,6 @@ export type Topic = {
   topics: Topic[]
 }
 
-export const NOTIFICATION_TOPICS = {
-  TRENDING_SOON: 2,
-  POSITION_POOL: 1,
-}
-
 type SaveNotificationParam = {
   subscribeIds: number[]
   unsubscribeIds: number[]

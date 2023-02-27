@@ -18,22 +18,13 @@ export enum ButtonColorScheme {
   APR = 'APR',
 }
 
-export const BtnLight = styled(ButtonLight)`
+const BtnLight = styled(ButtonLight)`
   padding: 8px 12px;
   width: fit-content;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 8px;
   `};
-`
-
-export const BtnPrimary = styled(ButtonPrimary)`
-  font-size: 14px;
-  :disabled {
-    background: ${({ theme }) => theme.buttonGray};
-    cursor: not-allowed;
-    opacity: 0.4;
-  }
 `
 
 const generateButtonOutlinedCSS = (theme: DefaultTheme, colorScheme?: ButtonColorScheme, disabled?: boolean) => {
@@ -240,20 +231,6 @@ export const MinimalActionButton = styled(ButtonLight)<{ colorScheme?: ButtonCol
     background: ${({ theme }) => theme.buttonGray};
     cursor: not-allowed;
   }
-`
-
-export const ActionButton = styled(ButtonLight)<{ colorScheme?: ButtonColorScheme }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-
-  width: max-content;
-  height: 38px;
-  padding: 0;
-  background-color: ${({ theme }) => rgba(theme.primary, 0.2)};
-
-  ${({ theme, colorScheme, disabled }) => generateActionButtonCSS(theme, colorScheme, disabled)}
 `
 
 export const ForceWithdrawButton: React.FC<React.ComponentPropsWithoutRef<'button'>> = ({

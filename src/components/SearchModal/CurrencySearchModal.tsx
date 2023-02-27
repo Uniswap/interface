@@ -1,10 +1,10 @@
 import { Currency, Token } from '@kyberswap/ks-sdk-core'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
+import { usePrevious } from 'react-use'
 
 import Modal from 'components/Modal'
 import useLast from 'hooks/useLast'
-import usePrevious from 'hooks/usePrevious'
 
 import { CurrencySearch } from './CurrencySearch'
 import { ImportToken } from './ImportToken'

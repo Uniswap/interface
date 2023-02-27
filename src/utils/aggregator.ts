@@ -39,7 +39,7 @@ import {
 } from './solanaInstructions'
 import { convertToVersionedTx } from './versionedTx'
 
-export type Swap = {
+type Swap = {
   pool: string
   tokenIn: string
   tokenOut: string

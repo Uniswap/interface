@@ -14,13 +14,6 @@ export type GrantProgram = {
   mobileBanner: string
 }
 
-export type Project = {
-  id: number
-  name: string
-  logoUrl: string
-  description: string
-}
-
 export type ProjectRanking = {
   rankNo: number
   competitorId: number

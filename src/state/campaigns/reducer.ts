@@ -21,7 +21,7 @@ import {
   setSelectedCampaignLuckyWinnersPageNumber,
 } from './actions'
 
-export interface CampaignsState {
+interface CampaignsState {
   readonly data: CampaignData[]
   readonly loadingCampaignData: boolean
   readonly loadingCampaignDataError: Error | undefined

@@ -2,7 +2,7 @@ import { createReducer } from '@reduxjs/toolkit'
 
 import { Field, selectCurrency } from './actions'
 
-export interface PairState {
+interface PairState {
   readonly [Field.CURRENCY_A]: { readonly currencyId: string | undefined }
   readonly [Field.CURRENCY_B]: { readonly currencyId: string | undefined }
 }

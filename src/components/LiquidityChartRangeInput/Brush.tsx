@@ -1,9 +1,9 @@
 import { BrushBehavior, D3BrushEvent, ScaleLinear, brushX, select } from 'd3'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { usePrevious } from 'react-use'
 import styled from 'styled-components'
 
 import { OffScreenHandle, brushHandleAccentPath, brushHandlePath } from 'components/LiquidityChartRangeInput/svg'
-import usePrevious from 'hooks/usePrevious'
 
 const Handle = styled.path<{ color: string; interactive: boolean }>`
   cursor: ${({ interactive }) => (interactive ? 'ew-resize' : 'default')};

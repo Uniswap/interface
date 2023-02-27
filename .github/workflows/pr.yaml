@@ -104,9 +104,6 @@ jobs:
       - name: Install dependences
         uses: bahmutov/npm-install@HEAD
 
-      - name: Run Lint
-        run: yarn lint --quiet
-
       - name: Yarn Build
         env:
           CI: false
@@ -134,3 +131,22 @@ jobs:
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+  linter:
+    runs-on: ubuntu-20.04
+    needs:
+      - prepare
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js 16.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.18.1
+
+      - name: Install dependences
+        uses: bahmutov/npm-install@HEAD
+
+      - name: Run Lint
+        run: yarn lint --quiet

@@ -84,7 +84,7 @@ const StakeTableRow = styled(TableRow)<{ isUnstake: boolean }>`
   ${({ isUnstake }) => generateCommonCSS(isUnstake)}
 `
 
-export type ExplicitNFT = {
+type ExplicitNFT = {
   available: NFTPosition
   staked: NFTPosition
   poolAddress: string

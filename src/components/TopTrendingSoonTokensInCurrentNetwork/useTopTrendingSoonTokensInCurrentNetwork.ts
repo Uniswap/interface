@@ -5,7 +5,7 @@ import { useActiveWeb3React } from 'hooks'
 import { TrueSightTimeframe } from 'pages/TrueSight'
 import useGetTrendingSoonData, { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
 
-export const TOP_TRENDING_TOKENS_MAX_ITEMS = 5
+const TOP_TRENDING_TOKENS_MAX_ITEMS = 5
 
 export default function useTopTrendingSoonTokensInCurrentNetwork() {
   const { chainId } = useActiveWeb3React()

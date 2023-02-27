@@ -7,6 +7,7 @@ import { rgba, transparentize } from 'polished'
 import { useCallback, useEffect, useState } from 'react'
 import { ChevronLeft } from 'react-feather'
 import { useLocation } from 'react-router-dom'
+import { usePrevious } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -22,7 +23,6 @@ import { SUPPORTED_WALLET, SUPPORTED_WALLETS, WalletInfo } from 'constants/walle
 import { useActiveWeb3React, useWeb3React } from 'hooks'
 import { useActivationWallet } from 'hooks/useActivationWallet'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import usePrevious from 'hooks/usePrevious'
 import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
 import {

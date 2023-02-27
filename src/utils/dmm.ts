@@ -12,7 +12,7 @@ import { NativeCurrencies } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import { useAllTokens } from 'hooks/Tokens'
 import { useBlockNumber } from 'state/application/hooks'
-import { useActiveAndUniqueFarmsData, useRewardTokenPrices, useRewardTokens } from 'state/farms/hooks'
+import { useRewardTokenPrices, useRewardTokens } from 'state/farms/hooks'
 import { Farm, Reward, RewardPerTimeUnit } from 'state/farms/types'
 import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
 import { tryParseAmount } from 'state/swap/hooks'
@@ -510,13 +510,6 @@ export function useRewardTokensFullInfo(): Token[] {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [chainId, nativeName, JSON.stringify(rewardTokens)],
   )
-}
-
-export function useCheckIsFarmingPool(address: string): boolean {
-  const { data: uniqueAndActiveFarms } = useActiveAndUniqueFarmsData()
-  const uniqueAndActiveFarmAddresses = uniqueAndActiveFarms.map(farm => farm.id)
-
-  return uniqueAndActiveFarmAddresses.includes(address) || uniqueAndActiveFarmAddresses.includes(address.toLowerCase())
 }
 
 export function errorFriendly(text: string): string {

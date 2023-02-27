@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 
-export type SharePoolSetter = (addr: string) => void
+type SharePoolSetter = (addr: string) => void
 export const SharePoolContext = React.createContext<SharePoolSetter>(() => {
   // empty
 })

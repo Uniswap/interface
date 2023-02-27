@@ -4,7 +4,7 @@ import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
 import { Swap as SwapIcon } from 'components/Icons'
 import useTheme from 'hooks/useTheme'
 
-export const ArrowWrapper = styled.div<{ rotated?: boolean; isVertical?: boolean; disable?: boolean }>`
+const ArrowWrapper = styled.div<{ rotated?: boolean; isVertical?: boolean; disable?: boolean }>`
   padding: 8px;
   display: flex;
   justify-content: center;
