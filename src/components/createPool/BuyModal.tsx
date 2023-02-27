@@ -71,10 +71,13 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
     // price plus spread
     const poolAmount = JSBI.divide(
       JSBI.multiply(
-        JSBI.subtract(parsedAmount.quotient, JSBI.divide(parsedAmount.quotient, JSBI.BigInt(20))), //parsedAmount.quotient,
+        JSBI.subtract(
+          parsedAmount.quotient,
+          JSBI.divide(JSBI.multiply(parsedAmount.quotient, JSBI.BigInt(poolInfo.spread)), JSBI.BigInt(10000))
+        ),
         JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(parsedAmount.currency.decimals ?? 18))
       ),
-      poolInfo.poolPriceAmount.quotient //: JSBI.BigInt(1)
+      poolInfo.poolPriceAmount.quotient
     )
     // extra 2% margin
     const minimumAmount = JSBI.subtract(poolAmount, JSBI.divide(poolAmount, JSBI.BigInt(50)))

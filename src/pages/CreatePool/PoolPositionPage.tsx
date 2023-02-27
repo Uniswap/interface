@@ -275,7 +275,7 @@ export function PoolPositionPage() {
   // TODO: check if should move definitions in custom hook
   //const poolInfo= usePoolInfo(poolAddressFromUrl)
   // TODO: pass recipient as optional parameter to check currency balance hook
-  const poolInfo = { pool, recipient: account, userPoolBalance, poolPriceAmount: poolPrice } as PoolInfo
+  const poolInfo = { pool, recipient: account, userPoolBalance, poolPriceAmount: poolPrice, spread } as PoolInfo
   const userBaseTokenBalance = useCurrencyBalance(account ?? undefined, base ?? undefined)
   const toggleWalletModal = useToggleWalletModal()
 
