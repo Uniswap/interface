@@ -259,6 +259,19 @@ const Container = ({
       >
         {children}
       </CardContainer>
+      <Box
+        position="relative"
+        ref={assetRef}
+        borderRadius={BORDER_RADIUS}
+        className={selected ? styles.selectedCard : styles.card}
+        draggable={false}
+        onMouseEnter={toggleHover}
+        onMouseLeave={toggleHover}
+        transition="250"
+        onClick={isDisabled ? () => null : onClick ?? handleAssetInBag}
+      >
+        {children}
+      </Box>
     </CardContext.Provider>
   )
 }
@@ -310,6 +323,24 @@ interface ImageProps {
   setRenderedHeight?: (renderedHeight: number | undefined) => void
 }
 
+const StyledImageOverflowContainer = styled(Row)`
+  overflow: hidden;
+  border-top-left-radius: ${BORDER_RADIUS}px;
+  border-top-right-radius: ${BORDER_RADIUS}px;
+`
+
+const StyledImage = styled.img<{
+  uniformAspectRatio?: UniformAspectRatio
+  setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
+  renderedHeight?: number
+}>`
+  width: 100%;
+  aspect-ratio: ${({ uniformAspectRatio, setUniformAspectRatio }) =>
+    `${uniformAspectRatio === UniformAspectRatios.square || !setUniformAspectRatio ? '1' : 'auto'}`};
+  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} transform`};
+  object-fit: contain;
+`
+
 const Image = ({
   uniformAspectRatio = UniformAspectRatios.square,
   setUniformAspectRatio,
@@ -326,16 +357,9 @@ const Image = ({
   }
 
   return (
-    <Box display="flex" overflow="hidden" borderTopLeftRadius={BORDER_RADIUS} borderTopRightRadius={BORDER_RADIUS}>
-      <Box
-        as="img"
-        width="full"
-        style={{
-          aspectRatio: `${uniformAspectRatio === UniformAspectRatios.square || !setUniformAspectRatio ? '1' : 'auto'}`,
-          transition: 'transform 0.25s ease 0s',
-        }}
+    <StyledImageOverflowContainer>
+      <StyledImage
         src={asset.imageUrl || asset.smallImageUrl}
-        objectFit="contain"
         draggable={false}
         onError={() => setNoContent(true)}
         onLoad={(e) => {
@@ -344,7 +368,7 @@ const Image = ({
         }}
         className={clsx(hovered && !isMobile && styles.cardImageHover, !loaded && styles.loadingBackground)}
       />
-    </Box>
+    </StyledImageOverflowContainer>
   )
 }
 
