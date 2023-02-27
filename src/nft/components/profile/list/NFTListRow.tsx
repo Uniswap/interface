@@ -3,7 +3,7 @@ import Row from 'components/Row'
 import { VerifiedIcon } from 'nft/components/icons'
 import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, WalletAsset } from 'nft/types'
-import { Dispatch, useReducer, useState } from 'react'
+import { Dispatch, useEffect, useReducer, useState } from 'react'
 import { Trash2 } from 'react-feather'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
@@ -119,9 +119,13 @@ export const NFTListRow = ({
 }: NFTListRowProps) => {
   const [expandMarketplaceRows, toggleExpandMarketplaceRows] = useReducer((s) => !s, false)
   const removeAsset = useSellAsset((state) => state.removeSellAsset)
-  const [localMarkets, setLocalMarkets] = useState<ListingMarket[]>(JSON.parse(JSON.stringify(selectedMarkets)))
+  const [localMarkets, setLocalMarkets] = useState<ListingMarket[]>([])
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
   const theme = useTheme()
+
+  useEffect(() => {
+    setLocalMarkets(JSON.parse(JSON.stringify(selectedMarkets)))
+  }, [selectedMarkets])
 
   return (
     <NFTListRowWrapper
