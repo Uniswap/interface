@@ -1,5 +1,4 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import clsx from 'clsx'
 import Column from 'components/Column'
 import { OpacityHoverState } from 'components/Common'
 import Row from 'components/Row'
@@ -317,7 +316,7 @@ interface ImageProps {
   setRenderedHeight?: (renderedHeight: number | undefined) => void
 }
 
-const StyledImageOverflowContainer = styled(Row)`
+const StyledMediaContainer = styled(Row)`
   overflow: hidden;
   border-top-left-radius: ${BORDER_RADIUS}px;
   border-top-right-radius: ${BORDER_RADIUS}px;
@@ -359,9 +358,12 @@ const Image = ({
   }
 
   return (
-    <StyledImageOverflowContainer>
+    <StyledMediaContainer>
       <StyledImage
         src={asset.imageUrl || asset.smallImageUrl}
+        uniformAspectRatio={uniformAspectRatio}
+        setUniformAspectRatio={setUniformAspectRatio}
+        renderedHeight={renderedHeight}
         hovered={hovered && !isMobile}
         imageLoading={!loaded}
         draggable={false}
@@ -371,7 +373,7 @@ const Image = ({
           setLoaded(true)
         }}
       />
-    </StyledImageOverflowContainer>
+    </StyledMediaContainer>
   )
 }
 
@@ -380,8 +382,29 @@ interface MediaProps {
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }
 
-const StyledVideoContainer = styled(Row)`
-  overflow: hidden;
+const PlaybackButton = styled.div`
+  position: absolute;
+  height: 40px;
+  width: 40px;
+  z-index: 1;
+  margin-left: calc(100% - 50px);
+  transform: translateY(-56px);
+`
+
+const StyledVideo = styled.video<{
+  uniformAspectRatio?: UniformAspectRatio
+  setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
+  renderedHeight?: number
+}>`
+  width: 100%;
+  aspect-ratio: ${({ uniformAspectRatio, setUniformAspectRatio }) =>
+    `${getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}`};
+`
+
+const StyledInnerMediaContainer = styled(Row)`
+  position: absolute;
+  left: 0px;
+  top: 0px;
 `
 
 const Video = ({
@@ -410,10 +433,13 @@ const Video = ({
 
   return (
     <>
-      <StyledVideoContainer>
+      <StyledMediaContainer>
         <StyledImage
           src={asset.imageUrl || asset.smallImageUrl}
           alt={asset.name || asset.tokenId}
+          uniformAspectRatio={uniformAspectRatio}
+          setUniformAspectRatio={setUniformAspectRatio}
+          renderedHeight={renderedHeight}
           hovered={hovered && !isMobile}
           imageLoading={!imageLoaded}
           draggable={false}
@@ -424,10 +450,10 @@ const Video = ({
           }}
           $hidden={shouldPlay}
         />
-      </StyledVideoContainer>
+      </StyledMediaContainer>
       {shouldPlay ? (
         <>
-          <Box className={styles.playbackSwitch}>
+          <PlaybackButton>
             <PauseButtonIcon
               width="100%"
               height="100%"
@@ -436,19 +462,14 @@ const Video = ({
                 e.stopPropagation()
                 setCurrentTokenPlayingMedia(undefined)
               }}
-              className="playback-icon"
             />
-          </Box>
-          <Box position="absolute" left="0" top="0" display="flex">
-            <Box
-              as="video"
+          </PlaybackButton>
+          <StyledInnerMediaContainer>
+            <StyledVideo
+              uniformAspectRatio={uniformAspectRatio}
+              setUniformAspectRatio={setUniformAspectRatio}
+              renderedHeight={renderedHeight}
               ref={vidRef}
-              width="full"
-              style={{
-                aspectRatio: `${
-                  uniformAspectRatio === UniformAspectRatios.square || !setUniformAspectRatio ? '1' : 'auto'
-                }`,
-              }}
               onEnded={(e) => {
                 e.preventDefault()
                 setCurrentTokenPlayingMedia(undefined)
@@ -457,11 +478,11 @@ const Video = ({
               playsInline
             >
               <source src={asset.animationUrl} />
-            </Box>
-          </Box>
+            </StyledVideo>
+          </StyledInnerMediaContainer>
         </>
       ) : (
-        <Box className={styles.playbackSwitch}>
+        <PlaybackButton>
           {((!isMobile && hovered) || isMobile) && (
             <PlayButtonIcon
               width="100%"
@@ -474,11 +495,16 @@ const Video = ({
               className="playback-icon"
             />
           )}
-        </Box>
+        </PlaybackButton>
       )}
     </>
   )
 }
+
+const StyledAudio = styled.audio`
+  width: 100%;
+  height: 100%;
+`
 
 const Audio = ({
   uniformAspectRatio = UniformAspectRatios.square,
@@ -506,29 +532,27 @@ const Audio = ({
 
   return (
     <>
-      <Box display="flex" overflow="hidden">
-        <Box
-          as="img"
-          alt={asset.name || asset.tokenId}
-          width="full"
-          style={{
-            aspectRatio: getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio),
-            transition: 'transform 0.4s ease 0s',
-          }}
+      <StyledMediaContainer>
+        <StyledImage
           src={asset.imageUrl || asset.smallImageUrl}
-          objectFit="contain"
+          alt={asset.name || asset.tokenId}
+          uniformAspectRatio={uniformAspectRatio}
+          setUniformAspectRatio={setUniformAspectRatio}
+          renderedHeight={renderedHeight}
+          hovered={hovered && !isMobile}
+          imageLoading={!imageLoaded}
           draggable={false}
           onError={() => setNoContent(true)}
           onLoad={(e) => {
             handleUniformAspectRatio(uniformAspectRatio, e, setUniformAspectRatio, renderedHeight, setRenderedHeight)
             setImageLoaded(true)
+            setImageLoaded(true)
           }}
-          className={clsx(hovered && !isMobile && styles.cardImageHover, !imageLoaded && styles.loadingBackground)}
         />
-      </Box>
+      </StyledMediaContainer>
       {shouldPlay ? (
         <>
-          <Box className={styles.playbackSwitch}>
+          <PlaybackButton>
             <PauseButtonIcon
               width="100%"
               height="100%"
@@ -537,26 +561,22 @@ const Audio = ({
                 e.stopPropagation()
                 setCurrentTokenPlayingMedia(undefined)
               }}
-              className="playback-icon"
             />
-          </Box>
-          <Box position="absolute" left="0" top="0" display="flex">
-            <Box
-              as="audio"
+          </PlaybackButton>
+          <StyledInnerMediaContainer>
+            <StyledAudio
               ref={audRef}
-              width="full"
-              height="full"
               onEnded={(e) => {
                 e.preventDefault()
                 setCurrentTokenPlayingMedia(undefined)
               }}
             >
               <source src={asset.animationUrl} />
-            </Box>
-          </Box>
+            </StyledAudio>
+          </StyledInnerMediaContainer>
         </>
       ) : (
-        <Box className={styles.playbackSwitch}>
+        <PlaybackButton>
           {((!isMobile && hovered) || isMobile) && (
             <PlayButtonIcon
               width="100%"
@@ -569,7 +589,7 @@ const Audio = ({
               className="playback-icon"
             />
           )}
-        </Box>
+        </PlaybackButton>
       )}
     </>
   )
