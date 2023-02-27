@@ -32,6 +32,10 @@ export default createReducer(initialState, builder =>
       ) => {
         const chainTxs = transactions[chainId] ?? {}
         const txs = (firstTxHash && chainTxs[firstTxHash]) || []
+        if (txs.find(e => e.hash === hash)) {
+          // duplicate
+          return
+        }
         txs.push({
           sentAtBlock,
           to,
