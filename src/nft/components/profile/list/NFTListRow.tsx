@@ -123,6 +123,7 @@ export const NFTListRow = ({
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
   const theme = useTheme()
 
+  // Keep localMarkets up to date with changes to globalMarkets
   useEffect(() => {
     setLocalMarkets(JSON.parse(JSON.stringify(selectedMarkets)))
   }, [selectedMarkets])
