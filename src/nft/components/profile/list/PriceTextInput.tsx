@@ -7,7 +7,7 @@ import { body } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { formatEth } from 'nft/utils/currency'
-import { Dispatch, useState } from 'react'
+import { Dispatch, useEffect, useRef, useState } from 'react'
 import { AlertTriangle, Link } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -110,7 +110,12 @@ export const PriceTextInput = ({
   const [warningType, setWarningType] = useState(WarningType.NONE)
   const removeSellAsset = useSellAsset((state) => state.removeSellAsset)
   const showResolveIssues = useSellAsset((state) => state.showResolveIssues)
+  const inputRef = useRef() as React.MutableRefObject<HTMLInputElement>
   const theme = useTheme()
+
+  useEffect(() => {
+    inputRef.current.value = listPrice !== undefined ? `${listPrice}` : ''
+  }, [listPrice])
 
   const percentBelowFloor = (1 - (listPrice ?? 0) / (asset.floorPrice ?? 0)) * 100
 
@@ -151,6 +156,7 @@ export const PriceTextInput = ({
           placeholder="0"
           backgroundColor="none"
           width={{ sm: '54', md: '68' }}
+          ref={inputRef}
           onChange={setPrice}
         />
         <CurrencyWrapper listPrice={listPrice}>&nbsp;ETH</CurrencyWrapper>
