@@ -13,10 +13,9 @@ import { Dispatch, DispatchWithoutAction, useEffect, useMemo, useReducer, useSta
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
-import { SetPriceMethod } from './NFTListingsGrid'
 import { PriceTextInput } from './PriceTextInput'
 import { RoyaltyTooltip } from './RoyaltyTooltip'
-import { RemoveIconWrap } from './shared'
+import { RemoveIconWrap, SetPriceMethod } from './shared'
 
 const LastPriceInfo = styled(Column)`
   text-align: left;

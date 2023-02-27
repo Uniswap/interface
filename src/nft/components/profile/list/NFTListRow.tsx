@@ -10,7 +10,7 @@ import { BREAKPOINTS, ThemedText } from 'theme'
 import { opacify } from 'theme/utils'
 
 import { MarketplaceRow } from './MarketplaceRow'
-import { SetPriceMethod } from './NFTListingsGrid'
+import { SetPriceMethod } from './shared'
 
 const IMAGE_THUMBNAIL_SIZE = 60
 
