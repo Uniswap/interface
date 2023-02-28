@@ -1,11 +1,9 @@
 import { BagItem, BagItemStatus, BagStatus, UpdatedGenieAsset } from 'nft/types'
 
-// eslint-disable-next-line import/no-unused-modules
 export function getPurchasableAssets(itemsInBag: BagItem[]): UpdatedGenieAsset[] {
   return itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset)
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export function createBagFromUpdatedAssets(
   unavailable: UpdatedGenieAsset[],
   priceChanged: UpdatedGenieAsset[],
@@ -27,7 +25,6 @@ export function createBagFromUpdatedAssets(
   ]
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export function getNextBagState(
   hasAssets: boolean,
   shouldReview: boolean,
