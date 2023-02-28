@@ -294,7 +294,7 @@ export const ListPage = () => {
             <EthValueWrapper totalEthListingValue={!!totalEthListingValue}>
               {totalEthListingValue > 0 ? formatEth(totalEthListingValue) : '-'} ETH
             </EthValueWrapper>
-            {!!totalEthListingValue && !!usdcValue && <UsdValue>{usdcAmount}</UsdValue>}
+            {!!usdcValue && <UsdValue>{usdcAmount}</UsdValue>}
           </ProceedsWrapper>
           <ListingButton onClick={showModalAndStartListing} />
         </ProceedsAndButtonWrapper>
