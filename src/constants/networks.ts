@@ -69,6 +69,11 @@ export const FALLBACK_URLS = {
     // "Safe" URLs
     'https://rinkeby.arbitrum.io/rpc',
   ],
+  [SupportedChainId.ARBITRUM_GOERLI]: [
+    // "Safe" URLs
+    'https://endpoints.omniatech.io/v1/arbitrum/goerli/public',
+    'https://goerli-rollup.arbitrum.io/rpc',
+  ],
   [SupportedChainId.OPTIMISM]: [
     // "Safe" URLs
     'https://mainnet.optimism.io/',
@@ -131,6 +136,10 @@ export const RPC_URLS = {
   [SupportedChainId.ARBITRUM_ONE]: [
     `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}`,
     ...FALLBACK_URLS[SupportedChainId.ARBITRUM_ONE],
+  ],
+  [SupportedChainId.ARBITRUM_GOERLI]: [
+    `https://arbitrum-goerli.infura.io/v3/${INFURA_KEY}`,
+    ...FALLBACK_URLS[SupportedChainId.ARBITRUM_GOERLI],
   ],
   [SupportedChainId.ARBITRUM_RINKEBY]: [
     `https://arbitrum-rinkeby.infura.io/v3/${INFURA_KEY}`,

@@ -12,6 +12,7 @@ export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.CELO_ALFAJORES]: 'celo_alfajores',
   [SupportedChainId.ARBITRUM_ONE]: 'arbitrum',
   [SupportedChainId.ARBITRUM_RINKEBY]: 'arbitrum_rinkeby',
+  [SupportedChainId.ARBITRUM_GOERLI]: 'arbitrum_goerli',
   [SupportedChainId.OPTIMISM]: 'optimism',
   [SupportedChainId.OPTIMISM_GOERLI]: 'optimism_goerli',
   [SupportedChainId.BSC]: 'bsc',
