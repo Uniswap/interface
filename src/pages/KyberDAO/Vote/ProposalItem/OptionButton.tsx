@@ -97,6 +97,13 @@ const ChoosingProgress = styled.div<{ width: number }>`
     animation: ${move} 1.5s linear infinite;
   }
 `
+const CheckButtonWrapper = styled.div`
+  width: 18px;
+  > svg {
+    display: block;
+  }
+`
+
 export default function OptionButton({
   checked,
   percent = 40,
@@ -105,6 +112,7 @@ export default function OptionButton({
   onOptionClick,
   isCheckBox,
   disabled,
+  id,
 }: {
   checked?: boolean
   percent?: number
@@ -113,6 +121,7 @@ export default function OptionButton({
   onOptionClick?: () => void
   isCheckBox: boolean
   disabled?: boolean
+  id: number
 }) {
   const parsedPercent = parseFloat(percent.toFixed(2) || '0')
   return (
@@ -125,7 +134,7 @@ export default function OptionButton({
             width="fit-content"
           >
             <RowFit gap="5px" style={{ fontSize: '12px', overflow: 'hidden', wordBreak: 'break-word' }}>
-              <span style={{ width: '18px' }}>
+              <CheckButtonWrapper style={{ width: '18px' }}>
                 {isCheckBox ? (
                   checked ? (
                     <CheckSquare size={18} />
@@ -137,8 +146,8 @@ export default function OptionButton({
                 ) : (
                   <RadioButtonUnchecked />
                 )}{' '}
-              </span>
-              <Text>{title}</Text>
+              </CheckButtonWrapper>
+              <Text>{`${id}. ${title}`}</Text>
             </RowFit>
           </MouseoverTooltip>
           <Text fontSize="12px" padding={'0 4px'}>
