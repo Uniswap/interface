@@ -14,6 +14,8 @@ import styled, { useTheme } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { colors } from 'theme/colors'
 
+import { WarningType } from './shared'
+
 const PriceTextInputWrapper = styled(Column)`
   gap: 12px;
   position: relative;
@@ -71,12 +73,6 @@ const WarningAction = styled.div`
   cursor: pointer;
   color: ${({ theme }) => theme.accentAction};
 `
-
-export enum WarningType {
-  BELOW_FLOOR,
-  ALREADY_LISTED,
-  NONE,
-}
 
 const getWarningMessage = (warning: WarningType) => {
   let message = <></>

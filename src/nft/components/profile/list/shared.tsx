@@ -21,3 +21,9 @@ export enum SetPriceMethod {
   LAST_PRICE,
   CUSTOM,
 }
+
+export enum WarningType {
+  BELOW_FLOOR,
+  ALREADY_LISTED,
+  NONE,
+}
