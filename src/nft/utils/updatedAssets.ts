@@ -20,3 +20,15 @@ export const getTotalNftValue = (nfts: UpdatedGenieAsset[]): BigNumber => {
     )
   )
 }
+
+export function filterUpdatedAssetsByState(assets: UpdatedGenieAsset[]): {
+  unchanged: UpdatedGenieAsset[]
+  priceChanged: UpdatedGenieAsset[]
+  unavailable: UpdatedGenieAsset[]
+} {
+  const unchanged = assets.filter((asset) => !asset.updatedPriceInfo && !asset.isUnavailable)
+  const priceChanged = assets.filter((asset) => asset.updatedPriceInfo).sort(sortUpdatedAssets)
+  const unavailable = assets.filter((asset) => asset.isUnavailable)
+
+  return { unchanged, priceChanged, unavailable }
+}

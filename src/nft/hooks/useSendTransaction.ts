@@ -12,7 +12,7 @@ import ERC721 from '../../abis/erc721.json'
 import ERC1155 from '../../abis/erc1155.json'
 import CryptoPunksMarket from '../abis/CryptoPunksMarket.json'
 import { GenieAsset, RouteResponse, RoutingItem, TxResponse, TxStateType, UpdatedGenieAsset } from '../types'
-import { combineBuyItemsWithTxRoute } from '../utils/txRoute/combineItemsWithTxRoute'
+import { compareAssetsWithTransactionRoute } from '../utils/txRoute/combineItemsWithTxRoute'
 
 interface TxState {
   state: TxStateType
@@ -147,7 +147,7 @@ const findNFTsPurchased = (
     )
   })
 
-  return combineBuyItemsWithTxRoute(transferredItems, txRoute).updatedAssets
+  return compareAssetsWithTransactionRoute(transferredItems, txRoute).updatedAssets
 }
 
 const findNFTsNotPurchased = (toBuy: GenieAsset[], nftsPurchased: UpdatedGenieAsset[]) => {
