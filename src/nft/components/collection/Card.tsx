@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { t, Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import { OpacityHoverState } from 'components/Common'
 import Row from 'components/Row'
@@ -29,7 +30,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { AlertTriangle } from 'react-feather'
+import { AlertTriangle, Pause, Play } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { colors } from 'theme/colors'
@@ -173,7 +174,6 @@ const CardContainer = styled.div<{ selected: boolean }>`
   box-shadow: rgba(0, 0, 0, 10%) 0px 4px 12px;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  transition: ${({ theme }) => `${theme.transition.duration.medium}`};
 
   :after {
     content: '';
@@ -439,9 +439,8 @@ const Video = ({
       {shouldPlay ? (
         <>
           <PlaybackButton>
-            <PauseButtonIcon
-              width="100%"
-              height="100%"
+            <Pause
+              size="24px"
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
@@ -467,9 +466,8 @@ const Video = ({
       ) : (
         <PlaybackButton>
           {((!isMobile && hovered) || isMobile) && (
-            <PlayButtonIcon
-              width="100%"
-              height="100%"
+            <Play
+              size="24px"
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
@@ -608,19 +606,21 @@ const TruncatedTextRow = styled(ThemedText.BodySmall)`
   overflow: hidden;
 `
 
+const AssetNameRow = styled(TruncatedTextRow)`
+  color: ${({ theme }) => theme.textPrimary};
+  font-size: 16px !important;
+  font-weight: 400;
+`
+
 interface ProfileNftDetailsProps {
   asset: WalletAsset
   hideDetails: boolean
 }
 
-const ProfileAssetNameRow = styled(Row)`
-  justify-items: flex-start; ;
-`
-
 const PrimaryRowContainer = styled.div`
   overflow: hidden;
   width: 100%;
-  flex-wrap: nowrap; ;
+  flex-wrap: nowrap;
 `
 
 const FloorPriceRow = styled(TruncatedTextRow)`
@@ -648,10 +648,10 @@ const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
         </PrimaryDetails>
         {!hideDetails && <DetailsLink />}
       </PrimaryRow>
-      <ProfileAssetNameRow>
-        <TruncatedTextRow color="textPrimary">{assetName()}</TruncatedTextRow>
+      <Row>
+        <AssetNameRow>{assetName()}</AssetNameRow>
         {asset.susFlag && <Suspicious />}
-      </ProfileAssetNameRow>
+      </Row>
       <FloorPriceRow>
         {shouldShowUserListedPrice && asset.floor_sell_order_price
           ? `${floorFormatter(asset.floor_sell_order_price)} ETH`
@@ -694,7 +694,7 @@ const PrimaryInfo = ({ children }: { children: ReactNode }) => {
 const StyledSecondaryRow = styled(Row)`
   height: 20px;
   justify-content: space-between;
-  margin-top: 6px; ;
+  margin-top: 6px;
 `
 
 const SecondaryRow = ({ children }: { children: ReactNode }) => <StyledSecondaryRow>{children}</StyledSecondaryRow>
@@ -772,7 +772,7 @@ const StyledMarketplaceIcon = styled.img`
 `
 
 const MarketplaceIcon = ({ marketplace }: { marketplace: string }) => {
-  return <StyledMarketplaceIcon as="img" alt={marketplace} src={`/nft/svgs/marketplaces/${marketplace}.svg`} />
+  return <StyledMarketplaceIcon alt={marketplace} src={`/nft/svgs/marketplaces/${marketplace}.svg`} />
 }
 
 const DetailsLink = () => {
@@ -856,7 +856,7 @@ const Ranking = ({ rarity, provider, rarityVerified, rarityLogo }: RankingProps)
   )
 }
 
-const SUSPICIOUS_TEXT = 'Blocked on OpenSea'
+const SUSPICIOUS_TEXT = t`Blocked on OpenSea`
 
 const SuspiciousIconContainer = styled(Row)`
   flex-shrink: 0;
@@ -916,9 +916,9 @@ const NoContentContainer = ({ height }: { height?: number }) => (
   <>
     <NoContentContainerBackground height={height}>
       <NoContentText>
-        Content not
+        <Trans>Content not</Trans>
         <br />
-        available yet
+        <Trans>available yet</Trans>
       </NoContentText>
     </NoContentContainerBackground>
   </>
