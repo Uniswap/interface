@@ -216,6 +216,7 @@ export interface NFTApproveTransactionInfo extends BaseTransactionInfo {
 export interface WCConfirmInfo extends BaseTransactionInfo {
   type: TransactionType.WCConfirm
   dapp: DappInfo
+  chainId: ChainId
 }
 
 export interface UnknownTransactionInfo extends BaseTransactionInfo {

@@ -10,12 +10,13 @@ import { CallEffect, ChannelTakeEffect, PutEffect } from 'redux-saga/effects'
 import { i18n } from 'src/app/i18n'
 import { config } from 'src/config'
 import { ALL_SUPPORTED_CHAIN_IDS, CHAIN_INFO } from 'src/constants/chains'
-import { addPendingSession } from 'src/features/walletConnect/walletConnectSlice'
+import { EthMethod } from 'src/features/walletConnect/types'
+import { addPendingSession, addRequest } from 'src/features/walletConnect/walletConnectSlice'
 import {
-  getChainFromEIP155String,
+  getChainIdFromEIP155String,
   getSupportedWalletConnectChains,
+  parseSignRequest,
 } from 'src/features/walletConnectV2/utils'
-import { toSupportedChainId } from 'src/utils/chainId'
 import { logger } from 'src/utils/logger'
 import { call, put, take } from 'typed-redux-saga'
 
@@ -51,9 +52,11 @@ function createWalletConnectV2Channel(): EventChannel<Action<unknown>> {
       const proposalNamespaces = proposal.params.requiredNamespaces
 
       // Check if proposal namespaces includes any unsupported EVM chains
-      const hasUnsupportedEIP155Chains = proposalNamespaces.eip155?.chains
-        .map((chain) => getChainFromEIP155String(chain))
-        .some((chain) => toSupportedChainId(chain) === null)
+      const hasUnsupportedEIP155Chains = proposalNamespaces.eip155?.chains?.some(
+        (chain) => getChainIdFromEIP155String(chain) === null
+      )
+
+      const chains = getSupportedWalletConnectChains(proposalNamespaces.eip155?.chains)
 
       // Reject pending session if namespaces includes non-EVM chains or unsupported EVM chains
       if (!proposalNamespaces.eip155 || hasUnsupportedEIP155Chains) {
@@ -68,10 +71,13 @@ function createWalletConnectV2Channel(): EventChannel<Action<unknown>> {
           id: proposal.id,
           reason: getSdkError('UNSUPPORTED_CHAINS'),
         })
+        logger.info(
+          'WalletConnectV2Saga',
+          'sessionProposalHandler',
+          `Rejected session proposal due to unsupported chains: ${proposalNamespaces.eip155?.chains}`
+        )
         return
       }
-
-      const chains = getSupportedWalletConnectChains(proposalNamespaces.eip155?.chains)
 
       emit(
         addPendingSession({
@@ -91,8 +97,61 @@ function createWalletConnectV2Channel(): EventChannel<Action<unknown>> {
       )
     }
 
-    const sessionRequestHandler = async (): Promise<void> => {
-      // TODO: Handle session method requests, such as "eth_sign", "eth_sendTransaction", etc.
+    const sessionRequestHandler = async (event: Web3WalletTypes.SessionRequest): Promise<void> => {
+      const { topic, params, id } = event
+      const { request: wcRequest, chainId: wcChainId } = params
+      const { method, params: requestParams } = wcRequest
+
+      const chainId = getChainIdFromEIP155String(wcChainId)
+      const requestSession = wcWeb3Wallet.engine.signClient.session.get(topic)
+      const dapp = requestSession.peer.metadata
+
+      if (!chainId) {
+        throw new Error('WalletConnect 2.0 session request has invalid chainId')
+      }
+
+      switch (method) {
+        case EthMethod.EthSign:
+        case EthMethod.PersonalSign:
+        case EthMethod.SignTypedData:
+        case EthMethod.SignTypedDataV4: {
+          const { account, request } = parseSignRequest(
+            method,
+            topic,
+            id,
+            chainId,
+            dapp,
+            requestParams
+          )
+          emit(
+            addRequest({
+              account,
+              request,
+            })
+          )
+          break
+        }
+        case EthMethod.EthSignTransaction:
+        case EthMethod.EthSendTransaction: {
+          // TODO: handle eth transaction methods
+          break
+        }
+        default:
+          // Reject request for an invalid method
+          logger.warn(
+            'WalletConnectV2Saga',
+            'sessionRequestHandler',
+            `Session request method is unsupported: ${method}`
+          )
+          wcWeb3Wallet.respondSessionRequest({
+            topic,
+            response: {
+              id,
+              jsonrpc: '2.0',
+              error: getSdkError('INVALID_METHOD'),
+            },
+          })
+      }
     }
 
     wcWeb3Wallet.on('session_proposal', sessionProposalHandler)

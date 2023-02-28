@@ -34,6 +34,7 @@ class WalletConnectSignTransactionHandler: RequestHandler {
         withName: EventType.transactionRequest.rawValue, body: [
           "type": request.method,
           "request_internal_id": internalId,
+          "session_id": session.url.topic,
           "account": session.getAccount(),
           "transaction": [
             "data": transaction.data,

@@ -24,7 +24,6 @@ export function NetworkFee({
   const { t } = useTranslation()
   const theme = useAppTheme()
   const gasFeeUSD = useUSDValue(chainId, gasFee)
-  const showNetworkPill = chainId !== ChainId.Mainnet
 
   const feeSectionContent = (
     <>
@@ -51,7 +50,7 @@ export function NetworkFee({
       <Text variant="subheadSmall">{t('Network fee')}</Text>
       <Flex row gap="none" justifyContent="flex-end">
         <Flex row alignItems="center" gap="spacing8">
-          {gasFeeUSD && showNetworkPill ? (
+          {gasFeeUSD ? (
             <Flex row alignItems="center" gap="spacing8">
               <InlineNetworkPill chainId={chainId} />
               <Text variant="subheadSmall">•</Text>
