@@ -8,13 +8,13 @@ import Row from 'components/Row'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
+import { ListingButton } from 'nft/components/profile/list/ListingButton'
 import {
   approveCollectionRow,
   getTotalEthValue,
   useSubscribeListingState,
   verifyStatus,
-} from 'nft/components/bag/profile/utils'
-import { ListingButton } from 'nft/components/profile/list/ListingButton'
+} from 'nft/components/profile/list/utils'
 import { useIsMobile, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from 'nft/pages/profile/shared'
 import { looksRareNonceFetcher } from 'nft/queries'

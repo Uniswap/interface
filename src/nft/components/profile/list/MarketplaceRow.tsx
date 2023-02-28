@@ -3,8 +3,8 @@ import { t } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { getRoyalty } from 'nft/components/bag/profile/utils'
 import { RowsCollpsedIcon, RowsExpandedIcon } from 'nft/components/icons'
+import { getRoyalty, useHandleGlobalPriceToggle, useSyncPriceWithGlobalMethod } from 'nft/components/profile/list/utils'
 import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
@@ -165,32 +165,18 @@ export const MarketplaceRow = ({
   const feeInEth = price && (price * fees) / 100
   const userReceives = price && feeInEth && price - feeInEth
 
-  useEffect(() => {
-    if (globalPriceMethod === SetPriceMethod.FLOOR_PRICE) {
-      setListPrice(asset?.floorPrice)
-      setGlobalPrice(asset.floorPrice)
-    } else if (globalPriceMethod === SetPriceMethod.LAST_PRICE) {
-      setListPrice(asset.lastPrice)
-      setGlobalPrice(asset.lastPrice)
-    } else if (globalPriceMethod === SetPriceMethod.SAME_PRICE)
-      listPrice && !globalPrice ? setGlobalPrice(listPrice) : setListPrice(globalPrice)
+  useHandleGlobalPriceToggle(globalOverride, setListPrice, setPrice, listPrice, globalPrice)
+  useSyncPriceWithGlobalMethod(
+    asset,
+    setListPrice,
+    setGlobalPrice,
+    setGlobalOverride,
+    listPrice,
+    globalPrice,
+    globalPriceMethod
+  )
 
-    setGlobalOverride(false)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [globalPriceMethod])
-
-  useEffect(() => {
-    let price: number | undefined
-    if (globalOverride) {
-      if (!listPrice) setListPrice(globalPrice)
-      price = globalPrice
-    } else {
-      price = listPrice
-    }
-    setPrice(price)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [globalOverride])
-
+  // When in Same Price Mode and not overriding, update local price when global price changes
   useEffect(() => {
     if (showGlobalPrice) {
       setPrice(globalPrice)

@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { getRoyalty } from 'nft/components/bag/profile/utils'
+import { getRoyalty } from 'nft/components/profile/list/utils'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { formatEth } from 'nft/utils'
 import styled from 'styled-components/macro'

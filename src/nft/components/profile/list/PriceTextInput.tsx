@@ -3,11 +3,12 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { BrokenLinkIcon } from 'nft/components/icons'
 import { NumericInput } from 'nft/components/layout/Input'
+import { useUpdateInputAndWarnings } from 'nft/components/profile/list/utils'
 import { body } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { formatEth } from 'nft/utils/currency'
-import { Dispatch, useEffect, useRef, useState } from 'react'
+import { Dispatch, useRef, useState } from 'react'
 import { AlertTriangle, Link } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -71,7 +72,7 @@ const WarningAction = styled.div`
   color: ${({ theme }) => theme.accentAction};
 `
 
-enum WarningType {
+export enum WarningType {
   BELOW_FLOOR,
   ALREADY_LISTED,
   NONE,
@@ -133,15 +134,7 @@ export const PriceTextInput = ({
     setListPrice(isNaN(val) ? undefined : val)
   }
 
-  useEffect(() => {
-    setWarningType(WarningType.NONE)
-    if (listPrice !== undefined) {
-      inputRef.current.value = `${listPrice}`
-      if (listPrice < (asset?.floorPrice ?? 0)) setWarningType(WarningType.BELOW_FLOOR)
-      else if (asset.floor_sell_order_price && listPrice >= asset.floor_sell_order_price)
-        setWarningType(WarningType.ALREADY_LISTED)
-    }
-  }, [asset?.floorPrice, asset.floor_sell_order_price, listPrice])
+  useUpdateInputAndWarnings(setWarningType, inputRef, asset, listPrice)
 
   return (
     <PriceTextInputWrapper>
