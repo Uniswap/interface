@@ -114,7 +114,6 @@ export const PriceTextInput = ({
   const theme = useTheme()
 
   const percentBelowFloor = (1 - (listPrice ?? 0) / (asset.floorPrice ?? 0)) * 100
-
   const warningColor =
     (showResolveIssues && !listPrice) ||
     warningType === WarningType.ALREADY_LISTED ||

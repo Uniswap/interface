@@ -180,21 +180,20 @@ export const MarketplaceRow = ({
   }, [globalPriceMethod])
 
   useEffect(() => {
-    let price: number | undefined = undefined
+    let price: number | undefined
     if (globalOverride) {
       if (!listPrice) setListPrice(globalPrice)
-      price = listPrice ? listPrice : globalPrice
+      price = globalPrice
     } else {
       price = listPrice
     }
-    if (selectedMarkets.length) for (const marketplace of selectedMarkets) setAssetListPrice(asset, price, marketplace)
-    else setAssetListPrice(asset, price)
+    setPrice(price)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [globalOverride])
 
   useEffect(() => {
     if (showGlobalPrice) {
-      for (const marketplace of selectedMarkets) setAssetListPrice(asset, globalPrice, marketplace)
+      setPrice(globalPrice)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [globalPrice])
