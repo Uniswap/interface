@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unused-modules */
 import { Currency, Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core'
 import { SupportedChainId } from '@uniswap/sdk-core'
 import invariant from 'tiny-invariant'
