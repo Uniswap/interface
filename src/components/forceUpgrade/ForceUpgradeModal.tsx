@@ -18,6 +18,9 @@ import { useNonPendingSignerAccounts } from 'src/features/wallet/hooks'
 import { openUri } from 'src/utils/linking'
 import { Statsig } from 'statsig-react-native'
 
+const APP_STORE_LINK = 'https://apps.apple.com/us/app/uniswap-wallet-defi-nfts/id6443944476'
+const TESTFLIGHT_LINK = 'itms-beta://testflight.apple.com/v1/app/'
+
 export function ForceUpgradeModal(): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
@@ -33,15 +36,13 @@ export function ForceUpgradeModal(): JSX.Element {
       : undefined
 
   const [showSeedPhrase, setShowSeedPhrase] = useState(false)
-  const [deeplinkToAppStore, setDeeplinkToAppStore] = useState<string | undefined>() // could be app store or testflight deeplink
+  const [isTestFlightLink, setIsTestFlightLink] = useState<boolean>(false)
 
   useEffect(() => {
     const config = Statsig.getConfig(DYNAMIC_CONFIGS.ForceUpgrade)
     const statusString = config.getValue('status')?.toString()
-    const deeplink = config.getValue('upgradeLink')?.toString()
-    if (deeplink) {
-      setDeeplinkToAppStore(deeplink)
-    }
+    const shouldUseTestFlightLink = config.getValue('isTestFlightLink', false)
+    setIsTestFlightLink(shouldUseTestFlightLink === true)
 
     let status = UpgradeStatus.NotRequired
     if (statusString === 'recommended') {
@@ -49,14 +50,13 @@ export function ForceUpgradeModal(): JSX.Element {
     } else if (statusString === 'required') {
       status = UpgradeStatus.Required
     }
-
     setUpgradeStatus(status)
-    setIsVisible(upgradeStatus !== UpgradeStatus.NotRequired)
-  }, [upgradeStatus])
+    setIsVisible(status !== UpgradeStatus.NotRequired)
+  }, [])
 
   const onPressConfirm = (): void => {
-    if (!deeplinkToAppStore) return
-    openUri(deeplinkToAppStore, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)
+    const upgradeLink = isTestFlightLink ? TESTFLIGHT_LINK : APP_STORE_LINK
+    openUri(upgradeLink, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)
   }
 
   const onClose = (): void => {
@@ -75,7 +75,7 @@ export function ForceUpgradeModal(): JSX.Element {
     <>
       {isVisible && (
         <WarningModal
-          confirmText={deeplinkToAppStore ? t('Update app') : undefined}
+          confirmText={t('Update app')}
           hideHandlebar={upgradeStatus === UpgradeStatus.Required}
           isDismissible={upgradeStatus !== UpgradeStatus.Required}
           modalName={ModalName.ForceUpgradeModal}
