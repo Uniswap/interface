@@ -87,15 +87,18 @@ export function useFetchAssets(): () => Promise<void> {
           const purchasingWithErc20 = !!tokenTradeInput
           const { route, routeResponse } = buildRouteResponse(data.nftRoute, purchasingWithErc20)
 
-          const { newBagItems, nextBagStatus, lockBag } = getNextBagState(wishAssetsToBuy, route, purchasingWithErc20)
-
-          if (nextBagStatus === BagStatus.CONFIRMING_IN_WALLET) {
-            purchaseAssets(routeResponse, wishAssetsToBuy, purchasingWithErc20)
-          }
+          const { newBagItems, nextBagStatus } = getNextBagState(wishAssetsToBuy, route, purchasingWithErc20)
 
           setItemsInBag(newBagItems)
           setBagStatus(nextBagStatus)
-          setBagLocked(lockBag)
+
+          if (nextBagStatus === BagStatus.CONFIRMING_IN_WALLET) {
+            purchaseAssets(routeResponse, wishAssetsToBuy, purchasingWithErc20)
+            setBagLocked(true)
+            return
+          }
+
+          setBagLocked(false)
         },
       })
     } else {

@@ -33,49 +33,43 @@ function evaluateNextBagState(
   shouldReview: boolean,
   hasAssetsInReview: boolean,
   shouldRefetchCalldata: boolean
-): { nextBagStatus: BagStatus; lockBag: boolean } {
+): BagStatus {
   if (!hasAssets) {
-    return { nextBagStatus: BagStatus.ADDING_TO_BAG, lockBag: false }
+    return BagStatus.ADDING_TO_BAG
   }
 
   if (shouldReview) {
     if (hasAssetsInReview) {
-      return { nextBagStatus: BagStatus.IN_REVIEW, lockBag: false }
+      return BagStatus.IN_REVIEW
     }
 
-    return { nextBagStatus: BagStatus.CONFIRM_REVIEW, lockBag: false }
+    return BagStatus.CONFIRM_REVIEW
   }
 
   if (shouldRefetchCalldata) {
-    return { nextBagStatus: BagStatus.CONFIRM_QUOTE, lockBag: false }
+    return BagStatus.CONFIRM_QUOTE
   }
 
-  return { nextBagStatus: BagStatus.CONFIRMING_IN_WALLET, lockBag: true }
+  return BagStatus.CONFIRMING_IN_WALLET
 }
 
 export function getNextBagState(
   wishAssetsToBuy: UpdatedGenieAsset[],
   route: RoutingItem[],
   purchasingWithErc20: boolean
-) {
+): { newBagItems: BagItem[]; nextBagStatus: BagStatus } {
   const { hasPriceAdjustment, updatedAssets } = compareAssetsWithTransactionRoute(wishAssetsToBuy, route)
   const shouldRefetchCalldata = hasPriceAdjustment && purchasingWithErc20
 
   const { unchanged, priceChanged, unavailable } = filterUpdatedAssetsByState(updatedAssets)
 
-  const hasReviewedAssets = unchanged.length > 0
+  const hasAssets = updatedAssets.length > 0
   const hasAssetsInReview = priceChanged.length > 0
   const hasUnavailableAssets = unavailable.length > 0
-
-  const hasAssets = hasReviewedAssets || hasAssetsInReview || hasUnavailableAssets
   const shouldReview = hasAssetsInReview || hasUnavailableAssets
-  const newBagItems = createBagFromUpdatedAssets(unavailable, priceChanged, unchanged)
-  const { nextBagStatus, lockBag } = evaluateNextBagState(
-    hasAssets,
-    shouldReview,
-    hasAssetsInReview,
-    shouldRefetchCalldata
-  )
 
-  return { newBagItems, nextBagStatus, lockBag }
+  const newBagItems = createBagFromUpdatedAssets(unavailable, priceChanged, unchanged)
+  const nextBagStatus = evaluateNextBagState(hasAssets, shouldReview, hasAssetsInReview, shouldRefetchCalldata)
+
+  return { newBagItems, nextBagStatus }
 }
