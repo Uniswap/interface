@@ -6,7 +6,6 @@ export interface ListingMarket {
   name: string
   fee: number
   icon: string
-  royalty?: number
 }
 
 export interface SellOrder {

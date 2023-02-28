@@ -213,7 +213,7 @@ export const ListPage = () => {
   const [selectedMarkets, setSelectedMarkets] = useState([ListingMarkets[0]]) // default marketplace: x2y2
   const signer = provider?.getSigner()
 
-  // instantiate listings and collections to approve when user's modify input data
+  // instantiate listings and collections to approve when users modify input data
   useSubscribeListingState()
 
   useEffect(() => {

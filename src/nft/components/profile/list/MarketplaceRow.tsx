@@ -165,14 +165,6 @@ export const MarketplaceRow = ({
   const feeInEth = price && (price * fees) / 100
   const userReceives = price && feeInEth && price - feeInEth
 
-  useMemo(() => {
-    for (const market of selectedMarkets) {
-      if (market && asset && asset.basisPoints) {
-        market.royalty = (market.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset.basisPoints) * 0.01
-      }
-    }
-  }, [asset, selectedMarkets])
-
   useEffect(() => {
     if (globalPriceMethod === SetPriceMethod.FLOOR_PRICE) {
       setListPrice(asset?.floorPrice)
