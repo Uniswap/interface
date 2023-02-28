@@ -32,6 +32,13 @@ const NavItem = styled(ThemedText.SubHeader)<{ active?: boolean }>`
   }
 `
 
+const PageWrapper = styled.div`
+  border-radius: 12px;
+  margin-right: -16px;
+  margin-left: -16px;
+  width: calc(100% + 32px);
+`
+
 const Pages = [
   { title: t`Tokens`, component: Tokens },
   { title: t`NFTs`, component: NFTs },
@@ -60,7 +67,9 @@ export default function MiniPortfolio({ account }: { account: string }) {
           </NavItem>
         ))}
       </Nav>
-      <Page account={account} />
+      <PageWrapper>
+        <Page account={account} />
+      </PageWrapper>
     </Wrapper>
   )
 }

@@ -2,11 +2,9 @@ import { t } from '@lingui/macro'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonLight } from 'components/Button'
-import { AutoColumn } from 'components/Column'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
-import Row, { AutoRow } from 'components/Row'
+import { AutoRow } from 'components/Row'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
-// import { DeltaArrow, formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import { PortfolioBalancesQuery, usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 import { PercentChange } from 'nft/components/collection/CollectionStats'
@@ -17,37 +15,20 @@ import { EllipsisStyle, ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
 
 import { PortfolioArrow } from '../AuthenticatedHeader'
-
-const Wrapper = styled.div`
-  border-radius: 12px;
-  margin-right: -8px;
-  margin-left: -8px;
-  width: calc(100% + 16px);
-`
+import PortfolioRow from './PortfolioRow'
 
 export default function Tokens({ account }: { account: string }) {
   const { data } = usePortfolioBalancesQuery({ variables: { ownerAddress: account } })
   return (
-    <Wrapper>
+    <>
       {data?.portfolios?.[0].tokenBalances?.map(
         (tokenBalance) =>
-          tokenBalance.token && <PortfolioRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
+          tokenBalance.token && <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
       )}
-    </Wrapper>
+    </>
   )
 }
 
-const RowWrapper = styled(Row)`
-  gap: 8px;
-  height: 56px;
-  padding: 8px 8px;
-
-  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} background-color`};
-
-  &:hover {
-    background: ${({ theme }) => theme.hoverDefault};
-  }
-`
 const TokenBalanceText = styled(ThemedText.Caption)`
   ${EllipsisStyle}
   color: ${({ theme }) => theme.textSecondary};
@@ -59,21 +40,21 @@ type TokenBalance = NonNullable<
 
 type PortfolioToken = NonNullable<TokenBalance['token']>
 
-function PortfolioRow({ token, quantity, denominatedValue }: TokenBalance & { token: PortfolioToken }) {
+function TokenRow({ token, quantity, denominatedValue }: TokenBalance & { token: PortfolioToken }) {
   const [showSwap, setShowSwap] = useState(false)
-  const swapOnHover = { onMouseEnter: () => setShowSwap(true), onMouseLeave: () => setShowSwap(false) }
 
   return (
-    <RowWrapper {...swapOnHover}>
-      <QueryTokenLogo token={token} size="36px" />
-      <AutoColumn grow>
-        <ThemedText.SubHeaderSmall color="textPrimary">{token?.name}</ThemedText.SubHeaderSmall>
+    <PortfolioRow
+      setIsHover={setShowSwap}
+      left={<QueryTokenLogo token={token} size="36px" />}
+      title={<ThemedText.SubHeaderSmall color="textPrimary">{token?.name}</ThemedText.SubHeaderSmall>}
+      descriptor={
         <TokenBalanceText>
           {formatNumber(quantity, NumberType.TokenNonTx)} {token?.symbol}
         </TokenBalanceText>
-      </AutoColumn>
-      <AutoColumn justify="end">
-        {showSwap ? (
+      }
+      right={
+        showSwap ? (
           <MiniSwapButton token={token} />
         ) : (
           <>
@@ -91,9 +72,9 @@ function PortfolioRow({ token, quantity, denominatedValue }: TokenBalance & { to
               </AutoRow>
             )}
           </>
-        )}
-      </AutoColumn>
-    </RowWrapper>
+        )
+      }
+    />
   )
 }
 
