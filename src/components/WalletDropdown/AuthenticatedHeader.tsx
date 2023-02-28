@@ -13,12 +13,9 @@ import useCopyClipboard from 'hooks/useCopyClipboard'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import ms from 'ms.macro'
-import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
-import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Copy, CreditCard, ExternalLink as ExternalLinkIcon, Info, Power } from 'react-feather'
-import { useNavigate } from 'react-router-dom'
 import { useCurrencyBalanceString } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { useFiatOnrampAck } from 'state/user/hooks'
@@ -27,7 +24,7 @@ import styled, { css, keyframes } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 
 import { shortenAddress } from '../../nft/utils/address'
-import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal } from '../../state/application/hooks'
+import { useFiatOnrampAvailability, useOpenModal, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import StatusIcon from '../Identicon/StatusIcon'
@@ -186,11 +183,6 @@ const AuthenticatedHeader = () => {
     nativeCurrency: { symbol: nativeCurrencySymbol },
     explorer,
   } = getChainInfoOrDefault(chainId ? chainId : SupportedChainId.MAINNET)
-  const navigate = useNavigate()
-  const closeModal = useCloseModal()
-  const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
-  const resetSellAssets = useSellAsset((state) => state.reset)
-  const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
@@ -214,14 +206,6 @@ const AuthenticatedHeader = () => {
     const balance = parseFloat(balanceString)
     return price * balance
   }, [balanceString, nativeCurrencyPrice])
-
-  const navigateToProfile = useCallback(() => {
-    resetSellAssets()
-    setSellPageState(ProfilePageStateType.VIEWING)
-    clearCollectionFilters()
-    navigate('/nfts/profile')
-    closeModal()
-  }, [clearCollectionFilters, closeModal, navigate, resetSellAssets, setSellPageState])
 
   // animate the border of the buy crypto button when a user navigates here from the feature announcement
   // can be removed when components/FiatOnrampAnnouncment.tsx is no longer used
@@ -307,7 +291,9 @@ const AuthenticatedHeader = () => {
         </BalanceWrapper>
         <ProfileButton
           data-testid="nft-view-self-nfts"
-          onClick={navigateToProfile}
+          onClick={() => {
+            window.open('https://www.orbitmarket.io/profile/' + account)
+          }}
           size={ButtonSize.medium}
           emphasis={ButtonEmphasis.medium}
         >
