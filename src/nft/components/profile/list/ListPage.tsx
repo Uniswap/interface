@@ -9,7 +9,7 @@ import { ListingButton } from 'nft/components/profile/list/ListingButton'
 import { useIsMobile, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from 'nft/pages/profile/shared'
 import { looksRareNonceFetcher } from 'nft/queries'
-import { ListingStatus, ProfilePageStateType } from 'nft/types'
+import { ProfilePageStateType } from 'nft/types'
 import { fetchPrice, formatEth, formatUsdPrice } from 'nft/utils'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { useEffect, useMemo, useReducer, useState } from 'react'
@@ -185,23 +185,10 @@ export const ListPage = () => {
     }),
     shallow
   )
-  const {
-    listings,
-    collectionsRequiringApproval,
-    setListingStatus,
-    setLooksRareNonce,
-    setCollectionStatusAndCallback,
-  } = useNFTList(
-    ({
+  const { listings, collectionsRequiringApproval, setLooksRareNonce, setCollectionStatusAndCallback } = useNFTList(
+    ({ listings, collectionsRequiringApproval, setLooksRareNonce, setCollectionStatusAndCallback }) => ({
       listings,
       collectionsRequiringApproval,
-      setListingStatus,
-      setLooksRareNonce,
-      setCollectionStatusAndCallback,
-    }) => ({
-      listings,
-      collectionsRequiringApproval,
-      setListingStatus,
       setLooksRareNonce,
       setCollectionStatusAndCallback,
     }),
@@ -236,7 +223,6 @@ export const ListPage = () => {
   const startListingFlow = async () => {
     if (!signer) return
     sendAnalyticsEvent(NFTEventName.NFT_SELL_START_LISTING, { ...startListingEventProperties })
-    setListingStatus(ListingStatus.SIGNING)
     const signerAddress = await signer.getAddress()
     const nonce = await looksRareNonceFetcher(signerAddress)
     setLooksRareNonce(nonce ?? 0)

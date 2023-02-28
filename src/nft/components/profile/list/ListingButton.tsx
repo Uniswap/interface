@@ -3,7 +3,7 @@ import { BaseButton } from 'components/Button'
 import ms from 'ms.macro'
 import { BelowFloorWarningModal } from 'nft/components/profile/list/Modal/BelowFloorWarningModal'
 import { useIsMobile, useNFTList, useSellAsset } from 'nft/hooks'
-import { Listing, ListingStatus, WalletAsset } from 'nft/types'
+import { Listing, WalletAsset } from 'nft/types'
 import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -44,9 +44,8 @@ export const ListingButton = ({ onClick }: { onClick: () => void }) => {
     }),
     shallow
   )
-  const { setListingStatus, setListings, setCollectionsRequiringApproval } = useNFTList(
-    ({ setListingStatus, setListings, setCollectionsRequiringApproval }) => ({
-      setListingStatus,
+  const { setListings, setCollectionsRequiringApproval } = useNFTList(
+    ({ setListings, setCollectionsRequiringApproval }) => ({
       setListings,
       setCollectionsRequiringApproval,
     }),
@@ -60,8 +59,7 @@ export const ListingButton = ({ onClick }: { onClick: () => void }) => {
     const [newCollectionsToApprove, newListings] = getListings(sellAssets)
     setListings(newListings)
     setCollectionsRequiringApproval(newCollectionsToApprove)
-    setListingStatus(ListingStatus.DEFINED)
-  }, [sellAssets, setCollectionsRequiringApproval, setListingStatus, setListings])
+  }, [sellAssets, setCollectionsRequiringApproval, setListings])
 
   // Find issues with item listing data
   const [listingsMissingPrice, listingsBelowFloor] = useMemo(() => {
