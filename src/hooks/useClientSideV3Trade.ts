@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount, SupportedChainId, TradeType } from '@uniswap/sdk-core'
 import { Route, SwapQuoter } from '@uniswap/v3-sdk'
+import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { useSingleContractWithCallData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
