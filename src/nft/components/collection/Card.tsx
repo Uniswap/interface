@@ -318,16 +318,13 @@ const StyledMediaContainer = styled(Row)`
 `
 
 const StyledImage = styled.img<{
-  uniformAspectRatio?: UniformAspectRatio
-  setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
-  renderedHeight?: number
   hovered: boolean
   imageLoading: boolean
+  $aspectRatio?: string
   $hidden?: boolean
 }>`
   width: 100%;
-  aspect-ratio: ${({ uniformAspectRatio, setUniformAspectRatio }) =>
-    `${getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}`};
+  aspect-ratio: ${({ $aspectRatio }) => $aspectRatio};
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} transform`};
   will-change: transform;
   object-fit: contain;
@@ -356,9 +353,7 @@ const Image = ({
     <StyledMediaContainer>
       <StyledImage
         src={asset.imageUrl || asset.smallImageUrl}
-        uniformAspectRatio={uniformAspectRatio}
-        setUniformAspectRatio={setUniformAspectRatio}
-        renderedHeight={renderedHeight}
+        $aspectRatio={getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}
         hovered={hovered && !isMobile}
         imageLoading={!loaded}
         draggable={false}
@@ -387,13 +382,10 @@ const PlaybackButton = styled.div`
 `
 
 const StyledVideo = styled.video<{
-  uniformAspectRatio?: UniformAspectRatio
-  setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
-  renderedHeight?: number
+  $aspectRatio?: string
 }>`
   width: 100%;
-  aspect-ratio: ${({ uniformAspectRatio, setUniformAspectRatio }) =>
-    `${getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}`};
+  aspect-ratio: ${({ $aspectRatio }) => $aspectRatio};
 `
 
 const StyledInnerMediaContainer = styled(Row)`
@@ -432,9 +424,7 @@ const Video = ({
         <StyledImage
           src={asset.imageUrl || asset.smallImageUrl}
           alt={asset.name || asset.tokenId}
-          uniformAspectRatio={uniformAspectRatio}
-          setUniformAspectRatio={setUniformAspectRatio}
-          renderedHeight={renderedHeight}
+          $aspectRatio={getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}
           hovered={hovered && !isMobile}
           imageLoading={!imageLoaded}
           draggable={false}
@@ -461,9 +451,7 @@ const Video = ({
           </PlaybackButton>
           <StyledInnerMediaContainer>
             <StyledVideo
-              uniformAspectRatio={uniformAspectRatio}
-              setUniformAspectRatio={setUniformAspectRatio}
-              renderedHeight={renderedHeight}
+              $aspectRatio={getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}
               ref={vidRef}
               onEnded={(e) => {
                 e.preventDefault()
@@ -530,9 +518,7 @@ const Audio = ({
         <StyledImage
           src={asset.imageUrl || asset.smallImageUrl}
           alt={asset.name || asset.tokenId}
-          uniformAspectRatio={uniformAspectRatio}
-          setUniformAspectRatio={setUniformAspectRatio}
-          renderedHeight={renderedHeight}
+          $aspectRatio={getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}
           hovered={hovered && !isMobile}
           imageLoading={!imageLoaded}
           draggable={false}
