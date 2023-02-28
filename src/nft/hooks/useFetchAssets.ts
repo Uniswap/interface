@@ -7,11 +7,10 @@ import { BagItemStatus, BagStatus } from 'nft/types'
 import {
   buildNftTradeInputFromBagItems,
   buildSellObject,
-  filterUpdatedAssetsByState,
   recalculateBagUsingPooledAssets,
   sortUpdatedAssets,
 } from 'nft/utils'
-import { createBagFromUpdatedAssets, getNextBagState, getPurchasableAssets } from 'nft/utils/bag'
+import { getNextBagState, getPurchasableAssets } from 'nft/utils/bag'
 import { buildRouteResponse } from 'nft/utils/nftRoute'
 import { compareAssetsWithTransactionRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
 import { useCallback, useMemo } from 'react'
@@ -88,32 +87,13 @@ export function useFetchAssets(): () => Promise<void> {
           const purchasingWithErc20 = !!tokenTradeInput
           const { route, routeResponse } = buildRouteResponse(data.nftRoute, purchasingWithErc20)
 
-          const { hasPriceAdjustment, updatedAssets } = compareAssetsWithTransactionRoute(wishAssetsToBuy, route)
-          const shouldRefetchCalldata = hasPriceAdjustment && purchasingWithErc20
-
-          const { unchanged, priceChanged, unavailable } = filterUpdatedAssetsByState(updatedAssets)
-
-          const hasReviewedAssets = unchanged.length > 0
-          const hasAssetsInReview = priceChanged.length > 0
-          const hasUnavailableAssets = unavailable.length > 0
-
-          const hasAssets = hasReviewedAssets || hasAssetsInReview || hasUnavailableAssets
-          const shouldReview = hasAssetsInReview || hasUnavailableAssets
-
-          const newBagItems = createBagFromUpdatedAssets(unavailable, priceChanged, unchanged)
-          setItemsInBag(newBagItems)
-
-          const { nextBagStatus, lockBag } = getNextBagState(
-            hasAssets,
-            shouldReview,
-            hasAssetsInReview,
-            shouldRefetchCalldata
-          )
+          const { newBagItems, nextBagStatus, lockBag } = getNextBagState(wishAssetsToBuy, route, purchasingWithErc20)
 
           if (nextBagStatus === BagStatus.CONFIRMING_IN_WALLET) {
             purchaseAssets(routeResponse, wishAssetsToBuy, purchasingWithErc20)
           }
 
+          setItemsInBag(newBagItems)
           setBagStatus(nextBagStatus)
           setBagLocked(lockBag)
         },

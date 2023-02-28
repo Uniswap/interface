@@ -1,10 +1,13 @@
-import { BagItem, BagItemStatus, BagStatus, UpdatedGenieAsset } from 'nft/types'
+import { BagItem, BagItemStatus, BagStatus, RoutingItem, UpdatedGenieAsset } from 'nft/types'
+
+import { compareAssetsWithTransactionRoute } from './txRoute/combineItemsWithTxRoute'
+import { filterUpdatedAssetsByState } from './updatedAssets'
 
 export function getPurchasableAssets(itemsInBag: BagItem[]): UpdatedGenieAsset[] {
   return itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset)
 }
 
-export function createBagFromUpdatedAssets(
+function createBagFromUpdatedAssets(
   unavailable: UpdatedGenieAsset[],
   priceChanged: UpdatedGenieAsset[],
   unchanged: UpdatedGenieAsset[]
@@ -25,7 +28,7 @@ export function createBagFromUpdatedAssets(
   ]
 }
 
-export function getNextBagState(
+function evaluateNextBagState(
   hasAssets: boolean,
   shouldReview: boolean,
   hasAssetsInReview: boolean,
@@ -48,4 +51,31 @@ export function getNextBagState(
   }
 
   return { nextBagStatus: BagStatus.CONFIRMING_IN_WALLET, lockBag: true }
+}
+
+export function getNextBagState(
+  wishAssetsToBuy: UpdatedGenieAsset[],
+  route: RoutingItem[],
+  purchasingWithErc20: boolean
+) {
+  const { hasPriceAdjustment, updatedAssets } = compareAssetsWithTransactionRoute(wishAssetsToBuy, route)
+  const shouldRefetchCalldata = hasPriceAdjustment && purchasingWithErc20
+
+  const { unchanged, priceChanged, unavailable } = filterUpdatedAssetsByState(updatedAssets)
+
+  const hasReviewedAssets = unchanged.length > 0
+  const hasAssetsInReview = priceChanged.length > 0
+  const hasUnavailableAssets = unavailable.length > 0
+
+  const hasAssets = hasReviewedAssets || hasAssetsInReview || hasUnavailableAssets
+  const shouldReview = hasAssetsInReview || hasUnavailableAssets
+  const newBagItems = createBagFromUpdatedAssets(unavailable, priceChanged, unchanged)
+  const { nextBagStatus, lockBag } = evaluateNextBagState(
+    hasAssets,
+    shouldReview,
+    hasAssetsInReview,
+    shouldRefetchCalldata
+  )
+
+  return { newBagItems, nextBagStatus, lockBag }
 }
