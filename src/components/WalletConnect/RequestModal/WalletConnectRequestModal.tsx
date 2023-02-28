@@ -8,16 +8,15 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
-import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Box, BoxProps, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
+import { NetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
 import { ClientDetails, PermitInfo } from 'src/components/WalletConnect/RequestModal/ClientDetails'
 import { useHasSufficientFunds } from 'src/components/WalletConnect/RequestModal/hooks'
 import { RequestDetails } from 'src/components/WalletConnect/RequestModal/RequestDetails'
-import { CHAIN_INFO } from 'src/constants/chains'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { useTransactionGasFee } from 'src/features/gas/hooks'
 import { GasSpeed } from 'src/features/gas/types'
@@ -281,19 +280,22 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
             {methodCostsGas(request) ? (
               <NetworkFee chainId={chainId} gasFee={gasFeeInfo?.gasFee} />
             ) : (
-              <SectionContainer>
+              <Box px="spacing16" py="spacing12">
                 <Flex row alignItems="center" justifyContent="space-between">
-                  <Flex row gap="spacing12">
-                    <NetworkLogo chainId={chainId} />
-                    <Text color="textPrimary" variant="subheadSmall">
-                      {CHAIN_INFO[chainId].label}
-                    </Text>
-                  </Flex>
-                  <Text color="textSecondary" variant="bodySmall">
+                  <Text color="textPrimary" variant="subheadSmall">
                     {t('Network')}
                   </Text>
+                  <NetworkPill
+                    showIcon
+                    chainId={chainId}
+                    gap="spacing4"
+                    pl="spacing4"
+                    pr="spacing8"
+                    py="spacing2"
+                    textVariant="subheadSmall"
+                  />
                 </Flex>
-              </SectionContainer>
+              </Box>
             )}
 
             <SectionContainer>

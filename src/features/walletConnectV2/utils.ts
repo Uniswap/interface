@@ -57,11 +57,21 @@ export const getSupportedWalletConnectChains = (chains?: string[]): ChainId[] =>
 
 /**
  * Convert chain from `eip155:[CHAIN_ID]` format to supported ChainId.
- * Returns undefined if chain doesn't match correct `eip155:` format or is an unsupported chain.
+ * Returns null if chain doesn't match correct `eip155:` format or is an unsupported chain.
  */
 export const getChainIdFromEIP155String = (chain: string): ChainId | null => {
   const chainStr = chain.startsWith('eip155:') ? chain.split(':')[1] : undefined
   return toSupportedChainId(chainStr)
+}
+
+/**
+ * Convert account from `eip155:[CHAIN_ID]:[ADDRESS]` format to account address.
+ * Returns null if string doesn't match correct `eip155:chainId:address` forma.
+ */
+export const getAccountAddressFromEIP155String = (account: string): Address | null => {
+  const address = account.startsWith('eip155:') ? account.split(':')[2] : undefined
+  if (!address) return null
+  return address
 }
 
 /**

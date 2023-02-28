@@ -7,7 +7,7 @@ import { LinkButton } from 'src/components/buttons/LinkButton'
 import { Box, Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
+import { NetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { CHAIN_INFO } from 'src/constants/chains'
@@ -83,9 +83,22 @@ export function WalletConnectSwitchChainModal({ onClose, request }: Props): JSX.
         </Flex>
         <Flex gap="spacing12">
           <Flex backgroundColor="background2" borderRadius="rounded16" gap="none">
-            <Flex row alignItems="center" justifyContent="space-between" p="spacing16">
+            <Flex
+              row
+              alignItems="center"
+              justifyContent="space-between"
+              px="spacing16"
+              py="spacing12">
               <Text variant="subheadSmall">{t('Network')}</Text>
-              <InlineNetworkPill chainId={newChainId} />
+              <NetworkPill
+                showIcon
+                chainId={newChainId}
+                gap="spacing4"
+                pl="spacing4"
+                pr="spacing8"
+                py="spacing2"
+                textVariant="subheadSmall"
+              />
             </Flex>
             <Separator color="background1" width={1} />
             <Box p="spacing16">

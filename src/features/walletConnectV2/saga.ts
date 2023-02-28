@@ -10,14 +10,23 @@ import { CallEffect, ChannelTakeEffect, PutEffect } from 'redux-saga/effects'
 import { i18n } from 'src/app/i18n'
 import { config } from 'src/config'
 import { ALL_SUPPORTED_CHAIN_IDS, CHAIN_INFO } from 'src/constants/chains'
+import { pushNotification } from 'src/features/notifications/notificationSlice'
+import { AppNotificationType } from 'src/features/notifications/types'
+import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { EthMethod } from 'src/features/walletConnect/types'
-import { addPendingSession, addRequest } from 'src/features/walletConnect/walletConnectSlice'
 import {
+  addPendingSession,
+  addRequest,
+  removeSession,
+} from 'src/features/walletConnect/walletConnectSlice'
+import {
+  getAccountAddressFromEIP155String,
   getChainIdFromEIP155String,
   getSupportedWalletConnectChains,
   parseSignRequest,
 } from 'src/features/walletConnectV2/utils'
 import { logger } from 'src/utils/logger'
+import { ONE_SECOND_MS } from 'src/utils/time'
 import { call, put, take } from 'typed-redux-saga'
 
 export let wcWeb3Wallet: IWeb3Wallet
@@ -154,12 +163,52 @@ function createWalletConnectV2Channel(): EventChannel<Action<unknown>> {
       }
     }
 
+    const sessionDeleteHandler = async (event: Web3WalletTypes.SessionDelete): Promise<void> => {
+      const { topic } = event
+      const session = wcWeb3Wallet.engine.signClient.session.get(topic)
+      const dapp = session.peer.metadata
+      const account = session.namespaces.eip155?.accounts[0]
+
+      if (!account) {
+        logger.error(
+          'WalletConnectV2Saga',
+          'sessionDeleteHandler',
+          'Account not found in session namespaces'
+        )
+        return
+      }
+
+      const address = getAccountAddressFromEIP155String(account)
+      if (!address) {
+        logger.error(
+          'WalletConnectV2Saga',
+          'sessionDeleteHandler',
+          'Unable to parse account address from session namespaces'
+        )
+        return
+      }
+
+      emit(removeSession({ account: address, sessionId: event.topic }))
+      emit(
+        pushNotification({
+          type: AppNotificationType.WalletConnect,
+          address,
+          dappName: dapp.name,
+          event: WalletConnectEvent.Disconnected,
+          imageUrl: dapp.icons[0] ?? null,
+          hideDelay: 3 * ONE_SECOND_MS,
+        })
+      )
+    }
+
     wcWeb3Wallet.on('session_proposal', sessionProposalHandler)
     wcWeb3Wallet.on('session_request', sessionRequestHandler)
+    wcWeb3Wallet.on('session_delete', sessionDeleteHandler)
 
     const unsubscribe = (): void => {
       wcWeb3Wallet.off('session_proposal', sessionProposalHandler)
       wcWeb3Wallet.off('session_request', sessionRequestHandler)
+      wcWeb3Wallet.off('session_delete', sessionDeleteHandler)
     }
 
     return unsubscribe
