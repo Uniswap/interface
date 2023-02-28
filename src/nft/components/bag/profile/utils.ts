@@ -12,10 +12,9 @@ export async function approveCollectionRow(
     collection: CollectionRow,
     status: ListingStatus,
     callback?: () => Promise<void>
-  ) => void,
-  pauseAllRows?: () => void
+  ) => void
 ) {
-  const callback = () => approveCollectionRow(collectionRow, signer, setCollectionStatusAndCallback, pauseAllRows)
+  const callback = () => approveCollectionRow(collectionRow, signer, setCollectionStatusAndCallback)
   setCollectionStatusAndCallback(collectionRow, ListingStatus.SIGNING, callback)
   const { marketplace, collectionAddress } = collectionRow
   const addresses = addressesByNetwork[SupportedChainId.MAINNET]
@@ -31,11 +30,6 @@ export async function approveCollectionRow(
     (await approveCollection(spender, collectionAddress, signer, (newStatus: ListingStatus) =>
       setCollectionStatusAndCallback(collectionRow, newStatus, callback)
     ))
-  if (
-    (collectionRow.status === ListingStatus.REJECTED || collectionRow.status === ListingStatus.FAILED) &&
-    pauseAllRows
-  )
-    pauseAllRows()
 }
 
 export async function signListingRow(
@@ -44,31 +38,18 @@ export async function signListingRow(
   provider: Web3Provider,
   getLooksRareNonce: () => number,
   setLooksRareNonce: (nonce: number) => void,
-  setListingStatusAndCallback: (listing: ListingRow, status: ListingStatus, callback?: () => Promise<void>) => void,
-  pauseAllRows?: () => void
+  setListingStatusAndCallback: (listing: ListingRow, status: ListingStatus, callback?: () => Promise<void>) => void
 ) {
   const looksRareNonce = getLooksRareNonce()
   const callback = () => {
-    return signListingRow(
-      listing,
-      signer,
-      provider,
-      getLooksRareNonce,
-      setLooksRareNonce,
-      setListingStatusAndCallback,
-      pauseAllRows
-    )
+    return signListingRow(listing, signer, provider, getLooksRareNonce, setLooksRareNonce, setListingStatusAndCallback)
   }
   setListingStatusAndCallback(listing, ListingStatus.SIGNING, callback)
   const { asset, marketplace } = listing
   const res = await signListing(marketplace, asset, signer, provider, looksRareNonce, (newStatus: ListingStatus) =>
     setListingStatusAndCallback(listing, newStatus, callback)
   )
-  if (listing.status === ListingStatus.REJECTED && pauseAllRows) {
-    pauseAllRows()
-  } else {
-    res && listing.marketplace.name === 'LooksRare' && setLooksRareNonce(looksRareNonce + 1)
-  }
+  res && listing.marketplace.name === 'LooksRare' && setLooksRareNonce(looksRareNonce + 1)
 }
 
 export const getTotalEthValue = (sellAssets: WalletAsset[]) => {
