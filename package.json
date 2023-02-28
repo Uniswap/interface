@@ -111,7 +111,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.2",
-    "@coinbase/wallet-sdk": "^3.3.0",
+    "@coinbase/wallet-sdk": "^3.6.4",
     "@fontsource/ibm-plex-mono": "^4.5.1",
     "@fontsource/inter": "^4.5.1",
     "@graphql-codegen/cli": "^2.15.0",
@@ -152,7 +152,7 @@
     "@uniswap/v3-core": "1.0.0",
     "@uniswap/v3-periphery": "^1.1.1",
     "@uniswap/v3-sdk": "^3.9.0",
-    "@uniswap/widgets": "^2.39.0",
+    "@uniswap/widgets": "^2.40.0",
     "@vanilla-extract/css": "^1.7.2",
     "@vanilla-extract/css-utils": "^0.1.2",
     "@vanilla-extract/dynamic": "^2.0.2",
