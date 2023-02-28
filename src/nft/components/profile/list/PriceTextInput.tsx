@@ -113,10 +113,6 @@ export const PriceTextInput = ({
   const inputRef = useRef() as React.MutableRefObject<HTMLInputElement>
   const theme = useTheme()
 
-  useEffect(() => {
-    inputRef.current.value = listPrice !== undefined ? `${listPrice}` : ''
-  }, [listPrice])
-
   const percentBelowFloor = (1 - (listPrice ?? 0) / (asset.floorPrice ?? 0)) * 100
 
   const warningColor =
@@ -136,13 +132,17 @@ export const PriceTextInput = ({
     }
     const val = parseFloat(event.target.value)
     setListPrice(isNaN(val) ? undefined : val)
+  }
+
+  useEffect(() => {
     setWarningType(WarningType.NONE)
-    if (val && !isNaN(val)) {
-      if (val < (asset?.floorPrice ?? 0)) setWarningType(WarningType.BELOW_FLOOR)
-      else if (asset.floor_sell_order_price && val >= asset.floor_sell_order_price)
+    if (listPrice !== undefined) {
+      inputRef.current.value = `${listPrice}`
+      if (listPrice < (asset?.floorPrice ?? 0)) setWarningType(WarningType.BELOW_FLOOR)
+      else if (asset.floor_sell_order_price && listPrice >= asset.floor_sell_order_price)
         setWarningType(WarningType.ALREADY_LISTED)
     }
-  }
+  }, [asset?.floorPrice, asset.floor_sell_order_price, listPrice])
 
   return (
     <PriceTextInputWrapper>

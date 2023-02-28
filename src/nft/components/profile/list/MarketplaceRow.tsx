@@ -176,7 +176,8 @@ export const MarketplaceRow = ({
       listPrice && !globalPrice ? setGlobalPrice(listPrice) : setListPrice(globalPrice)
 
     setGlobalOverride(false)
-  }, [setGlobalPrice])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [globalPriceMethod])
 
   useEffect(() => {
     let price: number | undefined = undefined
@@ -192,7 +193,7 @@ export const MarketplaceRow = ({
   }, [globalOverride])
 
   useEffect(() => {
-    if (globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride) {
+    if (showGlobalPrice) {
       for (const marketplace of selectedMarkets) setAssetListPrice(asset, globalPrice, marketplace)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
