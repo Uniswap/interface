@@ -2,14 +2,12 @@ import { Plural, t, Trans } from '@lingui/macro'
 import { BaseButton } from 'components/Button'
 import ms from 'ms.macro'
 import { BelowFloorWarningModal } from 'nft/components/profile/list/Modal/BelowFloorWarningModal'
-import { useIsMobile, useNFTList, useSellAsset } from 'nft/hooks'
-import { Listing, ListingStatus, WalletAsset } from 'nft/types'
-import { useEffect, useMemo, useState } from 'react'
+import { useIsMobile, useSellAsset } from 'nft/hooks'
+import { Listing, WalletAsset } from 'nft/types'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import shallow from 'zustand/shallow'
-
-import { getListings } from '../../bag/profile/utils'
 
 const BELOW_FLOOR_PRICE_THRESHOLD = 0.8
 
@@ -44,24 +42,8 @@ export const ListingButton = ({ onClick }: { onClick: () => void }) => {
     }),
     shallow
   )
-  const { setListingStatus, setListings, setCollectionsRequiringApproval } = useNFTList(
-    ({ setListingStatus, setListings, setCollectionsRequiringApproval }) => ({
-      setListingStatus,
-      setListings,
-      setCollectionsRequiringApproval,
-    }),
-    shallow
-  )
   const [showWarning, setShowWarning] = useState(false)
   const isMobile = useIsMobile()
-
-  // instantiate listings and collections to approve when user's modify input data
-  useEffect(() => {
-    const [newCollectionsToApprove, newListings] = getListings(sellAssets)
-    setListings(newListings)
-    setCollectionsRequiringApproval(newCollectionsToApprove)
-    setListingStatus(ListingStatus.DEFINED)
-  }, [sellAssets, setCollectionsRequiringApproval, setListingStatus, setListings])
 
   // Find issues with item listing data
   const [listingsMissingPrice, listingsBelowFloor] = useMemo(() => {
