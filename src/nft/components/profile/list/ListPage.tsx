@@ -8,7 +8,12 @@ import Row from 'components/Row'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { approveCollectionRow, getTotalEthValue, verifyStatus } from 'nft/components/bag/profile/utils'
+import {
+  approveCollectionRow,
+  getTotalEthValue,
+  useSubscribeListingState,
+  verifyStatus,
+} from 'nft/components/bag/profile/utils'
 import { ListingButton } from 'nft/components/profile/list/ListingButton'
 import { useIsMobile, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from 'nft/pages/profile/shared'
@@ -207,6 +212,9 @@ export const ListPage = () => {
   const [showListModal, toggleShowListModal] = useReducer((s) => !s, false)
   const [selectedMarkets, setSelectedMarkets] = useState([ListingMarkets[0]]) // default marketplace: x2y2
   const signer = provider?.getSigner()
+
+  // instantiate listings and collections to approve when user's modify input data
+  useSubscribeListingState()
 
   useEffect(() => {
     setGlobalMarketplaces(selectedMarkets)

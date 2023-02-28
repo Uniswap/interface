@@ -1,9 +1,12 @@
 import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { addressesByNetwork, SupportedChainId } from '@looksrare/sdk'
+import { useNFTList, useSellAsset } from 'nft/hooks'
 import { LOOKSRARE_MARKETPLACE_CONTRACT, X2Y2_TRANSFER_CONTRACT } from 'nft/queries'
 import { OPENSEA_CROSS_CHAIN_CONDUIT } from 'nft/queries/openSea'
 import { CollectionRow, ListingMarket, ListingRow, ListingStatus, WalletAsset } from 'nft/types'
 import { approveCollection, LOOKS_RARE_CREATOR_BASIS_POINTS, signListing } from 'nft/utils/listNfts'
+import { useEffect } from 'react'
+import shallow from 'zustand/shallow'
 
 export async function approveCollectionRow(
   collectionRow: CollectionRow,
@@ -67,7 +70,7 @@ export const getTotalEthValue = (sellAssets: WalletAsset[]) => {
   return total ? Math.round(total * 10000 + Number.EPSILON) / 10000 : 0
 }
 
-export const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], ListingRow[]] => {
+const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], ListingRow[]] => {
   const newCollectionsToApprove: CollectionRow[] = []
 
   const newListings: ListingRow[] = []
@@ -106,4 +109,20 @@ export const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], Listin
 
 export const verifyStatus = (status: ListingStatus) => {
   return status !== ListingStatus.PAUSED && status !== ListingStatus.APPROVED
+}
+
+export function useSubscribeListingState() {
+  const sellAssets = useSellAsset((state) => state.sellAssets)
+  const { setListings, setCollectionsRequiringApproval } = useNFTList(
+    ({ setListings, setCollectionsRequiringApproval }) => ({
+      setListings,
+      setCollectionsRequiringApproval,
+    }),
+    shallow
+  )
+  useEffect(() => {
+    const [newCollectionsToApprove, newListings] = getListings(sellAssets)
+    setListings(newListings)
+    setCollectionsRequiringApproval(newCollectionsToApprove)
+  }, [sellAssets, setCollectionsRequiringApproval, setListings])
 }
