@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
+import { getRoyalty } from 'nft/components/bag/profile/utils'
 import { ListingMarket, WalletAsset } from 'nft/types'
-import { formatEth, LOOKS_RARE_CREATOR_BASIS_POINTS } from 'nft/utils'
+import { formatEth } from 'nft/utils'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -50,12 +51,7 @@ export const RoyaltyTooltip = ({
   asset: WalletAsset
   fees?: number
 }) => {
-  const maxRoyalty = (
-    (selectedMarkets.length === 1 && selectedMarkets[0].name === 'LooksRare'
-      ? LOOKS_RARE_CREATOR_BASIS_POINTS
-      : asset.basisPoints ?? 0) * 0.01
-  ).toFixed(2)
-
+  const maxRoyalty = Math.max(...selectedMarkets.map((market) => getRoyalty(market, asset) ?? 0)).toFixed(2)
   return (
     <RoyaltyContainer>
       {selectedMarkets.map((market) => (

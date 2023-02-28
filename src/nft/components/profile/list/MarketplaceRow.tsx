@@ -3,10 +3,10 @@ import { t } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { getRoyalty } from 'nft/components/bag/profile/utils'
 import { RowsCollpsedIcon, RowsExpandedIcon } from 'nft/components/icons'
 import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, WalletAsset } from 'nft/types'
-import { LOOKS_RARE_CREATOR_BASIS_POINTS } from 'nft/utils'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { Dispatch, DispatchWithoutAction, useEffect, useMemo, useReducer, useState } from 'react'
@@ -102,13 +102,6 @@ const ReturnColumn = styled(Column)`
     display: flex;
   }
 `
-
-const getRoyalty = (listingMarket: ListingMarket, asset: WalletAsset) => {
-  // LooksRare is a unique case where royalties for creators are a flat 0.5% or 50 basis points
-  const baseFee = listingMarket.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset.basisPoints ?? 0
-
-  return baseFee * 0.01
-}
 
 interface MarketplaceRowProps {
   globalPriceMethod?: SetPriceMethod

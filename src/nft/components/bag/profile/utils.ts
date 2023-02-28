@@ -126,3 +126,10 @@ export function useSubscribeListingState() {
     setCollectionsRequiringApproval(newCollectionsToApprove)
   }, [sellAssets, setCollectionsRequiringApproval, setListings])
 }
+
+export const getRoyalty = (listingMarket: ListingMarket, asset: WalletAsset) => {
+  // LooksRare is a unique case where royalties for creators are a flat 0.5% or 50 basis points
+  const baseFee = listingMarket.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset.basisPoints ?? 0
+
+  return baseFee * 0.01
+}
