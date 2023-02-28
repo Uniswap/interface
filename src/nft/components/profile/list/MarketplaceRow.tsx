@@ -138,14 +138,14 @@ export const MarketplaceRow = ({
   )
   const [globalOverride, setGlobalOverride] = useState(false)
 
-  const showGlobalPrice = globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride && !!globalPrice
+  const showGlobalPrice = globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride
   const price = showGlobalPrice ? globalPrice : listPrice
   const setPrice = useCallback(
     (price?: number) => {
       showGlobalPrice ? setGlobalPrice(price) : setListPrice(price)
-      for (const marketplace of selectedMarkets) setAssetListPrice(asset, listPrice, marketplace)
+      for (const marketplace of selectedMarkets) setAssetListPrice(asset, price, marketplace)
     },
-    [asset, listPrice, selectedMarkets, setAssetListPrice, setGlobalPrice, showGlobalPrice]
+    [asset, selectedMarkets, setAssetListPrice, setGlobalPrice, showGlobalPrice]
   )
 
   const fees = useMemo(() => {
@@ -176,7 +176,7 @@ export const MarketplaceRow = ({
       listPrice && !globalPrice ? setGlobalPrice(listPrice) : setListPrice(globalPrice)
 
     setGlobalOverride(false)
-  }, [asset.floorPrice, asset.lastPrice, globalPrice, globalPriceMethod, listPrice, setGlobalPrice])
+  }, [setGlobalPrice])
 
   useEffect(() => {
     let price: number | undefined = undefined
@@ -193,9 +193,7 @@ export const MarketplaceRow = ({
 
   useEffect(() => {
     if (globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride) {
-      if (selectedMarkets.length)
-        for (const marketplace of selectedMarkets) setAssetListPrice(asset, globalPrice, marketplace)
-      else setAssetListPrice(asset, globalPrice)
+      for (const marketplace of selectedMarkets) setAssetListPrice(asset, globalPrice, marketplace)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [globalPrice])
