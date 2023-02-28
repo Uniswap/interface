@@ -9,7 +9,7 @@ import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
-import { Dispatch, DispatchWithoutAction, useEffect, useMemo, useReducer, useState } from 'react'
+import { Dispatch, DispatchWithoutAction, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
@@ -137,9 +137,16 @@ export const MarketplaceRow = ({
       )?.price
   )
   const [globalOverride, setGlobalOverride] = useState(false)
-  const showGlobalPrice = globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride && globalPrice
 
+  const showGlobalPrice = globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride && !!globalPrice
   const price = showGlobalPrice ? globalPrice : listPrice
+  const setPrice = useCallback(
+    (price?: number) => {
+      showGlobalPrice ? setGlobalPrice(price) : setListPrice(price)
+      for (const marketplace of selectedMarkets) setAssetListPrice(asset, listPrice, marketplace)
+    },
+    [asset, listPrice, selectedMarkets, setAssetListPrice, setGlobalPrice, showGlobalPrice]
+  )
 
   const fees = useMemo(() => {
     if (selectedMarkets.length === 1) {
@@ -169,15 +176,7 @@ export const MarketplaceRow = ({
       listPrice && !globalPrice ? setGlobalPrice(listPrice) : setListPrice(globalPrice)
 
     setGlobalOverride(false)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [globalPriceMethod])
-
-  useEffect(() => {
-    if (selectedMarkets.length)
-      for (const marketplace of selectedMarkets) setAssetListPrice(asset, listPrice, marketplace)
-    else setAssetListPrice(asset, listPrice)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listPrice])
+  }, [asset.floorPrice, asset.lastPrice, globalPrice, globalPriceMethod, listPrice, setGlobalPrice])
 
   useEffect(() => {
     let price: number | undefined = undefined
@@ -234,25 +233,14 @@ export const MarketplaceRow = ({
             ))}
           </MarketIconsWrapper>
         )}
-        {globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride ? (
-          <PriceTextInput
-            listPrice={globalPrice}
-            setListPrice={setGlobalPrice}
-            isGlobalPrice={true}
-            setGlobalOverride={setGlobalOverride}
-            globalOverride={globalOverride}
-            asset={asset}
-          />
-        ) : (
-          <PriceTextInput
-            listPrice={listPrice}
-            setListPrice={setListPrice}
-            isGlobalPrice={false}
-            setGlobalOverride={setGlobalOverride}
-            globalOverride={globalOverride}
-            asset={asset}
-          />
-        )}
+        <PriceTextInput
+          listPrice={price}
+          setListPrice={setPrice}
+          isGlobalPrice={showGlobalPrice}
+          setGlobalOverride={setGlobalOverride}
+          globalOverride={globalOverride}
+          asset={asset}
+        />
         {rowHovered && ((expandMarketplaceRows && marketRowHovered) || selectedMarkets.length > 1) && (
           <ExpandMarketIconWrapper onClick={toggleExpandMarketplaceRows}>
             {expandMarketplaceRows ? <RowsExpandedIcon /> : <RowsCollpsedIcon />}
