@@ -1,3 +1,4 @@
+import { useCallback, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Rnd } from 'react-rnd'
 import { useMedia } from 'react-use'
@@ -38,6 +39,11 @@ const WalletPopup: React.FC<Props> = ({ isModalOpen, onDismissModal, isPinned, s
   const isMobile = useMedia(`(max-width: ${MEDIA_WIDTHS.upToMedium}px)`)
   const rootNode = document.getElementById('app')
 
+  const [showBalance, setShowBalance] = useState(true)
+  const toggleShowBalance = useCallback(() => {
+    setShowBalance(prev => !prev)
+  }, [])
+
   const shouldOpenPopup = (!isPinned && isModalOpen) || isPinned
 
   const handleClosePopup = () => {
@@ -61,10 +67,12 @@ const WalletPopup: React.FC<Props> = ({ isModalOpen, onDismissModal, isPinned, s
     return null
   }
 
+  const commonProps = { isPinned, showBalance, toggleShowBalance }
+
   if (isMobile) {
     return (
       <Modal isOpen={isModalOpen} onDismiss={onDismissModal} minHeight={80}>
-        <WalletView onDismiss={handleClosePopup} isPinned={isPinned} />
+        <WalletView {...commonProps} onDismiss={handleClosePopup} />
       </Modal>
     )
   }
@@ -82,9 +90,9 @@ const WalletPopup: React.FC<Props> = ({ isModalOpen, onDismissModal, isPinned, s
           }}
         >
           <WalletView
+            {...commonProps}
             blurBackground
             onDismiss={onDismissModal}
-            isPinned={isPinned}
             onPin={handlePinPopup}
             onUnpin={handleUnpinPopup}
           />
@@ -126,9 +134,9 @@ const WalletPopup: React.FC<Props> = ({ isModalOpen, onDismissModal, isPinned, s
             disableDragging={!isPinned}
           >
             <WalletView
+              {...commonProps}
               blurBackground
               onDismiss={handleClosePopup}
-              isPinned={isPinned}
               onPin={handlePinPopup}
               onUnpin={handleUnpinPopup}
             />

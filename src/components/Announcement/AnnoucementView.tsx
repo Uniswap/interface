@@ -32,6 +32,7 @@ const Wrapper = styled.div`
   padding-top: 20px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     width: 100%;
+    min-width: 380px;
   `};
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 100%;

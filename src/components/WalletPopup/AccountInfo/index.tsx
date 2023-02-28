@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
+import { Eye, EyeOff } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import CopyHelper from 'components/Copy'
 import Loader from 'components/Loader'
+import Row from 'components/Row'
 import ActionButtonGroup from 'components/WalletPopup/AccountInfo/ActionButtonGroup'
 import CardBackground from 'components/WalletPopup/AccountInfo/CardBackground'
 import MinimalActionButtonGroup from 'components/WalletPopup/AccountInfo/MinimalActionButtonGroup'
@@ -95,8 +97,10 @@ const IconWrapper = styled.div`
 `
 
 type Props = {
-  totalBalanceInUsd: number | null
+  totalBalanceInUsd: number | null | string
   isMinimal: boolean
+  toggleShowBalance: () => void
+  showBalance: boolean
 } & ClickHandlerProps
 
 export type ClickHandlerProps = {
@@ -113,6 +117,8 @@ export default function AccountInfo({
   onClickReceive,
   onClickSend,
   isMinimal,
+  showBalance,
+  toggleShowBalance,
 }: Props) {
   const { chainId, account = '', walletKey } = useActiveWeb3React()
   const theme = useTheme()
@@ -156,13 +162,22 @@ export default function AccountInfo({
                 gap: '4px',
               }}
             >
-              <BalanceTitle>
-                <Trans>Total Balance</Trans>
-              </BalanceTitle>
+              <Row align="center" gap="4px" style={{ cursor: 'pointer' }} onClick={toggleShowBalance}>
+                <BalanceTitle>
+                  <Trans>Total Balance</Trans>
+                </BalanceTitle>
+                {showBalance ? <EyeOff size={14} color={theme.subText} /> : <Eye size={14} color={theme.subText} />}
+              </Row>
 
               <BalanceValue>
-                {totalBalanceInUsd !== null ? (
-                  `$${formatNumberWithPrecisionRange(totalBalanceInUsd, 0, 8)}`
+                {typeof totalBalanceInUsd === 'number' ? (
+                  showBalance ? (
+                    `$${formatNumberWithPrecisionRange(totalBalanceInUsd, 0, 8)}`
+                  ) : (
+                    '******'
+                  )
+                ) : typeof totalBalanceInUsd === 'string' ? (
+                  totalBalanceInUsd
                 ) : (
                   <Loader size="30px" />
                 )}

@@ -100,6 +100,7 @@ export function CurrencyRow({
   customBalance,
   usdBalance,
   hoverColor,
+  hideBalance,
 }: {
   showImported?: boolean
   showFavoriteIcon?: boolean
@@ -115,6 +116,7 @@ export function CurrencyRow({
   customBalance?: ReactNode
   usdBalance?: number
   hoverColor?: string
+  hideBalance?: boolean
 }) {
   const { chainId, account } = useActiveWeb3React()
   const theme = useTheme()
@@ -143,7 +145,13 @@ export function CurrencyRow({
 
     return false
   })()
-  const balanceComponent = currencyBalance ? <Balance balance={currencyBalance} /> : account ? <Loader /> : null
+  const balanceComponent = hideBalance ? (
+    '******'
+  ) : currencyBalance ? (
+    <Balance balance={currencyBalance} />
+  ) : account ? (
+    <Loader />
+  ) : null
   const { symbol } = getDisplayTokenInfo(currency)
   return (
     <CurrencyRowWrapper
@@ -175,7 +183,7 @@ export function CurrencyRow({
             <FavoriteButton onClick={e => handleClickFavorite?.(e, currency)} data-active={isFavorite} />
           )}
         </RowFixed>
-        {usdBalance !== undefined && (
+        {usdBalance !== undefined && !hideBalance && (
           <Text fontSize={'12px'} color={theme.subText}>
             {formattedNum(usdBalance + '', true)}
           </Text>

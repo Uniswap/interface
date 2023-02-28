@@ -5,6 +5,7 @@ import { Suspense, lazy, useEffect } from 'react'
 import { isMobile } from 'react-device-detect'
 import { AlertTriangle } from 'react-feather'
 import { Route, Routes } from 'react-router-dom'
+import { useNetwork, usePrevious } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -107,6 +108,16 @@ const BodyWrapper = styled.div`
 
 export default function App() {
   const { account, chainId, networkInfo } = useActiveWeb3React()
+
+  const { online } = useNetwork()
+  const prevOnline = usePrevious(online)
+
+  useEffect(() => {
+    if (prevOnline === false && online && account) {
+      // refresh page when network back to normal to prevent some issues: ex: stale data, ...
+      window.location.reload()
+    }
+  }, [online, prevOnline, account])
 
   useEffect(() => {
     if (account) {
