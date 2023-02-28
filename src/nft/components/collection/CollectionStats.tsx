@@ -17,7 +17,7 @@ import { ThemedText } from 'theme'
 import { DiscordIcon, EllipsisIcon, ExternalIcon, InstagramIcon, TwitterIcon, VerifiedIcon, XMarkIcon } from '../icons'
 import * as styles from './CollectionStats.css'
 
-export const PercentChange = styled.div<{ isNegative: boolean }>`
+const PercentChange = styled.div<{ isNegative: boolean }>`
   color: ${({ theme, isNegative }) => (isNegative ? theme.accentFailure : theme.accentSuccess)};
   display: flex;
   align-items: center;
