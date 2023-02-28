@@ -1,5 +1,6 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { GqlRoutingVariant, useGqlRoutingFlag } from 'featureFlags/flags/gqlRouting'
+import { NftGraphqlVariant, useNftGraphqlFlag } from 'featureFlags/flags/nftlGraphql'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
 import { Permit2Variant, usePermit2Flag } from 'featureFlags/flags/permit2'
 import { SwapWidgetVariant, useSwapWidgetFlag } from 'featureFlags/flags/swapWidget'
@@ -228,6 +229,12 @@ export default function FeatureFlagModal() {
         value={useGqlRoutingFlag()}
         featureFlag={FeatureFlag.gqlRouting}
         label="GraphQL NFT Routing"
+      />
+      <FeatureFlagOption
+        variant={NftGraphqlVariant}
+        value={useNftGraphqlFlag()}
+        featureFlag={FeatureFlag.nftGraphql}
+        label="Migrate NFT read endpoints to GQL"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption

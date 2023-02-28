@@ -8,4 +8,5 @@ export enum FeatureFlag {
   swapWidget = 'swap_widget_replacement_enabled',
   gqlRouting = 'gqlRouting',
   statsigDummy = 'web_dummy_gate_amplitude_id',
+  nftGraphql = 'nft_graphql_migration',
 }
