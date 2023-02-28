@@ -41,7 +41,7 @@ export function DappHeaderIcon({
           uri={dapp.icon}
         />
       ) : (
-        { fallback }
+        fallback
       )}
       {showChain && chainId && (
         <Box bottom={-4} position="absolute" right={-4}>
