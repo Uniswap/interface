@@ -317,6 +317,7 @@ function ProposalItem({
                   : 'Finished'
               }
               isCheckBox={proposal.proposal_type === ProposalType.GenericProposal}
+              id={index}
             />
           )
         })}
