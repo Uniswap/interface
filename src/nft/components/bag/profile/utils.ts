@@ -2,30 +2,8 @@ import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { addressesByNetwork, SupportedChainId } from '@looksrare/sdk'
 import { LOOKSRARE_MARKETPLACE_CONTRACT, X2Y2_TRANSFER_CONTRACT } from 'nft/queries'
 import { OPENSEA_CROSS_CHAIN_CONDUIT } from 'nft/queries/openSea'
-import { AssetRow, CollectionRow, ListingMarket, ListingRow, ListingStatus, WalletAsset } from 'nft/types'
+import { CollectionRow, ListingMarket, ListingRow, ListingStatus, WalletAsset } from 'nft/types'
 import { approveCollection, LOOKS_RARE_CREATOR_BASIS_POINTS, signListing } from 'nft/utils/listNfts'
-import { Dispatch } from 'react'
-
-const updateStatus = ({
-  listing,
-  newStatus,
-  rows,
-  setRows,
-  callback,
-}: {
-  listing: AssetRow
-  newStatus: ListingStatus
-  rows: AssetRow[]
-  setRows: Dispatch<AssetRow[]>
-  callback?: () => Promise<void>
-}) => {
-  const rowsCopy = [...rows]
-  const index = rows.findIndex((n) => n === listing)
-  listing.status = newStatus
-  if (callback) listing.callback = callback
-  rowsCopy[index] = listing
-  setRows(rowsCopy)
-}
 
 export async function approveCollectionRow(
   collectionRow: CollectionRow,
@@ -210,28 +188,4 @@ export const getListingState = (
 
 export const verifyStatus = (status: ListingStatus) => {
   return status !== ListingStatus.PAUSED && status !== ListingStatus.APPROVED
-}
-
-export const pauseRow = (row: AssetRow, rows: AssetRow[], setRows: Dispatch<AssetRow[]>) => {
-  if (row.status === ListingStatus.PENDING || row.status === ListingStatus.DEFINED)
-    updateStatus({
-      listing: row,
-      newStatus: ListingStatus.PAUSED,
-      rows,
-      setRows,
-    })
-}
-
-export const resetRow = (row: AssetRow, rows: AssetRow[], setRows: Dispatch<AssetRow[]>) => {
-  if (
-    row.status === ListingStatus.PAUSED ||
-    row.status === ListingStatus.FAILED ||
-    row.status === ListingStatus.REJECTED
-  )
-    updateStatus({
-      listing: row,
-      newStatus: ListingStatus.DEFINED,
-      rows,
-      setRows,
-    })
 }
