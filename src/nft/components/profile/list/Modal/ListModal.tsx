@@ -1,14 +1,17 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, Trace, useTrace } from '@uniswap/analytics'
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
+import { useStablecoinValue } from 'hooks/useStablecoinPrice'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { getTotalEthValue, signListingRow } from 'nft/components/bag/profile/utils'
 import { Portal } from 'nft/components/common/Portal'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { useNFTList, useSellAsset } from 'nft/hooks'
 import { ListingStatus } from 'nft/types'
-import { fetchPrice } from 'nft/utils'
-import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
+import { useCallback, useEffect, useMemo, useReducer } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
@@ -69,13 +72,10 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
     (s) => (s === Section.APPROVE ? Section.SIGN : Section.APPROVE),
     Section.APPROVE
   )
-  const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
-
-  useEffect(() => {
-    fetchPrice().then((price) => {
-      setEthPriceInUSD(price || 0)
-    })
-  }, [])
+  const nativeCurrency = useNativeCurrency()
+  const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
+  const usdcValue = useStablecoinValue(parsedAmount)
+  const usdcAmount = formatCurrencyAmount(usdcValue, NumberType.FiatTokenPrice)
 
   const allCollectionsApproved = useMemo(
     () => collectionsRequiringApproval.every((collection) => collection.status === ListingStatus.APPROVED),
@@ -97,7 +97,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
     sendAnalyticsEvent(NFTEventName.NFT_LISTING_COMPLETED, {
       signatures_approved: listings.filter((asset) => asset.status === ListingStatus.APPROVED),
       list_quantity: listings.length,
-      usd_value: ethPriceInUSD * totalEthListingValue,
+      usd_value: usdcAmount,
       ...trace,
     })
   }
