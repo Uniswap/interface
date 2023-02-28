@@ -51,7 +51,7 @@ function ElasticFarms({ stakedOnly }: { stakedOnly: { active: boolean; ended: bo
   const stakedOnlyKey = activeTab === FARM_TAB.ACTIVE ? 'active' : 'ended'
 
   const tab = searchParams.get('tab')
-  const search: string = searchParams.get('search') || ''
+  const search: string = searchParams.get('search')?.toLowerCase() || ''
 
   const filteredFarms = useMemo(() => {
     const now = Date.now() / 1000
@@ -93,8 +93,8 @@ function ElasticFarms({ stakedOnly }: { stakedOnly: { active: boolean; ended: bo
         farm.pools = farm.pools.filter(pool => {
           return (
             pool.token0.symbol?.toLowerCase().includes(search) ||
-            pool.token0.symbol?.toLowerCase().includes(search) ||
-            pool.token1.name?.toLowerCase().includes(search) ||
+            pool.token1.symbol?.toLowerCase().includes(search) ||
+            pool.token0.name?.toLowerCase().includes(search) ||
             pool.token1.name?.toLowerCase().includes(search)
           )
         })

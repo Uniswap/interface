@@ -50,8 +50,8 @@ const görliInfo: EVMNetworkInfo = {
     fairlaunchV2: EMPTY_ARRAY,
   },
   elastic: {
-    client: createClient('https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-mainnet'),
-    startBlock: 14932476,
+    client: createClient('https://api.thegraph.com/subgraphs/name/viet-nv/kyberswap-elastic-goerli'),
+    startBlock: 7576952,
     coreFactory: '0x1a91f5ADc7cB5763d35A26e98A18520CB9b67e70',
     nonfungiblePositionManager: '0x8B76f8e008570686aD5933e5669045c5B01DB7bE',
     tickReader: '0x24F40B8a021d5442B97459A336D1363E4D0f1388',
