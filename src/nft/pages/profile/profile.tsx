@@ -62,13 +62,8 @@ const ConnectWalletButton = styled(ButtonPrimary)`
 const ProfileContent = () => {
   const sellPageState = useProfilePageState((state) => state.state)
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
-  const removeAllMarketplaceWarnings = useSellAsset((state) => state.removeAllMarketplaceWarnings)
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
-
-  useEffect(() => {
-    removeAllMarketplaceWarnings()
-  }, [removeAllMarketplaceWarnings, sellPageState])
 
   const { account } = useWeb3React()
   const accountRef = useRef(account)

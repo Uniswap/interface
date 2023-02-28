@@ -8,10 +8,6 @@ export interface ListingMarket {
   icon: string
   royalty?: number
 }
-export interface ListingWarning {
-  marketplace: ListingMarket
-  message: string
-}
 
 export interface SellOrder {
   address: string
@@ -72,7 +68,6 @@ export interface WalletAsset {
   marketAgnosticPrice?: number
   newListings?: Listing[]
   marketplaces?: ListingMarket[]
-  listingWarnings?: ListingWarning[]
 }
 
 export interface WalletCollection {
