@@ -9,6 +9,7 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import {
   AddEthereumChainParameter,
+  DialogAnimationType,
   EMPTY_TOKEN_LIST,
   OnReviewSwapClick,
   SwapWidget,
@@ -183,6 +184,10 @@ export default function Widget({
         onSwapApprove={onApproveToken}
         onInitialSwapQuote={onInitialSwapQuote}
         onSwapPriceUpdateAck={onSwapPriceUpdateAck}
+        dialogOptions={{
+          pageCentered: true,
+          animationType: DialogAnimationType.FADE,
+        }}
         onError={(error, errorInfo) => {
           sendAnalyticsEvent(SwapEventName.SWAP_ERROR, { error, errorInfo, ...trace })
         }}

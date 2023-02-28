@@ -675,9 +675,11 @@ export type QueryNftAssetsArgs = {
   asc?: InputMaybe<Scalars['Boolean']>;
   before?: InputMaybe<Scalars['String']>;
   chain?: InputMaybe<Chain>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<NftAssetsFilterInput>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<NftAssetSortableField>;
 };
 
