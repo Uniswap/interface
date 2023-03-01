@@ -180,7 +180,7 @@ const CardContainer = styled.div<{ selected: boolean }>`
     right: 0px;
     bottom: 0px;
     left: 0px;
-    border: ${({ selected }) => (selected ? '2px' : '1px')} solid;
+    border: ${({ selected }) => (selected ? '3px' : '1px')} solid;
     border-radius: ${BORDER_RADIUS}px;
     border-color: ${({ theme, selected }) => (selected ? theme.accentAction : theme.backgroundOutline)};
     pointer-events: none;
