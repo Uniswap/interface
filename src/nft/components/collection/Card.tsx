@@ -6,17 +6,18 @@ import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import {
+  CollectionSelectedAssetIcon,
   MinusIconLarge,
   OpenSeaMarketplaceIcon,
   PauseButtonIcon,
   PlayButtonIcon,
   PlusIconLarge,
   PoolIcon,
-  SelectedAssetIcon,
+  ProfileSelectedAssetIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
-import { GenieAsset, UniformAspectRatio, UniformAspectRatios, WalletAsset } from 'nft/types'
+import { GenieAsset, Markets, UniformAspectRatio, UniformAspectRatios, WalletAsset } from 'nft/types'
 import { getAssetHref, isAudio, isVideo, putCommas } from 'nft/utils'
 import { floorFormatter } from 'nft/utils/numbers'
 import {
@@ -917,18 +918,35 @@ const StyledMarketplaceContainer = styled.div`
   z-index: 2;
 `
 
+function getMarketplaceIcon(market: Markets): ReactNode {
+  switch (market) {
+    case Markets.Opensea:
+      return <OpenSeaMarketplaceIcon />
+    default:
+      return null
+  }
+}
+
 const MarketplaceContainer = () => {
   const { asset, selected } = useCardContext()
 
   if (selected) {
+    if (!('marketplace' in asset)) {
+      return (
+        <StyledMarketplaceContainer>
+          <ProfileSelectedAssetIcon />
+        </StyledMarketplaceContainer>
+      )
+    }
+
     return (
       <StyledMarketplaceContainer>
-        <SelectedAssetIcon />
+        <CollectionSelectedAssetIcon />
       </StyledMarketplaceContainer>
     )
   }
 
-  if (!('marketplace' in asset)) {
+  if (!('marketplace' in asset) || !asset.marketplace) {
     return null
   }
 
@@ -936,11 +954,7 @@ const MarketplaceContainer = () => {
     return null
   }
 
-  return (
-    <StyledMarketplaceContainer>
-      <OpenSeaMarketplaceIcon />
-    </StyledMarketplaceContainer>
-  )
+  return <StyledMarketplaceContainer>{getMarketplaceIcon(asset.marketplace)}</StyledMarketplaceContainer>
 }
 
 const NoContentContainerBackground = styled.div<{ height?: number }>`

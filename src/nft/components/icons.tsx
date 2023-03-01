@@ -783,7 +783,84 @@ export const OpenSeaMarketplaceIcon = (props: SVGProps) => (
   </svg>
 )
 
-export const SelectedAssetIcon = (props: SVGProps) => (
+export const CollectionSelectedAssetIcon = (props: SVGProps) => (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <rect width="32" height="32" rx="16" fill="#5D6785" fillOpacity="0.48" />
+    <g filter="url(#filter0_d_11_451)">
+      <path
+        d="M23.5 15.1667V12.5278C23.5 11.684 22.7538 11 21.8333 11H10.1667C9.24619 11 8.5 11.684 8.5 12.5278V23.2222C8.5 24.066 9.24619 24.75 10.1667 24.75H17.25"
+        stroke="#F5F6FC"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </g>
+    <g filter="url(#filter1_d_11_451)">
+      <path
+        d="M18.5 20.6667L20.4048 22.6667L25.1667 17.6667"
+        stroke="#F5F6FC"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </g>
+    <path
+      d="M12.6666 11L12.6666 10.1667C12.6666 9.28261 13.0178 8.43476 13.6429 7.80964C14.268 7.18452 15.1159 6.83333 15.9999 6.83333C16.884 6.83333 17.7318 7.18452 18.3569 7.80964C18.9821 8.43476 19.3333 9.28261 19.3333 10.1667L19.3333 11"
+      stroke="#F5F6FC"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <defs>
+      <filter
+        id="filter0_d_11_451"
+        x="5.75"
+        y="8.25"
+        width="22.5"
+        height="21.25"
+        filterUnits="userSpaceOnUse"
+        colorInterpolationFilters="sRGB"
+      >
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
+        <feColorMatrix
+          in="SourceAlpha"
+          type="matrix"
+          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+          result="hardAlpha"
+        />
+        <feOffset dx="1" dy="1" />
+        <feGaussianBlur stdDeviation="1.5" />
+        <feColorMatrix type="matrix" values="0 0 0 0 0.2 0 0 0 0 0.207843 0 0 0 0 0.282353 0 0 0 0.54 0" />
+        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_11_451" />
+        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_11_451" result="shape" />
+      </filter>
+      <filter
+        id="filter1_d_11_451"
+        x="15.75"
+        y="14.9167"
+        width="14.1667"
+        height="12.5"
+        filterUnits="userSpaceOnUse"
+        colorInterpolationFilters="sRGB"
+      >
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
+        <feColorMatrix
+          in="SourceAlpha"
+          type="matrix"
+          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+          result="hardAlpha"
+        />
+        <feOffset dx="1" dy="1" />
+        <feGaussianBlur stdDeviation="1.5" />
+        <feColorMatrix type="matrix" values="0 0 0 0 0.2 0 0 0 0 0.207843 0 0 0 0 0.282353 0 0 0 0.54 0" />
+        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_11_451" />
+        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_11_451" result="shape" />
+      </filter>
+    </defs>
+  </svg>
+)
+
+export const ProfileSelectedAssetIcon = (props: SVGProps) => (
   <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <rect width="32" height="32" rx="16" fill="#5D6785" fillOpacity="0.48" />
     <g clipPath="url(#clip0_12_963)">
