@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, TextInput } from 'react-native'
 import { Button } from 'src/components/buttons/Button'
@@ -17,13 +17,16 @@ export enum PasswordErrors {
 type Props = {
   onPressDone: (password: string) => void
   doneButtonText: string
+  focusPassword?: boolean
 }
 
 export function CloudBackupSetPassword({
   onPressDone: onDoneButtonPressed,
   doneButtonText,
+  focusPassword = false,
 }: Props): JSX.Element {
   const { t } = useTranslation()
+  const passwordInputRef = useRef<TextInput>(null)
   const confirmPasswordRef = useRef<TextInput>(null)
 
   const [password, setPassword] = useState('')
@@ -82,11 +85,18 @@ export function CloudBackupSetPassword({
     }
   }
 
+  useEffect(() => {
+    if (focusPassword) {
+      passwordInputRef.current?.focus()
+    }
+  }, [focusPassword])
+
   return (
     <>
       <Flex gap="spacing24" mb="spacing24" mx="spacing8">
         <Flex gap="spacing8">
           <PasswordInput
+            ref={passwordInputRef}
             placeholder={t('Enter password')}
             returnKeyType="next"
             value={password}

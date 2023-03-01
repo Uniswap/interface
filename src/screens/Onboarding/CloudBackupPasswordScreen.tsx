@@ -31,7 +31,11 @@ export function CloudBackupPasswordScreen({ navigation, route: { params } }: Pro
         'Setting a password will encrypt your recovery phrase backup. You’ll need to enter this when restoring your wallet.'
       )}
       title={t('Create your backup password')}>
-      <CloudBackupSetPassword doneButtonText={t('Continue')} onPressDone={onPressNext} />
+      <CloudBackupSetPassword
+        focusPassword
+        doneButtonText={t('Continue')}
+        onPressDone={onPressNext}
+      />
     </SafeKeyboardOnboardingScreen>
   )
 }
