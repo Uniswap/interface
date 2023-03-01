@@ -727,6 +727,7 @@ const SecondaryInfo = ({ children }: { children: ReactNode }) => {
 
 const StyledTertiaryInfoContainer = styled.div`
   position: relative;
+  height: 20px;
 `
 
 const TertiaryInfoContainer = ({ children }: { children: ReactNode }) => {

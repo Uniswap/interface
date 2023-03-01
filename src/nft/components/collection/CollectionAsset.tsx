@@ -202,7 +202,6 @@ export const CollectionAsset = ({
         </Card.InfoContainer>
         <Card.TertiaryInfoContainer>
           <Card.ActionButton>{isSelected ? `Remove from bag` : `Add to bag`}</Card.ActionButton>
-          <Card.TertiaryInfo>Last sale: 5.05 ETH</Card.TertiaryInfo>
         </Card.TertiaryInfoContainer>
       </Card.DetailsContainer>
     </Card.Container>
