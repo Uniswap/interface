@@ -161,7 +161,7 @@ const StyledImageContainer = styled.div<{ isDisabled?: boolean }>`
   cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
 `
 
-const CardContainer = styled.div<{ selected: boolean; $hovered: boolean }>`
+const CardContainer = styled.div<{ selected: boolean }>`
   position: relative;
   border-radius: ${BORDER_RADIUS}px;
   background-color: ${({ theme }) => theme.backgroundSurface};
@@ -181,9 +181,12 @@ const CardContainer = styled.div<{ selected: boolean; $hovered: boolean }>`
     left: 0px;
     border: ${({ selected }) => (selected ? '3px' : '1px')} solid;
     border-radius: ${BORDER_RADIUS}px;
-    border-color: ${({ theme, selected, $hovered }) =>
-      selected ? ($hovered ? theme.accentCritical : theme.accentAction) : theme.backgroundOutline};
+    border-color: ${({ theme, selected }) => (selected ? theme.accentAction : theme.backgroundOutline)};
     pointer-events: none;
+  }
+
+  :hover::after {
+    ${({ selected, theme }) => selected && `border-color: ${theme.accentCritical}`};
   }
 `
 
@@ -267,7 +270,6 @@ const Container = ({
     <CardContext.Provider value={providerValue}>
       <CardContainer
         selected={selected}
-        $hovered={hovered}
         ref={assetRef}
         draggable={false}
         onMouseEnter={toggleHover}
@@ -340,7 +342,6 @@ const StyledMediaContainer = styled(Row)`
 `
 
 const StyledImage = styled.img<{
-  hovered: boolean
   imageLoading: boolean
   $aspectRatio?: string
   $hidden?: boolean
@@ -351,9 +352,12 @@ const StyledImage = styled.img<{
   will-change: transform;
   object-fit: contain;
   visibility: ${({ $hidden }) => ($hidden ? 'hidden' : 'visible')};
-  transform: ${({ hovered }) => hovered && 'scale(1.15)'};
   background: ${({ theme, imageLoading }) =>
     imageLoading && `linear-gradient(270deg, ${theme.backgroundOutline} 0%, ${theme.backgroundSurface} 100%)`};
+
+  ${CardContainer}:hover & {
+    transform: scale(1.15);
+  }
 `
 
 const Image = ({
@@ -362,10 +366,11 @@ const Image = ({
   renderedHeight,
   setRenderedHeight,
 }: ImageProps) => {
-  const { hovered, asset } = useCardContext()
+  const { asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
   const [loaded, setLoaded] = useState(false)
-  const isMobile = useIsMobile()
+
+  // TODO: add mobile check for hover
 
   if (noContent) {
     return <NoContentContainer height={getHeightFromAspectRatio(uniformAspectRatio, renderedHeight)} />
@@ -376,7 +381,6 @@ const Image = ({
       <StyledImage
         src={asset.imageUrl || asset.smallImageUrl}
         $aspectRatio={getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}
-        hovered={hovered && !isMobile}
         imageLoading={!loaded}
         draggable={false}
         onError={() => setNoContent(true)}
@@ -447,7 +451,6 @@ const Video = ({
           src={asset.imageUrl || asset.smallImageUrl}
           alt={asset.name || asset.tokenId}
           $aspectRatio={getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}
-          hovered={hovered && !isMobile}
           imageLoading={!imageLoaded}
           draggable={false}
           onError={() => setNoContent(true)}
@@ -539,7 +542,6 @@ const Audio = ({
           src={asset.imageUrl || asset.smallImageUrl}
           alt={asset.name || asset.tokenId}
           $aspectRatio={getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}
-          hovered={hovered && !isMobile}
           imageLoading={!imageLoaded}
           draggable={false}
           onError={() => setNoContent(true)}
@@ -761,7 +763,7 @@ const TertiaryInfo = ({ children }: { children: ReactNode }) => {
   return <StyledTertiaryInfo>{children}</StyledTertiaryInfo>
 }
 
-const StyledActionButton = styled(ThemedText.BodySmall)<{ $hovered: boolean; selected: boolean }>`
+const StyledActionButton = styled(ThemedText.BodySmall)<{ $disabled: boolean; selected: boolean }>`
   position: absolute;
   display: flex;
   width: 100%;
@@ -774,14 +776,18 @@ const StyledActionButton = styled(ThemedText.BodySmall)<{ $hovered: boolean; sel
   justify-content: center;
   font-weight: 600 !important;
   line-height: 16px;
-  opacity: ${({ $hovered }) => ($hovered ? 1 : 0)};
+  opacity: 0;
   cursor: pointer;
+
+  ${CardContainer}:hover & {
+    opacity: ${({ $disabled }) => ($disabled ? 0 : 1)};
+  }
 `
 
 const ActionButton = ({ children }: { children: ReactNode }) => {
-  const { hovered, clickActionButton, isDisabled, selected } = useCardContext()
+  const { clickActionButton, isDisabled, selected } = useCardContext()
   return (
-    <StyledActionButton $hovered={hovered && !isDisabled} selected={selected} onClick={clickActionButton}>
+    <StyledActionButton $disabled={isDisabled} selected={selected} onClick={clickActionButton}>
       {children}
     </StyledActionButton>
   )
