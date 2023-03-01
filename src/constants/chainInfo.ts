@@ -223,7 +223,7 @@ const CHAIN_INFO: ChainInfoMap = {
   [SupportedChainId.BSC]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms`10m`,
-    bridge: 'https://apy.plasma.finance/#/bridge',
+    bridge: 'https://cbridge.celer.network/1/56',
     docs: 'https://docs.bnbchain.org/',
     explorer: 'https://bscscan.com/',
     infoLink: 'https://info.uniswap.org/#/bnb',
