@@ -1,11 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
-import { MouseoverTooltip } from 'components/Tooltip'
-import Tooltip from 'components/Tooltip'
-import { Box } from 'nft/components/Box'
-import { bodySmall } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks'
 import { GenieAsset, UniformAspectRatio } from 'nft/types'
 import { formatWeiToDecimal } from 'nft/utils'
@@ -122,66 +117,36 @@ export const CollectionAsset = ({
       selected={isSelected}
       addAssetToBag={handleAddAssetToBag}
       removeAssetFromBag={handleRemoveAssetFromBag}
+      data-testid="nft-collection-asset"
     >
       <Card.ImageContainer isDisabled={asset.notForSale}>
-        <StyledContainer data-testid="nft-collection-asset">
-          <Tooltip
-            text={
-              <Box as="span" className={bodySmall} color="textPrimary">
-                {isSelected ? <Trans>Added to bag</Trans> : <Trans>Removed from bag</Trans>}
-              </Box>
-            }
-            show={showTooltip}
-            style={{ display: 'block' }}
-            offsetX={0}
-            offsetY={0}
-            hideArrow={true}
-            placement="bottom"
-            showInline
-          />
-        </StyledContainer>
         <Card.MarketplaceContainer />
-        <MouseoverTooltip
-          text={
-            <Box as="span" className={bodySmall} color="textPrimary">
-              <Trans>This item is not for sale</Trans>
-            </Box>
-          }
-          placement="bottom"
-          offsetX={0}
-          offsetY={-50}
-          style={{ display: 'block' }}
-          hideArrow={true}
-          disableHover={!asset.notForSale}
-          timeout={isMobile ? TOOLTIP_TIMEOUT : undefined}
-        >
-          {assetMediaType === AssetMediaType.Image ? (
-            <Card.Image
-              uniformAspectRatio={uniformAspectRatio}
-              setUniformAspectRatio={setUniformAspectRatio}
-              renderedHeight={renderedHeight}
-              setRenderedHeight={setRenderedHeight}
-            />
-          ) : assetMediaType === AssetMediaType.Video ? (
-            <Card.Video
-              shouldPlay={mediaShouldBePlaying}
-              setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-              uniformAspectRatio={uniformAspectRatio}
-              setUniformAspectRatio={setUniformAspectRatio}
-              renderedHeight={renderedHeight}
-              setRenderedHeight={setRenderedHeight}
-            />
-          ) : (
-            <Card.Audio
-              shouldPlay={mediaShouldBePlaying}
-              setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-              uniformAspectRatio={uniformAspectRatio}
-              setUniformAspectRatio={setUniformAspectRatio}
-              renderedHeight={renderedHeight}
-              setRenderedHeight={setRenderedHeight}
-            />
-          )}
-        </MouseoverTooltip>
+        {assetMediaType === AssetMediaType.Image ? (
+          <Card.Image
+            uniformAspectRatio={uniformAspectRatio}
+            setUniformAspectRatio={setUniformAspectRatio}
+            renderedHeight={renderedHeight}
+            setRenderedHeight={setRenderedHeight}
+          />
+        ) : assetMediaType === AssetMediaType.Video ? (
+          <Card.Video
+            shouldPlay={mediaShouldBePlaying}
+            setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+            uniformAspectRatio={uniformAspectRatio}
+            setUniformAspectRatio={setUniformAspectRatio}
+            renderedHeight={renderedHeight}
+            setRenderedHeight={setRenderedHeight}
+          />
+        ) : (
+          <Card.Audio
+            shouldPlay={mediaShouldBePlaying}
+            setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+            uniformAspectRatio={uniformAspectRatio}
+            setUniformAspectRatio={setUniformAspectRatio}
+            renderedHeight={renderedHeight}
+            setRenderedHeight={setRenderedHeight}
+          />
+        )}
       </Card.ImageContainer>
       <Card.DetailsContainer>
         <Card.InfoContainer>

@@ -17,7 +17,7 @@ import {
 } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset, UniformAspectRatio, UniformAspectRatios, WalletAsset } from 'nft/types'
-import { isAudio, isVideo, putCommas } from 'nft/utils'
+import { getAssetHref, isAudio, isVideo, putCommas } from 'nft/utils'
 import { floorFormatter } from 'nft/utils/numbers'
 import {
   createContext,
@@ -32,6 +32,7 @@ import {
   useState,
 } from 'react'
 import { AlertTriangle, Pause, Play } from 'react-feather'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { colors } from 'theme/colors'
@@ -46,7 +47,7 @@ export interface CardContextProps {
   setHref: (href: string) => void
   addAssetToBag: () => void
   removeAssetFromBag: () => void
-  clickActionButton: () => void
+  clickActionButton: (e: MouseEvent) => void
 }
 
 const CardContext = createContext<CardContextProps | undefined>(undefined)
@@ -185,6 +186,10 @@ const CardContainer = styled.div<{ selected: boolean; $hovered: boolean }>`
   }
 `
 
+const StyledLink = styled(Link)`
+  text-decoration: none;
+`
+
 /* -------- ASSET CARD -------- */
 interface CardProps {
   asset: GenieAsset | WalletAsset
@@ -208,21 +213,30 @@ const Container = ({
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
   const [href, setHref] = useState(baseHref(asset))
 
-  const clickActionButton = useCallback(() => {
-    if (isDisabled) {
-      return null
-    }
+  const clickActionButton = useCallback(
+    (e: MouseEvent) => {
+      e.stopPropagation()
+      e.preventDefault()
 
-    if (onClick) {
-      return onClick()
-    }
+      if (isDisabled) {
+        return
+      }
 
-    if (selected) {
-      return removeAssetFromBag()
-    }
+      if (onClick) {
+        onClick()
+        return
+      }
 
-    return addAssetToBag()
-  }, [addAssetToBag, isDisabled, onClick, removeAssetFromBag, selected])
+      if (selected) {
+        removeAssetFromBag()
+        return
+      }
+
+      addAssetToBag()
+      return
+    },
+    [addAssetToBag, isDisabled, onClick, removeAssetFromBag, selected]
+  )
 
   const providerValue = useMemo(
     () => ({
@@ -258,7 +272,7 @@ const Container = ({
         onMouseEnter={toggleHover}
         onMouseLeave={toggleHover}
       >
-        {children}
+        <StyledLink to={getAssetHref(asset)}>{children}</StyledLink>
       </CardContainer>
     </CardContext.Provider>
   )
