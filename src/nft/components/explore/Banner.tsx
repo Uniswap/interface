@@ -132,7 +132,10 @@ const Banner = () => {
   )
 
   const collections = useMemo(
-    () => data?.filter((collection) => !EXCLUDED_COLLECTIONS.includes(collection.address)).slice(0, 5),
+    () =>
+      data
+        ?.filter((collection) => collection.address && !EXCLUDED_COLLECTIONS.includes(collection.address))
+        .slice(0, 5),
     [data]
   )
 

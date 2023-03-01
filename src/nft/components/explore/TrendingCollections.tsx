@@ -114,7 +114,6 @@ const TrendingCollections = () => {
         },
         owners: {
           value: d.owners,
-          change: d.ownersChange,
         },
         sales: d.sales,
         totalSupply: d.totalSupply,

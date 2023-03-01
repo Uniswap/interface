@@ -235,7 +235,7 @@ const MARKETS_ENUM_TO_NAME = {
 }
 
 export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
-  const { data: gqlCollection, loading } = useCollection(collection.address)
+  const { data: gqlCollection, loading } = useCollection(collection.address ?? '')
 
   if (loading) return <LoadingCarouselCard />
 
@@ -252,9 +252,11 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
               </FirstColumnTextWrapper>
             </TableElement>
             <TableElement>
-              <ThemedText.SubHeaderSmall color="userThemeColor">
-                {formatWeiToDecimal(collection.floor.toString())} ETH Floor
-              </ThemedText.SubHeaderSmall>
+              {collection.floor && (
+                <ThemedText.SubHeaderSmall color="userThemeColor">
+                  {formatWeiToDecimal(collection.floor.toString())} ETH Floor
+                </ThemedText.SubHeaderSmall>
+              )}
             </TableElement>
             <TableElement>
               <ThemedText.SubHeaderSmall color="userThemeColor">
@@ -304,7 +306,7 @@ const CollectionName = styled(ThemedText.MediumHeader)`
 
 const CarouselCardHeader = ({ collection }: { collection: TrendingCollection }) => {
   return (
-    <CardHeaderContainer src={collection.bannerImageUrl}>
+    <CardHeaderContainer src={collection.bannerImageUrl ?? ''}>
       <CardHeaderColumn>
         <CollectionImage src={collection.imageUrl} />
         <CollectionNameContainer>
