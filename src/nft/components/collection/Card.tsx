@@ -38,11 +38,13 @@ import { colors } from 'theme/colors'
 export interface CardContextProps {
   asset: GenieAsset | WalletAsset
   hovered: boolean
+  isDisabled: boolean
   selected: boolean
   href: string
   setHref: (href: string) => void
   addAssetToBag: () => void
   removeAssetFromBag: () => void
+  clickActionButton: () => void
 }
 
 const CardContext = createContext<CardContextProps | undefined>(undefined)
@@ -146,13 +148,6 @@ const Erc1155ControlsInput = styled.div`
   }
 `
 
-const RankingContainer = styled.div`
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  z-index: 2;
-`
-
 const StyledImageContainer = styled.div<{ isDisabled?: boolean }>`
   position: relative;
   pointer-events: auto;
@@ -210,18 +205,36 @@ const Container = ({
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
   const [href, setHref] = useState(baseHref(asset))
 
+  const clickActionButton = useCallback(() => {
+    if (isDisabled) {
+      return null
+    }
+
+    if (onClick) {
+      return onClick()
+    }
+
+    if (selected) {
+      return removeAssetFromBag()
+    }
+
+    return addAssetToBag()
+  }, [addAssetToBag, isDisabled, onClick, removeAssetFromBag, selected])
+
   const providerValue = useMemo(
     () => ({
       asset,
       selected,
       hovered,
+      isDisabled: Boolean(isDisabled),
       toggleHovered,
       href,
       setHref,
       addAssetToBag,
       removeAssetFromBag,
+      clickActionButton,
     }),
-    [asset, hovered, selected, href, addAssetToBag, removeAssetFromBag]
+    [asset, selected, hovered, isDisabled, href, addAssetToBag, removeAssetFromBag, clickActionButton]
   )
 
   const assetRef = useRef<HTMLDivElement>(null)
@@ -229,13 +242,6 @@ const Container = ({
   useLayoutEffect(() => {
     if (hovered && assetRef.current?.matches(':hover') === false) toggleHovered()
   }, [hovered])
-
-  const handleAssetInBag = (e: MouseEvent) => {
-    if (!asset.notForSale) {
-      e.preventDefault()
-      !selected ? addAssetToBag() : removeAssetFromBag()
-    }
-  }
 
   const toggleHover = useCallback(() => toggleHovered(), [])
 
@@ -247,7 +253,6 @@ const Container = ({
         draggable={false}
         onMouseEnter={toggleHover}
         onMouseLeave={toggleHover}
-        onClick={isDisabled ? () => null : onClick ?? handleAssetInBag}
       >
         {children}
       </CardContainer>
@@ -716,7 +721,11 @@ const SecondaryInfo = ({ children }: { children: ReactNode }) => {
   return <SecondaryInfoContainer>{children}</SecondaryInfoContainer>
 }
 
-const TertiaryInfoContainer = styled(ThemedText.BodySmall)`
+const TertiaryInfoContainer = styled.div`
+  position: relative;
+`
+
+const StyledTertiaryInfo = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.textSecondary};
   overflow: hidden;
   white-space: nowrap;
@@ -725,7 +734,33 @@ const TertiaryInfoContainer = styled(ThemedText.BodySmall)`
 `
 
 const TertiaryInfo = ({ children }: { children: ReactNode }) => {
-  return <TertiaryInfoContainer>{children}</TertiaryInfoContainer>
+  return <StyledTertiaryInfo>{children}</StyledTertiaryInfo>
+}
+
+const StyledActionButton = styled(ThemedText.BodySmall)<{ $hovered: boolean }>`
+  position: absolute;
+  display: flex;
+  width: 100%;
+  padding: 8px 0px;
+  color: ${({ theme }) => theme.accentTextLightPrimary};
+  background: ${({ theme }) => theme.accentAction};
+  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
+  will-change: opacity;
+  border-radius: 8px;
+  justify-content: center;
+  font-weight: 600 !important;
+  line-height: 16px;
+  opacity: ${({ $hovered }) => ($hovered ? 1 : 0)};
+  cursor: pointer;
+`
+
+const ActionButton = ({ children }: { children: ReactNode }) => {
+  const { hovered, clickActionButton, isDisabled } = useCardContext()
+  return (
+    <StyledActionButton $hovered={hovered && !isDisabled} onClick={() => clickActionButton()}>
+      {children}
+    </StyledActionButton>
+  )
 }
 
 interface Erc1155ControlsInterface {
@@ -883,6 +918,7 @@ const NoContentContainer = ({ height }: { height?: number }) => (
 )
 
 export {
+  ActionButton,
   Audio,
   Container,
   DetailsContainer,
@@ -903,6 +939,7 @@ export {
   SecondaryRow,
   Suspicious,
   TertiaryInfo,
+  TertiaryInfoContainer,
   useAssetMediaType,
   useNotForSale,
   Video,
