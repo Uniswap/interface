@@ -11,12 +11,11 @@ import {
   PlayButtonIcon,
   PlusIconLarge,
   PoolIcon,
-  RarityVerifiedIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
-import { GenieAsset, Rarity, UniformAspectRatio, UniformAspectRatios, WalletAsset } from 'nft/types'
-import { fallbackProvider, isAudio, isVideo, putCommas } from 'nft/utils'
+import { GenieAsset, UniformAspectRatio, UniformAspectRatios, WalletAsset } from 'nft/types'
+import { isAudio, isVideo, putCommas } from 'nft/utils'
 import { floorFormatter } from 'nft/utils/numbers'
 import {
   createContext,
@@ -34,7 +33,6 @@ import { AlertTriangle, Pause, Play } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { colors } from 'theme/colors'
-import { opacify } from 'theme/utils'
 
 /* -------- ASSET CONTEXT -------- */
 export interface CardContextProps {
@@ -169,11 +167,11 @@ const CardContainer = styled.div<{ selected: boolean }>`
   border-radius: ${BORDER_RADIUS}px;
   background-color: ${({ theme }) => theme.backgroundSurface};
   overflow: hidden;
-  padding-bottom: 12px;
-  border-radius: 16px;
-  box-shadow: rgba(0, 0, 0, 10%) 0px 4px 12px;
+  padding-bottom: 20px;
+  box-shadow: ${({ theme }) => theme.shallowShadow};
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
+  isolation: isolate;
 
   :after {
     content: '';
@@ -183,8 +181,8 @@ const CardContainer = styled.div<{ selected: boolean }>`
     bottom: 0px;
     left: 0px;
     border: ${({ selected }) => (selected ? '2px' : '1px')} solid;
-    border-radius: 16px;
-    border-color: ${({ theme, selected }) => (selected ? theme.accentAction : opacify(12, colors.gray500))};
+    border-radius: ${BORDER_RADIUS}px;
+    border-color: ${({ theme, selected }) => (selected ? theme.accentAction : theme.backgroundOutline)};
     pointer-events: none;
   }
 `
@@ -579,16 +577,17 @@ interface CardDetailsContainerProps {
 
 const StyledDetailsContainer = styled(Column)`
   position: relative;
-  padding: 12px 12px 0px;
+  padding: 16px 16px 0px;
   justify-content: space-between;
-  transition: ${({ theme }) => `${theme.transition.duration.medium}`};
+  gap: 8px;
 `
 
 const DetailsContainer = ({ children }: CardDetailsContainerProps) => {
   return <StyledDetailsContainer>{children}</StyledDetailsContainer>
 }
 
-const StyledInfoContainer = styled.div`
+const StyledInfoContainer = styled(Column)`
+  gap: 4px;
   overflow: hidden;
   width: 100%;
 `
@@ -678,13 +677,12 @@ const PrimaryDetails = ({ children }: { children: ReactNode }) => (
   <StyledPrimaryDetails>{children}</StyledPrimaryDetails>
 )
 
-const PrimaryInfoContainer = styled.div`
+const PrimaryInfoContainer = styled(ThemedText.BodySmall)`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
+  font-weight: 600 !important;
+  line-height: 20px;
 `
 
 const PrimaryInfo = ({ children }: { children: ReactNode }) => {
@@ -692,9 +690,7 @@ const PrimaryInfo = ({ children }: { children: ReactNode }) => {
 }
 
 const StyledSecondaryRow = styled(Row)`
-  height: 20px;
   justify-content: space-between;
-  margin-top: 6px;
 `
 
 const SecondaryRow = ({ children }: { children: ReactNode }) => <StyledSecondaryRow>{children}</StyledSecondaryRow>
@@ -708,21 +704,24 @@ const SecondaryDetails = ({ children }: { children: ReactNode }) => (
   <StyledSecondaryDetails>{children}</StyledSecondaryDetails>
 )
 
-const SecondaryInfoContainer = styled.div`
+const SecondaryInfoContainer = styled(ThemedText.BodyPrimary)`
   color: ${({ theme }) => theme.textPrimary};
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  line-height: 20px;
+  line-height: 24px;
 `
 
 const SecondaryInfo = ({ children }: { children: ReactNode }) => {
   return <SecondaryInfoContainer>{children}</SecondaryInfoContainer>
 }
 
-const TertiaryInfoContainer = styled.div`
+const TertiaryInfoContainer = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.textSecondary};
-  margin-top: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 20px;
 `
 
 const TertiaryInfo = ({ children }: { children: ReactNode }) => {
@@ -792,68 +791,27 @@ const DetailsLink = () => {
 
 /* -------- RANKING CARD -------- */
 interface RankingProps {
-  rarity: Rarity
   provider: { url?: string; rank?: number }
-  rarityVerified: boolean
-  rarityLogo?: string
 }
 
-const RarityLogoContainer = styled(Row)`
-  margin-right: 4px;
-  width: 16px;
-`
-
-const RarityText = styled(ThemedText.BodySmall)`
-  display: flex;
-`
-
-const RarityInfo = styled(Row)`
-  height: 16px;
-  border-radius: 4px;
-  color: ${({ theme }) => theme.textPrimary};
+const RarityInfo = styled(ThemedText.Caption)`
+  flex-shrink: 0;
+  color: ${({ theme }) => theme.textSecondary};
   background: ${({ theme }) => theme.backgroundInteractive};
-  font-size: 10px;
-  font-weight: 600;
-  padding: 0px 4px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-weight: 700 !important;
   line-height: 12px;
-  letter-spacing: 0.04em;
-  backdrop-filter: blur(6px);
+  text-align: right;
+  cursor: auto;
 `
 
-const Ranking = ({ rarity, provider, rarityVerified, rarityLogo }: RankingProps) => {
-  const { asset } = useCardContext()
+const Ranking = ({ provider }: RankingProps) => {
+  if (!provider.rank) {
+    return null
+  }
 
-  return (
-    <>
-      {provider.rank && (
-        <RankingContainer>
-          <MouseoverTooltip
-            text={
-              <Row>
-                <RarityLogoContainer>
-                  <img src={rarityLogo} alt="cardLogo" width={16} height={16} />
-                </RarityLogoContainer>
-                <RarityText>
-                  {rarityVerified
-                    ? `Verified by ${
-                        ('collectionName' in asset && asset.collectionName) ||
-                        ('asset_contract' in asset && asset.asset_contract?.name)
-                      }`
-                    : `Ranking by ${rarity.primaryProvider === 'Genie' ? fallbackProvider : rarity.primaryProvider}`}
-                </RarityText>
-              </Row>
-            }
-            placement="top"
-          >
-            <RarityInfo>
-              <Row padding="2px 0px">{putCommas(provider.rank)}</Row>
-              <Row>{rarityVerified ? <RarityVerifiedIcon /> : null}</Row>
-            </RarityInfo>
-          </MouseoverTooltip>
-        </RankingContainer>
-      )}
-    </>
-  )
+  return <RarityInfo># {putCommas(provider.rank)}</RarityInfo>
 }
 
 const SUSPICIOUS_TEXT = t`Blocked on OpenSea`
@@ -944,7 +902,6 @@ export {
   SecondaryInfo,
   SecondaryRow,
   Suspicious,
-  SUSPICIOUS_TEXT,
   TertiaryInfo,
   useAssetMediaType,
   useNotForSale,

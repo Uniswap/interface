@@ -4,12 +4,11 @@ import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { MouseoverTooltip } from 'components/Tooltip'
 import Tooltip from 'components/Tooltip'
-import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { Box } from 'nft/components/Box'
 import { bodySmall } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks'
-import { GenieAsset, isPooledMarket, UniformAspectRatio } from 'nft/types'
-import { formatWeiToDecimal, rarityProviderLogo } from 'nft/utils'
+import { GenieAsset, UniformAspectRatio } from 'nft/types'
+import { formatWeiToDecimal } from 'nft/utils'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 
@@ -47,7 +46,6 @@ export const CollectionAsset = ({
   isMobile,
   mediaShouldBePlaying,
   setCurrentTokenPlayingMedia,
-  rarityVerified,
   uniformAspectRatio,
   setUniformAspectRatio,
   renderedHeight,
@@ -79,13 +77,8 @@ export const CollectionAsset = ({
   const notForSale = useNotForSale(asset)
   const assetMediaType = useAssetMediaType(asset)
 
-  const { provider, rarityLogo } = useMemo(() => {
-    return {
-      provider: asset?.rarity?.providers?.find(
-        ({ provider: _provider }) => _provider === asset.rarity?.primaryProvider
-      ),
-      rarityLogo: rarityProviderLogo[asset.rarity?.primaryProvider ?? 0] ?? '',
-    }
+  const provider = useMemo(() => {
+    return asset?.rarity?.providers?.find(({ provider: _provider }) => _provider === asset.rarity?.primaryProvider)
   }, [asset])
 
   const handleAddAssetToBag = useCallback(() => {
@@ -147,14 +140,7 @@ export const CollectionAsset = ({
             showInline
           />
         </StyledContainer>
-        {asset.rarity && provider && (
-          <Card.Ranking
-            rarity={asset.rarity}
-            provider={provider}
-            rarityVerified={!!rarityVerified}
-            rarityLogo={rarityLogo}
-          />
-        )}
+        {/*       put the marketplace here   */}
         <MouseoverTooltip
           text={
             <Box as="span" className={bodySmall} color="textPrimary">
@@ -204,21 +190,22 @@ export const CollectionAsset = ({
               <Card.PrimaryInfo>{asset.name ? asset.name : `#${asset.tokenId}`}</Card.PrimaryInfo>
               {asset.susFlag && <Card.Suspicious />}
             </Card.PrimaryDetails>
-            <Card.DetailsLink />
+            {asset.rarity && provider && <Card.Ranking provider={provider} />}
           </Card.PrimaryRow>
           <Card.SecondaryRow>
             <Card.SecondaryDetails>
               <Card.SecondaryInfo>
                 {notForSale ? '' : `${formatWeiToDecimal(asset.priceInfo.ETHPrice, true)} ETH`}
               </Card.SecondaryInfo>
-              {isPooledMarket(asset.marketplace) && <Card.Pool />}
             </Card.SecondaryDetails>
-            {asset.tokenType !== NftStandard.Erc1155 && asset.marketplace && (
-              <Card.MarketplaceIcon marketplace={asset.marketplace} />
-            )}
           </Card.SecondaryRow>
         </Card.InfoContainer>
+        <Card.TertiaryInfo>Last sale: 5.05 ETH</Card.TertiaryInfo>
       </Card.DetailsContainer>
     </Card.Container>
   )
 }
+
+// {asset.tokenType !== NftStandard.Erc1155 && asset.marketplace && (
+//   <Card.MarketplaceIcon marketplace={asset.marketplace} />
+// )}
