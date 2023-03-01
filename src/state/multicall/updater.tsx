@@ -1,4 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -90,9 +91,9 @@ async function fetchChunk(
  */
 function activeListeningKeys(
   allListeners: AppState['multicall']['callListeners'],
-  chainId?: number,
+  chainId: ChainId,
 ): { [callKey: string]: number } {
-  if (!allListeners || !chainId) return {}
+  if (!allListeners) return {}
   const listeners = allListeners[chainId]
   if (!listeners) return {}
 
@@ -122,10 +123,10 @@ function activeListeningKeys(
 function outdatedListeningKeys(
   callResults: AppState['multicall']['callResults'],
   listeningKeys: { [callKey: string]: number },
-  chainId: number | undefined,
+  chainId: ChainId,
   latestBlockNumber: number | undefined,
 ): string[] {
-  if (!chainId || !latestBlockNumber) return []
+  if (!latestBlockNumber) return []
   const results = callResults[chainId]
   // no results at all, load everything
   if (!results) return Object.keys(listeningKeys)
@@ -171,7 +172,7 @@ export default function Updater(): null {
   )
 
   useEffect(() => {
-    if (!latestBlockNumber || !chainId || !multicallContract) return
+    if (!latestBlockNumber || !multicallContract) return
 
     const outdatedCallKeys: string[] = JSON.parse(serializedOutdatedCallKeys)
 

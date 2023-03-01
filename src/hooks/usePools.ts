@@ -20,11 +20,11 @@ const POOL_STATE_INTERFACE = new Interface(ProAmmPoolStateABI.abi)
 export function usePools(
   poolKeys: [Currency | undefined, Currency | undefined, FeeAmount | undefined][],
 ): [PoolState, Pool | null][] {
-  const { chainId, isEVM, networkInfo } = useActiveWeb3React()
+  const { isEVM, networkInfo } = useActiveWeb3React()
 
   const transformed: ([Token, Token, FeeAmount] | null)[] = useMemo(() => {
     return poolKeys.map(([currencyA, currencyB, feeAmount]) => {
-      if (!chainId || !currencyA || !currencyB || !feeAmount) return null
+      if (!currencyA || !currencyB || !feeAmount) return null
 
       const tokenA = currencyA?.wrapped
       const tokenB = currencyB?.wrapped
@@ -32,7 +32,7 @@ export function usePools(
       const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
       return [token0, token1, feeAmount]
     })
-  }, [chainId, poolKeys])
+  }, [poolKeys])
   const poolAddresses: (string | undefined)[] = useMemo(() => {
     if (!isEVM) return []
     const proAmmCoreFactoryAddress = (networkInfo as EVMNetworkInfo).elastic.coreFactory

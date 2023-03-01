@@ -28,7 +28,7 @@ export const convertSymbol = (network: string, value: string) => {
  * @param symbol2 ex: usdt
  * @returns
  */
-export const checkPairInWhiteList = (chainId: ChainId | undefined, symbol1: string, symbol2: string) => {
+export const checkPairInWhiteList = (chainId: ChainId, symbol1: string, symbol2: string) => {
   if (!chainId) {
     return { isInWhiteList: false, data: {}, canonicalUrl: '' }
   }
@@ -56,7 +56,7 @@ export const getFormattedAddress = (chainId: ChainId, address?: string, fallback
 
 export const isTokenNative = (
   currency: Currency | WrappedTokenInfo | undefined,
-  chainId: ChainId | undefined,
+  chainId: ChainId,
 ): currency is NativeCurrency => {
   if (currency?.isNative) return true
   // case multichain token

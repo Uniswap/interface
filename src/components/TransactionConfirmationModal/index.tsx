@@ -326,8 +326,6 @@ export default function TransactionConfirmationModal({
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 
-  if (!chainId) return null
-
   return (
     <Modal
       isOpen={isOpen}

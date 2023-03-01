@@ -266,7 +266,7 @@ export async function getBulkPoolDataWithPagination(
   }
 }
 
-export function useResetPools(chainId: ChainId | undefined) {
+export function useResetPools(chainId: ChainId) {
   const dispatch = useDispatch()
 
   useEffect(() => {

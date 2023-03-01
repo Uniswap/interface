@@ -24,7 +24,7 @@ export function useTransactionAdder(): (tx: TransactionHistory) => void {
 
   return useCallback(
     async ({ hash, desiredChainId, type, firstTxHash, extraInfo }: TransactionHistory) => {
-      if (!account || !chainId) return
+      if (!account) return
 
       let tx: TransactionResponse | undefined
       if (isEVM) {

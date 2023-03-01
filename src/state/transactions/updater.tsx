@@ -59,7 +59,7 @@ export default function Updater(): null {
   const setClaimingCampaignRewardId = useSetClaimingCampaignRewardId()[1]
 
   useEffect(() => {
-    if (!chainId || !library || !lastBlockNumber) return
+    if (!library || !lastBlockNumber) return
     const uniqueTransactions = [
       ...new Set(
         Object.values(transactions)

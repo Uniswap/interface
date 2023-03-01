@@ -57,7 +57,7 @@ function FaucetModal() {
   const { mixpanelHandler } = useMixpanel()
   const allTokens = useAllTokens()
   const token = useMemo(() => {
-    if (!chainId || !account) return
+    if (!account) return
     const nativeToken = NativeCurrencies[chainId]
     if (rewardData) {
       if (rewardData.tokenAddress === '0') return nativeToken
@@ -67,7 +67,7 @@ function FaucetModal() {
     return nativeToken
   }, [rewardData, chainId, account, allTokens])
   const tokenLogo = useMemo(() => {
-    if (!chainId || !token) return
+    if (!token) return
     if (token.isNative) return networkInfo.nativeToken.logo
     return getTokenLogoURL(token.address, chainId)
   }, [chainId, token, networkInfo])
@@ -107,7 +107,7 @@ function FaucetModal() {
   }, [account, notify, rewardData, token?.decimals, tokenSymbol])
 
   useEffect(() => {
-    if (!chainId || !account) return
+    if (!account) return
     const getRewardAmount = async () => {
       try {
         const { data } = await fetch(`${REWARD_SERVICE_API}/faucets?wallet=${account}&chainId=${chainId}`).then(res =>

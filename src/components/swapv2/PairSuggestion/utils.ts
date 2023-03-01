@@ -40,7 +40,7 @@ export const findLogoAndSortPair = (activeTokens: TokenMap, list: SuggestionPair
     })
 }
 
-export const getAddressParam = (address: string, chainId: ChainId | undefined) =>
+export const getAddressParam = (address: string, chainId: ChainId) =>
   address.toLowerCase() === ETHER_ADDRESS.toLowerCase() && chainId
     ? currencyId(NativeCurrencies[chainId], chainId)
     : address

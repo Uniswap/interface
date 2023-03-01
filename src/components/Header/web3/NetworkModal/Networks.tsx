@@ -130,7 +130,7 @@ const Networks = ({
   mb?: number
   isAcceptedTerm?: boolean
   activeChainIds?: ChainId[]
-  selectedId?: ChainId | undefined
+  selectedId?: ChainId
   customOnSelectNetwork?: (chainId: ChainId) => void
   customToggleModal?: () => void
   disabledMsg?: string

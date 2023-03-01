@@ -167,7 +167,7 @@ const TokenPair = ({
 
   async function onAdd() {
     // if (!pair) return
-    if (!chainId || !library || !account) return
+    if (!library || !account) return
     const router = isStaticFeePair
       ? isOldStaticFeeContract
         ? getOldStaticFeeRouterContract(chainId, library, account)

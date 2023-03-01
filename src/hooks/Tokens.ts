@@ -145,7 +145,7 @@ export const useTokens = (addresses: string[]): TokenMap => {
         const symbol32 = symbol32Result?.[0].result?.[index]
         const decimals = decimalResult?.[0].result?.[index]
 
-        if (!symbol || !decimals || !chainId) return null
+        if (!symbol || !decimals) return null
 
         return new Token(
           chainId,
@@ -200,7 +200,7 @@ export function useToken(tokenAddress?: string): Token | NativeCurrency | undefi
 
   return useMemo(() => {
     if (token) return token
-    if (!chainId || !address) return undefined
+    if (!address) return undefined
     if (decimals.loading || symbol.loading || tokenName.loading) return null
     if (typeof decimalsResult === 'number') {
       return new Token(

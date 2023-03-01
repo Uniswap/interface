@@ -425,17 +425,8 @@ const LimitOrderForm = function LimitOrderForm({
 
   const onSubmitCreateOrder = async (params: CreateOrderParam) => {
     try {
-      const { currencyIn, currencyOut, chainId, account, inputAmount, outputAmount, expiredAt } = params
-      if (
-        !library ||
-        !currencyIn ||
-        !currencyOut ||
-        !chainId ||
-        !account ||
-        !inputAmount ||
-        !outputAmount ||
-        !expiredAt
-      ) {
+      const { currencyIn, currencyOut, account, inputAmount, outputAmount, expiredAt } = params
+      if (!library || !currencyIn || !currencyOut || !account || !inputAmount || !outputAmount || !expiredAt) {
         throw new Error('wrong input')
       }
 
@@ -537,7 +528,7 @@ const LimitOrderForm = function LimitOrderForm({
   refRefreshActiveMakingAmount.current = refreshActiveMakingAmount
 
   useEffect(() => {
-    if (!account || !chainId) return
+    if (!account) return
     // call when cancel expired/cancelled
     const unsubscribeCancelled = subscribeNotificationOrderCancelled(account, chainId, data => {
       data?.orders.forEach(order => {

@@ -21,7 +21,6 @@ function ContractAddressItem({ network, address, lastItem }: { network: string; 
     event.stopPropagation()
     setCopied(address)
   }
-  if (!chainId) return null
   return (
     <>
       <StyledContractAddressItem>

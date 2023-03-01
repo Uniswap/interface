@@ -162,7 +162,7 @@ const LogoIcon = styled.div`
 `
 
 export default function Header() {
-  const { walletKey } = useActiveWeb3React()
+  const { walletKey, networkInfo } = useActiveWeb3React()
   const isDark = useIsDarkMode()
   const [holidayMode] = useHolidayMode()
 
@@ -170,7 +170,7 @@ export default function Header() {
   return (
     <HeaderFrame>
       <HeaderRow>
-        <Title to="/swap">
+        <Title to={`${APP_PATHS.SWAP}/${networkInfo.route}`}>
           {holidayMode ? (
             <LogoIcon>
               <IconImage

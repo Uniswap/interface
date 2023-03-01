@@ -116,7 +116,7 @@ export function isSolana(chainId?: ChainId): chainId is ChainId.SOLANA {
   return chainType === ChainType.SOLANA
 }
 
-type NetToChain = { [p: string]: ChainId | undefined }
+type NetToChain = { [p: string]: ChainId }
 
 export const TRUESIGHT_NETWORK_TO_CHAINID: NetToChain = SUPPORTED_NETWORKS.reduce((acc, chainId) => {
   const id = NETWORKS_INFO[chainId].trueSightId

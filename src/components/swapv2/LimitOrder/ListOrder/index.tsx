@@ -221,7 +221,7 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
   }
 
   useEffect(() => {
-    if (!account || !chainId) return
+    if (!account) return
     const unsubscribeCancelled = subscribeNotificationOrderCancelled(account, chainId, data => {
       refreshListOrder()
       const cancelAllData = data?.all?.[0]
@@ -415,7 +415,7 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
   }, [orders, isOrderCancelling])
 
   const requestCancelOrder = async (order: LimitOrder | undefined) => {
-    if (!library || !account || !chainId || !limitOrderContract) return Promise.reject('Wrong input')
+    if (!library || !account || !limitOrderContract) return Promise.reject('Wrong input')
 
     setFlowState(state => ({
       ...state,

@@ -97,7 +97,7 @@ const FairLaunchPools = ({ fairLaunchAddress, farms, active }: FarmsListProps) =
     : undefined
 
   const handleHarvestAll = async () => {
-    if (!chainId || !account) {
+    if (!account) {
       return
     }
 

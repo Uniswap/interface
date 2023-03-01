@@ -94,11 +94,7 @@ interface CurrencySearchProps {
 
 const PAGE_SIZE = 20
 
-const fetchTokens = async (
-  search: string | undefined,
-  page: number,
-  chainId: ChainId | undefined,
-): Promise<WrappedTokenInfo[]> => {
+const fetchTokens = async (search: string | undefined, page: number, chainId: ChainId): Promise<WrappedTokenInfo[]> => {
   try {
     if (search && chainId && isAddress(chainId, search)) {
       const token = await fetchTokenByAddress(search, chainId)
@@ -106,7 +102,7 @@ const fetchTokens = async (
     }
     const params: { query: string; isWhitelisted?: boolean; pageSize: number; page: number; chainIds: string } = {
       query: search ?? '',
-      chainIds: chainId?.toString() ?? '',
+      chainIds: chainId.toString(),
       page,
       pageSize: PAGE_SIZE,
     }
@@ -267,7 +263,7 @@ export function CurrencySearch({
         : !currentList.find(el => el === address) // else remove favorite
       const curTotal =
         currentList.filter(address => !!defaultTokens[address]).length + (favoriteTokens?.includeNativeToken ? 1 : 0)
-      if (!chainId || (isAddFavorite && curTotal === MAX_FAVORITE_PAIR)) return
+      if (isAddFavorite && curTotal === MAX_FAVORITE_PAIR) return
 
       if (currency.isNative) {
         toggleFavoriteToken({

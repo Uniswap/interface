@@ -7,7 +7,7 @@ import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 export type BridgeStateParams = {
   tokenIn?: WrappedTokenInfo | undefined
   tokenOut?: WrappedTokenInfo | undefined
-  chainIdOut?: ChainId | undefined
+  chainIdOut?: ChainId
   listChainIn?: ChainId[] | undefined
   listTokenIn?: WrappedTokenInfo[] | undefined
   listTokenOut?: WrappedTokenInfo[] | undefined

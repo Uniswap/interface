@@ -56,7 +56,9 @@ function Web3Network({
   return (
     <>
       <NetworkSwitchContainer onClick={() => chainIds.length && toggleNetworkModal()}>
-        <NetworkLogo chainId={selectedChainId} style={{ width: 20, height: 20, marginRight: '8px' }} />
+        {selectedChainId && (
+          <NetworkLogo chainId={selectedChainId} style={{ width: 20, height: 20, marginRight: '8px' }} />
+        )}
         <NetworkLabel>{name}</NetworkLabel>
         <DropdownIcon open={isOpen} />
       </NetworkSwitchContainer>

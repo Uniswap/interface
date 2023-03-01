@@ -185,7 +185,7 @@ export default function CreatePool() {
 
   async function onAdd() {
     // if (!pair) return
-    if (!chainId || !library || !account) return
+    if (!library || !account) return
 
     const router =
       feeType === FEE_TYPE.STATIC && !onlyDynamicFee

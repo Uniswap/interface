@@ -61,7 +61,7 @@ function useSwapCallArguments(
   const deadline = useTransactionDeadline()
   const tradeBestExactInAnyway = useTradeExactIn(trade?.inputAmount, trade?.outputAmount.currency || undefined)
   return useMemo(() => {
-    if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
+    if (!trade || !recipient || !library || !account || !deadline) return []
 
     const routerContract: Contract | null = getDynamicFeeRouterContract(chainId, library, account)
     if (!routerContract) {
@@ -111,7 +111,7 @@ export function useSwapCallback(
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const { library } = useWeb3React()
 
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
@@ -122,7 +122,7 @@ export function useSwapCallback(
   const recipient = recipientAddressOrName === null ? account : recipientAddress
 
   return useMemo(() => {
-    if (!trade || !library || !account || !chainId) {
+    if (!trade || !library || !account) {
       return { state: SwapCallbackState.INVALID, callback: null, error: 'Missing dependencies' }
     }
     if (!recipient) {
@@ -230,5 +230,5 @@ export function useSwapCallback(
       },
       error: null,
     }
-  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransactionWithType])
+  }, [trade, library, account, recipient, recipientAddressOrName, swapCalls, addTransactionWithType])
 }

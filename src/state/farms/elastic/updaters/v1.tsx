@@ -68,8 +68,8 @@ interface SubgraphFarm {
   farmingPools: Array<FarmingPool>
 }
 
-// TODO: remove below hardcode id_not position
-// That 0xbdec4a045446f583dc564c0a227ffd475b329bf0_98_25016 position causing subgraph to fail
+// TODO (everyone): remove below hardcode id_not position
+// That 0xbdec4a045446f583dc564c0a227ffd475b329bf0_98_25016 position causing subgraph to fail on polygon
 // temporary add this until subgraph fixed the bug
 const ELASTIC_FARM_QUERY = gql`
   query getFarms {

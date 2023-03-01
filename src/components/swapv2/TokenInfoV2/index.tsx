@@ -30,7 +30,7 @@ const checkTokenDescription = ({
   tokenInfo2: TokenInfo
   tokenWrapped1: Currency | undefined
   tokenWrapped2: Currency | undefined
-  chainId: ChainId | undefined
+  chainId: ChainId
 }) => {
   // hard code pair description for SEO
   const rs1: TokenInfo = copyToken(tokenInfo1)

@@ -192,7 +192,7 @@ const ZapIn = ({
     if (!isEVM || !library || !account) return
     const zapContract = getZapContract(chainId, library, account, isStaticFeePair, isOldStaticFeeContract)
 
-    if (!chainId || !account) {
+    if (!account) {
       return
     }
 

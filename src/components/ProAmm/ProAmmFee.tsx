@@ -46,7 +46,7 @@ export default function ProAmmFee({
   feeValue0: CurrencyAmount<Currency> | undefined
   feeValue1: CurrencyAmount<Currency> | undefined
 }) {
-  const { chainId, account } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const { library } = useWeb3React()
   const theme = useTheme()
   const token0Shown = unwrappedToken(position.pool.token0)
@@ -60,18 +60,7 @@ export default function ProAmmFee({
 
   const liquidity = position.liquidity.toString()
   const collect = useCallback(() => {
-    if (
-      !chainId ||
-      !feeValue0 ||
-      !feeValue1 ||
-      !positionManager ||
-      !account ||
-      !tokenId ||
-      !library ||
-      !deadline ||
-      !layout
-    )
-      return
+    if (!feeValue0 || !feeValue1 || !positionManager || !account || !tokenId || !library || !deadline || !layout) return
     // setCollecting(true)
     mixpanelHandler(MIXPANEL_TYPE.ELASTIC_COLLECT_FEES_INITIATED, {
       token_1: token0Shown?.symbol,
@@ -134,7 +123,6 @@ export default function ProAmmFee({
         console.error(error)
       })
   }, [
-    chainId,
     feeValue0,
     feeValue1,
     positionManager,

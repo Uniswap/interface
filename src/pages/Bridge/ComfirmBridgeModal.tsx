@@ -83,7 +83,7 @@ export default memo(function Disclaimer({
         label: t`to`,
         content: (
           <Value>
-            <NetworkLogo chainId={chainIdOut} style={styleLogo} />
+            {chainIdOut && <NetworkLogo chainId={chainIdOut} style={styleLogo} />}
             {chainIdOut && <Text>{NETWORKS_INFO[chainIdOut].name}</Text>}
           </Value>
         ),

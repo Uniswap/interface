@@ -89,8 +89,7 @@ export function useMultipleContracts(
   const { library } = useWeb3React()
 
   return useMemo(() => {
-    if (!isEVM || !addresses || !Array.isArray(addresses) || addresses.length === 0 || !ABI || !library || !chainId)
-      return null
+    if (!isEVM || !addresses || !Array.isArray(addresses) || addresses.length === 0 || !ABI || !library) return null
     const provider = providers[chainId as EVM_NETWORK]
 
     const result: {

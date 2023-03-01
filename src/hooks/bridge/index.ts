@@ -30,7 +30,7 @@ function getTokenBalanceOfAnotherChain(account: string, token: WrappedTokenInfo,
   const isNativeToken = token.multichainInfo?.tokenType === 'NATIVE'
   return new Promise(async (resolve, reject) => {
     try {
-      if (!account || !token || !chainId || !isEVM(chainId)) return reject('wrong input')
+      if (!account || !token || !isEVM(chainId)) return reject('wrong input')
       let balance: BigNumber | undefined
       try {
         const provider = providers[chainId]

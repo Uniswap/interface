@@ -197,7 +197,7 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
   const { deposit, withdraw, harvest } = useFairLaunch(farm.fairLaunchAddress)
 
   const handleStake = async (pid: number) => {
-    if (!chainId || !account) {
+    if (!account) {
       return
     }
 
@@ -217,7 +217,7 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
   }
 
   const handleUnstake = async (pid: number) => {
-    if (!chainId || !account) {
+    if (!account) {
       return
     }
 
@@ -237,7 +237,7 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
   }
 
   const handleHarvest = async (pid: number) => {
-    if (!chainId || !account) {
+    if (!account) {
       return
     }
 

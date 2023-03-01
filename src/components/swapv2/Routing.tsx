@@ -485,7 +485,7 @@ const Routing = ({ trade, currencies, formattedAmounts, maxHeight }: RoutingProp
 
   const tradeComposition = useMemo((): SwapRouteV2[] | undefined => {
     try {
-      return getTradeComposition(trade, chainId, allTokens)
+      return getTradeComposition(chainId, trade, allTokens)
     } catch (e) {
       return undefined
     }

@@ -167,7 +167,7 @@ function useRouterSwap(
   const sendTxToKsSetting = useSendTxToKsSettingCallback()
 
   return useMemo(() => {
-    if (!bridgeContract || !chainId || !tokenInfoIn || !account || !chainIdOut) return NOT_APPLICABLE
+    if (!bridgeContract || !tokenInfoIn || !account || !chainIdOut) return NOT_APPLICABLE
 
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
     return {
@@ -276,7 +276,7 @@ function useBridgeSwap(
   const sendTxToKsSetting = useSendTxToKsSettingCallback()
 
   return useMemo(() => {
-    if (!chainId || !toAddress || !chainIdOut || !library || !account) return NOT_APPLICABLE
+    if (!toAddress || !chainIdOut || !library || !account) return NOT_APPLICABLE
 
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
 

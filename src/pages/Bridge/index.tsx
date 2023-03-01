@@ -130,7 +130,7 @@ export default function Bridge() {
 
   useEffect(() => {
     const destChainInfo = tokenInfoIn?.destChains || {}
-    if (!chainIdOut || !tokenInfoIn || !chainId) {
+    if (!chainIdOut || !tokenInfoIn) {
       setBridgeState({ listTokenOut: [] })
       return
     }

@@ -127,7 +127,7 @@ const RewardLockerSchedules = ({
   }, {})
 
   const onClaimAll = async () => {
-    if (!chainId || !account) {
+    if (!account) {
       return
     }
 

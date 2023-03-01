@@ -27,7 +27,7 @@ export default function useCancellingOrders(): CancellingOrderInfo {
   }, [])
 
   useEffect(() => {
-    if (!account || !chainId) return
+    if (!account) return
     const unsubscribe = subscribeCancellingOrders(account, chainId, data => {
       setCancellingOrdersIds(data?.orderIds ?? [])
       setCancellingOrdersNonces(data?.nonces ?? [])

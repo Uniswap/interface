@@ -84,7 +84,7 @@ export function warningSeverity(priceImpact: Percent | undefined): 0 | 1 | 2 | 3
 }
 
 export function formatExecutionPrice(trade?: AnyTrade | Aggregator, inverted?: boolean, chainId?: ChainId): string {
-  if (!trade || !chainId) {
+  if (!trade) {
     return ''
   }
   const nativeInput = trade.inputAmount.currency

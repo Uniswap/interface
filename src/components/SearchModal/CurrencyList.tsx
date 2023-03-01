@@ -129,7 +129,7 @@ export function CurrencyRow({
   }
 
   const isFavorite = (() => {
-    if (!chainId || !favoriteTokens) {
+    if (!favoriteTokens) {
       return false
     }
 

@@ -37,9 +37,8 @@ export default function Logo({ srcs, alt, ...rest }: LogoProps) {
   return <HelpCircle {...rest} />
 }
 
-export function NetworkLogo({ chainId, style = {} }: { chainId: ChainId | undefined; style?: CSSProperties }) {
+export function NetworkLogo({ chainId, style = {} }: { chainId: ChainId; style?: CSSProperties }) {
   const isDarkMode = useIsDarkMode()
-  if (!chainId) return null
   const { iconDark, icon } = NETWORKS_INFO[chainId]
   const iconSrc = isDarkMode && iconDark ? iconDark : icon
   if (!iconSrc) return null

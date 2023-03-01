@@ -33,7 +33,7 @@ function getTokenComparator(
     [tokenAddress: string]: TokenAmount | undefined
   },
   ethBalance: CurrencyAmount<Currency> | undefined,
-  chainId: ChainId | undefined,
+  chainId: ChainId,
 ): (tokenA: Token, tokenB: Token) => number {
   return function sortTokens(tokenA: Token, tokenB: Token): number {
     // -1 = a is first

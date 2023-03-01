@@ -310,7 +310,7 @@ export function useLiquidityPositionTokenPairs(): [Token, Token][] {
   const savedSerializedPairs = useSelector<AppState, AppState['user']['pairs']>(({ user: { pairs } }) => pairs)
 
   const userPairs: [Token, Token][] = useMemo(() => {
-    if (!chainId || !savedSerializedPairs) return []
+    if (!savedSerializedPairs) return []
     const forChain = savedSerializedPairs[chainId]
     if (!forChain) return []
 

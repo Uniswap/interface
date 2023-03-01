@@ -28,7 +28,7 @@ export default function NetworkModal({
   disabledMsg,
 }: {
   activeChainIds?: ChainId[]
-  selectedId?: ChainId | undefined
+  selectedId?: ChainId
   isOpen?: boolean
   customOnSelectNetwork?: (chainId: ChainId) => void
   customToggleModal?: () => void

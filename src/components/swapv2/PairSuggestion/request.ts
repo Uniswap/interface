@@ -24,7 +24,7 @@ export type SuggestionPairData = {
 }
 
 export function reqGetSuggestionPair(
-  chainId: ChainId | undefined,
+  chainId: ChainId,
   wallet: string | null | undefined,
   query: string,
 ): Promise<{ favoritePairs: SuggestionPairData[]; recommendedPairs: SuggestionPairData[]; amount: string }> {
@@ -36,7 +36,7 @@ export function reqGetSuggestionPair(
 export function reqRemoveFavoritePair(
   item: SuggestionPairData,
   wallet: string | null | undefined,
-  chainId: ChainId | undefined,
+  chainId: ChainId,
 ): Promise<any> {
   return Axios.delete(`${TYPE_AND_SWAP_URL}/v1/favorite-pairs`, {
     data: { wallet, chainId: chainId + '', tokenIn: item.tokenIn, tokenOut: item.tokenOut },
@@ -46,7 +46,7 @@ export function reqRemoveFavoritePair(
 export function reqAddFavoritePair(
   item: SuggestionPairData,
   wallet: string | null | undefined,
-  chainId: ChainId | undefined,
+  chainId: ChainId,
 ): Promise<any> {
   return Axios.post(`${TYPE_AND_SWAP_URL}/v1/favorite-pairs`, {
     wallet,
