@@ -10,7 +10,6 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import {
   AddEthereumChainParameter,
   DialogAnimationType,
-  EMPTY_TOKEN_LIST,
   OnReviewSwapClick,
   SwapWidget,
   SwapWidgetSkeleton,
@@ -61,7 +60,7 @@ export default function Widget({
   const { connector, provider, chainId } = useWeb3React()
   const locale = useActiveLocale()
   const theme = useWidgetTheme()
-  const { inputs, tokenSelector } = useSyncWidgetInputs({
+  const { inputs } = useSyncWidgetInputs({
     defaultTokens,
     onDefaultTokenChange,
   })
@@ -174,8 +173,8 @@ export default function Widget({
         onConnectWalletClick={onConnectWalletClick}
         provider={provider}
         onSwitchChain={onSwitchChain}
-        tokenList={EMPTY_TOKEN_LIST} // prevents loading the default token list, as we use our own token selector UI
-        {...inputs}
+        // {...inputs} // the rest of these relate to token selection
+        onAmountChange={inputs.onAmountChange}
         {...settings}
         {...transactions}
         onExpandSwapDetails={onExpandSwapDetails}
@@ -192,7 +191,6 @@ export default function Widget({
           sendAnalyticsEvent(SwapEventName.SWAP_ERROR, { error, errorInfo, ...trace })
         }}
       />
-      {tokenSelector}
     </>
   )
 }
