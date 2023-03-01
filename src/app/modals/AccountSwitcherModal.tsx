@@ -318,24 +318,24 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         ),
       },
       {
-        key: ElementName.AddViewOnlyWallet,
-        onPress: onPressAddViewOnlyWallet,
+        key: ElementName.ImportAccount,
+        onPress: onPressImportWallet,
         render: () => (
           <Box alignItems="center" p="spacing16">
-            <Text variant="bodyLarge">{t('Add a view-only wallet')}</Text>
+            <Text variant="bodyLarge">{t('Import a wallet')}</Text>
           </Box>
         ),
       },
       {
-        key: ElementName.ImportAccount,
-        onPress: onPressImportWallet,
+        key: ElementName.AddViewOnlyWallet,
+        onPress: onPressAddViewOnlyWallet,
         render: () => (
           <Box
             alignItems="center"
             borderTopColor="backgroundOutline"
             borderTopWidth={1}
             p="spacing16">
-            <Text variant="bodyLarge">{t('Import a wallet')}</Text>
+            <Text variant="bodyLarge">{t('Add a view-only wallet')}</Text>
           </Box>
         ),
       },
