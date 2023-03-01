@@ -157,7 +157,7 @@ const StyledImageContainer = styled.div<{ isDisabled?: boolean }>`
   cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
 `
 
-const CardContainer = styled.div<{ selected: boolean }>`
+const CardContainer = styled.div<{ selected: boolean; $hovered: boolean }>`
   position: relative;
   border-radius: ${BORDER_RADIUS}px;
   background-color: ${({ theme }) => theme.backgroundSurface};
@@ -177,7 +177,8 @@ const CardContainer = styled.div<{ selected: boolean }>`
     left: 0px;
     border: ${({ selected }) => (selected ? '3px' : '1px')} solid;
     border-radius: ${BORDER_RADIUS}px;
-    border-color: ${({ theme, selected }) => (selected ? theme.accentAction : theme.backgroundOutline)};
+    border-color: ${({ theme, selected, $hovered }) =>
+      selected ? ($hovered ? theme.accentCritical : theme.accentAction) : theme.backgroundOutline};
     pointer-events: none;
   }
 `
@@ -249,6 +250,7 @@ const Container = ({
     <CardContext.Provider value={providerValue}>
       <CardContainer
         selected={selected}
+        $hovered={hovered}
         ref={assetRef}
         draggable={false}
         onMouseEnter={toggleHover}
@@ -737,13 +739,13 @@ const TertiaryInfo = ({ children }: { children: ReactNode }) => {
   return <StyledTertiaryInfo>{children}</StyledTertiaryInfo>
 }
 
-const StyledActionButton = styled(ThemedText.BodySmall)<{ $hovered: boolean }>`
+const StyledActionButton = styled(ThemedText.BodySmall)<{ $hovered: boolean; selected: boolean }>`
   position: absolute;
   display: flex;
   width: 100%;
   padding: 8px 0px;
   color: ${({ theme }) => theme.accentTextLightPrimary};
-  background: ${({ theme }) => theme.accentAction};
+  background: ${({ theme, selected }) => (selected ? theme.accentCritical : theme.accentAction)};
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
   will-change: opacity;
   border-radius: 8px;
@@ -755,9 +757,9 @@ const StyledActionButton = styled(ThemedText.BodySmall)<{ $hovered: boolean }>`
 `
 
 const ActionButton = ({ children }: { children: ReactNode }) => {
-  const { hovered, clickActionButton, isDisabled } = useCardContext()
+  const { hovered, clickActionButton, isDisabled, selected } = useCardContext()
   return (
-    <StyledActionButton $hovered={hovered && !isDisabled} onClick={() => clickActionButton()}>
+    <StyledActionButton $hovered={hovered && !isDisabled} selected={selected} onClick={clickActionButton}>
       {children}
     </StyledActionButton>
   )
