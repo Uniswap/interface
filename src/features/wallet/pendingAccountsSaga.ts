@@ -17,6 +17,12 @@ export enum PendingAccountActions {
 export function* managePendingAccounts(pendingAccountAction: PendingAccountActions) {
   const pendingAccounts = yield* appSelect(selectPendingAccounts)
   const pendingAddresses = Object.keys(pendingAccounts)
+  if (!pendingAddresses.length) {
+    // It does not make sense to make updates, when there is nothing to update
+    // Also `removeAccounts` called with empty array will change the current active account
+    logger.debug('pendingAccountsSaga', 'managePendingAccounts', 'No pending accounts found.')
+    return
+  }
   if (pendingAccountAction === PendingAccountActions.ACTIVATE) {
     yield* put(markAsNonPending(pendingAddresses))
   } else if (pendingAccountAction === PendingAccountActions.DELETE) {
