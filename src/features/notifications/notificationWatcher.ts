@@ -121,7 +121,7 @@ export function* pushTransactionNotification(
         event: WalletConnectEvent.TransactionConfirmed,
         dappName: typeInfo.dapp.name,
         imageUrl: typeInfo.dapp.icon,
-        chainId: typeInfo.chainId,
+        chainId: typeInfo.dapp.chain_id,
       })
     )
   } else if (typeInfo.type === TransactionType.Unknown) {

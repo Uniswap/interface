@@ -46,69 +46,10 @@ export type EthSignMethod =
   | EthMethod.SignTypedDataV4
 export type EthTransactionMethod = EthMethod.EthSignTransaction | EthMethod.EthSendTransaction
 
-export interface DappInfoV1 {
-  name: string
-  url: string
-  icon: string | null
-  chain_id: number
-  version: '1'
-}
-
-export interface DappInfoV2 {
-  name: string
-  url: string
-  icon: string | null
-  version: '2'
-}
-
-export type DappInfo = DappInfoV1 | DappInfoV2
-
-export interface EthTransaction {
-  to?: string
-  from?: string
-  value?: string
-  data?: string
-  gasLimit?: string
-  gasPrice?: string
-  nonce?: string
-}
-
-// The following events are only used by WalletConnectV1 request handlers
-interface BaseRequestEvent {
-  account: string
-  dapp: DappInfoV1
-  request_internal_id: string
-  session_id: string
-}
-
-export interface TransactionRequestEvent extends BaseRequestEvent {
-  type: EthTransactionMethod
-  transaction: {
-    to: string | null
-    from: string | null
-    value: string | null
-    data: string | null
-    gas: string | null
-    gas_price: string | null
-    nonce: string | null
-  }
-}
-
-export interface SignRequestEvent extends BaseRequestEvent {
-  type: EthMethod
-  raw_message: string
-  message: string | null
-}
-
-export interface SwitchChainRequestEvent extends BaseRequestEvent {
-  type: EthMethod.SwitchChain | EthMethod.AddChain
-  new_chain_id: number
-}
-
 interface BaseSessionEvent {
   session_id: string
   account: string
-  dapp: DappInfoV1
+  dapp: DappInfo
 }
 
 export interface SessionConnectedEvent extends BaseSessionEvent {
@@ -124,6 +65,65 @@ export interface SessionDisconnectedEvent extends BaseSessionEvent {
 }
 
 export type SessionPendingEvent = BaseSessionEvent
+
+export interface DappInfo {
+  name: string
+  url: string
+  icon: string | null
+  chain_id: number
+  version: '1'
+}
+
+export interface DappInfoV2 {
+  name: string
+  url: string
+  icon: string | null
+  version: '2'
+}
+
+export interface EthTransaction {
+  to?: string
+  from?: string
+  value?: string
+  data?: string
+  gasLimit?: string
+  gasPrice?: string
+  nonce?: string
+}
+
+export interface TransactionRequestEvent {
+  account: string
+  type: EthTransactionMethod
+  transaction: {
+    to: string | null
+    from: string | null
+    value: string | null
+    data: string | null
+    gas: string | null
+    gas_price: string | null
+    nonce: string | null
+  }
+  request_internal_id: string
+  dapp: DappInfo
+}
+
+export interface SignRequestEvent {
+  account: string
+  type: EthMethod
+  raw_message: string
+  message: string | null
+  request_internal_id: string
+  dapp: DappInfo
+}
+
+export interface SwitchChainRequestEvent {
+  account: string
+  type: EthMethod.SwitchChain | EthMethod.AddChain
+  request_internal_id: string
+  session_id: string
+  new_chain_id: number
+  dapp: DappInfo
+}
 
 export interface WCError {
   account: string | null

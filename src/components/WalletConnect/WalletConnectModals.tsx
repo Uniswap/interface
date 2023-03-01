@@ -24,7 +24,6 @@ import {
   SwitchChainRequest,
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { areAddressesEqual } from 'src/utils/addresses'
 
 export function WalletConnectModals(): JSX.Element {
   const activeAccount = useActiveAccount()
@@ -74,8 +73,8 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
     return <WalletConnectSwitchChainModal request={currRequest} onClose={onClose} />
   }
 
-  const isRequestFromSignerAccount = signerAccounts.some((account) =>
-    areAddressesEqual(account.address, currRequest.account)
+  const isRequestFromSignerAccount = signerAccounts.some(
+    (account) => account.address === currRequest.account
   )
 
   if (!isRequestFromSignerAccount) {

@@ -62,7 +62,6 @@ const whitelist: Array<ReducerNames> = [
   'tokens',
   'transactions',
   'wallet',
-  'walletConnect',
   ensApi.reducerPath,
   trmApi.reducerPath,
 ]

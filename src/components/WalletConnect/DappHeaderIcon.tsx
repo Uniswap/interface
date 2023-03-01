@@ -7,7 +7,7 @@ import { ImageUri } from 'src/components/images/ImageUri'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { CurrencyInfo } from 'src/features/dataApi/types'
-import { DappInfo } from 'src/features/walletConnect/types'
+import { DappInfo, DappInfoV2 } from 'src/features/walletConnect/types'
 import { borderRadii, iconSizes } from 'src/styles/sizing'
 import { toSupportedChainId } from 'src/utils/chainId'
 
@@ -16,7 +16,7 @@ export function DappHeaderIcon({
   permitCurrencyInfo,
   showChain = true,
 }: {
-  dapp: DappInfo
+  dapp: DappInfo | DappInfoV2
   permitCurrencyInfo?: CurrencyInfo | null
   showChain?: boolean
 }): JSX.Element {

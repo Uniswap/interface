@@ -60,7 +60,6 @@ class WalletConnectSignRequestHandler: RequestHandler {
           "raw_message": rawMessage,
           "message": decodedMessage ?? nil,
           "request_internal_id": internalId,
-          "session_id": session.url.topic,
           "account": session.getAccount(),
           "dapp": [
             "name": session.dAppInfo.peerMeta.name,

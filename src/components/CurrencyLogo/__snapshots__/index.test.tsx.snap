@@ -64,7 +64,7 @@ exports[`renders a currency logo with network logo 1`] = `
             "display": "flex",
           },
           Object {
-            "borderColor": "#28A0F0",
+            "borderColor": "#515EDC",
           },
         ]
       }

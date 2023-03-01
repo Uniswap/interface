@@ -58,18 +58,16 @@ export function NFTItemScreen({
 
   const ownerDisplayName = useDisplayName(owner)
 
-  const isSharable = asset?.nftContract?.address && asset?.tokenId
-
   const onShare = useCallback(async () => {
-    if (!isSharable) return
+    if (!asset?.nftContract || !asset.tokenId) return
     try {
       await Share.share({
-        message: `${uniswapUrls.nftUrl}/asset/${asset.nftContract?.address}/${asset.tokenId}`,
+        message: `${uniswapUrls.nftUrl}/asset/${asset.nftContract.address}/${asset.tokenId}`,
       })
     } catch (e) {
       logger.error('NFTItemScreen', 'onShare', (e as unknown as Error).message)
     }
-  }, [asset?.nftContract?.address, asset?.tokenId, isSharable])
+  }, [asset?.nftContract, asset?.tokenId])
 
   const creatorInfo = useMemo(() => {
     const creator = asset?.creator
@@ -141,15 +139,13 @@ export function NFTItemScreen({
           renderedInModal={inModal}
           rightElement={
             <Box mr="spacing4">
-              {isSharable && (
-                <TouchableOpacity onPress={onShare}>
-                  <ShareIcon
-                    color={theme.colors.textTertiary}
-                    height={iconSizes.icon24}
-                    width={iconSizes.icon24}
-                  />
-                </TouchableOpacity>
-              )}
+              <TouchableOpacity onPress={onShare}>
+                <ShareIcon
+                  color={theme.colors.textTertiary}
+                  height={iconSizes.icon24}
+                  width={iconSizes.icon24}
+                />
+              </TouchableOpacity>
             </Box>
           }>
           <Flex gap="spacing24" mb="spacing48" mt="spacing16" mx="spacing24" pb="spacing48">

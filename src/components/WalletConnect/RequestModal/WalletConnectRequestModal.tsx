@@ -1,5 +1,4 @@
 import { useNetInfo } from '@react-native-community/netinfo'
-import { getSdkError } from '@walletconnect/utils'
 import { providers } from 'ethers'
 import React, { PropsWithChildren, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,7 +11,6 @@ import { Box, BoxProps, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
-import { NetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
 import { ClientDetails, PermitInfo } from 'src/components/WalletConnect/RequestModal/ClientDetails'
 import { useHasSufficientFunds } from 'src/components/WalletConnect/RequestModal/hooks'
@@ -40,9 +38,8 @@ import {
   TransactionRequest,
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { iconSizes } from 'src/styles/sizing'
-import { areAddressesEqual } from 'src/utils/addresses'
+import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 
@@ -110,10 +107,10 @@ const spacerProps: BoxProps = {
 export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Element | null {
   const theme = useAppTheme()
   const netInfo = useNetInfo()
-  const chainId = request.chainId
+  const chainId = toSupportedChainId(request.dapp.chain_id) ?? undefined
 
   const tx: providers.TransactionRequest | null = useMemo(() => {
-    if (!isTransactionRequest(request)) {
+    if (!chainId || !isTransactionRequest(request)) {
       return null
     }
 
@@ -121,9 +118,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   }, [chainId, request])
 
   const signerAccounts = useSignerAccounts()
-  const signerAccount = signerAccounts.find((account) =>
-    areAddressesEqual(account.address, request.account)
-  )
+  const signerAccount = signerAccounts.find((account) => account.address === request.account)
   const gasFeeInfo = useTransactionGasFee(tx, GasSpeed.Urgent)
   const hasSufficientFunds = useHasSufficientFunds({
     account: request.account,
@@ -159,19 +154,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   const rejectOnCloseRef = useRef(true)
 
   const onReject = (): void => {
-    if (request.version === '1') {
-      rejectRequest(request.internalId)
-    } else {
-      wcWeb3Wallet.respondSessionRequest({
-        topic: request.sessionId,
-        response: {
-          id: Number(request.internalId),
-          jsonrpc: '2.0',
-          error: getSdkError('USER_REJECTED'),
-        },
-      })
-    }
-
+    rejectRequest(request.internalId)
     rejectOnCloseRef.current = false
 
     sendAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
@@ -181,9 +164,9 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
       eth_method: request.type,
       dapp_url: request.dapp.url,
       dapp_name: request.dapp.name,
-      chain_id: chainId,
+      chain_id: request.dapp.chain_id,
       outcome: WCRequestOutcome.Reject,
-      wc_version: request.version,
+      wc_version: '1',
     })
 
     onClose()
@@ -198,20 +181,16 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
       if (!gasFeeInfo) return // appeasing typescript
       dispatch(
         signWcRequestActions.trigger({
-          sessionId: request.sessionId,
           requestInternalId: request.internalId,
           method: request.type,
           transaction: { ...tx, ...gasFeeInfo.params },
           account: signerAccount,
           dapp: request.dapp,
-          chainId,
-          version: request.version,
         })
       )
     } else {
       dispatch(
         signWcRequestActions.trigger({
-          sessionId: request.sessionId,
           requestInternalId: request.internalId,
           method: request.type,
           // this is EthSignMessage type
@@ -219,8 +198,6 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
           message: (request as any).message || (request as any).rawMessage,
           account: signerAccount,
           dapp: request.dapp,
-          chainId,
-          version: request.version,
         })
       )
     }
@@ -234,9 +211,9 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
       eth_method: request.type,
       dapp_url: request.dapp.url,
       dapp_name: request.dapp.name,
-      chain_id: chainId,
+      chain_id: request.dapp.chain_id,
       outcome: WCRequestOutcome.Confirm,
-      wc_version: request.version,
+      wc_version: '1',
     })
 
     onClose()
@@ -277,25 +254,9 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                 </Flex>
               </SectionContainer>
             )}
-            {methodCostsGas(request) ? (
+
+            {methodCostsGas(request) && chainId && (
               <NetworkFee chainId={chainId} gasFee={gasFeeInfo?.gasFee} />
-            ) : (
-              <Box px="spacing16" py="spacing12">
-                <Flex row alignItems="center" justifyContent="space-between">
-                  <Text color="textPrimary" variant="subheadSmall">
-                    {t('Network')}
-                  </Text>
-                  <NetworkPill
-                    showIcon
-                    chainId={chainId}
-                    gap="spacing4"
-                    pl="spacing4"
-                    pr="spacing8"
-                    py="spacing2"
-                    textVariant="subheadSmall"
-                  />
-                </Flex>
-              </Box>
             )}
 
             <SectionContainer>

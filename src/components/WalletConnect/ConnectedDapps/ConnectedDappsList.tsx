@@ -4,9 +4,8 @@ import { FlatList, StyleSheet, ViewStyle } from 'react-native'
 import 'react-native-reanimated'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
-import { BackButton } from 'src/components/buttons/BackButton'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { BackHeader } from 'src/components/layout/BackHeader'
 import { Text } from 'src/components/Text'
 import { DappConnectionItem } from 'src/components/WalletConnect/ConnectedDapps/DappConnectionItem'
 import { DappSwitchNetworkModal } from 'src/components/WalletConnect/ConnectedDapps/DappSwitchNetworkModal'
@@ -24,30 +23,28 @@ type ConnectedDappsProps = {
 export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps): JSX.Element {
   const { t } = useTranslation()
   const theme = useAppTheme()
-  const [isEditing, setIsEditing] = useState(false)
+
   const [selectedSession, setSelectedSession] = useState<WalletConnectSessionV1>()
+
+  const headerText = (
+    <Text color="textPrimary" variant="bodyLarge">
+      {t('Manage connections')}
+    </Text>
+  )
+  const header = backButton ? (
+    <Flex row alignItems="center" justifyContent="space-between">
+      {backButton}
+      {headerText}
+      <Box width={theme.iconSizes.icon24} />
+    </Flex>
+  ) : (
+    <BackHeader alignment="center">{headerText}</BackHeader>
+  )
 
   return (
     <>
       <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} pt="spacing16" px="spacing24">
-        <Flex row alignItems="center" justifyContent="space-between">
-          <Box width={theme.iconSizes.icon40}>{backButton ?? <BackButton />}</Box>
-          <Text color="textPrimary" variant="bodyLarge">
-            {t('Manage connections')}
-          </Text>
-          <TouchableArea
-            width={theme.iconSizes.icon40}
-            onPress={(): void => {
-              setIsEditing(!isEditing)
-            }}>
-            <Text
-              color={isEditing ? 'accentActive' : 'textTertiary'}
-              textAlign="right"
-              variant="subheadSmall">
-              {isEditing ? t('Done') : t('Edit')}
-            </Text>
-          </TouchableArea>
-        </Flex>
+        {header}
 
         {sessions.length > 0 ? (
           <FlatList
@@ -57,7 +54,6 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
             numColumns={2}
             renderItem={({ item }): JSX.Element => (
               <DappConnectionItem
-                isEditing={isEditing}
                 session={item}
                 onPressChangeNetwork={(session): void => setSelectedSession(session)}
               />
