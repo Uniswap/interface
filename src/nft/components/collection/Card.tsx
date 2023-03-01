@@ -8,13 +8,17 @@ import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import {
   CollectionSelectedAssetIcon,
   MinusIconLarge,
+  Nft20Icon,
+  NftXIcon,
   OpenSeaMarketplaceIcon,
   PauseButtonIcon,
   PlayButtonIcon,
   PlusIconLarge,
   PoolIcon,
   ProfileSelectedAssetIcon,
+  SudoSwapIcon,
   VerifiedIcon,
+  X2y2Icon,
 } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset, Markets, UniformAspectRatio, UniformAspectRatios, WalletAsset } from 'nft/types'
@@ -928,6 +932,14 @@ function getMarketplaceIcon(market: Markets): ReactNode {
   switch (market) {
     case Markets.Opensea:
       return <OpenSeaMarketplaceIcon />
+    case Markets.X2Y2:
+      return <X2y2Icon />
+    case Markets.Sudoswap:
+      return <SudoSwapIcon />
+    case Markets.NFT20:
+      return <Nft20Icon />
+    case Markets.NFTX:
+      return <NftXIcon />
     default:
       return null
   }
