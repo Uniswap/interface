@@ -113,14 +113,14 @@ export function TokenDetailsStats({
 
   return (
     <Flex gap="spacing24">
-      <Flex gap="spacing4">
-        {tokenData?.name ? (
-          <Text color="textTertiary" variant="subheadSmall">
-            {t('About {{ token }}', { token: tokenData.name })}
-          </Text>
-        ) : null}
-        <Flex gap="spacing16">
-          {tokenProjectData?.description && (
+      {tokenProjectData?.description && (
+        <Flex gap="spacing4">
+          {tokenData?.name && (
+            <Text color="textTertiary" variant="subheadSmall">
+              {t('About {{ token }}', { token: tokenData.name })}
+            </Text>
+          )}
+          <Flex gap="spacing16">
             <LongText
               gap="spacing2"
               initialDisplayedLines={5}
@@ -128,9 +128,9 @@ export function TokenDetailsStats({
               readMoreOrLessColor={tokenColor ?? theme.colors.accentAction}
               text={tokenProjectData.description.trim()}
             />
-          )}
+          </Flex>
         </Flex>
-      </Flex>
+      )}
       <Flex gap="spacing4">
         <Text color="textTertiary" variant="subheadSmall">
           {t('Stats')}
