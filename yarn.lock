@@ -5251,10 +5251,10 @@
     "@uniswap/v3-core" "1.0.0"
     "@uniswap/v3-periphery" "^1.0.1"
 
-"@uniswap/widgets@^2.42.1":
-  version "2.42.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.42.1.tgz#d3cf94d1d646049006f0e4275ae8af272f609858"
-  integrity sha512-oxLRNRAsikC8RFtUsT28nGSV6HPybKIRLhM80HKxIWOhgYSSmya36qC1KLvSf/rfGJOzo7EewrawiPgkjngoxg==
+"@uniswap/widgets@^2.42.3":
+  version "2.42.3"
+  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.42.3.tgz#67b8f59b901ba092d8fd0d981513989f1bc5dcfd"
+  integrity sha512-YzaJUQqtQsaKjUk+Fa4PMZ35fDhtd0CZxC6dMFtq8y2Rmv2Uh0ARD3ZqOJqe3pU3D9dbYpIOD/wzLBrzB4LRtQ==
   dependencies:
     "@babel/runtime" ">=7.17.0"
     "@fontsource/ibm-plex-mono" "^4.5.1"
