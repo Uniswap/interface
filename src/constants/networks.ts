@@ -4,6 +4,10 @@ const INFURA_KEY = process.env.REACT_APP_INFURA_KEY
 if (typeof INFURA_KEY === 'undefined') {
   throw new Error(`REACT_APP_INFURA_KEY must be a defined environment variable`)
 }
+const QUICKNODE_KEY = process.env.REACT_APP_QUICKNODE_KEY
+if (typeof QUICKNODE_KEY === 'undefined') {
+  throw new Error(`REACT_APP_QUICKNODE_KEY must be a defined environment variable`)
+}
 
 /**
  * Fallback JSON-RPC endpoints.
@@ -155,5 +159,8 @@ export const RPC_URLS = {
   ],
   [SupportedChainId.CELO]: FALLBACK_URLS[SupportedChainId.CELO],
   [SupportedChainId.CELO_ALFAJORES]: FALLBACK_URLS[SupportedChainId.CELO_ALFAJORES],
-  [SupportedChainId.BSC]: FALLBACK_URLS[SupportedChainId.BSC],
+  [SupportedChainId.BSC]: [
+    `https://maximum-aged-mound.bsc.quiknode.pro/${QUICKNODE_KEY}`,
+    ...FALLBACK_URLS[SupportedChainId.BSC],
+  ],
 }
