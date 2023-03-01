@@ -7,10 +7,12 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import {
   MinusIconLarge,
+  OpenSeaMarketplaceIcon,
   PauseButtonIcon,
   PlayButtonIcon,
   PlusIconLarge,
   PoolIcon,
+  SelectedAssetIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
@@ -723,9 +725,13 @@ const SecondaryInfo = ({ children }: { children: ReactNode }) => {
   return <SecondaryInfoContainer>{children}</SecondaryInfoContainer>
 }
 
-const TertiaryInfoContainer = styled.div`
+const StyledTertiaryInfoContainer = styled.div`
   position: relative;
 `
+
+const TertiaryInfoContainer = ({ children }: { children: ReactNode }) => {
+  return <StyledTertiaryInfoContainer>{children}</StyledTertiaryInfoContainer>
+}
 
 const StyledTertiaryInfo = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.textSecondary};
@@ -889,6 +895,39 @@ const Pool = () => {
   )
 }
 
+const StyledMarketplaceContainer = styled.div`
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+`
+
+const MarketplaceContainer = () => {
+  const { asset, selected } = useCardContext()
+
+  if (selected) {
+    return (
+      <StyledMarketplaceContainer>
+        <SelectedAssetIcon />
+      </StyledMarketplaceContainer>
+    )
+  }
+
+  if (!('marketplace' in asset)) {
+    return null
+  }
+
+  if (asset.tokenType === NftStandard.Erc1155) {
+    return null
+  }
+
+  return (
+    <StyledMarketplaceContainer>
+      <OpenSeaMarketplaceIcon />
+    </StyledMarketplaceContainer>
+  )
+}
+
 const NoContentContainerBackground = styled.div<{ height?: number }>`
   position: relative;
   width: 100%;
@@ -929,6 +968,7 @@ export {
   Image,
   ImageContainer,
   InfoContainer,
+  MarketplaceContainer,
   MarketplaceIcon,
   Pool,
   PrimaryDetails,

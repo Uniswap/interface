@@ -140,7 +140,7 @@ export const CollectionAsset = ({
             showInline
           />
         </StyledContainer>
-        {/*       put the marketplace here   */}
+        <Card.MarketplaceContainer />
         <MouseoverTooltip
           text={
             <Box as="span" className={bodySmall} color="textPrimary">
@@ -208,7 +208,3 @@ export const CollectionAsset = ({
     </Card.Container>
   )
 }
-
-// {asset.tokenType !== NftStandard.Erc1155 && asset.marketplace && (
-//   <Card.MarketplaceIcon marketplace={asset.marketplace} />
-// )}
