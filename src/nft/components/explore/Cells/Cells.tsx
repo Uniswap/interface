@@ -7,7 +7,7 @@ import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { ethNumberStandardFormatter, formatWeiToDecimal } from '../../../utils/currency'
+import { ethNumberStandardFormatter } from '../../../utils/currency'
 import * as styles from './Cells.css'
 
 const TruncatedText = styled.div`
@@ -116,7 +116,7 @@ export const EthCell = ({
   const denominatedValue = getDenominatedValue(denomination, true, value, usdPrice)
   const formattedValue = denominatedValue
     ? denomination === Denomination.ETH
-      ? formatWeiToDecimal(denominatedValue.toString(), true) + ' ETH'
+      ? ethNumberStandardFormatter(denominatedValue.toString(), false, true, false) + ' ETH'
       : ethNumberStandardFormatter(denominatedValue, true, false, true)
     : '-'
 
