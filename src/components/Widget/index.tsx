@@ -61,7 +61,7 @@ export default function Widget({
   const { connector, provider, chainId } = useWeb3React()
   const locale = useActiveLocale()
   const theme = useWidgetTheme()
-  const { inputs } = useSyncWidgetInputs({
+  const { inputs, tokenSelector } = useSyncWidgetInputs({
     defaultTokens,
     onDefaultTokenChange,
   })
@@ -174,7 +174,7 @@ export default function Widget({
         onConnectWalletClick={onConnectWalletClick}
         provider={provider}
         onSwitchChain={onSwitchChain}
-        tokenList={EMPTY_TOKEN_LIST}
+        tokenList={EMPTY_TOKEN_LIST} // prevents loading the default token list, as we use our own token selector UI
         {...inputs}
         {...settings}
         {...transactions}
@@ -192,6 +192,7 @@ export default function Widget({
           sendAnalyticsEvent(SwapEventName.SWAP_ERROR, { error, errorInfo, ...trace })
         }}
       />
+      {tokenSelector}
     </>
   )
 }
