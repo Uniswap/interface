@@ -32,7 +32,7 @@ const StyledHeader = styled.div`
   color: ${({ theme }) => theme.textPrimary};
   font-size: 36px;
   line-height: 44px;
-  weight: 500;
+  font-weight: 500;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     font-size: 20px;
