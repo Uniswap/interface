@@ -10,6 +10,7 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import {
   AddEthereumChainParameter,
   DialogAnimationType,
+  EMPTY_TOKEN_LIST,
   OnReviewSwapClick,
   SwapWidget,
   SwapWidgetSkeleton,
@@ -173,8 +174,8 @@ export default function Widget({
         onConnectWalletClick={onConnectWalletClick}
         provider={provider}
         onSwitchChain={onSwitchChain}
-        // {...inputs} // the rest of these relate to token selection
-        onAmountChange={inputs.onAmountChange}
+        tokenList={EMPTY_TOKEN_LIST}
+        {...inputs}
         {...settings}
         {...transactions}
         onExpandSwapDetails={onExpandSwapDetails}
