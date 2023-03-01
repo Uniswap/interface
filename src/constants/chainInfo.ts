@@ -227,7 +227,7 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://docs.bnbchain.org/',
     explorer: 'https://bscscan.com/',
     infoLink: 'https://info.uniswap.org/#/bnb',
-    label: 'BNB',
+    label: 'BNB Chain',
     logoUrl: bnbLogo,
     circleLogoUrl: bnbCircleLogoUrl,
     nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
