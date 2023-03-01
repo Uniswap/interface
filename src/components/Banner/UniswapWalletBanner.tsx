@@ -1,11 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import Row, { RowBetween } from 'components/Row'
+import { useWalletDrawer } from 'components/WalletDropdown'
 import { DownloadButton, LearnMoreButton } from 'components/WalletDropdown/DownloadButton'
 import { X } from 'react-feather'
 import { useLocation } from 'react-router-dom'
-import { useModalIsOpen } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
 import { useHideUniswapWalletBanner } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -67,13 +66,13 @@ const StyledXButton = styled(X)`
 
 export default function UniswapWalletBanner() {
   const [hideUniswapWalletBanner, toggleHideUniswapWalletBanner] = useHideUniswapWalletBanner()
-  const walletDropdownOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
+  const [walletDrawerOpen] = useWalletDrawer()
 
   const theme = useTheme()
 
   const { pathname } = useLocation()
   const shouldDisplay = Boolean(
-    !walletDropdownOpen && !hideUniswapWalletBanner && isIOS && !pathname.startsWith('/wallet')
+    !walletDrawerOpen && !hideUniswapWalletBanner && isIOS && !pathname.startsWith('/wallet')
   )
 
   return (

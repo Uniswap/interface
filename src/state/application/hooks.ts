@@ -102,10 +102,6 @@ export function useToggleUniwalletModal(): () => void {
   return useToggleModal(ApplicationModal.UNIWALLET_CONNECT)
 }
 
-export function useToggleWalletDropdown(): () => void {
-  return useToggleModal(ApplicationModal.WALLET_DROPDOWN)
-}
-
 export function useToggleSettingsMenu(): () => void {
   return useToggleModal(ApplicationModal.SETTINGS)
 }

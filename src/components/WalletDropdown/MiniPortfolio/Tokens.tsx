@@ -8,10 +8,10 @@ import { PortfolioBalancesQuery, usePortfolioBalancesQuery } from 'graphql/data/
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useToggleWalletDropdown } from 'state/application/hooks'
 import styled from 'styled-components/macro'
 import { EllipsisStyle, ThemedText } from 'theme'
 
+import { useToggleWalletDrawer } from '..'
 import { PortfolioArrow } from '../AuthenticatedHeader'
 import PortfolioRow from './PortfolioRow'
 
@@ -74,12 +74,12 @@ function TokenRow({ token, quantity, denominatedValue }: TokenBalance & { token:
 
 function MiniSwapButton({ token }: { token: PortfolioToken }) {
   const navigate = useNavigate()
-  const toggleWalletDropdown = useToggleWalletDropdown()
+  const toggleWalletDrawer = useToggleWalletDrawer()
 
   const navigateToSwap = useCallback(async () => {
     navigate(getTokenDetailsURL(token))
-    toggleWalletDropdown()
-  }, [navigate, token, toggleWalletDropdown])
+    toggleWalletDrawer()
+  }, [navigate, token, toggleWalletDrawer])
 
   return (
     <ButtonLight onClick={navigateToSwap} width="fit-content" padding="8px" $borderRadius="12px">

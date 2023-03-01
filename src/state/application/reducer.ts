@@ -35,7 +35,6 @@ export enum ApplicationModal {
   TIME_SELECTOR,
   VOTE,
   WALLET,
-  WALLET_DROPDOWN,
   UNISWAP_NFT_AIRDROP_CLAIM,
 }
 

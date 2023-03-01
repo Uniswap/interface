@@ -19,6 +19,7 @@ import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { useToggleWalletDrawer } from 'components/WalletDropdown'
 import Widget from 'components/Widget'
 import { isSupportedChain } from 'constants/chains'
 import { useSwapWidgetEnabled } from 'featureFlags/flags/swapWidget'
@@ -33,7 +34,6 @@ import { ReactNode } from 'react'
 import { ArrowDown, Info } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
-import { useToggleWalletDropdown } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
@@ -194,7 +194,7 @@ export default function Swap({ className }: { className?: string }) {
   const theme = useTheme()
 
   // toggle wallet when disconnected
-  const toggleWalletDropdown = useToggleWalletDropdown()
+  const toggleWalletDrawer = useToggleWalletDrawer()
 
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
@@ -634,7 +634,7 @@ export default function Swap({ className }: { className?: string }) {
                       properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
                       element={InterfaceElementName.CONNECT_WALLET_BUTTON}
                     >
-                      <ButtonLight onClick={toggleWalletDropdown} fontWeight={600}>
+                      <ButtonLight onClick={toggleWalletDrawer} fontWeight={600}>
                         <Trans>Connect Wallet</Trans>
                       </ButtonLight>
                     </TraceEvent>

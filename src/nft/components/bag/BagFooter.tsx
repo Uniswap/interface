@@ -12,6 +12,7 @@ import Row from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { useToggleWalletDrawer } from 'components/WalletDropdown'
 import { SupportedChainId } from 'constants/chains'
 import { usePayWithAnyTokenEnabled } from 'featureFlags/flags/payWithAnyToken'
 import { useCurrency } from 'hooks/Tokens'
@@ -33,7 +34,6 @@ import { BagStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
-import { useToggleWalletDropdown } from 'state/application/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -287,7 +287,7 @@ const PENDING_BAG_STATUSES = [
 ]
 
 export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) => {
-  const toggleWalletDropdown = useToggleWalletDropdown()
+  const toggleWalletDrawer = useToggleWalletDrawer()
   const theme = useTheme()
   const { account, chainId, connector } = useWeb3React()
   const connected = Boolean(account && chainId)
@@ -400,7 +400,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
       warningText = <Trans>Something went wrong. Please try again.</Trans>
     } else if (!connected) {
       handleClick = () => {
-        toggleWalletDropdown()
+        toggleWalletDrawer()
         setBagExpanded({ bagExpanded: false })
       }
       disabled = false
@@ -484,7 +484,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     allowance.state,
     priceImpact,
     connector,
-    toggleWalletDropdown,
+    toggleWalletDrawer,
     setBagExpanded,
     isAllowancePending,
     isApprovalLoading,

@@ -3,14 +3,14 @@ import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
-import WalletDropdown from 'components/WalletDropdown'
+import WalletDropdown, { useWalletDrawer } from 'components/WalletDropdown'
 import PrefetchBalancesWrapper from 'components/WalletDropdown/PrefetchBalancesWrapper'
 import { getConnection } from 'connection'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useMemo } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
@@ -18,9 +18,6 @@ import styled, { useTheme } from 'styled-components/macro'
 import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
 
-import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { useCloseModal, useModalIsOpen, useToggleWalletDropdown } from '../../state/application/hooks'
-import { ApplicationModal } from '../../state/application/reducer'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/types'
 import { shortenAddress } from '../../utils'
@@ -175,12 +172,11 @@ function Web3StatusInner() {
   } = useDerivedSwapInfo()
   const validSwapQuote = getIsValidSwapQuote(trade, tradeState, swapInputError)
   const theme = useTheme()
-  const toggleWalletDropdown = useToggleWalletDropdown()
+  const [walletDrawerOpen, toggleWalletDrawer] = useWalletDrawer()
   const handleWalletDropdownClick = useCallback(() => {
     sendAnalyticsEvent(InterfaceEventName.ACCOUNT_DROPDOWN_BUTTON_CLICKED)
-    toggleWalletDropdown()
-  }, [toggleWalletDropdown])
-  const walletIsOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
+    toggleWalletDrawer()
+  }, [toggleWalletDrawer])
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
@@ -211,7 +207,7 @@ function Web3StatusInner() {
     const chevronProps = {
       ...CHEVRON_PROPS,
       color: theme.textSecondary,
-      'aria-label': walletIsOpen ? t`Close wallet connection options` : t`Open wallet connection options`,
+      'aria-label': walletDrawerOpen ? t`Close wallet connection options` : t`Open wallet connection options`,
     }
 
     return (
@@ -232,7 +228,7 @@ function Web3StatusInner() {
         ) : (
           <AddressAndChevronContainer>
             <Text>{ENSName || shortenAddress(account)}</Text>
-            {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
+            {walletDrawerOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
           </AddressAndChevronContainer>
         )}
       </Web3StatusConnected>
@@ -241,7 +237,7 @@ function Web3StatusInner() {
     const chevronProps = {
       ...CHEVRON_PROPS,
       'data-testid': 'navbar-wallet-dropdown',
-      'aria-label': walletIsOpen ? t`Close wallet connection options` : t`Open wallet connection options`,
+      'aria-label': walletDrawerOpen ? t`Close wallet connection options` : t`Open wallet connection options`,
     }
     return (
       <TraceEvent
@@ -260,7 +256,7 @@ function Web3StatusInner() {
             <Trans>Connect</Trans>
           </StyledConnectButton>
           <ChevronWrapper tabIndex={-1}>
-            {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
+            {walletDrawerOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
           </ChevronWrapper>
         </Web3StatusConnectWrapper>
       </TraceEvent>
@@ -270,23 +266,12 @@ function Web3StatusInner() {
 
 // eslint-disable-next-line import/no-unused-modules
 export default function Web3Status() {
-  const ref = useRef<HTMLDivElement>(null)
-  const walletRef = useRef<HTMLDivElement>(null)
-  const closeModal = useCloseModal()
-  const isOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
-
-  useOnClickOutside(ref, isOpen ? closeModal : undefined, [walletRef])
-
   return (
     <PrefetchBalancesWrapper>
-      <span ref={ref}>
-        <Web3StatusInner />
-        <Portal>
-          <span ref={walletRef}>
-            <WalletDropdown />
-          </span>
-        </Portal>
-      </span>
+      <Web3StatusInner />
+      <Portal>
+        <WalletDropdown />
+      </Portal>
     </PrefetchBalancesWrapper>
   )
 }

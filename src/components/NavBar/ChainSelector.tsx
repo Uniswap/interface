@@ -1,4 +1,6 @@
+import { t } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { ConnectionType } from 'connection'
 import { getConnection } from 'connection'
 import { getChainInfo } from 'constants/chainInfo'
@@ -9,12 +11,9 @@ import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Column, Row } from 'nft/components/Flex'
-import { TokenWarningRedIcon } from 'nft/components/icons'
-import { subhead } from 'nft/css/common.css'
-import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { useCallback, useRef, useState } from 'react'
-import { ChevronDown, ChevronUp } from 'react-feather'
+import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useTheme } from 'styled-components/macro'
 
 import * as styles from './ChainSelector.css'
@@ -95,31 +94,22 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
 
   return (
     <Box position="relative" ref={ref}>
-      <Row
-        as="button"
-        gap="8"
-        className={styles.ChainSelector}
-        background={isOpen ? 'accentActiveSoft' : 'none'}
-        data-testid="chain-selector"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        {!isSupported ? (
-          <>
-            <TokenWarningRedIcon fill={themeVars.colors.textSecondary} width={24} height={24} />
-            <Box as="span" className={subhead} display={{ sm: 'none', xxl: 'flex' }} style={{ lineHeight: '20px' }}>
-              Unsupported
-            </Box>
-          </>
-        ) : (
-          <>
-            <img src={info.logoUrl} alt={info.label} className={styles.Image} />
-            <Box as="span" className={subhead} display={{ sm: 'none', xxl: 'flex' }} style={{ lineHeight: '20px' }}>
-              {info.label}
-            </Box>
-          </>
-        )}
-        {isOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
-      </Row>
+      <MouseoverTooltip text={t`Your wallet's current network is unsupported.`} disableHover={isSupported}>
+        <Row
+          as="button"
+          gap="8"
+          className={styles.ChainSelector}
+          background={isOpen ? 'accentActiveSoft' : 'none'}
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          {!isSupported ? (
+            <AlertTriangle size={20} color={theme.textSecondary} />
+          ) : (
+            <img src={info.logoUrl} alt={info.label} className={styles.Image} data-testid="chain-selector-logo" />
+          )}
+          {isOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
+        </Row>
+      </MouseoverTooltip>
       {isOpen && (isMobile ? <Portal>{dropdown}</Portal> : <>{dropdown}</>)}
     </Box>
   )
