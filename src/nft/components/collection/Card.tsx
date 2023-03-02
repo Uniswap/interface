@@ -186,6 +186,7 @@ interface CardProps {
   children: ReactNode
   isDisabled?: boolean
   onClick?: () => void
+  doNotLinkToDetails?: boolean
 }
 
 const Container = ({
@@ -196,6 +197,7 @@ const Container = ({
   children,
   isDisabled,
   onClick,
+  doNotLinkToDetails = false,
 }: CardProps) => {
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
   const [href, setHref] = useState(baseHref(asset))
@@ -243,7 +245,7 @@ const Container = ({
   return (
     <CardContext.Provider value={providerValue}>
       <CardContainer>
-        <StyledLink to={getAssetHref(asset)}>{children}</StyledLink>
+        <StyledLink to={doNotLinkToDetails ? '' : getAssetHref(asset)}>{children}</StyledLink>
       </CardContainer>
     </CardContext.Provider>
   )

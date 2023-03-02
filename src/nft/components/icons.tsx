@@ -67,15 +67,6 @@ export const VerifiedIcon = (props: SVGProps) => {
   )
 }
 
-export const PoolIcon = (props: SVGProps) => (
-  <svg {...props} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M3.13184 15.1834C3.13184 15.5098 3.34528 15.7233 3.67174 15.7233H16.2464C16.5854 15.7233 16.8679 15.4596 16.8679 15.108C16.8679 14.7565 16.5854 14.4928 16.2464 14.4928H4.53809C4.40625 14.4928 4.3623 14.4489 4.3623 14.317V10.9019L7.02414 9.35749C7.23758 9.55838 7.52009 9.68394 7.84026 9.68394C8.11021 9.68394 8.36761 9.58977 8.5685 9.43283L9.74874 10.4373C9.7048 10.5628 9.67969 10.701 9.67969 10.8391C9.67969 11.5045 10.2133 12.0382 10.8725 12.0382C11.5317 12.0382 12.0716 11.5045 12.0716 10.8391C12.0716 10.7889 12.0653 10.7324 12.059 10.6821L14.9343 8.96198C15.1226 9.09382 15.3549 9.16915 15.5998 9.16915C16.2589 9.16915 16.7988 8.62925 16.7988 7.97008C16.7988 7.3109 16.2589 6.771 15.5998 6.771C14.9406 6.771 14.4007 7.3109 14.4007 7.97008C14.4007 8.05169 14.4132 8.1333 14.4258 8.20864L11.607 9.89739C11.4061 9.74044 11.1487 9.64627 10.8725 9.64627C10.6779 9.64627 10.4895 9.69022 10.32 9.77811L9.02051 8.6732C9.02679 8.61042 9.03306 8.54764 9.03306 8.48486C9.03306 7.82568 8.49944 7.28578 7.84026 7.28578C7.17481 7.28578 6.64118 7.82568 6.64118 8.48486C6.64118 8.5037 6.64118 8.52253 6.64118 8.54136L4.3623 9.85972V4.44817C4.3623 4.10289 4.09863 3.82666 3.74707 3.82666C3.39551 3.82666 3.13184 4.10289 3.13184 4.44817V15.1834Z"
-      fill="currentColor"
-    />
-  </svg>
-)
-
 export const XMarkIcon = (props: SVGProps) => (
   <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
@@ -490,19 +481,6 @@ export const GovernanceIcon = (props: SVGProps) => (
       strokeLinecap="round"
       strokeLinejoin="round"
     />
-  </svg>
-)
-
-export const MinusIconLarge = (props: SVGProps) => (
-  <svg {...props} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-)
-
-export const PlusIconLarge = (props: SVGProps) => (
-  <svg {...props} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 5V19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
 

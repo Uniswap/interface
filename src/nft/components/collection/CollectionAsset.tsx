@@ -4,8 +4,7 @@ import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { useBag } from 'nft/hooks'
 import { GenieAsset, UniformAspectRatio } from 'nft/types'
 import { formatWeiToDecimal } from 'nft/utils'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import styled from 'styled-components/macro'
+import { useCallback, useMemo, useRef } from 'react'
 
 import { useAssetMediaType, useNotForSale } from './Card'
 import { AssetMediaType } from './Card'
@@ -24,17 +23,6 @@ interface CollectionAssetProps {
 }
 
 const TOOLTIP_TIMEOUT = 2000
-
-const StyledContainer = styled.div`
-  position: absolute;
-  bottom: 12px;
-  left: 0px;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  z-index: 2;
-  pointer-events: none;
-`
 
 export const CollectionAsset = ({
   asset,
@@ -66,7 +54,6 @@ export const CollectionAsset = ({
     }
   }, [asset, itemsInBag])
 
-  const [showTooltip, setShowTooltip] = useState(false)
   const isSelectedRef = useRef(isSelected)
 
   const notForSale = useNotForSale(asset)
@@ -90,22 +77,6 @@ export const CollectionAsset = ({
       })
     }
   }, [addAssetsToBag, asset, bagExpanded, bagManuallyClosed, isMobile, setBagExpanded, trace])
-
-  useEffect(() => {
-    if (isSelected !== isSelectedRef.current && !usedSweep) {
-      setShowTooltip(true)
-      isSelectedRef.current = isSelected
-      const tooltipTimer = setTimeout(() => {
-        setShowTooltip(false)
-      }, TOOLTIP_TIMEOUT)
-
-      return () => {
-        clearTimeout(tooltipTimer)
-      }
-    }
-    isSelectedRef.current = isSelected
-    return undefined
-  }, [isSelected, isSelectedRef, usedSweep])
 
   const handleRemoveAssetFromBag = useCallback(() => {
     removeAssetsFromBag([asset])

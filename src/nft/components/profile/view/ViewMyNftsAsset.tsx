@@ -1,18 +1,14 @@
-import { Trans } from '@lingui/macro'
 import { useTrace } from '@uniswap/analytics'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
-import { Box } from 'nft/components/Box'
 import * as Card from 'nft/components/collection/Card'
 import { AssetMediaType } from 'nft/components/collection/Card'
 import { VerifiedIcon } from 'nft/components/icons'
-import { bodySmall } from 'nft/css/common.css'
-import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { ethNumberStandardFormatter } from 'nft/utils'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef } from 'react'
 
 const TOOLTIP_TIMEOUT = 2000
 
@@ -38,16 +34,6 @@ const getNftDisplayComponent = (
   }
 }
 
-const getUnsupportedNftTextComponent = (asset: WalletAsset) => (
-  <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
-    {asset.asset_contract.tokenType === NftStandard.Erc1155 ? (
-      <Trans>Selling ERC-1155s coming soon</Trans>
-    ) : (
-      <Trans>Blocked from trading</Trans>
-    )}
-  </Box>
-)
-
 export const ViewMyNftsAsset = ({
   asset,
   mediaShouldBePlaying,
@@ -67,7 +53,6 @@ export const ViewMyNftsAsset = ({
     )
   }, [asset, sellAssets])
 
-  const [showTooltip, setShowTooltip] = useState(false)
   const isSelectedRef = useRef(isSelected)
   const trace = useTrace()
   const onCardClick = () => handleSelect(isSelected)
@@ -93,22 +78,6 @@ export const ViewMyNftsAsset = ({
       toggleCart()
   }
 
-  useEffect(() => {
-    if (isSelected !== isSelectedRef.current) {
-      setShowTooltip(true)
-      isSelectedRef.current = isSelected
-      const tooltipTimer = setTimeout(() => {
-        setShowTooltip(false)
-      }, TOOLTIP_TIMEOUT)
-
-      return () => {
-        clearTimeout(tooltipTimer)
-      }
-    }
-    isSelectedRef.current = isSelected
-    return undefined
-  }, [isSelected, isSelectedRef])
-
   const assetMediaType = Card.useAssetMediaType(asset)
   const isDisabled = asset.asset_contract.tokenType === NftStandard.Erc1155 || asset.susFlag
   const assetName = () => {
@@ -124,6 +93,7 @@ export const ViewMyNftsAsset = ({
       removeAssetFromBag={() => handleSelect(true)}
       onClick={onCardClick}
       isDisabled={isDisabled}
+      doNotLinkToDetails={hideDetails}
     >
       <Card.ImageContainer>
         {getNftDisplayComponent(assetMediaType, mediaShouldBePlaying, setCurrentTokenPlayingMedia)}
