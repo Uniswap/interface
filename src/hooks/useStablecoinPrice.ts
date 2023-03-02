@@ -2,9 +2,8 @@ import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-
 import { SupportedChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { RouterPreference } from 'state/routing/slice'
-import { TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 
 import { CUSD_CELO, DAI_OPTIMISM, USDC_ARBITRUM, USDC_BSC, USDC_MAINNET, USDC_POLYGON } from '../constants/tokens'
@@ -20,21 +19,17 @@ const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
   [SupportedChainId.BSC]: CurrencyAmount.fromRawAmount(USDC_BSC, 10_000e18),
 }
 
-interface UseStablecoinPriceReturns {
-  price: Price<Currency, Token> | undefined
-  state: TradeState
-}
 /**
  * Returns the price in USDC of the input currency
  * @param currency currency to compute the USDC price of
  */
-export default function useStablecoinPrice(currency?: Currency): UseStablecoinPriceReturns {
+export default function useStablecoinPrice(currency?: Currency): Price<Currency, Token> | undefined {
   const chainId = currency?.chainId
 
   const amountOut = chainId ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
   const stablecoin = amountOut?.currency
 
-  const { state, trade } = useRoutingAPITrade(TradeType.EXACT_OUTPUT, amountOut, currency, RouterPreference.PRICE)
+  const { trade } = useRoutingAPITrade(TradeType.EXACT_OUTPUT, amountOut, currency, RouterPreference.PRICE)
   const price = useMemo(() => {
     if (!currency || !stablecoin) {
       return undefined
@@ -54,27 +49,21 @@ export default function useStablecoinPrice(currency?: Currency): UseStablecoinPr
   }, [currency, stablecoin, trade])
 
   const lastPrice = useRef(price)
-  useEffect(() => {
-    if (
-      !price ||
-      !lastPrice.current ||
-      !price.equalTo(lastPrice.current) ||
-      !price.baseCurrency.equals(lastPrice.current.baseCurrency)
-    ) {
-      lastPrice.current = price
-    }
-  }, [price])
-
-  return {
-    price: lastPrice.current,
-    state,
+  if (
+    !price ||
+    !lastPrice.current ||
+    !price.equalTo(lastPrice.current) ||
+    !price.baseCurrency.equals(lastPrice.current.baseCurrency)
+  ) {
+    lastPrice.current = price
   }
+  return lastPrice.current
 }
 
 export function useStablecoinValue(currencyAmount: CurrencyAmount<Currency> | undefined | null) {
-  const { price, state } = useStablecoinPrice(currencyAmount?.currency)
+  const price = useStablecoinPrice(currencyAmount?.currency)
 
-  const value = useMemo(() => {
+  return useMemo(() => {
     if (!price || !currencyAmount) return null
     try {
       return price.quote(currencyAmount)
@@ -82,11 +71,6 @@ export function useStablecoinValue(currencyAmount: CurrencyAmount<Currency> | un
       return null
     }
   }, [currencyAmount, price])
-
-  return {
-    value,
-    state,
-  }
 }
 
 /**

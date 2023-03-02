@@ -80,7 +80,7 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
-  const { value: usdcValue } = useStablecoinValue(parsedAmount)
+  const usdcValue = useStablecoinValue(parsedAmount)
 
   return (
     <>

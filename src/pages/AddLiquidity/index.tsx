@@ -188,11 +188,10 @@ export default function AddLiquidity() {
     [independentField]: typedValue,
     [dependentField]: parsedAmounts[dependentField]?.toSignificant(6) ?? '',
   }
-  const { value: valueA } = useStablecoinValue(parsedAmounts[Field.CURRENCY_A])
-  const { value: valueB } = useStablecoinValue(parsedAmounts[Field.CURRENCY_B])
+
   const usdcValues = {
-    [Field.CURRENCY_A]: valueA,
-    [Field.CURRENCY_B]: valueB,
+    [Field.CURRENCY_A]: useStablecoinValue(parsedAmounts[Field.CURRENCY_A]),
+    [Field.CURRENCY_B]: useStablecoinValue(parsedAmounts[Field.CURRENCY_B]),
   }
 
   // get the max amounts user can add
