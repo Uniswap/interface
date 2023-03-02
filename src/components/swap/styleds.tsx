@@ -1,3 +1,4 @@
+import { ChainId } from '@uniswap/smart-order-router'
 import { TooltipContainer } from 'components/Tooltip'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'
@@ -23,12 +24,13 @@ export const PageWrapper = styled.div`
 `
 
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
-export const SwapWrapper = styled.main`
+export const SwapWrapper = styled.main<{ chainId: number | undefined }>`
   position: relative;
   background: ${({ theme }) => theme.backgroundSurface};
   border-radius: 16px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   padding: 8px;
+  box-shadow: ${({ chainId }) => !!chainId && chainId === ChainId.BSC && '0px 40px 120px 0px #f0b90b29'};
   z-index: ${Z_INDEX.deprecated_content};
   transition: transform 250ms ease;
 
