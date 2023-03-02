@@ -13,10 +13,6 @@ export const PageWrapper = styled.div`
   max-width: 480px;
   width: 100%;
 
-  // This is intentional - so the tooltips of the Swap component are given z-index priority over the NetworkAlert
-  display: flex;
-  flex-direction: column-reverse;
-
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     padding-top: 48px;
   }

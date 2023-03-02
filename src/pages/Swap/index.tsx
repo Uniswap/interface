@@ -562,9 +562,8 @@ export default function Swap({ className }: { className?: string }) {
           showCancel={true}
         />
         <PageWrapper>
-          <NetworkAlert />
           {swapWidgetEnabled ? (
-            <div style={{ zIndex: 1 }}>
+            <div style={{ position: 'relative', zIndex: 1 }}>
               <Widget
                 defaultTokens={{
                   [Field.INPUT]: loadedInputCurrency ?? undefined,
@@ -894,6 +893,7 @@ export default function Swap({ className }: { className?: string }) {
               </AutoColumn>
             </SwapWrapper>
           )}
+          <NetworkAlert />
         </PageWrapper>
         <SwitchLocaleLink />
         {!swapIsUnsupported ? null : (
