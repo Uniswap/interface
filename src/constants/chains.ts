@@ -6,7 +6,6 @@ export enum SupportedChainId {
   GOERLI = 5,
 
   ARBITRUM_ONE = 42161,
-  ARBITRUM_GOERLI = 421613,
 
   OPTIMISM = 10,
   OPTIMISM_GOERLI = 420,
