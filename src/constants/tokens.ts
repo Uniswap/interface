@@ -439,7 +439,7 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     SupportedChainId.BSC,
     '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
     18,
-    'BNB',
+    'WBNB',
     'Wrapped BNB'
   ),
 }
