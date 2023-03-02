@@ -12,7 +12,7 @@ import ms from 'ms.macro'
 import { darkTheme } from 'theme/colors'
 
 import { SupportedL1ChainId, SupportedL2ChainId } from './chains'
-import { ARBITRUM_LIST, BNB_LIST, CELO_LIST, OPTIMISM_LIST } from './lists'
+import { ARBITRUM_LIST, CELO_LIST, OPTIMISM_LIST, PLASMA_BNB_LIST } from './lists'
 
 export const AVERAGE_L1_BLOCK_TIME = ms`12s`
 
@@ -231,7 +231,7 @@ const CHAIN_INFO: ChainInfoMap = {
     logoUrl: bnbLogo,
     circleLogoUrl: bnbCircleLogoUrl,
     nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
-    defaultListUrl: BNB_LIST,
+    defaultListUrl: PLASMA_BNB_LIST,
     color: darkTheme.chain_56,
     backgroundColor: darkTheme.chain_56_background,
   },
