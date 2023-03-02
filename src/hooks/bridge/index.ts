@@ -4,17 +4,20 @@ import { useCallback, useEffect, useState } from 'react'
 
 import ERC20_INTERFACE, { ERC20_ABI } from 'constants/abis/erc20'
 import { isEVM } from 'constants/networks'
-import { providers, useActiveWeb3React } from 'hooks'
+import { useActiveWeb3React } from 'hooks'
 import { useMulticallContract } from 'hooks/useContract'
 import useInterval from 'hooks/useInterval'
+import { useKyberswapConfig } from 'hooks/useKyberswapConfig'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 export const useTokenBalanceOfAnotherChain = (chainId: ChainId | undefined, token: WrappedTokenInfo | undefined) => {
   const { account } = useActiveWeb3React()
   const [balance, setBalance] = useState('0')
+  const { provider } = useKyberswapConfig()
+
   useEffect(() => {
-    if (account && chainId && token)
-      getTokenBalanceOfAnotherChain(account, token, chainId)
+    if (account && chainId && token && provider)
+      getTokenBalanceOfAnotherChain(account, token, chainId, provider)
         .then(data => {
           setBalance(data)
         })
@@ -22,18 +25,22 @@ export const useTokenBalanceOfAnotherChain = (chainId: ChainId | undefined, toke
     else {
       setBalance('0')
     }
-  }, [chainId, token, account, balance])
+  }, [chainId, token, account, balance, provider])
   return balance
 }
 
-function getTokenBalanceOfAnotherChain(account: string, token: WrappedTokenInfo, chainId: ChainId): Promise<string> {
+function getTokenBalanceOfAnotherChain(
+  account: string,
+  token: WrappedTokenInfo,
+  chainId: ChainId,
+  provider: ethers.providers.JsonRpcProvider,
+): Promise<string> {
   const isNativeToken = token.multichainInfo?.tokenType === 'NATIVE'
   return new Promise(async (resolve, reject) => {
     try {
       if (!account || !token || !isEVM(chainId)) return reject('wrong input')
       let balance: BigNumber | undefined
       try {
-        const provider = providers[chainId]
         if (isNativeToken) {
           balance = await provider.getBalance(account)
         } else {

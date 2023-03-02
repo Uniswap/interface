@@ -7,7 +7,7 @@ import { ENV_LEVEL } from 'constants/env'
 import { ZERO_ADDRESS, ZERO_ADDRESS_SOLANA } from 'constants/index'
 import { ENV_TYPE } from 'constants/type'
 import { PairState, usePairs } from 'data/Reserves'
-import { useActiveWeb3React } from 'hooks/index'
+import { useActiveWeb3React, useWeb3Solana } from 'hooks/index'
 import { useAllCurrencyCombinations } from 'hooks/useAllCurrencyCombinations'
 import useDebounce from 'hooks/useDebounce'
 import { AppState } from 'state'
@@ -18,6 +18,8 @@ import { useAllTransactions } from 'state/transactions/hooks'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { isAddress } from 'utils'
 import { Aggregator } from 'utils/aggregator'
+
+import { useKyberswapGlobalConfig } from './useKyberswapConfig'
 
 function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[][] {
   const allPairCombinations = useAllCurrencyCombinations(currencyA, currencyB)
@@ -97,12 +99,13 @@ export function useTradeExactInV2(
   onUpdateCallback: (resetRoute: boolean, minimumLoadingTime: number) => void
   loading: boolean
 } {
-  const { account, chainId, networkInfo, isEVM } = useActiveWeb3React()
+  const { account, chainId, isEVM } = useActiveWeb3React()
   const controller = useRef(new AbortController())
   const [allowedSlippage] = useUserSlippageTolerance()
   const txsInChain = useAllTransactions()
   const [, setEncodeSolana] = useEncodeSolana()
-
+  const { connection } = useWeb3Solana()
+  const { aggregatorAPI } = useKyberswapGlobalConfig()
   const allDexes = useAllDexes()
   const [excludeDexes] = useExcludeDexes()
 
@@ -149,7 +152,7 @@ export function useTradeExactInV2(
 
         const [state, comparedResult] = await Promise.all([
           Aggregator.bestTradeExactIn(
-            networkInfo.routerUri,
+            aggregatorAPI,
             debounceCurrencyAmountIn,
             currencyOut,
             saveGas,
@@ -162,7 +165,7 @@ export function useTradeExactInV2(
             minimumLoadingTime,
           ),
           Aggregator.compareDex(
-            networkInfo.routerUri,
+            aggregatorAPI,
             debounceCurrencyAmountIn,
             currencyOut,
             allowedSlippage,
@@ -212,7 +215,7 @@ export function useTradeExactInV2(
       recipient,
       account,
       ttl,
-      networkInfo.routerUri,
+      aggregatorAPI,
       saveGas,
       dexes,
       allowedSlippage,
@@ -227,8 +230,8 @@ export function useTradeExactInV2(
   useEffect(() => {
     const controller = new AbortController()
     const encodeSolana = async () => {
-      if (!trade) return
-      const encodeSolana = await Aggregator.encodeSolana(trade, controller.signal)
+      if (!trade || !connection) return
+      const encodeSolana = await Aggregator.encodeSolana(trade, connection, controller.signal)
       if (encodeSolana && !controller.signal.aborted) setEncodeSolana(encodeSolana)
     }
     encodeSolana()
@@ -236,7 +239,7 @@ export function useTradeExactInV2(
     return () => {
       controller.abort()
     }
-  }, [trade, setEncodeSolana])
+  }, [trade, setEncodeSolana, connection])
 
   return {
     trade, //todo: not return this anymore, set & use it from redux

@@ -1,15 +1,14 @@
 import { useQuery } from '@apollo/client'
-import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
+import { Currency } from '@kyberswap/ks-sdk-core'
 import { FeeAmount, TICK_SPACINGS, tickToPrice } from '@kyberswap/ks-sdk-elastic'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 
 import { ALL_TICKS, Tick } from 'apollo/queries/promm'
-import { NETWORKS_INFO } from 'constants/networks'
-import { EVMNetworkInfo } from 'constants/networks/type'
 import { useActiveWeb3React } from 'hooks'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 
+import { useKyberswapConfig } from './useKyberswapConfig'
 import { PoolState, usePool } from './usePools'
 import useProAmmPoolInfo from './useProAmmPoolInfo'
 
@@ -29,11 +28,11 @@ const getActiveTick = (tickCurrent: number | undefined, feeAmount: FeeAmount | u
     : undefined
 
 const useAllTicks = (poolAddress: string) => {
-  const { isEVM, networkInfo } = useActiveWeb3React()
-  const client = isEVM ? (networkInfo as EVMNetworkInfo).elastic.client : NETWORKS_INFO[ChainId.MAINNET].elastic.client
+  const { isEVM } = useActiveWeb3React()
+  const { elasticClient } = useKyberswapConfig()
 
   return useQuery(ALL_TICKS(poolAddress?.toLowerCase()), {
-    client,
+    client: elasticClient,
     pollInterval: 30_000,
     skip: !isEVM,
   })

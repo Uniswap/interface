@@ -3,10 +3,9 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { t } from '@lingui/macro'
 import { SignerWalletAdapter } from '@solana/wallet-adapter-base'
-import { Transaction, VersionedTransaction } from '@solana/web3.js'
+import { Connection, Transaction, VersionedTransaction } from '@solana/web3.js'
 import { ethers } from 'ethers'
 
-import connection from 'state/connection/connection'
 import { SolanaEncode } from 'state/swap/types'
 import { TRANSACTION_TYPE, TransactionHistory } from 'state/transactions/type'
 import { calculateGasMargin } from 'utils'
@@ -64,6 +63,7 @@ const getInspectTxSolanaUrl = (tx: Transaction | VersionedTransaction | undefine
 }
 
 export async function sendSolanaTransactions(
+  connection: Connection,
   encode: SolanaEncode,
   solanaWallet: SignerWalletAdapter,
   addTransactionWithType: (tx: TransactionHistory) => void,

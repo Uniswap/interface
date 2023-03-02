@@ -1,15 +1,12 @@
 import { gql } from '@apollo/client'
 import { ChainId, Fraction } from '@kyberswap/ks-sdk-core'
-import { BigNumber, Contract } from 'ethers'
+import { BigNumber, Contract, ethers } from 'ethers'
 import { useEffect, useMemo, useState } from 'react'
 import { useLocalStorage } from 'react-use'
 
 import { ERC20_ABI } from 'constants/abis/erc20'
-import { NETWORKS_INFO } from 'constants/networks'
-import ethereumInfo from 'constants/networks/ethereum'
-import maticInfo from 'constants/networks/matic'
 import { KNC_ADDRESS } from 'constants/tokens'
-import { providers } from 'hooks'
+import { useKyberswapConfig } from 'hooks/useKyberswapConfig'
 import { getEthPrice, getKNCPriceByETH } from 'state/application/hooks'
 
 const POOLS_BULK = gql`
@@ -59,8 +56,8 @@ const MATIC_LP_ADDRESSES = [
 ]
 const REWARD_POOL_ADDRESS = '0xd2d0a0557e5b78e29542d440ec968f9253daa2e2'
 
-const getTresuaryBalances = async () => {
-  const contracts = LP_ADDRESSES.map((a: string) => new Contract(a, ERC20_ABI, providers[ChainId.MAINNET]))
+const getTresuaryBalances = async (provider: ethers.providers.JsonRpcProvider) => {
+  const contracts = LP_ADDRESSES.map((a: string) => new Contract(a, ERC20_ABI, provider))
   const balances: { id: string; balance: BigNumber }[] = await Promise.all(
     contracts.map((c: Contract) =>
       c.balanceOf(TRESUARY_ADDRESS).then((res: BigNumber) => {
@@ -70,8 +67,9 @@ const getTresuaryBalances = async () => {
   )
   return balances
 }
-const getMaticTresuaryBalances = async () => {
-  const contracts = MATIC_LP_ADDRESSES.map((a: string) => new Contract(a, ERC20_ABI, providers[ChainId.MATIC]))
+
+const getMaticTresuaryBalances = async (provider: ethers.providers.JsonRpcProvider) => {
+  const contracts = MATIC_LP_ADDRESSES.map((a: string) => new Contract(a, ERC20_ABI, provider))
   const balances: { id: string; balance: BigNumber }[] = await Promise.all(
     contracts.map((c: Contract) =>
       c.balanceOf(MATIC_TRESUARY_ADDRESS).then((res: BigNumber) => {
@@ -89,6 +87,8 @@ export default function useTotalVotingReward(): {
 } {
   const [totalVotingReward, setTotalVotingReward] = useState(0)
   const [kncPriceETH, setKncPriceETH] = useState(0)
+  const { classicClient: classicClientMainnet, blockClient, provider } = useKyberswapConfig(ChainId.MAINNET)
+  const { classicClient: classicClientMatic, provider: providerMatic } = useKyberswapConfig(ChainId.MATIC)
 
   const [localStoredTotalVotingReward, setLocalStoredTotalVotingReward] = useLocalStorage(
     'kyberdao-totalVotingRewards',
@@ -102,18 +102,19 @@ export default function useTotalVotingReward(): {
   }, [totalVotingReward, setLocalStoredTotalVotingReward])
 
   useEffect(() => {
-    const a = async () => {
+    const run = async () => {
       try {
+        if (!provider || !providerMatic) return
         const rewards = await Promise.all([
           (async () => {
-            const poolsQuery = ethereumInfo.classic.client.query({
+            const poolsQuery = classicClientMainnet.query({
               query: POOLS_BULK,
               variables: {
                 allPools: LP_ADDRESSES,
               },
               fetchPolicy: 'network-only',
             })
-            const balances = await getTresuaryBalances()
+            const balances = await getTresuaryBalances(provider)
             const pools = await poolsQuery
             const balancesNum = balances.map(result => {
               const pool = pools.data.pools.find((pool: any) => pool.id === result.id)
@@ -126,14 +127,14 @@ export default function useTotalVotingReward(): {
             return balancesNum.reduce((a: number, b: number) => a + b, 0)
           })(),
           (async () => {
-            const poolsMaticQuery = maticInfo.classic.client.query({
+            const poolsMaticQuery = classicClientMatic.query({
               query: POOLS_BULK,
               variables: {
                 allPools: MATIC_LP_ADDRESSES,
               },
               fetchPolicy: 'network-only',
             })
-            const balancesMatic = await getMaticTresuaryBalances()
+            const balancesMatic = await getMaticTresuaryBalances(providerMatic)
             const poolsMatic = await poolsMaticQuery
 
             const balancesMaticNum = balancesMatic.map(result => {
@@ -147,8 +148,8 @@ export default function useTotalVotingReward(): {
             return balancesMaticNum.reduce((a: number, b: number) => a + b, 0)
           })(),
           (async () => {
-            const ethBalanceQuery = providers[ChainId.MAINNET].getBalance(TRESUARY_ADDRESS)
-            const ethPrice = await ethereumInfo.classic.client.query({
+            const ethBalanceQuery = provider.getBalance(TRESUARY_ADDRESS)
+            const ethPrice = await classicClientMainnet.query({
               query: ETH_PRICE,
               fetchPolicy: 'network-only',
             })
@@ -159,8 +160,8 @@ export default function useTotalVotingReward(): {
             )
           })(),
           (async () => {
-            const maticBalanceQuery = providers[ChainId.MATIC].getBalance(MATIC_TRESUARY_ADDRESS)
-            const maticPrice = await maticInfo.classic.client.query({
+            const maticBalanceQuery = providerMatic.getBalance(MATIC_TRESUARY_ADDRESS)
+            const maticPrice = await classicClientMatic.query({
               query: ETH_PRICE,
               fetchPolicy: 'network-only',
             })
@@ -171,7 +172,7 @@ export default function useTotalVotingReward(): {
             )
           })(),
           (async () => {
-            const KNCContract = new Contract(KNC_ADDRESS, ERC20_ABI, providers[ChainId.MAINNET])
+            const KNCContract = new Contract(KNC_ADDRESS, ERC20_ABI, provider)
             const kncBalance = await KNCContract.balanceOf(REWARD_POOL_ADDRESS)
             return parseFloat(new Fraction(kncBalance.toString(), 10 ** 18).toSignificant(18))
           })(),
@@ -181,18 +182,18 @@ export default function useTotalVotingReward(): {
         setTotalVotingReward(0)
       }
     }
-    a()
-  }, [])
+    run()
+  }, [classicClientMainnet, classicClientMatic, provider, providerMatic])
 
   useEffect(() => {
     async function checkForKNCPrice() {
-      const kncPriceByETH = await getKNCPriceByETH(ChainId.MAINNET, NETWORKS_INFO[ChainId.MAINNET].classic.client)
-      const ethPrice = await getEthPrice(ChainId.MAINNET, NETWORKS_INFO[ChainId.MAINNET].classic.client)
+      const kncPriceByETH = await getKNCPriceByETH(ChainId.MAINNET, classicClientMainnet)
+      const ethPrice = await getEthPrice(ChainId.MAINNET, classicClientMainnet, blockClient)
       const kncPrice = kncPriceByETH * ethPrice[0] || 0
       setKncPriceETH(kncPrice)
     }
     checkForKNCPrice()
-  }, [])
+  }, [classicClientMainnet, blockClient])
 
   return {
     usd: Math.floor(totalVotingReward || localStoredTotalVotingReward || 0),

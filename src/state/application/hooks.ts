@@ -16,10 +16,10 @@ import {
   PopupType,
 } from 'components/Announcement/type'
 import { OUTSITE_FARM_REWARDS_QUERY, ZERO_ADDRESS } from 'constants/index'
-import { EVMNetworkInfo } from 'constants/networks/type'
 import { KNC } from 'constants/tokens'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks/index'
+import { useKyberswapConfig } from 'hooks/useKyberswapConfig'
 import { useAppSelector } from 'state/hooks'
 import { AppDispatch, AppState } from 'state/index'
 import { getBlockFromTimestamp, getPercentChange } from 'utils'
@@ -278,7 +278,11 @@ export function useActivePopups() {
 /**
  * Gets the current price  of ETH, 24 hour price, and % change between them
  */
-export const getEthPrice = async (chainId: ChainId, apolloClient: ApolloClient<NormalizedCacheObject>) => {
+export const getEthPrice = async (
+  chainId: ChainId,
+  apolloClient: ApolloClient<NormalizedCacheObject>,
+  blockClient: ApolloClient<NormalizedCacheObject>,
+) => {
   const utcCurrentTime = dayjs()
   const utcOneDayBack = utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
 
@@ -287,7 +291,7 @@ export const getEthPrice = async (chainId: ChainId, apolloClient: ApolloClient<N
   let priceChangeETH = 0
 
   try {
-    const oneDayBlock = await getBlockFromTimestamp(utcOneDayBack, chainId)
+    const oneDayBlock = await getBlockFromTimestamp(utcOneDayBack, chainId, blockClient)
     const result = await apolloClient.query({
       query: ETH_PRICE(),
       fetchPolicy: 'network-only',
@@ -310,7 +314,11 @@ export const getEthPrice = async (chainId: ChainId, apolloClient: ApolloClient<N
   return [ethPrice, ethPriceOneDay, priceChangeETH]
 }
 
-const getPrommEthPrice = async (chainId: ChainId, apolloClient: ApolloClient<NormalizedCacheObject>) => {
+const getPrommEthPrice = async (
+  chainId: ChainId,
+  apolloClient: ApolloClient<NormalizedCacheObject>,
+  blockClient: ApolloClient<NormalizedCacheObject>,
+) => {
   const utcCurrentTime = dayjs()
   const utcOneDayBack = utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
 
@@ -319,7 +327,7 @@ const getPrommEthPrice = async (chainId: ChainId, apolloClient: ApolloClient<Nor
   let priceChangeETH = 0
 
   try {
-    const oneDayBlock = await getBlockFromTimestamp(utcOneDayBack, chainId)
+    const oneDayBlock = await getBlockFromTimestamp(utcOneDayBack, chainId, blockClient)
     const result = await apolloClient.query({
       query: PROMM_ETH_PRICE(),
       fetchPolicy: 'network-only',
@@ -344,7 +352,8 @@ const getPrommEthPrice = async (chainId: ChainId, apolloClient: ApolloClient<Nor
 
 export function useETHPrice(version: string = VERSION.CLASSIC): AppState['application']['ethPrice'] {
   const dispatch = useDispatch()
-  const { isEVM, networkInfo, chainId } = useActiveWeb3React()
+  const { isEVM, chainId } = useActiveWeb3React()
+  const { elasticClient, classicClient, blockClient } = useKyberswapConfig()
 
   const ethPrice = useSelector((state: AppState) =>
     version === VERSION.ELASTIC ? state.application.prommEthPrice : state.application.ethPrice,
@@ -352,13 +361,11 @@ export function useETHPrice(version: string = VERSION.CLASSIC): AppState['applic
 
   useEffect(() => {
     if (!isEVM) return
-    const apolloProMMClient = (networkInfo as EVMNetworkInfo).elastic.client
-    const apolloClient = (networkInfo as EVMNetworkInfo).classic.client
 
     async function checkForEthPrice() {
-      const [newPrice, oneDayBackPrice, pricePercentChange] = await (version === VERSION.ELASTIC && apolloProMMClient
-        ? getPrommEthPrice(chainId, apolloProMMClient)
-        : getEthPrice(chainId, apolloClient))
+      const [newPrice, oneDayBackPrice, pricePercentChange] = await (version === VERSION.ELASTIC
+        ? getPrommEthPrice(chainId, elasticClient, blockClient)
+        : getEthPrice(chainId, classicClient, blockClient))
 
       dispatch(
         version === VERSION.ELASTIC
@@ -375,7 +382,7 @@ export function useETHPrice(version: string = VERSION.CLASSIC): AppState['applic
       )
     }
     checkForEthPrice()
-  }, [dispatch, chainId, version, isEVM, networkInfo])
+  }, [dispatch, chainId, version, isEVM, elasticClient, classicClient, blockClient])
 
   return ethPrice
 }
@@ -405,21 +412,21 @@ export const getKNCPriceByETH = async (chainId: ChainId, apolloClient: ApolloCli
 export function useKNCPrice(): AppState['application']['kncPrice'] {
   const dispatch = useDispatch()
   const ethPrice = useETHPrice()
-  const { isEVM, networkInfo, chainId } = useActiveWeb3React()
+  const { isEVM, chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
+  const { classicClient } = useKyberswapConfig()
 
   const kncPrice = useSelector((state: AppState) => state.application.kncPrice)
 
   useEffect(() => {
     if (!isEVM) return
-    const apolloClient = (networkInfo as EVMNetworkInfo).classic.client
     async function checkForKNCPrice() {
-      const kncPriceByETH = await getKNCPriceByETH(chainId, apolloClient)
+      const kncPriceByETH = await getKNCPriceByETH(chainId, classicClient)
       const kncPrice = ethPrice.currentPrice && kncPriceByETH * parseFloat(ethPrice.currentPrice)
       dispatch(updateKNCPrice(kncPrice?.toString()))
     }
     checkForKNCPrice()
-  }, [kncPrice, dispatch, ethPrice.currentPrice, isEVM, networkInfo, chainId, blockNumber])
+  }, [kncPrice, dispatch, ethPrice.currentPrice, isEVM, classicClient, chainId, blockNumber])
 
   return kncPrice
 }
@@ -465,13 +472,13 @@ const cache: { [key: string]: number } = {}
 export function useTokensPrice(tokens: (Token | NativeCurrency | null | undefined)[], version?: string): number[] {
   const ethPrice = useETHPrice(version)
 
-  const { chainId, isEVM, networkInfo } = useActiveWeb3React()
+  const { chainId, isEVM } = useActiveWeb3React()
   const [prices, setPrices] = useState<number[]>([])
+  const { elasticClient, classicClient } = useKyberswapConfig()
 
   useDeepCompareEffect(() => {
     if (!isEVM) return
-    const apolloClient = (networkInfo as EVMNetworkInfo).classic.client
-    const client = version !== VERSION.ELASTIC ? apolloClient : (networkInfo as EVMNetworkInfo).elastic.client
+    const client = version !== VERSION.ELASTIC ? classicClient : elasticClient
 
     async function checkForTokenPrice() {
       const tokensPrice = tokens.map(async token => {
@@ -504,7 +511,7 @@ export function useTokensPrice(tokens: (Token | NativeCurrency | null | undefine
     }
 
     checkForTokenPrice()
-  }, [ethPrice.currentPrice, chainId, isEVM, networkInfo, tokens, version])
+  }, [ethPrice.currentPrice, chainId, isEVM, elasticClient, classicClient, tokens, version])
 
   return prices
 }

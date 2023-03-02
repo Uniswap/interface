@@ -2,14 +2,15 @@ import { AnchorProvider } from '@project-serum/anchor'
 import { useAnchorWallet } from '@solana/wallet-adapter-react'
 import { useMemo } from 'react'
 
-import connection from 'state/connection/connection'
+import { useWeb3Solana } from 'hooks'
 
 const useProvider = (): AnchorProvider | null => {
   const wallet = useAnchorWallet()
+  const { connection } = useWeb3Solana()
 
   const provider = useMemo(
-    () => (wallet ? new AnchorProvider(connection, wallet, AnchorProvider.defaultOptions()) : null),
-    [wallet],
+    () => (wallet && connection ? new AnchorProvider(connection, wallet, AnchorProvider.defaultOptions()) : null),
+    [wallet, connection],
   )
   return provider
 }

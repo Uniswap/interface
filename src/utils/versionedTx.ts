@@ -2,6 +2,7 @@ import {
   AddressLookupTableAccount,
   AddressLookupTableProgram,
   Commitment,
+  Connection,
   Message,
   PublicKey,
   Transaction,
@@ -10,11 +11,12 @@ import {
   VersionedTransaction,
 } from '@solana/web3.js'
 
-import connection from 'state/connection/connection'
+import solanaInfo from 'constants/networks/solana'
 import { filterTruthy } from 'utils'
 
 import { wait } from './retry'
 
+const connection = new Connection(solanaInfo.defaultRpcUrl, { commitment: 'confirmed' })
 const lookupTablesByPoolPromise = (async () => {
   let fetchCount = 0
   const authority = new PublicKey('9YqphVt2hdE7RaL3YBCCP49thJbSovwgZQhyHjvgi1L3') // Kyber's lookuptable account owner
@@ -63,6 +65,7 @@ const lookupTablesByPoolPromise = (async () => {
  * @return {Promise<VersionedTransaction>} The converted VersionedTransaction
  */
 export async function convertToVersionedTx(
+  connection: Connection,
   commitment: Commitment,
   recentBlockhash: string,
   message: Message,

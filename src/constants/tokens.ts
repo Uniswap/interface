@@ -237,6 +237,7 @@ export const CORRELATED_COINS_ADDRESS: { [chainId in ChainId]: string[][] } = {
     [
       '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', //WETH
       '0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84', //stETH
+      '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0', //wstETH
     ],
     [
       '0xdd974D5C2e2928deA5F71b9825b8b646686BD200', //KNCL

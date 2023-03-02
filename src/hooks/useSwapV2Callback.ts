@@ -4,7 +4,7 @@ import { SignerWalletAdapter } from '@solana/wallet-adapter-base'
 import { useCallback, useMemo } from 'react'
 
 import { ZERO_ADDRESS_SOLANA } from 'constants/index'
-import { useActiveWeb3React, useWeb3React } from 'hooks/index'
+import { useActiveWeb3React, useWeb3React, useWeb3Solana } from 'hooks/index'
 import useENS from 'hooks/useENS'
 import { useEncodeSolana, useSwapState } from 'state/swap/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
@@ -37,6 +37,7 @@ export function useSwapV2Callback(
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   const { account, chainId, isEVM, isSolana, walletSolana } = useActiveWeb3React()
   const { library } = useWeb3React()
+  const { connection } = useWeb3Solana()
   const provider = useProvider()
   const [encodeSolana] = useEncodeSolana()
 
@@ -141,8 +142,10 @@ export function useSwapV2Callback(
       if (!provider) throw new Error('Please connect wallet first')
       if (!walletSolana.wallet?.adapter) throw new Error('Please connect wallet first')
       if (!encodeSolana) throw new Error('Encode not found')
+      if (!connection) throw new Error('connection is empty')
 
       const hash = await sendSolanaTransactions(
+        connection,
         encodeSolana,
         walletSolana.wallet.adapter as SignerWalletAdapter,
         addTransactionWithType,
@@ -171,5 +174,6 @@ export function useSwapV2Callback(
     walletSolana,
     addTransactionWithType,
     extractSwapData,
+    connection,
   ])
 }

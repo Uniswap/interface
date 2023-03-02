@@ -1,9 +1,8 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 
 import Polygon from 'assets/networks/polygon-network.png'
-import { AGGREGATOR_API, KS_SETTING_API } from 'constants/env'
+import { KS_SETTING_API } from 'constants/env'
 import { EVMNetworkInfo } from 'constants/networks/type'
-import { createClient } from 'utils/client'
 
 const EMPTY = ''
 const NOT_SUPPORT = null
@@ -14,12 +13,13 @@ const maticInfo: EVMNetworkInfo = {
   ksSettingRoute: 'polygon',
   priceRoute: 'polygon',
   poolFarmRoute: 'polygon',
+  aggregatorRoute: 'polygon',
   name: 'Polygon',
   icon: Polygon,
   iconDark: NOT_SUPPORT,
   iconSelected: NOT_SUPPORT,
   iconDarkSelected: NOT_SUPPORT,
-  blockClient: createClient('https://api.thegraph.com/subgraphs/name/dynamic-amm/ethereum-blocks-polygon'),
+  defaultBlockSubgraph: 'https://api.thegraph.com/subgraphs/name/dynamic-amm/ethereum-blocks-polygon',
   etherscanUrl: 'https://polygonscan.com',
   etherscanName: 'Polygonscan',
   tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.MATIC}&isWhitelisted=${true}`,
@@ -31,12 +31,11 @@ const maticInfo: EVMNetworkInfo = {
     decimal: 18,
     minForGas: 10 ** 17,
   },
-  rpcUrl: 'https://polygon.kyberengineering.io',
-  routerUri: `${AGGREGATOR_API}/polygon/route/encode`,
+  defaultRpcUrl: 'https://polygon.kyberengineering.io',
   multicall: '0xed386Fe855C1EFf2f843B910923Dd8846E45C5A4',
   classic: {
-    client: createClient('https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-exchange-polygon'),
-    // client: createClient(
+    defaultSubgraph: 'https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-exchange-polygon',
+    // defaultSubgraph: (
     //   'https://polygon-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-polygon',
     // ),
     static: {
@@ -62,10 +61,7 @@ const maticInfo: EVMNetworkInfo = {
     fairlaunchV2: ['0xFFD22921947D75342BFE1f8efAcEE4B8B3b5183F'],
   },
   elastic: {
-    // client: createClient('https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-matic'),
-    client: createClient(
-      'https://polygon-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-elastic-polygon',
-    ),
+    defaultSubgraph: 'https://polygon-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-elastic-polygon',
     startBlock: 29347468,
     coreFactory: '0x5F1dddbf348aC2fbe22a163e30F99F9ECE3DD50a',
     nonfungiblePositionManager: '0x2B1c7b41f6A8F2b2bc45C3233a5d5FB3cD6dC9A8',

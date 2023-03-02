@@ -4,7 +4,6 @@ import { PublicKey, Transaction } from '@solana/web3.js'
 import { useMemo } from 'react'
 
 import { NativeCurrencies } from 'constants/tokens'
-import connection from 'state/connection/connection'
 import { tryParseAmount } from 'state/swap/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TRANSACTION_TYPE } from 'state/transactions/type'
@@ -12,7 +11,7 @@ import { useCurrencyBalance } from 'state/wallet/hooks'
 import { calculateGasMargin } from 'utils'
 import { checkAndCreateUnwrapSOLInstruction, createWrapSOLInstructions } from 'utils/solanaInstructions'
 
-import { useActiveWeb3React } from './index'
+import { useActiveWeb3React, useWeb3Solana } from './index'
 import useProvider from './solana/useProvider'
 import { useWETHContract } from './useContract'
 
@@ -47,6 +46,7 @@ export default function useWrapCallback(
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
   const inputAmount = useMemo(() => tryParseAmount(typedValue, inputCurrency ?? undefined), [inputCurrency, typedValue])
   const addTransactionWithType = useTransactionAdder()
+  const { connection } = useWeb3Solana()
 
   return useMemo(() => {
     if ((!wethContract && isEVM) || !inputCurrency || !outputCurrency) return NOT_APPLICABLE
@@ -72,9 +72,9 @@ export default function useWrapCallback(
                       gasLimit: calculateGasMargin(estimateGas),
                     })
                     hash = txReceipt?.hash
-                  } else if (isSolana && account && provider) {
+                  } else if (isSolana && account && provider && connection) {
                     const accountPK = new PublicKey(account)
-                    const wrapIxs = await createWrapSOLInstructions(accountPK, inputAmount)
+                    const wrapIxs = await createWrapSOLInstructions(connection, accountPK, inputAmount)
                     const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash()
 
                     const tx = new Transaction({
@@ -131,9 +131,9 @@ export default function useWrapCallback(
                       gasLimit: calculateGasMargin(estimateGas),
                     })
                     hash = txReceipt.hash
-                  } else if (isSolana && account && provider) {
+                  } else if (isSolana && account && provider && connection) {
                     const accountPK = new PublicKey(account)
-                    const ix = await checkAndCreateUnwrapSOLInstruction(accountPK)
+                    const ix = await checkAndCreateUnwrapSOLInstruction(connection, accountPK)
                     if (ix) {
                       const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash()
 
@@ -191,5 +191,6 @@ export default function useWrapCallback(
     provider,
     addTransactionWithType,
     forceWrap,
+    connection,
   ])
 }

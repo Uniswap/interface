@@ -1,9 +1,10 @@
 import { stringify } from 'querystring'
 import { useEffect, useMemo, useState } from 'react'
 
-import { AGGREGATOR_API, PRICE_API } from 'constants/env'
+import { PRICE_API } from 'constants/env'
 import { NETWORKS_INFO } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
+import { useKyberswapGlobalConfig } from 'hooks/useKyberswapConfig'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { isAddressString } from 'utils'
 
@@ -21,7 +22,7 @@ const useTokenPricesLocal = (
   const dispatch = useAppDispatch()
   const { chainId, isEVM } = useActiveWeb3React()
   const [loading, setLoading] = useState(true)
-
+  const { aggregatorDomain } = useKyberswapGlobalConfig()
   const addressKeys = addresses
     .sort()
     .map(x => getAddress(x, isEVM))
@@ -47,7 +48,7 @@ const useTokenPricesLocal = (
               method: 'POST',
               body: JSON.stringify(payload),
             })
-          : fetch(`${AGGREGATOR_API}/solana/prices?${stringify(payload)}`)
+          : fetch(`${aggregatorDomain}/solana/prices?${stringify(payload)}`)
 
         const res = await promise.then(res => res.json())
         const prices = res?.data?.prices || res
@@ -77,7 +78,7 @@ const useTokenPricesLocal = (
     else {
       setLoading(false)
     }
-  }, [unknownPriceList, chainId, dispatch, isEVM])
+  }, [unknownPriceList, chainId, dispatch, isEVM, aggregatorDomain])
 
   const data: {
     [address: string]: number

@@ -21,8 +21,6 @@ import {
   TransactionInstruction,
 } from '@solana/web3.js'
 
-import connection from 'state/connection/connection'
-
 function createIdempotentAssociatedTokenAccountInstruction(
   payer: PublicKey,
   associatedToken: PublicKey,
@@ -81,11 +79,12 @@ async function getAssociatedTokenAccount(
 }
 
 export const createWrapSOLInstructions = async (
+  connection: Connection,
   account: PublicKey,
   amountIn: CurrencyAmount<Currency>,
 ): Promise<TransactionInstruction[]> => {
   const associatedTokenAccount = await getAssociatedTokenAddress(NATIVE_MINT, account)
-  const createWSOLIx = await checkAndCreateAtaInstruction(account, amountIn.currency)
+  const createWSOLIx = await checkAndCreateAtaInstruction(connection, account, amountIn.currency)
 
   const transferIx = SystemProgram.transfer({
     fromPubkey: account,
@@ -99,6 +98,7 @@ export const createWrapSOLInstructions = async (
 }
 
 export const checkAndCreateWrapSOLInstructions = async (
+  connection: Connection,
   account: PublicKey,
   amountIn: CurrencyAmount<Currency>,
 ): Promise<TransactionInstruction[] | null> => {
@@ -110,7 +110,7 @@ export const checkAndCreateWrapSOLInstructions = async (
     } catch {}
     const WSOLAmount = CurrencyAmount.fromRawAmount(amountIn.currency, WSOLBalance ? WSOLBalance.value.amount : '0')
     if (WSOLAmount.lessThan(amountIn)) {
-      const ixs = await createWrapSOLInstructions(account, amountIn)
+      const ixs = await createWrapSOLInstructions(connection, account, amountIn)
       return ixs
     }
   }
@@ -118,6 +118,7 @@ export const checkAndCreateWrapSOLInstructions = async (
 }
 
 export const checkAndCreateAtaInstruction = async (
+  connection: Connection,
   account: PublicKey,
   currencyIn: Currency,
 ): Promise<TransactionInstruction | null> => {
@@ -147,6 +148,7 @@ export const createUnwrapSOLInstruction = async (account: PublicKey): Promise<Tr
 }
 
 export const checkAndCreateUnwrapSOLInstruction = async (
+  connection: Connection,
   account: PublicKey,
 ): Promise<TransactionInstruction | null> => {
   try {

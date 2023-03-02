@@ -13,7 +13,7 @@ const NETWORK_URLS: {
   [chainId in EVM_NETWORK]: string
 } = EVM_NETWORKS.reduce(
   (acc, val) => {
-    acc[val] = NETWORKS_INFO[val].rpcUrl
+    acc[val] = NETWORKS_INFO[val].defaultRpcUrl
     return acc
   },
   {} as {
@@ -21,7 +21,7 @@ const NETWORK_URLS: {
   },
 )
 
-const NETWORK_URL = NETWORKS_INFO[ChainId.MAINNET].rpcUrl
+const NETWORK_URL = NETWORKS_INFO[ChainId.MAINNET].defaultRpcUrl
 
 const NETWORK_CHAIN_ID = 1
 

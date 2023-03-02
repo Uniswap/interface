@@ -4,10 +4,12 @@ import { getUnixTime, subHours } from 'date-fns'
 import { useMemo } from 'react'
 import useSWR from 'swr'
 
-import { AGGREGATOR_API, PRICE_CHART_API } from 'constants/env'
+import { PRICE_CHART_API } from 'constants/env'
 import { COINGECKO_API_URL } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
+
+import { useKyberswapGlobalConfig } from './useKyberswapConfig'
 
 export enum LiveDataTimeframeEnum {
   HOUR = '1H',
@@ -58,16 +60,6 @@ const getClosestPrice = (prices: any[], time: number) => {
   return prices[closestIndex][0] - time > 10000000 ? 0 : prices[closestIndex][1]
 }
 
-const liveDataApi: { [chainId in ChainId]?: string } = {
-  [ChainId.MAINNET]: `${AGGREGATOR_API}/ethereum/tokens`,
-  [ChainId.BSCMAINNET]: `${AGGREGATOR_API}/bsc/tokens`,
-  [ChainId.MATIC]: `${AGGREGATOR_API}/polygon/tokens`,
-  [ChainId.AVAXMAINNET]: `${AGGREGATOR_API}/avalanche/tokens`,
-  [ChainId.FANTOM]: `${AGGREGATOR_API}/fantom/tokens`,
-  [ChainId.CRONOS]: `${AGGREGATOR_API}/cronos/tokens`,
-  [ChainId.ARBITRUM]: `${AGGREGATOR_API}/arbitrum/tokens`,
-}
-
 const fetchKyberDataSWR = async (url: string) => {
   const res = await axios.get(url, { timeout: 5000 })
   if (res.status === 204) {
@@ -113,8 +105,8 @@ const fetchCoingeckoDataSWR = async (tokenAddresses: any, chainId: any, timeFram
 }
 
 export default function useBasicChartData(tokens: (Token | null | undefined)[], timeFrame: LiveDataTimeframeEnum) {
-  const { chainId, isEVM } = useActiveWeb3React()
-
+  const { chainId, isEVM, networkInfo } = useActiveWeb3React()
+  const { aggregatorDomain } = useKyberswapGlobalConfig()
   const isReverse = useMemo(() => {
     if (!tokens || !tokens[0] || !tokens[1] || tokens[0].equals(tokens[1]) || tokens[0].chainId !== tokens[1].chainId)
       return false
@@ -193,7 +185,7 @@ export default function useBasicChartData(tokens: (Token | null | undefined)[], 
 
   const { data: liveKyberData } = useSWR(
     !isKyberDataNotValid && kyberData && chainId
-      ? liveDataApi[chainId] + `?ids=${tokenAddresses[0]},${tokenAddresses[1]}`
+      ? `${aggregatorDomain}/${networkInfo.aggregatorRoute}/tokens?ids=${tokenAddresses[0]},${tokenAddresses[1]}`
       : null,
     fetchKyberDataSWRWithHeader,
     {

@@ -4,30 +4,19 @@ import { Wallet, useWallet } from '@solana/wallet-adapter-react'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
-import { ethers } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { useSelector } from 'react-redux'
 
 import { injected, walletconnect, walletlink } from 'connectors'
-import { EVM_NETWORK, EVM_NETWORKS, NETWORKS_INFO, isEVM } from 'constants/networks'
+import { NETWORKS_INFO } from 'constants/networks'
 import { NetworkInfo } from 'constants/networks/type'
 import { SUPPORTED_WALLET, SUPPORTED_WALLETS, WALLETLINK_LOCALSTORAGE_NAME } from 'constants/wallets'
 import { AppState } from 'state'
 import { useIsAcceptedTerm, useIsUserManuallyDisconnect } from 'state/user/hooks'
 import { detectInjectedType, isEVMWallet, isSolanaWallet } from 'utils'
 
-export const providers: {
-  [chainId in EVM_NETWORK]: ethers.providers.JsonRpcProvider
-} = EVM_NETWORKS.reduce(
-  (acc, val) => {
-    acc[val] = new ethers.providers.JsonRpcProvider(NETWORKS_INFO[val].rpcUrl)
-    return acc
-  },
-  {} as {
-    [chainId in EVM_NETWORK]: ethers.providers.JsonRpcProvider
-  },
-)
+import { useKyberswapConfig } from './useKyberswapConfig'
 
 export function useActiveWeb3React(): {
   chainId: ChainId
@@ -112,7 +101,7 @@ export function useActiveWeb3React(): {
 
 export function useWeb3React(key?: string): Web3ReactContextInterface<Web3Provider> & { chainId?: ChainId } {
   const { connector, library, chainId, account, active, error, activate, setError, deactivate } = useWeb3ReactCore(key)
-  const chainIdState = useSelector<AppState, ChainId>(state => state.user.chainId)
+  const { provider } = useKyberswapConfig()
 
   const activateWrapped = useCallback(
     (connector: AbstractConnector, onError?: (error: Error) => void, throwErrors?: boolean) => {
@@ -125,7 +114,7 @@ export function useWeb3React(key?: string): Web3ReactContextInterface<Web3Provid
   }, [deactivate])
   return {
     connector,
-    library: library || providers[isEVM(chainIdState) ? chainIdState : ChainId.MAINNET],
+    library: library || provider,
     chainId: chainId || ChainId.MAINNET,
     account,
     active,
@@ -134,6 +123,11 @@ export function useWeb3React(key?: string): Web3ReactContextInterface<Web3Provid
     setError,
     deactivate: deactivateWrapped,
   } as Web3ReactContextInterface
+}
+
+export const useWeb3Solana = () => {
+  const { connection } = useKyberswapConfig()
+  return { connection }
 }
 
 async function isAuthorized(): Promise<boolean> {

@@ -1,12 +1,12 @@
 import { gql, useLazyQuery } from '@apollo/client'
-import { ChainId, CurrencyAmount, Token, TokenAmount, WETH } from '@kyberswap/ks-sdk-core'
+import { CurrencyAmount, Token, TokenAmount, WETH } from '@kyberswap/ks-sdk-core'
 import { FeeAmount, Pool, Position } from '@kyberswap/ks-sdk-elastic'
 import { useEffect } from 'react'
 
 import { ZERO_ADDRESS } from 'constants/index'
-import { NETWORKS_INFO, isEVM } from 'constants/networks'
 import { NativeCurrencies } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
+import { useKyberswapConfig } from 'hooks/useKyberswapConfig'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { isAddressString } from 'utils'
 
@@ -146,9 +146,10 @@ const FarmUpdaterV1: React.FC<CommonProps> = ({ interval }) => {
   const dispatch = useAppDispatch()
   const { chainId } = useActiveWeb3React()
   const elasticFarm = useAppSelector(state => state.elasticFarm)[chainId || 1] || defaultChainData
+  const { elasticClient } = useKyberswapConfig()
 
   const [getElasticFarms, { data, error }] = useLazyQuery(ELASTIC_FARM_QUERY, {
-    client: isEVM(chainId) ? NETWORKS_INFO[chainId].elastic.client : NETWORKS_INFO[ChainId.MAINNET].elastic.client,
+    client: elasticClient,
     fetchPolicy: 'network-only',
   })
 

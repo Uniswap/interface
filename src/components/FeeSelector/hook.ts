@@ -3,8 +3,8 @@ import { FeeAmount } from '@kyberswap/ks-sdk-elastic'
 import { useEffect, useMemo, useState } from 'react'
 
 import { POOL_POSITION_COUNT } from 'apollo/queries/promm'
-import { EVMNetworkInfo } from 'constants/networks/type'
 import { useActiveWeb3React } from 'hooks'
+import { useKyberswapConfig } from 'hooks/useKyberswapConfig'
 import { useProAmmPoolInfos } from 'hooks/useProAmmPoolInfo'
 
 export const useFeeTierDistribution = (
@@ -12,7 +12,7 @@ export const useFeeTierDistribution = (
   currencyB: Currency | undefined,
 ): { [key in FeeAmount]: number } => {
   const { isEVM, networkInfo } = useActiveWeb3React()
-
+  const { elasticClient } = useKyberswapConfig()
   const feeAmounts = useMemo(() => {
     return [FeeAmount.HIGH, FeeAmount.LOW, FeeAmount.LOWEST, FeeAmount.STABLE, FeeAmount.MEDIUM]
   }, [])
@@ -39,7 +39,7 @@ export const useFeeTierDistribution = (
   useEffect(() => {
     if (!isEVM) return
     if (!poolIds.length) return
-    ;(networkInfo as EVMNetworkInfo).elastic.client
+    elasticClient
       .query({
         query: POOL_POSITION_COUNT(poolIds),
       })

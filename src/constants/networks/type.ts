@@ -1,6 +1,5 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import { Connection, PublicKey } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 
 export interface NetworkInfo {
   readonly chainId: ChainId
@@ -9,6 +8,7 @@ export interface NetworkInfo {
   readonly route: string
   readonly ksSettingRoute: string
   readonly priceRoute: string
+  readonly aggregatorRoute: string
   readonly name: string
   readonly icon: string
   readonly iconDark: string | null
@@ -24,7 +24,6 @@ export interface NetworkInfo {
     readonly decimal: number
     readonly minForGas: number
   }
-  readonly routerUri: string
   readonly coingeckoNetworkId: string | null //https://api.coingecko.com/api/v3/asset_platforms
   readonly coingeckoNativeTokenId: string | null //https://api.coingecko.com/api/v3/coins/list
   readonly tokenListUrl: string
@@ -34,6 +33,7 @@ export interface NetworkInfo {
     development: string | null
     production: string | null
   }
+  readonly defaultRpcUrl: string
   // token: {
   //   DAI: Token
   //   USDC: Token
@@ -43,11 +43,10 @@ export interface NetworkInfo {
 
 export interface EVMNetworkInfo extends NetworkInfo {
   readonly poolFarmRoute: string // use this to get data from our internal BE
-  readonly blockClient: ApolloClient<NormalizedCacheObject>
-  readonly rpcUrl: string
+  readonly defaultBlockSubgraph: string
   readonly multicall: string
   readonly classic: {
-    readonly client: ApolloClient<NormalizedCacheObject>
+    readonly defaultSubgraph: string
     readonly static: {
       readonly zap: string
       readonly router: string
@@ -68,7 +67,7 @@ export interface EVMNetworkInfo extends NetworkInfo {
     readonly fairlaunchV2: string[]
   }
   readonly elastic: {
-    readonly client: ApolloClient<NormalizedCacheObject>
+    readonly defaultSubgraph: string
     readonly startBlock: number
     readonly coreFactory: string
     readonly nonfungiblePositionManager: string
@@ -100,7 +99,6 @@ export interface SolanaNetworkInfo extends NetworkInfo {
   //   readonly factory: string
   //   readonly router: string
   // }
-  connection: Connection
   aggregatorProgramAddress: string
   openBookAddress: PublicKey
 }

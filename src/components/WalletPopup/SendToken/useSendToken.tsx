@@ -6,9 +6,8 @@ import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction } from '@solana
 import { ethers } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
 
-import { useActiveWeb3React, useWeb3React } from 'hooks'
+import { useActiveWeb3React, useWeb3React, useWeb3Solana } from 'hooks'
 import { useTokenContract } from 'hooks/useContract'
-import connection from 'state/connection/connection'
 import { tryParseAmount } from 'state/swap/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TRANSACTION_TYPE } from 'state/transactions/type'
@@ -21,6 +20,7 @@ export default function useSendToken(currency: Currency | undefined, recipient: 
   const addTransactionWithType = useTransactionAdder()
   const [isSending, setIsSending] = useState(false)
   const { publicKey } = useWallet()
+  const { connection } = useWeb3Solana()
 
   const prepareTransactionSolana = useCallback(async () => {
     const amountIn = tryParseAmount(amount, currency)
@@ -60,7 +60,7 @@ export default function useSendToken(currency: Currency | undefined, recipient: 
     transaction.feePayer = publicKey
 
     return transaction
-  }, [publicKey, recipient, amount, walletSolana, currency])
+  }, [publicKey, recipient, amount, walletSolana, currency, connection])
 
   useEffect(() => {
     if (!currency || !amount || !recipient) {
@@ -90,6 +90,7 @@ export default function useSendToken(currency: Currency | undefined, recipient: 
     }
 
     async function getGasFeeSolana() {
+      if (!connection) return
       try {
         const transaction = await prepareTransactionSolana()
         const fee = await transaction.getEstimatedFee(connection)
@@ -99,7 +100,18 @@ export default function useSendToken(currency: Currency | undefined, recipient: 
       }
     }
     isEVM ? getGasFee() : getGasFeeSolana()
-  }, [library, account, amount, currency, prepareTransactionSolana, isEVM, recipient, tokenContract, isSolana])
+  }, [
+    library,
+    account,
+    amount,
+    currency,
+    prepareTransactionSolana,
+    isEVM,
+    recipient,
+    tokenContract,
+    isSolana,
+    connection,
+  ])
 
   const addTransaction = useCallback(
     (hash: string) => {
@@ -146,7 +158,7 @@ export default function useSendToken(currency: Currency | undefined, recipient: 
   const sendTokenSolana = useCallback(async () => {
     try {
       const amountIn = tryParseAmount(amount, currency)
-      if (!publicKey || !currency || !recipient || !amountIn || !walletSolana) {
+      if (!publicKey || !currency || !recipient || !amountIn || !walletSolana || !connection) {
         return Promise.reject('wrong input')
       }
       setIsSending(true)
@@ -160,7 +172,7 @@ export default function useSendToken(currency: Currency | undefined, recipient: 
       throw error
     }
     return
-  }, [publicKey, recipient, amount, addTransaction, prepareTransactionSolana, walletSolana, currency])
+  }, [publicKey, recipient, amount, addTransaction, prepareTransactionSolana, walletSolana, currency, connection])
 
   return { sendToken: isEVM ? sendTokenEvm : sendTokenSolana, isSending, estimateGas }
 }

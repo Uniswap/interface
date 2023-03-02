@@ -274,9 +274,13 @@ export async function splitQuery<ResultType, T, U>(
  * @dev Query speed is optimized by limiting to a 600-second period
  * @param {Int} timestamp in seconds
  */
-export async function getBlockFromTimestamp(timestamp: number, chainId: ChainId) {
+export async function getBlockFromTimestamp(
+  timestamp: number,
+  chainId: ChainId,
+  blockClient: ApolloClient<NormalizedCacheObject>,
+) {
   if (!isEVM(chainId)) return
-  const result = await NETWORKS_INFO[chainId].blockClient.query({
+  const result = await blockClient.query({
     query: GET_BLOCK,
     variables: {
       timestampFrom: timestamp,
@@ -296,6 +300,7 @@ export async function getBlockFromTimestamp(timestamp: number, chainId: ChainId)
  * @param {Array} timestamps
  */
 export async function getBlocksFromTimestamps(
+  blockClient: ApolloClient<NormalizedCacheObject>,
   timestamps: number[],
   chainId: ChainId,
   skipCount = 500,
@@ -307,7 +312,7 @@ export async function getBlocksFromTimestamps(
 
   const fetchedData = await splitQuery<{ number: number }[], number, any>(
     GET_BLOCKS,
-    NETWORKS_INFO[chainId].blockClient,
+    blockClient,
     timestamps,
     [],
     skipCount,

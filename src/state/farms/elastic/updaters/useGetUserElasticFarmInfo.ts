@@ -2,7 +2,7 @@ import { gql, useLazyQuery } from '@apollo/client'
 import { defaultAbiCoder } from '@ethersproject/abi'
 import { getCreate2Address } from '@ethersproject/address'
 import { keccak256 } from '@ethersproject/solidity'
-import { ChainId, Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
+import { Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
 import { BigNumber } from 'ethers'
 import { Interface } from 'ethers/lib/utils'
 import { useCallback, useEffect } from 'react'
@@ -13,6 +13,7 @@ import ELASTIC_FARM_ABI from 'constants/abis/v2/farm.json'
 import { NETWORKS_INFO, isEVM } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import { useMulticallContract } from 'hooks/useContract'
+import { useKyberswapConfig } from 'hooks/useKyberswapConfig'
 import { useAppSelector } from 'state/hooks'
 import { usePoolBlocks } from 'state/prommPools/hooks'
 
@@ -40,6 +41,7 @@ const useGetUserFarmingInfo = (interval?: boolean) => {
   const dispatch = useDispatch()
   const { chainId, account } = useActiveWeb3React()
   const multicallContract = useMulticallContract()
+  const { elasticClient } = useKyberswapConfig()
 
   const elasticFarm = useAppSelector(state => state.elasticFarm)[chainId || 1] || defaultChainData
 
@@ -240,7 +242,7 @@ const useGetUserFarmingInfo = (interval?: boolean) => {
       if (userInfo) dispatch(setUserFarmInfo({ chainId, userInfo }))
       console.timeEnd('getUserFarmInfo')
     }
-  }, [account, multicallContract, chainId, dispatch, elasticFarm.farms])
+  }, [elasticFarm.farms, chainId, account, multicallContract, dispatch])
 
   useEffect(() => {
     getUserFarmInfo()
@@ -257,7 +259,7 @@ const useGetUserFarmingInfo = (interval?: boolean) => {
 
   const { blockLast24h } = usePoolBlocks()
   const [getPoolInfo, { data: poolFeeData }] = useLazyQuery(POOL_FEE_HISTORY, {
-    client: isEVM(chainId) ? NETWORKS_INFO[chainId].elastic.client : NETWORKS_INFO[ChainId.MAINNET].elastic.client,
+    client: elasticClient,
     fetchPolicy: 'network-only',
   })
 
@@ -278,6 +280,7 @@ const useGetUserFarmingInfo = (interval?: boolean) => {
   }, [poolFeeData, chainId, dispatch])
 
   useEffect(() => {
+    if (!isEVM(chainId)) return
     const poolIds = elasticFarm.farms?.map(item => item.pools.map(p => p.poolAddress.toLowerCase())).flat()
 
     if (blockLast24h && poolIds?.length) {
@@ -288,7 +291,7 @@ const useGetUserFarmingInfo = (interval?: boolean) => {
         },
       })
     }
-  }, [elasticFarm.farms, blockLast24h, getPoolInfo])
+  }, [elasticFarm.farms, blockLast24h, getPoolInfo, chainId])
 
   useEffect(() => {
     if (chainId) dispatch(resetErrorNFTs(chainId))

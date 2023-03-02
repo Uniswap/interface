@@ -5,8 +5,7 @@ import JSBI from 'jsbi'
 import { useEffect, useMemo, useState } from 'react'
 
 import { NativeCurrencies } from 'constants/tokens'
-import { useActiveWeb3React } from 'hooks'
-import connection from 'state/connection/connection'
+import { useActiveWeb3React, useWeb3Solana } from 'hooks'
 import { useAllTransactions } from 'state/transactions/hooks'
 import { isAddress, isWalletAddressSolana } from 'utils'
 import { wait } from 'utils/retry'
@@ -15,12 +14,13 @@ export const useSOLBalance = (uncheckedAddress?: string): CurrencyAmount<Currenc
   const { chainId, account, isSolana } = useActiveWeb3React()
   const [solBalance, setSolBalance] = useState<CurrencyAmount<Currency> | undefined>(undefined)
   const allTransactions = useAllTransactions()
+  const { connection } = useWeb3Solana()
 
   useEffect(() => {
     let canceled = false
     let triedCount = 0
     const getBalance = async () => {
-      if (!isSolana) return
+      if (!isSolana || !connection) return
       if (!account || !isAddress(chainId, account)) {
         setSolBalance(undefined)
         return
@@ -51,7 +51,7 @@ export const useSOLBalance = (uncheckedAddress?: string): CurrencyAmount<Currenc
     return () => {
       canceled = true
     }
-  }, [allTransactions, account, chainId, isSolana, uncheckedAddress])
+  }, [allTransactions, account, chainId, isSolana, uncheckedAddress, connection])
 
   return solBalance
 }
@@ -68,6 +68,7 @@ const useAssociatedTokensAccounts = (): { [mintAddress: string]: AccountInfoPars
   const { isSolana, account } = useActiveWeb3React()
   const allTransactions = useAllTransactions()
   const [atas, setAtas] = useState<{ [mintAddress: string]: AccountInfoParsed } | null>(null)
+  const { connection } = useWeb3Solana()
 
   useEffect(() => {
     if (!isSolana) return
@@ -75,6 +76,7 @@ const useAssociatedTokensAccounts = (): { [mintAddress: string]: AccountInfoPars
     let canceled = false
     let triedCount = 0
     async function getTokenAccounts(publicKey: PublicKey) {
+      if (!connection) return
       try {
         const response = await connection.getTokenAccountsByOwner(publicKey, {
           programId: TOKEN_PROGRAM_ID,
@@ -103,7 +105,7 @@ const useAssociatedTokensAccounts = (): { [mintAddress: string]: AccountInfoPars
     return () => {
       canceled = true
     }
-  }, [allTransactions, account, isSolana])
+  }, [allTransactions, account, isSolana, connection])
 
   return atas
 }

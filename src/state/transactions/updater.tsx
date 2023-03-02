@@ -6,11 +6,10 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { NotificationType } from 'components/Announcement/type'
 import { APP_PATHS } from 'constants/index'
-import { useActiveWeb3React, useWeb3React } from 'hooks'
+import { useActiveWeb3React, useWeb3React, useWeb3Solana } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE, NEED_CHECK_SUBGRAPH_TRANSACTION_TYPES } from 'hooks/useMixpanel'
 import { useBlockNumber, useTransactionNotify } from 'state/application/hooks'
 import { useSetClaimingCampaignRewardId } from 'state/campaigns/hooks'
-import connection from 'state/connection/connection'
 import { AppDispatch, AppState } from 'state/index'
 import { findTx } from 'utils'
 import { includes } from 'utils/array'
@@ -43,6 +42,7 @@ function shouldCheck(
 export default function Updater(): null {
   const { chainId, isEVM, isSolana } = useActiveWeb3React()
   const { library } = useWeb3React()
+  const { connection } = useWeb3Solana()
 
   const lastBlockNumber = useBlockNumber()
   const dispatch = useDispatch<AppDispatch>()
@@ -198,7 +198,7 @@ export default function Updater(): null {
               console.error(`failed to check transaction hash: ${hash}`, error)
             })
         }
-        if (isSolana) {
+        if (isSolana && connection) {
           connection
             .getParsedTransaction(hash, { maxSupportedTransactionVersion: 0 })
             .then((tx: ParsedTransactionWithMeta | null) => {
@@ -260,7 +260,7 @@ export default function Updater(): null {
       })
 
     // eslint-disable-next-line
-  }, [chainId, library, transactions, lastBlockNumber, dispatch])
+  }, [chainId, library, transactions, lastBlockNumber, dispatch, connection])
 
   return null
 }

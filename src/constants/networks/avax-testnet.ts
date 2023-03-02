@@ -3,7 +3,6 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import AVAX from 'assets/networks/avax-network.png'
 import { KS_SETTING_API } from 'constants/env'
 import { EVMNetworkInfo } from 'constants/networks/type'
-import { createClient } from 'utils/client'
 
 const EMPTY = ''
 const EMPTY_ARRAY: any[] = []
@@ -14,13 +13,14 @@ const avaxTestnetInfo: EVMNetworkInfo = {
   route: 'avalanche-testnet',
   ksSettingRoute: 'avalanche',
   priceRoute: 'avalanche',
+  aggregatorRoute: 'avalanche',
   poolFarmRoute: EMPTY,
   name: 'Avalanche Testnet',
   icon: AVAX,
   iconDark: NOT_SUPPORT,
   iconSelected: NOT_SUPPORT,
   iconDarkSelected: NOT_SUPPORT,
-  blockClient: createClient('https://api.thegraph.com/subgraphs/name/ducquangkstn/ethereum-block-fuji'),
+  defaultBlockSubgraph: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/ethereum-block-fuji',
   etherscanUrl: 'https://testnet.snowtrace.io',
   etherscanName: 'Snowtrace',
   tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.AVAXTESTNET}&isWhitelisted=${true}`,
@@ -32,11 +32,10 @@ const avaxTestnetInfo: EVMNetworkInfo = {
     decimal: 18,
     minForGas: 10 ** 16,
   },
-  rpcUrl: 'https://api.avax-test.network/ext/bc/C/rpc',
-  routerUri: `https://aggregator-api.stg.kyberengineering.io/fuji/route/encode`,
+  defaultRpcUrl: 'https://api.avax-test.network/ext/bc/C/rpc',
   multicall: '0x5D605e78bc699fB565E6E6a1fa2d940C40F8ce25',
   classic: {
-    client: createClient('https://api.thegraph.com/subgraphs/name/ducquangkstn/dmm-exchange-fuij'),
+    defaultSubgraph: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/dmm-exchange-fuij',
     static: {
       zap: EMPTY,
       router: EMPTY,
@@ -53,7 +52,7 @@ const avaxTestnetInfo: EVMNetworkInfo = {
     fairlaunchV2: EMPTY_ARRAY,
   },
   elastic: {
-    client: createClient('https://api.thegraph.com/subgraphs/name/viet-nv/elastic-fuji'),
+    defaultSubgraph: 'https://api.thegraph.com/subgraphs/name/viet-nv/elastic-fuji',
     startBlock: 12351427,
     coreFactory: '0x6992a3c0613485644a634bfe22ea97b04f0916aa',
     nonfungiblePositionManager: '0x0C1f1B3608C10DD4E95EBca5a776f004B7EDFdb2',

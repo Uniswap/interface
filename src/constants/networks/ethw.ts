@@ -1,8 +1,7 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 
 import Mainnet from 'assets/networks/ethw.png'
-import { AGGREGATOR_API, KS_SETTING_API } from 'constants/env'
-import { createClient } from 'utils/client'
+import { KS_SETTING_API } from 'constants/env'
 
 import { EVMNetworkInfo } from './type'
 
@@ -16,14 +15,13 @@ const ethereumInfo: EVMNetworkInfo = {
   ksSettingRoute: 'ethw',
   priceRoute: 'ethw',
   poolFarmRoute: EMPTY,
+  aggregatorRoute: 'ethw',
   name: 'EthereumPoW',
   icon: Mainnet,
   iconDark: NOT_SUPPORT,
   iconSelected: NOT_SUPPORT,
   iconDarkSelected: NOT_SUPPORT,
-  blockClient: createClient(
-    'https://ethereumpow-graph.kyberengineering.io/subgraphs/name/kybernetwork/ethereumpow-blocks',
-  ),
+  defaultBlockSubgraph: 'https://ethereumpow-graph.kyberengineering.io/subgraphs/name/kybernetwork/ethereumpow-blocks',
   etherscanUrl: 'https://www.oklink.com/en/ethw',
   etherscanName: 'Ethwscan',
   tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.ETHW}&isWhitelisted=${true}`,
@@ -35,13 +33,11 @@ const ethereumInfo: EVMNetworkInfo = {
     decimal: 18,
     minForGas: 10 ** 16,
   },
-  rpcUrl: 'https://ethereumpow.kyberengineering.io',
-  routerUri: `${AGGREGATOR_API}/ethw/route/encode`,
+  defaultRpcUrl: 'https://ethereumpow.kyberengineering.io',
   multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
   classic: {
-    client: createClient(
+    defaultSubgraph:
       'https://ethereumpow-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-ethereumpow',
-    ),
     static: {
       zap: '0x2abE8750e4a65584d7452316356128C936273e0D',
       router: '0x5649B4DD00780e99Bab7Abb4A3d581Ea1aEB23D0',
@@ -58,9 +54,8 @@ const ethereumInfo: EVMNetworkInfo = {
     fairlaunchV2: EMPTY_ARRAY,
   },
   elastic: {
-    client: createClient(
+    defaultSubgraph:
       'https://ethereumpow-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-elastic-ethereumpow',
-    ),
     startBlock: 14932475,
     coreFactory: '0x5F1dddbf348aC2fbe22a163e30F99F9ECE3DD50a',
     nonfungiblePositionManager: '0x2B1c7b41f6A8F2b2bc45C3233a5d5FB3cD6dC9A8',

@@ -13,6 +13,7 @@ import {
 import { DexInstructions, OpenOrders } from '@project-serum/serum'
 import { captureException } from '@sentry/react'
 import {
+  Connection,
   Keypair,
   Message,
   PublicKey,
@@ -28,7 +29,6 @@ import invariant from 'tiny-invariant'
 import { AbortedError, ETHER_ADDRESS, KYBERSWAP_SOURCE, ZERO_ADDRESS_SOLANA, sentryRequestId } from 'constants/index'
 import { NETWORKS_INFO, isEVM } from 'constants/networks'
 import { FeeConfig } from 'hooks/useSwapV2Callback'
-import connection from 'state/connection/connection'
 import { AggregationComparer, SolanaEncode } from 'state/swap/types'
 
 import fetchWaiting from './fetchWaiting'
@@ -444,7 +444,11 @@ export class Aggregator {
     return null
   }
 
-  public static async encodeSolana(agg: Aggregator, signal: AbortSignal): Promise<undefined | SolanaEncode> {
+  public static async encodeSolana(
+    agg: Aggregator,
+    connection: Connection,
+    signal: AbortSignal,
+  ): Promise<undefined | SolanaEncode> {
     if (!agg.solana) return
     if (!agg.solana.encodedMessage) return
     if (agg.solana.to === ZERO_ADDRESS_SOLANA) return
@@ -545,7 +549,7 @@ export class Aggregator {
         let initializedWrapSOL = false
         let wrapIxs: TransactionInstruction[] | null = null
         if (agg.inputAmount.currency.isNative) {
-          wrapIxs = await checkAndCreateWrapSOLInstructions(toPK, agg.inputAmount)
+          wrapIxs = await checkAndCreateWrapSOLInstructions(connection, toPK, agg.inputAmount)
           if (signal.aborted) throw new AbortedError()
           if (wrapIxs) {
             initializedWrapSOL = true
@@ -562,6 +566,7 @@ export class Aggregator {
             if (!token) return
             if (tokenAddress === WETH[ChainId.SOLANA].address && initializedWrapSOL) return // for case WSOL as part of route
             const createAtaIxs = await checkAndCreateAtaInstruction(
+              connection,
               toPK,
               new Token(ChainId.SOLANA, tokenAddress, token?.decimals || 0),
             )
@@ -578,7 +583,15 @@ export class Aggregator {
         //#endregion set up tx
 
         //#region swap tx
-        const swapTx = await convertToVersionedTx('confirmed', blockhash, message, toPK, wrapIxs, cleanUpIxs)
+        const swapTx = await convertToVersionedTx(
+          connection,
+          'confirmed',
+          blockhash,
+          message,
+          toPK,
+          wrapIxs,
+          cleanUpIxs,
+        )
         if (signal.aborted) throw new AbortedError()
 
         await swapTx.sign([agg.solana.programState])

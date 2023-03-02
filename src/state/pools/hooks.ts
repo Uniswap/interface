@@ -12,9 +12,9 @@ import {
   POOL_DATA,
   USER_POSITIONS,
 } from 'apollo/queries'
-import { NETWORKS_INFO, ONLY_DYNAMIC_FEE_CHAINS } from 'constants/networks'
-import { EVMNetworkInfo } from 'constants/networks/type'
+import { ONLY_DYNAMIC_FEE_CHAINS } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
+import { useKyberswapConfig } from 'hooks/useKyberswapConfig'
 import { useETHPrice } from 'state/application/hooks'
 import { AppState } from 'state/index'
 import { get24hValue, getBlocksFromTimestamps, getPercentChange, getTimestampsForChanges } from 'utils'
@@ -85,9 +85,10 @@ export interface UserLiquidityPositionResult {
  * @param user string
  */
 export function useUserLiquidityPositions(): UserLiquidityPositionResult {
-  const { isEVM, account, networkInfo } = useActiveWeb3React()
+  const { isEVM, account } = useActiveWeb3React()
+  const { classicClient } = useKyberswapConfig()
   const { loading, error, data } = useQuery(USER_POSITIONS, {
-    client: isEVM ? (networkInfo as EVMNetworkInfo).classic.client : NETWORKS_INFO[ChainId.MAINNET].classic.client,
+    client: classicClient,
     variables: {
       user: account?.toLowerCase(),
     },
@@ -134,6 +135,7 @@ function parseData(data: any, oneDayData: any, ethPrice: any, oneDayBlock: any, 
 export async function getBulkPoolDataFromPoolList(
   poolList: string[],
   apolloClient: ApolloClient<NormalizedCacheObject>,
+  blockClient: ApolloClient<NormalizedCacheObject>,
   chainId: ChainId,
   ethPrice?: string,
 ): Promise<any> {
@@ -144,7 +146,7 @@ export async function getBulkPoolDataFromPoolList(
     })
     let poolData
     const [t1] = getTimestampsForChanges()
-    const blocks = await getBlocksFromTimestamps([t1], chainId)
+    const blocks = await getBlocksFromTimestamps(blockClient, [t1], chainId)
     if (!blocks.length) {
       return current.data.pools
     } else {
@@ -199,12 +201,13 @@ export async function getBulkPoolDataWithPagination(
   first: number,
   skip: number,
   apolloClient: ApolloClient<NormalizedCacheObject>,
+  blockClient: ApolloClient<NormalizedCacheObject>,
   ethPrice: string,
   chainId: ChainId,
 ): Promise<any> {
   try {
     const [t1] = getTimestampsForChanges()
-    const blocks = await getBlocksFromTimestamps([t1], chainId)
+    const blocks = await getBlocksFromTimestamps(blockClient, [t1], chainId)
 
     // In case we can't get the block one day ago then we set it to 0 which is fine
     // because our subgraph never syncs from block 0 => response is empty
@@ -278,12 +281,12 @@ export function useResetPools(chainId: ChainId) {
 export function usePoolCountInSubgraph(): number {
   const [poolCount, setPoolCount] = useState(0)
   const { isEVM, networkInfo } = useActiveWeb3React()
+  const { classicClient } = useKyberswapConfig()
 
   useEffect(() => {
     if (!isEVM) return
-    const apolloClient = (networkInfo as EVMNetworkInfo).classic.client
     const getPoolCount = async () => {
-      const result = await apolloClient.query({
+      const result = await classicClient.query({
         query: POOL_COUNT,
         fetchPolicy: 'network-only',
       })
@@ -295,7 +298,7 @@ export function usePoolCountInSubgraph(): number {
     }
 
     getPoolCount()
-  }, [networkInfo, isEVM])
+  }, [networkInfo, isEVM, classicClient])
 
   return poolCount
 }
@@ -313,11 +316,11 @@ export function useAllPoolsData(): {
   const error = useSelector((state: AppState) => state.pools.error)
 
   const { currentPrice: ethPrice } = useETHPrice()
+  const { classicClient, blockClient } = useKyberswapConfig()
 
   const poolCountSubgraph = usePoolCountInSubgraph()
   useEffect(() => {
     if (!isEVM) return
-    const apolloClient = (networkInfo as EVMNetworkInfo).classic.client
     let cancelled = false
 
     const getPoolsData = async () => {
@@ -327,7 +330,9 @@ export function useAllPoolsData(): {
           const ITEM_PER_CHUNK = Math.min(1000, poolCountSubgraph) // GraphNode can handle max 1000 records per query.
           const promises = []
           for (let i = 0, j = poolCountSubgraph; i < j; i += ITEM_PER_CHUNK) {
-            promises.push(() => getBulkPoolDataWithPagination(ITEM_PER_CHUNK, i, apolloClient, ethPrice, chainId))
+            promises.push(() =>
+              getBulkPoolDataWithPagination(ITEM_PER_CHUNK, i, classicClient, blockClient, ethPrice, chainId),
+            )
           }
           const pools = (await Promise.all(promises.map(callback => callback()))).flat()
           !cancelled && dispatch(updatePools({ pools }))
@@ -344,7 +349,18 @@ export function useAllPoolsData(): {
     return () => {
       cancelled = true
     }
-  }, [chainId, dispatch, error, ethPrice, poolCountSubgraph, poolsData.length, isEVM, networkInfo])
+  }, [
+    chainId,
+    dispatch,
+    error,
+    ethPrice,
+    poolCountSubgraph,
+    poolsData.length,
+    isEVM,
+    networkInfo,
+    classicClient,
+    blockClient,
+  ])
 
   return useMemo(() => ({ loading, error, data: poolsData }), [error, loading, poolsData])
 }
@@ -366,17 +382,17 @@ export function useSinglePoolData(
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<Error | undefined>(undefined)
   const [poolData, setPoolData] = useState<SubgraphPoolData>()
+  const { classicClient, blockClient } = useKyberswapConfig()
 
   useEffect(() => {
     if (!isEVM) return
     let isCanceled = false
-    const apolloClient = (networkInfo as EVMNetworkInfo).classic.client
     async function checkForPools() {
       setLoading(true)
 
       try {
         if (poolAddress && !error) {
-          const pools = await getBulkPoolDataFromPoolList([poolAddress], apolloClient, chainId, ethPrice)
+          const pools = await getBulkPoolDataFromPoolList([poolAddress], classicClient, blockClient, chainId, ethPrice)
 
           if (pools.length > 0) {
             !isCanceled && setPoolData(pools[0])
@@ -394,7 +410,7 @@ export function useSinglePoolData(
     return () => {
       isCanceled = true
     }
-  }, [ethPrice, error, poolAddress, chainId, isEVM, networkInfo])
+  }, [ethPrice, error, poolAddress, chainId, isEVM, networkInfo, classicClient, blockClient])
 
   return { loading, error, data: poolData }
 }
