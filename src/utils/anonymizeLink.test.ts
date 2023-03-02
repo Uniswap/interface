@@ -28,9 +28,4 @@ describe('#anonymizeLink', () => {
   it('works for arbitrum urls', () => {
     expect(anonymizeLink('https://arbiscan.io/0x/0xabc')).toEqual('https://arbiscan.io/0x/***')
   })
-  it('works for arbitrum rinkeby urls', () => {
-    expect(anonymizeLink('https://rinkeby-explorer.arbitrum.io/0x/0xabc')).toEqual(
-      'https://rinkeby-explorer.arbitrum.io/0x/***'
-    )
-  })
 })
