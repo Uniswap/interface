@@ -6,7 +6,7 @@ import Row from 'components/Row'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { getTotalEthValue } from 'nft/components/bag/profile/utils'
+import { getTotalEthValue } from 'nft/components/profile/list/utils'
 import { useSellAsset } from 'nft/hooks'
 import { formatEth, generateTweetForList, pluralize } from 'nft/utils'
 import { useMemo } from 'react'
@@ -63,7 +63,7 @@ const ReturnButton = styled.button`
 
 const TweetButton = styled.a`
   background-color: ${({ theme }) => theme.accentAction};
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.accentTextLightPrimary};
   text-decoration: none;
   ${buttonStyle}
 `
@@ -119,7 +119,7 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
         </ReturnButton>
         <TweetButton href={generateTweetForList(sellAssets)} target="_blank" rel="noreferrer">
           <TweetRow>
-            <Twitter height={20} width={20} color={theme.textPrimary} fill={theme.textPrimary} />
+            <Twitter height={20} width={20} color={theme.accentTextLightPrimary} fill={theme.accentTextLightPrimary} />
             <Trans>Share on Twitter</Trans>
           </TweetRow>
         </TweetButton>

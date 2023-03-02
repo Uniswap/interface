@@ -1,7 +1,6 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
-import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
 import { GqlRoutingVariant, useGqlRoutingFlag } from 'featureFlags/flags/gqlRouting'
-import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
+import { NftGraphqlVariant, useNftGraphqlFlag } from 'featureFlags/flags/nftlGraphql'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
 import { Permit2Variant, usePermit2Flag } from 'featureFlags/flags/permit2'
 import { SwapWidgetVariant, useSwapWidgetFlag } from 'featureFlags/flags/swapWidget'
@@ -214,18 +213,6 @@ export default function FeatureFlagModal() {
         label="Permit 2 / Universal Router"
       />
       <FeatureFlagOption
-        variant={BaseVariant}
-        value={useFiatOnrampFlag()}
-        featureFlag={FeatureFlag.fiatOnramp}
-        label="Fiat on-ramp"
-      />
-      <FeatureFlagOption
-        variant={NftListV2Variant}
-        value={useNftListV2Flag()}
-        featureFlag={FeatureFlag.nftListV2}
-        label="NFT Listing Page v2"
-      />
-      <FeatureFlagOption
         variant={PayWithAnyTokenVariant}
         value={usePayWithAnyTokenFlag()}
         featureFlag={FeatureFlag.payWithAnyToken}
@@ -242,6 +229,12 @@ export default function FeatureFlagModal() {
         value={useGqlRoutingFlag()}
         featureFlag={FeatureFlag.gqlRouting}
         label="GraphQL NFT Routing"
+      />
+      <FeatureFlagOption
+        variant={NftGraphqlVariant}
+        value={useNftGraphqlFlag()}
+        featureFlag={FeatureFlag.nftGraphql}
+        label="Migrate NFT read endpoints to GQL"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption

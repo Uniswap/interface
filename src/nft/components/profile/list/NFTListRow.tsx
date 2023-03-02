@@ -10,7 +10,9 @@ import { BREAKPOINTS, ThemedText } from 'theme'
 import { opacify } from 'theme/utils'
 
 import { MarketplaceRow } from './MarketplaceRow'
-import { SetPriceMethod } from './NFTListingsGrid'
+import { SetPriceMethod } from './shared'
+
+const IMAGE_THUMBNAIL_SIZE = 60
 
 const NFTListRowWrapper = styled(Row)`
   padding: 24px 0px;
@@ -23,8 +25,8 @@ const NFTListRowWrapper = styled(Row)`
 `
 
 const RemoveIconContainer = styled.div`
-  width: 48px;
-  height: 44px;
+  width: ${IMAGE_THUMBNAIL_SIZE}px;
+  height: ${IMAGE_THUMBNAIL_SIZE}px;
   padding-left: 12px;
   align-self: flex-start;
   align-items: center;
@@ -42,13 +44,17 @@ const RemoveIconContainer = styled.div`
 const NFTInfoWrapper = styled(Row)`
   align-items: center;
   min-width: 0px;
-  flex: 1.5;
+  flex: 2;
   margin-bottom: auto;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    flex: 1.5;
+  }
 `
 
 const NFTImage = styled.img`
-  width: 48px;
-  height: 48px;
+  width: ${IMAGE_THUMBNAIL_SIZE}px;
+  height: ${IMAGE_THUMBNAIL_SIZE}px;
   border-radius: 8px;
   margin-right: 8px;
 `
@@ -60,7 +66,6 @@ const HideTextOverflow = css`
 `
 
 const TokenInfoWrapper = styled(Column)`
-  gap: 4px;
   margin-right: 8px;
   min-width: 0px;
 `
@@ -82,6 +87,7 @@ const MarketPlaceRowWrapper = styled(Column)`
   gap: 24px;
   flex: 1.5;
   margin-right: 12px;
+  padding: 6px 0px;
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     flex: 2;
@@ -117,10 +123,10 @@ export const NFTListRow = ({
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
   const theme = useTheme()
 
+  // Keep localMarkets up to date with changes to globalMarkets
   useEffect(() => {
     setLocalMarkets(JSON.parse(JSON.stringify(selectedMarkets)))
-    selectedMarkets.length < 2 && expandMarketplaceRows && toggleExpandMarketplaceRows()
-  }, [expandMarketplaceRows, selectedMarkets])
+  }, [selectedMarkets])
 
   return (
     <NFTListRowWrapper
@@ -155,17 +161,16 @@ export const NFTListRow = ({
         </TokenInfoWrapper>
       </NFTInfoWrapper>
       <MarketPlaceRowWrapper>
-        {expandMarketplaceRows ? (
-          localMarkets.map((market, index) => {
+        {expandMarketplaceRows && localMarkets.length > 1 ? (
+          localMarkets.map((market) => {
             return (
               <MarketplaceRow
                 globalPriceMethod={globalPriceMethod}
                 globalPrice={globalPrice}
                 setGlobalPrice={setGlobalPrice}
                 selectedMarkets={[market]}
-                removeMarket={() => localMarkets.splice(index, 1)}
+                removeMarket={() => setLocalMarkets(localMarkets.filter((oldMarket) => oldMarket.name !== market.name))}
                 asset={asset}
-                showMarketplaceLogo={true}
                 key={asset.name + market.name}
                 expandMarketplaceRows={expandMarketplaceRows}
                 rowHovered={hovered}
@@ -180,7 +185,6 @@ export const NFTListRow = ({
             setGlobalPrice={setGlobalPrice}
             selectedMarkets={localMarkets}
             asset={asset}
-            showMarketplaceLogo={false}
             rowHovered={hovered}
             toggleExpandMarketplaceRows={toggleExpandMarketplaceRows}
           />

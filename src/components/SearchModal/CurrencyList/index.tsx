@@ -290,7 +290,7 @@ export default function CurrencyList({
   }, [])
 
   return (
-    <div style={{ paddingRight: '8px', paddingTop: '8px' }}>
+    <div style={{ paddingRight: '4px' }}>
       {isLoading ? (
         <FixedSizeList
           className={styles.scrollbarStyle}

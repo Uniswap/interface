@@ -14,3 +14,16 @@ export const TitleRow = styled(Row)`
   justify-content: space-between;
   margin-bottom: 8px;
 `
+
+export enum SetPriceMethod {
+  SAME_PRICE,
+  FLOOR_PRICE,
+  LAST_PRICE,
+  CUSTOM,
+}
+
+export enum WarningType {
+  BELOW_FLOOR,
+  ALREADY_LISTED,
+  NONE,
+}

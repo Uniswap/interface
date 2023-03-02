@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-// eslint-disable-next-line no-restricted-imports
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -12,6 +11,7 @@ import { BREAKPOINTS } from 'theme'
 
 import { Dropdown } from './Dropdown'
 import { NFTListRow } from './NFTListRow'
+import { SetPriceMethod } from './shared'
 
 const TableHeader = styled.div`
   display: flex;
@@ -20,7 +20,7 @@ const TableHeader = styled.div`
   top: 72px;
   padding-top: 24px;
   padding-bottom: 24px;
-  z-index: 1;
+  z-index: 3;
   background-color: ${({ theme }) => theme.backgroundBackdrop};
   color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
@@ -28,12 +28,16 @@ const TableHeader = styled.div`
   line-height: 20px;
 
   @media screen and (min-width: ${BREAKPOINTS.sm}px) {
-    margin-left: 48px;
+    padding-left: 48px;
   }
 `
 
 const NFTHeader = styled.div`
-  flex: 1.5;
+  flex: 2;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    flex: 1.5;
+  }
 `
 
 const PriceHeaders = styled(Row)`
@@ -45,17 +49,26 @@ const PriceHeaders = styled(Row)`
   }
 `
 
-const PriceInfoHeader = styled.div`
+const LastPriceHeader = styled.div`
   display: none;
   flex: 1;
 
-  @media screen and (min-width: ${BREAKPOINTS.xl}px) {
+  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+    display: flex;
+  }
+`
+
+const FloorPriceHeader = styled.div`
+  display: none;
+  flex: 1;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
     display: flex;
   }
 `
 
 const DropdownAndHeaderWrapper = styled(Row)`
-  flex: 3;
+  flex: 2;
   gap: 4px;
 `
 
@@ -130,13 +143,6 @@ const RowDivider = styled.hr`
   border-color: ${({ theme }) => theme.backgroundInteractive};
 `
 
-export enum SetPriceMethod {
-  SAME_PRICE,
-  FLOOR_PRICE,
-  LAST_PRICE,
-  CUSTOM,
-}
-
 export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingMarket[] }) => {
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const [globalPriceMethod, setGlobalPriceMethod] = useState(SetPriceMethod.CUSTOM)
@@ -208,12 +214,12 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           <Trans>NFT</Trans>
         </NFTHeader>
         <PriceHeaders>
-          <PriceInfoHeader>
+          <FloorPriceHeader>
             <Trans>Floor</Trans>
-          </PriceInfoHeader>
-          <PriceInfoHeader>
+          </FloorPriceHeader>
+          <LastPriceHeader>
             <Trans>Last</Trans>
-          </PriceInfoHeader>
+          </LastPriceHeader>
 
           <DropdownAndHeaderWrapper ref={dropdownRef}>
             <Trans>Price</Trans>
