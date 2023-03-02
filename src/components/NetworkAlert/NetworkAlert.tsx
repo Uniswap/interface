@@ -24,9 +24,7 @@ const BodyText = styled.div`
   font-size: 14px;
 `
 const RootWrapper = styled.div`
-  position: relative;
   margin-top: 16px;
-  z-index: 0;
 `
 
 const SHOULD_SHOW_ALERT = {

@@ -563,15 +563,13 @@ export default function Swap({ className }: { className?: string }) {
         />
         <PageWrapper>
           {swapWidgetEnabled ? (
-            <div style={{ position: 'relative', zIndex: 1 }}>
-              <Widget
-                defaultTokens={{
-                  [Field.INPUT]: loadedInputCurrency ?? undefined,
-                  [Field.OUTPUT]: loadedOutputCurrency ?? undefined,
-                }}
-                width="100%"
-              />
-            </div>
+            <Widget
+              defaultTokens={{
+                [Field.INPUT]: loadedInputCurrency ?? undefined,
+                [Field.OUTPUT]: loadedOutputCurrency ?? undefined,
+              }}
+              width="100%"
+            />
           ) : (
             <SwapWrapper className={className} id="swap-page">
               <SwapHeader allowedSlippage={allowedSlippage} />
