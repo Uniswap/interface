@@ -1,5 +1,6 @@
 /**
  * List of all the networks supported by the Uniswap Interface
+ * TODO(INFRA-90): Eventually this may be derived from sdk-core.
  */
 export enum SupportedChainId {
   MAINNET = 1,
