@@ -117,9 +117,10 @@ export const CollectionAsset = ({
       selected={isSelected}
       addAssetToBag={handleAddAssetToBag}
       removeAssetFromBag={handleRemoveAssetFromBag}
+      isDisabled={asset.notForSale}
       data-testid="nft-collection-asset"
     >
-      <Card.ImageContainer isDisabled={asset.notForSale}>
+      <Card.ImageContainer>
         <Card.MarketplaceContainer />
         {assetMediaType === AssetMediaType.Image ? (
           <Card.Image

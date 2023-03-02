@@ -13,20 +13,17 @@ import {
   PlayButtonIcon,
   ProfileSelectedAssetIcon,
   SudoSwapIcon,
-  VerifiedIcon,
   X2y2Icon,
 } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset, Markets, UniformAspectRatio, UniformAspectRatios, WalletAsset } from 'nft/types'
 import { getAssetHref, isAudio, isVideo, putCommas } from 'nft/utils'
-import { floorFormatter } from 'nft/utils/numbers'
 import {
   createContext,
   MouseEvent,
   ReactNode,
   useCallback,
   useContext,
-  useLayoutEffect,
   useMemo,
   useReducer,
   useRef,
@@ -38,7 +35,6 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { colors } from 'theme/colors'
 
-/* -------- ASSET CONTEXT -------- */
 export interface CardContextProps {
   asset: GenieAsset | WalletAsset
   hovered: boolean
@@ -108,7 +104,33 @@ const StyledImageContainer = styled.div<{ isDisabled?: boolean }>`
   cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
 `
 
-const CardContainer = styled.div<{ selected: boolean }>`
+const StyledActionButton = styled(ThemedText.BodySmall)<{ selected: boolean }>`
+  position: absolute;
+  display: flex;
+  width: 100%;
+  padding: 8px 0px;
+  color: ${({ theme }) => theme.accentTextLightPrimary};
+  background: ${({ theme, selected }) => (selected ? theme.accentCritical : theme.accentAction)};
+  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
+  will-change: opacity;
+  border-radius: 8px;
+  justify-content: center;
+  font-weight: 600 !important;
+  line-height: 16px;
+  opacity: 0;
+  cursor: pointer;
+`
+
+const ActionButton = ({ children }: { children: ReactNode }) => {
+  const { clickActionButton, selected } = useCardContext()
+  return (
+    <StyledActionButton selected={selected} onClick={clickActionButton}>
+      {children}
+    </StyledActionButton>
+  )
+}
+
+const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean }>`
   position: relative;
   border-radius: ${BORDER_RADIUS}px;
   background-color: ${({ theme }) => theme.backgroundSurface};
@@ -135,7 +157,22 @@ const CardContainer = styled.div<{ selected: boolean }>`
   :hover::after {
     ${({ selected, theme }) => selected && `border-color: ${theme.accentCritical}`};
   }
+
+  :hover {
+    ${StyledActionButton} {
+      opacity: ${({ isDisabled }) => (isDisabled ? 0 : 1)};
+    }
+  }
 `
+
+const CardContainer = ({ children }: { children: ReactNode }) => {
+  const { selected, isDisabled } = useCardContext()
+  return (
+    <StyledCardContainer selected={selected} isDisabled={isDisabled} draggable={false}>
+      {children}
+    </StyledCardContainer>
+  )
+}
 
 const StyledLink = styled(Link)`
   text-decoration: none;
@@ -203,32 +240,19 @@ const Container = ({
     [asset, selected, hovered, isDisabled, href, addAssetToBag, removeAssetFromBag, clickActionButton]
   )
 
-  const assetRef = useRef<HTMLDivElement>(null)
-
-  useLayoutEffect(() => {
-    if (hovered && assetRef.current?.matches(':hover') === false) toggleHovered()
-  }, [hovered])
-
-  const toggleHover = useCallback(() => toggleHovered(), [])
-
   return (
     <CardContext.Provider value={providerValue}>
-      <CardContainer
-        selected={selected}
-        ref={assetRef}
-        draggable={false}
-        onMouseEnter={toggleHover}
-        onMouseLeave={toggleHover}
-      >
+      <CardContainer>
         <StyledLink to={getAssetHref(asset)}>{children}</StyledLink>
       </CardContainer>
     </CardContext.Provider>
   )
 }
 
-const ImageContainer = ({ children, isDisabled = false }: { children: ReactNode; isDisabled?: boolean }) => (
-  <StyledImageContainer isDisabled={isDisabled}>{children}</StyledImageContainer>
-)
+const ImageContainer = ({ children }: { children: ReactNode }) => {
+  const { isDisabled } = useCardContext()
+  return <StyledImageContainer isDisabled={isDisabled}>{children}</StyledImageContainer>
+}
 
 const handleUniformAspectRatio = (
   uniformAspectRatio: UniformAspectRatio,
@@ -300,7 +324,7 @@ const StyledImage = styled.img<{
   background: ${({ theme, imageLoading }) =>
     imageLoading && `linear-gradient(270deg, ${theme.backgroundOutline} 0%, ${theme.backgroundSurface} 100%)`};
 
-  ${CardContainer}:hover & {
+  ${StyledCardContainer}:hover & {
     transform: scale(1.15);
   }
 `
@@ -564,69 +588,6 @@ const InfoContainer = ({ children }: { children: ReactNode }) => {
   return <StyledInfoContainer>{children}</StyledInfoContainer>
 }
 
-const TruncatedTextRow = styled(ThemedText.BodySmall)`
-  display: flex;
-  padding: 2px;
-  white-space: pre;
-  text-overflow: ellipsis;
-  display: block;
-  overflow: hidden;
-`
-
-const AssetNameRow = styled(TruncatedTextRow)`
-  color: ${({ theme }) => theme.textPrimary};
-  font-size: 16px !important;
-  font-weight: 400;
-`
-
-interface ProfileNftDetailsProps {
-  asset: WalletAsset
-  hideDetails: boolean
-}
-
-const PrimaryRowContainer = styled.div`
-  overflow: hidden;
-  width: 100%;
-  flex-wrap: nowrap;
-`
-
-const FloorPriceRow = styled(TruncatedTextRow)`
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 20px;
-`
-
-const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
-  const assetName = () => {
-    if (!asset.name && !asset.tokenId) return
-    return asset.name ? asset.name : `#${asset.tokenId}`
-  }
-
-  const shouldShowUserListedPrice = !asset.notForSale && asset.asset_contract.tokenType !== NftStandard.Erc1155
-
-  return (
-    <PrimaryRowContainer>
-      <PrimaryRow>
-        <PrimaryDetails>
-          <TruncatedTextRow color="textSecondary">
-            {!!asset.asset_contract.name && <span>{asset.asset_contract.name}</span>}
-          </TruncatedTextRow>
-          {asset.collectionIsVerified && <VerifiedIcon height="18px" width="18px" />}
-        </PrimaryDetails>
-      </PrimaryRow>
-      <Row>
-        <AssetNameRow>{assetName()}</AssetNameRow>
-        {asset.susFlag && <Suspicious />}
-      </Row>
-      <FloorPriceRow>
-        {shouldShowUserListedPrice && asset.floor_sell_order_price
-          ? `${floorFormatter(asset.floor_sell_order_price)} ETH`
-          : ' '}
-      </FloorPriceRow>
-    </PrimaryRowContainer>
-  )
-}
-
 const StyledPrimaryRow = styled(Row)`
   gap: 8px;
   justify-content: space-between;
@@ -703,36 +664,6 @@ const StyledTertiaryInfo = styled(ThemedText.BodySmall)`
 
 const TertiaryInfo = ({ children }: { children: ReactNode }) => {
   return <StyledTertiaryInfo>{children}</StyledTertiaryInfo>
-}
-
-const StyledActionButton = styled(ThemedText.BodySmall)<{ $disabled: boolean; selected: boolean }>`
-  position: absolute;
-  display: flex;
-  width: 100%;
-  padding: 8px 0px;
-  color: ${({ theme }) => theme.accentTextLightPrimary};
-  background: ${({ theme, selected }) => (selected ? theme.accentCritical : theme.accentAction)};
-  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
-  will-change: opacity;
-  border-radius: 8px;
-  justify-content: center;
-  font-weight: 600 !important;
-  line-height: 16px;
-  opacity: 0;
-  cursor: pointer;
-
-  ${CardContainer}:hover & {
-    opacity: ${({ $disabled }) => ($disabled ? 0 : 1)};
-  }
-`
-
-const ActionButton = ({ children }: { children: ReactNode }) => {
-  const { clickActionButton, isDisabled, selected } = useCardContext()
-  return (
-    <StyledActionButton $disabled={isDisabled} selected={selected} onClick={clickActionButton}>
-      {children}
-    </StyledActionButton>
-  )
 }
 
 const StyledMarketplaceIcon = styled.img`
@@ -886,7 +817,6 @@ export {
   PrimaryDetails,
   PrimaryInfo,
   PrimaryRow,
-  ProfileNftDetails,
   Ranking,
   SecondaryDetails,
   SecondaryInfo,

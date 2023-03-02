@@ -2,16 +2,16 @@ import { Trans } from '@lingui/macro'
 import { useTrace } from '@uniswap/analytics'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
-import { MouseoverTooltip } from 'components/Tooltip'
-import Tooltip from 'components/Tooltip'
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { Box } from 'nft/components/Box'
 import * as Card from 'nft/components/collection/Card'
 import { AssetMediaType } from 'nft/components/collection/Card'
+import { VerifiedIcon } from 'nft/components/icons'
 import { bodySmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
+import { ethNumberStandardFormatter } from 'nft/utils'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 const TOOLTIP_TIMEOUT = 2000
@@ -111,6 +111,10 @@ export const ViewMyNftsAsset = ({
 
   const assetMediaType = Card.useAssetMediaType(asset)
   const isDisabled = asset.asset_contract.tokenType === NftStandard.Erc1155 || asset.susFlag
+  const assetName = () => {
+    if (!asset.name && !asset.tokenId) return
+    return asset.name ? asset.name : `#${asset.tokenId}`
+  }
 
   return (
     <Card.Container
@@ -121,36 +125,29 @@ export const ViewMyNftsAsset = ({
       onClick={onCardClick}
       isDisabled={isDisabled}
     >
-      <Card.ImageContainer isDisabled={isDisabled}>
-        <Tooltip
-          text={
-            <Box as="span" className={bodySmall} color="textPrimary">
-              {isSelected ? <Trans>Added to bag</Trans> : <Trans>Removed from bag</Trans>}
-            </Box>
-          }
-          show={showTooltip}
-          style={{ display: 'block' }}
-          offsetX={0}
-          offsetY={-68}
-          hideArrow={true}
-          placement="bottom"
-        >
-          <MouseoverTooltip
-            text={getUnsupportedNftTextComponent(asset)}
-            placement="bottom"
-            offsetX={0}
-            offsetY={-60}
-            hideArrow={true}
-            style={{ display: 'block' }}
-            disableHover={!isDisabled}
-            timeout={isMobile ? TOOLTIP_TIMEOUT : undefined}
-          >
-            {getNftDisplayComponent(assetMediaType, mediaShouldBePlaying, setCurrentTokenPlayingMedia)}
-          </MouseoverTooltip>
-        </Tooltip>
+      <Card.ImageContainer>
+        {getNftDisplayComponent(assetMediaType, mediaShouldBePlaying, setCurrentTokenPlayingMedia)}
       </Card.ImageContainer>
       <Card.DetailsContainer>
-        <Card.ProfileNftDetails asset={asset} hideDetails={hideDetails} />
+        <Card.InfoContainer>
+          <Card.PrimaryRow>
+            <Card.PrimaryDetails>
+              <Card.PrimaryInfo>{!!asset.asset_contract.name && asset.asset_contract.name}</Card.PrimaryInfo>
+              {asset.collectionIsVerified && <VerifiedIcon height="16px" width="16px" />}
+            </Card.PrimaryDetails>
+          </Card.PrimaryRow>
+          <Card.SecondaryRow>
+            <Card.SecondaryDetails>
+              <Card.SecondaryInfo>{assetName()}</Card.SecondaryInfo>
+            </Card.SecondaryDetails>
+          </Card.SecondaryRow>
+        </Card.InfoContainer>
+        <Card.TertiaryInfoContainer>
+          <Card.ActionButton>{isSelected ? `Remove from bag` : `List for sale`}</Card.ActionButton>
+          <Card.TertiaryInfo>
+            {asset.lastPrice ? `Last sale: ${ethNumberStandardFormatter(asset.lastPrice)} ETH` : null}
+          </Card.TertiaryInfo>
+        </Card.TertiaryInfoContainer>
       </Card.DetailsContainer>
     </Card.Container>
   )
