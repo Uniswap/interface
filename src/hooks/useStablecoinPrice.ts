@@ -1,5 +1,6 @@
-import { Currency, CurrencyAmount, Price, SupportedChainId, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { SupportedChainId } from 'constants/chains'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useRef } from 'react'
 import { RouterPreference } from 'state/routing/slice'
