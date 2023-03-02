@@ -1,4 +1,4 @@
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 import { useWeb3React } from '@web3-react/core'
 import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'

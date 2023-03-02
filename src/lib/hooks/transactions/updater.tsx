@@ -1,5 +1,5 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 import { useWeb3React } from '@web3-react/core'
 import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
 import ms from 'ms.macro'

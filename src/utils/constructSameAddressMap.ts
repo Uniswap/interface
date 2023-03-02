@@ -1,4 +1,4 @@
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 
 const DEFAULT_NETWORKS = [SupportedChainId.MAINNET, SupportedChainId.GOERLI]
 

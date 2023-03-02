@@ -1,6 +1,6 @@
 // a list of tokens by chain
 import { Currency, Token } from '@uniswap/sdk-core'
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 
 import {
   AMPL,

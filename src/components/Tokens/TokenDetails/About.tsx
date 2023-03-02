@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 import { getChainInfo } from 'constants/chainInfo'
 import { darken } from 'polished'
 import { useState } from 'react'

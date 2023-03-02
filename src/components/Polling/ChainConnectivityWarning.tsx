@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 import { useWeb3React } from '@web3-react/core'
 import { getChainInfoOrDefault, L2ChainInfo } from 'constants/chainInfo'
 import { AlertTriangle } from 'react-feather'

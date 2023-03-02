@@ -1,4 +1,4 @@
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 import { Connector } from '@web3-react/types'
 import { networkConnection, walletConnectConnection } from 'connection'
 import { getChainInfo } from 'constants/chainInfo'
