@@ -78,12 +78,12 @@ export default function useAutoSlippageTolerance(
 ): Percent {
   const { chainId } = useWeb3React()
   const onL2 = chainId && L2_CHAIN_IDS.includes(chainId)
-  const outputDollarValue = useStablecoinValue(trade?.outputAmount)
+  const { value: outputDollarValue } = useStablecoinValue(trade?.outputAmount)
   const nativeGasPrice = useGasPrice()
 
   const gasEstimate = guesstimateGas(trade)
   const nativeCurrency = useNativeCurrency()
-  const nativeCurrencyPrice = useStablecoinPrice((trade && nativeCurrency) ?? undefined)
+  const { price: nativeCurrencyPrice } = useStablecoinPrice((trade && nativeCurrency) ?? undefined)
 
   return useMemo(() => {
     if (!trade || onL2) return DEFAULT_AUTO_SLIPPAGE

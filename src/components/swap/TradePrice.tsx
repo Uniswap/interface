@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Price } from '@uniswap/sdk-core'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { formatDollar, formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
@@ -30,16 +30,17 @@ const StyledPriceContainer = styled.button`
 export default function TradePrice({ price }: TradePriceProps) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
-  const usdcPrice = useStablecoinPrice(showInverted ? price.baseCurrency : price.quoteCurrency)
+  const { price: usdcPrice } = useStablecoinPrice(showInverted ? price.baseCurrency : price.quoteCurrency)
 
-  let formattedPrice: string
-  try {
-    formattedPrice = showInverted
-      ? formatTransactionAmount(priceToPreciseFloat(price))
-      : formatTransactionAmount(priceToPreciseFloat(price.invert()))
-  } catch (error) {
-    formattedPrice = '0'
-  }
+  const formattedPrice = useMemo(() => {
+    try {
+      return showInverted
+        ? formatTransactionAmount(priceToPreciseFloat(price))
+        : formatTransactionAmount(priceToPreciseFloat(price.invert()))
+    } catch (error) {
+      return '0'
+    }
+  }, [price, showInverted])
 
   const label = showInverted ? `${price.quoteCurrency?.symbol}` : `${price.baseCurrency?.symbol} `
   const labelInverted = showInverted ? `${price.baseCurrency?.symbol} ` : `${price.quoteCurrency?.symbol}`

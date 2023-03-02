@@ -235,16 +235,16 @@ export default function Swap({ className }: { className?: string }) {
           },
     [independentField, parsedAmount, showWrap, trade]
   )
-  const fiatValueInput = useStablecoinValue(parsedAmounts[Field.INPUT])
-  const fiatValueOutput = useStablecoinValue(parsedAmounts[Field.OUTPUT])
+  const { value: fiatValueInput } = useStablecoinValue(parsedAmounts[Field.INPUT])
+  const { value: fiatValueOutput } = useStablecoinValue(parsedAmounts[Field.OUTPUT])
 
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
     () => [!trade?.swaps, TradeState.LOADING === tradeState, TradeState.SYNCING === tradeState],
     [trade, tradeState]
   )
 
-  const fiatValueTradeInput = useStablecoinValue(trade?.inputAmount)
-  const fiatValueTradeOutput = useStablecoinValue(trade?.outputAmount)
+  const { value: fiatValueTradeInput } = useStablecoinValue(trade?.inputAmount)
+  const { value: fiatValueTradeOutput } = useStablecoinValue(trade?.outputAmount)
   const stablecoinPriceImpact = useMemo(
     () =>
       routeIsSyncing || !trade ? undefined : computeFiatValuePriceImpact(fiatValueTradeInput, fiatValueTradeOutput),

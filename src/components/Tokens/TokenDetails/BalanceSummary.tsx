@@ -69,7 +69,8 @@ export default function BalanceSummary({ token }: { token: Currency }) {
   const { label, color } = getChainInfo(isSupportedChain(chainId) ? chainId : SupportedChainId.MAINNET)
   const balance = useCurrencyBalance(account, token)
   const formattedBalance = formatCurrencyAmount(balance, NumberType.TokenNonTx)
-  const formattedUsdValue = formatCurrencyAmount(useStablecoinValue(balance), NumberType.FiatTokenStats)
+  const { value } = useStablecoinValue(balance)
+  const formattedUsdValue = formatCurrencyAmount(value, NumberType.FiatTokenStats)
 
   if (!account || !balance) {
     return null

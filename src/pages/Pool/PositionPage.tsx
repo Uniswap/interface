@@ -408,8 +408,8 @@ export function PositionPage() {
   const [showConfirm, setShowConfirm] = useState(false)
 
   // usdc prices always in terms of tokens
-  const price0 = useStablecoinPrice(token0 ?? undefined)
-  const price1 = useStablecoinPrice(token1 ?? undefined)
+  const { price: price0 } = useStablecoinPrice(token0 ?? undefined)
+  const { price: price1 } = useStablecoinPrice(token1 ?? undefined)
 
   const fiatValueOfFees: CurrencyAmount<Currency> | null = useMemo(() => {
     if (!price0 || !price1 || !feeValue0 || !feeValue1) return null

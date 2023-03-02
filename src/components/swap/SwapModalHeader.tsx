@@ -78,8 +78,8 @@ export default function SwapModalHeader({
   const [lastExecutionPrice, setLastExecutionPrice] = useState(trade.executionPrice)
   const [priceUpdate, setPriceUpdate] = useState<number | undefined>()
 
-  const fiatValueInput = useStablecoinValue(trade.inputAmount)
-  const fiatValueOutput = useStablecoinValue(trade.outputAmount)
+  const { value: fiatValueInput } = useStablecoinValue(trade.inputAmount)
+  const { value: fiatValueOutput } = useStablecoinValue(trade.outputAmount)
 
   useEffect(() => {
     if (!trade.executionPrice.equalTo(lastExecutionPrice)) {

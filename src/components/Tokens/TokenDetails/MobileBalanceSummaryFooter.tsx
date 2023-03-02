@@ -86,7 +86,8 @@ export default function MobileBalanceSummaryFooter({ token }: { token: Currency 
   const { account } = useWeb3React()
   const balance = useCurrencyBalance(account, token)
   const formattedBalance = formatCurrencyAmount(balance, NumberType.TokenNonTx)
-  const formattedUsdValue = formatCurrencyAmount(useStablecoinValue(balance), NumberType.FiatTokenStats)
+  const { value } = useStablecoinValue(balance)
+  const formattedUsdValue = formatCurrencyAmount(value, NumberType.FiatTokenStats)
   const chain = CHAIN_ID_TO_BACKEND_NAME[token.chainId].toLowerCase()
   const isDummyGateFlagEnabled = useDummyGateEnabled()
 

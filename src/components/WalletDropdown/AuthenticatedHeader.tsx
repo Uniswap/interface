@@ -197,7 +197,7 @@ const AuthenticatedHeader = () => {
   const isUnclaimed = useUserHasAvailableClaim(account)
   const connectionType = getConnection(connector).type
   const nativeCurrency = useNativeCurrency()
-  const nativeCurrencyPrice = useStablecoinPrice(nativeCurrency ?? undefined)
+  const { price: nativeCurrencyPrice } = useStablecoinPrice(nativeCurrency ?? undefined)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const openNftModal = useToggleModal(ApplicationModal.UNISWAP_NFT_AIRDROP_CLAIM)
   const disconnect = useCallback(() => {

@@ -339,7 +339,7 @@ export const BagFooter = ({ totalEthPrice, fetchAssets, eventProperties }: BagFo
 
   const fiatValueTradeInput = useStablecoinValue(trade?.inputAmount)
   const fiatValueTradeOutput = useStablecoinValue(parsedOutputAmount)
-  const usdcValue = usingPayWithAnyToken ? fiatValueTradeInput : fiatValueTradeOutput
+  const { value: usdcValue } = usingPayWithAnyToken ? fiatValueTradeInput : fiatValueTradeOutput
 
   const { balance: balanceInEth } = useWalletBalance()
   const sufficientBalance = useMemo(() => {
