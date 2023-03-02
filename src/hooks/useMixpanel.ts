@@ -23,6 +23,7 @@ import { EVMNetworkInfo } from 'constants/networks/type'
 import { useActiveWeb3React } from 'hooks'
 import { AppDispatch, AppState } from 'state'
 import { useETHPrice } from 'state/application/hooks'
+import { RANGE } from 'state/mint/proamm/type'
 import { Field } from 'state/swap/actions'
 import { useSwapState } from 'state/swap/hooks'
 import { modifyTransaction } from 'state/transactions/actions'
@@ -90,6 +91,12 @@ export enum MIXPANEL_TYPE {
   ELASTIC_ADD_LIQUIDITY_INITIATED,
   ELASTIC_ADD_LIQUIDITY_IN_LIST_INITIATED,
   ELASTIC_ADD_LIQUIDITY_COMPLETED,
+  ELASTIC_ADD_LIQUIDITY_ADD_NEW_POSITION,
+  ELASTIC_ADD_LIQUIDITY_CLICK_TO_REMOVE_POSITION,
+  ELASTIC_ADD_LIQUIDITY_SELECT_RANGE_FOR_POOL,
+  ELASTIC_ADD_LIQUIDITY_CLICK_SWAP,
+  ELASTIC_ADD_LIQUIDITY_CLICK_PRICE_CHART,
+  ELASTIC_ADD_LIQUIDITY_CLICK_POOL_ANALYTIC,
   ELASTIC_REMOVE_LIQUIDITY_INITIATED,
   ELASTIC_REMOVE_LIQUIDITY_COMPLETED,
   ELASTIC_INCREASE_LIQUIDITY_INITIATED,
@@ -903,6 +910,59 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
         }
         case MIXPANEL_TYPE.WUI_IMPORT_TOKEN_BUTTON_CLICK: {
           mixpanel.track('Wallet UI - Import Token - Import button click', payload)
+          break
+        }
+        case MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_ADD_NEW_POSITION: {
+          const { token_1, token_2 } = payload as {
+            token_1: string
+            token_2: string
+          }
+          mixpanel.track('Elastic - Add Liquidity page - Add new position', { token_1, token_2 })
+          break
+        }
+        case MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_CLICK_TO_REMOVE_POSITION: {
+          const { token_1, token_2 } = payload as {
+            token_1: string
+            token_2: string
+          }
+          mixpanel.track('Elastic - Add Liquidity page - Click to remove position', { token_1, token_2 })
+          break
+        }
+        case MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_SELECT_RANGE_FOR_POOL: {
+          const { token_1, token_2, range } = payload as {
+            token_1: string
+            token_2: string
+            range: RANGE
+          }
+          mixpanel.track('Elastic - Add Liquidity page - Select range for pool', {
+            token_1,
+            token_2,
+            range: range.toLowerCase().replace('_', ' '),
+          })
+          break
+        }
+        case MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_CLICK_SWAP: {
+          const { token_1, token_2 } = payload as {
+            token_1: string
+            token_2: string
+          }
+          mixpanel.track('Elastic - Add Liquidity page - Click Swap', { token_1, token_2 })
+          break
+        }
+        case MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_CLICK_PRICE_CHART: {
+          const { token_1, token_2 } = payload as {
+            token_1: string
+            token_2: string
+          }
+          mixpanel.track('Elastic - Add Liquidity page - Click Price chart', { token_1, token_2 })
+          break
+        }
+        case MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_CLICK_POOL_ANALYTIC: {
+          const { token_1, token_2 } = payload as {
+            token_1: string
+            token_2: string
+          }
+          mixpanel.track('Elastic - Add Liquidity page - Click Pool analytic', { token_1, token_2 })
           break
         }
       }

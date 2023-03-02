@@ -46,6 +46,7 @@ import { useActiveWeb3React, useWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useProAmmNFTPositionManagerContract } from 'hooks/useContract'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useProAmmPoolInfo from 'hooks/useProAmmPoolInfo'
 import useProAmmPreviousTicks, { useProAmmMultiplePreviousTicks } from 'hooks/useProAmmPreviousTicks'
 import useTheme from 'hooks/useTheme'
@@ -103,6 +104,7 @@ export default function AddLiquidity() {
   const positionManager = useProAmmNFTPositionManagerContract()
   const [showChart, setShowChart] = useState(false)
   const [positionIndex, setPositionIndex] = useState(0)
+  const { mixpanelHandler } = useMixpanel()
 
   // fee selection from url
   const feeAmount: FeeAmount | undefined =
@@ -188,6 +190,27 @@ export default function AddLiquidity() {
     onAddPosition,
     onRemovePosition,
   } = useProAmmMintActionHandlers(noLiquidity, pIndex)
+
+  const onAddPositionEvent = useCallback(() => {
+    if (tokenA?.symbol && tokenB?.symbol)
+      mixpanelHandler(MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_ADD_NEW_POSITION, {
+        token_1: tokenA?.symbol,
+        token_2: tokenB?.symbol,
+      })
+    onAddPosition()
+  }, [mixpanelHandler, onAddPosition, tokenA?.symbol, tokenB?.symbol])
+
+  const onRemovePositionEvent = useCallback(
+    (positionIndex: number) => {
+      if (tokenA?.symbol && tokenB?.symbol)
+        mixpanelHandler(MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_CLICK_TO_REMOVE_POSITION, {
+          token_1: tokenA?.symbol,
+          token_2: tokenB?.symbol,
+        })
+      onRemovePosition(positionIndex)
+    },
+    [mixpanelHandler, onRemovePosition, tokenA?.symbol, tokenB?.symbol],
+  )
 
   const isValid = !errorMessage && !invalidRange
 
@@ -499,6 +522,20 @@ export default function AddLiquidity() {
       pool,
       price,
     )
+
+  const setRange = useCallback(
+    (range: RANGE) => {
+      if (tokenA?.symbol && tokenB?.symbol)
+        mixpanelHandler(MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_SELECT_RANGE_FOR_POOL, {
+          token_1: tokenA?.symbol,
+          token_2: tokenB?.symbol,
+          range,
+        })
+      getSetRange(range)
+    },
+    [mixpanelHandler, getSetRange, tokenA?.symbol, tokenB?.symbol],
+  )
+
   // we need an existence check on parsed amounts for single-asset deposits
   const showApprovalA = approvalA !== ApprovalState.APPROVED && (noLiquidity ? true : !!parsedAmounts_A)
   const showApprovalB = approvalB !== ApprovalState.APPROVED && (noLiquidity ? true : !!parsedAmounts_B)
@@ -546,7 +583,11 @@ export default function AddLiquidity() {
         <Trans>Connect Wallet</Trans>
       </ButtonLight>
     ) : (
-      <>
+      <Flex
+        sx={{ gap: '16px' }}
+        flexDirection={upToMedium ? 'column' : 'row'}
+        width={upToMedium ? '100%' : 'fit-content'}
+      >
         {(approvalA === ApprovalState.NOT_APPROVED ||
           approvalA === ApprovalState.PENDING ||
           approvalB === ApprovalState.NOT_APPROVED ||
@@ -604,7 +645,7 @@ export default function AddLiquidity() {
             {errorMessage ? errorMessage : expertMode ? <Trans>Supply</Trans> : <Trans>Preview</Trans>}
           </Text>
         </ButtonError>
-      </>
+      </Flex>
     )
 
   const warning = errorLabel ? (
@@ -660,12 +701,19 @@ export default function AddLiquidity() {
           tabsCount={positionsState.length}
           selectedTab={pIndex}
           onChangedTab={index => setPositionIndex(index)}
-          onAddTab={onAddPosition}
-          onRemoveTab={onRemovePosition}
+          onAddTab={onAddPositionEvent}
+          onRemoveTab={onRemovePositionEvent}
           showChart={showChart}
-          onToggleChart={(newShowChart: boolean | undefined) =>
-            setShowChart(showChart => (typeof newShowChart !== 'undefined' ? newShowChart : !showChart))
-          }
+          onToggleChart={(newShowChart: boolean | undefined) => {
+            const newValue = typeof newShowChart !== 'undefined' ? newShowChart : !showChart
+            if (newValue && tokenA?.symbol && tokenB?.symbol) {
+              mixpanelHandler(MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_CLICK_PRICE_CHART, {
+                token_1: tokenA?.symbol,
+                token_2: tokenB?.symbol,
+              })
+            }
+            setShowChart(newValue)
+          }}
         />
       )}
       <ChartBody>
@@ -697,7 +745,7 @@ export default function AddLiquidity() {
                           placement="bottom"
                         >
                           <RangeBtn
-                            onClick={() => getSetRange(range)}
+                            onClick={() => setRange(range)}
                             isSelected={range === activeRange}
                             onMouseEnter={() => setShownTooltip(range)}
                             onMouseLeave={() => setShownTooltip(null)}
@@ -984,6 +1032,13 @@ export default function AddLiquidity() {
                     href={`${APP_PATHS.SWAP}/${networkInfo.route}?${currencyIdA ? `inputCurrency=${currencyIdA}` : ''}${
                       currencyIdB ? `&outputCurrency=${currencyIdB}` : ''
                     }`}
+                    onClick={() => {
+                      if (tokenA?.symbol && tokenB?.symbol)
+                        mixpanelHandler(MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_CLICK_SWAP, {
+                          token_1: tokenA?.symbol,
+                          token_2: tokenB?.symbol,
+                        })
+                    }}
                   >
                     <Repeat size={16} />
                     <Text marginLeft="4px">
@@ -1136,7 +1191,18 @@ export default function AddLiquidity() {
                       <Text fontWeight={500} fontSize="12px">
                         <Trans>Pool Stats</Trans>
                       </Text>
-                      <ProAmmPoolStat pool={poolStat} onShared={openShareModal} userPositions={userPositions} />
+                      <ProAmmPoolStat
+                        pool={poolStat}
+                        onShared={openShareModal}
+                        userPositions={userPositions}
+                        onClickPoolAnalytics={() => {
+                          if (tokenA?.symbol && tokenB?.symbol)
+                            mixpanelHandler(MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_CLICK_POOL_ANALYTIC, {
+                              token_1: tokenA?.symbol,
+                              token_2: tokenB?.symbol,
+                            })
+                        }}
+                      />
                     </AutoColumn>
                     <ShareModal
                       url={`${window.location.origin}/pools/${networkInfo.route}?search=${poolAddress}&tab=elastic`}

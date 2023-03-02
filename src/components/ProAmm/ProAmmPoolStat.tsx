@@ -50,6 +50,7 @@ interface ListItemProps {
   pool: ElasticPoolDetail
   onShared: (id: string) => void
   userPositions: { [key: string]: number }
+  onClickPoolAnalytics?: () => void
 }
 
 const getPrommAnalyticLink = (chainId: ChainId, poolAddress: string) => {
@@ -64,7 +65,7 @@ const Wrapper = styled.div`
   background-repeat: no-repeat;
   background-color: ${({ theme }) => theme.buttonBlack};
 `
-export default function ProAmmPoolStat({ pool, onShared, userPositions }: ListItemProps) {
+export default function ProAmmPoolStat({ pool, onShared, userPositions, onClickPoolAnalytics }: ListItemProps) {
   const { chainId, networkInfo } = useActiveWeb3React()
   const theme = useTheme()
 
@@ -211,7 +212,7 @@ export default function ProAmmPoolStat({ pool, onShared, userPositions }: ListIt
           {((pool.farmAPR || 0) + pool.apr).toFixed(2)}%
         </Text>
 
-        <StyledLink href={getPrommAnalyticLink(chainId, pool.address)}>
+        <StyledLink href={getPrommAnalyticLink(chainId, pool.address)} onClick={onClickPoolAnalytics}>
           <Flex alignItems="flex-end">
             <BarChart2 size="16px" color={theme.subText} />
             <Text fontSize="12px" fontWeight="500" marginLeft="4px" color={theme.subText}>
