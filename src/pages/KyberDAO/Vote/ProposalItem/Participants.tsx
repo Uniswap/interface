@@ -119,7 +119,9 @@ const VotersListModal = ({
             <Text style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{option}</Text>
           </RowFit>
 
-          <Text style={{ paddingLeft: '10px' }}>{sumPower ? Math.round(sumPower).toLocaleString() : '--'}</Text>
+          <Text style={{ paddingLeft: '10px', flexShrink: 0 }}>
+            {sumPower ? Math.round(sumPower).toLocaleString() : '--'}
+          </Text>
         </RowBetween>
         <Divider margin="10px 0" />
         <TableHeaderWrapper fontSize={12} color={theme.subText}>
@@ -164,6 +166,13 @@ export default function Participants({ proposalId }: { proposalId?: number }) {
       })
   }, [proposalInfo])
   const options = proposalInfo?.options
+
+  // flag to reduce fontsize when contents are too long
+  const isLongText = useMemo(() => {
+    if (!options) return false
+    return options.some(o => o.length > 30)
+  }, [options])
+
   return (
     <Wrapper>
       {options && participants
@@ -179,10 +188,17 @@ export default function Participants({ proposalId }: { proposalId?: number }) {
                 <RowBetween>
                   <RowFit height={19}>
                     {isWonOption && <img alt="gold-medal" src={Gold} style={{ marginRight: '8px' }} />}
-                    <Text style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{o}</Text>
+                    <Text
+                      fontSize={isLongText ? '14px' : '16px'}
+                      style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+                    >
+                      {o}
+                    </Text>
                   </RowFit>
 
-                  <Text style={{ paddingLeft: '10px' }}>{sumPower ? Math.round(sumPower).toLocaleString() : '--'}</Text>
+                  <Text fontSize={isLongText ? '14px' : '16px'} style={{ paddingLeft: '10px', flexShrink: 0 }}>
+                    {sumPower ? Math.round(sumPower).toLocaleString() : '--'}
+                  </Text>
                 </RowBetween>
                 <Divider margin="10px 0" />
                 <TableHeaderWrapper fontSize={12} color={theme.subText}>

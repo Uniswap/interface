@@ -629,6 +629,7 @@ export default function AddLiquidity() {
             </>
           )}
         <ButtonError
+          id="btnSupply"
           onClick={() => {
             expertMode ? onAdd() : setShowConfirm(true)
           }}
@@ -984,14 +985,14 @@ export default function AddLiquidity() {
               isMultiplePosition ? (
                 <RowBetween>
                   <div />
-                  <ButtonPrimary onClick={onAdd} width="160px">
+                  <ButtonPrimary id="btnSupply" onClick={onAdd} width="160px">
                     <Text fontWeight={500}>
                       <Trans>Supply</Trans>
                     </Text>
                   </ButtonPrimary>
                 </RowBetween>
               ) : (
-                <ButtonPrimary onClick={onAdd} width="100%">
+                <ButtonPrimary id="btnSupply" onClick={onAdd} width="100%">
                   <Text fontWeight={500}>
                     <Trans>Supply</Trans>
                   </Text>

@@ -422,7 +422,7 @@ export default function AddLiquidity() {
               )
             }
             bottomContent={() => (
-              <ButtonPrimary onClick={onAdd}>
+              <ButtonPrimary id="btnSupply" onClick={onAdd}>
                 <Text fontWeight={500}>
                   <Trans>Supply</Trans>
                 </Text>

@@ -741,6 +741,7 @@ const ZapIn = ({
                   )}
 
                 <ButtonError
+                  id="btnSupply"
                   onClick={() => {
                     expertMode ? onZapIn() : setShowConfirm(true)
                   }}
