@@ -8,7 +8,7 @@ import { VerifiedIcon } from 'nft/components/icons'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { ethNumberStandardFormatter } from 'nft/utils'
-import { useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 
 const TOOLTIP_TIMEOUT = 2000
 
@@ -53,7 +53,6 @@ export const ViewMyNftsAsset = ({
     )
   }, [asset, sellAssets])
 
-  const isSelectedRef = useRef(isSelected)
   const trace = useTrace()
   const onCardClick = () => handleSelect(isSelected)
 
