@@ -1,3 +1,6 @@
+import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
+import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
+import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod } from 'nft/types'
 import { calculateCardIndex } from 'nft/utils'
@@ -114,6 +117,7 @@ const TRENDING_COLLECTION_SIZE = 5
 
 const Banner = () => {
   const navigate = useNavigate()
+  const isNftGraphqlEnabled = useNftGraphqlEnabled()
 
   const { data } = useQuery(
     ['trendingCollections'],
@@ -130,11 +134,17 @@ const Banner = () => {
       refetchOnMount: false,
     }
   )
-
-  const collections = useMemo(
-    () => data?.filter((collection) => !EXCLUDED_COLLECTIONS.includes(collection.address)).slice(0, 5),
-    [data]
+  const { data: gqlData } = useTrendingCollections(
+    TRENDING_COLLECTION_SIZE + EXCLUDED_COLLECTIONS.length,
+    HistoryDuration.Day
   )
+
+  const collections = useMemo(() => {
+    const gatedData = isNftGraphqlEnabled ? gqlData : data
+    return gatedData
+      ?.filter((collection) => collection.address && !EXCLUDED_COLLECTIONS.includes(collection.address))
+      .slice(0, 5)
+  }, [data, gqlData, isNftGraphqlEnabled])
 
   const [activeCollectionIdx, setActiveCollectionIdx] = useState(0)
   const onToggleNextSlide = useCallback(
