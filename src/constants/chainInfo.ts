@@ -5,10 +5,11 @@ import { default as arbitrumCircleLogoUrl, default as arbitrumLogoUrl } from 'as
 import celoLogo from 'assets/svg/celo_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimistic_ethereum.svg'
 import polygonMaticLogo from 'assets/svg/polygon-matic-logo.svg'
+import { SupportedChainId } from 'constants/chains'
 import ms from 'ms.macro'
 import { darkTheme } from 'theme/colors'
 
-import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from './chains'
+import { SupportedL1ChainId, SupportedL2ChainId } from './chains'
 import { ARBITRUM_LIST, CELO_LIST, OPTIMISM_LIST } from './lists'
 
 export const AVERAGE_L1_BLOCK_TIME = ms`12s`
@@ -63,36 +64,6 @@ const CHAIN_INFO: ChainInfoMap = {
     logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: darkTheme.chain_1,
-  },
-  [SupportedChainId.RINKEBY]: {
-    networkType: NetworkType.L1,
-    docs: 'https://docs.uniswap.org/',
-    explorer: 'https://rinkeby.etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/',
-    label: 'Rinkeby',
-    logoUrl: ethereumLogoUrl,
-    nativeCurrency: { name: 'Rinkeby Ether', symbol: 'rETH', decimals: 18 },
-    color: darkTheme.chain_4,
-  },
-  [SupportedChainId.ROPSTEN]: {
-    networkType: NetworkType.L1,
-    docs: 'https://docs.uniswap.org/',
-    explorer: 'https://ropsten.etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/',
-    label: 'Ropsten',
-    logoUrl: ethereumLogoUrl,
-    nativeCurrency: { name: 'Ropsten Ether', symbol: 'ropETH', decimals: 18 },
-    color: darkTheme.chain_3,
-  },
-  [SupportedChainId.KOVAN]: {
-    networkType: NetworkType.L1,
-    docs: 'https://docs.uniswap.org/',
-    explorer: 'https://kovan.etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/',
-    label: 'Kovan',
-    logoUrl: ethereumLogoUrl,
-    nativeCurrency: { name: 'Kovan Ether', symbol: 'kovETH', decimals: 18 },
-    color: darkTheme.chain_420,
   },
   [SupportedChainId.GOERLI]: {
     networkType: NetworkType.L1,
@@ -152,20 +123,6 @@ const CHAIN_INFO: ChainInfoMap = {
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: darkTheme.chain_42,
     backgroundColor: darkTheme.chain_42161_background,
-  },
-  [SupportedChainId.ARBITRUM_RINKEBY]: {
-    networkType: NetworkType.L2,
-    blockWaitMsBeforeWarning: ms`10m`,
-    bridge: 'https://bridge.arbitrum.io/',
-    docs: 'https://offchainlabs.com/',
-    explorer: 'https://rinkeby-explorer.arbitrum.io/',
-    infoLink: 'https://info.uniswap.org/#/arbitrum/',
-    label: 'Arbitrum Rinkeby',
-    logoUrl: arbitrumLogoUrl,
-    defaultListUrl: ARBITRUM_LIST,
-    helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
-    nativeCurrency: { name: 'Rinkeby Arbitrum Ether', symbol: 'rinkArbETH', decimals: 18 },
-    color: darkTheme.chain_421611,
   },
   [SupportedChainId.POLYGON]: {
     networkType: NetworkType.L1,

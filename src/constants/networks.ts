@@ -1,4 +1,4 @@
-import { SupportedChainId } from './chains'
+import { SupportedChainId } from 'constants/chains'
 
 const INFURA_KEY = process.env.REACT_APP_INFURA_KEY
 if (typeof INFURA_KEY === 'undefined') {
@@ -24,25 +24,11 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
     'https://rpc.ankr.com/eth',
     'https://eth-mainnet.public.blastapi.io',
   ],
-  [SupportedChainId.ROPSTEN]: [
-    // "Fallback" URLs
-    'https://rpc.ankr.com/eth_ropsten',
-  ],
-  [SupportedChainId.RINKEBY]: [
-    // "Fallback" URLs
-    'https://rinkeby-light.eth.linkpool.io/',
-  ],
   [SupportedChainId.GOERLI]: [
     // "Safe" URLs
     'https://rpc.goerli.mudit.blog/',
     // "Fallback" URLs
     'https://rpc.ankr.com/eth_goerli',
-  ],
-  [SupportedChainId.KOVAN]: [
-    // "Safe" URLs
-    'https://kovan.poa.network',
-    // "Fallback" URLs
-    'https://eth-kovan.public.blastapi.io',
   ],
   [SupportedChainId.POLYGON]: [
     // "Safe" URLs
@@ -64,10 +50,6 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
     'https://arb1.arbitrum.io/rpc',
     // "Fallback" URLs
     'https://arbitrum.public-rpc.com',
-  ],
-  [SupportedChainId.ARBITRUM_RINKEBY]: [
-    // "Safe" URLs
-    'https://rinkeby.arbitrum.io/rpc',
   ],
   [SupportedChainId.OPTIMISM]: [
     // "Safe" URLs
@@ -98,16 +80,7 @@ export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
     `https://mainnet.infura.io/v3/${INFURA_KEY}`,
     ...FALLBACK_URLS[SupportedChainId.MAINNET],
   ],
-  [SupportedChainId.RINKEBY]: [
-    `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
-    ...FALLBACK_URLS[SupportedChainId.RINKEBY],
-  ],
-  [SupportedChainId.ROPSTEN]: [
-    `https://ropsten.infura.io/v3/${INFURA_KEY}`,
-    ...FALLBACK_URLS[SupportedChainId.ROPSTEN],
-  ],
   [SupportedChainId.GOERLI]: [`https://goerli.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[SupportedChainId.GOERLI]],
-  [SupportedChainId.KOVAN]: [`https://kovan.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[SupportedChainId.KOVAN]],
   [SupportedChainId.OPTIMISM]: [
     `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`,
     ...FALLBACK_URLS[SupportedChainId.OPTIMISM],
@@ -119,10 +92,6 @@ export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
   [SupportedChainId.ARBITRUM_ONE]: [
     `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}`,
     ...FALLBACK_URLS[SupportedChainId.ARBITRUM_ONE],
-  ],
-  [SupportedChainId.ARBITRUM_RINKEBY]: [
-    `https://arbitrum-rinkeby.infura.io/v3/${INFURA_KEY}`,
-    ...FALLBACK_URLS[SupportedChainId.ARBITRUM_RINKEBY],
   ],
   [SupportedChainId.POLYGON]: [
     `https://polygon-mainnet.infura.io/v3/${INFURA_KEY}`,

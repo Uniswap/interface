@@ -1,9 +1,9 @@
 import { useWeb3React } from '@web3-react/core'
+import { SupportedChainId } from 'constants/chains'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useEffect } from 'react'
 import { useDarkModeManager } from 'state/user/hooks'
 
-import { SupportedChainId } from '../../constants/chains'
 import { darkTheme, lightTheme } from '../colors'
 
 const initialStyles = {
@@ -47,8 +47,7 @@ export default function RadialGradientByChainUpdater(): null {
     }
 
     switch (chainId) {
-      case SupportedChainId.ARBITRUM_ONE:
-      case SupportedChainId.ARBITRUM_RINKEBY: {
+      case SupportedChainId.ARBITRUM_ONE: {
         setBackground(backgroundResetStyles)
         const arbitrumLightGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(205, 232, 251, 0.7) 0%, rgba(252, 243, 249, 0.6536) 49.48%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
