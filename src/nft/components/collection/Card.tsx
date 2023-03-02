@@ -1,10 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import clsx from 'clsx'
+import { t, Trans } from '@lingui/macro'
+import Column from 'components/Column'
 import { OpacityHoverState } from 'components/Common'
+import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
-import { Box } from 'nft/components/Box'
-import { Row } from 'nft/components/Flex'
 import {
   MinusIconLarge,
   PauseButtonIcon,
@@ -14,8 +14,6 @@ import {
   RarityVerifiedIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
-import { body, bodySmall, buttonTextMedium, subhead } from 'nft/css/common.css'
-import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset, Rarity, UniformAspectRatio, UniformAspectRatios, WalletAsset } from 'nft/types'
 import { fallbackProvider, isAudio, isVideo, putCommas } from 'nft/utils'
@@ -32,11 +30,11 @@ import {
   useRef,
   useState,
 } from 'react'
-import { AlertTriangle } from 'react-feather'
+import { AlertTriangle, Pause, Play } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-
-import * as styles from './Card.css'
+import { colors } from 'theme/colors'
+import { opacify } from 'theme/utils'
 
 /* -------- ASSET CONTEXT -------- */
 export interface CardContextProps {
@@ -166,6 +164,31 @@ const StyledImageContainer = styled.div<{ isDisabled?: boolean }>`
   cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
 `
 
+const CardContainer = styled.div<{ selected: boolean }>`
+  position: relative;
+  border-radius: ${BORDER_RADIUS}px;
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  overflow: hidden;
+  padding-bottom: 12px;
+  border-radius: 16px;
+  box-shadow: rgba(0, 0, 0, 10%) 0px 4px 12px;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+
+  :after {
+    content: '';
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    border: ${({ selected }) => (selected ? '2px' : '1px')} solid;
+    border-radius: 16px;
+    border-color: ${({ theme, selected }) => (selected ? theme.accentAction : opacify(12, colors.gray500))};
+    pointer-events: none;
+  }
+`
+
 /* -------- ASSET CARD -------- */
 interface CardProps {
   asset: GenieAsset | WalletAsset
@@ -220,19 +243,16 @@ const Container = ({
 
   return (
     <CardContext.Provider value={providerValue}>
-      <Box
-        position="relative"
+      <CardContainer
+        selected={selected}
         ref={assetRef}
-        borderRadius={BORDER_RADIUS}
-        className={selected ? styles.selectedCard : styles.card}
         draggable={false}
         onMouseEnter={toggleHover}
         onMouseLeave={toggleHover}
-        transition="250"
         onClick={isDisabled ? () => null : onClick ?? handleAssetInBag}
       >
         {children}
-      </Box>
+      </CardContainer>
     </CardContext.Provider>
   )
 }
@@ -277,12 +297,42 @@ function getHeightFromAspectRatio(uniformAspectRatio: UniformAspectRatio, render
     : renderedHeight
 }
 
+function getMediaAspectRatio(
+  uniformAspectRatio?: UniformAspectRatio,
+  setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
+): string {
+  return uniformAspectRatio === UniformAspectRatios.square || !setUniformAspectRatio ? '1' : 'auto'
+}
+
 interface ImageProps {
   uniformAspectRatio?: UniformAspectRatio
   setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
   renderedHeight?: number
   setRenderedHeight?: (renderedHeight: number | undefined) => void
 }
+
+const StyledMediaContainer = styled(Row)`
+  overflow: hidden;
+  border-top-left-radius: ${BORDER_RADIUS}px;
+  border-top-right-radius: ${BORDER_RADIUS}px;
+`
+
+const StyledImage = styled.img<{
+  hovered: boolean
+  imageLoading: boolean
+  $aspectRatio?: string
+  $hidden?: boolean
+}>`
+  width: 100%;
+  aspect-ratio: ${({ $aspectRatio }) => $aspectRatio};
+  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} transform`};
+  will-change: transform;
+  object-fit: contain;
+  visibility: ${({ $hidden }) => ($hidden ? 'hidden' : 'visible')};
+  transform: ${({ hovered }) => hovered && 'scale(1.15)'};
+  background: ${({ theme, imageLoading }) =>
+    imageLoading && `linear-gradient(270deg, ${theme.backgroundOutline} 0%, ${theme.backgroundSurface} 100%)`};
+`
 
 const Image = ({
   uniformAspectRatio = UniformAspectRatios.square,
@@ -300,39 +350,49 @@ const Image = ({
   }
 
   return (
-    <Box display="flex" overflow="hidden" borderTopLeftRadius={BORDER_RADIUS} borderTopRightRadius={BORDER_RADIUS}>
-      <Box
-        as="img"
-        width="full"
-        style={{
-          aspectRatio: `${uniformAspectRatio === UniformAspectRatios.square || !setUniformAspectRatio ? '1' : 'auto'}`,
-          transition: 'transform 0.25s ease 0s',
-        }}
+    <StyledMediaContainer>
+      <StyledImage
         src={asset.imageUrl || asset.smallImageUrl}
-        objectFit="contain"
+        $aspectRatio={getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}
+        hovered={hovered && !isMobile}
+        imageLoading={!loaded}
         draggable={false}
         onError={() => setNoContent(true)}
         onLoad={(e) => {
           handleUniformAspectRatio(uniformAspectRatio, e, setUniformAspectRatio, renderedHeight, setRenderedHeight)
           setLoaded(true)
         }}
-        className={clsx(hovered && !isMobile && styles.cardImageHover, !loaded && styles.loadingBackground)}
       />
-    </Box>
+    </StyledMediaContainer>
   )
-}
-
-function getMediaAspectRatio(
-  uniformAspectRatio: UniformAspectRatio,
-  setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
-): string {
-  return uniformAspectRatio === UniformAspectRatios.square || !setUniformAspectRatio ? '1' : 'auto'
 }
 
 interface MediaProps {
   shouldPlay: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }
+
+const PlaybackButton = styled.div`
+  position: absolute;
+  height: 40px;
+  width: 40px;
+  z-index: 1;
+  margin-left: calc(100% - 50px);
+  transform: translateY(-56px);
+`
+
+const StyledVideo = styled.video<{
+  $aspectRatio?: string
+}>`
+  width: 100%;
+  aspect-ratio: ${({ $aspectRatio }) => $aspectRatio};
+`
+
+const StyledInnerMediaContainer = styled(Row)`
+  position: absolute;
+  left: 0px;
+  top: 0px;
+`
 
 const Video = ({
   uniformAspectRatio = UniformAspectRatios.square,
@@ -360,52 +420,38 @@ const Video = ({
 
   return (
     <>
-      <Box display="flex" overflow="hidden">
-        <Box
-          as="img"
-          alt={asset.name || asset.tokenId}
-          width="full"
-          style={{
-            aspectRatio: getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio),
-            transition: 'transform 0.25s ease 0s',
-            willChange: 'transform',
-          }}
+      <StyledMediaContainer>
+        <StyledImage
           src={asset.imageUrl || asset.smallImageUrl}
-          objectFit="contain"
+          alt={asset.name || asset.tokenId}
+          $aspectRatio={getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}
+          hovered={hovered && !isMobile}
+          imageLoading={!imageLoaded}
           draggable={false}
           onError={() => setNoContent(true)}
           onLoad={(e) => {
             handleUniformAspectRatio(uniformAspectRatio, e, setUniformAspectRatio, renderedHeight, setRenderedHeight)
             setImageLoaded(true)
           }}
-          visibility={shouldPlay ? 'hidden' : 'visible'}
-          className={clsx(hovered && !isMobile && styles.cardImageHover, !imageLoaded && styles.loadingBackground)}
+          $hidden={shouldPlay}
         />
-      </Box>
+      </StyledMediaContainer>
       {shouldPlay ? (
         <>
-          <Box className={styles.playbackSwitch}>
-            <PauseButtonIcon
-              width="100%"
-              height="100%"
+          <PlaybackButton>
+            <Pause
+              size="24px"
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
                 setCurrentTokenPlayingMedia(undefined)
               }}
-              className="playback-icon"
             />
-          </Box>
-          <Box position="absolute" left="0" top="0" display="flex">
-            <Box
-              as="video"
+          </PlaybackButton>
+          <StyledInnerMediaContainer>
+            <StyledVideo
+              $aspectRatio={getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}
               ref={vidRef}
-              width="full"
-              style={{
-                aspectRatio: `${
-                  uniformAspectRatio === UniformAspectRatios.square || !setUniformAspectRatio ? '1' : 'auto'
-                }`,
-              }}
               onEnded={(e) => {
                 e.preventDefault()
                 setCurrentTokenPlayingMedia(undefined)
@@ -414,28 +460,31 @@ const Video = ({
               playsInline
             >
               <source src={asset.animationUrl} />
-            </Box>
-          </Box>
+            </StyledVideo>
+          </StyledInnerMediaContainer>
         </>
       ) : (
-        <Box className={styles.playbackSwitch}>
+        <PlaybackButton>
           {((!isMobile && hovered) || isMobile) && (
-            <PlayButtonIcon
-              width="100%"
-              height="100%"
+            <Play
+              size="24px"
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
                 setCurrentTokenPlayingMedia(asset.tokenId)
               }}
-              className="playback-icon"
             />
           )}
-        </Box>
+        </PlaybackButton>
       )}
     </>
   )
 }
+
+const StyledAudio = styled.audio`
+  width: 100%;
+  height: 100%;
+`
 
 const Audio = ({
   uniformAspectRatio = UniformAspectRatios.square,
@@ -463,29 +512,25 @@ const Audio = ({
 
   return (
     <>
-      <Box display="flex" overflow="hidden">
-        <Box
-          as="img"
-          alt={asset.name || asset.tokenId}
-          width="full"
-          style={{
-            aspectRatio: getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio),
-            transition: 'transform 0.4s ease 0s',
-          }}
+      <StyledMediaContainer>
+        <StyledImage
           src={asset.imageUrl || asset.smallImageUrl}
-          objectFit="contain"
+          alt={asset.name || asset.tokenId}
+          $aspectRatio={getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}
+          hovered={hovered && !isMobile}
+          imageLoading={!imageLoaded}
           draggable={false}
           onError={() => setNoContent(true)}
           onLoad={(e) => {
             handleUniformAspectRatio(uniformAspectRatio, e, setUniformAspectRatio, renderedHeight, setRenderedHeight)
             setImageLoaded(true)
+            setImageLoaded(true)
           }}
-          className={clsx(hovered && !isMobile && styles.cardImageHover, !imageLoaded && styles.loadingBackground)}
         />
-      </Box>
+      </StyledMediaContainer>
       {shouldPlay ? (
         <>
-          <Box className={styles.playbackSwitch}>
+          <PlaybackButton>
             <PauseButtonIcon
               width="100%"
               height="100%"
@@ -494,26 +539,22 @@ const Audio = ({
                 e.stopPropagation()
                 setCurrentTokenPlayingMedia(undefined)
               }}
-              className="playback-icon"
             />
-          </Box>
-          <Box position="absolute" left="0" top="0" display="flex">
-            <Box
-              as="audio"
+          </PlaybackButton>
+          <StyledInnerMediaContainer>
+            <StyledAudio
               ref={audRef}
-              width="full"
-              height="full"
               onEnded={(e) => {
                 e.preventDefault()
                 setCurrentTokenPlayingMedia(undefined)
               }}
             >
               <source src={asset.animationUrl} />
-            </Box>
-          </Box>
+            </StyledAudio>
+          </StyledInnerMediaContainer>
         </>
       ) : (
-        <Box className={styles.playbackSwitch}>
+        <PlaybackButton>
           {((!isMobile && hovered) || isMobile) && (
             <PlayButtonIcon
               width="100%"
@@ -523,10 +564,9 @@ const Audio = ({
                 e.stopPropagation()
                 setCurrentTokenPlayingMedia(asset.tokenId)
               }}
-              className="playback-icon"
             />
           )}
-        </Box>
+        </PlaybackButton>
       )}
     </>
   )
@@ -537,42 +577,57 @@ interface CardDetailsContainerProps {
   children: ReactNode
 }
 
+const StyledDetailsContainer = styled(Column)`
+  position: relative;
+  padding: 12px 12px 0px;
+  justify-content: space-between;
+  transition: ${({ theme }) => `${theme.transition.duration.medium}`};
+`
+
 const DetailsContainer = ({ children }: CardDetailsContainerProps) => {
-  return (
-    <Row
-      position="relative"
-      paddingX="12"
-      paddingTop="12"
-      justifyContent="space-between"
-      flexDirection="column"
-      transition="250"
-    >
-      {children}
-    </Row>
-  )
+  return <StyledDetailsContainer>{children}</StyledDetailsContainer>
 }
+
+const StyledInfoContainer = styled.div`
+  overflow: hidden;
+  width: 100%;
+`
 
 const InfoContainer = ({ children }: { children: ReactNode }) => {
-  return (
-    <Box overflow="hidden" width="full">
-      {children}
-    </Box>
-  )
+  return <StyledInfoContainer>{children}</StyledInfoContainer>
 }
 
-const TruncatedTextRow = styled(Row)`
+const TruncatedTextRow = styled(ThemedText.BodySmall)`
+  display: flex;
   padding: 2px;
   white-space: pre;
   text-overflow: ellipsis;
   display: block;
   overflow: hidden;
-  flex: 1;
+`
+
+const AssetNameRow = styled(TruncatedTextRow)`
+  color: ${({ theme }) => theme.textPrimary};
+  font-size: 16px !important;
+  font-weight: 400;
 `
 
 interface ProfileNftDetailsProps {
   asset: WalletAsset
   hideDetails: boolean
 }
+
+const PrimaryRowContainer = styled.div`
+  overflow: hidden;
+  width: 100%;
+  flex-wrap: nowrap;
+`
+
+const FloorPriceRow = styled(TruncatedTextRow)`
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+`
 
 const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
   const assetName = () => {
@@ -583,89 +638,95 @@ const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
   const shouldShowUserListedPrice = !asset.notForSale && asset.asset_contract.tokenType !== NftStandard.Erc1155
 
   return (
-    <Box overflow="hidden" width="full" flexWrap="nowrap">
+    <PrimaryRowContainer>
       <PrimaryRow>
         <PrimaryDetails>
-          <TruncatedTextRow className={bodySmall} style={{ color: themeVars.colors.textSecondary }}>
+          <TruncatedTextRow color="textSecondary">
             {!!asset.asset_contract.name && <span>{asset.asset_contract.name}</span>}
           </TruncatedTextRow>
           {asset.collectionIsVerified && <VerifiedIcon height="18px" width="18px" />}
         </PrimaryDetails>
         {!hideDetails && <DetailsLink />}
       </PrimaryRow>
-      <Row justifyItems="flex-start">
-        <TruncatedTextRow
-          className={body}
-          style={{
-            color: themeVars.colors.textPrimary,
-          }}
-        >
-          {assetName()}
-        </TruncatedTextRow>
+      <Row>
+        <AssetNameRow>{assetName()}</AssetNameRow>
         {asset.susFlag && <Suspicious />}
       </Row>
-      <TruncatedTextRow className={buttonTextMedium} style={{ color: themeVars.colors.textPrimary }}>
+      <FloorPriceRow>
         {shouldShowUserListedPrice && asset.floor_sell_order_price
           ? `${floorFormatter(asset.floor_sell_order_price)} ETH`
           : ' '}
-      </TruncatedTextRow>
-    </Box>
+      </FloorPriceRow>
+    </PrimaryRowContainer>
   )
 }
 
-const PrimaryRow = ({ children }: { children: ReactNode }) => (
-  <Row gap="8" justifyContent="space-between">
-    {children}
-  </Row>
-)
+const StyledPrimaryRow = styled(Row)`
+  gap: 8px;
+  justify-content: space-between;
+`
+
+const PrimaryRow = ({ children }: { children: ReactNode }) => <StyledPrimaryRow>{children}</StyledPrimaryRow>
+
+const StyledPrimaryDetails = styled(Row)`
+  justify-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+`
 
 const PrimaryDetails = ({ children }: { children: ReactNode }) => (
-  <Row justifyItems="center" overflow="hidden" whiteSpace="nowrap">
-    {children}
-  </Row>
+  <StyledPrimaryDetails>{children}</StyledPrimaryDetails>
 )
+
+const PrimaryInfoContainer = styled.div`
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+`
 
 const PrimaryInfo = ({ children }: { children: ReactNode }) => {
-  return (
-    <Box overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis" className={body}>
-      {children}
-    </Box>
-  )
+  return <PrimaryInfoContainer>{children}</PrimaryInfoContainer>
 }
 
-const SecondaryRow = ({ children }: { children: ReactNode }) => (
-  <Row height="20" justifyContent="space-between" marginTop="6">
-    {children}
-  </Row>
-)
+const StyledSecondaryRow = styled(Row)`
+  height: 20px;
+  justify-content: space-between;
+  margin-top: 6px;
+`
+
+const SecondaryRow = ({ children }: { children: ReactNode }) => <StyledSecondaryRow>{children}</StyledSecondaryRow>
+
+const StyledSecondaryDetails = styled(Row)`
+  overflow: hidden;
+  white-space: nowrap;
+`
 
 const SecondaryDetails = ({ children }: { children: ReactNode }) => (
-  <Row overflow="hidden" whiteSpace="nowrap">
-    {children}
-  </Row>
+  <StyledSecondaryDetails>{children}</StyledSecondaryDetails>
 )
 
+const SecondaryInfoContainer = styled.div`
+  color: ${({ theme }) => theme.textPrimary};
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 20px;
+`
+
 const SecondaryInfo = ({ children }: { children: ReactNode }) => {
-  return (
-    <Box
-      color="textPrimary"
-      overflow="hidden"
-      whiteSpace="nowrap"
-      textOverflow="ellipsis"
-      style={{ lineHeight: '20px' }}
-      className={subhead}
-    >
-      {children}
-    </Box>
-  )
+  return <SecondaryInfoContainer>{children}</SecondaryInfoContainer>
 }
 
+const TertiaryInfoContainer = styled.div`
+  color: ${({ theme }) => theme.textSecondary};
+  margin-top: 8px;
+`
+
 const TertiaryInfo = ({ children }: { children: ReactNode }) => {
-  return (
-    <Box marginTop="8" color="textSecondary">
-      {children}
-    </Box>
-  )
+  return <TertiaryInfoContainer>{children}</TertiaryInfoContainer>
 }
 
 interface Erc1155ControlsInterface {
@@ -700,15 +761,18 @@ const Erc1155Controls = ({ quantity }: Erc1155ControlsInterface) => {
   )
 }
 
+const StyledMarketplaceIcon = styled.img`
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-left: 8px;
+  vertical-align: top;
+`
+
 const MarketplaceIcon = ({ marketplace }: { marketplace: string }) => {
-  return (
-    <Box
-      as="img"
-      alt={marketplace}
-      src={`/nft/svgs/marketplaces/${marketplace}.svg`}
-      className={styles.marketplaceIcon}
-    />
-  )
+  return <StyledMarketplaceIcon alt={marketplace} src={`/nft/svgs/marketplaces/${marketplace}.svg`} />
 }
 
 const DetailsLink = () => {
@@ -721,7 +785,7 @@ const DetailsLink = () => {
         e.stopPropagation()
       }}
     >
-      <Box data-testid="nft-details-link">Details</Box>
+      <div data-testid="nft-details-link">Details</div>
     </DetailsLinkContainer>
   )
 }
@@ -734,6 +798,28 @@ interface RankingProps {
   rarityLogo?: string
 }
 
+const RarityLogoContainer = styled(Row)`
+  margin-right: 4px;
+  width: 16px;
+`
+
+const RarityText = styled(ThemedText.BodySmall)`
+  display: flex;
+`
+
+const RarityInfo = styled(Row)`
+  height: 16px;
+  border-radius: 4px;
+  color: ${({ theme }) => theme.textPrimary};
+  background: ${({ theme }) => theme.backgroundInteractive};
+  font-size: 10px;
+  font-weight: 600;
+  padding: 0px 4px;
+  line-height: 12px;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(6px);
+`
+
 const Ranking = ({ rarity, provider, rarityVerified, rarityLogo }: RankingProps) => {
   const { asset } = useCardContext()
 
@@ -744,44 +830,49 @@ const Ranking = ({ rarity, provider, rarityVerified, rarityLogo }: RankingProps)
           <MouseoverTooltip
             text={
               <Row>
-                <Box display="flex" marginRight="4">
-                  <img src={rarityLogo} alt="cardLogo" width={16} />
-                </Box>
-                <Box width="full" className={bodySmall}>
+                <RarityLogoContainer>
+                  <img src={rarityLogo} alt="cardLogo" width={16} height={16} />
+                </RarityLogoContainer>
+                <RarityText>
                   {rarityVerified
                     ? `Verified by ${
                         ('collectionName' in asset && asset.collectionName) ||
                         ('asset_contract' in asset && asset.asset_contract?.name)
                       }`
                     : `Ranking by ${rarity.primaryProvider === 'Genie' ? fallbackProvider : rarity.primaryProvider}`}
-                </Box>
+                </RarityText>
               </Row>
             }
             placement="top"
           >
-            <Box className={styles.rarityInfo}>
-              <Box paddingTop="2" paddingBottom="2" display="flex">
-                {putCommas(provider.rank)}
-              </Box>
-
-              <Box display="flex" height="16">
-                {rarityVerified ? <RarityVerifiedIcon /> : null}
-              </Box>
-            </Box>
+            <RarityInfo>
+              <Row padding="2px 0px">{putCommas(provider.rank)}</Row>
+              <Row>{rarityVerified ? <RarityVerifiedIcon /> : null}</Row>
+            </RarityInfo>
           </MouseoverTooltip>
         </RankingContainer>
       )}
     </>
   )
 }
-const SUSPICIOUS_TEXT = 'Blocked on OpenSea'
+
+const SUSPICIOUS_TEXT = t`Blocked on OpenSea`
+
+const SuspiciousIconContainer = styled(Row)`
+  flex-shrink: 0;
+  margin-left: 4px;
+`
+
+const PoolIconContainer = styled(SuspiciousIconContainer)`
+  color: ${({ theme }) => theme.textSecondary};
+`
 
 const Suspicious = () => {
   return (
-    <MouseoverTooltip text={<Box className={bodySmall}>{SUSPICIOUS_TEXT}</Box>} placement="top">
-      <Box display="flex" flexShrink="0" marginLeft="4">
+    <MouseoverTooltip text={<ThemedText.BodySmall>{SUSPICIOUS_TEXT}</ThemedText.BodySmall>} placement="top">
+      <SuspiciousIconContainer>
         <SuspiciousIcon />
-      </Box>
+      </SuspiciousIconContainer>
     </MouseoverTooltip>
   )
 }
@@ -790,44 +881,46 @@ const Pool = () => {
   return (
     <MouseoverTooltip
       text={
-        <Box className={bodySmall}>
+        <ThemedText.BodySmall>
           This NFT is part of a liquidity pool. Buying this will increase the price of the remaining pooled NFTs.
-        </Box>
+        </ThemedText.BodySmall>
       }
       placement="top"
     >
-      <Box display="flex" flexShrink="0" marginLeft="4" color="textSecondary">
+      <PoolIconContainer>
         <PoolIcon width="20" height="20" />
-      </Box>
+      </PoolIconContainer>
     </MouseoverTooltip>
   )
 }
 
+const NoContentContainerBackground = styled.div<{ height?: number }>`
+  position: relative;
+  width: 100%;
+  height: ${({ height }) => (height ? `${height}px` : 'auto')};
+  padding-top: 100%;
+  background: ${({ theme }) =>
+    `linear-gradient(90deg, ${theme.backgroundSurface} 0%, ${theme.backgroundInteractive} 95.83%)`};
+`
+
+const NoContentText = styled(ThemedText.BodyPrimary)`
+  position: absolute;
+  text-align: center;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  color: ${colors.gray500};
+`
+
 const NoContentContainer = ({ height }: { height?: number }) => (
   <>
-    <Box
-      position="relative"
-      width="full"
-      style={{
-        height: height ? `${height}px` : 'auto',
-        paddingTop: '100%',
-        background: `linear-gradient(90deg, ${themeVars.colors.backgroundSurface} 0%, ${themeVars.colors.backgroundInteractive} 95.83%)`,
-      }}
-    >
-      <Box
-        position="absolute"
-        textAlign="center"
-        left="1/2"
-        top="1/2"
-        style={{ transform: 'translate3d(-50%, -50%, 0)' }}
-        color="gray500"
-        className={body}
-      >
-        Content not
+    <NoContentContainerBackground height={height}>
+      <NoContentText>
+        <Trans>Content not</Trans>
         <br />
-        available yet
-      </Box>
-    </Box>
+        <Trans>available yet</Trans>
+      </NoContentText>
+    </NoContentContainerBackground>
   </>
 )
 

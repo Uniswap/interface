@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
+import { getRoyalty } from 'nft/components/profile/list/utils'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { formatEth } from 'nft/utils'
 import styled from 'styled-components/macro'
@@ -50,7 +51,7 @@ export const RoyaltyTooltip = ({
   asset: WalletAsset
   fees?: number
 }) => {
-  const maxRoyalty = Math.max(...selectedMarkets.map((market) => market.royalty ?? 0))
+  const maxRoyalty = Math.max(...selectedMarkets.map((market) => getRoyalty(market, asset) ?? 0)).toFixed(2)
   return (
     <RoyaltyContainer>
       {selectedMarkets.map((market) => (
