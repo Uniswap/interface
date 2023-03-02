@@ -1,20 +1,16 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { t, Trans } from '@lingui/macro'
 import Column from 'components/Column'
-import { OpacityHoverState } from 'components/Common'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import {
   CollectionSelectedAssetIcon,
-  MinusIconLarge,
   Nft20Icon,
   NftXIcon,
   OpenSeaMarketplaceIcon,
   PauseButtonIcon,
   PlayButtonIcon,
-  PlusIconLarge,
-  PoolIcon,
   ProfileSelectedAssetIcon,
   SudoSwapIcon,
   VerifiedIcon,
@@ -97,63 +93,10 @@ const baseHref = (asset: GenieAsset | WalletAsset) => {
   return '/#/nfts/profile'
 }
 
-const DetailsLinkContainer = styled.a`
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  border: 1px solid;
-  color: ${({ theme }) => theme.accentAction};
-  border-color: ${({ theme }) => theme.accentActionSoft};
-  padding: 2px 6px;
-  border-radius: 6px;
-  ${OpacityHoverState};
-`
-
 const SuspiciousIcon = styled(AlertTriangle)`
   width: 16px;
   height: 16px;
   color: ${({ theme }) => theme.accentFailure};
-`
-
-const Erc1155ControlsRow = styled.div`
-  position: absolute;
-  display: flex;
-  width: 100%;
-  bottom: 12px;
-  z-index: 2;
-  justify-content: center;
-`
-
-const Erc1155ControlsContainer = styled.div`
-  display: flex;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  border-radius: ${BORDER_RADIUS}px;
-  overflow: hidden;
-`
-
-const Erc1155ControlsDisplay = styled(ThemedText.HeadlineSmall)`
-  display: flex;
-  padding: 6px 8px;
-  width: 60px;
-  background: ${({ theme }) => theme.backgroundBackdrop};
-  justify-content: center;
-  cursor: default;
-`
-
-const Erc1155ControlsInput = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 40px;
-  background: ${({ theme }) => theme.backgroundInteractive};
-  color: ${({ theme }) => theme.textPrimary};
-
-  :hover {
-    color: ${({ theme }) => theme.accentAction};
-  }
 `
 
 const StyledImageContainer = styled.div<{ isDisabled?: boolean }>`
@@ -198,7 +141,6 @@ const StyledLink = styled(Link)`
   text-decoration: none;
 `
 
-/* -------- ASSET CARD -------- */
 interface CardProps {
   asset: GenieAsset | WalletAsset
   selected: boolean
@@ -241,7 +183,6 @@ const Container = ({
       }
 
       addAssetToBag()
-      return
     },
     [addAssetToBag, isDisabled, onClick, removeAssetFromBag, selected]
   )
@@ -373,8 +314,6 @@ const Image = ({
   const { asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
   const [loaded, setLoaded] = useState(false)
-
-  // TODO: add mobile check for hover
 
   if (noContent) {
     return <NoContentContainer height={getHeightFromAspectRatio(uniformAspectRatio, renderedHeight)} />
@@ -600,7 +539,6 @@ const Audio = ({
   )
 }
 
-/* -------- CARD DETAILS CONTAINER -------- */
 interface CardDetailsContainerProps {
   children: ReactNode
 }
@@ -675,7 +613,6 @@ const ProfileNftDetails = ({ asset, hideDetails }: ProfileNftDetailsProps) => {
           </TruncatedTextRow>
           {asset.collectionIsVerified && <VerifiedIcon height="18px" width="18px" />}
         </PrimaryDetails>
-        {!hideDetails && <DetailsLink />}
       </PrimaryRow>
       <Row>
         <AssetNameRow>{assetName()}</AssetNameRow>
@@ -701,6 +638,7 @@ const StyledPrimaryDetails = styled(Row)`
   justify-items: center;
   overflow: hidden;
   white-space: nowrap;
+  gap: 8px;
 `
 
 const PrimaryDetails = ({ children }: { children: ReactNode }) => (
@@ -797,38 +735,6 @@ const ActionButton = ({ children }: { children: ReactNode }) => {
   )
 }
 
-interface Erc1155ControlsInterface {
-  quantity: string
-}
-
-const Erc1155Controls = ({ quantity }: Erc1155ControlsInterface) => {
-  const { addAssetToBag, removeAssetFromBag } = useCardContext()
-
-  return (
-    <Erc1155ControlsRow>
-      <Erc1155ControlsContainer>
-        <Erc1155ControlsInput
-          onClick={(e: MouseEvent) => {
-            e.stopPropagation()
-            removeAssetFromBag()
-          }}
-        >
-          <MinusIconLarge width="24px" height="24px" />
-        </Erc1155ControlsInput>
-        <Erc1155ControlsDisplay>{quantity}</Erc1155ControlsDisplay>
-        <Erc1155ControlsInput
-          onClick={(e: MouseEvent) => {
-            e.stopPropagation()
-            addAssetToBag()
-          }}
-        >
-          <PlusIconLarge width="24px" height="24px" />
-        </Erc1155ControlsInput>
-      </Erc1155ControlsContainer>
-    </Erc1155ControlsRow>
-  )
-}
-
 const StyledMarketplaceIcon = styled.img`
   display: inline-block;
   width: 16px;
@@ -843,22 +749,6 @@ const MarketplaceIcon = ({ marketplace }: { marketplace: string }) => {
   return <StyledMarketplaceIcon alt={marketplace} src={`/nft/svgs/marketplaces/${marketplace}.svg`} />
 }
 
-const DetailsLink = () => {
-  const { asset } = useCardContext()
-
-  return (
-    <DetailsLinkContainer
-      href={baseHref(asset)}
-      onClick={(e: MouseEvent) => {
-        e.stopPropagation()
-      }}
-    >
-      <div data-testid="nft-details-link">Details</div>
-    </DetailsLinkContainer>
-  )
-}
-
-/* -------- RANKING CARD -------- */
 interface RankingProps {
   provider: { url?: string; rank?: number }
 }
@@ -887,11 +777,6 @@ const SUSPICIOUS_TEXT = t`Blocked on OpenSea`
 
 const SuspiciousIconContainer = styled(Row)`
   flex-shrink: 0;
-  margin-left: 4px;
-`
-
-const PoolIconContainer = styled(SuspiciousIconContainer)`
-  color: ${({ theme }) => theme.textSecondary};
 `
 
 const Suspicious = () => {
@@ -900,23 +785,6 @@ const Suspicious = () => {
       <SuspiciousIconContainer>
         <SuspiciousIcon />
       </SuspiciousIconContainer>
-    </MouseoverTooltip>
-  )
-}
-
-const Pool = () => {
-  return (
-    <MouseoverTooltip
-      text={
-        <ThemedText.BodySmall>
-          This NFT is part of a liquidity pool. Buying this will increase the price of the remaining pooled NFTs.
-        </ThemedText.BodySmall>
-      }
-      placement="top"
-    >
-      <PoolIconContainer>
-        <PoolIcon width="20" height="20" />
-      </PoolIconContainer>
     </MouseoverTooltip>
   )
 }
@@ -1010,14 +878,11 @@ export {
   Audio,
   Container,
   DetailsContainer,
-  DetailsLink,
-  Erc1155Controls,
   Image,
   ImageContainer,
   InfoContainer,
   MarketplaceContainer,
   MarketplaceIcon,
-  Pool,
   PrimaryDetails,
   PrimaryInfo,
   PrimaryRow,
