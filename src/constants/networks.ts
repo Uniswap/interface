@@ -15,7 +15,7 @@ if (typeof INFURA_KEY === 'undefined') {
  *
  * These "Safe" URLs are listed first, followed by other fallback URLs, which are taken from chainlist.org.
  */
-export const FALLBACK_URLS = {
+export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
   [SupportedChainId.MAINNET]: [
     // "Safe" URLs
     'https://api.mycryptoapi.com/eth',
@@ -75,7 +75,7 @@ export const FALLBACK_URLS = {
  * Known JSON-RPC endpoints.
  * These are the URLs used by the interface when there is not another available source of chain data.
  */
-export const RPC_URLS = {
+export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
   [SupportedChainId.MAINNET]: [
     `https://mainnet.infura.io/v3/${INFURA_KEY}`,
     ...FALLBACK_URLS[SupportedChainId.MAINNET],
