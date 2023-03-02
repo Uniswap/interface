@@ -98,9 +98,9 @@ export function ForceUpgradeModal(): JSX.Element {
       {mnemonicId && showSeedPhrase && (
         <BottomSheetModal
           fullScreen
-          hideHandlebar
           backgroundColor={theme.colors.background0}
-          name={ModalName.ForceUpgradeModal}>
+          name={ModalName.ForceUpgradeModal}
+          onClose={onDismiss}>
           <Box flex={1} px="spacing24" py="spacing24">
             <Flex row alignItems="center" justifyContent="flex-start">
               <TouchableArea onPress={onDismiss}>

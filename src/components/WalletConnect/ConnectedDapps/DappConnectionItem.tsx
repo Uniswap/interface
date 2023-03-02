@@ -1,51 +1,120 @@
+import { getSdkError } from '@walletconnect/utils'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useColorScheme } from 'react-native'
+import { Alert } from 'react-native'
 import 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
+import RemoveButton from 'src/components/explore/RemoveButton'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
-import { CHAIN_INFO } from 'src/constants/chains'
+import { ChainId, CHAIN_INFO } from 'src/constants/chains'
+import { pushNotification } from 'src/features/notifications/notificationSlice'
+import { AppNotificationType } from 'src/features/notifications/types'
 import { ElementName } from 'src/features/telemetry/constants'
+import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
+import { WalletConnectEvent } from 'src/features/walletConnect/saga'
+import { disconnectFromApp } from 'src/features/walletConnect/WalletConnect'
 import {
+  removeSession,
   WalletConnectSession,
   WalletConnectSessionV1,
 } from 'src/features/walletConnect/walletConnectSlice'
+import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { openUri } from 'src/utils/linking'
+import { logger } from 'src/utils/logger'
+import { ONE_SECOND_MS } from 'src/utils/time'
 
 export function DappConnectionItem({
   session,
+  isEditing,
   onPressChangeNetwork,
 }: {
   session: WalletConnectSession
+  isEditing: boolean
   onPressChangeNetwork: (session: WalletConnectSessionV1) => void
 }): JSX.Element {
   const theme = useAppTheme()
+  const { t } = useTranslation()
   const { dapp } = session
+  const dispatch = useAppDispatch()
+  const address = useActiveAccountAddressWithThrow()
+
+  const onDisconnect = async (): Promise<void> => {
+    if (session.version === '1') {
+      disconnectFromApp(session.id)
+      return
+    }
+
+    if (session.version === '2') {
+      try {
+        await wcWeb3Wallet.disconnectSession({
+          topic: session.id,
+          reason: getSdkError('USER_DISCONNECTED'),
+        })
+        dispatch(removeSession({ account: address, sessionId: session.id }))
+        dispatch(
+          pushNotification({
+            type: AppNotificationType.WalletConnect,
+            address,
+            dappName: dapp.name,
+            event: WalletConnectEvent.Disconnected,
+            imageUrl: dapp.icon,
+            hideDelay: 3 * ONE_SECOND_MS,
+          })
+        )
+      } catch (e) {
+        if (e instanceof Error) {
+          logger.error(
+            'DappConnectionItem',
+            'onDisconnect',
+            'Failed to disconnect session',
+            e.message
+          )
+          Alert.alert(
+            t('WalletConnect Error'),
+            t('Failed to disconnect from {{ dapp }}. \n\n Error: {{ message }}', {
+              dapp: dapp.name,
+              message: e.message,
+            })
+          )
+        }
+      }
+    }
+  }
 
   return (
     <Flex
       bg="background2"
       borderRadius="rounded16"
-      gap="spacing16"
+      gap="spacing12"
       justifyContent="space-between"
       mb="spacing12"
+      pb="spacing12"
+      pt="spacing24"
       px="spacing12"
-      py="spacing16"
       width="48%">
+      <Flex
+        alignSelf="flex-end"
+        position="absolute"
+        right={theme.spacing.spacing12}
+        top={theme.spacing.spacing12}>
+        {isEditing ? (
+          <RemoveButton onPress={onDisconnect} />
+        ) : (
+          <Box height={theme.iconSizes.icon24} width={theme.iconSizes.icon24} />
+        )}
+      </Flex>
       <TouchableArea
         flex={1}
         name={ElementName.WCOpenDapp}
         onPress={(): Promise<void> => openUri(dapp.url)}>
-        <Flex centered grow gap="spacing8">
-          <Flex fill>
-            <DappHeaderIcon dapp={dapp} showChain={false} />
-          </Flex>
+        <Flex grow alignItems="center" gap="spacing8">
+          <DappHeaderIcon dapp={dapp} showChain={false} />
           <Text numberOfLines={2} textAlign="center" variant="buttonLabelMedium">
             {dapp.name || dapp.url}
           </Text>
@@ -61,24 +130,7 @@ export function DappConnectionItem({
       {session.version === '1' ? (
         <ChangeNetworkButton session={session} onPressChangeNetwork={onPressChangeNetwork} />
       ) : (
-        <Flex centered>
-          <Box
-            flexDirection="row"
-            height={theme.iconSizes.icon28}
-            width={
-              theme.iconSizes.icon28 +
-              (session.chains.length - 1) * theme.iconSizes.icon28 * (2 / 3)
-            }>
-            {session.chains.map((chainId, index) => (
-              <Box
-                key={chainId}
-                left={index * theme.iconSizes.icon28 * (2 / 3)}
-                position="absolute">
-                <NetworkLogo chainId={chainId} size={theme.iconSizes.icon28} />
-              </Box>
-            ))}
-          </Box>
-        </Flex>
+        <NetworkLogos chains={session.chains} />
       )}
     </Flex>
   )
@@ -96,7 +148,6 @@ function ChangeNetworkButton({
 
   // Only WC v1.0 connections have a current chain_id
   const supportedChainId = toSupportedChainId(session.dapp.chain_id)
-  const isDarkMode = useColorScheme() === 'dark'
 
   return (
     <TouchableArea
@@ -105,7 +156,7 @@ function ChangeNetworkButton({
       <Flex
         row
         shrink
-        backgroundColor={isDarkMode ? 'background3' : 'background3'}
+        backgroundColor="background3"
         borderRadius="roundedFull"
         gap="none"
         justifyContent="space-between"
@@ -136,5 +187,38 @@ function ChangeNetworkButton({
         />
       </Flex>
     </TouchableArea>
+  )
+}
+
+function NetworkLogos({ chains }: { chains: ChainId[] }): JSX.Element {
+  const theme = useAppTheme()
+  const firstChain = chains[0]
+
+  return (
+    <Flex
+      row
+      shrink
+      alignItems="center"
+      backgroundColor="background3"
+      borderRadius="roundedFull"
+      gap="none"
+      justifyContent="space-between"
+      p="spacing8">
+      {chains.length === 1 && firstChain ? (
+        <Flex fill row justifyContent="space-between">
+          <NetworkLogo chainId={firstChain} />
+          <Text color="textSecondary" numberOfLines={1} variant="buttonLabelSmall">
+            {CHAIN_INFO[firstChain].label}
+          </Text>
+          <Box width={theme.iconSizes.icon20} />
+        </Flex>
+      ) : (
+        <Flex centered grow flexDirection="row" gap="spacing4">
+          {chains.map((chainId) => (
+            <NetworkLogo key={chainId} chainId={chainId} size={theme.iconSizes.icon20} />
+          ))}
+        </Flex>
+      )}
+    </Flex>
   )
 }

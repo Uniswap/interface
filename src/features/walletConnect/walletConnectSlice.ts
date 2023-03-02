@@ -3,6 +3,7 @@ import { ProposalTypes } from '@walletconnect/types'
 import { ChainId } from 'src/constants/chains'
 import {
   DappInfo,
+  DappInfoV1,
   DappInfoV2,
   EthMethod,
   EthSignMethod,
@@ -12,7 +13,7 @@ import {
 
 export type WalletConnectSessionV1 = {
   id: string
-  dapp: DappInfo
+  dapp: DappInfoV1
   version: '1'
 }
 
@@ -31,10 +32,14 @@ interface SessionMapping {
 }
 
 interface BaseRequest {
+  sessionId: string
   internalId: string
   account: string
   dapp: DappInfo
+  chainId: ChainId
+  version: '1' | '2'
 }
+
 export interface SignRequest extends BaseRequest {
   type: EthSignMethod
   message: string | null
@@ -48,8 +53,9 @@ export interface TransactionRequest extends BaseRequest {
 
 export interface SwitchChainRequest extends BaseRequest {
   type: EthMethod.SwitchChain | EthMethod.AddChain
-  sessionId: string
   newChainId: number
+  dapp: DappInfoV1
+  version: '1'
 }
 
 export type WalletConnectRequest = SignRequest | TransactionRequest | SwitchChainRequest

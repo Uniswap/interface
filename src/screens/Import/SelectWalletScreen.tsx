@@ -13,6 +13,7 @@ import { useSelectWalletScreenQuery } from 'src/data/__generated__/types-and-hoo
 import { IMPORT_WALLET_AMOUNT } from 'src/features/import/importAccountSaga'
 import WalletPreviewCard from 'src/features/import/WalletPreviewCard'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
@@ -146,7 +147,14 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
         }
       }
     })
-    navigation.navigate({ name: OnboardingScreens.Backup, params, merge: true })
+    navigation.navigate({
+      name:
+        params?.importType === ImportType.Restore
+          ? OnboardingScreens.Notifications
+          : OnboardingScreens.Backup,
+      params,
+      merge: true,
+    })
   }, [
     dispatch,
     addresses,

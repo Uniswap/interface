@@ -4,9 +4,10 @@ import { useAppTheme } from 'src/app/hooks'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { LinkButton } from 'src/components/buttons/LinkButton'
-import { Box, BoxProps, Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
+import { Separator } from 'src/components/layout/Separator'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
+import { NetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { CHAIN_INFO } from 'src/constants/chains'
@@ -18,11 +19,6 @@ import { toSupportedChainId } from 'src/utils/chainId'
 interface Props {
   onClose: () => void
   request: SwitchChainRequest
-}
-
-const spacerProps: BoxProps = {
-  borderBottomColor: 'backgroundOutline',
-  borderBottomWidth: 1,
 }
 
 export function WalletConnectSwitchChainModal({ onClose, request }: Props): JSX.Element | null {
@@ -86,15 +82,25 @@ export function WalletConnectSwitchChainModal({ onClose, request }: Props): JSX.
           />
         </Flex>
         <Flex gap="spacing12">
-          <Flex
-            backgroundColor="background2"
-            borderRadius="rounded16"
-            gap="none"
-            spacerProps={spacerProps}>
-            <Flex row alignItems="center" justifyContent="space-between" p="spacing16">
+          <Flex backgroundColor="background2" borderRadius="rounded16" gap="none">
+            <Flex
+              row
+              alignItems="center"
+              justifyContent="space-between"
+              px="spacing16"
+              py="spacing12">
               <Text variant="subheadSmall">{t('Network')}</Text>
-              <InlineNetworkPill chainId={newChainId} />
+              <NetworkPill
+                showIcon
+                chainId={newChainId}
+                gap="spacing4"
+                pl="spacing4"
+                pr="spacing8"
+                py="spacing2"
+                textVariant="subheadSmall"
+              />
             </Flex>
+            <Separator color="background1" width={1} />
             <Box p="spacing16">
               <AccountDetails address={request.account} />
             </Box>

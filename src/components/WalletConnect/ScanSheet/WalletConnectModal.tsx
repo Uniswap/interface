@@ -24,6 +24,7 @@ import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { connectToApp } from 'src/features/walletConnect/WalletConnect'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
+import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { ONE_SECOND_MS } from 'src/utils/time'
 
 const WC_TIMEOUT_DURATION_MS = 10 * ONE_SECOND_MS // timeout after 10 seconds
@@ -85,6 +86,11 @@ export function WalletConnectModal({
       if (supportedURI.type === URIType.WalletConnectURL) {
         setShouldFreezeCamera(true)
         connectToApp(supportedURI.value)
+      }
+
+      if (supportedURI.type === URIType.WalletConnectV2URL) {
+        setShouldFreezeCamera(true)
+        wcWeb3Wallet.core.pairing.pair({ uri: supportedURI.value })
       }
 
       if (supportedURI.type === URIType.EasterEgg) {

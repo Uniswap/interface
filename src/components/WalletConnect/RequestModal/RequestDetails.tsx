@@ -198,7 +198,7 @@ function RequestDetailsContent({ request }: Props): JSX.Element {
   if (isSignTypedDataRequest(request)) {
     try {
       const data = JSON.parse(request.rawMessage)
-      return getParsedObjectDisplay(request.dapp.chain_id, data.message, 0)
+      return getParsedObjectDisplay(request.chainId, data.message, 0)
     } catch (e) {
       logger.error('WalletConnectRequestModal', 'getMessage', 'invalid JSON message', e)
       return <Text />
@@ -206,7 +206,7 @@ function RequestDetailsContent({ request }: Props): JSX.Element {
   }
 
   if (isTransactionRequest(request)) {
-    return <TransactionDetails chainId={request.dapp.chain_id} transaction={request.transaction} />
+    return <TransactionDetails chainId={request.chainId} transaction={request.transaction} />
   }
 
   const message = getStrMessage(request)
