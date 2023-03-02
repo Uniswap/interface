@@ -35,21 +35,20 @@ export interface TransactionsResponse {
 }
 
 export interface TrendingCollection {
-  name: string
-  address: string
-  imageUrl: string
-  bannerImageUrl: string
-  isVerified: boolean
-  volume: number
-  volumeChange: number
-  floor: number
-  floorChange: number
-  marketCap: number
-  percentListed: number
-  owners: number
-  ownersChange: number
-  totalSupply: number
-  sales: number
+  name?: string
+  address?: string
+  imageUrl?: string
+  bannerImageUrl?: string
+  isVerified?: boolean
+  volume?: number
+  volumeChange?: number
+  floor?: number
+  floorChange?: number
+  marketCap?: number
+  percentListed?: number
+  owners?: number
+  totalSupply?: number
+  sales?: number
 }
 
 export enum Denomination {
@@ -59,26 +58,25 @@ export enum Denomination {
 
 export interface CollectionTableColumn {
   collection: {
-    name: string
-    address: string
-    logo: string
-    isVerified: boolean
+    name?: string
+    address?: string
+    logo?: string
+    isVerified?: boolean
   }
   volume: {
-    value: number
-    change: number
-    type: VolumeType
+    value?: number
+    change?: number
+    type?: VolumeType
   }
   floor: {
-    value: number
-    change: number
+    value?: number
+    change?: number
   }
   owners: {
-    value: number
-    change: number
+    value?: number
   }
-  sales: number
-  totalSupply: number
+  sales?: number
+  totalSupply?: number
   denomination: Denomination
   usdPrice?: number
 }

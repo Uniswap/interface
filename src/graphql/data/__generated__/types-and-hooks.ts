@@ -675,9 +675,11 @@ export type QueryNftAssetsArgs = {
   asc?: InputMaybe<Scalars['Boolean']>;
   before?: InputMaybe<Scalars['String']>;
   chain?: InputMaybe<Chain>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<NftAssetsFilterInput>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<NftAssetSortableField>;
 };
 
@@ -1118,6 +1120,14 @@ export type NftRouteQueryVariables = Exact<{
 
 
 export type NftRouteQuery = { __typename?: 'Query', nftRoute?: { __typename?: 'NftRouteResponse', id: string, calldata: string, toAddress: string, route?: Array<{ __typename?: 'NftTrade', amount: number, contractAddress: string, id: string, marketplace: NftMarketplace, tokenId: string, tokenType: NftStandard, price: { __typename?: 'TokenAmount', id: string, currency: Currency, value: string }, quotePrice?: { __typename?: 'TokenAmount', id: string, currency: Currency, value: string } }>, sendAmount: { __typename?: 'TokenAmount', id: string, currency: Currency, value: string } } };
+
+export type TrendingCollectionsQueryVariables = Exact<{
+  size?: InputMaybe<Scalars['Int']>;
+  timePeriod?: InputMaybe<HistoryDuration>;
+}>;
+
+
+export type TrendingCollectionsQuery = { __typename?: 'Query', topCollections?: { __typename?: 'NftCollectionConnection', edges: Array<{ __typename?: 'NftCollectionEdge', node: { __typename?: 'NftCollection', name?: string, isVerified?: boolean, nftContracts?: Array<{ __typename?: 'NftContract', address: string, totalSupply?: number }>, image?: { __typename?: 'Image', url: string }, bannerImage?: { __typename?: 'Image', url: string }, markets?: Array<{ __typename?: 'NftCollectionMarket', owners?: number, floorPrice?: { __typename?: 'TimestampedAmount', value: number }, totalVolume?: { __typename?: 'TimestampedAmount', value: number }, volume?: { __typename?: 'TimestampedAmount', value: number }, volumePercentChange?: { __typename?: 'TimestampedAmount', value: number }, floorPricePercentChange?: { __typename?: 'TimestampedAmount', value: number }, sales?: { __typename?: 'TimestampedAmount', value: number }, listings?: { __typename?: 'TimestampedAmount', value: number } }> } }> } };
 
 
 export const RecentlySearchedAssetsDocument = gql`
@@ -2118,3 +2128,81 @@ export function useNftRouteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<N
 export type NftRouteQueryHookResult = ReturnType<typeof useNftRouteQuery>;
 export type NftRouteLazyQueryHookResult = ReturnType<typeof useNftRouteLazyQuery>;
 export type NftRouteQueryResult = Apollo.QueryResult<NftRouteQuery, NftRouteQueryVariables>;
+export const TrendingCollectionsDocument = gql`
+    query TrendingCollections($size: Int, $timePeriod: HistoryDuration) {
+  topCollections(limit: $size, duration: $timePeriod) {
+    edges {
+      node {
+        name
+        nftContracts {
+          address
+          totalSupply
+        }
+        image {
+          url
+        }
+        bannerImage {
+          url
+        }
+        isVerified
+        markets(currencies: ETH) {
+          floorPrice {
+            value
+          }
+          owners
+          totalVolume {
+            value
+          }
+          volume(duration: $timePeriod) {
+            value
+          }
+          volumePercentChange(duration: $timePeriod) {
+            value
+          }
+          floorPricePercentChange(duration: $timePeriod) {
+            value
+          }
+          sales {
+            value
+          }
+          totalVolume {
+            value
+          }
+          listings {
+            value
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useTrendingCollectionsQuery__
+ *
+ * To run a query within a React component, call `useTrendingCollectionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTrendingCollectionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTrendingCollectionsQuery({
+ *   variables: {
+ *      size: // value for 'size'
+ *      timePeriod: // value for 'timePeriod'
+ *   },
+ * });
+ */
+export function useTrendingCollectionsQuery(baseOptions?: Apollo.QueryHookOptions<TrendingCollectionsQuery, TrendingCollectionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TrendingCollectionsQuery, TrendingCollectionsQueryVariables>(TrendingCollectionsDocument, options);
+      }
+export function useTrendingCollectionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TrendingCollectionsQuery, TrendingCollectionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TrendingCollectionsQuery, TrendingCollectionsQueryVariables>(TrendingCollectionsDocument, options);
+        }
+export type TrendingCollectionsQueryHookResult = ReturnType<typeof useTrendingCollectionsQuery>;
+export type TrendingCollectionsLazyQueryHookResult = ReturnType<typeof useTrendingCollectionsLazyQuery>;
+export type TrendingCollectionsQueryResult = Apollo.QueryResult<TrendingCollectionsQuery, TrendingCollectionsQueryVariables>;
