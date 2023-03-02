@@ -24,7 +24,7 @@ import { updateSelectedWallet } from 'state/user/reducer'
 import { useConnectedWallets } from 'state/wallets/hooks'
 import styled from 'styled-components/macro'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
-import { isMobile } from 'utils/userAgent'
+import { useIsMobile } from 'utils/userAgent'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { useModalIsOpen, useToggleWalletModal } from '../../state/application/hooks'
@@ -250,6 +250,8 @@ export default function WalletModal({
     },
     [dispatch]
   )
+
+  const isMobile = useIsMobile()
 
   function getOptions() {
     const isInjected = getIsInjected()

@@ -6,7 +6,7 @@ import { useEffect, useRef } from 'react'
 import { ArrowDown, Info, X } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
-import { isMobile } from 'utils/userAgent'
+import { useIsMobile } from 'utils/userAgent'
 
 import { useModalIsOpen, useTogglePrivacyPolicy } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
@@ -111,6 +111,8 @@ export function PrivacyPolicyModal() {
 }
 
 function PrivacyPolicy() {
+  const isMobile = useIsMobile()
+
   return (
     <Wrapper
       draggable="true"

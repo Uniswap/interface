@@ -2,15 +2,20 @@ import { useWeb3React } from '@web3-react/core'
 import { useEffect } from 'react'
 import { UaEventOptions } from 'react-ga4/types/ga4'
 import { useLocation } from 'react-router-dom'
-import { isMobile } from 'utils/userAgent'
+// import { isMobile } from 'utils/userAgent'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import GoogleAnalyticsProvider from './GoogleAnalyticsProvider'
-
+const isMobile = false
 const GOOGLE_ANALYTICS_CLIENT_ID_STORAGE_KEY = 'ga_client_id'
 const GOOGLE_ANALYTICS_ID: string | undefined = process.env.REACT_APP_GOOGLE_ANALYTICS_ID
 
-const storedClientId = window.localStorage.getItem(GOOGLE_ANALYTICS_CLIENT_ID_STORAGE_KEY)
+const window = {
+  localStorage: null,
+}
+
+// const storedClientId = window.localStorage.getItem(GOOGLE_ANALYTICS_CLIENT_ID_STORAGE_KEY) || ''
+const storedClientId = ''
 
 const googleAnalytics = new GoogleAnalyticsProvider()
 
@@ -53,7 +58,8 @@ if (typeof GOOGLE_ANALYTICS_ID === 'string') {
   googleAnalytics.initialize('test', { gtagOptions: { debug_mode: true } })
 }
 
-const installed = Boolean(window.navigator.serviceWorker?.controller)
+// const installed = Boolean(window.navigator.serviceWorker?.controller)
+const installed = false
 const hit = Boolean((window as any).__isDocumentCached)
 const action = installed ? (hit ? 'Cache hit' : 'Cache miss') : 'Not installed'
 sendEvent({ category: 'Service Worker', action, nonInteraction: true })
@@ -88,7 +94,7 @@ export function useAnalyticsReporter() {
       if (!tracker) return
 
       const clientId = tracker.get('clientId')
-      window.localStorage.setItem(GOOGLE_ANALYTICS_CLIENT_ID_STORAGE_KEY, clientId)
+      // window.localStorage.setItem(GOOGLE_ANALYTICS_CLIENT_ID_STORAGE_KEY, clientId)
     })
   }, [])
 }

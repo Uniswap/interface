@@ -1,4 +1,5 @@
-import 'rc-slider/assets/index.css'
+// @todo move this somewhere else
+// import 'rc-slider/assets/index.css'
 
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'

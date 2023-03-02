@@ -13,7 +13,7 @@ const mockEth = () => nativeOnChain(1)
 
 const UserAgentMock = jest.requireMock('utils/userAgent')
 jest.mock('utils/userAgent', () => ({
-  isMobile: false,
+  useIsMobile: () => false,
 }))
 
 jest.mock('.../../state/application/hooks', () => {

@@ -10,7 +10,7 @@ import { Trait } from 'nft/hooks/useCollectionFilters'
 import { TraitPosition } from 'nft/hooks/useTraitsOpen'
 import { DropDownOption } from 'nft/types'
 import { useMemo, useReducer } from 'react'
-import { isMobile } from 'utils/userAgent'
+import { useIsMobile } from 'utils/userAgent'
 
 import { FilterSortDropdown } from '../common/SortDropdown'
 import { getSortDropdownOptions } from './CollectionNfts'
@@ -33,6 +33,8 @@ export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait
     () => getSortDropdownOptions(setSortBy, hasRarity ?? false),
     [hasRarity, setSortBy]
   )
+
+  const isMobile = useIsMobile()
 
   return (
     <Box className={styles.container}>

@@ -1,4 +1,5 @@
-import 'rc-slider/assets/index.css'
+// @todo move this somewhere else
+// import 'rc-slider/assets/index.css'
 
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'

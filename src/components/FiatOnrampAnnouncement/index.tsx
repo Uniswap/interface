@@ -10,7 +10,7 @@ import { useAppSelector } from 'state/hooks'
 import { useFiatOnrampAck } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { isMobile } from 'utils/userAgent'
+import { useIsMobile } from 'utils/userAgent'
 
 const Arrow = styled.div`
   top: -4px;
@@ -119,6 +119,7 @@ export function FiatOnrampAnnouncement() {
   }, [acknowledge, toggleWalletDropdown])
 
   const openModal = useAppSelector((state) => state.application.openModal)
+  const isMobile = useIsMobile()
 
   if (
     !account ||

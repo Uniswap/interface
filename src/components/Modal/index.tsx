@@ -5,7 +5,7 @@ import { useGesture } from 'react-use-gesture'
 import styled, { css } from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
 
-import { isMobile } from '../../utils/userAgent'
+import { useIsMobile } from '../../utils/userAgent'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 
@@ -118,6 +118,8 @@ export default function Modal({
       }
     },
   })
+
+  const isMobile = useIsMobile()
 
   return (
     <>

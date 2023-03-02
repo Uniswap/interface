@@ -8,7 +8,7 @@ import { updateSelectedWallet } from 'state/user/reducer'
 import { removeConnectedWallet } from 'state/wallets/reducer'
 import styled, { useTheme } from 'styled-components/macro'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
-import { isMobile } from 'utils/userAgent'
+import { useIsMobile } from 'utils/userAgent'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { clearAllTransactions } from '../../state/transactions/reducer'
@@ -212,6 +212,7 @@ export default function AccountDetails({
 
   const hasMetaMaskExtension = getIsMetaMaskWallet()
   const hasCoinbaseExtension = getIsCoinbaseWallet()
+  const isMobile = useIsMobile()
   const isInjectedMobileBrowser = (hasMetaMaskExtension || hasCoinbaseExtension) && isMobile
 
   function formatConnectorName() {

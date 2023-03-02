@@ -22,15 +22,16 @@ function parseLocale(maybeSupportedLocale: unknown): SupportedLocale | undefined
  * Returns the supported locale read from the user agent (navigator)
  */
 export function navigatorLocale(): SupportedLocale | undefined {
-  if (!navigator.language) return undefined
+  // if (!navigator.language) return undefined
 
-  const [language, region] = navigator.language.split('-')
+  // const [language, region] = navigator.language.split('-')
 
-  if (region) {
-    return parseLocale(`${language}-${region.toUpperCase()}`) ?? parseLocale(language)
-  }
+  // if (region) {
+  //   return parseLocale(`${language}-${region.toUpperCase()}`) ?? parseLocale(language)
+  // }
 
-  return parseLocale(language)
+  // return parseLocale(language)
+  return undefined
 }
 
 function storeLocale(): SupportedLocale | undefined {

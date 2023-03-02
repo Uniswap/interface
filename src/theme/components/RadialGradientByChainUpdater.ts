@@ -19,13 +19,14 @@ const backgroundResetStyles = {
 
 type TargetBackgroundStyles = typeof initialStyles | typeof backgroundResetStyles
 
-const backgroundRadialGradientElement = document.getElementById('background-radial-gradient')
-const setBackground = (newValues: TargetBackgroundStyles) =>
-  Object.entries(newValues).forEach(([key, value]) => {
-    if (backgroundRadialGradientElement) {
-      backgroundRadialGradientElement.style[key as keyof typeof backgroundResetStyles] = value
-    }
-  })
+const backgroundRadialGradientElement = null
+const setBackground = (newValues: TargetBackgroundStyles) => {
+  // Object.entries(newValues).forEach(([key, value]) => {
+  //   if (backgroundRadialGradientElement) {
+  //     backgroundRadialGradientElement.style[key as keyof typeof backgroundResetStyles] = value
+  //   }
+  // })
+}
 
 export default function RadialGradientByChainUpdater(): null {
   const { chainId } = useWeb3React()

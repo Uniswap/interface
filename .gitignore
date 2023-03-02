@@ -14,6 +14,10 @@ schema.graphql
 # dependencies
 /node_modules
 
+# next
+.next
+next-env.d.ts
+
 # testing
 /coverage
 
