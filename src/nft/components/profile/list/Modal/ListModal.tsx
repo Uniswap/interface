@@ -74,8 +74,8 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   )
   const nativeCurrency = useNativeCurrency()
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
-  const usdcValue = useStablecoinValue(parsedAmount)
-  const usdcAmount = formatCurrencyAmount(usdcValue, NumberType.FiatTokenPrice)
+  const { value } = useStablecoinValue(parsedAmount)
+  const stableCoinAmount = formatCurrencyAmount(value, NumberType.FiatTokenPrice)
 
   const allCollectionsApproved = useMemo(
     () => collectionsRequiringApproval.every((collection) => collection.status === ListingStatus.APPROVED),
@@ -97,7 +97,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
     sendAnalyticsEvent(NFTEventName.NFT_LISTING_COMPLETED, {
       signatures_approved: listings.filter((asset) => asset.status === ListingStatus.APPROVED),
       list_quantity: listings.length,
-      usd_value: usdcAmount,
+      usd_value: stableCoinAmount,
       ...trace,
     })
   }

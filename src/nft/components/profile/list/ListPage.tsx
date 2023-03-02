@@ -207,8 +207,8 @@ export const ListPage = () => {
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const nativeCurrency = useNativeCurrency()
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
-  const usdcValue = useStablecoinValue(parsedAmount)
-  const usdcAmount = formatCurrencyAmount(usdcValue, NumberType.FiatTokenPrice)
+  const { value: stableValue } = useStablecoinValue(parsedAmount)
+  const stableAmount = formatCurrencyAmount(stableValue, NumberType.FiatTokenPrice)
   const [showListModal, toggleShowListModal] = useReducer((s) => !s, false)
   const [selectedMarkets, setSelectedMarkets] = useState([ListingMarkets[0]]) // default marketplace: x2y2
   const signer = provider?.getSigner()
@@ -225,7 +225,7 @@ export const ListPage = () => {
     token_ids: sellAssets.map((asset) => asset.tokenId),
     marketplaces: Array.from(new Set(listings.map((asset) => asset.marketplace.name))),
     list_quantity: listings.length,
-    usd_value: usdcAmount,
+    usd_value: stableAmount,
     ...trace,
   }
 
@@ -294,7 +294,7 @@ export const ListPage = () => {
             <EthValueWrapper totalEthListingValue={!!totalEthListingValue}>
               {totalEthListingValue > 0 ? formatEth(totalEthListingValue) : '-'} ETH
             </EthValueWrapper>
-            {!!usdcValue && <UsdValue>{usdcAmount}</UsdValue>}
+            {!!stableValue && <UsdValue>{stableAmount}</UsdValue>}
           </ProceedsWrapper>
           <ListingButton onClick={showModalAndStartListing} />
         </ProceedsAndButtonWrapper>
