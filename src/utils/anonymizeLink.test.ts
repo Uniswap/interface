@@ -11,18 +11,15 @@ describe('#anonymizeLink', () => {
     expect(anonymizeLink('https://goerli.etherscan.io/address/0xabcd')).toEqual(
       'https://goerli.etherscan.io/address/***'
     )
-    expect(anonymizeLink('https://ropsten.etherscan.io/address/0xabcd')).toEqual(
-      'https://ropsten.etherscan.io/address/***'
-    )
   })
   it('anonymizes hashes in the middle of the url', () => {
-    expect(anonymizeLink('https://ropsten.etherscan.io/address/0xabcd/test')).toEqual(
-      'https://ropsten.etherscan.io/address/***/test'
+    expect(anonymizeLink('https://goerli.etherscan.io/address/0xabcd/test')).toEqual(
+      'https://goerli.etherscan.io/address/***/test'
     )
   })
   it('does not anonymize 0x', () => {
-    expect(anonymizeLink('https://ropsten.etherscan.io/address/0x/test')).toEqual(
-      'https://ropsten.etherscan.io/address/0x/test'
+    expect(anonymizeLink('https://goerli.etherscan.io/address/0x/test')).toEqual(
+      'https://goerli.etherscan.io/address/0x/test'
     )
   })
   it('works for arbitrum urls', () => {
