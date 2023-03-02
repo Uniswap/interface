@@ -1,5 +1,5 @@
 import React, { CSSProperties, ReactNode, useState } from 'react'
-import { ChevronUp } from 'react-feather'
+import { ChevronDown } from 'react-feather'
 import styled from 'styled-components'
 
 const ItemWrapper = styled.div`
@@ -32,7 +32,7 @@ const ArrowWrapper = styled.div`
     transition: all 150ms ease-in-out;
   }
 
-  &[data-expanded='false'] {
+  &[data-expanded='true'] {
     svg {
       transform: rotate(180deg);
     }
@@ -76,7 +76,7 @@ export const CollapseItem: React.FC<Props> = ({
         }}
       >
         {header}
-        <ArrowWrapper data-expanded={isExpanded}>{arrowComponent || <ChevronUp />}</ArrowWrapper>
+        <ArrowWrapper data-expanded={isExpanded}>{arrowComponent || <ChevronDown />}</ArrowWrapper>
       </Header>
       <ContentWrapper data-expanded={isExpanded}>{children}</ContentWrapper>
     </ItemWrapper>
@@ -108,7 +108,7 @@ const ToggleCollapse = ({
             >
               {item.title}
               <ArrowWrapper data-expanded={isActive}>
-                <ChevronUp />
+                <ChevronDown />
               </ArrowWrapper>
             </Header>
             <ContentWrapper data-expanded={isActive}>{item.content}</ContentWrapper>
