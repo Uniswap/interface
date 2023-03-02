@@ -2165,9 +2165,6 @@ export const TrendingCollectionsDocument = gql`
           sales {
             value
           }
-          totalVolume {
-            value
-          }
           listings {
             value
           }
