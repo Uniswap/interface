@@ -37,7 +37,9 @@ const nextConfig = {
   },
   /**
    * TODO(XXXX)
-   *
+   * Uniswap internal packages are currently packaged as a mix of CommonJS and ESModules. This causes
+   * some incompatibilities, when a CommonJS package tries to require an ESModule and vice versa.
+   * As a temporary workaround, we transpile the following packages with Babel to ensure they're all CommonJS.
    */
   transpilePackages: ['@uniswap/conedison', '@uniswap/widgets', '@uniswap/analytics', '@uniswap/analytics-events'],
   webpack(config) {
