@@ -25,14 +25,6 @@ const USDC_GOERLI = new Token(
   'USDC',
   'USD//C'
 )
-const USDC_KOVAN = new Token(SupportedChainId.KOVAN, '0x31eeb2d0f9b6fd8642914ab10f4dd473677d80df', 6, 'USDC', 'USD//C')
-export const USDC_OPTIMISM = new Token(
-  SupportedChainId.OPTIMISM,
-  '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
-  6,
-  'USDC',
-  'USD//C'
-)
 const USDC_OPTIMISM_GOERLI = new Token(
   SupportedChainId.OPTIMISM_GOERLI,
   '0x7E07E15D2a87A24492740D16f5bdF58c16db0c4E',
@@ -422,6 +414,5 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedCha
     [SupportedChainId.CELO]: PORTAL_USDC_CELO.address,
     [SupportedChainId.CELO_ALFAJORES]: PORTAL_USDC_CELO.address,
     [SupportedChainId.GOERLI]: USDC_GOERLI.address,
-    [SupportedChainId.KOVAN]: USDC_KOVAN.address,
   },
 }
