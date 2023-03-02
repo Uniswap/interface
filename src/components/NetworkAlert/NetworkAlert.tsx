@@ -26,6 +26,7 @@ const BodyText = styled.div`
 const RootWrapper = styled.div`
   position: relative;
   margin-top: 16px;
+  z-index: 0;
 `
 
 const SHOULD_SHOW_ALERT = {
@@ -101,7 +102,6 @@ const ContentWrapper = styled.div<{ chainId: NetworkAlertChains; darkMode: boole
     position: absolute;
     transform: rotate(25deg) translate(-90px, -40px);
     width: 300px;
-    z-index: -1;
   }
 `
 const Header = styled.h2`

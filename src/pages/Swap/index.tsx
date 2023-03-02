@@ -562,14 +562,17 @@ export default function Swap({ className }: { className?: string }) {
           showCancel={true}
         />
         <PageWrapper>
+          <NetworkAlert />
           {swapWidgetEnabled ? (
-            <Widget
-              defaultTokens={{
-                [Field.INPUT]: loadedInputCurrency ?? undefined,
-                [Field.OUTPUT]: loadedOutputCurrency ?? undefined,
-              }}
-              width="100%"
-            />
+            <div style={{ zIndex: 1 }}>
+              <Widget
+                defaultTokens={{
+                  [Field.INPUT]: loadedInputCurrency ?? undefined,
+                  [Field.OUTPUT]: loadedOutputCurrency ?? undefined,
+                }}
+                width="100%"
+              />
+            </div>
           ) : (
             <SwapWrapper className={className} id="swap-page">
               <SwapHeader allowedSlippage={allowedSlippage} />
@@ -891,7 +894,6 @@ export default function Swap({ className }: { className?: string }) {
               </AutoColumn>
             </SwapWrapper>
           )}
-          <NetworkAlert />
         </PageWrapper>
         <SwitchLocaleLink />
         {!swapIsUnsupported ? null : (
