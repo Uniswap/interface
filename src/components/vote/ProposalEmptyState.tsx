@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { SupportedChainId } from 'constants/chains'
 import { useWeb3React } from '@web3-react/core'
+import { SupportedChainId } from 'constants/chains'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 

@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { SupportedChainId } from 'constants/chains'
 import { getChainInfo } from 'constants/chainInfo'
+import { SupportedChainId } from 'constants/chains'
 import { AlertTriangle } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 
