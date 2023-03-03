@@ -15,7 +15,6 @@ import {
   SwapWidgetSkeleton,
 } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
-import { usePermit2Enabled } from 'featureFlags/flags/permit2'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import {
   formatPercentInBasisPointsNumber,
@@ -153,8 +152,6 @@ export default function Widget({
     [initialQuoteDate, trace]
   )
 
-  const permit2Enabled = usePermit2Enabled()
-
   if (!(inputs.value.INPUT || inputs.value.OUTPUT)) {
     return <WidgetSkeleton />
   }
@@ -164,7 +161,7 @@ export default function Widget({
       <SwapWidget
         hideConnectionUI
         brandedFooter={false}
-        permit2={permit2Enabled}
+        permit2
         routerUrl={WIDGET_ROUTER_URL}
         locale={locale}
         theme={theme}

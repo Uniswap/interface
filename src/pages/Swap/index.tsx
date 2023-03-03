@@ -21,7 +21,6 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import Widget from 'components/Widget'
 import { isSupportedChain } from 'constants/chains'
-import { usePermit2Enabled } from 'featureFlags/flags/permit2'
 import { useSwapWidgetEnabled } from 'featureFlags/flags/swapWidget'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useSwapCallback } from 'hooks/useSwapCallback'
@@ -57,7 +56,6 @@ import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
-import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import useWrapCallback, { WrapErrorText, WrapType } from '../../hooks/useWrapCallback'
@@ -303,19 +301,16 @@ export default function Swap({ className }: { className?: string }) {
     currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
   )
 
-  const permit2Enabled = usePermit2Enabled()
   const maximumAmountIn = useMemo(() => {
     const maximumAmountIn = trade?.maximumAmountIn(allowedSlippage)
     return maximumAmountIn?.currency.isToken ? (maximumAmountIn as CurrencyAmount<Token>) : undefined
   }, [allowedSlippage, trade])
   const allowance = usePermit2Allowance(
-    permit2Enabled
-      ? maximumAmountIn ??
-          (parsedAmounts[Field.INPUT]?.currency.isToken
-            ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
-            : undefined)
-      : undefined,
-    permit2Enabled && chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
+    maximumAmountIn ??
+      (parsedAmounts[Field.INPUT]?.currency.isToken
+        ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
+        : undefined),
+    chainId ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
   )
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
   const [isAllowancePending, setIsAllowancePending] = useState(false)
@@ -337,16 +332,13 @@ export default function Swap({ className }: { className?: string }) {
   }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol])
 
   // check whether the user has approved the router on the input token
-  const [approvalState, approveCallback] = useApproveCallbackFromTrade(
-    permit2Enabled ? undefined : trade,
-    allowedSlippage
-  )
+  const [approvalState, approveCallback] = useApproveCallbackFromTrade(undefined, allowedSlippage)
   const transactionDeadline = useTransactionDeadline()
-  const {
-    state: signatureState,
-    signatureData,
-    gatherPermitSignature,
-  } = useERC20PermitFromTrade(permit2Enabled ? undefined : trade, allowedSlippage, transactionDeadline)
+  const { state: signatureState, gatherPermitSignature } = useERC20PermitFromTrade(
+    undefined,
+    allowedSlippage,
+    transactionDeadline
+  )
 
   const [approvalPending, setApprovalPending] = useState<boolean>(false)
   const handleApprove = useCallback(async () => {
@@ -392,11 +384,9 @@ export default function Swap({ className }: { className?: string }) {
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
 
   // the callback to execute the swap
-  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
+  const { callback: swapCallback } = useSwapCallback(
     trade,
     allowedSlippage,
-    recipient,
-    signatureData,
     allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined
   )
 
@@ -460,18 +450,9 @@ export default function Swap({ className }: { className?: string }) {
     return { priceImpactSeverity: warningSeverity(largerPriceImpact), largerPriceImpact }
   }, [stablecoinPriceImpact, trade])
 
-  const isArgentWallet = useIsArgentWallet()
-
   // show approve flow when: no error on inputs, not approved or pending, or approved in current session
   // never show if price impact is above threshold in non expert mode
-  const showApproveFlow =
-    !permit2Enabled &&
-    !isArgentWallet &&
-    !swapInputError &&
-    (approvalState === ApprovalState.NOT_APPROVED ||
-      approvalState === ApprovalState.PENDING ||
-      (approvalSubmitted && approvalState === ApprovalState.APPROVED)) &&
-    !(priceImpactSeverity > 3 && !isExpertMode)
+  const showApproveFlow = false
 
   const handleConfirmDismiss = useCallback(() => {
     setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
@@ -863,13 +844,9 @@ export default function Swap({ className }: { className?: string }) {
                         routeIsSyncing ||
                         routeIsLoading ||
                         priceImpactTooHigh ||
-                        (permit2Enabled ? allowance.state !== AllowanceState.ALLOWED : Boolean(swapCallbackError))
+                        allowance.state !== AllowanceState.ALLOWED
                       }
-                      error={
-                        isValid &&
-                        priceImpactSeverity > 2 &&
-                        (permit2Enabled ? allowance.state === AllowanceState.ALLOWED : !swapCallbackError)
-                      }
+                      error={isValid && priceImpactSeverity > 2 && allowance.state === AllowanceState.ALLOWED}
                     >
                       <Text fontSize={20} fontWeight={600}>
                         {swapInputError ? (
