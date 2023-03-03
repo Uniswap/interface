@@ -17,7 +17,23 @@ type SortedPortfolioBalances = {
   spamBalances: PortfolioBalance[]
 }
 
-/** Returns all balances indexed by checksummed currencyId for a given address */
+/**
+ * Returns all balances indexed by checksummed currencyId for a given address
+ * @param address
+ * @param shouldPoll whether query should poll
+ * NOTE:
+ *  on TokenDetails, useSingleBalance and useMultipleBalances both rely on
+ *  usePortfolioBalances but don't need polling versions of it. Including
+ *  polling was causing multiple polling intervals to be kicked off with
+ *  usePortfolioBalances.
+ *  Same with on Token Selector's TokenSearchResultList, since the home screen
+ *  has a usePortfolioBalances polling hook, we don't need to duplicate the
+ *  polling interval when token selector is open
+ * @param hideSmallBalances
+ * @param hideSpamTokens
+ * @param onCompleted
+ * @returns
+ */
 export function usePortfolioBalances(
   address: Address,
   shouldPoll?: boolean,

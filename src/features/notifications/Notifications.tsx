@@ -17,7 +17,7 @@ import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { CHAIN_INFO } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { useENS } from 'src/features/ens/useENS'
-import { closeModal, openModal } from 'src/features/modals/modalSlice'
+import { closeAllModals, closeModal, openModal } from 'src/features/modals/modalSlice'
 import { useNFT } from 'src/features/nfts/hooks'
 import BalanceUpdateDisplay from 'src/features/notifications/BalanceUpdateDisplay'
 import { NotificationToast } from 'src/features/notifications/NotificationToast'
@@ -59,7 +59,7 @@ import { buildCurrencyId } from 'src/utils/currencyId'
 
 export const NOTIFICATION_ICON_SIZE = iconSizes.icon36
 
-// Helpers to preload profile data, and dismiss swap and navigate
+// Helpers to preload profile data, and dismiss modals and navigate
 const useNavigateToProfileTab = (
   address: string | undefined
 ): {
@@ -75,8 +75,8 @@ const useNavigateToProfileTab = (
 
   const onPress = (): void => {
     if (!address) return
-    store.dispatch(closeModal({ name: ModalName.Swap }))
     navigate()
+    store.dispatch(closeAllModals())
   }
 
   return {

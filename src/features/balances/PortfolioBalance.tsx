@@ -16,6 +16,8 @@ interface PortfolioBalanceProps {
 export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element {
   const { data, loading, networkStatus } = usePortfolioBalanceQuery({
     variables: { owner },
+    // TransactionHistoryUpdater will refetch this query on new transaction.
+    // No need to be super aggressive with polling here.
     pollInterval: PollingInterval.Normal,
     notifyOnNetworkStatusChange: true,
     // This is better than using network status to check, because doing it that way we would have to wait

@@ -3,6 +3,7 @@ import { RootState } from 'src/app/rootReducer'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { ModalName } from 'src/features/telemetry/constants'
 import { TransactionState } from 'src/features/transactions/transactionState/transactionState'
+import { getKeys } from 'src/utils/objects'
 
 export interface AppModalState<T> {
   isOpen: boolean
@@ -84,11 +85,16 @@ const slice = createSlice({
       state[name].isOpen = true
       state[name].initialState = initialState
     },
-
     closeModal: (state, action: PayloadAction<{ name: keyof ModalsState }>) => {
       const { name } = action.payload
       state[name].isOpen = false
       state[name].initialState = undefined
+    },
+    closeAllModals: (state) => {
+      getKeys(state).forEach((modalName) => {
+        state[modalName].isOpen = false
+        state[modalName].initialState = undefined
+      })
     },
   },
 })
@@ -103,5 +109,5 @@ export function selectSomeModalOpen(state: RootState): boolean {
   return Object.values(state.modals).some((modalState) => modalState.isOpen)
 }
 
-export const { openModal, closeModal } = slice.actions
+export const { openModal, closeModal, closeAllModals } = slice.actions
 export const { reducer: modalsReducer } = slice

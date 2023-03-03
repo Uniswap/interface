@@ -3,6 +3,7 @@ import { useCallback, useContext } from 'react'
 import { navigate as rootNavigate } from 'src/app/navigation/rootNavigation'
 import { useAppStackNavigation, useExploreStackNavigation } from 'src/app/navigation/types'
 import { useTransactionListLazyQuery } from 'src/data/__generated__/types-and-hooks'
+import { TabIndex } from 'src/screens/HomeScreen'
 import { Screens } from 'src/screens/Screens'
 
 /**
@@ -27,7 +28,10 @@ export function useEagerActivityNavigation(): {
     [load]
   )
 
-  const navigate = useCallback(() => navigation.navigate(Screens.Home), [navigation])
+  const navigate = useCallback(
+    () => navigation.navigate(Screens.Home, { tab: TabIndex.Activity }),
+    [navigation]
+  )
 
   return { preload, navigate }
 }
