@@ -3,9 +3,10 @@ import { deepCopy } from '@ethersproject/properties'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { StaticJsonRpcProvider } from '@ethersproject/providers'
 import { isPlain } from '@reduxjs/toolkit'
+import { SupportedChainId } from 'constants/chains'
 
 import { AVERAGE_L1_BLOCK_TIME } from './chainInfo'
-import { CHAIN_IDS_TO_NAMES, SupportedChainId } from './chains'
+import { CHAIN_IDS_TO_NAMES } from './chains'
 import { RPC_URLS } from './networks'
 
 class AppJsonRpcProvider extends StaticJsonRpcProvider {
@@ -58,14 +59,10 @@ class AppJsonRpcProvider extends StaticJsonRpcProvider {
  */
 export const RPC_PROVIDERS: { [key in SupportedChainId]: StaticJsonRpcProvider } = {
   [SupportedChainId.MAINNET]: new AppJsonRpcProvider(SupportedChainId.MAINNET),
-  [SupportedChainId.RINKEBY]: new AppJsonRpcProvider(SupportedChainId.RINKEBY),
-  [SupportedChainId.ROPSTEN]: new AppJsonRpcProvider(SupportedChainId.ROPSTEN),
   [SupportedChainId.GOERLI]: new AppJsonRpcProvider(SupportedChainId.GOERLI),
-  [SupportedChainId.KOVAN]: new AppJsonRpcProvider(SupportedChainId.KOVAN),
   [SupportedChainId.OPTIMISM]: new AppJsonRpcProvider(SupportedChainId.OPTIMISM),
   [SupportedChainId.OPTIMISM_GOERLI]: new AppJsonRpcProvider(SupportedChainId.OPTIMISM_GOERLI),
   [SupportedChainId.ARBITRUM_ONE]: new AppJsonRpcProvider(SupportedChainId.ARBITRUM_ONE),
-  [SupportedChainId.ARBITRUM_RINKEBY]: new AppJsonRpcProvider(SupportedChainId.ARBITRUM_RINKEBY),
   [SupportedChainId.POLYGON]: new AppJsonRpcProvider(SupportedChainId.POLYGON),
   [SupportedChainId.POLYGON_MUMBAI]: new AppJsonRpcProvider(SupportedChainId.POLYGON_MUMBAI),
   [SupportedChainId.CELO]: new AppJsonRpcProvider(SupportedChainId.CELO),

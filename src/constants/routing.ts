@@ -1,7 +1,7 @@
 // a list of tokens by chain
 import { Currency, Token } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 
-import { SupportedChainId } from './chains'
 import {
   AMPL,
   CEUR_CELO,
@@ -122,21 +122,9 @@ export const COMMON_BASES: ChainCurrencyList = {
     WBTC,
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.MAINNET] as Token,
   ],
-  [SupportedChainId.ROPSTEN]: [
-    nativeOnChain(SupportedChainId.ROPSTEN),
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.ROPSTEN] as Token,
-  ],
-  [SupportedChainId.RINKEBY]: [
-    nativeOnChain(SupportedChainId.RINKEBY),
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.RINKEBY] as Token,
-  ],
   [SupportedChainId.GOERLI]: [
     nativeOnChain(SupportedChainId.GOERLI),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.GOERLI] as Token,
-  ],
-  [SupportedChainId.KOVAN]: [
-    nativeOnChain(SupportedChainId.KOVAN),
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.KOVAN] as Token,
   ],
   [SupportedChainId.ARBITRUM_ONE]: [
     nativeOnChain(SupportedChainId.ARBITRUM_ONE),
@@ -145,10 +133,6 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT_ARBITRUM_ONE,
     WBTC_ARBITRUM_ONE,
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.ARBITRUM_ONE] as Token,
-  ],
-  [SupportedChainId.ARBITRUM_RINKEBY]: [
-    nativeOnChain(SupportedChainId.ARBITRUM_RINKEBY),
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.ARBITRUM_RINKEBY] as Token,
   ],
   [SupportedChainId.OPTIMISM]: [
     nativeOnChain(SupportedChainId.OPTIMISM),
