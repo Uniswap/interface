@@ -1,3 +1,4 @@
+import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
 import gql from 'graphql-tag'
 import { ActivityEvent } from 'nft/types'
 import { useCallback, useMemo } from 'react'
@@ -68,13 +69,15 @@ gql`
   }
 `
 
-function useNftActivity(filter: NftActivityFilterInput, cursor?: string, limit?: number) {
-  const { data, loading, fetchMore } = useNftActivityQuery({
+export function useNftActivity(filter: NftActivityFilterInput, limit?: number, cursor?: string) {
+  const isNftGraphqlEnabled = useNftGraphqlEnabled()
+  const { data, loading, fetchMore, error } = useNftActivityQuery({
     variables: {
       filter,
       cursor,
       limit,
     },
+    skip: !isNftGraphqlEnabled,
   })
 
   const hasNext = data?.nftActivity?.pageInfo?.hasNextPage
@@ -125,5 +128,8 @@ function useNftActivity(filter: NftActivityFilterInput, cursor?: string, limit?:
     }
   })
 
-  return useMemo(() => ({ nftActivity, hasNext, loadMore, loading }), [hasNext, loadMore, loading, nftActivity])
+  return useMemo(
+    () => ({ nftActivity, hasNext, loadMore, loading, error }),
+    [hasNext, loadMore, loading, nftActivity, error]
+  )
 }
