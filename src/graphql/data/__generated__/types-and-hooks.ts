@@ -237,9 +237,7 @@ export type NftAsset = {
 export type NftAssetListingsArgs = {
   after?: InputMaybe<Scalars['String']>;
   asc?: InputMaybe<Scalars['Boolean']>;
-  before?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
 };
 
 export type NftAssetConnection = {
@@ -662,10 +660,10 @@ export type Query = {
 
 
 export type QueryNftActivityArgs = {
+  after?: InputMaybe<Scalars['String']>;
   chain?: InputMaybe<Chain>;
-  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<NftActivityFilterInput>;
-  limit?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -673,35 +671,27 @@ export type QueryNftAssetsArgs = {
   address: Scalars['String'];
   after?: InputMaybe<Scalars['String']>;
   asc?: InputMaybe<Scalars['Boolean']>;
-  before?: InputMaybe<Scalars['String']>;
   chain?: InputMaybe<Chain>;
-  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<NftAssetsFilterInput>;
   first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<NftAssetSortableField>;
 };
 
 
 export type QueryNftBalancesArgs = {
   after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
   chain?: InputMaybe<Chain>;
-  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<NftBalancesFilterInput>;
   first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
   ownerAddress: Scalars['String'];
 };
 
 
 export type QueryNftCollectionsArgs = {
+  after?: InputMaybe<Scalars['String']>;
   chain?: InputMaybe<Chain>;
-  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<NftCollectionsFilterInput>;
-  limit?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -750,10 +740,10 @@ export type QueryTokensArgs = {
 
 
 export type QueryTopCollectionsArgs = {
+  after?: InputMaybe<Scalars['String']>;
   chains?: InputMaybe<Array<Chain>>;
-  cursor?: InputMaybe<Scalars['String']>;
   duration?: InputMaybe<HistoryDuration>;
-  limit?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<CollectionSortableField>;
 };
 
@@ -1077,8 +1067,6 @@ export type AssetQueryVariables = Exact<{
   filter?: InputMaybe<NftAssetsFilterInput>;
   first?: InputMaybe<Scalars['Int']>;
   after?: InputMaybe<Scalars['String']>;
-  last?: InputMaybe<Scalars['Int']>;
-  before?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -1101,8 +1089,8 @@ export type DetailsQuery = { __typename?: 'Query', nftAssets?: { __typename?: 'N
 
 export type NftActivityQueryVariables = Exact<{
   filter?: InputMaybe<NftActivityFilterInput>;
-  cursor?: InputMaybe<Scalars['String']>;
-  limit?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
 }>;
 
 
@@ -1113,8 +1101,6 @@ export type NftBalanceQueryVariables = Exact<{
   filter?: InputMaybe<NftBalancesFilterInput>;
   first?: InputMaybe<Scalars['Int']>;
   after?: InputMaybe<Scalars['String']>;
-  last?: InputMaybe<Scalars['Int']>;
-  before?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -1597,7 +1583,7 @@ export type TrendingTokensQueryHookResult = ReturnType<typeof useTrendingTokensQ
 export type TrendingTokensLazyQueryHookResult = ReturnType<typeof useTrendingTokensLazyQuery>;
 export type TrendingTokensQueryResult = Apollo.QueryResult<TrendingTokensQuery, TrendingTokensQueryVariables>;
 export const AssetDocument = gql`
-    query Asset($address: String!, $orderBy: NftAssetSortableField, $asc: Boolean, $filter: NftAssetsFilterInput, $first: Int, $after: String, $last: Int, $before: String) {
+    query Asset($address: String!, $orderBy: NftAssetSortableField, $asc: Boolean, $filter: NftAssetsFilterInput, $first: Int, $after: String) {
   nftAssets(
     address: $address
     orderBy: $orderBy
@@ -1605,8 +1591,6 @@ export const AssetDocument = gql`
     filter: $filter
     first: $first
     after: $after
-    last: $last
-    before: $before
   ) {
     edges {
       node {
@@ -1708,8 +1692,6 @@ export const AssetDocument = gql`
  *      filter: // value for 'filter'
  *      first: // value for 'first'
  *      after: // value for 'after'
- *      last: // value for 'last'
- *      before: // value for 'before'
  *   },
  * });
  */
@@ -1948,8 +1930,8 @@ export type DetailsQueryHookResult = ReturnType<typeof useDetailsQuery>;
 export type DetailsLazyQueryHookResult = ReturnType<typeof useDetailsLazyQuery>;
 export type DetailsQueryResult = Apollo.QueryResult<DetailsQuery, DetailsQueryVariables>;
 export const NftActivityDocument = gql`
-    query NftActivity($filter: NftActivityFilterInput, $cursor: String, $limit: Int) {
-  nftActivity(filter: $filter, cursor: $cursor, limit: $limit) {
+    query NftActivity($filter: NftActivityFilterInput, $after: String, $first: Int) {
+  nftActivity(filter: $filter, after: $after, first: $first) {
     edges {
       node {
         id
@@ -2024,8 +2006,8 @@ export const NftActivityDocument = gql`
  * const { data, loading, error } = useNftActivityQuery({
  *   variables: {
  *      filter: // value for 'filter'
- *      cursor: // value for 'cursor'
- *      limit: // value for 'limit'
+ *      after: // value for 'after'
+ *      first: // value for 'first'
  *   },
  * });
  */
@@ -2041,14 +2023,12 @@ export type NftActivityQueryHookResult = ReturnType<typeof useNftActivityQuery>;
 export type NftActivityLazyQueryHookResult = ReturnType<typeof useNftActivityLazyQuery>;
 export type NftActivityQueryResult = Apollo.QueryResult<NftActivityQuery, NftActivityQueryVariables>;
 export const NftBalanceDocument = gql`
-    query NftBalance($ownerAddress: String!, $filter: NftBalancesFilterInput, $first: Int, $after: String, $last: Int, $before: String) {
+    query NftBalance($ownerAddress: String!, $filter: NftBalancesFilterInput, $first: Int, $after: String) {
   nftBalances(
     ownerAddress: $ownerAddress
     filter: $filter
     first: $first
     after: $after
-    last: $last
-    before: $before
   ) {
     edges {
       node {
@@ -2146,8 +2126,6 @@ export const NftBalanceDocument = gql`
  *      filter: // value for 'filter'
  *      first: // value for 'first'
  *      after: // value for 'after'
- *      last: // value for 'last'
- *      before: // value for 'before'
  *   },
  * });
  */
@@ -2232,7 +2210,7 @@ export type NftRouteLazyQueryHookResult = ReturnType<typeof useNftRouteLazyQuery
 export type NftRouteQueryResult = Apollo.QueryResult<NftRouteQuery, NftRouteQueryVariables>;
 export const TrendingCollectionsDocument = gql`
     query TrendingCollections($size: Int, $timePeriod: HistoryDuration) {
-  topCollections(limit: $size, duration: $timePeriod) {
+  topCollections(first: $size, duration: $timePeriod) {
     edges {
       node {
         name

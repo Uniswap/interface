@@ -7,8 +7,8 @@ import { useCallback, useMemo } from 'react'
 import { NftActivityFilterInput, useNftActivityQuery } from '../__generated__/types-and-hooks'
 
 gql`
-  query NftActivity($filter: NftActivityFilterInput, $cursor: String, $limit: Int) {
-    nftActivity(filter: $filter, cursor: $cursor, limit: $limit) {
+  query NftActivity($filter: NftActivityFilterInput, $after: String, $first: Int) {
+    nftActivity(filter: $filter, after: $after, first: $first) {
       edges {
         node {
           id
@@ -70,12 +70,12 @@ gql`
   }
 `
 
-export function useNftActivity(filter: NftActivityFilterInput, limit?: number, fetchPolicy?: WatchQueryFetchPolicy) {
+export function useNftActivity(filter: NftActivityFilterInput, first?: number, fetchPolicy?: WatchQueryFetchPolicy) {
   const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const { data, loading, fetchMore, error } = useNftActivityQuery({
     variables: {
       filter,
-      limit,
+      first,
     },
     skip: !isNftGraphqlEnabled,
     fetchPolicy,
@@ -86,7 +86,7 @@ export function useNftActivity(filter: NftActivityFilterInput, limit?: number, f
     () =>
       fetchMore({
         variables: {
-          cursor: data?.nftActivity?.pageInfo?.endCursor,
+          after: data?.nftActivity?.pageInfo?.endCursor,
         },
       }),
     [data, fetchMore]

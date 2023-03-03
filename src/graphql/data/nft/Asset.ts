@@ -22,19 +22,8 @@ gql`
     $filter: NftAssetsFilterInput
     $first: Int
     $after: String
-    $last: Int
-    $before: String
   ) {
-    nftAssets(
-      address: $address
-      orderBy: $orderBy
-      asc: $asc
-      filter: $filter
-      first: $first
-      after: $after
-      last: $last
-      before: $before
-    ) {
+    nftAssets(address: $address, orderBy: $orderBy, asc: $asc, filter: $filter, first: $first, after: $after) {
       edges {
         node {
           id
@@ -177,8 +166,6 @@ export interface AssetFetcherParams {
   filter: NftAssetsFilterInput
   first?: number
   after?: string
-  last?: number
-  before?: string
 }
 
 const defaultAssetFetcherParams: Omit<AssetQueryVariables, 'address'> = {
