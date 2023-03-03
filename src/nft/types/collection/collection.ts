@@ -83,31 +83,31 @@ export interface TokenRarity {
 }
 
 export interface TokenMetadata {
-  name: string
-  imageUrl: string
-  smallImageUrl: string
-  metadataUrl: string
-  rarity: TokenRarity
-  suspiciousFlag: boolean
-  suspiciousFlaggedBy: string
-  standard: TokenType
+  name: string //
+  imageUrl: string //
+  smallImageUrl: string //
+  metadataUrl: string //
+  rarity: TokenRarity //
+  suspiciousFlag: boolean //
+  suspiciousFlaggedBy: string //
+  standard: TokenType //
 }
 
 export interface ActivityEvent {
-  collectionAddress: string
-  tokenId?: string
-  tokenMetadata?: TokenMetadata
-  eventType: ActivityEventType
-  marketplace?: Markets
-  fromAddress: string
-  toAddress?: string
-  transactionHash?: string
-  orderHash?: string
-  orderStatus?: OrderStatus
-  price?: string
-  symbol?: string
-  quantity?: number
-  auctionType?: string
-  url?: string
-  eventTimestamp?: number
+  collectionAddress: string //
+  tokenId?: string //
+  tokenMetadata?: TokenMetadata //
+  eventType: ActivityEventType //
+  marketplace?: Markets //
+  fromAddress: string //
+  toAddress?: string //
+  transactionHash?: string //
+  orderHash?: string // remove
+  orderStatus?: OrderStatus //
+  price?: string //
+  symbol?: string // collection symbol
+  quantity?: number //
+  auctionType?: string //remove
+  url?: string //
+  eventTimestamp?: number //
 }

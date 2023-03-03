@@ -1099,6 +1099,15 @@ export type DetailsQueryVariables = Exact<{
 
 export type DetailsQuery = { __typename?: 'Query', nftAssets?: { __typename?: 'NftAssetConnection', edges: Array<{ __typename?: 'NftAssetEdge', node: { __typename?: 'NftAsset', id: string, name?: string, ownerAddress?: string, tokenId: string, description?: string, animationUrl?: string, suspiciousFlag?: boolean, metadataUrl?: string, image?: { __typename?: 'Image', url: string }, smallImage?: { __typename?: 'Image', url: string }, originalImage?: { __typename?: 'Image', url: string }, creator?: { __typename?: 'NftProfile', address: string, isVerified?: boolean, profileImage?: { __typename?: 'Image', url: string } }, collection?: { __typename?: 'NftCollection', name?: string, isVerified?: boolean, numAssets?: number, twitterName?: string, discordUrl?: string, homepageUrl?: string, description?: string, image?: { __typename?: 'Image', url: string }, nftContracts?: Array<{ __typename?: 'NftContract', address: string, standard?: NftStandard }> }, listings?: { __typename?: 'NftOrderConnection', edges: Array<{ __typename?: 'NftOrderEdge', cursor: string, node: { __typename?: 'NftOrder', address: string, createdAt: number, endAt?: number, id: string, maker: string, marketplace: NftMarketplace, marketplaceUrl: string, orderHash?: string, quantity: number, startAt: number, status: OrderStatus, taker?: string, tokenId?: string, type: OrderType, protocolParameters?: any, price: { __typename?: 'Amount', currency?: Currency, value: number } } }> }, rarities?: Array<{ __typename?: 'NftAssetRarity', provider?: NftRarityProvider, rank?: number, score?: number }>, traits?: Array<{ __typename?: 'NftAssetTrait', name?: string, value?: string }> } }> } };
 
+export type NftActivityQueryVariables = Exact<{
+  filter?: InputMaybe<NftActivityFilterInput>;
+  cursor?: InputMaybe<Scalars['String']>;
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type NftActivityQuery = { __typename?: 'Query', nftActivity?: { __typename?: 'NftActivityConnection', edges: Array<{ __typename?: 'NftActivityEdge', node: { __typename?: 'NftActivity', id: string, address: string, tokenId?: string, type: NftActivityType, marketplace?: NftMarketplace, fromAddress: string, toAddress?: string, transactionHash?: string, orderStatus?: OrderStatus, quantity?: number, url?: string, timestamp: number, asset?: { __typename?: 'NftAsset', id: string, metadataUrl?: string, name?: string, suspiciousFlag?: boolean, image?: { __typename?: 'Image', id: string, url: string }, smallImage?: { __typename?: 'Image', id: string, url: string }, rarities?: Array<{ __typename?: 'NftAssetRarity', id: string, provider?: NftRarityProvider, rank?: number, score?: number }>, nftContract?: { __typename?: 'NftContract', id: string, standard?: NftStandard }, collection?: { __typename?: 'NftCollection', id: string, image?: { __typename?: 'Image', id: string, url: string } } }, price?: { __typename?: 'Amount', id: string, value: number } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string, hasNextPage?: boolean, hasPreviousPage?: boolean, startCursor?: string } } };
+
 export type NftBalanceQueryVariables = Exact<{
   ownerAddress: Scalars['String'];
   filter?: InputMaybe<NftBalancesFilterInput>;
@@ -1938,6 +1947,99 @@ export function useDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<De
 export type DetailsQueryHookResult = ReturnType<typeof useDetailsQuery>;
 export type DetailsLazyQueryHookResult = ReturnType<typeof useDetailsLazyQuery>;
 export type DetailsQueryResult = Apollo.QueryResult<DetailsQuery, DetailsQueryVariables>;
+export const NftActivityDocument = gql`
+    query NftActivity($filter: NftActivityFilterInput, $cursor: String, $limit: Int) {
+  nftActivity(filter: $filter, cursor: $cursor, limit: $limit) {
+    edges {
+      node {
+        id
+        address
+        tokenId
+        asset {
+          id
+          metadataUrl
+          image {
+            id
+            url
+          }
+          smallImage {
+            id
+            url
+          }
+          name
+          rarities {
+            id
+            provider
+            rank
+            score
+          }
+          suspiciousFlag
+          nftContract {
+            id
+            standard
+          }
+          collection {
+            id
+            image {
+              id
+              url
+            }
+          }
+        }
+        type
+        marketplace
+        fromAddress
+        toAddress
+        transactionHash
+        price {
+          id
+          value
+        }
+        orderStatus
+        quantity
+        url
+        timestamp
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+      hasPreviousPage
+      startCursor
+    }
+  }
+}
+    `;
+
+/**
+ * __useNftActivityQuery__
+ *
+ * To run a query within a React component, call `useNftActivityQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNftActivityQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNftActivityQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      cursor: // value for 'cursor'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useNftActivityQuery(baseOptions?: Apollo.QueryHookOptions<NftActivityQuery, NftActivityQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NftActivityQuery, NftActivityQueryVariables>(NftActivityDocument, options);
+      }
+export function useNftActivityLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NftActivityQuery, NftActivityQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NftActivityQuery, NftActivityQueryVariables>(NftActivityDocument, options);
+        }
+export type NftActivityQueryHookResult = ReturnType<typeof useNftActivityQuery>;
+export type NftActivityLazyQueryHookResult = ReturnType<typeof useNftActivityLazyQuery>;
+export type NftActivityQueryResult = Apollo.QueryResult<NftActivityQuery, NftActivityQueryVariables>;
 export const NftBalanceDocument = gql`
     query NftBalance($ownerAddress: String!, $filter: NftBalancesFilterInput, $first: Int, $after: String, $last: Int, $before: String) {
   nftBalances(

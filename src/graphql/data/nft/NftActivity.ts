@@ -1,7 +1,11 @@
 import gql from 'graphql-tag'
+import { ActivityEvent } from 'nft/types'
+import { useCallback, useMemo } from 'react'
+
+import { NftActivityFilterInput, useNftActivityQuery } from '../__generated__/types-and-hooks'
 
 gql`
-  query NftActivity($filter: NftActivityFilterInput, cursor: String, limit: Int) {
+  query NftActivity($filter: NftActivityFilterInput, $cursor: String, $limit: Int) {
     nftActivity(filter: $filter, cursor: $cursor, limit: $limit) {
       edges {
         node {
@@ -44,7 +48,10 @@ gql`
           fromAddress
           toAddress
           transactionHash
-          price
+          price {
+            id
+            value
+          }
           orderStatus
           quantity
           url
@@ -60,3 +67,28 @@ gql`
     }
   }
 `
+
+function useNftActivity(filter: NftActivityFilterInput, cursor?: string, limit?: number) {
+  const { data, loading, fetchMore } = useNftActivityQuery({
+    variables: {
+      filter,
+      cursor,
+      limit,
+    },
+  })
+
+  const hasNext = data?.nftActivity?.pageInfo?.hasNextPage
+  const loadMore = useCallback(
+    () =>
+      fetchMore({
+        variables: {
+          after: data?.nftActivity?.pageInfo?.endCursor,
+        },
+      }),
+    [data?.nftActivity?.pageInfo?.endCursor, fetchMore]
+  )
+
+  const nftActivity: ActivityEvent[] = []
+
+  return useMemo(() => ({ nftActivity, hasNext, loadMore, loading }), [hasNext, loadMore, loading, nftActivity])
+}
