@@ -367,8 +367,14 @@ export default function WalletModal({
     )
   }
 
+  /**
+   * Do not show <WalletModal /> when WalletConnect connection modal is open to prevent focus issues when
+   * trying to interact with a WalletConnect modal.
+   */
+  const isPending = walletView === WALLET_VIEWS.PENDING && pendingConnector instanceof WalletConnect && !pendingError
+
   return (
-    <Modal isOpen={walletModalOpen} onDismiss={toggleWalletModal} minHeight={false} maxHeight={90}>
+    <Modal isOpen={walletModalOpen && !isPending} onDismiss={toggleWalletModal} minHeight={false} maxHeight={90}>
       <Wrapper data-testid="wallet-modal">{getModalContent()}</Wrapper>
     </Modal>
   )
