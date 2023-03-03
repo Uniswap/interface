@@ -1,4 +1,7 @@
 import { OpacityHoverState } from 'components/Common'
+import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
+import { NftActivityType } from 'graphql/data/__generated__/types-and-hooks'
+import { useNftActivity } from 'graphql/data/nft/NftActivity'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
@@ -63,6 +66,7 @@ export const reduceFilters = (state: typeof initialFilterState, action: { eventT
 const baseHref = (event: ActivityEvent) => `/#/nfts/asset/${event.collectionAddress}/${event.tokenId}?origin=activity`
 
 export const Activity = ({ contractAddress, rarityVerified, collectionName, chainId }: ActivityProps) => {
+  const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
 
   const {
@@ -102,10 +106,43 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
     }
   )
 
-  const events = useMemo(
-    () => (isSuccess ? eventsData?.pages.map((page) => page.events).flat() : null),
-    [isSuccess, eventsData]
+  const {
+    nftActivity: gqlEventsData,
+    hasNext,
+    loadMore,
+    loading,
+    error,
+  } = useNftActivity(
+    {
+      activityTypes: Object.keys(activeFilters)
+        .map((key) => key as NftActivityType)
+        .filter((key) => activeFilters[key]),
+      address: contractAddress,
+    },
+    25
   )
+
+  const { events, gatedHasNext, gatedLoadMore, gatedLoading, gatedSuccess } = useMemo(() => {
+    return {
+      events: isNftGraphqlEnabled ? gqlEventsData : eventsData?.pages.map((page) => page.events).flat(),
+      gatedHasNext: isNftGraphqlEnabled ? hasNext : hasNextPage,
+      gatedLoadMore: isNftGraphqlEnabled ? loadMore : fetchNextPage,
+      gatedLoading: isNftGraphqlEnabled ? loading : isFetchingNextPage,
+      gatedSuccess: isNftGraphqlEnabled ? !error : isSuccess,
+    }
+  }, [
+    error,
+    eventsData?.pages,
+    fetchNextPage,
+    gqlEventsData,
+    hasNext,
+    hasNextPage,
+    isFetchingNextPage,
+    isNftGraphqlEnabled,
+    isSuccess,
+    loadMore,
+    loading,
+  ])
 
   const itemsInBag = useBag((state) => state.itemsInBag)
   const addAssetsToBag = useBag((state) => state.addAssetsToBag)
@@ -147,14 +184,14 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
         <Filter eventType={ActivityEventType.Sale} />
         <Filter eventType={ActivityEventType.Transfer} />
       </Row>
-      {isLoading && <ActivityLoader />}
+      {!events?.length && !gatedSuccess && <ActivityLoader />}
       {events && (
         <Column marginTop="36">
           <HeaderRow />
           <InfiniteScroll
-            next={fetchNextPage}
-            hasMore={!!hasNextPage}
-            loader={isFetchingNextPage ? <ActivityPageLoader rowCount={2} /> : null}
+            next={gatedLoadMore}
+            hasMore={!!gatedHasNext}
+            loader={gatedLoading ? <ActivityPageLoader rowCount={2} /> : null}
             dataLength={events?.length ?? 0}
             style={{ overflow: 'unset' }}
           >

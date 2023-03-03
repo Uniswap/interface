@@ -2,6 +2,7 @@ import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/smart-order-router'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
 import { NftActivityType, NftMarketplace, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -26,7 +27,7 @@ import {
 } from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
 import { buildActivityAsset } from 'nft/utils/buildActivityAsset'
-import { formatEthPrice } from 'nft/utils/currency'
+import { formatEth, formatEthPrice } from 'nft/utils/currency'
 import { getTimeDifference, isValidDate } from 'nft/utils/date'
 import { putCommas } from 'nft/utils/putCommas'
 import { fallbackProvider, getRarityProviderLogo } from 'nft/utils/rarity'
@@ -96,9 +97,10 @@ export const BuyCell = ({
   isMobile,
   ethPriceInUSD,
 }: BuyCellProps) => {
+  const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const asset = useMemo(
-    () => buildActivityAsset(event, collectionName, ethPriceInUSD),
-    [event, collectionName, ethPriceInUSD]
+    () => buildActivityAsset(event, collectionName, ethPriceInUSD, isNftGraphqlEnabled),
+    [event, collectionName, ethPriceInUSD, isNftGraphqlEnabled]
   )
   const isSelected = useMemo(() => {
     return itemsInBag.some((item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address)
@@ -193,9 +195,15 @@ export const PriceCell = ({
   marketplace?: Markets | NftMarketplace
   price?: string | number
 }) => {
+  const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const formattedPrice = useMemo(
-    () => (price ? putCommas(formatEthPrice(price.toString()))?.toString() : null),
-    [price]
+    () =>
+      price
+        ? isNftGraphqlEnabled
+          ? formatEth(parseFloat(price?.toString()))
+          : putCommas(formatEthPrice(price.toString()))?.toString()
+        : null,
+    [isNftGraphqlEnabled, price]
   )
 
   return (
@@ -268,9 +276,15 @@ export const EventCell = ({
   price,
   isMobile,
 }: EventCellProps) => {
+  const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const formattedPrice = useMemo(
-    () => (price ? putCommas(formatEthPrice(price.toString()))?.toString() : null),
-    [price]
+    () =>
+      price
+        ? isNftGraphqlEnabled
+          ? formatEth(parseFloat(price?.toString()))
+          : putCommas(formatEthPrice(price.toString()))?.toString()
+        : null,
+    [isNftGraphqlEnabled, price]
   )
   return (
     <Column height="full" justifyContent="center" gap="4">
@@ -278,9 +292,9 @@ export const EventCell = ({
         {renderEventIcon(eventType)}
         {ActivityEventTypeDisplay[eventType]}
       </Row>
-      {eventTimestamp && isValidDate(eventTimestamp) && !isMobile && !eventOnly && (
+      {eventTimestamp && (isValidDate(eventTimestamp) || isNftGraphqlEnabled) && !isMobile && !eventOnly && (
         <Row className={styles.eventTime}>
-          {getTimeDifference(eventTimestamp.toString())}
+          {getTimeDifference(eventTimestamp.toString(), isNftGraphqlEnabled)}
           {eventTransactionHash && <ExternalLinkIcon transactionHash={eventTransactionHash} />}
         </Row>
       )}
@@ -376,6 +390,7 @@ const getItemImage = (tokenMetadata?: TokenMetadata): string | undefined => {
 export const ItemCell = ({ event, rarityVerified, collectionName, eventTimestamp, isMobile }: ItemCellProps) => {
   const [loaded, setLoaded] = useState(false)
   const [noContent, setNoContent] = useState(!getItemImage(event.tokenMetadata))
+  const isNftGraphqlEnabled = useNftGraphqlEnabled()
 
   return (
     <Row gap="16" overflow="hidden" whiteSpace="nowrap">
@@ -404,7 +419,10 @@ export const ItemCell = ({ event, rarityVerified, collectionName, eventTimestamp
             collectionName={collectionName}
           />
         )}
-        {isMobile && eventTimestamp && isValidDate(eventTimestamp) && getTimeDifference(eventTimestamp.toString())}
+        {isMobile &&
+          eventTimestamp &&
+          (isValidDate(eventTimestamp) || isNftGraphqlEnabled) &&
+          getTimeDifference(eventTimestamp.toString(), isNftGraphqlEnabled)}
       </Column>
     </Row>
   )

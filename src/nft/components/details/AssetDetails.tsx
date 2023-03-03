@@ -490,7 +490,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
           {events && events.length > 0 ? (
             <InfiniteScroll
               next={gatedLoadMore}
-              hasMore={gatedHasNext ?? false}
+              hasMore={!!gatedHasNext}
               loader={
                 gatedLoading && (
                   <Center>

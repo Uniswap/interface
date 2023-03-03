@@ -195,7 +195,7 @@ const AssetActivity = ({ events }: { events: ActivityEvent[] | undefined }) => {
                   </Link>
                 )}
               </TD>
-              <TD>{eventTimestamp && getTimeDifference(eventTimestamp.toString())}</TD>
+              <TD>{eventTimestamp && getTimeDifference(eventTimestamp.toString(), isNftGraphqlEnabled)}</TD>
             </TR>
           )
         })}

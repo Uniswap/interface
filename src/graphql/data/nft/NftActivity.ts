@@ -127,7 +127,7 @@ export function useNftActivity(filter: NftActivityFilterInput, first?: number, f
           symbol: asset?.collection?.image?.url,
           quantity: activity.quantity,
           url: activity.url,
-          eventTimestamp: activity.timestamp,
+          eventTimestamp: activity.timestamp * 1000,
         }
       }),
     [data]
