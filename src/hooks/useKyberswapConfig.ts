@@ -43,21 +43,22 @@ const parseResponse = (
     cacheRPC[defaultChainId]![rpc] = new ethers.providers.JsonRpcProvider(rpc)
   }
   const provider = cacheRPC[defaultChainId]![rpc]
+
   return {
     rpc,
-    prochart: data?.prochart ?? false,
+    prochart: data?.prochart || false,
     blockClient: isEVM(defaultChainId)
-      ? createClient(data?.blockSubgraph ?? NETWORKS_INFO[defaultChainId].defaultBlockSubgraph)
+      ? createClient(data?.blockSubgraph || NETWORKS_INFO[defaultChainId].defaultBlockSubgraph)
       : createClient(ethereumInfo.defaultBlockSubgraph),
     classicClient: isEVM(defaultChainId)
-      ? createClient(data?.classicSubgraph ?? NETWORKS_INFO[defaultChainId].classic.defaultSubgraph)
+      ? createClient(data?.classicSubgraph || NETWORKS_INFO[defaultChainId].classic.defaultSubgraph)
       : createClient(ethereumInfo.classic.defaultSubgraph),
     elasticClient: isEVM(defaultChainId)
-      ? createClient(data?.elasticSubgraph ?? NETWORKS_INFO[defaultChainId].elastic.defaultSubgraph)
+      ? createClient(data?.elasticSubgraph || NETWORKS_INFO[defaultChainId].elastic.defaultSubgraph)
       : createClient(ethereumInfo.elastic.defaultSubgraph),
     provider: isEVM(defaultChainId) ? provider : undefined,
     connection: isSolana(defaultChainId)
-      ? new Connection(data?.rpc ?? solanaInfo.defaultRpcUrl, { commitment: 'confirmed' })
+      ? new Connection(data?.rpc || solanaInfo.defaultRpcUrl, { commitment: 'confirmed' })
       : undefined,
   }
 }
