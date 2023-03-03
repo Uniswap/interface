@@ -128,7 +128,7 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
   }
 `
 
-const SubText = styled.h3`
+const SubText = styled.div`
   color: ${({ theme }) => theme.textSecondary};
   font-size: 16px;
   line-height: 24px;
