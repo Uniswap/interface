@@ -5,7 +5,6 @@ import { useTokenContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ApproveTransactionInfo, TransactionType } from 'state/transactions/types'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 export function useTokenAllowance(
   token?: Token,
@@ -48,15 +47,8 @@ export function useUpdateTokenAllowance(
       if (!contract) throw new Error('missing contract')
       if (!spender) throw new Error('missing spender')
 
-      let allowance: BigNumberish = MaxUint256.toString()
-      const estimatedGas = await contract.estimateGas.approve(spender, allowance).catch(() => {
-        // Fallback for tokens which restrict approval amounts:
-        allowance = amount.quotient.toString()
-        return contract.estimateGas.approve(spender, allowance)
-      })
-
-      const gasLimit = calculateGasMargin(estimatedGas)
-      const response = await contract.approve(spender, allowance, { gasLimit })
+      const allowance: BigNumberish = MaxUint256.toString()
+      const response = await contract.approve(spender, allowance)
       return {
         response,
         info: {
