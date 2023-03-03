@@ -71,7 +71,7 @@ interface AllowedSignatureData extends BaseSignatureData {
   allowed: true
 }
 
-export type SignatureData = StandardSignatureData | AllowedSignatureData
+type SignatureData = StandardSignatureData | AllowedSignatureData
 
 const EIP712_DOMAIN_TYPE = [
   { name: 'name', type: 'string' },
