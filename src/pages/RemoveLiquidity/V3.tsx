@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import { sendTransaction } from '@uniswap/conedison/provider/index'
 import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -35,7 +36,6 @@ import { ThemedText } from 'theme'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { TransactionType } from '../../state/transactions/types'
-import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
 import AppBody from '../AppBody'
 import { ResponsiveHeaderText, SmallMaxButton, Wrapper } from './styled'
@@ -133,34 +133,22 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       value,
     }
 
-    provider
-      .getSigner()
-      .estimateGas(txn)
-      .then((estimate) => {
-        const newTxn = {
-          ...txn,
-          gasLimit: calculateGasMargin(estimate),
-        }
-
-        return provider
-          .getSigner()
-          .sendTransaction(newTxn)
-          .then((response: TransactionResponse) => {
-            sendEvent({
-              category: 'Liquidity',
-              action: 'RemoveV3',
-              label: [liquidityValue0.currency.symbol, liquidityValue1.currency.symbol].join('/'),
-            })
-            setTxnHash(response.hash)
-            setAttemptingTxn(false)
-            addTransaction(response, {
-              type: TransactionType.REMOVE_LIQUIDITY_V3,
-              baseCurrencyId: currencyId(liquidityValue0.currency),
-              quoteCurrencyId: currencyId(liquidityValue1.currency),
-              expectedAmountBaseRaw: liquidityValue0.quotient.toString(),
-              expectedAmountQuoteRaw: liquidityValue1.quotient.toString(),
-            })
-          })
+    sendTransaction(provider, txn, 0.2)
+      .then((response: TransactionResponse) => {
+        sendEvent({
+          category: 'Liquidity',
+          action: 'RemoveV3',
+          label: [liquidityValue0.currency.symbol, liquidityValue1.currency.symbol].join('/'),
+        })
+        setTxnHash(response.hash)
+        setAttemptingTxn(false)
+        addTransaction(response, {
+          type: TransactionType.REMOVE_LIQUIDITY_V3,
+          baseCurrencyId: currencyId(liquidityValue0.currency),
+          quoteCurrencyId: currencyId(liquidityValue1.currency),
+          expectedAmountBaseRaw: liquidityValue0.quotient.toString(),
+          expectedAmountQuoteRaw: liquidityValue1.quotient.toString(),
+        })
       })
       .catch((error) => {
         setAttemptingTxn(false)
