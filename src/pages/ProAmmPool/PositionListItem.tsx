@@ -24,7 +24,6 @@ import { useProMMFarmContract } from 'hooks/useContract'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { usePool } from 'hooks/usePools'
-import { useProAmmPositionFees } from 'hooks/useProAmmPositionFees'
 import useTheme from 'hooks/useTheme'
 import { useElasticFarms } from 'state/farms/elastic/hooks'
 import { UserPositionFarm } from 'state/farms/elastic/types'
@@ -116,6 +115,9 @@ enum TAB {
 
 interface PositionListItemProps {
   positionDetails: PositionDetails | UserPositionFarm
+  rawFeeRewards: [string, string]
+  liquidityTime?: number
+  createdAt?: number
   hasUserDepositedInFarm?: boolean
   stakedLayout?: boolean
   refe?: React.MutableRefObject<any>
@@ -148,6 +150,9 @@ function PositionListItem({
   positionDetails,
   refe,
   hasActiveFarm,
+  rawFeeRewards,
+  liquidityTime,
+  createdAt,
 }: PositionListItemProps) {
   const { chainId, networkInfo } = useActiveWeb3React()
   const {
@@ -245,7 +250,8 @@ function PositionListItem({
     return undefined
   }, [liquidity, pool, tickLower, tickUpper])
 
-  const { current, last24h } = useProAmmPositionFees(positionDetails.tokenId, position, false)
+  const feeValue0 = currency0 && CurrencyAmount.fromRawAmount(currency0, rawFeeRewards[0])
+  const feeValue1 = currency1 && CurrencyAmount.fromRawAmount(currency1, rawFeeRewards[1])
 
   const stakedPosition =
     pool && hasUserDepositedInFarm
@@ -266,16 +272,11 @@ function PositionListItem({
     parseFloat(stakedPosition?.amount1.toExact() || '0') * prices[token1?.wrapped.address || '']
 
   const currentFeeValue =
-    Number(current[0]?.toExact() || '0') * prices[token0?.wrapped.address || ''] +
-    Number(current[1]?.toExact() || '0') * prices[token1?.wrapped.address || '']
-  const last24hFeeValue =
-    Number(last24h[0]?.toExact() || '0') * prices[token0?.wrapped.address || ''] +
-    Number(last24h[1]?.toExact() || '0') * prices[token1?.wrapped.address || '']
+    Number(feeValue0?.toExact() || '0') * prices[token0?.wrapped.address || ''] +
+    Number(feeValue1?.toExact() || '0') * prices[token1?.wrapped.address || '']
 
-  const positionAPR =
-    currentFeeValue && last24hFeeValue && usd && currentFeeValue > last24hFeeValue
-      ? (((currentFeeValue - last24hFeeValue) * 365 * 100) / usd).toFixed(2)
-      : '--'
+  const estimatedOneYearFee = liquidityTime && (currentFeeValue * 365 * 24 * 60 * 60) / liquidityTime
+  const positionAPR = liquidityTime && usd ? (((estimatedOneYearFee || 0) * 100) / usd).toFixed(2) : '--'
 
   const farmRewardValue = rewardTokens.reduce((usdValue, currency, index) => {
     const temp = reward24h?.[index]
@@ -334,6 +335,7 @@ function PositionListItem({
             {!stakedLayout ? (
               <ProAmmPooledTokens
                 positionAPR={positionAPR}
+                createdAt={createdAt}
                 farmAPR={farmAPR}
                 valueUSD={usd}
                 stakedUsd={stakedUsd}
@@ -381,8 +383,8 @@ function PositionListItem({
             {!stakedLayout && (
               <ProAmmFee
                 totalFeeRewardUSD={currentFeeValue}
-                feeValue0={current[0]}
-                feeValue1={current[1]}
+                feeValue0={feeValue0}
+                feeValue1={feeValue1}
                 position={position}
                 tokenId={positionDetails.tokenId}
                 layout={1}

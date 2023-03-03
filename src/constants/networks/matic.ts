@@ -61,7 +61,7 @@ const maticInfo: EVMNetworkInfo = {
     fairlaunchV2: ['0xFFD22921947D75342BFE1f8efAcEE4B8B3b5183F'],
   },
   elastic: {
-    defaultSubgraph: 'https://polygon-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-elastic-polygon',
+    defaultSubgraph: 'https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-matic',
     startBlock: 29347468,
     coreFactory: '0x5F1dddbf348aC2fbe22a163e30F99F9ECE3DD50a',
     nonfungiblePositionManager: '0x2B1c7b41f6A8F2b2bc45C3233a5d5FB3cD6dC9A8',

@@ -1,6 +1,7 @@
 import { ZERO } from '@kyberswap/ks-sdk-classic'
 import { Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
+import dayjs from 'dayjs'
 import { Text } from 'rebass'
 
 import { OutlineCard } from 'components/Card'
@@ -8,6 +9,7 @@ import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import Divider from 'components/Divider'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
+import InfoHelper from 'components/InfoHelper'
 import { RowBetween, RowFixed } from 'components/Row'
 import useTheme from 'hooks/useTheme'
 import { formatDollarAmount } from 'utils/numbers'
@@ -22,6 +24,7 @@ export default function ProAmmPooledTokens({
   title,
   pooled = false,
   positionAPR,
+  createdAt,
   farmAPR,
 }: {
   liquidityValue0: CurrencyAmount<Currency> | undefined
@@ -32,6 +35,7 @@ export default function ProAmmPooledTokens({
   title?: string
   pooled?: boolean
   positionAPR?: string
+  createdAt?: number
   farmAPR?: number
 }) {
   const theme = useTheme()
@@ -131,6 +135,12 @@ export default function ProAmmPooledTokens({
             <RowBetween>
               <Text fontSize={12} fontWeight="500" color={theme.subText}>
                 <Trans>My Pool APR</Trans>
+                {createdAt && (
+                  <InfoHelper
+                    placement="top"
+                    text={<Trans>Position has created at {dayjs(createdAt * 1000).format('YYYY-MM-DD HH:mm')}</Trans>}
+                  />
+                )}
               </Text>
               <Text fontSize={12} fontWeight="500" color={theme.apr}>
                 {positionAPR === '--' ? '--' : positionAPR + '%'}
