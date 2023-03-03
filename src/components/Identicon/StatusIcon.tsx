@@ -64,7 +64,6 @@ const Divider = styled.div`
 function UniconTooltip({ children, enabled }: PropsWithChildren<{ enabled?: boolean }>) {
   return (
     <MouseoverTooltip
-      // show={true}
       timeout={ms`3s`}
       offsetY={8}
       disableHover={!enabled}
