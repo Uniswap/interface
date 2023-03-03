@@ -21,7 +21,7 @@ export function chainIdToNetworkName(networkId: SupportedChainId): Network {
       return 'optimism'
     case SupportedChainId.POLYGON:
       return 'polygon'
-    case SupportedChainId.BSC:
+    case SupportedChainId.BNB:
       return 'binance'
     default:
       return 'ethereum'
@@ -33,7 +33,7 @@ export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MA
     case SupportedChainId.POLYGON:
     case SupportedChainId.POLYGON_MUMBAI:
       return MaticLogo
-    case SupportedChainId.BSC:
+    case SupportedChainId.BNB:
       return BnbLogo
     case SupportedChainId.CELO:
     case SupportedChainId.CELO_ALFAJORES:
@@ -49,7 +49,7 @@ function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedC
     SupportedChainId.ARBITRUM_ONE,
     SupportedChainId.MAINNET,
     SupportedChainId.OPTIMISM,
-    SupportedChainId.BSC,
+    SupportedChainId.BNB,
   ]
   if (networksWithUrls.includes(chainId)) {
     return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`

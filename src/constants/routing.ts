@@ -1,6 +1,6 @@
 // a list of tokens by chain
 import { Currency, Token } from '@uniswap/sdk-core'
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 
 import {
   AMPL,
@@ -94,8 +94,8 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDT_POLYGON,
     WETH_POLYGON,
   ],
-  [SupportedChainId.BSC]: [
-    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.BSC],
+  [SupportedChainId.BNB]: [
+    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.BNB],
     DAI_BSC,
     USDC_BSC,
     USDT_BSC,
@@ -115,7 +115,7 @@ export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: To
     [WBTC.address]: [renBTC],
     [renBTC.address]: [WBTC],
   },
-  [SupportedChainId.BSC]: {
+  [SupportedChainId.BNB]: {
     [ETH_BSC.address]: [ETH_BSC],
     [BTC_BSC.address]: [BTC_BSC],
     [FRAX_BSC.address]: [FRAX_BSC],
@@ -145,21 +145,9 @@ export const COMMON_BASES: ChainCurrencyList = {
     WBTC,
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.MAINNET] as Token,
   ],
-  [SupportedChainId.ROPSTEN]: [
-    nativeOnChain(SupportedChainId.ROPSTEN),
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.ROPSTEN] as Token,
-  ],
-  [SupportedChainId.RINKEBY]: [
-    nativeOnChain(SupportedChainId.RINKEBY),
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.RINKEBY] as Token,
-  ],
   [SupportedChainId.GOERLI]: [
     nativeOnChain(SupportedChainId.GOERLI),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.GOERLI] as Token,
-  ],
-  [SupportedChainId.KOVAN]: [
-    nativeOnChain(SupportedChainId.KOVAN),
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.KOVAN] as Token,
   ],
   [SupportedChainId.ARBITRUM_ONE]: [
     nativeOnChain(SupportedChainId.ARBITRUM_ONE),
@@ -168,10 +156,6 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT_ARBITRUM_ONE,
     WBTC_ARBITRUM_ONE,
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.ARBITRUM_ONE] as Token,
-  ],
-  [SupportedChainId.ARBITRUM_RINKEBY]: [
-    nativeOnChain(SupportedChainId.ARBITRUM_RINKEBY),
-    WRAPPED_NATIVE_CURRENCY[SupportedChainId.ARBITRUM_RINKEBY] as Token,
   ],
   [SupportedChainId.OPTIMISM]: [
     nativeOnChain(SupportedChainId.OPTIMISM),
@@ -209,8 +193,8 @@ export const COMMON_BASES: ChainCurrencyList = {
     CEUR_CELO_ALFAJORES,
   ],
 
-  [SupportedChainId.BSC]: [
-    nativeOnChain(SupportedChainId.BSC),
+  [SupportedChainId.BNB]: [
+    nativeOnChain(SupportedChainId.BNB),
     DAI_BSC,
     USDC_BSC,
     USDT_BSC,
@@ -230,8 +214,8 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
     USDT,
     WBTC,
   ],
-  [SupportedChainId.BSC]: [
-    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.BSC],
+  [SupportedChainId.BNB]: [
+    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.BNB],
     DAI_BSC,
     USDC_BSC,
     USDT_BSC,

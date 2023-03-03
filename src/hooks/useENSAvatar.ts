@@ -5,7 +5,6 @@ import { useWeb3React } from '@web3-react/core'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { useEffect, useMemo, useState } from 'react'
-import { safeNamehash } from 'utils/safeNamehash'
 
 import { isAddress } from '../utils'
 import isZero from '../utils/isZero'
@@ -29,7 +28,7 @@ export default function useENSAvatar(
 
   const addressAvatar = useAvatarFromNode(node)
   const ENSName = useENSName(address).ENSName
-  const nameAvatar = useAvatarFromNode(ENSName === null ? undefined : safeNamehash(ENSName))
+  const nameAvatar = useAvatarFromNode(ENSName === null ? undefined : namehash(ENSName))
   let avatar = addressAvatar.avatar || nameAvatar.avatar
 
   const nftAvatar = useAvatarFromNFT(avatar, enforceOwnership)

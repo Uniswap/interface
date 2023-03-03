@@ -62,7 +62,6 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.CELO]: Chain.Celo,
   [SupportedChainId.CELO_ALFAJORES]: Chain.Celo,
   [SupportedChainId.ARBITRUM_ONE]: Chain.Arbitrum,
-  [SupportedChainId.ARBITRUM_RINKEBY]: Chain.Arbitrum,
   [SupportedChainId.OPTIMISM]: Chain.Optimism,
   [SupportedChainId.OPTIMISM_GOERLI]: Chain.Optimism,
 }
@@ -91,7 +90,7 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key: string]: SupportedChainId } = {
   CELO: SupportedChainId.CELO,
   ARBITRUM: SupportedChainId.ARBITRUM_ONE,
   OPTIMISM: SupportedChainId.OPTIMISM,
-  BNB: SupportedChainId.BSC,
+  BNB: SupportedChainId.BNB,
 }
 
 export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Ethereum, Chain.Polygon, Chain.Optimism, Chain.Arbitrum, Chain.Celo]

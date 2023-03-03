@@ -1,21 +1,36 @@
-import { SupportedChainId } from '@uniswap/sdk-core'
+/**
+ * List of all the networks supported by the Uniswap Interface
+ * TODO(INFRA-90): Eventually this may be derived from sdk-core.
+ */
+export enum SupportedChainId {
+  MAINNET = 1,
+  GOERLI = 5,
+
+  ARBITRUM_ONE = 42161,
+
+  OPTIMISM = 10,
+  OPTIMISM_GOERLI = 420,
+
+  POLYGON = 137,
+  POLYGON_MUMBAI = 80001,
+
+  CELO = 42220,
+  CELO_ALFAJORES = 44787,
+
+  BNB = 56,
+}
 
 export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.MAINNET]: 'mainnet',
-  [SupportedChainId.ROPSTEN]: 'ropsten',
-  [SupportedChainId.RINKEBY]: 'rinkeby',
   [SupportedChainId.GOERLI]: 'goerli',
-  [SupportedChainId.KOVAN]: 'kovan',
   [SupportedChainId.POLYGON]: 'polygon',
   [SupportedChainId.POLYGON_MUMBAI]: 'polygon_mumbai',
   [SupportedChainId.CELO]: 'celo',
   [SupportedChainId.CELO_ALFAJORES]: 'celo_alfajores',
   [SupportedChainId.ARBITRUM_ONE]: 'arbitrum',
-  [SupportedChainId.ARBITRUM_RINKEBY]: 'arbitrum_rinkeby',
-  [SupportedChainId.ARBITRUM_GOERLI]: 'arbitrum_goerli',
   [SupportedChainId.OPTIMISM]: 'optimism',
   [SupportedChainId.OPTIMISM_GOERLI]: 'optimism_goerli',
-  [SupportedChainId.BSC]: 'bsc',
+  [SupportedChainId.BNB]: 'bnb',
 }
 
 /**
@@ -35,7 +50,7 @@ export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
   SupportedChainId.CELO,
   SupportedChainId.OPTIMISM,
   SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.BSC,
+  SupportedChainId.BNB,
 ]
 
 /**
@@ -45,16 +60,12 @@ export const UNSUPPORTED_V2POOL_CHAIN_IDS = [
   SupportedChainId.POLYGON,
   SupportedChainId.OPTIMISM,
   SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.BSC,
+  SupportedChainId.BNB,
 ]
 
 export const TESTNET_CHAIN_IDS = [
-  SupportedChainId.ROPSTEN,
-  SupportedChainId.RINKEBY,
   SupportedChainId.GOERLI,
-  SupportedChainId.KOVAN,
   SupportedChainId.POLYGON_MUMBAI,
-  SupportedChainId.ARBITRUM_RINKEBY,
   SupportedChainId.OPTIMISM_GOERLI,
 ] as const
 
@@ -65,15 +76,12 @@ export type SupportedTestnetChainId = typeof TESTNET_CHAIN_IDS[number]
  */
 export const L1_CHAIN_IDS = [
   SupportedChainId.MAINNET,
-  SupportedChainId.ROPSTEN,
-  SupportedChainId.RINKEBY,
   SupportedChainId.GOERLI,
-  SupportedChainId.KOVAN,
   SupportedChainId.POLYGON,
   SupportedChainId.POLYGON_MUMBAI,
   SupportedChainId.CELO,
   SupportedChainId.CELO_ALFAJORES,
-  SupportedChainId.BSC,
+  SupportedChainId.BNB,
 ] as const
 
 export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
@@ -84,7 +92,6 @@ export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
  */
 export const L2_CHAIN_IDS = [
   SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.ARBITRUM_RINKEBY,
   SupportedChainId.OPTIMISM,
   SupportedChainId.OPTIMISM_GOERLI,
 ] as const

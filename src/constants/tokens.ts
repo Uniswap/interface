@@ -1,5 +1,5 @@
 import { Currency, Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core'
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 import invariant from 'tiny-invariant'
 
 import { UNI_ADDRESS } from './addresses'
@@ -18,20 +18,6 @@ export const USDC_MAINNET = new Token(
   'USDC',
   'USD//C'
 )
-const USDC_ROPSTEN = new Token(
-  SupportedChainId.ROPSTEN,
-  '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
-  6,
-  'USDC',
-  'USD//C'
-)
-const USDC_RINKEBY = new Token(
-  SupportedChainId.RINKEBY,
-  '0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b',
-  6,
-  'tUSDC',
-  'test USD//C'
-)
 const USDC_GOERLI = new Token(
   SupportedChainId.GOERLI,
   '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
@@ -39,7 +25,6 @@ const USDC_GOERLI = new Token(
   'USDC',
   'USD//C'
 )
-const USDC_KOVAN = new Token(SupportedChainId.KOVAN, '0x31eeb2d0f9b6fd8642914ab10f4dd473677d80df', 6, 'USDC', 'USD//C')
 export const USDC_OPTIMISM = new Token(
   SupportedChainId.OPTIMISM,
   '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
@@ -57,13 +42,6 @@ const USDC_OPTIMISM_GOERLI = new Token(
 export const USDC_ARBITRUM = new Token(
   SupportedChainId.ARBITRUM_ONE,
   '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
-  6,
-  'USDC',
-  'USD//C'
-)
-const USDC_ARBITRUM_RINKEBY = new Token(
-  SupportedChainId.ARBITRUM_RINKEBY,
-  '0x09b98f8b2395d076514037ff7d39a091a536206c',
   6,
   'USDC',
   'USD//C'
@@ -310,7 +288,7 @@ export const CEUR_CELO_ALFAJORES = new Token(
 )
 
 export const USDC_BSC = new Token(
-  SupportedChainId.BSC,
+  SupportedChainId.BNB,
   '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
   18,
   'USDC',
@@ -318,7 +296,7 @@ export const USDC_BSC = new Token(
 )
 
 export const USDT_BSC = new Token(
-  SupportedChainId.BSC,
+  SupportedChainId.BNB,
   '0x55d398326f99059fF775485246999027B3197955',
   18,
   'USDT',
@@ -326,7 +304,7 @@ export const USDT_BSC = new Token(
 )
 
 export const ETH_BSC = new Token(
-  SupportedChainId.BSC,
+  SupportedChainId.BNB,
   '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
   18,
   'ETH',
@@ -334,7 +312,7 @@ export const ETH_BSC = new Token(
 )
 
 export const MATIC_BSC = new Token(
-  SupportedChainId.BSC,
+  SupportedChainId.BNB,
   '0xCC42724C6683B7E57334c4E856f4c9965ED682bD',
   18,
   'MATIC',
@@ -342,17 +320,17 @@ export const MATIC_BSC = new Token(
 )
 
 export const FRAX_BSC = new Token(
-  SupportedChainId.BSC,
+  SupportedChainId.BNB,
   '0x90C97F71E18723b0Cf0dfa30ee176Ab653E89F40',
   18,
   'FRAX',
   'FRAX'
 )
 
-export const BTC_BSC = new Token(SupportedChainId.BSC, '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', 18, 'BTCB', 'BTCB')
+export const BTC_BSC = new Token(SupportedChainId.BNB, '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', 18, 'BTCB', 'BTCB')
 
 export const CAKE_BSC = new Token(
-  SupportedChainId.BSC,
+  SupportedChainId.BNB,
   '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82',
   18,
   'CAKE',
@@ -360,21 +338,18 @@ export const CAKE_BSC = new Token(
 )
 
 export const BUSD_BSC = new Token(
-  SupportedChainId.BSC,
+  SupportedChainId.BNB,
   '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
   18,
   'BUSD',
   'BUSD'
 )
 
-export const DAI_BSC = new Token(SupportedChainId.BSC, '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3', 18, 'DAI', 'DAI')
+export const DAI_BSC = new Token(SupportedChainId.BNB, '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3', 18, 'DAI', 'DAI')
 
 export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
-  [SupportedChainId.RINKEBY]: new Token(SupportedChainId.RINKEBY, UNI_ADDRESS[4], 18, 'UNI', 'Uniswap'),
-  [SupportedChainId.ROPSTEN]: new Token(SupportedChainId.ROPSTEN, UNI_ADDRESS[3], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.GOERLI]: new Token(SupportedChainId.GOERLI, UNI_ADDRESS[5], 18, 'UNI', 'Uniswap'),
-  [SupportedChainId.KOVAN]: new Token(SupportedChainId.KOVAN, UNI_ADDRESS[42], 18, 'UNI', 'Uniswap'),
 }
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
@@ -396,13 +371,6 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
   [SupportedChainId.ARBITRUM_ONE]: new Token(
     SupportedChainId.ARBITRUM_ONE,
     '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-    18,
-    'WETH',
-    'Wrapped Ether'
-  ),
-  [SupportedChainId.ARBITRUM_RINKEBY]: new Token(
-    SupportedChainId.ARBITRUM_RINKEBY,
-    '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681',
     18,
     'WETH',
     'Wrapped Ether'
@@ -435,8 +403,8 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'CELO',
     'Celo native asset'
   ),
-  [SupportedChainId.BSC]: new Token(
-    SupportedChainId.BSC,
+  [SupportedChainId.BNB]: new Token(
+    SupportedChainId.BNB,
     '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
     18,
     'WBNB',
@@ -481,8 +449,8 @@ class MaticNativeCurrency extends NativeCurrency {
   }
 }
 
-function isBsc(chainId: number): chainId is SupportedChainId.BSC {
-  return chainId === SupportedChainId.BSC
+function isBsc(chainId: number): chainId is SupportedChainId.BNB {
+  return chainId === SupportedChainId.BNB
 }
 
 class BscNativeCurrency extends NativeCurrency {
@@ -538,16 +506,12 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedCha
     [SupportedChainId.MAINNET]: USDC_MAINNET.address,
     [SupportedChainId.ARBITRUM_ONE]: USDC_ARBITRUM.address,
     [SupportedChainId.OPTIMISM]: USDC_OPTIMISM.address,
-    [SupportedChainId.ARBITRUM_RINKEBY]: USDC_ARBITRUM_RINKEBY.address,
     [SupportedChainId.OPTIMISM_GOERLI]: USDC_OPTIMISM_GOERLI.address,
     [SupportedChainId.POLYGON]: USDC_POLYGON.address,
     [SupportedChainId.POLYGON_MUMBAI]: USDC_POLYGON_MUMBAI.address,
-    [SupportedChainId.BSC]: USDC_BSC.address,
+    [SupportedChainId.BNB]: USDC_BSC.address,
     [SupportedChainId.CELO]: PORTAL_USDC_CELO.address,
     [SupportedChainId.CELO_ALFAJORES]: PORTAL_USDC_CELO.address,
     [SupportedChainId.GOERLI]: USDC_GOERLI.address,
-    [SupportedChainId.RINKEBY]: USDC_RINKEBY.address,
-    [SupportedChainId.KOVAN]: USDC_KOVAN.address,
-    [SupportedChainId.ROPSTEN]: USDC_ROPSTEN.address,
   },
 }

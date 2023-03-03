@@ -5,7 +5,6 @@ import store, { AppState } from '../../state/index'
 
 const CHAIN_SUBGRAPH_URL: Record<number, string> = {
   [SupportedChainId.MAINNET]: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
-  [SupportedChainId.RINKEBY]: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
 
   [SupportedChainId.ARBITRUM_ONE]: 'https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal',
 
@@ -15,7 +14,7 @@ const CHAIN_SUBGRAPH_URL: Record<number, string> = {
 
   [SupportedChainId.CELO]: 'https://api.thegraph.com/subgraphs/name/jesse-sawa/uniswap-celo',
 
-  [SupportedChainId.BSC]: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-bsc',
+  [SupportedChainId.BNB]: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-bsc',
 }
 
 const httpLink = new HttpLink({ uri: CHAIN_SUBGRAPH_URL[SupportedChainId.MAINNET] })

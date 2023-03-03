@@ -1,4 +1,4 @@
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 
 import {
   GOVERNANCE_ALPHA_V0_ADDRESSES,
