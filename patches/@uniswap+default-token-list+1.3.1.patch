@@ -1,5 +1,5 @@
 diff --git a/node_modules/@uniswap/default-token-list/build/uniswap-default.tokenlist.json b/node_modules/@uniswap/default-token-list/build/uniswap-default.tokenlist.json
-index ff79fb0..af2eb3c 100644
+index ff79fb0..f54120a 100644
 --- a/node_modules/@uniswap/default-token-list/build/uniswap-default.tokenlist.json
 +++ b/node_modules/@uniswap/default-token-list/build/uniswap-default.tokenlist.json
 @@ -1076,6 +1076,14 @@
@@ -9,7 +9,7 @@ index ff79fb0..af2eb3c 100644
 +    },
 +    {
 +      "name": "Wrapped Ether",
-+      "address": "0x00050EA132347e85CbF9F03fd7aDCb213A0Fda46",
++      "address": "0xEEbdC6192cB8CD9E27D880Fa0dcEC11a2B407B0C",
 +      "symbol": "WETH",
 +      "decimals": 18,
 +      "chainId": 11155111,
@@ -17,3 +17,4 @@ index ff79fb0..af2eb3c 100644
      }
    ]
  }
+\ No newline at end of file
