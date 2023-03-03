@@ -301,7 +301,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   )
 
   const lastSalePrice = priceData?.events[0]?.price ?? null
-  const formattedEthprice = formatEthPrice(lastSalePrice ?? '') || 0
+  const formattedEthprice = formatEthPrice(lastSalePrice?.toString()) || 0
   const formattedPrice = lastSalePrice ? putCommas(formattedEthprice).toString() : null
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
 

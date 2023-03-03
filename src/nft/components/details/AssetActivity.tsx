@@ -153,8 +153,8 @@ const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | und
       {eventsData?.events &&
         eventsData.events.map((event, index) => {
           const { eventTimestamp, eventType, fromAddress, marketplace, price, toAddress, transactionHash } = event
-          const formattedPrice = price ? putCommas(formatEthPrice(price)).toString() : null
-
+          const formattedPrice = price ? putCommas(formatEthPrice(price.toString())).toString() : null
+          if (!eventType) return null
           return (
             <TR key={index}>
               <TD>

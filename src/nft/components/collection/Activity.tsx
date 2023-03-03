@@ -158,38 +158,41 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
             dataLength={events?.length ?? 0}
             style={{ overflow: 'unset' }}
           >
-            {events.map((event, i) => (
-              <Box as="a" data-testid="nft-activity-row" href={baseHref(event)} className={styles.eventRow} key={i}>
-                <ItemCell
-                  event={event}
-                  rarityVerified={rarityVerified}
-                  collectionName={collectionName}
-                  eventTimestamp={event.eventTimestamp}
-                  isMobile={isMobile}
-                />
-                <EventCell
-                  eventType={event.eventType}
-                  eventTimestamp={event.eventTimestamp}
-                  eventTransactionHash={event.transactionHash}
-                  price={event.price}
-                  isMobile={isMobile}
-                />
-                <PriceCell marketplace={event.marketplace} price={event.price} />
-                <AddressCell address={event.fromAddress} chainId={chainId} />
-                <AddressCell address={event.toAddress} chainId={chainId} desktopLBreakpoint />
-                <BuyCell
-                  event={event}
-                  collectionName={collectionName}
-                  selectAsset={addAssetsToBag}
-                  removeAsset={removeAssetsFromBag}
-                  itemsInBag={itemsInBag}
-                  cartExpanded={cartExpanded}
-                  toggleCart={toggleCart}
-                  isMobile={isMobile}
-                  ethPriceInUSD={ethPriceInUSD}
-                />
-              </Box>
-            ))}
+            {events.map(
+              (event, i) =>
+                event.eventType && (
+                  <Box as="a" data-testid="nft-activity-row" href={baseHref(event)} className={styles.eventRow} key={i}>
+                    <ItemCell
+                      event={event}
+                      rarityVerified={rarityVerified}
+                      collectionName={collectionName}
+                      eventTimestamp={event.eventTimestamp}
+                      isMobile={isMobile}
+                    />
+                    <EventCell
+                      eventType={event.eventType}
+                      eventTimestamp={event.eventTimestamp}
+                      eventTransactionHash={event.transactionHash}
+                      price={event.price}
+                      isMobile={isMobile}
+                    />
+                    <PriceCell marketplace={event.marketplace} price={event.price} />
+                    <AddressCell address={event.fromAddress} chainId={chainId} />
+                    <AddressCell address={event.toAddress} chainId={chainId} desktopLBreakpoint />
+                    <BuyCell
+                      event={event}
+                      collectionName={collectionName}
+                      selectAsset={addAssetsToBag}
+                      removeAsset={removeAssetsFromBag}
+                      itemsInBag={itemsInBag}
+                      cartExpanded={cartExpanded}
+                      toggleCart={toggleCart}
+                      isMobile={isMobile}
+                      ethPriceInUSD={ethPriceInUSD}
+                    />
+                  </Box>
+                )
+            )}
           </InfiniteScroll>
         </Column>
       )}

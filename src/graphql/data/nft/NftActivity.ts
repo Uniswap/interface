@@ -88,7 +88,42 @@ function useNftActivity(filter: NftActivityFilterInput, cursor?: string, limit?:
     [data?.nftActivity?.pageInfo?.endCursor, fetchMore]
   )
 
-  const nftActivity: ActivityEvent[] = []
+  const nftActivity: ActivityEvent[] | undefined = data?.nftActivity?.edges?.map((queryActivity) => {
+    const activity = queryActivity?.node
+    const asset = activity?.asset
+    return {
+      collectionAddress: activity.address,
+      tokenId: activity.tokenId,
+      tokenMetadata: {
+        name: asset?.name,
+        imageUrl: asset?.image?.url,
+        smallImageUrl: asset?.smallImage?.url,
+        metadataUrl: asset?.metadataUrl,
+        rarity: {
+          primaryProvider: 'Rarity Sniper', // TODO update when backend adds more providers
+          providers: asset?.rarities?.map((rarity) => {
+            return {
+              ...rarity,
+              provider: 'Rarity Sniper',
+            }
+          }),
+        },
+        suspiciousFlag: asset?.suspiciousFlag,
+        standard: asset?.nftContract?.standard,
+      },
+      eventType: activity.type,
+      marketplace: activity.marketplace,
+      fromAddress: activity.fromAddress,
+      toAddress: activity.toAddress,
+      transactionHash: activity.transactionHash,
+      orderStatus: activity.orderStatus,
+      price: activity.price?.value,
+      symbol: asset?.collection?.image?.url,
+      quantity: activity.quantity,
+      url: activity.url,
+      eventTimestamp: activity.timestamp,
+    }
+  })
 
   return useMemo(() => ({ nftActivity, hasNext, loadMore, loading }), [hasNext, loadMore, loading, nftActivity])
 }
