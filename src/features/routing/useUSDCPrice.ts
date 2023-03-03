@@ -4,6 +4,7 @@ import { ChainId } from 'src/constants/chains'
 import { PollingInterval } from 'src/constants/misc'
 import { USDC, USDC_ARBITRUM, USDC_GOERLI, USDC_OPTIMISM, USDC_POLYGON } from 'src/constants/tokens'
 import { useTrade } from 'src/features/transactions/swap/useTrade'
+import { areCurrencyIdsEqual, currencyId } from 'src/utils/currencyId'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
@@ -29,7 +30,9 @@ export function useUSDCPrice(
   const stablecoin = quoteAmount?.currency
 
   // avoid requesting quotes for stablecoin input
-  const currencyIsStablecoin = Boolean(stablecoin && currency?.wrapped.equals(stablecoin))
+  const currencyIsStablecoin = Boolean(
+    stablecoin && currency && areCurrencyIdsEqual(currencyId(currency), currencyId(stablecoin))
+  )
   const amountSpecified = currencyIsStablecoin ? undefined : quoteAmount
 
   const { trade } = useTrade(amountSpecified, currency, TradeType.EXACT_OUTPUT, pollingInterval)

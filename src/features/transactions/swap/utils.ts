@@ -14,6 +14,7 @@ import {
 } from 'src/features/transactions/types'
 import { areAddressesEqual } from 'src/utils/addresses'
 import {
+  areCurrencyIdsEqual,
   CurrencyId,
   currencyId,
   currencyIdToAddress,
@@ -42,9 +43,12 @@ export function getWrapType(
 
   const weth = WRAPPED_NATIVE_CURRENCY[inputCurrency.chainId as ChainId]
 
-  if (inputCurrency.isNative && outputCurrency.equals(weth)) {
+  if (inputCurrency.isNative && areCurrencyIdsEqual(currencyId(outputCurrency), currencyId(weth))) {
     return WrapType.Wrap
-  } else if (outputCurrency.isNative && inputCurrency.equals(weth)) {
+  } else if (
+    outputCurrency.isNative &&
+    areCurrencyIdsEqual(currencyId(inputCurrency), currencyId(weth))
+  ) {
     return WrapType.Unwrap
   }
 
