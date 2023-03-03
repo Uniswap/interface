@@ -68,7 +68,7 @@ export function PriceExplorer({
             <PriceTextSection loading={loading} relativeChange={data.spot?.relativeChange} />
             <Box my="spacing24">
               <LineChart height={CHART_HEIGHT}>
-                <LineChart.Path color={tokenColor} />
+                <LineChart.Path color={tokenColor} pathProps={{ isTransitionEnabled: false }} />
 
                 <LineChart.CursorLine color={tokenColor} />
                 <LineChart.CursorCrosshair

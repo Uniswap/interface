@@ -5,7 +5,6 @@ import {
   SharedValue,
   useAnimatedStyle,
   useSharedValue,
-  withTiming,
 } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -68,7 +67,7 @@ export function TimeRangeGroup({
 
   // animates slider (time range label background) on press
   const sliderStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: withTiming(BUTTON_WIDTH * currentIndex.value + BUTTON_PADDING) }],
+    transform: [{ translateX: BUTTON_WIDTH * currentIndex.value + BUTTON_PADDING }],
   }))
 
   return (
@@ -94,7 +93,7 @@ export function TimeRangeGroup({
                 previousIndex.value = currentIndex.value
                 transition.value = 0
                 currentIndex.value = index
-                transition.value = withTiming(1)
+                transition.value = 1
               }}>
               <TimeRangeLabel
                 index={index}
