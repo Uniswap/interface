@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/react'
 import { Token } from '@uniswap/sdk-core'
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 import uriToHttp from 'lib/utils/uriToHttp'
 import Vibrant from 'node-vibrant/lib/bundle.js'
 import { shade } from 'polished'

@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { SupportedChainId } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { ALL_SUPPORTED_CHAIN_IDS } from 'constants/chains'
+import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import type { ReactNode } from 'react'
 
 export const FEE_AMOUNT_DETAIL: Record<
