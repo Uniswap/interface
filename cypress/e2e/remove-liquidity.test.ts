@@ -1,12 +1,12 @@
 describe('Remove Liquidity', () => {
   it('eth remove', () => {
-    cy.visit('/remove/v2/ETH/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85') // todo: replace w/ pool address
+    cy.visit('/remove/v2/ETH/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
     cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'ETH')
     cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'UNI')
   })
 
   it('eth remove swap order', () => {
-    cy.visit('/remove/v2/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85/ETH')
+    cy.visit('/remove/v2/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/ETH')
     cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'UNI')
     cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'ETH')
   })
