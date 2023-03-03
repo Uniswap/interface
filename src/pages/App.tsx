@@ -67,7 +67,6 @@ logger.init({
   release: process.env.REACT_APP_GIT_COMMIT_HASH,
   enabled: isSentryEnabled(),
   environment: getEnvName(),
-  tracesSampleRate: 1.0, // 1.0 while testing (https://docs.sentry.io/platforms/javascript/guides/react/performance/#verify)
 })
 
 initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {
