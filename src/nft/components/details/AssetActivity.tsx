@@ -3,7 +3,7 @@ import { OpacityHoverState, ScrollBarStyles } from 'components/Common'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
 import { EventCell, MarketplaceIcon } from 'nft/components/collection/ActivityCells'
-import { ActivityEventResponse } from 'nft/types'
+import { ActivityEvent } from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
 import { formatEth, formatEthPrice } from 'nft/utils/currency'
 import { getTimeDifference } from 'nft/utils/date'
@@ -148,17 +148,17 @@ export const LoadingAssetActivity = ({ rowCount }: { rowCount: number }) => {
   )
 }
 
-const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | undefined }) => {
+const AssetActivity = ({ events }: { events: ActivityEvent[] | undefined }) => {
   const isNftGraphqlEnabled = useNftGraphqlEnabled()
   return (
     <ActivityTable>
-      {eventsData?.events &&
-        eventsData.events.map((event, index) => {
+      {events &&
+        events.map((event, index) => {
           const { eventTimestamp, eventType, fromAddress, marketplace, price, toAddress, transactionHash } = event
-          const formattedPrice = isNftGraphqlEnabled
-            ? formatEth(parseFloat(price?.toString() ?? ''))
-            : price
-            ? putCommas(formatEthPrice(price.toString())).toString()
+          const formattedPrice = price
+            ? isNftGraphqlEnabled
+              ? formatEth(parseFloat(price?.toString() ?? ''))
+              : putCommas(formatEthPrice(price.toString())).toString()
             : null
           if (!eventType) return null
           return (

@@ -1,3 +1,4 @@
+import { WatchQueryFetchPolicy } from '@apollo/client'
 import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
 import gql from 'graphql-tag'
 import { ActivityEvent } from 'nft/types'
@@ -69,15 +70,15 @@ gql`
   }
 `
 
-export function useNftActivity(filter: NftActivityFilterInput, limit?: number, cursor?: string) {
+export function useNftActivity(filter: NftActivityFilterInput, limit?: number, fetchPolicy?: WatchQueryFetchPolicy) {
   const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const { data, loading, fetchMore, error } = useNftActivityQuery({
     variables: {
       filter,
-      cursor,
       limit,
     },
     skip: !isNftGraphqlEnabled,
+    fetchPolicy,
   })
 
   const hasNext = data?.nftActivity?.pageInfo?.hasNextPage
@@ -85,48 +86,52 @@ export function useNftActivity(filter: NftActivityFilterInput, limit?: number, c
     () =>
       fetchMore({
         variables: {
-          after: data?.nftActivity?.pageInfo?.endCursor,
+          cursor: data?.nftActivity?.pageInfo?.endCursor,
         },
       }),
-    [data?.nftActivity?.pageInfo?.endCursor, fetchMore]
+    [data, fetchMore]
   )
 
-  const nftActivity: ActivityEvent[] | undefined = data?.nftActivity?.edges?.map((queryActivity) => {
-    const activity = queryActivity?.node
-    const asset = activity?.asset
-    return {
-      collectionAddress: activity.address,
-      tokenId: activity.tokenId,
-      tokenMetadata: {
-        name: asset?.name,
-        imageUrl: asset?.image?.url,
-        smallImageUrl: asset?.smallImage?.url,
-        metadataUrl: asset?.metadataUrl,
-        rarity: {
-          primaryProvider: 'Rarity Sniper', // TODO update when backend adds more providers
-          providers: asset?.rarities?.map((rarity) => {
-            return {
-              ...rarity,
-              provider: 'Rarity Sniper',
-            }
-          }),
-        },
-        suspiciousFlag: asset?.suspiciousFlag,
-        standard: asset?.nftContract?.standard,
-      },
-      eventType: activity.type,
-      marketplace: activity.marketplace,
-      fromAddress: activity.fromAddress,
-      toAddress: activity.toAddress,
-      transactionHash: activity.transactionHash,
-      orderStatus: activity.orderStatus,
-      price: activity.price?.value,
-      symbol: asset?.collection?.image?.url,
-      quantity: activity.quantity,
-      url: activity.url,
-      eventTimestamp: activity.timestamp,
-    }
-  })
+  const nftActivity: ActivityEvent[] | undefined = useMemo(
+    () =>
+      data?.nftActivity?.edges?.map((queryActivity) => {
+        const activity = queryActivity?.node
+        const asset = activity?.asset
+        return {
+          collectionAddress: activity.address,
+          tokenId: activity.tokenId,
+          tokenMetadata: {
+            name: asset?.name,
+            imageUrl: asset?.image?.url,
+            smallImageUrl: asset?.smallImage?.url,
+            metadataUrl: asset?.metadataUrl,
+            rarity: {
+              primaryProvider: 'Rarity Sniper', // TODO update when backend adds more providers
+              providers: asset?.rarities?.map((rarity) => {
+                return {
+                  ...rarity,
+                  provider: 'Rarity Sniper',
+                }
+              }),
+            },
+            suspiciousFlag: asset?.suspiciousFlag,
+            standard: asset?.nftContract?.standard,
+          },
+          eventType: activity.type,
+          marketplace: activity.marketplace,
+          fromAddress: activity.fromAddress,
+          toAddress: activity.toAddress,
+          transactionHash: activity.transactionHash,
+          orderStatus: activity.orderStatus,
+          price: activity.price?.value,
+          symbol: asset?.collection?.image?.url,
+          quantity: activity.quantity,
+          url: activity.url,
+          eventTimestamp: activity.timestamp,
+        }
+      }),
+    [data]
+  )
 
   return useMemo(
     () => ({ nftActivity, hasNext, loadMore, loading, error }),

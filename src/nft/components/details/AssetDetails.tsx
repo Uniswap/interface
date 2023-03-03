@@ -303,14 +303,18 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       refetchOnMount: false,
     }
   )
-  const { nftActivity: gqlPriceData } = useNftActivity({
-    activityTypes: [NftActivityType.Sale],
-    address: contractAddress,
-    tokenId: token_id,
-  })
+  const { nftActivity: gqlPriceData } = useNftActivity(
+    {
+      activityTypes: [NftActivityType.Sale],
+      address: contractAddress,
+      tokenId: token_id,
+    },
+    1,
+    'no-cache'
+  )
 
   // TODO simplify typecasting when removing graphql flag
-  const lastSalePrice = isNftGraphqlEnabled ? gqlPriceData?.[0].price : priceData?.events[0]?.price
+  const lastSalePrice = isNftGraphqlEnabled ? gqlPriceData?.[0]?.price : priceData?.events[0]?.price
   const formattedEthprice = isNftGraphqlEnabled
     ? formatEth(parseFloat(lastSalePrice?.toString() ?? ''))
     : formatEthPrice(lastSalePrice?.toString()) || 0
@@ -347,7 +351,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    isLoading: isActivityLoading,
+    isSuccess,
   } = useInfiniteQuery<ActivityEventResponse>(
     [
       'collectionActivity',
@@ -385,6 +389,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     hasNext,
     loadMore,
     loading,
+    error,
   } = useNftActivity(
     {
       activityTypes: Object.keys(activeFilters)
@@ -393,17 +398,19 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       address: contractAddress,
       tokenId: token_id,
     },
-    1
+    25
   )
 
-  const { events, gatedHasNext, gatedLoadMore, gatedLoading } = useMemo(() => {
+  const { events, gatedHasNext, gatedLoadMore, gatedLoading, gatedSuccess } = useMemo(() => {
     return {
       events: isNftGraphqlEnabled ? gqlEventsData : eventsData?.pages.map((page) => page.events).flat(),
       gatedHasNext: isNftGraphqlEnabled ? hasNext : hasNextPage,
       gatedLoadMore: isNftGraphqlEnabled ? loadMore : fetchNextPage,
       gatedLoading: isNftGraphqlEnabled ? loading : isFetchingNextPage,
+      gatedSuccess: isNftGraphqlEnabled ? !error : isSuccess,
     }
   }, [
+    error,
     eventsData?.pages,
     fetchNextPage,
     gqlEventsData,
@@ -411,6 +418,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     hasNextPage,
     isFetchingNextPage,
     isNftGraphqlEnabled,
+    isSuccess,
     loadMore,
     loading,
   ])
@@ -479,11 +487,10 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             <Filter eventType={ActivityEventType.Transfer} />
             <Filter eventType={ActivityEventType.CancelListing} />
           </ActivitySelectContainer>
-          {gatedLoading && <LoadingAssetActivity rowCount={10} />}
           {events && events.length > 0 ? (
             <InfiniteScroll
               next={gatedLoadMore}
-              hasMore={!!gatedHasNext}
+              hasMore={gatedHasNext ?? false}
               loader={
                 gatedLoading && (
                   <Center>
@@ -494,15 +501,17 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
               dataLength={events?.length ?? 0}
               scrollableTarget="activityContainer"
             >
-              <AssetActivity eventsData={{ events }} />
+              <AssetActivity events={events} />
             </InfiniteScroll>
           ) : (
             <>
-              {(!isActivityLoading || isNftGraphqlEnabled) && (
+              {gatedSuccess && events ? (
                 <EmptyActivitiesContainer>
                   <div>No activities yet</div>
                   <Link to={`/nfts/collection/${asset.address}`}>View collection items</Link>{' '}
                 </EmptyActivitiesContainer>
+              ) : (
+                <LoadingAssetActivity rowCount={10} />
               )}
             </>
           )}
