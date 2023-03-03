@@ -1,4 +1,4 @@
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 
 import { ALL_SUPPORTED_CHAIN_IDS } from './chains'
 
