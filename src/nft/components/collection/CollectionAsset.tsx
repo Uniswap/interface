@@ -4,10 +4,10 @@ import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { useBag } from 'nft/hooks'
 import { GenieAsset, UniformAspectRatio } from 'nft/types'
 import { formatWeiToDecimal } from 'nft/utils'
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useMemo } from 'react'
 
-import { useAssetMediaType, useNotForSale } from './Card'
-import { AssetMediaType } from './Card'
+import { NftCard, NftCardDisplayProps } from '../card'
+import { useNotForSale } from './Card'
 import * as Card from './Card'
 
 interface CollectionAssetProps {
@@ -22,8 +22,6 @@ interface CollectionAssetProps {
   setRenderedHeight: (renderedHeight: number | undefined) => void
 }
 
-const TOOLTIP_TIMEOUT = 2000
-
 export const CollectionAsset = ({
   asset,
   isMobile,
@@ -37,7 +35,6 @@ export const CollectionAsset = ({
   const bagManuallyClosed = useBag((state) => state.bagManuallyClosed)
   const addAssetsToBag = useBag((state) => state.addAssetsToBag)
   const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
-  const usedSweep = useBag((state) => state.usedSweep)
   const itemsInBag = useBag((state) => state.itemsInBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
   const setBagExpanded = useBag((state) => state.setBagExpanded)
@@ -54,10 +51,7 @@ export const CollectionAsset = ({
     }
   }, [asset, itemsInBag])
 
-  const isSelectedRef = useRef(isSelected)
-
   const notForSale = useNotForSale(asset)
-  const assetMediaType = useAssetMediaType(asset)
 
   const provider = useMemo(() => {
     return asset?.rarity?.providers?.find(({ provider: _provider }) => _provider === asset.rarity?.primaryProvider)
@@ -82,65 +76,32 @@ export const CollectionAsset = ({
     removeAssetsFromBag([asset])
   }, [asset, removeAssetsFromBag])
 
+  const display: NftCardDisplayProps = useMemo(() => {
+    return {
+      primaryInfo: asset.name ? asset.name : `#${asset.tokenId}`,
+      primaryInfoExtra: asset.susFlag ? <Card.Suspicious /> : undefined,
+      primaryInfoRight: asset.rarity && provider ? <Card.Ranking provider={provider} /> : undefined,
+      secondaryInfo: notForSale ? '' : `${formatWeiToDecimal(asset.priceInfo.ETHPrice, true)} ETH`,
+      selectedInfo: 'Remove from bag',
+      notSelectedInfo: 'Add to bag',
+    }
+  }, [asset.name, asset.priceInfo.ETHPrice, asset.rarity, asset.susFlag, asset.tokenId, notForSale, provider])
+
   return (
-    <Card.Container
+    <NftCard
       asset={asset}
-      selected={isSelected}
+      display={display}
+      isSelected={isSelected}
+      isDisabled={Boolean(asset.notForSale)}
       addAssetToBag={handleAddAssetToBag}
       removeAssetFromBag={handleRemoveAssetFromBag}
-      isDisabled={asset.notForSale}
-      data-testid="nft-collection-asset"
-    >
-      <Card.ImageContainer>
-        <Card.MarketplaceContainer />
-        {assetMediaType === AssetMediaType.Image ? (
-          <Card.Image
-            uniformAspectRatio={uniformAspectRatio}
-            setUniformAspectRatio={setUniformAspectRatio}
-            renderedHeight={renderedHeight}
-            setRenderedHeight={setRenderedHeight}
-          />
-        ) : assetMediaType === AssetMediaType.Video ? (
-          <Card.Video
-            shouldPlay={mediaShouldBePlaying}
-            setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-            uniformAspectRatio={uniformAspectRatio}
-            setUniformAspectRatio={setUniformAspectRatio}
-            renderedHeight={renderedHeight}
-            setRenderedHeight={setRenderedHeight}
-          />
-        ) : (
-          <Card.Audio
-            shouldPlay={mediaShouldBePlaying}
-            setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-            uniformAspectRatio={uniformAspectRatio}
-            setUniformAspectRatio={setUniformAspectRatio}
-            renderedHeight={renderedHeight}
-            setRenderedHeight={setRenderedHeight}
-          />
-        )}
-      </Card.ImageContainer>
-      <Card.DetailsContainer>
-        <Card.InfoContainer>
-          <Card.PrimaryRow>
-            <Card.PrimaryDetails>
-              <Card.PrimaryInfo>{asset.name ? asset.name : `#${asset.tokenId}`}</Card.PrimaryInfo>
-              {asset.susFlag && <Card.Suspicious />}
-            </Card.PrimaryDetails>
-            {asset.rarity && provider && <Card.Ranking provider={provider} />}
-          </Card.PrimaryRow>
-          <Card.SecondaryRow>
-            <Card.SecondaryDetails>
-              <Card.SecondaryInfo>
-                {notForSale ? '' : `${formatWeiToDecimal(asset.priceInfo.ETHPrice, true)} ETH`}
-              </Card.SecondaryInfo>
-            </Card.SecondaryDetails>
-          </Card.SecondaryRow>
-        </Card.InfoContainer>
-        <Card.TertiaryInfoContainer>
-          <Card.ActionButton>{isSelected ? `Remove from bag` : `Add to bag`}</Card.ActionButton>
-        </Card.TertiaryInfoContainer>
-      </Card.DetailsContainer>
-    </Card.Container>
+      mediaShouldBePlaying={mediaShouldBePlaying}
+      uniformAspectRatio={uniformAspectRatio}
+      setUniformAspectRatio={setUniformAspectRatio}
+      renderedHeight={renderedHeight}
+      setRenderedHeight={setRenderedHeight}
+      setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+      testId="nft-collection-asset"
+    />
   )
 }

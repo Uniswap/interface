@@ -1,4 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { t, Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
@@ -9,85 +8,20 @@ import {
   Nft20Icon,
   NftXIcon,
   OpenSeaMarketplaceIcon,
-  PauseButtonIcon,
-  PlayButtonIcon,
   ProfileSelectedAssetIcon,
   SudoSwapIcon,
   X2y2Icon,
 } from 'nft/components/icons'
-import { useIsMobile } from 'nft/hooks'
-import { GenieAsset, Markets, UniformAspectRatio, UniformAspectRatios, WalletAsset } from 'nft/types'
-import { getAssetHref, isAudio, isVideo, putCommas } from 'nft/utils'
-import {
-  createContext,
-  MouseEvent,
-  ReactNode,
-  useCallback,
-  useContext,
-  useMemo,
-  useReducer,
-  useRef,
-  useState,
-} from 'react'
+import { Markets, UniformAspectRatio, UniformAspectRatios } from 'nft/types'
+import { putCommas } from 'nft/utils'
+import { ReactNode, useEffect, useRef, useState } from 'react'
 import { AlertTriangle, Pause, Play } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 import { colors } from 'theme/colors'
 
-export interface CardContextProps {
-  asset: GenieAsset | WalletAsset
-  hovered: boolean
-  isDisabled: boolean
-  selected: boolean
-  href: string
-  setHref: (href: string) => void
-  addAssetToBag: () => void
-  removeAssetFromBag: () => void
-  clickActionButton: (e: MouseEvent) => void
-}
-
-const CardContext = createContext<CardContextProps | undefined>(undefined)
-
 const BORDER_RADIUS = '12'
-
-const useCardContext = () => {
-  const context = useContext(CardContext)
-  if (!context) throw new Error('Must use context inside of provider')
-  return context
-}
-
-export enum AssetMediaType {
-  Image,
-  Video,
-  Audio,
-}
-
-const useNotForSale = (asset: GenieAsset) =>
-  useMemo(() => {
-    let notForSale = true
-    notForSale = asset.notForSale || BigNumber.from(asset.priceInfo ? asset.priceInfo.ETHPrice : 0).lt(0)
-    return notForSale
-  }, [asset])
-
-const useAssetMediaType = (asset: GenieAsset | WalletAsset) =>
-  useMemo(() => {
-    let assetMediaType = AssetMediaType.Image
-    if (asset.animationUrl) {
-      if (isAudio(asset.animationUrl)) {
-        assetMediaType = AssetMediaType.Audio
-      } else if (isVideo(asset.animationUrl)) {
-        assetMediaType = AssetMediaType.Video
-      }
-    }
-    return assetMediaType
-  }, [asset])
-
-const baseHref = (asset: GenieAsset | WalletAsset) => {
-  if ('address' in asset) return `/#/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection`
-  if ('asset_contract' in asset) return `/#/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=profile`
-  return '/#/nfts/profile'
-}
 
 const SuspiciousIcon = styled(AlertTriangle)`
   width: 16px;
@@ -125,10 +59,19 @@ const StyledActionButton = styled(ThemedText.BodySmall)<{ selected: boolean; isD
   }
 `
 
-const ActionButton = ({ children }: { children: ReactNode }) => {
-  const { clickActionButton, selected, isDisabled } = useCardContext()
+const ActionButton = ({
+  isDisabled,
+  isSelected,
+  clickActionButton,
+  children,
+}: {
+  isDisabled: boolean
+  isSelected: boolean
+  clickActionButton: (e: React.MouseEvent) => void
+  children: ReactNode
+}) => {
   return (
-    <StyledActionButton selected={selected} isDisabled={isDisabled} onClick={clickActionButton}>
+    <StyledActionButton selected={isSelected} isDisabled={isDisabled} onClick={clickActionButton}>
       {children}
     </StyledActionButton>
   )
@@ -173,10 +116,17 @@ const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean 
   }
 `
 
-const CardContainer = ({ children }: { children: ReactNode }) => {
-  const { selected, isDisabled } = useCardContext()
+const CardContainer = ({
+  isSelected,
+  isDisabled,
+  children,
+}: {
+  isSelected: boolean
+  isDisabled: boolean
+  children: ReactNode
+}) => {
   return (
-    <StyledCardContainer selected={selected} isDisabled={isDisabled} draggable={false}>
+    <StyledCardContainer selected={isSelected} isDisabled={isDisabled} draggable={false}>
       {children}
     </StyledCardContainer>
   )
@@ -186,81 +136,27 @@ const StyledLink = styled(Link)`
   text-decoration: none;
 `
 
-interface CardProps {
-  asset: GenieAsset | WalletAsset
-  selected: boolean
-  addAssetToBag: () => void
-  removeAssetFromBag: () => void
-  children: ReactNode
-  isDisabled?: boolean
-  onClick?: () => void
-  doNotLinkToDetails?: boolean
-}
-
 const Container = ({
-  asset,
-  selected,
-  addAssetToBag,
-  removeAssetFromBag,
-  children,
+  isSelected,
   isDisabled,
-  onClick,
+  detailsHref,
   doNotLinkToDetails = false,
-}: CardProps) => {
-  const [hovered, toggleHovered] = useReducer((s) => !s, false)
-  const [href, setHref] = useState(baseHref(asset))
-
-  const clickActionButton = useCallback(
-    (e: MouseEvent) => {
-      e.stopPropagation()
-      e.preventDefault()
-
-      if (isDisabled) {
-        return
-      }
-
-      if (onClick) {
-        onClick()
-        return
-      }
-
-      if (selected) {
-        removeAssetFromBag()
-        return
-      }
-
-      addAssetToBag()
-    },
-    [addAssetToBag, isDisabled, onClick, removeAssetFromBag, selected]
-  )
-
-  const providerValue = useMemo(
-    () => ({
-      asset,
-      selected,
-      hovered,
-      isDisabled: Boolean(isDisabled),
-      toggleHovered,
-      href,
-      setHref,
-      addAssetToBag,
-      removeAssetFromBag,
-      clickActionButton,
-    }),
-    [asset, selected, hovered, isDisabled, href, addAssetToBag, removeAssetFromBag, clickActionButton]
-  )
-
+  children,
+}: {
+  isSelected: boolean
+  isDisabled: boolean
+  detailsHref: string
+  doNotLinkToDetails: boolean
+  children: ReactNode
+}) => {
   return (
-    <CardContext.Provider value={providerValue}>
-      <CardContainer>
-        <StyledLink to={doNotLinkToDetails ? '' : getAssetHref(asset)}>{children}</StyledLink>
-      </CardContainer>
-    </CardContext.Provider>
+    <CardContainer isSelected={isSelected} isDisabled={isDisabled}>
+      <StyledLink to={doNotLinkToDetails ? '' : detailsHref}>{children}</StyledLink>
+    </CardContainer>
   )
 }
 
-const ImageContainer = ({ children }: { children: ReactNode }) => {
-  const { isDisabled } = useCardContext()
+const ImageContainer = ({ isDisabled, children }: { isDisabled: boolean; children: ReactNode }) => {
   return <StyledImageContainer isDisabled={isDisabled}>{children}</StyledImageContainer>
 }
 
@@ -308,6 +204,7 @@ function getMediaAspectRatio(
 }
 
 interface ImageProps {
+  src?: string
   uniformAspectRatio?: UniformAspectRatio
   setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
   renderedHeight?: number
@@ -340,13 +237,13 @@ const StyledImage = styled.img<{
 `
 
 const Image = ({
+  src,
   uniformAspectRatio = UniformAspectRatios.square,
   setUniformAspectRatio,
   renderedHeight,
   setRenderedHeight,
 }: ImageProps) => {
-  const { asset } = useCardContext()
-  const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
+  const [noContent, setNoContent] = useState(!src)
   const [loaded, setLoaded] = useState(false)
 
   if (noContent) {
@@ -356,7 +253,7 @@ const Image = ({
   return (
     <StyledMediaContainer>
       <StyledImage
-        src={asset.imageUrl || asset.smallImageUrl}
+        src={src}
         $aspectRatio={getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}
         imageLoading={!loaded}
         draggable={false}
@@ -371,17 +268,29 @@ const Image = ({
 }
 
 interface MediaProps {
+  mediaSrc?: string
+  tokenId?: string
   shouldPlay: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }
 
-const PlaybackButton = styled.div`
+const PlaybackButton = styled.div<{ pauseButton?: boolean }>`
+  display: ${({ pauseButton }) => (pauseButton ? 'block' : 'none')};
+  color: ${({ theme }) => theme.accentTextLightPrimary};
   position: absolute;
   height: 40px;
   width: 40px;
   z-index: 1;
   margin-left: calc(100% - 50px);
   transform: translateY(-56px);
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    display: block;
+  }
+
+  ${StyledImageContainer}:hover & {
+    display: block;
+  }
 `
 
 const StyledVideo = styled.video<{
@@ -398,6 +307,9 @@ const StyledInnerMediaContainer = styled(Row)`
 `
 
 const Video = ({
+  src,
+  mediaSrc,
+  tokenId,
   uniformAspectRatio = UniformAspectRatios.square,
   setUniformAspectRatio,
   renderedHeight,
@@ -406,16 +318,18 @@ const Video = ({
   setCurrentTokenPlayingMedia,
 }: MediaProps & ImageProps) => {
   const vidRef = useRef<HTMLVideoElement>(null)
-  const { hovered, asset } = useCardContext()
-  const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
+  const [noContent, setNoContent] = useState(!src)
   const [imageLoaded, setImageLoaded] = useState(false)
-  const isMobile = useIsMobile()
 
-  if (shouldPlay) {
-    vidRef.current?.play()
-  } else {
-    vidRef.current?.pause()
-  }
+  useEffect(() => {
+    if (shouldPlay && vidRef.current) {
+      vidRef.current.play()
+    } else if (!shouldPlay && vidRef.current) {
+      vidRef.current.pause()
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shouldPlay, vidRef.current])
 
   if (noContent) {
     return <NoContentContainer height={getHeightFromAspectRatio(uniformAspectRatio, renderedHeight)} />
@@ -425,8 +339,7 @@ const Video = ({
     <>
       <StyledMediaContainer>
         <StyledImage
-          src={asset.imageUrl || asset.smallImageUrl}
-          alt={asset.name || asset.tokenId}
+          src={src}
           $aspectRatio={getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}
           imageLoading={!imageLoaded}
           draggable={false}
@@ -440,7 +353,7 @@ const Video = ({
       </StyledMediaContainer>
       {shouldPlay ? (
         <>
-          <PlaybackButton>
+          <PlaybackButton pauseButton={true}>
             <Pause
               size="24px"
               onClick={(e) => {
@@ -461,22 +374,20 @@ const Video = ({
               loop
               playsInline
             >
-              <source src={asset.animationUrl} />
+              <source src={mediaSrc} />
             </StyledVideo>
           </StyledInnerMediaContainer>
         </>
       ) : (
         <PlaybackButton>
-          {((!isMobile && hovered) || isMobile) && (
-            <Play
-              size="24px"
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                setCurrentTokenPlayingMedia(asset.tokenId)
-              }}
-            />
-          )}
+          <Play
+            size="24px"
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              setCurrentTokenPlayingMedia(tokenId)
+            }}
+          />
         </PlaybackButton>
       )}
     </>
@@ -489,6 +400,9 @@ const StyledAudio = styled.audio`
 `
 
 const Audio = ({
+  src,
+  mediaSrc,
+  tokenId,
   uniformAspectRatio = UniformAspectRatios.square,
   setUniformAspectRatio,
   renderedHeight,
@@ -497,16 +411,18 @@ const Audio = ({
   setCurrentTokenPlayingMedia,
 }: MediaProps & ImageProps) => {
   const audRef = useRef<HTMLAudioElement>(null)
-  const { hovered, asset } = useCardContext()
-  const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
+  const [noContent, setNoContent] = useState(!src)
   const [imageLoaded, setImageLoaded] = useState(false)
-  const isMobile = useIsMobile()
 
-  if (shouldPlay) {
-    audRef.current?.play()
-  } else {
-    audRef.current?.pause()
-  }
+  useEffect(() => {
+    if (shouldPlay && audRef.current) {
+      audRef.current.play()
+    } else if (!shouldPlay && audRef.current) {
+      audRef.current.pause()
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shouldPlay, audRef.current])
 
   if (noContent) {
     return <NoContentContainer height={getHeightFromAspectRatio(uniformAspectRatio, renderedHeight)} />
@@ -516,8 +432,7 @@ const Audio = ({
     <>
       <StyledMediaContainer>
         <StyledImage
-          src={asset.imageUrl || asset.smallImageUrl}
-          alt={asset.name || asset.tokenId}
+          src={src}
           $aspectRatio={getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}
           imageLoading={!imageLoaded}
           draggable={false}
@@ -531,10 +446,9 @@ const Audio = ({
       </StyledMediaContainer>
       {shouldPlay ? (
         <>
-          <PlaybackButton>
-            <PauseButtonIcon
-              width="100%"
-              height="100%"
+          <PlaybackButton pauseButton={true}>
+            <Pause
+              size="24px"
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
@@ -550,23 +464,20 @@ const Audio = ({
                 setCurrentTokenPlayingMedia(undefined)
               }}
             >
-              <source src={asset.animationUrl} />
+              <source src={mediaSrc} />
             </StyledAudio>
           </StyledInnerMediaContainer>
         </>
       ) : (
         <PlaybackButton>
-          {((!isMobile && hovered) || isMobile) && (
-            <PlayButtonIcon
-              width="100%"
-              height="100%"
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                setCurrentTokenPlayingMedia(asset.tokenId)
-              }}
-            />
-          )}
+          <Play
+            size="24px"
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              setCurrentTokenPlayingMedia(tokenId)
+            }}
+          />
         </PlaybackButton>
       )}
     </>
@@ -754,11 +665,17 @@ function getMarketplaceIcon(market: Markets): ReactNode {
   }
 }
 
-const MarketplaceContainer = () => {
-  const { asset, selected } = useCardContext()
-
-  if (selected) {
-    if (!('marketplace' in asset)) {
+const MarketplaceContainer = ({
+  isSelected,
+  marketplace,
+  tokenType,
+}: {
+  isSelected: boolean
+  marketplace?: Markets
+  tokenType?: NftStandard
+}) => {
+  if (isSelected) {
+    if (!marketplace) {
       return (
         <StyledMarketplaceContainer>
           <ProfileSelectedAssetIcon />
@@ -773,15 +690,15 @@ const MarketplaceContainer = () => {
     )
   }
 
-  if (!('marketplace' in asset) || !asset.marketplace) {
+  if (!marketplace) {
     return null
   }
 
-  if (asset.tokenType === NftStandard.Erc1155) {
+  if (!tokenType || tokenType === NftStandard.Erc1155) {
     return null
   }
 
-  return <StyledMarketplaceContainer>{getMarketplaceIcon(asset.marketplace)}</StyledMarketplaceContainer>
+  return <StyledMarketplaceContainer>{getMarketplaceIcon(marketplace)}</StyledMarketplaceContainer>
 }
 
 const NoContentContainerBackground = styled.div<{ height?: number }>`
@@ -834,7 +751,5 @@ export {
   Suspicious,
   TertiaryInfo,
   TertiaryInfoContainer,
-  useAssetMediaType,
-  useNotForSale,
   Video,
 }
