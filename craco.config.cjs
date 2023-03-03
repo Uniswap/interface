@@ -22,7 +22,7 @@ module.exports = {
   },
   webpack: {
     plugins: [
-      new VanillaExtractPlugin(),
+      new VanillaExtractPlugin({ identifiers: 'short' }),
       new DefinePlugin({
         'process.env.REACT_APP_GIT_COMMIT_HASH': JSON.stringify(commitHash.toString()),
       }),
