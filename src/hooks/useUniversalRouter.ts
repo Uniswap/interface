@@ -10,7 +10,6 @@ import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
 import isZero from 'utils/isZero'
 import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
@@ -52,17 +51,18 @@ export function useUniversalRouterSwapCallback(
         ...(value && !isZero(value) ? { value: toHex(value) } : {}),
       }
 
-      let gasEstimate: BigNumber
-      try {
-        gasEstimate = await provider.estimateGas(tx)
-      } catch (gasError) {
-        console.warn(gasError)
-        throw new Error('Your swap is expected to fail')
-      }
-      const gasLimit = calculateGasMargin(gasEstimate)
+      // let gasEstimate: BigNumber
+      // try {
+      //   gasEstimate = await provider.estimateGas(tx)
+      // } catch (gasError) {
+      //   console.warn(gasError)
+      //   throw new Error('Your swap is expected to fail')
+      // }
+      // const gasLimit = calculateGasMargin(gasEstimate)
       const response = await provider
         .getSigner()
-        .sendTransaction({ ...tx, gasLimit })
+        .sendTransaction(tx)
+        // .sendTransaction({ ...tx, gasLimit })
         .then((response) => {
           sendAnalyticsEvent(
             SwapEventName.SWAP_SIGNED,
