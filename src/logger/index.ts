@@ -1,17 +1,43 @@
 import * as Sentry from '@sentry/react'
 import { BrowserTracing } from '@sentry/tracing'
+import { Primitive, Transaction } from '@sentry/types'
 
 export { ErrorBoundary } from '@sentry/react'
 
 export type SeverityLevel = 'fatal' | 'error' | 'warning' | 'log' | 'info' | 'debug'
 
-export function init(options: Sentry.BrowserOptions) {
+export function init(options: Omit<Sentry.BrowserOptions, 'integrations'>) {
   return Sentry.init({
-    // Tracing configuration
-    integrations: [new BrowserTracing()],
-    tracesSampleRate: 1.0, // 1.0 while testing (https://docs.sentry.io/platforms/javascript/guides/react/performance/#verify)
     ...options,
+    integrations: [
+      new BrowserTracing({
+        startTransactionOnLocationChange: false,
+        startTransactionOnPageLoad: true,
+      }),
+    ],
   })
+}
+
+export async function time<T>(
+  name: string,
+  callback: (transaction: Transaction) => Promise<T>,
+  tags?: Record<string, Primitive>,
+  data?: Record<string, any>
+): Promise<T> {
+  const tx = Sentry.startTransaction({ name, tags, data })
+
+  try {
+    return await callback(tx)
+  } catch (error: unknown) {
+    if (error) {
+      tx.setStatus((error as object).toString())
+    } else {
+      tx.setStatus('unknown_error')
+    }
+    throw error
+  } finally {
+    tx.finish()
+  }
 }
 
 export function log(message: string, severity: Sentry.SeverityLevel) {

@@ -3,6 +3,7 @@ import { Protocol } from '@uniswap/router-sdk'
 import { AlphaRouter, ChainId } from '@uniswap/smart-order-router'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { getClientSideQuote, toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
+import { time } from 'logger'
 import ms from 'ms.macro'
 import qs from 'qs'
 
@@ -106,12 +107,14 @@ export const routingApi = createApi({
             result = await fetch(`quote?${query}`)
           } else {
             const router = getRouter(args.tokenInChainId)
-            result = await getClientSideQuote(
-              args,
-              router,
-              // TODO(zzmp): Use PRICE_PARAMS for RouterPreference.PRICE.
-              // This change is intentionally being deferred to first see what effect router caching has.
-              CLIENT_PARAMS
+            result = await time('quote:price', () =>
+              getClientSideQuote(
+                args,
+                router,
+                // TODO(zzmp): Use PRICE_PARAMS for RouterPreference.PRICE.
+                // This change is intentionally being deferred to first see what effect router caching has.
+                CLIENT_PARAMS
+              )
             )
           }
 

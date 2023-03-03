@@ -23,7 +23,7 @@ import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { getEnvName, isProductionEnv, isSentryEnabled } from 'utils/env'
+import { getEnvName, isDevelopmentEnv, isProductionEnv, isSentryEnabled } from 'utils/env'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
@@ -65,8 +65,9 @@ const STATSIG_DUMMY_KEY = 'client-0000000000000000000000000000000000000000000'
 logger.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
   release: process.env.REACT_APP_GIT_COMMIT_HASH,
-  enabled: isSentryEnabled(),
   environment: getEnvName(),
+  enabled: isSentryEnabled(),
+  tracesSampleRate: isDevelopmentEnv() ? 1.0 : 0.00003,
 })
 
 initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {
