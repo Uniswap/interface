@@ -1,13 +1,13 @@
 import { Trans } from '@lingui/macro'
-import * as Sentry from '@sentry/react'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { AutoColumn, ColumnCenter } from 'components/Column'
 import Loader from 'components/Loader'
 import { format } from 'd3'
 import { useColor } from 'hooks/useColor'
+import * as logger from 'logger'
 import { saturate } from 'polished'
-import React, { ReactNode, useCallback, useMemo } from 'react'
+import React, { ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { BarChart2, CloudOff, Inbox } from 'react-feather'
 import { batch } from 'react-redux'
 import { Bound } from 'state/mint/v3/actions'
@@ -100,6 +100,7 @@ export default function LiquidityChartRangeInput({
     currencyB,
     feeAmount,
   })
+  useEffect(() => logger.log(error.toString(), 'warning'), [error])
 
   const onBrushDomainChangeEnded = useCallback(
     (domain: [number, number], mode: string | undefined) => {
@@ -155,10 +156,6 @@ export default function LiquidityChartRangeInput({
     },
     [isSorted, price, ticksAtLimit]
   )
-
-  if (error) {
-    Sentry.captureMessage(error.toString(), 'log')
-  }
 
   const isUninitialized = !currencyA || !currencyB || (formattedData === undefined && !isLoading)
 

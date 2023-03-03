@@ -4,11 +4,11 @@ import 'polyfills'
 import 'components/analytics'
 
 import { ApolloProvider } from '@apollo/client'
-import * as Sentry from '@sentry/react'
 import { FeatureFlagsProvider } from 'featureFlags'
 import { apolloClient } from 'graphql/data/apollo'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
+import * as logger from 'logger'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -34,7 +34,7 @@ if (window.ethereum) {
 }
 
 if (isSentryEnabled()) {
-  Sentry.init({
+  logger.init({
     dsn: process.env.REACT_APP_SENTRY_DSN,
     release: process.env.REACT_APP_GIT_COMMIT_HASH,
   })

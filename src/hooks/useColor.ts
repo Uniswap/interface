@@ -1,7 +1,7 @@
-import * as Sentry from '@sentry/react'
 import { Token } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import uriToHttp from 'lib/utils/uriToHttp'
+import * as logger from 'logger'
 import Vibrant from 'node-vibrant/lib/bundle.js'
 import { shade } from 'polished'
 import { useEffect, useState } from 'react'
@@ -39,7 +39,7 @@ async function getColorFromToken(token: Token): Promise<string | null> {
       logoURI = URIForEthToken(address)
       return await getColorFromUriPath(logoURI)
     } catch (error) {
-      Sentry.captureMessage(error.toString())
+      logger.log(error.toString(), 'warning')
     }
   }
 

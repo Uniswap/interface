@@ -1,7 +1,7 @@
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
-import * as Sentry from '@sentry/react'
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
+import * as logger from 'logger'
 import {
   af,
   ar,
@@ -84,7 +84,7 @@ export async function dynamicActivate(locale: SupportedLocale) {
     // Bundlers will either export it as default or as a named export named default.
     i18n.load(locale, catalog.messages || catalog.default.messages)
   } catch (error) {
-    Sentry.captureMessage(error.toString())
+    logger.log(error.toString(), 'error')
   }
   i18n.activate(locale)
 }

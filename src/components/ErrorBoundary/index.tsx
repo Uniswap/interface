@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
-import * as Sentry from '@sentry/react'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { ButtonLight, SmallButtonPrimary } from 'components/Button'
+import * as logger from 'logger'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
 import React, { PropsWithChildren, useState } from 'react'
@@ -222,7 +222,7 @@ const updateServiceWorkerInBackground = async () => {
 export default function ErrorBoundary({ children }: PropsWithChildren): JSX.Element {
   const { pathname } = useLocation()
   return (
-    <Sentry.ErrorBoundary
+    <logger.ErrorBoundary
       fallback={({ error, eventId }) => <Fallback error={error} eventId={eventId} />}
       beforeCapture={(scope) => {
         scope.setLevel('fatal')
@@ -235,6 +235,6 @@ export default function ErrorBoundary({ children }: PropsWithChildren): JSX.Elem
       }}
     >
       {children}
-    </Sentry.ErrorBoundary>
+    </logger.ErrorBoundary>
   )
 }
