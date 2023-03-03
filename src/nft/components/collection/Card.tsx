@@ -32,7 +32,7 @@ import {
 import { AlertTriangle, Pause, Play } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { BREAKPOINTS, ThemedText } from 'theme'
 import { colors } from 'theme/colors'
 
 export interface CardContextProps {
@@ -104,7 +104,7 @@ const StyledImageContainer = styled.div<{ isDisabled?: boolean }>`
   cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
 `
 
-const StyledActionButton = styled(ThemedText.BodySmall)<{ selected: boolean }>`
+const StyledActionButton = styled(ThemedText.BodySmall)<{ selected: boolean; isDisabled: boolean }>`
   position: absolute;
   display: flex;
   width: 100%;
@@ -119,12 +119,15 @@ const StyledActionButton = styled(ThemedText.BodySmall)<{ selected: boolean }>`
   line-height: 16px;
   opacity: 0;
   cursor: pointer;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    ${({ isDisabled }) => `opacity: ${isDisabled ? 0 : 1};`}
 `
 
 const ActionButton = ({ children }: { children: ReactNode }) => {
-  const { clickActionButton, selected } = useCardContext()
+  const { clickActionButton, selected, isDisabled } = useCardContext()
   return (
-    <StyledActionButton selected={selected} onClick={clickActionButton}>
+    <StyledActionButton selected={selected} isDisabled={isDisabled} onClick={clickActionButton}>
       {children}
     </StyledActionButton>
   )
@@ -152,6 +155,10 @@ const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean 
     border-radius: ${BORDER_RADIUS}px;
     border-color: ${({ theme, selected }) => (selected ? theme.accentAction : theme.backgroundOutline)};
     pointer-events: none;
+
+    @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+      ${({ selected, theme }) => selected && `border-color: ${theme.accentCritical}`};
+    }
   }
 
   :hover::after {

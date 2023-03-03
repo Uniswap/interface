@@ -7,10 +7,8 @@ import { AssetMediaType } from 'nft/components/collection/Card'
 import { VerifiedIcon } from 'nft/components/icons'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
-import { ethNumberStandardFormatter } from 'nft/utils'
+import { ethNumberStandardFormatter, floorFormatter } from 'nft/utils'
 import { useMemo } from 'react'
-
-const TOOLTIP_TIMEOUT = 2000
 
 interface ViewMyNftsAssetProps {
   asset: WalletAsset
@@ -79,6 +77,7 @@ export const ViewMyNftsAsset = ({
 
   const assetMediaType = Card.useAssetMediaType(asset)
   const isDisabled = asset.asset_contract.tokenType === NftStandard.Erc1155 || asset.susFlag
+  const shouldShowUserListedPrice = !asset.notForSale && asset.asset_contract.tokenType !== NftStandard.Erc1155
   const assetName = () => {
     if (!asset.name && !asset.tokenId) return
     return asset.name ? asset.name : `#${asset.tokenId}`
@@ -114,7 +113,11 @@ export const ViewMyNftsAsset = ({
         <Card.TertiaryInfoContainer>
           <Card.ActionButton>{isSelected ? `Remove from bag` : `List for sale`}</Card.ActionButton>
           <Card.TertiaryInfo>
-            {asset.lastPrice ? `Last sale: ${ethNumberStandardFormatter(asset.lastPrice)} ETH` : null}
+            {shouldShowUserListedPrice && asset.floor_sell_order_price
+              ? `${floorFormatter(asset.floor_sell_order_price)} ETH`
+              : asset.lastPrice
+              ? `Last sale: ${ethNumberStandardFormatter(asset.lastPrice)} ETH`
+              : null}
           </Card.TertiaryInfo>
         </Card.TertiaryInfoContainer>
       </Card.DetailsContainer>
