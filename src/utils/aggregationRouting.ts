@@ -1,10 +1,10 @@
 import { ZERO } from '@kyberswap/ks-sdk-classic'
-import { ChainId, Percent, Rounding, Token, WETH } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency, CurrencyAmount, Percent, Rounding, Token, WETH } from '@kyberswap/ks-sdk-core'
 import JSBI from 'jsbi'
 
+import { ETHER_ADDRESS } from 'constants/index'
+import { NativeCurrencies } from 'constants/tokens'
 import { isAddressString } from 'utils'
-
-import { Aggregator } from './aggregator'
 
 export interface SwapPool {
   id: string
@@ -14,6 +14,15 @@ export interface SwapPool {
 }
 
 type PathItem = Token
+
+type Swap = {
+  pool: string
+  tokenIn: string
+  tokenOut: string
+  swapAmount: string
+  amountOut: string
+  exchange: string
+}
 
 interface SwapRoute {
   slug: string
@@ -109,38 +118,50 @@ function formatRoutesV2(routes: SwapRoute[]): SwapRouteV2[] {
 
 export function getTradeComposition(
   chainId: ChainId,
-  trade?: Aggregator,
-  allTokens?: { [address: string]: Token },
+  inputAmount: CurrencyAmount<Currency> | undefined,
+  involvingTokens: { [address: string]: Token | undefined } | undefined,
+  swaps: Swap[][] | undefined,
+  allTokens: { [address: string]: Token } | undefined,
 ): SwapRouteV2[] | undefined {
-  if (!trade || !trade.swaps) {
+  if (!inputAmount || !swaps) {
     return undefined
   }
-  const inputTokenAmount = trade.inputAmount?.wrapped
+
+  const inputTokenAmount = inputAmount.wrapped
+  const tokens = involvingTokens || ({} as any)
+  const defaultToken = new Token(chainId, WETH[chainId].address, 0, '--', '--')
+  const routes: SwapRoute[] = []
 
   const calcSwapPercentage = function (tokenIn: string, amount: string): number | undefined {
     if (!tokenIn || !amount) {
       return undefined
     }
     const exactTokenIn = tokenIn?.toLowerCase() === inputTokenAmount?.currency.address?.toLowerCase()
-    if (exactTokenIn && trade.inputAmount.greaterThan(JSBI.BigInt(0))) {
-      const percent = new Percent(JSBI.BigInt(amount || 0), trade.inputAmount.quotient).toFixed(0)
+    if (exactTokenIn && inputAmount.greaterThan(JSBI.BigInt(0))) {
+      const percent = new Percent(JSBI.BigInt(amount || 0), inputAmount.quotient).toFixed(0)
       return parseInt(percent)
     }
     return undefined
   }
 
-  const tokens = trade.tokens || ({} as any)
-  const defaultToken = new Token(chainId, WETH[chainId].address, 0, '--', '--')
-  const routes: SwapRoute[] = []
+  const getTokenFromAddress = (address: string) => {
+    if (address.toLowerCase() === ETHER_ADDRESS.toLowerCase()) {
+      return NativeCurrencies[chainId]
+    }
+
+    return allTokens?.[isAddressString(chainId, address)] || tokens[address] || defaultToken
+  }
 
   // Convert all Swaps to ChartSwaps
-  trade.swaps.forEach(sorMultiSwap => {
+  swaps.forEach(sorMultiSwap => {
+    if (!sorMultiSwap.length || sorMultiSwap.length < 1) {
+      return
+    }
+
     if (sorMultiSwap.length === 1) {
       const hop = sorMultiSwap[0]
-      const path = [
-        allTokens?.[isAddressString(chainId, hop.tokenIn)] || tokens[hop.tokenIn] || defaultToken,
-        allTokens?.[isAddressString(chainId, hop.tokenOut)] || tokens[hop.tokenOut] || defaultToken,
-      ]
+      const path = [getTokenFromAddress(hop.tokenIn), getTokenFromAddress(hop.tokenOut)]
+
       routes.push({
         slug: hop.tokenOut?.toLowerCase(),
         pools: [
@@ -154,40 +175,44 @@ export function getTradeComposition(
         path,
         id: hop.pool,
       })
-    } else if (sorMultiSwap.length > 1) {
-      const path: PathItem[] = []
-      const pools: SwapPool[] = []
-      sorMultiSwap.forEach((hop: any, index: number) => {
-        pools.push({
-          id: hop.pool,
-          exchange: hop.exchange,
-          swapAmount: JSBI.BigInt(hop.swapAmount),
-          swapPercentage: index === 0 ? calcSwapPercentage(hop.tokenIn, hop.swapAmount) : 100,
-        })
-        if (index === 0) {
-          const token = tokens[hop.tokenIn] || defaultToken
-          path.push(
-            allTokens?.[isAddressString(chainId, token.address)] ||
-              new Token(chainId, token.address, token.decimals, token.symbol, token.name),
-          )
-        }
-        const token = tokens[hop.tokenOut] || defaultToken
+
+      return
+    }
+
+    const path: PathItem[] = []
+    const pools: SwapPool[] = []
+    sorMultiSwap.forEach((hop: any, index: number) => {
+      pools.push({
+        id: hop.pool,
+        exchange: hop.exchange,
+        swapAmount: JSBI.BigInt(hop.swapAmount),
+        swapPercentage: index === 0 ? calcSwapPercentage(hop.tokenIn, hop.swapAmount) : 100,
+      })
+
+      if (index === 0) {
+        const token = tokens[hop.tokenIn] || defaultToken
         path.push(
           allTokens?.[isAddressString(chainId, token.address)] ||
             new Token(chainId, token.address, token.decimals, token.symbol, token.name),
         )
-      })
-      routes.push({
-        slug: path
-          .slice(1)
-          .map(t => t.address)
-          .join('-')
-          .toLowerCase(),
-        path,
-        pools,
-        id: pools.map(p => p.id).join('-'),
-      })
-    }
+      }
+
+      const token = allTokens?.[isAddressString(chainId, hop.tokenOut)] || tokens[hop.tokenOut] || defaultToken
+      path.push(
+        allTokens?.[isAddressString(chainId, token.address)] ||
+          new Token(chainId, token.address, token.decimals, token.symbol, token.name),
+      )
+    })
+    routes.push({
+      slug: path
+        .slice(1)
+        .map(t => t.address)
+        .join('-')
+        .toLowerCase(),
+      path,
+      pools,
+      id: pools.map(p => p.id).join('-'),
+    })
   })
 
   // Convert to ChartSwaps v2

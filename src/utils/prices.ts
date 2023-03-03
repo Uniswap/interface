@@ -108,3 +108,17 @@ export function computePriceImpactWithoutFee(pairs: Pair[], priceImpact?: Percen
 
   return priceImpactWithoutFeePercent
 }
+
+export const checkPriceImpact = (
+  priceImpact?: number,
+): {
+  isInvalid: boolean
+  isHigh: boolean
+  isVeryHigh: boolean
+} => {
+  return {
+    isInvalid: priceImpact === -1,
+    isHigh: !!priceImpact && priceImpact > 5,
+    isVeryHigh: !!priceImpact && priceImpact > 15,
+  }
+}

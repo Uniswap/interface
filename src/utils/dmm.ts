@@ -529,7 +529,7 @@ export function errorFriendly(text: string): string {
   if (error.includes('header not found') || error.includes('swap failed')) {
     return t`An error occurred. Refresh the page and try again. If the issue still persists, it might be an issue with your RPC node settings in Metamask.`
   }
-  if (error.includes('user rejected transaction')) {
+  if (error.includes('user rejected transaction') || error.includes('user denied transaction')) {
     return t`User rejected transaction.`
   }
 

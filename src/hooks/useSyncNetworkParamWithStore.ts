@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
-import { NETWORKS_INFO, isEVM, isSolana } from 'constants/networks'
+import { NETWORKS_INFO } from 'constants/networks'
 import { useActiveWeb3React, useEagerConnect } from 'hooks'
 
 import { useChangeNetwork } from './useChangeNetwork'
@@ -30,20 +30,19 @@ export function useSyncNetworkParamWithStore() {
        * @param triedEager: only run after tried to connect injected wallet
        */
       ;(async () => {
-        if (paramChainId && isEVM(paramChainId)) {
-          setRequestingNetwork(params?.network)
-          await changeNetwork(paramChainId, undefined, () => {
-            if (params.network) {
-              navigate(
-                { ...location, pathname: location.pathname.replace(params.network, networkInfo.route) },
-                { replace: true },
-              )
-            }
-          })
-        } else if (paramChainId && isSolana(paramChainId)) {
-          setRequestingNetwork(params?.network)
-          await changeNetwork(paramChainId)
+        if (!paramChainId) {
+          return
         }
+
+        setRequestingNetwork(params?.network)
+        await changeNetwork(paramChainId, undefined, () => {
+          if (params.network) {
+            navigate(
+              { ...location, pathname: location.pathname.replace(params.network, networkInfo.route) },
+              { replace: true },
+            )
+          }
+        })
       })()
     }
     isOnInit.current = false

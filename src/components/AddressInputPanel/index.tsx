@@ -66,10 +66,10 @@ const Input = styled.input<{ error?: boolean }>`
   }
 `
 
-const DropdownIcon = styled(DropdownSVG)<{ open: boolean }>`
+const DropdownIcon = styled(DropdownSVG)<{ $rotated: boolean }>`
   cursor: pointer;
   transition: transform 300ms;
-  transform: rotate(${({ open }) => (open ? '-180deg' : 0)});
+  transform: rotate(${({ $rotated }) => ($rotated ? '-180deg' : 0)});
 `
 
 type Props = {
@@ -150,7 +150,17 @@ export default function AddressInputPanel({
   if (!isEVM) return null
   return (
     <AutoColumn gap="4px">
-      <Flex justifyContent="space-between" alignItems="center" marginTop="4px" color={theme.subText}>
+      <Flex
+        role="button"
+        onClick={() => onChange(value === null ? '' : null)}
+        sx={{
+          cursor: 'pointer',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginTop: '4px',
+          color: theme.subText,
+        }}
+      >
         <Text fontSize="12px" fontWeight="500">
           <Trans>Recipient (Optional)</Trans>
 
@@ -163,7 +173,7 @@ export default function AddressInputPanel({
             </ExternalLink>
           )}
         </Text>
-        <DropdownIcon open={value !== null} onClick={() => onChange(value === null ? '' : null)} />
+        <DropdownIcon $rotated={value !== null} />
       </Flex>
 
       <InputPanel id={id} style={{ maxHeight: value === null ? 0 : '44px' }}>

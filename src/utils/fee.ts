@@ -34,3 +34,24 @@ export function getFormattedFeeAmountUsd(trade: Aggregator, feeConfig: FeeConfig
 
   return '--'
 }
+
+export const getFormattedFeeAmountUsdV2 = (rawAmountInUSD: number, feeAmount?: string) => {
+  if (feeAmount) {
+    const amountInUsd = new Fraction(
+      parseUnits(toFixed(rawAmountInUSD), RESERVE_USD_DECIMALS).toString(),
+      JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(RESERVE_USD_DECIMALS)),
+    )
+    if (amountInUsd) {
+      // feeAmount might < 1.
+      const feeAmountFraction = new Fraction(
+        parseUnits(feeAmount, RESERVE_USD_DECIMALS).toString(),
+        JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(RESERVE_USD_DECIMALS)),
+      )
+      const feeAmountDecimal = feeAmountFraction.divide(BIPS_BASE)
+      const feeAmountUsd = amountInUsd.multiply(feeAmountDecimal).toSignificant(RESERVE_USD_DECIMALS)
+      return formattedNum(feeAmountUsd, true)
+    }
+  }
+
+  return '--'
+}

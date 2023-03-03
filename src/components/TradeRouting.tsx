@@ -1,20 +1,15 @@
 import { ChainId, Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
-import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { memo, useCallback, useEffect, useRef } from 'react'
 import ScrollContainer from 'react-indiana-drag-scroll'
 import styled, { css } from 'styled-components'
 
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useActiveWeb3React } from 'hooks'
-import { useAllTokens } from 'hooks/Tokens'
 import useThrottle from 'hooks/useThrottle'
 import { Dex } from 'state/customizeDexes'
 import { useAllDexes } from 'state/customizeDexes/hooks'
-import { Field } from 'state/swap/actions'
-import { useSwapState } from 'state/swap/hooks'
 import { getEtherscanLink, isAddress } from 'utils'
-import { SwapPool, SwapRouteV2, getTradeComposition } from 'utils/aggregationRouting'
-import { Aggregator } from 'utils/aggregator'
-import { useCurrencyConvertedToNative } from 'utils/dmm'
+import { SwapPool, SwapRouteV2 } from 'utils/aggregationRouting'
 
 const getDexInfoByPool = (pool: SwapPool, allDexes?: Dex[]) => {
   if (pool.exchange === '1inch') {
@@ -466,52 +461,39 @@ const RouteRow = ({ route, chainId, backgroundColor }: RouteRowProps) => {
 }
 
 interface RoutingProps {
-  trade?: Aggregator
-  currencies: { [field in Field]?: Currency }
-  formattedAmounts: { [x: string]: string }
   maxHeight?: string
+
+  tradeComposition: SwapRouteV2[] | undefined
+  currencyIn: Currency | undefined
+  currencyOut: Currency | undefined
+  inputAmount: CurrencyAmount<Currency> | undefined
+  outputAmount: CurrencyAmount<Currency> | undefined
 }
 
-const Routing = ({ trade, currencies, formattedAmounts, maxHeight }: RoutingProps) => {
+const Routing = ({ tradeComposition, maxHeight, inputAmount, outputAmount, currencyIn, currencyOut }: RoutingProps) => {
   const { chainId } = useActiveWeb3React()
   const shadowRef = useRef<HTMLDivElement>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
 
-  const nativeInputCurrency = useCurrencyConvertedToNative(currencies[Field.INPUT] || undefined)
-  const nativeOutputCurrency = useCurrencyConvertedToNative(currencies[Field.OUTPUT] || undefined)
-
-  const allTokens = useAllTokens()
-
-  const tradeComposition = useMemo((): SwapRouteV2[] | undefined => {
-    try {
-      return getTradeComposition(chainId, trade, allTokens)
-    } catch (e) {
-      return undefined
-    }
-  }, [trade, chainId, allTokens])
-
-  const renderTokenInfo = (currencyAmount: CurrencyAmount<Currency> | string | undefined, field: Field) => {
-    const isOutput = field === Field.OUTPUT
-    const currency =
-      currencyAmount instanceof CurrencyAmount
-        ? currencyAmount?.currency
-        : isOutput
-        ? nativeOutputCurrency
-        : nativeInputCurrency
-
+  const renderTokenInfo = (
+    currency: Currency | undefined,
+    amount: CurrencyAmount<Currency> | undefined,
+    reverseOrder?: boolean,
+  ) => {
     if (chainId && currency) {
       return (
-        <StyledToken as="div" reverse={isOutput} style={{ border: 'none' }}>
+        <StyledToken as="div" reverse={reverseOrder} style={{ border: 'none' }}>
           <CurrencyLogo currency={currency} size="20px" />
-          <span>{`${currency && formattedAmounts[field] ? formattedAmounts[field] : '0.0'} ${currency.symbol}`}</span>
+          <span>{`${amount ? amount.toSignificant(6) : ''} ${currency.symbol}`}</span>
         </StyledToken>
       )
     }
+
     return null
   }
 
-  const hasRoutes = trade && chainId && tradeComposition && tradeComposition.length > 0
+  const hasRoutes = chainId && tradeComposition && tradeComposition.length > 0
 
   const handleScroll = useCallback(() => {
     const element = wrapperRef.current
@@ -534,24 +516,19 @@ const Routing = ({ trade, currencies, formattedAmounts, maxHeight }: RoutingProp
 
   useEffect(() => {
     handleScroll()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trade, maxHeight])
-
-  const { feeConfig, typedValue } = useSwapState()
+  }, [tradeComposition, maxHeight, handleScroll])
 
   return (
     <Shadow ref={shadowRef}>
       <StyledContainer ref={wrapperRef} onScroll={handleScroll} style={{ maxHeight: maxHeight || '100%' }}>
         <div ref={contentRef}>
           <StyledPair>
-            <StyledWrapToken>
-              {renderTokenInfo(!!feeConfig ? typedValue : trade?.inputAmount, Field.INPUT)}
-            </StyledWrapToken>
+            <StyledWrapToken>{renderTokenInfo(currencyIn, inputAmount)}</StyledWrapToken>
             {!hasRoutes && <StyledPairLine />}
-            <StyledWrapToken>{renderTokenInfo(trade?.outputAmount, Field.OUTPUT)}</StyledWrapToken>
+            <StyledWrapToken>{renderTokenInfo(currencyOut, outputAmount, true)}</StyledWrapToken>
           </StyledPair>
 
-          {trade && chainId && tradeComposition && tradeComposition.length > 0 ? (
+          {tradeComposition && chainId && tradeComposition && tradeComposition.length > 0 ? (
             <div>
               <StyledRoutes>
                 <StyledDot />

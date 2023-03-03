@@ -65,6 +65,7 @@
     "@web3-react/walletconnect-connector": "^7.0.2-alpha.0",
     "@web3-react/walletlink-connector": "^6.2.14",
     "aos": "^2.3.4",
+    "axios": "1.2.1",
     "base64-js": "^1.5.1",
     "cids": "^1.1.9",
     "d3": "^7.6.1",

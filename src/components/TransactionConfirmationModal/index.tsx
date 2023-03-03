@@ -48,7 +48,7 @@ const StyledLogo = styled.img`
   margin-left: 6px;
 `
 
-function ConfirmationPendingContent({
+export function ConfirmationPendingContent({
   onDismiss,
   pendingText,
   startedTime,
@@ -134,7 +134,7 @@ function AddTokenToInjectedWallet({ token, chainId }: { token: Token; chainId: C
   )
 }
 
-function TransactionSubmittedContent({
+export function TransactionSubmittedContent({
   onDismiss,
   chainId,
   hash,
@@ -268,8 +268,6 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
             style={{ textAlign: 'center', width: '85%' }}
           >
             {errorFriendly(message)}
-            {/* {message.includes('minTotalAmountOut') &&
-              ' Try to refresh the exchange rate or increase the Slippage tolerance in Settings'} */}
           </Text>
           {message !== errorFriendly(message) && (
             <AutoColumn justify="center" style={{ width: '100%' }}>

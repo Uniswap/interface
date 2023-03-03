@@ -1,4 +1,5 @@
 import { Currency, Price } from '@kyberswap/ks-sdk-core'
+import { Trans } from '@lingui/macro'
 import React, { useState } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
@@ -6,7 +7,7 @@ import { Text } from 'rebass'
 import useTheme from 'hooks/useTheme'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 
-import { StyledBalanceMaxMini } from './styleds'
+import { Dots, StyledBalanceMaxMini } from './styleds'
 
 interface TradePriceProps {
   price: Price<Currency, Currency> | undefined
@@ -44,7 +45,9 @@ export default function TradePrice({ price }: TradePriceProps) {
           </StyledBalanceMaxMini>
         </>
       ) : (
-        '-'
+        <Dots>
+          <Trans>Calculating</Trans>
+        </Dots>
       )}
     </Text>
   )

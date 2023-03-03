@@ -231,7 +231,7 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
           break
         case MIXPANEL_TYPE.SWAP_INITIATED: {
           const { gasUsd, inputAmount, priceImpact } = (payload || {}) as {
-            gasUsd: number | undefined
+            gasUsd: number | string | undefined
             inputAmount: CurrencyAmount<Currency> | undefined
             priceImpact: number | undefined
           }
@@ -239,7 +239,7 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
           mixpanel.track('Swap Initiated', {
             input_token: inputSymbol,
             output_token: outputSymbol,
-            estimated_gas: gasUsd?.toFixed(4),
+            estimated_gas: gasUsd ? Number(gasUsd).toFixed(4) : undefined,
             max_return_or_low_gas: saveGas ? 'Lowest Gas' : 'Maximum Return',
             trade_qty: inputAmount?.toExact(),
             slippage_setting: allowedSlippage ? allowedSlippage / 100 : 0,

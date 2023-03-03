@@ -112,7 +112,7 @@ export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
 
-const toK = (num: string) => {
+export const toK = (num: string) => {
   return Numeral(num).format('0.[00]a')
 }
 
@@ -459,5 +459,5 @@ export const isChristmasTime = () => {
 
 export const getLimitOrderContract = (chainId: ChainId) => {
   const { production, development } = NETWORKS_INFO_CONFIG[chainId]?.limitOrder ?? {}
-  return ENV_LEVEL === ENV_TYPE.PROD ? production : development
+  return [ENV_TYPE.PROD, ENV_TYPE.ADPR].includes(ENV_LEVEL) ? production : development
 }

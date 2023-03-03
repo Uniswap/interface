@@ -1,7 +1,7 @@
 import { transparentize } from 'polished'
 import { useState } from 'react'
 import { Text } from 'rebass'
-import styled, { css } from 'styled-components'
+import styled, { CSSProperties, css } from 'styled-components'
 
 import { ReactComponent as Alert } from 'assets/images/alert.svg'
 import { ButtonEmpty } from 'components/Button'
@@ -188,11 +188,11 @@ const SwapCallbackErrorInner = styled.div`
   }
 `
 
-export function SwapCallbackError({ error }: { error: string }) {
+export function SwapCallbackError({ error, style = {} }: { error: string; style?: CSSProperties }) {
   const theme = useTheme()
   const [showDetail, setShowDetail] = useState<boolean>(false)
   return (
-    <SwapCallbackErrorInner>
+    <SwapCallbackErrorInner style={style}>
       <Alert style={{ marginBottom: 'auto' }} />
       <AutoColumn style={{ flexBasis: '100%', margin: '10px 0 auto 8px' }}>
         <Text fontSize="16px" fontWeight="500" color={theme.red} lineHeight={'24px'}>
@@ -216,7 +216,7 @@ export function SwapCallbackError({ error }: { error: string }) {
             lineHeight="16px"
             sx={{ wordBreak: 'break-word' }}
           >
-            {error}
+            {typeof error === 'string' ? error : JSON.stringify(error)}
           </Text>
         )}
       </AutoColumn>
