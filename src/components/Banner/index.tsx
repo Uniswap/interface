@@ -6,8 +6,6 @@ import styled from 'styled-components'
 import { Autoplay, Navigation, Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react/swiper-react'
 
-import TradingGrantCampaignDesktop from 'assets/banners/trading_grant_program_desktop.png'
-import TradingGrantCampaignMobile from 'assets/banners/trading_grant_program_mobile.png'
 import WorkYourAssetsDesktop from 'assets/banners/work_your_assets_desktop.png'
 import WorkYourAssetsMobile from 'assets/banners/work_your_assets_mobile.png'
 import WorkYourAssetsTablet from 'assets/banners/work_your_assets_tablet.png'
@@ -106,23 +104,10 @@ function Banner({
     () => [
       {
         // KyberSwap Work Your Assets
-        id: 'Trading-Grant-Campaign',
-        name: 'Trading Grant Campaign',
-        start: new Date('2023-01-06T00:00:00.000Z'),
-        end: new Date('2023-02-06T23:59:59.000Z'),
-        img: isInModal
-          ? TradingGrantCampaignMobile
-          : w > 768
-          ? TradingGrantCampaignDesktop
-          : TradingGrantCampaignMobile,
-        link: 'https://kyberswap.com/campaigns/?utm_source=kn_website&utm_medium=banner&utm_campaign=trading_grant_1',
-      },
-      {
-        // KyberSwap Work Your Assets
         id: 'KyberSwap-Work-Your-Assets',
         name: 'KyberSwap Work Your Assets',
         start: new Date('2022-12-06T00:00:00.000Z'),
-        end: new Date('2023-12-30T23:59:59.000Z'),
+        end: new Date('2022-12-30T23:59:59.000Z'),
         img: isInModal
           ? WorkYourAssetsMobile
           : w > 768
@@ -141,7 +126,7 @@ function Banner({
     () =>
       ALL_BANNERS.filter(b => {
         const date = new Date()
-        return date >= b.start && date <= b.end
+        return b.start <= date && date <= b.end
       }),
     [ALL_BANNERS],
   )
