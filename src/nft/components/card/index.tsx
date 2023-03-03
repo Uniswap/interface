@@ -3,7 +3,7 @@ import { GenieAsset, UniformAspectRatio, UniformAspectRatios, WalletAsset } from
 import { isAudio, isVideo } from 'nft/utils'
 import { ReactNode, useCallback } from 'react'
 
-export enum AssetMediaType {
+enum AssetMediaType {
   Image,
   Video,
   Audio,
