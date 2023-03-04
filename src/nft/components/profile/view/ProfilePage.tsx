@@ -138,7 +138,7 @@ export const ProfilePage = () => {
           borderRadius="12"
           paddingX="16"
           paddingY="12"
-          background="backgroundModule"
+          background="backgroundSurface"
           borderStyle="solid"
           borderColor="backgroundOutline"
           borderWidth="1px"

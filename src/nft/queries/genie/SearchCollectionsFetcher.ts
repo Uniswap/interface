@@ -1,4 +1,5 @@
 import { isAddress } from '@ethersproject/address'
+import { blocklistedCollections } from 'nft/utils'
 
 import { GenieCollection } from '../../types'
 
@@ -45,15 +46,17 @@ export const fetchSearchCollections = async (addressOrName: string, recursive = 
   if (isName) {
     const data = await r.json()
     const formattedData = data?.data
-      ? data.data.map((collection: { stats: Record<string, unknown>; floorPrice: string }) => {
-          return {
-            ...collection,
-            stats: {
-              ...collection.stats,
-              floor_price: collection.floorPrice,
-            },
-          }
-        })
+      ? data.data
+          .filter((collection: { address: string }) => !blocklistedCollections.includes(collection.address))
+          .map((collection: { stats: Record<string, unknown>; floorPrice: string }) => {
+            return {
+              ...collection,
+              stats: {
+                ...collection.stats,
+                floor_price: collection.floorPrice,
+              },
+            }
+          })
       : []
     return formattedData.slice(0, MAX_SEARCH_RESULTS)
   }

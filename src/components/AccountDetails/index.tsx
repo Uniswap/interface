@@ -1,11 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import {
-  getConnection,
-  getConnectionName,
-  getHasCoinbaseExtensionInstalled,
-  getHasMetaMaskExtensionInstalled,
-} from 'connection/utils'
+import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsMetaMaskWallet } from 'connection/utils'
 import { useCallback } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
@@ -215,8 +210,8 @@ export default function AccountDetails({
   const theme = useTheme()
   const dispatch = useAppDispatch()
 
-  const hasMetaMaskExtension = getHasMetaMaskExtensionInstalled()
-  const hasCoinbaseExtension = getHasCoinbaseExtensionInstalled()
+  const hasMetaMaskExtension = getIsMetaMaskWallet()
+  const hasCoinbaseExtension = getIsCoinbaseWallet()
   const isInjectedMobileBrowser = (hasMetaMaskExtension || hasCoinbaseExtension) && isMobile
 
   function formatConnectorName() {

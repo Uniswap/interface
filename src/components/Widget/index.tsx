@@ -26,16 +26,17 @@ import {
   getTokenAddress,
 } from 'lib/utils/analytics'
 import { useCallback, useState } from 'react'
+import { useToggleWalletModal } from 'state/application/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
 import { computeRealizedPriceImpact } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
 
-import { useSyncWidgetInputs } from './inputs'
+import { DefaultTokens, useSyncWidgetInputs } from './inputs'
 import { useSyncWidgetSettings } from './settings'
 import { DARK_THEME, LIGHT_THEME } from './theme'
 import { useSyncWidgetTransactions } from './transactions'
 
-export const WIDGET_WIDTH = 360
+export const DEFAULT_WIDGET_WIDTH = 360
 
 const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
@@ -44,18 +45,33 @@ function useWidgetTheme() {
 }
 
 interface WidgetProps {
-  token?: Currency
-  onTokenChange?: (token: Currency) => void
+  defaultTokens: DefaultTokens
+  width?: number | string
+  onDefaultTokenChange?: (token: Currency) => void
   onReviewSwapClick?: OnReviewSwapClick
 }
 
-export default function Widget({ token, onTokenChange, onReviewSwapClick }: WidgetProps) {
-  const { connector, provider } = useWeb3React()
+export default function Widget({
+  defaultTokens,
+  width = DEFAULT_WIDGET_WIDTH,
+  onDefaultTokenChange,
+  onReviewSwapClick,
+}: WidgetProps) {
+  const { connector, provider, chainId } = useWeb3React()
   const locale = useActiveLocale()
   const theme = useWidgetTheme()
-  const { inputs, tokenSelector } = useSyncWidgetInputs({ token, onTokenChange })
+  const { inputs, tokenSelector } = useSyncWidgetInputs({
+    defaultTokens,
+    onDefaultTokenChange,
+  })
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
+
+  const toggleWalletModal = useToggleWalletModal()
+  const onConnectWalletClick = useCallback(() => {
+    toggleWalletModal()
+    return false // prevents the in-widget wallet modal from opening
+  }, [toggleWalletModal])
 
   const onSwitchChain = useCallback(
     // TODO(WEB-1757): Widget should not break if this rejects - upstream the catch to ignore it.
@@ -152,8 +168,9 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
         routerUrl={WIDGET_ROUTER_URL}
         locale={locale}
         theme={theme}
-        width={WIDGET_WIDTH}
-        // defaultChainId is excluded - it is always inferred from the passed provider
+        width={width}
+        defaultChainId={chainId}
+        onConnectWalletClick={onConnectWalletClick}
         provider={provider}
         onSwitchChain={onSwitchChain}
         tokenList={EMPTY_TOKEN_LIST} // prevents loading the default token list, as we use our own token selector UI
@@ -166,13 +183,16 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
         onSwapApprove={onApproveToken}
         onInitialSwapQuote={onInitialSwapQuote}
         onSwapPriceUpdateAck={onSwapPriceUpdateAck}
+        onError={(error, errorInfo) => {
+          sendAnalyticsEvent(SwapEventName.SWAP_ERROR, { error, errorInfo, ...trace })
+        }}
       />
       {tokenSelector}
     </>
   )
 }
 
-export function WidgetSkeleton() {
+export function WidgetSkeleton({ width = DEFAULT_WIDGET_WIDTH }: { width?: number | string }) {
   const theme = useWidgetTheme()
-  return <SwapWidgetSkeleton theme={theme} width={WIDGET_WIDTH} />
+  return <SwapWidgetSkeleton theme={theme} width={width} />
 }

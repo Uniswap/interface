@@ -19,10 +19,12 @@ interface TxState {
   setState: (state: TxStateType) => void
   txHash: string
   clearTxHash: () => void
+  purchasedWithErc20: boolean
   sendTransaction: (
     signer: JsonRpcSigner,
     selectedAssets: UpdatedGenieAsset[],
-    transactionData: RouteResponse
+    transactionData: RouteResponse,
+    purchasedWithErc20: boolean
   ) => Promise<TxResponse | undefined>
 }
 
@@ -31,14 +33,15 @@ export const useSendTransaction = create<TxState>()(
     (set) => ({
       state: TxStateType.New,
       txHash: '',
+      purchasedWithErc20: false,
       clearTxHash: () => set({ txHash: '' }),
       setState: (newState) => set(() => ({ state: newState })),
-      sendTransaction: async (signer, selectedAssets, transactionData) => {
+      sendTransaction: async (signer, selectedAssets, transactionData, purchasedWithErc20) => {
         const address = await signer.getAddress()
         try {
           const txNoGasLimit = {
             to: transactionData.to,
-            value: BigNumber.from(transactionData.valueToSend),
+            value: transactionData.valueToSend ? BigNumber.from(transactionData.valueToSend) : undefined,
             data: transactionData.data,
           }
 
@@ -50,6 +53,7 @@ export const useSendTransaction = create<TxState>()(
           const res = await signer.sendTransaction(tx)
           set({ state: TxStateType.Confirming })
           set({ txHash: res.hash })
+          set({ purchasedWithErc20 })
           sendAnalyticsEvent(NFTEventName.NFT_BUY_BAG_SIGNED, { transaction_hash: res.hash })
 
           const txReceipt = await res.wait()
@@ -143,7 +147,7 @@ const findNFTsPurchased = (
     )
   })
 
-  return combineBuyItemsWithTxRoute(transferredItems, txRoute)
+  return combineBuyItemsWithTxRoute(transferredItems, txRoute).updatedAssets
 }
 
 const findNFTsNotPurchased = (toBuy: GenieAsset[], nftsPurchased: UpdatedGenieAsset[]) => {

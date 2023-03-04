@@ -1,16 +1,17 @@
 import { Trans } from '@lingui/macro'
-// eslint-disable-next-line no-restricted-imports
-import { t } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { SortDropdown } from 'nft/components/common/SortDropdown'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption, ListingMarket } from 'nft/types'
-import { useMemo, useState } from 'react'
+import { useMemo, useReducer, useRef, useState } from 'react'
+import { ChevronDown } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
+import { Dropdown } from './Dropdown'
 import { NFTListRow } from './NFTListRow'
+import { SetPriceMethod } from './shared'
 
 const TableHeader = styled.div`
   display: flex;
@@ -19,12 +20,16 @@ const TableHeader = styled.div`
   top: 72px;
   padding-top: 24px;
   padding-bottom: 24px;
-  z-index: 1;
+  z-index: 3;
   background-color: ${({ theme }) => theme.backgroundBackdrop};
   color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
   font-weight: normal;
   line-height: 20px;
+
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+    padding-left: 48px;
+  }
 `
 
 const NFTHeader = styled.div`
@@ -36,30 +41,84 @@ const NFTHeader = styled.div`
 `
 
 const PriceHeaders = styled(Row)`
-  flex: 1;
+  flex: 1.5;
+  margin-right: 12px;
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     flex: 3;
   }
 `
 
-const PriceInfoHeader = styled.div`
+const LastPriceHeader = styled.div`
   display: none;
   flex: 1;
 
-  @media screen and (min-width: ${BREAKPOINTS.xl}px) {
+  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
     display: flex;
   }
 `
 
-const DropdownWrapper = styled.div`
+const FloorPriceHeader = styled.div`
+  display: none;
+  flex: 1;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    display: flex;
+  }
+`
+
+const DropdownAndHeaderWrapper = styled(Row)`
   flex: 2;
+  gap: 4px;
+`
+
+const DropdownPromptContainer = styled(Column)`
+  position: relative;
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    display: none;
+  }
+`
+
+const DropdownPrompt = styled(Row)`
+  gap: 4px;
+  background-color: ${({ theme }) => theme.backgroundInteractive};
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  border-radius: 4px;
+  padding: 2px 6px;
+  width: min-content;
+  white-space: nowrap;
+  color: ${({ theme }) => theme.textPrimary};
+
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+`
+
+const DropdownChevron = styled(ChevronDown)<{ isOpen: boolean }>`
+  height: 16px;
+  width: 16px;
+  color: ${({ theme }) => theme.textSecondary};
+  transform: ${({ isOpen }) => isOpen && 'rotate(180deg)'};
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `transform ${duration.fast} ${timing.ease}`};
+`
+
+const DropdownContainer = styled.div`
+  position: absolute;
+  top: 36px;
+  right: 0px;
 `
 
 const FeeUserReceivesSharedStyles = css`
   display: none;
   justify-content: flex-end;
-  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
     display: flex;
   }
 `
@@ -80,37 +139,73 @@ const RowDivider = styled.hr`
   border-radius: 20px;
   border-width: 0.5px;
   border-style: solid;
+  margin: 0;
   border-color: ${({ theme }) => theme.backgroundInteractive};
 `
 
-export enum SetPriceMethod {
-  SAME_PRICE,
-  FLOOR_PRICE,
-  PREV_LISTING,
-}
-
 export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingMarket[] }) => {
   const sellAssets = useSellAsset((state) => state.sellAssets)
-  const [globalPriceMethod, setGlobalPriceMethod] = useState<SetPriceMethod>()
+  const [globalPriceMethod, setGlobalPriceMethod] = useState(SetPriceMethod.CUSTOM)
   const [globalPrice, setGlobalPrice] = useState<number>()
+  const [showDropdown, toggleShowDropdown] = useReducer((s) => !s, false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+  useOnClickOutside(dropdownRef, showDropdown ? toggleShowDropdown : undefined)
 
   const priceDropdownOptions: DropDownOption[] = useMemo(
     () => [
       {
-        displayText: 'Same price',
-        onClick: () => setGlobalPriceMethod(SetPriceMethod.SAME_PRICE),
+        displayText: 'Custom',
+        isSelected: globalPriceMethod === SetPriceMethod.CUSTOM,
+        onClick: () => {
+          setGlobalPriceMethod(SetPriceMethod.CUSTOM)
+          toggleShowDropdown()
+        },
       },
       {
         displayText: 'Floor price',
-        onClick: () => setGlobalPriceMethod(SetPriceMethod.FLOOR_PRICE),
+        isSelected: globalPriceMethod === SetPriceMethod.FLOOR_PRICE,
+        onClick: () => {
+          setGlobalPriceMethod(SetPriceMethod.FLOOR_PRICE)
+          toggleShowDropdown()
+        },
       },
       {
-        displayText: 'Prev. listing',
-        onClick: () => setGlobalPriceMethod(SetPriceMethod.PREV_LISTING),
+        displayText: 'Last price',
+        isSelected: globalPriceMethod === SetPriceMethod.LAST_PRICE,
+        onClick: () => {
+          setGlobalPriceMethod(SetPriceMethod.LAST_PRICE)
+          toggleShowDropdown()
+        },
+      },
+      {
+        displayText: 'Same price',
+        isSelected: globalPriceMethod === SetPriceMethod.SAME_PRICE,
+        onClick: () => {
+          setGlobalPriceMethod(SetPriceMethod.SAME_PRICE)
+          toggleShowDropdown()
+        },
       },
     ],
-    []
+    [globalPriceMethod]
   )
+
+  let prompt
+  switch (globalPriceMethod) {
+    case SetPriceMethod.CUSTOM:
+      prompt = <Trans>Custom</Trans>
+      break
+    case SetPriceMethod.FLOOR_PRICE:
+      prompt = <Trans>Floor price</Trans>
+      break
+    case SetPriceMethod.LAST_PRICE:
+      prompt = <Trans>Last Price</Trans>
+      break
+    case SetPriceMethod.SAME_PRICE:
+      prompt = <Trans>Same Price</Trans>
+      break
+    default:
+      break
+  }
 
   return (
     <Column>
@@ -119,16 +214,26 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           <Trans>NFT</Trans>
         </NFTHeader>
         <PriceHeaders>
-          <PriceInfoHeader>
+          <FloorPriceHeader>
             <Trans>Floor</Trans>
-          </PriceInfoHeader>
-          <PriceInfoHeader>
+          </FloorPriceHeader>
+          <LastPriceHeader>
             <Trans>Last</Trans>
-          </PriceInfoHeader>
+          </LastPriceHeader>
 
-          <DropdownWrapper>
-            <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt={t`Set price by`} />
-          </DropdownWrapper>
+          <DropdownAndHeaderWrapper ref={dropdownRef}>
+            <Trans>Price</Trans>
+            <DropdownPromptContainer>
+              <DropdownPrompt onClick={toggleShowDropdown}>
+                {prompt} <DropdownChevron isOpen={showDropdown} />
+              </DropdownPrompt>
+              {showDropdown && (
+                <DropdownContainer>
+                  <Dropdown dropDownOptions={priceDropdownOptions} width={200} />
+                </DropdownContainer>
+              )}
+            </DropdownPromptContainer>
+          </DropdownAndHeaderWrapper>
 
           <FeeHeader>
             <Trans>Fees</Trans>

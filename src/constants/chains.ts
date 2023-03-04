@@ -1,15 +1,12 @@
 /**
  * List of all the networks supported by the Uniswap Interface
+ * TODO(INFRA-90): Eventually this may be derived from sdk-core.
  */
 export enum SupportedChainId {
   MAINNET = 1,
-  ROPSTEN = 3,
-  RINKEBY = 4,
   GOERLI = 5,
-  KOVAN = 42,
 
   ARBITRUM_ONE = 42161,
-  ARBITRUM_RINKEBY = 421611,
   ARBITRUM_GOERLI = 421613,
 
   OPTIMISM = 10,
@@ -24,16 +21,12 @@ export enum SupportedChainId {
 
 export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.MAINNET]: 'mainnet',
-  [SupportedChainId.ROPSTEN]: 'ropsten',
-  [SupportedChainId.RINKEBY]: 'rinkeby',
   [SupportedChainId.GOERLI]: 'goerli',
-  [SupportedChainId.KOVAN]: 'kovan',
   [SupportedChainId.POLYGON]: 'polygon',
   [SupportedChainId.POLYGON_MUMBAI]: 'polygon_mumbai',
   [SupportedChainId.CELO]: 'celo',
   [SupportedChainId.CELO_ALFAJORES]: 'celo_alfajores',
   [SupportedChainId.ARBITRUM_ONE]: 'arbitrum',
-  [SupportedChainId.ARBITRUM_RINKEBY]: 'arbitrum_rinkeby',
   [SupportedChainId.ARBITRUM_GOERLI]: 'arbitrum_goerli',
   [SupportedChainId.OPTIMISM]: 'optimism',
   [SupportedChainId.OPTIMISM_GOERLI]: 'optimism_goerli',
@@ -69,12 +62,8 @@ export const UNSUPPORTED_V2POOL_CHAIN_IDS = [
 ]
 
 export const TESTNET_CHAIN_IDS = [
-  SupportedChainId.ROPSTEN,
-  SupportedChainId.RINKEBY,
   SupportedChainId.GOERLI,
-  SupportedChainId.KOVAN,
   SupportedChainId.POLYGON_MUMBAI,
-  SupportedChainId.ARBITRUM_RINKEBY,
   SupportedChainId.ARBITRUM_GOERLI,
   SupportedChainId.OPTIMISM_GOERLI,
 ] as const
@@ -86,10 +75,7 @@ export type SupportedTestnetChainId = typeof TESTNET_CHAIN_IDS[number]
  */
 export const L1_CHAIN_IDS = [
   SupportedChainId.MAINNET,
-  SupportedChainId.ROPSTEN,
-  SupportedChainId.RINKEBY,
   SupportedChainId.GOERLI,
-  SupportedChainId.KOVAN,
   SupportedChainId.POLYGON,
   SupportedChainId.POLYGON_MUMBAI,
   SupportedChainId.CELO,
@@ -104,7 +90,6 @@ export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
  */
 export const L2_CHAIN_IDS = [
   SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.ARBITRUM_RINKEBY,
   SupportedChainId.ARBITRUM_GOERLI,
   SupportedChainId.OPTIMISM,
   SupportedChainId.OPTIMISM_GOERLI,

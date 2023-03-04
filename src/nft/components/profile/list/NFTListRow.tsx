@@ -1,19 +1,44 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { RowsCollpsedIcon, RowsExpandedIcon, VerifiedIcon } from 'nft/components/icons'
+import { VerifiedIcon } from 'nft/components/icons'
 import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, WalletAsset } from 'nft/types'
-import { Dispatch, useEffect, useState } from 'react'
-import styled, { css } from 'styled-components/macro'
+import { Dispatch, useEffect, useReducer, useState } from 'react'
+import { Trash2 } from 'react-feather'
+import styled, { css, useTheme } from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
+import { opacify } from 'theme/utils'
 
 import { MarketplaceRow } from './MarketplaceRow'
-import { SetPriceMethod } from './NFTListingsGrid'
-import { RemoveIconWrap } from './shared'
+import { SetPriceMethod } from './shared'
+
+const IMAGE_THUMBNAIL_SIZE = 60
 
 const NFTListRowWrapper = styled(Row)`
-  margin: 24px 0px;
+  padding: 24px 0px;
   align-items: center;
+  border-radius: 8px;
+
+  &:hover {
+    background: ${({ theme }) => opacify(24, theme.backgroundOutline)};
+  }
+`
+
+const RemoveIconContainer = styled.div`
+  width: ${IMAGE_THUMBNAIL_SIZE}px;
+  height: ${IMAGE_THUMBNAIL_SIZE}px;
+  padding-left: 12px;
+  align-self: flex-start;
+  align-items: center;
+  display: flex;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    display: none;
+  }
+
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
 `
 
 const NFTInfoWrapper = styled(Row)`
@@ -27,27 +52,11 @@ const NFTInfoWrapper = styled(Row)`
   }
 `
 
-const ExpandMarketIconWrapper = styled.div`
-  cursor: pointer;
-  margin-right: 8px;
-`
-
-const NFTImageWrapper = styled.div`
-  position: relative;
-  cursor: pointer;
-  height: 48px;
-  margin-right: 8px;
-`
-
 const NFTImage = styled.img`
-  width: 48px;
-  height: 48px;
+  width: ${IMAGE_THUMBNAIL_SIZE}px;
+  height: ${IMAGE_THUMBNAIL_SIZE}px;
   border-radius: 8px;
-`
-
-const RemoveIcon = styled.img`
-  width: 32px;
-  height: 32px;
+  margin-right: 8px;
 `
 
 const HideTextOverflow = css`
@@ -57,7 +66,6 @@ const HideTextOverflow = css`
 `
 
 const TokenInfoWrapper = styled(Column)`
-  gap: 4px;
   margin-right: 8px;
   min-width: 0px;
 `
@@ -77,7 +85,13 @@ const CollectionName = styled(ThemedText.BodySmall)`
 
 const MarketPlaceRowWrapper = styled(Column)`
   gap: 24px;
-  flex: 1;
+  flex: 1.5;
+  margin-right: 12px;
+  padding: 6px 0px;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    flex: 2;
+  }
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     flex: 3;
@@ -103,37 +117,41 @@ export const NFTListRow = ({
   setGlobalPrice,
   selectedMarkets,
 }: NFTListRowProps) => {
-  const [expandMarketplaceRows, setExpandMarketplaceRows] = useState(false)
+  const [expandMarketplaceRows, toggleExpandMarketplaceRows] = useReducer((s) => !s, false)
   const removeAsset = useSellAsset((state) => state.removeSellAsset)
-  const [localMarkets, setLocalMarkets] = useState([])
-  const [hovered, setHovered] = useState(false)
-  const handleHover = () => setHovered(!hovered)
+  const [localMarkets, setLocalMarkets] = useState<ListingMarket[]>([])
+  const [hovered, toggleHovered] = useReducer((s) => !s, false)
+  const theme = useTheme()
 
+  // Keep localMarkets up to date with changes to globalMarkets
   useEffect(() => {
     setLocalMarkets(JSON.parse(JSON.stringify(selectedMarkets)))
-    selectedMarkets.length < 2 && setExpandMarketplaceRows(false)
   }, [selectedMarkets])
 
   return (
-    <NFTListRowWrapper>
-      <NFTInfoWrapper>
-        {localMarkets.length > 1 && (
-          <ExpandMarketIconWrapper onClick={() => setExpandMarketplaceRows(!expandMarketplaceRows)}>
-            {expandMarketplaceRows ? <RowsExpandedIcon /> : <RowsCollpsedIcon />}
-          </ExpandMarketIconWrapper>
+    <NFTListRowWrapper
+      onMouseEnter={() => {
+        !hovered && toggleHovered()
+      }}
+      onMouseLeave={() => {
+        hovered && toggleHovered()
+      }}
+    >
+      <RemoveIconContainer>
+        {hovered && (
+          <Trash2
+            size={20}
+            color={theme.textSecondary}
+            cursor="pointer"
+            onClick={() => {
+              removeAsset(asset)
+            }}
+          />
         )}
-        <NFTImageWrapper
-          onMouseEnter={handleHover}
-          onMouseLeave={handleHover}
-          onClick={() => {
-            removeAsset(asset)
-          }}
-        >
-          <RemoveIconWrap hovered={hovered}>
-            <RemoveIcon src="/nft/svgs/minusCircle.svg" alt="Remove item" />
-          </RemoveIconWrap>
-          <NFTImage alt={asset.name} src={asset.imageUrl || '/nft/svgs/image-placeholder.svg'} />
-        </NFTImageWrapper>
+      </RemoveIconContainer>
+
+      <NFTInfoWrapper>
+        <NFTImage alt={asset.name} src={asset.imageUrl || '/nft/svgs/image-placeholder.svg'} />
         <TokenInfoWrapper>
           <TokenName>{asset.name ? asset.name : `#${asset.tokenId}`}</TokenName>
           <CollectionName>
@@ -143,19 +161,20 @@ export const NFTListRow = ({
         </TokenInfoWrapper>
       </NFTInfoWrapper>
       <MarketPlaceRowWrapper>
-        {expandMarketplaceRows ? (
-          localMarkets.map((market, index) => {
+        {expandMarketplaceRows && localMarkets.length > 1 ? (
+          localMarkets.map((market) => {
             return (
               <MarketplaceRow
                 globalPriceMethod={globalPriceMethod}
                 globalPrice={globalPrice}
                 setGlobalPrice={setGlobalPrice}
                 selectedMarkets={[market]}
-                removeMarket={() => localMarkets.splice(index, 1)}
+                removeMarket={() => setLocalMarkets(localMarkets.filter((oldMarket) => oldMarket.name !== market.name))}
                 asset={asset}
-                showMarketplaceLogo={true}
-                key={index}
+                key={asset.name + market.name}
                 expandMarketplaceRows={expandMarketplaceRows}
+                rowHovered={hovered}
+                toggleExpandMarketplaceRows={toggleExpandMarketplaceRows}
               />
             )
           })
@@ -166,7 +185,8 @@ export const NFTListRow = ({
             setGlobalPrice={setGlobalPrice}
             selectedMarkets={localMarkets}
             asset={asset}
-            showMarketplaceLogo={false}
+            rowHovered={hovered}
+            toggleExpandMarketplaceRows={toggleExpandMarketplaceRows}
           />
         )}
       </MarketPlaceRowWrapper>

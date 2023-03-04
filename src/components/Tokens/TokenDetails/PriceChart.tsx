@@ -275,7 +275,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
 
   return (
     <>
-      <ChartHeader>
+      <ChartHeader data-cy="chart-header">
         {displayPrice.value ? (
           <>
             <TokenPrice>{formatDollar({ num: displayPrice.value, isPrice: true })}</TokenPrice>
@@ -294,7 +294,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
       {!chartAvailable ? (
         <MissingPriceChart width={width} height={graphHeight} message={!!displayPrice.value && missingPricesMessage} />
       ) : (
-        <svg width={width} height={graphHeight} style={{ minWidth: '100%' }}>
+        <svg data-cy="price-chart" width={width} height={graphHeight} style={{ minWidth: '100%' }}>
           <AnimatedInLineChart
             data={prices}
             getX={getX}
@@ -411,7 +411,7 @@ function MissingPriceChart({ width, height, message }: { width: number; height: 
   const theme = useTheme()
   const midPoint = height / 2 + 45
   return (
-    <StyledMissingChart width={width} height={height} style={{ minWidth: '100%' }}>
+    <StyledMissingChart data-cy="missing-chart" width={width} height={height} style={{ minWidth: '100%' }}>
       <path
         d={`M 0 ${midPoint} Q 104 ${midPoint - 70}, 208 ${midPoint} T 416 ${midPoint}
           M 416 ${midPoint} Q 520 ${midPoint - 70}, 624 ${midPoint} T 832 ${midPoint}`}

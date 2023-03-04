@@ -13,7 +13,7 @@ import TimePeriodSelector from './TimeSelector'
 function usePriceHistory(tokenPriceData: TokenPriceQuery): PricePoint[] | undefined {
   // Appends the current price to the end of the priceHistory array
   const priceHistory = useMemo(() => {
-    const market = tokenPriceData.tokens?.[0]?.market
+    const market = tokenPriceData.token?.market
     const priceHistory = market?.priceHistory?.filter(isPricePoint)
     const currentPrice = market?.price?.value
     if (Array.isArray(priceHistory) && currentPrice !== undefined) {
@@ -58,7 +58,7 @@ function Chart({
   const timePeriod = useAtomValue(pageTimePeriodAtom)
 
   return (
-    <ChartContainer>
+    <ChartContainer data-testid="chart-container">
       <ParentSize>
         {({ width }) => <PriceChart prices={prices ?? null} width={width} height={436} timePeriod={timePeriod} />}
       </ParentSize>
