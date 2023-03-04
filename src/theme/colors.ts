@@ -110,7 +110,6 @@ const commonTheme = {
   chain_42: colors.networkArbitrum,
   chain_420: colors.networkOptimism,
   chain_42161: colors.networkArbitrum,
-  chain_421611: colors.networkArbitrum,
   chain_421613: colors.networkArbitrum,
   chain_80001: colors.networkPolygon,
   chain_137_background: colors.purple900,
