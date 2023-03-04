@@ -2,8 +2,8 @@ import { Contract } from '@ethersproject/contracts'
 import { ChainId, WETH } from '@uniswap/sdk'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { useMemo } from 'react'
-import ENS_ABI from '../constants/abis/ens-registrar.json'
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
+import ENS_ABI from '../constants/abis/ens-registrar.json'
 import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
 import ERC20_ABI from '../constants/abis/erc20.json'
 import { MIGRATOR_ABI, MIGRATOR_ADDRESS } from '../constants/abis/migrator'
@@ -61,6 +61,10 @@ export function useENSRegistrarContract(withSignerIfPossible?: boolean): Contrac
       case ChainId.ROPSTEN:
       case ChainId.RINKEBY:
         address = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
+
+        break
+      case ChainId.SEPOLIA:
+        address = '0x457f57fEF8c189EB688f27A7E0674dc610810897'
         break
     }
   }

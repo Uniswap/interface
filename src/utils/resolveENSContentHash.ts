@@ -1,5 +1,5 @@
-import { Contract } from '@ethersproject/contracts'
 import { Provider } from '@ethersproject/abstract-provider'
+import { Contract } from '@ethersproject/contracts'
 import { namehash } from 'ethers/lib/utils'
 
 const REGISTRAR_ABI = [
@@ -23,7 +23,7 @@ const REGISTRAR_ABI = [
     type: 'function'
   }
 ]
-const REGISTRAR_ADDRESS = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
+const REGISTRAR_ADDRESS = '0x457f57fEF8c189EB688f27A7E0674dc610810897'
 
 const RESOLVER_ABI = [
   {
