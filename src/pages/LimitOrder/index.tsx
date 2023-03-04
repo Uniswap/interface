@@ -1,4 +1,5 @@
-import { Trans } from '@lingui/macro'
+// eslint-disable-next-line no-restricted-imports
+import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
@@ -537,7 +538,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                 <AutoColumn gap={'md'}>
                   <div style={{ display: 'relative' }}>
                     <CurrencyInputPanel
-                      actionLabel="You send"
+                      actionLabel={t`You send`}
                       label={
                         independentField === Field.OUTPUT && !showWrap ? (
                           <Trans>From (at most)</Trans>
