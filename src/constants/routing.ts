@@ -26,6 +26,7 @@ import {
   SWISE,
   TRIBE,
   USDC_ARBITRUM,
+  USDC_ARBITRUM_GOERLI,
   USDC_MAINNET,
   USDC_OPTIMISM,
   USDC_POLYGON,
@@ -133,6 +134,11 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT_ARBITRUM_ONE,
     WBTC_ARBITRUM_ONE,
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.ARBITRUM_ONE] as Token,
+  ],
+  [SupportedChainId.ARBITRUM_GOERLI]: [
+    nativeOnChain(SupportedChainId.ARBITRUM_GOERLI),
+    WRAPPED_NATIVE_CURRENCY[SupportedChainId.ARBITRUM_GOERLI] as Token,
+    USDC_ARBITRUM_GOERLI,
   ],
   [SupportedChainId.OPTIMISM]: [
     nativeOnChain(SupportedChainId.OPTIMISM),
