@@ -15,10 +15,7 @@ import { useTickLens } from './useContract'
 import { PoolState, usePool } from './usePools'
 
 const PRICE_FIXED_DIGITS = 8
-const CHAIN_IDS_MISSING_SUBGRAPH_DATA = [
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.ARBITRUM_GOERLI,
-]
+const CHAIN_IDS_MISSING_SUBGRAPH_DATA = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_GOERLI]
 
 // Tick with fields parsed to JSBIs, and active liquidity computed.
 export interface TickProcessed {
@@ -57,12 +54,12 @@ function useTicksFromTickLens(
   const poolAddress =
     currencyA && currencyB && feeAmount && poolState === PoolState.EXISTS
       ? Pool.getAddress(
-        currencyA?.wrapped,
-        currencyB?.wrapped,
-        feeAmount,
-        undefined,
-        chainId ? V3_CORE_FACTORY_ADDRESSES[chainId] : undefined
-      )
+          currencyA?.wrapped,
+          currencyB?.wrapped,
+          feeAmount,
+          undefined,
+          chainId ? V3_CORE_FACTORY_ADDRESSES[chainId] : undefined
+        )
       : undefined
 
   // it is also possible to grab all tick data but it is extremely slow
@@ -83,9 +80,9 @@ function useTicksFromTickLens(
     () =>
       maxIndex && minIndex && poolAddress && poolAddress !== ZERO_ADDRESS
         ? new Array(maxIndex - minIndex + 1)
-          .fill(0)
-          .map((_, i) => i + minIndex)
-          .map((wordIndex) => [poolAddress, wordIndex])
+            .fill(0)
+            .map((_, i) => i + minIndex)
+            .map((wordIndex) => [poolAddress, wordIndex])
         : [],
     [minIndex, maxIndex, poolAddress]
   )
@@ -150,12 +147,12 @@ function useTicksFromSubgraph(
   const poolAddress =
     currencyA && currencyB && feeAmount
       ? Pool.getAddress(
-        currencyA?.wrapped,
-        currencyB?.wrapped,
-        feeAmount,
-        undefined,
-        chainId ? V3_CORE_FACTORY_ADDRESSES[chainId] : undefined
-      )
+          currencyA?.wrapped,
+          currencyB?.wrapped,
+          feeAmount,
+          undefined,
+          chainId ? V3_CORE_FACTORY_ADDRESSES[chainId] : undefined
+        )
       : undefined
 
   return useAllV3TicksQuery(poolAddress, skip, ms`30s`)
