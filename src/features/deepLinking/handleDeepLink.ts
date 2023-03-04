@@ -37,6 +37,12 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>): Genera
 > {
   const { coldStart } = action.payload
   try {
+    // Skip handling any uniswap:// deep links for now for security reasons
+    // currently only used for WalletConnect flow fallback
+    if (action.payload.url.startsWith('uniswap://')) {
+      return
+    }
+
     const url = new URL(action.payload.url)
 
     // handle WC deeplink connections
