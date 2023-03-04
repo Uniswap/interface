@@ -124,6 +124,20 @@ const CHAIN_INFO: ChainInfoMap = {
     color: darkTheme.chain_42,
     backgroundColor: darkTheme.chain_42161_background,
   },
+  [SupportedChainId.ARBITRUM_GOERLI]: {
+    networkType: NetworkType.L2,
+    blockWaitMsBeforeWarning: ms`10m`,
+    bridge: 'https://bridge.arbitrum.io/',
+    docs: 'https://offchainlabs.com/',
+    explorer: 'https://goerli.arbiscan.io/',
+    infoLink: 'https://info.uniswap.org/#/arbitrum/',
+    label: 'Arbitrum Goerli',
+    logoUrl: arbitrumLogoUrl,
+    defaultListUrl: ARBITRUM_LIST, // TODO: use arbitrum goerli token list
+    helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
+    nativeCurrency: { name: 'Goerli Arbitrum Ether', symbol: 'goerliArbETH', decimals: 18 },
+    color: darkTheme.chain_421613,
+  },
   [SupportedChainId.POLYGON]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms`10m`,
