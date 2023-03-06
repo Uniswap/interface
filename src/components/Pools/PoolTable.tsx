@@ -18,7 +18,7 @@ import { darkTheme } from 'theme/colors'
 const GreyBadge = styled(Card)`
   width: fit-content;
   border-radius: 8px;
-  background: ${darkTheme.background};
+  background: ${darkTheme.backgroundModule};
   color: ${darkTheme.textPrimary};
   padding: 4px 6px;
   font-weight: 400;
@@ -53,7 +53,7 @@ function feeTierPercent(fee: number): string {
   return (fee / 10000).toPrecision(1) + '%'
 }
 
-const Label = styled.div<{ end?: number }>`
+const Label = styled.div<{ end?: number; color?: string }>`
   display: flex;
   font-size: 16px;
   font-weight: 400;
@@ -63,6 +63,7 @@ const Label = styled.div<{ end?: number }>`
   @media screen and (max-width: 640px) {
     font-size: 14px;
   }
+  color: ${({ color }) => (color ? color : '#ffffff')};
 `
 
 const ClickableText = styled(Label)`
@@ -200,7 +201,7 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
   return (
     <LinkWrapper to={'/add/' + poolData.token0.address + '/' + poolData.token1.address}>
       <ResponsiveGrid>
-        <Label>{index + 1}</Label>
+        <Label color="#ffffff">{index + 1}</Label>
         <Label>
           <RowFixed>
             <DoubleCurrencyLogo size={20} currency0={currency0} currency1={currency1} />
@@ -279,17 +280,21 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
         {sortedPools.length > 0 ? (
           <AutoColumn gap="16px">
             <ResponsiveGrid>
-              <Label color="#ffffff">#</Label>
-              <ClickableText color="#ffffff" onClick={() => handleSort(SORT_FIELD.feeTier)}>
+              <Label color={darkTheme.textQuaternary}>#</Label>
+              <ClickableText color={darkTheme.textQuaternary} onClick={() => handleSort(SORT_FIELD.feeTier)}>
                 Pool {arrow(SORT_FIELD.feeTier)}
               </ClickableText>
-              <ClickableText color="#ffffff" end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
+              <ClickableText color={darkTheme.textQuaternary} end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
                 TVL {arrow(SORT_FIELD.tvlUSD)}
               </ClickableText>
-              <ClickableText color="#ffffff" end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
+              <ClickableText color={darkTheme.textQuaternary} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
                 Volume 24H {arrow(SORT_FIELD.volumeUSD)}
               </ClickableText>
-              <ClickableText color="#ffffff" end={1} onClick={() => handleSort(SORT_FIELD.volumeUSDWeek)}>
+              <ClickableText
+                color={darkTheme.textQuaternary}
+                end={1}
+                onClick={() => handleSort(SORT_FIELD.volumeUSDWeek)}
+              >
                 Volume 7D {arrow(SORT_FIELD.volumeUSDWeek)}
               </ClickableText>
             </ResponsiveGrid>

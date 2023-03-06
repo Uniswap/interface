@@ -125,29 +125,31 @@ export const darkTheme = {
 
   userThemeColor: colors.magentaVibrant,
 
-  background: colors.gray800,
+  background: '#0b0a09',
   backgroundBackdrop: colors.gray950,
-  backgroundSurface: colors.gray900,
-  backgroundModule: colors.gray800,
-  backgroundInteractive: colors.gray700,
+  backgroundSurface: '#0b0a09',
+  backgroundModule: '#2d2925',
+  backgroundInteractive: '#4f4740',
   backgroundFloating: opacify(12, colors.black),
-  backgroundOutline: colors.gray750,
-  backgroundScrim: opacify(72, colors.gray900),
-  backgroundScrolledSurface: opacify(72, colors.gray900),
+  backgroundOutline: '#2d2925',
+  backgroundScrim: opacify(72, '#0b0a09'),
+  backgroundScrolledSurface: opacify(72, '#0b0a09'),
 
   textPrimary: colors.white,
-  textSecondary: colors.gray300,
-  textTertiary: colors.gray500,
+  textSecondary: '#918378',
+  textTertiary: '#918378',
 
-  accentAction: colors.blue400,
-  accentActive: colors.blue400,
+  textQuaternary: '#ed4e33',
+
+  accentAction: '#ed4e33',
+  accentActive: '#ed4e33',
   accentSuccess: colors.green200,
   accentWarning: colors.gold200,
   accentFailure: colors.red300,
   accentCritical: colors.red300,
 
-  accentActionSoft: opacify(24, colors.blue400),
-  accentActiveSoft: opacify(24, colors.blue400),
+  accentActionSoft: opacify(24, '#ed4e33'),
+  accentActiveSoft: opacify(24, '#ed4e33'),
   accentSuccessSoft: opacify(24, colors.green400),
   accentWarningSoft: opacify(24, colors.gold200),
   accentFailureSoft: opacify(12, colors.red300),
@@ -163,7 +165,7 @@ export const darkTheme = {
   deepShadow: '12px 16px 24px rgba(0, 0, 0, 0.24), 12px 8px 12px rgba(0, 0, 0, 0.24), 4px 4px 8px rgba(0, 0, 0, 0.32);',
   shallowShadow: '4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12);',
 
-  networkDefaultShadow: `0px 40px 120px ${opacify(16, colors.blue400)}`,
+  networkDefaultShadow: `0px 40px 120px ${opacify(16, '#ed4e33')}`,
 
   stateOverlayHover: opacify(8, colors.gray300),
   stateOverlayPressed: opacify(24, colors.gray200),
@@ -190,6 +192,7 @@ export const lightTheme: Theme = {
   textPrimary: colors.gray900,
   textSecondary: colors.gray400,
   textTertiary: colors.gray300,
+  textQuaternary: '#ed4e33',
 
   accentAction: colors.pink400,
   accentActive: colors.blue400,

@@ -9,7 +9,7 @@ function getDeprecatedTheme(darkMode: boolean) {
     // backgrounds / grays
 
     // we could move this to `background`, but gray50 is a bit different from #FAFAFA
-    deprecated_bg1: darkMode ? colors.gray800 : colors.gray50,
+    deprecated_bg1: darkMode ? '#2d2925' : colors.gray50,
 
     deprecated_bg3: darkMode ? colors.gray600 : colors.gray200,
     deprecated_bg4: darkMode ? colors.gray500 : colors.gray300,
