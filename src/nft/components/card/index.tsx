@@ -176,7 +176,7 @@ export const NftCard = ({
       isDisabled={isDisabled}
       detailsHref={detailsHref(asset)}
       doNotLinkToDetails={doNotLinkToDetails}
-      data-testid={testId}
+      testId={testId}
     >
       <Card.ImageContainer isDisabled={isDisabled}>
         <Card.MarketplaceContainer isSelected={isSelected} marketplace={marketplace} tokenType={tokenType} />

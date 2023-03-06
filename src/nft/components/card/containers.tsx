@@ -121,13 +121,15 @@ const CardContainer = ({
   isSelected,
   isDisabled,
   children,
+  testId,
 }: {
   isSelected: boolean
   isDisabled: boolean
   children: ReactNode
+  testId?: string
 }) => {
   return (
-    <StyledCardContainer selected={isSelected} isDisabled={isDisabled} draggable={false}>
+    <StyledCardContainer selected={isSelected} isDisabled={isDisabled} draggable={false} data-testid={testId}>
       {children}
     </StyledCardContainer>
   )
@@ -142,16 +144,18 @@ const Container = ({
   isDisabled,
   detailsHref,
   doNotLinkToDetails = false,
+  testId,
   children,
 }: {
   isSelected: boolean
   isDisabled: boolean
   detailsHref: string
   doNotLinkToDetails: boolean
+  testId?: string
   children: ReactNode
 }) => {
   return (
-    <CardContainer isSelected={isSelected} isDisabled={isDisabled}>
+    <CardContainer isSelected={isSelected} isDisabled={isDisabled} testId={testId}>
       <StyledLink to={doNotLinkToDetails ? '' : detailsHref}>{children}</StyledLink>
     </CardContainer>
   )
