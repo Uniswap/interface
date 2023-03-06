@@ -1,4 +1,4 @@
-import * as Card from 'nft/components/card/Containers'
+import * as Card from 'nft/components/card/containers'
 import { GenieAsset, UniformAspectRatio, UniformAspectRatios, WalletAsset } from 'nft/types'
 import { isAudio, isVideo } from 'nft/utils'
 import { ReactNode, useCallback } from 'react'
