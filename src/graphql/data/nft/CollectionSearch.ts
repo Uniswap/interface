@@ -16,68 +16,23 @@ gql`
       edges {
         cursor
         node {
-          bannerImage {
-            url
-          }
-          collectionId
-          description
-          discordUrl
-          homepageUrl
           image {
             url
           }
-          instagramName
           isVerified
           name
           numAssets
-          twitterName
           nftContracts {
             address
             chain
             name
-            standard
             symbol
             totalSupply
-          }
-          traits {
-            name
-            values
-            stats {
-              name
-              value
-              assets
-              listings
-            }
           }
           markets(currencies: ETH) {
             floorPrice {
               currency
               value
-            }
-            owners
-            totalVolume {
-              value
-              currency
-            }
-            listings {
-              value
-            }
-            volume(duration: DAY) {
-              value
-              currency
-            }
-            volumePercentChange(duration: DAY) {
-              value
-              currency
-            }
-            floorPricePercentChange(duration: DAY) {
-              value
-              currency
-            }
-            marketplaces {
-              marketplace
-              listings
-              floorPrice
             }
           }
         }

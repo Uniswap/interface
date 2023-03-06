@@ -1096,7 +1096,7 @@ export type CollectionSearchQueryVariables = Exact<{
 }>;
 
 
-export type CollectionSearchQuery = { __typename?: 'Query', nftCollections?: { __typename?: 'NftCollectionConnection', edges: Array<{ __typename?: 'NftCollectionEdge', cursor: string, node: { __typename?: 'NftCollection', collectionId: string, description?: string, discordUrl?: string, homepageUrl?: string, instagramName?: string, isVerified?: boolean, name?: string, numAssets?: number, twitterName?: string, bannerImage?: { __typename?: 'Image', url: string }, image?: { __typename?: 'Image', url: string }, nftContracts?: Array<{ __typename?: 'NftContract', address: string, chain: Chain, name?: string, standard?: NftStandard, symbol?: string, totalSupply?: number }>, traits?: Array<{ __typename?: 'NftCollectionTrait', name?: string, values?: Array<string>, stats?: Array<{ __typename?: 'NftCollectionTraitStats', name?: string, value?: string, assets?: number, listings?: number }> }>, markets?: Array<{ __typename?: 'NftCollectionMarket', owners?: number, floorPrice?: { __typename?: 'TimestampedAmount', currency?: Currency, value: number }, totalVolume?: { __typename?: 'TimestampedAmount', value: number, currency?: Currency }, listings?: { __typename?: 'TimestampedAmount', value: number }, volume?: { __typename?: 'TimestampedAmount', value: number, currency?: Currency }, volumePercentChange?: { __typename?: 'TimestampedAmount', value: number, currency?: Currency }, floorPricePercentChange?: { __typename?: 'TimestampedAmount', value: number, currency?: Currency }, marketplaces?: Array<{ __typename?: 'NftCollectionMarketplace', marketplace?: NftMarketplace, listings?: number, floorPrice?: number }> }> } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string, hasNextPage?: boolean, hasPreviousPage?: boolean, startCursor?: string } } };
+export type CollectionSearchQuery = { __typename?: 'Query', nftCollections?: { __typename?: 'NftCollectionConnection', edges: Array<{ __typename?: 'NftCollectionEdge', cursor: string, node: { __typename?: 'NftCollection', isVerified?: boolean, name?: string, numAssets?: number, image?: { __typename?: 'Image', url: string }, nftContracts?: Array<{ __typename?: 'NftContract', address: string, chain: Chain, name?: string, symbol?: string, totalSupply?: number }>, markets?: Array<{ __typename?: 'NftCollectionMarket', floorPrice?: { __typename?: 'TimestampedAmount', currency?: Currency, value: number } }> } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string, hasNextPage?: boolean, hasPreviousPage?: boolean, startCursor?: string } } };
 
 export type DetailsQueryVariables = Exact<{
   address: Scalars['String'];
@@ -1837,68 +1837,23 @@ export const CollectionSearchDocument = gql`
     edges {
       cursor
       node {
-        bannerImage {
-          url
-        }
-        collectionId
-        description
-        discordUrl
-        homepageUrl
         image {
           url
         }
-        instagramName
         isVerified
         name
         numAssets
-        twitterName
         nftContracts {
           address
           chain
           name
-          standard
           symbol
           totalSupply
-        }
-        traits {
-          name
-          values
-          stats {
-            name
-            value
-            assets
-            listings
-          }
         }
         markets(currencies: ETH) {
           floorPrice {
             currency
             value
-          }
-          owners
-          totalVolume {
-            value
-            currency
-          }
-          listings {
-            value
-          }
-          volume(duration: DAY) {
-            value
-            currency
-          }
-          volumePercentChange(duration: DAY) {
-            value
-            currency
-          }
-          floorPricePercentChange(duration: DAY) {
-            value
-            currency
-          }
-          marketplaces {
-            marketplace
-            listings
-            floorPrice
           }
         }
       }
