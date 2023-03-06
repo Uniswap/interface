@@ -5096,6 +5096,30 @@
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
 
+"@uniswap/smart-order-router@^2.10.0":
+  version "2.10.2"
+  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-2.10.2.tgz#c6aabe890d096f4c4727011ecfe6f37a401f99a5"
+  integrity sha512-Nq/O5p5vUxcGL2PpdB4/mjq0cgfpisPA8Q29dPs3+dgYJ3PNgIasCoENMHgauTvCFCNyql+GwanfeW/DtEcd5A==
+  dependencies:
+    "@uniswap/default-token-list" "^2.0.0"
+    "@uniswap/router-sdk" "^1.3.0"
+    "@uniswap/swap-router-contracts" "^1.3.0"
+    "@uniswap/token-lists" "^1.0.0-beta.25"
+    "@uniswap/v2-sdk" "^3.0.1"
+    "@uniswap/v3-sdk" "^3.7.0"
+    async-retry "^1.3.1"
+    await-timeout "^1.1.1"
+    axios "^0.21.1"
+    bunyan "^1.8.15"
+    bunyan-blackhole "^1.1.1"
+    ethers "^5.6.1"
+    graphql "^15.5.0"
+    graphql-request "^3.4.0"
+    lodash "^4.17.21"
+    mnemonist "^0.38.3"
+    node-cache "^5.1.2"
+    stats-lite "^2.2.0"
+
 "@uniswap/smart-order-router@^3.6.0":
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-3.6.0.tgz#45141dd97083725d185b841e0a465ab4107cc1be"
@@ -5255,10 +5279,10 @@
     "@uniswap/v3-core" "1.0.0"
     "@uniswap/v3-periphery" "^1.0.1"
 
-"@uniswap/widgets@^2.43.2":
-  version "2.43.2"
-  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.43.2.tgz#a3fa428f35c606a355563749c527b5fb3659a1dd"
-  integrity sha512-LPfFukRh1VhemDBYu1dI4qxFa73fZfB0JgR1TRXPtrw/fVsK30bmV0kXIYm8O1coOZyB+2oiuofv+Q+Xc7gBtQ==
+"@uniswap/widgets@2.40.0":
+  version "2.40.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.40.0.tgz#98539f31cc21a8e70ced86da65db642f3380db14"
+  integrity sha512-55I6r8a3XfWAEFfU6eAj4BUbaYRBPyrbfzaedAy0+9SAntnxxT7wyh3DMC9MoMLEwd4PPLemWyLfVQTVIoYn0g==
   dependencies:
     "@babel/runtime" ">=7.17.0"
     "@fontsource/ibm-plex-mono" "^4.5.1"
@@ -5269,10 +5293,10 @@
     "@uniswap/permit2-sdk" "^1.2.0"
     "@uniswap/redux-multicall" "^1.1.8"
     "@uniswap/router-sdk" "^1.3.0"
-    "@uniswap/sdk-core" "^3.2.0"
-    "@uniswap/smart-order-router" "^3.6.0"
+    "@uniswap/sdk-core" "^3.0.1"
+    "@uniswap/smart-order-router" "^2.10.0"
     "@uniswap/token-lists" "^1.0.0-beta.30"
-    "@uniswap/universal-router-sdk" "^1.3.8"
+    "@uniswap/universal-router-sdk" "^1.3.6"
     "@uniswap/v2-sdk" "^3.0.1"
     "@uniswap/v3-sdk" "^3.8.2"
     "@web3-react/core" "8.0.35-beta.0"
@@ -5286,7 +5310,7 @@
     ajv "^8.11.0"
     ajv-formats "^2.1.1"
     cids "^1.0.0"
-    ethers "^5.7.2"
+    ethers "^5.6.1"
     immer "^9.0.6"
     jotai "^1.3.7"
     jsbi "^3.1.4"
@@ -10259,7 +10283,7 @@ ethereumjs-util@^7.1.0:
     ethereum-cryptography "^0.1.3"
     rlp "^2.2.4"
 
-ethers@^5.3.1, ethers@^5.5.2, ethers@^5.6.0, ethers@^5.6.7, ethers@^5.6.8, ethers@^5.7.2:
+ethers@^5.3.1, ethers@^5.5.2, ethers@^5.6.0, ethers@^5.6.1, ethers@^5.6.7, ethers@^5.6.8, ethers@^5.7.2:
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.7.2.tgz#3a7deeabbb8c030d4126b24f84e525466145872e"
   integrity sha512-wswUsmWo1aOK8rR7DIKiWSw9DbLWe6x98Jrn8wcTflTVvaXhAMaB5zGAXy0GYQEQp9iO1iSHWVyARQm11zUtyg==
