@@ -146,7 +146,7 @@ export interface NftCardDisplayProps {
   notSelectedInfo?: ReactNode
 }
 
-export function NftCard({
+export const NftCard = ({
   asset,
   display,
   isSelected,
@@ -162,7 +162,7 @@ export function NftCard({
   setRenderedHeight,
   setCurrentTokenPlayingMedia,
   testId,
-}: NftCardProps) {
+}: NftCardProps) => {
   const clickActionButton = useSelectAsset(addAssetToBag, removeAssetFromBag, isSelected, isDisabled, onClick)
 
   const collectionNft = 'marketplace' in asset
