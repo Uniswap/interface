@@ -13,7 +13,7 @@ import { useQuoter } from './useContract'
 
 const QUOTE_GAS_OVERRIDES: { [chainId: number]: number } = {
   [SupportedChainId.ARBITRUM_ONE]: 25_000_000,
-  [SupportedChainId.ARBITRUM_RINKEBY]: 25_000_000,
+  [SupportedChainId.ARBITRUM_GOERLI]: 25_000_000,
   [SupportedChainId.CELO]: 50_000_000,
   [SupportedChainId.CELO_ALFAJORES]: 50_000_000,
   [SupportedChainId.POLYGON]: 40_000_000,
@@ -58,16 +58,18 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
     gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
   })
 
+  const currenciesAreTheSame = useMemo(
+    () => currencyIn && currencyOut && (currencyIn.equals(currencyOut) || currencyIn.wrapped.equals(currencyOut)),
+    [currencyIn, currencyOut]
+  )
+
   return useMemo(() => {
     if (
       !amountSpecified ||
       !currencyIn ||
       !currencyOut ||
       quotesResults.some(({ valid }) => !valid) ||
-      // skip when tokens are the same
-      (tradeType === TradeType.EXACT_INPUT
-        ? amountSpecified.currency.equals(currencyOut)
-        : amountSpecified.currency.equals(currencyIn))
+      currenciesAreTheSame
     ) {
       return {
         state: TradeState.INVALID,
@@ -145,5 +147,5 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
         tradeType,
       }),
     }
-  }, [amountSpecified, currencyIn, currencyOut, quotesResults, routes, routesLoading, tradeType])
+  }, [amountSpecified, currenciesAreTheSame, currencyIn, currencyOut, quotesResults, routes, routesLoading, tradeType])
 }
