@@ -304,7 +304,7 @@ const Row = ({
               }}
             >
               <Text fontSize={14} fontWeight={500}>
-                {getTokenSymbolWithHardcode(chainId, farmingPool.token0.wrapped.address, farmingPool.token0.symbol)} -
+                {getTokenSymbolWithHardcode(chainId, farmingPool.token0.wrapped.address, farmingPool.token0.symbol)} -{' '}
                 {getTokenSymbolWithHardcode(chainId, farmingPool.token1.wrapped.address, farmingPool.token1.symbol)}
               </Text>
             </Link>
