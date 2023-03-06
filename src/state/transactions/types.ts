@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { TradeType } from '@uniswap/sdk-core'
 
 import { VoteOption } from '../governance/types'
@@ -77,6 +78,7 @@ interface BaseSwapTransactionInfo extends BaseTransactionInfo {
   tradeType: TradeType
   inputCurrencyId: string
   outputCurrencyId: string
+  deadline: BigNumber
 }
 
 export interface ExactInputSwapTransactionInfo extends BaseSwapTransactionInfo {

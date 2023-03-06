@@ -1,15 +1,18 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
 import ms from 'ms.macro'
 import { useCallback, useEffect } from 'react'
+import { ExactOutputSwapTransactionInfo, TransactionInfo } from 'state/transactions/types'
 import { retry, RetryableError, RetryOptions } from 'utils/retry'
 
 interface Transaction {
   addedTime: number
   receipt?: unknown
   lastCheckedBlockNumber?: number
+  info: TransactionInfo
 }
 
 export function shouldCheck(lastBlockNumber: number, tx: Transaction): boolean {
@@ -49,15 +52,28 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
 
   const lastBlockNumber = useBlockNumber()
   const fastForwardBlockNumber = useFastForwardBlockNumber()
+  const blockTimestamp = useCurrentBlockTimestamp()
 
   const getReceipt = useCallback(
     (hash: string) => {
       if (!provider || !chainId) throw new Error('No provider or chainId')
+      if (!blockTimestamp) throw new Error('No block timestamp')
       const retryOptions = RETRY_OPTIONS_BY_CHAIN_ID[chainId] ?? DEFAULT_RETRY_OPTIONS
+      const deadline = (pendingTransactions[hash].info as ExactOutputSwapTransactionInfo).deadline
       return retry(
         () =>
           provider.getTransactionReceipt(hash).then((receipt) => {
             if (receipt === null) {
+              if (blockTimestamp.gt(deadline)) {
+                onReceipt({
+                  chainId,
+                  hash,
+                  receipt: {
+                    ...(receipt as TransactionReceipt),
+                    status: 0,
+                  },
+                })
+              }
               console.debug(`Retrying tranasaction receipt for ${hash}`)
               throw new RetryableError()
             }
@@ -66,7 +82,7 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
         retryOptions
       )
     },
-    [chainId, provider]
+    [provider, chainId, blockTimestamp, pendingTransactions, onReceipt]
   )
 
   useEffect(() => {
