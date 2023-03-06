@@ -57,13 +57,12 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
   const getReceipt = useCallback(
     (hash: string) => {
       if (!provider || !chainId) throw new Error('No provider or chainId')
-      if (!blockTimestamp) throw new Error('No block timestamp')
       const retryOptions = RETRY_OPTIONS_BY_CHAIN_ID[chainId] ?? DEFAULT_RETRY_OPTIONS
       const deadline = (pendingTransactions[hash].info as ExactOutputSwapTransactionInfo).deadline
       return retry(
         () =>
           provider.getTransactionReceipt(hash).then((receipt) => {
-            if (receipt === null) {
+            if (receipt === null && blockTimestamp) {
               if (blockTimestamp.gt(deadline)) {
                 onReceipt({
                   chainId,
