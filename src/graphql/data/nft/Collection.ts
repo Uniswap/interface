@@ -142,16 +142,17 @@ export function formatCollectionQueryData(
   }
 }
 
-export interface useCollectionReturnProps {
+interface useCollectionReturnProps {
   data: GenieCollection
   loading: boolean
 }
 
-export function useCollection(address: string): useCollectionReturnProps {
+export function useCollection(address: string, skip?: boolean): useCollectionReturnProps {
   const { data: queryData, loading } = useCollectionQuery({
     variables: {
       addresses: address,
     },
+    skip,
   })
 
   const queryCollection = queryData?.nftCollections?.edges?.[0]?.node as NonNullable<NftCollection>
