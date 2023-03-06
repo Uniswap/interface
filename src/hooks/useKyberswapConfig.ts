@@ -3,7 +3,7 @@ import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Connection } from '@solana/web3.js'
 import { ethers } from 'ethers'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import {
   KyberswapConfigurationResponse,
@@ -79,9 +79,28 @@ const parseGlobalResponse = (
     aggregatorAPI: `${aggregatorDomain}/${NETWORKS_INFO[chainId].aggregatorRoute}/route/encode`,
   }
 }
+export const useLazyKyberswapConfig = (): ((customChainId?: ChainId) => Promise<KyberswapConfig>) => {
+  const storeChainId = useSelector<AppState, ChainId>(state => state.user.chainId) || ChainId.MAINNET // read directly from store instead of useActiveWeb3React to prevent circular loop
+  const [getKyberswapConfiguration] = useLazyGetKyberswapConfigurationQuery()
+  const fetchKyberswapConfig = useCallback(
+    async (customChainId?: ChainId) => {
+      const chainId = customChainId ?? storeChainId
+      try {
+        const { data } = await getKyberswapConfiguration({ chainId: chainId })
+        return parseResponse(data, chainId)
+      } catch {
+        return parseResponse(undefined, chainId)
+      }
+    },
+    [getKyberswapConfiguration, storeChainId],
+  )
+  return fetchKyberswapConfig
+}
+
 export const useKyberswapConfig = (customChainId?: ChainId): KyberswapConfig => {
-  const chainId = useSelector<AppState, ChainId>(state => state.user.chainId) || ChainId.MAINNET // read directly from store instead of useActiveWeb3React to prevent circular loop
-  const { data } = useGetKyberswapConfigurationQuery({ chainId: customChainId ?? chainId })
+  const storeChainId = useSelector<AppState, ChainId>(state => state.user.chainId) || ChainId.MAINNET // read directly from store instead of useActiveWeb3React to prevent circular loop
+  const chainId = customChainId ?? storeChainId
+  const { data } = useGetKyberswapConfigurationQuery({ chainId: chainId })
   const result = useMemo(() => parseResponse(data, chainId), [chainId, data])
   return result
 }
