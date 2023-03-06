@@ -83,6 +83,7 @@ export enum Chain {
   EthereumGoerli = 'ETHEREUM_GOERLI',
   Optimism = 'OPTIMISM',
   Polygon = 'POLYGON',
+  Boba = 'BOBA',
   UnknownChain = 'UNKNOWN_CHAIN'
 }
 
@@ -2163,9 +2164,6 @@ export const TrendingCollectionsDocument = gql`
             value
           }
           sales {
-            value
-          }
-          totalVolume {
             value
           }
           listings {

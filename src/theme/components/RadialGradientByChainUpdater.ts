@@ -77,6 +77,15 @@ export default function RadialGradientByChainUpdater(): null {
         backgroundRadialGradientElement.style.background = darkMode ? polygonDarkGradient : polygonLightGradient
         break
       }
+      case SupportedChainId.BOBA: {
+        setBackground(backgroundResetStyles)
+        const bobaLightGradient =
+          'radial-gradient(100% 100% at 50% 0%, rgb(210 220 185) 0%, rgb(245 255 220 / 20%) 52.6%, rgba(0, 0, 0, 0) 100%), rgb(255, 255, 255)'
+        const bobaDarkGradient =
+          'radial-gradient(100% 100% at 50% 0%, rgba(182, 255,0,0.2) 0%, rgba(36,51,0,0.05) 52.6%, rgba(0, 0, 0, 0) 100%), rgb(13, 14, 14)'
+        backgroundRadialGradientElement.style.background = darkMode ? bobaDarkGradient : bobaLightGradient
+        break
+      }
       case SupportedChainId.CELO:
       case SupportedChainId.CELO_ALFAJORES: {
         setBackground(backgroundResetStyles)
