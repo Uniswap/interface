@@ -97,7 +97,7 @@ export const ViewMyNftsAsset = ({
       onClick={onCardClick}
       mediaShouldBePlaying={mediaShouldBePlaying}
       setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-      testId="nft-collection-asset"
+      testId="nft-profile-asset"
       doNotLinkToDetails={hideDetails}
     />
   )
