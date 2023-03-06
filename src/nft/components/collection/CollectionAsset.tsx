@@ -7,8 +7,14 @@ import { formatWeiToDecimal } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
 
 import { NftCard, NftCardDisplayProps } from '../card'
-import { useNotForSale } from './Card'
-import * as Card from './Card'
+import { Ranking as RankingContainer, Suspicious as SuspiciousContainer } from '../card/containers'
+
+const useNotForSale = (asset: GenieAsset) =>
+  useMemo(() => {
+    let notForSale = true
+    notForSale = asset.notForSale || BigNumber.from(asset.priceInfo ? asset.priceInfo.ETHPrice : 0).lt(0)
+    return notForSale
+  }, [asset])
 
 interface CollectionAssetProps {
   asset: GenieAsset
@@ -79,8 +85,8 @@ export const CollectionAsset = ({
   const display: NftCardDisplayProps = useMemo(() => {
     return {
       primaryInfo: asset.name ? asset.name : `#${asset.tokenId}`,
-      primaryInfoExtra: asset.susFlag ? <Card.Suspicious /> : undefined,
-      primaryInfoRight: asset.rarity && provider ? <Card.Ranking provider={provider} /> : undefined,
+      primaryInfoExtra: asset.susFlag ? <SuspiciousContainer /> : undefined,
+      primaryInfoRight: asset.rarity && provider ? <RankingContainer provider={provider} /> : undefined,
       secondaryInfo: notForSale ? '' : `${formatWeiToDecimal(asset.priceInfo.ETHPrice, true)} ETH`,
       selectedInfo: 'Remove from bag',
       notSelectedInfo: 'Add to bag',
