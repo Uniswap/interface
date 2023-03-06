@@ -33,7 +33,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
 
   const onPress = (): void => {
     tokenDetailsNavigation.preload(currencyId)
-    tokenDetailsNavigation.navigate(currencyId, name)
+    tokenDetailsNavigation.navigate(currencyId)
     if (searchContext) {
       sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
         query: searchContext.query,

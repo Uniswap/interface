@@ -111,7 +111,6 @@ export function NFTItemScreen({
   const onPressOwner = (): void => {
     navigation.navigate(Screens.ExternalProfile, {
       address: owner,
-      walletName: ownerDisplayName?.name,
     })
   }
 

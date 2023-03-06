@@ -109,7 +109,6 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
           owner,
           address: asset.contractAddress ?? '',
           tokenId: asset.tokenId ?? '',
-          collectionName: asset.collectionName ?? '',
         })
       },
       [navigation, owner]

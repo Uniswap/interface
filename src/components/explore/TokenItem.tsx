@@ -132,7 +132,7 @@ export const TokenItem = memo(({ tokenItemData, index, metadataDisplayType }: To
 
   const onPress = (): void => {
     tokenDetailsNavigation.preload(_currencyId)
-    tokenDetailsNavigation.navigate(_currencyId, name)
+    tokenDetailsNavigation.navigate(_currencyId)
     sendAnalyticsEvent(MobileEventName.ExploreTokenItemSelected, {
       address: currencyIdToAddress(_currencyId),
       chain: currencyIdToChain(_currencyId) as number,

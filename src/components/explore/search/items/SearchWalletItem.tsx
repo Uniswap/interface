@@ -33,7 +33,7 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
 
   const onPress = (): void => {
     preload(address)
-    navigate(address, displayName?.name)
+    navigate(address)
     if (searchContext) {
       sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
         query: searchContext.query,

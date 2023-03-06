@@ -48,8 +48,8 @@ export function useCrossChainBalances(
 /** Utility hook to simplify navigating to token details screen */
 export function useTokenDetailsNavigation(): {
   preload: (currencyId: CurrencyId) => void
-  navigate: (currencyId: CurrencyId, currencyName?: string) => void
-  navigateWithPop: (currencyId: CurrencyId, currencyName?: string) => void
+  navigate: (currencyId: CurrencyId) => void
+  navigateWithPop: (currencyId: CurrencyId) => void
 } {
   const navigation = useAppStackNavigation()
   const [load] = useTokenDetailsScreenLazyQuery()
@@ -65,15 +65,15 @@ export function useTokenDetailsNavigation(): {
   // for that reason, we first `pop` token details from the stack, and then push it.
   //
   // Use whenever we want to avoid nested token details screens in the nav stack.
-  const navigateWithPop = (currencyId: CurrencyId, currencyName?: string): void => {
+  const navigateWithPop = (currencyId: CurrencyId): void => {
     if (navigation.canGoBack()) {
       navigation.pop()
     }
-    navigation.push(Screens.TokenDetails, { currencyId, currencyName })
+    navigation.push(Screens.TokenDetails, { currencyId })
   }
 
-  const navigate = (currencyId: CurrencyId, currencyName?: string): void => {
-    navigation.navigate(Screens.TokenDetails, { currencyId, currencyName })
+  const navigate = (currencyId: CurrencyId): void => {
+    navigation.navigate(Screens.TokenDetails, { currencyId })
   }
 
   return { preload, navigate, navigateWithPop }

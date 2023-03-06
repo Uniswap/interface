@@ -321,7 +321,6 @@ function TokenDetails({
               <TokenBalances
                 currentChainBalance={currentChainBalance}
                 otherChainBalances={otherChainBalances}
-                tokenName={token?.name ?? undefined}
                 onPressSend={onPressSend}
               />
               <Box mb="spacing8" mx="spacing16">

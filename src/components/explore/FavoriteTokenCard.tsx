@@ -102,7 +102,7 @@ function FavoriteTokenCard({
   const onPress = (): void => {
     if (isEditing || !currencyId) return
     tokenDetailsNavigation.preload(currencyId)
-    tokenDetailsNavigation.navigate(currencyId, token?.name ?? undefined)
+    tokenDetailsNavigation.navigate(currencyId)
   }
 
   if (isNonPollingRequestInFlight(networkStatus)) {

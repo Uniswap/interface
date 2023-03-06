@@ -22,12 +22,10 @@ import { SendButton } from './SendButton'
  * If user has no balance at all, it renders nothing.
  */
 export function TokenBalances({
-  tokenName,
   currentChainBalance,
   otherChainBalances,
   onPressSend,
 }: {
-  tokenName?: string
   currentChainBalance: PortfolioBalance | null
   otherChainBalances: PortfolioBalance[] | null
   onPressSend: () => void
@@ -46,9 +44,9 @@ export function TokenBalances({
   const navigateToCurrency = useCallback(
     (currencyId: CurrencyId) => {
       preload(currencyId)
-      navigateWithPop(currencyId, tokenName)
+      navigateWithPop(currencyId)
     },
-    [navigateWithPop, preload, tokenName]
+    [navigateWithPop, preload]
   )
 
   if (!hasCurrentChainBalances && !hasOtherChainBalances) return null
