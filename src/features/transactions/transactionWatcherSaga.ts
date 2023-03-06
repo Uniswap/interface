@@ -190,7 +190,8 @@ export function* watchTransaction(transaction: TransactionDetails): Generator<an
   // Check if monitored transaction has been replaced on chain
   const highestConfirmedNonce = yield* call([provider, provider.getTransactionCount], address)
   const nonce = options.request.nonce
-  const hasInvalidNonce = !nonce || highestConfirmedNonce > nonce
+
+  const hasInvalidNonce = nonce === undefined || highestConfirmedNonce > nonce
 
   // Dont wait for receipt if tx is invalid, it wont get picked up. Only apply to Mainnet
   // because L2s may confirm before this saga runs causing it to think the tx was invalid
