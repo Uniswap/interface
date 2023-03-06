@@ -310,7 +310,7 @@ export const CEUR_CELO_ALFAJORES = new Token(
   'Celo Euro Stablecoin'
 )
 
-const BOBA_BOBA = new Token(
+export const BOBA_BOBA = new Token(
   SupportedChainId.BOBA,
   '0xa18bF3994C0Cc6E3b63ac420308E5383f53120D7',
   18,
@@ -423,10 +423,10 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
   ),
   [SupportedChainId.BOBA]: new Token(
     SupportedChainId.BOBA,
-    '0xa18bF3994C0Cc6E3b63ac420308E5383f53120D7',
+    '0x4200000000000000000000000000000000000006',
     18,
-    'BOBA',
-    'Boba Token'
+    'WETH',
+    'Wrapped Ether'
   ),
 }
 
@@ -447,15 +447,6 @@ function getCeloNativeCurrency(chainId: number) {
 
 export function isBoba(chainId: number): chainId is SupportedChainId.BOBA {
   return chainId === SupportedChainId.BOBA
-}
-
-function getBobaNativeCurrency(chainId: number) {
-  switch (chainId) {
-    case SupportedChainId.BOBA:
-      return BOBA_BOBA
-    default:
-      throw new Error('Not Boba')
-  }
 }
 
 function isMatic(chainId: number): chainId is SupportedChainId.POLYGON | SupportedChainId.POLYGON_MUMBAI {
@@ -502,8 +493,6 @@ export function nativeOnChain(chainId: number): NativeCurrency | Token {
     nativeCurrency = new MaticNativeCurrency(chainId)
   } else if (isCelo(chainId)) {
     nativeCurrency = getCeloNativeCurrency(chainId)
-  } else if (isBoba(chainId)) {
-    nativeCurrency = getBobaNativeCurrency(chainId)
   } else {
     nativeCurrency = ExtendedEther.onChain(chainId)
   }

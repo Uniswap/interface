@@ -4,6 +4,7 @@ import { SupportedChainId } from 'constants/chains'
 
 import {
   AMPL,
+  BOBA_BOBA,
   CEUR_CELO,
   CEUR_CELO_ALFAJORES,
   CMC02_CELO,
@@ -43,7 +44,6 @@ import {
   WBTC_BOBA,
   WBTC_OPTIMISM,
   WBTC_POLYGON,
-  WETH_BOBA,
   WETH_POLYGON,
   WETH_POLYGON_MUMBAI,
   WRAPPED_NATIVE_CURRENCY,
@@ -93,7 +93,15 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     WETH_POLYGON,
   ],
   [SupportedChainId.CELO]: [CUSD_CELO, CEUR_CELO, CMC02_CELO, PORTAL_USDC_CELO, PORTAL_ETH_CELO],
-  [SupportedChainId.BOBA]: [WETH_BOBA, WBTC_BOBA, USDT_BOBA, DAI_BOBA, USDC_BOBA, LINK_BOBA],
+  [SupportedChainId.BOBA]: [
+    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.BOBA],
+    BOBA_BOBA,
+    WBTC_BOBA,
+    USDT_BOBA,
+    DAI_BOBA,
+    USDC_BOBA,
+    LINK_BOBA,
+  ],
 }
 export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
   [SupportedChainId.MAINNET]: {
@@ -184,8 +192,8 @@ export const COMMON_BASES: ChainCurrencyList = {
   ],
   [SupportedChainId.BOBA]: [
     nativeOnChain(SupportedChainId.BOBA),
-    WETH_BOBA,
     WBTC_BOBA,
+    BOBA_BOBA,
     USDT_BOBA,
     DAI_BOBA,
     USDC_BOBA,
