@@ -1,13 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
+import { Ranking as RankingContainer, Suspicious as SuspiciousContainer } from 'nft/components/card/Containers'
 import { useBag } from 'nft/hooks'
 import { GenieAsset, UniformAspectRatio } from 'nft/types'
 import { formatWeiToDecimal } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
 
 import { NftCard, NftCardDisplayProps } from '../card'
-import { Ranking as RankingContainer, Suspicious as SuspiciousContainer } from '../card/Containers'
 
 const useNotForSale = (asset: GenieAsset) =>
   useMemo(() => {
