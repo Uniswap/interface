@@ -89,11 +89,11 @@ export default function RadialGradientByChainUpdater(): null {
       }
       case SupportedChainId.BNB: {
         setBackground(backgroundResetStyles)
-        // making this same as default for now, pending fred's new designs
-        const defaultLightGradient =
-          'radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
-        const defaultDarkGradient = 'linear-gradient(180deg, #202738 0%, #070816 100%)'
-        backgroundRadialGradientElement.style.background = darkMode ? defaultDarkGradient : defaultLightGradient
+        const bscLightGradient =
+          'radial-gradient(100% 100% at 50% 0%, rgba(242 , 186, 8, 0.1) 0%, rgba(238, 182, 6, 0.08) 50%, rgba(140, 185, 11, 0) 100%), #FFFFFF'
+        const bscDarkGradient =
+          'radial-gradient(100% 100% at 50% 0%, rgba(169, 132, 17, 0.1) 0%, rgba(128, 100, 14, 0.08) 50%, rgba(140, 185, 11, 0) 100%), #0D0E0E'
+        backgroundRadialGradientElement.style.background = darkMode ? bscDarkGradient : bscLightGradient
         break
       }
       default: {
