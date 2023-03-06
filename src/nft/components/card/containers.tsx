@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unused-modules */
 import { t, Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
