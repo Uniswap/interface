@@ -132,18 +132,18 @@ const sendAnalyticsEventAndUserInfo = (
   walletType: string,
   chainId: number | undefined,
   isReconnect: boolean,
-  peerWalletName: string | undefined
+  peerWalletAgent: string | undefined
 ) => {
   sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
     result: WalletConnectionResult.SUCCEEDED,
     wallet_address: account,
     wallet_type: walletType,
     is_reconnect: isReconnect,
-    peer_wallet_name: peerWalletName,
+    peer_wallet_name: peerWalletAgent,
   })
   user.set(CustomUserProperties.WALLET_ADDRESS, account)
   user.set(CustomUserProperties.WALLET_TYPE, walletType)
-  user.set(CustomUserProperties.PEER_WALLET_NAME, peerWalletName ?? '')
+  user.set(CustomUserProperties.PEER_WALLET_NAME, peerWalletAgent ?? '')
   if (chainId) {
     user.postInsert(CustomUserProperties.ALL_WALLET_CHAIN_IDS, chainId)
   }
@@ -216,10 +216,10 @@ export default function WalletModal({
   useEffect(() => {
     if (account && account !== lastActiveWalletAddress) {
       const walletType = getConnectionName(getConnection(connector).type)
-      const peerWalletName = provider ? getWalletMeta(provider)?.name : undefined
+      const peerWalletAgent = provider ? getWalletMeta(provider)?.agent : undefined
       const isReconnect =
         connectedWallets.filter((wallet) => wallet.account === account && wallet.walletType === walletType).length > 0
-      sendAnalyticsEventAndUserInfo(account, walletType, chainId, isReconnect, peerWalletName)
+      sendAnalyticsEventAndUserInfo(account, walletType, chainId, isReconnect, peerWalletAgent)
       if (!isReconnect) addWalletToConnectedWallets({ account, walletType })
     }
     setLastActiveWalletAddress(account)
