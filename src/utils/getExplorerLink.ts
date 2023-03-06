@@ -39,6 +39,20 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
     }
   }
 
+  if (chainId === SupportedChainId.ARBITRUM_GOERLI) {
+    switch (type) {
+      case ExplorerDataType.TRANSACTION:
+        return `https://goerli.arbiscan.io/tx/${data}`
+      case ExplorerDataType.ADDRESS:
+      case ExplorerDataType.TOKEN:
+        return `https://goerli.arbiscan.io/address/${data}`
+      case ExplorerDataType.BLOCK:
+        return `https://goerli.arbiscan.io/block/${data}`
+      default:
+        return `https://goerli.arbiscan.io/`
+    }
+  }
+
   const prefix = BLOCK_EXPLORER_PREFIXES[chainId] ?? 'https://etherscan.io'
 
   switch (type) {
