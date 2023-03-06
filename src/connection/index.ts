@@ -66,6 +66,7 @@ const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletCo
     actions,
     options: {
       rpc: RPC_URLS_WITHOUT_FALLBACKS,
+      qrcode: true,
     },
     onError,
   })
