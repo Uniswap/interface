@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { TimedLoader } from 'nft/components/bag/TimedLoader'
 import { Box } from 'nft/components/Box'
-import { Suspicious } from 'nft/components/card/containers'
+import { Suspicious } from 'nft/components/card/Containers'
 import { Column, Row } from 'nft/components/Flex'
 import {
   ChevronDownBagIcon,

@@ -7,7 +7,7 @@ import { formatWeiToDecimal } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
 
 import { NftCard, NftCardDisplayProps } from '../card'
-import { Ranking as RankingContainer, Suspicious as SuspiciousContainer } from '../card/containers'
+import { Ranking as RankingContainer, Suspicious as SuspiciousContainer } from '../card/Containers'
 
 const useNotForSale = (asset: GenieAsset) =>
   useMemo(() => {
