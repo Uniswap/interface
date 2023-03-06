@@ -1033,3 +1033,41 @@ export const SudoSwapIcon = (props: SVGProps) => (
     </defs>
   </svg>
 )
+
+export const LooksRareIcon = (props: SVGProps) => (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <rect width="32" height="32" rx="16" fill="#5D6785" fillOpacity="0.48" />
+    <g filter="url(#filter0_d_608_25400)">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M11.9459 8.56757L6 14.5176L16 24.5135L26 14.5176L20.0541 8.56757H11.9459ZM11.4054 12.3513C13.9318 9.81385 18.0682 9.81384 20.5946 12.3513L22.7568 14.5135L20.5946 16.6757C18.0682 19.2132 13.9318 19.2132 11.4054 16.6757L9.24324 14.5135L11.4054 12.3513ZM12.8919 14.5136C12.8919 16.2308 14.2841 17.6217 16 17.6217C17.7159 17.6217 19.1081 16.2308 19.1081 14.5136C19.1081 12.7963 17.7159 11.4054 16 11.4054C14.2841 11.4054 12.8919 12.7963 12.8919 14.5136ZM16 15.8649C15.254 15.8649 14.6486 15.2602 14.6486 14.5136C14.6486 13.7669 15.254 13.1622 16 13.1622C16.746 13.1622 17.3513 13.7669 17.3513 14.5136C17.3513 15.2602 16.746 15.8649 16 15.8649Z"
+        fill="white"
+      />
+    </g>
+    <defs>
+      <filter
+        id="filter0_d_608_25400"
+        x="4"
+        y="6.56757"
+        width="26"
+        height="21.9459"
+        filterUnits="userSpaceOnUse"
+        colorInterpolationFilters="sRGB"
+      >
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
+        <feColorMatrix
+          in="SourceAlpha"
+          type="matrix"
+          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+          result="hardAlpha"
+        />
+        <feOffset dx="1" dy="1" />
+        <feGaussianBlur stdDeviation="1.5" />
+        <feColorMatrix type="matrix" values="0 0 0 0 0.2 0 0 0 0 0.207843 0 0 0 0 0.282353 0 0 0 0.54 0" />
+        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_608_25400" />
+        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_608_25400" result="shape" />
+      </filter>
+    </defs>
+  </svg>
+)

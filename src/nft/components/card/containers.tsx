@@ -5,6 +5,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import {
   CollectionSelectedAssetIcon,
+  LooksRareIcon,
   Nft20Icon,
   NftXIcon,
   OpenSeaMarketplaceIcon,
@@ -652,6 +653,8 @@ function getMarketplaceIcon(market: Markets): ReactNode {
   switch (market) {
     case Markets.Opensea:
       return <OpenSeaMarketplaceIcon />
+    case Markets.LooksRare:
+      return <LooksRareIcon />
     case Markets.X2Y2:
       return <X2y2Icon />
     case Markets.Sudoswap:

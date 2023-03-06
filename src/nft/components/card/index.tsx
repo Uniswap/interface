@@ -209,7 +209,7 @@ export function NftCard({
           <Card.ActionButton clickActionButton={clickActionButton} isDisabled={isDisabled} isSelected={isSelected}>
             {isSelected ? display.selectedInfo : display.notSelectedInfo}
           </Card.ActionButton>
-          {display.tertiaryInfo}
+          <Card.TertiaryInfo>{display.tertiaryInfo}</Card.TertiaryInfo>
         </Card.TertiaryInfoContainer>
       </Card.DetailsContainer>
     </Card.Container>
