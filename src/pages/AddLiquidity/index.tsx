@@ -38,7 +38,7 @@ import Row, { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from '../../constants/addresses'
-import { ZERO_PERCENT } from '../../constants/misc'
+import { TX_GAS_MARGIN, ZERO_PERCENT } from '../../constants/misc'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
@@ -288,7 +288,7 @@ export default function AddLiquidity() {
 
       setAttemptingTxn(true)
 
-      sendTransaction(provider, txn, 0.2)
+      sendTransaction(provider, txn, TX_GAS_MARGIN)
         .then((response: TransactionResponse) => {
           setAttemptingTxn(false)
           addTransaction(response, {

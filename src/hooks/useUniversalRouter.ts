@@ -9,6 +9,7 @@ import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { TX_GAS_MARGIN } from 'constants/misc'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import isZero from 'utils/isZero'
@@ -52,7 +53,7 @@ export function useUniversalRouterSwapCallback(
         ...(value && !isZero(value) ? { value: toHex(value) } : {}),
       }
 
-      const response = await sendTransaction(provider, tx, 0.2).then((response) => {
+      const response = await sendTransaction(provider, tx, TX_GAS_MARGIN).then((response) => {
         sendAnalyticsEvent(
           SwapEventName.SWAP_SIGNED,
           formatSwapSignedAnalyticsEventProperties({ trade, txHash: response.hash })

@@ -19,6 +19,7 @@ import { AddRemoveTabs } from 'components/NavigationTabs'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import Slider from 'components/Slider'
 import Toggle from 'components/Toggle'
+import { TX_GAS_MARGIN } from 'constants/misc'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
@@ -133,7 +134,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       value,
     }
 
-    sendTransaction(provider, txn, 0.2)
+    sendTransaction(provider, txn, TX_GAS_MARGIN)
       .then((response: TransactionResponse) => {
         sendEvent({
           category: 'Liquidity',

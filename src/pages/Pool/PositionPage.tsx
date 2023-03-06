@@ -19,6 +19,7 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
+import { TX_GAS_MARGIN } from 'constants/misc'
 import { useToken } from 'hooks/Tokens'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -463,7 +464,7 @@ export function PositionPage() {
       value,
     }
 
-    sendTransaction(provider, txn, 0.2)
+    sendTransaction(provider, txn, TX_GAS_MARGIN)
       .then((response: TransactionResponse) => {
         setCollectMigrationHash(response.hash)
         setCollecting(false)

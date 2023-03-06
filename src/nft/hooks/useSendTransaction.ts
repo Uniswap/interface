@@ -6,6 +6,7 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
 import { sendTransaction } from '@uniswap/conedison/provider/index'
+import { NFT_TX_GAS_MARGIN } from 'constants/misc'
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
 
@@ -42,13 +43,12 @@ export const useSendTransaction = create<TxState>()(
         try {
           set({ state: TxStateType.Signing })
 
-          // TODO(signer should be provider)
           const tx = {
             to: transactionData.to,
             value: transactionData.valueToSend ? BigNumber.from(transactionData.valueToSend) : undefined,
             data: transactionData.data,
           }
-          const res = await sendTransaction(provider, tx, 0.05)
+          const res = await sendTransaction(provider, tx, NFT_TX_GAS_MARGIN)
 
           set({ state: TxStateType.Confirming })
           set({ txHash: res.hash })
