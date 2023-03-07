@@ -359,7 +359,7 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
   ),
 }
 
-export function isCelo(chainId: number): chainId is SupportedChainId.CELO | SupportedChainId.CELO_ALFAJORES {
+export function isCelo(chainId: number): boolean {
   return chainId === SupportedChainId.CELO_ALFAJORES || chainId === SupportedChainId.CELO
 }
 
@@ -374,7 +374,7 @@ function getCeloNativeCurrency(chainId: number) {
   }
 }
 
-function isMatic(chainId: number): chainId is SupportedChainId.POLYGON | SupportedChainId.POLYGON_MUMBAI {
+function isMatic(chainId: number): boolean {
   return chainId === SupportedChainId.POLYGON_MUMBAI || chainId === SupportedChainId.POLYGON
 }
 
