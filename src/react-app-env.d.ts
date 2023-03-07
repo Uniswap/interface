@@ -5,6 +5,8 @@ declare module '@metamask/jazzicon' {
 }
 
 interface Window {
+  GIT_COMMIT_HASH?: string
+
   // walletLinkExtension is injected by the Coinbase Wallet extension
   walletLinkExtension?: any
   ethereum?: {

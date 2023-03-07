@@ -63,6 +63,9 @@ const Asset = lazy(() => import('nft/pages/asset/Asset'))
 const AMPLITUDE_DUMMY_KEY = '00000000000000000000000000000000'
 const STATSIG_DUMMY_KEY = 'client-0000000000000000000000000000000000000000000'
 
+// Dump some metadata into the window to allow client verification.
+window.GIT_COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
+
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
   release: process.env.REACT_APP_GIT_COMMIT_HASH,
