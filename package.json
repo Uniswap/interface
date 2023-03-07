@@ -60,7 +60,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-transform-async-to-generator": "^7.20.7",
+    "@babel/plugin-transform-async-to-generator": "^7.12.1",
     "@craco/craco": "6.4.3",
     "@ethersproject/experimental": "^5.4.0",
     "@lingui/cli": "^3.9.0",
