@@ -123,7 +123,8 @@ function WalletDropdown() {
     <>
       {walletDrawerOpen && <CloseDrawer onClick={toggleWalletDrawer} />}
       <Scrim onClick={toggleWalletDrawer} open={walletDrawerOpen} />
-      <WalletDropdownWrapper open={walletDrawerOpen}>
+      {/* id used for child InfiniteScrolls to reference when it has reached the bottom of the component */}
+      <WalletDropdownWrapper open={walletDrawerOpen} id="wallet-dropdown-wrapper">
         <DefaultMenu />
       </WalletDropdownWrapper>
     </>

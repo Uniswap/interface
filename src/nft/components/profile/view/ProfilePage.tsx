@@ -26,7 +26,7 @@ import { easings, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
 import { shallow } from 'zustand/shallow'
 
-import { EmptyWalletContent } from './EmptyWalletContent'
+import { EmptyWalletModule } from './EmptyWalletContent'
 import * as styles from './ProfilePage.css'
 import { ProfileBodyLoadingSkeleton } from './ProfilePageLoadingSkeleton'
 import { ViewMyNftsAsset } from './ViewMyNftsAsset'
@@ -217,7 +217,7 @@ const ProfilePageNfts = ({
   return (
     <Column width="full">
       {ownerAssets?.length === 0 ? (
-        <EmptyWalletContent />
+        <EmptyWalletModule />
       ) : (
         <AnimatedBox
           flexShrink="0"

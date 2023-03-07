@@ -1,3 +1,77 @@
-export default function NFTs() {
-  return <div>NFTs</div>
+import { useNftBalance } from 'graphql/data/nft/NftBalance'
+import { LoadingAssets } from 'nft/components/collection/CollectionAssetLoading'
+import { EmptyWalletContent } from 'nft/components/profile/view/EmptyWalletContent'
+import { useState } from 'react'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import styled from 'styled-components/macro'
+
+import { DEFAULT_NFT_QUERY_AMOUNT } from './consts'
+import { NFT } from './NFT'
+
+export default function NFTs({ account }: { account: string }) {
+  const { walletAssets, loading, hasNext, loadMore } = useNftBalance(account, [], [], DEFAULT_NFT_QUERY_AMOUNT)
+
+  const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
+
+  if (loading && !walletAssets)
+    return (
+      <AssetsContainer>
+        <LoadingAssets count={2} />
+      </AssetsContainer>
+    )
+
+  if (!walletAssets || walletAssets?.length === 0)
+    return (
+      <EmptyWalletContainer>
+        <EmptyWalletContent />
+      </EmptyWalletContainer>
+    )
+
+  return (
+    <InfiniteScroll
+      next={loadMore}
+      hasMore={hasNext ?? false}
+      loader={
+        Boolean(hasNext && walletAssets?.length) && (
+          <AssetsContainer>
+            <LoadingAssets count={2} />
+          </AssetsContainer>
+        )
+      }
+      dataLength={walletAssets?.length ?? 0}
+      style={{ overflow: 'unset' }}
+      scrollableTarget="wallet-dropdown-wrapper"
+    >
+      <AssetsContainer>
+        {walletAssets?.length
+          ? walletAssets.map((asset, index) => {
+              return (
+                <NFT
+                  setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+                  mediaShouldBePlaying={currentTokenPlayingMedia === asset.tokenId}
+                  key={asset.tokenId ?? index}
+                  asset={asset}
+                />
+              )
+            })
+          : null}
+      </AssetsContainer>
+    </InfiniteScroll>
+  )
 }
+
+const EmptyWalletContainer = styled.div`
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  margin: 16px;
+`
+
+const AssetsContainer = styled.div`
+  display: grid;
+  gap: 12px;
+
+  // use minmax to not let grid items escape the parent container
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  margin: 16px;
+`

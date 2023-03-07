@@ -41,7 +41,7 @@ export const EmptyWalletContent = () => {
   const { account, ENSName } = useWeb3React()
   const navigate = useNavigate()
   return (
-    <EmptyWalletContainer>
+    <>
       <EmptyNFTWalletIcon />
       <EmptyWalletText className={headlineMedium}>
         <Trans>No NFTs in</Trans>&nbsp;{ENSName || shortenAddress(account ?? '')}
@@ -49,6 +49,14 @@ export const EmptyWalletContent = () => {
       <ExploreNFTsButton data-testid="nft-explore-nfts-button" onClick={() => navigate('/nfts')}>
         <Trans>Explore NFTs</Trans>
       </ExploreNFTsButton>
+    </>
+  )
+}
+
+export const EmptyWalletModule = () => {
+  return (
+    <EmptyWalletContainer>
+      <EmptyWalletContent />
     </EmptyWalletContainer>
   )
 }

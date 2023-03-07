@@ -2,12 +2,14 @@ import { t } from '@lingui/macro'
 import Column from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { useMiniPortfolioEnabled } from 'featureFlags/flags/miniPortfolio'
+import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import Activity from './Activity'
+import { DEFAULT_NFT_QUERY_AMOUNT } from './consts'
 import NFTs from './NFTs'
 import Pools from './Pools'
 import Tokens from './Tokens'
@@ -46,12 +48,12 @@ const Pages = [
   { title: t`Pools`, component: Pools },
 ]
 
-export default function MiniPortfolio({ account }: { account: string }) {
+function MiniPortfolio({ account }: { account: string }) {
   const isNftPage = useIsNftPage()
   const [currentPage, setCurrentPage] = useState(isNftPage ? 1 : 0)
-  const flagEnabled = useMiniPortfolioEnabled()
 
-  if (!flagEnabled) return null
+  // preload NFT query here so that it's instantly ready when navigating the NFT tab
+  useNftBalance(account, [], [], DEFAULT_NFT_QUERY_AMOUNT)
 
   const Page = Pages[currentPage].component
   return (
@@ -72,4 +74,11 @@ export default function MiniPortfolio({ account }: { account: string }) {
       </PageWrapper>
     </Wrapper>
   )
+}
+
+export default function MiniPortfolioWrapper({ account }: { account: string }) {
+  const flagEnabled = useMiniPortfolioEnabled()
+  if (!flagEnabled) return null
+
+  return <MiniPortfolio account={account} />
 }

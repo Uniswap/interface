@@ -17,7 +17,7 @@ export const apolloClient = new ApolloClient({
     typePolicies: {
       Query: {
         fields: {
-          nftBalances: relayStylePagination(),
+          nftBalances: relayStylePagination(['ownerAddress', 'filter']),
           nftAssets: relayStylePagination(),
           nftActivity: relayStylePagination(),
           // tell apollo client how to reference Token items in the cache after being fetched by queries that return Token[]

@@ -33,13 +33,31 @@ exports[`renders multi route 1`] = `
 }
 
 .c12 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 1px;
+}
+
+.c13 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c12 > * {
+.c13 > * {
   margin: 1px !important;
 }
 
@@ -180,7 +198,7 @@ exports[`renders multi route 1`] = `
           </div>
         </div>
         <div
-          class="c11 c2 c12"
+          class="c11 c12 c13"
           style="justify-content: space-evenly; z-index: 2;"
           width="100%"
         >
@@ -225,7 +243,7 @@ exports[`renders multi route 1`] = `
           </div>
         </div>
         <div
-          class="c11 c2 c12"
+          class="c11 c12 c13"
           style="justify-content: space-evenly; z-index: 2;"
           width="100%"
         >
@@ -271,13 +289,31 @@ exports[`renders single route 1`] = `
 }
 
 .c12 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 1px;
+}
+
+.c13 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c12 > * {
+.c13 > * {
   margin: 1px !important;
 }
 
@@ -418,7 +454,7 @@ exports[`renders single route 1`] = `
           </div>
         </div>
         <div
-          class="c11 c2 c12"
+          class="c11 c12 c13"
           style="justify-content: space-evenly; z-index: 2;"
           width="100%"
         >
