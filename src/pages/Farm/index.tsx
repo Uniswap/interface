@@ -48,8 +48,8 @@ import { CurrencyWrapper, Tab } from 'pages/Pools/styleds'
 import { AppState } from 'state'
 import { ApplicationModal } from 'state/application/actions'
 import { useBlockNumber, useOpenModal } from 'state/application/hooks'
+import { useFarmsData } from 'state/farms/classic/hooks'
 import { FarmUpdater, useElasticFarms } from 'state/farms/elastic/hooks'
-import { useFarmsData } from 'state/farms/hooks'
 import { isInEnum } from 'utils/string'
 
 const Farm = () => {

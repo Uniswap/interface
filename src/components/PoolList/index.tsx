@@ -20,7 +20,7 @@ import { useActiveWeb3React } from 'hooks'
 import { SelectPairInstructionWrapper } from 'pages/Pools/styleds'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useOpenModal } from 'state/application/hooks'
-import { useActiveAndUniqueFarmsData } from 'state/farms/hooks'
+import { useActiveAndUniqueFarmsData } from 'state/farms/classic/hooks'
 import { Field } from 'state/pair/actions'
 import {
   SubgraphPoolData,

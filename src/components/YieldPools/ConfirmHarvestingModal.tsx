@@ -1,9 +1,9 @@
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import TransactionConfirmationModal, { TransactionErrorContent } from 'components/TransactionConfirmationModal'
 import { AppState } from 'state'
-import { setAttemptingTxn, setShowConfirm, setTxHash, setYieldPoolsError } from 'state/farms/actions'
+import { setAttemptingTxn, setShowConfirm, setTxHash, setYieldPoolsError } from 'state/farms/classic/actions'
 import { useAppDispatch } from 'state/hooks'
 
 export default function ConfirmHarvestingModal() {

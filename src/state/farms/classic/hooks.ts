@@ -30,7 +30,13 @@ import useTokenBalance from 'hooks/useTokenBalance'
 import useTokensMarketPrice from 'hooks/useTokensMarketPrice'
 import { AppState } from 'state'
 import { useBlockNumber, useETHPrice, useTokensPrice } from 'state/application/hooks'
-import { FairLaunchVersion, Farm, FarmHistoriesSubgraphResult, FarmHistory, FarmHistoryMethod } from 'state/farms/types'
+import {
+  FairLaunchVersion,
+  Farm,
+  FarmHistoriesSubgraphResult,
+  FarmHistory,
+  FarmHistoryMethod,
+} from 'state/farms/classic/types'
 import { useAppDispatch } from 'state/hooks'
 import { useMultipleContractSingleData } from 'state/multicall/hooks'
 import { SubgraphPoolData, getBulkPoolDataFromPoolList } from 'state/pools/hooks'

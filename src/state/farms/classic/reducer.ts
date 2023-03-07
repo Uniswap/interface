@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { captureException } from '@sentry/react'
 
-import { Farm } from 'state/farms/types'
+import { Farm } from 'state/farms/classic/types'
 
 import { setAttemptingTxn, setFarmsData, setLoading, setShowConfirm, setTxHash, setYieldPoolsError } from './actions'
 

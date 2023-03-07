@@ -1,6 +1,6 @@
 import { createAction } from '@reduxjs/toolkit'
 
-import { Farm } from 'state/farms/types'
+import { Farm } from 'state/farms/classic/types'
 
 export const setFarmsData = createAction<{ [key: string]: Farm[] }>('farms/setFarmsData')
 export const setLoading = createAction<boolean>('farms/setLoading')

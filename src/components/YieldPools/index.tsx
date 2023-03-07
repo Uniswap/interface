@@ -13,8 +13,8 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import useTheme from 'hooks/useTheme'
 import { useBlockNumber } from 'state/application/hooks'
-import { useFarmsData } from 'state/farms/hooks'
-import { Farm } from 'state/farms/types'
+import { useFarmsData } from 'state/farms/classic/hooks'
+import { Farm } from 'state/farms/classic/types'
 
 import ConfirmHarvestingModal from './ConfirmHarvestingModal'
 

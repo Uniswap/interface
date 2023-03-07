@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Token } from '@kyberswap/ks-sdk-core'
 import { createAction } from '@reduxjs/toolkit'
 
-import { RewardLockerVersion } from 'state/farms/types'
+import { RewardLockerVersion } from 'state/farms/classic/types'
 
 export const setLoading = createAction<boolean>('vesting/setLoading')
 export const setSchedulesByRewardLocker = createAction<{

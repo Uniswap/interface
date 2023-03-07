@@ -76,6 +76,8 @@ export interface EVMNetworkInfo extends NetworkInfo {
     readonly quoter: string
     readonly routers: string
     readonly farms: string[]
+    readonly farmv2Quoter?: string
+    readonly farmV2Contract?: string
   }
   readonly limitOrder: {
     development: string | null

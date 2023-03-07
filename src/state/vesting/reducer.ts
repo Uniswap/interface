@@ -3,7 +3,7 @@ import { Token } from '@kyberswap/ks-sdk-core'
 import { createReducer } from '@reduxjs/toolkit'
 import { captureException } from '@sentry/react'
 
-import { RewardLockerVersion } from 'state/farms/types'
+import { RewardLockerVersion } from 'state/farms/classic/types'
 
 import {
   setAttemptingTxn,

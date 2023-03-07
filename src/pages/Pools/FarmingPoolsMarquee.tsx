@@ -16,8 +16,8 @@ import { useToken } from 'hooks/Tokens'
 import useMarquee from 'hooks/useMarquee'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import useTheme from 'hooks/useTheme'
+import { useActiveAndUniqueFarmsData } from 'state/farms/classic/hooks'
 import { useElasticFarms } from 'state/farms/elastic/hooks'
-import { useActiveAndUniqueFarmsData } from 'state/farms/hooks'
 
 const StyledLink = styled(Link)`
   display: flex;

@@ -30,6 +30,7 @@ export const useElasticFarms = () => {
   const elasticFarm = useAppSelector(state => state.elasticFarm[chainId])
   return useMemo(() => (isEVM ? elasticFarm || defaultChainData : defaultChainData), [isEVM, elasticFarm])
 }
+
 export type StakeParam = {
   nftId: BigNumber
   position: NFTPosition | Position

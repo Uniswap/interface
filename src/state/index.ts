@@ -14,8 +14,9 @@ import burnProAmm from './burn/proamm/reducer'
 import burn from './burn/reducer'
 import campaigns from './campaigns/reducer'
 import customizeDexes from './customizeDexes'
+import farms from './farms/classic/reducer'
 import elasticFarm from './farms/elastic'
-import farms from './farms/reducer'
+import elasticFarmV2 from './farms/elasticv2'
 import { updateVersion } from './global/actions'
 import limit from './limit/reducer'
 import lists from './lists/reducer'
@@ -62,6 +63,7 @@ const store = configureStore({
     bridge,
     customizeDexes,
     elasticFarm,
+    elasticFarmV2,
     tokenPrices,
     topTokens,
     [routeApi.reducerPath]: routeApi.reducer,

@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 
 import { CONTRACT_NOT_FOUND_MSG } from 'constants/messages'
 import { useFairLaunchContract } from 'hooks/useContract'
-import { Farm, Reward } from 'state/farms/types'
+import { Farm, Reward } from 'state/farms/classic/types'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TRANSACTION_TYPE, TransactionExtraInfoHarvestFarm } from 'state/transactions/type'
 import { calculateGasMargin } from 'utils'

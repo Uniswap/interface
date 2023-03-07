@@ -1,0 +1,52 @@
+[
+  {
+    "inputs": [{ "internalType": "contract IKyberSwapElasticLMV3", "name": "_farmSC", "type": "address" }],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  { "inputs": [], "name": "PositionNotEligible", "type": "error" },
+  {
+    "inputs": [],
+    "name": "farmSC",
+    "outputs": [{ "internalType": "contract IKyberSwapElasticLMV3", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "fId", "type": "uint256" },
+      { "internalType": "uint256", "name": "nftId", "type": "uint256" }
+    ],
+    "name": "getEligibleRanges",
+    "outputs": [{ "internalType": "uint256[]", "name": "indexesValid", "type": "uint256[]" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "nftId", "type": "uint256" }],
+    "name": "getUnclaimedReward",
+    "outputs": [{ "internalType": "uint256[]", "name": "currentUnclaimedRewards", "type": "uint256[]" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "user", "type": "address" }],
+    "name": "getUserInfo",
+    "outputs": [
+      {
+        "components": [
+          { "internalType": "uint256", "name": "nftId", "type": "uint256" },
+          { "internalType": "uint256", "name": "fId", "type": "uint256" },
+          { "internalType": "uint256", "name": "rangeId", "type": "uint256" },
+          { "internalType": "uint128", "name": "liquidity", "type": "uint128" },
+          { "internalType": "uint256[]", "name": "currentUnclaimedRewards", "type": "uint256[]" }
+        ],
+        "internalType": "struct IQuoterELM3.UserInfo[]",
+        "name": "result",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

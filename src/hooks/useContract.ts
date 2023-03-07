@@ -31,7 +31,7 @@ import { MULTICALL_ABI } from 'constants/multicall'
 import { NETWORKS_INFO, isEVM } from 'constants/networks'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { useWeb3React } from 'hooks'
-import { FairLaunchVersion, RewardLockerVersion } from 'state/farms/types'
+import { FairLaunchVersion, RewardLockerVersion } from 'state/farms/classic/types'
 import { useRewardLockerAddressesWithVersion } from 'state/vesting/hooks'
 import { getContract, getContractForReading } from 'utils/getContract'
 
