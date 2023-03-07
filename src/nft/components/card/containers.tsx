@@ -39,6 +39,17 @@ const StyledImageContainer = styled.div<{ isDisabled?: boolean }>`
   cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
 `
 
+const StyledTertiaryInfo = styled(ThemedText.BodySmall)`
+  color: ${({ theme }) => theme.textSecondary};
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 20px;
+  padding: 0px 8px;
+  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
+  will-change: opacity;
+`
+
 const StyledActionButton = styled(ThemedText.BodySmall)<{ selected: boolean; isDisabled: boolean }>`
   position: absolute;
   display: flex;
@@ -104,7 +115,7 @@ const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean 
   border-radius: ${BORDER_RADIUS}px;
   background-color: ${({ theme }) => theme.backgroundSurface};
   overflow: hidden;
-  padding-bottom: 20px;
+  padding-bottom: 8px;
   box-shadow: ${({ theme }) => theme.shallowShadow};
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -134,6 +145,10 @@ const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean 
   :hover {
     ${StyledActionButton} {
       opacity: ${({ isDisabled }) => (isDisabled ? 0 : 1)};
+    }
+
+    ${StyledTertiaryInfo} {
+      opacity: ${({ isDisabled }) => (isDisabled ? 1 : 0)};
     }
   }
 `
@@ -589,23 +604,15 @@ const SecondaryInfo = ({ children }: { children: ReactNode }) => {
   return <SecondaryInfoContainer>{children}</SecondaryInfoContainer>
 }
 
-const StyledTertiaryInfoContainer = styled.div`
+const StyledTertiaryInfoContainer = styled(Column)`
   position: relative;
-  height: 20px;
+  height: 32px;
+  justify-content: center;
 `
 
 const TertiaryInfoContainer = ({ children }: { children: ReactNode }) => {
   return <StyledTertiaryInfoContainer>{children}</StyledTertiaryInfoContainer>
 }
-
-const StyledTertiaryInfo = styled(ThemedText.BodySmall)`
-  color: ${({ theme }) => theme.textSecondary};
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  line-height: 20px;
-  padding: 0px 8px;
-`
 
 const TertiaryInfo = ({ children }: { children: ReactNode }) => {
   return <StyledTertiaryInfo>{children}</StyledTertiaryInfo>
