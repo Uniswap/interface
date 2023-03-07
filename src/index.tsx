@@ -37,6 +37,7 @@ if (isSentryEnabled()) {
   Sentry.init({
     dsn: process.env.REACT_APP_SENTRY_DSN,
     release: process.env.REACT_APP_GIT_COMMIT_HASH,
+    normalizeDepth: 10,
   })
 }
 
