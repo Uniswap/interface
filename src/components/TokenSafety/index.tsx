@@ -77,7 +77,7 @@ const Buttons = ({
   showCancel,
 }: {
   warning: Warning
-  onContinue: () => void
+  onContinue?: () => void
   onCancel: () => void
   onBlocked?: () => void
   showCancel?: boolean
@@ -292,7 +292,7 @@ export default function TokenSafety({
             {heading} {description} {learnMoreUrl}
           </InfoText>
         </ShortColumn>
-        <Buttons warning={tokenNotFoundWarning} onCancel={onCancel} showCancel={true} onContinue={() => undefined} />
+        <Buttons warning={tokenNotFoundWarning} onCancel={onCancel} showCancel={true} />
       </Container>
     </Wrapper>
   )
