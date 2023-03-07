@@ -13,7 +13,7 @@ import ELASTIC_FARM_ABI from 'constants/abis/v2/farm.json'
 import { NETWORKS_INFO, isEVM } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import { useMulticallContract } from 'hooks/useContract'
-import { useKyberswapConfig } from 'hooks/useKyberswapConfig'
+import { useKyberSwapConfig } from 'state/application/hooks'
 import { useAppSelector } from 'state/hooks'
 import { usePoolBlocks } from 'state/prommPools/hooks'
 
@@ -41,7 +41,7 @@ const useGetUserFarmingInfo = (interval?: boolean) => {
   const dispatch = useDispatch()
   const { chainId, account } = useActiveWeb3React()
   const multicallContract = useMulticallContract()
-  const { elasticClient } = useKyberswapConfig()
+  const { elasticClient } = useKyberSwapConfig()
 
   const elasticFarm = useAppSelector(state => state.elasticFarm)[chainId || 1] || defaultChainData
 

@@ -2,7 +2,7 @@ import { gql, useLazyQuery } from '@apollo/client'
 import { defaultAbiCoder } from '@ethersproject/abi'
 import { getCreate2Address } from '@ethersproject/address'
 import { keccak256 } from '@ethersproject/solidity'
-import { CurrencyAmount, Token, WETH } from '@kyberswap/ks-sdk-core'
+import { CurrencyAmount, Token, TokenAmount, WETH } from '@kyberswap/ks-sdk-core'
 import { FeeAmount, Pool, Position } from '@kyberswap/ks-sdk-elastic'
 import { BigNumber } from 'ethers'
 import { Interface } from 'ethers/lib/utils'
@@ -10,12 +10,11 @@ import { useEffect } from 'react'
 
 import FarmV2QuoterABI from 'constants/abis/farmv2Quoter.json'
 import NFTPositionManagerABI from 'constants/abis/v2/ProAmmNFTPositionManager.json'
-import { NETWORKS_INFO } from 'constants/networks'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { NativeCurrencies } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import { useContract, useMulticallContract } from 'hooks/useContract'
-import { useKyberswapConfig } from 'hooks/useKyberswapConfig'
+import { useKyberSwapConfig } from 'state/application/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { isAddressString } from 'utils'
 
@@ -24,7 +23,7 @@ import { ElasticFarmV2, SubgraphFarmV2, SubgraphToken, UserFarmV2Info } from './
 
 const queryFarms = gql`
   {
-    farmV2S {
+    farmV2S(first: 1000) {
       id
       startTime
       endTime
@@ -66,6 +65,32 @@ const queryFarms = gql`
         tickLower
         weight
       }
+
+      depositedPositions {
+        id
+        position {
+          id
+          liquidity
+          tickLower {
+            tickIdx
+          }
+          tickUpper {
+            tickIdx
+          }
+          token0 {
+            id
+            symbol
+            name
+            decimals
+          }
+          token1 {
+            id
+            symbol
+            name
+            decimals
+          }
+        }
+      }
     }
   }
 `
@@ -77,8 +102,8 @@ const positionManagerInterface = new Interface(NFTPositionManagerABI.abi)
 export const useElasticFarmsV2 = (subscribe = false) => {
   const dispatch = useAppDispatch()
   const { networkInfo, isEVM, chainId, account } = useActiveWeb3React()
-  const elasticFarm = useAppSelector(state => (chainId ? state.elasticFarmV2[chainId] : defaultChainData))
-  const { elasticClient } = useKyberswapConfig(chainId)
+  const elasticFarm = useAppSelector(state => state.elasticFarmV2[chainId] || defaultChainData)
+  const { elasticClient } = useKyberSwapConfig()
 
   const multicallContract = useMulticallContract()
   const farmv2QuoterContract = useContract(
@@ -148,6 +173,19 @@ export const useElasticFarmsV2 = (subscribe = false) => {
           Number(farm.pool.tick),
         )
 
+        let tvlToken0 = TokenAmount.fromRawAmount(token0.wrapped, 0)
+        let tvlToken1 = TokenAmount.fromRawAmount(token1.wrapped, 0)
+        farm.depositedPositions.forEach(pos => {
+          const position = new Position({
+            pool: p,
+            liquidity: pos.position.liquidity,
+            tickLower: Number(pos.position.tickLower.tickIdx),
+            tickUpper: Number(pos.position.tickUpper.tickIdx),
+          })
+          tvlToken0 = tvlToken0.add(position.amount0)
+          tvlToken1 = tvlToken1.add(position.amount1)
+        })
+
         return {
           id: farm.id,
           startTime: Number(farm.startTime),
@@ -158,6 +196,8 @@ export const useElasticFarmsV2 = (subscribe = false) => {
           token1,
           totalRewards: farm.rewards.map(item => CurrencyAmount.fromRawAmount(getToken(item.token), item.amount)),
           ranges: farm.ranges,
+          tvlToken0,
+          tvlToken1,
         }
       })
 

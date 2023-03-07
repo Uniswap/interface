@@ -6,9 +6,9 @@ import { useMemo } from 'react'
 
 import { ALL_TICKS, Tick } from 'apollo/queries/promm'
 import { useActiveWeb3React } from 'hooks'
+import { useKyberSwapConfig } from 'state/application/hooks'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 
-import { useKyberswapConfig } from './useKyberswapConfig'
 import { PoolState, usePool } from './usePools'
 import useProAmmPoolInfo from './useProAmmPoolInfo'
 
@@ -29,7 +29,7 @@ const getActiveTick = (tickCurrent: number | undefined, feeAmount: FeeAmount | u
 
 const useAllTicks = (poolAddress: string) => {
   const { isEVM } = useActiveWeb3React()
-  const { elasticClient } = useKyberswapConfig()
+  const { elasticClient } = useKyberSwapConfig()
 
   return useQuery(ALL_TICKS(poolAddress?.toLowerCase()), {
     client: elasticClient,

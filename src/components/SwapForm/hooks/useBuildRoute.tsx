@@ -6,7 +6,7 @@ import { RouteSummary } from 'services/route/types/getRoute'
 
 import { NETWORKS_INFO } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
-import { useKyberswapGlobalConfig } from 'hooks/useKyberswapConfig'
+import { useKyberswapGlobalConfig } from 'hooks/useKyberSwapConfig'
 
 export type BuildRouteResult =
   | {

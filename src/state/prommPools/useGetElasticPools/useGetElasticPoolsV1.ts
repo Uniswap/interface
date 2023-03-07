@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { PROMM_POOLS_BULK, ProMMPoolFields } from 'apollo/queries/promm'
 import { ELASTIC_BASE_FEE_UNIT } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
-import { useKyberswapConfig } from 'hooks/useKyberswapConfig'
+import { useKyberSwapConfig } from 'state/application/hooks'
 import { ElasticPoolDetail } from 'types/pool'
 import { getBlocksFromTimestamps } from 'utils'
 
@@ -19,7 +19,7 @@ type PoolAccumulator = Record<string, ProMMPoolFields>
 
 const usePoolBlocks = () => {
   const { chainId } = useActiveWeb3React()
-  const { blockClient } = useKyberswapConfig()
+  const { blockClient } = useKyberSwapConfig()
 
   const utcCurrentTime = dayjs()
   const last24h = utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
@@ -125,7 +125,7 @@ const parsedPoolData = (
 }
 
 const useGetElasticPoolsV1 = (poolAddresses: string[], skip?: boolean): CommonReturn => {
-  const { elasticClient } = useKyberswapConfig()
+  const { elasticClient } = useKyberSwapConfig()
 
   const { blockLast24h } = usePoolBlocks()
 

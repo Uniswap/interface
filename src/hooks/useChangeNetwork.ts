@@ -13,7 +13,7 @@ import { updateChainId } from 'state/user/actions'
 import { isEVMWallet, isSolanaWallet } from 'utils'
 
 import { useActivationWallet } from './useActivationWallet'
-import { useLazyKyberswapConfig } from './useKyberswapConfig'
+import { useLazyKyberswapConfig } from './useKyberSwapConfig'
 
 const getEVMAddNetworkParams = (chainId: EVM_NETWORK, rpc: string) => ({
   chainId: '0x' + chainId.toString(16),

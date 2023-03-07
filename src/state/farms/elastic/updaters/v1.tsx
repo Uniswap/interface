@@ -6,7 +6,7 @@ import { useEffect } from 'react'
 import { ZERO_ADDRESS } from 'constants/index'
 import { NativeCurrencies } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
-import { useKyberswapConfig } from 'hooks/useKyberswapConfig'
+import { useKyberSwapConfig } from 'state/application/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { isAddressString } from 'utils'
 
@@ -143,7 +143,7 @@ const FarmUpdaterV1: React.FC<CommonProps> = ({ interval }) => {
   const dispatch = useAppDispatch()
   const { chainId } = useActiveWeb3React()
   const elasticFarm = useAppSelector(state => state.elasticFarm)[chainId || 1] || defaultChainData
-  const { elasticClient } = useKyberswapConfig()
+  const { elasticClient } = useKyberSwapConfig()
 
   const [getElasticFarms, { data, error }] = useLazyQuery(ELASTIC_FARM_QUERY, {
     client: elasticClient,

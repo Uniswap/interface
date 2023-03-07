@@ -6,8 +6,7 @@ import { useLocalStorage } from 'react-use'
 
 import { ERC20_ABI } from 'constants/abis/erc20'
 import { KNC_ADDRESS } from 'constants/tokens'
-import { useKyberswapConfig } from 'hooks/useKyberswapConfig'
-import { getEthPrice, getKNCPriceByETH } from 'state/application/hooks'
+import { getEthPrice, getKNCPriceByETH, useKyberSwapConfig } from 'state/application/hooks'
 
 const POOLS_BULK = gql`
   query pools($allPools: [Bytes]!) {
@@ -87,8 +86,8 @@ export default function useTotalVotingReward(): {
 } {
   const [totalVotingReward, setTotalVotingReward] = useState(0)
   const [kncPriceETH, setKncPriceETH] = useState(0)
-  const { classicClient: classicClientMainnet, blockClient, provider } = useKyberswapConfig(ChainId.MAINNET)
-  const { classicClient: classicClientMatic, provider: providerMatic } = useKyberswapConfig(ChainId.MATIC)
+  const { classicClient: classicClientMainnet, blockClient, provider } = useKyberSwapConfig(ChainId.MAINNET)
+  const { classicClient: classicClientMatic, provider: providerMatic } = useKyberSwapConfig(ChainId.MATIC)
 
   const [localStoredTotalVotingReward, setLocalStoredTotalVotingReward] = useLocalStorage(
     'kyberdao-totalVotingRewards',

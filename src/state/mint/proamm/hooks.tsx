@@ -24,9 +24,9 @@ import { NETWORKS_INFO, isEVM } from 'constants/networks'
 import { getHourlyRateData } from 'data/poolRate'
 import { PoolRatesEntry } from 'data/type'
 import { useActiveWeb3React } from 'hooks'
-import { useKyberswapConfig } from 'hooks/useKyberswapConfig'
 import { PoolState, usePool } from 'hooks/usePools'
 import { RANGE_LIST } from 'pages/AddLiquidityV2/constants'
+import { useKyberSwapConfig } from 'state/application/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { AppState } from 'state/index'
 import { tryParseAmount } from 'state/swap/hooks'
@@ -1399,7 +1399,7 @@ export function useHourlyRateData(
   const dispatch = useAppDispatch()
   const { chainId } = useActiveWeb3React()
   const [ratesData, setRatesData] = useState<[PoolRatesEntry[], PoolRatesEntry[]] | null>(null)
-  const { elasticClient, blockClient } = useKyberswapConfig()
+  const { elasticClient, blockClient } = useKyberSwapConfig()
   useEffect(() => {
     const controller = new AbortController()
     const currentTime = dayjs.utc()

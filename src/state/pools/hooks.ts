@@ -14,8 +14,7 @@ import {
 } from 'apollo/queries'
 import { ONLY_DYNAMIC_FEE_CHAINS } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
-import { useKyberswapConfig } from 'hooks/useKyberswapConfig'
-import { useETHPrice } from 'state/application/hooks'
+import { useETHPrice, useKyberSwapConfig } from 'state/application/hooks'
 import { AppState } from 'state/index'
 import { get24hValue, getBlocksFromTimestamps, getPercentChange, getTimestampsForChanges } from 'utils'
 
@@ -86,7 +85,7 @@ interface UserLiquidityPositionResult {
  */
 export function useUserLiquidityPositions(): UserLiquidityPositionResult {
   const { isEVM, account } = useActiveWeb3React()
-  const { classicClient } = useKyberswapConfig()
+  const { classicClient } = useKyberSwapConfig()
   const { loading, error, data } = useQuery(USER_POSITIONS, {
     client: classicClient,
     variables: {
@@ -281,7 +280,7 @@ export function useResetPools(chainId: ChainId) {
 function usePoolCountInSubgraph(): number {
   const [poolCount, setPoolCount] = useState(0)
   const { isEVM, networkInfo } = useActiveWeb3React()
-  const { classicClient } = useKyberswapConfig()
+  const { classicClient } = useKyberSwapConfig()
 
   useEffect(() => {
     if (!isEVM) return
@@ -316,7 +315,7 @@ export function useAllPoolsData(): {
   const error = useSelector((state: AppState) => state.pools.error)
 
   const { currentPrice: ethPrice } = useETHPrice()
-  const { classicClient, blockClient } = useKyberswapConfig()
+  const { classicClient, blockClient } = useKyberSwapConfig()
 
   const poolCountSubgraph = usePoolCountInSubgraph()
   useEffect(() => {
@@ -382,7 +381,7 @@ export function useSinglePoolData(
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<Error | undefined>(undefined)
   const [poolData, setPoolData] = useState<SubgraphPoolData>()
-  const { classicClient, blockClient } = useKyberswapConfig()
+  const { classicClient, blockClient } = useKyberSwapConfig()
 
   useEffect(() => {
     if (!isEVM) return

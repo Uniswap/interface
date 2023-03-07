@@ -5,7 +5,6 @@ import { ElasticFarm, UserFarmInfo } from './types'
 interface ElasticFarmState {
   [chainId: number]: {
     loading: boolean
-    loadingUserInfo: boolean
     farms: ElasticFarm[] | null
     userFarmInfo?: UserFarmInfo
     poolFeeLast24h: {
@@ -17,7 +16,6 @@ interface ElasticFarmState {
 }
 
 export const defaultChainData = {
-  loadingUserInfo: false,
   loading: false,
   farms: [],
   poolFeeLast24h: {},

@@ -8,7 +8,6 @@ import { useSelector } from 'react-redux'
 import {
   KyberswapConfigurationResponse,
   KyberswapGlobalConfigurationResponse,
-  useGetKyberswapConfigurationQuery,
   useGetKyberswapGlobalConfigurationQuery,
   useLazyGetKyberswapConfigurationQuery,
 } from 'services/ksSetting'
@@ -37,7 +36,8 @@ const parseResponse = (
   defaultChainId: ChainId,
 ): KyberswapConfig => {
   const data = responseData?.data?.config
-  const rpc = data?.rpc ?? NETWORKS_INFO[defaultChainId].defaultRpcUrl
+  const rpc = data?.rpc || NETWORKS_INFO[defaultChainId].defaultRpcUrl
+
   if (!cacheRPC[defaultChainId]?.[rpc]) {
     if (!cacheRPC[defaultChainId]) cacheRPC[defaultChainId] = {}
     cacheRPC[defaultChainId]![rpc] = new ethers.providers.JsonRpcProvider(rpc)
@@ -95,14 +95,6 @@ export const useLazyKyberswapConfig = (): ((customChainId?: ChainId) => Promise<
     [getKyberswapConfiguration, storeChainId],
   )
   return fetchKyberswapConfig
-}
-
-export const useKyberswapConfig = (customChainId?: ChainId): KyberswapConfig => {
-  const storeChainId = useSelector<AppState, ChainId>(state => state.user.chainId) || ChainId.MAINNET // read directly from store instead of useActiveWeb3React to prevent circular loop
-  const chainId = customChainId ?? storeChainId
-  const { data } = useGetKyberswapConfigurationQuery({ chainId: chainId })
-  const result = useMemo(() => parseResponse(data, chainId), [chainId, data])
-  return result
 }
 
 export const useKyberswapGlobalConfig = () => {

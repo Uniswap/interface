@@ -21,15 +21,13 @@ import { ELASTIC_BASE_FEE_UNIT } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import { AppDispatch, AppState } from 'state'
-import { useETHPrice } from 'state/application/hooks'
+import { useETHPrice, useKyberSwapConfig } from 'state/application/hooks'
 import { RANGE } from 'state/mint/proamm/type'
 import { Field } from 'state/swap/actions'
 import { useSwapState } from 'state/swap/hooks'
 import { modifyTransaction } from 'state/transactions/actions'
 import { TRANSACTION_TYPE, TransactionDetails, TransactionExtraInfo2Token } from 'state/transactions/type'
 import { useUserSlippageTolerance } from 'state/user/hooks'
-
-import { useKyberswapConfig } from './useKyberswapConfig'
 
 export enum MIXPANEL_TYPE {
   PAGE_VIEWED,
@@ -212,7 +210,7 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
   const dispatch = useDispatch<AppDispatch>()
   const selectedCampaign = useSelector((state: AppState) => state.campaigns.selectedCampaign)
   const [allowedSlippage] = useUserSlippageTolerance()
-  const { elasticClient, classicClient } = useKyberswapConfig()
+  const { elasticClient, classicClient } = useKyberSwapConfig()
 
   const mixpanelHandler = useCallback(
     (type: MIXPANEL_TYPE, payload?: any) => {

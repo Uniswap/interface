@@ -7,7 +7,7 @@ import TickReaderABI from 'constants/abis/v2/ProAmmTickReader.json'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { useActiveWeb3React } from 'hooks'
 import { useMulticallContract } from 'hooks/useContract'
-import { useKyberswapConfig } from 'hooks/useKyberswapConfig'
+import { useKyberSwapConfig } from 'state/application/hooks'
 import { PositionDetails } from 'types/position'
 
 import PositionListItem from './PositionListItem'
@@ -53,7 +53,7 @@ function PositionGrid({
 }) {
   const { isEVM, networkInfo, chainId } = useActiveWeb3React()
   const multicallContract = useMulticallContract()
-  const { elasticClient } = useKyberswapConfig(chainId)
+  const { elasticClient } = useKyberSwapConfig(chainId)
 
   // raw
   const [feeRewards, setFeeRewards] = useState<{

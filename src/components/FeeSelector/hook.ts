@@ -4,15 +4,15 @@ import { useEffect, useMemo, useState } from 'react'
 
 import { POOL_POSITION_COUNT } from 'apollo/queries/promm'
 import { useActiveWeb3React } from 'hooks'
-import { useKyberswapConfig } from 'hooks/useKyberswapConfig'
 import { useProAmmPoolInfos } from 'hooks/useProAmmPoolInfo'
+import { useKyberSwapConfig } from 'state/application/hooks'
 
 export const useFeeTierDistribution = (
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
 ): { [key in FeeAmount]: number } => {
   const { isEVM, networkInfo } = useActiveWeb3React()
-  const { elasticClient } = useKyberswapConfig()
+  const { elasticClient } = useKyberSwapConfig()
   const feeAmounts = useMemo(() => {
     return [FeeAmount.HIGH, FeeAmount.LOW, FeeAmount.LOWEST, FeeAmount.STABLE, FeeAmount.MEDIUM]
   }, [])

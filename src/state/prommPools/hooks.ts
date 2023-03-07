@@ -7,7 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useActiveWeb3React } from 'hooks'
-import { useKyberswapConfig } from 'hooks/useKyberswapConfig'
+import { useKyberSwapConfig } from 'state/application/hooks'
 import { AppState } from 'state/index'
 import { getBlocksFromTimestamps } from 'utils'
 
@@ -172,7 +172,7 @@ export interface UserPositionResult {
  */
 export function useUserProMMPositions(): UserPositionResult {
   const { chainId, account, isEVM } = useActiveWeb3React()
-  const { elasticClient } = useKyberswapConfig()
+  const { elasticClient } = useKyberSwapConfig()
 
   const { loading, error, data } = useQuery(PROMM_USER_POSITIONS, {
     client: elasticClient,
@@ -239,7 +239,7 @@ export function useUserProMMPositions(): UserPositionResult {
 
 export const usePoolBlocks = () => {
   const { chainId } = useActiveWeb3React()
-  const { blockClient } = useKyberswapConfig()
+  const { blockClient } = useKyberSwapConfig()
 
   const utcCurrentTime = dayjs()
   const last24h = utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
@@ -301,7 +301,7 @@ export function useTopPoolAddresses(): {
   addresses: string[] | undefined
 } {
   const { isEVM } = useActiveWeb3React()
-  const { elasticClient } = useKyberswapConfig()
+  const { elasticClient } = useKyberSwapConfig()
 
   const { loading, error, data } = useQuery<TopPoolsResponse>(TOP_POOLS, {
     client: elasticClient,

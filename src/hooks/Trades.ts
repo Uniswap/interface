@@ -19,7 +19,7 @@ import { useUserSlippageTolerance } from 'state/user/hooks'
 import { isAddress } from 'utils'
 import { Aggregator } from 'utils/aggregator'
 
-import { useKyberswapGlobalConfig } from './useKyberswapConfig'
+import { useKyberswapGlobalConfig } from './useKyberSwapConfig'
 
 function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[][] {
   const allPairCombinations = useAllCurrencyCombinations(currencyA, currencyB)

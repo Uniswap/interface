@@ -37,6 +37,7 @@ const ksSettingApi = createApi({
         },
       }),
     }),
+
     getKyberswapGlobalConfiguration: builder.query<KyberswapGlobalConfigurationResponse, void>({
       query: () => ({
         url: '/configurations/fetch',
@@ -48,10 +49,6 @@ const ksSettingApi = createApi({
   }),
 })
 
-export const {
-  useGetKyberswapConfigurationQuery,
-  useLazyGetKyberswapConfigurationQuery,
-  useGetKyberswapGlobalConfigurationQuery,
-} = ksSettingApi
+export const { useLazyGetKyberswapConfigurationQuery, useGetKyberswapGlobalConfigurationQuery } = ksSettingApi
 
 export default ksSettingApi

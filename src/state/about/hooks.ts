@@ -6,7 +6,7 @@ import { EVM_MAINNET_NETWORKS, isEVM } from 'constants/networks'
 import { ELASTIC_NOT_SUPPORTED, VERSION } from 'constants/v2'
 import useAggregatorAPR from 'hooks/useAggregatorAPR'
 import useAggregatorVolume from 'hooks/useAggregatorVolume'
-import { useAllKyberswapConfig } from 'hooks/useKyberswapConfig'
+import { useAllKyberswapConfig } from 'hooks/useKyberSwapConfig'
 
 interface GlobalData {
   dmmFactories: {

@@ -5,7 +5,6 @@ import { ElasticFarmV2, UserFarmV2Info } from './types'
 interface ElasticFarmV2State {
   [chainId: number]: {
     loading: boolean
-    loadingUserInfo: boolean
     // null mean untouch
     farms: ElasticFarmV2[] | null
     userInfo: UserFarmV2Info[] | null
@@ -14,7 +13,6 @@ interface ElasticFarmV2State {
 
 export const defaultChainData = {
   loading: false,
-  loadingUserInfo: false,
   farms: null,
   userInfo: null,
 } as ElasticFarmV2State[number]
@@ -36,11 +34,6 @@ const slice = createSlice({
       } else state[chainId] = { ...state[chainId], loading }
     },
 
-    setLoadingUserInfo(state, { payload: { loading, chainId } }) {
-      if (!state[chainId]) {
-        state[chainId] = { ...defaultChainData, loadingUserInfo: loading }
-      } else state[chainId] = { ...state[chainId], loadingUserInfo: loading }
-    },
     setUserFarmInfo(
       state,
       { payload: { userInfo, chainId } }: { payload: { userInfo: UserFarmV2Info[]; chainId: number } },
@@ -50,6 +43,6 @@ const slice = createSlice({
   },
 })
 
-export const { setFarms, setLoading, setLoadingUserInfo, setUserFarmInfo } = slice.actions
+export const { setFarms, setLoading, setUserFarmInfo } = slice.actions
 
 export default slice.reducer

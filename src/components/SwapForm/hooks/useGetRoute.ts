@@ -8,7 +8,7 @@ import useSelectedDexes from 'components/SwapForm/hooks/useSelectedDexes'
 import { ETHER_ADDRESS, INPUT_DEBOUNCE_TIME } from 'constants/index'
 import { NETWORKS_INFO, isEVM } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
-import { useKyberswapGlobalConfig } from 'hooks/useKyberswapConfig'
+import { useKyberswapGlobalConfig } from 'hooks/useKyberSwapConfig'
 import { FeeConfig } from 'types/route'
 
 type Args = {

@@ -17,11 +17,10 @@ import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
 import { useAllTokens } from 'hooks/Tokens'
 import { useFairLaunchContracts } from 'hooks/useContract'
-import { useKyberswapConfig } from 'hooks/useKyberswapConfig'
 import useTokenBalance from 'hooks/useTokenBalance'
 import useTokensMarketPrice from 'hooks/useTokensMarketPrice'
 import { AppState } from 'state'
-import { useBlockNumber, useETHPrice, useTokensPrice } from 'state/application/hooks'
+import { useBlockNumber, useETHPrice, useKyberSwapConfig, useTokensPrice } from 'state/application/hooks'
 import { FairLaunchVersion, Farm } from 'state/farms/classic/types'
 import { useAppDispatch } from 'state/hooks'
 import { useMultipleContractSingleData } from 'state/multicall/hooks'
@@ -84,7 +83,7 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
   const fairLaunchContracts = useFairLaunchContracts(false)
   const ethPrice = useETHPrice()
   const allTokens = useAllTokens()
-  const { classicClient, blockClient } = useKyberswapConfig()
+  const { classicClient, blockClient } = useKyberSwapConfig()
 
   const farmsData = useSelector((state: AppState) => state.farms.data)
   const loading = useSelector((state: AppState) => state.farms.loading)

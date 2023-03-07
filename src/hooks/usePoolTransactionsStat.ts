@@ -3,8 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { RECENT_POOL_TX } from 'apollo/queries/promm'
 import { POOL_TRANSACTION_TYPE } from 'components/ProAmm/type'
 import { useActiveWeb3React } from 'hooks'
-
-import { useKyberswapConfig } from './useKyberswapConfig'
+import { useKyberSwapConfig } from 'state/application/hooks'
 
 type RecentPoolTxsResult = {
   mints: { id: string }[]
@@ -24,7 +23,7 @@ const usePoolTransactionsStat = (
   | undefined => {
   const { isEVM, networkInfo } = useActiveWeb3React()
   const [data, setData] = useState<RecentPoolTxsResult | null>(null)
-  const { elasticClient } = useKyberswapConfig()
+  const { elasticClient } = useKyberSwapConfig()
 
   useEffect(() => {
     const controller = new AbortController()

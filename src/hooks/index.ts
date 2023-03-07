@@ -13,10 +13,9 @@ import { NETWORKS_INFO } from 'constants/networks'
 import { NetworkInfo } from 'constants/networks/type'
 import { SUPPORTED_WALLET, SUPPORTED_WALLETS, WALLETLINK_LOCALSTORAGE_NAME } from 'constants/wallets'
 import { AppState } from 'state'
+import { useKyberSwapConfig } from 'state/application/hooks'
 import { useIsAcceptedTerm, useIsUserManuallyDisconnect } from 'state/user/hooks'
 import { detectInjectedType, isEVMWallet, isSolanaWallet } from 'utils'
-
-import { useKyberswapConfig } from './useKyberswapConfig'
 
 export function useActiveWeb3React(): {
   chainId: ChainId
@@ -101,7 +100,7 @@ export function useActiveWeb3React(): {
 
 export function useWeb3React(key?: string): Web3ReactContextInterface<Web3Provider> & { chainId?: ChainId } {
   const { connector, library, chainId, account, active, error, activate, setError, deactivate } = useWeb3ReactCore(key)
-  const { provider } = useKyberswapConfig()
+  const { provider } = useKyberSwapConfig()
 
   const activateWrapped = useCallback(
     (connector: AbstractConnector, onError?: (error: Error) => void, throwErrors?: boolean) => {
@@ -126,7 +125,7 @@ export function useWeb3React(key?: string): Web3ReactContextInterface<Web3Provid
 }
 
 export const useWeb3Solana = () => {
-  const { connection } = useKyberswapConfig()
+  const { connection } = useKyberSwapConfig()
   return { connection }
 }
 

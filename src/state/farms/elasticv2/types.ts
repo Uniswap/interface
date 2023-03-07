@@ -64,4 +64,20 @@ export interface SubgraphFarmV2 {
     tickUpper: string
     weight: number
   }>
+
+  depositedPositions: Array<{
+    id: string
+    position: {
+      id: string
+      liquidity: string
+      tickLower: {
+        tickIdx: string
+      }
+      tickUpper: {
+        tickIdx: string
+      }
+      token0: SubgraphToken
+      token1: SubgraphToken
+    }
+  }>
 }

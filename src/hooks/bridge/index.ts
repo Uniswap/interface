@@ -7,13 +7,13 @@ import { isEVM } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import { useMulticallContract } from 'hooks/useContract'
 import useInterval from 'hooks/useInterval'
-import { useKyberswapConfig } from 'hooks/useKyberswapConfig'
+import { useKyberSwapConfig } from 'state/application/hooks'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 export const useTokenBalanceOfAnotherChain = (chainId: ChainId | undefined, token: WrappedTokenInfo | undefined) => {
   const { account } = useActiveWeb3React()
   const [balance, setBalance] = useState('0')
-  const { provider } = useKyberswapConfig()
+  const { provider } = useKyberSwapConfig()
 
   useEffect(() => {
     if (account && chainId && token && provider)

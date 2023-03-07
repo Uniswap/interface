@@ -1,6 +1,10 @@
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { createReducer, nanoid } from '@reduxjs/toolkit'
+import ksSettingApi from 'services/ksSetting'
 
 import { AnnouncementTemplatePopup, PopupItemType } from 'components/Announcement/type'
+import { NETWORKS_INFO, isEVM } from 'constants/networks'
+import ethereumInfo from 'constants/networks/ethereum'
 import { Topic } from 'hooks/useNotification'
 
 import {
@@ -46,6 +50,15 @@ interface ApplicationState {
       hasMore: boolean // need to load more or not
     }
   }
+  readonly config: {
+    [chainId in ChainId]?: {
+      rpc: string
+      prochart: boolean
+      blockSubgraph: string
+      classicSubgraph: string
+      elasticSubgraph: string
+    }
+  }
 }
 const initialStateNotification = {
   isLoading: false,
@@ -66,6 +79,7 @@ const initialState: ApplicationState = {
   kncPrice: '',
   serviceWorkerRegistration: null,
   notification: initialStateNotification,
+  config: {},
 }
 
 export default createReducer(initialState, builder =>
@@ -137,6 +151,36 @@ export default createReducer(initialState, builder =>
       state.notification = {
         ...notification,
         announcementDetail,
+      }
+    })
+    .addMatcher(ksSettingApi.endpoints.getKyberswapConfiguration.matchFulfilled, (state, action) => {
+      const { chainId } = action.meta.arg.originalArgs
+      const evm = isEVM(chainId)
+      const data = action.payload.data.config
+      const rpc = data?.rpc || NETWORKS_INFO[chainId].defaultRpcUrl
+
+      const blockSubgraph = evm
+        ? data?.blockSubgraph || NETWORKS_INFO[chainId].defaultBlockSubgraph
+        : ethereumInfo.defaultBlockSubgraph
+
+      const classicSubgraph = evm
+        ? data?.classicSubgraph || NETWORKS_INFO[chainId].classic.defaultSubgraph
+        : ethereumInfo.classic.defaultSubgraph
+
+      const elasticSubgraph = evm
+        ? data?.elasticSubgraph || NETWORKS_INFO[chainId].elastic.defaultSubgraph
+        : ethereumInfo.elastic.defaultSubgraph
+
+      if (!state.config) state.config = {}
+      state.config = {
+        ...state.config,
+        [chainId]: {
+          rpc,
+          prochart: data?.prochart || false,
+          blockSubgraph,
+          elasticSubgraph,
+          classicSubgraph,
+        },
       }
     }),
 )
