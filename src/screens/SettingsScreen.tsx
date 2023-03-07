@@ -11,7 +11,9 @@ import BookOpenIcon from 'src/assets/icons/book-open.svg'
 import FaceIdIcon from 'src/assets/icons/faceid.svg'
 import FingerprintIcon from 'src/assets/icons/fingerprint.svg'
 import FlashbotsIcon from 'src/assets/icons/flashbots.svg'
+import LikeSquare from 'src/assets/icons/like-square.svg'
 import LockIcon from 'src/assets/icons/lock.svg'
+import MessageQuestion from 'src/assets/icons/message-question.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
@@ -24,7 +26,7 @@ import {
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
 import { Text } from 'src/components/Text'
-import { uniswapUrls } from 'src/constants/urls'
+import { APP_FEEDBACK_LINK, GET_HELP_LINK, uniswapUrls } from 'src/constants/urls'
 import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
@@ -73,6 +75,29 @@ export function SettingsScreen(): JSX.Element {
             ),
           },
           // @TODO: [MOB-3920] add back testnet toggle when Zerion provides data for testnets correctly.
+        ],
+      },
+      {
+        subTitle: t('Support'),
+        data: [
+          {
+            screen: Screens.WebView,
+            screenProps: {
+              uriLink: APP_FEEDBACK_LINK,
+              headerTitle: t('Send Feedback'),
+            },
+            text: t('Send Feedback'),
+            icon: <LikeSquare {...iconProps} />,
+          },
+          {
+            screen: Screens.WebView,
+            screenProps: {
+              uriLink: GET_HELP_LINK,
+              headerTitle: t('Get Help'),
+            },
+            text: t('Get Help'),
+            icon: <MessageQuestion {...iconProps} />,
+          },
         ],
       },
       {

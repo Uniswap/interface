@@ -38,7 +38,11 @@ function getUniswapAmplitudeProxyUrl(): string {
   return `${config.uniswapApiBaseUrl}/v1/amplitude-proxy`
 }
 
-export const TOKEN_WARNING_HELP_PAGE_URL =
-  'https://support.uniswap.org/hc/en-us/articles/8723118437133-What-are-token-warnings-'
+export const TOKEN_WARNING_HELP_PAGE_URL = `${uniswapUrls.helpUrl}/hc/en-us/articles/8723118437133-What-are-token-warnings-`
 
 export const APP_STORE_LINK = 'https://apps.apple.com/us/app/uniswap-wallet-defi-nfts/id6443944476'
+
+export const APP_FEEDBACK_LINK =
+  'https://docs.google.com/forms/d/e/1FAIpQLSepzL5aMuSfRhSgw0zDw_gVmc2aeVevfrb1UbOwn6WGJ--46w/viewform'
+
+export const GET_HELP_LINK = `${uniswapUrls.helpUrl}/hc/en-us/categories/11301970439565-Uniswap-Wallet`
