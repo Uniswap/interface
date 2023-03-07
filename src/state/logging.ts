@@ -10,10 +10,10 @@ type Partial<T> = T extends object
   : T
 
 /**
- * This middleware will automatically store the latest state in Sentry's scope, so that it will be available
+ * This enhancer will automatically store the latest state in Sentry's scope, so that it will be available
  * in the Sentry dashboard when an exception happens.
  */
-export const sentryMiddleware = Sentry.createReduxEnhancer({
+export const sentryEnhancer = Sentry.createReduxEnhancer({
   /**
    * We don't want to store actions as breadcrumbs in Sentry, so we return null to disable the default behavior.
    */
