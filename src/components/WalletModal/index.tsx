@@ -3,6 +3,7 @@ import { sendAnalyticsEvent, user } from '@uniswap/analytics'
 import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
+import { WalletConnect } from '@web3-react/walletconnect'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
@@ -367,8 +368,20 @@ export default function WalletModal({
     )
   }
 
+  /**
+   * Do not show <WalletModal /> when WalletConnect connection modal is open to prevent focus issues when
+   * trying to interact with a WalletConnect modal.
+   */
+  const isWalletConnectModalOpen =
+    walletView === WALLET_VIEWS.PENDING && pendingConnector instanceof WalletConnect && !pendingError
+
   return (
-    <Modal isOpen={walletModalOpen} onDismiss={toggleWalletModal} minHeight={false} maxHeight={90}>
+    <Modal
+      isOpen={walletModalOpen && !isWalletConnectModalOpen}
+      onDismiss={toggleWalletModal}
+      minHeight={false}
+      maxHeight={90}
+    >
       <Wrapper data-testid="wallet-modal">{getModalContent()}</Wrapper>
     </Modal>
   )

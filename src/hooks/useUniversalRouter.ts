@@ -3,14 +3,15 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { t } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { SwapEventName } from '@uniswap/analytics-events'
+import { sendTransaction } from '@uniswap/conedison/provider/index'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { TX_GAS_MARGIN } from 'constants/misc'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
 import isZero from 'utils/isZero'
 import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
@@ -52,30 +53,19 @@ export function useUniversalRouterSwapCallback(
         ...(value && !isZero(value) ? { value: toHex(value) } : {}),
       }
 
-      let gasEstimate: BigNumber
-      try {
-        gasEstimate = await provider.estimateGas(tx)
-      } catch (gasError) {
-        console.warn(gasError)
-        throw new Error('Your swap is expected to fail')
-      }
-      const gasLimit = calculateGasMargin(gasEstimate)
-      const response = await provider
-        .getSigner()
-        .sendTransaction({ ...tx, gasLimit })
-        .then((response) => {
-          sendAnalyticsEvent(
-            SwapEventName.SWAP_SIGNED,
-            formatSwapSignedAnalyticsEventProperties({ trade, txHash: response.hash })
+      const response = await sendTransaction(provider, tx, TX_GAS_MARGIN).then((response) => {
+        sendAnalyticsEvent(
+          SwapEventName.SWAP_SIGNED,
+          formatSwapSignedAnalyticsEventProperties({ trade, txHash: response.hash })
+        )
+        if (tx.data !== response.data) {
+          sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, { txHash: response.hash })
+          throw new InvalidSwapError(
+            t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`
           )
-          if (tx.data !== response.data) {
-            sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, { txHash: response.hash })
-            throw new InvalidSwapError(
-              t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`
-            )
-          }
-          return response
-        })
+        }
+        return response
+      })
       return response
     } catch (swapError: unknown) {
       if (swapError instanceof InvalidSwapError) throw swapError

@@ -3,6 +3,7 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
+import { sendTransaction } from '@uniswap/conedison/provider/index'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -18,6 +19,7 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
+import { TX_GAS_MARGIN } from 'constants/misc'
 import { useToken } from 'hooks/Tokens'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -45,7 +47,6 @@ import RateToggle from '../../components/RateToggle'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
 import { TransactionType } from '../../state/transactions/types'
-import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { LoadingRows } from './styleds'
 
@@ -463,36 +464,24 @@ export function PositionPage() {
       value,
     }
 
-    provider
-      .getSigner()
-      .estimateGas(txn)
-      .then((estimate) => {
-        const newTxn = {
-          ...txn,
-          gasLimit: calculateGasMargin(estimate),
-        }
+    sendTransaction(provider, txn, TX_GAS_MARGIN)
+      .then((response: TransactionResponse) => {
+        setCollectMigrationHash(response.hash)
+        setCollecting(false)
 
-        return provider
-          .getSigner()
-          .sendTransaction(newTxn)
-          .then((response: TransactionResponse) => {
-            setCollectMigrationHash(response.hash)
-            setCollecting(false)
+        sendEvent({
+          category: 'Liquidity',
+          action: 'CollectV3',
+          label: [currency0ForFeeCollectionPurposes.symbol, currency1ForFeeCollectionPurposes.symbol].join('/'),
+        })
 
-            sendEvent({
-              category: 'Liquidity',
-              action: 'CollectV3',
-              label: [currency0ForFeeCollectionPurposes.symbol, currency1ForFeeCollectionPurposes.symbol].join('/'),
-            })
-
-            addTransaction(response, {
-              type: TransactionType.COLLECT_FEES,
-              currencyId0: currencyId(currency0ForFeeCollectionPurposes),
-              currencyId1: currencyId(currency1ForFeeCollectionPurposes),
-              expectedCurrencyOwed0: CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0).toExact(),
-              expectedCurrencyOwed1: CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0).toExact(),
-            })
-          })
+        addTransaction(response, {
+          type: TransactionType.COLLECT_FEES,
+          currencyId0: currencyId(currency0ForFeeCollectionPurposes),
+          currencyId1: currencyId(currency1ForFeeCollectionPurposes),
+          expectedCurrencyOwed0: CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0).toExact(),
+          expectedCurrencyOwed1: CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0).toExact(),
+        })
       })
       .catch((error) => {
         setCollecting(false)
