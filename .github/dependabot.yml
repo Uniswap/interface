@@ -11,4 +11,3 @@ updates:
       - dependency-name: '@uniswap/widgets'
     reviewers:
       - "Uniswap/dependabot-reviewers"
-      - 'Uniswap/web-tokens'
