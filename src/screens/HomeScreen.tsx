@@ -48,6 +48,7 @@ import { Text } from 'src/components/Text'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
 import { useFiatOnRampEnabled } from 'src/features/experiments/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
+import { useSelectAddressHasNotifications } from 'src/features/notifications/hooks'
 import { setNotificationStatus } from 'src/features/notifications/notificationSlice'
 import {
   ElementName,
@@ -147,12 +148,13 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     return activityTabScrollValue.value
   }, [tabIndex])
 
+  // clear the notification indicator if the user is on the activity tab
+  const hasNotifications = useSelectAddressHasNotifications(activeAccount.address)
   useEffect(() => {
-    // clear the notification indicator if the user is on the activity tab
-    if (tabIndex === 2) {
+    if (tabIndex === 2 && hasNotifications) {
       dispatch(setNotificationStatus({ address: activeAccount.address, hasNotifications: false }))
     }
-  }, [dispatch, activeAccount.address, tabIndex])
+  }, [dispatch, activeAccount.address, tabIndex, hasNotifications])
 
   // If accounts are switched, we want to scroll to top and show full header
   useEffect(() => {
