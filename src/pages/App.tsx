@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react'
 import {
   getDeviceId,
   initializeAnalytics,
@@ -22,6 +23,7 @@ import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
+import { isSentryEnabled } from 'utils/env'
 import { getEnvName, isProductionEnv } from 'utils/env'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
@@ -57,16 +59,21 @@ const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
 
-// Placeholder API key. Actual API key used in the proxy server
+// Actual KEYs are set by proxy servers.
 const AMPLITUDE_DUMMY_KEY = '00000000000000000000000000000000'
-const AMPLITUDE_PROXY_URL = process.env.REACT_APP_AMPLITUDE_PROXY_URL
 const STATSIG_DUMMY_KEY = 'client-0000000000000000000000000000000000000000000'
-const STATSIG_PROXY_URL = process.env.REACT_APP_STATSIG_PROXY_URL
-const COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
+
+Sentry.init({
+  dsn: process.env.REACT_APP_SENTRY_DSN,
+  release: process.env.REACT_APP_GIT_COMMIT_HASH,
+  environment: getEnvName(),
+  enabled: isSentryEnabled(),
+})
+
 initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {
-  proxyUrl: AMPLITUDE_PROXY_URL,
+  proxyUrl: process.env.REACT_APP_AMPLITUDE_PROXY_URL,
   defaultEventName: SharedEventName.PAGE_VIEWED,
-  commitHash: COMMIT_HASH,
+  commitHash: process.env.REACT_APP_GIT_COMMIT_HASH,
   isProductionEnv: isProductionEnv(),
 })
 
@@ -216,7 +223,7 @@ export default function App() {
           waitForInitialization={false}
           options={{
             environment: { tier: getEnvName() },
-            api: STATSIG_PROXY_URL,
+            api: process.env.REACT_APP_STATSIG_PROXY_URL,
           }}
         >
           <HeaderWrapper transparent={isHeaderTransparent}>
