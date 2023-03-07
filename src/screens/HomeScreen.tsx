@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import { useScrollToTop } from '@react-navigation/native'
 import { FlashList } from '@shopify/flash-list'
+import { useResponsiveProp } from '@shopify/restyle'
 import { impactAsync } from 'expo-haptics'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -83,6 +84,12 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
   const dispatch = useAppDispatch()
+
+  const listBottomPadding =
+    useResponsiveProp({
+      xs: theme.spacing.spacing36,
+      sm: theme.spacing.spacing12,
+    }) ?? 0
 
   const [tabIndex, setTabIndex] = useState(props?.route?.params?.tab ?? TabIndex.Tokens)
   const routes = useMemo(
@@ -240,10 +247,14 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
       paddingTop: headerHeight + TAB_BAR_HEIGHT + TAB_STYLES.tabListInner.paddingTop,
-      paddingBottom: insets.bottom + SWAP_BUTTON_HEIGHT + TAB_STYLES.tabListInner.paddingBottom,
+      paddingBottom:
+        insets.bottom +
+        SWAP_BUTTON_HEIGHT +
+        TAB_STYLES.tabListInner.paddingBottom +
+        listBottomPadding,
       minHeight: dimensions.fullHeight + headerHeightDiff,
     }),
-    [headerHeight, insets.bottom, headerHeightDiff]
+    [headerHeight, insets.bottom, listBottomPadding, headerHeightDiff]
   )
 
   const loadingContainerStyle = useMemo<StyleProp<ViewStyle>>(
