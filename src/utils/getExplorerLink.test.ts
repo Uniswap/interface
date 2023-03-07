@@ -1,4 +1,4 @@
-import { SupportedChainId } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 
 import { ExplorerDataType, getExplorerLink } from './getExplorerLink'
 
@@ -19,7 +19,7 @@ describe('#getExplorerLink', () => {
     expect(getExplorerLink(42161, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://arbiscan.io/address/abc')
   })
   it('bnb chain', () => {
-    expect(getExplorerLink(SupportedChainId.BSC, 'abc', ExplorerDataType.ADDRESS)).toEqual(
+    expect(getExplorerLink(SupportedChainId.BNB, 'abc', ExplorerDataType.ADDRESS)).toEqual(
       'https://bscscan.com/address/abc'
     )
   })

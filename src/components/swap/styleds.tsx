@@ -1,5 +1,5 @@
-import { ChainId } from '@uniswap/smart-order-router'
 import { TooltipContainer } from 'components/Tooltip'
+import { SupportedChainId } from 'constants/chains'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -30,7 +30,7 @@ export const SwapWrapper = styled.main<{ chainId: number | undefined }>`
   border-radius: 16px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   padding: 8px;
-  box-shadow: ${({ chainId }) => !!chainId && chainId === ChainId.BSC && '0px 40px 120px 0px #f0b90b29'};
+  box-shadow: ${({ chainId }) => !!chainId && chainId === SupportedChainId.BNB && '0px 40px 120px 0px #f0b90b29'};
   z-index: ${Z_INDEX.deprecated_content};
   transition: transform 250ms ease;
 
