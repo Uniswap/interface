@@ -50,7 +50,7 @@ export interface L2ChainInfo extends BaseChainInfo {
   readonly defaultListUrl: string
 }
 
-const L1_CHAIN_INFO: Record<SupportedL1ChainId, L1ChainInfo> = {
+const L1_CHAIN_INFO = {
   [SupportedChainId.MAINNET]: {
     networkType: NetworkType.L1,
     docs: 'https://docs.uniswap.org/',
@@ -123,7 +123,7 @@ const L1_CHAIN_INFO: Record<SupportedL1ChainId, L1ChainInfo> = {
   },
 }
 
-const L2_CHAIN_INFO: Record<SupportedL2ChainId, L2ChainInfo> = {
+const L2_CHAIN_INFO = {
   [SupportedChainId.OPTIMISM]: {
     networkType: NetworkType.L2,
     blockWaitMsBeforeWarning: ms`25m`,
