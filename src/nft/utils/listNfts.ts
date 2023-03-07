@@ -41,7 +41,7 @@ export const ListingMarkets: ListingMarket[] = [
   },
   {
     name: 'OpenSea',
-    fee: 2.5,
+    fee: 0,
     icon: '/nft/svgs/marketplaces/opensea.svg',
   },
 ]
