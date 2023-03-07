@@ -6,7 +6,14 @@ const gzipSize = require('gzip-size').sync
 const path = require('path')
 
 const buildDir = path.join(__dirname, '../build')
-const { entrypoints } = require(path.join(buildDir, 'asset-manifest.json'))
+
+let entrypoints
+try {
+  entrypoints = require(path.join(buildDir, 'asset-manifest.json')).entrypoints
+} catch (e) {
+  console.log(chalk.yellow('You must build first: `yarn build`'))
+  process.exit(1)
+}
 
 // The last recorded size for these assets, as reported by `yarn build`.
 const MAX_SIZE_MAIN_KB = 361.36
