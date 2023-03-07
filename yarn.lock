@@ -5003,10 +5003,10 @@
     react "^18.2.0"
     react-dom "^18.2.0"
 
-"@uniswap/conedison@^1.3.0", "@uniswap/conedison@^1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.5.1.tgz#91527cc9928ce0187f30a5eb4abb705b8f0cd013"
-  integrity sha512-VJqUW4l54QVj5a4vAzAlWWd193iCcT8HMugFPB28S2Uqhs2elAg/RDQmiPOf9TOFB635MdBlD0S6xUuqo7FB4A==
+"@uniswap/conedison@^1.3.0", "@uniswap/conedison@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/conedison/-/conedison-1.4.0.tgz#44ad96333b92913a57be34bf5effcfee6534cba1"
+  integrity sha512-ZZMfPTjUiYpLvO0SuMPGNzkFrRpzf+bQYSL/CzaYKGSVdorRUj4XpeMdjlbuKUtHqUEunOWE8eDL3J1Hl4HOUg==
 
 "@uniswap/default-token-list@^2.0.0":
   version "2.2.0"
