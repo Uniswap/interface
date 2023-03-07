@@ -38,7 +38,7 @@ const ExpirationContainer = ({ expirationTimestamp }: { expirationTimestamp: num
   return (
     <StyledExpirationContainer>
       <Clock size={20} />
-      {timeLeft(new Date(expirationTimestamp))}
+      {timeLeft(new Date(expirationTimestamp), true)}
     </StyledExpirationContainer>
   )
 }
