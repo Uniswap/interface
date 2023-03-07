@@ -1,12 +1,4 @@
-import * as Sentry from '@sentry/react'
-import {
-  getDeviceId,
-  initializeAnalytics,
-  OriginApplication,
-  sendAnalyticsEvent,
-  Trace,
-  user,
-} from '@uniswap/analytics'
+import { getDeviceId, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
 import { CustomUserProperties, getBrowser, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import Loader from 'components/Loader'
@@ -14,6 +6,7 @@ import { MenuDropdown } from 'components/NavBar/MenuDropdown'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
+import { STATSIG_DUMMY_KEY } from 'integrations'
 import { Box } from 'nft/components/Box'
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
@@ -23,8 +16,7 @@ import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { isSentryEnabled } from 'utils/env'
-import { getEnvName, isProductionEnv } from 'utils/env'
+import { getEnvName } from 'utils/env'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
@@ -58,27 +50,6 @@ const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
-
-// Actual KEYs are set by proxy servers.
-const AMPLITUDE_DUMMY_KEY = '00000000000000000000000000000000'
-const STATSIG_DUMMY_KEY = 'client-0000000000000000000000000000000000000000000'
-
-// Dump some metadata into the window to allow client verification.
-window.GIT_COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
-
-Sentry.init({
-  dsn: process.env.REACT_APP_SENTRY_DSN,
-  release: process.env.REACT_APP_GIT_COMMIT_HASH,
-  environment: getEnvName(),
-  enabled: isSentryEnabled(),
-})
-
-initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {
-  proxyUrl: process.env.REACT_APP_AMPLITUDE_PROXY_URL,
-  defaultEventName: SharedEventName.PAGE_VIEWED,
-  commitHash: process.env.REACT_APP_GIT_COMMIT_HASH,
-  isProductionEnv: isProductionEnv(),
-})
 
 const BodyWrapper = styled.div`
   display: flex;
