@@ -2257,6 +2257,11 @@ msgstr "Неверная сеть"
 msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
 msgstr "Вы покидаете Kromatika.Finance и будете перенаправлены на независимый сторонний веб-сайт."
 
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You buy"
+msgstr "Ты покупаешь"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Вы можете проголосовать за каждое предложение самостоятельно или делегировать свои голоса третьей стороне."
@@ -2301,6 +2306,11 @@ msgstr "Вы должны дать разрешение смарт-контра�
 #: src/pages/LimitOrder/index.tsx
 msgid "You receive at least"
 msgstr "Вы получаете как минимум"
+
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You sell"
+msgstr "Вы продаете"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2556,6 +2566,10 @@ msgstr "{label}"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{status}"
+msgstr "{status}"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "{token0CreatedAmount}"

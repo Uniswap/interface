@@ -53,7 +53,6 @@ const Q192 = JSBI.exponentiate(Q96, JSBI.BigInt(2))
 const PageWrapper = styled.div`
   min-width: 800px;
   max-width: 960px;
-  margin-top: 60px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     min-width: 680px;

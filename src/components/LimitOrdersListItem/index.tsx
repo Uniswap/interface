@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Trans } from '@lingui/macro'
+// eslint-disable-next-line no-restricted-imports
+import { t, Trans } from '@lingui/macro'
 import { CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import { DateTime } from 'luxon/src/luxon'
@@ -281,7 +282,7 @@ export default function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }
       ? Number(token1USD) / Number(priceUpper?.toSignificant(6))
       : Number(token1USD) / Number(priceUpper?.toSignificant(6))
 
-  const renderStatus = () => (processed ? 'Processed' : outOfRange ? 'Pending' : 'In Range')
+  const status = processed ? <Trans>Processed</Trans> : outOfRange ? <Trans>Pending</Trans> : <Trans>In Range</Trans>
 
   return (
     <LimitOrderWrapper to={positionSummaryLink}>
@@ -300,9 +301,7 @@ export default function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }
             <Trans>Status:</Trans>
           </TYPE.darkGray>
         </TextLabel>
-        <TextValue fontWeight={700}>
-          <Trans>{renderStatus()}</Trans>
-        </TextValue>
+        <TextValue fontWeight={700}>{status}</TextValue>
       </RowFixedHeight>
 
       {createdBlockDate && (

@@ -2257,6 +2257,11 @@ msgstr "Nieprawidłowa sieć"
 msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
 msgstr "Opuszczasz Kromatika.Finance i zostaniesz przekierowany na niezależną stronę internetową strony trzeciej."
 
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You buy"
+msgstr "kupujesz"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Możesz samodzielnie głosować na każdy wniosek lub przekazać swoje głosy osobie trzeciej."
@@ -2301,6 +2306,11 @@ msgstr "Musisz przyznać Kromatika inteligentne kontrakty na korzystanie z twoje
 #: src/pages/LimitOrder/index.tsx
 msgid "You receive at least"
 msgstr "Otrzymujesz min"
+
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You sell"
+msgstr "Sprzedajesz"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2556,6 +2566,10 @@ msgstr "{label}"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{status}"
+msgstr "{status}"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "{token0CreatedAmount}"

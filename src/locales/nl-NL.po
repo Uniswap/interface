@@ -2257,6 +2257,11 @@ msgstr "Verkeerd netwerk"
 msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
 msgstr "U verlaat Kromatika.Finance en wordt doorgestuurd naar een onafhankelijke website van derden."
 
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You buy"
+msgstr "Je koopt"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
 msgstr "U kunt zelf over elk voorstel stemmen of uw stemmen overdragen aan een derde partij."
@@ -2301,6 +2306,11 @@ msgstr "U dient de Kromatika smart contracten toestemming te geven om uw {0} te 
 #: src/pages/LimitOrder/index.tsx
 msgid "You receive at least"
 msgstr "Je ontvangt minimaal"
+
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You sell"
+msgstr "Jij verkoopt"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2556,6 +2566,10 @@ msgstr "{label}"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{status}"
+msgstr "{status}"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "{token0CreatedAmount}"

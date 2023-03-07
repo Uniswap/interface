@@ -1,4 +1,5 @@
-import { Trans } from '@lingui/macro'
+// eslint-disable-next-line no-restricted-imports
+import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
@@ -186,7 +187,6 @@ const ClassicModeContainer = styled.div`
   height: 100%;
   width: 475px;
   padding: 1rem 0 8rem 0;
-  margin-top: 60px;
   z-index: 0;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     width: 100%;
@@ -222,11 +222,10 @@ const FlexContainer = styled.div`
   align-items: flex-start;
   gap: 2rem;
   border: none;
-  padding: 1rem 4rem;
-  margin-top: 60px;
+  padding: 1rem;
   width: calc(100% - 1rem);
   height: 100%;
-  min-height: 75vh;
+  min-height: 90vh;
   z-index: 0;
   ${({ theme }) => theme.mediaWidth.upToLarge`
     flex-direction: column;

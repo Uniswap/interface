@@ -2257,6 +2257,11 @@ msgstr "ネットワークが間違っています"
 msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
 msgstr "Kromatika.Finance を離れ、独立したサードパーティの Web サイトにリダイレクトされます。"
 
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You buy"
+msgstr "あなたが買う"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
 msgstr "各提案に対して自分で投票するか、または第三者に投票を委任することができます。"
@@ -2301,6 +2306,11 @@ msgstr "{0}を使用するには、Kromatikaスマートコントラクトに許
 #: src/pages/LimitOrder/index.tsx
 msgid "You receive at least"
 msgstr "あなたは少なくとも"
+
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You sell"
+msgstr "あなたが売る"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2556,6 +2566,10 @@ msgstr "{label}"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{status}"
+msgstr "{status}"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "{token0CreatedAmount}"

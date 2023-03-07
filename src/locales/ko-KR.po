@@ -2257,6 +2257,11 @@ msgstr "잘못된 네트워크"
 msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
 msgstr "귀하는 Kromatika.Finance를 떠나고 독립적인 제3자 웹사이트로 리디렉션됩니다."
 
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You buy"
+msgstr "당신은 구매"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
 msgstr "각 제안에 대해 직접 투표하거나 제3자에게 투표를 위임할 수 있습니다."
@@ -2301,6 +2306,11 @@ msgstr "{0}을 사용하려면 Kromatika 스마트 계약에 권한을 부여해
 #: src/pages/LimitOrder/index.tsx
 msgid "You receive at least"
 msgstr "당신은 적어도"
+
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You sell"
+msgstr "당신은 판매"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2556,6 +2566,10 @@ msgstr "{label}"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{status}"
+msgstr "{status}"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "{token0CreatedAmount}"

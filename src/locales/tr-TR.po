@@ -2257,6 +2257,11 @@ msgstr "Yanlış Ağ"
 msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
 msgstr "Kromatika.Finance'tan ayrılıyorsunuz ve bağımsız bir üçüncü taraf web sitesine yönlendirileceksiniz."
 
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You buy"
+msgstr "Nunua"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Her bir teklife kendiniz oy verebilir veya oylarınızı üçüncü bir tarafa devredebilirsiniz."
@@ -2301,6 +2306,11 @@ msgstr "{0} kullanmak için Kromatika akıllı sözleşmeler iznini vermeniz ger
 #: src/pages/LimitOrder/index.tsx
 msgid "You receive at least"
 msgstr "en azından alırsın"
+
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You sell"
+msgstr "Unauza"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2556,6 +2566,10 @@ msgstr "{label}"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "%{percentForSlider}"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{status}"
+msgstr "{status}"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "{token0CreatedAmount}"

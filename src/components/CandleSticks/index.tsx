@@ -10,7 +10,7 @@ const StyledIframe = styled.iframe`
   box-shadow: 0 0 12px 6px ${({ theme }) => theme.shadow2};
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    height: 75vh;
+    height: 90vh;
   `};
 `
 

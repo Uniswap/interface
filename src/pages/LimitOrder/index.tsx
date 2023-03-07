@@ -78,11 +78,10 @@ const ClassicModeContainer = styled.div`
   align-items: flex-start;
   gap: 2rem;
   border: none;
-  padding: 1rem 4rem 7rem;
-  margin-top: 60px;
+  padding: 1rem 1rem 7rem;
   width: calc(100% - 1rem);
   height: 100%;
-  min-height: 75vh;
+  min-height: 90vh;
   z-index: 0;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -188,13 +187,12 @@ const GridContainer = styled.div`
   grid-template-columns: minmax(min(100%, 475px), 1fr) minmax(min(100%, 475px), 475px);
   row-gap: 2rem;
   column-gap: 2rem;
-  margin-top: 60px;
 
   border: none;
-  padding: 1rem 4rem 7rem;
+  padding: 1rem 1rem 7rem;
   width: 100%;
   height: 100%;
-  min-height: 75vh;
+  min-height: 90vh;
   z-index: 0;
 
   & > :nth-child(n + 2) {

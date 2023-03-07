@@ -2257,6 +2257,11 @@ msgstr "错误的网络"
 msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
 msgstr "您将离开 Kromatika.Finance 并将被重定向到一个独立的第三方网站。"
 
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You buy"
+msgstr "你买"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
 msgstr "您可以对每个提案自行进行投票，也可以将您的投票权委托给第三方。"
@@ -2301,6 +2306,11 @@ msgstr "您必须授予 Kromatika 智能合约使用您的 {0} 的权限。每�
 #: src/pages/LimitOrder/index.tsx
 msgid "You receive at least"
 msgstr "你至少收到"
+
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You sell"
+msgstr "你卖"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2556,6 +2566,10 @@ msgstr "{label}"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{status}"
+msgstr "{status}"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "{token0CreatedAmount}"

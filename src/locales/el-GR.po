@@ -2257,6 +2257,11 @@ msgstr "Λάθος Δίκτυο"
 msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
 msgstr "Αποχωρείτε από το Kromatika.Finance και θα ανακατευθυνθείτε σε έναν ανεξάρτητο ιστότοπο τρίτων."
 
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You buy"
+msgstr "Αγοράζεις"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Μπορείτε είτε να ψηφίσετε μόνοι σας για κάθε πρόταση είτε να αναθέσετε την ψήφο σας σε ένα τρίτο μέρος."
@@ -2301,6 +2306,11 @@ msgstr "Πρέπει να δώσετε στο έξυπνο συμβόλαιο Kr
 #: src/pages/LimitOrder/index.tsx
 msgid "You receive at least"
 msgstr "Λαμβάνετε τουλάχιστον"
+
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You sell"
+msgstr "Πουλάς"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2556,6 +2566,10 @@ msgstr "{label}"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{status}"
+msgstr "{status}"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "{token0CreatedAmount}"

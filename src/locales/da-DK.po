@@ -2257,6 +2257,11 @@ msgstr "Forkert netværk"
 msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
 msgstr "Du forlader Kromatika.Finance og vil blive omdirigeret til et uafhængigt tredjepartswebsted."
 
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You buy"
+msgstr "Du køber"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Du kan enten selv stemme om hvert enkelt forslag eller uddelegere dine stemmer til en tredjepart."
@@ -2301,6 +2306,11 @@ msgstr "Du skal give Kromatika smart contracts tilladelse til at bruge din {0}. 
 #: src/pages/LimitOrder/index.tsx
 msgid "You receive at least"
 msgstr "Du modtager i hvert fald"
+
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You sell"
+msgstr "Du sælger"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2556,6 +2566,10 @@ msgstr "{label}"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider} %"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{status}"
+msgstr "{status}"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "{token0CreatedAmount}"

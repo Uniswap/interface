@@ -2257,6 +2257,11 @@ msgstr "Feil nettverk"
 msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
 msgstr "Du forlater Kromatika.Finance og vil bli omdirigert til et uavhengig tredjepartsnettsted."
 
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You buy"
+msgstr "Du kjøper"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Du kan enten stemme på hvert forslag selv eller delegere stemmene til en tredjepart."
@@ -2301,6 +2306,11 @@ msgstr "Du må gi Kromatika smartkontrakter tillatelse til å bruke din {0}. Du 
 #: src/pages/LimitOrder/index.tsx
 msgid "You receive at least"
 msgstr "Du får i det minste"
+
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+msgid "You sell"
+msgstr "Du selger"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2556,6 +2566,10 @@ msgstr "{label}"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider} %"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{status}"
+msgstr "{status}"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "{token0CreatedAmount}"

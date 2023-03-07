@@ -90,7 +90,7 @@ export const initialState: UserState = {
   matchesDarkMode: false,
   optimismAlphaAcknowledged: false,
   userDarkMode: true,
-  userExpertMode: false,
+  userExpertMode: true,
   userLocale: null,
   userClientSideRouter: false,
   userHideClosedPositions: false,
