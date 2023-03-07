@@ -162,7 +162,7 @@ msgstr "APY"
 
 #: src/pages/Earn/Manage.tsx
 msgid "APY - add explanational tooltip"
-msgstr "APY - aldonu klarigan konsileton""
+msgstr "APY - aldonu klarigan konsileton\""
 
 #: src/pages/Stake/index.tsx
 msgid "APY is calculated as a participation percentage compared to the overall staked balance.It is updated every 2 weeks."
@@ -2278,6 +2278,10 @@ msgstr "Vi devas doni al la Kromatika Agregator permeson uzi vian {0}. Vi devas 
 #: src/pages/Swap/index.tsx
 msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "Debes dar permiso a los contratos inteligentes de Kromatika para usar tu {0}. Solo tienes que hacerlo una vez por token."
+
+#: src/pages/LimitOrder/index.tsx
+msgid "You send"
+msgstr ""
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."

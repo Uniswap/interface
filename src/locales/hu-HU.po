@@ -2279,6 +2279,10 @@ msgstr "Engedélyt kell adnia a Kromatika Aggregatornak a(z) {0} használatához
 msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "Engedélyt kell adnia az Kromatika intelligens szerződéseknek a(z) {0} használatához. Ezt tokenenként csak egyszer kell megtennie."
 
+#: src/pages/LimitOrder/index.tsx
+msgid "You send"
+msgstr ""
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
 msgstr "Ezen a pozíción megszerzett díjakat is beszedi."

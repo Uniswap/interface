@@ -22,7 +22,7 @@ msgstr "$-"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "$<0/>"
-msgstr ""
+msgstr "$<0/>"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/swap/TradePrice.tsx
@@ -66,7 +66,7 @@ msgstr "0 UNI / tuần"
 
 #: src/pages/Earn/Manage.tsx
 msgid "0 sKrom / week"
-msgstr ""
+msgstr "0 sKrom / tuần"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
@@ -103,16 +103,16 @@ msgstr "<0/> Phiếu bầu"
 
 #: src/components/Perpetual/PerpModal.tsx
 msgid "<0/><1/>By clicking \"Agree\" you accept the <2>Terms and Conditions </2>by Kromatika.Finance<3/><4/>"
-msgstr ""
+msgstr "<0/><1/>Bằng cách nhấp vào \"Đồng ý\", bạn chấp nhận <2>Điều khoản và điều kiện </2>của Kromatika.Finance<3/><4/>"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 msgid "<0><1><2><3/><4/><5/><6/><7/></2></1><8>Earn crypto by sharing the following referral link <9><10>{0} {1}</10></9></8></0>"
-msgstr ""
+msgstr "<0><1><2><3/><4/><5/><6/><7/></2></1><8>Kiếm tiền điện tử bằng cách chia sẻ liên kết giới thiệu sau <9 ><10>{0} {1}</10></9></8></0>"
 
 #: src/components/LimitWarning/LimitWarningModal.tsx
 msgid "<0>ALL OTHER CHAINS</0> and <1>FEATURES ARE SECURE</1> (Polygon swaps & gasless swaps are also secure).<2/> <3/>As a security measure, Limit Order UI is paused on <4>Polygon Network only</4>."
-msgstr ""
+msgstr "<0>TẤT CẢ CÁC CHUỖI KHÁC</0> và <1>CÁC TÍNH NĂNG AN TOÀN</1> (Hoán đổi đa giác & hoán đổi gasless cũng an toàn).<2/> <3/>Là một biện pháp bảo mật, UI Lệnh giới hạn bị tạm dừng trên <4>Chỉ Mạng đa giác</4>."
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
@@ -121,11 +121,11 @@ msgstr "<0>Phân tích tài khoản và phí tích lũy</0><1> ↗ </1>"
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 msgid "<0>Connect wallet to generate referral link. How it works ? <1>Read More</1></0>"
-msgstr ""
+msgstr "<0>Kết nối ví để tạo liên kết giới thiệu. Làm thế nào nó hoạt động ? <1>Đọc thêm</1></0>"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "<0>Error occured, reattempting transaction building! If the error persists, cancel the trade and try again.</0>"
-msgstr ""
+msgstr "<0>Đã xảy ra lỗi, đang thử tạo lại giao dịch! Nếu lỗi vẫn tiếp diễn, hãy hủy giao dịch và thử lại.</0>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
@@ -142,11 +142,11 @@ msgstr "<0>Mở khóa biểu quyết</0> để chuẩn bị cho đề xuất ti�
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "<0>{0} per {1}</0>"
-msgstr ""
+msgstr "<0>{0} mỗi {1}</0>"
 
 #: src/pages/Market/index.tsx
 msgid "<0> Price: </0>"
-msgstr ""
+msgstr "<0> Giá: </0>"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
@@ -158,28 +158,28 @@ msgstr "Yêu cầu ngưỡng tối thiểu 0,25% tổng nguồn cung cấp UNI �
 
 #: src/pages/Stake/index.tsx
 msgid "APY"
-msgstr ""
+msgstr "APY"
 
 #: src/pages/Earn/Manage.tsx
 msgid "APY - add explanational tooltip"
-msgstr ""
+msgstr "APY - thêm chú giải công cụ giải thích"
 
 #: src/pages/Stake/index.tsx
 msgid "APY is calculated as a participation percentage compared to the overall staked balance.It is updated every 2 weeks."
-msgstr ""
+msgstr "APY được tính bằng tỷ lệ phần trăm tham gia so với tổng số dư đã đặt cược. Nó được cập nhật 2 tuần một lần."
 
 #: src/components/Stake/index.tsx
 msgid "APY is calculated as a participation percentage in relation to the overall staked balance pool.It is updated every 2 weeks."
-msgstr ""
+msgstr "APY được tính bằng tỷ lệ phần trăm tham gia liên quan đến nhóm số dư đã đặt cược tổng thể. Nó được cập nhật 2 tuần một lần."
 
 #: src/components/PositionCard/index.tsx
 msgid "APY is calculated as participating percentage in the total value staked. The APY percentage is therefore applied on total amount collected in the Fee Treasury."
-msgstr ""
+msgstr "APY được tính bằng tỷ lệ phần trăm tham gia trong tổng giá trị đặt cược. Do đó, tỷ lệ phần trăm APY được áp dụng trên tổng số tiền thu được trong Kho bạc phí."
 
 #: src/components/PositionCard/index.tsx
 #: src/components/Stake/index.tsx
 msgid "APY:"
-msgstr ""
+msgstr "APY:"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -197,7 +197,7 @@ msgstr "Tài khoản"
 
 #: src/components/PositionCard/index.tsx
 msgid "Account Status:"
-msgstr ""
+msgstr "Tình trạng tài khoản:"
 
 #: src/components/PositionCard/index.tsx
 #: src/components/SearchModal/ImportRow.tsx
@@ -249,19 +249,19 @@ msgstr "Chống lại"
 #: src/components/LimitWarning/LimitWarningModal.tsx
 #: src/components/Perpetual/PerpModal.tsx
 msgid "Agree"
-msgstr ""
+msgstr "Đồng ý"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Allow Kromatika to use your {0}"
-msgstr ""
+msgstr "Cho phép Kromatika sử dụng {0} của bạn"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 msgid "Allow the Kromatika Aggregator to use your {0}"
-msgstr ""
+msgstr "Cho phép Kromatika Aggregator sử dụng {0} của bạn"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 msgid "Allowed Slippage"
@@ -270,7 +270,7 @@ msgstr "Độ trượt được phép"
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 msgid "Allowed Slippage:"
-msgstr ""
+msgstr "Trượt cho phép:"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -280,17 +280,17 @@ msgstr "Số tiền"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Amounts"
-msgstr ""
+msgstr "Lượng"
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
-msgstr ""
+msgstr "Đã xảy ra lỗi khi cố gắng thực hiện trao đổi này. Bạn có thể cần tăng khả năng chịu trượt của mình. Nếu điều đó không hiệu quả, có thể có sự không tương thích với mã thông báo bạn đang giao dịch. Lưu ý: phí chuyển nhượng và rebase token không tương thích với Kromatika."
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
 msgid "Any missing order? Try switching between"
-msgstr ""
+msgstr "Có đơn hàng nào bị thiếu không? Hãy thử chuyển đổi giữa"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -335,7 +335,7 @@ msgstr "Bạn có chắc không?"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr ""
+msgstr "Là thành viên của cộng đồng Uniswap, bạn có thể yêu cầu UNI được sử dụng để bỏ phiếu và quản trị.<0/><1/><2>Đọc thêm về UNI</2>"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
@@ -343,7 +343,7 @@ msgstr "Tự động"
 
 #: src/components/Settings/index.tsx
 msgid "BETA FEATURE. Use at own risk."
-msgstr ""
+msgstr "TÍNH NĂNG THỬ NGHIỆM. Sử dụng có nguy cơ riêng."
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
@@ -379,7 +379,7 @@ msgstr "Cầu"
 
 #: src/state/market/hooks.tsx
 msgid "Buy amount lower than fee amount"
-msgstr ""
+msgstr "Số tiền mua thấp hơn số tiền phí"
 
 #: src/components/PositionCard/index.tsx
 #: src/components/Stake/index.tsx
@@ -392,12 +392,12 @@ msgstr "Bằng cách thêm danh sách này, bạn hoàn toàn tin tưởng rằn
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancel"
-msgstr ""
+msgstr "Hủy bỏ"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancel Trade"
-msgstr ""
+msgstr "Hủy giao dịch"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Vote/styled.tsx
@@ -406,19 +406,19 @@ msgstr "Đã hủy"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Canceling the trade will withdraw available amounts for you."
-msgstr ""
+msgstr "Việc hủy giao dịch sẽ rút số tiền khả dụng cho bạn."
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Cancelled:"
-msgstr ""
+msgstr "Đã hủy"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancelling"
-msgstr ""
+msgstr "hủy bỏ"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancelling trade"
-msgstr ""
+msgstr "hủy giao dịch"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -443,7 +443,7 @@ msgstr "Yêu cầu <0 /> cho {0}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Claim KROM"
-msgstr ""
+msgstr "Yêu cầu KROM"
 
 #: src/components/Header/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -506,7 +506,7 @@ msgstr "Đã đóng cửa"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Closed:"
-msgstr ""
+msgstr "đóng cửa:"
 
 #: src/components/Menu/index.tsx
 msgid "Code"
@@ -531,20 +531,20 @@ msgstr "Đã thu thập"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
-msgstr ""
+msgstr "Đã thu thập {0} {1}{2} và {3} {4}{5}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting amounts will withdraw currently available amounts for you."
-msgstr ""
+msgstr "Số tiền thu thập sẽ rút số tiền hiện có cho bạn."
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting tokens"
-msgstr ""
+msgstr "Thu thập mã thông báo"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
 msgid "Coming Soon"
-msgstr ""
+msgstr "Sắp ra mắt"
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
@@ -557,7 +557,7 @@ msgstr "Xác nhận"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Confirm Limit Order"
-msgstr ""
+msgstr "Xác nhận lệnh giới hạn"
 
 #: src/components/market/ConfirmMarketModal.tsx
 #: src/components/market/MarketModalFooter.tsx
@@ -618,7 +618,7 @@ msgstr "Kết nối với ví để xem tính thanh khoản của bạn."
 
 #: src/components/Web3Status/index.tsx
 msgid "Connect wallet"
-msgstr ""
+msgstr "Kết nối ví"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -660,7 +660,7 @@ msgstr "Tạo {0}/{1} hồ bơi V3"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Created Limit Trade {0} {1} {2}for {3} {4}{5}↗"
-msgstr ""
+msgstr "Đã tạo giao dịch giới hạn {0} {1} {2}cho {3} {4}{5}↗"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -668,16 +668,16 @@ msgstr ""
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Current Price"
-msgstr ""
+msgstr "Giá hiện tại"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Current Price:"
-msgstr ""
+msgstr "Giá hiện tại:"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
 msgid "Current Price: 0"
-msgstr ""
+msgstr "Giá hiện tại: 0"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -723,11 +723,11 @@ msgstr "Ký quỹ tài sản"
 #: src/components/PositionCard/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Deposit KROM"
-msgstr ""
+msgstr "Gửi tiền KROM"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Deposit KROM to process trade"
-msgstr ""
+msgstr "Gửi KROM để xử lý giao dịch"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
@@ -740,15 +740,15 @@ msgstr "Thanh khoản tiền gửi"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr ""
+msgstr "Gửi mã thông báo Nhà cung cấp thanh khoản của bạn để nhận UNI, mã thông báo quản trị giao thức Uniswap."
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit {0}"
-msgstr ""
+msgstr "Gửi tiền {0}"
 
 #: src/components/PositionCard/index.tsx
 msgid "Deposited Balance:"
-msgstr ""
+msgstr "Số dư tiền gửi:"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
@@ -756,7 +756,7 @@ msgstr "Thanh khoản tiền gửi:"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Depositing KROM will allow the system to automatically process trades"
-msgstr ""
+msgstr "Gửi KROM sẽ cho phép hệ thống tự động xử lý giao dịch"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
@@ -788,25 +788,25 @@ msgstr "Docs"
 
 #: src/components/Perpetual/PerpModal.tsx
 msgid "Don't show this message again for the next 30 days."
-msgstr ""
+msgstr "Không hiển thị lại thông báo này trong 30 ngày tới."
 
 #: src/components/LimitWarning/LimitWarningModal.tsx
 msgid "Due to the recent LastPass breach, there may be a potential security breach on Kromatika's Limit Order Contract on <0>Polygon Network only</0>."
-msgstr ""
+msgstr "Do vi phạm LastPass gần đây, có thể có vi phạm bảo mật tiềm ẩn đối với Hợp đồng đặt hàng giới hạn của Kromatika trên <0>Chỉ Mạng đa giác</0>."
 
 #: src/components/PositionCard/index.tsx
 #: src/components/Stake/index.tsx
 msgid "Earned Balance:"
-msgstr ""
+msgstr "Số dư kiếm được:"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr ""
+msgstr "Mã thông báo UNI kiếm được đại diện cho cổ phần biểu quyết trong quản trị Uniswap."
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "Earned sKrom"
-msgstr ""
+msgstr "Kiếm được sKrom"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
@@ -814,7 +814,7 @@ msgstr "Biên tập"
 
 #: src/components/Settings/index.tsx
 msgid "Enables gasless transactions by compensating them with KROM."
-msgstr ""
+msgstr "Cho phép giao dịch gasless bằng cách bù chúng bằng KROM."
 
 #: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
@@ -874,11 +874,11 @@ msgstr "Lỗi khi nhập danh sách"
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 msgid "Est. Fees:"
-msgstr ""
+msgstr "ước tính Lệ phí:"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Etherscan"
-msgstr ""
+msgstr "Etherscan"
 
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
@@ -894,11 +894,11 @@ msgstr "Đã hết hạn"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
-msgstr ""
+msgstr "Khám phá các pool phổ biến trên Uniswap Analytics."
 
 #: src/components/LimitWarning/LimitWarningModal.tsx
 msgid "FOR POLYGON KROMATIKA LIMIT ORDERS USERS - <0><1>ACTION REQUIRED</1></0>:<2/>a) Cancel Polygon chain limit orders<3/>b) Withdraw deposited KROM on polygon<4/>c) Revoke approval to old limit order manager contract: \"0xd1fdf0144be118c30a53e1d08cc1e61d600e508e\" <5>CLICK HERE</5> and follow the guide."
-msgstr ""
+msgstr "ĐỐI VỚI NGƯỜI DÙNG ĐẶT HÀNG GIỚI HẠN ĐA GIÁC KROMATIKA - <0><1>HÀNH ĐỘNG BẮT BUỘC</1></0>:<2/>a) Hủy các lệnh giới hạn chuỗi đa giác<3/>b) Rút KROM đã ký gửi trên đa giác<4/> c) Thu hồi phê duyệt hợp đồng quản lý lệnh giới hạn cũ: \"0xd1fdf0144be118c30a53e1d08cc1e61d600e508e\" <5>BẤM VÀO ĐÂY</5> và làm theo hướng dẫn."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -910,7 +910,7 @@ msgstr "Bậc phí"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Filling"
-msgstr ""
+msgstr "đổ đầy"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -938,7 +938,7 @@ msgstr "Từ (nhiều nhất)"
 
 #: src/components/Settings/index.tsx
 msgid "Frontrun Protection"
-msgstr ""
+msgstr "Bảo vệ trước"
 
 #: src/components/RangeSelector/PresetsButtons.tsx
 msgid "Full Range"
@@ -946,11 +946,11 @@ msgstr "Phạm vi đầy đủ"
 
 #: src/components/Settings/index.tsx
 msgid "Gasless Mode"
-msgstr ""
+msgstr "Chế độ không gas"
 
 #: src/components/Settings/index.tsx
 msgid "Gasless mode enables users to send blockchain transactions without paying network gas fees."
-msgstr ""
+msgstr "Chế độ Gasless cho phép người dùng gửi các giao dịch chuỗi khối mà không phải trả phí gas mạng."
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
@@ -974,7 +974,7 @@ msgstr "Nếu bạn mua mã token từ danh sách này, bạn có thể không b
 
 #: src/state/market/hooks.tsx
 msgid "Impact is too high"
-msgstr ""
+msgstr "Tác động quá cao"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
@@ -1008,7 +1008,7 @@ msgstr "Đang khởi tạo..."
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
 msgid "Input"
-msgstr ""
+msgstr "Đầu vào"
 
 #: src/components/market/MarketModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
@@ -1037,7 +1037,7 @@ msgstr "Số dư {0} không đủ"
 
 #: src/state/mint/v3/hooks.tsx
 msgid "Insufficient {0} deposit"
-msgstr ""
+msgstr "Không đủ {0} tiền gửi"
 
 #: src/state/mint/hooks.tsx
 msgid "Invalid pair"
@@ -1060,7 +1060,7 @@ msgstr "Kromatika có sẵn ở: <0>{0}</0>"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "LP fees earned:"
-msgstr ""
+msgstr "Phí LP kiếm được:"
 
 #: src/components/Menu/index.tsx
 msgid "Language"
@@ -1068,7 +1068,7 @@ msgstr "Ngôn ngữ"
 
 #: src/components/Perpetual/PerpModal.tsx
 msgid "Launch Perpetual Trading"
-msgstr ""
+msgstr "Khởi chạy giao dịch vĩnh viễn"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Learn More"
@@ -1084,19 +1084,19 @@ msgstr "Chủ đề ánh sáng"
 
 #: src/pages/Pool/index.tsx
 msgid "Limit Orders"
-msgstr ""
+msgstr "Lệnh giới hạn"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Limit price (USD):"
-msgstr ""
+msgstr "Giá giới hạn (USD):"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Limit price:"
-msgstr ""
+msgstr "Giá giới hạn:"
 
 #: src/components/NavigationLinks/index.tsx
 msgid "Limit/FELO"
-msgstr ""
+msgstr "Giới hạn/FELO"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "Liquidity"
@@ -1137,7 +1137,7 @@ msgstr "Đang tải"
 
 #: src/state/market/hooks.tsx
 msgid "Loading ..."
-msgstr ""
+msgstr "Đang tải ..."
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1195,20 +1195,20 @@ msgstr "Giá tối thiểu"
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
 msgid "Min Price: 0"
-msgstr ""
+msgstr "Giá tối thiểu: 0"
 
 #: src/components/PositionCard/index.tsx
 msgid "Minimum Balance:"
-msgstr ""
+msgstr "Số dư tối thiểu:"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Minimum Price"
-msgstr ""
+msgstr "Giá thấp nhất"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 msgid "Minimum Received:"
-msgstr ""
+msgstr "Nhận được tối thiểu:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Minimum received"
@@ -1216,7 +1216,7 @@ msgstr "Số tiền nhận được tối thiểu"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 msgid "Minimum received {0}"
-msgstr ""
+msgstr "Tối thiểu nhận được {0}"
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -1226,7 +1226,7 @@ msgstr "Thiếu phụ thuộc"
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
 msgid "My limit orders"
-msgstr ""
+msgstr "Lệnh giới hạn của tôi"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Network Warning"
@@ -1234,7 +1234,7 @@ msgstr "Cảnh báo mạng"
 
 #: src/pages/Pool/index.tsx
 msgid "New Limit Order"
-msgstr ""
+msgstr "Lệnh giới hạn mới"
 
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
@@ -1287,7 +1287,7 @@ msgstr "Ối! Đã xảy ra lỗi không xác định. Vui lòng làm mới tran
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Opened:"
-msgstr ""
+msgstr "đã mở:"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimism Gateway"
@@ -1306,7 +1306,7 @@ msgstr "Etherscan lạc quan"
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
 msgid "Output"
-msgstr ""
+msgstr "đầu ra"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
@@ -1314,11 +1314,11 @@ msgstr "Đầu ra được ước tính. Nếu giá thay đổi nhiều hơn {0}
 
 #: src/components/market/MarketModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} </0> or the transaction will revert."
-msgstr ""
+msgstr "Sản lượng được ước tính. Bạn sẽ nhận được ít nhất <0>{0}</0> hoặc giao dịch sẽ hoàn nguyên."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> when the current market price reaches your target price."
-msgstr ""
+msgstr "Sản lượng được ước tính. Bạn sẽ nhận được ít nhất <0>{0} {1}</0> khi giá thị trường hiện tại đạt đến giá mục tiêu của bạn."
 
 #: src/components/market/MarketModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
@@ -1327,7 +1327,7 @@ msgstr "Đầu ra sẽ được gửi đến <0>{0}</0>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Paid {0} {1} {2}service fees ↗"
-msgstr ""
+msgstr "Đã thanh toán {0} {1} {2}phí dịch vụ ↗"
 
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
@@ -1340,11 +1340,11 @@ msgstr "Đang chờ xử lý"
 
 #: src/components/NavigationLinks/index.tsx
 msgid "Perpetuals"
-msgstr ""
+msgstr "vĩnh viễn"
 
 #: src/state/swap/hooks.tsx
 msgid "Place limit order above the minimum price"
-msgstr ""
+msgstr "Đặt lệnh giới hạn trên mức giá tối thiểu"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Please confirm you would like to remove this list by typing REMOVE"
@@ -1360,27 +1360,27 @@ msgstr "Vui lòng kết nối với mạng Ethereum thích hợp."
 
 #: src/components/PositionCard/index.tsx
 msgid "Please deposit $KROM to process your limit order.<0/><1/>Recommendation is to deposit at least twice the minimum balance."
-msgstr ""
+msgstr "Vui lòng gửi $KROM để xử lý lệnh giới hạn của bạn.<0/><1/>Khuyến nghị là gửi ít nhất gấp đôi số dư tối thiểu."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable gasless mode."
-msgstr ""
+msgstr "Vui lòng nhập từ \"{confirmWord}\" để bật chế độ không cần gas."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Please wait while the transaction is being built"
-msgstr ""
+msgstr "Vui lòng đợi trong khi giao dịch đang được xây dựng"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygon Bridge"
-msgstr ""
+msgstr "cầu đa giác"
 
 #: src/components/LimitWarning/LimitWarningModal.tsx
 msgid "Polygon User Warning"
-msgstr ""
+msgstr "Cảnh báo người dùng đa giác"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygonscan"
-msgstr ""
+msgstr "Polygonscan"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
@@ -1409,11 +1409,11 @@ msgstr "Pool {0}:"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Preparing transaction"
-msgstr ""
+msgstr "Chuẩn bị giao dịch"
 
 #: src/components/Settings/index.tsx
 msgid "Prevents front-running of swaps"
-msgstr ""
+msgstr "Ngăn chặn chạy trước các giao dịch hoán đổi"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/Stake/StakingModal.tsx
@@ -1427,7 +1427,7 @@ msgstr "Giá"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price Details"
-msgstr ""
+msgstr "Giá chi tiết"
 
 #: src/components/market/MarketModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
@@ -1441,7 +1441,7 @@ msgstr "Giá:"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Processed"
-msgstr ""
+msgstr "Xử lý"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
@@ -1461,11 +1461,11 @@ msgstr "Đã xếp hàng"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about KROM"
-msgstr ""
+msgstr "Tìm hiểu thêm về KROM"
 
 #: src/pages/Vote/index.tsx
 msgid "Read more about Uniswap governance"
-msgstr ""
+msgstr "Đọc thêm về quản trị Uniswap"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1554,12 +1554,12 @@ msgstr "Tự ủy quyền"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Service Fee"
-msgstr ""
+msgstr "Phí dịch vụ"
 
 #: src/components/market/MarketHeader.tsx
 #: src/components/swap/SwapHeader.tsx
 msgid "Show Chart"
-msgstr ""
+msgstr "Hiển thị biểu đồ"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
@@ -1576,7 +1576,7 @@ msgstr "Khả năng chịu trượt"
 #: src/components/swap/SwapRoute.tsx
 #: src/components/swap/SwapRoute.tsx
 msgid "Smart Route"
-msgstr ""
+msgstr "Tuyến đường thông minh"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
@@ -1584,7 +1584,7 @@ msgstr "Một số tài sản không khả dụng thông qua giao diện này v�
 
 #: src/components/Perpetual/PerpModal.tsx
 msgid "Some countries may not be allowed to use perpetual trading - see the details under section 2 within our terms of use."
-msgstr ""
+msgstr "Một số quốc gia có thể không được phép sử dụng giao dịch vĩnh viễn - xem chi tiết trong phần 2 trong các điều khoản sử dụng của chúng tôi."
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
@@ -1592,35 +1592,35 @@ msgstr "Đã xảy ra sự cố"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Stake"
-msgstr ""
+msgstr "Cổ phần"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "Stake KROM"
-msgstr ""
+msgstr "Cổ phần KROM"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Stake Summary called"
-msgstr ""
+msgstr "Tóm tắt cổ phần được gọi là"
 
 #: src/components/PositionCard/index.tsx
 #: src/components/Stake/index.tsx
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "Staked Balance:"
-msgstr ""
+msgstr "Số dư đã đặt cược:"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Staking - make it bigger, maybe positioned at the centre"
-msgstr ""
+msgstr "Đặt cược - làm cho nó lớn hơn, có thể đặt ở trung tâm"
 
 #: src/pages/Stake/index.tsx
 msgid "Staking - style it. Commafy values."
-msgstr ""
+msgstr "Đặt cược - tạo kiểu cho nó. Các giá trị phù hợp"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Staking KROM will allow the system to automatically process trades"
-msgstr ""
+msgstr "Staking KROM sẽ cho phép hệ thống tự động xử lý các giao dịch"
 
 #: src/components/PositionList/index.tsx
 msgid "Status"
@@ -1628,7 +1628,7 @@ msgstr "Trạng thái"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Status:"
-msgstr ""
+msgstr "Trạng thái:"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
@@ -1683,23 +1683,23 @@ msgstr "Đổi {0} {1} lấy {2} {3}"
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Target Price"
-msgstr ""
+msgstr "Giá mục tiêu"
 
 #: src/pages/LimitOrder/index.tsx
 msgid "Target Price+++"
-msgstr ""
+msgstr "Giá mục tiêu+++"
 
 #: src/pages/LimitOrder/index.tsx
 msgid "Target Price---"
-msgstr ""
+msgstr "Giá mục tiêu---"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Target Price:"
-msgstr ""
+msgstr "Giá mục tiêu:"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Target price"
-msgstr ""
+msgstr "Giá mục tiêu"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Kromatika community <0/>"
@@ -1711,16 +1711,16 @@ msgstr "% Bạn sẽ kiếm được từ phí."
 
 #: src/components/Perpetual/PerpModal.tsx
 msgid "The Perpetual Trading is currently in beta-stage. Trade at your own risk."
-msgstr ""
+msgstr "Giao dịch vĩnh viễn hiện đang ở giai đoạn thử nghiệm. Triển nguy cơ của riêng bạn."
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr ""
+msgstr "Bất biến Uniswap x*y=k không được hoán đổi thỏa mãn. Điều này thường có nghĩa là một trong những mã thông báo bạn đang hoán đổi kết hợp hành vi tùy chỉnh khi chuyển."
 
 #: src/components/Header/Polling.tsx
 msgid "The current fast gas amount for sending a transaction on the network. Gas fees are paid in native currency {0} and denominated in gwei."
-msgstr ""
+msgstr "Lượng gas nhanh hiện tại để gửi một giao dịch trên mạng. Phí gas được thanh toán bằng nội tệ {0} và có mệnh giá bằng gwei."
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -1733,7 +1733,7 @@ msgstr "Giá thị trường nằm ngoài phạm vi giá đã chỉ định củ
 
 #: src/components/Header/Polling.tsx
 msgid "The most recent block number on this network. Prices update on every block."
-msgstr ""
+msgstr "Số khối gần đây nhất trên mạng này. Giá cập nhật trên mỗi khối."
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -1742,23 +1742,23 @@ msgstr "Không thể chuyển mã token đầu ra. Có thể có sự cố với
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
-msgstr ""
+msgstr "Không thể chuyển mã thông báo đầu ra. Có thể có vấn đề với mã thông báo đầu ra. Lưu ý: phí chuyển nhượng và rebase token không tương thích với Kromatika."
 
 #: src/hooks/useMarketCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr ""
+msgstr "Không thể chuyển mã thông báo đầu ra. Có thể có vấn đề với mã thông báo đầu ra. Lưu ý: phí chuyển và rebase token không tương thích với Uniswap V3."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The trade has been processed"
-msgstr ""
+msgstr "Giao dịch đã được xử lý"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The trade is filling in."
-msgstr ""
+msgstr "Giao dịch đang được lấp đầy."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The trade is pending, waiting for the current market price to reach the specified target price."
-msgstr ""
+msgstr "Giao dịch đang chờ xử lý, chờ giá thị trường hiện tại đạt đến giá mục tiêu được chỉ định."
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -1783,11 +1783,11 @@ msgstr "Mã token này không xuất hiện trên (các) danh sách mã token đ
 
 #: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
-msgstr ""
+msgstr "Giao dịch này sẽ không thành công do biến động giá. Hãy thử tăng khả năng chịu trượt của bạn. Lưu ý: phí chuyển nhượng và rebase token không tương thích với Kromatika."
 
 #: src/hooks/useMarketCallback.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr ""
+msgstr "Giao dịch này sẽ không thành công do biến động giá. Hãy thử tăng khả năng chịu trượt của bạn. Lưu ý: phí chuyển và rebase token không tương thích với Uniswap V3."
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -1839,15 +1839,15 @@ msgstr "Tổng cung"
 
 #: src/pages/Stake/index.tsx
 msgid "Total Value Locked"
-msgstr ""
+msgstr "Tổng giá trị bị khóa"
 
 #: src/components/PositionCard/index.tsx
 msgid "Total Value Locked:"
-msgstr ""
+msgstr "Tổng giá trị bị khóa:"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Total Value Staked"
-msgstr ""
+msgstr "Tổng giá trị đặt cược"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
@@ -1862,27 +1862,27 @@ msgstr "Tổng số tiền gửi"
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Trade"
-msgstr ""
+msgstr "Buôn bán"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Trade History"
-msgstr ""
+msgstr "Lịch sử giao dịch"
 
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Pool"
-msgstr ""
+msgstr "Nhóm giao dịch"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Trades not processing. Please fund your account with KROM."
-msgstr ""
+msgstr "Giao dịch không xử lý. Vui lòng nạp tiền vào tài khoản của bạn bằng KROM."
 
 #: src/state/swap/hooks.tsx
 msgid "Trading pair not available"
-msgstr ""
+msgstr "Cặp giao dịch không khả dụng"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Trading {0} {1} for {2} {3}"
-msgstr ""
+msgstr "Giao dịch {0} {1} cho {2} {3}"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
@@ -1917,7 +1917,7 @@ msgstr "Giao dịch bị từ chối."
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useMarketCallback.tsx
 msgid "Transaction rejected: {0}"
-msgstr ""
+msgstr "Giao dịch bị từ chối: {0}"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
@@ -1925,7 +1925,7 @@ msgstr "Thử lại"
 
 #: src/components/Settings/index.tsx
 msgid "Turn On Gasless Mode"
-msgstr ""
+msgstr "Bật chế độ không gas"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "UNI has arrived"
@@ -1941,7 +1941,7 @@ msgstr "Giá UNI:"
 
 #: src/pages/Vote/index.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr ""
+msgstr "Mã thông báo UNI đại diện cho cổ phần biểu quyết trong quản trị Uniswap. Bạn có thể tự bỏ phiếu cho từng đề xuất hoặc ủy quyền phiếu bầu của mình cho bên thứ ba."
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
@@ -1954,7 +1954,7 @@ msgstr "Mã token UNI-V2 LP là bắt buộc. Khi bạn đã thêm tính thanh k
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "UnStake Summary called"
-msgstr ""
+msgstr "Tóm tắt UnStake được gọi"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -1980,15 +1980,15 @@ msgstr "Vấn đề không mong muốn với ước tính khí. Vui lòng thử 
 
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
-msgstr ""
+msgstr "Quản trị Uniswap"
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
-msgstr ""
+msgstr "Quản trị Uniswap chỉ khả dụng trên Lớp 1. Chuyển mạng của bạn sang Ethereum Mainnet để xem Đề xuất và Bình chọn."
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
-msgstr ""
+msgstr "Khai thác thanh khoản Uniswap"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1997,7 +1997,7 @@ msgstr "Nguồn không rõ"
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
-msgstr ""
+msgstr "Lỗi không xác định{0}. Hãy thử tăng khả năng chịu trượt của bạn. Lưu ý: phí chuyển nhượng và rebase token không tương thích với Kromatika."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -2014,16 +2014,16 @@ msgstr "Mở khóa phiếu bầu"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Unstake"
-msgstr ""
+msgstr "hủy bỏ cổ phần"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "Unstake KROM"
-msgstr ""
+msgstr "Rút KROM"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Unstaking KROM may prevent the system to calculate rewards"
-msgstr ""
+msgstr "Unstaking KROM có thể ngăn hệ thống tính toán phần thưởng"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2053,7 +2053,7 @@ msgstr "Tháo"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
-msgstr ""
+msgstr "Mở gói <0/> thành {0}"
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
@@ -2158,11 +2158,11 @@ msgstr "Địa chỉ ví hoặc tên ENS"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Wallet: {0}, Balance: {1}"
-msgstr ""
+msgstr "Ví: {0}, Số dư: {1}"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Wallet: {0}, Staked: {stakedBalance}"
-msgstr ""
+msgstr "Ví: {0}, Đã đặt cược: {stakeBalance}"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
@@ -2191,7 +2191,7 @@ msgstr "Rút tiền & xác nhận quyền sở hữu"
 #: src/components/PositionCard/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Withdraw KROM"
-msgstr ""
+msgstr "Rút KROM"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
@@ -2199,11 +2199,11 @@ msgstr "Rút tiền thanh khoản đã ký gửi"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw {0}"
-msgstr ""
+msgstr "Rút {0}"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Withdrawing KROM may prevent the system to automatically process trades"
-msgstr ""
+msgstr "Rút KROM có thể ngăn hệ thống tự động xử lý giao dịch"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrawing {0} UNI-V2"
@@ -2224,11 +2224,11 @@ msgstr "Bọc lại"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
-msgstr ""
+msgstr "Bọc <0/> thành {0}"
 
 #: src/state/market/hooks.tsx
 msgid "Wrap your native token"
-msgstr ""
+msgstr "Bọc mã thông báo gốc của bạn"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -2237,7 +2237,7 @@ msgstr "Mạng sai"
 
 #: src/components/Perpetual/PerpModal.tsx
 msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
-msgstr ""
+msgstr "Bạn đang rời khỏi Kromatika.Finance và sẽ được chuyển hướng đến một trang web độc lập của bên thứ ba."
 
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
@@ -2246,7 +2246,7 @@ msgstr "Bạn có thể tự bỏ phiếu cho từng đề xuất hoặc ủy th
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 msgid "You can now swap {0}"
-msgstr ""
+msgstr "Bây giờ bạn có thể hoán đổi {0}"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2270,7 +2270,7 @@ msgstr "Bạn có thể đã mất kết nối mạng của mình."
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 msgid "You must give the Kromatika Aggregator a permission to use your {0}. You only have to do this once per token."
-msgstr ""
+msgstr "Bạn phải cấp cho Kromatika Aggregator quyền sử dụng {0} của mình. Bạn chỉ phải làm điều này một lần cho mỗi mã thông báo."
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2279,13 +2279,17 @@ msgstr ""
 msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "Bạn phải cấp quyền cho hợp đồng thông minh Kromatika để sử dụng số {0} của bạn. Bạn chỉ phải làm điều này một lần cho mỗi mã token."
 
+#: src/pages/LimitOrder/index.tsx
+msgid "You send"
+msgstr "Bạn gửi"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
 msgstr "Bạn cũng sẽ thu phí kiếm được từ vị trí này."
 
 #: src/components/PositionCard/index.tsx
 msgid "You will need to maintain a minimum KROM balance to cover for the service fees.<0/><1/>Recommendation is to deposit at least twice the minimum balance."
-msgstr ""
+msgstr "Bạn sẽ cần duy trì số dư KROM tối thiểu để trang trải phí dịch vụ.<0/><1/>Khuyến nghị là gửi ít nhất gấp đôi số dư tối thiểu."
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
@@ -2301,11 +2305,11 @@ msgstr "Thanh khoản V2 của bạn"
 
 #: src/components/PositionCard/index.tsx
 msgid "Your account is actively processing trades.<0/><1/>Recommendation is to deposit at least twice the minimum balance."
-msgstr ""
+msgstr "Tài khoản của bạn đang tích cực xử lý các giao dịch.<0/><1/>Khuyến nghị là gửi ít nhất gấp đôi số dư tối thiểu."
 
 #: src/pages/Pool/index.tsx
 msgid "Your limit orders will appear here."
-msgstr ""
+msgstr "Đơn đặt hàng giới hạn của bạn sẽ xuất hiện ở đây."
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -2338,7 +2342,7 @@ msgstr "Tổng số mã token chung của bạn:"
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Your trade will appear here."
-msgstr ""
+msgstr "Giao dịch của bạn sẽ xuất hiện ở đây."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
@@ -2362,11 +2366,11 @@ msgstr "cho {0}"
 
 #: src/components/Settings/index.tsx
 msgid "gasless"
-msgstr ""
+msgstr "không khí"
 
 #: src/components/Header/Polling.tsx
 msgid "gwei"
-msgstr ""
+msgstr "gwei"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
@@ -2383,7 +2387,7 @@ msgstr "https:// hoặc ipfs:// hoặc tên ENS"
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
 msgid "networks."
-msgstr ""
+msgstr "mạng lưới."
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
@@ -2422,15 +2426,15 @@ msgstr "{0} %"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "{0} + {1}"
-msgstr ""
+msgstr "{0} + {1}"
 
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/>  per <1/> <2>{1} </2>"
-msgstr ""
+msgstr "{0} <0/> mỗi <1/> <2>{1} </2>"
 
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/> <2>{1} </2>"
-msgstr ""
+msgstr "{0} <0/> mỗi <1/> <2>{1} </2>"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
@@ -2481,7 +2485,7 @@ msgstr "{0} trên {1}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0} sKrom / week"
-msgstr ""
+msgstr "{0} sKrom / tuần"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
@@ -2515,7 +2519,7 @@ msgstr "{USER_AMOUNT} UNI"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "{actionLabel}"
-msgstr ""
+msgstr "{actionLabel}"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
@@ -2523,7 +2527,7 @@ msgstr "{activeTokensOnThisChain} mã thông báo"
 
 #: src/components/Collapsible/index.tsx
 msgid "{label}"
-msgstr ""
+msgstr "{label}"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
@@ -2531,7 +2535,7 @@ msgstr "{percentForSlider}%"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "{token0CreatedAmount}"
-msgstr ""
+msgstr "{token0CreatedAmount}"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
@@ -2539,4 +2543,4 @@ msgstr "{tokenB} trên {tokenA}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Limit Orders"
-msgstr ""
+msgstr "← Quay lại Lệnh giới hạn"

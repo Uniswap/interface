@@ -103,7 +103,7 @@ msgstr "<0/> Votos"
 
 #: src/components/Perpetual/PerpModal.tsx
 msgid "<0/><1/>By clicking \"Agree\" you accept the <2>Terms and Conditions </2>by Kromatika.Finance<3/><4/>"
-msgstr "<0/>>1/> Ao clicar em "Concordo" você aceita os <2>Termos e Condições </2> por Kromatika.Finance<3/>>4/>"
+msgstr "<0/>>1/> Ao clicar em \"Concordo\" você aceita os <2>Termos e Condições </2> por Kromatika.Finance<3/>>4/>"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
@@ -2278,6 +2278,10 @@ msgstr "Você deve dar ao Kromatika Aggregator uma permissão para usar seu {0}.
 #: src/pages/Swap/index.tsx
 msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "É preciso conceder a permissão ao recurso de contratos inteligentes do Kromatika para que possa utilizar seu {0}. Basta efetuar a operação uma vez para cada token."
+
+#: src/pages/LimitOrder/index.tsx
+msgid "You send"
+msgstr ""
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."

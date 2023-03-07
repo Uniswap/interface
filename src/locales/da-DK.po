@@ -2279,6 +2279,10 @@ msgstr "Du skal give Kromatika Aggregator tilladelse til at bruge din {0}. Du sk
 msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "Du skal give Kromatika smart contracts tilladelse til at bruge din {0}. Du behøver kun at gøre dette én gang pr. token."
 
+#: src/pages/LimitOrder/index.tsx
+msgid "You send"
+msgstr ""
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
 msgstr "Du vil også indsamle gebyrer optjent fra denne position."

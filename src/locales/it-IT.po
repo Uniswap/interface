@@ -334,8 +334,8 @@ msgid "Are you sure?"
 msgstr "Sei sicuro?"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "Qualche ordine mancante? Prova a passare da una all'altra"
-msgstr "Qualche ordine mancante? Prova a passare da una all'altra"
+msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
+msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
@@ -2278,6 +2278,10 @@ msgstr "Devi concedere a Kromatika Aggregator un'autorizzazione per utilizzare i
 #: src/pages/Swap/index.tsx
 msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "Devi dare il permesso agli smart contract Kromatika di utilizzare il tuo {0}. Devi farlo solo una volta per token."
+
+#: src/pages/LimitOrder/index.tsx
+msgid "You send"
+msgstr ""
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."

@@ -103,7 +103,7 @@ msgstr "<0/> Stimmen"
 
 #: src/components/Perpetual/PerpModal.tsx
 msgid "<0/><1/>By clicking \"Agree\" you accept the <2>Terms and Conditions </2>by Kromatika.Finance<3/><4/>"
-msgstr "<0/> <1/> durch Klicken auf \ "zustimmen \" Sie akzeptieren die <2> -Anwhen- und -bedingungen </2> von kromatika.finance <3/> <4/>"
+msgstr "<0/> <1/> durch Klicken auf \\ \"zustimmen \" Sie akzeptieren die <2> -Anwhen- und -bedingungen </2> von kromatika.finance <3/> <4/>"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
@@ -898,7 +898,7 @@ msgstr "Erkunden Sie beliebte Pools auf Uniswap -Analysen."
 
 #: src/components/LimitWarning/LimitWarningModal.tsx
 msgid "FOR POLYGON KROMATIKA LIMIT ORDERS USERS - <0><1>ACTION REQUIRED</1></0>:<2/>a) Cancel Polygon chain limit orders<3/>b) Withdraw deposited KROM on polygon<4/>c) Revoke approval to old limit order manager contract: \"0xd1fdf0144be118c30a53e1d08cc1e61d600e508e\" <5>CLICK HERE</5> and follow the guide."
-msgstr "Für Polygon Kromatika -Grenzbestellungen Benutzer - <0> <1 1> Erforderliche Aktion c) Genehmigung für den alten Grenzbestellmanagervertrag: \ "0xD1FDF0144BE118C30A53E1D08CC1E61D600E508E \" <5> Klicken Sie hier </5> und folgen Sie dem Handbuch."
+msgstr "Für Polygon Kromatika -Grenzbestellungen Benutzer - <0> <1 1> Erforderliche Aktion c) Genehmigung für den alten Grenzbestellmanagervertrag: \\ \"0xD1FDF0144BE118C30A53E1D08CC1E61D600E508E \" <5> Klicken Sie hier </5> und folgen Sie dem Handbuch."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -2278,6 +2278,10 @@ msgstr "Sie müssen dem Kromatika -Aggregator eine Erlaubnis geben, Ihre {0} zu 
 #: src/pages/Swap/index.tsx
 msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "Sie müssen den Kromatika Smart Contracts die Erlaubnis erteilen, Ihre {0} zu verwenden. Sie müssen dies nur einmal pro Token tun."
+
+#: src/pages/LimitOrder/index.tsx
+msgid "You send"
+msgstr ""
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."

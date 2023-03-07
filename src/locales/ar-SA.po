@@ -103,7 +103,7 @@ msgstr "<0/> الأصوات"
 
 #: src/components/Perpetual/PerpModal.tsx
 msgid "<0/><1/>By clicking \"Agree\" you accept the <2>Terms and Conditions </2>by Kromatika.Finance<3/><4/>"
-msgstr "<0 /> <1 /> بالنقر فوق \ "موافق \" ، فإنك تقبل <2> الشروط والأحكام </ 2> بواسطة Kromatika.Finance <3 /> <4 />"
+msgstr "<0 /> <1 /> بالنقر فوق \\ \"موافق \" ، فإنك تقبل <2> الشروط والأحكام </ 2> بواسطة Kromatika.Finance <3 /> <4 />"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
@@ -898,7 +898,7 @@ msgstr "استكشف المجمعات الشعبية على Uniswap Analytics."
 
 #: src/components/LimitWarning/LimitWarningModal.tsx
 msgid "FOR POLYGON KROMATIKA LIMIT ORDERS USERS - <0><1>ACTION REQUIRED</1></0>:<2/>a) Cancel Polygon chain limit orders<3/>b) Withdraw deposited KROM on polygon<4/>c) Revoke approval to old limit order manager contract: \"0xd1fdf0144be118c30a53e1d08cc1e61d600e508e\" <5>CLICK HERE</5> and follow the guide."
-msgstr "لمستخدمي أوامر POLYGON KROMATIKA المحدودة - <0> <1> الإجراء المطلوب </ 1> </0>: <2 /> أ) إلغاء أوامر حد سلسلة المضلع <3 /> ب) سحب KROM المودعة على المضلع <4 /> ج) إبطال الموافقة على عقد مدير أوامر الحد القديم: \ "0xd1fdf0144be118c30a53e1d08cc1e61d600e508e \" <5> انقر هنا </ 5> واتبع الدليل."
+msgstr "لمستخدمي أوامر POLYGON KROMATIKA المحدودة - <0> <1> الإجراء المطلوب </ 1> </0>: <2 /> أ) إلغاء أوامر حد سلسلة المضلع <3 /> ب) سحب KROM المودعة على المضلع <4 /> ج) إبطال الموافقة على عقد مدير أوامر الحد القديم: \\ \"0xd1fdf0144be118c30a53e1d08cc1e61d600e508e \" <5> انقر هنا </ 5> واتبع الدليل."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -1364,7 +1364,7 @@ msgstr "يرجى إيداع $ KROM لمعالجة طلب الحد الخاص ب�
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable gasless mode."
-msgstr "الرجاء كتابة الكلمة \ "{ConfirmWord} \" لتمكين وضع الغاز."
+msgstr "الرجاء كتابة الكلمة \\ \"{ConfirmWord} \" لتمكين وضع الغاز."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Please wait while the transaction is being built"
@@ -2278,6 +2278,10 @@ msgstr "يجب أن تمنح Kromatika Aggregator إذنًا لاستخدام {0
 #: src/pages/Swap/index.tsx
 msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "يجب عليك منح العقود الذكية لـ Kromatika الإذن لاستخدام {0}الخاص بك. يجب عليك القيام بذلك مرة واحدة فقط لكل رمز."
+
+#: src/pages/LimitOrder/index.tsx
+msgid "You send"
+msgstr ""
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."

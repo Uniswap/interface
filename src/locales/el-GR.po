@@ -103,7 +103,7 @@ msgstr "<0/> Ψήφοι"
 
 #: src/components/Perpetual/PerpModal.tsx
 msgid "<0/><1/>By clicking \"Agree\" you accept the <2>Terms and Conditions </2>by Kromatika.Finance<3/><4/>"
-msgstr "<0/> <1/> κάνοντας κλικ στο \ "Συμφωνώ \" Αποδέχεστε τους όρους και τις προϋποθέσεις </2> από το kromatika.finance <3/> <4/>"
+msgstr "<0/> <1/> κάνοντας κλικ στο \\ \"Συμφωνώ \" Αποδέχεστε τους όρους και τις προϋποθέσεις </2> από το kromatika.finance <3/> <4/>"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
@@ -898,7 +898,7 @@ msgstr "Εξερευνήστε τις δημοφιλείς πισίνες για
 
 #: src/components/LimitWarning/LimitWarningModal.tsx
 msgid "FOR POLYGON KROMATIKA LIMIT ORDERS USERS - <0><1>ACTION REQUIRED</1></0>:<2/>a) Cancel Polygon chain limit orders<3/>b) Withdraw deposited KROM on polygon<4/>c) Revoke approval to old limit order manager contract: \"0xd1fdf0144be118c30a53e1d08cc1e61d600e508e\" <5>CLICK HERE</5> and follow the guide."
-msgstr "Για το Polygon Kromatika Order Order Order Users - <0> <1> Απαιτείται δράση </1> </0>: <2/> A) Ακύρωση των παραγγελιών αλυσίδας πολυγώνου <3/> b) αποσύρουν κατατεθειμένο KROM σε πολυγώνο <4/> γ) Ανακάλυψη της έγκρισης σε παλαιά σύμβαση διαχείρισης παραγγελιών: \ "0xd1fdf0144be118c30a53e1d08cc1e61d600e508e \" <5> Κάντε κλικ εδώ </5> και ακολουθήστε τον οδηγό."
+msgstr "Για το Polygon Kromatika Order Order Order Users - <0> <1> Απαιτείται δράση </1> </0>: <2/> A) Ακύρωση των παραγγελιών αλυσίδας πολυγώνου <3/> b) αποσύρουν κατατεθειμένο KROM σε πολυγώνο <4/> γ) Ανακάλυψη της έγκρισης σε παλαιά σύμβαση διαχείρισης παραγγελιών: \\ \"0xd1fdf0144be118c30a53e1d08cc1e61d600e508e \" <5> Κάντε κλικ εδώ </5> και ακολουθήστε τον οδηγό."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -1364,7 +1364,7 @@ msgstr "Καταθέστε το $ KROM για να επεξεργαστείτε 
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable gasless mode."
-msgstr "Πληκτρολογήστε τη λέξη \ "{επιβεβαίωση} \" για να ενεργοποιήσετε τη λειτουργία χωρίς αέριο."
+msgstr "Πληκτρολογήστε τη λέξη \\ \"{επιβεβαίωση} \" για να ενεργοποιήσετε τη λειτουργία χωρίς αέριο."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Please wait while the transaction is being built"
@@ -2278,6 +2278,10 @@ msgstr "Πρέπει να δώσετε στο Kromatika Aggregator άδεια ν
 #: src/pages/Swap/index.tsx
 msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "Πρέπει να δώσετε στο έξυπνο συμβόλαιο Kromatika άδεια για να χρησιμοποιήσει το {0} σας. Πρέπει να το κάνετε αυτό μία φορά ανά μάρκα."
+
+#: src/pages/LimitOrder/index.tsx
+msgid "You send"
+msgstr ""
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."

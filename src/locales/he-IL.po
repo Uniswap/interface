@@ -1088,7 +1088,7 @@ msgstr "הזמנות מוגבלות"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Limit price (USD):"
-msgstr "מחיר הגבלה (דולר ארה"ב):"
+msgstr "מחיר הגבלה (דולר ארה\"ב):"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Limit price:"
@@ -2278,6 +2278,10 @@ msgstr "עליך לתת ל-Kromatika Aggregator הרשאה להשתמש ב-{0} �
 #: src/pages/Swap/index.tsx
 msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "עליך לתת לחוזים החכמים של Kromatika להשתמש ב- {0}שלך. אתה צריך לעשות זאת רק פעם אחת לכל אסימון."
+
+#: src/pages/LimitOrder/index.tsx
+msgid "You send"
+msgstr ""
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
