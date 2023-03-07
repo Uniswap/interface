@@ -133,6 +133,8 @@ const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean 
     border-radius: ${BORDER_RADIUS}px;
     border-color: ${({ theme, selected }) => (selected ? theme.accentAction : theme.backgroundOutline)};
     pointer-events: none;
+    transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} border`};
+    will-change: border;
 
     @media screen and (max-width: ${BREAKPOINTS.sm}px) {
       ${({ selected, theme }) => selected && `border-color: ${theme.accentCritical}`};
