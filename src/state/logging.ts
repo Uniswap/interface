@@ -1,0 +1,49 @@
+import * as Sentry from '@sentry/react'
+
+import { AppState } from './types'
+
+/* Utility type to mark all properties of a type as optional */
+type DeepPartial<T> = T extends object
+  ? {
+      [P in keyof T]?: DeepPartial<T[P]>
+    }
+  : T
+
+export const middleware = Sentry.createReduxEnhancer({
+  actionTransformer: () => null,
+  /**
+   * This function runs on every state update, so keeping it as fast as possible by avoiding any function
+   * calls and deep object traversals.
+   */
+  stateTransformer: (state: AppState): DeepPartial<AppState> => {
+    return {
+      application: {
+        fiatOnramp: state.application.fiatOnramp,
+        chainId: state.application.chainId,
+        openModal: state.application.openModal,
+        popupList: state.application.popupList,
+      },
+      user: {
+        fiatOnrampAcknowledgments: state.user.fiatOnrampAcknowledgments,
+        selectedWallet: state.user.selectedWallet,
+        lastUpdateVersionTimestamp: state.user.lastUpdateVersionTimestamp,
+        matchesDarkMode: state.user.matchesDarkMode,
+        userDarkMode: state.user.userDarkMode,
+        userLocale: state.user.userLocale,
+        userExpertMode: state.user.userExpertMode,
+        userClientSideRouter: state.user.userClientSideRouter,
+        userHideClosedPositions: state.user.userHideClosedPositions,
+        userSlippageTolerance: state.user.userSlippageTolerance,
+        userSlippageToleranceHasBeenMigratedToAuto: state.user.userSlippageToleranceHasBeenMigratedToAuto,
+        userDeadline: state.user.userDeadline,
+        timestamp: state.user.timestamp,
+        URLWarningVisible: state.user.URLWarningVisible,
+        showSurveyPopup: state.user.showSurveyPopup,
+      },
+      connection: {
+        errorByConnectionType: state.connection.errorByConnectionType,
+      },
+      transactions: state.transactions,
+    }
+  },
+})
