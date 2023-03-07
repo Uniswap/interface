@@ -23,7 +23,7 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
    * Note: This function runs on every state update, so we're keeping it as fast as possible by avoiding any function
    * calls and deep object traversals.
    */
-  stateTransformer: (state: AppState): Partial<AppState> => {
+  stateTransformer: (state: AppState): DeepPartial<AppState> => {
     return {
       application: {
         fiatOnramp: state.application.fiatOnramp,
