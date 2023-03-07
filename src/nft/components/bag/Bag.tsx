@@ -194,7 +194,7 @@ const Bag = () => {
   const purchaseAssets = async (routingData: RouteResponse, purchasingWithErc20: boolean) => {
     if (!provider || !routingData) return
     const purchaseResponse = await sendTransaction(
-      provider,
+      provider?.getSigner(),
       itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset),
       routingData,
       purchasingWithErc20

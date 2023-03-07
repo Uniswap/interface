@@ -2,11 +2,9 @@ import { Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { hexStripZeros } from '@ethersproject/bytes'
 import { ContractReceipt } from '@ethersproject/contracts'
-import { JsonRpcProvider } from '@ethersproject/providers'
+import type { JsonRpcSigner } from '@ethersproject/providers'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
-import { sendTransaction } from '@uniswap/conedison/provider/index'
-import { NFT_TX_GAS_MARGIN } from 'constants/misc'
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
 
@@ -23,7 +21,7 @@ interface TxState {
   clearTxHash: () => void
   purchasedWithErc20: boolean
   sendTransaction: (
-    provider: JsonRpcProvider,
+    signer: JsonRpcSigner,
     selectedAssets: UpdatedGenieAsset[],
     transactionData: RouteResponse,
     purchasedWithErc20: boolean
@@ -38,18 +36,21 @@ export const useSendTransaction = create<TxState>()(
       purchasedWithErc20: false,
       clearTxHash: () => set({ txHash: '' }),
       setState: (newState) => set(() => ({ state: newState })),
-      sendTransaction: async (provider, selectedAssets, transactionData, purchasedWithErc20) => {
-        const address = await provider.getSigner().getAddress()
+      sendTransaction: async (signer, selectedAssets, transactionData, purchasedWithErc20) => {
+        const address = await signer.getAddress()
         try {
-          set({ state: TxStateType.Signing })
-
-          const tx = {
+          const txNoGasLimit = {
             to: transactionData.to,
             value: transactionData.valueToSend ? BigNumber.from(transactionData.valueToSend) : undefined,
             data: transactionData.data,
           }
-          const res = await sendTransaction(provider, tx, NFT_TX_GAS_MARGIN)
 
+          const gasLimit = (await signer.estimateGas(txNoGasLimit)).mul(105).div(100)
+          // tx['gasLimit'] = gasLimit
+          const tx = { ...txNoGasLimit, gasLimit } // TODO test this works when firing off tx
+
+          set({ state: TxStateType.Signing })
+          const res = await signer.sendTransaction(tx)
           set({ state: TxStateType.Confirming })
           set({ txHash: res.hash })
           set({ purchasedWithErc20 })
