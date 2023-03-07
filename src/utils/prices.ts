@@ -1,5 +1,5 @@
 import { Pair, Trade } from '@kyberswap/ks-sdk-classic'
-import { ChainId, Currency, CurrencyAmount, Fraction, Percent, TokenAmount, TradeType } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@kyberswap/ks-sdk-core'
 import JSBI from 'jsbi'
 
 import {
@@ -8,7 +8,6 @@ import {
   ALLOWED_PRICE_IMPACT_MEDIUM,
   BLOCKED_PRICE_IMPACT_NON_EXPERT,
 } from 'constants/index'
-import { AnyTrade } from 'hooks/useSwapCallback'
 import { Field } from 'state/swap/actions'
 
 import { Aggregator } from './aggregator'
@@ -31,37 +30,7 @@ function computeFee(pairs?: Array<Pair>): Fraction {
   return realizedLPFee
 }
 
-// computes price breakdown for the trade
-export function computeTradePriceBreakdown(trade?: Trade<Currency, Currency, TradeType>): {
-  priceImpactWithoutFee?: Percent
-  realizedLPFee?: CurrencyAmount<Currency>
-  accruedFeePercent: Percent
-} {
-  const pairs = trade ? trade.route.pairs : undefined
-  const realizedLPFee: Fraction = computeFee(pairs)
-  const accruedFeePercent: Percent = new Percent(realizedLPFee.numerator, JSBI.BigInt('1000000000000000000'))
-
-  // remove lp fees from price impact
-  const priceImpactWithoutFeeFraction = trade && realizedLPFee ? trade.priceImpact.subtract(realizedLPFee) : undefined
-
-  // the x*y=k impact
-  const priceImpactWithoutFeePercent = priceImpactWithoutFeeFraction
-    ? new Percent(priceImpactWithoutFeeFraction?.numerator, priceImpactWithoutFeeFraction?.denominator)
-    : undefined
-
-  // the amount of the input that accrues to LPs
-  const realizedLPFeeAmount =
-    realizedLPFee &&
-    trade &&
-    // TODO: Check again inputAmount.quotient
-    // (trade.inputAmount.currency.isToken
-    // ?
-    TokenAmount.fromRawAmount(trade.inputAmount.currency, realizedLPFee.multiply(trade.inputAmount.quotient).quotient)
-  // : CurrencyAmount.ether(realizedLPFee.multiply(trade.inputAmount.raw).quotient))
-
-  return { priceImpactWithoutFee: priceImpactWithoutFeePercent, realizedLPFee: realizedLPFeeAmount, accruedFeePercent }
-}
-
+type AnyTrade = Trade<Currency, Currency, TradeType>
 // computes the minimum amount out and maximum amount in for a trade given a user specified allowed slippage in bips
 export function computeSlippageAdjustedAmounts(
   trade: AnyTrade | Aggregator | undefined,

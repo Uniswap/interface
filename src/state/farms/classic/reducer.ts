@@ -5,7 +5,7 @@ import { Farm } from 'state/farms/classic/types'
 
 import { setAttemptingTxn, setFarmsData, setLoading, setShowConfirm, setTxHash, setYieldPoolsError } from './actions'
 
-export interface FarmsState {
+interface FarmsState {
   readonly data: { [key: string]: Farm[] }
   readonly loading: boolean
   readonly showConfirm: boolean

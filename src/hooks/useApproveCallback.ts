@@ -1,11 +1,9 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Trade } from '@kyberswap/ks-sdk-classic'
-import { Currency, CurrencyAmount, TradeType } from '@kyberswap/ks-sdk-core'
+import { Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 
-import { EVMNetworkInfo } from 'constants/networks/type'
 import { useTokenAllowance } from 'data/Allowances'
 import { Field } from 'state/swap/actions'
 import { useHasPendingApproval, useTransactionAdder } from 'state/transactions/hooks'
@@ -126,20 +124,6 @@ export function useApproveCallback(
   }, [approvalState, token, tokenContract, amountToApprove, spender, addTransactionWithType, forceApprove])
 
   return [approvalState, approve]
-}
-
-// wraps useApproveCallback in the context of a swap
-export function useApproveCallbackFromTrade(
-  trade?: Trade<Currency, Currency, TradeType>,
-  allowedSlippage = 0,
-): [ApprovalState, () => Promise<void>] {
-  const { isEVM, networkInfo } = useActiveWeb3React()
-  const amountToApprove = useMemo(
-    () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
-    [trade, allowedSlippage],
-  )
-  const spender = isEVM ? (networkInfo as EVMNetworkInfo).classic.dynamic?.router : undefined
-  return useApproveCallback(amountToApprove, spender)
 }
 
 // wraps useApproveCallback in the context of a swap

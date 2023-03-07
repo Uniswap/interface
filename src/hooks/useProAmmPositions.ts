@@ -13,20 +13,12 @@ import { PositionDetails } from 'types/position'
 
 import { useProAmmNFTPositionManagerContract } from './useContract'
 
-//           { "internalType": "uint96", "name": "nonce", "type": "uint96" },
-//           { "internalType": "address", "name": "operator", "type": "address" },
-//           { "internalType": "uint80", "name": "poolId", "type": "uint80" },
-//           { "internalType": "int24", "name": "tickLower", "type": "int24" },
-//           { "internalType": "int24", "name": "tickUpper", "type": "int24" },
-//           { "internalType": "uint128", "name": "liquidity", "type": "uint128" },
-//           { "internalType": "uint256", "name": "rTokenOwed", "type": "uint256" },
-//           { "internalType": "uint256", "name": "feeGrowthInsideLast", "type": "uint256" }
 interface UseProAmmPositionsResults {
   loading: boolean
   positions: PositionDetails[] | undefined
 }
 
-export function useProAmmPositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseProAmmPositionsResults {
+function useProAmmPositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseProAmmPositionsResults {
   const positionManager = useProAmmNFTPositionManagerContract()
   const { isEVM, networkInfo } = useActiveWeb3React()
 
@@ -91,45 +83,6 @@ export function useProAmmPositionsFromTokenId(tokenId: BigNumber | undefined): U
   return {
     loading: position.loading,
     position: position.positions?.[0],
-  }
-}
-
-export const useTokenIdsOwnedByAddress = (address: string): { loading: boolean; tokenIds: BigNumber[] } => {
-  const positionManager = useProAmmNFTPositionManagerContract()
-  const { loading: balanceLoading, result: balanceResult } = useSingleCallResult(positionManager, 'balanceOf', [
-    address ?? undefined,
-  ])
-
-  // we don't expect any account balance to ever exceed the bounds of max safe int
-  const accountBalance: number | undefined = balanceResult?.[0]?.toNumber()
-
-  const tokenIdsArgs = useMemo(() => {
-    if (accountBalance && address) {
-      const tokenRequests = []
-      for (let i = 0; i < accountBalance; i++) {
-        tokenRequests.push([address, i])
-      }
-      return tokenRequests
-    }
-    return []
-  }, [address, accountBalance])
-
-  const tokenIdResults = useSingleContractMultipleData(positionManager, 'tokenOfOwnerByIndex', tokenIdsArgs)
-
-  const someTokenIdsLoading = useMemo(() => tokenIdResults.some(({ loading }) => loading), [tokenIdResults])
-  const tokenIds = useMemo(() => {
-    if (address) {
-      return tokenIdResults
-        .map(({ result }) => result)
-        .filter((result): result is Result => !!result)
-        .map(result => BigNumber.from(result[0]))
-    }
-    return []
-  }, [address, tokenIdResults])
-
-  return {
-    loading: balanceLoading || someTokenIdsLoading,
-    tokenIds,
   }
 }
 

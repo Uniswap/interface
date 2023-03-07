@@ -71,7 +71,7 @@ const FormWrapper = styled.div`
   width: 100%;
 `
 
-export const InnerCard = styled.div`
+const InnerCard = styled.div`
   border-radius: 16px;
   background-color: ${({ theme }) => theme.buttonBlack};
   padding: 12px 16px;
@@ -138,21 +138,6 @@ const StakeForm = styled(FormWrapper)`
   display: flex;
   gap: 16px;
   flex-direction: column;
-`
-
-export const CurrencyInput = styled.input<{ disabled?: boolean }>`
-  background: none;
-  border: none;
-  outline: none;
-  color: ${({ theme, disabled }) => (disabled ? theme.subText : theme.text)};
-  font-size: 24px;
-  width: 0;
-  flex: 1;
-  ${({ disabled }) =>
-    disabled &&
-    `
-      cursor: not-allowed;
-    `}
 `
 
 const AddressInput = styled.input`

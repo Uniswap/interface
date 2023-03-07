@@ -204,43 +204,6 @@ export function useSingleContractMultipleData(
   }, [isEVM, fragment, contract, results, latestBlockNumber])
 }
 
-export function useSingleContractWithCallData(
-  contract: Contract | null | undefined,
-  callDatas: string[],
-  options?: ListenerOptions,
-): CallState[] {
-  const { isEVM } = useActiveWeb3React()
-  const { gasRequired } = options ?? {}
-  const calls = useMemo(
-    () =>
-      isEVM && contract && callDatas && callDatas.length > 0
-        ? callDatas.map<Call>(callData => {
-            return {
-              address: contract.address,
-              callData,
-              gasRequired,
-            }
-          })
-        : EMPTY_ARRAY,
-    [callDatas, contract, gasRequired, isEVM],
-  )
-
-  const results = useCallsData(calls, options)
-
-  const latestBlockNumber = useBlockNumber()
-
-  return useMemo(() => {
-    return results.map((result, i) =>
-      toCallState(
-        result,
-        contract?.interface,
-        contract?.interface?.getFunction(callDatas[i].substring(0, 10)),
-        latestBlockNumber,
-      ),
-    )
-  }, [contract, results, latestBlockNumber, callDatas])
-}
-
 export function useMultipleContractSingleData(
   addresses: (string | undefined)[],
   contractInterface: Interface,

@@ -38,7 +38,7 @@ import { RedirectPathToSwapV3Network } from './SwapV3/redirects'
 import Verify from './Verify'
 
 // Route-based code splitting
-const Swap = lazy(() => import(/* webpackChunkName: 'swap-page' */ './Swap'))
+
 const SwapV2 = lazy(() => import(/* webpackChunkName: 'swapv2-page' */ './SwapV2'))
 const SwapV3 = lazy(() => import(/* webpackChunkName: 'swapv3-page' */ './SwapV3'))
 const Bridge = lazy(() => import(/* webpackChunkName: 'bridge-page' */ './Bridge'))
@@ -227,7 +227,6 @@ export default function App() {
                 <Web3ReactManager>
                   <Routes>
                     <Route element={<DarkModeQueryParamReader />} />
-                    <Route path={APP_PATHS.SWAP_LEGACY} element={<Swap />} />
 
                     <Route path={`${APP_PATHS.SWAP}/:network/:fromCurrency-to-:toCurrency`} element={<SwapPage />} />
                     <Route path={`${APP_PATHS.SWAP}/:network/:fromCurrency`} element={<SwapPage />} />

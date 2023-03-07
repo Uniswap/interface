@@ -9,7 +9,7 @@ import useTheme from 'hooks/useTheme'
 import { Bound } from 'state/mint/proamm/type'
 import { formatTickPrice } from 'utils/formatTickPrice'
 
-export const Dot = styled.div<{ isShow?: boolean | undefined; isCurrentPrice?: boolean; outOfRange?: boolean }>`
+const Dot = styled.div<{ isShow?: boolean | undefined; isCurrentPrice?: boolean; outOfRange?: boolean }>`
   width: 8px;
   min-width: 8px;
   height: 8px;

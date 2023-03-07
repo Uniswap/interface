@@ -24,7 +24,7 @@ import TransactionConfirmationModal, {
   TransactionErrorContent,
 } from 'components/TransactionConfirmationModal'
 import ZapError from 'components/ZapError'
-import FormattedPriceImpact from 'components/swap/FormattedPriceImpact'
+import FormattedPriceImpact from 'components/swapv2/FormattedPriceImpact'
 import { AMP_HINT } from 'constants/index'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { NativeCurrencies } from 'constants/tokens'

@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 import { TopToken } from './type'
 
-export type TopTokenState = {
+type TopTokenState = {
   [chainId in ChainId]: TopToken[] | undefined
 }
 

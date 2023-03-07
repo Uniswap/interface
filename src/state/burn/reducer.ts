@@ -2,7 +2,7 @@ import { createReducer } from '@reduxjs/toolkit'
 
 import { Field, switchTokenField, typeInput } from './actions'
 
-export interface BurnState {
+interface BurnState {
   readonly independentField: Field
   readonly independentTokenField: Field
   readonly typedValue: string

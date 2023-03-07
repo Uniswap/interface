@@ -14,7 +14,7 @@ import {
   setVestingError,
 } from './actions'
 
-export interface VestingState {
+interface VestingState {
   readonly loading: boolean
   readonly schedulesByRewardLocker: {
     [key: string]: [BigNumber, BigNumber, BigNumber, BigNumber, Token, number, RewardLockerVersion][]

@@ -71,7 +71,7 @@ export interface UserLiquidityPosition {
   }
 }
 
-export interface UserLiquidityPositionResult {
+interface UserLiquidityPositionResult {
   loading: boolean
   error: any
   data: {
@@ -278,7 +278,7 @@ export function useResetPools(chainId: ChainId) {
   }, [chainId, dispatch])
 }
 
-export function usePoolCountInSubgraph(): number {
+function usePoolCountInSubgraph(): number {
   const [poolCount, setPoolCount] = useState(0)
   const { isEVM, networkInfo } = useActiveWeb3React()
   const { classicClient } = useKyberswapConfig()

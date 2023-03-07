@@ -7,7 +7,7 @@ export interface Dex {
   id: string
 }
 
-export interface CustomizeDexeState {
+interface CustomizeDexeState {
   excludeDexes: Partial<Record<ChainId, string[]>>
   allDexes: Partial<Record<ChainId, Dex[]>>
 }

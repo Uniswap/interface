@@ -2,7 +2,7 @@ import { createReducer } from '@reduxjs/toolkit'
 
 import { Field, resetMintState, switchTokenField, typeInput } from './actions'
 
-export interface MintState {
+interface MintState {
   readonly independentField: Field
   readonly typedValue: string
   readonly otherTypedValue: string // for the case when there's no liquidity

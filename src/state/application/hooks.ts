@@ -76,11 +76,6 @@ export function useOpenModal(modal: ApplicationModal): () => void {
   return useCallback(() => dispatch(setOpenModal(modal)), [dispatch, modal])
 }
 
-export function useCloseModals(): () => void {
-  const dispatch = useDispatch<AppDispatch>()
-  return useCallback(() => dispatch(setOpenModal(null)), [dispatch])
-}
-
 export function useNetworkModalToggle(): () => void {
   return useToggleModal(ApplicationModal.NETWORK)
 }
@@ -93,44 +88,16 @@ export function useWalletModalToggle(): () => void {
   return useToggleModal(ApplicationModal.WALLET)
 }
 
-export function useToggleSettingsMenu(): () => void {
-  return useToggleModal(ApplicationModal.SETTINGS)
-}
-
 export function useToggleTransactionSettingsMenu(): () => void {
   return useToggleModal(ApplicationModal.TRANSACTION_SETTINGS)
-}
-
-export function useShowClaimPopup(): boolean {
-  return useModalOpen(ApplicationModal.CLAIM_POPUP)
-}
-
-export function useToggleShowClaimPopup(): () => void {
-  return useToggleModal(ApplicationModal.CLAIM_POPUP)
-}
-
-export function useToggleSelfClaimModal(): () => void {
-  return useToggleModal(ApplicationModal.SELF_CLAIM)
-}
-
-export function useToggleDelegateModal(): () => void {
-  return useToggleModal(ApplicationModal.DELEGATE)
 }
 
 export function useToggleYourCampaignTransactionsModal(): () => void {
   return useToggleModal(ApplicationModal.YOUR_CAMPAIGN_TRANSACTIONS)
 }
 
-export function useToggleVoteModal(): () => void {
-  return useToggleModal(ApplicationModal.VOTE)
-}
-
 export function usePoolDetailModalToggle(): () => void {
   return useToggleModal(ApplicationModal.POOL_DETAIL)
-}
-
-export function useTrendingSoonSortingModalToggle(): () => void {
-  return useToggleModal(ApplicationModal.TRENDING_SOON_SORTING)
 }
 
 export function useSelectCampaignModalToggle(): () => void {
@@ -149,20 +116,12 @@ export function useTrueSightNetworkModalToggle(): () => void {
   return useToggleModal(ApplicationModal.TRUESIGHT_NETWORK)
 }
 
-export function useTrendingSoonTokenDetailModalToggle(): () => void {
-  return useToggleModal(ApplicationModal.TRENDING_SOON_TOKEN_DETAIL)
-}
-
 export function useNotificationModalToggle(): () => void {
   return useToggleModal(ApplicationModal.NOTIFICATION_SUBSCRIPTION)
 }
 
 export function useToggleEthPowAckModal(): () => void {
   return useToggleModal(ApplicationModal.ETH_POW_ACK)
-}
-
-export function useToggleSwitchEthereumModal(): () => void {
-  return useToggleModal(ApplicationModal.SWITCH_TO_ETHEREUM)
 }
 
 // returns a function that allows adding a popup

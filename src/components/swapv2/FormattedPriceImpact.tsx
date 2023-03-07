@@ -1,10 +1,20 @@
 import { Percent } from '@kyberswap/ks-sdk-core'
+import { Text } from 'rebass'
+import styled from 'styled-components'
 
 import { ONE_BIPS } from 'constants/index'
 import { warningSeverity } from 'utils/prices'
 
-import { ErrorText } from './styleds'
-
+const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
+  color: ${({ theme, severity }) =>
+    severity === 3 || severity === 4
+      ? theme.red1
+      : severity === 2
+      ? theme.yellow2
+      : severity === 1
+      ? theme.text
+      : theme.green1};
+`
 /**
  * Formatted version of price impact text with warning colors
  */

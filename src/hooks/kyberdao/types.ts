@@ -19,7 +19,7 @@ export enum ActionType {
   Withdraw = 'Withdraw',
   Delegate = 'Delegate',
 }
-export interface VoteOption {
+interface VoteOption {
   option: number
   vote_count: number
 }
@@ -32,7 +32,7 @@ export interface VoteDetail {
   power: string
   staker_name: string
 }
-export interface VoteStat {
+interface VoteStat {
   options: VoteOption[]
   total_address_count: number
   total_vote_count: number

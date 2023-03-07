@@ -1,23 +1,15 @@
 import { Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { CurrencyAmount, Fraction, Token } from '@kyberswap/ks-sdk-core'
+import { Fraction, Token } from '@kyberswap/ks-sdk-core'
 import { ethers } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
-import { FARM_HISTORIES } from 'apollo/queries'
 import FAIRLAUNCH_V2_ABI from 'constants/abis/fairlaunch-v2.json'
 import FAIRLAUNCH_ABI from 'constants/abis/fairlaunch.json'
-import {
-  LP_TOKEN_DECIMALS,
-  MAX_ALLOW_APY,
-  OUTSIDE_FAIRLAUNCH_ADDRESSES,
-  RESERVE_USD_DECIMALS,
-  ZERO_ADDRESS,
-} from 'constants/index'
+import { MAX_ALLOW_APY, OUTSIDE_FAIRLAUNCH_ADDRESSES, ZERO_ADDRESS } from 'constants/index'
 import { DEFAULT_REWARDS } from 'constants/networks'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { NativeCurrencies } from 'constants/tokens'
@@ -30,19 +22,12 @@ import useTokenBalance from 'hooks/useTokenBalance'
 import useTokensMarketPrice from 'hooks/useTokensMarketPrice'
 import { AppState } from 'state'
 import { useBlockNumber, useETHPrice, useTokensPrice } from 'state/application/hooks'
-import {
-  FairLaunchVersion,
-  Farm,
-  FarmHistoriesSubgraphResult,
-  FarmHistory,
-  FarmHistoryMethod,
-} from 'state/farms/classic/types'
+import { FairLaunchVersion, Farm } from 'state/farms/classic/types'
 import { useAppDispatch } from 'state/hooks'
 import { useMultipleContractSingleData } from 'state/multicall/hooks'
-import { SubgraphPoolData, getBulkPoolDataFromPoolList } from 'state/pools/hooks'
-import { tryParseAmount } from 'state/swap/hooks'
+import { getBulkPoolDataFromPoolList } from 'state/pools/hooks'
 import { isAddressString } from 'utils'
-import { getTradingFeeAPR, parseSubgraphPoolData, useFarmApr } from 'utils/dmm'
+import { getTradingFeeAPR, useFarmApr } from 'utils/dmm'
 
 import { setFarmsData, setLoading, setYieldPoolsError } from './actions'
 
@@ -344,121 +329,6 @@ export const useActiveAndUniqueFarmsData = (): { loading: boolean; error: string
   }, [blockNumber, farmsData])
 }
 
-export const useYieldHistories = (isModalOpen: boolean) => {
-  const { chainId, account, isEVM, networkInfo } = useActiveWeb3React()
-  const [histories, setHistories] = useState<FarmHistory[]>([])
-  const [loading, setLoading] = useState(false)
-  const { classicClient } = useKyberswapConfig()
-
-  useEffect(() => {
-    if (!isEVM) return
-    async function fetchFarmHistories() {
-      if (!account || !isModalOpen) {
-        return
-      }
-
-      setLoading(true)
-
-      try {
-        const result = await classicClient.query<FarmHistoriesSubgraphResult>({
-          query: FARM_HISTORIES,
-          variables: {
-            user: account,
-          },
-          fetchPolicy: 'network-only',
-        })
-
-        const historiesData: FarmHistory[] = []
-
-        result.data.deposits.forEach(deposit => {
-          historiesData.push({
-            id: deposit.id,
-            timestamp: deposit.timestamp,
-            method: FarmHistoryMethod.DEPOSIT,
-            amount: deposit.amount,
-            stakeToken: deposit.stakeToken,
-          })
-        })
-
-        result.data.withdraws.forEach(withdraw => {
-          historiesData.push({
-            id: withdraw.id,
-            timestamp: withdraw.timestamp,
-            method: FarmHistoryMethod.WITHDRAW,
-            amount: withdraw.amount,
-            stakeToken: withdraw.stakeToken,
-          })
-        })
-
-        result.data.harvests.forEach(harvest => {
-          const txHash = harvest.id.split('-')?.[0]
-
-          const index = historiesData.findIndex(
-            history =>
-              history.method === FarmHistoryMethod.HARVEST &&
-              history.rewardToken === harvest.rewardToken &&
-              history.id.includes(txHash),
-          )
-
-          if (index < 0) {
-            historiesData.push({
-              id: harvest.id,
-              timestamp: harvest.timestamp,
-              method: FarmHistoryMethod.HARVEST,
-              amount: harvest.amount,
-              stakeToken: harvest.stakeToken,
-              rewardToken: harvest.rewardToken,
-            })
-          } else {
-            historiesData[index].amount = BigNumber.from(historiesData[index].amount)
-              .add(BigNumber.from(harvest.amount))
-              .toString()
-          }
-        })
-
-        result.data.vests.forEach(vest => {
-          const txHash = vest.id.split('-')?.[0]
-
-          const index = historiesData.findIndex(
-            history =>
-              history.method === FarmHistoryMethod.CLAIM &&
-              history.rewardToken === vest.rewardToken &&
-              history.id.includes(txHash),
-          )
-
-          if (index < 0) {
-            historiesData.push({
-              id: vest.id,
-              timestamp: vest.timestamp,
-              method: FarmHistoryMethod.CLAIM,
-              amount: vest.amount,
-              rewardToken: vest.rewardToken,
-            })
-          } else {
-            historiesData[index].amount = BigNumber.from(historiesData[index].amount)
-              .add(BigNumber.from(vest.amount))
-              .toString()
-          }
-        })
-
-        historiesData.sort(function (a, b) {
-          return parseInt(b.timestamp) - parseInt(a.timestamp)
-        })
-
-        setHistories(historiesData)
-      } catch (err) {
-        setHistories([])
-      }
-
-      setLoading(false)
-    }
-
-    fetchFarmHistories()
-  }, [chainId, account, isModalOpen, isEVM, networkInfo, classicClient])
-
-  return { loading, data: histories }
-}
-
 export const useTotalApr = (farm: Farm) => {
   const { chainId } = useActiveWeb3React()
   const poolAddressChecksum = isAddressString(chainId, farm.id)
@@ -482,70 +352,4 @@ export const useTotalApr = (farm: Farm) => {
   const apr = farmAPR + (tradingFeeAPR < MAX_ALLOW_APY ? tradingFeeAPR : 0)
 
   return { tradingFeeAPR, farmAPR, apr }
-}
-
-export const useUserStakedBalance = (poolData: SubgraphPoolData) => {
-  const { chainId } = useActiveWeb3React()
-
-  const { currency0, currency1 } = parseSubgraphPoolData(poolData, chainId)
-
-  const farmData = useFarmsData(false)
-
-  const userStakedData = Object.values(farmData.data)
-    .flat()
-    .filter(farm => farm.id.toLowerCase() === poolData.id)
-    .map(farm => {
-      const userStakedBalance = farm.userData?.stakedBalance
-        ? new Fraction(farm.userData.stakedBalance, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(LP_TOKEN_DECIMALS)))
-        : new Fraction('0')
-
-      const lpUserStakedTokenRatio = userStakedBalance.divide(
-        new Fraction(
-          ethers.utils.parseUnits(farm.totalSupply, LP_TOKEN_DECIMALS).toString(),
-          JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(LP_TOKEN_DECIMALS)),
-        ),
-      )
-
-      const userStakedToken0Balance =
-        tryParseAmount(farm.reserve0, currency0)?.multiply(lpUserStakedTokenRatio) ||
-        CurrencyAmount.fromRawAmount(currency0, 0)
-      const userStakedToken1Balance =
-        tryParseAmount(farm.reserve1, currency1)?.multiply(lpUserStakedTokenRatio) ||
-        CurrencyAmount.fromRawAmount(currency1, 0)
-
-      const userStakedBalanceUSD = new Fraction(
-        parseUnits(farm.reserveUSD, RESERVE_USD_DECIMALS).toString(),
-        JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(RESERVE_USD_DECIMALS)),
-      ).multiply(lpUserStakedTokenRatio)
-
-      return {
-        userStakedToken0Balance,
-        userStakedToken1Balance,
-        userStakedBalanceUSD,
-        userStakedBalance,
-      }
-    })
-
-  const { userStakedToken0Balance, userStakedToken1Balance, userStakedBalanceUSD, userStakedBalance } =
-    userStakedData.reduce(
-      (acc, value) => ({
-        userStakedToken0Balance: value.userStakedToken0Balance.add(acc.userStakedToken0Balance),
-        userStakedToken1Balance: value.userStakedToken1Balance.add(acc.userStakedToken1Balance),
-        userStakedBalanceUSD: value.userStakedBalanceUSD.add(acc.userStakedBalanceUSD),
-        userStakedBalance: value.userStakedBalance.add(acc.userStakedBalance),
-      }),
-      {
-        userStakedToken0Balance: CurrencyAmount.fromRawAmount(currency0, 0),
-        userStakedToken1Balance: CurrencyAmount.fromRawAmount(currency1, 0),
-        userStakedBalanceUSD: new Fraction('0'),
-        userStakedBalance: new Fraction('0'),
-      },
-    )
-
-  return {
-    userStakedToken0Balance,
-    userStakedToken1Balance,
-    userStakedBalanceUSD,
-    userStakedBalance,
-  }
 }

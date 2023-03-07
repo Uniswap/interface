@@ -9,7 +9,7 @@ import {
   updateMulticallResults,
 } from './actions'
 
-export interface MulticallState {
+interface MulticallState {
   callListeners?: {
     // on a per-chain basis
     [chainId: number]: {

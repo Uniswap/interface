@@ -8,7 +8,7 @@ interface SelectedPool {
   myLiquidity: UserLiquidityPosition | undefined
 }
 
-export interface PoolsState {
+interface PoolsState {
   readonly pools: SubgraphPoolData[]
   readonly loading: boolean
   readonly error: Error | undefined

@@ -12,7 +12,6 @@ import { AutoColumn } from 'components/Column'
 import CopyHelper from 'components/Copy'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { RowBetween } from 'components/Row'
-import { SectionBreak } from 'components/swap/styleds'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { useAddUserToken } from 'state/user/hooks'
@@ -31,6 +30,12 @@ const Wrapper = styled.div`
 const WarningWrapper = styled(Card)`
   background-color: ${({ theme }) => transparentize(0.8, theme.warning)};
   width: fit-content;
+`
+
+const SectionBreak = styled.div`
+  height: 1px;
+  width: 100%;
+  background-color: ${({ theme }) => theme.bg3};
 `
 
 const AddressText = styled.div`

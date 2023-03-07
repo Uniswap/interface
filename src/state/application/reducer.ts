@@ -24,7 +24,7 @@ type ETHPrice = {
   pricePercentChange?: number
 }
 
-export interface ApplicationState {
+interface ApplicationState {
   readonly blockNumber: { readonly [chainId: number]: number }
   readonly popupList: PopupItemType[]
   readonly openModal: ApplicationModal | null

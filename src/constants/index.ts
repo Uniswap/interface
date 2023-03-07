@@ -130,8 +130,7 @@ export const BIPS_BASE = JSBI.BigInt(10000)
 export const ALLOWED_PRICE_IMPACT_LOW: Percent = new Percent(JSBI.BigInt(100), BIPS_BASE) // 1%
 export const ALLOWED_PRICE_IMPACT_MEDIUM: Percent = new Percent(JSBI.BigInt(300), BIPS_BASE) // 3%
 export const ALLOWED_PRICE_IMPACT_HIGH: Percent = new Percent(JSBI.BigInt(500), BIPS_BASE) // 5%
-// if the price slippage exceeds this number, force the user to type 'confirm' to execute
-export const PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN: Percent = new Percent(JSBI.BigInt(1000), BIPS_BASE) // 10%
+
 // for non expert mode disable swaps above this
 export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(1500), BIPS_BASE) // 15%
 
@@ -217,7 +216,6 @@ export const DEFAULT_GAS_LIMIT_MARGIN = 20000
 // This variable to handle crazy APR which it can be wrong calculations or a bug
 // But now, for FOMO of Pagxy, updated this to 10000 (before we set 2000 for it)
 export const MAX_ALLOW_APY = 10000
-export const LP_TOKEN_DECIMALS = 18
 export const RESERVE_USD_DECIMALS = 100
 export const DEFAULT_SIGNIFICANT = 6
 export const SUBGRAPH_AMP_MULTIPLIER = 10000
@@ -257,7 +255,6 @@ export const MAX_SLIPPAGE_IN_BIPS = 2000
 export const AGGREGATOR_WAITING_TIME = 1700 // 1700 means that we at least show '.' '..' '...' '.' '..' '...'
 
 export const APP_PATHS = {
-  SWAP_LEGACY: '/swap-legacy',
   ABOUT: '/about',
   SWAP: '/swap',
   CAMPAIGN: '/campaigns',

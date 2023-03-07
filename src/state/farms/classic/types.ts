@@ -11,7 +11,7 @@ export enum RewardLockerVersion {
   V2,
 }
 
-export interface FarmV1 {
+interface FarmV1 {
   fairLaunchAddress: string
   version: FairLaunchVersion
   pid: number
@@ -42,7 +42,7 @@ export interface FarmV1 {
   time: string
 }
 
-export interface FarmV2 {
+interface FarmV2 {
   fairLaunchAddress: string
   version: FairLaunchVersion
   pid: number
