@@ -10,4 +10,4 @@ updates:
       - dependency-name: '@uniswap/token-lists'
       - dependency-name: '@uniswap/widgets'
     reviewers:
-      - "Uniswap/dependabot-reviewers"
+      - 'Uniswap/dependabot-reviewers'
