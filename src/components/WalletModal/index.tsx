@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, user } from '@uniswap/analytics'
 import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
+import { getWalletMeta } from '@uniswap/conedison/provider/meta'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
@@ -130,16 +131,19 @@ const sendAnalyticsEventAndUserInfo = (
   account: string,
   walletType: string,
   chainId: number | undefined,
-  isReconnect: boolean
+  isReconnect: boolean,
+  peerWalletAgent: string | undefined
 ) => {
   sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
     result: WalletConnectionResult.SUCCEEDED,
     wallet_address: account,
     wallet_type: walletType,
     is_reconnect: isReconnect,
+    peer_wallet_agent: peerWalletAgent,
   })
   user.set(CustomUserProperties.WALLET_ADDRESS, account)
   user.set(CustomUserProperties.WALLET_TYPE, walletType)
+  user.set(CustomUserProperties.PEER_WALLET_AGENT, peerWalletAgent ?? '')
   if (chainId) {
     user.postInsert(CustomUserProperties.ALL_WALLET_CHAIN_IDS, chainId)
   }
@@ -156,7 +160,7 @@ export default function WalletModal({
   ENSName?: string
 }) {
   const dispatch = useAppDispatch()
-  const { connector, account, chainId } = useWeb3React()
+  const { connector, account, chainId, provider } = useWeb3React()
   const previousAccount = usePrevious(account)
 
   const location = useLocation()
@@ -212,13 +216,14 @@ export default function WalletModal({
   useEffect(() => {
     if (account && account !== lastActiveWalletAddress) {
       const walletType = getConnectionName(getConnection(connector).type)
+      const peerWalletAgent = provider ? getWalletMeta(provider)?.agent : undefined
       const isReconnect =
         connectedWallets.filter((wallet) => wallet.account === account && wallet.walletType === walletType).length > 0
-      sendAnalyticsEventAndUserInfo(account, walletType, chainId, isReconnect)
+      sendAnalyticsEventAndUserInfo(account, walletType, chainId, isReconnect, peerWalletAgent)
       if (!isReconnect) addWalletToConnectedWallets({ account, walletType })
     }
     setLastActiveWalletAddress(account)
-  }, [connectedWallets, addWalletToConnectedWallets, lastActiveWalletAddress, account, connector, chainId])
+  }, [connectedWallets, addWalletToConnectedWallets, lastActiveWalletAddress, account, connector, chainId, provider])
 
   const tryActivation = useCallback(
     async (connector: Connector) => {
