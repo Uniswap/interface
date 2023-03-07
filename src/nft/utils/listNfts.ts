@@ -11,7 +11,7 @@ import { ZERO_ADDRESS } from 'constants/misc'
 import {
   OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY,
   OPENSEA_KEY_TO_CONDUIT,
-  OPENSEA_SEAPORT_V1_4,
+  OPENSEA_SEAPORT_V1_4_CONTRACT,
 } from 'nft/queries/openSea'
 
 import ERC721 from '../../abis/erc721.json'
@@ -156,7 +156,7 @@ export async function signListing(
         )
 
         const order = await executeAllActions()
-        const seaportV14Order = { ...order, protocol_address: OPENSEA_SEAPORT_V1_4 }
+        const seaportV14Order = { ...order, protocol_address: OPENSEA_SEAPORT_V1_4_CONTRACT }
         setStatus(ListingStatus.PENDING)
         const res = await PostOpenSeaSellOrder(seaportV14Order)
         res ? setStatus(ListingStatus.APPROVED) : setStatus(ListingStatus.FAILED)
