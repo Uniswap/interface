@@ -22,7 +22,7 @@ export function useRoutingAPIArguments({
 }) {
   return useMemo(
     () =>
-      !tokenIn || !tokenOut || !amount || tokenIn.equals(tokenOut)
+      !tokenIn || !tokenOut || !amount || tokenIn.equals(tokenOut) || tokenIn.wrapped.equals(tokenOut.wrapped)
         ? undefined
         : {
             amount: amount.quotient.toString(),
