@@ -48,6 +48,7 @@ const StyledTertiaryInfo = styled(ThemedText.BodySmall)`
   padding: 0px 8px;
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
   will-change: opacity;
+  pointer-events: none;
 `
 
 const StyledActionButton = styled(ThemedText.BodySmall)<{ selected: boolean; isDisabled: boolean }>`
