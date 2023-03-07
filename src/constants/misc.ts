@@ -28,3 +28,7 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(
 
 export const ZERO_PERCENT = new Percent('0')
 export const ONE_HUNDRED_PERCENT = new Percent('1')
+
+// gas margin to ensure successful transactions
+export const TX_GAS_MARGIN = 0.2
+export const NFT_TX_GAS_MARGIN = 0.05

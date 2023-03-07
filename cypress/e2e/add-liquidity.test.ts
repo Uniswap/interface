@@ -10,28 +10,28 @@ describe('Add Liquidity', () => {
   })
 
   it('loads the two correct tokens', () => {
-    cy.visit('/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85/0xc778417E063141139Fce010982780140Aa0cD5Ab/500')
-    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'MKR')
+    cy.visit('/add/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6/500')
+    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'UNI')
     cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'ETH')
   })
 
   it('does not crash if ETH is duplicated', () => {
-    cy.visit('/add/0xc778417E063141139Fce010982780140Aa0cD5Ab/0xc778417E063141139Fce010982780140Aa0cD5Ab')
+    cy.visit('/add/0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6/0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6')
     cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'ETH')
     cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('not.contain.text', 'ETH')
   })
 
   it.skip('token not in storage is loaded', () => {
-    cy.visit('/add/0xb290b2f9f8f108d03ff2af3ac5c8de6de31cdf6d/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
-    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'SKL')
-    cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'MKR')
+    cy.visit('/add/0x07865c6e87b9f70255377e024ace6630c1eaa37f/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
+    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'USDC')
+    cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'UNI')
   })
 
   it.skip('single token can be selected', () => {
-    cy.visit('/add/0xb290b2f9f8f108d03ff2af3ac5c8de6de31cdf6d')
-    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'SKL')
-    cy.visit('/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
-    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'MKR')
+    cy.visit('/add/0x07865c6e87b9f70255377e024ace6630c1eaa37f')
+    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'USDC')
+    cy.visit('/add/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
+    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'UNI')
   })
 
   it.skip('loads fee tier distribution', () => {
@@ -53,7 +53,7 @@ describe('Add Liquidity', () => {
         }
       })
 
-      cy.visit('/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85/0xc778417E063141139Fce010982780140Aa0cD5Ab')
+      cy.visit('/add/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6')
 
       cy.wait('@FeeTierDistributionQuery')
 

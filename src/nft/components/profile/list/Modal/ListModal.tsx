@@ -1,14 +1,17 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, Trace, useTrace } from '@uniswap/analytics'
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
+import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
-import { getTotalEthValue, signListingRow } from 'nft/components/bag/profile/utils'
+import { useStablecoinValue } from 'hooks/useStablecoinPrice'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Portal } from 'nft/components/common/Portal'
 import { Overlay } from 'nft/components/modals/Overlay'
+import { getTotalEthValue, signListingRow } from 'nft/components/profile/list/utils'
 import { useNFTList, useSellAsset } from 'nft/hooks'
 import { ListingStatus } from 'nft/types'
-import { fetchPrice } from 'nft/utils'
-import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
+import { useCallback, useEffect, useMemo, useReducer } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
@@ -46,48 +49,42 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   const signer = provider?.getSigner()
   const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
   const sellAssets = useSellAsset((state) => state.sellAssets)
-  const {
-    listingStatus,
-    setListingStatusAndCallback,
-    setLooksRareNonce,
-    getLooksRareNonce,
-    collectionsRequiringApproval,
-    listings,
-  } = useNFTList(
-    ({
-      listingStatus,
-      setListingStatusAndCallback,
-      setLooksRareNonce,
-      getLooksRareNonce,
-      collectionsRequiringApproval,
-      listings,
-    }) => ({
-      listingStatus,
-      setListingStatusAndCallback,
-      setLooksRareNonce,
-      getLooksRareNonce,
-      collectionsRequiringApproval,
-      listings,
-    }),
-    shallow
-  )
+  const { setListingStatusAndCallback, setLooksRareNonce, getLooksRareNonce, collectionsRequiringApproval, listings } =
+    useNFTList(
+      ({
+        setListingStatusAndCallback,
+        setLooksRareNonce,
+        getLooksRareNonce,
+        collectionsRequiringApproval,
+        listings,
+      }) => ({
+        setListingStatusAndCallback,
+        setLooksRareNonce,
+        getLooksRareNonce,
+        collectionsRequiringApproval,
+        listings,
+      }),
+      shallow
+    )
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const [openSection, toggleOpenSection] = useReducer(
     (s) => (s === Section.APPROVE ? Section.SIGN : Section.APPROVE),
     Section.APPROVE
   )
-  const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
-
-  useEffect(() => {
-    fetchPrice().then((price) => {
-      setEthPriceInUSD(price || 0)
-    })
-  }, [])
+  const nativeCurrency = useNativeCurrency()
+  const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
+  const usdcValue = useStablecoinValue(parsedAmount)
+  const usdcAmount = formatCurrencyAmount(usdcValue, NumberType.FiatTokenPrice)
 
   const allCollectionsApproved = useMemo(
     () => collectionsRequiringApproval.every((collection) => collection.status === ListingStatus.APPROVED),
     [collectionsRequiringApproval]
+  )
+
+  const allListingsApproved = useMemo(
+    () => listings.every((listing) => listing.status === ListingStatus.APPROVED),
+    [listings]
   )
 
   const signListings = async () => {
@@ -96,14 +93,16 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
     for (const listing of listings) {
       await signListingRow(listing, signer, provider, getLooksRareNonce, setLooksRareNonce, setListingStatusAndCallback)
     }
+
     sendAnalyticsEvent(NFTEventName.NFT_LISTING_COMPLETED, {
       signatures_approved: listings.filter((asset) => asset.status === ListingStatus.APPROVED),
       list_quantity: listings.length,
-      usd_value: ethPriceInUSD * totalEthListingValue,
+      usd_value: usdcAmount,
       ...trace,
     })
   }
 
+  // Once all collections have been approved, go to next section and start signing listings
   useEffect(() => {
     if (allCollectionsApproved) {
       signListings()
@@ -113,8 +112,8 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   }, [allCollectionsApproved])
 
   const closeModalOnClick = useCallback(() => {
-    listingStatus === ListingStatus.APPROVED ? window.location.reload() : overlayClick()
-  }, [listingStatus, overlayClick])
+    allListingsApproved ? window.location.reload() : overlayClick()
+  }, [allListingsApproved, overlayClick])
 
   // In the case that a user removes all listings via retry logic, close modal
   useEffect(() => {
@@ -125,7 +124,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
     <Portal>
       <Trace modal={InterfaceModalName.NFT_LISTING}>
         <ListModalWrapper>
-          {listingStatus === ListingStatus.APPROVED ? (
+          {allListingsApproved ? (
             <SuccessScreen overlayClick={closeModalOnClick} />
           ) : (
             <>

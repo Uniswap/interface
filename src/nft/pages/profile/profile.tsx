@@ -7,8 +7,8 @@ import { XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { ListPage } from 'nft/components/profile/list/ListPage'
 import { ProfilePage } from 'nft/components/profile/view/ProfilePage'
 import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
-import { useBag, useNFTList, useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
-import { ListingStatus, ProfilePageStateType } from 'nft/types'
+import { useBag, useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
+import { ProfilePageStateType } from 'nft/types'
 import { Suspense, useEffect, useRef } from 'react'
 import { useToggleWalletModal } from 'state/application/hooks'
 import styled from 'styled-components/macro'
@@ -62,15 +62,8 @@ const ConnectWalletButton = styled(ButtonPrimary)`
 const ProfileContent = () => {
   const sellPageState = useProfilePageState((state) => state.state)
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
-  const removeAllMarketplaceWarnings = useSellAsset((state) => state.removeAllMarketplaceWarnings)
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
-  const setListingStatus = useNFTList((state) => state.setListingStatus)
-
-  useEffect(() => {
-    removeAllMarketplaceWarnings()
-    setListingStatus(ListingStatus.DEFINED)
-  }, [removeAllMarketplaceWarnings, sellPageState, setListingStatus])
 
   const { account } = useWeb3React()
   const accountRef = useRef(account)

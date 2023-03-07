@@ -1,7 +1,7 @@
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
 
-import { ListingMarket, ListingWarning, WalletAsset } from '../types'
+import { ListingMarket, WalletAsset } from '../types'
 
 interface SellAssetState {
   sellAssets: WalletAsset[]
@@ -16,10 +16,6 @@ interface SellAssetState {
   removeAssetMarketplace: (asset: WalletAsset, marketplace: ListingMarket) => void
   toggleShowResolveIssues: () => void
   setIssues: (issues: number) => void
-  // TODO: After merging v2, see if this marketplace logic can be removed
-  addMarketplaceWarning: (asset: WalletAsset, warning: ListingWarning) => void
-  removeMarketplaceWarning: (asset: WalletAsset, warning: ListingWarning, setGlobalOverride?: boolean) => void
-  removeAllMarketplaceWarnings: () => void
 }
 
 export const useSellAsset = create<SellAssetState>()(
@@ -115,47 +111,6 @@ export const useSellAsset = create<SellAssetState>()(
             assetCopy.newListings.splice(listingIndex, 1)
           }
           assetsCopy.splice(assetIndex, 1, assetCopy)
-          return { sellAssets: assetsCopy }
-        })
-      },
-      addMarketplaceWarning: (asset, warning) => {
-        set(({ sellAssets }) => {
-          const assetsCopy = [...sellAssets]
-          asset.listingWarnings?.push(warning)
-          const index = sellAssets.findIndex(
-            (n) => n.tokenId === asset.tokenId && n.asset_contract.address === asset.asset_contract.address
-          )
-          assetsCopy[index] = asset
-          return { sellAssets: assetsCopy }
-        })
-      },
-      removeMarketplaceWarning: (asset, warning, setGlobalOverride?) => {
-        set(({ sellAssets }) => {
-          const assetsCopy = [...sellAssets]
-          if (asset.listingWarnings === undefined || asset.newListings === undefined) return { sellAssets: assetsCopy }
-          const warningIndex =
-            asset.listingWarnings?.findIndex((n) => n.marketplace.name === warning.marketplace.name) ?? -1
-          asset.listingWarnings?.splice(warningIndex, 1)
-          if (warning?.message?.includes('LISTING BELOW FLOOR')) {
-            if (setGlobalOverride) {
-              asset.newListings?.forEach((listing) => (listing.overrideFloorPrice = true))
-            } else {
-              const listingIndex =
-                asset.newListings?.findIndex((n) => n.marketplace.name === warning.marketplace.name) ?? -1
-              asset.newListings[listingIndex].overrideFloorPrice = true
-            }
-          }
-          const index = sellAssets.findIndex(
-            (n) => n.tokenId === asset.tokenId && n.asset_contract.address === asset.asset_contract.address
-          )
-          assetsCopy[index] = asset
-          return { sellAssets: assetsCopy }
-        })
-      },
-      removeAllMarketplaceWarnings: () => {
-        set(({ sellAssets }) => {
-          const assetsCopy = [...sellAssets]
-          assetsCopy.map((asset) => (asset.listingWarnings = []))
           return { sellAssets: assetsCopy }
         })
       },
