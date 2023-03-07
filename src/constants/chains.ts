@@ -1,22 +1,20 @@
-/**
- * List of all the networks supported by the Uniswap Interface
- * TODO(INFRA-90): Eventually this may be derived from sdk-core.
- */
+import { SupportedChainId as SdkSupportedChainId } from '@uniswap/sdk-core'
+
 export enum SupportedChainId {
-  MAINNET = 1,
-  GOERLI = 5,
+  MAINNET = SdkSupportedChainId.MAINNET,
+  GOERLI = SdkSupportedChainId.GOERLI,
 
-  ARBITRUM_ONE = 42161,
-  ARBITRUM_GOERLI = 421613,
+  ARBITRUM_ONE = SdkSupportedChainId.ARBITRUM_ONE,
+  ARBITRUM_GOERLI = SdkSupportedChainId.ARBITRUM_GOERLI,
 
-  OPTIMISM = 10,
-  OPTIMISM_GOERLI = 420,
+  OPTIMISM = SdkSupportedChainId.OPTIMISM,
+  OPTIMISM_GOERLI = SdkSupportedChainId.OPTIMISM_GOERLI,
 
-  POLYGON = 137,
-  POLYGON_MUMBAI = 80001,
+  POLYGON = SdkSupportedChainId.POLYGON,
+  POLYGON_MUMBAI = SdkSupportedChainId.POLYGON_MUMBAI,
 
-  CELO = 42220,
-  CELO_ALFAJORES = 44787,
+  CELO = SdkSupportedChainId.CELO,
+  CELO_ALFAJORES = SdkSupportedChainId.CELO_ALFAJORES,
 }
 
 export const CHAIN_IDS_TO_NAMES = {
