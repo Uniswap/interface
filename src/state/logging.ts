@@ -3,9 +3,9 @@ import * as Sentry from '@sentry/react'
 import { AppState } from './types'
 
 /* Utility type to mark all properties of a type as optional */
-type Partial<T> = T extends object
+type DeepPartial<T> = T extends object
   ? {
-      [P in keyof T]?: Partial<T[P]>
+      [P in keyof T]?: DeepPartial<T[P]>
     }
   : T
 
