@@ -7,9 +7,9 @@ import { addressesByNetwork, MakerOrder, signMakerOrder, SupportedChainId } from
 import { Seaport } from '@opensea/seaport-js'
 import { ItemType } from '@opensea/seaport-js/lib/constants'
 import { ConsiderationInputItem } from '@opensea/seaport-js/lib/types'
+import { ZERO_ADDRESS } from 'constants/misc'
 import {
   OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY,
-  OPENSEA_DEFAULT_ZONE,
   OPENSEA_KEY_TO_CONDUIT,
   OPENSEA_SEAPORT_V1_4,
 } from 'nft/queries/openSea'
@@ -149,7 +149,7 @@ export async function signListing(
             ],
             consideration: considerationItems,
             endTime: asset.expirationTime.toString(),
-            zone: OPENSEA_DEFAULT_ZONE,
+            zone: ZERO_ADDRESS,
             allowPartialFills: true,
           },
           signerAddress
