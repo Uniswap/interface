@@ -105,7 +105,7 @@ export function SafeKeyboardOnboardingScreen({
           exiting={FadeOut}
           gap={responsiveSpacing}
           minHeight={minHeight}
-          pb={responsiveSpacing}
+          pb="spacing16"
           px="spacing16"
           style={[containerStyle, { paddingTop: headerHeight }]}>
           {header}
