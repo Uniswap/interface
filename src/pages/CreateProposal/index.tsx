@@ -1,6 +1,8 @@
 import { defaultAbiCoder } from '@ethersproject/abi'
 import { getAddress, isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
+import { Trace } from '@uniswap/analytics'
+import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonError } from 'components/Button'
@@ -9,7 +11,7 @@ import { AutoColumn } from 'components/Column'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Wrapper } from 'pages/Pool/styleds'
-import React, { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import {
   CreateProposalData,
   ProposalState,
@@ -30,6 +32,18 @@ import { ProposalActionDetail } from './ProposalActionDetail'
 import { ProposalAction, ProposalActionSelector, ProposalActionSelectorModal } from './ProposalActionSelector'
 import { ProposalEditor } from './ProposalEditor'
 import { ProposalSubmissionModal } from './ProposalSubmissionModal'
+
+const PageWrapper = styled(AutoColumn)`
+  padding: 68px 8px 0px;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    padding: 48px 8px 0px;
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding-top: 20px;
+  }
+`
 
 const CreateProposalButton = ({
   proposalThreshold,
@@ -225,63 +239,68 @@ ${bodyValue}
   }
 
   return (
-    <AppBody {...{ maxWidth: '800px' }}>
-      <CreateProposalTabs />
-      <CreateProposalWrapper>
-        <BlueCard>
-          <AutoColumn gap="10px">
-            <ThemedText.Link fontWeight={400} color={'primaryText1'}>
-              <Trans>
-                <strong>Tip:</strong> Select an action and describe your proposal for the community. The proposal cannot
-                be modified after submission, so please verify all information before submitting. The voting period will
-                begin immediately and last for 7 days. To propose a custom action,{' '}
-                <ExternalLink href="https://uniswap.org/docs/v2/governance/governance-reference/#propose">
-                  read the docs
-                </ExternalLink>
-                .
-              </Trans>
-            </ThemedText.Link>
-          </AutoColumn>
-        </BlueCard>
+    <Trace page={InterfacePageName.VOTE_PAGE} shouldLogImpression>
+      <PageWrapper>
+        <AppBody $maxWidth="800px">
+          <CreateProposalTabs />
+          <CreateProposalWrapper>
+            <BlueCard>
+              <AutoColumn gap="10px">
+                <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
+                  <Trans>
+                    <strong>Tip:</strong> Select an action and describe your proposal for the community. The proposal
+                    cannot be modified after submission, so please verify all information before submitting. The voting
+                    period will begin immediately and last for 7 days. To propose a custom action,{' '}
+                    <ExternalLink href="https://docs.uniswap.org/protocol/reference/Governance/governance-reference#propose">
+                      read the docs
+                    </ExternalLink>
+                    .
+                  </Trans>
+                </ThemedText.DeprecatedLink>
+              </AutoColumn>
+            </BlueCard>
 
-        <ProposalActionSelector onClick={handleActionSelectorClick} proposalAction={proposalAction} />
-        <ProposalActionDetail
-          proposalAction={proposalAction}
-          currency={currencyValue}
-          amount={amountValue}
-          toAddress={toAddressValue}
-          onCurrencySelect={handleCurrencySelect}
-          onAmountInput={handleAmountInput}
-          onToAddressInput={handleToAddressInput}
-        />
-        <ProposalEditor
-          title={titleValue}
-          body={bodyValue}
-          onTitleInput={handleTitleInput}
-          onBodyInput={handleBodyInput}
-        />
-        <CreateProposalButton
-          proposalThreshold={proposalThreshold}
-          hasActiveOrPendingProposal={
-            latestProposalData?.status === ProposalState.ACTIVE || latestProposalData?.status === ProposalState.PENDING
-          }
-          hasEnoughVote={hasEnoughVote}
-          isFormInvalid={isFormInvalid}
-          handleCreateProposal={handleCreateProposal}
-        />
-        {!hasEnoughVote ? (
-          <AutonomousProposalCTA>
-            Don’t have 2.5M votes? Anyone can create an autonomous proposal using{' '}
-            <ExternalLink href="https://fish.vote">fish.vote</ExternalLink>
-          </AutonomousProposalCTA>
-        ) : null}
-      </CreateProposalWrapper>
-      <ProposalActionSelectorModal
-        isOpen={modalOpen}
-        onDismiss={handleDismissActionSelector}
-        onProposalActionSelect={(proposalAction: ProposalAction) => handleActionChange(proposalAction)}
-      />
-      <ProposalSubmissionModal isOpen={attempting} hash={hash} onDismiss={handleDismissSubmissionModal} />
-    </AppBody>
+            <ProposalActionSelector onClick={handleActionSelectorClick} proposalAction={proposalAction} />
+            <ProposalActionDetail
+              proposalAction={proposalAction}
+              currency={currencyValue}
+              amount={amountValue}
+              toAddress={toAddressValue}
+              onCurrencySelect={handleCurrencySelect}
+              onAmountInput={handleAmountInput}
+              onToAddressInput={handleToAddressInput}
+            />
+            <ProposalEditor
+              title={titleValue}
+              body={bodyValue}
+              onTitleInput={handleTitleInput}
+              onBodyInput={handleBodyInput}
+            />
+            <CreateProposalButton
+              proposalThreshold={proposalThreshold}
+              hasActiveOrPendingProposal={
+                latestProposalData?.status === ProposalState.ACTIVE ||
+                latestProposalData?.status === ProposalState.PENDING
+              }
+              hasEnoughVote={hasEnoughVote}
+              isFormInvalid={isFormInvalid}
+              handleCreateProposal={handleCreateProposal}
+            />
+            {!hasEnoughVote ? (
+              <AutonomousProposalCTA>
+                Don’t have 2.5M votes? Anyone can create an autonomous proposal using{' '}
+                <ExternalLink href="https://fish.vote">fish.vote</ExternalLink>
+              </AutonomousProposalCTA>
+            ) : null}
+          </CreateProposalWrapper>
+          <ProposalActionSelectorModal
+            isOpen={modalOpen}
+            onDismiss={handleDismissActionSelector}
+            onProposalActionSelect={(proposalAction: ProposalAction) => handleActionChange(proposalAction)}
+          />
+          <ProposalSubmissionModal isOpen={attempting} hash={hash} onDismiss={handleDismissSubmissionModal} />
+        </AppBody>
+      </PageWrapper>
+    </Trace>
   )
 }

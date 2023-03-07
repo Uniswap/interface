@@ -1,7 +1,7 @@
 // Utility to match GraphQL mutation based on the query name
 export const hasQuery = (req: any, queryName: string) => {
   const { body } = req
-  return body.hasOwnProperty('query') && body.query.includes(queryName)
+  return Object.prototype.hasOwnProperty.call(body, 'query') && body.query.includes(queryName)
 }
 
 // Alias query if queryName  matches

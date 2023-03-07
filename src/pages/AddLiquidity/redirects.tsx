@@ -1,17 +1,11 @@
 import { useWeb3React } from '@web3-react/core'
-import { Redirect, RouteComponentProps } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import AddLiquidity from './index'
 
-export function RedirectDuplicateTokenIds(
-  props: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; feeAmount?: string }>
-) {
-  const {
-    match: {
-      params: { currencyIdA, currencyIdB },
-    },
-  } = props
+export function RedirectDuplicateTokenIds() {
+  const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string; feeAmount?: string }>()
 
   const { chainId } = useWeb3React()
 
@@ -26,7 +20,7 @@ export function RedirectDuplicateTokenIds(
     currencyIdB &&
     (currencyIdA.toLowerCase() === currencyIdB.toLowerCase() || (isETHOrWETHA && isETHOrWETHB))
   ) {
-    return <Redirect to={`/add/${currencyIdA}`} />
+    return <Navigate to={`/add/${currencyIdA}`} replace />
   }
-  return <AddLiquidity {...props} />
+  return <AddLiquidity />
 }

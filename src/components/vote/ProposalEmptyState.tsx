@@ -5,7 +5,7 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 const EmptyProposals = styled.div`
-  border: 1px solid ${({ theme }) => theme.text4};
+  border: 1px solid ${({ theme }) => theme.deprecated_text4};
   padding: 16px 12px;
   border-radius: 12px;
   display: flex;
@@ -25,14 +25,14 @@ interface EmptyStateProps {
 }
 const EmptyState = ({ HeaderContent, SubHeaderContent }: EmptyStateProps) => (
   <EmptyProposals>
-    <ThemedText.Body style={{ marginBottom: '8px' }}>
+    <ThemedText.DeprecatedBody style={{ marginBottom: '8px' }}>
       <HeaderContent />
-    </ThemedText.Body>
-    <ThemedText.SubHeader>
+    </ThemedText.DeprecatedBody>
+    <ThemedText.DeprecatedSubHeader>
       <Sub>
         <SubHeaderContent />
       </Sub>
-    </ThemedText.SubHeader>
+    </ThemedText.DeprecatedSubHeader>
   </EmptyProposals>
 )
 

@@ -1,4 +1,4 @@
-import { TransactionResponse } from '@ethersproject/providers'
+import type { TransactionResponse } from '@ethersproject/providers'
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -99,7 +99,7 @@ function fetchClaim(account: string): Promise<UserClaimData> {
 
 // parse distributorContract blob and detect if user has claim data
 // null means we know it does not
-export function useUserClaimData(account: string | null | undefined): UserClaimData | null {
+function useUserClaimData(account: string | null | undefined): UserClaimData | null {
   const { chainId } = useWeb3React()
 
   const [claimInfo, setClaimInfo] = useState<{ [account: string]: UserClaimData | null }>({})

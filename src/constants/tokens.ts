@@ -1,8 +1,15 @@
 import { Currency, Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 import invariant from 'tiny-invariant'
 
 import { UNI_ADDRESS } from './addresses'
-import { SupportedChainId } from './chains'
+
+export const NATIVE_CHAIN_ID = 'NATIVE'
+
+// When decimals are not specified for an ERC20 token
+// use default ERC20 token decimals as specified here:
+// https://docs.openzeppelin.com/contracts/3.x/erc20
+export const DEFAULT_ERC20_DECIMALS = 18
 
 export const USDC_MAINNET = new Token(
   SupportedChainId.MAINNET,
@@ -11,30 +18,9 @@ export const USDC_MAINNET = new Token(
   'USDC',
   'USD//C'
 )
-export const USDC_ROPSTEN = new Token(
-  SupportedChainId.ROPSTEN,
-  '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
-  6,
-  'USDC',
-  'USD//C'
-)
-export const USDC_RINKEBY = new Token(
-  SupportedChainId.RINKEBY,
-  '0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b',
-  6,
-  'tUSDC',
-  'test USD//C'
-)
-export const USDC_GOERLI = new Token(
+const USDC_GOERLI = new Token(
   SupportedChainId.GOERLI,
   '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
-  6,
-  'USDC',
-  'USD//C'
-)
-export const USDC_KOVAN = new Token(
-  SupportedChainId.KOVAN,
-  '0x31eeb2d0f9b6fd8642914ab10f4dd473677d80df',
   6,
   'USDC',
   'USD//C'
@@ -46,9 +32,9 @@ export const USDC_OPTIMISM = new Token(
   'USDC',
   'USD//C'
 )
-export const USDC_OPTIMISTIC_KOVAN = new Token(
-  SupportedChainId.OPTIMISTIC_KOVAN,
-  '0x3b8e53b3ab8e01fb57d0c9e893bc4d655aa67d84',
+const USDC_OPTIMISM_GOERLI = new Token(
+  SupportedChainId.OPTIMISM_GOERLI,
+  '0x7E07E15D2a87A24492740D16f5bdF58c16db0c4E',
   6,
   'USDC',
   'USD//C'
@@ -60,9 +46,9 @@ export const USDC_ARBITRUM = new Token(
   'USDC',
   'USD//C'
 )
-export const USDC_ARBITRUM_RINKEBY = new Token(
-  SupportedChainId.ARBITRUM_RINKEBY,
-  '0x09b98f8b2395d076514037ff7d39a091a536206c',
+export const USDC_ARBITRUM_GOERLI = new Token(
+  SupportedChainId.ARBITRUM_GOERLI,
+  '0x8FB1E3fC51F3b789dED7557E680551d93Ea9d892',
   6,
   'USDC',
   'USD//C'
@@ -74,7 +60,7 @@ export const USDC_POLYGON = new Token(
   'USDC',
   'USD//C'
 )
-export const USDC_POLYGON_MUMBAI = new Token(
+const USDC_POLYGON_MUMBAI = new Token(
   SupportedChainId.POLYGON_MUMBAI,
   '0xe11a86849d99f524cac3e7a0ec1241828e332c62',
   6,
@@ -87,13 +73,6 @@ export const PORTAL_USDC_CELO = new Token(
   6,
   'USDCet',
   'USDC (Portal from Ethereum)'
-)
-export const USDC_CELO_ALFAJORES = new Token(
-  SupportedChainId.CELO_ALFAJORES,
-  '0x41F4a5d2632b019Ae6CE9625bE3c9CaC143AcC7D',
-  6,
-  'USDC',
-  'USD//C'
 )
 export const AMPL = new Token(
   SupportedChainId.MAINNET,
@@ -123,21 +102,6 @@ export const DAI_OPTIMISM = new Token(
   'DAI',
   'Dai stable coin'
 )
-export const USDC: { [chainId in SupportedChainId]: Token } = {
-  [SupportedChainId.MAINNET]: USDC_MAINNET,
-  [SupportedChainId.ARBITRUM_ONE]: USDC_ARBITRUM,
-  [SupportedChainId.OPTIMISM]: USDC_OPTIMISM,
-  [SupportedChainId.ARBITRUM_RINKEBY]: USDC_ARBITRUM_RINKEBY,
-  [SupportedChainId.OPTIMISTIC_KOVAN]: USDC_OPTIMISTIC_KOVAN,
-  [SupportedChainId.POLYGON]: USDC_POLYGON,
-  [SupportedChainId.POLYGON_MUMBAI]: USDC_POLYGON_MUMBAI,
-  [SupportedChainId.CELO]: PORTAL_USDC_CELO,
-  [SupportedChainId.CELO_ALFAJORES]: USDC_CELO_ALFAJORES,
-  [SupportedChainId.GOERLI]: USDC_GOERLI,
-  [SupportedChainId.RINKEBY]: USDC_RINKEBY,
-  [SupportedChainId.KOVAN]: USDC_KOVAN,
-  [SupportedChainId.ROPSTEN]: USDC_ROPSTEN,
-}
 export const DAI_POLYGON = new Token(
   SupportedChainId.POLYGON,
   '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
@@ -279,13 +243,7 @@ export const WETH_POLYGON = new Token(
   'WETH',
   'Wrapped Ether'
 )
-export const CELO_CELO = new Token(
-  SupportedChainId.CELO,
-  '0x471EcE3750Da237f93B8E339c536989b8978a438',
-  18,
-  'CELO',
-  'Celo'
-)
+const CELO_CELO = new Token(SupportedChainId.CELO, '0x471EcE3750Da237f93B8E339c536989b8978a438', 18, 'CELO', 'Celo')
 export const CUSD_CELO = new Token(
   SupportedChainId.CELO,
   '0x765DE816845861e75A25fCA122bb6898B8B1282a',
@@ -314,7 +272,7 @@ export const CMC02_CELO = new Token(
   'cMCO2',
   'Celo Moss Carbon Credit'
 )
-export const CELO_CELO_ALFAJORES = new Token(
+const CELO_CELO_ALFAJORES = new Token(
   SupportedChainId.CELO_ALFAJORES,
   '0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9',
   18,
@@ -338,10 +296,7 @@ export const CEUR_CELO_ALFAJORES = new Token(
 
 export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
-  [SupportedChainId.RINKEBY]: new Token(SupportedChainId.RINKEBY, UNI_ADDRESS[4], 18, 'UNI', 'Uniswap'),
-  [SupportedChainId.ROPSTEN]: new Token(SupportedChainId.ROPSTEN, UNI_ADDRESS[3], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.GOERLI]: new Token(SupportedChainId.GOERLI, UNI_ADDRESS[5], 18, 'UNI', 'Uniswap'),
-  [SupportedChainId.KOVAN]: new Token(SupportedChainId.KOVAN, UNI_ADDRESS[42], 18, 'UNI', 'Uniswap'),
 }
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
@@ -353,8 +308,8 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'WETH',
     'Wrapped Ether'
   ),
-  [SupportedChainId.OPTIMISTIC_KOVAN]: new Token(
-    SupportedChainId.OPTIMISTIC_KOVAN,
+  [SupportedChainId.OPTIMISM_GOERLI]: new Token(
+    SupportedChainId.OPTIMISM_GOERLI,
     '0x4200000000000000000000000000000000000006',
     18,
     'WETH',
@@ -367,9 +322,9 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'WETH',
     'Wrapped Ether'
   ),
-  [SupportedChainId.ARBITRUM_RINKEBY]: new Token(
-    SupportedChainId.ARBITRUM_RINKEBY,
-    '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681',
+  [SupportedChainId.ARBITRUM_GOERLI]: new Token(
+    SupportedChainId.ARBITRUM_GOERLI,
+    '0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3',
     18,
     'WETH',
     'Wrapped Ether'
@@ -387,6 +342,20 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     18,
     'WMATIC',
     'Wrapped MATIC'
+  ),
+  [SupportedChainId.CELO]: new Token(
+    SupportedChainId.CELO,
+    '0x471ece3750da237f93b8e339c536989b8978a438',
+    18,
+    'CELO',
+    'Celo native asset'
+  ),
+  [SupportedChainId.CELO_ALFAJORES]: new Token(
+    SupportedChainId.CELO_ALFAJORES,
+    '0xf194afdf50b03e69bd7d057c1aa9e10c9954e4c9',
+    18,
+    'CELO',
+    'Celo native asset'
   ),
 }
 
@@ -427,7 +396,7 @@ class MaticNativeCurrency extends NativeCurrency {
   }
 }
 
-export class ExtendedEther extends Ether {
+class ExtendedEther extends Ether {
   public get wrapped(): Token {
     const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
     if (wrapped) return wrapped
@@ -459,16 +428,13 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedCha
   USDC: {
     [SupportedChainId.MAINNET]: USDC_MAINNET.address,
     [SupportedChainId.ARBITRUM_ONE]: USDC_ARBITRUM.address,
+    [SupportedChainId.ARBITRUM_GOERLI]: USDC_ARBITRUM_GOERLI.address,
     [SupportedChainId.OPTIMISM]: USDC_OPTIMISM.address,
-    [SupportedChainId.ARBITRUM_RINKEBY]: USDC_ARBITRUM_RINKEBY.address,
-    [SupportedChainId.OPTIMISTIC_KOVAN]: USDC_OPTIMISTIC_KOVAN.address,
+    [SupportedChainId.OPTIMISM_GOERLI]: USDC_OPTIMISM_GOERLI.address,
     [SupportedChainId.POLYGON]: USDC_POLYGON.address,
     [SupportedChainId.POLYGON_MUMBAI]: USDC_POLYGON_MUMBAI.address,
     [SupportedChainId.CELO]: PORTAL_USDC_CELO.address,
     [SupportedChainId.CELO_ALFAJORES]: PORTAL_USDC_CELO.address,
     [SupportedChainId.GOERLI]: USDC_GOERLI.address,
-    [SupportedChainId.RINKEBY]: USDC_RINKEBY.address,
-    [SupportedChainId.KOVAN]: USDC_KOVAN.address,
-    [SupportedChainId.ROPSTEN]: USDC_ROPSTEN.address,
   },
 }

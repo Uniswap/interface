@@ -36,9 +36,9 @@ const SmallButton = styled(ButtonGray)`
 `
 
 const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boolean }>`
-  border-color: ${({ active, theme }) => active && theme.blue1};
+  border-color: ${({ active, theme }) => active && theme.accentAction};
   padding: 12px;
-  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.blue1)} 0.8s linear;
+  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.accentAction)} 0.8s linear;
 `
 
 const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
@@ -48,23 +48,23 @@ const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
   font-weight: 500;
   padding: 0 10px;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     font-size: 16px;
   `};
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
     font-size: 12px;
   `};
 `
 
-const InputTitle = styled(ThemedText.Small)`
-  color: ${({ theme }) => theme.text2};
+const InputTitle = styled(ThemedText.DeprecatedSmall)`
+  color: ${({ theme }) => theme.textSecondary};
   font-size: 12px;
   font-weight: 500;
 `
 
-const ButtonLabel = styled(ThemedText.White)<{ disabled: boolean }>`
-  color: ${({ theme, disabled }) => (disabled ? theme.text2 : theme.text1)} !important;
+const ButtonLabel = styled(ThemedText.DeprecatedWhite)<{ disabled: boolean }>`
+  color: ${({ theme, disabled }) => (disabled ? theme.textSecondary : theme.textPrimary)} !important;
 `
 
 interface StepCounterProps {

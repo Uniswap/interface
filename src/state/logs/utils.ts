@@ -1,4 +1,4 @@
-import { Filter } from '@ethersproject/providers'
+import type { Filter } from '@ethersproject/providers'
 
 export interface Log {
   topics: Array<string>

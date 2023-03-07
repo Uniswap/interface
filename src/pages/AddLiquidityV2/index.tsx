@@ -1,16 +1,18 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { TransactionResponse } from '@ethersproject/providers'
+import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import { useCallback, useContext, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Plus } from 'react-feather'
-import { RouteComponentProps } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components/macro'
+import { useTheme } from 'styled-components/macro'
 
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'
@@ -47,15 +49,12 @@ import { PoolPriceBar } from './PoolPriceBar'
 
 const DEFAULT_ADD_V2_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
-export default function AddLiquidity({
-  match: {
-    params: { currencyIdA, currencyIdB },
-  },
-  history,
-}: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
+export default function AddLiquidity() {
+  const { currencyIdA, currencyIdB } = useParams<{ currencyIdA?: string; currencyIdB?: string }>()
+  const navigate = useNavigate()
   const { account, chainId, provider } = useWeb3React()
 
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
@@ -250,12 +249,12 @@ export default function AddLiquidity({
             {currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol + ' Pool Tokens'}
           </Text>
         </Row>
-        <ThemedText.Italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
+        <ThemedText.DeprecatedItalic fontSize={12} textAlign="left" padding="8px 0 0 0 ">
           <Trans>
             Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your transaction
             will revert.
           </Trans>
-        </ThemedText.Italic>
+        </ThemedText.DeprecatedItalic>
       </AutoColumn>
     )
   }
@@ -284,27 +283,27 @@ export default function AddLiquidity({
     (currencyA: Currency) => {
       const newCurrencyIdA = currencyId(currencyA)
       if (newCurrencyIdA === currencyIdB) {
-        history.push(`/add/v2/${currencyIdB}/${currencyIdA}`)
+        navigate(`/add/v2/${currencyIdB}/${currencyIdA}`)
       } else {
-        history.push(`/add/v2/${newCurrencyIdA}/${currencyIdB}`)
+        navigate(`/add/v2/${newCurrencyIdA}/${currencyIdB}`)
       }
     },
-    [currencyIdB, history, currencyIdA]
+    [currencyIdB, navigate, currencyIdA]
   )
   const handleCurrencyBSelect = useCallback(
     (currencyB: Currency) => {
       const newCurrencyIdB = currencyId(currencyB)
       if (currencyIdA === newCurrencyIdB) {
         if (currencyIdB) {
-          history.push(`/add/v2/${currencyIdB}/${newCurrencyIdB}`)
+          navigate(`/add/v2/${currencyIdB}/${newCurrencyIdB}`)
         } else {
-          history.push(`/add/v2/${newCurrencyIdB}`)
+          navigate(`/add/v2/${newCurrencyIdB}`)
         }
       } else {
-        history.push(`/add/v2/${currencyIdA ? currencyIdA : 'ETH'}/${newCurrencyIdB}`)
+        navigate(`/add/v2/${currencyIdA ? currencyIdA : 'ETH'}/${newCurrencyIdB}`)
       }
     },
-    [currencyIdA, history, currencyIdB]
+    [currencyIdA, navigate, currencyIdB]
   )
 
   const handleDismissConfirmation = useCallback(() => {
@@ -316,7 +315,8 @@ export default function AddLiquidity({
     setTxHash('')
   }, [onFieldAInput, txHash])
 
-  const isCreate = history.location.pathname.includes('/create')
+  const { pathname } = useLocation()
+  const isCreate = pathname.includes('/create')
 
   const addIsUnsupported = useIsSwapUnsupported(currencies?.CURRENCY_A, currencies?.CURRENCY_B)
 
@@ -347,15 +347,15 @@ export default function AddLiquidity({
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <ThemedText.Link fontWeight={600} color={'primaryText1'}>
+                      <ThemedText.DeprecatedLink fontWeight={600} color="accentAction">
                         <Trans>You are the first liquidity provider.</Trans>
-                      </ThemedText.Link>
-                      <ThemedText.Link fontWeight={400} color={'primaryText1'}>
+                      </ThemedText.DeprecatedLink>
+                      <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
                         <Trans>The ratio of tokens you add will set the price of this pool.</Trans>
-                      </ThemedText.Link>
-                      <ThemedText.Link fontWeight={400} color={'primaryText1'}>
+                      </ThemedText.DeprecatedLink>
+                      <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
                         <Trans>Once you are happy with the rate click supply to review.</Trans>
-                      </ThemedText.Link>
+                      </ThemedText.DeprecatedLink>
                     </AutoColumn>
                   </BlueCard>
                 </ColumnCenter>
@@ -363,7 +363,7 @@ export default function AddLiquidity({
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <ThemedText.Link fontWeight={400} color={'primaryText1'}>
+                      <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
                         <Trans>
                           <b>
                             <Trans>Tip:</Trans>
@@ -372,7 +372,7 @@ export default function AddLiquidity({
                           automatically earn fees proportional to your share of the pool, and can be redeemed at any
                           time.
                         </Trans>
-                      </ThemedText.Link>
+                      </ThemedText.DeprecatedLink>
                     </AutoColumn>
                   </BlueCard>
                 </ColumnCenter>
@@ -390,7 +390,7 @@ export default function AddLiquidity({
               showCommonBases
             />
             <ColumnCenter>
-              <Plus size="16" color={theme.text2} />
+              <Plus size="16" color={theme.textSecondary} />
             </ColumnCenter>
             <CurrencyInputPanel
               value={formattedAmounts[Field.CURRENCY_B]}
@@ -406,17 +406,17 @@ export default function AddLiquidity({
             />
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
               <>
-                <LightCard padding="0px" $borderRadius={'20px'}>
+                <LightCard padding="0px" $borderRadius="20px">
                   <RowBetween padding="1rem">
-                    <ThemedText.SubHeader fontWeight={500} fontSize={14}>
+                    <ThemedText.DeprecatedSubHeader fontWeight={500} fontSize={14}>
                       {noLiquidity ? (
                         <Trans>Initial prices and pool share</Trans>
                       ) : (
                         <Trans>Prices and pool share</Trans>
                       )}
-                    </ThemedText.SubHeader>
+                    </ThemedText.DeprecatedSubHeader>
                   </RowBetween>{' '}
-                  <LightCard padding="1rem" $borderRadius={'20px'}>
+                  <LightCard padding="1rem" $borderRadius="20px">
                     <PoolPriceBar
                       currencies={currencies}
                       poolTokenPercentage={poolTokenPercentage}
@@ -430,16 +430,23 @@ export default function AddLiquidity({
 
             {addIsUnsupported ? (
               <ButtonPrimary disabled={true}>
-                <ThemedText.Main mb="4px">
+                <ThemedText.DeprecatedMain mb="4px">
                   <Trans>Unsupported Asset</Trans>
-                </ThemedText.Main>
+                </ThemedText.DeprecatedMain>
               </ButtonPrimary>
             ) : !account ? (
-              <ButtonLight onClick={toggleWalletModal}>
-                <Trans>Connect Wallet</Trans>
-              </ButtonLight>
+              <TraceEvent
+                events={[BrowserEvent.onClick]}
+                name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
+                properties={{ received_swap_quote: false }}
+                element={InterfaceElementName.CONNECT_WALLET_BUTTON}
+              >
+                <ButtonLight onClick={toggleWalletModal}>
+                  <Trans>Connect Wallet</Trans>
+                </ButtonLight>
+              </TraceEvent>
             ) : (
-              <AutoColumn gap={'md'}>
+              <AutoColumn gap="md">
                 {(approvalA === ApprovalState.NOT_APPROVED ||
                   approvalA === ApprovalState.PENDING ||
                   approvalB === ApprovalState.NOT_APPROVED ||

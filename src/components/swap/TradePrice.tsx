@@ -1,15 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Price } from '@uniswap/sdk-core'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
-import { useCallback, useContext } from 'react'
-import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components/macro'
+import { useCallback, useState } from 'react'
+import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { formatDollar, formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
 
 interface TradePriceProps {
   price: Price<Currency, Currency>
-  showInverted: boolean
-  setShowInverted: (showInverted: boolean) => void
 }
 
 const StyledPriceContainer = styled.button`
@@ -29,19 +27,16 @@ const StyledPriceContainer = styled.button`
   user-select: text;
 `
 
-export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
-  const theme = useContext(ThemeContext)
+export default function TradePrice({ price }: TradePriceProps) {
+  const [showInverted, setShowInverted] = useState<boolean>(false)
 
   const usdcPrice = useStablecoinPrice(showInverted ? price.baseCurrency : price.quoteCurrency)
-  /*
-   * calculate needed amount of decimal prices, for prices between 0.95-1.05 use 4 decimal places
-   */
-  const p = Number(usdcPrice?.toFixed())
-  const visibleDecimalPlaces = p < 1.05 ? 4 : 2
 
   let formattedPrice: string
   try {
-    formattedPrice = showInverted ? price.toSignificant(4) : price.invert()?.toSignificant(4)
+    formattedPrice = showInverted
+      ? formatTransactionAmount(priceToPreciseFloat(price))
+      : formatTransactionAmount(priceToPreciseFloat(price.invert()))
   } catch (error) {
     formattedPrice = '0'
   }
@@ -60,13 +55,11 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
       }}
       title={text}
     >
-      <Text fontWeight={500} color={theme.text1}>
-        {text}
-      </Text>{' '}
+      <ThemedText.BodySmall>{text}</ThemedText.BodySmall>{' '}
       {usdcPrice && (
-        <ThemedText.DarkGray>
-          <Trans>(${usdcPrice.toFixed(visibleDecimalPlaces, { groupSeparator: ',' })})</Trans>
-        </ThemedText.DarkGray>
+        <ThemedText.DeprecatedDarkGray>
+          <Trans>({formatDollar({ num: priceToPreciseFloat(usdcPrice), isPrice: true })})</Trans>
+        </ThemedText.DeprecatedDarkGray>
       )}
     </StyledPriceContainer>
   )

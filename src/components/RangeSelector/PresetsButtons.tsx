@@ -10,7 +10,7 @@ const Button = styled(ButtonOutlined).attrs(() => ({
   padding: '8px',
   $borderRadius: '8px',
 }))`
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.textPrimary};
   flex: 1;
 `
 
@@ -26,9 +26,9 @@ export default function PresetsButtons({ setFullRange }: { setFullRange: () => v
           })
         }}
       >
-        <ThemedText.Body fontSize={12}>
+        <ThemedText.DeprecatedBody fontSize={12}>
           <Trans>Full Range</Trans>
-        </ThemedText.Body>
+        </ThemedText.DeprecatedBody>
       </Button>
     </AutoRow>
   )

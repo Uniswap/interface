@@ -8,7 +8,7 @@ const StyledGroup = styled.g`
   }
 
   text {
-    color: ${({ theme }) => theme.text2};
+    color: ${({ theme }) => theme.textSecondary};
     transform: translateY(5px);
   }
 `

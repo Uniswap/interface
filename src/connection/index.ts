@@ -1,22 +1,20 @@
 import { CoinbaseWallet } from '@web3-react/coinbase-wallet'
 import { initializeConnector, Web3ReactHooks } from '@web3-react/core'
-import { EIP1193 } from '@web3-react/eip1193'
 import { GnosisSafe } from '@web3-react/gnosis-safe'
 import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
 import { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
 import { SupportedChainId } from 'constants/chains'
-import Fortmatic from 'fortmatic'
 
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
 import { RPC_URLS } from '../constants/networks'
+import { RPC_PROVIDERS } from '../constants/providers'
 
 export enum ConnectionType {
   INJECTED = 'INJECTED',
   COINBASE_WALLET = 'COINBASE_WALLET',
   WALLET_CONNECT = 'WALLET_CONNECT',
-  FORTMATIC = 'FORTMATIC',
   NETWORK = 'NETWORK',
   GNOSIS_SAFE = 'GNOSIS_SAFE',
 }
@@ -32,7 +30,7 @@ function onError(error: Error) {
 }
 
 const [web3Network, web3NetworkHooks] = initializeConnector<Network>(
-  (actions) => new Network({ actions, urlMap: RPC_URLS, defaultChainId: 1 })
+  (actions) => new Network({ actions, urlMap: RPC_PROVIDERS, defaultChainId: 1 })
 )
 export const networkConnection: Connection = {
   connector: web3Network,
@@ -54,30 +52,29 @@ export const gnosisSafeConnection: Connection = {
   type: ConnectionType.GNOSIS_SAFE,
 }
 
-const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletConnect>(
-  (actions) =>
-    new WalletConnect({
-      actions,
-      options: {
-        rpc: RPC_URLS,
-        qrcode: true,
-      },
-      onError,
-    })
-)
+const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletConnect>((actions) => {
+  // Avoid testing for the best URL by only passing a single URL per chain.
+  // Otherwise, WC will not initialize until all URLs have been tested (see getBestUrl in web3-react).
+  const RPC_URLS_WITHOUT_FALLBACKS = Object.entries(RPC_URLS).reduce(
+    (map, [chainId, urls]) => ({
+      ...map,
+      [chainId]: urls[0],
+    }),
+    {}
+  )
+  return new WalletConnect({
+    actions,
+    options: {
+      rpc: RPC_URLS_WITHOUT_FALLBACKS,
+      qrcode: true,
+    },
+    onError,
+  })
+})
 export const walletConnectConnection: Connection = {
   connector: web3WalletConnect,
   hooks: web3WalletConnectHooks,
   type: ConnectionType.WALLET_CONNECT,
-}
-
-const [web3Fortmatic, web3FortmaticHooks] = initializeConnector<EIP1193>(
-  (actions) => new EIP1193({ actions, provider: new Fortmatic(process.env.REACT_APP_FORTMATIC_KEY).getProvider() })
-)
-export const fortmaticConnection: Connection = {
-  connector: web3Fortmatic,
-  hooks: web3FortmaticHooks,
-  type: ConnectionType.FORTMATIC,
 }
 
 const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<CoinbaseWallet>(
@@ -85,7 +82,7 @@ const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<Coinba
     new CoinbaseWallet({
       actions,
       options: {
-        url: RPC_URLS[SupportedChainId.MAINNET],
+        url: RPC_URLS[SupportedChainId.MAINNET][0],
         appName: 'Uniswap',
         appLogoUrl: UNISWAP_LOGO_URL,
         reloadOnDisconnect: false,

@@ -17,8 +17,8 @@ const GasWrapper = styled(RowFixed)`
   border-radius: 8px;
   padding: 4px 6px;
   height: 24px;
-  color: ${({ theme }) => theme.text3};
-  background-color: ${({ theme }) => theme.bg1};
+  color: ${({ theme }) => theme.textTertiary};
+  background-color: ${({ theme }) => theme.deprecated_bg1};
   font-size: 14px;
   font-weight: 500;
   user-select: none;
@@ -27,7 +27,7 @@ const StyledGasIcon = styled(GasIcon)`
   margin-right: 4px;
   height: 14px;
   & > * {
-    stroke: ${({ theme }) => theme.text3};
+    stroke: ${({ theme }) => theme.textTertiary};
   }
 `
 
@@ -69,15 +69,15 @@ export default function GasEstimateBadge({
               ) : null
             ) : (
               <AutoColumn gap="4px" justify="center">
-                <ThemedText.Main fontSize="12px" textAlign="center">
+                <ThemedText.DeprecatedMain fontSize="12px" textAlign="center">
                   <Trans>Estimated network fee</Trans>
-                </ThemedText.Main>
-                <ThemedText.Body textAlign="center" fontWeight={500} style={{ userSelect: 'none' }}>
+                </ThemedText.DeprecatedMain>
+                <ThemedText.DeprecatedBody textAlign="center" fontWeight={500} style={{ userSelect: 'none' }}>
                   <Trans>${trade?.gasUseEstimateUSD?.toFixed(2)}</Trans>
-                </ThemedText.Body>
-                <ThemedText.Main fontSize="10px" textAlign="center" maxWidth="140px" color="text3">
+                </ThemedText.DeprecatedBody>
+                <ThemedText.DeprecatedMain fontSize="10px" textAlign="center" maxWidth="140px" color="text3">
                   <Trans>Estimate may differ due to your wallet gas settings</Trans>
-                </ThemedText.Main>
+                </ThemedText.DeprecatedMain>
               </AutoColumn>
             )}
           </ResponsiveTooltipContainer>

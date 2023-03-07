@@ -4,11 +4,11 @@ import { useWeb3React } from '@web3-react/core'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
-import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual } from 'react-redux'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { UserAddedToken } from 'types/tokens'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
@@ -17,10 +17,8 @@ import { AppState } from '../index'
 import {
   addSerializedPair,
   addSerializedToken,
-  removeSerializedToken,
+  updateFiatOnrampAcknowledgments,
   updateHideClosedPositions,
-  updateShowDonationLink,
-  updateShowSurveyPopup,
   updateUserClientSideRouter,
   updateUserDarkMode,
   updateUserDeadline,
@@ -40,8 +38,8 @@ function serializeToken(token: Token): SerializedToken {
   }
 }
 
-function deserializeToken(serializedToken: SerializedToken): Token {
-  return new Token(
+function deserializeToken(serializedToken: SerializedToken, Class: typeof Token = Token): Token {
+  return new Class(
     serializedToken.chainId,
     serializedToken.address,
     serializedToken.decimals,
@@ -106,36 +104,24 @@ export function useExpertModeManager(): [boolean, () => void] {
   return [expertMode, toggleSetExpertMode]
 }
 
-export function useShowSurveyPopup(): [boolean | undefined, (showPopup: boolean) => void] {
-  const dispatch = useAppDispatch()
-  const showSurveyPopup = useAppSelector((state) => state.user.showSurveyPopup)
-  const toggleShowSurveyPopup = useCallback(
-    (showPopup: boolean) => {
-      dispatch(updateShowSurveyPopup({ showSurveyPopup: showPopup }))
-    },
-    [dispatch]
-  )
-  return [showSurveyPopup, toggleShowSurveyPopup]
+interface FiatOnrampAcknowledgements {
+  renderCount: number
+  system: boolean
+  user: boolean
 }
-
-const DONATION_END_TIMESTAMP = 1646864954 // Jan 15th
-
-export function useShowDonationLink(): [boolean | undefined, (showDonationLink: boolean) => void] {
+export function useFiatOnrampAck(): [
+  FiatOnrampAcknowledgements,
+  (acknowledgements: Partial<FiatOnrampAcknowledgements>) => void
+] {
   const dispatch = useAppDispatch()
-  const showDonationLink = useAppSelector((state) => state.user.showDonationLink)
-
-  const toggleShowDonationLink = useCallback(
-    (showPopup: boolean) => {
-      dispatch(updateShowDonationLink({ showDonationLink: showPopup }))
+  const fiatOnrampAcknowledgments = useAppSelector((state) => state.user.fiatOnrampAcknowledgments)
+  const setAcknowledgements = useCallback(
+    (acks: Partial<FiatOnrampAcknowledgements>) => {
+      dispatch(updateFiatOnrampAcknowledgments(acks))
     },
     [dispatch]
   )
-
-  const timestamp = useCurrentBlockTimestamp()
-  const durationOver = timestamp ? timestamp.toNumber() > DONATION_END_TIMESTAMP : false
-  const donationVisible = showDonationLink !== false && !durationOver
-
-  return [donationVisible, toggleShowDonationLink]
+  return [fiatOnrampAcknowledgments, setAcknowledgements]
 }
 
 export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean) => void] {
@@ -153,10 +139,20 @@ export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean)
   return [clientSideRouter, setClientSideRouter]
 }
 
-export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'auto') => void {
-  const dispatch = useAppDispatch()
+/**
+ * Return the user's slippage tolerance, from the redux store, and a function to update the slippage tolerance
+ */
+export function useUserSlippageTolerance(): [Percent | 'auto', (slippageTolerance: Percent | 'auto') => void] {
+  const userSlippageToleranceRaw = useAppSelector((state) => {
+    return state.user.userSlippageTolerance
+  })
+  const userSlippageTolerance = useMemo(
+    () => (userSlippageToleranceRaw === 'auto' ? 'auto' : new Percent(userSlippageToleranceRaw, 10_000)),
+    [userSlippageToleranceRaw]
+  )
 
-  return useCallback(
+  const dispatch = useAppDispatch()
+  const setUserSlippageTolerance = useCallback(
     (userSlippageTolerance: Percent | 'auto') => {
       let value: 'auto' | number
       try {
@@ -173,19 +169,10 @@ export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'au
     },
     [dispatch]
   )
-}
-
-/**
- * Return the user's slippage tolerance, from the redux store, and a function to update the slippage tolerance
- */
-export function useUserSlippageTolerance(): Percent | 'auto' {
-  const userSlippageTolerance = useAppSelector((state) => {
-    return state.user.userSlippageTolerance
-  })
 
   return useMemo(
-    () => (userSlippageTolerance === 'auto' ? 'auto' : new Percent(userSlippageTolerance, 10_000)),
-    [userSlippageTolerance]
+    () => [userSlippageTolerance, setUserSlippageTolerance],
+    [setUserSlippageTolerance, userSlippageTolerance]
   )
 }
 
@@ -209,7 +196,7 @@ export function useUserHideClosedPositions(): [boolean, (newHideClosedPositions:
  * @param defaultSlippageTolerance the default value to replace auto with
  */
 export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: Percent): Percent {
-  const allowedSlippage = useUserSlippageTolerance()
+  const allowedSlippage = useUserSlippageTolerance()[0]
   return useMemo(
     () => (allowedSlippage === 'auto' ? defaultSlippageTolerance : allowedSlippage),
     [allowedSlippage, defaultSlippageTolerance]
@@ -243,27 +230,20 @@ export function useAddUserToken(): (token: Token) => void {
   )
 }
 
-export function useRemoveUserAddedToken(): (chainId: number, address: string) => void {
-  const dispatch = useAppDispatch()
-  return useCallback(
-    (chainId: number, address: string) => {
-      dispatch(removeSerializedToken({ chainId, address }))
-    },
-    [dispatch]
-  )
-}
-
-export function useUserAddedTokens(): Token[] {
-  const { chainId } = useWeb3React()
+export function useUserAddedTokensOnChain(chainId: number | undefined | null): Token[] {
   const serializedTokensMap = useAppSelector(({ user: { tokens } }) => tokens)
 
   return useMemo(() => {
     if (!chainId) return []
     const tokenMap: Token[] = serializedTokensMap?.[chainId]
-      ? Object.values(serializedTokensMap[chainId]).map(deserializeToken)
+      ? Object.values(serializedTokensMap[chainId]).map((value) => deserializeToken(value, UserAddedToken))
       : []
     return tokenMap
   }, [serializedTokensMap, chainId])
+}
+
+export function useUserAddedTokens(): Token[] {
+  return useUserAddedTokensOnChain(useWeb3React().chainId)
 }
 
 function serializePair(pair: Pair): SerializedPair {

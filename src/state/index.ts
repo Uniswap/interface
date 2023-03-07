@@ -2,12 +2,12 @@ import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query/react'
 import multicall from 'lib/state/multicall'
 import { load, save } from 'redux-localstorage-simple'
+import { isTestEnv } from 'utils/env'
 
 import application from './application/reducer'
 import burn from './burn/reducer'
 import burnV3 from './burn/v3/reducer'
 import connection from './connection/reducer'
-import { api as dataApi } from './data/slice'
 import { updateVersion } from './global/actions'
 import lists from './lists/reducer'
 import logs from './logs/slice'
@@ -17,6 +17,7 @@ import { routingApi } from './routing/slice'
 import swap from './swap/reducer'
 import transactions from './transactions/reducer'
 import user from './user/reducer'
+import wallets from './wallets/reducer'
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 
@@ -26,6 +27,7 @@ const store = configureStore({
     user,
     connection,
     transactions,
+    wallets,
     swap,
     mint,
     mintV3,
@@ -34,15 +36,13 @@ const store = configureStore({
     multicall: multicall.reducer,
     lists,
     logs,
-    [dataApi.reducerPath]: dataApi.reducer,
     [routingApi.reducerPath]: routingApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true })
-      .concat(dataApi.middleware)
       .concat(routingApi.middleware)
       .concat(save({ states: PERSISTED_KEYS, debounce: 1000 })),
-  preloadedState: load({ states: PERSISTED_KEYS, disableWarnings: process.env.NODE_ENV === 'test' }),
+  preloadedState: load({ states: PERSISTED_KEYS, disableWarnings: isTestEnv() }),
 })
 
 store.dispatch(updateVersion())

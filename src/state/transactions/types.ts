@@ -2,7 +2,7 @@ import { TradeType } from '@uniswap/sdk-core'
 
 import { VoteOption } from '../governance/types'
 
-interface SerializableTransactionReceipt {
+export interface SerializableTransactionReceipt {
   to: string
   from: string
   contractAddress: string
@@ -37,7 +37,7 @@ export enum TransactionType {
   EXECUTE,
 }
 
-export interface BaseTransactionInfo {
+interface BaseTransactionInfo {
   type: TransactionType
 }
 
@@ -92,13 +92,13 @@ export interface ExactOutputSwapTransactionInfo extends BaseSwapTransactionInfo 
   maximumInputCurrencyAmountRaw: string
 }
 
-export interface DepositLiquidityStakingTransactionInfo {
+interface DepositLiquidityStakingTransactionInfo {
   type: TransactionType.DEPOSIT_LIQUIDITY_STAKING
   token0Address: string
   token1Address: string
 }
 
-export interface WithdrawLiquidityStakingTransactionInfo {
+interface WithdrawLiquidityStakingTransactionInfo {
   type: TransactionType.WITHDRAW_LIQUIDITY_STAKING
   token0Address: string
   token1Address: string
@@ -152,6 +152,8 @@ export interface CollectFeesTransactionInfo {
   type: TransactionType.COLLECT_FEES
   currencyId0: string
   currencyId1: string
+  expectedCurrencyOwed0: string
+  expectedCurrencyOwed1: string
 }
 
 export interface RemoveLiquidityV3TransactionInfo {
@@ -162,7 +164,7 @@ export interface RemoveLiquidityV3TransactionInfo {
   expectedAmountQuoteRaw: string
 }
 
-export interface SubmitProposalTransactionInfo {
+interface SubmitProposalTransactionInfo {
   type: TransactionType.SUBMIT_PROPOSAL
 }
 

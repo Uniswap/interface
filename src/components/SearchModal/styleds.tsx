@@ -1,27 +1,15 @@
+import searchIcon from 'assets/svg/search.svg'
 import { LoadingRows as BaseLoadingRows } from 'components/Loader/styled'
 import styled from 'styled-components/macro'
 
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 
-export const TextDot = styled.div`
-  height: 3px;
-  width: 3px;
-  background-color: ${({ theme }) => theme.text2};
-  border-radius: 50%;
-`
-
-export const Checkbox = styled.input`
-  border: 1px solid ${({ theme }) => theme.red3};
-  height: 20px;
-  margin: 0;
-`
-
 export const PaddedColumn = styled(AutoColumn)`
   padding: 20px;
 `
 
-export const MenuItem = styled(RowBetween)`
+export const MenuItem = styled(RowBetween)<{ dim?: boolean }>`
   padding: 4px 20px;
   height: 56px;
   display: grid;
@@ -30,48 +18,50 @@ export const MenuItem = styled(RowBetween)`
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
   :hover {
-    background-color: ${({ theme, disabled }) => !disabled && theme.bg2};
+    background-color: ${({ theme }) => theme.hoverDefault};
   }
-  opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
+  opacity: ${({ disabled, selected, dim }) => (dim || disabled || selected ? 0.4 : 1)};
 `
 
 export const SearchInput = styled.input`
+  background: no-repeat scroll 7px 7px;
+  background-image: url(${searchIcon});
+  background-size: 20px 20px;
+  background-position: 12px center;
   position: relative;
   display: flex;
   padding: 16px;
+  padding-left: 40px;
+  height: 40px;
   align-items: center;
   width: 100%;
   white-space: nowrap;
-  background: none;
+  background-color: ${({ theme }) => theme.backgroundModule};
   border: none;
   outline: none;
-  border-radius: 20px;
-  color: ${({ theme }) => theme.text1};
+  border-radius: 12px;
+  color: ${({ theme }) => theme.textPrimary};
   border-style: solid;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
   -webkit-appearance: none;
 
-  font-size: 18px;
+  font-size: 16px;
 
   ::placeholder {
-    color: ${({ theme }) => theme.text3};
+    color: ${({ theme }) => theme.textTertiary};
+    font-size: 16px;
   }
   transition: border 100ms;
   :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    border: 1px solid ${({ theme }) => theme.accentActiveSoft};
+    background-color: ${({ theme }) => theme.backgroundSurface};
     outline: none;
   }
 `
 export const Separator = styled.div`
   width: 100%;
   height: 1px;
-  background-color: ${({ theme }) => theme.bg2};
-`
-
-export const SeparatorDark = styled.div`
-  width: 100%;
-  height: 1px;
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.backgroundOutline};
 `
 
 export const LoadingRows = styled(BaseLoadingRows)`

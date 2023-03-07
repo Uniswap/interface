@@ -2,7 +2,7 @@ import { defaultAbiCoder, Interface } from '@ethersproject/abi'
 import { isAddress } from '@ethersproject/address'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { TransactionResponse } from '@ethersproject/providers'
+import type { TransactionResponse } from '@ethersproject/providers'
 import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/strings'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
@@ -16,6 +16,7 @@ import {
   GOVERNANCE_ALPHA_V1_ADDRESSES,
   GOVERNANCE_BRAVO_ADDRESSES,
 } from 'constants/addresses'
+import { SupportedChainId } from 'constants/chains'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
 import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
@@ -24,7 +25,6 @@ import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/mu
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
-import { SupportedChainId } from '../../constants/chains'
 import {
   BRAVO_START_BLOCK,
   MOONBEAN_START_BLOCK,
@@ -52,7 +52,7 @@ function useGovernanceBravoContract(): Contract | null {
 
 const useLatestGovernanceContract = useGovernanceBravoContract
 
-export function useUniContract() {
+function useUniContract() {
   const { chainId } = useWeb3React()
   const uniAddress = useMemo(() => (chainId ? UNI[chainId]?.address : undefined), [chainId])
   return useContract(uniAddress, UNI_ABI, true)
@@ -117,6 +117,9 @@ const FOUR_BYTES_DIR: { [sig: string]: string } = {
   '0x5ef2c7f0': 'setSubnodeRecord(bytes32,bytes32,address,address,uint64)',
   '0x10f13a8c': 'setText(bytes32,string,string)',
   '0xb4720477': 'sendMessageToChild(address,bytes)',
+  '0xa9059cbb': 'transfer(address,uint256)',
+  '0x095ea7b3': 'approve(address,uint256)',
+  '0x7b1837de': 'fund(address,uint256)',
 }
 
 /**

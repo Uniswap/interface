@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { Trace } from '@uniswap/analytics'
+import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
@@ -11,7 +13,7 @@ import { ButtonDropdownLight } from '../../components/Button'
 import { LightCard } from '../../components/Card'
 import { BlueCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import CurrencyLogo from '../../components/CurrencyLogo'
+import CurrencyLogo from '../../components/Logo/CurrencyLogo'
 import { FindPoolTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row from '../../components/Row'
@@ -95,139 +97,141 @@ export default function PoolFinder() {
   )
 
   return (
-    <>
-      <AppBody>
-        <FindPoolTabs origin={query.get('origin') ?? '/pool/v2'} />
-        <AutoColumn style={{ padding: '1rem' }} gap="md">
-          <BlueCard>
-            <AutoColumn gap="10px">
-              <ThemedText.Link fontWeight={400} color={'primaryText1'}>
-                <Trans>
-                  <b>Tip:</b> Use this tool to find v2 pools that don&apos;t automatically appear in the interface.
-                </Trans>
-              </ThemedText.Link>
-            </AutoColumn>
-          </BlueCard>
-          <ButtonDropdownLight
-            onClick={() => {
-              setShowSearch(true)
-              setActiveField(Fields.TOKEN0)
-            }}
-          >
-            {currency0 ? (
-              <Row>
-                <CurrencyLogo currency={currency0} />
-                <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-                  {currency0.symbol}
-                </Text>
-              </Row>
-            ) : (
-              <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-                <Trans>Select a token</Trans>
-              </Text>
-            )}
-          </ButtonDropdownLight>
-
-          <ColumnCenter>
-            <Plus size="16" color="#888D9B" />
-          </ColumnCenter>
-
-          <ButtonDropdownLight
-            onClick={() => {
-              setShowSearch(true)
-              setActiveField(Fields.TOKEN1)
-            }}
-          >
-            {currency1 ? (
-              <Row>
-                <CurrencyLogo currency={currency1} />
-                <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-                  {currency1.symbol}
-                </Text>
-              </Row>
-            ) : (
-              <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-                <Trans>Select a token</Trans>
-              </Text>
-            )}
-          </ButtonDropdownLight>
-
-          {hasPosition && (
-            <ColumnCenter
-              style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}
+    <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
+      <>
+        <AppBody>
+          <FindPoolTabs origin={query.get('origin') ?? '/pool/v2'} />
+          <AutoColumn style={{ padding: '1rem' }} gap="md">
+            <BlueCard>
+              <AutoColumn gap="10px">
+                <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
+                  <Trans>
+                    <b>Tip:</b> Use this tool to find v2 pools that don&apos;t automatically appear in the interface.
+                  </Trans>
+                </ThemedText.DeprecatedLink>
+              </AutoColumn>
+            </BlueCard>
+            <ButtonDropdownLight
+              onClick={() => {
+                setShowSearch(true)
+                setActiveField(Fields.TOKEN0)
+              }}
             >
-              <Text textAlign="center" fontWeight={500}>
-                <Trans>Pool Found!</Trans>
-              </Text>
-              <StyledInternalLink to={`/pool/v2`}>
-                <Text textAlign="center">
-                  <Trans>Manage this pool.</Trans>
-                </Text>
-              </StyledInternalLink>
-            </ColumnCenter>
-          )}
-
-          {currency0 && currency1 ? (
-            pairState === PairState.EXISTS ? (
-              hasPosition && pair ? (
-                <MinimalPositionCard pair={pair} border="1px solid #CED0D9" />
+              {currency0 ? (
+                <Row>
+                  <CurrencyLogo currency={currency0} />
+                  <Text fontWeight={500} fontSize={20} marginLeft="12px">
+                    {currency0.symbol}
+                  </Text>
+                </Row>
               ) : (
+                <Text fontWeight={500} fontSize={20} marginLeft="12px">
+                  <Trans>Select a token</Trans>
+                </Text>
+              )}
+            </ButtonDropdownLight>
+
+            <ColumnCenter>
+              <Plus size="16" color="#888D9B" />
+            </ColumnCenter>
+
+            <ButtonDropdownLight
+              onClick={() => {
+                setShowSearch(true)
+                setActiveField(Fields.TOKEN1)
+              }}
+            >
+              {currency1 ? (
+                <Row>
+                  <CurrencyLogo currency={currency1} />
+                  <Text fontWeight={500} fontSize={20} marginLeft="12px">
+                    {currency1.symbol}
+                  </Text>
+                </Row>
+              ) : (
+                <Text fontWeight={500} fontSize={20} marginLeft="12px">
+                  <Trans>Select a token</Trans>
+                </Text>
+              )}
+            </ButtonDropdownLight>
+
+            {hasPosition && (
+              <ColumnCenter
+                style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}
+              >
+                <Text textAlign="center" fontWeight={500}>
+                  <Trans>Pool Found!</Trans>
+                </Text>
+                <StyledInternalLink to="/pool/v2">
+                  <Text textAlign="center">
+                    <Trans>Manage this pool.</Trans>
+                  </Text>
+                </StyledInternalLink>
+              </ColumnCenter>
+            )}
+
+            {currency0 && currency1 ? (
+              pairState === PairState.EXISTS ? (
+                hasPosition && pair ? (
+                  <MinimalPositionCard pair={pair} border="1px solid #CED0D9" />
+                ) : (
+                  <LightCard padding="45px 10px">
+                    <AutoColumn gap="sm" justify="center">
+                      <Text textAlign="center">
+                        <Trans>You don’t have liquidity in this pool yet.</Trans>
+                      </Text>
+                      <StyledInternalLink to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
+                        <Text textAlign="center">
+                          <Trans>Add liquidity.</Trans>
+                        </Text>
+                      </StyledInternalLink>
+                    </AutoColumn>
+                  </LightCard>
+                )
+              ) : validPairNoLiquidity ? (
                 <LightCard padding="45px 10px">
                   <AutoColumn gap="sm" justify="center">
                     <Text textAlign="center">
-                      <Trans>You don’t have liquidity in this pool yet.</Trans>
+                      <Trans>No pool found.</Trans>
                     </Text>
                     <StyledInternalLink to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
-                      <Text textAlign="center">
-                        <Trans>Add liquidity.</Trans>
-                      </Text>
+                      <Trans>Create pool.</Trans>
                     </StyledInternalLink>
                   </AutoColumn>
                 </LightCard>
-              )
-            ) : validPairNoLiquidity ? (
-              <LightCard padding="45px 10px">
-                <AutoColumn gap="sm" justify="center">
-                  <Text textAlign="center">
-                    <Trans>No pool found.</Trans>
-                  </Text>
-                  <StyledInternalLink to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
-                    <Trans>Create pool.</Trans>
-                  </StyledInternalLink>
-                </AutoColumn>
-              </LightCard>
-            ) : pairState === PairState.INVALID ? (
-              <LightCard padding="45px 10px">
-                <AutoColumn gap="sm" justify="center">
-                  <Text textAlign="center" fontWeight={500}>
-                    <Trans>Invalid pair.</Trans>
-                  </Text>
-                </AutoColumn>
-              </LightCard>
-            ) : pairState === PairState.LOADING ? (
-              <LightCard padding="45px 10px">
-                <AutoColumn gap="sm" justify="center">
-                  <Text textAlign="center">
-                    <Trans>Loading</Trans>
-                    <Dots />
-                  </Text>
-                </AutoColumn>
-              </LightCard>
-            ) : null
-          ) : (
-            prerequisiteMessage
-          )}
-        </AutoColumn>
+              ) : pairState === PairState.INVALID ? (
+                <LightCard padding="45px 10px">
+                  <AutoColumn gap="sm" justify="center">
+                    <Text textAlign="center" fontWeight={500}>
+                      <Trans>Invalid pair.</Trans>
+                    </Text>
+                  </AutoColumn>
+                </LightCard>
+              ) : pairState === PairState.LOADING ? (
+                <LightCard padding="45px 10px">
+                  <AutoColumn gap="sm" justify="center">
+                    <Text textAlign="center">
+                      <Trans>Loading</Trans>
+                      <Dots />
+                    </Text>
+                  </AutoColumn>
+                </LightCard>
+              ) : null
+            ) : (
+              prerequisiteMessage
+            )}
+          </AutoColumn>
 
-        <CurrencySearchModal
-          isOpen={showSearch}
-          onCurrencySelect={handleCurrencySelect}
-          onDismiss={handleSearchDismiss}
-          showCommonBases
-          selectedCurrency={(activeField === Fields.TOKEN0 ? currency1 : currency0) ?? undefined}
-        />
-      </AppBody>
-      <SwitchLocaleLink />
-    </>
+          <CurrencySearchModal
+            isOpen={showSearch}
+            onCurrencySelect={handleCurrencySelect}
+            onDismiss={handleSearchDismiss}
+            showCommonBases
+            selectedCurrency={(activeField === Fields.TOKEN0 ? currency1 : currency0) ?? undefined}
+          />
+        </AppBody>
+        <SwitchLocaleLink />
+      </>
+    </Trace>
   )
 }

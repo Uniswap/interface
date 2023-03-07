@@ -32,9 +32,9 @@ export function shouldCheck(lastBlockNumber: number, tx: Transaction): boolean {
 
 const RETRY_OPTIONS_BY_CHAIN_ID: { [chainId: number]: RetryOptions } = {
   [SupportedChainId.ARBITRUM_ONE]: { n: 10, minWait: 250, maxWait: 1000 },
-  [SupportedChainId.ARBITRUM_RINKEBY]: { n: 10, minWait: 250, maxWait: 1000 },
-  [SupportedChainId.OPTIMISTIC_KOVAN]: { n: 10, minWait: 250, maxWait: 1000 },
+  [SupportedChainId.ARBITRUM_GOERLI]: { n: 10, minWait: 250, maxWait: 1000 },
   [SupportedChainId.OPTIMISM]: { n: 10, minWait: 250, maxWait: 1000 },
+  [SupportedChainId.OPTIMISM_GOERLI]: { n: 10, minWait: 250, maxWait: 1000 },
 }
 const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 1, minWait: 0, maxWait: 0 }
 
@@ -79,6 +79,7 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
         promise
           .then((receipt) => {
             if (receipt) {
+              fastForwardBlockNumber(receipt.blockNumber)
               onReceipt({ chainId, hash, receipt })
             } else {
               onCheck({ chainId, hash, blockNumber: lastBlockNumber })
@@ -95,7 +96,7 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
     return () => {
       cancels.forEach((cancel) => cancel())
     }
-  }, [chainId, provider, lastBlockNumber, getReceipt, fastForwardBlockNumber, onReceipt, onCheck, pendingTransactions])
+  }, [chainId, provider, lastBlockNumber, getReceipt, onReceipt, onCheck, pendingTransactions, fastForwardBlockNumber])
 
   return null
 }

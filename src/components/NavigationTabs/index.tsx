@@ -1,59 +1,30 @@
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
-import useTheme from 'hooks/useTheme'
-import { darken } from 'polished'
 import { ReactNode } from 'react'
 import { ArrowLeft } from 'react-feather'
-import { Link as HistoryLink, NavLink, useLocation } from 'react-router-dom'
+import { Link as HistoryLink, useLocation } from 'react-router-dom'
 import { Box } from 'rebass'
 import { useAppDispatch } from 'state/hooks'
 import { resetMintState } from 'state/mint/actions'
 import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { flexRowNoWrap } from 'theme/styles'
 
 import Row, { RowBetween } from '../Row'
 import SettingsTab from '../Settings'
 
 const Tabs = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
+  ${flexRowNoWrap};
   align-items: center;
   border-radius: 3rem;
   justify-content: space-evenly;
 `
 
-const activeClassName = 'ACTIVE'
-
-const StyledNavLink = styled(NavLink).attrs({
-  activeClassName,
-})`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: center;
-  justify-content: center;
-  height: 3rem;
-  border-radius: 3rem;
-  outline: none;
-  cursor: pointer;
-  text-decoration: none;
-  color: ${({ theme }) => theme.text3};
-  font-size: 20px;
-
-  &.${activeClassName} {
-    border-radius: 12px;
-    font-weight: 500;
-    color: ${({ theme }) => theme.text1};
-  }
-
-  :hover,
-  :focus {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
-  }
-`
-
 const StyledHistoryLink = styled(HistoryLink)<{ flex: string | undefined }>`
   flex: ${({ flex }) => flex ?? 'none'};
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     flex: none;
     margin-right: 10px;
   `};
@@ -65,21 +36,8 @@ const ActiveText = styled.div`
 `
 
 const StyledArrowLeft = styled(ArrowLeft)`
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.textPrimary};
 `
-
-export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
-  return (
-    <Tabs style={{ marginBottom: '20px', display: 'none', padding: '1rem 1rem 0 1rem' }}>
-      <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => active === 'swap'}>
-        <Trans>Swap</Trans>
-      </StyledNavLink>
-      <StyledNavLink id={`pool-nav-link`} to={'/pool'} isActive={() => active === 'pool'}>
-        <Trans>Pool</Trans>
-      </StyledNavLink>
-    </Tabs>
-  )
-}
 
 export function FindPoolTabs({ origin }: { origin: string }) {
   return (
@@ -118,7 +76,7 @@ export function AddRemoveTabs({
   // detect if back should redirect to v3 or v2 pool page
   const poolLink = location.pathname.includes('add/v2')
     ? '/pool/v2'
-    : '/pool' + (!!positionID ? `/${positionID.toString()}` : '')
+    : '/pool' + (positionID ? `/${positionID.toString()}` : '')
 
   return (
     <Tabs>
@@ -134,9 +92,9 @@ export function AddRemoveTabs({
           }}
           flex={children ? '1' : undefined}
         >
-          <StyledArrowLeft stroke={theme.text2} />
+          <StyledArrowLeft stroke={theme.textSecondary} />
         </StyledHistoryLink>
-        <ThemedText.MediumHeader
+        <ThemedText.DeprecatedMediumHeader
           fontWeight={500}
           fontSize={20}
           style={{ flex: '1', margin: 'auto', textAlign: children ? 'start' : 'center' }}
@@ -148,7 +106,7 @@ export function AddRemoveTabs({
           ) : (
             <Trans>Remove Liquidity</Trans>
           )}
-        </ThemedText.MediumHeader>
+        </ThemedText.DeprecatedMediumHeader>
         <Box style={{ marginRight: '.5rem' }}>{children}</Box>
         <SettingsTab placeholderSlippage={defaultSlippage} />
       </RowBetween>

@@ -1,7 +1,6 @@
 import { readableColor } from 'polished'
 import { PropsWithChildren } from 'react'
 import styled, { DefaultTheme } from 'styled-components/macro'
-import { Color } from 'theme/styled'
 
 export enum BadgeVariant {
   DEFAULT = 'DEFAULT',
@@ -17,27 +16,27 @@ interface BadgeProps {
   variant?: BadgeVariant
 }
 
-function pickBackgroundColor(variant: BadgeVariant | undefined, theme: DefaultTheme): Color {
+function pickBackgroundColor(variant: BadgeVariant | undefined, theme: DefaultTheme): string {
   switch (variant) {
     case BadgeVariant.NEGATIVE:
-      return theme.error
+      return theme.accentFailure
     case BadgeVariant.POSITIVE:
-      return theme.success
+      return theme.accentSuccess
     case BadgeVariant.PRIMARY:
-      return theme.primary1
+      return theme.accentAction
     case BadgeVariant.WARNING:
-      return theme.warning
+      return theme.accentWarning
     case BadgeVariant.WARNING_OUTLINE:
       return 'transparent'
     default:
-      return theme.bg2
+      return theme.backgroundInteractive
   }
 }
 
 function pickBorder(variant: BadgeVariant | undefined, theme: DefaultTheme): string {
   switch (variant) {
     case BadgeVariant.WARNING_OUTLINE:
-      return `1px solid ${theme.warning}`
+      return `1px solid ${theme.accentWarning}`
     default:
       return 'unset'
   }
@@ -46,15 +45,15 @@ function pickBorder(variant: BadgeVariant | undefined, theme: DefaultTheme): str
 function pickFontColor(variant: BadgeVariant | undefined, theme: DefaultTheme): string {
   switch (variant) {
     case BadgeVariant.NEGATIVE:
-      return readableColor(theme.error)
+      return readableColor(theme.accentFailure)
     case BadgeVariant.POSITIVE:
-      return readableColor(theme.success)
+      return readableColor(theme.accentSuccess)
     case BadgeVariant.WARNING:
-      return readableColor(theme.warning)
+      return readableColor(theme.accentWarning)
     case BadgeVariant.WARNING_OUTLINE:
-      return theme.warning
+      return theme.accentWarning
     default:
-      return readableColor(theme.bg2)
+      return readableColor(theme.backgroundInteractive)
   }
 }
 

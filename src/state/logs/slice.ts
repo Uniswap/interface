@@ -1,9 +1,9 @@
-import { Filter } from '@ethersproject/providers'
+import type { Filter } from '@ethersproject/providers'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { filterToKey, Log } from './utils'
 
-export interface LogsState {
+interface LogsState {
   [chainId: number]: {
     [filterKey: string]: {
       listeners: number

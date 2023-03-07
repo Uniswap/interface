@@ -1,14 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { ConnectionType } from 'connection'
 
-export interface ConnectionState {
+interface ConnectionState {
   errorByConnectionType: Record<ConnectionType, string | undefined>
 }
 
-export const initialState: ConnectionState = {
+const initialState: ConnectionState = {
   errorByConnectionType: {
     [ConnectionType.INJECTED]: undefined,
-    [ConnectionType.FORTMATIC]: undefined,
     [ConnectionType.WALLET_CONNECT]: undefined,
     [ConnectionType.COINBASE_WALLET]: undefined,
     [ConnectionType.NETWORK]: undefined,

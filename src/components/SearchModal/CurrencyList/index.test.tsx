@@ -16,7 +16,7 @@ const mockCurrencyAmt = {
 }
 
 jest.mock(
-  'components/CurrencyLogo',
+  'components/Logo/CurrencyLogo',
   () =>
     ({ currency }: { currency: Currency }) =>
       `CurrencyLogo currency=${currency.symbol}`
@@ -52,6 +52,8 @@ it('renders loading rows when isLoading is true', () => {
       showImportView={noOp}
       setImportToken={noOp}
       isLoading={true}
+      searchQuery=""
+      isAddressSearch=""
     />
   )
   expect(asFragment()).toMatchSnapshot()
@@ -68,6 +70,8 @@ it('renders currency rows correctly when currencies list is non-empty', () => {
       showImportView={noOp}
       setImportToken={noOp}
       isLoading={false}
+      searchQuery=""
+      isAddressSearch=""
     />
   )
   expect(asFragment()).toMatchSnapshot()

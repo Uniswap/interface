@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { Percent, Price, Token } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
@@ -15,53 +16,46 @@ import { Link } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components/macro'
 import { HideSmall, MEDIA_WIDTHS, SmallOnly } from 'theme'
-import { PositionDetails } from 'types/position'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
+import { hasURL } from 'utils/urlChecks'
 
 import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 
 const LinkRow = styled(Link)`
   align-items: center;
-  border-radius: 20px;
   display: flex;
   cursor: pointer;
   user-select: none;
   display: flex;
   flex-direction: column;
-
   justify-content: space-between;
-  color: ${({ theme }) => theme.text1};
-  margin: 8px 0;
+  color: ${({ theme }) => theme.textPrimary};
   padding: 16px;
   text-decoration: none;
   font-weight: 500;
-  background-color: ${({ theme }) => theme.bg1};
 
-  &:last-of-type {
-    margin: 8px 0 0 0;
-  }
   & > div:not(:first-child) {
     text-align: center;
   }
   :hover {
-    background-color: ${({ theme }) => theme.bg2};
+    background-color: ${({ theme }) => theme.hoverDefault};
   }
 
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+  @media screen and (min-width: ${MEDIA_WIDTHS.deprecated_upToSmall}px) {
     /* flex-direction: row; */
   }
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex-direction: column;
-    row-gap: 12px;
+    row-gap: 8px;
   `};
 `
 
 const BadgeText = styled.div`
   font-weight: 500;
   font-size: 14px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     font-size: 12px;
   `};
 `
@@ -74,37 +68,25 @@ const RangeLineItem = styled(DataLineItem)`
   display: flex;
   flex-direction: row;
   align-items: center;
-
   margin-top: 4px;
   width: 100%;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  background-color: ${({ theme }) => theme.bg2};
-    border-radius: 12px;
-    padding: 8px 0;
-`};
 `
 
 const DoubleArrow = styled.span`
   margin: 0 2px;
-  color: ${({ theme }) => theme.text3};
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    margin: 4px;
-    padding: 20px;
-  `};
+  color: ${({ theme }) => theme.textTertiary};
 `
 
 const RangeText = styled.span`
-  /* background-color: ${({ theme }) => theme.bg2}; */
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 0.25rem;
   border-radius: 8px;
 `
 
 const ExtentsText = styled.span`
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.textTertiary};
   font-size: 14px;
   margin-right: 4px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     display: none;
   `};
 `
@@ -122,13 +104,19 @@ const DataText = styled.div`
   font-weight: 600;
   font-size: 18px;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    font-size: 14px;
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+    font-size: 18px;
   `};
 `
 
 interface PositionListItemProps {
-  positionDetails: PositionDetails
+  token0: string
+  token1: string
+  tokenId: BigNumber
+  fee: number
+  liquidity: BigNumber
+  tickLower: number
+  tickUpper: number
 }
 
 export function getPriceOrderingFromPositionForUI(position?: Position): {
@@ -185,16 +173,15 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   }
 }
 
-export default function PositionListItem({ positionDetails }: PositionListItemProps) {
-  const {
-    token0: token0Address,
-    token1: token1Address,
-    fee: feeAmount,
-    liquidity,
-    tickLower,
-    tickUpper,
-  } = positionDetails
-
+export default function PositionListItem({
+  token0: token0Address,
+  token1: token1Address,
+  tokenId,
+  fee: feeAmount,
+  liquidity,
+  tickLower,
+  tickUpper,
+}: PositionListItemProps) {
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
 
@@ -222,9 +209,22 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
   // check if price is within range
   const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
 
-  const positionSummaryLink = '/pool/' + positionDetails.tokenId
+  const positionSummaryLink = '/pool/' + tokenId
 
   const removed = liquidity?.eq(0)
+
+  const containsURL = useMemo(
+    () =>
+      [token0?.name, token0?.symbol, token1?.name, token1?.symbol].reduce(
+        (acc, testString) => acc || Boolean(testString && hasURL(testString)),
+        false
+      ),
+    [token0?.name, token0?.symbol, token1?.name, token1?.symbol]
+  )
+
+  if (containsURL) {
+    return null
+  }
 
   return (
     <LinkRow to={positionSummaryLink}>
@@ -251,8 +251,12 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
               <Trans>Min: </Trans>
             </ExtentsText>
             <Trans>
-              {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} <HoverInlineText text={currencyQuote?.symbol} />{' '}
-              per <HoverInlineText text={currencyBase?.symbol ?? ''} />
+              {formatTickPrice({
+                price: priceLower,
+                atLimit: tickAtLimit,
+                direction: Bound.LOWER,
+              })}{' '}
+              <HoverInlineText text={currencyQuote?.symbol} /> per <HoverInlineText text={currencyBase?.symbol ?? ''} />
             </Trans>
           </RangeText>{' '}
           <HideSmall>
@@ -266,8 +270,13 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
               <Trans>Max:</Trans>
             </ExtentsText>
             <Trans>
-              {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)} <HoverInlineText text={currencyQuote?.symbol} />{' '}
-              per <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
+              {formatTickPrice({
+                price: priceUpper,
+                atLimit: tickAtLimit,
+                direction: Bound.UPPER,
+              })}{' '}
+              <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
+              <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
             </Trans>
           </RangeText>
         </RangeLineItem>

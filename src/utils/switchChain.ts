@@ -1,72 +1,34 @@
 import { Connector } from '@web3-react/types'
-import {
-  coinbaseWalletConnection,
-  fortmaticConnection,
-  gnosisSafeConnection,
-  injectedConnection,
-  networkConnection,
-  walletConnectConnection,
-} from 'connection'
-import { CHAIN_INFO } from 'constants/chainInfo'
-import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
-import { RPC_URLS } from 'constants/networks'
+import { networkConnection, walletConnectConnection } from 'connection'
+import { getChainInfo } from 'constants/chainInfo'
+import { SupportedChainId } from 'constants/chains'
+import { isSupportedChain } from 'constants/chains'
+import { FALLBACK_URLS, RPC_URLS } from 'constants/networks'
 
-function getRpcUrls(chainId: SupportedChainId): [string] {
+function getRpcUrl(chainId: SupportedChainId): string {
   switch (chainId) {
     case SupportedChainId.MAINNET:
-    case SupportedChainId.RINKEBY:
-    case SupportedChainId.ROPSTEN:
-    case SupportedChainId.KOVAN:
     case SupportedChainId.GOERLI:
-      return [RPC_URLS[chainId]]
-    case SupportedChainId.OPTIMISM:
-      return ['https://mainnet.optimism.io']
-    case SupportedChainId.OPTIMISTIC_KOVAN:
-      return ['https://kovan.optimism.io']
-    case SupportedChainId.ARBITRUM_ONE:
-      return ['https://arb1.arbitrum.io/rpc']
-    case SupportedChainId.ARBITRUM_RINKEBY:
-      return ['https://rinkeby.arbitrum.io/rpc']
-    case SupportedChainId.POLYGON:
-      return ['https://polygon-rpc.com/']
-    case SupportedChainId.POLYGON_MUMBAI:
-      return ['https://rpc-endpoints.superfluid.dev/mumbai']
-    case SupportedChainId.CELO:
-      return ['https://forno.celo.org']
-    case SupportedChainId.CELO_ALFAJORES:
-      return ['https://alfajores-forno.celo-testnet.org']
+      return RPC_URLS[chainId][0]
+    // Attempting to add a chain using an infura URL will not work, as the URL will be unreachable from the MetaMask background page.
+    // MetaMask allows switching to any publicly reachable URL, but for novel chains, it will display a warning if it is not on the "Safe" list.
+    // See the definition of FALLBACK_URLS for more details.
     default:
-  }
-  // Our API-keyed URLs will fail security checks when used with external wallets.
-  throw new Error('RPC URLs must use public endpoints')
-}
-
-export function isChainAllowed(connector: Connector, chainId: number) {
-  switch (connector) {
-    case fortmaticConnection.connector:
-      return chainId === SupportedChainId.MAINNET
-    case injectedConnection.connector:
-    case coinbaseWalletConnection.connector:
-    case walletConnectConnection.connector:
-    case networkConnection.connector:
-    case gnosisSafeConnection.connector:
-      return ALL_SUPPORTED_CHAIN_IDS.includes(chainId)
-    default:
-      return false
+      return FALLBACK_URLS[chainId][0]
   }
 }
 
-export const switchChain = async (connector: Connector, chainId: number) => {
-  if (!isChainAllowed(connector, chainId)) {
+export const switchChain = async (connector: Connector, chainId: SupportedChainId) => {
+  if (!isSupportedChain(chainId)) {
     throw new Error(`Chain ${chainId} not supported for connector (${typeof connector})`)
   } else if (connector === walletConnectConnection.connector || connector === networkConnection.connector) {
     await connector.activate(chainId)
   } else {
-    const info = CHAIN_INFO[chainId]
+    const info = getChainInfo(chainId)
     const addChainParameter = {
       chainId,
       chainName: info.label,
-      rpcUrls: getRpcUrls(chainId),
+      rpcUrls: [getRpcUrl(chainId)],
       nativeCurrency: info.nativeCurrency,
       blockExplorerUrls: [info.explorer],
     }

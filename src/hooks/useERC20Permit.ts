@@ -1,15 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { splitSignature } from '@ethersproject/bytes'
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { SupportedChainId } from 'constants/chains'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo, useState } from 'react'
 
-import { SWAP_ROUTER_ADDRESSES, V3_ROUTER_ADDRESS } from '../constants/addresses'
 import { DAI, UNI, USDC_MAINNET } from '../constants/tokens'
 import { useEIP2612Contract } from './useContract'
 import useIsArgentWallet from './useIsArgentWallet'
@@ -35,28 +32,17 @@ const PERMITTABLE_TOKENS: {
     [checksummedTokenAddress: string]: PermitInfo
   }
 } = {
-  1: {
+  [SupportedChainId.MAINNET]: {
     [USDC_MAINNET.address]: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
     [DAI.address]: { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
-    [UNI[1].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+    [UNI[SupportedChainId.MAINNET].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
-  4: {
-    '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735': { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
-    [UNI[4].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
-  },
-  3: {
-    [UNI[3].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
-    '0x07865c6E87B9F70255377e024ace6630C1Eaa37F': { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
-  },
-  5: {
-    [UNI[5].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
-  },
-  42: {
-    [UNI[42].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+  [SupportedChainId.GOERLI]: {
+    [UNI[SupportedChainId.GOERLI].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
 }
 
-export enum UseERC20PermitState {
+enum UseERC20PermitState {
   // returned for any reason, e.g. it is an argent wallet, or the currency does not support it
   NOT_APPLICABLE,
   LOADING,
@@ -85,7 +71,7 @@ interface AllowedSignatureData extends BaseSignatureData {
   allowed: true
 }
 
-export type SignatureData = StandardSignatureData | AllowedSignatureData
+type SignatureData = StandardSignatureData | AllowedSignatureData
 
 const EIP712_DOMAIN_TYPE = [
   { name: 'name', type: 'string' },
@@ -174,7 +160,8 @@ export function useERC20Permit(
       signatureData.tokenAddress === tokenAddress &&
       signatureData.nonce === nonceNumber &&
       signatureData.spender === spender &&
-      ('allowed' in signatureData || JSBI.equal(JSBI.BigInt(signatureData.amount), currencyAmount.quotient))
+      ('allowed' in signatureData ||
+        JSBI.greaterThanOrEqual(JSBI.BigInt(signatureData.amount), currencyAmount.quotient))
 
     return {
       state: isSignatureDataValid ? UseERC20PermitState.SIGNED : UseERC20PermitState.NOT_SIGNED,
@@ -257,30 +244,4 @@ export function useERC20Permit(
     permitInfo,
     signatureData,
   ])
-}
-
-export function useERC20PermitFromTrade(
-  trade:
-    | V2Trade<Currency, Currency, TradeType>
-    | V3Trade<Currency, Currency, TradeType>
-    | Trade<Currency, Currency, TradeType>
-    | undefined,
-  allowedSlippage: Percent,
-  transactionDeadline: BigNumber | undefined
-) {
-  const { chainId } = useWeb3React()
-  const swapRouterAddress = chainId
-    ? // v2 router does not support
-      trade instanceof V2Trade
-      ? undefined
-      : trade instanceof V3Trade
-      ? V3_ROUTER_ADDRESS[chainId]
-      : SWAP_ROUTER_ADDRESSES[chainId]
-    : undefined
-  const amountToApprove = useMemo(
-    () => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined),
-    [trade, allowedSlippage]
-  )
-
-  return useERC20Permit(amountToApprove, swapRouterAddress, transactionDeadline, null)
 }

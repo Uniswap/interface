@@ -1,0 +1,22 @@
+diff --git a/node_modules/@vanilla-extract/css/dist/vanilla-extract-css.cjs.dev.js b/node_modules/@vanilla-extract/css/dist/vanilla-extract-css.cjs.dev.js
+index 6e40061..10283a2 100644
+--- a/node_modules/@vanilla-extract/css/dist/vanilla-extract-css.cjs.dev.js
++++ b/node_modules/@vanilla-extract/css/dist/vanilla-extract-css.cjs.dev.js
+@@ -177,11 +177,13 @@ function generateIdentifier(debugId) {
+   var fileScopeHash = hash__default["default"](packageName ? "".concat(packageName).concat(filePath) : filePath);
+   var identifier = "".concat(fileScopeHash).concat(refCount);
+ 
+-  if (adapter_dist_vanillaExtractCssAdapter.getIdentOption() === 'debug') {
+-    var devPrefix = getDevPrefix(debugId);
++  if (process.env.VANILLA_EXTRACT_DEV_PREFIX) {
++    if (adapter_dist_vanillaExtractCssAdapter.getIdentOption() === 'debug') {
++      var devPrefix = getDevPrefix(debugId);
+ 
+-    if (devPrefix) {
+-      identifier = "".concat(devPrefix, "__").concat(identifier);
++      if (devPrefix) {
++        identifier = "".concat(devPrefix, "__").concat(identifier);
++      }
+     }
+   }
+ 

@@ -23,7 +23,7 @@
     "strict": true,
     "strictNullChecks": true,
     "target": "es5",
-    "types": ["react-spring", "jest"],
+    "types": ["jest"],
     "useUnknownInCatchVariables": false
   },
   "exclude": ["node_modules", "cypress"],

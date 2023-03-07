@@ -1,7 +1,7 @@
 import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 // This file is lazy-loaded, so the import of smart-order-router is intentional.
 // eslint-disable-next-line no-restricted-imports
-import { AlphaRouter, AlphaRouterConfig, AlphaRouterParams, ChainId } from '@uniswap/smart-order-router'
+import { AlphaRouter, AlphaRouterConfig, ChainId } from '@uniswap/smart-order-router'
 import { SupportedChainId } from 'constants/chains'
 import JSBI from 'jsbi'
 import { GetQuoteResult } from 'state/routing/types'
@@ -29,11 +29,9 @@ async function getQuote(
     tokenOut: { address: string; chainId: number; decimals: number; symbol?: string }
     amount: BigintIsh
   },
-  routerParams: AlphaRouterParams,
-  routerConfig: Partial<AlphaRouterConfig>
+  router: AlphaRouter,
+  config: Partial<AlphaRouterConfig>
 ): Promise<{ data: GetQuoteResult; error?: unknown }> {
-  const router = new AlphaRouter(routerParams)
-
   const currencyIn = new Token(tokenIn.chainId, tokenIn.address, tokenIn.decimals, tokenIn.symbol)
   const currencyOut = new Token(tokenOut.chainId, tokenOut.address, tokenOut.decimals, tokenOut.symbol)
 
@@ -46,7 +44,7 @@ async function getQuote(
     quoteCurrency,
     type === 'exactIn' ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     /*swapConfig=*/ undefined,
-    routerConfig
+    config
   )
 
   if (!swapRoute) throw new Error('Failed to generate client side quote')
@@ -80,8 +78,8 @@ export async function getClientSideQuote(
     amount,
     type,
   }: QuoteArguments,
-  routerParams: AlphaRouterParams,
-  routerConfig: Partial<AlphaRouterConfig>
+  router: AlphaRouter,
+  config: Partial<AlphaRouterConfig>
 ) {
   return getQuote(
     {
@@ -100,7 +98,7 @@ export async function getClientSideQuote(
       },
       amount,
     },
-    routerParams,
-    routerConfig
+    router,
+    config
   )
 }

@@ -1,4 +1,6 @@
-const isDev = process.env.NODE_ENV !== 'production'
+/* eslint-env node */
+
+const isDev = process.env.NODE_ENV === 'development'
 
 module.exports = {
   styledComponents: {

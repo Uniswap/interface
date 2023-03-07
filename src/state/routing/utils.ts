@@ -1,8 +1,8 @@
+import { MixedRouteSDK, Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 
-import { nativeOnChain } from '../../constants/tokens'
 import { GetQuoteResult, InterfaceTrade, V2PoolInRoute, V3PoolInRoute } from './types'
 
 /**
@@ -21,12 +21,9 @@ export function computeRoutes(
 
   const parsedTokenIn = parseToken(quoteResult.route[0][0].tokenIn)
   const parsedTokenOut = parseToken(quoteResult.route[0][quoteResult.route[0].length - 1].tokenOut)
-
   if (parsedTokenIn.address !== currencyIn.wrapped.address) return undefined
   if (parsedTokenOut.address !== currencyOut.wrapped.address) return undefined
-
-  const parsedCurrencyIn = currencyIn.isNative ? nativeOnChain(currencyIn.chainId) : parsedTokenIn
-  const parsedCurrencyOut = currencyOut.isNative ? nativeOnChain(currencyOut.chainId) : parsedTokenOut
+  if (parsedTokenIn.wrapped.equals(parsedTokenOut.wrapped)) return undefined
 
   try {
     return quoteResult.route.map((route) => {
@@ -40,11 +37,23 @@ export function computeRoutes(
         throw new Error('Expected both amountIn and amountOut to be present')
       }
 
+      const routeProtocol = getRouteProtocol(route)
+
       return {
-        routev3: isV3Route(route) ? new V3Route(route.map(parsePool), parsedCurrencyIn, parsedCurrencyOut) : null,
-        routev2: !isV3Route(route) ? new V2Route(route.map(parsePair), parsedCurrencyIn, parsedCurrencyOut) : null,
-        inputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyIn, rawAmountIn),
-        outputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyOut, rawAmountOut),
+        routev3:
+          routeProtocol === Protocol.V3
+            ? new V3Route(route.map(genericPoolPairParser) as Pool[], currencyIn, currencyOut)
+            : null,
+        routev2:
+          routeProtocol === Protocol.V2
+            ? new V2Route(route.map(genericPoolPairParser) as Pair[], currencyIn, currencyOut)
+            : null,
+        mixedRoute:
+          routeProtocol === Protocol.MIXED
+            ? new MixedRouteSDK(route.map(genericPoolPairParser), currencyIn, currencyOut)
+            : null,
+        inputAmount: CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn),
+        outputAmount: CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut),
       }
     })
   } catch (e) {
@@ -59,6 +68,7 @@ export function computeRoutes(
 export function transformRoutesToTrade<TTradeType extends TradeType>(
   route: ReturnType<typeof computeRoutes>,
   tradeType: TTradeType,
+  blockNumber?: string | null,
   gasUseEstimateUSD?: CurrencyAmount<Token> | null
 ): InterfaceTrade<Currency, Currency, TTradeType> {
   return new InterfaceTrade({
@@ -70,8 +80,16 @@ export function transformRoutesToTrade<TTradeType extends TradeType>(
       route
         ?.filter((r): r is typeof route[0] & { routev3: NonNullable<typeof route[0]['routev3']> } => r.routev3 !== null)
         .map(({ routev3, inputAmount, outputAmount }) => ({ routev3, inputAmount, outputAmount })) ?? [],
+    mixedRoutes:
+      route
+        ?.filter(
+          (r): r is typeof route[0] & { mixedRoute: NonNullable<typeof route[0]['mixedRoute']> } =>
+            r.mixedRoute !== null
+        )
+        .map(({ mixedRoute, inputAmount, outputAmount }) => ({ mixedRoute, inputAmount, outputAmount })) ?? [],
     tradeType,
     gasUseEstimateUSD,
+    blockNumber,
   })
 }
 
@@ -95,6 +113,12 @@ const parsePair = ({ reserve0, reserve1 }: V2PoolInRoute): Pair =>
     CurrencyAmount.fromRawAmount(parseToken(reserve1.token), reserve1.quotient)
   )
 
-function isV3Route(route: V3PoolInRoute[] | V2PoolInRoute[]): route is V3PoolInRoute[] {
-  return route[0].type === 'v3-pool'
+const genericPoolPairParser = (pool: V3PoolInRoute | V2PoolInRoute): Pool | Pair => {
+  return pool.type === 'v3-pool' ? parsePool(pool) : parsePair(pool)
+}
+
+function getRouteProtocol(route: (V3PoolInRoute | V2PoolInRoute)[]): Protocol {
+  if (route.every((pool) => pool.type === 'v2-pool')) return Protocol.V2
+  if (route.every((pool) => pool.type === 'v3-pool')) return Protocol.V3
+  return Protocol.MIXED
 }

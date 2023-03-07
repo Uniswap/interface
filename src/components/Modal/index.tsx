@@ -1,89 +1,91 @@
 import { DialogContent, DialogOverlay } from '@reach/dialog'
-import { transparentize } from 'polished'
 import React from 'react'
 import { animated, useSpring, useTransition } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 import styled, { css } from 'styled-components/macro'
+import { Z_INDEX } from 'theme/zIndex'
 
 import { isMobile } from '../../utils/userAgent'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
+
+const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ $scrollOverlay?: boolean }>`
   &[data-reach-dialog-overlay] {
-    z-index: 2;
+    z-index: ${Z_INDEX.modalBackdrop};
     background-color: transparent;
     overflow: hidden;
 
     display: flex;
     align-items: center;
+    @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+      align-items: flex-end;
+    }
+    overflow-y: ${({ $scrollOverlay }) => $scrollOverlay && 'scroll'};
     justify-content: center;
 
-    background-color: ${({ theme }) => theme.modalBG};
+    background-color: ${({ theme }) => theme.backgroundScrim};
   }
 `
 
+type StyledDialogProps = {
+  $minHeight?: number | false
+  $maxHeight?: number
+  $scrollOverlay?: boolean
+  $hideBorder?: boolean
+  $maxWidth: number
+}
+
 const AnimatedDialogContent = animated(DialogContent)
-// destructure to not pass custom props to Dialog DOM element
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...rest }) => (
-  <AnimatedDialogContent {...rest} />
-)).attrs({
-  'aria-label': 'dialog',
-})`
+const StyledDialogContent = styled(AnimatedDialogContent)<StyledDialogProps>`
   overflow-y: auto;
 
   &[data-reach-dialog-content] {
-    margin: 0 0 2rem 0;
-    background-color: ${({ theme }) => theme.bg0};
-    border: 1px solid ${({ theme }) => theme.bg1};
-    box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadow1)};
+    margin: auto;
+    background-color: ${({ theme }) => theme.backgroundSurface};
+    border: ${({ theme, $hideBorder }) => !$hideBorder && `1px solid ${theme.backgroundOutline}`};
+    box-shadow: ${({ theme }) => theme.deepShadow};
     padding: 0px;
     width: 50vw;
     overflow-y: auto;
     overflow-x: hidden;
-
-    align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')};
-
-    max-width: 420px;
-    ${({ maxHeight }) =>
-      maxHeight &&
+    max-width: ${({ $maxWidth }) => $maxWidth}px;
+    ${({ $maxHeight }) =>
+      $maxHeight &&
       css`
-        max-height: ${maxHeight}vh;
+        max-height: ${$maxHeight}vh;
       `}
-    ${({ minHeight }) =>
-      minHeight &&
+    ${({ $minHeight }) =>
+      $minHeight &&
       css`
-        min-height: ${minHeight}vh;
+        min-height: ${$minHeight}vh;
       `}
-    display: flex;
+    display: ${({ $scrollOverlay }) => ($scrollOverlay ? 'inline-table' : 'flex')};
     border-radius: 20px;
-    ${({ theme }) => theme.mediaWidth.upToMedium`
+
+    @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
       width: 65vw;
+    }
+    @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
       margin: 0;
-    `}
-    ${({ theme, mobile }) => theme.mediaWidth.upToSmall`
-      width:  85vw;
-      ${
-        mobile &&
-        css`
-          width: 100vw;
-          border-radius: 20px;
-          border-bottom-left-radius: 0;
-          border-bottom-right-radius: 0;
-        `
-      }
-    `}
+      width: 100vw;
+      border-radius: 20px;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
   }
 `
 
 interface ModalProps {
   isOpen: boolean
-  onDismiss: () => void
+  onDismiss?: () => void
+  onSwipe?: () => void
   minHeight?: number | false
   maxHeight?: number
+  maxWidth?: number
   initialFocusRef?: React.RefObject<any>
   children?: React.ReactNode
+  $scrollOverlay?: boolean
+  hideBorder?: boolean
 }
 
 export default function Modal({
@@ -91,10 +93,14 @@ export default function Modal({
   onDismiss,
   minHeight = false,
   maxHeight = 90,
+  maxWidth = 420,
   initialFocusRef,
   children,
+  onSwipe = onDismiss,
+  $scrollOverlay,
+  hideBorder = false,
 }: ModalProps) {
-  const fadeTransition = useTransition(isOpen, null, {
+  const fadeTransition = useTransition(isOpen, {
     config: { duration: 200 },
     from: { opacity: 0 },
     enter: { opacity: 1 },
@@ -108,22 +114,22 @@ export default function Modal({
         y: state.down ? state.movement[1] : 0,
       })
       if (state.movement[1] > 300 || (state.velocity > 3 && state.direction[1] > 0)) {
-        onDismiss()
+        onSwipe?.()
       }
     },
   })
 
   return (
     <>
-      {fadeTransition.map(
-        ({ item, key, props }) =>
+      {fadeTransition(
+        ({ opacity }, item) =>
           item && (
             <StyledDialogOverlay
-              key={key}
-              style={props}
+              style={{ opacity: opacity.to({ range: [0.0, 1.0], output: [0, 1] }) }}
               onDismiss={onDismiss}
               initialFocusRef={initialFocusRef}
               unstable_lockFocusAcrossFrames={false}
+              $scrollOverlay={$scrollOverlay}
             >
               <StyledDialogContent
                 {...(isMobile
@@ -132,10 +138,12 @@ export default function Modal({
                       style: { transform: y.interpolate((y) => `translateY(${(y as number) > 0 ? y : 0}px)`) },
                     }
                   : {})}
-                aria-label="dialog content"
-                minHeight={minHeight}
-                maxHeight={maxHeight}
-                mobile={isMobile}
+                aria-label="dialog"
+                $minHeight={minHeight}
+                $maxHeight={maxHeight}
+                $scrollOverlay={$scrollOverlay}
+                $hideBorder={hideBorder}
+                $maxWidth={maxWidth}
               >
                 {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}
                 {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}

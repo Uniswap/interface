@@ -1,11 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
-import { CHAIN_INFO } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
+import { getChainInfoOrDefault } from 'constants/chainInfo'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { isChainAllowed } from 'utils/switchChain'
 
 import { ExternalLink } from '../../theme'
 
@@ -15,7 +13,7 @@ const CTASection = styled.section`
   gap: 8px;
   opacity: 0.8;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     grid-template-columns: auto;
     grid-template-rows: auto;
   `};
@@ -30,15 +28,15 @@ const CTA1 = styled(ExternalLink)`
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
 
   * {
-    color: ${({ theme }) => theme.text1};
+    color: ${({ theme }) => theme.textPrimary};
     text-decoration: none !important;
   }
 
   :hover {
-    border: 1px solid ${({ theme }) => theme.bg4};
+    border: 1px solid ${({ theme }) => theme.deprecated_bg4};
 
     text-decoration: none;
     * {
@@ -55,15 +53,15 @@ const CTA2 = styled(ExternalLink)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
 
   * {
-    color: ${({ theme }) => theme.text1};
+    color: ${({ theme }) => theme.textPrimary};
     text-decoration: none !important;
   }
 
   :hover {
-    border: 1px solid ${({ theme }) => theme.bg4};
+    border: 1px solid ${({ theme }) => theme.deprecated_bg4};
     text-decoration: none !important;
     * {
       text-decoration: none !important;
@@ -71,13 +69,13 @@ const CTA2 = styled(ExternalLink)`
   }
 `
 
-const HeaderText = styled(ThemedText.Label)`
+const HeaderText = styled(ThemedText.DeprecatedLabel)`
   align-items: center;
   display: flex;
 
   font-weight: 400;
   font-size: 16px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     font-size: 16px;
   `};
 `
@@ -87,26 +85,26 @@ const ResponsiveColumn = styled(AutoColumn)`
   width: 100%;
   gap: 8px;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     gap: 8px;
   `};
   justify-content: space-between;
 `
 
 export default function CTACards() {
-  const { chainId, connector } = useWeb3React()
-  const { infoLink } = CHAIN_INFO[chainId && isChainAllowed(connector, chainId) ? chainId : SupportedChainId.MAINNET]
+  const { chainId } = useWeb3React()
+  const { infoLink } = getChainInfoOrDefault(chainId)
 
   return (
     <CTASection>
-      <CTA1 href={'https://help.uniswap.org/en/articles/5391541-providing-liquidity-on-uniswap-v3'}>
+      <CTA1 href="https://support.uniswap.org/hc/en-us/categories/8122334631437-Providing-Liquidity-">
         <ResponsiveColumn>
           <HeaderText>
             <Trans>Learn about providing liquidity</Trans> ↗
           </HeaderText>
-          <ThemedText.Body fontWeight={400} style={{ alignItems: 'center', display: 'flex' }}>
+          <ThemedText.DeprecatedBody fontWeight={400} style={{ alignItems: 'center', display: 'flex' }}>
             <Trans>Check out our v3 LP walkthrough and migration guides.</Trans>
-          </ThemedText.Body>
+          </ThemedText.DeprecatedBody>
         </ResponsiveColumn>
       </CTA1>
       <CTA2 data-testid="cta-infolink" href={infoLink + 'pools'}>
@@ -114,9 +112,9 @@ export default function CTACards() {
           <HeaderText style={{ alignSelf: 'flex-start' }}>
             <Trans>Top pools</Trans> ↗
           </HeaderText>
-          <ThemedText.Body fontWeight={400} style={{ alignSelf: 'flex-start' }}>
+          <ThemedText.DeprecatedBody fontWeight={400} style={{ alignSelf: 'flex-start' }}>
             <Trans>Explore Uniswap Analytics.</Trans>
-          </ThemedText.Body>
+          </ThemedText.DeprecatedBody>
         </ResponsiveColumn>
       </CTA2>
     </CTASection>

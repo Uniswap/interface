@@ -7,8 +7,8 @@ import { DEFAULT_LOCALE, LOCALE_LABEL, SupportedLocale } from '../../constants/l
 import { navigatorLocale, useActiveLocale } from '../../hooks/useActiveLocale'
 import { StyledInternalLink, ThemedText } from '../../theme'
 
-const Container = styled(ThemedText.Small)`
-  opacity: 0.6;
+const Container = styled(ThemedText.DeprecatedSmall)`
+  opacity: ${({ theme }) => theme.opacity.hover};
   :hover {
     opacity: 1;
   }

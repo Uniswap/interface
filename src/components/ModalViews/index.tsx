@@ -1,8 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { useContext } from 'react'
 import { ArrowUpCircle } from 'react-feather'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import { CloseIcon, CustomLightSpinner, ThemedText } from '../../theme'
@@ -28,13 +27,13 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
         <CloseIcon onClick={onDismiss} />
       </RowBetween>
       <ConfirmedIcon>
-        <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
+        <CustomLightSpinner src={Circle} alt="loader" size="90px" />
       </ConfirmedIcon>
-      <AutoColumn gap="100px" justify={'center'}>
+      <AutoColumn gap="100px" justify="center">
         {children}
-        <ThemedText.SubHeader>
+        <ThemedText.DeprecatedSubHeader>
           <Trans>Confirm this transaction in your wallet</Trans>
-        </ThemedText.SubHeader>
+        </ThemedText.DeprecatedSubHeader>
       </AutoColumn>
     </ConfirmOrLoadingWrapper>
   )
@@ -49,7 +48,7 @@ export function SubmittedView({
   onDismiss: () => void
   hash: string | undefined
 }) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const { chainId } = useWeb3React()
 
   return (
@@ -59,18 +58,18 @@ export function SubmittedView({
         <CloseIcon onClick={onDismiss} />
       </RowBetween>
       <ConfirmedIcon>
-        <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.primary1} />
+        <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.accentAction} />
       </ConfirmedIcon>
-      <AutoColumn gap="100px" justify={'center'}>
+      <AutoColumn gap="100px" justify="center">
         {children}
         {chainId && hash && (
           <ExternalLink
             href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}
             style={{ marginLeft: '4px' }}
           >
-            <ThemedText.SubHeader>
+            <ThemedText.DeprecatedSubHeader>
               <Trans>View transaction on Explorer</Trans>
-            </ThemedText.SubHeader>
+            </ThemedText.DeprecatedSubHeader>
           </ExternalLink>
         )}
       </AutoColumn>

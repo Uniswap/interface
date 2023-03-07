@@ -35,7 +35,8 @@ export default function useAccountRiskCheck(account: string | null | undefined) 
             .catch(() => dispatch(setOpenModal(null)))
         }
       } finally {
-        localStorage.setItem(riskCheckLocalStorageKey, (now + ms`7 days`).toString())
+        // leaving this code in place w/ a negligible cache time in case we want to increase cache time later
+        localStorage.setItem(riskCheckLocalStorageKey, (now + ms`10 seconds`).toString())
       }
     }
   }, [account, dispatch])

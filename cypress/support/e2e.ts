@@ -9,6 +9,8 @@
 import { injected } from './ethereum'
 import assert = require('assert')
 
+import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
+
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
@@ -17,6 +19,9 @@ declare global {
     }
     interface VisitOptions {
       serviceWorker?: true
+      featureFlags?: Array<FeatureFlag>
+      selectedWallet?: string
+      noWallet?: boolean
     }
   }
 }
@@ -31,10 +36,30 @@ Cypress.Commands.overwrite(
     cy.intercept('/service-worker.js', options?.serviceWorker ? undefined : { statusCode: 404 }).then(() => {
       original({
         ...options,
-        url: (url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url) + '?chain=rinkeby',
+        url:
+          (url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url) +
+          `${url.includes('?') ? '&' : '?'}chain=goerli`,
         onBeforeLoad(win) {
           options?.onBeforeLoad?.(win)
           win.localStorage.clear()
+
+          const userState = {
+            selectedWallet: options?.noWallet !== true ? options?.selectedWallet || 'INJECTED' : undefined,
+            fiatOnrampDismissed: true,
+          }
+          win.localStorage.setItem('redux_localstorage_simple_user', JSON.stringify(userState))
+
+          if (options?.featureFlags) {
+            const featureFlags = options.featureFlags.reduce(
+              (flags, flag) => ({
+                ...flags,
+                [flag]: 'enabled',
+              }),
+              {}
+            )
+            win.localStorage.setItem('featureFlags', JSON.stringify(featureFlags))
+          }
+
           win.ethereum = injected
         },
       })
@@ -47,6 +72,23 @@ beforeEach(() => {
   // These are stripped by cypress because chromeWebSecurity === false; this adds them back in.
   cy.intercept(/infura.io/, (res) => {
     res.headers['origin'] = 'http://localhost:3000'
+    res.alias = res.body.method
     res.continue()
   })
+
+  // Graphql security policies are based on Origin headers.
+  // These are stripped by cypress because chromeWebSecurity === false; this adds them back in.
+  cy.intercept('https://api.uniswap.org/v1/graphql', (res) => {
+    res.headers['origin'] = 'https://app.uniswap.org'
+    res.continue()
+  })
+  cy.intercept('https://beta.api.uniswap.org/v1/graphql', (res) => {
+    res.headers['origin'] = 'https://app.uniswap.org'
+    res.continue()
+  })
+})
+
+Cypress.on('uncaught:exception', () => {
+  // returning false here prevents Cypress from failing the test
+  return false
 })

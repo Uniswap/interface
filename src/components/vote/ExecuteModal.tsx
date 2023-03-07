@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import { useExecuteCallback } from '../../state/governance/hooks'
@@ -49,7 +49,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
   const [attempting, setAttempting] = useState<boolean>(false)
 
   // get theme for colors
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {
@@ -81,20 +81,20 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
-              <ThemedText.MediumHeader fontWeight={500}>
+              <ThemedText.DeprecatedMediumHeader fontWeight={500}>
                 <Trans>Execute Proposal {proposalId}</Trans>
-              </ThemedText.MediumHeader>
+              </ThemedText.DeprecatedMediumHeader>
               <StyledClosed onClick={wrappedOnDismiss} />
             </RowBetween>
             <RowBetween>
-              <ThemedText.Body>
+              <ThemedText.DeprecatedBody>
                 <Trans>Executing this proposal will enact the calldata on-chain.</Trans>
-              </ThemedText.Body>
+              </ThemedText.DeprecatedBody>
             </RowBetween>
             <ButtonPrimary onClick={onExecute}>
-              <ThemedText.MediumHeader color="white">
+              <ThemedText.DeprecatedMediumHeader color="white">
                 <Trans>Execute</Trans>
-              </ThemedText.MediumHeader>
+              </ThemedText.DeprecatedMediumHeader>
             </ButtonPrimary>
           </AutoColumn>
         </ContentWrapper>
@@ -106,17 +106,17 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
             <StyledClosed onClick={wrappedOnDismiss} />
           </RowBetween>
           <ConfirmedIcon>
-            <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
+            <CustomLightSpinner src={Circle} alt="loader" size="90px" />
           </ConfirmedIcon>
-          <AutoColumn gap="100px" justify={'center'}>
-            <AutoColumn gap="12px" justify={'center'}>
-              <ThemedText.LargeHeader>
+          <AutoColumn gap="100px" justify="center">
+            <AutoColumn gap="md" justify="center">
+              <ThemedText.DeprecatedLargeHeader>
                 <Trans>Executing</Trans>
-              </ThemedText.LargeHeader>
+              </ThemedText.DeprecatedLargeHeader>
             </AutoColumn>
-            <ThemedText.SubHeader>
+            <ThemedText.DeprecatedSubHeader>
               <Trans>Confirm this transaction in your wallet</Trans>
-            </ThemedText.SubHeader>
+            </ThemedText.DeprecatedSubHeader>
           </AutoColumn>
         </ConfirmOrLoadingWrapper>
       )}
@@ -127,22 +127,22 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
             <StyledClosed onClick={wrappedOnDismiss} />
           </RowBetween>
           <ConfirmedIcon>
-            <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.primary1} />
+            <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.accentAction} />
           </ConfirmedIcon>
-          <AutoColumn gap="100px" justify={'center'}>
-            <AutoColumn gap="12px" justify={'center'}>
-              <ThemedText.LargeHeader>
+          <AutoColumn gap="100px" justify="center">
+            <AutoColumn gap="md" justify="center">
+              <ThemedText.DeprecatedLargeHeader>
                 <Trans>Execution Submitted</Trans>
-              </ThemedText.LargeHeader>
+              </ThemedText.DeprecatedLargeHeader>
             </AutoColumn>
             {chainId && (
               <ExternalLink
                 href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}
                 style={{ marginLeft: '4px' }}
               >
-                <ThemedText.SubHeader>
+                <ThemedText.DeprecatedSubHeader>
                   <Trans>View transaction on Explorer</Trans>
-                </ThemedText.SubHeader>
+                </ThemedText.DeprecatedSubHeader>
               </ExternalLink>
             )}
           </AutoColumn>

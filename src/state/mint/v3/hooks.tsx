@@ -16,7 +16,7 @@ import { usePool } from 'hooks/usePools'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useCallback, useMemo } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { getTickToPrice } from 'utils/getTickToPrice'
 import { replaceURLParam } from 'utils/routes'
@@ -48,7 +48,7 @@ export function useV3MintActionHandlers(noLiquidity: boolean | undefined): {
   onStartPriceInput: (typedValue: string) => void
 } {
   const dispatch = useAppDispatch()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const onFieldAInput = useCallback(
     (typedValue: string) => {
@@ -64,20 +64,22 @@ export function useV3MintActionHandlers(noLiquidity: boolean | undefined): {
     [dispatch, noLiquidity]
   )
 
+  const { search } = useLocation()
+
   const onLeftRangeInput = useCallback(
     (typedValue: string) => {
       dispatch(typeLeftRangeInput({ typedValue }))
-      history.replace({ search: replaceURLParam(history.location.search, 'minPrice', typedValue) })
+      navigate({ search: replaceURLParam(search, 'minPrice', typedValue) }, { replace: true })
     },
-    [dispatch, history]
+    [dispatch, navigate, search]
   )
 
   const onRightRangeInput = useCallback(
     (typedValue: string) => {
       dispatch(typeRightRangeInput({ typedValue }))
-      history.replace({ search: replaceURLParam(history.location.search, 'maxPrice', typedValue) })
+      navigate({ search: replaceURLParam(search, 'maxPrice', typedValue) }, { replace: true })
     },
-    [dispatch, history]
+    [dispatch, navigate, search]
   )
 
   const onStartPriceInput = useCallback(

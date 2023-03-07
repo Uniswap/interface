@@ -34,8 +34,8 @@ const pulse = (color: string) => keyframes`
   }
 `
 const FocusedOutlineCard = styled(Card)<{ pulsing: boolean }>`
-  border: 1px solid ${({ theme }) => theme.bg2};
-  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.primary1)} 0.6s linear;
+  border: 1px solid ${({ theme }) => theme.backgroundInteractive};
+  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.accentAction)} 0.6s linear;
   align-self: center;
 `
 
@@ -149,18 +149,18 @@ export default function FeeSelector({
             <AutoColumn id="add-liquidity-selected-fee">
               {!feeAmount ? (
                 <>
-                  <ThemedText.Label>
+                  <ThemedText.DeprecatedLabel>
                     <Trans>Fee tier</Trans>
-                  </ThemedText.Label>
-                  <ThemedText.Main fontWeight={400} fontSize="12px" textAlign="left">
+                  </ThemedText.DeprecatedLabel>
+                  <ThemedText.DeprecatedMain fontWeight={400} fontSize="12px" textAlign="left">
                     <Trans>The % you will earn in fees.</Trans>
-                  </ThemedText.Main>
+                  </ThemedText.DeprecatedMain>
                 </>
               ) : (
                 <>
-                  <ThemedText.Label className="selected-fee-label">
+                  <ThemedText.DeprecatedLabel className="selected-fee-label">
                     <Trans>{FEE_AMOUNT_DETAIL[feeAmount].label}% fee tier</Trans>
-                  </ThemedText.Label>
+                  </ThemedText.DeprecatedLabel>
                   <Box style={{ width: 'fit-content', marginTop: '8px' }} className="selected-fee-percentage">
                     {distributions && (
                       <FeeTierPercentageBadge

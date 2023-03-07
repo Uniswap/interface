@@ -19,9 +19,9 @@ import { unwrappedToken } from '../../utils/unwrappedToken'
 import { ButtonEmpty, ButtonPrimary, ButtonSecondary } from '../Button'
 import { LightCard } from '../Card'
 import { AutoColumn } from '../Column'
-import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { CardNoise } from '../earn/styled'
+import CurrencyLogo from '../Logo/CurrencyLogo'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { Dots } from '../swap/styleds'
 import { FixedHeightRow } from '.'
@@ -29,7 +29,7 @@ import { FixedHeightRow } from '.'
 const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
   border: none;
   background: ${({ theme, bgColor }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${transparentize(0.8, bgColor)} 0%, ${theme.bg3} 100%) `};
+    `radial-gradient(91.85% 100% at 1.84% 0%, ${transparentize(0.8, bgColor)} 0%, ${theme.deprecated_bg3} 100%) `};
   position: relative;
   overflow: hidden;
 `
@@ -79,7 +79,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
   return (
     <StyledPositionCard border={border} bgColor={backgroundColor}>
       <CardNoise />
-      <AutoColumn gap="12px">
+      <AutoColumn gap="md">
         <FixedHeightRow>
           <AutoRow gap="8px">
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
@@ -116,7 +116,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
         </FixedHeightRow>
 
         {showMore && (
-          <AutoColumn gap="8px">
+          <AutoColumn gap="sm">
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
                 <Trans>Your total pool tokens:</Trans>
@@ -143,7 +143,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
               </RowFixed>
               {token0Deposited ? (
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                  <Text fontSize={16} fontWeight={500} marginLeft="6px">
                     {token0Deposited?.toSignificant(6)}
                   </Text>
                   <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
@@ -161,7 +161,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
               </RowFixed>
               {token1Deposited ? (
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                  <Text fontSize={16} fontWeight={500} marginLeft="6px">
                     {token1Deposited?.toSignificant(6)}
                   </Text>
                   <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />

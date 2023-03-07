@@ -4,13 +4,13 @@ import styled, { keyframes } from 'styled-components/macro'
 
 const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
   align-items: center;
-  background: ${({ theme }) => theme.bg1};
-  border: none;
+  background: ${({ isActive, theme }) => (isActive ? theme.accentActionSoft : 'transparent')};
+  border: ${({ theme, isActive }) => (isActive ? 'none' : `1px solid ${theme.backgroundOutline}`)};
   border-radius: 20px;
   cursor: pointer;
   display: flex;
   outline: none;
-  padding: 0.4rem 0.4rem;
+  padding: 4px;
   width: fit-content;
 `
 
@@ -42,8 +42,8 @@ const ToggleElementHoverStyle = (hasBgColor: boolean, theme: any, isActive?: boo
         opacity: '0.8',
       }
     : {
-        background: isActive ? darken(0.05, theme.primary1) : darken(0.05, theme.bg4),
-        color: isActive ? theme.white : theme.text3,
+        background: isActive ? darken(0.05, theme.accentAction) : darken(0.05, theme.deprecated_bg4),
+        color: isActive ? theme.white : theme.textTertiary,
       }
 
 const ToggleElement = styled.span<{ isActive?: boolean; bgColor?: string; isInitialToggleLoad?: boolean }>`
@@ -51,14 +51,14 @@ const ToggleElement = styled.span<{ isActive?: boolean; bgColor?: string; isInit
     ${({ isActive, isInitialToggleLoad }) => (isInitialToggleLoad ? 'none' : isActive ? turnOnToggle : turnOffToggle)}
     ease-in;
   background: ${({ theme, bgColor, isActive }) =>
-    isActive ? bgColor ?? theme.primary1 : !!bgColor ? theme.bg4 : theme.text3};
+    isActive ? bgColor ?? theme.accentAction : bgColor ? theme.deprecated_bg4 : theme.textTertiary};
   border-radius: 50%;
   height: 24px;
   :hover {
     ${({ bgColor, theme, isActive }) => ToggleElementHoverStyle(!!bgColor, theme, isActive)}
   }
-  margin-left: ${({ isActive }) => (isActive ? '2.2em' : '0em')};
-  margin-right: ${({ isActive }) => (!isActive ? '2.2em' : '0em')};
+  margin-left: ${({ isActive }) => isActive && '2.2em'};
+  margin-right: ${({ isActive }) => !isActive && '2.2em'};
   width: 24px;
 `
 

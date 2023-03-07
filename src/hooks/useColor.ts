@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react'
 import { Token } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import uriToHttp from 'lib/utils/uriToHttp'
@@ -37,7 +38,9 @@ async function getColorFromToken(token: Token): Promise<string | null> {
     try {
       logoURI = URIForEthToken(address)
       return await getColorFromUriPath(logoURI)
-    } catch (e) {}
+    } catch (error) {
+      Sentry.captureMessage(error.toString())
+    }
   }
 
   return null
@@ -46,7 +49,13 @@ async function getColorFromToken(token: Token): Promise<string | null> {
 async function getColorFromUriPath(uri: string): Promise<string | null> {
   const formattedPath = uriToHttp(uri)[0]
 
-  const palette = await Vibrant.from(formattedPath).getPalette()
+  let palette
+
+  try {
+    palette = await Vibrant.from(formattedPath).getPalette()
+  } catch (err) {
+    return null
+  }
   if (!palette?.Vibrant) {
     return null
   }
@@ -80,29 +89,6 @@ export function useColor(token?: Token) {
       setColor('#2172E5')
     }
   }, [token])
-
-  return color
-}
-
-export function useListColor(listImageUri?: string) {
-  const [color, setColor] = useState('#2172E5')
-
-  useEffect(() => {
-    let stale = false
-
-    if (listImageUri) {
-      getColorFromUriPath(listImageUri).then((color) => {
-        if (!stale && color !== null) {
-          setColor(color)
-        }
-      })
-    }
-
-    return () => {
-      stale = true
-      setColor('#2172E5')
-    }
-  }, [listImageUri])
 
   return color
 }

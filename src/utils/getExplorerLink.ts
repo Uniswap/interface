@@ -1,13 +1,10 @@
-import { SupportedChainId } from '../constants/chains'
+import { SupportedChainId } from 'constants/chains'
 
 const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
   [SupportedChainId.MAINNET]: 'https://etherscan.io',
-  [SupportedChainId.ROPSTEN]: 'https://ropsten.etherscan.io',
-  [SupportedChainId.RINKEBY]: 'https://rinkeby.etherscan.io',
   [SupportedChainId.GOERLI]: 'https://goerli.etherscan.io',
-  [SupportedChainId.KOVAN]: 'https://kovan.etherscan.io',
   [SupportedChainId.OPTIMISM]: 'https://optimistic.etherscan.io',
-  [SupportedChainId.OPTIMISTIC_KOVAN]: 'https://kovan-optimistic.etherscan.io',
+  [SupportedChainId.OPTIMISM_GOERLI]: 'https://goerli-optimism.etherscan.io',
   [SupportedChainId.POLYGON]: 'https://polygonscan.com',
   [SupportedChainId.POLYGON_MUMBAI]: 'https://mumbai.polygonscan.com',
   [SupportedChainId.CELO]: 'https://celoscan.io',
@@ -42,17 +39,17 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
     }
   }
 
-  if (chainId === SupportedChainId.ARBITRUM_RINKEBY) {
+  if (chainId === SupportedChainId.ARBITRUM_GOERLI) {
     switch (type) {
       case ExplorerDataType.TRANSACTION:
-        return `https://rinkeby-explorer.arbitrum.io/tx/${data}`
+        return `https://goerli.arbiscan.io/tx/${data}`
       case ExplorerDataType.ADDRESS:
       case ExplorerDataType.TOKEN:
-        return `https://rinkeby-explorer.arbitrum.io/address/${data}`
+        return `https://goerli.arbiscan.io/address/${data}`
       case ExplorerDataType.BLOCK:
-        return `https://rinkeby-explorer.arbitrum.io/block/${data}`
+        return `https://goerli.arbiscan.io/block/${data}`
       default:
-        return `https://rinkeby-explorer.arbitrum.io/`
+        return `https://goerli.arbiscan.io/`
     }
   }
 
@@ -66,7 +63,7 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
       return `${prefix}/token/${data}`
 
     case ExplorerDataType.BLOCK:
-      if (chainId === SupportedChainId.OPTIMISM || chainId === SupportedChainId.OPTIMISTIC_KOVAN) {
+      if (chainId === SupportedChainId.OPTIMISM || chainId === SupportedChainId.OPTIMISM_GOERLI) {
         return `${prefix}/tx/${data}`
       }
       return `${prefix}/block/${data}`

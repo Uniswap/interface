@@ -2,34 +2,38 @@ import { Connector } from '@web3-react/types'
 import {
   coinbaseWalletConnection,
   ConnectionType,
-  fortmaticConnection,
   gnosisSafeConnection,
   injectedConnection,
   networkConnection,
   walletConnectConnection,
 } from 'connection'
 
-const CONNECTIONS = [
-  coinbaseWalletConnection,
-  fortmaticConnection,
-  injectedConnection,
-  networkConnection,
-  walletConnectConnection,
-  gnosisSafeConnection,
-]
-
 export function getIsInjected(): boolean {
   return Boolean(window.ethereum)
 }
 
-export function getIsMetaMask(): boolean {
-  return window.ethereum?.isMetaMask ?? false
+export function getIsBraveWallet(): boolean {
+  return window.ethereum?.isBraveWallet ?? false
+}
+
+export function getIsMetaMaskWallet(): boolean {
+  // When using Brave browser, `isMetaMask` is set to true when using the built-in wallet
+  // This function should return true only when using the MetaMask extension
+  // https://wallet-docs.brave.com/ethereum/wallet-detection#compatability-with-metamask
+  return (window.ethereum?.isMetaMask ?? false) && !getIsBraveWallet()
 }
 
 export function getIsCoinbaseWallet(): boolean {
   return window.ethereum?.isCoinbaseWallet ?? false
 }
 
+const CONNECTIONS = [
+  gnosisSafeConnection,
+  injectedConnection,
+  coinbaseWalletConnection,
+  walletConnectConnection,
+  networkConnection,
+]
 export function getConnection(c: Connector | ConnectionType) {
   if (c instanceof Connector) {
     const connection = CONNECTIONS.find((connection) => connection.connector === c)
@@ -45,8 +49,6 @@ export function getConnection(c: Connector | ConnectionType) {
         return coinbaseWalletConnection
       case ConnectionType.WALLET_CONNECT:
         return walletConnectConnection
-      case ConnectionType.FORTMATIC:
-        return fortmaticConnection
       case ConnectionType.NETWORK:
         return networkConnection
       case ConnectionType.GNOSIS_SAFE:
@@ -55,16 +57,17 @@ export function getConnection(c: Connector | ConnectionType) {
   }
 }
 
-export function getConnectionName(connectionType: ConnectionType, isMetaMask?: boolean) {
+export function getConnectionName(
+  connectionType: ConnectionType,
+  hasMetaMaskExtension: boolean = getIsMetaMaskWallet()
+) {
   switch (connectionType) {
     case ConnectionType.INJECTED:
-      return isMetaMask ? 'MetaMask' : 'Injected'
+      return hasMetaMaskExtension ? 'MetaMask' : 'Browser Wallet'
     case ConnectionType.COINBASE_WALLET:
       return 'Coinbase Wallet'
     case ConnectionType.WALLET_CONNECT:
       return 'WalletConnect'
-    case ConnectionType.FORTMATIC:
-      return 'Fortmatic'
     case ConnectionType.NETWORK:
       return 'Network'
     case ConnectionType.GNOSIS_SAFE:

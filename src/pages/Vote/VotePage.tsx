@@ -1,5 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
+import { Trace } from '@uniswap/analytics'
+import { InterfacePageName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import ExecuteModal from 'components/vote/ExecuteModal'
@@ -12,11 +14,11 @@ import ms from 'ms.macro'
 import { useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
-import { RouteComponentProps } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { ButtonPrimary } from '../../components/Button'
-import { GreyCard } from '../../components/Card'
+import { GrayCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import { CardSection, DataCard } from '../../components/earn/styled'
 import { RowBetween, RowFixed } from '../../components/Row'
@@ -54,11 +56,20 @@ import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ProposalStatus } from './styled'
 
 const PageWrapper = styled(AutoColumn)`
+  padding-top: 68px;
   width: 100%;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    padding: 48px 8px 0px;
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding-top: 20px;
+  }
 `
 
 const ProposalInfo = styled(AutoColumn)`
-  background: ${({ theme }) => theme.bg0};
+  background: ${({ theme }) => theme.backgroundSurface};
   border-radius: 12px;
   padding: 1.5rem;
   position: relative;
@@ -71,10 +82,10 @@ const ArrowWrapper = styled(StyledInternalLink)`
   align-items: center;
   gap: 8px;
   height: 24px;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.textPrimary};
 
   a {
-    color: ${({ theme }) => theme.text1};
+    color: ${({ theme }) => theme.textPrimary};
     text-decoration: none;
   }
   :hover {
@@ -91,7 +102,7 @@ const CardWrapper = styled.div`
 const StyledDataCard = styled(DataCard)`
   width: 100%;
   background: none;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.deprecated_bg1};
   height: fit-content;
   z-index: 2;
 `
@@ -101,14 +112,14 @@ const ProgressWrapper = styled.div`
   margin-top: 1rem;
   height: 4px;
   border-radius: 4px;
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.deprecated_bg3};
   position: relative;
 `
 
 const Progress = styled.div<{ status: 'for' | 'against'; percentageString?: string }>`
   height: 4px;
   border-radius: 4px;
-  background-color: ${({ theme, status }) => (status === 'for' ? theme.green1 : theme.red1)};
+  background-color: ${({ theme, status }) => (status === 'for' ? theme.accentSuccess : theme.accentFailure)};
   width: ${({ percentageString }) => percentageString ?? '0%'};
 `
 
@@ -118,7 +129,7 @@ const MarkDownWrapper = styled.div`
 `
 
 const WrapSmall = styled(RowBetween)`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     align-items: flex-start;
     flex-direction: column;
   `};
@@ -150,11 +161,9 @@ function getDateFromBlock(
   return undefined
 }
 
-export default function VotePage({
-  match: {
-    params: { governorIndex, id },
-  },
-}: RouteComponentProps<{ governorIndex: string; id: string }>) {
+export default function VotePage() {
+  // see https://github.com/remix-run/react-router/issues/8200#issuecomment-962520661
+  const { governorIndex, id } = useParams() as { governorIndex: string; id: string }
   const parsedGovernorIndex = Number.parseInt(governorIndex)
 
   const { chainId, account } = useWeb3React()
@@ -257,227 +266,244 @@ export default function VotePage({
     return <span>{content}</span>
   }
 
+  function MarkdownImage({ ...rest }) {
+    return <img {...rest} style={{ width: '100%', height: '100$', objectFit: 'cover' }} alt="" />
+  }
+
   return (
-    <>
-      <PageWrapper gap="lg" justify="center">
-        <VoteModal
-          isOpen={showVoteModal}
-          onDismiss={toggleVoteModal}
-          proposalId={proposalData?.id}
-          voteOption={voteOption}
-        />
-        <DelegateModal isOpen={showDelegateModal} onDismiss={toggleDelegateModal} title={<Trans>Unlock Votes</Trans>} />
-        <QueueModal isOpen={showQueueModal} onDismiss={toggleQueueModal} proposalId={proposalData?.id} />
-        <ExecuteModal isOpen={showExecuteModal} onDismiss={toggleExecuteModal} proposalId={proposalData?.id} />
-        <ProposalInfo gap="lg" justify="start">
-          <RowBetween style={{ width: '100%' }}>
-            <ArrowWrapper to="/vote">
-              <Trans>
-                <ArrowLeft size={20} /> All Proposals
-              </Trans>
-            </ArrowWrapper>
-            {proposalData && <ProposalStatus status={proposalData.status} />}
-          </RowBetween>
-          <AutoColumn gap="10px" style={{ width: '100%' }}>
-            <ThemedText.LargeHeader style={{ marginBottom: '.5rem' }}>{proposalData?.title}</ThemedText.LargeHeader>
-            <RowBetween>
-              <ThemedText.Main>
-                {startDate && startDate > now ? (
-                  <Trans>Voting starts approximately {startDate.toLocaleString(locale, dateFormat)}</Trans>
-                ) : null}
-              </ThemedText.Main>
+    <Trace page={InterfacePageName.VOTE_PAGE} shouldLogImpression>
+      <>
+        <PageWrapper gap="lg" justify="center">
+          <VoteModal
+            isOpen={showVoteModal}
+            onDismiss={toggleVoteModal}
+            proposalId={proposalData?.id}
+            voteOption={voteOption}
+          />
+          <DelegateModal
+            isOpen={showDelegateModal}
+            onDismiss={toggleDelegateModal}
+            title={<Trans>Unlock Votes</Trans>}
+          />
+          <QueueModal isOpen={showQueueModal} onDismiss={toggleQueueModal} proposalId={proposalData?.id} />
+          <ExecuteModal isOpen={showExecuteModal} onDismiss={toggleExecuteModal} proposalId={proposalData?.id} />
+          <ProposalInfo gap="lg" justify="start">
+            <RowBetween style={{ width: '100%' }}>
+              <ArrowWrapper to="/vote">
+                <Trans>
+                  <ArrowLeft size={20} /> All Proposals
+                </Trans>
+              </ArrowWrapper>
+              {proposalData && <ProposalStatus status={proposalData.status} />}
             </RowBetween>
-            <RowBetween>
-              <ThemedText.Main>
-                {endDate &&
-                  (endDate < now ? (
-                    <Trans>Voting ended {endDate.toLocaleString(locale, dateFormat)}</Trans>
-                  ) : (
-                    <Trans>Voting ends approximately {endDate.toLocaleString(locale, dateFormat)}</Trans>
-                  ))}
-              </ThemedText.Main>
-            </RowBetween>
-            {proposalData && proposalData.status === ProposalState.ACTIVE && !showVotingButtons && (
-              <GreyCard>
-                <ThemedText.Black>
-                  <Trans>
-                    Only UNI votes that were self delegated or delegated to another address before block{' '}
-                    {proposalData.startBlock} are eligible for voting.
-                  </Trans>{' '}
-                  {showLinkForUnlock && (
-                    <span>
-                      <Trans>
-                        <StyledInternalLink to="/vote">Unlock voting</StyledInternalLink> to prepare for the next
-                        proposal.
-                      </Trans>
-                    </span>
-                  )}
-                </ThemedText.Black>
-              </GreyCard>
-            )}
-          </AutoColumn>
-          {showVotingButtons && (
-            <RowFixed style={{ width: '100%', gap: '12px' }}>
-              <ButtonPrimary
-                padding="8px"
-                $borderRadius="8px"
-                onClick={() => {
-                  setVoteOption(VoteOption.For)
-                  toggleVoteModal()
-                }}
-              >
-                <Trans>Vote For</Trans>
-              </ButtonPrimary>
-              <ButtonPrimary
-                padding="8px"
-                $borderRadius="8px"
-                onClick={() => {
-                  setVoteOption(VoteOption.Against)
-                  toggleVoteModal()
-                }}
-              >
-                <Trans>Vote Against</Trans>
-              </ButtonPrimary>
-            </RowFixed>
-          )}
-          {showQueueButton && (
-            <RowFixed style={{ width: '100%', gap: '12px' }}>
-              <ButtonPrimary
-                padding="8px"
-                $borderRadius="8px"
-                onClick={() => {
-                  toggleQueueModal()
-                }}
-              >
-                <Trans>Queue</Trans>
-              </ButtonPrimary>
-            </RowFixed>
-          )}
-          {showExecuteButton && (
-            <>
-              {eta && (
-                <RowBetween>
-                  <ThemedText.Black>
-                    <Trans>This proposal may be executed after {eta.toLocaleString(locale, dateFormat)}.</Trans>
-                  </ThemedText.Black>
-                </RowBetween>
+            <AutoColumn gap="10px" style={{ width: '100%' }}>
+              <ThemedText.DeprecatedLargeHeader style={{ marginBottom: '.5rem' }}>
+                {proposalData?.title}
+              </ThemedText.DeprecatedLargeHeader>
+              <RowBetween>
+                <ThemedText.DeprecatedMain>
+                  {startDate && startDate > now ? (
+                    <Trans>Voting starts approximately {startDate.toLocaleString(locale, dateFormat)}</Trans>
+                  ) : null}
+                </ThemedText.DeprecatedMain>
+              </RowBetween>
+              <RowBetween>
+                <ThemedText.DeprecatedMain>
+                  {endDate &&
+                    (endDate < now ? (
+                      <Trans>Voting ended {endDate.toLocaleString(locale, dateFormat)}</Trans>
+                    ) : (
+                      <Trans>Voting ends approximately {endDate.toLocaleString(locale, dateFormat)}</Trans>
+                    ))}
+                </ThemedText.DeprecatedMain>
+              </RowBetween>
+              {proposalData && proposalData.status === ProposalState.ACTIVE && !showVotingButtons && (
+                <GrayCard>
+                  <ThemedText.DeprecatedBlack>
+                    <Trans>
+                      Only UNI votes that were self delegated or delegated to another address before block{' '}
+                      {proposalData.startBlock} are eligible for voting.
+                    </Trans>{' '}
+                    {showLinkForUnlock && (
+                      <span>
+                        <Trans>
+                          <StyledInternalLink to="/vote">Unlock voting</StyledInternalLink> to prepare for the next
+                          proposal.
+                        </Trans>
+                      </span>
+                    )}
+                  </ThemedText.DeprecatedBlack>
+                </GrayCard>
               )}
+            </AutoColumn>
+            {showVotingButtons && (
               <RowFixed style={{ width: '100%', gap: '12px' }}>
                 <ButtonPrimary
                   padding="8px"
                   $borderRadius="8px"
                   onClick={() => {
-                    toggleExecuteModal()
+                    setVoteOption(VoteOption.For)
+                    toggleVoteModal()
                   }}
-                  // can't execute until the eta has arrived
-                  disabled={!currentTimestamp || !proposalData?.eta || currentTimestamp.lt(proposalData.eta)}
                 >
-                  <Trans>Execute</Trans>
+                  <Trans>Vote For</Trans>
+                </ButtonPrimary>
+                <ButtonPrimary
+                  padding="8px"
+                  $borderRadius="8px"
+                  onClick={() => {
+                    setVoteOption(VoteOption.Against)
+                    toggleVoteModal()
+                  }}
+                >
+                  <Trans>Vote Against</Trans>
                 </ButtonPrimary>
               </RowFixed>
-            </>
-          )}
-          <CardWrapper>
-            <StyledDataCard>
-              <CardSection>
-                <AutoColumn gap="md">
-                  <WrapSmall>
-                    <ThemedText.Black fontWeight={600}>
-                      <Trans>For</Trans>
-                    </ThemedText.Black>
-                    {proposalData && (
-                      <ThemedText.Black fontWeight={600}>
-                        {proposalData.forCount.toFixed(0, { groupSeparator: ',' })}
-                        {quorumAmount && (
-                          <span style={{ fontWeight: 400 }}>{` / ${quorumAmount.toExact({
-                            groupSeparator: ',',
-                          })}`}</span>
-                        )}
-                      </ThemedText.Black>
-                    )}
-                  </WrapSmall>
-                </AutoColumn>
-                <ProgressWrapper>
-                  <Progress
-                    status={'for'}
-                    percentageString={
-                      proposalData?.forCount.greaterThan(0) ? `${forPercentage?.toFixed(0) ?? 0}%` : '0%'
-                    }
-                  />
-                </ProgressWrapper>
-              </CardSection>
-            </StyledDataCard>
-            <StyledDataCard>
-              <CardSection>
-                <AutoColumn gap="md">
-                  <WrapSmall>
-                    <ThemedText.Black fontWeight={600}>
-                      <Trans>Against</Trans>
-                    </ThemedText.Black>
-                    {proposalData && (
-                      <ThemedText.Black fontWeight={600}>
-                        {proposalData.againstCount.toFixed(0, { groupSeparator: ',' })}
-                      </ThemedText.Black>
-                    )}
-                  </WrapSmall>
-                </AutoColumn>
-                <ProgressWrapper>
-                  <Progress
-                    status={'against'}
-                    percentageString={
-                      proposalData?.againstCount?.greaterThan(0) ? `${againstPercentage?.toFixed(0) ?? 0}%` : '0%'
-                    }
-                  />
-                </ProgressWrapper>
-              </CardSection>
-            </StyledDataCard>
-          </CardWrapper>
-          <AutoColumn gap="md">
-            <ThemedText.MediumHeader fontWeight={600}>
-              <Trans>Details</Trans>
-            </ThemedText.MediumHeader>
-            {proposalData?.details?.map((d, i) => {
-              return (
-                <DetailText key={i}>
-                  {i + 1}: {linkIfAddress(d.target)}.{d.functionSig}(
-                  {d.callData.split(',').map((content, i) => {
-                    return (
-                      <span key={i}>
-                        {linkIfAddress(content)}
-                        {d.callData.split(',').length - 1 === i ? '' : ','}
-                      </span>
+            )}
+            {showQueueButton && (
+              <RowFixed style={{ width: '100%', gap: '12px' }}>
+                <ButtonPrimary
+                  padding="8px"
+                  $borderRadius="8px"
+                  onClick={() => {
+                    toggleQueueModal()
+                  }}
+                >
+                  <Trans>Queue</Trans>
+                </ButtonPrimary>
+              </RowFixed>
+            )}
+            {showExecuteButton && (
+              <>
+                {eta && (
+                  <RowBetween>
+                    <ThemedText.DeprecatedBlack>
+                      <Trans>This proposal may be executed after {eta.toLocaleString(locale, dateFormat)}.</Trans>
+                    </ThemedText.DeprecatedBlack>
+                  </RowBetween>
+                )}
+                <RowFixed style={{ width: '100%', gap: '12px' }}>
+                  <ButtonPrimary
+                    padding="8px"
+                    $borderRadius="8px"
+                    onClick={() => {
+                      toggleExecuteModal()
+                    }}
+                    // can't execute until the eta has arrived
+                    disabled={!currentTimestamp || !proposalData?.eta || currentTimestamp.lt(proposalData.eta)}
+                  >
+                    <Trans>Execute</Trans>
+                  </ButtonPrimary>
+                </RowFixed>
+              </>
+            )}
+            <CardWrapper>
+              <StyledDataCard>
+                <CardSection>
+                  <AutoColumn gap="md">
+                    <WrapSmall>
+                      <ThemedText.DeprecatedBlack fontWeight={600}>
+                        <Trans>For</Trans>
+                      </ThemedText.DeprecatedBlack>
+                      {proposalData && (
+                        <ThemedText.DeprecatedBlack fontWeight={600}>
+                          {proposalData.forCount.toFixed(0, { groupSeparator: ',' })}
+                          {quorumAmount && (
+                            <span style={{ fontWeight: 400 }}>{` / ${quorumAmount.toExact({
+                              groupSeparator: ',',
+                            })}`}</span>
+                          )}
+                        </ThemedText.DeprecatedBlack>
+                      )}
+                    </WrapSmall>
+                  </AutoColumn>
+                  <ProgressWrapper>
+                    <Progress
+                      status="for"
+                      percentageString={
+                        proposalData?.forCount.greaterThan(0) ? `${forPercentage?.toFixed(0) ?? 0}%` : '0%'
+                      }
+                    />
+                  </ProgressWrapper>
+                </CardSection>
+              </StyledDataCard>
+              <StyledDataCard>
+                <CardSection>
+                  <AutoColumn gap="md">
+                    <WrapSmall>
+                      <ThemedText.DeprecatedBlack fontWeight={600}>
+                        <Trans>Against</Trans>
+                      </ThemedText.DeprecatedBlack>
+                      {proposalData && (
+                        <ThemedText.DeprecatedBlack fontWeight={600}>
+                          {proposalData.againstCount.toFixed(0, { groupSeparator: ',' })}
+                        </ThemedText.DeprecatedBlack>
+                      )}
+                    </WrapSmall>
+                  </AutoColumn>
+                  <ProgressWrapper>
+                    <Progress
+                      status="against"
+                      percentageString={
+                        proposalData?.againstCount?.greaterThan(0) ? `${againstPercentage?.toFixed(0) ?? 0}%` : '0%'
+                      }
+                    />
+                  </ProgressWrapper>
+                </CardSection>
+              </StyledDataCard>
+            </CardWrapper>
+            <AutoColumn gap="md">
+              <ThemedText.DeprecatedMediumHeader fontWeight={600}>
+                <Trans>Details</Trans>
+              </ThemedText.DeprecatedMediumHeader>
+              {proposalData?.details?.map((d, i) => {
+                return (
+                  <DetailText key={i}>
+                    {i + 1}: {linkIfAddress(d.target)}.{d.functionSig}(
+                    {d.callData.split(',').map((content, i) => {
+                      return (
+                        <span key={i}>
+                          {linkIfAddress(content)}
+                          {d.callData.split(',').length - 1 === i ? '' : ','}
+                        </span>
+                      )
+                    })}
                     )
-                  })}
-                  )
-                </DetailText>
-              )
-            })}
-          </AutoColumn>
-          <AutoColumn gap="md">
-            <ThemedText.MediumHeader fontWeight={600}>
-              <Trans>Description</Trans>
-            </ThemedText.MediumHeader>
-            <MarkDownWrapper>
-              <ReactMarkdown source={proposalData?.description} />
-            </MarkDownWrapper>
-          </AutoColumn>
-          <AutoColumn gap="md">
-            <ThemedText.MediumHeader fontWeight={600}>
-              <Trans>Proposer</Trans>
-            </ThemedText.MediumHeader>
-            <ProposerAddressLink
-              href={
-                proposalData?.proposer && chainId
-                  ? getExplorerLink(chainId, proposalData?.proposer, ExplorerDataType.ADDRESS)
-                  : ''
-              }
-            >
-              <ReactMarkdown source={proposalData?.proposer} />
-            </ProposerAddressLink>
-          </AutoColumn>
-        </ProposalInfo>
-      </PageWrapper>
-      <SwitchLocaleLink />
-    </>
+                  </DetailText>
+                )
+              })}
+            </AutoColumn>
+            <AutoColumn gap="md">
+              <ThemedText.DeprecatedMediumHeader fontWeight={600}>
+                <Trans>Description</Trans>
+              </ThemedText.DeprecatedMediumHeader>
+              <MarkDownWrapper>
+                <ReactMarkdown
+                  source={proposalData?.description}
+                  renderers={{
+                    image: MarkdownImage,
+                  }}
+                />
+              </MarkDownWrapper>
+            </AutoColumn>
+            <AutoColumn gap="md">
+              <ThemedText.DeprecatedMediumHeader fontWeight={600}>
+                <Trans>Proposer</Trans>
+              </ThemedText.DeprecatedMediumHeader>
+              <ProposerAddressLink
+                href={
+                  proposalData?.proposer && chainId
+                    ? getExplorerLink(chainId, proposalData?.proposer, ExplorerDataType.ADDRESS)
+                    : ''
+                }
+              >
+                <ReactMarkdown source={proposalData?.proposer} />
+              </ProposerAddressLink>
+            </AutoColumn>
+          </ProposalInfo>
+        </PageWrapper>
+        <SwitchLocaleLink />
+      </>
+    </Trace>
   )
 }

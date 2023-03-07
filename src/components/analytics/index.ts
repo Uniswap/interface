@@ -1,13 +1,13 @@
 import { useWeb3React } from '@web3-react/core'
 import { useEffect } from 'react'
 import { UaEventOptions } from 'react-ga4/types/ga4'
-import { RouteComponentProps } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { isMobile } from 'utils/userAgent'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import GoogleAnalyticsProvider from './GoogleAnalyticsProvider'
 
-export const GOOGLE_ANALYTICS_CLIENT_ID_STORAGE_KEY = 'ga_client_id'
+const GOOGLE_ANALYTICS_CLIENT_ID_STORAGE_KEY = 'ga_client_id'
 const GOOGLE_ANALYTICS_ID: string | undefined = process.env.REACT_APP_GOOGLE_ANALYTICS_ID
 
 const storedClientId = window.localStorage.getItem(GOOGLE_ANALYTICS_CLIENT_ID_STORAGE_KEY)
@@ -63,7 +63,8 @@ function reportWebVitals({ name, delta, id }: Metric) {
 }
 
 // tracks web vitals and pageviews
-export function useAnalyticsReporter({ pathname, search }: RouteComponentProps['location']) {
+export function useAnalyticsReporter() {
+  const { pathname, search } = useLocation()
   useEffect(() => {
     getFCP(reportWebVitals)
     getFID(reportWebVitals)

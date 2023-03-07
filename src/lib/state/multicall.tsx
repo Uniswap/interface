@@ -4,11 +4,8 @@ import { SupportedChainId } from 'constants/chains'
 import { useInterfaceMulticall } from 'hooks/useContract'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useMemo } from 'react'
-import { combineReducers, createStore } from 'redux'
 
 const multicall = createMulticall()
-const reducer = combineReducers({ [multicall.reducerPath]: multicall.reducer })
-export const store = createStore(reducer)
 
 export default multicall
 
@@ -17,6 +14,9 @@ function getBlocksPerFetchForChainId(chainId: number | undefined): number {
     case SupportedChainId.ARBITRUM_ONE:
     case SupportedChainId.OPTIMISM:
       return 15
+    case SupportedChainId.CELO:
+    case SupportedChainId.CELO_ALFAJORES:
+      return 5
     default:
       return 1
   }

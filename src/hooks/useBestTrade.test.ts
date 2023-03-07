@@ -1,7 +1,9 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
+import { RouterPreference } from 'state/routing/slice'
 import { TradeState } from 'state/routing/types'
+import { useClientSideRouter } from 'state/user/hooks'
 
 import { useRoutingAPITrade } from '../state/routing/useRoutingAPITrade'
 import useAutoRouterSupported from './useAutoRouterSupported'
@@ -25,6 +27,7 @@ const mockUseAutoRouterSupported = useAutoRouterSupported as jest.MockedFunction
 const mockUseIsWindowVisible = useIsWindowVisible as jest.MockedFunction<typeof useIsWindowVisible>
 
 const mockUseRoutingAPITrade = useRoutingAPITrade as jest.MockedFunction<typeof useRoutingAPITrade>
+const mockUseClientSideRouter = useClientSideRouter as jest.MockedFunction<typeof useClientSideRouter>
 const mockUseClientSideV3Trade = useClientSideV3Trade as jest.MockedFunction<typeof useClientSideV3Trade>
 
 // helpers to set mock expectations
@@ -42,29 +45,30 @@ beforeEach(() => {
 
   mockUseIsWindowVisible.mockReturnValue(true)
   mockUseAutoRouterSupported.mockReturnValue(true)
+  mockUseClientSideRouter.mockReturnValue([true, () => undefined])
 })
 
 describe('#useBestV3Trade ExactIn', () => {
-  it('does not compute routing api trade when routing API is not supported', () => {
+  it('does not compute routing api trade when routing API is not supported', async () => {
     mockUseAutoRouterSupported.mockReturnValue(false)
     expectRouterMock(TradeState.INVALID)
     expectClientSideMock(TradeState.VALID)
 
     const { result } = renderHook(() => useBestTrade(TradeType.EXACT_INPUT, USDCAmount, DAI))
 
-    expect(mockUseRoutingAPITrade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, undefined, DAI)
+    expect(mockUseRoutingAPITrade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, undefined, DAI, RouterPreference.CLIENT)
     expect(mockUseClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, USDCAmount, DAI)
     expect(result.current).toEqual({ state: TradeState.VALID, trade: undefined })
   })
 
-  it('does not compute routing api trade when window is not focused', () => {
+  it('does not compute routing api trade when window is not focused', async () => {
     mockUseIsWindowVisible.mockReturnValue(false)
     expectRouterMock(TradeState.NO_ROUTE_FOUND)
     expectClientSideMock(TradeState.VALID)
 
     const { result } = renderHook(() => useBestTrade(TradeType.EXACT_INPUT, USDCAmount, DAI))
 
-    expect(mockUseRoutingAPITrade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, undefined, DAI)
+    expect(mockUseRoutingAPITrade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, undefined, DAI, RouterPreference.CLIENT)
     expect(mockUseClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, USDCAmount, DAI)
     expect(result.current).toEqual({ state: TradeState.VALID, trade: undefined })
   })
@@ -128,7 +132,12 @@ describe('#useBestV3Trade ExactOut', () => {
 
     const { result } = renderHook(() => useBestTrade(TradeType.EXACT_OUTPUT, DAIAmount, USDC_MAINNET))
 
-    expect(mockUseRoutingAPITrade).toHaveBeenCalledWith(TradeType.EXACT_OUTPUT, undefined, USDC_MAINNET)
+    expect(mockUseRoutingAPITrade).toHaveBeenCalledWith(
+      TradeType.EXACT_OUTPUT,
+      undefined,
+      USDC_MAINNET,
+      RouterPreference.CLIENT
+    )
     expect(mockUseClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_OUTPUT, DAIAmount, USDC_MAINNET)
     expect(result.current).toEqual({ state: TradeState.VALID, trade: undefined })
   })
@@ -140,7 +149,12 @@ describe('#useBestV3Trade ExactOut', () => {
 
     const { result } = renderHook(() => useBestTrade(TradeType.EXACT_OUTPUT, DAIAmount, USDC_MAINNET))
 
-    expect(mockUseRoutingAPITrade).toHaveBeenCalledWith(TradeType.EXACT_OUTPUT, undefined, USDC_MAINNET)
+    expect(mockUseRoutingAPITrade).toHaveBeenCalledWith(
+      TradeType.EXACT_OUTPUT,
+      undefined,
+      USDC_MAINNET,
+      RouterPreference.CLIENT
+    )
     expect(mockUseClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_OUTPUT, DAIAmount, USDC_MAINNET)
     expect(result.current).toEqual({ state: TradeState.VALID, trade: undefined })
   })

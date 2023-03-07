@@ -1,5 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const exec = require('child_process').exec
+/* eslint-env node */
+
+const { exec } = require('child_process')
 const isWindows = process.platform === 'win32' || /^(msys|cygwin)$/.test(process.env.OSTYPE)
 
 if (isWindows) {

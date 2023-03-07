@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import Circle from '../../assets/images/blue-loader.svg'
@@ -53,7 +53,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
   const [attempting, setAttempting] = useState<boolean>(false)
 
   // get theme for colors
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {
@@ -85,7 +85,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
-              <ThemedText.MediumHeader fontWeight={500}>
+              <ThemedText.DeprecatedMediumHeader fontWeight={500}>
                 {voteOption === VoteOption.Against ? (
                   <Trans>Vote against proposal {proposalId}</Trans>
                 ) : voteOption === VoteOption.For ? (
@@ -93,14 +93,14 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
                 ) : (
                   <Trans>Vote to abstain on proposal {proposalId}</Trans>
                 )}
-              </ThemedText.MediumHeader>
+              </ThemedText.DeprecatedMediumHeader>
               <StyledClosed onClick={wrappedOnDismiss} />
             </RowBetween>
-            <ThemedText.LargeHeader>
+            <ThemedText.DeprecatedLargeHeader>
               <Trans>{formatCurrencyAmount(availableVotes, 4)} Votes</Trans>
-            </ThemedText.LargeHeader>
+            </ThemedText.DeprecatedLargeHeader>
             <ButtonPrimary onClick={onVote}>
-              <ThemedText.MediumHeader color="white">
+              <ThemedText.DeprecatedMediumHeader color="white">
                 {voteOption === VoteOption.Against ? (
                   <Trans>Vote against proposal {proposalId}</Trans>
                 ) : voteOption === VoteOption.For ? (
@@ -108,7 +108,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
                 ) : (
                   <Trans>Vote to abstain on proposal {proposalId}</Trans>
                 )}
-              </ThemedText.MediumHeader>
+              </ThemedText.DeprecatedMediumHeader>
             </ButtonPrimary>
           </AutoColumn>
         </ContentWrapper>
@@ -120,17 +120,17 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
             <StyledClosed onClick={wrappedOnDismiss} />
           </RowBetween>
           <ConfirmedIcon>
-            <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
+            <CustomLightSpinner src={Circle} alt="loader" size="90px" />
           </ConfirmedIcon>
-          <AutoColumn gap="100px" justify={'center'}>
-            <AutoColumn gap="12px" justify={'center'}>
-              <ThemedText.LargeHeader>
+          <AutoColumn gap="100px" justify="center">
+            <AutoColumn gap="md" justify="center">
+              <ThemedText.DeprecatedLargeHeader>
                 <Trans>Submitting Vote</Trans>
-              </ThemedText.LargeHeader>
+              </ThemedText.DeprecatedLargeHeader>
             </AutoColumn>
-            <ThemedText.SubHeader>
+            <ThemedText.DeprecatedSubHeader>
               <Trans>Confirm this transaction in your wallet</Trans>
-            </ThemedText.SubHeader>
+            </ThemedText.DeprecatedSubHeader>
           </AutoColumn>
         </ConfirmOrLoadingWrapper>
       )}
@@ -141,22 +141,22 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
             <StyledClosed onClick={wrappedOnDismiss} />
           </RowBetween>
           <ConfirmedIcon>
-            <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.primary1} />
+            <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.accentAction} />
           </ConfirmedIcon>
-          <AutoColumn gap="100px" justify={'center'}>
-            <AutoColumn gap="12px" justify={'center'}>
-              <ThemedText.LargeHeader>
+          <AutoColumn gap="100px" justify="center">
+            <AutoColumn gap="md" justify="center">
+              <ThemedText.DeprecatedLargeHeader>
                 <Trans>Transaction Submitted</Trans>
-              </ThemedText.LargeHeader>
+              </ThemedText.DeprecatedLargeHeader>
             </AutoColumn>
             {chainId && (
               <ExternalLink
                 href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}
                 style={{ marginLeft: '4px' }}
               >
-                <ThemedText.SubHeader>
+                <ThemedText.DeprecatedSubHeader>
                   <Trans>View transaction on Explorer</Trans>
-                </ThemedText.SubHeader>
+                </ThemedText.DeprecatedSubHeader>
               </ExternalLink>
             )}
           </AutoColumn>

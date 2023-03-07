@@ -16,29 +16,39 @@ export type PopupContent =
 export enum ApplicationModal {
   ADDRESS_CLAIM,
   BLOCKED_ACCOUNT,
-  DELEGATE,
   CLAIM_POPUP,
+  DELEGATE,
+  EXECUTE,
+  FEATURE_FLAGS,
+  FIAT_ONRAMP,
   MENU,
+  METAMASK_CONNECTION_ERROR,
+  NETWORK_FILTER,
   NETWORK_SELECTOR,
   POOL_OVERVIEW_OPTIONS,
   PRIVACY_POLICY,
+  QUEUE,
   SELF_CLAIM,
   SETTINGS,
+  SHARE,
+  TIME_SELECTOR,
   VOTE,
   WALLET,
-  QUEUE,
-  EXECUTE,
+  WALLET_DROPDOWN,
+  UNISWAP_NFT_AIRDROP_CLAIM,
 }
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
 
 export interface ApplicationState {
   readonly chainId: number | null
+  readonly fiatOnramp: { available: boolean; availabilityChecked: boolean }
   readonly openModal: ApplicationModal | null
   readonly popupList: PopupList
 }
 
 const initialState: ApplicationState = {
+  fiatOnramp: { available: false, availabilityChecked: false },
   chainId: null,
   openModal: null,
   popupList: [],
@@ -48,6 +58,9 @@ const applicationSlice = createSlice({
   name: 'application',
   initialState,
   reducers: {
+    setFiatOnrampAvailability(state, { payload: available }) {
+      state.fiatOnramp = { available, availabilityChecked: true }
+    },
     updateChainId(state, action) {
       const { chainId } = action.payload
       state.chainId = chainId
@@ -75,5 +88,6 @@ const applicationSlice = createSlice({
   },
 })
 
-export const { updateChainId, setOpenModal, addPopup, removePopup } = applicationSlice.actions
+export const { updateChainId, setFiatOnrampAvailability, setOpenModal, addPopup, removePopup } =
+  applicationSlice.actions
 export default applicationSlice.reducer

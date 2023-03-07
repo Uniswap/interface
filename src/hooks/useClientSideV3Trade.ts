@@ -7,12 +7,17 @@ import { useSingleContractWithCallData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 
+import { isCelo } from '../constants/tokens'
 import { useAllV3Routes } from './useAllV3Routes'
 import { useQuoter } from './useContract'
 
 const QUOTE_GAS_OVERRIDES: { [chainId: number]: number } = {
   [SupportedChainId.ARBITRUM_ONE]: 25_000_000,
-  [SupportedChainId.ARBITRUM_RINKEBY]: 25_000_000,
+  [SupportedChainId.ARBITRUM_GOERLI]: 25_000_000,
+  [SupportedChainId.CELO]: 50_000_000,
+  [SupportedChainId.CELO_ALFAJORES]: 50_000_000,
+  [SupportedChainId.POLYGON]: 40_000_000,
+  [SupportedChainId.POLYGON_MUMBAI]: 40_000_000,
 }
 
 const DEFAULT_GAS_QUOTE = 2_000_000
@@ -36,10 +41,7 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
 
   const { chainId } = useWeb3React()
   // Chains deployed using the deploy-v3 script only deploy QuoterV2.
-  const useQuoterV2 = useMemo(
-    () => Boolean(chainId && [SupportedChainId.CELO, SupportedChainId.CELO_ALFAJORES].includes(chainId)),
-    [chainId]
-  )
+  const useQuoterV2 = useMemo(() => Boolean(chainId && isCelo(chainId)), [chainId])
   const quoter = useQuoter(useQuoterV2)
   const callData = useMemo(
     () =>
@@ -55,16 +57,18 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
     gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
   })
 
+  const currenciesAreTheSame = useMemo(
+    () => currencyIn && currencyOut && (currencyIn.equals(currencyOut) || currencyIn.wrapped.equals(currencyOut)),
+    [currencyIn, currencyOut]
+  )
+
   return useMemo(() => {
     if (
       !amountSpecified ||
       !currencyIn ||
       !currencyOut ||
       quotesResults.some(({ valid }) => !valid) ||
-      // skip when tokens are the same
-      (tradeType === TradeType.EXACT_INPUT
-        ? amountSpecified.currency.equals(currencyOut)
-        : amountSpecified.currency.equals(currencyIn))
+      currenciesAreTheSame
     ) {
       return {
         state: TradeState.INVALID,
@@ -142,5 +146,5 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
         tradeType,
       }),
     }
-  }, [amountSpecified, currencyIn, currencyOut, quotesResults, routes, routesLoading, tradeType])
+  }, [amountSpecified, currenciesAreTheSame, currencyIn, currencyOut, quotesResults, routes, routesLoading, tradeType])
 }

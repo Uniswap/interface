@@ -1,32 +1,55 @@
-import { loadingOpacityMixin } from 'components/Loader/styled'
 import { TooltipContainer } from 'components/Tooltip'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { css } from 'styled-components/macro'
+import { Z_INDEX } from 'theme/zIndex'
 
-import { ThemedText } from '../../theme'
 import { AutoColumn } from '../Column'
-import TradePrice from './TradePrice'
 
-export const Wrapper = styled.div`
+export const PageWrapper = styled.div`
+  padding: 68px 8px 0px;
+  max-width: 480px;
+  width: 100%;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    padding-top: 48px;
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding-top: 20px;
+  }
+`
+
+// Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
+export const SwapWrapper = styled.main`
   position: relative;
+  background: ${({ theme }) => theme.backgroundSurface};
+  border-radius: 16px;
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
   padding: 8px;
+  z-index: ${Z_INDEX.deprecated_content};
+  transition: transform 250ms ease;
+
+  &:hover {
+    border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  }
 `
 
 export const ArrowWrapper = styled.div<{ clickable: boolean }>`
-  padding: 4px;
   border-radius: 12px;
-  height: 32px;
-  width: 32px;
+  height: 40px;
+  width: 40px;
   position: relative;
-  margin-top: -14px;
-  margin-bottom: -14px;
-  left: calc(50% - 16px);
-  /* transform: rotate(90deg); */
-  background-color: ${({ theme }) => theme.bg1};
-  border: 4px solid ${({ theme }) => theme.bg0};
+  margin-top: -18px;
+  margin-bottom: -18px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: ${({ theme }) => theme.backgroundInteractive};
+  border: 4px solid;
+  border-color: ${({ theme }) => theme.backgroundSurface};
+
   z-index: 2;
   ${({ clickable }) =>
     clickable
@@ -39,21 +62,15 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
       : null}
 `
 
-export const SectionBreak = styled.div`
-  height: 1px;
-  width: 100%;
-  background-color: ${({ theme }) => theme.bg3};
-`
-
 export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
   color: ${({ theme, severity }) =>
     severity === 3 || severity === 4
-      ? theme.red1
+      ? theme.accentFailure
       : severity === 2
-      ? theme.yellow2
+      ? theme.deprecated_yellow2
       : severity === 1
-      ? theme.text1
-      : theme.text2};
+      ? theme.textPrimary
+      : theme.textSecondary};
 `
 
 export const TruncatedText = styled(Text)`
@@ -86,7 +103,7 @@ export const Dots = styled.span`
 `
 
 const SwapCallbackErrorInner = styled.div`
-  background-color: ${({ theme }) => transparentize(0.9, theme.red1)};
+  background-color: ${({ theme }) => transparentize(0.9, theme.accentFailure)};
   border-radius: 1rem;
   display: flex;
   align-items: center;
@@ -94,7 +111,7 @@ const SwapCallbackErrorInner = styled.div`
   width: 100%;
   padding: 3rem 1.25rem 1rem 1rem;
   margin-top: -2rem;
-  color: ${({ theme }) => theme.red1};
+  color: ${({ theme }) => theme.accentFailure};
   z-index: -1;
   p {
     padding: 0;
@@ -104,7 +121,7 @@ const SwapCallbackErrorInner = styled.div`
 `
 
 const SwapCallbackErrorInnerAlertTriangle = styled.div`
-  background-color: ${({ theme }) => transparentize(0.9, theme.red1)};
+  background-color: ${({ theme }) => transparentize(0.9, theme.accentFailure)};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -126,30 +143,21 @@ export function SwapCallbackError({ error }: { error: ReactNode }) {
 }
 
 export const SwapShowAcceptChanges = styled(AutoColumn)`
-  background-color: ${({ theme }) => transparentize(0.95, theme.primary3)};
-  color: ${({ theme }) => theme.primaryText1};
+  background-color: ${({ theme }) => transparentize(0.95, theme.deprecated_primary3)};
+  color: ${({ theme }) => theme.accentAction};
   padding: 0.5rem;
   border-radius: 12px;
   margin-top: 8px;
 `
 
-export const TransactionDetailsLabel = styled(ThemedText.Black)`
-  border-bottom: 1px solid ${({ theme }) => theme.bg2};
-  padding-bottom: 0.5rem;
-`
-
 export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: string; width?: string }>`
-  background-color: ${({ theme }) => theme.bg0};
-  border: 1px solid ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  border: 1px solid ${({ theme }) => theme.backgroundInteractive};
   padding: 1rem;
   width: ${({ width }) => width ?? 'auto'};
 
-  ${({ theme, origin }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme, origin }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
     transform: scale(0.8);
     transform-origin: ${origin ?? 'top left'};
   `}
-`
-
-export const StyledTradePrice = styled(TradePrice)<{ $loading: boolean }>`
-  ${loadingOpacityMixin}
 `
