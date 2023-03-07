@@ -884,6 +884,11 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Henrettet"
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Executed Orders"
+msgstr "Utførte ordre"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Ekspanderte resultater fra inaktive pollettlister"
@@ -1054,6 +1059,10 @@ msgstr "Ugyldig par."
 msgid "Invalid recipient"
 msgstr "Ugyldig mottaker"
 
+#: src/components/PositionCard/index.tsx
+msgid "KROM deposit required"
+msgstr "KROM depositum kreves"
+
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Kromatika available in: <0>{0}</0>"
 msgstr "Kromatika er tilgjengelig om: <0>{0}</0>"
@@ -1085,6 +1094,10 @@ msgstr "Lys tema"
 #: src/pages/Pool/index.tsx
 msgid "Limit Orders"
 msgstr "Begrens bestillinger"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Limit Price"
+msgstr "Begrense pris"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Limit price (USD):"
@@ -1284,6 +1297,11 @@ msgstr "Bare UNI-stemmer som ble delegert eller delegert til annen adresse før 
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "Det oppstod en ukjent feil. Oppdater siden, eller besøk fra en annen nettleser eller enhet."
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Open Orders"
+msgstr "Åpne bestillinger"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Opened:"
@@ -2280,8 +2298,14 @@ msgid "You must give the Kromatika smart contracts permission to use your {0}. Y
 msgstr "Du må gi Kromatika smartkontrakter tillatelse til å bruke din {0}. Du må bare gjøre dette en gang per pollett."
 
 #: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "You receive at least"
+msgstr "Du får i det minste"
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
 msgid "You send"
-msgstr ""
+msgstr "Du sender"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."

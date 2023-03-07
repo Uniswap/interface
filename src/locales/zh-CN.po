@@ -884,6 +884,11 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "已执行"
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Executed Orders"
+msgstr "已执行订单"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "从待用代币列表中扩展出的结果"
@@ -1054,6 +1059,10 @@ msgstr "无效的币对。"
 msgid "Invalid recipient"
 msgstr "无效的接收方"
 
+#: src/components/PositionCard/index.tsx
+msgid "KROM deposit required"
+msgstr "需要 KROM 押金"
+
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Kromatika available in: <0>{0}</0>"
 msgstr "Kromatika可用：<0>{0}</0>"
@@ -1085,6 +1094,10 @@ msgstr "浅色主题"
 #: src/pages/Pool/index.tsx
 msgid "Limit Orders"
 msgstr "限价单"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Limit Price"
+msgstr "限价"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Limit price (USD):"
@@ -1284,6 +1297,11 @@ msgstr "只有在 {0} 区块编号之前已自行委托或委托给另一个区�
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "糟糕！出现未知错误。请刷新页面，或从其他浏览器或设备访问。"
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Open Orders"
+msgstr "打开订单"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Opened:"
@@ -2279,6 +2297,12 @@ msgstr "您必须授予 Kromatika 聚合器使用您的 {0} 的权限。 您只�
 msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "您必须授予 Kromatika 智能合约使用您的 {0} 的权限。每个代币只需要授权一次。"
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "You receive at least"
+msgstr "你至少收到"
+
+#: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
 msgid "You send"
 msgstr "你发"

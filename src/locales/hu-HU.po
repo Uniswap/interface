@@ -884,6 +884,11 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Végrehajtott"
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Executed Orders"
+msgstr "Végrehajtott megbízások"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Az inaktív tokenlisták kibővített eredményei"
@@ -1054,6 +1059,10 @@ msgstr "Érvénytelen pár."
 msgid "Invalid recipient"
 msgstr "Érvénytelen címzett"
 
+#: src/components/PositionCard/index.tsx
+msgid "KROM deposit required"
+msgstr "KROM letét szükséges"
+
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Kromatika available in: <0>{0}</0>"
 msgstr "Az Kromatika itt érhető el: <0>{0}</0>"
@@ -1085,6 +1094,10 @@ msgstr "Fény téma"
 #: src/pages/Pool/index.tsx
 msgid "Limit Orders"
 msgstr "Limit megbízások"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Limit Price"
+msgstr "Limit ár"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Limit price (USD):"
@@ -1284,6 +1297,11 @@ msgstr "Csak azok az UNI-szavazatok jogosultak szavazni, amelyeket a {0} blokk e
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "Hoppá! Ismeretlen hiba történt. Kérjük, frissítse az oldalt, vagy látogasson el egy másik böngészőből vagy eszközről."
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Open Orders"
+msgstr "Nyissa meg a rendeléseket"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Opened:"
@@ -2280,8 +2298,14 @@ msgid "You must give the Kromatika smart contracts permission to use your {0}. Y
 msgstr "Engedélyt kell adnia az Kromatika intelligens szerződéseknek a(z) {0} használatához. Ezt tokenenként csak egyszer kell megtennie."
 
 #: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "You receive at least"
+msgstr "Legalább kapsz"
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
 msgid "You send"
-msgstr ""
+msgstr "Küldesz"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."

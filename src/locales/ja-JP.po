@@ -884,6 +884,11 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "実行済"
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Executed Orders"
+msgstr "実行された注文"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "あなたが利用していないトークンリストからの検索結果"
@@ -1054,6 +1059,10 @@ msgstr "無効なペアです。"
 msgid "Invalid recipient"
 msgstr "受け取りアドレスが無効です"
 
+#: src/components/PositionCard/index.tsx
+msgid "KROM deposit required"
+msgstr "KROMデポジットが必要です"
+
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Kromatika available in: <0>{0}</0>"
 msgstr "利用可能言語: <0>{0}</0>"
@@ -1085,6 +1094,10 @@ msgstr "ライトテーマ"
 #: src/pages/Pool/index.tsx
 msgid "Limit Orders"
 msgstr "指値注文"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Limit Price"
+msgstr "指値価格"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Limit price (USD):"
@@ -1284,6 +1297,11 @@ msgstr "ブロック{0} 以前に自己委任、または他のアドレスに�
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "不明なエラーが発生しました。ページを更新するか、別のブラウザまたはデバイスからアクセスしてください。"
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Open Orders"
+msgstr "オープンオーダー"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Opened:"
@@ -2280,8 +2298,14 @@ msgid "You must give the Kromatika smart contracts permission to use your {0}. Y
 msgstr "{0}を使用するには、Kromatikaスマートコントラクトに許可を与える必要があります。トークンごとに1回だけ行う必要があります。"
 
 #: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "You receive at least"
+msgstr "あなたは少なくとも"
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
 msgid "You send"
-msgstr ""
+msgstr "あなたが送る"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."

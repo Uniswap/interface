@@ -884,6 +884,11 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Wanyongwa"
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Executed Orders"
+msgstr "Maagizo Yanayotekelezwa"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Matokeo yaliyopanuliwa kutoka kwa Orodha za Ishara ambazo hazifanyi kazi"
@@ -1054,6 +1059,10 @@ msgstr "Jozi batili."
 msgid "Invalid recipient"
 msgstr "Mpokeaji si sahihi"
 
+#: src/components/PositionCard/index.tsx
+msgid "KROM deposit required"
+msgstr "Amana ya KROM inahitajika"
+
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Kromatika available in: <0>{0}</0>"
 msgstr "Kubadilisha kunapatikana katika: <0>{0}</0>"
@@ -1085,6 +1094,10 @@ msgstr "Mandhari mepesi"
 #: src/pages/Pool/index.tsx
 msgid "Limit Orders"
 msgstr "Maagizo ya Kikomo"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Limit Price"
+msgstr "Bei Kikomo"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Limit price (USD):"
@@ -1284,6 +1297,11 @@ msgstr "Kura tu za UNI ambazo zilikabidhiwa kibinafsi au kupelekwa kwa anwani ny
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "Lo! Hitilafu isiyojulikana ilitokea. Tafadhali onyesha upya ukurasa, au tembelea kutoka kwa kivinjari kingine au kifaa."
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Open Orders"
+msgstr "Fungua Maagizo"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Opened:"
@@ -2279,6 +2297,12 @@ msgstr "Ni lazima umpe Kromatika Aggregator ruhusa ya kutumia {0} yako. Lazima u
 msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "Lazima upe Mkataba wa Kromatika ruhusa ya kutumia {0}yako. Lazima ufanye hivi mara moja tu kwa ishara."
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "You receive at least"
+msgstr "Unapokea angalau"
+
+#: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
 msgid "You send"
 msgstr "Unatuma"

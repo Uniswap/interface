@@ -884,6 +884,11 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Исполнено"
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Executed Orders"
+msgstr "Выполненные заказы"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Расширенные результаты из неактивных списков токенов"
@@ -1054,6 +1059,10 @@ msgstr "Неверная пара."
 msgid "Invalid recipient"
 msgstr "Неверный получатель"
 
+#: src/components/PositionCard/index.tsx
+msgid "KROM deposit required"
+msgstr "Требуется депозит KROM"
+
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Kromatika available in: <0>{0}</0>"
 msgstr "Kromatika доступен на языке <0>{0}</0>"
@@ -1085,6 +1094,10 @@ msgstr "Светлая тема"
 #: src/pages/Pool/index.tsx
 msgid "Limit Orders"
 msgstr "Лимитные ордера"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Limit Price"
+msgstr "Предельная цена"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Limit price (USD):"
@@ -1285,6 +1298,11 @@ msgstr "Проголосовать могут только те голоса UNI
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "Ой! Произошла неизвестная ошибка. Пожалуйста, обновите страницу или откройте из другого браузера или с другого устройства."
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Open Orders"
+msgstr "Открытые ордера"
+
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Opened:"
 msgstr "Открыто:"
@@ -1376,7 +1394,7 @@ msgstr "Многоугольный мост"
 
 #: src/components/LimitWarning/LimitWarningModal.tsx
 msgid "Polygon User Warning"
-msgstr Предупреждение пользователя полигона""
+msgstr "Предупреждение пользователя полигона"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygonscan"
@@ -2279,6 +2297,12 @@ msgstr "Вы должны предоставить агрегатору Kromatik
 msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "Вы должны дать разрешение смарт-контрактам Kromatika на использование ваших {0}. Это нужно сделать только один раз для каждого токена."
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "You receive at least"
+msgstr "Вы получаете как минимум"
+
+#: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
 msgid "You send"
 msgstr "Вы отправляете"

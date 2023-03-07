@@ -884,6 +884,11 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Погубљен"
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Executed Orders"
+msgstr "Извршени налози"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Проширени резултати са неактивних листа токена"
@@ -1054,6 +1059,10 @@ msgstr "Неважећи пар."
 msgid "Invalid recipient"
 msgstr "Неважећи прималац"
 
+#: src/components/PositionCard/index.tsx
+msgid "KROM deposit required"
+msgstr "Потребан је КРОМ депозит"
+
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Kromatika available in: <0>{0}</0>"
 msgstr "Kromatika доступан у: <0>{0}</0>"
@@ -1085,6 +1094,10 @@ msgstr "Лигхт Тхеме"
 #: src/pages/Pool/index.tsx
 msgid "Limit Orders"
 msgstr "Лимит Ордерс"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Limit Price"
+msgstr "Лимит Прице"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Limit price (USD):"
@@ -1284,6 +1297,11 @@ msgstr "Само УНИ гласови који су самостално или
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "Упс! Дошло је до непознате грешке. Освежите страницу или је посетите из другог прегледача или уређаја."
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Open Orders"
+msgstr "Опен Ордерс"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Opened:"
@@ -2279,6 +2297,12 @@ msgstr "Морате да дате Кроматика Аггрегатору д�
 msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "Морате да дате дозволу Kromatika паметним уговорима да бисте користили {0}. То морате учинити само једном по токену."
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "You receive at least"
+msgstr "Добијате најмање"
+
+#: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
 msgid "You send"
 msgstr "Шаљете"

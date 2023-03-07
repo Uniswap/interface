@@ -884,6 +884,11 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Dieksekusi"
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Executed Orders"
+msgstr "Perintah yang Dijalankan"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Hasil yang diperluas dari Daftar Token yang tidak aktif"
@@ -1054,6 +1059,10 @@ msgstr "Pasangan tidak valid."
 msgid "Invalid recipient"
 msgstr "Penerima tidak valid"
 
+#: src/components/PositionCard/index.tsx
+msgid "KROM deposit required"
+msgstr "Diperlukan setoran KROM"
+
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Kromatika available in: <0>{0}</0>"
 msgstr "Kromatika tersedia dalam: <0>{0}</0>"
@@ -1085,6 +1094,10 @@ msgstr "Tema Terang"
 #: src/pages/Pool/index.tsx
 msgid "Limit Orders"
 msgstr "Batasi Pesanan"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Limit Price"
+msgstr "Batasi Harga"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Limit price (USD):"
@@ -1284,6 +1297,11 @@ msgstr "Hanya suara UNI yang didelegasikan sendiri atau didelegasikan ke alamat 
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "Ups! Terjadi kesalahan yang tidak diketahui. Harap segarkan halaman, atau kunjungi dari browser atau perangkat lain."
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Open Orders"
+msgstr "Buka Pesanan"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Opened:"
@@ -2280,8 +2298,14 @@ msgid "You must give the Kromatika smart contracts permission to use your {0}. Y
 msgstr "Anda harus memberikan izin smart contract kepada Kromatika untuk menggunakan {0} Anda. Anda hanya perlu melakukan ini satu kali per token."
 
 #: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "You receive at least"
+msgstr "Anda menerima setidaknya"
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
 msgid "You send"
-msgstr ""
+msgstr "Anda mengirim"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."

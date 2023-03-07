@@ -335,7 +335,7 @@ msgstr "Sei sicuro?"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr ""
+msgstr "Come membro della comunità Uniswap puoi richiedere che UNI venga utilizzato per il voto e la governance.<0/><1/><2>Leggi di più su UNI</2>"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
@@ -884,6 +884,11 @@ msgstr "Etherscan"
 msgid "Executed"
 msgstr "Eseguito"
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Executed Orders"
+msgstr "Ordini eseguiti"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Risultati espansi dalle liste Token inattive"
@@ -1054,6 +1059,10 @@ msgstr "Coppia non valida."
 msgid "Invalid recipient"
 msgstr "Destinatario non valido"
 
+#: src/components/PositionCard/index.tsx
+msgid "KROM deposit required"
+msgstr "È richiesto un deposito in KROM"
+
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Kromatika available in: <0>{0}</0>"
 msgstr "Kromatika disponibile tra: <0>{0}</0>"
@@ -1085,6 +1094,10 @@ msgstr "Tema chiaro"
 #: src/pages/Pool/index.tsx
 msgid "Limit Orders"
 msgstr "Limitare gli ordini"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Limit Price"
+msgstr "Prezzo limite"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Limit price (USD):"
@@ -1284,6 +1297,11 @@ msgstr "Solo i voti UNI che sono stati auto-delegati o delegati a un altro indir
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "Oops! Si è verificato un errore sconosciuto. Si prega di aggiornare la pagina, o visitare da un altro browser o dispositivo."
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Open Orders"
+msgstr "Ordini aperti"
 
 #: src/components/LimitOrdersListItem/index.tsx
 msgid "Opened:"
@@ -2280,8 +2298,14 @@ msgid "You must give the Kromatika smart contracts permission to use your {0}. Y
 msgstr "Devi dare il permesso agli smart contract Kromatika di utilizzare il tuo {0}. Devi farlo solo una volta per token."
 
 #: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "You receive at least"
+msgstr "Ricevi almeno"
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
 msgid "You send"
-msgstr ""
+msgstr "Tu invii"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."

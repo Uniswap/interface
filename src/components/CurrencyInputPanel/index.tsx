@@ -358,7 +358,9 @@ export default function CurrencyInputPanel({
           ) : null}
           {showRate && (
             <RowFixed style={{ height: '17px', marginRight: '12px' }}>
-              <TYPE.main>Limit Price</TYPE.main>
+              <TYPE.main>
+                <Trans>Limit Price</Trans>
+              </TYPE.main>
             </RowFixed>
           )}
           {!hideInput && (

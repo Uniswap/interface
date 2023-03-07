@@ -593,7 +593,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                     </ArrowWrapper>
 
                     <CurrencyInputPanel
-                      actionLabel="You receive at least"
+                      actionLabel={t`You receive at least`}
                       value={formattedAmounts.output}
                       onUserInput={handleTypeOutput}
                       label={
@@ -898,10 +898,10 @@ export default function LimitOrder({ history }: RouteComponentProps) {
           </StyledSwap>
           <LimitOrdersContainer>
             <LimitOrdersWrapper direction={'row'}>
-              <Collapsible label="Open Orders" initState={openPositions.length > 0}>
+              <Collapsible label={t`Open Orders`} initState={openPositions.length > 0}>
                 <LimitOrdersList orders={openPositions} fundingBalance={fundingBalance} minBalance={minBalance} />
               </Collapsible>
-              <Collapsible label="Executed Orders" initState={closedPositions.length > 0}>
+              <Collapsible label={t`Executed Orders`} initState={closedPositions.length > 0}>
                 <LimitOrdersList orders={closedPositions} fundingBalance={fundingBalance} minBalance={minBalance} />
               </Collapsible>
             </LimitOrdersWrapper>
@@ -955,7 +955,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
           <AutoColumn gap={'md'}>
             <div style={{ display: 'relative' }}>
               <CurrencyInputPanel
-                actionLabel="You send"
+                actionLabel={t`You send`}
                 label={
                   independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
                 }
@@ -1006,7 +1006,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
               </ArrowWrapper>
 
               <CurrencyInputPanel
-                actionLabel="You receive at least"
+                actionLabel={t`You receive at least`}
                 value={formattedAmounts.output}
                 onUserInput={handleTypeOutput}
                 label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
@@ -1303,10 +1303,10 @@ export default function LimitOrder({ history }: RouteComponentProps) {
       )}
       <LimitOrdersContainer>
         <LimitOrdersWrapper direction={'column'}>
-          <Collapsible label="Open Orders" initState={openPositions.length > 0}>
+          <Collapsible label={t`Open Orders`} initState={openPositions.length > 0}>
             <LimitOrdersList orders={openPositions} fundingBalance={fundingBalance} minBalance={minBalance} />
           </Collapsible>
-          <Collapsible label="Executed Orders" initState={closedPositions.length > 0}>
+          <Collapsible label={t`Executed Orders`} initState={closedPositions.length > 0}>
             <LimitOrdersList orders={closedPositions} fundingBalance={fundingBalance} minBalance={minBalance} />
           </Collapsible>
         </LimitOrdersWrapper>

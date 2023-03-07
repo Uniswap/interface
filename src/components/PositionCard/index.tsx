@@ -234,7 +234,9 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
                 <AutoColumn>
                   <RowFixed gap="1rem">
                     <Text fontSize={16} fontWeight={500}>
-                      <TYPE.error error>KROM deposit required</TYPE.error>
+                      <TYPE.error error>
+                        <Trans>KROM deposit required</Trans>
+                      </TYPE.error>
                     </Text>
                   </RowFixed>
                 </AutoColumn>
