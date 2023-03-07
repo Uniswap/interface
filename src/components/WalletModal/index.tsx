@@ -139,11 +139,11 @@ const sendAnalyticsEventAndUserInfo = (
     wallet_address: account,
     wallet_type: walletType,
     is_reconnect: isReconnect,
-    peer_wallet_name: peerWalletAgent,
+    peer_wallet_agent: peerWalletAgent,
   })
   user.set(CustomUserProperties.WALLET_ADDRESS, account)
   user.set(CustomUserProperties.WALLET_TYPE, walletType)
-  user.set(CustomUserProperties.PEER_WALLET_NAME, peerWalletAgent ?? '')
+  user.set(CustomUserProperties.PEER_WALLET_AGENT, peerWalletAgent ?? '')
   if (chainId) {
     user.postInsert(CustomUserProperties.ALL_WALLET_CHAIN_IDS, chainId)
   }
