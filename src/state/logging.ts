@@ -24,34 +24,35 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
    * calls and deep object traversals.
    */
   stateTransformer: (state: AppState): DeepPartial<AppState> => {
+    const { application, user, connection, transactions } = state
     return {
       application: {
-        fiatOnramp: state.application.fiatOnramp,
-        chainId: state.application.chainId,
-        openModal: state.application.openModal,
-        popupList: state.application.popupList,
+        fiatOnramp: application.fiatOnramp,
+        chainId: application.chainId,
+        openModal: application.openModal,
+        popupList: application.popupList,
       },
       user: {
-        fiatOnrampAcknowledgments: state.user.fiatOnrampAcknowledgments,
-        selectedWallet: state.user.selectedWallet,
-        lastUpdateVersionTimestamp: state.user.lastUpdateVersionTimestamp,
-        matchesDarkMode: state.user.matchesDarkMode,
-        userDarkMode: state.user.userDarkMode,
-        userLocale: state.user.userLocale,
-        userExpertMode: state.user.userExpertMode,
-        userClientSideRouter: state.user.userClientSideRouter,
-        userHideClosedPositions: state.user.userHideClosedPositions,
-        userSlippageTolerance: state.user.userSlippageTolerance,
-        userSlippageToleranceHasBeenMigratedToAuto: state.user.userSlippageToleranceHasBeenMigratedToAuto,
-        userDeadline: state.user.userDeadline,
-        timestamp: state.user.timestamp,
-        URLWarningVisible: state.user.URLWarningVisible,
-        showSurveyPopup: state.user.showSurveyPopup,
+        fiatOnrampAcknowledgments: user.fiatOnrampAcknowledgments,
+        selectedWallet: user.selectedWallet,
+        lastUpdateVersionTimestamp: user.lastUpdateVersionTimestamp,
+        matchesDarkMode: user.matchesDarkMode,
+        userDarkMode: user.userDarkMode,
+        userLocale: user.userLocale,
+        userExpertMode: user.userExpertMode,
+        userClientSideRouter: user.userClientSideRouter,
+        userHideClosedPositions: user.userHideClosedPositions,
+        userSlippageTolerance: user.userSlippageTolerance,
+        userSlippageToleranceHasBeenMigratedToAuto: user.userSlippageToleranceHasBeenMigratedToAuto,
+        userDeadline: user.userDeadline,
+        timestamp: user.timestamp,
+        URLWarningVisible: user.URLWarningVisible,
+        showSurveyPopup: user.showSurveyPopup,
       },
       connection: {
-        errorByConnectionType: state.connection.errorByConnectionType,
+        errorByConnectionType: connection.errorByConnectionType,
       },
-      transactions: state.transactions,
+      transactions,
     }
   },
 })
