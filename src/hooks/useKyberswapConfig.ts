@@ -100,8 +100,8 @@ export const useLazyKyberswapConfig = (): ((customChainId?: ChainId) => Promise<
 export const useKyberswapConfig = (customChainId?: ChainId): KyberswapConfig => {
   const storeChainId = useSelector<AppState, ChainId>(state => state.user.chainId) || ChainId.MAINNET // read directly from store instead of useActiveWeb3React to prevent circular loop
   const chainId = customChainId ?? storeChainId
-  const { data } = useGetKyberswapConfigurationQuery({ chainId: chainId })
-  const result = useMemo(() => parseResponse(data, chainId), [chainId, data])
+  const { data, isLoading, isFetching } = useGetKyberswapConfigurationQuery({ chainId: chainId })
+  const result = useMemo(() => parseResponse(isLoading || isFetching ? undefined : data, chainId), [chainId, data])
   return result
 }
 
