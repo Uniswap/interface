@@ -10,5 +10,5 @@ updates:
       - dependency-name: '@uniswap/token-lists'
       - dependency-name: '@uniswap/widgets'
     reviewers:
-      - 'just-toby'
+      - "Uniswap/dependabot-reviewers"
       - 'Uniswap/web-tokens'
