@@ -39,7 +39,7 @@ export const timeLeft = (targetDate: Date, mostSignificant = false): string => {
     if (minutes > 0) return `${roundAndPluralize(minutes, 'minute')}`
   }
 
-  return `${days !== 0 ? roundAndPluralize(days, 'day') : ''} ${
-    hours !== 0 ? roundAndPluralize(hours, 'hour') : ''
-  } ${roundAndPluralize(minutes, 'minute')}`
+  return `${days > 0 ? roundAndPluralize(days, 'day') : ''} ${hours > 0 ? roundAndPluralize(hours, 'hour') : ''} ${
+    minutes > 0 ? roundAndPluralize(minutes, 'minute') : ''
+  }`
 }

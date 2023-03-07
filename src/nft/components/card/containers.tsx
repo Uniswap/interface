@@ -58,6 +58,27 @@ const StyledActionButton = styled(ThemedText.BodySmall)<{ selected: boolean; isD
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     ${({ isDisabled }) => `opacity: ${isDisabled ? 0 : 1};`}
   }
+
+  &:before {
+    background-size: 100%;
+    border-radius: inherit;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+    content: '';
+  }
+
+  &:hover:before {
+    background-color: ${({ theme }) => theme.stateOverlayHover};
+  }
+
+  &:active:before {
+    background-color: ${({ theme }) => theme.stateOverlayPressed};
+  }
 `
 
 const ActionButton = ({
@@ -489,18 +510,14 @@ const Audio = ({
   )
 }
 
-interface CardDetailsContainerProps {
-  children: ReactNode
-}
-
 const StyledDetailsContainer = styled(Column)`
   position: relative;
-  padding: 16px 16px 0px;
+  padding: 16px 8px 0px;
   justify-content: space-between;
   gap: 8px;
 `
 
-const DetailsContainer = ({ children }: CardDetailsContainerProps) => {
+const DetailsContainer = ({ children }: { children: ReactNode }) => {
   return <StyledDetailsContainer>{children}</StyledDetailsContainer>
 }
 
@@ -508,6 +525,7 @@ const StyledInfoContainer = styled(Column)`
   gap: 4px;
   overflow: hidden;
   width: 100%;
+  padding: 0px 8px;
 `
 
 const InfoContainer = ({ children }: { children: ReactNode }) => {
@@ -586,6 +604,7 @@ const StyledTertiaryInfo = styled(ThemedText.BodySmall)`
   white-space: nowrap;
   text-overflow: ellipsis;
   line-height: 20px;
+  padding: 0px 8px;
 `
 
 const TertiaryInfo = ({ children }: { children: ReactNode }) => {
