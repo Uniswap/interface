@@ -63,6 +63,10 @@ const AMPLITUDE_PROXY_URL = process.env.REACT_APP_AMPLITUDE_PROXY_URL
 const STATSIG_DUMMY_KEY = 'client-0000000000000000000000000000000000000000000'
 const STATSIG_PROXY_URL = process.env.REACT_APP_STATSIG_PROXY_URL
 const COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
+
+// Dump some metadata into the window to allow client verification.
+window.GIT_COMMIT_HASH = COMMIT_HASH
+
 initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {
   proxyUrl: AMPLITUDE_PROXY_URL,
   defaultEventName: SharedEventName.PAGE_VIEWED,
