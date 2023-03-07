@@ -1,9 +1,11 @@
+import { Interface } from '@ethersproject/abi'
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, ElementName, EventName, PageName, SectionName } from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import POOL_EXTENDED_ABI from 'abis/pool-extended.json'
 import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
@@ -16,6 +18,7 @@ import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
+import { darken } from 'polished'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
@@ -27,13 +30,14 @@ import { TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 
-import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
+import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
+import { ButtonConfirmed, ButtonError, ButtonGray, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GrayCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import Loader from '../../components/Loader'
-import { AutoRow } from '../../components/Row'
+import { AutoRow, RowFixed } from '../../components/Row'
+import SmartPoolSearchModal from '../../components/SearchModal/SmartPoolSearchModal'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, PageWrapper, SwapCallbackError, SwapWrapper } from '../../components/swap/styleds'
@@ -46,8 +50,11 @@ import useENSAddress from '../../hooks/useENSAddress'
 import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
+//import { /*PoolInitParams,*/ PoolWithAddress } from '../../hooks/useSmartPools'
 import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import useWrapCallback, { WrapErrorText, WrapType } from '../../hooks/useWrapCallback'
+import { useMultipleContractSingleData } from '../../lib/hooks/multicall'
+import { /*usePoolOperators,*/ useRegisteredPools } from '../../state/pool/hooks'
 import { Field } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
@@ -62,6 +69,13 @@ import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeRealizedPriceImpact, warningSeverity } from '../../utils/prices'
 import { supportedChainId } from '../../utils/supportedChainId'
 
+const Aligner = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`
+
 const ArrowContainer = styled.div`
   display: inline-block;
   display: inline-flex;
@@ -70,6 +84,49 @@ const ArrowContainer = styled.div`
 
   width: 100%;
   height: 100%;
+`
+
+const PoolSelect = styled(ButtonGray)<{
+  visible: boolean
+  selected: boolean
+  hideInput?: boolean
+  disabled?: boolean
+}>`
+  align-items: center;
+  background-color: ${({ selected, theme }) => (selected ? theme.deprecated_bg2 : theme.deprecated_primary1)};
+  opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
+  box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
+  color: ${({ selected, theme }) => (selected ? theme.deprecated_text1 : theme.deprecated_white)};
+  cursor: pointer;
+  border-radius: 16px;
+  outline: none;
+  user-select: none;
+  border: none;
+  font-size: 24px;
+  font-weight: 500;
+  height: ${({ hideInput }) => (hideInput ? '2.8rem' : '2.4rem')};
+  width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
+  padding: 0 8px;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  margin-left: ${({ hideInput }) => (hideInput ? '0' : '12px')};
+  :focus,
+  :hover {
+    background-color: ${({ selected, theme }) =>
+      selected ? theme.deprecated_bg3 : darken(0.05, theme.deprecated_primary1)};
+  }
+  visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
+`
+
+const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
+  margin: 0 0.25rem 0 0.35rem;
+  height: 35%;
+
+  path {
+    stroke: ${({ selected, theme }) => (selected ? theme.deprecated_text1 : theme.deprecated_white)};
+    stroke-width: 1.5px;
+  }
 `
 
 const SwapSection = styled.div`
@@ -107,16 +164,21 @@ const SwapSection = styled.div`
   }
 `
 
+const DetailsSwapSection = styled(SwapSection)`
+  padding: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+`
+
 const OutputSwapSection = styled(SwapSection)<{ showDetailsDropdown: boolean }>`
   border-bottom: ${({ theme }) => `1px solid ${theme.backgroundSurface}`};
   border-bottom-left-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
   border-bottom-right-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
 `
 
-const DetailsSwapSection = styled(SwapSection)`
-  padding: 0;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+const StyledTokenName = styled.span<{ active?: boolean }>`
+  ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
+  font-size: 20px;
 `
 
 export function getIsValidSwapQuote(
@@ -144,6 +206,7 @@ export default function Swap() {
   const navigate = useNavigate()
   const { account, chainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
+  const [modalOpen, setModalOpen] = useState(false)
   const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
   const [fetchingSwapQuoteStartTime, setFetchingSwapQuoteStartTime] = useState<Date | undefined>()
 
@@ -160,6 +223,10 @@ export default function Swap() {
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
   }, [])
+
+  const handleDismissSearch = useCallback(() => {
+    setModalOpen(false)
+  }, [setModalOpen])
 
   // dismiss warning if all imported tokens are in active lists
   const defaultTokens = useAllTokens()
@@ -190,8 +257,59 @@ export default function Swap() {
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
 
+  // TODO: if (poolsLogs === []) return (() => getAllPoolsData), i.e. fire logs query. Be sure to query just once.
+  const poolsLogs = useRegisteredPools(chainId)
+  //const poolAddresses: (string | undefined)[] = useMemo(() => poolsLogs?.map((p) => p.pool), [poolsLogs])
+  const poolAddresses: (string | undefined)[] = useMemo(() => {
+    // this declaration does not make much sense
+    //if (!chainId) return new Array(poolsLogs.length)
+    if (!poolsLogs) return []
+
+    return poolsLogs.map((p) => p.pool)
+  }, [poolsLogs])
+  //const rewardsAddresses = useMemo(() => info.map(({ stakingRewardAddress }) => stakingRewardAddress), [info])
+  //const poolOperators = usePoolOperators(poolAddresses)
+  const PoolInterface = new Interface(POOL_EXTENDED_ABI)
+  const results = useMultipleContractSingleData(poolAddresses, PoolInterface, 'getPool')
+
+  // TODO: careful: on swap page returns [], only by goint to 'Mint' page will it query events
+  const operatedPools: Token[] | undefined = useMemo(() => {
+    if (!account || !chainId || !results || !poolAddresses) return
+    const mockToken = new Token(0, account, 1)
+    return results
+      .map((result, i) => {
+        const { result: pools, loading } = result
+        const poolAddress = poolAddresses[i]
+
+        if (loading || !pools || !pools?.[0] || !poolAddress) return mockToken
+        //const parsed: PoolInitParams[] | undefined = pools?.[0]
+        const { name, symbol, decimals, owner } = pools?.[0]
+        if (!name || !symbol || !decimals || !owner || !poolAddress) return mockToken
+        //const poolWithAddress: PoolWithAddress = { name, symbol, decimals, owner, poolAddress }
+        const isPoolOperator = owner === account
+        if (!isPoolOperator) return mockToken
+        return new Token(chainId, poolAddress, decimals, symbol, name)
+      })
+      .filter((p) => p !== mockToken)
+    //.filter((p) => account === owner)
+  }, [account, chainId, poolAddresses, results])
+
+  const defaultPool = useMemo(() => {
+    if (!operatedPools) return
+    return operatedPools[0]
+  }, [operatedPools])
+
+  // TODO: move all this to reducer
+  //const [smartPoolValue, ] = useState<Token | undefined>(defaultPool)
+  /*const handlePoolSelect = useCallback(
+    (smartPool: Currency) => {
+      setSmartPoolValue(smartPool as Token)
+    },
+    [setSmartPoolValue]
+  )*/
+
   // swap state
-  const { independentField, typedValue, recipient } = useSwapState()
+  const { independentField, typedValue, recipient, smartPoolAddress, smartPoolName } = useSwapState()
   const {
     trade: { state: tradeState, trade },
     allowedSlippage,
@@ -235,7 +353,7 @@ export default function Swap() {
     [fiatValueInput, fiatValueOutput, routeIsSyncing]
   )
 
-  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
+  const { onSwitchTokens, onCurrencySelection, onUserInput, onPoolSelection } = useSwapActionHandlers()
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
@@ -340,11 +458,13 @@ export default function Swap() {
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
 
   // the callback to execute the swap
+  // TODO: send selected poolAddress to child
   const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
     trade,
     allowedSlippage,
     recipient,
-    signatureData
+    signatureData,
+    smartPoolAddress //smartPoolValue?.isToken ? smartPoolValue?.address : undefined
   )
 
   const handleSwap = useCallback(() => {
@@ -461,6 +581,10 @@ export default function Swap() {
   // Handle time based logging events and event properties.
   useEffect(() => {
     const now = new Date()
+    // Initialize default pool
+    if (!smartPoolAddress && defaultPool) {
+      onPoolSelection(defaultPool)
+    }
     // If a trade exists, and we need to log the receipt of this new swap quote:
     if (newSwapQuoteNeedsLogging && !!trade) {
       // Set the current datetime as the time of receipt of latest swap quote.
@@ -488,6 +612,9 @@ export default function Swap() {
     fetchingSwapQuoteStartTime,
     trade,
     setSwapQuoteReceivedDate,
+    onPoolSelection,
+    defaultPool,
+    smartPoolAddress,
   ])
 
   const approveTokenButtonDisabled =
@@ -511,6 +638,27 @@ export default function Swap() {
         <PageWrapper>
           <SwapWrapper id="swap-page">
             <SwapHeader allowedSlippage={allowedSlippage} />
+            <PoolSelect
+              disabled={!isSupportedChain(chainId)}
+              visible={true}
+              selected={true}
+              hideInput={false}
+              className="operated-pool-select-button"
+              onClick={() => {
+                setModalOpen(true)
+              }}
+            >
+              <Aligner>
+                <RowFixed>
+                  {operatedPools && (
+                    <StyledTokenName className="pool-name-container" active={true}>
+                      {smartPoolName}
+                    </StyledTokenName>
+                  )}
+                </RowFixed>
+                <StyledDropDown selected={!!smartPoolAddress} />
+              </Aligner>
+            </PoolSelect>
             <ConfirmSwapModal
               isOpen={showConfirm}
               trade={trade}
@@ -527,17 +675,19 @@ export default function Swap() {
               fiatValueInput={fiatValueInput}
               fiatValueOutput={fiatValueOutput}
             />
+            {operatedPools && (
+              <SmartPoolSearchModal
+                isOpen={modalOpen}
+                onDismiss={handleDismissSearch}
+                onCurrencySelect={onPoolSelection}
+                selectedCurrency={defaultPool}
+                operatedPools={operatedPools}
+                showCommonBases={false}
+                showCurrencyAmount={false}
+                disableNonToken={false}
+              />
+            )}
             <div style={{ display: 'relative' }}>
-              <>
-                <AddressInputPanel id="recipient" value={recipient ?? ''} onChange={onChangeRecipient} />
-                <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                  <ArrowWrapper clickable={false}>
-                    <ArrowContainer color={theme.textPrimary}>
-                      <ArrowDown size="16" color={theme.deprecated_text2} />
-                    </ArrowContainer>
-                  </ArrowWrapper>
-                </AutoRow>
-              </>
               <SwapSection>
                 <Trace section={SectionName.CURRENCY_INPUT_PANEL}>
                   <SwapCurrencyInputPanel

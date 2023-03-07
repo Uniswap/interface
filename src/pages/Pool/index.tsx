@@ -19,7 +19,6 @@ import { /*HideSmall,*/ ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
-import useENS from '../../hooks/useENS'
 import { useSwapState } from '../../state/swap/hooks'
 //import CTACards from './CTACards'
 import { LoadingRows } from './styleds'
@@ -203,11 +202,8 @@ export default function Pool() {
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
 
   // we query pool address from swap state
-  const { recipient } = useSwapState()
-  const recipientLookup = useENS(recipient ?? undefined)
-  const poolAddress = recipientLookup.address
-
-  const { positions, loading: positionsLoading } = useV3Positions(poolAddress)
+  const { smartPoolAddress } = useSwapState()
+  const { positions, loading: positionsLoading } = useV3Positions(smartPoolAddress)
 
   if (!isSupportedChain(chainId)) {
     return <WrongNetworkCard />

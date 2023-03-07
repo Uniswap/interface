@@ -101,7 +101,8 @@ export default function RemoveLiquidity() {
     parsedAmounts[Field.LIQUIDITY],
     router?.address
   )
-  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], router?.address)
+  const isRbPool = true
+  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], router?.address, isRbPool)
 
   async function onAttemptToApprove() {
     if (!pairContract || !pair || !provider || !deadline) throw new Error('missing dependencies')

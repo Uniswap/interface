@@ -124,7 +124,7 @@ export function PrivacyPolicy() {
       <AutoColumn gap="16px">
         <AutoColumn gap="8px" style={{ width: '100%' }}>
           <StyledExternalCard>
-            <ExternalLink href="https://uniswap.org/terms-of-service">
+            <ExternalLink href="https://rigoblock.com/legal">
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />

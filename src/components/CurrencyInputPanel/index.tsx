@@ -18,7 +18,6 @@ import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
 import { useSwapState } from '../../state/swap/hooks'
 import { ThemedText } from '../../theme'
-import { isAddress } from '../../utils'
 import { ButtonGray } from '../Button'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import CurrencyLogo from '../Logo/CurrencyLogo'
@@ -220,10 +219,8 @@ export default function CurrencyInputPanel({
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
   const { account, chainId } = useWeb3React()
-  // TODO: we use recipient as placeholder for pool, we must check how to improve here
-  const { recipient } = useSwapState()
-  const poolAddress = isAddress(recipient) ? recipient : account
-  const selectedCurrencyBalance = useCurrencyBalance(poolAddress ?? undefined, currency ?? undefined)
+  const { smartPoolAddress } = useSwapState()
+  const selectedCurrencyBalance = useCurrencyBalance(smartPoolAddress ?? undefined, currency ?? undefined)
   const theme = useTheme()
 
   const handleDismissSearch = useCallback(() => {

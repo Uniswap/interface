@@ -15,11 +15,14 @@ import { useAppSelector } from 'state/hooks'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 import { SupportedChainId } from '../../constants/chains'
+//import { useMultipleContractSingleData } from '../../lib/hooks/multicall'
 import { AppState } from '../index'
 import { useLogs } from '../logs/hooks'
+import { filterToKey } from '../logs/utils'
 import { useTransactionAdder } from '../transactions/hooks'
 import { TransactionType } from '../transactions/types'
 
+//const PoolInterface = new Interface(POOL_EXTENDED_ABI)
 const RegistryInterface = new Interface(RB_REGISTRY_ABI)
 
 // TODO: create pool state in ../index and create pool reducer if we want to store pool data in state
@@ -63,6 +66,44 @@ export function usePoolOperator(poolAddress: string | undefined): string | undef
   const { result } = useSingleCallResult(contract, 'getPool')
 
   return result?.[3]?.toString()
+}
+
+// TODO: fix
+/*
+export function usePoolOperators(poolAddresses: (string | undefined)[]): (string | undefined)[] {
+  const results = useMultipleContractSingleData(poolAddresses, PoolInterface, 'owner')
+
+  return useMemo(() => {
+    if (!results) return []
+    return results.map((result, i) => {
+      const { result: owners, loading } = result
+      const { owner } = owners
+
+      if (loading) return undefined
+      return [owner]
+    })
+  }, [results])
+}
+*/
+
+function useStartBlock(chainId: number | undefined): number | undefined {
+  let registryStartBlock
+
+  if (chainId === SupportedChainId.MAINNET) {
+    registryStartBlock = 15834693
+  } else if (chainId === SupportedChainId.GOERLI) {
+    registryStartBlock = 7807806
+  } else if (chainId === SupportedChainId.ARBITRUM_ONE) {
+    registryStartBlock = 35439804
+  } else if (chainId === SupportedChainId.OPTIMISM) {
+    registryStartBlock = 34629059
+  } else if (chainId === SupportedChainId.POLYGON) {
+    registryStartBlock = 35228892
+  } else {
+    registryStartBlock = undefined
+  }
+
+  return registryStartBlock
 }
 
 /**
@@ -194,5 +235,51 @@ export function useCreateCallback(): (
       })
     },
     [account, addTransaction, chainId, provider, factoryContract]
+  )
+}
+
+export function useRegisteredPools(chainId: number | undefined): PoolRegisteredLog[] | undefined {
+  const registry = useRegistryContract()
+  const fromBlock = useStartBlock(chainId)
+  // create filters for Registered events
+  const filter = useMemo(() => {
+    const filter = registry?.filters?.Registered()
+    if (!filter) return undefined
+    return {
+      ...filter,
+      fromBlock,
+    }
+  }, [registry, fromBlock])
+  const logs = useAppSelector((state) => state.logs)
+  if (!chainId || !filter) return []
+  const state = logs[chainId]?.[filterToKey(filter)]
+  const result = state?.results
+
+  return (
+    result?.logs
+      ?.map((log) => {
+        const parsed = RegistryInterface.parseLog(log).args
+        return parsed
+      })
+      //.filter((p) => p.governorIndex === governorIndex)?.find((p) => p.id === id)
+      //?.filter((parsed) => indices.flat().some((i) => i === parsed.id.toNumber()))
+      // TODO: filter by pool operator, if cannot do efficient hook must query all "Pool Initialized"
+      // events, filtered by group, then map those owned, but must add pools that changed ownership
+      //.filter((parsed) => usePoolOperator(parsed.address) === operator)
+      ?.map((parsed) => {
+        // TODO: can simply pass the array from above
+        const group = parsed.group
+        const pool = parsed.pool
+        const name = parseBytes32String(parsed.name)
+        const symbol = parseBytes32String(parsed.symbol)
+        const id = parsed.id //.toString()
+        const poolData: PoolRegisteredLog = { group, pool, name, symbol, id }
+
+        return poolData
+      })
+      .reverse()
+    //.then(console.log(pool))
+    // TODO: defined a constant poolOwners and parse multicall
+    // compare pool owners with account, filter by those pools that user owns
   )
 }

@@ -320,8 +320,8 @@ export default function WalletModal({
       const content = (
         <Trans>
           By connecting a wallet, you agree to Rigoblock’{' '}
-          <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and consent to its{' '}
-          <ExternalLink href="https://uniswap.org/privacy-policy">Privacy Policy</ExternalLink>.
+          <ExternalLink href="https://rigoblock.com/legal">Terms of Service</ExternalLink> and consent to its{' '}
+          <ExternalLink href="https://rigoblock.com/legal">Privacy Policy</ExternalLink>.
         </Trans>
       )
       return nftFlagEnabled ? (

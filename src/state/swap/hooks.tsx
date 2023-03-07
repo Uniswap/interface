@@ -17,7 +17,15 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { useCurrencyBalances } from '../connection/hooks'
 import { AppState } from '../index'
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
+import {
+  Field,
+  replaceSwapState,
+  selectCurrency,
+  setRecipient,
+  setSmartPoolValue,
+  switchCurrencies,
+  typeInput,
+} from './actions'
 import { SwapState } from './reducer'
 
 export function useSwapState(): AppState['swap'] {
@@ -29,6 +37,7 @@ export function useSwapActionHandlers(): {
   onSwitchTokens: () => void
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
+  onPoolSelection: (smartPoolValue: Currency) => void
 } {
   const dispatch = useAppDispatch()
   const onCurrencySelection = useCallback(
@@ -61,11 +70,24 @@ export function useSwapActionHandlers(): {
     [dispatch]
   )
 
+  const onPoolSelection = useCallback(
+    (smartPoolValue: Currency) => {
+      dispatch(
+        setSmartPoolValue({
+          smartPoolAddress: smartPoolValue.isToken ? smartPoolValue.address : '',
+          smartPoolName: smartPoolValue.isToken && smartPoolValue.name ? smartPoolValue.name : '',
+        })
+      )
+    },
+    [dispatch]
+  )
+
   return {
     onSwitchTokens,
     onCurrencySelection,
     onUserInput,
     onChangeRecipient,
+    onPoolSelection,
   }
 }
 
@@ -95,16 +117,17 @@ export function useDerivedSwapInfo(): {
     [Field.INPUT]: { currencyId: inputCurrencyId },
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     recipient,
+    smartPoolAddress,
   } = useSwapState()
 
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
-  const poolAddress = recipientLookup.address
+  //const poolAddress = smartPoolValue?.isToken ? smartPoolValue?.address : undefined
 
   const relevantTokenBalances = useCurrencyBalances(
-    poolAddress ?? undefined,
+    smartPoolAddress ?? undefined,
     useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency])
   )
 

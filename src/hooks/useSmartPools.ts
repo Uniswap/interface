@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 // TODO: remove duplicate method definition and reorg code
 import { usePoolExtendedContract } from 'state/pool/hooks'
 
-interface PoolInitParams {
+export interface PoolInitParams {
   name: string
   symbol: string
   decimals: number

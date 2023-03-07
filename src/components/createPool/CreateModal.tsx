@@ -105,7 +105,7 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
   const [typedName, setTypedName] = useState('')
   const [typedSymbol, setTypedSymbol] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
-  // TODO: check if should use network base currency default instead of GRG
+  // TODO: check if should use network base currency default instead of GRG, check if should not fallback to mainnet
   const [currencyValue, setCurrencyValue] = useState<Currency>(GRG[chainId ?? 1])
 
   const handleDismissSearch = useCallback(() => {
@@ -184,7 +184,7 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
             <CurrencySelect
               disabled={!chainAllowed}
               visible={true}
-              selected={false}
+              selected={true}
               hideInput={false}
               className="open-currency-select-button"
               onClick={() => {
