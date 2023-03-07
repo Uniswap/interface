@@ -4,6 +4,7 @@ import AnnouncementApi from 'services/announcement'
 import styled, { css } from 'styled-components'
 
 import AnnouncementView, { Tab } from 'components/Announcement/AnnoucementView'
+import DetailAnnouncementPopup from 'components/Announcement/Popups/DetailAnnouncementPopup'
 import { formatNumberOfUnread } from 'components/Announcement/helper'
 import { Announcement, PrivateAnnouncement } from 'components/Announcement/type'
 import NotificationIcon from 'components/Icons/NotificationIcon'
@@ -13,7 +14,7 @@ import { useActiveWeb3React } from 'hooks'
 import useInterval from 'hooks/useInterval'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { ApplicationModal } from 'state/application/actions'
-import { useModalOpen, useToggleNotificationCenter } from 'state/application/hooks'
+import { useDetailAnnouncement, useModalOpen, useToggleNotificationCenter } from 'state/application/hooks'
 import { MEDIA_WIDTHS } from 'theme'
 
 const StyledMenuButton = styled.button<{ active?: boolean }>`
@@ -105,8 +106,8 @@ export default function AnnouncementComponent() {
 
   const fetchAnnouncementsByTab = useCallback(
     async (isReset = false, tab: Tab = activeTab) => {
-      if (loadingAnnouncement.current) return
       try {
+        if (loadingAnnouncement.current) return
         const isMyInboxTab = tab === Tab.INBOX
         loadingAnnouncement.current = true
         const page = isReset ? 1 : curPage + 1
@@ -119,19 +120,22 @@ export default function AnnouncementComponent() {
         if (!promise) return
         const { data } = await promise
         const notifications = data?.notifications ?? []
+        setPage(page)
+        let newData
         if (isMyInboxTab) {
-          const newData = isReset ? notifications : [...privateAnnouncements, ...notifications]
+          newData = isReset ? notifications : [...privateAnnouncements, ...notifications]
           setPrivateAnnouncements(newData as PrivateAnnouncement[])
         } else {
-          const newData = isReset ? notifications : [...announcements, ...notifications]
+          newData = isReset ? notifications : [...announcements, ...notifications]
           setAnnouncements(newData as Announcement[])
         }
-        setPage(page)
+        return newData
       } catch (error) {
         console.error(error)
       } finally {
         loadingAnnouncement.current = false
       }
+      return
     },
     [
       account,
@@ -238,6 +242,25 @@ export default function AnnouncementComponent() {
     }
   }
 
+  const [, setAnnouncementDetail] = useDetailAnnouncement()
+  const showDetailAnnouncement = (selectedIndex: number) => {
+    setAnnouncementDetail({
+      announcements: announcements.map(e => e.templateBody),
+      selectedIndex,
+      hasMore: totalAnnouncement > announcements.length,
+    })
+  }
+
+  const fetchMoreAnnouncement = async () => {
+    const announcements = (await fetchAnnouncementsByTab(false, Tab.ANNOUNCEMENT)) as Announcement[]
+    return announcements
+      ? {
+          announcements: announcements.map(e => e.templateBody),
+          hasMore: totalAnnouncement > announcements.length,
+        }
+      : undefined
+  }
+
   const props = {
     numberOfUnread,
     announcements: isMyInboxTab ? privateAnnouncements : announcements,
@@ -247,7 +270,9 @@ export default function AnnouncementComponent() {
     toggleNotificationCenter: togglePopupWithAckAllMessage,
     isMyInboxTab,
     onSetTab,
+    showDetailAnnouncement,
   }
+
   const bellIcon = (
     <StyledMenuButton
       active={isOpenNotificationCenter || numberOfUnread > 0}
@@ -283,6 +308,7 @@ export default function AnnouncementComponent() {
           <AnnouncementView {...props} />
         </MenuFlyout>
       )}
+      <DetailAnnouncementPopup fetchMore={fetchMoreAnnouncement} />
     </StyledMenu>
   )
 }

@@ -12,17 +12,21 @@ import {
   RowItem,
   Title,
 } from 'components/Announcement/PrivateAnnoucement/styled'
-import { AnnouncementTemplateLimitOrder, LimitOrderNotification } from 'components/Announcement/type'
+import { AnnouncementTemplateLimitOrder } from 'components/Announcement/type'
 import { CheckCircle } from 'components/Icons'
 import DeltaTokenAmount from 'components/WalletPopup/Transactions/DeltaTokenAmount'
 import { LimitOrderStatus } from 'components/swapv2/LimitOrder/type'
 import { APP_PATHS } from 'constants/index'
 import useTheme from 'hooks/useTheme'
 
-function InboxItemBridge({ announcement, onRead, style, time }: PrivateAnnouncementProp) {
+function InboxItemBridge({
+  announcement,
+  onRead,
+  style,
+  time,
+}: PrivateAnnouncementProp<AnnouncementTemplateLimitOrder>) {
   const { templateBody, isRead } = announcement
   const theme = useTheme()
-  const order = ((templateBody as AnnouncementTemplateLimitOrder).order ?? {}) as LimitOrderNotification
   const {
     status,
     makerAssetSymbol,
@@ -36,7 +40,7 @@ function InboxItemBridge({ announcement, onRead, style, time }: PrivateAnnouncem
     filledPercent,
     increasedFilledPercent,
     takingAmountRate,
-  } = order
+  } = templateBody.order
   const isFilled = status === LimitOrderStatus.FILLED
   const isPartialFilled = status === LimitOrderStatus.PARTIALLY_FILLED
 

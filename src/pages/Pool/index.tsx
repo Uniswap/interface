@@ -48,7 +48,7 @@ export const Tab = styled.div<{ active: boolean }>`
     color: ${props => props.theme.primary};
   }
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    font-size: 15px;
+    font-size: 14px;
   `};
 `
 

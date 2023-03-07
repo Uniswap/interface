@@ -12,6 +12,7 @@ import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { useActivePopups, useRemoveAllPopupByType } from 'state/application/hooks'
 import { MEDIA_WIDTHS } from 'theme'
+import { escapeScriptHtml } from 'utils/string'
 
 const BannerWrapper = styled.div<{ color?: string }>`
   width: 100%;
@@ -153,7 +154,7 @@ function TopBanner() {
             ref={refContent}
             isOverflow={isOverflowParent}
             dangerouslySetInnerHTML={{
-              __html: content,
+              __html: escapeScriptHtml(content),
             }}
           />
         </TextWrapper>

@@ -1,33 +1,29 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useLocalStorage } from 'react-use'
 
 import { AnnouncementTemplatePopup, PopupContentAnnouncement, PopupItemType } from 'components/Announcement/type'
 
-export const useAckAnnouncement = () => {
-  const [announcementsMap, setAnnouncementsMap] = useLocalStorage<{ [id: string]: string }>('ack-announcements', {})
-  const ackAnnouncement = useCallback(
-    (id: string | number) =>
-      setAnnouncementsMap({
-        ...announcementsMap,
-        [id]: '1',
-      }),
-    [announcementsMap, setAnnouncementsMap],
+const LsKey = 'ack-announcements'
+const getAnnouncementsAckMap = () => JSON.parse(localStorage[LsKey] || '{}')
+
+export const ackAnnouncementPopup = (id: string | number) => {
+  const announcementsMap = getAnnouncementsAckMap()
+  localStorage.setItem(
+    LsKey,
+    JSON.stringify({
+      ...announcementsMap,
+      [id]: '1',
+    }),
   )
-  return { announcementsAckMap: announcementsMap ?? {}, ackAnnouncement }
 }
 
 export const formatNumberOfUnread = (num: number) => (num > 10 ? '10+' : num + '')
 
-export const isPopupCanShow = (
-  popupInfo: PopupItemType<PopupContentAnnouncement>,
-  announcementsAckMap: { [id: string]: string },
-  chainId: ChainId,
-) => {
+export const isPopupCanShow = (popupInfo: PopupItemType<PopupContentAnnouncement>, chainId: ChainId) => {
   const { templateBody = {}, metaMessageId } = popupInfo.content
   const { endAt, startAt, chainIds = [] } = templateBody as AnnouncementTemplatePopup
   const isRightChain = chainIds.includes(chainId + '')
+  const announcementsAckMap = getAnnouncementsAckMap()
   const isRead = announcementsAckMap[metaMessageId]
   const isExpired = Date.now() < startAt * 1000 || Date.now() > endAt * 1000
   return !isRead && !isExpired && isRightChain

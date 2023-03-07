@@ -47,6 +47,15 @@ const TabRow = styled.div`
   `}
 `
 
+const TabWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    gap: 8px;
+  `}
+`
+
 interface AddressSymbolMapInterface {
   [key: string]: string
 }
@@ -59,9 +68,9 @@ const renderNotificationButton = (iconOnly: boolean) => {
       subscribeTooltip={
         <div>
           <Trans>
-            Subscribe to receive email notifications on <Hightlight>all</Hightlight> your liquidity positions. When your
-            liquidity position goes <Hightlight>out-of-range</Hightlight>, back <Hightlight>in-range</Hightlight> or is{' '}
-            <Hightlight>closed</Hightlight> you will receive a notification
+            Subscribe to receive emails on all your Elastic liquidity positions. You will receive an email when your
+            position goes <Hightlight>out-of-range</Hightlight>, comes back <Hightlight>in-range</Hightlight>, or is{' '}
+            <Hightlight>closed</Hightlight> altogether.
           </Trans>
         </div>
       }
@@ -169,7 +178,7 @@ export default function ProAmmPool() {
           </InstructionText>
           <TabRow>
             <Flex justifyContent="space-between" flex={1} alignItems="center" width="100%">
-              <Flex sx={{ gap: '1rem' }} alignItems="center">
+              <TabWrapper>
                 <Tab
                   active={!showStaked}
                   role="button"
@@ -189,7 +198,7 @@ export default function ProAmmPool() {
                 >
                   {isMobile ? <Trans>Farming Positions</Trans> : <Trans>My Farming Positions</Trans>}
                 </Tab>
-              </Flex>
+              </TabWrapper>
 
               {upToSmall && (
                 <Flex sx={{ gap: '8px' }}>

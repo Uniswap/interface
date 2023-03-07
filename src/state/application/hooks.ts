@@ -6,8 +6,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useDeepCompareEffect } from 'react-use'
 
 import { ETH_PRICE, PROMM_ETH_PRICE, TOKEN_DERIVED_ETH } from 'apollo/queries'
-import { isPopupCanShow, useAckAnnouncement } from 'components/Announcement/helper'
+import { ackAnnouncementPopup, isPopupCanShow } from 'components/Announcement/helper'
 import {
+  AnnouncementTemplatePopup,
   PopupContent,
   PopupContentAnnouncement,
   PopupContentSimple,
@@ -29,6 +30,7 @@ import {
   addPopup,
   closeModal,
   removePopup,
+  setAnnouncementDetail,
   setOpenModal,
   updateETHPrice,
   updateKNCPrice,
@@ -166,16 +168,15 @@ export const useTransactionNotify = () => {
 // returns a function that allows removing a popup via its key
 export function useRemovePopup() {
   const dispatch = useDispatch()
-  const { ackAnnouncement } = useAckAnnouncement()
   return useCallback(
     (popup: PopupItemType) => {
       const { key, popupType, content } = popup
       if ([PopupType.CENTER, PopupType.SNIPPET, PopupType.TOP_RIGHT, PopupType.TOP_BAR].includes(popupType)) {
-        ackAnnouncement((content as PopupContentAnnouncement).metaMessageId)
+        ackAnnouncementPopup((content as PopupContentAnnouncement).metaMessageId)
       }
       dispatch(removePopup({ key }))
     },
-    [dispatch, ackAnnouncement],
+    [dispatch],
   )
 }
 
@@ -207,7 +208,6 @@ export function useActivePopups() {
   const popups = useSelector(
     (state: AppState) => state.application.popupList,
   ) as PopupItemType<PopupContentAnnouncement>[]
-  const { announcementsAckMap } = useAckAnnouncement()
   const { chainId } = useActiveWeb3React()
 
   return useMemo(() => {
@@ -215,23 +215,17 @@ export function useActivePopups() {
       [PopupType.SIMPLE, PopupType.TOP_RIGHT, PopupType.TRANSACTION].includes(e.popupType),
     )
 
-    const topPopups = popups.filter(
-      e => e.popupType === PopupType.TOP_BAR && isPopupCanShow(e, announcementsAckMap, chainId),
-    )
-    const snippetPopups = popups.filter(
-      e => e.popupType === PopupType.SNIPPET && isPopupCanShow(e, announcementsAckMap, chainId),
-    )
+    const topPopups = popups.filter(e => e.popupType === PopupType.TOP_BAR && isPopupCanShow(e, chainId))
+    const snippetPopups = popups.filter(e => e.popupType === PopupType.SNIPPET && isPopupCanShow(e, chainId))
 
-    const centerPopups = popups.filter(
-      e => e.popupType === PopupType.CENTER && isPopupCanShow(e, announcementsAckMap, chainId),
-    )
+    const centerPopups = popups.filter(e => e.popupType === PopupType.CENTER && isPopupCanShow(e, chainId))
     return {
       topPopups,
       centerPopups,
       topRightPopups,
       snippetPopups,
     }
-  }, [popups, announcementsAckMap, chainId])
+  }, [popups, chainId])
 }
 
 /**
@@ -477,4 +471,22 @@ export function useTokensPrice(tokens: (Token | NativeCurrency | null | undefine
 
 export const useServiceWorkerRegistration = () => {
   return useAppSelector(state => state.application.serviceWorkerRegistration)
+}
+
+type DetailAnnouncementParam = {
+  selectedIndex: number | null
+  hasMore?: boolean
+  announcements?: AnnouncementTemplatePopup[]
+}
+
+export const useDetailAnnouncement = (): [DetailAnnouncementParam, (v: DetailAnnouncementParam) => void] => {
+  const announcementDetail = useAppSelector(state => state.application.notification?.announcementDetail)
+  const dispatch = useDispatch()
+  const setDetail = useCallback(
+    (data: DetailAnnouncementParam) => {
+      dispatch(setAnnouncementDetail({ ...announcementDetail, ...data }))
+    },
+    [dispatch, announcementDetail],
+  )
+  return [announcementDetail, setDetail]
 }

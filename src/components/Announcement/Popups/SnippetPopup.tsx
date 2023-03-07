@@ -1,7 +1,5 @@
-import { Trans, t } from '@lingui/macro'
 import { rgba } from 'polished'
-import { useState } from 'react'
-import { ChevronsUp, X } from 'react-feather'
+import { X } from 'react-feather'
 import { Flex } from 'rebass'
 import styled, { css } from 'styled-components'
 import { Navigation, Pagination } from 'swiper'
@@ -20,125 +18,100 @@ import { AutoColumn } from 'components/Column'
 import { Z_INDEXS } from 'constants/styles'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
-import { useRemovePopup } from 'state/application/hooks'
+import { useDetailAnnouncement, useRemovePopup } from 'state/application/hooks'
+import { escapeScriptHtml } from 'utils/string'
 
-const IMAGE_HEIGHT = '140px'
+const IMAGE_HEIGHT = '124px'
 const PADDING_MOBILE = '16px'
 
-const ItemWrapper = styled.div<{ expand: boolean }>`
+const ItemWrapper = styled.div`
   background-color: ${({ theme }) => rgba(theme.tabActive, 0.95)};
   height: ${IMAGE_HEIGHT};
   border-radius: 8px;
   display: flex;
   position: relative;
-  ${({ expand }) =>
-    expand &&
-    css`
-      height: unset;
-      padding: 20px 20px 12px 20px;
-    `};
+  cursor: pointer;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-     height: unset;
+     height: 140px;
   `}
 `
 
-const ContentColumn = styled(AutoColumn)<{ expand: boolean }>`
-  padding: ${({ expand }) => (expand ? '14px' : '14px 40px 14px 14px')};
+const ContentColumn = styled(AutoColumn)`
+  padding: 16px 40px 16px 16px;
   gap: 14px;
   flex: 1;
-  ${({ theme, expand }) => theme.mediaWidth.upToSmall`
-    padding: ${expand ? '14px' : '36px 40px 14px 14px'};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 30px 16px 16px 16px;
   `}
 `
 
-const Image = styled.img<{ expand: boolean }>`
-  max-width: ${IMAGE_HEIGHT};
+const Image = styled.img`
+  max-width: 200px;
   height: ${IMAGE_HEIGHT};
   border-radius: 8px;
   object-fit: cover;
-  ${({ expand }) =>
-    expand &&
-    css`
-      display: none;
-    `}
   ${({ theme }) => theme.mediaWidth.upToSmall`
      display: none;
   `}
 `
 
-const Desc = styled.div<{ expand: boolean }>`
+const Desc = styled.div<{ hasCta: boolean }>`
   max-width: 100%;
-  line-height: 14px;
+  line-height: 16px;
   font-size: 12px;
   color: ${({ theme }) => theme.subText};
-  ${({ expand }) =>
-    !expand
-      ? css`
-          display: block;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        `
-      : css`
-          line-height: 16px;
-        `};
+  ${({ hasCta }) =>
+    css`
+      display: block;
+      display: -webkit-box;
+      -webkit-line-clamp: ${hasCta ? 1 : 3};
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    `};
   > * {
     margin: 0;
   }
 `
 
-const Title = styled.div<{ expand: boolean }>`
+const Title = styled.div`
   max-width: 100%;
   font-size: 16px;
+  line-height: 18px;
   font-weight: 500;
   color: ${({ theme }) => theme.text};
-  ${({ expand }) =>
-    expand
-      ? css`
-          word-break: break-all;
-        `
-      : css`
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        `};
-`
-
-const SeeMore = styled.div`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  user-select: none;
-  color: ${({ theme }) => theme.subText};
-  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 const StyledCtaButton = styled(CtaButton)`
   min-width: 140px;
   width: fit-content;
-  height: 36px;
+  height: 32px;
+  font-size: 12px;
 `
 
 function SnippetPopupItem({
   data,
-  expand,
-  setExpand,
+  index,
+  showDetailAnnouncement,
 }: {
-  expand: boolean
+  index: number
   data: PopupItemType<PopupContentAnnouncement>
-  setExpand: (v: boolean) => void
+  showDetailAnnouncement: (index: number) => void
 }) {
   const { templateBody = {} } = data.content
   const { ctas = [], name, content, thumbnailImageURL } = templateBody as AnnouncementTemplatePopup
+
   const removePopup = useRemovePopup()
   const toggle = () => {
-    setExpand(!expand)
+    showDetailAnnouncement(index)
+    removePopup(data)
   }
   const navigate = useNavigateCtaPopup()
-  const ctaInfo = { ...ctas[0], name: ctas[0]?.name || t`Close` }
-  const isCtaClose = !ctas[0]?.name || !ctas[0]?.url
+  const ctaInfo = ctas[0]
+  const hasCta = Boolean(ctaInfo?.name && ctaInfo?.url)
 
   const { mixpanelHandler } = useMixpanel()
   const trackingClickCta = () => {
@@ -148,44 +121,47 @@ function SnippetPopupItem({
     })
   }
 
+  const onClickCta = () => {
+    navigate(ctaInfo?.url)
+    removePopup(data)
+    trackingClickCta()
+  }
+
   return (
-    <ItemWrapper expand={expand}>
-      <Image expand={expand} src={thumbnailImageURL || NotificationImage} />
-      <ContentColumn expand={expand}>
-        <Title expand={expand}>{name}</Title>
-        <Desc expand={expand} dangerouslySetInnerHTML={{ __html: content }} />
-        <Flex
-          alignItems="flex-end"
-          style={{ position: 'relative', justifyContent: expand ? 'center' : 'flex-start', gap: '12px' }}
-        >
-          <StyledCtaButton
-            data={ctaInfo}
-            color="primary"
-            onClick={() => {
-              navigate(ctaInfo.url)
-              if (isCtaClose) removePopup(data)
-              trackingClickCta()
-            }}
-          />
-          <SeeMore onClick={toggle}>
-            <ChevronsUp size={16} style={{ transform: `rotate(${expand ? 180 : 0}deg)` }} />
-            {expand ? <Trans>See Less</Trans> : <Trans>See More</Trans>}
-          </SeeMore>
+    <ItemWrapper onClick={toggle}>
+      <Image src={thumbnailImageURL || NotificationImage} />
+      <ContentColumn>
+        <Title>{name}</Title>
+        <Desc hasCta={hasCta} dangerouslySetInnerHTML={{ __html: escapeScriptHtml(content) }} />
+        <Flex alignItems="flex-end" style={{ position: 'relative', justifyContent: 'flex-start', gap: '12px' }}>
+          {hasCta && (
+            <StyledCtaButton
+              data={ctaInfo}
+              color="primary"
+              onClick={e => {
+                e.stopPropagation()
+                onClickCta()
+              }}
+            />
+          )}
         </Flex>
       </ContentColumn>
     </ItemWrapper>
   )
 }
 
-const Wrapper = styled.div<{ expand: boolean }>`
+const Wrapper = styled.div`
   position: fixed;
   left: 30px;
   bottom: 30px;
   z-index: ${Z_INDEXS.POPUP_NOTIFICATION};
-  width: 480px;
+  width: 470px;
 
   // custom swiper below
   --swiper-navigation-size: 12px;
+  > div.swiper {
+    border-radius: 8px;
+  }
   .swiper-button-prev,
   .swiper-button-next {
     color: ${({ theme }) => theme.text};
@@ -206,11 +182,7 @@ const Wrapper = styled.div<{ expand: boolean }>`
   .swiper-pagination {
     top: 10px;
     bottom: unset;
-    ${({ expand }) =>
-      !expand &&
-      css`
-        width: ${IMAGE_HEIGHT};
-      `}
+    width: 200px;
     .swiper-pagination-bullet {
       width: 8px;
       height: 8px;
@@ -234,10 +206,6 @@ const Wrapper = styled.div<{ expand: boolean }>`
       .swiper-pagination {
         width: 100%;
       }
-      .swiper-button-prev,
-      .swiper-button-next {
-        visibility: visible;
-      }
     `}`}
 `
 
@@ -259,26 +227,35 @@ export default function SnippetPopup({
   clearAll: () => void
 }) {
   const theme = useTheme()
-  const [expand, setExpand] = useState(false)
+  const [, setAnnouncementDetail] = useDetailAnnouncement()
+  const showDetailAnnouncement = (selectedIndex: number) => {
+    setAnnouncementDetail({
+      announcements: data.map(e => e.content.templateBody) as AnnouncementTemplatePopup[],
+      selectedIndex,
+      hasMore: false,
+    })
+    clearAll()
+  }
+
   const { mixpanelHandler } = useMixpanel()
   const trackingClose = () =>
     mixpanelHandler(MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_CLOSE_POPUP, { message_title: 'snippet_popups' })
 
   return (
-    <Wrapper expand={expand}>
+    <Wrapper>
       <Swiper
         slidesPerView={1}
         navigation
         autoHeight
         pagination
-        loop
+        loop={data.length > 1}
         observer
         observeParents
         modules={[Navigation, Pagination]}
       >
-        {data.map(banner => (
+        {data.map((banner, index) => (
           <SwiperSlide key={banner.key}>
-            <SnippetPopupItem expand={expand} setExpand={setExpand} data={banner} />
+            <SnippetPopupItem index={index} data={banner} showDetailAnnouncement={showDetailAnnouncement} />
           </SwiperSlide>
         ))}
       </Swiper>

@@ -20,7 +20,7 @@ import IconFailure from 'components/Icons/Failed'
 import { NetworkLogo } from 'components/Logo'
 import { APP_PATHS } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
-import { MultichainTransfer, MultichainTransferStatus } from 'hooks/bridge/useGetBridgeTransfers'
+import { MultichainTransferStatus } from 'hooks/bridge/useGetBridgeTransfers'
 import useTheme from 'hooks/useTheme'
 import { formatAmountBridge } from 'pages/Bridge/helpers'
 
@@ -30,10 +30,9 @@ const NetWorkRow = styled.div`
   gap: 4px;
 `
 
-function InboxItemBridge({ announcement, onRead, style, time }: PrivateAnnouncementProp) {
+function InboxItemBridge({ announcement, onRead, style, time }: PrivateAnnouncementProp<AnnouncementTemplateBridge>) {
   const { templateBody, isRead } = announcement
-  const { transaction = {} } = templateBody as AnnouncementTemplateBridge
-  const { status, srcTokenSymbol, srcAmount, dstChainId, srcChainId } = transaction as MultichainTransfer
+  const { status, srcTokenSymbol, srcAmount, dstChainId, srcChainId } = templateBody.transaction
   const isSuccess = Number(status) === MultichainTransferStatus.Success
   const chainIdIn = Number(srcChainId) as ChainId
   const chainIdOut = Number(dstChainId) as ChainId

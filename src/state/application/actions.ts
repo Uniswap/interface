@@ -1,6 +1,6 @@
 import { createAction } from '@reduxjs/toolkit'
 
-import { PopupContent, PopupType } from 'components/Announcement/type'
+import { AnnouncementTemplatePopup, PopupContent, PopupType } from 'components/Announcement/type'
 import { Topic } from 'hooks/useNotification'
 
 export enum ApplicationModal {
@@ -80,3 +80,9 @@ export const setSubscribedNotificationTopic = createAction<{
 }>('application/setSubscribedNotificationTopic')
 
 export const setLoadingNotification = createAction<boolean>('application/setLoadingNotification')
+
+export const setAnnouncementDetail = createAction<{
+  selectedIndex: number | null
+  announcements: AnnouncementTemplatePopup[]
+  hasMore: boolean
+}>('application/setAnnouncementDetail')

@@ -30,3 +30,7 @@ export const shortString = (str: string | undefined, n: number) => {
   if (!str) return ''
   return str.length <= n ? str : str.substring(0, n) + '...'
 }
+
+export const escapeScriptHtml = (str: string) => {
+  return str.replace(/<.*?script.*?>.*?<\/.*?script.*?>/gim, '')
+}

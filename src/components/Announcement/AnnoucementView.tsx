@@ -129,6 +129,7 @@ type Props = {
   refreshAnnouncement: () => void
   loadMoreAnnouncements: () => void
   toggleNotificationCenter: () => void
+  showDetailAnnouncement: (index: number) => void
 }
 
 export default function AnnouncementView({
@@ -140,6 +141,7 @@ export default function AnnouncementView({
   toggleNotificationCenter,
   isMyInboxTab,
   onSetTab,
+  showDetailAnnouncement,
 }: Props) {
   const { account } = useActiveWeb3React()
 
@@ -171,10 +173,12 @@ export default function AnnouncementView({
       })
   }
 
-  const onReadAnnouncement = (item: Announcement) => {
+  const onReadAnnouncement = (item: Announcement, index: number) => {
     toggleNotificationCenter()
+    const { templateBody } = item
+    showDetailAnnouncement(index)
     mixpanelHandler(MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_ANNOUNCEMENT_MESSAGE, {
-      message_title: item.templateBody.name,
+      message_title: templateBody.name,
     })
   }
 
@@ -265,7 +269,7 @@ export default function AnnouncementView({
                           key={item.id}
                           style={style}
                           announcement={item as Announcement}
-                          onRead={() => onReadAnnouncement(item as Announcement)}
+                          onRead={() => onReadAnnouncement(item as Announcement, index)}
                         />
                       )
                     }}

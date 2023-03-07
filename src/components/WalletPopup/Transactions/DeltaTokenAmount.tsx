@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import styled from 'styled-components'
 
 import Logo from 'components/Logo'
@@ -31,7 +32,7 @@ const DeltaTokenAmount = ({
   logoURL,
 }: {
   symbol?: string
-  amount?: string
+  amount?: ReactNode
   tokenAddress?: string
   plus?: boolean
   color?: string

@@ -118,7 +118,7 @@ export default function Popups() {
         </FixedPopupColumn>
       )}
       {snippetPopups.length > 0 && <SnippetPopup data={snippetPopups} clearAll={clearAllSnippetPopup} />}
-      {centerPopup && <CenterPopup data={centerPopup} clearAll={clearAllCenterPopup} />}
+      {centerPopup && <CenterPopup data={centerPopup} onDismiss={clearAllCenterPopup} />}
     </>
   )
 }

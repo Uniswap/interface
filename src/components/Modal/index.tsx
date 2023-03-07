@@ -97,7 +97,6 @@ export interface ModalProps {
   transition?: boolean
   enableSwipeGesture?: boolean
 }
-
 export default function Modal({
   isOpen,
   onDismiss = () => {

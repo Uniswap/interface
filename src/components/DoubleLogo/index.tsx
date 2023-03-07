@@ -58,17 +58,15 @@ export function DoubleCurrencyLogoV2({
   logoUrl1,
   logoUrl2,
   size = 16,
-  margin = true,
   style = {},
 }: {
   logoUrl1: string
   logoUrl2: string
   size: number
-  margin?: boolean
   style?: CSSProperties
 }) {
   return (
-    <Wrapper sizeraw={size} margin={margin} style={style}>
+    <Wrapper sizeraw={size} margin={false} style={style}>
       {logoUrl1 && (
         <HigherLogo>
           <Logo srcs={[logoUrl1]} style={{ width: size, height: size }} />
