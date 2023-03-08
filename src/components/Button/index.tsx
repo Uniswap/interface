@@ -476,7 +476,7 @@ function pickThemeButtonTextColor({ theme, emphasis }: { theme: DefaultTheme; em
   switch (emphasis) {
     case ButtonEmphasis.high:
     case ButtonEmphasis.promotional:
-      return theme.accentTextLightPrimary
+      return theme.accentTextDarkPrimary
     case ButtonEmphasis.highSoft:
       return theme.accentAction
     case ButtonEmphasis.low:
