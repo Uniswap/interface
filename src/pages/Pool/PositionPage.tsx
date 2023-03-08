@@ -179,7 +179,7 @@ function CurrentPriceCard({
           <Trans>Current price</Trans>
         </ExtentsText>
         <ThemedText.DeprecatedMediumHeader textAlign="center">
-          {formatPrice(inverted ? pool.token1Price : pool.token0Price, NumberType.TokenNonTx)}{' '}
+          {formatPrice(inverted ? pool.token1Price : pool.token0Price, NumberType.TokenTx)}{' '}
         </ThemedText.DeprecatedMediumHeader>
         <ExtentsText>
           <Trans>
