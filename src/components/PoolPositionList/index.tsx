@@ -1,6 +1,11 @@
+import { Interface } from '@ethersproject/abi'
 import { Trans } from '@lingui/macro'
+import { Token } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
+import POOL_EXTENDED_ABI from 'abis/pool-extended.json'
 import PoolPositionListItem from 'components/PoolPositionListItem'
-import React from 'react'
+import { useMultipleContractSingleData } from 'lib/hooks/multicall'
+import React, { useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
 import { PoolPositionDetails } from 'types/position'
@@ -52,19 +57,42 @@ type PoolPositionListProps = React.PropsWithChildren<{
 }>
 
 export default function PoolPositionList({ positions, filterByOperator, filterByHolder }: PoolPositionListProps) {
+  const { account, chainId } = useWeb3React()
+  // TODO: we should merge this part with same part in swap page and move to a custom hook
+  const poolAddresses = positions.map((p) => p.pool)
+  const PoolInterface = new Interface(POOL_EXTENDED_ABI)
+  // TODO: check how many times we are making this rpc call
+  const results = useMultipleContractSingleData(poolAddresses, PoolInterface, 'getPool')
+  // TODO: if we initiate this in state, we can later query from state instead of making rpc call
+  //  in 1) swap and 2) each pool url, we could also store poolId at that point
+  const operatedPools = useMemo(() => {
+    return results
+      .map((result, i) => {
+        const { result: pools, loading } = result
+        if (!chainId || loading || !pools || !pools?.[0]) return ''
+        const { name, symbol, decimals, owner } = pools?.[0]
+        const isPoolOperator = owner === account
+        if (!isPoolOperator) return ''
+        return new Token(chainId, poolAddresses[i], decimals, symbol, name)
+      })
+      .filter((p) => p !== '')
+  }, [account, chainId, poolAddresses, results])
+  console.log(operatedPools)
+
   return (
     <>
       <DesktopHeader>
         <div>
-          <Trans>All pools</Trans>
-          {positions && ' (' + positions.length + ')'}
+          <Trans>Operated pools</Trans>
+          {positions && ' (' + operatedPools.length + ')'}
         </div>
       </DesktopHeader>
       <MobileHeader>
-        <Trans>All pools</Trans>
+        <Trans>Operated pools</Trans>
       </MobileHeader>
-      {positions.map((p) => {
-        return <PoolPositionListItem key={p.id.toString()} positionDetails={p} />
+      {/* return <PoolPositionListItem key={p.id.toString()} positionDetails={p} /> */}
+      {operatedPools.map((p: any) => {
+        return <PoolPositionListItem key={p?.name.toString()} positionDetails={p} />
       })}
     </>
   )
