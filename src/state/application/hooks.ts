@@ -4,7 +4,7 @@ import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
-import { AppState } from '../index'
+import { AppState } from '../types'
 import {
   addPopup,
   ApplicationModal,
