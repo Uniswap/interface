@@ -45,6 +45,7 @@ const TaxOptionDescription = styled.div`
   display: flex;
   height: 100%;
   justify-content: center;
+  user-select: none;
   text-align: center;
 `
 
@@ -52,6 +53,7 @@ const TaxOption = styled.div`
   align-items: center;
   background-color: ${({ theme }) => theme.backgroundModule};
   border-radius: 12px;
+  cursor: auto;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -63,11 +65,12 @@ const TaxOption = styled.div`
 const StyledImageContainer = styled(Box)`
   width: 75%;
   height: 80%;
-  cursor: pointer;
+  cursor: auto;
   object-fit: contain;
 `
 
 const Button = styled(ThemeButton)`
+  cursor: pointer;
   width: 100%;
   margin-right: auto;
 `
@@ -84,7 +87,7 @@ function TaxServiceOption({ description, logo, url }: TaxServiceOptionProps) {
   }
 
   return (
-    <TaxOption>
+    <TaxOption tabIndex={0}>
       <StyledImageContainer as="img" src={logo} draggable={false} />
       <TaxOptionDescription className={bodySmall}>{description}</TaxOptionDescription>
       <Button size={ButtonSize.medium} emphasis={ButtonEmphasis.medium} onClick={openTaxServiceLink}>
@@ -98,7 +101,7 @@ export default memo(function TaxServiceModal({ isOpen, onDismiss }: TaxServiceMo
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90} minHeight={false}>
       <InnerContainer>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', userSelect: 'none' }}>
           <div className={subhead}>
             <Trans>Save on your crypto taxes</Trans>
           </div>

@@ -1,10 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
-import { LARGE_MEDIA_BREAKPOINT, MOBILE_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import { SMALLEST_MOBILE_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { bodySmall, subhead } from 'nft/css/common.css'
 import { useState } from 'react'
 import { useCallback } from 'react'
 import { X } from 'react-feather'
+import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
 
@@ -12,15 +13,11 @@ import TaxServiceModal from '.'
 import CointrackerLogo from './CointrackerLogo.png'
 import TokenTaxLogo from './TokenTaxLogo.png'
 
-const PopupContainer = styled.div<{ show: boolean }>`
-  background-image: url(${CointrackerLogo}), url(${TokenTaxLogo});
-  background-size: 15%, 20%;
-  background-repeat: no-repeat;
-  background-position: top right 75px, bottom 5px right 7px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+const PopupContainer = styled.div<{ show: boolean; isDarkMode: boolean }>`
   box-shadow: ${({ theme }) => theme.deepShadow};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  border-radius: 12px;
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  border-radius: 13px;
   cursor: pointer;
   color: ${({ theme }) => theme.textPrimary};
   display: ${({ show }) => (show ? 'flex' : 'none')};
@@ -35,18 +32,37 @@ const PopupContainer = styled.div<{ show: boolean }>`
   }) => `${duration.slow} opacity ${timing.in}`};
   width: 320px;
   height: 156px;
-  @media screen and (min-width: ${LARGE_MEDIA_BREAKPOINT}) {
-    bottom: 48px;
+  @media screen and (min-width: ${SMALLEST_MOBILE_MEDIA_BREAKPOINT}) {
+    bottom: 50px;
   }
-  @media screen and (min-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    width: 320px;
+
+  ::before {
+    content: '';
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+
+    background-image: url(${CointrackerLogo}), url(${TokenTaxLogo});
+    background-size: 15%, 20%;
+    background-repeat: no-repeat;
+    background-position: top right 75px, bottom 5px right 7px;
+
+    opacity: ${({ isDarkMode }) => (isDarkMode ? '0.6' : '0.25')};
   }
-  :hover {
-    border: double 1px transparent;
-    border-radius: 12px;
-    background-origin: border-box;
-    background-clip: padding-box, border-box;
-  }
+`
+
+const InnerContainer = styled.div`
+  background-color: ${({ theme }) => theme.accentActionSoft};
+  border-radius: 12px;
+  cursor: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  gap: 8px;
+  padding: 16px;
 `
 
 const Button = styled(ThemeButton)`
@@ -57,18 +73,8 @@ const Button = styled(ThemeButton)`
   border-radius: 12px;
 `
 
-const InnerContainer = styled.div`
-  background-color: ${({ theme }) => theme.accentActionSoft};
-  border-radius: 12px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  gap: 8px;
-  padding: 16px;
-`
-
 const TextContainer = styled.div`
+  user-select: none;
   display: flex;
   flex-direction: column;
   width: 70%;
@@ -77,6 +83,7 @@ const TextContainer = styled.div`
 
 export const StyledXButton = styled(X)`
   color: ${({ theme }) => theme.textPrimary};
+  cursor: pointer;
   &:hover {
     opacity: ${({ theme }) => theme.opacity.hover};
   }
@@ -88,6 +95,7 @@ export const StyledXButton = styled(X)`
 const TAX_SERVICE_DISMISSED = 'TaxServiceToast-dismissed'
 
 export default function TaxServiceBanner() {
+  const isDarkMode = useIsDarkMode()
   const [modalOpen, setModalOpen] = useState(false)
   const sessionStorageTaxServiceDismissed = sessionStorage.getItem(TAX_SERVICE_DISMISSED)
   let initialBannerOpen = true
@@ -111,7 +119,7 @@ export default function TaxServiceBanner() {
   }, [])
 
   return (
-    <PopupContainer show={bannerOpen}>
+    <PopupContainer show={bannerOpen} isDarkMode={isDarkMode}>
       <InnerContainer>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <TextContainer>
