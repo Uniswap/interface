@@ -1051,3 +1051,66 @@ export const LooksRareIcon = (props: SVGProps) => (
     </defs>
   </svg>
 )
+
+export const LarvaLabsMarketplaceIcon = (props: SVGProps) => (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <rect width="32" height="32" rx="16" fill="#5D6785" fillOpacity="0.24" />
+    <g clipPath="url(#clip0_668_26243)">
+      <g filter="url(#filter0_ddd_668_26243)">
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M13.5 10.1667H16V20.1667H13.5V10.1667ZM16.8333 10.1667H19.3333V16.8334H16.8333V10.1667ZM16.8333 17.6667V20.1667H24.3333V17.6667H16.8333ZM7.66663 20.1667V17.6667H12.6666V20.1667H7.66663Z"
+          fill="white"
+        />
+      </g>
+    </g>
+    <defs>
+      <filter
+        id="filter0_ddd_668_26243"
+        x="3.66663"
+        y="6.16669"
+        width="36.6666"
+        height="30"
+        filterUnits="userSpaceOnUse"
+        colorInterpolationFilters="sRGB"
+      >
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
+        <feColorMatrix
+          in="SourceAlpha"
+          type="matrix"
+          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+          result="hardAlpha"
+        />
+        <feOffset dx="1" dy="2" />
+        <feGaussianBlur stdDeviation="1" />
+        <feColorMatrix type="matrix" values="0 0 0 0 0.2 0 0 0 0 0.207843 0 0 0 0 0.282353 0 0 0 0.08 0" />
+        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_668_26243" />
+        <feColorMatrix
+          in="SourceAlpha"
+          type="matrix"
+          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+          result="hardAlpha"
+        />
+        <feOffset dx="2" dy="2" />
+        <feGaussianBlur stdDeviation="3" />
+        <feColorMatrix type="matrix" values="0 0 0 0 0.2 0 0 0 0 0.207843 0 0 0 0 0.282353 0 0 0 0.08 0" />
+        <feBlend mode="normal" in2="effect1_dropShadow_668_26243" result="effect2_dropShadow_668_26243" />
+        <feColorMatrix
+          in="SourceAlpha"
+          type="matrix"
+          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+          result="hardAlpha"
+        />
+        <feOffset dx="6" dy="6" />
+        <feGaussianBlur stdDeviation="5" />
+        <feColorMatrix type="matrix" values="0 0 0 0 0.2 0 0 0 0 0.207843 0 0 0 0 0.282353 0 0 0 0.04 0" />
+        <feBlend mode="normal" in2="effect2_dropShadow_668_26243" result="effect3_dropShadow_668_26243" />
+        <feBlend mode="normal" in="SourceGraphic" in2="effect3_dropShadow_668_26243" result="shape" />
+      </filter>
+      <clipPath id="clip0_668_26243">
+        <rect width="20" height="20" fill="white" transform="translate(6 6)" />
+      </clipPath>
+    </defs>
+  </svg>
+)

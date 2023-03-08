@@ -5,6 +5,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import {
   CollectionSelectedAssetIcon,
+  LarvaLabsMarketplaceIcon,
   LooksRareIcon,
   Nft20Icon,
   NftXIcon,
@@ -622,20 +623,6 @@ const TertiaryInfo = ({ children }: { children: ReactNode }) => {
   return <StyledTertiaryInfo>{children}</StyledTertiaryInfo>
 }
 
-const StyledMarketplaceIcon = styled.img`
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
-  flex-shrink: 0;
-  margin-left: 8px;
-  vertical-align: top;
-`
-
-const MarketplaceIcon = ({ marketplace }: { marketplace: string }) => {
-  return <StyledMarketplaceIcon alt={marketplace} src={`/nft/svgs/marketplaces/${marketplace}.svg`} />
-}
-
 interface RankingProps {
   provider: { url?: string; rank?: number }
 }
@@ -697,6 +684,8 @@ function getMarketplaceIcon(market: Markets): ReactNode {
       return <Nft20Icon />
     case Markets.NFTX:
       return <NftXIcon />
+    case Markets.Cryptopunks:
+      return <LarvaLabsMarketplaceIcon />
     default:
       return null
   }
@@ -777,7 +766,6 @@ export {
   ImageContainer,
   InfoContainer,
   MarketplaceContainer,
-  MarketplaceIcon,
   PrimaryDetails,
   PrimaryInfo,
   PrimaryRow,
