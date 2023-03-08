@@ -37,6 +37,13 @@ if (isSentryEnabled()) {
   Sentry.init({
     dsn: process.env.REACT_APP_SENTRY_DSN,
     release: process.env.REACT_APP_GIT_COMMIT_HASH,
+    /**
+     * TODO(INFRA-143)
+     * According to Sentry, this shouldn't be necessary, as they default to `3` when not set.
+     * Unfortunately, that doesn't work right now, so we workaround it by explicitly setting
+     * the `normalizeDepth` to `10`. This should be removed once the issue is fixed.
+     */
+    normalizeDepth: 10,
   })
 }
 

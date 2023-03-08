@@ -4,7 +4,7 @@ import { useAppSelector } from 'state/hooks'
 import sortByListPriority from 'utils/listSort'
 
 import BROKEN_LIST from '../../constants/tokenLists/broken.tokenlist.json'
-import { AppState } from '../index'
+import { AppState } from '../types'
 import { DEFAULT_ACTIVE_LIST_URLS, UNSUPPORTED_LIST_URLS } from './../../constants/lists'
 
 export type TokenAddressMap = ChainTokenMap
