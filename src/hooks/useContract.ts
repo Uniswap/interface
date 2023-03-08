@@ -58,14 +58,14 @@ export function useContract(
   }, [address, ABI, library, withSignerIfPossible, account, isEVM])
 }
 
-function useContractForReading(
+export function useContractForReading(
   address: string | undefined,
   ABI: ContractInterface,
   customChainId?: ChainId,
 ): Contract | null {
   const { chainId: curChainId } = useActiveWeb3React()
   const chainId = customChainId || curChainId
-  const { provider } = useKyberSwapConfig()
+  const { provider } = useKyberSwapConfig(chainId)
 
   return useMemo(() => {
     if (!address || !isEVM(chainId) || !provider) return null

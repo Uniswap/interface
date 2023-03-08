@@ -14,7 +14,7 @@ import { CONTRACT_NOT_FOUND_MSG } from 'constants/messages'
 import { NETWORKS_INFO, NETWORKS_INFO_CONFIG, isEVM } from 'constants/networks'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { useActiveWeb3React } from 'hooks'
-import { useContract, useTokenContractForReading } from 'hooks/useContract'
+import { useContract, useContractForReading, useTokenContractForReading } from 'hooks/useContract'
 import useTokenBalance from 'hooks/useTokenBalance'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
@@ -352,21 +352,33 @@ export function useStakingInfo() {
 export function useVotingInfo() {
   const { account } = useActiveWeb3React()
   const kyberDaoInfo = useKyberDAOInfo()
-  const rewardDistributorContract = useContract(kyberDaoInfo?.rewardsDistributor, RewardDistributorABI)
+  const rewardsDistributorContract = useContractForReading(
+    kyberDaoInfo?.rewardsDistributor,
+    RewardDistributorABI,
+    ChainId.MAINNET,
+  )
   const { data: daoInfo } = useSWR(kyberDaoInfo?.daoStatsApi + '/dao-info', fetcher)
   const [localStoredDaoInfo, setLocalStoredDaoInfo] = useLocalStorage('kyberdao-daoInfo')
+  const [merkleData, setMerkleData] = useState<any>()
+  useEffect(() => {
+    rewardsDistributorContract
+      ?.getMerkleData?.()
+      .then((res: any) => {
+        setMerkleData(res)
+      })
+      .catch((err: any) => console.log(err))
+  }, [rewardsDistributorContract])
+
   useEffect(() => {
     if (daoInfo) {
       setLocalStoredDaoInfo(daoInfo)
     }
   }, [daoInfo, setLocalStoredDaoInfo])
-  const merkleData = useSingleCallResult(rewardDistributorContract, 'getMerkleData')
 
   const merkleDataFileUrl = useMemo(() => {
     if (!merkleData) return
-    const merkleDataRes = merkleData.result?.[0]
-    const cycle = parseInt(merkleDataRes?.[0]?.toString())
-    const merkleDataFileUrl = merkleDataRes?.[2]
+    const cycle = parseInt(merkleData?.[0]?.toString())
+    const merkleDataFileUrl = merkleData?.[2]
     if (!cycle || !merkleDataFileUrl) {
       return
     }
@@ -386,13 +398,16 @@ export function useVotingInfo() {
     },
   )
 
-  const claimedRewardAmounts = useSingleCallResult(rewardDistributorContract, 'getClaimedAmounts', [
-    account,
-    userRewards?.userReward?.tokens,
-  ])
+  const [claimedRewardAmounts, setClaimedRewardAmounts] = useState<any>()
+  useEffect(() => {
+    rewardsDistributorContract
+      ?.getClaimedAmounts?.(account, userRewards?.userReward?.tokens)
+      .then((res: any) => setClaimedRewardAmounts(res))
+      .catch((err: any) => console.log(err))
+  }, [rewardsDistributorContract, account, userRewards?.userReward?.tokens])
 
   const remainingCumulativeAmount: BigNumber = useMemo(() => {
-    if (!userRewards?.userReward?.tokens || !claimedRewardAmounts?.result) return BigNumber.from(0)
+    if (!userRewards?.userReward?.tokens || !claimedRewardAmounts) return BigNumber.from(0)
     return (
       userRewards?.userReward?.tokens?.map((_: string, index: number) => {
         const cummulativeAmount =
@@ -403,7 +418,7 @@ export function useVotingInfo() {
         if (!cummulativeAmount) {
           return BigNumber.from(0)
         }
-        const claimedAmount = claimedRewardAmounts?.result?.[0]?.[index] || 0
+        const claimedAmount = claimedRewardAmounts?.[0]?.[index] || 0
 
         return BigNumber.from(cummulativeAmount).sub(BigNumber.from(claimedAmount))
       })[0] || BigNumber.from(0)
