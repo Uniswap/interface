@@ -46,10 +46,6 @@ export function useSwapCallArguments(
     const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
     if (!swapRouterAddress) return []
 
-    // TODO: should add optional additional param poolAddress? so we leave recipient field free
-    //  so we avoid confusiong poolAddress and recipient
-    //const poolAddress = recipient
-
     const { value, calldata } = SwapRouter.swapCallParameters(trade, {
       fee: feeOptions,
       recipient,

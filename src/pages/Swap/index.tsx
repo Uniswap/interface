@@ -50,11 +50,11 @@ import useENSAddress from '../../hooks/useENSAddress'
 import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
-//import { /*PoolInitParams,*/ PoolWithAddress } from '../../hooks/useSmartPools'
+//import { PoolInitParams, PoolWithAddress } from '../../hooks/useSmartPools'
 import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import useWrapCallback, { WrapErrorText, WrapType } from '../../hooks/useWrapCallback'
 import { useMultipleContractSingleData } from '../../lib/hooks/multicall'
-import { /*usePoolOperators,*/ useRegisteredPools } from '../../state/pool/hooks'
+import { useRegisteredPools } from '../../state/pool/hooks'
 import { Field } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
@@ -259,16 +259,11 @@ export default function Swap() {
 
   // TODO: if (poolsLogs === []) return (() => getAllPoolsData), i.e. fire logs query. Be sure to query just once.
   const poolsLogs = useRegisteredPools(chainId)
-  //const poolAddresses: (string | undefined)[] = useMemo(() => poolsLogs?.map((p) => p.pool), [poolsLogs])
   const poolAddresses: (string | undefined)[] = useMemo(() => {
-    // this declaration does not make much sense
-    //if (!chainId) return new Array(poolsLogs.length)
     if (!poolsLogs) return []
 
     return poolsLogs.map((p) => p.pool)
   }, [poolsLogs])
-  //const rewardsAddresses = useMemo(() => info.map(({ stakingRewardAddress }) => stakingRewardAddress), [info])
-  //const poolOperators = usePoolOperators(poolAddresses)
   const PoolInterface = new Interface(POOL_EXTENDED_ABI)
   const results = useMultipleContractSingleData(poolAddresses, PoolInterface, 'getPool')
 
@@ -298,15 +293,6 @@ export default function Swap() {
     if (!operatedPools) return
     return operatedPools[0]
   }, [operatedPools])
-
-  // TODO: move all this to reducer
-  //const [smartPoolValue, ] = useState<Token | undefined>(defaultPool)
-  /*const handlePoolSelect = useCallback(
-    (smartPool: Currency) => {
-      setSmartPoolValue(smartPool as Token)
-    },
-    [setSmartPoolValue]
-  )*/
 
   // swap state
   const { independentField, typedValue, recipient, smartPoolAddress, smartPoolName } = useSwapState()
@@ -458,13 +444,12 @@ export default function Swap() {
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
 
   // the callback to execute the swap
-  // TODO: send selected poolAddress to child
   const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
     trade,
     allowedSlippage,
     recipient,
     signatureData,
-    smartPoolAddress //smartPoolValue?.isToken ? smartPoolValue?.address : undefined
+    smartPoolAddress
   )
 
   const handleSwap = useCallback(() => {

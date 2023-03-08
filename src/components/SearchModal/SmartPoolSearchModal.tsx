@@ -52,6 +52,7 @@ export default memo(function SmartPoolSearchModal({
     setModalView(PoolModalView.tokenSafety)
   }
 
+  // TODO: set hasWarning as false for pools (check as seems working fine)
   const handleCurrencySelect = useCallback(
     (currency: Currency, hasWarning?: boolean) => {
       if (hasWarning && currency.isToken && !userAddedTokens.find((token) => token.equals(currency))) {
