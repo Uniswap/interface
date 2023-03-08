@@ -1,3 +1,4 @@
+import { BottomSheetSectionList } from '@gorhom/bottom-sheet'
 import { Currency } from '@uniswap/sdk-core'
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -337,8 +338,8 @@ function _TokenSearchResultList({
   }
 
   return (
-    <Box>
-      <SectionList
+    <Box flexGrow={1}>
+      <BottomSheetSectionList
         ref={sectionListRef}
         ListEmptyComponent={
           <Flex>
@@ -350,7 +351,7 @@ function _TokenSearchResultList({
             </Text>
           </Flex>
         }
-        ListFooterComponent={Footer}
+        ListFooterComponent={<Inset all="spacing36" />}
         keyExtractor={key}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="always"
@@ -376,14 +377,6 @@ function SectionHeader({ title }: { title: string }): JSX.Element {
         {title}
       </Text>
     </Flex>
-  )
-}
-
-function Footer(): JSX.Element {
-  return (
-    <Inset all="spacing48">
-      <Inset all="spacing16" />
-    </Inset>
   )
 }
 
