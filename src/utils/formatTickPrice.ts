@@ -19,5 +19,5 @@ export function formatTickPrice({ price, atLimit, direction, placeholder }: Form
     return placeholder
   }
 
-  return formatPrice(price, NumberType.TokenTx)
+  return formatPrice(price, NumberType.TokenNonTx)
 }
