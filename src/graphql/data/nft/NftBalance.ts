@@ -7,8 +7,22 @@ import { useCallback, useMemo } from 'react'
 import { NftAsset, useNftBalanceQuery } from '../__generated__/types-and-hooks'
 
 gql`
-  query NftBalance($ownerAddress: String!, $filter: NftBalancesFilterInput, $first: Int, $after: String) {
-    nftBalances(ownerAddress: $ownerAddress, filter: $filter, first: $first, after: $after) {
+  query NftBalance(
+    $ownerAddress: String!
+    $filter: NftBalancesFilterInput
+    $first: Int
+    $after: String
+    $last: Int
+    $before: String
+  ) {
+    nftBalances(
+      ownerAddress: $ownerAddress
+      filter: $filter
+      first: $first
+      after: $after
+      last: $last
+      before: $before
+    ) {
       edges {
         node {
           ownedAsset {
@@ -94,7 +108,9 @@ export function useNftBalance(
   collectionFilters?: string[],
   assetsFilter?: { address: string; tokenId: string }[],
   first?: number,
-  after?: string
+  after?: string,
+  last?: number,
+  before?: string
 ) {
   const { data, loading, fetchMore } = useNftBalanceQuery({
     variables: {
@@ -109,6 +125,8 @@ export function useNftBalance(
             },
       first,
       after,
+      last,
+      before,
     },
   })
 
