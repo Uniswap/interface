@@ -237,7 +237,9 @@ export type NftAsset = {
 export type NftAssetListingsArgs = {
   after?: InputMaybe<Scalars['String']>;
   asc?: InputMaybe<Scalars['Boolean']>;
+  before?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
 };
 
 export type NftAssetConnection = {
@@ -671,18 +673,22 @@ export type QueryNftAssetsArgs = {
   address: Scalars['String'];
   after?: InputMaybe<Scalars['String']>;
   asc?: InputMaybe<Scalars['Boolean']>;
+  before?: InputMaybe<Scalars['String']>;
   chain?: InputMaybe<Chain>;
   filter?: InputMaybe<NftAssetsFilterInput>;
   first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<NftAssetSortableField>;
 };
 
 
 export type QueryNftBalancesArgs = {
   after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
   chain?: InputMaybe<Chain>;
   filter?: InputMaybe<NftBalancesFilterInput>;
   first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
   ownerAddress: Scalars['String'];
 };
 
@@ -742,8 +748,10 @@ export type QueryTokensArgs = {
 export type QueryTopCollectionsArgs = {
   after?: InputMaybe<Scalars['String']>;
   chains?: InputMaybe<Array<Chain>>;
+  cursor?: InputMaybe<Scalars['String']>;
   duration?: InputMaybe<HistoryDuration>;
   first?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<CollectionSortableField>;
 };
 
