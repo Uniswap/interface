@@ -90,7 +90,12 @@ function TaxServiceOption({ description, logo, url }: TaxServiceOptionProps) {
     <TaxOption tabIndex={0}>
       <StyledImageContainer as="img" src={logo} draggable={false} />
       <TaxOptionDescription className={bodySmall}>{description}</TaxOptionDescription>
-      <Button size={ButtonSize.medium} emphasis={ButtonEmphasis.medium} onClick={openTaxServiceLink}>
+      <Button
+        size={ButtonSize.medium}
+        emphasis={ButtonEmphasis.medium}
+        onClick={openTaxServiceLink}
+        data-testid="tax-service-option-button"
+      >
         Get started
       </Button>
     </TaxOption>

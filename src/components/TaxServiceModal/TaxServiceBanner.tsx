@@ -49,12 +49,11 @@ const PopupContainer = styled.div<{ show: boolean; isDarkMode: boolean }>`
     background-repeat: no-repeat;
     background-position: top right 75px, bottom 5px right 7px;
 
-    opacity: ${({ isDarkMode }) => (isDarkMode ? '0.6' : '0.25')};
+    opacity: ${({ isDarkMode }) => (isDarkMode ? '0.9' : '0.25')};
   }
 `
 
 const InnerContainer = styled.div`
-  background-color: ${({ theme }) => theme.accentActionSoft};
   border-radius: 12px;
   cursor: auto;
   overflow: hidden;
@@ -63,6 +62,17 @@ const InnerContainer = styled.div`
   position: relative;
   gap: 8px;
   padding: 16px;
+  ::before {
+    content: '';
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+
+    background-color: ${({ theme }) => theme.accentActionSoft};
+    opacity: 0.4;
+  }
 `
 
 const Button = styled(ThemeButton)`
@@ -122,7 +132,7 @@ export default function TaxServiceBanner() {
     <PopupContainer show={bannerOpen} isDarkMode={isDarkMode}>
       <InnerContainer>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <TextContainer>
+          <TextContainer data-testid="tax-service-description">
             <div className={subhead} style={{ paddingBottom: '12px' }}>
               <Trans>Save on your crypto taxes</Trans>
             </div>
@@ -140,7 +150,12 @@ export default function TaxServiceBanner() {
           />
         </div>
 
-        <Button size={ButtonSize.small} emphasis={ButtonEmphasis.promotional} onClick={toggleTaxModal}>
+        <Button
+          size={ButtonSize.small}
+          emphasis={ButtonEmphasis.promotional}
+          onClick={toggleTaxModal}
+          data-testid="learn-more-button"
+        >
           <Trans>Learn more</Trans>
         </Button>
       </InnerContainer>
