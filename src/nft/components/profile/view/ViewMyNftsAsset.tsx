@@ -4,11 +4,12 @@ import { NFTEventName } from '@uniswap/analytics-events'
 import Row from 'components/Row'
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { NftCard, NftCardDisplayProps } from 'nft/components/card'
-import { BagIcon, VerifiedIcon } from 'nft/components/icons'
+import { VerifiedIcon } from 'nft/components/icons'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { ethNumberStandardFormatter, floorFormatter } from 'nft/utils'
 import { useMemo } from 'react'
+import { Tag } from 'react-feather'
 import styled from 'styled-components/macro'
 
 const StyledRow = styled(Row)`
@@ -19,7 +20,7 @@ const StyledRow = styled(Row)`
 const UserListedContainer = ({ listingPrice }: { listingPrice: number }) => {
   return (
     <StyledRow>
-      <BagIcon height="20px" width="20px" />
+      <Tag size={20} />
       <span>{floorFormatter(listingPrice)} ETH</span>
     </StyledRow>
   )

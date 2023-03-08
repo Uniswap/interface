@@ -225,9 +225,10 @@ const handleUniformAspectRatio = (
       setRenderedHeight(height)
     }
 
+    const variance = 0.05
     if (uniformAspectRatio === UniformAspectRatios.unset) {
       setUniformAspectRatio(aspectRatio >= 1 ? UniformAspectRatios.square : aspectRatio)
-    } else if (uniformAspectRatio !== aspectRatio) {
+    } else if (aspectRatio > uniformAspectRatio + variance || aspectRatio < uniformAspectRatio - variance) {
       setUniformAspectRatio(UniformAspectRatios.square)
       setRenderedHeight && setRenderedHeight(undefined)
     }

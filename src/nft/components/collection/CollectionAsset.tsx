@@ -105,7 +105,7 @@ export const CollectionAsset = ({
       secondaryInfo: notForSale ? '' : `${formatWeiToDecimal(asset.priceInfo.ETHPrice, true)} ETH`,
       selectedInfo: 'Remove from bag',
       tertiaryInfo:
-        asset.sellorders && asset.sellorders[0].endAt ? (
+        asset.sellorders && asset.sellorders.length > 0 && asset.sellorders[0].endAt ? (
           <ExpirationContainer expirationTimestamp={asset.sellorders[0].endAt} />
         ) : null,
       notSelectedInfo: 'Add to bag',
