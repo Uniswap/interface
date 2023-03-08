@@ -214,7 +214,7 @@ export const SearchBar = () => {
         </Box>
       </Box>
       {isMobileOrTablet && (
-        <NavIcon onClick={toggleOpen}>
+        <NavIcon onClick={toggleOpen} label={placeholderText}>
           <NavMagnifyingGlassIcon />
         </NavIcon>
       )}

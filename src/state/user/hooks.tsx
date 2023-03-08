@@ -13,7 +13,7 @@ import { UserAddedToken } from 'types/tokens'
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
 import { useAllTokens } from '../../hooks/Tokens'
-import { AppState } from '../index'
+import { AppState } from '../types'
 import {
   addSerializedPair,
   addSerializedToken,

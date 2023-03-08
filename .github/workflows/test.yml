@@ -36,13 +36,12 @@ jobs:
           fail_ci_if_error: false
           verbose: true
 
-  cypress-build:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - run: yarn prepare
-
       - run: yarn build
       - uses: actions/upload-artifact@v2
         with:
@@ -50,6 +49,24 @@ jobs:
           path: build
           if-no-files-found: error
 
+  size-tests:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@v2
+        with:
+          name: build
+          path: build
+      - run: yarn test:size
+
+
+  cypress-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
       - uses: actions/cache@v3
         id: cypress-cache
         with:
@@ -59,7 +76,7 @@ jobs:
         run: yarn cypress install
 
   cypress-test-matrix:
-    needs: cypress-build
+    needs: [build, cypress-build]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -96,7 +113,7 @@ jobs:
 
   # Included as a single job to check against for cypress test success, as cypress runs in a matrix.
   cypress-tests:
-    needs: cypress-test-matrix
+    needs: [cypress-test-matrix]
     runs-on: ubuntu-latest
     steps:
       - run: echo 'Finished cypress tests https\://dashboard.cypress.io/projects/yp82ef'

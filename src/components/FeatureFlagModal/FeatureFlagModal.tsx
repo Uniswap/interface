@@ -2,7 +2,6 @@ import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'fe
 import { GqlRoutingVariant, useGqlRoutingFlag } from 'featureFlags/flags/gqlRouting'
 import { NftGraphqlVariant, useNftGraphqlFlag } from 'featureFlags/flags/nftlGraphql'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
-import { Permit2Variant, usePermit2Flag } from 'featureFlags/flags/permit2'
 import { SwapWidgetVariant, useSwapWidgetFlag } from 'featureFlags/flags/swapWidget'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
@@ -206,12 +205,6 @@ export default function FeatureFlagModal() {
           <X size={24} />
         </CloseButton>
       </Header>
-      <FeatureFlagOption
-        variant={Permit2Variant}
-        value={usePermit2Flag()}
-        featureFlag={FeatureFlag.permit2}
-        label="Permit 2 / Universal Router"
-      />
       <FeatureFlagOption
         variant={PayWithAnyTokenVariant}
         value={usePayWithAnyTokenFlag()}
