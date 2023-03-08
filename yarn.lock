@@ -3274,14 +3274,14 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@opensea/seaport-js@^1.0.2":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@opensea/seaport-js/-/seaport-js-1.0.5.tgz#f48ebf5e3bc6ff5627502616598b401c6eaf352a"
-  integrity sha512-WgK3Grdqf5PEQWMlSFiSFaL/j8vlJ3feSjn+frFEO0QH2MuqwlFBRUGwqK4l09o5ZtZDRRTMafgrYC6BOgBY4A==
+"@opensea/seaport-js@^1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@opensea/seaport-js/-/seaport-js-1.0.10.tgz#538eed1316a99d2cf06a57fd874b719efad9c22e"
+  integrity sha512-k4kBmkCNYxAuB6DYRqwcGXik/8x80cHQ4r4bWWFyB0v4AxGNsqMGOwdeDiP1ajxbg4NnmdEpyA8b2p73GiaK7Q==
   dependencies:
     "@0xsequence/multicall" "^0.39.0"
     ethers "^5.6.7"
-    merkletreejs "^0.2.31"
+    merkletreejs "^0.3.9"
 
 "@openzeppelin/contracts@3.4.1-solc-0.7-2":
   version "3.4.1-solc-0.7-2"
@@ -13962,10 +13962,10 @@ merge@2.1.0:
   resolved "https://registry.npmjs.org/merge/-/merge-2.1.0.tgz"
   integrity sha512-TcuhVDV+e6X457MQAm7xIb19rWhZuEDEho7RrwxMpQ/3GhD5sDlnP188gjQQuweXHy9igdke5oUtVOXX1X8Sxg==
 
-merkletreejs@^0.2.31:
-  version "0.2.32"
-  resolved "https://registry.yarnpkg.com/merkletreejs/-/merkletreejs-0.2.32.tgz#cf1c0760e2904e4a1cc269108d6009459fd06223"
-  integrity sha512-TostQBiwYRIwSE5++jGmacu3ODcKAgqb0Y/pnIohXS7sWxh1gCkSptbmF1a43faehRDpcHf7J/kv0Ml2D/zblQ==
+merkletreejs@^0.3.9:
+  version "0.3.9"
+  resolved "https://registry.yarnpkg.com/merkletreejs/-/merkletreejs-0.3.9.tgz#cdb364a3b974a44f4eff3446522d7066e0cf95de"
+  integrity sha512-NjlATjJr4NEn9s8v/VEHhgwRWaE1eA/Une07d9SEqKzULJi1Wsh0Y3svwJdP2bYLMmgSBHzOrNydMWM1NN9VeQ==
   dependencies:
     bignumber.js "^9.0.1"
     buffer-reverse "^1.0.1"
