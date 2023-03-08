@@ -16,6 +16,7 @@ import {
   getIsInjected,
   getIsMetaMaskWallet,
 } from 'connection/utils'
+import { isSupportedChain } from 'constants/chains'
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -207,7 +208,7 @@ export default function WalletModal({
 
   // Keep the network connector in sync with any active user connector to prevent chain-switching on wallet disconnection.
   useEffect(() => {
-    if (chainId && connector !== networkConnection.connector) {
+    if (chainId && isSupportedChain(chainId) && connector !== networkConnection.connector) {
       networkConnection.connector.activate(chainId)
     }
   }, [chainId, connector])
