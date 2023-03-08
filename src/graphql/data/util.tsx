@@ -97,13 +97,20 @@ export function validateUrlChainParam(chainName: string | undefined) {
   return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum
 }
 
-export const CHAIN_NAME_TO_CHAIN_ID: { [key: string]: SupportedChainId } = {
-  ETHEREUM: SupportedChainId.MAINNET,
-  POLYGON: SupportedChainId.POLYGON,
-  CELO: SupportedChainId.CELO,
-  ARBITRUM: SupportedChainId.ARBITRUM_ONE,
-  OPTIMISM: SupportedChainId.OPTIMISM,
-  BNB: SupportedChainId.BNB,
+// TODO(cartcrom): refactor into safer lookup & replace usage
+export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
+  [Chain.Ethereum]: SupportedChainId.MAINNET,
+  [Chain.EthereumGoerli]: SupportedChainId.GOERLI,
+  [Chain.Polygon]: SupportedChainId.POLYGON,
+  [Chain.Celo]: SupportedChainId.CELO,
+  [Chain.Optimism]: SupportedChainId.OPTIMISM,
+  [Chain.Arbitrum]: SupportedChainId.ARBITRUM_ONE,
+  [Chain.UnknownChain]: SupportedChainId.MAINNET,
+  /* [Chain.BinanceSmartChain]: SupportedChainId.BNB */
+}
+
+export function fromGraphQLChain(chain: Chain): SupportedChainId {
+  return CHAIN_NAME_TO_CHAIN_ID[chain]
 }
 
 export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Ethereum, Chain.Polygon, Chain.Optimism, Chain.Arbitrum, Chain.Celo]
