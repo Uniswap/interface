@@ -407,7 +407,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       events: isNftGraphqlEnabled ? gqlEventsData : eventsData?.pages.map((page) => page.events).flat(),
       gatedHasNext: isNftGraphqlEnabled ? hasNext : hasNextPage,
       gatedLoadMore: isNftGraphqlEnabled ? loadMore : fetchNextPage,
-      gatedLoading: isNftGraphqlEnabled ? loading : isFetchingNextPage,
+      gatedLoading: isNftGraphqlEnabled ? loading : isActivityLoading,
       gatedSuccess: isNftGraphqlEnabled ? !error : isSuccess,
     }
   }, [
@@ -417,7 +417,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     gqlEventsData,
     hasNext,
     hasNextPage,
-    isFetchingNextPage,
+    isActivityLoading,
     isNftGraphqlEnabled,
     isSuccess,
     loadMore,
@@ -488,15 +488,14 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             <Filter eventType={ActivityEventType.Transfer} />
             <Filter eventType={ActivityEventType.CancelListing} />
           </ActivitySelectContainer>
-          {isActivityLoading && !isNftGraphqlEnabled && <LoadingAssetActivity rowCount={10} />}
-          {gatedLoading && isNftGraphqlEnabled ? (
+          {gatedLoading ? (
             <LoadingAssetActivity rowCount={10} />
           ) : events && events.length > 0 ? (
             <InfiniteScroll
               next={gatedLoadMore}
               hasMore={!!gatedHasNext}
               loader={
-                gatedLoading && (
+                isFetchingNextPage && (
                   <Center>
                     <LoadingSparkle />
                   </Center>

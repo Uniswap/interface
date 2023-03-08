@@ -111,7 +111,6 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
     hasNext,
     loadMore,
     loading,
-    error,
   } = useNftActivity(
     {
       activityTypes: Object.keys(activeFilters)
@@ -122,22 +121,26 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
     25
   )
 
-  const { events, gatedHasNext, gatedLoadMore, gatedLoading, gatedSuccess } = useMemo(() => {
+  const { events, gatedHasNext, gatedLoadMore, gatedLoading, gatedIsLoadingMore } = useMemo(() => {
     return {
-      events: isNftGraphqlEnabled ? gqlEventsData : eventsData?.pages.map((page) => page.events).flat(),
+      events: isNftGraphqlEnabled
+        ? gqlEventsData
+        : isSuccess
+        ? eventsData?.pages.map((page) => page.events).flat()
+        : undefined,
       gatedHasNext: isNftGraphqlEnabled ? hasNext : hasNextPage,
       gatedLoadMore: isNftGraphqlEnabled ? loadMore : fetchNextPage,
-      gatedLoading: isNftGraphqlEnabled ? loading : isFetchingNextPage,
-      gatedSuccess: isNftGraphqlEnabled ? !error : isSuccess,
+      gatedLoading: isNftGraphqlEnabled ? loading : isLoading,
+      gatedIsLoadingMore: isNftGraphqlEnabled ? hasNext && gqlEventsData?.length : isFetchingNextPage,
     }
   }, [
-    error,
     eventsData?.pages,
     fetchNextPage,
     gqlEventsData,
     hasNext,
     hasNextPage,
     isFetchingNextPage,
+    isLoading,
     isNftGraphqlEnabled,
     isSuccess,
     loadMore,
@@ -184,54 +187,63 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
         <Filter eventType={ActivityEventType.Sale} />
         <Filter eventType={ActivityEventType.Transfer} />
       </Row>
-      {!events?.length && !gatedSuccess && <ActivityLoader />}
-      {events && (
-        <Column marginTop="36">
-          <HeaderRow />
-          <InfiniteScroll
-            next={gatedLoadMore}
-            hasMore={!!gatedHasNext}
-            loader={gatedLoading ? <ActivityPageLoader rowCount={2} /> : null}
-            dataLength={events?.length ?? 0}
-            style={{ overflow: 'unset' }}
-          >
-            {events.map(
-              (event, i) =>
-                event.eventType && (
-                  <Box as="a" data-testid="nft-activity-row" href={baseHref(event)} className={styles.eventRow} key={i}>
-                    <ItemCell
-                      event={event}
-                      rarityVerified={rarityVerified}
-                      collectionName={collectionName}
-                      eventTimestamp={event.eventTimestamp}
-                      isMobile={isMobile}
-                    />
-                    <EventCell
-                      eventType={event.eventType}
-                      eventTimestamp={event.eventTimestamp}
-                      eventTransactionHash={event.transactionHash}
-                      price={event.price}
-                      isMobile={isMobile}
-                    />
-                    <PriceCell marketplace={event.marketplace} price={event.price} />
-                    <AddressCell address={event.fromAddress} chainId={chainId} />
-                    <AddressCell address={event.toAddress} chainId={chainId} desktopLBreakpoint />
-                    <BuyCell
-                      event={event}
-                      collectionName={collectionName}
-                      selectAsset={addAssetsToBag}
-                      removeAsset={removeAssetsFromBag}
-                      itemsInBag={itemsInBag}
-                      cartExpanded={cartExpanded}
-                      toggleCart={toggleCart}
-                      isMobile={isMobile}
-                      ethPriceInUSD={ethPriceInUSD}
-                    />
-                  </Box>
-                )
-            )}
-          </InfiniteScroll>
-        </Column>
+      {gatedLoading ? (
+        <ActivityLoader />
+      ) : (
+        events && (
+          <Column marginTop="36">
+            <HeaderRow />
+            <InfiniteScroll
+              next={gatedLoadMore}
+              hasMore={!!gatedHasNext}
+              loader={gatedIsLoadingMore ? <ActivityPageLoader rowCount={2} /> : null}
+              dataLength={events?.length ?? 0}
+              style={{ overflow: 'unset' }}
+            >
+              {events.map(
+                (event, i) =>
+                  event.eventType && (
+                    <Box
+                      as="a"
+                      data-testid="nft-activity-row"
+                      href={baseHref(event)}
+                      className={styles.eventRow}
+                      key={i}
+                    >
+                      <ItemCell
+                        event={event}
+                        rarityVerified={rarityVerified}
+                        collectionName={collectionName}
+                        eventTimestamp={event.eventTimestamp}
+                        isMobile={isMobile}
+                      />
+                      <EventCell
+                        eventType={event.eventType}
+                        eventTimestamp={event.eventTimestamp}
+                        eventTransactionHash={event.transactionHash}
+                        price={event.price}
+                        isMobile={isMobile}
+                      />
+                      <PriceCell marketplace={event.marketplace} price={event.price} />
+                      <AddressCell address={event.fromAddress} chainId={chainId} />
+                      <AddressCell address={event.toAddress} chainId={chainId} desktopLBreakpoint />
+                      <BuyCell
+                        event={event}
+                        collectionName={collectionName}
+                        selectAsset={addAssetsToBag}
+                        removeAsset={removeAssetsFromBag}
+                        itemsInBag={itemsInBag}
+                        cartExpanded={cartExpanded}
+                        toggleCart={toggleCart}
+                        isMobile={isMobile}
+                        ethPriceInUSD={ethPriceInUSD}
+                      />
+                    </Box>
+                  )
+              )}
+            </InfiniteScroll>
+          </Column>
+        )
       )}
     </Box>
   )
