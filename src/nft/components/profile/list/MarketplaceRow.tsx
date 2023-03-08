@@ -239,7 +239,7 @@ export const MarketplaceRow = ({
         >
           <FeeWrapper>
             <ThemedText.BodyPrimary color="textSecondary">
-              {fees > 0 ? `${fees}${selectedMarkets.length > 1 ? t`% max` : '%'}` : '--%'}
+              {fees > 0 ? `${fees.toFixed(2)}${selectedMarkets.length > 1 ? t`% max` : '%'}` : '--%'}
             </ThemedText.BodyPrimary>
           </FeeWrapper>
         </MouseoverTooltip>

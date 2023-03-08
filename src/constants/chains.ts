@@ -1,6 +1,10 @@
-/**
- * List of all the networks supported by the Uniswap Interface
- * TODO(INFRA-90): Eventually this may be derived from sdk-core.
+/*
+ * SupportedChainId must be defined inline, without using @uniswap/sdk-core, so that its members are their own types
+ * {@see https://www.typescriptlang.org/docs/handbook/enums.html#union-enums-and-enum-member-types}. This allows the
+ * derived const arrays and their types (eg {@link L1_CHAIN_IDS}, {@link SupportedL1ChainId}) to be narrowed and used
+ * to enforce chain typing.
+ *
+ * Because this is not explicitly derived from @uniswap/sdk-core, there is a unit test to enforce conformance.
  */
 export enum SupportedChainId {
   MAINNET = 1,
@@ -49,7 +53,7 @@ export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
   SupportedChainId.CELO,
   SupportedChainId.OPTIMISM,
   SupportedChainId.ARBITRUM_ONE,
-]
+] as const
 
 /**
  * Unsupported networks for V2 pool behavior.
@@ -59,7 +63,7 @@ export const UNSUPPORTED_V2POOL_CHAIN_IDS = [
   SupportedChainId.OPTIMISM,
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.ARBITRUM_GOERLI,
-]
+] as const
 
 export const TESTNET_CHAIN_IDS = [
   SupportedChainId.GOERLI,

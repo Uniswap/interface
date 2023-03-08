@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useV2Pair } from '../../hooks/useV2Pairs'
 import { useTokenBalances } from '../connection/hooks'
-import { AppState } from '../index'
+import { AppState } from '../types'
 import { Field, typeInput } from './actions'
 
 export function useBurnState(): AppState['burn'] {

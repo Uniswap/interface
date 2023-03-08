@@ -4,6 +4,8 @@ import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analyt
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
+import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
+import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import { useSearchTokens } from 'graphql/data/SearchTokens'
 import useDebounce from 'hooks/useDebounce'
 import { useIsNftPage } from 'hooks/useIsNftPage'
@@ -49,12 +51,13 @@ export const SearchBar = () => {
   const { pathname } = useLocation()
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
+  const isNftGraphqlEnabled = useNftGraphqlEnabled()
 
   useOnClickOutside(searchRef, () => {
     isOpen && toggleOpen()
   })
 
-  const { data: collections, isLoading: collectionsAreLoading } = useQuery(
+  const { data: queryCollections, isLoading: queryCollectionsAreLoading } = useQuery(
     ['searchCollections', debouncedSearchValue],
     () => fetchSearchCollections(debouncedSearchValue),
     {
@@ -65,12 +68,26 @@ export const SearchBar = () => {
     }
   )
 
+  const { data: gqlCollections, loading: gqlCollectionsAreLoading } = useCollectionSearch(debouncedSearchValue)
+
+  const { gatedCollections, gatedCollectionsAreLoading } = useMemo(() => {
+    return isNftGraphqlEnabled
+      ? {
+          gatedCollections: gqlCollections,
+          gatedCollectionsAreLoading: gqlCollectionsAreLoading,
+        }
+      : {
+          gatedCollections: queryCollections,
+          gatedCollectionsAreLoading: queryCollectionsAreLoading,
+        }
+  }, [gqlCollections, gqlCollectionsAreLoading, isNftGraphqlEnabled, queryCollections, queryCollectionsAreLoading])
+
   const { chainId } = useWeb3React()
   const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, chainId ?? 1)
 
   const isNFTPage = useIsNftPage()
 
-  const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], collections ?? [])
+  const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], gatedCollections ?? [])
 
   // close dropdown on escape
   useEffect(() => {
@@ -86,7 +103,7 @@ export const SearchBar = () => {
     return () => {
       document.removeEventListener('keydown', escapeKeyDownHandler)
     }
-  }, [isOpen, toggleOpen, collections])
+  }, [isOpen, toggleOpen, gatedCollections])
 
   // clear searchbar when changing pages
   useEffect(() => {
@@ -208,7 +225,7 @@ export const SearchBar = () => {
               collections={reducedCollections}
               queryText={debouncedSearchValue}
               hasInput={debouncedSearchValue.length > 0}
-              isLoading={tokensAreLoading || collectionsAreLoading}
+              isLoading={tokensAreLoading || gatedCollectionsAreLoading}
             />
           )}
         </Box>
