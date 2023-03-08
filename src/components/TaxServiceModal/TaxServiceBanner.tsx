@@ -76,7 +76,7 @@ const TextContainer = styled.div`
 `
 
 export const StyledXButton = styled(X)`
-  color: ${({ theme }) => theme.accentTextLightPrimary};
+  color: ${({ theme }) => theme.textPrimary};
   &:hover {
     opacity: ${({ theme }) => theme.opacity.hover};
   }
