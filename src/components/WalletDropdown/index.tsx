@@ -65,7 +65,10 @@ const WalletDropdownWrapper = styled.div<{ open: boolean }>`
   right: ${({ open }) => (open ? DRAWER_MARGIN : '-' + DRAWER_WIDTH)};
   z-index: ${Z_INDEX.dropdown};
 
-  overflow-y: overlay;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+
   ${ScrollBarStyles}
 
   height: calc(100% - 2 * ${DRAWER_MARGIN});
@@ -82,11 +85,6 @@ const WalletDropdownWrapper = styled.div<{ open: boolean }>`
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
     box-shadow: unset;
-  }
-
-  ::-webkit-scrollbar-track {
-    margin-top: 40px;
-    margin-bottom: 40px;
   }
 
   border-radius: 12px;
