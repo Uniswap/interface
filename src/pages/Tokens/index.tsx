@@ -98,7 +98,7 @@ const Tokens = () => {
       <ExploreContainer>
         <TitleContainer>
           <ThemedText.LargeHeader>
-            <Trans>Top tokens on Uniswap</Trans>
+            <Trans>Top smart pools on Rigoblock</Trans>
           </ThemedText.LargeHeader>
         </TitleContainer>
         <FiltersWrapper>
