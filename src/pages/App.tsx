@@ -1,11 +1,4 @@
-import {
-  getDeviceId,
-  initializeAnalytics,
-  OriginApplication,
-  sendAnalyticsEvent,
-  Trace,
-  user,
-} from '@uniswap/analytics'
+import { getDeviceId, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
 import { CustomUserProperties, getBrowser, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import Loader from 'components/Loader'
@@ -13,6 +6,7 @@ import { MenuDropdown } from 'components/NavBar/MenuDropdown'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
+import { STATSIG_DUMMY_KEY } from 'integrations'
 import { Box } from 'nft/components/Box'
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
@@ -22,7 +16,7 @@ import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { getEnvName, isProductionEnv } from 'utils/env'
+import { getEnvName } from 'utils/env'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
@@ -56,23 +50,6 @@ const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
-
-// Placeholder API key. Actual API key used in the proxy server
-const AMPLITUDE_DUMMY_KEY = '00000000000000000000000000000000'
-const AMPLITUDE_PROXY_URL = process.env.REACT_APP_AMPLITUDE_PROXY_URL
-const STATSIG_DUMMY_KEY = 'client-0000000000000000000000000000000000000000000'
-const STATSIG_PROXY_URL = process.env.REACT_APP_STATSIG_PROXY_URL
-const COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
-
-// Dump some metadata into the window to allow client verification.
-window.GIT_COMMIT_HASH = COMMIT_HASH
-
-initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {
-  proxyUrl: AMPLITUDE_PROXY_URL,
-  defaultEventName: SharedEventName.PAGE_VIEWED,
-  commitHash: COMMIT_HASH,
-  isProductionEnv: isProductionEnv(),
-})
 
 const BodyWrapper = styled.div`
   display: flex;
@@ -220,7 +197,7 @@ export default function App() {
           waitForInitialization={false}
           options={{
             environment: { tier: getEnvName() },
-            api: STATSIG_PROXY_URL,
+            api: process.env.REACT_APP_STATSIG_PROXY_URL,
           }}
         >
           <HeaderWrapper transparent={isHeaderTransparent}>
