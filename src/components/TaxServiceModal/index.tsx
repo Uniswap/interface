@@ -60,7 +60,7 @@ const TaxOption = styled.div`
   gap: 16px;
 `
 
-export const StyledImageContainer = styled(Box)`
+const StyledImageContainer = styled(Box)`
   width: 75%;
   height: 80%;
   cursor: pointer;
