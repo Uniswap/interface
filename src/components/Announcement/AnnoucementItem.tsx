@@ -39,6 +39,7 @@ const Desc = styled.div`
   display: -webkit-box;
   max-width: 100%;
   line-height: 16px;
+  height: 34px;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
