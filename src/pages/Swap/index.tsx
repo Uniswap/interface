@@ -337,6 +337,7 @@ export default function Swap({ className }: { className?: string }) {
   // the callback to execute the swap
   const { callback: swapCallback } = useSwapCallback(
     trade,
+    { amountIn: fiatValueTradeInput, amountOut: fiatValueTradeOutput },
     allowedSlippage,
     allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined
   )
