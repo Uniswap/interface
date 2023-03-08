@@ -2,6 +2,7 @@ import { t } from '@lingui/macro'
 import { ReactComponent as UnknownStatus } from 'assets/svg/contract-interaction.svg'
 import Column from 'components/Column'
 import Loader from 'components/Loader'
+import { LoadingBubble } from 'components/Tokens/loading'
 import { Unicon } from 'components/Unicon'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { AssetActivityPartsFragment, useTransactionListQuery } from 'graphql/data/__generated__/types-and-hooks'
@@ -14,7 +15,7 @@ import styled from 'styled-components/macro'
 import { EllipsisStyle, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
-import PortfolioRow from '../PortfolioRow'
+import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
 import { getActivityDetails, timeSince } from './util'
 
 interface ActivityGroup {
@@ -75,11 +76,17 @@ const ActivityGroupWrapper = styled(Column)`
 `
 
 export default function Activity({ account }: { account: string }) {
-  const { data } = useTransactionListQuery({ variables: { account }, errorPolicy: 'ignore' })
+  const { data, loading } = useTransactionListQuery({ variables: { account }, errorPolicy: 'ignore' })
   const activityGroups = useMemo(() => createGroups(data?.portfolios?.[0]?.assetActivities), [data])
 
-  return (
+  // TODO(cartcrom): add no activity state
+  return !data && loading ? (
     <>
+      <LoadingBubble height="16px" width="80px" margin="16px 16px 8px" />
+      <PortfolioSkeleton shrinkRight />
+    </>
+  ) : (
+    <PortfolioTabWrapper>
       {activityGroups.map((activityGroup) => (
         <ActivityGroupWrapper key={activityGroup.title}>
           <ThemedText.SubHeader color="textSecondary" fontWeight={500} marginLeft="16px">
@@ -92,7 +99,7 @@ export default function Activity({ account }: { account: string }) {
           </Column>
         </ActivityGroupWrapper>
       ))}
-    </>
+    </PortfolioTabWrapper>
   )
 }
 

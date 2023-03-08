@@ -13,7 +13,7 @@ import { EllipsisStyle, ThemedText } from 'theme'
 
 import { useToggleWalletDrawer } from '..'
 import { PortfolioArrow } from '../AuthenticatedHeader'
-import PortfolioRow, { PortfolioSkeleton } from './PortfolioRow'
+import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from './PortfolioRow'
 
 export default function Tokens({ account }: { account: string }) {
   const { data, loading } = usePortfolioBalancesQuery({ variables: { ownerAddress: account } })
@@ -22,12 +22,12 @@ export default function Tokens({ account }: { account: string }) {
   return !data && loading ? (
     <PortfolioSkeleton />
   ) : (
-    <>
+    <PortfolioTabWrapper>
       {data?.portfolios?.[0].tokenBalances?.map(
         (tokenBalance) =>
           tokenBalance.token && <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
       )}
-    </>
+    </PortfolioTabWrapper>
   )
 }
 

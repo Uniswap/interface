@@ -2,7 +2,7 @@ import Column, { AutoColumn } from 'components/Column'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useMemo } from 'react'
-import styled from 'styled-components/macro'
+import styled, { css, keyframes } from 'styled-components/macro'
 
 const RowWrapper = styled(Row)<{ onClick?: any }>`
   gap: 8px;
@@ -57,31 +57,46 @@ export default function PortfolioRow({
   )
 }
 
-function PortfolioSkeletonRow({ delay = 0 }: { delay?: number }) {
+function PortfolioSkeletonRow({ shrinkRight }: { shrinkRight?: boolean }) {
   return (
     <RowWrapper>
-      <LoadingBubble height="40px" width="40px" round delay={`${delay}ms`} />
+      <LoadingBubble height="40px" width="40px" round />
       <AutoColumn grow gap="4px">
-        <LoadingBubble height="16px" width="60px" delay={`${delay + 300}ms`} />
-        <LoadingBubble height="10px" width="90px" delay={`${delay + 300}ms`} />
+        <LoadingBubble height="16px" width="60px" delay="300ms" />
+        <LoadingBubble height="10px" width="90px" delay="300ms" />
       </AutoColumn>
       <EndColumn gap="xs">
-        <LoadingBubble height="14px" width="70px" delay={`${delay + 600}ms`} />
-        <LoadingBubble height="14px" width="50px" delay={`${delay + 600}ms`} />
+        {shrinkRight ? (
+          <LoadingBubble height="12px" width="20px" delay="600ms" />
+        ) : (
+          <>
+            <LoadingBubble height="14px" width="70px" delay="600ms" />
+            <LoadingBubble height="14px" width="50px" delay="600ms" />
+          </>
+        )}
       </EndColumn>
     </RowWrapper>
   )
 }
 
-export function PortfolioSkeleton() {
+export function PortfolioSkeleton({ shrinkRight = false }: { shrinkRight?: boolean }) {
   return (
     <>
-      <PortfolioSkeletonRow />
-      <PortfolioSkeletonRow />
-      <PortfolioSkeletonRow />
-      <PortfolioSkeletonRow />
-      <PortfolioSkeletonRow />
-      <PortfolioSkeletonRow />
+      {Array.from({ length: 5 }).map((_, i) => (
+        <PortfolioSkeletonRow shrinkRight={shrinkRight} key={`portfolio loading row${i}`} />
+      ))}
     </>
   )
 }
+
+const fadeIn = keyframes`
+  from { opacity: .25 }
+  to { opacity: 1 }
+`
+export const portfolioFadeInAnimation = css`
+  animation: ${fadeIn} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.in}`};
+`
+
+export const PortfolioTabWrapper = styled.div`
+  ${portfolioFadeInAnimation}
+`

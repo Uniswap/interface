@@ -31,6 +31,7 @@ import StatusIcon from '../Identicon/StatusIcon'
 import { useToggleWalletDrawer } from '.'
 import IconButton, { IconHoverText } from './IconButton'
 import MiniPortfolio from './MiniPortfolio'
+import { portfolioFadeInAnimation } from './MiniPortfolio/PortfolioRow'
 
 const BuyCryptoButtonBorderKeyframes = keyframes`
   0% {
@@ -154,6 +155,10 @@ const CopyText = styled(CopyHelper).attrs({
   iconPosition: 'right',
 })``
 
+const FadeInColumn = styled(Column)`
+  ${portfolioFadeInAnimation}
+`
+
 export function PortfolioArrow({ change, ...rest }: { change: number } & IconProps) {
   const theme = useTheme()
   return change < 0 ? (
@@ -256,30 +261,28 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
         </IconContainer>
       </HeaderWrapper>
       <Column>
-        <Column gap="xs">
-          {totalBalance ? (
-            <>
-              <ThemedText.HeadlineLarge fontWeight={500}>
-                {formatNumber(totalBalance, NumberType.PortfolioBalance)}
-              </ThemedText.HeadlineLarge>
-              {absoluteChange && percentChange && (
-                <AutoRow marginBottom="20px">
-                  <PortfolioArrow change={absoluteChange} />
-                  <ThemedText.BodySecondary>
-                    {`${formatNumber(Math.abs(absoluteChange), NumberType.PortfolioBalance)} (${formatDelta(
-                      percentChange
-                    )})`}
-                  </ThemedText.BodySecondary>
-                </AutoRow>
-              )}
-            </>
-          ) : (
-            <>
-              <LoadingBubble height="44px" width="170px" />
-              <LoadingBubble height="16px" width="100px" margin="4px 0 20px 0" />
-            </>
-          )}
-        </Column>
+        {totalBalance ? (
+          <FadeInColumn gap="xs">
+            <ThemedText.HeadlineLarge fontWeight={500}>
+              {formatNumber(totalBalance, NumberType.PortfolioBalance)}
+            </ThemedText.HeadlineLarge>
+            {absoluteChange && percentChange && (
+              <AutoRow marginBottom="20px">
+                <PortfolioArrow change={absoluteChange} />
+                <ThemedText.BodySecondary>
+                  {`${formatNumber(Math.abs(absoluteChange), NumberType.PortfolioBalance)} (${formatDelta(
+                    percentChange
+                  )})`}
+                </ThemedText.BodySecondary>
+              </AutoRow>
+            )}
+          </FadeInColumn>
+        ) : (
+          <Column gap="xs">
+            <LoadingBubble height="44px" width="170px" />
+            <LoadingBubble height="16px" width="100px" margin="4px 0 20px 0" />
+          </Column>
+        )}
         <BuyCryptoButton
           size={ButtonSize.medium}
           emphasis={ButtonEmphasis.medium}
