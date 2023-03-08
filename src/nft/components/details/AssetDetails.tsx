@@ -352,6 +352,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     hasNextPage,
     isFetchingNextPage,
     isSuccess,
+    isLoading: isActivityLoading,
   } = useInfiniteQuery<ActivityEventResponse>(
     [
       'collectionActivity',
@@ -487,7 +488,10 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             <Filter eventType={ActivityEventType.Transfer} />
             <Filter eventType={ActivityEventType.CancelListing} />
           </ActivitySelectContainer>
-          {events && events.length > 0 ? (
+          {isActivityLoading && !isNftGraphqlEnabled && <LoadingAssetActivity rowCount={10} />}
+          {gatedLoading && isNftGraphqlEnabled ? (
+            <LoadingAssetActivity rowCount={10} />
+          ) : events && events.length > 0 ? (
             <InfiniteScroll
               next={gatedLoadMore}
               hasMore={!!gatedHasNext}
@@ -505,13 +509,11 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             </InfiniteScroll>
           ) : (
             <>
-              {gatedSuccess && events ? (
+              {gatedSuccess && events && (
                 <EmptyActivitiesContainer>
                   <div>No activities yet</div>
                   <Link to={`/nfts/collection/${asset.address}`}>View collection items</Link>{' '}
                 </EmptyActivitiesContainer>
-              ) : (
-                <LoadingAssetActivity rowCount={10} />
               )}
             </>
           )}
