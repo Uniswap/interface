@@ -1,11 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { TOKEN_SHORTHANDS, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { TOKEN_SHORTHANDS } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useBestTrade } from 'hooks/useBestTrade'
-import { useWETHContract } from 'hooks/useContract'
 import useENS from 'hooks/useENS'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -88,7 +87,7 @@ export function useDerivedSwapInfo(): {
   }
   allowedSlippage: Percent
 } {
-  const { account, chainId } = useWeb3React()
+  const { account } = useWeb3React()
 
   const {
     independentField,
@@ -114,19 +113,9 @@ export function useDerivedSwapInfo(): {
     [inputCurrency, isExactIn, outputCurrency, typedValue]
   )
 
-  const wethContract = useWETHContract()
-  const isAWrapTransaction = useMemo(() => {
-    if (!wethContract || !chainId || !inputCurrency || !outputCurrency) return undefined
-    const weth = chainId ? WRAPPED_NATIVE_CURRENCY[chainId] : undefined
-    return (
-      (inputCurrency.isNative && weth?.equals(outputCurrency)) ||
-      (outputCurrency.isNative && weth?.equals(inputCurrency))
-    )
-  }, [chainId, inputCurrency, outputCurrency, wethContract])
-
   const trade = useBestTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
-    !isAWrapTransaction ? parsedAmount : undefined,
+    parsedAmount,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined
   )
 
