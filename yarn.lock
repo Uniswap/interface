@@ -5255,10 +5255,10 @@
     "@uniswap/v3-core" "1.0.0"
     "@uniswap/v3-periphery" "^1.0.1"
 
-"@uniswap/widgets@^2.47.0":
-  version "2.47.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.47.0.tgz#fa3fd5669c9340940d0f8350bbefc19cd0baa1d8"
-  integrity sha512-Jp+0F7kkld5LVjwLqN5drZOUxmdEbB4Ht6KbXwm7vV+08OhfpagPoKULfXWwIcEtNfWpbHeAAJfrhRN1E8Xx0g==
+"@uniswap/widgets@^2.47.1":
+  version "2.47.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.47.1.tgz#d52908f1c445c4de7953962b8eae844f981c59dd"
+  integrity sha512-rzY9v/t/ic1vvq1jgT5FR1t7VHfhnkii3D0Tru8Veuc0i/vC53C30QBpjrcBmmoZTg/YFO2vHdpT2NhBmQmH7Q==
   dependencies:
     "@babel/runtime" ">=7.17.0"
     "@fontsource/ibm-plex-mono" "^4.5.1"
@@ -5275,14 +5275,14 @@
     "@uniswap/universal-router-sdk" "^1.3.8"
     "@uniswap/v2-sdk" "^3.0.1"
     "@uniswap/v3-sdk" "^3.8.2"
-    "@web3-react/core" "8.1.1-beta.0"
-    "@web3-react/eip1193" "8.1.1-beta.0"
-    "@web3-react/empty" "8.1.1-beta.0"
-    "@web3-react/metamask" "8.1.1-beta.0"
-    "@web3-react/network" "8.1.1-beta.0"
-    "@web3-react/types" "8.1.1-beta.0"
-    "@web3-react/url" "8.1.1-beta.0"
-    "@web3-react/walletconnect" "8.1.1-beta.0"
+    "@web3-react/core" "8.1.2-beta.0"
+    "@web3-react/eip1193" "8.1.2-beta.0"
+    "@web3-react/empty" "8.1.2-beta.0"
+    "@web3-react/metamask" "8.1.2-beta.0"
+    "@web3-react/network" "8.1.2-beta.0"
+    "@web3-react/types" "8.1.2-beta.0"
+    "@web3-react/url" "8.1.2-beta.0"
+    "@web3-react/walletconnect" "8.1.2-beta.0"
     ajv "^8.11.0"
     ajv-formats "^2.1.1"
     cids "^1.0.0"
@@ -5811,17 +5811,6 @@
   dependencies:
     "@web3-react/types" "^8.1.2-beta.0"
 
-"@web3-react/core@8.1.1-beta.0":
-  version "8.1.1-beta.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/core/-/core-8.1.1-beta.0.tgz#76b81518829a1dd5bb3e992499824da96b71d2fd"
-  integrity sha512-7Fbsh+dLKAGrqZfDy+ZrFQraLwgnzrrI36YFdNUawUbLlaGAINFebQTUgQWAiEZ30S0xKLpggAdB+3rxwIqRKg==
-  dependencies:
-    "@web3-react/store" "^8.1.1-beta.0"
-    "@web3-react/types" "^8.1.1-beta.0"
-    zustand "4.3.3"
-  optionalDependencies:
-    "@ethersproject/providers" "^5"
-
 "@web3-react/core@8.1.2-beta.0":
   version "8.1.2-beta.0"
   resolved "https://registry.yarnpkg.com/@web3-react/core/-/core-8.1.2-beta.0.tgz#8bc2abb42d06db07c3b577cf8da30d1450e0fb89"
@@ -5833,26 +5822,12 @@
   optionalDependencies:
     "@ethersproject/providers" "^5"
 
-"@web3-react/eip1193@8.1.1-beta.0":
-  version "8.1.1-beta.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/eip1193/-/eip1193-8.1.1-beta.0.tgz#7f1d6065d1e3b7f1c6a4c169a1837d0c2b4a4da2"
-  integrity sha512-JT/heP/cnRh/wJ3+Y7Rt7SgNrChMRn6iqnmAMadGHq3hdZh5lUeKdgrIEJy5jFKOWqAzm82YNiJ0ZYN8Yd7DhA==
-  dependencies:
-    "@web3-react/types" "^8.1.1-beta.0"
-
 "@web3-react/eip1193@8.1.2-beta.0":
   version "8.1.2-beta.0"
   resolved "https://registry.yarnpkg.com/@web3-react/eip1193/-/eip1193-8.1.2-beta.0.tgz#ccab0860857b622461cd164259b8cf163c6d3ab9"
   integrity sha512-LU6ejYvscg04ziq6EiIKjJl6ou0X1knKu7ZtBjKAkoFjLyHO79WTe4ZL/JyFHxgy50OlcyiEiAEI2rghW95X5g==
   dependencies:
     "@web3-react/types" "^8.1.2-beta.0"
-
-"@web3-react/empty@8.1.1-beta.0":
-  version "8.1.1-beta.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/empty/-/empty-8.1.1-beta.0.tgz#b032a721bde722c02c6720e7944110b9622a96cb"
-  integrity sha512-gmTX7KHrpnJgX/V5lxCpFhEk06RdSl3jCYCf2H9HOlypZ4JcRHNq9wiwUJocdUnhHbdD46J5D9N4YEDhVgtn9g==
-  dependencies:
-    "@web3-react/types" "^8.1.1-beta.0"
 
 "@web3-react/empty@8.1.2-beta.0":
   version "8.1.2-beta.0"
@@ -5870,14 +5845,6 @@
     "@safe-global/safe-apps-sdk" "^7.10.0"
     "@web3-react/types" "^8.1.2-beta.0"
 
-"@web3-react/metamask@8.1.1-beta.0":
-  version "8.1.1-beta.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/metamask/-/metamask-8.1.1-beta.0.tgz#c67a6ea656b951596e7d47655e7c8da591447e87"
-  integrity sha512-+LNsX+cZblhXv5ayR/L7KxcyA2C6oQFRANm/KPQVAkz/vFepKcCCcULHrDWzm6PuIQ9e99UqECkerOlI42UFHw==
-  dependencies:
-    "@metamask/detect-provider" "^1.2.0"
-    "@web3-react/types" "^8.1.1-beta.0"
-
 "@web3-react/metamask@8.1.2-beta.0":
   version "8.1.2-beta.0"
   resolved "https://registry.yarnpkg.com/@web3-react/metamask/-/metamask-8.1.2-beta.0.tgz#671f8b9601b275a4d7ca8cc694e6530c3c35ad4b"
@@ -5886,14 +5853,6 @@
     "@metamask/detect-provider" "^1.2.0"
     "@web3-react/types" "^8.1.2-beta.0"
 
-"@web3-react/network@8.1.1-beta.0":
-  version "8.1.1-beta.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/network/-/network-8.1.1-beta.0.tgz#b6feb407f3d48c9793fdbe428e9e7a29c71f11ee"
-  integrity sha512-MnuPpxxsbrfbhKPJo9ELYkz6z4x9HDji8VCt9/KHe3p6/tjQL1sobiFZ7tzcderGY20o1VpV46rKFy1kiv0flg==
-  dependencies:
-    "@ethersproject/providers" "^5"
-    "@web3-react/types" "^8.1.1-beta.0"
-
 "@web3-react/network@8.1.2-beta.0":
   version "8.1.2-beta.0"
   resolved "https://registry.yarnpkg.com/@web3-react/network/-/network-8.1.2-beta.0.tgz#a9246e5ab922d31a1ac0890cacee91b1394a91ed"
@@ -5901,15 +5860,6 @@
   dependencies:
     "@ethersproject/providers" "^5"
     "@web3-react/types" "^8.1.2-beta.0"
-
-"@web3-react/store@^8.1.1-beta.0":
-  version "8.1.1-beta.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/store/-/store-8.1.1-beta.0.tgz#7abccfd7fe7b75d98d8ed2a9fdff931ed7e11b3a"
-  integrity sha512-hPS3QjbIOxDBT4zsKW7+SZ+LDFb7OpbTsdwSypuAUN8Z53biglF5Ge4U8U2jxMvnDvO3AMAOmDGslpF3j+W+Vg==
-  dependencies:
-    "@ethersproject/address" "^5"
-    "@web3-react/types" "^8.1.1-beta.0"
-    zustand "4.3.3"
 
 "@web3-react/store@^8.1.2-beta.0":
   version "8.1.2-beta.0"
@@ -5920,27 +5870,12 @@
     "@web3-react/types" "^8.1.2-beta.0"
     zustand "^4.3.5"
 
-"@web3-react/types@8.1.1-beta.0", "@web3-react/types@^8.1.1-beta.0":
-  version "8.1.1-beta.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/types/-/types-8.1.1-beta.0.tgz#fe1b7bf256053cd6dfebb005cf689aacf04a29e4"
-  integrity sha512-H9iI8fmaytuNRXdk9+60nnhu3wyPJs6xa836ay+x+pJfqTM9EbJJUsTsNWSBEDevGGUIaE97yKD3izOcvfqnFg==
-  dependencies:
-    zustand "4.3.3"
-
 "@web3-react/types@8.1.2-beta.0", "@web3-react/types@^8.1.2-beta.0":
   version "8.1.2-beta.0"
   resolved "https://registry.yarnpkg.com/@web3-react/types/-/types-8.1.2-beta.0.tgz#439e3a539688e91b677a3959d2e1bf56c33eaa96"
   integrity sha512-gvVJqRvGsABpoUZA7RWQQiOq5qv5exkUW6ouSjlO4Q5BkfCBgT4NlIUVQ91w3JnS5qkDpk/uKDMt+wDFw0Yssw==
   dependencies:
     zustand "^4.3.5"
-
-"@web3-react/url@8.1.1-beta.0":
-  version "8.1.1-beta.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/url/-/url-8.1.1-beta.0.tgz#da20ac2c4678b96b55197748718945db5da540e3"
-  integrity sha512-yRM9vruY5ksqPkvNYD+G+wJe0floRytlQ+K9pVi0XP/jWkE/P4vjW7D7ZGiGsh03fiG895tYqAeqPgVHyMpsag==
-  dependencies:
-    "@ethersproject/providers" "^5"
-    "@web3-react/types" "^8.1.1-beta.0"
 
 "@web3-react/url@8.1.2-beta.0":
   version "8.1.2-beta.0"
@@ -5949,15 +5884,6 @@
   dependencies:
     "@ethersproject/providers" "^5"
     "@web3-react/types" "^8.1.2-beta.0"
-
-"@web3-react/walletconnect@8.1.1-beta.0":
-  version "8.1.1-beta.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/walletconnect/-/walletconnect-8.1.1-beta.0.tgz#6c699e8634bdc66dae7c8b982ba5553bbf86c1c5"
-  integrity sha512-3amB2uFq0Ixxv+SFr5yuR6f0uqpR+jwIKKaHaNOqfeYLPU24pvRPrudWeVrZGIMoIo3rTeN1UMT7UjZsDQgXUQ==
-  dependencies:
-    "@walletconnect/ethereum-provider" "^1.7.8"
-    "@web3-react/types" "^8.1.1-beta.0"
-    eventemitter3 "^4.0.7"
 
 "@web3-react/walletconnect@8.1.2-beta.0":
   version "8.1.2-beta.0"
@@ -20334,13 +20260,6 @@ zen-observable@0.8.15:
   version "0.8.15"
   resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.8.15.tgz#96415c512d8e3ffd920afd3889604e30b9eaac15"
   integrity sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==
-
-zustand@4.3.3:
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/zustand/-/zustand-4.3.3.tgz#c9113499074dde2d6d99c1b5f591e9329572c224"
-  integrity sha512-x2jXq8S0kfLGNwGh87nhRfEc2eZy37tSatpSoSIN+O6HIaBhgQHSONV/F9VNrNcBcKQu/E80K1DeHDYQC/zCrQ==
-  dependencies:
-    use-sync-external-store "1.2.0"
 
 zustand@^4.3.5, zustand@^4.3.6:
   version "4.3.6"
