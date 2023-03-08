@@ -20,7 +20,7 @@ import { ArrowDownRight, ArrowUpRight, Copy, CreditCard, IconProps, Info, Power,
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { CopyHelper, ExternalLink, ThemedText } from 'theme'
 
 import { shortenAddress } from '../../nft/utils/address'
@@ -28,16 +28,41 @@ import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal 
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import StatusIcon from '../Identicon/StatusIcon'
+import { useToggleWalletDrawer } from '.'
 import IconButton, { IconHoverText } from './IconButton'
 import MiniPortfolio from './MiniPortfolio'
 
-const BuyCryptoButton = styled(ThemeButton)`
+const BuyCryptoButtonBorderKeyframes = keyframes`
+  0% {
+    border-color: transparent;
+  }
+  33% {
+    border-color: hsla(225, 95%, 63%, 1);
+  }
+  66% {
+    border-color: hsla(267, 95%, 63%, 1);
+  }
+  100% {
+    border-color: transparent;
+  }
+`
+
+const HeaderButton = styled(ThemeButton)`
   border-color: transparent;
   border-radius: 12px;
   border-style: solid;
   border-width: 1px;
   height: 40px;
   margin-top: 8px;
+`
+
+const BuyCryptoButton = styled(HeaderButton)`
+  animation-direction: alternate;
+  animation-duration: ${({ theme }) => theme.transition.duration.slow};
+  animation-fill-mode: none;
+  animation-iteration-count: 2;
+  animation-name: ${BuyCryptoButtonBorderKeyframes};
+  animation-timing-function: ${({ theme }) => theme.transition.timing.inOut};
 `
 const WalletButton = styled(ThemeButton)`
   border-radius: 12px;
@@ -48,13 +73,13 @@ const WalletButton = styled(ThemeButton)`
   border: none;
 `
 
-const ProfileButton = styled(WalletButton)`
-  background: ${({ theme }) => theme.accentAction};
-  transition: ${({ theme }) => theme.transition.duration.fast} ${({ theme }) => theme.transition.timing.ease}
-    background-color;
-`
-
 const UNIButton = styled(WalletButton)`
+  border-radius: 12px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 4px;
+  color: white;
+  border: none;
   background: linear-gradient(to right, #9139b0 0%, #4261d6 100%);
 `
 
@@ -161,13 +186,16 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     dispatch(updateSelectedWallet({ wallet: undefined }))
   }, [connector, dispatch])
 
+  const toggleWalletDrawer = useToggleWalletDrawer()
+
   const navigateToProfile = useCallback(() => {
+    toggleWalletDrawer()
     resetSellAssets()
     setSellPageState(ProfilePageStateType.VIEWING)
     clearCollectionFilters()
     navigate('/nfts/profile')
     closeModal()
-  }, [clearCollectionFilters, closeModal, navigate, resetSellAssets, setSellPageState])
+  }, [clearCollectionFilters, closeModal, navigate, resetSellAssets, setSellPageState, toggleWalletDrawer])
 
   const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const openFoRModalWithAnalytics = useCallback(() => {
@@ -207,7 +235,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     <>
       <HeaderWrapper>
         <StatusWrapper>
-          <StatusIcon connection={connection} size={44} />
+          <StatusIcon connection={connection} size={ENSName ? 44 : 28} />
           {account && (
             <AccountNamesWrapper>
               <ThemedText.SubHeader color="textPrimary" fontWeight={500}>
@@ -223,12 +251,8 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           )}
         </StatusWrapper>
         <IconContainer>
-          <IconButton data-testid="wallet-settings" onClick={openSettings} Icon={Settings}>
-            <Trans>Settings</Trans>
-          </IconButton>
-          <IconButton data-testid="wallet-disconnect" onClick={disconnect} Icon={Power}>
-            <Trans>Disconnect</Trans>
-          </IconButton>
+          <IconButton data-testid="wallet-settings" onClick={openSettings} Icon={Settings} />
+          <IconButton data-testid="wallet-disconnect" onClick={disconnect} Icon={Power} />
         </IconContainer>
       </HeaderWrapper>
       <Column>
@@ -256,14 +280,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             </>
           )}
         </Column>
-        <ProfileButton
-          data-testid="nft-view-self-nfts"
-          onClick={navigateToProfile}
-          size={ButtonSize.medium}
-          emphasis={ButtonEmphasis.medium}
-        >
-          <Trans>View and sell NFTs</Trans>
-        </ProfileButton>
         <BuyCryptoButton
           size={ButtonSize.medium}
           emphasis={ButtonEmphasis.medium}
@@ -283,6 +299,14 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             </>
           )}
         </BuyCryptoButton>
+        <HeaderButton
+          data-testid="nft-view-self-nfts"
+          onClick={navigateToProfile}
+          size={ButtonSize.medium}
+          emphasis={ButtonEmphasis.medium}
+        >
+          <Trans>View and sell NFTs</Trans>
+        </HeaderButton>
         {Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) && (
           <FiatOnrampNotAvailableText marginTop="8px">
             <Trans>Not available in your region</Trans>
