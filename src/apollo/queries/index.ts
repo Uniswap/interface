@@ -253,7 +253,7 @@ export const POOLS_BULK_FROM_LIST = (pools: string[], withFee?: boolean) => {
   const queryString = `
   query pools {
     pools(first: ${
-      pools.length
+      pools.length || 1000
     }, where: {id_in: ${poolsString}}, orderBy: reserveUSD, orderDirection: desc, subgraphError: allow) {
         ${PoolFields(withFee)}
     }
@@ -289,7 +289,7 @@ export const POOLS_HISTORICAL_BULK_FROM_LIST = (block: number, pools: string[], 
   const queryString = `
   query pools {
     pools(first: ${
-      pools.length
+      pools.length || 1000
     }, where: {id_in: ${poolsString}}, block: {number: ${block}}, orderBy: reserveUSD, orderDirection: desc, subgraphError: allow) {
       id
       reserveUSD

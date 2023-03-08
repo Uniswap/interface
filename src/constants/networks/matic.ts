@@ -58,7 +58,7 @@ const maticInfo: EVMNetworkInfo = {
       '0x829c27fd3013b944cbE76E92c3D6c45767c0C789',
       '0x3aDd3034Fcf921F20c74c6149FB44921709595B1',
     ],
-    fairlaunchV2: ['0xFFD22921947D75342BFE1f8efAcEE4B8B3b5183F'],
+    fairlaunchV2: ['0xFFD22921947D75342BFE1f8efAcEE4B8B3b5183F', '0x0bAF410dcfCf168f659f46bF1e28D29f68a25E77'],
   },
   elastic: {
     defaultSubgraph: 'https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-matic',
