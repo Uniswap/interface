@@ -38,6 +38,7 @@ const Wrapper = styled.div`
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   bottom: 60px;
+  z-index: 2;
   display: none;
   max-width: 348px;
   padding: 16px 20px;
