@@ -52,7 +52,7 @@ export function useBestTrade(
   const routingAPITrade = useRoutingAPITrade(
     tradeType,
     autoRouterSupported && shouldGetTrade ? debouncedAmount : undefined,
-    shouldGetTrade ? debouncedOtherCurrency : undefined,
+    debouncedOtherCurrency,
     clientSideRouter ? RouterPreference.CLIENT : RouterPreference.API
   )
 
