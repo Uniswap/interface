@@ -68,7 +68,6 @@ const MOONPAY_SUPPORTED_CURRENCY_CODES = [
   'usdc_polygon',
 ]
 
-//test
 export default function FiatOnrampModal() {
   const { account } = useWeb3React()
   const theme = useTheme()
