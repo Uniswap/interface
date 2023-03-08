@@ -23,6 +23,8 @@ type HeaderScrollScreenProps = {
   fullScreen?: boolean // Expand to device edges
   renderedInModal?: boolean // Apply styling to display within bottom sheet modal
   showHandleBar?: boolean // add handlebar element to top of view
+  backgroundColor?: keyof typeof FixedTheme.colors
+  backButtonColor?: keyof typeof FixedTheme.colors
 }
 
 export function HeaderScrollScreen({
@@ -32,6 +34,8 @@ export function HeaderScrollScreen({
   fullScreen = false,
   renderedInModal = false,
   showHandleBar = false,
+  backgroundColor = 'background0',
+  backButtonColor,
   children,
 }: PropsWithChildren<HeaderScrollScreenProps>): JSX.Element {
   const theme = useAppTheme()
@@ -56,10 +60,12 @@ export function HeaderScrollScreen({
   })
 
   return (
-    <Screen edges={fullScreen ? EMPTY_ARRAY : ['top', 'left', 'right']}>
+    <Screen bg={backgroundColor} edges={fullScreen ? EMPTY_ARRAY : ['top', 'left', 'right']}>
       {showHandleBar ? <HandleBar backgroundColor={theme.colors.background0} /> : null}
       <ScrollHeader
         alwaysShowCenterElement={alwaysShowCenterElement}
+        backButtonColor={backButtonColor}
+        backgroundColor={backgroundColor}
         centerElement={centerElement}
         fullScreen={fullScreen}
         listRef={listRef}

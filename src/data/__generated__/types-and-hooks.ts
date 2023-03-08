@@ -1027,10 +1027,11 @@ export type NftsQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?
 export type NftItemScreenQueryVariables = Exact<{
   contractAddress: Scalars['String'];
   filter?: InputMaybe<NftAssetsFilterInput>;
+  activityFilter?: InputMaybe<NftActivityFilterInput>;
 }>;
 
 
-export type NftItemScreenQuery = { __typename?: 'Query', nftAssets?: { __typename?: 'NftAssetConnection', edges: Array<{ __typename?: 'NftAssetEdge', node: { __typename?: 'NftAsset', id: string, description?: string | null, name?: string | null, tokenId: string, collection?: { __typename?: 'NftCollection', id: string, collectionId: string, description?: string | null, isVerified?: boolean | null, name?: string | null, numAssets?: number | null, image?: { __typename?: 'Image', id: string, url: string } | null, markets?: Array<{ __typename?: 'NftCollectionMarket', id: string, owners?: number | null, floorPrice?: { __typename?: 'TimestampedAmount', id: string, value: number } | null, totalVolume?: { __typename?: 'TimestampedAmount', id: string, value: number } | null }> | null, nftContracts?: Array<{ __typename?: 'NftContract', id: string, address: string }> | null } | null, image?: { __typename?: 'Image', id: string, url: string } | null, nftContract?: { __typename?: 'NftContract', id: string, address: string, chain: Chain, standard?: NftStandard | null } | null, creator?: { __typename?: 'NftProfile', id: string, address: string, username?: string | null } | null } }> } | null };
+export type NftItemScreenQuery = { __typename?: 'Query', nftAssets?: { __typename?: 'NftAssetConnection', edges: Array<{ __typename?: 'NftAssetEdge', node: { __typename?: 'NftAsset', id: string, description?: string | null, name?: string | null, tokenId: string, collection?: { __typename?: 'NftCollection', id: string, collectionId: string, description?: string | null, isVerified?: boolean | null, name?: string | null, numAssets?: number | null, image?: { __typename?: 'Image', id: string, url: string } | null, markets?: Array<{ __typename?: 'NftCollectionMarket', id: string, owners?: number | null, floorPrice?: { __typename?: 'TimestampedAmount', id: string, value: number } | null, totalVolume?: { __typename?: 'TimestampedAmount', id: string, value: number } | null }> | null, nftContracts?: Array<{ __typename?: 'NftContract', id: string, address: string }> | null } | null, image?: { __typename?: 'Image', id: string, url: string } | null, nftContract?: { __typename?: 'NftContract', id: string, address: string, chain: Chain, standard?: NftStandard | null } | null, creator?: { __typename?: 'NftProfile', id: string, address: string, username?: string | null } | null, traits?: Array<{ __typename?: 'NftAssetTrait', id: string, name?: string | null, rarity?: number | null, value?: string | null }> | null } }> } | null, nftActivity?: { __typename?: 'NftActivityConnection', edges: Array<{ __typename?: 'NftActivityEdge', node: { __typename?: 'NftActivity', id: string, quantity?: number | null, price?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null } }> } | null };
 
 export type NftCollectionScreenQueryVariables = Exact<{
   contractAddress: Scalars['String'];
@@ -1439,7 +1440,7 @@ export type NftsQueryHookResult = ReturnType<typeof useNftsQuery>;
 export type NftsLazyQueryHookResult = ReturnType<typeof useNftsLazyQuery>;
 export type NftsQueryResult = Apollo.QueryResult<NftsQuery, NftsQueryVariables>;
 export const NftItemScreenDocument = gql`
-    query NFTItemScreen($contractAddress: String!, $filter: NftAssetsFilterInput) {
+    query NFTItemScreen($contractAddress: String!, $filter: NftAssetsFilterInput, $activityFilter: NftActivityFilterInput) {
   nftAssets(address: $contractAddress, filter: $filter) {
     edges {
       node {
@@ -1490,6 +1491,25 @@ export const NftItemScreenDocument = gql`
           address
           username
         }
+        traits {
+          id
+          name
+          rarity
+          value
+        }
+      }
+    }
+  }
+  nftActivity(filter: $activityFilter) {
+    edges {
+      node {
+        id
+        quantity
+        price {
+          id
+          currency
+          value
+        }
       }
     }
   }
@@ -1510,6 +1530,7 @@ export const NftItemScreenDocument = gql`
  *   variables: {
  *      contractAddress: // value for 'contractAddress'
  *      filter: // value for 'filter'
+ *      activityFilter: // value for 'activityFilter'
  *   },
  * });
  */

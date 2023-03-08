@@ -20,6 +20,7 @@ type AddressDisplayProps = {
   hideAddressInSubtitle?: boolean
   size?: number
   variant?: keyof Theme['textVariants']
+  textColor?: keyof Theme['colors']
   captionVariant?: keyof Theme['textVariants']
   direction?: 'row' | 'column'
   showCopy?: boolean
@@ -59,6 +60,7 @@ export function AddressDisplay({
   address,
   size = 24,
   variant = 'bodyLarge',
+  textColor = 'textPrimary',
   captionVariant = 'subheadSmall',
   hideAddressInSubtitle,
   direction = 'row',
@@ -108,7 +110,7 @@ export function AddressDisplay({
           onPress={showCopy && !showAddressAsSubtitle ? onPressCopyAddress : undefined}>
           <Flex centered row gap="spacing12">
             <Text
-              color="textPrimary"
+              color={textColor}
               ellipsizeMode="tail"
               numberOfLines={1}
               testID={`address-display/name/${displayName?.name}`}

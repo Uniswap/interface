@@ -60,7 +60,11 @@ query Nfts($ownerAddress: String!) {
   }
 }
 
-query NFTItemScreen($contractAddress: String!, $filter: NftAssetsFilterInput) {
+query NFTItemScreen(
+  $contractAddress: String!
+  $filter: NftAssetsFilterInput
+  $activityFilter: NftActivityFilterInput
+) {
   nftAssets(address: $contractAddress, filter: $filter) {
     edges {
       node {
@@ -111,6 +115,25 @@ query NFTItemScreen($contractAddress: String!, $filter: NftAssetsFilterInput) {
           address
           username
         }
+        traits {
+          id
+          name
+          rarity
+          value
+        }
+      }
+    }
+  }
+  nftActivity(filter: $activityFilter) {
+    edges {
+      node {
+        id
+        quantity
+        price {
+          id
+          currency
+          value
+        }
       }
     }
   }
@@ -134,7 +157,6 @@ query NftCollectionScreen(
         description
         homepageUrl
         twitterName
-
         image {
           id
           url

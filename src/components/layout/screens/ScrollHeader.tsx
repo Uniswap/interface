@@ -11,7 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
 import { WithScrollToTop } from 'src/components/layout/screens/WithScrollToTop'
-import { theme } from 'src/styles/theme'
+import { Theme, theme } from 'src/styles/theme'
 import { zIndices } from 'src/styles/zIndices'
 
 type ScrollHeaderProps = {
@@ -24,6 +24,8 @@ type ScrollHeaderProps = {
   rightElement?: JSX.Element
   alwaysShowCenterElement?: boolean
   fullScreen?: boolean // Expand to device edges
+  backgroundColor?: keyof Theme['colors']
+  backButtonColor?: keyof Theme['colors']
 }
 
 /**
@@ -41,6 +43,8 @@ export function ScrollHeader({
   rightElement = <Box width={theme.iconSizes.icon24} />,
   alwaysShowCenterElement,
   fullScreen = false,
+  backgroundColor,
+  backButtonColor,
 }: ScrollHeaderProps): JSX.Element {
   // scrolls to top when tapping on the active tab
   useScrollToTop(listRef)
@@ -68,7 +72,10 @@ export function ScrollHeader({
   const headerWrapperStyles = fullScreen ? [visibleOnScrollStyle, { zIndex: zIndices.popover }] : []
 
   return (
-    <HeaderWrapper fullScreen={fullScreen} style={headerWrapperStyles}>
+    <HeaderWrapper
+      backgroundColor={backgroundColor}
+      fullScreen={fullScreen}
+      style={headerWrapperStyles}>
       <WithScrollToTop ref={listRef}>
         <Flex
           row
@@ -77,7 +84,7 @@ export function ScrollHeader({
           mx="spacing16"
           my="spacing12"
           style={headerRowStyles}>
-          <BackButton />
+          <BackButton color={backButtonColor} />
           <Flex shrink>
             {alwaysShowCenterElement ? (
               centerElement
@@ -88,7 +95,7 @@ export function ScrollHeader({
           {rightElement}
         </Flex>
         <AnimatedBox
-          borderBottomColor="backgroundOutline"
+          borderBottomColor={backgroundColor ?? 'backgroundOutline'}
           borderBottomWidth={0.25}
           height={1}
           overflow="visible"
@@ -104,17 +111,19 @@ function HeaderWrapper({
   fullScreen,
   children,
   style,
+  backgroundColor = 'background0',
 }: {
   fullScreen: boolean
   children: ReactElement
   style?: StyleProp<Animated.AnimateStyle<StyleProp<ViewStyle>>>
+  backgroundColor?: keyof typeof theme.colors
 }): JSX.Element {
   if (!fullScreen) {
-    return <Box bg="background0">{children}</Box>
+    return <Box bg={backgroundColor}>{children}</Box>
   }
   return (
     <AnimatedBox
-      bg="background0"
+      bg={backgroundColor}
       left={0}
       opacity={0}
       position="absolute"
