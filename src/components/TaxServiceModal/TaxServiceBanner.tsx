@@ -7,6 +7,7 @@ import { useCallback } from 'react'
 import { X } from 'react-feather'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
+import { opacify } from 'theme/utils'
 import { Z_INDEX } from 'theme/zIndex'
 
 import TaxServiceModal from '.'
@@ -53,7 +54,7 @@ const PopupContainer = styled.div<{ show: boolean; isDarkMode: boolean }>`
   }
 `
 
-const InnerContainer = styled.div`
+const InnerContainer = styled.div<{ isDarkMode: boolean }>`
   border-radius: 12px;
   cursor: auto;
   overflow: hidden;
@@ -62,17 +63,8 @@ const InnerContainer = styled.div`
   position: relative;
   gap: 8px;
   padding: 16px;
-  ::before {
-    content: '';
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
-
-    background-color: ${({ theme }) => theme.accentActionSoft};
-    opacity: 0.4;
-  }
+  background-color: ${({ isDarkMode, theme }) =>
+    isDarkMode ? opacify(10, theme.accentAction) : opacify(4, theme.accentAction)};
 `
 
 const Button = styled(ThemeButton)`
@@ -108,13 +100,11 @@ export default function TaxServiceBanner() {
   const isDarkMode = useIsDarkMode()
   const [modalOpen, setModalOpen] = useState(false)
   const sessionStorageTaxServiceDismissed = sessionStorage.getItem(TAX_SERVICE_DISMISSED)
-  let initialBannerOpen = true
+
   if (!sessionStorageTaxServiceDismissed) {
     sessionStorage.setItem(TAX_SERVICE_DISMISSED, 'false')
-  } else if (sessionStorageTaxServiceDismissed === 'true') {
-    initialBannerOpen = false
   }
-  const [bannerOpen, setBannerOpen] = useState(initialBannerOpen)
+  const [bannerOpen, setBannerOpen] = useState(sessionStorageTaxServiceDismissed !== 'true')
   const onDismiss = () => {
     setModalOpen(false)
   }
@@ -124,13 +114,13 @@ export default function TaxServiceBanner() {
   }
 
   const handleClose = useCallback(() => {
-    setBannerOpen(false)
     sessionStorage.setItem(TAX_SERVICE_DISMISSED, 'true')
+    setBannerOpen(false)
   }, [])
 
   return (
     <PopupContainer show={bannerOpen} isDarkMode={isDarkMode}>
-      <InnerContainer>
+      <InnerContainer isDarkMode={isDarkMode}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <TextContainer data-testid="tax-service-description">
             <div className={subhead} style={{ paddingBottom: '12px' }}>
