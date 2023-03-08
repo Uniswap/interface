@@ -1,4 +1,4 @@
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
@@ -11,10 +11,10 @@ import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
 import { useCallback, useMemo } from 'react'
-import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
+import { AlertTriangle } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
 
@@ -28,15 +28,6 @@ import { RowBetween } from '../Row'
 
 // https://stackoverflow.com/a/31617326
 const FULL_BORDER_RADIUS = 9999
-
-const ChevronWrapper = styled.button`
-  color: ${({ theme }) => theme.accentAction};
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  padding: 10px 12px 10px 4px;
-`
 
 const Web3StatusGeneric = styled(ButtonSecondary)`
   ${flexRowNoWrap};
@@ -154,14 +145,9 @@ const StyledConnectButton = styled.button`
   cursor: pointer;
   font-weight: 600;
   font-size: 16px;
-  padding: 10px 4px 10px 12px;
+  padding: 10px 12px;
   color: inherit;
 `
-
-const CHEVRON_PROPS = {
-  height: 20,
-  width: 20,
-}
 
 function Web3StatusInner() {
   const { account, connector, chainId, ENSName } = useWeb3React()
@@ -171,8 +157,7 @@ function Web3StatusInner() {
     inputError: swapInputError,
   } = useDerivedSwapInfo()
   const validSwapQuote = getIsValidSwapQuote(trade, tradeState, swapInputError)
-  const theme = useTheme()
-  const [walletDrawerOpen, toggleWalletDrawer] = useWalletDrawer()
+  const [, toggleWalletDrawer] = useWalletDrawer()
   const handleWalletDropdownClick = useCallback(() => {
     sendAnalyticsEvent(InterfaceEventName.ACCOUNT_DROPDOWN_BUTTON_CLICKED)
     toggleWalletDrawer()
@@ -204,12 +189,6 @@ function Web3StatusInner() {
       </Web3StatusError>
     )
   } else if (account) {
-    const chevronProps = {
-      ...CHEVRON_PROPS,
-      color: theme.textSecondary,
-      'aria-label': walletDrawerOpen ? t`Close wallet connection options` : t`Open wallet connection options`,
-    }
-
     return (
       <Web3StatusConnected
         data-testid="web3-status-connected"
@@ -228,17 +207,11 @@ function Web3StatusInner() {
         ) : (
           <AddressAndChevronContainer>
             <Text>{ENSName || shortenAddress(account)}</Text>
-            {walletDrawerOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
           </AddressAndChevronContainer>
         )}
       </Web3StatusConnected>
     )
   } else {
-    const chevronProps = {
-      ...CHEVRON_PROPS,
-      'data-testid': 'navbar-wallet-dropdown',
-      'aria-label': walletDrawerOpen ? t`Close wallet connection options` : t`Open wallet connection options`,
-    }
     return (
       <TraceEvent
         events={[BrowserEvent.onClick]}
@@ -255,9 +228,6 @@ function Web3StatusInner() {
           <StyledConnectButton tabIndex={-1} data-testid="navbar-connect-wallet">
             <Trans>Connect</Trans>
           </StyledConnectButton>
-          <ChevronWrapper tabIndex={-1}>
-            {walletDrawerOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
-          </ChevronWrapper>
         </Web3StatusConnectWrapper>
       </TraceEvent>
     )
