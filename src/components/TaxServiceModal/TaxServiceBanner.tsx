@@ -136,9 +136,7 @@ export default function TaxServiceBanner() {
           </TextContainer>
           <StyledXButton
             size={20}
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
+            onClick={() => {
               handleClose()
             }}
           />

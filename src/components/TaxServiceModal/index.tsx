@@ -112,9 +112,7 @@ export default memo(function TaxServiceModal({ isOpen, onDismiss }: TaxServiceMo
           </div>
           <StyledXButton
             size={20}
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
+            onClick={() => {
               onDismiss()
             }}
           />
