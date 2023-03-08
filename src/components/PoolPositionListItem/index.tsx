@@ -100,7 +100,7 @@ export default function PoolPositionListItem({ positionDetails }: PoolPositionLi
   //}, [name, symbol, pool, id])
 
   //const positionSummaryLink = '/smart-pool/' + positionDetails.pool '/' + positionDetails.id
-  const positionSummaryLink = `/smart-pool/${positionDetails.pool}/${positionDetails.id}`
+  const positionSummaryLink = `/smart-pool/${positionDetails.address}` ///${positionDetails.id}
 
   return (
     <LinkRow to={positionSummaryLink}>
@@ -113,7 +113,7 @@ export default function PoolPositionListItem({ positionDetails }: PoolPositionLi
       <RangeLineItem>
         <RangeText>
           <ExtentsText>
-            <Trans>{positionDetails.pool}</Trans>
+            <Trans>{positionDetails.address}</Trans>
           </ExtentsText>
         </RangeText>
       </RangeLineItem>

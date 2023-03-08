@@ -23,4 +23,5 @@ export interface PoolPositionDetails {
   name: string
   symbol: string
   id: string
+  address?: string
 }
