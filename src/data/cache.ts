@@ -29,8 +29,10 @@ function setupCache(): InMemoryCache {
       Query: {
         fields: {
           // relayStylePagination function unfortunately generates a field policy that ignores args
+          // Note: all non-pagination related query args should be added for cache to work properly.
+          // ^ This ensures that cache doesnt get overwritten by similar queries with different args (e.g. different filter on NFT Items)
           nftBalances: relayStylePagination(['ownerAddress']),
-          nftAssets: relayStylePagination(['address']),
+          nftAssets: relayStylePagination(['address', 'filter']),
 
           /*
            * CACHE REDIRECTS
