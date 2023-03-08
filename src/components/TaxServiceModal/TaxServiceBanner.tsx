@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
-import { SMALLEST_MOBILE_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { bodySmall, subhead } from 'nft/css/common.css'
 import { useState } from 'react'
 import { useCallback } from 'react'
@@ -33,8 +32,9 @@ const PopupContainer = styled.div<{ show: boolean; isDarkMode: boolean }>`
   }) => `${duration.slow} opacity ${timing.in}`};
   width: 320px;
   height: 156px;
-  @media screen and (min-width: ${SMALLEST_MOBILE_MEDIA_BREAKPOINT}) {
-    bottom: 50px;
+  bottom: 50px;
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    width: 100%;
   }
 
   ::before {
@@ -49,6 +49,10 @@ const PopupContainer = styled.div<{ show: boolean; isDarkMode: boolean }>`
     background-size: 15%, 20%;
     background-repeat: no-repeat;
     background-position: top right 75px, bottom 5px right 7px;
+    @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+      background-size: 48px, 64px;
+      background-position: top right 75px, bottom 20px right 7px;
+    }
 
     opacity: ${({ isDarkMode }) => (isDarkMode ? '0.9' : '0.25')};
   }
