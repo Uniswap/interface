@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { rgba } from 'polished'
 import { X } from 'react-feather'
 import { Flex } from 'rebass'
@@ -19,7 +20,6 @@ import { Z_INDEXS } from 'constants/styles'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { useDetailAnnouncement, useRemovePopup } from 'state/application/hooks'
-import { escapeScriptHtml } from 'utils/string'
 
 const IMAGE_HEIGHT = '124px'
 const PADDING_MOBILE = '16px'
@@ -30,9 +30,8 @@ const ItemWrapper = styled.div`
   border-radius: 8px;
   display: flex;
   position: relative;
-  cursor: pointer;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-     height: 140px;
+     height: 124px;
   `}
 `
 
@@ -41,7 +40,7 @@ const ContentColumn = styled(AutoColumn)`
   gap: 14px;
   flex: 1;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 30px 16px 16px 16px;
+    padding: 16px 40px 16px 16px;
   `}
 `
 
@@ -50,46 +49,40 @@ const Image = styled.img`
   height: ${IMAGE_HEIGHT};
   border-radius: 8px;
   object-fit: cover;
+  cursor: pointer;
   ${({ theme }) => theme.mediaWidth.upToSmall`
      display: none;
   `}
 `
 
-const Desc = styled.div<{ hasCta: boolean }>`
-  max-width: 100%;
-  line-height: 16px;
-  font-size: 12px;
-  color: ${({ theme }) => theme.subText};
-  ${({ hasCta }) =>
-    css`
-      display: block;
-      display: -webkit-box;
-      -webkit-line-clamp: ${hasCta ? 1 : 3};
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    `};
-  > * {
-    margin: 0;
-  }
-`
-
 const Title = styled.div`
   max-width: 100%;
-  font-size: 16px;
-  line-height: 18px;
+  font-size: 14px;
+  line-height: 20px;
+  height: 42px;
   font-weight: 500;
   color: ${({ theme }) => theme.text};
-  white-space: nowrap;
+  display: block;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
 `
 
 const StyledCtaButton = styled(CtaButton)`
-  min-width: 140px;
-  width: fit-content;
-  height: 32px;
-  font-size: 12px;
+  font-size: 14px;
+`
+
+const SeeMore = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  color: ${({ theme }) => theme.subText};
+  font-size: 14px;
+  font-weight: 500;
 `
 
 function SnippetPopupItem({
@@ -102,7 +95,7 @@ function SnippetPopupItem({
   showDetailAnnouncement: (index: number) => void
 }) {
   const { templateBody = {} } = data.content
-  const { ctas = [], name, content, thumbnailImageURL } = templateBody as AnnouncementTemplatePopup
+  const { ctas = [], name, thumbnailImageURL } = templateBody as AnnouncementTemplatePopup
 
   const removePopup = useRemovePopup()
   const toggle = () => {
@@ -128,22 +121,23 @@ function SnippetPopupItem({
   }
 
   return (
-    <ItemWrapper onClick={toggle}>
-      <Image src={thumbnailImageURL || NotificationImage} />
+    <ItemWrapper>
+      <Image onClick={toggle} src={thumbnailImageURL || NotificationImage} />
       <ContentColumn>
-        <Title>{name}</Title>
-        <Desc hasCta={hasCta} dangerouslySetInnerHTML={{ __html: escapeScriptHtml(content) }} />
-        <Flex alignItems="flex-end" style={{ position: 'relative', justifyContent: 'flex-start', gap: '12px' }}>
-          {hasCta && (
-            <StyledCtaButton
-              data={ctaInfo}
-              color="primary"
-              onClick={e => {
-                e.stopPropagation()
-                onClickCta()
-              }}
-            />
-          )}
+        <Title onClick={toggle}>{name}</Title>
+        <Flex
+          alignItems="flex-end"
+          style={{
+            position: 'relative',
+            justifyContent: hasCta ? 'space-between' : 'flex-start',
+            gap: '12px',
+            alignItems: 'flex-end',
+          }}
+        >
+          {hasCta && <StyledCtaButton data={ctaInfo} color="link" onClick={onClickCta} />}
+          <SeeMore onClick={toggle}>
+            <Trans>Read More</Trans>
+          </SeeMore>
         </Flex>
       </ContentColumn>
     </ItemWrapper>
@@ -180,20 +174,7 @@ const Wrapper = styled.div`
     }
   }
   .swiper-pagination {
-    top: 10px;
-    bottom: unset;
-    width: 200px;
-    .swiper-pagination-bullet {
-      width: 8px;
-      height: 8px;
-      opacity: 1;
-      background: none;
-      border: 1px solid ${({ theme }) => theme.subText};
-      &.swiper-pagination-bullet-active {
-        background: ${({ theme }) => theme.primary};
-        border: none;
-      }
-    }
+    display: none;
   }
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -203,9 +184,6 @@ const Wrapper = styled.div`
       width: 100%;
       padding: 0px ${PADDING_MOBILE};
       --swiper-navigation-size: 10px;
-      .swiper-pagination {
-        width: 100%;
-      }
     `}`}
 `
 

@@ -14,7 +14,7 @@ function CtaButton({
 }: {
   data: AnnouncementCTA
   className?: string
-  color: 'primary' | 'gray' | 'outline'
+  color: 'primary' | 'gray' | 'outline' | 'link'
   onClick?: MouseEventHandler<HTMLButtonElement>
 }) {
   const theme = useTheme()
@@ -27,6 +27,12 @@ function CtaButton({
       return <ButtonPrimary {...props}>{displayName}</ButtonPrimary>
     case 'outline':
       return <ButtonOutlined {...props}>{displayName}</ButtonOutlined>
+    case 'link':
+      return (
+        <span style={{ color: theme.primary, fontWeight: '500', cursor: 'pointer' }} {...props}>
+          {displayName}
+        </span>
+      )
     default:
       return (
         <ButtonEmpty

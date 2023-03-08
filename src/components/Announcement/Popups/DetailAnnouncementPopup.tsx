@@ -169,8 +169,11 @@ export default function DetailAnnouncementPopup({
 
   if (selectedIndex === null || !announcements[selectedIndex]) return null
 
-  const { name, thumbnailImageURL, content, ctaURL, ctaName = '' } = announcements[selectedIndex]
-  const ctas = [{ url: ctaURL, name: formatCtaName(ctaName, ctaURL) }]
+  const { name, thumbnailImageURL, content, ctaURL, ctaName = '', ctas: rawCtas } = announcements[selectedIndex]
+  const ctas = (rawCtas?.length ? rawCtas : [{ url: ctaURL, name: ctaName }]).map(e => ({
+    ...e,
+    name: formatCtaName(e.name, e.url),
+  }))
 
   const onClickCta = (ctaUrl: string) => {
     onDismiss()
