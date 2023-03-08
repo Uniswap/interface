@@ -13,11 +13,15 @@ import { EllipsisStyle, ThemedText } from 'theme'
 
 import { useToggleWalletDrawer } from '..'
 import { PortfolioArrow } from '../AuthenticatedHeader'
-import PortfolioRow from './PortfolioRow'
+import PortfolioRow, { PortfolioSkeleton } from './PortfolioRow'
 
 export default function Tokens({ account }: { account: string }) {
-  const { data } = usePortfolioBalancesQuery({ variables: { ownerAddress: account } })
-  return (
+  const { data, loading } = usePortfolioBalancesQuery({ variables: { ownerAddress: account } })
+
+  // TODO(cartcrom): add a "no tokens" state
+  return !data && loading ? (
+    <PortfolioSkeleton />
+  ) : (
     <>
       {data?.portfolios?.[0].tokenBalances?.map(
         (tokenBalance) =>

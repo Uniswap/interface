@@ -7,6 +7,7 @@ import { useWeb3React } from '@web3-react/core'
 import { ButtonEmphasis, ButtonSize, LoadingButtonSpinner, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import { AutoRow } from 'components/Row'
+import { LoadingBubble } from 'components/Tokens/loading'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import Tooltip from 'components/Tooltip'
 import { getConnection } from 'connection'
@@ -232,18 +233,27 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
       </HeaderWrapper>
       <Column>
         <Column gap="xs">
-          <ThemedText.HeadlineLarge fontWeight={500}>
-            {formatNumber(totalBalance, NumberType.PortfolioBalance)}
-          </ThemedText.HeadlineLarge>
-          {absoluteChange && percentChange && (
-            <AutoRow marginBottom="20px">
-              <PortfolioArrow change={absoluteChange} />
-              <ThemedText.BodySecondary>
-                {`${formatNumber(Math.abs(absoluteChange), NumberType.PortfolioBalance)} (${formatDelta(
-                  percentChange
-                )})`}
-              </ThemedText.BodySecondary>
-            </AutoRow>
+          {totalBalance ? (
+            <>
+              <ThemedText.HeadlineLarge fontWeight={500}>
+                {formatNumber(totalBalance, NumberType.PortfolioBalance)}
+              </ThemedText.HeadlineLarge>
+              {absoluteChange && percentChange && (
+                <AutoRow marginBottom="20px">
+                  <PortfolioArrow change={absoluteChange} />
+                  <ThemedText.BodySecondary>
+                    {`${formatNumber(Math.abs(absoluteChange), NumberType.PortfolioBalance)} (${formatDelta(
+                      percentChange
+                    )})`}
+                  </ThemedText.BodySecondary>
+                </AutoRow>
+              )}
+            </>
+          ) : (
+            <>
+              <LoadingBubble height="44px" width="170px" />
+              <LoadingBubble height="16px" width="100px" margin="4px 0 20px 0" />
+            </>
           )}
         </Column>
         <ProfileButton
