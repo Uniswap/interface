@@ -22,6 +22,7 @@ gql`
     $filter: NftAssetsFilterInput
     $first: Int
     $after: String
+    $last: Int
     $before: String
   ) {
     nftAssets(
@@ -176,6 +177,7 @@ export interface AssetFetcherParams {
   filter: NftAssetsFilterInput
   first?: number
   after?: string
+  last?: number
   before?: string
 }
 
