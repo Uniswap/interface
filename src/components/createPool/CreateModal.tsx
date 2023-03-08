@@ -105,7 +105,7 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
   const [typedName, setTypedName] = useState('')
   const [typedSymbol, setTypedSymbol] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
-  // TODO: check if should use network base currency default instead of GRG
+  // TODO: check if should use network base currency default instead of GRG, check if should not fallback to mainnet
   const [currencyValue, setCurrencyValue] = useState<Currency>(GRG[chainId ?? 1])
 
   const handleDismissSearch = useCallback(() => {
@@ -172,9 +172,6 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
               <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
             </RowBetween>
             <ThemedText.DeprecatedBody>
-              <Trans>Experience endless DeFi applications without the hassle of setting allowances.</Trans>
-            </ThemedText.DeprecatedBody>
-            <ThemedText.DeprecatedBody>
               <Trans>Choose a cool name, a symbol and the base token.</Trans>
             </ThemedText.DeprecatedBody>
             <NameInputPanel value={typedName} onChange={onNameInput} />
@@ -187,7 +184,7 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
             <CurrencySelect
               disabled={!chainAllowed}
               visible={true}
-              selected={false}
+              selected={true}
               hideInput={false}
               className="open-currency-select-button"
               onClick={() => {

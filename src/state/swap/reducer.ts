@@ -1,7 +1,15 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { parsedQueryString } from 'hooks/useParsedQueryString'
 
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
+import {
+  Field,
+  replaceSwapState,
+  selectCurrency,
+  setRecipient,
+  setSmartPoolValue,
+  switchCurrencies,
+  typeInput,
+} from './actions'
 import { queryParametersToSwapState } from './hooks'
 
 export interface SwapState {
@@ -15,6 +23,8 @@ export interface SwapState {
   }
   // the typed recipient address or ENS name, or null if swap should go to sender
   readonly recipient: string | null
+  readonly smartPoolAddress?: string
+  readonly smartPoolName?: string
 }
 
 const initialState: SwapState = queryParametersToSwapState(parsedQueryString())
@@ -72,5 +82,9 @@ export default createReducer<SwapState>(initialState, (builder) =>
     })
     .addCase(setRecipient, (state, { payload: { recipient } }) => {
       state.recipient = recipient
+    })
+    .addCase(setSmartPoolValue, (state, { payload: { smartPoolAddress, smartPoolName } }) => {
+      state.smartPoolAddress = smartPoolAddress
+      state.smartPoolName = smartPoolName
     })
 )

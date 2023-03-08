@@ -46,7 +46,6 @@ import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallbac
 import { useArgentWalletContract } from '../../hooks/useArgentWalletContract'
 import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { useDerivedPositionInfo } from '../../hooks/useDerivedPositionInfo'
-import useENS from '../../hooks/useENS'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
@@ -93,11 +92,7 @@ export default function AddLiquidity() {
   const theme = useTheme()
 
   // we query pool address from swap state
-  const { recipient } = useSwapState()
-  const recipientLookup = useENS(recipient ?? undefined)
-  const poolAddress = recipientLookup.address
-
-  // TODO: fix token balances
+  const { smartPoolAddress } = useSwapState()
   const toggleWalletModal = useToggleWalletModal() // toggle wallet when disconnected
   const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
@@ -228,13 +223,16 @@ export default function AddLiquidity() {
   const argentWalletContract = useArgentWalletContract()
 
   // check whether the user has approved the router on the tokens
+  const isRbPool = true
   const [approvalA, approveACallback] = useApproveCallback(
     argentWalletContract ? undefined : parsedAmounts[Field.CURRENCY_A],
-    chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined
+    chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined,
+    isRbPool
   )
   const [approvalB, approveBCallback] = useApproveCallback(
     argentWalletContract ? undefined : parsedAmounts[Field.CURRENCY_B],
-    chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined
+    chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined,
+    isRbPool
   )
 
   const allowedSlippage = useUserSlippageToleranceWithDefault(
@@ -242,7 +240,7 @@ export default function AddLiquidity() {
   )
 
   async function onAdd() {
-    if (!chainId || !provider || !account || !poolAddress) return
+    if (!chainId || !provider || !account || !smartPoolAddress) return
 
     if (!positionManager || !baseCurrency || !quoteCurrency) {
       return
@@ -267,7 +265,7 @@ export default function AddLiquidity() {
             })
 
       let txn: { to: string; data: string; value: string } = {
-        to: poolAddress, //NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId],
+        to: smartPoolAddress, //NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId],
         data: MulticallExtended.encodeMulticall([PaymentsExtended.encodeWrapETH(JSBI.BigInt(value)), calldata]),
         value: '0x0',
       }

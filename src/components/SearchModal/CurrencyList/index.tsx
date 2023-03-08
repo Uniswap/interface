@@ -15,7 +15,6 @@ import { useCurrencyBalance } from '../../../state/connection/hooks'
 import { WrappedTokenInfo } from '../../../state/lists/wrappedTokenInfo'
 import { useSwapState } from '../../../state/swap/hooks'
 import { ThemedText } from '../../../theme'
-import { isAddress } from '../../../utils'
 import Column, { AutoColumn } from '../../Column'
 import Loader from '../../Loader'
 import CurrencyLogo from '../../Logo/CurrencyLogo'
@@ -108,6 +107,7 @@ export function CurrencyRow({
   currency,
   onSelect,
   isSelected,
+  isSmartPool,
   otherSelected,
   style,
   showCurrencyAmount,
@@ -116,6 +116,7 @@ export function CurrencyRow({
   currency: Currency
   onSelect: (hasWarning: boolean) => void
   isSelected: boolean
+  isSmartPool?: boolean
   otherSelected: boolean
   style?: CSSProperties
   showCurrencyAmount?: boolean
@@ -124,10 +125,9 @@ export function CurrencyRow({
   const { account } = useWeb3React()
   const key = currencyKey(currency)
   const customAdded = useIsUserAddedToken(currency)
-  const { recipient } = useSwapState()
-  const poolAddress = isAddress(recipient) ? recipient : undefined
-  const balance = useCurrencyBalance(poolAddress ?? undefined, currency)
-  const warning = currency.isNative ? null : checkWarning(currency.address)
+  const { smartPoolAddress } = useSwapState()
+  const balance = useCurrencyBalance(smartPoolAddress ?? undefined, currency)
+  const warning = currency.isNative || isSmartPool ? null : checkWarning(currency.address)
   const isBlockedToken = !!warning && !warning.canProceed
   const blockedTokenOpacity = '0.6'
 
@@ -231,6 +231,7 @@ export default function CurrencyList({
   otherCurrency,
   fixedListRef,
   showCurrencyAmount,
+  isSmartPool,
   isLoading,
   searchQuery,
   isAddressSearch,
@@ -243,6 +244,7 @@ export default function CurrencyList({
   otherCurrency?: Currency | null
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>
   showCurrencyAmount?: boolean
+  isSmartPool?: boolean
   isLoading: boolean
   searchQuery: string
   isAddressSearch: string | false
@@ -274,6 +276,7 @@ export default function CurrencyList({
             style={style}
             currency={currency}
             isSelected={isSelected}
+            isSmartPool={isSmartPool}
             onSelect={handleSelect}
             otherSelected={otherSelected}
             showCurrencyAmount={showCurrencyAmount}
@@ -284,7 +287,16 @@ export default function CurrencyList({
         return null
       }
     },
-    [onCurrencySelect, otherCurrency, selectedCurrency, showCurrencyAmount, isLoading, isAddressSearch, searchQuery]
+    [
+      onCurrencySelect,
+      otherCurrency,
+      selectedCurrency,
+      showCurrencyAmount,
+      isLoading,
+      isSmartPool,
+      isAddressSearch,
+      searchQuery,
+    ]
   )
 
   const itemKey = useCallback((index: number, data: typeof itemData) => {
