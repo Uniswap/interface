@@ -9,7 +9,6 @@ import RB_POOL_FACTORY_ABI from 'abis/rb-pool-factory.json'
 import RB_REGISTRY_ABI from 'abis/rb-registry.json'
 import { RB_FACTORY_ADDRESSES, RB_REGISTRY_ADDRESSES } from 'constants/addresses'
 import { useContract } from 'hooks/useContract'
-import { useSingleCallResult /*, useSingleContractMultipleData*/ } from 'lib/hooks/multicall'
 import { useCallback, useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -60,32 +59,6 @@ export interface PoolData {
   baseToken: string
 }
 
-// TODO: we must send array of pool addresses and query owners in a multicall, otherwise events query make 1 call per created pool
-export function usePoolOperator(poolAddress: string | undefined): string | undefined {
-  const contract = usePoolExtendedContract(poolAddress)
-  const { result } = useSingleCallResult(contract, 'getPool')
-
-  return result?.[3]?.toString()
-}
-
-// TODO: fix
-/*
-export function usePoolOperators(poolAddresses: (string | undefined)[]): (string | undefined)[] {
-  const results = useMultipleContractSingleData(poolAddresses, PoolInterface, 'owner')
-
-  return useMemo(() => {
-    if (!results) return []
-    return results.map((result, i) => {
-      const { result: owners, loading } = result
-      const { owner } = owners
-
-      if (loading) return undefined
-      return [owner]
-    })
-  }, [results])
-}
-*/
-
 function useStartBlock(chainId: number | undefined): number | undefined {
   let registryStartBlock
 
@@ -132,29 +105,21 @@ export function useFormattedPoolCreatedLogs(
   const useLogsResult = useLogs(filter)
 
   return useMemo(() => {
-    return (
-      useLogsResult?.logs
-        ?.map((log) => {
-          const parsed = RegistryInterface.parseLog(log).args
-          return parsed
-        })
-        //.filter((p) => p.governorIndex === governorIndex)?.find((p) => p.id === id)
-        //?.filter((parsed) => indices.flat().some((i) => i === parsed.id.toNumber()))
-        // TODO: filter by pool operator, if cannot do efficient hook must query all "Pool Initialized"
-        // events, filtered by group, then map those owned, but must add pools that changed ownership
-        //.filter((parsed) => usePoolOperator(parsed.address) === operator)
-        ?.map((parsed) => {
-          // TODO: can simply pass the array from above
-          const group = parsed.group
-          const pool = parsed.pool
-          const name = parseBytes32String(parsed.name)
-          const symbol = parseBytes32String(parsed.symbol)
-          const id = parsed.id //.toString()
+    return useLogsResult?.logs
+      ?.map((log) => {
+        const parsed = RegistryInterface.parseLog(log).args
+        return parsed
+      })
+      ?.map((parsed) => {
+        const group = parsed.group
+        const pool = parsed.pool
+        const name = parseBytes32String(parsed.name)
+        const symbol = parseBytes32String(parsed.symbol)
+        const id = parsed.id //.toString()
 
-          return { group, pool, name, symbol, id }
-        })
-        .reverse()
-    )
+        return { group, pool, name, symbol, id }
+      })
+      .reverse()
   }, [useLogsResult])
 }
 
@@ -186,22 +151,18 @@ export function useAllPoolsData(): { data: PoolRegisteredLog[] | undefined; load
 
   // early return until events are fetched
   return useMemo(() => {
-    const formattedLogs = [...(formattedLogsV1 ?? [])]
+    //const formattedLogs = [...(formattedLogsV1 ?? [])]
 
+    // prevent display if wallet not connected
     if (!account) {
       return { data: undefined, loading: false }
     }
 
-    // in case the wallet is not connected, we return empty array not loading
-    if (registry && !formattedLogs) {
-      return { data: [], loading: false }
-    }
-
-    if (registry && !formattedLogs) {
+    if (registry && !formattedLogsV1) {
       return { data: [], loading: true }
     }
 
-    return { data: formattedLogs, loading: false }
+    return { data: formattedLogsV1, loading: false }
   }, [account, formattedLogsV1, registry])
 }
 
@@ -216,6 +177,7 @@ export function useCreateCallback(): (
 
   return useCallback(
     (name: string | undefined, symbol: string | undefined, baseCurrency: string | undefined) => {
+      // TODO: check name and symbol assertions
       //if (!provider || !chainId || !account || name === '' || symbol === '' || !isAddress(baseCurrency ?? ''))
       if (!provider || !chainId || !account || !name || !symbol || !isAddress(baseCurrency ?? '')) return undefined
       if (!factoryContract) throw new Error('No Factory Contract!')
@@ -255,31 +217,20 @@ export function useRegisteredPools(chainId: number | undefined): PoolRegisteredL
   const state = logs[chainId]?.[filterToKey(filter)]
   const result = state?.results
 
-  return (
-    result?.logs
-      ?.map((log) => {
-        const parsed = RegistryInterface.parseLog(log).args
-        return parsed
-      })
-      //.filter((p) => p.governorIndex === governorIndex)?.find((p) => p.id === id)
-      //?.filter((parsed) => indices.flat().some((i) => i === parsed.id.toNumber()))
-      // TODO: filter by pool operator, if cannot do efficient hook must query all "Pool Initialized"
-      // events, filtered by group, then map those owned, but must add pools that changed ownership
-      //.filter((parsed) => usePoolOperator(parsed.address) === operator)
-      ?.map((parsed) => {
-        // TODO: can simply pass the array from above
-        const group = parsed.group
-        const pool = parsed.pool
-        const name = parseBytes32String(parsed.name)
-        const symbol = parseBytes32String(parsed.symbol)
-        const id = parsed.id //.toString()
-        const poolData: PoolRegisteredLog = { group, pool, name, symbol, id }
+  return result?.logs
+    ?.map((log) => {
+      const parsed = RegistryInterface.parseLog(log).args
+      return parsed
+    })
+    ?.map((parsed) => {
+      const group = parsed.group
+      const pool = parsed.pool
+      const name = parseBytes32String(parsed.name)
+      const symbol = parseBytes32String(parsed.symbol)
+      const id = parsed.id //.toString()
+      const poolData: PoolRegisteredLog = { group, pool, name, symbol, id }
 
-        return poolData
-      })
-      .reverse()
-    //.then(console.log(pool))
-    // TODO: defined a constant poolOwners and parse multicall
-    // compare pool owners with account, filter by those pools that user owns
-  )
+      return poolData
+    })
+    .reverse()
 }
