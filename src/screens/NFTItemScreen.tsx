@@ -1,10 +1,11 @@
 import { ApolloQueryResult } from '@apollo/client'
+import { ThemeProvider } from '@shopify/restyle'
 import { isAddress } from 'ethers/lib/utils'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableOpacity } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import EllipsisIcon from 'src/assets/icons/ellipsis.svg'
 import ShareIcon from 'src/assets/icons/share.svg'
@@ -37,6 +38,7 @@ import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
 import { colorsDark } from 'src/styles/color'
 import { iconSizes } from 'src/styles/sizing'
+import { darkTheme } from 'src/styles/theme'
 import { areAddressesEqual } from 'src/utils/addresses'
 import {
   MIN_COLOR_CONTRAST_THRESHOLD,
@@ -50,7 +52,6 @@ export function NFTItemScreen({
     params: { owner, address, tokenId },
   },
 }: AppStackScreenProp<Screens.NFTItem>): JSX.Element {
-  const theme = useAppTheme()
   const { t } = useTranslation()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
 
@@ -114,208 +115,215 @@ export function NFTItemScreen({
   const accentTextColor = useMemo(() => {
     if (
       colorLight &&
-      passesContrast(colorLight, theme.colors.textOnDimTertiary, MIN_COLOR_CONTRAST_THRESHOLD)
+      passesContrast(colorLight, darkTheme.colors.textTertiary, MIN_COLOR_CONTRAST_THRESHOLD)
     ) {
       return colorLight
     }
-    return theme.colors.textOnBrightTertiary
-  }, [colorLight, theme])
+    return darkTheme.colors.textTertiary
+  }, [colorLight])
 
   return (
-    <Trace
-      directFromPage
-      logImpression={!!traceProperties}
-      properties={traceProperties}
-      screen={Screens.NFTItem}>
-      <ExploreModalAwareView>
-        <>
-          <BlurredImageBackground
-            backgroundColor={colorDark ?? colorsDark.background3}
-            imageUri={asset?.image?.url}
-          />
-          <HeaderScrollScreen
-            backButtonColor="textOnBrightPrimary"
-            backgroundColor="none"
-            centerElement={
-              asset?.image?.url ? (
-                <Box
-                  borderRadius="rounded8"
-                  maxHeight={theme.iconSizes.icon40}
-                  maxWidth={theme.iconSizes.icon40}
-                  ml="spacing4"
-                  overflow="hidden">
-                  <NFTViewer autoplay uri={asset.image.url} />
-                </Box>
-              ) : (
-                <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
-                  {asset?.name}
-                </Text>
-              )
-            }
-            renderedInModal={inModal}
-            rightElement={
-              menuActions.length > 0 ? (
-                onlyShare ? (
-                  <Box mr="spacing4">
-                    <TouchableOpacity onPress={menuActions[0]?.onPress}>
-                      <ShareIcon
-                        color={theme.colors.textTertiary}
-                        height={iconSizes.icon24}
-                        width={iconSizes.icon24}
-                      />
-                    </TouchableOpacity>
+    <ThemeProvider theme={darkTheme}>
+      <Trace
+        directFromPage
+        logImpression={!!traceProperties}
+        properties={traceProperties}
+        screen={Screens.NFTItem}>
+        <ExploreModalAwareView>
+          <>
+            <BlurredImageBackground
+              backgroundColor={colorDark ?? colorsDark.background3}
+              imageUri={asset?.image?.url}
+            />
+            <HeaderScrollScreen
+              backButtonColor="textOnBrightPrimary"
+              backgroundColor="none"
+              centerElement={
+                asset?.image?.url ? (
+                  <Box
+                    borderRadius="rounded8"
+                    maxHeight={darkTheme.iconSizes.icon40}
+                    maxWidth={darkTheme.iconSizes.icon40}
+                    ml="spacing4"
+                    overflow="hidden">
+                    <NFTViewer autoplay uri={asset.image.url} />
                   </Box>
                 ) : (
-                  <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
-                    <Box mr="spacing4">
-                      <EllipsisIcon
-                        color={theme.colors.textTertiary}
-                        height={iconSizes.icon16}
-                        width={iconSizes.icon16}
-                      />
-                    </Box>
-                  </ContextMenu>
-                )
-              ) : undefined
-            }>
-            {/* Content wrapper */}
-            <Flex
-              backgroundColor="none"
-              gap="spacing24"
-              mb="spacing48"
-              mt="spacing8"
-              pb="spacing48"
-              px="spacing24">
-              <Flex
-                gap="spacing12"
-                shadowColor="black"
-                shadowOffset={{ width: 0, height: 16 }}
-                shadowOpacity={0.2}
-                shadowRadius={16}>
-                <Flex centered borderRadius="rounded16" overflow="hidden">
-                  {nftLoading ? (
-                    <Box aspectRatio={1} width="100%">
-                      <Loader.Image />
-                    </Box>
-                  ) : asset?.image?.url ? (
-                    <NFTViewer autoplay uri={asset.image.url} />
-                  ) : (
-                    <Box
-                      aspectRatio={1}
-                      style={{ backgroundColor: colorsDark.background2 }}
-                      width="100%">
-                      <BaseCard.ErrorState
-                        retryButtonLabel="Retry"
-                        title={t("Couldn't load NFT details")}
-                        onRetry={(): Promise<ApolloQueryResult<NftItemScreenQuery>> => refetch?.()}
-                      />
-                    </Box>
-                  )}
-                </Flex>
-                {nftLoading ? (
-                  <Text
-                    color="textOnBrightPrimary"
-                    loading={nftLoading}
-                    loadingPlaceholderText="#0000 NFT Title"
-                    mt="spacing4"
-                    variant="subheadLarge"
-                  />
-                ) : asset?.name ? (
-                  <Text
-                    color="textOnBrightPrimary"
-                    mt="spacing4"
-                    numberOfLines={2}
-                    variant="subheadLarge">
-                    {asset.name}
+                  <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
+                    {asset?.name}
                   </Text>
-                ) : null}
-                <CollectionPreviewCard
-                  collection={asset?.collection}
-                  loading={nftLoading}
-                  onPress={onPressCollection}
-                />
-              </Flex>
-
-              {/* Description */}
-              {nftLoading ? (
-                <Box mt="spacing12">
-                  <Loader.Box
-                    height={theme.textVariants.bodySmall.lineHeight}
-                    mb="spacing4"
-                    repeat={3}
+                )
+              }
+              renderedInModal={inModal}
+              rightElement={
+                menuActions.length > 0 ? (
+                  onlyShare ? (
+                    <Box mr="spacing4">
+                      <TouchableOpacity onPress={menuActions[0]?.onPress}>
+                        <ShareIcon
+                          color={darkTheme.colors.textPrimary}
+                          height={iconSizes.icon24}
+                          width={iconSizes.icon24}
+                        />
+                      </TouchableOpacity>
+                    </Box>
+                  ) : (
+                    <ContextMenu
+                      dropdownMenuMode
+                      actions={menuActions}
+                      onPress={onContextMenuPress}>
+                      <Box mr="spacing4">
+                        <EllipsisIcon
+                          color={darkTheme.colors.textPrimary}
+                          height={iconSizes.icon16}
+                          width={iconSizes.icon16}
+                        />
+                      </Box>
+                    </ContextMenu>
+                  )
+                ) : undefined
+              }>
+              {/* Content wrapper */}
+              <Flex
+                backgroundColor="none"
+                gap="spacing24"
+                mb="spacing48"
+                mt="spacing8"
+                pb="spacing48"
+                px="spacing24">
+                <Flex
+                  gap="spacing12"
+                  shadowColor="black"
+                  shadowOffset={{ width: 0, height: 16 }}
+                  shadowOpacity={0.2}
+                  shadowRadius={16}>
+                  <Flex centered borderRadius="rounded16" overflow="hidden">
+                    {nftLoading ? (
+                      <Box aspectRatio={1} width="100%">
+                        <Loader.Image />
+                      </Box>
+                    ) : asset?.image?.url ? (
+                      <NFTViewer autoplay uri={asset.image.url} />
+                    ) : (
+                      <Box
+                        aspectRatio={1}
+                        style={{ backgroundColor: colorsDark.background2 }}
+                        width="100%">
+                        <BaseCard.ErrorState
+                          retryButtonLabel="Retry"
+                          title={t("Couldn't load NFT details")}
+                          onRetry={(): Promise<ApolloQueryResult<NftItemScreenQuery>> =>
+                            refetch?.()
+                          }
+                        />
+                      </Box>
+                    )}
+                  </Flex>
+                  {nftLoading ? (
+                    <Text
+                      color="textOnBrightPrimary"
+                      loading={nftLoading}
+                      loadingPlaceholderText="#0000 NFT Title"
+                      mt="spacing4"
+                      variant="subheadLarge"
+                    />
+                  ) : asset?.name ? (
+                    <Text
+                      color="textOnBrightPrimary"
+                      mt="spacing4"
+                      numberOfLines={2}
+                      variant="subheadLarge">
+                      {asset.name}
+                    </Text>
+                  ) : null}
+                  <CollectionPreviewCard
+                    collection={asset?.collection}
+                    loading={nftLoading}
+                    onPress={onPressCollection}
                   />
-                </Box>
-              ) : asset?.description ? (
-                <LongText
-                  renderAsMarkdown
-                  color={theme.colors.textOnBrightPrimary}
-                  initialDisplayedLines={3}
-                  readMoreOrLessColor={accentTextColor}
-                  text={asset?.description || '-'}
-                />
-              ) : null}
+                </Flex>
 
-              {/* Metadata */}
-              <Flex gap="spacing12">
-                {lastSaleData?.price?.value ? (
-                  <AssetMetadata
-                    title={t('Last sale price')}
-                    valueComponent={
-                      lastSaleData.price.currency === Currency.Eth ? (
-                        <Flex row alignItems="center" gap="spacing2">
-                          <Text
-                            color="textOnBrightPrimary"
-                            variant="buttonLabelSmall">{`${formatNumber(
-                            lastSaleData.price.value,
-                            NumberType.NFTTokenFloorPrice
-                          )}`}</Text>
-                          <EthereumLogo color={theme.colors.textOnBrightPrimary} />
-                        </Flex>
-                      ) : (
-                        <Flex row alignItems="center" gap="spacing2">
-                          <Text variant="buttonLabelSmall">
-                            $
-                            {`${formatNumber(
+                {/* Description */}
+                {nftLoading ? (
+                  <Box mt="spacing12">
+                    <Loader.Box
+                      height={darkTheme.textVariants.bodySmall.lineHeight}
+                      mb="spacing4"
+                      repeat={3}
+                    />
+                  </Box>
+                ) : asset?.description ? (
+                  <LongText
+                    renderAsMarkdown
+                    color={darkTheme.colors.textPrimary}
+                    initialDisplayedLines={3}
+                    readMoreOrLessColor={accentTextColor}
+                    text={asset?.description || '-'}
+                  />
+                ) : null}
+
+                {/* Metadata */}
+                <Flex gap="spacing12">
+                  {lastSaleData?.price?.value ? (
+                    <AssetMetadata
+                      title={t('Last sale price')}
+                      valueComponent={
+                        lastSaleData.price.currency === Currency.Eth ? (
+                          <Flex row alignItems="center" gap="spacing2">
+                            <Text
+                              color="textOnBrightPrimary"
+                              variant="buttonLabelSmall">{`${formatNumber(
                               lastSaleData.price.value,
                               NumberType.NFTTokenFloorPrice
-                            )} `}
-                          </Text>
-                        </Flex>
-                      )
+                            )}`}</Text>
+                            <EthereumLogo color={darkTheme.colors.textPrimary} />
+                          </Flex>
+                        ) : (
+                          <Flex row alignItems="center" gap="spacing2">
+                            <Text variant="buttonLabelSmall">
+                              $
+                              {`${formatNumber(
+                                lastSaleData.price.value,
+                                NumberType.NFTTokenFloorPrice
+                              )} `}
+                            </Text>
+                          </Flex>
+                        )
+                      }
+                    />
+                  ) : null}
+                  <AssetMetadata
+                    title={t('Owned by')}
+                    valueComponent={
+                      <TouchableArea disabled={disableProfileNavigation} onPress={onPressOwner}>
+                        <AddressDisplay
+                          address={owner}
+                          hideAddressInSubtitle={true}
+                          horizontalGap="spacing4"
+                          size={darkTheme.iconSizes.icon20}
+                          textColor="textOnBrightPrimary"
+                          variant="buttonLabelSmall"
+                        />
+                      </TouchableArea>
                     }
                   />
-                ) : null}
-                <AssetMetadata
-                  title={t('Owned by')}
-                  valueComponent={
-                    <TouchableArea disabled={disableProfileNavigation} onPress={onPressOwner}>
-                      <AddressDisplay
-                        address={owner}
-                        hideAddressInSubtitle={true}
-                        horizontalGap="spacing4"
-                        size={theme.iconSizes.icon20}
-                        textColor="textOnBrightPrimary"
-                        variant="buttonLabelSmall"
-                      />
-                    </TouchableArea>
-                  }
-                />
-              </Flex>
-
-              {/* Traits */}
-              {asset?.traits && asset?.traits?.length > 0 ? (
-                <Flex gap="spacing12">
-                  <Text color="textOnBrightPrimary" variant="buttonLabelSmall">
-                    {t('Traits')}
-                  </Text>
-                  <NFTTraitList titleTextColor={accentTextColor} traits={asset.traits} />
                 </Flex>
-              ) : null}
-            </Flex>
-          </HeaderScrollScreen>
-        </>
-      </ExploreModalAwareView>
-    </Trace>
+
+                {/* Traits */}
+                {asset?.traits && asset?.traits?.length > 0 ? (
+                  <Flex gap="spacing12">
+                    <Text color="textOnBrightPrimary" variant="buttonLabelSmall">
+                      {t('Traits')}
+                    </Text>
+                    <NFTTraitList titleTextColor={accentTextColor} traits={asset.traits} />
+                  </Flex>
+                ) : null}
+              </Flex>
+            </HeaderScrollScreen>
+          </>
+        </ExploreModalAwareView>
+      </Trace>
+    </ThemeProvider>
   )
 }
 
