@@ -61,10 +61,18 @@ export function useENSRegistrarContract(withSignerIfPossible?: boolean): Contrac
       case ChainId.ROPSTEN:
       case ChainId.RINKEBY:
         address = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
-
         break
       case ChainId.SEPOLIA:
         address = '0x457f57fEF8c189EB688f27A7E0674dc610810897'
+        break
+      case ChainId.HARDHAT:
+        address = '0xf9D9e38B6343aA99EB0d9bF832a61f3111B53Eb0'
+        break
+      case ChainId.TAIKO:
+        address = '0xf9D9e38B6343aA99EB0d9bF832a61f3111B53Eb0'
+        break
+      case ChainId.TAIKO_INTERNAL_1:
+        address = '0xf9D9e38B6343aA99EB0d9bF832a61f3111B53Eb0'
         break
     }
   }

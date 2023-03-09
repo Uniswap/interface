@@ -1,5 +1,3 @@
-import useENS from '../../hooks/useENS'
-import { Version } from '../../hooks/useToggledVersion'
 import { parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@uniswap/sdk'
 import { ParsedQs } from 'qs'
@@ -9,15 +7,16 @@ import { useV1Trade } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
+import useENS from '../../hooks/useENS'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
+import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { isAddress } from '../../utils'
+import { computeSlippageAdjustedAmounts } from '../../utils/prices'
 import { AppDispatch, AppState } from '../index'
+import { useUserSlippageTolerance } from '../user/hooks'
 import { useCurrencyBalances } from '../wallet/hooks'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { SwapState } from './reducer'
-import useToggledVersion from '../../hooks/useToggledVersion'
-import { useUserSlippageTolerance } from '../user/hooks'
-import { computeSlippageAdjustedAmounts } from '../../utils/prices'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -89,9 +88,9 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
 }
 
 const BAD_RECIPIENT_ADDRESSES: string[] = [
-  '0xb75dF9841B3BACe732C558A495a8AA5F914bd3F5', // v2 factory
-  '0xaA60271e6590A7aD9E4E190e232586Ad1C3d0bbE', // v2 router 01
-  '0xf0cC3752BDE1B65bd32B925b1a672396BF26B77e' // v2 router 02
+  '0xBfd71D0343eb812364fbE911A0E6095Ce284E023', // v2 factory
+  '0xed290dAfA7b8E20a66DF47A59007CEa2CC23A337', // v2 router 01
+  '0x46F081caE310F964dE1e01269cC85a998634c115' // v2 router 02
 ]
 
 /**

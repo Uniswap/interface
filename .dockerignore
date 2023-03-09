@@ -1,0 +1,8 @@
+artifacts
+cache
+node_modules
+test
+*.log
+.git
+npm-debug.log
+Dockerfile
