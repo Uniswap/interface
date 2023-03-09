@@ -10,6 +10,7 @@ import { Z_INDEX } from 'theme/zIndex'
 
 import DefaultMenu from './DefaultMenu'
 
+const DRAWER_WIDTH_XL = '390px'
 const DRAWER_WIDTH = '320px'
 const DRAWER_MARGIN = '8px'
 const DRAWER_TOP_MARGIN_MOBILE_WEB = '72px'
@@ -87,6 +88,11 @@ const WalletDropdownWrapper = styled.div<{ open: boolean }>`
     box-shadow: unset;
   }
 
+  @media screen and (min-width: 1440px) {
+    right: ${({ open }) => (open ? DRAWER_MARGIN : '-' + DRAWER_WIDTH_XL)};
+    width: ${DRAWER_WIDTH_XL};
+  }
+
   border-radius: 12px;
   width: ${DRAWER_WIDTH};
   font-size: 16px;
@@ -108,6 +114,10 @@ const CloseDrawer = styled(ChevronsRight).attrs({ size: 24 })`
   z-index: ${Z_INDEX.dropdown};
   stroke: ${({ theme }) => theme.textSecondary};
   cursor: pointer;
+
+  @media screen and (min-width: 1440px) {
+    right: calc(${DRAWER_MARGIN} + ${DRAWER_WIDTH_XL} + ${CLOSE_ICON_OFFSET});
+  }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     display: none;

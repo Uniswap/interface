@@ -125,7 +125,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
           </Box>
           <Box className={styles.rightSideContainer}>
             <Row gap="12">
-              <Box position="relative" display={{ sm: 'flex', xl: 'none' }}>
+              <Box position="relative" display={{ sm: 'flex', navSearchInputVisible: 'none' }}>
                 <SearchBar />
               </Box>
               <Box display={{ sm: 'none', lg: 'flex' }}>

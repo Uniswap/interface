@@ -109,7 +109,7 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{
 const AddressAndChevronContainer = styled.div`
   display: flex;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.navSearchInputVisible}px`}) {
     display: none;
   }
 `
