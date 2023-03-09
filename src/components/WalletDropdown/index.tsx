@@ -13,6 +13,7 @@ import DefaultMenu from './DefaultMenu'
 const DRAWER_WIDTH_XL = '390px'
 const DRAWER_WIDTH = '320px'
 const DRAWER_MARGIN = '8px'
+const DRAWER_OFFSET = '10px'
 const DRAWER_TOP_MARGIN_MOBILE_WEB = '72px'
 
 const walletDrawerOpenAtom = atom(false)
@@ -105,31 +106,62 @@ const WalletDropdownWrapper = styled.div<{ open: boolean }>`
     bottom ${({ theme }) => theme.transition.duration.medium};
 `
 
-const CLOSE_ICON_OFFSET = '16px'
-const CloseDrawer = styled(ChevronsRight).attrs({ size: 24 })`
-  ${ClickableStyle}
-  position: fixed;
-  top: 24px;
-  right: calc(${DRAWER_MARGIN} + ${DRAWER_WIDTH} + ${CLOSE_ICON_OFFSET});
-  z-index: ${Z_INDEX.dropdown};
+const CloseIcon = styled(ChevronsRight).attrs({ size: 24 })`
   stroke: ${({ theme }) => theme.textSecondary};
+`
+
+const CloseDrawer = styled.div`
+  ${ClickableStyle}
   cursor: pointer;
-
-  @media screen and (min-width: 1440px) {
-    right: calc(${DRAWER_MARGIN} + ${DRAWER_WIDTH_XL} + ${CLOSE_ICON_OFFSET});
+  height: calc(100% - 2 * ${DRAWER_MARGIN});
+  /* width: 50px; */
+  position: fixed;
+  right: calc(${DRAWER_MARGIN} + ${DRAWER_WIDTH} - ${DRAWER_OFFSET});
+  top: ${DRAWER_MARGIN};
+  z-index: ${Z_INDEX.dropdown};
+  // When the drawer is not hovered, the icon should be 18px from the edge of the sidebar.
+  padding: 24px calc(18px + ${DRAWER_OFFSET}) 24px 14px;
+  border-radius: 20px 0 0 20px;
+  transition: ${({ theme }) =>
+    `${theme.transition.duration.medium} ${theme.transition.timing.ease} background-color, ${theme.transition.duration.medium} ${theme.transition.timing.ease} margin`};
+  &:hover {
+    margin: 0 -4px 0 0;
+    background-color: ${({ theme }) => theme.stateOverlayHover}};
   }
-
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     display: none;
+  }
+  @media screen and (min-width: 1440px) {
+    right: calc(${DRAWER_MARGIN} + ${DRAWER_WIDTH_XL} + ${DRAWER_OFFSET});
   }
 `
 
 function WalletDropdown() {
   const [walletDrawerOpen, toggleWalletDrawer] = useWalletDrawer()
 
+  // close on escape keypress
+  useEffect(() => {
+    const escapeKeyDownHandler = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && walletDrawerOpen) {
+        event.preventDefault()
+        toggleWalletDrawer()
+      }
+    }
+
+    document.addEventListener('keydown', escapeKeyDownHandler)
+
+    return () => {
+      document.removeEventListener('keydown', escapeKeyDownHandler)
+    }
+  }, [walletDrawerOpen, toggleWalletDrawer])
+
   return (
     <>
-      {walletDrawerOpen && <CloseDrawer onClick={toggleWalletDrawer} />}
+      {walletDrawerOpen && (
+        <CloseDrawer onClick={toggleWalletDrawer}>
+          <CloseIcon />
+        </CloseDrawer>
+      )}
       <Scrim onClick={toggleWalletDrawer} open={walletDrawerOpen} />
       {/* id used for child InfiniteScrolls to reference when it has reached the bottom of the component */}
       <WalletDropdownWrapper open={walletDrawerOpen} id="wallet-dropdown-wrapper">

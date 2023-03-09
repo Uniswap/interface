@@ -13,6 +13,8 @@ const SegmentWrapper = styled(AutoRow)<{ active?: boolean }>`
   overflow: hidden;
   white-space: nowrap;
 
+  cursor: pointer;
+
   border-radius: 12px;
   padding: 6px;
   color: ${({ theme }) => theme.textSecondary};
