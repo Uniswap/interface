@@ -157,14 +157,11 @@ export interface GlobalPalette {
   slate800: string
   slate900: string
   slateVibrant: string
-  networkEthereum: string
-  networkEthereumSoft: string
+  networkDarkEthereum: string
+  networkLightEthereum: string
   networkOptimism: string
-  networkOptimismSoft: string
   networkPolygon: string
-  networkPolygonSoft: string
   networkArbitrum: string
-  networkArbitrumSoft: string
 }
 
 export const colors: GlobalPalette = {
@@ -320,14 +317,11 @@ export const colors: GlobalPalette = {
   slate800: '#181B18',
   slate900: '#0F120E',
   slateVibrant: '#7E887D',
-  networkEthereum: '#393939',
-  networkEthereumSoft: opacify(12, '#393939'),
+  networkLightEthereum: '#393939',
+  networkDarkEthereum: '#e6e6e6',
   networkOptimism: '#FA2B39',
-  networkOptimismSoft: opacify(12, '#FA2B39'),
   networkPolygon: '#a26af3',
-  networkPolygonSoft: opacify(12, '#A26AF3'),
   networkArbitrum: '#28A0F0',
-  networkArbitrumSoft: opacify(12, '#28A0F0'),
 }
 
 export interface Palette {
@@ -449,7 +443,7 @@ export const colorsLight: Palette = {
   magentaVibrant: colors.magentaVibrant,
   magentaDark: opacify(12, colors.magentaVibrant),
 
-  chain_1: colors.networkEthereum,
+  chain_1: colors.networkLightEthereum,
   chain_3: colors.yellow400,
   chain_4: colors.pink400,
   chain_5: colors.green400,
@@ -514,7 +508,7 @@ export const colorsDark: Palette = {
   magentaVibrant: colors.magentaVibrant,
   magentaDark: opacify(12, colors.magentaVibrant),
 
-  chain_1: colors.networkEthereum,
+  chain_1: colors.networkDarkEthereum,
   chain_3: colors.yellow400,
   chain_4: colors.pink400,
   chain_5: colors.green400,
