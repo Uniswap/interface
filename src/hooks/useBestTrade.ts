@@ -38,7 +38,7 @@ export function useBestTrade(
 
   const wethContract = useWETHContract()
   const isAWrapTransaction = useMemo(() => {
-    if (!wethContract || !chainId || !amountSpecified || !debouncedOtherCurrency) return undefined
+    if (!wethContract || !chainId || !amountSpecified || !debouncedOtherCurrency) return false
     const weth = chainId ? WRAPPED_NATIVE_CURRENCY[chainId] : undefined
     return (
       (amountSpecified.currency.isNative && weth?.equals(debouncedOtherCurrency)) ||
