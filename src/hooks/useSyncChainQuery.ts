@@ -52,10 +52,11 @@ export default function useSyncChainQuery() {
   return useEffect(() => {
     if (nextChainId && isActive) {
       // If the query param changed, and the chain didn't change, then activate the new chain
-      selectChain(nextChainId)
-      searchParams.delete('chain')
-      setSearchParams(searchParams)
-      setNextChainId(undefined)
+      selectChain(nextChainId).then(() => {
+        searchParams.delete('chain')
+        setSearchParams(searchParams)
+        setNextChainId(undefined)
+      })
     }
   }, [nextChainId, urlChainId, selectChain, searchParams, setSearchParams, isActive])
 }
