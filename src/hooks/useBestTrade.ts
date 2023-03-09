@@ -9,7 +9,6 @@ import { useClientSideRouter } from 'state/user/hooks'
 
 import useAutoRouterSupported from './useAutoRouterSupported'
 import { useClientSideV3Trade } from './useClientSideV3Trade'
-import { useWETHContract } from './useContract'
 import useDebounce from './useDebounce'
 import useIsWindowVisible from './useIsWindowVisible'
 
@@ -36,15 +35,14 @@ export function useBestTrade(
     200
   )
 
-  const wethContract = useWETHContract()
   const isAWrapTransaction = useMemo(() => {
-    if (!wethContract || !chainId || !amountSpecified || !debouncedOtherCurrency) return false
-    const weth = chainId ? WRAPPED_NATIVE_CURRENCY[chainId] : undefined
+    if (!chainId || !amountSpecified || !debouncedOtherCurrency) return false
+    const weth = WRAPPED_NATIVE_CURRENCY[chainId]
     return (
       (amountSpecified.currency.isNative && weth?.equals(debouncedOtherCurrency)) ||
       (debouncedOtherCurrency.isNative && weth?.equals(amountSpecified.currency))
     )
-  }, [amountSpecified, chainId, debouncedOtherCurrency, wethContract])
+  }, [amountSpecified, chainId, debouncedOtherCurrency])
 
   const shouldGetTrade = !isAWrapTransaction && isWindowVisible
 
