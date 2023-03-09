@@ -71,9 +71,20 @@ export const PageTabs = () => {
       <MenuItem dataTestId="nft-nav" href="/nfts" isActive={isNftPage}>
         <Trans>NFTs</Trans>
       </MenuItem>
+<<<<<<< HEAD
       <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
         <Trans>Pools</Trans>
       </MenuItem>
+=======
+      <Box display={{ sm: 'flex', lg: 'none', xxl: 'flex' }} width="full">
+        <MenuItem href="/pool" dataTestId="pool-nav-link" isActive={isPoolActive}>
+          <Trans>Pool</Trans>
+        </MenuItem>
+      </Box>
+      <Box marginY={{ sm: '4', md: 'unset' }}>
+        <MenuDropdown />
+      </Box>
+>>>>>>> c4c2ff058 (feat: nav bar MenuDropdown updates (#107))
       {micrositeEnabled && (
         <Box display={{ sm: 'none', md: 'flex', xl: 'none', xxl: 'flex' }}>
           <MenuItem href="/wallet" isActive={pathname.startsWith('/wallet')}>
@@ -127,9 +138,6 @@ const Navbar = ({ blur }: { blur: boolean }) => {
             <Row gap="12">
               <Box position="relative" display={{ sm: 'flex', navSearchInputVisible: 'none' }}>
                 <SearchBar />
-              </Box>
-              <Box display={{ sm: 'none', lg: 'flex' }}>
-                <MenuDropdown />
               </Box>
               {isNftPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}
               {!isNftPage && (
