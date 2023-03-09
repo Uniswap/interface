@@ -54,7 +54,7 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://docs.avax.network/quickstart/fuji-workflow',
     explorer: 'https://testnet.snowtrace.io/',
     infoLink: '',
-    label: 'TEvmos',
+    label: 'Test Evmos',
     logoUrl: 'https://raw.githubusercontent.com/cosmos/chain-registry/master/evmos/images/evmos.png',
     circleLogoUrl: 'https://raw.githubusercontent.com/cosmos/chain-registry/master/evmos/images/evmos.png',
     nativeCurrency: { name: 'Test Evmos', symbol: 'TEVMOS', decimals: 18 },

@@ -57,7 +57,7 @@ export function isPricePoint(p: PricePoint | null): p is PricePoint {
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.MAINNET]: Chain.Evmos,
   [SupportedChainId.FUJI]: Chain.Fuji,
-  [SupportedChainId.TESTNET]: Chain.TEvmos,
+  [SupportedChainId.TESTNET]: Chain.Tevmos,
 }
 
 export function chainIdToBackendName(chainId: number | undefined) {
@@ -69,7 +69,7 @@ export function chainIdToBackendName(chainId: number | undefined) {
 const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
   evmos: Chain.Evmos,
   fuji: Chain.Fuji,
-  tevmos: Chain.TEvmos,
+  tevmos: Chain.Tevmos,
 }
 
 export function validateUrlChainParam(chainName: string | undefined) {
@@ -82,7 +82,7 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key: string]: SupportedChainId } = {
   TEVMOS: SupportedChainId.TESTNET,
 }
 
-export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Evmos, Chain.Fuji, Chain.TEvmos]
+export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Evmos, Chain.Fuji, Chain.Tevmos]
 
 export function getTokenDetailsURL({ address, chain }: { address?: string | null; chain: Chain }) {
   return `/tokens/${chain.toLowerCase()}/${address ?? NATIVE_CHAIN_ID}`

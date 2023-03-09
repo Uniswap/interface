@@ -6,7 +6,7 @@ export function getNativeTokenDBAddress(chain: Chain): string | undefined {
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   switch (chain) {
     case Chain.Evmos:
-    case Chain.TEvmos:
+    case Chain.Tevmos:
     case Chain.Fuji:
       return nativeOnChain(pageChainId).wrapped.address
     default:
