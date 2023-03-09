@@ -2,7 +2,7 @@ import gql from 'graphql-tag'
 
 gql`
   query NftRoute(
-    $chain: Chain = ETHEREUM
+    $chain: Chain = EVMOS
     $senderAddress: String!
     $nftTrades: [NftTradeInput!]!
     $tokenTrades: [TokenTradeInput!]

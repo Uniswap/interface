@@ -8,8 +8,6 @@
 /src/locales/**/en-US.po
 /src/locales/**/pseudo.po
 
-# generated graphql types
-schema.graphql
 
 # dependencies
 /node_modules

@@ -77,9 +77,9 @@ export type AssetActivity = {
 export type AssetChange = NftApproval | NftApproveForAll | NftTransfer | TokenApproval | TokenTransfer;
 
 export enum Chain {
-  Fuji = 'FUJI',
   Evmos = 'EVMOS',
-  TEvmos = 'TEvmos',
+  Fuji = 'FUJI',
+  Tevmos = 'TEVMOS',
   UnknownChain = 'UNKNOWN_CHAIN'
 }
 
@@ -2048,7 +2048,7 @@ export type NftBalanceQueryHookResult = ReturnType<typeof useNftBalanceQuery>;
 export type NftBalanceLazyQueryHookResult = ReturnType<typeof useNftBalanceLazyQuery>;
 export type NftBalanceQueryResult = Apollo.QueryResult<NftBalanceQuery, NftBalanceQueryVariables>;
 export const NftRouteDocument = gql`
-    query NftRoute($chain: Chain = ETHEREUM, $senderAddress: String!, $nftTrades: [NftTradeInput!]!, $tokenTrades: [TokenTradeInput!]) {
+    query NftRoute($chain: Chain = EVMOS, $senderAddress: String!, $nftTrades: [NftTradeInput!]!, $tokenTrades: [TokenTradeInput!]) {
   nftRoute(
     chain: $chain
     senderAddress: $senderAddress
