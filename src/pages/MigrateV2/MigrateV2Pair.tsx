@@ -347,6 +347,7 @@ function V2PairMigration({
               baseCurrencyId: currencyId(currency0),
               quoteCurrencyId: currencyId(currency1),
               isFork: isNotUniswap,
+              deadline: deadlineToUse,
             })
             setPendingMigrationHash(response.hash)
           })

@@ -1,4 +1,4 @@
-import { BigNumber } from '@ethersproject/bignumber'
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
@@ -167,9 +167,11 @@ export default function RemoveLiquidity() {
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
+    let deadlineToUse: BigNumberish
     let methodNames: string[], args: Array<string | string[] | number | boolean>
     // we have approval, use normal remove liquidity
     if (approval === ApprovalState.APPROVED) {
+      deadlineToUse = deadline
       // removeLiquidityETH
       if (oneCurrencyIsETH) {
         methodNames = ['removeLiquidityETH', 'removeLiquidityETHSupportingFeeOnTransferTokens']
@@ -198,6 +200,7 @@ export default function RemoveLiquidity() {
     }
     // we have a signature, use permit versions of remove liquidity
     else if (signatureData !== null) {
+      deadlineToUse = signatureData.deadline
       // removeLiquidityETHWithPermit
       if (oneCurrencyIsETH) {
         methodNames = ['removeLiquidityETHWithPermit', 'removeLiquidityETHWithPermitSupportingFeeOnTransferTokens']
@@ -270,6 +273,7 @@ export default function RemoveLiquidity() {
             quoteCurrencyId: currencyId(currencyB),
             expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient.toString() ?? '0',
             expectedAmountQuoteRaw: parsedAmounts[Field.CURRENCY_B]?.quotient.toString() ?? '0',
+            deadline: deadlineToUse,
           })
 
           setTxHash(response.hash)
