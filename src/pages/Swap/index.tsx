@@ -333,11 +333,14 @@ export default function Swap({ className }: { className?: string }) {
     [currencyBalances]
   )
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
+  const swapFiatValues = useMemo(() => {
+    return { amountIn: fiatValueTradeInput, amountOut: fiatValueTradeOutput }
+  }, [fiatValueTradeInput, fiatValueTradeOutput])
 
   // the callback to execute the swap
   const { callback: swapCallback } = useSwapCallback(
     trade,
-    { amountIn: fiatValueTradeInput, amountOut: fiatValueTradeOutput },
+    swapFiatValues,
     allowedSlippage,
     allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined
   )

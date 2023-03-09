@@ -67,7 +67,7 @@ export function useUniversalRouterSwapCallback(
         .then((response) => {
           sendAnalyticsEvent(
             SwapEventName.SWAP_SIGNED,
-            formatSwapSignedAnalyticsEventProperties({ trade, txHash: response.hash })
+            formatSwapSignedAnalyticsEventProperties({ trade, fiatValues, txHash: response.hash })
           )
           if (tx.data !== response.data) {
             sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, { txHash: response.hash })
@@ -85,6 +85,7 @@ export function useUniversalRouterSwapCallback(
   }, [
     account,
     chainId,
+    fiatValues,
     options.deadline,
     options.feeOptions,
     options.permit,
