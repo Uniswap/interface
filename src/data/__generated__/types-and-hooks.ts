@@ -1040,7 +1040,7 @@ export type NftCollectionScreenQueryVariables = Exact<{
 }>;
 
 
-export type NftCollectionScreenQuery = { __typename?: 'Query', nftCollections?: { __typename?: 'NftCollectionConnection', edges: Array<{ __typename?: 'NftCollectionEdge', node: { __typename?: 'NftCollection', id: string, isVerified?: boolean | null, numAssets?: number | null, description?: string | null, homepageUrl?: string | null, twitterName?: string | null, name?: string | null, bannerImage?: { __typename?: 'Image', id: string, url: string } | null, image?: { __typename?: 'Image', id: string, url: string } | null, markets?: Array<{ __typename?: 'NftCollectionMarket', id: string, owners?: number | null, floorPrice?: { __typename?: 'TimestampedAmount', id: string, value: number } | null, volume24h?: { __typename?: 'Amount', id: string, value: number } | null, totalVolume?: { __typename?: 'TimestampedAmount', id: string, value: number } | null }> | null } }> } | null, nftAssets?: { __typename?: 'NftAssetConnection', edges: Array<{ __typename?: 'NftAssetEdge', node: { __typename?: 'NftAsset', ownerAddress?: string | null, id: string, name?: string | null, tokenId: string, nftContract?: { __typename?: 'NftContract', id: string, address: string } | null, collection?: { __typename?: 'NftCollection', id: string, collectionId: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, url: string, dimensions?: { __typename?: 'Dimensions', id: string, width?: number | null, height?: number | null } | null } | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null, hasPreviousPage?: boolean | null, startCursor?: string | null } } | null };
+export type NftCollectionScreenQuery = { __typename?: 'Query', nftCollections?: { __typename?: 'NftCollectionConnection', edges: Array<{ __typename?: 'NftCollectionEdge', node: { __typename?: 'NftCollection', id: string, isVerified?: boolean | null, numAssets?: number | null, description?: string | null, homepageUrl?: string | null, twitterName?: string | null, name?: string | null, bannerImage?: { __typename?: 'Image', id: string, url: string } | null, image?: { __typename?: 'Image', id: string, url: string } | null, markets?: Array<{ __typename?: 'NftCollectionMarket', id: string, owners?: number | null, floorPrice?: { __typename?: 'TimestampedAmount', id: string, value: number } | null, volume24h?: { __typename?: 'Amount', id: string, value: number } | null, totalVolume?: { __typename?: 'TimestampedAmount', id: string, value: number } | null }> | null } }> } | null, nftAssets?: { __typename?: 'NftAssetConnection', edges: Array<{ __typename?: 'NftAssetEdge', node: { __typename?: 'NftAsset', ownerAddress?: string | null, id: string, name?: string | null, tokenId: string, nftContract?: { __typename?: 'NftContract', id: string, address: string } | null, collection?: { __typename?: 'NftCollection', id: string, collectionId: string, name?: string | null } | null, image?: { __typename?: 'Image', id: string, url: string, dimensions?: { __typename?: 'Dimensions', id: string, width?: number | null, height?: number | null } | null } | null, listings?: { __typename?: 'NftOrderConnection', edges: Array<{ __typename?: 'NftOrderEdge', node: { __typename?: 'NftOrder', id: string, price: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } } }> } | null } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage?: boolean | null, hasPreviousPage?: boolean | null, startCursor?: string | null } } | null };
 
 export type NftsTabQueryVariables = Exact<{
   ownerAddress: Scalars['String'];
@@ -1584,7 +1584,13 @@ export const NftCollectionScreenDocument = gql`
       }
     }
   }
-  nftAssets(address: $contractAddress, first: $first, after: $after) {
+  nftAssets(
+    address: $contractAddress
+    first: $first
+    after: $after
+    orderBy: PRICE
+    asc: true
+  ) {
     edges {
       node {
         ownerAddress
@@ -1607,6 +1613,18 @@ export const NftCollectionScreenDocument = gql`
             id
             width
             height
+          }
+        }
+        listings(first: 1) {
+          edges {
+            node {
+              id
+              price {
+                id
+                currency
+                value
+              }
+            }
           }
         }
       }

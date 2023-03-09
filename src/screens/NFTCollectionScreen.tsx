@@ -22,6 +22,7 @@ import {
   NftCollectionScreenQuery,
   useNftCollectionScreenQuery,
 } from 'src/data/__generated__/types-and-hooks'
+import { ListPriceCard } from 'src/features/nfts/collection/ListPriceCard'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
 import {
   NFTCollectionHeader,
@@ -63,6 +64,7 @@ function gqlNFTAssetToNFTItem(data: NftCollectionScreenQuery | undefined): NFTIt
         item?.image?.dimensions?.height && item?.image?.dimensions?.width
           ? { width: item.image.dimensions.width, height: item.image.dimensions.height }
           : undefined,
+      listPrice: item?.listings?.edges?.[0]?.node?.price ?? undefined,
     }
   })
 }
@@ -167,6 +169,14 @@ export function NFTCollectionScreen({
               placeholderContent={item.name || item.collectionName}
               uri={item.imageUrl}
             />
+            {item.listPrice && (
+              <ListPriceCard
+                bottom={theme.spacing.spacing4}
+                position="absolute"
+                price={item.listPrice}
+                right={theme.spacing.spacing4}
+              />
+            )}
           </TouchableArea>
         )}
       </Box>

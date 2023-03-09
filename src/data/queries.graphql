@@ -181,7 +181,13 @@ query NftCollectionScreen(
       }
     }
   }
-  nftAssets(address: $contractAddress, first: $first, after: $after) {
+  nftAssets(
+    address: $contractAddress
+    first: $first
+    after: $after
+    orderBy: PRICE
+    asc: true
+  ) {
     edges {
       node {
         ownerAddress
@@ -204,6 +210,18 @@ query NftCollectionScreen(
             id
             width
             height
+          }
+        }
+        listings(first: 1) {
+          edges {
+            node {
+              id
+              price {
+                id
+                currency
+                value
+              }
+            }
           }
         }
       }

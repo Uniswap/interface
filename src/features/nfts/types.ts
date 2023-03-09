@@ -1,3 +1,5 @@
+import { Amount } from 'src/data/__generated__/types-and-hooks'
+
 export type NFTItem = {
   name?: string
   description?: string
@@ -9,4 +11,5 @@ export type NFTItem = {
   isVerifiedCollection?: boolean
   floorPrice?: number
   ownerAddress?: string
+  listPrice?: Amount
 }
