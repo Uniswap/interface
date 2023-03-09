@@ -11,6 +11,7 @@ import { Box } from 'nft/components/Box'
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
+import StatsigJS from 'statsig-js'
 import { StatsigProvider, StatsigUser } from 'statsig-react'
 import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
@@ -127,6 +128,8 @@ const LazyLoadSpinner = () => (
     />
   </SpinnerSVG>
 )
+
+StatsigJS.encodeIntializeCall = false
 
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()

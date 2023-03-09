@@ -18002,6 +18002,14 @@ statsig-js@^4.28.1:
     uuid "^8.3.2"
     whatwg-fetch "^3.6.2"
 
+statsig-js@^4.30.1:
+  version "4.30.1"
+  resolved "https://registry.yarnpkg.com/statsig-js/-/statsig-js-4.30.1.tgz#468de8ca6702f4f44753b999671e4f47660bf0f3"
+  integrity sha512-nm5i9t6qYg4GZdzYjOftoOs2RTAWdHjEyqP5+SQsQGNBl4SpVpnS5qfbbN1U4v0PmoRGzXMxIOTZ1RSrCtJOxw==
+  dependencies:
+    js-sha256 "^0.9.0"
+    uuid "^8.3.2"
+
 statsig-react@^1.22.0:
   version "1.22.0"
   resolved "https://registry.yarnpkg.com/statsig-react/-/statsig-react-1.22.0.tgz#3f4f1498dc78bba53d80d6eb4c9d507b2a3c16e5"
