@@ -1,43 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query/react'
-import multicall from 'lib/state/multicall'
 import { load, save } from 'redux-localstorage-simple'
 import { isTestEnv } from 'utils/env'
 
-import application from './application/reducer'
-import burn from './burn/reducer'
-import burnV3 from './burn/v3/reducer'
-import connection from './connection/reducer'
 import { updateVersion } from './global/actions'
-import lists from './lists/reducer'
-import logs from './logs/slice'
-import mint from './mint/reducer'
-import mintV3 from './mint/v3/reducer'
+import { sentryEnhancer } from './logging'
+import reducer from './reducer'
 import { routingApi } from './routing/slice'
-import swap from './swap/reducer'
-import transactions from './transactions/reducer'
-import user from './user/reducer'
-import wallets from './wallets/reducer'
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 
 const store = configureStore({
-  reducer: {
-    application,
-    user,
-    connection,
-    transactions,
-    wallets,
-    swap,
-    mint,
-    mintV3,
-    burn,
-    burnV3,
-    multicall: multicall.reducer,
-    lists,
-    logs,
-    [routingApi.reducerPath]: routingApi.reducer,
-  },
+  reducer,
+  enhancers: (defaultEnhancers) => defaultEnhancers.concat(sentryEnhancer),
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true })
       .concat(routingApi.middleware)
@@ -50,6 +25,3 @@ store.dispatch(updateVersion())
 setupListeners(store.dispatch)
 
 export default store
-
-export type AppState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch

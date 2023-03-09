@@ -10,7 +10,7 @@ import { BREAKPOINTS, ThemedText } from 'theme'
 import { opacify } from 'theme/utils'
 
 import { MarketplaceRow } from './MarketplaceRow'
-import { SetPriceMethod } from './NFTListingsGrid'
+import { SetPriceMethod } from './shared'
 
 const IMAGE_THUMBNAIL_SIZE = 60
 
@@ -123,10 +123,10 @@ export const NFTListRow = ({
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
   const theme = useTheme()
 
+  // Keep localMarkets up to date with changes to globalMarkets
   useEffect(() => {
     setLocalMarkets(JSON.parse(JSON.stringify(selectedMarkets)))
-    selectedMarkets.length < 2 && expandMarketplaceRows && toggleExpandMarketplaceRows()
-  }, [expandMarketplaceRows, selectedMarkets])
+  }, [selectedMarkets])
 
   return (
     <NFTListRowWrapper
@@ -161,17 +161,16 @@ export const NFTListRow = ({
         </TokenInfoWrapper>
       </NFTInfoWrapper>
       <MarketPlaceRowWrapper>
-        {expandMarketplaceRows ? (
-          localMarkets.map((market, index) => {
+        {expandMarketplaceRows && localMarkets.length > 1 ? (
+          localMarkets.map((market) => {
             return (
               <MarketplaceRow
                 globalPriceMethod={globalPriceMethod}
                 globalPrice={globalPrice}
                 setGlobalPrice={setGlobalPrice}
                 selectedMarkets={[market]}
-                removeMarket={() => localMarkets.splice(index, 1)}
+                removeMarket={() => setLocalMarkets(localMarkets.filter((oldMarket) => oldMarket.name !== market.name))}
                 asset={asset}
-                showMarketplaceLogo={true}
                 key={asset.name + market.name}
                 expandMarketplaceRows={expandMarketplaceRows}
                 rowHovered={hovered}
@@ -186,7 +185,6 @@ export const NFTListRow = ({
             setGlobalPrice={setGlobalPrice}
             selectedMarkets={localMarkets}
             asset={asset}
-            showMarketplaceLogo={false}
             rowHovered={hovered}
             toggleExpandMarketplaceRows={toggleExpandMarketplaceRows}
           />

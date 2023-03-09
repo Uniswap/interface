@@ -71,7 +71,7 @@ export const PageTabs = () => {
       <MenuItem dataTestId="nft-nav" href="/nfts" isActive={isNftPage}>
         <Trans>NFTs</Trans>
       </MenuItem>
-      <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
+      <MenuItem href="/pool" dataTestId="pool-nav-link" isActive={isPoolActive}>
         <Trans>Pool</Trans>
       </MenuItem>
     </>

@@ -86,23 +86,13 @@ gql`
   }
 `
 
-interface useCollectionReturnProps {
-  data: GenieCollection
-  loading: boolean
-}
-
-export function useCollection(address: string): useCollectionReturnProps {
-  const { data: queryData, loading } = useCollectionQuery({
-    variables: {
-      addresses: address,
-    },
-  })
-
-  const queryCollection = queryData?.nftCollections?.edges?.[0]?.node as NonNullable<NftCollection>
+export function formatCollectionQueryData(
+  queryCollection: NonNullable<NftCollection>,
+  address?: string
+): GenieCollection {
   const market = queryCollection?.markets?.[0]
-  const traits = useMemo(() => {
-    return {} as Record<string, Trait[]>
-  }, [])
+  if (!address && !queryCollection?.nftContracts?.[0]?.address) return {} as GenieCollection
+  const traits = {} as Record<string, Trait[]>
   if (queryCollection?.traits) {
     queryCollection?.traits.forEach((trait) => {
       if (trait.name && trait.stats) {
@@ -116,43 +106,60 @@ export function useCollection(address: string): useCollectionReturnProps {
       }
     })
   }
+  return {
+    address: address ?? queryCollection?.nftContracts?.[0]?.address ?? '',
+    isVerified: queryCollection?.isVerified,
+    name: queryCollection?.name,
+    description: queryCollection?.description,
+    standard: queryCollection?.nftContracts?.[0]?.standard,
+    bannerImageUrl: queryCollection?.bannerImage?.url,
+    stats: {
+      num_owners: market?.owners,
+      floor_price: market?.floorPrice?.value,
+      one_day_volume: market?.volume?.value,
+      one_day_change: market?.volumePercentChange?.value,
+      one_day_floor_change: market?.floorPricePercentChange?.value,
+      banner_image_url: queryCollection?.bannerImage?.url,
+      total_supply: queryCollection?.numAssets,
+      total_listings: market?.listings?.value,
+      total_volume: market?.totalVolume?.value,
+    },
+    traits,
+    marketplaceCount: market?.marketplaces?.map((market) => {
+      return {
+        marketplace: market.marketplace?.toLowerCase() ?? '',
+        count: market.listings ?? 0,
+        floorPrice: market.floorPrice ?? 0,
+      }
+    }),
+    imageUrl: queryCollection?.image?.url ?? '',
+    twitterUrl: queryCollection?.twitterName,
+    instagram: queryCollection?.instagramName,
+    discordUrl: queryCollection?.discordUrl,
+    externalUrl: queryCollection?.homepageUrl,
+    rarityVerified: false, // TODO update when backend supports
+    // isFoundation: boolean, // TODO ask backend to add
+  }
+}
+
+interface useCollectionReturnProps {
+  data: GenieCollection
+  loading: boolean
+}
+
+export function useCollection(address: string, skip?: boolean): useCollectionReturnProps {
+  const { data: queryData, loading } = useCollectionQuery({
+    variables: {
+      addresses: address,
+    },
+    skip,
+  })
+
+  const queryCollection = queryData?.nftCollections?.edges?.[0]?.node as NonNullable<NftCollection>
   return useMemo(() => {
     return {
-      data: {
-        address,
-        isVerified: queryCollection?.isVerified,
-        name: queryCollection?.name,
-        description: queryCollection?.description,
-        standard: queryCollection?.nftContracts?.[0]?.standard,
-        bannerImageUrl: queryCollection?.bannerImage?.url,
-        stats: {
-          num_owners: market?.owners,
-          floor_price: market?.floorPrice?.value,
-          one_day_volume: market?.volume?.value,
-          one_day_change: market?.volumePercentChange?.value,
-          one_day_floor_change: market?.floorPricePercentChange?.value,
-          banner_image_url: queryCollection?.bannerImage?.url,
-          total_supply: queryCollection?.numAssets,
-          total_listings: market?.listings?.value,
-          total_volume: market?.totalVolume?.value,
-        },
-        traits,
-        marketplaceCount: market?.marketplaces?.map((market) => {
-          return {
-            marketplace: market.marketplace?.toLowerCase() ?? '',
-            count: market.listings ?? 0,
-            floorPrice: market.floorPrice ?? 0,
-          }
-        }),
-        imageUrl: queryCollection?.image?.url ?? '',
-        twitterUrl: queryCollection?.twitterName,
-        instagram: queryCollection?.instagramName,
-        discordUrl: queryCollection?.discordUrl,
-        externalUrl: queryCollection?.homepageUrl,
-        rarityVerified: false, // TODO update when backend supports
-        // isFoundation: boolean, // TODO ask backend to add
-      },
+      data: formatCollectionQueryData(queryCollection, address),
       loading,
     }
-  }, [address, loading, market, queryCollection, traits])
+  }, [address, loading, queryCollection])
 }

@@ -6,11 +6,6 @@ export interface ListingMarket {
   name: string
   fee: number
   icon: string
-  royalty?: number
-}
-export interface ListingWarning {
-  marketplace: ListingMarket
-  message: string
 }
 
 export interface SellOrder {
@@ -72,7 +67,6 @@ export interface WalletAsset {
   marketAgnosticPrice?: number
   newListings?: Listing[]
   marketplaces?: ListingMarket[]
-  listingWarnings?: ListingWarning[]
 }
 
 export interface WalletCollection {
