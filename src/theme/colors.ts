@@ -198,7 +198,7 @@ export const lightTheme: Theme = {
   accentFailure: colors.red400,
   accentCritical: colors.red400,
 
-  accentActionSoft: opacify(24, colors.pink400),
+  accentActionSoft: opacify(12, colors.pink400),
   accentActiveSoft: opacify(24, colors.blue400),
   accentSuccessSoft: opacify(24, colors.green300),
   accentWarningSoft: opacify(24, colors.gold200),

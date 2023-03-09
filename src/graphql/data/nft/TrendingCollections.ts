@@ -7,7 +7,7 @@ import { HistoryDuration, useTrendingCollectionsQuery } from '../__generated__/t
 
 gql`
   query TrendingCollections($size: Int, $timePeriod: HistoryDuration) {
-    topCollections(limit: $size, duration: $timePeriod) {
+    topCollections(first: $size, duration: $timePeriod) {
       edges {
         node {
           name
