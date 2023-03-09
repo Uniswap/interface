@@ -205,26 +205,6 @@ export const ButtonOutlined = styled(BaseButton)`
   }
 `
 
-export const ButtonYellow = styled(BaseButton)`
-  background-color: ${({ theme }) => theme.accentWarningSoft};
-  color: ${({ theme }) => theme.accentWarning};
-  &:focus {
-    background-color: ${({ theme }) => theme.accentWarningSoft};
-  }
-  &:hover {
-    background: ${({ theme }) => theme.stateOverlayHover};
-    mix-blend-mode: normal;
-  }
-  &:active {
-    background-color: ${({ theme }) => theme.accentWarningSoft};
-  }
-  &:disabled {
-    background-color: ${({ theme }) => theme.accentWarningSoft};
-    opacity: 60%;
-    cursor: auto;
-  }
-`
-
 export const ButtonEmpty = styled(BaseButton)`
   background-color: transparent;
   color: ${({ theme }) => theme.accentAction};
