@@ -15,6 +15,7 @@ import { modalsReducer } from 'src/features/modals/modalSlice'
 import { notificationReducer } from 'src/features/notifications/notificationSlice'
 import { providersReducer } from 'src/features/providers/providerSlice'
 import { routingApi } from 'src/features/routing/routingApi'
+import { telemetryReducer } from 'src/features/telemetry/slice'
 import { tokensReducer } from 'src/features/tokens/tokensSlice'
 import { transactionReducer } from 'src/features/transactions/slice'
 import { trmApi } from 'src/features/trm/api'
@@ -39,6 +40,7 @@ const reducers = {
   providers: providersReducer,
   saga: monitoredSagaReducers,
   searchHistory: searchHistoryReducer,
+  telemetry: telemetryReducer,
   tokens: tokensReducer,
   transactions: transactionReducer,
   wallet: walletReducer,

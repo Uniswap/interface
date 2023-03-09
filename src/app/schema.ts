@@ -23,6 +23,9 @@ export const initialSchema = {
     isInitialized: false,
   },
   saga: {},
+  telemetry: {
+    lastBalancesReport: 0,
+  },
   tokenLists: {
     lastInitializedDefaultListOfLists: [],
     byUrl: [],
@@ -213,6 +216,13 @@ export const v33Schema = {
   },
 }
 
+export const v34Schema = {
+  ...v33Schema,
+  telemetry: {
+    lastBalancesReport: 0,
+  },
+}
+
 // TODO: [MOB-3864] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v33Schema => v33Schema
+export const getSchema = (): typeof v34Schema => v34Schema

@@ -29,6 +29,11 @@ export type MoonpayTransactionEventProperties = BaseEventProperty &
   Record<string, string>
 
 export type EventProperties = {
+  [MobileEventName.BalancesReport]: {
+    total_balances_usd: number
+    wallets: string[]
+    balances: number[]
+  }
   [MobileEventName.DeepLinkOpened]: {
     url: string
     screen: 'swap' | 'transaction'

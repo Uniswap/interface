@@ -8,6 +8,7 @@ export enum MobileEventName {
 
   // some of these values are Title Cased to match shared repo event format:
   // https://github.com/Uniswap/analytics-events/blob/main/src/primitives.ts
+  BalancesReport = 'Balances Report',
   DeepLinkOpened = 'Deep Link Opened',
   ExploreFilterSelected = 'Explore Filter Selected',
   ExploreSearchResultClicked = 'Explore Search Result Clicked',

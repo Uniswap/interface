@@ -57,12 +57,14 @@ import {
   ModalName,
   SectionName,
 } from 'src/features/telemetry/constants'
+import { useLastBalancesReporter } from 'src/features/telemetry/hooks'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
-import { useTimeout } from 'src/utils/timing'
+import { ONE_SECOND_MS } from 'src/utils/time'
+import { useInterval, useTimeout } from 'src/utils/timing'
 
 const CONTENT_HEADER_HEIGHT_ESTIMATE = 270
 
@@ -84,6 +86,10 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
   const dispatch = useAppDispatch()
+
+  // Report balances at most every 24 hours, checking every 15 seconds when app is open
+  const lastBalancesReporter = useLastBalancesReporter()
+  useInterval(lastBalancesReporter, ONE_SECOND_MS * 15, true)
 
   const listBottomPadding =
     useResponsiveProp({

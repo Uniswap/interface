@@ -471,4 +471,13 @@ export const migrations = {
     }
     return newState
   },
+
+  34: function addLastBalancesReport(state: any) {
+    const newState = { ...state }
+
+    newState.telemetry = {
+      lastBalancesReport: 0,
+    }
+    return newState
+  },
 }
