@@ -27,12 +27,13 @@ export default function useSyncChainQuery() {
 
   const urlChainId = getParsedChainId(parsedQs)
   const previousUrlChainId = usePrevious(urlChainId)
-  const [nextChainId, setNextChainId] = useState<number | undefined>(undefined)
 
   const selectChain = useSelectChain()
 
   // Can't use `usePrevious` because `chainId` can be undefined while activating.
   const [previousChainId, setPreviousChainId] = useState<number | undefined>(undefined)
+  const [nextChainId, setNextChainId] = useState<number | undefined>(undefined)
+
   useEffect(() => {
     if (chainId && chainId !== previousChainId) {
       setPreviousChainId(chainId)
