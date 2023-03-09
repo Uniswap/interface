@@ -217,7 +217,7 @@ export default function App() {
           user={statsigUser}
           // TODO: replace with proxy and cycle key
           sdkKey={STATSIG_DUMMY_KEY}
-          waitForInitialization={true}
+          waitForInitialization={false}
           options={{
             environment: { tier: getEnvName() },
             api: STATSIG_PROXY_URL,

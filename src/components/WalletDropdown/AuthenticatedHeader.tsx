@@ -220,9 +220,6 @@ const AuthenticatedHeader = () => {
     closeModal()
   }, [clearCollectionFilters, closeModal, navigate, resetSellAssets, setSellPageState])
 
-  // animate the border of the buy crypto button when a user navigates here from the feature announcement
-  // can be removed when components/FiatOnrampAnnouncment.tsx is no longer used
-
   const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const openFoRModalWithAnalytics = useCallback(() => {
     sendAnalyticsEvent(InterfaceEventName.FIAT_ONRAMP_WIDGET_OPENED)

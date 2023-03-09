@@ -110,12 +110,7 @@ export default memo(function TaxServiceModal({ isOpen, onDismiss }: TaxServiceMo
           <div className={subhead}>
             <Trans>Save on your crypto taxes</Trans>
           </div>
-          <StyledXButton
-            size={20}
-            onClick={() => {
-              onDismiss()
-            }}
-          />
+          <StyledXButton size={20} onClick={onDismiss} />
         </div>
         <TaxOptionContainer>
           <TaxServiceOption description={COINTRACKER_DESCRIPTION} logo={CointrackerFullLogo} url={COINTRACKER_URL} />

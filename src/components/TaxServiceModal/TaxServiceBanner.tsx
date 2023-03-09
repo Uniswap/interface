@@ -109,13 +109,13 @@ export default function TaxServiceBanner() {
     sessionStorage.setItem(TAX_SERVICE_DISMISSED, 'false')
   }
   const [bannerOpen, setBannerOpen] = useState(sessionStorageTaxServiceDismissed !== 'true')
-  const onDismiss = () => {
+  const onDismiss = useCallback(() => {
     setModalOpen(false)
-  }
+  }, [])
 
-  const toggleTaxModal = () => {
+  const openTaxModal = useCallback(() => {
     setModalOpen(true)
-  }
+  }, [])
 
   const handleClose = useCallback(() => {
     sessionStorage.setItem(TAX_SERVICE_DISMISSED, 'true')
@@ -134,18 +134,13 @@ export default function TaxServiceBanner() {
               <Trans>Get up to a 20% discount on CoinTracker or TokenTax.</Trans>{' '}
             </div>
           </TextContainer>
-          <StyledXButton
-            size={20}
-            onClick={() => {
-              handleClose()
-            }}
-          />
+          <StyledXButton size={20} onClick={handleClose} />
         </div>
 
         <Button
           size={ButtonSize.small}
           emphasis={ButtonEmphasis.promotional}
-          onClick={toggleTaxModal}
+          onClick={openTaxModal}
           data-testid="learn-more-button"
         >
           <Trans>Learn more</Trans>
