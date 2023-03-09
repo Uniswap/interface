@@ -65,9 +65,10 @@ export function useUniversalRouterSwapCallback(
         .getSigner()
         .sendTransaction({ ...tx, gasLimit })
         .then((response) => {
-          const properties = formatSwapSignedAnalyticsEventProperties({ trade, fiatValues, txHash: response.hash })
-          console.log('swap analytics', properties)
-          sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, properties)
+          sendAnalyticsEvent(
+            SwapEventName.SWAP_SIGNED,
+            formatSwapSignedAnalyticsEventProperties({ trade, fiatValues, txHash: response.hash })
+          )
           if (tx.data !== response.data) {
             sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, { txHash: response.hash })
             throw new InvalidSwapError(
