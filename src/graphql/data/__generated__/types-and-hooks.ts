@@ -2199,7 +2199,7 @@ export type NftRouteLazyQueryHookResult = ReturnType<typeof useNftRouteLazyQuery
 export type NftRouteQueryResult = Apollo.QueryResult<NftRouteQuery, NftRouteQueryVariables>;
 export const TrendingCollectionsDocument = gql`
     query TrendingCollections($size: Int, $timePeriod: HistoryDuration) {
-  topCollections(limit: $size, duration: $timePeriod) {
+  topCollections(first: $size, duration: $timePeriod) {
     edges {
       node {
         name
