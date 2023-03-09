@@ -84,7 +84,6 @@ import useTheme from 'hooks/useTheme'
 import useWrapCallback, { WrapType } from 'hooks/useWrapCallback'
 import { BodyWrapper } from 'pages/AppBody'
 import { ClickableText } from 'pages/Pool/styleds'
-import VerifyComponent from 'pages/Verify/VerifyComponent'
 import { useToggleTransactionSettingsMenu, useWalletModalToggle } from 'state/application/hooks'
 import { useAllDexes } from 'state/customizeDexes/hooks'
 import { useLimitActionHandlers, useLimitState } from 'state/limit/hooks'
@@ -692,7 +691,6 @@ export default function Swap() {
        */}
       <SEOSwap canonicalUrl={canonicalUrl} />
       <TutorialSwap />
-      <VerifyComponent />
       <TokenWarningModal
         isOpen={isShowModalImportToken}
         tokens={importTokensNotInDefault}

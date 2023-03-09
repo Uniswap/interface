@@ -26,6 +26,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useGlobalMixpanelEvents } from 'hooks/useMixpanel'
 import { useSyncNetworkParamWithStore } from 'hooks/useSyncNetworkParamWithStore'
 import useTheme from 'hooks/useTheme'
+import VerifyComponent from 'pages/Verify/VerifyComponent'
 import { useHolidayMode } from 'state/user/hooks'
 import DarkModeQueryParamReader from 'theme/DarkModeQueryParamReader'
 import { getLimitOrderContract, isAddressString, shortenAddress } from 'utils'
@@ -113,11 +114,12 @@ const SwapPage = () => {
   const { chainId } = useActiveWeb3React()
   useSyncNetworkParamWithStore()
 
-  if (chainId === ChainId.SOLANA) {
-    return <SwapV2 />
-  }
-
-  return <SwapV3 />
+  return (
+    <>
+      <VerifyComponent />
+      {chainId === ChainId.SOLANA ? <SwapV2 /> : <SwapV3 />}
+    </>
+  )
 }
 
 export default function App() {
