@@ -15,6 +15,7 @@ const RowWrapper = styled(Row)<{ onClick?: any }>`
 
   &:hover {
     background: ${({ theme }) => theme.hoverDefault};
+    cursor: pointer;
   }
 `
 
