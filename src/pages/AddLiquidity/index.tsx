@@ -432,6 +432,19 @@ export default function AddLiquidity() {
     !depositBDisabled ? currencies[Field.CURRENCY_B]?.symbol : ''
   }`
 
+  const handleSetFullRange = useCallback(() => {
+    setShowCapitalEfficiencyWarning(true)
+    sendEvent({
+      category: 'Liquidity',
+      action: 'Full Range Clicked',
+    })
+  }, [])
+
+  const handleFullRangeConfirmationClick = useCallback(() => {
+    setShowCapitalEfficiencyWarning(false)
+    getSetFullRange()
+  }, [getSetFullRange])
+
   const Buttons = () =>
     addIsUnsupported ? (
       <ButtonPrimary disabled={true} $borderRadius="12px" padding="12px">
@@ -828,13 +841,7 @@ export default function AddLiquidity() {
                               feeAmount={feeAmount}
                               ticksAtLimit={ticksAtLimit}
                             />
-                            {!noLiquidity && (
-                              <PresetsButtons
-                                setFullRange={() => {
-                                  setShowCapitalEfficiencyWarning(true)
-                                }}
-                              />
-                            )}
+                            {!noLiquidity && <PresetsButtons onSetFullRange={handleSetFullRange} />}
                           </AutoColumn>
                         </StackedItem>
 
@@ -876,10 +883,7 @@ export default function AddLiquidity() {
                                     marginRight="8px"
                                     $borderRadius="8px"
                                     width="auto"
-                                    onClick={() => {
-                                      setShowCapitalEfficiencyWarning(false)
-                                      getSetFullRange()
-                                    }}
+                                    onClick={handleFullRangeConfirmationClick}
                                   >
                                     <ThemedText.DeprecatedBlack fontSize={13} color="black">
                                       <Trans>I understand</Trans>
