@@ -5,7 +5,6 @@ import dayjs from 'dayjs'
 import { ethers } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useDeepCompareEffect } from 'react-use'
 
 import { ETH_PRICE, PROMM_ETH_PRICE, TOKEN_DERIVED_ETH } from 'apollo/queries'
 import { ackAnnouncementPopup, isPopupCanShow } from 'components/Announcement/helper'
@@ -307,6 +306,7 @@ const getPrommEthPrice = async (
   return [ethPrice, ethPriceOneDay, priceChangeETH]
 }
 
+let fetchingETHPrice = false
 export function useETHPrice(version: string = VERSION.CLASSIC): AppState['application']['ethPrice'] {
   const dispatch = useDispatch()
   const { isEVM, chainId } = useActiveWeb3React()
@@ -320,23 +320,29 @@ export function useETHPrice(version: string = VERSION.CLASSIC): AppState['applic
     if (!isEVM) return
 
     async function checkForEthPrice() {
-      const [newPrice, oneDayBackPrice, pricePercentChange] = await (version === VERSION.ELASTIC
-        ? getPrommEthPrice(chainId, elasticClient, blockClient)
-        : getEthPrice(chainId, classicClient, blockClient))
+      if (fetchingETHPrice) return
+      fetchingETHPrice = true
+      try {
+        const [newPrice, oneDayBackPrice, pricePercentChange] = await (version === VERSION.ELASTIC
+          ? getPrommEthPrice(chainId, elasticClient, blockClient)
+          : getEthPrice(chainId, classicClient, blockClient))
 
-      dispatch(
-        version === VERSION.ELASTIC
-          ? updatePrommETHPrice({
-              currentPrice: (newPrice ? newPrice : 0).toString(),
-              oneDayBackPrice: (oneDayBackPrice ? oneDayBackPrice : 0).toString(),
-              pricePercentChange,
-            })
-          : updateETHPrice({
-              currentPrice: (newPrice ? newPrice : 0).toString(),
-              oneDayBackPrice: (oneDayBackPrice ? oneDayBackPrice : 0).toString(),
-              pricePercentChange,
-            }),
-      )
+        dispatch(
+          version === VERSION.ELASTIC
+            ? updatePrommETHPrice({
+                currentPrice: (newPrice ? newPrice : 0).toString(),
+                oneDayBackPrice: (oneDayBackPrice ? oneDayBackPrice : 0).toString(),
+                pricePercentChange,
+              })
+            : updateETHPrice({
+                currentPrice: (newPrice ? newPrice : 0).toString(),
+                oneDayBackPrice: (oneDayBackPrice ? oneDayBackPrice : 0).toString(),
+                pricePercentChange,
+              }),
+        )
+      } finally {
+        fetchingETHPrice = false
+      }
     }
     checkForEthPrice()
   }, [dispatch, chainId, version, isEVM, elasticClient, classicClient, blockClient])
@@ -433,7 +439,9 @@ export function useTokensPrice(tokens: (Token | NativeCurrency | null | undefine
   const [prices, setPrices] = useState<number[]>([])
   const { elasticClient, classicClient } = useKyberSwapConfig()
 
-  useDeepCompareEffect(() => {
+  const ethPriceParsed = ethPrice?.currentPrice ? parseFloat(ethPrice.currentPrice) : undefined
+
+  useEffect(() => {
     if (!isEVM) return
     const client = version !== VERSION.ELASTIC ? classicClient : elasticClient
 
@@ -443,19 +451,19 @@ export function useTokensPrice(tokens: (Token | NativeCurrency | null | undefine
           return 0
         }
 
-        if (!ethPrice?.currentPrice) {
+        if (!ethPriceParsed) {
           return 0
         }
 
         if (token.isNative || token?.address === ZERO_ADDRESS) {
-          return parseFloat(ethPrice.currentPrice)
+          return ethPriceParsed
         }
 
         const key = `${token.address}_${chainId}_${version}`
         if (cache[key]) return cache[key]
 
         const tokenPriceByETH = await getTokenPriceByETH(token?.address, client)
-        const tokenPrice = tokenPriceByETH * parseFloat(ethPrice.currentPrice)
+        const tokenPrice = tokenPriceByETH * ethPriceParsed
 
         if (tokenPrice) cache[key] = tokenPrice
 
@@ -468,7 +476,8 @@ export function useTokensPrice(tokens: (Token | NativeCurrency | null | undefine
     }
 
     checkForTokenPrice()
-  }, [ethPrice.currentPrice, chainId, isEVM, elasticClient, classicClient, tokens, version])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ethPriceParsed, chainId, isEVM, elasticClient, classicClient, JSON.stringify(tokens), version])
 
   return prices
 }

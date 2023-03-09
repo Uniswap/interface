@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Text } from 'rebass'
@@ -91,12 +91,11 @@ const FairLaunchPools = ({ fairLaunchAddress, farms, active }: FarmsListProps) =
     })
   }, [isShareModalOpen, setSharedPoolAddress])
 
-  if (!isEVM) return <Navigate to="/" />
   const shareUrl = sharedPoolAddress
     ? window.location.origin + `/farms/${networkRoute}?search=` + sharedPoolAddress + '&tab=classic'
     : undefined
 
-  const handleHarvestAll = async () => {
+  const handleHarvestAll = useCallback(async () => {
     if (!account) {
       return
     }
@@ -141,7 +140,7 @@ const FairLaunchPools = ({ fairLaunchAddress, farms, active }: FarmsListProps) =
     }
 
     dispatch(setAttemptingTxn(false))
-  }
+  }, [account, dispatch, farms, harvestMultiplePools, mixpanelHandler, totalRewards])
 
   const currentTimestamp = Math.floor(Date.now() / 1000)
 
@@ -202,6 +201,7 @@ const FairLaunchPools = ({ fairLaunchAddress, farms, active }: FarmsListProps) =
   const outsideFarm = OUTSIDE_FAIRLAUNCH_ADDRESSES[fairLaunchAddress]
 
   const ConditionListWrapper = viewMode === VIEW_MODE.LIST && above1200 ? ListItemWrapper : ClassicFarmGridWrapper
+  if (!isEVM) return <Navigate to="/" />
 
   return (
     <ClassicFarmWrapper>

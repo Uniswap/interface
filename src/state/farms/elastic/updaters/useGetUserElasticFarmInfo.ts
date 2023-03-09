@@ -5,7 +5,7 @@ import { keccak256 } from '@ethersproject/solidity'
 import { Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
 import { BigNumber } from 'ethers'
 import { Interface } from 'ethers/lib/utils'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
 import NFTPositionManagerABI from 'constants/abis/v2/ProAmmNFTPositionManager.json'
@@ -43,7 +43,7 @@ const useGetUserFarmingInfo = (interval?: boolean) => {
   const multicallContract = useMulticallContract()
   const { elasticClient } = useKyberSwapConfig()
 
-  const elasticFarm = useAppSelector(state => state.elasticFarm)[chainId || 1] || defaultChainData
+  const elasticFarm = useAppSelector(state => state.elasticFarm[chainId || 1]) || defaultChainData
 
   const getUserFarmInfo = useCallback(async () => {
     const farmAddresses = elasticFarm.farms?.map(farm => farm.id)
@@ -244,18 +244,21 @@ const useGetUserFarmingInfo = (interval?: boolean) => {
     }
   }, [elasticFarm.farms, chainId, account, multicallContract, dispatch])
 
+  const getUserFarmInfoRef = useRef(getUserFarmInfo)
+  getUserFarmInfoRef.current = getUserFarmInfo
+
   useEffect(() => {
-    getUserFarmInfo()
+    getUserFarmInfoRef.current()
 
     const i = interval
       ? setInterval(() => {
-          getUserFarmInfo()
+          getUserFarmInfoRef.current()
         }, 10_000)
       : undefined
     return () => {
       i && clearInterval(i)
     }
-  }, [getUserFarmInfo, interval])
+  }, [interval])
 
   const { blockLast24h } = usePoolBlocks()
   const [getPoolInfo, { data: poolFeeData }] = useLazyQuery(POOL_FEE_HISTORY, {

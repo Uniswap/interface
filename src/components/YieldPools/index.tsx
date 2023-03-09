@@ -21,6 +21,10 @@ import ConfirmHarvestingModal from './ConfirmHarvestingModal'
 const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean }) => {
   const theme = useTheme()
   const blockNumber = useBlockNumber()
+  // temporary use ref for prevent re-render when block change since farm page is spamming rpc calls
+  // todo: fix spam rpc and remove this ref, add blockNumber into deps list
+  const blockNumberRef = useRef(blockNumber)
+  blockNumberRef.current = blockNumber
   const { search = '', ...qs } = useParsedQueryString<{ search: string }>()
   const { chainId } = useActiveWeb3React()
   const { data: farmsByFairLaunch } = useFarmsData()
@@ -35,7 +39,8 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
   useOnClickOutside(ref, open ? () => setOpen(prev => !prev) : undefined)
 
   const activeTab = active ? 'active' : 'ended'
-  const currentTimestamp = Math.floor(Date.now() / 1000)
+  const currentTimestampRef = useRef(0)
+  currentTimestampRef.current = Math.floor(Date.now() / 1000)
   const debouncedSearchText = useDebounce(search.trim().toLowerCase(), 200)
 
   const filterFarm = useCallback(
@@ -48,12 +53,12 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
       if (farm.rewardPerSeconds) {
         // for active/ended farms
         return (
-          currentTimestamp &&
+          currentTimestampRef.current &&
           (qs.type === FARM_TAB.MY_FARMS
             ? true
             : active
-            ? farm.endTime >= currentTimestamp
-            : farm.endTime < currentTimestamp) &&
+            ? farm.endTime >= currentTimestampRef.current
+            : farm.endTime < currentTimestampRef.current) &&
           // search farms
           (debouncedSearchText
             ? farm.token0?.symbol.toLowerCase().includes(debouncedSearchText) ||
@@ -68,14 +73,14 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
       } else {
         // for active/ended farms
         return (
-          blockNumber &&
+          blockNumberRef.current &&
           (qs.type === FARM_TAB.MY_FARMS
             ? true
             : isSipherFarm
             ? active
             : active
-            ? farm.endBlock >= blockNumber
-            : farm.endBlock < blockNumber) &&
+            ? farm.endBlock >= blockNumberRef.current
+            : farm.endBlock < blockNumberRef.current) &&
           // search farms
           (debouncedSearchText
             ? farm.token0?.symbol.toLowerCase().includes(debouncedSearchText) ||
@@ -89,7 +94,7 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
         )
       }
     },
-    [active, activeTab, blockNumber, debouncedSearchText, stakedOnly, currentTimestamp, chainId, qs.type],
+    [active, activeTab, debouncedSearchText, stakedOnly, chainId, qs.type],
   )
 
   const farms = useMemo(
@@ -111,15 +116,15 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
         return !!farmsByFairLaunch[address].filter(farm => {
           if (farm.rewardPerSeconds) {
             return (
-              currentTimestamp &&
-              farm.endTime < currentTimestamp &&
+              currentTimestampRef.current &&
+              farm.endTime < currentTimestampRef.current &&
               farm.userData?.stakedBalance &&
               BigNumber.from(farm.userData.stakedBalance).gt(0)
             )
           } else {
             return (
-              blockNumber &&
-              farm.endBlock < blockNumber &&
+              blockNumberRef.current &&
+              farm.endBlock < blockNumberRef.current &&
               farm.userData?.stakedBalance &&
               BigNumber.from(farm.userData.stakedBalance).gt(0)
             )
@@ -132,7 +137,7 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
         setStakedOnly(prev => ({ ...prev, ended: true }))
       }
     }
-  }, [active, stakedOnly, farmsByFairLaunch, blockNumber, isCheckUserStaked, currentTimestamp])
+  }, [active, stakedOnly, farmsByFairLaunch, isCheckUserStaked])
 
   return (
     <>

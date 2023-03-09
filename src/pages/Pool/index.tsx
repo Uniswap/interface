@@ -34,6 +34,7 @@ import useTheme from 'hooks/useTheme'
 import ProAmmPool from 'pages/ProAmmPool'
 import { useFarmsData, useTotalApr } from 'state/farms/classic/hooks'
 import { Farm } from 'state/farms/classic/types'
+import ClassicFarmUpdater from 'state/farms/classic/updater'
 import { UserLiquidityPosition, useUserLiquidityPositions } from 'state/pools/hooks'
 import { useLiquidityPositionTokenPairs, useToV2LiquidityTokens } from 'state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from 'state/wallet/hooks'
@@ -286,6 +287,7 @@ function Pool() {
   if (!isEVM) return <Navigate to="/" replace />
   return (
     <>
+      <ClassicFarmUpdater isInterval={false} />
       <PageWrapper style={{ padding: 0, marginTop: '24px' }}>
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>

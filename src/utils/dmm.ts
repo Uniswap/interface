@@ -401,72 +401,77 @@ export function useCurrencyConvertedToNative(currency?: Currency): Currency | un
 }
 
 export function useFarmRewards(farms?: Farm[], onlyCurrentUser = true): Reward[] {
-  if (!farms) {
-    return []
-  }
+  const result = useMemo(() => {
+    if (!farms) {
+      return []
+    }
 
-  const initialRewards: { [key: string]: Reward } = {}
+    const initialRewards: { [key: string]: Reward } = {}
 
-  const userFarmRewards = farms.reduce((total, farm) => {
-    if (farm.userData?.rewards) {
-      farm.rewardTokens.forEach((token, index) => {
-        if (total[token.address]) {
-          total[token.address].amount = total[token.address].amount.add(BigNumber.from(farm.userData?.rewards?.[index]))
-        } else {
+    const userFarmRewards = farms.reduce((total, farm) => {
+      if (farm.userData?.rewards) {
+        farm.rewardTokens.forEach((token, index) => {
+          if (total[token.address]) {
+            total[token.address].amount = total[token.address].amount.add(
+              BigNumber.from(farm.userData?.rewards?.[index]),
+            )
+          } else {
+            total[token.address] = {
+              token,
+              amount: BigNumber.from(farm.userData?.rewards?.[index]),
+            }
+          }
+        })
+        return total
+      } else {
+        farm.rewardTokens.forEach(token => {
           total[token.address] = {
             token,
-            amount: BigNumber.from(farm.userData?.rewards?.[index]),
+            amount: BigNumber.from(0),
           }
-        }
-      })
+        })
+      }
+
       return total
-    } else {
-      farm.rewardTokens.forEach(token => {
-        total[token.address] = {
-          token,
-          amount: BigNumber.from(0),
-        }
-      })
-    }
+    }, initialRewards)
 
-    return total
-  }, initialRewards)
+    const initialAllFarmsRewards: { [key: string]: Reward } = {}
 
-  const initialAllFarmsRewards: { [key: string]: Reward } = {}
-
-  const allFarmsRewards = farms.reduce((total, farm) => {
-    if (farm.rewardPerSeconds) {
-      farm.rewardTokens.forEach((token, index) => {
-        if (total[token.address]) {
-          total[token.address].amount = total[token.address].amount.add(
-            BigNumber.from(farm.lastRewardTime - farm.startTime).mul(farm.rewardPerSeconds[index]),
-          )
-        } else {
-          total[token.address] = {
-            token,
-            amount: BigNumber.from(farm.lastRewardTime - farm.startTime).mul(farm.rewardPerSeconds[index]),
+    const allFarmsRewards = farms.reduce((total, farm) => {
+      if (farm.rewardPerSeconds) {
+        farm.rewardTokens.forEach((token, index) => {
+          if (total[token.address]) {
+            total[token.address].amount = total[token.address].amount.add(
+              BigNumber.from(farm.lastRewardTime - farm.startTime).mul(farm.rewardPerSeconds[index]),
+            )
+          } else {
+            total[token.address] = {
+              token,
+              amount: BigNumber.from(farm.lastRewardTime - farm.startTime).mul(farm.rewardPerSeconds[index]),
+            }
           }
-        }
-      })
-    } else {
-      farm.rewardTokens.forEach((token, index) => {
-        if (total[token.address]) {
-          total[token.address].amount = total[token.address].amount.add(
-            BigNumber.from(farm.lastRewardBlock - farm.startBlock).mul(farm.rewardPerBlocks[index]),
-          )
-        } else {
-          total[token.address] = {
-            token,
-            amount: BigNumber.from(farm.lastRewardBlock - farm.startBlock).mul(farm.rewardPerBlocks[index]),
+        })
+      } else {
+        farm.rewardTokens.forEach((token, index) => {
+          if (total[token.address]) {
+            total[token.address].amount = total[token.address].amount.add(
+              BigNumber.from(farm.lastRewardBlock - farm.startBlock).mul(farm.rewardPerBlocks[index]),
+            )
+          } else {
+            total[token.address] = {
+              token,
+              amount: BigNumber.from(farm.lastRewardBlock - farm.startBlock).mul(farm.rewardPerBlocks[index]),
+            }
           }
-        }
-      })
-    }
+        })
+      }
 
-    return total
-  }, initialAllFarmsRewards)
+      return total
+    }, initialAllFarmsRewards)
 
-  return onlyCurrentUser ? Object.values(userFarmRewards) : Object.values(allFarmsRewards)
+    return onlyCurrentUser ? Object.values(userFarmRewards) : Object.values(allFarmsRewards)
+  }, [farms, onlyCurrentUser])
+  return result
 }
 
 export function useFarmRewardsUSD(rewards?: Reward[]): number {
