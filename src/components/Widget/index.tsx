@@ -1,9 +1,15 @@
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
-import { EventName, SectionName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
+import {
+  InterfaceEventName,
+  InterfaceSectionName,
+  SwapEventName,
+  SwapPriceUpdateUserResponse,
+} from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import {
   AddEthereumChainParameter,
+  DialogAnimationType,
   EMPTY_TOKEN_LIST,
   OnReviewSwapClick,
   SwapWidget,
@@ -20,16 +26,17 @@ import {
   getTokenAddress,
 } from 'lib/utils/analytics'
 import { useCallback, useState } from 'react'
+import { useToggleWalletModal } from 'state/application/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
 import { computeRealizedPriceImpact } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
 
-import { useSyncWidgetInputs } from './inputs'
+import { DefaultTokens, useSyncWidgetInputs } from './inputs'
 import { useSyncWidgetSettings } from './settings'
 import { DARK_THEME, LIGHT_THEME } from './theme'
 import { useSyncWidgetTransactions } from './transactions'
 
-export const WIDGET_WIDTH = 360
+export const DEFAULT_WIDGET_WIDTH = 360
 
 const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
@@ -38,18 +45,33 @@ function useWidgetTheme() {
 }
 
 interface WidgetProps {
-  token?: Currency
-  onTokenChange?: (token: Currency) => void
+  defaultTokens: DefaultTokens
+  width?: number | string
+  onDefaultTokenChange?: (token: Currency) => void
   onReviewSwapClick?: OnReviewSwapClick
 }
 
-export default function Widget({ token, onTokenChange, onReviewSwapClick }: WidgetProps) {
-  const { connector, provider } = useWeb3React()
+export default function Widget({
+  defaultTokens,
+  width = DEFAULT_WIDGET_WIDTH,
+  onDefaultTokenChange,
+  onReviewSwapClick,
+}: WidgetProps) {
+  const { connector, provider, chainId } = useWeb3React()
   const locale = useActiveLocale()
   const theme = useWidgetTheme()
-  const { inputs, tokenSelector } = useSyncWidgetInputs({ token, onTokenChange })
+  const { inputs, tokenSelector } = useSyncWidgetInputs({
+    defaultTokens,
+    onDefaultTokenChange,
+  })
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
+
+  const toggleWalletModal = useToggleWalletModal()
+  const onConnectWalletClick = useCallback(() => {
+    toggleWalletModal()
+    return false // prevents the in-widget wallet modal from opening
+  }, [toggleWalletModal])
 
   const onSwitchChain = useCallback(
     // TODO(WEB-1757): Widget should not break if this rejects - upstream the catch to ignore it.
@@ -57,7 +79,7 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
     [connector]
   )
 
-  const trace = useTrace({ section: SectionName.WIDGET })
+  const trace = useTrace({ section: InterfaceSectionName.WIDGET })
   const [initialQuoteDate, setInitialQuoteDate] = useState<Date>()
   const onInitialSwapQuote = useCallback(
     (trade: Trade<Currency, Currency, TradeType>) => {
@@ -71,7 +93,7 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
         ),
         ...trace,
       }
-      sendAnalyticsEvent(EventName.SWAP_QUOTE_RECEIVED, eventProperties)
+      sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, eventProperties)
     },
     [trace]
   )
@@ -84,10 +106,10 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
       token_address: getTokenAddress(input),
       ...trace,
     }
-    sendAnalyticsEvent(EventName.APPROVE_TOKEN_TXN_SUBMITTED, eventProperties)
+    sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, eventProperties)
   }, [inputs.value.INPUT, trace])
   const onExpandSwapDetails = useCallback(() => {
-    sendAnalyticsEvent(EventName.SWAP_DETAILS_EXPANDED, { ...trace })
+    sendAnalyticsEvent(SwapEventName.SWAP_DETAILS_EXPANDED, { ...trace })
   }, [trace])
   const onSwapPriceUpdateAck = useCallback(
     (stale: Trade<Currency, Currency, TradeType>, update: Trade<Currency, Currency, TradeType>) => {
@@ -99,7 +121,7 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
         price_update_basis_points: getPriceUpdateBasisPoints(stale.executionPrice, update.executionPrice),
         ...trace,
       }
-      sendAnalyticsEvent(EventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED, eventProperties)
+      sendAnalyticsEvent(SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED, eventProperties)
     },
     [trace]
   )
@@ -126,7 +148,7 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
         swap_quote_block_number: undefined,
         ...trace,
       }
-      sendAnalyticsEvent(EventName.SWAP_SUBMITTED_BUTTON_CLICKED, eventProperties)
+      sendAnalyticsEvent(SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED, eventProperties)
     },
     [initialQuoteDate, trace]
   )
@@ -137,33 +159,44 @@ export default function Widget({ token, onTokenChange, onReviewSwapClick }: Widg
 
   return (
     <>
-      <SwapWidget
-        disableBranding
-        hideConnectionUI
-        routerUrl={WIDGET_ROUTER_URL}
-        locale={locale}
-        theme={theme}
-        width={WIDGET_WIDTH}
-        // defaultChainId is excluded - it is always inferred from the passed provider
-        provider={provider}
-        onSwitchChain={onSwitchChain}
-        tokenList={EMPTY_TOKEN_LIST} // prevents loading the default token list, as we use our own token selector UI
-        {...inputs}
-        {...settings}
-        {...transactions}
-        onExpandSwapDetails={onExpandSwapDetails}
-        onReviewSwapClick={onReviewSwapClick}
-        onSubmitSwapClick={onSubmitSwapClick}
-        onSwapApprove={onApproveToken}
-        onInitialSwapQuote={onInitialSwapQuote}
-        onSwapPriceUpdateAck={onSwapPriceUpdateAck}
-      />
+      <div style={{ zIndex: 1, position: 'relative' }}>
+        <SwapWidget
+          hideConnectionUI
+          brandedFooter={false}
+          permit2
+          routerUrl={WIDGET_ROUTER_URL}
+          locale={locale}
+          theme={theme}
+          width={width}
+          defaultChainId={chainId}
+          onConnectWalletClick={onConnectWalletClick}
+          provider={provider}
+          onSwitchChain={onSwitchChain}
+          tokenList={EMPTY_TOKEN_LIST} // prevents loading the default token list, as we use our own token selector UI
+          {...inputs}
+          {...settings}
+          {...transactions}
+          onExpandSwapDetails={onExpandSwapDetails}
+          onReviewSwapClick={onReviewSwapClick}
+          onSubmitSwapClick={onSubmitSwapClick}
+          onSwapApprove={onApproveToken}
+          onInitialSwapQuote={onInitialSwapQuote}
+          onSwapPriceUpdateAck={onSwapPriceUpdateAck}
+          dialogOptions={{
+            pageCentered: true,
+            animationType: DialogAnimationType.FADE,
+          }}
+          onError={(error, errorInfo) => {
+            sendAnalyticsEvent(SwapEventName.SWAP_ERROR, { error, errorInfo, ...trace })
+          }}
+        />
+      </div>
       {tokenSelector}
     </>
   )
 }
 
-export function WidgetSkeleton() {
+export function WidgetSkeleton({ width = DEFAULT_WIDGET_WIDTH }: { width?: number | string }) {
   const theme = useWidgetTheme()
-  return <SwapWidgetSkeleton theme={theme} width={WIDGET_WIDTH} />
+  return <SwapWidgetSkeleton theme={theme} width={width} />
 }

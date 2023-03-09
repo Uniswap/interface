@@ -1,14 +1,16 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatEther } from '@ethersproject/units'
+import { Trans } from '@lingui/macro'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { GqlRoutingVariant, useGqlRoutingFlag } from 'featureFlags/flags/gqlRouting'
+import { useNftRouteLazyQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
-import ListingModal from 'nft/components/bag/profile/ListingModal'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Column } from 'nft/components/Flex'
 import { Overlay } from 'nft/components/modals/Overlay'
-import { buttonTextMedium, commonButtonStyles } from 'nft/css/common.css'
 import {
   useBag,
   useIsMobile,
@@ -17,19 +19,22 @@ import {
   useSendTransaction,
   useTransactionResponse,
 } from 'nft/hooks'
+import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { fetchRoute } from 'nft/queries'
 import { BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType } from 'nft/types'
 import {
+  buildNftTradeInputFromBagItems,
   buildSellObject,
-  fetchPrice,
   formatAssetEventProperties,
   recalculateBagUsingPooledAssets,
   sortUpdatedAssets,
 } from 'nft/utils'
+import { buildRouteResponse } from 'nft/utils/nftRoute'
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useQuery, useQueryClient } from 'react-query'
+import { useQueryClient } from 'react-query'
 import styled from 'styled-components/macro'
+import { Z_INDEX } from 'theme/zIndex'
 import shallow from 'zustand/shallow'
 
 import * as styles from './Bag.css'
@@ -38,22 +43,72 @@ import { BagHeader } from './BagHeader'
 import EmptyState from './EmptyContent'
 import { ProfileBagContent } from './profile/ProfileBagContent'
 
+export const BAG_WIDTH = 320
+export const XXXL_BAG_WIDTH = 360
+
 interface SeparatorProps {
   top?: boolean
   show?: boolean
 }
 
+const BagContainer = styled.div<{ raiseZIndex: boolean; isProfilePage: boolean }>`
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  top: 88px;
+  right: 20px;
+  width: ${BAG_WIDTH}px;
+  height: calc(100vh - 108px);
+  background: ${({ theme }) => theme.backgroundSurface};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-radius: 16px;
+  box-shadow: ${({ theme }) => theme.shallowShadow};
+  z-index: ${({ raiseZIndex, isProfilePage }) =>
+    raiseZIndex ? (isProfilePage ? Z_INDEX.modalOverTooltip : Z_INDEX.modalBackdrop - 1) : 3};
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    right: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    border-radius: 0px;
+    border: none;
+  }
+
+  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.xxxl}px`}) {
+    width: ${XXXL_BAG_WIDTH}px;
+  }
+`
+
 const DetailsPageBackground = styled.div`
   position: fixed;
   background: rgba(0, 0, 0, 0.7);
-  top: 72px;
+  top: 0px;
   width: 100%;
   height: 100%;
 `
 
+const ContinueButton = styled.div`
+  background: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accentTextLightPrimary};
+  margin: 32px 28px 16px;
+  padding: 10px 0px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  cursor: pointer;
+  transition: ${({ theme }) => theme.transition.duration.medium};
+
+  :hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+`
+
 const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
   <Box
-    marginX="16"
+    marginX="24"
     borderWidth="1px"
     borderStyle="solid"
     borderColor="transparent"
@@ -75,10 +130,7 @@ const Bag = () => {
     shallow
   )
 
-  const { profilePageState, setProfilePageState } = useProfilePageState(
-    ({ setProfilePageState, state }) => ({ profilePageState: state, setProfilePageState }),
-    shallow
-  )
+  const { setProfilePageState } = useProfilePageState(({ setProfilePageState }) => ({ setProfilePageState }))
 
   const {
     bagStatus,
@@ -92,7 +144,6 @@ const Bag = () => {
     bagExpanded,
     toggleBag,
     setTotalEthPrice,
-    setTotalUsdPrice,
     setBagExpanded,
   } = useBag((state) => ({ ...state, bagIsLocked: state.isLocked, uncheckedItemsInBag: state.itemsInBag }), shallow)
   const { uncheckedItemsInBag } = useBag(({ itemsInBag }) => ({ uncheckedItemsInBag: itemsInBag }))
@@ -101,18 +152,20 @@ const Bag = () => {
   const isDetailsPage = useIsNftDetailsPage()
   const isNFTPage = useIsNftPage()
   const isMobile = useIsMobile()
+  const usingGqlRouting = useGqlRoutingFlag() === GqlRoutingVariant.Enabled
 
   const sendTransaction = useSendTransaction((state) => state.sendTransaction)
   const transactionState = useSendTransaction((state) => state.state)
   const setTransactionState = useSendTransaction((state) => state.setState)
   const transactionStateRef = useRef(transactionState)
   const [setTransactionResponse] = useTransactionResponse((state) => [state.setTransactionResponse])
+  const tokenTradeInput = useTokenInput((state) => state.tokenTradeInput)
 
   const queryClient = useQueryClient()
 
   const itemsInBag = useMemo(() => recalculateBagUsingPooledAssets(uncheckedItemsInBag), [uncheckedItemsInBag])
 
-  const [isOpen, setModalIsOpen] = useState(false)
+  const [isModalOpen, setModalIsOpen] = useState(false)
   const [userCanScroll, setUserCanScroll] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
   const scrollRef = (node: HTMLDivElement) => {
@@ -122,9 +175,7 @@ const Bag = () => {
     }
   }
 
-  const { data: fetchedPriceData } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
-
-  const { totalEthPrice, totalUsdPrice } = useMemo(() => {
+  const { totalEthPrice } = useMemo(() => {
     const totalEthPrice = itemsInBag.reduce(
       (total, item) =>
         item.status !== BagItemStatus.UNAVAILABLE
@@ -136,17 +187,17 @@ const Bag = () => {
           : total,
       BigNumber.from(0)
     )
-    const totalUsdPrice = fetchedPriceData ? parseFloat(formatEther(totalEthPrice)) * fetchedPriceData : undefined
 
-    return { totalEthPrice, totalUsdPrice }
-  }, [itemsInBag, fetchedPriceData])
+    return { totalEthPrice }
+  }, [itemsInBag])
 
-  const purchaseAssets = async (routingData: RouteResponse) => {
+  const purchaseAssets = async (routingData: RouteResponse, purchasingWithErc20: boolean) => {
     if (!provider || !routingData) return
     const purchaseResponse = await sendTransaction(
       provider?.getSigner(),
       itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset),
-      routingData
+      routingData,
+      purchasingWithErc20
     )
     if (
       purchaseResponse &&
@@ -164,6 +215,8 @@ const Bag = () => {
     setBagExpanded({ bagExpanded: false, manualClose: true })
   }, [setBagExpanded])
 
+  const [fetchGqlRoute] = useNftRouteLazyQuery()
+
   const fetchAssets = async () => {
     const itemsToBuy = itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset)
     const ethSellObject = buildSellObject(
@@ -176,48 +229,125 @@ const Bag = () => {
     !bagIsLocked && setLocked(true)
     setBagStatus(BagStatus.FETCHING_ROUTE)
     try {
-      const data = await queryClient.fetchQuery(['assetsRoute', ethSellObject, itemsToBuy, account], () =>
-        fetchRoute({
-          toSell: [ethSellObject],
-          toBuy: itemsToBuy,
-          senderAddress: account ?? '',
+      if (usingGqlRouting) {
+        fetchGqlRoute({
+          variables: {
+            senderAddress: usingGqlRouting && account ? account : '',
+            nftTrades: usingGqlRouting ? buildNftTradeInputFromBagItems(itemsInBag) : [],
+            tokenTrades: tokenTradeInput ? tokenTradeInput : undefined,
+          },
+          onCompleted: (data) => {
+            if (!data.nftRoute || !data.nftRoute.route) {
+              setBagStatus(BagStatus.ADDING_TO_BAG)
+              setLocked(false)
+              return
+            }
+
+            const purchasingWithErc20 = !!tokenTradeInput
+            const { route, routeResponse } = buildRouteResponse(data.nftRoute, purchasingWithErc20)
+
+            const { hasPriceAdjustment, updatedAssets } = combineBuyItemsWithTxRoute(itemsToBuy, route)
+            const shouldRefetchCalldata = hasPriceAdjustment && purchasingWithErc20
+
+            const fetchedPriceChangedAssets = updatedAssets
+              .filter((asset) => asset.updatedPriceInfo)
+              .sort(sortUpdatedAssets)
+            const fetchedUnavailableAssets = updatedAssets.filter((asset) => asset.isUnavailable)
+            const fetchedUnchangedAssets = updatedAssets.filter(
+              (asset) => !asset.updatedPriceInfo && !asset.isUnavailable
+            )
+            const hasReviewedAssets = fetchedUnchangedAssets.length > 0
+            const hasAssetsInReview = fetchedPriceChangedAssets.length > 0
+            const hasUnavailableAssets = fetchedUnavailableAssets.length > 0
+            const hasAssets = hasReviewedAssets || hasAssetsInReview || hasUnavailableAssets
+            const shouldReview = hasAssetsInReview || hasUnavailableAssets
+
+            setItemsInBag([
+              ...fetchedUnavailableAssets.map((unavailableAsset) => ({
+                asset: unavailableAsset,
+                status: BagItemStatus.UNAVAILABLE,
+              })),
+              ...fetchedPriceChangedAssets.map((changedAsset) => ({
+                asset: changedAsset,
+                status: BagItemStatus.REVIEWING_PRICE_CHANGE,
+              })),
+              ...fetchedUnchangedAssets.map((unchangedAsset) => ({
+                asset: unchangedAsset,
+                status: BagItemStatus.REVIEWED,
+              })),
+            ])
+
+            let shouldLock = false
+
+            if (hasAssets) {
+              if (!shouldReview) {
+                if (shouldRefetchCalldata) {
+                  setBagStatus(BagStatus.CONFIRM_QUOTE)
+                } else {
+                  purchaseAssets(routeResponse, purchasingWithErc20)
+                  setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
+                  shouldLock = true
+                }
+              } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
+              else {
+                setBagStatus(BagStatus.IN_REVIEW)
+              }
+            } else {
+              setBagStatus(BagStatus.ADDING_TO_BAG)
+            }
+
+            setLocked(shouldLock)
+          },
         })
-      )
-
-      const updatedAssets = combineBuyItemsWithTxRoute(itemsToBuy, data.route)
-
-      const fetchedPriceChangedAssets = updatedAssets.filter((asset) => asset.updatedPriceInfo).sort(sortUpdatedAssets)
-      const fetchedUnavailableAssets = updatedAssets.filter((asset) => asset.isUnavailable)
-      const fetchedUnchangedAssets = updatedAssets.filter((asset) => !asset.updatedPriceInfo && !asset.isUnavailable)
-      const hasReviewedAssets = fetchedUnchangedAssets.length > 0
-      const hasAssetsInReview = fetchedPriceChangedAssets.length > 0
-      const hasUnavailableAssets = fetchedUnavailableAssets.length > 0
-      const hasAssets = hasReviewedAssets || hasAssetsInReview || hasUnavailableAssets
-      const shouldReview = hasAssetsInReview || hasUnavailableAssets
-
-      setItemsInBag([
-        ...fetchedUnavailableAssets.map((unavailableAsset) => ({
-          asset: unavailableAsset,
-          status: BagItemStatus.UNAVAILABLE,
-        })),
-        ...fetchedPriceChangedAssets.map((changedAsset) => ({
-          asset: changedAsset,
-          status: BagItemStatus.REVIEWING_PRICE_CHANGE,
-        })),
-        ...fetchedUnchangedAssets.map((unchangedAsset) => ({ asset: unchangedAsset, status: BagItemStatus.REVIEWED })),
-      ])
-      setLocked(false)
-
-      if (hasAssets) {
-        if (!shouldReview) {
-          purchaseAssets(data)
-          setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
-        } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
-        else {
-          setBagStatus(BagStatus.IN_REVIEW)
-        }
       } else {
-        setBagStatus(BagStatus.ADDING_TO_BAG)
+        const routeData = await queryClient.fetchQuery(['assetsRoute', ethSellObject, itemsToBuy, account], () =>
+          fetchRoute({
+            toSell: [ethSellObject],
+            toBuy: itemsToBuy,
+            senderAddress: account ?? '',
+          })
+        )
+
+        const { updatedAssets } = combineBuyItemsWithTxRoute(itemsToBuy, routeData.route)
+
+        const fetchedPriceChangedAssets = updatedAssets
+          .filter((asset) => asset.updatedPriceInfo)
+          .sort(sortUpdatedAssets)
+        const fetchedUnavailableAssets = updatedAssets.filter((asset) => asset.isUnavailable)
+        const fetchedUnchangedAssets = updatedAssets.filter((asset) => !asset.updatedPriceInfo && !asset.isUnavailable)
+        const hasReviewedAssets = fetchedUnchangedAssets.length > 0
+        const hasAssetsInReview = fetchedPriceChangedAssets.length > 0
+        const hasUnavailableAssets = fetchedUnavailableAssets.length > 0
+        const hasAssets = hasReviewedAssets || hasAssetsInReview || hasUnavailableAssets
+        const shouldReview = hasAssetsInReview || hasUnavailableAssets
+
+        setItemsInBag([
+          ...fetchedUnavailableAssets.map((unavailableAsset) => ({
+            asset: unavailableAsset,
+            status: BagItemStatus.UNAVAILABLE,
+          })),
+          ...fetchedPriceChangedAssets.map((changedAsset) => ({
+            asset: changedAsset,
+            status: BagItemStatus.REVIEWING_PRICE_CHANGE,
+          })),
+          ...fetchedUnchangedAssets.map((unchangedAsset) => ({
+            asset: unchangedAsset,
+            status: BagItemStatus.REVIEWED,
+          })),
+        ])
+        setLocked(false)
+
+        if (hasAssets) {
+          if (!shouldReview) {
+            purchaseAssets(routeData, false)
+            setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
+          } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
+          else {
+            setBagStatus(BagStatus.IN_REVIEW)
+          }
+        } else {
+          setBagStatus(BagStatus.ADDING_TO_BAG)
+        }
       }
     } catch (error) {
       setBagStatus(BagStatus.ADDING_TO_BAG)
@@ -229,8 +359,8 @@ const Bag = () => {
   }, [])
 
   useEffect(() => {
-    if (bagIsLocked && !isOpen) setModalIsOpen(true)
-  }, [bagIsLocked, isOpen])
+    if (bagIsLocked && !isModalOpen) setModalIsOpen(true)
+  }, [bagIsLocked, isModalOpen])
 
   useEffect(() => {
     if (transactionStateRef.current === TxStateType.Confirming) setBagStatus(BagStatus.PROCESSING_TRANSACTION)
@@ -247,8 +377,7 @@ const Bag = () => {
 
   useEffect(() => {
     setTotalEthPrice(totalEthPrice)
-    setTotalUsdPrice(totalUsdPrice)
-  }, [totalEthPrice, totalUsdPrice, setTotalEthPrice, setTotalUsdPrice])
+  }, [totalEthPrice, setTotalEthPrice])
 
   const hasAssetsToShow = itemsInBag.length > 0
 
@@ -269,10 +398,9 @@ const Bag = () => {
 
   const eventProperties = useMemo(
     () => ({
-      usd_value: totalUsdPrice,
       ...formatAssetEventProperties(itemsInBag.map((item) => item.asset)),
     }),
-    [itemsInBag, totalUsdPrice]
+    [itemsInBag]
   )
 
   if (!bagExpanded || !isNFTPage) {
@@ -281,56 +409,42 @@ const Bag = () => {
 
   return (
     <Portal>
-      {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (
-        <Column zIndex={isMobile || isOpen ? 'modalOverTooltip' : '3'} className={styles.bagContainer}>
-          <BagHeader
-            numberOfAssets={isProfilePage ? sellAssets.length : itemsInBag.length}
-            closeBag={handleCloseBag}
-            resetFlow={isProfilePage ? resetSellAssets : reset}
-            isProfilePage={isProfilePage}
-          />
-          {shouldRenderEmptyState && <EmptyState />}
-          <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
-          <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
-            {isProfilePage ? <ProfileBagContent /> : <BagContent />}
-          </Column>
-          {hasAssetsToShow && !isProfilePage && (
-            <BagFooter
-              totalEthPrice={totalEthPrice}
-              totalUsdPrice={totalUsdPrice}
-              bagStatus={bagStatus}
-              fetchAssets={fetchAssets}
-              eventProperties={eventProperties}
-            />
-          )}
-          {isSellingAssets && isProfilePage && (
-            <Box
-              marginTop="32"
-              marginX="28"
-              paddingY="10"
-              className={`${buttonTextMedium} ${commonButtonStyles}`}
-              backgroundColor="accentAction"
-              color="white"
-              textAlign="center"
-              onClick={() => {
-                isMobile && toggleBag()
-                setProfilePageState(ProfilePageStateType.LISTING)
-              }}
-            >
-              Continue
-            </Box>
-          )}
+      <BagContainer data-testid="nft-bag" raiseZIndex={isMobile || isModalOpen} isProfilePage={isProfilePage}>
+        <BagHeader
+          numberOfAssets={isProfilePage ? sellAssets.length : itemsInBag.length}
+          closeBag={handleCloseBag}
+          resetFlow={isProfilePage ? resetSellAssets : reset}
+          isProfilePage={isProfilePage}
+        />
+        {shouldRenderEmptyState && <EmptyState />}
+        <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
+        <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
+          {isProfilePage ? <ProfileBagContent /> : <BagContent />}
         </Column>
-      ) : (
-        <Column zIndex={isMobile || isOpen ? 'modalOverTooltip' : '3'} className={styles.bagContainer}>
-          <ListingModal />
-        </Column>
-      )}
+        {hasAssetsToShow && !isProfilePage && (
+          <BagFooter totalEthPrice={totalEthPrice} fetchAssets={fetchAssets} eventProperties={eventProperties} />
+        )}
+        {isSellingAssets && isProfilePage && (
+          <ContinueButton
+            onClick={() => {
+              toggleBag()
+              setProfilePageState(ProfilePageStateType.LISTING)
+              sendAnalyticsEvent(NFTEventName.NFT_PROFILE_PAGE_START_SELL, {
+                list_quantity: sellAssets.length,
+                collection_addresses: sellAssets.map((asset) => asset.asset_contract.address),
+                token_ids: sellAssets.map((asset) => asset.tokenId),
+              })
+            }}
+          >
+            <Trans>Continue</Trans>
+          </ContinueButton>
+        )}
+      </BagContainer>
 
       {isDetailsPage ? (
         <DetailsPageBackground onClick={toggleBag} />
       ) : (
-        isOpen && <Overlay onClick={() => (!bagIsLocked ? setModalIsOpen(false) : undefined)} />
+        isModalOpen && <Overlay onClick={() => (!bagIsLocked ? setModalIsOpen(false) : undefined)} />
       )}
     </Portal>
   )

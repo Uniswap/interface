@@ -9,7 +9,7 @@ import { isMobile } from '../../utils/userAgent'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 
-const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ scrollOverlay?: boolean }>`
+const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ $scrollOverlay?: boolean }>`
   &[data-reach-dialog-overlay] {
     z-index: ${Z_INDEX.modalBackdrop};
     background-color: transparent;
@@ -17,7 +17,10 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ scrollOverlay?: bool
 
     display: flex;
     align-items: center;
-    overflow-y: ${({ scrollOverlay }) => scrollOverlay && 'scroll'};
+    @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+      align-items: flex-end;
+    }
+    overflow-y: ${({ $scrollOverlay }) => $scrollOverlay && 'scroll'};
     justify-content: center;
 
     background-color: ${({ theme }) => theme.backgroundScrim};
@@ -27,7 +30,6 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ scrollOverlay?: bool
 type StyledDialogProps = {
   $minHeight?: number | false
   $maxHeight?: number
-  $isBottomSheet?: boolean
   $scrollOverlay?: boolean
   $hideBorder?: boolean
   $maxWidth: number
@@ -39,15 +41,13 @@ const StyledDialogContent = styled(AnimatedDialogContent)<StyledDialogProps>`
 
   &[data-reach-dialog-content] {
     margin: auto;
-    background-color: ${({ theme }) => theme.deprecated_bg0};
-    border: ${({ theme, $hideBorder }) => !$hideBorder && `1px solid ${theme.deprecated_bg1}`};
+    background-color: ${({ theme }) => theme.backgroundSurface};
+    border: ${({ theme, $hideBorder }) => !$hideBorder && `1px solid ${theme.backgroundOutline}`};
     box-shadow: ${({ theme }) => theme.deepShadow};
     padding: 0px;
     width: 50vw;
     overflow-y: auto;
     overflow-x: hidden;
-
-    align-self: ${({ $isBottomSheet }) => $isBottomSheet && 'flex-end'};
     max-width: ${({ $maxWidth }) => $maxWidth}px;
     ${({ $maxHeight }) =>
       $maxHeight &&
@@ -61,22 +61,17 @@ const StyledDialogContent = styled(AnimatedDialogContent)<StyledDialogProps>`
       `}
     display: ${({ $scrollOverlay }) => ($scrollOverlay ? 'inline-table' : 'flex')};
     border-radius: 20px;
-    ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
+
+    @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
       width: 65vw;
-      margin: auto;
-    `}
-    ${({ theme, $isBottomSheet }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-      width:  85vw;
-      ${
-        $isBottomSheet &&
-        css`
-          width: 100vw;
-          border-radius: 20px;
-          border-bottom-left-radius: 0;
-          border-bottom-right-radius: 0;
-        `
-      }
-    `}
+    }
+    @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+      margin: 0;
+      width: 100vw;
+      border-radius: 20px;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
   }
 `
 
@@ -89,9 +84,8 @@ interface ModalProps {
   maxWidth?: number
   initialFocusRef?: React.RefObject<any>
   children?: React.ReactNode
-  scrollOverlay?: boolean
+  $scrollOverlay?: boolean
   hideBorder?: boolean
-  isBottomSheet?: boolean
 }
 
 export default function Modal({
@@ -103,8 +97,7 @@ export default function Modal({
   initialFocusRef,
   children,
   onSwipe = onDismiss,
-  scrollOverlay,
-  isBottomSheet = isMobile,
+  $scrollOverlay,
   hideBorder = false,
 }: ModalProps) {
   const fadeTransition = useTransition(isOpen, {
@@ -136,7 +129,7 @@ export default function Modal({
               onDismiss={onDismiss}
               initialFocusRef={initialFocusRef}
               unstable_lockFocusAcrossFrames={false}
-              scrollOverlay={scrollOverlay}
+              $scrollOverlay={$scrollOverlay}
             >
               <StyledDialogContent
                 {...(isMobile
@@ -148,8 +141,7 @@ export default function Modal({
                 aria-label="dialog"
                 $minHeight={minHeight}
                 $maxHeight={maxHeight}
-                $isBottomSheet={isBottomSheet}
-                $scrollOverlay={scrollOverlay}
+                $scrollOverlay={$scrollOverlay}
                 $hideBorder={hideBorder}
                 $maxWidth={maxWidth}
               >

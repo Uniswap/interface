@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { Percent, Price, Token } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
@@ -15,9 +16,9 @@ import { Link } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components/macro'
 import { HideSmall, MEDIA_WIDTHS, SmallOnly } from 'theme'
-import { PositionDetails } from 'types/position'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
+import { hasURL } from 'utils/urlChecks'
 
 import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 
@@ -29,7 +30,7 @@ const LinkRow = styled(Link)`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
   padding: 16px;
   text-decoration: none;
   font-weight: 500;
@@ -73,7 +74,7 @@ const RangeLineItem = styled(DataLineItem)`
 
 const DoubleArrow = styled.span`
   margin: 0 2px;
-  color: ${({ theme }) => theme.deprecated_text3};
+  color: ${({ theme }) => theme.textTertiary};
 `
 
 const RangeText = styled.span`
@@ -82,7 +83,7 @@ const RangeText = styled.span`
 `
 
 const ExtentsText = styled.span`
-  color: ${({ theme }) => theme.deprecated_text3};
+  color: ${({ theme }) => theme.textTertiary};
   font-size: 14px;
   margin-right: 4px;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
@@ -109,7 +110,13 @@ const DataText = styled.div`
 `
 
 interface PositionListItemProps {
-  positionDetails: PositionDetails
+  token0: string
+  token1: string
+  tokenId: BigNumber
+  fee: number
+  liquidity: BigNumber
+  tickLower: number
+  tickUpper: number
 }
 
 export function getPriceOrderingFromPositionForUI(position?: Position): {
@@ -166,16 +173,15 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   }
 }
 
-export default function PositionListItem({ positionDetails }: PositionListItemProps) {
-  const {
-    token0: token0Address,
-    token1: token1Address,
-    fee: feeAmount,
-    liquidity,
-    tickLower,
-    tickUpper,
-  } = positionDetails
-
+export default function PositionListItem({
+  token0: token0Address,
+  token1: token1Address,
+  tokenId,
+  fee: feeAmount,
+  liquidity,
+  tickLower,
+  tickUpper,
+}: PositionListItemProps) {
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
 
@@ -203,9 +209,22 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
   // check if price is within range
   const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
 
-  const positionSummaryLink = '/pool/' + positionDetails.tokenId
+  const positionSummaryLink = '/pool/' + tokenId
 
   const removed = liquidity?.eq(0)
+
+  const containsURL = useMemo(
+    () =>
+      [token0?.name, token0?.symbol, token1?.name, token1?.symbol].reduce(
+        (acc, testString) => acc || Boolean(testString && hasURL(testString)),
+        false
+      ),
+    [token0?.name, token0?.symbol, token1?.name, token1?.symbol]
+  )
+
+  if (containsURL) {
+    return null
+  }
 
   return (
     <LinkRow to={positionSummaryLink}>
@@ -232,8 +251,12 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
               <Trans>Min: </Trans>
             </ExtentsText>
             <Trans>
-              {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} <HoverInlineText text={currencyQuote?.symbol} />{' '}
-              per <HoverInlineText text={currencyBase?.symbol ?? ''} />
+              {formatTickPrice({
+                price: priceLower,
+                atLimit: tickAtLimit,
+                direction: Bound.LOWER,
+              })}{' '}
+              <HoverInlineText text={currencyQuote?.symbol} /> per <HoverInlineText text={currencyBase?.symbol ?? ''} />
             </Trans>
           </RangeText>{' '}
           <HideSmall>
@@ -247,8 +270,13 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
               <Trans>Max:</Trans>
             </ExtentsText>
             <Trans>
-              {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)} <HoverInlineText text={currencyQuote?.symbol} />{' '}
-              per <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
+              {formatTickPrice({
+                price: priceUpper,
+                atLimit: tickAtLimit,
+                direction: Bound.UPPER,
+              })}{' '}
+              <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
+              <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
             </Trans>
           </RangeText>
         </RangeLineItem>

@@ -1,5 +1,5 @@
 import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import React from 'react'
 import { Check } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -64,14 +64,13 @@ const HeaderText = styled.div`
   ${flexRowNoWrap};
   align-items: center;
   justify-content: center;
-  color: ${(props) =>
-    props.color === 'blue' ? ({ theme }) => theme.deprecated_primary1 : ({ theme }) => theme.deprecated_text1};
+  color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.accentAction : ({ theme }) => theme.textPrimary)};
   font-size: 16px;
   font-weight: 600;
 `
 
 const SubHeader = styled.div`
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
   margin-top: 10px;
   font-size: 12px;
 `
@@ -117,9 +116,9 @@ export default function Option({
   const content = (
     <TraceEvent
       events={[BrowserEvent.onClick]}
-      name={EventName.WALLET_SELECTED}
+      name={InterfaceEventName.WALLET_SELECTED}
       properties={{ wallet_type: header }}
-      element={ElementName.WALLET_TYPE_OPTION}
+      element={InterfaceElementName.WALLET_TYPE_OPTION}
     >
       <OptionCardClickable
         id={id}

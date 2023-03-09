@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
-import { PageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import ExecuteModal from 'components/vote/ExecuteModal'
@@ -69,7 +69,7 @@ const PageWrapper = styled(AutoColumn)`
 `
 
 const ProposalInfo = styled(AutoColumn)`
-  background: ${({ theme }) => theme.deprecated_bg0};
+  background: ${({ theme }) => theme.backgroundSurface};
   border-radius: 12px;
   padding: 1.5rem;
   position: relative;
@@ -82,10 +82,10 @@ const ArrowWrapper = styled(StyledInternalLink)`
   align-items: center;
   gap: 8px;
   height: 24px;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
 
   a {
-    color: ${({ theme }) => theme.deprecated_text1};
+    color: ${({ theme }) => theme.textPrimary};
     text-decoration: none;
   }
   :hover {
@@ -119,7 +119,7 @@ const ProgressWrapper = styled.div`
 const Progress = styled.div<{ status: 'for' | 'against'; percentageString?: string }>`
   height: 4px;
   border-radius: 4px;
-  background-color: ${({ theme, status }) => (status === 'for' ? theme.deprecated_green1 : theme.deprecated_red1)};
+  background-color: ${({ theme, status }) => (status === 'for' ? theme.accentSuccess : theme.accentFailure)};
   width: ${({ percentageString }) => percentageString ?? '0%'};
 `
 
@@ -271,7 +271,7 @@ export default function VotePage() {
   }
 
   return (
-    <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
+    <Trace page={InterfacePageName.VOTE_PAGE} shouldLogImpression>
       <>
         <PageWrapper gap="lg" justify="center">
           <VoteModal

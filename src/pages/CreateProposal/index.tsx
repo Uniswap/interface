@@ -2,7 +2,7 @@ import { defaultAbiCoder } from '@ethersproject/abi'
 import { getAddress, isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
-import { PageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonError } from 'components/Button'
@@ -239,14 +239,14 @@ ${bodyValue}
   }
 
   return (
-    <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
+    <Trace page={InterfacePageName.VOTE_PAGE} shouldLogImpression>
       <PageWrapper>
         <AppBody $maxWidth="800px">
           <CreateProposalTabs />
           <CreateProposalWrapper>
             <BlueCard>
               <AutoColumn gap="10px">
-                <ThemedText.DeprecatedLink fontWeight={400} color="deprecated_primaryText1">
+                <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
                   <Trans>
                     <strong>Tip:</strong> Select an action and describe your proposal for the community. The proposal
                     cannot be modified after submission, so please verify all information before submitting. The voting

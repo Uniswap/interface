@@ -62,7 +62,7 @@ jobs:
         continue-on-error: true
         timeout-minutes: 2
         with:
-          cid: ${{ steps.upload.outputs.hash }}
+          cid: ${{ steps.pinata.outputs.hash }}
           seeds: ${{ secrets.CRUST_SEEDS }}
 
       - name: Convert CIDv0 to CIDv1
@@ -93,7 +93,7 @@ jobs:
             IPFS gateways:
             - https://${{ steps.convert-cidv0.outputs.cidv1 }}.ipfs.dweb.link/
             - https://${{ steps.convert-cidv0.outputs.cidv1 }}.ipfs.cf-ipfs.com/
-            - [ipfs://${{ steps.upload.outputs.hash }}/](ipfs://${{ steps.pinata.outputs.hash }}/)
+            - [ipfs://${{ steps.pinata.outputs.hash }}/](ipfs://${{ steps.pinata.outputs.hash }}/)
 
             ${{ needs.tag.outputs.changelog }}
 
@@ -110,3 +110,15 @@ jobs:
           projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
           directory: build
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload source maps to Sentry
+        uses: getsentry/action-release@bd5f874fcda966ba48139b0140fb3ec0cb3aabdd
+        continue-on-error: true
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          environment: production
+          sourcemaps: './build/static/js'
+          url_prefix: '~/static/js'

@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
-import { EventName, ModalName } from '@uniswap/analytics-events'
+import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
@@ -32,8 +32,10 @@ import { PaddedColumn, SearchInput, Separator } from './styleds'
 const ContentWrapper = styled(Column)`
   background-color: ${({ theme }) => theme.backgroundSurface};
   width: 100%;
+  overflow: hidden;
   flex: 1 1;
   position: relative;
+  border-radius: 20px;
 `
 
 interface CurrencySearchProps {
@@ -45,6 +47,7 @@ interface CurrencySearchProps {
   showCommonBases?: boolean
   showCurrencyAmount?: boolean
   disableNonToken?: boolean
+  onlyShowCurrenciesWithBalance?: boolean
 }
 
 export function CurrencySearch({
@@ -56,6 +59,7 @@ export function CurrencySearch({
   disableNonToken,
   onDismiss,
   isOpen,
+  onlyShowCurrenciesWithBalance,
 }: CurrencySearchProps) {
   const { chainId } = useWeb3React()
   const theme = useTheme()
@@ -92,6 +96,10 @@ export function CurrencySearch({
       !balancesAreLoading
         ? filteredTokens
             .filter((token) => {
+              if (onlyShowCurrenciesWithBalance) {
+                return balances[token.address]?.greaterThan(0)
+              }
+
               // If there is no query, filter out unselected user-added tokens with no balance.
               if (!debouncedQuery && token instanceof UserAddedToken) {
                 if (selectedCurrency?.equals(token) || otherSelectedCurrency?.equals(token)) return true
@@ -101,7 +109,15 @@ export function CurrencySearch({
             })
             .sort(tokenComparator.bind(null, balances))
         : [],
-    [balances, balancesAreLoading, debouncedQuery, filteredTokens, otherSelectedCurrency, selectedCurrency]
+    [
+      balances,
+      balancesAreLoading,
+      debouncedQuery,
+      filteredTokens,
+      otherSelectedCurrency,
+      selectedCurrency,
+      onlyShowCurrenciesWithBalance,
+    ]
   )
   const isLoading = Boolean(balancesAreLoading && !tokenLoaderTimerElapsed)
 
@@ -114,11 +130,23 @@ export function CurrencySearch({
     const s = debouncedQuery.toLowerCase().trim()
 
     const tokens = filteredSortedTokens.filter((t) => !(t.equals(wrapped) || (disableNonToken && t.isNative)))
-    const natives = (disableNonToken || native.equals(wrapped) ? [wrapped] : [native, wrapped]).filter(
-      (n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1
-    )
+    const shouldShowWrapped =
+      !onlyShowCurrenciesWithBalance || (!balancesAreLoading && balances[wrapped.address]?.greaterThan(0))
+    const natives = (
+      disableNonToken || native.equals(wrapped) ? [wrapped] : shouldShowWrapped ? [native, wrapped] : [native]
+    ).filter((n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1)
+
     return [...natives, ...tokens]
-  }, [debouncedQuery, filteredSortedTokens, wrapped, disableNonToken, native])
+  }, [
+    debouncedQuery,
+    filteredSortedTokens,
+    onlyShowCurrenciesWithBalance,
+    balancesAreLoading,
+    balances,
+    wrapped,
+    disableNonToken,
+    native,
+  ])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency, hasWarning?: boolean) => {
@@ -168,7 +196,9 @@ export function CurrencySearch({
 
   // if no results on main list, show option to expand into inactive
   const filteredInactiveTokens = useSearchInactiveTokenLists(
-    filteredTokens.length === 0 || (debouncedQuery.length > 2 && !isAddressSearch) ? debouncedQuery : undefined
+    !onlyShowCurrenciesWithBalance && (filteredTokens.length === 0 || (debouncedQuery.length > 2 && !isAddressSearch))
+      ? debouncedQuery
+      : undefined
   )
 
   // Timeout token loader after 3 seconds to avoid hanging in a loading state.
@@ -181,7 +211,11 @@ export function CurrencySearch({
 
   return (
     <ContentWrapper>
-      <Trace name={EventName.TOKEN_SELECTOR_OPENED} modal={ModalName.TOKEN_SELECTOR} shouldLogImpression>
+      <Trace
+        name={InterfaceEventName.TOKEN_SELECTOR_OPENED}
+        modal={InterfaceModalName.TOKEN_SELECTOR}
+        shouldLogImpression
+      >
         <PaddedColumn gap="16px">
           <RowBetween>
             <Text fontWeight={500} fontSize={16}>
@@ -251,7 +285,7 @@ export function CurrencySearch({
           </div>
         ) : (
           <Column style={{ padding: '20px', height: '100%' }}>
-            <ThemedText.DeprecatedMain color={theme.deprecated_text3} textAlign="center" mb="20px">
+            <ThemedText.DeprecatedMain color={theme.textTertiary} textAlign="center" mb="20px">
               <Trans>No results found.</Trans>
             </ThemedText.DeprecatedMain>
           </Column>

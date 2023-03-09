@@ -26,6 +26,7 @@ export const NumericInput = forwardRef<HTMLInputElement, BoxProps>((props, ref) 
     <Box
       ref={ref}
       as="input"
+      inputMode="decimal"
       autoComplete="off"
       type="text"
       borderColor={{ default: 'backgroundOutline', focus: 'textSecondary' }}

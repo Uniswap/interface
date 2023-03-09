@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
@@ -347,13 +347,13 @@ export default function AddLiquidity() {
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <ThemedText.DeprecatedLink fontWeight={600} color="deprecated_primaryText1">
+                      <ThemedText.DeprecatedLink fontWeight={600} color="accentAction">
                         <Trans>You are the first liquidity provider.</Trans>
                       </ThemedText.DeprecatedLink>
-                      <ThemedText.DeprecatedLink fontWeight={400} color="deprecated_primaryText1">
+                      <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
                         <Trans>The ratio of tokens you add will set the price of this pool.</Trans>
                       </ThemedText.DeprecatedLink>
-                      <ThemedText.DeprecatedLink fontWeight={400} color="deprecated_primaryText1">
+                      <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
                         <Trans>Once you are happy with the rate click supply to review.</Trans>
                       </ThemedText.DeprecatedLink>
                     </AutoColumn>
@@ -363,7 +363,7 @@ export default function AddLiquidity() {
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <ThemedText.DeprecatedLink fontWeight={400} color="deprecated_primaryText1">
+                      <ThemedText.DeprecatedLink fontWeight={400} color="accentAction">
                         <Trans>
                           <b>
                             <Trans>Tip:</Trans>
@@ -390,7 +390,7 @@ export default function AddLiquidity() {
               showCommonBases
             />
             <ColumnCenter>
-              <Plus size="16" color={theme.deprecated_text2} />
+              <Plus size="16" color={theme.textSecondary} />
             </ColumnCenter>
             <CurrencyInputPanel
               value={formattedAmounts[Field.CURRENCY_B]}
@@ -437,9 +437,9 @@ export default function AddLiquidity() {
             ) : !account ? (
               <TraceEvent
                 events={[BrowserEvent.onClick]}
-                name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+                name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
                 properties={{ received_swap_quote: false }}
-                element={ElementName.CONNECT_WALLET_BUTTON}
+                element={InterfaceElementName.CONNECT_WALLET_BUTTON}
               >
                 <ButtonLight onClick={toggleWalletModal}>
                   <Trans>Connect Wallet</Trans>

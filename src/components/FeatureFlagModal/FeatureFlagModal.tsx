@@ -1,5 +1,8 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
-import { LandingPageVariant, useLandingPageFlag } from 'featureFlags/flags/landingPage'
+import { GqlRoutingVariant, useGqlRoutingFlag } from 'featureFlags/flags/gqlRouting'
+import { NftGraphqlVariant, useNftGraphqlFlag } from 'featureFlags/flags/nftlGraphql'
+import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
+import { SwapWidgetVariant, useSwapWidgetFlag } from 'featureFlags/flags/swapWidget'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
@@ -163,7 +166,7 @@ function FeatureFlagGroup({ name, children }: PropsWithChildren<{ name: string }
   )
 }
 
-function FeatureFlagOption({ variant, featureFlag, value, label }: FeatureFlagProps) {
+function FeatureFlagOption({ variant, featureFlag, label }: FeatureFlagProps) {
   const updateFlag = useUpdateFlag()
   const [count, setCount] = useState(0)
   const featureFlags = useAtomValue(featureFlagSettings)
@@ -202,20 +205,36 @@ export default function FeatureFlagModal() {
           <X size={24} />
         </CloseButton>
       </Header>
+      <FeatureFlagOption
+        variant={PayWithAnyTokenVariant}
+        value={usePayWithAnyTokenFlag()}
+        featureFlag={FeatureFlag.payWithAnyToken}
+        label="Pay With Any Token"
+      />
+      <FeatureFlagOption
+        variant={SwapWidgetVariant}
+        value={useSwapWidgetFlag()}
+        featureFlag={FeatureFlag.swapWidget}
+        label="Swap Widget"
+      />
+      <FeatureFlagOption
+        variant={GqlRoutingVariant}
+        value={useGqlRoutingFlag()}
+        featureFlag={FeatureFlag.gqlRouting}
+        label="GraphQL NFT Routing"
+      />
+      <FeatureFlagOption
+        variant={NftGraphqlVariant}
+        value={useNftGraphqlFlag()}
+        featureFlag={FeatureFlag.nftGraphql}
+        label="Migrate NFT read endpoints to GQL"
+      />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
           variant={TraceJsonRpcVariant}
           value={useTraceJsonRpcFlag()}
           featureFlag={FeatureFlag.traceJsonRpc}
           label="Enables JSON-RPC tracing"
-        />
-      </FeatureFlagGroup>
-      <FeatureFlagGroup name="Tokens">
-        <FeatureFlagOption
-          variant={LandingPageVariant}
-          value={useLandingPageFlag()}
-          featureFlag={FeatureFlag.landingPage}
-          label="Landing Page"
         />
       </FeatureFlagGroup>
       <SaveButton onClick={() => window.location.reload()}>Reload</SaveButton>

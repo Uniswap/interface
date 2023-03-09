@@ -1,25 +1,27 @@
-import { initializeAnalytics, OriginApplication, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
-import { CustomUserProperties, EventName, getBrowser, PageName } from '@uniswap/analytics-events'
+import { getDeviceId, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
+import { CustomUserProperties, getBrowser, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
 import Loader from 'components/Loader'
+import { MenuDropdown } from 'components/NavBar/MenuDropdown'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
-import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
-import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
-import { useBag } from 'nft/hooks'
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { STATSIG_DUMMY_KEY } from 'integrations'
+import { Box } from 'nft/components/Box'
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
+import { StatsigProvider, StatsigUser } from 'statsig-react'
 import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { isProductionEnv } from 'utils/env'
+import { getEnvName } from 'utils/env'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
+import { PageTabs } from '../components/NavBar'
 import NavBar from '../components/NavBar'
 import Polling from '../components/Polling'
 import Popups from '../components/Popups'
@@ -28,10 +30,10 @@ import DarkModeQueryParamReader from '../theme/components/DarkModeQueryParamRead
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
-import Earn from './Earn'
-import Manage from './Earn/Manage'
+import Landing from './Landing'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
+import NotFound from './NotFound'
 import Pool from './Pool'
 import { PositionPage } from './Pool/PositionPage'
 import PoolV2 from './Pool/v2'
@@ -39,7 +41,7 @@ import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
-import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly } from './Swap/redirects'
+import { RedirectPathToSwapOnly } from './Swap/redirects'
 import Tokens from './Tokens'
 
 const TokenDetails = lazy(() => import('./TokenDetails'))
@@ -49,33 +51,33 @@ const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
 
-// Placeholder API key. Actual API key used in the proxy server
-const ANALYTICS_DUMMY_KEY = '00000000000000000000000000000000'
-const ANALYTICS_PROXY_URL = process.env.REACT_APP_AMPLITUDE_PROXY_URL
-const COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
-initializeAnalytics(ANALYTICS_DUMMY_KEY, OriginApplication.INTERFACE, {
-  proxyUrl: ANALYTICS_PROXY_URL,
-  defaultEventName: EventName.PAGE_VIEWED,
-  commitHash: COMMIT_HASH,
-  isProductionEnv: isProductionEnv(),
-})
-
-const AppWrapper = styled.div`
-  display: flex;
-  flex-flow: column;
-  align-items: flex-start;
-`
-
 const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 72px 0px 0px 0px;
+  min-height: 100vh;
+  padding: ${({ theme }) => theme.navHeight}px 0px 5rem 0px;
   align-items: center;
   flex: 1;
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    padding: 52px 0px 16px 0px;
-  `};
+`
+
+const MobileBottomBar = styled.div`
+  z-index: ${Z_INDEX.sticky};
+  position: fixed;
+  display: flex;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 100vw;
+  justify-content: space-between;
+  padding: 4px 8px;
+  height: ${({ theme }) => theme.mobileBottomBarHeight}px;
+  background: ${({ theme }) => theme.backgroundSurface};
+  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+    display: none;
+  }
 `
 
 const HeaderWrapper = styled.div<{ transparent?: boolean }>`
@@ -86,31 +88,27 @@ const HeaderWrapper = styled.div<{ transparent?: boolean }>`
   justify-content: space-between;
   position: fixed;
   top: 0;
-  z-index: ${Z_INDEX.sticky};
+  z-index: ${Z_INDEX.dropdown};
 `
 
-const Marginer = styled.div`
-  margin-top: 5rem;
-`
-
-function getCurrentPageFromLocation(locationPathname: string): PageName | undefined {
+function getCurrentPageFromLocation(locationPathname: string): InterfacePageName | undefined {
   switch (true) {
     case locationPathname.startsWith('/swap'):
-      return PageName.SWAP_PAGE
+      return InterfacePageName.SWAP_PAGE
     case locationPathname.startsWith('/vote'):
-      return PageName.VOTE_PAGE
+      return InterfacePageName.VOTE_PAGE
     case locationPathname.startsWith('/pool'):
-      return PageName.POOL_PAGE
+      return InterfacePageName.POOL_PAGE
     case locationPathname.startsWith('/tokens'):
-      return PageName.TOKENS_PAGE
+      return InterfacePageName.TOKENS_PAGE
     case locationPathname.startsWith('/nfts/profile'):
-      return PageName.NFT_PROFILE_PAGE
+      return InterfacePageName.NFT_PROFILE_PAGE
     case locationPathname.startsWith('/nfts/asset'):
-      return PageName.NFT_DETAILS_PAGE
+      return InterfacePageName.NFT_DETAILS_PAGE
     case locationPathname.startsWith('/nfts/collection'):
-      return PageName.NFT_COLLECTION_PAGE
+      return InterfacePageName.NFT_COLLECTION_PAGE
     case locationPathname.startsWith('/nfts'):
-      return PageName.NFT_EXPLORE_PAGE
+      return InterfacePageName.NFT_EXPLORE_PAGE
     default:
       return undefined
   }
@@ -147,15 +145,17 @@ export default function App() {
   }, [pathname])
 
   useEffect(() => {
-    sendAnalyticsEvent(EventName.APP_LOADED)
+    sendAnalyticsEvent(SharedEventName.APP_LOADED)
     user.set(CustomUserProperties.USER_AGENT, navigator.userAgent)
     user.set(CustomUserProperties.BROWSER, getBrowser())
     user.set(CustomUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
     user.set(CustomUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
-    getCLS(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { cumulative_layout_shift: delta }))
-    getFCP(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_contentful_paint_ms: delta }))
-    getFID(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_input_delay_ms: delta }))
-    getLCP(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { largest_contentful_paint_ms: delta }))
+    getCLS(({ delta }: Metric) => sendAnalyticsEvent(SharedEventName.WEB_VITALS, { cumulative_layout_shift: delta }))
+    getFCP(({ delta }: Metric) => sendAnalyticsEvent(SharedEventName.WEB_VITALS, { first_contentful_paint_ms: delta }))
+    getFID(({ delta }: Metric) => sendAnalyticsEvent(SharedEventName.WEB_VITALS, { first_input_delay_ms: delta }))
+    getLCP(({ delta }: Metric) =>
+      sendAnalyticsEvent(SharedEventName.WEB_VITALS, { largest_contentful_paint_ms: delta })
+    )
   }, [])
 
   useEffect(() => {
@@ -174,16 +174,32 @@ export default function App() {
     return () => window.removeEventListener('scroll', scrollListener)
   }, [])
 
-  const isBagExpanded = useBag((state) => state.bagExpanded)
+  const isHeaderTransparent = !scrolledState
 
-  const isHeaderTransparent = !scrolledState && !isBagExpanded
+  const { account } = useWeb3React()
+  const statsigUser: StatsigUser = useMemo(
+    () => ({
+      userID: getDeviceId(),
+      customIDs: { address: account ?? '' },
+    }),
+    [account]
+  )
 
   return (
     <ErrorBoundary>
       <DarkModeQueryParamReader />
       <ApeModeQueryParamReader />
-      <AppWrapper>
-        <Trace page={currentPage}>
+      <Trace page={currentPage}>
+        <StatsigProvider
+          user={statsigUser}
+          // TODO: replace with proxy and cycle key
+          sdkKey={STATSIG_DUMMY_KEY}
+          waitForInitialization={false}
+          options={{
+            environment: { tier: getEnvName() },
+            api: process.env.REACT_APP_STATSIG_PROXY_URL,
+          }}
+        >
           <HeaderWrapper transparent={isHeaderTransparent}>
             <NavBar />
           </HeaderWrapper>
@@ -194,6 +210,8 @@ export default function App() {
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
+                  <Route path="/" element={<Landing />} />
+
                   <Route path="tokens" element={<Tokens />}>
                     <Route path=":chainName" />
                   </Route>
@@ -207,9 +225,6 @@ export default function App() {
                     }
                   />
                   <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
-                  <Route path="claim" element={<OpenClaimAddressModalAndRedirectToSwap />} />
-                  <Route path="uni" element={<Earn />} />
-                  <Route path="uni/:currencyIdA/:currencyIdB" element={<Manage />} />
 
                   <Route path="send" element={<RedirectPathToSwapOnly />} />
                   <Route path="swap" element={<Swap />} />
@@ -243,12 +258,9 @@ export default function App() {
                   <Route path="migrate/v2" element={<MigrateV2 />} />
                   <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
 
-                  <Route path="*" element={<RedirectPathToSwapOnly />} />
-
                   <Route
                     path="/nfts"
                     element={
-                      // TODO: replace loading state during Apollo migration
                       <Suspense fallback={null}>
                         <NftExplore />
                       </Suspense>
@@ -257,7 +269,7 @@ export default function App() {
                   <Route
                     path="/nfts/asset/:contractAddress/:tokenId"
                     element={
-                      <Suspense fallback={<AssetDetailsLoading />}>
+                      <Suspense fallback={null}>
                         <Asset />
                       </Suspense>
                     }
@@ -265,7 +277,7 @@ export default function App() {
                   <Route
                     path="/nfts/profile"
                     element={
-                      <Suspense fallback={<ProfilePageLoadingSkeleton />}>
+                      <Suspense fallback={null}>
                         <Profile />
                       </Suspense>
                     }
@@ -273,7 +285,7 @@ export default function App() {
                   <Route
                     path="/nfts/collection/:contractAddress"
                     element={
-                      <Suspense fallback={<CollectionPageSkeleton />}>
+                      <Suspense fallback={null}>
                         <Collection />
                       </Suspense>
                     }
@@ -281,20 +293,28 @@ export default function App() {
                   <Route
                     path="/nfts/collection/:contractAddress/activity"
                     element={
-                      <Suspense fallback={<CollectionPageSkeleton />}>
+                      <Suspense fallback={null}>
                         <Collection />
                       </Suspense>
                     }
                   />
+
+                  <Route path="*" element={<Navigate to="/not-found" replace />} />
+                  <Route path="/not-found" element={<NotFound />} />
                 </Routes>
               ) : (
                 <Loader />
               )}
             </Suspense>
-            <Marginer />
           </BodyWrapper>
-        </Trace>
-      </AppWrapper>
+          <MobileBottomBar>
+            <PageTabs />
+            <Box marginY="4">
+              <MenuDropdown />
+            </Box>
+          </MobileBottomBar>
+        </StatsigProvider>
+      </Trace>
     </ErrorBoundary>
   )
 }

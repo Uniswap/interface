@@ -1,15 +1,17 @@
+import { Plural } from '@lingui/macro'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import ms from 'ms.macro'
-import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Column, Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
-import { bodySmall, buttonTextMedium, caption } from 'nft/css/common.css'
+import { body, caption } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
-import { pluralize } from 'nft/utils/roundAndPluralize'
-import { useEffect, useMemo, useState } from 'react'
-import { AlertTriangle } from 'react-feather'
+import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import { AlertTriangle, ChevronDown } from 'react-feather'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import { Z_INDEX } from 'theme/zIndex'
+
+import { Dropdown } from './Dropdown'
 
 const ModalWrapper = styled(Column)`
   gap: 4px;
@@ -17,25 +19,50 @@ const ModalWrapper = styled(Column)`
 `
 
 const InputWrapper = styled(Row)<{ isInvalid: boolean }>`
-  padding: 12px 8px 12px 12px;
+  padding: 6px 6px 6px 12px;
   border: 1px solid;
   position: relative;
   height: 44px;
   border-radius: 8px;
   border-color: ${({ isInvalid, theme }) => (isInvalid ? theme.accentCritical : theme.backgroundOutline)};
+  width: 160px;
+  justify-content: space-between;
 `
 
-const DropdownWrapper = styled(ThemedText.BodyPrimary)`
+const DropdownPrompt = styled(Row)`
+  gap: 4px;
+  background-color: ${({ theme }) => theme.backgroundInteractive};
   cursor: pointer;
-  display: flex;
-  justify-content: flex-end;
-  height: min-content;
-  width: 80px;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 16px;
+  border-radius: 8px;
+  padding: 6px 4px 6px 8px;
+  white-space: nowrap;
+  color: ${({ theme }) => theme.textPrimary};
+
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundInteractive};
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
-  border-radius: 12px;
-  padding: 8px;
+`
+
+const DropdownChevron = styled(ChevronDown)<{ isOpen: boolean }>`
+  height: 20px;
+  width: 20px;
+  color: ${({ theme }) => theme.textSecondary};
+  transform: ${({ isOpen }) => isOpen && 'rotate(180deg)'};
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `transform ${duration.fast} ${timing.ease}`};
+`
+
+const DropdownContainer = styled.div`
+  position: absolute;
+  top: 48px;
+  right: 0px;
+  z-index: ${Z_INDEX.dropdown};
 `
 
 const ErrorMessage = styled(Row)`
@@ -43,6 +70,7 @@ const ErrorMessage = styled(Row)`
   gap: 4px;
   position: absolute;
   top: 44px;
+  white-space: nowrap;
 `
 
 const WarningIcon = styled(AlertTriangle)`
@@ -65,73 +93,107 @@ enum ErrorState {
 
 export const SetDurationModal = () => {
   const [duration, setDuration] = useState(Duration.day)
-  const [displayDuration, setDisplayDuration] = useState(Duration.day)
-  const [amount, setAmount] = useState(7)
+  const [amount, setAmount] = useState('7')
   const [errorState, setErrorState] = useState(ErrorState.valid)
   const setGlobalExpiration = useSellAsset((state) => state.setGlobalExpiration)
+  const [showDropdown, toggleShowDropdown] = useReducer((s) => !s, false)
+  const durationDropdownRef = useRef<HTMLDivElement>(null)
+  useOnClickOutside(durationDropdownRef, showDropdown ? toggleShowDropdown : undefined)
+
   const setCustomExpiration = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(!!event.target.value.length ? parseFloat(event.target.value) : 0)
-    setDuration(displayDuration)
+    setAmount(event.target.value.length ? event.target.value : '')
   }
-  const selectDuration = (duration: Duration) => {
-    setDuration(duration)
-    setDisplayDuration(duration)
-  }
+
   const durationOptions: DropDownOption[] = useMemo(
     () => [
       {
-        displayText: 'Hours',
-        onClick: () => selectDuration(Duration.hour),
+        displayText: 'hours',
+        isSelected: duration === Duration.hour,
+        onClick: () => {
+          setDuration(Duration.hour)
+          toggleShowDropdown()
+        },
       },
       {
-        displayText: 'Days',
-        onClick: () => selectDuration(Duration.day),
+        displayText: 'days',
+        isSelected: duration === Duration.day,
+        onClick: () => {
+          setDuration(Duration.day)
+          toggleShowDropdown()
+        },
       },
       {
-        displayText: 'Weeks',
-        onClick: () => selectDuration(Duration.week),
+        displayText: 'weeks',
+        isSelected: duration === Duration.week,
+        onClick: () => {
+          setDuration(Duration.week)
+          toggleShowDropdown()
+        },
       },
       {
-        displayText: 'Months',
-        onClick: () => selectDuration(Duration.month),
+        displayText: 'months',
+        isSelected: duration === Duration.month,
+        onClick: () => {
+          setDuration(Duration.month)
+          toggleShowDropdown()
+        },
       },
     ],
-    []
+    [duration]
   )
+
+  let prompt
+  switch (duration) {
+    case Duration.hour:
+      prompt = <Plural value={amount} _1="hour" other="hours" />
+      break
+    case Duration.day:
+      prompt = <Plural value={amount} _1="day" other="days" />
+      break
+    case Duration.week:
+      prompt = <Plural value={amount} _1="week" other="weeks" />
+      break
+    case Duration.month:
+      prompt = <Plural value={amount} _1="month" other="months" />
+      break
+    default:
+      break
+  }
+
   useEffect(() => {
-    const expiration = convertDurationToExpiration(amount, duration)
-    if (expiration * 1000 - Date.now() < ms`60 seconds`) setErrorState(ErrorState.empty)
+    const expiration = convertDurationToExpiration(parseFloat(amount), duration)
+
+    if (expiration * 1000 - Date.now() < ms`60 seconds` || isNaN(expiration)) setErrorState(ErrorState.empty)
     else if (expiration * 1000 - Date.now() > ms`180 days`) setErrorState(ErrorState.overMax)
     else setErrorState(ErrorState.valid)
     setGlobalExpiration(expiration)
   }, [amount, duration, setGlobalExpiration])
 
   return (
-    <ModalWrapper>
+    <ModalWrapper ref={durationDropdownRef}>
       <InputWrapper isInvalid={errorState !== ErrorState.valid}>
         <NumericInput
           as="input"
           type="number"
           pattern="[0-9]"
           borderStyle="none"
-          className={bodySmall}
+          className={body}
           color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
           value={amount}
-          width="32"
+          width="40"
           marginRight="4"
           backgroundColor="none"
           onChange={setCustomExpiration}
           flexShrink="0"
         />
-        <DropdownWrapper className={buttonTextMedium}>
-          <SortDropdown
-            dropDownOptions={durationOptions}
-            mini
-            miniPrompt={displayDuration + (displayDuration === duration ? pluralize(amount) : 's')}
-            left={38}
-            top={38}
-          />
-        </DropdownWrapper>
+        <DropdownPrompt onClick={toggleShowDropdown}>
+          {prompt} <DropdownChevron isOpen={showDropdown} />
+        </DropdownPrompt>
+        {showDropdown && (
+          <DropdownContainer>
+            <Dropdown dropDownOptions={durationOptions} width={125} />
+          </DropdownContainer>
+        )}
       </InputWrapper>
       {errorState !== ErrorState.valid && (
         <ErrorMessage className={caption}>

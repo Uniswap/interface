@@ -112,7 +112,7 @@ export function useSearchInactiveTokenLists(search: string | undefined, minResul
     const result: WrappedTokenInfo[] = []
     const addressSet: { [address: string]: true } = {}
     for (const url of inactiveUrls) {
-      const list = lists[url].current
+      const list = lists[url]?.current
       if (!list) continue
       for (const tokenInfo of list.tokens) {
         if (tokenInfo.chainId === chainId && tokenFilter(tokenInfo)) {

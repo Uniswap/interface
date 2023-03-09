@@ -19,7 +19,7 @@ const WalletWrapper = styled.div`
   background-color: ${({ theme }) => theme.backgroundSurface};
   border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
   box-shadow: ${({ theme }) => theme.deepShadow};
-  padding: 16px 0;
+  padding: 16px;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     width: 100%;
@@ -52,7 +52,6 @@ const WalletDropdownWrapper = styled.div`
 const WalletDropdown = () => {
   const [menu, setMenu] = useState<MenuState>(MenuState.DEFAULT)
   const walletDropdownOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
-
   return (
     <>
       {walletDropdownOpen && (

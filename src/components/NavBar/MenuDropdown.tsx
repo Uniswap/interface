@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -16,6 +16,7 @@ import { body, bodySmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { ReactNode, useReducer, useRef } from 'react'
 import { NavLink, NavLinkProps } from 'react-router-dom'
+import styled from 'styled-components/macro'
 import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 
 import { useToggleModal } from '../../state/application/hooks'
@@ -50,8 +51,13 @@ const PrimaryMenuRow = ({
   )
 }
 
+const StyledBox = styled(Box)`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+`
 const PrimaryMenuRowText = ({ children }: { children: ReactNode }) => {
-  return <Box className={`${styles.PrimaryText} ${body}`}>{children}</Box>
+  return <StyledBox className={`${styles.PrimaryText} ${body}`}>{children}</StyledBox>
 }
 
 PrimaryMenuRow.Text = PrimaryMenuRowText
@@ -115,14 +121,13 @@ export const MenuDropdown = () => {
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
   const togglePrivacyPolicy = useToggleModal(ApplicationModal.PRIVACY_POLICY)
   const openFeatureFlagsModal = useToggleModal(ApplicationModal.FEATURE_FLAGS)
-
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, isOpen ? toggleOpen : undefined)
 
   return (
     <>
       <Box position="relative" ref={ref}>
-        <NavIcon isActive={isOpen} onClick={toggleOpen}>
+        <NavIcon isActive={isOpen} onClick={toggleOpen} label={isOpen ? t`Show resources` : t`Hide resources`}>
           <EllipsisIcon viewBox="0 0 20 20" width={24} height={24} />
         </NavIcon>
 
@@ -160,6 +165,9 @@ export const MenuDropdown = () => {
                 </SecondaryLinkedText>
                 <SecondaryLinkedText href="https://docs.uniswap.org/">
                   <Trans>Documentation</Trans> ↗
+                </SecondaryLinkedText>
+                <SecondaryLinkedText href="https://uniswap.canny.io/feature-requests">
+                  <Trans>Feedback</Trans> ↗
                 </SecondaryLinkedText>
                 <SecondaryLinkedText
                   onClick={() => {

@@ -79,10 +79,10 @@ const HeaderButtonWrap = styled(Row)`
   border-radius: 12px;
   width: 180px;
   justify-content: space-between;
-  background: ${({ theme }) => theme.backgroundModule};
+  background: ${({ theme }) => theme.backgroundInteractive};
   cursor: pointer;
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundInteractive};
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
   @media screen and (min-width: ${SMALL_MEDIA_BREAKPOINT}) {
     width: 220px;
@@ -124,7 +124,7 @@ const ModalWrapper = styled.div`
 
 const DropdownWrapper = styled(Column)<{ isOpen: boolean }>`
   padding: 16px 0px;
-  background-color: ${({ theme }) => theme.backgroundModule};
+  background-color: ${({ theme }) => theme.backgroundSurface};
   display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
   position: absolute;
   top: 52px;
@@ -132,6 +132,8 @@ const DropdownWrapper = styled(Column)<{ isOpen: boolean }>`
   border-radius: 12px;
   gap: 12px;
   z-index: ${Z_INDEX.modalBackdrop};
+  box-shadow: ${({ theme }) => theme.deepShadow};
+  border: 0.5px solid ${({ theme }) => theme.backgroundOutline};
 `
 
 export const SelectMarketplacesDropdown = ({

@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
-import { PageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -32,13 +32,14 @@ import { Link, useParams } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
-import { ExternalLink, HideExtraSmall, ThemedText } from 'theme'
+import { ExternalLink, HideExtraSmall, HideSmall, ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 import RangeBadge from '../../components/Badge/RangeBadge'
+import { SmallButtonPrimary } from '../../components/Button/index'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
 import RateToggle from '../../components/RateToggle'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
@@ -49,38 +50,20 @@ import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { LoadingRows } from './styleds'
 
 const PageWrapper = styled.div`
-  padding: 68px 8px 0px;
+  padding: 68px 16px 16px 16px;
 
   min-width: 800px;
   max-width: 960px;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    padding: 48px 8px 0px;
+    min-width: 100%;
+    padding: 16px;
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    padding-top: 20px;
+    min-width: 100%;
+    padding: 16px;
   }
-
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
-    min-width: 680px;
-    max-width: 680px;
-  `};
-
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    min-width: 600px;
-    max-width: 600px;
-  `};
-
-  @media only screen and (max-width: 620px) {
-    min-width: 500px;
-    max-width: 500px;
-  }
-
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
-    min-width: 340px;
-    max-width: 340px;
-  `};
 `
 
 const BadgeText = styled.div`
@@ -99,7 +82,7 @@ const Label = styled(({ end, ...props }) => <ThemedText.DeprecatedLabel {...prop
 `
 
 const ExtentsText = styled.span`
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
   text-align: center;
   margin-right: 4px;
@@ -108,35 +91,52 @@ const ExtentsText = styled.span`
 
 const HoverText = styled(ThemedText.DeprecatedMain)`
   text-decoration: none;
-  color: ${({ theme }) => theme.deprecated_text3};
+  color: ${({ theme }) => theme.textTertiary};
   :hover {
-    color: ${({ theme }) => theme.deprecated_text1};
+    color: ${({ theme }) => theme.textPrimary};
     text-decoration: none;
   }
 `
 
 const DoubleArrow = styled.span`
-  color: ${({ theme }) => theme.deprecated_text3};
+  color: ${({ theme }) => theme.textTertiary};
   margin: 0 1rem;
 `
 const ResponsiveRow = styled(RowBetween)`
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     flex-direction: column;
     align-items: flex-start;
     row-gap: 16px;
-    width: 100%:
-  `};
+    width: 100%;
+  }
 `
 
-const ResponsiveButtonPrimary = styled(ButtonPrimary)`
+const ActionButtonResponsiveRow = styled(ResponsiveRow)`
+  width: 50%;
+  justify-content: flex-end;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    width: 100%;
+    flex-direction: row;
+    * {
+      width: 100%;
+    }
+  }
+`
+
+const ResponsiveButtonConfirmed = styled(ButtonConfirmed)`
   border-radius: 12px;
   padding: 6px 8px;
   width: fit-content;
   font-size: 16px;
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    flex: 1 1 auto;
-    width: 49%;
-  `};
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    width: fit-content;
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    width: fit-content;
+  }
 `
 
 const NFTGrid = styled.div`
@@ -511,7 +511,7 @@ export function PositionPage() {
     provider,
   ])
 
-  const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
+  const owner = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
   const ownsNFT = owner === account || positionDetails?.operator === account
 
   const feeValueUpper = inverted ? feeValue0 : feeValue1
@@ -582,7 +582,7 @@ export function PositionPage() {
       <div />
     </LoadingRows>
   ) : (
-    <Trace page={PageName.POOL_PAGE} shouldLogImpression>
+    <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
       <>
         <PageWrapper>
           <TransactionConfirmationModal
@@ -624,13 +624,13 @@ export function PositionPage() {
                   <RangeBadge removed={removed} inRange={inRange} />
                 </RowFixed>
                 {ownsNFT && (
-                  <RowFixed>
+                  <ActionButtonResponsiveRow>
                     {currency0 && currency1 && feeAmount && tokenId ? (
                       <ButtonGray
                         as={Link}
                         to={`/increase/${currencyId(currency0)}/${currencyId(currency1)}/${feeAmount}/${tokenId}`}
-                        width="fit-content"
                         padding="6px 8px"
+                        width="fit-content"
                         $borderRadius="12px"
                         style={{ marginRight: '8px' }}
                       >
@@ -638,55 +638,58 @@ export function PositionPage() {
                       </ButtonGray>
                     ) : null}
                     {tokenId && !removed ? (
-                      <ResponsiveButtonPrimary
+                      <SmallButtonPrimary
                         as={Link}
                         to={`/remove/${tokenId}`}
-                        width="fit-content"
                         padding="6px 8px"
+                        width="fit-content"
                         $borderRadius="12px"
                       >
                         <Trans>Remove Liquidity</Trans>
-                      </ResponsiveButtonPrimary>
+                      </SmallButtonPrimary>
                     ) : null}
-                  </RowFixed>
+                  </ActionButtonResponsiveRow>
                 )}
               </ResponsiveRow>
               <RowBetween></RowBetween>
             </AutoColumn>
             <ResponsiveRow align="flex-start">
-              {'result' in metadata ? (
-                <DarkCard
-                  width="100%"
-                  height="100%"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexDirection: 'column',
-                    justifyContent: 'space-around',
-                    marginRight: '12px',
-                  }}
-                >
-                  <div style={{ marginRight: 12 }}>
+              <HideSmall
+                style={{
+                  marginRight: '12px',
+                }}
+              >
+                {'result' in metadata ? (
+                  <DarkCard
+                    width="100%"
+                    height="100%"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      flexDirection: 'column',
+                      justifyContent: 'space-around',
+                      minWidth: '340px',
+                    }}
+                  >
                     <NFT image={metadata.result.image} height={400} />
-                  </div>
-                  {typeof chainId === 'number' && owner && !ownsNFT ? (
-                    <ExternalLink href={getExplorerLink(chainId, owner, ExplorerDataType.ADDRESS)}>
-                      <Trans>Owner</Trans>
-                    </ExternalLink>
-                  ) : null}
-                </DarkCard>
-              ) : (
-                <DarkCard
-                  width="100%"
-                  height="100%"
-                  style={{
-                    marginRight: '12px',
-                    minWidth: '340px',
-                  }}
-                >
-                  <Loader />
-                </DarkCard>
-              )}
+                    {typeof chainId === 'number' && owner && !ownsNFT ? (
+                      <ExternalLink href={getExplorerLink(chainId, owner, ExplorerDataType.ADDRESS)}>
+                        <Trans>Owner</Trans>
+                      </ExternalLink>
+                    ) : null}
+                  </DarkCard>
+                ) : (
+                  <DarkCard
+                    width="100%"
+                    height="100%"
+                    style={{
+                      minWidth: '340px',
+                    }}
+                  >
+                    <Loader />
+                  </DarkCard>
+                )}
+              </HideSmall>
               <AutoColumn gap="sm" style={{ width: '100%', height: '100%' }}>
                 <DarkCard>
                   <AutoColumn gap="md" style={{ width: '100%' }}>
@@ -699,11 +702,7 @@ export function PositionPage() {
                           <Trans>${fiatValueOfLiquidity.toFixed(2, { groupSeparator: ',' })}</Trans>
                         </ThemedText.DeprecatedLargeHeader>
                       ) : (
-                        <ThemedText.DeprecatedLargeHeader
-                          color={theme.deprecated_text1}
-                          fontSize="36px"
-                          fontWeight={500}
-                        >
+                        <ThemedText.DeprecatedLargeHeader color={theme.textPrimary} fontSize="36px" fontWeight={500}>
                           <Trans>$-</Trans>
                         </ThemedText.DeprecatedLargeHeader>
                       )}
@@ -718,7 +717,7 @@ export function PositionPage() {
                             </ThemedText.DeprecatedMain>
                             {typeof ratio === 'number' && !removed ? (
                               <Badge style={{ marginLeft: '10px' }}>
-                                <ThemedText.DeprecatedMain fontSize={11}>
+                                <ThemedText.DeprecatedMain color={theme.textSecondary} fontSize={11}>
                                   <Trans>{inverted ? ratio : 100 - ratio}%</Trans>
                                 </ThemedText.DeprecatedMain>
                               </Badge>
@@ -733,7 +732,7 @@ export function PositionPage() {
                             </ThemedText.DeprecatedMain>
                             {typeof ratio === 'number' && !removed ? (
                               <Badge style={{ marginLeft: '10px' }}>
-                                <ThemedText.DeprecatedMain color={theme.deprecated_text2} fontSize={11}>
+                                <ThemedText.DeprecatedMain color={theme.textSecondary} fontSize={11}>
                                   <Trans>{inverted ? 100 - ratio : ratio}%</Trans>
                                 </ThemedText.DeprecatedMain>
                               </Badge>
@@ -754,7 +753,7 @@ export function PositionPage() {
                           </Label>
                           {fiatValueOfFees?.greaterThan(new Fraction(1, 100)) ? (
                             <ThemedText.DeprecatedLargeHeader
-                              color={theme.deprecated_green1}
+                              color={theme.accentSuccess}
                               fontSize="36px"
                               fontWeight={500}
                             >
@@ -762,7 +761,7 @@ export function PositionPage() {
                             </ThemedText.DeprecatedLargeHeader>
                           ) : (
                             <ThemedText.DeprecatedLargeHeader
-                              color={theme.deprecated_text1}
+                              color={theme.textPrimary}
                               fontSize="36px"
                               fontWeight={500}
                             >
@@ -772,7 +771,7 @@ export function PositionPage() {
                         </AutoColumn>
                         {ownsNFT &&
                         (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash) ? (
-                          <ButtonConfirmed
+                          <ResponsiveButtonConfirmed
                             disabled={collecting || !!collectMigrationHash}
                             confirmed={!!collectMigrationHash && !isCollectPending}
                             width="fit-content"
@@ -781,11 +780,11 @@ export function PositionPage() {
                             onClick={() => setShowConfirm(true)}
                           >
                             {!!collectMigrationHash && !isCollectPending ? (
-                              <ThemedText.DeprecatedMain color={theme.deprecated_text1}>
+                              <ThemedText.DeprecatedMain color={theme.textPrimary}>
                                 <Trans> Collected</Trans>
                               </ThemedText.DeprecatedMain>
                             ) : isCollectPending || collecting ? (
-                              <ThemedText.DeprecatedMain color={theme.deprecated_text1}>
+                              <ThemedText.DeprecatedMain color={theme.textPrimary}>
                                 {' '}
                                 <Dots>
                                   <Trans>Collecting</Trans>
@@ -793,12 +792,12 @@ export function PositionPage() {
                               </ThemedText.DeprecatedMain>
                             ) : (
                               <>
-                                <ThemedText.DeprecatedMain color={theme.deprecated_white}>
+                                <ThemedText.DeprecatedMain color={theme.white}>
                                   <Trans>Collect fees</Trans>
                                 </ThemedText.DeprecatedMain>
                               </>
                             )}
-                          </ButtonConfirmed>
+                          </ResponsiveButtonConfirmed>
                         ) : null}
                       </RowBetween>
                     </AutoColumn>
@@ -886,7 +885,11 @@ export function PositionPage() {
                         <Trans>Min price</Trans>
                       </ExtentsText>
                       <ThemedText.DeprecatedMediumHeader textAlign="center">
-                        {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)}
+                        {formatTickPrice({
+                          price: priceLower,
+                          atLimit: tickAtLimit,
+                          direction: Bound.LOWER,
+                        })}
                       </ThemedText.DeprecatedMediumHeader>
                       <ExtentsText>
                         {' '}
@@ -896,7 +899,7 @@ export function PositionPage() {
                       </ExtentsText>
 
                       {inRange && (
-                        <ThemedText.DeprecatedSmall color={theme.deprecated_text3}>
+                        <ThemedText.DeprecatedSmall color={theme.textTertiary}>
                           <Trans>Your position will be 100% {currencyBase?.symbol} at this price.</Trans>
                         </ThemedText.DeprecatedSmall>
                       )}
@@ -910,7 +913,11 @@ export function PositionPage() {
                         <Trans>Max price</Trans>
                       </ExtentsText>
                       <ThemedText.DeprecatedMediumHeader textAlign="center">
-                        {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)}
+                        {formatTickPrice({
+                          price: priceUpper,
+                          atLimit: tickAtLimit,
+                          direction: Bound.UPPER,
+                        })}
                       </ThemedText.DeprecatedMediumHeader>
                       <ExtentsText>
                         {' '}
@@ -920,7 +927,7 @@ export function PositionPage() {
                       </ExtentsText>
 
                       {inRange && (
-                        <ThemedText.DeprecatedSmall color={theme.deprecated_text3}>
+                        <ThemedText.DeprecatedSmall color={theme.textTertiary}>
                           <Trans>Your position will be 100% {currencyQuote?.symbol} at this price.</Trans>
                         </ThemedText.DeprecatedSmall>
                       )}

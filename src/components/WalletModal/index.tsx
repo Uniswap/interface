@@ -1,16 +1,26 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, user } from '@uniswap/analytics'
-import { CustomUserProperties, EventName, WalletConnectionResult } from '@uniswap/analytics-events'
+import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
+import { getWalletMeta } from '@uniswap/conedison/provider/meta'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
+import { WalletConnect } from '@web3-react/walletconnect'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { networkConnection } from 'connection'
-import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
+import {
+  getConnection,
+  getConnectionName,
+  getIsCoinbaseWallet,
+  getIsInjected,
+  getIsMetaMaskWallet,
+} from 'connection/utils'
+import { isSupportedChain } from 'constants/chains'
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { updateConnectionError } from 'state/connection/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
@@ -61,7 +71,7 @@ const HeaderRow = styled.div`
   padding: 1rem 1rem;
   font-weight: 600;
   size: 16px;
-  color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.deprecated_primary1 : 'inherit')};
+  color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.accentAction : 'inherit')};
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     padding: 1rem;
   `};
@@ -103,7 +113,7 @@ const OptionGrid = styled.div`
 
 const HoverText = styled.div`
   text-decoration: none;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
   display: flex;
   align-items: center;
 
@@ -122,16 +132,19 @@ const sendAnalyticsEventAndUserInfo = (
   account: string,
   walletType: string,
   chainId: number | undefined,
-  isReconnect: boolean
+  isReconnect: boolean,
+  peerWalletAgent: string | undefined
 ) => {
-  sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
+  sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
     result: WalletConnectionResult.SUCCEEDED,
     wallet_address: account,
     wallet_type: walletType,
     is_reconnect: isReconnect,
+    peer_wallet_agent: peerWalletAgent,
   })
   user.set(CustomUserProperties.WALLET_ADDRESS, account)
   user.set(CustomUserProperties.WALLET_TYPE, walletType)
+  user.set(CustomUserProperties.PEER_WALLET_AGENT, peerWalletAgent ?? '')
   if (chainId) {
     user.postInsert(CustomUserProperties.ALL_WALLET_CHAIN_IDS, chainId)
   }
@@ -148,8 +161,11 @@ export default function WalletModal({
   ENSName?: string
 }) {
   const dispatch = useAppDispatch()
-  const { connector, account, chainId } = useWeb3React()
+  const { connector, account, chainId, provider } = useWeb3React()
   const previousAccount = usePrevious(account)
+
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const [connectedWallets, addWalletToConnectedWallets] = useConnectedWallets()
 
@@ -177,8 +193,11 @@ export default function WalletModal({
   useEffect(() => {
     if (account && account !== previousAccount && walletModalOpen) {
       toggleWalletModal()
+      if (location.pathname === '/') {
+        navigate('/swap')
+      }
     }
-  }, [account, previousAccount, toggleWalletModal, walletModalOpen])
+  }, [account, previousAccount, toggleWalletModal, walletModalOpen, location.pathname, navigate])
 
   useEffect(() => {
     if (pendingConnector && walletView !== WALLET_VIEWS.PENDING) {
@@ -189,7 +208,7 @@ export default function WalletModal({
 
   // Keep the network connector in sync with any active user connector to prevent chain-switching on wallet disconnection.
   useEffect(() => {
-    if (chainId && connector !== networkConnection.connector) {
+    if (chainId && isSupportedChain(chainId) && connector !== networkConnection.connector) {
       networkConnection.connector.activate(chainId)
     }
   }, [chainId, connector])
@@ -197,14 +216,15 @@ export default function WalletModal({
   // When new wallet is successfully set by the user, trigger logging of Amplitude analytics event.
   useEffect(() => {
     if (account && account !== lastActiveWalletAddress) {
-      const walletType = getConnectionName(getConnection(connector).type, getIsMetaMask())
+      const walletType = getConnectionName(getConnection(connector).type)
+      const peerWalletAgent = provider ? getWalletMeta(provider)?.agent : undefined
       const isReconnect =
         connectedWallets.filter((wallet) => wallet.account === account && wallet.walletType === walletType).length > 0
-      sendAnalyticsEventAndUserInfo(account, walletType, chainId, isReconnect)
+      sendAnalyticsEventAndUserInfo(account, walletType, chainId, isReconnect, peerWalletAgent)
       if (!isReconnect) addWalletToConnectedWallets({ account, walletType })
     }
     setLastActiveWalletAddress(account)
-  }, [connectedWallets, addWalletToConnectedWallets, lastActiveWalletAddress, account, connector, chainId])
+  }, [connectedWallets, addWalletToConnectedWallets, lastActiveWalletAddress, account, connector, chainId, provider])
 
   const tryActivation = useCallback(
     async (connector: Connector) => {
@@ -229,9 +249,9 @@ export default function WalletModal({
         console.debug(`web3-react connection error: ${error}`)
         dispatch(updateConnectionError({ connectionType, error: error.message }))
 
-        sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
+        sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
           result: WalletConnectionResult.FAILED,
-          wallet_type: getConnectionName(connectionType, getIsMetaMask()),
+          wallet_type: getConnectionName(connectionType),
         })
       }
     },
@@ -240,11 +260,11 @@ export default function WalletModal({
 
   function getOptions() {
     const isInjected = getIsInjected()
-    const isMetaMask = getIsMetaMask()
-    const isCoinbaseWallet = getIsCoinbaseWallet()
+    const hasMetaMaskExtension = getIsMetaMaskWallet()
+    const hasCoinbaseExtension = getIsCoinbaseWallet()
 
-    const isCoinbaseWalletBrowser = isMobile && isCoinbaseWallet
-    const isMetaMaskBrowser = isMobile && isMetaMask
+    const isCoinbaseWalletBrowser = isMobile && hasCoinbaseExtension
+    const isMetaMaskBrowser = isMobile && hasMetaMaskExtension
     const isInjectedMobileBrowser = isCoinbaseWalletBrowser || isMetaMaskBrowser
 
     let injectedOption
@@ -252,8 +272,8 @@ export default function WalletModal({
       if (!isMobile) {
         injectedOption = <InstallMetaMaskOption />
       }
-    } else if (!isCoinbaseWallet) {
-      if (isMetaMask) {
+    } else if (!hasCoinbaseExtension) {
+      if (hasMetaMaskExtension) {
         injectedOption = <MetaMaskOption tryActivation={tryActivation} />
       } else {
         injectedOption = <InjectedOption tryActivation={tryActivation} />
@@ -354,8 +374,20 @@ export default function WalletModal({
     )
   }
 
+  /**
+   * Do not show <WalletModal /> when WalletConnect connection modal is open to prevent focus issues when
+   * trying to interact with a WalletConnect modal.
+   */
+  const isWalletConnectModalOpen =
+    walletView === WALLET_VIEWS.PENDING && pendingConnector instanceof WalletConnect && !pendingError
+
   return (
-    <Modal isOpen={walletModalOpen} onDismiss={toggleWalletModal} minHeight={false} maxHeight={90}>
+    <Modal
+      isOpen={walletModalOpen && !isWalletConnectModalOpen}
+      onDismiss={toggleWalletModal}
+      minHeight={false}
+      maxHeight={90}
+    >
       <Wrapper data-testid="wallet-modal">{getModalContent()}</Wrapper>
     </Modal>
   )

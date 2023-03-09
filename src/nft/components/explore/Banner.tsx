@@ -1,8 +1,10 @@
-import { useLoadCollectionQuery } from 'graphql/data/nft/Collection'
+import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
+import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
+import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod } from 'nft/types'
 import { calculateCardIndex } from 'nft/utils'
-import { Suspense, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -115,6 +117,7 @@ const TRENDING_COLLECTION_SIZE = 5
 
 const Banner = () => {
   const navigate = useNavigate()
+  const isNftGraphqlEnabled = useNftGraphqlEnabled()
 
   const { data } = useQuery(
     ['trendingCollections'],
@@ -131,15 +134,17 @@ const Banner = () => {
       refetchOnMount: false,
     }
   )
-
-  const collections = useMemo(
-    () => data?.filter((collection) => !EXCLUDED_COLLECTIONS.includes(collection.address)).slice(0, 5),
-    [data]
+  const { data: gqlData } = useTrendingCollections(
+    TRENDING_COLLECTION_SIZE + EXCLUDED_COLLECTIONS.length,
+    HistoryDuration.Day
   )
 
-  // Trigger queries for the top trending collections, so that the data is immediately available if the user clicks through.
-  const collectionAddresses = useMemo(() => collections?.map(({ address }) => address), [collections])
-  useLoadCollectionQuery(collectionAddresses)
+  const collections = useMemo(() => {
+    const gatedData = isNftGraphqlEnabled ? gqlData : data
+    return gatedData
+      ?.filter((collection) => collection.address && !EXCLUDED_COLLECTIONS.includes(collection.address))
+      .slice(0, 5)
+  }, [data, gqlData, isNftGraphqlEnabled])
 
   const [activeCollectionIdx, setActiveCollectionIdx] = useState(0)
   const onToggleNextSlide = useCallback(
@@ -169,13 +174,11 @@ const Banner = () => {
         {collections ? (
           <Carousel activeIndex={activeCollectionIdx} toggleNextSlide={onToggleNextSlide}>
             {collections.map((collection) => (
-              <Suspense fallback={<LoadingCarouselCard collection={collection} />} key={collection.address}>
-                <CarouselCard
-                  key={collection.address}
-                  collection={collection}
-                  onClick={() => navigate(`/nfts/collection/${collection.address}`)}
-                />
-              </Suspense>
+              <CarouselCard
+                key={collection.address}
+                collection={collection}
+                onClick={() => navigate(`/nfts/collection/${collection.address}`)}
+              />
             ))}
           </Carousel>
         ) : (

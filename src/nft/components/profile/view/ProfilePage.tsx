@@ -1,8 +1,9 @@
-import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
+import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { AnimatedBox, Box } from 'nft/components/Box'
-import { ClearAllButton, LoadingAssets } from 'nft/components/collection/CollectionNfts'
+import { LoadingAssets } from 'nft/components/collection/CollectionAssetLoading'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
 import { FilterButton } from 'nft/components/collection/FilterButton'
+import { ClearAllButton } from 'nft/components/collection/shared'
 import { Column, Row } from 'nft/components/Flex'
 import { CrossIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
@@ -90,7 +91,7 @@ export const ProfilePage = () => {
     isFetchingNextPage,
     isSuccess,
   } = useInfiniteQuery(['ownerCollections', { address }], getOwnerCollections, {
-    getNextPageParam: (lastGroup, _allGroups) => (lastGroup.data.length === 0 ? undefined : lastGroup.nextPage),
+    getNextPageParam: (lastGroup) => (lastGroup.data.length === 0 ? undefined : lastGroup.nextPage),
     refetchInterval: 15000,
     refetchIntervalInBackground: false,
     refetchOnWindowFocus: false,
@@ -137,7 +138,7 @@ export const ProfilePage = () => {
           borderRadius="12"
           paddingX="16"
           paddingY="12"
-          background="backgroundModule"
+          background="backgroundSurface"
           borderStyle="solid"
           borderColor="backgroundOutline"
           borderWidth="1px"
@@ -198,10 +199,10 @@ const ProfilePageNfts = ({
 
   const {
     walletAssets: ownerAssets,
-    loadNext,
+    loading,
     hasNext,
-    isLoadingNext,
-  } = useNftBalanceQuery(address, collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
+    loadMore,
+  } = useNftBalance(address, collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
 
   const { gridX } = useSpring({
     gridX: isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING,
@@ -210,6 +211,8 @@ const ProfilePageNfts = ({
       easing: easings.easeOutSine,
     },
   })
+
+  if (loading) return <ProfileBodyLoadingSkeleton />
 
   return (
     <Column width="full">
@@ -242,13 +245,13 @@ const ProfilePageNfts = ({
             />
           </Row>
           <InfiniteScroll
-            next={() => loadNext(DEFAULT_WALLET_ASSET_QUERY_AMOUNT)}
-            hasMore={hasNext}
+            next={loadMore}
+            hasMore={hasNext ?? false}
             loader={
               Boolean(hasNext && ownerAssets?.length) && <LoadingAssets count={DEFAULT_WALLET_ASSET_QUERY_AMOUNT} />
             }
             dataLength={ownerAssets?.length ?? 0}
-            className={ownerAssets?.length || isLoadingNext ? assetList : undefined}
+            className={ownerAssets?.length ? assetList : undefined}
             style={{ overflow: 'unset' }}
           >
             {ownerAssets?.length

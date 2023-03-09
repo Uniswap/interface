@@ -1,19 +1,24 @@
-import graphql from 'babel-plugin-relay/macro'
+import gql from 'graphql-tag'
 
-// TODO: Implemnt this as a refetchable fragment on tokenQuery when backend adds support
-export const tokenPriceQuery = graphql`
-  query TokenPriceQuery($contract: ContractInput!, $duration: HistoryDuration!) {
-    tokens(contracts: [$contract]) {
-      market(currency: USD) @required(action: LOG) {
+gql`
+  query TokenPrice($chain: Chain!, $address: String = null, $duration: HistoryDuration!) {
+    token(chain: $chain, address: $address) {
+      id
+      address
+      chain
+      market(currency: USD) {
+        id
         price {
-          value @required(action: LOG)
+          id
+          value
         }
         priceHistory(duration: $duration) {
-          timestamp @required(action: LOG)
-          value @required(action: LOG)
+          id
+          timestamp
+          value
         }
       }
     }
   }
 `
-export type { TokenPriceQuery } from './__generated__/TokenPriceQuery.graphql'
+export type { TokenPriceQuery } from './__generated__/types-and-hooks'

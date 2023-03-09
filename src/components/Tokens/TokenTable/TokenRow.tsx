@@ -1,17 +1,17 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { EventName } from '@uniswap/analytics-events'
+import { InterfaceEventName } from '@uniswap/analytics-events'
 import { formatNumber, formatUSDPrice, NumberType } from '@uniswap/conedison/format'
 import { ParentSize } from '@visx/responsive'
 import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
-import { getChainInfo } from 'constants/chainInfo'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
-import { ArrowDown, ArrowUp } from 'react-feather'
+import { ArrowDown, ArrowUp, Info } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
@@ -31,7 +31,6 @@ import {
   TokenSortMethod,
   useSetSortMethod,
 } from '../state'
-import InfoTip from '../TokenDetails/InfoTip'
 import { ArrowCell, DeltaText, formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 
 const Cell = styled.div`
@@ -200,7 +199,6 @@ const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
   display: flex;
   gap: 4px;
-  height: 100%;
   justify-content: flex-end;
   width: 100%;
 
@@ -280,28 +278,20 @@ export const SparkLineLoadingBubble = styled(LongLoadingBubble)`
   height: 4px;
 `
 
-export const L2NetworkLogo = styled.div<{ networkUrl?: string; size?: string }>`
-  height: ${({ size }) => size ?? '12px'};
-  width: ${({ size }) => size ?? '12px'};
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  background: url(${({ networkUrl }) => networkUrl});
-  background-repeat: no-repeat;
-  background-size: ${({ size }) => (size ? `${size} ${size}` : '12px 12px')};
-  display: ${({ networkUrl }) => !networkUrl && 'none'};
-`
-export const LogoContainer = styled.div`
-  position: relative;
-  align-items: center;
+const InfoIconContainer = styled.div`
+  margin-left: 2px;
   display: flex;
+  align-items: center;
+  cursor: help;
 `
 
 export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined> = {
   [TokenSortMethod.PRICE]: undefined,
   [TokenSortMethod.PERCENT_CHANGE]: undefined,
   [TokenSortMethod.TOTAL_VALUE_LOCKED]: (
-    <Trans>Total value locked (TVL) is the amount of the asset that’s currently in a Uniswap v3 liquidity pool.</Trans>
+    <Trans>
+      Total value locked (TVL) is the aggregate amount of the asset available across all Uniswap v3 liquidity pools.
+    </Trans>
   ),
   [TokenSortMethod.VOLUME]: (
     <Trans>Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame.</Trans>
@@ -333,7 +323,13 @@ function HeaderCell({
         </>
       )}
       {category}
-      {description && <InfoTip text={description}></InfoTip>}
+      {description && (
+        <MouseoverTooltip text={description} placement="right">
+          <InfoIconContainer>
+            <Info size={14} />
+          </InfoIconContainer>
+        </MouseoverTooltip>
+      )}
     </HeaderCellWrapper>
   )
 }
@@ -366,15 +362,23 @@ function TokenRow({
   const rowCells = (
     <>
       <ListNumberCell header={header}>{listNumber}</ListNumberCell>
-      <NameCell>{tokenInfo}</NameCell>
-      <PriceCell sortable={header}>{price}</PriceCell>
-      <PercentChangeCell sortable={header}>{percentChange}</PercentChangeCell>
-      <TvlCell sortable={header}>{tvl}</TvlCell>
-      <VolumeCell sortable={header}>{volume}</VolumeCell>
+      <NameCell data-testid="name-cell">{tokenInfo}</NameCell>
+      <PriceCell data-testid="price-cell" sortable={header}>
+        {price}
+      </PriceCell>
+      <PercentChangeCell data-testid="percent-change-cell" sortable={header}>
+        {percentChange}
+      </PercentChangeCell>
+      <TvlCell data-testid="tvl-cell" sortable={header}>
+        {tvl}
+      </TvlCell>
+      <VolumeCell data-testid="volume-cell" sortable={header}>
+        {volume}
+      </VolumeCell>
       <SparkLineCell>{sparkLine}</SparkLineCell>
     </>
   )
-  if (header) return <StyledHeaderRow>{rowCells}</StyledHeaderRow>
+  if (header) return <StyledHeaderRow data-testid="header-row">{rowCells}</StyledHeaderRow>
   return <StyledTokenRow {...rest}>{rowCells}</StyledTokenRow>
 }
 
@@ -422,34 +426,29 @@ interface LoadedRowProps {
   tokenListLength: number
   token: NonNullable<TopToken>
   sparklineMap: SparklineMap
+  sortRank: number
 }
 
 /* Loaded State: row component with token information */
 export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
-  const { tokenListIndex, tokenListLength, token } = props
-  const tokenAddress = token.address
-  const tokenName = token.name
-  const tokenSymbol = token.symbol
+  const { tokenListIndex, tokenListLength, token, sortRank } = props
   const filterString = useAtomValue(filterStringAtom)
-  const sortAscending = useAtomValue(sortAscendingAtom)
 
   const lowercaseChainName = useParams<{ chainName?: string }>().chainName?.toUpperCase() ?? 'ethereum'
   const filterNetwork = lowercaseChainName.toUpperCase()
   const chainId = CHAIN_NAME_TO_CHAIN_ID[filterNetwork]
-  const L2Icon = getChainInfo(chainId)?.circleLogoUrl
   const timePeriod = useAtomValue(filterTimeAtom)
   const delta = token.market?.pricePercentChange?.value
   const arrow = getDeltaArrow(delta)
   const smallArrow = getDeltaArrow(delta, 14)
   const formattedDelta = formatDelta(delta)
-  const rank = sortAscending ? tokenListLength - tokenListIndex : tokenListIndex + 1
 
   const exploreTokenSelectedEventProperties = {
     chain_id: chainId,
-    token_address: tokenAddress,
-    token_symbol: tokenSymbol,
+    token_address: token.address,
+    token_symbol: token.symbol,
     token_list_index: tokenListIndex,
-    token_list_rank: rank,
+    token_list_rank: sortRank,
     token_list_length: tokenListLength,
     time_frame: timePeriod,
     search_token_address_input: filterString,
@@ -457,23 +456,22 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
-    <div ref={ref}>
+    <div ref={ref} data-testid={`token-table-row-${token.symbol}`}>
       <StyledLink
-        to={getTokenDetailsURL(token.address, token.chain)}
-        onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
+        to={getTokenDetailsURL(token)}
+        onClick={() =>
+          sendAnalyticsEvent(InterfaceEventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)
+        }
       >
         <TokenRow
           header={false}
-          listNumber={rank}
+          listNumber={sortRank}
           tokenInfo={
             <ClickableName>
-              <LogoContainer>
-                <QueryTokenLogo token={token} />
-                <L2NetworkLogo networkUrl={L2Icon} />
-              </LogoContainer>
+              <QueryTokenLogo token={token} />
               <TokenInfoCell>
-                <TokenName>{tokenName}</TokenName>
-                <TokenSymbol>{tokenSymbol}</TokenSymbol>
+                <TokenName data-cy="token-name">{token.name}</TokenName>
+                <TokenSymbol>{token.symbol}</TokenSymbol>
               </TokenInfoCell>
             </ClickableName>
           }
@@ -512,7 +510,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                       height={height}
                       tokenData={token}
                       pricePercentChange={token.market?.pricePercentChange?.value}
-                      timePeriod={timePeriod}
                       sparklineMap={props.sparklineMap}
                     />
                   )

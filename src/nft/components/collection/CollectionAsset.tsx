@@ -1,13 +1,14 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
-import { EventName, PageName } from '@uniswap/analytics-events'
+import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { MouseoverTooltip } from 'components/Tooltip'
 import Tooltip from 'components/Tooltip'
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { Box } from 'nft/components/Box'
 import { bodySmall } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks'
-import { GenieAsset, isPooledMarket, TokenType } from 'nft/types'
+import { GenieAsset, isPooledMarket, UniformAspectRatio } from 'nft/types'
 import { formatWeiToDecimal, rarityProviderLogo } from 'nft/utils'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
@@ -22,6 +23,10 @@ interface CollectionAssetProps {
   mediaShouldBePlaying: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
   rarityVerified?: boolean
+  uniformAspectRatio: UniformAspectRatio
+  setUniformAspectRatio: (uniformAspectRatio: UniformAspectRatio) => void
+  renderedHeight?: number
+  setRenderedHeight: (renderedHeight: number | undefined) => void
 }
 
 const TOOLTIP_TIMEOUT = 2000
@@ -43,6 +48,10 @@ export const CollectionAsset = ({
   mediaShouldBePlaying,
   setCurrentTokenPlayingMedia,
   rarityVerified,
+  uniformAspectRatio,
+  setUniformAspectRatio,
+  renderedHeight,
+  setRenderedHeight,
 }: CollectionAssetProps) => {
   const bagManuallyClosed = useBag((state) => state.bagManuallyClosed)
   const addAssetsToBag = useBag((state) => state.addAssetsToBag)
@@ -51,7 +60,7 @@ export const CollectionAsset = ({
   const itemsInBag = useBag((state) => state.itemsInBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
   const setBagExpanded = useBag((state) => state.setBagExpanded)
-  const trace = useTrace({ page: PageName.NFT_COLLECTION_PAGE })
+  const trace = useTrace({ page: InterfacePageName.NFT_COLLECTION_PAGE })
 
   const { isSelected } = useMemo(() => {
     const matchingItems = itemsInBag.filter(
@@ -80,12 +89,12 @@ export const CollectionAsset = ({
   }, [asset])
 
   const handleAddAssetToBag = useCallback(() => {
-    if (BigNumber.from(asset.priceInfo?.ETHPrice ?? 0).gte(0)) {
+    if (BigNumber.from(asset.priceInfo?.ETHPrice ?? 0).gt(0)) {
       addAssetsToBag([asset])
       if (!bagExpanded && !isMobile && !bagManuallyClosed) {
         setBagExpanded({ bagExpanded: true })
       }
-      sendAnalyticsEvent(EventName.NFT_BUY_ADDED, {
+      sendAnalyticsEvent(NFTEventName.NFT_BUY_ADDED, {
         collection_address: asset.address,
         token_id: asset.tokenId,
         token_type: asset.tokenType,
@@ -122,7 +131,7 @@ export const CollectionAsset = ({
       removeAssetFromBag={handleRemoveAssetFromBag}
     >
       <Card.ImageContainer isDisabled={asset.notForSale}>
-        <StyledContainer>
+        <StyledContainer data-testid="nft-collection-asset">
           <Tooltip
             text={
               <Box as="span" className={bodySmall} color="textPrimary">
@@ -161,11 +170,30 @@ export const CollectionAsset = ({
           timeout={isMobile ? TOOLTIP_TIMEOUT : undefined}
         >
           {assetMediaType === AssetMediaType.Image ? (
-            <Card.Image />
+            <Card.Image
+              uniformAspectRatio={uniformAspectRatio}
+              setUniformAspectRatio={setUniformAspectRatio}
+              renderedHeight={renderedHeight}
+              setRenderedHeight={setRenderedHeight}
+            />
           ) : assetMediaType === AssetMediaType.Video ? (
-            <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+            <Card.Video
+              shouldPlay={mediaShouldBePlaying}
+              setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+              uniformAspectRatio={uniformAspectRatio}
+              setUniformAspectRatio={setUniformAspectRatio}
+              renderedHeight={renderedHeight}
+              setRenderedHeight={setRenderedHeight}
+            />
           ) : (
-            <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+            <Card.Audio
+              shouldPlay={mediaShouldBePlaying}
+              setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+              uniformAspectRatio={uniformAspectRatio}
+              setUniformAspectRatio={setUniformAspectRatio}
+              renderedHeight={renderedHeight}
+              setRenderedHeight={setRenderedHeight}
+            />
           )}
         </MouseoverTooltip>
       </Card.ImageContainer>
@@ -185,7 +213,7 @@ export const CollectionAsset = ({
               </Card.SecondaryInfo>
               {isPooledMarket(asset.marketplace) && <Card.Pool />}
             </Card.SecondaryDetails>
-            {asset.tokenType !== TokenType.ERC1155 && asset.marketplace && (
+            {asset.tokenType !== NftStandard.Erc1155 && asset.marketplace && (
               <Card.MarketplaceIcon marketplace={asset.marketplace} />
             )}
           </Card.SecondaryRow>

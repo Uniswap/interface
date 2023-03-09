@@ -5,11 +5,16 @@ declare module '@metamask/jazzicon' {
 }
 
 interface Window {
+  GIT_COMMIT_HASH?: string
+
   // walletLinkExtension is injected by the Coinbase Wallet extension
   walletLinkExtension?: any
   ethereum?: {
-    // value that is populated and returns true by the Coinbase Wallet mobile dapp browser
+    // set by the Coinbase Wallet mobile dapp browser
     isCoinbaseWallet?: true
+    // set by the Brave browser when using built-in wallet
+    isBraveWallet?: true
+    // set by the MetaMask browser extension (also set by Brave browser when using built-in wallet)
     isMetaMask?: true
     autoRefreshOnNetworkChange?: boolean
   }
@@ -24,8 +29,4 @@ declare module 'content-hash' {
 declare module 'multihashes' {
   declare function decode(buff: Uint8Array): { code: number; name: string; length: number; digest: Uint8Array }
   declare function toB58String(hash: Uint8Array): string
-}
-
-declare module 'babel-plugin-relay/macro' {
-  export { graphql as default } from 'react-relay'
 }

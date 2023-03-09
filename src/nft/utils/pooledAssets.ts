@@ -8,6 +8,7 @@ const PROTOCOL_FEE_MULTIPLIER = BigNumber.from('5000000000000000')
 enum BondingCurve {
   Linear = 'LINEAR',
   Exponential = 'EXPONENTIAL',
+  Xyk = 'XYK',
 }
 
 interface Pool {
@@ -32,6 +33,50 @@ const calculateScaledPrice = (currentPrice: BigNumber, poolFee: BigNumber): BigN
   return currentPrice.add(protocolFee).add(tradeFee)
 }
 
+const calcSudoSwapLinearBondingCurve = (currentPrice: BigNumber, delta: BigNumber, position = 0): BigNumber => {
+  for (let i = 0; i <= position; i++) {
+    currentPrice = currentPrice.add(delta)
+  }
+
+  return currentPrice
+}
+
+const calcSudoSwapExponentialBondingCurve = (currentPrice: BigNumber, delta: BigNumber, position = 0): BigNumber => {
+  for (let i = 0; i <= position; i++) {
+    currentPrice = currentPrice.mul(delta).div(BigNumber.from(PRECISION))
+  }
+
+  return currentPrice
+}
+
+const calcSudoSwapXykBondingCurve = (
+  currentPrice: BigNumber,
+  sudoSwapPool: Pool,
+  position = 0
+): BigNumber | undefined => {
+  let virtualTokenBalance = BigNumber.from(sudoSwapPool.spotPrice)
+  let virtualNFTBalance = BigNumber.from(sudoSwapPool.delta)
+
+  if (virtualNFTBalance.sub(BigNumber.from(1)).gt(BigNumber.from(0))) {
+    currentPrice = virtualTokenBalance.div(virtualNFTBalance.sub(BigNumber.from(1)))
+  } else {
+    return undefined
+  }
+
+  for (let i = 1; i <= position; i++) {
+    virtualTokenBalance = virtualTokenBalance.add(currentPrice)
+    virtualNFTBalance = virtualNFTBalance.sub(BigNumber.from(1))
+
+    if (!virtualNFTBalance.sub(BigNumber.from(1)).isZero()) {
+      currentPrice = virtualTokenBalance.div(virtualNFTBalance.sub(BigNumber.from(1)))
+    } else {
+      return undefined
+    }
+  }
+
+  return currentPrice
+}
+
 export const calcSudoSwapPrice = (asset: GenieAsset, position = 0): string | undefined => {
   if (!asset.sellorders) return undefined
 
@@ -45,19 +90,25 @@ export const calcSudoSwapPrice = (asset: GenieAsset, position = 0): string | und
   const delta = BigNumber.from(sudoSwapPool.delta)
   const poolFee = BigNumber.from(sudoSwapPool.fee)
 
-  for (let i = 0; i <= position; i++) {
-    if (sudoSwapPool.bondingCurve === BondingCurve.Linear) {
-      currentPrice = currentPrice.add(delta)
-    } else if (sudoSwapPool.bondingCurve === BondingCurve.Exponential) {
-      currentPrice = currentPrice.mul(delta).div(BigNumber.from(PRECISION))
+  if (sudoSwapPool.bondingCurve === BondingCurve.Linear) {
+    currentPrice = calcSudoSwapLinearBondingCurve(currentPrice, delta, position)
+  } else if (sudoSwapPool.bondingCurve === BondingCurve.Exponential) {
+    currentPrice = calcSudoSwapExponentialBondingCurve(currentPrice, delta, position)
+  } else if (sudoSwapPool.bondingCurve === BondingCurve.Xyk) {
+    const xykCurrentPrice = calcSudoSwapXykBondingCurve(currentPrice, sudoSwapPool, position)
+    if (xykCurrentPrice) {
+      currentPrice = xykCurrentPrice
+    } else {
+      return undefined
     }
+  } else {
+    return undefined
   }
 
   return calculateScaledPrice(currentPrice, poolFee).toString()
 }
 
-// TODO: a lot of the below typecasting logic can be simplified when GraphQL migration is complete
-export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
+const calcAmmBasedPoolprice = (asset: GenieAsset, position = 0): string => {
   if (!asset.sellorders) return ''
 
   let amountToBuy: BigNumber = BigNumber.from(0)
@@ -118,6 +169,12 @@ export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
   price = price.mul(101).div(100)
 
   return price.toString()
+}
+
+export const calcPoolPrice = (asset: GenieAsset, position = 0): string => {
+  if (!asset.sellorders) return ''
+  if (asset.marketplace === Markets.Sudoswap) return calcSudoSwapPrice(asset, position) ?? '0'
+  return calcAmmBasedPoolprice(asset, position)
 }
 
 export const calcAvgGroupPoolPrice = (asset: GenieAsset, numberOfAssets: number) => {

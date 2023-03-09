@@ -1,11 +1,15 @@
 import { Trans } from '@lingui/macro'
 import * as Sentry from '@sentry/react'
-import { ButtonLight, ButtonPrimary } from 'components/Button'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { SwapEventName } from '@uniswap/analytics-events'
+import { ButtonLight, SmallButtonPrimary } from 'components/Button'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
 import React, { PropsWithChildren, useState } from 'react'
 import { Copy } from 'react-feather'
+import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { isSentryEnabled } from 'utils/env'
 
 import { CopyToClipboard, ExternalLink, ThemedText } from '../../theme'
 import { Column } from '../Column'
@@ -21,13 +25,6 @@ const BodyWrapper = styled.div<{ margin?: string }>`
   max-width: 500px;
   margin: auto;
   padding: 1rem;
-`
-
-const SmallButtonPrimary = styled(ButtonPrimary)`
-  width: auto;
-  font-size: 16px;
-  padding: 10px 16px;
-  border-radius: 12px;
 `
 
 const SmallButtonLight = styled(ButtonLight)`
@@ -92,6 +89,7 @@ const CodeTitle = styled.div`
   display: flex;
   gap: 14px;
   align-items: center;
+  justify-content: space-between;
   word-break: break-word;
 `
 
@@ -99,49 +97,87 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
   const [isExpanded, setExpanded] = useState(false)
   const isMobile = useIsMobile()
 
-  const errorId = eventId || 'unknown-error'
-
   // @todo: ThemedText components should be responsive by default
   const [Title, Description] = isMobile
     ? [ThemedText.HeadlineSmall, ThemedText.BodySmall]
     : [ThemedText.HeadlineLarge, ThemedText.BodySecondary]
 
+  const showErrorId = isSentryEnabled() && eventId
+
+  const showMoreButton = (
+    <ShowMoreButton onClick={() => setExpanded((s) => !s)}>
+      <ThemedText.Link color="textSecondary">
+        <Trans>{isExpanded ? 'Show less' : 'Show more'}</Trans>
+      </ThemedText.Link>
+      <ShowMoreIcon $isExpanded={isExpanded} secondaryWidth="20" secondaryHeight="20" />
+    </ShowMoreButton>
+  )
+
+  const errorDetails = error.stack || error.message
+
   return (
     <FallbackWrapper>
       <BodyWrapper>
         <Column gap="xl">
-          <Column gap="sm">
-            <Title textAlign="center">
-              <Trans>Something went wrong</Trans>
-            </Title>
-            <Description textAlign="center" color="textSecondary">
-              <Trans>
-                Sorry, an error occured while processing your request. If you request support, be sure to provide your
-                error ID.
-              </Trans>
-            </Description>
-          </Column>
-          <CodeBlockWrapper>
-            <CodeTitle>
-              <ThemedText.SubHeader fontWeight={500}>Error ID: {errorId}</ThemedText.SubHeader>
-              <CopyToClipboard toCopy={errorId}>
-                <CopyIcon />
-              </CopyToClipboard>
-            </CodeTitle>
-            <Separator />
-            {isExpanded && (
-              <>
-                <Code>{error.stack}</Code>
+          {showErrorId ? (
+            <>
+              <Column gap="sm">
+                <Title textAlign="center">
+                  <Trans>Something went wrong</Trans>
+                </Title>
+                <Description textAlign="center" color="textSecondary">
+                  <Trans>
+                    Sorry, an error occured while processing your request. If you request support, be sure to provide
+                    your error ID.
+                  </Trans>
+                </Description>
+              </Column>
+              <CodeBlockWrapper>
+                <CodeTitle>
+                  <ThemedText.SubHeader fontWeight={500}>
+                    <Trans>Error ID: {eventId}</Trans>
+                  </ThemedText.SubHeader>
+                  <CopyToClipboard toCopy={eventId}>
+                    <CopyIcon />
+                  </CopyToClipboard>
+                </CodeTitle>
                 <Separator />
-              </>
-            )}
-            <ShowMoreButton onClick={() => setExpanded((s) => !s)}>
-              <ThemedText.Link color="textSecondary">
-                <Trans>{isExpanded ? 'Show less' : 'Show more'}</Trans>
-              </ThemedText.Link>
-              <ShowMoreIcon $isExpanded={isExpanded} secondaryWidth="20" secondaryHeight="20" />
-            </ShowMoreButton>
-          </CodeBlockWrapper>
+                {isExpanded && (
+                  <>
+                    <Code>{errorDetails}</Code>
+                    <Separator />
+                  </>
+                )}
+                {showMoreButton}
+              </CodeBlockWrapper>
+            </>
+          ) : (
+            <>
+              <Column gap="sm">
+                <Title textAlign="center">
+                  <Trans>Something went wrong</Trans>
+                </Title>
+                <Description textAlign="center" color="textSecondary">
+                  <Trans>
+                    Sorry, an error occured while processing your request. If you request support, be sure to copy the
+                    details of this error.
+                  </Trans>
+                </Description>
+              </Column>
+              <CodeBlockWrapper>
+                <CodeTitle>
+                  <ThemedText.SubHeader fontWeight={500}>Error details</ThemedText.SubHeader>
+                  <CopyToClipboard toCopy={errorDetails}>
+                    <CopyIcon />
+                  </CopyToClipboard>
+                </CodeTitle>
+                <Separator />
+                <Code>{errorDetails.split('\n').slice(0, isExpanded ? undefined : 4)}</Code>
+                <Separator />
+                {showMoreButton}
+              </CodeBlockWrapper>
+            </>
+          )}
           <StretchedRow>
             <SmallButtonPrimary onClick={() => window.location.reload()}>
               <Trans>Reload the app</Trans>
@@ -184,13 +220,19 @@ const updateServiceWorkerInBackground = async () => {
 }
 
 export default function ErrorBoundary({ children }: PropsWithChildren): JSX.Element {
+  const { pathname } = useLocation()
   return (
     <Sentry.ErrorBoundary
       fallback={({ error, eventId }) => <Fallback error={error} eventId={eventId} />}
       beforeCapture={(scope) => {
         scope.setLevel('fatal')
       }}
-      onError={updateServiceWorkerInBackground}
+      onError={(error) => {
+        updateServiceWorkerInBackground()
+        if (pathname === '/swap') {
+          sendAnalyticsEvent(SwapEventName.SWAP_ERROR, { error })
+        }
+      }}
     >
       {children}
     </Sentry.ErrorBoundary>
