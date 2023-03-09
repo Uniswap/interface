@@ -52,13 +52,19 @@ const StyledTertiaryInfo = styled(ThemedText.BodySmall)`
   pointer-events: none;
 `
 
-const StyledActionButton = styled(ThemedText.BodySmall)<{ selected: boolean; isDisabled: boolean }>`
+const StyledActionButton = styled(ThemedText.BodySmall)<{
+  selected: boolean
+  isDisabled: boolean
+  unavailableForListing: boolean
+}>`
   position: absolute;
   display: flex;
   width: 100%;
   padding: 8px 0px;
-  color: ${({ theme }) => theme.accentTextLightPrimary};
-  background: ${({ theme, selected }) => (selected ? theme.accentCritical : theme.accentAction)};
+  color: ${({ theme, unavailableForListing }) =>
+    unavailableForListing ? theme.textPrimary : theme.accentTextLightPrimary};
+  background: ${({ theme, selected, unavailableForListing }) =>
+    selected ? theme.accentCritical : unavailableForListing ? theme.backgroundInteractive : theme.accentAction};
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
   will-change: opacity;
   border-radius: 8px;
@@ -66,7 +72,7 @@ const StyledActionButton = styled(ThemedText.BodySmall)<{ selected: boolean; isD
   font-weight: 600 !important;
   line-height: 16px;
   opacity: 0;
-  cursor: pointer;
+  cursor: ${({ unavailableForListing }) => (unavailableForListing ? 'default' : 'pointer')};
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     ${({ isDisabled }) => `opacity: ${isDisabled ? 0 : 1};`}
@@ -86,27 +92,35 @@ const StyledActionButton = styled(ThemedText.BodySmall)<{ selected: boolean; isD
   }
 
   &:hover:before {
-    background-color: ${({ theme }) => theme.stateOverlayHover};
+    background-color: ${({ theme, unavailableForListing }) => !unavailableForListing && theme.stateOverlayHover};
   }
 
   &:active:before {
-    background-color: ${({ theme }) => theme.stateOverlayPressed};
+    background-color: ${({ theme, unavailableForListing }) => !unavailableForListing && theme.stateOverlayPressed};
   }
 `
 
 const ActionButton = ({
   isDisabled,
   isSelected,
+  unavailableForListing,
   clickActionButton,
   children,
 }: {
   isDisabled: boolean
   isSelected: boolean
+  unavailableForListing: boolean
   clickActionButton: (e: React.MouseEvent) => void
   children: ReactNode
 }) => {
   return (
-    <StyledActionButton selected={isSelected} isDisabled={isDisabled} onClick={clickActionButton}>
+    <StyledActionButton
+      selected={isSelected}
+      isDisabled={isDisabled}
+      unavailableForListing={unavailableForListing}
+      onClick={(e: React.MouseEvent) => (unavailableForListing ? undefined : clickActionButton(e))}
+      disabled={unavailableForListing}
+    >
       {children}
     </StyledActionButton>
   )
