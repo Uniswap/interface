@@ -554,6 +554,7 @@ const StyledInfoContainer = styled(Column)`
   overflow: hidden;
   width: 100%;
   padding: 0px 8px;
+  height: 48px;
 `
 
 const InfoContainer = ({ children }: { children: ReactNode }) => {
