@@ -26,11 +26,22 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   11155111: 'sepolia.',
   31337: 'hardhat.',
   167: 'taiko.',
-  167001: 'taiko-internal-1.'
+  167001: 'taiko-internal-1.',
+  167004: 'taiko-testnet.'
 }
 
 export function getEtherscanLink(chainId: ChainId, data: string, type: 'transaction' | 'token' | 'address'): string {
-  const prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
+  let prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
+
+  switch (chainId) {
+    case ChainId.HARDHAT:
+    case ChainId.TAIKO:
+      prefix = 'https://l2explorer.a2.taiko.xyz'
+      break
+    case ChainId.TAIKO_INTERNAL_1:
+      prefix = 'https://l2explorer.internal.taiko.xyz'
+      break
+  }
 
   switch (type) {
     case 'transaction': {

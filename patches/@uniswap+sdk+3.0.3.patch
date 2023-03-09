@@ -1,8 +1,8 @@
 diff --git a/node_modules/@uniswap/sdk/dist/constants.d.ts b/node_modules/@uniswap/sdk/dist/constants.d.ts
-index 65a9f9b..7e016f7 100644
+index 65a9f9b..f4cea98 100644
 --- a/node_modules/@uniswap/sdk/dist/constants.d.ts
 +++ b/node_modules/@uniswap/sdk/dist/constants.d.ts
-@@ -5,7 +5,11 @@ export declare enum ChainId {
+@@ -5,7 +5,12 @@ export declare enum ChainId {
      ROPSTEN = 3,
      RINKEBY = 4,
      GÖRLI = 5,
@@ -12,10 +12,11 @@ index 65a9f9b..7e016f7 100644
 +    HARDHAT = 31337,
 +    TAIKO = 167,
 +    TAIKO_INTERNAL_1 = 167001,
++    TAIKO_TESTNET = 167004,
  }
  export declare enum TradeType {
      EXACT_INPUT = 0,
-@@ -16,7 +20,7 @@ export declare enum Rounding {
+@@ -16,7 +21,7 @@ export declare enum Rounding {
      ROUND_HALF_UP = 1,
      ROUND_UP = 2
  }
@@ -25,10 +26,10 @@ index 65a9f9b..7e016f7 100644
  export declare const MINIMUM_LIQUIDITY: JSBI;
  export declare const ZERO: JSBI;
 diff --git a/node_modules/@uniswap/sdk/dist/entities/token.d.ts b/node_modules/@uniswap/sdk/dist/entities/token.d.ts
-index 3b5b50b..9044bbe 100644
+index 3b5b50b..23c0bba 100644
 --- a/node_modules/@uniswap/sdk/dist/entities/token.d.ts
 +++ b/node_modules/@uniswap/sdk/dist/entities/token.d.ts
-@@ -30,4 +30,8 @@ export declare const WETH: {
+@@ -30,4 +30,9 @@ export declare const WETH: {
      4: Token;
      5: Token;
      42: Token;
@@ -36,9 +37,10 @@ index 3b5b50b..9044bbe 100644
 +    31337:Token;
 +    167:Token;
 +    167001:Token;
++    167004:Token;
  };
 diff --git a/node_modules/@uniswap/sdk/dist/sdk.cjs.development.js b/node_modules/@uniswap/sdk/dist/sdk.cjs.development.js
-index a4450f3..b7c3a5c 100644
+index a4450f3..8e160e9 100644
 --- a/node_modules/@uniswap/sdk/dist/sdk.cjs.development.js
 +++ b/node_modules/@uniswap/sdk/dist/sdk.cjs.development.js
 @@ -2,7 +2,7 @@
@@ -50,7 +52,7 @@ index a4450f3..b7c3a5c 100644
  
  var JSBI = _interopDefault(require('jsbi'));
  var invariant = _interopDefault(require('tiny-invariant'));
-@@ -25,6 +25,10 @@ var _SOLIDITY_TYPE_MAXIMA;
+@@ -25,6 +25,11 @@ var _SOLIDITY_TYPE_MAXIMA;
    ChainId[ChainId["RINKEBY"] = 4] = "RINKEBY";
    ChainId[ChainId["G\xD6RLI"] = 5] = "G\xD6RLI";
    ChainId[ChainId["KOVAN"] = 42] = "KOVAN";
@@ -58,10 +60,11 @@ index a4450f3..b7c3a5c 100644
 +  ChainId[ChainId["HARDHAT"] = 31337] = "HARDHAT";
 +  ChainId[ChainId["TAIKO"] = 167] = "TAIKO";
 +  ChainId[ChainId["TAIKO_INTERNAL_1"] = 167001] = "TAIKO_INTERNAL_1";
++  ChainId[ChainId["TAIKO_TESTNET"] = 167004] = "TAIKO_TESTNET";
  })(exports.ChainId || (exports.ChainId = {}));
  
  (function (TradeType) {
-@@ -38,7 +42,7 @@ var _SOLIDITY_TYPE_MAXIMA;
+@@ -38,7 +43,7 @@ var _SOLIDITY_TYPE_MAXIMA;
    Rounding[Rounding["ROUND_UP"] = 2] = "ROUND_UP";
  })(exports.Rounding || (exports.Rounding = {}));
  
@@ -70,7 +73,7 @@ index a4450f3..b7c3a5c 100644
  var INIT_CODE_HASH = '0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f';
  var MINIMUM_LIQUIDITY = /*#__PURE__*/JSBI.BigInt(1000); // exports for internal consumption
  
-@@ -122,7 +126,7 @@ function _isNativeReflectConstruct() {
+@@ -122,7 +127,7 @@ function _isNativeReflectConstruct() {
    if (typeof Proxy === "function") return true;
  
    try {
@@ -79,7 +82,7 @@ index a4450f3..b7c3a5c 100644
      return true;
    } catch (e) {
      return false;
-@@ -278,8 +282,8 @@ var InsufficientInputAmountError = /*#__PURE__*/function (_Error2) {
+@@ -278,8 +283,8 @@ var InsufficientInputAmountError = /*#__PURE__*/function (_Error2) {
  }( /*#__PURE__*/_wrapNativeSuper(Error));
  
  function validateSolidityTypeInstance(value, solidityType) {
@@ -90,7 +93,7 @@ index a4450f3..b7c3a5c 100644
  } // warns if addresses are not checksummed
  
  function validateAndParseAddress(address$1) {
-@@ -288,7 +292,7 @@ function validateAndParseAddress(address$1) {
+@@ -288,7 +293,7 @@ function validateAndParseAddress(address$1) {
      "development" !== "production" ? warning(address$1 === checksummedAddress, address$1 + " is not checksummed.") : void 0;
      return checksummedAddress;
    } catch (error) {
@@ -99,7 +102,7 @@ index a4450f3..b7c3a5c 100644
    }
  }
  function parseBigintIsh(bigintIsh) {
-@@ -317,9 +321,9 @@ function sqrt(y) {
+@@ -317,9 +322,9 @@ function sqrt(y) {
  // `maxSize` by removing the last item
  
  function sortedInsert(items, add, maxSize, comparator) {
@@ -111,7 +114,7 @@ index a4450f3..b7c3a5c 100644
  
    if (items.length === 0) {
      items.push(add);
-@@ -332,7 +336,7 @@ function sortedInsert(items, add, maxSize, comparator) {
+@@ -332,7 +337,7 @@ function sortedInsert(items, add, maxSize, comparator) {
      }
  
      var lo = 0,
@@ -120,7 +123,7 @@ index a4450f3..b7c3a5c 100644
  
      while (lo < hi) {
        var mid = lo + hi >>> 1;
-@@ -356,18 +360,18 @@ function sortedInsert(items, add, maxSize, comparator) {
+@@ -356,18 +361,18 @@ function sortedInsert(items, add, maxSize, comparator) {
   */
  
  var Currency =
@@ -151,7 +154,7 @@ index a4450f3..b7c3a5c 100644
  /**
   * The only instance of the base class `Currency`.
   */
-@@ -407,17 +411,17 @@ var Token = /*#__PURE__*/function (_Currency) {
+@@ -407,17 +412,17 @@ var Token = /*#__PURE__*/function (_Currency) {
  
      return this.chainId === other.chainId && this.address === other.address;
    }
@@ -178,16 +181,16 @@ index a4450f3..b7c3a5c 100644
      return this.address.toLowerCase() < other.address.toLowerCase();
    };
  
-@@ -438,7 +442,7 @@ function currencyEquals(currencyA, currencyB) {
+@@ -438,7 +443,7 @@ function currencyEquals(currencyA, currencyB) {
      return currencyA === currencyB;
    }
  }
 -var WETH = (_WETH = {}, _WETH[exports.ChainId.MAINNET] = /*#__PURE__*/new Token(exports.ChainId.MAINNET, '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.ROPSTEN] = /*#__PURE__*/new Token(exports.ChainId.ROPSTEN, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.RINKEBY] = /*#__PURE__*/new Token(exports.ChainId.RINKEBY, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.GÖRLI] = /*#__PURE__*/new Token(exports.ChainId.GÖRLI, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.KOVAN] = /*#__PURE__*/new Token(exports.ChainId.KOVAN, '0xd0A1E359811322d97991E03f863a0C30C2cF029C', 18, 'WETH', 'Wrapped Ether'), _WETH);
-+var WETH = (_WETH = {}, _WETH[exports.ChainId.MAINNET] = /*#__PURE__*/new Token(exports.ChainId.MAINNET, '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.ROPSTEN] = /*#__PURE__*/new Token(exports.ChainId.ROPSTEN, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.RINKEBY] = /*#__PURE__*/new Token(exports.ChainId.RINKEBY, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.GÖRLI] = /*#__PURE__*/new Token(exports.ChainId.GÖRLI, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.KOVAN] = /*#__PURE__*/new Token(exports.ChainId.KOVAN, '0xd0A1E359811322d97991E03f863a0C30C2cF029C', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.SEPOLIA] = /*#__PURE__*/new Token(exports.ChainId.SEPOLIA, '0xEEbdC6192cB8CD9E27D880Fa0dcEC11a2B407B0C', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.HARDHAT] = /*#__PURE__*/new Token(exports.ChainId.HARDHAT, '0x582232A9462C0D113ec7263f69b8685034219a9C', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.TAIKO] = /*#__PURE__*/new Token(exports.ChainId.TAIKO, '0x582232A9462C0D113ec7263f69b8685034219a9C', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.TAIKO_INTERNAL_1] = /*#__PURE__*/new Token(exports.ChainId.TAIKO_INTERNAL_1, '0x582232A9462C0D113ec7263f69b8685034219a9C', 18, 'WETH', 'Wrapped Ether'), _WETH);
++var WETH = (_WETH = {}, _WETH[exports.ChainId.MAINNET] = /*#__PURE__*/new Token(exports.ChainId.MAINNET, '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.ROPSTEN] = /*#__PURE__*/new Token(exports.ChainId.ROPSTEN, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.RINKEBY] = /*#__PURE__*/new Token(exports.ChainId.RINKEBY, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.GÖRLI] = /*#__PURE__*/new Token(exports.ChainId.GÖRLI, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.KOVAN] = /*#__PURE__*/new Token(exports.ChainId.KOVAN, '0xd0A1E359811322d97991E03f863a0C30C2cF029C', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.SEPOLIA] = /*#__PURE__*/new Token(exports.ChainId.SEPOLIA, '0xEEbdC6192cB8CD9E27D880Fa0dcEC11a2B407B0C', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.HARDHAT] = /*#__PURE__*/new Token(exports.ChainId.HARDHAT, '0x582232A9462C0D113ec7263f69b8685034219a9C', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.TAIKO] = /*#__PURE__*/new Token(exports.ChainId.TAIKO, '0x582232A9462C0D113ec7263f69b8685034219a9C', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.TAIKO_INTERNAL_1] = /*#__PURE__*/new Token(exports.ChainId.TAIKO_INTERNAL_1, '0x582232A9462C0D113ec7263f69b8685034219a9C', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.TAIKO_TESTNET] = /*#__PURE__*/new Token(exports.ChainId.TAIKO_TESTNET, '0x582232A9462C0D113ec7263f69b8685034219a9C', 18, 'WETH', 'Wrapped Ether'), _WETH);
  
  var _toSignificantRoundin, _toFixedRounding;
  var Decimal = /*#__PURE__*/toFormat(_Decimal);
-@@ -518,8 +522,8 @@ var Fraction = /*#__PURE__*/function () {
+@@ -518,8 +523,8 @@ var Fraction = /*#__PURE__*/function () {
        rounding = exports.Rounding.ROUND_HALF_UP;
      }
  
@@ -198,7 +201,7 @@ index a4450f3..b7c3a5c 100644
      Decimal.set({
        precision: significantDigits + 1,
        rounding: toSignificantRounding[rounding]
-@@ -539,8 +543,8 @@ var Fraction = /*#__PURE__*/function () {
+@@ -539,8 +544,8 @@ var Fraction = /*#__PURE__*/function () {
        rounding = exports.Rounding.ROUND_HALF_UP;
      }
  
@@ -209,7 +212,7 @@ index a4450f3..b7c3a5c 100644
      Big.DP = decimalPlaces;
      Big.RM = toFixedRounding[rounding];
      return new Big(this.numerator.toString()).div(this.denominator.toString()).toFormat(decimalPlaces, format);
-@@ -589,12 +593,12 @@ var CurrencyAmount = /*#__PURE__*/function (_Fraction) {
+@@ -589,12 +594,12 @@ var CurrencyAmount = /*#__PURE__*/function (_Fraction) {
    var _proto = CurrencyAmount.prototype;
  
    _proto.add = function add(other) {
@@ -224,7 +227,7 @@ index a4450f3..b7c3a5c 100644
      return new CurrencyAmount(this.currency, JSBI.subtract(this.raw, other.raw));
    };
  
-@@ -619,7 +623,7 @@ var CurrencyAmount = /*#__PURE__*/function (_Fraction) {
+@@ -619,7 +624,7 @@ var CurrencyAmount = /*#__PURE__*/function (_Fraction) {
        rounding = exports.Rounding.ROUND_DOWN;
      }
  
@@ -233,7 +236,7 @@ index a4450f3..b7c3a5c 100644
      return _Fraction.prototype.toFixed.call(this, decimalPlaces, format, rounding);
    };
  
-@@ -659,12 +663,12 @@ var TokenAmount = /*#__PURE__*/function (_CurrencyAmount) {
+@@ -659,12 +664,12 @@ var TokenAmount = /*#__PURE__*/function (_CurrencyAmount) {
    var _proto = TokenAmount.prototype;
  
    _proto.add = function add(other) {
@@ -248,7 +251,7 @@ index a4450f3..b7c3a5c 100644
      return new TokenAmount(this.token, JSBI.subtract(this.raw, other.raw));
    };
  
-@@ -690,8 +694,8 @@ var Price = /*#__PURE__*/function (_Fraction) {
+@@ -690,8 +695,8 @@ var Price = /*#__PURE__*/function (_Fraction) {
  
      for (var _iterator = _createForOfIteratorHelperLoose(route.pairs.entries()), _step; !(_step = _iterator()).done;) {
        var _step$value = _step.value,
@@ -259,7 +262,7 @@ index a4450f3..b7c3a5c 100644
        prices.push(route.path[i].equals(pair.token0) ? new Price(pair.reserve0.currency, pair.reserve1.currency, pair.reserve0.raw, pair.reserve1.raw) : new Price(pair.reserve1.currency, pair.reserve0.currency, pair.reserve1.raw, pair.reserve0.raw));
      }
  
-@@ -707,16 +711,16 @@ var Price = /*#__PURE__*/function (_Fraction) {
+@@ -707,16 +712,16 @@ var Price = /*#__PURE__*/function (_Fraction) {
    };
  
    _proto.multiply = function multiply(other) {
@@ -279,7 +282,7 @@ index a4450f3..b7c3a5c 100644
  
      if (this.quoteCurrency instanceof Token) {
        return new TokenAmount(this.quoteCurrency, _Fraction.prototype.multiply.call(this, currencyAmount.raw).quotient);
-@@ -760,7 +764,7 @@ var PAIR_ADDRESS_CACHE = {};
+@@ -760,7 +765,7 @@ var PAIR_ADDRESS_CACHE = {};
  var Pair = /*#__PURE__*/function () {
    function Pair(tokenAmountA, tokenAmountB) {
      var tokenAmounts = tokenAmountA.token.sortsBefore(tokenAmountB.token) // does safety checks
@@ -288,7 +291,7 @@ index a4450f3..b7c3a5c 100644
      this.liquidityToken = new Token(tokenAmounts[0].token.chainId, Pair.getAddress(tokenAmounts[0].token, tokenAmounts[1].token), 18, 'UNI-V2', 'Uniswap V2');
      this.tokenAmounts = tokenAmounts;
    }
-@@ -778,42 +782,42 @@ var Pair = /*#__PURE__*/function () {
+@@ -778,42 +783,42 @@ var Pair = /*#__PURE__*/function () {
  
      return PAIR_ADDRESS_CACHE[tokens[0].address][tokens[1].address];
    }
@@ -347,7 +350,7 @@ index a4450f3..b7c3a5c 100644
  
      if (JSBI.equal(this.reserve0.raw, ZERO) || JSBI.equal(this.reserve1.raw, ZERO)) {
        throw new InsufficientReservesError();
-@@ -834,7 +838,7 @@ var Pair = /*#__PURE__*/function () {
+@@ -834,7 +839,7 @@ var Pair = /*#__PURE__*/function () {
    };
  
    _proto.getInputAmount = function getInputAmount(outputAmount) {
@@ -356,7 +359,7 @@ index a4450f3..b7c3a5c 100644
  
      if (JSBI.equal(this.reserve0.raw, ZERO) || JSBI.equal(this.reserve1.raw, ZERO) || JSBI.greaterThanOrEqual(outputAmount.raw, this.reserveOf(outputAmount.token).raw)) {
        throw new InsufficientReservesError();
-@@ -849,10 +853,10 @@ var Pair = /*#__PURE__*/function () {
+@@ -849,10 +854,10 @@ var Pair = /*#__PURE__*/function () {
    };
  
    _proto.getLiquidityMinted = function getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB) {
@@ -370,7 +373,7 @@ index a4450f3..b7c3a5c 100644
      var liquidity;
  
      if (JSBI.equal(totalSupply.raw, ZERO)) {
-@@ -875,16 +879,16 @@ var Pair = /*#__PURE__*/function () {
+@@ -875,16 +880,16 @@ var Pair = /*#__PURE__*/function () {
        feeOn = false;
      }
  
@@ -392,7 +395,7 @@ index a4450f3..b7c3a5c 100644
        var kLastParsed = parseBigintIsh(kLast);
  
        if (!JSBI.equal(kLastParsed, ZERO)) {
-@@ -953,20 +957,20 @@ var Pair = /*#__PURE__*/function () {
+@@ -953,20 +958,20 @@ var Pair = /*#__PURE__*/function () {
  
  var Route = /*#__PURE__*/function () {
    function Route(pairs, input, output) {
@@ -420,7 +423,7 @@ index a4450f3..b7c3a5c 100644
  
        var _output = currentInput.equals(pair.token0) ? pair.token1 : pair.token0;
  
-@@ -1038,8 +1042,8 @@ function computePriceImpact(midPrice, inputAmount, outputAmount) {
+@@ -1038,8 +1043,8 @@ function computePriceImpact(midPrice, inputAmount, outputAmount) {
  
  function inputOutputComparator(a, b) {
    // must have same input and output token for comparison
@@ -431,7 +434,7 @@ index a4450f3..b7c3a5c 100644
  
    if (a.outputAmount.equalTo(b.outputAmount)) {
      if (a.inputAmount.equalTo(b.inputAmount)) {
-@@ -1088,13 +1092,13 @@ function tradeComparator(a, b) {
+@@ -1088,13 +1093,13 @@ function tradeComparator(a, b) {
  function wrappedAmount(currencyAmount, chainId) {
    if (currencyAmount instanceof TokenAmount) return currencyAmount;
    if (currencyAmount.currency === ETHER) return new TokenAmount(WETH[chainId], currencyAmount.raw);
@@ -447,7 +450,7 @@ index a4450f3..b7c3a5c 100644
  }
  /**
   * Represents a trade executed against a list of pairs.
-@@ -1108,29 +1112,29 @@ var Trade = /*#__PURE__*/function () {
+@@ -1108,29 +1113,29 @@ var Trade = /*#__PURE__*/function () {
      var nextPairs = new Array(route.pairs.length);
  
      if (tradeType === exports.TradeType.EXACT_INPUT) {
@@ -483,7 +486,7 @@ index a4450f3..b7c3a5c 100644
  
          amounts[_i - 1] = inputAmount;
          nextPairs[_i - 1] = _nextPair;
-@@ -1155,26 +1159,26 @@ var Trade = /*#__PURE__*/function () {
+@@ -1155,26 +1160,26 @@ var Trade = /*#__PURE__*/function () {
    Trade.exactIn = function exactIn(route, amountIn) {
      return new Trade(route, amountIn, exports.TradeType.EXACT_INPUT);
    }
@@ -522,7 +525,7 @@ index a4450f3..b7c3a5c 100644
  
      if (this.tradeType === exports.TradeType.EXACT_OUTPUT) {
        return this.outputAmount;
-@@ -1183,14 +1187,14 @@ var Trade = /*#__PURE__*/function () {
+@@ -1183,14 +1188,14 @@ var Trade = /*#__PURE__*/function () {
        return this.outputAmount instanceof TokenAmount ? new TokenAmount(this.outputAmount.token, slippageAdjustedAmountOut) : CurrencyAmount.ether(slippageAdjustedAmountOut);
      }
    }
@@ -543,604 +546,6 @@ index a4450f3..b7c3a5c 100644
  
      if (this.tradeType === exports.TradeType.EXACT_INPUT) {
        return this.inputAmount;
-@@ -1199,29 +1203,29 @@ var Trade = /*#__PURE__*/function () {
-       return this.inputAmount instanceof TokenAmount ? new TokenAmount(this.inputAmount.token, slippageAdjustedAmountIn) : CurrencyAmount.ether(slippageAdjustedAmountIn);
-     }
-   }
--  /**
--   * Given a list of pairs, and a fixed amount in, returns the top `maxNumResults` trades that go from an input token
--   * amount to an output token, making at most `maxHops` hops.
--   * Note this does not consider aggregation, as routes are linear. It's possible a better route exists by splitting
--   * the amount in among multiple routes.
--   * @param pairs the pairs to consider in finding the best trade
--   * @param currencyAmountIn exact amount of input currency to spend
--   * @param currencyOut the desired currency out
--   * @param maxNumResults maximum number of results to return
--   * @param maxHops maximum number of hops a returned trade can make, e.g. 1 hop goes through a single pair
--   * @param currentPairs used in recursion; the current list of pairs
--   * @param originalAmountIn used in recursion; the original value of the currencyAmountIn parameter
--   * @param bestTrades used in recursion; the current list of best trades
--   */
--  ;
-+    /**
-+     * Given a list of pairs, and a fixed amount in, returns the top `maxNumResults` trades that go from an input token
-+     * amount to an output token, making at most `maxHops` hops.
-+     * Note this does not consider aggregation, as routes are linear. It's possible a better route exists by splitting
-+     * the amount in among multiple routes.
-+     * @param pairs the pairs to consider in finding the best trade
-+     * @param currencyAmountIn exact amount of input currency to spend
-+     * @param currencyOut the desired currency out
-+     * @param maxNumResults maximum number of results to return
-+     * @param maxHops maximum number of hops a returned trade can make, e.g. 1 hop goes through a single pair
-+     * @param currentPairs used in recursion; the current list of pairs
-+     * @param originalAmountIn used in recursion; the original value of the currencyAmountIn parameter
-+     * @param bestTrades used in recursion; the current list of best trades
-+     */
-+    ;
- 
-   Trade.bestTradeExactIn = function bestTradeExactIn(pairs, currencyAmountIn, currencyOut, _temp, // used in recursion.
--  currentPairs, originalAmountIn, bestTrades) {
-+    currentPairs, originalAmountIn, bestTrades) {
-     var _ref = _temp === void 0 ? {} : _temp,
--        _ref$maxNumResults = _ref.maxNumResults,
--        maxNumResults = _ref$maxNumResults === void 0 ? 3 : _ref$maxNumResults,
--        _ref$maxHops = _ref.maxHops,
--        maxHops = _ref$maxHops === void 0 ? 3 : _ref$maxHops;
-+      _ref$maxNumResults = _ref.maxNumResults,
-+      maxNumResults = _ref$maxNumResults === void 0 ? 3 : _ref$maxNumResults,
-+      _ref$maxHops = _ref.maxHops,
-+      maxHops = _ref$maxHops === void 0 ? 3 : _ref$maxHops;
- 
-     if (currentPairs === void 0) {
-       currentPairs = [];
-@@ -1235,11 +1239,11 @@ var Trade = /*#__PURE__*/function () {
-       bestTrades = [];
-     }
- 
--    !(pairs.length > 0) ?  invariant(false, 'PAIRS')  : void 0;
--    !(maxHops > 0) ?  invariant(false, 'MAX_HOPS')  : void 0;
--    !(originalAmountIn === currencyAmountIn || currentPairs.length > 0) ?  invariant(false, 'INVALID_RECURSION')  : void 0;
-+    !(pairs.length > 0) ? invariant(false, 'PAIRS') : void 0;
-+    !(maxHops > 0) ? invariant(false, 'MAX_HOPS') : void 0;
-+    !(originalAmountIn === currencyAmountIn || currentPairs.length > 0) ? invariant(false, 'INVALID_RECURSION') : void 0;
-     var chainId = currencyAmountIn instanceof TokenAmount ? currencyAmountIn.token.chainId : currencyOut instanceof Token ? currencyOut.chainId : undefined;
--    !(chainId !== undefined) ?  invariant(false, 'CHAIN_ID')  : void 0;
-+    !(chainId !== undefined) ? invariant(false, 'CHAIN_ID') : void 0;
-     var amountIn = wrappedAmount(currencyAmountIn, chainId);
-     var tokenOut = wrappedCurrency(currencyOut, chainId);
- 
-@@ -1280,30 +1284,30 @@ var Trade = /*#__PURE__*/function () {
- 
-     return bestTrades;
-   }
--  /**
--   * similar to the above method but instead targets a fixed output amount
--   * given a list of pairs, and a fixed amount out, returns the top `maxNumResults` trades that go from an input token
--   * to an output token amount, making at most `maxHops` hops
--   * note this does not consider aggregation, as routes are linear. it's possible a better route exists by splitting
--   * the amount in among multiple routes.
--   * @param pairs the pairs to consider in finding the best trade
--   * @param currencyIn the currency to spend
--   * @param currencyAmountOut the exact amount of currency out
--   * @param maxNumResults maximum number of results to return
--   * @param maxHops maximum number of hops a returned trade can make, e.g. 1 hop goes through a single pair
--   * @param currentPairs used in recursion; the current list of pairs
--   * @param originalAmountOut used in recursion; the original value of the currencyAmountOut parameter
--   * @param bestTrades used in recursion; the current list of best trades
--   */
--  ;
-+    /**
-+     * similar to the above method but instead targets a fixed output amount
-+     * given a list of pairs, and a fixed amount out, returns the top `maxNumResults` trades that go from an input token
-+     * to an output token amount, making at most `maxHops` hops
-+     * note this does not consider aggregation, as routes are linear. it's possible a better route exists by splitting
-+     * the amount in among multiple routes.
-+     * @param pairs the pairs to consider in finding the best trade
-+     * @param currencyIn the currency to spend
-+     * @param currencyAmountOut the exact amount of currency out
-+     * @param maxNumResults maximum number of results to return
-+     * @param maxHops maximum number of hops a returned trade can make, e.g. 1 hop goes through a single pair
-+     * @param currentPairs used in recursion; the current list of pairs
-+     * @param originalAmountOut used in recursion; the original value of the currencyAmountOut parameter
-+     * @param bestTrades used in recursion; the current list of best trades
-+     */
-+    ;
- 
-   Trade.bestTradeExactOut = function bestTradeExactOut(pairs, currencyIn, currencyAmountOut, _temp2, // used in recursion.
--  currentPairs, originalAmountOut, bestTrades) {
-+    currentPairs, originalAmountOut, bestTrades) {
-     var _ref2 = _temp2 === void 0 ? {} : _temp2,
--        _ref2$maxNumResults = _ref2.maxNumResults,
--        maxNumResults = _ref2$maxNumResults === void 0 ? 3 : _ref2$maxNumResults,
--        _ref2$maxHops = _ref2.maxHops,
--        maxHops = _ref2$maxHops === void 0 ? 3 : _ref2$maxHops;
-+      _ref2$maxNumResults = _ref2.maxNumResults,
-+      maxNumResults = _ref2$maxNumResults === void 0 ? 3 : _ref2$maxNumResults,
-+      _ref2$maxHops = _ref2.maxHops,
-+      maxHops = _ref2$maxHops === void 0 ? 3 : _ref2$maxHops;
- 
-     if (currentPairs === void 0) {
-       currentPairs = [];
-@@ -1317,11 +1321,11 @@ var Trade = /*#__PURE__*/function () {
-       bestTrades = [];
-     }
- 
--    !(pairs.length > 0) ?  invariant(false, 'PAIRS')  : void 0;
--    !(maxHops > 0) ?  invariant(false, 'MAX_HOPS')  : void 0;
--    !(originalAmountOut === currencyAmountOut || currentPairs.length > 0) ?  invariant(false, 'INVALID_RECURSION')  : void 0;
-+    !(pairs.length > 0) ? invariant(false, 'PAIRS') : void 0;
-+    !(maxHops > 0) ? invariant(false, 'MAX_HOPS') : void 0;
-+    !(originalAmountOut === currencyAmountOut || currentPairs.length > 0) ? invariant(false, 'INVALID_RECURSION') : void 0;
-     var chainId = currencyAmountOut instanceof TokenAmount ? currencyAmountOut.token.chainId : currencyIn instanceof Token ? currencyIn.chainId : undefined;
--    !(chainId !== undefined) ?  invariant(false, 'CHAIN_ID')  : void 0;
-+    !(chainId !== undefined) ? invariant(false, 'CHAIN_ID') : void 0;
-     var amountOut = wrappedAmount(currencyAmountOut, chainId);
-     var tokenIn = wrappedCurrency(currencyIn, chainId);
- 
-@@ -1379,7 +1383,7 @@ var Router = /*#__PURE__*/function () {
-   /**
-    * Cannot be constructed.
-    */
--  function Router() {}
-+  function Router() { }
-   /**
-    * Produces the on-chain method name to call and the hex encoded parameters to pass as arguments for a given trade.
-    * @param trade to produce call parameters for
-@@ -1391,8 +1395,8 @@ var Router = /*#__PURE__*/function () {
-     var etherIn = trade.inputAmount.currency === ETHER;
-     var etherOut = trade.outputAmount.currency === ETHER; // the router does not support both ether in and out
- 
--    !!(etherIn && etherOut) ?  invariant(false, 'ETHER_IN_OUT')  : void 0;
--    !(!('ttl' in options) || options.ttl > 0) ?  invariant(false, 'TTL')  : void 0;
-+    !!(etherIn && etherOut) ? invariant(false, 'ETHER_IN_OUT') : void 0;
-+    !(!('ttl' in options) || options.ttl > 0) ? invariant(false, 'TTL') : void 0;
-     var to = validateAndParseAddress(options.recipient);
-     var amountIn = toHex(trade.maximumAmountIn(options.allowedSlippage));
-     var amountOut = toHex(trade.minimumAmountOut(options.allowedSlippage));
-@@ -1427,7 +1431,7 @@ var Router = /*#__PURE__*/function () {
-         break;
- 
-       case exports.TradeType.EXACT_OUTPUT:
--        !!useFeeOnTransfer ?  invariant(false, 'EXACT_OUT_FOT')  : void 0;
-+        !!useFeeOnTransfer ? invariant(false, 'EXACT_OUT_FOT') : void 0;
- 
-         if (etherIn) {
-           methodName = 'swapETHForExactTokens'; // (uint amountOut, address[] calldata path, address to, uint deadline)
-@@ -1460,40 +1464,40 @@ var Router = /*#__PURE__*/function () {
- }();
- 
- var ERC20 = [
--	{
--		constant: true,
--		inputs: [
--		],
--		name: "decimals",
--		outputs: [
--			{
--				name: "",
--				type: "uint8"
--			}
--		],
--		payable: false,
--		stateMutability: "view",
--		type: "function"
--	},
--	{
--		constant: true,
--		inputs: [
--			{
--				name: "",
--				type: "address"
--			}
--		],
--		name: "balanceOf",
--		outputs: [
--			{
--				name: "",
--				type: "uint256"
--			}
--		],
--		payable: false,
--		stateMutability: "view",
--		type: "function"
--	}
-+  {
-+    constant: true,
-+    inputs: [
-+    ],
-+    name: "decimals",
-+    outputs: [
-+      {
-+        name: "",
-+        type: "uint8"
-+      }
-+    ],
-+    payable: false,
-+    stateMutability: "view",
-+    type: "function"
-+  },
-+  {
-+    constant: true,
-+    inputs: [
-+      {
-+        name: "",
-+        type: "address"
-+      }
-+    ],
-+    name: "balanceOf",
-+    outputs: [
-+      {
-+        name: "",
-+        type: "uint256"
-+      }
-+    ],
-+    payable: false,
-+    stateMutability: "view",
-+    type: "function"
-+  }
- ];
- 
- var _TOKEN_DECIMALS_CACHE;
-@@ -1509,7 +1513,7 @@ var Fetcher = /*#__PURE__*/function () {
-   /**
-    * Cannot be constructed.
-    */
--  function Fetcher() {}
-+  function Fetcher() { }
-   /**
-    * Fetch information for a given token on the given chain, using the given ethers provider.
-    * @param chainId chain of the token
-@@ -1542,13 +1546,13 @@ var Fetcher = /*#__PURE__*/function () {
-       return Promise.reject(e);
-     }
-   }
--  /**
--   * Fetches information about a pair and constructs a pair from the given two tokens.
--   * @param tokenA first token
--   * @param tokenB second token
--   * @param provider the provider to use to fetch the data
--   */
--  ;
-+    /**
-+     * Fetches information about a pair and constructs a pair from the given two tokens.
-+     * @param tokenA first token
-+     * @param tokenB second token
-+     * @param provider the provider to use to fetch the data
-+     */
-+    ;
- 
-   Fetcher.fetchPairData = function fetchPairData(tokenA, tokenB, provider) {
-     try {
-@@ -1557,7 +1561,7 @@ var Fetcher = /*#__PURE__*/function () {
-       var address = Pair.getAddress(tokenA, tokenB);
-       return Promise.resolve(new contracts.Contract(address, IUniswapV2Pair.abi, provider).getReserves()).then(function (_ref) {
-         var reserves0 = _ref[0],
--            reserves1 = _ref[1];
-+          reserves1 = _ref[1];
-         var balances = tokenA.sortsBefore(tokenB) ? [reserves0, reserves1] : [reserves1, reserves0];
-         return new Pair(new TokenAmount(tokenA, balances[0]), new TokenAmount(tokenB, balances[1]));
-       });
-diff --git a/node_modules/@uniswap/sdk/dist/sdk.esm.js b/node_modules/@uniswap/sdk/dist/sdk.esm.js
-index 6c34a78..5810356 100644
---- a/node_modules/@uniswap/sdk/dist/sdk.esm.js
-+++ b/node_modules/@uniswap/sdk/dist/sdk.esm.js
-@@ -1,16 +1,17 @@
--import JSBI from 'jsbi';
--export { default as JSBI } from 'jsbi';
--import invariant from 'tiny-invariant';
--import warning from 'tiny-warning';
- import { getAddress, getCreate2Address } from '@ethersproject/address';
--import _Big from 'big.js';
--import toFormat from 'toformat';
--import _Decimal from 'decimal.js-light';
--import { keccak256, pack } from '@ethersproject/solidity';
- import { Contract } from '@ethersproject/contracts';
- import { getNetwork } from '@ethersproject/networks';
- import { getDefaultProvider } from '@ethersproject/providers';
-+import { keccak256, pack } from '@ethersproject/solidity';
- import IUniswapV2Pair from '@uniswap/v2-core/build/IUniswapV2Pair.json';
-+import _Big from 'big.js';
-+import _Decimal from 'decimal.js-light';
-+import JSBI from 'jsbi';
-+import invariant from 'tiny-invariant';
-+import warning from 'tiny-warning';
-+import toFormat from 'toformat';
-+export { default as JSBI } from 'jsbi';
-+export { ChainId, Currency, CurrencyAmount, ETHER, FACTORY_ADDRESS, Fetcher, Fraction, INIT_CODE_HASH, InsufficientInputAmountError, InsufficientReservesError, MINIMUM_LIQUIDITY, Pair, Percent, Price, Rounding, Route, Router, Token, TokenAmount, Trade, TradeType, WETH, currencyEquals, inputOutputComparator, tradeComparator };
- 
- var _SOLIDITY_TYPE_MAXIMA;
- var ChainId;
-@@ -21,6 +22,10 @@ var ChainId;
-   ChainId[ChainId["RINKEBY"] = 4] = "RINKEBY";
-   ChainId[ChainId["G\xD6RLI"] = 5] = "G\xD6RLI";
-   ChainId[ChainId["KOVAN"] = 42] = "KOVAN";
-+  ChainId[ChainId["SEPOLIA"] = 11155111] = "SEPOLIA";
-+  ChainId[ChainId["HARDHAT"] = 31337] = "HARDHAT";
-+  ChainId[ChainId["TAIKO"] = 167] = "TAIKO";
-+  ChainId[ChainId["TAIKO_INTERNAL_1"] = 167001] = "TAIKO_INTERNAL_1";
- })(ChainId || (ChainId = {}));
- 
- var TradeType;
-@@ -38,7 +43,7 @@ var Rounding;
-   Rounding[Rounding["ROUND_UP"] = 2] = "ROUND_UP";
- })(Rounding || (Rounding = {}));
- 
--var FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f';
-+var FACTORY_ADDRESS = '0xBfd71D0343eb812364fbE911A0E6095Ce284E023';
- var INIT_CODE_HASH = '0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f';
- var MINIMUM_LIQUIDITY = /*#__PURE__*/JSBI.BigInt(1000); // exports for internal consumption
- 
-@@ -122,7 +127,7 @@ function _isNativeReflectConstruct() {
-   if (typeof Proxy === "function") return true;
- 
-   try {
--    Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
-+    Date.prototype.toString.call(Reflect.construct(Date, [], function () { }));
-     return true;
-   } catch (e) {
-     return false;
-@@ -288,7 +293,7 @@ function validateAndParseAddress(address) {
-     process.env.NODE_ENV !== "production" ? warning(address === checksummedAddress, address + " is not checksummed.") : void 0;
-     return checksummedAddress;
-   } catch (error) {
--     process.env.NODE_ENV !== "production" ? invariant(false, address + " is not a valid address.") : invariant(false) ;
-+    process.env.NODE_ENV !== "production" ? invariant(false, address + " is not a valid address.") : invariant(false);
-   }
- }
- function parseBigintIsh(bigintIsh) {
-@@ -332,7 +337,7 @@ function sortedInsert(items, add, maxSize, comparator) {
-     }
- 
-     var lo = 0,
--        hi = items.length;
-+      hi = items.length;
- 
-     while (lo < hi) {
-       var mid = lo + hi >>> 1;
-@@ -356,18 +361,18 @@ function sortedInsert(items, add, maxSize, comparator) {
-  */
- 
- var Currency =
--/**
-- * Constructs an instance of the base class `Currency`. The only instance of the base class `Currency` is `Currency.ETHER`.
-- * @param decimals decimals of the currency
-- * @param symbol symbol of the currency
-- * @param name of the currency
-- */
--function Currency(decimals, symbol, name) {
--  validateSolidityTypeInstance(JSBI.BigInt(decimals), SolidityType.uint8);
--  this.decimals = decimals;
--  this.symbol = symbol;
--  this.name = name;
--};
-+  /**
-+   * Constructs an instance of the base class `Currency`. The only instance of the base class `Currency` is `Currency.ETHER`.
-+   * @param decimals decimals of the currency
-+   * @param symbol symbol of the currency
-+   * @param name of the currency
-+   */
-+  function Currency(decimals, symbol, name) {
-+    validateSolidityTypeInstance(JSBI.BigInt(decimals), SolidityType.uint8);
-+    this.decimals = decimals;
-+    this.symbol = symbol;
-+    this.name = name;
-+  };
- /**
-  * The only instance of the base class `Currency`.
-  */
-@@ -407,13 +412,13 @@ var Token = /*#__PURE__*/function (_Currency) {
- 
-     return this.chainId === other.chainId && this.address === other.address;
-   }
--  /**
--   * Returns true if the address of this token sorts before the address of the other token
--   * @param other other token to compare
--   * @throws if the tokens have the same address
--   * @throws if the tokens are on different chains
--   */
--  ;
-+    /**
-+     * Returns true if the address of this token sorts before the address of the other token
-+     * @param other other token to compare
-+     * @throws if the tokens have the same address
-+     * @throws if the tokens are on different chains
-+     */
-+    ;
- 
-   _proto.sortsBefore = function sortsBefore(other) {
-     !(this.chainId === other.chainId) ? process.env.NODE_ENV !== "production" ? invariant(false, 'CHAIN_IDS') : invariant(false) : void 0;
-@@ -438,7 +443,7 @@ function currencyEquals(currencyA, currencyB) {
-     return currencyA === currencyB;
-   }
- }
--var WETH = (_WETH = {}, _WETH[ChainId.MAINNET] = /*#__PURE__*/new Token(ChainId.MAINNET, '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.ROPSTEN] = /*#__PURE__*/new Token(ChainId.ROPSTEN, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.RINKEBY] = /*#__PURE__*/new Token(ChainId.RINKEBY, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.GÖRLI] = /*#__PURE__*/new Token(ChainId.GÖRLI, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.KOVAN] = /*#__PURE__*/new Token(ChainId.KOVAN, '0xd0A1E359811322d97991E03f863a0C30C2cF029C', 18, 'WETH', 'Wrapped Ether'), _WETH);
-+var WETH = (_WETH = {}, _WETH[ChainId.MAINNET] = /*#__PURE__*/new Token(ChainId.MAINNET, '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.ROPSTEN] = /*#__PURE__*/new Token(ChainId.ROPSTEN, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.RINKEBY] = /*#__PURE__*/new Token(ChainId.RINKEBY, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.GÖRLI] = /*#__PURE__*/new Token(ChainId.GÖRLI, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.KOVAN] = /*#__PURE__*/new Token(ChainId.KOVAN, '0xd0A1E359811322d97991E03f863a0C30C2cF029C', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.SEPOLIA] = /*#__PURE__*/new Token(ChainId.SEPOLIA, '0xEEbdC6192cB8CD9E27D880Fa0dcEC11a2B407B0C', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.HARDHAT] = /*#__PURE__*/new Token(ChainId.HARDHAT, '0x582232A9462C0D113ec7263f69b8685034219a9C', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.TAIKO] = /*#__PURE__*/new Token(ChainId.TAIKO, '0x582232A9462C0D113ec7263f69b8685034219a9C', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.TAIKO_INTERNAL_1] = /*#__PURE__*/new Token(ChainId.TAIKO_INTERNAL_1, '0x582232A9462C0D113ec7263f69b8685034219a9C', 18, 'WETH', 'Wrapped Ether'), _WETH);
- 
- var _toSignificantRoundin, _toFixedRounding;
- var Decimal = /*#__PURE__*/toFormat(_Decimal);
-@@ -690,8 +695,8 @@ var Price = /*#__PURE__*/function (_Fraction) {
- 
-     for (var _iterator = _createForOfIteratorHelperLoose(route.pairs.entries()), _step; !(_step = _iterator()).done;) {
-       var _step$value = _step.value,
--          i = _step$value[0],
--          pair = _step$value[1];
-+        i = _step$value[0],
-+        pair = _step$value[1];
-       prices.push(route.path[i].equals(pair.token0) ? new Price(pair.reserve0.currency, pair.reserve1.currency, pair.reserve0.raw, pair.reserve1.raw) : new Price(pair.reserve1.currency, pair.reserve0.currency, pair.reserve1.raw, pair.reserve0.raw));
-     }
- 
-@@ -713,7 +718,7 @@ var Price = /*#__PURE__*/function (_Fraction) {
- 
-     return new Price(this.baseCurrency, other.quoteCurrency, fraction.denominator, fraction.numerator);
-   } // performs floor division on overflow
--  ;
-+    ;
- 
-   _proto.quote = function quote(currencyAmount) {
-     !currencyEquals(currencyAmount.currency, this.baseCurrency) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOKEN') : invariant(false) : void 0;
-@@ -760,7 +765,7 @@ var PAIR_ADDRESS_CACHE = {};
- var Pair = /*#__PURE__*/function () {
-   function Pair(tokenAmountA, tokenAmountB) {
-     var tokenAmounts = tokenAmountA.token.sortsBefore(tokenAmountB.token) // does safety checks
--    ? [tokenAmountA, tokenAmountB] : [tokenAmountB, tokenAmountA];
-+      ? [tokenAmountA, tokenAmountB] : [tokenAmountB, tokenAmountA];
-     this.liquidityToken = new Token(tokenAmounts[0].token.chainId, Pair.getAddress(tokenAmounts[0].token, tokenAmounts[1].token), 18, 'UNI-V2', 'Uniswap V2');
-     this.tokenAmounts = tokenAmounts;
-   }
-@@ -778,21 +783,21 @@ var Pair = /*#__PURE__*/function () {
- 
-     return PAIR_ADDRESS_CACHE[tokens[0].address][tokens[1].address];
-   }
--  /**
--   * Returns true if the token is either token0 or token1
--   * @param token to check
--   */
--  ;
-+    /**
-+     * Returns true if the token is either token0 or token1
-+     * @param token to check
-+     */
-+    ;
- 
-   var _proto = Pair.prototype;
- 
-   _proto.involvesToken = function involvesToken(token) {
-     return token.equals(this.token0) || token.equals(this.token1);
-   }
--  /**
--   * Returns the current mid price of the pair in terms of token0, i.e. the ratio of reserve1 to reserve0
--   */
--  ;
-+    /**
-+     * Returns the current mid price of the pair in terms of token0, i.e. the ratio of reserve1 to reserve0
-+     */
-+    ;
- 
-   /**
-    * Return the price of the given token in terms of the other token in the pair.
-@@ -802,10 +807,10 @@ var Pair = /*#__PURE__*/function () {
-     !this.involvesToken(token) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOKEN') : invariant(false) : void 0;
-     return token.equals(this.token0) ? this.token0Price : this.token1Price;
-   }
--  /**
--   * Returns the chain ID of the tokens in the pair.
--   */
--  ;
-+    /**
-+     * Returns the chain ID of the tokens in the pair.
-+     */
-+    ;
- 
-   _proto.reserveOf = function reserveOf(token) {
-     !this.involvesToken(token) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOKEN') : invariant(false) : void 0;
-@@ -851,7 +856,7 @@ var Pair = /*#__PURE__*/function () {
-   _proto.getLiquidityMinted = function getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB) {
-     !totalSupply.token.equals(this.liquidityToken) ? process.env.NODE_ENV !== "production" ? invariant(false, 'LIQUIDITY') : invariant(false) : void 0;
-     var tokenAmounts = tokenAmountA.token.sortsBefore(tokenAmountB.token) // does safety checks
--    ? [tokenAmountA, tokenAmountB] : [tokenAmountB, tokenAmountA];
-+      ? [tokenAmountA, tokenAmountB] : [tokenAmountB, tokenAmountA];
-     !(tokenAmounts[0].token.equals(this.token0) && tokenAmounts[1].token.equals(this.token1)) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOKEN') : invariant(false) : void 0;
-     var liquidity;
- 
-@@ -963,8 +968,8 @@ var Route = /*#__PURE__*/function () {
- 
-     for (var _iterator = _createForOfIteratorHelperLoose(pairs.entries()), _step; !(_step = _iterator()).done;) {
-       var _step$value = _step.value,
--          i = _step$value[0],
--          pair = _step$value[1];
-+        i = _step$value[0],
-+        pair = _step$value[1];
-       var currentInput = path[i];
-       !(currentInput.equals(pair.token0) || currentInput.equals(pair.token1)) ? process.env.NODE_ENV !== "production" ? invariant(false, 'PATH') : invariant(false) : void 0;
- 
-@@ -1088,13 +1093,13 @@ function tradeComparator(a, b) {
- function wrappedAmount(currencyAmount, chainId) {
-   if (currencyAmount instanceof TokenAmount) return currencyAmount;
-   if (currencyAmount.currency === ETHER) return new TokenAmount(WETH[chainId], currencyAmount.raw);
--   process.env.NODE_ENV !== "production" ? invariant(false, 'CURRENCY') : invariant(false) ;
-+  process.env.NODE_ENV !== "production" ? invariant(false, 'CURRENCY') : invariant(false);
- }
- 
- function wrappedCurrency(currency, chainId) {
-   if (currency instanceof Token) return currency;
-   if (currency === ETHER) return WETH[chainId];
--   process.env.NODE_ENV !== "production" ? invariant(false, 'CURRENCY') : invariant(false) ;
-+  process.env.NODE_ENV !== "production" ? invariant(false, 'CURRENCY') : invariant(false);
- }
- /**
-  * Represents a trade executed against a list of pairs.
-@@ -1115,8 +1120,8 @@ var Trade = /*#__PURE__*/function () {
-         var pair = route.pairs[i];
- 
-         var _pair$getOutputAmount = pair.getOutputAmount(amounts[i]),
--            outputAmount = _pair$getOutputAmount[0],
--            nextPair = _pair$getOutputAmount[1];
-+          outputAmount = _pair$getOutputAmount[0],
-+          nextPair = _pair$getOutputAmount[1];
- 
-         amounts[i + 1] = outputAmount;
-         nextPairs[i] = nextPair;
-@@ -1129,8 +1134,8 @@ var Trade = /*#__PURE__*/function () {
-         var _pair = route.pairs[_i - 1];
- 
-         var _pair$getInputAmount = _pair.getInputAmount(amounts[_i]),
--            inputAmount = _pair$getInputAmount[0],
--            _nextPair = _pair$getInputAmount[1];
-+          inputAmount = _pair$getInputAmount[0],
-+          _nextPair = _pair$getInputAmount[1];
- 
-         amounts[_i - 1] = inputAmount;
-         nextPairs[_i - 1] = _nextPair;
-@@ -1155,21 +1160,21 @@ var Trade = /*#__PURE__*/function () {
-   Trade.exactIn = function exactIn(route, amountIn) {
-     return new Trade(route, amountIn, TradeType.EXACT_INPUT);
-   }
--  /**
--   * Constructs an exact out trade with the given amount out and route
--   * @param route route of the exact out trade
--   * @param amountOut the amount returned by the trade
--   */
--  ;
-+    /**
-+     * Constructs an exact out trade with the given amount out and route
-+     * @param route route of the exact out trade
-+     * @param amountOut the amount returned by the trade
-+     */
-+    ;
- 
-   Trade.exactOut = function exactOut(route, amountOut) {
-     return new Trade(route, amountOut, TradeType.EXACT_OUTPUT);
-   }
--  /**
--   * Get the minimum amount that must be received from this trade for the given slippage tolerance
--   * @param slippageTolerance tolerance of unfavorable slippage from the execution price of this trade
--   */
--  ;
-+    /**
-+     * Get the minimum amount that must be received from this trade for the given slippage tolerance
-+     * @param slippageTolerance tolerance of unfavorable slippage from the execution price of this trade
-+     */
-+    ;
- 
-   var _proto = Trade.prototype;
- 
-@@ -1183,11 +1188,11 @@ var Trade = /*#__PURE__*/function () {
-       return this.outputAmount instanceof TokenAmount ? new TokenAmount(this.outputAmount.token, slippageAdjustedAmountOut) : CurrencyAmount.ether(slippageAdjustedAmountOut);
-     }
-   }
--  /**
--   * Get the maximum amount in that can be spent via this trade for the given slippage tolerance
--   * @param slippageTolerance tolerance of unfavorable slippage from the execution price of this trade
--   */
--  ;
-+    /**
-+     * Get the maximum amount in that can be spent via this trade for the given slippage tolerance
-+     * @param slippageTolerance tolerance of unfavorable slippage from the execution price of this trade
-+     */
-+    ;
- 
-   _proto.maximumAmountIn = function maximumAmountIn(slippageTolerance) {
-     !!slippageTolerance.lessThan(ZERO) ? process.env.NODE_ENV !== "production" ? invariant(false, 'SLIPPAGE_TOLERANCE') : invariant(false) : void 0;
 @@ -1199,29 +1204,29 @@ var Trade = /*#__PURE__*/function () {
        return this.inputAmount instanceof TokenAmount ? new TokenAmount(this.inputAmount.token, slippageAdjustedAmountIn) : CurrencyAmount.ether(slippageAdjustedAmountIn);
      }
@@ -1191,6 +596,22 @@ index 6c34a78..5810356 100644
  
      if (currentPairs === void 0) {
        currentPairs = [];
+@@ -1235,11 +1240,11 @@ var Trade = /*#__PURE__*/function () {
+       bestTrades = [];
+     }
+ 
+-    !(pairs.length > 0) ?  invariant(false, 'PAIRS')  : void 0;
+-    !(maxHops > 0) ?  invariant(false, 'MAX_HOPS')  : void 0;
+-    !(originalAmountIn === currencyAmountIn || currentPairs.length > 0) ?  invariant(false, 'INVALID_RECURSION')  : void 0;
++    !(pairs.length > 0) ? invariant(false, 'PAIRS') : void 0;
++    !(maxHops > 0) ? invariant(false, 'MAX_HOPS') : void 0;
++    !(originalAmountIn === currencyAmountIn || currentPairs.length > 0) ? invariant(false, 'INVALID_RECURSION') : void 0;
+     var chainId = currencyAmountIn instanceof TokenAmount ? currencyAmountIn.token.chainId : currencyOut instanceof Token ? currencyOut.chainId : undefined;
+-    !(chainId !== undefined) ?  invariant(false, 'CHAIN_ID')  : void 0;
++    !(chainId !== undefined) ? invariant(false, 'CHAIN_ID') : void 0;
+     var amountIn = wrappedAmount(currencyAmountIn, chainId);
+     var tokenOut = wrappedCurrency(currencyOut, chainId);
+ 
 @@ -1280,30 +1285,30 @@ var Trade = /*#__PURE__*/function () {
  
      return bestTrades;
@@ -1243,6 +664,22 @@ index 6c34a78..5810356 100644
  
      if (currentPairs === void 0) {
        currentPairs = [];
+@@ -1317,11 +1322,11 @@ var Trade = /*#__PURE__*/function () {
+       bestTrades = [];
+     }
+ 
+-    !(pairs.length > 0) ?  invariant(false, 'PAIRS')  : void 0;
+-    !(maxHops > 0) ?  invariant(false, 'MAX_HOPS')  : void 0;
+-    !(originalAmountOut === currencyAmountOut || currentPairs.length > 0) ?  invariant(false, 'INVALID_RECURSION')  : void 0;
++    !(pairs.length > 0) ? invariant(false, 'PAIRS') : void 0;
++    !(maxHops > 0) ? invariant(false, 'MAX_HOPS') : void 0;
++    !(originalAmountOut === currencyAmountOut || currentPairs.length > 0) ? invariant(false, 'INVALID_RECURSION') : void 0;
+     var chainId = currencyAmountOut instanceof TokenAmount ? currencyAmountOut.token.chainId : currencyIn instanceof Token ? currencyIn.chainId : undefined;
+-    !(chainId !== undefined) ?  invariant(false, 'CHAIN_ID')  : void 0;
++    !(chainId !== undefined) ? invariant(false, 'CHAIN_ID') : void 0;
+     var amountOut = wrappedAmount(currencyAmountOut, chainId);
+     var tokenIn = wrappedCurrency(currencyIn, chainId);
+ 
 @@ -1379,7 +1384,7 @@ var Router = /*#__PURE__*/function () {
    /**
     * Cannot be constructed.
@@ -1252,6 +689,26 @@ index 6c34a78..5810356 100644
    /**
     * Produces the on-chain method name to call and the hex encoded parameters to pass as arguments for a given trade.
     * @param trade to produce call parameters for
+@@ -1391,8 +1396,8 @@ var Router = /*#__PURE__*/function () {
+     var etherIn = trade.inputAmount.currency === ETHER;
+     var etherOut = trade.outputAmount.currency === ETHER; // the router does not support both ether in and out
+ 
+-    !!(etherIn && etherOut) ?  invariant(false, 'ETHER_IN_OUT')  : void 0;
+-    !(!('ttl' in options) || options.ttl > 0) ?  invariant(false, 'TTL')  : void 0;
++    !!(etherIn && etherOut) ? invariant(false, 'ETHER_IN_OUT') : void 0;
++    !(!('ttl' in options) || options.ttl > 0) ? invariant(false, 'TTL') : void 0;
+     var to = validateAndParseAddress(options.recipient);
+     var amountIn = toHex(trade.maximumAmountIn(options.allowedSlippage));
+     var amountOut = toHex(trade.minimumAmountOut(options.allowedSlippage));
+@@ -1427,7 +1432,7 @@ var Router = /*#__PURE__*/function () {
+         break;
+ 
+       case exports.TradeType.EXACT_OUTPUT:
+-        !!useFeeOnTransfer ?  invariant(false, 'EXACT_OUT_FOT')  : void 0;
++        !!useFeeOnTransfer ? invariant(false, 'EXACT_OUT_FOT') : void 0;
+ 
+         if (etherIn) {
+           methodName = 'swapETHForExactTokens'; // (uint amountOut, address[] calldata path, address to, uint deadline)
 @@ -1460,40 +1465,40 @@ var Router = /*#__PURE__*/function () {
  }();
  
@@ -1359,6 +816,553 @@ index 6c34a78..5810356 100644
      try {
 @@ -1557,7 +1562,7 @@ var Fetcher = /*#__PURE__*/function () {
        var address = Pair.getAddress(tokenA, tokenB);
+       return Promise.resolve(new contracts.Contract(address, IUniswapV2Pair.abi, provider).getReserves()).then(function (_ref) {
+         var reserves0 = _ref[0],
+-            reserves1 = _ref[1];
++          reserves1 = _ref[1];
+         var balances = tokenA.sortsBefore(tokenB) ? [reserves0, reserves1] : [reserves1, reserves0];
+         return new Pair(new TokenAmount(tokenA, balances[0]), new TokenAmount(tokenB, balances[1]));
+       });
+diff --git a/node_modules/@uniswap/sdk/dist/sdk.esm.js b/node_modules/@uniswap/sdk/dist/sdk.esm.js
+index 6c34a78..13c2ab8 100644
+--- a/node_modules/@uniswap/sdk/dist/sdk.esm.js
++++ b/node_modules/@uniswap/sdk/dist/sdk.esm.js
+@@ -1,16 +1,17 @@
+-import JSBI from 'jsbi';
+-export { default as JSBI } from 'jsbi';
+-import invariant from 'tiny-invariant';
+-import warning from 'tiny-warning';
+ import { getAddress, getCreate2Address } from '@ethersproject/address';
+-import _Big from 'big.js';
+-import toFormat from 'toformat';
+-import _Decimal from 'decimal.js-light';
+-import { keccak256, pack } from '@ethersproject/solidity';
+ import { Contract } from '@ethersproject/contracts';
+ import { getNetwork } from '@ethersproject/networks';
+ import { getDefaultProvider } from '@ethersproject/providers';
++import { keccak256, pack } from '@ethersproject/solidity';
+ import IUniswapV2Pair from '@uniswap/v2-core/build/IUniswapV2Pair.json';
++import _Big from 'big.js';
++import _Decimal from 'decimal.js-light';
++import JSBI from 'jsbi';
++import invariant from 'tiny-invariant';
++import warning from 'tiny-warning';
++import toFormat from 'toformat';
++export { default as JSBI } from 'jsbi';
++export { ChainId, Currency, CurrencyAmount, ETHER, FACTORY_ADDRESS, Fetcher, Fraction, INIT_CODE_HASH, InsufficientInputAmountError, InsufficientReservesError, MINIMUM_LIQUIDITY, Pair, Percent, Price, Rounding, Route, Router, Token, TokenAmount, Trade, TradeType, WETH, currencyEquals, inputOutputComparator, tradeComparator };
+ 
+ var _SOLIDITY_TYPE_MAXIMA;
+ var ChainId;
+@@ -21,6 +22,11 @@ var ChainId;
+   ChainId[ChainId["RINKEBY"] = 4] = "RINKEBY";
+   ChainId[ChainId["G\xD6RLI"] = 5] = "G\xD6RLI";
+   ChainId[ChainId["KOVAN"] = 42] = "KOVAN";
++  ChainId[ChainId["SEPOLIA"] = 11155111] = "SEPOLIA";
++  ChainId[ChainId["HARDHAT"] = 31337] = "HARDHAT";
++  ChainId[ChainId["TAIKO"] = 167] = "TAIKO";
++  ChainId[ChainId["TAIKO_INTERNAL_1"] = 167001] = "TAIKO_INTERNAL_1";
++  ChainId[ChainId["TAIKO_TESTNET"] = 167004] = "TAIKO_TESTNET";
+ })(ChainId || (ChainId = {}));
+ 
+ var TradeType;
+@@ -38,7 +44,7 @@ var Rounding;
+   Rounding[Rounding["ROUND_UP"] = 2] = "ROUND_UP";
+ })(Rounding || (Rounding = {}));
+ 
+-var FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f';
++var FACTORY_ADDRESS = '0xBfd71D0343eb812364fbE911A0E6095Ce284E023';
+ var INIT_CODE_HASH = '0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f';
+ var MINIMUM_LIQUIDITY = /*#__PURE__*/JSBI.BigInt(1000); // exports for internal consumption
+ 
+@@ -122,7 +128,7 @@ function _isNativeReflectConstruct() {
+   if (typeof Proxy === "function") return true;
+ 
+   try {
+-    Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
++    Date.prototype.toString.call(Reflect.construct(Date, [], function () { }));
+     return true;
+   } catch (e) {
+     return false;
+@@ -288,7 +294,7 @@ function validateAndParseAddress(address) {
+     process.env.NODE_ENV !== "production" ? warning(address === checksummedAddress, address + " is not checksummed.") : void 0;
+     return checksummedAddress;
+   } catch (error) {
+-     process.env.NODE_ENV !== "production" ? invariant(false, address + " is not a valid address.") : invariant(false) ;
++    process.env.NODE_ENV !== "production" ? invariant(false, address + " is not a valid address.") : invariant(false);
+   }
+ }
+ function parseBigintIsh(bigintIsh) {
+@@ -332,7 +338,7 @@ function sortedInsert(items, add, maxSize, comparator) {
+     }
+ 
+     var lo = 0,
+-        hi = items.length;
++      hi = items.length;
+ 
+     while (lo < hi) {
+       var mid = lo + hi >>> 1;
+@@ -356,18 +362,18 @@ function sortedInsert(items, add, maxSize, comparator) {
+  */
+ 
+ var Currency =
+-/**
+- * Constructs an instance of the base class `Currency`. The only instance of the base class `Currency` is `Currency.ETHER`.
+- * @param decimals decimals of the currency
+- * @param symbol symbol of the currency
+- * @param name of the currency
+- */
+-function Currency(decimals, symbol, name) {
+-  validateSolidityTypeInstance(JSBI.BigInt(decimals), SolidityType.uint8);
+-  this.decimals = decimals;
+-  this.symbol = symbol;
+-  this.name = name;
+-};
++  /**
++   * Constructs an instance of the base class `Currency`. The only instance of the base class `Currency` is `Currency.ETHER`.
++   * @param decimals decimals of the currency
++   * @param symbol symbol of the currency
++   * @param name of the currency
++   */
++  function Currency(decimals, symbol, name) {
++    validateSolidityTypeInstance(JSBI.BigInt(decimals), SolidityType.uint8);
++    this.decimals = decimals;
++    this.symbol = symbol;
++    this.name = name;
++  };
+ /**
+  * The only instance of the base class `Currency`.
+  */
+@@ -407,13 +413,13 @@ var Token = /*#__PURE__*/function (_Currency) {
+ 
+     return this.chainId === other.chainId && this.address === other.address;
+   }
+-  /**
+-   * Returns true if the address of this token sorts before the address of the other token
+-   * @param other other token to compare
+-   * @throws if the tokens have the same address
+-   * @throws if the tokens are on different chains
+-   */
+-  ;
++    /**
++     * Returns true if the address of this token sorts before the address of the other token
++     * @param other other token to compare
++     * @throws if the tokens have the same address
++     * @throws if the tokens are on different chains
++     */
++    ;
+ 
+   _proto.sortsBefore = function sortsBefore(other) {
+     !(this.chainId === other.chainId) ? process.env.NODE_ENV !== "production" ? invariant(false, 'CHAIN_IDS') : invariant(false) : void 0;
+@@ -438,7 +444,7 @@ function currencyEquals(currencyA, currencyB) {
+     return currencyA === currencyB;
+   }
+ }
+-var WETH = (_WETH = {}, _WETH[ChainId.MAINNET] = /*#__PURE__*/new Token(ChainId.MAINNET, '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.ROPSTEN] = /*#__PURE__*/new Token(ChainId.ROPSTEN, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.RINKEBY] = /*#__PURE__*/new Token(ChainId.RINKEBY, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.GÖRLI] = /*#__PURE__*/new Token(ChainId.GÖRLI, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.KOVAN] = /*#__PURE__*/new Token(ChainId.KOVAN, '0xd0A1E359811322d97991E03f863a0C30C2cF029C', 18, 'WETH', 'Wrapped Ether'), _WETH);
++var WETH = (_WETH = {}, _WETH[ChainId.MAINNET] = /*#__PURE__*/new Token(ChainId.MAINNET, '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.ROPSTEN] = /*#__PURE__*/new Token(ChainId.ROPSTEN, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.RINKEBY] = /*#__PURE__*/new Token(ChainId.RINKEBY, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.GÖRLI] = /*#__PURE__*/new Token(ChainId.GÖRLI, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.KOVAN] = /*#__PURE__*/new Token(ChainId.KOVAN, '0xd0A1E359811322d97991E03f863a0C30C2cF029C', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.SEPOLIA] = /*#__PURE__*/new Token(ChainId.SEPOLIA, '0xEEbdC6192cB8CD9E27D880Fa0dcEC11a2B407B0C', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.HARDHAT] = /*#__PURE__*/new Token(ChainId.HARDHAT, '0x582232A9462C0D113ec7263f69b8685034219a9C', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.TAIKO] = /*#__PURE__*/new Token(ChainId.TAIKO, '0x582232A9462C0D113ec7263f69b8685034219a9C', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.TAIKO_INTERNAL_1] = /*#__PURE__*/new Token(ChainId.TAIKO_INTERNAL_1, '0x582232A9462C0D113ec7263f69b8685034219a9C', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.TAIKO_TESTNET] = /*#__PURE__*/new Token(ChainId.TAIKO_TESTNET, '0x582232A9462C0D113ec7263f69b8685034219a9C', 18, 'WETH', 'Wrapped Ether'), _WETH);
+ 
+ var _toSignificantRoundin, _toFixedRounding;
+ var Decimal = /*#__PURE__*/toFormat(_Decimal);
+@@ -690,8 +696,8 @@ var Price = /*#__PURE__*/function (_Fraction) {
+ 
+     for (var _iterator = _createForOfIteratorHelperLoose(route.pairs.entries()), _step; !(_step = _iterator()).done;) {
+       var _step$value = _step.value,
+-          i = _step$value[0],
+-          pair = _step$value[1];
++        i = _step$value[0],
++        pair = _step$value[1];
+       prices.push(route.path[i].equals(pair.token0) ? new Price(pair.reserve0.currency, pair.reserve1.currency, pair.reserve0.raw, pair.reserve1.raw) : new Price(pair.reserve1.currency, pair.reserve0.currency, pair.reserve1.raw, pair.reserve0.raw));
+     }
+ 
+@@ -713,7 +719,7 @@ var Price = /*#__PURE__*/function (_Fraction) {
+ 
+     return new Price(this.baseCurrency, other.quoteCurrency, fraction.denominator, fraction.numerator);
+   } // performs floor division on overflow
+-  ;
++    ;
+ 
+   _proto.quote = function quote(currencyAmount) {
+     !currencyEquals(currencyAmount.currency, this.baseCurrency) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOKEN') : invariant(false) : void 0;
+@@ -760,7 +766,7 @@ var PAIR_ADDRESS_CACHE = {};
+ var Pair = /*#__PURE__*/function () {
+   function Pair(tokenAmountA, tokenAmountB) {
+     var tokenAmounts = tokenAmountA.token.sortsBefore(tokenAmountB.token) // does safety checks
+-    ? [tokenAmountA, tokenAmountB] : [tokenAmountB, tokenAmountA];
++      ? [tokenAmountA, tokenAmountB] : [tokenAmountB, tokenAmountA];
+     this.liquidityToken = new Token(tokenAmounts[0].token.chainId, Pair.getAddress(tokenAmounts[0].token, tokenAmounts[1].token), 18, 'UNI-V2', 'Uniswap V2');
+     this.tokenAmounts = tokenAmounts;
+   }
+@@ -778,21 +784,21 @@ var Pair = /*#__PURE__*/function () {
+ 
+     return PAIR_ADDRESS_CACHE[tokens[0].address][tokens[1].address];
+   }
+-  /**
+-   * Returns true if the token is either token0 or token1
+-   * @param token to check
+-   */
+-  ;
++    /**
++     * Returns true if the token is either token0 or token1
++     * @param token to check
++     */
++    ;
+ 
+   var _proto = Pair.prototype;
+ 
+   _proto.involvesToken = function involvesToken(token) {
+     return token.equals(this.token0) || token.equals(this.token1);
+   }
+-  /**
+-   * Returns the current mid price of the pair in terms of token0, i.e. the ratio of reserve1 to reserve0
+-   */
+-  ;
++    /**
++     * Returns the current mid price of the pair in terms of token0, i.e. the ratio of reserve1 to reserve0
++     */
++    ;
+ 
+   /**
+    * Return the price of the given token in terms of the other token in the pair.
+@@ -802,10 +808,10 @@ var Pair = /*#__PURE__*/function () {
+     !this.involvesToken(token) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOKEN') : invariant(false) : void 0;
+     return token.equals(this.token0) ? this.token0Price : this.token1Price;
+   }
+-  /**
+-   * Returns the chain ID of the tokens in the pair.
+-   */
+-  ;
++    /**
++     * Returns the chain ID of the tokens in the pair.
++     */
++    ;
+ 
+   _proto.reserveOf = function reserveOf(token) {
+     !this.involvesToken(token) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOKEN') : invariant(false) : void 0;
+@@ -851,7 +857,7 @@ var Pair = /*#__PURE__*/function () {
+   _proto.getLiquidityMinted = function getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB) {
+     !totalSupply.token.equals(this.liquidityToken) ? process.env.NODE_ENV !== "production" ? invariant(false, 'LIQUIDITY') : invariant(false) : void 0;
+     var tokenAmounts = tokenAmountA.token.sortsBefore(tokenAmountB.token) // does safety checks
+-    ? [tokenAmountA, tokenAmountB] : [tokenAmountB, tokenAmountA];
++      ? [tokenAmountA, tokenAmountB] : [tokenAmountB, tokenAmountA];
+     !(tokenAmounts[0].token.equals(this.token0) && tokenAmounts[1].token.equals(this.token1)) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOKEN') : invariant(false) : void 0;
+     var liquidity;
+ 
+@@ -963,8 +969,8 @@ var Route = /*#__PURE__*/function () {
+ 
+     for (var _iterator = _createForOfIteratorHelperLoose(pairs.entries()), _step; !(_step = _iterator()).done;) {
+       var _step$value = _step.value,
+-          i = _step$value[0],
+-          pair = _step$value[1];
++        i = _step$value[0],
++        pair = _step$value[1];
+       var currentInput = path[i];
+       !(currentInput.equals(pair.token0) || currentInput.equals(pair.token1)) ? process.env.NODE_ENV !== "production" ? invariant(false, 'PATH') : invariant(false) : void 0;
+ 
+@@ -1088,13 +1094,13 @@ function tradeComparator(a, b) {
+ function wrappedAmount(currencyAmount, chainId) {
+   if (currencyAmount instanceof TokenAmount) return currencyAmount;
+   if (currencyAmount.currency === ETHER) return new TokenAmount(WETH[chainId], currencyAmount.raw);
+-   process.env.NODE_ENV !== "production" ? invariant(false, 'CURRENCY') : invariant(false) ;
++  process.env.NODE_ENV !== "production" ? invariant(false, 'CURRENCY') : invariant(false);
+ }
+ 
+ function wrappedCurrency(currency, chainId) {
+   if (currency instanceof Token) return currency;
+   if (currency === ETHER) return WETH[chainId];
+-   process.env.NODE_ENV !== "production" ? invariant(false, 'CURRENCY') : invariant(false) ;
++  process.env.NODE_ENV !== "production" ? invariant(false, 'CURRENCY') : invariant(false);
+ }
+ /**
+  * Represents a trade executed against a list of pairs.
+@@ -1115,8 +1121,8 @@ var Trade = /*#__PURE__*/function () {
+         var pair = route.pairs[i];
+ 
+         var _pair$getOutputAmount = pair.getOutputAmount(amounts[i]),
+-            outputAmount = _pair$getOutputAmount[0],
+-            nextPair = _pair$getOutputAmount[1];
++          outputAmount = _pair$getOutputAmount[0],
++          nextPair = _pair$getOutputAmount[1];
+ 
+         amounts[i + 1] = outputAmount;
+         nextPairs[i] = nextPair;
+@@ -1129,8 +1135,8 @@ var Trade = /*#__PURE__*/function () {
+         var _pair = route.pairs[_i - 1];
+ 
+         var _pair$getInputAmount = _pair.getInputAmount(amounts[_i]),
+-            inputAmount = _pair$getInputAmount[0],
+-            _nextPair = _pair$getInputAmount[1];
++          inputAmount = _pair$getInputAmount[0],
++          _nextPair = _pair$getInputAmount[1];
+ 
+         amounts[_i - 1] = inputAmount;
+         nextPairs[_i - 1] = _nextPair;
+@@ -1155,21 +1161,21 @@ var Trade = /*#__PURE__*/function () {
+   Trade.exactIn = function exactIn(route, amountIn) {
+     return new Trade(route, amountIn, TradeType.EXACT_INPUT);
+   }
+-  /**
+-   * Constructs an exact out trade with the given amount out and route
+-   * @param route route of the exact out trade
+-   * @param amountOut the amount returned by the trade
+-   */
+-  ;
++    /**
++     * Constructs an exact out trade with the given amount out and route
++     * @param route route of the exact out trade
++     * @param amountOut the amount returned by the trade
++     */
++    ;
+ 
+   Trade.exactOut = function exactOut(route, amountOut) {
+     return new Trade(route, amountOut, TradeType.EXACT_OUTPUT);
+   }
+-  /**
+-   * Get the minimum amount that must be received from this trade for the given slippage tolerance
+-   * @param slippageTolerance tolerance of unfavorable slippage from the execution price of this trade
+-   */
+-  ;
++    /**
++     * Get the minimum amount that must be received from this trade for the given slippage tolerance
++     * @param slippageTolerance tolerance of unfavorable slippage from the execution price of this trade
++     */
++    ;
+ 
+   var _proto = Trade.prototype;
+ 
+@@ -1183,11 +1189,11 @@ var Trade = /*#__PURE__*/function () {
+       return this.outputAmount instanceof TokenAmount ? new TokenAmount(this.outputAmount.token, slippageAdjustedAmountOut) : CurrencyAmount.ether(slippageAdjustedAmountOut);
+     }
+   }
+-  /**
+-   * Get the maximum amount in that can be spent via this trade for the given slippage tolerance
+-   * @param slippageTolerance tolerance of unfavorable slippage from the execution price of this trade
+-   */
+-  ;
++    /**
++     * Get the maximum amount in that can be spent via this trade for the given slippage tolerance
++     * @param slippageTolerance tolerance of unfavorable slippage from the execution price of this trade
++     */
++    ;
+ 
+   _proto.maximumAmountIn = function maximumAmountIn(slippageTolerance) {
+     !!slippageTolerance.lessThan(ZERO) ? process.env.NODE_ENV !== "production" ? invariant(false, 'SLIPPAGE_TOLERANCE') : invariant(false) : void 0;
+@@ -1199,29 +1205,29 @@ var Trade = /*#__PURE__*/function () {
+       return this.inputAmount instanceof TokenAmount ? new TokenAmount(this.inputAmount.token, slippageAdjustedAmountIn) : CurrencyAmount.ether(slippageAdjustedAmountIn);
+     }
+   }
+-  /**
+-   * Given a list of pairs, and a fixed amount in, returns the top `maxNumResults` trades that go from an input token
+-   * amount to an output token, making at most `maxHops` hops.
+-   * Note this does not consider aggregation, as routes are linear. It's possible a better route exists by splitting
+-   * the amount in among multiple routes.
+-   * @param pairs the pairs to consider in finding the best trade
+-   * @param currencyAmountIn exact amount of input currency to spend
+-   * @param currencyOut the desired currency out
+-   * @param maxNumResults maximum number of results to return
+-   * @param maxHops maximum number of hops a returned trade can make, e.g. 1 hop goes through a single pair
+-   * @param currentPairs used in recursion; the current list of pairs
+-   * @param originalAmountIn used in recursion; the original value of the currencyAmountIn parameter
+-   * @param bestTrades used in recursion; the current list of best trades
+-   */
+-  ;
++    /**
++     * Given a list of pairs, and a fixed amount in, returns the top `maxNumResults` trades that go from an input token
++     * amount to an output token, making at most `maxHops` hops.
++     * Note this does not consider aggregation, as routes are linear. It's possible a better route exists by splitting
++     * the amount in among multiple routes.
++     * @param pairs the pairs to consider in finding the best trade
++     * @param currencyAmountIn exact amount of input currency to spend
++     * @param currencyOut the desired currency out
++     * @param maxNumResults maximum number of results to return
++     * @param maxHops maximum number of hops a returned trade can make, e.g. 1 hop goes through a single pair
++     * @param currentPairs used in recursion; the current list of pairs
++     * @param originalAmountIn used in recursion; the original value of the currencyAmountIn parameter
++     * @param bestTrades used in recursion; the current list of best trades
++     */
++    ;
+ 
+   Trade.bestTradeExactIn = function bestTradeExactIn(pairs, currencyAmountIn, currencyOut, _temp, // used in recursion.
+-  currentPairs, originalAmountIn, bestTrades) {
++    currentPairs, originalAmountIn, bestTrades) {
+     var _ref = _temp === void 0 ? {} : _temp,
+-        _ref$maxNumResults = _ref.maxNumResults,
+-        maxNumResults = _ref$maxNumResults === void 0 ? 3 : _ref$maxNumResults,
+-        _ref$maxHops = _ref.maxHops,
+-        maxHops = _ref$maxHops === void 0 ? 3 : _ref$maxHops;
++      _ref$maxNumResults = _ref.maxNumResults,
++      maxNumResults = _ref$maxNumResults === void 0 ? 3 : _ref$maxNumResults,
++      _ref$maxHops = _ref.maxHops,
++      maxHops = _ref$maxHops === void 0 ? 3 : _ref$maxHops;
+ 
+     if (currentPairs === void 0) {
+       currentPairs = [];
+@@ -1280,30 +1286,30 @@ var Trade = /*#__PURE__*/function () {
+ 
+     return bestTrades;
+   }
+-  /**
+-   * similar to the above method but instead targets a fixed output amount
+-   * given a list of pairs, and a fixed amount out, returns the top `maxNumResults` trades that go from an input token
+-   * to an output token amount, making at most `maxHops` hops
+-   * note this does not consider aggregation, as routes are linear. it's possible a better route exists by splitting
+-   * the amount in among multiple routes.
+-   * @param pairs the pairs to consider in finding the best trade
+-   * @param currencyIn the currency to spend
+-   * @param currencyAmountOut the exact amount of currency out
+-   * @param maxNumResults maximum number of results to return
+-   * @param maxHops maximum number of hops a returned trade can make, e.g. 1 hop goes through a single pair
+-   * @param currentPairs used in recursion; the current list of pairs
+-   * @param originalAmountOut used in recursion; the original value of the currencyAmountOut parameter
+-   * @param bestTrades used in recursion; the current list of best trades
+-   */
+-  ;
++    /**
++     * similar to the above method but instead targets a fixed output amount
++     * given a list of pairs, and a fixed amount out, returns the top `maxNumResults` trades that go from an input token
++     * to an output token amount, making at most `maxHops` hops
++     * note this does not consider aggregation, as routes are linear. it's possible a better route exists by splitting
++     * the amount in among multiple routes.
++     * @param pairs the pairs to consider in finding the best trade
++     * @param currencyIn the currency to spend
++     * @param currencyAmountOut the exact amount of currency out
++     * @param maxNumResults maximum number of results to return
++     * @param maxHops maximum number of hops a returned trade can make, e.g. 1 hop goes through a single pair
++     * @param currentPairs used in recursion; the current list of pairs
++     * @param originalAmountOut used in recursion; the original value of the currencyAmountOut parameter
++     * @param bestTrades used in recursion; the current list of best trades
++     */
++    ;
+ 
+   Trade.bestTradeExactOut = function bestTradeExactOut(pairs, currencyIn, currencyAmountOut, _temp2, // used in recursion.
+-  currentPairs, originalAmountOut, bestTrades) {
++    currentPairs, originalAmountOut, bestTrades) {
+     var _ref2 = _temp2 === void 0 ? {} : _temp2,
+-        _ref2$maxNumResults = _ref2.maxNumResults,
+-        maxNumResults = _ref2$maxNumResults === void 0 ? 3 : _ref2$maxNumResults,
+-        _ref2$maxHops = _ref2.maxHops,
+-        maxHops = _ref2$maxHops === void 0 ? 3 : _ref2$maxHops;
++      _ref2$maxNumResults = _ref2.maxNumResults,
++      maxNumResults = _ref2$maxNumResults === void 0 ? 3 : _ref2$maxNumResults,
++      _ref2$maxHops = _ref2.maxHops,
++      maxHops = _ref2$maxHops === void 0 ? 3 : _ref2$maxHops;
+ 
+     if (currentPairs === void 0) {
+       currentPairs = [];
+@@ -1379,7 +1385,7 @@ var Router = /*#__PURE__*/function () {
+   /**
+    * Cannot be constructed.
+    */
+-  function Router() {}
++  function Router() { }
+   /**
+    * Produces the on-chain method name to call and the hex encoded parameters to pass as arguments for a given trade.
+    * @param trade to produce call parameters for
+@@ -1460,40 +1466,40 @@ var Router = /*#__PURE__*/function () {
+ }();
+ 
+ var ERC20 = [
+-	{
+-		constant: true,
+-		inputs: [
+-		],
+-		name: "decimals",
+-		outputs: [
+-			{
+-				name: "",
+-				type: "uint8"
+-			}
+-		],
+-		payable: false,
+-		stateMutability: "view",
+-		type: "function"
+-	},
+-	{
+-		constant: true,
+-		inputs: [
+-			{
+-				name: "",
+-				type: "address"
+-			}
+-		],
+-		name: "balanceOf",
+-		outputs: [
+-			{
+-				name: "",
+-				type: "uint256"
+-			}
+-		],
+-		payable: false,
+-		stateMutability: "view",
+-		type: "function"
+-	}
++  {
++    constant: true,
++    inputs: [
++    ],
++    name: "decimals",
++    outputs: [
++      {
++        name: "",
++        type: "uint8"
++      }
++    ],
++    payable: false,
++    stateMutability: "view",
++    type: "function"
++  },
++  {
++    constant: true,
++    inputs: [
++      {
++        name: "",
++        type: "address"
++      }
++    ],
++    name: "balanceOf",
++    outputs: [
++      {
++        name: "",
++        type: "uint256"
++      }
++    ],
++    payable: false,
++    stateMutability: "view",
++    type: "function"
++  }
+ ];
+ 
+ var _TOKEN_DECIMALS_CACHE;
+@@ -1509,7 +1515,7 @@ var Fetcher = /*#__PURE__*/function () {
+   /**
+    * Cannot be constructed.
+    */
+-  function Fetcher() {}
++  function Fetcher() { }
+   /**
+    * Fetch information for a given token on the given chain, using the given ethers provider.
+    * @param chainId chain of the token
+@@ -1542,13 +1548,13 @@ var Fetcher = /*#__PURE__*/function () {
+       return Promise.reject(e);
+     }
+   }
+-  /**
+-   * Fetches information about a pair and constructs a pair from the given two tokens.
+-   * @param tokenA first token
+-   * @param tokenB second token
+-   * @param provider the provider to use to fetch the data
+-   */
+-  ;
++    /**
++     * Fetches information about a pair and constructs a pair from the given two tokens.
++     * @param tokenA first token
++     * @param tokenB second token
++     * @param provider the provider to use to fetch the data
++     */
++    ;
+ 
+   Fetcher.fetchPairData = function fetchPairData(tokenA, tokenB, provider) {
+     try {
+@@ -1557,7 +1563,7 @@ var Fetcher = /*#__PURE__*/function () {
+       var address = Pair.getAddress(tokenA, tokenB);
        return Promise.resolve(new Contract(address, IUniswapV2Pair.abi, provider).getReserves()).then(function (_ref) {
          var reserves0 = _ref[0],
 -            reserves1 = _ref[1];
@@ -1366,7 +1370,7 @@ index 6c34a78..5810356 100644
          var balances = tokenA.sortsBefore(tokenB) ? [reserves0, reserves1] : [reserves1, reserves0];
          return new Pair(new TokenAmount(tokenA, balances[0]), new TokenAmount(tokenB, balances[1]));
        });
-@@ -1569,5 +1574,4 @@ var Fetcher = /*#__PURE__*/function () {
+@@ -1569,5 +1575,4 @@ var Fetcher = /*#__PURE__*/function () {
    return Fetcher;
  }();
  

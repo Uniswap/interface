@@ -1,8 +1,8 @@
 diff --git a/node_modules/@uniswap/default-token-list/build/uniswap-default.tokenlist.json b/node_modules/@uniswap/default-token-list/build/uniswap-default.tokenlist.json
-index ff79fb0..401f356 100644
+index ff79fb0..d217d46 100644
 --- a/node_modules/@uniswap/default-token-list/build/uniswap-default.tokenlist.json
 +++ b/node_modules/@uniswap/default-token-list/build/uniswap-default.tokenlist.json
-@@ -1076,6 +1076,38 @@
+@@ -1076,6 +1076,46 @@
        "decimals": 18,
        "chainId": 42,
        "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xd0A1E359811322d97991E03f863a0C30C2cF029C/logo.png"
@@ -37,6 +37,14 @@ index ff79fb0..401f356 100644
 +      "symbol": "WETH",
 +      "decimals": 18,
 +      "chainId": 167001,
++      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xd0A1E359811322d97991E03f863a0C30C2cF029C/logo.png"
++    },
++    {
++      "name": "Wrapped Ether",
++      "address": "0x582232A9462C0D113ec7263f69b8685034219a9C",
++      "symbol": "WETH",
++      "decimals": 18,
++      "chainId": 167004,
 +      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xd0A1E359811322d97991E03f863a0C30C2cF029C/logo.png"
      }
    ]
