@@ -4,7 +4,7 @@ import { t } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -27,6 +27,7 @@ interface SwapOptions {
 
 export function useUniversalRouterSwapCallback(
   trade: Trade<Currency, Currency, TradeType> | undefined,
+  fiatValues: { amountIn: CurrencyAmount<Currency> | null; amountOut: CurrencyAmount<Currency> | null },
   options: SwapOptions
 ) {
   const { account, chainId, provider } = useWeb3React()
@@ -66,7 +67,7 @@ export function useUniversalRouterSwapCallback(
         .then((response) => {
           sendAnalyticsEvent(
             SwapEventName.SWAP_SIGNED,
-            formatSwapSignedAnalyticsEventProperties({ trade, txHash: response.hash })
+            formatSwapSignedAnalyticsEventProperties({ trade, fiatValues, txHash: response.hash })
           )
           if (tx.data !== response.data) {
             sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, { txHash: response.hash })
@@ -84,6 +85,7 @@ export function useUniversalRouterSwapCallback(
   }, [
     account,
     chainId,
+    fiatValues,
     options.deadline,
     options.feeOptions,
     options.permit,
