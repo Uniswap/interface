@@ -21,6 +21,7 @@ export default function TopLevelModals() {
   useAccountRiskCheck(account)
   const accountBlocked = Boolean(blockedAccountModalOpen && account)
   const taxServiceEnabled = useTaxServiceBannerEnabled()
+  console.log('taxServiceEnabled', taxServiceEnabled)
 
   return (
     <>

@@ -59,9 +59,11 @@ export enum BaseVariant {
 export function useBaseFlag(flag: string, defaultValue = BaseVariant.Control): BaseVariant {
   const { value: statsigValue } = useGate(flag) // non-existent gates return false
   const featureFlagsContext = useFeatureFlagsContext()
+  console.log('stat sig value', statsigValue)
   if (statsigValue) {
     return BaseVariant.Enabled
   }
+  console.log('flag', featureFlagsContext.flags[flag])
   switch (featureFlagsContext.flags[flag]) {
     case 'enabled':
       return BaseVariant.Enabled
