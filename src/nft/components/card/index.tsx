@@ -123,7 +123,6 @@ interface NftCardProps {
   display: NftCardDisplayProps
   isSelected: boolean
   isDisabled: boolean
-  unavailableForListing?: boolean
   addAssetToBag: () => void
   removeAssetFromBag: () => void
   onClick?: () => void
@@ -145,6 +144,7 @@ export interface NftCardDisplayProps {
   tertiaryInfo?: ReactNode
   selectedInfo?: ReactNode
   notSelectedInfo?: ReactNode
+  disabledInfo?: ReactNode
 }
 
 export const NftCard = ({
@@ -154,7 +154,6 @@ export const NftCard = ({
   addAssetToBag,
   removeAssetFromBag,
   isDisabled,
-  unavailableForListing = false,
   onClick,
   doNotLinkToDetails = false,
   mediaShouldBePlaying,
@@ -208,13 +207,8 @@ export const NftCard = ({
           </Card.SecondaryRow>
         </Card.InfoContainer>
         <Card.TertiaryInfoContainer>
-          <Card.ActionButton
-            clickActionButton={clickActionButton}
-            isDisabled={isDisabled}
-            isSelected={isSelected}
-            unavailableForListing={unavailableForListing}
-          >
-            {isSelected ? display.selectedInfo : display.notSelectedInfo}
+          <Card.ActionButton clickActionButton={clickActionButton} isDisabled={isDisabled} isSelected={isSelected}>
+            {isSelected ? display.selectedInfo : isDisabled ? display.disabledInfo : display.notSelectedInfo}
           </Card.ActionButton>
           <Card.TertiaryInfo>{display.tertiaryInfo}</Card.TertiaryInfo>
         </Card.TertiaryInfoContainer>

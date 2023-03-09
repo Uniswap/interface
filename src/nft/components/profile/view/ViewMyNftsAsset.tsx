@@ -91,7 +91,8 @@ export const ViewMyNftsAsset = ({
           `Last sale: ${ethNumberStandardFormatter(asset.lastPrice)} ETH`
         ) : null,
       selectedInfo: 'Remove from bag',
-      notSelectedInfo: isDisabled ? 'Unavailable for listing' : 'List for sale',
+      notSelectedInfo: 'List for sale',
+      disabledInfo: 'Unavailable for listing',
     }
   }, [
     asset.asset_contract.name,
@@ -100,7 +101,6 @@ export const ViewMyNftsAsset = ({
     asset.lastPrice,
     asset.name,
     asset.tokenId,
-    isDisabled,
     shouldShowUserListedPrice,
   ])
 
@@ -109,8 +109,7 @@ export const ViewMyNftsAsset = ({
       asset={asset}
       display={display}
       isSelected={isSelected}
-      isDisabled={Boolean(asset.susFlag)}
-      unavailableForListing={Boolean(isDisabled)}
+      isDisabled={Boolean(isDisabled)}
       addAssetToBag={() => handleSelect(false)}
       removeAssetFromBag={() => handleSelect(true)}
       onClick={onCardClick}

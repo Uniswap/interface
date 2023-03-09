@@ -55,16 +55,14 @@ const StyledTertiaryInfo = styled(ThemedText.BodySmall)`
 const StyledActionButton = styled(ThemedText.BodySmall)<{
   selected: boolean
   isDisabled: boolean
-  unavailableForListing: boolean
 }>`
   position: absolute;
   display: flex;
   width: 100%;
   padding: 8px 0px;
-  color: ${({ theme, unavailableForListing }) =>
-    unavailableForListing ? theme.textPrimary : theme.accentTextLightPrimary};
-  background: ${({ theme, selected, unavailableForListing }) =>
-    selected ? theme.accentCritical : unavailableForListing ? theme.backgroundInteractive : theme.accentAction};
+  color: ${({ theme, isDisabled }) => (isDisabled ? theme.textPrimary : theme.accentTextLightPrimary)};
+  background: ${({ theme, selected, isDisabled }) =>
+    selected ? theme.accentCritical : isDisabled ? theme.backgroundInteractive : theme.accentAction};
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
   will-change: opacity;
   border-radius: 8px;
@@ -72,7 +70,7 @@ const StyledActionButton = styled(ThemedText.BodySmall)<{
   font-weight: 600 !important;
   line-height: 16px;
   opacity: 0;
-  cursor: ${({ unavailableForListing }) => (unavailableForListing ? 'default' : 'pointer')};
+  cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     ${({ isDisabled }) => `opacity: ${isDisabled ? 0 : 1};`}
@@ -92,24 +90,22 @@ const StyledActionButton = styled(ThemedText.BodySmall)<{
   }
 
   &:hover:before {
-    background-color: ${({ theme, unavailableForListing }) => !unavailableForListing && theme.stateOverlayHover};
+    background-color: ${({ theme, isDisabled }) => !isDisabled && theme.stateOverlayHover};
   }
 
   &:active:before {
-    background-color: ${({ theme, unavailableForListing }) => !unavailableForListing && theme.stateOverlayPressed};
+    background-color: ${({ theme, isDisabled }) => !isDisabled && theme.stateOverlayPressed};
   }
 `
 
 const ActionButton = ({
   isDisabled,
   isSelected,
-  unavailableForListing,
   clickActionButton,
   children,
 }: {
   isDisabled: boolean
   isSelected: boolean
-  unavailableForListing: boolean
   clickActionButton: (e: React.MouseEvent) => void
   children: ReactNode
 }) => {
@@ -117,9 +113,7 @@ const ActionButton = ({
     <StyledActionButton
       selected={isSelected}
       isDisabled={isDisabled}
-      unavailableForListing={unavailableForListing}
-      onClick={(e: React.MouseEvent) => (unavailableForListing ? undefined : clickActionButton(e))}
-      disabled={unavailableForListing}
+      onClick={(e: React.MouseEvent) => (isDisabled ? undefined : clickActionButton(e))}
     >
       {children}
     </StyledActionButton>
@@ -162,11 +156,11 @@ const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean 
 
   :hover {
     ${StyledActionButton} {
-      opacity: ${({ isDisabled }) => (isDisabled ? 0 : 1)};
+      opacity: 1;
     }
 
     ${StyledTertiaryInfo} {
-      opacity: ${({ isDisabled }) => (isDisabled ? 1 : 0)};
+      opacity: 0;
     }
   }
 `

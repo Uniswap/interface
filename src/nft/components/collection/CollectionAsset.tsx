@@ -109,6 +109,7 @@ export const CollectionAsset = ({
           <ExpirationContainer expirationTimestamp={asset.sellorders[0].endAt} />
         ) : null,
       notSelectedInfo: 'Add to bag',
+      disabledInfo: 'Not listed',
     }
   }, [
     asset.name,
