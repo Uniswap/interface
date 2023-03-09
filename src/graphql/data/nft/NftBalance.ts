@@ -29,6 +29,7 @@ gql`
             id
             animationUrl
             collection {
+              id
               isVerified
               image {
                 url
