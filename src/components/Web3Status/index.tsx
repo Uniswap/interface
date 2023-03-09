@@ -2,7 +2,6 @@ import { t, Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { FiatOnrampAnnouncement } from 'components/FiatOnrampAnnouncement'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import WalletDropdown from 'components/WalletDropdown'
 import { getConnection } from 'connection/utils'
@@ -318,7 +317,6 @@ export default function Web3Status() {
   return (
     <span ref={ref}>
       <Web3StatusInner />
-      <FiatOnrampAnnouncement />
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
       <Portal>
         <span ref={walletRef}>
