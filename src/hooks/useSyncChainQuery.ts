@@ -27,6 +27,7 @@ export default function useSyncChainQuery() {
 
   const urlChainId = getParsedChainId(parsedQs)
   const previousUrlChainId = usePrevious(urlChainId)
+  const [nextChainId, setNextChainId] = useState<number | undefined>(undefined)
 
   const selectChain = useSelectChain()
 
@@ -40,14 +41,20 @@ export default function useSyncChainQuery() {
 
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const chainQueryManuallyUpdated = urlChainId && urlChainId !== previousUrlChainId && isActive
+  useEffect(() => {
+    const chainQueryManuallyUpdated = urlChainId && urlChainId !== previousUrlChainId
+    if (chainQueryManuallyUpdated) {
+      setNextChainId(urlChainId)
+    }
+  }, [previousUrlChainId, urlChainId])
 
   return useEffect(() => {
-    if (chainQueryManuallyUpdated) {
+    if (nextChainId && isActive) {
       // If the query param changed, and the chain didn't change, then activate the new chain
-      selectChain(urlChainId)
+      selectChain(nextChainId)
       searchParams.delete('chain')
       setSearchParams(searchParams)
+      setNextChainId(undefined)
     }
-  }, [chainQueryManuallyUpdated, urlChainId, selectChain, searchParams, setSearchParams])
+  }, [nextChainId, urlChainId, selectChain, searchParams, setSearchParams, isActive])
 }
