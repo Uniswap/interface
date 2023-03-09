@@ -2,7 +2,7 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 
 import { SupportedChainId } from './chains'
-import { nativeOnChain, USDC_FUJI, WETH_FUJI, WRAPPED_NATIVE_CURRENCY } from './tokens'
+import { nativeOnChain, USDC_FUJI, USDC_TEVMOS, WETH_FUJI, WETH_TEVMOS, WRAPPED_NATIVE_CURRENCY } from './tokens'
 
 type ChainTokenList = {
   readonly [chainId: number]: Token[]
@@ -23,6 +23,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WRAPPED_NATIVE_CURRENCIES_ONLY,
   [SupportedChainId.MAINNET]: [...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.MAINNET]],
   [SupportedChainId.FUJI]: [USDC_FUJI, WETH_FUJI],
+  [SupportedChainId.TESTNET]: [USDC_TEVMOS, WETH_TEVMOS],
 }
 export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {}
 /**
@@ -41,6 +42,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.MAINNET] as Token,
   ],
   [SupportedChainId.FUJI]: [nativeOnChain(SupportedChainId.FUJI), USDC_FUJI],
+  [SupportedChainId.TESTNET]: [nativeOnChain(SupportedChainId.TESTNET), USDC_TEVMOS],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
@@ -48,5 +50,6 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WRAPPED_NATIVE_CURRENCIES_ONLY,
   [SupportedChainId.MAINNET]: [...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.MAINNET]],
   [SupportedChainId.FUJI]: [...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.FUJI], USDC_FUJI],
+  [SupportedChainId.TESTNET]: [...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.TESTNET], USDC_TEVMOS],
 }
 export const PINNED_PAIRS: { readonly [chainId: number]: [Token, Token][] } = {}

@@ -5,12 +5,14 @@ export enum SupportedChainId {
   FUJI = 43113,
   MAINNET = 9001,
   OPTIMISM = 10,
+  TESTNET = 9000,
 }
 
 export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.MAINNET]: 'evmos',
   [SupportedChainId.FUJI]: 'fuji',
   [SupportedChainId.OPTIMISM]: 'optimism',
+  [SupportedChainId.TESTNET]: 'tevmos',
 }
 
 /**
@@ -24,21 +26,25 @@ export function isSupportedChain(chainId: number | null | undefined): chainId is
   return !!chainId && !!SupportedChainId[chainId]
 }
 
-export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [SupportedChainId.MAINNET, SupportedChainId.FUJI]
+export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
+  SupportedChainId.MAINNET,
+  SupportedChainId.FUJI,
+  SupportedChainId.TESTNET,
+]
 
 /**
  * Unsupported networks for V2 pool behavior.
  */
-export const UNSUPPORTED_V2POOL_CHAIN_IDS = [SupportedChainId.FUJI]
+export const UNSUPPORTED_V2POOL_CHAIN_IDS = [SupportedChainId.FUJI, SupportedChainId.TESTNET]
 
-export const TESTNET_CHAIN_IDS = [SupportedChainId.FUJI] as const
+export const TESTNET_CHAIN_IDS = [SupportedChainId.FUJI, SupportedChainId.TESTNET] as const
 
 export type SupportedTestnetChainId = typeof TESTNET_CHAIN_IDS[number]
 
 /**
  * All the chain IDs that are running the Ethereum protocol.
  */
-export const L1_CHAIN_IDS = [SupportedChainId.MAINNET, SupportedChainId.FUJI] as const
+export const L1_CHAIN_IDS = [SupportedChainId.MAINNET, SupportedChainId.FUJI, SupportedChainId.TESTNET] as const
 
 export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
 

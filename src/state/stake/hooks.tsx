@@ -9,7 +9,7 @@ import JSBI from 'jsbi'
 import { NEVER_RELOAD, useMultipleContractSingleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 
-import { UNI, USDC_FUJI, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
+import { UNI, USDC_TEVMOS, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 
 const STAKING_REWARDS_INTERFACE = new Interface(STAKING_REWARDS_ABI)
 
@@ -24,11 +24,15 @@ const STAKING_REWARDS_INFO: {
   1: [
     {
       // TODO: replace USDC_FUJI with mainnet
-      tokens: [WRAPPED_NATIVE_CURRENCY[SupportedChainId.MAINNET] as Token, USDC_FUJI],
+      tokens: [WRAPPED_NATIVE_CURRENCY[SupportedChainId.MAINNET] as Token, USDC_TEVMOS],
       stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711',
     },
     {
-      tokens: [WRAPPED_NATIVE_CURRENCY[SupportedChainId.FUJI] as Token, USDC_FUJI],
+      tokens: [WRAPPED_NATIVE_CURRENCY[SupportedChainId.FUJI] as Token, USDC_TEVMOS],
+      stakingRewardAddress: '0x7FBa4B8Dc5E7616e59622806932DBea72537A56b',
+    },
+    {
+      tokens: [WRAPPED_NATIVE_CURRENCY[SupportedChainId.TESTNET] as Token, USDC_TEVMOS],
       stakingRewardAddress: '0x7FBa4B8Dc5E7616e59622806932DBea72537A56b',
     },
   ],

@@ -11,6 +11,7 @@ import { useAllV3Routes } from './useAllV3Routes'
 import { useQuoter } from './useContract'
 
 const QUOTE_GAS_OVERRIDES: { [chainId: number]: number } = {
+  [SupportedChainId.TESTNET]: 40_000_000,
   [SupportedChainId.FUJI]: 40_000_000,
 }
 

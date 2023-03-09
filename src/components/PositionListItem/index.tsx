@@ -20,7 +20,7 @@ import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import { hasURL } from 'utils/urlChecks'
 
-import { USDC_FUJI, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
+import { USDC_TEVMOS, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 
 const LinkRow = styled(Link)`
   align-items: center;
@@ -133,7 +133,7 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   const token1 = position.amount1.currency
 
   // if token0 is a dollar-stable asset, set it as the quote token
-  const stables = [USDC_FUJI]
+  const stables = [USDC_TEVMOS]
   if (stables.some((stable) => stable.equals(token0))) {
     return {
       priceLower: position.token0PriceUpper.invert(),

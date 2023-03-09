@@ -7,6 +7,7 @@ import { FALLBACK_URLS, RPC_URLS } from 'constants/networks'
 function getRpcUrl(chainId: SupportedChainId): string {
   switch (chainId) {
     case SupportedChainId.MAINNET:
+    case SupportedChainId.TESTNET:
     case SupportedChainId.FUJI:
       return RPC_URLS[chainId][0]
     // Attempting to add a chain using an infura URL will not work, as the URL will be unreachable from the MetaMask background page.

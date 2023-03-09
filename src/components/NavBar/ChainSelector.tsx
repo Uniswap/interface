@@ -19,7 +19,7 @@ import * as styles from './ChainSelector.css'
 import ChainSelectorRow from './ChainSelectorRow'
 import { NavDropdown } from './NavDropdown'
 
-const NETWORK_SELECTOR_CHAINS = [SupportedChainId.MAINNET, SupportedChainId.FUJI]
+const NETWORK_SELECTOR_CHAINS = [SupportedChainId.MAINNET, SupportedChainId.FUJI, SupportedChainId.TESTNET]
 
 interface ChainSelectorProps {
   leftAlign?: boolean

@@ -32,6 +32,7 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
     // "Safe" URLs
     'https://ava-testnet.public.blastapi.io/ext/bc/C/rpc	',
   ],
+  [SupportedChainId.TESTNET]: ['https://eth.bd.evmos.dev:8545'],
 }
 
 /**
@@ -43,6 +44,7 @@ export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
     `https://mainnet.infura.io/v3/${INFURA_KEY}`,
     ...FALLBACK_URLS[SupportedChainId.MAINNET],
   ],
-  [SupportedChainId.FUJI]: [`https://api.avax-test.network/ext/bc/C/rpc	`, ...FALLBACK_URLS[SupportedChainId.FUJI]],
-  [SupportedChainId.OPTIMISM]: [`https://api.avax-test.network/ext/bc/C/rpc	`, ...FALLBACK_URLS[SupportedChainId.FUJI]],
+  [SupportedChainId.TESTNET]: ['https://eth.bd.evmos.dev:8545', ...FALLBACK_URLS[SupportedChainId.FUJI]],
+  [SupportedChainId.FUJI]: [`https://api.avax-test.network/ext/bc/C/rpc`, ...FALLBACK_URLS[SupportedChainId.FUJI]],
+  [SupportedChainId.OPTIMISM]: [`https://api.avax-test.network/ext/bc/C/rpc`, ...FALLBACK_URLS[SupportedChainId.FUJI]],
 }

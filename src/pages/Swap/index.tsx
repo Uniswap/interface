@@ -573,7 +573,7 @@ export default function Swap({ className, intro }: { className?: string; intro?:
   ])
   const priceQueryToken = currencies[Field.OUTPUT]?.isToken ? (currencies[Field.OUTPUT] as Token) : undefined
   const infoToken = priceQueryToken ? priceQueryToken : WRAPPED_NATIVE_CURRENCY[SupportedChainId.FUJI]
-  const priceQueryAddress = priceQueryToken ? priceQueryToken.address : '0x1D308089a2D1Ced3f1Ce36B1FcaF815b07217be3'
+  const priceQueryAddress = priceQueryToken ? priceQueryToken.address : '0xBeFe898407483f0f2fF605971FBD8Cf8FbD8B160'
   const { data: tokenPriceQuery } = useTokenPrice(priceQueryAddress)
 
   const approveTokenButtonDisabled =

@@ -26,9 +26,32 @@ export const WETH_FUJI = new Token(
   'Wrapped Ether'
 )
 
+export const USDC_TEVMOS = new Token(
+  SupportedChainId.TESTNET,
+  '0xBf6942D20D1460334B9b147199c4f03c97b70d02',
+  6,
+  'USDC',
+  'USD//C'
+)
+
+export const WETH_TEVMOS = new Token(
+  SupportedChainId.TESTNET,
+  '0x43bDe47a34801f6aB2d66016Aef723Ba1b3A62b3',
+  18,
+  'WETH',
+  'Wrapped Ether'
+)
+
 export const UNI: { [chainId: number]: Token } = {}
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
+  [SupportedChainId.TESTNET]: new Token(
+    SupportedChainId.TESTNET,
+    '0xBeFe898407483f0f2fF605971FBD8Cf8FbD8B160',
+    18,
+    'WtEVMOS',
+    'Wrapped tEVMOS'
+  ),
   [SupportedChainId.FUJI]: new Token(
     SupportedChainId.FUJI,
     '0x1D308089a2D1Ced3f1Ce36B1FcaF815b07217be3',
@@ -77,12 +100,32 @@ class FujiNativeCurrency extends NativeCurrency {
   }
 }
 
+class TEvmosNativeCurrency extends NativeCurrency {
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId
+  }
+
+  get wrapped(): Token {
+    if (this.chainId !== SupportedChainId.TESTNET) throw new Error('Not tEvmos')
+    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
+    invariant(wrapped instanceof Token)
+    return wrapped
+  }
+
+  public constructor(chainId: number) {
+    if (chainId !== SupportedChainId.TESTNET) throw new Error('Not tEvmos')
+    super(chainId, 18, 'tEVMOS', 'Test Evmos')
+  }
+}
+
 const cachedNativeCurrency: { [chainId: number]: NativeCurrency | Token } = {}
 export function nativeOnChain(chainId: number): NativeCurrency | Token {
   if (cachedNativeCurrency[chainId]) return cachedNativeCurrency[chainId]
   let nativeCurrency: NativeCurrency | Token
   if (chainId === SupportedChainId.FUJI) {
     nativeCurrency = new FujiNativeCurrency(chainId)
+  } else if (chainId === SupportedChainId.TESTNET) {
+    nativeCurrency = new TEvmosNativeCurrency(chainId)
   } else {
     nativeCurrency = ExtendedEther.onChain(chainId)
   }
@@ -91,6 +134,7 @@ export function nativeOnChain(chainId: number): NativeCurrency | Token {
 
 export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedChainId]?: string } } = {
   USDC: {
+    [SupportedChainId.TESTNET]: USDC_TEVMOS.address,
     [SupportedChainId.FUJI]: USDC_FUJI.address,
   },
 }

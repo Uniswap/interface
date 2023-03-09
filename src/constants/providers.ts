@@ -60,4 +60,5 @@ export const RPC_PROVIDERS: { [key in SupportedChainId]: StaticJsonRpcProvider }
   [SupportedChainId.FUJI]: new AppJsonRpcProvider(SupportedChainId.FUJI),
   [SupportedChainId.MAINNET]: new AppJsonRpcProvider(SupportedChainId.MAINNET),
   [SupportedChainId.OPTIMISM]: new AppJsonRpcProvider(SupportedChainId.OPTIMISM),
+  [SupportedChainId.TESTNET]: new AppJsonRpcProvider(SupportedChainId.TESTNET),
 }

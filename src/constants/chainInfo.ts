@@ -3,7 +3,7 @@ import ms from 'ms.macro'
 import { darkTheme } from 'theme/colors'
 
 import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from './chains'
-import { FUJI_LIST } from './lists'
+import { FUJI_LIST, TESTNET_LIST } from './lists'
 
 export const AVERAGE_L1_BLOCK_TIME = ms`12s`
 
@@ -48,6 +48,18 @@ type ChainInfoMap = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } & 
 } & { readonly [chainId in SupportedL1ChainId]: L1ChainInfo }
 
 const CHAIN_INFO: ChainInfoMap = {
+  [SupportedChainId.TESTNET]: {
+    networkType: NetworkType.L1,
+    blockWaitMsBeforeWarning: ms`10m`,
+    docs: 'https://docs.avax.network/quickstart/fuji-workflow',
+    explorer: 'https://testnet.snowtrace.io/',
+    infoLink: '',
+    label: 'TEvmos',
+    logoUrl: 'https://raw.githubusercontent.com/cosmos/chain-registry/master/evmos/images/evmos.png',
+    circleLogoUrl: 'https://raw.githubusercontent.com/cosmos/chain-registry/master/evmos/images/evmos.png',
+    nativeCurrency: { name: 'Test Evmos', symbol: 'TEVMOS', decimals: 18 },
+    defaultListUrl: TESTNET_LIST,
+  },
   [SupportedChainId.FUJI]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms`10m`,

@@ -14,6 +14,7 @@ function getBlocksPerFetchForChainId(chainId: number | undefined): number {
     case SupportedChainId.OPTIMISM:
       return 15
     case SupportedChainId.MAINNET:
+    case SupportedChainId.TESTNET:
     case SupportedChainId.FUJI:
       return 5
     default:
