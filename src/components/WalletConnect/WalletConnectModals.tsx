@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import EyeIcon from 'src/assets/icons/eye.svg'
@@ -8,6 +8,7 @@ import { WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { WalletConnectRequestModal } from 'src/components/WalletConnect/RequestModal/WalletConnectRequestModal'
 import { WalletConnectSwitchChainModal } from 'src/components/WalletConnect/RequestModal/WalletConnectSwitchChainModal'
+import { PendingConnectionModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionModal'
 import { WalletConnectModal } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -34,20 +35,33 @@ export function WalletConnectModals(): JSX.Element {
 
   const currRequest = pendingRequests[0] ?? null
 
-  const onClose = useCallback(() => {
-    dispatch(removePendingSession())
+  const onCloseWCModal = (): void => {
     dispatch(closeModal({ name: ModalName.WalletConnectScan }))
-  }, [dispatch])
+  }
+
+  const onClosePendingConnection = (): void => {
+    dispatch(removePendingSession())
+  }
+
+  // When WalletConnectModal is open and a WC QR code is scanned to add a pendingSession,
+  // dismiss the scan modal in favor of showing PendingConnectionModal
+  useEffect(() => {
+    if (modalState.isOpen && pendingSession) {
+      dispatch(closeModal({ name: ModalName.WalletConnectScan }))
+    }
+  }, [modalState.isOpen, pendingSession, dispatch])
 
   return (
     <>
-      {(modalState.isOpen || Boolean(pendingSession)) && (
-        <WalletConnectModal
-          initialScreenState={modalState.initialState}
-          pendingSession={pendingSession}
-          onClose={onClose}
-        />
+      {modalState.isOpen && (
+        <WalletConnectModal initialScreenState={modalState.initialState} onClose={onCloseWCModal} />
       )}
+      {pendingSession ? (
+        <PendingConnectionModal
+          pendingSession={pendingSession}
+          onClose={onClosePendingConnection}
+        />
+      ) : null}
       {currRequest ? <RequestModal currRequest={currRequest} /> : null}
     </>
   )

@@ -12,6 +12,7 @@ import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Chevron } from 'src/components/icons/Chevron'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
+import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { PendingConnectionSwitchAccountModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionSwitchAccountModal'
@@ -20,7 +21,7 @@ import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
-import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
+import { ElementName, MobileEventName, ModalName } from 'src/features/telemetry/constants'
 import {
   useActiveAccountAddressWithThrow,
   useActiveAccountWithThrow,
@@ -152,7 +153,7 @@ const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps):
   )
 }
 
-export const PendingConnection = ({ pendingSession, onClose }: Props): JSX.Element => {
+export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.Element => {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const activeAddress = useActiveAccountAddressWithThrow()
@@ -186,12 +187,7 @@ export const PendingConnection = ({ pendingSession, onClose }: Props): JSX.Eleme
       // Handle WC 1.0 session request
       if (pendingSession.version === '1') {
         settlePendingSession(selectedChainId, activeAddress, approved)
-        if (approved) {
-          onClose()
-        } else {
-          dispatch(removePendingSession())
-        }
-
+        onClose()
         return
       }
 
@@ -235,8 +231,6 @@ export const PendingConnection = ({ pendingSession, onClose }: Props): JSX.Eleme
             hideDelay: 3 * ONE_SECOND_MS,
           })
         )
-
-        onClose()
       } else {
         wcWeb3Wallet.rejectSession({
           id: Number(pendingSession.id),
@@ -244,12 +238,14 @@ export const PendingConnection = ({ pendingSession, onClose }: Props): JSX.Eleme
         })
         dispatch(removePendingSession())
       }
+
+      onClose()
     },
     [activeAddress, dispatch, onClose, selectedChainId, pendingSession]
   )
 
   return (
-    <>
+    <BottomSheetModal name={ModalName.WCPendingConnection} onClose={onClose}>
       <AnimatedFlex
         backgroundColor="background1"
         borderRadius="rounded12"
@@ -328,6 +324,6 @@ export const PendingConnection = ({ pendingSession, onClose }: Props): JSX.Eleme
           }}
         />
       )}
-    </>
+    </BottomSheetModal>
   )
 }

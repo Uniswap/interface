@@ -15,7 +15,6 @@ import {
   selectSignerMnemonicAccountExists,
   selectViewOnlyAccounts,
 } from 'src/features/wallet/selectors'
-import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
 import { getValidAddress, sanitizeAddressText, shortenAddress } from 'src/utils/addresses'
 import { trimToLength } from 'src/utils/string'
 
@@ -102,10 +101,7 @@ export function useDisplayName(
   return { name: `${sanitizeAddressText(shortenAddress(address))}`, type: 'address' }
 }
 
-export function useWCTimeoutError(
-  pendingSession: WalletConnectSession | null,
-  timeoutDurationInMs: number
-): {
+export function useWCTimeoutError(timeoutDurationInMs: number): {
   hasScanError: boolean
   setHasScanError: Dispatch<SetStateAction<boolean>>
   shouldFreezeCamera: boolean
@@ -115,27 +111,18 @@ export function useWCTimeoutError(
   const { t } = useTranslation()
   const [hasScanError, setHasScanError] = useState<boolean>(false)
   const [shouldFreezeCamera, setShouldFreezeCamera] = useState<boolean>(false)
-  const pendingSessionRef = useRef(pendingSession)
   const hasScanErrorRef = useRef(hasScanError)
   const shouldFreezeCameraRef = useRef(shouldFreezeCamera)
 
-  pendingSessionRef.current = pendingSession
   hasScanErrorRef.current = hasScanError
   shouldFreezeCameraRef.current = shouldFreezeCamera
-
-  useEffect(() => {
-    if (pendingSession) {
-      setShouldFreezeCamera(false)
-    }
-  }, [pendingSession])
 
   useEffect(() => {
     if (!shouldFreezeCamera) return
     // camera freezes when we attempt to connect, show timeout error if no response after 10 seconds
     const timer = setTimeout(() => {
-      // don't show error if we were sent to pending session screen or already error showing
-      if (pendingSessionRef.current || hasScanErrorRef.current || !shouldFreezeCameraRef.current)
-        return
+      // don't show error if error already showing
+      if (hasScanErrorRef.current || !shouldFreezeCameraRef.current) return
 
       setHasScanError(true)
       setShouldFreezeCamera(false)

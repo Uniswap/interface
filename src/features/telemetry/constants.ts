@@ -86,6 +86,7 @@ export const enum ModalName {
   TransactionActions = 'transaction-actions',
   ViewSeedPhraseWarning = 'view-seed-phrase-warning',
   WalletConnectScan = 'wallet-connect-scan-modal',
+  WCPendingConnection = 'wc-pending-connection-modal',
   WCSignRequest = 'wc-sign-request-modal',
   WCSwitchChainRequest = 'wc-switch-chain-request-modal',
   WCViewOnlyWarning = 'wc-view-only-warning-modal',
