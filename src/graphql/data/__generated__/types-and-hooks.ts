@@ -150,7 +150,7 @@ export type NftActivity = {
   asset?: Maybe<NftAsset>;
   fromAddress: Scalars['String'];
   id: Scalars['ID'];
-  marketplace?: Maybe<NftMarketplace>;
+  marketplace?: Maybe<Scalars['String']>;
   orderStatus?: Maybe<OrderStatus>;
   price?: Maybe<Amount>;
   quantity?: Maybe<Scalars['Int']>;
@@ -1104,7 +1104,7 @@ export type NftActivityQueryVariables = Exact<{
 }>;
 
 
-export type NftActivityQuery = { __typename?: 'Query', nftActivity?: { __typename?: 'NftActivityConnection', edges: Array<{ __typename?: 'NftActivityEdge', node: { __typename?: 'NftActivity', id: string, address: string, tokenId?: string, type: NftActivityType, marketplace?: NftMarketplace, fromAddress: string, toAddress?: string, transactionHash?: string, orderStatus?: OrderStatus, quantity?: number, url?: string, timestamp: number, asset?: { __typename?: 'NftAsset', id: string, metadataUrl?: string, name?: string, suspiciousFlag?: boolean, image?: { __typename?: 'Image', id: string, url: string }, smallImage?: { __typename?: 'Image', id: string, url: string }, rarities?: Array<{ __typename?: 'NftAssetRarity', id: string, provider?: NftRarityProvider, rank?: number, score?: number }>, nftContract?: { __typename?: 'NftContract', id: string, standard?: NftStandard }, collection?: { __typename?: 'NftCollection', id: string, image?: { __typename?: 'Image', id: string, url: string } } }, price?: { __typename?: 'Amount', id: string, value: number } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string, hasNextPage?: boolean, hasPreviousPage?: boolean, startCursor?: string } } };
+export type NftActivityQuery = { __typename?: 'Query', nftActivity?: { __typename?: 'NftActivityConnection', edges: Array<{ __typename?: 'NftActivityEdge', node: { __typename?: 'NftActivity', id: string, address: string, tokenId?: string, type: NftActivityType, marketplace?: string, fromAddress: string, toAddress?: string, transactionHash?: string, orderStatus?: OrderStatus, quantity?: number, url?: string, timestamp: number, asset?: { __typename?: 'NftAsset', id: string, metadataUrl?: string, name?: string, suspiciousFlag?: boolean, image?: { __typename?: 'Image', id: string, url: string }, smallImage?: { __typename?: 'Image', id: string, url: string }, rarities?: Array<{ __typename?: 'NftAssetRarity', id: string, provider?: NftRarityProvider, rank?: number, score?: number }>, nftContract?: { __typename?: 'NftContract', id: string, standard?: NftStandard }, collection?: { __typename?: 'NftCollection', id: string, image?: { __typename?: 'Image', id: string, url: string } } }, price?: { __typename?: 'Amount', id: string, value: number } } }>, pageInfo: { __typename?: 'PageInfo', endCursor?: string, hasNextPage?: boolean, hasPreviousPage?: boolean, startCursor?: string } } };
 
 export type NftBalanceQueryVariables = Exact<{
   ownerAddress: Scalars['String'];

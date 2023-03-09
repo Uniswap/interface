@@ -3,7 +3,7 @@ import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/smart-order-router'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
-import { NftActivityType, NftMarketplace, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { NftActivityType, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import {
@@ -164,7 +164,7 @@ export const AddressCell = ({ address, desktopLBreakpoint, chainId }: AddressCel
   )
 }
 
-export const MarketplaceIcon = ({ marketplace }: { marketplace: Markets | NftMarketplace }) => {
+export const MarketplaceIcon = ({ marketplace }: { marketplace: Markets | string }) => {
   return (
     <Box
       as="img"
@@ -188,13 +188,7 @@ const PriceTooltip = ({ price }: { price: string }) => (
   </MouseoverTooltip>
 )
 
-export const PriceCell = ({
-  marketplace,
-  price,
-}: {
-  marketplace?: Markets | NftMarketplace
-  price?: string | number
-}) => {
+export const PriceCell = ({ marketplace, price }: { marketplace?: Markets | string; price?: string | number }) => {
   const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const formattedPrice = useMemo(
     () =>
