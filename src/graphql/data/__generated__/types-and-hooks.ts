@@ -150,7 +150,7 @@ export type NftActivity = {
   asset?: Maybe<NftAsset>;
   fromAddress: Scalars['String'];
   id: Scalars['ID'];
-  marketplace?: Maybe<NftMarketplace>;
+  marketplace?: Maybe<Scalars['String']>;
   orderStatus?: Maybe<OrderStatus>;
   price?: Maybe<Amount>;
   quantity?: Maybe<Scalars['Int']>;
@@ -238,6 +238,7 @@ export type NftAssetListingsArgs = {
   after?: InputMaybe<Scalars['String']>;
   asc?: InputMaybe<Scalars['Boolean']>;
   before?: InputMaybe<Scalars['String']>;
+  chain?: InputMaybe<Chain>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
 };
