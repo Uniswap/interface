@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { ButtonEmphasis } from 'components/Button'
 import { ButtonSize, ThemeButton } from 'components/Button'
 import { Box } from 'nft/components/Box'
@@ -90,14 +92,24 @@ function TaxServiceOption({ description, logo, url }: TaxServiceOptionProps) {
     <TaxOption tabIndex={0}>
       <StyledImageContainer as="img" src={logo} draggable={false} />
       <TaxOptionDescription className={bodySmall}>{description}</TaxOptionDescription>
-      <Button
-        size={ButtonSize.medium}
-        emphasis={ButtonEmphasis.medium}
-        onClick={openTaxServiceLink}
-        data-testid="tax-service-option-button"
+      <TraceEvent
+        events={[BrowserEvent.onClick]}
+        name={SharedEventName.ELEMENT_CLICKED}
+        element={
+          url.includes('tokentax')
+            ? InterfaceElementName.TAX_SERVICE_TOKENTAX_BUTTON
+            : InterfaceElementName.TAX_SERVICE_COINTRACKER_BUTTON
+        }
       >
-        Get started
-      </Button>
+        <Button
+          size={ButtonSize.medium}
+          emphasis={ButtonEmphasis.medium}
+          onClick={openTaxServiceLink}
+          data-testid="tax-service-option-button"
+        >
+          Get started
+        </Button>
+      </TraceEvent>
     </TaxOption>
   )
 }

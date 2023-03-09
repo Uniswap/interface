@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { bodySmall, subhead } from 'nft/css/common.css'
 import { useState } from 'react'
@@ -137,14 +139,20 @@ export default function TaxServiceBanner() {
           <StyledXButton size={20} onClick={handleClose} />
         </div>
 
-        <Button
-          size={ButtonSize.small}
-          emphasis={ButtonEmphasis.promotional}
-          onClick={openTaxModal}
-          data-testid="learn-more-button"
+        <TraceEvent
+          events={[BrowserEvent.onClick]}
+          name={SharedEventName.ELEMENT_CLICKED}
+          element={InterfaceElementName.TAX_SERVICE_BANNER_CTA_BUTTON}
         >
-          <Trans>Learn more</Trans>
-        </Button>
+          <Button
+            size={ButtonSize.small}
+            emphasis={ButtonEmphasis.promotional}
+            onClick={openTaxModal}
+            data-testid="learn-more-button"
+          >
+            <Trans>Learn more</Trans>
+          </Button>
+        </TraceEvent>
       </InnerContainer>
       <TaxServiceModal isOpen={modalOpen} onDismiss={onDismiss} />
     </PopupContainer>
