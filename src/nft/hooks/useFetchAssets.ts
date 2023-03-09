@@ -3,29 +3,27 @@ import { useWeb3React } from '@web3-react/core'
 import { GqlRoutingVariant, useGqlRoutingFlag } from 'featureFlags/flags/gqlRouting'
 import { useNftRouteLazyQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { fetchRoute } from 'nft/queries'
-import { BagItemStatus, BagStatus, RouteResponse } from 'nft/types'
+import { BagItemStatus, BagStatus } from 'nft/types'
 import {
   buildNftTradeInputFromBagItems,
   buildSellObject,
   recalculateBagUsingPooledAssets,
   sortUpdatedAssets,
 } from 'nft/utils'
+import { getNextBagState, getPurchasableAssets } from 'nft/utils/bag'
 import { buildRouteResponse } from 'nft/utils/nftRoute'
-import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
+import { compareAssetsWithTransactionRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
 import { useCallback, useMemo } from 'react'
 import { useQueryClient } from 'react-query'
 import shallow from 'zustand/shallow'
 
 import { useBag } from './useBag'
-import { useSendTransaction } from './useSendTransaction'
+import { usePurchaseAssets } from './usePurchaseAssets'
 import { useTokenInput } from './useTokenInput'
-import { useTransactionResponse } from './useTransactionResponse'
 
 export function useFetchAssets(): () => Promise<void> {
-  const { account, provider } = useWeb3React()
+  const { account } = useWeb3React()
   const usingGqlRouting = useGqlRoutingFlag() === GqlRoutingVariant.Enabled
-  const sendTransaction = useSendTransaction((state) => state.sendTransaction)
-  const setTransactionResponse = useTransactionResponse((state) => state.setTransactionResponse)
 
   const {
     itemsInBag: uncheckedItemsInBag,
@@ -35,8 +33,6 @@ export function useFetchAssets(): () => Promise<void> {
     isLocked: bagIsLocked,
     setLocked: setBagLocked,
     setItemsInBag,
-    setBagExpanded,
-    reset: resetBag,
   } = useBag(
     ({
       itemsInBag,
@@ -46,8 +42,6 @@ export function useFetchAssets(): () => Promise<void> {
       isLocked,
       setLocked,
       setItemsInBag,
-      setBagExpanded,
-      reset,
     }) => ({
       itemsInBag,
       setBagStatus,
@@ -56,8 +50,6 @@ export function useFetchAssets(): () => Promise<void> {
       isLocked,
       setLocked,
       setItemsInBag,
-      setBagExpanded,
-      reset,
     }),
     shallow
   )
@@ -66,119 +58,66 @@ export function useFetchAssets(): () => Promise<void> {
 
   const queryClient = useQueryClient()
   const [fetchGqlRoute] = useNftRouteLazyQuery()
+  const purchaseAssets = usePurchaseAssets()
 
-  const purchaseAssets = useCallback(
-    async (routingData: RouteResponse, purchasingWithErc20: boolean) => {
-      if (!provider || !routingData) return
-      const purchaseResponse = await sendTransaction(
-        provider?.getSigner(),
-        itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset),
-        routingData,
-        purchasingWithErc20
-      )
-
-      if (purchaseResponse) {
-        setBagLocked(false)
-        setTransactionResponse(purchaseResponse)
-        setBagExpanded({ bagExpanded: false })
-        resetBag()
-      }
-    },
-    [itemsInBag, provider, resetBag, sendTransaction, setBagExpanded, setBagLocked, setTransactionResponse]
-  )
-
-  return useCallback(async () => {
-    const itemsToBuy = itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset)
-    const ethSellObject = buildSellObject(
-      itemsToBuy
-        .reduce((ethTotal, asset) => ethTotal.add(BigNumber.from(asset.priceInfo.ETHPrice)), BigNumber.from(0))
-        .toString()
-    )
-
+  const resetStateBeforeFetch = useCallback(() => {
     didOpenUnavailableAssets && setDidOpenUnavailableAssets(false)
     !bagIsLocked && setBagLocked(true)
     setBagStatus(BagStatus.FETCHING_ROUTE)
-    try {
-      if (usingGqlRouting) {
-        fetchGqlRoute({
-          variables: {
-            senderAddress: usingGqlRouting && account ? account : '',
-            nftTrades: usingGqlRouting ? buildNftTradeInputFromBagItems(itemsInBag) : [],
-            tokenTrades: tokenTradeInput ? tokenTradeInput : undefined,
-          },
-          onCompleted: (data) => {
-            if (!data.nftRoute || !data.nftRoute.route) {
-              setBagStatus(BagStatus.ADDING_TO_BAG)
-              setBagLocked(false)
-              return
-            }
+  }, [bagIsLocked, didOpenUnavailableAssets, setBagLocked, setBagStatus, setDidOpenUnavailableAssets])
 
-            const purchasingWithErc20 = !!tokenTradeInput
-            const { route, routeResponse } = buildRouteResponse(data.nftRoute, purchasingWithErc20)
+  return useCallback(async () => {
+    resetStateBeforeFetch()
 
-            const { hasPriceAdjustment, updatedAssets } = combineBuyItemsWithTxRoute(itemsToBuy, route)
-            const shouldRefetchCalldata = hasPriceAdjustment && purchasingWithErc20
+    if (usingGqlRouting) {
+      fetchGqlRoute({
+        variables: {
+          senderAddress: account ? account : '',
+          nftTrades: buildNftTradeInputFromBagItems(itemsInBag),
+          tokenTrades: tokenTradeInput ? tokenTradeInput : undefined,
+        },
+        onCompleted: (data) => {
+          if (!data.nftRoute || !data.nftRoute.route) {
+            setBagStatus(BagStatus.ADDING_TO_BAG)
+            setBagLocked(false)
+            return
+          }
 
-            const fetchedPriceChangedAssets = updatedAssets
-              .filter((asset) => asset.updatedPriceInfo)
-              .sort(sortUpdatedAssets)
-            const fetchedUnavailableAssets = updatedAssets.filter((asset) => asset.isUnavailable)
-            const fetchedUnchangedAssets = updatedAssets.filter(
-              (asset) => !asset.updatedPriceInfo && !asset.isUnavailable
-            )
-            const hasReviewedAssets = fetchedUnchangedAssets.length > 0
-            const hasAssetsInReview = fetchedPriceChangedAssets.length > 0
-            const hasUnavailableAssets = fetchedUnavailableAssets.length > 0
-            const hasAssets = hasReviewedAssets || hasAssetsInReview || hasUnavailableAssets
-            const shouldReview = hasAssetsInReview || hasUnavailableAssets
+          const wishAssetsToBuy = getPurchasableAssets(itemsInBag)
+          const purchasingWithErc20 = !!tokenTradeInput
+          const { route, routeResponse } = buildRouteResponse(data.nftRoute, purchasingWithErc20)
 
-            setItemsInBag([
-              ...fetchedUnavailableAssets.map((unavailableAsset) => ({
-                asset: unavailableAsset,
-                status: BagItemStatus.UNAVAILABLE,
-              })),
-              ...fetchedPriceChangedAssets.map((changedAsset) => ({
-                asset: changedAsset,
-                status: BagItemStatus.REVIEWING_PRICE_CHANGE,
-              })),
-              ...fetchedUnchangedAssets.map((unchangedAsset) => ({
-                asset: unchangedAsset,
-                status: BagItemStatus.REVIEWED,
-              })),
-            ])
+          const { newBagItems, nextBagStatus } = getNextBagState(wishAssetsToBuy, route, purchasingWithErc20)
 
-            let shouldLock = false
+          setItemsInBag(newBagItems)
+          setBagStatus(nextBagStatus)
 
-            if (hasAssets) {
-              if (!shouldReview) {
-                if (shouldRefetchCalldata) {
-                  setBagStatus(BagStatus.CONFIRM_QUOTE)
-                } else {
-                  purchaseAssets(routeResponse, purchasingWithErc20)
-                  setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
-                  shouldLock = true
-                }
-              } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
-              else {
-                setBagStatus(BagStatus.IN_REVIEW)
-              }
-            } else {
-              setBagStatus(BagStatus.ADDING_TO_BAG)
-            }
+          if (nextBagStatus === BagStatus.CONFIRMING_IN_WALLET) {
+            purchaseAssets(routeResponse, wishAssetsToBuy, purchasingWithErc20)
+            setBagLocked(true)
+            return
+          }
 
-            setBagLocked(shouldLock)
-          },
-        })
-      } else {
-        const routeData = await queryClient.fetchQuery(['assetsRoute', ethSellObject, itemsToBuy, account], () =>
+          setBagLocked(false)
+        },
+      })
+    } else {
+      try {
+        const assetsToBuy = getPurchasableAssets(itemsInBag)
+        const ethSellObject = buildSellObject(
+          assetsToBuy
+            .reduce((ethTotal, asset) => ethTotal.add(BigNumber.from(asset.priceInfo.ETHPrice)), BigNumber.from(0))
+            .toString()
+        )
+        const routeData = await queryClient.fetchQuery(['assetsRoute', ethSellObject, assetsToBuy, account], () =>
           fetchRoute({
             toSell: [ethSellObject],
-            toBuy: itemsToBuy,
+            toBuy: assetsToBuy,
             senderAddress: account ?? '',
           })
         )
 
-        const { updatedAssets } = combineBuyItemsWithTxRoute(itemsToBuy, routeData.route)
+        const { updatedAssets } = compareAssetsWithTransactionRoute(assetsToBuy, routeData.route)
 
         const fetchedPriceChangedAssets = updatedAssets
           .filter((asset) => asset.updatedPriceInfo)
@@ -209,7 +148,7 @@ export function useFetchAssets(): () => Promise<void> {
 
         if (hasAssets) {
           if (!shouldReview) {
-            purchaseAssets(routeData, false)
+            purchaseAssets(routeData, assetsToBuy)
             setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
           } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
           else {
@@ -218,21 +157,19 @@ export function useFetchAssets(): () => Promise<void> {
         } else {
           setBagStatus(BagStatus.ADDING_TO_BAG)
         }
+      } catch (error) {
+        setBagStatus(BagStatus.ADDING_TO_BAG)
       }
-    } catch (error) {
-      setBagStatus(BagStatus.ADDING_TO_BAG)
     }
   }, [
     account,
-    bagIsLocked,
-    didOpenUnavailableAssets,
     fetchGqlRoute,
     itemsInBag,
     purchaseAssets,
     queryClient,
+    resetStateBeforeFetch,
     setBagLocked,
     setBagStatus,
-    setDidOpenUnavailableAssets,
     setItemsInBag,
     tokenTradeInput,
     usingGqlRouting,
