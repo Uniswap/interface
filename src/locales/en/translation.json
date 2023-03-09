@@ -391,6 +391,8 @@
   "Enter a wallet address": "Enter a wallet address",
   "Couldn’t load NFT collection": "Couldn’t load NFT collection",
   "No NFTs found": "No NFTs found",
+  "Hide NFT": "Hide NFT",
+  "Unhide NFT": "Unhide NFT",
   "Couldn't load NFT details": "Couldn't load NFT details",
   "Floor: {{floorPrice}} ETH": "Floor: {{floorPrice}} ETH",
   "Last sale price": "Last sale price",

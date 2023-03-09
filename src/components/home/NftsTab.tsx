@@ -4,6 +4,7 @@ import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { forwardRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, NativeScrollEvent, NativeSyntheticEvent, View } from 'react-native'
+import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import NoNFTsIcon from 'src/assets/icons/empty-state-picture.svg'
@@ -20,6 +21,7 @@ import { EMPTY_ARRAY } from 'src/constants/misc'
 import { isError, isNonPollingRequestInFlight } from 'src/data/utils'
 import { NftsTabQuery, useNftsTabQuery } from 'src/data/__generated__/types-and-hooks'
 import { openModal } from 'src/features/modals/modalSlice'
+import { useNFTMenu } from 'src/features/nfts/hooks'
 import { NFTItem } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -70,9 +72,60 @@ const keyExtractor = (item: NFTItem | string): string =>
     ? LOADING_ITEM
     : getNFTAssetKey(item.contractAddress ?? '', item.tokenId ?? '')
 
+function NftView({ owner, item }: { owner: Address; item: NFTItem }): JSX.Element {
+  const navigation = useAppStackNavigation()
+  const theme = useAppTheme()
+  const onPressItem = useCallback(() => {
+    // Always ensure push to enforce right push
+    navigation.push(Screens.NFTItem, {
+      owner,
+      address: item.contractAddress ?? '',
+      tokenId: item.tokenId ?? '',
+    })
+  }, [item.contractAddress, item.tokenId, navigation, owner])
+
+  const { menuActions, onContextMenuPress } = useNFTMenu({
+    contractAddress: item.contractAddress,
+    tokenId: item.tokenId,
+    owner,
+  })
+
+  return (
+    <Box flex={1} justifyContent="flex-start" m="spacing4">
+      <ContextMenu
+        actions={menuActions}
+        disabled={menuActions.length === 0}
+        style={{ borderRadius: theme.borderRadii.rounded16 }}
+        onPress={onContextMenuPress}>
+        <TouchableArea
+          hapticFeedback
+          activeOpacity={1}
+          hapticStyle={ImpactFeedbackStyle.Light}
+          onPress={onPressItem}>
+          <Box
+            alignItems="center"
+            aspectRatio={1}
+            backgroundColor="backgroundOutline"
+            borderRadius="rounded12"
+            overflow="hidden"
+            width="100%">
+            <NFTViewer
+              imageDimensions={item.imageDimensions}
+              limitGIFSize={ESTIMATED_ITEM_SIZE}
+              maxHeight={MAX_NFT_IMAGE_SIZE}
+              placeholderContent={item.name || item.collectionName}
+              squareGridView={true}
+              uri={item.imageUrl ?? ''}
+            />
+          </Box>
+        </TouchableArea>
+      </ContextMenu>
+    </Box>
+  )
+}
+
 export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
   ({ owner, containerProps, scrollHandler }, ref) => {
-    const navigation = useAppStackNavigation()
     const { t } = useTranslation()
     const theme = useAppTheme()
     const dispatch = useAppDispatch()
@@ -102,18 +155,6 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
       fetchMore,
     ])
 
-    const onPressItem = useCallback(
-      (asset: NFTItem) => {
-        // Always ensure push to enforce right push
-        navigation.push(Screens.NFTItem, {
-          owner,
-          address: asset.contractAddress ?? '',
-          tokenId: asset.tokenId ?? '',
-        })
-      },
-      [navigation, owner]
-    )
-
     const onPressScan = (): void => {
       // in case we received a pending session from a previous scan after closing modal
       dispatch(removePendingSession())
@@ -124,37 +165,9 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
 
     const renderItem = useCallback(
       ({ item }: ListRenderItemInfo<string | NFTItem>) => {
-        return typeof item === 'string' ? (
-          <Loader.NFT />
-        ) : (
-          <Box flex={1} justifyContent="flex-start" m="spacing4">
-            <TouchableArea
-              hapticFeedback
-              activeOpacity={1}
-              hapticStyle={ImpactFeedbackStyle.Light}
-              onPress={(): void => onPressItem(item)}>
-              <Box
-                alignItems="center"
-                aspectRatio={1}
-                backgroundColor="backgroundOutline"
-                borderRadius="rounded12"
-                // eslint-disable-next-line react-native/no-inline-styles
-                style={{ overflow: 'hidden' }}
-                width="100%">
-                <NFTViewer
-                  imageDimensions={item.imageDimensions}
-                  limitGIFSize={ESTIMATED_ITEM_SIZE}
-                  maxHeight={MAX_NFT_IMAGE_SIZE}
-                  placeholderContent={item.name || item.collectionName}
-                  squareGridView={true}
-                  uri={item.imageUrl ?? ''}
-                />
-              </Box>
-            </TouchableArea>
-          </Box>
-        )
+        return typeof item === 'string' ? <Loader.NFT /> : <NftView item={item} owner={owner} />
       },
-      [onPressItem]
+      [owner]
     )
 
     /**

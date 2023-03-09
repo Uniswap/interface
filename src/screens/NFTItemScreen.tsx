@@ -1,11 +1,12 @@
 import { ApolloQueryResult } from '@apollo/client'
 import { isAddress } from 'ethers/lib/utils'
-import React, { useCallback, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Share } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { TouchableOpacity } from 'react-native'
+import ContextMenu from 'react-native-context-menu-view'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
+import EllipsisIcon from 'src/assets/icons/ellipsis.svg'
 import ShareIcon from 'src/assets/icons/share.svg'
 import EthereumLogo from 'src/assets/logos/ethereum.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
@@ -19,7 +20,6 @@ import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import { PollingInterval } from 'src/constants/misc'
-import { uniswapUrls } from 'src/constants/urls'
 import {
   Currency,
   NftActivityType,
@@ -27,11 +27,12 @@ import {
   useNftItemScreenQuery,
 } from 'src/data/__generated__/types-and-hooks'
 import { selectModalState } from 'src/features/modals/modalSlice'
+import { useNFTMenu } from 'src/features/nfts/hooks'
 import { BlurredImageBackground } from 'src/features/nfts/item/BlurredImageBackground'
 import { CollectionPreviewCard } from 'src/features/nfts/item/CollectionPreviewCard'
 import { NFTTraitList } from 'src/features/nfts/item/traits'
 import { ModalName } from 'src/features/telemetry/constants'
-import { useActiveAccountAddressWithThrow, useDisplayName } from 'src/features/wallet/hooks'
+import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
 import { colorsDark } from 'src/styles/color'
@@ -43,7 +44,6 @@ import {
   useNearestThemeColorFromImageUri,
 } from 'src/utils/colors'
 import { formatNumber, NumberType } from 'src/utils/format'
-import { logger } from 'src/utils/logger'
 
 export function NFTItemScreen({
   route: {
@@ -76,21 +76,6 @@ export function NFTItemScreen({
 
   const lastSaleData = data?.nftActivity?.edges[0]?.node
 
-  const ownerDisplayName = useDisplayName(owner)
-
-  const isSharable = asset?.nftContract?.address && asset?.tokenId
-
-  const onShare = useCallback(async () => {
-    if (!isSharable) return
-    try {
-      await Share.share({
-        message: `${uniswapUrls.nftUrl}/asset/${asset.nftContract?.address}/${asset.tokenId}`,
-      })
-    } catch (e) {
-      logger.error('NFTItemScreen', 'onShare', (e as unknown as Error).message)
-    }
-  }, [asset?.nftContract?.address, asset?.tokenId, isSharable])
-
   const onPressCollection = (): void => {
     if (asset && asset.collection?.collectionId && asset.nftContract?.address) {
       navigation.navigate(Screens.NFTCollection, {
@@ -119,6 +104,11 @@ export function NFTItemScreen({
     [address, asset?.collection?.name, owner, tokenId]
   )
 
+  const { menuActions, onContextMenuPress, onlyShare } = useNFTMenu({
+    contractAddress: asset?.nftContract?.address,
+    tokenId: asset?.tokenId,
+    owner,
+  })
   const { colorLight, colorDark } = useNearestThemeColorFromImageUri(asset?.image?.url)
   // check if colorLight passes contrast against card bg color, if not use fallback
   const accentTextColor = useMemo(() => {
@@ -164,22 +154,29 @@ export function NFTItemScreen({
             }
             renderedInModal={inModal}
             rightElement={
-              <Flex
-                alignItems="center"
-                height={iconSizes.icon40}
-                justifyContent="center"
-                pr="spacing4"
-                width={iconSizes.icon40}>
-                {isSharable && (
-                  <TouchableOpacity onPress={onShare}>
-                    <ShareIcon
-                      color={theme.colors.textOnBrightPrimary}
-                      height={iconSizes.icon24}
-                      width={iconSizes.icon24}
-                    />
-                  </TouchableOpacity>
-                )}
-              </Flex>
+              menuActions.length > 0 ? (
+                onlyShare ? (
+                  <Box mr="spacing4">
+                    <TouchableOpacity onPress={menuActions[0]?.onPress}>
+                      <ShareIcon
+                        color={theme.colors.textTertiary}
+                        height={iconSizes.icon24}
+                        width={iconSizes.icon24}
+                      />
+                    </TouchableOpacity>
+                  </Box>
+                ) : (
+                  <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
+                    <Box mr="spacing4">
+                      <EllipsisIcon
+                        color={theme.colors.textTertiary}
+                        height={iconSizes.icon16}
+                        width={iconSizes.icon16}
+                      />
+                    </Box>
+                  </ContextMenu>
+                )
+              ) : undefined
             }>
             {/* Content wrapper */}
             <Flex

@@ -18,7 +18,7 @@ import { useSignerAccounts } from 'src/features/wallet/hooks'
 import { CurrencyId } from 'src/utils/currencyId'
 
 type TokensTabProps = {
-  owner: string
+  owner: Address
   containerProps?: TabContentProps
   scrollHandler?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
   isExternalProfile?: boolean
