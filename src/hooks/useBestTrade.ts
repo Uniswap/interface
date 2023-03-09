@@ -46,7 +46,7 @@ export function useBestTrade(
     )
   }, [amountSpecified, chainId, debouncedOtherCurrency, wethContract])
 
-  const shouldGetTrade = Boolean(!isAWrapTransaction && isWindowVisible)
+  const shouldGetTrade = !isAWrapTransaction && isWindowVisible
 
   const [clientSideRouter] = useClientSideRouter()
   const routingAPITrade = useRoutingAPITrade(
