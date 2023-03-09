@@ -26,7 +26,7 @@ type Props = NativeStackScreenProps<
 export function CloudBackupProcessingScreen({
   navigation,
   route: {
-    params: { password, importType },
+    params: { password, importType, entryPoint },
   },
 }: Props): JSX.Element {
   const { t } = useTranslation()
@@ -66,14 +66,14 @@ export function CloudBackupProcessingScreen({
       const timer = setTimeout(() => {
         navigation.navigate({
           name: OnboardingScreens.Backup,
-          params: { importType },
+          params: { importType, entryPoint },
           merge: true,
         })
       }, ONE_SECOND_MS)
 
       return () => clearTimeout(timer)
     }
-  }, [activeAccount?.backups, importType, navigation])
+  }, [activeAccount?.backups, entryPoint, importType, navigation])
 
   // Handle backup to Cloud when screen appears
   useEffect(() => {

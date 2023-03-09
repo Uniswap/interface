@@ -7,10 +7,17 @@ import { Screens } from 'src/screens/Screens'
 
 export function EducationScreen({
   route: {
-    params: { type },
+    params: { type, importType, entryPoint },
   },
 }: AppStackScreenProp<Screens.Education>): JSX.Element {
-  const content = useMemo(() => educationContent[type](), [type])
+  const content = useMemo(
+    () =>
+      educationContent[type]({
+        importType,
+        entryPoint,
+      }),
+    [entryPoint, importType, type]
+  )
 
   return (
     <SheetScreen flex={1}>

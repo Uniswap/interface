@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
 import { Pressable } from 'react-native'
-import { useOnboardingStackNavigation } from 'src/app/navigation/types'
+import { OnboardingStackBaseParams, useOnboardingStackNavigation } from 'src/app/navigation/types'
 import { CloseButton } from 'src/components/buttons/CloseButton'
 import { CarouselContext } from 'src/components/carousel/Carousel'
 import { Flex } from 'src/components/layout'
@@ -11,10 +11,16 @@ import { dimensions } from 'src/styles/sizing'
 
 const { fullWidth } = dimensions
 
-function Page({ text }: { text: ReactNode }): JSX.Element {
+function Page({
+  text,
+  params,
+}: {
+  text: ReactNode
+  params: OnboardingStackBaseParams
+}): JSX.Element {
   const navigation = useOnboardingStackNavigation()
   const onDismiss = (): void => {
-    navigation.navigate(OnboardingScreens.Backup)
+    navigation.navigate(OnboardingScreens.Backup, params)
   }
 
   return (
@@ -49,8 +55,9 @@ function Page({ text }: { text: ReactNode }): JSX.Element {
   )
 }
 
-export const SeedPhraseEducationContent = (): JSX.Element[] => [
+export const SeedPhraseEducationContent = (params: OnboardingStackBaseParams): JSX.Element[] => [
   <Page
+    params={params}
     text={
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
@@ -61,6 +68,7 @@ export const SeedPhraseEducationContent = (): JSX.Element[] => [
     }
   />,
   <Page
+    params={params}
     text={
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
@@ -71,6 +79,7 @@ export const SeedPhraseEducationContent = (): JSX.Element[] => [
     }
   />,
   <Page
+    params={params}
     text={
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
@@ -81,6 +90,7 @@ export const SeedPhraseEducationContent = (): JSX.Element[] => [
     }
   />,
   <Page
+    params={params}
     text={
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
@@ -91,6 +101,7 @@ export const SeedPhraseEducationContent = (): JSX.Element[] => [
     }
   />,
   <Page
+    params={params}
     text={
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>
@@ -101,6 +112,7 @@ export const SeedPhraseEducationContent = (): JSX.Element[] => [
     }
   />,
   <Page
+    params={params}
     text={
       <Text fontSize={28} lineHeight={34} variant="headlineMedium">
         <Trans>

@@ -12,6 +12,7 @@ import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { uniswapUrls } from 'src/constants/urls'
+import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
   PendingAccountActions,
@@ -30,7 +31,10 @@ export function LandingScreen({ navigation, route: { params } }: Props): JSX.Ele
   // We navigate from here so that the landing screen is still in the stack.
   useEffect(() => {
     if (params?.shouldSkipToSeedPhraseInput === true)
-      navigation.navigate(OnboardingScreens.SeedPhraseInput)
+      navigation.navigate(OnboardingScreens.SeedPhraseInput, {
+        importType: ImportType.SeedPhrase,
+        entryPoint: OnboardingEntryPoint.ReplaceAccount,
+      })
   }, [navigation, params])
 
   const { t } = useTranslation()
@@ -38,7 +42,10 @@ export function LandingScreen({ navigation, route: { params } }: Props): JSX.Ele
 
   const onPressGetStarted = (): void => {
     dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
-    navigation.navigate(OnboardingScreens.ImportMethod)
+    navigation.navigate(OnboardingScreens.ImportMethod, {
+      importType: ImportType.NotYetSelected,
+      entryPoint: OnboardingEntryPoint.FreshInstall,
+    })
   }
 
   const outerGap = useResponsiveProp({ xs: 'spacing12', sm: 'spacing24' })

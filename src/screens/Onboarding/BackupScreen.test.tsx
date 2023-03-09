@@ -3,6 +3,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { StackNavigationProp } from '@react-navigation/stack'
 import React from 'react'
 import { AppStackParamList, OnboardingStackParamList } from 'src/app/navigation/types'
+import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { BackupScreen } from 'src/screens/Onboarding/BackupScreen'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { mockWalletPreloadedState } from 'src/test/fixtures'
@@ -13,7 +14,12 @@ const navigationProp = {} as CompositeNavigationProp<
   StackNavigationProp<OnboardingStackParamList, OnboardingScreens.Backup, undefined>,
   NativeStackNavigationProp<AppStackParamList, Screens.Education, undefined>
 >
-const routeProp = {} as RouteProp<OnboardingStackParamList, OnboardingScreens.Backup>
+const routeProp = {
+  params: {
+    importType: ImportType.CreateNew,
+    entryPoint: OnboardingEntryPoint.FreshInstall,
+  },
+} as RouteProp<OnboardingStackParamList, OnboardingScreens.Backup>
 
 describe(BackupScreen, () => {
   it('renders backup options when none are completed', async () => {

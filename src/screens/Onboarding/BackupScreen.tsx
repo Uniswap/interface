@@ -73,7 +73,11 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   }
 
   const onPressEducationButton = (): void => {
-    navigation.navigate(Screens.Education, { type: EducationContentType.SeedPhrase })
+    navigation.navigate(Screens.Education, {
+      type: EducationContentType.SeedPhrase,
+      importType: params.importType,
+      entryPoint: params.entryPoint,
+    })
   }
 
   const disabled = !activeAccountBackups || activeAccountBackups.length < 1

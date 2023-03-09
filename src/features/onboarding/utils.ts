@@ -1,8 +1,9 @@
 import { OnboardingScreens } from 'src/screens/Screens'
 
 export enum ImportType {
-  CreateNew = 'CreateNew', // creating initial wallet
-  CreateAdditional = 'CreateAdditional', // creating additional derivation indexes
+  CreateNew = 'CreateNew',
+  CreateAdditional = 'CreateAdditional',
+  NotYetSelected = 'NotYetSelected',
   SeedPhrase = 'SeedPhrase',
   Watch = 'Watch',
   Restore = 'Restore',
@@ -41,6 +42,8 @@ const FLOWS: Record<ImportType, OnboardingScreens[]> = {
   ],
   // @TODO [MOB-3894] Fill out restore flow.
   [ImportType.Restore]: [],
+  // Will not show header for flow until a selection of import type is made
+  [ImportType.NotYetSelected]: [],
 }
 
 export function getFlow(

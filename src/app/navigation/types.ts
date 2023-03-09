@@ -47,12 +47,10 @@ export type SettingsStackParamList = {
   } // temporary to be able to view onboarding from settings
 }
 
-export type OnboardingStackBaseParams =
-  | {
-      importType?: ImportType
-      entryPoint?: OnboardingEntryPoint
-    }
-  | undefined
+export type OnboardingStackBaseParams = {
+  importType: ImportType
+  entryPoint: OnboardingEntryPoint
+}
 
 export type OnboardingStackParamList = {
   [OnboardingScreens.BackupCloudProcessing]: {
@@ -86,7 +84,7 @@ export type AppStackParamList = {
   [Screens.AccountStack]: NavigatorScreenParams<AccountStackParamList>
   [Screens.Education]: {
     type: EducationContentType
-  }
+  } & OnboardingStackBaseParams
   [Screens.Home]?: { tab?: TabIndex }
   [Screens.SettingsWalletManageConnection]: { address: Address }
   [Screens.OnboardingStack]: NavigatorScreenParams<OnboardingStackParamList>
