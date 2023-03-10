@@ -14,7 +14,7 @@ const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
   // TODO: replace USDC fuji by mainnet
   [SupportedChainId.MAINNET]: CurrencyAmount.fromRawAmount(USDC_FUJI, 100_000e6),
   [SupportedChainId.FUJI]: CurrencyAmount.fromRawAmount(USDC_FUJI, 10_000e18),
-  [SupportedChainId.TESTNET]: CurrencyAmount.fromRawAmount(USDC_TEVMOS, 100_000e6),
+  [SupportedChainId.TESTNET]: CurrencyAmount.fromRawAmount(USDC_TEVMOS, 10_000e6),
 }
 
 /**
@@ -26,7 +26,6 @@ export default function useStablecoinPrice(currency?: Currency): Price<Currency,
 
   const amountOut = chainId ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
   const stablecoin = amountOut?.currency
-
   const { trade } = useRoutingAPITrade(TradeType.EXACT_OUTPUT, amountOut, currency, RouterPreference.PRICE)
   const price = useMemo(() => {
     if (!currency || !stablecoin) {

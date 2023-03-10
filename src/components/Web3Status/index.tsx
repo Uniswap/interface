@@ -196,7 +196,7 @@ const CHEVRON_PROPS = {
 }
 
 function Web3StatusInner() {
-  const { account, connector, chainId, ENSName } = useWeb3React()
+  const { account, connector, ENSName } = useWeb3React()
   const connectionType = getConnection(connector).type
   const {
     trade: { state: tradeState, trade },
@@ -226,9 +226,7 @@ function Web3StatusInner() {
 
   const hasPendingTransactions = !!pending.length
 
-  if (!chainId) {
-    return null
-  } else if (error) {
+  if (error) {
     return (
       <Web3StatusError onClick={handleWalletDropdownClick}>
         <NetworkIcon />

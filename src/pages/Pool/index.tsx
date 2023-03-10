@@ -210,7 +210,6 @@ export default function Pool() {
     },
     [[], []]
   ) ?? [[], []]
-
   const filteredPositions = useMemo(
     () => [...openPositions, ...(userHideClosedPositions ? [] : closedPositions)],
     [closedPositions, openPositions, userHideClosedPositions]

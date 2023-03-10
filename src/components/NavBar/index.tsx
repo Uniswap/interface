@@ -4,13 +4,10 @@ import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
-import { useProfilePageState } from 'nft/hooks'
-import { ProfilePageStateType } from 'nft/types'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
-import { Bag } from './Bag'
 import { ChainSelector } from './ChainSelector'
 import * as styles from './style.css'
 
@@ -54,7 +51,7 @@ export const PageTabs = () => {
     !pathname.startsWith('/pools')
 
   return (
-    <>
+    <div style={{ display: 'flex', gap: '10px' }}>
       <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
         <Trans>Swap</Trans>
       </MenuItem>
@@ -67,20 +64,20 @@ export const PageTabs = () => {
         className={styles.menuItem}
         style={{ textDecoration: 'none' }}
         rel="noreferrer"
+        target="_blank"
       >
         <Trans>NFTs</Trans>
       </a>
 
       <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
-        <Trans>Pool</Trans>
+        <Trans>Add Liquidity</Trans>
       </MenuItem>
-    </>
+    </div>
   )
 }
 
 const Navbar = () => {
   const isNftPage = useIsNftPage()
-  const sellPageState = useProfilePageState((state) => state.state)
   const navigate = useNavigate()
 
   return (
@@ -114,7 +111,6 @@ const Navbar = () => {
 
           <Box className={styles.rightSideContainer}>
             <Row gap="12">
-              {isNftPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}
               {!isNftPage && (
                 <Box display={{ sm: 'none', lg: 'flex' }}>
                   <ChainSelector />

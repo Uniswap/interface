@@ -187,13 +187,13 @@ const GridContainer = styled.div`
 
 const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => {
   const currency0 = new Token(
-    SupportedChainId.FUJI,
+    SupportedChainId.TESTNET,
     poolData.token0.address,
     poolData.token0.decimals,
     poolData.token0.symbol
   )
   const currency1 = new Token(
-    SupportedChainId.FUJI,
+    SupportedChainId.TESTNET,
     poolData.token1.address,
     poolData.token1.decimals,
     poolData.token1.symbol

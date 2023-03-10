@@ -64,7 +64,6 @@ const baseMenuItem = style([
     borderRadius: '12',
     transition: '250',
     height: 'min',
-    width: 'full',
     textAlign: 'center',
   }),
   {
