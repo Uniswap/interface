@@ -11,6 +11,7 @@ import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 export const pageTimePeriodAtom = atomWithStorage<TimePeriod>('tokenDetailsTimePeriod', TimePeriod.DAY)
 
+// eslint-disable-next-line import/no-unused-modules
 export default function TokenDetailsPage() {
   const { tokenAddress, chainName } = useParams<{ tokenAddress: string; chainName?: string }>()
   const chain = validateUrlChainParam(chainName)
