@@ -32,8 +32,6 @@ export default function useSyncChainQuery() {
 
   // Can't use `usePrevious` because `chainId` can be undefined while activating.
   const [previousChainId, setPreviousChainId] = useState<number | undefined>(undefined)
-  const [nextChainId, setNextChainId] = useState<number | undefined>(undefined)
-
   useEffect(() => {
     if (chainId && chainId !== previousChainId) {
       setPreviousChainId(chainId)
@@ -42,21 +40,14 @@ export default function useSyncChainQuery() {
 
   const [searchParams, setSearchParams] = useSearchParams()
 
-  useEffect(() => {
-    const chainQueryManuallyUpdated = urlChainId && urlChainId !== previousUrlChainId
-    if (chainQueryManuallyUpdated) {
-      setNextChainId(urlChainId)
-    }
-  }, [previousUrlChainId, urlChainId])
+  const chainQueryManuallyUpdated = urlChainId && urlChainId !== previousUrlChainId && isActive
 
   return useEffect(() => {
-    if (nextChainId && isActive) {
+    if (chainQueryManuallyUpdated) {
       // If the query param changed, and the chain didn't change, then activate the new chain
-      selectChain(nextChainId).then(() => {
-        searchParams.delete('chain')
-        setSearchParams(searchParams)
-        setNextChainId(undefined)
-      })
+      selectChain(urlChainId)
+      searchParams.delete('chain')
+      setSearchParams(searchParams)
     }
-  }, [nextChainId, urlChainId, selectChain, searchParams, setSearchParams, isActive])
+  }, [chainQueryManuallyUpdated, urlChainId, selectChain, searchParams, setSearchParams])
 }
