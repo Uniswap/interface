@@ -1,6 +1,35 @@
 """This directive allows results to be deferred during execution"""
 directive @defer on FIELD
 
+"""Tells the service which mutation triggers this subscription."""
+directive @aws_subscribe(
+  """
+  List of mutations which will trigger this subscription when they are called.
+  """
+  mutations: [String]
+) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by a Lambda Authorizer.
+"""
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an OIDC token.
+"""
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service which subscriptions will be published to when this mutation is
+called. This directive is deprecated use @aws_susbscribe directive instead.
+"""
+directive @aws_publish(
+  """
+  List of subscriptions which will be published to when this mutation is called.
+  """
+  subscriptions: [String]
+) on FIELD_DEFINITION
+
 """
 Tells the service this field/object has access authorized by a Cognito User Pools token.
 """
@@ -21,38 +50,9 @@ directive @aws_auth(
 ) on FIELD_DEFINITION
 
 """
-Tells the service which subscriptions will be published to when this mutation is
-called. This directive is deprecated use @aws_susbscribe directive instead.
-"""
-directive @aws_publish(
-  """
-  List of subscriptions which will be published to when this mutation is called.
-  """
-  subscriptions: [String]
-) on FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by a Lambda Authorizer.
-"""
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
-
-"""Tells the service which mutation triggers this subscription."""
-directive @aws_subscribe(
-  """
-  List of mutations which will trigger this subscription when they are called.
-  """
-  mutations: [String]
-) on FIELD_DEFINITION
-
-"""
 Tells the service this field/object has access authorized by an API key.
 """
 directive @aws_api_key on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an OIDC token.
-"""
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
 
 enum ActivityType {
   APPROVE
@@ -121,6 +121,10 @@ enum Chain {
   POLYGON
   CELO
   UNKNOWN_CHAIN
+}
+
+enum CollectionSortableField {
+  VOLUME
 }
 
 input ContractInput {
@@ -385,6 +389,8 @@ type NftCollectionMarket {
   sales(duration: HistoryDuration): TimestampedAmount
   listings: TimestampedAmount
   marketplaces(marketplaces: [NftMarketplace!]): [NftCollectionMarketplace!]
+  percentUniqueOwners: TimestampedAmount
+  percentListed: TimestampedAmount
 }
 
 type NftCollectionMarketplace {
@@ -609,7 +615,8 @@ type Query {
   portfolios(ownerAddresses: [String!]!): [Portfolio]
   nftCollectionsById(collectionIds: [String]): [NftCollection]
   topTokens(chain: Chain, page: Int, pageSize: Int, orderBy: TokenSortableField): [Token]
-  nftAssets(chain: Chain, address: String!, orderBy: NftAssetSortableField, asc: Boolean, filter: NftAssetsFilterInput, first: Int, last: Int, after: String, before: String): NftAssetConnection
+  topCollections(chains: [Chain!], orderBy: CollectionSortableField, duration: HistoryDuration, cursor: String, limit: Int): NftCollectionConnection
+  nftAssets(chain: Chain, address: String!, orderBy: NftAssetSortableField, asc: Boolean, filter: NftAssetsFilterInput, first: Int, last: Int, after: String, before: String, cursor: String, limit: Int): NftAssetConnection
   nftCollections(chain: Chain, filter: NftCollectionsFilterInput, cursor: String, limit: Int): NftCollectionConnection
   nftBalances(chain: Chain, ownerAddress: String!, filter: NftBalancesFilterInput, first: Int, last: Int, after: String, before: String, cursor: String, limit: Int): NftBalanceConnection
   nftRoute(chain: Chain, senderAddress: String!, nftTrades: [NftTradeInput!]!, tokenTrades: [TokenTradeInput!]): NftRouteResponse
