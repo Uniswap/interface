@@ -2,7 +2,7 @@ import { ScrollBarStyles } from 'components/Common'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { ChevronsRight } from 'react-feather'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ClickableStyle } from 'theme'
@@ -61,17 +61,27 @@ const Scrim = ({ onClick, open }: { onClick: () => void; open: boolean }) => {
   return <ScrimBackground onClick={onClick} open={open} />
 }
 
+const WalletDropdownScrollWrapper = styled.div`
+  overflow: hidden;
+  &:hover {
+    overflow-y: auto;
+  }
+
+  ${ScrollBarStyles}
+
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+  padding: 14px 16px 16px;
+  border-radius: 12px;
+`
+
 const WalletDropdownWrapper = styled.div<{ open: boolean }>`
   position: fixed;
   top: ${DRAWER_MARGIN};
   right: ${({ open }) => (open ? DRAWER_MARGIN : '-' + DRAWER_WIDTH)};
   z-index: ${Z_INDEX.dropdown};
 
-  overflow-y: auto;
-  scrollbar-gutter: stable;
-  overscroll-behavior: contain;
-
-  ${ScrollBarStyles}
+  overflow: hidden;
 
   height: calc(100% - 2 * ${DRAWER_MARGIN});
 
@@ -99,7 +109,6 @@ const WalletDropdownWrapper = styled.div<{ open: boolean }>`
   font-size: 16px;
   background-color: ${({ theme }) => theme.backgroundSurface};
   border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
-  padding: 14px 16px 16px;
 
   box-shadow: ${({ theme }) => theme.deepShadow};
   transition: right ${({ theme }) => theme.transition.duration.medium},
@@ -114,7 +123,6 @@ const CloseDrawer = styled.div`
   ${ClickableStyle}
   cursor: pointer;
   height: calc(100% - 2 * ${DRAWER_MARGIN});
-  /* width: 50px; */
   position: fixed;
   right: calc(${DRAWER_MARGIN} + ${DRAWER_WIDTH} - ${DRAWER_OFFSET});
   top: ${DRAWER_MARGIN};
@@ -132,12 +140,18 @@ const CloseDrawer = styled.div`
     display: none;
   }
   @media screen and (min-width: 1440px) {
-    right: calc(${DRAWER_MARGIN} + ${DRAWER_WIDTH_XL} + ${DRAWER_OFFSET});
+    right: calc(${DRAWER_MARGIN} + ${DRAWER_WIDTH_XL} - ${DRAWER_OFFSET});
   }
 `
 
 function WalletDropdown() {
   const [walletDrawerOpen, toggleWalletDrawer] = useWalletDrawer()
+  const scrollRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!walletDrawerOpen) {
+      scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }, [walletDrawerOpen])
 
   // close on escape keypress
   useEffect(() => {
@@ -165,7 +179,9 @@ function WalletDropdown() {
       <Scrim onClick={toggleWalletDrawer} open={walletDrawerOpen} />
       {/* id used for child InfiniteScrolls to reference when it has reached the bottom of the component */}
       <WalletDropdownWrapper open={walletDrawerOpen} id="wallet-dropdown-wrapper">
-        <DefaultMenu />
+        <WalletDropdownScrollWrapper ref={scrollRef}>
+          <DefaultMenu />
+        </WalletDropdownScrollWrapper>
       </WalletDropdownWrapper>
     </>
   )
