@@ -19,7 +19,7 @@ import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/W
 import WarningModal, { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
-import { useUSDCPrice, useUSDCValue } from 'src/features/routing/useUSDCPrice'
+import { useUSDCPrice } from 'src/features/routing/useUSDCPrice'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
 import { useSwapAnalytics } from 'src/features/transactions/swap/analytics'
@@ -65,6 +65,7 @@ function _SwapForm({
     chainId,
     currencies,
     currencyAmounts,
+    currencyAmountsUSDValue,
     currencyBalances,
     exactCurrencyField,
     focusOnCurrencyField,
@@ -81,9 +82,6 @@ function _SwapForm({
     onCreateTxId,
     onShowTokenSelector,
   } = useSwapActionHandlers(dispatch)
-
-  const inputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
-  const outputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.OUTPUT])
 
   useShowSwapNetworkNotification(chainId)
 
@@ -228,7 +226,7 @@ function _SwapForm({
                 focus={focusOnCurrencyField === CurrencyField.INPUT}
                 isOnScreen={!showingSelectorScreen}
                 showSoftInputOnFocus={showNativeKeyboard}
-                usdValue={inputCurrencyUSDValue}
+                usdValue={currencyAmountsUSDValue[CurrencyField.INPUT]}
                 value={
                   exactCurrencyField === CurrencyField.INPUT ? exactValue : formattedDerivedValue
                 }
@@ -290,7 +288,7 @@ function _SwapForm({
                   isOnScreen={!showingSelectorScreen}
                   showNonZeroBalancesOnly={false}
                   showSoftInputOnFocus={showNativeKeyboard}
-                  usdValue={outputCurrencyUSDValue}
+                  usdValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
                   value={
                     exactCurrencyField === CurrencyField.OUTPUT ? exactValue : formattedDerivedValue
                   }

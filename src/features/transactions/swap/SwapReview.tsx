@@ -5,7 +5,6 @@ import { useAppTheme } from 'src/app/hooks'
 import InfoCircleSVG from 'src/assets/icons/info-circle.svg'
 import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
-import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import {
   DerivedSwapInfo,
@@ -66,6 +65,7 @@ export function SwapReview({
     wrapType,
     exactCurrencyField,
     txId,
+    currencyAmountsUSDValue,
   } = derivedSwapInfo
 
   const swapWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
@@ -88,10 +88,16 @@ export function SwapReview({
     txId
   )
 
-  const inputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
-  const outputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.OUTPUT])
-
-  const onSwap = useSwapCallback(approveTxRequest, txRequest, totalGasFee, trade, onNext, txId)
+  const onSwap = useSwapCallback(
+    approveTxRequest,
+    txRequest,
+    totalGasFee,
+    trade,
+    currencyAmountsUSDValue[CurrencyField.INPUT],
+    currencyAmountsUSDValue[CurrencyField.OUTPUT],
+    onNext,
+    txId
+  )
 
   const onPress = useCallback(() => {
     if (swapWarning && !showWarningModal && !warningAcknowledged) {
@@ -249,8 +255,8 @@ export function SwapReview({
         currencyOutInfo={currencyOutInfo}
         formattedAmountIn={amountIn}
         formattedAmountOut={amountOut}
-        inputCurrencyUSDValue={inputCurrencyUSDValue}
-        outputCurrencyUSDValue={outputCurrencyUSDValue}
+        inputCurrencyUSDValue={currencyAmountsUSDValue[CurrencyField.INPUT]}
+        outputCurrencyUSDValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
         transactionDetails={getTransactionDetails()}
         onPrev={onPrev}
       />

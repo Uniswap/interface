@@ -1,7 +1,7 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { WarningLabel } from 'src/components/modals/WarningModal/types'
 import { ChainId } from 'src/constants/chains'
-import { DAI } from 'src/constants/tokens'
+import { DAI, USDC } from 'src/constants/tokens'
 import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { getSwapWarnings } from 'src/features/transactions/swap/useSwapWarnings'
@@ -35,6 +35,10 @@ const swapState: DerivedSwapInfo = {
     [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(ETH, '10000'),
     [CurrencyField.OUTPUT]: undefined,
   },
+  currencyAmountsUSDValue: {
+    [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(USDC, '100000'),
+    [CurrencyField.OUTPUT]: undefined,
+  },
   currencyBalances: {
     [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(ETH, '20000'),
     [CurrencyField.OUTPUT]: undefined,
@@ -53,6 +57,10 @@ const insufficientBalanceState: DerivedSwapInfo = {
     [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(ETH, '10000'),
     [CurrencyField.OUTPUT]: CurrencyAmount.fromRawAmount(DAI, '200000'),
   },
+  currencyAmountsUSDValue: {
+    [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(USDC, '100000'),
+    [CurrencyField.OUTPUT]: CurrencyAmount.fromRawAmount(USDC, '200000'),
+  },
   currencyBalances: {
     [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(ETH, '1000'),
     [CurrencyField.OUTPUT]: CurrencyAmount.fromRawAmount(DAI, '0'),
@@ -69,6 +77,10 @@ const tradeErrorState: DerivedSwapInfo = {
   ...emptySwapInfo,
   currencyAmounts: {
     [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(DAI, '1000'),
+    [CurrencyField.OUTPUT]: null,
+  },
+  currencyAmountsUSDValue: {
+    [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(USDC, '1000'),
     [CurrencyField.OUTPUT]: null,
   },
   currencyBalances: {

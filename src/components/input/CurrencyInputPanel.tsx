@@ -39,7 +39,7 @@ type CurrentInputPanelProps = {
   dimTextColor?: boolean
   selection?: TextInputProps['selection']
   onSelectionChange?: (start: number, end: number) => void
-  usdValue: CurrencyAmount<Currency> | null
+  usdValue: NullUndefined<CurrencyAmount<Currency>>
 
   // sometimes CurrencyInputPanel rendered off screen like with Send input -> selector flow
   isOnScreen?: boolean

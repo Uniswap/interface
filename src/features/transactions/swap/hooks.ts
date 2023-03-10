@@ -29,7 +29,11 @@ import { GasSpeed } from 'src/features/gas/types'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { useSimulatedGasLimit } from 'src/features/routing/hooks'
-import { STABLECOIN_AMOUNT_OUT, useUSDCPrice } from 'src/features/routing/useUSDCPrice'
+import {
+  STABLECOIN_AMOUNT_OUT,
+  useUSDCPrice,
+  useUSDCValue,
+} from 'src/features/routing/useUSDCPrice'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import { PERMITTABLE_TOKENS } from 'src/features/transactions/permit/permittableTokens'
@@ -76,6 +80,10 @@ export type DerivedSwapInfo<
     [CurrencyField.OUTPUT]: NullUndefined<TOutput>
   }
   currencyAmounts: BaseDerivedInfo<TInput>['currencyAmounts'] & {
+    [CurrencyField.OUTPUT]: NullUndefined<CurrencyAmount<Currency>>
+  }
+  currencyAmountsUSDValue: {
+    [CurrencyField.INPUT]: NullUndefined<CurrencyAmount<Currency>>
     [CurrencyField.OUTPUT]: NullUndefined<CurrencyAmount<Currency>>
   }
   currencyBalances: BaseDerivedInfo<TInput>['currencyBalances'] & {
@@ -181,6 +189,16 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     ]
   )
 
+  const inputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
+  const outputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.OUTPUT])
+
+  const currencyAmountsUSDValue = useMemo(() => {
+    return {
+      [CurrencyField.INPUT]: inputCurrencyUSDValue,
+      [CurrencyField.OUTPUT]: outputCurrencyUSDValue,
+    }
+  }, [inputCurrencyUSDValue, outputCurrencyUSDValue])
+
   const currencyBalances = useMemo(() => {
     return {
       [CurrencyField.INPUT]: tokenInBalance,
@@ -193,6 +211,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       chainId,
       currencies,
       currencyAmounts,
+      currencyAmountsUSDValue,
       currencyBalances,
       exactAmountToken,
       exactAmountUSD,
@@ -209,6 +228,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     currencies,
     currencyAmounts,
     currencyBalances,
+    currencyAmountsUSDValue,
     exactAmountToken,
     exactAmountUSD,
     exactCurrencyField,
@@ -789,6 +809,8 @@ export function useSwapCallback(
   swapTxRequest: providers.TransactionRequest | undefined,
   totalGasFee: string | undefined,
   trade: Trade | null | undefined,
+  currencyInAmountUSD: NullUndefined<CurrencyAmount<Currency>>,
+  currencyOutAmountUSD: NullUndefined<CurrencyAmount<Currency>>,
   onSubmit: () => void,
   txId?: string
 ): () => void {
@@ -808,6 +830,8 @@ export function useSwapCallback(
           txId,
           account,
           trade,
+          currencyInAmountUSD,
+          currencyOutAmountUSD,
           approveTxRequest,
           swapTxRequest,
         })
@@ -818,11 +842,28 @@ export function useSwapCallback(
         ...getBaseTradeAnalyticsProperties(trade),
         estimated_network_fee_wei: totalGasFee,
         gas_limit: toStringish(swapTxRequest.gasLimit),
+        token_in_amount_usd: currencyInAmountUSD
+          ? parseFloat(currencyInAmountUSD.toFixed(2))
+          : undefined,
+        token_out_amount_usd: currencyOutAmountUSD
+          ? parseFloat(currencyOutAmountUSD.toFixed(2))
+          : undefined,
         transaction_deadline_seconds: trade.deadline,
         swap_quote_block_number: trade.quote?.blockNumber,
       })
     }
-  }, [account, swapTxRequest, trade, totalGasFee, appDispatch, txId, approveTxRequest, onSubmit])
+  }, [
+    account,
+    swapTxRequest,
+    trade,
+    totalGasFee,
+    currencyInAmountUSD,
+    currencyOutAmountUSD,
+    appDispatch,
+    txId,
+    approveTxRequest,
+    onSubmit,
+  ])
 }
 
 export function useWrapCallback(
