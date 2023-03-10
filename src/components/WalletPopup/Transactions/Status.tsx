@@ -45,12 +45,10 @@ function StatusIcon({
     Date.now() - addedTime < MAX_TIME_CHECK_STATUS
 
   const isPendingTooLong = isShowPendingWarning(transaction)
-  const [isPendingState, setIsPendingState] = useState<boolean | null>(null)
+  const [isPendingState, setIsPendingState] = useState<boolean | null>(needCheckActuallyPending ? null : pendingRpc)
 
   const dispatch = useDispatch<AppDispatch>()
   const { cancellingOrdersIds, cancellingOrdersNonces, loading } = cancellingOrderInfo
-
-  const pending = isPendingState
 
   const interval = useRef<NodeJS.Timeout>()
 
@@ -105,7 +103,7 @@ function StatusIcon({
   }, [needCheckActuallyPending, pendingRpc, checkStatusDebounced, type])
 
   const theme = useTheme()
-  const checkingStatus = pending === null
+  const checkingStatus = isPendingState === null
 
   const pendingText = isPendingTooLong ? t`Pending` : t`Processing`
   const pendingIcon = isPendingTooLong ? (
@@ -116,11 +114,11 @@ function StatusIcon({
   return (
     <Flex style={{ gap: '4px', minWidth: 'unset' }} alignItems={'center'}>
       <PrimaryText color={theme.text}>
-        {checkingStatus ? t`Checking` : pending ? pendingText : success ? t`Completed` : t`Failed`}
+        {checkingStatus ? t`Checking` : isPendingState ? pendingText : success ? t`Completed` : t`Failed`}
       </PrimaryText>
       {checkingStatus ? (
         <Loader size={'12px'} />
-      ) : pending ? (
+      ) : isPendingState ? (
         pendingIcon
       ) : success ? (
         <CheckCircle size="12px" color={theme.primary} />

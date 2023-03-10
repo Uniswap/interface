@@ -279,6 +279,7 @@ export default function NotificationModal() {
       })
       const verificationUrl = resp?.verificationUrl
       updateTopicGroupsLocal(subscribeIds, unsubscribeIds)
+      refreshTopics()
       if (isTelegramTab && verificationUrl) {
         window.open(`https://${verificationUrl}`)
         return
