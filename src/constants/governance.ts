@@ -1,3 +1,5 @@
+import { SupportedChainId } from 'constants/chains'
+
 import {
   GOVERNANCE_ALPHA_V0_ADDRESSES,
   GOVERNANCE_ALPHA_V1_ADDRESSES,
@@ -5,7 +7,6 @@ import {
   TIMELOCK_ADDRESS,
   UNI_ADDRESS,
 } from './addresses'
-import { SupportedChainId } from './chains'
 
 export const COMMON_CONTRACT_NAMES: Record<number, { [address: string]: string }> = {
   [SupportedChainId.MAINNET]: {

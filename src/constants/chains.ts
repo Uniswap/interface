@@ -1,5 +1,10 @@
-/**
- * List of all the networks supported by the Uniswap Interface
+/*
+ * SupportedChainId must be defined inline, without using @uniswap/sdk-core, so that its members are their own types
+ * {@see https://www.typescriptlang.org/docs/handbook/enums.html#union-enums-and-enum-member-types}. This allows the
+ * derived const arrays and their types (eg {@link L1_CHAIN_IDS}, {@link SupportedL1ChainId}) to be narrowed and used
+ * to enforce chain typing.
+ *
+ * Because this is not explicitly derived from @uniswap/sdk-core, there is a unit test to enforce conformance.
  */
 export enum SupportedChainId {
   FUJI = 43113,

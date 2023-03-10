@@ -428,7 +428,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       const modifiedQuery = applyFiltersFromURL(location, collectionStats)
 
       requestAnimationFrame(() => {
-        useCollectionFilters.setState(modifiedQuery as any)
+        if (modifiedQuery) {
+          useCollectionFilters.setState(modifiedQuery as any)
+        }
       })
 
       useCollectionFilters.subscribe((state) => {

@@ -12,13 +12,11 @@ import { SupportedChainId } from 'constants/chains'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import ms from 'ms.macro'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Copy, CreditCard, ExternalLink as ExternalLinkIcon, Info, Power } from 'react-feather'
 import { useCurrencyBalanceString } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
-import { useFiatOnrampAck } from 'state/user/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import styled, { css, keyframes } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
@@ -45,7 +43,7 @@ const BuyCryptoButtonBorderKeyframes = keyframes`
   }
 `
 
-const BuyCryptoButton = styled(ThemeButton)<{ $animateBorder: boolean }>`
+const BuyCryptoButton = styled(ThemeButton)`
   border-color: transparent;
   border-radius: 12px;
   border-style: solid;
@@ -57,7 +55,6 @@ const BuyCryptoButton = styled(ThemeButton)<{ $animateBorder: boolean }>`
   animation-fill-mode: none;
   animation-iteration-count: 2;
   animation-name: ${BuyCryptoButtonBorderKeyframes};
-  animation-play-state: ${({ $animateBorder }) => ($animateBorder ? 'running' : 'paused')};
   animation-timing-function: ${({ theme }) => theme.transition.timing.inOut};
 `
 const WalletButton = styled(ThemeButton)`
@@ -209,23 +206,6 @@ const AuthenticatedHeader = () => {
 
   // animate the border of the buy crypto button when a user navigates here from the feature announcement
   // can be removed when components/FiatOnrampAnnouncment.tsx is no longer used
-  const [acknowledgements, acknowledge] = useFiatOnrampAck()
-  const animateBuyCryptoButtonBorder = acknowledgements?.user && !acknowledgements.system
-  useEffect(() => {
-    let stale = false
-    let timeoutId = 0
-    if (animateBuyCryptoButtonBorder) {
-      timeoutId = setTimeout(() => {
-        if (stale) return
-        acknowledge({ system: true })
-      }, ms`2 seconds`) as unknown as number
-      // as unknown as number is necessary so it's not incorrectly typed as a NodeJS.Timeout
-    }
-    return () => {
-      stale = true
-      clearTimeout(timeoutId)
-    }
-  }, [acknowledge, animateBuyCryptoButtonBorder])
 
   const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const openFoRModalWithAnalytics = useCallback(() => {
@@ -300,7 +280,6 @@ const AuthenticatedHeader = () => {
           <Trans>View and sell NFTs</Trans>
         </ProfileButton>
         <BuyCryptoButton
-          $animateBorder={animateBuyCryptoButtonBorder}
           size={ButtonSize.medium}
           emphasis={ButtonEmphasis.medium}
           onClick={handleBuyCryptoClick}

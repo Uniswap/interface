@@ -18,26 +18,9 @@ export const subheadSmall = sprinkles({ fontWeight: 'medium', fontSize: '14', li
 export const body = sprinkles({ fontWeight: 'normal', fontSize: '16', lineHeight: '24' })
 export const bodySmall = sprinkles({ fontWeight: 'normal', fontSize: '14', lineHeight: '20' })
 export const caption = sprinkles({ fontWeight: 'normal', fontSize: '12', lineHeight: '16' })
-export const badge = sprinkles({ fontWeight: 'semibold', fontSize: '10', lineHeight: '12' })
 
 export const buttonTextMedium = sprinkles({ fontWeight: 'semibold', fontSize: '16', lineHeight: '20' })
 export const buttonTextSmall = sprinkles({ fontWeight: 'semibold', fontSize: '14', lineHeight: '16' })
-
-export const commonButtonStyles = style([
-  sprinkles({
-    borderRadius: '12',
-    transition: '250',
-  }),
-  {
-    border: 'none',
-    ':hover': {
-      cursor: 'pointer',
-    },
-    ':disabled': {
-      cursor: 'auto',
-    },
-  },
-])
 
 const magicalGradient = style({
   selectors: {

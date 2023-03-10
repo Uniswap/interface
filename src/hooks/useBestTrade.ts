@@ -1,4 +1,6 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
+import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useMemo } from 'react'
 import { RouterPreference } from 'state/routing/slice'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
@@ -24,6 +26,7 @@ export function useBestTrade(
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
 } {
+  const { chainId } = useWeb3React()
   const autoRouterSupported = useAutoRouterSupported()
   const isWindowVisible = useIsWindowVisible()
 
@@ -32,16 +35,27 @@ export function useBestTrade(
     200
   )
 
+  const isAWrapTransaction = useMemo(() => {
+    if (!chainId || !amountSpecified || !debouncedOtherCurrency) return false
+    const weth = WRAPPED_NATIVE_CURRENCY[chainId]
+    return (
+      (amountSpecified.currency.isNative && weth?.equals(debouncedOtherCurrency)) ||
+      (debouncedOtherCurrency.isNative && weth?.equals(amountSpecified.currency))
+    )
+  }, [amountSpecified, chainId, debouncedOtherCurrency])
+
+  const shouldGetTrade = !isAWrapTransaction && isWindowVisible
+
   const [clientSideRouter] = useClientSideRouter()
   const routingAPITrade = useRoutingAPITrade(
     tradeType,
-    autoRouterSupported && isWindowVisible ? debouncedAmount : undefined,
+    autoRouterSupported && shouldGetTrade ? debouncedAmount : undefined,
     debouncedOtherCurrency,
     clientSideRouter ? RouterPreference.CLIENT : RouterPreference.API
   )
 
   const isLoading = routingAPITrade.state === TradeState.LOADING
-  const useFallback = !autoRouterSupported || routingAPITrade.state === TradeState.NO_ROUTE_FOUND
+  const useFallback = (!autoRouterSupported || routingAPITrade.state === TradeState.NO_ROUTE_FOUND) && shouldGetTrade
 
   // only use client side router if routing api trade failed or is not supported
   const bestV3Trade = useClientSideV3Trade(

@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import Web3Status from 'components/Web3Status'
-import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
@@ -82,7 +81,6 @@ export const PageTabs = () => {
 const Navbar = () => {
   const isNftPage = useIsNftPage()
   const sellPageState = useProfilePageState((state) => state.state)
-  const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
   const navigate = useNavigate()
 
   return (
@@ -116,7 +114,7 @@ const Navbar = () => {
 
           <Box className={styles.rightSideContainer}>
             <Row gap="12">
-              {isNftPage && (!isNftListV2 || sellPageState !== ProfilePageStateType.LISTING) && <Bag />}
+              {isNftPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}
               {!isNftPage && (
                 <Box display={{ sm: 'none', lg: 'flex' }}>
                   <ChainSelector />

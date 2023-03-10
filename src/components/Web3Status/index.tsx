@@ -1,8 +1,7 @@
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { FiatOnrampAnnouncement } from 'components/FiatOnrampAnnouncement'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import WalletDropdown from 'components/WalletDropdown'
 import { getConnection } from 'connection/utils'
@@ -242,6 +241,7 @@ function Web3StatusInner() {
     const chevronProps = {
       ...CHEVRON_PROPS,
       color: theme.textSecondary,
+      'aria-label': walletIsOpen ? t`Close wallet connection options` : t`Open wallet connection options`,
     }
 
     return (
@@ -251,7 +251,7 @@ function Web3StatusInner() {
         pending={hasPendingTransactions}
         isClaimAvailable={isClaimAvailable}
       >
-        {!hasPendingTransactions && <StatusIcon size={24} connectionType={connectionType} />}
+        {!hasPendingTransactions && <StatusIcon enableInfotips={true} size={24} connectionType={connectionType} />}
         {hasPendingTransactions ? (
           <RowBetween>
             <Text>
@@ -272,6 +272,7 @@ function Web3StatusInner() {
       ...CHEVRON_PROPS,
       color: theme.accentAction,
       'data-testid': 'navbar-wallet-dropdown',
+      'aria-label': walletIsOpen ? t`Close wallet connection options` : t`Open wallet connection options`,
     }
     return (
       <TraceEvent
@@ -316,7 +317,6 @@ export default function Web3Status() {
   return (
     <span ref={ref}>
       <Web3StatusInner />
-      <FiatOnrampAnnouncement />
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
       <Portal>
         <span ref={walletRef}>

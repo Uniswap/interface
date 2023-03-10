@@ -18,20 +18,15 @@ import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
-import { getDeltaArrow } from '../Tokens/TokenDetails/PriceChart'
+import { DeltaText, getDeltaArrow } from '../Tokens/TokenDetails/PriceChart'
 import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
 
 const PriceChangeContainer = styled.div`
   display: flex;
   align-items: center;
-`
-
-const PriceChangeText = styled.span<{ isNegative: boolean }>`
-  font-size: 14px;
-  line-height: 20px;
-  color: ${({ theme, isNegative }) => (isNegative ? theme.accentFailure : theme.accentSuccess)};
 `
 
 const ArrowCell = styled.span`
@@ -191,18 +186,20 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
       </Row>
 
       <Column className={styles.suggestionSecondaryContainer}>
-        {token.market?.price?.value && (
-          <Row gap="4">
-            <Box className={styles.primaryText}>{formatUSDPrice(token.market.price.value)}</Box>
-          </Row>
-        )}
-        {token.market?.pricePercentChange?.value && (
-          <PriceChangeContainer>
-            <ArrowCell>{arrow}</ArrowCell>
-            <PriceChangeText isNegative={token.market.pricePercentChange.value < 0}>
-              {Math.abs(token.market.pricePercentChange.value).toFixed(2)}%
-            </PriceChangeText>
-          </PriceChangeContainer>
+        {!!token.market?.price?.value && (
+          <>
+            <Row gap="4">
+              <Box className={styles.primaryText}>{formatUSDPrice(token.market.price.value)}</Box>
+            </Row>
+            <PriceChangeContainer>
+              <ArrowCell>{arrow}</ArrowCell>
+              <ThemedText.BodySmall>
+                <DeltaText delta={token.market?.pricePercentChange?.value}>
+                  {Math.abs(token.market?.pricePercentChange?.value ?? 0).toFixed(2)}%
+                </DeltaText>
+              </ThemedText.BodySmall>
+            </PriceChangeContainer>
+          </>
         )}
       </Column>
     </Link>

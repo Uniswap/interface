@@ -1,11 +1,4 @@
-import {
-  getDeviceId,
-  initializeAnalytics,
-  OriginApplication,
-  sendAnalyticsEvent,
-  Trace,
-  user,
-} from '@uniswap/analytics'
+import { getDeviceId, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
 import { CustomUserProperties, getBrowser, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import Loader from 'components/Loader'
@@ -13,6 +6,7 @@ import { MenuDropdown } from 'components/NavBar/MenuDropdown'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
+import { STATSIG_DUMMY_KEY } from 'integrations'
 import { Box } from 'nft/components/Box'
 import { Suspense, useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
@@ -21,7 +15,7 @@ import { StatsigProvider, StatsigUser } from 'statsig-react'
 import styled from 'styled-components/macro'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { getEnvName, isProductionEnv } from 'utils/env'
+import { getEnvName } from 'utils/env'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
@@ -43,17 +37,6 @@ import { PositionPage } from './Pool/PositionPage'
 import Pools from './Pools'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
-
-// Placeholder API key. Actual API key used in the proxy server
-const ANALYTICS_DUMMY_KEY = '00000000000000000000000000000000'
-const ANALYTICS_PROXY_URL = process.env.REACT_APP_AMPLITUDE_PROXY_URL
-const COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
-initializeAnalytics(ANALYTICS_DUMMY_KEY, OriginApplication.INTERFACE, {
-  proxyUrl: ANALYTICS_PROXY_URL,
-  defaultEventName: SharedEventName.PAGE_VIEWED,
-  commitHash: COMMIT_HASH,
-  isProductionEnv: isProductionEnv(),
-})
 
 const BodyWrapper = styled.div`
   display: flex;
@@ -183,10 +166,11 @@ export default function App() {
         <StatsigProvider
           user={statsigUser}
           // TODO: replace with proxy and cycle key
-          sdkKey={process.env.REACT_APP_STATSIG_API_KEY ?? ''}
+          sdkKey={STATSIG_DUMMY_KEY}
           waitForInitialization={false}
           options={{
             environment: { tier: getEnvName() },
+            api: process.env.REACT_APP_STATSIG_PROXY_URL,
           }}
         >
           <HeaderWrapper transparent={isHeaderTransparent}>

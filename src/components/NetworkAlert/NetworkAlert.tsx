@@ -24,7 +24,6 @@ const BodyText = styled.div`
   font-size: 14px;
 `
 const RootWrapper = styled.div`
-  position: relative;
   margin-top: 16px;
 `
 
@@ -71,7 +70,6 @@ const ContentWrapper = styled.div<{ chainId: NetworkAlertChains; darkMode: boole
     position: absolute;
     transform: rotate(25deg) translate(-90px, -40px);
     width: 300px;
-    z-index: -1;
   }
 `
 const Header = styled.h2`
@@ -116,7 +114,10 @@ export function NetworkAlert() {
     return null
   }
 
-  const { label, logoUrl, bridge } = getChainInfo(chainId)
+  const chainInfo = getChainInfo(chainId)
+  if (!chainInfo) return null
+
+  const { label, logoUrl, bridge } = chainInfo
   const textColor = TEXT_COLORS[chainId]
 
   return bridge ? (

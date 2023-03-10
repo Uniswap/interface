@@ -1,18 +1,16 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { GqlRoutingVariant, useGqlRoutingFlag } from 'featureFlags/flags/gqlRouting'
-import { NftListV2Variant, useNftListV2Flag } from 'featureFlags/flags/nftListV2'
 import { useNftRouteLazyQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { BagFooter } from 'nft/components/bag/BagFooter'
-import ListingModal from 'nft/components/bag/profile/ListingModal'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Column } from 'nft/components/Flex'
 import { Overlay } from 'nft/components/modals/Overlay'
-import { buttonTextMedium, commonButtonStyles } from 'nft/css/common.css'
 import {
   useBag,
   useIsMobile,
@@ -66,7 +64,7 @@ const BagContainer = styled.div<{ raiseZIndex: boolean; isProfilePage: boolean }
   border-radius: 16px;
   box-shadow: ${({ theme }) => theme.shallowShadow};
   z-index: ${({ raiseZIndex, isProfilePage }) =>
-    raiseZIndex ? (isProfilePage ? Z_INDEX.modalOverTooltip : Z_INDEX.modalBackdrop + 2) : 3};
+    raiseZIndex ? (isProfilePage ? Z_INDEX.modalOverTooltip : Z_INDEX.modalBackdrop - 1) : 3};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     right: 0px;
@@ -88,6 +86,24 @@ const DetailsPageBackground = styled.div`
   top: 0px;
   width: 100%;
   height: 100%;
+`
+
+const ContinueButton = styled.div`
+  background: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.accentTextLightPrimary};
+  margin: 32px 28px 16px;
+  padding: 10px 0px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  cursor: pointer;
+  transition: ${({ theme }) => theme.transition.duration.medium};
+
+  :hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
 `
 
 const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
@@ -114,10 +130,7 @@ const Bag = () => {
     shallow
   )
 
-  const { profilePageState, setProfilePageState } = useProfilePageState(
-    ({ setProfilePageState, state }) => ({ profilePageState: state, setProfilePageState }),
-    shallow
-  )
+  const { setProfilePageState } = useProfilePageState(({ setProfilePageState }) => ({ setProfilePageState }))
 
   const {
     bagStatus,
@@ -139,7 +152,6 @@ const Bag = () => {
   const isDetailsPage = useIsNftDetailsPage()
   const isNFTPage = useIsNftPage()
   const isMobile = useIsMobile()
-  const isNftListV2 = useNftListV2Flag() === NftListV2Variant.Enabled
   const usingGqlRouting = useGqlRoutingFlag() === GqlRoutingVariant.Enabled
 
   const sendTransaction = useSendTransaction((state) => state.sendTransaction)
@@ -398,48 +410,34 @@ const Bag = () => {
   return (
     <Portal>
       <BagContainer data-testid="nft-bag" raiseZIndex={isMobile || isModalOpen} isProfilePage={isProfilePage}>
-        {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (
-          <>
-            <BagHeader
-              numberOfAssets={isProfilePage ? sellAssets.length : itemsInBag.length}
-              closeBag={handleCloseBag}
-              resetFlow={isProfilePage ? resetSellAssets : reset}
-              isProfilePage={isProfilePage}
-            />
-            {shouldRenderEmptyState && <EmptyState />}
-            <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
-            <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
-              {isProfilePage ? <ProfileBagContent /> : <BagContent />}
-            </Column>
-            {hasAssetsToShow && !isProfilePage && (
-              <BagFooter totalEthPrice={totalEthPrice} fetchAssets={fetchAssets} eventProperties={eventProperties} />
-            )}
-            {isSellingAssets && isProfilePage && (
-              <Box
-                marginTop="32"
-                marginX="28"
-                marginBottom="16"
-                paddingY="10"
-                className={`${buttonTextMedium} ${commonButtonStyles}`}
-                backgroundColor="accentAction"
-                color="white"
-                textAlign="center"
-                onClick={() => {
-                  ;(isMobile || isNftListV2) && toggleBag()
-                  setProfilePageState(ProfilePageStateType.LISTING)
-                  sendAnalyticsEvent(NFTEventName.NFT_PROFILE_PAGE_START_SELL, {
-                    list_quantity: sellAssets.length,
-                    collection_addresses: sellAssets.map((asset) => asset.asset_contract.address),
-                    token_ids: sellAssets.map((asset) => asset.tokenId),
-                  })
-                }}
-              >
-                Continue
-              </Box>
-            )}
-          </>
-        ) : (
-          <ListingModal />
+        <BagHeader
+          numberOfAssets={isProfilePage ? sellAssets.length : itemsInBag.length}
+          closeBag={handleCloseBag}
+          resetFlow={isProfilePage ? resetSellAssets : reset}
+          isProfilePage={isProfilePage}
+        />
+        {shouldRenderEmptyState && <EmptyState />}
+        <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
+        <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
+          {isProfilePage ? <ProfileBagContent /> : <BagContent />}
+        </Column>
+        {hasAssetsToShow && !isProfilePage && (
+          <BagFooter totalEthPrice={totalEthPrice} fetchAssets={fetchAssets} eventProperties={eventProperties} />
+        )}
+        {isSellingAssets && isProfilePage && (
+          <ContinueButton
+            onClick={() => {
+              toggleBag()
+              setProfilePageState(ProfilePageStateType.LISTING)
+              sendAnalyticsEvent(NFTEventName.NFT_PROFILE_PAGE_START_SELL, {
+                list_quantity: sellAssets.length,
+                collection_addresses: sellAssets.map((asset) => asset.asset_contract.address),
+                token_ids: sellAssets.map((asset) => asset.tokenId),
+              })
+            }}
+          >
+            <Trans>Continue</Trans>
+          </ContinueButton>
         )}
       </BagContainer>
 

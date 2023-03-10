@@ -21,9 +21,9 @@ export function computeRoutes(
 
   const parsedTokenIn = parseToken(quoteResult.route[0][0].tokenIn)
   const parsedTokenOut = parseToken(quoteResult.route[0][quoteResult.route[0].length - 1].tokenOut)
-
   if (parsedTokenIn.address !== currencyIn.wrapped.address) return undefined
   if (parsedTokenOut.address !== currencyOut.wrapped.address) return undefined
+  if (parsedTokenIn.wrapped.equals(parsedTokenOut.wrapped)) return undefined
 
   try {
     return quoteResult.route.map((route) => {
