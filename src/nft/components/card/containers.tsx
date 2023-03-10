@@ -52,24 +52,44 @@ const StyledTertiaryInfo = styled(ThemedText.BodySmall)`
   pointer-events: none;
 `
 
+const StyledDetailsRelativeContainer = styled.div`
+  position: relative;
+  height: 84px;
+`
+
+const StyledDetailsContainer = styled(Column)`
+  position: absolute;
+  width: 100%;
+  padding: 16px 8px 0px;
+  justify-content: space-between;
+  gap: 8px;
+  height: 84px;
+  background: ${({ theme }) => theme.backgroundSurface};
+  will-change: transform;
+  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} transform`};
+`
+
 const StyledActionButton = styled(ThemedText.BodySmall)<{
   selected: boolean
   isDisabled: boolean
 }>`
   position: absolute;
   display: flex;
-  width: 100%;
   padding: 8px 0px;
+  bottom: -32px;
+  left: 8px;
+  right: 8px;
   color: ${({ theme, isDisabled }) => (isDisabled ? theme.textPrimary : theme.accentTextLightPrimary)};
   background: ${({ theme, selected, isDisabled }) =>
     selected ? theme.accentCritical : isDisabled ? theme.backgroundInteractive : theme.accentAction};
-  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
-  will-change: opacity;
+  transition: ${({ theme }) =>
+    `${theme.transition.duration.medium} ${theme.transition.timing.ease} bottom, ${theme.transition.duration.medium} ${theme.transition.timing.ease} visibility`};
+  will-change: transform;
   border-radius: 8px;
   justify-content: center;
   font-weight: 600 !important;
   line-height: 16px;
-  opacity: 0;
+  visibility: hidden;
   cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
@@ -125,7 +145,6 @@ const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean 
   border-radius: ${BORDER_RADIUS}px;
   background-color: ${({ theme }) => theme.backgroundSurface};
   overflow: hidden;
-  padding-bottom: 8px;
   box-shadow: ${({ theme }) => theme.shallowShadow};
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -156,11 +175,17 @@ const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean 
 
   :hover {
     ${StyledActionButton} {
-      opacity: 1;
+      visibility: visible;
+      bottom: 8px;
     }
 
     ${StyledTertiaryInfo} {
       opacity: 0;
+    }
+
+    ${StyledDetailsContainer} {
+      height: 112px;
+      transform: translateY(-28px);
     }
   }
 `
@@ -538,12 +563,9 @@ const Audio = ({
   )
 }
 
-const StyledDetailsContainer = styled(Column)`
-  position: relative;
-  padding: 16px 8px 0px;
-  justify-content: space-between;
-  gap: 8px;
-`
+const DetailsRelativeContainer = ({ children }: { children: ReactNode }) => {
+  return <StyledDetailsRelativeContainer>{children}</StyledDetailsRelativeContainer>
+}
 
 const DetailsContainer = ({ children }: { children: ReactNode }) => {
   return <StyledDetailsContainer>{children}</StyledDetailsContainer>
@@ -771,6 +793,7 @@ export {
   Audio,
   Container,
   DetailsContainer,
+  DetailsRelativeContainer,
   Image,
   ImageContainer,
   InfoContainer,

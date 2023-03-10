@@ -191,28 +191,27 @@ export const NftCard = ({
           setRenderedHeight
         )}
       </Card.ImageContainer>
-      <Card.DetailsContainer>
-        <Card.InfoContainer>
-          <Card.PrimaryRow>
-            <Card.PrimaryDetails>
-              <Card.PrimaryInfo>{display.primaryInfo}</Card.PrimaryInfo>
-              {display.primaryInfoExtra}
-            </Card.PrimaryDetails>
-            {display.primaryInfoRight}
-          </Card.PrimaryRow>
-          <Card.SecondaryRow>
-            <Card.SecondaryDetails>
-              <Card.SecondaryInfo>{display.secondaryInfo}</Card.SecondaryInfo>
-            </Card.SecondaryDetails>
-          </Card.SecondaryRow>
-        </Card.InfoContainer>
-        <Card.TertiaryInfoContainer>
-          <Card.ActionButton clickActionButton={clickActionButton} isDisabled={isDisabled} isSelected={isSelected}>
-            {isSelected ? display.selectedInfo : isDisabled ? display.disabledInfo : display.notSelectedInfo}
-          </Card.ActionButton>
-          <Card.TertiaryInfo>{display.tertiaryInfo}</Card.TertiaryInfo>
-        </Card.TertiaryInfoContainer>
-      </Card.DetailsContainer>
+      <Card.DetailsRelativeContainer>
+        <Card.DetailsContainer>
+          <Card.InfoContainer>
+            <Card.PrimaryRow>
+              <Card.PrimaryDetails>
+                <Card.PrimaryInfo>{display.primaryInfo}</Card.PrimaryInfo>
+                {display.primaryInfoExtra}
+              </Card.PrimaryDetails>
+              {display.primaryInfoRight}
+            </Card.PrimaryRow>
+            <Card.SecondaryRow>
+              <Card.SecondaryDetails>
+                <Card.SecondaryInfo>{display.secondaryInfo}</Card.SecondaryInfo>
+              </Card.SecondaryDetails>
+            </Card.SecondaryRow>
+          </Card.InfoContainer>
+        </Card.DetailsContainer>
+      </Card.DetailsRelativeContainer>
+      <Card.ActionButton clickActionButton={clickActionButton} isDisabled={isDisabled} isSelected={isSelected}>
+        {isSelected ? display.selectedInfo : isDisabled ? display.disabledInfo : display.notSelectedInfo}
+      </Card.ActionButton>
     </Card.Container>
   )
 }
