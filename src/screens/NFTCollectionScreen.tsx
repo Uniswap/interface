@@ -22,7 +22,7 @@ import {
   NftCollectionScreenQuery,
   useNftCollectionScreenQuery,
 } from 'src/data/__generated__/types-and-hooks'
-import { ListPriceCard } from 'src/features/nfts/collection/ListPriceCard'
+import { ListPriceBadge } from 'src/features/nfts/collection/ListPriceCard'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
 import {
   NFTCollectionHeader,
@@ -170,11 +170,13 @@ export function NFTCollectionScreen({
               uri={item.imageUrl}
             />
             {item.listPrice && (
-              <ListPriceCard
+              <ListPriceBadge
                 bottom={theme.spacing.spacing4}
+                iconColor="white"
                 position="absolute"
                 price={item.listPrice}
                 right={theme.spacing.spacing4}
+                textColor="white"
               />
             )}
           </TouchableArea>

@@ -121,6 +121,18 @@ query NFTItemScreen(
           rarity
           value
         }
+        listings(first: 1) {
+          edges {
+            node {
+              id
+              price {
+                id
+                currency
+                value
+              }
+            }
+          }
+        }
       }
     }
   }

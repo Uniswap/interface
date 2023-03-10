@@ -9,7 +9,6 @@ import { useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import EllipsisIcon from 'src/assets/icons/ellipsis.svg'
 import ShareIcon from 'src/assets/icons/share.svg'
-import EthereumLogo from 'src/assets/logos/ethereum.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { NFTViewer } from 'src/components/images/NFTViewer'
@@ -22,12 +21,12 @@ import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import { PollingInterval } from 'src/constants/misc'
 import {
-  Currency,
   NftActivityType,
   NftItemScreenQuery,
   useNftItemScreenQuery,
 } from 'src/data/__generated__/types-and-hooks'
 import { selectModalState } from 'src/features/modals/modalSlice'
+import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
 import { useNFTMenu } from 'src/features/nfts/hooks'
 import { BlurredImageBackground } from 'src/features/nfts/item/BlurredImageBackground'
 import { CollectionPreviewCard } from 'src/features/nfts/item/CollectionPreviewCard'
@@ -45,7 +44,6 @@ import {
   passesContrast,
   useNearestThemeColorFromImageUri,
 } from 'src/utils/colors'
-import { formatNumber, NumberType } from 'src/utils/format'
 
 export function NFTItemScreen({
   route: {
@@ -76,6 +74,7 @@ export function NFTItemScreen({
   const asset = data?.nftAssets?.edges[0]?.node
 
   const lastSaleData = data?.nftActivity?.edges[0]?.node
+  const listingPrice = asset?.listings?.edges?.[0]?.node?.price
 
   const onPressCollection = (): void => {
     if (asset && asset.collection?.collectionId && asset.nftContract?.address) {
@@ -156,9 +155,14 @@ export function NFTItemScreen({
               }
               renderedInModal={inModal}
               rightElement={
-                menuActions.length > 0 ? (
-                  onlyShare ? (
-                    <Box mr="spacing4">
+                <Box
+                  alignItems="center"
+                  height={darkTheme.iconSizes.icon40}
+                  justifyContent="center"
+                  mr="spacing4"
+                  width={darkTheme.iconSizes.icon40}>
+                  {menuActions.length > 0 ? (
+                    onlyShare ? (
                       <TouchableOpacity onPress={menuActions[0]?.onPress}>
                         <ShareIcon
                           color={darkTheme.colors.textPrimary}
@@ -166,22 +170,20 @@ export function NFTItemScreen({
                           width={iconSizes.icon24}
                         />
                       </TouchableOpacity>
-                    </Box>
-                  ) : (
-                    <ContextMenu
-                      dropdownMenuMode
-                      actions={menuActions}
-                      onPress={onContextMenuPress}>
-                      <Box mr="spacing4">
+                    ) : (
+                      <ContextMenu
+                        dropdownMenuMode
+                        actions={menuActions}
+                        onPress={onContextMenuPress}>
                         <EllipsisIcon
                           color={darkTheme.colors.textPrimary}
                           height={iconSizes.icon16}
                           width={iconSizes.icon16}
                         />
-                      </Box>
-                    </ContextMenu>
-                  )
-                ) : undefined
+                      </ContextMenu>
+                    )
+                  ) : undefined}
+                </Box>
               }>
               {/* Content wrapper */}
               <Flex
@@ -264,34 +266,33 @@ export function NFTItemScreen({
 
                 {/* Metadata */}
                 <Flex gap="spacing12">
+                  {listingPrice?.value ? (
+                    <AssetMetadata
+                      title={t('Current price')}
+                      valueComponent={
+                        <PriceAmount
+                          iconColor="white"
+                          price={listingPrice}
+                          textColor="white"
+                          textVariant="buttonLabelSmall"
+                        />
+                      }
+                    />
+                  ) : null}
                   {lastSaleData?.price?.value ? (
                     <AssetMetadata
                       title={t('Last sale price')}
                       valueComponent={
-                        lastSaleData.price.currency === Currency.Eth ? (
-                          <Flex row alignItems="center" gap="spacing2">
-                            <Text
-                              color="textOnBrightPrimary"
-                              variant="buttonLabelSmall">{`${formatNumber(
-                              lastSaleData.price.value,
-                              NumberType.NFTTokenFloorPrice
-                            )}`}</Text>
-                            <EthereumLogo color={darkTheme.colors.textPrimary} />
-                          </Flex>
-                        ) : (
-                          <Flex row alignItems="center" gap="spacing2">
-                            <Text variant="buttonLabelSmall">
-                              $
-                              {`${formatNumber(
-                                lastSaleData.price.value,
-                                NumberType.NFTTokenFloorPrice
-                              )} `}
-                            </Text>
-                          </Flex>
-                        )
+                        <PriceAmount
+                          iconColor="white"
+                          price={lastSaleData.price}
+                          textColor="white"
+                          textVariant="buttonLabelSmall"
+                        />
                       }
                     />
                   ) : null}
+
                   <AssetMetadata
                     title={t('Owned by')}
                     valueComponent={

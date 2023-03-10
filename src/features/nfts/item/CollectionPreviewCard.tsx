@@ -8,9 +8,9 @@ import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box, Flex } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
-import { NftItemScreenQuery } from 'src/data/__generated__/types-and-hooks'
+import { Currency, NftItemScreenQuery } from 'src/data/__generated__/types-and-hooks'
+import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
 import { iconSizes, imageSizes } from 'src/styles/sizing'
-import { formatNumber, NumberType } from 'src/utils/format'
 
 export type Collection = NonNullable<
   NonNullable<NonNullable<NftItemScreenQuery['nftAssets']>>['edges'][0]
@@ -76,14 +76,21 @@ export function CollectionPreviewCard({
               )}
             </Flex>
             {collection?.markets?.[0]?.floorPrice?.value && (
-              <Text color="textOnBrightTertiary" numberOfLines={1} variant="subheadSmall">
-                {t('Floor: {{floorPrice}} ETH', {
-                  floorPrice: formatNumber(
-                    collection.markets?.[0].floorPrice?.value,
-                    NumberType.NFTTokenFloorPrice
-                  ),
-                })}
-              </Text>
+              <Flex row gap="spacing4">
+                <Text color="textOnBrightTertiary" numberOfLines={1} variant="subheadSmall">
+                  {t('Floor')}
+                </Text>
+                <PriceAmount
+                  iconColor="textOnBrightTertiary"
+                  price={{
+                    id: collection?.markets?.[0].floorPrice.id,
+                    value: collection.markets[0].floorPrice.value,
+                    currency: Currency.Eth,
+                  }}
+                  textColor="textOnBrightTertiary"
+                  textVariant="subheadSmall"
+                />
+              </Flex>
             )}
           </Flex>
         </Flex>
