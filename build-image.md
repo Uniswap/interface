@@ -1,6 +1,6 @@
 ## Development
 
-### change nodejs version
+### Change nodejs version
 
 `nvm use`
 
@@ -17,19 +17,19 @@ yarn postinstall
 yarn start
 ```
 
-### build
+### Build
 
 `yarn build`
 
-### build docker image
+### Build docker image
 
 ```shell
 docker build -t uniswap-interface:local .
 ```
 
-### test
+### Test by container
 
-start the uniswap interface container:
+Start the uniswap interface container:
 
 ```shell
 docker run -d -p 80:80 uniswap-interface:local
