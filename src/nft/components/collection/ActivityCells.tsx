@@ -1,6 +1,6 @@
+import { ChainId } from '@orbitalapes/smart-order-router'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
-import { ChainId } from '@uniswap/smart-order-router'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
