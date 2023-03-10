@@ -35,7 +35,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useQueryClient } from 'react-query'
 import styled from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
-import shallow from 'zustand/shallow'
+import { shallow } from 'zustand/shallow'
 
 import * as styles from './Bag.css'
 import { BagContent } from './BagContent'

@@ -36,7 +36,7 @@ import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
-import shallow from 'zustand/shallow'
+import { shallow } from 'zustand/shallow'
 
 const FooterContainer = styled.div`
   padding: 0px 12px;
