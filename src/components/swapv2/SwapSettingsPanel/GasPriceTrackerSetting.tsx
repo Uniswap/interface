@@ -4,6 +4,7 @@ import { isMobile } from 'react-device-detect'
 import { ChevronRight } from 'react-feather'
 import styled from 'styled-components'
 
+import SettingLabel from 'components/swapv2/SwapSettingsPanel/SettingLabel'
 import useGasPriceFromDeBank, { GasLevel } from 'hooks/useGasPriceFromDeBank'
 import useTheme from 'hooks/useTheme'
 
@@ -17,13 +18,6 @@ const Container = styled.div`
   align-items: center;
 
   cursor: pointer;
-`
-
-const SettingLabel = styled.span`
-  font-size: ${isMobile ? '14px' : '12px'};
-  color: ${({ theme }) => theme.text};
-  font-weight: 400;
-  line-height: 16px;
 `
 
 const Group = styled.div`

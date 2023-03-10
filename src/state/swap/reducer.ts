@@ -9,6 +9,7 @@ import {
   Field,
   chooseToSaveGas,
   encodedSolana,
+  pinSlippageControl,
   replaceSwapState,
   resetSelectCurrency,
   selectCurrency,
@@ -45,6 +46,7 @@ export interface SwapState {
   readonly txHash: string | undefined
 
   readonly isSelectTokenManually: boolean
+  readonly isSlippageControlPinned: boolean
 }
 
 const { search, pathname } = window.location
@@ -76,6 +78,7 @@ const initialState: SwapState = {
   txHash: undefined,
 
   isSelectTokenManually: false,
+  isSlippageControlPinned: true,
 }
 
 export default createReducer<SwapState>(initialState, builder =>
@@ -95,6 +98,7 @@ export default createReducer<SwapState>(initialState, builder =>
           typedValue: typedValue || state.typedValue || '1',
           recipient,
           feeConfig,
+          isSlippageControlPinned: state.isSlippageControlPinned ?? initialState.isSlippageControlPinned,
         }
       },
     )
@@ -165,5 +169,8 @@ export default createReducer<SwapState>(initialState, builder =>
     .addCase(setTrade, (state, { payload: { trade } }) => {
       state.trade = trade
       state.encodeSolana = undefined
+    })
+    .addCase(pinSlippageControl, (state, { payload }) => {
+      state.isSlippageControlPinned = payload
     }),
 )

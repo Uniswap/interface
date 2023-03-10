@@ -9,6 +9,7 @@ type SwapFormContextProps = {
   typedValue: string
   isSaveGas: boolean
   recipient: string | null
+  isStablePairSwap: boolean
 }
 
 const SwapFormContext = createContext<SwapFormContextProps>({
@@ -18,6 +19,7 @@ const SwapFormContext = createContext<SwapFormContextProps>({
   typedValue: '',
   isSaveGas: false,
   recipient: null,
+  isStablePairSwap: false,
 })
 
 const SwapFormContextProvider: React.FC<

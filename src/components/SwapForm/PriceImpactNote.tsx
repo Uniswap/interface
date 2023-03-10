@@ -1,5 +1,4 @@
 import { Trans, t } from '@lingui/macro'
-import { CSSProperties } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 
@@ -22,9 +21,8 @@ type Props = {
   isAdvancedMode?: boolean
   priceImpact: number | undefined
   hasTooltip: boolean
-  style?: CSSProperties
 }
-const PriceImpactNote: React.FC<Props> = ({ isAdvancedMode, priceImpact, hasTooltip, style }) => {
+const PriceImpactNote: React.FC<Props> = ({ isAdvancedMode, priceImpact, hasTooltip }) => {
   const theme = useTheme()
   const priceImpactResult = checkPriceImpact(priceImpact)
 
@@ -35,7 +33,7 @@ const PriceImpactNote: React.FC<Props> = ({ isAdvancedMode, priceImpact, hasTool
   // invalid
   if (priceImpactResult.isInvalid) {
     return (
-      <Wrapper style={style}>
+      <Wrapper>
         <AlertTriangle color={theme.warning} size={16} style={{ marginRight: '10px' }} />
         <Trans>Unable to calculate Price Impact</Trans>
         <InfoHelper text={t`Turn on Advanced Mode to trade`} color={theme.text} />
@@ -45,7 +43,7 @@ const PriceImpactNote: React.FC<Props> = ({ isAdvancedMode, priceImpact, hasTool
 
   if (priceImpactResult.isHigh) {
     return (
-      <Wrapper style={style} veryHigh={priceImpactResult.isVeryHigh}>
+      <Wrapper veryHigh={priceImpactResult.isVeryHigh}>
         <AlertTriangle size={16} style={{ marginRight: '10px' }} />
         {priceImpactResult.isVeryHigh ? <Trans>Price Impact is Very High</Trans> : <Trans>Price Impact is High</Trans>}
 

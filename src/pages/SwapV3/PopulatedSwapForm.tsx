@@ -34,7 +34,7 @@ const PopulatedSwapForm: React.FC<Props> = ({ routeSummary, setRouteSummary, goT
   const { feeConfig } = useSwapState()
   const { onUserInput, onCurrencySelection, onResetSelectCurrency } = useSwapActionHandlers()
 
-  useUpdateSlippageInStableCoinSwap(currencyIn, currencyOut)
+  useUpdateSlippageInStableCoinSwap()
 
   const onSelectSuggestedPair = useCallback(
     (fromToken: Currency | undefined, toToken: Currency | undefined, amount?: string) => {

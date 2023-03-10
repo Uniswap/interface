@@ -1,6 +1,7 @@
 import { Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import { useEffect, useState } from 'react'
+import { Flex } from 'rebass'
 import styled from 'styled-components'
 
 import { ButtonConfirmed, ButtonLight, ButtonPrimary } from 'components/Button'
@@ -174,7 +175,12 @@ const SwapActionButton: React.FC<Props> = ({
 
     if (showApproveFlow) {
       return (
-        <>
+        <Flex
+          sx={{
+            flexDirection: 'column',
+            gap: '0.75rem',
+          }}
+        >
           <RowBetween>
             <ButtonConfirmed
               onClick={approveCallback}
@@ -199,10 +205,10 @@ const SwapActionButton: React.FC<Props> = ({
 
             <SwapOnlyButton minimal {...swapOnlyButtonProps} />
           </RowBetween>
-          <Column style={{ marginTop: '1rem' }}>
+          <Column>
             <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />
           </Column>
-        </>
+        </Flex>
       )
     }
 

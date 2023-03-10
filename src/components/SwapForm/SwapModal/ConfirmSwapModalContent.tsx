@@ -1,13 +1,15 @@
 import { Price } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import React from 'react'
-import { Text } from 'rebass'
+import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import { ButtonPrimary } from 'components/Button'
 import { GreyCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { AutoRow, RowBetween } from 'components/Row'
+import PriceImpactNote from 'components/SwapForm/PriceImpactNote'
+import SlippageNote from 'components/SwapForm/SlippageNote'
 import { useSwapFormContext } from 'components/SwapForm/SwapFormContext'
 import { BuildRouteResult } from 'components/SwapForm/hooks/useBuildRoute'
 import { Dots } from 'components/swapv2/styleds'
@@ -124,6 +126,16 @@ const ConfirmSwapModalContent: React.FC<Props> = ({
       </AutoColumn>
 
       <SwapDetails {...getSwapDetailsProps()} />
+
+      <Flex
+        sx={{
+          flexDirection: 'column',
+          gap: '0.75rem',
+        }}
+      >
+        <SlippageNote />
+        <PriceImpactNote priceImpact={routeSummary?.priceImpact} hasTooltip={false} />
+      </Flex>
 
       <AutoRow>
         {isSolana && !encodeSolana ? (

@@ -1,29 +1,34 @@
-import { Currency } from '@kyberswap/ks-sdk-core'
 import { useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
 
+import { DEFAULT_SLIPPAGE_STABLE_PAIR_SWAP } from 'constants/index'
 import { STABLE_COINS_ADDRESS } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
+import { AppState } from 'state'
+import { Field } from 'state/swap/actions'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 
-const useUpdateSlippageInStableCoinSwap = (currencyIn?: Currency, currencyOut?: Currency) => {
+const useUpdateSlippageInStableCoinSwap = () => {
   const { chainId } = useActiveWeb3React()
+  const inputCurrencyId = useSelector((state: AppState) => state.swap[Field.INPUT].currencyId)
+  const outputCurrencyId = useSelector((state: AppState) => state.swap[Field.OUTPUT].currencyId)
   const [slippage, setSlippage] = useUserSlippageTolerance()
-  const isStableCoinSwap =
-    chainId &&
-    currencyIn &&
-    currencyOut &&
-    STABLE_COINS_ADDRESS[chainId].includes(currencyIn.wrapped.address) &&
-    STABLE_COINS_ADDRESS[chainId].includes(currencyOut.wrapped.address)
+
   const rawSlippageRef = useRef(slippage)
   rawSlippageRef.current = slippage
+
   useEffect(() => {
-    if (isStableCoinSwap && rawSlippageRef.current > 10) {
-      setSlippage(10)
+    const isStableCoinSwap =
+      chainId &&
+      inputCurrencyId &&
+      outputCurrencyId &&
+      STABLE_COINS_ADDRESS[chainId].includes(inputCurrencyId) &&
+      STABLE_COINS_ADDRESS[chainId].includes(outputCurrencyId)
+
+    if (isStableCoinSwap && rawSlippageRef.current > DEFAULT_SLIPPAGE_STABLE_PAIR_SWAP) {
+      setSlippage(DEFAULT_SLIPPAGE_STABLE_PAIR_SWAP)
     }
-    if (!isStableCoinSwap && rawSlippageRef.current === 10) {
-      setSlippage(50)
-    }
-  }, [isStableCoinSwap, setSlippage])
+  }, [chainId, inputCurrencyId, outputCurrencyId, setSlippage])
 }
 
 export default useUpdateSlippageInStableCoinSwap

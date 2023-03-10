@@ -177,7 +177,7 @@ const CloseIcon = styled.div`
   position: absolute;
   right: 20px;
   top: 17px;
-  color: ${({ theme }) => theme.text4};
+  color: ${({ theme }) => theme.subText};
   &:hover {
     cursor: pointer;
     opacity: 0.6;

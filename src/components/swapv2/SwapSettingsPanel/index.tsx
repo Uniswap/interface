@@ -1,9 +1,8 @@
 import { Trans, t } from '@lingui/macro'
 import { rgba } from 'polished'
 import React from 'react'
-import { isMobile } from 'react-device-detect'
 import { ArrowLeft } from 'react-feather'
-import { Box, Flex } from 'rebass'
+import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import { AutoColumn } from 'components/Column'
@@ -28,6 +27,7 @@ import {
 import AdvancedModeSetting from './AdvancedModeSetting'
 import GasPriceTrackerSetting from './GasPriceTrackerSetting'
 import LiquiditySourcesSetting from './LiquiditySourcesSetting'
+import SettingLabel from './SettingLabel'
 import SlippageSetting from './SlippageSetting'
 import TransactionTimeLimitSetting from './TransactionTimeLimitSetting'
 
@@ -120,11 +120,8 @@ const SettingsPanel: React.FC<Props> = ({
 
               <SlippageSetting />
               <TransactionTimeLimitSetting />
-
               <AdvancedModeSetting />
-
               <GasPriceTrackerSetting onClick={onClickGasPriceTracker} />
-
               <LiquiditySourcesSetting onClick={onClickLiquiditySources} />
             </>
           )}
@@ -136,14 +133,22 @@ const SettingsPanel: React.FC<Props> = ({
               borderTop: `1px solid ${theme.border}`,
             }}
           >
-            <span className="settingTitle">
+            <Text
+              as="span"
+              sx={{
+                fontSize: '16px',
+                fontWeight: 500,
+              }}
+            >
               <Trans>Display Settings</Trans>
-            </span>
+            </Text>
             <AutoColumn gap="md">
               {shouldShowTrendingSoonSetting && (
                 <RowBetween>
                   <RowFixed>
-                    <span className="settingLabel">Trending Soon</span>
+                    <SettingLabel>
+                      <Trans>Trending Soon</Trans>
+                    </SettingLabel>
                     <QuestionHelper text={t`Turn on to display tokens that could be trending soon`} />
                   </RowFixed>
                   <Toggle isActive={isShowTrendingSoonTokens} toggle={toggleTopTrendingTokens} />
@@ -151,7 +156,9 @@ const SettingsPanel: React.FC<Props> = ({
               )}
               <RowBetween>
                 <RowFixed>
-                  <span className="settingLabel">Live Chart</span>
+                  <SettingLabel>
+                    <Trans>Live Chart</Trans>
+                  </SettingLabel>
                   <QuestionHelper text={t`Turn on to display live chart`} />
                 </RowFixed>
                 <Toggle isActive={isShowLiveChart} toggle={handleToggleLiveChart} />
@@ -160,18 +167,18 @@ const SettingsPanel: React.FC<Props> = ({
                 <>
                   <RowBetween>
                     <RowFixed>
-                      <span className="settingLabel">
+                      <SettingLabel>
                         <Trans>Trade Route</Trans>
-                      </span>
+                      </SettingLabel>
                       <QuestionHelper text={t`Turn on to display trade route`} />
                     </RowFixed>
                     <Toggle isActive={isShowTradeRoutes} toggle={handleToggleTradeRoute} />
                   </RowBetween>
                   <RowBetween>
                     <RowFixed>
-                      <span className="settingLabel">
+                      <SettingLabel>
                         <Trans>Token Info</Trans>
-                      </span>
+                      </SettingLabel>
                       <QuestionHelper text={t`Turn on to display token info`} />
                     </RowFixed>
                     <Toggle isActive={isShowTokenInfo} toggle={toggleTokenInfo} />
@@ -187,18 +194,6 @@ const SettingsPanel: React.FC<Props> = ({
 }
 
 export default styled(SettingsPanel)`
-  .settingTitle {
-    font-size: 16px;
-    font-weight: 500;
-  }
-
-  .settingLabel {
-    font-size: ${isMobile ? '14px' : '12px'};
-    color: ${({ theme }) => theme.text};
-    font-weight: 400;
-    line-height: 20px;
-  }
-
   ${Toggle} {
     background: ${({ theme }) => theme.buttonBlack};
     &[data-active='true'] {

@@ -1,10 +1,10 @@
 import { Trans, t } from '@lingui/macro'
 import React, { useEffect, useRef, useState } from 'react'
-import { isMobile } from 'react-device-detect'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import QuestionHelper from 'components/QuestionHelper'
+import SettingLabel from 'components/swapv2/SwapSettingsPanel/SettingLabel'
 import useTheme from 'hooks/useTheme'
 import { useUserTransactionTTL } from 'state/user/hooks'
 
@@ -65,18 +65,9 @@ const TransactionTimeLimitSetting: React.FC<Props> = ({ className }) => {
   return (
     <Flex justifyContent={'space-between'} alignItems="center" className={className}>
       <Flex alignItems="center">
-        <Text
-          className="label"
-          sx={{
-            fontSize: isMobile ? '14px' : '12px',
-            color: theme.text,
-            fontWeight: 400,
-            lineHeight: '16px',
-            whiteSpace: 'nowrap',
-          }}
-        >
+        <SettingLabel>
           <Trans>Transaction time limit</Trans>
-        </Text>
+        </SettingLabel>
         <QuestionHelper text={t`Transaction will revert if it is pending for longer than the indicated time`} />
       </Flex>
 

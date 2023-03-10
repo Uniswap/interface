@@ -12,6 +12,7 @@ import InfoHelper from 'components/InfoHelper'
 import Loader from 'components/Loader'
 import { RowBetween, RowFixed } from 'components/Row'
 import { useSwapFormContext } from 'components/SwapForm/SwapFormContext'
+import SlippageValue from 'components/SwapForm/SwapModal/SwapDetails/SlippageValue'
 import ValueWithLoadingSkeleton from 'components/SwapForm/SwapModal/SwapDetails/ValueWithLoadingSkeleton'
 import { StyledBalanceMaxMini } from 'components/swapv2/styleds'
 import { useActiveWeb3React } from 'hooks'
@@ -261,7 +262,7 @@ const SwapDetails: React.FC<Props> = ({
             </TYPE.black>
           </RowFixed>
 
-          <TYPE.black fontSize={14}>{slippage / 100}%</TYPE.black>
+          <SlippageValue />
         </RowBetween>
 
         {feeConfig && (
