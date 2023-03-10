@@ -8,10 +8,9 @@ import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useCallback, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import {
   useRangeHopCallbacks,
@@ -77,6 +76,25 @@ import {
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
+function useSyncPriceRangeToQueryParams() {
+  const { onLeftRangeInput, onRightRangeInput } = useV3MintActionHandlers(undefined)
+  const { search } = useLocation()
+  useEffect(() => {
+    const minPrice = new URLSearchParams(search).get('minPrice')
+    if (minPrice && typeof minPrice === 'string' && !isNaN(minPrice as any)) {
+      onLeftRangeInput(minPrice)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search])
+  useEffect(() => {
+    const maxPrice = new URLSearchParams(search).get('maxPrice')
+    if (maxPrice && typeof maxPrice === 'string' && !isNaN(maxPrice as any)) {
+      onRightRangeInput(maxPrice)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search])
+}
+
 export default function AddLiquidity() {
   const navigate = useNavigate()
   const {
@@ -92,7 +110,6 @@ export default function AddLiquidity() {
   const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
-  const parsedQs = useParsedQueryString()
 
   // check for existing position if tokenId in url
   const { position: existingPositionDetails, loading: positionLoading } = useV3PositionFromTokenId(
@@ -153,25 +170,7 @@ export default function AddLiquidity() {
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
 
-  useEffect(() => {
-    if (
-      parsedQs.minPrice &&
-      typeof parsedQs.minPrice === 'string' &&
-      parsedQs.minPrice !== leftRangeTypedValue &&
-      !isNaN(parsedQs.minPrice as any)
-    ) {
-      onLeftRangeInput(parsedQs.minPrice)
-    }
-
-    if (
-      parsedQs.maxPrice &&
-      typeof parsedQs.maxPrice === 'string' &&
-      parsedQs.maxPrice !== rightRangeTypedValue &&
-      !isNaN(parsedQs.maxPrice as any)
-    ) {
-      onRightRangeInput(parsedQs.maxPrice)
-    }
-  }, [parsedQs, rightRangeTypedValue, leftRangeTypedValue, onRightRangeInput, onLeftRangeInput])
+  useSyncPriceRangeToQueryParams()
 
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
