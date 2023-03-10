@@ -11,11 +11,7 @@ import { AppNotification, AppNotificationType } from 'src/features/notifications
 import { sendTransaction, SendTransactionParams } from 'src/features/transactions/sendTransaction'
 import { TransactionType } from 'src/features/transactions/types'
 import { Account } from 'src/features/wallet/accounts/types'
-import {
-  signMessage,
-  signTransaction,
-  signTypedDataMessage,
-} from 'src/features/wallet/signing/signing'
+import { signMessage, signTypedDataMessage } from 'src/features/wallet/signing/signing'
 import {
   deregisterWcPushNotifications,
   registerWcPushNotifications,
@@ -294,7 +290,7 @@ type SignTransactionParams = {
   requestInternalId: string
   transaction: providers.TransactionRequest
   account: Account
-  method: EthMethod.EthSignTransaction | EthMethod.EthSendTransaction
+  method: EthMethod.EthSendTransaction
   dapp: DappInfo
   chainId: ChainId
   version: '1' | '2'
@@ -318,8 +314,6 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
       signature = yield* call(signMessage, params.message, account, signerManager)
     } else if (method === EthMethod.SignTypedData || method === EthMethod.SignTypedDataV4) {
       signature = yield* call(signTypedDataMessage, params.message, account, signerManager)
-    } else if (method === EthMethod.EthSignTransaction) {
-      signature = yield* call(signTransaction, params.transaction, account, signerManager)
     } else if (method === EthMethod.EthSendTransaction) {
       const txParams: SendTransactionParams = {
         chainId: params.transaction.chainId || ChainId.Mainnet,

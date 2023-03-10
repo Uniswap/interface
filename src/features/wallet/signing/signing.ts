@@ -1,6 +1,6 @@
 // If the message to be signed is a hex string, it must be converted to an array:
 
-import { providers, TypedDataDomain, TypedDataField, Wallet } from 'ethers'
+import { TypedDataDomain, TypedDataField, Wallet } from 'ethers'
 import { arrayify, isHexString } from 'ethers/lib/utils'
 import { Account } from 'src/features/wallet/accounts/types'
 import { NativeSigner } from 'src/features/wallet/signing/NativeSigner'
@@ -33,21 +33,6 @@ export async function signMessage(
     signature = await signer.signMessage(message)
   }
 
-  return ensureLeading0x(signature)
-}
-
-export async function signTransaction(
-  transaction: providers.TransactionRequest,
-  account: Account,
-  signerManager: SignerManager
-): Promise<string> {
-  const signer = await signerManager.getSignerForAccount(account)
-  if (!signer) {
-    logger.error('signers', 'signTransaction', `no signer found for ${account}`)
-    return ''
-  }
-
-  const signature = await signer.signTransaction(transaction)
   return ensureLeading0x(signature)
 }
 

@@ -33,7 +33,7 @@ class WalletConnectServerWrapper {
     self.supportedChainIds = supportedChainIds
     
     self.server.register(handler: WalletConnectSignRequestHandler(eventEmitter: eventEmitter, serverWrapper: self))
-    self.server.register(handler: WalletConnectSignTransactionHandler(eventEmitter: eventEmitter, serverWrapper: self))
+    self.server.register(handler: WalletConnectSendTransactionHandler(eventEmitter: eventEmitter, serverWrapper: self))
     self.server.register(handler: WalletConnectSwitchChainHandler(eventEmitter: eventEmitter, serverWrapper: self, supportedChainIds: supportedChainIds))
   }
   

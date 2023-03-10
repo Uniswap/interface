@@ -1,7 +1,6 @@
 // derived from this list https://docs.walletconnect.com/json-rpc-api-methods/ethereum#eth_signtypeddata
 export enum EthMethod {
   EthSign = 'eth_sign',
-  EthSignTransaction = 'eth_signTransaction',
   EthSendTransaction = 'eth_sendTransaction',
   SignTypedData = 'eth_signTypedData',
   SignTypedDataV4 = 'eth_signTypedData_v4',
@@ -44,7 +43,6 @@ export type EthSignMethod =
   | EthMethod.SignTypedData
   | EthMethod.EthSign
   | EthMethod.SignTypedDataV4
-export type EthTransactionMethod = EthMethod.EthSignTransaction | EthMethod.EthSendTransaction
 
 export interface DappInfoV1 {
   name: string
@@ -82,7 +80,7 @@ interface BaseRequestEvent {
 }
 
 export interface TransactionRequestEvent extends BaseRequestEvent {
-  type: EthTransactionMethod
+  type: EthMethod.EthSendTransaction
   transaction: {
     to: string | null
     from: string | null

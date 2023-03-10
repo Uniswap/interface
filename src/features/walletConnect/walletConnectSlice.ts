@@ -8,7 +8,6 @@ import {
   EthMethod,
   EthSignMethod,
   EthTransaction,
-  EthTransactionMethod,
 } from 'src/features/walletConnect/types'
 
 export type WalletConnectSessionV1 = {
@@ -47,7 +46,7 @@ export interface SignRequest extends BaseRequest {
 }
 
 export interface TransactionRequest extends BaseRequest {
-  type: EthTransactionMethod
+  type: EthMethod.EthSendTransaction
   transaction: EthTransaction
 }
 
@@ -62,8 +61,7 @@ export type WalletConnectRequest = SignRequest | TransactionRequest | SwitchChai
 
 export const isTransactionRequest = (
   request: WalletConnectRequest
-): request is TransactionRequest =>
-  request.type === EthMethod.EthSendTransaction || request.type === EthMethod.EthSignTransaction
+): request is TransactionRequest => request.type === EthMethod.EthSendTransaction
 
 export interface WalletConnectState {
   byAccount: {

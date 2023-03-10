@@ -48,7 +48,6 @@ export function HeaderText({
       case EthMethod.SignTypedData:
         return t('Signature request from')
       case EthMethod.EthSendTransaction:
-      case EthMethod.EthSignTransaction:
         return t('Transaction request from')
     }
 

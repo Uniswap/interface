@@ -140,7 +140,6 @@ function createWalletConnectV2Channel(): EventChannel<Action<unknown>> {
           )
           break
         }
-        case EthMethod.EthSignTransaction:
         case EthMethod.EthSendTransaction: {
           // TODO: handle eth transaction methods
           break

@@ -87,7 +87,6 @@ const VALID_REQUEST_TYPES = [
   EthMethod.SignTypedData,
   EthMethod.SignTypedDataV4,
   EthMethod.EthSign,
-  EthMethod.EthSignTransaction,
   EthMethod.EthSendTransaction,
 ]
 
@@ -191,10 +190,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
 
   const onConfirm = async (): Promise<void> => {
     if (!confirmEnabled || !signerAccount) return
-    if (
-      request.type === EthMethod.EthSignTransaction ||
-      request.type === EthMethod.EthSendTransaction
-    ) {
+    if (request.type === EthMethod.EthSendTransaction) {
       if (!gasFeeInfo) return // appeasing typescript
       dispatch(
         signWcRequestActions.trigger({
