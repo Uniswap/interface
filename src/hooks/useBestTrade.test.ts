@@ -15,6 +15,13 @@ import useIsWindowVisible from './useIsWindowVisible'
 const USDCAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '10000')
 const DAIAmount = CurrencyAmount.fromRawAmount(DAI, '10000')
 
+jest.mock('@web3-react/core', () => {
+  return {
+    useWeb3React: () => ({
+      chainId: 1,
+    }),
+  }
+})
 jest.mock('./useAutoRouterSupported')
 jest.mock('./useClientSideV3Trade')
 jest.mock('./useDebounce')
@@ -69,8 +76,7 @@ describe('#useBestV3Trade ExactIn', () => {
     const { result } = renderHook(() => useBestTrade(TradeType.EXACT_INPUT, USDCAmount, DAI))
 
     expect(mockUseRoutingAPITrade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, undefined, DAI, RouterPreference.CLIENT)
-    expect(mockUseClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_INPUT, USDCAmount, DAI)
-    expect(result.current).toEqual({ state: TradeState.VALID, trade: undefined })
+    expect(result.current).toEqual({ state: TradeState.NO_ROUTE_FOUND, trade: undefined })
   })
 
   describe('when routing api is in non-error state', () => {
@@ -155,8 +161,7 @@ describe('#useBestV3Trade ExactOut', () => {
       USDC_MAINNET,
       RouterPreference.CLIENT
     )
-    expect(mockUseClientSideV3Trade).toHaveBeenCalledWith(TradeType.EXACT_OUTPUT, DAIAmount, USDC_MAINNET)
-    expect(result.current).toEqual({ state: TradeState.VALID, trade: undefined })
+    expect(result.current).toEqual({ state: TradeState.NO_ROUTE_FOUND, trade: undefined })
   })
   describe('when routing api is in non-error state', () => {
     it('does not compute client side v3 trade if routing api is LOADING', () => {

@@ -17,7 +17,6 @@ import { AppState } from '../types'
 import {
   addSerializedPair,
   addSerializedToken,
-  updateFiatOnrampAcknowledgments,
   updateHideClosedPositions,
   updateUserClientSideRouter,
   updateUserDarkMode,
@@ -102,26 +101,6 @@ export function useExpertModeManager(): [boolean, () => void] {
   }, [expertMode, dispatch])
 
   return [expertMode, toggleSetExpertMode]
-}
-
-interface FiatOnrampAcknowledgements {
-  renderCount: number
-  system: boolean
-  user: boolean
-}
-export function useFiatOnrampAck(): [
-  FiatOnrampAcknowledgements,
-  (acknowledgements: Partial<FiatOnrampAcknowledgements>) => void
-] {
-  const dispatch = useAppDispatch()
-  const fiatOnrampAcknowledgments = useAppSelector((state) => state.user.fiatOnrampAcknowledgments)
-  const setAcknowledgements = useCallback(
-    (acks: Partial<FiatOnrampAcknowledgements>) => {
-      dispatch(updateFiatOnrampAcknowledgments(acks))
-    },
-    [dispatch]
-  )
-  return [fiatOnrampAcknowledgments, setAcknowledgements]
 }
 
 export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean) => void] {
