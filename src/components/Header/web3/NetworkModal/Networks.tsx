@@ -4,7 +4,7 @@ import { darken, rgba } from 'polished'
 import { stringify } from 'querystring'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Text } from 'rebass'
+import { Flex, Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
 import { ButtonEmpty } from 'components/Button'
@@ -200,7 +200,21 @@ const Networks = ({
             >
               <ListItem selected={selected}>
                 <img src={imgSrc} alt="Switch Network" style={{ height: '20px', width: '20px', marginRight: '8px' }} />
-                <Text color={theme.subText}>{name}</Text>
+                <Flex
+                  sx={{
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start',
+                  }}
+                >
+                  <Text color={theme.subText} as="span" textAlign="left">
+                    {name}
+                  </Text>
+                  {key === ChainId.ETHW && (
+                    <Text color={theme.warning} as="span" fontSize="10px" fontWeight={400} textAlign="left">
+                      <Trans>To be disabled</Trans>
+                    </Text>
+                  )}
+                </Flex>
                 {key === ChainId.SOLANA && (
                   <NewLabel>
                     <Trans>New</Trans>
