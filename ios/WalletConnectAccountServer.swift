@@ -256,7 +256,7 @@ extension WalletConnectServerWrapper: ServerDelegate {
         "name": session.dAppInfo.peerMeta.name,
         "url": session.dAppInfo.peerMeta.url.absoluteString,
         "icon": icons.isEmpty ? "" : icons[0].absoluteString,
-        "chain_id": session.walletInfo?.chainId ?? 1,
+        "chain_id": session.dAppInfo.chainId ?? 1,
       ]
     ])
   }
