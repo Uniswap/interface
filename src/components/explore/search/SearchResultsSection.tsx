@@ -64,7 +64,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
         chainId,
         address,
         name,
-        symbol,
+        symbol: symbol ?? '',
         safetyLevel: project.safetyLevel,
         logoUrl: project.logoUrl,
         volume1Y: market?.volume?.value ?? 0,
