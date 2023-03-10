@@ -31,7 +31,7 @@ export default function FiatPurchaseSummaryItem({
       : undefined
   )
 
-  const title = getTransactionTitle(transaction.status, t('Purchase'), t('Purchased'), t)
+  const title = getTransactionTitle(transaction.status, t('Purchase'), t)
 
   const fiatPurchaseAmount = formatFiatPrice(
     inputCurrencyAmount && inputCurrencyAmount > 0 ? inputCurrencyAmount : undefined,

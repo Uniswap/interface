@@ -43,7 +43,6 @@ interface SwapLogoOrLogoWithTxStatusProps {
   outputCurrencyInfo: NullUndefined<CurrencyInfo>
   txStatus: TransactionStatus
   size: number
-  showCancelIcon?: boolean
 }
 
 interface CurrencyStatusProps extends LogoWithTxStatusProps {
@@ -90,7 +89,7 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps): J
     if (txStatus === TransactionStatus.Failed) {
       return <AlertTriangle color={yellow} fill={fill} height={statusSize} width={statusSize} />
     }
-    if (txStatus === TransactionStatus.Cancelled) {
+    if (txStatus === TransactionStatus.Cancelled || txStatus === TransactionStatus.Cancelling) {
       return (
         <SlashCircleIcon
           color={theme.colors.textSecondary}
@@ -146,11 +145,11 @@ export function SwapLogoOrLogoWithTxStatus({
   inputCurrencyInfo,
   outputCurrencyInfo,
   txStatus,
-  showCancelIcon,
 }: SwapLogoOrLogoWithTxStatusProps): JSX.Element {
   if (
     txStatus === TransactionStatus.Failed ||
-    (showCancelIcon && txStatus === TransactionStatus.Cancelled)
+    txStatus === TransactionStatus.Cancelled ||
+    txStatus === TransactionStatus.Cancelling
   ) {
     return (
       <LogoWithTxStatus

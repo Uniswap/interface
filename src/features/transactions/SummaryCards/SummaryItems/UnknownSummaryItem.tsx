@@ -20,12 +20,7 @@ export default function UnknownSummaryItem({
   const { t } = useTranslation()
   const theme = useAppTheme()
 
-  const title = getTransactionTitle(
-    transaction.status,
-    t('Contract Interaction'),
-    undefined /*=pastText*/,
-    t
-  )
+  const title = getTransactionTitle(transaction.status, t('Contract Interaction'), t)
 
   const caption = useMemo(() => {
     return transaction.typeInfo.tokenAddress && getValidAddress(transaction.typeInfo.tokenAddress)

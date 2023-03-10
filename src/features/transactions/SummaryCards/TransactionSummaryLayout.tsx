@@ -14,7 +14,6 @@ import { ChainId } from 'src/constants/chains'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useLowestPendingNonce } from 'src/features/transactions/hooks'
 import { cancelTransaction } from 'src/features/transactions/slice'
-import AlertBanner from 'src/features/transactions/SummaryCards/AlertBanner'
 import { CancelConfirmationView } from 'src/features/transactions/SummaryCards/CancelConfirmationView'
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
 import {
@@ -53,12 +52,7 @@ function TransactionSummaryLayout({
 
   const { status, addedTime, hash, chainId } = transaction
 
-  const showAlertBanner =
-    status === TransactionStatus.Cancelled ||
-    status === TransactionStatus.Cancelling ||
-    status === TransactionStatus.FailedCancel
   const inProgress = status === TransactionStatus.Cancelling || status === TransactionStatus.Pending
-  const showBackground = showAlertBanner || inProgress
 
   // Monitor latest nonce to identify queued transactions.
   const lowestPendingNonce = useLowestPendingNonce()
@@ -101,25 +95,23 @@ function TransactionSummaryLayout({
   return (
     <>
       <TouchableArea overflow="hidden" onPress={onPress} {...rest} mb="spacing24">
-        {showAlertBanner && <AlertBanner status={status} />}
         <Flex
           grow
           row
           alignItems="flex-start"
-          bg={showBackground ? 'background2' : bg ?? 'background0'}
+          bg={inProgress ? 'background2' : bg ?? 'background0'}
           borderRadius="rounded16"
-          borderTopLeftRadius={showAlertBanner ? 'none' : 'rounded16'}
-          borderTopRightRadius={showAlertBanner ? 'none' : 'rounded16'}
           justifyContent="space-between"
-          px={showBackground ? 'spacing12' : 'none'}
-          py={showBackground ? 'spacing12' : 'none'}>
+          px={inProgress ? 'spacing12' : 'none'}
+          py={inProgress ? 'spacing12' : 'none'}>
           <Flex
-            grow
             row
+            shrink
             alignItems="center"
             gap="spacing12"
             height="100%"
-            justifyContent="flex-start">
+            justifyContent="flex-start"
+            pr="spacing8">
             {icon && (
               <Flex centered height={TXN_HISTORY_ICON_SIZE} width={TXN_HISTORY_ICON_SIZE}>
                 {icon}
@@ -142,15 +134,9 @@ function TransactionSummaryLayout({
           {inProgress ? (
             <Flex alignItems="flex-end" gap="spacing2">
               <SpinningLoader disabled={queued} size={LOADING_SPINNER_SIZE} />
-              {queued ? (
-                <Text color="textSecondary" variant="subheadSmall">
-                  {t('Queued')}
-                </Text>
-              ) : inProgress ? (
-                <Text color="textSecondary" variant="subheadSmall">
-                  {t('Pending')}
-                </Text>
-              ) : null}
+              <Text color="textSecondary" variant="subheadSmall">
+                {queued ? t('Queued') : t('Pending')}
+              </Text>
             </Flex>
           ) : (
             endAdornment

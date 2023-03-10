@@ -30,13 +30,11 @@ import {
 
 export type BaseTransactionSummaryProps = {
   transaction: TransactionDetails
-  showInlineWarning: boolean
   readonly: boolean
 } & BaseButtonProps
 
 export default function TransactionSummaryRouter({
   transaction,
-  showInlineWarning,
   ...rest
 }: BaseTransactionSummaryProps): JSX.Element {
   switch (transaction.typeInfo.type) {
@@ -45,7 +43,6 @@ export default function TransactionSummaryRouter({
         <ApproveSummaryItem
           transaction={transaction as TransactionDetails & { typeInfo: ApproveTransactionInfo }}
           {...rest}
-          showInlineWarning={showInlineWarning}
         />
       )
     case TransactionType.NFTApprove:
@@ -53,7 +50,6 @@ export default function TransactionSummaryRouter({
         <NFTApproveSummaryItem
           transaction={transaction as TransactionDetails & { typeInfo: NFTApproveTransactionInfo }}
           {...rest}
-          showInlineWarning={showInlineWarning}
         />
       )
     case TransactionType.Swap:
@@ -65,7 +61,6 @@ export default function TransactionSummaryRouter({
             }
           }
           {...rest}
-          showInlineWarning={showInlineWarning}
         />
       )
     case TransactionType.NFTTrade:
@@ -77,7 +72,6 @@ export default function TransactionSummaryRouter({
             }
           }
           {...rest}
-          showInlineWarning={showInlineWarning}
         />
       )
     case TransactionType.Send:
@@ -89,7 +83,6 @@ export default function TransactionSummaryRouter({
             }
           }
           {...rest}
-          showInlineWarning={showInlineWarning}
         />
       )
     case TransactionType.Receive:
@@ -101,7 +94,6 @@ export default function TransactionSummaryRouter({
             }
           }
           {...rest}
-          showInlineWarning={showInlineWarning}
         />
       )
     case TransactionType.NFTMint:
@@ -113,7 +105,6 @@ export default function TransactionSummaryRouter({
             }
           }
           {...rest}
-          showInlineWarning={showInlineWarning}
         />
       )
     case TransactionType.Wrap:
@@ -125,7 +116,6 @@ export default function TransactionSummaryRouter({
             }
           }
           {...rest}
-          showInlineWarning={showInlineWarning}
         />
       )
     case TransactionType.WCConfirm:
@@ -137,13 +127,11 @@ export default function TransactionSummaryRouter({
             }
           }
           {...rest}
-          showInlineWarning={showInlineWarning}
         />
       )
     case TransactionType.FiatPurchase:
       return (
         <FiatPurchaseSummaryItem
-          showInlineWarning={showInlineWarning}
           transaction={
             transaction as TransactionDetails & { typeInfo: FiatPurchaseTransactionInfo }
           }
@@ -161,7 +149,6 @@ export default function TransactionSummaryRouter({
         }
       }
       {...rest}
-      showInlineWarning={showInlineWarning}
     />
   )
 }

@@ -23,12 +23,8 @@ export default function NFTTradeSummaryItem({
   const purchaseCurrencyInfo = useCurrencyInfo(transaction.typeInfo.purchaseCurrencyId)
   const purchaseAmountRaw = transaction.typeInfo.purchaseCurrencyAmountRaw
 
-  const titleTextPresent =
-    transaction.typeInfo.tradeType === NFTTradeType.BUY ? t('Buy') : t('Sell')
-  const titleTextPast =
-    transaction.typeInfo.tradeType === NFTTradeType.BUY ? t('Bought') : t('Sold')
-
-  const title = getTransactionTitle(transaction.status, titleTextPresent, titleTextPast, t)
+  const titleText = transaction.typeInfo.tradeType === NFTTradeType.BUY ? t('Buy') : t('Sell')
+  const title = getTransactionTitle(transaction.status, titleText, t)
 
   return (
     <TransactionSummaryLayout

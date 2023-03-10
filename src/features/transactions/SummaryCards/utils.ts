@@ -1,26 +1,27 @@
 import { TFunction } from 'i18next'
 import { TransactionStatus } from 'src/features/transactions/types'
 
-export function getTransactionTitle(
-  status: TransactionStatus,
-  presentText: string, // present tense form of the title
-  pastText: string | undefined, // past tense form of the title
-  t: TFunction
-): string {
-  const prefixFail = status === TransactionStatus.Failed ? t('Failed') : ''
+export function getTransactionTitle(status: TransactionStatus, text: string, t: TFunction): string {
+  let prefix = ''
+  let suffix = ''
 
-  // For items with pending or alert banner UI (see AlertBanner.tsx), use present tense.
-  const isPresentTense =
-    status === TransactionStatus.Pending ||
-    status === TransactionStatus.Cancelling ||
-    status === TransactionStatus.Cancelled ||
-    !!prefixFail
+  switch (status) {
+    case TransactionStatus.Cancelling:
+      prefix = t('Canceling')
+      break
+    case TransactionStatus.Failed:
+      suffix = t('failed')
+      break
+    case TransactionStatus.Cancelled:
+      suffix = t('canceled')
+      break
+    default:
+      break
+  }
 
-  const baseText = isPresentTense || !pastText ? presentText : pastText
-
-  // Lowercase title if prefix
-  const title =
-    prefixFail + (prefixFail ? ' ' : '') + (prefixFail ? baseText.toLocaleLowerCase() : baseText)
+  const title = [prefix, prefix ? text.toLowerCase() : text, suffix]
+    .filter(Boolean) // remove prefix or suffix when undefined
+    .join(' ') // add space in between each
 
   return title
 }

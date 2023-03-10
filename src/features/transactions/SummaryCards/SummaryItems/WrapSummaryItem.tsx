@@ -11,11 +11,10 @@ import TransactionSummaryLayout, {
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
 import { getTransactionTitle } from 'src/features/transactions/SummaryCards/utils'
-import { TransactionStatus, WrapTransactionInfo } from 'src/features/transactions/types'
+import { WrapTransactionInfo } from 'src/features/transactions/types'
 
 export default function WrapSummaryItem({
   transaction,
-  showInlineWarning,
   readonly,
   ...rest
 }: BaseTransactionSummaryProps & { transaction: { typeInfo: WrapTransactionInfo } }): JSX.Element {
@@ -26,15 +25,8 @@ export default function WrapSummaryItem({
   const wrappedCurrencyInfo = useWrappedNativeCurrencyInfo(transaction.chainId)
   const outputCurrency = unwrapped ? nativeCurrencyInfo : wrappedCurrencyInfo
 
-  const showCancelIcon =
-    (transaction.status === TransactionStatus.Cancelled ||
-      transaction.status === TransactionStatus.Cancelling) &&
-    showInlineWarning
-
-  const titleTextPresent = unwrapped ? t('Unwrap') : t('Wrap')
-  const titleTextPast = unwrapped ? t('Unwrapped') : t('Wrapped')
-
-  const title = getTransactionTitle(transaction.status, titleTextPresent, titleTextPast, t)
+  const titleText = unwrapped ? t('Unwrap') : t('Wrap')
+  const title = getTransactionTitle(transaction.status, titleText, t)
 
   const caption = unwrapped
     ? `${wrappedCurrencyInfo?.currency.symbol} → ${nativeCurrencyInfo?.currency.symbol}`
@@ -68,7 +60,6 @@ export default function WrapSummaryItem({
         <SwapLogoOrLogoWithTxStatus
           inputCurrencyInfo={unwrapped ? wrappedCurrencyInfo : nativeCurrencyInfo}
           outputCurrencyInfo={unwrapped ? nativeCurrencyInfo : wrappedCurrencyInfo}
-          showCancelIcon={showCancelIcon}
           size={TXN_HISTORY_ICON_SIZE}
           txStatus={transaction.status}
         />

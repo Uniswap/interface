@@ -26,7 +26,7 @@ export default function ApproveSummaryItem({
     buildCurrencyId(transaction.chainId, transaction.typeInfo.tokenAddress)
   )
 
-  const title = getTransactionTitle(transaction.status, t('Approve'), t('Approved'), t)
+  const title = getTransactionTitle(transaction.status, t('Approve'), t)
 
   const { approvalAmount } = transaction.typeInfo
 

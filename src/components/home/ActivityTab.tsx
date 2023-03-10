@@ -77,15 +77,7 @@ const renderActivityItem = (
   if (isSectionHeader(item)) {
     return <SectionTitle title={item.title} />
   }
-  return (
-    <TransactionSummaryRouter
-      readonly={readonly}
-      // TODO: [MOB-3879] @ianlapham Implement finalized inline/card designs for special case txns (failure, pending failure, etc)
-      // When finalized, delete this prop if no longer using inline copy.
-      showInlineWarning={false}
-      transaction={item}
-    />
-  )
+  return <TransactionSummaryRouter readonly={readonly} transaction={item} />
 }
 
 export const ActivityTab = forwardRef<FlashList<unknown>, ActivityTabProps>(

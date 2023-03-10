@@ -23,7 +23,6 @@ import {
 
 export default function SwapSummaryItem({
   transaction,
-  showInlineWarning,
   readonly,
   ...rest
 }: BaseTransactionSummaryProps & {
@@ -35,10 +34,6 @@ export default function SwapSummaryItem({
 
   const inputCurrencyInfo = useCurrencyInfo(transaction.typeInfo.inputCurrencyId)
   const outputCurrencyInfo = useCurrencyInfo(transaction.typeInfo.outputCurrencyId)
-
-  const showCancelIcon =
-    (status === TransactionStatus.Cancelled || status === TransactionStatus.Cancelling) &&
-    showInlineWarning
 
   const [inputAmountRaw, outputAmountRaw] = useMemo(() => {
     if (transaction.typeInfo.tradeType === TradeType.EXACT_INPUT) {
@@ -68,7 +63,7 @@ export default function SwapSummaryItem({
     return inputCurrency.symbol + '→' + outputCurrency.symbol
   }, [inputAmountRaw, inputCurrencyInfo, outputAmountRaw, outputCurrencyInfo, status])
 
-  const title = getTransactionTitle(transaction.status, t('Swap'), t('Swapped'), t)
+  const title = getTransactionTitle(transaction.status, t('Swap'), t)
 
   // For retrying failed, locally submitted swaps
   const swapFormState = useCreateSwapFormState(
@@ -112,7 +107,6 @@ export default function SwapSummaryItem({
         <SwapLogoOrLogoWithTxStatus
           inputCurrencyInfo={inputCurrencyInfo}
           outputCurrencyInfo={outputCurrencyInfo}
-          showCancelIcon={showCancelIcon}
           size={TXN_HISTORY_ICON_SIZE}
           txStatus={status}
         />

@@ -59,7 +59,7 @@ export default function ReceiveSummaryItem({
     transaction.typeInfo.type,
   ])
 
-  const title = getTransactionTitle(transaction.status, t('Receive'), t('Received'), t)
+  const title = getTransactionTitle(transaction.status, t('Receive'), t)
 
   // Search for matching ENS
   const { name: ensName } = useENS(ChainId.Mainnet, transaction.typeInfo.sender, true)

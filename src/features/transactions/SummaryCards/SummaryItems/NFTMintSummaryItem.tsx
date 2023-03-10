@@ -19,7 +19,7 @@ export default function NFTMintSummaryItem({
   transaction: { typeInfo: NFTMintTransactionInfo }
 }): JSX.Element {
   const { t } = useTranslation()
-  const title = getTransactionTitle(transaction.status, t('Mint'), t('Minted'), t)
+  const title = getTransactionTitle(transaction.status, t('Mint'), t)
   const currencyInfo = useCurrencyInfo(transaction.typeInfo.purchaseCurrencyId)
   const amountRaw = transaction.typeInfo.purchaseCurrencyAmountRaw
 

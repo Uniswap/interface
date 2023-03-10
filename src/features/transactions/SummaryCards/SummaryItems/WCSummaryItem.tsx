@@ -14,12 +14,7 @@ export default function WCSummaryItem({
   ...rest
 }: BaseTransactionSummaryProps & { transaction: { typeInfo: WCConfirmInfo } }): JSX.Element {
   const { t } = useTranslation()
-  const title = getTransactionTitle(
-    transaction.status,
-    t('Contract Interaction'),
-    undefined /*=pastText*/,
-    t
-  )
+  const title = getTransactionTitle(transaction.status, t('Contract Interaction'), t)
   return (
     <TransactionSummaryLayout
       caption={transaction.typeInfo.dapp.name}

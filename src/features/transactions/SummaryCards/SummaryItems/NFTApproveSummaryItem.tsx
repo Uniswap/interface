@@ -19,7 +19,7 @@ export default function NFTApproveSummaryItem({
   transaction: { typeInfo: NFTApproveTransactionInfo }
 }): JSX.Element {
   const { t } = useTranslation()
-  const title = getTransactionTitle(transaction.status, t('Approve'), t('Approved'), t)
+  const title = getTransactionTitle(transaction.status, t('Approve'), t)
   return (
     <TransactionSummaryLayout
       caption={shortenAddress(transaction.typeInfo.spender)}
