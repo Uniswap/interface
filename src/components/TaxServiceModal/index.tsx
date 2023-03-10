@@ -84,10 +84,6 @@ const TOKEN_TAX_DESCRIPTION = 'Save 10% on all plans'
 const COINTRACKER_DESCRIPTION = 'New and existing users save up to 20%'
 
 function TaxServiceOption({ description, logo, url }: TaxServiceOptionProps) {
-  const openTaxServiceLink = () => {
-    window.open(url, '_blank')
-  }
-
   return (
     <TaxOption tabIndex={0}>
       <StyledImageContainer as="img" src={logo} draggable={false} />
@@ -101,14 +97,11 @@ function TaxServiceOption({ description, logo, url }: TaxServiceOptionProps) {
             : InterfaceElementName.TAX_SERVICE_COINTRACKER_BUTTON
         }
       >
-        <Button
-          size={ButtonSize.medium}
-          emphasis={ButtonEmphasis.medium}
-          onClick={openTaxServiceLink}
-          data-testid="tax-service-option-button"
-        >
-          Get started
-        </Button>
+        <a href={url} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
+          <Button size={ButtonSize.medium} emphasis={ButtonEmphasis.medium} data-testid="tax-service-option-button">
+            Get started
+          </Button>
+        </a>
       </TraceEvent>
     </TaxOption>
   )
