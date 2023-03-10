@@ -2,6 +2,7 @@ import React from 'react'
 import { useColorScheme } from 'react-native'
 import renderer, { act } from 'react-test-renderer'
 import { TraceUserProperties } from 'src/components/telemetry/TraceUserProperties'
+import * as appearanceHooks from 'src/features/appearance/hooks'
 import * as biometricHooks from 'src/features/biometrics/hooks'
 // ok to import in test file
 // eslint-disable-next-line no-restricted-imports
@@ -73,6 +74,7 @@ describe('TraceUserProperties', () => {
       touchId: false,
       faceId: true,
     })
+    mockFn(appearanceHooks, 'useIsDarkMode', true)
 
     // mock setUserProperty
     const mocked = mockFn(telemetry, 'setUserProperty', undefined)
@@ -124,6 +126,7 @@ describe('TraceUserProperties', () => {
       touchId: false,
       faceId: false,
     })
+    mockFn(appearanceHooks, 'useIsDarkMode', true)
 
     // mock setUserProperty
     const mocked = mockFn(telemetry, 'setUserProperty', undefined)

@@ -1,7 +1,6 @@
 import { ShadowProps } from '@shopify/restyle'
 import React, { ComponentProps, PropsWithChildren, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useColorScheme } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -9,6 +8,7 @@ import { Chevron } from 'src/components/icons/Chevron'
 import { Box, BoxProps, Flex } from 'src/components/layout'
 import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { Theme } from 'src/styles/theme'
 import { opacify } from 'src/utils/colors'
 
@@ -39,7 +39,7 @@ export function Container({
 }
 
 export function Shadow({ children, ...rest }: BoxProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark'
+  const isDarkMode = useIsDarkMode()
   const theme = useAppTheme()
   return (
     <Box

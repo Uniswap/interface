@@ -480,4 +480,13 @@ export const migrations = {
     }
     return newState
   },
+
+  35: function addAppearanceSetting(state: any) {
+    const newState = { ...state }
+
+    newState.appearanceSettings = {
+      selectedAppearanceSettings: 'system',
+    }
+    return newState
+  },
 }

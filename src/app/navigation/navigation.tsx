@@ -48,6 +48,7 @@ import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSe
 import { OutroScreen } from 'src/screens/Onboarding/OutroScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
+import { SettingsAppearanceScreen } from 'src/screens/SettingsAppearanceScreen'
 import { SettingsBiometricAuthScreen } from 'src/screens/SettingsBiometricAuthScreen'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
 import { SettingsCloudBackupScreen } from 'src/screens/SettingsCloudBackupScreen'
@@ -95,6 +96,10 @@ function SettingsStackGroup(): JSX.Element {
       <SettingsStack.Screen
         component={SettingsCloudBackupStatus}
         name={Screens.SettingsCloudBackupStatus}
+      />
+      <SettingsStack.Screen
+        component={SettingsAppearanceScreen}
+        name={Screens.SettingsAppearance}
       />
     </SettingsStack.Navigator>
   )

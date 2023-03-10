@@ -1,12 +1,12 @@
 import React, { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useColorScheme } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { TokenSortableField } from 'src/data/__generated__/types-and-hooks'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ClientTokensOrderBy, TokensOrderBy } from 'src/features/explore/types'
 import {
   getTokensOrderByMenuLabel,
@@ -22,7 +22,7 @@ interface FilterGroupProps {
 
 function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
   const theme = useAppTheme()
-  const isDarkMode = useColorScheme() === 'dark'
+  const isDarkMode = useIsDarkMode()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 

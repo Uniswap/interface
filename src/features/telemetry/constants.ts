@@ -172,6 +172,7 @@ export const enum ElementName {
 export const enum MarkNames {}
 
 export enum UserPropertyName {
+  AppearanceSetting = 'appearance_setting',
   ActiveWalletAddress = 'active_wallet_address',
   ActiveWalletType = 'active_wallet_type',
   AppOpenAuthMethod = 'app_open_auth_method',

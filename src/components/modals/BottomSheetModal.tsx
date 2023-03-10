@@ -7,11 +7,12 @@ import {
 } from '@gorhom/bottom-sheet'
 import { BlurView } from 'expo-blur'
 import React, { ComponentProps, PropsWithChildren, useCallback, useEffect, useRef } from 'react'
-import { Keyboard, StyleSheet, useColorScheme } from 'react-native'
+import { Keyboard, StyleSheet } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
 import { HandleBar } from 'src/components/modals/HandleBar'
 import { Trace } from 'src/components/telemetry/Trace'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
 import { TelemetryTraceProps } from 'src/features/telemetry/types'
 import { dimensions, spacing } from 'src/styles/sizing'
@@ -70,7 +71,7 @@ export function BottomSheetModal({
   const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
     useBottomSheetDynamicSnapPoints(snapPoints)
   const theme = useAppTheme()
-  const isDarkMode = useColorScheme() === 'dark'
+  const isDarkMode = useIsDarkMode()
 
   const backgroundColorValue = blurredBackground
     ? theme.colors.none

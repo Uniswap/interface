@@ -1,12 +1,6 @@
 import React, { forwardRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Keyboard,
-  LayoutChangeEvent,
-  TextInput as NativeTextInput,
-  useColorScheme,
-  ViewStyle,
-} from 'react-native'
+import { Keyboard, LayoutChangeEvent, TextInput as NativeTextInput, ViewStyle } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import X from 'src/assets/icons/x.svg'
@@ -15,6 +9,7 @@ import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { AnimatedBox, AnimatedFlex, Box } from 'src/components/layout'
 import { SHADOW_OFFSET_SMALL } from 'src/components/layout/BaseCard'
 import { Text } from 'src/components/Text'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { dimensions } from 'src/styles/sizing'
@@ -42,7 +37,7 @@ export type SearchTextInputProps = TextInputProps & {
 
 export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>((props, ref) => {
   const theme = useAppTheme()
-  const isDarkMode = useColorScheme() === 'dark'
+  const isDarkMode = useIsDarkMode()
   const { t } = useTranslation()
   const {
     autoFocus,

@@ -1,5 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit'
 import { monitoredSagaReducers } from 'src/app/rootSaga'
+import { appearanceSettingsReducer } from 'src/features/appearance/slice'
 import { onChainBalanceApi } from 'src/features/balances/api'
 import { biometricSettingsReducer } from 'src/features/biometrics/slice'
 import { chainsReducer } from 'src/features/chains/chainsSlice'
@@ -29,6 +30,7 @@ const reducers = {
   [onChainBalanceApi.reducerPath]: onChainBalanceApi.reducer,
   [routingApi.reducerPath]: routingApi.reducer,
   [trmApi.reducerPath]: trmApi.reducer,
+  appearanceSettings: appearanceSettingsReducer,
   biometricSettings: biometricSettingsReducer,
   chains: chainsReducer,
   cloudBackup: cloudBackupReducer,

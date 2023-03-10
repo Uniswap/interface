@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, useColorScheme } from 'react-native'
+import { StyleSheet } from 'react-native'
 import Svg, { Defs, RadialGradient as RadialGradientSVG, Rect, Stop } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
 import Eye from 'src/assets/icons/eye.svg'
@@ -7,6 +7,7 @@ import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Box } from 'src/components/layout'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { useUniconColors } from 'src/components/unicons/utils'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { theme as FixedTheme } from 'src/styles/theme'
 
 interface Props {
@@ -41,7 +42,7 @@ export function AccountIcon({
   const iconEyeContainerSize = size * 0.45
   const iconEyeSize = iconEyeContainerSize - iconPadding
 
-  const isDarkMode = useColorScheme() === 'dark'
+  const isDarkMode = useIsDarkMode()
 
   const defaultImage = (
     <>

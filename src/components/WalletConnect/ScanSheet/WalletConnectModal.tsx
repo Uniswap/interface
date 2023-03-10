@@ -1,7 +1,7 @@
 import { selectionAsync } from 'expo-haptics'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert, useColorScheme } from 'react-native'
+import { Alert } from 'react-native'
 import 'react-native-reanimated'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { useEagerExternalProfileRootNavigation } from 'src/app/navigation/hooks'
@@ -17,6 +17,7 @@ import { WalletQRCode } from 'src/components/QRCodeScanner/WalletQRCode'
 import { Text } from 'src/components/Text'
 import { ConnectedDappsList } from 'src/components/WalletConnect/ConnectedDapps/ConnectedDappsList'
 import { getSupportedURI, URIType } from 'src/components/WalletConnect/ScanSheet/util'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useWCTimeoutError } from 'src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
@@ -38,7 +39,7 @@ export function WalletConnectModal({
 }: Props): JSX.Element | null {
   const { t } = useTranslation()
   const theme = useAppTheme()
-  const isDarkMode = useColorScheme() === 'dark'
+  const isDarkMode = useIsDarkMode()
   const activeAddress = useAppSelector(selectActiveAccountAddress)
   const { sessions } = useWalletConnect(activeAddress)
   const [currentScreenState, setCurrentScreenState] =

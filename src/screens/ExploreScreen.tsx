@@ -2,7 +2,7 @@ import { useScrollToTop } from '@react-navigation/native'
 import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { KeyboardAvoidingView, TextInput, useColorScheme } from 'react-native'
+import { KeyboardAvoidingView, TextInput } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { ExploreSections } from 'src/components/explore/ExploreSections'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
@@ -12,6 +12,7 @@ import { AnimatedFlex, Box } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { HandleBar } from 'src/components/modals/HandleBar'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { SectionName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
@@ -21,7 +22,7 @@ import { useDebounce } from 'src/utils/timing'
 
 export function ExploreScreen(): JSX.Element {
   const { t } = useTranslation()
-  const isDarkMode = useColorScheme() === 'dark'
+  const isDarkMode = useIsDarkMode()
 
   const listRef = useRef(null)
   useScrollToTop(listRef)

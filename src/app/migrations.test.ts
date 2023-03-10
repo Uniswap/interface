@@ -32,6 +32,7 @@ import {
   v31Schema,
   v32Schema,
   v33Schema,
+  v34Schema,
   v3Schema,
   v4Schema,
   v5Schema,
@@ -110,6 +111,7 @@ describe('Redux state migrations', () => {
 
     // Add new slices here!
     const initialState = {
+      appearanceSettings: { selectedAppearanceSettings: 'system' },
       biometricSettings: initialBiometricsSettingsState,
       blocks: { byChainId: {} },
       chains: initialChainsState,
@@ -985,5 +987,13 @@ describe('Redux state migrations', () => {
     const v34 = migrations[34](v33Stub)
 
     expect(v34.telemetry.lastBalancesReport).toBe(0)
+  })
+
+  it('migrates from v34 to 35', () => {
+    const v34Stub = { ...v34Schema }
+
+    const v35 = migrations[35](v34Stub)
+
+    expect(v35.appearanceSettings.selectedAppearanceSettings).toBe('system')
   })
 })

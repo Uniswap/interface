@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useColorScheme } from 'react-native'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
 import {
   useBiometricAppSettings,
   useDeviceSupportsBiometricAuth,
@@ -17,7 +17,7 @@ import { getFullAppVersion } from 'src/utils/version'
 
 /** Component that tracks UserProperties during the lifetime of the app */
 export function TraceUserProperties(): null {
-  const isDarkMode = useColorScheme() === 'dark'
+  const isDarkMode = useIsDarkMode()
   const viewOnlyAccounts = useViewOnlyAccounts()
   const activeAccount = useActiveAccount()
   const signerAccounts = useNonPendingSignerAccounts()

@@ -4,7 +4,7 @@ import * as Sentry from '@sentry/react-native'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { StrictMode, useCallback, useEffect, useState } from 'react'
-import { StatusBar, useColorScheme } from 'react-native'
+import { StatusBar } from 'react-native'
 import { getUniqueId } from 'react-native-device-info'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
@@ -20,6 +20,7 @@ import { Trace } from 'src/components/telemetry/Trace'
 import { TraceUserProperties } from 'src/components/telemetry/TraceUserProperties'
 import { config } from 'src/config'
 import { usePersistedApolloClient } from 'src/data/hooks'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { BiometricContextProvider } from 'src/features/biometrics/context'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
@@ -132,7 +133,7 @@ function App(): JSX.Element | null {
 }
 
 function AppInner(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark'
+  const isDarkMode = useIsDarkMode()
 
   return <NavStack isDarkMode={isDarkMode} />
 }

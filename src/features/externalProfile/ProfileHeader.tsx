@@ -1,7 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient'
 import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet, useColorScheme } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
 import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
@@ -14,6 +14,7 @@ import { AnimatedBox, Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { useUniconColors } from 'src/components/unicons/utils'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { useENSAvatar } from 'src/features/ens/api'
 import { ProfileContextMenu } from 'src/features/externalProfile/ProfileContextMenu'
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
@@ -182,7 +183,7 @@ interface HeartIconProps {
 
 export const DynamicHeartIcon = ({ isFavorited, size }: HeartIconProps): JSX.Element => {
   const theme = useAppTheme()
-  const isDarkMode = useColorScheme() === 'dark'
+  const isDarkMode = useIsDarkMode()
   const unfilledColor = isDarkMode ? theme.colors.textTertiary : theme.colors.backgroundOutline
   const color = isFavorited ? theme.colors.accentAction : unfilledColor
   return <HeartIcon color={color} height={size} width={size} />

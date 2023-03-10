@@ -1,13 +1,14 @@
 import { useTheme } from '@shopify/restyle'
 import { default as React, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Image, ListRenderItemInfo, SectionList, StyleSheet, useColorScheme } from 'react-native'
+import { Image, ListRenderItemInfo, SectionList, StyleSheet } from 'react-native'
 import { FadeInDown, FadeOutUp } from 'react-native-reanimated'
 import { SvgProps } from 'react-native-svg'
 import { useDispatch } from 'react-redux'
 import { useSettingsStackNavigation } from 'src/app/navigation/types'
 import { AVATARS_DARK, AVATARS_LIGHT } from 'src/assets'
 import BookOpenIcon from 'src/assets/icons/book-open.svg'
+import ContrastIcon from 'src/assets/icons/contrast.svg'
 import FaceIdIcon from 'src/assets/icons/faceid.svg'
 import FingerprintIcon from 'src/assets/icons/fingerprint.svg'
 import FlashbotsIcon from 'src/assets/icons/flashbots.svg'
@@ -27,6 +28,7 @@ import {
 } from 'src/components/Settings/SettingsRow'
 import { Text } from 'src/components/Text'
 import { APP_FEEDBACK_LINK, GET_HELP_LINK, uniswapUrls } from 'src/constants/urls'
+import { useCurrentAppearanceSetting, useIsDarkMode } from 'src/features/appearance/hooks'
 import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
@@ -50,9 +52,11 @@ export function SettingsScreen(): JSX.Element {
 
   // Defining them inline instead of outside component b.c. they need t()
   const showDevSettings = isEnabled(TestConfig.ShowDevSettings)
+  const currentAppearanceSetting = useCurrentAppearanceSetting()
+
   const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
     const iconProps: SvgProps = {
-      color: theme.colors.textSecondary,
+      color: theme.colors.textTertiary,
       height: 24,
       strokeLinecap: 'round',
       strokeLinejoin: 'round',
@@ -64,6 +68,17 @@ export function SettingsScreen(): JSX.Element {
       {
         subTitle: t('App settings'),
         data: [
+          {
+            screen: Screens.SettingsAppearance,
+            text: t('Appearance'),
+            currentSetting:
+              currentAppearanceSetting === 'system'
+                ? t('Device settings')
+                : currentAppearanceSetting === 'dark'
+                ? t('Dark mode')
+                : t('Light mode'),
+            icon: <ContrastIcon {...iconProps} />,
+          },
           {
             screen: Screens.SettingsBiometricAuth,
             isHidden: !isTouchIdSupported && !isFaceIdSupported,
@@ -148,8 +163,9 @@ export function SettingsScreen(): JSX.Element {
       },
     ]
   }, [
-    theme.colors.textSecondary,
+    theme.colors.textTertiary,
     t,
+    currentAppearanceSetting,
     isTouchIdSupported,
     isFaceIdSupported,
     authenticationTypeName,
@@ -297,7 +313,7 @@ function WalletSettings(): JSX.Element {
 function FooterSettings(): JSX.Element {
   const { t } = useTranslation()
   const [showSignature, setShowSignature] = useState(false)
-  const isDarkMode = useColorScheme() === 'dark'
+  const isDarkMode = useIsDarkMode()
 
   // Fade out signature after duration
   useTimeout(

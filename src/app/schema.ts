@@ -223,6 +223,13 @@ export const v34Schema = {
   },
 }
 
+export const v35Schema = {
+  ...v34Schema,
+  appearanceSettings: {
+    selectedAppearanceSettings: 'system',
+  },
+}
+
 // TODO: [MOB-3864] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v34Schema => v34Schema
+export const getSchema = (): typeof v35Schema => v35Schema

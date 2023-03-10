@@ -4,7 +4,7 @@ import { BlurView } from 'expo-blur'
 import { impactAsync } from 'expo-haptics'
 import React, { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet, useColorScheme } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { TapGestureHandler, TapGestureHandlerGestureEvent } from 'react-native-gesture-handler'
 import {
   cancelAnimation,
@@ -23,6 +23,7 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { AnimatedBox, AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -59,7 +60,7 @@ function sendSwapPressAnalyticsEvent(): void {
 export const NavBar = (): JSX.Element => {
   const insets = useSafeAreaInsets()
   const theme = useAppTheme()
-  const isDarkMode = useColorScheme() === 'dark'
+  const isDarkMode = useIsDarkMode()
 
   const BUTTONS_OFFSET =
     useResponsiveProp({ xs: theme.spacing.spacing24, sm: theme.spacing.none }) ?? theme.spacing.none
@@ -120,7 +121,7 @@ const SwapFAB = memo(({ activeScale = 0.96, inputCurrencyId }: SwapTabBarButtonP
   const dispatch = useAppDispatch()
 
   const theme = useAppTheme()
-  const isDarkMode = useColorScheme() === 'dark'
+  const isDarkMode = useIsDarkMode()
 
   const onPress = useCallback(() => {
     impactAsync()
@@ -200,7 +201,7 @@ type ExploreTabBarButtonProps = {
 function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): JSX.Element {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
-  const isDarkMode = useColorScheme() === 'dark'
+  const isDarkMode = useIsDarkMode()
   const { t } = useTranslation()
 
   const onPress = (): void => {

@@ -19,6 +19,7 @@ export enum Screens {
   SettingsStack = 'SettingsStack',
   SettingsTestConfigs = 'SettingsTestConfigs',
   SettingsBiometricAuth = 'SettingsBiometricAuth',
+  SettingsAppearance = 'SettingsAppearance',
   SettingsViewSeedPhrase = 'SettingsViewSeedPhrase',
   TokenDetails = 'TokenDetails',
   ExternalProfile = 'ExternalProfile',

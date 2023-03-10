@@ -37,6 +37,7 @@ export type SettingsStackParamList = {
   [Screens.SettingsChains]: undefined
   [Screens.SettingsTestConfigs]: undefined
   [Screens.SettingsBiometricAuth]: undefined
+  [Screens.SettingsAppearance]: undefined
   [Screens.WebView]: { headerTitle: string; uriLink: string }
   [Screens.Dev]: undefined
   [Screens.SettingsCloudBackupScreen]: { address: Address }

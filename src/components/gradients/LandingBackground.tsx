@@ -1,9 +1,10 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { useResponsiveProp } from '@shopify/restyle'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useColorScheme, ViewStyle } from 'react-native'
+import { ViewStyle } from 'react-native'
 import Rive, { Alignment, Fit, RiveRef } from 'rive-react-native'
 import { useAppStackNavigation } from 'src/app/navigation/types'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { useTimeout } from 'src/utils/timing'
 
 const stateMachineName = 'State Machine 1'
@@ -16,7 +17,7 @@ const animationStyles: ViewStyle = {
 }
 
 const OnboardingAnimation = (): JSX.Element => {
-  const isDarkMode = useColorScheme() === 'dark'
+  const isDarkMode = useIsDarkMode()
   const animationRef = useRef<RiveRef>(null)
   const fitValue = useResponsiveProp({ xs: Fit.FitWidth, sm: Fit.FitHeight })
 

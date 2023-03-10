@@ -12,7 +12,7 @@ import { useResponsiveProp } from '@shopify/restyle'
 import { ResizeMode, Video } from 'expo-av'
 import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleProp, StyleSheet, useColorScheme, View, ViewStyle } from 'react-native'
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import Animated, {
   AnimateStyle,
   Easing,
@@ -31,6 +31,7 @@ import { Box, Flex } from 'src/components/layout'
 import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
 import { Text } from 'src/components/Text'
 import { useUniconColors } from 'src/components/unicons/utils'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
   flashWipeAnimation,
@@ -63,7 +64,7 @@ export function OnboardingCompleteAnimation({
     video.current?.playAsync()
   }
 
-  const isDarkMode = useColorScheme() === 'dark'
+  const isDarkMode = useIsDarkMode()
 
   const etchingVideoSource = isDarkMode
     ? ONBOARDING_QR_ETCHING_VIDEO_DARK

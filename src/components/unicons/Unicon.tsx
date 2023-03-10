@@ -11,7 +11,6 @@ import {
   vec,
 } from '@shopify/react-native-skia'
 import React, { memo, useMemo } from 'react'
-import { useColorScheme } from 'react-native'
 import 'react-native-reanimated'
 import { Box } from 'src/components/layout'
 import {
@@ -25,6 +24,7 @@ import {
   getUniconAttributeData,
   isEthAddress,
 } from 'src/components/unicons/utils'
+import { useSelectedColorScheme } from 'src/features/appearance/hooks'
 import { flex } from 'src/styles/flex'
 
 // HACK: Add 1 to effectively increase margin between svg and surrounding box, otherwise get a cropping issue
@@ -147,7 +147,7 @@ export const Unicon = memo(_Unicon)
 
 export function _Unicon({ address, size, randomSeed = 0 }: Props): JSX.Element | null {
   // TODO(MOB-2992): move this into a mandatory boolean prop for the Unicon component (e.g. `lightModeOverlay`) so that any consumer of the Unicon component has to decide whether or not to show the light mode overlay (presumably based on whether the current theme is light or dark)
-  const isLightMode = useColorScheme() === 'light'
+  const isLightMode = useSelectedColorScheme() === 'light'
 
   // Renders a Unicon inside a (size) x (size) pixel square Box
   const attributeIndices = useMemo(

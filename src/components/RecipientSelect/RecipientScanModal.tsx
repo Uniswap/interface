@@ -1,7 +1,7 @@
 import { selectionAsync } from 'expo-haptics'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert, useColorScheme } from 'react-native'
+import { Alert } from 'react-native'
 import 'react-native-reanimated'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import Scan from 'src/assets/icons/receive.svg'
@@ -14,6 +14,7 @@ import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
 import { WalletQRCode } from 'src/components/QRCodeScanner/WalletQRCode'
 import { Text } from 'src/components/Text'
 import { getSupportedURI, URIType } from 'src/components/WalletConnect/ScanSheet/util'
+import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 
@@ -64,7 +65,7 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
       setCurrentScreenState(ScannerModalState.ScanQr)
     }
   }
-  const isDarkMode = useColorScheme() === 'dark'
+  const isDarkMode = useIsDarkMode()
 
   return (
     <BottomSheetModal
