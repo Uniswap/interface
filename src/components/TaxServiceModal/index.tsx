@@ -97,7 +97,7 @@ function TaxServiceOption({ description, logo, url }: TaxServiceOptionProps) {
             : InterfaceElementName.TAX_SERVICE_COINTRACKER_BUTTON
         }
       >
-        <a href={url} target="_blank" rel="noreferrer">
+        <a href={url} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
           <Button size={ButtonSize.medium} emphasis={ButtonEmphasis.medium} data-testid="tax-service-option-button">
             Get started
           </Button>
