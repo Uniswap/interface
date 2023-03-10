@@ -10,7 +10,7 @@ describe(favoritesReducer, () => {
   let store: Store<FavoritesState>
 
   beforeEach(() => {
-    store = createStore(favoritesReducer, { tokens: [], watchedAddresses: [] })
+    store = createStore(favoritesReducer, { tokens: [], watchedAddresses: [], hiddenNfts: {} })
   })
 
   it('adds favorites', () => {

@@ -224,6 +224,7 @@
   "Owners": "Owners",
   "Floor": "Floor",
   "Hide NFT": "Hide NFT",
+  "Unhide NFT": "Unhide NFT",
   "Floor: {{floorPrice}} ETH": "Floor: {{floorPrice}} ETH",
   "Address copied": "Address copied",
   "Swapping on {{ network }}": "Swapping on {{ network }}",

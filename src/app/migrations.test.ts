@@ -33,6 +33,7 @@ import {
   v32Schema,
   v33Schema,
   v34Schema,
+  v35Schema,
   v3Schema,
   v4Schema,
   v5Schema,
@@ -995,5 +996,13 @@ describe('Redux state migrations', () => {
     const v35 = migrations[35](v34Stub)
 
     expect(v35.appearanceSettings.selectedAppearanceSettings).toBe('system')
+  })
+
+  it('migrates from v35 to 36', () => {
+    const v35Stub = { ...v35Schema }
+
+    const v36 = migrations[36](v35Stub)
+
+    expect(v36.favorites.hiddenNfts).toEqual({})
   })
 })

@@ -230,6 +230,14 @@ export const v35Schema = {
   },
 }
 
+export const v36Schema = {
+  ...v35Schema,
+  favorites: {
+    ...v35Schema.favorites,
+    hiddenNfts: {},
+  },
+}
+
 // TODO: [MOB-3864] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
 export const getSchema = (): typeof v35Schema => v35Schema
