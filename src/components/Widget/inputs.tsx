@@ -3,6 +3,7 @@ import { InterfaceSectionName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, Field, SwapController, SwapEventHandlers, TradeType } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import { isSupportedChain } from 'constants/chains'
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -50,7 +51,7 @@ export function useSyncWidgetInputs({
   }, [defaultTokens, tokens])
 
   useEffect(() => {
-    if (chainId !== previousChainId && !!previousChainId) {
+    if (chainId !== previousChainId && !!previousChainId && isSupportedChain(chainId)) {
       setTokens({
         ...tokens,
         [Field.INPUT]: undefined,

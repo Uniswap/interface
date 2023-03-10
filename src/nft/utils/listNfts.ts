@@ -7,10 +7,11 @@ import { addressesByNetwork, MakerOrder, signMakerOrder, SupportedChainId } from
 import { Seaport } from '@opensea/seaport-js'
 import { ItemType } from '@opensea/seaport-js/lib/constants'
 import { ConsiderationInputItem } from '@opensea/seaport-js/lib/types'
+import { ZERO_ADDRESS } from 'constants/misc'
 import {
   OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY,
-  OPENSEA_DEFAULT_ZONE,
   OPENSEA_KEY_TO_CONDUIT,
+  OPENSEA_SEAPORT_V1_4_CONTRACT,
 } from 'nft/queries/openSea'
 
 import ERC721 from '../../abis/erc721.json'
@@ -21,7 +22,7 @@ import {
   newX2Y2Order,
   PostOpenSeaSellOrder,
 } from '../queries'
-import { INVERSE_BASIS_POINTS, OPENSEA_DEFAULT_FEE, OPENSEA_FEE_ADDRESS } from '../queries/openSea'
+import { INVERSE_BASIS_POINTS } from '../queries/openSea'
 import { ListingMarket, ListingStatus, WalletAsset } from '../types'
 import { createSellOrder, encodeOrder, OfferItem, OrderPayload, signOrderData } from './x2y2'
 
@@ -40,7 +41,7 @@ export const ListingMarkets: ListingMarket[] = [
   },
   {
     name: 'OpenSea',
-    fee: 2.5,
+    fee: 0,
     icon: '/nft/svgs/marketplaces/opensea.svg',
   },
 ]
@@ -58,14 +59,11 @@ const getConsiderationItems = (
   signerAddress: string
 ): {
   sellerFee: ConsiderationInputItem
-  openseaFee: ConsiderationInputItem
   creatorFee?: ConsiderationInputItem
 } => {
-  const openSeaBasisPoints = OPENSEA_DEFAULT_FEE * INVERSE_BASIS_POINTS
   const creatorFeeBasisPoints = asset?.basisPoints ?? 0
-  const sellerBasisPoints = INVERSE_BASIS_POINTS - openSeaBasisPoints - creatorFeeBasisPoints
+  const sellerBasisPoints = INVERSE_BASIS_POINTS - creatorFeeBasisPoints
 
-  const openseaFee = price.mul(BigNumber.from(openSeaBasisPoints)).div(BigNumber.from(INVERSE_BASIS_POINTS)).toString()
   const creatorFee = price
     .mul(BigNumber.from(creatorFeeBasisPoints))
     .div(BigNumber.from(INVERSE_BASIS_POINTS))
@@ -74,7 +72,6 @@ const getConsiderationItems = (
 
   return {
     sellerFee: createConsiderationItem(sellerFee, signerAddress),
-    openseaFee: createConsiderationItem(openseaFee, OPENSEA_FEE_ADDRESS),
     creatorFee:
       creatorFeeBasisPoints > 0
         ? createConsiderationItem(creatorFee, asset?.asset_contract?.payout_address ?? '')
@@ -126,6 +123,7 @@ export async function signListing(
     overrides: {
       defaultConduitKey: OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY,
     },
+    seaportVersion: '1.4',
   })
 
   const signerAddress = await signer.getAddress()
@@ -135,8 +133,8 @@ export async function signListing(
     case 'OpenSea':
       try {
         const listingInWei = parseEther(`${listingPrice}`)
-        const { sellerFee, openseaFee, creatorFee } = getConsiderationItems(asset, listingInWei, signerAddress)
-        const considerationItems = [sellerFee, openseaFee, creatorFee].filter(
+        const { sellerFee, creatorFee } = getConsiderationItems(asset, listingInWei, signerAddress)
+        const considerationItems = [sellerFee, creatorFee].filter(
           (item): item is ConsiderationInputItem => item !== undefined
         )
 
@@ -147,21 +145,20 @@ export async function signListing(
                 itemType: ItemType.ERC721,
                 token: asset.asset_contract.address,
                 identifier: asset.tokenId,
-                amount: '1',
               },
             ],
             consideration: considerationItems,
             endTime: asset.expirationTime.toString(),
-            zone: OPENSEA_DEFAULT_ZONE,
-            restrictedByZone: true,
+            zone: ZERO_ADDRESS,
             allowPartialFills: true,
           },
           signerAddress
         )
 
         const order = await executeAllActions()
+        const seaportV14Order = { ...order, protocol_address: OPENSEA_SEAPORT_V1_4_CONTRACT }
         setStatus(ListingStatus.PENDING)
-        const res = await PostOpenSeaSellOrder(order)
+        const res = await PostOpenSeaSellOrder(seaportV14Order)
         res ? setStatus(ListingStatus.APPROVED) : setStatus(ListingStatus.FAILED)
         return res
       } catch (error) {

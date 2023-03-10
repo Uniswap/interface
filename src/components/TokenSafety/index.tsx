@@ -4,7 +4,7 @@ import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import TokenSafetyLabel from 'components/TokenSafety/TokenSafetyLabel'
-import { checkWarning, getWarningCopy, TOKEN_SAFETY_ARTICLE, Warning } from 'constants/tokenSafety'
+import { checkWarning, getWarningCopy, TOKEN_SAFETY_ARTICLE, Warning, WARNING_LEVEL } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
 import { ExternalLink as LinkIconFeather } from 'react-feather'
 import { Text } from 'rebass'
@@ -77,7 +77,7 @@ const Buttons = ({
   showCancel,
 }: {
   warning: Warning
-  onContinue: () => void
+  onContinue?: () => void
   onCancel: () => void
   onBlocked?: () => void
   showCancel?: boolean
@@ -251,32 +251,49 @@ export default function TokenSafety({
       <Trans>Learn more</Trans>
     </StyledExternalLink>
   )
+  const tokenNotFoundWarning = {
+    level: WARNING_LEVEL.UNKNOWN,
+    message: <Trans>Token not found</Trans>,
+    canProceed: false,
+  }
 
-  return (
-    displayWarning && (
-      <Wrapper>
-        <Container>
-          <AutoColumn>
-            <LogoContainer>{logos}</LogoContainer>
-          </AutoColumn>
-          <ShortColumn>
-            <SafetyLabel warning={displayWarning} />
-          </ShortColumn>
-          <ShortColumn>
-            <InfoText>
-              {heading} {description} {learnMoreUrl}
-            </InfoText>
-          </ShortColumn>
-          <LinkColumn>{urls}</LinkColumn>
-          <Buttons
-            warning={displayWarning}
-            onContinue={acknowledge}
-            onCancel={onCancel}
-            onBlocked={onBlocked}
-            showCancel={showCancel}
-          />
-        </Container>
-      </Wrapper>
-    )
+  return displayWarning ? (
+    <Wrapper>
+      <Container>
+        <AutoColumn>
+          <LogoContainer>{logos}</LogoContainer>
+        </AutoColumn>
+        <ShortColumn>
+          <SafetyLabel warning={displayWarning} />
+        </ShortColumn>
+        <ShortColumn>
+          <InfoText>
+            {heading} {description} {learnMoreUrl}
+          </InfoText>
+        </ShortColumn>
+        <LinkColumn>{urls}</LinkColumn>
+        <Buttons
+          warning={displayWarning}
+          onContinue={acknowledge}
+          onCancel={onCancel}
+          onBlocked={onBlocked}
+          showCancel={showCancel}
+        />
+      </Container>
+    </Wrapper>
+  ) : (
+    <Wrapper>
+      <Container>
+        <ShortColumn>
+          <SafetyLabel warning={tokenNotFoundWarning} />
+        </ShortColumn>
+        <ShortColumn>
+          <InfoText>
+            {heading} {description} {learnMoreUrl}
+          </InfoText>
+        </ShortColumn>
+        <Buttons warning={tokenNotFoundWarning} onCancel={onCancel} showCancel={true} />
+      </Container>
+    </Wrapper>
   )
 }

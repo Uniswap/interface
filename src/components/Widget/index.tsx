@@ -9,13 +9,13 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import {
   AddEthereumChainParameter,
+  DialogAnimationType,
   EMPTY_TOKEN_LIST,
   OnReviewSwapClick,
   SwapWidget,
   SwapWidgetSkeleton,
 } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
-import { usePermit2Enabled } from 'featureFlags/flags/permit2'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import {
   formatPercentInBasisPointsNumber,
@@ -153,40 +153,44 @@ export default function Widget({
     [initialQuoteDate, trace]
   )
 
-  const permit2Enabled = usePermit2Enabled()
-
   if (!(inputs.value.INPUT || inputs.value.OUTPUT)) {
     return <WidgetSkeleton />
   }
 
   return (
     <>
-      <SwapWidget
-        hideConnectionUI
-        brandedFooter={false}
-        permit2={permit2Enabled}
-        routerUrl={WIDGET_ROUTER_URL}
-        locale={locale}
-        theme={theme}
-        width={width}
-        defaultChainId={chainId}
-        onConnectWalletClick={onConnectWalletClick}
-        provider={provider}
-        onSwitchChain={onSwitchChain}
-        tokenList={EMPTY_TOKEN_LIST} // prevents loading the default token list, as we use our own token selector UI
-        {...inputs}
-        {...settings}
-        {...transactions}
-        onExpandSwapDetails={onExpandSwapDetails}
-        onReviewSwapClick={onReviewSwapClick}
-        onSubmitSwapClick={onSubmitSwapClick}
-        onSwapApprove={onApproveToken}
-        onInitialSwapQuote={onInitialSwapQuote}
-        onSwapPriceUpdateAck={onSwapPriceUpdateAck}
-        onError={(error, errorInfo) => {
-          sendAnalyticsEvent(SwapEventName.SWAP_ERROR, { error, errorInfo, ...trace })
-        }}
-      />
+      <div style={{ zIndex: 1, position: 'relative' }}>
+        <SwapWidget
+          hideConnectionUI
+          brandedFooter={false}
+          permit2
+          routerUrl={WIDGET_ROUTER_URL}
+          locale={locale}
+          theme={theme}
+          width={width}
+          defaultChainId={chainId}
+          onConnectWalletClick={onConnectWalletClick}
+          provider={provider}
+          onSwitchChain={onSwitchChain}
+          tokenList={EMPTY_TOKEN_LIST} // prevents loading the default token list, as we use our own token selector UI
+          {...inputs}
+          {...settings}
+          {...transactions}
+          onExpandSwapDetails={onExpandSwapDetails}
+          onReviewSwapClick={onReviewSwapClick}
+          onSubmitSwapClick={onSubmitSwapClick}
+          onSwapApprove={onApproveToken}
+          onInitialSwapQuote={onInitialSwapQuote}
+          onSwapPriceUpdateAck={onSwapPriceUpdateAck}
+          dialogOptions={{
+            pageCentered: true,
+            animationType: DialogAnimationType.FADE,
+          }}
+          onError={(error, errorInfo) => {
+            sendAnalyticsEvent(SwapEventName.SWAP_ERROR, { error, errorInfo, ...trace })
+          }}
+        />
+      </div>
       {tokenSelector}
     </>
   )
