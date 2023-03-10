@@ -22,6 +22,7 @@ RCT_EXTERN_METHOD(sendSignature: (NSString *)requestInternalId
 RCT_EXTERN_METHOD(confirmSwitchChainRequest: (NSString* )requestInternalId)
 RCT_EXTERN_METHOD(rejectRequest: (NSString* )requestInternalId)
 RCT_EXTERN_METHOD(isValidWCUrl: (NSString *)url resolver: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(returnToPreviousApp)
 
 
 @end

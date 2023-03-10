@@ -52,6 +52,12 @@ enum WCSwiftError: Error {
 
 let WALLET_CONNECT_SESSION_STORAGE_KEY = "wallet_connect"
 
+// Used to return to previously opened app (wallet to dapp in mobile browser)
+@objc private protocol PrivateSelectors: NSObjectProtocol {
+    var destinations: [NSNumber] { get }
+    func sendResponseForDestination(_ destination: NSNumber)
+}
+
 @objc(RNWalletConnect)
 class RNWalletConnect: RCTEventEmitter {
   var serverWrapper: WalletConnectServerWrapper!
@@ -122,7 +128,7 @@ class RNWalletConnect: RCTEventEmitter {
       return sendEvent(withName: EventType.error.rawValue, body: ["type": ErrorType.pendingSessionNotFound.rawValue, "account": account])
     }
   }
-
+  
   @objc
   func isValidWCUrl(_ url: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
     guard let wcUrl = WCURL(url) else {
@@ -160,6 +166,30 @@ class RNWalletConnect: RCTEventEmitter {
   @objc
   func rejectRequest(_ requestInternalId: String) {
     self.serverWrapper.rejectRequest(requestInternalId: requestInternalId)
+  }
+  
+  /*
+   * Open the previously opened app that deep linked to Uniswap app
+   * (eg. Dapp website in Safari -> Wallet -> Dapp website in Safari).
+   * Returns false and does nothing if there is no previous opened app to link back to.
+   * Returns true if successfully opened previous app
+   */
+  @objc
+  func returnToPreviousApp() -> Bool {
+    let sys = "_system"
+    let nav = "Navigation"
+    let action = "Action"
+    guard
+      let sysNavIvar = class_getInstanceVariable(UIApplication.self, sys + nav + action),
+      let action = object_getIvar(UIApplication.shared, sysNavIvar) as? NSObject,
+      let destinations = action.perform(#selector(getter: PrivateSelectors.destinations)).takeUnretainedValue() as? [NSNumber],
+      let firstDestination = destinations.first
+    else {
+      return false
+    }
+    
+    action.perform(#selector(PrivateSelectors.sendResponseForDestination), with: firstDestination)
+    return true
   }
   
   @objc override static func requiresMainQueueSetup() -> Bool {

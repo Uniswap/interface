@@ -9,6 +9,7 @@ import { MobileEventName } from 'src/features/telemetry/constants'
 import { selectAccounts } from 'src/features/wallet/selectors'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
+import { setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
 import { logger } from 'src/utils/logger'
 import { call, fork, put, takeLatest } from 'typed-redux-saga'
 
@@ -25,8 +26,12 @@ export function* deepLinkWatcher(): Generator<ForkEffect<never>, void, unknown> 
 
 export function* handleDeepLink(action: ReturnType<typeof openDeepLink>): Generator<
   | CallEffect<boolean>
-  | CallEffect<string>
   | ForkEffect<void>
+  | PutEffect<{
+      payload: boolean | undefined
+      type: string
+    }>
+  | CallEffect<string>
   | PutEffect<{
       payload: string
       type: string
@@ -40,18 +45,25 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>): Genera
     // Skip handling any uniswap:// deep links for now for security reasons
     // currently only used for WalletConnect flow fallback
     if (action.payload.url.startsWith('uniswap://')) {
+      // Set didOpenFromDeepLink so that `returnToPreviousApp()` is enabled during WalletConnect flows
+      yield* put(setDidOpenFromDeepLink(true))
       return
     }
 
     const url = new URL(action.payload.url)
 
-    // handle WC deeplink connections
-    const wcUri = url.searchParams.get('uri')
-    if (url.pathname.includes('/wc') && wcUri) {
-      const isValidWcUri = yield* call(isValidWCUrl, wcUri)
-      if (isValidWcUri) {
-        yield* fork(connectToApp, wcUri)
+    // Handle WC deeplink connections
+    if (url.pathname.includes('/wc')) {
+      // Only initial session connections include `uri` param, signing requests only link to /wc
+      const wcUri = url.searchParams.get('uri')
+      if (wcUri) {
+        const isValidWcUri = yield* call(isValidWCUrl, wcUri)
+        if (isValidWcUri) {
+          yield* fork(connectToApp, wcUri)
+        }
       }
+      // Set didOpenFromDeepLink so that `returnToPreviousApp()` is enabled during WalletConnect flows
+      yield* put(setDidOpenFromDeepLink(true))
       return
     }
 

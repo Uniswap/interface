@@ -23,3 +23,7 @@ export const selectPendingRequests = (state: RootState): WalletConnectRequest[] 
 export const selectPendingSession = (state: RootState): WalletConnectSession | null => {
   return state.walletConnect.pendingSession
 }
+
+export const selectDidOpenFromDeepLink = (state: RootState): boolean => {
+  return state.walletConnect.didOpenFromDeepLink ?? false
+}

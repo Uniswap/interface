@@ -1,7 +1,7 @@
 import { getSdkError } from '@walletconnect/utils'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import Checkmark from 'src/assets/icons/check.svg'
 import X from 'src/assets/icons/x.svg'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
@@ -29,8 +29,9 @@ import {
 } from 'src/features/wallet/hooks'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
+import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
 import { WCEventType, WCRequestOutcome } from 'src/features/walletConnect/types'
-import { settlePendingSession } from 'src/features/walletConnect/WalletConnect'
+import { returnToPreviousApp, settlePendingSession } from 'src/features/walletConnect/WalletConnect'
 import {
   addSession,
   removePendingSession,
@@ -159,6 +160,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
   const activeAddress = useActiveAccountAddressWithThrow()
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccountWithThrow()
+  const didOpenFromDeepLink = useAppSelector(selectDidOpenFromDeepLink)
 
   const [modalState, setModalState] = useState<PendingConnectionModalState>(
     PendingConnectionModalState.Hidden
@@ -188,6 +190,9 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
       if (pendingSession.version === '1') {
         settlePendingSession(selectedChainId, activeAddress, approved)
         onClose()
+        if (didOpenFromDeepLink) {
+          returnToPreviousApp()
+        }
         return
       }
 
@@ -241,7 +246,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
 
       onClose()
     },
-    [activeAddress, dispatch, onClose, selectedChainId, pendingSession]
+    [activeAddress, dispatch, onClose, selectedChainId, pendingSession, didOpenFromDeepLink]
   )
 
   return (

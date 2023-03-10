@@ -71,6 +71,7 @@ export interface WalletConnectState {
   }
   pendingSession: WalletConnectSession | null
   pendingRequests: WalletConnectRequest[]
+  didOpenFromDeepLink?: boolean
 }
 
 export const initialWalletConnectState: Readonly<WalletConnectState> = {
@@ -139,6 +140,10 @@ const slice = createSlice({
         (req) => req.internalId !== requestInternalId
       )
     },
+
+    setDidOpenFromDeepLink: (state, action: PayloadAction<boolean | undefined>) => {
+      state.didOpenFromDeepLink = action.payload
+    },
   },
 })
 
@@ -150,5 +155,6 @@ export const {
   removePendingSession,
   addRequest,
   removeRequest,
+  setDidOpenFromDeepLink,
 } = slice.actions
 export const { reducer: walletConnectReducer } = slice

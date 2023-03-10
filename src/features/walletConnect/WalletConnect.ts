@@ -46,3 +46,7 @@ export const isValidWCUrl = (uri: string): boolean => {
 export const disconnectWCForAccount = (account: string): void => {
   return RNWalletConnect.disconnectAllForAccount(account)
 }
+
+export const returnToPreviousApp = (): boolean => {
+  return RNWalletConnect.returnToPreviousApp()
+}

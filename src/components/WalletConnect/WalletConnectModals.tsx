@@ -22,10 +22,12 @@ import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import {
   removePendingSession,
   removeRequest,
+  setDidOpenFromDeepLink,
   SwitchChainRequest,
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { areAddressesEqual } from 'src/utils/addresses'
+import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 
 export function WalletConnectModals(): JSX.Element {
   const activeAccount = useActiveAccount()
@@ -33,12 +35,24 @@ export function WalletConnectModals(): JSX.Element {
 
   const { pendingRequests, modalState, pendingSession } = useWalletConnect(activeAccount?.address)
 
+  /*
+   * Reset didOpenFromDeepLink state when app is backgrounded, since we only want
+   * to call `returnToPreviousApp` when the app was deep linked to from another app.
+   * Handles case where user opens app via WalletConnect deep link, backgrounds app, then
+   * opens Uniswap app via Spotlight search – we don't want `returnToPreviousApp` to return
+   * to Spotlight search.
+   * */
+  useAppStateTrigger('active', 'inactive', () => {
+    dispatch(setDidOpenFromDeepLink(undefined))
+  })
+
   const currRequest = pendingRequests[0] ?? null
 
   const onCloseWCModal = (): void => {
     dispatch(closeModal({ name: ModalName.WalletConnectScan }))
   }
 
+  // TODO: Move returnToPreviousApp() call to onClose but ensure it is not called twice
   const onClosePendingConnection = (): void => {
     dispatch(removePendingSession())
   }
@@ -78,6 +92,7 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
 
+  // TODO: Move returnToPreviousApp() call to onClose but ensure it is not called twice
   const onClose = (): void => {
     dispatch(
       removeRequest({ requestInternalId: currRequest.internalId, account: activeAccountAddress })

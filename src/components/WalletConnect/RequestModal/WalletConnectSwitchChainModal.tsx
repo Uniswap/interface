@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { LinkButton } from 'src/components/buttons/LinkButton'
@@ -12,7 +12,12 @@ import { Text } from 'src/components/Text'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { CHAIN_INFO } from 'src/constants/chains'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { confirmSwitchChainRequest, rejectRequest } from 'src/features/walletConnect/WalletConnect'
+import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
+import {
+  confirmSwitchChainRequest,
+  rejectRequest,
+  returnToPreviousApp,
+} from 'src/features/walletConnect/WalletConnect'
 import { SwitchChainRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { toSupportedChainId } from 'src/utils/chainId'
 
@@ -24,6 +29,8 @@ interface Props {
 export function WalletConnectSwitchChainModal({ onClose, request }: Props): JSX.Element | null {
   const { t } = useTranslation()
   const theme = useAppTheme()
+  const dispatch = useAppDispatch()
+  const didOpenFromDeepLink = useAppSelector(selectDidOpenFromDeepLink)
 
   /**
    * TODO: [MOB-3908] implement this behavior in a less janky way. Ideally if we can distinguish between `onClose` being called programmatically and `onClose` as a results of a user dismissing the modal then we can determine what this value should be without this class variable.
@@ -42,12 +49,18 @@ export function WalletConnectSwitchChainModal({ onClose, request }: Props): JSX.
     rejectRequest(request.internalId)
     rejectOnCloseRef.current = false
     onClose()
+    if (didOpenFromDeepLink) {
+      returnToPreviousApp()
+    }
   }
 
   const onConfirm = async (): Promise<void> => {
     confirmSwitchChainRequest(request.internalId)
     rejectOnCloseRef.current = false
     onClose()
+    if (didOpenFromDeepLink) {
+      returnToPreviousApp()
+    }
   }
 
   const handleClose = (): void => {

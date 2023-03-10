@@ -4,7 +4,7 @@ import { providers } from 'ethers'
 import React, { PropsWithChildren, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
@@ -27,13 +27,14 @@ import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useIsBlocked } from 'src/features/trm/hooks'
 import { useSignerAccounts } from 'src/features/wallet/hooks'
 import { signWcRequestActions } from 'src/features/walletConnect/saga'
+import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
 import {
   EthMethod,
   isPrimaryTypePermit,
   WCEventType,
   WCRequestOutcome,
 } from 'src/features/walletConnect/types'
-import { rejectRequest } from 'src/features/walletConnect/WalletConnect'
+import { rejectRequest, returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
 import {
   isTransactionRequest,
   SignRequest,
@@ -109,6 +110,7 @@ const spacerProps: BoxProps = {
 export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Element | null {
   const theme = useAppTheme()
   const netInfo = useNetInfo()
+  const didOpenFromDeepLink = useAppSelector(selectDidOpenFromDeepLink)
   const chainId = request.chainId
 
   const tx: providers.TransactionRequest | null = useMemo(() => {
@@ -186,6 +188,9 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     })
 
     onClose()
+    if (didOpenFromDeepLink) {
+      returnToPreviousApp()
+    }
   }
 
   const onConfirm = async (): Promise<void> => {
@@ -236,6 +241,9 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     })
 
     onClose()
+    if (didOpenFromDeepLink) {
+      returnToPreviousApp()
+    }
   }
 
   const { trigger: actionButtonTrigger } = useBiometricPrompt(onConfirm)
