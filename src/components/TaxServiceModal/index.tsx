@@ -96,15 +96,11 @@ function TaxServiceOption({ description, logo, url }: TaxServiceOptionProps) {
             ? InterfaceElementName.TAX_SERVICE_TOKENTAX_BUTTON
             : InterfaceElementName.TAX_SERVICE_COINTRACKER_BUTTON
         }
-      > 
-      <a href={url} target="_blank">
-        <Button
-          size={ButtonSize.medium}
-          emphasis={ButtonEmphasis.medium}
-          data-testid="tax-service-option-button"
-        >
-          Get started
-        </Button>
+      >
+        <a href={url} target="_blank" rel="noreferrer">
+          <Button size={ButtonSize.medium} emphasis={ButtonEmphasis.medium} data-testid="tax-service-option-button">
+            Get started
+          </Button>
         </a>
       </TraceEvent>
     </TaxOption>
