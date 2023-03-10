@@ -33,6 +33,9 @@ import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { currencyId } from 'src/utils/currencyId'
 
 export const MainnetEth = NativeCurrency.onChain(ChainId.Mainnet)
+export const PolygonMatic = NativeCurrency.onChain(ChainId.Polygon)
+export const ArbitrumEth = NativeCurrency.onChain(ChainId.ArbitrumOne)
+export const OptimismEth = NativeCurrency.onChain(ChainId.Optimism)
 
 export const ACCOUNT_ADDRESS_ONE = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
 export const ACCOUNT_ADDRESS_TWO = '0x1234567890123456789012345678901234567890'
