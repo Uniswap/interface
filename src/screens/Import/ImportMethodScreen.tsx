@@ -42,17 +42,7 @@ interface ImportMethodOption {
 
 const options: ImportMethodOption[] = [
   {
-    title: (t: TFunction) => t('Create a new wallet'),
-    blurb: (t: TFunction) => t('Start with a new recovery phrase'),
-    icon: (theme: Theme) => (
-      <SeedPhraseIcon color={theme.colors.textPrimary} height={22} strokeWidth="1.5" width={22} />
-    ),
-    nav: OnboardingScreens.EditName,
-    importType: ImportType.CreateNew,
-    name: ElementName.OnboardingCreateWallet,
-  },
-  {
-    title: (t: TFunction) => t('Import an existing wallet'),
+    title: (t: TFunction) => t('Import my wallet'),
     blurb: (t: TFunction) => t('Enter your recovery phrase'),
     icon: (theme: Theme) => (
       <ImportIcon color={theme.colors.textPrimary} height={18} strokeWidth="1.5" width={18} />
@@ -62,14 +52,24 @@ const options: ImportMethodOption[] = [
     name: ElementName.OnboardingImportSeedPhrase,
   },
   {
-    title: (t: TFunction) => t('Add a view-only wallet'),
-    blurb: (t: TFunction) => t('Explore the contents of any wallet'),
+    title: (t: TFunction) => t('Watch a wallet'),
+    blurb: (t: TFunction) => t('Try it out with any wallet address'),
     icon: (theme: Theme) => (
       <EyeIcon color={theme.colors.textPrimary} height={24} strokeWidth="1.5" width={24} />
     ),
     nav: OnboardingScreens.WatchWallet,
     importType: ImportType.Watch,
     name: ElementName.OnboardingImportWatchedAccount,
+  },
+  {
+    title: (t: TFunction) => t('Create a new wallet'),
+    blurb: (t: TFunction) => t('Start with a new recovery phrase'),
+    icon: (theme: Theme) => (
+      <SeedPhraseIcon color={theme.colors.textPrimary} height={22} strokeWidth="1.5" width={22} />
+    ),
+    nav: OnboardingScreens.EditName,
+    importType: ImportType.CreateNew,
+    name: ElementName.OnboardingCreateWallet,
   },
 ]
 
