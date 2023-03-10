@@ -3,6 +3,7 @@ import { Protocol } from '@uniswap/router-sdk'
 import { AlphaRouter, ChainId } from '@uniswap/smart-order-router'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { getClientSideQuote, toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
+import { trace } from 'logging/trace'
 import ms from 'ms.macro'
 import qs from 'qs'
 
@@ -64,28 +65,53 @@ const PRICE_PARAMS = {
   distributionPercent: 100,
 }
 
+interface GetQuoteArgs {
+  tokenInAddress: string
+  tokenInChainId: ChainId
+  tokenInDecimals: number
+  tokenInSymbol?: string
+  tokenOutAddress: string
+  tokenOutChainId: ChainId
+  tokenOutDecimals: number
+  tokenOutSymbol?: string
+  amount: string
+  routerPreference: RouterPreference
+  type: 'exactIn' | 'exactOut'
+}
+
 export const routingApi = createApi({
   reducerPath: 'routingApi',
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://api.uniswap.org/v1/',
   }),
   endpoints: (build) => ({
-    getQuote: build.query<
-      GetQuoteResult,
-      {
-        tokenInAddress: string
-        tokenInChainId: ChainId
-        tokenInDecimals: number
-        tokenInSymbol?: string
-        tokenOutAddress: string
-        tokenOutChainId: ChainId
-        tokenOutDecimals: number
-        tokenOutSymbol?: string
-        amount: string
-        routerPreference: RouterPreference
-        type: 'exactIn' | 'exactOut'
-      }
-    >({
+    getQuote: build.query<GetQuoteResult, GetQuoteArgs>({
+      async onQueryStarted(args: GetQuoteArgs, { queryFulfilled }) {
+        const provenance = args.routerPreference === RouterPreference.PRICE ? 'price' : 'quote'
+        const autoRouter = args.routerPreference === RouterPreference.API
+        trace(
+          'quote.interface',
+          async ({ transaction }) => {
+            try {
+              await queryFulfilled
+            } catch (error: unknown) {
+              if (error && typeof error === 'object' && 'status' in error) {
+                const queryError = error as FetchBaseQueryError
+                if (typeof queryError.status === 'number') {
+                  transaction.setHttpStatus(queryError.status)
+                } else if (
+                  queryError.status === 'FETCH_ERROR' ||
+                  queryError.status === 'PARSING_ERROR' ||
+                  queryError.status === 'CUSTOM_ERROR'
+                ) {
+                  transaction.setData('error', queryError.error)
+                }
+              }
+            }
+          },
+          { tags: { provenance, autoRouter } }
+        )
+      },
       async queryFn(args, _api, _extraOptions, fetch) {
         const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, routerPreference, type } =
           args
