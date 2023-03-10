@@ -40,18 +40,6 @@ const StyledImageContainer = styled.div<{ isDisabled?: boolean }>`
   cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
 `
 
-const StyledTertiaryInfo = styled(ThemedText.BodySmall)`
-  color: ${({ theme }) => theme.textSecondary};
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  line-height: 20px;
-  padding: 0px 8px;
-  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
-  will-change: opacity;
-  pointer-events: none;
-`
-
 const StyledDetailsRelativeContainer = styled.div`
   position: relative;
   height: 84px;
@@ -177,10 +165,6 @@ const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean 
     ${StyledActionButton} {
       visibility: visible;
       bottom: 8px;
-    }
-
-    ${StyledTertiaryInfo} {
-      opacity: 0;
     }
 
     ${StyledDetailsContainer} {
@@ -640,20 +624,6 @@ const SecondaryInfo = ({ children }: { children: ReactNode }) => {
   return <SecondaryInfoContainer>{children}</SecondaryInfoContainer>
 }
 
-const StyledTertiaryInfoContainer = styled(Column)`
-  position: relative;
-  height: 32px;
-  justify-content: center;
-`
-
-const TertiaryInfoContainer = ({ children }: { children: ReactNode }) => {
-  return <StyledTertiaryInfoContainer>{children}</StyledTertiaryInfoContainer>
-}
-
-const TertiaryInfo = ({ children }: { children: ReactNode }) => {
-  return <StyledTertiaryInfo>{children}</StyledTertiaryInfo>
-}
-
 interface RankingProps {
   provider: { url?: string; rank?: number }
 }
@@ -806,7 +776,5 @@ export {
   SecondaryInfo,
   SecondaryRow,
   Suspicious,
-  TertiaryInfo,
-  TertiaryInfoContainer,
   Video,
 }
