@@ -6,11 +6,6 @@ export interface ListingMarket {
   name: string
   fee: number
   icon: string
-  royalty?: number
-}
-export interface ListingWarning {
-  marketplace: ListingMarket
-  message: string
 }
 
 export interface SellOrder {
@@ -72,7 +67,6 @@ export interface WalletAsset {
   marketAgnosticPrice?: number
   newListings?: Listing[]
   marketplaces?: ListingMarket[]
-  listingWarnings?: ListingWarning[]
 }
 
 export interface WalletCollection {
@@ -109,6 +103,7 @@ export interface ListingRow extends AssetRow {
 
 export interface CollectionRow extends AssetRow {
   collectionAddress?: string
+  isVerified?: boolean
   marketplace: ListingMarket
 }
 
@@ -116,9 +111,4 @@ export interface CollectionRow extends AssetRow {
 export enum ProfilePageStateType {
   VIEWING,
   LISTING,
-}
-
-export enum ListingResponse {
-  TRY_AGAIN,
-  SUCCESS,
 }

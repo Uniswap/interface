@@ -1,8 +1,29 @@
+import { QueryResult } from '@apollo/client'
 import { SupportedChainId } from 'constants/chains'
-import { ZERO_ADDRESS } from 'constants/misc'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import ms from 'ms.macro'
+import { useEffect } from 'react'
 
 import { Chain, HistoryDuration } from './__generated__/types-and-hooks'
+
+export enum PollingInterval {
+  Slow = ms`5m`,
+  Normal = ms`1m`,
+  Fast = ms`12s`, // 12 seconds, block times for mainnet
+  LightningMcQueen = ms`3s`, // 3 seconds, approx block times for polygon
+}
+
+// Polls a query only when the current component is mounted, as useQuery's pollInterval prop will continue to poll after unmount
+export function usePollQueryWhileMounted<T, K>(queryResult: QueryResult<T, K>, interval: PollingInterval) {
+  const { startPolling, stopPolling } = queryResult
+
+  useEffect(() => {
+    startPolling(interval)
+    return stopPolling
+  }, [interval, startPolling, stopPolling])
+
+  return queryResult
+}
 
 export enum TimePeriod {
   HOUR,
@@ -41,7 +62,7 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.CELO]: Chain.Celo,
   [SupportedChainId.CELO_ALFAJORES]: Chain.Celo,
   [SupportedChainId.ARBITRUM_ONE]: Chain.Arbitrum,
-  [SupportedChainId.ARBITRUM_RINKEBY]: Chain.Arbitrum,
+  [SupportedChainId.ARBITRUM_GOERLI]: Chain.Arbitrum,
   [SupportedChainId.OPTIMISM]: Chain.Optimism,
   [SupportedChainId.OPTIMISM_GOERLI]: Chain.Optimism,
 }
@@ -74,17 +95,8 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key: string]: SupportedChainId } = {
 
 export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Ethereum, Chain.Polygon, Chain.Optimism, Chain.Arbitrum, Chain.Celo]
 
-export function getTokenDetailsURL(address: string, chainName?: Chain, chainId?: number) {
-  if (address === ZERO_ADDRESS && chainId && chainId === SupportedChainId.MAINNET) {
-    return `/tokens/${CHAIN_ID_TO_BACKEND_NAME[chainId].toLowerCase()}/${NATIVE_CHAIN_ID}`
-  } else if (chainName) {
-    return `/tokens/${chainName.toLowerCase()}/${address}`
-  } else if (chainId) {
-    const chainName = CHAIN_ID_TO_BACKEND_NAME[chainId]
-    return chainName ? `/tokens/${chainName.toLowerCase()}/${address}` : ''
-  } else {
-    return ''
-  }
+export function getTokenDetailsURL({ address, chain }: { address?: string | null; chain: Chain }) {
+  return `/tokens/${chain.toLowerCase()}/${address ?? NATIVE_CHAIN_ID}`
 }
 
 export function unwrapToken<

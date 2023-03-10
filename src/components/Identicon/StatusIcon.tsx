@@ -1,7 +1,13 @@
+import { getWalletMeta } from '@uniswap/conedison/provider/meta'
 import { useWeb3React } from '@web3-react/core'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { Unicon } from 'components/Unicon'
 import { ConnectionType } from 'connection'
 import useENSAvatar from 'hooks/useENSAvatar'
+import ms from 'ms.macro'
+import { PropsWithChildren } from 'react'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 import { flexColumnNoWrap } from 'theme/styles'
 
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
@@ -50,14 +56,53 @@ const Socks = () => {
   )
 }
 
-const useIcon = (connectionType: ConnectionType) => {
-  const { account } = useWeb3React()
+const Divider = styled.div`
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+  margin: 12px 0;
+`
+
+function UniconTooltip({ children, enabled }: PropsWithChildren<{ enabled?: boolean }>) {
+  return (
+    <MouseoverTooltip
+      timeout={ms`3s`}
+      offsetY={8}
+      disableHover={!enabled}
+      text={
+        // TODO(cartcrom): add Learn More link when unicon microsite is polished
+        <>
+          <ThemedText.SubHeaderSmall color="textPrimary" paddingTop="4px">
+            This is your Unicon
+          </ThemedText.SubHeaderSmall>
+          <Divider />
+          <ThemedText.Caption paddingBottom="4px">
+            Unicons are avatars for your wallet, generated from your address.
+          </ThemedText.Caption>
+        </>
+      }
+      placement="bottom"
+    >
+      <div>{children}</div>
+    </MouseoverTooltip>
+  )
+}
+
+const useIcon = (connectionType: ConnectionType, size?: number, enableInfotips?: boolean) => {
+  const { account, provider } = useWeb3React()
   const { avatar } = useENSAvatar(account ?? undefined)
+  const isUniswapWallet = Boolean(provider && getWalletMeta(provider)?.name === 'Uniswap Wallet')
+
+  if (!account) return null
 
   if (avatar || connectionType === ConnectionType.INJECTED) {
     return <Identicon />
   } else if (connectionType === ConnectionType.WALLET_CONNECT) {
-    return <img src={WalletConnectIcon} alt="WalletConnect" />
+    return isUniswapWallet ? (
+      <UniconTooltip enabled={enableInfotips}>
+        <Unicon address={account} size={size} />
+      </UniconTooltip>
+    ) : (
+      <img src={WalletConnectIcon} alt="WalletConnect" />
+    )
   } else if (connectionType === ConnectionType.COINBASE_WALLET) {
     return <img src={CoinbaseWalletIcon} alt="Coinbase Wallet" />
   }
@@ -65,9 +110,17 @@ const useIcon = (connectionType: ConnectionType) => {
   return undefined
 }
 
-export default function StatusIcon({ connectionType, size }: { connectionType: ConnectionType; size?: number }) {
+export default function StatusIcon({
+  connectionType,
+  size,
+  enableInfotips,
+}: {
+  connectionType: ConnectionType
+  size?: number
+  enableInfotips?: boolean
+}) {
   const hasSocks = useHasSocks()
-  const icon = useIcon(connectionType)
+  const icon = useIcon(connectionType, size, enableInfotips)
 
   return (
     <IconWrapper size={size ?? 16}>

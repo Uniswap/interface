@@ -1,9 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { formatCurrencyAmount, NumberType } from '@uniswap/conedison/format'
-import { Currency, SupportedChainId } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
+import { SupportedChainId } from 'constants/chains'
 import { isSupportedChain } from 'constants/chains'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
@@ -81,7 +82,7 @@ export default function BalanceSummary({ token }: { token: Currency }) {
           <Trans>Your balance on {label}</Trans>
         </ThemedText.SubHeaderSmall>
         <BalanceRow>
-          <CurrencyLogo currency={token} size="2rem" />
+          <CurrencyLogo currency={token} size="2rem" hideL2Icon={false} />
           <BalanceContainer>
             <BalanceAmountsContainer>
               <BalanceItem>

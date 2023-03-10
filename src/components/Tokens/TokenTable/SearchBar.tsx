@@ -84,6 +84,7 @@ export default function SearchBar() {
             element={InterfaceElementName.EXPLORE_SEARCH_INPUT}
           >
             <SearchInput
+              data-cy="explore-tokens-search-input"
               type="search"
               placeholder={`${translation}`}
               id="searchBar"

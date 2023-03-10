@@ -1,6 +1,9 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
-import { useFiatOnrampFlag } from 'featureFlags/flags/fiatOnramp'
-import { Permit2Variant, usePermit2Flag } from 'featureFlags/flags/permit2'
+import { GqlRoutingVariant, useGqlRoutingFlag } from 'featureFlags/flags/gqlRouting'
+import { NftGraphqlVariant, useNftGraphqlFlag } from 'featureFlags/flags/nftlGraphql'
+import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
+import { SwapWidgetVariant, useSwapWidgetFlag } from 'featureFlags/flags/swapWidget'
+import { TaxServiceVariant, useTaxServiceBannerFlag } from 'featureFlags/flags/taxServiceBanner'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
@@ -204,16 +207,34 @@ export default function FeatureFlagModal() {
         </CloseButton>
       </Header>
       <FeatureFlagOption
-        variant={Permit2Variant}
-        value={usePermit2Flag()}
-        featureFlag={FeatureFlag.permit2}
-        label="Permit 2 / Universal Router"
+        variant={PayWithAnyTokenVariant}
+        value={usePayWithAnyTokenFlag()}
+        featureFlag={FeatureFlag.payWithAnyToken}
+        label="Pay With Any Token"
       />
       <FeatureFlagOption
-        variant={BaseVariant}
-        value={useFiatOnrampFlag()}
-        featureFlag={FeatureFlag.fiatOnramp}
-        label="Fiat on-ramp"
+        variant={SwapWidgetVariant}
+        value={useSwapWidgetFlag()}
+        featureFlag={FeatureFlag.swapWidget}
+        label="Swap Widget"
+      />
+      <FeatureFlagOption
+        variant={GqlRoutingVariant}
+        value={useGqlRoutingFlag()}
+        featureFlag={FeatureFlag.gqlRouting}
+        label="GraphQL NFT Routing"
+      />
+      <FeatureFlagOption
+        variant={NftGraphqlVariant}
+        value={useNftGraphqlFlag()}
+        featureFlag={FeatureFlag.nftGraphql}
+        label="Migrate NFT read endpoints to GQL"
+      />
+      <FeatureFlagOption
+        variant={TaxServiceVariant}
+        value={useTaxServiceBannerFlag()}
+        featureFlag={FeatureFlag.taxService}
+        label="Tax Service Banner"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption

@@ -15,9 +15,30 @@ export function swapErrorToUserReadableMessage(error: any): string {
     }
   }
 
+  console.warn('Swap error:', error)
+
   while (error) {
     reason = error.reason ?? error.message ?? reason
     error = error.error ?? error.data?.originalError
+  }
+
+  // The 4001 error code doesn't capture the case where users reject a transaction for all wallets,
+  // so we need to parse the reason for these special cases:
+  if (
+    // ethers v5.7.0 wrapped error
+    error?.code === 'ACTION_REJECTED' ||
+    // For Rainbow :
+    (reason?.match(/request/i) && reason?.match(/reject/i)) ||
+    // For Frame:
+    reason?.match(/declined/i) ||
+    // For SafePal:
+    reason?.match(/cancelled by user/i) ||
+    // For Coinbase:
+    reason?.match(/user denied/i) ||
+    // For Fireblocks
+    reason?.match(/user rejected/i)
+  ) {
+    return t`Transaction rejected`
   }
 
   if (reason?.indexOf('execution reverted: ') === 0) reason = reason.substr('execution reverted: '.length)
@@ -44,8 +65,7 @@ export function swapErrorToUserReadableMessage(error: any): string {
       if (reason?.indexOf('undefined is not an object') !== -1) {
         return t`An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
       }
-      return t`Unknown error${
-        reason ? `: "${reason}"` : ''
-      }. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
+      return t`${reason ? reason : 'Unknown error'}. Try increasing your slippage tolerance.
+Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3.`
   }
 }

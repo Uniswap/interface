@@ -1,4 +1,5 @@
-import { FungibleToken, GenieCollection } from 'nft/types'
+import { SearchToken } from 'graphql/data/SearchTokens'
+import { GenieCollection } from 'nft/types'
 
 /**
  * Organizes the number of Token and NFT results to be shown to a user depending on if they're in the NFT or Token experience
@@ -10,9 +11,9 @@ import { FungibleToken, GenieCollection } from 'nft/types'
  */
 export function organizeSearchResults(
   isNFTPage: boolean,
-  tokenResults: FungibleToken[],
+  tokenResults: SearchToken[],
   collectionResults: GenieCollection[]
-): [FungibleToken[], GenieCollection[]] {
+): [SearchToken[], GenieCollection[]] {
   const reducedTokens =
     tokenResults?.slice(0, isNFTPage ? 3 : collectionResults.length < 3 ? 8 - collectionResults.length : 5) ?? []
   const reducedCollections = collectionResults.slice(0, 8 - reducedTokens.length)

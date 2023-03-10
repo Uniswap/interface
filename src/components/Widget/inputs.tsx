@@ -1,17 +1,21 @@
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfaceSectionName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, Field, SwapController, SwapEventHandlers, TradeType } from '@uniswap/widgets'
+import { useWeb3React } from '@web3-react/core'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import { isSupportedChain } from 'constants/chains'
+import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 const EMPTY_AMOUNT = ''
 
 type SwapValue = Required<SwapController>['value']
 type SwapTokens = Pick<SwapValue, Field.INPUT | Field.OUTPUT> & { default?: Currency }
+export type DefaultTokens = Partial<SwapTokens>
 
-function includesDefaultToken(tokens: SwapTokens) {
-  if (!tokens.default) return true
-  return tokens[Field.INPUT]?.equals(tokens.default) || tokens[Field.OUTPUT]?.equals(tokens.default)
+function missingDefaultToken(tokens: SwapTokens) {
+  if (!tokens.default) return false
+  return !tokens[Field.INPUT]?.equals(tokens.default) && !tokens[Field.OUTPUT]?.equals(tokens.default)
 }
 
 /**
@@ -20,27 +24,42 @@ function includesDefaultToken(tokens: SwapTokens) {
  * Enforces that token is a part of the returned value.
  */
 export function useSyncWidgetInputs({
-  token,
-  onTokenChange,
+  defaultTokens,
+  onDefaultTokenChange,
 }: {
-  token?: Currency
-  onTokenChange?: (token: Currency) => void
+  defaultTokens: DefaultTokens
+  onDefaultTokenChange?: (token: Currency) => void
 }) {
   const trace = useTrace({ section: InterfaceSectionName.WIDGET })
 
+  const { chainId } = useWeb3React()
+  const previousChainId = usePrevious(chainId)
+
   const [type, setType] = useState<SwapValue['type']>(TradeType.EXACT_INPUT)
   const [amount, setAmount] = useState<SwapValue['amount']>(EMPTY_AMOUNT)
-  const [tokens, setTokens] = useState<SwapTokens>({ [Field.OUTPUT]: token, default: token })
+  const [tokens, setTokens] = useState<SwapTokens>(defaultTokens)
 
   useEffect(() => {
-    setTokens((tokens) => {
-      const update = { ...tokens, default: token }
-      if (!includesDefaultToken(update)) {
-        return { [Field.OUTPUT]: update.default, default: update.default }
-      }
-      return update
-    })
-  }, [token])
+    if (!tokens[Field.INPUT] && !tokens[Field.OUTPUT]) {
+      setTokens({
+        ...tokens,
+        [Field.INPUT]: defaultTokens[Field.INPUT] ?? tokens[Field.INPUT],
+        [Field.OUTPUT]: defaultTokens[Field.OUTPUT] ?? tokens[Field.OUTPUT] ?? defaultTokens.default,
+        default: defaultTokens.default,
+      })
+    }
+  }, [defaultTokens, tokens])
+
+  useEffect(() => {
+    if (chainId !== previousChainId && !!previousChainId && isSupportedChain(chainId)) {
+      setTokens({
+        ...tokens,
+        [Field.INPUT]: undefined,
+        [Field.OUTPUT]: undefined,
+      })
+      setAmount(EMPTY_AMOUNT)
+    }
+  }, [chainId, previousChainId, tokens])
 
   const onAmountChange = useCallback(
     (field: Field, amount: string, origin?: 'max') => {
@@ -96,13 +115,14 @@ export function useSyncWidgetInputs({
         return type
       })
 
-      if (!includesDefaultToken(update)) {
-        onTokenChange?.(update[Field.OUTPUT] || selectingToken)
+      if (missingDefaultToken(update)) {
+        onDefaultTokenChange?.(update[Field.OUTPUT] ?? selectingToken)
       }
       setTokens(update)
     },
-    [onTokenChange, selectingField, tokens]
+    [onDefaultTokenChange, selectingField, tokens]
   )
+
   const tokenSelector = (
     <CurrencySearchModal
       isOpen={selectingField !== undefined}
@@ -110,6 +130,7 @@ export function useSyncWidgetInputs({
       selectedCurrency={selectingField && tokens[selectingField]}
       otherSelectedCurrency={selectingField && tokens[invertField(selectingField)]}
       onCurrencySelect={onTokenSelect}
+      showCommonBases
     />
   )
 
@@ -117,11 +138,11 @@ export function useSyncWidgetInputs({
     () => ({
       type,
       amount,
-      // If the default has not yet been handled, preemptively disable the widget by passing no tokens. Effectively,
+      // If the initial state has not yet been set, preemptively disable the widget by passing no tokens. Effectively,
       // this resets the widget - avoiding rendering stale state - because with no tokens the skeleton will be rendered.
-      ...(token && tokens.default?.equals(token) ? tokens : undefined),
+      ...(tokens[Field.INPUT] || tokens[Field.OUTPUT] ? tokens : undefined),
     }),
-    [amount, token, tokens, type]
+    [amount, tokens, type]
   )
   const valueHandlers: SwapEventHandlers = useMemo(
     () => ({ onAmountChange, onSwitchTokens, onTokenSelectorClick }),

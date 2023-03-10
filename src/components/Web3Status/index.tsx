@@ -1,16 +1,15 @@
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { FiatOnrampAnnouncement } from 'components/FiatOnrampAnnouncement'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import WalletDropdown from 'components/WalletDropdown'
-import { getConnection, getIsMetaMask } from 'connection/utils'
+import { getConnection } from 'connection/utils'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
@@ -22,7 +21,6 @@ import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import {
   useCloseModal,
   useModalIsOpen,
-  useToggleMetamaskConnectionErrorModal,
   useToggleWalletDropdown,
   useToggleWalletModal,
 } from '../../state/application/hooks'
@@ -35,7 +33,6 @@ import StatusIcon from '../Identicon/StatusIcon'
 import Loader from '../Loader'
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
-import MetamaskConnectionError from './MetamaskConnectionError'
 
 // https://stackoverflow.com/a/31617326
 const FULL_BORDER_RADIUS = 9999
@@ -213,16 +210,10 @@ function Web3StatusInner() {
     toggleWalletDropdown()
   }, [toggleWalletDropdown])
   const toggleWalletModal = useToggleWalletModal()
-  const toggleMetamaskConnectionErrorModal = useToggleMetamaskConnectionErrorModal()
   const walletIsOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
-  const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
-  useEffect(() => {
-    if (getIsMetaMask() && error) {
-      toggleMetamaskConnectionErrorModal()
-    }
-  }, [error, toggleMetamaskConnectionErrorModal])
+  const error = useAppSelector((state) => state.connection.errorByConnectionType[connectionType])
 
   const allTransactions = useAllTransactions()
 
@@ -250,6 +241,7 @@ function Web3StatusInner() {
     const chevronProps = {
       ...CHEVRON_PROPS,
       color: theme.textSecondary,
+      'aria-label': walletIsOpen ? t`Close wallet connection options` : t`Open wallet connection options`,
     }
 
     return (
@@ -259,7 +251,7 @@ function Web3StatusInner() {
         pending={hasPendingTransactions}
         isClaimAvailable={isClaimAvailable}
       >
-        {!hasPendingTransactions && <StatusIcon size={24} connectionType={connectionType} />}
+        {!hasPendingTransactions && <StatusIcon enableInfotips={true} size={24} connectionType={connectionType} />}
         {hasPendingTransactions ? (
           <RowBetween>
             <Text>
@@ -280,6 +272,7 @@ function Web3StatusInner() {
       ...CHEVRON_PROPS,
       color: theme.accentAction,
       'data-testid': 'navbar-wallet-dropdown',
+      'aria-label': walletIsOpen ? t`Close wallet connection options` : t`Open wallet connection options`,
     }
     return (
       <TraceEvent
@@ -324,9 +317,7 @@ export default function Web3Status() {
   return (
     <span ref={ref}>
       <Web3StatusInner />
-      <FiatOnrampAnnouncement />
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
-      <MetamaskConnectionError />
       <Portal>
         <span ref={walletRef}>
           <WalletDropdown />

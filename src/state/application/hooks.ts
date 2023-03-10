@@ -4,7 +4,7 @@ import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
-import { AppState } from '../index'
+import { AppState } from '../types'
 import {
   addPopup,
   ApplicationModal,
@@ -91,10 +91,6 @@ export function useToggleModal(modal: ApplicationModal): () => void {
 export function useCloseModal(): () => void {
   const dispatch = useAppDispatch()
   return useCallback(() => dispatch(setOpenModal(null)), [dispatch])
-}
-
-export function useToggleMetamaskConnectionErrorModal(): () => void {
-  return useToggleModal(ApplicationModal.METAMASK_CONNECTION_ERROR)
 }
 
 export function useOpenModal(modal: ApplicationModal): () => void {

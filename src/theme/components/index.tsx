@@ -182,6 +182,12 @@ const StyledLink = styled.a`
   ${ClickableStyle}
   ${LinkStyle}
 `
+
+export const StyledRouterLink = styled(Link)`
+  ${ClickableStyle}
+  ${LinkStyle}
+`
+
 /**
  * Outbound link that handles firing google analytics events
  */

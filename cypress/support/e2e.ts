@@ -36,7 +36,9 @@ Cypress.Commands.overwrite(
     cy.intercept('/service-worker.js', options?.serviceWorker ? undefined : { statusCode: 404 }).then(() => {
       original({
         ...options,
-        url: (url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url) + '?chain=goerli',
+        url:
+          (url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url) +
+          `${url.includes('?') ? '&' : '?'}chain=goerli`,
         onBeforeLoad(win) {
           options?.onBeforeLoad?.(win)
           win.localStorage.clear()
@@ -70,6 +72,7 @@ beforeEach(() => {
   // These are stripped by cypress because chromeWebSecurity === false; this adds them back in.
   cy.intercept(/infura.io/, (res) => {
     res.headers['origin'] = 'http://localhost:3000'
+    res.alias = res.body.method
     res.continue()
   })
 

@@ -13,8 +13,8 @@ describe('Wallet Dropdown', () => {
 
   it('should select a language', () => {
     cy.get(getTestSelector('wallet-select-language')).click()
-    cy.get(getTestSelector('wallet-language-item')).contains('Afrikaans').click({ force: true })
-    cy.get(getTestSelector('wallet-header')).should('contain', 'Taal')
+    cy.get(getTestSelector('wallet-language-item')).contains('Deutsch').click({ force: true })
+    cy.get(getTestSelector('wallet-header')).should('contain', 'Sprache')
     cy.get(getTestSelector('wallet-language-item')).contains('English').click({ force: true })
     cy.get(getTestSelector('wallet-header')).should('contain', 'Language')
     cy.get(getTestSelector('wallet-back')).click()
@@ -36,8 +36,8 @@ describe('Wallet Dropdown', () => {
 
   it('should select a language when not connected', () => {
     cy.get(getTestSelector('wallet-select-language')).click()
-    cy.get(getTestSelector('wallet-language-item')).contains('Afrikaans').click({ force: true })
-    cy.get(getTestSelector('wallet-header')).should('contain', 'Taal')
+    cy.get(getTestSelector('wallet-language-item')).contains('Deutsch').click({ force: true })
+    cy.get(getTestSelector('wallet-header')).should('contain', 'Sprache')
     cy.get(getTestSelector('wallet-language-item')).contains('English').click({ force: true })
     cy.get(getTestSelector('wallet-header')).should('contain', 'Language')
     cy.get(getTestSelector('wallet-back')).click()

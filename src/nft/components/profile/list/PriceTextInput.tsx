@@ -1,28 +1,87 @@
 import { Trans } from '@lingui/macro'
-import { Box } from 'nft/components/Box'
-import { Column, Row } from 'nft/components/Flex'
-import { AttachPriceIcon, EditPriceIcon } from 'nft/components/icons'
+import Column from 'components/Column'
+import Row from 'components/Row'
+import { BrokenLinkIcon } from 'nft/components/icons'
 import { NumericInput } from 'nft/components/layout/Input'
-import { badge, body } from 'nft/css/common.css'
+import { useUpdateInputAndWarnings } from 'nft/components/profile/list/utils'
+import { body } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
-import { ListingWarning, WalletAsset } from 'nft/types'
+import { WalletAsset } from 'nft/types'
 import { formatEth } from 'nft/utils/currency'
-import { Dispatch, FormEvent, useEffect, useRef, useState } from 'react'
+import { Dispatch, useRef, useState } from 'react'
+import { AlertTriangle, Link } from 'react-feather'
+import styled, { useTheme } from 'styled-components/macro'
+import { BREAKPOINTS } from 'theme'
+import { colors } from 'theme/colors'
 
-enum WarningType {
-  BELOW_FLOOR,
-  ALREADY_LISTED,
-  NONE,
-}
+import { WarningType } from './shared'
+
+const PriceTextInputWrapper = styled(Column)`
+  gap: 12px;
+  position: relative;
+`
+
+const InputWrapper = styled(Row)<{ borderColor: string }>`
+  height: 48px;
+  color: ${({ theme }) => theme.textTertiary};
+  padding: 12px;
+  border: 2px solid;
+  border-radius: 8px;
+  border-color: ${({ borderColor }) => borderColor};
+  margin-right: auto;
+  box-sizing: border-box;
+`
+
+const CurrencyWrapper = styled.div<{ listPrice: number | undefined }>`
+  color: ${({ listPrice, theme }) => (listPrice ? theme.textPrimary : theme.textSecondary)};
+`
+
+const GlobalPriceIcon = styled.div`
+  display: flex;
+  cursor: pointer;
+  position: absolute;
+  bottom: 32px;
+  right: -10px;
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  border-radius: 50%;
+  height: 28px;
+  width: 28px;
+  align-items: center;
+  justify-content: center;
+`
+
+const WarningRow = styled(Row)`
+  gap: 4px;
+`
+
+const WarningMessage = styled(Row)<{ $color: string }>`
+  top: 52px;
+  width: max-content;
+  position: absolute;
+  right: 0;
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 12px;
+  color: ${({ $color }) => $color};
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    right: unset;
+  }
+`
+
+const WarningAction = styled.div`
+  cursor: pointer;
+  color: ${({ theme }) => theme.accentAction};
+`
 
 const getWarningMessage = (warning: WarningType) => {
   let message = <></>
   switch (warning) {
     case WarningType.BELOW_FLOOR:
-      message = <Trans>LISTING BELOW FLOOR </Trans>
+      message = <Trans>below floor price.</Trans>
       break
     case WarningType.ALREADY_LISTED:
-      message = <Trans>ALREADY LISTED FOR </Trans>
+      message = <Trans>Already listed at</Trans>
       break
   }
   return message
@@ -34,9 +93,7 @@ interface PriceTextInputProps {
   isGlobalPrice: boolean
   setGlobalOverride: Dispatch<boolean>
   globalOverride: boolean
-  warning?: ListingWarning
   asset: WalletAsset
-  shrink?: boolean
 }
 
 export const PriceTextInput = ({
@@ -45,48 +102,39 @@ export const PriceTextInput = ({
   isGlobalPrice,
   setGlobalOverride,
   globalOverride,
-  warning,
   asset,
-  shrink,
 }: PriceTextInputProps) => {
-  const [focused, setFocused] = useState(false)
   const [warningType, setWarningType] = useState(WarningType.NONE)
-  const removeMarketplaceWarning = useSellAsset((state) => state.removeMarketplaceWarning)
   const removeSellAsset = useSellAsset((state) => state.removeSellAsset)
+  const showResolveIssues = useSellAsset((state) => state.showResolveIssues)
   const inputRef = useRef() as React.MutableRefObject<HTMLInputElement>
+  const theme = useTheme()
 
-  useEffect(() => {
-    inputRef.current.value = listPrice !== undefined ? `${listPrice}` : ''
-    setWarningType(WarningType.NONE)
-    if (!warning && listPrice) {
-      if (listPrice < (asset?.floorPrice ?? 0)) setWarningType(WarningType.BELOW_FLOOR)
-      else if (asset.floor_sell_order_price && listPrice >= asset.floor_sell_order_price)
-        setWarningType(WarningType.ALREADY_LISTED)
-    } else if (warning && listPrice && listPrice >= 0) removeMarketplaceWarning(asset, warning)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listPrice])
+  const percentBelowFloor = (1 - (listPrice ?? 0) / (asset.floorPrice ?? 0)) * 100
+  const warningColor =
+    (showResolveIssues && !listPrice) ||
+    warningType === WarningType.ALREADY_LISTED ||
+    (warningType === WarningType.BELOW_FLOOR && percentBelowFloor >= 20)
+      ? colors.red400
+      : warningType === WarningType.BELOW_FLOOR
+      ? theme.accentWarning
+      : isGlobalPrice || !!listPrice
+      ? theme.accentAction
+      : theme.textSecondary
+
+  const setPrice = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!listPrice && event.target.value.includes('.') && parseFloat(event.target.value) === 0) {
+      return
+    }
+    const val = parseFloat(event.target.value)
+    setListPrice(isNaN(val) ? undefined : val)
+  }
+
+  useUpdateInputAndWarnings(setWarningType, inputRef, asset, listPrice)
 
   return (
-    <Column gap="12" position="relative">
-      <Row
-        color="textTertiary"
-        height="44"
-        width="min"
-        padding="4"
-        borderRadius="8"
-        borderWidth="2px"
-        borderStyle="solid"
-        marginRight="auto"
-        borderColor={
-          warningType !== WarningType.NONE && !focused
-            ? 'orange'
-            : isGlobalPrice
-            ? 'accentAction'
-            : listPrice != null
-            ? 'textSecondary'
-            : 'blue400'
-        }
-      >
+    <PriceTextInputWrapper>
+      <InputWrapper borderColor={warningColor}>
         <NumericInput
           as="input"
           pattern="[0-9]"
@@ -94,69 +142,39 @@ export const PriceTextInput = ({
           className={body}
           color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
           placeholder="0"
-          marginRight="0"
-          marginLeft="14"
           backgroundColor="none"
-          style={{ width: shrink ? '54px' : '68px' }}
-          onFocus={() => setFocused(true)}
-          onBlur={() => {
-            setFocused(false)
-          }}
+          width={{ sm: '54', md: '68' }}
           ref={inputRef}
-          onChange={(v: FormEvent<HTMLInputElement>) => {
-            if (!listPrice && v.currentTarget.value.includes('.') && parseFloat(v.currentTarget.value) === 0) {
-              return
-            }
-            const val = parseFloat(v.currentTarget.value)
-            setListPrice(isNaN(val) ? undefined : val)
-          }}
+          onChange={setPrice}
         />
-        <Box color={listPrice && listPrice >= 0 ? 'textPrimary' : 'textSecondary'} marginRight="16">
-          &nbsp;ETH
-        </Box>
-        <Box
-          cursor="pointer"
-          display={isGlobalPrice || globalOverride ? 'block' : 'none'}
-          position="absolute"
-          style={{ marginTop: '-36px', marginLeft: '124px' }}
-          backgroundColor="backgroundSurface"
-          onClick={() => setGlobalOverride(!globalOverride)}
-        >
-          {globalOverride ? <AttachPriceIcon /> : <EditPriceIcon />}
-        </Box>
-      </Row>
-      <Row
-        top="52"
-        width="max"
-        className={badge}
-        color={warningType === WarningType.BELOW_FLOOR && !focused ? 'orange' : 'textSecondary'}
-        position="absolute"
-        right={{ sm: '0', md: 'unset' }}
-      >
-        {warning
-          ? warning.message
-          : warningType !== WarningType.NONE && (
-              <>
-                {getWarningMessage(warningType)}
-                &nbsp;
-                {warningType === WarningType.BELOW_FLOOR
-                  ? formatEth(asset?.floorPrice ?? 0)
-                  : formatEth(asset?.floor_sell_order_price ?? 0)}
-                ETH
-                <Box
-                  color={warningType === WarningType.BELOW_FLOOR ? 'accentAction' : 'orange'}
-                  marginLeft="8"
-                  cursor="pointer"
-                  onClick={() => {
-                    warningType === WarningType.ALREADY_LISTED && removeSellAsset(asset)
-                    setWarningType(WarningType.NONE)
-                  }}
-                >
-                  {warningType === WarningType.BELOW_FLOOR ? <Trans>DISMISS</Trans> : <Trans>REMOVE ITEM</Trans>}
-                </Box>
-              </>
-            )}
-      </Row>
-    </Column>
+        <CurrencyWrapper listPrice={listPrice}>&nbsp;ETH</CurrencyWrapper>
+        {(isGlobalPrice || globalOverride) && (
+          <GlobalPriceIcon onClick={() => setGlobalOverride(!globalOverride)}>
+            {globalOverride ? <BrokenLinkIcon /> : <Link size={20} color={warningColor} />}
+          </GlobalPriceIcon>
+        )}
+      </InputWrapper>
+      <WarningMessage $color={warningColor}>
+        {warningType !== WarningType.NONE && (
+          <WarningRow>
+            <AlertTriangle height={16} width={16} color={warningColor} />
+            <span>
+              {warningType === WarningType.BELOW_FLOOR && `${percentBelowFloor.toFixed(0)}% `}
+              {getWarningMessage(warningType)}
+              &nbsp;
+              {warningType === WarningType.ALREADY_LISTED && `${formatEth(asset?.floor_sell_order_price ?? 0)} ETH`}
+            </span>
+            <WarningAction
+              onClick={() => {
+                warningType === WarningType.ALREADY_LISTED && removeSellAsset(asset)
+                setWarningType(WarningType.NONE)
+              }}
+            >
+              {warningType === WarningType.BELOW_FLOOR ? <Trans>Dismiss</Trans> : <Trans>Remove item</Trans>}
+            </WarningAction>
+          </WarningRow>
+        )}
+      </WarningMessage>
+    </PriceTextInputWrapper>
   )
 }

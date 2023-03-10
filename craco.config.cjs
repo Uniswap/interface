@@ -9,9 +9,20 @@ module.exports = {
   babel: {
     plugins: ['@vanilla-extract/babel-plugin'],
   },
+  jest: {
+    configure(jestConfig) {
+      return Object.assign({}, jestConfig, {
+        transformIgnorePatterns: ['@uniswap/conedison/format', '@uniswap/conedison/provider'],
+        moduleNameMapper: {
+          '@uniswap/conedison/format': '@uniswap/conedison/dist/format',
+          '@uniswap/conedison/provider': '@uniswap/conedison/dist/provider',
+        },
+      })
+    },
+  },
   webpack: {
     plugins: [
-      new VanillaExtractPlugin(),
+      new VanillaExtractPlugin({ identifiers: 'short' }),
       new DefinePlugin({
         'process.env.REACT_APP_GIT_COMMIT_HASH': JSON.stringify(commitHash.toString()),
       }),
