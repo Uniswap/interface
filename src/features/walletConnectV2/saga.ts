@@ -24,6 +24,7 @@ import {
   getChainIdFromEIP155String,
   getSupportedWalletConnectChains,
   parseSignRequest,
+  parseTransactionRequest,
 } from 'src/features/walletConnectV2/utils'
 import { logger } from 'src/utils/logger'
 import { ONE_SECOND_MS } from 'src/utils/time'
@@ -141,7 +142,20 @@ function createWalletConnectV2Channel(): EventChannel<Action<unknown>> {
           break
         }
         case EthMethod.EthSendTransaction: {
-          // TODO: handle eth transaction methods
+          const { account, request } = parseTransactionRequest(
+            method,
+            topic,
+            id,
+            chainId,
+            dapp,
+            requestParams
+          )
+          emit(
+            addRequest({
+              account,
+              request,
+            })
+          )
           break
         }
         default:
@@ -156,7 +170,7 @@ function createWalletConnectV2Channel(): EventChannel<Action<unknown>> {
             response: {
               id,
               jsonrpc: '2.0',
-              error: getSdkError('INVALID_METHOD'),
+              error: getSdkError('WC_METHOD_UNSUPPORTED'),
             },
           })
       }

@@ -4,7 +4,7 @@ import { utils } from 'ethers'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { EthMethod, EthSignMethod } from 'src/features/walletConnect/types'
-import { SignRequest } from 'src/features/walletConnect/walletConnectSlice'
+import { SignRequest, TransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { toSupportedChainId } from 'src/utils/chainId'
 
 /**
@@ -75,7 +75,7 @@ export const getAccountAddressFromEIP155String = (account: string): Address | nu
 }
 
 /**
- * Formats SignRequestV2 object from WalletConnect 2.0 request parameters
+ * Formats SignRequest object from WalletConnect 2.0 request parameters
  *
  * @param {EthSignMethod} method type of method to sign
  * @param {string} topic id for the WalletConnect session
@@ -103,6 +103,56 @@ export const parseSignRequest = (
       rawMessage,
       message,
       account: address,
+      chainId,
+      dapp: {
+        name: dapp.name,
+        url: dapp.url,
+        icon: dapp.icons[0] ?? null,
+        version: '2',
+      },
+      version: '2',
+    },
+  }
+}
+
+/**
+ * Formats TransactionRequest object from WalletConnect 2.0 request parameters.
+ * Only supports `eth_sendTransaction` request, `eth_signTransaction` is intentionally
+ * unsupported since it is difficult to support to nonce calculation and tracking.
+ *
+ * @param {EthMethod.EthSendTransaction} method type of method to sign (only support `eth_signTransaction`)
+ * @param {string} topic id for the WalletConnect session
+ * @param {number} internalId id for the WalletConnect transaction request
+ * @param {ChainId} chainId chain the signature is being requested on
+ * @param {SignClientTypes.Metadata} dapp metadata for the dapp requesting the transaction
+ * @param {Web3WalletTypes.SessionRequest['params']['request']['params']} requestParams parameters of the request
+ * @returns {{Address, TransactionRequest}} address of the account receiving the request and formatted TransactionRequest object
+ */
+export const parseTransactionRequest = (
+  method: EthMethod.EthSendTransaction,
+  topic: string,
+  internalId: number,
+  chainId: ChainId,
+  dapp: SignClientTypes.Metadata,
+  requestParams: Web3WalletTypes.SessionRequest['params']['request']['params']
+): { account: Address; request: TransactionRequest } => {
+  // Omit gasPrice and nonce in tx sent from dapp since it is calculated later
+  const { from, to, data, gasLimit, value } = requestParams[0]
+
+  return {
+    account: from,
+    request: {
+      type: method,
+      sessionId: topic,
+      internalId: String(internalId),
+      transaction: {
+        to,
+        from,
+        value,
+        data,
+        gasLimit,
+      },
+      account: from,
       chainId,
       dapp: {
         name: dapp.name,
