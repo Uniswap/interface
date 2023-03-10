@@ -47,7 +47,7 @@ export type V3PoolInRoute = {
   amountIn?: string
   amountOut?: string
 
-  // no used in the interface
+  // not used in the interface
   address?: string
 }
 

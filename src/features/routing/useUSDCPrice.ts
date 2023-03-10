@@ -35,7 +35,12 @@ export function useUSDCPrice(
   )
   const amountSpecified = currencyIsStablecoin ? undefined : quoteAmount
 
-  const { trade } = useTrade(amountSpecified, currency, TradeType.EXACT_OUTPUT, pollingInterval)
+  const { trade } = useTrade({
+    amountSpecified,
+    otherCurrency: currency,
+    tradeType: TradeType.EXACT_OUTPUT,
+    pollingInterval,
+  })
 
   return useMemo(() => {
     if (!stablecoin) return

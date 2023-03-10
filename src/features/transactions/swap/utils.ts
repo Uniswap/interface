@@ -1,10 +1,9 @@
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { BigNumber, BigNumberish } from 'ethers'
 import { TFunction } from 'i18next'
 import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { AssetType } from 'src/entities/assets'
-import { DEFAULT_SLIPPAGE_TOLERANCE_PERCENT } from 'src/features/transactions/swap/hooks'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import {
@@ -62,6 +61,7 @@ export function isWrapAction(wrapType: WrapType): wrapType is WrapType.Unwrap | 
 export function tradeToTransactionInfo(
   trade: Trade
 ): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
+  const slippageTolerance = slippageToleranceToPercent(trade.slippageTolerance)
   return trade.tradeType === TradeType.EXACT_INPUT
     ? {
         type: TransactionType.Swap,
@@ -71,7 +71,7 @@ export function tradeToTransactionInfo(
         inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
         expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
         minimumOutputCurrencyAmountRaw: trade
-          .minimumAmountOut(DEFAULT_SLIPPAGE_TOLERANCE_PERCENT)
+          .minimumAmountOut(slippageTolerance)
           .quotient.toString(),
       }
     : {
@@ -81,9 +81,7 @@ export function tradeToTransactionInfo(
         tradeType: TradeType.EXACT_OUTPUT,
         outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
         expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-        maximumInputCurrencyAmountRaw: trade
-          .maximumAmountIn(DEFAULT_SLIPPAGE_TOLERANCE_PERCENT)
-          .quotient.toString(),
+        maximumInputCurrencyAmountRaw: trade.maximumAmountIn(slippageTolerance).quotient.toString(),
       }
 }
 
@@ -171,4 +169,10 @@ export const prepareSwapFormState = ({
         [CurrencyField.OUTPUT]: null,
       }
     : undefined
+}
+
+// rounds to nearest basis point
+export const slippageToleranceToPercent = (slippage: number): Percent => {
+  const basisPoints = Math.round(slippage * 100)
+  return new Percent(basisPoints, 10_000)
 }

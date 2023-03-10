@@ -4,7 +4,7 @@ import { MaxUint256 } from '@ethersproject/constants'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { SwapRouter } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import {
   SwapRouter as UniversalSwapRouter,
   UNIVERSAL_ROUTER_ADDRESS,
@@ -18,7 +18,6 @@ import { useAppDispatch } from 'src/app/hooks'
 import { useContractManager, useProvider } from 'src/app/walletContext'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
-import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/transactions'
 import { AssetType } from 'src/entities/assets'
 import { useOnChainCurrencyBalance } from 'src/features/balances/api'
 import { ContractManager } from 'src/features/contracts/ContractManager'
@@ -38,8 +37,13 @@ import { usePermitSignature } from 'src/features/transactions/permit/usePermitSi
 import { getBaseTradeAnalyticsProperties } from 'src/features/transactions/swap/analytics'
 import { swapActions } from 'src/features/transactions/swap/swapSaga'
 import { usePermit2Signature } from 'src/features/transactions/swap/usePermit2Signature'
-import { Trade, useTrade } from 'src/features/transactions/swap/useTrade'
-import { getWrapType, isWrapAction, sumGasFees } from 'src/features/transactions/swap/utils'
+import { Trade, useSetTradeSlippage, useTrade } from 'src/features/transactions/swap/useTrade'
+import {
+  getWrapType,
+  isWrapAction,
+  slippageToleranceToPercent,
+  sumGasFees,
+} from 'src/features/transactions/swap/utils'
 import {
   getWethContract,
   tokenWrapActions,
@@ -61,7 +65,6 @@ import { logger } from 'src/utils/logger'
 import { toStringish } from 'src/utils/number'
 import { tryParseExactAmount } from 'src/utils/tryParseAmount'
 
-export const DEFAULT_SLIPPAGE_TOLERANCE_PERCENT = new Percent(DEFAULT_SLIPPAGE_TOLERANCE, 100)
 const NUM_USD_DECIMALS_DISPLAY = 2
 
 export type DerivedSwapInfo<
@@ -83,6 +86,7 @@ export type DerivedSwapInfo<
   wrapType: WrapType
   selectingCurrencyField?: CurrencyField
   txId?: string
+  slippageTolerance?: number
 }
 
 /** Returns information derived from the current swap state */
@@ -96,6 +100,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     focusOnCurrencyField = CurrencyField.INPUT,
     selectingCurrencyField,
     txId,
+    slippageTolerance,
   } = state
 
   const activeAccount = useActiveAccount()
@@ -141,11 +146,14 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
 
   const shouldGetQuote = !isWrapAction(wrapType)
 
-  const trade = useTrade(
-    shouldGetQuote ? amountSpecified : null,
+  const tradeWithoutSlippage = useTrade({
+    amountSpecified: shouldGetQuote ? amountSpecified : null,
     otherCurrency,
-    isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT
-  )
+    tradeType: isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
+    slippageTolerance,
+  })
+
+  const trade = useSetTradeSlippage(tradeWithoutSlippage, slippageTolerance)
 
   const currencyAmounts = useMemo(
     () =>
@@ -194,6 +202,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       wrapType,
       selectingCurrencyField,
       txId,
+      slippageTolerance,
     }
   }, [
     chainId,
@@ -208,6 +217,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     trade,
     txId,
     wrapType,
+    slippageTolerance,
   ])
 }
 
@@ -654,9 +664,11 @@ export function useSwapTransactionRequest(
       chainId,
     }
 
+    const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance)
+
     if (permitInfo) {
       const { calldata, value } = SwapRouter.swapCallParameters(trade, {
-        slippageTolerance: DEFAULT_SLIPPAGE_TOLERANCE_PERCENT,
+        slippageTolerance: slippageTolerancePercent,
         recipient: address,
         inputTokenPermit: permitInfo,
       })
@@ -669,7 +681,7 @@ export function useSwapTransactionRequest(
 
     if (permit2Signature) {
       const { calldata, value } = UniversalSwapRouter.swapERC20CallParameters(trade, {
-        slippageTolerance: DEFAULT_SLIPPAGE_TOLERANCE_PERCENT,
+        slippageTolerance: slippageTolerancePercent,
         recipient: address,
         inputTokenPermit: {
           signature: permit2Signature.signature,

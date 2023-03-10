@@ -21,6 +21,7 @@ export interface TransactionState {
   isUSDInput?: boolean
   selectingCurrencyField?: CurrencyField
   showRecipientSelector?: boolean
+  slippageTolerance?: number // placeholder for when the UI allows users to set slippage tolerance. percentage must have max 2 decimals
 }
 
 const ETH_TRADEABLE_ASSET: TradeableAsset = {
@@ -41,6 +42,7 @@ export const initialState: Readonly<TransactionState> = {
   isUSDInput: false,
   selectingCurrencyField: undefined,
   showRecipientSelector: true,
+  slippageTolerance: undefined,
 }
 
 // using `createSlice` for convenience -- slice is not added to root reducer

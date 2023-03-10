@@ -20,6 +20,7 @@ export interface UseQuoteProps {
   skip?: boolean
   fetchSimulatedGasLimit?: boolean
   permitSignatureInfo?: PermitSignatureInfo | null
+  slippageTolerance?: number
 }
 
 /**
@@ -38,6 +39,7 @@ export function useRouterQuote(params: UseQuoteProps) {
     skip,
     fetchSimulatedGasLimit,
     permitSignatureInfo,
+    slippageTolerance,
   } = params
 
   const currencyIn = tradeType === TradeType.EXACT_INPUT ? amountSpecified?.currency : otherCurrency
@@ -71,6 +73,7 @@ export function useRouterQuote(params: UseQuoteProps) {
           recipient: recipient?.address,
           fetchSimulatedGasLimit,
           permitSignatureInfo,
+          slippageTolerance,
         },
     {
       pollingInterval,

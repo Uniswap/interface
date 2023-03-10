@@ -1,6 +1,5 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { BigNumber } from 'ethers'
 import { useEffect, useRef } from 'react'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { SwapTradeBaseProperties } from 'src/features/telemetry/types'
@@ -60,9 +59,6 @@ export function getBaseTradeAnalyticsProperties(
     chain_id: trade.inputAmount.currency.chainId,
     token_in_amount: trade.inputAmount.toExact(),
     token_out_amount: formatCurrencyAmount(trade.outputAmount, NumberType.SwapTradeAmount),
-    allowed_slippage_basis_points:
-      trade.slippageTolerance !== undefined
-        ? BigNumber.from(trade.slippageTolerance).mul(100).toNumber()
-        : undefined,
+    allowed_slippage_basis_points: trade.slippageTolerance * 100,
   }
 }
