@@ -1,4 +1,4 @@
-import { useContractKit, useGetConnectedSigner } from '@celo-tools/use-contractkit'
+import { useContractKit, useGetConnectedSigner, useProvider } from '@celo-tools/use-contractkit'
 import { TokenAmount } from '@ubeswap/sdk'
 import { ButtonEmpty, ButtonLight, ButtonPrimary, ButtonRadio } from 'components/Button'
 import { AutoColumn } from 'components/Column'
@@ -13,6 +13,7 @@ import StakeCollapseCard from 'components/Stake/StakeCollapseCard'
 import StakeInputField from 'components/Stake/StakeInputField'
 import { ViewProposalModal } from 'components/Stake/ViewProposalModal'
 import { useDoTransaction } from 'components/swap/routing'
+import { RomulusDelegate__factory, Voter__factory } from 'generated'
 import { VotableStakingRewards__factory } from 'generated/factories/VotableStakingRewards__factory'
 import { useRomulus } from 'hooks/romulus/useRomulus'
 import { useVotingTokens } from 'hooks/romulus/useVotingTokens'
@@ -73,6 +74,7 @@ export const Stake: React.FC = () => {
 
   const history = useHistory()
   const { address, connect, network } = useContractKit()
+  const provider = useProvider()
   const getConnectedSigner = useGetConnectedSigner()
   const [amount, setAmount] = useState('')
   const [showChangeDelegateModal, setShowChangeDelegateModal] = useState(false)
@@ -83,6 +85,22 @@ export const Stake: React.FC = () => {
   const [staking, setStaking] = useState(true)
   const ubeBalance = useCurrencyBalance(address ?? undefined, ube)
   const contract = useVotableStakingContract(VOTABLE_STAKING_REWARDS_ADDRESS)
+  const crank = useCallback(
+    async (delegateIdx: DelegateIdx) => {
+      const staking = VotableStakingRewards__factory.connect(VOTABLE_STAKING_REWARDS_ADDRESS, provider)
+      const voterAddr = await staking.delegates(delegateIdx)
+      const supportName =
+        delegateIdx === DelegateIdx.ABSTAIN ? 'ABSTAIN' : delegateIdx === DelegateIdx.FOR ? 'FOR' : 'AGAINST'
+      const voter = Voter__factory.connect(voterAddr, provider)
+      const romulus = RomulusDelegate__factory.connect(await voter.romulusDelegate(), provider)
+      const proposalCount = await romulus.proposalCount()
+      await doTransaction(voter, 'castVote', {
+        args: [proposalCount.sub(1)],
+        summary: `Cranking the ${supportName} vote`,
+      })
+    },
+    [getConnectedSigner, network]
+  )
   const stakeBalance = new TokenAmount(
     ube,
     useSingleCallResult(contract, 'balanceOf', [address ?? undefined]).result?.[0] ?? 0
@@ -267,6 +285,47 @@ export const Stake: React.FC = () => {
             week ({apy?.multiply('100').toFixed(2, { groupSeparator: ',' }) ?? '--'}% APR)
           </Text>
         )}
+
+        <StakeCollapseCard title="Voter cranks">
+          <InformationWrapper>
+            <div>
+              <Text fontWeight={500} fontSize={16} marginTop={12}>
+                For Voter
+              </Text>
+              <ButtonPrimary
+                onClick={async () => {
+                  await crank(DelegateIdx.FOR)
+                }}
+              >
+                Crank
+              </ButtonPrimary>
+            </div>
+            <div>
+              <Text fontWeight={500} fontSize={16} marginTop={12}>
+                Abstain Voter
+              </Text>
+              <ButtonPrimary
+                onClick={async () => {
+                  await crank(DelegateIdx.ABSTAIN)
+                }}
+              >
+                Crank
+              </ButtonPrimary>
+            </div>
+            <div>
+              <Text fontWeight={500} fontSize={16} marginTop={12}>
+                Against Voter
+              </Text>
+              <ButtonPrimary
+                onClick={async () => {
+                  await crank(DelegateIdx.AGAINST)
+                }}
+              >
+                Crank
+              </ButtonPrimary>
+            </div>
+          </InformationWrapper>
+        </StakeCollapseCard>
 
         <StakeCollapseCard title={t('Governance')} gap={'12px'}>
           <Text fontSize={14}>{t('CreateAndViewProposalsDelegateVotesAndParticipateInProtocolGovernance')}</Text>
