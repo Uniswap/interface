@@ -41,6 +41,7 @@ export default function useSyncChainQuery() {
   return useEffect(() => {
     if (nextChainId && isActive) {
       selectChain(nextChainId).then(() => {
+        setNextChainId(undefined)
         searchParams.delete('chain')
         setSearchParams(searchParams)
       })
