@@ -27,7 +27,8 @@ function useETHValue(currencyAmount?: CurrencyAmount<Currency>): CurrencyAmount<
     RouterPreference.PRICE
   )
 
-  if (chainId && currencyAmount && currencyAmount.currency.equals(nativeOnChain(chainId))) {
+  // Get ETH value of ETH or WETH
+  if (chainId && currencyAmount && currencyAmount.currency.wrapped.equals(nativeOnChain(chainId).wrapped)) {
     return new Price(currencyAmount.currency, currencyAmount.currency, '1', '1').quote(currencyAmount)
   }
 
