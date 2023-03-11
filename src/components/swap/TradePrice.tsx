@@ -1,10 +1,12 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Price } from '@uniswap/sdk-core'
-import useStablecoinPrice from 'hooks/useStablecoinPrice'
+import { formatNumber, NumberType } from '@uniswap/conedison/format'
+import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
+import { parseUnits } from 'ethers/lib/utils'
+import { useUSDPrice } from 'hooks/useUSDPrice'
 import { useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { formatDollar, formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
+import { formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
 
 interface TradePriceProps {
   price: Price<Currency, Currency>
@@ -27,10 +29,18 @@ const StyledPriceContainer = styled.button`
   user-select: text;
 `
 
+function getOneCurrencyRawAmount(currency: Currency): string {
+  return parseUnits('1', currency.decimals).toString()
+}
+
 export default function TradePrice({ price }: TradePriceProps) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
-  const usdcPrice = useStablecoinPrice(showInverted ? price.baseCurrency : price.quoteCurrency)
+  const usdPrice = useUSDPrice(
+    showInverted
+      ? CurrencyAmount.fromRawAmount(price.baseCurrency, getOneCurrencyRawAmount(price.baseCurrency))
+      : CurrencyAmount.fromRawAmount(price.quoteCurrency, getOneCurrencyRawAmount(price.quoteCurrency))
+  )
 
   let formattedPrice: string
   try {
@@ -56,9 +66,9 @@ export default function TradePrice({ price }: TradePriceProps) {
       title={text}
     >
       <ThemedText.BodySmall>{text}</ThemedText.BodySmall>{' '}
-      {usdcPrice && (
+      {usdPrice && (
         <ThemedText.DeprecatedDarkGray>
-          <Trans>({formatDollar({ num: priceToPreciseFloat(usdcPrice), isPrice: true })})</Trans>
+          <Trans>({formatNumber(usdPrice, NumberType.FiatTokenPrice)})</Trans>
         </ThemedText.DeprecatedDarkGray>
       )}
     </StyledPriceContainer>

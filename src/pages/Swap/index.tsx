@@ -55,7 +55,6 @@ import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
-import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import useWrapCallback, { WrapErrorText, WrapType } from '../../hooks/useWrapCallback'
 import { Field } from '../../state/swap/actions'
 import {
@@ -231,18 +230,16 @@ export default function Swap({ className }: { className?: string }) {
           },
     [independentField, parsedAmount, showWrap, trade]
   )
-  const fiatValueInput = useStablecoinValue(parsedAmounts[Field.INPUT])
-  const fiatValueInput2 = useUSDPrice(parsedAmounts[Field.INPUT])
-  console.log('fiatValueInput2', fiatValueInput2)
-  const fiatValueOutput = useStablecoinValue(parsedAmounts[Field.OUTPUT])
+  const fiatValueInput = useUSDPrice(parsedAmounts[Field.INPUT])
+  const fiatValueOutput = useUSDPrice(parsedAmounts[Field.OUTPUT])
 
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
     () => [!trade?.swaps, TradeState.LOADING === tradeState, TradeState.SYNCING === tradeState],
     [trade, tradeState]
   )
 
-  const fiatValueTradeInput = useStablecoinValue(trade?.inputAmount)
-  const fiatValueTradeOutput = useStablecoinValue(trade?.outputAmount)
+  const fiatValueTradeInput = useUSDPrice(trade?.inputAmount)
+  const fiatValueTradeOutput = useUSDPrice(trade?.outputAmount)
   const stablecoinPriceImpact = useMemo(
     () =>
       routeIsSyncing || !trade ? undefined : computeFiatValuePriceImpact(fiatValueTradeInput, fiatValueTradeOutput),

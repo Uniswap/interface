@@ -1,16 +1,21 @@
 import gql from 'graphql-tag'
 
 gql`
-  query TokenSpotPrice($chain: Chain!, $address: String = null) {
+  query TokenSpotPrice($chain: Chain!, $address: String) {
     token(chain: $chain, address: $address) {
       id
       address
       chain
-      market(currency: USD) {
+      name
+      symbol
+      project {
         id
-        price {
+        markets(currencies: [USD]) {
           id
-          value
+          price {
+            id
+            value
+          }
         }
       }
     }

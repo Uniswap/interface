@@ -1,9 +1,12 @@
 import { Currency, CurrencyAmount, Price, SupportedChainId, TradeType } from '@uniswap/sdk-core'
 import { nativeOnChain } from 'constants/tokens'
-import { useTokenSpotPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { Chain, useTokenSpotPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { chainIdToBackendName, isGqlSupportedChain } from 'graphql/data/util'
 import { RouterPreference } from 'state/routing/slice'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
+import { getNativeTokenDBAddress } from 'utils/nativeTokens'
+
+import useStablecoinPrice from './useStablecoinPrice'
 
 // ETH amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
@@ -35,19 +38,25 @@ function useETHValue(currencyAmount?: CurrencyAmount<Currency>): CurrencyAmount<
   return price.quote(currencyAmount)
 }
 
-export function useUSDPrice(currencyAmount?: CurrencyAmount<Currency>) {
-  const chain = chainIdToBackendName(currencyAmount?.currency.chainId)
-
+export function useUSDPrice(currencyAmount?: CurrencyAmount<Currency>): number | undefined {
+  const chain = currencyAmount?.currency.chainId ? chainIdToBackendName(currencyAmount?.currency.chainId) : undefined
+  const currency = currencyAmount?.currency
   const ethValue = useETHValue(currencyAmount)
-  console.log('ethValue', ethValue?.toSignificant())
 
   const { data } = useTokenSpotPriceQuery({
-    variables: { chain },
-    skip: !isGqlSupportedChain(currencyAmount?.currency.chainId),
+    variables: { chain: chain ?? Chain.Ethereum, address: getNativeTokenDBAddress(chain ?? Chain.Ethereum) },
+    skip: !chain || !isGqlSupportedChain(currency?.chainId),
   })
 
-  const ethUSDPrice = data?.token?.market?.price?.value
+  // Use USDC price for chains not supported by backend yet
+  const stablecoinPrice = useStablecoinPrice(!isGqlSupportedChain(currency?.chainId) ? currency : undefined)
+  if (!isGqlSupportedChain(currency?.chainId) && currencyAmount && stablecoinPrice) {
+    return parseFloat(stablecoinPrice.quote(currencyAmount).toSignificant())
+  }
+
+  // Otherwise, get the price of the token in ETH, and then multiple by the price of ETH
+  const ethUSDPrice = data?.token?.project?.markets?.[0]?.price?.value
   if (!ethUSDPrice || !ethValue) return undefined
-  console.log('ethUSDPrice', ethUSDPrice)
+
   return parseFloat(ethValue.toExact()) * ethUSDPrice
 }
