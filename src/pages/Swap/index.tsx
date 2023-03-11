@@ -25,6 +25,7 @@ import { useSwapWidgetEnabled } from 'featureFlags/flags/swapWidget'
 import useENSAddress from 'hooks/useENSAddress'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useSwapCallback } from 'hooks/useSwapCallback'
+import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -231,6 +232,8 @@ export default function Swap({ className }: { className?: string }) {
     [independentField, parsedAmount, showWrap, trade]
   )
   const fiatValueInput = useStablecoinValue(parsedAmounts[Field.INPUT])
+  const fiatValueInput2 = useUSDPrice(parsedAmounts[Field.INPUT])
+  console.log('fiatValueInput2', fiatValueInput2)
   const fiatValueOutput = useStablecoinValue(parsedAmounts[Field.OUTPUT])
 
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
