@@ -501,6 +501,8 @@ export default function AddLiquidity() {
       </AutoColumn>
     )
 
+  const currencyAFiat = usdcValues[Field.CURRENCY_A]
+  const currencyBFiat = usdcValues[Field.CURRENCY_B]
   return (
     <>
       <ScrollablePage>
@@ -651,7 +653,7 @@ export default function AddLiquidity() {
                       showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
                       currency={currencies[Field.CURRENCY_A] ?? null}
                       id="add-liquidity-input-tokena"
-                      fiatValue={usdcValues[Field.CURRENCY_A]}
+                      fiatValue={currencyAFiat && parseFloat(currencyAFiat.toSignificant())}
                       showCommonBases
                       locked={depositADisabled}
                     />
@@ -663,7 +665,7 @@ export default function AddLiquidity() {
                         onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
                       }}
                       showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
-                      fiatValue={usdcValues[Field.CURRENCY_B]}
+                      fiatValue={currencyBFiat && parseFloat(currencyBFiat.toSignificant())}
                       currency={currencies[Field.CURRENCY_B] ?? null}
                       id="add-liquidity-input-tokenb"
                       showCommonBases

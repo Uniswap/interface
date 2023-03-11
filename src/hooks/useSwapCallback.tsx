@@ -1,5 +1,5 @@
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { PermitSignature } from 'hooks/usePermitAllowance'
 import { useMemo } from 'react'
 
@@ -13,7 +13,7 @@ import { useUniversalRouterSwapCallback } from './useUniversalRouter'
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
   trade: Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
-  fiatValues: { amountIn: CurrencyAmount<Currency> | null; amountOut: CurrencyAmount<Currency> | null }, // usd values for amount in and out, logged for analytics
+  fiatValues: { amountIn: number | undefined; amountOut: number | undefined }, // usd values for amount in and out, logged for analytics
   allowedSlippage: Percent, // in bips
   permitSignature: PermitSignature | undefined
 ): { callback: null | (() => Promise<string>) } {
