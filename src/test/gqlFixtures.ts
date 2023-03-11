@@ -10,6 +10,7 @@ import {
   Currency,
   Portfolio,
   SafetyLevel,
+  SearchTokensQuery,
   Token,
   TokenApproval,
   TokenProject,
@@ -247,6 +248,153 @@ export const TokenProjects: [TokenProject] = [
         ],
       },
     ],
+  },
+]
+
+export const SearchTokens: NonNullable<SearchTokensQuery['searchTokens']> = [
+  {
+    __typename: 'Token',
+    address: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1',
+    chain: Chain.Arbitrum,
+    decimals: 18,
+    id: 'VG9rZW46QVJCSVRSVU1fMHhEQTEwMDA5Y0JkNUQwN2RkMENlQ2M2NjE2MUZDOTNEN2M5MDAwZGEx',
+    name: 'Dai Stablecoin',
+    project: {
+      __typename: 'TokenProject',
+      id: 'VG9rZW5Qcm9qZWN0OlRva2VuOkFSQklUUlVNXzB4REExMDAwOWNCZDVEMDdkZDBDZUNjNjYxNjFGQzkzRDdjOTAwMGRhMQ==',
+      logoUrl:
+        'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png',
+      safetyLevel: SafetyLevel.Verified,
+    },
+    symbol: 'DAI',
+  },
+  {
+    __typename: 'Token',
+    address: '0x6b175474e89094c44da98b954eedeac495271d0f',
+    chain: Chain.Ethereum,
+    decimals: 18,
+    id: 'VG9rZW46RVRIRVJFVU1fMHg2YjE3NTQ3NGU4OTA5NGM0NGRhOThiOTU0ZWVkZWFjNDk1MjcxZDBm',
+    name: 'Dai Stablecoin',
+    project: {
+      __typename: 'TokenProject',
+      id: 'VG9rZW5Qcm9qZWN0OlRva2VuOkFSQklUUlVNXzB4REExMDAwOWNCZDVEMDdkZDBDZUNjNjYxNjFGQzkzRDdjOTAwMGRhMQ==',
+      logoUrl:
+        'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png',
+      safetyLevel: SafetyLevel.Verified,
+    },
+    symbol: 'DAI',
+  },
+  {
+    __typename: 'Token',
+    address: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1',
+    chain: Chain.Optimism,
+    decimals: 18,
+    id: 'VG9rZW46T1BUSU1JU01fMHhkYTEwMDA5Y2JkNWQwN2RkMGNlY2M2NjE2MWZjOTNkN2M5MDAwZGEx',
+    name: 'Dai Stablecoin',
+    project: {
+      __typename: 'TokenProject',
+      id: 'VG9rZW5Qcm9qZWN0OlRva2VuOkFSQklUUlVNXzB4REExMDAwOWNCZDVEMDdkZDBDZUNjNjYxNjFGQzkzRDdjOTAwMGRhMQ==',
+      logoUrl:
+        'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png',
+      safetyLevel: SafetyLevel.Verified,
+    },
+    symbol: 'DAI',
+  },
+  {
+    __typename: 'Token',
+    address: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
+    chain: Chain.Polygon,
+    decimals: 18,
+    id: 'VG9rZW46UE9MWUdPTl8weDhmM2NmN2FkMjNjZDNjYWRiZDk3MzVhZmY5NTgwMjMyMzljNmEwNjM=',
+    name: '(PoS) Dai Stablecoin',
+    project: {
+      __typename: 'TokenProject',
+      id: 'VG9rZW5Qcm9qZWN0OlRva2VuOkFSQklUUlVNXzB4REExMDAwOWNCZDVEMDdkZDBDZUNjNjYxNjFGQzkzRDdjOTAwMGRhMQ==',
+      logoUrl:
+        'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png',
+      safetyLevel: SafetyLevel.Verified,
+    },
+    symbol: 'DAI',
+  },
+  {
+    __typename: 'Token',
+    address: '0x993f2cafe9dbe525243f4a78bebc69dac8d36000',
+    chain: Chain.Polygon,
+    decimals: 18,
+    id: 'VG9rZW46UE9MWUdPTl8weDk5M2YyQ2FmRTlkYkU1MjUyNDNmNEE3OEJlQkM2OURBYzhEMzYwMDA=',
+    name: 'DIA',
+    project: {
+      __typename: 'TokenProject',
+      id: 'VG9rZW5Qcm9qZWN0OlRva2VuOkFSQklUUlVNXzB4Y2E2NDI0NjdDNkViZTU4YzEzY0I0QTcwOTEzMTdmMzRFMTdhYzA1ZQ==',
+      logoUrl:
+        'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x84cA8bc7997272c7CfB4D0Cd3D55cd942B3c9419/logo.png',
+      safetyLevel: SafetyLevel.Verified,
+    },
+    symbol: 'DIA',
+  },
+  {
+    __typename: 'Token',
+    address: '0x1494ca1f11d487c2bbe4543e90080aeba4ba3c2b',
+    chain: Chain.Ethereum,
+    decimals: 18,
+    id: 'VG9rZW46RVRIRVJFVU1fMHgxNDk0Q0ExRjExRDQ4N2MyYkJlNDU0M0U5MDA4MEFlQmE0QkEzQzJi',
+    name: 'DefiPulse Index',
+    project: {
+      __typename: 'TokenProject',
+      id: 'VG9rZW5Qcm9qZWN0OlRva2VuOkVUSEVSRVVNXzB4MTQ5NENBMUYxMUQ0ODdjMmJCZTQ1NDNFOTAwODBBZUJhNEJBM0MyYg==',
+      logoUrl:
+        'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1494CA1F11D487c2bBe4543E90080AeBa4BA3C2b/logo.png',
+      safetyLevel: SafetyLevel.Verified,
+    },
+    symbol: 'DPI',
+  },
+  {
+    __typename: 'Token',
+    address: '0xca642467c6ebe58c13cb4a7091317f34e17ac05e',
+    chain: Chain.Arbitrum,
+    decimals: 18,
+    id: 'VG9rZW46QVJCSVRSVU1fMHhjYTY0MjQ2N0M2RWJlNThjMTNjQjRBNzA5MTMxN2YzNEUxN2FjMDVl',
+    name: 'DIA',
+    project: {
+      __typename: 'TokenProject',
+      id: 'VG9rZW5Qcm9qZWN0OlRva2VuOkFSQklUUlVNXzB4Y2E2NDI0NjdDNkViZTU4YzEzY0I0QTcwOTEzMTdmMzRFMTdhYzA1ZQ==',
+      logoUrl:
+        'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x84cA8bc7997272c7CfB4D0Cd3D55cd942B3c9419/logo.png',
+      safetyLevel: SafetyLevel.Verified,
+    },
+    symbol: 'DIA',
+  },
+  {
+    __typename: 'Token',
+    address: '0x85955046df4668e1dd369d2de9f3aeb98dd2a369',
+    chain: Chain.Polygon,
+    decimals: 18,
+    id: 'VG9rZW46UE9MWUdPTl8weDg1OTU1MDQ2REY0NjY4ZTFERDM2OUQyREU5ZjNBRUI5OEREMkEzNjk=',
+    name: 'DeFi Pulse Index',
+    project: {
+      __typename: 'TokenProject',
+      id: 'VG9rZW5Qcm9qZWN0OlRva2VuOkVUSEVSRVVNXzB4MTQ5NENBMUYxMUQ0ODdjMmJCZTQ1NDNFOTAwODBBZUJhNEJBM0MyYg==',
+      logoUrl:
+        'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1494CA1F11D487c2bBe4543E90080AeBa4BA3C2b/logo.png',
+      safetyLevel: SafetyLevel.Verified,
+    },
+    symbol: 'DPI',
+  },
+  {
+    __typename: 'Token',
+    address: '0x7fb688ccf682d58f86d7e38e03f9d22e7705448b',
+    chain: Chain.Optimism,
+    decimals: 18,
+    id: 'VG9rZW46T1BUSU1JU01fMHg3RkI2ODhDQ2Y2ODJkNThmODZEN2UzOGUwM2Y5RDIyZTc3MDU0NDhC',
+    name: 'Rai Reflex Index',
+    project: {
+      __typename: 'TokenProject',
+      id: 'VG9rZW5Qcm9qZWN0OlRva2VuOkFSQklUUlVNXzB4YWVGNWJiY2JGYTQzODUxOWE1ZWE4MEI0YzcxODFCNEU3OGQ0MTlmMg==',
+      logoUrl:
+        'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x03ab458634910AaD20eF5f1C8ee96F1D6ac54919/logo.png',
+      safetyLevel: SafetyLevel.Verified,
+    },
+    symbol: 'RAI',
   },
 ]
 
