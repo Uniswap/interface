@@ -8,7 +8,6 @@ gql`
       chain
       project {
         id
-        logoUrl
         markets(currencies: [USD]) {
           id
           price {
