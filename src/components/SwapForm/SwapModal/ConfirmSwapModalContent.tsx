@@ -170,11 +170,9 @@ const ConfirmSwapModalContent: React.FC<Props> = ({
             )}
             <Text flex={1}>
               {confirmNewPrice ? (
-                <Trans>You have accepted the updated price</Trans>
+                <Trans>New Price Accepted</Trans>
               ) : (
-                <Trans>
-                  Your price has been updated. Please confirm the updated price before proceeding with the swap
-                </Trans>
+                <Trans>Your price has been updated. Please accept the new price before proceeding with the swap</Trans>
               )}
             </Text>
           </PriceUpdateWarning>
