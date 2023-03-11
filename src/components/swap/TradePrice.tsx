@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
-import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
-import { parseUnits } from 'ethers/lib/utils'
+import { Currency, Price } from '@uniswap/sdk-core'
 import { useUSDPrice } from 'hooks/useUSDPrice'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -29,18 +29,11 @@ const StyledPriceContainer = styled.button`
   user-select: text;
 `
 
-function getOneCurrencyRawAmount(currency: Currency): string {
-  return parseUnits('1', currency.decimals).toString()
-}
-
 export default function TradePrice({ price }: TradePriceProps) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
-  const usdPrice = useUSDPrice(
-    showInverted
-      ? CurrencyAmount.fromRawAmount(price.baseCurrency, getOneCurrencyRawAmount(price.baseCurrency))
-      : CurrencyAmount.fromRawAmount(price.quoteCurrency, getOneCurrencyRawAmount(price.quoteCurrency))
-  )
+  const { baseCurrency, quoteCurrency } = price
+  const usdPrice = useUSDPrice(tryParseCurrencyAmount('1', showInverted ? baseCurrency : quoteCurrency))
 
   let formattedPrice: string
   try {
