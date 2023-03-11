@@ -18,6 +18,8 @@ import { Text } from 'src/components/Text'
 import { ConnectedDappsList } from 'src/components/WalletConnect/ConnectedDapps/ConnectedDappsList'
 import { getSupportedURI, URIType } from 'src/components/WalletConnect/ScanSheet/util'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
+import { FEATURE_FLAGS } from 'src/features/experiments/constants'
+import { useFeatureFlag } from 'src/features/experiments/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useWCTimeoutError } from 'src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
@@ -47,6 +49,7 @@ export function WalletConnectModal({
   const { hasScanError, setHasScanError, shouldFreezeCamera, setShouldFreezeCamera } =
     useWCTimeoutError(WC_TIMEOUT_DURATION_MS)
   const { preload, navigate } = useEagerExternalProfileRootNavigation()
+  const walletConnectV2Enabled = useFeatureFlag(FEATURE_FLAGS.WalletConnectV2)
 
   const onScanCode = useCallback(
     async (uri: string) => {
@@ -86,7 +89,7 @@ export function WalletConnectModal({
         connectToApp(supportedURI.value)
       }
 
-      if (supportedURI.type === URIType.WalletConnectV2URL) {
+      if (walletConnectV2Enabled && supportedURI.type === URIType.WalletConnectV2URL) {
         setShouldFreezeCamera(true)
         wcWeb3Wallet.core.pairing.pair({ uri: supportedURI.value })
       }
@@ -112,6 +115,7 @@ export function WalletConnectModal({
       setHasScanError,
       setShouldFreezeCamera,
       shouldFreezeCamera,
+      walletConnectV2Enabled,
       t,
     ]
   )
