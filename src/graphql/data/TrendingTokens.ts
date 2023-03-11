@@ -16,15 +16,6 @@ gql`
       symbol
       market(currency: USD) {
         id
-        price {
-          id
-          value
-          currency
-        }
-        pricePercentChange(duration: DAY) {
-          id
-          value
-        }
         volume24H: volume(duration: DAY) {
           id
           value
@@ -35,6 +26,18 @@ gql`
         id
         logoUrl
         safetyLevel
+        markets(currencies: [USD]) {
+          id
+          price {
+            id
+            value
+          }
+          pricePercentChange(duration: DAY) {
+            id
+            currency
+            value
+          }
+        }
       }
     }
   }

@@ -438,7 +438,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const filterNetwork = lowercaseChainName.toUpperCase()
   const chainId = CHAIN_NAME_TO_CHAIN_ID[filterNetwork]
   const timePeriod = useAtomValue(filterTimeAtom)
-  const delta = token.market?.pricePercentChange?.value
+  const delta = token.project?.markets?.[0]?.pricePercentChange?.value
   const arrow = getDeltaArrow(delta)
   const smallArrow = getDeltaArrow(delta, 14)
   const formattedDelta = formatDelta(delta)
@@ -478,7 +478,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           price={
             <ClickableContent>
               <PriceInfoCell>
-                {formatUSDPrice(token.market?.price?.value)}
+                {formatUSDPrice(token.project?.markets?.[0]?.price?.value)}
                 <PercentChangeInfoCell>
                   <ArrowCell>{smallArrow}</ArrowCell>
                   <DeltaText delta={delta}>{formattedDelta}</DeltaText>
@@ -509,7 +509,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                       width={width}
                       height={height}
                       tokenData={token}
-                      pricePercentChange={token.market?.pricePercentChange?.value}
+                      pricePercentChange={token.project?.markets?.[0]?.pricePercentChange?.value}
                       sparklineMap={props.sparklineMap}
                     />
                   )
