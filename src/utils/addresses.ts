@@ -7,17 +7,6 @@ export enum AddressStringFormat {
 }
 
 /**
- * @deprecated use {@link getValidAddress(address, true)} instead
- *
- * @param address Address to find the checksum for
- * @throws if address is not a valid address
- * @returns Checksum address
- */
-export function getChecksumAddress(address: string): string {
-  return utils.getAddress(address)
-}
-
-/**
  * Validates an address and returns the normalized address: lowercased or checksummed depending on the checksum field.
  *
  * When withChecksum === true, this method performs a checksum on the address. Please, use only for validating user input.

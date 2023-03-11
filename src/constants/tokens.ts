@@ -5,42 +5,42 @@ import { ChainId } from './chains'
 
 export const DAI = new Token(
   ChainId.Mainnet,
-  '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+  '0x6b175474e89094c44da98b954eedeac495271d0f',
   18,
   'DAI',
   'Dai Stablecoin'
 )
 export const DAI_ARBITRUM_ONE = new Token(
   ChainId.ArbitrumOne,
-  '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
+  '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1',
   18,
   'DAI',
   'Dai stable coin'
 )
 export const USDC = new Token(
   ChainId.Mainnet,
-  '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+  '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
   6,
   'USDC',
   'USD//C'
 )
 export const USDC_ARBITRUM = new Token(
   ChainId.ArbitrumOne,
-  '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
+  '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8',
   6,
   'USDC',
   'USD//C'
 )
 export const USDC_OPTIMISM = new Token(
   ChainId.Optimism,
-  '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+  '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
   6,
   'USDC',
   'USD//C'
 )
 export const USDC_POLYGON = new Token(
   ChainId.Polygon,
-  '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+  '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
   6,
   'USDC',
   'USD//C'
@@ -48,7 +48,7 @@ export const USDC_POLYGON = new Token(
 
 export const USDC_GOERLI = new Token(
   ChainId.Polygon,
-  '0x07865c6E87B9F70255377e024ace6630C1Eaa37F',
+  '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
   6,
   'USDC',
   'USD//C'
@@ -56,7 +56,7 @@ export const USDC_GOERLI = new Token(
 
 export const USDT = new Token(
   ChainId.Mainnet,
-  '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+  '0xdac17f958d2ee523a2206206994597c13d831ec7',
   6,
   'USDT',
   'Tether USD'
@@ -64,7 +64,7 @@ export const USDT = new Token(
 
 export const WBTC = new Token(
   ChainId.Mainnet,
-  '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+  '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
   8,
   'WBTC',
   'Wrapped BTC'
@@ -78,14 +78,14 @@ export const UNI = {
 export const WRAPPED_NATIVE_CURRENCY = {
   [ChainId.Mainnet]: new Token(
     1,
-    '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+    '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
     18,
     'WETH',
     'Wrapped Ether'
   ),
   [ChainId.Goerli]: new Token(
     5,
-    '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6',
+    '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6',
     18,
     'WETH',
     'Wrapped Ether'
@@ -99,21 +99,21 @@ export const WRAPPED_NATIVE_CURRENCY = {
   ),
   [ChainId.ArbitrumOne]: new Token(
     ChainId.ArbitrumOne,
-    '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+    '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
     18,
     'WETH',
     'Wrapped Ether'
   ),
   [ChainId.Polygon]: new Token(
     ChainId.Polygon,
-    '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+    '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
     18,
     'WMATIC',
     'Wrapped MATIC'
   ),
   [ChainId.PolygonMumbai]: new Token(
     ChainId.PolygonMumbai,
-    '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
+    '0x9c3c9283d3e44854697cd22d3faa240cfb032889',
     18,
     'WMATIC',
     'Wrapped MATIC'

@@ -14,6 +14,7 @@ import { Account } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { SignerManager } from 'src/features/wallet/signing/SignerManager'
 import { signTypedData } from 'src/features/wallet/signing/signing'
+import { areAddressesEqual } from 'src/utils/addresses'
 import { useAsyncData } from 'src/utils/hooks'
 import { logger } from 'src/utils/logger'
 import { inXMinutesUnix } from 'src/utils/time'
@@ -115,10 +116,23 @@ async function getPermitSignature(
 ): Promise<PermitOptions | null> {
   const { account, chainId, tokenAddress, spender } = params
   const { address } = account
-  const permitInfo = PERMITTABLE_TOKENS[chainId]?.[tokenAddress]
+  const permittableTokens = PERMITTABLE_TOKENS[chainId]
+
+  if (!permittableTokens) {
+    logger.debug(
+      'usePermitSignature',
+      'getPermitSignature',
+      'No permittable tokens on the given chain'
+    )
+    return null
+  }
+
+  const permitInfo = Object.entries(permittableTokens).filter(([permittableAddress]) =>
+    areAddressesEqual(tokenAddress, permittableAddress)
+  )[0]?.[1]
 
   if (!permitInfo) {
-    logger.debug('permitSaga', 'signPermitMessage', 'Permit not needed or not possible')
+    logger.debug('usePermitSignature', 'getPermitSignature', 'Permit not needed or not possible')
     return null
   }
 

@@ -62,6 +62,7 @@ import {
 } from 'src/features/transactions/transactionState/transactionState'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import { useActiveAccount, useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
+import { areAddressesEqual } from 'src/utils/addresses'
 import { buildCurrencyId, currencyAddress } from 'src/utils/currencyId'
 import { formatCurrencyAmount, NumberType } from 'src/utils/format'
 import { useAsyncData, usePrevious } from 'src/utils/hooks'
@@ -587,7 +588,15 @@ const getTokenApprovalInfo = async (
     return { action: ApprovalAction.None, txRequest: null }
   }
 
-  if (PERMITTABLE_TOKENS[chainId]?.[currencyIn.address]) {
+  const permittableTokens = PERMITTABLE_TOKENS[chainId]
+
+  const isPermittable = permittableTokens
+    ? Object.keys(permittableTokens).some((pemittableTokenAddress) =>
+        areAddressesEqual(pemittableTokenAddress, currencyIn.address)
+      )
+    : false
+
+  if (isPermittable) {
     return { action: ApprovalAction.Permit, txRequest: null }
   }
 

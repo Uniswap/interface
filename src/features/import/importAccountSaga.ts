@@ -9,7 +9,7 @@ import {
   unlockWallet,
 } from 'src/features/wallet/walletSlice'
 import { generateAndStorePrivateKey, importMnemonic } from 'src/lib/RNEthersRs'
-import { getChecksumAddress } from 'src/utils/addresses'
+import { getValidAddress } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { all, call, put, SagaGenerator } from 'typed-redux-saga'
@@ -60,7 +60,11 @@ function* importAddressAccount(
   name?: string,
   ignoreActivate?: boolean
 ): Generator<CallEffect<void>, void, unknown> {
-  const formattedAddress = getChecksumAddress(address)
+  const formattedAddress = getValidAddress(address, true)
+  if (!formattedAddress) {
+    throw new Error('Cannot import invalid view-only address')
+  }
+
   const account: Account = {
     type: AccountType.Readonly,
     address: formattedAddress,

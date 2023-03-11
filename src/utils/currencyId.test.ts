@@ -6,7 +6,6 @@ import {
   areCurrencyIdsEqual,
   buildCurrencyId,
   buildNativeCurrencyId,
-  checksumCurrencyId,
   currencyAddress,
   currencyAddressForSwapQuote,
   currencyId,
@@ -161,11 +160,5 @@ describe(currencyIdToChain, () => {
 
   it('handles invalid currencyId', () => {
     expect(currencyIdToChain(undefined)).toEqual(null)
-  })
-})
-
-describe(checksumCurrencyId, () => {
-  it('returns correct checksum address for token', () => {
-    expect(checksumCurrencyId(`1-${DAI_ADDRESS.toLowerCase()}`)).toEqual(`1-${DAI_ADDRESS}`)
   })
 })

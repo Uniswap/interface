@@ -8,7 +8,7 @@ import {
   signMessageForAddress,
   signTransactionHashForAddress,
 } from 'src/lib/RNEthersRs'
-import { getChecksumAddress } from 'src/utils/addresses'
+import { areAddressesEqual } from 'src/utils/addresses'
 import { toSupportedChainId } from 'src/utils/chainId'
 
 // A signer that uses native keystore to access keys
@@ -60,7 +60,7 @@ export class NativeSigner extends Signer {
       throw new Error('Expected chainId to be defined')
     }
     if (tx.from != null) {
-      if (getChecksumAddress(tx.from) !== this.address) {
+      if (!areAddressesEqual(tx.from, this.address)) {
         throw new Error('transaction from address mismatch')
       }
       delete tx.from

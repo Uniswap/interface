@@ -10,6 +10,7 @@ import {
   TransactionListQueryResponse,
   TransactionType,
 } from 'src/features/transactions/types'
+import { areAddressesEqual } from 'src/utils/addresses'
 import { fromGraphQLChain } from 'src/utils/chainId'
 
 // Non-exhaustive list of addresses Moonpay uses when sending purchased tokens
@@ -57,7 +58,9 @@ export default function parseReceiveTransaction(
   // Found ERC20 transfer
   if (change.__typename === 'TokenTransfer') {
     const sender = change.sender
-    const isMoonpayPurchase = MOONPAY_SENDER_ADDRESSES.includes(sender)
+    const isMoonpayPurchase = MOONPAY_SENDER_ADDRESSES.some((address) =>
+      areAddressesEqual(address, sender)
+    )
 
     const tokenAddress = getAddressFromAsset({
       chain: change.asset.chain,
