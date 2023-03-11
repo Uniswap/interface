@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount, Price, SupportedChainId, TradeType } from '@uniswap/sdk-core'
 import { nativeOnChain } from 'constants/tokens'
 import { Chain, useTokenSpotPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { chainIdToBackendName, isGqlSupportedChain } from 'graphql/data/util'
+import { chainIdToBackendName, isGqlSupportedChain, PollingInterval } from 'graphql/data/util'
 import { RouterPreference } from 'state/routing/slice'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
@@ -46,6 +46,7 @@ export function useUSDPrice(currencyAmount?: CurrencyAmount<Currency>): number |
   const { data } = useTokenSpotPriceQuery({
     variables: { chain: chain ?? Chain.Ethereum, address: getNativeTokenDBAddress(chain ?? Chain.Ethereum) },
     skip: !chain || !isGqlSupportedChain(currency?.chainId),
+    pollInterval: PollingInterval.Normal,
   })
 
   // Use USDC price for chains not supported by backend yet
