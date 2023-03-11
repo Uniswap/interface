@@ -22,6 +22,7 @@ import { DetailedRouteSummary } from 'types/route'
 import { formattedNum, toK } from 'utils'
 import { minimumAmountAfterSlippage } from 'utils/currencyAmount'
 import { getFormattedFeeAmountUsdV2 } from 'utils/fee'
+import { checkPriceImpact } from 'utils/prices'
 
 function formattedMinimumReceived(number: string) {
   if (!number) {
@@ -77,7 +78,9 @@ type Optional<T> = {
 export type Props = {
   isLoading: boolean
   hasError: boolean
-} & Optional<Pick<DetailedRouteSummary, 'gasUsd' | 'parsedAmountOut' | 'executionPrice' | 'amountInUsd'>>
+} & Optional<
+  Pick<DetailedRouteSummary, 'gasUsd' | 'parsedAmountOut' | 'executionPrice' | 'amountInUsd' | 'priceImpact'>
+>
 
 const SwapDetails: React.FC<Props> = ({
   isLoading,
@@ -86,6 +89,7 @@ const SwapDetails: React.FC<Props> = ({
   parsedAmountOut,
   executionPrice,
   amountInUsd,
+  priceImpact,
 }) => {
   const { isSolana, isEVM } = useActiveWeb3React()
   const [showInverted, setShowInverted] = useState<boolean>(false)
@@ -112,6 +116,8 @@ const SwapDetails: React.FC<Props> = ({
       ''
     )
 
+  const { isInvalid, isHigh, isVeryHigh } = checkPriceImpact(priceImpact)
+
   const renderStatusNotice = () => {
     if (isLoading) {
       return (
@@ -130,7 +136,7 @@ const SwapDetails: React.FC<Props> = ({
             <Loader size="20px" stroke={theme.primary} />
             <Text as="span" fontSize="12px" color={theme.primary} fontStyle="italic">
               <Dots>
-                <Trans>Locking in this price</Trans>
+                <Trans>Checking the price</Trans>
               </Dots>
             </Text>
           </Flex>
@@ -254,6 +260,18 @@ const SwapDetails: React.FC<Props> = ({
             />
           </RowBetween>
         )}
+
+        <RowBetween>
+          <RowFixed>
+            <TYPE.black fontSize={14} fontWeight={400} color={theme.subText}>
+              <Trans>Price Impact</Trans>
+            </TYPE.black>
+            <InfoHelper size={14} text={t`Estimated change in price due to the size of your transaction`} />
+          </RowFixed>
+          <TYPE.black fontSize={14} color={isVeryHigh ? theme.red : isHigh ? theme.warning : theme.text}>
+            {isInvalid || !priceImpact ? '--' : priceImpact > 0.01 ? priceImpact.toFixed(2) + '%' : '< 0.01%'}
+          </TYPE.black>
+        </RowBetween>
 
         <RowBetween height="20px">
           <RowFixed>

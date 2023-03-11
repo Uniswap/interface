@@ -202,7 +202,7 @@ const SwapForm: React.FC<SwapFormProps> = props => {
             <TrendingSoonTokenBanner currencyIn={currencyIn} currencyOut={currencyOut} style={{ marginTop: '24px' }} />
           )}
 
-          <SlippageNote />
+          {!isWrapOrUnwrap && <SlippageNote />}
 
           <PriceImpactNote priceImpact={routeSummary?.priceImpact} isAdvancedMode={isAdvancedMode} hasTooltip />
 

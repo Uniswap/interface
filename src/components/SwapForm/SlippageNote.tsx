@@ -4,6 +4,7 @@ import { Flex } from 'rebass'
 import styled from 'styled-components'
 
 import { useSwapFormContext } from 'components/SwapForm/SwapFormContext'
+import useTheme from 'hooks/useTheme'
 import { checkRangeSlippage } from 'utils/slippage'
 
 const Wrapper = styled.div`
@@ -14,8 +15,8 @@ const Wrapper = styled.div`
   gap: 8px;
 
   border-radius: 999px;
-  color: ${({ theme }) => theme.warning};
-  background: ${({ theme }) => rgba(theme.warning, 0.2)};
+  color: ${({ theme }) => theme.text};
+  background: ${({ theme }) => rgba(theme.warning, 0.3)};
   font-size: 12px;
 `
 
@@ -23,6 +24,7 @@ const SlippageNote: React.FC = () => {
   const { slippage, isStablePairSwap } = useSwapFormContext()
   const { isValid, message } = checkRangeSlippage(slippage, isStablePairSwap)
 
+  const theme = useTheme()
   if (!isValid || !message) {
     return null
   }
@@ -30,7 +32,7 @@ const SlippageNote: React.FC = () => {
   return (
     <Wrapper>
       <Flex flex="0 0 16px" height="16px" alignItems="center" justifyContent="center">
-        <AlertTriangle size={16} />
+        <AlertTriangle size={16} color={theme.warning} />
       </Flex>
       {message}
     </Wrapper>
