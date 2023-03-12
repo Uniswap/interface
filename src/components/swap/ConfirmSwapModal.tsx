@@ -100,12 +100,12 @@ export default function ConfirmSwapModal({
         swapErrorMessage={swapErrorMessage}
       />
     ) : null
-  }, [onConfirm, showAcceptChanges, swapErrorMessage, trade])
+  }, [chainId, onConfirm, showAcceptChanges, swapErrorMessage, trade])
 
   // text to show while loading
   const pendingText = trade ? (
     <Trans>
-      Trading {inputAmount?.toSignificant(6)} {inputAmount?.currency?.symbol} for {priceAmount?.toSignificant(6)}{' '}
+      Trading {inputAmount?.toSignificant(6)} {inputAmount?.currency?.symbol} for {outputAmount?.toSignificant(6)}{' '}
       {outputAmount?.currency?.symbol}
     </Trans>
   ) : null

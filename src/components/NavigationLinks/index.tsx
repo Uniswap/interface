@@ -154,14 +154,14 @@ export default function NavigationLinks() {
   return (
     <NavFrame>
       <NavLinks>
-        <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-          <Text fontSize={16} fontWeight={400}>
-            <Trans>Swap</Trans>
-          </Text>
-        </StyledNavLink>
         <StyledNavLink id={`swap-nav-link`} to={'/limitorder'}>
           <Text fontSize={16} fontWeight={400}>
             <Trans>Limit/FELO</Trans>
+          </Text>
+        </StyledNavLink>
+        <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+          <Text fontSize={16} fontWeight={400}>
+            <Trans>Swap</Trans>
           </Text>
         </StyledNavLink>
         <StyledNavLinkAlt id={`perp-nav-link`} onClick={() => handleTogglePerpModal()}>

@@ -107,8 +107,8 @@ export default function App() {
                 path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
                 component={RedirectDuplicateTokenIds}
               />
-              <Route component={RedirectPathToSwapOnly} />
               <Route component={RedirectPathToLimitOrderOnly} />
+              <Route component={RedirectPathToSwapOnly} />
             </Switch>
           </BodyWrapper>
         </AppWrapper>

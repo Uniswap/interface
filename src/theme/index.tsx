@@ -67,7 +67,7 @@ function colors(darkMode: boolean): Colors {
 
     // backgrounds / greys
     bg0: darkMode ? '#17161A' : '#FFFFFF',
-    bg1: darkMode ? '#1E1D20' : '#FFFFFF',
+    bg1: darkMode ? '#212121' : '#FFFFFF',
     bg2: darkMode ? '#292929' : '#F3F5FA',
     bg3: darkMode ? '#40444F' : '#EDF1FF',
     bg4: darkMode ? '#565A69' : '#ECF0F9',

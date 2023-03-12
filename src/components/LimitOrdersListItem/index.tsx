@@ -1,10 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
 // eslint-disable-next-line no-restricted-imports
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import { DateTime } from 'luxon/src/luxon'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
@@ -230,21 +230,15 @@ export default function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }
   // check if price is within range ; if out of range; the status is pending
   const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
 
-  const currencyAmount = tokensOwed0.gt(0)
-    ? currency0
+  const currencyAmount =
+    tokensOwed0.gt(0) && currency0
       ? CurrencyAmount.fromRawAmount(currency0 as Token, tokensOwed0.toString())
       : undefined
-    : currency1
-    ? CurrencyAmount.fromRawAmount(currency1 as Token, tokensOwed1.toString())
-    : undefined
 
-  const currencyAmount1 = tokensOwed0.eq(0)
-    ? currency0
-      ? CurrencyAmount.fromRawAmount(currency0 as Token, tokensOwed0.toString())
+  const currencyAmount1 =
+    tokensOwed1.gt(0) && currency1
+      ? CurrencyAmount.fromRawAmount(currency1 as Token, tokensOwed1.toString())
       : undefined
-    : currency1
-    ? CurrencyAmount.fromRawAmount(currency1 as Token, tokensOwed1.toString())
-    : undefined
 
   const currencyAmountFee = currencyAmount?.toFixed(6)
 

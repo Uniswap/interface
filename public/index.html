@@ -1,123 +1,128 @@
 <!DOCTYPE html>
-<html translate='no'>
-<head>
-  <meta charset='utf-8' />
+<html translate="no">
+  <head>
+    <meta charset="utf-8" />
 
-  <title>Kromatika Protocol</title>
-  <meta content='Swap and limit order MetaDEX Aggregator' name='description' />
+    <title>Kromatika Protocol</title>
+    <meta content="Swap and limit order MetaDEX Aggregator" name="description" />
 
-  <!--
+    <!--
     %PUBLIC_URL% will be replaced with the URL of the `public` folder during build.
     Only files inside the `public` folder can be referenced from the HTML.
   -->
-  <link href='%PUBLIC_URL%/favicon.png' rel='shortcut icon' type='image/png' />
-  <link href='%PUBLIC_URL%/images/192x192_App_Icon.png' rel='apple-touch-icon' sizes='192x192' />
-  <link href='%PUBLIC_URL%/images/512x512_App_Icon.png' rel='apple-touch-icon' sizes='512x512' />
+    <link href="%PUBLIC_URL%/favicon.png" rel="shortcut icon" type="image/png" />
+    <link href="%PUBLIC_URL%/images/192x192_App_Icon.png" rel="apple-touch-icon" sizes="192x192" />
+    <link href="%PUBLIC_URL%/images/512x512_App_Icon.png" rel="apple-touch-icon" sizes="512x512" />
 
-  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' name='viewport' />
-  <meta content='#ff007a' name='theme-color' />
-  <meta content='j93LgcVZk79qcgyo' name='fortmatic-site-verification' />
-  <meta content='no-cache' http-equiv='cache-control' />
-  <meta content='0' http-equiv='expires' />
-  <meta content='no-cache' http-equiv='pragma' />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta content="#ff007a" name="theme-color" />
+    <meta content="j93LgcVZk79qcgyo" name="fortmatic-site-verification" />
+    <meta content="no-cache" http-equiv="cache-control" />
+    <meta content="0" http-equiv="expires" />
+    <meta content="no-cache" http-equiv="pragma" />
 
-  <!--
+    <!--
     manifest.json provides metadata used when the app is installed as a PWA.
     See https://developers.google.com/web/fundamentals/web-app-manifest/
   -->
-  <link href='%PUBLIC_URL%/manifest.json' rel='manifest' />
+    <link href="%PUBLIC_URL%/manifest.json" rel="manifest" />
 
-  <link href='https://www.google-analytics.com/' rel='preconnect' />
+    <link href="https://www.google-analytics.com/" rel="preconnect" />
 
-  <link as='font' crossorigin href='%PUBLIC_URL%/fonts/Inter-roman.var.woff2' rel='preload' type='font/woff2' />
+    <link as="font" crossorigin href="%PUBLIC_URL%/fonts/Inter-roman.var.woff2" rel="preload" type="font/woff2" />
 
-  <style>
+    <style>
       * {
-          font-family: 'Inter', sans-serif;
-          box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+        box-sizing: border-box;
       }
 
       /**
           Explicitly load Inter var from public/ so it does not block LCP's critical path.
         */
       @font-face {
-          font-family: 'Inter custom';
-          font-weight: 100 900;
-          font-style: normal;
-          font-display: block;
-          font-named-instance: 'Regular';
-          src: url(%PUBLIC_URL%/fonts/Inter-roman.var.woff2) format('woff2 supports variations(gvar)'),
+        font-family: 'Inter custom';
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: block;
+        font-named-instance: 'Regular';
+        src: url(%PUBLIC_URL%/fonts/Inter-roman.var.woff2) format('woff2 supports variations(gvar)'),
           url(%PUBLIC_URL%/fonts/Inter-roman.var.woff2) format('woff2-variations'),
           url(%PUBLIC_URL%/fonts/Inter-roman.var.woff2) format('woff2');
       }
 
       @supports (font-variation-settings: normal) {
-          * {
-              font-family: 'Inter custom', sans-serif;
-          }
+        * {
+          font-family: 'Inter custom', sans-serif;
+        }
       }
 
       html,
       body {
-          margin: 0;
-          padding: 0;
+        margin: 0;
+        padding: 0;
       }
 
       button {
-          user-select: none;
+        user-select: none;
       }
 
       html {
-          font-size: 16px;
-          font-variant: none;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-          -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-          font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
+        font-size: 16px;
+        font-variant: none;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
       }
 
       #background-linear-gradient {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          pointer-events: none;
-          width: 200vw;
-          height: 200vh;
-          background: linear-gradient(103.87deg, rgba(29, 24, 32, 0.8) 0%, rgba(29, 26, 31, 0.8) 47.92%, rgba(26, 31, 38, 0.8) 100%);
-          transform: translate(-50vw, -100vh);
-          z-index: -1;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        width: 200vw;
+        height: 200vh;
+        background: linear-gradient(
+          103.87deg,
+          rgba(29, 24, 32, 0.8) 0%,
+          rgba(29, 26, 31, 0.8) 47.92%,
+          rgba(26, 31, 38, 0.8) 100%
+        );
+        transform: translate(-50vw, -100vh);
+        z-index: -1;
       }
 
       html {
-          min-height: 100%;
+        min-height: 100%;
       }
 
       @media (prefers-color-scheme: dark) {
-          html {
-              background-color: #1E1D20;
-          }
+        html {
+          background-color: #212121;
+        }
       }
 
       @media (prefers-color-scheme: light) {
-          html {
-              background-color: #f7f8fa;
-          }
+        html {
+          background-color: #f7f8fa;
+        }
       }
-  </style>
-</head>
-<body>
-<noscript>You need to enable JavaScript to run this app.</noscript>
+    </style>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
 
-<!-- The root is the container of the app -->
-<div id='root'>
-  <!-- Triggers the font to load immediately and then is replaced by the app -->
-  <div>&emsp;</div>
-</div>
+    <!-- The root is the container of the app -->
+    <div id="root">
+      <!-- Triggers the font to load immediately and then is replaced by the app -->
+      <div>&emsp;</div>
+    </div>
 
-<div id='background-linear-gradient'></div>
+    <div id="background-linear-gradient"></div>
 
-<!--
+    <!--
   This HTML file is a template.
   If you open it directly in the browser, you will see an empty page.
 
@@ -127,5 +132,5 @@
   To begin the development, run `npm start` or `yarn start`.
   To create a production bundle, use `npm run build` or `yarn build`.
 -->
-</body>
+  </body>
 </html>

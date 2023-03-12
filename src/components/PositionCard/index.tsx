@@ -5,6 +5,7 @@ import { Pair } from '@uniswap/v2-sdk'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { KROM } from 'constants/tokens'
 import { useNewStakingContract } from 'hooks/useContract'
+import useUSDCPrice from 'hooks/useUSDCPrice'
 import JSBI from 'jsbi'
 import { darken } from 'polished'
 import { useState } from 'react'
@@ -199,7 +200,9 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
   const { account, chainId } = useActiveWeb3React()
   const { minBalance } = useV3Positions(account)
   const kromToken = chainId ? KROM[chainId] : undefined
+  const usdcPrice = useUSDCPrice(kromToken)
   const isUnderfunded = fundingBalance ? !minBalance?.lessThan(fundingBalance?.quotient) : true
+  const minFiatBalance = minBalance?.multiply(usdcPrice ?? 0)
 
   return (
     <AccountStatusWrapper gap="10px">
@@ -281,6 +284,11 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
                       {fundingBalance?.toSignificant(6)} {fundingBalance?.currency.symbol}
                     </TYPE.body>
                   </Text>
+                  {minFiatBalance && (
+                    <Text fontSize={16} fontWeight={500} marginLeft="8px">
+                      <TYPE.small>{`($${minFiatBalance?.toSignificant(6)})`}</TYPE.small>
+                    </Text>
+                  )}
                 </RowFixed>
               ) : (
                 '-'
@@ -319,6 +327,11 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
                       {minBalance?.toSignificant(6)} {minBalance?.currency.symbol}
                     </TYPE.body>
                   </Text>
+                  {minFiatBalance && (
+                    <Text fontSize={16} fontWeight={500} marginLeft="8px">
+                      <TYPE.small>{`($${minFiatBalance?.toSignificant(6)})`}</TYPE.small>
+                    </Text>
+                  )}
                 </RowFixed>
               ) : (
                 '-'

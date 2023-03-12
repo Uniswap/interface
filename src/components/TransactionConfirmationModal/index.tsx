@@ -273,6 +273,7 @@ function L2Content({
   const theme = useContext(ThemeContext)
 
   const transaction = useTransaction(hash)
+
   const confirmed = useIsTransactionConfirmed(hash)
   const transactionSuccess = transaction?.receipt?.status === 1
 

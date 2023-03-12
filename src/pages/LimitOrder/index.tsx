@@ -906,11 +906,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
             <AutoRow justify="center" textAlign="center" padding="0 1rem">
               <Text fontSize={16} fontWeight={400}>
                 <TYPE.main>
-                  <Trans>Any missing order? Try switching between</Trans>
-                  <TYPE.blue as={'span'}>
-                    {' '}
-                    <Trans>networks.</Trans>
-                  </TYPE.blue>
+                  <Trans>Any missing order(s)? Try switching between networks.</Trans>
                 </TYPE.main>
               </Text>
             </AutoRow>
@@ -1311,11 +1307,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
         <AutoRow justify="center" textAlign="center" padding="0 1rem">
           <Text fontSize={16} fontWeight={400}>
             <TYPE.main>
-              <Trans>Any missing order? Try switching between</Trans>
-              <TYPE.blue as={'span'}>
-                {' '}
-                <Trans>networks.</Trans>
-              </TYPE.blue>
+              <Trans>Any missing order(s)? Try switching between networks.</Trans>
             </TYPE.main>
           </Text>
         </AutoRow>
