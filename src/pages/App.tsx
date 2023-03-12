@@ -8,7 +8,7 @@ import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { STATSIG_DUMMY_KEY } from 'integrations'
 import { Box } from 'nft/components/Box'
-import { Suspense, useEffect, useMemo, useState } from 'react'
+import React, { Suspense, useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import { StatsigProvider, StatsigUser } from 'statsig-react'
@@ -28,15 +28,16 @@ import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/components/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
-import Landing from './Landing'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
 import NotFound from './NotFound'
-import Pool from './Pool'
 import { PositionPage } from './Pool/PositionPage'
-import Pools from './Pools'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
-import Swap from './Swap'
+
+const Landing = React.lazy(() => import('./Landing'))
+const Swap = React.lazy(() => import('./Swap'))
+const Pools = React.lazy(() => import('./Pools'))
+const Pool = React.lazy(() => import('./Pool'))
 
 const BodyWrapper = styled.div`
   display: flex;

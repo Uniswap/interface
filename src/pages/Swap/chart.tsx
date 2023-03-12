@@ -75,11 +75,11 @@ export function useTokenPrice(token: string) {
     data: data?.tokenHourDatas?.map((td: any) => ({
       timestamp: td?.periodStartUnix,
       time: td?.periodStartUnix,
-      open: parseFloat(td?.open) == 0.0 ? 0.0 : 1 / parseFloat(td?.open),
-      high: parseFloat(td?.high) == 0.0 ? 0.0 : 1 / parseFloat(td?.high),
-      low: parseFloat(td?.low) == 0.0 ? 0.0 : 1 / parseFloat(td?.low),
-      close: parseFloat(td?.close) == 0.0 ? 0.0 : 1 / parseFloat(td?.close),
-      value: parseFloat(td?.priceUSD) == 0.0 ? 0.0 : 1 / parseFloat(td?.priceUSD),
+      open: parseFloat(td?.open) == 0.0 ? 0.0 : parseFloat(td?.open),
+      high: parseFloat(td?.high) == 0.0 ? 0.0 : parseFloat(td?.high),
+      low: parseFloat(td?.low) == 0.0 ? 0.0 : parseFloat(td?.low),
+      close: parseFloat(td?.close) == 0.0 ? 0.0 : parseFloat(td?.close),
+      value: parseFloat(td?.priceUSD) == 0.0 ? 0.0 : parseFloat(td?.priceUSD),
     })),
   }
 }

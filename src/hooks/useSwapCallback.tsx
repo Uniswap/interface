@@ -1,11 +1,16 @@
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
+import { usePermit2Enabled } from 'featureFlags/flags/permit2'
 import { PermitSignature } from 'hooks/usePermitAllowance'
-import { useMemo } from 'react'
+import { SwapCallbackState, useSwapCallback as useLibSwapCallBack } from 'lib/hooks/swap/useSwapCallback'
+import { ReactNode, useMemo } from 'react'
 
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { TransactionType } from '../state/transactions/types'
 import { currencyId } from '../utils/currencyId'
+import useENS from './useENS'
+import { SignatureData } from './useERC20Permit'
 import useTransactionDeadline from './useTransactionDeadline'
 import { useUniversalRouterSwapCallback } from './useUniversalRouter'
 
@@ -15,18 +20,37 @@ export function useSwapCallback(
   trade: Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
   fiatValues: { amountIn: CurrencyAmount<Currency> | null; amountOut: CurrencyAmount<Currency> | null }, // usd values for amount in and out, logged for analytics
   allowedSlippage: Percent, // in bips
-  permitSignature: PermitSignature | undefined
-): { callback: null | (() => Promise<string>) } {
+  permitSignature: PermitSignature | undefined,
+  recipientAddressOrName: string | null,
+  signatureData: SignatureData | undefined | null
+): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: ReactNode | null } {
+  const { account } = useWeb3React()
+
   const deadline = useTransactionDeadline()
 
   const addTransaction = useTransactionAdder()
+  const { address: recipientAddress } = useENS(recipientAddressOrName)
+  const recipient = recipientAddressOrName === null ? account : recipientAddress
 
-  const universalRouterSwapCallback = useUniversalRouterSwapCallback(trade, fiatValues, {
+  const permit2Enabled = usePermit2Enabled()
+  const {
+    state,
+    callback: libCallback,
+    error,
+  } = useLibSwapCallBack({
+    trade: permit2Enabled ? undefined : trade,
+    allowedSlippage,
+    recipientAddressOrName: recipient,
+    signatureData,
+    deadline,
+  })
+
+  const universalRouterSwapCallback = useUniversalRouterSwapCallback(permit2Enabled ? trade : undefined, fiatValues, {
     slippageTolerance: allowedSlippage,
     deadline,
     permit: permitSignature,
   })
-  const swapCallback = universalRouterSwapCallback
+  const swapCallback = permit2Enabled ? universalRouterSwapCallback : libCallback
 
   const callback = useMemo(() => {
     if (!trade || !swapCallback) return null
@@ -59,6 +83,8 @@ export function useSwapCallback(
   }, [addTransaction, allowedSlippage, swapCallback, trade])
 
   return {
+    state,
     callback,
+    error,
   }
 }

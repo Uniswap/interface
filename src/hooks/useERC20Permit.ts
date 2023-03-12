@@ -1,11 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { splitSignature } from '@ethersproject/bytes'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Trade } from '@uniswap/router-sdk'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo, useState } from 'react'
 
+import { SWAP_ROUTER_ADDRESSES } from '../constants/addresses'
 import { USDC_FUJI, USDC_TEVMOS } from '../constants/tokens'
 import { useEIP2612Contract } from './useContract'
 import useIsArgentWallet from './useIsArgentWallet'
@@ -42,7 +44,7 @@ const PERMITTABLE_TOKENS: {
   },
 }
 
-enum UseERC20PermitState {
+export enum UseERC20PermitState {
   // returned for any reason, e.g. it is an argent wallet, or the currency does not support it
   NOT_APPLICABLE,
   LOADING,
@@ -71,7 +73,7 @@ interface AllowedSignatureData extends BaseSignatureData {
   allowed: true
 }
 
-type SignatureData = StandardSignatureData | AllowedSignatureData
+export type SignatureData = StandardSignatureData | AllowedSignatureData
 
 const EIP712_DOMAIN_TYPE = [
   { name: 'name', type: 'string' },
@@ -244,4 +246,19 @@ export function useERC20Permit(
     permitInfo,
     signatureData,
   ])
+}
+
+export function useERC20PermitFromTrade(
+  trade: Trade<Currency, Currency, TradeType> | undefined,
+  allowedSlippage: Percent,
+  transactionDeadline: BigNumber | undefined
+) {
+  const { chainId } = useWeb3React()
+  const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
+  const amountToApprove = useMemo(
+    () => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined),
+    [trade, allowedSlippage]
+  )
+
+  return useERC20Permit(amountToApprove, swapRouterAddress, transactionDeadline, null)
 }
