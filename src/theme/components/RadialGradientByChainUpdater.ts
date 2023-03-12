@@ -4,7 +4,7 @@ import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useEffect } from 'react'
 import { useDarkModeManager } from 'state/user/hooks'
 
-import { darkTheme, lightTheme } from '../colors'
+import { darkTheme } from '../colors'
 
 const initialStyles = {
   width: '200vw',
@@ -42,35 +42,30 @@ export default function RadialGradientByChainUpdater(): null {
       setBackground(initialStyles)
       backgroundRadialGradientElement.style.background = darkMode
         ? darkTheme.backgroundBackdrop
-        : lightTheme.backgroundBackdrop
+        : darkTheme.backgroundBackdrop
       return
     }
 
     switch (chainId) {
       case SupportedChainId.FUJI: {
         setBackground(backgroundResetStyles)
-        const polygonLightGradient =
-          'radial-gradient(100% 100% at 50% 0%, rgba(0, 71, 229, 0.2) 0%, rgba(200, 168, 255, 0.05) 52.6%, rgba(0, 0, 0, 0) 100%), #FFFFFF'
         const polygonDarkGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.05) 52.6%, rgba(0, 0, 0, 0) 100%), #0D0E0E'
-        backgroundRadialGradientElement.style.background = darkMode ? polygonDarkGradient : polygonLightGradient
+        backgroundRadialGradientElement.style.background = polygonDarkGradient
         break
       }
       case SupportedChainId.TESTNET: {
         setBackground(backgroundResetStyles)
-        const polygonLightGradient =
-          'radial-gradient(100% 100% at 50% 0%, rgba(0, 71, 229, 0.2) 0%, rgba(200, 168, 255, 0.05) 52.6%, rgba(0, 0, 0, 0) 100%), #FFFFFF'
         const polygonDarkGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.05) 52.6%, rgba(0, 0, 0, 0) 100%), #0D0E0E'
-        backgroundRadialGradientElement.style.background = darkMode ? polygonDarkGradient : polygonLightGradient
+        backgroundRadialGradientElement.style.background = polygonDarkGradient
         break
       }
       default: {
         setBackground(initialStyles)
-        const defaultLightGradient =
-          'radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
-        const defaultDarkGradient = 'linear-gradient(180deg, #202738 0%, #070816 100%)'
-        backgroundRadialGradientElement.style.background = darkMode ? defaultDarkGradient : defaultLightGradient
+        const defaultDarkGradient =
+          'radial-gradient(100% 100% at 50% 0%, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.05) 52.6%, rgba(0, 0, 0, 0) 100%), #0D0E0E'
+        backgroundRadialGradientElement.style.background = defaultDarkGradient
       }
     }
   }, [darkMode, chainId, isNftPage])
