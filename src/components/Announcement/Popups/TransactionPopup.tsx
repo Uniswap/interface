@@ -187,7 +187,7 @@ export default function TransactionPopup({ hash, notiType }: { hash: string; not
   const { chainId } = useActiveWeb3React()
   const theme = useTheme()
   const success = notiType === NotificationType.SUCCESS
-  const transactions = useAllTransactions()
+  const transactions = useAllTransactions(true)
   const transaction = findTx(transactions, hash)
   const color = success ? theme.primary : theme.red
 

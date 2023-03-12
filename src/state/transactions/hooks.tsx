@@ -53,12 +53,14 @@ export function useTransactionAdder(): (tx: TransactionHistory) => void {
 // returns all the transactions for the current chain
 export function useAllTransactions(allChain = false): GroupedTxsByHash | undefined {
   const { chainId } = useActiveWeb3React()
-  const txsCurChain = useSelector<AppState, AppState['transactions'][number]>(state => state.transactions[chainId])
   const transactions = useSelector<AppState, AppState['transactions']>(state => state.transactions)
-  if (!allChain) return txsCurChain
-  return Object.values(transactions).reduce((rs, obj) => {
-    return { ...rs, ...obj }
-  }, {})
+
+  return useMemo(() => {
+    if (!allChain) return transactions[chainId]
+    return Object.values(transactions).reduce((rs, obj) => {
+      return { ...rs, ...obj }
+    }, {})
+  }, [allChain, transactions, chainId])
 }
 
 export function useSortRecentTransactions(recentOnly = true, allChain = false) {
