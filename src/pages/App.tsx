@@ -13,6 +13,7 @@ import { useModalOpen, useToggleModal } from '../state/application/hooks'
 import { ApplicationModal } from '../state/application/reducer'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
+import FAQ from './FAQ'
 import LimitOrder from './LimitOrder'
 import { RedirectPathToLimitOrderOnly, RedirectToLimitOrder } from './LimitOrder/redirects'
 import Market from './Market'
@@ -101,6 +102,7 @@ export default function App() {
               <Route exact strict path="/unstake/:tokenId/remove" component={StakingModal} />
               <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
               <Route exact strict path="/remove/:tokenId" component={RemoveLiquidityV3} />
+              <Route exact strict path="/faq" component={FAQ} />
               <Route
                 exact
                 strict

@@ -178,6 +178,11 @@ export default function NavigationLinks() {
             <Trans>Perpetuals</Trans>
           </Text>
         </StyledNavLinkAlt>
+        <StyledNavLink id={`swap-nav-link`} to={'/faq'}>
+          <Text fontSize={16} fontWeight={400}>
+            <Trans>FAQ</Trans>
+          </Text>
+        </StyledNavLink>
       </NavLinks>
     </NavFrame>
   )
