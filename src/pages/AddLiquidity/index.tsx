@@ -8,9 +8,10 @@ import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
+import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import {
   useRangeHopCallbacks,
@@ -76,25 +77,6 @@ import {
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
-function useSyncPriceRangeToQueryParams() {
-  const { onLeftRangeInput, onRightRangeInput } = useV3MintActionHandlers(undefined)
-  const { search } = useLocation()
-  useEffect(() => {
-    const minPrice = new URLSearchParams(search).get('minPrice')
-    if (minPrice && typeof minPrice === 'string' && !isNaN(minPrice as any)) {
-      onLeftRangeInput(minPrice)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search])
-  useEffect(() => {
-    const maxPrice = new URLSearchParams(search).get('maxPrice')
-    if (maxPrice && typeof maxPrice === 'string' && !isNaN(maxPrice as any)) {
-      onRightRangeInput(maxPrice)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search])
-}
-
 export default function AddLiquidity() {
   const navigate = useNavigate()
   const {
@@ -131,8 +113,7 @@ export default function AddLiquidity() {
     baseCurrency && currencyB && baseCurrency.wrapped.equals(currencyB.wrapped) ? undefined : currencyB
 
   // mint state
-  const { independentField, typedValue, startPriceTypedValue, rightRangeTypedValue, leftRangeTypedValue } =
-    useV3MintState()
+  const { independentField, typedValue, startPriceTypedValue } = useV3MintState()
 
   const {
     pool,
@@ -140,6 +121,7 @@ export default function AddLiquidity() {
     dependentField,
     price,
     pricesAtTicks,
+    pricesAtLimit,
     parsedAmounts,
     currencyBalances,
     position,
@@ -169,8 +151,6 @@ export default function AddLiquidity() {
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
-
-  useSyncPriceRangeToQueryParams()
 
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
@@ -426,13 +406,53 @@ export default function AddLiquidity() {
     !depositBDisabled ? currencies[Field.CURRENCY_B]?.symbol : ''
   }`
 
+  const [searchParams, setSearchParams] = useSearchParams()
+
   const handleSetFullRange = useCallback(() => {
     getSetFullRange()
+
+    const minPrice = pricesAtLimit[Bound.LOWER]
+    if (minPrice) searchParams.set('minPrice', minPrice.toSignificant(5))
+    const maxPrice = pricesAtLimit[Bound.UPPER]
+    if (maxPrice) searchParams.set('maxPrice', maxPrice.toSignificant(5))
+    setSearchParams(searchParams)
+
     sendEvent({
       category: 'Liquidity',
       action: 'Full Range Clicked',
     })
-  }, [getSetFullRange])
+  }, [getSetFullRange, pricesAtLimit, searchParams, setSearchParams])
+
+  // START: sync values with query string
+  const oldSearchParams = usePrevious(searchParams)
+  // use query string as an input to onInput handlers
+  useEffect(() => {
+    const minPrice = searchParams.get('minPrice')
+    const oldMinPrice = oldSearchParams?.get('minPrice')
+    if (
+      minPrice &&
+      typeof minPrice === 'string' &&
+      !isNaN(minPrice as any) &&
+      (!oldMinPrice || oldMinPrice !== minPrice)
+    ) {
+      onLeftRangeInput(minPrice)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
+  useEffect(() => {
+    const maxPrice = searchParams.get('maxPrice')
+    const oldMaxPrice = oldSearchParams?.get('maxPrice')
+    if (
+      maxPrice &&
+      typeof maxPrice === 'string' &&
+      !isNaN(maxPrice as any) &&
+      (!oldMaxPrice || oldMaxPrice !== maxPrice)
+    ) {
+      onRightRangeInput(maxPrice)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
+  // END: sync values with query string
 
   const Buttons = () =>
     addIsUnsupported ? (
