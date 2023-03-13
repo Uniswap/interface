@@ -89,6 +89,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     }
 
     if (isError || !otherAmount || !route || route.length === 0 || !queryArgs) {
+      console.log('NO ROUTE FOUND')
       return {
         state: TradeState.NO_ROUTE_FOUND,
         trade: undefined,

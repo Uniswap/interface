@@ -42,8 +42,8 @@ export default function ConfirmSwapModal({
   swapErrorMessage: ReactNode | undefined
   onDismiss: () => void
   swapQuoteReceivedDate: Date | undefined
-  fiatValueInput?: number
-  fiatValueOutput?: number
+  fiatValueInput: { data?: number; isLoading: boolean }
+  fiatValueOutput: { data?: number; isLoading: boolean }
 }) {
   // shouldLogModalCloseEvent lets the child SwapModalHeader component know when modal has been closed
   // and an event triggered by modal closing should be logged.
