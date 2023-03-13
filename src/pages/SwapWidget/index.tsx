@@ -322,7 +322,16 @@ export default function SwapWidget() {
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
 
-  const [darkMode] = useDarkModeManager()
+  const [darkMode, toggleSetDarkMode] = useDarkModeManager()
+  const { pathname } = window.location
+
+  if (darkMode && pathname.includes('light')) {
+    toggleSetDarkMode()
+  }
+
+  if (!darkMode && pathname.includes('dark')) {
+    toggleSetDarkMode()
+  }
 
   const parsedAmounts = useMemo(
     () =>
