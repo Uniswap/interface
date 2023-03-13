@@ -37,6 +37,8 @@ const PopupContainer = styled.div<{ show: boolean; isDarkMode: boolean }>`
   bottom: 50px;
   @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
     width: 100%;
+    border-radius: 0;
+    right: auto;
   }
 
   ::before {
@@ -71,6 +73,10 @@ const InnerContainer = styled.div<{ isDarkMode: boolean }>`
   padding: 16px;
   background-color: ${({ isDarkMode, theme }) =>
     isDarkMode ? opacify(10, theme.accentAction) : opacify(4, theme.accentAction)};
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    width: 100%;
+    border-radius: 0;
+  }
 `
 
 const Button = styled(ThemeButton)`
@@ -85,7 +91,7 @@ const TextContainer = styled.div`
   user-select: none;
   display: flex;
   flex-direction: column;
-  width: 70%;
+  width: 90%;
   justify-content: center;
 `
 
@@ -133,7 +139,7 @@ export default function TaxServiceBanner() {
               <Trans>Save on your crypto taxes</Trans>
             </div>
             <div className={bodySmall} style={{ paddingBottom: '12px' }}>
-              <Trans>Get up to a 20% discount on CoinTracker or TokenTax.</Trans>{' '}
+              <Trans>Uniswap Labs can save you up to 20% on CoinTracker and TokenTax</Trans>{' '}
             </div>
           </TextContainer>
           <StyledXButton size={20} onClick={handleClose} />

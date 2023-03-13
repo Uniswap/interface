@@ -7,13 +7,12 @@ import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
 import { BaseButton } from 'components/Button'
 import { useSwapWidgetEnabled } from 'featureFlags/flags/swapWidget'
+import { useShowLanding } from 'hooks/useShowLanding'
 import Swap from 'pages/Swap'
-import { parse } from 'qs'
 import { useEffect, useRef, useState } from 'react'
 import { ArrowDownCircle } from 'react-feather'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
-import { useAppSelector } from 'state/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -298,23 +297,15 @@ export default function Landing() {
   const cardsRef = useRef<HTMLDivElement>(null)
 
   const [showContent, setShowContent] = useState(false)
-  const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
+  const showLanding = useShowLanding()
   const navigate = useNavigate()
-  const location = useLocation()
-  const queryParams = parse(location.search, {
-    ignoreQueryPrefix: true,
-  })
 
   const swapWidgetEnabled = useSwapWidgetEnabled()
 
   // This can be simplified significantly once the flag is removed! For now being explicit is clearer.
   useEffect(() => {
-    if (queryParams.intro || !selectedWallet) {
-      setShowContent(true)
-    } else {
-      navigate('/swap')
-    }
-  }, [navigate, selectedWallet, queryParams.intro])
+    showLanding ? setShowContent(true) : navigate('/swap')
+  }, [showLanding, navigate])
 
   return (
     <Trace page={InterfacePageName.LANDING_PAGE} shouldLogImpression>
