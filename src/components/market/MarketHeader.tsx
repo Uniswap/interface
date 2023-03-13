@@ -25,19 +25,18 @@ export default function MarketHeader({
 
   return (
     <StyledMarketHeader>
-      <RowBetween>
-        {showChartSwitch && (
-          <RowFixed>
-            <Text>
-              <Trans>Show Chart</Trans>
-            </Text>
-            <Switch checked={expertMode} color="primary" onClick={() => toggleExpertMode()} />
-          </RowFixed>
-        )}
-        <RowFixed justify="flex-end" width="100%">
-          <SettingsTab placeholderSlippage={allowedSlippage} />
+      {showChartSwitch && (
+        <RowFixed>
+          <Text>
+            <Trans>Show Chart</Trans>
+          </Text>
+          <Switch checked={expertMode} color="primary" onClick={() => toggleExpertMode()} />
         </RowFixed>
-      </RowBetween>
+      )}
+
+      <RowFixed justify="flex-end" width="100%">
+        <SettingsTab placeholderSlippage={allowedSlippage} />
+      </RowFixed>
     </StyledMarketHeader>
   )
 }
