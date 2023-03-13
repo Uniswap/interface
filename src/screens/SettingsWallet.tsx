@@ -8,12 +8,12 @@ import { SvgProps } from 'react-native-svg'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { SettingsStackParamList, useSettingsStackNavigation } from 'src/app/navigation/types'
 import NotificationIcon from 'src/assets/icons/bell.svg'
-import BriefcaseIcon from 'src/assets/icons/briefcase.svg'
+import ChartIcon from 'src/assets/icons/chart.svg'
 import CloudIcon from 'src/assets/icons/cloud.svg'
 import EditIcon from 'src/assets/icons/edit.svg'
 import GlobalIcon from 'src/assets/icons/global.svg'
-import ShieldIcon from 'src/assets/icons/shield.svg'
-import TrendingUpIcon from 'src/assets/icons/trending-up.svg'
+import KeyIcon from 'src/assets/icons/key.svg'
+import ShieldQuestionIcon from 'src/assets/icons/shield-question.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Switch } from 'src/components/buttons/Switch'
@@ -158,7 +158,7 @@ export function SettingsWallet({
   }
 
   const iconProps: SvgProps = {
-    color: theme.colors.textSecondary,
+    color: theme.colors.textTertiary,
     height: 24,
     strokeLinecap: 'round',
     strokeLinejoin: 'round',
@@ -190,12 +190,12 @@ export function SettingsWallet({
         {
           action: <Switch value={hideSmallBalances} onValueChange={toggleHideSmallBalances} />,
           text: t('Hide small balances'),
-          icon: <TrendingUpIcon {...iconProps} />,
+          icon: <ChartIcon {...iconProps} />,
         },
         {
           action: <Switch value={hideSpamTokens} onValueChange={toggleHideSpamTokens} />,
           text: t('Hide unknown tokens'),
-          icon: <ShieldIcon {...iconProps} />,
+          icon: <ShieldQuestionIcon {...iconProps} />,
         },
         {
           screen: Screens.SettingsWalletManageConnection,
@@ -213,7 +213,7 @@ export function SettingsWallet({
         {
           screen: Screens.SettingsViewSeedPhrase,
           text: t('Recovery phrase'),
-          icon: <BriefcaseIcon {...iconProps} />,
+          icon: <KeyIcon {...iconProps} />,
           screenProps: { address },
           isHidden: readonly,
         },
