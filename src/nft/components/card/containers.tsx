@@ -157,14 +157,22 @@ const CardContainer = ({
   isDisabled,
   children,
   testId,
+  onClick,
 }: {
   isSelected: boolean
   isDisabled: boolean
   children: ReactNode
   testId?: string
+  onClick?: (e: React.MouseEvent) => void
 }) => {
   return (
-    <StyledCardContainer selected={isSelected} isDisabled={isDisabled} draggable={false} data-testid={testId}>
+    <StyledCardContainer
+      selected={isSelected}
+      isDisabled={isDisabled}
+      draggable={false}
+      data-testid={testId}
+      onClick={onClick}
+    >
       {children}
     </StyledCardContainer>
   )
@@ -180,6 +188,7 @@ const Container = ({
   detailsHref,
   doNotLinkToDetails = false,
   testId,
+  onClick,
   children,
 }: {
   isSelected: boolean
@@ -188,9 +197,10 @@ const Container = ({
   doNotLinkToDetails: boolean
   testId?: string
   children: ReactNode
+  onClick?: (e: React.MouseEvent) => void
 }) => {
   return (
-    <CardContainer isSelected={isSelected} isDisabled={isDisabled} testId={testId}>
+    <CardContainer isSelected={isSelected} isDisabled={isDisabled} testId={testId} onClick={onClick}>
       <StyledLink to={doNotLinkToDetails ? '' : detailsHref}>{children}</StyledLink>
     </CardContainer>
   )
@@ -262,7 +272,6 @@ const SecondaryDetails = ({ children }: { children: ReactNode }) => (
 )
 
 const SecondaryInfoContainer = styled(ThemedText.BodyPrimary)`
-  color: ${({ theme }) => theme.textPrimary};
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

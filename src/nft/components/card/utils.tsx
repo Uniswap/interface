@@ -1,4 +1,4 @@
-import { NftAudio, NftImage, NftVideo } from 'nft/components/card/media'
+import { NftImage, NftPlayableMedia } from 'nft/components/card/media'
 import {
   LarvaLabsMarketplaceIcon,
   LooksRareIcon,
@@ -66,7 +66,7 @@ export function getNftDisplayComponent(
       )
     case AssetMediaType.Video:
       return (
-        <NftVideo
+        <NftPlayableMedia
           src={getAssetImageUrl(asset)}
           mediaSrc={getAssetMediaUrl(asset)}
           tokenId={asset.tokenId}
@@ -80,7 +80,8 @@ export function getNftDisplayComponent(
       )
     case AssetMediaType.Audio:
       return (
-        <NftAudio
+        <NftPlayableMedia
+          isAudio={true}
           src={getAssetImageUrl(asset)}
           mediaSrc={getAssetMediaUrl(asset)}
           tokenId={asset.tokenId}

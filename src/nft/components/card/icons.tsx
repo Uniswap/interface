@@ -72,11 +72,7 @@ export const MarketplaceContainer = ({
     )
   }
 
-  if (!marketplace) {
-    return null
-  }
-
-  if (!tokenType || tokenType === NftStandard.Erc1155) {
+  if (!marketplace || tokenType === NftStandard.Erc1155) {
     return null
   }
 

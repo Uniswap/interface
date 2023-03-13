@@ -82,6 +82,7 @@ export const NftImage = ({
 }
 
 interface MediaProps {
+  isAudio?: boolean
   mediaSrc?: string
   tokenId?: string
   shouldPlay: boolean
@@ -120,100 +121,14 @@ const StyledInnerMediaContainer = styled(Row)`
   top: 0px;
 `
 
-export const NftVideo = ({
-  src,
-  mediaSrc,
-  tokenId,
-  uniformAspectRatio = UniformAspectRatios.square,
-  setUniformAspectRatio,
-  renderedHeight,
-  setRenderedHeight,
-  shouldPlay,
-  setCurrentTokenPlayingMedia,
-}: MediaProps & ImageProps) => {
-  const vidRef = useRef<HTMLVideoElement>(null)
-  const [noContent, setNoContent] = useState(!src)
-  const [imageLoaded, setImageLoaded] = useState(false)
-
-  useEffect(() => {
-    if (shouldPlay && vidRef.current) {
-      vidRef.current.play()
-    } else if (!shouldPlay && vidRef.current) {
-      vidRef.current.pause()
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shouldPlay, vidRef.current])
-
-  if (noContent) {
-    return <NoContentContainer height={getHeightFromAspectRatio(uniformAspectRatio, renderedHeight)} />
-  }
-
-  return (
-    <>
-      <StyledMediaContainer>
-        <StyledImage
-          src={src}
-          $aspectRatio={getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}
-          imageLoading={!imageLoaded}
-          draggable={false}
-          onError={() => setNoContent(true)}
-          onLoad={(e) => {
-            handleUniformAspectRatio(uniformAspectRatio, e, setUniformAspectRatio, renderedHeight, setRenderedHeight)
-            setImageLoaded(true)
-          }}
-          $hidden={shouldPlay}
-        />
-      </StyledMediaContainer>
-      {shouldPlay ? (
-        <>
-          <PlaybackButton pauseButton={true}>
-            <Pause
-              size="24px"
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                setCurrentTokenPlayingMedia(undefined)
-              }}
-            />
-          </PlaybackButton>
-          <StyledInnerMediaContainer>
-            <StyledVideo
-              $aspectRatio={getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}
-              ref={vidRef}
-              onEnded={(e) => {
-                e.preventDefault()
-                setCurrentTokenPlayingMedia(undefined)
-              }}
-              loop
-              playsInline
-            >
-              <source src={mediaSrc} />
-            </StyledVideo>
-          </StyledInnerMediaContainer>
-        </>
-      ) : (
-        <PlaybackButton>
-          <Play
-            size="24px"
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              setCurrentTokenPlayingMedia(tokenId)
-            }}
-          />
-        </PlaybackButton>
-      )}
-    </>
-  )
-}
-
 const StyledAudio = styled.audio`
   width: 100%;
   height: 100%;
 `
 
-export const NftAudio = ({
+// eslint-disable-next-line import/no-unused-modules
+export const NftPlayableMedia = ({
+  isAudio,
   src,
   mediaSrc,
   tokenId,
@@ -224,19 +139,17 @@ export const NftAudio = ({
   shouldPlay,
   setCurrentTokenPlayingMedia,
 }: MediaProps & ImageProps) => {
-  const audRef = useRef<HTMLAudioElement>(null)
+  const mediaRef = useRef<HTMLVideoElement>(null)
   const [noContent, setNoContent] = useState(!src)
   const [imageLoaded, setImageLoaded] = useState(false)
 
   useEffect(() => {
-    if (shouldPlay && audRef.current) {
-      audRef.current.play()
-    } else if (!shouldPlay && audRef.current) {
-      audRef.current.pause()
+    if (shouldPlay && mediaRef.current) {
+      mediaRef.current.play()
+    } else if (!shouldPlay && mediaRef.current) {
+      mediaRef.current.pause()
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shouldPlay, audRef.current])
+  }, [shouldPlay])
 
   if (noContent) {
     return <NoContentContainer height={getHeightFromAspectRatio(uniformAspectRatio, renderedHeight)} />
@@ -254,8 +167,8 @@ export const NftAudio = ({
           onLoad={(e) => {
             handleUniformAspectRatio(uniformAspectRatio, e, setUniformAspectRatio, renderedHeight, setRenderedHeight)
             setImageLoaded(true)
-            setImageLoaded(true)
           }}
+          $hidden={shouldPlay && !isAudio}
         />
       </StyledMediaContainer>
       {shouldPlay ? (
@@ -271,15 +184,30 @@ export const NftAudio = ({
             />
           </PlaybackButton>
           <StyledInnerMediaContainer>
-            <StyledAudio
-              ref={audRef}
-              onEnded={(e) => {
-                e.preventDefault()
-                setCurrentTokenPlayingMedia(undefined)
-              }}
-            >
-              <source src={mediaSrc} />
-            </StyledAudio>
+            {isAudio ? (
+              <StyledAudio
+                ref={mediaRef}
+                onEnded={(e) => {
+                  e.preventDefault()
+                  setCurrentTokenPlayingMedia(undefined)
+                }}
+              >
+                <source src={mediaSrc} />
+              </StyledAudio>
+            ) : (
+              <StyledVideo
+                $aspectRatio={getMediaAspectRatio(uniformAspectRatio, setUniformAspectRatio)}
+                ref={mediaRef}
+                onEnded={(e) => {
+                  e.preventDefault()
+                  setCurrentTokenPlayingMedia(undefined)
+                }}
+                loop
+                playsInline
+              >
+                <source src={mediaSrc} />
+              </StyledVideo>
+            )}
           </StyledInnerMediaContainer>
         </>
       ) : (
@@ -298,10 +226,10 @@ export const NftAudio = ({
   )
 }
 
-const NoContentContainerBackground = styled.div<{ height?: number }>`
+const NoContentContainerBackground = styled.div<{ $height?: number }>`
   position: relative;
   width: 100%;
-  height: ${({ height }) => (height ? `${height}px` : 'auto')};
+  height: ${({ $height }) => ($height ? `${$height}px` : 'auto')};
   padding-top: 100%;
   background: ${({ theme }) =>
     `linear-gradient(90deg, ${theme.backgroundSurface} 0%, ${theme.backgroundInteractive} 95.83%)`};
@@ -318,7 +246,7 @@ const NoContentText = styled(ThemedText.BodyPrimary)`
 
 const NoContentContainer = ({ height }: { height?: number }) => (
   <>
-    <NoContentContainerBackground height={height}>
+    <NoContentContainerBackground $height={height}>
       <NoContentText>
         <Trans>Content not</Trans>
         <br />
