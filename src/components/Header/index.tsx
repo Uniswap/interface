@@ -235,7 +235,6 @@ const StyledLogoIcon = styled.img`
 `
 
 function TopLevelModals() {
-  console.log('aaaaaaaaaaa')
   const open = useModalOpen(ApplicationModal.PERP_POPUP)
   const toggle = useTogglePerpModal()
   return <PerpModal isOpen={open} onDismiss={toggle} />

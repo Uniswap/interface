@@ -30,7 +30,7 @@ const StyledLink = styled.a`
   justify-content: center;
   gap: 6px;
   text-decoration: none;
-  color: #fff;
+  color: ${({ theme }) => theme.text1};
 
   &:hover {
     color: ${({ theme }) => theme.primary1};

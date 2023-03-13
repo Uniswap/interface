@@ -197,16 +197,21 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
 }
 
 export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
-  const [fiatBalance, setFiatBalance] = useState<CurrencyAmount<Token> | undefined>()
-
+  const [fiatBalance, setFiatBalance] = useState<string>('')
   const { account, chainId } = useActiveWeb3React()
   const { minBalance } = useV3Positions(account)
-  const kromToken = chainId ? KROM[chainId] : undefined
-  const usdcPrice = useUSDCPrice(kromToken)
 
   const isUnderfunded = fundingBalance ? !minBalance?.lessThan(fundingBalance?.quotient) : true
 
-  useEffect(() => setFiatBalance(minBalance?.multiply(usdcPrice ?? 0)), [minBalance, usdcPrice])
+  const kromToken = chainId ? KROM[chainId] : undefined
+  const usdcPrice = useUSDCPrice(kromToken ?? undefined)?.toSignificant(4)
+  const minBalanceNumber = minBalance?.toSignificant(4) || 0
+
+  useEffect(() => {
+    if (!minBalanceNumber || !usdcPrice) return
+    const result = Number(minBalanceNumber) * Number(usdcPrice)
+    setFiatBalance(result.toFixed(2))
+  }, [minBalanceNumber, usdcPrice])
 
   return (
     <AccountStatusWrapper gap="10px">
@@ -290,7 +295,7 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
                   </Text>
                   {fiatBalance && (
                     <Text fontSize={16} fontWeight={500} marginLeft="8px">
-                      <TYPE.small>{`($${fiatBalance.toSignificant(6)})`}</TYPE.small>
+                      <TYPE.small>{`($${fiatBalance})`}</TYPE.small>
                     </Text>
                   )}
                 </RowFixed>
@@ -333,7 +338,7 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
                   </Text>
                   {fiatBalance && (
                     <Text fontSize={16} fontWeight={500} marginLeft="8px">
-                      <TYPE.small>{`($${fiatBalance.toSignificant(6)})`}</TYPE.small>
+                      <TYPE.small>{`($${fiatBalance})`}</TYPE.small>
                     </Text>
                   )}
                 </RowFixed>
