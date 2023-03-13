@@ -258,7 +258,7 @@ export default function TokenSafety({
   }
 
   return displayWarning ? (
-    <Wrapper>
+    <Wrapper data-testid="TokenSafetyWrapper">
       <Container>
         <AutoColumn>
           <LogoContainer>{logos}</LogoContainer>
