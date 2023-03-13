@@ -7,7 +7,6 @@ import styled from 'styled-components'
 import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
 import InfoHelper from 'components/InfoHelper'
 import SlippageControl from 'components/SlippageControl'
-import { useSwapFormContext } from 'components/SwapForm/SwapFormContext'
 import { DEFAULT_SLIPPAGE, DEFAULT_SLIPPAGE_STABLE_PAIR_SWAP } from 'constants/index'
 import useTheme from 'hooks/useTheme'
 import { useAppSelector } from 'state/hooks'
@@ -22,12 +21,14 @@ const DropdownIcon = styled(DropdownSVG)`
   }
 `
 
-const SlippageSetting: React.FC = () => {
+type Props = {
+  isStablePairSwap: boolean
+}
+const SlippageSetting: React.FC<Props> = ({ isStablePairSwap }) => {
   const theme = useTheme()
-  const isSlippageControlPinned = useAppSelector(state => state.swap.isSlippageControlPinned)
+  const isSlippageControlPinned = useAppSelector(state => state.user.isSlippageControlPinned)
   const [expanded, setExpanded] = useState(false)
   const [rawSlippage, setRawSlippage] = useUserSlippageTolerance()
-  const { isStablePairSwap } = useSwapFormContext()
   const isWarningSlippage = checkWarningSlippage(rawSlippage, isStablePairSwap)
 
   if (!isSlippageControlPinned) {

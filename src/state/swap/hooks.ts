@@ -308,7 +308,7 @@ export function queryParametersToSwapState(
   parsedQs: ParsedUrlQuery,
   chainId: ChainId,
   isMatchPath: boolean,
-): Omit<SwapState, 'saveGas' | 'typedValue' | 'isSlippageControlPinned'> {
+): Omit<SwapState, 'saveGas' | 'typedValue'> {
   let inputCurrency = parseCurrencyFromURLParameter(isMatchPath ? parsedQs.inputCurrency : null, chainId)
   let outputCurrency = parseCurrencyFromURLParameter(isMatchPath ? parsedQs.outputCurrency : null, chainId)
   if (inputCurrency === outputCurrency) {

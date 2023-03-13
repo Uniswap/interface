@@ -10,8 +10,8 @@ import { ButtonPrimary } from 'components/Button'
 import { GreyCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { AutoRow, RowBetween } from 'components/Row'
+import SlippageWarningNote from 'components/SlippageWarningNote'
 import PriceImpactNote from 'components/SwapForm/PriceImpactNote'
-import SlippageNote from 'components/SwapForm/SlippageNote'
 import { useSwapFormContext } from 'components/SwapForm/SwapFormContext'
 import { BuildRouteResult } from 'components/SwapForm/hooks/useBuildRoute'
 import { Dots } from 'components/swapv2/styleds'
@@ -70,7 +70,7 @@ const ConfirmSwapModalContent: React.FC<Props> = ({
 }) => {
   const { isSolana } = useActiveWeb3React()
   const [encodeSolana] = useEncodeSolana()
-  const { routeSummary } = useSwapFormContext()
+  const { routeSummary, slippage, isStablePairSwap } = useSwapFormContext()
 
   const shouldDisableConfirmButton = isBuildingRoute || !!errorWhileBuildRoute
 
@@ -189,7 +189,7 @@ const ConfirmSwapModalContent: React.FC<Props> = ({
           gap: '0.75rem',
         }}
       >
-        <SlippageNote />
+        <SlippageWarningNote rawSlippage={slippage} isStablePairSwap={isStablePairSwap} />
         <PriceImpactNote priceImpact={priceImpactFromBuild} hasTooltip={false} />
       </Flex>
 

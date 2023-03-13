@@ -15,16 +15,17 @@ import { useActiveWeb3React } from 'hooks'
 import { FeeConfig } from 'hooks/useSwapV2Callback'
 import useTheme from 'hooks/useTheme'
 import { Field } from 'state/swap/actions'
-import { useEncodeSolana } from 'state/swap/hooks'
+import { useCheckStablePairSwap, useEncodeSolana } from 'state/swap/hooks'
 import { TYPE } from 'theme'
 import { formattedNum } from 'utils'
 import { Aggregator } from 'utils/aggregator'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { getFormattedFeeAmountUsd } from 'utils/fee'
 import { computeSlippageAdjustedAmounts, formatExecutionPrice } from 'utils/prices'
+import { checkWarningSlippage } from 'utils/slippage'
 
 import HurryUpBanner from './HurryUpBanner'
-import { StyledBalanceMaxMini, SwapCallbackError } from './styleds'
+import { CustomSlippageNote, StyledBalanceMaxMini, SwapCallbackError } from './styleds'
 
 export default function SwapModalFooter({
   trade,
@@ -43,6 +44,7 @@ export default function SwapModalFooter({
   feeConfig: FeeConfig | undefined
   startedTime: number | undefined
 }) {
+  const isStablePairSwap = useCheckStablePairSwap()
   const { chainId, isSolana, isEVM } = useActiveWeb3React()
   const [showInverted, setShowInverted] = useState<boolean>(false)
   const theme = useTheme()
@@ -50,6 +52,7 @@ export default function SwapModalFooter({
     () => computeSlippageAdjustedAmounts(trade, allowedSlippage),
     [allowedSlippage, trade],
   )
+  const isWarningSlippge = checkWarningSlippage(allowedSlippage, isStablePairSwap)
   const [encodeSolana] = useEncodeSolana()
 
   const nativeInput = useCurrencyConvertedToNative(trade.inputAmount.currency as Currency)
@@ -141,7 +144,9 @@ export default function SwapModalFooter({
               <Trans>Max Slippage</Trans>
             </TYPE.black>
           </RowFixed>
-          <TYPE.black fontSize={14}>{allowedSlippage / 100}%</TYPE.black>
+          <TYPE.black fontSize={14} color={isWarningSlippge ? theme.warning : undefined}>
+            {allowedSlippage / 100}%
+          </TYPE.black>
         </RowBetween>
 
         {feeConfig && (
@@ -158,17 +163,19 @@ export default function SwapModalFooter({
           </RowBetween>
         )}
       </AutoColumn>
+
+      <CustomSlippageNote rawSlippage={allowedSlippage} isStablePairSwap={isStablePairSwap} />
+
       {highPriceImpact && (
         <AutoRow
           style={{
             marginTop: '16px',
-            padding: '15px 20px',
-            borderRadius: '16px',
+            padding: '12px 16px',
+            borderRadius: '999px',
             backgroundColor: rgba(veryHighPriceImpact ? theme.red : theme.warning, 0.35),
             color: theme.text,
             fontSize: '12px',
             fontWeight: 400,
-            lineHeight: '18px',
           }}
         >
           <AlertTriangle

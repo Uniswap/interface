@@ -3,7 +3,6 @@ import { AlertTriangle } from 'react-feather'
 import { Flex } from 'rebass'
 import styled from 'styled-components'
 
-import { useSwapFormContext } from 'components/SwapForm/SwapFormContext'
 import useTheme from 'hooks/useTheme'
 import { checkRangeSlippage } from 'utils/slippage'
 
@@ -20,9 +19,13 @@ const Wrapper = styled.div`
   font-size: 12px;
 `
 
-const SlippageNote: React.FC = () => {
-  const { slippage, isStablePairSwap } = useSwapFormContext()
-  const { isValid, message } = checkRangeSlippage(slippage, isStablePairSwap)
+type Props = {
+  rawSlippage: number
+  isStablePairSwap: boolean
+  className?: string
+}
+const SlippageWarningNote: React.FC<Props> = ({ className, rawSlippage, isStablePairSwap }) => {
+  const { isValid, message } = checkRangeSlippage(rawSlippage, isStablePairSwap)
 
   const theme = useTheme()
   if (!isValid || !message) {
@@ -30,7 +33,7 @@ const SlippageNote: React.FC = () => {
   }
 
   return (
-    <Wrapper>
+    <Wrapper className={className}>
       <Flex flex="0 0 16px" height="16px" alignItems="center" justifyContent="center">
         <AlertTriangle size={16} color={theme.warning} />
       </Flex>
@@ -39,4 +42,4 @@ const SlippageNote: React.FC = () => {
   )
 }
 
-export default SlippageNote
+export default styled(SlippageWarningNote)``

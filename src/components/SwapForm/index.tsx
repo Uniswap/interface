@@ -5,9 +5,9 @@ import { parseGetRouteResponse } from 'services/route/utils'
 
 import AddressInputPanel from 'components/AddressInputPanel'
 import { AutoRow } from 'components/Row'
+import SlippageWarningNote from 'components/SlippageWarningNote'
 import InputCurrencyPanel from 'components/SwapForm/InputCurrencyPanel'
 import OutputCurrencyPanel from 'components/SwapForm/OutputCurrencyPanel'
-import SlippageNote from 'components/SwapForm/SlippageNote'
 import SlippageSetting from 'components/SwapForm/SlippageSetting'
 import { SwapFormContextProvider } from 'components/SwapForm/SwapFormContext'
 import useBuildRoute from 'components/SwapForm/hooks/useBuildRoute'
@@ -192,7 +192,7 @@ const SwapForm: React.FC<SwapFormProps> = props => {
               <AddressInputPanel id="recipient" value={recipient} onChange={setRecipient} />
             )}
 
-            {!isWrapOrUnwrap && <SlippageSetting />}
+            {!isWrapOrUnwrap && <SlippageSetting isStablePairSwap={isStablePairSwap} />}
           </Flex>
         </Wrapper>
         <Flex flexDirection="column" style={{ gap: '1.25rem' }}>
@@ -202,7 +202,7 @@ const SwapForm: React.FC<SwapFormProps> = props => {
             <TrendingSoonTokenBanner currencyIn={currencyIn} currencyOut={currencyOut} style={{ marginTop: '24px' }} />
           )}
 
-          {!isWrapOrUnwrap && <SlippageNote />}
+          {!isWrapOrUnwrap && <SlippageWarningNote rawSlippage={slippage} isStablePairSwap={isStablePairSwap} />}
 
           <PriceImpactNote priceImpact={routeSummary?.priceImpact} isAdvancedMode={isAdvancedMode} hasTooltip />
 
@@ -225,7 +225,7 @@ const SwapForm: React.FC<SwapFormProps> = props => {
             swapInputError={swapInputError}
           />
 
-          <TradeSummary feeConfig={feeConfig} routeSummary={routeSummary} slippage={slippage} />
+          {!isWrapOrUnwrap && <TradeSummary feeConfig={feeConfig} routeSummary={routeSummary} slippage={slippage} />}
         </Flex>
       </Box>
     </SwapFormContextProvider>

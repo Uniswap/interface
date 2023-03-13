@@ -68,7 +68,7 @@ const TradeSummary: React.FC<Props> = ({ feeConfig, routeSummary, slippage }) =>
   const hasTrade = !!routeSummary?.route
 
   const theme = useTheme()
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(true)
 
   const formattedFeeAmountUsd = amountInUsd ? getFormattedFeeAmountUsdV2(Number(amountInUsd), feeConfig?.feeAmount) : 0
   const minimumAmountOut = parsedAmountOut ? minimumAmountAfterSlippage(parsedAmountOut, slippage) : undefined

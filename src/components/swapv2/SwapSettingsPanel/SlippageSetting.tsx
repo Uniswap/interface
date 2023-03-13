@@ -10,8 +10,8 @@ import PinButton from 'components/swapv2/SwapSettingsPanel/PinButton'
 import SettingLabel from 'components/swapv2/SwapSettingsPanel/SettingLabel'
 import { DEFAULT_SLIPPAGE, DEFAULT_SLIPPAGE_STABLE_PAIR_SWAP } from 'constants/index'
 import { useAppSelector } from 'state/hooks'
-import { pinSlippageControl } from 'state/swap/actions'
 import { useCheckStablePairSwap } from 'state/swap/hooks'
+import { pinSlippageControl } from 'state/user/actions'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { checkRangeSlippage } from 'utils/slippage'
 
@@ -41,7 +41,7 @@ const SlippageSetting: React.FC<Props> = ({ shouldShowPinButton = true }) => {
   const isWarning = isValid && !!message
   const isError = !isValid
 
-  const isSlippageControlPinned = useAppSelector(state => state.swap.isSlippageControlPinned)
+  const isSlippageControlPinned = useAppSelector(state => state.user.isSlippageControlPinned)
 
   const handleClickPinSlippageControl = () => {
     dispatch(pinSlippageControl(!isSlippageControlPinned))

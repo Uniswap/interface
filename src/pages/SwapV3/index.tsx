@@ -273,7 +273,7 @@ export default function Swap() {
   const shareUrl = useMemo(() => {
     const tokenIn = isSwapPage ? currencyIn : limitState.currencyIn
     const tokenOut = isSwapPage ? currencyOut : limitState.currencyOut
-    return `${window.location.origin}${isSwapPage ? APP_PATHS.SWAP : APP_PATHS.LIMIT}}/${networkInfo.route}${
+    return `${window.location.origin}${isSwapPage ? APP_PATHS.SWAP : APP_PATHS.LIMIT}/${networkInfo.route}${
       tokenIn && tokenOut
         ? `?${stringify({
             inputCurrency: currencyId(tokenIn, chainId),

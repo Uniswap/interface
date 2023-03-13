@@ -43,7 +43,7 @@ interface TradeSummaryProps {
 function TradeSummary({ trade, feeConfig, allowedSlippage }: TradeSummaryProps) {
   const { isEVM } = useActiveWeb3React()
   const theme = useTheme()
-  const [show, setShow] = useState(feeConfig ? true : false)
+  const [show, setShow] = useState(true)
 
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)

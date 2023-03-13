@@ -4,6 +4,7 @@ import { Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
 import { DEFAULT_SLIPPAGES, MAX_SLIPPAGE_IN_BIPS } from 'constants/index'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { formatSlippage } from 'utils/slippage'
 
 export const parseSlippageInput = (str: string): number => Math.round(Number.parseFloat(str) * 100)
@@ -118,6 +119,7 @@ export type Props = {
 }
 const CustomSlippageInput: React.FC<Props> = ({ rawSlippage, setRawSlippage, isWarning, defaultRawSlippage }) => {
   const inputRef = useRef<HTMLInputElement>(null)
+  const { mixpanelHandler } = useMixpanel()
 
   // rawSlippage = 10
   // slippage shown to user: = 10 / 10_000 = 0.001 = 0.1%
@@ -157,6 +159,7 @@ const CustomSlippageInput: React.FC<Props> = ({ rawSlippage, setRawSlippage, isW
 
   const handleCommitChange = () => {
     setRawText(getSlippageText(rawSlippage))
+    mixpanelHandler(MIXPANEL_TYPE.SLIPPAGE_CHANGED, { new_slippage: Number(formatSlippage(rawSlippage, false)) })
   }
 
   const handleKeyPressInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -166,7 +169,6 @@ const CustomSlippageInput: React.FC<Props> = ({ rawSlippage, setRawSlippage, isW
     }
 
     if (key === 'Enter') {
-      handleCommitChange()
       inputRef.current?.blur()
       return
     }
