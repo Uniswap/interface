@@ -19,7 +19,7 @@ Sentry.init({
   release: process.env.REACT_APP_GIT_COMMIT_HASH,
   environment: getEnvName(),
   enabled: isSentryEnabled(),
-  tracesSampleRate: 0.00003,
+  tracesSampleRate: Number(process.env.REACT_APP_SENTRY_TRACES_SAMPLE_RATE ?? 0),
   integrations: [
     new BrowserTracing({
       startTransactionOnLocationChange: false,
