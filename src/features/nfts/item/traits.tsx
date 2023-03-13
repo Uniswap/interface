@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, ListRenderItemInfo } from 'react-native'
+import { FlatList, ListRenderItemInfo, StyleSheet } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -47,6 +47,7 @@ export function NFTTraitList({
   return (
     <FlatList
       ItemSeparatorComponent={Separator}
+      contentContainerStyle={Styles.listContainer}
       data={traits}
       horizontal={true}
       renderItem={renderItem}
@@ -58,3 +59,9 @@ export function NFTTraitList({
 function Separator(): JSX.Element {
   return <Box width={FixedTheme.spacing.spacing8} />
 }
+
+const Styles = StyleSheet.create({
+  listContainer: {
+    paddingHorizontal: FixedTheme.spacing.spacing24,
+  },
+})

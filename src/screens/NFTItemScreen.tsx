@@ -191,10 +191,10 @@ export function NFTItemScreen({
                 gap="spacing24"
                 mb="spacing48"
                 mt="spacing8"
-                pb="spacing48"
-                px="spacing24">
+                pb="spacing48">
                 <Flex
                   gap="spacing12"
+                  px="spacing24"
                   shadowColor="black"
                   shadowOffset={{ width: 0, height: 16 }}
                   shadowOpacity={0.2}
@@ -246,26 +246,28 @@ export function NFTItemScreen({
                 </Flex>
 
                 {/* Description */}
-                {nftLoading ? (
-                  <Box mt="spacing12">
-                    <Loader.Box
-                      height={darkTheme.textVariants.bodySmall.lineHeight}
-                      mb="spacing4"
-                      repeat={3}
+                <Flex px="spacing24">
+                  {nftLoading ? (
+                    <Box mt="spacing12">
+                      <Loader.Box
+                        height={darkTheme.textVariants.bodySmall.lineHeight}
+                        mb="spacing4"
+                        repeat={3}
+                      />
+                    </Box>
+                  ) : asset?.description ? (
+                    <LongText
+                      renderAsMarkdown
+                      color={darkTheme.colors.textPrimary}
+                      initialDisplayedLines={3}
+                      readMoreOrLessColor={accentTextColor}
+                      text={asset?.description || '-'}
                     />
-                  </Box>
-                ) : asset?.description ? (
-                  <LongText
-                    renderAsMarkdown
-                    color={darkTheme.colors.textPrimary}
-                    initialDisplayedLines={3}
-                    readMoreOrLessColor={accentTextColor}
-                    text={asset?.description || '-'}
-                  />
-                ) : null}
+                  ) : null}
+                </Flex>
 
                 {/* Metadata */}
-                <Flex gap="spacing12">
+                <Flex gap="spacing12" px="spacing24">
                   {listingPrice?.value ? (
                     <AssetMetadata
                       title={t('Current price')}
@@ -313,7 +315,7 @@ export function NFTItemScreen({
                 {/* Traits */}
                 {asset?.traits && asset?.traits?.length > 0 ? (
                   <Flex gap="spacing12">
-                    <Text color="textOnBrightPrimary" variant="buttonLabelSmall">
+                    <Text color="textOnBrightPrimary" ml="spacing24" variant="buttonLabelSmall">
                       {t('Traits')}
                     </Text>
                     <NFTTraitList titleTextColor={accentTextColor} traits={asset.traits} />

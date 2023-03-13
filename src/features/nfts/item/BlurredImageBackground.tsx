@@ -1,8 +1,9 @@
 import { BlurView } from 'expo-blur'
 import React from 'react'
-import { ImageBackground, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
-import { AnimatedBox, Box } from 'src/components/layout'
+import { NFTViewer } from 'src/components/images/NFTViewer'
+import { AnimatedFlex, Box } from 'src/components/layout'
 
 /**
  * Renders a blurred image background combined with a color overlay for a given image uri.
@@ -17,13 +18,14 @@ export const BlurredImageBackground = ({
   return (
     <View style={StyleSheet.absoluteFill}>
       {imageUri ? (
-        <AnimatedBox entering={FadeIn} style={StyleSheet.absoluteFill}>
-          <ImageBackground
-            resizeMode="cover"
-            source={{ uri: imageUri }}
-            style={StyleSheet.absoluteFill}
-          />
-        </AnimatedBox>
+        <AnimatedFlex
+          alignItems="center"
+          entering={FadeIn}
+          justifyContent="center"
+          overflow="hidden"
+          style={StyleSheet.absoluteFill}>
+          <NFTViewer squareGridView uri={imageUri} />
+        </AnimatedFlex>
       ) : null}
       <BlurView intensity={99} style={StyleSheet.absoluteFill} />
       <Box opacity={0.8} style={[StyleSheet.absoluteFill, { backgroundColor }]} />
