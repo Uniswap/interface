@@ -437,6 +437,8 @@ export default function AddLiquidity() {
     ) {
       onLeftRangeInput(minPrice)
     }
+    // disable eslint rule because this hook only cares about the url->input state data flow
+    // input state -> url updates are handled in the input handlers
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams])
   useEffect(() => {
@@ -450,6 +452,8 @@ export default function AddLiquidity() {
     ) {
       onRightRangeInput(maxPrice)
     }
+    // disable eslint rule because this hook only cares about the url->input state data flow
+    // input state -> url updates are handled in the input handlers
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams])
   // END: sync values with query string
