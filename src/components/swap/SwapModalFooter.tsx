@@ -118,8 +118,8 @@ export default function SwapModalFooter({
   swapErrorMessage: ReactNode | undefined
   disabledConfirm: boolean
   swapQuoteReceivedDate: Date | undefined
-  fiatValueInput?: number
-  fiatValueOutput?: number
+  fiatValueInput: { data?: number; isLoading: boolean }
+  fiatValueOutput: { data?: number; isLoading: boolean }
 }) {
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
@@ -142,8 +142,8 @@ export default function SwapModalFooter({
             isAutoRouterApi: !clientSideRouter,
             swapQuoteReceivedDate,
             routes,
-            fiatValueInput,
-            fiatValueOutput,
+            fiatValueInput: fiatValueInput.data,
+            fiatValueOutput: fiatValueOutput.data,
           })}
         >
           <ButtonError

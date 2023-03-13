@@ -9,7 +9,7 @@ import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import usePrevious from 'hooks/usePrevious'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -532,8 +532,22 @@ export default function AddLiquidity() {
       </AutoColumn>
     )
 
-  const currencyAFiat = usdcValues[Field.CURRENCY_A]
-  const currencyBFiat = usdcValues[Field.CURRENCY_B]
+  const usdcValueCurrencyA = usdcValues[Field.CURRENCY_A]
+  const usdcValueCurrencyB = usdcValues[Field.CURRENCY_B]
+  const currencyAFiat = useMemo(
+    () => ({
+      data: usdcValueCurrencyA ? parseFloat(usdcValueCurrencyA.toSignificant()) : undefined,
+      isLoading: false,
+    }),
+    [usdcValueCurrencyA]
+  )
+  const currencyBFiat = useMemo(
+    () => ({
+      data: usdcValueCurrencyB ? parseFloat(usdcValueCurrencyB.toSignificant()) : undefined,
+      isLoading: false,
+    }),
+    [usdcValueCurrencyB]
+  )
   return (
     <>
       <ScrollablePage>
@@ -684,7 +698,7 @@ export default function AddLiquidity() {
                       showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
                       currency={currencies[Field.CURRENCY_A] ?? null}
                       id="add-liquidity-input-tokena"
-                      fiatValue={currencyAFiat && parseFloat(currencyAFiat.toSignificant())}
+                      fiatValue={currencyAFiat}
                       showCommonBases
                       locked={depositADisabled}
                     />
@@ -696,7 +710,7 @@ export default function AddLiquidity() {
                         onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
                       }}
                       showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
-                      fiatValue={currencyBFiat && parseFloat(currencyBFiat.toSignificant())}
+                      fiatValue={currencyBFiat}
                       currency={currencies[Field.CURRENCY_B] ?? null}
                       id="add-liquidity-input-tokenb"
                       showCommonBases
