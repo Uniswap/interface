@@ -32,6 +32,7 @@ const ListPriceRowContainer = styled(Row)`
   font-size: 14px;
   font-weight: 600;
   line-height: 16px;
+  text-shadow: 1px 1px 3px rgba(51, 53, 72, 0.54);
 `
 
 export const MarketplaceContainer = ({
