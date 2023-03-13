@@ -3,9 +3,9 @@ import { Protocol } from '@uniswap/router-sdk'
 import { AlphaRouter, ChainId } from '@uniswap/smart-order-router'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { getClientSideQuote, toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
-import { trace } from 'logging/trace'
 import ms from 'ms.macro'
 import qs from 'qs'
+import { trace } from 'tracing'
 
 import { GetQuoteResult } from './types'
 
@@ -91,20 +91,20 @@ export const routingApi = createApi({
         const autoRouter = args.routerPreference === RouterPreference.API
         trace(
           'quote.interface',
-          async ({ transaction }) => {
+          async ({ setTraceError, setTraceStatus }) => {
             try {
               await queryFulfilled
             } catch (error: unknown) {
               if (error && typeof error === 'object' && 'status' in error) {
                 const queryError = error as FetchBaseQueryError
                 if (typeof queryError.status === 'number') {
-                  transaction.setHttpStatus(queryError.status)
+                  setTraceStatus(queryError.status)
                 } else if (
                   queryError.status === 'FETCH_ERROR' ||
                   queryError.status === 'PARSING_ERROR' ||
                   queryError.status === 'CUSTOM_ERROR'
                 ) {
-                  transaction.setData('error', queryError.error)
+                  setTraceError('unknown_error', queryError.error)
                 }
               }
             }

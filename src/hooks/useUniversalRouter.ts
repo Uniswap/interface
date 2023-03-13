@@ -9,8 +9,8 @@ import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
-import { trace } from 'logging/trace'
 import { useCallback } from 'react'
+import { trace } from 'tracing'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import isZero from 'utils/isZero'
 import { parseSwapError, swapErrorToMessage } from 'utils/swapErrorToUserReadableMessage'
@@ -37,7 +37,7 @@ export function useUniversalRouterSwapCallback(
     async (): Promise<TransactionResponse> =>
       trace(
         'swap.send',
-        async ({ transaction, traceChild }) => {
+        async ({ setTraceError, setTraceStatus, traceChild }) => {
           try {
             if (!account) throw new Error('missing account')
             if (!chainId) throw new Error('missing chainId')
@@ -58,16 +58,13 @@ export function useUniversalRouterSwapCallback(
               ...(value && !isZero(value) ? { value: toHex(value) } : {}),
             }
 
-            const gasEstimate = await traceChild('gasEstimate', async ({ transaction: gasEstimateTransaction }) => {
+            const gasEstimate = await traceChild('gasEstimate', async () => {
               try {
                 return await provider.estimateGas(tx)
               } catch (gasError) {
                 console.warn(gasError)
-                gasEstimateTransaction.setStatus('unknown_error')
-                transaction.setStatus('gas_estimate_failure')
+                setTraceError('gas_estimate_failure')
                 throw new Error('Your swap is expected to fail')
-              } finally {
-                gasEstimateTransaction.finish()
               }
             })
             const gasLimit = calculateGasMargin(gasEstimate)
@@ -81,7 +78,7 @@ export function useUniversalRouterSwapCallback(
                   formatSwapSignedAnalyticsEventProperties({ trade, fiatValues, txHash: response.hash })
                 )
                 if (tx.data !== response.data) {
-                  transaction.setStatus('modified_in_wallet')
+                  setTraceStatus('modified_in_wallet')
                   sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, { txHash: response.hash })
                   throw new InvalidSwapError(
                     t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`
@@ -94,10 +91,6 @@ export function useUniversalRouterSwapCallback(
             if (error instanceof InvalidSwapError) throw error
             const swapError = parseSwapError(error)
             const message = swapErrorToMessage(swapError, error)
-            if (!transaction.status) {
-              transaction.setStatus(status)
-            }
-            transaction.setData('error', message)
             throw new Error(message)
           }
         },
