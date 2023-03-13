@@ -5,7 +5,7 @@ import { BREAKPOINTS } from 'theme'
 
 import meshSrc from './images/Mesh.png'
 
-const DARK_MODE_GRADIENT = 'radial-gradient(101.8% 4091.31% at 0% 0%, #3e3e3e 0%, #000000 100%)'
+const DARK_MODE_GRADIENT = 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%)'
 
 const Banner = styled.div<{ isDarkMode: boolean }>`
   height: 340px;
@@ -41,7 +41,6 @@ const TextContainer = styled.div`
 `
 
 const HeaderText = styled.div`
-  color: white;
   font-weight: 700;
   font-size: 28px;
   line-height: 36px;
@@ -57,7 +56,6 @@ const DescriptionText = styled.div`
   font-weight: 500;
   font-size: 16px;
   line-height: 20px;
-  color: #918378;
 
   @media screen and (min-width: ${BREAKPOINTS.xl}px) {
     font-size: 20px;
@@ -82,8 +80,8 @@ const BannerButtonContainer = styled.div`
 `
 
 const BannerButton = styled(ButtonEmpty)`
-  color: #ed4e33;
-  border: 1px solid #ed4e33;
+  color: white;
+  border: 1px solid white;
 `
 
 const ProtocolBanner = () => {
@@ -91,13 +89,13 @@ const ProtocolBanner = () => {
   return (
     <Banner isDarkMode={isDarkMode}>
       <TextContainer>
-        <HeaderText color="#ed4e33" >Powered by OrbitalApes and the Evmos DAO.</HeaderText>
+        <HeaderText>Powered by the Uniswap Protocol</HeaderText>
         <DescriptionText>
-          Community funded. No swap fees. No investment token.
+          The leading decentralized crypto trading protocol, governed by a global community.
         </DescriptionText>
       </TextContainer>
       <BannerButtonContainer>
-        <BannerButton width="200px" as="a" href="https://forge.trade" rel="noopener noreferrer" target="_blank">
+        <BannerButton width="200px" as="a" href="https://uniswap.org" rel="noopener noreferrer" target="_blank">
           Learn more
         </BannerButton>
       </BannerButtonContainer>
