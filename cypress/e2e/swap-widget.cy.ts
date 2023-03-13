@@ -38,15 +38,15 @@ describe('swap widget integration tests', () => {
 
   describe('widget on swap page', () => {
     it('should have the correct default input/output and token selection should work', () => {
-      cy.visit('/swap', { featureFlags: [FeatureFlag.swapWidget] })
+      cy.visit('/swap', { featureFlags: [FeatureFlag.swapWidget] }).then(() => {
+        verifyInputToken('ETH')
+        verifyOutputToken('Select token')
 
-      verifyInputToken('ETH')
-      verifyOutputToken('Select token')
+        selectOutputAndSwitch('UNI')
 
-      selectOutputAndSwitch('UNI')
-
-      verifyInputToken('UNI')
-      verifyOutputToken('ETH')
+        verifyInputToken('UNI')
+        verifyOutputToken('ETH')
+      })
     })
 
     it('should have the correct default input from URL params ', () => {
