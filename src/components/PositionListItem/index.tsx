@@ -77,8 +77,7 @@ const DoubleArrow = styled.span`
   color: ${({ theme }) => theme.textTertiary};
 `
 
-const RangeText = styled.span`
-  display: block;
+const RangeText = styled.div`
   word-break: break-word;
   padding: 0.25rem 0.25rem;
   border-radius: 8px;
