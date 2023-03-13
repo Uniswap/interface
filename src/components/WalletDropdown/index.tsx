@@ -169,6 +169,22 @@ function WalletDropdown() {
     }
   }, [walletDrawerOpen, toggleWalletDrawer])
 
+  // close on escape keypress
+  useEffect(() => {
+    const escapeKeyDownHandler = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && walletDrawerOpen) {
+        event.preventDefault()
+        toggleWalletDrawer()
+      }
+    }
+
+    document.addEventListener('keydown', escapeKeyDownHandler)
+
+    return () => {
+      document.removeEventListener('keydown', escapeKeyDownHandler)
+    }
+  }, [walletDrawerOpen, toggleWalletDrawer])
+
   return (
     <>
       {walletDrawerOpen && (

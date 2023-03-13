@@ -9,6 +9,7 @@ import { ClickableStyle, ThemedText } from 'theme'
 import ThemeToggle from 'theme/components/ThemeToggle'
 
 import { SlideOutMenu } from './SlideOutMenu'
+import { SmallBalanceToggle } from './SmallBalanceToggle'
 
 const InternalLinkMenuItem = styled(Link)`
   ${ClickableStyle}
@@ -37,15 +38,18 @@ function LanguageMenuItem({ locale, isActive }: { locale: SupportedLocale; isAct
   )
 }
 
-const SectionTitle = styled(ThemedText.BodyPrimary)`
+const SectionTitle = styled(ThemedText.SubHeader)`
   color: ${({ theme }) => theme.textSecondary};
-  padding-bottom: 12px;
+  padding-bottom: 24px;
 `
 
-const Divider = styled.div`
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
-  margin-top: 16px;
-  margin-bottom: 16px;
+const ThemeToggleContainer = styled.div`
+  margin: 0 0 6px;
+`
+
+const BalanceToggleContainer = styled.div`
+  padding: 16px 0;
+  margin-bottom: 26px;
 `
 
 export default function SettingsMenu({ onClose }: { onClose: () => void }) {
@@ -57,10 +61,15 @@ export default function SettingsMenu({ onClose }: { onClose: () => void }) {
   return (
     <SlideOutMenu title={<Trans>Settings</Trans>} onClose={onClose}>
       <SectionTitle>
-        <Trans>Theme</Trans>
+        <Trans>Preferences</Trans>
       </SectionTitle>
-      <ThemeToggle disabled={isWalletPage} />
-      <Divider />
+      <ThemeToggleContainer>
+        <ThemeToggle disabled={isWalletPage} />
+      </ThemeToggleContainer>
+      <BalanceToggleContainer>
+        <SmallBalanceToggle />
+      </BalanceToggleContainer>
+
       <SectionTitle data-testid="wallet-header">
         <Trans>Language</Trans>
       </SectionTitle>

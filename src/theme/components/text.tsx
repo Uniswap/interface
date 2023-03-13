@@ -43,6 +43,9 @@ export const ThemedText = {
   Hero(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={48} color="textPrimary" {...props} />
   },
+  LabelSmall(props: TextProps) {
+    return <TextWrapper fontWeight={600} fontSize={14} color="textSecondary" {...props} />
+  },
   Link(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={14} color="accentAction" {...props} />
   },

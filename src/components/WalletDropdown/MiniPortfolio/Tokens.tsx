@@ -2,32 +2,89 @@ import { t } from '@lingui/macro'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonLight } from 'components/Button'
+import Column from 'components/Column'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import Row from 'components/Row'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import { PortfolioBalancesQuery, usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import useSelectChain from 'hooks/useSelectChain'
-import { useCallback, useState } from 'react'
+import { useAtomValue } from 'jotai/utils'
+import { useCallback, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { EllipsisStyle, ThemedText } from 'theme'
 
 import { useToggleWalletDrawer } from '..'
 import { PortfolioArrow } from '../AuthenticatedHeader'
+import { hideSmallBalancesAtom } from '../SmallBalanceToggle'
+import { HiddenTokensRow } from './HiddenTokensRow'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from './PortfolioRow'
 
+const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
+
+const HiddenTokensContainer = styled(Column)<{ numItems: number; $expanded: boolean }>`
+  height: ${({ numItems, $expanded }) => ($expanded ? numItems * 68 + 'px' : 0)};
+  transition: ${({ theme }) => `height ${theme.transition.duration.medium} ease-in-out`};
+  overflow: hidden;
+`
+
+function meetsThreshold(tokenBalance: TokenBalance, hideSmallBalances: boolean) {
+  return !hideSmallBalances || (tokenBalance.denominatedValue?.value ?? 0) > HIDE_SMALL_USD_BALANCES_THRESHOLD
+}
+
 export default function Tokens({ account }: { account: string }) {
-  const { data, loading } = usePortfolioBalancesQuery({ variables: { ownerAddress: account } })
+  const hideSmallBalances = useAtomValue(hideSmallBalancesAtom)
+  const [showHiddenTokens, setShowHiddenTokens] = useState(false)
+
+  const { data, loading } = usePortfolioBalancesQuery({
+    variables: { ownerAddress: account },
+  })
+
+  const visibleTokens = useMemo(() => {
+    return !hideSmallBalances
+      ? data?.portfolios?.[0].tokenBalances ?? []
+      : data?.portfolios?.[0].tokenBalances?.filter((tokenBalance) =>
+          meetsThreshold(tokenBalance, hideSmallBalances)
+        ) ?? []
+  }, [data?.portfolios, hideSmallBalances])
+
+  const hiddenTokens = useMemo(() => {
+    return !hideSmallBalances
+      ? []
+      : data?.portfolios?.[0].tokenBalances?.filter(
+          (tokenBalance) => !meetsThreshold(tokenBalance, hideSmallBalances)
+        ) ?? []
+  }, [data?.portfolios, hideSmallBalances])
 
   // TODO(cartcrom): add a "no tokens" state
   return !data && loading ? (
     <PortfolioSkeleton />
   ) : (
     <PortfolioTabWrapper>
-      {data?.portfolios?.[0].tokenBalances?.map(
+      {visibleTokens.map(
         (tokenBalance) =>
-          tokenBalance.token && <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
+          tokenBalance.token &&
+          meetsThreshold(tokenBalance, hideSmallBalances) && (
+            <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
+          )
+      )}
+      {hiddenTokens.length > 0 && (
+        <>
+          <HiddenTokensRow
+            numHidden={hiddenTokens.length}
+            isExpanded={showHiddenTokens}
+            onPress={() => {
+              setShowHiddenTokens((showHiddenTokens) => !showHiddenTokens)
+            }}
+          />
+          <HiddenTokensContainer numItems={hiddenTokens.length} $expanded={showHiddenTokens}>
+            {hiddenTokens.map(
+              (tokenBalance) =>
+                tokenBalance.token && <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
+            )}
+          </HiddenTokensContainer>
+        </>
       )}
     </PortfolioTabWrapper>
   )
