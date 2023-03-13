@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { NftCard, NftCardDisplayProps } from 'nft/components/card'
@@ -76,9 +77,9 @@ export const CollectionAsset = ({
       primaryInfoIcon: asset.susFlag ? <SuspiciousContainer /> : null,
       primaryInfoRight: asset.rarity && provider ? <RankingContainer provider={provider} /> : null,
       secondaryInfo: notForSale ? '' : `${formatWeiToDecimal(asset.priceInfo.ETHPrice, true)} ETH`,
-      selectedInfo: 'Remove from bag',
-      notSelectedInfo: 'Add to bag',
-      disabledInfo: 'Not listed',
+      selectedInfo: <Trans>Remove from bag</Trans>,
+      notSelectedInfo: <Trans>Add to bag</Trans>,
+      disabledInfo: <Trans>Not listed</Trans>,
     }
   }, [asset.name, asset.priceInfo.ETHPrice, asset.rarity, asset.susFlag, asset.tokenId, notForSale, provider])
 

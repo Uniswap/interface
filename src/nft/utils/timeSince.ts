@@ -1,3 +1,5 @@
+import { t } from '@lingui/macro'
+
 import { roundAndPluralize } from './roundAndPluralize'
 
 export function timeSince(date: Date, min?: boolean) {
@@ -27,19 +29,13 @@ const MINUTE = 1000 * 60
 const HOUR = MINUTE * 60
 const DAY = 24 * HOUR
 
-export const timeLeft = (targetDate: Date, mostSignificant = false): string => {
+export const timeLeft = (targetDate: Date): string => {
   const countDown = new Date(targetDate).getTime() - new Date().getTime()
   const days = Math.floor(countDown / DAY)
   const hours = Math.floor((countDown % DAY) / HOUR)
   const minutes = Math.floor((countDown % HOUR) / MINUTE)
 
-  if (mostSignificant) {
-    if (days > 0) return `${roundAndPluralize(days, 'day')}`
-    if (hours > 0) return `${roundAndPluralize(hours, 'hour')}`
-    if (minutes > 0) return `${roundAndPluralize(minutes, 'minute')}`
-  }
-
-  return `${days > 0 ? roundAndPluralize(days, 'day') : ''} ${hours > 0 ? roundAndPluralize(hours, 'hour') : ''} ${
-    minutes > 0 ? roundAndPluralize(minutes, 'minute') : ''
+  return `${days > 0 ? roundAndPluralize(days, t`day`) : ''} ${hours > 0 ? roundAndPluralize(hours, t`hour`) : ''} ${
+    minutes > 0 ? roundAndPluralize(minutes, t`minute`) : ''
   }`
 }

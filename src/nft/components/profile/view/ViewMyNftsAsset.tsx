@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { useTrace } from '@uniswap/analytics'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
@@ -65,9 +66,9 @@ export const ViewMyNftsAsset = ({
       primaryInfo: !!asset.asset_contract.name && asset.asset_contract.name,
       primaryInfoIcon: asset.collectionIsVerified && <VerifiedIcon height="16px" width="16px" />,
       secondaryInfo: asset.name || asset.tokenId ? asset.name ?? `#${asset.tokenId}` : null,
-      selectedInfo: 'Remove from bag',
-      notSelectedInfo: 'List for sale',
-      disabledInfo: 'Unavailable for listing',
+      selectedInfo: <Trans>Remove from bag</Trans>,
+      notSelectedInfo: <Trans>List for sale</Trans>,
+      disabledInfo: <Trans>Unavailable for listing</Trans>,
     }
   }, [asset.asset_contract.name, asset.collectionIsVerified, asset.name, asset.tokenId])
 
