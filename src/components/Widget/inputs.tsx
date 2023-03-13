@@ -72,6 +72,9 @@ export function useSyncWidgetInputs({
     }
   }, [baseTokens, defaultTokens])
 
+  /**
+   * Clear the tokens if the chain changes.
+   */
   useEffect(() => {
     if (chainId !== previousChainId && !!previousChainId && isSupportedChain(chainId)) {
       setTokens({
