@@ -8,7 +8,7 @@ import { useNewStakingContract } from 'hooks/useContract'
 import useUSDCPrice from 'hooks/useUSDCPrice'
 import JSBI from 'jsbi'
 import { darken } from 'polished'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { HelpCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -197,12 +197,16 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
 }
 
 export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
+  const [fiatBalance, setFiatBalance] = useState<CurrencyAmount<Token> | undefined>()
+
   const { account, chainId } = useActiveWeb3React()
   const { minBalance } = useV3Positions(account)
   const kromToken = chainId ? KROM[chainId] : undefined
   const usdcPrice = useUSDCPrice(kromToken)
+
   const isUnderfunded = fundingBalance ? !minBalance?.lessThan(fundingBalance?.quotient) : true
-  const minFiatBalance = minBalance?.multiply(usdcPrice ?? 0)
+
+  useEffect(() => setFiatBalance(minBalance?.multiply(usdcPrice ?? 0)), [minBalance, usdcPrice])
 
   return (
     <AccountStatusWrapper gap="10px">
@@ -284,9 +288,9 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
                       {fundingBalance?.toSignificant(6)} {fundingBalance?.currency.symbol}
                     </TYPE.body>
                   </Text>
-                  {minFiatBalance && (
+                  {fiatBalance && (
                     <Text fontSize={16} fontWeight={500} marginLeft="8px">
-                      <TYPE.small>{`($${minFiatBalance?.toSignificant(6)})`}</TYPE.small>
+                      <TYPE.small>{`($${fiatBalance.toSignificant(6)})`}</TYPE.small>
                     </Text>
                   )}
                 </RowFixed>
@@ -327,9 +331,9 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
                       {minBalance?.toSignificant(6)} {minBalance?.currency.symbol}
                     </TYPE.body>
                   </Text>
-                  {minFiatBalance && (
+                  {fiatBalance && (
                     <Text fontSize={16} fontWeight={500} marginLeft="8px">
-                      <TYPE.small>{`($${minFiatBalance?.toSignificant(6)})`}</TYPE.small>
+                      <TYPE.small>{`($${fiatBalance.toSignificant(6)})`}</TYPE.small>
                     </Text>
                   )}
                 </RowFixed>
