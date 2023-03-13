@@ -4,7 +4,7 @@ import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import { DateTime } from 'luxon/src/luxon'
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
@@ -180,7 +180,7 @@ function formatDate(date: Date) {
   return date.toLocaleTimeString('en-US', { hour12: false })
 }
 
-export default function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItemProps) {
+function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItemProps) {
   const {
     token0: token0Address,
     token1: token1Address,
@@ -384,3 +384,18 @@ export default function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }
     </LimitOrderWrapper>
   )
 }
+
+const MemoizedLimitOrdersListItem = memo(
+  LimitOrdersListItem,
+  (prevProps, nextProps) =>
+    prevProps.limitOrderDetails.owner === nextProps.limitOrderDetails.owner &&
+    prevProps.limitOrderDetails.tokenId === nextProps.limitOrderDetails.tokenId &&
+    prevProps.limitOrderDetails.token0 === nextProps.limitOrderDetails.token0 &&
+    prevProps.limitOrderDetails.token1 === nextProps.limitOrderDetails.token1 &&
+    prevProps.limitOrderDetails.fee === nextProps.limitOrderDetails.fee &&
+    prevProps.limitOrderDetails.processed === nextProps.limitOrderDetails.processed &&
+    prevProps.limitOrderDetails.tokensOwed0 === nextProps.limitOrderDetails.tokensOwed0 &&
+    prevProps.limitOrderDetails.tokensOwed1 === nextProps.limitOrderDetails.tokensOwed1
+)
+
+export { MemoizedLimitOrdersListItem as default }

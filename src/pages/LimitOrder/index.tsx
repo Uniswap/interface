@@ -1,3 +1,4 @@
+import { Skeleton } from '@chakra-ui/react'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
@@ -8,7 +9,7 @@ import TradePrice from 'components/swap/TradePrice'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import { useV3Positions } from 'hooks/useV3Positions'
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import React, { Suspense, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, Info, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
@@ -21,15 +22,12 @@ import { PositionDetails } from 'types/position'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { MemoizedCandleSticks } from '../../components/CandleSticks'
 import { GreyCard } from '../../components/Card'
 import Collapsible from '../../components/Collapsible'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
-import LimitOrdersList from '../../components/LimitOrdersList'
 import Loader from '../../components/Loader'
-import FullPositionCard from '../../components/PositionCard'
 import Row, { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import {
@@ -68,6 +66,10 @@ import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceIm
 import { getTradeVersion } from '../../utils/getTradeVersion'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
+
+const MemoizedCandleSticks = React.lazy(() => import('../../components/CandleSticks'))
+const FullPositionCard = React.lazy(() => import('../../components/PositionCard'))
+const LimitOrdersList = React.lazy(() => import('../../components/LimitOrdersList'))
 
 const ClassicModeContainer = styled.div`
   display: flex;
@@ -503,7 +505,9 @@ export default function LimitOrder({ history }: RouteComponentProps) {
     return (
       <>
         <GridContainer>
-          <MemoizedCandleSticks networkName={networkName} poolAddress={poolAddress} />
+          <Suspense fallback={<Skeleton height="60px" />}>
+            <MemoizedCandleSticks networkName={networkName} poolAddress={poolAddress} />
+          </Suspense>
           <StyledSwap>
             <TokenWarningModal
               isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
@@ -854,10 +858,14 @@ export default function LimitOrder({ history }: RouteComponentProps) {
           <LimitOrdersContainer>
             <LimitOrdersWrapper direction={'row'}>
               <Collapsible label={t`Open Orders`} initState={openPositions.length > 0}>
-                <LimitOrdersList orders={openPositions} fundingBalance={fundingBalance} minBalance={minBalance} />
+                <Suspense fallback={<Skeleton height="60px" />}>
+                  <LimitOrdersList orders={openPositions} fundingBalance={fundingBalance} minBalance={minBalance} />
+                </Suspense>
               </Collapsible>
               <Collapsible label={t`Executed Orders`} initState={closedPositions.length > 0}>
-                <LimitOrdersList orders={closedPositions} fundingBalance={fundingBalance} minBalance={minBalance} />
+                <Suspense fallback={<Skeleton height="60px" />}>
+                  <LimitOrdersList orders={closedPositions} fundingBalance={fundingBalance} minBalance={minBalance} />
+                </Suspense>
               </Collapsible>
             </LimitOrdersWrapper>
             <AutoRow justify="center" textAlign="center" padding="0 1rem">
@@ -868,7 +876,9 @@ export default function LimitOrder({ history }: RouteComponentProps) {
               </Text>
             </AutoRow>
           </LimitOrdersContainer>
-          <FullPositionCard fundingBalance={fundingBalance} minBalance={minBalance} gasPrice={gasPrice} />
+          <Suspense fallback={<Skeleton height="60px" />}>
+            <FullPositionCard fundingBalance={fundingBalance} minBalance={minBalance} gasPrice={gasPrice} />
+          </Suspense>
         </GridContainer>
       </>
     )
@@ -882,7 +892,9 @@ export default function LimitOrder({ history }: RouteComponentProps) {
         onConfirm={handleConfirmTokenWarning}
         onDismiss={handleDismissTokenWarning}
       />
-      <FullPositionCard fundingBalance={fundingBalance} minBalance={minBalance} gasPrice={gasPrice} />
+      <Suspense fallback={<Skeleton height="60px" />}>
+        <FullPositionCard fundingBalance={fundingBalance} minBalance={minBalance} gasPrice={gasPrice} />
+      </Suspense>
       <SwapModalContainer>
         <SwapHeader />
         <Wrapper id="swap-page">
@@ -1229,10 +1241,14 @@ export default function LimitOrder({ history }: RouteComponentProps) {
       <LimitOrdersContainer>
         <LimitOrdersWrapper direction={'column'}>
           <Collapsible label={t`Open Orders`} initState={openPositions.length > 0}>
-            <LimitOrdersList orders={openPositions} fundingBalance={fundingBalance} minBalance={minBalance} />
+            <Suspense fallback={<Skeleton height="60px" />}>
+              <LimitOrdersList orders={openPositions} fundingBalance={fundingBalance} minBalance={minBalance} />
+            </Suspense>
           </Collapsible>
           <Collapsible label={t`Executed Orders`} initState={closedPositions.length > 0}>
-            <LimitOrdersList orders={closedPositions} fundingBalance={fundingBalance} minBalance={minBalance} />
+            <Suspense fallback={<Skeleton height="60px" />}>
+              <LimitOrdersList orders={closedPositions} fundingBalance={fundingBalance} minBalance={minBalance} />
+            </Suspense>
           </Collapsible>
         </LimitOrdersWrapper>
         <AutoRow justify="center" textAlign="center" padding="0 1rem">

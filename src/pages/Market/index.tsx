@@ -1,3 +1,4 @@
+import { Skeleton } from '@chakra-ui/react'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
@@ -15,7 +16,7 @@ import { SupportedChainId } from 'constants/chains'
 import { CHAIN_NATIVE_TOKEN_SYMBOL, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useMarketCallback } from 'hooks/useMarketCallback'
 import JSBI from 'jsbi'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import React, { Suspense, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
@@ -27,7 +28,6 @@ import { shortenAddress } from 'utils'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { MemoizedCandleSticks } from '../../components/CandleSticks'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -64,6 +64,8 @@ import { getTradeVersion } from '../../utils/getTradeVersion'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
+
+const MemoizedCandleSticks = React.lazy(() => import('../../components/CandleSticks'))
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 100%;
@@ -650,7 +652,9 @@ export default function Market({ history }: RouteComponentProps) {
       <>
         <FlexContainer>
           <FlexItem>
-            <MemoizedCandleSticks networkName={networkName} poolAddress={poolAddress} />
+            <Suspense fallback={<Skeleton height="60px" />}>
+              <MemoizedCandleSticks networkName={networkName} poolAddress={poolAddress} />
+            </Suspense>
           </FlexItem>
           <FlexItem>
             <StyledSwap>

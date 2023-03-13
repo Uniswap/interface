@@ -27,4 +27,6 @@ function CandleSticks(props: { networkName: string; poolAddress: string; childre
   )
 }
 
-export const MemoizedCandleSticks = React.memo(CandleSticks)
+const MemoizedCandleSticks = React.memo(CandleSticks)
+
+export { MemoizedCandleSticks as default }

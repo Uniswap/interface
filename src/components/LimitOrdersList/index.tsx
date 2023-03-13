@@ -3,7 +3,7 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import React from 'react'
 
 import { AutoColumn } from '../Column'
-import LimitOrdersListItem from '../LimitOrdersListItem'
+import MemoizedLimitOrdersListItem from '../LimitOrdersListItem'
 
 export interface OrderDetails {
   owner: string
@@ -30,8 +30,8 @@ export default function LimitOrdersList({ orders, fundingBalance, minBalance }: 
 
   return (
     <AutoColumn gap="1rem">
-      {orders.map((o) => (
-        <LimitOrdersListItem key={o.tokenId.toString()} limitOrderDetails={o} isUnderfunded={isUnderfunded} />
+      {orders.map((item, index) => (
+        <MemoizedLimitOrdersListItem key={index} limitOrderDetails={item} isUnderfunded={isUnderfunded} />
       ))}
     </AutoColumn>
   )
