@@ -77,8 +77,8 @@ export const ViewMyNftsAsset = ({
       display={display}
       isSelected={isSelected}
       isDisabled={Boolean(isDisabled)}
-      addAssetToBag={() => handleSelect(false)}
-      removeAssetFromBag={() => handleSelect(true)}
+      selectAsset={() => handleSelect(false)}
+      unselectAsset={() => handleSelect(true)}
       onClick={onCardClick}
       mediaShouldBePlaying={mediaShouldBePlaying}
       setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}

@@ -8,13 +8,6 @@ import { GenieAsset, UniformAspectRatio } from 'nft/types'
 import { formatWeiToDecimal } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
 
-const useNotForSale = (asset: GenieAsset) =>
-  useMemo(() => {
-    let notForSale = true
-    notForSale = asset.notForSale || BigNumber.from(asset.priceInfo ? asset.priceInfo.ETHPrice : 0).lt(0)
-    return notForSale
-  }, [asset])
-
 interface CollectionAssetProps {
   asset: GenieAsset
   isMobile: boolean
@@ -56,12 +49,8 @@ export const CollectionAsset = ({
     }
   }, [asset, itemsInBag])
 
-  const notForSale = useNotForSale(asset)
-
-  const provider = useMemo(() => {
-    return asset?.rarity?.providers?.find(({ provider: _provider }) => _provider === asset.rarity?.primaryProvider)
-  }, [asset])
-
+  const notForSale = asset.notForSale || BigNumber.from(asset.priceInfo ? asset.priceInfo.ETHPrice : 0).lt(0)
+  const provider = asset?.rarity?.providers ? asset.rarity.providers[0] : undefined
   const handleAddAssetToBag = useCallback(() => {
     if (BigNumber.from(asset.priceInfo?.ETHPrice ?? 0).gt(0)) {
       addAssetsToBag([asset])
@@ -99,8 +88,8 @@ export const CollectionAsset = ({
       display={display}
       isSelected={isSelected}
       isDisabled={Boolean(asset.notForSale)}
-      addAssetToBag={handleAddAssetToBag}
-      removeAssetFromBag={handleRemoveAssetFromBag}
+      selectAsset={handleAddAssetToBag}
+      unselectAsset={handleRemoveAssetFromBag}
       mediaShouldBePlaying={mediaShouldBePlaying}
       uniformAspectRatio={uniformAspectRatio}
       setUniformAspectRatio={setUniformAspectRatio}

@@ -1,4 +1,4 @@
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -678,15 +678,20 @@ const Ranking = ({ provider }: RankingProps) => {
   )
 }
 
-const SUSPICIOUS_TEXT = t`Blocked on OpenSea`
-
 const SuspiciousIconContainer = styled(Row)`
   flex-shrink: 0;
 `
 
 const Suspicious = () => {
   return (
-    <MouseoverTooltip text={<ThemedText.BodySmall>{SUSPICIOUS_TEXT}</ThemedText.BodySmall>} placement="top">
+    <MouseoverTooltip
+      text={
+        <ThemedText.BodySmall>
+          <Trans>Blocked on OpenSea</Trans>
+        </ThemedText.BodySmall>
+      }
+      placement="top"
+    >
       <SuspiciousIconContainer>
         <SuspiciousIcon />
       </SuspiciousIconContainer>

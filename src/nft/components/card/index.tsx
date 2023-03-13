@@ -87,8 +87,8 @@ function getNftDisplayComponent(
 }
 
 function useSelectAsset(
-  addAssetToBag: () => void,
-  removeAssetFromBag: () => void,
+  selectAsset: () => void,
+  unselectAsset: () => void,
   isSelected: boolean,
   isDisabled: boolean,
   onClick?: () => void
@@ -107,14 +107,9 @@ function useSelectAsset(
         return
       }
 
-      if (isSelected) {
-        removeAssetFromBag()
-        return
-      }
-
-      addAssetToBag()
+      return isSelected ? unselectAsset() : selectAsset()
     },
-    [addAssetToBag, isDisabled, onClick, removeAssetFromBag, isSelected]
+    [selectAsset, isDisabled, onClick, unselectAsset, isSelected]
   )
 }
 
@@ -123,8 +118,8 @@ interface NftCardProps {
   display: NftCardDisplayProps
   isSelected: boolean
   isDisabled: boolean
-  addAssetToBag: () => void
-  removeAssetFromBag: () => void
+  selectAsset: () => void
+  unselectAsset: () => void
   onClick?: () => void
   doNotLinkToDetails?: boolean
   mediaShouldBePlaying: boolean
@@ -150,8 +145,8 @@ export const NftCard = ({
   asset,
   display,
   isSelected,
-  addAssetToBag,
-  removeAssetFromBag,
+  selectAsset,
+  unselectAsset,
   isDisabled,
   onClick,
   doNotLinkToDetails = false,
@@ -163,7 +158,7 @@ export const NftCard = ({
   setCurrentTokenPlayingMedia,
   testId,
 }: NftCardProps) => {
-  const clickActionButton = useSelectAsset(addAssetToBag, removeAssetFromBag, isSelected, isDisabled, onClick)
+  const clickActionButton = useSelectAsset(selectAsset, unselectAsset, isSelected, isDisabled, onClick)
 
   const collectionNft = 'marketplace' in asset
   const profileNft = 'asset_contract' in asset
