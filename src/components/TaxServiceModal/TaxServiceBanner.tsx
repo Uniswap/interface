@@ -3,8 +3,7 @@ import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { bodySmall, subhead } from 'nft/css/common.css'
-import { useState } from 'react'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { X } from 'react-feather'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
@@ -121,18 +120,20 @@ export default function TaxServiceBanner() {
     setModalOpen(false)
   }, [])
 
-  const openTaxModal = useCallback(() => {
-    setModalOpen(true)
-  }, [])
-
   const handleClose = useCallback(() => {
     sessionStorage.setItem(TAX_SERVICE_DISMISSED, 'true')
     setBannerOpen(false)
   }, [])
 
+  const handleLearnMoreClick = useCallback((e: any) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setModalOpen(true)
+  }, [])
+
   return (
     <PopupContainer show={bannerOpen} isDarkMode={isDarkMode}>
-      <InnerContainer isDarkMode={isDarkMode}>
+      <InnerContainer isDarkMode={isDarkMode} tabIndex={0}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <TextContainer data-testid="tax-service-description">
             <div className={subhead} style={{ paddingBottom: '12px' }}>
@@ -153,7 +154,10 @@ export default function TaxServiceBanner() {
           <Button
             size={ButtonSize.small}
             emphasis={ButtonEmphasis.promotional}
-            onClick={openTaxModal}
+            onMouseDown={(e) => {
+              e.preventDefault()
+            }}
+            onClick={handleLearnMoreClick}
             data-testid="learn-more-button"
           >
             <Trans>Learn more</Trans>

@@ -98,7 +98,14 @@ function TaxServiceOption({ description, logo, url }: TaxServiceOptionProps) {
         }
       >
         <a href={url} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
-          <Button size={ButtonSize.medium} emphasis={ButtonEmphasis.medium} data-testid="tax-service-option-button">
+          <Button
+            onMouseDown={(e) => {
+              e.preventDefault()
+            }}
+            size={ButtonSize.medium}
+            emphasis={ButtonEmphasis.medium}
+            data-testid="tax-service-option-button"
+          >
             Get started
           </Button>
         </a>
@@ -115,7 +122,14 @@ export default memo(function TaxServiceModal({ isOpen, onDismiss }: TaxServiceMo
           <div className={subhead}>
             <Trans>Save on your crypto taxes</Trans>
           </div>
-          <StyledXButton size={20} onClick={onDismiss} />
+          <StyledXButton
+            size={20}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              onDismiss()
+            }}
+          />
         </div>
         <TaxOptionContainer>
           <TaxServiceOption description={COINTRACKER_DESCRIPTION} logo={CointrackerFullLogo} url={COINTRACKER_URL} />

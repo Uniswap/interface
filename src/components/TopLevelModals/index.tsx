@@ -7,7 +7,6 @@ import { useTaxServiceBannerEnabled } from 'featureFlags/flags/taxServiceBanner'
 import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useIsPoolPage } from 'hooks/useIsPoolPage'
-import { useShowLanding } from 'hooks/useShowLanding'
 import { lazy } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
@@ -30,9 +29,7 @@ export default function TopLevelModals() {
   const isNftPage = useIsNftPage()
   const isPoolPage = useIsPoolPage()
 
-  const showingLandingPage = useShowLanding()
-
-  const isTaxModalServicePage = !showingLandingPage && (isNftPage || isPoolPage || pathname.startsWith('/swap'))
+  const isTaxModalServicePage = isNftPage || isPoolPage || pathname.startsWith('/swap')
 
   return (
     <>
