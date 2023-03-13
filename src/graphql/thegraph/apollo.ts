@@ -1,7 +1,7 @@
 import { ApolloClient, ApolloLink, concat, HttpLink, InMemoryCache } from '@apollo/client'
 import { SupportedChainId } from 'constants/chains'
 
-import store, { AppState } from '../../state/index'
+import store from '../../state/index'
 
 const CHAIN_SUBGRAPH_URL: Record<number, string> = {
   [SupportedChainId.MAINNET]: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
@@ -21,7 +21,7 @@ const httpLink = new HttpLink({ uri: CHAIN_SUBGRAPH_URL[SupportedChainId.MAINNET
 // For more information: https://www.apollographql.com/docs/react/networking/advanced-http-networking/
 const authMiddleware = new ApolloLink((operation, forward) => {
   // add the authorization to the headers
-  const chainId = (store.getState() as AppState).application.chainId
+  const chainId = store.getState().application.chainId
 
   operation.setContext(() => ({
     uri:

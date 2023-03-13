@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
-import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { formatNumber, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
+import { Percent } from '@uniswap/sdk-core'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useEffect, useMemo, useState } from 'react'
@@ -22,7 +22,7 @@ export function FiatValue({
   priceImpact,
   isLoading = false,
 }: {
-  fiatValue: CurrencyAmount<Currency> | null | undefined
+  fiatValue: number | null | undefined
   priceImpact?: Percent
   isLoading?: boolean
 }) {
@@ -56,7 +56,7 @@ export function FiatValue({
         <FiatLoadingBubble />
       ) : (
         <div>
-          {fiatValue && <>{formatCurrencyAmount(fiatValue, NumberType.FiatTokenPrice)}</>}
+          {fiatValue ? formatNumber(fiatValue, NumberType.FiatTokenPrice) : undefined}
           {priceImpact && (
             <span style={{ color: priceImpactColor }}>
               {' '}

@@ -205,26 +205,6 @@ export const ButtonOutlined = styled(BaseButton)`
   }
 `
 
-export const ButtonYellow = styled(BaseButton)`
-  background-color: ${({ theme }) => theme.accentWarningSoft};
-  color: ${({ theme }) => theme.accentWarning};
-  &:focus {
-    background-color: ${({ theme }) => theme.accentWarningSoft};
-  }
-  &:hover {
-    background: ${({ theme }) => theme.stateOverlayHover};
-    mix-blend-mode: normal;
-  }
-  &:active {
-    background-color: ${({ theme }) => theme.accentWarningSoft};
-  }
-  &:disabled {
-    background-color: ${({ theme }) => theme.accentWarningSoft};
-    opacity: 60%;
-    cursor: auto;
-  }
-`
-
 export const ButtonEmpty = styled(BaseButton)`
   background-color: transparent;
   color: ${({ theme }) => theme.accentAction};
@@ -422,7 +402,7 @@ function pickThemeButtonBackgroundColor({ theme, emphasis }: { theme: DefaultThe
     case ButtonEmphasis.high:
       return theme.accentAction
     case ButtonEmphasis.promotional:
-      return theme.accentTextLightPrimary
+      return theme.accentActionSoft
     case ButtonEmphasis.highSoft:
       return theme.accentActionSoft
     case ButtonEmphasis.low:
@@ -476,7 +456,7 @@ function pickThemeButtonTextColor({ theme, emphasis }: { theme: DefaultTheme; em
   switch (emphasis) {
     case ButtonEmphasis.high:
     case ButtonEmphasis.promotional:
-      return theme.accentTextLightPrimary
+      return theme.accentAction
     case ButtonEmphasis.highSoft:
       return theme.accentAction
     case ButtonEmphasis.low:

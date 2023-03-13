@@ -9,4 +9,5 @@ export enum FeatureFlag {
   gqlRouting = 'gqlRouting',
   statsigDummy = 'web_dummy_gate_amplitude_id',
   nftGraphql = 'nft_graphql_migration',
+  taxService = 'tax_service_banner',
 }

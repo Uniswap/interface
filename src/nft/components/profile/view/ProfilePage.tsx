@@ -24,7 +24,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 import { easings, useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
-import shallow from 'zustand/shallow'
+import { shallow } from 'zustand/shallow'
 
 import { EmptyWalletContent } from './EmptyWalletContent'
 import * as styles from './ProfilePage.css'

@@ -82,12 +82,6 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    updateFiatOnrampAcknowledgments(
-      state,
-      { payload }: { payload: Partial<{ renderCount: number; user: boolean; system: boolean }> }
-    ) {
-      state.fiatOnrampAcknowledgments = { ...state.fiatOnrampAcknowledgments, ...payload }
-    },
     updateSelectedWallet(state, { payload: { wallet } }) {
       state.selectedWallet = wallet
     },
@@ -181,7 +175,6 @@ const userSlice = createSlice({
 export const {
   addSerializedPair,
   addSerializedToken,
-  updateFiatOnrampAcknowledgments,
   updateSelectedWallet,
   updateHideClosedPositions,
   updateMatchesDarkMode,

@@ -138,15 +138,6 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
   )
 
   const chartAvailable = !!prices && prices.length > 0
-  const missingPricesMessage = !chartAvailable ? (
-    prices?.length === 0 ? (
-      <>
-        <Trans>Missing price data due to recently low trading volume on Uniswap v3</Trans>
-      </>
-    ) : (
-      <Trans>Missing chart data</Trans>
-    )
-  ) : null
 
   // first price point on the x-axis of the current time period's chart
   const startingPrice = originalPrices?.[0] ?? DATA_EMPTY
@@ -287,12 +278,18 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
         ) : (
           <>
             <MissingPrice>Price Unavailable</MissingPrice>
-            <ThemedText.Caption style={{ color: theme.textTertiary }}>{missingPricesMessage}</ThemedText.Caption>
+            <ThemedText.Caption style={{ color: theme.textTertiary }}>
+              <Trans>Missing price data</Trans>
+            </ThemedText.Caption>
           </>
         )}
       </ChartHeader>
       {!chartAvailable ? (
-        <MissingPriceChart width={width} height={graphHeight} message={!!displayPrice.value && missingPricesMessage} />
+        <MissingPriceChart
+          width={width}
+          height={graphHeight}
+          message={!!displayPrice.value && <Trans>Price history unavailable</Trans>}
+        />
       ) : (
         <svg data-cy="price-chart" width={width} height={graphHeight} style={{ minWidth: '100%' }}>
           <AnimatedInLineChart

@@ -13,7 +13,7 @@ import TimePeriodSelector from './TimeSelector'
 function usePriceHistory(tokenPriceData: TokenPriceQuery): PricePoint[] | undefined {
   // Appends the current price to the end of the priceHistory array
   const priceHistory = useMemo(() => {
-    const market = tokenPriceData.token?.market
+    const market = tokenPriceData.token?.project?.markets?.[0]
     const priceHistory = market?.priceHistory?.filter(isPricePoint)
     const currentPrice = market?.price?.value
     if (Array.isArray(priceHistory) && currentPrice !== undefined) {

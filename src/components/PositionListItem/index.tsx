@@ -77,7 +77,8 @@ const DoubleArrow = styled.span`
   color: ${({ theme }) => theme.textTertiary};
 `
 
-const RangeText = styled.span`
+const RangeText = styled.div`
+  word-break: break-word;
   padding: 0.25rem 0.25rem;
   border-radius: 8px;
 `
@@ -251,11 +252,13 @@ export default function PositionListItem({
               <Trans>Min: </Trans>
             </ExtentsText>
             <Trans>
-              {formatTickPrice({
-                price: priceLower,
-                atLimit: tickAtLimit,
-                direction: Bound.LOWER,
-              })}{' '}
+              <span>
+                {formatTickPrice({
+                  price: priceLower,
+                  atLimit: tickAtLimit,
+                  direction: Bound.LOWER,
+                })}{' '}
+              </span>
               <HoverInlineText text={currencyQuote?.symbol} /> per <HoverInlineText text={currencyBase?.symbol ?? ''} />
             </Trans>
           </RangeText>{' '}
@@ -270,11 +273,13 @@ export default function PositionListItem({
               <Trans>Max:</Trans>
             </ExtentsText>
             <Trans>
-              {formatTickPrice({
-                price: priceUpper,
-                atLimit: tickAtLimit,
-                direction: Bound.UPPER,
-              })}{' '}
+              <span>
+                {formatTickPrice({
+                  price: priceUpper,
+                  atLimit: tickAtLimit,
+                  direction: Bound.UPPER,
+                })}{' '}
+              </span>
               <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
               <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
             </Trans>

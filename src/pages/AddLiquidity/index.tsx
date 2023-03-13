@@ -21,7 +21,7 @@ import {
 } from 'state/mint/v3/hooks'
 import { useTheme } from 'styled-components/macro'
 
-import { ButtonError, ButtonLight, ButtonPrimary, ButtonText, ButtonYellow } from '../../components/Button'
+import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from '../../components/Button'
 import { BlueCard, OutlineCard, YellowCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -53,7 +53,7 @@ import { Bound, Field } from '../../state/mint/v3/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { TransactionType } from '../../state/transactions/types'
 import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
-import { ExternalLink, ThemedText } from '../../theme'
+import { ThemedText } from '../../theme'
 import approveAmountCalldata from '../../utils/approveAmountCalldata'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
@@ -152,11 +152,6 @@ export default function AddLiquidity() {
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
-
-  // capital efficiency warning
-  const [showCapitalEfficiencyWarning, setShowCapitalEfficiencyWarning] = useState(false)
-
-  useEffect(() => setShowCapitalEfficiencyWarning(false), [baseCurrency, quoteCurrency, feeAmount])
 
   useEffect(() => {
     if (
@@ -506,6 +501,8 @@ export default function AddLiquidity() {
       </AutoColumn>
     )
 
+  const currencyAFiat = usdcValues[Field.CURRENCY_A]
+  const currencyBFiat = usdcValues[Field.CURRENCY_B]
   return (
     <>
       <ScrollablePage>
@@ -656,7 +653,7 @@ export default function AddLiquidity() {
                       showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
                       currency={currencies[Field.CURRENCY_A] ?? null}
                       id="add-liquidity-input-tokena"
-                      fiatValue={usdcValues[Field.CURRENCY_A]}
+                      fiatValue={currencyAFiat && parseFloat(currencyAFiat.toSignificant())}
                       showCommonBases
                       locked={depositADisabled}
                     />
@@ -668,7 +665,7 @@ export default function AddLiquidity() {
                         onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
                       }}
                       showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
-                      fiatValue={usdcValues[Field.CURRENCY_B]}
+                      fiatValue={currencyBFiat && parseFloat(currencyBFiat.toSignificant())}
                       currency={currencies[Field.CURRENCY_B] ?? null}
                       id="add-liquidity-input-tokenb"
                       showCommonBases
@@ -805,7 +802,7 @@ export default function AddLiquidity() {
                       disabled={!feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue)}
                     >
                       <StackedContainer>
-                        <StackedItem style={{ opacity: showCapitalEfficiencyWarning ? '0.05' : 1 }}>
+                        <StackedItem>
                           <AutoColumn gap="md">
                             {noLiquidity && (
                               <RowBetween>
@@ -831,65 +828,12 @@ export default function AddLiquidity() {
                             {!noLiquidity && (
                               <PresetsButtons
                                 setFullRange={() => {
-                                  setShowCapitalEfficiencyWarning(true)
+                                  getSetFullRange()
                                 }}
                               />
                             )}
                           </AutoColumn>
                         </StackedItem>
-
-                        {showCapitalEfficiencyWarning && (
-                          <StackedItem zIndex={1}>
-                            <YellowCard
-                              padding="15px"
-                              $borderRadius="12px"
-                              height="100%"
-                              style={{
-                                borderColor: theme.deprecated_yellow3,
-                                border: '1px solid',
-                              }}
-                            >
-                              <AutoColumn gap="sm" style={{ height: '100%' }}>
-                                <RowFixed>
-                                  <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
-                                  <ThemedText.DeprecatedYellow ml="12px" fontSize="15px">
-                                    <Trans>Efficiency Comparison</Trans>
-                                  </ThemedText.DeprecatedYellow>
-                                </RowFixed>
-                                <RowFixed>
-                                  <ThemedText.DeprecatedYellow ml="12px" fontSize="13px" margin={0} fontWeight={400}>
-                                    <Trans>
-                                      Full range positions may earn less fees than concentrated positions. Learn more{' '}
-                                      <ExternalLink
-                                        style={{ color: theme.deprecated_yellow3, textDecoration: 'underline' }}
-                                        href="https://help.uniswap.org/en/articles/5434296-can-i-provide-liquidity-over-the-full-range-in-v3"
-                                      >
-                                        here
-                                      </ExternalLink>
-                                      .
-                                    </Trans>
-                                  </ThemedText.DeprecatedYellow>
-                                </RowFixed>
-                                <Row>
-                                  <ButtonYellow
-                                    padding="8px"
-                                    marginRight="8px"
-                                    $borderRadius="8px"
-                                    width="auto"
-                                    onClick={() => {
-                                      setShowCapitalEfficiencyWarning(false)
-                                      getSetFullRange()
-                                    }}
-                                  >
-                                    <ThemedText.DeprecatedBlack fontSize={13} color="black">
-                                      <Trans>I understand</Trans>
-                                    </ThemedText.DeprecatedBlack>
-                                  </ButtonYellow>
-                                </Row>
-                              </AutoColumn>
-                            </YellowCard>
-                          </StackedItem>
-                        )}
                       </StackedContainer>
 
                       {outOfRange ? (
