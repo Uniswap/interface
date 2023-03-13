@@ -36,35 +36,25 @@ export const StyledInput = styled.input`
 `
 
 export default function PerpModal({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) {
-  function wrappedOnDismiss() {
-    onDismiss()
-  }
+  const [checked, setChecked] = useState(false)
 
-  const PerpRedirectionHandler = () => {
-    // Check if checkbox is ticked
-    if (checked) {
-      // We need to write into localStorage the date of the checkbox checking event
-      localStorage.setItem('KromTOUTicked', Date.now().toString())
-    }
+  const handleChange = () => setChecked(!checked)
+
+  const perpRedirectionHandler = () => {
+    if (checked) localStorage.setItem('KromTOUTicked', Date.now().toString())
     onDismiss()
-    // External redirection
     window.open('https://perp.kromatika.finance/', '_blank')
   }
 
-  const [checked, setChecked] = useState(false)
-  const handleChange = () => {
-    setChecked(!checked)
-  }
-
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
       <ContentWrapper gap="lg">
         <CardSection gap="md">
           <RowBetween>
             <TYPE.subHeader>
               <Trans>Launch Perpetual Trading</Trans>
             </TYPE.subHeader>
-            <CloseIcon onClick={wrappedOnDismiss}>
+            <CloseIcon onClick={onDismiss}>
               <CloseColor />
             </CloseIcon>
           </RowBetween>
@@ -109,7 +99,7 @@ export default function PerpModal({ isOpen, onDismiss }: { isOpen: boolean; onDi
             width="100%"
             $borderRadius="20px"
             mt="1rem"
-            onClick={() => PerpRedirectionHandler()}
+            onClick={perpRedirectionHandler}
           >
             <Text fontWeight={700}>
               <Trans>Agree</Trans>

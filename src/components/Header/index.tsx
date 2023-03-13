@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import PerpModal from 'components/Perpetual/PerpModal'
+import PerpModal from 'components/Perpetual'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { useModalOpen, useShowClaimPopup, useTogglePerpModal, useToggleSelfClaimModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
@@ -234,18 +234,19 @@ const StyledLogoIcon = styled.img`
   margin-right: 8px;
 `
 
+function TopLevelModals() {
+  console.log('aaaaaaaaaaa')
+  const open = useModalOpen(ApplicationModal.PERP_POPUP)
+  const toggle = useTogglePerpModal()
+  return <PerpModal isOpen={open} onDismiss={toggle} />
+}
+
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const toggleClaimModal = useToggleSelfClaimModal()
 
   const kromToken = chainId ? KROM[chainId] : undefined
   const kromPrice = useUSDCPrice(kromToken)
-
-  function TopLevelModals() {
-    const open = useModalOpen(ApplicationModal.PERP_POPUP)
-    const toggle = useTogglePerpModal()
-    return <PerpModal isOpen={open} onDismiss={toggle} />
-  }
 
   const availableClaim: boolean = useUserHasAvailableClaim(account)
   const { claimTxn } = useUserHasSubmittedClaim(account ?? undefined)
