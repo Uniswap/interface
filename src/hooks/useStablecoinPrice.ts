@@ -14,7 +14,7 @@ const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
   // TODO: replace USDC fuji by mainnet
   [SupportedChainId.MAINNET]: CurrencyAmount.fromRawAmount(USDC_FUJI, 100_000e6),
   [SupportedChainId.FUJI]: CurrencyAmount.fromRawAmount(USDC_FUJI, 10_000e18),
-  [SupportedChainId.TESTNET]: CurrencyAmount.fromRawAmount(USDC_TEVMOS, 10_000e6),
+  [SupportedChainId.TESTNET]: CurrencyAmount.fromRawAmount(USDC_TEVMOS, 1_000e1),
 }
 
 /**

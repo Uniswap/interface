@@ -34,6 +34,8 @@ export const USDC_TEVMOS = new Token(
   'USD//C'
 )
 
+export const TEVMOS_STABLE_COINS = [USDC_TEVMOS.address.toLowerCase()]
+
 export const WETH_TEVMOS = new Token(
   SupportedChainId.TESTNET,
   '0x43bDe47a34801f6aB2d66016Aef723Ba1b3A62b3',

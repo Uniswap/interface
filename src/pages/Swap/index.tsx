@@ -22,7 +22,7 @@ import { TokenInfoContainer, TokenNameCell } from 'components/Tokens/TokenDetail
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import Widget from 'components/Widget'
-import { isSupportedChain, SupportedChainId } from 'constants/chains'
+import { isSupportedChain } from 'constants/chains'
 import { usePermit2Enabled } from 'featureFlags/flags/permit2'
 import { useSwapWidgetEnabled } from 'featureFlags/flags/swapWidget'
 import { TimePeriod } from 'graphql/data/util'
@@ -54,10 +54,16 @@ import Loader from '../../components/Loader'
 import { AutoRow } from '../../components/Row'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
-import { ArrowWrapper, SwapCallbackError, SwapPageWrapper, SwapWrapper } from '../../components/swap/styleds'
+import {
+  ArrowWrapper,
+  SwapCallbackError,
+  SwapPageWrapper,
+  SwapWrapper,
+  TokenInfoWrapper,
+} from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
-import { TOKEN_SHORTHANDS, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
+import { TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
@@ -80,6 +86,7 @@ import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeRealizedPriceImpact, warningSeverity } from '../../utils/prices'
 import { supportedChainId } from '../../utils/supportedChainId'
 import { useTokenPrice } from './chart'
+import { getQueryToken } from './helpers'
 import ChartComponent from './lighweightchart.js'
 
 const ArrowContainer = styled.div`
@@ -572,9 +579,10 @@ export default function Swap({ className, intro }: { className?: string; intro?:
     trade,
     setSwapQuoteReceivedDate,
   ])
-  const priceQueryToken = currencies[Field.OUTPUT]?.isToken ? (currencies[Field.OUTPUT] as Token) : undefined
-  const infoToken = priceQueryToken ? priceQueryToken : WRAPPED_NATIVE_CURRENCY[SupportedChainId.TESTNET]
-  const priceQueryAddress = priceQueryToken ? priceQueryToken.address : '0xBeFe898407483f0f2fF605971FBD8Cf8FbD8B160'
+
+  const displayToken = getQueryToken(currencies[Field.INPUT] ?? null, currencies[Field.OUTPUT] ?? null)
+  const infoToken = displayToken
+  const priceQueryAddress = displayToken ? (displayToken?.wrapped ? displayToken?.wrapped?.address : '') : ''
   const { data: tokenPriceQuery } = useTokenPrice(priceQueryAddress)
 
   const approveTokenButtonDisabled =
@@ -598,7 +606,7 @@ export default function Swap({ className, intro }: { className?: string; intro?:
 
         <SwapPageWrapper>
           {!intro && (
-            <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: 600 }}>
+            <TokenInfoWrapper>
               <TokenInfoContainer data-testid="token-info-container">
                 <TokenNameCell>
                   <CurrencyLogo currency={infoToken} size="32px" hideL2Icon={true} />
@@ -608,7 +616,7 @@ export default function Swap({ className, intro }: { className?: string; intro?:
                 </TokenNameCell>
               </TokenInfoContainer>
               <ChartComponent tokenPriceQuery={tokenPriceQuery} />
-            </div>
+            </TokenInfoWrapper>
           )}
 
           <PageWrapper>
