@@ -37,17 +37,28 @@ const ExploreNFTsButton = styled.button`
   line-height: 24px;
 `
 
-export const EmptyWalletContent = () => {
+interface EmptyWalletContentProps {
+  type?: 'nft' | 'token'
+  onNavigateClick?: () => void
+}
+
+export const EmptyWalletContent = ({ type = 'nft', onNavigateClick }: EmptyWalletContentProps) => {
   const { account, ENSName } = useWeb3React()
   const navigate = useNavigate()
   return (
     <>
       <EmptyNFTWalletIcon />
       <EmptyWalletText className={headlineMedium}>
-        <Trans>No NFTs in</Trans>&nbsp;{ENSName || shortenAddress(account ?? '')}
+        <Trans>No {type === 'nft' ? 'NFTs' : 'Tokens'} in</Trans>&nbsp;{ENSName || shortenAddress(account ?? '')}
       </EmptyWalletText>
-      <ExploreNFTsButton data-testid="nft-explore-nfts-button" onClick={() => navigate('/nfts')}>
-        <Trans>Explore NFTs</Trans>
+      <ExploreNFTsButton
+        data-testid="nft-explore-nfts-button"
+        onClick={() => {
+          onNavigateClick?.()
+          navigate(type === 'nft' ? '/nfts' : '/tokens')
+        }}
+      >
+        <Trans>Explore {type === 'nft' ? 'NFTs' : 'Tokens'}</Trans>
       </ExploreNFTsButton>
     </>
   )

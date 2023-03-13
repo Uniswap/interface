@@ -261,21 +261,23 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
         </IconContainer>
       </HeaderWrapper>
       <Column>
-        {totalBalance ? (
+        {totalBalance !== undefined ? (
           <FadeInColumn gap="xs">
             <ThemedText.HeadlineLarge fontWeight={500}>
               {formatNumber(totalBalance, NumberType.PortfolioBalance)}
             </ThemedText.HeadlineLarge>
-            {absoluteChange && percentChange && (
-              <AutoRow marginBottom="20px">
-                <PortfolioArrow change={absoluteChange} />
-                <ThemedText.BodySecondary>
-                  {`${formatNumber(Math.abs(absoluteChange), NumberType.PortfolioBalance)} (${formatDelta(
-                    percentChange
-                  )})`}
-                </ThemedText.BodySecondary>
-              </AutoRow>
-            )}
+            <AutoRow marginBottom="20px">
+              {absoluteChange !== 0 && percentChange && (
+                <>
+                  <PortfolioArrow change={absoluteChange as number} />
+                  <ThemedText.BodySecondary>
+                    {`${formatNumber(Math.abs(absoluteChange as number), NumberType.PortfolioBalance)} (${formatDelta(
+                      percentChange
+                    )})`}
+                  </ThemedText.BodySecondary>
+                </>
+              )}
+            </AutoRow>
           </FadeInColumn>
         ) : (
           <Column gap="xs">

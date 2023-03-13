@@ -10,6 +10,7 @@ import { PortfolioBalancesQuery, usePortfolioBalancesQuery } from 'graphql/data/
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import useSelectChain from 'hooks/useSelectChain'
 import { useAtomValue } from 'jotai/utils'
+import { EmptyWalletContent } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -19,6 +20,7 @@ import { useToggleWalletDrawer } from '..'
 import { PortfolioArrow } from '../AuthenticatedHeader'
 import { hideSmallBalancesAtom } from '../SmallBalanceToggle'
 import { HiddenTokensRow } from './HiddenTokensRow'
+import { EmptyWalletContainer } from './NFTs'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from './PortfolioRow'
 
 const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
@@ -40,6 +42,7 @@ export default function Tokens({ account }: { account: string }) {
   const { data, loading } = usePortfolioBalancesQuery({
     variables: { ownerAddress: account },
   })
+  const toggleWalletDrawer = useToggleWalletDrawer()
 
   const visibleTokens = useMemo(() => {
     return !hideSmallBalances
@@ -57,10 +60,19 @@ export default function Tokens({ account }: { account: string }) {
         ) ?? []
   }, [data?.portfolios, hideSmallBalances])
 
-  // TODO(cartcrom): add a "no tokens" state
-  return !data && loading ? (
-    <PortfolioSkeleton />
-  ) : (
+  if (!data && loading) {
+    return <PortfolioSkeleton />
+  }
+
+  if (data?.portfolios?.[0].tokenBalances?.length === 0) {
+    return (
+      <EmptyWalletContainer>
+        <EmptyWalletContent type="token" onNavigateClick={toggleWalletDrawer} />
+      </EmptyWalletContainer>
+    )
+  }
+
+  return (
     <PortfolioTabWrapper>
       {visibleTokens.map(
         (tokenBalance) =>

@@ -5,11 +5,13 @@ import { useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import styled from 'styled-components/macro'
 
+import { useToggleWalletDrawer } from '..'
 import { DEFAULT_NFT_QUERY_AMOUNT } from './consts'
 import { NFT } from './NFT'
 
 export default function NFTs({ account }: { account: string }) {
   const { walletAssets, loading, hasNext, loadMore } = useNftBalance(account, [], [], DEFAULT_NFT_QUERY_AMOUNT)
+  const toggleWalletDrawer = useToggleWalletDrawer()
 
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
 
@@ -23,7 +25,7 @@ export default function NFTs({ account }: { account: string }) {
   if (!walletAssets || walletAssets?.length === 0)
     return (
       <EmptyWalletContainer>
-        <EmptyWalletContent />
+        <EmptyWalletContent onNavigateClick={toggleWalletDrawer} />
       </EmptyWalletContainer>
     )
 
@@ -60,7 +62,7 @@ export default function NFTs({ account }: { account: string }) {
   )
 }
 
-const EmptyWalletContainer = styled.div`
+export const EmptyWalletContainer = styled.div`
   display: flex;
   flex-flow: column;
   align-items: center;
