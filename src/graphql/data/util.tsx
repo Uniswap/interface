@@ -73,6 +73,18 @@ export function chainIdToBackendName(chainId: number | undefined) {
     : CHAIN_ID_TO_BACKEND_NAME[SupportedChainId.MAINNET]
 }
 
+const GQL_CHAINS: number[] = [
+  SupportedChainId.MAINNET,
+  SupportedChainId.OPTIMISM,
+  SupportedChainId.POLYGON,
+  SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.CELO,
+]
+
+export function isGqlSupportedChain(chainId: number | undefined): chainId is SupportedChainId {
+  return !!chainId && GQL_CHAINS.includes(chainId)
+}
+
 const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
   ethereum: Chain.Ethereum,
   polygon: Chain.Polygon,

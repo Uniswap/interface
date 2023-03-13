@@ -108,7 +108,7 @@ export function useSyncWidgetTransactions() {
           ...formatSwapSignedAnalyticsEventProperties({
             trade,
             // TODO: add once Widgets adds fiat values to callback
-            fiatValues: { amountIn: null, amountOut: null },
+            fiatValues: { amountIn: undefined, amountOut: undefined },
             txHash: transaction.receipt?.transactionHash ?? '',
           }),
           ...trace,

@@ -1,11 +1,13 @@
 import gql from 'graphql-tag'
 
 gql`
-  query TokenPrice($chain: Chain!, $address: String = null, $duration: HistoryDuration!) {
+  query TokenSpotPrice($chain: Chain!, $address: String) {
     token(chain: $chain, address: $address) {
       id
       address
       chain
+      name
+      symbol
       project {
         id
         markets(currencies: [USD]) {
@@ -14,14 +16,8 @@ gql`
             id
             value
           }
-          priceHistory(duration: $duration) {
-            id
-            timestamp
-            value
-          }
         }
       }
     }
   }
 `
-export type { TokenPriceQuery } from './__generated__/types-and-hooks'

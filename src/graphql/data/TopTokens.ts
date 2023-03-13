@@ -36,22 +36,12 @@ gql`
       standard
       market(currency: USD) {
         id
-        totalValueLocked {
-          id
-          value
-          currency
-        }
-        price {
-          id
-          value
-          currency
-        }
-        pricePercentChange(duration: $duration) {
-          id
-          currency
-          value
-        }
         volume(duration: $duration) {
+          id
+          value
+          currency
+        }
+        totalValueLocked {
           id
           value
           currency
@@ -60,6 +50,18 @@ gql`
       project {
         id
         logoUrl
+        markets(currencies: [USD]) {
+          id
+          price {
+            id
+            value
+          }
+          pricePercentChange(duration: $duration) {
+            id
+            currency
+            value
+          }
+        }
       }
     }
   }
@@ -71,12 +73,14 @@ gql`
       id
       address
       chain
-      market(currency: USD) {
-        id
-        priceHistory(duration: $duration) {
+      project {
+        markets(currencies: [USD]) {
           id
-          timestamp
-          value
+          priceHistory(duration: $duration) {
+            id
+            timestamp
+            value
+          }
         }
       }
     }
@@ -92,11 +96,15 @@ function useSortedTokens(tokens: TopTokens100Query['topTokens']) {
     let tokenArray = Array.from(tokens)
     switch (sortMethod) {
       case TokenSortMethod.PRICE:
-        tokenArray = tokenArray.sort((a, b) => (b?.market?.price?.value ?? 0) - (a?.market?.price?.value ?? 0))
+        tokenArray = tokenArray.sort(
+          (a, b) => (b?.project?.markets?.[0]?.price?.value ?? 0) - (a?.project?.markets?.[0]?.price?.value ?? 0)
+        )
         break
       case TokenSortMethod.PERCENT_CHANGE:
         tokenArray = tokenArray.sort(
-          (a, b) => (b?.market?.pricePercentChange?.value ?? 0) - (a?.market?.pricePercentChange?.value ?? 0)
+          (a, b) =>
+            (b?.project?.markets?.[0]?.pricePercentChange?.value ?? 0) -
+            (a?.project?.markets?.[0]?.pricePercentChange?.value ?? 0)
         )
         break
       case TokenSortMethod.TOTAL_VALUE_LOCKED:
@@ -160,7 +168,8 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
     const unwrappedTokens = sparklineQuery?.topTokens?.map((topToken) => unwrapToken(chainId, topToken))
     const map: SparklineMap = {}
     unwrappedTokens?.forEach(
-      (current) => current?.address && (map[current.address] = current?.market?.priceHistory?.filter(isPricePoint))
+      (current) =>
+        current?.address && (map[current.address] = current?.project?.markets?.[0]?.priceHistory?.filter(isPricePoint))
     )
     return map
   }, [chainId, sparklineQuery?.topTokens])

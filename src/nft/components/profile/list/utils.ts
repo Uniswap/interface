@@ -7,7 +7,7 @@ import { OPENSEA_CROSS_CHAIN_CONDUIT } from 'nft/queries/openSea'
 import { CollectionRow, ListingMarket, ListingRow, ListingStatus, WalletAsset } from 'nft/types'
 import { approveCollection, LOOKS_RARE_CREATOR_BASIS_POINTS, signListing } from 'nft/utils/listNfts'
 import { Dispatch, useEffect } from 'react'
-import shallow from 'zustand/shallow'
+import { shallow } from 'zustand/shallow'
 
 export async function approveCollectionRow(
   collectionRow: CollectionRow,
