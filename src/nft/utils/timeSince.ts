@@ -33,7 +33,7 @@ export const timeLeft = (targetDate: Date): string => {
   const hours = Math.floor((countDown % DAY) / HOUR)
   const minutes = Math.floor((countDown % HOUR) / MINUTE)
 
-  return `${days > 0 ? roundAndPluralize(days, `day`) : ''} ${hours > 0 ? roundAndPluralize(hours, `hour`) : ''} ${
-    minutes > 0 ? roundAndPluralize(minutes, `minute`) : ''
-  }`
+  return `${days !== 0 ? roundAndPluralize(days, 'day') : ''} ${
+    hours !== 0 ? roundAndPluralize(hours, 'hour') : ''
+  } ${roundAndPluralize(minutes, 'minute')}`
 }
