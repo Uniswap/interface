@@ -919,6 +919,7 @@ export function PositionPage() {
                           price: priceUpper,
                           atLimit: tickAtLimit,
                           direction: Bound.UPPER,
+                          numberType: NumberType.TokenTx,
                         })}
                       </ThemedText.DeprecatedMediumHeader>
                       <ExtentsText>
