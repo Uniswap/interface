@@ -1,6 +1,7 @@
 import 'components/analytics'
 
 import * as Sentry from '@sentry/react'
+import { BrowserTracing } from '@sentry/tracing'
 import { initializeAnalytics, OriginApplication } from '@uniswap/analytics'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { isSentryEnabled } from 'utils/env'
@@ -18,6 +19,13 @@ Sentry.init({
   release: process.env.REACT_APP_GIT_COMMIT_HASH,
   environment: getEnvName(),
   enabled: isSentryEnabled(),
+  tracesSampleRate: 0.00003,
+  integrations: [
+    new BrowserTracing({
+      startTransactionOnLocationChange: false,
+      startTransactionOnPageLoad: true,
+    }),
+  ],
   /**
    * TODO(INFRA-143)
    * According to Sentry, this shouldn't be necessary, as they default to `3` when not set.
