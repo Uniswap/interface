@@ -1,30 +1,12 @@
 import { useTrace } from '@uniswap/analytics'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
-import Row from 'components/Row'
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { NftCard, NftCardDisplayProps } from 'nft/components/card'
 import { VerifiedIcon } from 'nft/components/icons'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
-import { ethNumberStandardFormatter, floorFormatter } from 'nft/utils'
 import { useMemo } from 'react'
-import { Tag } from 'react-feather'
-import styled from 'styled-components/macro'
-
-const StyledRow = styled(Row)`
-  gap: 10px;
-  color: ${({ theme }) => theme.accentAction};
-`
-
-const UserListedContainer = ({ listingPrice }: { listingPrice: number }) => {
-  return (
-    <StyledRow>
-      <Tag size={20} />
-      <span>{floorFormatter(listingPrice)} ETH</span>
-    </StyledRow>
-  )
-}
 
 interface ViewMyNftsAssetProps {
   asset: WalletAsset
@@ -77,32 +59,17 @@ export const ViewMyNftsAsset = ({
   }
 
   const isDisabled = asset.asset_contract.tokenType === NftStandard.Erc1155 || asset.susFlag
-  const shouldShowUserListedPrice = !asset.notForSale && asset.asset_contract.tokenType !== NftStandard.Erc1155
 
   const display: NftCardDisplayProps = useMemo(() => {
     return {
       primaryInfo: !!asset.asset_contract.name && asset.asset_contract.name,
       primaryInfoExtra: asset.collectionIsVerified && <VerifiedIcon height="16px" width="16px" />,
       secondaryInfo: asset.name || asset.tokenId ? asset.name ?? `#${asset.tokenId}` : null,
-      tertiaryInfo:
-        shouldShowUserListedPrice && asset.floor_sell_order_price ? (
-          <UserListedContainer listingPrice={asset.floor_sell_order_price} />
-        ) : asset.lastPrice ? (
-          `Last sale: ${ethNumberStandardFormatter(asset.lastPrice)} ETH`
-        ) : null,
       selectedInfo: 'Remove from bag',
       notSelectedInfo: 'List for sale',
       disabledInfo: 'Unavailable for listing',
     }
-  }, [
-    asset.asset_contract.name,
-    asset.collectionIsVerified,
-    asset.floor_sell_order_price,
-    asset.lastPrice,
-    asset.name,
-    asset.tokenId,
-    shouldShowUserListedPrice,
-  ])
+  }, [asset.asset_contract.name, asset.collectionIsVerified, asset.name, asset.tokenId])
 
   return (
     <NftCard

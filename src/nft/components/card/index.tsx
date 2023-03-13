@@ -141,7 +141,6 @@ export interface NftCardDisplayProps {
   primaryInfoExtra?: ReactNode
   primaryInfoRight?: ReactNode
   secondaryInfo?: ReactNode
-  tertiaryInfo?: ReactNode
   selectedInfo?: ReactNode
   notSelectedInfo?: ReactNode
   disabledInfo?: ReactNode

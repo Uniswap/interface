@@ -12,13 +12,12 @@ import {
   OpenSeaMarketplaceIcon,
   ProfileSelectedAssetIcon,
   SudoSwapIcon,
-  TagIcon,
   X2y2Icon,
 } from 'nft/components/icons'
 import { Markets, UniformAspectRatio, UniformAspectRatios } from 'nft/types'
 import { putCommas } from 'nft/utils'
 import { ReactNode, useEffect, useRef, useState } from 'react'
-import { AlertTriangle, Pause, Play } from 'react-feather'
+import { AlertTriangle, Pause, Play, Tag } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
@@ -780,7 +779,7 @@ const MarketplaceContainer = ({
     return (
       <StyledMarketplaceContainer isText={true}>
         <ListPriceRowContainer>
-          <TagIcon width="20px" height="20px" />
+          <Tag size={20} />
           {listedPrice} ETH
         </ListPriceRowContainer>
       </StyledMarketplaceContainer>

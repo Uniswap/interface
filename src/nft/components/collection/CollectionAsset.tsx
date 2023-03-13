@@ -1,15 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
-import Row from 'components/Row'
 import { NftCard, NftCardDisplayProps } from 'nft/components/card'
 import { Ranking as RankingContainer, Suspicious as SuspiciousContainer } from 'nft/components/card/containers'
 import { useBag } from 'nft/hooks'
 import { GenieAsset, UniformAspectRatio } from 'nft/types'
-import { formatWeiToDecimal, timeLeft } from 'nft/utils'
+import { formatWeiToDecimal } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
-import { Clock } from 'react-feather'
-import styled from 'styled-components/macro'
 
 const useNotForSale = (asset: GenieAsset) =>
   useMemo(() => {
@@ -28,19 +25,6 @@ interface CollectionAssetProps {
   setUniformAspectRatio: (uniformAspectRatio: UniformAspectRatio) => void
   renderedHeight?: number
   setRenderedHeight: (renderedHeight: number | undefined) => void
-}
-
-const StyledExpirationContainer = styled(Row)`
-  gap: 10px;
-`
-
-const ExpirationContainer = ({ expirationTimestamp }: { expirationTimestamp: number }) => {
-  return (
-    <StyledExpirationContainer>
-      <Clock size={20} />
-      {timeLeft(new Date(expirationTimestamp), true)}
-    </StyledExpirationContainer>
-  )
 }
 
 export const CollectionAsset = ({
@@ -104,23 +88,10 @@ export const CollectionAsset = ({
       primaryInfoRight: asset.rarity && provider ? <RankingContainer provider={provider} /> : null,
       secondaryInfo: notForSale ? '' : `${formatWeiToDecimal(asset.priceInfo.ETHPrice, true)} ETH`,
       selectedInfo: 'Remove from bag',
-      tertiaryInfo:
-        asset.sellorders && asset.sellorders.length > 0 && asset.sellorders[0].endAt ? (
-          <ExpirationContainer expirationTimestamp={asset.sellorders[0].endAt} />
-        ) : null,
       notSelectedInfo: 'Add to bag',
       disabledInfo: 'Not listed',
     }
-  }, [
-    asset.name,
-    asset.priceInfo.ETHPrice,
-    asset.rarity,
-    asset.sellorders,
-    asset.susFlag,
-    asset.tokenId,
-    notForSale,
-    provider,
-  ])
+  }, [asset.name, asset.priceInfo.ETHPrice, asset.rarity, asset.susFlag, asset.tokenId, notForSale, provider])
 
   return (
     <NftCard
