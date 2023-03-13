@@ -20,6 +20,7 @@ import { putCommas } from 'nft/utils'
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import { AlertTriangle, Pause, Play } from 'react-feather'
 import { Link } from 'react-router-dom'
+import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 import { colors } from 'theme/colors'
@@ -135,7 +136,7 @@ const ActionButton = ({
   )
 }
 
-const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean }>`
+const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean; isLightMode: boolean }>`
   position: relative;
   border-radius: ${BORDER_RADIUS}px;
   background-color: ${({ theme }) => theme.backgroundSurface};
@@ -152,7 +153,7 @@ const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean 
     right: 0px;
     bottom: 0px;
     left: 0px;
-    border: ${({ selected }) => (selected ? '3px' : '1px')} solid;
+    border: ${({ selected, isLightMode }) => (selected ? '3px' : isLightMode ? '0px' : '1px')} solid;
     border-radius: ${BORDER_RADIUS}px;
     border-color: ${({ theme, selected }) => (selected ? theme.accentAction : theme.backgroundOutline)};
     pointer-events: none;
@@ -192,8 +193,16 @@ const CardContainer = ({
   children: ReactNode
   testId?: string
 }) => {
+  const [darkMode] = useDarkModeManager()
+
   return (
-    <StyledCardContainer selected={isSelected} isDisabled={isDisabled} draggable={false} data-testid={testId}>
+    <StyledCardContainer
+      selected={isSelected}
+      isDisabled={isDisabled}
+      draggable={false}
+      data-testid={testId}
+      isLightMode={!darkMode}
+    >
       {children}
     </StyledCardContainer>
   )
@@ -635,6 +644,15 @@ interface RankingProps {
   provider: { url?: string; rank?: number }
 }
 
+const RarityLogoContainer = styled(Row)`
+  margin-right: 8px;
+  width: 16px;
+`
+
+const RarityText = styled(ThemedText.BodySmall)`
+  display: flex;
+`
+
 const RarityInfo = styled(ThemedText.Caption)`
   flex-shrink: 0;
   color: ${({ theme }) => theme.textSecondary};
@@ -654,7 +672,17 @@ const Ranking = ({ provider }: RankingProps) => {
 
   return (
     <RarityInfo>
-      <MouseoverTooltip text={<ThemedText.BodySmall>{SUSPICIOUS_TEXT}</ThemedText.BodySmall>} placement="top">
+      <MouseoverTooltip
+        text={
+          <Row>
+            <RarityLogoContainer>
+              <img src="/nft/svgs/gem.svg" width={16} height={16} />
+            </RarityLogoContainer>
+            <RarityText>Ranking by Rarity Sniper</RarityText>
+          </Row>
+        }
+        placement="top"
+      >
         # {putCommas(provider.rank)}
       </MouseoverTooltip>
     </RarityInfo>
