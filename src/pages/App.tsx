@@ -1,5 +1,5 @@
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
@@ -24,6 +24,7 @@ import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import StakingModal from './Stake/StakingModal'
 import { RedirectPathToSwapOnly } from './Swap/redirects'
+import SwapWidget from './SwapWidget'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -77,6 +78,9 @@ const TopLevelModals = () => {
 }
 
 export default function App() {
+  const { pathname } = useLocation()
+  const show = pathname !== '/swap-widget'
+
   return (
     <ErrorBoundary>
       <Route component={GoogleAnalyticsReporter} />
@@ -84,35 +88,44 @@ export default function App() {
       <Route component={ApeModeQueryParamReader} />
       <Web3ReactManager>
         <AppWrapper>
-          <HeaderWrapper>
-            <Header />
-          </HeaderWrapper>
-          <BodyWrapper>
-            <Popups />
-            <Polling />
-            <TopLevelModals />
+          {show ? (
+            <>
+              <HeaderWrapper>
+                <Header />
+              </HeaderWrapper>
+              <BodyWrapper>
+                <Popups />
+                <Polling />
+                <TopLevelModals />
+                <Switch>
+                  <Route exact strict path="/limitorder/:outputCurrency" component={RedirectToLimitOrder} />
+                  <Route exact strict path="/limitorder" component={LimitOrder} />
+                  <Route exact strict path="/swap/:outputCurrency" component={RedirectToMarket} />
+                  <Route path="/swap" component={Market} />
+                  <Route exact strict path="/pool" component={Pool} />
+                  <Route exact strict path="/pool/:tokenId" component={PositionPage} />
+                  <Route exact strict path="/stake/:tokenId" component={StakingModal} />
+                  <Route exact strict path="/unstake/:tokenId/remove" component={StakingModal} />
+                  <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
+                  <Route exact strict path="/remove/:tokenId" component={RemoveLiquidityV3} />
+                  <Route exact strict path="/faq" component={FAQ} />
+                  <Route
+                    exact
+                    strict
+                    path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
+                    component={RedirectDuplicateTokenIds}
+                  />
+                  <Route component={RedirectPathToLimitOrderOnly} />
+                  <Route component={RedirectPathToSwapOnly} />
+                </Switch>
+              </BodyWrapper>
+            </>
+          ) : (
             <Switch>
-              <Route exact strict path="/limitorder/:outputCurrency" component={RedirectToLimitOrder} />
-              <Route exact strict path="/limitorder" component={LimitOrder} />
-              <Route exact strict path="/swap/:outputCurrency" component={RedirectToMarket} />
-              <Route path="/swap" component={Market} />
-              <Route exact strict path="/pool" component={Pool} />
-              <Route exact strict path="/pool/:tokenId" component={PositionPage} />
-              <Route exact strict path="/stake/:tokenId" component={StakingModal} />
-              <Route exact strict path="/unstake/:tokenId/remove" component={StakingModal} />
-              <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
-              <Route exact strict path="/remove/:tokenId" component={RemoveLiquidityV3} />
-              <Route exact strict path="/faq" component={FAQ} />
-              <Route
-                exact
-                strict
-                path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
-                component={RedirectDuplicateTokenIds}
-              />
-              <Route component={RedirectPathToLimitOrderOnly} />
-              <Route component={RedirectPathToSwapOnly} />
+              <Route exact path="/swap-widget" component={SwapWidget} />
+              <Route exact path="/swap-widget/:theme" component={SwapWidget} />
             </Switch>
-          </BodyWrapper>
+          )}
         </AppWrapper>
       </Web3ReactManager>
     </ErrorBoundary>

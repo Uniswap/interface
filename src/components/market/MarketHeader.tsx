@@ -14,19 +14,27 @@ const StyledMarketHeader = styled.div`
   color: ${({ theme }) => theme.text2};
 `
 
-export default function MarketHeader({ allowedSlippage }: { allowedSlippage: Percent }) {
+export default function MarketHeader({
+  showChartSwitch = false,
+  allowedSlippage,
+}: {
+  showChartSwitch?: boolean
+  allowedSlippage: Percent
+}) {
   const [expertMode, toggleExpertMode] = useExpertModeManager()
 
   return (
     <StyledMarketHeader>
       <RowBetween>
-        <RowFixed>
-          <Text>
-            <Trans>Show Chart</Trans>
-          </Text>
-          <Switch checked={expertMode} color="primary" onClick={() => toggleExpertMode()} />
-        </RowFixed>
-        <RowFixed>
+        {showChartSwitch && (
+          <RowFixed>
+            <Text>
+              <Trans>Show Chart</Trans>
+            </Text>
+            <Switch checked={expertMode} color="primary" onClick={() => toggleExpertMode()} />
+          </RowFixed>
+        )}
+        <RowFixed justify="flex-end" width="100%">
           <SettingsTab placeholderSlippage={allowedSlippage} />
         </RowFixed>
       </RowBetween>
