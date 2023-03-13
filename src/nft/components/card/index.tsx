@@ -1,117 +1,10 @@
 import * as Card from 'nft/components/card/containers'
+import { MarketplaceContainer } from 'nft/components/card/icons'
+import { MediaContainer } from 'nft/components/card/media'
+import { detailsHref, getNftDisplayComponent, useSelectAsset } from 'nft/components/card/utils'
 import { GenieAsset, UniformAspectRatio, UniformAspectRatios, WalletAsset } from 'nft/types'
-import { floorFormatter, isAudio, isVideo } from 'nft/utils'
-import { ReactNode, useCallback } from 'react'
-
-enum AssetMediaType {
-  Image,
-  Video,
-  Audio,
-}
-
-function getAssetImageUrl(asset: GenieAsset | WalletAsset) {
-  return asset.imageUrl || asset.smallImageUrl
-}
-
-function getAssetMediaUrl(asset: GenieAsset | WalletAsset) {
-  return asset.animationUrl
-}
-
-function detailsHref(asset: GenieAsset | WalletAsset) {
-  if ('address' in asset) return `/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection`
-  if ('asset_contract' in asset) return `/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=profile`
-  return '/nfts/profile'
-}
-
-function getAssetMediaType(asset: GenieAsset | WalletAsset) {
-  let assetMediaType = AssetMediaType.Image
-  if (asset.animationUrl) {
-    if (isAudio(asset.animationUrl)) {
-      assetMediaType = AssetMediaType.Audio
-    } else if (isVideo(asset.animationUrl)) {
-      assetMediaType = AssetMediaType.Video
-    }
-  }
-  return assetMediaType
-}
-
-function getNftDisplayComponent(
-  asset: GenieAsset | WalletAsset,
-  mediaShouldBePlaying: boolean,
-  setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void,
-  uniformAspectRatio?: UniformAspectRatio,
-  setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void,
-  renderedHeight?: number,
-  setRenderedHeight?: (renderedHeight: number | undefined) => void
-) {
-  switch (getAssetMediaType(asset)) {
-    case AssetMediaType.Image:
-      return (
-        <Card.Image
-          src={getAssetImageUrl(asset)}
-          uniformAspectRatio={uniformAspectRatio}
-          setUniformAspectRatio={setUniformAspectRatio}
-          renderedHeight={renderedHeight}
-          setRenderedHeight={setRenderedHeight}
-        />
-      )
-    case AssetMediaType.Video:
-      return (
-        <Card.Video
-          src={getAssetImageUrl(asset)}
-          mediaSrc={getAssetMediaUrl(asset)}
-          tokenId={asset.tokenId}
-          shouldPlay={mediaShouldBePlaying}
-          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-          uniformAspectRatio={uniformAspectRatio}
-          setUniformAspectRatio={setUniformAspectRatio}
-          renderedHeight={renderedHeight}
-          setRenderedHeight={setRenderedHeight}
-        />
-      )
-    case AssetMediaType.Audio:
-      return (
-        <Card.Audio
-          src={getAssetImageUrl(asset)}
-          mediaSrc={getAssetMediaUrl(asset)}
-          tokenId={asset.tokenId}
-          shouldPlay={mediaShouldBePlaying}
-          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-          uniformAspectRatio={uniformAspectRatio}
-          setUniformAspectRatio={setUniformAspectRatio}
-          renderedHeight={renderedHeight}
-          setRenderedHeight={setRenderedHeight}
-        />
-      )
-  }
-}
-
-function useSelectAsset(
-  selectAsset: () => void,
-  unselectAsset: () => void,
-  isSelected: boolean,
-  isDisabled: boolean,
-  onClick?: () => void
-) {
-  return useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation()
-      e.preventDefault()
-
-      if (isDisabled) {
-        return
-      }
-
-      if (onClick) {
-        onClick()
-        return
-      }
-
-      return isSelected ? unselectAsset() : selectAsset()
-    },
-    [selectAsset, isDisabled, onClick, unselectAsset, isSelected]
-  )
-}
+import { floorFormatter } from 'nft/utils'
+import { ReactNode } from 'react'
 
 interface NftCardProps {
   asset: GenieAsset | WalletAsset
@@ -175,8 +68,8 @@ export const NftCard = ({
       doNotLinkToDetails={doNotLinkToDetails}
       testId={testId}
     >
-      <Card.ImageContainer isDisabled={isDisabled}>
-        <Card.MarketplaceContainer
+      <MediaContainer isDisabled={isDisabled}>
+        <MarketplaceContainer
           isSelected={isSelected}
           marketplace={marketplace}
           tokenType={tokenType}
@@ -191,7 +84,7 @@ export const NftCard = ({
           renderedHeight,
           setRenderedHeight
         )}
-      </Card.ImageContainer>
+      </MediaContainer>
       <Card.DetailsRelativeContainer>
         <Card.DetailsContainer>
           <Card.InfoContainer>
