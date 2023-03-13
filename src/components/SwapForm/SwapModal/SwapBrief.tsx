@@ -1,6 +1,7 @@
 import { Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
 import React from 'react'
 import { ArrowDown } from 'react-feather'
+import Skeleton from 'react-loading-skeleton'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -13,7 +14,9 @@ import useTheme from 'hooks/useTheme'
 
 type Props = {
   inputAmount: CurrencyAmount<Currency>
-  outputAmount: CurrencyAmount<Currency>
+  outputAmountFromBuild: CurrencyAmount<Currency> | undefined
+  isLoading: boolean
+  currencyOut: Currency
 } & UpdatedBadgeProps
 
 const TruncatedText = styled(Text)`
@@ -23,9 +26,31 @@ const TruncatedText = styled(Text)`
   font-weight: 500;
 `
 
-const SwapBrief: React.FC<Props> = ({ inputAmount, outputAmount, $level }) => {
+const SwapBrief: React.FC<Props> = ({ inputAmount, outputAmountFromBuild, $level, isLoading, currencyOut }) => {
   const theme = useTheme()
   const { typedValue, feeConfig } = useSwapFormContext()
+
+  const renderOutputAmount = () => {
+    if (isLoading) {
+      return (
+        <Skeleton
+          width="120px"
+          // there's border of 1px
+          height="22px"
+          baseColor={theme.border}
+          highlightColor={theme.buttonGray}
+          borderRadius="0.5rem"
+        />
+      )
+    }
+
+    if (!outputAmountFromBuild) {
+      return '--'
+    }
+
+    return <TruncatedText>{outputAmountFromBuild.toSignificant(6) || '--'}</TruncatedText>
+  }
+
   return (
     <AutoColumn gap={'md'} style={{ marginTop: '20px', padding: '0 8px' }}>
       <Flex
@@ -60,10 +85,10 @@ const SwapBrief: React.FC<Props> = ({ inputAmount, outputAmount, $level }) => {
             gap: '8px',
           }}
         >
-          <CurrencyLogo currency={outputAmount?.currency} size={'24px'} />
-          <TruncatedText>{outputAmount.toSignificant(6) || ''}</TruncatedText>
+          <CurrencyLogo currency={currencyOut} size={'24px'} />
+          {renderOutputAmount()}
           <Text flex="0 0 fit-content" fontSize={24} fontWeight={500}>
-            {outputAmount.currency.symbol}
+            {currencyOut.symbol}
           </Text>
         </Flex>
 

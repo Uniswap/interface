@@ -1,4 +1,4 @@
-import { Price } from '@kyberswap/ks-sdk-core'
+import { Currency, CurrencyAmount, Price } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import { transparentize } from 'polished'
 import React, { useState } from 'react'
@@ -121,8 +121,9 @@ const ConfirmSwapModalContent: React.FC<Props> = ({
       return null
     }
 
-    let { parsedAmountIn, parsedAmountOut } = routeSummary
+    let { parsedAmountIn } = routeSummary
     let changedAmount = 0
+    let parsedAmountOut: CurrencyAmount<Currency> | undefined = undefined
 
     if (buildResult?.data) {
       const { amountIn, amountOut } = buildResult.data
@@ -136,7 +137,9 @@ const ConfirmSwapModalContent: React.FC<Props> = ({
       <SwapBrief
         $level={changedAmount > 0 ? 'better' : changedAmount < 0 ? 'worse' : undefined}
         inputAmount={parsedAmountIn}
-        outputAmount={parsedAmountOut}
+        outputAmountFromBuild={parsedAmountOut}
+        currencyOut={routeSummary.parsedAmountOut.currency}
+        isLoading={isBuildingRoute}
       />
     )
   }

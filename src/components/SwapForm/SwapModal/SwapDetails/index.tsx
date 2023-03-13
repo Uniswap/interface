@@ -276,7 +276,7 @@ const SwapDetails: React.FC<Props> = ({
         <RowBetween height="20px">
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.subText}>
-              <Trans>Slippage</Trans>
+              <Trans>Max Slippage</Trans>
             </TYPE.black>
           </RowFixed>
 
