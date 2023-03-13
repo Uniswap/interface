@@ -12,6 +12,7 @@ import {
   OpenSeaMarketplaceIcon,
   ProfileSelectedAssetIcon,
   SudoSwapIcon,
+  TagIcon,
   X2y2Icon,
 } from 'nft/components/icons'
 import { Markets, UniformAspectRatio, UniformAspectRatios } from 'nft/types'
@@ -55,6 +56,11 @@ const StyledDetailsContainer = styled(Column)`
   background: ${({ theme }) => theme.backgroundSurface};
   will-change: transform;
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} transform`};
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    height: 112px;
+    transform: translateY(-28px);
+  }
 `
 
 const StyledActionButton = styled(ThemedText.BodySmall)<{
@@ -81,7 +87,8 @@ const StyledActionButton = styled(ThemedText.BodySmall)<{
   cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
-    ${({ isDisabled }) => `opacity: ${isDisabled ? 0 : 1};`}
+    visibility: visible;
+    bottom: 8px;
   }
 
   &:before {
@@ -637,7 +644,7 @@ const RarityInfo = styled(ThemedText.Caption)`
   font-weight: 700 !important;
   line-height: 12px;
   text-align: right;
-  cursor: auto;
+  cursor: pointer;
 `
 
 const Ranking = ({ provider }: RankingProps) => {
@@ -645,7 +652,13 @@ const Ranking = ({ provider }: RankingProps) => {
     return null
   }
 
-  return <RarityInfo># {putCommas(provider.rank)}</RarityInfo>
+  return (
+    <RarityInfo>
+      <MouseoverTooltip text={<ThemedText.BodySmall>{SUSPICIOUS_TEXT}</ThemedText.BodySmall>} placement="top">
+        # {putCommas(provider.rank)}
+      </MouseoverTooltip>
+    </RarityInfo>
+  )
 }
 
 const SUSPICIOUS_TEXT = t`Blocked on OpenSea`
@@ -664,29 +677,45 @@ const Suspicious = () => {
   )
 }
 
-const StyledMarketplaceContainer = styled.div`
+const StyledMarketplaceContainer = styled.div<{ isText?: boolean }>`
   position: absolute;
+  display: flex;
   top: 12px;
   left: 12px;
+  height: 32px;
+  width: ${({ isText }) => (isText ? 'auto' : '32px')};
+  padding: ${({ isText }) => (isText ? '0px 8px' : '0px')};
+  background: rgba(93, 103, 133, 0.24);
+  justify-content: center;
+  align-items: center;
+  border-radius: 32px;
   z-index: 2;
+`
+
+const ListPriceRowContainer = styled(Row)`
+  gap: 6px;
+  color: ${({ theme }) => theme.accentTextLightPrimary};
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16px;
 `
 
 function getMarketplaceIcon(market: Markets): ReactNode {
   switch (market) {
     case Markets.Opensea:
-      return <OpenSeaMarketplaceIcon />
+      return <OpenSeaMarketplaceIcon width="20px" height="20px" />
     case Markets.LooksRare:
-      return <LooksRareIcon />
+      return <LooksRareIcon width="20px" height="20px" />
     case Markets.X2Y2:
-      return <X2y2Icon />
+      return <X2y2Icon width="20px" height="20px" />
     case Markets.Sudoswap:
-      return <SudoSwapIcon />
+      return <SudoSwapIcon width="20px" height="20px" />
     case Markets.NFT20:
-      return <Nft20Icon />
+      return <Nft20Icon width="20px" height="20px" />
     case Markets.NFTX:
-      return <NftXIcon />
+      return <NftXIcon width="20px" height="20px" />
     case Markets.Cryptopunks:
-      return <LarvaLabsMarketplaceIcon />
+      return <LarvaLabsMarketplaceIcon width="20px" height="20px" />
     default:
       return null
   }
@@ -696,23 +725,36 @@ const MarketplaceContainer = ({
   isSelected,
   marketplace,
   tokenType,
+  listedPrice,
 }: {
   isSelected: boolean
   marketplace?: Markets
   tokenType?: NftStandard
+  listedPrice?: string
 }) => {
   if (isSelected) {
     if (!marketplace) {
       return (
         <StyledMarketplaceContainer>
-          <ProfileSelectedAssetIcon />
+          <ProfileSelectedAssetIcon width="20px" height="20px" />
         </StyledMarketplaceContainer>
       )
     }
 
     return (
       <StyledMarketplaceContainer>
-        <CollectionSelectedAssetIcon />
+        <CollectionSelectedAssetIcon width="20px" height="20px" viewBox="0 0 20 20" />
+      </StyledMarketplaceContainer>
+    )
+  }
+
+  if (listedPrice) {
+    return (
+      <StyledMarketplaceContainer isText={true}>
+        <ListPriceRowContainer>
+          <TagIcon width="20px" height="20px" />
+          {listedPrice} ETH
+        </ListPriceRowContainer>
       </StyledMarketplaceContainer>
     )
   }

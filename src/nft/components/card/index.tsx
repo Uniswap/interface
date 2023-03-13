@@ -1,6 +1,6 @@
 import * as Card from 'nft/components/card/containers'
 import { GenieAsset, UniformAspectRatio, UniformAspectRatios, WalletAsset } from 'nft/types'
-import { isAudio, isVideo } from 'nft/utils'
+import { floorFormatter, isAudio, isVideo } from 'nft/utils'
 import { ReactNode, useCallback } from 'react'
 
 enum AssetMediaType {
@@ -170,6 +170,8 @@ export const NftCard = ({
   const profileNft = 'asset_contract' in asset
   const tokenType = collectionNft ? asset.tokenType : profileNft ? asset.asset_contract.tokenType : undefined
   const marketplace = collectionNft ? asset.marketplace : undefined
+  const listedPrice =
+    profileNft && !isDisabled && asset.floor_sell_order_price ? floorFormatter(asset.floor_sell_order_price) : undefined
 
   return (
     <Card.Container
@@ -180,7 +182,12 @@ export const NftCard = ({
       testId={testId}
     >
       <Card.ImageContainer isDisabled={isDisabled}>
-        <Card.MarketplaceContainer isSelected={isSelected} marketplace={marketplace} tokenType={tokenType} />
+        <Card.MarketplaceContainer
+          isSelected={isSelected}
+          marketplace={marketplace}
+          tokenType={tokenType}
+          listedPrice={listedPrice}
+        />
         {getNftDisplayComponent(
           asset,
           mediaShouldBePlaying,
