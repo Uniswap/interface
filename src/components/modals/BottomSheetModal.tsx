@@ -5,6 +5,7 @@ import {
   BottomSheetView,
   useBottomSheetDynamicSnapPoints,
 } from '@gorhom/bottom-sheet'
+import { useResponsiveProp } from '@shopify/restyle'
 import { BlurView } from 'expo-blur'
 import React, { ComponentProps, PropsWithChildren, useCallback, useEffect, useRef } from 'react'
 import { Keyboard, StyleSheet } from 'react-native'
@@ -117,11 +118,21 @@ export function BottomSheetModal({
 
   const fullScreenContentHeight = (renderBehindInset ? 1 : FULL_HEIGHT) * dimensions.fullHeight
 
+  const borderRadius = useResponsiveProp({
+    // on screens without rounded corners, remove rounded corners when modal is fullscreen
+    xs: theme.borderRadii.none,
+    sm: theme.borderRadii.rounded24,
+  })
+
   const renderBlurredBg = useCallback(
     () => (
-      <BlurView intensity={90} style={BlurViewStyle.base} tint={isDarkMode ? 'dark' : 'light'} />
+      <BlurView
+        intensity={90}
+        style={[BlurViewStyle.base, { borderRadius }]}
+        tint={isDarkMode ? 'dark' : 'light'}
+      />
     ),
-    [isDarkMode]
+    [borderRadius, isDarkMode]
   )
 
   const background = blurredBackground ? { backgroundComponent: renderBlurredBg } : undefined
@@ -168,7 +179,7 @@ export function BottomSheetModal({
           style={[
             { height: fullScreen ? fullScreenContentHeight : undefined },
             BottomSheetStyle.view,
-            renderBehindInset ? BottomSheetStyle.rounded : undefined,
+            renderBehindInset ? { ...BottomSheetStyle.behindInset, borderRadius } : undefined,
           ]}
           onLayout={handleContentLayout}>
           {children}
@@ -241,12 +252,11 @@ export function BottomSheetDetachedModal({
 }
 
 const BottomSheetStyle = StyleSheet.create({
+  behindInset: {
+    overflow: 'hidden',
+  },
   detached: {
     marginHorizontal: spacing.spacing12,
-  },
-  rounded: {
-    borderRadius: FixedTheme.borderRadii.rounded24,
-    overflow: 'hidden',
   },
   view: {
     flex: 1,
@@ -256,7 +266,6 @@ const BottomSheetStyle = StyleSheet.create({
 const BlurViewStyle = StyleSheet.create({
   base: {
     ...StyleSheet.absoluteFillObject,
-    borderRadius: FixedTheme.borderRadii.rounded24,
     overflow: 'hidden',
   },
 })
