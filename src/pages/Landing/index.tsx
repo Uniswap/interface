@@ -215,8 +215,8 @@ const AboutContentContainer = styled.div<{ isDarkMode: boolean }>`
   width: 100%;
   background: ${({ isDarkMode }) =>
     isDarkMode
-      ? 'linear-gradient(179.82deg, rgba(0, 0, 0, 0) 0.16%, #050026 99.85%)'
-      : 'linear-gradient(179.82deg, rgba(255, 255, 255, 0) 0.16%, #eaeaea 99.85%)'};
+      ? 'linear-gradient(179.82deg, rgba(0, 0, 0, 0) 0.16%, #120303 99.85%)'
+      : 'linear-gradient(179.82deg, rgba(255, 255, 255, 0) 0.16%, #4c82fb 99.85%)'};
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     padding: 0 96px 5rem;
   }
@@ -342,9 +342,9 @@ export default function Landing() {
             <Glow />
           </GlowContainer>
           <ContentContainer isDarkMode={isDarkMode}>
-            <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence</TitleText>
+            <TitleText isDarkMode={isDarkMode}>The most seamless trading experience</TitleText>
             <SubTextContainer>
-              <SubText>Buy, sell, and explore tokens and NFTs</SubText>
+              <SubText>Trade, earn, govern and build on the leading decentralized exchange on Evmos</SubText>
             </SubTextContainer>
             <ActionsContainer>
               <TraceEvent
