@@ -84,7 +84,7 @@ export const CollectionAsset = ({
   const display: NftCardDisplayProps = useMemo(() => {
     return {
       primaryInfo: asset.name ? asset.name : `#${asset.tokenId}`,
-      primaryInfoExtra: asset.susFlag ? <SuspiciousContainer /> : null,
+      primaryInfoIcon: asset.susFlag ? <SuspiciousContainer /> : null,
       primaryInfoRight: asset.rarity && provider ? <RankingContainer provider={provider} /> : null,
       secondaryInfo: notForSale ? '' : `${formatWeiToDecimal(asset.priceInfo.ETHPrice, true)} ETH`,
       selectedInfo: 'Remove from bag',

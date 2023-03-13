@@ -10,16 +10,14 @@ import {
   Nft20Icon,
   NftXIcon,
   OpenSeaMarketplaceIcon,
-  ProfileSelectedAssetIcon,
   SudoSwapIcon,
   X2y2Icon,
 } from 'nft/components/icons'
 import { Markets, UniformAspectRatio, UniformAspectRatios } from 'nft/types'
 import { putCommas } from 'nft/utils'
 import { ReactNode, useEffect, useRef, useState } from 'react'
-import { AlertTriangle, Pause, Play, Tag } from 'react-feather'
+import { AlertTriangle, Check, Pause, Play, Tag } from 'react-feather'
 import { Link } from 'react-router-dom'
-import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 import { colors } from 'theme/colors'
@@ -135,7 +133,7 @@ const ActionButton = ({
   )
 }
 
-const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean; isLightMode: boolean }>`
+const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean }>`
   position: relative;
   border-radius: ${BORDER_RADIUS}px;
   background-color: ${({ theme }) => theme.backgroundSurface};
@@ -152,7 +150,7 @@ const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean;
     right: 0px;
     bottom: 0px;
     left: 0px;
-    border: ${({ selected, isLightMode }) => (selected ? '3px' : isLightMode ? '0px' : '1px')} solid;
+    border: ${({ selected, theme }) => (selected ? '3px' : !theme.darkMode ? '0px' : '1px')} solid;
     border-radius: ${BORDER_RADIUS}px;
     border-color: ${({ theme, selected }) => (selected ? theme.accentAction : theme.backgroundOutline)};
     pointer-events: none;
@@ -192,16 +190,8 @@ const CardContainer = ({
   children: ReactNode
   testId?: string
 }) => {
-  const [darkMode] = useDarkModeManager()
-
   return (
-    <StyledCardContainer
-      selected={isSelected}
-      isDisabled={isDisabled}
-      draggable={false}
-      data-testid={testId}
-      isLightMode={!darkMode}
-    >
+    <StyledCardContainer selected={isSelected} isDisabled={isDisabled} draggable={false} data-testid={testId}>
       {children}
     </StyledCardContainer>
   )
@@ -354,13 +344,13 @@ interface MediaProps {
 
 const PlaybackButton = styled.div<{ pauseButton?: boolean }>`
   display: ${({ pauseButton }) => (pauseButton ? 'block' : 'none')};
-  color: ${({ theme }) => theme.accentTextLightPrimary};
+  color: ${({ theme }) => theme.accentAction};
   position: absolute;
   height: 40px;
   width: 40px;
   z-index: 1;
   margin-left: calc(100% - 50px);
-  transform: translateY(-56px);
+  transform: translateY(-76px);
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     display: block;
@@ -713,6 +703,7 @@ const StyledMarketplaceContainer = styled.div<{ isText?: boolean }>`
   width: ${({ isText }) => (isText ? 'auto' : '32px')};
   padding: ${({ isText }) => (isText ? '0px 8px' : '0px')};
   background: rgba(93, 103, 133, 0.24);
+  color: ${({ theme }) => theme.accentTextLightPrimary};
   justify-content: center;
   align-items: center;
   border-radius: 32px;
@@ -730,19 +721,19 @@ const ListPriceRowContainer = styled(Row)`
 function getMarketplaceIcon(market: Markets): ReactNode {
   switch (market) {
     case Markets.Opensea:
-      return <OpenSeaMarketplaceIcon width="20px" height="20px" />
+      return <OpenSeaMarketplaceIcon />
     case Markets.LooksRare:
-      return <LooksRareIcon width="20px" height="20px" />
+      return <LooksRareIcon />
     case Markets.X2Y2:
-      return <X2y2Icon width="20px" height="20px" />
+      return <X2y2Icon />
     case Markets.Sudoswap:
-      return <SudoSwapIcon width="20px" height="20px" />
+      return <SudoSwapIcon />
     case Markets.NFT20:
-      return <Nft20Icon width="20px" height="20px" />
+      return <Nft20Icon />
     case Markets.NFTX:
-      return <NftXIcon width="20px" height="20px" />
+      return <NftXIcon />
     case Markets.Cryptopunks:
-      return <LarvaLabsMarketplaceIcon width="20px" height="20px" />
+      return <LarvaLabsMarketplaceIcon />
     default:
       return null
   }
@@ -763,7 +754,7 @@ const MarketplaceContainer = ({
     if (!marketplace) {
       return (
         <StyledMarketplaceContainer>
-          <ProfileSelectedAssetIcon width="20px" height="20px" />
+          <Check size={20} />
         </StyledMarketplaceContainer>
       )
     }

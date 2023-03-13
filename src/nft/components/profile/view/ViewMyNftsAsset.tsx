@@ -63,7 +63,7 @@ export const ViewMyNftsAsset = ({
   const display: NftCardDisplayProps = useMemo(() => {
     return {
       primaryInfo: !!asset.asset_contract.name && asset.asset_contract.name,
-      primaryInfoExtra: asset.collectionIsVerified && <VerifiedIcon height="16px" width="16px" />,
+      primaryInfoIcon: asset.collectionIsVerified && <VerifiedIcon height="16px" width="16px" />,
       secondaryInfo: asset.name || asset.tokenId ? asset.name ?? `#${asset.tokenId}` : null,
       selectedInfo: 'Remove from bag',
       notSelectedInfo: 'List for sale',

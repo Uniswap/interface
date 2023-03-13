@@ -702,7 +702,7 @@ export const ListingModalWindowClosed = (props: SVGProps) => (
 )
 
 export const OpenSeaMarketplaceIcon = (props: SVGProps) => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -738,20 +738,8 @@ export const CollectionSelectedAssetIcon = (props: SVGProps) => (
   </svg>
 )
 
-export const ProfileSelectedAssetIcon = (props: SVGProps) => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path
-      d="M16.6667 5L7.50004 14.1667L3.33337 10"
-      stroke="#F5F6FC"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-)
-
 export const Nft20Icon = (props: SVGProps) => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -762,7 +750,7 @@ export const Nft20Icon = (props: SVGProps) => (
 )
 
 export const NftXIcon = (props: SVGProps) => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -773,7 +761,7 @@ export const NftXIcon = (props: SVGProps) => (
 )
 
 export const X2y2Icon = (props: SVGProps) => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -784,7 +772,7 @@ export const X2y2Icon = (props: SVGProps) => (
 )
 
 export const SudoSwapIcon = (props: SVGProps) => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -795,7 +783,7 @@ export const SudoSwapIcon = (props: SVGProps) => (
 )
 
 export const LooksRareIcon = (props: SVGProps) => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -806,7 +794,7 @@ export const LooksRareIcon = (props: SVGProps) => (
 )
 
 export const LarvaLabsMarketplaceIcon = (props: SVGProps) => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       fillRule="evenodd"
       clipRule="evenodd"

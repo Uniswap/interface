@@ -138,7 +138,7 @@ interface NftCardProps {
 
 export interface NftCardDisplayProps {
   primaryInfo?: ReactNode
-  primaryInfoExtra?: ReactNode
+  primaryInfoIcon?: ReactNode
   primaryInfoRight?: ReactNode
   secondaryInfo?: ReactNode
   selectedInfo?: ReactNode
@@ -203,7 +203,7 @@ export const NftCard = ({
             <Card.PrimaryRow>
               <Card.PrimaryDetails>
                 <Card.PrimaryInfo>{display.primaryInfo}</Card.PrimaryInfo>
-                {display.primaryInfoExtra}
+                {display.primaryInfoIcon}
               </Card.PrimaryDetails>
               {display.primaryInfoRight}
             </Card.PrimaryRow>
