@@ -17,17 +17,12 @@ export default function SwapHeader() {
 
   return (
     <StyledSwapHeader>
-      <RowBetween>
-        <RowFixed>
-          <Text>
-            <Trans>Show Chart</Trans>
-          </Text>
-          <Switch checked={expertMode} color="primary" onClick={() => toggleExpertMode()} />
-        </RowFixed>
+      <RowFixed>
         <Text>
-          <Trans>UniswapV3 pairs only</Trans>
+          <Trans>Show Chart</Trans>
         </Text>
-      </RowBetween>
+        <Switch checked={expertMode} color="primary" onClick={() => toggleExpertMode()} />
+      </RowFixed>
     </StyledSwapHeader>
   )
 }

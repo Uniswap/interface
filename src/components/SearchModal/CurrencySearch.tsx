@@ -185,7 +185,7 @@ export function CurrencySearch({
       <PaddedColumn gap="16px">
         <RowBetween>
           <Text fontWeight={400} fontSize={16}>
-            <Trans>Select a token</Trans>
+            <Trans>Select a token (only UniswapV3 pairs)</Trans>
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>

@@ -28,7 +28,7 @@ const StyledLink = styled.a`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 6px;
   text-decoration: none;
   color: #fff;
 
@@ -50,13 +50,13 @@ const FAQ = () => {
           <TYPE.subHeader>
             <Trans>How to use FELO</Trans>
           </TYPE.subHeader>
-          <ExternalLink size={20} />
+          <ExternalLink size={18} />
         </StyledLink>
         <StyledLink href="https://docs.kromatika.finance/kromatika-dapp-2.0/tutorials/how-to-use-swap" target="_blank">
           <TYPE.subHeader>
             <Trans>How to use Swap</Trans>
           </TYPE.subHeader>
-          <ExternalLink size={20} />
+          <ExternalLink size={18} />
         </StyledLink>
         <StyledLink
           href="https://docs.kromatika.finance/kromatika-dapp-2.0/tutorials/how-to-use-gasless"
@@ -65,7 +65,7 @@ const FAQ = () => {
           <TYPE.subHeader>
             <Trans>How to use Gasless</Trans>
           </TYPE.subHeader>
-          <ExternalLink size={20} />
+          <ExternalLink size={18} />
         </StyledLink>
         <StyledLink
           href="https://docs.kromatika.finance/kromatika-dapp-2.0/tutorials/how-to-use-perpetuals"
@@ -74,7 +74,7 @@ const FAQ = () => {
           <TYPE.subHeader>
             <Trans>How to use Perpetuals</Trans>
           </TYPE.subHeader>
-          <ExternalLink size={20} />
+          <ExternalLink size={18} />
         </StyledLink>
       </ContentWrapper>
     </Container>
