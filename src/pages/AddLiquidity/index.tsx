@@ -8,10 +8,10 @@ import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import useParsedQueryString from 'hooks/useParsedQueryString'
+import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import {
   useRangeHopCallbacks,
@@ -92,7 +92,6 @@ export default function AddLiquidity() {
   const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
-  const parsedQs = useParsedQueryString()
 
   // check for existing position if tokenId in url
   const { position: existingPositionDetails, loading: positionLoading } = useV3PositionFromTokenId(
@@ -114,8 +113,7 @@ export default function AddLiquidity() {
     baseCurrency && currencyB && baseCurrency.wrapped.equals(currencyB.wrapped) ? undefined : currencyB
 
   // mint state
-  const { independentField, typedValue, startPriceTypedValue, rightRangeTypedValue, leftRangeTypedValue } =
-    useV3MintState()
+  const { independentField, typedValue, startPriceTypedValue } = useV3MintState()
 
   const {
     pool,
@@ -123,6 +121,7 @@ export default function AddLiquidity() {
     dependentField,
     price,
     pricesAtTicks,
+    pricesAtLimit,
     parsedAmounts,
     currencyBalances,
     position,
@@ -152,26 +151,6 @@ export default function AddLiquidity() {
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
-
-  useEffect(() => {
-    if (
-      parsedQs.minPrice &&
-      typeof parsedQs.minPrice === 'string' &&
-      parsedQs.minPrice !== leftRangeTypedValue &&
-      !isNaN(parsedQs.minPrice as any)
-    ) {
-      onLeftRangeInput(parsedQs.minPrice)
-    }
-
-    if (
-      parsedQs.maxPrice &&
-      typeof parsedQs.maxPrice === 'string' &&
-      parsedQs.maxPrice !== rightRangeTypedValue &&
-      !isNaN(parsedQs.maxPrice as any)
-    ) {
-      onRightRangeInput(parsedQs.maxPrice)
-    }
-  }, [parsedQs, rightRangeTypedValue, leftRangeTypedValue, onRightRangeInput, onLeftRangeInput])
 
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
@@ -426,6 +405,58 @@ export default function AddLiquidity() {
   } ${!outOfRange ? 'and' : ''} ${!depositBDisabled ? parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) : ''} ${
     !depositBDisabled ? currencies[Field.CURRENCY_B]?.symbol : ''
   }`
+
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const handleSetFullRange = useCallback(() => {
+    getSetFullRange()
+
+    const minPrice = pricesAtLimit[Bound.LOWER]
+    if (minPrice) searchParams.set('minPrice', minPrice.toSignificant(5))
+    const maxPrice = pricesAtLimit[Bound.UPPER]
+    if (maxPrice) searchParams.set('maxPrice', maxPrice.toSignificant(5))
+    setSearchParams(searchParams)
+
+    sendEvent({
+      category: 'Liquidity',
+      action: 'Full Range Clicked',
+    })
+  }, [getSetFullRange, pricesAtLimit, searchParams, setSearchParams])
+
+  // START: sync values with query string
+  const oldSearchParams = usePrevious(searchParams)
+  // use query string as an input to onInput handlers
+  useEffect(() => {
+    const minPrice = searchParams.get('minPrice')
+    const oldMinPrice = oldSearchParams?.get('minPrice')
+    if (
+      minPrice &&
+      typeof minPrice === 'string' &&
+      !isNaN(minPrice as any) &&
+      (!oldMinPrice || oldMinPrice !== minPrice)
+    ) {
+      onLeftRangeInput(minPrice)
+    }
+    // disable eslint rule because this hook only cares about the url->input state data flow
+    // input state -> url updates are handled in the input handlers
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
+  useEffect(() => {
+    const maxPrice = searchParams.get('maxPrice')
+    const oldMaxPrice = oldSearchParams?.get('maxPrice')
+    if (
+      maxPrice &&
+      typeof maxPrice === 'string' &&
+      !isNaN(maxPrice as any) &&
+      (!oldMaxPrice || oldMaxPrice !== maxPrice)
+    ) {
+      onRightRangeInput(maxPrice)
+    }
+    // disable eslint rule because this hook only cares about the url->input state data flow
+    // input state -> url updates are handled in the input handlers
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
+  // END: sync values with query string
 
   const Buttons = () =>
     addIsUnsupported ? (
@@ -825,13 +856,7 @@ export default function AddLiquidity() {
                               feeAmount={feeAmount}
                               ticksAtLimit={ticksAtLimit}
                             />
-                            {!noLiquidity && (
-                              <PresetsButtons
-                                setFullRange={() => {
-                                  getSetFullRange()
-                                }}
-                              />
-                            )}
+                            {!noLiquidity && <PresetsButtons onSetFullRange={handleSetFullRange} />}
                           </AutoColumn>
                         </StackedItem>
                       </StackedContainer>
