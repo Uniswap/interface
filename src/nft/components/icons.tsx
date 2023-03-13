@@ -805,7 +805,6 @@ export const LooksRareIcon = (props: SVGProps) => (
   </svg>
 )
 
-// eslint-disable-next-line import/no-unused-modules
 export const LarvaLabsMarketplaceIcon = (props: SVGProps) => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
