@@ -173,7 +173,7 @@ export default function useTotalVotingReward(): {
           (async () => {
             const KNCContract = new Contract(KNC_ADDRESS, ERC20_ABI, provider)
             const kncBalance = await KNCContract.balanceOf(REWARD_POOL_ADDRESS)
-            return parseFloat(new Fraction(kncBalance.toString(), 10 ** 18).toSignificant(18))
+            return parseFloat(new Fraction(kncBalance.toString(), 10 ** 18).toSignificant(18)) * kncPriceETH
           })(),
         ])
         setTotalVotingReward(rewards.reduce((a: number, b: number) => a + b, 0))
@@ -182,7 +182,7 @@ export default function useTotalVotingReward(): {
       }
     }
     run()
-  }, [classicClientMainnet, classicClientMatic, provider, providerMatic])
+  }, [classicClientMainnet, classicClientMatic, provider, providerMatic, kncPriceETH])
 
   useEffect(() => {
     async function checkForKNCPrice() {
