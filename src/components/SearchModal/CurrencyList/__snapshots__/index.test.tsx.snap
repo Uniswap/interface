@@ -108,7 +108,7 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
     style="padding-right: 4px;"
   >
     <div
-      class="_1pi21y70"
+      class="CurrencyList_scrollbarStyle__1pi21y70"
       style="position: relative; height: 10px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
     >
       <div
@@ -391,7 +391,7 @@ exports[`renders loading rows when isLoading is true 1`] = `
     style="padding-right: 4px;"
   >
     <div
-      class="_1pi21y70"
+      class="CurrencyList_scrollbarStyle__1pi21y70"
       style="position: relative; height: 10px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
     >
       <div

@@ -1,4 +1,6 @@
 import { t } from '@lingui/macro'
+import { Trace, TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, InterfaceElementName, InterfaceSectionName, SharedEventName } from '@uniswap/analytics-events'
 import Column from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { useMiniPortfolioEnabled } from 'featureFlags/flags/miniPortfolio'
@@ -41,11 +43,17 @@ const PageWrapper = styled.div`
   width: calc(100% + 32px);
 `
 
-const Pages = [
-  { title: t`Tokens`, component: Tokens },
-  { title: t`NFTs`, component: NFTs },
+interface Page {
+  title: string
+  component: ({ account }: { account: string }) => JSX.Element
+  loggingElementName?: string
+}
+
+const Pages: Array<Page> = [
+  { title: t`Tokens`, component: Tokens, loggingElementName: InterfaceElementName.MINI_PORTFOLIO_TOKENS_TAB },
+  { title: t`NFTs`, component: NFTs, loggingElementName: InterfaceElementName.MINI_PORTFOLIO_NFT_TAB },
   { title: t`Activity`, component: Activity },
-  { title: t`Pools`, component: Pools },
+  { title: t`Pools`, component: Pools, loggingElementName: InterfaceElementName.MINI_PORTFOLIO_POOLS_TAB },
 ]
 
 function MiniPortfolio({ account }: { account: string }) {
@@ -60,13 +68,21 @@ function MiniPortfolio({ account }: { account: string }) {
     <Wrapper>
       <Nav>
         {Pages.map(({ title }, index) => (
-          <NavItem
-            onClick={() => setCurrentPage(index)}
-            active={currentPage === index}
-            key={`Mini Portfolio page ${index}`}
+          <TraceEvent
+            events={[BrowserEvent.onClick]}
+            name={SharedEventName.NAVBAR_CLICKED}
+            element={Pages[index].loggingElementName}
+            shouldLogImpression={!!Pages[index].loggingElementName}
+            key={index}
           >
-            {title}
-          </NavItem>
+            <NavItem
+              onClick={() => setCurrentPage(index)}
+              active={currentPage === index}
+              key={`Mini Portfolio page ${index}`}
+            >
+              {title}
+            </NavItem>
+          </TraceEvent>
         ))}
       </Nav>
       <PageWrapper>
@@ -80,5 +96,9 @@ export default function MiniPortfolioWrapper({ account }: { account: string }) {
   const flagEnabled = useMiniPortfolioEnabled()
   if (!flagEnabled) return null
 
-  return <MiniPortfolio account={account} />
+  return (
+    <Trace section={InterfaceSectionName.MINI_PORTFOLIO}>
+      <MiniPortfolio account={account} />
+    </Trace>
+  )
 }

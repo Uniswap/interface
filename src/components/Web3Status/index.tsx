@@ -190,26 +190,32 @@ function Web3StatusInner() {
     )
   } else if (account) {
     return (
-      <Web3StatusConnected
-        data-testid="web3-status-connected"
-        onClick={handleWalletDropdownClick}
-        pending={hasPendingTransactions}
-        isClaimAvailable={isClaimAvailable}
+      <TraceEvent
+        events={[BrowserEvent.onClick]}
+        name={InterfaceEventName.MINI_PORTFOLIO_TOGGLED}
+        properties={{ type: 'open' }}
       >
-        {!hasPendingTransactions && <StatusIcon enableInfotips={true} size={24} connection={connection} />}
-        {hasPendingTransactions ? (
-          <RowBetween>
-            <Text>
-              <Trans>{pending?.length} Pending</Trans>
-            </Text>{' '}
-            <Loader stroke="white" />
-          </RowBetween>
-        ) : (
-          <AddressAndChevronContainer>
-            <Text>{ENSName || shortenAddress(account)}</Text>
-          </AddressAndChevronContainer>
-        )}
-      </Web3StatusConnected>
+        <Web3StatusConnected
+          data-testid="web3-status-connected"
+          onClick={handleWalletDropdownClick}
+          pending={hasPendingTransactions}
+          isClaimAvailable={isClaimAvailable}
+        >
+          {!hasPendingTransactions && <StatusIcon enableInfotips={true} size={24} connection={connection} />}
+          {hasPendingTransactions ? (
+            <RowBetween>
+              <Text>
+                <Trans>{pending?.length} Pending</Trans>
+              </Text>{' '}
+              <Loader stroke="white" />
+            </RowBetween>
+          ) : (
+            <AddressAndChevronContainer>
+              <Text>{ENSName || shortenAddress(account)}</Text>
+            </AddressAndChevronContainer>
+          )}
+        </Web3StatusConnected>
+      </TraceEvent>
     )
   } else {
     return (

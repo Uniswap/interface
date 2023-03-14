@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent } from '@uniswap/analytics'
-import { InterfaceEventName } from '@uniswap/analytics-events'
+import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName, SharedEventName } from '@uniswap/analytics-events'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -257,7 +257,13 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
         </StatusWrapper>
         <IconContainer>
           <IconButton data-testid="wallet-settings" onClick={openSettings} Icon={Settings} />
-          <IconButton data-testid="wallet-disconnect" onClick={disconnect} Icon={Power} />
+          <TraceEvent
+            events={[BrowserEvent.onClick]}
+            name={SharedEventName.ELEMENT_CLICKED}
+            element={InterfaceElementName.DISCONNECT_WALLET_BUTTON}
+          >
+            <IconButton data-testid="wallet-disconnect" onClick={disconnect} Icon={Power} />
+          </TraceEvent>
         </IconContainer>
       </HeaderWrapper>
       <Column>

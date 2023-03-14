@@ -106,7 +106,7 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
   [Chain.Optimism]: SupportedChainId.OPTIMISM,
   [Chain.Arbitrum]: SupportedChainId.ARBITRUM_ONE,
   [Chain.UnknownChain]: SupportedChainId.MAINNET,
-  /* [Chain.BinanceSmartChain]: SupportedChainId.BNB */
+  [Chain.Bnb]: SupportedChainId.BNB,
 }
 
 export function fromGraphQLChain(chain: Chain): SupportedChainId {

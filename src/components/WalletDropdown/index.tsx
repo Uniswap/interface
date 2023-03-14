@@ -1,3 +1,5 @@
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, InterfaceEventName } from '@uniswap/analytics-events'
 import { ScrollBarStyles } from 'components/Common'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { atom } from 'jotai'
@@ -188,9 +190,15 @@ function WalletDropdown() {
   return (
     <>
       {walletDrawerOpen && (
-        <CloseDrawer onClick={toggleWalletDrawer}>
-          <CloseIcon />
-        </CloseDrawer>
+        <TraceEvent
+          events={[BrowserEvent.onClick]}
+          name={InterfaceEventName.MINI_PORTFOLIO_TOGGLED}
+          properties={{ type: 'close' }}
+        >
+          <CloseDrawer onClick={toggleWalletDrawer}>
+            <CloseIcon />
+          </CloseDrawer>
+        </TraceEvent>
       )}
       <Scrim onClick={toggleWalletDrawer} open={walletDrawerOpen} />
       {/* id used for child InfiniteScrolls to reference when it has reached the bottom of the component */}
