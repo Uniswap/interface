@@ -40,7 +40,6 @@ import { call, fork, put, race, take } from 'typed-redux-saga'
 
 const FLASHBOTS_POLLING_INTERVAL = ONE_SECOND_MS * 5
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function* transactionWatcher() {
   // Delay execution until providers are ready
   yield* call(waitForProvidersInitialized)

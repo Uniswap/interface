@@ -1,3 +1,5 @@
+const nonSagaTs = '(?<!saga).ts'
+
 // reduces code complexity
 const complexityRules = {
   'max-depth': ['error', 4], // prevent deeply nested code paths which are hard to read
@@ -162,7 +164,7 @@ module.exports = {
     },
     {
       // enable the rule specifically for TypeScript files
-      files: ['*.ts', '*.mts', '*.cts', '*.tsx'],
+      files: [nonSagaTs, '*.mts', '*.cts', '*.tsx'],
       rules: {
         '@typescript-eslint/explicit-function-return-type': [
           'error',
