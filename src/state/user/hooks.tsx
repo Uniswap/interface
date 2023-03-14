@@ -97,8 +97,8 @@ export function useTaxServiceDismissal(): [number, (dismissals: number) => void]
   const dispatch = useAppDispatch()
   const taxServiceDismissals = useAppSelector((state) => state.user.taxServiceDismissals)
   const setDismissals = useCallback(
-    (acks: number) => {
-      dispatch(updateTaxServiceAcknowledgments({ taxServiceDismissals: acks }))
+    (dismissals: number) => {
+      dispatch(updateTaxServiceAcknowledgments({ taxServiceDismissals: dismissals }))
     },
     [dispatch]
   )
