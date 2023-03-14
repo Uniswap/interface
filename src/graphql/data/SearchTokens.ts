@@ -79,6 +79,7 @@ export function useSearchTokens(searchQuery: string, chainId: number) {
     variables: {
       searchQuery,
     },
+    skip: !searchQuery,
   })
 
   const sortedTokens = useMemo(() => {
