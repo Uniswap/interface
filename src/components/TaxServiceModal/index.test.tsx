@@ -13,5 +13,5 @@ it('renders Tax Service Banner', async () => {
   render(<TaxServiceBanner />)
   expect(screen.getByText('Save on your crypto taxes')).toBeInTheDocument()
   expect(screen.getAllByTestId('learn-more-button')).toHaveLength(1)
-  expect(screen.getByText('Get up to a 20% discount on CoinTracker or TokenTax.')).toBeInTheDocument()
+  expect(screen.getByText('Uniswap Labs can save you up to 20% on CoinTracker and TokenTax')).toBeInTheDocument()
 })

@@ -49,6 +49,10 @@ describe('Token details', () => {
     // Shiba predator token, low trading volume and also has warning modal
     cy.visit('/tokens/ethereum/0xa71d0588EAf47f12B13cF8eC750430d21DF04974')
 
+    // Should have missing price chart when price unavailable (expected for this token)
+    if (cy.get('[data-cy="chart-header"]').contains('Price Unavailable')) {
+      cy.get('[data-cy="missing-chart"]').should('exist')
+    }
     // Stats should have: TVL, 24H Volume, 52W low, 52W high
     cy.get(getTestSelector('token-details-stats')).should('exist')
     cy.get(getTestSelector('token-details-stats')).within(() => {

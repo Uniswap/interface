@@ -30,10 +30,23 @@ gql`
           value
           currency
         }
+        price {
+          id
+          value
+          currency
+        }
         volume24H: volume(duration: DAY) {
           id
           value
           currency
+        }
+        priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
+          id
+          value
+        }
+        priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
+          id
+          value
         }
       }
       project {
@@ -46,22 +59,6 @@ gql`
           id
           chain
           address
-        }
-        markets(currencies: [USD]) {
-          id
-          price {
-            id
-            value
-            currency
-          }
-          priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
-            id
-            value
-          }
-          priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
-            id
-            value
-          }
         }
       }
     }

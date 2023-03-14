@@ -156,7 +156,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     }
   }, [toggleOpen, isHovered, token, navigate, handleClick, tokenDetailsPath])
 
-  const arrow = getDeltaArrow(token.project?.markets?.[0]?.pricePercentChange?.value, 18)
+  const arrow = getDeltaArrow(token.market?.pricePercentChange?.value, 18)
 
   return (
     <Link
@@ -186,16 +186,16 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
       </Row>
 
       <Column className={styles.suggestionSecondaryContainer}>
-        {!!token.project?.markets?.[0]?.price?.value && (
+        {!!token.market?.price?.value && (
           <>
             <Row gap="4">
-              <Box className={styles.primaryText}>{formatUSDPrice(token.project.markets[0].price.value)}</Box>
+              <Box className={styles.primaryText}>{formatUSDPrice(token.market.price.value)}</Box>
             </Row>
             <PriceChangeContainer>
               <ArrowCell>{arrow}</ArrowCell>
               <ThemedText.BodySmall>
-                <DeltaText delta={token.project.markets[0].pricePercentChange?.value}>
-                  {Math.abs(token.project.markets[0].pricePercentChange?.value ?? 0).toFixed(2)}%
+                <DeltaText delta={token.market?.pricePercentChange?.value}>
+                  {Math.abs(token.market?.pricePercentChange?.value ?? 0).toFixed(2)}%
                 </DeltaText>
               </ThemedText.BodySmall>
             </PriceChangeContainer>

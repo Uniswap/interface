@@ -74,14 +74,10 @@ export function useSyncWidgetInputs({
 
   useEffect(() => {
     if (chainId !== previousChainId && !!previousChainId && isSupportedChain(chainId)) {
-      setTokens({
-        ...tokens,
-        [Field.INPUT]: undefined,
-        [Field.OUTPUT]: undefined,
-      })
+      setTokens(defaultTokens)
       setAmount(EMPTY_AMOUNT)
     }
-  }, [chainId, previousChainId, tokens])
+  }, [chainId, defaultTokens, previousChainId, tokens])
 
   const onAmountChange = useCallback(
     (field: Field, amount: string, origin?: 'max') => {
