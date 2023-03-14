@@ -75,6 +75,7 @@ const InnerContainer = styled.div<{ isDarkMode: boolean }>`
   background-color: ${({ isDarkMode, theme }) =>
     isDarkMode ? opacify(10, theme.accentAction) : opacify(4, theme.accentAction)};
   @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    height: 100%;
     width: 100%;
     border-radius: 0;
   }
