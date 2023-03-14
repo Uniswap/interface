@@ -1,0 +1,65 @@
+name: Deploy Staging
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    paths:
+      - 'packages/ui/**'
+      - 'packages/app/**'
+      - 'apps/expo/**'
+
+jobs:
+  ci-build-test:
+    uses: ./.github/workflows/ci-build-test.yml
+
+  eas-update-staging:
+    name: EAS Update
+    environment: staging
+    runs-on: ubuntu-latest
+    needs: [ci-build-test]
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      APP_VARIANT: ${{ vars.APP_VARIANT }}
+    defaults:
+      run:
+        working-directory: ./
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Set Node.js 18.14.0
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.14.0
+
+      - name: Setup Expo
+        uses: expo/expo-github-action@v7
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 📥 Monorepo install
+        uses: ./.github/actions/yarn-install
+
+      - name: 🚀 Publish to Expo
+        run: cd apps/expo && npx dotenv -c staging -- eas update --branch=staging --non-interactive --message "update staging channel to ${GITHUB_HEAD_REF}"
+
+      - name: 💬 Comment in preview
+        uses: expo/expo-github-action/preview-comment@v7
+        with:
+          channel: staging
+
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: REPLACE-ME
+          SLACK_MESSAGE: "Updated STAGING app to ${{env.GITHUB_HEAD_REF}} :rocket:"

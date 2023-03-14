@@ -1,0 +1,49 @@
+{
+  "baseBranch": "origin/main",
+  "pipeline": {
+    "typecheck": {
+      "inputs": ["{packages,apps}/*+(.ts|.tsx)"],
+      "outputs": []
+    },
+    "lint": {
+      "inputs": ["{packages,apps}/*+(.ts|.tsx)"],
+      "outputs": []
+    },
+    "lint:fix": {
+      "inputs": ["{packages,apps}/*+(.ts|.tsx)"],
+      "outputs": []
+    },
+    "format": {
+      "inputs": ["{packages,apps}/*+(.ts|.tsx)"],
+      "outputs": []
+    },
+    "format:check": {
+      "inputs": ["{packages,apps}/*+(.ts|.tsx)"],
+      "outputs": []
+    },
+    "//#staged:lint:fix": {
+      "outputs": []
+    },
+    "//#staged:format": {
+      "outputs": []
+    },
+    "test": {
+      "inputs": ["{packages,apps}/*+(.ts|.tsx)"],
+      "outputs": []
+    },
+    "tests#test": {
+      "inputs": ["apps/tests/**", "packages/ui/**"],
+      "outputs": []
+    },
+    "build": {
+      "inputs": ["yarn.lock", "**/package.json", "{packages,apps}/*+(.ts|.tsx)"],
+      "outputs": ["**/dist/**", "./apps/next/.next/**"],
+      "dependsOn": ["^build"]
+    },
+    "storybook#build": {
+      "dependsOn": ["ui#build"],
+      "inputs": ["packages/ui/**"],
+      "outputs": ["apps/storybook/dist/**"]
+    }
+  }
+}

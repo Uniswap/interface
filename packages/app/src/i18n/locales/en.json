@@ -1,0 +1,17 @@
+{
+  "test": "TestEN",
+  "common": {
+    "ok": "OK!",
+    "cancel": "Cancel",
+    "back": "Back"
+  },
+  "errors": {
+    "invalidEmail": "Invalid email address."
+  },
+  "welcomeScreen": {
+    "home": "HomeEN"
+  },
+  "overviewScreen": {
+    "headline": "Overview"
+  }
+}

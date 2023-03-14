@@ -1,0 +1,16 @@
+{
+  "extends": "tsconfig/nextjs.json",
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"],
+  "references": [
+    {
+      "path": "../../packages/ui"
+    },
+    {
+      "path": "../../packages/app"
+    }
+  ],
+  "compilerOptions": {
+    "types": ["chrome"]
+  }
+}

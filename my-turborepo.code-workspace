@@ -1,0 +1,25 @@
+{
+  "extensions": {
+    "recommendations": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+  },
+  "settings": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "[javascript]": {
+      "editor.formatOnSave": false
+    },
+    "eslint.alwaysShowStatus": true,
+    "eslint.workingDirectories": [
+      "./apps/extension",
+      "./apps/storybook",
+      "./apps/tests",
+      "./packages/app",
+      "./packages/eslint-config-custom",
+      "./packages/tsconfig",
+      "./packages/ui"
+    ]
+  }
+}

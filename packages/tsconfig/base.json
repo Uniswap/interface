@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "incremental": true,
+    "noEmit": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "downlevelIteration": true,
+    "inlineSources": false,
+    "strict": true,
+    "preserveSymlinks": true,
+    "preserveConstEnums": true,
+    "removeComments": false,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2017", "dom"],
+    "baseUrl": "../../",
+    "rootDir": "../../",
+    "outDir": "../../dist/out-tsc",
+    "types": ["jest", "node"],
+    "paths": {
+      "app/*": ["packages/app/*"],
+      "ui/*": ["packages/ui/*"]
+    }
+  }
+}

@@ -1,0 +1,45 @@
+name: 'Monorepo install (yarn)'
+description: 'Run yarn install with node_modules linked and cache enabled'
+inputs:
+  yarn-download-cache-key:
+    description: 'Yarn rotates downloaded cache archives. In case of issue you can update the key.'
+    required: false
+    default: 'v1'
+
+runs:
+  using: 'composite'
+
+  steps:
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      shell: bash
+      run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+
+    # Yarn rotates the downloaded cache archives.
+    # Keep one global cache-entry through action/cache
+    - name: Restore yarn cache
+      uses: actions/cache@v3
+      id: yarn-download-cache
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: yarn-download-cache-${{ inputs.yarn-download-cache-key }}
+
+    # Invalidated on yarn.lock changes
+    - name: Restore yarn install state
+      id: yarn-install-state-cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          .ci-cache/yarn-state
+        key: ${{ runner.os }}-yarn-install-state-cache-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        yarn install --immutable --inline-builds
+      env:
+        # CI optimizations. Overrides yarnrc.yml options (or their defaults) in the CI action.
+        YARN_ENABLE_GLOBAL_CACHE: 'false' # Use local cache folder to keep downloaded archives
+        YARN_NM_MODE: 'hardlinks-local' # Hardlinks-local reduces io / node_modules size
+        YARN_INSTALL_STATE_PATH: .ci-cache/yarn-state/install-state.gz # Small speedup when lock does not change
+        HUSKY: '0' # By default do not run HUSKY install

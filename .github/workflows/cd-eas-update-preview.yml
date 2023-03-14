@@ -1,0 +1,55 @@
+name: CD-EAS-Update-Preview
+
+on:
+  create:
+    tags:
+      - 'expo-app-*'
+
+jobs:
+  eas-update-preview:
+    name: EAS Update Preview
+    runs-on: ubuntu-latest
+    environment: preview
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      APP_VARIANT: ${{ vars.APP_VARIANT }}
+    defaults:
+      run:
+        working-directory: ./
+
+    steps:
+      - name: Get tag name
+        id: get_tag_name
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+          ref: ${{ steps.get_tag_name.outputs.VERSION }}
+
+      - name: Set Node.js 18.14.0
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.14.0
+
+      - name: Setup Expo
+        uses: expo/expo-github-action@v7
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 📥 Monorepo install
+        uses: ./.github/actions/yarn-install
+
+      - name: Publish preview update
+        run: cd apps/expo && npx dotenv -c preview -- eas update --branch preview --non-interactive --message "update preview to ${{ steps.get_tag_name.outputs.VERSION }}"
+
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: REPLACE-ME
+          SLACK_MESSAGE: "Updated PREVIEW app to ${{ steps.get_tag_name.outputs.VERSION }} :rocket:"
