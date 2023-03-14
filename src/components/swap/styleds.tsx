@@ -40,14 +40,14 @@ export const SwapPageWrapper = styled.div`
   }
 `
 
-export const TokenInfoWrapper = styled.div`
+export const TokenInfoWrapper = styled.div<{ show: boolean }>`
   display: none;
   flex-direction: column;
   width: '100%';
   max-width: 600;
 
   @media screen and (min-width: ${BREAKPOINTS.lg}px) {
-    display: flex;
+    display: ${({ show }) => (show ? 'flex' : 'none')};
   }
 `
 

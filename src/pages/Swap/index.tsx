@@ -79,7 +79,7 @@ import {
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
-import { useExpertModeManager } from '../../state/user/hooks'
+import { useExpertModeManager, useGraphManager } from '../../state/user/hooks'
 import { LinkStyledButton, ThemedText } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
@@ -592,6 +592,9 @@ export default function Swap({ className, intro }: { className?: string; intro?:
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
   )
 
+  const { showGraph } = useGraphManager()
+  const _showGraph = showGraph() === 'true' ? true : false
+
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <>
@@ -606,7 +609,7 @@ export default function Swap({ className, intro }: { className?: string; intro?:
 
         <SwapPageWrapper>
           {!intro && (
-            <TokenInfoWrapper>
+            <TokenInfoWrapper show={_showGraph}>
               <TokenInfoContainer data-testid="token-info-container">
                 <TokenNameCell>
                   <CurrencyLogo currency={infoToken} size="32px" hideL2Icon={true} />

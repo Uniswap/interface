@@ -12,7 +12,7 @@ import styled, { useTheme } from 'styled-components/macro'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { useModalIsOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
-import { useClientSideRouter, useExpertModeManager } from '../../state/user/hooks'
+import { useClientSideRouter, useExpertModeManager, useGraphManager } from '../../state/user/hooks'
 import { ThemedText } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
@@ -133,6 +133,8 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
 
   const [clientSideRouter, setClientSideRouter] = useClientSideRouter()
 
+  const { showGraph, setShowGraph } = useGraphManager()
+
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
 
@@ -226,6 +228,23 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                 />
               </RowBetween>
             )}
+            <RowBetween>
+              <RowFixed>
+                <ThemedText.DeprecatedBlack fontWeight={400} fontSize={14} color={theme.textSecondary}>
+                  <Trans>Price graph</Trans>
+                </ThemedText.DeprecatedBlack>
+              </RowFixed>
+              <Toggle
+                id="toggle-optimized-router-button"
+                isActive={showGraph() === 'true' ? true : false}
+                toggle={() => {
+                  const _showGraph = showGraph() === 'true' ? true : false
+                  setShowGraph(!_showGraph)
+                  toggle()
+                }}
+              />
+            </RowBetween>
+
             <RowBetween>
               <RowFixed>
                 <ThemedText.DeprecatedBlack fontWeight={400} fontSize={14} color={theme.textSecondary}>

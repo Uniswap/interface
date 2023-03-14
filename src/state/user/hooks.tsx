@@ -5,7 +5,7 @@ import { L2_CHAIN_IDS } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import JSBI from 'jsbi'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { shallowEqual } from 'react-redux'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { UserAddedToken } from 'types/tokens'
@@ -101,6 +101,44 @@ export function useExpertModeManager(): [boolean, () => void] {
   }, [expertMode, dispatch])
 
   return [expertMode, toggleSetExpertMode]
+}
+
+export function useGraphManager() {
+  const key = 'show-price-graph'
+  const [storedValue, setStoredValue] = useState<any>({})
+
+  const showGraph = () => {
+    if (storedValue[key]) {
+      return storedValue[key]
+    }
+    if (typeof window === 'undefined') {
+      return 'true'
+    }
+    try {
+      const item = window.localStorage.getItem(key)
+      if (item === null) {
+        return 'true'
+      }
+      return item
+    } catch (error) {
+      return null
+    }
+  }
+
+  const setShowGraph = (value: any) => {
+    try {
+      const valueToStore = value instanceof Function ? value(storedValue) : value
+      setStoredValue(valueToStore)
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem(key, JSON.stringify(valueToStore))
+        setStoredValue({ ...storedValue, key: value })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  return { showGraph, setShowGraph }
 }
 
 export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean) => void] {
