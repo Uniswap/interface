@@ -116,10 +116,9 @@ function parseSwap(changes: TransactionChanges) {
 
     const title = changes.NftTransfer[0].direction === 'IN' ? t`Bought` : t`Sold`
     const descriptor = Object.entries(collectionCounts)
-      .reduce((acc, [collectionName, count]) => {
-        return acc + `${count} ${collectionName}, `
-      }, '')
-      .substring(0, -2)
+      .map(([collectionName, count]) => `${count} ${collectionName}`)
+      .join()
+
     return { title, descriptor }
   } else if (changes.TokenTransfer.length === 2) {
     const sent = changes.TokenTransfer.find((t) => t?.__typename === 'TokenTransfer' && t.direction === 'OUT')
@@ -183,12 +182,12 @@ function parseSendReceive(changes: TransactionChanges, assetActivity: AssetActiv
     return transfer.direction === 'IN'
       ? {
           title: t`Received`,
-          descriptor: t`${amount} ${assetName} from `,
+          descriptor: `${amount} ${assetName} ${t`from`} `,
           otherAccount: isAddress(transfer.sender) || undefined,
         }
       : {
           title: t`Sent`,
-          descriptor: `${amount} ${assetName} to `,
+          descriptor: `${amount} ${assetName} ${t`to`} `,
           otherAccount: isAddress(transfer.recipient) || undefined,
         }
   }
