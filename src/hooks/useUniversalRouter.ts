@@ -4,7 +4,7 @@ import { t } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -27,7 +27,7 @@ interface SwapOptions {
 
 export function useUniversalRouterSwapCallback(
   trade: Trade<Currency, Currency, TradeType> | undefined,
-  fiatValues: { amountIn: CurrencyAmount<Currency> | null; amountOut: CurrencyAmount<Currency> | null },
+  fiatValues: { amountIn: number | undefined; amountOut: number | undefined },
   options: SwapOptions
 ) {
   const { account, chainId, provider } = useWeb3React()

@@ -1,10 +1,12 @@
 import { Trans } from '@lingui/macro'
+import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { Currency, Price } from '@uniswap/sdk-core'
-import useStablecoinPrice from 'hooks/useStablecoinPrice'
+import { useUSDPrice } from 'hooks/useUSDPrice'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { formatDollar, formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
+import { formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
 
 interface TradePriceProps {
   price: Price<Currency, Currency>
@@ -30,7 +32,8 @@ const StyledPriceContainer = styled.button`
 export default function TradePrice({ price }: TradePriceProps) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
-  const usdcPrice = useStablecoinPrice(showInverted ? price.baseCurrency : price.quoteCurrency)
+  const { baseCurrency, quoteCurrency } = price
+  const { data: usdPrice } = useUSDPrice(tryParseCurrencyAmount('1', showInverted ? baseCurrency : quoteCurrency))
 
   let formattedPrice: string
   try {
@@ -56,9 +59,9 @@ export default function TradePrice({ price }: TradePriceProps) {
       title={text}
     >
       <ThemedText.BodySmall>{text}</ThemedText.BodySmall>{' '}
-      {usdcPrice && (
+      {usdPrice && (
         <ThemedText.DeprecatedDarkGray>
-          <Trans>({formatDollar({ num: priceToPreciseFloat(usdcPrice), isPrice: true })})</Trans>
+          <Trans>({formatNumber(usdPrice, NumberType.FiatTokenPrice)})</Trans>
         </ThemedText.DeprecatedDarkGray>
       )}
     </StyledPriceContainer>
