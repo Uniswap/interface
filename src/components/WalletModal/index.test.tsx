@@ -74,7 +74,7 @@ it('loads Wallet Modal on desktop with generic Injected', async () => {
   jest.spyOn(connectionUtils, 'getIsCoinbaseWallet').mockReturnValue(false)
 
   render(<WalletModal pendingTransactions={[]} confirmedTransactions={[]} />)
-  expect(screen.getByText('Browser Wallet')).toBeInTheDocument()
+  expect(screen.getByText('Browser wallet')).toBeInTheDocument()
   expect(screen.getByText('Coinbase Wallet')).toBeInTheDocument()
   expect(screen.getByText('WalletConnect')).toBeInTheDocument()
   expect(screen.getAllByTestId('wallet-modal-option')).toHaveLength(3)
