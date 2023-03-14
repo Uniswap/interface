@@ -36,6 +36,7 @@ const PopupContainer = styled.div<{ show: boolean; isDarkMode: boolean }>`
   height: 156px;
   bottom: 50px;
   @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    border-style: solid none;
     width: 100%;
     border-radius: 0;
     right: auto;
