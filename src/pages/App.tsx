@@ -6,7 +6,6 @@ import { MenuDropdown } from 'components/NavBar/MenuDropdown'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { STATSIG_DUMMY_KEY } from 'integrations'
 import { Box } from 'nft/components/Box'
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
@@ -16,6 +15,7 @@ import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
+import { STATSIG_DUMMY_KEY } from 'tracing'
 import { getEnvName } from 'utils/env'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
@@ -145,11 +145,14 @@ export default function App() {
   }, [pathname])
 
   useEffect(() => {
-    sendAnalyticsEvent(SharedEventName.APP_LOADED)
+    // User properties *must* be set before sending corresponding event properties,
+    // so that the event contains the correct and up-to-date user properties.
     user.set(CustomUserProperties.USER_AGENT, navigator.userAgent)
     user.set(CustomUserProperties.BROWSER, getBrowser())
     user.set(CustomUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
     user.set(CustomUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
+
+    sendAnalyticsEvent(SharedEventName.APP_LOADED)
     getCLS(({ delta }: Metric) => sendAnalyticsEvent(SharedEventName.WEB_VITALS, { cumulative_layout_shift: delta }))
     getFCP(({ delta }: Metric) => sendAnalyticsEvent(SharedEventName.WEB_VITALS, { first_contentful_paint_ms: delta }))
     getFID(({ delta }: Metric) => sendAnalyticsEvent(SharedEventName.WEB_VITALS, { first_input_delay_ms: delta }))

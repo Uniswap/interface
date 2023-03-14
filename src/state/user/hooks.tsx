@@ -18,6 +18,7 @@ import {
   addSerializedPair,
   addSerializedToken,
   updateHideClosedPositions,
+  updateTaxServiceAcknowledgments,
   updateUserClientSideRouter,
   updateUserDarkMode,
   updateUserDeadline,
@@ -90,6 +91,18 @@ export function useUserLocaleManager(): [SupportedLocale | null, (newLocale: Sup
 
 export function useIsExpertMode(): boolean {
   return useAppSelector((state) => state.user.userExpertMode)
+}
+
+export function useTaxServiceDismissal(): [number, (dismissals: number) => void] {
+  const dispatch = useAppDispatch()
+  const taxServiceDismissals = useAppSelector((state) => state.user.taxServiceDismissals)
+  const setDismissals = useCallback(
+    (dismissals: number) => {
+      dispatch(updateTaxServiceAcknowledgments({ taxServiceDismissals: dismissals }))
+    },
+    [dispatch]
+  )
+  return [taxServiceDismissals, setDismissals]
 }
 
 export function useExpertModeManager(): [boolean, () => void] {

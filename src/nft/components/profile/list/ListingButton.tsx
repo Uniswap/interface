@@ -7,7 +7,7 @@ import { Listing, WalletAsset } from 'nft/types'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
-import shallow from 'zustand/shallow'
+import { shallow } from 'zustand/shallow'
 
 const BELOW_FLOOR_PRICE_THRESHOLD = 0.8
 

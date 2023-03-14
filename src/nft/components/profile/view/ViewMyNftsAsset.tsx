@@ -2,19 +2,12 @@ import { Trans } from '@lingui/macro'
 import { useTrace } from '@uniswap/analytics'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
-import { MouseoverTooltip } from 'components/Tooltip'
-import Tooltip from 'components/Tooltip'
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
-import { Box } from 'nft/components/Box'
-import * as Card from 'nft/components/collection/Card'
-import { AssetMediaType } from 'nft/components/collection/Card'
-import { bodySmall } from 'nft/css/common.css'
-import { themeVars } from 'nft/css/sprinkles.css'
+import { NftCard, NftCardDisplayProps } from 'nft/components/card'
+import { VerifiedIcon } from 'nft/components/icons'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
-import { useEffect, useMemo, useRef, useState } from 'react'
-
-const TOOLTIP_TIMEOUT = 2000
+import { useMemo } from 'react'
 
 interface ViewMyNftsAssetProps {
   asset: WalletAsset
@@ -22,31 +15,6 @@ interface ViewMyNftsAssetProps {
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
   hideDetails: boolean
 }
-
-const getNftDisplayComponent = (
-  assetMediaType: AssetMediaType,
-  mediaShouldBePlaying: boolean,
-  setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
-) => {
-  switch (assetMediaType) {
-    case AssetMediaType.Image:
-      return <Card.Image />
-    case AssetMediaType.Video:
-      return <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
-    case AssetMediaType.Audio:
-      return <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
-  }
-}
-
-const getUnsupportedNftTextComponent = (asset: WalletAsset) => (
-  <Box as="span" className={bodySmall} style={{ color: themeVars.colors.textPrimary }}>
-    {asset.asset_contract.tokenType === NftStandard.Erc1155 ? (
-      <Trans>Selling ERC-1155s coming soon</Trans>
-    ) : (
-      <Trans>Blocked from trading</Trans>
-    )}
-  </Box>
-)
 
 export const ViewMyNftsAsset = ({
   asset,
@@ -67,8 +35,6 @@ export const ViewMyNftsAsset = ({
     )
   }, [asset, sellAssets])
 
-  const [showTooltip, setShowTooltip] = useState(false)
-  const isSelectedRef = useRef(isSelected)
   const trace = useTrace()
   const onCardClick = () => handleSelect(isSelected)
 
@@ -93,65 +59,32 @@ export const ViewMyNftsAsset = ({
       toggleCart()
   }
 
-  useEffect(() => {
-    if (isSelected !== isSelectedRef.current) {
-      setShowTooltip(true)
-      isSelectedRef.current = isSelected
-      const tooltipTimer = setTimeout(() => {
-        setShowTooltip(false)
-      }, TOOLTIP_TIMEOUT)
-
-      return () => {
-        clearTimeout(tooltipTimer)
-      }
-    }
-    isSelectedRef.current = isSelected
-    return undefined
-  }, [isSelected, isSelectedRef])
-
-  const assetMediaType = Card.useAssetMediaType(asset)
   const isDisabled = asset.asset_contract.tokenType === NftStandard.Erc1155 || asset.susFlag
 
+  const display: NftCardDisplayProps = useMemo(() => {
+    return {
+      primaryInfo: !!asset.asset_contract.name && asset.asset_contract.name,
+      primaryInfoIcon: asset.collectionIsVerified && <VerifiedIcon height="16px" width="16px" />,
+      secondaryInfo: asset.name || asset.tokenId ? asset.name ?? `#${asset.tokenId}` : null,
+      selectedInfo: <Trans>Remove from bag</Trans>,
+      notSelectedInfo: <Trans>List for sale</Trans>,
+      disabledInfo: <Trans>Unavailable for listing</Trans>,
+    }
+  }, [asset.asset_contract.name, asset.collectionIsVerified, asset.name, asset.tokenId])
+
   return (
-    <Card.Container
+    <NftCard
       asset={asset}
-      selected={isSelected}
-      addAssetToBag={() => handleSelect(false)}
-      removeAssetFromBag={() => handleSelect(true)}
+      display={display}
+      isSelected={isSelected}
+      isDisabled={Boolean(isDisabled)}
+      selectAsset={() => handleSelect(false)}
+      unselectAsset={() => handleSelect(true)}
       onClick={onCardClick}
-      isDisabled={isDisabled}
-    >
-      <Card.ImageContainer isDisabled={isDisabled}>
-        <Tooltip
-          text={
-            <Box as="span" className={bodySmall} color="textPrimary">
-              {isSelected ? <Trans>Added to bag</Trans> : <Trans>Removed from bag</Trans>}
-            </Box>
-          }
-          show={showTooltip}
-          style={{ display: 'block' }}
-          offsetX={0}
-          offsetY={-68}
-          hideArrow={true}
-          placement="bottom"
-        >
-          <MouseoverTooltip
-            text={getUnsupportedNftTextComponent(asset)}
-            placement="bottom"
-            offsetX={0}
-            offsetY={-60}
-            hideArrow={true}
-            style={{ display: 'block' }}
-            disableHover={!isDisabled}
-            timeout={isMobile ? TOOLTIP_TIMEOUT : undefined}
-          >
-            {getNftDisplayComponent(assetMediaType, mediaShouldBePlaying, setCurrentTokenPlayingMedia)}
-          </MouseoverTooltip>
-        </Tooltip>
-      </Card.ImageContainer>
-      <Card.DetailsContainer>
-        <Card.ProfileNftDetails asset={asset} hideDetails={hideDetails} />
-      </Card.DetailsContainer>
-    </Card.Container>
+      mediaShouldBePlaying={mediaShouldBePlaying}
+      setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+      testId="nft-profile-asset"
+      doNotLinkToDetails={hideDetails}
+    />
   )
 }

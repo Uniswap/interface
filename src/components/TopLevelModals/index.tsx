@@ -5,7 +5,10 @@ import FiatOnrampModal from 'components/FiatOnrampModal'
 import TaxServiceBanner from 'components/TaxServiceModal/TaxServiceBanner'
 import { useTaxServiceBannerEnabled } from 'featureFlags/flags/taxServiceBanner'
 import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
+import { useIsNftPage } from 'hooks/useIsNftPage'
+import { useIsPoolPage } from 'hooks/useIsPoolPage'
 import { lazy } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 
@@ -22,6 +25,12 @@ export default function TopLevelModals() {
   const accountBlocked = Boolean(blockedAccountModalOpen && account)
   const taxServiceEnabled = useTaxServiceBannerEnabled()
 
+  const { pathname } = useLocation()
+  const isNftPage = useIsNftPage()
+  const isPoolPage = useIsPoolPage()
+
+  const isTaxModalServicePage = isNftPage || isPoolPage || pathname.startsWith('/swap')
+
   return (
     <>
       <AddressClaimModal isOpen={addressClaimOpen} onDismiss={addressClaimToggle} />
@@ -30,7 +39,7 @@ export default function TopLevelModals() {
       <TransactionCompleteModal />
       <AirdropModal />
       <FiatOnrampModal />
-      {taxServiceEnabled && <TaxServiceBanner />}
+      {taxServiceEnabled && isTaxModalServicePage && <TaxServiceBanner />}
     </>
   )
 }

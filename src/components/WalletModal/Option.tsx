@@ -75,15 +75,15 @@ const SubHeader = styled.div`
   font-size: 12px;
 `
 
-const IconWrapper = styled.div<{ size?: number | null }>`
+const IconWrapper = styled.div`
   ${flexColumnNoWrap};
   align-items: center;
   justify-content: center;
   padding-right: 12px;
   & > img,
   span {
-    height: ${({ size }) => (size ? size + 'px' : '28px')};
-    width: ${({ size }) => (size ? size + 'px' : '28px')};
+    height: 40px;
+    width: 40px;
   }
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     align-items: flex-end;
@@ -93,7 +93,6 @@ const IconWrapper = styled.div<{ size?: number | null }>`
 export default function Option({
   link = null,
   clickable = true,
-  size,
   onClick = null,
   color,
   header,
@@ -104,7 +103,6 @@ export default function Option({
 }: {
   link?: string | null
   clickable?: boolean
-  size?: number | null
   onClick?: null | (() => void)
   color: string
   header: React.ReactNode
@@ -129,7 +127,7 @@ export default function Option({
       >
         <OptionCardLeft>
           <HeaderText color={color}>
-            <IconWrapper size={size}>
+            <IconWrapper>
               <img src={icon} alt="Icon" />
             </IconWrapper>
             {header}

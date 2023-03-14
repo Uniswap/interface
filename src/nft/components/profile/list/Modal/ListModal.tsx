@@ -16,7 +16,7 @@ import { X } from 'react-feather'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
-import shallow from 'zustand/shallow'
+import { shallow } from 'zustand/shallow'
 
 import { TitleRow } from '../shared'
 import { ListModalSection, Section } from './ListModalSection'

@@ -57,7 +57,7 @@ function useCollectionQuerySearch(query: string, skip?: boolean): useCollectionS
     variables: {
       query,
     },
-    skip,
+    skip: skip || !query,
   })
 
   return useMemo(() => {
