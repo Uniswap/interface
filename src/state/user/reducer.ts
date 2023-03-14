@@ -9,7 +9,7 @@ import { SerializedPair, SerializedToken } from './types'
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
-  fiatOnrampAcknowledgments: { renderCount: number; system: boolean; user: boolean }
+  taxServiceAcknowledgments: number
 
   selectedWallet?: ConnectionType
 
@@ -60,7 +60,7 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
-  fiatOnrampAcknowledgments: { renderCount: 0, system: false, user: false },
+  taxServiceAcknowledgments: 0,
   selectedWallet: undefined,
   matchesDarkMode: false,
   userDarkMode: null,
@@ -82,6 +82,10 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    updateTaxServiceAcknowledgments(state, action) {
+      state.taxServiceAcknowledgments = action.payload.taxServiceAcknowledgments
+      state.timestamp = currentTimestamp()
+    },
     updateSelectedWallet(state, { payload: { wallet } }) {
       state.selectedWallet = wallet
     },
@@ -175,6 +179,7 @@ const userSlice = createSlice({
 export const {
   addSerializedPair,
   addSerializedToken,
+  updateTaxServiceAcknowledgments,
   updateSelectedWallet,
   updateHideClosedPositions,
   updateMatchesDarkMode,

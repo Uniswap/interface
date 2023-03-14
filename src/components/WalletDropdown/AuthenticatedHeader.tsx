@@ -21,7 +21,7 @@ import { useNavigate } from 'react-router-dom'
 import { useCurrencyBalanceString } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
-import styled, { css, keyframes } from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 
 import { shortenAddress } from '../../nft/utils/address'
@@ -31,21 +31,6 @@ import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/cl
 import StatusIcon from '../Identicon/StatusIcon'
 import IconButton, { IconHoverText } from './IconButton'
 
-const BuyCryptoButtonBorderKeyframes = keyframes`
-  0% {
-    border-color: transparent;
-  }
-  33% {
-    border-color: hsla(225, 95%, 63%, 1);
-  }
-  66% {
-    border-color: hsla(267, 95%, 63%, 1);
-  }
-  100% {
-    border-color: transparent;
-  }
-`
-
 const BuyCryptoButton = styled(ThemeButton)`
   border-color: transparent;
   border-radius: 12px;
@@ -53,12 +38,6 @@ const BuyCryptoButton = styled(ThemeButton)`
   border-width: 1px;
   height: 40px;
   margin-top: 8px;
-  animation-direction: alternate;
-  animation-duration: ${({ theme }) => theme.transition.duration.slow};
-  animation-fill-mode: none;
-  animation-iteration-count: 2;
-  animation-name: ${BuyCryptoButtonBorderKeyframes};
-  animation-timing-function: ${({ theme }) => theme.transition.timing.inOut};
 `
 const WalletButton = styled(ThemeButton)`
   border-radius: 12px;
