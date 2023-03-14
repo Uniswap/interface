@@ -6,6 +6,7 @@ import { ArrowUpRight } from 'react-feather'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, HideSmall } from 'theme'
+import { colors } from 'theme/colors'
 
 import { AutoRow } from '../Row'
 
@@ -140,7 +141,7 @@ const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
   [SupportedChainId.OPTIMISM]: '#ff3856',
   [SupportedChainId.OPTIMISM_GOERLI]: '#ff3856',
   [SupportedChainId.ARBITRUM_ONE]: '#0490ed',
-  [SupportedChainId.BNB]: '#F0B90B',
+  [SupportedChainId.BNB]: colors.gold200,
   [SupportedChainId.ARBITRUM_GOERLI]: '#0490ed',
 }
 
