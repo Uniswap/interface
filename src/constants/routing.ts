@@ -101,6 +101,9 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDC_BSC,
     USDT_BSC,
     BUSD_BSC,
+    FRAX_BSC,
+    MATIC_BSC,
+    CAKE_BSC,
   ],
   [SupportedChainId.CELO]: [CUSD_CELO, CEUR_CELO, CMC02_CELO, PORTAL_USDC_CELO, PORTAL_ETH_CELO],
 }
@@ -115,13 +118,6 @@ export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: To
     [FXS.address]: [FRAX],
     [WBTC.address]: [renBTC],
     [renBTC.address]: [WBTC],
-  },
-  [SupportedChainId.BNB]: {
-    [ETH_BSC.address]: [ETH_BSC],
-    [BTC_BSC.address]: [BTC_BSC],
-    [FRAX_BSC.address]: [FRAX_BSC],
-    [MATIC_BSC.address]: [MATIC_BSC],
-    [CAKE_BSC.address]: [CAKE_BSC],
   },
 }
 /**
