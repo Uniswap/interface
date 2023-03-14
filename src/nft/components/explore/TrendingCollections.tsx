@@ -1,4 +1,7 @@
 import { OpacityHoverState } from 'components/Common'
+import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
+import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
+import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import ms from 'ms.macro'
 import { CollectionTableColumn, Denomination, TimePeriod, VolumeType } from 'nft/types'
 import { fetchPrice } from 'nft/utils'
@@ -29,7 +32,7 @@ const StyledHeader = styled.div`
   color: ${({ theme }) => theme.textPrimary};
   font-size: 36px;
   line-height: 44px;
-  weight: 500;
+  font-weight: 500;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     font-size: 20px;
@@ -69,9 +72,25 @@ const StyledSelectorText = styled(ThemedText.SubHeader)<{ active: boolean }>`
   color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
 `
 
+function convertTimePeriodToHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
+  switch (timePeriod) {
+    case TimePeriod.OneDay:
+      return HistoryDuration.Day
+    case TimePeriod.SevenDays:
+      return HistoryDuration.Week
+    case TimePeriod.ThirtyDays:
+      return HistoryDuration.Month
+    case TimePeriod.AllTime:
+      return HistoryDuration.Max
+    default:
+      return HistoryDuration.Day
+  }
+}
+
 const TrendingCollections = () => {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.OneDay)
   const [isEthToggled, setEthToggled] = useState(true)
+  const isNftGraphqlEnabled = useNftGraphqlEnabled()
 
   const { isSuccess, data } = useQuery(
     ['trendingCollections', timePeriod],
@@ -86,6 +105,8 @@ const TrendingCollections = () => {
     }
   )
 
+  const { data: gqlData, loading } = useTrendingCollections(100, convertTimePeriodToHistoryDuration(timePeriod))
+
   const { data: usdPrice } = useQuery(['fetchPrice', {}], () => fetchPrice(), {
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
@@ -94,8 +115,10 @@ const TrendingCollections = () => {
   })
 
   const trendingCollections = useMemo(() => {
-    if (isSuccess && data) {
-      return data.map((d) => ({
+    const gatedData = isNftGraphqlEnabled ? gqlData : data
+    const dataLoaded = isNftGraphqlEnabled ? !loading : isSuccess
+    if (dataLoaded && gatedData) {
+      return gatedData.map((d) => ({
         ...d,
         collection: {
           name: d.name,
@@ -114,7 +137,6 @@ const TrendingCollections = () => {
         },
         owners: {
           value: d.owners,
-          change: d.ownersChange,
         },
         sales: d.sales,
         totalSupply: d.totalSupply,
@@ -122,7 +144,7 @@ const TrendingCollections = () => {
         usdPrice,
       }))
     } else return [] as CollectionTableColumn[]
-  }, [data, isSuccess, isEthToggled, usdPrice])
+  }, [isNftGraphqlEnabled, gqlData, data, loading, isSuccess, isEthToggled, usdPrice])
 
   return (
     <ExploreContainer>

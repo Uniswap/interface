@@ -1,10 +1,9 @@
 import '@reach/dialog/styles.css'
 import 'inter-ui'
 import 'polyfills'
-import 'components/analytics'
+import 'tracing'
 
 import { ApolloProvider } from '@apollo/client'
-import * as Sentry from '@sentry/react'
 import { FeatureFlagsProvider } from 'featureFlags'
 import { apolloClient } from 'graphql/data/apollo'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
@@ -14,7 +13,6 @@ import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
-import { isSentryEnabled } from 'utils/env'
 
 import Web3Provider from './components/Web3Provider'
 import { LanguageProvider } from './i18n'
@@ -31,13 +29,6 @@ import RadialGradientByChainUpdater from './theme/components/RadialGradientByCha
 
 if (window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false
-}
-
-if (isSentryEnabled()) {
-  Sentry.init({
-    dsn: process.env.REACT_APP_SENTRY_DSN,
-    release: process.env.REACT_APP_GIT_COMMIT_HASH,
-  })
 }
 
 function Updaters() {

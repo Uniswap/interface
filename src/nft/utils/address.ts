@@ -9,7 +9,7 @@ import { isAddress } from '@ethersproject/address'
  */
 export function shortenAddress(address: string, charsStart = 4, charsEnd?: number): string {
   const parsed = isAddress(address)
-  if (!parsed) throw Error(`Invalid 'address' parameter '${address}'.`)
+  if (!parsed) return ''
 
   return `${address.substring(0, charsStart + 2)}...${address.substring(42 - (charsEnd || charsStart))}`
 }

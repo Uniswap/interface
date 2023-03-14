@@ -62,7 +62,7 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.CELO]: Chain.Celo,
   [SupportedChainId.CELO_ALFAJORES]: Chain.Celo,
   [SupportedChainId.ARBITRUM_ONE]: Chain.Arbitrum,
-  [SupportedChainId.ARBITRUM_RINKEBY]: Chain.Arbitrum,
+  [SupportedChainId.ARBITRUM_GOERLI]: Chain.Arbitrum,
   [SupportedChainId.OPTIMISM]: Chain.Optimism,
   [SupportedChainId.OPTIMISM_GOERLI]: Chain.Optimism,
 }
@@ -71,6 +71,18 @@ export function chainIdToBackendName(chainId: number | undefined) {
   return chainId && CHAIN_ID_TO_BACKEND_NAME[chainId]
     ? CHAIN_ID_TO_BACKEND_NAME[chainId]
     : CHAIN_ID_TO_BACKEND_NAME[SupportedChainId.MAINNET]
+}
+
+const GQL_CHAINS: number[] = [
+  SupportedChainId.MAINNET,
+  SupportedChainId.OPTIMISM,
+  SupportedChainId.POLYGON,
+  SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.CELO,
+]
+
+export function isGqlSupportedChain(chainId: number | undefined): chainId is SupportedChainId {
+  return !!chainId && GQL_CHAINS.includes(chainId)
 }
 
 const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {

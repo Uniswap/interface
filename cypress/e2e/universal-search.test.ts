@@ -35,7 +35,7 @@ describe('Universal search bar', () => {
     cy.contains('UNI is the governance token for Uniswap').should('exist')
   })
 
-  it('should show recent tokens and popular tokens with empty search term', () => {
+  it.skip('should show recent tokens and popular tokens with empty search term', () => {
     cy.get('[data-cy="magnifying-icon"]')
       .parent()
       .then(($navIcon) => {

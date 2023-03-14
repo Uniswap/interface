@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-// eslint-disable-next-line no-restricted-imports
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -12,6 +11,7 @@ import { BREAKPOINTS } from 'theme'
 
 import { Dropdown } from './Dropdown'
 import { NFTListRow } from './NFTListRow'
+import { SetPriceMethod } from './shared'
 
 const TableHeader = styled.div`
   display: flex;
@@ -142,13 +142,6 @@ const RowDivider = styled.hr`
   margin: 0;
   border-color: ${({ theme }) => theme.backgroundInteractive};
 `
-
-export enum SetPriceMethod {
-  SAME_PRICE,
-  FLOOR_PRICE,
-  LAST_PRICE,
-  CUSTOM,
-}
 
 export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingMarket[] }) => {
   const sellAssets = useSellAsset((state) => state.sellAssets)

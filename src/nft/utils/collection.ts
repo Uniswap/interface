@@ -22,3 +22,9 @@ export const isInSameSudoSwapPool = (assetA: GenieAsset, assetB: GenieAsset): bo
 export const isInSameMarketplaceCollection = (assetA: GenieAsset, assetB: GenieAsset): boolean => {
   return assetA.address === assetB.address && assetA.marketplace === assetB.marketplace
 }
+
+export const blocklistedCollections = [
+  '0xd5eeac01b0d1d929d6cffaaf78020af137277293',
+  '0x85c08fffa9510f87019efdcf986301873cbb10d6',
+  '0x32d7e58933fceea6b73a13f8e30605d80915b616',
+]

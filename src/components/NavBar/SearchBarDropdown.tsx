@@ -2,7 +2,9 @@ import { Trans } from '@lingui/macro'
 import { useTrace } from '@uniswap/analytics'
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { SafetyLevel } from 'graphql/data/__generated__/types-and-hooks'
+import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
+import { HistoryDuration, SafetyLevel } from 'graphql/data/__generated__/types-and-hooks'
+import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import useTrendingTokens from 'graphql/data/TrendingTokens'
 import { useIsNftPage } from 'hooks/useIsNftPage'
@@ -56,7 +58,7 @@ const SearchBarDropdownSection = ({
       </Row>
       <Column gap="12">
         {suggestions.map((suggestion, index) =>
-          isLoading ? (
+          isLoading || !suggestion ? (
             <SkeletonRow key={index} />
           ) : isCollection(suggestion) ? (
             <CollectionRow
@@ -123,6 +125,7 @@ export const SearchBarDropdown = ({
 
   const { pathname } = useLocation()
   const isNFTPage = useIsNftPage()
+  const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const isTokenPage = pathname.includes('/tokens')
   const [resultsState, setResultsState] = useState<ReactNode>()
 
@@ -131,24 +134,25 @@ export const SearchBarDropdown = ({
     () => fetchTrendingCollections({ volumeType: 'eth', timePeriod: 'ONE_DAY' as TimePeriod, size: 3 })
   )
 
-  const trendingCollections = useMemo(
-    () =>
-      trendingCollectionResults
-        ? trendingCollectionResults
-            .map((collection) => ({
-              ...collection,
-              collectionAddress: collection.address,
-              floorPrice: formatEthPrice(collection.floor?.toString()),
-              stats: {
-                total_supply: collection.totalSupply,
-                one_day_change: collection.floorChange,
-                floor_price: formatEthPrice(collection.floor?.toString()),
-              },
-            }))
-            .slice(0, isNFTPage ? 3 : 2)
-        : [...Array<GenieCollection>(isNFTPage ? 3 : 2)],
-    [isNFTPage, trendingCollectionResults]
-  )
+  const { data: gqlData, loading } = useTrendingCollections(3, HistoryDuration.Day)
+
+  const trendingCollections = useMemo(() => {
+    const gatedTrendingCollections = isNftGraphqlEnabled ? gqlData : trendingCollectionResults
+    return gatedTrendingCollections && (!isNftGraphqlEnabled || !loading)
+      ? gatedTrendingCollections
+          .map((collection) => ({
+            ...collection,
+            collectionAddress: collection.address,
+            floorPrice: isNftGraphqlEnabled ? collection.floor : formatEthPrice(collection.floor?.toString()),
+            stats: {
+              total_supply: collection.totalSupply,
+              one_day_change: collection.floorChange,
+              floor_price: isNftGraphqlEnabled ? collection.floor : formatEthPrice(collection.floor?.toString()),
+            },
+          }))
+          .slice(0, isNFTPage ? 3 : 2)
+      : [...Array<GenieCollection>(isNFTPage ? 3 : 2)]
+  }, [gqlData, isNFTPage, isNftGraphqlEnabled, loading, trendingCollectionResults])
 
   const { data: trendingTokenData } = useTrendingTokens(useWeb3React().chainId)
 

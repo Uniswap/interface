@@ -1,7 +1,10 @@
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfaceSectionName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, Field, SwapController, SwapEventHandlers, TradeType } from '@uniswap/widgets'
+import { useWeb3React } from '@web3-react/core'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import { isSupportedChain } from 'constants/chains'
+import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 const EMPTY_AMOUNT = ''
@@ -13,6 +16,25 @@ export type DefaultTokens = Partial<SwapTokens>
 function missingDefaultToken(tokens: SwapTokens) {
   if (!tokens.default) return false
   return !tokens[Field.INPUT]?.equals(tokens.default) && !tokens[Field.OUTPUT]?.equals(tokens.default)
+}
+
+function currenciesEqual(a: Currency | undefined, b: Currency | undefined) {
+  if (a && b) {
+    return a.equals(b)
+  } else {
+    return !a && !b
+  }
+}
+
+function tokensEqual(a: SwapTokens | undefined, b: SwapTokens | undefined) {
+  if (!a || !b) {
+    return !a && !b
+  }
+  return (
+    currenciesEqual(a[Field.INPUT], b[Field.INPUT]) &&
+    currenciesEqual(a[Field.OUTPUT], b[Field.OUTPUT]) &&
+    currenciesEqual(a.default, b.default)
+  )
 }
 
 /**
@@ -29,23 +51,33 @@ export function useSyncWidgetInputs({
 }) {
   const trace = useTrace({ section: InterfaceSectionName.WIDGET })
 
+  const { chainId } = useWeb3React()
+  const previousChainId = usePrevious(chainId)
+
   const [type, setType] = useState<SwapValue['type']>(TradeType.EXACT_INPUT)
   const [amount, setAmount] = useState<SwapValue['amount']>(EMPTY_AMOUNT)
-  const [tokens, setTokens] = useState<SwapTokens>(defaultTokens)
+  const [tokens, setTokens] = useState<SwapTokens>({
+    ...defaultTokens,
+    [Field.OUTPUT]: defaultTokens[Field.OUTPUT] ?? defaultTokens.default,
+  })
 
+  // The most recent set of defaults, which can be used to check when the defaults are actually changing.
+  const baseTokens = usePrevious(defaultTokens)
   useEffect(() => {
-    if (!tokens[Field.INPUT] && !tokens[Field.OUTPUT]) {
-      setTokens((tokens) => {
-        const update = {
-          ...tokens,
-          [Field.INPUT]: defaultTokens[Field.INPUT] ?? tokens[Field.INPUT],
-          [Field.OUTPUT]: defaultTokens[Field.OUTPUT] ?? tokens[Field.OUTPUT] ?? defaultTokens.default,
-          default: defaultTokens.default,
-        }
-        return update
+    if (!tokensEqual(baseTokens, defaultTokens)) {
+      setTokens({
+        ...defaultTokens,
+        [Field.OUTPUT]: defaultTokens[Field.OUTPUT] ?? defaultTokens.default,
       })
     }
-  }, [defaultTokens, tokens])
+  }, [baseTokens, defaultTokens])
+
+  useEffect(() => {
+    if (chainId !== previousChainId && !!previousChainId && isSupportedChain(chainId)) {
+      setTokens(defaultTokens)
+      setAmount(EMPTY_AMOUNT)
+    }
+  }, [chainId, defaultTokens, previousChainId, tokens])
 
   const onAmountChange = useCallback(
     (field: Field, amount: string, origin?: 'max') => {
@@ -103,6 +135,7 @@ export function useSyncWidgetInputs({
 
       if (missingDefaultToken(update)) {
         onDefaultTokenChange?.(update[Field.OUTPUT] ?? selectingToken)
+        return
       }
       setTokens(update)
     },

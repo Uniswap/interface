@@ -63,7 +63,7 @@ export function getConnectionName(
 ) {
   switch (connectionType) {
     case ConnectionType.INJECTED:
-      return hasMetaMaskExtension ? 'MetaMask' : 'Browser Wallet'
+      return hasMetaMaskExtension ? 'MetaMask' : 'Browser wallet'
     case ConnectionType.COINBASE_WALLET:
       return 'Coinbase Wallet'
     case ConnectionType.WALLET_CONNECT:

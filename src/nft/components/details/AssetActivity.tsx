@@ -1,10 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { OpacityHoverState, ScrollBarStyles } from 'components/Common'
 import { LoadingBubble } from 'components/Tokens/loading'
+import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
 import { EventCell, MarketplaceIcon } from 'nft/components/collection/ActivityCells'
-import { ActivityEventResponse } from 'nft/types'
+import { ActivityEvent } from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
-import { formatEthPrice } from 'nft/utils/currency'
+import { formatEth, formatEthPrice } from 'nft/utils/currency'
 import { getTimeDifference } from 'nft/utils/date'
 import { putCommas } from 'nft/utils/putCommas'
 import { ReactNode } from 'react'
@@ -147,14 +148,19 @@ export const LoadingAssetActivity = ({ rowCount }: { rowCount: number }) => {
   )
 }
 
-const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | undefined }) => {
+const AssetActivity = ({ events }: { events: ActivityEvent[] | undefined }) => {
+  const isNftGraphqlEnabled = useNftGraphqlEnabled()
   return (
     <ActivityTable>
-      {eventsData?.events &&
-        eventsData.events.map((event, index) => {
+      {events &&
+        events.map((event, index) => {
           const { eventTimestamp, eventType, fromAddress, marketplace, price, toAddress, transactionHash } = event
-          const formattedPrice = price ? putCommas(formatEthPrice(price)).toString() : null
-
+          const formattedPrice = price
+            ? isNftGraphqlEnabled
+              ? formatEth(parseFloat(price ?? ''))
+              : putCommas(formatEthPrice(price)).toString()
+            : null
+          if (!eventType) return null
           return (
             <TR key={index}>
               <TD>
@@ -189,7 +195,7 @@ const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | und
                   </Link>
                 )}
               </TD>
-              <TD>{eventTimestamp && getTimeDifference(eventTimestamp.toString())}</TD>
+              <TD>{eventTimestamp && getTimeDifference(eventTimestamp.toString(), isNftGraphqlEnabled)}</TD>
             </TR>
           )
         })}

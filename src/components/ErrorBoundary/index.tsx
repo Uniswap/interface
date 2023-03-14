@@ -1,10 +1,13 @@
 import { Trans } from '@lingui/macro'
 import * as Sentry from '@sentry/react'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { SwapEventName } from '@uniswap/analytics-events'
 import { ButtonLight, SmallButtonPrimary } from 'components/Button'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
 import React, { PropsWithChildren, useState } from 'react'
 import { Copy } from 'react-feather'
+import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { isSentryEnabled } from 'utils/env'
 
@@ -217,13 +220,19 @@ const updateServiceWorkerInBackground = async () => {
 }
 
 export default function ErrorBoundary({ children }: PropsWithChildren): JSX.Element {
+  const { pathname } = useLocation()
   return (
     <Sentry.ErrorBoundary
       fallback={({ error, eventId }) => <Fallback error={error} eventId={eventId} />}
       beforeCapture={(scope) => {
         scope.setLevel('fatal')
       }}
-      onError={updateServiceWorkerInBackground}
+      onError={(error) => {
+        updateServiceWorkerInBackground()
+        if (pathname === '/swap') {
+          sendAnalyticsEvent(SwapEventName.SWAP_ERROR, { error })
+        }
+      }}
     >
       {children}
     </Sentry.ErrorBoundary>
