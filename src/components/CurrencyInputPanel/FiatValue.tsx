@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
-import { formatNumber, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
-import { Percent } from '@uniswap/sdk-core'
+import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
+import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled, { useTheme } from 'styled-components/macro'
 
 import { ThemedText } from '../../theme'
@@ -20,9 +20,11 @@ const FiatLoadingBubble = styled(LoadingBubble)`
 export function FiatValue({
   fiatValue,
   priceImpact,
+  isLoading = false,
 }: {
-  fiatValue?: { data?: number; isLoading: boolean }
+  fiatValue: CurrencyAmount<Currency> | null | undefined
   priceImpact?: Percent
+  isLoading?: boolean
 }) {
   const theme = useTheme()
   const priceImpactColor = useMemo(() => {
@@ -33,14 +35,27 @@ export function FiatValue({
     if (severity < 3) return theme.deprecated_yellow1
     return theme.accentFailure
   }, [priceImpact, theme.accentSuccess, theme.accentFailure, theme.textTertiary, theme.deprecated_yellow1])
+  const [showLoadingPlaceholder, setShowLoadingPlaceholder] = useState(false)
+  useEffect(() => {
+    const stale = false
+    let timeoutId = 0
+    if (isLoading && !fiatValue) {
+      timeoutId = setTimeout(() => {
+        if (!stale) setShowLoadingPlaceholder(true)
+      }, 200) as unknown as number
+    } else {
+      setShowLoadingPlaceholder(false)
+    }
+    return () => clearTimeout(timeoutId)
+  }, [isLoading, fiatValue])
 
   return (
     <ThemedText.DeprecatedBody fontSize={14} color={theme.textSecondary}>
-      {fiatValue?.isLoading ? (
+      {showLoadingPlaceholder ? (
         <FiatLoadingBubble />
       ) : (
         <div>
-          {fiatValue?.data ? formatNumber(fiatValue.data, NumberType.FiatTokenPrice) : undefined}
+          {fiatValue ? <>{formatCurrencyAmount(fiatValue, NumberType.FiatTokenPrice)}</> : undefined}
           {priceImpact && (
             <span style={{ color: priceImpactColor }}>
               {' '}

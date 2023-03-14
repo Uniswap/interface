@@ -62,7 +62,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   const isSyncing = currentData !== data
 
   return useMemo(() => {
-    if (!currencyIn || !currencyOut || currencyIn.equals(currencyOut)) {
+    if (!currencyIn || !currencyOut) {
       return {
         state: TradeState.INVALID,
         trade: undefined,

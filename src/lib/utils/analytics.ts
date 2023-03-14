@@ -40,7 +40,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   txHash,
 }: {
   trade: InterfaceTrade<Currency, Currency, TradeType> | Trade<Currency, Currency, TradeType>
-  fiatValues: { amountIn: number | undefined; amountOut: number | undefined }
+  fiatValues: { amountIn: CurrencyAmount<Currency> | null; amountOut: CurrencyAmount<Currency> | null }
   txHash: string
 }) => ({
   transaction_hash: txHash,
@@ -50,8 +50,8 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   token_out_symbol: trade.outputAmount.currency.symbol,
   token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
   token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
-  token_in_amount_usd: fiatValues.amountIn,
-  token_out_amount_usd: fiatValues.amountOut,
+  token_in_amount_usd: fiatValues.amountIn ? parseFloat(fiatValues.amountIn.toFixed(2)) : undefined,
+  token_out_amount_usd: fiatValues.amountOut ? parseFloat(fiatValues.amountOut.toFixed(2)) : undefined,
   price_impact_basis_points: formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)),
   chain_id:
     trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId

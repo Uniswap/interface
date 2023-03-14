@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { SwapEventName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { useUSDPrice } from 'hooks/useUSDPrice'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useEffect, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
@@ -10,6 +9,7 @@ import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 
+import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import { ThemedText } from '../../theme'
 import { isAddress, shortenAddress } from '../../utils'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
@@ -78,8 +78,8 @@ export default function SwapModalHeader({
   const [lastExecutionPrice, setLastExecutionPrice] = useState(trade.executionPrice)
   const [priceUpdate, setPriceUpdate] = useState<number | undefined>()
 
-  const fiatValueInput = useUSDPrice(trade.inputAmount)
-  const fiatValueOutput = useUSDPrice(trade.outputAmount)
+  const fiatValueInput = useStablecoinValue(trade.inputAmount)
+  const fiatValueOutput = useStablecoinValue(trade.outputAmount)
 
   useEffect(() => {
     if (!trade.executionPrice.equalTo(lastExecutionPrice)) {
@@ -145,7 +145,7 @@ export default function SwapModalHeader({
             <ThemedText.DeprecatedBody fontSize={14} color={theme.textTertiary}>
               <FiatValue
                 fiatValue={fiatValueOutput}
-                priceImpact={computeFiatValuePriceImpact(fiatValueInput.data, fiatValueOutput.data)}
+                priceImpact={computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)}
               />
             </ThemedText.DeprecatedBody>
           </RowBetween>

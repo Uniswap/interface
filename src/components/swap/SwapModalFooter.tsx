@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import {
   formatPercentInBasisPointsNumber,
@@ -31,8 +31,8 @@ interface AnalyticsEventProps {
   isAutoRouterApi: boolean
   swapQuoteReceivedDate: Date | undefined
   routes: RoutingDiagramEntry[]
-  fiatValueInput?: number
-  fiatValueOutput?: number
+  fiatValueInput?: CurrencyAmount<Token> | null
+  fiatValueOutput?: CurrencyAmount<Token> | null
 }
 
 const formatRoutesEventProperties = (routes: RoutingDiagramEntry[]) => {
@@ -83,8 +83,8 @@ const formatAnalyticsEventProperties = ({
   token_out_symbol: trade.outputAmount.currency.symbol,
   token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
   token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
-  token_in_amount_usd: fiatValueInput,
-  token_out_amount_usd: fiatValueOutput,
+  token_in_amount_usd: fiatValueInput ? parseFloat(fiatValueInput.toFixed(2)) : undefined,
+  token_out_amount_usd: fiatValueOutput ? parseFloat(fiatValueOutput.toFixed(2)) : undefined,
   price_impact_basis_points: formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)),
   allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
   is_auto_router_api: isAutoRouterApi,
@@ -118,8 +118,8 @@ export default function SwapModalFooter({
   swapErrorMessage: ReactNode | undefined
   disabledConfirm: boolean
   swapQuoteReceivedDate: Date | undefined
-  fiatValueInput: { data?: number; isLoading: boolean }
-  fiatValueOutput: { data?: number; isLoading: boolean }
+  fiatValueInput: CurrencyAmount<Token> | null
+  fiatValueOutput: CurrencyAmount<Token> | null
 }) {
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
@@ -142,8 +142,8 @@ export default function SwapModalFooter({
             isAutoRouterApi: !clientSideRouter,
             swapQuoteReceivedDate,
             routes,
-            fiatValueInput: fiatValueInput.data,
-            fiatValueOutput: fiatValueOutput.data,
+            fiatValueInput,
+            fiatValueOutput,
           })}
         >
           <ButtonError
