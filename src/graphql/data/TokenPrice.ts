@@ -6,19 +6,16 @@ gql`
       id
       address
       chain
-      project {
+      market(currency: USD) {
         id
-        markets(currencies: [USD]) {
+        price {
           id
-          price {
-            id
-            value
-          }
-          priceHistory(duration: $duration) {
-            id
-            timestamp
-            value
-          }
+          value
+        }
+        priceHistory(duration: $duration) {
+          id
+          timestamp
+          value
         }
       }
     }
