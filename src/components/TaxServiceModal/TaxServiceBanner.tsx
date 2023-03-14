@@ -3,9 +3,9 @@ import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { bodySmall, subhead } from 'nft/css/common.css'
-import { useState } from 'react'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { X } from 'react-feather'
+import { useTaxServiceDismissal } from 'state/user/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { opacify } from 'theme/utils'
@@ -36,7 +36,10 @@ const PopupContainer = styled.div<{ show: boolean; isDarkMode: boolean }>`
   height: 156px;
   bottom: 50px;
   @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    border-style: solid none;
     width: 100%;
+    border-radius: 0;
+    right: auto;
   }
 
   ::before {
@@ -71,6 +74,11 @@ const InnerContainer = styled.div<{ isDarkMode: boolean }>`
   padding: 16px;
   background-color: ${({ isDarkMode, theme }) =>
     isDarkMode ? opacify(10, theme.accentAction) : opacify(4, theme.accentAction)};
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    height: 100%;
+    width: 100%;
+    border-radius: 0;
+  }
 `
 
 const Button = styled(ThemeButton)`
@@ -85,7 +93,7 @@ const TextContainer = styled.div`
   user-select: none;
   display: flex;
   flex-direction: column;
-  width: 70%;
+  width: 90%;
   justify-content: center;
 `
 
@@ -102,38 +110,46 @@ export const StyledXButton = styled(X)`
 
 const TAX_SERVICE_DISMISSED = 'TaxServiceToast-dismissed'
 
+const MAX_RENDER_COUNT = 3
+
 export default function TaxServiceBanner() {
   const isDarkMode = useIsDarkMode()
+  const [dismissals, addTaxServiceDismissal] = useTaxServiceDismissal()
   const [modalOpen, setModalOpen] = useState(false)
   const sessionStorageTaxServiceDismissed = sessionStorage.getItem(TAX_SERVICE_DISMISSED)
 
   if (!sessionStorageTaxServiceDismissed) {
     sessionStorage.setItem(TAX_SERVICE_DISMISSED, 'false')
   }
-  const [bannerOpen, setBannerOpen] = useState(sessionStorageTaxServiceDismissed !== 'true')
+  const [bannerOpen, setBannerOpen] = useState(
+    sessionStorageTaxServiceDismissed !== 'true' && dismissals < MAX_RENDER_COUNT
+  )
   const onDismiss = useCallback(() => {
     setModalOpen(false)
-  }, [])
-
-  const openTaxModal = useCallback(() => {
-    setModalOpen(true)
   }, [])
 
   const handleClose = useCallback(() => {
     sessionStorage.setItem(TAX_SERVICE_DISMISSED, 'true')
     setBannerOpen(false)
+    addTaxServiceDismissal(dismissals + 1)
+  }, [addTaxServiceDismissal, dismissals])
+
+  const handleLearnMoreClick = useCallback((e: any) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setModalOpen(true)
   }, [])
 
   return (
     <PopupContainer show={bannerOpen} isDarkMode={isDarkMode}>
-      <InnerContainer isDarkMode={isDarkMode}>
+      <InnerContainer isDarkMode={isDarkMode} tabIndex={0}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <TextContainer data-testid="tax-service-description">
             <div className={subhead} style={{ paddingBottom: '12px' }}>
               <Trans>Save on your crypto taxes</Trans>
             </div>
             <div className={bodySmall} style={{ paddingBottom: '12px' }}>
-              <Trans>Get up to a 20% discount on CoinTracker or TokenTax.</Trans>{' '}
+              <Trans>Uniswap Labs can save you up to 20% on CoinTracker and TokenTax</Trans>{' '}
             </div>
           </TextContainer>
           <StyledXButton size={20} onClick={handleClose} />
@@ -147,7 +163,10 @@ export default function TaxServiceBanner() {
           <Button
             size={ButtonSize.small}
             emphasis={ButtonEmphasis.promotional}
-            onClick={openTaxModal}
+            onMouseDown={(e) => {
+              e.preventDefault()
+            }}
+            onClick={handleLearnMoreClick}
             data-testid="learn-more-button"
           >
             <Trans>Learn more</Trans>
