@@ -1,14 +1,15 @@
-import { Percent } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import JSBI from 'jsbi'
 
-const PRECISION = 10000
+import { ONE_HUNDRED_PERCENT } from '../constants/misc'
+
 export function computeFiatValuePriceImpact(
-  fiatValueInput: number | undefined | null,
-  fiatValueOutput: number | undefined | null
+  fiatValueInput: CurrencyAmount<Currency> | undefined | null,
+  fiatValueOutput: CurrencyAmount<Currency> | undefined | null
 ): Percent | undefined {
   if (!fiatValueOutput || !fiatValueInput) return undefined
-  if (fiatValueInput === 0) return undefined
-
-  const ratio = 1 - fiatValueOutput / fiatValueInput
-  const numerator = Math.floor(ratio * PRECISION)
-  return new Percent(numerator, PRECISION)
+  if (!fiatValueInput.currency.equals(fiatValueOutput.currency)) return undefined
+  if (JSBI.equal(fiatValueInput.quotient, JSBI.BigInt(0))) return undefined
+  const pct = ONE_HUNDRED_PERCENT.subtract(fiatValueOutput.divide(fiatValueInput))
+  return new Percent(pct.numerator, pct.denominator)
 }
