@@ -5,7 +5,7 @@ import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { bodySmall, subhead } from 'nft/css/common.css'
 import { useCallback, useState } from 'react'
 import { X } from 'react-feather'
-import { useTaxServiceAck } from 'state/user/hooks'
+import { useTaxServiceDismissal } from 'state/user/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { opacify } from 'theme/utils'
@@ -112,15 +112,16 @@ const MAX_RENDER_COUNT = 3
 
 export default function TaxServiceBanner() {
   const isDarkMode = useIsDarkMode()
-  const [acks, acknowledge] = useTaxServiceAck()
+  const [dismissals, addTaxServiceDismissal] = useTaxServiceDismissal()
   const [modalOpen, setModalOpen] = useState(false)
   const sessionStorageTaxServiceDismissed = sessionStorage.getItem(TAX_SERVICE_DISMISSED)
-  console.log('acks', acks)
 
   if (!sessionStorageTaxServiceDismissed) {
     sessionStorage.setItem(TAX_SERVICE_DISMISSED, 'false')
   }
-  const [bannerOpen, setBannerOpen] = useState(sessionStorageTaxServiceDismissed !== 'true' && acks < MAX_RENDER_COUNT)
+  const [bannerOpen, setBannerOpen] = useState(
+    sessionStorageTaxServiceDismissed !== 'true' && dismissals < MAX_RENDER_COUNT
+  )
   const onDismiss = useCallback(() => {
     setModalOpen(false)
   }, [])
@@ -128,8 +129,8 @@ export default function TaxServiceBanner() {
   const handleClose = useCallback(() => {
     sessionStorage.setItem(TAX_SERVICE_DISMISSED, 'true')
     setBannerOpen(false)
-    acknowledge(acks + 1)
-  }, [acknowledge, acks])
+    addTaxServiceDismissal(dismissals + 1)
+  }, [addTaxServiceDismissal, dismissals])
 
   const handleLearnMoreClick = useCallback((e: any) => {
     e.preventDefault()

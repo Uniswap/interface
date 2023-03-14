@@ -33,7 +33,7 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
         popupList: application.popupList,
       },
       user: {
-        taxServiceAcknowledgments: user.taxServiceAcknowledgments,
+        taxServiceDismissals: user.taxServiceDismissals,
         selectedWallet: user.selectedWallet,
         lastUpdateVersionTimestamp: user.lastUpdateVersionTimestamp,
         matchesDarkMode: user.matchesDarkMode,

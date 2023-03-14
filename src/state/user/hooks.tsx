@@ -93,17 +93,16 @@ export function useIsExpertMode(): boolean {
   return useAppSelector((state) => state.user.userExpertMode)
 }
 
-export function useTaxServiceAck(): [number, (acknowledgements: number) => void] {
+export function useTaxServiceDismissal(): [number, (dismissals: number) => void] {
   const dispatch = useAppDispatch()
-  const taxServiceAcknowledgments = useAppSelector((state) => state.user.taxServiceAcknowledgments)
-  console.log('taxServiceAcknowledgments', taxServiceAcknowledgments)
-  const setAcknowledgements = useCallback(
+  const taxServiceDismissals = useAppSelector((state) => state.user.taxServiceDismissals)
+  const setDismissals = useCallback(
     (acks: number) => {
-      dispatch(updateTaxServiceAcknowledgments({ taxServiceAcknowledgments: acks }))
+      dispatch(updateTaxServiceAcknowledgments({ taxServiceDismissals: acks }))
     },
     [dispatch]
   )
-  return [taxServiceAcknowledgments, setAcknowledgements]
+  return [taxServiceDismissals, setDismissals]
 }
 
 export function useExpertModeManager(): [boolean, () => void] {
