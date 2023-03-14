@@ -1,8 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { sendEvent } from 'components/analytics'
 import { ButtonOutlined } from 'components/Button'
 import { AutoRow } from 'components/Row'
-import React from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -14,18 +12,14 @@ const Button = styled(ButtonOutlined).attrs(() => ({
   flex: 1;
 `
 
-export default function PresetsButtons({ setFullRange }: { setFullRange: () => void }) {
+interface PresetsButtonsProps {
+  onSetFullRange: () => void
+}
+
+export default function PresetsButtons({ onSetFullRange }: PresetsButtonsProps) {
   return (
     <AutoRow gap="4px" width="auto">
-      <Button
-        onClick={() => {
-          setFullRange()
-          sendEvent({
-            category: 'Liquidity',
-            action: 'Full Range Clicked',
-          })
-        }}
-      >
+      <Button onClick={onSetFullRange}>
         <ThemedText.DeprecatedBody fontSize={12}>
           <Trans>Full Range</Trans>
         </ThemedText.DeprecatedBody>

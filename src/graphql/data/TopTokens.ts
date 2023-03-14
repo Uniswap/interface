@@ -67,9 +67,10 @@ gql`
   }
 `
 
+// We separately query sparkline data so that the large download time does not block Token Explore rendering
 gql`
   query TopTokensSparkline($duration: HistoryDuration!, $chain: Chain!) {
-    topTokens(pageSize: 100, page: 1, chain: $chain) {
+    topTokens(pageSize: 100, page: 1, chain: $chain, orderBy: VOLUME) {
       id
       address
       chain

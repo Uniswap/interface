@@ -1,8 +1,10 @@
+import { NetworkStatus } from '@apollo/client'
 import { Currency, CurrencyAmount, Price, SupportedChainId, TradeType } from '@uniswap/sdk-core'
 import { nativeOnChain } from 'constants/tokens'
 import { Chain, useTokenSpotPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { chainIdToBackendName, isGqlSupportedChain, PollingInterval } from 'graphql/data/util'
 import { RouterPreference } from 'state/routing/slice'
+import { TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
@@ -11,16 +13,20 @@ import useStablecoinPrice from './useStablecoinPrice'
 // ETH amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
 const ETH_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Currency> } = {
-  [SupportedChainId.MAINNET]: CurrencyAmount.fromRawAmount(nativeOnChain(SupportedChainId.MAINNET), 100),
-  [SupportedChainId.ARBITRUM_ONE]: CurrencyAmount.fromRawAmount(nativeOnChain(SupportedChainId.ARBITRUM_ONE), 100),
-  [SupportedChainId.OPTIMISM]: CurrencyAmount.fromRawAmount(nativeOnChain(SupportedChainId.OPTIMISM), 100),
-  [SupportedChainId.POLYGON]: CurrencyAmount.fromRawAmount(nativeOnChain(SupportedChainId.POLYGON), 10_000e6),
+  [SupportedChainId.MAINNET]: CurrencyAmount.fromRawAmount(nativeOnChain(SupportedChainId.MAINNET), 100e18),
+  [SupportedChainId.ARBITRUM_ONE]: CurrencyAmount.fromRawAmount(nativeOnChain(SupportedChainId.ARBITRUM_ONE), 10e18),
+  [SupportedChainId.OPTIMISM]: CurrencyAmount.fromRawAmount(nativeOnChain(SupportedChainId.OPTIMISM), 10e18),
+  [SupportedChainId.POLYGON]: CurrencyAmount.fromRawAmount(nativeOnChain(SupportedChainId.POLYGON), 10_000e18),
+  [SupportedChainId.CELO]: CurrencyAmount.fromRawAmount(nativeOnChain(SupportedChainId.CELO), 10e18),
 }
 
-function useETHValue(currencyAmount?: CurrencyAmount<Currency>): CurrencyAmount<Currency> | undefined {
+function useETHValue(currencyAmount?: CurrencyAmount<Currency>): {
+  data: CurrencyAmount<Currency> | undefined
+  isLoading: boolean
+} {
   const chainId = currencyAmount?.currency?.chainId
   const amountOut = isGqlSupportedChain(chainId) ? ETH_AMOUNT_OUT[chainId] : undefined
-  const { trade } = useRoutingAPITrade(
+  const { trade, state } = useRoutingAPITrade(
     TradeType.EXACT_OUTPUT,
     amountOut,
     currencyAmount?.currency,
@@ -29,36 +35,47 @@ function useETHValue(currencyAmount?: CurrencyAmount<Currency>): CurrencyAmount<
 
   // Get ETH value of ETH or WETH
   if (chainId && currencyAmount && currencyAmount.currency.wrapped.equals(nativeOnChain(chainId).wrapped)) {
-    return new Price(currencyAmount.currency, currencyAmount.currency, '1', '1').quote(currencyAmount)
+    return {
+      data: new Price(currencyAmount.currency, currencyAmount.currency, '1', '1').quote(currencyAmount),
+      isLoading: false,
+    }
   }
 
-  if (!trade || !currencyAmount?.currency || !isGqlSupportedChain(chainId)) return
+  if (!trade || !currencyAmount?.currency || !isGqlSupportedChain(chainId)) {
+    return { data: undefined, isLoading: state === TradeState.LOADING || state === TradeState.SYNCING }
+  }
 
   const { numerator, denominator } = trade.routes[0].midPrice
   const price = new Price(currencyAmount?.currency, nativeOnChain(chainId), denominator, numerator)
-  return price.quote(currencyAmount)
+  return { data: price.quote(currencyAmount), isLoading: false }
 }
 
-export function useUSDPrice(currencyAmount?: CurrencyAmount<Currency>): number | undefined {
+export function useUSDPrice(currencyAmount?: CurrencyAmount<Currency>): {
+  data: number | undefined
+  isLoading: boolean
+} {
   const chain = currencyAmount?.currency.chainId ? chainIdToBackendName(currencyAmount?.currency.chainId) : undefined
   const currency = currencyAmount?.currency
-  const ethValue = useETHValue(currencyAmount)
+  const { data: ethValue, isLoading: isEthValueLoading } = useETHValue(currencyAmount)
 
-  const { data } = useTokenSpotPriceQuery({
+  const { data, networkStatus } = useTokenSpotPriceQuery({
     variables: { chain: chain ?? Chain.Ethereum, address: getNativeTokenDBAddress(chain ?? Chain.Ethereum) },
     skip: !chain || !isGqlSupportedChain(currency?.chainId),
     pollInterval: PollingInterval.Normal,
+    notifyOnNetworkStatusChange: true,
   })
 
   // Use USDC price for chains not supported by backend yet
   const stablecoinPrice = useStablecoinPrice(!isGqlSupportedChain(currency?.chainId) ? currency : undefined)
   if (!isGqlSupportedChain(currency?.chainId) && currencyAmount && stablecoinPrice) {
-    return parseFloat(stablecoinPrice.quote(currencyAmount).toSignificant())
+    return { data: parseFloat(stablecoinPrice.quote(currencyAmount).toSignificant()), isLoading: false }
   }
+
+  const isFirstLoad = networkStatus === NetworkStatus.loading
 
   // Otherwise, get the price of the token in ETH, and then multiple by the price of ETH
   const ethUSDPrice = data?.token?.project?.markets?.[0]?.price?.value
-  if (!ethUSDPrice || !ethValue) return undefined
+  if (!ethUSDPrice || !ethValue) return { data: undefined, isLoading: isEthValueLoading || isFirstLoad }
 
-  return parseFloat(ethValue.toExact()) * ethUSDPrice
+  return { data: parseFloat(ethValue.toExact()) * ethUSDPrice, isLoading: false }
 }
