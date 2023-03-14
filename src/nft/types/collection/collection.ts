@@ -1,4 +1,6 @@
-import { Markets, TokenType } from '../common'
+import { NftActivityType, NftStandard, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
+
+import { Markets, Rarity, TokenType } from '../common'
 export interface AssetPayload {
   filters: {
     traits?: Record<string, string[]>
@@ -57,13 +59,6 @@ export enum ActivityEventTypeDisplay {
   'CANCEL_LISTING' = 'Cancellation',
 }
 
-export enum OrderStatus {
-  VALID = 'VALID',
-  EXECUTED = 'EXECUTED',
-  CANCELLED = 'CANCELLED',
-  EXPIRED = 'EXPIRED',
-}
-
 export interface ActivityFilter {
   collectionAddress?: string
   eventTypes?: ActivityEventType[]
@@ -83,31 +78,29 @@ export interface TokenRarity {
 }
 
 export interface TokenMetadata {
-  name: string
-  imageUrl: string
-  smallImageUrl: string
-  metadataUrl: string
-  rarity: TokenRarity
-  suspiciousFlag: boolean
-  suspiciousFlaggedBy: string
-  standard: TokenType
+  name?: string
+  imageUrl?: string
+  smallImageUrl?: string
+  metadataUrl?: string
+  rarity?: TokenRarity | Rarity
+  suspiciousFlag?: boolean
+  standard?: TokenType | NftStandard
 }
 
+// TODO when deprecating activity query, remove all outdated types (former in optional fields)
 export interface ActivityEvent {
-  collectionAddress: string
+  collectionAddress?: string
   tokenId?: string
   tokenMetadata?: TokenMetadata
-  eventType: ActivityEventType
-  marketplace?: Markets
-  fromAddress: string
+  eventType?: NftActivityType
+  marketplace?: Markets | string
+  fromAddress?: string
   toAddress?: string
   transactionHash?: string
-  orderHash?: string
   orderStatus?: OrderStatus
   price?: string
   symbol?: string
   quantity?: number
-  auctionType?: string
   url?: string
   eventTimestamp?: number
 }
