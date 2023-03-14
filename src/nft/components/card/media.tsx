@@ -126,7 +126,6 @@ const StyledAudio = styled.audio`
   height: 100%;
 `
 
-// eslint-disable-next-line import/no-unused-modules
 export const NftPlayableMedia = ({
   isAudio,
   src,
