@@ -30,7 +30,7 @@ const StyledPriceContainer = styled.button`
 export default function TradePrice({ price }: TradePriceProps) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
-  const { data: usdcPrice, isLoading } = useStablecoinPrice(showInverted ? price.baseCurrency : price.quoteCurrency)
+  const usdcPrice = useStablecoinPrice(showInverted ? price.baseCurrency : price.quoteCurrency)
 
   let formattedPrice: string
   try {

@@ -21,7 +21,7 @@ export function FiatValue({
   fiatValue,
   priceImpact,
 }: {
-  fiatValue: { data: CurrencyAmount<Currency> | null | undefined; isLoading: boolean }
+  fiatValue: CurrencyAmount<Currency> | null | undefined
   priceImpact?: Percent
 }) {
   const theme = useTheme()
@@ -36,11 +36,11 @@ export function FiatValue({
 
   return (
     <ThemedText.DeprecatedBody fontSize={14} color={theme.textSecondary}>
-      {fiatValue?.isLoading ? (
+      {!fiatValue ? (
         <FiatLoadingBubble />
       ) : (
         <div>
-          {fiatValue?.data ? <>{formatCurrencyAmount(fiatValue.data, NumberType.FiatTokenPrice)}</> : undefined}
+          {fiatValue ? <>{formatCurrencyAmount(fiatValue, NumberType.FiatTokenPrice)}</> : undefined}
           {priceImpact && (
             <span style={{ color: priceImpactColor }}>
               {' '}

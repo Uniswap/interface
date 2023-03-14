@@ -195,7 +195,7 @@ interface SwapCurrencyInputPanelProps {
   pair?: Pair | null
   hideInput?: boolean
   otherCurrency?: Currency | null
-  fiatValue: { data?: CurrencyAmount<Token> | null; isLoading: boolean }
+  fiatValue: CurrencyAmount<Token> | null
   priceImpact?: Percent
   id: string
   showCommonBases?: boolean

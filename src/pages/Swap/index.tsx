@@ -242,9 +242,7 @@ export default function Swap({ className }: { className?: string }) {
   const fiatValueTradeOutput = useStablecoinValue(trade?.outputAmount)
   const stablecoinPriceImpact = useMemo(
     () =>
-      routeIsSyncing || !trade
-        ? undefined
-        : computeFiatValuePriceImpact(fiatValueTradeInput.data, fiatValueTradeOutput.data),
+      routeIsSyncing || !trade ? undefined : computeFiatValuePriceImpact(fiatValueTradeInput, fiatValueTradeOutput),
     [fiatValueTradeInput, fiatValueTradeOutput, routeIsSyncing, trade]
   )
 
@@ -336,7 +334,7 @@ export default function Swap({ className }: { className?: string }) {
   )
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
   const swapFiatValues = useMemo(() => {
-    return { amountIn: fiatValueTradeInput.data, amountOut: fiatValueTradeOutput.data }
+    return { amountIn: fiatValueTradeInput, amountOut: fiatValueTradeOutput }
   }, [fiatValueTradeInput, fiatValueTradeOutput])
 
   // the callback to execute the swap
