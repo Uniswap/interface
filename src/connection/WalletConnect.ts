@@ -24,9 +24,9 @@ export class WalletConnectPopup extends WalletConnect {
     super({ actions, options: { qrcode, rpc: RPC_URLS_WITHOUT_FALLBACKS }, onError })
   }
 
-  activate() {
+  activate(chainId?: number) {
     sendAnalyticsEvent(this.ANALYTICS_EVENT)
-    return super.activate()
+    return super.activate(chainId)
   }
 }
 
