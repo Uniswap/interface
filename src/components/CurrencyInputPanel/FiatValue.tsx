@@ -5,7 +5,7 @@ import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/co
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled, { useTheme } from 'styled-components/macro'
 
 import { ThemedText } from '../../theme'
@@ -20,9 +20,11 @@ const FiatLoadingBubble = styled(LoadingBubble)`
 export function FiatValue({
   fiatValue,
   priceImpact,
+  isLoading = false,
 }: {
   fiatValue: CurrencyAmount<Currency> | null | undefined
   priceImpact?: Percent
+  isLoading?: boolean
 }) {
   const theme = useTheme()
   const priceImpactColor = useMemo(() => {
@@ -33,10 +35,23 @@ export function FiatValue({
     if (severity < 3) return theme.deprecated_yellow1
     return theme.accentFailure
   }, [priceImpact, theme.accentSuccess, theme.accentFailure, theme.textTertiary, theme.deprecated_yellow1])
+  const [showLoadingPlaceholder, setShowLoadingPlaceholder] = useState(false)
+  useEffect(() => {
+    const stale = false
+    let timeoutId = 0
+    if (isLoading && !fiatValue) {
+      timeoutId = setTimeout(() => {
+        if (!stale) setShowLoadingPlaceholder(true)
+      }, 200) as unknown as number
+    } else {
+      setShowLoadingPlaceholder(false)
+    }
+    return () => clearTimeout(timeoutId)
+  }, [isLoading, fiatValue])
 
   return (
     <ThemedText.DeprecatedBody fontSize={14} color={theme.textSecondary}>
-      {!fiatValue ? (
+      {showLoadingPlaceholder ? (
         <FiatLoadingBubble />
       ) : (
         <div>
