@@ -1,17 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { Connector } from '@web3-react/types'
-import INJECTED_ICON_URL from 'assets/images/arrow-right.svg'
 import METAMASK_ICON_URL from 'assets/images/metamask.png'
+import INJECTED_DARK_ICON_URL from 'assets/svg/browser-wallet-dark.svg'
+import INJECTED_LIGHT_ICON_URL from 'assets/svg/browser-wallet-light.svg'
 import { ConnectionType, injectedConnection } from 'connection'
 import { getConnectionName } from 'connection/utils'
+import { useIsDarkMode } from 'state/user/hooks'
 
 import Option from './Option'
-
-const INJECTED_PROPS = {
-  color: '#010101',
-  icon: INJECTED_ICON_URL,
-  id: 'injected',
-}
 
 const METAMASK_PROPS = {
   color: '#E8831D',
@@ -37,9 +33,12 @@ export function MetaMaskOption({ tryActivation }: { tryActivation: (connector: C
 
 export function InjectedOption({ tryActivation }: { tryActivation: (connector: Connector) => void }) {
   const isActive = injectedConnection.hooks.useIsActive()
+  const isDarkMode = useIsDarkMode()
   return (
     <Option
-      {...INJECTED_PROPS}
+      color="#010101"
+      icon={isDarkMode ? INJECTED_DARK_ICON_URL : INJECTED_LIGHT_ICON_URL}
+      id="injected"
       isActive={isActive}
       header={getConnectionName(ConnectionType.INJECTED, false)}
       onClick={() => tryActivation(injectedConnection.connector)}
