@@ -51,6 +51,8 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   } = useGetQuoteQuery(queryArgs ?? skipToken, {
     // Price-fetching is informational and costly, so it's done less frequently.
     pollingInterval: routerPreference === RouterPreference.PRICE ? ms`1m` : AVERAGE_L1_BLOCK_TIME,
+    // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
+    refetchOnMountOrArgChange: 2 * 60,
   })
 
   const route = useMemo(
