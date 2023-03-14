@@ -145,7 +145,7 @@ export default function SwapModalHeader({
             <ThemedText.DeprecatedBody fontSize={14} color={theme.textTertiary}>
               <FiatValue
                 fiatValue={fiatValueOutput}
-                priceImpact={computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)}
+                priceImpact={computeFiatValuePriceImpact(fiatValueInput.data, fiatValueOutput.data)}
               />
             </ThemedText.DeprecatedBody>
           </RowBetween>

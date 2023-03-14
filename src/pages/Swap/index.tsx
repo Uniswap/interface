@@ -242,7 +242,9 @@ export default function Swap({ className }: { className?: string }) {
   const fiatValueTradeOutput = useUSDPrice(trade?.outputAmount)
   const stablecoinPriceImpact = useMemo(
     () =>
-      routeIsSyncing || !trade ? undefined : computeFiatValuePriceImpact(fiatValueTradeInput, fiatValueTradeOutput),
+      routeIsSyncing || !trade
+        ? undefined
+        : computeFiatValuePriceImpact(fiatValueTradeInput.data, fiatValueTradeOutput.data),
     [fiatValueTradeInput, fiatValueTradeOutput, routeIsSyncing, trade]
   )
 
@@ -334,7 +336,7 @@ export default function Swap({ className }: { className?: string }) {
   )
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
   const swapFiatValues = useMemo(() => {
-    return { amountIn: fiatValueTradeInput, amountOut: fiatValueTradeOutput }
+    return { amountIn: fiatValueTradeInput.data, amountOut: fiatValueTradeOutput.data }
   }, [fiatValueTradeInput, fiatValueTradeOutput])
 
   // the callback to execute the swap
@@ -534,7 +536,7 @@ export default function Swap({ className }: { className?: string }) {
                       currency={currencies[Field.INPUT] ?? null}
                       onUserInput={handleTypeInput}
                       onMax={handleMaxInput}
-                      fiatValue={fiatValueInput ?? undefined}
+                      fiatValue={fiatValueInput}
                       onCurrencySelect={handleInputSelect}
                       otherCurrency={currencies[Field.OUTPUT]}
                       showCommonBases={true}
@@ -581,7 +583,7 @@ export default function Swap({ className }: { className?: string }) {
                         }
                         showMaxButton={false}
                         hideBalance={false}
-                        fiatValue={fiatValueOutput ?? undefined}
+                        fiatValue={fiatValueOutput}
                         priceImpact={stablecoinPriceImpact}
                         currency={currencies[Field.OUTPUT] ?? null}
                         onCurrencySelect={handleOutputSelect}

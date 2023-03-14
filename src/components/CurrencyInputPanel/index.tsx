@@ -182,7 +182,7 @@ interface CurrencyInputPanelProps {
   pair?: Pair | null
   hideInput?: boolean
   otherCurrency?: Currency | null
-  fiatValue?: number | null
+  fiatValue?: { data?: number; isLoading: boolean }
   priceImpact?: Percent
   id: string
   showCommonBases?: boolean
