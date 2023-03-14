@@ -1,4 +1,4 @@
-const AddCircle = ({ width, height, color }: { width?: number; height?: number; color?: string }) => {
+const SwitchIcon = ({ width, height, color }: { width?: number; height?: number; color?: string }) => {
   return (
     <svg width={width || 24} height={height || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M8 9H16" stroke={color || 'white'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -21,4 +21,4 @@ const AddCircle = ({ width, height, color }: { width?: number; height?: number; 
   )
 }
 
-export default AddCircle
+export default SwitchIcon

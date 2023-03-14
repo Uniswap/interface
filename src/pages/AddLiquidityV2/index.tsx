@@ -63,7 +63,7 @@ import {
 import { Bound, Field, RANGE } from 'state/mint/proamm/type'
 import { useUserProMMPositions } from 'state/prommPools/hooks'
 import useGetElasticPools from 'state/prommPools/useGetElasticPools'
-import { useTokenPrices } from 'state/tokenPrices/hooks'
+import { useTokenPricesWithLoading } from 'state/tokenPrices/hooks'
 import { usePairFactor } from 'state/topTokens/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TRANSACTION_TYPE } from 'state/transactions/type'
@@ -75,6 +75,7 @@ import { currencyId } from 'utils/currencyId'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 
+import NewPoolNote from './components/NewPoolNote'
 import { RANGE_LIST, rangeData } from './constants'
 import {
   ArrowWrapper,
@@ -263,6 +264,30 @@ export default function AddLiquidity() {
     {} as { [field in Field]: CurrencyAmount<Currency> },
   )
 
+  const amountUnlocks: { [field in Field]: CurrencyAmount<Currency> } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
+    (accumulator, field) => {
+      let amountUnlock = JSBI.BigInt('0')
+      if (currencies[field] && noLiquidity && tokenA && tokenB) {
+        if (
+          (!invertPrice && tokenA.equals(currencies[field] as Currency)) ||
+          (invertPrice && tokenB.equals(currencies[field] as Currency))
+        ) {
+          amountUnlock = amount0Unlock
+        } else {
+          amountUnlock = amount1Unlock
+        }
+      }
+
+      return {
+        ...accumulator,
+        [field]: currencies[field]
+          ? CurrencyAmount.fromRawAmount(currencies[field] as Currency, amountUnlock)
+          : undefined,
+      }
+    },
+    {} as { [field in Field]: CurrencyAmount<Currency> },
+  )
+
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(
     !!currencies_A && depositADisabled && noLiquidity
@@ -282,7 +307,13 @@ export default function AddLiquidity() {
     () => [currencies_A, currencies_B].map(currency => currency?.wrapped),
     [currencies_A, currencies_B],
   )
-  const usdPrices = useTokenPrices(tokens.map(t => t?.wrapped.address || ''))
+  const { data: usdPrices, loading, fetchPrices } = useTokenPricesWithLoading(tokens.map(t => t?.wrapped.address || ''))
+
+  const amountUnlockUSD =
+    Number(amountUnlocks[Field.CURRENCY_A]?.toExact()) *
+      usdPrices[amountUnlocks[Field.CURRENCY_A]?.currency.wrapped.address] +
+    Number(amountUnlocks[Field.CURRENCY_B]?.toExact()) *
+      usdPrices[amountUnlocks[Field.CURRENCY_B]?.currency.wrapped.address]
 
   const estimatedUsdCurrencyA =
     parsedAmounts_A && usdPrices[tokens[0]?.address || '']
@@ -964,6 +995,11 @@ export default function AddLiquidity() {
 
   const tightTokenSelect = !upToMedium && upToLarge
 
+  const marketPrice =
+    usdPrices[quoteCurrency?.wrapped.address || ''] &&
+    usdPrices[baseCurrency?.wrapped.address || ''] &&
+    usdPrices[baseCurrency?.wrapped.address || ''] / usdPrices[quoteCurrency?.wrapped.address || '']
+
   if (!isEVM) return <Navigate to="/" />
   return (
     <>
@@ -1141,7 +1177,7 @@ export default function AddLiquidity() {
                       <TYPE.body fontSize={12} textAlign="left" color={theme.subText} lineHeight="16px">
                         <Trans>
                           To initialize this pool, select a starting price for the pool then enter your liquidity price
-                          range. Gas fees will be higher than usual due to initialization of the pool.
+                          range.
                         </Trans>
                       </TYPE.body>
                     </Flex>
@@ -1157,21 +1193,17 @@ export default function AddLiquidity() {
                         onUserInput={onStartPriceInput}
                       />
                     </OutlineCard>
+
                     <RowBetween>
-                      <Text
-                        fontWeight="500"
-                        color={theme.subText}
-                        style={{ textTransform: 'uppercase' }}
-                        fontSize="12px"
-                      >
-                        <Trans>Current Price</Trans>
+                      <Text fontWeight="500" color={theme.subText} fontSize="12px">
+                        <Trans>Starting Price</Trans>
                       </Text>
                       <TYPE.main>
                         {price ? (
-                          <TYPE.main>
+                          <TYPE.main fontSize="14px">
                             <RowFixed>
                               <HoverInlineText
-                                maxCharacters={20}
+                                maxCharacters={24}
                                 text={`1 ${baseCurrency?.symbol} = ${
                                   invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)
                                 } ${quoteCurrency?.symbol}`}
@@ -1183,6 +1215,15 @@ export default function AddLiquidity() {
                         )}
                       </TYPE.main>
                     </RowBetween>
+                    <NewPoolNote
+                      loading={loading}
+                      onRefreshPrice={() => fetchPrices(tokens.map(t => t?.wrapped.address || ''))}
+                      marketPrice={marketPrice}
+                      baseCurrency={baseCurrency}
+                      quoteCurrency={quoteCurrency}
+                      amountUnlockUSD={amountUnlockUSD}
+                      amountUnlocks={amountUnlocks}
+                    />
                   </AutoColumn>
                 </AutoColumn>
               ) : (

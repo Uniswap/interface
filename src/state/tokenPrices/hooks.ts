@@ -1,5 +1,5 @@
 import { stringify } from 'querystring'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { PRICE_API } from 'constants/env'
 import { NETWORKS_INFO } from 'constants/networks'
@@ -17,6 +17,7 @@ const useTokenPricesLocal = (
 ): {
   data: { [address: string]: number }
   loading: boolean
+  fetchPrices: (value: string[]) => void
 } => {
   const tokenPrices = useAppSelector(state => state.tokenPrices)
   const dispatch = useAppDispatch()
@@ -36,12 +37,12 @@ const useTokenPricesLocal = (
     return tokenList.filter(item => tokenPrices[`${item}_${chainId}`] === undefined)
   }, [tokenList, chainId, tokenPrices])
 
-  useEffect(() => {
-    const fetchPrices = async () => {
+  const fetchPrices = useCallback(
+    async (list: string[]) => {
       try {
         setLoading(true)
         const payload = {
-          ids: unknownPriceList.join(','),
+          ids: list.join(','),
         }
         const promise = isEVM
           ? fetch(`${PRICE_API}/${NETWORKS_INFO[chainId].priceRoute}/api/v1/prices`, {
@@ -54,7 +55,7 @@ const useTokenPricesLocal = (
         const prices = res?.data?.prices || res
 
         if (prices?.length) {
-          const formattedPrices = unknownPriceList.map(address => {
+          const formattedPrices = list.map(address => {
             const price = prices.find(
               (p: { address: string; marketPrice: number; price: number }) => getAddress(p.address, isEVM) === address,
             )
@@ -74,13 +75,16 @@ const useTokenPricesLocal = (
       } finally {
         setLoading(false)
       }
-    }
+    },
+    [chainId, dispatch, isEVM, aggregatorDomain],
+  )
 
-    if (unknownPriceList.length) fetchPrices()
+  useEffect(() => {
+    if (unknownPriceList.length) fetchPrices(unknownPriceList)
     else {
       setLoading(false)
     }
-  }, [unknownPriceList, chainId, dispatch, isEVM, aggregatorDomain])
+  }, [unknownPriceList, fetchPrices])
 
   const data: {
     [address: string]: number
@@ -95,7 +99,7 @@ const useTokenPricesLocal = (
     }, {} as { [address: string]: number })
   }, [tokenList, chainId, tokenPrices])
 
-  return { data, loading }
+  return { data, loading, fetchPrices }
 }
 
 export const useTokenPrices = (
