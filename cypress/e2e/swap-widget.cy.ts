@@ -39,6 +39,7 @@ describe('swap widget integration tests', () => {
   describe('widget on swap page', () => {
     it('should have the correct default input/output and token selection should work', () => {
       cy.visit('/swap', { featureFlags: [FeatureFlag.swapWidget] }).then(() => {
+        cy.wait('@eth_blockNumber')
         verifyInputToken('ETH')
         verifyOutputToken('Select token')
 
