@@ -123,7 +123,7 @@ export function useNftActivity(filter: NftActivityFilterInput, first?: number, f
           toAddress: activity.toAddress,
           transactionHash: activity.transactionHash,
           orderStatus: activity.orderStatus,
-          price: activity.price?.value,
+          price: activity.price?.value.toString(),
           symbol: asset?.collection?.image?.url,
           quantity: activity.quantity,
           url: activity.url,

@@ -9,7 +9,7 @@ import { useBag, useIsMobile } from 'nft/hooks'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
 import { ActivityEvent, ActivityEventResponse, ActivityEventType } from 'nft/types'
 import { fetchPrice } from 'nft/utils/fetchPrice'
-import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
+import { useCallback, useEffect, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -121,31 +121,17 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
     25
   )
 
-  const { events, gatedHasNext, gatedLoadMore, gatedLoading, gatedIsLoadingMore } = useMemo(() => {
-    return {
-      events: isNftGraphqlEnabled
-        ? gqlEventsData
-        : isSuccess
-        ? eventsData?.pages.map((page) => page.events).flat()
-        : undefined,
-      gatedHasNext: isNftGraphqlEnabled ? hasNext : hasNextPage,
-      gatedLoadMore: isNftGraphqlEnabled ? loadMore : fetchNextPage,
-      gatedLoading: isNftGraphqlEnabled ? loading : isLoading,
-      gatedIsLoadingMore: isNftGraphqlEnabled ? hasNext && gqlEventsData?.length : isFetchingNextPage,
-    }
-  }, [
-    eventsData?.pages,
-    fetchNextPage,
-    gqlEventsData,
-    hasNext,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-    isNftGraphqlEnabled,
-    isSuccess,
-    loadMore,
-    loading,
-  ])
+  const { events, gatedHasNext, gatedLoadMore, gatedLoading, gatedIsLoadingMore } = {
+    events: isNftGraphqlEnabled
+      ? gqlEventsData
+      : isSuccess
+      ? eventsData?.pages.map((page) => page.events).flat()
+      : undefined,
+    gatedHasNext: isNftGraphqlEnabled ? hasNext : hasNextPage,
+    gatedLoadMore: isNftGraphqlEnabled ? loadMore : fetchNextPage,
+    gatedLoading: isNftGraphqlEnabled ? loading : isLoading,
+    gatedIsLoadingMore: isNftGraphqlEnabled ? hasNext && gqlEventsData?.length : isFetchingNextPage,
+  }
 
   const itemsInBag = useBag((state) => state.itemsInBag)
   const addAssetsToBag = useBag((state) => state.addAssetsToBag)

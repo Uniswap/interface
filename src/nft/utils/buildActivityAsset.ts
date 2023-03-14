@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther } from '@ethersproject/units'
+import { parseEther } from 'ethers/lib/utils'
 import { ActivityEvent, GenieAsset } from 'nft/types'
 
 import { formatEth } from './currency'
@@ -12,13 +13,15 @@ export const buildActivityAsset = (
 ): GenieAsset => {
   const assetUsdPrice = event.price
     ? isNftGraphqlEnabled
-      ? formatEth(parseFloat(event.price?.toString()) * ethPriceInUSD)
+      ? formatEth(parseFloat(event.price) * ethPriceInUSD)
       : formatEther(
           BigNumber.from(event.price)
             .mul(BigNumber.from(Math.trunc(ethPriceInUSD * 100)))
             .div(100)
         )
     : '0'
+
+  const weiPrice = isNftGraphqlEnabled ? parseEther(event.price ?? '') : event.price
 
   return {
     address: event.collectionAddress,
@@ -32,8 +35,8 @@ export const buildActivityAsset = (
     collectionSymbol: event.symbol,
     priceInfo: {
       USDPrice: assetUsdPrice,
-      ETHPrice: event.price,
-      basePrice: event.price,
+      ETHPrice: weiPrice,
+      basePrice: weiPrice,
       baseAsset: 'ETH',
     },
     tokenType: event.tokenMetadata?.standard,

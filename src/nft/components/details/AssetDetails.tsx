@@ -316,8 +316,8 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   // TODO simplify typecasting when removing graphql flag
   const lastSalePrice = isNftGraphqlEnabled ? gqlPriceData?.[0]?.price : priceData?.events[0]?.price
   const formattedEthprice = isNftGraphqlEnabled
-    ? formatEth(parseFloat(lastSalePrice?.toString() ?? ''))
-    : formatEthPrice(lastSalePrice?.toString()) || 0
+    ? formatEth(parseFloat(lastSalePrice ?? ''))
+    : formatEthPrice(lastSalePrice) || 0
   const formattedPrice = isNftGraphqlEnabled
     ? formattedEthprice
     : lastSalePrice

@@ -59,13 +59,6 @@ export enum ActivityEventTypeDisplay {
   'CANCEL_LISTING' = 'Cancellation',
 }
 
-export enum QueryOrderStatus {
-  VALID = 'VALID',
-  EXECUTED = 'EXECUTED',
-  CANCELLED = 'CANCELLED',
-  EXPIRED = 'EXPIRED',
-}
-
 export interface ActivityFilter {
   collectionAddress?: string
   eventTypes?: ActivityEventType[]
@@ -104,8 +97,8 @@ export interface ActivityEvent {
   fromAddress?: string
   toAddress?: string
   transactionHash?: string
-  orderStatus?: QueryOrderStatus | OrderStatus
-  price?: string | number
+  orderStatus?: OrderStatus
+  price?: string
   symbol?: string
   quantity?: number
   url?: string

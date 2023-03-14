@@ -157,8 +157,8 @@ const AssetActivity = ({ events }: { events: ActivityEvent[] | undefined }) => {
           const { eventTimestamp, eventType, fromAddress, marketplace, price, toAddress, transactionHash } = event
           const formattedPrice = price
             ? isNftGraphqlEnabled
-              ? formatEth(parseFloat(price?.toString() ?? ''))
-              : putCommas(formatEthPrice(price.toString())).toString()
+              ? formatEth(parseFloat(price ?? ''))
+              : putCommas(formatEthPrice(price)).toString()
             : null
           if (!eventType) return null
           return (

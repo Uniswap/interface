@@ -20,7 +20,6 @@ import {
   BagItem,
   GenieAsset,
   Markets,
-  QueryOrderStatus,
   Rarity,
   TokenMetadata,
   TokenRarity,
@@ -59,15 +58,15 @@ const AddressLink = styled(ExternalLink)`
   }
 `
 
-const formatListingStatus = (status: QueryOrderStatus | OrderStatus): string => {
+const formatListingStatus = (status: OrderStatus): string => {
   switch (status) {
-    case QueryOrderStatus.EXECUTED || OrderStatus.Executed:
+    case OrderStatus.Executed:
       return 'Sold'
-    case QueryOrderStatus.CANCELLED || OrderStatus.Cancelled:
+    case OrderStatus.Cancelled:
       return 'Cancelled'
-    case QueryOrderStatus.EXPIRED || OrderStatus.Expired:
+    case OrderStatus.Expired:
       return 'Expired'
-    case QueryOrderStatus.VALID || OrderStatus.Valid:
+    case OrderStatus.Valid:
       return 'Add to Bag'
     default:
       return ''
@@ -120,16 +119,16 @@ export const BuyCell = ({
       {event.eventType === NftActivityType.Listing && event.orderStatus ? (
         <Box
           as="button"
-          className={event.orderStatus === QueryOrderStatus.VALID && isSelected ? styles.removeCell : styles.buyCell}
+          className={event.orderStatus === OrderStatus.Valid && isSelected ? styles.removeCell : styles.buyCell}
           onClick={(e: MouseEvent) => {
             e.preventDefault()
             isSelected ? removeAsset([asset]) : selectAsset([asset])
             !isSelected && !cartExpanded && !isMobile && toggleCart()
             !isSelected && sendAnalyticsEvent(NFTEventName.NFT_BUY_ADDED, { eventProperties })
           }}
-          disabled={event.orderStatus !== QueryOrderStatus.VALID}
+          disabled={event.orderStatus !== OrderStatus.Valid}
         >
-          {event.orderStatus === QueryOrderStatus.VALID ? (
+          {event.orderStatus === OrderStatus.Valid ? (
             <>{`${isSelected ? 'Remove' : 'Add to bag'}`}</>
           ) : (
             <>{`${formatListingStatus(event.orderStatus)}`}</>
