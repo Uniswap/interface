@@ -495,8 +495,6 @@ export const BagFooter = ({ totalEthPrice, fetchAssets, eventProperties }: BagFo
     ...eventProperties,
   }
 
-  console.log(bagStatus)
-
   return (
     <FooterContainer>
       <Footer>

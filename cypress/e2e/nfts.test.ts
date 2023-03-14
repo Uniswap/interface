@@ -33,7 +33,7 @@ describe('Testing nfts', () => {
     cy.visit(`/#/nfts/collection/${PUDGY_COLLECTION_ADDRESS}`)
     cy.get(getTestSelector('nft-filter')).first().click()
     cy.get(getTestSelector('nft-collection-filter-buy-now')).click()
-    cy.get(getTestSelector('nft-details-link')).first().click()
+    cy.get(getTestSelector('nft-collection-asset')).first().click()
     cy.get(getTestSelector('nft-details-traits')).should('exist')
     cy.get(getTestSelector('nft-details-activity')).should('exist')
     cy.get(getTestSelector('nft-details-description')).should('exist')
