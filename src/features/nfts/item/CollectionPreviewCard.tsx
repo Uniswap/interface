@@ -78,7 +78,7 @@ export function CollectionPreviewCard({
             {collection?.markets?.[0]?.floorPrice?.value && (
               <Flex row gap="spacing4">
                 <Text color="textOnBrightTertiary" numberOfLines={1} variant="subheadSmall">
-                  {t('Floor')}
+                  {t('Floor')}:
                 </Text>
                 <PriceAmount
                   iconColor="textOnBrightTertiary"

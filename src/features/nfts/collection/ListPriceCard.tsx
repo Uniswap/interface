@@ -32,8 +32,8 @@ export function ListPriceBadge(props: ListPriceProps): JSX.Element {
 
 export function PriceAmount({
   price,
-  gap = 'none',
-  iconSize = 'icon12',
+  gap = 'spacing4',
+  iconSize = 'icon16',
   iconColor,
   textColor = 'textPrimary',
   textVariant = 'buttonLabelMicro',

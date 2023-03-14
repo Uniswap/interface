@@ -172,7 +172,9 @@ export function NFTCollectionScreen({
             {item.listPrice && (
               <ListPriceBadge
                 bottom={theme.spacing.spacing4}
+                gap="none"
                 iconColor="white"
+                iconSize="icon12"
                 position="absolute"
                 price={item.listPrice}
                 right={theme.spacing.spacing4}
