@@ -21,7 +21,7 @@ export const buildActivityAsset = (
         )
     : '0'
 
-  const weiPrice = isNftGraphqlEnabled ? parseEther(event.price ?? '') : event.price
+  const weiPrice = isNftGraphqlEnabled ? (event.price ? parseEther(event.price) : '') : event.price
 
   return {
     address: event.collectionAddress,
