@@ -297,7 +297,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         )}
         pendingText={pendingText}
       />
-      <AppBody>
+      <AppBody $maxWidth="unset">
         <AddRemoveTabs
           creating={false}
           adding={false}
