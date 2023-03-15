@@ -113,7 +113,7 @@ export function useUniversalRouterSwapCallback(
           throw new Error(swapErrorToUserReadableMessage(swapError))
         }
       },
-      { tags: { widget: false } }
+      { tags: { is_widget: false } }
     )
   }, [
     account,

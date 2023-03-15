@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/react'
 import { Span, SpanStatusType } from '@sentry/tracing'
 
 type TraceTags = {
-  widget: boolean
+  is_widget: boolean
 }
 
 interface TraceMetadata {
