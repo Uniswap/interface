@@ -63,6 +63,7 @@ export function useUSDPrice(currencyAmount?: CurrencyAmount<Currency>): {
     skip: !chain || !isGqlSupportedChain(currency?.chainId),
     pollInterval: PollingInterval.Normal,
     notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'cache-first',
   })
 
   // Use USDC price for chains not supported by backend yet

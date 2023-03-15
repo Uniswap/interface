@@ -14,6 +14,7 @@ function getBlocksPerFetchForChainId(chainId: number | undefined): number {
     case SupportedChainId.ARBITRUM_ONE:
     case SupportedChainId.OPTIMISM:
       return 15
+    case SupportedChainId.BNB:
     case SupportedChainId.CELO:
     case SupportedChainId.CELO_ALFAJORES:
       return 5

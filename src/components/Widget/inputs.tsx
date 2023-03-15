@@ -74,7 +74,10 @@ export function useSyncWidgetInputs({
 
   useEffect(() => {
     if (chainId !== previousChainId && !!previousChainId && isSupportedChain(chainId)) {
-      setTokens(defaultTokens)
+      setTokens({
+        ...defaultTokens,
+        [Field.OUTPUT]: defaultTokens[Field.OUTPUT] ?? defaultTokens.default,
+      })
       setAmount(EMPTY_AMOUNT)
     }
   }, [chainId, defaultTokens, previousChainId, tokens])

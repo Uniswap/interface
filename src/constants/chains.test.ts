@@ -1,16 +1,23 @@
 import { SupportedChainId as SdkSupportedChainId } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 
-import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from './chains'
+import { ALL_SUPPORTED_CHAIN_IDS } from './chains'
 
-describe('chains', () => {
-  describe('ALL_SUPPORTED_CHAIN_IDS', () => {
+describe('ChainIds', () => {
+  describe('SupportedChainId', () => {
     it('derives from sdk-core', () => {
-      ALL_SUPPORTED_CHAIN_IDS.forEach((chainId) => {
-        const chainName = SupportedChainId[chainId]
-        expect(SdkSupportedChainId[chainId]).toBe(chainName)
-      })
+      const SDKChains = Object.values(SdkSupportedChainId)
+        .filter((chainId) => typeof chainId === 'number')
+        .map((value) => value.toString())
+      const InterfaceChains = Object.values(SupportedChainId)
+        .filter((chainId) => typeof chainId === 'number')
+        .map((value) => value.toString())
+      const isSubset = InterfaceChains.every((value) => SDKChains.includes(value))
+      expect(isSubset).toBe(true)
     })
+  })
 
+  describe('ALL_SUPPORTED_CHAIN_IDS', () => {
     it('contains all the values in the SupportedChainId enum', () => {
       Object.values(SupportedChainId)
         .filter((chainId) => typeof chainId === 'number')

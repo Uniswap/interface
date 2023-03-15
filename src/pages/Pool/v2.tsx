@@ -181,7 +181,7 @@ export default function Pool() {
               <AutoColumn gap="md" style={{ width: '100%' }}>
                 <Layer2Prompt>
                   <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
-                    <Trans>V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum.</Trans>
+                    <Trans>Uniswap V2 is not available on this network.</Trans>
                   </ThemedText.DeprecatedBody>
                 </Layer2Prompt>
               </AutoColumn>

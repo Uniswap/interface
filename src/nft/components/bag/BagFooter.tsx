@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatEther } from '@ethersproject/units'
-import { parseEther } from '@ethersproject/units'
+import { formatEther, parseEther } from '@ethersproject/units'
 import { t, Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'

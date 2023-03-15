@@ -5094,10 +5094,10 @@
     "@uniswap/v2-sdk" "^3.0.1"
     "@uniswap/v3-sdk" "^3.8.3"
 
-"@uniswap/sdk-core@^3.0.0-alpha.3", "@uniswap/sdk-core@^3.0.1", "@uniswap/sdk-core@^3.1.0", "@uniswap/sdk-core@^3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/sdk-core/-/sdk-core-3.2.0.tgz#cabee6b21469d2e8d41c367503cfd961dddc8305"
-  integrity sha512-KXCIDNRhKF9DeDBY2j7SiAlD56ZqD/T6his2m9y8ZCMdObLBVt/oCt4kaQGrWUjJuf2Flr5dryHMmMQBXqA9pA==
+"@uniswap/sdk-core@^3.0.0-alpha.3", "@uniswap/sdk-core@^3.0.1", "@uniswap/sdk-core@^3.1.0", "@uniswap/sdk-core@^3.2.0", "@uniswap/sdk-core@^3.2.2":
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@uniswap/sdk-core/-/sdk-core-3.2.2.tgz#50dbc6f2543d088680f36fb61e01bb90d4d8fa71"
+  integrity sha512-dPA34T8EVfFzKtw1NC1Mr7M0aXpY1UN+lUpdBv757JxKKMlGQTg96XTIfjYCflqEshxlBdz2+IVQgk6H+dMu5g==
   dependencies:
     "@ethersproject/address" "^5.0.2"
     big.js "^5.2.2"
@@ -5161,7 +5161,7 @@
   resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.30.tgz#2103ca23b8007c59ec71718d34cdc97861c409e5"
   integrity sha512-HwY2VvkQ8lNR6ks5NqQfAtg+4IZqz3KV1T8d2DlI8emIn9uMmaoFbIOg0nzjqAVKKnZSbMTRRtUoAh6mmjRvog==
 
-"@uniswap/universal-router-sdk@^1.3.6", "@uniswap/universal-router-sdk@^1.3.8", "@uniswap/universal-router-sdk@^1.3.9":
+"@uniswap/universal-router-sdk@^1.3.8", "@uniswap/universal-router-sdk@^1.3.9":
   version "1.3.9"
   resolved "https://registry.yarnpkg.com/@uniswap/universal-router-sdk/-/universal-router-sdk-1.3.9.tgz#75a1b354457b85e1e0271ecd5956ea3323a40eca"
   integrity sha512-uXhdK8IDuyZZRMKiua9dJ6jj5MJ5xUrGflczWwhp6i0cb2VvXoLNQqc7aq3130NfIrKEYfkBGMjsqStZmqqKug==
@@ -5175,10 +5175,19 @@
     bignumber.js "^9.0.2"
     ethers "^5.3.1"
 
-"@uniswap/universal-router@1.2.1", "@uniswap/universal-router@^1.0.1":
+"@uniswap/universal-router@1.2.1":
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@uniswap/universal-router/-/universal-router-1.2.1.tgz#5fe4aa21d6bc89314d99f26407f28154f8e16f42"
   integrity sha512-F3S1wKylncuvIG2qwC1ciXXc1z1QmKsalo4p6H2A90LSRylEEhNp7ITxs7qCcnfRh+ZNkGJ0yQ0zmuVJSBezOQ==
+  dependencies:
+    "@openzeppelin/contracts" "4.7.0"
+    "@uniswap/v2-core" "1.0.1"
+    "@uniswap/v3-core" "1.0.0"
+
+"@uniswap/universal-router@^1.0.1":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@uniswap/universal-router/-/universal-router-1.2.2.tgz#7b3704a307fad53ba2a80718362b1b7718ada4cc"
+  integrity sha512-ipQQpo3xO21EIS5pBjJazZbh9Vth6wzeta85Xva2HKoJ0uBvnugCjqvjkJMqiiz+osBnC12yemitjTOOxcqXjA==
   dependencies:
     "@openzeppelin/contracts" "4.7.0"
     "@uniswap/v2-core" "1.0.1"
