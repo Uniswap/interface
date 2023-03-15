@@ -136,7 +136,6 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
     if (!approval || !approveCallback) return
     //if (!provider) throw new Error('missing dependencies')
     if (!grgBalance) throw new Error('missing GRG amount')
-    console.log(grgBalance)
 
     await approveCallback()
   }

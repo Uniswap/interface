@@ -77,7 +77,6 @@ export default function PoolPositionList({ positions, filterByOperator, filterBy
       })
       .filter((p) => p !== '')
   }, [account, chainId, poolAddresses, results])
-  console.log(operatedPools)
 
   return (
     <>

@@ -34,7 +34,6 @@ import { ThemedText } from 'theme'
 
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
-import useENS from '../../hooks/useENS'
 import { useSwapState } from '../../state/swap/hooks'
 import { TransactionType } from '../../state/transactions/types'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
@@ -68,9 +67,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   const { account, chainId, provider } = useWeb3React()
 
   // we query pool address from swap state
-  const { recipient } = useSwapState()
-  const recipientLookup = useENS(recipient ?? undefined)
-  const poolAddress = recipientLookup.address
+  const { smartPoolAddress: poolAddress } = useSwapState()
 
   // flag for receiving WETH
   // we always collect as WETH as unwrap, sweep token methods would clash between adapters otherwise
@@ -300,7 +297,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         )}
         pendingText={pendingText}
       />
-      <AppBody>
+      <AppBody $maxWidth="unset">
         <AddRemoveTabs
           creating={false}
           adding={false}
