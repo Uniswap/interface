@@ -54,7 +54,7 @@ import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import useWrapCallback, { WrapErrorText, WrapType } from '../../hooks/useWrapCallback'
 import { useMultipleContractSingleData } from '../../lib/hooks/multicall'
-import { useRegisteredPools } from '../../state/pool/hooks'
+import { useAllPoolsData /*, useRegisteredPools*/ } from '../../state/pool/hooks'
 import { Field } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
@@ -257,8 +257,11 @@ export default function Swap() {
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
 
-  // TODO: if (poolsLogs === []) return (() => getAllPoolsData), i.e. fire logs query. Be sure to query just once.
-  const poolsLogs = useRegisteredPools(chainId)
+  // TODO: the following is expensive as overwrites all pools data, however it is called just once. It is useful when
+  //  switching chain in the swap page s otherwise the state is cleared when page is reloaded.
+  //  We sould try and update state only if poolsLogs is undefined
+  //const poolsLogs = useRegisteredPools(chainId)
+  const { data: poolsLogs } = useAllPoolsData()
   const poolAddresses: (string | undefined)[] = useMemo(() => {
     if (!poolsLogs) return []
 
