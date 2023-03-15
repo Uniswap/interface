@@ -151,7 +151,7 @@ export function OnboardingCompleteAnimation({
   const QR_CONTAINER_SIZE = 242
   const QR_CODE_SIZE = 190
 
-  const UNICON_SIZE = 48
+  const UNICON_SIZE = 64
 
   const finalTitleMaxFontSizeMultiplier = useResponsiveProp({
     xs: 1.1,
@@ -219,7 +219,6 @@ export function OnboardingCompleteAnimation({
                         logoSize={UNICON_SIZE}
                         overlayOpacityPercent={10}
                         safeAreaColor="background0"
-                        safeAreaSize={UNICON_SIZE + UNICON_SIZE / 2}
                         size={QR_CODE_SIZE}
                       />
                     </Animated.View>

@@ -696,7 +696,14 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   }
                   width="100%"
                 >
-                  <RNSVGGroup>
+                  <RNSVGGroup
+                    fill={
+                      Object {
+                        "payload": 4278190080,
+                        "type": 0,
+                      }
+                    }
+                  >
                     <RNSVGDefs>
                       <RNSVGLinearGradient
                         gradient={
@@ -718,10 +725,10 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     </RNSVGDefs>
                     <RNSVGRect
                       fill={
-                        Array [
-                          1,
-                          "background",
-                        ]
+                        Object {
+                          "brushRef": "background",
+                          "type": 1,
+                        }
                       }
                       height="150%"
                       opacity={1}
@@ -1463,7 +1470,14 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   }
                   width="100%"
                 >
-                  <RNSVGGroup>
+                  <RNSVGGroup
+                    fill={
+                      Object {
+                        "payload": 4278190080,
+                        "type": 0,
+                      }
+                    }
+                  >
                     <RNSVGDefs>
                       <RNSVGLinearGradient
                         gradient={
@@ -1485,10 +1499,10 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     </RNSVGDefs>
                     <RNSVGRect
                       fill={
-                        Array [
-                          1,
-                          "background",
-                        ]
+                        Object {
+                          "brushRef": "background",
+                          "type": 1,
+                        }
                       }
                       height="150%"
                       opacity={1}

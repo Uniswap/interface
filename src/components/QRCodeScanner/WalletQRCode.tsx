@@ -10,7 +10,7 @@ import { useUniconColors } from 'src/components/unicons/utils'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 
 const QR_CODE_SIZE = 220
-const UNICON_SIZE = QR_CODE_SIZE / 4.2
+const UNICON_SIZE = QR_CODE_SIZE / 2.8
 
 interface Props {
   address?: Address
@@ -55,10 +55,10 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
           address={address}
           backgroundColor="background0"
           containerBackgroundColor="background0"
+          displayShadow={true}
           logoSize={UNICON_SIZE}
           overlayOpacityPercent={10}
           safeAreaColor="background0"
-          safeAreaSize={UNICON_SIZE + UNICON_SIZE / 2}
           size={QR_CODE_SIZE}
         />
       </AnimatedFlex>

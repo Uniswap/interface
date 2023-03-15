@@ -86,6 +86,10 @@ export enum Chain {
   UnknownChain = 'UNKNOWN_CHAIN'
 }
 
+export enum CollectionSortableField {
+  Volume = 'VOLUME'
+}
+
 export type ContractInput = {
   address?: InputMaybe<Scalars['String']>;
   chain: Chain;
@@ -371,6 +375,8 @@ export type NftCollectionMarket = {
   marketplaces?: Maybe<Array<NftCollectionMarketplace>>;
   nftContracts?: Maybe<Array<NftContract>>;
   owners?: Maybe<Scalars['Int']>;
+  percentListed?: Maybe<TimestampedAmount>;
+  percentUniqueOwners?: Maybe<TimestampedAmount>;
   sales?: Maybe<TimestampedAmount>;
   totalVolume?: Maybe<TimestampedAmount>;
   volume?: Maybe<TimestampedAmount>;
@@ -650,6 +656,7 @@ export type Query = {
   token?: Maybe<Token>;
   tokenProjects?: Maybe<Array<Maybe<TokenProject>>>;
   tokens?: Maybe<Array<Maybe<Token>>>;
+  topCollections?: Maybe<NftCollectionConnection>;
   topTokens?: Maybe<Array<Maybe<Token>>>;
 };
 
@@ -668,9 +675,11 @@ export type QueryNftAssetsArgs = {
   asc?: InputMaybe<Scalars['Boolean']>;
   before?: InputMaybe<Scalars['String']>;
   chain?: InputMaybe<Chain>;
+  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<NftAssetsFilterInput>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<NftAssetSortableField>;
 };
 
@@ -737,6 +746,15 @@ export type QueryTokenProjectsArgs = {
 
 export type QueryTokensArgs = {
   contracts: Array<ContractInput>;
+};
+
+
+export type QueryTopCollectionsArgs = {
+  chains?: InputMaybe<Array<Chain>>;
+  cursor?: InputMaybe<Scalars['String']>;
+  duration?: InputMaybe<HistoryDuration>;
+  limit?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<CollectionSortableField>;
 };
 
 

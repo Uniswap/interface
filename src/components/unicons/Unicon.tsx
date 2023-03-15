@@ -31,6 +31,11 @@ import { flex } from 'src/styles/flex'
 const ORIGINAL_SVG_SIZE = 36 + 1
 const EMBLEM_XY_SHIFT = 10
 
+// HACKS: Magic numbers to make SVG with border look right - makes the margin larger, and shifts the SVG down and right
+const ORIGINAL_SVG_SIZE_WITH_BORDER = 48
+const BORDER_SIZE = 10
+const BORDER_XY_SHIFT = 9
+
 const GradientBlur = ({
   size,
   gradientStart,
@@ -66,25 +71,84 @@ function UniconMask({
   size,
   attributeData,
   overlay = false,
+  showBorder,
 }: {
   size: number
   attributeData: UniconAttributeData
   overlay?: boolean
+  showBorder?: boolean
 }): JSX.Element {
   return (
     <Group
-      blendMode={overlay ? 'multiply' : 'xor'}
-      transform={[{ scale: size / ORIGINAL_SVG_SIZE }]}>
-      <Group transform={[{ translateX: EMBLEM_XY_SHIFT }, { translateY: EMBLEM_XY_SHIFT }]}>
-        {/* This is the shape generation code */}
-        {attributeData[UniconAttributes.Shape].map((pathProps) => (
+      transform={[
+        { translateX: showBorder ? BORDER_XY_SHIFT : 0 },
+        { translateY: showBorder ? BORDER_XY_SHIFT : 0 },
+      ]}>
+      <Group
+        blendMode={overlay ? 'multiply' : 'xor'}
+        transform={[
+          { scale: size / (showBorder ? ORIGINAL_SVG_SIZE_WITH_BORDER : ORIGINAL_SVG_SIZE) },
+        ]}>
+        <Group transform={[{ translateX: EMBLEM_XY_SHIFT }, { translateY: EMBLEM_XY_SHIFT }]}>
+          {/* This is the shape generation code */}
+          {attributeData[UniconAttributes.Shape].map((pathProps) => (
+            <Path key={pathProps.path as string} {...pathProps} />
+          ))}
+        </Group>
+        {/* This is the container generation code */}
+        {attributeData[UniconAttributes.Container].map((pathProps) => (
           <Path key={pathProps.path as string} {...pathProps} />
         ))}
       </Group>
-      {/* This is the container generation code */}
-      {attributeData[UniconAttributes.Container].map((pathProps) => (
-        <Path key={pathProps.path as string} {...pathProps} />
-      ))}
+    </Group>
+  )
+}
+
+function UniconMaskBG({
+  size,
+  attributeData,
+  showBorder,
+}: {
+  size: number
+  attributeData: UniconAttributeData
+  showBorder?: boolean
+}): JSX.Element {
+  return (
+    <Group
+      transform={[
+        { translateX: showBorder ? BORDER_XY_SHIFT : 0 },
+        { translateY: showBorder ? BORDER_XY_SHIFT : 0 },
+      ]}>
+      <Group
+        transform={[
+          { translateX: EMBLEM_XY_SHIFT + (showBorder ? BORDER_XY_SHIFT + 4 : 0) },
+          { translateY: EMBLEM_XY_SHIFT + (showBorder ? BORDER_XY_SHIFT + 4 : 0) },
+        ]}>
+        {attributeData[UniconAttributes.Shape].map((pathProps) => (
+          <Path
+            key={pathProps.path as string}
+            strokeJoin="round"
+            strokeWidth={BORDER_SIZE + 4}
+            style="stroke"
+            {...pathProps}
+          />
+        ))}
+      </Group>
+
+      <Group
+        transform={[
+          { scale: size / (showBorder ? ORIGINAL_SVG_SIZE_WITH_BORDER : ORIGINAL_SVG_SIZE) },
+        ]}>
+        {attributeData[UniconAttributes.Container].map((pathProps) => (
+          <Path
+            key={pathProps.path as string}
+            strokeJoin="round"
+            strokeWidth={BORDER_SIZE}
+            style="stroke"
+            {...pathProps}
+          />
+        ))}
+      </Group>
     </Group>
   )
 }
@@ -93,10 +157,12 @@ function UniconSvg({
   attributeIndices,
   size,
   lightModeOverlay,
+  showBorder,
 }: {
   attributeIndices: UniconAttributesToIndices
   size: number
   lightModeOverlay?: boolean
+  showBorder?: boolean
 }): JSX.Element | null {
   // UniconSvg is used in the Unicon component or for testing specific shapes/containers
   // UniconSvg canvases will grow to fit their container
@@ -112,7 +178,9 @@ function UniconSvg({
 
   return (
     <Canvas style={flex.fill}>
-      <Mask clip={true} mask={<UniconMask attributeData={attributeData} size={size} />}>
+      <Mask
+        clip={true}
+        mask={<UniconMask attributeData={attributeData} showBorder={showBorder} size={size} />}>
         <GradientBlur
           blurColor={blurColor}
           gradientEnd={attributeData[UniconAttributes.GradientEnd]}
@@ -121,17 +189,43 @@ function UniconSvg({
         />
       </Mask>
       {lightModeOverlay && (
-        <Mask clip={true} mask={<UniconMask overlay attributeData={attributeData} size={size} />}>
-          <Rect
-            color="#000000"
-            height={ORIGINAL_SVG_SIZE}
-            opacity={0.08}
-            width={ORIGINAL_SVG_SIZE}
-            x={0}
-            y={0}
-          />
+        <Mask
+          clip={true}
+          mask={
+            <UniconMask overlay attributeData={attributeData} showBorder={showBorder} size={size} />
+          }>
+          <Rect color="#000000" height={size} opacity={0.08} width={size} x={0} y={0} />
         </Mask>
       )}
+    </Canvas>
+  )
+}
+
+function UniconBG({
+  attributeIndices,
+  size,
+  backgroundColor,
+  showBorder,
+}: {
+  attributeIndices: UniconAttributesToIndices
+  size: number
+  backgroundColor?: string
+  showBorder?: boolean
+}): JSX.Element | null {
+  const attributeData = useMemo(() => getUniconAttributeData(attributeIndices), [attributeIndices])
+
+  if (!attributeIndices || !attributeData) return null
+
+  const blurColor = blurs[attributeIndices[UniconAttributes.GradientStart]]
+  if (!blurColor) return null
+
+  return (
+    <Canvas style={flex.fill}>
+      <Mask
+        clip={true}
+        mask={<UniconMaskBG attributeData={attributeData} showBorder={showBorder} size={size} />}>
+        <Rect color={backgroundColor} height={size} opacity={1} width={size} x={0} y={0} />
+      </Mask>
     </Canvas>
   )
 }
@@ -140,12 +234,19 @@ interface Props {
   address: string
   size: number
   randomSeed?: number
-  border?: boolean
+  showBorder?: boolean
+  backgroundColor?: string
 }
 
 export const Unicon = memo(_Unicon)
 
-export function _Unicon({ address, size, randomSeed = 0 }: Props): JSX.Element | null {
+export function _Unicon({
+  address,
+  size,
+  backgroundColor,
+  randomSeed = 0,
+  showBorder = false,
+}: Props): JSX.Element | null {
   // TODO(MOB-2992): move this into a mandatory boolean prop for the Unicon component (e.g. `lightModeOverlay`) so that any consumer of the Unicon component has to decide whether or not to show the light mode overlay (presumably based on whether the current theme is light or dark)
   const isLightMode = useSelectedColorScheme() === 'light'
 
@@ -159,7 +260,24 @@ export function _Unicon({ address, size, randomSeed = 0 }: Props): JSX.Element |
 
   return (
     <Box height={size} width={size}>
-      <UniconSvg attributeIndices={attributeIndices} lightModeOverlay={isLightMode} size={size} />
+      <Box height={size} width={size}>
+        <UniconSvg
+          attributeIndices={attributeIndices}
+          lightModeOverlay={isLightMode}
+          showBorder={showBorder}
+          size={size}
+        />
+      </Box>
+      {showBorder && (
+        <Box height={size} position="absolute" width={size} zIndex="negative">
+          <UniconBG
+            attributeIndices={attributeIndices}
+            backgroundColor={backgroundColor}
+            showBorder={true}
+            size={size}
+          />
+        </Box>
+      )}
     </Box>
   )
 }

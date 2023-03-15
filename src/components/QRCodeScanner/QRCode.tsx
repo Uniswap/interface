@@ -1,8 +1,8 @@
 import React, { memo, useMemo } from 'react'
 import { ImageSourcePropType, StyleSheet } from 'react-native'
-import QRCode from 'react-native-qrcode-svg'
 import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
+import QRCode from 'src/components/QRCodeScanner/custom-qr-code-generator'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { useUniconColors } from 'src/components/unicons/utils'
 import { Theme } from 'src/styles/theme'
@@ -58,12 +58,14 @@ export const AddressQRCode = ({
       enableLinearGradient?: boolean
       linearGradient?: string[]
       gradientDirection?: string[]
+      color?: string
     } = {}
 
     if (!color) {
       gradientPropsObject = {
         enableLinearGradient: true,
         linearGradient: [gradientData.gradientStart, gradientData.gradientEnd],
+        color: gradientData.gradientStart,
         gradientDirection: ['0%', '0%', '100%', '0%'],
       }
     }
@@ -94,11 +96,12 @@ type QRCodeDisplayProps = {
   logoSize?: number
   overlayOpacityPercent?: number
   hideOutline?: boolean
+  displayShadow?: boolean
 }
 
 const _QRCodeDisplay = ({
   address,
-  errorCorrectionLevel = 'H',
+  errorCorrectionLevel = 'M',
   size,
   backgroundColor = 'background0',
   containerBackgroundColor,
@@ -107,6 +110,7 @@ const _QRCodeDisplay = ({
   logoSize = 32,
   safeAreaColor,
   hideOutline = false,
+  displayShadow = false,
 }: QRCodeDisplayProps): JSX.Element => {
   const theme = useAppTheme()
 
@@ -119,14 +123,18 @@ const _QRCodeDisplay = ({
       borderWidth={hideOutline ? 0 : 2}
       justifyContent="center"
       padding="spacing24"
-      position="relative">
+      position="relative"
+      shadowColor="black"
+      shadowOffset={{ width: 0, height: 16 }}
+      shadowOpacity={displayShadow ? 0.1 : 0}
+      shadowRadius={16}>
       <Box>
         <AddressQRCode
           address={address}
           backgroundColor={backgroundColor}
           errorCorrectionLevel={errorCorrectionLevel}
           safeAreaColor={safeAreaColor}
-          safeAreaSize={safeAreaSize}
+          safeAreaSize={logoSize / 1.5}
           size={size}
         />
         {overlayOpacityPercent && (
@@ -137,7 +145,7 @@ const _QRCodeDisplay = ({
               color={opacify(overlayOpacityPercent, theme.colors.textPrimary)}
               errorCorrectionLevel={errorCorrectionLevel}
               safeAreaColor={safeAreaColor}
-              safeAreaSize={safeAreaSize}
+              safeAreaSize={logoSize / 1.5}
               size={size}
             />
           </Box>
@@ -147,10 +155,16 @@ const _QRCodeDisplay = ({
         alignItems="center"
         backgroundColor="none"
         borderRadius="roundedFull"
+        overflow="visible"
         paddingLeft="spacing2"
         paddingTop="spacing2"
         position="absolute">
-        <Unicon address={address} size={logoSize} />
+        <Unicon
+          showBorder
+          address={address}
+          backgroundColor={theme.colors.background0}
+          size={logoSize}
+        />
       </Box>
     </Box>
   )

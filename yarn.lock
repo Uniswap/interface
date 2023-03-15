@@ -2439,7 +2439,7 @@
     find-up "^5.0.0"
     js-yaml "^4.1.0"
 
-"@faker-js/faker@^7.6.0":
+"@faker-js/faker@7.6.0":
   version "7.6.0"
   resolved "https://registry.yarnpkg.com/@faker-js/faker/-/faker-7.6.0.tgz#9ea331766084288634a9247fcd8b84f16ff4ba07"
   integrity sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw==
@@ -18430,10 +18430,10 @@ qrcode-terminal@0.11.0:
   resolved "https://registry.yarnpkg.com/qrcode-terminal/-/qrcode-terminal-0.11.0.tgz#ffc6c28a2fc0bfb47052b47e23f4f446a5fbdb9e"
   integrity sha512-Uu7ii+FQy4Qf82G4xu7ShHhjhGahEpCWc3x8UavY3CTcWV+ufmmCtwkr7ZKsX42jdL0kr1B5FKUeqJvAn51jzQ==
 
-qrcode@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/qrcode/-/qrcode-1.5.0.tgz#95abb8a91fdafd86f8190f2836abbfc500c72d1b"
-  integrity sha512-9MgRpgVc+/+47dFvQeD6U2s0Z92EsKzcHogtum4QB+UNd025WOJSHvn/hjk9xmzj7Stj95CyUAs31mrjxliEsQ==
+qrcode@1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/qrcode/-/qrcode-1.5.1.tgz#0103f97317409f7bc91772ef30793a54cd59f0cb"
+  integrity sha512-nS8NJ1Z3md8uTjKtP+SGGhfqmTCs5flU/xR623oI0JX+Wepz9R8UrRVCTBTJm3qGw3rH6jJ6MUHjkDx15cxSSg==
   dependencies:
     dijkstrajs "^1.0.1"
     encode-utf8 "^1.0.3"
@@ -18906,14 +18906,6 @@ react-native-permissions@3.6.0:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-3.6.0.tgz#4b284b6374fdb8b9b6702c6a0719bfb1a97aa7ff"
   integrity sha512-aiancYU5eAC3lCtdAFNz/8OQAShAXSgFJAcNrsspXiMulL4zjClIa52uWMi5NTU4skU0KoWG5rCfqjxWAkJL8w==
 
-react-native-qrcode-svg@6.1.2:
-  version "6.1.2"
-  resolved "https://registry.yarnpkg.com/react-native-qrcode-svg/-/react-native-qrcode-svg-6.1.2.tgz#a7cb6c10199ab01418a7f7700ce17a6a014f544e"
-  integrity sha512-lMbbxoPVybXCp9SYm73Aj/0iZ9OlSZl2u+zpdbjgC4DYHBm9m9tDQxISNg1OPeR7AAzmyx8IV4JTFmk8G5R22g==
-  dependencies:
-    prop-types "^15.7.2"
-    qrcode "^1.5.0"
-
 react-native-reanimated@2.13.0:
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.13.0.tgz#d64c1386626822d4dc22094b4efe028ff2c49cc9"
@@ -18964,10 +18956,10 @@ react-native-svg-transformer@0.14.3:
     path-dirname "^1.0.2"
     semver "^5.6.0"
 
-react-native-svg@12.4.4:
-  version "12.4.4"
-  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-12.4.4.tgz#2ba684eaea9a7402fbbe0ed9737e77284631d00e"
-  integrity sha512-LpcNlEVCURexqPAvQ9ne8KrPVfYz0wIDygwud8VMRmXLezysXzyQN/DTsjm1BO9lIfYp55WQsr3u3yW/vk6iiA==
+react-native-svg@13.8.0:
+  version "13.8.0"
+  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-13.8.0.tgz#b6a22cf77f8098f910490a13aeb160a37e182f97"
+  integrity sha512-G8Mx6W86da+vFimZBJvA93POw8yz0fgDS5biy6oIjMWVJVQSDzCyzwO/zY0yuZmCDhKSZzogl5m0wXXvW2OcTA==
   dependencies:
     css-select "^5.1.0"
     css-tree "^1.1.3"

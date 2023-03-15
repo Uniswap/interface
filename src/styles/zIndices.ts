@@ -1,5 +1,6 @@
 // Standard z-index system https://getbootstrap.com/docs/5.0/layout/z-index/
 export const zIndices = {
+  negative: -1,
   background: 0,
   dropdown: 1000,
   sticky: 1020,
