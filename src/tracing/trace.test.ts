@@ -162,7 +162,7 @@ describe('maybeTrace', () => {
   it('creates a span under the active transaction', async () => {
     getScope.mockReturnValue({ getTransaction })
     await trace('test', () => {
-      maybeTrace('child', () => Promise.resolve(), { data: { e: 'e' }, tags: { f: 6 } })
+      maybeTrace('child', () => Promise.resolve(), { data: { e: 'e' }, tags: { is_widget: true } })
       return Promise.resolve()
     })
     const transaction = getTransaction()
@@ -170,6 +170,6 @@ describe('maybeTrace', () => {
     assert(span)
     expect(span.op).toBe('child')
     expect(span.data).toEqual({ e: 'e' })
-    expect(span.tags).toEqual({ f: 6 })
+    expect(span.tags).toEqual({ is_widget: true })
   })
 })
