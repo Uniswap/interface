@@ -20,7 +20,7 @@ export async function approveCollectionRow(
 ) {
   const callback = () => approveCollectionRow(collectionRow, signer, setCollectionStatusAndCallback)
   setCollectionStatusAndCallback(collectionRow, ListingStatus.SIGNING, callback)
-  const { marketplace, collectionAddress } = collectionRow
+  const { marketplace, collectionAddress, nftStandard } = collectionRow
   const addresses = addressesByNetwork[SupportedChainId.MAINNET]
   const spender =
     marketplace.name === 'OpenSea'
@@ -31,8 +31,12 @@ export async function approveCollectionRow(
       ? X2Y2_TRANSFER_CONTRACT
       : addresses.TRANSFER_MANAGER_ERC721
   !!collectionAddress &&
-    (await approveCollection(spender, collectionAddress, signer, (newStatus: ListingStatus) =>
-      setCollectionStatusAndCallback(collectionRow, newStatus, callback)
+    (await approveCollection(
+      spender,
+      collectionAddress,
+      signer,
+      (newStatus: ListingStatus) => setCollectionStatusAndCallback(collectionRow, newStatus, callback),
+      nftStandard
     ))
 }
 
@@ -100,6 +104,7 @@ const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], ListingRow[]]
           collectionAddress: asset.asset_contract.address,
           isVerified: asset.collectionIsVerified,
           marketplace,
+          nftStandard: asset.asset_contract.tokenType,
         }
         newCollectionsToApprove.push(newCollectionRow)
       }

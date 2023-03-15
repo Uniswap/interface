@@ -8,6 +8,7 @@ import { Seaport } from '@opensea/seaport-js'
 import { ItemType } from '@opensea/seaport-js/lib/constants'
 import { ConsiderationInputItem } from '@opensea/seaport-js/lib/types'
 import { ZERO_ADDRESS } from 'constants/misc'
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import {
   OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY,
   OPENSEA_KEY_TO_CONDUIT,
@@ -15,6 +16,7 @@ import {
 } from 'nft/queries/openSea'
 
 import ERC721 from '../../abis/erc721.json'
+import ERC1155 from '../../abis/erc1155.json'
 import {
   createLooksRareOrder,
   getOrderId,
@@ -83,22 +85,23 @@ export async function approveCollection(
   operator: string,
   collectionAddress: string,
   signer: Signer,
-  setStatus: (newStatus: ListingStatus) => void
+  setStatus: (newStatus: ListingStatus) => void,
+  nftStandard: NftStandard = NftStandard.Erc721
 ): Promise<void> {
   // This will work for both 721s & 1155s because they both have the
   // setApprovalForAll() method
-  const ERC721Contract = new Contract(collectionAddress, ERC721, signer)
+  const contract = new Contract(collectionAddress, nftStandard === NftStandard.Erc721 ? ERC721 : ERC1155, signer)
   const signerAddress = await signer.getAddress()
 
   try {
-    const approved = await ERC721Contract.isApprovedForAll(signerAddress, operator)
+    const approved = await contract.isApprovedForAll(signerAddress, operator)
     if (approved) {
       setStatus(ListingStatus.APPROVED)
       return
     }
 
     setStatus(ListingStatus.SIGNING)
-    const approvalTransaction = await ERC721Contract.setApprovalForAll(operator, true)
+    const approvalTransaction = await contract.setApprovalForAll(operator, true)
 
     setStatus(ListingStatus.PENDING)
     const tx = await approvalTransaction.wait()
