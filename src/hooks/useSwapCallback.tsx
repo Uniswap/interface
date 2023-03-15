@@ -52,7 +52,7 @@ export function useSwapCallback(
   const swapCallback = permit2Enabled ? universalRouterSwapCallback : libCallback
 
   const callback = useMemo(() => {
-    if (!trade || !swapCallback) return null
+    if (!trade || !swapCallback || !deadline) return null
     return () =>
       swapCallback().then((response) => {
         addTransaction(
@@ -66,6 +66,7 @@ export function useSwapCallback(
                 expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
                 outputCurrencyId: currencyId(trade.outputAmount.currency),
                 minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
+                deadline,
               }
             : {
                 type: TransactionType.SWAP,
@@ -75,11 +76,12 @@ export function useSwapCallback(
                 outputCurrencyId: currencyId(trade.outputAmount.currency),
                 outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
                 expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+                deadline,
               }
         )
         return response.hash
       })
-  }, [addTransaction, allowedSlippage, swapCallback, trade])
+  }, [addTransaction, allowedSlippage, swapCallback, trade, deadline])
 
   return {
     state,

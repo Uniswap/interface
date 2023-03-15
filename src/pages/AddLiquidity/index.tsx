@@ -310,6 +310,7 @@ export default function AddLiquidity() {
                 expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient?.toString() ?? '0',
                 expectedAmountQuoteRaw: parsedAmounts[Field.CURRENCY_B]?.quotient?.toString() ?? '0',
                 feeAmount: position.pool.fee,
+                deadline,
               })
               setTxHash(response.hash)
               sendEvent({

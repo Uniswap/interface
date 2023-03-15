@@ -196,6 +196,7 @@ export default function AddLiquidity() {
             expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient.toString() ?? '0',
             quoteCurrencyId: currencyId(currencyB),
             expectedAmountQuoteRaw: parsedAmounts[Field.CURRENCY_B]?.quotient.toString() ?? '0',
+            deadline,
           })
 
           setTxHash(response.hash)

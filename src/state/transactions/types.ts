@@ -1,3 +1,4 @@
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { TradeType } from '@uniswap/sdk-core'
 
 import { VoteOption } from '../governance/types'
@@ -77,6 +78,7 @@ interface BaseSwapTransactionInfo extends BaseTransactionInfo {
   tradeType: TradeType
   inputCurrencyId: string
   outputCurrencyId: string
+  deadline: BigNumber
 }
 
 export interface ExactInputSwapTransactionInfo extends BaseSwapTransactionInfo {
@@ -131,6 +133,7 @@ export interface AddLiquidityV3PoolTransactionInfo {
   feeAmount: number
   expectedAmountBaseRaw: string
   expectedAmountQuoteRaw: string
+  deadline: BigNumber
 }
 
 export interface AddLiquidityV2PoolTransactionInfo {
@@ -139,6 +142,7 @@ export interface AddLiquidityV2PoolTransactionInfo {
   quoteCurrencyId: string
   expectedAmountBaseRaw: string
   expectedAmountQuoteRaw: string
+  deadline: BigNumber
 }
 
 export interface MigrateV2LiquidityToV3TransactionInfo {
@@ -146,6 +150,7 @@ export interface MigrateV2LiquidityToV3TransactionInfo {
   baseCurrencyId: string
   quoteCurrencyId: string
   isFork: boolean
+  deadline: BigNumberish
 }
 
 export interface CollectFeesTransactionInfo {
@@ -162,6 +167,7 @@ export interface RemoveLiquidityV3TransactionInfo {
   quoteCurrencyId: string
   expectedAmountBaseRaw: string
   expectedAmountQuoteRaw: string
+  deadline: BigNumberish
 }
 
 interface SubmitProposalTransactionInfo {

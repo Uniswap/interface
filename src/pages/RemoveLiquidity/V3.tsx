@@ -159,6 +159,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               quoteCurrencyId: currencyId(liquidityValue1.currency),
               expectedAmountBaseRaw: liquidityValue0.quotient.toString(),
               expectedAmountQuoteRaw: liquidityValue1.quotient.toString(),
+              deadline,
             })
           })
       })
