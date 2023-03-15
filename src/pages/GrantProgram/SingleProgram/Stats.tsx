@@ -83,7 +83,7 @@ const formatTradingVolume = (v: string) => {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 0,
-    maximumSignificantDigits: 2,
+    maximumFractionDigits: 1,
   })
 
   return formatter.format(Number(v))
@@ -93,7 +93,7 @@ const formatNumber = (v: number) => {
   const formatter = Intl.NumberFormat('en-US', {
     notation: 'compact',
     minimumFractionDigits: 0,
-    maximumSignificantDigits: 2,
+    maximumFractionDigits: 1,
   })
 
   return formatter.format(v)
