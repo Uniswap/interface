@@ -17,8 +17,24 @@ import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorTo
 
 import { PermitSignature } from './usePermitAllowance'
 
-class ModifiedSwapError extends Error {}
-class GasEstimationError extends Error {}
+/** Thrown when gas estimation fails. This class of error usually requires an emulator to determine the root cause. */
+class GasEstimationError extends Error {
+  constructor() {
+    super(t`Your swap is expected to fail.`)
+  }
+}
+
+/**
+ * Thrown when the user modifies the transaction in-wallet before submitting it.
+ * In-wallet calldata modification nullifies any safeguards (eg slippage) from the interface, so we recommend reverting them immediately.
+ */
+class ModifiedSwapError extends Error {
+  constructor() {
+    super(
+      t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`
+    )
+  }
+}
 
 interface SwapOptions {
   slippageTolerance: Percent
@@ -55,7 +71,7 @@ export function useUniversalRouterSwapCallback(
             from: account,
             to: UNIVERSAL_ROUTER_ADDRESS(chainId),
             data,
-            // TODO: universal-router-sdk returns a non-hexlified value.
+            // TODO(https://github.com/Uniswap/universal-router-sdk/issues/113): universal-router-sdk returns a non-hexlified value.
             ...(value && !isZero(value) ? { value: toHex(value) } : {}),
           }
 
@@ -66,7 +82,7 @@ export function useUniversalRouterSwapCallback(
             setTraceStatus('failed_precondition')
             setTraceError(gasError)
             console.warn(gasError)
-            throw new GasEstimationError('Your swap is expected to fail.')
+            throw new GasEstimationError()
           }
           const gasLimit = calculateGasMargin(gasEstimate)
           setTraceData('gasLimit', gasLimit.toNumber())
@@ -80,9 +96,7 @@ export function useUniversalRouterSwapCallback(
               )
               if (tx.data !== response.data) {
                 sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, { txHash: response.hash })
-                throw new ModifiedSwapError(
-                  t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`
-                )
+                throw new ModifiedSwapError()
               }
               return response
             })
