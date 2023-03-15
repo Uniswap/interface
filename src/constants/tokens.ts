@@ -387,7 +387,7 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
   // ),
   [SupportedChainId.SCROLL_ALPHA]: new Token(
     SupportedChainId.SCROLL_ALPHA,
-    '0x5300000000000000000000000000000000000004',
+    '0xa1EA0B2354F5A344110af2b6AD68e75545009a03',
     18,
     'WETH',
     'Wrapped Ether'
