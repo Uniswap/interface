@@ -23,10 +23,9 @@ type Args = {
   routeSummary: RouteSummary | undefined
   slippage: number
   transactionTimeout: number
-  skipSimulateTx: boolean
 }
 const useBuildRoute = (args: Args) => {
-  const { recipient, routeSummary, slippage, transactionTimeout, skipSimulateTx } = args
+  const { recipient, routeSummary, slippage, transactionTimeout } = args
   const { chainId, account } = useActiveWeb3React()
   const abortControllerRef = useRef(new AbortController())
   const { aggregatorDomain } = useKyberswapGlobalConfig()
@@ -51,7 +50,7 @@ const useBuildRoute = (args: Args) => {
       sender: account,
       recipient: recipient || account,
       source: 'kyberswap',
-      skipSimulateTx,
+      skipSimulateTx: false,
     }
 
     try {
@@ -69,7 +68,7 @@ const useBuildRoute = (args: Args) => {
         error: e.message || t`Something went wrong`,
       }
     }
-  }, [account, aggregatorDomain, chainId, recipient, routeSummary, skipSimulateTx, slippage, transactionTimeout])
+  }, [account, aggregatorDomain, chainId, recipient, routeSummary, slippage, transactionTimeout])
 
   return fetcher
 }

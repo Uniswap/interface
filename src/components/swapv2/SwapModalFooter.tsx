@@ -1,31 +1,33 @@
 import { Currency, TradeType } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
-import { rgba } from 'polished'
 import { useMemo, useState } from 'react'
-import { AlertTriangle, Repeat } from 'react-feather'
-import { Text } from 'rebass'
+import { Repeat } from 'react-feather'
+import { Flex, Text } from 'rebass'
 
 import { ButtonError } from 'components/Button'
 import { GreyCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import InfoHelper from 'components/InfoHelper'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
+import SlippageWarningNote from 'components/SlippageWarningNote'
+import PriceImpactNote from 'components/SwapForm/PriceImpactNote'
 import { Dots } from 'components/swapv2/styleds'
 import { useActiveWeb3React } from 'hooks'
 import { FeeConfig } from 'hooks/useSwapV2Callback'
 import useTheme from 'hooks/useTheme'
 import { Field } from 'state/swap/actions'
 import { useCheckStablePairSwap, useEncodeSolana } from 'state/swap/hooks'
+import { useExpertModeManager } from 'state/user/hooks'
 import { TYPE } from 'theme'
 import { formattedNum } from 'utils'
 import { Aggregator } from 'utils/aggregator'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { getFormattedFeeAmountUsd } from 'utils/fee'
-import { computeSlippageAdjustedAmounts, formatExecutionPrice } from 'utils/prices'
+import { checkPriceImpact, computeSlippageAdjustedAmounts, formatExecutionPrice, formatPriceImpact } from 'utils/prices'
 import { checkWarningSlippage } from 'utils/slippage'
 
 import HurryUpBanner from './HurryUpBanner'
-import { CustomSlippageNote, StyledBalanceMaxMini, SwapCallbackError } from './styleds'
+import { StyledBalanceMaxMini, SwapCallbackError } from './styleds'
 
 export default function SwapModalFooter({
   trade,
@@ -52,6 +54,7 @@ export default function SwapModalFooter({
     () => computeSlippageAdjustedAmounts(trade, allowedSlippage),
     [allowedSlippage, trade],
   )
+  const [isAdvancedMode] = useExpertModeManager()
   const isWarningSlippge = checkWarningSlippage(allowedSlippage, isStablePairSwap)
   const [encodeSolana] = useEncodeSolana()
 
@@ -61,8 +64,7 @@ export default function SwapModalFooter({
 
   const formattedFeeAmountUsd = useMemo(() => getFormattedFeeAmountUsd(trade, feeConfig), [trade, feeConfig])
   const { priceImpact } = trade
-  const highPriceImpact = priceImpact > 5
-  const veryHighPriceImpact = priceImpact > 15
+  const priceImpactResult = checkPriceImpact(priceImpact)
 
   return (
     <>
@@ -132,9 +134,9 @@ export default function SwapModalFooter({
           </RowFixed>
           <TYPE.black
             fontSize={14}
-            color={veryHighPriceImpact ? theme.red : highPriceImpact ? theme.warning : theme.text}
+            color={priceImpactResult.isVeryHigh ? theme.red : priceImpactResult.isHigh ? theme.warning : theme.text}
           >
-            {priceImpact > 0.01 ? parseFloat(priceImpact.toFixed(3)) : '< 0.01'}%
+            {priceImpactResult.isInvalid || typeof priceImpact !== 'number' ? '--' : formatPriceImpact(priceImpact)}
           </TYPE.black>
         </RowBetween>
 
@@ -164,61 +166,47 @@ export default function SwapModalFooter({
         )}
       </AutoColumn>
 
-      <CustomSlippageNote rawSlippage={allowedSlippage} isStablePairSwap={isStablePairSwap} />
+      <Flex
+        sx={{
+          flexDirection: 'column',
+          gap: '0.75rem',
+          marginTop: '1rem',
+        }}
+      >
+        <SlippageWarningNote rawSlippage={allowedSlippage} isStablePairSwap={isStablePairSwap} />
 
-      {highPriceImpact && (
-        <AutoRow
-          style={{
-            marginTop: '16px',
-            padding: '12px 16px',
-            borderRadius: '999px',
-            backgroundColor: rgba(veryHighPriceImpact ? theme.red : theme.warning, 0.35),
-            color: theme.text,
-            fontSize: '12px',
-            fontWeight: 400,
-          }}
-        >
-          <AlertTriangle
-            color={veryHighPriceImpact ? theme.red : theme.warning}
-            size={16}
-            style={{ marginRight: '10px' }}
-          />
-          {veryHighPriceImpact ? <Trans>Price impact is Very High!</Trans> : <Trans>Price impact is High!</Trans>}
+        <PriceImpactNote priceImpact={priceImpact} isAdvancedMode={isAdvancedMode} />
+
+        <HurryUpBanner startedTime={startedTime} />
+        <AutoRow>
+          {isSolana && !encodeSolana ? (
+            <GreyCard style={{ textAlign: 'center', borderRadius: '999px', padding: '12px' }} id="confirm-swap-or-send">
+              <Dots>
+                <Trans>Checking accounts</Trans>
+              </Dots>
+            </GreyCard>
+          ) : (
+            <ButtonError
+              onClick={onConfirm}
+              disabled={disabledConfirm}
+              style={{
+                ...((priceImpactResult.isHigh || priceImpactResult.isInvalid) && {
+                  border: 'none',
+                  background: priceImpactResult.isVeryHigh || priceImpactResult.isInvalid ? theme.red : theme.warning,
+                  color: theme.text,
+                }),
+              }}
+              id="confirm-swap-or-send"
+            >
+              <Text fontSize={16} fontWeight={500}>
+                <Trans>Confirm Swap</Trans>
+              </Text>
+            </ButtonError>
+          )}
+
+          {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
         </AutoRow>
-      )}
-      <HurryUpBanner startedTime={startedTime} />
-      <AutoRow>
-        {isSolana && !encodeSolana ? (
-          <GreyCard
-            style={{ textAlign: 'center', borderRadius: '999px', padding: '12px', marginTop: '24px' }}
-            id="confirm-swap-or-send"
-          >
-            <Dots>
-              <Trans>Checking accounts</Trans>
-            </Dots>
-          </GreyCard>
-        ) : (
-          <ButtonError
-            onClick={onConfirm}
-            disabled={disabledConfirm}
-            style={{
-              marginTop: '24px',
-              ...((highPriceImpact || veryHighPriceImpact) && {
-                border: 'none',
-                background: veryHighPriceImpact ? theme.red : theme.warning,
-                color: theme.text,
-              }),
-            }}
-            id="confirm-swap-or-send"
-          >
-            <Text fontSize={16} fontWeight={500}>
-              <Trans>Confirm Swap</Trans>
-            </Text>
-          </ButtonError>
-        )}
-
-        {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-      </AutoRow>
+      </Flex>
     </>
   )
 }

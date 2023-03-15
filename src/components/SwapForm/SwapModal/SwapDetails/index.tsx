@@ -22,7 +22,7 @@ import { DetailedRouteSummary } from 'types/route'
 import { formattedNum, toK } from 'utils'
 import { minimumAmountAfterSlippage } from 'utils/currencyAmount'
 import { getFormattedFeeAmountUsdV2 } from 'utils/fee'
-import { checkPriceImpact } from 'utils/prices'
+import { checkPriceImpact, formatPriceImpact } from 'utils/prices'
 
 function formattedMinimumReceived(number: string) {
   if (!number) {
@@ -116,7 +116,7 @@ const SwapDetails: React.FC<Props> = ({
       ''
     )
 
-  const { isInvalid, isHigh, isVeryHigh } = checkPriceImpact(priceImpact)
+  const priceImpactResult = checkPriceImpact(priceImpact)
 
   const renderStatusNotice = () => {
     if (isLoading) {
@@ -226,7 +226,11 @@ const SwapDetails: React.FC<Props> = ({
             <TYPE.black fontSize={14} fontWeight={400} color={theme.subText}>
               <Trans>Minimum Received</Trans>
             </TYPE.black>
-            <InfoHelper size={14} text={t`You will receive at least this amount or your transaction will revert`} />
+            <InfoHelper
+              placement="top"
+              size={14}
+              text={t`You will receive at least this amount or your transaction will revert`}
+            />
           </RowFixed>
 
           <ValueWithLoadingSkeleton
@@ -244,7 +248,7 @@ const SwapDetails: React.FC<Props> = ({
               <TYPE.black fontSize={14} fontWeight={400} color={theme.subText}>
                 <Trans>Gas Fee</Trans>
               </TYPE.black>
-              <InfoHelper size={14} text={t`Estimated network fee for your transaction`} />
+              <InfoHelper placement="top" size={14} text={t`Estimated network fee for your transaction`} />
             </RowFixed>
 
             <ValueWithLoadingSkeleton
@@ -266,11 +270,27 @@ const SwapDetails: React.FC<Props> = ({
             <TYPE.black fontSize={14} fontWeight={400} color={theme.subText}>
               <Trans>Price Impact</Trans>
             </TYPE.black>
-            <InfoHelper size={14} text={t`Estimated change in price due to the size of your transaction`} />
+            <InfoHelper
+              placement="top"
+              size={14}
+              text={t`Estimated change in price due to the size of your transaction`}
+            />
           </RowFixed>
-          <TYPE.black fontSize={14} color={isVeryHigh ? theme.red : isHigh ? theme.warning : theme.text}>
-            {isInvalid || !priceImpact ? '--' : priceImpact > 0.01 ? priceImpact.toFixed(2) + '%' : '< 0.01%'}
-          </TYPE.black>
+
+          <ValueWithLoadingSkeleton
+            skeletonStyle={{
+              width: '64px',
+            }}
+            isShowingSkeleton={isLoading}
+            content={
+              <TYPE.black
+                fontSize={14}
+                color={priceImpactResult.isVeryHigh ? theme.red : priceImpactResult.isHigh ? theme.warning : theme.text}
+              >
+                {priceImpactResult.isInvalid || typeof priceImpact !== 'number' ? '--' : formatPriceImpact(priceImpact)}
+              </TYPE.black>
+            }
+          />
         </RowBetween>
 
         <RowBetween height="20px">

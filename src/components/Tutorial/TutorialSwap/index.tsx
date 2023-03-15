@@ -308,7 +308,7 @@ const getListSteps = (isLogin: boolean, isSolana: boolean) => {
       description: (
         <Layout title={LIST_TITLE.SETTING}>
           <Desc>
-            <Trans>Adjust the advanced settings for your trades like the max slippage.</Trans>
+            <Trans>Adjust the advanced settings for your trades such as the max slippage.</Trans>
           </Desc>
           <Desc>
             <Trans>Personalize your trading interface in the display settings</Trans>

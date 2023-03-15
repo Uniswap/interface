@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
-import { Trans, t } from '@lingui/macro'
-import { useMemo, useState } from 'react'
+import { Trans } from '@lingui/macro'
+import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { ButtonPrimary } from 'components/Button'
@@ -83,38 +83,6 @@ const SwapOnlyButton: React.FC<Props> = ({
   const userHasSpecifiedInputOutput = Boolean(currencyIn && currencyOut && parsedAmount)
   const showLoading = isGettingRoute || isBuildingRoute || ((!balanceIn || !balanceOut) && userHasSpecifiedInputOutput)
 
-  const handleClickSwapForAdvancedMode = async () => {
-    if (!swapCallback || isBuildingRoute) {
-      return
-    }
-
-    setProcessingSwap(true)
-
-    setBuildingRoute(true)
-    const result = await buildRoute()
-    setBuildingRoute(false)
-
-    if (result.error) {
-      setProcessingSwap(false)
-      setErrorWhileSwap(result.error)
-      return
-    }
-
-    if (!result.data?.data || !result.data?.routerAddress) {
-      setProcessingSwap(false)
-      setErrorWhileSwap(t`Build failed. Please try again`)
-      return
-    }
-
-    try {
-      await swapCallback(result.data.routerAddress, result.data.data)
-    } catch (e) {
-      setErrorWhileSwap(e.message)
-    }
-
-    setProcessingSwap(false)
-  }
-
   const handleClickSwapForNormalMode = async () => {
     if (!swapCallback || isBuildingRoute) {
       return
@@ -143,11 +111,7 @@ const SwapOnlyButton: React.FC<Props> = ({
 
     setErrorWhileSwap('')
 
-    if (isAdvancedMode) {
-      handleClickSwapForAdvancedMode()
-    } else {
-      handleClickSwapForNormalMode()
-    }
+    handleClickSwapForNormalMode()
   }
 
   const handleClickRetryForNormalMode = () => {
@@ -170,8 +134,12 @@ const SwapOnlyButton: React.FC<Props> = ({
     return undefined
   }, [buildResult, swapCallback, routeSummary, mixpanelHandler])
 
+  const onDismissModal = useCallback(() => {
+    setProcessingSwap(false)
+  }, [setProcessingSwap])
+
   const renderButton = () => {
-    if (isProcessingSwap && isAdvancedMode) {
+    if (isProcessingSwap) {
       return (
         <CustomPrimaryButton disabled $minimal={minimal}>
           <Dots>
@@ -201,29 +169,29 @@ const SwapOnlyButton: React.FC<Props> = ({
       )
     }
 
-    const isDisablePriceImpact = !isAdvancedMode && (priceImpactResult.isVeryHigh || priceImpactResult.isInvalid)
-    const shouldBeDisabled = isDisabled || isDisablePriceImpact
+    const shouldDisableByPriceImpact = !isAdvancedMode && (priceImpactResult.isVeryHigh || priceImpactResult.isInvalid)
+    const shouldDisable = isDisabled || shouldDisableByPriceImpact
 
-    if (priceImpactResult.isVeryHigh) {
+    if (priceImpactResult.isVeryHigh || (priceImpactResult.isInvalid && isAdvancedMode)) {
       return (
         <CustomPrimaryButton
           onClick={handleClickSwapButton}
-          disabled={shouldBeDisabled}
+          disabled={shouldDisable}
           $minimal={minimal}
-          style={shouldBeDisabled ? undefined : { background: theme.red, color: theme.white }}
+          style={shouldDisable ? undefined : { background: theme.red }}
         >
           <Trans>Swap Anyway</Trans>
         </CustomPrimaryButton>
       )
     }
 
-    if (priceImpactResult.isHigh || (priceImpactResult.isInvalid && isAdvancedMode)) {
+    if (priceImpactResult.isHigh) {
       return (
         <CustomPrimaryButton
           onClick={handleClickSwapButton}
           $minimal={minimal}
-          disabled={shouldBeDisabled}
-          style={isDisabled ? undefined : { background: theme.warning, color: theme.white }}
+          disabled={shouldDisable}
+          style={isDisabled ? undefined : { background: theme.warning }}
         >
           <Trans>Swap Anyway</Trans>
         </CustomPrimaryButton>
@@ -231,7 +199,7 @@ const SwapOnlyButton: React.FC<Props> = ({
     }
 
     return (
-      <CustomPrimaryButton disabled={shouldBeDisabled} onClick={handleClickSwapButton} $minimal={minimal}>
+      <CustomPrimaryButton disabled={shouldDisable} onClick={handleClickSwapButton} $minimal={minimal}>
         <Trans>Swap</Trans>
       </CustomPrimaryButton>
     )
@@ -241,13 +209,11 @@ const SwapOnlyButton: React.FC<Props> = ({
     <>
       {renderButton()}
       <SwapModal
-        isOpen={isProcessingSwap && !isAdvancedMode}
+        isOpen={isProcessingSwap}
         tokenAddToMetaMask={currencyOut}
         buildResult={buildResult}
         isBuildingRoute={isBuildingRoute}
-        onDismiss={() => {
-          setProcessingSwap(false)
-        }}
+        onDismiss={onDismissModal}
         swapCallback={swapCallbackForModal}
         onRetryBuild={handleClickRetryForNormalMode}
       />

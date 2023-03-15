@@ -7,7 +7,7 @@ import { toCurrencyAmount } from 'utils/currencyAmount'
 import { GetRouteData } from './types/getRoute'
 
 export const calculatePriceImpact = (amountInUsd: number, amountOutUsd: number) => {
-  const priceImpact = !amountOutUsd ? -1 : ((amountInUsd - amountOutUsd) * 100) / amountInUsd
+  const priceImpact = !amountOutUsd ? NaN : ((amountInUsd - amountOutUsd) * 100) / amountInUsd
   return priceImpact
 }
 

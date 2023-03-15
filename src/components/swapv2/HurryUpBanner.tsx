@@ -32,7 +32,7 @@ function HurryUpBanner({ startedTime }: { startedTime: number | undefined }) {
   const color = currentTime <= 5 ? theme.green : currentTime <= 10 ? theme.yellow1 : theme.red2
 
   return (
-    <GreyCard style={{ padding: '12px 16px', marginTop: '24px', fontSize: '12px' }}>
+    <GreyCard style={{ padding: '12px 16px', fontSize: '12px' }}>
       <RowFixed style={{ gap: '8px' }}>
         <ConfirmedIcon>
           <CountdountNumber style={{ color }}>{currentTime}</CountdountNumber>

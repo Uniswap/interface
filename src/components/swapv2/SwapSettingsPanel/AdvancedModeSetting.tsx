@@ -1,10 +1,10 @@
-import { Trans, t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { rgba } from 'polished'
 import { useState } from 'react'
 import { Flex } from 'rebass'
 import styled from 'styled-components'
 
-import QuestionHelper from 'components/QuestionHelper'
+import InfoHelper from 'components/InfoHelper'
 import Toggle from 'components/Toggle'
 import AdvanceModeModal from 'components/TransactionSettings/AdvanceModeModal'
 import SettingLabel from 'components/swapv2/SwapSettingsPanel/SettingLabel'
@@ -35,8 +35,14 @@ const AdvancedModeSetting: React.FC<Props> = ({ className }) => {
           <SettingLabel>
             <Trans>Advanced Mode</Trans>
           </SettingLabel>
-          <QuestionHelper
-            text={t`You can make trades with high price impact and without any confirmation prompts. Enable at your own risk`}
+          <InfoHelper
+            placement="top"
+            text={
+              <Trans>
+                You can make trades with price impact which is <b>very</b> high, or cannot be calculated. Enable at your
+                own risk
+              </Trans>
+            }
           />
         </Flex>
         <Toggle id="toggle-expert-mode-button" isActive={expertMode} toggle={handleToggleAdvancedMode} />

@@ -55,7 +55,7 @@ const UpdatedBadge: React.FC<Props> = ({ $level }) => {
           width="fit-content"
           text={
             <Trans>
-              <i>We got you better price!</i>
+              <i>We got you a better price!</i>
             </Trans>
           }
         />

@@ -1,19 +1,41 @@
-import { Trans, t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { Flex } from 'rebass'
+import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
-import QuestionHelper from 'components/QuestionHelper'
+import InfoHelper from 'components/InfoHelper'
 import SlippageControl from 'components/SlippageControl'
 import PinButton from 'components/swapv2/SwapSettingsPanel/PinButton'
 import SettingLabel from 'components/swapv2/SwapSettingsPanel/SettingLabel'
-import { DEFAULT_SLIPPAGE, DEFAULT_SLIPPAGE_STABLE_PAIR_SWAP } from 'constants/index'
+import { DEFAULT_SLIPPAGE, DEFAULT_SLIPPAGE_STABLE_PAIR_SWAP, MAX_SLIPPAGE_IN_BIPS } from 'constants/index'
 import { useAppSelector } from 'state/hooks'
 import { useCheckStablePairSwap } from 'state/swap/hooks'
 import { pinSlippageControl } from 'state/user/actions'
 import { useUserSlippageTolerance } from 'state/user/hooks'
-import { checkRangeSlippage } from 'utils/slippage'
+import { checkRangeSlippage, formatSlippage } from 'utils/slippage'
+
+const maxSlippageInText = formatSlippage(MAX_SLIPPAGE_IN_BIPS)
+
+export const InfoHelperForMaxSlippage = () => {
+  return (
+    <InfoHelper
+      width="320px"
+      placement="top"
+      text={
+        <Text>
+          <Trans>
+            During your swap if the price changes by more than this %, your transaction will revert.
+            <br />
+            The maximum allowed slippage is <b>{maxSlippageInText}</b>.
+            <br />
+            This control will appear in Swap form if pinned.
+          </Trans>
+        </Text>
+      }
+    />
+  )
+}
 
 const Message = styled.div`
   font-size: 12px;
@@ -62,10 +84,7 @@ const SlippageSetting: React.FC<Props> = ({ shouldShowPinButton = true }) => {
         <SettingLabel>
           <Trans>Max Slippage</Trans>
         </SettingLabel>
-        <QuestionHelper
-          placement="top"
-          text={t`Transaction will revert if there is an adverse rate change that is higher than this %. This control will appear in Swap form if pinned.`}
-        />
+        <InfoHelperForMaxSlippage />
 
         {shouldShowPinButton && (
           <PinButton isActive={isSlippageControlPinned} onClick={handleClickPinSlippageControl} />

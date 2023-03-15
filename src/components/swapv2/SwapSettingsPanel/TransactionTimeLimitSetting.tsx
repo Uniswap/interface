@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
-import QuestionHelper from 'components/QuestionHelper'
+import InfoHelper from 'components/InfoHelper'
 import SettingLabel from 'components/swapv2/SwapSettingsPanel/SettingLabel'
 import useTheme from 'hooks/useTheme'
 import { useUserTransactionTTL } from 'state/user/hooks'
@@ -68,7 +68,10 @@ const TransactionTimeLimitSetting: React.FC<Props> = ({ className }) => {
         <SettingLabel>
           <Trans>Transaction time limit</Trans>
         </SettingLabel>
-        <QuestionHelper text={t`Transaction will revert if it is pending for longer than the indicated time`} />
+        <InfoHelper
+          placement="top"
+          text={t`Transaction will revert if it is pending for longer than the indicated time`}
+        />
       </Flex>
 
       <Flex

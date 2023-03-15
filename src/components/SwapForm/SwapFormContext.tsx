@@ -10,6 +10,7 @@ type SwapFormContextProps = {
   isSaveGas: boolean
   recipient: string | null
   isStablePairSwap: boolean
+  isAdvancedMode: boolean
 }
 
 const SwapFormContext = createContext<SwapFormContextProps | undefined>(undefined)

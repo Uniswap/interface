@@ -53,7 +53,7 @@ const LiquiditySourcesSetting: React.FC<Props> = ({ onClick }) => {
         <SettingLabel>
           <Trans>Liquidity Sources</Trans>
         </SettingLabel>
-        <QuestionHelper text={t`Your trade is routed through one or more of these liquidity sources`} />
+        <QuestionHelper placement="top" text={t`Your trade is routed through one or more of these liquidity sources`} />
       </Group>
 
       <Group>

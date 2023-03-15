@@ -311,6 +311,6 @@ if (ENV.ENV_LEVEL < ENV_TYPE.PROD) {
   console.groupEnd()
 }
 
-export const INPUT_DEBOUNCE_TIME = 200
+export const INPUT_DEBOUNCE_TIME = 300
 
 export const ENABLE_CLICK_TO_REFRESH_GET_ROUTE = false

@@ -78,16 +78,40 @@ export function computePriceImpactWithoutFee(pairs: Pair[], priceImpact?: Percen
   return priceImpactWithoutFeePercent
 }
 
+// priceImpact is invalid if it's not finite (NaN, Infinity)
+// priceImpact is undefined or null means it's not provided
 export const checkPriceImpact = (
-  priceImpact?: number,
+  priceImpact: number | undefined | null,
 ): {
   isInvalid: boolean
   isHigh: boolean
   isVeryHigh: boolean
 } => {
   return {
-    isInvalid: priceImpact === -1,
+    isInvalid: typeof priceImpact === 'number' && !Number.isFinite(priceImpact),
     isHigh: !!priceImpact && priceImpact > 5,
     isVeryHigh: !!priceImpact && priceImpact > 15,
   }
+}
+
+// price impact can still be negative, it's only invalid if it's -1
+export const formatPriceImpact = (pi: number, withPercent = true) => {
+  let text = ''
+  const pi100 = Math.floor(pi * 100)
+
+  if (pi < 0.01) {
+    text = '< 0.01'
+  } else if (pi100 % 100 === 0) {
+    text = String(pi100 / 100)
+  } else if (pi100 % 10 === 0) {
+    text = (pi100 / 100).toFixed(1)
+  } else {
+    text = (pi100 / 100).toFixed(2)
+  }
+
+  if (withPercent) {
+    text += '%'
+  }
+
+  return text
 }

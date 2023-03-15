@@ -7,7 +7,6 @@ import { ReactComponent as Alert } from 'assets/images/alert.svg'
 import { ButtonEmpty } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import Modal, { ModalProps } from 'components/Modal'
-import SlippageWarningNote from 'components/SlippageWarningNote'
 import { Z_INDEXS } from 'constants/styles'
 import useTheme from 'hooks/useTheme'
 import { errorFriendly } from 'utils/dmm'
@@ -278,7 +277,6 @@ export const PriceImpactHigh = styled.div<{ veryHigh?: boolean }>`
   border-radius: 999px;
   padding: 12px 16px;
   background: ${({ theme, veryHigh }) => (veryHigh ? `${theme.red}66` : `${theme.warning}66`)};
-  margin-top: 24px;
   display: flex;
   align-items: center;
   font-size: 12px;
@@ -392,8 +390,4 @@ export const IconButton = styled(StyledActionButtonSwapForm)<{ enableClickToRefr
     cursor: default;
     background-color: transparent;
   }
-`
-
-export const CustomSlippageNote = styled(SlippageWarningNote)`
-  margin-top: 16px;
 `

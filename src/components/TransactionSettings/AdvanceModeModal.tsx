@@ -79,8 +79,8 @@ function AdvanceModeModal({ show, setShow }: { show: boolean; setShow: (v: boole
             <Text color={theme.warning} as="span" fontWeight="500">
               Advanced Mode
             </Text>{' '}
-            turns off the &apos;Confirm&apos; transaction prompt while trading and allows trades with high price impact
-            that can result in bad rates and lost funds.
+            allows you to make trades with price impact which is <b>very</b> high, or cannot be calculated. Enable at
+            your own risk as this can result in bad rates and lost funds!
           </Trans>
         </Text>
 
