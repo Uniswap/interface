@@ -35,68 +35,72 @@ export function useUniversalRouterSwapCallback(
   const { account, chainId, provider } = useWeb3React()
 
   return useCallback(async (): Promise<TransactionResponse> => {
-    return trace('swap.send', async ({ setTraceData, setTraceStatus, setTraceError }) => {
-      try {
-        if (!account) throw new Error('missing account')
-        if (!chainId) throw new Error('missing chainId')
-        if (!provider) throw new Error('missing provider')
-        if (!trade) throw new Error('missing trade')
-
-        setTraceData('slippageTolerance', options.slippageTolerance.toFixed(2))
-        const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
-          slippageTolerance: options.slippageTolerance,
-          deadlineOrPreviousBlockhash: options.deadline?.toString(),
-          inputTokenPermit: options.permit,
-          fee: options.feeOptions,
-        })
-        const tx = {
-          from: account,
-          to: UNIVERSAL_ROUTER_ADDRESS(chainId),
-          data,
-          // TODO: universal-router-sdk returns a non-hexlified value.
-          ...(value && !isZero(value) ? { value: toHex(value) } : {}),
-        }
-
-        let gasEstimate: BigNumber
+    return trace(
+      'swap.send',
+      async ({ setTraceData, setTraceStatus, setTraceError }) => {
         try {
-          gasEstimate = await provider.estimateGas(tx)
-        } catch (gasError) {
-          setTraceStatus('failed_precondition')
-          setTraceError(gasError)
-          console.warn(gasError)
-          throw new GasEstimationError('Your swap is expected to fail.')
-        }
-        const gasLimit = calculateGasMargin(gasEstimate)
-        setTraceData('gasLimit', gasLimit.toNumber())
-        const response = await provider
-          .getSigner()
-          .sendTransaction({ ...tx, gasLimit })
-          .then((response) => {
-            sendAnalyticsEvent(
-              SwapEventName.SWAP_SIGNED,
-              formatSwapSignedAnalyticsEventProperties({ trade, fiatValues, txHash: response.hash })
-            )
-            if (tx.data !== response.data) {
-              sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, { txHash: response.hash })
-              throw new ModifiedSwapError(
-                t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`
-              )
-            }
-            return response
+          if (!account) throw new Error('missing account')
+          if (!chainId) throw new Error('missing chainId')
+          if (!provider) throw new Error('missing provider')
+          if (!trade) throw new Error('missing trade')
+
+          setTraceData('slippageTolerance', options.slippageTolerance.toFixed(2))
+          const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
+            slippageTolerance: options.slippageTolerance,
+            deadlineOrPreviousBlockhash: options.deadline?.toString(),
+            inputTokenPermit: options.permit,
+            fee: options.feeOptions,
           })
-        return response
-      } catch (swapError: unknown) {
-        if (swapError instanceof ModifiedSwapError) throw swapError
+          const tx = {
+            from: account,
+            to: UNIVERSAL_ROUTER_ADDRESS(chainId),
+            data,
+            // TODO: universal-router-sdk returns a non-hexlified value.
+            ...(value && !isZero(value) ? { value: toHex(value) } : {}),
+          }
 
-        // Cancellations are not failures, and must be accounted for as 'cancelled'.
-        if (didUserReject(swapError)) setTraceStatus('cancelled')
+          let gasEstimate: BigNumber
+          try {
+            gasEstimate = await provider.estimateGas(tx)
+          } catch (gasError) {
+            setTraceStatus('failed_precondition')
+            setTraceError(gasError)
+            console.warn(gasError)
+            throw new GasEstimationError('Your swap is expected to fail.')
+          }
+          const gasLimit = calculateGasMargin(gasEstimate)
+          setTraceData('gasLimit', gasLimit.toNumber())
+          const response = await provider
+            .getSigner()
+            .sendTransaction({ ...tx, gasLimit })
+            .then((response) => {
+              sendAnalyticsEvent(
+                SwapEventName.SWAP_SIGNED,
+                formatSwapSignedAnalyticsEventProperties({ trade, fiatValues, txHash: response.hash })
+              )
+              if (tx.data !== response.data) {
+                sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, { txHash: response.hash })
+                throw new ModifiedSwapError(
+                  t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`
+                )
+              }
+              return response
+            })
+          return response
+        } catch (swapError: unknown) {
+          if (swapError instanceof ModifiedSwapError) throw swapError
 
-        // GasEstimationErrors are already traced when they are thrown.
-        if (!(swapError instanceof GasEstimationError)) setTraceError(swapError)
+          // Cancellations are not failures, and must be accounted for as 'cancelled'.
+          if (didUserReject(swapError)) setTraceStatus('cancelled')
 
-        throw new Error(swapErrorToUserReadableMessage(swapError))
-      }
-    })
+          // GasEstimationErrors are already traced when they are thrown.
+          if (!(swapError instanceof GasEstimationError)) setTraceError(swapError)
+
+          throw new Error(swapErrorToUserReadableMessage(swapError))
+        }
+      },
+      { tags: { widget: false } }
+    )
   }, [
     account,
     chainId,
