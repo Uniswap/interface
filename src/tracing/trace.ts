@@ -1,6 +1,5 @@
 import * as Sentry from '@sentry/react'
-import { SpanStatusType } from '@sentry/tracing'
-import { Span, Transaction } from '@sentry/types'
+import { Span, SpanStatusType } from '@sentry/tracing'
 
 interface TraceMetadata {
   /** Arbitrary data stored on a trace. */
@@ -15,12 +14,12 @@ interface TraceCallbackOptions {
   traceChild<T>(name: string, callback: TraceCallback<T>, metadata?: TraceMetadata): Promise<T>
   setTraceData(key: string, value: unknown): void
   setTraceTag(key: string, value: string | number | boolean): void
-  setTraceStatus(status: SpanStatusType): void
+  setTraceStatus(status: number | SpanStatusType): void
   setTraceError(error: unknown): void
 }
 type TraceCallback<T> = (options: TraceCallbackOptions) => Promise<T>
 
-function traceTransaction(transaction?: Transaction | Span) {
+function traceTransaction(transaction?: Span) {
   const traceChild = <T>(name: string, callback: TraceCallback<T>, metadata?: TraceMetadata) => {
     const child = transaction?.startChild({ ...metadata, op: name })
     return traceTransaction(child)(name, callback)
