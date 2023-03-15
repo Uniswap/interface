@@ -157,7 +157,7 @@ const LeaderBoardSection: React.FC<Props> = ({ programId, showRefreshTimer }) =>
           width: '100%',
         }}
       >
-        <Trophy key={rankByConfig.param} rankByConfig={rankByConfig} programId={programId} />
+        <Trophy rankByConfig={rankByConfig} programId={programId} />
 
         <Container>
           <RankByWrapper>

@@ -119,7 +119,7 @@ const NavLinkBetween = styled(MenuItem)`
   }
 `
 
-const CampaignWrapper = styled(MenuItem)`
+const CampaignWrapper = styled.div`
   display: none;
 
   /* It's better to break at 420px than at extraSmall */
@@ -236,6 +236,7 @@ export default function Menu() {
     mixpanelHandler(MIXPANEL_TYPE.TUTORIAL_CLICK_START)
     toggle()
   }
+
   const under1440 = useMedia('(max-width: 1440px)')
   const above1321 = useMedia('(min-width: 1321px)')
   const under1040 = useMedia('(max-width: 1040px)')
@@ -316,10 +317,17 @@ export default function Menu() {
             </DiscoverWrapper>
 
             <CampaignWrapper>
-              <NavLink to="/campaigns" onClick={toggle}>
-                <Award />
-                <Trans>Campaigns</Trans>
-              </NavLink>
+              <MenuItem>
+                <NavDropDown
+                  icon={<Award />}
+                  title={t`Campaigns`}
+                  link={'#'}
+                  options={[
+                    { link: APP_PATHS.CAMPAIGN, label: t`Trading Campaigns` },
+                    { link: APP_PATHS.GRANT_PROGRAMS, label: t`Project Trading Grant` },
+                  ]}
+                />
+              </MenuItem>
             </CampaignWrapper>
 
             {under1440 && (
@@ -335,6 +343,7 @@ export default function Menu() {
                 />
               </MenuItem>
             )}
+
             <MenuItem>
               <NavLink
                 to="/referral"

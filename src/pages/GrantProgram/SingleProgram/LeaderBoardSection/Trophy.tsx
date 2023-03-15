@@ -7,7 +7,6 @@ import TrophyImage from 'assets/images/campaign_trophy.png'
 import useGetLeaderboardGrantProgram from 'hooks/campaigns/useGetLeaderboardGrantProgram'
 import { MEDIA_WIDTHS } from 'theme'
 import { ProjectRanking } from 'types/grantProgram'
-import { FadeIn } from 'utils/keyframes'
 
 import { RankByConfig } from '.'
 
@@ -28,20 +27,11 @@ const ImageWrapper = styled.div`
   overflow: hidden;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), inset 0px 4px 4px rgba(255, 255, 255, 0.4);
 
-  animation-duration: 1s;
-  animation-name: ${FadeIn};
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-
-  opacity: 0;
-
   &[data-rank='1'] {
     top: -2%;
     left: 36.4%;
     width: 22%;
     height: 22%;
-
-    animation-delay: 2.5s;
   }
 
   &[data-rank='2'] {
@@ -49,8 +39,6 @@ const ImageWrapper = styled.div`
     left: 19.6%;
     width: 16.2%;
     height: 16.2%;
-
-    animation-delay: 2s;
   }
 
   &[data-rank='3'] {
@@ -58,8 +46,6 @@ const ImageWrapper = styled.div`
     left: 59.5%;
     width: 14.4%;
     height: 14.4%;
-
-    animation-delay: 1.5s;
   }
 
   &[data-rank='4'] {
@@ -67,8 +53,6 @@ const ImageWrapper = styled.div`
     left: 31.5%;
     width: 11.7%;
     height: 11.7%;
-
-    animation-delay: 1s;
   }
 
   &[data-rank='5'] {
@@ -76,8 +60,6 @@ const ImageWrapper = styled.div`
     left: 51%;
     width: 11.7%;
     height: 11.7%;
-
-    animation-delay: 1s;
   }
 `
 
