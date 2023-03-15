@@ -84,8 +84,8 @@ AOS.init()
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
-if ('ethereum' in window) {
-  ;(window.ethereum as any).autoRefreshOnNetworkChange = false
+if (window.ethereum) {
+  window.ethereum.autoRefreshOnNetworkChange = false
 }
 
 function Updaters() {

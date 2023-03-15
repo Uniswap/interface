@@ -21,6 +21,7 @@ interface Window {
       isMetaMask: boolean
     }
     providers?: any[]
+    autoRefreshOnNetworkChange?: boolean
   }
   web3?: {
     currentProvider?: {
