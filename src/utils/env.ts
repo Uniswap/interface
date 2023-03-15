@@ -7,7 +7,7 @@ export function isTestEnv(): boolean {
 }
 
 export function isStagingEnv(): boolean {
-  // NB: This is set in vercel builds.
+  // This is set in vercel builds.
   return Boolean(process.env.REACT_APP_STAGING)
 }
 
@@ -15,7 +15,13 @@ export function isProductionEnv(): boolean {
   return process.env.NODE_ENV === 'production' && !isStagingEnv()
 }
 
+export function isAppUniswapOrg({ hostname }: { hostname: string }): boolean {
+  return hostname === 'app.uniswap.org'
+}
+
 export function isSentryEnabled(): boolean {
+  // Disable in e2e test environments
+  if (isStagingEnv() || (isProductionEnv() && !isAppUniswapOrg(window.location))) return false
   return process.env.REACT_APP_SENTRY_ENABLED === 'true'
 }
 
