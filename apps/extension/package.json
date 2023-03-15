@@ -5,6 +5,7 @@
   "browserslist": "last 2 chrome versions",
   "dependencies": {
     "app": "workspace:^",
+    "eth-rpc-errors": "4.0.3",
     "ethers": "5.7.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",

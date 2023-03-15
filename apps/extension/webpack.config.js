@@ -153,7 +153,8 @@ const options = {
     // options: "./src/options/index.tsx",
     // permissions: "./src/permissions/index.tsx",
     popup: "./src/popup.tsx",
-    providerScript: path.join(__dirname, 'src', 'contentScript', 'provider.ts'),
+    providerScript: "./src/contentScript/provider.ts",
+    injected: "./src/contentScript/injected.js"
     // contentScript: "./src/contentScript/index.ts",
     // injected: "../provider-injection/dist/browser/index.js",
   },
@@ -289,6 +290,42 @@ const options = {
         //   to: "injected.js",
         //   force: true,
         // },
+      ],
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/assets/default.png',
+          to: path.resolve(__dirname, dir),
+          force: true,
+        },
+      ],
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/assets/success.png',
+          to: path.resolve(__dirname, dir),
+          force: true,
+        },
+      ],
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/assets/pending.png',
+          to: path.resolve(__dirname, dir),
+          force: true,
+        },
+      ],
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/assets/fail.png',
+          to: path.resolve(__dirname, dir),
+          force: true,
+        },
       ],
     }),
   ],

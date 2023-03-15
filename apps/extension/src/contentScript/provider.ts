@@ -3,13 +3,12 @@
  */
 
 import { MessageType } from '../types'
-import { WindowEventType } from './types'
 
 const container = document.head || document.documentElement
 const scriptTag = document.createElement('script')
 
 // The script tag is inserted into the DOM and then removed.
-scriptTag.src = chrome.runtime.getURL('script.bundle.js')
+scriptTag.src = chrome.runtime.getURL('injected.js')
 container.appendChild(scriptTag)
 scriptTag.onload = () => {
   if (scriptTag.parentNode) {
@@ -34,27 +33,24 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     sendResponse
   )
 
-  if (message.type in chromeMessageToWindowMessageTypes) {
+  if (chromeMessageToWindowMessageTypes.includes(message.type)) {
+    console.log("response is")
     window.postMessage({ type: message.type, data: message.data }, '*')
   }
 })
 
 const windowMessageToChromeMessageTypes = [
-  WindowEventType.handleEthSendTransaction,
-  WindowEventType.handleEthSignTransaction,
-  WindowEventType.handleEthSignMessage,
+  MessageType.SendTransaction,
+  MessageType.SignTransaction,
+  MessageType.SignMessage,
 ]
 window.addEventListener('message', function (event) {
   // We only accept messages from ourselves
   if (event.source != window) {
-    console.log(
-      '[provider script] Received message from unknown source',
-      event.source
-    )
     return
   }
 
-  if (event.data.type in windowMessageToChromeMessageTypes) {
+  if (windowMessageToChromeMessageTypes.includes(event.data.type)) {
     console.log(
       '[provider script] Payload to send to background is',
       event.data

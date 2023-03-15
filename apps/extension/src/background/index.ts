@@ -86,8 +86,13 @@ chrome.runtime.onMessage.addListener(
         // TODO:
         // Prompt user to confirm transaction in a notification
         // If user confirms, send transaction
-
-        const sentTx = await signer.sendTransaction(message.data.transaction)
+        console.log(
+          'transaction about to send is',
+          message.data.data.transaction
+        )
+        const sentTx = await signer.sendTransaction(
+          message.data.data.transaction
+        )
         onTransactionSent(sentTx)
         // return true // check if we need this / lets us use sendResponse to the tab
 
@@ -130,7 +135,7 @@ function onTransactionSent(transactionResponse: TransactionResponse): void {
     path: 'pending.png',
   })
   sendMessageToActiveTab({
-    type: MessageType.SignedTransaction,
+    type: MessageType.SendTransactionResponse,
     data: transactionResponse,
   })
 

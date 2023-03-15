@@ -14,10 +14,18 @@
         "<all_urls>"
       ],
       "js": [
-        "providerScript.bundle.js"
+        "providerScript.js"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "injected.js"
+      ],
+      "matches": [
+        "<all_urls>"
       ]
     }
   ]
-
-  // TODO: Maybe add web accessible resources if needed here? 
 }
