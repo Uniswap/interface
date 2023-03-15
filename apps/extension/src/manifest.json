@@ -7,5 +7,17 @@
     "service_worker": "background.js",
     "type": "module"
   },
-  "permissions": ["storage"]
+  "permissions": ["storage"], 
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "providerScript.bundle.js"
+      ]
+    }
+  ]
+
+  // TODO: Maybe add web accessible resources if needed here? 
 }

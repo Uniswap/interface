@@ -153,6 +153,7 @@ const options = {
     // options: "./src/options/index.tsx",
     // permissions: "./src/permissions/index.tsx",
     popup: "./src/popup.tsx",
+    providerScript: path.join(__dirname, 'src', 'contentScript', 'provider.ts'),
     // contentScript: "./src/contentScript/index.ts",
     // injected: "../provider-injection/dist/browser/index.js",
   },
