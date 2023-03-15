@@ -13,7 +13,7 @@ import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 export const useTokenBalanceOfAnotherChain = (chainId: ChainId | undefined, token: WrappedTokenInfo | undefined) => {
   const { account } = useActiveWeb3React()
   const [balance, setBalance] = useState('0')
-  const { provider } = useKyberSwapConfig()
+  const { provider } = useKyberSwapConfig(chainId)
 
   useEffect(() => {
     if (account && chainId && token && provider)
