@@ -3,6 +3,7 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
+import { formatPrice, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -172,13 +173,13 @@ function CurrentPriceCard({
   }
 
   return (
-    <LightCard padding="12px ">
+    <LightCard padding="12px">
       <AutoColumn gap="sm" justify="center">
         <ExtentsText>
           <Trans>Current price</Trans>
         </ExtentsText>
         <ThemedText.DeprecatedMediumHeader textAlign="center">
-          {(inverted ? pool.token1Price : pool.token0Price).toSignificant(6)}{' '}
+          {formatPrice(inverted ? pool.token1Price : pool.token0Price, NumberType.TokenTx)}
         </ThemedText.DeprecatedMediumHeader>
         <ExtentsText>
           <Trans>
@@ -889,6 +890,7 @@ export function PositionPage() {
                           price: priceLower,
                           atLimit: tickAtLimit,
                           direction: Bound.LOWER,
+                          numberType: NumberType.TokenTx,
                         })}
                       </ThemedText.DeprecatedMediumHeader>
                       <ExtentsText>
@@ -917,6 +919,7 @@ export function PositionPage() {
                           price: priceUpper,
                           atLimit: tickAtLimit,
                           direction: Bound.UPPER,
+                          numberType: NumberType.TokenTx,
                         })}
                       </ThemedText.DeprecatedMediumHeader>
                       <ExtentsText>
