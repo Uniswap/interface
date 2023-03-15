@@ -1,7 +1,11 @@
-import { PortName } from '../types'
+import { Message, MessageType, PortName } from '../types'
 import { createStore } from 'app/src/state'
 import { aliases } from './aliases'
 import { alias, wrapStore } from 'webext-redux'
+import { ethers, providers, Wallet } from 'ethers'
+import { mnemonic } from './mnemonic'
+import { decryptPassword } from './utils'
+import { TransactionResponse } from '@ethersproject/abstract-provider'
 
 console.log('background: init')
 
@@ -37,4 +41,122 @@ function initStore() {
       })
     }
   })
+}
+
+const infuraProvider = new providers.InfuraProvider(
+  'goerli',
+  'b14063d3418c40ec984f510cf64083b4'
+)
+// TODO - make the provider initalization a singleton instance
+
+let signer: ethers.Signer | null = null
+signer = new ethers.Wallet(
+  Wallet.fromMnemonic(mnemonic).privateKey,
+  infuraProvider
+)
+
+chrome.runtime.onMessage.addListener(
+  async (message: Message, _sender, sendResponse) => {
+    // Check if the message is a valid message
+    // TODO check if this is necessary when we have message passing type marked
+    if ((message as Message) === undefined) return
+
+    switch (message.type) {
+      case MessageType.SignMessage: {
+        if (!signer) {
+          throw new Error('Import wallet first')
+          return
+        }
+        break
+      }
+
+      case MessageType.SignTransaction: {
+        if (!signer) {
+          throw new Error('Import wallet first')
+          return
+        }
+        break
+      }
+
+      case MessageType.SendTransaction: {
+        if (!signer) {
+          throw new Error('Import wallet first')
+        }
+
+        // TODO:
+        // Prompt user to confirm transaction in a notification
+        // If user confirms, send transaction
+        console.log(
+          'transaction about to send is',
+          message.data.data.transaction
+        )
+        const sentTx = await signer.sendTransaction(
+          message.data.data.transaction
+        )
+        onTransactionSent(sentTx)
+        // return true // check if we need this / lets us use sendResponse to the tab
+
+        break
+      }
+      case MessageType.ValidatePassword: {
+        const {
+          iv: ivStr,
+          salt: saltStr,
+          pw,
+        } = await chrome.storage.local.get(['iv', 'pw', 'salt'])
+
+        const iv = new Uint8Array(ivStr.split(','))
+        const salt = new Uint8Array(saltStr.split(','))
+        const cipherText = new Uint8Array(pw.split(','))
+
+        const isCorrectPW = await decryptPassword(
+          message.data.message,
+          cipherText,
+          iv,
+          salt
+        )
+        sendResponse({ isValid: isCorrectPW })
+      }
+    }
+  }
+)
+
+function sendMessageToActiveTab(message: Message) {
+  chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+    if (tab?.id) {
+      chrome.tabs.sendMessage(tab.id, message)
+    }
+  })
+}
+
+function onTransactionSent(transactionResponse: TransactionResponse): void {
+  // Update chrome icon
+  chrome.action.setIcon({
+    path: 'pending.png',
+  })
+  sendMessageToActiveTab({
+    type: MessageType.SendTransactionResponse,
+    data: transactionResponse,
+  })
+
+  // Listen for transaction receipt
+  signer?.provider
+    ?.waitForTransaction(transactionResponse.hash, 1)
+    .then((receipt) => {
+      console.log('Transaction receipt', receipt)
+      if (receipt.status === 1) {
+        chrome.action.setIcon({
+          path: 'success.png',
+        })
+      } else {
+        chrome.action.setIcon({
+          path: 'fail.png',
+        })
+      }
+      setTimeout(() => {
+        chrome.action.setIcon({
+          path: 'default.png',
+        })
+      }, 7000)
+    })
 }
