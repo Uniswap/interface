@@ -1,8 +1,7 @@
 import { Connector } from '@web3-react/types'
 import { networkConnection, walletConnectConnection } from 'connection'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
-import { isSupportedChain } from 'constants/chains'
+import { isSupportedChain, SupportedChainId } from 'constants/chains'
 import { FALLBACK_URLS, RPC_URLS } from 'constants/networks'
 
 function getRpcUrl(chainId: SupportedChainId): string {

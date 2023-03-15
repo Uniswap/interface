@@ -87,6 +87,15 @@ export default function RadialGradientByChainUpdater(): null {
         backgroundRadialGradientElement.style.background = darkMode ? celoDarkGradient : celoLightGradient
         break
       }
+      case SupportedChainId.BNB: {
+        setBackground(backgroundResetStyles)
+        const bscLightGradient =
+          'radial-gradient(100% 100% at 50% 0%, rgba(242 , 186, 8, 0.1) 0%, rgba(238, 182, 6, 0.08) 50%, rgba(140, 185, 11, 0) 100%), #FFFFFF'
+        const bscDarkGradient =
+          'radial-gradient(100% 100% at 50% 0%, rgba(169, 132, 17, 0.1) 0%, rgba(128, 100, 14, 0.08) 50%, rgba(140, 185, 11, 0) 100%), #0D0E0E'
+        backgroundRadialGradientElement.style.background = darkMode ? bscDarkGradient : bscLightGradient
+        break
+      }
       default: {
         setBackground(initialStyles)
         const defaultLightGradient =

@@ -1,4 +1,5 @@
 const EXPLORER_HOSTNAMES: { [hostname: string]: true } = {
+  'bscscan.com': true,
   'etherscan.io': true,
   'goerli.etherscan.io': true,
   'optimistic.etherscan.io': true,

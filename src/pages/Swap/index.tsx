@@ -501,7 +501,7 @@ export default function Swap({ className }: { className?: string }) {
               width="100%"
             />
           ) : (
-            <SwapWrapper className={className} id="swap-page">
+            <SwapWrapper chainId={chainId} className={className} id="swap-page">
               <SwapHeader allowedSlippage={allowedSlippage} />
               <ConfirmSwapModal
                 isOpen={showConfirm}
