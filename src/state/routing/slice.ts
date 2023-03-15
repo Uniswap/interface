@@ -106,10 +106,11 @@ export const routingApi = createApi({
           },
           {
             data: {
-              price: args.routerPreference === RouterPreference.PRICE,
-              autoRouter: args.routerPreference === RouterPreference.API,
+              ...args,
+              isPrice: args.routerPreference === RouterPreference.PRICE,
+              isAutoRouter: args.routerPreference === RouterPreference.API,
             },
-            tags: { widget: false },
+            tags: { is_widget: false },
           }
         )
       },
