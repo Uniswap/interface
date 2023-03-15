@@ -23,10 +23,14 @@ interface TraceCallbackOptions {
 }
 type TraceCallback<T> = (options: TraceCallbackOptions) => Promise<T>
 
+/**
+ * Sets up TraceCallbackOptions for a transaction.
+ * @returns a handler which will run a TraceCallback and propagate its result.
+ */
 function traceTransaction(transaction?: Span) {
   const traceChild = <T>(name: string, callback: TraceCallback<T>, metadata?: TraceMetadata) => {
     const child = transaction?.startChild({ ...metadata, op: name })
-    return traceTransaction(child)(name, callback)
+    return traceTransaction(child)(callback)
   }
   const setTraceData = <K extends keyof TraceTags>(key: K, value: TraceTags[K]) => {
     transaction?.setData(key, value)
@@ -45,7 +49,7 @@ function traceTransaction(transaction?: Span) {
     transaction?.setData('error', error)
   }
 
-  return async function boundTrace<T>(name: string, callback: TraceCallback<T>): Promise<T> {
+  return async function boundTrace<T>(callback: TraceCallback<T>): Promise<T> {
     try {
       return await callback({ traceChild, setTraceData, setTraceTag, setTraceStatus, setTraceError })
     } catch (error) {
@@ -65,5 +69,5 @@ function traceTransaction(transaction?: Span) {
 /** Traces the callback, adding any metadata to the trace. */
 export async function trace<T>(name: string, callback: TraceCallback<T>, metadata?: TraceMetadata): Promise<T> {
   const transaction = Sentry.startTransaction({ name, data: metadata?.data, tags: metadata?.tags })
-  return traceTransaction(transaction)(name, callback)
+  return traceTransaction(transaction)(callback)
 }
