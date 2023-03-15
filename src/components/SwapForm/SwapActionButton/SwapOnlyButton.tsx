@@ -157,11 +157,18 @@ const SwapOnlyButton: React.FC<Props> = ({
 
   const swapCallbackForModal = useMemo(() => {
     if (buildResult?.data?.data && buildResult?.data?.routerAddress && swapCallback) {
-      return () => swapCallback(buildResult.data.routerAddress, buildResult.data.data)
+      return () => {
+        mixpanelHandler(MIXPANEL_TYPE.SWAP_CONFIRMED, {
+          gasUsd: routeSummary?.gasUsd,
+          inputAmount: routeSummary?.parsedAmountIn,
+          priceImpact: routeSummary?.priceImpact,
+        })
+        return swapCallback(buildResult.data.routerAddress, buildResult.data.data)
+      }
     }
 
     return undefined
-  }, [buildResult, swapCallback])
+  }, [buildResult, swapCallback, routeSummary, mixpanelHandler])
 
   const renderButton = () => {
     if (isProcessingSwap && isAdvancedMode) {

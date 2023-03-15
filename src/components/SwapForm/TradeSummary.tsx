@@ -8,6 +8,7 @@ import { AutoColumn } from 'components/Column'
 import Divider from 'components/Divider'
 import InfoHelper from 'components/InfoHelper'
 import { RowBetween, RowFixed } from 'components/Row'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { TYPE } from 'theme'
 import { DetailedRouteSummary, FeeConfig } from 'types/route'
@@ -72,9 +73,10 @@ const TradeSummary: React.FC<Props> = ({ feeConfig, routeSummary, slippage }) =>
 
   const formattedFeeAmountUsd = amountInUsd ? getFormattedFeeAmountUsdV2(Number(amountInUsd), feeConfig?.feeAmount) : 0
   const minimumAmountOut = parsedAmountOut ? minimumAmountAfterSlippage(parsedAmountOut, slippage) : undefined
-
+  const { mixpanelHandler } = useMixpanel()
   const handleClickExpand = () => {
     setExpanded(prev => !prev)
+    mixpanelHandler(MIXPANEL_TYPE.SWAP_MORE_INFO_CLICK, { option: expanded ? 'Close' : 'Open' })
   }
 
   useEffect(() => {

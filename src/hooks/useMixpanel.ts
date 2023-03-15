@@ -35,6 +35,13 @@ export enum MIXPANEL_TYPE {
   SWAP_INITIATED,
   SWAP_CONFIRMED,
   SWAP_COMPLETED,
+  SWAP_TYPED_ON_THE_TEXT_BOX,
+  SWAP_INPUT_AMOUNT,
+  SWAP_SETTINGS_CLICK,
+  SWAP_TUTORIAL_CLICK,
+  SWAP_TOKEN_INFO_CLICK,
+  SWAP_MORE_INFO_CLICK,
+  SWAP_DISPLAY_SETTING_CLICK,
   ADVANCED_MODE_ON,
   ADD_RECIPIENT_CLICKED,
   SLIPPAGE_CHANGED,
@@ -178,6 +185,7 @@ export enum MIXPANEL_TYPE {
   LO_CANCEL_ORDER_SUBMITTED,
   LO_CLICK_REVIEW_PLACE_ORDER,
   LO_CLICK_EDIT_ORDER,
+  LO_DISPLAY_SETTING_CLICK,
 
   // Wallet UI
   WUI_WALLET_CLICK,
@@ -187,6 +195,12 @@ export enum MIXPANEL_TYPE {
   WUI_IMPORT_TOKEN_CLICK,
   WUI_TRANSACTION_CLICK,
   WUI_IMPORT_TOKEN_BUTTON_CLICK,
+
+  // Menu header
+  MENU_MENU_CLICK,
+  MENU_PREFERENCE_CLICK,
+  MENU_CLAIM_REWARDS_CLICK,
+  SUPPORT_CLICK,
 }
 
 export const NEED_CHECK_SUBGRAPH_TRANSACTION_TYPES: readonly TRANSACTION_TYPE[] = [
@@ -248,7 +262,7 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
         }
         case MIXPANEL_TYPE.SWAP_CONFIRMED: {
           const { gasUsd, inputAmount, priceImpact } = (payload || {}) as {
-            gasUsd: number | undefined
+            gasUsd: string | undefined
             inputAmount: CurrencyAmount<Currency> | undefined
             priceImpact: number | undefined
           }
@@ -256,7 +270,7 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
           mixpanel.track('Swap Confirmed', {
             input_token: inputSymbol,
             output_token: outputSymbol,
-            estimated_gas: gasUsd?.toFixed(4),
+            estimated_gas: gasUsd,
             max_return_or_low_gas: saveGas ? 'Lowest Gas' : 'Maximum Return',
             trade_qty: inputAmount?.toExact(),
             slippage_setting: allowedSlippage ? allowedSlippage / 100 : 0,
@@ -284,6 +298,26 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
             eth_price: ethPrice?.currentPrice,
             actual_gas_native: actual_gas?.toNumber(),
           })
+          break
+        }
+        case MIXPANEL_TYPE.SWAP_SETTINGS_CLICK: {
+          mixpanel.track('Swap - Swap settings')
+          break
+        }
+        case MIXPANEL_TYPE.SWAP_TUTORIAL_CLICK: {
+          mixpanel.track('Swap - Tutorial Click in swap box')
+          break
+        }
+        case MIXPANEL_TYPE.SWAP_TOKEN_INFO_CLICK: {
+          mixpanel.track('Swap - Token Info Click in swap box')
+          break
+        }
+        case MIXPANEL_TYPE.SWAP_MORE_INFO_CLICK: {
+          mixpanel.track('Swap - More information Click in swap box', payload)
+          break
+        }
+        case MIXPANEL_TYPE.SWAP_DISPLAY_SETTING_CLICK: {
+          mixpanel.track('Swap - Display settings on Swap settings', payload)
           break
         }
         case MIXPANEL_TYPE.ADVANCED_MODE_ON: {
@@ -884,6 +918,10 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
           mixpanel.track('Limit Order -  Update Order Click', payload)
           break
         }
+        case MIXPANEL_TYPE.LO_DISPLAY_SETTING_CLICK: {
+          mixpanel.track('Limit Order - Display settings on Limit settings', payload)
+          break
+        }
         case MIXPANEL_TYPE.WUI_WALLET_CLICK: {
           mixpanel.track('Wallet UI - Wallet Click')
           break
@@ -910,6 +948,14 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
         }
         case MIXPANEL_TYPE.WUI_IMPORT_TOKEN_BUTTON_CLICK: {
           mixpanel.track('Wallet UI - Import Token - Import button click', payload)
+          break
+        }
+        case MIXPANEL_TYPE.MENU_MENU_CLICK: {
+          mixpanel.track('Menu - Menu Click', payload)
+          break
+        }
+        case MIXPANEL_TYPE.MENU_PREFERENCE_CLICK: {
+          mixpanel.track('Menu - Preference Click', payload)
           break
         }
         case MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_ADD_NEW_POSITION: {

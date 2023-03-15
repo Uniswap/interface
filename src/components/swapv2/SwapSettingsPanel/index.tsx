@@ -80,12 +80,22 @@ const SettingsPanel: React.FC<Props> = ({
 
   const handleToggleLiveChart = () => {
     mixpanelHandler(MIXPANEL_TYPE.LIVE_CHART_ON_OFF, { live_chart_on_or_off: !isShowLiveChart })
+    isLimitOrder
+      ? mixpanelHandler(MIXPANEL_TYPE.LO_DISPLAY_SETTING_CLICK, {
+          display_setting: isShowLiveChart ? 'Live Chart Off' : 'Live Chart On',
+        })
+      : mixpanelHandler(MIXPANEL_TYPE.SWAP_DISPLAY_SETTING_CLICK, {
+          display_setting: isShowLiveChart ? 'Live Chart Off' : 'Live Chart On',
+        })
     toggleLiveChart()
   }
 
   const handleToggleTradeRoute = () => {
     mixpanelHandler(MIXPANEL_TYPE.TRADING_ROUTE_ON_OFF, {
       trading_route_on_or_off: !isShowTradeRoutes,
+    })
+    mixpanelHandler(MIXPANEL_TYPE.SWAP_DISPLAY_SETTING_CLICK, {
+      display_setting: isShowTradeRoutes ? 'Trade Route Off' : 'Trade Route On',
     })
     toggleTradeRoutes()
   }
@@ -151,7 +161,19 @@ const SettingsPanel: React.FC<Props> = ({
                     </SettingLabel>
                     <QuestionHelper text={t`Turn on to display tokens that could be trending soon`} />
                   </RowFixed>
-                  <Toggle isActive={isShowTrendingSoonTokens} toggle={toggleTopTrendingTokens} />
+                  <Toggle
+                    isActive={isShowTrendingSoonTokens}
+                    toggle={() => {
+                      toggleTopTrendingTokens()
+                      isLimitOrder
+                        ? mixpanelHandler(MIXPANEL_TYPE.LO_DISPLAY_SETTING_CLICK, {
+                            display_setting: isShowTrendingSoonTokens ? 'Trending Soon Off' : 'Trending Soon On',
+                          })
+                        : mixpanelHandler(MIXPANEL_TYPE.SWAP_DISPLAY_SETTING_CLICK, {
+                            display_setting: isShowTrendingSoonTokens ? 'Trending Soon Off' : 'Trending Soon On',
+                          })
+                    }}
+                  />
                 </RowBetween>
               )}
               <RowBetween>
@@ -181,7 +203,15 @@ const SettingsPanel: React.FC<Props> = ({
                       </SettingLabel>
                       <QuestionHelper text={t`Turn on to display token info`} />
                     </RowFixed>
-                    <Toggle isActive={isShowTokenInfo} toggle={toggleTokenInfo} />
+                    <Toggle
+                      isActive={isShowTokenInfo}
+                      toggle={() => {
+                        mixpanelHandler(MIXPANEL_TYPE.SWAP_DISPLAY_SETTING_CLICK, {
+                          display_setting: isShowTokenInfo ? 'Token Info Off' : 'Token Info On',
+                        })
+                        toggleTokenInfo()
+                      }}
+                    />
                   </RowBetween>
                 </>
               )}
