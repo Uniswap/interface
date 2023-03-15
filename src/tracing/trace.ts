@@ -1,11 +1,15 @@
 import * as Sentry from '@sentry/react'
 import { Span, SpanStatusType } from '@sentry/tracing'
 
+type TraceTags = {
+  widget: boolean
+}
+
 interface TraceMetadata {
   /** Arbitrary data stored on a trace. */
   data?: Record<string, unknown>
   /** Indexed (ie searchable) tags associated with a trace. */
-  tags?: Record<string, string | number | boolean>
+  tags?: Partial<TraceTags>
 }
 
 // These methods are provided as an abstraction so that users will not interact with Sentry directly.
@@ -13,7 +17,7 @@ interface TraceMetadata {
 interface TraceCallbackOptions {
   traceChild<T>(name: string, callback: TraceCallback<T>, metadata?: TraceMetadata): Promise<T>
   setTraceData(key: string, value: unknown): void
-  setTraceTag(key: string, value: string | number | boolean): void
+  setTraceTag<K extends keyof TraceTags>(key: K, value: TraceTags[K]): void
   setTraceStatus(status: number | SpanStatusType): void
   setTraceError(error: unknown): void
 }
@@ -24,7 +28,7 @@ function traceTransaction(transaction?: Span) {
     const child = transaction?.startChild({ ...metadata, op: name })
     return traceTransaction(child)(name, callback)
   }
-  const setTraceData = (key: string, value: unknown) => {
+  const setTraceData = <K extends keyof TraceTags>(key: K, value: TraceTags[K]) => {
     transaction?.setData(key, value)
   }
   const setTraceTag = (key: string, value: string | number | boolean) => {
