@@ -5,8 +5,7 @@ import Loader from 'components/Loader'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { Unicon } from 'components/Unicon'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
-import { AssetActivityPartsFragment, useTransactionListQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'graphql/data/util'
+import { useTransactionListQuery } from 'graphql/data/__generated__/types-and-hooks'
 import useENSAvatar from 'hooks/useENSAvatar'
 import useENSName from 'hooks/useENSName'
 import { useMemo } from 'react'
@@ -16,42 +15,42 @@ import { EllipsisStyle, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
-import { getActivityDetails, timeSince } from './util'
+import { Activity, parseRemoteActivities, timeSince } from './parse'
 
 interface ActivityGroup {
   title: string
-  transactions: AssetActivityPartsFragment[]
+  transactions: Array<Activity>
 }
 
-const createGroups = (assetActivities?: Array<AssetActivityPartsFragment>) => {
-  if (!assetActivities) return []
+const createGroups = (activities?: Array<Activity>) => {
+  if (!activities || !activities.length) return []
   const now = Date.now()
 
-  const today: Array<AssetActivityPartsFragment> = []
-  const currentWeek: Array<AssetActivityPartsFragment> = []
-  const last30Days: Array<AssetActivityPartsFragment> = []
-  const currentYear: Array<AssetActivityPartsFragment> = []
-  const yearMap: { [key: string]: Array<AssetActivityPartsFragment> } = {}
+  const today: Array<Activity> = []
+  const currentWeek: Array<Activity> = []
+  const last30Days: Array<Activity> = []
+  const currentYear: Array<Activity> = []
+  const yearMap: { [key: string]: Array<Activity> } = {}
 
   // TODO(cartcrom): create different time bucket system for activities to fall in based on design wants
-  assetActivities.forEach((assetActivity) => {
-    const addedTime = assetActivity.timestamp * 1000
+  activities.forEach((activity) => {
+    const addedTime = activity.timestamp * 1000
 
     if (isSameDay(now, addedTime)) {
-      today.push(assetActivity)
+      today.push(activity)
     } else if (isSameWeek(addedTime, now)) {
-      currentWeek.push(assetActivity)
+      currentWeek.push(activity)
     } else if (isSameMonth(addedTime, now)) {
-      last30Days.push(assetActivity)
+      last30Days.push(activity)
     } else if (isSameYear(addedTime, now)) {
-      currentYear.push(assetActivity)
+      currentYear.push(activity)
     } else {
       const year = getYear(addedTime)
 
       if (!yearMap[year]) {
-        yearMap[year] = [assetActivity]
+        yearMap[year] = [activity]
       } else {
-        yearMap[year].push(assetActivity)
+        yearMap[year].push(activity)
       }
     }
   })
@@ -75,9 +74,13 @@ const ActivityGroupWrapper = styled(Column)`
   gap: 8px;
 `
 
-export default function Activity({ account }: { account: string }) {
-  const { data, loading } = useTransactionListQuery({ variables: { account }, errorPolicy: 'ignore' })
-  const activityGroups = useMemo(() => createGroups(data?.portfolios?.[0]?.assetActivities), [data])
+export default function ActivityTab({ account }: { account: string }) {
+  const { data, loading } = useTransactionListQuery({
+    variables: { account },
+    errorPolicy: 'all',
+  })
+  const remoteActivities = useMemo(() => parseRemoteActivities(data?.portfolios?.[0].assetActivities), [data])
+  const activityGroups = useMemo(() => createGroups(remoteActivities), [remoteActivities])
 
   // TODO(cartcrom): add no activity state
   return !data && loading ? (
@@ -93,8 +96,8 @@ export default function Activity({ account }: { account: string }) {
             {activityGroup.title}
           </ThemedText.SubHeader>
           <Column>
-            {activityGroup.transactions.map((assetActivity) => (
-              <ActivityRow key={assetActivity.id} assetActivity={assetActivity} />
+            {activityGroup.transactions.map((activity) => (
+              <ActivityRow key={activity.receipt.hash} activity={activity} />
             ))}
           </Column>
         </ActivityGroupWrapper>
@@ -175,14 +178,10 @@ const StyledTimestamp = styled(ThemedText.Caption)`
   font-feature-settings: 'tnum' on, 'lnum' on, 'ss02' on;
 `
 
-function ActivityRow({ assetActivity }: { assetActivity: AssetActivityPartsFragment }) {
-  const { title, descriptor, logos, otherAccount } = useMemo(() => getActivityDetails(assetActivity), [assetActivity])
+function ActivityRow({ activity }: { activity: Activity }) {
+  const { title, descriptor, logos, otherAccount } = activity
   const { ENSName } = useENSName(otherAccount)
-  const explorerUrl = getExplorerLink(
-    fromGraphQLChain(assetActivity.chain),
-    assetActivity.transaction.hash,
-    ExplorerDataType.TRANSACTION
-  )
+  const explorerUrl = getExplorerLink(activity.chainId, activity.receipt.hash, ExplorerDataType.TRANSACTION)
 
   return (
     <PortfolioRow
@@ -202,7 +201,7 @@ function ActivityRow({ assetActivity }: { assetActivity: AssetActivityPartsFragm
           {ENSName ?? otherAccount}
         </StyledDescriptor>
       }
-      right={<StyledTimestamp>{timeSince(assetActivity.timestamp)}</StyledTimestamp>}
+      right={<StyledTimestamp>{timeSince(activity.timestamp)}</StyledTimestamp>}
       onClick={() => window.open(explorerUrl, '_blank')}
     />
   )

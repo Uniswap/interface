@@ -16,11 +16,14 @@ import { fromGraphQLChain } from 'graphql/data/util'
 import ms from 'ms.macro'
 import { isAddress } from 'utils'
 
-type ActivityDisplayData = {
+export type Activity = {
+  chainId: SupportedChainId
+  timestamp: number
   title: string
-  descriptor?: string
-  logos?: Array<string | undefined>
+  descriptor: string
+  logos: Array<string | undefined>
   otherAccount?: string
+  receipt: AssetActivityPartsFragment['transaction']
 }
 
 type TransactionChanges = {
@@ -38,7 +41,7 @@ const UNI_IMG =
 const ENS_IMG =
   'https://464911102-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/collections%2F2TjMAeHSzwlQgcOdL48E%2Ficon%2FKWP0gk2C6bdRPliWIA6o%2Fens%20transparent%20background.png?alt=media&token=bd28b063-5a75-4971-890c-97becea09076'
 
-const COMMON_CONTRACTS: { [key: string]: ActivityDisplayData | undefined } = {
+const COMMON_CONTRACTS: { [key: string]: Partial<Activity> | undefined } = {
   [UNI_ADDRESS[SupportedChainId.MAINNET].toLowerCase()]: {
     title: t`UNI Governance`,
     descriptor: t`Contract Interaction`,
@@ -212,8 +215,8 @@ function parseUnknown(_changes: TransactionChanges, assetActivity: AssetActivity
   return { title: t`Contract Interaction`, ...COMMON_CONTRACTS[assetActivity.transaction.to.toLowerCase()] }
 }
 
-type ActivityParser = (changes: TransactionChanges, assetActivity: AssetActivityPartsFragment) => ActivityDisplayData
-const ActivityParserByType: { [key: string]: ActivityParser | undefined } = {
+type ActivityTypeParser = (changes: TransactionChanges, assetActivity: AssetActivityPartsFragment) => Partial<Activity>
+const ActivityParserByType: { [key: string]: ActivityTypeParser | undefined } = {
   [ActivityType.Swap]: parseSwap,
   [ActivityType.Approve]: parseApprove,
   [ActivityType.Send]: parseSendReceive,
@@ -235,23 +238,39 @@ function getLogoSrcs(changes: TransactionChanges): string[] {
   return Array.from(logoSet).filter(Boolean) as string[]
 }
 
-export function getActivityDetails(assetActivity: AssetActivityPartsFragment): ActivityDisplayData {
-  const changes = assetActivity.assetChanges.reduce(
-    (acc: TransactionChanges, assetChange) => {
-      if (assetChange.__typename === 'NftApproval') acc.NftApproval.push(assetChange)
-      else if (assetChange.__typename === 'NftApproveForAll') acc.NftApproveForAll.push(assetChange)
-      else if (assetChange.__typename === 'NftTransfer') acc.NftTransfer.push(assetChange)
-      else if (assetChange.__typename === 'TokenTransfer') acc.TokenTransfer.push(assetChange)
-      else if (assetChange.__typename === 'TokenApproval') acc.TokenApproval.push(assetChange)
+function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activity | undefined {
+  try {
+    const changes = assetActivity.assetChanges.reduce(
+      (acc: TransactionChanges, assetChange) => {
+        if (assetChange.__typename === 'NftApproval') acc.NftApproval.push(assetChange)
+        else if (assetChange.__typename === 'NftApproveForAll') acc.NftApproveForAll.push(assetChange)
+        else if (assetChange.__typename === 'NftTransfer') acc.NftTransfer.push(assetChange)
+        else if (assetChange.__typename === 'TokenTransfer') acc.TokenTransfer.push(assetChange)
+        else if (assetChange.__typename === 'TokenApproval') acc.TokenApproval.push(assetChange)
 
-      return acc
-    },
-    { NftTransfer: [], TokenTransfer: [], TokenApproval: [], NftApproval: [], NftApproveForAll: [] }
-  )
+        return acc
+      },
+      { NftTransfer: [], TokenTransfer: [], TokenApproval: [], NftApproval: [], NftApproveForAll: [] }
+    )
+    const defaultFields = {
+      timestamp: assetActivity.timestamp,
+      chainId: fromGraphQLChain(assetActivity.chain),
+      logos: getLogoSrcs(changes),
+      title: assetActivity.type,
+      descriptor: assetActivity.transaction.to,
+      receipt: assetActivity.transaction,
+    }
+    const parsedFields = ActivityParserByType[assetActivity.type]?.(changes, assetActivity)
 
-  const logos = getLogoSrcs(changes)
-  const parsedFields = ActivityParserByType[assetActivity.type]?.(changes, assetActivity)
-  return { title: assetActivity.type, descriptor: assetActivity.transaction.to, logos, ...parsedFields }
+    return { ...defaultFields, ...parsedFields }
+  } catch (e) {
+    console.error('Failed to parse activity', e, assetActivity)
+    return undefined
+  }
+}
+
+export function parseRemoteActivities(activities?: AssetActivityPartsFragment[]): Array<Activity> | undefined {
+  return activities?.flatMap((activity) => parseRemoteActivity(activity) ?? [])
 }
 
 export function timeSince(timestamp: number) {
