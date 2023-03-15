@@ -97,7 +97,8 @@ const RewardDetails: React.FC<Props> = ({ rewardDetails }) => {
 
       <StyledSubtitle>
         <Trans>
-          The final winning projects have the highest total of participants at the end of the 3-month grant campaign.
+          {/* TODO: update the duration for grant campaign (e.g. 4-week) */}
+          The final winning projects have the highest total of participants at the end of the 4-week grant campaign.
         </Trans>
       </StyledSubtitle>
 

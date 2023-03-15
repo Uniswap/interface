@@ -120,13 +120,6 @@ const IconImage = styled.img<{ isChristmas?: boolean }>`
   }
 `
 
-const CampaignWrapper = styled.span`
-  /* It's better to break at 420px than at extraSmall */
-  @media (max-width: 420px) {
-    display: none;
-  }
-`
-
 const BlogWrapper = styled.span`
   @media (max-width: 1440px) {
     display: none;

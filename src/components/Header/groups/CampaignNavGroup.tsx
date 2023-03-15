@@ -5,17 +5,13 @@ import { Flex } from 'rebass'
 
 import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
 import { APP_PATHS } from 'constants/index'
-import { useActiveWeb3React } from 'hooks'
-import useMixpanel from 'hooks/useMixpanel'
 
 import { DropdownTextAnchor, StyledNavLink } from '../styleds'
 import NavGroup from './NavGroup'
 
 const CampaignNavGroup = () => {
-  const { networkInfo } = useActiveWeb3React()
   const upTo420 = useMedia('(max-width: 420px)')
   const { pathname } = useLocation()
-  const { mixpanelHandler } = useMixpanel()
   const isActive = [APP_PATHS.CAMPAIGN, APP_PATHS.GRANT_PROGRAMS].some(path => pathname.includes(path))
 
   return (

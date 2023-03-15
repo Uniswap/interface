@@ -158,13 +158,28 @@ const LeaderBoard: React.FC<Props> = ({ rankings, rankByConfig, page, setPage, t
         {renderEmptyRows()}
       </Table>
 
-      <CustomPagination
-        onPageChange={setPage}
-        totalCount={totalRankings}
-        currentPage={page}
-        pageSize={ITEMS_PER_PAGE}
-        haveBg={false}
-      />
+      <Flex
+        sx={{
+          position: 'relative',
+          height: '36px',
+        }}
+      >
+        <Flex
+          sx={{
+            position: 'absolute',
+            width: '100%',
+            justifyContent: 'center',
+          }}
+        >
+          <CustomPagination
+            onPageChange={setPage}
+            totalCount={totalRankings}
+            currentPage={page}
+            pageSize={ITEMS_PER_PAGE}
+            haveBg={false}
+          />
+        </Flex>
+      </Flex>
     </Flex>
   )
 }
