@@ -296,6 +296,7 @@ export default function Swap() {
 
   // swap state
   const { independentField, typedValue, recipient, smartPoolAddress, smartPoolName } = useSwapState()
+  const smartPool = useCurrency(smartPoolAddress)
   const {
     trade: { state: tradeState, trade },
     allowedSlippage,
@@ -665,7 +666,7 @@ export default function Swap() {
                 isOpen={modalOpen}
                 onDismiss={handleDismissSearch}
                 onCurrencySelect={onPoolSelection}
-                selectedCurrency={defaultPool}
+                selectedCurrency={smartPool}
                 operatedPools={operatedPools}
                 showCommonBases={false}
                 showCurrencyAmount={false}
