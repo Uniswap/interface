@@ -24,8 +24,12 @@ function traceTransaction(transaction?: Span) {
     const child = transaction?.startChild({ ...metadata, op: name })
     return traceTransaction(child)(name, callback)
   }
-  const setTraceData = (key: string, value: unknown) => void transaction?.setData(key, value)
-  const setTraceTag = (key: string, value: string | number | boolean) => void transaction?.setTag(key, value)
+  const setTraceData = (key: string, value: unknown) => {
+    transaction?.setData(key, value)
+  }
+  const setTraceTag = (key: string, value: string | number | boolean) => {
+    transaction?.setTag(key, value)
+  }
   const setTraceStatus = (status: number | SpanStatusType) => {
     if (typeof status === 'number') {
       transaction?.setHttpStatus(status)
@@ -33,7 +37,9 @@ function traceTransaction(transaction?: Span) {
       transaction?.setStatus(status)
     }
   }
-  const setTraceError = (error: unknown) => void transaction?.setData('error', error)
+  const setTraceError = (error: unknown) => {
+    transaction?.setData('error', error)
+  }
 
   return async function boundTrace<T>(name: string, callback: TraceCallback<T>): Promise<T> {
     try {
