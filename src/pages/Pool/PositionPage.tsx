@@ -6,6 +6,7 @@ import { InterfacePageName } from '@uniswap/analytics-events'
 import { formatPrice, NumberType } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
+import { SupportedChainId } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import Badge from 'components/Badge'
@@ -49,6 +50,22 @@ import { TransactionType } from '../../state/transactions/types'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { LoadingRows } from './styleds'
+
+const getTokenLink = (chainId: SupportedChainId, address: string) => {
+  const chainName = CHAIN_ID_TO_NAME[chainId]
+  if (chainName) {
+    return `${window.location.origin}/#/tokens/${chainName}/${address}`
+  } else {
+    return getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
+  }
+}
+
+const CHAIN_ID_TO_NAME: Partial<Record<SupportedChainId, string>> = {
+  [SupportedChainId.ARBITRUM_ONE]: 'arbitrum',
+  [SupportedChainId.OPTIMISM]: 'optimism',
+  [SupportedChainId.MAINNET]: 'ethereum',
+  [SupportedChainId.CELO]: 'celo',
+}
 
 const PageWrapper = styled.div`
   padding: 68px 16px 16px 16px;
@@ -196,7 +213,7 @@ function LinkedCurrency({ chainId, currency }: { chainId?: number; currency?: Cu
 
   if (typeof chainId === 'number' && address) {
     return (
-      <ExternalLink href={getExplorerLink(chainId, address, ExplorerDataType.TOKEN)}>
+      <ExternalLink href={getTokenLink(chainId, address)}>
         <RowFixed>
           <CurrencyLogo currency={currency} size="20px" style={{ marginRight: '0.5rem' }} />
           <ThemedText.DeprecatedMain>{currency?.symbol} ↗</ThemedText.DeprecatedMain>
