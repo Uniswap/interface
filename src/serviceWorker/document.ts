@@ -25,7 +25,7 @@ export function matchDocument({ request, url }: RouteMatchCallbackOptions) {
 
   // If this isn't app.uniswap.org (or a local build), skip.
   // IPFS gateways may not have domain separation, so they cannot use document caching.
-  if (isAppUniswapOrg(url) && !isDevelopment()) {
+  if (!isAppUniswapOrg(url) && !isDevelopment()) {
     return false
   }
 
