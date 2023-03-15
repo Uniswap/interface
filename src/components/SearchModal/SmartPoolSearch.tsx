@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import { t, Trans } from '@lingui/macro'
+import { /*t,*/ Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { EventName, ModalName } from '@uniswap/analytics-events'
 import { Currency, Token } from '@uniswap/sdk-core'
@@ -11,7 +11,7 @@ import useToggle from 'hooks/useToggle'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 //import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { tokenComparator, useSortTokensByQuery } from 'lib/hooks/useTokenList/sorting'
-import { ChangeEvent, KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { /*ChangeEvent, KeyboardEvent, RefObject,*/ useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
@@ -23,11 +23,11 @@ import { /*useAllTokens,*/ useIsUserAddedToken, useSearchInactiveTokenLists, use
 import { CloseIcon, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
-import Row, { RowBetween } from '../Row'
+import { /*Row,*/ RowBetween } from '../Row'
 import CommonBases from './CommonBases'
 import { CurrencyRow, formatAnalyticsEventProperties } from './CurrencyList'
 import CurrencyList from './CurrencyList'
-import { PaddedColumn, SearchInput, Separator } from './styleds'
+import { PaddedColumn, /*SearchInput,*/ Separator } from './styleds'
 
 const ContentWrapper = styled(Column)`
   background-color: ${({ theme }) => theme.backgroundSurface};
@@ -133,7 +133,7 @@ export function SmartPoolSearch({
   }, [isOpen])
 
   // manage focus on modal show
-  const inputRef = useRef<HTMLInputElement>()
+  /*const inputRef = useRef<HTMLInputElement>()
   const handleInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value
     const checksummedInput = isAddress(input)
@@ -155,7 +155,7 @@ export function SmartPoolSearch({
       }
     },
     [debouncedQuery, searchCurrencies, handleCurrencySelect]
-  )
+  )*/
 
   // menu ui
   const [open, toggle] = useToggle(false)
@@ -185,6 +185,7 @@ export function SmartPoolSearch({
             </Text>
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
+          {/*
           <Row>
             <SearchInput
               type="text"
@@ -197,6 +198,7 @@ export function SmartPoolSearch({
               onKeyDown={handleEnter}
             />
           </Row>
+          */}
           {showCommonBases && (
             <CommonBases
               chainId={chainId}
