@@ -24,29 +24,29 @@ interface TraceCallbackOptions {
 type TraceCallback<T> = (options: TraceCallbackOptions) => Promise<T>
 
 /**
- * Sets up TraceCallbackOptions for a transaction.
+ * Sets up TraceCallbackOptions for a Span (NB: Transaction extends Span).
  * @returns a handler which will run a TraceCallback and propagate its result.
  */
-function traceTransaction(transaction?: Span) {
+function traceSpan(span?: Span) {
   const traceChild = <T>(name: string, callback: TraceCallback<T>, metadata?: TraceMetadata) => {
-    const child = transaction?.startChild({ ...metadata, op: name })
-    return traceTransaction(child)(callback)
+    const child = span?.startChild({ ...metadata, op: name })
+    return traceSpan(child)(callback)
   }
   const setTraceData = <K extends keyof TraceTags>(key: K, value: TraceTags[K]) => {
-    transaction?.setData(key, value)
+    span?.setData(key, value)
   }
   const setTraceTag = (key: string, value: string | number | boolean) => {
-    transaction?.setTag(key, value)
+    span?.setTag(key, value)
   }
   const setTraceStatus = (status: number | SpanStatusType) => {
     if (typeof status === 'number') {
-      transaction?.setHttpStatus(status)
+      span?.setHttpStatus(status)
     } else {
-      transaction?.setStatus(status)
+      span?.setStatus(status)
     }
   }
   const setTraceError = (error: unknown) => {
-    transaction?.setData('error', error)
+    span?.setData('error', error)
   }
 
   return async function boundTrace<T>(callback: TraceCallback<T>): Promise<T> {
@@ -54,14 +54,14 @@ function traceTransaction(transaction?: Span) {
       return await callback({ traceChild, setTraceData, setTraceTag, setTraceStatus, setTraceError })
     } catch (error) {
       // Do not overwrite any custom status or error data that was already set.
-      if (!transaction?.status) transaction?.setStatus('internal_error')
-      if (!transaction?.data.error) transaction?.setData('error', error)
+      if (!span?.status) span?.setStatus('internal_error')
+      if (!span?.data.error) span?.setData('error', error)
 
       throw error
     } finally {
       // If no status was reported, assume that it was 'ok'. Otherwise, it will default to 'unknown'.
-      if (!transaction?.status) transaction?.setStatus('ok')
-      transaction?.finish()
+      if (!span?.status) span?.setStatus('ok')
+      span?.finish()
     }
   }
 }
@@ -69,5 +69,5 @@ function traceTransaction(transaction?: Span) {
 /** Traces the callback, adding any metadata to the trace. */
 export async function trace<T>(name: string, callback: TraceCallback<T>, metadata?: TraceMetadata): Promise<T> {
   const transaction = Sentry.startTransaction({ name, data: metadata?.data, tags: metadata?.tags })
-  return traceTransaction(transaction)(callback)
+  return traceSpan(transaction)(callback)
 }
