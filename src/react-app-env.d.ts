@@ -16,6 +16,8 @@ interface Window {
     isBraveWallet?: true
     // set by the MetaMask browser extension (also set by Brave browser when using built-in wallet)
     isMetaMask?: true
+    // set by the Rabby browser extension
+    isRabby?: true
     autoRefreshOnNetworkChange?: boolean
   }
   web3?: Record<string, unknown>

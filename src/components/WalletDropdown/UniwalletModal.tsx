@@ -14,7 +14,7 @@ import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
 import { CloseIcon, ThemedText } from 'theme'
 
-import uniPng from '../../assets/images/uniwallet.png'
+import uniPng from '../../assets/images/uniwallet.svg'
 import { DownloadButton } from './DownloadButton'
 
 const UniwalletConnectWrapper = styled(RowBetween)`

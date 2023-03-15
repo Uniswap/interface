@@ -7,8 +7,8 @@ import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { connectionErrorAtom } from 'components/WalletDropdown/DefaultMenu'
 import IconButton from 'components/WalletDropdown/IconButton'
-import { Connection, CONNECTIONS, ConnectionType, networkConnection } from 'connection'
-import { getConnection } from 'connection'
+import { Connection, ConnectionType, networkConnection, useConnections } from 'connection'
+import { useGetConnection } from 'connection'
 import { ErrorCode } from 'connection/utils'
 import { isSupportedChain } from 'constants/chains'
 import { useMgtmEnabled } from 'featureFlags/flags/mgtm'
@@ -89,6 +89,9 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
   const [pendingConnection, setPendingConnection] = useState<Connection | undefined>()
   const [pendingError, setPendingError] = useAtom(connectionErrorAtom)
 
+  const connections = useConnections()
+  const getConnection = useGetConnection()
+
   useEffect(() => {
     // Clean up errors when the dropdown closes
     return () => setPendingError(undefined)
@@ -119,7 +122,16 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
       if (!isReconnect) addWalletToConnectedWallets({ account, walletType: walletName })
     }
     setLastActiveWalletAddress(account)
-  }, [connectedWallets, addWalletToConnectedWallets, lastActiveWalletAddress, account, connector, chainId, provider])
+  }, [
+    connectedWallets,
+    addWalletToConnectedWallets,
+    lastActiveWalletAddress,
+    account,
+    connector,
+    chainId,
+    provider,
+    getConnection,
+  ])
 
   const tryActivation = useCallback(
     async (connection: Connection) => {
@@ -170,7 +182,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
       ) : (
         <AutoColumn gap="16px">
           <OptionGrid data-testid="option-grid">
-            {CONNECTIONS.map((connection) =>
+            {connections.map((connection) =>
               // Hides Uniswap Wallet if mgtm is disabled
               connection.shouldDisplay && !(connection.type === ConnectionType.UNIWALLET && !mgtmEnabled) ? (
                 <Option
