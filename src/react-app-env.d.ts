@@ -18,6 +18,8 @@ interface Window {
     isMetaMask?: true
     // set by the Rabby browser extension
     isRabby?: true
+    // set by the Trust Wallet browser extension
+    isTrustWallet?: true
     autoRefreshOnNetworkChange?: boolean
   }
   web3?: Record<string, unknown>

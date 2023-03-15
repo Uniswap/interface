@@ -241,7 +241,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     <>
       <HeaderWrapper>
         <StatusWrapper>
-          <StatusIcon connection={connection} size={ENSName ? 44 : 28} />
+          <StatusIcon connection={connection} size={40} />
           {account && (
             <AccountNamesWrapper>
               <ThemedText.SubHeader color="textPrimary" fontWeight={500}>

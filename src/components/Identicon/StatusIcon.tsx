@@ -1,4 +1,3 @@
-import { getWalletMeta } from '@uniswap/conedison/provider/meta'
 import { useWeb3React } from '@web3-react/core'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Unicon } from 'components/Unicon'
@@ -30,27 +29,43 @@ export const IconWrapper = styled.div<{ size?: number }>`
   `};
 `
 
-const SockContainer = styled.div`
+const MiniIconContainer = styled.div<{ side: 'left' | 'right' }>`
   position: absolute;
   display: flex;
   justify-content: center;
-  border-radius: 50%;
+  align-items: center;
   width: 16px;
   height: 16px;
   bottom: -4px;
-  right: -4px;
+  ${({ side }) => `${side === 'left' ? 'left' : 'right'}: -4px;`}
+  border-radius: 50%;
+  outline: 2px solid ${({ theme }) => theme.backgroundSurface};
+  outline-offset: -0.1px;
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  overflow: hidden;
+  @supports (overflow: clip) {
+    overflow: clip;
+  }
 `
 
-const SockImg = styled.img`
+const MiniImg = styled.img`
   width: 16px;
   height: 16px;
 `
 
 const Socks = () => {
   return (
-    <SockContainer>
-      <SockImg src={sockImg} />
-    </SockContainer>
+    <MiniIconContainer side="left">
+      <MiniImg src={sockImg} />
+    </MiniIconContainer>
+  )
+}
+
+const MiniWalletIcon = ({ connection, side }: { connection: Connection; side: 'left' | 'right' }) => {
+  return (
+    <MiniIconContainer side={side}>
+      <MiniImg src={connection.icon} alt={`${connection.name} icon`} />
+    </MiniIconContainer>
   )
 }
 
@@ -84,23 +99,28 @@ function UniconTooltip({ children, enabled }: PropsWithChildren<{ enabled?: bool
   )
 }
 
-const useIcon = (connection: Connection, size: number, enableInfotips?: boolean) => {
-  const { account, provider } = useWeb3React()
+const MainWalletIcon = ({
+  connection,
+  size,
+  enableInfotips,
+}: {
+  connection: Connection
+  size: number
+  enableInfotips?: boolean
+}) => {
+  const { account } = useWeb3React()
   const { avatar } = useENSAvatar(account ?? undefined)
-  const isUniswapWalletConnect = Boolean(provider && getWalletMeta(provider)?.name === 'Uniswap Wallet')
 
   if (!account) {
-    return undefined
-  } else if (avatar || connection.type === ConnectionType.INJECTED) {
+    return null
+  } else if (avatar || (connection.type === ConnectionType.INJECTED && connection.name === 'MetaMask')) {
     return <Identicon size={size} />
-  } else if (isUniswapWalletConnect) {
+  } else {
     return (
       <UniconTooltip enabled={enableInfotips}>
         <Unicon address={account} size={size} />
       </UniconTooltip>
     )
-  } else {
-    return <img src={connection.icon} alt={`${connection.name} icon`} />
   }
 }
 
@@ -108,18 +128,20 @@ export default function StatusIcon({
   connection,
   size = 16,
   enableInfotips,
+  showMiniIcons = true,
 }: {
   connection: Connection
   size?: number
   enableInfotips?: boolean
+  showMiniIcons?: boolean
 }) {
   const hasSocks = useHasSocks()
-  const icon = useIcon(connection, size, enableInfotips)
 
   return (
     <IconWrapper size={size}>
-      {hasSocks && <Socks />}
-      {icon}
+      {hasSocks && showMiniIcons && <Socks />}
+      <MainWalletIcon connection={connection} size={size} enableInfotips={enableInfotips} />
+      {showMiniIcons && <MiniWalletIcon connection={connection} side="right" />}
     </IconWrapper>
   )
 }
