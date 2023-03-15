@@ -42,7 +42,6 @@ import RangeBadge from '../../components/Badge/RangeBadge'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
 import RateToggle from '../../components/RateToggle'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
-import useENS from '../../hooks/useENS'
 import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
 import { useSwapState } from '../../state/swap/hooks'
 import { TransactionType } from '../../state/transactions/types'
@@ -332,9 +331,7 @@ export function PositionPage() {
   const theme = useTheme()
 
   // we query pool address from swap state
-  const { recipient } = useSwapState()
-  const recipientLookup = useENS(recipient ?? undefined)
-  const poolAddress = recipientLookup.address
+  const { smartPoolAddress: poolAddress } = useSwapState()
 
   const parsedTokenId = tokenIdFromUrl ? BigNumber.from(tokenIdFromUrl) : undefined
   const { loading, position: positionDetails } = useV3PositionFromTokenId(parsedTokenId)
