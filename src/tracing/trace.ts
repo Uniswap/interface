@@ -87,3 +87,12 @@ export async function trace<T>(name: string, callback: TraceCallback<T>, metadat
   const transaction = Sentry.startTransaction({ name, data: metadata?.data, tags: metadata?.tags })
   return traceSpan(transaction)(callback)
 }
+
+/** Traces the callback as part of an already active trace if an active trace exists. */
+export async function maybeTrace<T>(name: string, callback: TraceCallback<T>, metadata?: TraceMetadata): Promise<T> {
+  const span = Sentry.getCurrentHub()
+    .getScope()
+    ?.getTransaction()
+    ?.startChild({ op: name, data: metadata?.data, tags: metadata?.tags })
+  return traceSpan(span)(callback)
+}
