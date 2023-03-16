@@ -180,12 +180,11 @@ function useAllV3Ticks(
 
   const [skipNumber, setSkipNumber] = useState(0)
   const [subgraphTickData, setSubgraphTickData] = useState<Ticks>([])
-  const { data, error, isLoading } = useTicksFromSubgraph(
-    useSubgraph ? currencyA : undefined,
-    currencyB,
-    feeAmount,
-    skipNumber
-  )
+  const {
+    data,
+    error,
+    loading: isLoading,
+  } = useTicksFromSubgraph(useSubgraph ? currencyA : undefined, currencyB, feeAmount, skipNumber)
 
   useEffect(() => {
     if (data?.ticks.length) {
