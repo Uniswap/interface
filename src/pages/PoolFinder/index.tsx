@@ -100,7 +100,7 @@ export default function PoolFinder() {
     <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
       <>
         <AppBody>
-          <FindPoolTabs origin={query.get('origin') ?? '/pools/v2'} />
+          <FindPoolTabs origin={query.get('origin') ?? '/pools'} />
           <AutoColumn style={{ padding: '1rem' }} gap="md">
             <BlueCard>
               <AutoColumn gap="10px">
