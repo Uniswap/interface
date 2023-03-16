@@ -84,7 +84,8 @@ export async function dynamicActivate(locale: SupportedLocale) {
     // Bundlers will either export it as default or as a named export named default.
     i18n.load(locale, catalog.messages || catalog.default.messages)
   } catch (error) {
-    Sentry.captureMessage(error.toString())
+    console.error(error)
+    Sentry.captureException(new Error(`Unable to load locale (${locale})`))
   }
   i18n.activate(locale)
 }

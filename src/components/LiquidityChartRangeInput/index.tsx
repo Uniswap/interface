@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import * as Sentry from '@sentry/react'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { AutoColumn, ColumnCenter } from 'components/Column'
@@ -155,10 +154,6 @@ export default function LiquidityChartRangeInput({
     },
     [isSorted, price, ticksAtLimit]
   )
-
-  if (error) {
-    Sentry.captureMessage(error.toString(), 'log')
-  }
 
   const isUninitialized = !currencyA || !currencyB || (formattedData === undefined && !isLoading)
 

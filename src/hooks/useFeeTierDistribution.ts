@@ -1,4 +1,3 @@
-import * as Sentry from '@sentry/react'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
@@ -89,8 +88,7 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
     }
 
     if (latestBlock - (_meta?.block?.number ?? 0) > MAX_DATA_BLOCK_AGE) {
-      Sentry.captureMessage(`Graph stale (latest block: ${latestBlock})`, 'log')
-
+      console.log(`Graph stale (latest block: ${latestBlock})`)
       return {
         isLoading,
         error,
