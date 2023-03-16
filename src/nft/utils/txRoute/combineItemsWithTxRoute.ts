@@ -74,7 +74,7 @@ const itemInRouteAndSamePool = (
   )
 }
 
-export const combineBuyItemsWithTxRoute = (
+export const compareAssetsWithTransactionRoute = (
   items: UpdatedGenieAsset[],
   txRoute?: RoutingItem[]
 ): { hasPriceAdjustment: boolean; updatedAssets: UpdatedGenieAsset[] } => {
