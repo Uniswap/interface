@@ -197,8 +197,18 @@ export function useUpdateInputAndWarnings(
 }
 
 export const getRoyalty = (listingMarket: ListingMarket, asset: WalletAsset) => {
-  // LooksRare is a unique case where royalties for creators are a flat 0.5% or 50 basis points
-  const baseFee = listingMarket.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset.basisPoints ?? 0
+  // LooksRare is a unique case where royalties for creators are a flat 0.5% or 50 basis points if royalty is set
+  const baseFee =
+    listingMarket.name === 'LooksRare'
+      ? asset.basisPoints
+        ? LOOKS_RARE_CREATOR_BASIS_POINTS
+        : 0
+      : asset.basisPoints ?? 0
 
   return baseFee * 0.01
+}
+
+// OpenSea has a 0.5% fee for all assets that do not have a royalty set
+export const getMarketplaceFee = (listingMarket: ListingMarket, asset: WalletAsset) => {
+  return listingMarket.name === 'OpenSea' && !asset.basisPoints ? 0.5 : listingMarket.fee
 }
