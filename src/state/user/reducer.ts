@@ -9,7 +9,7 @@ import { SerializedPair, SerializedToken } from './types'
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
-  taxServiceDismissals: number
+  taxServiceDismissals: number | undefined
 
   selectedWallet?: ConnectionType
 
