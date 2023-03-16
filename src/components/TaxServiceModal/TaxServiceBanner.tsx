@@ -122,7 +122,7 @@ export default function TaxServiceBanner() {
     sessionStorage.setItem(TAX_SERVICE_DISMISSED, 'false')
   }
   const [bannerOpen, setBannerOpen] = useState(
-    sessionStorageTaxServiceDismissed !== 'true' && dismissals < MAX_RENDER_COUNT
+    sessionStorageTaxServiceDismissed !== 'true' && (dismissals === undefined || dismissals < MAX_RENDER_COUNT)
   )
   const onDismiss = useCallback(() => {
     setModalOpen(false)
@@ -131,7 +131,7 @@ export default function TaxServiceBanner() {
   const handleClose = useCallback(() => {
     sessionStorage.setItem(TAX_SERVICE_DISMISSED, 'true')
     setBannerOpen(false)
-    addTaxServiceDismissal(dismissals + 1)
+    dismissals === undefined ? addTaxServiceDismissal(1) : addTaxServiceDismissal(dismissals + 1)
   }, [addTaxServiceDismissal, dismissals])
 
   const handleLearnMoreClick = useCallback((e: any) => {

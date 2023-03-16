@@ -9,7 +9,7 @@ import { ExternalLink } from '../../theme'
 
 const CTASection = styled.section`
   display: grid;
-  grid-template-columns: 2fr 1.5fr;
+  grid-template-columns: 1fr 1fr;
   gap: 8px;
   opacity: 0.8;
 
