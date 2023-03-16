@@ -9,17 +9,18 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 
 import { maybeTrace } from './trace'
 
-const JsonRpcProviderSend = JsonRpcProvider.prototype.send
+const jsonRpcProviderSend = JsonRpcProvider.prototype.send
 JsonRpcProvider.prototype.send = async function LoggingAwareSend(this, method, params) {
-  maybeTrace('jsonRpc.send', async ({ setTraceData }) => {
+  maybeTrace('json_rpc', async ({ setTraceData }) => {
     setTraceData('method', method)
     if (method === 'eth_call') {
-      // Trim the calldata to the method hash to avoid recording large payloads and sensitive information.
+      // Trim the calldata to the method hash (10 chars) to avoid recording large payloads and sensitive information.
       const methodHash = (params[0].data as string).substring(0, 10)
+      // Override the calldata with the method hash, which is part of the first param.
       setTraceData('params', { ...params, [0]: { ...params[0], data: methodHash } })
     } else {
       setTraceData('params', params)
     }
-    return JsonRpcProviderSend.call(this, method, params)
+    return jsonRpcProviderSend.call(this, method, params)
   })
 }
