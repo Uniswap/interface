@@ -2,7 +2,7 @@ import gql from 'graphql-tag'
 
 import { AllV3TicksQuery } from './__generated__/types-and-hooks'
 
-const query = gql`
+gql`
   query AllV3Ticks($poolAddress: String, $skip: Int!) {
     ticks(first: 1000, skip: $skip, where: { poolAddress: $poolAddress }, orderBy: tickIdx) {
       tick: tickIdx

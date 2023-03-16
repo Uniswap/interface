@@ -7,6 +7,7 @@ import { useAllV3TicksQuery } from 'graphql/thegraph/__generated__/types-and-hoo
 import { TickData, Ticks } from 'graphql/thegraph/AllV3TicksQuery'
 import JSBI from 'jsbi'
 import { useSingleContractMultipleData } from 'lib/hooks/multicall'
+import ms from 'ms.macro'
 import { useEffect, useMemo, useState } from 'react'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 
@@ -158,7 +159,7 @@ function useTicksFromSubgraph(
   return useAllV3TicksQuery({
     variables: { poolAddress: poolAddress?.toLowerCase(), skip },
     skip: !poolAddress,
-    pollInterval: 30000,
+    pollInterval: ms`30s`,
   })
 }
 
