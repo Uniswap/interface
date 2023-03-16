@@ -3,10 +3,10 @@ import { FeeAmount, nearestUsableTick, Pool, TICK_SPACINGS, tickToPrice } from '
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
-import useAllV3TicksQuery, { TickData, Ticks } from 'graphql/thegraph/AllV3TicksQuery'
+import { useAllV3TicksQuery } from 'graphql/thegraph/__generated__/types-and-hooks'
+import { TickData, Ticks } from 'graphql/thegraph/AllV3TicksQuery'
 import JSBI from 'jsbi'
 import { useSingleContractMultipleData } from 'lib/hooks/multicall'
-import ms from 'ms.macro'
 import { useEffect, useMemo, useState } from 'react'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 
@@ -155,7 +155,7 @@ function useTicksFromSubgraph(
         )
       : undefined
 
-  return useAllV3TicksQuery(poolAddress, skip, ms`30s`)
+  return useAllV3TicksQuery({ variables: { poolAddress, skip }, skip: !poolAddress, pollInterval: 30000 })
 }
 
 const MAX_THE_GRAPH_TICK_FETCH_VALUE = 1000
@@ -175,12 +175,11 @@ function useAllV3Ticks(
 
   const [skipNumber, setSkipNumber] = useState(0)
   const [subgraphTickData, setSubgraphTickData] = useState<Ticks>([])
-  const { data, error, isLoading } = useTicksFromSubgraph(
-    useSubgraph ? currencyA : undefined,
-    currencyB,
-    feeAmount,
-    skipNumber
-  )
+  const {
+    data,
+    error,
+    loading: isLoading,
+  } = useTicksFromSubgraph(useSubgraph ? currencyA : undefined, currencyB, feeAmount, skipNumber)
 
   useEffect(() => {
     if (data?.ticks.length) {
