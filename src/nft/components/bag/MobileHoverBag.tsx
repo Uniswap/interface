@@ -3,7 +3,7 @@ import { Column, Row } from 'nft/components/Flex'
 import { body, bodySmall } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks'
 import { useBagTotalEthPrice, useBagTotalUsdPrice } from 'nft/hooks/useBagTotalEthPrice'
-import { formatWeiToDecimal, roundAndPluralize } from 'nft/utils'
+import { ethNumberStandardFormatter, formatWeiToDecimal, roundAndPluralize } from 'nft/utils'
 
 import * as styles from './MobileHoverBag.css'
 export const MobileHoverBag = () => {
@@ -48,9 +48,9 @@ export const MobileHoverBag = () => {
             {roundAndPluralize(itemsInBag.length, 'NFT')}
           </Box>
           <Row gap="8">
-            <Box className={body}>{`${formatWeiToDecimal(totalEthPrice.toString())}`}</Box>
+            <Box className={body}>{`${formatWeiToDecimal(totalEthPrice.toString())}`} ETH</Box>
             <Box color="textSecondary" className={bodySmall}>
-              {totalUsdPrice}
+              {ethNumberStandardFormatter(totalUsdPrice, true)}
             </Box>
           </Row>
         </Column>

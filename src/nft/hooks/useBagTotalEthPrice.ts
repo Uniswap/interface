@@ -4,7 +4,6 @@ import { useCurrency } from 'hooks/Tokens'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { BagItemStatus } from 'nft/types'
-import { ethNumberStandardFormatter } from 'nft/utils'
 import { useMemo } from 'react'
 
 import { useBag } from './useBag'
@@ -29,7 +28,7 @@ export function useBagTotalEthPrice(): BigNumber {
   }, [itemsInBag])
 }
 
-export function useBagTotalUsdPrice(): string {
+export function useBagTotalUsdPrice(): string | undefined {
   const totalEthPrice = useBagTotalEthPrice()
   const defaultCurrency = useCurrency('ETH')
 
@@ -40,6 +39,6 @@ export function useBagTotalUsdPrice(): string {
   const usdcValue = useStablecoinValue(parsedOutputAmount)
 
   return useMemo(() => {
-    return ethNumberStandardFormatter(usdcValue?.toExact(), true)
+    return usdcValue?.toExact()
   }, [usdcValue])
 }
