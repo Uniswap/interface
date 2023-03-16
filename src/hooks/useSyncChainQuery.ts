@@ -2,10 +2,8 @@ import { useWeb3React } from '@web3-react/core'
 import { CHAIN_IDS_TO_NAMES } from 'constants/chains'
 import { ParsedQs } from 'qs'
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
 
 import useParsedQueryString from './useParsedQueryString'
-import usePrevious from './usePrevious'
 import useSelectChain from './useSelectChain'
 
 function getChainIdFromName(name: string) {
@@ -22,32 +20,22 @@ function getParsedChainId(parsedQs?: ParsedQs) {
 }
 
 export default function useSyncChainQuery() {
-  const { chainId, isActive } = useWeb3React()
   const parsedQs = useParsedQueryString()
-
   const urlChainId = getParsedChainId(parsedQs)
-  const previousUrlChainId = usePrevious(urlChainId)
+  const [nextChainId, setNextChainId] = useState<number | undefined>(undefined)
+
+  useEffect(() => {
+    if (urlChainId) {
+      setNextChainId(urlChainId)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const selectChain = useSelectChain()
-
-  // Can't use `usePrevious` because `chainId` can be undefined while activating.
-  const [previousChainId, setPreviousChainId] = useState<number | undefined>(undefined)
-  useEffect(() => {
-    if (chainId && chainId !== previousChainId) {
-      setPreviousChainId(chainId)
-    }
-  }, [chainId, previousChainId])
-
-  const [searchParams, setSearchParams] = useSearchParams()
-
-  const chainQueryManuallyUpdated = urlChainId && urlChainId !== previousUrlChainId && isActive
-
+  const { isActive } = useWeb3React()
   return useEffect(() => {
-    if (chainQueryManuallyUpdated) {
-      // If the query param changed, and the chain didn't change, then activate the new chain
-      selectChain(urlChainId)
-      searchParams.delete('chain')
-      setSearchParams(searchParams)
+    console.log(nextChainId, isActive)
+    if (nextChainId && isActive) {
+      selectChain(nextChainId)
     }
-  }, [chainQueryManuallyUpdated, urlChainId, selectChain, searchParams, setSearchParams])
+  }, [isActive, nextChainId, selectChain])
 }
