@@ -12,7 +12,7 @@ describe('swap widget integration tests', () => {
     cy.get(getClassContainsSelector('TokenButtonRow')).last().contains(outputText)
   }
 
-  const selectOutputAndSwitch = (outputText = 'UNI') => {
+  const selectOutputAndSwitch = (outputText: string) => {
     // open token selector...
     cy.contains('Select token').click()
     // select token...
@@ -24,10 +24,12 @@ describe('swap widget integration tests', () => {
           return 'I understand'
         }
 
-        return 'You pay' // Just click on a random element as a no-op
+        return undefined
       })
       .then((selector) => {
-        cy.contains(selector).click()
+        if (selector !== undefined) {
+          cy.contains(selector as string).click()
+        }
       })
 
     // token selector should close...
