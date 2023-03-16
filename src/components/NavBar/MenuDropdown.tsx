@@ -236,7 +236,7 @@ export const MenuDropdown = () => {
                   </PrimaryMenuRow.Text>
                 </PrimaryMenuRow>
                 {mgtmEnabled && (
-                  <Box display={micrositeEnabled ? { sm: 'flex', md: 'none', xl: 'flex', xxl: 'none' } : 'flex'}>
+                  <Box display={micrositeEnabled ? { xxl: 'flex', xxxl: 'none' } : 'flex'}>
                     <PrimaryMenuRow
                       to={micrositeEnabled ? '/wallet' : undefined}
                       href={micrositeEnabled ? undefined : APP_STORE_LINK}

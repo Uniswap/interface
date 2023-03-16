@@ -71,28 +71,22 @@ export const PageTabs = () => {
       <MenuItem dataTestId="nft-nav" href="/nfts" isActive={isNftPage}>
         <Trans>NFTs</Trans>
       </MenuItem>
-<<<<<<< HEAD
-      <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
-        <Trans>Pools</Trans>
-      </MenuItem>
-=======
       <Box display={{ sm: 'flex', lg: 'none', xxl: 'flex' }} width="full">
-        <MenuItem href="/pool" dataTestId="pool-nav-link" isActive={isPoolActive}>
-          <Trans>Pool</Trans>
+        <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
+          <Trans>Pools</Trans>
         </MenuItem>
       </Box>
-      <Box marginY={{ sm: '4', md: 'unset' }}>
-        <MenuDropdown />
-      </Box>
->>>>>>> c4c2ff058 (feat: nav bar MenuDropdown updates (#107))
       {micrositeEnabled && (
-        <Box display={{ sm: 'none', md: 'flex', xl: 'none', xxl: 'flex' }}>
+        <Box display={{ sm: 'none', xxxl: 'flex' }}>
           <MenuItem href="/wallet" isActive={pathname.startsWith('/wallet')}>
             <Trans>Wallet</Trans>
             <NewBadge />
           </MenuItem>
         </Box>
       )}
+      <Box marginY={{ sm: '4', md: 'unset' }}>
+        <MenuDropdown />
+      </Box>
     </>
   )
 }
