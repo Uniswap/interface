@@ -81,7 +81,7 @@ const WalletDropdownWrapper = styled.div<{ open: boolean }>`
   position: fixed;
   top: ${DRAWER_MARGIN};
   right: ${({ open }) => (open ? DRAWER_MARGIN : '-' + DRAWER_WIDTH)};
-  z-index: ${Z_INDEX.dropdown};
+  z-index: ${Z_INDEX.fixed};
 
   overflow: hidden;
 
