@@ -7,6 +7,7 @@ const Menu = styled.div`
   width: 100%;
   overflow: auto;
   margin-top: 4px;
+  padding: 14px 16px 16px;
   ${ScrollBarStyles}
   ::-webkit-scrollbar-track {
     margin-top: 40px;

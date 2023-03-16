@@ -48,6 +48,13 @@ const BuyCryptoButtonBorderKeyframes = keyframes`
   }
 `
 
+const AuthenticatedHeaderWrapper = styled.div`
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+`
+
 const HeaderButton = styled(ThemeButton)`
   border-color: transparent;
   border-radius: 12px;
@@ -242,7 +249,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const percentChange = portfolio?.tokensTotalDenominatedValueChange?.percentage?.value
 
   return (
-    <>
+    <AuthenticatedHeaderWrapper>
       <HeaderWrapper>
         <StatusWrapper>
           <StatusIcon connection={connection} size={40} />
@@ -353,6 +360,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           </UNIButton>
         )}
       </PortfolioDrawerContainer>
-    </>
+    </AuthenticatedHeaderWrapper>
   )
 }

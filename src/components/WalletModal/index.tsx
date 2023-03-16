@@ -30,6 +30,8 @@ const Wrapper = styled.div`
   ${flexColumnNoWrap};
   background-color: ${({ theme }) => theme.backgroundSurface};
   width: 100%;
+  padding: 14px 16px 16px;
+  flex: 1;
 `
 
 const OptionGrid = styled.div`

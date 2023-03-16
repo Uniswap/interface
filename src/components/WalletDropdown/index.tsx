@@ -73,7 +73,6 @@ const WalletDropdownScrollWrapper = styled.div`
 
   scrollbar-gutter: stable;
   overscroll-behavior: contain;
-  padding: 14px 16px 16px;
   border-radius: 12px;
 `
 
@@ -136,7 +135,7 @@ const CloseDrawer = styled.div`
     `${theme.transition.duration.medium} ${theme.transition.timing.ease} background-color, ${theme.transition.duration.medium} ${theme.transition.timing.ease} margin`};
   &:hover {
     margin: 0 -4px 0 0;
-    background-color: ${({ theme }) => theme.stateOverlayHover}};
+    background-color: ${({ theme }) => theme.stateOverlayHover};
   }
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     display: none;
