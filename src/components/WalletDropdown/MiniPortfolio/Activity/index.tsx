@@ -4,10 +4,12 @@ import Column from 'components/Column'
 import Loader from 'components/Loader'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { Unicon } from 'components/Unicon'
+import { useToggleWalletDrawer } from 'components/WalletDropdown'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { useTransactionListQuery } from 'graphql/data/__generated__/types-and-hooks'
 import useENSAvatar from 'hooks/useENSAvatar'
 import useENSName from 'hooks/useENSName'
+import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useMemo } from 'react'
 import { HelpCircle } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -81,14 +83,22 @@ export default function ActivityTab({ account }: { account: string }) {
   })
   const remoteActivities = useMemo(() => parseRemoteActivities(data?.portfolios?.[0].assetActivities), [data])
   const activityGroups = useMemo(() => createGroups(remoteActivities), [remoteActivities])
+  const toggleWalletDrawer = useToggleWalletDrawer()
 
-  // TODO(cartcrom): add no activity state
-  return !data && loading ? (
-    <>
-      <LoadingBubble height="16px" width="80px" margin="16px 16px 8px" />
-      <PortfolioSkeleton shrinkRight />
-    </>
-  ) : (
+  if (!data || loading) {
+    return (
+      <>
+        <LoadingBubble height="16px" width="80px" margin="16px 16px 8px" />
+        <PortfolioSkeleton shrinkRight />
+      </>
+    )
+  }
+
+  if (activityGroups.length === 0) {
+    return <EmptyWalletModule type="activity" onNavigateClick={toggleWalletDrawer} />
+  }
+
+  return (
     <PortfolioTabWrapper>
       {activityGroups.map((activityGroup) => (
         <ActivityGroupWrapper key={activityGroup.title}>

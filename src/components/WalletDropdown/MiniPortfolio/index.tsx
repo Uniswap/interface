@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceSectionName, SharedEventName } from '@uniswap/analytics-events'
 import Column from 'components/Column'
@@ -19,6 +19,8 @@ import Tokens from './Tokens'
 const Wrapper = styled(Column)`
   margin-top: 28px;
   display: flex;
+  flex-direction: column;
+  height: 100%;
   gap: 12px;
 `
 
@@ -41,19 +43,24 @@ const PageWrapper = styled.div`
   margin-right: -16px;
   margin-left: -16px;
   width: calc(100% + 32px);
+  flex: 1;
 `
 
 interface Page {
-  title: string
+  title: React.ReactNode
   component: ({ account }: { account: string }) => JSX.Element
   loggingElementName?: string
 }
 
 const Pages: Array<Page> = [
-  { title: t`Tokens`, component: Tokens, loggingElementName: InterfaceElementName.MINI_PORTFOLIO_TOKENS_TAB },
-  { title: t`NFTs`, component: NFTs, loggingElementName: InterfaceElementName.MINI_PORTFOLIO_NFT_TAB },
-  { title: t`Activity`, component: Activity },
-  { title: t`Pools`, component: Pools, loggingElementName: InterfaceElementName.MINI_PORTFOLIO_POOLS_TAB },
+  {
+    title: <Trans>Tokens</Trans>,
+    component: Tokens,
+    loggingElementName: InterfaceElementName.MINI_PORTFOLIO_TOKENS_TAB,
+  },
+  { title: <Trans>NFTs</Trans>, component: NFTs, loggingElementName: InterfaceElementName.MINI_PORTFOLIO_NFT_TAB },
+  { title: <Trans>Pools</Trans>, component: Pools, loggingElementName: InterfaceElementName.MINI_PORTFOLIO_POOLS_TAB },
+  { title: <Trans>Activity</Trans>, component: Activity },
 ]
 
 function MiniPortfolio({ account }: { account: string }) {

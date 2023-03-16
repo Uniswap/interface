@@ -1,4 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
+import Column from 'components/Column'
 import WalletModal from 'components/WalletModal'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
@@ -10,8 +11,9 @@ import SettingsMenu from './SettingsMenu'
 
 export const connectionErrorAtom = atom<string | undefined>(undefined)
 
-const DefaultMenuWrap = styled.div`
+const DefaultMenuWrap = styled(Column)`
   width: 100%;
+  height: 100%;
 `
 
 enum MenuState {

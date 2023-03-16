@@ -50,6 +50,10 @@ const ProfileHeader = styled.div`
   }
 `
 
+const EmptyStateContainer = styled.div`
+  margin-top: 164px;
+`
+
 export const DEFAULT_WALLET_ASSET_QUERY_AMOUNT = 25
 export const WALLET_COLLECTIONS_PAGINATION_LIMIT = 300
 const FILTER_SIDEBAR_WIDTH = 300
@@ -217,7 +221,9 @@ const ProfilePageNfts = ({
   return (
     <Column width="full">
       {ownerAssets?.length === 0 ? (
-        <EmptyWalletModule />
+        <EmptyStateContainer>
+          <EmptyWalletModule />
+        </EmptyStateContainer>
       ) : (
         <AnimatedBox
           flexShrink="0"

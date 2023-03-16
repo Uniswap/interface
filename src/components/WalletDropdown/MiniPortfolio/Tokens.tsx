@@ -5,7 +5,7 @@ import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import { PortfolioBalancesQuery, usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
-import { EmptyWalletContent } from 'nft/components/profile/view/EmptyWalletContent'
+import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -15,7 +15,6 @@ import { useToggleWalletDrawer } from '..'
 import { PortfolioArrow } from '../AuthenticatedHeader'
 import { hideSmallBalancesAtom } from '../SmallBalanceToggle'
 import { ExpandoRow } from './ExpandoRow'
-import { EmptyWalletContainer } from './NFTs'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from './PortfolioRow'
 
 const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
@@ -54,11 +53,7 @@ export default function Tokens({ account }: { account: string }) {
   }
 
   if (data?.portfolios?.[0].tokenBalances?.length === 0) {
-    return (
-      <EmptyWalletContainer>
-        <EmptyWalletContent type="token" onNavigateClick={toggleWalletDrawer} />
-      </EmptyWalletContainer>
-    )
+    return <EmptyWalletModule type="token" onNavigateClick={toggleWalletDrawer} />
   }
 
   const toggleHiddenTokens = () => setShowHiddenTokens((showHiddenTokens) => !showHiddenTokens)

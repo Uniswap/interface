@@ -159,6 +159,10 @@ const FadeInColumn = styled(Column)`
   ${portfolioFadeInAnimation}
 `
 
+const PortfolioDrawerContainer = styled(Column)`
+  flex: 1;
+`
+
 export function PortfolioArrow({ change, ...rest }: { change: number } & IconProps) {
   const theme = useTheme()
   return change < 0 ? (
@@ -267,7 +271,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           </TraceEvent>
         </IconContainer>
       </HeaderWrapper>
-      <Column>
+      <PortfolioDrawerContainer>
         {totalBalance !== undefined ? (
           <FadeInColumn gap="xs">
             <ThemedText.HeadlineLarge fontWeight={500}>
@@ -348,7 +352,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             <Trans>Claim Uniswap NFT Airdrop</Trans>
           </UNIButton>
         )}
-      </Column>
+      </PortfolioDrawerContainer>
     </>
   )
 }

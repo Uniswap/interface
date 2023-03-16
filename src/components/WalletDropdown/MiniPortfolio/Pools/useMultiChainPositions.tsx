@@ -75,7 +75,7 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
   const pms = useV3ManagerContracts(chains)
   const multicalls = useInterfaceMulticallContracts(chains)
   const allTokens = useAllTokensMultichain()
-  const [positions, setPositions] = useState<PositionInfo[] | undefined>([])
+  const [positions, setPositions] = useState<PositionInfo[] | undefined>()
   const positionsFetching = useRef(false)
   const positionsLoading = !positions && positionsFetching.current
 

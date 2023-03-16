@@ -8,6 +8,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useToggleWalletDrawer } from 'components/WalletDropdown'
 import { getChainInfo } from 'constants/chainInfo'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
+import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -31,10 +32,17 @@ export default function Pools({ account }: { account: string }) {
     return [openPositions, closedPositions]
   }, [positions])
 
-  // TODO(cartcrom): add no pools state
-  return !positions || loading ? (
-    <PortfolioSkeleton />
-  ) : (
+  const toggleWalletDrawer = useToggleWalletDrawer()
+
+  if (!positions || loading) {
+    return <PortfolioSkeleton />
+  }
+
+  if (positions?.length === 0) {
+    return <EmptyWalletModule type="pool" onNavigateClick={toggleWalletDrawer} />
+  }
+
+  return (
     <PortfolioTabWrapper>
       {openPositions.map((positionInfo) => (
         <PositionListItem

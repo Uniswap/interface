@@ -1,6 +1,6 @@
 import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { LoadingAssets } from 'nft/components/collection/CollectionAssetLoading'
-import { EmptyWalletContent } from 'nft/components/profile/view/EmptyWalletContent'
+import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import styled from 'styled-components/macro'
@@ -22,12 +22,9 @@ export default function NFTs({ account }: { account: string }) {
       </AssetsContainer>
     )
 
-  if (!walletAssets || walletAssets?.length === 0)
-    return (
-      <EmptyWalletContainer>
-        <EmptyWalletContent onNavigateClick={toggleWalletDrawer} />
-      </EmptyWalletContainer>
-    )
+  if (!walletAssets || walletAssets?.length === 0) {
+    return <EmptyWalletModule onNavigateClick={toggleWalletDrawer} />
+  }
 
   return (
     <InfiniteScroll
@@ -61,13 +58,6 @@ export default function NFTs({ account }: { account: string }) {
     </InfiniteScroll>
   )
 }
-
-export const EmptyWalletContainer = styled.div`
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-  margin: 16px;
-`
 
 const AssetsContainer = styled.div`
   display: grid;

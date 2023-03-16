@@ -65,9 +65,11 @@ export function useSyncWidgetInputs({
   const baseTokens = usePrevious(defaultTokens)
   useEffect(() => {
     if (!tokensEqual(baseTokens, defaultTokens)) {
+      const input = defaultTokens[Field.INPUT]
+      const output = defaultTokens[Field.OUTPUT] ?? defaultTokens.default
       setTokens({
         ...defaultTokens,
-        [Field.OUTPUT]: defaultTokens[Field.OUTPUT] ?? defaultTokens.default,
+        [Field.OUTPUT]: currenciesEqual(output, input) ? undefined : output,
       })
     }
   }, [baseTokens, defaultTokens])
