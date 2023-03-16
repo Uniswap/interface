@@ -191,9 +191,20 @@ export function useUpdateInputAndWarnings(
     const price = listPrice ?? 0
     inputRef.current.value = `${price}`
     if (price < (asset?.floorPrice ?? 0) && price > 0) setWarningType(WarningType.BELOW_FLOOR)
-    else if (asset.floor_sell_order_price && price >= asset.floor_sell_order_price)
+    else if (
+      asset.floor_sell_order_price &&
+      price >= asset.floor_sell_order_price &&
+      asset.asset_contract.tokenType !== NftStandard.Erc1155
+    )
       setWarningType(WarningType.ALREADY_LISTED)
-  }, [asset?.floorPrice, asset.floor_sell_order_price, inputRef, listPrice, setWarningType])
+  }, [
+    asset.asset_contract.tokenType,
+    asset?.floorPrice,
+    asset.floor_sell_order_price,
+    inputRef,
+    listPrice,
+    setWarningType,
+  ])
 }
 
 export const getRoyalty = (listingMarket: ListingMarket, asset: WalletAsset) => {

@@ -1,5 +1,6 @@
 import { Plural, t, Trans } from '@lingui/macro'
 import { BaseButton } from 'components/Button'
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import ms from 'ms.macro'
 import { BelowFloorWarningModal } from 'nft/components/profile/list/Modal/BelowFloorWarningModal'
 import { useIsMobile, useSellAsset } from 'nft/hooks'
@@ -71,7 +72,11 @@ export const ListingButton = ({ onClick }: { onClick: () => void }) => {
             !listing.overrideFloorPrice
           )
             listingsBelowFloor.push([asset, listing])
-          else if (asset.floor_sell_order_price && listing.price >= asset.floor_sell_order_price)
+          else if (
+            asset.floor_sell_order_price &&
+            listing.price >= asset.floor_sell_order_price &&
+            asset.asset_contract.tokenType !== NftStandard.Erc1155
+          )
             listingsAboveSellOrderFloor.push([asset, listing])
         }
       }
