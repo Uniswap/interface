@@ -8,6 +8,7 @@ import { isSentryEnabled } from 'utils/env'
 import { getEnvName, isProductionEnv } from 'utils/env'
 
 export { trace } from './trace'
+export { ErrorBoundary as TracingErrorBoundary } from '@sentry/react'
 
 // Dump some metadata into the window to allow client verification.
 window.GIT_COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
@@ -22,7 +23,12 @@ Sentry.init({
   environment: getEnvName(),
   enabled: isSentryEnabled(),
   tracesSampleRate: Number(process.env.REACT_APP_SENTRY_TRACES_SAMPLE_RATE ?? 0),
-  integrations: [
+  integrations: (integrations) => [
+    // Remove TryCatch {@link https://docs.sentry.io/platforms/javascript/configuration/integrations/default/#trycatch}
+    // and GlobalHandlers {@link https://docs.sentry.io/platforms/javascript/configuration/integrations/default/#globalhandlers}
+    // integrations, as they flood the log with errors which may be intentionally ignored.
+    // Errors which crash the app should be caught by the Sentry.ErrorBoundary.
+    ...integrations.filter(({ name }) => !['TryCatch', 'GlobalHandlers'].includes(name)),
     new BrowserTracing({
       startTransactionOnLocationChange: false,
       startTransactionOnPageLoad: true,

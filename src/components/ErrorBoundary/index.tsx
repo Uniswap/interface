@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import * as Sentry from '@sentry/react'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { ButtonLight, SmallButtonPrimary } from 'components/Button'
@@ -9,6 +8,7 @@ import React, { PropsWithChildren, useState } from 'react'
 import { Copy } from 'react-feather'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { TracingErrorBoundary } from 'tracing'
 import { isSentryEnabled } from 'utils/env'
 
 import { CopyToClipboard, ExternalLink, ThemedText } from '../../theme'
@@ -222,7 +222,7 @@ const updateServiceWorkerInBackground = async () => {
 export default function ErrorBoundary({ children }: PropsWithChildren): JSX.Element {
   const { pathname } = useLocation()
   return (
-    <Sentry.ErrorBoundary
+    <TracingErrorBoundary
       fallback={({ error, eventId }) => <Fallback error={error} eventId={eventId} />}
       beforeCapture={(scope) => {
         scope.setLevel('fatal')
@@ -235,6 +235,6 @@ export default function ErrorBoundary({ children }: PropsWithChildren): JSX.Elem
       }}
     >
       {children}
-    </Sentry.ErrorBoundary>
+    </TracingErrorBoundary>
   )
 }
