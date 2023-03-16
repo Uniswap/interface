@@ -13,10 +13,10 @@ import { InterfaceTrade } from 'state/routing/types'
 import useGasPrice from './useGasPrice'
 import useStablecoinPrice, { useStablecoinValue } from './useStablecoinPrice'
 
-const V3_SWAP_DEFAULT_SLIPPAGE = new Percent(50, 10_000) // .50%
+const V3_SWAP_DEFAULT_SLIPPAGE = new Percent(10, 10_000) // .10%
 const ONE_TENTHS_PERCENT = new Percent(10, 10_000) // .10%
 const DEFAULT_AUTO_SLIPPAGE = ONE_TENTHS_PERCENT
-const GAS_ESTIMATE_BUFFER = new Percent(10, 100) // 10%
+const GAS_ESTIMATE_BUFFER = new Percent(110, 100) // 110%
 
 // Base costs regardless of how many hops in the route
 const V3_SWAP_BASE_GAS_ESTIMATE = 100_000
@@ -67,8 +67,8 @@ function guesstimateGas(trade: Trade<Currency, Currency, TradeType> | undefined)
   return undefined
 }
 
-const MIN_AUTO_SLIPPAGE_TOLERANCE = new Percent(5, 1000) // 0.5%
-const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(25, 100) // 25%
+const MIN_AUTO_SLIPPAGE_TOLERANCE = new Percent(1, 1000) // 0.1%
+const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(5, 100) // 5%
 
 /**
  * Returns slippage tolerance based on values from current trade, gas estimates from api, and active network.
@@ -110,6 +110,7 @@ export default function useAutoSlippageTolerance(
       // the cost of the gas of the failed transaction
       const fraction = dollarCostToUse.asFraction.divide(outputDollarValue.asFraction)
       const result = new Percent(fraction.numerator, fraction.denominator)
+
       if (result.greaterThan(MAX_AUTO_SLIPPAGE_TOLERANCE)) {
         return MAX_AUTO_SLIPPAGE_TOLERANCE
       }
