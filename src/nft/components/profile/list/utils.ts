@@ -1,8 +1,9 @@
 import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { addressesByNetwork, SupportedChainId } from '@looksrare/sdk'
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { SetPriceMethod, WarningType } from 'nft/components/profile/list/shared'
 import { useNFTList, useSellAsset } from 'nft/hooks'
-import { LOOKSRARE_MARKETPLACE_CONTRACT, X2Y2_TRANSFER_CONTRACT } from 'nft/queries'
+import { LOOKSRARE_MARKETPLACE_CONTRACT, X2Y2_TRANSFER_CONTRACT_721, X2Y2_TRANSFER_CONTRACT_1155 } from 'nft/queries'
 import { OPENSEA_CROSS_CHAIN_CONDUIT } from 'nft/queries/openSea'
 import { CollectionRow, ListingMarket, ListingRow, ListingStatus, WalletAsset } from 'nft/types'
 import { approveCollection, LOOKS_RARE_CREATOR_BASIS_POINTS, signListing } from 'nft/utils/listNfts'
@@ -28,7 +29,9 @@ export async function approveCollectionRow(
       : marketplace.name === 'Rarible'
       ? LOOKSRARE_MARKETPLACE_CONTRACT
       : marketplace.name === 'X2Y2'
-      ? X2Y2_TRANSFER_CONTRACT
+      ? collectionRow.nftStandard === NftStandard.Erc721
+        ? X2Y2_TRANSFER_CONTRACT_721
+        : X2Y2_TRANSFER_CONTRACT_1155
       : addresses.TRANSFER_MANAGER_ERC721
   !!collectionAddress &&
     (await approveCollection(
