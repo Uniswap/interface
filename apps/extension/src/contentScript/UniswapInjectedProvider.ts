@@ -128,8 +128,7 @@ export class UniswapInjectedProvider extends EventEmitter {
     const provider = new ethers.providers.JsonRpcProvider(
       'https://goerli.infura.io/v3/b14063d3418c40ec984f510cf64083b4'
     )
-    const wallet = new ethers.Wallet(Wallet.fromMnemonic(mnemonic).privateKey)
-    wallet.connect(provider)
+
     this.provider = provider
 
     // Sometimes we want to pretend to be MetaMask

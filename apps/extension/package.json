@@ -5,6 +5,7 @@
   "browserslist": "last 2 chrome versions",
   "dependencies": {
     "app": "workspace:^",
+    "dotenv-webpack": "8.0.1",
     "eth-rpc-errors": "4.0.3",
     "ethers": "5.7.2",
     "react": "^18.0.0",

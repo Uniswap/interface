@@ -51,7 +51,7 @@ const infuraProvider = new providers.InfuraProvider(
 
 let signer: ethers.Signer | null = null
 signer = new ethers.Wallet(
-  Wallet.fromMnemonic(mnemonic).privateKey,
+  Wallet.fromMnemonic(process.env.TEST_SEED_PHRASE || "").privateKey,
   infuraProvider
 )
 

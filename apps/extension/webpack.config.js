@@ -7,6 +7,7 @@ const path = require("path");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const fs = require("fs");
 const { shouldExclude } = require('tamagui-loader')
+const DotenvPlugin = require('dotenv-webpack')
 
 const NODE_ENV = process.env.NODE_ENV || "development";
 const EXTENSION_NAME =
@@ -229,16 +230,13 @@ const options = {
     },
   },
   plugins: [
+    new DotenvPlugin(),
     new DefinePlugin({
-      process: {
-        env: {
-          __DEV__: NODE_ENV === "development" ? "true" : "false",
-          IS_STATIC: '""',
-          NODE_ENV: JSON.stringify(NODE_ENV),
-          TAMAGUI_TARGET: JSON.stringify("web"),
-          DEBUG: JSON.stringify(process.env.DEBUG || "0"),
-        },
-      },
+      'process.env.__DEV__': NODE_ENV === "development" ? "true" : "false",
+      'process.env.IS_STATIC': '""',
+      'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+      'process.env.TAMAGUI_TARGET': JSON.stringify("web"),
+      'process.env.DEBUG': JSON.stringify(process.env.DEBUG || "0")
     }),
     new CleanWebpackPlugin(),
     ...plugins,
@@ -271,6 +269,11 @@ const options = {
         },
         {
           from: "src/assets/*.{html,png,svg}",
+          to: "[name][ext]",
+          force: true,
+        },
+        {
+          from: "src/*.{html,png,svg}",
           to: "[name][ext]",
           force: true,
         },
