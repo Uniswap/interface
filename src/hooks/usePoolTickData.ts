@@ -155,7 +155,11 @@ function useTicksFromSubgraph(
         )
       : undefined
 
-  return useAllV3TicksQuery({ variables: { poolAddress, skip }, skip: !poolAddress, pollInterval: 30000 })
+  return useAllV3TicksQuery({
+    variables: { poolAddress: poolAddress?.toLowerCase(), skip },
+    skip: !poolAddress,
+    pollInterval: 30000,
+  })
 }
 
 const MAX_THE_GRAPH_TICK_FETCH_VALUE = 1000
@@ -175,11 +179,12 @@ function useAllV3Ticks(
 
   const [skipNumber, setSkipNumber] = useState(0)
   const [subgraphTickData, setSubgraphTickData] = useState<Ticks>([])
-  const {
-    data,
-    error,
-    loading: isLoading,
-  } = useTicksFromSubgraph(useSubgraph ? currencyA : undefined, currencyB, feeAmount, skipNumber)
+  const { data, error, isLoading } = useTicksFromSubgraph(
+    useSubgraph ? currencyA : undefined,
+    currencyB,
+    feeAmount,
+    skipNumber
+  )
 
   useEffect(() => {
     if (data?.ticks.length) {
