@@ -1,6 +1,6 @@
 import { BagStatus, TxStateType } from 'nft/types'
 import { useEffect, useRef } from 'react'
-import shallow from 'zustand/shallow'
+import { shallow } from 'zustand/shallow'
 
 import { useBag } from './useBag'
 import { useSendTransaction } from './useSendTransaction'
