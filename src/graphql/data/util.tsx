@@ -1,10 +1,12 @@
 import { QueryResult } from '@apollo/client'
+import { Currency } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import ms from 'ms.macro'
 import { useEffect } from 'react'
+import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
-import { Chain, HistoryDuration } from './__generated__/types-and-hooks'
+import { Chain, ContractInput, HistoryDuration } from './__generated__/types-and-hooks'
 
 export enum PollingInterval {
   Slow = ms`5m`,
@@ -83,6 +85,10 @@ const GQL_CHAINS: number[] = [
 
 export function isGqlSupportedChain(chainId: number | undefined): chainId is SupportedChainId {
   return !!chainId && GQL_CHAINS.includes(chainId)
+}
+export function toContractInput(currency: Currency): ContractInput {
+  const chain = chainIdToBackendName(currency.chainId)
+  return { chain, address: currency.isToken ? currency.address : getNativeTokenDBAddress(chain) }
 }
 
 const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {

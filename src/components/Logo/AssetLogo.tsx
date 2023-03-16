@@ -34,12 +34,12 @@ export type AssetLogoBaseProps = {
 }
 type AssetLogoProps = AssetLogoBaseProps & { isNative?: boolean; address?: string | null; chainId?: number }
 
-const LogoContainer = styled.div`
+export const LogoContainer = styled.div`
   position: relative;
   display: flex;
 `
 
-const L2NetworkLogo = styled.div<{ networkUrl?: string; parentSize: string }>`
+export const L2NetworkLogo = styled.div<{ networkUrl?: string; parentSize: string }>`
   --size: ${({ parentSize }) => `calc(${parentSize} / 2)`};
   width: var(--size);
   height: var(--size);

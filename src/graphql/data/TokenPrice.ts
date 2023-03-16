@@ -21,4 +21,23 @@ gql`
     }
   }
 `
+
+gql`
+  query UniswapPrices($contracts: [ContractInput!]!) {
+    tokens(contracts: $contracts) {
+      id
+      address
+      chain
+      standard
+      market(currency: USD) {
+        id
+        price {
+          id
+          value
+        }
+      }
+    }
+  }
+`
+
 export type { TokenPriceQuery } from './__generated__/types-and-hooks'

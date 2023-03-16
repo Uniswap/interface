@@ -143,7 +143,7 @@ const UnknownContract = styled(UnknownStatus)`
   width: 40px;
 `
 
-function ActivityLogo({ srcs, otherAccount }: { srcs?: Array<string | undefined>; otherAccount?: string }) {
+export function ActivityLogo({ srcs, otherAccount }: { srcs?: Array<string | undefined>; otherAccount?: string }) {
   const { avatar, loading } = useENSAvatar(otherAccount, false)
   if (otherAccount) {
     return loading ? (

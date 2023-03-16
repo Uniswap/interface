@@ -137,4 +137,3 @@ query TransactionList($account: String!) {
     }
   }
 }
-
