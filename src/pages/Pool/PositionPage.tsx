@@ -20,7 +20,7 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
+import { CHAIN_ID_TO_BACKEND_NAME, isGqlSupportedChain } from 'graphql/data/util'
 import { useToken } from 'hooks/Tokens'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -52,15 +52,8 @@ import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { LoadingRows } from './styleds'
 
-const SUPPORTED_CHAIN_IDS = [
-  SupportedChainId.MAINNET,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.CELO,
-]
-
 const getTokenLink = (chainId: SupportedChainId, address: string) => {
-  if (SUPPORTED_CHAIN_IDS.includes(chainId)) {
+  if (isGqlSupportedChain(chainId)) {
     const chainName = CHAIN_ID_TO_BACKEND_NAME[chainId]
     return `${window.location.origin}/#/tokens/${chainName}/${address}`
   } else {
