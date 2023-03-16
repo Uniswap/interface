@@ -66,7 +66,7 @@ const getConsiderationItems = (
   openSeaFee?: ConsiderationInputItem
 } => {
   const creatorFeeBasisPoints = asset?.basisPoints ?? 0
-  const openSeaBasisPoints = asset?.asset_contract?.tokenType === NftStandard.Erc1155 ? 50 : 0
+  const openSeaBasisPoints = !asset?.basisPoints ? 50 : 0
   const sellerBasisPoints = INVERSE_BASIS_POINTS - creatorFeeBasisPoints - openSeaBasisPoints
 
   const creatorFee = price
@@ -82,10 +82,7 @@ const getConsiderationItems = (
       creatorFeeBasisPoints > 0
         ? createConsiderationItem(creatorFee, asset?.asset_contract?.payout_address ?? '')
         : undefined,
-    openSeaFee:
-      asset?.asset_contract?.tokenType === NftStandard.Erc1155
-        ? createConsiderationItem(openSeaFee, OPENSEA_FEE_ADDRESS)
-        : undefined,
+    openSeaFee: openSeaBasisPoints ? createConsiderationItem(openSeaFee, OPENSEA_FEE_ADDRESS) : undefined,
   }
 }
 
@@ -120,9 +117,9 @@ export async function approveCollection(
 }
 
 /*
-TODO: I think Opensea is good, maybe check consideration items
+TODO: OS confirmed working, need to update UX to reflect OS basis points for 0 creator fee
 LR and X2 didn't have anything obvious to change, see if you can even list to them first and then check their docs
-UPDATED X2 DELEGATE contract depending on standard
+UPDATED X2 DELEGATE contract depending on standard, got an internal server error, will need to investigate, added amount to offer item, 721 still succeeds
 */
 
 export async function signListing(
