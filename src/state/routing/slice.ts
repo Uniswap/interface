@@ -5,6 +5,7 @@ import { RPC_PROVIDERS } from 'constants/providers'
 import { getClientSideQuote, toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms.macro'
 import qs from 'qs'
+import { trace } from 'tracing'
 
 import { GetQuoteResult } from './types'
 
@@ -64,33 +65,58 @@ const PRICE_PARAMS = {
   distributionPercent: 100,
 }
 
+interface GetQuoteArgs {
+  tokenInAddress: string
+  tokenInChainId: ChainId
+  tokenInDecimals: number
+  tokenInSymbol?: string
+  tokenOutAddress: string
+  tokenOutChainId: ChainId
+  tokenOutDecimals: number
+  tokenOutSymbol?: string
+  amount: string
+  routerPreference: RouterPreference
+  type: 'exactIn' | 'exactOut'
+}
+
 export const routingApi = createApi({
   reducerPath: 'routingApi',
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://api.uniswap.org/v1/',
   }),
   endpoints: (build) => ({
-    getQuote: build.query<
-      GetQuoteResult,
-      {
-        tokenInAddress: string
-        tokenInChainId: ChainId
-        tokenInDecimals: number
-        tokenInSymbol?: string
-        tokenOutAddress: string
-        tokenOutChainId: ChainId
-        tokenOutDecimals: number
-        tokenOutSymbol?: string
-        amount: string
-        routerPreference: RouterPreference
-        type: 'exactIn' | 'exactOut'
-      }
-    >({
+    getQuote: build.query<GetQuoteResult, GetQuoteArgs>({
+      async onQueryStarted(args: GetQuoteArgs, { queryFulfilled }) {
+        trace(
+          'quote',
+          async ({ setTraceError, setTraceStatus }) => {
+            try {
+              await queryFulfilled
+            } catch (error: unknown) {
+              if (error && typeof error === 'object' && 'error' in error) {
+                const queryError = (error as Record<'error', FetchBaseQueryError>).error
+                if (typeof queryError.status === 'number') {
+                  setTraceStatus(queryError.status)
+                }
+                setTraceError(queryError)
+              } else {
+                throw error
+              }
+            }
+          },
+          {
+            data: {
+              ...args,
+              isPrice: args.routerPreference === RouterPreference.PRICE,
+              isAutoRouter: args.routerPreference === RouterPreference.API,
+            },
+            tags: { is_widget: false },
+          }
+        )
+      },
       async queryFn(args, _api, _extraOptions, fetch) {
         const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, routerPreference, type } =
           args
-
-        let result
 
         try {
           if (routerPreference === RouterPreference.API) {
@@ -103,10 +129,10 @@ export const routingApi = createApi({
               amount,
               type,
             })
-            result = await fetch(`quote?${query}`)
+            return (await fetch(`quote?${query}`)) as { data: GetQuoteResult } | { error: FetchBaseQueryError }
           } else {
             const router = getRouter(args.tokenInChainId)
-            result = await getClientSideQuote(
+            return await getClientSideQuote(
               args,
               router,
               // TODO(zzmp): Use PRICE_PARAMS for RouterPreference.PRICE.
@@ -114,12 +140,10 @@ export const routingApi = createApi({
               CLIENT_PARAMS
             )
           }
-
-          return { data: result.data as GetQuoteResult }
-        } catch (e) {
+        } catch (error) {
           // TODO: fall back to client-side quoter when auto router fails.
           // deprecate 'legacy' v2/v3 routers first.
-          return { error: e as FetchBaseQueryError }
+          return { error: { status: 'CUSTOM_ERROR', error: error.toString(), data: error } }
         }
       },
       keepUnusedDataFor: ms`10s`,
