@@ -24,12 +24,10 @@ describe('swap widget integration tests', () => {
           return 'I understand'
         }
 
-        return undefined
+        return 'You pay' // Just click on a random element as a no-op
       })
       .then((selector) => {
-        if (selector instanceof String) {
-          cy.contains(selector as string).click()
-        }
+        cy.contains(selector).click()
       })
 
     // token selector should close...
