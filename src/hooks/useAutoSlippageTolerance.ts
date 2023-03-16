@@ -110,7 +110,6 @@ export default function useAutoSlippageTolerance(
       // the cost of the gas of the failed transaction
       const fraction = dollarCostToUse.asFraction.divide(outputDollarValue.asFraction)
       const result = new Percent(fraction.numerator, fraction.denominator)
-
       if (result.greaterThan(MAX_AUTO_SLIPPAGE_TOLERANCE)) {
         return MAX_AUTO_SLIPPAGE_TOLERANCE
       }
