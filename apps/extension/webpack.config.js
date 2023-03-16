@@ -270,7 +270,7 @@ const options = {
           },
         },
         {
-          from: "src/*.{html,png,svg}",
+          from: "src/assets/*.{html,png,svg}",
           to: "[name][ext]",
           force: true,
         },
@@ -290,42 +290,6 @@ const options = {
         //   to: "injected.js",
         //   force: true,
         // },
-      ],
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: 'src/assets/default.png',
-          to: path.resolve(__dirname, dir),
-          force: true,
-        },
-      ],
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: 'src/assets/success.png',
-          to: path.resolve(__dirname, dir),
-          force: true,
-        },
-      ],
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: 'src/assets/pending.png',
-          to: path.resolve(__dirname, dir),
-          force: true,
-        },
-      ],
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: 'src/assets/fail.png',
-          to: path.resolve(__dirname, dir),
-          force: true,
-        },
       ],
     }),
   ],
