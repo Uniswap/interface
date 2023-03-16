@@ -8,30 +8,53 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useToggleWalletDrawer } from 'components/WalletDropdown'
 import { getChainInfo } from 'constants/chainInfo'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
-import { useCallback } from 'react'
+import { useCallback, useMemo, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
 
 import { ActivityLogo } from '../Activity'
+import { ExpandoRow } from '../ExpandoRow'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
 import { useFeeValues } from './hooks'
 import useMultiChainPositions, { PositionInfo } from './useMultiChainPositions'
 
 export default function Pools({ account }: { account: string }) {
   const { positions, loading } = useMultiChainPositions(account)
+  const [showClosed, toggleShowClosed] = useReducer((showClosed) => !showClosed, false)
+
+  const [openPositions, closedPositions] = useMemo(() => {
+    const openPositions: PositionInfo[] = []
+    const closedPositions: PositionInfo[] = []
+    positions?.forEach((position) => (position.closed ? closedPositions : openPositions).push(position))
+    return [openPositions, closedPositions]
+  }, [positions])
+
   // TODO(cartcrom): add no pools state
   return !positions || loading ? (
     <PortfolioSkeleton />
   ) : (
     <PortfolioTabWrapper>
-      {positions.map((positionInfo) => (
+      {openPositions.map((positionInfo) => (
         <PositionListItem
           key={positionInfo.details.tokenId.toString() + positionInfo.chainId}
           positionInfo={positionInfo}
         />
       ))}
+      <ExpandoRow
+        title={t`Closed Positions`}
+        isExpanded={showClosed}
+        toggle={toggleShowClosed}
+        numItems={closedPositions.length}
+      >
+        {closedPositions.map((positionInfo) => (
+          <PositionListItem
+            key={positionInfo.details.tokenId.toString() + positionInfo.chainId}
+            positionInfo={positionInfo}
+          />
+        ))}
+      </ExpandoRow>
     </PortfolioTabWrapper>
   )
 }

@@ -1,5 +1,4 @@
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
-import Column from 'components/Column'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import Row from 'components/Row'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
@@ -15,17 +14,11 @@ import { EllipsisStyle, ThemedText } from 'theme'
 import { useToggleWalletDrawer } from '..'
 import { PortfolioArrow } from '../AuthenticatedHeader'
 import { hideSmallBalancesAtom } from '../SmallBalanceToggle'
-import { HiddenTokensRow } from './HiddenTokensRow'
+import { ExpandoRow } from './ExpandoRow'
 import { EmptyWalletContainer } from './NFTs'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from './PortfolioRow'
 
 const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
-
-const HiddenTokensContainer = styled(Column)<{ numItems: number; $expanded: boolean }>`
-  height: ${({ numItems, $expanded }) => ($expanded ? numItems * 68 + 'px' : 0)};
-  transition: ${({ theme }) => `height ${theme.transition.duration.medium} ease-in-out`};
-  overflow: hidden;
-`
 
 function meetsThreshold(tokenBalance: TokenBalance, hideSmallBalances: boolean) {
   return !hideSmallBalances || (tokenBalance.denominatedValue?.value ?? 0) > HIDE_SMALL_USD_BALANCES_THRESHOLD
@@ -68,6 +61,8 @@ export default function Tokens({ account }: { account: string }) {
     )
   }
 
+  const toggleHiddenTokens = () => setShowHiddenTokens((showHiddenTokens) => !showHiddenTokens)
+
   return (
     <PortfolioTabWrapper>
       {visibleTokens.map(
@@ -77,23 +72,12 @@ export default function Tokens({ account }: { account: string }) {
             <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
           )
       )}
-      {hiddenTokens.length > 0 && (
-        <>
-          <HiddenTokensRow
-            numHidden={hiddenTokens.length}
-            isExpanded={showHiddenTokens}
-            onPress={() => {
-              setShowHiddenTokens((showHiddenTokens) => !showHiddenTokens)
-            }}
-          />
-          <HiddenTokensContainer numItems={hiddenTokens.length} $expanded={showHiddenTokens}>
-            {hiddenTokens.map(
-              (tokenBalance) =>
-                tokenBalance.token && <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
-            )}
-          </HiddenTokensContainer>
-        </>
-      )}
+      <ExpandoRow isExpanded={showHiddenTokens} toggle={toggleHiddenTokens} numItems={hiddenTokens.length}>
+        {hiddenTokens.map(
+          (tokenBalance) =>
+            tokenBalance.token && <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
+        )}
+      </ExpandoRow>
     </PortfolioTabWrapper>
   )
 }
