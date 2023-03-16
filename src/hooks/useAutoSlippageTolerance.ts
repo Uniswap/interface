@@ -13,9 +13,7 @@ import { InterfaceTrade } from 'state/routing/types'
 import useGasPrice from './useGasPrice'
 import useStablecoinPrice, { useStablecoinValue } from './useStablecoinPrice'
 
-const V3_SWAP_DEFAULT_SLIPPAGE = new Percent(10, 10_000) // .10%
-const ONE_TENTHS_PERCENT = new Percent(10, 10_000) // .10%
-const DEFAULT_AUTO_SLIPPAGE = ONE_TENTHS_PERCENT
+const DEFAULT_AUTO_SLIPPAGE = new Percent(1, 1000) // .10%
 
 // Base costs regardless of how many hops in the route
 const V3_SWAP_BASE_GAS_ESTIMATE = 100_000
@@ -66,7 +64,7 @@ function guesstimateGas(trade: Trade<Currency, Currency, TradeType> | undefined)
   return undefined
 }
 
-const MIN_AUTO_SLIPPAGE_TOLERANCE = new Percent(1, 1000) // 0.1%
+const MIN_AUTO_SLIPPAGE_TOLERANCE = DEFAULT_AUTO_SLIPPAGE
 // assuming normal gas speeds, most swaps complete within 3 blocks and
 // there's rarely price movement >5% in that time period
 const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(5, 100) // 5%
@@ -122,6 +120,6 @@ export default function useAutoSlippageTolerance(
       return result
     }
 
-    return V3_SWAP_DEFAULT_SLIPPAGE
+    return DEFAULT_AUTO_SLIPPAGE
   }, [trade, onL2, nativeGasPrice, gasEstimate, nativeCurrency, nativeCurrencyPrice, chainId, outputDollarValue])
 }
