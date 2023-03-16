@@ -199,7 +199,7 @@ export default function Pool() {
                     <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/add/v2/ETH">
                       <Trans>Create a pair</Trans>
                     </ResponsiveButtonSecondary>
-                    <ResponsiveButtonPrimary id="find-pool-button" as={Link} to="/pool/v2/find" padding="6px 8px">
+                    <ResponsiveButtonPrimary id="find-pool-button" as={Link} to="/pools/v2/find" padding="6px 8px">
                       <Text fontWeight={500} fontSize={16}>
                         <Trans>Import Pool</Trans>
                       </Text>

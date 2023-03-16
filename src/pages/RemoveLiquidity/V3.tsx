@@ -55,7 +55,7 @@ export default function RemoveLiquidityV3() {
   }, [tokenId])
 
   if (parsedTokenId === null || parsedTokenId.eq(0)) {
-    return <Navigate to={{ ...location, pathname: '/pool' }} replace />
+    return <Navigate to={{ ...location, pathname: '/pools' }} replace />
   }
 
   return <Remove tokenId={parsedTokenId} />

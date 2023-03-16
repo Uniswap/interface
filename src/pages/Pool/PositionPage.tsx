@@ -605,7 +605,7 @@ export function PositionPage() {
               <Link
                 data-cy="visit-pool"
                 style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }}
-                to="/pool"
+                to="/pools"
               >
                 <HoverText>
                   <Trans>← Back to Pools</Trans>
