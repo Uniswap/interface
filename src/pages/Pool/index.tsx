@@ -241,7 +241,7 @@ export default function Pool() {
           <Layers size={16} />
         </PoolMenuItem>
       ),
-      link: '/pool/v2',
+      link: '/pools/v2',
       external: false,
     },
     {

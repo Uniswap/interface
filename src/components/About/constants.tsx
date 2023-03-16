@@ -50,7 +50,7 @@ export const MORE_CARDS = [
     elementName: InterfaceElementName.ABOUT_PAGE_BUY_CRYPTO_CARD,
   },
   {
-    to: '/pool',
+    to: '/pools',
     title: 'Earn',
     description: 'Provide liquidity to pools on Uniswap and earn fees on swaps.',
     lightIcon: <StyledCardLogo src={lightArrowImgSrc} alt="Analytics" />,

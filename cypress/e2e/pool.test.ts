@@ -1,6 +1,6 @@
 describe('Pool', () => {
   beforeEach(() => {
-    cy.visit('/pool').then(() => {
+    cy.visit('/pools').then(() => {
       cy.wait('@eth_blockNumber')
     })
   })
