@@ -1,4 +1,7 @@
 import { OpacityHoverState } from 'components/Common'
+import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
+import { NftActivityType } from 'graphql/data/__generated__/types-and-hooks'
+import { useNftActivity } from 'graphql/data/nft/NftActivity'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
@@ -6,7 +9,7 @@ import { useBag, useIsMobile } from 'nft/hooks'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
 import { ActivityEvent, ActivityEventResponse, ActivityEventType } from 'nft/types'
 import { fetchPrice } from 'nft/utils/fetchPrice'
-import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
+import { useCallback, useEffect, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -63,6 +66,7 @@ export const reduceFilters = (state: typeof initialFilterState, action: { eventT
 const baseHref = (event: ActivityEvent) => `/#/nfts/asset/${event.collectionAddress}/${event.tokenId}?origin=activity`
 
 export const Activity = ({ contractAddress, rarityVerified, collectionName, chainId }: ActivityProps) => {
+  const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
 
   const {
@@ -102,10 +106,32 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
     }
   )
 
-  const events = useMemo(
-    () => (isSuccess ? eventsData?.pages.map((page) => page.events).flat() : null),
-    [isSuccess, eventsData]
+  const {
+    nftActivity: gqlEventsData,
+    hasNext,
+    loadMore,
+    loading,
+  } = useNftActivity(
+    {
+      activityTypes: Object.keys(activeFilters)
+        .map((key) => key as NftActivityType)
+        .filter((key) => activeFilters[key]),
+      address: contractAddress,
+    },
+    25
   )
+
+  const { events, gatedHasNext, gatedLoadMore, gatedLoading, gatedIsLoadingMore } = {
+    events: isNftGraphqlEnabled
+      ? gqlEventsData
+      : isSuccess
+      ? eventsData?.pages.map((page) => page.events).flat()
+      : undefined,
+    gatedHasNext: isNftGraphqlEnabled ? hasNext : hasNextPage,
+    gatedLoadMore: isNftGraphqlEnabled ? loadMore : fetchNextPage,
+    gatedLoading: isNftGraphqlEnabled ? loading : isLoading,
+    gatedIsLoadingMore: isNftGraphqlEnabled ? hasNext && gqlEventsData?.length : isFetchingNextPage,
+  }
 
   const itemsInBag = useBag((state) => state.itemsInBag)
   const addAssetsToBag = useBag((state) => state.addAssetsToBag)
@@ -147,51 +173,63 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
         <Filter eventType={ActivityEventType.Sale} />
         <Filter eventType={ActivityEventType.Transfer} />
       </Row>
-      {isLoading && <ActivityLoader />}
-      {events && (
-        <Column marginTop="36">
-          <HeaderRow />
-          <InfiniteScroll
-            next={fetchNextPage}
-            hasMore={!!hasNextPage}
-            loader={isFetchingNextPage ? <ActivityPageLoader rowCount={2} /> : null}
-            dataLength={events?.length ?? 0}
-            style={{ overflow: 'unset' }}
-          >
-            {events.map((event, i) => (
-              <Box as="a" data-testid="nft-activity-row" href={baseHref(event)} className={styles.eventRow} key={i}>
-                <ItemCell
-                  event={event}
-                  rarityVerified={rarityVerified}
-                  collectionName={collectionName}
-                  eventTimestamp={event.eventTimestamp}
-                  isMobile={isMobile}
-                />
-                <EventCell
-                  eventType={event.eventType}
-                  eventTimestamp={event.eventTimestamp}
-                  eventTransactionHash={event.transactionHash}
-                  price={event.price}
-                  isMobile={isMobile}
-                />
-                <PriceCell marketplace={event.marketplace} price={event.price} />
-                <AddressCell address={event.fromAddress} chainId={chainId} />
-                <AddressCell address={event.toAddress} chainId={chainId} desktopLBreakpoint />
-                <BuyCell
-                  event={event}
-                  collectionName={collectionName}
-                  selectAsset={addAssetsToBag}
-                  removeAsset={removeAssetsFromBag}
-                  itemsInBag={itemsInBag}
-                  cartExpanded={cartExpanded}
-                  toggleCart={toggleCart}
-                  isMobile={isMobile}
-                  ethPriceInUSD={ethPriceInUSD}
-                />
-              </Box>
-            ))}
-          </InfiniteScroll>
-        </Column>
+      {gatedLoading ? (
+        <ActivityLoader />
+      ) : (
+        events && (
+          <Column marginTop="36">
+            <HeaderRow />
+            <InfiniteScroll
+              next={gatedLoadMore}
+              hasMore={!!gatedHasNext}
+              loader={gatedIsLoadingMore ? <ActivityPageLoader rowCount={2} /> : null}
+              dataLength={events?.length ?? 0}
+              style={{ overflow: 'unset' }}
+            >
+              {events.map(
+                (event, i) =>
+                  event.eventType && (
+                    <Box
+                      as="a"
+                      data-testid="nft-activity-row"
+                      href={baseHref(event)}
+                      className={styles.eventRow}
+                      key={i}
+                    >
+                      <ItemCell
+                        event={event}
+                        rarityVerified={rarityVerified}
+                        collectionName={collectionName}
+                        eventTimestamp={event.eventTimestamp}
+                        isMobile={isMobile}
+                      />
+                      <EventCell
+                        eventType={event.eventType}
+                        eventTimestamp={event.eventTimestamp}
+                        eventTransactionHash={event.transactionHash}
+                        price={event.price}
+                        isMobile={isMobile}
+                      />
+                      <PriceCell marketplace={event.marketplace} price={event.price} />
+                      <AddressCell address={event.fromAddress} chainId={chainId} />
+                      <AddressCell address={event.toAddress} chainId={chainId} desktopLBreakpoint />
+                      <BuyCell
+                        event={event}
+                        collectionName={collectionName}
+                        selectAsset={addAssetsToBag}
+                        removeAsset={removeAssetsFromBag}
+                        itemsInBag={itemsInBag}
+                        cartExpanded={cartExpanded}
+                        toggleCart={toggleCart}
+                        isMobile={isMobile}
+                        ethPriceInUSD={ethPriceInUSD}
+                      />
+                    </Box>
+                  )
+              )}
+            </InfiniteScroll>
+          </Column>
+        )
       )}
     </Box>
   )

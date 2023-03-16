@@ -135,13 +135,8 @@ const sendAnalyticsEventAndUserInfo = (
   isReconnect: boolean,
   peerWalletAgent: string | undefined
 ) => {
-  sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
-    result: WalletConnectionResult.SUCCEEDED,
-    wallet_address: account,
-    wallet_type: walletType,
-    is_reconnect: isReconnect,
-    peer_wallet_agent: peerWalletAgent,
-  })
+  // User properties *must* be set before sending corresponding event properties,
+  // so that the event contains the correct and up-to-date user properties.
   user.set(CustomUserProperties.WALLET_ADDRESS, account)
   user.set(CustomUserProperties.WALLET_TYPE, walletType)
   user.set(CustomUserProperties.PEER_WALLET_AGENT, peerWalletAgent ?? '')
@@ -149,6 +144,14 @@ const sendAnalyticsEventAndUserInfo = (
     user.postInsert(CustomUserProperties.ALL_WALLET_CHAIN_IDS, chainId)
   }
   user.postInsert(CustomUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account)
+
+  sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
+    result: WalletConnectionResult.SUCCEEDED,
+    wallet_address: account,
+    wallet_type: walletType,
+    is_reconnect: isReconnect,
+    peer_wallet_agent: peerWalletAgent,
+  })
 }
 
 export default function WalletModal({

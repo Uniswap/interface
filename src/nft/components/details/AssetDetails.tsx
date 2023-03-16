@@ -1,6 +1,9 @@
 import { OpacityHoverState, ScrollBarStyles } from 'components/Common'
 import Resource from 'components/Tokens/TokenDetails/Resource'
 import { MouseoverTooltip } from 'components/Tooltip/index'
+import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
+import { NftActivityType } from 'graphql/data/__generated__/types-and-hooks'
+import { useNftActivity } from 'graphql/data/nft/NftActivity'
 import { Box } from 'nft/components/Box'
 import { reduceFilters } from 'nft/components/collection/Activity'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
@@ -10,7 +13,7 @@ import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
 import { ActivityEventResponse, ActivityEventType, CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
-import { formatEthPrice } from 'nft/utils/currency'
+import { formatEth, formatEthPrice } from 'nft/utils/currency'
 import { isAudio } from 'nft/utils/isAudio'
 import { isVideo } from 'nft/utils/isVideo'
 import { putCommas } from 'nft/utils/putCommas'
@@ -244,6 +247,7 @@ interface AssetDetailsProps {
 }
 
 export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
+  const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const [dominantColor] = useState<[number, number, number]>([0, 0, 0])
 
   const { rarityProvider } = useMemo(
@@ -299,10 +303,26 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       refetchOnMount: false,
     }
   )
+  const { nftActivity: gqlPriceData } = useNftActivity(
+    {
+      activityTypes: [NftActivityType.Sale],
+      address: contractAddress,
+      tokenId: token_id,
+    },
+    1,
+    'no-cache'
+  )
 
-  const lastSalePrice = priceData?.events[0]?.price ?? null
-  const formattedEthprice = formatEthPrice(lastSalePrice ?? '') || 0
-  const formattedPrice = lastSalePrice ? putCommas(formattedEthprice).toString() : null
+  // TODO simplify typecasting when removing graphql flag
+  const lastSalePrice = isNftGraphqlEnabled ? gqlPriceData?.[0]?.price : priceData?.events[0]?.price
+  const formattedEthprice = isNftGraphqlEnabled
+    ? formatEth(parseFloat(lastSalePrice ?? ''))
+    : formatEthPrice(lastSalePrice) || 0
+  const formattedPrice = isNftGraphqlEnabled
+    ? formattedEthprice
+    : lastSalePrice
+    ? putCommas(parseFloat(formattedEthprice.toString())).toString()
+    : null
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
 
   const Filter = useCallback(
@@ -365,13 +385,48 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     }
   )
 
-  const rarity = asset?.rarity?.providers?.length ? asset?.rarity?.providers?.[0] : undefined
+  const {
+    nftActivity: gqlEventsData,
+    hasNext,
+    loadMore,
+    loading,
+    error,
+  } = useNftActivity(
+    {
+      activityTypes: Object.keys(activeFilters)
+        .map((key) => key as NftActivityType)
+        .filter((key) => activeFilters[key]),
+      address: contractAddress,
+      tokenId: token_id,
+    },
+    25
+  )
+
+  const { events, gatedHasNext, gatedLoadMore, gatedLoading, gatedSuccess } = useMemo(() => {
+    return {
+      events: isNftGraphqlEnabled ? gqlEventsData : eventsData?.pages.map((page) => page.events).flat(),
+      gatedHasNext: isNftGraphqlEnabled ? hasNext : hasNextPage,
+      gatedLoadMore: isNftGraphqlEnabled ? loadMore : fetchNextPage,
+      gatedLoading: isNftGraphqlEnabled ? loading : isActivityLoading,
+      gatedSuccess: isNftGraphqlEnabled ? !error : isSuccess,
+    }
+  }, [
+    error,
+    eventsData?.pages,
+    fetchNextPage,
+    gqlEventsData,
+    hasNext,
+    hasNextPage,
+    isActivityLoading,
+    isNftGraphqlEnabled,
+    isSuccess,
+    loadMore,
+    loading,
+  ])
+
+  const rarity = asset?.rarity?.providers?.[0]
   const [showHolder, setShowHolder] = useState(false)
   const rarityProviderLogo = getRarityProviderLogo(rarity?.provider)
-  const events = useMemo(
-    () => (isSuccess ? eventsData?.pages.map((page) => page.events).flat() : null),
-    [isSuccess, eventsData]
-  )
 
   return (
     <Column>
@@ -433,11 +488,12 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             <Filter eventType={ActivityEventType.Transfer} />
             <Filter eventType={ActivityEventType.CancelListing} />
           </ActivitySelectContainer>
-          {isActivityLoading && <LoadingAssetActivity rowCount={10} />}
-          {events && events.length > 0 ? (
+          {gatedLoading ? (
+            <LoadingAssetActivity rowCount={10} />
+          ) : events && events.length > 0 ? (
             <InfiniteScroll
-              next={fetchNextPage}
-              hasMore={!!hasNextPage}
+              next={gatedLoadMore}
+              hasMore={!!gatedHasNext}
               loader={
                 isFetchingNextPage && (
                   <Center>
@@ -448,11 +504,11 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
               dataLength={events?.length ?? 0}
               scrollableTarget="activityContainer"
             >
-              <AssetActivity eventsData={{ events }} />
+              <AssetActivity events={events} />
             </InfiniteScroll>
           ) : (
             <>
-              {!isActivityLoading && (
+              {gatedSuccess && events && (
                 <EmptyActivitiesContainer>
                   <div>No activities yet</div>
                   <Link to={`/nfts/collection/${asset.address}`}>View collection items</Link>{' '}

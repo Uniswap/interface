@@ -19,6 +19,7 @@ export const apolloClient = new ApolloClient({
         fields: {
           nftBalances: relayStylePagination(),
           nftAssets: relayStylePagination(),
+          nftActivity: relayStylePagination(),
           // tell apollo client how to reference Token items in the cache after being fetched by queries that return Token[]
           token: {
             read(_, { args, toReference }): Reference | undefined {

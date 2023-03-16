@@ -4,7 +4,7 @@ import { BagIcon, HundredsOverflowIcon, TagIcon } from 'nft/components/icons'
 import { useBag, useSellAsset } from 'nft/hooks'
 import { useCallback } from 'react'
 import styled from 'styled-components/macro'
-import shallow from 'zustand/shallow'
+import { shallow } from 'zustand/shallow'
 
 const CounterDot = styled.div`
   background-color: ${({ theme }) => theme.accentAction};

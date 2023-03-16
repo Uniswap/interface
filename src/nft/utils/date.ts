@@ -3,8 +3,8 @@ export const isValidDate = (date: number): boolean => {
   return isNaN(d) ? false : true
 }
 
-export const getTimeDifference = (eventTimestamp: string) => {
-  const date = new Date(eventTimestamp).getTime()
+export const getTimeDifference = (eventTimestamp: string, isNftGraphqlEnabled: boolean) => {
+  const date = isNftGraphqlEnabled ? parseFloat(eventTimestamp) : new Date(eventTimestamp).getTime()
   const diff = new Date().getTime() - date
 
   const days = Math.floor(diff / (1000 * 60 * 60 * 24))

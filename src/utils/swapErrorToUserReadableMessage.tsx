@@ -1,30 +1,18 @@
-// eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
-/**
- * This is hacking out the revert reason from the ethers provider thrown error however it can.
- * This object seems to be undocumented by ethers.
- * @param error an error from the ethers provider
- */
-export function swapErrorToUserReadableMessage(error: any): string {
+
+function getReason(error: any): string | undefined {
   let reason: string | undefined
-
-  if (error.code) {
-    switch (error.code) {
-      case 4001:
-        return t`Transaction rejected`
-    }
-  }
-
-  console.warn('Swap error:', error)
-
   while (error) {
     reason = error.reason ?? error.message ?? reason
     error = error.error ?? error.data?.originalError
   }
+  return reason
+}
 
-  // The 4001 error code doesn't capture the case where users reject a transaction for all wallets,
-  // so we need to parse the reason for these special cases:
+export function didUserReject(error: any): boolean {
+  const reason = getReason(error)
   if (
+    error?.code === 4001 ||
     // ethers v5.7.0 wrapped error
     error?.code === 'ACTION_REJECTED' ||
     // For Rainbow :
@@ -32,20 +20,35 @@ export function swapErrorToUserReadableMessage(error: any): string {
     // For Frame:
     reason?.match(/declined/i) ||
     // For SafePal:
-    reason?.match(/cancelled by user/i) ||
+    reason?.match(/cancell?ed by user/i) ||
+    // For Trust:
+    reason?.match(/user cancell?ed/i) ||
     // For Coinbase:
     reason?.match(/user denied/i) ||
     // For Fireblocks
     reason?.match(/user rejected/i)
   ) {
+    return true
+  }
+  return false
+}
+
+/**
+ * This is hacking out the revert reason from the ethers provider thrown error however it can.
+ * This object seems to be undocumented by ethers.
+ * @param error - An error from the ethers provider
+ */
+export function swapErrorToUserReadableMessage(error: any): string {
+  if (didUserReject(error)) {
     return t`Transaction rejected`
   }
 
+  let reason = getReason(error)
   if (reason?.indexOf('execution reverted: ') === 0) reason = reason.substr('execution reverted: '.length)
 
   switch (reason) {
     case 'UniswapV2Router: EXPIRED':
-      return t`The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low.`
+      return t`This transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low.`
     case 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT':
     case 'UniswapV2Router: EXCESSIVE_INPUT_AMOUNT':
       return t`This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.`
@@ -63,6 +66,7 @@ export function swapErrorToUserReadableMessage(error: any): string {
       return t`The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
     default:
       if (reason?.indexOf('undefined is not an object') !== -1) {
+        console.error(error, reason)
         return t`An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
       }
       return t`${reason ? reason : 'Unknown error'}. Try increasing your slippage tolerance.

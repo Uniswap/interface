@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatEther } from '@ethersproject/units'
-import { parseEther } from '@ethersproject/units'
+import { formatEther, parseEther } from '@ethersproject/units'
 import { t, Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
@@ -39,7 +38,7 @@ import { InterfaceTrade, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
-import shallow from 'zustand/shallow'
+import { shallow } from 'zustand/shallow'
 
 const FooterContainer = styled.div`
   padding: 0px 12px;

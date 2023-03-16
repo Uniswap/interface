@@ -2,20 +2,12 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
-import { MouseoverTooltip } from 'components/Tooltip'
-import Tooltip from 'components/Tooltip'
-import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
-import { Box } from 'nft/components/Box'
-import { bodySmall } from 'nft/css/common.css'
+import { NftCard, NftCardDisplayProps } from 'nft/components/card'
+import { Ranking as RankingContainer, Suspicious as SuspiciousContainer } from 'nft/components/card/icons'
 import { useBag } from 'nft/hooks'
-import { GenieAsset, isPooledMarket, UniformAspectRatio } from 'nft/types'
-import { formatWeiToDecimal, rarityProviderLogo } from 'nft/utils'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import styled from 'styled-components/macro'
-
-import { useAssetMediaType, useNotForSale } from './Card'
-import { AssetMediaType } from './Card'
-import * as Card from './Card'
+import { GenieAsset, UniformAspectRatio } from 'nft/types'
+import { formatWeiToDecimal } from 'nft/utils'
+import { useCallback, useMemo } from 'react'
 
 interface CollectionAssetProps {
   asset: GenieAsset
@@ -29,25 +21,11 @@ interface CollectionAssetProps {
   setRenderedHeight: (renderedHeight: number | undefined) => void
 }
 
-const TOOLTIP_TIMEOUT = 2000
-
-const StyledContainer = styled.div`
-  position: absolute;
-  bottom: 12px;
-  left: 0px;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  z-index: 2;
-  pointer-events: none;
-`
-
 export const CollectionAsset = ({
   asset,
   isMobile,
   mediaShouldBePlaying,
   setCurrentTokenPlayingMedia,
-  rarityVerified,
   uniformAspectRatio,
   setUniformAspectRatio,
   renderedHeight,
@@ -56,7 +34,6 @@ export const CollectionAsset = ({
   const bagManuallyClosed = useBag((state) => state.bagManuallyClosed)
   const addAssetsToBag = useBag((state) => state.addAssetsToBag)
   const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
-  const usedSweep = useBag((state) => state.usedSweep)
   const itemsInBag = useBag((state) => state.itemsInBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
   const setBagExpanded = useBag((state) => state.setBagExpanded)
@@ -73,21 +50,8 @@ export const CollectionAsset = ({
     }
   }, [asset, itemsInBag])
 
-  const [showTooltip, setShowTooltip] = useState(false)
-  const isSelectedRef = useRef(isSelected)
-
-  const notForSale = useNotForSale(asset)
-  const assetMediaType = useAssetMediaType(asset)
-
-  const { provider, rarityLogo } = useMemo(() => {
-    return {
-      provider: asset?.rarity?.providers?.find(
-        ({ provider: _provider }) => _provider === asset.rarity?.primaryProvider
-      ),
-      rarityLogo: rarityProviderLogo[asset.rarity?.primaryProvider ?? 0] ?? '',
-    }
-  }, [asset])
-
+  const notForSale = asset.notForSale || BigNumber.from(asset.priceInfo ? asset.priceInfo.ETHPrice : 0).lt(0)
+  const provider = asset?.rarity?.providers ? asset.rarity.providers[0] : undefined
   const handleAddAssetToBag = useCallback(() => {
     if (BigNumber.from(asset.priceInfo?.ETHPrice ?? 0).gt(0)) {
       addAssetsToBag([asset])
@@ -103,122 +67,37 @@ export const CollectionAsset = ({
     }
   }, [addAssetsToBag, asset, bagExpanded, bagManuallyClosed, isMobile, setBagExpanded, trace])
 
-  useEffect(() => {
-    if (isSelected !== isSelectedRef.current && !usedSweep) {
-      setShowTooltip(true)
-      isSelectedRef.current = isSelected
-      const tooltipTimer = setTimeout(() => {
-        setShowTooltip(false)
-      }, TOOLTIP_TIMEOUT)
-
-      return () => {
-        clearTimeout(tooltipTimer)
-      }
-    }
-    isSelectedRef.current = isSelected
-    return undefined
-  }, [isSelected, isSelectedRef, usedSweep])
-
   const handleRemoveAssetFromBag = useCallback(() => {
     removeAssetsFromBag([asset])
   }, [asset, removeAssetsFromBag])
 
+  const display: NftCardDisplayProps = useMemo(() => {
+    return {
+      primaryInfo: asset.name ? asset.name : `#${asset.tokenId}`,
+      primaryInfoIcon: asset.susFlag ? <SuspiciousContainer /> : null,
+      primaryInfoRight: asset.rarity && provider ? <RankingContainer provider={provider} /> : null,
+      secondaryInfo: notForSale ? '' : `${formatWeiToDecimal(asset.priceInfo.ETHPrice, true)} ETH`,
+      selectedInfo: <Trans>Remove from bag</Trans>,
+      notSelectedInfo: <Trans>Add to bag</Trans>,
+      disabledInfo: <Trans>Not listed</Trans>,
+    }
+  }, [asset.name, asset.priceInfo.ETHPrice, asset.rarity, asset.susFlag, asset.tokenId, notForSale, provider])
+
   return (
-    <Card.Container
+    <NftCard
       asset={asset}
-      selected={isSelected}
-      addAssetToBag={handleAddAssetToBag}
-      removeAssetFromBag={handleRemoveAssetFromBag}
-    >
-      <Card.ImageContainer isDisabled={asset.notForSale}>
-        <StyledContainer data-testid="nft-collection-asset">
-          <Tooltip
-            text={
-              <Box as="span" className={bodySmall} color="textPrimary">
-                {isSelected ? <Trans>Added to bag</Trans> : <Trans>Removed from bag</Trans>}
-              </Box>
-            }
-            show={showTooltip}
-            style={{ display: 'block' }}
-            offsetX={0}
-            offsetY={0}
-            hideArrow={true}
-            placement="bottom"
-            showInline
-          />
-        </StyledContainer>
-        {asset.rarity && provider && (
-          <Card.Ranking
-            rarity={asset.rarity}
-            provider={provider}
-            rarityVerified={!!rarityVerified}
-            rarityLogo={rarityLogo}
-          />
-        )}
-        <MouseoverTooltip
-          text={
-            <Box as="span" className={bodySmall} color="textPrimary">
-              <Trans>This item is not for sale</Trans>
-            </Box>
-          }
-          placement="bottom"
-          offsetX={0}
-          offsetY={-50}
-          style={{ display: 'block' }}
-          hideArrow={true}
-          disableHover={!asset.notForSale}
-          timeout={isMobile ? TOOLTIP_TIMEOUT : undefined}
-        >
-          {assetMediaType === AssetMediaType.Image ? (
-            <Card.Image
-              uniformAspectRatio={uniformAspectRatio}
-              setUniformAspectRatio={setUniformAspectRatio}
-              renderedHeight={renderedHeight}
-              setRenderedHeight={setRenderedHeight}
-            />
-          ) : assetMediaType === AssetMediaType.Video ? (
-            <Card.Video
-              shouldPlay={mediaShouldBePlaying}
-              setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-              uniformAspectRatio={uniformAspectRatio}
-              setUniformAspectRatio={setUniformAspectRatio}
-              renderedHeight={renderedHeight}
-              setRenderedHeight={setRenderedHeight}
-            />
-          ) : (
-            <Card.Audio
-              shouldPlay={mediaShouldBePlaying}
-              setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-              uniformAspectRatio={uniformAspectRatio}
-              setUniformAspectRatio={setUniformAspectRatio}
-              renderedHeight={renderedHeight}
-              setRenderedHeight={setRenderedHeight}
-            />
-          )}
-        </MouseoverTooltip>
-      </Card.ImageContainer>
-      <Card.DetailsContainer>
-        <Card.InfoContainer>
-          <Card.PrimaryRow>
-            <Card.PrimaryDetails>
-              <Card.PrimaryInfo>{asset.name ? asset.name : `#${asset.tokenId}`}</Card.PrimaryInfo>
-              {asset.susFlag && <Card.Suspicious />}
-            </Card.PrimaryDetails>
-            <Card.DetailsLink />
-          </Card.PrimaryRow>
-          <Card.SecondaryRow>
-            <Card.SecondaryDetails>
-              <Card.SecondaryInfo>
-                {notForSale ? '' : `${formatWeiToDecimal(asset.priceInfo.ETHPrice, true)} ETH`}
-              </Card.SecondaryInfo>
-              {isPooledMarket(asset.marketplace) && <Card.Pool />}
-            </Card.SecondaryDetails>
-            {asset.tokenType !== NftStandard.Erc1155 && asset.marketplace && (
-              <Card.MarketplaceIcon marketplace={asset.marketplace} />
-            )}
-          </Card.SecondaryRow>
-        </Card.InfoContainer>
-      </Card.DetailsContainer>
-    </Card.Container>
+      display={display}
+      isSelected={isSelected}
+      isDisabled={Boolean(asset.notForSale)}
+      selectAsset={handleAddAssetToBag}
+      unselectAsset={handleRemoveAssetFromBag}
+      mediaShouldBePlaying={mediaShouldBePlaying}
+      uniformAspectRatio={uniformAspectRatio}
+      setUniformAspectRatio={setUniformAspectRatio}
+      renderedHeight={renderedHeight}
+      setRenderedHeight={setRenderedHeight}
+      setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+      testId="nft-collection-asset"
+    />
   )
 }

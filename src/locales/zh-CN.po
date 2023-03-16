@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-02-17 00:17\n"
+"PO-Revision-Date: 2023-03-14 20:05\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -116,6 +116,11 @@ msgstr "<0>提示：</0>当您注入流动资金时，您将收到代表您份�
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
 msgstr "<0>解锁投票</0>，以准备下一个提案。"
 
+#: src/components/PositionListItem/index.tsx
+#: src/components/PositionListItem/index.tsx
+msgid "<0>{0} </0><1/> per <2/>"
+msgstr ""
+
 #: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "提交提案所需的最低门槛为 UNI 总供应量的 0.25%"
@@ -171,6 +176,10 @@ msgstr "添加流动性。"
 msgid "Add more liquidity"
 msgstr "增加更多流动性"
 
+#: src/nft/components/collection/CollectionAsset.tsx
+msgid "Add to bag"
+msgstr ""
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0}"
 msgstr ""
@@ -181,11 +190,6 @@ msgstr "添加{0}/{1} V3流动性"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Added"
-msgstr ""
-
-#: src/nft/components/collection/CollectionAsset.tsx
-#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
-msgid "Added to bag"
 msgstr ""
 
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -215,10 +219,6 @@ msgstr "允许流动池代币迁移"
 #: src/components/Settings/index.tsx
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
 msgstr "允许高度影响价格的交易，并跳过确认步骤。须自行承担使用风险。"
-
-#: src/pages/Swap/index.tsx
-msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "允许 Uniswap 调用您的 {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -353,11 +353,10 @@ msgstr "最佳价格路由消耗的gas约为 {formattedGasPriceString}"
 msgid "Blocked Address"
 msgstr ""
 
-#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
-msgid "Blocked from trading"
+#: src/nft/components/card/icons.tsx
+msgid "Blocked on OpenSea"
 msgstr ""
 
-#: src/components/FiatOnrampAnnouncement/index.tsx
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Buy crypto"
 msgstr ""
@@ -451,6 +450,11 @@ msgstr "全部清除"
 msgid "Close"
 msgstr "关闭"
 
+#: src/components/Web3Status/index.tsx
+#: src/components/Web3Status/index.tsx
+msgid "Close wallet connection options"
+msgstr ""
+
 #: src/components/Badge/RangeBadge.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Closed"
@@ -530,6 +534,7 @@ msgstr "在钱包中确认交易"
 msgid "Connect"
 msgstr ""
 
+#: src/nft/pages/profile/profile.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -567,6 +572,11 @@ msgstr "连接钱包"
 msgid "Connected with"
 msgstr ""
 
+#: src/nft/components/card/media.tsx
+msgid "Content not"
+msgstr ""
+
+#: src/nft/components/bag/Bag.tsx
 #: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
 msgid "Continue"
 msgstr ""
@@ -724,10 +734,6 @@ msgstr "修改"
 #: src/nft/components/profile/list/Modal/BelowFloorWarningModal.tsx
 msgid "Edit listings"
 msgstr ""
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Efficiency Comparison"
-msgstr "效率对比"
 
 #: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
@@ -916,16 +922,8 @@ msgstr "来源 (最多为)"
 msgid "Full Range"
 msgstr "全范围"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
-msgstr "全范围仓位可能比集中仓位赚取更少的费用。在<0>此处</0>了解更多。"
-
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support"
-msgstr ""
-
-#: src/components/FiatOnrampAnnouncement/index.tsx
-msgid "Get tokens at the best prices in web3 on Uniswap, powered by Moonpay."
 msgstr ""
 
 #: src/components/NavBar/MenuDropdown.tsx
@@ -942,12 +940,11 @@ msgstr "隐藏"
 msgid "Hide closed positions"
 msgstr "隐藏已关闭的仓位"
 
-#: src/pages/Swap/index.tsx
-msgid "High Price Impact"
-msgstr "对兑换率有高度影响"
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Hide resources"
+msgstr ""
 
 #: src/components/TokenSafety/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "我已知悉"
 
@@ -1031,7 +1028,6 @@ msgstr "无效的兑换率输入"
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "选择的范围无效。最小兑换率必须低于最大兑换率。"
 
-#: src/lib/hooks/swap/useSwapCallback.tsx
 #: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
 msgstr "无效的接收方"
@@ -1059,6 +1055,7 @@ msgstr "了解提供流动性的相关信息"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TaxServiceModal/TaxServiceBanner.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
 #: src/components/TokenSafety/index.tsx
 #: src/pages/Landing/index.tsx
@@ -1096,6 +1093,10 @@ msgstr "流动资金提供者在所有交易中按其在流动池中的份额获
 
 #: src/nft/components/profile/list/Modal/ListModal.tsx
 msgid "List NFTs"
+msgstr ""
+
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "List for sale"
 msgstr ""
 
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
@@ -1219,10 +1220,6 @@ msgstr "收到的最低数额"
 msgid "Missing chart data"
 msgstr ""
 
-#: src/lib/hooks/swap/useSwapCallback.tsx
-msgid "Missing dependencies"
-msgstr "缺少依赖套件"
-
 #: src/components/Tokens/TokenDetails/PriceChart.tsx
 msgid "Missing price data due to recently low trading volume on Uniswap v3"
 msgstr ""
@@ -1259,6 +1256,10 @@ msgstr ""
 msgid "Name not found"
 msgstr ""
 
+#: src/components/NavBar/NavIcon.tsx
+msgid "Navigation button"
+msgstr ""
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Network Fee"
 msgstr "网络费用"
@@ -1286,6 +1287,10 @@ msgstr "没有数据"
 #: src/state/governance/hooks.ts
 msgid "No description."
 msgstr "没有说明。"
+
+#: src/nft/pages/profile/profile.tsx
+msgid "No items to display"
+msgstr ""
 
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
@@ -1327,6 +1332,10 @@ msgstr ""
 msgid "Not created"
 msgstr "未创建"
 
+#: src/nft/components/collection/CollectionAsset.tsx
+msgid "Not listed"
+msgstr ""
+
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "务必在详细了解此模式应用后才使用此模式操作。"
@@ -1345,6 +1354,11 @@ msgstr "只有在 {0} 区块编号之前已自行委托或委托给另一个区�
 
 #: src/pages/NotFound/index.tsx
 msgid "Oops, take me back to Swap"
+msgstr ""
+
+#: src/components/Web3Status/index.tsx
+#: src/components/Web3Status/index.tsx
+msgid "Open wallet connection options"
 msgstr ""
 
 #: src/components/Badge/RangeBadge.tsx
@@ -1623,17 +1637,17 @@ msgstr "去除投票权委托"
 msgid "Remove Liquidity"
 msgstr "去除流动资金"
 
+#: src/nft/components/collection/CollectionAsset.tsx
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "Remove from bag"
+msgstr ""
+
 #: src/nft/components/profile/list/PriceTextInput.tsx
 msgid "Remove item"
 msgstr ""
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Removed"
-msgstr ""
-
-#: src/nft/components/collection/CollectionAsset.tsx
-#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
-msgid "Removed from bag"
 msgstr ""
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
@@ -1648,7 +1662,7 @@ msgstr "正在去除 {0} {1} 和 {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "移除 {0} {1} 和 {2} {3}"
 
-#: src/nft/components/bag/profile/ListingButton.tsx
+#: src/nft/components/profile/list/ListingButton.tsx
 msgid "Resolve {issues} issues"
 msgstr ""
 
@@ -1668,6 +1682,11 @@ msgstr ""
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Same Price"
+msgstr ""
+
+#: src/components/TaxServiceModal/TaxServiceBanner.tsx
+#: src/components/TaxServiceModal/index.tsx
+msgid "Save on your crypto taxes"
 msgstr ""
 
 #: src/components/NavBar/SearchBar.tsx
@@ -1726,10 +1745,6 @@ msgstr ""
 msgid "Sell NFTs"
 msgstr ""
 
-#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
-msgid "Selling ERC-1155s coming soon"
-msgstr ""
-
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1740,7 +1755,7 @@ msgstr "设置兑换率范围"
 msgid "Set Starting Price"
 msgstr "设置起始兑换率"
 
-#: src/nft/components/profile/list/ListPage.tsx
+#: src/nft/components/profile/list/ListingButton.tsx
 msgid "Set prices to continue"
 msgstr ""
 
@@ -1778,6 +1793,10 @@ msgstr "显示已关闭的仓位"
 msgid "Show more"
 msgstr ""
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Show resources"
+msgstr ""
+
 #: src/nft/components/profile/list/Modal/ListModalSection.tsx
 msgid "Sign"
 msgstr ""
@@ -1812,7 +1831,7 @@ msgstr ""
 msgid "Sorry, an error occured while processing your request. If you request support, be sure to provide your error ID."
 msgstr ""
 
-#: src/nft/components/profile/list/ListPage.tsx
+#: src/nft/components/profile/list/ListingButton.tsx
 msgid "Start listing"
 msgstr ""
 
@@ -1854,9 +1873,7 @@ msgstr "提供 {0} {1} 和 {2} {3}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/NavBar/index.tsx
-#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 #: src/components/swap/SwapHeader.tsx
-#: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
@@ -1867,18 +1884,12 @@ msgid "Swap <0/> for exactly <1/>"
 msgstr "将约 <0/> 兑换成 <1/>"
 
 #: src/pages/Swap/index.tsx
-#: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "仍要兑换"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
 msgstr "将恰好 <0/> 兑换成 <1/>"
-
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
-msgid "Swap failed: {0}"
-msgstr "兑换失败： {0}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Swapped"
@@ -2010,10 +2021,6 @@ msgstr ""
 msgid "This app uses the following third-party APIs:"
 msgstr "此应用程序使用以下第三方 API："
 
-#: src/nft/components/collection/CollectionAsset.tsx
-msgid "This item is not for sale"
-msgstr ""
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "需要先初始化，然后再添加流动性。初始化时，请先选择起始价格，然后输入您的流动性价格范围和存款金额。因需进行初始化相关操作，Gas 费将比平时高一些。"
@@ -2073,6 +2080,10 @@ msgstr ""
 msgid "Token name"
 msgstr ""
 
+#: src/components/TokenSafety/index.tsx
+msgid "Token not found"
+msgstr ""
+
 #: src/components/NavBar/SearchBarDropdown.tsx
 #: src/components/NavBar/index.tsx
 msgid "Tokens"
@@ -2121,8 +2132,6 @@ msgstr "交易截止期限"
 msgid "Transaction pending"
 msgstr "交易等待中"
 
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 #: src/utils/swapErrorToUserReadableMessage.tsx
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Transaction rejected"
@@ -2161,6 +2170,10 @@ msgstr "UNI代币代表了Uniswap治理中的投票份额。您可以自行为�
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} 被摧毁"
 
+#: src/nft/components/profile/view/ViewMyNftsAsset.tsx
+msgid "Unavailable for listing"
+msgstr ""
+
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
 msgstr "未领取的手续费"
@@ -2169,17 +2182,13 @@ msgstr "未领取的手续费"
 msgid "Undetermined"
 msgstr "未定"
 
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
-msgid "Unexpected error. Could not estimate gas for the swap."
-msgstr "错误。无法估计兑换所需的gas。"
-
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
-msgid "Unexpected issue with estimating the gas. Please try again."
-msgstr "估计 gas 时遇到问题。请再试一次。"
-
 #: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswap治理"
+
+#: src/components/TaxServiceModal/TaxServiceBanner.tsx
+msgid "Uniswap Labs can save you up to 20% on CoinTracker and TokenTax"
+msgstr ""
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Uniswap Labs' Terms of Service"
@@ -2433,10 +2442,6 @@ msgstr "您是第一个流动资金提供者。"
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
 msgstr "您可以对每个提案自行进行投票，也可以将您的投票权委托给第三方。"
 
-#: src/pages/Swap/index.tsx
-msgid "You can now trade {0}"
-msgstr "您现在可以交易 {0}"
-
 #: src/pages/CreateProposal/index.tsx
 msgid "You don't have enough votes to submit a proposal"
 msgstr "您没有足够的票数来提交提案"
@@ -2452,10 +2457,6 @@ msgstr "您的网络连接可能断了。"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "您必须连接帐户。"
-
-#: src/pages/Swap/index.tsx
-msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "您必须授予 Uniswap 智能合约使用您的 {0} 的权限。每个代币只需要授权一次。"
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
@@ -2535,8 +2536,6 @@ msgstr "您的仓位"
 
 #: src/hooks/useUniversalRouter.ts
 #: src/hooks/useUniversalRouter.ts
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
-#: src/lib/hooks/swap/useSendSwapTransaction.tsx
 msgid "Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds."
 msgstr ""
 
@@ -2585,6 +2584,10 @@ msgstr "滑点后"
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "and"
+msgstr ""
+
+#: src/nft/components/card/media.tsx
+msgid "available yet"
 msgstr ""
 
 #: src/nft/components/profile/list/PriceTextInput.tsx
@@ -2644,7 +2647,7 @@ msgstr ""
 msgid "to"
 msgstr ""
 
-#: src/nft/components/bag/profile/ListingButton.tsx
+#: src/nft/components/profile/list/ListingButton.tsx
 msgid "{0, plural, =1 {Resolve issue} other {{1}}}"
 msgstr ""
 
@@ -2672,6 +2675,7 @@ msgstr ""
 #: src/components/ErrorBoundary/index.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 #: src/nft/components/bag/BagFooter.tsx
 msgid "{0}"
 msgstr "{0}"
@@ -2679,11 +2683,6 @@ msgstr "{0}"
 #: src/components/PositionCard/index.tsx
 msgid "{0} %"
 msgstr "{0} %"
-
-#: src/components/PositionListItem/index.tsx
-#: src/components/PositionListItem/index.tsx
-msgid "{0} <0/> per <1/>"
-msgstr "{0} <0/> 每 <1/>"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
