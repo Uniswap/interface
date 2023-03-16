@@ -21,7 +21,7 @@ import ERC1155 from '../../abis/erc1155.json'
 import {
   createLooksRareOrder,
   getOrderId,
-  LOOKSRARE_MARKETPLACE_CONTRACT,
+  LOOKSRARE_MARKETPLACE_CONTRACT_721,
   newX2Y2Order,
   PostOpenSeaSellOrder,
 } from '../queries'
@@ -117,8 +117,8 @@ export async function approveCollection(
 }
 
 /*
-TODO: OS confirmed working, need to update UX to reflect OS basis points for 0 creator fee
-LR and X2 didn't have anything obvious to change, see if you can even list to them first and then check their docs
+TODO: OS confirmed working, updated UX for OS and LR when no creator royalties are set
+LR now working, only needed to update the approving contract address
 UPDATED X2 DELEGATE contract depending on standard, got an internal server error, will need to investigate, added amount to offer item, 721 still succeeds
 */
 
@@ -219,7 +219,7 @@ export async function signListing(
           signer,
           SupportedChainId.MAINNET,
           makerOrder,
-          LOOKSRARE_MARKETPLACE_CONTRACT
+          LOOKSRARE_MARKETPLACE_CONTRACT_721
         )
         setStatus(ListingStatus.PENDING)
         const payload = {
