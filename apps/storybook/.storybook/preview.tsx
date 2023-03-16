@@ -1,9 +1,9 @@
 import '@fontsource/inter/400.css'
 import '@fontsource/inter/700.css'
-import '@tamagui/core/reset.css'
-import 'raf/polyfill' // const OriginalNextImage = NextImage.default
+// import 'tamagui/reset.css'
+// import 'raf/polyfill' // const OriginalNextImage = NextImage.default
 
-import { RouterContext } from 'next/dist/shared/lib/router-context'
+// import { RouerContext } from 'next/dist/shared/lib/router-context'
 import { Provider } from 'app/src/provider/tamagui-provider'
 
 export const parameters = {
@@ -17,9 +17,9 @@ export const parameters = {
   backgrounds: {
     values: [],
   },
-  nextRouter: {
-    Provider: RouterContext.Provider,
-  },
+  // nextRouter: {
+  //   Provider: RouterContext.Provider,
+  // },
 }
 
 export const globalTypes = {
