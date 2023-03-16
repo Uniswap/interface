@@ -136,7 +136,7 @@ const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
   [ChainId.HARDHAT]: 'Hardhat',
   [ChainId.TAIKO]: 'Taiko',
   [ChainId.TAIKO_INTERNAL_1]: 'Taiko_Internal_1',
-  [ChainId.TAIKO_TESTNET]: 'Taiko_testnet'
+  [ChainId.TAIKO_TESTNET]: 'Taiko_testnet_a2'
 }
 
 export default function Header() {

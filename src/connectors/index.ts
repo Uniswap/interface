@@ -32,7 +32,9 @@ export const injected = new InjectedConnector({
 
 // mainnet only
 export const walletconnect = new WalletConnectConnector({
-  rpc: { [167001]: 'https://l2rpc.internal.taiko.xyz' },
+  rpc: {
+    167004: 'https://l2rpc.a2.taiko.xyz/'
+  },
   bridge: 'https://bridge.walletconnect.org',
   qrcode: true,
   pollingInterval: 15000
