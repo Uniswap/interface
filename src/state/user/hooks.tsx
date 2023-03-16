@@ -93,7 +93,7 @@ export function useIsExpertMode(): boolean {
   return useAppSelector((state) => state.user.userExpertMode)
 }
 
-export function useTaxServiceDismissal(): [number, (dismissals: number) => void] {
+export function useTaxServiceDismissal(): [number | undefined, (dismissals: number) => void] {
   const dispatch = useAppDispatch()
   const taxServiceDismissals = useAppSelector((state) => state.user.taxServiceDismissals)
   const setDismissals = useCallback(
