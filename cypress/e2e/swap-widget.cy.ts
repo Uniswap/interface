@@ -27,7 +27,7 @@ describe('swap widget integration tests', () => {
         return undefined
       })
       .then((selector) => {
-        if (selector !== undefined) {
+        if (selector instanceof String) {
           cy.contains(selector as string).click()
         }
       })
@@ -39,6 +39,10 @@ describe('swap widget integration tests', () => {
   }
 
   describe('widget on swap page', () => {
+    beforeEach(() => {
+      cy.viewport(1200, 800)
+    })
+
     it('should have the correct default input/output and token selection should work', () => {
       cy.visit('/swap', { featureFlags: [FeatureFlag.swapWidget] }).then(() => {
         cy.wait('@eth_blockNumber')
@@ -55,6 +59,8 @@ describe('swap widget integration tests', () => {
     it('should have the correct default input from URL params ', () => {
       cy.visit(`/swap?inputCurrency=${UNI_GOERLI}`, {
         featureFlags: [FeatureFlag.swapWidget],
+      }).then(() => {
+        cy.wait('@eth_blockNumber')
       })
 
       verifyInputToken('UNI')
@@ -69,6 +75,8 @@ describe('swap widget integration tests', () => {
     it('should have the correct default output from URL params ', () => {
       cy.visit(`/swap?outputCurrency=${UNI_GOERLI}`, {
         featureFlags: [FeatureFlag.swapWidget],
+      }).then(() => {
+        cy.wait('@eth_blockNumber')
       })
 
       verifyInputToken('Select token')
@@ -88,10 +96,12 @@ describe('swap widget integration tests', () => {
   describe('widget on Token Detail Page', () => {
     beforeEach(() => {
       cy.viewport(1200, 800)
+      cy.visit(`/tokens/ethereum/${UNI_GOERLI}`, { featureFlags: [FeatureFlag.swapWidget] }).then(() => {
+        cy.wait('@eth_blockNumber')
+      })
     })
 
     it('should have the expected output for a tokens detail page', () => {
-      cy.visit(`/tokens/ethereum/${UNI_GOERLI}`, { featureFlags: [FeatureFlag.swapWidget] })
       verifyOutputToken('UNI')
       cy.contains('Connect to Ethereum').should('exist')
     })
