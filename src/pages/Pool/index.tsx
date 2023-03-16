@@ -261,7 +261,7 @@ export default function Pool() {
           <BookOpen size={16} />
         </PoolMenuItem>
       ),
-      link: 'https://docs.uniswap.org/',
+      link: 'https://support.uniswap.org/hc/en-us/categories/8122334631437-Providing-Liquidity-',
       external: true,
     },
   ]
