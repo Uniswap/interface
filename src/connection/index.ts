@@ -148,7 +148,7 @@ export const coinbaseWalletConnection: Connection = {
       : undefined,
 }
 
-function getConnections(isDarkMode: boolean) {
+export function getConnections(isDarkMode: boolean) {
   return [
     uniwalletConnectConnection,
     isDarkMode ? darkInjectedConnection : lightInjectedConnection,
