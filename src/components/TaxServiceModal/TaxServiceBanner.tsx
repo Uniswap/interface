@@ -131,11 +131,7 @@ export default function TaxServiceBanner() {
   const handleClose = useCallback(() => {
     sessionStorage.setItem(TAX_SERVICE_DISMISSED, 'true')
     setBannerOpen(false)
-    if (typeof dismissals === 'undefined') {
-      addTaxServiceDismissal(1)
-    } else {
-      addTaxServiceDismissal(dismissals + 1)
-    }
+    typeof dismissals === 'undefined' ? addTaxServiceDismissal(1) : addTaxServiceDismissal(dismissals + 1)
   }, [addTaxServiceDismissal, dismissals])
 
   const handleLearnMoreClick = useCallback((e: any) => {
