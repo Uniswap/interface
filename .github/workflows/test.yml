@@ -120,4 +120,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: exit 1
-        if: ${{ needs.build.result }} != "success"
+        if: ${{ needs.cypress-test-matrix.result }} != "success"
