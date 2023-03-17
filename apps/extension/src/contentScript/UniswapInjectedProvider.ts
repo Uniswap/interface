@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable max-lines */
-import { ethers, Wallet } from 'ethers'
+
+import { ethers } from 'ethers'
 import EventEmitter from 'eventemitter3'
 import { ethErrors } from 'eth-rpc-errors'
-import { mnemonic } from '../background/mnemonic'
 import { MessageType } from '../types'
 
 export type EthersSendCallback = (error: unknown, response: unknown) => void
@@ -483,7 +482,6 @@ function sendMessageAndWaitForResponse(
   window.postMessage(message)
   return new Promise((resolve) => {
     window.addEventListener('message', (event: MessageEvent<any>) => {
-
       const messageData = event.data
       if (messageData?.type === responseType) {
         console.log('{EVENT} sendMessageAndWaitForResponse', messageData)

@@ -3,7 +3,6 @@ import { createStore } from 'app/src/state'
 import { aliases } from './aliases'
 import { alias, wrapStore } from 'webext-redux'
 import { ethers, providers, Wallet } from 'ethers'
-import { mnemonic } from './mnemonic'
 import { decryptPassword } from './utils'
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 
@@ -51,7 +50,7 @@ const infuraProvider = new providers.InfuraProvider(
 
 let signer: ethers.Signer | null = null
 signer = new ethers.Wallet(
-  Wallet.fromMnemonic(process.env.TEST_SEED_PHRASE || "").privateKey,
+  Wallet.fromMnemonic(process.env.TEST_SEED_PHRASE || '').privateKey,
   infuraProvider
 )
 
@@ -65,7 +64,6 @@ chrome.runtime.onMessage.addListener(
       case MessageType.SignMessage: {
         if (!signer) {
           throw new Error('Import wallet first')
-          return
         }
         break
       }
@@ -73,7 +71,6 @@ chrome.runtime.onMessage.addListener(
       case MessageType.SignTransaction: {
         if (!signer) {
           throw new Error('Import wallet first')
-          return
         }
         break
       }
