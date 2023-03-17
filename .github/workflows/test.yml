@@ -62,9 +62,30 @@ jobs:
       - run: yarn test:size
 
 
-  cypress-tests:
-    needs: [build]
+  cypress-build:
     runs-on: ubuntu-latest
+    container: cypress/browsers:node-18.14.1-chrome-111.0.5563.64-1-ff-111.0-edge-111.0.1661.43-1
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - uses: actions/cache@v3
+        id: cypress-cache
+        with:
+          path: /root/.cache/Cypress
+          key: ${{ runner.os }}-cypress-${{ hashFiles('yarn.lock') }}
+      - if: steps.cypress-cache.outputs.cache-hit != 'true'
+        run: |
+          yarn cypress install
+          yarn cypress info
+
+  cypress-test-matrix:
+    needs: [build, cypress-build]
+    runs-on: ubuntu-latest
+    container: cypress/browsers:node-18.14.1-chrome-111.0.5563.64-1-ff-111.0-edge-111.0.1661.43-1
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -72,12 +93,11 @@ jobs:
         with:
           name: build
           path: build
-
       - uses: actions/cache@v3
         id: cypress-cache
         with:
-          path: /home/runner/.cache/Cypress
-          key: ${{ runner.os }}-cypress-${{ hashFiles('node_modules/cypress') }}
+          path: /root/.cache/Cypress
+          key: ${{ runner.os }}-cypress-${{ hashFiles('yarn.lock') }}
       - if: steps.cypress-cache.outputs.cache-hit != 'true'
         run: yarn cypress install
 
@@ -88,6 +108,16 @@ jobs:
           wait-on: 'http://localhost:3000'
           browser: chrome
           record: true
+          parallel: true
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Included as a single job to check for cypress-test-matrix success, as a matrix cannot be checked.
+  cypress-tests:
+    if: ${{ always() }}
+    needs: [cypress-test-matrix]
+    runs-on: ubuntu-latest
+    steps:
+      - if: needs.cypress-test-matrix.result != 'success'
+        run: exit 1
