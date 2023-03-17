@@ -119,6 +119,5 @@ jobs:
     needs: [cypress-test-matrix]
     runs-on: ubuntu-latest
     steps:
-      - run: echo needs.cypress-test-matrix.result
-      - if: needs.cypress-test-matrix.result != 'success'
+      - if: needs.cypress-test-matrix.result == 'success'
         run: exit 1
