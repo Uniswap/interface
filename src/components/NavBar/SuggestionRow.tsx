@@ -238,6 +238,7 @@ function getPoolDetailsURL(address: string) {
 }
 
 // TODO: we should add pool NAV and performance since inception in base currency
+//  also check what pool data we already have in state and use a different type for pools if appropriate
 export const PoolRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, eventProperties }: TokenRowProps) => {
   const addToSearchHistory = useSearchHistory(
     (state: { addItem: (item: FungibleToken | GenieCollection) => void }) => state.addItem

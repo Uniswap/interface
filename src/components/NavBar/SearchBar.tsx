@@ -19,7 +19,7 @@ import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { fetchSearchCollections } from 'nft/queries'
 //import { fetchSearchSmartPools } from 'nft/queries/genie/SearchSmartPoolsFetcher'
 import { fetchSearchTokens } from 'nft/queries/genie/SearchTokensFetcher'
-//import { FungibleToken } from 'nft/types'
+import { FungibleToken } from 'nft/types'
 import { ChangeEvent, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
@@ -29,30 +29,6 @@ import { ChevronLeftIcon, MagnifyingGlassIcon, NavMagnifyingGlassIcon } from '..
 import { NavIcon } from './NavIcon'
 import * as styles from './SearchBar.css'
 import { SearchBarDropdown } from './SearchBarDropdown'
-
-interface BridgeInfoEntry {
-  tokenAddress?: string
-}
-
-interface FungibleTokenExtensions {
-  bridgeInfo?: { [chain: number]: BridgeInfoEntry }
-}
-
-interface FungibleToken {
-  name: string
-  address: string
-  symbol: string
-  decimals: number
-  chainId: number
-  logoURI: string
-  coinGeckoId: string
-  priceUsd: number
-  price24hChange: number
-  volume24h: number
-  onDefaultList?: boolean
-  extensions?: FungibleTokenExtensions
-  marketCap: number
-}
 
 export const SearchBar = () => {
   const [isOpen, toggleOpen] = useReducer((state: boolean) => !state, false)
@@ -92,6 +68,7 @@ export const SearchBar = () => {
     }
   )
 
+  // TODO: check if we already store all pools' data in state, so can return a richer pool struct
   const smartPoolsLogs = useRegisteredPools()
   const { chainId } = useWeb3React()
   const smartPools: Token[] = useMemo(() => {
@@ -106,6 +83,7 @@ export const SearchBar = () => {
   const filteredPools: Token[] = useMemo(() => {
     return Object.values(smartPools).filter(getTokenFilter(debouncedSearchValue))
   }, [smartPools, debouncedSearchValue])
+  // TODO: check using a different struct for pools
   const fungiblePools: FungibleToken[] | undefined = useMemo(() => {
     if (!chainId) return
     return filteredPools.map((p) => {
