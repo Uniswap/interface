@@ -113,9 +113,11 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # Included as a single job to check against for cypress test success, as cypress runs in a matrix.
+  # Included as a single job to check for cypress-test-matrix success, as a matrix cannot be checked.
   cypress-tests:
+    if: ${{ always() }}
     needs: [cypress-test-matrix]
     runs-on: ubuntu-latest
     steps:
-      - run: echo 'Finished cypress tests https\://dashboard.cypress.io/projects/yp82ef'
+      - run: exit 1
+        if: ${{ needs.build.result }} != "success"
