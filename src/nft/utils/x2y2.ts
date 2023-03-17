@@ -69,7 +69,7 @@ const randomSalt = () => {
   return hexZeroPad(randomHex, 64)
 }
 
-const encodeItemData = (data: { token: string; tokenId: BigNumberish }[]) => {
+const encodeItemData = (data: { token: string; tokenId: BigNumberish; amount: number }[]) => {
   return defaultAbiCoder.encode([dataParamType], [data])
 }
 
