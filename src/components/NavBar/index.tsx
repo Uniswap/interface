@@ -13,7 +13,7 @@ import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
 import { Bag } from './Bag'
 import { ChainSelector } from './ChainSelector'
 import { MenuDropdown } from './MenuDropdown'
-//import { SearchBar } from './SearchBar'
+import { SearchBar } from './SearchBar'
 import * as styles from './style.css'
 
 interface MenuItemProps {
@@ -96,18 +96,14 @@ const Navbar = () => {
               <PageTabs />
             </Row>
           </Box>
-          {/*
-          <Box className={styles.middleContainer}>
+          <Box className={styles.searchContainer}>
             <SearchBar />
           </Box>
-          */}
           <Box className={styles.rightSideContainer}>
             <Row gap="12">
-              {/*
-              <Box display={{ sm: 'flex', xl: 'none' }}>
+              <Box position="relative" display={{ sm: 'flex', xl: 'none' }}>
                 <SearchBar />
               </Box>
-              */}
               <Box display={{ sm: 'none', lg: 'flex' }}>
                 <MenuDropdown />
               </Box>

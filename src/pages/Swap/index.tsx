@@ -260,7 +260,7 @@ export default function Swap() {
   // TODO: the following is expensive as overwrites all pools data, however it is called just once. It is useful when
   //  switching chain in the swap page s otherwise the state is cleared when page is reloaded.
   //  We sould try and update state only if poolsLogs is undefined
-  //const poolsLogs = useRegisteredPools(chainId)
+  //const poolsLogs = useRegisteredPools()
   const { data: poolsLogs } = useAllPoolsData()
   const poolAddresses: (string | undefined)[] = useMemo(() => {
     if (!poolsLogs) return []

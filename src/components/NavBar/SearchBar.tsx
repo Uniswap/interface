@@ -2,26 +2,57 @@
 import { t } from '@lingui/macro'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analytics'
 import { BrowserEvent, ElementName, EventName, SectionName } from '@uniswap/analytics-events'
+import { Token } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useDebounce from 'hooks/useDebounce'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { organizeSearchResults } from 'lib/utils/searchBar'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { magicalGradientOnHover } from 'nft/css/common.css'
 import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { fetchSearchCollections } from 'nft/queries'
+//import { fetchSearchSmartPools } from 'nft/queries/genie/SearchSmartPoolsFetcher'
 import { fetchSearchTokens } from 'nft/queries/genie/SearchTokensFetcher'
-import { ChangeEvent, useEffect, useReducer, useRef, useState } from 'react'
+//import { FungibleToken } from 'nft/types'
+import { ChangeEvent, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
+import { useRegisteredPools } from 'state/pool/hooks'
 
 import { ChevronLeftIcon, MagnifyingGlassIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
 import { NavIcon } from './NavIcon'
 import * as styles from './SearchBar.css'
 import { SearchBarDropdown } from './SearchBarDropdown'
+
+interface BridgeInfoEntry {
+  tokenAddress?: string
+}
+
+interface FungibleTokenExtensions {
+  bridgeInfo?: { [chain: number]: BridgeInfoEntry }
+}
+
+interface FungibleToken {
+  name: string
+  address: string
+  symbol: string
+  decimals: number
+  chainId: number
+  logoURI: string
+  coinGeckoId: string
+  priceUsd: number
+  price24hChange: number
+  volume24h: number
+  onDefaultList?: boolean
+  extensions?: FungibleTokenExtensions
+  marketCap: number
+}
 
 export const SearchBar = () => {
   const [isOpen, toggleOpen] = useReducer((state: boolean) => !state, false)
@@ -61,9 +92,49 @@ export const SearchBar = () => {
     }
   )
 
+  const smartPoolsLogs = useRegisteredPools()
+  const { chainId } = useWeb3React()
+  const smartPools: Token[] = useMemo(() => {
+    const mockToken = new Token(1, ZERO_ADDRESS, 0, '', '')
+    if (!smartPoolsLogs || !chainId) return [mockToken]
+    return smartPoolsLogs.map((p) => {
+      const { name, symbol, pool: address } = p
+      //if (!name || !symbol || !address) return
+      return new Token(chainId ?? 1, address ?? undefined, 18, symbol ?? 'NAN', name ?? '')
+    })
+  }, [chainId, smartPoolsLogs])
+  const filteredPools: Token[] = useMemo(() => {
+    return Object.values(smartPools).filter(getTokenFilter(debouncedSearchValue))
+  }, [smartPools, debouncedSearchValue])
+  const fungiblePools: FungibleToken[] | undefined = useMemo(() => {
+    if (!chainId) return
+    return filteredPools.map((p) => {
+      const { name, symbol, address, chainId } = p
+      return {
+        name: name ?? '',
+        address,
+        symbol: symbol ?? '',
+        decimals: 0,
+        chainId,
+        logoURI: '',
+        coinGeckoId: '',
+        priceUsd: 1,
+        price24hChange: 0,
+        volume24h: 0,
+        onDefaultList: true,
+        marketCap: 0,
+      }
+    })
+  }, [chainId, filteredPools])
+
   const isNFTPage = useIsNftPage()
 
-  const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], collections ?? [])
+  const [reducedPools, reducedTokens, reducedCollections] = organizeSearchResults(
+    isNFTPage,
+    fungiblePools ?? [],
+    tokens ?? [],
+    collections ?? []
+  )
 
   // close dropdown on escape
   useEffect(() => {
@@ -93,7 +164,8 @@ export const SearchBar = () => {
     }
   }, [isOpen])
 
-  const placeholderText = phase1Flag === NftVariant.Enabled ? t`Search tokens and NFT collections` : t`Search tokens`
+  const placeholderText =
+    phase1Flag === NftVariant.Enabled ? t`Search tokens and NFT collections` : t`Search smart pools`
   const isMobileOrTablet = isMobile || isTablet
   const showCenteredSearchContent =
     !isOpen && phase1Flag !== NftVariant.Enabled && !isMobileOrTablet && searchValue.length === 0
@@ -118,7 +190,7 @@ export const SearchBar = () => {
         >
           <Row
             className={clsx(
-              ` ${isPhase1 ? styles.nftSearchBar : styles.searchBar} ${
+              ` ${isPhase1 ? styles.searchBar : styles.nftSearchBar} ${
                 !isOpen && !isMobile && magicalGradientOnHover
               } ${isMobileOrTablet && (isOpen ? styles.visible : styles.hidden)}`
             )}
@@ -164,6 +236,7 @@ export const SearchBar = () => {
             {isOpen && (
               <SearchBarDropdown
                 toggleOpen={toggleOpen}
+                pools={reducedPools}
                 tokens={reducedTokens}
                 collections={reducedCollections}
                 queryText={debouncedSearchValue}

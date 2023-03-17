@@ -17,10 +17,15 @@ import { useLocation } from 'react-router-dom'
 
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
 import * as styles from './SearchBar.css'
-import { CollectionRow, SkeletonRow, TokenRow } from './SuggestionRow'
+import { CollectionRow, PoolRow, SkeletonRow, TokenRow } from './SuggestionRow'
 
 function isCollection(suggestion: GenieCollection | FungibleToken | TrendingCollection) {
   return (suggestion as FungibleToken).decimals === undefined
+}
+
+// Rigoblock pools do not generate volume
+function isPool(suggestion: GenieCollection | FungibleToken | TrendingCollection) {
+  return (suggestion as FungibleToken).volume24h === 0
 }
 
 interface SearchBarDropdownSectionProps {
@@ -71,6 +76,21 @@ export const SearchBarDropdownSection = ({
                 ...eventProperties,
               }}
             />
+          ) : isPool(suggestion) ? (
+            <PoolRow
+              key={suggestion.address}
+              token={suggestion as FungibleToken}
+              isHovered={hoveredIndex === index + startingIndex}
+              setHoveredIndex={setHoveredIndex}
+              toggleOpen={toggleOpen}
+              index={index + startingIndex}
+              eventProperties={{
+                position: index + startingIndex,
+                selected_search_result_name: suggestion.name,
+                selected_search_result_address: suggestion.address,
+                ...eventProperties,
+              }}
+            />
           ) : (
             <TokenRow
               key={suggestion.address}
@@ -93,8 +113,10 @@ export const SearchBarDropdownSection = ({
   )
 }
 
+// TODO: we can pass pools as just Token[]
 interface SearchBarDropdownProps {
   toggleOpen: () => void
+  pools: FungibleToken[]
   tokens: FungibleToken[]
   collections: GenieCollection[]
   queryText: string
@@ -104,6 +126,7 @@ interface SearchBarDropdownProps {
 
 export const SearchBarDropdown = ({
   toggleOpen,
+  pools,
   tokens,
   collections,
   queryText,
@@ -119,6 +142,8 @@ export const SearchBarDropdown = ({
   const phase1Flag = useNftFlag()
   const [resultsState, setResultsState] = useState<ReactNode>()
   const isPhase1 = phase1Flag === NftVariant.Enabled
+  // TODO: set true when looking to display tokens
+  const displayTokens = false
 
   const { data: trendingCollectionResults, isLoading: trendingCollectionsAreLoading } = useQuery(
     ['trendingCollections', 'eth', 'twenty_four_hours'],
@@ -210,7 +235,27 @@ export const SearchBarDropdown = ({
   useEffect(() => {
     const eventProperties = { total_suggestions: totalSuggestions, query_text: queryText, ...JSON.parse(trace) }
     if (!isLoading) {
-      const tokenSearchResults =
+      const poolSearchResults =
+        pools.length > 0 ? (
+          <SearchBarDropdownSection
+            hoveredIndex={hoveredIndex}
+            startingIndex={showCollectionsFirst ? collections.length : 0}
+            setHoveredIndex={setHoveredIndex}
+            toggleOpen={toggleOpen}
+            suggestions={pools}
+            eventProperties={{
+              suggestion_type: NavBarSearchTypes.TOKEN_SUGGESTION,
+              ...eventProperties,
+            }}
+            header={<Trans>Smart Pools</Trans>}
+          />
+        ) : (
+          <Box className={styles.notFoundContainer}>
+            <Trans>No pools found.</Trans>
+          </Box>
+        )
+
+      const tokenSearchResults = displayTokens ? (
         tokens.length > 0 ? (
           <SearchBarDropdownSection
             hoveredIndex={hoveredIndex}
@@ -229,6 +274,7 @@ export const SearchBarDropdown = ({
             <Trans>No tokens found.</Trans>
           </Box>
         )
+      ) : null
 
       const collectionSearchResults =
         phase1Flag === NftVariant.Enabled ? (
@@ -257,10 +303,12 @@ export const SearchBarDropdown = ({
             {showCollectionsFirst ? (
               <>
                 {collectionSearchResults}
+                {poolSearchResults}
                 {tokenSearchResults}
               </>
             ) : (
               <>
+                {poolSearchResults}
                 {tokenSearchResults}
                 {collectionSearchResults}
               </>
@@ -284,6 +332,7 @@ export const SearchBarDropdown = ({
                 headerIcon={<ClockIcon />}
               />
             )}
+            {/*
             {!isNFTPage && (
               <SearchBarDropdownSection
                 hoveredIndex={hoveredIndex}
@@ -300,6 +349,7 @@ export const SearchBarDropdown = ({
                 isLoading={trendingTokensAreLoading}
               />
             )}
+            */}
             {!isTokenPage && phase1Flag === NftVariant.Enabled && (
               <SearchBarDropdownSection
                 hoveredIndex={hoveredIndex}
@@ -323,6 +373,7 @@ export const SearchBarDropdown = ({
     }
   }, [
     isLoading,
+    pools,
     tokens,
     collections,
     trendingCollections,
@@ -331,6 +382,7 @@ export const SearchBarDropdown = ({
     trendingTokensAreLoading,
     hoveredIndex,
     phase1Flag,
+    displayTokens,
     toggleOpen,
     shortenedHistory,
     hasInput,

@@ -7,6 +7,7 @@ import AssetLogo from 'components/Logo/AssetLogo'
 import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { getTokenDetailsURL } from 'graphql/data/util'
@@ -225,5 +226,75 @@ export const SkeletonRow = () => {
         </Column>
       </Row>
     </Row>
+  )
+}
+
+function getPoolDetailsURL(address: string) {
+  if (address === ZERO_ADDRESS) {
+    return `/smart-pool/${NATIVE_CHAIN_ID}`
+  } else {
+    return `/smart-pool/${address}`
+  }
+}
+
+export const PoolRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, eventProperties }: TokenRowProps) => {
+  const addToSearchHistory = useSearchHistory(
+    (state: { addItem: (item: FungibleToken | GenieCollection) => void }) => state.addItem
+  )
+  const navigate = useNavigate()
+
+  const handleClick = useCallback(() => {
+    addToSearchHistory(token)
+    toggleOpen()
+    sendAnalyticsEvent(EventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
+  }, [addToSearchHistory, toggleOpen, token, eventProperties])
+
+  const [L2Icon] = useBridgedAddress(token)
+  const poolDetailsPath = getPoolDetailsURL(token.address)
+  // Close the modal on escape
+  useEffect(() => {
+    const keyDownHandler = (event: KeyboardEvent) => {
+      if (event.key === 'Enter' && isHovered) {
+        event.preventDefault()
+        navigate(poolDetailsPath)
+        handleClick()
+      }
+    }
+    document.addEventListener('keydown', keyDownHandler)
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler)
+    }
+  }, [toggleOpen, isHovered, token, navigate, handleClick, poolDetailsPath])
+
+  return (
+    <Link
+      to={poolDetailsPath}
+      onClick={handleClick}
+      onMouseEnter={() => !isHovered && setHoveredIndex(index)}
+      onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
+      className={styles.suggestionRow}
+      style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
+    >
+      <Row style={{ width: '65%' }}>
+        <StyledLogoContainer>
+          <AssetLogo
+            isNative={token.address === NATIVE_CHAIN_ID}
+            address={token.address}
+            chainId={token.chainId}
+            symbol={token.symbol}
+            size="36px"
+            backupImg={token.logoURI}
+          />
+          <L2NetworkLogo networkUrl={L2Icon} size="16px" />
+        </StyledLogoContainer>
+        <Column className={styles.suggestionPrimaryContainer}>
+          <Row gap="4" width="full">
+            <Box className={styles.primaryText}>{token.name}</Box>
+            <TokenSafetyIcon warning={checkWarning(token.address)} />
+          </Row>
+          <Box className={styles.secondaryText}>{token.symbol}</Box>
+        </Column>
+      </Row>
+    </Link>
   )
 }
