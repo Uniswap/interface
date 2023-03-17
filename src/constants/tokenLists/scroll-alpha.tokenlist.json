@@ -10,7 +10,7 @@
     {
       "logoURI": "https://assets.coingecko.com/coins/images/2518/thumb/weth.png?1628852295",
       "chainId": 534353,
-      "address": "0x5300000000000000000000000000000000000004",
+      "address": "0xa1EA0B2354F5A344110af2b6AD68e75545009a03",
       "name": "Wrapped Ether",
       "symbol": "WETH",
       "decimals": 18
