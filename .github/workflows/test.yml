@@ -62,30 +62,12 @@ jobs:
       - run: yarn test:size
 
 
-  cypress-build:
+  cypress-tests:
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: actions/cache@v3
-        id: cypress-cache
-        with:
-          path: /home/runner/.cache/Cypress
-          key: ${{ runner.os }}-cypress-${{ hashFiles('node_modules/cypress') }}
-      - if: steps.cypress-cache.outputs.cache-hit != 'true'
-        run: yarn cypress install
-
-  cypress-test-matrix:
-    needs: [build, cypress-build]
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        containers: [1, 2, 3, 4]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-
       - uses: actions/download-artifact@v2
         with:
           name: build
@@ -106,14 +88,6 @@ jobs:
           wait-on: 'http://localhost:3000'
           browser: chrome
           record: true
-          parallel: true
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  # Included as a single job to check against for cypress test success, as cypress runs in a matrix.
-  cypress-tests:
-    needs: [cypress-test-matrix]
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo 'Finished cypress tests https\://dashboard.cypress.io/projects/yp82ef'
