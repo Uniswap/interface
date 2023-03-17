@@ -3,7 +3,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { Unicon } from 'components/Unicon'
 import { Connection, ConnectionType } from 'connection'
 import useENSAvatar from 'hooks/useENSAvatar'
-import ms from 'ms.macro'
+import { useIsMobile } from 'nft/hooks'
 import { PropsWithChildren } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -77,7 +77,6 @@ const Divider = styled.div`
 function UniconTooltip({ children, enabled }: PropsWithChildren<{ enabled?: boolean }>) {
   return (
     <MouseoverTooltip
-      timeout={ms`3s`}
       offsetY={8}
       disableHover={!enabled}
       text={
@@ -110,13 +109,16 @@ const MainWalletIcon = ({
 }) => {
   const { account } = useWeb3React()
   const { avatar } = useENSAvatar(account ?? undefined)
+  const isMobile = useIsMobile()
 
   if (!account) {
     return null
   } else if (avatar || (connection.type === ConnectionType.INJECTED && connection.name === 'MetaMask')) {
     return <Identicon size={size} />
   } else {
-    return (
+    return isMobile ? (
+      <Unicon address={account} size={size} />
+    ) : (
       <UniconTooltip enabled={enableInfotips}>
         <Unicon address={account} size={size} />
       </UniconTooltip>
