@@ -144,8 +144,6 @@ export const SearchBar = () => {
   const placeholderText =
     phase1Flag === NftVariant.Enabled ? t`Search tokens and NFT collections` : t`Search smart pools`
   const isMobileOrTablet = isMobile || isTablet
-  const showCenteredSearchContent =
-    !isOpen && phase1Flag !== NftVariant.Enabled && !isMobileOrTablet && searchValue.length === 0
 
   const trace = useTrace({ section: SectionName.NAVBAR_SEARCH })
 
@@ -167,7 +165,7 @@ export const SearchBar = () => {
         >
           <Row
             className={clsx(
-              ` ${isPhase1 ? styles.searchBar : styles.nftSearchBar} ${
+              ` ${isPhase1 ? styles.nftSearchBar : styles.searchBar} ${
                 !isOpen && !isMobile && magicalGradientOnHover
               } ${isMobileOrTablet && (isOpen ? styles.visible : styles.hidden)}`
             )}
@@ -178,7 +176,7 @@ export const SearchBar = () => {
             onClick={() => !isOpen && toggleOpen()}
             gap="12"
           >
-            <Box className={showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign}>
+            <Box className={styles.searchContentLeftAlign}>
               <Box display={{ sm: 'none', md: 'flex' }}>
                 <MagnifyingGlassIcon />
               </Box>
@@ -200,9 +198,7 @@ export const SearchBar = () => {
                   setSearchValue(event.target.value)
                 }}
                 onBlur={() => sendAnalyticsEvent(EventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)}
-                className={`${styles.searchBarInput} ${
-                  showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign
-                }`}
+                className={`${styles.searchBarInput} ${styles.searchContentLeftAlign}`}
                 value={searchValue}
                 ref={inputRef}
                 width={phase1Flag === NftVariant.Enabled || isOpen ? 'full' : '160'}
