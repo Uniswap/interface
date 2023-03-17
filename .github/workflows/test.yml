@@ -120,6 +120,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "${{ needs.cypress-test-matrix.result }}"
-      - run: echo ${{ "${{ needs.cypress-test-matrix.result }}" != "success" }}
       - run: exit 1
         if: "${{ needs.cypress-test-matrix.result }}" != "success"
