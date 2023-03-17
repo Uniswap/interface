@@ -66,7 +66,7 @@ export function useENSRegistrarContract(withSignerIfPossible?: boolean): Contrac
         address = '0x457f57fEF8c189EB688f27A7E0674dc610810897'
         break
       case ChainId.HARDHAT:
-        address = '0xf9D9e38B6343aA99EB0d9bF832a61f3111B53Eb0'
+        address = '0xa5A32e6c46784f48F481e170996c82d1104EAC2f'
         break
       case ChainId.TAIKO:
         address = '0xf9D9e38B6343aA99EB0d9bF832a61f3111B53Eb0'
