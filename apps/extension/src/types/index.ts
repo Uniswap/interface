@@ -78,3 +78,18 @@ export interface SwapCancelledNotification extends SwapNotification {
 }
 
 export type Notification = SwapCompleteNotification | SwapFailedNotification | SwapCancelledNotification | SwapSubmittingNotification | SwapInProgressNotification
+
+
+
+export enum TransactionType {
+  'SwapApproval' = 'SwapApproval',
+  'SendApproval' = 'SendApproval',
+  'Approve' = 'Approve',
+}
+
+export type TransactionDetails = {
+  type: TransactionType.SwapApproval
+  id: string
+  title: string
+  message: string
+}

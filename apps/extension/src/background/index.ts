@@ -1,4 +1,4 @@
-import { Message, MessageType, PortName } from '../types'
+import { Message, MessageType, PortName, TransactionType } from '../types'
 import { createStore } from 'app/src/state'
 import { aliases } from './aliases'
 import { alias, wrapStore } from 'webext-redux'
@@ -208,7 +208,7 @@ function confirmSendTransaction() {
       .then((window) => window.width)
 
     const popupWindow = chrome.windows.create({
-      url: 'approval.html',
+      url: 'transactionWindow.html',
       type: 'popup',
       width: 250,
       height: 400,
@@ -225,8 +225,10 @@ function confirmSendTransaction() {
         {
           type: MessageType.TransactionDetails,
           data: {
+            type: TransactionType.SwapApproval,
             title: 'Swap',
             message: 'You sure?',
+            id: Math.random().toString(36).substring(7),
           },
         },
         window.tabs?.[0]?.id || 0
