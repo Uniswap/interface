@@ -5,6 +5,7 @@ import { SupportedChainId } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { useAllV3TicksQuery } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { TickData, Ticks } from 'graphql/thegraph/AllV3TicksQuery'
+import { apolloClient } from 'graphql/thegraph/apollo'
 import JSBI from 'jsbi'
 import { useSingleContractMultipleData } from 'lib/hooks/multicall'
 import ms from 'ms.macro'
@@ -160,6 +161,7 @@ function useTicksFromSubgraph(
     variables: { poolAddress: poolAddress?.toLowerCase(), skip },
     skip: !poolAddress,
     pollInterval: ms`30s`,
+    client: apolloClient,
   })
 }
 
