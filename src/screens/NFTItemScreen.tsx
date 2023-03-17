@@ -108,6 +108,7 @@ export function NFTItemScreen({
     contractAddress: asset?.nftContract?.address,
     tokenId: asset?.tokenId,
     owner,
+    showNotification: true,
   })
   const { colorLight, colorDark } = useNearestThemeColorFromImageUri(asset?.image?.url)
   // check if colorLight passes contrast against card bg color, if not use fallback

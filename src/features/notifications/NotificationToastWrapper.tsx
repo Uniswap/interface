@@ -6,6 +6,7 @@ import {
   CopiedNotification,
   DefaultNotification,
   ErrorNotification,
+  NftVisibilityChangeNotification,
   SwapNetworkNotification,
   SwapNotification,
   TransferCurrencyNotification,
@@ -43,6 +44,8 @@ export function NotificationToastRouter({
       return <CopiedNotification notification={notification} />
     case AppNotificationType.SwapNetwork:
       return <SwapNetworkNotification notification={notification} />
+    case AppNotificationType.NFTVisibility:
+      return <NftVisibilityChangeNotification notification={notification} />
     case AppNotificationType.Transaction:
       switch (notification.txType) {
         case TransactionType.Approve:

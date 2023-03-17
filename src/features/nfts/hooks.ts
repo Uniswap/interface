@@ -11,6 +11,8 @@ import { selectHiddenNfts } from 'src/features/favorites/selectors'
 import { HiddenNftsByAddress, toggleNftVisibility } from 'src/features/favorites/slice'
 import { NFTItem } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
+import { pushNotification } from 'src/features/notifications/notificationSlice'
+import { AppNotificationType } from 'src/features/notifications/types'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { logger } from 'src/utils/logger'
 
@@ -51,6 +53,7 @@ interface NFTMenuParams {
   tokenId?: string
   contractAddress?: Address
   owner: Address
+  showNotification?: boolean
 }
 
 function shouldHideNft(
@@ -66,7 +69,12 @@ function shouldHideNft(
   )
 }
 
-export function useNFTMenu({ contractAddress, tokenId, owner }: NFTMenuParams): {
+export function useNFTMenu({
+  contractAddress,
+  tokenId,
+  owner,
+  showNotification = false,
+}: NFTMenuParams): {
   menuActions: Array<ContextMenuAction & { onPress: () => void }>
   onContextMenuPress: (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => void
   onlyShare: boolean
@@ -108,13 +116,32 @@ export function useNFTMenu({ contractAddress, tokenId, owner }: NFTMenuParams): 
           onPress: (): void => {
             if (contractAddress && tokenId) {
               dispatch(toggleNftVisibility({ owner, contractAddress, tokenId }))
+              if (showNotification) {
+                dispatch(
+                  pushNotification({
+                    type: AppNotificationType.NFTVisibility,
+                    visible: !hidden,
+                    hideDelay: 2000,
+                  })
+                )
+              }
             }
           },
         },
       ]) ||
         []),
     ],
-    [contractAddress, dispatch, hidden, isLocalAccount, isShareable, owner, t, tokenId]
+    [
+      contractAddress,
+      dispatch,
+      hidden,
+      isLocalAccount,
+      isShareable,
+      owner,
+      showNotification,
+      t,
+      tokenId,
+    ]
   )
 
   const onContextMenuPress = useCallback(

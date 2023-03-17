@@ -212,6 +212,7 @@ module.exports = {
               'you’ll',
               'you’re',
               'you’ve',
+              'unhide'
             ],
           },
         ],

@@ -225,6 +225,8 @@
   "Floor": "Floor",
   "Unhide NFT": "Unhide NFT",
   "Hide NFT": "Hide NFT",
+  "NFT hidden": "NFT hidden",
+  "NFT unhidden": "NFT unhidden",
   "Address copied": "Address copied",
   "Swapping on {{ network }}": "Swapping on {{ network }}",
   "Connected": "Connected",
