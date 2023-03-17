@@ -6,6 +6,7 @@ import {
   injectedConnection,
   networkConnection,
   walletConnectConnection,
+  walletConnectV2Connection,
 } from 'connection'
 
 export function getIsInjected(): boolean {
@@ -32,6 +33,7 @@ const CONNECTIONS = [
   injectedConnection,
   coinbaseWalletConnection,
   walletConnectConnection,
+  walletConnectV2Connection,
   networkConnection,
 ]
 export function getConnection(c: Connector | ConnectionType) {
@@ -49,6 +51,8 @@ export function getConnection(c: Connector | ConnectionType) {
         return coinbaseWalletConnection
       case ConnectionType.WALLET_CONNECT:
         return walletConnectConnection
+      case ConnectionType.WALLET_CONNECT_V2:
+        return walletConnectV2Connection
       case ConnectionType.NETWORK:
         return networkConnection
       case ConnectionType.GNOSIS_SAFE:
@@ -68,6 +72,8 @@ export function getConnectionName(
       return 'Coinbase Wallet'
     case ConnectionType.WALLET_CONNECT:
       return 'WalletConnect'
+    case ConnectionType.WALLET_CONNECT_V2:
+      return 'WalletConnect V2'
     case ConnectionType.NETWORK:
       return 'Network'
     case ConnectionType.GNOSIS_SAFE:

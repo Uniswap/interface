@@ -106,3 +106,12 @@ export const L2_CHAIN_IDS = [
 ] as const
 
 export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]
+
+export const NETWORK_SELECTOR_CHAINS = [
+  SupportedChainId.MAINNET,
+  SupportedChainId.POLYGON,
+  SupportedChainId.OPTIMISM,
+  SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.CELO,
+  SupportedChainId.BNB,
+]

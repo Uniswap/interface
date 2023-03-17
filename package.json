@@ -55,6 +55,7 @@
       "not op_mini all"
     ],
     "development": [
+      "node 12",
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
@@ -166,7 +167,6 @@
     "@visx/react-spring": "^2.12.2",
     "@visx/responsive": "^2.10.0",
     "@visx/shape": "^2.11.1",
-    "@walletconnect/ethereum-provider": "^1.8.0",
     "@web3-react/coinbase-wallet": "8.1.2-beta.0",
     "@web3-react/core": "8.1.2-beta.0",
     "@web3-react/eip1193": "8.1.2-beta.0",
@@ -177,6 +177,8 @@
     "@web3-react/types": "8.1.2-beta.0",
     "@web3-react/url": "8.1.2-beta.0",
     "@web3-react/walletconnect": "8.1.2-beta.0",
+    "@web3-react/walletconnect-v2": "8.1.2-beta.0",
+    "@web3modal/standalone": "^2.2.1",
     "array.prototype.flat": "^1.2.4",
     "array.prototype.flatmap": "^1.2.4",
     "cids": "^1.0.0",

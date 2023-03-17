@@ -5,6 +5,7 @@ import { getWalletMeta } from '@uniswap/conedison/provider/meta'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { WalletConnect } from '@web3-react/walletconnect'
+import { WalletConnect as WalletConnectV2 } from '@web3-react/walletconnect'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
@@ -39,6 +40,7 @@ import { CoinbaseWalletOption, OpenCoinbaseWalletOption } from './CoinbaseWallet
 import { InjectedOption, InstallMetaMaskOption, MetaMaskOption } from './InjectedOption'
 import PendingView from './PendingView'
 import { WalletConnectOption } from './WalletConnectOption'
+import { WalletConnectV2Option } from './WalletConnectV2Option'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -293,11 +295,15 @@ export default function WalletModal({
     const walletConnectionOption =
       (!isInjectedMobileBrowser && <WalletConnectOption tryActivation={tryActivation} />) ?? null
 
+    const walletConnectionV2Option =
+      (!isInjectedMobileBrowser && <WalletConnectV2Option tryActivation={tryActivation} />) ?? null
+
     return (
       <>
         {injectedOption}
         {coinbaseWalletOption}
         {walletConnectionOption}
+        {walletConnectionV2Option}
       </>
     )
   }
@@ -382,7 +388,9 @@ export default function WalletModal({
    * trying to interact with a WalletConnect modal.
    */
   const isWalletConnectModalOpen =
-    walletView === WALLET_VIEWS.PENDING && pendingConnector instanceof WalletConnect && !pendingError
+    walletView === WALLET_VIEWS.PENDING &&
+    (pendingConnector instanceof WalletConnect || pendingConnector instanceof WalletConnectV2) &&
+    !pendingError
 
   return (
     <Modal
