@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex } from 'rebass'
 
+import { NewLabel } from 'components/Menu'
 import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
 import { APP_PATHS } from 'constants/index'
 
@@ -14,9 +15,12 @@ const CampaignNavGroup = () => {
   const { pathname } = useLocation()
   const isActive = [APP_PATHS.CAMPAIGN, APP_PATHS.GRANT_PROGRAMS].some(path => pathname.includes(path))
 
+  if (upTo420) {
+    return null
+  }
+
   return (
     <NavGroup
-      dropdownAlign={upTo420 ? 'right' : 'left'}
       id={TutorialIds.CAMPAIGN_LINK}
       isActive={isActive}
       anchor={
@@ -35,7 +39,10 @@ const CampaignNavGroup = () => {
           </StyledNavLink>
 
           <StyledNavLink id="project-trading-grant" to={APP_PATHS.GRANT_PROGRAMS}>
-            <Trans>Project Trading Grant</Trans>
+            <Trans>Project Trading Grant</Trans>{' '}
+            <NewLabel>
+              <Trans>New</Trans>
+            </NewLabel>
           </StyledNavLink>
         </Flex>
       }

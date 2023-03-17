@@ -199,6 +199,7 @@ export const NewLabel = styled.span`
   height: calc(100% + 4px);
   margin-left: 2px;
 `
+
 const Divider = styled.div`
   border-top: 1px solid ${({ theme }) => theme.border};
   margin-top: 10px;
@@ -310,9 +311,6 @@ export default function Menu() {
                 <SlideToUnlock>
                   <Trans>Discover</Trans>
                 </SlideToUnlock>
-                <NewLabel>
-                  <Trans>New</Trans>
-                </NewLabel>
               </NavLink>
             </DiscoverWrapper>
 
@@ -320,11 +318,28 @@ export default function Menu() {
               <MenuItem>
                 <NavDropDown
                   icon={<Award />}
-                  title={t`Campaigns`}
+                  title={
+                    <Text>
+                      <Trans>Campaigns</Trans>{' '}
+                      <NewLabel>
+                        <Trans>New</Trans>
+                      </NewLabel>
+                    </Text>
+                  }
                   link={'#'}
                   options={[
                     { link: APP_PATHS.CAMPAIGN, label: t`Trading Campaigns` },
-                    { link: APP_PATHS.GRANT_PROGRAMS, label: t`Project Trading Grant` },
+                    {
+                      link: APP_PATHS.GRANT_PROGRAMS,
+                      label: (
+                        <Text as="span">
+                          <Trans>Project Trading Grant</Trans>{' '}
+                          <NewLabel>
+                            <Trans>New</Trans>
+                          </NewLabel>
+                        </Text>
+                      ),
+                    },
                   ]}
                 />
               </MenuItem>
@@ -334,7 +349,7 @@ export default function Menu() {
               <MenuItem>
                 <NavDropDown
                   icon={<Info />}
-                  title={'About'}
+                  title={t`About`}
                   link={'/about'}
                   options={[
                     { link: '/about/kyberswap', label: 'Kyberswap' },
@@ -363,9 +378,9 @@ export default function Menu() {
                   title={'KyberDAO'}
                   link={'/kyberdao/stake-knc'}
                   options={[
-                    { link: '/kyberdao/stake-knc', label: 'Stake KNC' },
-                    { link: '/kyberdao/vote', label: 'Vote' },
-                    { link: 'https://kyberswap.canny.io/feature-request', label: 'Feature Request', external: true },
+                    { link: '/kyberdao/stake-knc', label: t`Stake KNC` },
+                    { link: '/kyberdao/vote', label: t`Vote` },
+                    { link: 'https://kyberswap.canny.io/feature-request', label: t`Feature Request`, external: true },
                   ]}
                 />
               </MenuItem>
@@ -375,7 +390,7 @@ export default function Menu() {
                 <NavDropDown
                   icon={<PieChart />}
                   link="#"
-                  title={'Analytics'}
+                  title={t`Analytics`}
                   options={[
                     { link: DMM_ANALYTICS_URL[chainId], label: t`Liquidity`, external: true },
                     {

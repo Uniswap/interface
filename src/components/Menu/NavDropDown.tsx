@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import React, { ReactNode, useRef, useState } from 'react'
+import { ReactNode, useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
@@ -14,10 +14,10 @@ const Wrapper = styled.div`
   overflow: hidden;
   flex: 1;
 `
-const LinkContainer = styled.div<{ isShow?: boolean; $height: number }>`
+const LinkContainer = styled.div<{ $isShow?: boolean; $height: number }>`
   padding-left: 24px;
   transition: all 0.3s ease;
-  ${({ isShow, $height }) => (isShow ? `height: ${$height}px;` : 'height: 0px;')}
+  ${({ $isShow, $height }) => ($isShow ? `height: ${$height}px;` : 'height: 0px;')}
   > * {
     padding: 12px 0;
   }
@@ -29,11 +29,11 @@ const LinkContainer = styled.div<{ isShow?: boolean; $height: number }>`
     padding-bottom: 0;
   }
 `
-const DropdownIcon = styled(DropdownSVG)<{ isShow?: boolean }>`
+const DropdownIcon = styled(DropdownSVG)<{ $isShow?: boolean }>`
   transition: all 0.2s ease;
   height: 24px !important;
   width: 24px !important;
-  ${({ isShow }) => isShow && 'transform: rotate(180deg);'}
+  ${({ $isShow }) => $isShow && 'transform: rotate(180deg);'}
 `
 
 const TitleWrapper = styled(NavLink)`
@@ -47,20 +47,19 @@ export default function NavDropDown({
   icon,
   options,
 }: {
-  title: string
+  title: ReactNode
   icon: ReactNode
   link: string
-  options: { link: string; label: string; external?: boolean }[]
+  options: { link: string; label: ReactNode; external?: boolean }[]
 }) {
   const [isShowOptions, setIsShowOptions] = useState(false)
   const toggle = useToggleModal(ApplicationModal.MENU)
+  const ref = useRef<HTMLDivElement>(null)
 
   const handleClick = (e: any) => {
     e.preventDefault()
     setIsShowOptions(prev => !prev)
   }
-
-  const ref = useRef<HTMLDivElement>(null)
 
   return (
     <Wrapper>
@@ -69,17 +68,17 @@ export default function NavDropDown({
         <Text flex={1}>
           <Trans>{title}</Trans>
         </Text>
-        <DropdownIcon isShow={isShowOptions} />
+        <DropdownIcon $isShow={isShowOptions} />
       </TitleWrapper>
-      <LinkContainer isShow={isShowOptions} ref={ref} $height={ref.current?.scrollHeight || 0}>
+      <LinkContainer $isShow={isShowOptions} ref={ref} $height={ref.current?.scrollHeight || 0}>
         {options.map(item =>
           item.external ? (
             <ExternalLink key={item.link} href={item.link} onClick={toggle}>
-              <Trans>{item.label}</Trans>
+              {item.label}
             </ExternalLink>
           ) : (
             <NavLink to={item.link} key={item.link} onClick={toggle}>
-              <Trans>{item.label}</Trans>
+              {item.label}
             </NavLink>
           ),
         )}
