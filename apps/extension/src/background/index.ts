@@ -15,6 +15,8 @@ const isInitialized = false
 
 initStore()
 
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms))
+
 function initStore() {
   // Listen to incoming connections from content scripts or popup.
   // Triggers whenever extension "wakes up" from idle.
@@ -80,18 +82,27 @@ chrome.runtime.onMessage.addListener(
           throw new Error('Import wallet first')
         }
 
-        // TODO:
-        // Prompt user to confirm transaction in a notification
-        // If user confirms, send transaction
-        console.log(
-          'transaction about to send is',
-          message.data.data.transaction
-        )
+        // We need to get the active tab id before opening the popup
+        const activeTabId = await new Promise<number>((resolve) => {
+          chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+            if (tab?.id) {
+              resolve(tab.id)
+            }
+          })
+        })
+
+        const confirmed = await confirmSendTransaction()
+        if (!confirmed) {
+          console.log('Transaction not confirmed')
+          // TODO: Send transaction not confirmed message to provider
+          return
+        }
+
         const sentTx = await signer.sendTransaction(
           message.data.data.transaction
         )
-        onTransactionSent(sentTx)
-        // return true // check if we need this / lets us use sendResponse to the tab
+        onTransactionSent(sentTx, activeTabId)
+        // return true - TODO: check if we need this / lets us use sendResponse to the tab
 
         break
       }
@@ -126,28 +137,58 @@ function sendMessageToActiveTab(message: Message) {
   })
 }
 
-function onTransactionSent(transactionResponse: TransactionResponse): void {
+function sendMessageToSpecificTab(message: Message, tabId: number) {
+  chrome.tabs.sendMessage(tabId, message)
+}
+
+function onTransactionSent(
+  transactionResponse: TransactionResponse,
+  tabId: number
+): void {
   // Update chrome icon
   chrome.action.setIcon({
     path: 'pending.png',
   })
-  sendMessageToActiveTab({
-    type: MessageType.SendTransactionResponse,
-    data: transactionResponse,
-  })
+
+  sendMessageToSpecificTab(
+    {
+      type: MessageType.SendTransactionResponse,
+      data: transactionResponse,
+    },
+    tabId
+  )
 
   // Listen for transaction receipt
   signer?.provider
     ?.waitForTransaction(transactionResponse.hash, 1)
     .then((receipt) => {
-      console.log('Transaction receipt', receipt)
       if (receipt.status === 1) {
         chrome.action.setIcon({
           path: 'success.png',
         })
+
+        // Send chrome notification that transaction was successful
+        chrome.notifications.create({
+          type: 'basic',
+          iconUrl: 'success.png',
+          title: 'Transaction successful',
+          message: `Transaction ${transactionResponse.hash} was successful`,
+        })
       } else {
         chrome.action.setIcon({
           path: 'fail.png',
+        })
+        // Send chrome notification that transaction failed
+        chrome.notifications.create({
+          type: 'basic',
+          iconUrl: 'fail.png',
+          title: 'Transaction failed',
+          message: `Transaction ${transactionResponse.hash} failed`,
+          buttons: [
+            {
+              title: 'Retry',
+            },
+          ],
         })
       }
       setTimeout(() => {
@@ -156,4 +197,48 @@ function onTransactionSent(transactionResponse: TransactionResponse): void {
         })
       }, 7000)
     })
+}
+
+function confirmSendTransaction() {
+  // eslint-disable-next-line no-async-promise-executor
+  return new Promise<boolean>(async (resolve) => {
+    // open a custom chrome window to confirm transactions before sending
+    const currentWindowWidth = await chrome.windows
+      .getCurrent()
+      .then((window) => window.width)
+
+    const popupWindow = chrome.windows.create({
+      url: 'approval.html',
+      type: 'popup',
+      width: 250,
+      height: 400,
+      left: (currentWindowWidth || 2000) - 200,
+      top: 100,
+    })
+
+    let windowId: number | null | undefined = null
+    popupWindow.then(async (window) => {
+      windowId = window.id
+      await delay(500) // TODO remove hacky delay in case the popup window hasn't started listening yet and save information elsewhere
+
+      sendMessageToSpecificTab(
+        {
+          type: MessageType.TransactionDetails,
+          data: {
+            title: 'Swap',
+            message: 'You sure?',
+          },
+        },
+        window.tabs?.[0]?.id || 0
+      )
+    })
+
+    chrome.runtime.onMessage.addListener((message) => {
+      if (message.type === MessageType.ConfirmSendTransaction) {
+        resolve(true)
+        if (!windowId) return
+        chrome.windows.remove(windowId)
+      }
+    })
+  })
 }

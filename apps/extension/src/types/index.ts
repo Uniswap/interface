@@ -11,21 +11,24 @@ export type Message = {
 };
 
 export enum MessageType {
-    GetLocalStorage = "getLocalStorage",
-    SetLocalStorage = "setLocalStorage",
-    SendTransaction = "sendTransaction",
-    SendTransactionResponse = "sendTransactionResponse",
-    UndoTransaction = "undoTransaction",
-    ScriptInjectionAlert = "scriptInjectionAlert",
-    UpdateIcon = "updateIcon",
-    UpdateNotifications = "UpdateNotifications",
-    ViewNotificationData = "ViewNotificationData",
-    SignMessage = "SignMessage",
-    SignTransaction = "SignTransaction",
-    SignedTransaction = "SignedTransaction",
-    SignMessageResponse = "SignMessageResponse",
-    ValidatePassword = "ValidatePassword",
-    SignTransactionResponse = "SignTransactionResponse"
+  GetLocalStorage = "getLocalStorage",
+  SetLocalStorage = "setLocalStorage",
+  SendTransaction = "sendTransaction",
+  SendTransactionResponse = "sendTransactionResponse",
+  UndoTransaction = "undoTransaction",
+  ScriptInjectionAlert = "scriptInjectionAlert",
+  UpdateIcon = "updateIcon",
+  UpdateNotifications = "UpdateNotifications",
+  ViewNotificationData = "ViewNotificationData",
+  SignMessage = "SignMessage",
+  SignTransaction = "SignTransaction",
+  SignedTransaction = "SignedTransaction",
+  SignMessageResponse = "SignMessageResponse",
+  ValidatePassword = "ValidatePassword",
+  SignTransactionResponse = "SignTransactionResponse",
+  ConfirmSendTransaction = "ConfirmSendTransaction",
+  CancelSendTransaction = "CancelSendTransaction",
+  TransactionDetails = "TransactionDetails"
 }
 
 

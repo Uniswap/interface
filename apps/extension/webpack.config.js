@@ -154,6 +154,7 @@ const options = {
     // options: "./src/options/index.tsx",
     // permissions: "./src/permissions/index.tsx",
     popup: "./src/popup.tsx",
+    approval: "./src/approval.tsx",
     providerScript: "./src/contentScript/provider.ts",
     injected: "./src/contentScript/injected.js"
     // contentScript: "./src/contentScript/index.ts",

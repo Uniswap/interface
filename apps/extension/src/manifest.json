@@ -7,7 +7,7 @@
     "service_worker": "background.js",
     "type": "module"
   },
-  "permissions": ["storage"], 
+  "permissions": ["storage", "notifications"], 
   "content_scripts": [
     {
       "matches": [
