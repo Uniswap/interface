@@ -64,20 +64,24 @@ jobs:
 
   cypress-build:
     runs-on: ubuntu-latest
+    container: cypress/browsers:node-18.14.1-chrome-111.0.5563.64-1-ff-111.0-edge-111.0.1661.43-1
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: actions/cache@v3
         id: cypress-cache
         with:
-          path: /home/runner/.cache/Cypress
-          key: ${{ runner.os }}-cypress-${{ hashFiles('node_modules/cypress') }}
+          path: /root/.cache/Cypress
+          key: ${{ runner.os }}-cypress-${{ hashFiles('yarn.lock') }}
       - if: steps.cypress-cache.outputs.cache-hit != 'true'
-        run: yarn cypress install
+        run: |
+          yarn cypress install
+          yarn cypress info
 
   cypress-test-matrix:
     needs: [build, cypress-build]
     runs-on: ubuntu-latest
+    container: cypress/browsers:node-18.14.1-chrome-111.0.5563.64-1-ff-111.0-edge-111.0.1661.43-1
     strategy:
       fail-fast: false
       matrix:
@@ -85,17 +89,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-
       - uses: actions/download-artifact@v2
         with:
           name: build
           path: build
-
       - uses: actions/cache@v3
         id: cypress-cache
         with:
-          path: /home/runner/.cache/Cypress
-          key: ${{ runner.os }}-cypress-${{ hashFiles('node_modules/cypress') }}
+          path: /root/.cache/Cypress
+          key: ${{ runner.os }}-cypress-${{ hashFiles('yarn.lock') }}
       - if: steps.cypress-cache.outputs.cache-hit != 'true'
         run: yarn cypress install
 
