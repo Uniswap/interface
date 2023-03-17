@@ -200,7 +200,8 @@ export function useCreateCallback(): (
   )
 }
 
-export function useRegisteredPools(chainId: number | undefined): PoolRegisteredLog[] | undefined {
+export function useRegisteredPools(): PoolRegisteredLog[] | undefined {
+  const { chainId } = useWeb3React()
   const registry = useRegistryContract()
   const fromBlock = useStartBlock(chainId)
   // create filters for Registered events

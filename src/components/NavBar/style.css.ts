@@ -52,13 +52,15 @@ export const leftSideContainer = style([
   }),
 ])
 
-export const middleContainer = style([
-  baseContainer,
+export const searchContainer = style([
   sprinkles({
     flex: '1',
     flexShrink: '1',
-    justifyContent: 'center',
+    justifyContent: { lg: 'flex-end', xl: 'center' },
     display: { sm: 'none', xl: 'flex' },
+    alignSelf: 'center',
+    height: '48',
+    alignItems: 'flex-start',
   }),
 ])
 

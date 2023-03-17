@@ -2,11 +2,15 @@
 import { t } from '@lingui/macro'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analytics'
 import { BrowserEvent, ElementName, EventName, SectionName } from '@uniswap/analytics-events'
+import { Token } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useDebounce from 'hooks/useDebounce'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { organizeSearchResults } from 'lib/utils/searchBar'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
@@ -14,9 +18,11 @@ import { magicalGradientOnHover } from 'nft/css/common.css'
 import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { fetchSearchCollections } from 'nft/queries'
 import { fetchSearchTokens } from 'nft/queries/genie/SearchTokensFetcher'
-import { ChangeEvent, useEffect, useReducer, useRef, useState } from 'react'
+import { FungibleToken } from 'nft/types'
+import { ChangeEvent, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
+import { useRegisteredPools } from 'state/pool/hooks'
 
 import { ChevronLeftIcon, MagnifyingGlassIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
 import { NavIcon } from './NavIcon'
@@ -61,9 +67,51 @@ export const SearchBar = () => {
     }
   )
 
+  // TODO: check if we already store all pools' data in state, so can return a richer pool struct
+  const smartPoolsLogs = useRegisteredPools()
+  const { chainId } = useWeb3React()
+  const smartPools: Token[] = useMemo(() => {
+    const mockToken = new Token(1, ZERO_ADDRESS, 0, '', '')
+    if (!smartPoolsLogs || !chainId) return [mockToken]
+    return smartPoolsLogs.map((p) => {
+      const { name, symbol, pool: address } = p
+      //if (!name || !symbol || !address) return
+      return new Token(chainId ?? 1, address ?? undefined, 18, symbol ?? 'NAN', name ?? '')
+    })
+  }, [chainId, smartPoolsLogs])
+  const filteredPools: Token[] = useMemo(() => {
+    return Object.values(smartPools).filter(getTokenFilter(debouncedSearchValue))
+  }, [smartPools, debouncedSearchValue])
+  // TODO: check using a different struct for pools
+  const fungiblePools: FungibleToken[] | undefined = useMemo(() => {
+    if (!chainId) return
+    return filteredPools.map((p) => {
+      const { name, symbol, address, chainId } = p
+      return {
+        name: name ?? '',
+        address,
+        symbol: symbol ?? '',
+        decimals: 0,
+        chainId,
+        logoURI: '',
+        coinGeckoId: '',
+        priceUsd: 1,
+        price24hChange: 0,
+        volume24h: 0,
+        onDefaultList: true,
+        marketCap: 0,
+      }
+    })
+  }, [chainId, filteredPools])
+
   const isNFTPage = useIsNftPage()
 
-  const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], collections ?? [])
+  const [reducedPools, reducedTokens, reducedCollections] = organizeSearchResults(
+    isNFTPage,
+    fungiblePools ?? [],
+    tokens ?? [],
+    collections ?? []
+  )
 
   // close dropdown on escape
   useEffect(() => {
@@ -93,10 +141,9 @@ export const SearchBar = () => {
     }
   }, [isOpen])
 
-  const placeholderText = phase1Flag === NftVariant.Enabled ? t`Search tokens and NFT collections` : t`Search tokens`
+  const placeholderText =
+    phase1Flag === NftVariant.Enabled ? t`Search tokens and NFT collections` : t`Search smart pools`
   const isMobileOrTablet = isMobile || isTablet
-  const showCenteredSearchContent =
-    !isOpen && phase1Flag !== NftVariant.Enabled && !isMobileOrTablet && searchValue.length === 0
 
   const trace = useTrace({ section: SectionName.NAVBAR_SEARCH })
 
@@ -129,7 +176,7 @@ export const SearchBar = () => {
             onClick={() => !isOpen && toggleOpen()}
             gap="12"
           >
-            <Box className={showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign}>
+            <Box className={styles.searchContentLeftAlign}>
               <Box display={{ sm: 'none', md: 'flex' }}>
                 <MagnifyingGlassIcon />
               </Box>
@@ -151,9 +198,7 @@ export const SearchBar = () => {
                   setSearchValue(event.target.value)
                 }}
                 onBlur={() => sendAnalyticsEvent(EventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)}
-                className={`${styles.searchBarInput} ${
-                  showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign
-                }`}
+                className={`${styles.searchBarInput} ${styles.searchContentLeftAlign}`}
                 value={searchValue}
                 ref={inputRef}
                 width={phase1Flag === NftVariant.Enabled || isOpen ? 'full' : '160'}
@@ -164,6 +209,7 @@ export const SearchBar = () => {
             {isOpen && (
               <SearchBarDropdown
                 toggleOpen={toggleOpen}
+                pools={reducedPools}
                 tokens={reducedTokens}
                 collections={reducedCollections}
                 queryText={debouncedSearchValue}
