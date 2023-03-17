@@ -181,6 +181,7 @@ const ToggleMenuItem = styled.button`
 
 const MenuDivider = styled.div`
   border-bottom: 2px solid ${({ theme }) => theme.bg2};
+  margin: 8px 0;
 `
 
 const CODE_LINK = 'https://github.com/Kromatika-Finance/interface'
