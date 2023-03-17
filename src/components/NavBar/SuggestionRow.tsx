@@ -237,6 +237,7 @@ function getPoolDetailsURL(address: string) {
   }
 }
 
+// TODO: we should add pool NAV and performance since inception in base currency
 export const PoolRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, eventProperties }: TokenRowProps) => {
   const addToSearchHistory = useSearchHistory(
     (state: { addItem: (item: FungibleToken | GenieCollection) => void }) => state.addItem
@@ -290,7 +291,6 @@ export const PoolRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, 
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{token.name}</Box>
-            <TokenSafetyIcon warning={checkWarning(token.address)} />
           </Row>
           <Box className={styles.secondaryText}>{token.symbol}</Box>
         </Column>
