@@ -197,21 +197,24 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
 }
 
 export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
-  const [fiatBalance, setFiatBalance] = useState<string>('')
+  const [depositedFiatBalance, setDepositedFiatBalance] = useState<string>('')
+  const [minFiatBalance, setMinFiatBalance] = useState<string>('')
+
   const { account, chainId } = useActiveWeb3React()
   const { minBalance } = useV3Positions(account)
 
   const isUnderfunded = fundingBalance ? !minBalance?.lessThan(fundingBalance?.quotient) : true
+  const depositedAmount = fundingBalance?.toSignificant(2)
 
   const kromToken = chainId ? KROM[chainId] : undefined
   const usdcPrice = useUSDCPrice(kromToken ?? undefined)?.toSignificant(4)
   const minBalanceNumber = minBalance?.toSignificant(4) || 0
 
   useEffect(() => {
-    if (!minBalanceNumber || !usdcPrice) return
-    const result = Number(minBalanceNumber) * Number(usdcPrice)
-    setFiatBalance(result.toFixed(2))
-  }, [minBalanceNumber, usdcPrice])
+    if (!usdcPrice) return
+    setDepositedFiatBalance((Number(depositedAmount) * Number(usdcPrice)).toFixed(2))
+    setMinFiatBalance((Number(minBalanceNumber) * Number(usdcPrice)).toFixed(2))
+  }, [depositedAmount, minBalanceNumber, usdcPrice])
 
   return (
     <AccountStatusWrapper gap="10px">
@@ -293,9 +296,9 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
                       {fundingBalance?.toSignificant(6)} {fundingBalance?.currency.symbol}
                     </TYPE.body>
                   </Text>
-                  {fiatBalance && (
+                  {depositedFiatBalance && (
                     <Text fontSize={16} fontWeight={500} marginLeft="8px">
-                      <TYPE.small>{`($${fiatBalance})`}</TYPE.small>
+                      <TYPE.small>{`($${depositedFiatBalance})`}</TYPE.small>
                     </Text>
                   )}
                 </RowFixed>
@@ -336,9 +339,9 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
                       {minBalance?.toSignificant(6)} {minBalance?.currency.symbol}
                     </TYPE.body>
                   </Text>
-                  {fiatBalance && (
+                  {minFiatBalance && (
                     <Text fontSize={16} fontWeight={500} marginLeft="8px">
-                      <TYPE.small>{`($${fiatBalance})`}</TYPE.small>
+                      <TYPE.small>{`($${minFiatBalance})`}</TYPE.small>
                     </Text>
                   )}
                 </RowFixed>

@@ -1135,14 +1135,14 @@ export function PositionPage({
                     </HideSmall>
                     <TYPE.small>
                       <Trans>
-                        Created Limit Trade {commafy(currencyCreatedEventAmount?.toSignificant(4))}{' '}
+                        Created Limit Trade {commafy(currencyCreatedEventAmount?.toSignificant())}{' '}
                         {currencyCreatedEventAmount?.currency
                           ? unwrappedToken(currencyCreatedEventAmount?.currency)?.symbol
                           : ''}{' '}
                         {limitOrder0USD ? <span>(${formatPrice(limitOrder0USD)}) </span> : ' '}
                         for{' '}
                         {targetPrice && currencyCreatedEventAmount
-                          ? commafy(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2))
+                          ? commafy(targetPrice?.quote(currencyCreatedEventAmount).toSignificant())
                           : ''}{' '}
                         {targetPrice?.quoteCurrency ? unwrappedToken(targetPrice?.quoteCurrency)?.symbol : ''}
                         {limitOrder1USD ? <span> (${formatPrice(limitOrder1USD)}) </span> : ''}↗

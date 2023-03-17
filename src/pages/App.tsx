@@ -13,7 +13,6 @@ import { useModalOpen, useToggleModal } from '../state/application/hooks'
 import { ApplicationModal } from '../state/application/reducer'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
-import FAQ from './FAQ'
 import LimitOrder from './LimitOrder'
 import { RedirectPathToLimitOrderOnly, RedirectToLimitOrder } from './LimitOrder/redirects'
 import Market from './Market'
@@ -78,7 +77,7 @@ const TopLevelModals = () => {
 }
 
 const Application = () => (
-  <>
+  <AppWrapper>
     <HeaderWrapper>
       <Header />
     </HeaderWrapper>
@@ -97,13 +96,12 @@ const Application = () => (
         <Route exact strict path="/unstake/:tokenId/remove" component={StakingModal} />
         <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
         <Route exact strict path="/remove/:tokenId" component={RemoveLiquidityV3} />
-        <Route exact strict path="/faq" component={FAQ} />
         <Route exact strict path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?" component={RedirectDuplicateTokenIds} />
         <Route component={RedirectPathToLimitOrderOnly} />
         <Route component={RedirectPathToSwapOnly} />
       </Switch>
     </BodyWrapper>
-  </>
+  </AppWrapper>
 )
 
 const Widget = () => (
@@ -122,9 +120,7 @@ export default function App() {
       <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
       <Route component={ApeModeQueryParamReader} />
-      <Web3ReactManager>
-        <AppWrapper>{isApp ? <Application /> : <Widget />}</AppWrapper>
-      </Web3ReactManager>
+      <Web3ReactManager>{isApp ? <Application /> : <Widget />}</Web3ReactManager>
     </ErrorBoundary>
   )
 }

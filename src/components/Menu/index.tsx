@@ -4,7 +4,18 @@ import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/loca
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import React, { useEffect, useRef, useState } from 'react'
-import { BookOpen, Check, ChevronLeft, Code, Globe, Info, MessageCircle, Moon, Sun } from 'react-feather'
+import {
+  BookOpen,
+  Check,
+  ChevronLeft,
+  Code,
+  ExternalLink as ExternalLinkIcon,
+  Globe,
+  Info,
+  MessageCircle,
+  Moon,
+  Sun,
+} from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled, { css } from 'styled-components/macro'
@@ -66,8 +77,8 @@ const StyledMenu = styled.div`
 `
 
 const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
-  min-width: 196px;
-  max-height: 350px;
+  min-width: 230px;
+  max-height: fit-content;
   overflow: auto;
   background-color: ${({ theme }) => theme.bg1};
   box-shadow: 0 0 2px 2px ${({ theme }) => theme.shadow2};
@@ -168,6 +179,10 @@ const ToggleMenuItem = styled.button`
   }
 `
 
+const MenuDivider = styled.div`
+  border-bottom: 2px solid ${({ theme }) => theme.bg2};
+`
+
 const CODE_LINK = 'https://github.com/Kromatika-Finance/interface'
 
 function LanguageMenuItem({ locale, active, key }: { locale: SupportedLocale; active: boolean; key: string }) {
@@ -260,6 +275,31 @@ export default function Menu() {
                     <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
                     {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
                   </ToggleMenuItem>
+                  <MenuDivider />
+                  <MenuItem href="https://docs.kromatika.finance/kromatika-dapp-2.0/tutorials/how-to-use-felo">
+                    <div>
+                      <Trans>How to use FELO</Trans>
+                    </div>
+                    <ExternalLinkIcon opacity={0.6} size={16} />
+                  </MenuItem>
+                  <MenuItem href="https://docs.kromatika.finance/kromatika-dapp-2.0/tutorials/how-to-use-swap">
+                    <div>
+                      <Trans>How to use Swap</Trans>
+                    </div>
+                    <ExternalLinkIcon opacity={0.6} size={16} />
+                  </MenuItem>
+                  <MenuItem href="https://docs.kromatika.finance/kromatika-dapp-2.0/tutorials/how-to-use-gasless">
+                    <div>
+                      <Trans>How to use Gasless</Trans>
+                    </div>
+                    <ExternalLinkIcon opacity={0.6} size={16} />
+                  </MenuItem>
+                  <MenuItem href="https://docs.kromatika.finance/kromatika-dapp-2.0/tutorials/how-to-use-perpetuals">
+                    <div>
+                      <Trans>How to use Perpetuals</Trans>
+                    </div>
+                    <ExternalLinkIcon opacity={0.6} size={16} />
+                  </MenuItem>
                 </MenuFlyout>
               )
           }

@@ -3,12 +3,12 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
+import JSBI from 'jsbi'
 import { DateTime } from 'luxon/src/luxon'
-import { memo, useMemo } from 'react'
+import { memo, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
-import Web3 from 'web3-utils'
 
 import { DAI, USDC, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { useToken } from '../../hooks/Tokens'
@@ -20,6 +20,9 @@ import { useV3PositionFromTokenId } from '../../hooks/useV3Positions'
 import { TYPE } from '../../theme'
 import { unwrappedToken } from '../../utils/unwrappedToken'
 import { RowBetween } from '../Row'
+
+const Q96 = JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(96))
+const Q192 = JSBI.exponentiate(Q96, JSBI.BigInt(2))
 
 const LimitOrderWrapper = styled(Link)`
   gap: 5px;
@@ -176,11 +179,7 @@ function formatPrice(value: string | number | undefined) {
   return commafy(Number(value).toFixed(3))
 }
 
-function formatDate(date: Date) {
-  return date.toLocaleTimeString('en-US', { hour12: false })
-}
-
-function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItemProps) {
+function LimitOrdersListItem({ limitOrderDetails }: OrderListItemProps) {
   const {
     token0: token0Address,
     token1: token1Address,
@@ -188,32 +187,78 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
     liquidity,
     tickLower,
     tickUpper,
+    tokenId,
     processed,
     tokensOwed0,
     tokensOwed1,
-  } = limitOrderDetails
+    owner,
+  } = limitOrderDetails || {}
 
-  const { createdLogs } = useV3PositionFromTokenId(limitOrderDetails.tokenId)
-  const { createdBlockDate, processedBlockDate, cancelledBlockDate, collectedBlockDate } = useLimitOrdersDates(
-    limitOrderDetails.tokenId
-  )
-  const positionSummaryLink = '/pool/' + limitOrderDetails.tokenId
+  const positionSummaryLink = '/pool/' + tokenId
+
+  const { createdLogs, collectedLogs } = useV3PositionFromTokenId(tokenId)
+  const { event: createdEvent } = createdLogs || {}
+  const { event: collectedEvent } = collectedLogs || {}
+  const { createdBlockDate, cancelledBlockDate, collectedBlockDate } = useLimitOrdersDates(limitOrderDetails.tokenId)
 
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
 
-  const currency0 = token0 ? token0 : undefined
-  const currency1 = token1 ? token1 : undefined
+  const currency0Wrapped = token0 ? token0 : undefined
+  const currency1Wrapped = token1 ? token1 : undefined
 
-  const token0CreatedAmount = createdLogs?.event?.amount0 ? Web3.fromWei(createdLogs?.event?.amount0.toString()) : ''
-  const token1CreatedAmount = createdLogs?.event?.amount1 ? Web3.fromWei(createdLogs?.event?.amount1.toString()) : ''
-  const token0CollectedAmount = tokensOwed0 ? Web3.fromWei(tokensOwed0.toString()) : ''
-  const token1CollectedAmount = tokensOwed1 ? Web3.fromWei(tokensOwed1.toString()) : ''
+  const currency0 = token0 ? unwrappedToken(token0) : undefined
+  const currency1 = token1 ? unwrappedToken(token1) : undefined
+
+  const feeValue0: CurrencyAmount<Token> | undefined = useMemo(() => {
+    if (!tokensOwed0 || !currency0) return undefined
+    return CurrencyAmount.fromRawAmount(currency0 as Token, tokensOwed0?.toString())
+  }, [currency0, tokensOwed0])
+
+  const feeValue1: CurrencyAmount<Token> | undefined = useMemo(() => {
+    if (!tokensOwed1 || !currency1) return undefined
+    return CurrencyAmount.fromRawAmount(currency1 as Token, tokensOwed1?.toString())
+  }, [currency1, tokensOwed1])
+
+  const currencyAmount = feeValue0
+  const currencyAmount1 = feeValue1
+
+  const currencyAmountFee = currencyAmount?.toSignificant(6)
+  const currencyAmountFee1 = currencyAmount1?.toSignificant(6)
+
+  const createdEventAmount0 = createdEvent?.amount0
+  const createdEventAmount1 = createdEvent?.amount1
+
+  const collectedAmount0 = collectedEvent?.tokensOwed0
+  const collectedAmount1 = collectedEvent?.tokensOwed1
+
+  const collectedValue0: CurrencyAmount<Token> | undefined = useMemo(() => {
+    if (!collectedAmount0 || !currency0) return undefined
+    return CurrencyAmount.fromRawAmount(currency0 as Token, collectedAmount0?.toString())
+  }, [collectedAmount0, currency0])
+
+  const collectedValue1: CurrencyAmount<Token> | undefined = useMemo(() => {
+    if (!collectedAmount1 || !currency1) return undefined
+    return CurrencyAmount.fromRawAmount(currency1 as Token, collectedAmount1?.toString())
+  }, [collectedAmount1, currency1])
+
+  const currencyCreatedEventAmount: CurrencyAmount<Token> | undefined = useMemo(() => {
+    if (!createdEventAmount0 || !currency0Wrapped) return undefined
+    if (!createdEventAmount1 || !currency1Wrapped) return undefined
+
+    if (createdEventAmount0.gt(createdEventAmount1)) {
+      return CurrencyAmount.fromRawAmount(currency0Wrapped as Token, createdEventAmount0?.toString())
+    }
+    return CurrencyAmount.fromRawAmount(currency1Wrapped as Token, createdEventAmount1?.toString())
+  }, [createdEventAmount0, currency0Wrapped, createdEventAmount1, currency1Wrapped])
+
+  const token0USD = useUSDCPrice(currency0 ?? undefined)?.toSignificant(6)
+  const token1USD = useUSDCPrice(currency1 ?? undefined)?.toSignificant(6)
 
   // construct Position from details returned
   const [, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, feeAmount)
   const position = useMemo(() => {
-    if (pool) {
+    if (pool && liquidity && typeof tickLower === 'number' && typeof tickUpper === 'number') {
       return new Position({ pool, liquidity: liquidity.toString(), tickLower, tickUpper })
     }
     return undefined
@@ -227,36 +272,28 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
   const inverted = token1 ? base?.equals(token1) : undefined
   const isTokenStable = isToken0Stable(pool?.token0) ?? undefined
 
-  // check if price is within range ; if out of range; the status is pending
-  const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
+  const sqrtRatioX96Recalc = createdEvent?.sqrtPriceX96
 
-  const currencyAmount =
-    tokensOwed0.gt(0) && currency0
-      ? CurrencyAmount.fromRawAmount(currency0 as Token, tokensOwed0.toString())
-      : undefined
+  const createdPrice = useMemo(() => {
+    if (!currency0Wrapped || !currency1Wrapped || !sqrtRatioX96Recalc) return undefined
+    const ratioX192 = JSBI.multiply(JSBI.BigInt(sqrtRatioX96Recalc), JSBI.BigInt(sqrtRatioX96Recalc))
+    return new Price(currency0Wrapped, currency1Wrapped, Q192, ratioX192)
+  }, [currency0Wrapped, currency1Wrapped, sqrtRatioX96Recalc])
 
-  const currencyAmount1 =
-    tokensOwed1.gt(0) && currency1
-      ? CurrencyAmount.fromRawAmount(currency1 as Token, tokensOwed1.toString())
-      : undefined
-
-  const currencyAmountFee = currencyAmount?.toFixed(6)
-
-  const currencyAmountFee1 =
-    currencyAmount?.currency.symbol == base?.symbol
-      ? (Number(currencyAmount?.toSignificant(6)) * Number(priceUpper?.toSignificant(6))).toFixed(6)
-      : (Number(currencyAmount?.toSignificant(6)) / Number(priceUpper?.toSignificant(6))).toFixed(6)
-
+  // TODO (pai) fix the target price ; upper or lower ; buy or sell
   const targetPrice = useMemo(() => {
-    if (priceUpper?.baseCurrency != currencyAmount?.currency) {
+    if (createdPrice) {
+      if (createdPrice?.baseCurrency != currencyCreatedEventAmount?.currency) {
+        return createdPrice.invert()
+      }
+      return createdPrice
+    }
+    if (priceUpper?.baseCurrency != currencyCreatedEventAmount?.currency) {
       // invert
       return priceUpper?.invert()
     }
     return priceUpper
-  }, [currencyAmount?.currency, priceUpper])
-
-  const token0USD = useUSDCPrice(currency0 ?? undefined)?.toSignificant(4)
-  const token1USD = useUSDCPrice(currency1 ?? undefined)?.toSignificant(4)
+  }, [createdPrice, currencyCreatedEventAmount, priceUpper])
 
   const currentPriceUSD =
     currency0 && currencyBase?.name == unwrappedToken(currency0)?.name
@@ -276,28 +313,39 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
       ? Number(token1USD) / Number(priceUpper?.toSignificant(6))
       : Number(token1USD) / Number(priceUpper?.toSignificant(6))
 
-  const status = processed ? <Trans>Processed</Trans> : outOfRange ? <Trans>Pending</Trans> : <Trans>In Range</Trans>
+  // check if price is within range
+  const below = pool && typeof tickLower === 'number' ? pool.tickCurrent < tickLower : undefined
+  const above = pool && typeof tickUpper === 'number' ? pool.tickCurrent >= tickUpper : undefined
+  const inRange: boolean = typeof below === 'boolean' && typeof above === 'boolean' ? !below && !above : false
 
   return (
     <LimitOrderWrapper to={positionSummaryLink}>
       <RowFixedHeight>
         <Token0>
-          <Trans>{token0CreatedAmount} </Trans> <span>{currencyAmount?.currency.symbol}</span>
+          <Trans>
+            {commafy(currencyCreatedEventAmount?.toSignificant())}
+            <span>{currencyAmount?.currency.symbol}</span>
+          </Trans>
         </Token0>
         <Token1>
-          <Trans>{currencyAmount1?.toSignificant(6)} </Trans> <span>{currencyAmount1?.currency.symbol}</span>
+          <Trans>
+            {targetPrice &&
+              currencyCreatedEventAmount &&
+              commafy(targetPrice?.quote(currencyCreatedEventAmount).toSignificant())}
+            <span>{currencyAmount1?.currency.symbol}</span>
+          </Trans>
         </Token1>
       </RowFixedHeight>
-
       <RowFixedHeight>
         <TextLabel>
           <TYPE.darkGray>
             <Trans>Status:</Trans>
           </TYPE.darkGray>
         </TextLabel>
-        <TextValue fontWeight={700}>{status}</TextValue>
+        <TextValue fontWeight={700}>
+          {processed ? <Trans>Processed</Trans> : inRange ? <Trans>In Range</Trans> : <Trans>Pending</Trans>}
+        </TextValue>
       </RowFixedHeight>
-
       {createdBlockDate && (
         <RowFixedHeight>
           <TextLabel>
@@ -310,7 +358,6 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
           </TextValue>
         </RowFixedHeight>
       )}
-
       {cancelledBlockDate && (
         <RowFixedHeight>
           <TextLabel>
@@ -323,7 +370,6 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
           </TextValue>
         </RowFixedHeight>
       )}
-
       {collectedBlockDate && (
         <RowFixedHeight>
           <TextLabel>
@@ -336,7 +382,6 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
           </TextValue>
         </RowFixedHeight>
       )}
-
       <RowFixedHeight>
         <TextLabel>
           <TYPE.darkGray>
@@ -357,7 +402,6 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
           </Trans>
         </TextValue>
       </RowFixedHeight>
-
       <RowFixedHeight>
         <TextLabel>
           <TYPE.darkGray>
@@ -368,7 +412,6 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
           <Trans>{targetPriceUSD && !isTokenStable ? <span>${formatPrice(targetPriceUSD)}</span> : ''}</Trans>
         </TextValue>
       </RowFixedHeight>
-
       <RowFixedHeight>
         <TextLabel>
           <TYPE.darkGray>
@@ -377,7 +420,17 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
         </TextLabel>
         <TextValue>
           <Trans>
-            {currencyAmountFee + ' ' + currency0?.symbol} + {currencyAmountFee1 + ' ' + currency1?.symbol}
+            {`${commafy(collectedValue0?.toSignificant())} ${currency0?.symbol} + ${
+              targetPrice &&
+              currencyCreatedEventAmount &&
+              currencyAmount1 &&
+              commafy(
+                (
+                  Number(currencyAmount1.toSignificant()) -
+                  Number(currencyCreatedEventAmount.multiply(targetPrice).toSignificant())
+                ).toFixed(6)
+              )
+            } ${currency1?.symbol}`}
           </Trans>
         </TextValue>
       </RowFixedHeight>
