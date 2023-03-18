@@ -168,44 +168,55 @@ export default function AddLiquidity({
       ]
       value = null
     }
-
+    console.log('router address:', router.address)
+    console.log('args:', args)
+    console.log('value:', value?.toString())
     setAttemptingTxn(true)
-    await estimate(...args, value ? { value } : {})
-      .then(estimatedGasLimit =>
-        method(...args, {
-          ...(value ? { value } : {}),
-          gasLimit: calculateGasMargin(estimatedGasLimit)
-        }).then(response => {
-          setAttemptingTxn(false)
-
-          addTransaction(response, {
-            summary:
-              'Add ' +
-              parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
-              ' ' +
-              currencies[Field.CURRENCY_A]?.symbol +
-              ' and ' +
-              parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
-              ' ' +
-              currencies[Field.CURRENCY_B]?.symbol
-          })
-
-          setTxHash(response.hash)
-
-          ReactGA.event({
-            category: 'Liquidity',
-            action: 'Add',
-            label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/')
-          })
-        })
-      )
-      .catch(error => {
-        setAttemptingTxn(false)
-        // we only care if the error is something _other_ than the user rejected the tx
-        if (error?.code !== 4001) {
-          console.error(error)
-        }
+    console.log('before estimatedGasLimit')
+    if (false) {
+      // 当时设定了一下固定的 gasLimit, 然后添加流动池就可以了
+      // 然后切换回原来的代码，前端就没有-32603错误了，不报错了，就可以顺利执行后续的其他操作了。
+      const estimatedGasLimit: BigNumber = BigNumber.from(5000000)
+      console.log(estimatedGasLimit)
+    }
+    const estimatedGasLimit: BigNumber = await estimate(...args, value ? { value } : {})
+    console.log('after estimatedGasLimit')
+    console.log('estimatedGasLimit:', estimatedGasLimit.toString())
+    const response = await method(...args, {
+      ...(value ? { value } : {}),
+      gasLimit: calculateGasMargin(estimatedGasLimit)
+    })
+    console.log('addLiquidityETH response:', response)
+    const f = async function() {
+      setAttemptingTxn(false)
+      addTransaction(response, {
+        summary:
+          'Add ' +
+          parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
+          ' ' +
+          currencies[Field.CURRENCY_A]?.symbol +
+          ' and ' +
+          parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
+          ' ' +
+          currencies[Field.CURRENCY_B]?.symbol
       })
+
+      setTxHash(response.hash)
+
+      ReactGA.event({
+        category: 'Liquidity',
+        action: 'Add',
+        label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/')
+      })
+    }
+
+    await f().catch(error => {
+      setAttemptingTxn(false)
+      // we only care if the error is something _other_ than the user rejected the tx
+      if (error?.code !== 4001) {
+        console.error(error)
+      }
+    })
   }
 
   const modalHeader = () => {
