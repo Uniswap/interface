@@ -20,7 +20,8 @@ const StyledClose = styled(X)`
 const Popup = styled.div`
   display: inline-block;
   width: 100%;
-  background-color: ${({ theme }) => theme.primary1};
+  background-color: ${({ theme }) => theme.bg1};
+  box-shadow: 0 0 12px 6px ${({ theme }) => theme.shadow2};
   position: relative;
   border-radius: 10px;
   padding: 20px;
