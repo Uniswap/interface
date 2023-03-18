@@ -7,7 +7,7 @@ import type { Web3Provider } from '@ethersproject/providers'
 import { randomBytes } from '@ethersproject/random'
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 
-const dataParamType = `tuple(address token, uint256 tokenId)[]`
+const dataParamType = `tuple(address token, uint256 tokenId, uint256 amount)[]`
 const orderItemParamType = `tuple(uint256 price, bytes data)`
 const orderParamTypes = [
   `uint256`,
