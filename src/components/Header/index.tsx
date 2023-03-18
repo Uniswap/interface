@@ -271,7 +271,7 @@ export default function Header() {
         <Title href=".">
           <UniIcon>
             <MainLogo>
-              <img src={KromatikaLogo} alt={'KromatikaL logo'} />
+              <img src={KromatikaLogo} alt={'Kromatika logo'} />
             </MainLogo>
             <PhoneLogo>
               <PhoneScreenLogo width="48px" height="48px" title="logo" z-index="1" />

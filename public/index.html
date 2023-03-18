@@ -63,10 +63,6 @@
         padding: 0;
       }
 
-      button {
-        user-select: none;
-      }
-
       html {
         font-size: 16px;
         font-variant: none;
@@ -76,61 +72,17 @@
         font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
       }
 
-      #background-linear-gradient {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        pointer-events: none;
-        width: 200vw;
-        height: 200vh;
-        background: linear-gradient(
-          103.87deg,
-          rgba(29, 24, 32, 0.8) 0%,
-          rgba(29, 26, 31, 0.8) 47.92%,
-          rgba(26, 31, 38, 0.8) 100%
-        );
-        transform: translate(-50vw, -100vh);
-        z-index: -1;
-      }
-
-      html {
-        min-height: 100%;
-      }
-
-      @media (prefers-color-scheme: dark) {
-        html {
-          background-color: #212121;
-        }
-      }
-
-      @media (prefers-color-scheme: light) {
-        html {
-          background-color: #f7f8fa;
-        }
+      button {
+        user-select: none;
       }
     </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-
     <!-- The root is the container of the app -->
     <div id="root">
       <!-- Triggers the font to load immediately and then is replaced by the app -->
       <div>&emsp;</div>
     </div>
-
-    <div id="background-linear-gradient"></div>
-
-    <!--
-  This HTML file is a template.
-  If you open it directly in the browser, you will see an empty page.
-
-  You can add webfonts, meta tags, or analytics to this file.
-  The build step will place the bundled scripts into the <body> tag.
-
-  To begin the development, run `npm start` or `yarn start`.
-  To create a production bundle, use `npm run build` or `yarn build`.
--->
   </body>
 </html>

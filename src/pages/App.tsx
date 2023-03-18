@@ -33,6 +33,8 @@ const AppWrapper = styled.div`
   align-items: stretch;
   align-content: stretch;
   min-height: 100vh;
+  color: ${({ theme }) => theme.text1};
+  background-color: ${({ theme }) => theme.bg0};
 `
 
 const HeaderWrapper = styled.div`
@@ -105,10 +107,12 @@ const Application = () => (
 )
 
 const Widget = () => (
-  <Switch>
-    <Route exact strict path="/swap-widget/dark" component={SwapWidget} />
-    <Route exact strict path="/swap-widget/light" component={SwapWidget} />
-  </Switch>
+  <AppWrapper>
+    <Switch>
+      <Route exact strict path="/swap-widget/dark" component={SwapWidget} />
+      <Route exact strict path="/swap-widget/light" component={SwapWidget} />
+    </Switch>
+  </AppWrapper>
 )
 
 export default function App() {

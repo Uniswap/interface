@@ -61,6 +61,7 @@ import { getTradeVersion } from '../../utils/getTradeVersion'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
+import KromLogo from './../../assets/images/KROM_Transparent_1.png'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 100%;
@@ -201,6 +202,15 @@ const StyledInfo = styled(Info)`
   :hover {
     color: ${({ theme }) => theme.text1};
   }
+`
+
+const PoweredBy = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  border-radius: 0px 0px 18px 18px;
+  padding: 8px;
+  margin: 16px 0;
 `
 
 export default function SwapWidget() {
@@ -635,7 +645,6 @@ export default function SwapWidget() {
               feeImpactAccepted={feeImpactAccepted}
               routeIsNotFound={routeNotFound}
             />
-
             <AutoColumn gap={'md'}>
               <div style={{ display: 'relative' }}>
                 <CurrencyInputPanel
@@ -1034,6 +1043,9 @@ export default function SwapWidget() {
                 {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
               </div>
             </AutoColumn>
+            <PoweredBy>
+              Powered by <img src={KromLogo} alt="KROM Logo" height="24px" />
+            </PoweredBy>
           </Wrapper>
         </AppBody>
       </StyledSwap>
