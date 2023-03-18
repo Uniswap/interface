@@ -116,12 +116,6 @@ export async function approveCollection(
   }
 }
 
-/*
-TODO: OS confirmed working, updated UX for OS and LR when no creator royalties are set
-LR now working, only needed to update the approving contract address
-UPDATED X2 DELEGATE contract depending on standard, got an internal server error, will need to investigate, added amount to offer item, 721 still succeeds
-*/
-
 export async function signListing(
   marketplace: ListingMarket,
   asset: WalletAsset,
