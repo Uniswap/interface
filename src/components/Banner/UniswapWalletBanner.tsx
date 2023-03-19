@@ -71,8 +71,10 @@ export default function UniswapWalletBanner() {
   const theme = useTheme()
 
   const { pathname } = useLocation()
+  // hardcodeToFalse hardcodes the banner to never display, temporarily:
+  const hardcodeToFalse = false
   const shouldDisplay = Boolean(
-    !walletDrawerOpen && !hideUniswapWalletBanner && isIOS && !pathname.startsWith('/wallet')
+    !walletDrawerOpen && !hideUniswapWalletBanner && isIOS && !pathname.startsWith('/wallet') && hardcodeToFalse
   )
 
   return (
