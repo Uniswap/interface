@@ -1,5 +1,4 @@
 import 'components/analytics'
-import './jsonrpc'
 
 import * as Sentry from '@sentry/react'
 import { BrowserTracing } from '@sentry/tracing'
