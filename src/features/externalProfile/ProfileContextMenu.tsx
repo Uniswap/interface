@@ -8,7 +8,7 @@ import { TripleDot } from 'src/components/icons/TripleDot'
 import { Flex } from 'src/components/layout/Flex'
 import { ChainId } from 'src/constants/chains'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
-import { AppNotificationType } from 'src/features/notifications/types'
+import { AppNotificationType, CopyNotificationType } from 'src/features/notifications/types'
 import { setClipboard } from 'src/utils/clipboard'
 import { ExplorerDataType, getExplorerLink, openUri } from 'src/utils/linking'
 
@@ -19,7 +19,9 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
 
   const onPressCopyAddress = useCallback(() => {
     if (!address) return
-    dispatch(pushNotification({ type: AppNotificationType.Copied }))
+    dispatch(
+      pushNotification({ type: AppNotificationType.Copied, copyType: CopyNotificationType.Address })
+    )
     setClipboard(address)
   }, [address, dispatch])
 

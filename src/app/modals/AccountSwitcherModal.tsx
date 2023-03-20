@@ -21,7 +21,7 @@ import { Text } from 'src/components/Text'
 import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { closeModal, selectModalState } from 'src/features/modals/modalSlice'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
-import { AppNotificationType } from 'src/features/notifications/types'
+import { AppNotificationType, CopyNotificationType } from 'src/features/notifications/types'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Account, AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
@@ -162,7 +162,12 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     const onPressCopyAddress = (): void => {
       if (!pendingEditAddress) return
       setClipboard(pendingEditAddress)
-      dispatch(pushNotification({ type: AppNotificationType.Copied }))
+      dispatch(
+        pushNotification({
+          type: AppNotificationType.Copied,
+          copyType: CopyNotificationType.Address,
+        })
+      )
       setShowEditAccountModal(false)
     }
 

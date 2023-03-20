@@ -22,6 +22,7 @@ import { NativeCurrency } from 'src/features/tokens/NativeCurrency'
 import { finalizeTransaction } from 'src/features/transactions/slice'
 import {
   ApproveTransactionInfo,
+  FiatPurchaseTransactionInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
@@ -188,6 +189,27 @@ export const fiatOnRampTxDetailsPending: TransactionDetails = {
   },
   typeInfo: txTypeInfo,
   status: TransactionStatus.Pending,
+  addedTime: 1487076708000,
+  hash: '0x123',
+}
+
+export const fiatOnRampTxDetailsFailed: TransactionDetails & {
+  typeInfo: FiatPurchaseTransactionInfo
+} = {
+  chainId: ChainId.Mainnet,
+  id: '0',
+  from: account.address,
+  options: {
+    request: txRequest,
+  },
+  typeInfo: {
+    type: TransactionType.FiatPurchase,
+    explorerUrl:
+      'https://buy-sandbox.moonpay.com/transaction_receipt?transactionId=d6c32bb5-7cd9-4c22-8f46-6bbe786c599f',
+    id: 'd6c32bb5-7cd9-4c22-8f46-6bbe786c599f',
+    syncedWithBackend: true,
+  },
+  status: TransactionStatus.Failed,
   addedTime: 1487076708000,
   hash: '0x123',
 }

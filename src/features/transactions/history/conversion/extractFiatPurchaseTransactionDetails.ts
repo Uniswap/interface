@@ -42,6 +42,7 @@ function parseFiatPurchaseTransaction(
 
   return {
     type: TransactionType.FiatPurchase,
+    id: transaction.id,
     explorerUrl: formatReturnUrl(transaction.returnUrl, transaction.id), // Moonpay's transaction tracker page
     inputCurrency: { type: inputCurrency.type, code: inputCurrency.code },
     inputCurrencyAmount,

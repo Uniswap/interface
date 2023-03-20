@@ -501,4 +501,43 @@ export const migrations = {
     }
     return newState
   },
+  37: function correctFailedFiatOnRampTxIds(state: any) {
+    const newState = { ...state }
+
+    const oldTransactionState = state?.transactions
+    const newTransactionState: any = {}
+
+    const addresses = Object.keys(oldTransactionState ?? {})
+    for (const address of addresses) {
+      const chainIds = Object.keys(oldTransactionState[address] ?? {})
+      for (const chainId of chainIds) {
+        const transactions = oldTransactionState[address][chainId]
+        const txIds = Object.keys(transactions ?? {})
+
+        for (const txId of txIds) {
+          const txDetails = transactions[txId]
+
+          if (!txDetails) {
+            // we iterate over every chain, need to no-op on some combinations
+            continue
+          }
+
+          newTransactionState[address] ??= {}
+          newTransactionState[address][chainId] ??= {}
+          newTransactionState[address][chainId][txId] =
+            txDetails.typeInfo.type === TransactionType.FiatPurchase &&
+            txDetails.status === TransactionStatus.Failed
+              ? {
+                  ...txDetails,
+                  typeInfo: {
+                    ...txDetails.typeInfo,
+                    id: txDetails.typeInfo?.explorerUrl?.split('=')?.[1],
+                  },
+                }
+              : txDetails
+        }
+      }
+    }
+    return { ...newState, transactions: newTransactionState }
+  },
 }

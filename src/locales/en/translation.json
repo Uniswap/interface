@@ -228,6 +228,7 @@
   "NFT hidden": "NFT hidden",
   "NFT unhidden": "NFT unhidden",
   "Address copied": "Address copied",
+  "Transaction ID copied": "Transaction ID copied",
   "Swapping on {{ network }}": "Swapping on {{ network }}",
   "Connected": "Connected",
   "Disconnected": "Disconnected",

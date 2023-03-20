@@ -11,6 +11,7 @@ export type ChainIdToTxIdToDetails = ChainIdTo<{ [txId: string]: TransactionDeta
 // Basic identifying info for a transaction
 export interface TransactionId {
   chainId: ChainId
+  // moonpay externalTransactionId
   id: string
 }
 
@@ -182,6 +183,7 @@ export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
 
 export interface FiatPurchaseTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.FiatPurchase
+  id?: string
   explorerUrl?: string
   // code will be used for formatting amounts
   inputCurrency?: Pick<MoonpayCurrency, 'type' | 'code'>

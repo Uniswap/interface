@@ -8,7 +8,7 @@ import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { useENSAvatar } from 'src/features/ens/api'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
-import { AppNotificationType } from 'src/features/notifications/types'
+import { AppNotificationType, CopyNotificationType } from 'src/features/notifications/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useDisplayName } from 'src/features/wallet/hooks'
 import { Theme } from 'src/styles/theme'
@@ -81,7 +81,12 @@ export function AddressDisplay({
 
   const onPressCopyAddress = (): void => {
     if (!address) return
-    dispatch(pushNotification({ type: AppNotificationType.Copied }))
+    dispatch(
+      pushNotification({
+        type: AppNotificationType.Copied,
+        copyType: CopyNotificationType.Address,
+      })
+    )
     setClipboard(address)
   }
 

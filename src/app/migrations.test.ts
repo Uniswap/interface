@@ -34,6 +34,7 @@ import {
   v33Schema,
   v34Schema,
   v35Schema,
+  v36Schema,
   v3Schema,
   v4Schema,
   v5Schema,
@@ -70,7 +71,7 @@ import { Account, AccountType, SignerMnemonicAccount } from 'src/features/wallet
 import { DEMO_ACCOUNT_ADDRESS } from 'src/features/wallet/accounts/useTestAccount'
 import { initialWalletState } from 'src/features/wallet/walletSlice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
-import { account, txDetailsConfirmed } from 'src/test/fixtures'
+import { account, fiatOnRampTxDetailsFailed, txDetailsConfirmed } from 'src/test/fixtures'
 
 // helps with object assignement
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -1004,5 +1005,54 @@ describe('Redux state migrations', () => {
     const v36 = migrations[36](v35Stub)
 
     expect(v36.favorites.hiddenNfts).toEqual({})
+  })
+
+  it('migrates from v36 to 37', () => {
+    const id1 = '123'
+    const id2 = '456'
+    const id3 = '789'
+    const transactions = {
+      [account.address]: {
+        [ChainId.Mainnet]: {
+          [id1]: {
+            ...fiatOnRampTxDetailsFailed,
+            typeInfo: {
+              ...fiatOnRampTxDetailsFailed.typeInfo,
+              id: undefined,
+            },
+          },
+          [id2]: {
+            ...fiatOnRampTxDetailsFailed,
+            typeInfo: {
+              ...fiatOnRampTxDetailsFailed.typeInfo,
+              id: undefined,
+              explorerUrl: undefined,
+            },
+          },
+          [id3]: txDetailsConfirmed,
+        },
+      },
+    }
+
+    const v36Stub = { ...v36Schema, transactions }
+
+    expect(
+      v36Stub.transactions[account.address]?.[ChainId.Mainnet][id1].typeInfo.id
+    ).toBeUndefined()
+    expect(
+      v36Stub.transactions[account.address]?.[ChainId.Mainnet][id2].typeInfo.id
+    ).toBeUndefined()
+
+    const v37 = migrations[37](v36Stub)
+
+    expect(v37.transactions[account.address]?.[ChainId.Mainnet][id1].typeInfo.id).toEqual(
+      fiatOnRampTxDetailsFailed.typeInfo.id
+    )
+    expect(
+      v36Stub.transactions[account.address]?.[ChainId.Mainnet][id2].typeInfo.id
+    ).toBeUndefined()
+    expect(v36Stub.transactions[account.address]?.[ChainId.Mainnet][id3]).toEqual(
+      txDetailsConfirmed
+    )
   })
 })

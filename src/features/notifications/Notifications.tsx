@@ -29,6 +29,7 @@ import {
   ApproveTxNotification,
   ChangeNFTVisibilityNotification,
   CopyNotification,
+  CopyNotificationType,
   SwapNetworkNotification as SwapNetworkNotificationType,
   SwapTxNotification,
   TransactionNotificationBase,
@@ -486,12 +487,22 @@ export function DefaultNotification({
 }
 
 export function CopiedNotification({
-  notification: { hideDelay = 2000 },
+  notification: { hideDelay = 2000, copyType },
 }: {
   notification: CopyNotification
-}): JSX.Element {
+}): JSX.Element | null {
   const { t } = useTranslation()
   const theme = useAppTheme()
+
+  let title
+  switch (copyType) {
+    case CopyNotificationType.Address:
+      title = t('Address copied')
+      break
+    case CopyNotificationType.TransactionId:
+      title = t('Transaction ID copied')
+      break
+  }
 
   return (
     <NotificationToast
@@ -505,7 +516,7 @@ export function CopiedNotification({
           width={iconSizes.icon24}
         />
       }
-      title={t('Address copied')}
+      title={title}
     />
   )
 }

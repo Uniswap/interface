@@ -8,7 +8,7 @@ import { ActionSheetModalContent, MenuItemProp } from 'src/components/modals/Act
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
-import { AppNotificationType } from 'src/features/notifications/types'
+import { AppNotificationType, CopyNotificationType } from 'src/features/notifications/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { TransactionDetails, TransactionType } from 'src/features/transactions/types'
 import { Theme } from 'src/styles/theme'
@@ -86,22 +86,37 @@ export default function TransactionActionsModal({
         ]
       : []
 
+    const transactionId =
+      // isFiatOnRampTransaction would not provide type narrowing here
+      transactionDetails.typeInfo.type === TransactionType.FiatPurchase
+        ? transactionDetails.typeInfo.id
+        : transactionDetails.id
+
+    const maybeCopyTransactionIdOption = transactionId
+      ? [
+          {
+            key: ElementName.Copy,
+            onPress: (): void => {
+              setClipboard(transactionId)
+              dispatch(
+                pushNotification({
+                  type: AppNotificationType.Copied,
+                  copyType: CopyNotificationType.TransactionId,
+                })
+              )
+              handleClose()
+            },
+            render: onViewMoonpay
+              ? renderOptionItem(t('Copy MoonPay transaction ID'))
+              : renderOptionItem(t('Copy transaction ID')),
+          },
+        ]
+      : []
+
     const transactionActionOptions: MenuItemProp[] = [
       ...maybeViewOnMoonpayOption,
       ...maybeViewOnEtherscanOption,
-      {
-        key: ElementName.Copy,
-        onPress: (): void => {
-          // for fiat onramp, pending: id==externalTxId, complete: id==hash
-          // else, id==hash
-          setClipboard(transactionDetails.id)
-          dispatch(pushNotification({ type: AppNotificationType.Copied }))
-          handleClose()
-        },
-        render: onViewMoonpay
-          ? renderOptionItem(t('Copy MoonPay transaction ID'))
-          : renderOptionItem(t('Copy transaction ID')),
-      },
+      ...maybeCopyTransactionIdOption,
       {
         key: ElementName.GetHelp,
         onPress: (): void => {

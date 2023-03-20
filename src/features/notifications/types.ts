@@ -121,8 +121,14 @@ export type TransactionNotification =
   | TransferNFTTxNotification
   | UnknownTxNotification
 
+export enum CopyNotificationType {
+  Address = 'address',
+  TransactionId = 'transactionId',
+}
+
 export interface CopyNotification extends AppNotificationBase {
   type: AppNotificationType.Copied
+  copyType: CopyNotificationType
 }
 
 export interface SwapNetworkNotification extends AppNotificationBase {

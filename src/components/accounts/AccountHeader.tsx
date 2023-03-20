@@ -12,7 +12,7 @@ import { Box } from 'src/components/layout/Box'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { openModal } from 'src/features/modals/modalSlice'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
-import { AppNotificationType } from 'src/features/notifications/types'
+import { AppNotificationType, CopyNotificationType } from 'src/features/notifications/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
@@ -61,7 +61,12 @@ export function AccountHeader(): JSX.Element {
     if (activeAddress) {
       impactAsync()
       setClipboard(activeAddress)
-      dispatch(pushNotification({ type: AppNotificationType.Copied }))
+      dispatch(
+        pushNotification({
+          type: AppNotificationType.Copied,
+          copyType: CopyNotificationType.Address,
+        })
+      )
     }
   }
 
