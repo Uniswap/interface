@@ -14,17 +14,10 @@ import {
 } from 'graphql/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'graphql/data/util'
 import ms from 'ms.macro'
+import { useEffect, useState } from 'react'
 import { isAddress } from 'utils'
 
-export type Activity = {
-  chainId: SupportedChainId
-  timestamp: number
-  title: string
-  descriptor: string
-  logos: Array<string | undefined>
-  otherAccount?: string
-  receipt: AssetActivityPartsFragment['transaction']
-}
+import { Activity } from './types'
 
 type TransactionChanges = {
   NftTransfer: NftTransferPartsFragment[]
@@ -253,8 +246,10 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
       { NftTransfer: [], TokenTransfer: [], TokenApproval: [], NftApproval: [], NftApproveForAll: [] }
     )
     const defaultFields = {
-      timestamp: assetActivity.timestamp,
+      hash: assetActivity.transaction.hash,
       chainId: fromGraphQLChain(assetActivity.chain),
+      status: assetActivity.transaction.status,
+      timestamp: assetActivity.timestamp,
       logos: getLogoSrcs(changes),
       title: assetActivity.type,
       descriptor: assetActivity.transaction.to,
@@ -269,11 +264,15 @@ function parseRemoteActivity(assetActivity: AssetActivityPartsFragment): Activit
   }
 }
 
-export function parseRemoteActivities(activities?: AssetActivityPartsFragment[]): Array<Activity> | undefined {
-  return activities?.flatMap((activity) => parseRemoteActivity(activity) ?? [])
+export function parseRemoteActivities(assetActivities?: AssetActivityPartsFragment[]) {
+  return assetActivities?.reduce((acc: { [hash: string]: Activity }, assetActivity) => {
+    const activity = parseRemoteActivity(assetActivity)
+    if (activity) acc[activity.hash] = activity
+    return acc
+  }, {})
 }
 
-export function timeSince(timestamp: number) {
+const getTimeSince = (timestamp: number) => {
   const seconds = Math.floor(Date.now() - timestamp * 1000)
 
   let interval
@@ -284,4 +283,27 @@ export function timeSince(timestamp: number) {
   if ((interval = seconds / ms`1h`) > 1) return Math.floor(interval) + 'h'
   if ((interval = seconds / ms`1m`) > 1) return Math.floor(interval) + 'm'
   else return Math.floor(seconds / ms`1s`) + 's'
+}
+
+/**
+ * Keeps track of the time since a given timestamp, keeping it up to date every second when necessary
+ * @param timestamp
+ * @returns
+ */
+export function useTimeSince(timestamp: number) {
+  const [timeSince, setTimeSince] = useState<string>(getTimeSince(timestamp))
+
+  useEffect(() => {
+    const refreshTime = () => {
+      if (Math.floor(Date.now() - timestamp * 1000) / ms`61s` <= 1) {
+        setTimeSince(getTimeSince(timestamp))
+        setTimeout(() => {
+          refreshTime()
+        }, ms`1s`)
+      }
+    }
+    refreshTime()
+  }, [timestamp])
+
+  return timeSince
 }

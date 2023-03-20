@@ -11,7 +11,7 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import Activity from './Activity'
-import { DEFAULT_NFT_QUERY_AMOUNT } from './consts'
+import { DEFAULT_NFT_QUERY_AMOUNT } from './constants'
 import NFTs from './NFTs'
 import Pools from './Pools'
 import Tokens from './Tokens'

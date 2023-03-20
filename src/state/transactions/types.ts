@@ -35,6 +35,15 @@ export enum TransactionType {
   SUBMIT_PROPOSAL,
   QUEUE,
   EXECUTE,
+  BUY,
+  SEND,
+  RECEIVE,
+  MINT,
+  BURN,
+  BORROW,
+  REPAY,
+  DEPLOY,
+  CANCEL,
 }
 
 interface BaseTransactionInfo {
