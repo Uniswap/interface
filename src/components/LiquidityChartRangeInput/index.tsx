@@ -21,31 +21,63 @@ import { useDensityChartData } from './hooks'
 import { ZoomLevels } from './types'
 
 const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
+  [FeeAmount.VERY_STABLE]: {
+    initialMin: 0.999,
+    initialMax: 1.001,
+    min: 0.00001,
+    max: 1.5,
+  },
+
+  [FeeAmount.VERY_STABLE1]: {
+    initialMin: 0.999,
+    initialMax: 1.001,
+    min: 0.00001,
+    max: 1.5,
+  },
+  [FeeAmount.VERY_STABLE2]: {
+    initialMin: 0.999,
+    initialMax: 1.001,
+    min: 0.00001,
+    max: 1.5,
+  },
   [FeeAmount.STABLE]: {
     initialMin: 0.999,
     initialMax: 1.001,
     min: 0.00001,
     max: 1.5,
   },
-  [FeeAmount.LOWEST]: {
-    initialMin: 0.999,
-    initialMax: 1.001,
-    min: 0.00001,
-    max: 1.5,
-  },
-  [FeeAmount.LOW]: {
-    initialMin: 0.999,
-    initialMax: 1.001,
-    min: 0.00001,
-    max: 1.5,
-  },
-  [FeeAmount.MEDIUM]: {
+  [FeeAmount.MOST_PAIR]: {
     initialMin: 0.5,
     initialMax: 2,
     min: 0.00001,
     max: 20,
   },
-  [FeeAmount.HIGH]: {
+  [FeeAmount.MOST_PAIR1]: {
+    initialMin: 0.5,
+    initialMax: 2,
+    min: 0.00001,
+    max: 20,
+  },
+  [FeeAmount.MOST_PAIR2]: {
+    initialMin: 0.5,
+    initialMax: 2,
+    min: 0.00001,
+    max: 20,
+  },
+  [FeeAmount.EXOTIC]: {
+    initialMin: 0.5,
+    initialMax: 2,
+    min: 0.00001,
+    max: 20,
+  },
+
+  [FeeAmount.VOLATILE]: {
+    initialMin: 0.5,
+    initialMax: 2,
+    min: 0.00001,
+    max: 20,
+  },
+  [FeeAmount.RARE]: {
     initialMin: 0.5,
     initialMax: 2,
     min: 0.00001,
@@ -209,7 +241,7 @@ export default function LiquidityChartRangeInput({
             brushLabels={brushLabelValue}
             brushDomain={brushDomain}
             onBrushDomainChange={onBrushDomainChangeEnded}
-            zoomLevels={ZOOM_LEVELS[feeAmount ?? FeeAmount.MEDIUM]}
+            zoomLevels={ZOOM_LEVELS[feeAmount ?? FeeAmount.MOST_PAIR2]}
             ticksAtLimit={ticksAtLimit}
           />
         </ChartWrapper>

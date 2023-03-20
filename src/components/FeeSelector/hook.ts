@@ -1,11 +1,29 @@
 import { Currency } from '@kyberswap/ks-sdk-core'
 import { FeeAmount } from '@kyberswap/ks-sdk-elastic'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { POOL_POSITION_COUNT } from 'apollo/queries/promm'
 import { useActiveWeb3React } from 'hooks'
 import { useProAmmPoolInfos } from 'hooks/useProAmmPoolInfo'
 import { useKyberSwapConfig } from 'state/application/hooks'
+
+export const FEE_AMOUNTS = [
+  FeeAmount.VERY_STABLE,
+  FeeAmount.VERY_STABLE1,
+  FeeAmount.VERY_STABLE2,
+  FeeAmount.STABLE,
+  FeeAmount.MOST_PAIR,
+  FeeAmount.MOST_PAIR1,
+  FeeAmount.MOST_PAIR2,
+  FeeAmount.EXOTIC,
+  FeeAmount.VOLATILE,
+  FeeAmount.RARE,
+]
+
+const initState = FEE_AMOUNTS.reduce(
+  (acc, feeAmount) => ({ ...acc, [feeAmount]: 0 }),
+  {} as { [key in FeeAmount]: number },
+)
 
 export const useFeeTierDistribution = (
   currencyA: Currency | undefined,
@@ -13,28 +31,14 @@ export const useFeeTierDistribution = (
 ): { [key in FeeAmount]: number } => {
   const { isEVM, networkInfo } = useActiveWeb3React()
   const { elasticClient } = useKyberSwapConfig()
-  const feeAmounts = useMemo(() => {
-    return [FeeAmount.HIGH, FeeAmount.LOW, FeeAmount.LOWEST, FeeAmount.STABLE, FeeAmount.MEDIUM]
-  }, [])
-
-  const poolIds = useProAmmPoolInfos(currencyA, currencyB, feeAmounts).filter(Boolean)
-
-  const initState = useMemo(() => {
-    return {
-      [FeeAmount.HIGH]: 0,
-      [FeeAmount.LOW]: 0,
-      [FeeAmount.LOWEST]: 0,
-      [FeeAmount.STABLE]: 0,
-      [FeeAmount.MEDIUM]: 0,
-    }
-  }, [])
+  const poolIds = useProAmmPoolInfos(currencyA, currencyB, FEE_AMOUNTS).filter(Boolean)
 
   const [feeTierDistribution, setFeeTierDistribution] = useState<{ [key in FeeAmount]: number }>(initState)
 
   // reset feeTierDistribution when change token
   useEffect(() => {
     setFeeTierDistribution(initState)
-  }, [currencyA, currencyB, initState])
+  }, [currencyA, currencyB])
 
   useEffect(() => {
     if (!isEVM) return
