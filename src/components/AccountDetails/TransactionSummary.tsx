@@ -17,7 +17,6 @@ import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   ExecuteTransactionInfo,
-  MigrateV2LiquidityToV3TransactionInfo,
   QueueTransactionInfo,
   RemoveLiquidityV3TransactionInfo,
   TransactionInfo,
@@ -182,21 +181,6 @@ function WithdrawLiquidityStakingSummary() {
   return <Trans>Withdraw deposited liquidity</Trans>
 }
 
-function MigrateLiquidityToV3Summary({
-  info: { baseCurrencyId, quoteCurrencyId },
-}: {
-  info: MigrateV2LiquidityToV3TransactionInfo
-}) {
-  const baseCurrency = useCurrency(baseCurrencyId)
-  const quoteCurrency = useCurrency(quoteCurrencyId)
-
-  return (
-    <Trans>
-      Migrate {baseCurrency?.symbol}/{quoteCurrency?.symbol} liquidity to V3
-    </Trans>
-  )
-}
-
 function CreateV3PoolSummary({ info: { quoteCurrencyId, baseCurrencyId } }: { info: CreateV3PoolTransactionInfo }) {
   const baseCurrency = useCurrency(baseCurrencyId)
   const quoteCurrency = useCurrency(quoteCurrencyId)
@@ -338,9 +322,6 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.CREATE_V3_POOL:
       return <CreateV3PoolSummary info={info} />
-
-    case TransactionType.MIGRATE_LIQUIDITY_V3:
-      return <MigrateLiquidityToV3Summary info={info} />
 
     case TransactionType.COLLECT_FEES:
       return <CollectFeesSummary info={info} />

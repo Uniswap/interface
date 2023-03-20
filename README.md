@@ -45,7 +45,6 @@ The Uniswap Interface supports swapping, adding liquidity, removing liquidity an
 - Swap on Uniswap V2: <https://app.uniswap.org/#/swap?use=v2>
 - View V2 liquidity: <https://app.uniswap.org/#/pools/v2>
 - Add V2 liquidity: <https://app.uniswap.org/#/add/v2>
-- Migrate V2 liquidity to V3: <https://app.uniswap.org/#/migrate/v2>
 
 ## Accessing Uniswap V1
 

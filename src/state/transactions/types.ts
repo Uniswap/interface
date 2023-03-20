@@ -29,7 +29,6 @@ export enum TransactionType {
   CREATE_V3_POOL,
   ADD_LIQUIDITY_V3_POOL,
   ADD_LIQUIDITY_V2_POOL,
-  MIGRATE_LIQUIDITY_V3,
   COLLECT_FEES,
   REMOVE_LIQUIDITY_V3,
   SUBMIT_PROPOSAL,
@@ -141,13 +140,6 @@ export interface AddLiquidityV2PoolTransactionInfo {
   expectedAmountQuoteRaw: string
 }
 
-export interface MigrateV2LiquidityToV3TransactionInfo {
-  type: TransactionType.MIGRATE_LIQUIDITY_V3
-  baseCurrencyId: string
-  quoteCurrencyId: string
-  isFork: boolean
-}
-
 export interface CollectFeesTransactionInfo {
   type: TransactionType.COLLECT_FEES
   currencyId0: string
@@ -183,7 +175,6 @@ export type TransactionInfo =
   | CreateV3PoolTransactionInfo
   | AddLiquidityV3PoolTransactionInfo
   | AddLiquidityV2PoolTransactionInfo
-  | MigrateV2LiquidityToV3TransactionInfo
   | CollectFeesTransactionInfo
   | RemoveLiquidityV3TransactionInfo
   | SubmitProposalTransactionInfo

@@ -11,7 +11,7 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { isSupportedChain } from 'constants/chains'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useMemo } from 'react'
-import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers } from 'react-feather'
+import { AlertTriangle, BookOpen, ChevronDown, Inbox, Layers } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
@@ -224,16 +224,6 @@ export default function Pool() {
   const showV2Features = Boolean(V2_FACTORY_ADDRESSES[chainId])
 
   const menuItems = [
-    {
-      content: (
-        <PoolMenuItem>
-          <Trans>Migrate</Trans>
-          <ChevronsRight size={16} />
-        </PoolMenuItem>
-      ),
-      link: '/migrate/v2',
-      external: false,
-    },
     {
       content: (
         <PoolMenuItem>
