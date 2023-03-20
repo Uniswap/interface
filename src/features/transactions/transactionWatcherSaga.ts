@@ -19,6 +19,7 @@ import { selectIncompleteTransactions } from 'src/features/transactions/selector
 import {
   addTransaction,
   cancelTransaction,
+  forceFetchFiatOnRampTransactions,
   replaceTransaction,
   transactionActions,
   updateTransaction,
@@ -36,7 +37,7 @@ import {
 import { logger } from 'src/utils/logger'
 import { ONE_SECOND_MS } from 'src/utils/time'
 import { sleep } from 'src/utils/timing'
-import { call, fork, put, race, take } from 'typed-redux-saga'
+import { call, delay, fork, put, race, take } from 'typed-redux-saga'
 
 const FLASHBOTS_POLLING_INTERVAL = ONE_SECOND_MS * 5
 
@@ -166,8 +167,13 @@ export function* watchFiatOnRampTransaction(transaction: TransactionDetails): Ge
 
       // at this point, we received a response from Moonpay's API
       // however, we didn't have enough information to act
-      // try again after a waiting period
-      yield* call(sleep, PollingInterval.Normal)
+      // try again after a waiting period or when we've come back from Moonpay page
+      // TODO: Currently, when user closes in-app browser we would not re-fetch the data, but we should.
+      //       When https://uniswaplabs.atlassian.net/browse/DATA-734 is implemented, remove `forceFetchFiatOnRampTransactions` related logic
+      yield* race({
+        forceFetch: take(forceFetchFiatOnRampTransactions),
+        timeout: delay(PollingInterval.Normal),
+      })
     }
   } catch (e) {
     logger.error(

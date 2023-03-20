@@ -2,6 +2,7 @@ import { createAction } from '@reduxjs/toolkit'
 import { URL } from 'react-native-url-polyfill'
 import { CallEffect, ForkEffect, PutEffect, SelectEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
+import { handleMoonpayReturnLink } from 'src/features/deepLinking/handleMoonpayReturnLink'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLink'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLink'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
@@ -69,13 +70,18 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>): Genera
 
     const screen = url.searchParams.get('screen')
     const userAddress = url.searchParams.get('userAddress')
+    const fiatOnRamp = url.searchParams.get('fiatOnRamp') === 'true'
 
     const validUserAddress = yield* call(parseAndValidateUserAddress, userAddress)
     yield* put(activateAccount(validUserAddress))
 
     switch (screen) {
       case 'transaction':
-        yield* call(handleTransactionLink)
+        if (fiatOnRamp) {
+          yield* call(handleMoonpayReturnLink)
+        } else {
+          yield* call(handleTransactionLink)
+        }
         break
       case 'swap':
         yield* call(handleSwapLink, url)

@@ -62,12 +62,7 @@ export function FiatOnRampModal(): JSX.Element {
   const onPress = (): void => {
     if (!fiatOnRampHostUrl) return
 
-    // ideally, we would keep users inside our app and open an inapp browser
-    // however, as of iOS 11, Safari won't share cookies with SafariViewControllers,
-    // meaning users have to sign in every time, and some redirects links won't work
-    // (e.g. after using plaid)
-    const openExternalBrowser = true
-    openUri(fiatOnRampHostUrl, openExternalBrowser)
+    openUri(fiatOnRampHostUrl)
 
     dispatchAddTransaction()
     onClose()

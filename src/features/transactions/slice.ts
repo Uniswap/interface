@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* helpful when dealing with deeply nested state objects */
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { providers } from 'ethers'
 import {
   ChainIdToTxIdToDetails,
@@ -120,6 +120,11 @@ const slice = createSlice({
   },
 })
 
+// This action is fired, when user has come back from Moonpay flow using Return to Uniswap button
+export const forceFetchFiatOnRampTransactions = createAction(
+  'transactions/forceFetchFiatOnRampTransactions'
+)
+
 export const {
   addTransaction,
   cancelTransaction,
@@ -129,4 +134,6 @@ export const {
   upsertFiatOnRampTransaction,
   updateTransaction,
 } = slice.actions
-export const { reducer: transactionReducer, actions: transactionActions } = slice
+
+export const { reducer: transactionReducer } = slice
+export const transactionActions = { ...slice.actions, forceFetchFiatOnRampTransactions }

@@ -153,16 +153,21 @@ function TransactionSummaryLayout({
             setShowCancelModal(true)
           }}
           onClose={(): void => setShowActionsModal(false)}
-          onExplore={(): Promise<void> => openTransactionLink(hash, chainId)}
+          onExplore={(): Promise<void> => {
+            setShowActionsModal(false)
+            return openTransactionLink(hash, chainId)
+          }}
           onViewMoonpay={
             transaction.typeInfo.type === TransactionType.FiatPurchase &&
             // only display `View on Moonpay` when an explorer url was provided by Moonpay
             transaction.typeInfo.explorerUrl
-              ? (): Promise<void> | undefined =>
+              ? (): Promise<void> | undefined => {
+                  setShowActionsModal(false)
                   // avoids type casting
-                  transaction.typeInfo.type === TransactionType.FiatPurchase
+                  return transaction.typeInfo.type === TransactionType.FiatPurchase
                     ? openMoonpayTransactionLink(transaction.typeInfo)
                     : undefined
+                }
               : undefined
           }
         />

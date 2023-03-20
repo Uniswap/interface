@@ -1,5 +1,5 @@
 import { expectSaga } from 'redux-saga-test-plan'
-import { call } from 'redux-saga/effects'
+import { call, delay } from 'redux-saga/effects'
 import { getProvider, getProviderManager } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { PollingInterval } from 'src/constants/misc'
@@ -10,6 +10,7 @@ import {
   addTransaction,
   cancelTransaction,
   finalizeTransaction,
+  forceFetchFiatOnRampTransactions,
   transactionActions,
   updateTransaction,
 } from 'src/features/transactions/slice'
@@ -175,7 +176,7 @@ describe(watchFiatOnRampTransaction, () => {
     )
   })
 
-  it('keeps a transactions on 404 when not yet stale', () => {
+  it('keeps a transaction on 404 when not yet stale', () => {
     const tx = { ...fiatOnRampTxDetailsPending, addedTime: Date.now() }
     const confirmedTx = { ...tx, status: TransactionStatus.Success }
 
@@ -198,9 +199,42 @@ describe(watchFiatOnRampTransaction, () => {
               }
             },
           },
-          [call(sleep, PollingInterval.Normal), Promise.resolve(() => undefined)],
+          [delay(PollingInterval.Normal), Promise.resolve(() => undefined)],
         ])
-        .call(sleep, PollingInterval.Normal)
+        .delay(PollingInterval.Normal)
+        // only called once
+        .put(transactionActions.upsertFiatOnRampTransaction(confirmedTx))
+        .silentRun()
+    )
+  })
+
+  it('keeps a transaction on 404 when not yet stale, when fetch is forced', () => {
+    const tx = { ...fiatOnRampTxDetailsPending, addedTime: Date.now() }
+    const confirmedTx = { ...tx, status: TransactionStatus.Success }
+
+    let fetchCalledCount = 0
+
+    return (
+      expectSaga(watchFiatOnRampTransaction, tx)
+        .provide([
+          {
+            call(effect): TransactionDetails | undefined {
+              if (effect.fn === fetchFiatOnRampTransaction) {
+                switch (fetchCalledCount++) {
+                  case 0:
+                  case 1:
+                    // return same tx twice, but upsert should only be called once
+                    return tx
+                  case 2:
+                    return confirmedTx
+                }
+              }
+            },
+          },
+        ])
+        .dispatch(forceFetchFiatOnRampTransactions())
+        .dispatch(forceFetchFiatOnRampTransactions())
+        .dispatch(forceFetchFiatOnRampTransactions())
         // only called once
         .put(transactionActions.upsertFiatOnRampTransaction(confirmedTx))
         .silentRun()

@@ -51,6 +51,10 @@ export async function openUri(
   }
 }
 
+export function dismissInAppBrowser(): void {
+  WebBrowser.dismissBrowser()
+}
+
 export async function openTransactionLink(hash: string, chainId: ChainId): Promise<void> {
   const explorerUrl = getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)
   return openUri(explorerUrl)
@@ -61,8 +65,7 @@ export async function openUniswapHelpLink(): Promise<void> {
 }
 
 export async function openMoonpayTransactionLink(info: FiatPurchaseTransactionInfo): Promise<void> {
-  // Open all Moonpay URLs in external browser for saved cookies
-  return openUri(info.explorerUrl ?? 'https://support.moonpay.com/hc/en-gb', true)
+  return openUri(info.explorerUrl ?? 'https://support.moonpay.com/hc/en-gb')
 }
 
 export async function openMoonpayHelpLink(): Promise<void> {
