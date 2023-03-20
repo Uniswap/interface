@@ -19,39 +19,10 @@ import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { TYPE } from 'theme'
 import { DetailedRouteSummary } from 'types/route'
-import { formattedNum, toK } from 'utils'
+import { formattedNum } from 'utils'
 import { minimumAmountAfterSlippage } from 'utils/currencyAmount'
 import { getFormattedFeeAmountUsdV2 } from 'utils/fee'
 import { checkPriceImpact, formatPriceImpact } from 'utils/prices'
-
-function formattedMinimumReceived(number: string) {
-  if (!number) {
-    return 0
-  }
-
-  const num = parseFloat(number)
-
-  if (num > 500000000) {
-    return toK(num.toFixed(0))
-  }
-
-  if (num === 0) {
-    return 0
-  }
-
-  if (num < 0.0001 && num > 0) {
-    return '< 0.0001'
-  }
-
-  if (num >= 1000) {
-    return Number(num.toFixed(0)).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 6 })
-  }
-
-  return Number(num.toFixed(6)).toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 6,
-  })
-}
 
 function formatExecutionPrice(executionPrice?: Price<Currency, Currency>, inverted?: boolean): string {
   if (!executionPrice) {
@@ -110,7 +81,7 @@ const SwapDetails: React.FC<Props> = ({
           whiteSpace: 'nowrap',
         }}
       >
-        {formattedMinimumReceived(minimumAmountOut.toSignificant(6))} {currencyOut.symbol}
+        {formattedNum(minimumAmountOut.toSignificant(6), false, 6)} {currencyOut.symbol}
       </Text>
     ) : (
       ''
