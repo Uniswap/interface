@@ -585,8 +585,8 @@ export default function PositionPage() {
     return null
   }
 
-  if (poolState === PoolState.NOT_EXISTS || poolState === PoolState.INVALID) {
-    navigate('/not-found')
+  if (!loading && !positionDetails) {
+    return <div>missing details</div>
   }
 
   if (loading || poolState === PoolState.LOADING || !feeAmount) {

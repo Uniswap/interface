@@ -58,13 +58,11 @@ export function AddRemoveTabs({
   adding,
   creating,
   defaultSlippage,
-  positionID,
   children,
 }: {
   adding: boolean
   creating: boolean
   defaultSlippage: Percent
-  positionID?: string | undefined
   showBackLink?: boolean
   children?: ReactNode | undefined
 }) {
