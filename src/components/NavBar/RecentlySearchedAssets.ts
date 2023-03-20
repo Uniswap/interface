@@ -53,6 +53,7 @@ export function useRecentlySearchedAssets() {
           chain: token.chain,
         })),
     },
+    fetchPolicy: 'no-cache',
   })
 
   const data = useMemo(() => {
