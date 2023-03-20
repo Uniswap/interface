@@ -200,9 +200,9 @@ function WalletDropdown() {
         </TraceEvent>
       )}
       <Scrim onClick={toggleWalletDrawer} open={walletDrawerOpen} />
-      {/* id used for child InfiniteScrolls to reference when it has reached the bottom of the component */}
-      <WalletDropdownWrapper open={walletDrawerOpen} id="wallet-dropdown-wrapper">
-        <WalletDropdownScrollWrapper ref={scrollRef}>
+      <WalletDropdownWrapper open={walletDrawerOpen}>
+        {/* id used for child InfiniteScrolls to reference when it has reached the bottom of the component */}
+        <WalletDropdownScrollWrapper ref={scrollRef} id="wallet-dropdown-scroll-wrapper">
           <DefaultMenu />
         </WalletDropdownScrollWrapper>
       </WalletDropdownWrapper>

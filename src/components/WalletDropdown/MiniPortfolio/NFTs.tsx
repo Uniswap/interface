@@ -39,7 +39,7 @@ export default function NFTs({ account }: { account: string }) {
       }
       dataLength={walletAssets?.length ?? 0}
       style={{ overflow: 'unset' }}
-      scrollableTarget="wallet-dropdown-wrapper"
+      scrollableTarget="wallet-dropdown-scroll-wrapper"
     >
       <AssetsContainer>
         {walletAssets?.length
@@ -48,7 +48,7 @@ export default function NFTs({ account }: { account: string }) {
                 <NFT
                   setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
                   mediaShouldBePlaying={currentTokenPlayingMedia === asset.tokenId}
-                  key={asset.tokenId ?? index}
+                  key={index}
                   asset={asset}
                 />
               )
