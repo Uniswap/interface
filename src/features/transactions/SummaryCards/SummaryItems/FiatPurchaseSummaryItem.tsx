@@ -9,7 +9,7 @@ import TransactionSummaryLayout, {
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
 import { getTransactionTitle } from 'src/features/transactions/SummaryCards/utils'
-import { FiatPurchaseTransactionInfo } from 'src/features/transactions/types'
+import { FiatPurchaseTransactionInfo, TransactionStatus } from 'src/features/transactions/types'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { formatFiatPrice } from 'src/utils/format'
 
@@ -41,15 +41,17 @@ export default function FiatPurchaseSummaryItem({
     ? `${fiatPurchaseAmount} of ${outputCurrencyInfo?.currency.symbol ?? t('Unknown token')}`
     : ''
 
-  const endAdornment = outputCurrency ? (
-    // bypassing BalanceUpdate since we do not have an actual raw amount here
-    <AssetUpdateLayout
-      caption={fiatPurchaseAmount}
-      title={
-        '+' + outputCurrencyAmount + ' ' + outputCurrencyInfo?.currency.symbol ?? t('unknown token')
-      }
-    />
-  ) : undefined
+  const endAdornment =
+    outputCurrencyAmount && transaction.status !== TransactionStatus.Failed ? (
+      // bypassing BalanceUpdate since we do not have an actual raw amount here
+      <AssetUpdateLayout
+        caption={fiatPurchaseAmount}
+        title={
+          '+' + outputCurrencyAmount + ' ' + outputCurrencyInfo?.currency.symbol ??
+          t('unknown token')
+        }
+      />
+    ) : undefined
 
   return (
     <TransactionSummaryLayout
