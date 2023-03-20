@@ -99,6 +99,7 @@ const Tag = styled(Badge)`
   background-color: ${({ theme }) => theme.backgroundModule};
   color: ${({ theme }) => theme.textSecondary};
   font-size: 10px;
+  opacity: 1;
   padding: 4px 6px;
 `
 
