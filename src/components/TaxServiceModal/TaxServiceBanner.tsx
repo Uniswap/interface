@@ -110,6 +110,8 @@ export const StyledXButton = styled(X)`
 
 const TAX_SERVICE_DISMISSED = 'TaxServiceToast-dismissed'
 
+// TODO(lynnshaoyu): remove this count and change taxServiceDismissals in UserState to be a boolean
+// flag instead after upgrading to redux-persist.
 const MAX_RENDER_COUNT = 1
 
 export default function TaxServiceBanner() {
