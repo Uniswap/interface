@@ -1,22 +1,15 @@
 import groupBy from 'lodash/groupBy'
 import { useCallback, useMemo } from 'react'
 import { ChainId } from 'src/constants/chains'
-import {
-  Chain,
-  SearchTokensQuery,
-  useSearchTokensQuery,
-} from 'src/data/__generated__/types-and-hooks'
+import { SearchTokensQuery, useSearchTokensQuery } from 'src/data/__generated__/types-and-hooks'
 import { CurrencyInfo, GqlResult } from 'src/features/dataApi/types'
-import { gqlTokenToCurrencyInfo, usePersistedError } from 'src/features/dataApi/utils'
+import {
+  gqlTokenToCurrencyInfo,
+  sortTokensWithinProject,
+  usePersistedError,
+} from 'src/features/dataApi/utils'
 
 const NO_PROJECT = 'NO_PROJECT'
-
-const rank: Partial<Record<Chain, number>> = {
-  [Chain.Ethereum]: 1,
-  [Chain.Polygon]: 2,
-  [Chain.Arbitrum]: 3,
-  [Chain.Optimism]: 4,
-}
 
 export function useSearchTokens(
   searchQuery: string | null,
@@ -76,9 +69,7 @@ export function reorderChainsForProject(
     .map((projectId) => {
       const projectTokens = groups[projectId]
       if (projectTokens) {
-        return projectId === NO_PROJECT
-          ? projectTokens
-          : projectTokens.sort((a, b) => ((a && rank[a.chain]) ?? 0) - ((b && rank[b.chain]) ?? 0)) // sorting by chain
+        return projectId === NO_PROJECT ? projectTokens : sortTokensWithinProject(projectTokens)
       }
       return null
     })

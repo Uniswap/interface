@@ -27,32 +27,46 @@ export function currencyIdToContractInput(id: CurrencyId): ContractInput {
   }
 }
 
+const rank: Partial<Record<Chain, number>> = {
+  [Chain.Ethereum]: 1,
+  [Chain.Polygon]: 2,
+  [Chain.Arbitrum]: 3,
+  [Chain.Optimism]: 4,
+}
+
+// this ideally should be done on the backend side, but until it's possible we control it on the client
+export function sortTokensWithinProject<T extends { chain: Chain } | null>(tokens: T[]): T[] {
+  return [...tokens].sort((a, b) => ((a && rank[a.chain]) ?? 0) - ((b && rank[b.chain]) ?? 0)) // sorting by rank
+}
+
 export function tokenProjectToCurrencyInfos(
   tokenProject: TokenProjectsQuery['tokenProjects'],
   chainFilter?: ChainId | null
 ): CurrencyInfo[] {
   return tokenProject
-    ?.flatMap((project) =>
-      project?.tokens.map((token) => {
-        const { logoUrl, safetyLevel } = project
-        const { chain, address, name, decimals, symbol } = token
-        const chainId = fromGraphQLChain(chain)
-        if (!chainId || !decimals || !symbol || !name) return null
+    ?.flatMap(
+      (project) =>
+        project?.tokens &&
+        sortTokensWithinProject(project?.tokens).map((token) => {
+          const { logoUrl, safetyLevel } = project ?? {}
+          const { chain, address, name, decimals, symbol } = token ?? {}
+          const chainId = fromGraphQLChain(chain)
+          if (!chainId || !decimals || !symbol || !name) return null
 
-        if (chainFilter && chainFilter !== chainId) return null
-        const currency = isNonNativeAddress(chainId, address)
-          ? new Token(chainId, address, decimals, symbol, name, /* bypassChecksum:*/ true)
-          : NativeCurrency.onChain(chainId)
+          if (chainFilter && chainFilter !== chainId) return null
+          const currency = isNonNativeAddress(chainId, address)
+            ? new Token(chainId, address, decimals, symbol, name, /* bypassChecksum:*/ true)
+            : NativeCurrency.onChain(chainId)
 
-        const currencyInfo: CurrencyInfo = {
-          currency,
-          currencyId: currencyId(currency),
-          logoUrl,
-          safetyLevel,
-        }
+          const currencyInfo: CurrencyInfo = {
+            currency,
+            currencyId: currencyId(currency),
+            logoUrl,
+            safetyLevel,
+          }
 
-        return currencyInfo
-      })
+          return currencyInfo
+        })
     )
     .filter(Boolean) as CurrencyInfo[]
 }
