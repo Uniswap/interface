@@ -9,18 +9,19 @@ const thegraphConfig = require('../graphql_thegraph.config')
 
 const exec = promisify(child_process.exec)
 
-async function fetchSchema(url, outputFile) {
-  try {
-    const {stderr, stdout} = await exec(`npx get-graphql-schema --h Origin=https://app.uniswap.org ${url}`)
-    if (stderr) {
-      throw new Error(stderr)
-    } else {
-      fs.writeFile(outputFile, stdout)
-    }
-  } catch (err) {
-    console.error(err)
-    console.error(`Failed to fetch schema from ${url}`)
-  }
+function fetchSchema(url, outputFile) {
+  exec(`npx get-graphql-schema --h Origin=https://app.uniswap.org ${url}`)
+    .then(({ stderr, stdout }) => {
+      if (stderr) {
+        throw new Error(stderr)
+      } else {
+        fs.writeFile(outputFile, stdout)
+      }
+    })
+    .catch((err) => {
+      console.error(err)
+      console.error(`Failed to fetch schema from ${url}`)
+    })
 }
 
 fetchSchema(process.env.THE_GRAPH_SCHEMA_ENDPOINT, thegraphConfig.schema)
