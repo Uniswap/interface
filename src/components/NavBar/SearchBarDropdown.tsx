@@ -120,8 +120,7 @@ export const SearchBarDropdown = ({
 }: SearchBarDropdownProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
 
-  const { data: searchHistory, loading: searchHistoryLoading } = useRecentlySearchedAssets()
-  console.log(searchHistoryLoading, searchHistory)
+  const { data: searchHistory } = useRecentlySearchedAssets()
   const shortenedHistory = useMemo(() => searchHistory?.slice(0, 2) ?? [...Array<SearchToken>(2)], [searchHistory])
 
   const { pathname } = useLocation()
