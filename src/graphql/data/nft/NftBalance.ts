@@ -32,11 +32,13 @@ gql`
               id
               isVerified
               image {
+                id
                 url
               }
               name
               twitterName
               nftContracts {
+                id
                 address
                 chain
                 name
@@ -45,7 +47,9 @@ gql`
                 totalSupply
               }
               markets(currencies: ETH) {
+                id
                 floorPrice {
+                  id
                   value
                 }
               }
@@ -53,25 +57,30 @@ gql`
             description
             flaggedBy
             image {
+              id
               url
             }
             originalImage {
+              id
               url
             }
             name
             ownerAddress
             smallImage {
+              id
               url
             }
             suspiciousFlag
             tokenId
             thumbnail {
+              id
               url
             }
             listings(first: 1) {
               edges {
                 node {
                   price {
+                    id
                     value
                     currency
                   }
@@ -84,10 +93,12 @@ gql`
           }
           listedMarketplaces
           listingFees {
+            id
             payoutAddress
             basisPoints
           }
           lastPrice {
+            id
             currency
             timestamp
             value

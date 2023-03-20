@@ -4,14 +4,12 @@ import { BrowserEvent, InterfaceElementName, InterfaceSectionName, SharedEventNa
 import Column from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { useMiniPortfolioEnabled } from 'featureFlags/flags/miniPortfolio'
-import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import Activity from './Activity'
-import { DEFAULT_NFT_QUERY_AMOUNT } from './constants'
 import NFTs from './NFTs'
 import Pools from './Pools'
 import Tokens from './Tokens'
@@ -66,9 +64,6 @@ const Pages: Array<Page> = [
 function MiniPortfolio({ account }: { account: string }) {
   const isNftPage = useIsNftPage()
   const [currentPage, setCurrentPage] = useState(isNftPage ? 1 : 0)
-
-  // preload NFT query here so that it's instantly ready when navigating the NFT tab
-  useNftBalance(account, [], [], DEFAULT_NFT_QUERY_AMOUNT)
 
   const Page = Pages[currentPage].component
   return (

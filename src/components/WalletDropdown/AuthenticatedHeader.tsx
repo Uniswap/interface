@@ -28,7 +28,7 @@ import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal 
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import StatusIcon from '../Identicon/StatusIcon'
-import { useToggleWalletDrawer } from '.'
+import { useToggleWalletDrawer, useWalletDrawer } from '.'
 import IconButton, { IconHoverText } from './IconButton'
 import MiniPortfolio from './MiniPortfolio'
 import { portfolioFadeInAnimation } from './MiniPortfolio/PortfolioRow'
@@ -242,7 +242,12 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const openFiatOnrampUnavailableTooltip = useCallback(() => setShow(true), [setShow])
   const closeFiatOnrampUnavailableTooltip = useCallback(() => setShow(false), [setShow])
 
-  const { data: portfolioBalances } = usePortfolioBalancesQuery({ variables: { ownerAddress: account ?? '' } })
+  const [drawerOpen] = useWalletDrawer()
+  const { data: portfolioBalances } = usePortfolioBalancesQuery({
+    variables: { ownerAddress: account ?? '' },
+    skip: !drawerOpen,
+    fetchPolicy: 'cache-first',
+  })
   const portfolio = portfolioBalances?.portfolios?.[0]
   const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
   const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value

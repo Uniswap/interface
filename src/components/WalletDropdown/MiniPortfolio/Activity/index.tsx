@@ -3,12 +3,14 @@ import Column from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { useToggleWalletDrawer } from 'components/WalletDropdown'
+import { useWalletDrawer } from 'components/WalletDropdown'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { TransactionStatus, useTransactionListQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { PollingInterval } from 'graphql/data/util'
 import useENSName from 'hooks/useENSName'
+import { atom, useAtom } from 'jotai'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { EllipsisStyle, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -97,19 +99,36 @@ function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = 
   }, [])
 }
 
+const lastFetchedAtom = atom<number | undefined>(0)
+
 export default function ActivityTab({ account }: { account: string }) {
+  const [drawerOpen, toggleWalletDrawer] = useWalletDrawer()
+  const [lastFetched, setLastFetched] = useAtom(lastFetchedAtom)
+
   const localMap = useLocalActivities()
-  const { data, loading } = useTransactionListQuery({
+
+  const { data, loading, refetch } = useTransactionListQuery({
     variables: { account },
     errorPolicy: 'all',
+    fetchPolicy: 'cache-first',
   })
+
+  // We only refetch remote activity if the user renavigates to the activity tab by changing tabs or opening the drawer
+  useEffect(() => {
+    const currentTime = Date.now()
+    if (!lastFetched) {
+      setLastFetched(currentTime)
+    } else if (drawerOpen && lastFetched && currentTime - lastFetched > PollingInterval.Slow) {
+      refetch()
+      setLastFetched(currentTime)
+    }
+  }, [drawerOpen, lastFetched, refetch, setLastFetched])
 
   const activityGroups = useMemo(() => {
     const remoteMap = parseRemoteActivities(data?.portfolios?.[0].assetActivities)
     const allActivities = combineActivities(localMap, remoteMap)
     return createGroups(allActivities)
   }, [data?.portfolios, localMap])
-  const toggleWalletDrawer = useToggleWalletDrawer()
 
   if (!data && loading)
     return (
