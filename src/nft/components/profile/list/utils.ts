@@ -1,6 +1,7 @@
 import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { addressesByNetwork, SupportedChainId } from '@looksrare/sdk'
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
+import ms from 'ms.macro'
 import { SetPriceMethod, WarningType } from 'nft/components/profile/list/shared'
 import { useNFTList, useSellAsset } from 'nft/hooks'
 import {
@@ -10,7 +11,7 @@ import {
   X2Y2_TRANSFER_CONTRACT_1155,
 } from 'nft/queries'
 import { OPENSEA_CROSS_CHAIN_CONDUIT } from 'nft/queries/openSea'
-import { CollectionRow, ListingMarket, ListingRow, ListingStatus, WalletAsset } from 'nft/types'
+import { CollectionRow, Listing, ListingMarket, ListingRow, ListingStatus, WalletAsset } from 'nft/types'
 import { approveCollection, LOOKS_RARE_CREATOR_BASIS_POINTS, signListing } from 'nft/utils/listNfts'
 import { Dispatch, useEffect } from 'react'
 import { shallow } from 'zustand/shallow'
@@ -229,4 +230,44 @@ export const getRoyalty = (listingMarket: ListingMarket, asset: WalletAsset) => 
 // OpenSea has a 0.5% fee for all assets that do not have a royalty set
 export const getMarketplaceFee = (listingMarket: ListingMarket, asset: WalletAsset) => {
   return listingMarket.name === 'OpenSea' && !asset.basisPoints ? 0.5 : listingMarket.fee
+}
+
+const BELOW_FLOOR_PRICE_THRESHOLD = 0.8
+
+export const findListingIssues = (sellAssets: WalletAsset[]) => {
+  const missingExpiration = sellAssets.some((asset) => {
+    return (
+      asset.expirationTime != null &&
+      (isNaN(asset.expirationTime) || asset.expirationTime * 1000 - Date.now() < ms`60 seconds`)
+    )
+  })
+  const overMaxExpiration = sellAssets.some((asset) => {
+    return asset.expirationTime != null && asset.expirationTime * 1000 - Date.now() > ms`180 days`
+  })
+
+  const listingsMissingPrice: [WalletAsset, Listing][] = []
+  const listingsBelowFloor: [WalletAsset, Listing][] = []
+  const listingsAboveSellOrderFloor: [WalletAsset, Listing][] = []
+  for (const asset of sellAssets) {
+    if (asset.newListings) {
+      for (const listing of asset.newListings) {
+        if (!listing.price) listingsMissingPrice.push([asset, listing])
+        else if (listing.price < (asset?.floorPrice ?? 0) * BELOW_FLOOR_PRICE_THRESHOLD && !listing.overrideFloorPrice)
+          listingsBelowFloor.push([asset, listing])
+        else if (
+          asset.floor_sell_order_price &&
+          listing.price >= asset.floor_sell_order_price &&
+          asset.asset_contract.tokenType !== NftStandard.Erc1155
+        )
+          listingsAboveSellOrderFloor.push([asset, listing])
+      }
+    }
+  }
+  return {
+    missingExpiration,
+    overMaxExpiration,
+    listingsMissingPrice,
+    listingsBelowFloor,
+    listingsAboveSellOrderFloor,
+  }
 }
