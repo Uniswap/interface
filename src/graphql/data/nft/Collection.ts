@@ -6,7 +6,7 @@ import { NftCollection, useCollectionQuery } from '../__generated__/types-and-ho
 
 gql`
   query Collection($addresses: [String!]!) {
-    nftCollections(filter: { addresses: $addresses }) {
+    nftCollections(filter: { addresses: $addresses }, _fs: "DATASOURCE:ALTERNATE") {
       edges {
         cursor
         node {
@@ -43,8 +43,8 @@ gql`
               listings
             }
           }
-          markets(currencies: ETH) {
-            floorPrice {
+          markets(currencies: ETH, _fs: "DATASOURCE:ALTERNATE") {
+            floorPrice(_fs: "DATASOURCE:ALTERNATE") {
               currency
               value
             }

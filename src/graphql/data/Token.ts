@@ -15,7 +15,7 @@ The difference between Token and TokenProject:
 */
 gql`
   query Token($chain: Chain!, $address: String = null) {
-    token(chain: $chain, address: $address) {
+    token(chain: $chain, address: $address, _fs: "DATASOURCE:ALTERNATE") {
       id
       decimals
       name

@@ -1,7 +1,7 @@
 import { BaseVariant, FeatureFlag, useBaseFlag } from '../index'
 
 export function useNftGraphqlFlag(): BaseVariant {
-  return useBaseFlag(FeatureFlag.nftGraphql)
+  return useBaseFlag(FeatureFlag.nftGraphql, BaseVariant.Enabled)
 }
 
 export function useNftGraphqlEnabled(): boolean {
