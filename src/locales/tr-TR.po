@@ -56,6 +56,7 @@ msgstr "(düzenle)"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "- Remove recipient"
 msgstr "- Alıcıyı kaldır"
 
@@ -101,12 +102,13 @@ msgstr "<0/> Tüm Teklifler"
 msgid "<0/> Votes"
 msgstr "<0/> Oylar"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "<0/><1/>By clicking \"Agree\" you accept the <2>Terms and Conditions </2>by Kromatika.Finance<3/><4/>"
 msgstr "<0/><1/>\"Kabul ediyorum\" düğmesini tıklayarak Kromatika.Finance'ın <2>Şartlar ve Koşullarını </2>kabul etmiş olursunuz<3/><4/>"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "<0><1><2><3/><4/><5/><6/><7/></2></1><8>Earn crypto by sharing the following referral link <9><10>{0} {1}</10></9></8></0>"
 msgstr "<0><1><2><3/><4/><5/><6/><7/></2></1><8>Aşağıdaki yönlendirme bağlantısını paylaşarak kripto para kazanın <9 ><10>{0} {1}</10></9></8></0>"
 
@@ -120,6 +122,7 @@ msgstr "<0>Hesap analizi ve tahakkuk eden ücretler</0><1> ↗</1>"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "<0>Connect wallet to generate referral link. How it works ? <1>Read More</1></0>"
 msgstr "<0>Yönlendirme bağlantısı oluşturmak için cüzdanı bağlayın. Nasıl çalışır ? <1>Daha Fazla Oku</1></0>"
 
@@ -247,21 +250,24 @@ msgid "Against"
 msgstr "Karşısında"
 
 #: src/components/LimitWarning/LimitWarningModal.tsx
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Agree"
 msgstr "Kabul etmek"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Allow Kromatika to use your {0}"
 msgstr "Kromatika'nın {0}'inizi kullanmasına izin verin"
 
-#: src/pages/Market/index.tsx
-#: src/pages/Market/index.tsx
-msgid "Allow the Kromatika Aggregator to use your {0}"
-msgstr "Kromatika Toplayıcının {0} kimliğinizi kullanmasına izin verin"
+#: 
+#: 
+#~ msgid "Allow the Kromatika Aggregator to use your {0}"
+#~ msgstr "Kromatika Toplayıcının {0} kimliğinizi kullanmasına izin verin"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 msgid "Allowed Slippage"
@@ -269,6 +275,7 @@ msgstr "İzin Verilen Kayma"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Allowed Slippage:"
 msgstr "İzin Verilen Kayma:"
 
@@ -289,8 +296,13 @@ msgstr "Bu takas yürütülmeye çalışılırken bir hata oluştu. Kayma tolera
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
-msgid "Any missing order? Try switching between"
-msgstr "Eksik sipariş var mı? arasında geçiş yapmayı deneyin"
+msgid "Any missing order(s)? Try switching between networks."
+msgstr "Eksik sipariş(ler) var mı? Ağlar arasında geçiş yapmayı deneyin."
+
+#: 
+#: 
+#~ msgid "Any missing order? Try switching between"
+#~ msgstr "Eksik sipariş var mı? arasında geçiş yapmayı deneyin"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -533,6 +545,10 @@ msgstr "Toplandı"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "Toplanan {0} {1}{2} ve {3} {4}{5}"
 
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Collected:"
+msgstr "Toplanmış:"
+
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting amounts will withdraw currently available amounts for you."
 msgstr "Toplama tutarları, sizin için şu anda mevcut olan tutarları çekecektir."
@@ -586,6 +602,7 @@ msgstr "Cüzdandaki işlemi onaylayın"
 #: src/pages/Stake/StakingModal.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/burn/v3/hooks.tsx
 #: src/state/market/hooks.tsx
@@ -786,7 +803,7 @@ msgstr "Reddet"
 msgid "Docs"
 msgstr "Dokümanlar"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Don't show this message again for the next 30 days."
 msgstr "Önümüzdeki 30 gün boyunca bu mesajı bir daha gösterme."
 
@@ -873,6 +890,7 @@ msgstr "Liste içe aktarılırken hata oluştu"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Est. Fees:"
 msgstr "Doğu. ücretler:"
 
@@ -929,6 +947,7 @@ msgstr "Şunun için"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "From"
 msgstr "Kaynak"
 
@@ -938,6 +957,7 @@ msgstr "Kaynak"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "From (at most)"
 msgstr "Gönderen (en fazla)"
 
@@ -968,6 +988,22 @@ msgstr "Yardım Merkezi"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Saklamak"
+
+#: src/components/Menu/index.tsx
+msgid "How to use FELO"
+msgstr "FELO nasıl kullanılır?"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Gasless"
+msgstr "Gazsız nasıl kullanılır"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Perpetuals"
+msgstr "Kalıcılar nasıl kullanılır?"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Swap"
+msgstr "Takas nasıl kullanılır?"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
@@ -1004,6 +1040,10 @@ msgstr "V2 Havuzunu İçe Aktar"
 msgid "Import at your own risk"
 msgstr "Riskin size ait olduğunu bilerek içe aktarın"
 
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "In Range"
+msgstr "Menzilde"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
 msgstr "Başlatılıyor..."
@@ -1029,6 +1069,7 @@ msgstr "Metamask'ı yükleyin"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Bu işlem için yetersiz likidite."
 
@@ -1067,15 +1108,15 @@ msgstr "KROM depozitosu gerekli"
 msgid "Kromatika available in: <0>{0}</0>"
 msgstr "Kromatika kullanılabilir: <0>{0}</0>"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "LP fees earned:"
-msgstr "Kazanılan LP ücretleri:"
+#: 
+#~ msgid "LP fees earned:"
+#~ msgstr "Kazanılan LP ücretleri:"
 
 #: src/components/Menu/index.tsx
 msgid "Language"
 msgstr "Dil"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Launch Perpetual Trading"
 msgstr "Sürekli Ticareti Başlatın"
 
@@ -1145,6 +1186,7 @@ msgstr "Yüklendi"
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Loading"
 msgstr "Yükleniyor"
 
@@ -1220,6 +1262,7 @@ msgstr "Minimum fiyat"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Minimum Received:"
 msgstr "Minimum Alınan:"
 
@@ -1352,6 +1395,7 @@ msgid "Participating pools"
 msgstr "Katılımcı havuzlar"
 
 #: src/components/Badge/RangeBadge.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Bekliyor"
@@ -1439,7 +1483,9 @@ msgid "Preview"
 msgstr "Ön izleme"
 
 #: src/components/market/MarketModalHeader.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Price"
 msgstr "Fiyat"
 
@@ -1452,12 +1498,12 @@ msgstr "Fiyat Detayları"
 msgid "Price Updated"
 msgstr "Fiyat Güncellendi"
 
-#: src/pages/Market/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
 msgstr "Fiyat:"
 
 #: src/components/Badge/RangeBadge.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 msgid "Processed"
 msgstr "İşlenmiş"
 
@@ -1550,13 +1596,16 @@ msgid "Select a network"
 msgstr "Bir ağ seçin"
 
 #: src/components/CurrencyInputPanel/index.tsx
-#: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/market/hooks.tsx
 #: src/state/swap/hooks.tsx
 msgid "Select a token"
 msgstr "Bir jeton seçin"
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Select a token - Uniswap V3 pairs only"
+msgstr "Bir belirteç seçin - yalnızca Uniswap V3 çiftleri"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
@@ -1600,7 +1649,7 @@ msgstr "Akıllı Rota"
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Bazı varlıklar bu arayüz aracılığıyla kullanılamaz. Bunun nedeni akıllı sözleşmelerle iyi sonuç vermemeleri veya yasal nedenlerle ticarete izin veremememizdir."
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Some countries may not be allowed to use perpetual trading - see the details under section 2 within our terms of use."
 msgstr "Bazı ülkelerin kalıcı ticareti kullanmasına izin verilmeyebilir - kullanım koşullarımızda bölüm 2'deki ayrıntılara bakın."
 
@@ -1675,6 +1724,8 @@ msgstr "Başarı"
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Swap"
 msgstr "Swap"
 
@@ -1727,7 +1778,7 @@ msgstr "Kromatika topluluğunun bir parçası olduğunuz için teşekkürler <0/
 msgid "The % you will earn in fees."
 msgstr "Ücretlerde kazanacağınız yüzde."
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "The Perpetual Trading is currently in beta-stage. Trade at your own risk."
 msgstr "Sürekli Ticaret şu anda beta aşamasındadır. Riski size ait olmak üzere ticaret yapın."
 
@@ -1823,6 +1874,7 @@ msgstr "İpucu: Özel jetonlar tarayıcınızda yerel olarak depolanır"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "To"
 msgstr "Alıcı"
 
@@ -1832,6 +1884,7 @@ msgstr "Alıcı"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "To (at least)"
 msgstr "Alıcı (en az)"
 
@@ -1904,6 +1957,9 @@ msgstr "{2} {3} karşılığında {0} {1} ticareti"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Transaction Details"
 msgstr "ödeme detayları"
 
@@ -2049,6 +2105,7 @@ msgstr "KROM'u geri almak, sistemin ödülleri hesaplamasını engelleyebilir"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Unsupported Asset"
 msgstr "Desteklenmeyen Varlık"
 
@@ -2066,6 +2123,7 @@ msgstr "başlıksız"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Unwrap"
 msgstr "Paketi Aç"
 
@@ -2237,6 +2295,7 @@ msgstr "UNI-V2 çekildi!"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Wrap"
 msgstr "Paketle"
 
@@ -2253,12 +2312,13 @@ msgstr "Yerel jetonunuzu sarın"
 msgid "Wrong Network"
 msgstr "Yanlış Ağ"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
 msgstr "Kromatika.Finance'tan ayrılıyorsunuz ve bağımsız bir üçüncü taraf web sitesine yönlendirileceksiniz."
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You buy"
 msgstr "Nunua"
 
@@ -2268,6 +2328,7 @@ msgstr "Her bir teklife kendiniz oy verebilir veya oylarınızı üçüncü bir 
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You can now swap {0}"
 msgstr "Şimdi {0} takas edebilirsiniz"
 
@@ -2292,6 +2353,7 @@ msgstr "Ağ bağlantınızı kaybetmiş olabilirsiniz."
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You must give the Kromatika Aggregator a permission to use your {0}. You only have to do this once per token."
 msgstr "{0}'inizi kullanması için Kromatika Toplayıcı'ya izin vermelisiniz. Bunu belirteç başına yalnızca bir kez yapmanız gerekir."
 
@@ -2309,6 +2371,7 @@ msgstr "en azından alırsın"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You sell"
 msgstr "Unauza"
 
@@ -2418,10 +2481,10 @@ msgstr "Burada."
 msgid "https:// or ipfs:// or ENS name"
 msgstr "https:// veya ipfs:// veya ENS adı"
 
-#: src/pages/LimitOrder/index.tsx
-#: src/pages/LimitOrder/index.tsx
-msgid "networks."
-msgstr "ağlar."
+#: 
+#: 
+#~ msgid "networks."
+#~ msgstr "ağlar."
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
@@ -2435,7 +2498,6 @@ msgstr "{0} jeton listesi aracılığıyla"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Jetonu içe aktar} other {Jetonu içe aktar}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
 #: src/components/LimitOrdersListItem/index.tsx
 #: src/components/LimitOrdersListItem/index.tsx
 #: src/components/LimitOrdersListItem/index.tsx
@@ -2458,9 +2520,9 @@ msgstr "{0}"
 msgid "{0} %"
 msgstr "% {0}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "{0} + {1}"
-msgstr "{0} + {1}"
+#: 
+#~ msgid "{0} + {1}"
+#~ msgstr "{0} + {1}"
 
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/>  per <1/> <2>{1} </2>"
@@ -2526,6 +2588,14 @@ msgstr "{0} sKrom / hafta"
 msgid "{0} tokens"
 msgstr "{0} jeton"
 
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{0} {1} + {2} {3}"
+msgstr "{0} {1} + {2} {3}"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Kullanıcı tarafından eklendi"
@@ -2536,6 +2606,7 @@ msgstr "{0} • Kullanıcı tarafından eklendi"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "{0}%"
 msgstr "%{0}"
 
@@ -2567,13 +2638,13 @@ msgstr "{label}"
 msgid "{percentForSlider}%"
 msgstr "%{percentForSlider}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "{status}"
-msgstr "{status}"
+#: 
+#~ msgid "{status}"
+#~ msgstr "{status}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "{token0CreatedAmount}"
-msgstr "{token0CreatedAmount}"
+#: 
+#~ msgid "{token0CreatedAmount}"
+#~ msgstr "{token0CreatedAmount}"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"

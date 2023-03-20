@@ -56,6 +56,7 @@ msgstr "(editar)"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "- Remove recipient"
 msgstr "- Eliminar destinatario"
 
@@ -101,12 +102,13 @@ msgstr "<0/> Todas las propuestas"
 msgid "<0/> Votes"
 msgstr "<0/> Votos"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "<0/><1/>By clicking \"Agree\" you accept the <2>Terms and Conditions </2>by Kromatika.Finance<3/><4/>"
 msgstr "0 sKrom / semajno<0/><1/>Alklakante \"Konsenti\" vi akceptas la <2>Kondiĉojn </2>de Kromatika.Finance<3/><4/>"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "<0><1><2><3/><4/><5/><6/><7/></2></1><8>Earn crypto by sharing the following referral link <9><10>{0} {1}</10></9></8></0>"
 msgstr "<0><1><2><3/><4/><5/><6/><7/></2></1><8>Gajnu kripton per dividado de la jena referenca ligo <9 ><10>{0} {1}</10></9></8></0>"
 
@@ -120,6 +122,7 @@ msgstr "<0>Análisis de cuentas y comisiones acumuladas</0><1> ↗ </1>"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "<0>Connect wallet to generate referral link. How it works ? <1>Read More</1></0>"
 msgstr "<0>Konekti monujon por generi referencan ligon. Kiel ĝi funkcias? <1>Legu pli</1></0>"
 
@@ -247,21 +250,24 @@ msgid "Against"
 msgstr "Contra"
 
 #: src/components/LimitWarning/LimitWarningModal.tsx
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Agree"
 msgstr "Konsentu"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Allow Kromatika to use your {0}"
 msgstr "Permesu al Kromatika uzi vian {0}"
 
-#: src/pages/Market/index.tsx
-#: src/pages/Market/index.tsx
-msgid "Allow the Kromatika Aggregator to use your {0}"
-msgstr "Permesu al Kromatika Agregator uzi vian {0}"
+#: 
+#: 
+#~ msgid "Allow the Kromatika Aggregator to use your {0}"
+#~ msgstr "Permesu al Kromatika Agregator uzi vian {0}"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 msgid "Allowed Slippage"
@@ -269,6 +275,7 @@ msgstr "Deslizamiento permitido"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Allowed Slippage:"
 msgstr "Permesita Glito:"
 
@@ -289,8 +296,13 @@ msgstr "Okazis eraro kiam oni provis efektivigi ĉi tiun interŝanĝon. Vi eble 
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
-msgid "Any missing order? Try switching between"
-msgstr "Ĉu mankas ordo? Provu ŝanĝi inter"
+msgid "Any missing order(s)? Try switching between networks."
+msgstr "¿Algún pedido faltante? Prueba a cambiar de red."
+
+#: 
+#: 
+#~ msgid "Any missing order? Try switching between"
+#~ msgstr "Ĉu mankas ordo? Provu ŝanĝi inter"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -533,6 +545,10 @@ msgstr "Recogido"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "Kolektis {0} {1}{2} kaj {3} {4}{5}"
 
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Collected:"
+msgstr "Recogida:"
+
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting amounts will withdraw currently available amounts for you."
 msgstr "Kolektado de sumoj retiros nuntempe disponeblajn sumojn por vi."
@@ -586,6 +602,7 @@ msgstr "Confirmar transacción en billetera"
 #: src/pages/Stake/StakingModal.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/burn/v3/hooks.tsx
 #: src/state/market/hooks.tsx
@@ -786,7 +803,7 @@ msgstr "Descartar"
 msgid "Docs"
 msgstr "Documentos"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Don't show this message again for the next 30 days."
 msgstr "Ne montru ĉi tiun mesaĝon denove dum la venontaj 30 tagoj."
 
@@ -873,6 +890,7 @@ msgstr "Error importando lista"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Est. Fees:"
 msgstr "Est. Kotizoj:"
 
@@ -929,6 +947,7 @@ msgstr "Para"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "From"
 msgstr "De"
 
@@ -938,6 +957,7 @@ msgstr "De"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "From (at most)"
 msgstr "Desde (máximo)"
 
@@ -968,6 +988,22 @@ msgstr "Centro de ayuda"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Esconder"
+
+#: src/components/Menu/index.tsx
+msgid "How to use FELO"
+msgstr "Cómo usar FELO"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Gasless"
+msgstr "Cómo usar Gasless"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Perpetuals"
+msgstr "Cómo usar Perpetuals"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Swap"
+msgstr "Cómo usar Swap"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
@@ -1004,6 +1040,10 @@ msgstr "Importar grupo V2"
 msgid "Import at your own risk"
 msgstr "Importar bajo su propio riesgo"
 
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "In Range"
+msgstr "En el rango"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
 msgstr "Inicializando..."
@@ -1029,6 +1069,7 @@ msgstr "Instalar Metamask"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Liquidez insuficiente para esta operación."
 
@@ -1067,15 +1108,15 @@ msgstr "Se requiere depósito de KROM"
 msgid "Kromatika available in: <0>{0}</0>"
 msgstr "Kromatika disponible en: <0>{0}</0>"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "LP fees earned:"
-msgstr "LP-kotizoj gajnitaj:"
+#: 
+#~ msgid "LP fees earned:"
+#~ msgstr "LP-kotizoj gajnitaj:"
 
 #: src/components/Menu/index.tsx
 msgid "Language"
 msgstr "Idioma"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Launch Perpetual Trading"
 msgstr "Lanĉu Eterna Komerco"
 
@@ -1145,6 +1186,7 @@ msgstr "Cargado"
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Loading"
 msgstr "Cargando"
 
@@ -1220,6 +1262,7 @@ msgstr "Minimuma Prezo"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Minimum Received:"
 msgstr "Minimumo Ricevita:"
 
@@ -1352,6 +1395,7 @@ msgid "Participating pools"
 msgstr "Fondos comunes que participan"
 
 #: src/components/Badge/RangeBadge.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Pendiente"
@@ -1439,7 +1483,9 @@ msgid "Preview"
 msgstr "Avance"
 
 #: src/components/market/MarketModalHeader.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Price"
 msgstr "Precio"
 
@@ -1452,12 +1498,12 @@ msgstr "Prezaj Detaloj"
 msgid "Price Updated"
 msgstr "Precio actualizado"
 
-#: src/pages/Market/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
 msgstr "Precio:"
 
 #: src/components/Badge/RangeBadge.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 msgid "Processed"
 msgstr "Prilaborita"
 
@@ -1550,13 +1596,16 @@ msgid "Select a network"
 msgstr "Seleccione una red"
 
 #: src/components/CurrencyInputPanel/index.tsx
-#: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/market/hooks.tsx
 #: src/state/swap/hooks.tsx
 msgid "Select a token"
 msgstr "Seleccione un token"
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Select a token - Uniswap V3 pairs only"
+msgstr "Seleccione un token: solo pares Uniswap V3"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
@@ -1600,7 +1649,7 @@ msgstr "Inteligenta Itinero"
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Algunos activos no están disponibles a través de esta interfaz porque puede que no funcionen bien con los contratos inteligentes o que no podamos permitir el comercio por razones legales."
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Some countries may not be allowed to use perpetual trading - see the details under section 2 within our terms of use."
 msgstr "Iuj landoj eble ne rajtas uzi ĉiaman komercon - vidu la detalojn sub sekcio 2 ene de niaj uzkondiĉoj."
 
@@ -1675,6 +1724,8 @@ msgstr "Éxito"
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Swap"
 msgstr "Intercambiar"
 
@@ -1727,7 +1778,7 @@ msgstr "Gracias por ser parte de la comunidad Kromatika <0 />"
 msgid "The % you will earn in fees."
 msgstr "El% que ganarás en comisiones."
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "The Perpetual Trading is currently in beta-stage. Trade at your own risk."
 msgstr "La Eterna Komerco estas nuntempe en beta-fazo. Komercu je via propra risko."
 
@@ -1823,6 +1874,7 @@ msgstr "Consejo: los tokens personalizados se almacenan localmente en su navegad
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "To"
 msgstr "A"
 
@@ -1832,6 +1884,7 @@ msgstr "A"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "To (at least)"
 msgstr "A (al menos)"
 
@@ -1904,6 +1957,9 @@ msgstr "Komerco de {0} {1} por {2} {3}"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Transaction Details"
 msgstr "Detalles de la transacción"
 
@@ -2049,6 +2105,7 @@ msgstr "Malŝpari KROM povas malhelpi la sistemon kalkuli rekompencojn"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Unsupported Asset"
 msgstr "Activo no soportado"
 
@@ -2066,6 +2123,7 @@ msgstr "Intitulado"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Unwrap"
 msgstr "Unwrap"
 
@@ -2237,6 +2295,7 @@ msgstr "¡Retirado UNI-V2!"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Wrap"
 msgstr "Envoltura"
 
@@ -2253,12 +2312,13 @@ msgstr "Envolvu vian indiĝenan ĵetonon"
 msgid "Wrong Network"
 msgstr "Red incorrecta"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
 msgstr "Vi forlasas Kromatika.Finance kaj estos redirektita al sendependa triaparta retejo."
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You buy"
 msgstr "Tu compras"
 
@@ -2268,6 +2328,7 @@ msgstr "Usted puede votar sobre cada propuesta usted mismo o delegar sus votos a
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You can now swap {0}"
 msgstr "Vi nun povas interŝanĝi {0}"
 
@@ -2292,6 +2353,7 @@ msgstr "Es posible que haya perdido su conexión de red."
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You must give the Kromatika Aggregator a permission to use your {0}. You only have to do this once per token."
 msgstr "Vi devas doni al la Kromatika Agregator permeson uzi vian {0}. Vi devas fari ĉi tion nur unufoje per ĵetono."
 
@@ -2309,6 +2371,7 @@ msgstr "recibes al menos"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You sell"
 msgstr "Vendes"
 
@@ -2418,10 +2481,10 @@ msgstr "aquí."
 msgid "https:// or ipfs:// or ENS name"
 msgstr "https:// o ipfs:// o nombre ENS"
 
-#: src/pages/LimitOrder/index.tsx
-#: src/pages/LimitOrder/index.tsx
-msgid "networks."
-msgstr "retoj."
+#: 
+#: 
+#~ msgid "networks."
+#~ msgstr "retoj."
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
@@ -2435,7 +2498,6 @@ msgstr "a través de la lista de fichas {0}"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Importar token} other {Importa tokens}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
 #: src/components/LimitOrdersListItem/index.tsx
 #: src/components/LimitOrdersListItem/index.tsx
 #: src/components/LimitOrdersListItem/index.tsx
@@ -2458,9 +2520,9 @@ msgstr "{0}"
 msgid "{0} %"
 msgstr "{0} %"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "{0} + {1}"
-msgstr "{0} + {1}"
+#: 
+#~ msgid "{0} + {1}"
+#~ msgstr "{0} + {1}"
 
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/>  per <1/> <2>{1} </2>"
@@ -2526,6 +2588,14 @@ msgstr "{0} sKrom / semajno"
 msgid "{0} tokens"
 msgstr "{0} tokens"
 
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{0} {1} + {2} {3}"
+msgstr "{0} {1} + {2} {3}"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Agregado por el usuario"
@@ -2536,6 +2606,7 @@ msgstr "{0} • Agregado por el usuario"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "{0}%"
 msgstr "{0} %"
 
@@ -2567,13 +2638,13 @@ msgstr "{label}"
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider} %"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "{status}"
-msgstr "{status}"
+#: 
+#~ msgid "{status}"
+#~ msgstr "{status}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "{token0CreatedAmount}"
-msgstr "{token0CreatedAmount}"
+#: 
+#~ msgid "{token0CreatedAmount}"
+#~ msgstr "{token0CreatedAmount}"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"

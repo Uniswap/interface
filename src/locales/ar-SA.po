@@ -56,6 +56,7 @@ msgstr "(تعديل)"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "- Remove recipient"
 msgstr "- إزالة المستلم"
 
@@ -101,12 +102,13 @@ msgstr "<0/> جميع المقترحات"
 msgid "<0/> Votes"
 msgstr "<0/> الأصوات"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "<0/><1/>By clicking \"Agree\" you accept the <2>Terms and Conditions </2>by Kromatika.Finance<3/><4/>"
 msgstr "<0 /> <1 /> بالنقر فوق \\ \"موافق \" ، فإنك تقبل <2> الشروط والأحكام </ 2> بواسطة Kromatika.Finance <3 /> <4 />"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "<0><1><2><3/><4/><5/><6/><7/></2></1><8>Earn crypto by sharing the following referral link <9><10>{0} {1}</10></9></8></0>"
 msgstr "<0> <1> <2> <3 /> <4 /> <5 /> <6 /> <7 /> </2> </1> <8> اربح تشفيرًا من خلال مشاركة رابط الإحالة التالي <9 > <10> {0} {1} </10> </9> </8> </0>"
 
@@ -120,6 +122,7 @@ msgstr "<0>تحليلات الحساب والرسوم المتراكمة</0><1> 
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "<0>Connect wallet to generate referral link. How it works ? <1>Read More</1></0>"
 msgstr "<0> ربط المحفظة لإنشاء رابط الإحالة. كيف تعمل ؟ <1> اقرأ المزيد </ 1> </0>"
 
@@ -247,21 +250,24 @@ msgid "Against"
 msgstr "ضد"
 
 #: src/components/LimitWarning/LimitWarningModal.tsx
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Agree"
 msgstr "يوافق"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Allow Kromatika to use your {0}"
 msgstr "اسمح لـ Kromatika باستخدام {0}"
 
-#: src/pages/Market/index.tsx
-#: src/pages/Market/index.tsx
-msgid "Allow the Kromatika Aggregator to use your {0}"
-msgstr "اسمح لـ Kromatika Aggregator باستخدام {0}"
+#: 
+#: 
+#~ msgid "Allow the Kromatika Aggregator to use your {0}"
+#~ msgstr "اسمح لـ Kromatika Aggregator باستخدام {0}"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 msgid "Allowed Slippage"
@@ -269,6 +275,7 @@ msgstr "الانزلاق السعري المسموح به"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Allowed Slippage:"
 msgstr "الانزلاق السعري المسموح به:"
 
@@ -289,8 +296,13 @@ msgstr "حدث خطأ أثناء محاولة تنفيذ هذا التبادل. 
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
-msgid "Any missing order? Try switching between"
-msgstr "أي طلب مفقود؟ حاول التبديل بين"
+msgid "Any missing order(s)? Try switching between networks."
+msgstr "أي طلبات مفقودة؟ حاول التبديل بين الشبكات."
+
+#: 
+#: 
+#~ msgid "Any missing order? Try switching between"
+#~ msgstr "أي طلب مفقود؟ حاول التبديل بين"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -533,6 +545,10 @@ msgstr "مجمّع"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "تم تجميع {0} {1} {2} و {3} {4} {5}"
 
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Collected:"
+msgstr "جمعت:"
+
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting amounts will withdraw currently available amounts for you."
 msgstr "سيؤدي تحصيل المبالغ إلى سحب المبالغ المتاحة حاليًا لك."
@@ -586,6 +602,7 @@ msgstr "تأكيد المعاملة في المحفظة"
 #: src/pages/Stake/StakingModal.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/burn/v3/hooks.tsx
 #: src/state/market/hooks.tsx
@@ -786,7 +803,7 @@ msgstr "تجاهل"
 msgid "Docs"
 msgstr "الوثائق"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Don't show this message again for the next 30 days."
 msgstr "لا تعرض هذه الرسالة مرة أخرى خلال الثلاثين يومًا القادمة."
 
@@ -873,6 +890,7 @@ msgstr "خطأ في استيراد قائمة"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Est. Fees:"
 msgstr "EST. مصاريف:"
 
@@ -929,6 +947,7 @@ msgstr "لـ"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "From"
 msgstr "من"
 
@@ -938,6 +957,7 @@ msgstr "من"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "From (at most)"
 msgstr "من (على الأكثر)"
 
@@ -968,6 +988,22 @@ msgstr "مركز المساعدة"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "يخفي"
+
+#: src/components/Menu/index.tsx
+msgid "How to use FELO"
+msgstr "كيفية استخدام FELO"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Gasless"
+msgstr "كيفية استخدام Gasless"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Perpetuals"
+msgstr "كيفية استخدام Perpetuals"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Swap"
+msgstr "كيفية استخدام Swap"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
@@ -1004,6 +1040,10 @@ msgstr "استيراد مجموعة V2"
 msgid "Import at your own risk"
 msgstr "استيراد على مسؤوليتك الخاصة"
 
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "In Range"
+msgstr "في النطاق"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
 msgstr "تهيئة..."
@@ -1029,6 +1069,7 @@ msgstr "تثبيت Metamask"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "السيولة غير كافية لهذه التجارة."
 
@@ -1067,15 +1108,15 @@ msgstr "إيداع KROM مطلوب"
 msgid "Kromatika available in: <0>{0}</0>"
 msgstr "Kromatika متاح في: <0>{0}</0>"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "LP fees earned:"
-msgstr "رسوم LP المكتسبة:"
+#: 
+#~ msgid "LP fees earned:"
+#~ msgstr "رسوم LP المكتسبة:"
 
 #: src/components/Menu/index.tsx
 msgid "Language"
 msgstr "لغة"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Launch Perpetual Trading"
 msgstr "إطلاق التداول الدائم"
 
@@ -1145,6 +1186,7 @@ msgstr "تحميل"
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Loading"
 msgstr "جاري التحميل"
 
@@ -1220,6 +1262,7 @@ msgstr "سعر الحد الأدنى"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Minimum Received:"
 msgstr "الحد الأدنى المستلم:"
 
@@ -1352,6 +1395,7 @@ msgid "Participating pools"
 msgstr "المجموعات المشاركة"
 
 #: src/components/Badge/RangeBadge.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "قيد الانتظار"
@@ -1439,7 +1483,9 @@ msgid "Preview"
 msgstr "معاينة"
 
 #: src/components/market/MarketModalHeader.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Price"
 msgstr "السعر"
 
@@ -1452,12 +1498,12 @@ msgstr "تفاصيل السعر"
 msgid "Price Updated"
 msgstr "تم تحديث السعر"
 
-#: src/pages/Market/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
 msgstr "السعر:"
 
 #: src/components/Badge/RangeBadge.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 msgid "Processed"
 msgstr "معالجتها"
 
@@ -1550,13 +1596,16 @@ msgid "Select a network"
 msgstr "حدد شبكة"
 
 #: src/components/CurrencyInputPanel/index.tsx
-#: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/market/hooks.tsx
 #: src/state/swap/hooks.tsx
 msgid "Select a token"
 msgstr "حدد الرمز"
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Select a token - Uniswap V3 pairs only"
+msgstr "حدد رمزًا مميزًا - أزواج Uniswap V3 فقط"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
@@ -1600,7 +1649,7 @@ msgstr "الطريق الذكي"
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "بعض الأصول غير متوفرة من خلال هذه الواجهة لأنها قد لا تعمل بشكل جيد مع العقود الذكية أو نحن غير قادرين على السماح بالتداول لأسباب قانونية."
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Some countries may not be allowed to use perpetual trading - see the details under section 2 within our terms of use."
 msgstr "قد لا يُسمح لبعض الدول باستخدام التداول الدائم - راجع التفاصيل الواردة في القسم 2 ضمن شروط الاستخدام الخاصة بنا."
 
@@ -1675,6 +1724,8 @@ msgstr "النجاح"
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Swap"
 msgstr "مبادلة"
 
@@ -1727,7 +1778,7 @@ msgstr "نشكرك على كونك جزءًا من مجتمع Kromatika <0/>"
 msgid "The % you will earn in fees."
 msgstr "النسبة التي ستكسبها في الرسوم."
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "The Perpetual Trading is currently in beta-stage. Trade at your own risk."
 msgstr "التداول الدائم حاليًا في المرحلة التجريبية. التجارة على مسؤليتك الخاصة."
 
@@ -1823,6 +1874,7 @@ msgstr "نصيحة: يتم تخزين الرموز المخصصة محليًا �
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "To"
 msgstr "إلى"
 
@@ -1832,6 +1884,7 @@ msgstr "إلى"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "To (at least)"
 msgstr "إلى (على الأقل)"
 
@@ -1904,6 +1957,9 @@ msgstr "التداول {0} {1} مقابل {2} {3}"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Transaction Details"
 msgstr "تفاصيل الصفقه"
 
@@ -2049,6 +2105,7 @@ msgstr "قد يؤدي عدم تثبيت KROM إلى منع النظام من ح�
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Unsupported Asset"
 msgstr "الأصول غير المدعومة"
 
@@ -2066,6 +2123,7 @@ msgstr "بدون عنوان"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Unwrap"
 msgstr "Unwrap"
 
@@ -2237,6 +2295,7 @@ msgstr "سحب UNI-V2!"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Wrap"
 msgstr "التفاف"
 
@@ -2253,12 +2312,13 @@ msgstr "لف الرمز الأصلي الخاص بك"
 msgid "Wrong Network"
 msgstr "شبكة خاطئة"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
 msgstr "أنت تغادر Kromatika.Finance وستتم إعادة توجيهك إلى موقع ويب مستقل تابع لجهة خارجية."
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You buy"
 msgstr "أنت تشتري"
 
@@ -2268,6 +2328,7 @@ msgstr "يمكنك إما أن تصوت على كل اقتراح بنفسك أو
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You can now swap {0}"
 msgstr "يمكنك الآن مبادلة {0}"
 
@@ -2292,6 +2353,7 @@ msgstr "ربما تكون قد فقدت اتصالك بالشبكة."
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You must give the Kromatika Aggregator a permission to use your {0}. You only have to do this once per token."
 msgstr "يجب أن تمنح Kromatika Aggregator إذنًا لاستخدام {0} الخاص بك. ما عليك سوى القيام بذلك مرة واحدة لكل رمز."
 
@@ -2309,6 +2371,7 @@ msgstr "تتلقى على الأقل"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You sell"
 msgstr "أنت تبيع"
 
@@ -2418,10 +2481,10 @@ msgstr "هنا."
 msgid "https:// or ipfs:// or ENS name"
 msgstr "https: // أو ipfs: // أو اسم ENS"
 
-#: src/pages/LimitOrder/index.tsx
-#: src/pages/LimitOrder/index.tsx
-msgid "networks."
-msgstr "الشبكات."
+#: 
+#: 
+#~ msgid "networks."
+#~ msgstr "الشبكات."
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
@@ -2435,7 +2498,6 @@ msgstr "عبر قائمة الرموز {0}"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {استيراد رمز} other {استيراد رموز}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
 #: src/components/LimitOrdersListItem/index.tsx
 #: src/components/LimitOrdersListItem/index.tsx
 #: src/components/LimitOrdersListItem/index.tsx
@@ -2458,9 +2520,9 @@ msgstr "{0}"
 msgid "{0} %"
 msgstr "{0} %"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "{0} + {1}"
-msgstr "{0} + {1}"
+#: 
+#~ msgid "{0} + {1}"
+#~ msgstr "{0} + {1}"
 
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/>  per <1/> <2>{1} </2>"
@@ -2526,6 +2588,14 @@ msgstr "{0} sKrom / الأسبوع"
 msgid "{0} tokens"
 msgstr "{0} رموز"
 
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{0} {1} + {2} {3}"
+msgstr "{0} {1} + {2} {3}"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • أضيفت من قبل المستخدم"
@@ -2536,6 +2606,7 @@ msgstr "{0} • أضيفت من قبل المستخدم"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "{0}%"
 msgstr "{0}%"
 
@@ -2567,13 +2638,13 @@ msgstr "{label}"
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "{status}"
-msgstr "{status}"
+#: 
+#~ msgid "{status}"
+#~ msgstr "{status}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "{token0CreatedAmount}"
-msgstr "{token0CreatedAmount}"
+#: 
+#~ msgid "{token0CreatedAmount}"
+#~ msgstr "{token0CreatedAmount}"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"

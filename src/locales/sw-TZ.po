@@ -56,6 +56,7 @@ msgstr "(rekebisha)"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "- Remove recipient"
 msgstr "- Ondoa mpokeaji"
 
@@ -101,12 +102,13 @@ msgstr "<0/> Mapendekezo Yote"
 msgid "<0/> Votes"
 msgstr "<0/> Kura"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "<0/><1/>By clicking \"Agree\" you accept the <2>Terms and Conditions </2>by Kromatika.Finance<3/><4/>"
 msgstr "<0/><1/>Kwa kubofya \"Kubali\" unakubali <2>Sheria na Masharti </2>na Kromatika.Finance<3/><4/>"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "<0><1><2><3/><4/><5/><6/><7/></2></1><8>Earn crypto by sharing the following referral link <9><10>{0} {1}</10></9></8></0>"
 msgstr "<0><1><2><3/><4/><5/><6/><7/></2></1><8>Jipatie fedha za crypto kwa kushiriki kiungo kifuatacho cha rufaa <9 ><10>{0} {1}</10></9></8></0>"
 
@@ -120,6 +122,7 @@ msgstr "<0>Uchanganuzi wa akaunti na makato iliyokusanywa</0><1> ↗ </1>"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "<0>Connect wallet to generate referral link. How it works ? <1>Read More</1></0>"
 msgstr "<0>Unganisha pochi ili kuunda kiungo cha rufaa. Inavyofanya kazi ? <1>Soma Zaidi</1></0>"
 
@@ -247,21 +250,24 @@ msgid "Against"
 msgstr "Kupinga"
 
 #: src/components/LimitWarning/LimitWarningModal.tsx
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Agree"
 msgstr "Kubali"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Allow Kromatika to use your {0}"
 msgstr "Ruhusu Kromatika kutumia {0} yako"
 
-#: src/pages/Market/index.tsx
-#: src/pages/Market/index.tsx
-msgid "Allow the Kromatika Aggregator to use your {0}"
-msgstr "Ruhusu Kromatika Aggregator kutumia {0} yako"
+#: 
+#: 
+#~ msgid "Allow the Kromatika Aggregator to use your {0}"
+#~ msgstr "Ruhusu Kromatika Aggregator kutumia {0} yako"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 msgid "Allowed Slippage"
@@ -269,6 +275,7 @@ msgstr "Kuruhusiwa Slippage"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Allowed Slippage:"
 msgstr "Utelezi Unaoruhusiwa:"
 
@@ -289,8 +296,13 @@ msgstr "Hitilafu ilitokea wakati wa kujaribu kutekeleza ubadilishanaji huu. Huen
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
-msgid "Any missing order? Try switching between"
-msgstr "Agizo lolote ambalo halipo? Jaribu kubadilisha kati"
+msgid "Any missing order(s)? Try switching between networks."
+msgstr "Je, kuna maagizo yoyote ambayo hayapo? Jaribu kubadilisha kati ya mitandao."
+
+#: 
+#: 
+#~ msgid "Any missing order? Try switching between"
+#~ msgstr "Agizo lolote ambalo halipo? Jaribu kubadilisha kati"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -533,6 +545,10 @@ msgstr "Imekusanywa"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "Imekusanywa {0} {1}{2} na {3} {4}{5}"
 
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Collected:"
+msgstr "Imekusanywa:"
+
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting amounts will withdraw currently available amounts for you."
 msgstr "Kiasi cha kukusanya kitaondoa kiasi kinachopatikana kwa sasa kwako."
@@ -586,6 +602,7 @@ msgstr "Thibitisha shughuli kwenye mkoba"
 #: src/pages/Stake/StakingModal.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/burn/v3/hooks.tsx
 #: src/state/market/hooks.tsx
@@ -786,7 +803,7 @@ msgstr "Ondoa"
 msgid "Docs"
 msgstr "Hati"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Don't show this message again for the next 30 days."
 msgstr "Usionyeshe ujumbe huu tena kwa siku 30 zijazo."
 
@@ -873,6 +890,7 @@ msgstr "Hitilafu ya kuingiza orodha"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Est. Fees:"
 msgstr "Mashariki. Ada:"
 
@@ -929,6 +947,7 @@ msgstr "Kwa maana"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "From"
 msgstr "Kutoka"
 
@@ -938,6 +957,7 @@ msgstr "Kutoka"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "From (at most)"
 msgstr "Kutoka (zaidi)"
 
@@ -968,6 +988,22 @@ msgstr "Kituo cha Usaidizi"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Ficha"
+
+#: src/components/Menu/index.tsx
+msgid "How to use FELO"
+msgstr "Jinsi ya kutumia FELO"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Gasless"
+msgstr "Jinsi ya kutumia Gasless"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Perpetuals"
+msgstr "Jinsi ya kutumia Perpetuals"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Swap"
+msgstr "Jinsi ya kutumia Swap"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
@@ -1004,6 +1040,10 @@ msgstr "Ingiza Bwawa la V2"
 msgid "Import at your own risk"
 msgstr "Ingiza kwa hatari yako mwenyewe"
 
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "In Range"
+msgstr "Katika Masafa"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
 msgstr "Inaanzisha ..."
@@ -1029,6 +1069,7 @@ msgstr "Sakinisha Metamask"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Ukosefu wa kutosha wa biashara hii."
 
@@ -1067,15 +1108,15 @@ msgstr "Amana ya KROM inahitajika"
 msgid "Kromatika available in: <0>{0}</0>"
 msgstr "Kubadilisha kunapatikana katika: <0>{0}</0>"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "LP fees earned:"
-msgstr "Ada za LP zilizopatikana:"
+#: 
+#~ msgid "LP fees earned:"
+#~ msgstr "Ada za LP zilizopatikana:"
 
 #: src/components/Menu/index.tsx
 msgid "Language"
 msgstr "Lugha"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Launch Perpetual Trading"
 msgstr "Zindua Biashara ya Kudumu"
 
@@ -1145,6 +1186,7 @@ msgstr "Imepakiwa"
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Loading"
 msgstr "Inapakia"
 
@@ -1220,6 +1262,7 @@ msgstr "Bei ya chini"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Minimum Received:"
 msgstr "Kiwango cha chini Kimepokelewa:"
 
@@ -1352,6 +1395,7 @@ msgid "Participating pools"
 msgstr "Mabwawa ya kushiriki"
 
 #: src/components/Badge/RangeBadge.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Inasubiri"
@@ -1439,7 +1483,9 @@ msgid "Preview"
 msgstr "Hakiki"
 
 #: src/components/market/MarketModalHeader.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Price"
 msgstr "Bei"
 
@@ -1452,12 +1498,12 @@ msgstr "Maelezo ya Bei"
 msgid "Price Updated"
 msgstr "Bei Imesasishwa"
 
-#: src/pages/Market/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
 msgstr "Bei:"
 
 #: src/components/Badge/RangeBadge.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 msgid "Processed"
 msgstr "Imechakatwa"
 
@@ -1550,13 +1596,16 @@ msgid "Select a network"
 msgstr "Chagua mtandao"
 
 #: src/components/CurrencyInputPanel/index.tsx
-#: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/market/hooks.tsx
 #: src/state/swap/hooks.tsx
 msgid "Select a token"
 msgstr "Chagua ishara"
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Select a token - Uniswap V3 pairs only"
+msgstr "Chagua tokeni - Uniswap V3 jozi pekee"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
@@ -1600,7 +1649,7 @@ msgstr "Njia ya Smart"
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Mali zingine hazipatikani kupitia kiolesura hiki kwa sababu zinaweza kufanya kazi vizuri na mikataba mizuri au hatuwezi kuruhusu biashara kwa sababu za kisheria."
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Some countries may not be allowed to use perpetual trading - see the details under section 2 within our terms of use."
 msgstr "Baadhi ya nchi huenda zisiruhusiwe kutumia biashara ya kudumu - tazama maelezo chini ya sehemu ya 2 ndani ya sheria na masharti yetu."
 
@@ -1675,6 +1724,8 @@ msgstr "Mafanikio"
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Swap"
 msgstr "Badilishana"
 
@@ -1727,7 +1778,7 @@ msgstr "Asante kwa kuwa sehemu ya jamii ya Kromatika <0 />"
 msgid "The % you will earn in fees."
 msgstr "% Utakayopata katika ada."
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "The Perpetual Trading is currently in beta-stage. Trade at your own risk."
 msgstr "Uuzaji wa Kudumu kwa sasa uko katika hatua ya beta. Biashara kwa hatari yako mwenyewe."
 
@@ -1823,6 +1874,7 @@ msgstr "Kidokezo: Ishara maalum huhifadhiwa ndani ya kivinjari chako"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "To"
 msgstr "Kwa"
 
@@ -1832,6 +1884,7 @@ msgstr "Kwa"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "To (at least)"
 msgstr "Kwa (angalau)"
 
@@ -1904,6 +1957,9 @@ msgstr "Biashara {0} {1} kwa {2} {3}"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Transaction Details"
 msgstr "Maelezo ya Muamala"
 
@@ -2049,6 +2105,7 @@ msgstr "Kuondoa KROM kunaweza kuzuia mfumo kukokotoa zawadi"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Unsupported Asset"
 msgstr "Sifa isiyotumika"
 
@@ -2066,6 +2123,7 @@ msgstr "Haina Jina"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Unwrap"
 msgstr "Unwrap"
 
@@ -2237,6 +2295,7 @@ msgstr "Umeondoa UNI-V2!"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Wrap"
 msgstr "Funga"
 
@@ -2253,12 +2312,13 @@ msgstr "Funga ishara yako ya asili"
 msgid "Wrong Network"
 msgstr "Mtandao Mbaya"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
 msgstr "Unaondoka kwenye Kromatika.Finance na utaelekezwa kwenye tovuti huru ya wahusika wengine."
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You buy"
 msgstr "Nunua"
 
@@ -2268,6 +2328,7 @@ msgstr "Unaweza kupiga kura juu ya kila pendekezo mwenyewe au upe kura zako kwa 
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You can now swap {0}"
 msgstr "Sasa unaweza kubadilisha {0}"
 
@@ -2292,6 +2353,7 @@ msgstr "Labda umepoteza muunganisho wako wa mtandao."
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You must give the Kromatika Aggregator a permission to use your {0}. You only have to do this once per token."
 msgstr "Ni lazima umpe Kromatika Aggregator ruhusa ya kutumia {0} yako. Lazima ufanye hivi mara moja tu kwa kila ishara."
 
@@ -2309,6 +2371,7 @@ msgstr "Unapokea angalau"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You sell"
 msgstr "Unauza"
 
@@ -2418,10 +2481,10 @@ msgstr "hapa."
 msgid "https:// or ipfs:// or ENS name"
 msgstr "https: // au ipfs: // au jina la ENS"
 
-#: src/pages/LimitOrder/index.tsx
-#: src/pages/LimitOrder/index.tsx
-msgid "networks."
-msgstr "mitandao."
+#: 
+#: 
+#~ msgid "networks."
+#~ msgstr "mitandao."
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
@@ -2435,7 +2498,6 @@ msgstr "kupitia orodha ya ishara {0}"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Leta ishara} other {Ingiza ishara}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
 #: src/components/LimitOrdersListItem/index.tsx
 #: src/components/LimitOrdersListItem/index.tsx
 #: src/components/LimitOrdersListItem/index.tsx
@@ -2458,9 +2520,9 @@ msgstr "{0}"
 msgid "{0} %"
 msgstr "{0} %"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "{0} + {1}"
-msgstr "{0} + {1}"
+#: 
+#~ msgid "{0} + {1}"
+#~ msgstr "{0} + {1}"
 
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/>  per <1/> <2>{1} </2>"
@@ -2526,6 +2588,14 @@ msgstr "{0} sKrom / wiki"
 msgid "{0} tokens"
 msgstr "Ishara {0}"
 
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{0} {1} + {2} {3}"
+msgstr "{0} {1} + {2} {3}"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Imeongezwa na mtumiaji"
@@ -2536,6 +2606,7 @@ msgstr "{0} • Imeongezwa na mtumiaji"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "{0}%"
 msgstr "{0}%"
 
@@ -2567,13 +2638,13 @@ msgstr "{label}"
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "{status}"
-msgstr "{status}"
+#: 
+#~ msgid "{status}"
+#~ msgstr "{status}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "{token0CreatedAmount}"
-msgstr "{token0CreatedAmount}"
+#: 
+#~ msgid "{token0CreatedAmount}"
+#~ msgstr "{token0CreatedAmount}"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"

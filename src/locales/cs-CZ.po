@@ -56,6 +56,7 @@ msgstr "(upravit)"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "- Remove recipient"
 msgstr "- Odebrat příjemce"
 
@@ -101,12 +102,13 @@ msgstr "<0/> Všechny návrhy"
 msgid "<0/> Votes"
 msgstr "<0/> hlasů"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "<0/><1/>By clicking \"Agree\" you accept the <2>Terms and Conditions </2>by Kromatika.Finance<3/><4/>"
 msgstr "<0/><1/>Kliknutím na \"Souhlasím\" přijímáte <2>Smluvní podmínky </2>od společnosti Kromatika.Finance<3/><4/>"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "<0><1><2><3/><4/><5/><6/><7/></2></1><8>Earn crypto by sharing the following referral link <9><10>{0} {1}</10></9></8></0>"
 msgstr "<0><1><2><3/><4/><5/><6/><7/></2></1><8>Vydělávejte kryptoměny sdílením následujícího odkazu na doporučení <9 ><10>{0} {1}</10></9></8></0>"
 
@@ -120,6 +122,7 @@ msgstr "<0>Analýza účtu a naběhlé poplatky</0><1> ↗ </1>"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "<0>Connect wallet to generate referral link. How it works ? <1>Read More</1></0>"
 msgstr "<0>Připojte peněženku a vygenerujte odkaz na doporučení. Jak to funguje ? <1>Další informace</1></0>"
 
@@ -247,21 +250,24 @@ msgid "Against"
 msgstr "Proti"
 
 #: src/components/LimitWarning/LimitWarningModal.tsx
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Agree"
 msgstr "Souhlasit"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Allow Kromatika to use your {0}"
 msgstr "Povolit Kromatikě používat vaše {0}"
 
-#: src/pages/Market/index.tsx
-#: src/pages/Market/index.tsx
-msgid "Allow the Kromatika Aggregator to use your {0}"
-msgstr "Povolit agregátoru Kromatika používat vaše {0}"
+#: 
+#: 
+#~ msgid "Allow the Kromatika Aggregator to use your {0}"
+#~ msgstr "Povolit agregátoru Kromatika používat vaše {0}"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 msgid "Allowed Slippage"
@@ -269,6 +275,7 @@ msgstr "Povolený skluz"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Allowed Slippage:"
 msgstr "Povolený skluz:"
 
@@ -289,8 +296,13 @@ msgstr "Při pokusu o provedení tohoto swapu došlo k chybě. Možná budete mu
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
-msgid "Any missing order? Try switching between"
-msgstr "Chybí nějaká objednávka? Zkuste mezi nimi přepínat"
+msgid "Any missing order(s)? Try switching between networks."
+msgstr "Chybí nějaká objednávka (objednávky)? Zkuste přepínat mezi sítěmi."
+
+#: 
+#: 
+#~ msgid "Any missing order? Try switching between"
+#~ msgstr "Chybí nějaká objednávka? Zkuste mezi nimi přepínat"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -533,6 +545,10 @@ msgstr "Vybráno"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "Shromážděno {0} {1}{2} a {3} {4}{5}"
 
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Collected:"
+msgstr "Shromážděno:"
+
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting amounts will withdraw currently available amounts for you."
 msgstr "Shromažďování částek vám stáhne aktuálně dostupné částky."
@@ -586,6 +602,7 @@ msgstr "Potvrďte transakci v peněžence"
 #: src/pages/Stake/StakingModal.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/burn/v3/hooks.tsx
 #: src/state/market/hooks.tsx
@@ -786,7 +803,7 @@ msgstr "Zamítnout"
 msgid "Docs"
 msgstr "Dokumenty"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Don't show this message again for the next 30 days."
 msgstr "Následujících 30 dní již tuto zprávu nezobrazovat."
 
@@ -873,6 +890,7 @@ msgstr "Chyba importu seznamu"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Est. Fees:"
 msgstr "Odhad. poplatky:"
 
@@ -929,6 +947,7 @@ msgstr "Pro"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "From"
 msgstr "Od"
 
@@ -938,6 +957,7 @@ msgstr "Od"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "From (at most)"
 msgstr "Od (nanejvýš)"
 
@@ -968,6 +988,22 @@ msgstr "Centrum nápovědy"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Skrýt"
+
+#: src/components/Menu/index.tsx
+msgid "How to use FELO"
+msgstr "Jak používat FELO"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Gasless"
+msgstr "Jak používat Gasless"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Perpetuals"
+msgstr "Jak používat Perpetuals"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Swap"
+msgstr "Jak používat Swap"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
@@ -1004,6 +1040,10 @@ msgstr "Importovat fond V2"
 msgid "Import at your own risk"
 msgstr "Importovat na vlastní riziko"
 
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "In Range"
+msgstr "V dosahu"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
 msgstr "Inicializace..."
@@ -1029,6 +1069,7 @@ msgstr "Nainstalovat Metamasku"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Nedostatek likvidity pro tento obchod."
 
@@ -1067,15 +1108,15 @@ msgstr "Je vyžadována záloha KROM"
 msgid "Kromatika available in: <0>{0}</0>"
 msgstr "Kromatika k dispozici za: <0>{0}</0>"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "LP fees earned:"
-msgstr "Vydělané poplatky za LP:"
+#: 
+#~ msgid "LP fees earned:"
+#~ msgstr "Vydělané poplatky za LP:"
 
 #: src/components/Menu/index.tsx
 msgid "Language"
 msgstr "Jazyk"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Launch Perpetual Trading"
 msgstr "Spusťte Perpetual Trading"
 
@@ -1145,6 +1186,7 @@ msgstr "Načteno"
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Loading"
 msgstr "Načítání"
 
@@ -1220,6 +1262,7 @@ msgstr "Minimální cena"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Minimum Received:"
 msgstr "Minimální přijaté:"
 
@@ -1352,6 +1395,7 @@ msgid "Participating pools"
 msgstr "Zúčastněné fondy"
 
 #: src/components/Badge/RangeBadge.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "čekající"
@@ -1439,7 +1483,9 @@ msgid "Preview"
 msgstr "Náhled"
 
 #: src/components/market/MarketModalHeader.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Price"
 msgstr "Cena"
 
@@ -1452,12 +1498,12 @@ msgstr "Podrobnosti o ceně"
 msgid "Price Updated"
 msgstr "Cena byla aktualizována"
 
-#: src/pages/Market/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
 msgstr "Cena:"
 
 #: src/components/Badge/RangeBadge.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 msgid "Processed"
 msgstr "Zpracováno"
 
@@ -1550,13 +1596,16 @@ msgid "Select a network"
 msgstr "Vyberte síť"
 
 #: src/components/CurrencyInputPanel/index.tsx
-#: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/market/hooks.tsx
 #: src/state/swap/hooks.tsx
 msgid "Select a token"
 msgstr "Vyberte žeton"
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Select a token - Uniswap V3 pairs only"
+msgstr "Vyberte token – pouze páry Uniswap V3"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
@@ -1600,7 +1649,7 @@ msgstr "Chytrá trasa"
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Některá aktiva nejsou přes toto rozhraní dostupná, protože nemusí dobře fungovat s chytrými smlouvami nebo z právních důvodů nejsme schopni povolit obchodování."
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Some countries may not be allowed to use perpetual trading - see the details under section 2 within our terms of use."
 msgstr "Některé země nemusí mít povoleno používat trvalé obchodování – viz podrobnosti v části 2 našich podmínek použití."
 
@@ -1675,6 +1724,8 @@ msgstr "Úspěch"
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Swap"
 msgstr "Prohodit"
 
@@ -1727,7 +1778,7 @@ msgstr "Děkujeme, že jste součástí komunity Kromatika <0/>"
 msgid "The % you will earn in fees."
 msgstr "Procento, které získáte na poplatcích."
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "The Perpetual Trading is currently in beta-stage. Trade at your own risk."
 msgstr "Perpetual Trading je v současné době ve fázi beta. Obchodujte na vlastní nebezpečí."
 
@@ -1823,6 +1874,7 @@ msgstr "Tip: Vlastní žetony jsou uloženy lokálně ve Vašem prohlížeči"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "To"
 msgstr "Do"
 
@@ -1832,6 +1884,7 @@ msgstr "Do"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "To (at least)"
 msgstr "Do (alespoň)"
 
@@ -1904,6 +1957,9 @@ msgstr "Obchodování {0} {1} za {2} {3}"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Transaction Details"
 msgstr "Detaily transakce"
 
@@ -2049,6 +2105,7 @@ msgstr "Odstranění KROM může systému zabránit ve výpočtu odměn"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Unsupported Asset"
 msgstr "Nepodporované aktivum"
 
@@ -2066,6 +2123,7 @@ msgstr "Nepojmenovaná"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Unwrap"
 msgstr "Rozbalit"
 
@@ -2237,6 +2295,7 @@ msgstr "UNI-V2 vybráno!"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Wrap"
 msgstr "Zalomit"
 
@@ -2253,12 +2312,13 @@ msgstr "Zabalte svůj nativní token"
 msgid "Wrong Network"
 msgstr "Nesprávná síť"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
 msgstr "Opouštíte Kromatika.Finance a budete přesměrováni na nezávislou webovou stránku třetí strany."
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You buy"
 msgstr "Kupujete"
 
@@ -2268,6 +2328,7 @@ msgstr "Buď můžete o každém návrhu hlasovat sami, nebo můžete své hlasy
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You can now swap {0}"
 msgstr "Nyní můžete vyměnit {0}"
 
@@ -2292,6 +2353,7 @@ msgstr "Možná jste ztratili připojení k síti."
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You must give the Kromatika Aggregator a permission to use your {0}. You only have to do this once per token."
 msgstr "K použití vašeho {0} musíte dát agregátoru Kromatika povolení. Pro každý token to musíte udělat pouze jednou."
 
@@ -2309,6 +2371,7 @@ msgstr "Dostáváte minimálně"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You sell"
 msgstr "Prodáváš"
 
@@ -2418,10 +2481,10 @@ msgstr "tady."
 msgid "https:// or ipfs:// or ENS name"
 msgstr "https:// nebo ipfs:// nebo název ENS"
 
-#: src/pages/LimitOrder/index.tsx
-#: src/pages/LimitOrder/index.tsx
-msgid "networks."
-msgstr "sítí."
+#: 
+#: 
+#~ msgid "networks."
+#~ msgstr "sítí."
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
@@ -2435,7 +2498,6 @@ msgstr "prostřednictvím seznamu žetonů {0}"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Importovat žeton} other {Importovat žetony}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
 #: src/components/LimitOrdersListItem/index.tsx
 #: src/components/LimitOrdersListItem/index.tsx
 #: src/components/LimitOrdersListItem/index.tsx
@@ -2458,9 +2520,9 @@ msgstr "{0}"
 msgid "{0} %"
 msgstr "{0} %"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "{0} + {1}"
-msgstr "{0} + {1}"
+#: 
+#~ msgid "{0} + {1}"
+#~ msgstr "{0} + {1}"
 
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/>  per <1/> <2>{1} </2>"
@@ -2526,6 +2588,14 @@ msgstr "{0} sKrom / týden"
 msgid "{0} tokens"
 msgstr "{0} žetonů"
 
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{0} {1} + {2} {3}"
+msgstr "{0} {1} + {2} {3}"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • Přidáno uživatelem"
@@ -2536,6 +2606,7 @@ msgstr "{0} • Přidáno uživatelem"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "{0}%"
 msgstr "{0} %"
 
@@ -2567,13 +2638,13 @@ msgstr "{label}"
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "{status}"
-msgstr "{status}"
+#: 
+#~ msgid "{status}"
+#~ msgstr "{status}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "{token0CreatedAmount}"
-msgstr "{token0CreatedAmount}"
+#: 
+#~ msgid "{token0CreatedAmount}"
+#~ msgstr "{token0CreatedAmount}"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"

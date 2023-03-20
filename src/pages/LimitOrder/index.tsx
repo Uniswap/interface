@@ -125,6 +125,7 @@ const ClassicModeContainer = styled.div`
 const SwapModalContainer = styled(AppBody)`
   flex: 1;
   width: 100%;
+  min-width: 280px;
   max-width: 475px;
   ${({ theme }) => theme.mediaWidth.upToLarge`
     width: 100%;
@@ -536,81 +537,79 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                 />
 
                 <AutoColumn gap={'md'}>
-                  <div style={{ display: 'relative' }}>
-                    <CurrencyInputPanel
-                      actionLabel={t`You send`}
-                      label={
-                        independentField === Field.OUTPUT && !showWrap ? (
-                          <Trans>From (at most)</Trans>
-                        ) : (
-                          <Trans>From</Trans>
-                        )
-                      }
-                      value={formattedAmounts.input}
-                      showMaxButton={showMaxButton}
-                      currency={currencies[Field.INPUT]}
-                      onUserInput={handleTypeInput}
-                      onMax={handleMaxInput}
-                      fiatValue={fiatValueInput ?? undefined}
-                      onCurrencySelect={handleInputSelect}
-                      otherCurrency={currencies[Field.OUTPUT]}
-                      showCommonBases={true}
-                      id="swap-currency-input"
-                      loading={independentField === Field.OUTPUT && routeIsSyncing}
+                  <CurrencyInputPanel
+                    actionLabel={t`You send`}
+                    label={
+                      independentField === Field.OUTPUT && !showWrap ? (
+                        <Trans>From (at most)</Trans>
+                      ) : (
+                        <Trans>From</Trans>
+                      )
+                    }
+                    value={formattedAmounts.input}
+                    showMaxButton={showMaxButton}
+                    currency={currencies[Field.INPUT]}
+                    onUserInput={handleTypeInput}
+                    onMax={handleMaxInput}
+                    fiatValue={fiatValueInput ?? undefined}
+                    onCurrencySelect={handleInputSelect}
+                    otherCurrency={currencies[Field.OUTPUT]}
+                    showCommonBases={true}
+                    id="swap-currency-input"
+                    loading={independentField === Field.OUTPUT && routeIsSyncing}
+                  />
+
+                  <ArrowWrapper clickable={false}>
+                    <X size="16" />
+                  </ArrowWrapper>
+
+                  <CurrencyInputPanel
+                    value={formattedAmounts.price}
+                    onUserInput={handleTypePrice}
+                    label={<Trans>Target Price+++</Trans>}
+                    showMaxButton={false}
+                    hideBalance={true}
+                    currency={currencies[Field.OUTPUT] ?? null}
+                    otherCurrency={currencies[Field.INPUT]}
+                    id="target-price"
+                    showCommonBases={false}
+                    locked={false}
+                    showCurrencySelector={false}
+                    showRate={true}
+                    isInvertedRate={showInverted}
+                    price={price}
+                    loading={independentField === Field.INPUT && routeIsSyncing}
+                  />
+
+                  <ArrowWrapper clickable>
+                    <ArrowDown
+                      size="16"
+                      onClick={() => {
+                        setApprovalSubmitted(false) // reset 2 step UI for approvals
+                        onSwitchTokens()
+                      }}
+                      color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
                     />
+                  </ArrowWrapper>
 
-                    <ArrowWrapper clickable={false}>
-                      <X size="16" />
-                    </ArrowWrapper>
-
-                    <CurrencyInputPanel
-                      value={formattedAmounts.price}
-                      onUserInput={handleTypePrice}
-                      label={<Trans>Target Price+++</Trans>}
-                      showMaxButton={false}
-                      hideBalance={true}
-                      currency={currencies[Field.OUTPUT] ?? null}
-                      otherCurrency={currencies[Field.INPUT]}
-                      id="target-price"
-                      showCommonBases={false}
-                      locked={false}
-                      showCurrencySelector={false}
-                      showRate={true}
-                      isInvertedRate={showInverted}
-                      price={price}
-                      loading={independentField === Field.INPUT && routeIsSyncing}
-                    />
-
-                    <ArrowWrapper clickable>
-                      <ArrowDown
-                        size="16"
-                        onClick={() => {
-                          setApprovalSubmitted(false) // reset 2 step UI for approvals
-                          onSwitchTokens()
-                        }}
-                        color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
-                      />
-                    </ArrowWrapper>
-
-                    <CurrencyInputPanel
-                      actionLabel={t`You receive at least`}
-                      value={formattedAmounts.output}
-                      onUserInput={handleTypeOutput}
-                      label={
-                        independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>
-                      }
-                      showMaxButton={false}
-                      hideBalance={false}
-                      fiatValue={fiatValueOutput ?? undefined}
-                      priceImpact={priceImpact}
-                      currency={currencies[Field.OUTPUT]}
-                      onCurrencySelect={handleOutputSelect}
-                      otherCurrency={currencies[Field.INPUT]}
-                      showCommonBases={true}
-                      id="swap-currency-output"
-                      loading={independentField === Field.INPUT && routeIsSyncing}
-                    />
-                  </div>
+                  <CurrencyInputPanel
+                    actionLabel={t`You receive at least`}
+                    value={formattedAmounts.output}
+                    onUserInput={handleTypeOutput}
+                    label={
+                      independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>
+                    }
+                    showMaxButton={false}
+                    hideBalance={false}
+                    fiatValue={fiatValueOutput ?? undefined}
+                    priceImpact={priceImpact}
+                    currency={currencies[Field.OUTPUT]}
+                    onCurrencySelect={handleOutputSelect}
+                    otherCurrency={currencies[Field.INPUT]}
+                    showCommonBases={true}
+                    id="swap-currency-output"
+                    loading={independentField === Field.INPUT && routeIsSyncing}
+                  />
 
                   {recipient !== null && !showWrap ? (
                     <>
@@ -764,7 +763,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                           }
                         >
                           <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                            <span style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'break-spaces' }}>
                               <CurrencyLogo
                                 currency={currencies[Field.INPUT]}
                                 size={'20px'}
@@ -916,75 +915,73 @@ export default function LimitOrder({ history }: RouteComponentProps) {
           />
 
           <AutoColumn gap={'md'}>
-            <div style={{ display: 'relative' }}>
-              <CurrencyInputPanel
-                actionLabel={t`You send`}
-                label={
-                  independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
-                }
-                value={formattedAmounts.input}
-                showMaxButton={showMaxButton}
-                currency={currencies[Field.INPUT]}
-                onUserInput={handleTypeInput}
-                onMax={handleMaxInput}
-                fiatValue={fiatValueInput ?? undefined}
-                onCurrencySelect={handleInputSelect}
-                otherCurrency={currencies[Field.OUTPUT]}
-                showCommonBases={true}
-                id="swap-currency-input"
-                loading={independentField === Field.OUTPUT && routeIsSyncing}
+            <CurrencyInputPanel
+              actionLabel={t`You send`}
+              label={
+                independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
+              }
+              value={formattedAmounts.input}
+              showMaxButton={showMaxButton}
+              currency={currencies[Field.INPUT]}
+              onUserInput={handleTypeInput}
+              onMax={handleMaxInput}
+              fiatValue={fiatValueInput ?? undefined}
+              onCurrencySelect={handleInputSelect}
+              otherCurrency={currencies[Field.OUTPUT]}
+              showCommonBases={true}
+              id="swap-currency-input"
+              loading={independentField === Field.OUTPUT && routeIsSyncing}
+            />
+
+            <ArrowWrapper clickable={false}>
+              <X size="16" />
+            </ArrowWrapper>
+
+            <CurrencyInputPanel
+              value={formattedAmounts.price}
+              onUserInput={handleTypePrice}
+              label={<Trans>Target Price---</Trans>}
+              showMaxButton={false}
+              hideBalance={true}
+              currency={currencies[Field.OUTPUT] ?? null}
+              otherCurrency={currencies[Field.INPUT]}
+              id="target-price"
+              showCommonBases={false}
+              locked={false}
+              showCurrencySelector={false}
+              showRate={true}
+              isInvertedRate={showInverted}
+              price={price}
+              loading={independentField === Field.INPUT && routeIsSyncing}
+            />
+
+            <ArrowWrapper clickable>
+              <ArrowDown
+                size="16"
+                onClick={() => {
+                  setApprovalSubmitted(false) // reset 2 step UI for approvals
+                  onSwitchTokens()
+                }}
+                color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
               />
+            </ArrowWrapper>
 
-              <ArrowWrapper clickable={false}>
-                <X size="16" />
-              </ArrowWrapper>
-
-              <CurrencyInputPanel
-                value={formattedAmounts.price}
-                onUserInput={handleTypePrice}
-                label={<Trans>Target Price---</Trans>}
-                showMaxButton={false}
-                hideBalance={true}
-                currency={currencies[Field.OUTPUT] ?? null}
-                otherCurrency={currencies[Field.INPUT]}
-                id="target-price"
-                showCommonBases={false}
-                locked={false}
-                showCurrencySelector={false}
-                showRate={true}
-                isInvertedRate={showInverted}
-                price={price}
-                loading={independentField === Field.INPUT && routeIsSyncing}
-              />
-
-              <ArrowWrapper clickable>
-                <ArrowDown
-                  size="16"
-                  onClick={() => {
-                    setApprovalSubmitted(false) // reset 2 step UI for approvals
-                    onSwitchTokens()
-                  }}
-                  color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
-                />
-              </ArrowWrapper>
-
-              <CurrencyInputPanel
-                actionLabel={t`You receive at least`}
-                value={formattedAmounts.output}
-                onUserInput={handleTypeOutput}
-                label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
-                showMaxButton={false}
-                hideBalance={false}
-                fiatValue={fiatValueOutput ?? undefined}
-                priceImpact={priceImpact}
-                currency={currencies[Field.OUTPUT]}
-                onCurrencySelect={handleOutputSelect}
-                otherCurrency={currencies[Field.INPUT]}
-                showCommonBases={true}
-                id="swap-currency-output"
-                loading={independentField === Field.INPUT && routeIsSyncing}
-              />
-            </div>
+            <CurrencyInputPanel
+              actionLabel={t`You receive at least`}
+              value={formattedAmounts.output}
+              onUserInput={handleTypeOutput}
+              label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
+              showMaxButton={false}
+              hideBalance={false}
+              fiatValue={fiatValueOutput ?? undefined}
+              priceImpact={priceImpact}
+              currency={currencies[Field.OUTPUT]}
+              onCurrencySelect={handleOutputSelect}
+              otherCurrency={currencies[Field.INPUT]}
+              showCommonBases={true}
+              id="swap-currency-output"
+              loading={independentField === Field.INPUT && routeIsSyncing}
+            />
 
             {recipient !== null && !showWrap ? (
               <>
@@ -1148,7 +1145,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                         }
                       >
                         <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                          <span style={{ display: 'flex', alignItems: 'center' }}>
+                          <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'break-spaces' }}>
                             <CurrencyLogo
                               currency={currencies[Field.INPUT]}
                               size={'20px'}

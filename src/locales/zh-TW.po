@@ -56,6 +56,7 @@ msgstr "(編輯)"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "- Remove recipient"
 msgstr "- 刪除接收人"
 
@@ -101,12 +102,13 @@ msgstr "<0/> 所有提案"
 msgid "<0/> Votes"
 msgstr "<0/> 投票"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "<0/><1/>By clicking \"Agree\" you accept the <2>Terms and Conditions </2>by Kromatika.Finance<3/><4/>"
 msgstr "<0/><1/>點擊“同意”即表示您接受 Kromatika.Finance<3/><4/> 的<2>條款和條件</2>"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "<0><1><2><3/><4/><5/><6/><7/></2></1><8>Earn crypto by sharing the following referral link <9><10>{0} {1}</10></9></8></0>"
 msgstr "<0><1><2><3/><4/><5/><6/></2></1><8>通過分享以下推薦鏈接賺取加密貨幣 <9 ><10>{0} {1}</10></9></8></0>"
 
@@ -120,6 +122,7 @@ msgstr "<0>帳戶分析和已累積的手續費</0><1>↗</1>"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "<0>Connect wallet to generate referral link. How it works ? <1>Read More</1></0>"
 msgstr "<0>連接錢包生成推薦鏈接。 怎麼運行的 ？ <1>閱讀更多</1></0>"
 
@@ -247,21 +250,24 @@ msgid "Against"
 msgstr "反對"
 
 #: src/components/LimitWarning/LimitWarningModal.tsx
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Agree"
 msgstr "同意"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Allow Kromatika to use your {0}"
 msgstr "允許 Kromatika 使用您的 {0}"
 
-#: src/pages/Market/index.tsx
-#: src/pages/Market/index.tsx
-msgid "Allow the Kromatika Aggregator to use your {0}"
-msgstr "允許 Kromatika 聚合器使用您的 {0}"
+#: 
+#: 
+#~ msgid "Allow the Kromatika Aggregator to use your {0}"
+#~ msgstr "允許 Kromatika 聚合器使用您的 {0}"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 msgid "Allowed Slippage"
@@ -269,6 +275,7 @@ msgstr "允許滑點"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Allowed Slippage:"
 msgstr "允許滑點："
 
@@ -289,8 +296,13 @@ msgstr "嘗試執行此交換時發生錯誤。 您可能需要增加滑點容�
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
-msgid "Any missing order? Try switching between"
-msgstr "有遺漏的訂單嗎？ 嘗試切換"
+msgid "Any missing order(s)? Try switching between networks."
+msgstr "有遺漏的訂單嗎？ 嘗試在網絡之間切換。"
+
+#: 
+#: 
+#~ msgid "Any missing order? Try switching between"
+#~ msgstr "有遺漏的訂單嗎？ 嘗試切換"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -533,6 +545,10 @@ msgstr "已收取"
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
 msgstr "收集了 {0} {1}{2} 和 {3} {4}{5}"
 
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Collected:"
+msgstr "集:"
+
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting amounts will withdraw currently available amounts for you."
 msgstr "收集金額將為您提取當前可用的金額。"
@@ -586,6 +602,7 @@ msgstr "在錢包中確認交易"
 #: src/pages/Stake/StakingModal.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/burn/v3/hooks.tsx
 #: src/state/market/hooks.tsx
@@ -786,7 +803,7 @@ msgstr "關閉"
 msgid "Docs"
 msgstr "文檔"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Don't show this message again for the next 30 days."
 msgstr "在接下來的 30 天內不再顯示此消息。"
 
@@ -873,6 +890,7 @@ msgstr "導入列表時出錯"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Est. Fees:"
 msgstr "美東時間。 費用："
 
@@ -929,6 +947,7 @@ msgstr "贊成"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "From"
 msgstr "源自"
 
@@ -938,6 +957,7 @@ msgstr "源自"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "From (at most)"
 msgstr "來源 (最多為)"
 
@@ -968,6 +988,22 @@ msgstr "幫助中心"
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "隱藏"
+
+#: src/components/Menu/index.tsx
+msgid "How to use FELO"
+msgstr "FELO的使用方法"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Gasless"
+msgstr "如何使用無氣體"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Perpetuals"
+msgstr "如何使用永續合約"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Swap"
+msgstr "如何使用交換"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
@@ -1004,6 +1040,10 @@ msgstr "導入 V2 流動池"
 msgid "Import at your own risk"
 msgstr "自行承擔導入的風險"
 
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "In Range"
+msgstr "在範圍內"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
 msgstr "初始化中..."
@@ -1029,6 +1069,7 @@ msgstr "安裝Metamask"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "現有流動量不足以支持此交易。"
 
@@ -1067,15 +1108,15 @@ msgstr "需要 KROM 押金"
 msgid "Kromatika available in: <0>{0}</0>"
 msgstr "Kromatika 可選語言：<0>{0}</0>"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "LP fees earned:"
-msgstr "賺取的 LP 費用："
+#: 
+#~ msgid "LP fees earned:"
+#~ msgstr "賺取的 LP 費用："
 
 #: src/components/Menu/index.tsx
 msgid "Language"
 msgstr "語言"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Launch Perpetual Trading"
 msgstr "啟動永續交易"
 
@@ -1145,6 +1186,7 @@ msgstr "已加載"
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Loading"
 msgstr "載入中"
 
@@ -1220,6 +1262,7 @@ msgstr "最低價格"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Minimum Received:"
 msgstr "最低收到："
 
@@ -1352,6 +1395,7 @@ msgid "Participating pools"
 msgstr "參與的流動池"
 
 #: src/components/Badge/RangeBadge.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "待辦"
@@ -1439,7 +1483,9 @@ msgid "Preview"
 msgstr "預覽"
 
 #: src/components/market/MarketModalHeader.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Price"
 msgstr "兌換率"
 
@@ -1452,12 +1498,12 @@ msgstr "價格詳情"
 msgid "Price Updated"
 msgstr "兌換率已更新"
 
-#: src/pages/Market/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
 msgstr "兌換率："
 
 #: src/components/Badge/RangeBadge.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 msgid "Processed"
 msgstr "處理"
 
@@ -1550,13 +1596,16 @@ msgid "Select a network"
 msgstr "選擇網絡"
 
 #: src/components/CurrencyInputPanel/index.tsx
-#: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/market/hooks.tsx
 #: src/state/swap/hooks.tsx
 msgid "Select a token"
 msgstr "選擇代幣"
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Select a token - Uniswap V3 pairs only"
+msgstr "選擇代幣 - 僅限 Uniswap V3 對"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
@@ -1600,7 +1649,7 @@ msgstr "智能路線"
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "有些代幣無法通過此界面使用，因為它們可能無法很好地調用智能合約，或者由於法律原因無法允許交易。"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "Some countries may not be allowed to use perpetual trading - see the details under section 2 within our terms of use."
 msgstr "某些國家/地區可能不允許使用永久交易 - 請參閱我們的使用條款中第 2 節的詳細信息。"
 
@@ -1675,6 +1724,8 @@ msgstr "成功"
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Swap"
 msgstr "兌換"
 
@@ -1727,7 +1778,7 @@ msgstr "感謝您加入 Kromatika 社區 <0/>"
 msgid "The % you will earn in fees."
 msgstr "您將賺取的手續費百分比。"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "The Perpetual Trading is currently in beta-stage. Trade at your own risk."
 msgstr "永續交易目前處於測試階段。 自負風險。"
 
@@ -1823,6 +1874,7 @@ msgstr "提示：自定義代幣信息會本地存儲在您的瀏覽器中"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "To"
 msgstr "至"
 
@@ -1832,6 +1884,7 @@ msgstr "至"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "To (at least)"
 msgstr "到（至少）"
 
@@ -1904,6 +1957,9 @@ msgstr "用 {0} {1} 換 {2} {3}"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Transaction Details"
 msgstr "交易明細"
 
@@ -2049,6 +2105,7 @@ msgstr "取消質押 KROM 可能會阻止系統計算獎勵"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Unsupported Asset"
 msgstr "不支持的資產"
 
@@ -2066,6 +2123,7 @@ msgstr "無標題"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Unwrap"
 msgstr "展開"
 
@@ -2237,6 +2295,7 @@ msgstr "已贖回 UNI-V2！"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Wrap"
 msgstr "包裹"
 
@@ -2253,12 +2312,13 @@ msgstr "包裝您的原生令牌"
 msgid "Wrong Network"
 msgstr "錯誤的網絡"
 
-#: src/components/Perpetual/PerpModal.tsx
+#: src/components/Perpetual/index.tsx
 msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
 msgstr "您將離開 Kromatika.Finance 並將被重定向到一個獨立的第三方網站。"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You buy"
 msgstr "你买"
 
@@ -2268,6 +2328,7 @@ msgstr "您可以對每個提案自行進行投票，也可以將您的投票權
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You can now swap {0}"
 msgstr "您現在可以交換 {0}"
 
@@ -2292,6 +2353,7 @@ msgstr "您的網絡連接可能斷了。"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You must give the Kromatika Aggregator a permission to use your {0}. You only have to do this once per token."
 msgstr "您必須授予 Kromatika 聚合器使用您的 {0} 的權限。 您只需為每個令牌執行一次此操作。"
 
@@ -2309,6 +2371,7 @@ msgstr "你至少收到"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You sell"
 msgstr "你卖"
 
@@ -2418,10 +2481,10 @@ msgstr "這裡。"
 msgid "https:// or ipfs:// or ENS name"
 msgstr "https:// 或 ipfs:// 或 ENS 名"
 
-#: src/pages/LimitOrder/index.tsx
-#: src/pages/LimitOrder/index.tsx
-msgid "networks."
-msgstr "網絡."
+#: 
+#: 
+#~ msgid "networks."
+#~ msgstr "網絡."
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
@@ -2435,7 +2498,6 @@ msgstr "從 {0} 代幣列表"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {導入代幣} other {導入代幣}}"
 
-#: src/components/LimitOrdersListItem/index.tsx
 #: src/components/LimitOrdersListItem/index.tsx
 #: src/components/LimitOrdersListItem/index.tsx
 #: src/components/LimitOrdersListItem/index.tsx
@@ -2458,9 +2520,9 @@ msgstr "{0}"
 msgid "{0} %"
 msgstr "{0} %"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "{0} + {1}"
-msgstr "{0} + {1}"
+#: 
+#~ msgid "{0} + {1}"
+#~ msgstr "{0} + {1}"
 
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/>  per <1/> <2>{1} </2>"
@@ -2526,6 +2588,14 @@ msgstr "{0} sKrom/週"
 msgid "{0} tokens"
 msgstr "{0} 代幣"
 
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{0} {1} + {2} {3}"
+msgstr "{0} {1} + {2} {3}"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "{0} • Added by user"
 msgstr "{0} • 由用戶添加"
@@ -2536,6 +2606,7 @@ msgstr "{0} • 由用戶添加"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "{0}%"
 msgstr "{0}%"
 
@@ -2567,13 +2638,13 @@ msgstr "{label}"
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "{status}"
-msgstr "{status}"
+#: 
+#~ msgid "{status}"
+#~ msgstr "{status}"
 
-#: src/components/LimitOrdersListItem/index.tsx
-msgid "{token0CreatedAmount}"
-msgstr "{token0CreatedAmount}"
+#: 
+#~ msgid "{token0CreatedAmount}"
+#~ msgstr "{token0CreatedAmount}"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"

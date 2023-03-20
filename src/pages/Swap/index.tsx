@@ -786,7 +786,7 @@ export default function Swap({ history }: RouteComponentProps) {
                               }
                             >
                               <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                                <span style={{ display: 'flex', alignItems: 'center' }}>
+                                <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'break-spaces' }}>
                                   <CurrencyLogo
                                     currency={currencies[Field.INPUT]}
                                     size={'20px'}
@@ -1197,7 +1197,7 @@ export default function Swap({ history }: RouteComponentProps) {
                         }
                       >
                         <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                          <span style={{ display: 'flex', alignItems: 'center' }}>
+                          <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'break-spaces' }}>
                             <CurrencyLogo
                               currency={currencies[Field.INPUT]}
                               size={'20px'}

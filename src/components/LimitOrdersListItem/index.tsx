@@ -203,54 +203,50 @@ function LimitOrdersListItem({ limitOrderDetails }: OrderListItemProps) {
 
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
-
+  const currency0 = token0 ? unwrappedToken(token0) : undefined
+  const currency1 = token1 ? unwrappedToken(token1) : undefined
   const currency0Wrapped = token0 ? token0 : undefined
   const currency1Wrapped = token1 ? token1 : undefined
 
-  const currency0 = token0 ? unwrappedToken(token0) : undefined
-  const currency1 = token1 ? unwrappedToken(token1) : undefined
-
-  const feeValue0: CurrencyAmount<Token> | undefined = useMemo(() => {
+  const currencyAmount0: CurrencyAmount<Token> | undefined = useMemo(() => {
     if (!tokensOwed0 || !currency0) return undefined
     return CurrencyAmount.fromRawAmount(currency0 as Token, tokensOwed0?.toString())
   }, [currency0, tokensOwed0])
-
-  const feeValue1: CurrencyAmount<Token> | undefined = useMemo(() => {
+  const currencyAmount1: CurrencyAmount<Token> | undefined = useMemo(() => {
     if (!tokensOwed1 || !currency1) return undefined
     return CurrencyAmount.fromRawAmount(currency1 as Token, tokensOwed1?.toString())
   }, [currency1, tokensOwed1])
 
-  const currencyAmount = feeValue0
-  const currencyAmount1 = feeValue1
-
-  const currencyAmountFee = currencyAmount?.toSignificant(6)
-  const currencyAmountFee1 = currencyAmount1?.toSignificant(6)
-
   const createdEventAmount0 = createdEvent?.amount0
   const createdEventAmount1 = createdEvent?.amount1
-
-  const collectedAmount0 = collectedEvent?.tokensOwed0
-  const collectedAmount1 = collectedEvent?.tokensOwed1
-
-  const collectedValue0: CurrencyAmount<Token> | undefined = useMemo(() => {
-    if (!collectedAmount0 || !currency0) return undefined
-    return CurrencyAmount.fromRawAmount(currency0 as Token, collectedAmount0?.toString())
-  }, [collectedAmount0, currency0])
-
-  const collectedValue1: CurrencyAmount<Token> | undefined = useMemo(() => {
-    if (!collectedAmount1 || !currency1) return undefined
-    return CurrencyAmount.fromRawAmount(currency1 as Token, collectedAmount1?.toString())
-  }, [collectedAmount1, currency1])
+  const createdValue0: CurrencyAmount<Token> | undefined = useMemo(() => {
+    if (!createdEventAmount0 || !currency0) return undefined
+    return CurrencyAmount.fromRawAmount(currency0 as Token, createdEventAmount0?.toString())
+  }, [createdEventAmount0, currency0])
+  const createdValue1: CurrencyAmount<Token> | undefined = useMemo(() => {
+    if (!createdEventAmount1 || !currency1) return undefined
+    return CurrencyAmount.fromRawAmount(currency1 as Token, createdEventAmount1?.toString())
+  }, [createdEventAmount1, currency1])
 
   const currencyCreatedEventAmount: CurrencyAmount<Token> | undefined = useMemo(() => {
     if (!createdEventAmount0 || !currency0Wrapped) return undefined
     if (!createdEventAmount1 || !currency1Wrapped) return undefined
-
     if (createdEventAmount0.gt(createdEventAmount1)) {
       return CurrencyAmount.fromRawAmount(currency0Wrapped as Token, createdEventAmount0?.toString())
     }
     return CurrencyAmount.fromRawAmount(currency1Wrapped as Token, createdEventAmount1?.toString())
   }, [createdEventAmount0, currency0Wrapped, createdEventAmount1, currency1Wrapped])
+
+  const collectedAmount0 = collectedEvent?.tokensOwed0
+  const collectedAmount1 = collectedEvent?.tokensOwed1
+  const collectedValue0: CurrencyAmount<Token> | undefined = useMemo(() => {
+    if (!collectedAmount0 || !currency0) return undefined
+    return CurrencyAmount.fromRawAmount(currency0 as Token, collectedAmount0?.toString())
+  }, [collectedAmount0, currency0])
+  const collectedValue1: CurrencyAmount<Token> | undefined = useMemo(() => {
+    if (!collectedAmount1 || !currency1) return undefined
+    return CurrencyAmount.fromRawAmount(currency1 as Token, collectedAmount1?.toString())
+  }, [collectedAmount1, currency1])
 
   const token0USD = useUSDCPrice(currency0 ?? undefined)?.toSignificant(6)
   const token1USD = useUSDCPrice(currency1 ?? undefined)?.toSignificant(6)
@@ -322,17 +318,17 @@ function LimitOrdersListItem({ limitOrderDetails }: OrderListItemProps) {
     <LimitOrderWrapper to={positionSummaryLink}>
       <RowFixedHeight>
         <Token0>
-          <Trans>
-            {commafy(currencyCreatedEventAmount?.toSignificant())}
-            <span>{currencyAmount?.currency.symbol}</span>
-          </Trans>
+          <Trans>{`${commafy(currencyCreatedEventAmount?.toSignificant())} ${
+            currencyCreatedEventAmount?.currency ? unwrappedToken(currencyCreatedEventAmount?.currency)?.symbol : ''
+          }`}</Trans>
         </Token0>
         <Token1>
           <Trans>
-            {targetPrice &&
-              currencyCreatedEventAmount &&
-              commafy(targetPrice?.quote(currencyCreatedEventAmount).toSignificant())}
-            <span>{currencyAmount1?.currency.symbol}</span>
+            {targetPrice && currencyCreatedEventAmount
+              ? `${commafy(targetPrice?.quote(currencyCreatedEventAmount).toSignificant())} ${
+                  targetPrice?.quoteCurrency ? unwrappedToken(targetPrice?.quoteCurrency)?.symbol : ''
+                }`
+              : ''}
           </Trans>
         </Token1>
       </RowFixedHeight>
@@ -390,10 +386,10 @@ function LimitOrdersListItem({ limitOrderDetails }: OrderListItemProps) {
         </TextLabel>
         <TextValue>
           <Trans>
-            {priceUpper ? (
+            {targetPrice ? (
               <>
-                <span>1 {currencyAmount?.currency.symbol} = </span>
-                <span>{commafy(priceUpper?.toSignificant(6))}</span>
+                <span>1 {currencyAmount0?.currency.symbol} = </span>
+                <span>{commafy(targetPrice?.toSignificant(6))}</span>
                 <span> {currencyAmount1?.currency.symbol}</span>{' '}
               </>
             ) : (
@@ -415,22 +411,13 @@ function LimitOrdersListItem({ limitOrderDetails }: OrderListItemProps) {
       <RowFixedHeight>
         <TextLabel>
           <TYPE.darkGray>
-            <Trans>LP fees earned:</Trans>
+            <Trans>Collected:</Trans>
           </TYPE.darkGray>
         </TextLabel>
         <TextValue>
           <Trans>
-            {`${commafy(collectedValue0?.toSignificant())} ${currency0?.symbol} + ${
-              targetPrice &&
-              currencyCreatedEventAmount &&
-              currencyAmount1 &&
-              commafy(
-                (
-                  Number(currencyAmount1.toSignificant()) -
-                  Number(currencyCreatedEventAmount.multiply(targetPrice).toSignificant())
-                ).toFixed(6)
-              )
-            } ${currency1?.symbol}`}
+            {`${commafy(collectedValue0?.toSignificant())} ${currency0?.symbol} + 
+              ${commafy(collectedValue1?.toSignificant())} ${currency1?.symbol}`}
           </Trans>
         </TextValue>
       </RowFixedHeight>
