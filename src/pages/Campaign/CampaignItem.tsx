@@ -9,7 +9,9 @@ import { Check } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
+import { ReactComponent as GrantCampaignIcon } from 'assets/svg/grant_campaign.svg'
 import ProgressBar from 'components/ProgressBar'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { DEFAULT_SIGNIFICANT, RESERVE_USD_DECIMALS } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
 import useTheme from 'hooks/useTheme'
@@ -139,10 +141,30 @@ const CampaignItem = ({ campaign, onSelectCampaign, isSelected }: CampaignItemPr
   const showProgressBarNumberTrade = tradingNumberRequired > 1
 
   return (
-    <CampaignItemWrapper onClick={() => onSelectCampaign(campaign)} selected={isSelected}>
+    <CampaignItemWrapper
+      onClick={() => {
+        onSelectCampaign(campaign)
+      }}
+      selected={isSelected}
+    >
       <Container>
         <Flex style={{ gap: '8px' }}>{rChainIdImages}</Flex>
-        <CampaignStatusText status={campaign.status}>{rCampaignStatus}</CampaignStatusText>
+        <Flex
+          alignItems="center"
+          sx={{
+            gap: '8px',
+          }}
+        >
+          {campaign.competitionId && campaign.competitorId && campaign.status !== CampaignStatus.ENDED ? (
+            <MouseoverTooltip
+              placement="top"
+              text={<Trans>This campaign is participating in the Grant Campaign</Trans>}
+            >
+              <GrantCampaignIcon width="16px" height="16px" />
+            </MouseoverTooltip>
+          ) : null}
+          <CampaignStatusText status={campaign.status}>{rCampaignStatus}</CampaignStatusText>
+        </Flex>
       </Container>
 
       <Container>

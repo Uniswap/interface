@@ -113,6 +113,8 @@ export interface CampaignData {
   userInfo?: CampaignUserInfo
   tradingNumberRequired: number
   leaderboard: CampaignLeaderboard | undefined
+  competitionId?: number
+  competitorId?: number
 }
 
 export interface CampaignProofData {

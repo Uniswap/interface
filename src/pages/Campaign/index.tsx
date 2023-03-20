@@ -424,7 +424,7 @@ export default function Campaign() {
     <>
       <PageWrapper>
         <CampaignContainer>
-          <HideMedium style={{ maxWidth: 'max(35%, 400px)' }}>
+          <HideMedium style={{ flex: '0 0 max(35%, 400px)' }}>
             <CampaignListAndSearch onSelectCampaign={onSelectCampaign} />
           </HideMedium>
 

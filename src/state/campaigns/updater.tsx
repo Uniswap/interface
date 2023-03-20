@@ -292,13 +292,17 @@ export default function CampaignsUpdater(): null {
     dispatch(setCampaignData({ campaigns: campaignData ?? [] }))
     if (campaignData && campaignData.length) {
       if (selectedCampaignId === undefined) {
-        navigate(getSlugUrlCampaign(campaignData[0].id, campaignData[0].name))
+        navigate(getSlugUrlCampaign(campaignData[0].id, campaignData[0].name), {
+          replace: true,
+        })
       } else {
         const selectedCampaign = campaignData.find(campaign => campaign.id.toString() === selectedCampaignId)
         if (selectedCampaign) {
           dispatch(setSelectedCampaign({ campaign: selectedCampaign }))
         } else {
-          navigate(getSlugUrlCampaign(campaignData[0].id, campaignData[0].name))
+          navigate(getSlugUrlCampaign(campaignData[0].id, campaignData[0].name), {
+            replace: true,
+          })
         }
       }
     }
