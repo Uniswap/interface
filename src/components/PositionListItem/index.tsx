@@ -2,12 +2,14 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { Percent, Price, Token } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
+import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
 import RangeBadge from 'components/Badge/RangeBadge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverInlineText from 'components/HoverInlineText'
 import Loader from 'components/Loader'
 import { RowBetween } from 'components/Row'
+import { getUrlNameFromChainId } from 'graphql/data/util'
 import { useToken } from 'hooks/Tokens'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { usePool } from 'hooks/usePools'
@@ -183,6 +185,8 @@ export default function PositionListItem({
   tickLower,
   tickUpper,
 }: PositionListItemProps) {
+  const { chainId } = useWeb3React()
+
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
 
@@ -210,8 +214,6 @@ export default function PositionListItem({
   // check if price is within range
   const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
 
-  const positionSummaryLink = '/pools/' + tokenId
-
   const removed = liquidity?.eq(0)
 
   const containsURL = useMemo(
@@ -226,6 +228,12 @@ export default function PositionListItem({
   if (containsURL) {
     return null
   }
+
+  if (!chainId) {
+    return null
+  }
+
+  const positionSummaryLink = `/pools/${getUrlNameFromChainId(chainId)}/${tokenId}`
 
   return (
     <LinkRow to={positionSummaryLink}>

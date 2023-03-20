@@ -1,5 +1,5 @@
 import { QueryResult } from '@apollo/client'
-import { SupportedChainId } from 'constants/chains'
+import { isSupportedChain, SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import ms from 'ms.macro'
 import { useEffect } from 'react'
@@ -93,7 +93,7 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
   optimism: Chain.Optimism,
 }
 
-export const CHAIN_ID_TO_URL_NAME: Record<SupportedChainId, string> = {
+const CHAIN_ID_TO_URL_NAME: Record<SupportedChainId, string> = {
   [SupportedChainId.ARBITRUM_ONE]: 'arbitrum',
   [SupportedChainId.ARBITRUM_GOERLI]: 'arbitrum_goerli',
   [SupportedChainId.BNB]: 'bnb',
@@ -106,6 +106,19 @@ export const CHAIN_ID_TO_URL_NAME: Record<SupportedChainId, string> = {
   [SupportedChainId.POLYGON]: 'polygon',
   [SupportedChainId.POLYGON_MUMBAI]: 'polygon_mumbai',
 }
+
+export const getUrlNameFromChainId = (chainId: number) => {
+  if (isSupportedChain(chainId)) {
+    return CHAIN_ID_TO_URL_NAME[chainId as SupportedChainId]
+  } else {
+    return undefined
+  }
+}
+
+export const getChainIdFromUrlName = (urlChainName: string) =>
+  Object.entries(CHAIN_ID_TO_URL_NAME).find(([, name]) => {
+    return name === urlChainName
+  })?.[0]
 
 export function validateUrlChainParam(chainName: string | undefined) {
   return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum

@@ -73,10 +73,7 @@ export function AddRemoveTabs({
   const dispatch = useAppDispatch()
   const location = useLocation()
 
-  // detect if back should redirect to v3 or v2 pool page
-  const poolLink = location.pathname.includes('add/v2')
-    ? '/pools/v2'
-    : '/pools' + (positionID ? `/${positionID.toString()}` : '')
+  const poolLink = location.pathname.includes('add/v2') ? '/pools/v2' : '/pools'
 
   return (
     <Tabs>

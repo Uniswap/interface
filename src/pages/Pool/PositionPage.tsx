@@ -20,7 +20,7 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-import { CHAIN_ID_TO_URL_NAME, isGqlSupportedChain } from 'graphql/data/util'
+import { getChainIdFromUrlName, getUrlNameFromChainId, isGqlSupportedChain } from 'graphql/data/util'
 import { useToken } from 'hooks/Tokens'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -31,7 +31,7 @@ import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components/macro'
@@ -54,7 +54,7 @@ import { LoadingRows } from './styleds'
 
 const getTokenLink = (chainId: SupportedChainId, address: string) => {
   if (isGqlSupportedChain(chainId)) {
-    const chainName = CHAIN_ID_TO_URL_NAME[chainId]
+    const chainName = getUrlNameFromChainId(chainId)
     return `${window.location.origin}/#/tokens/${chainName}/${address}`
   } else {
     return getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
@@ -337,12 +337,13 @@ const useInverter = ({
   }
 }
 
-export function PositionPage() {
-  const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
+export default function PositionPage() {
+  const navigate = useNavigate()
+  const { tokenId: urlTokenId, chainName: urlChainName } = useParams<{ tokenId?: string; chainName?: string }>()
   const { chainId, account, provider } = useWeb3React()
   const theme = useTheme()
 
-  const parsedTokenId = tokenIdFromUrl ? BigNumber.from(tokenIdFromUrl) : undefined
+  const parsedTokenId = urlTokenId ? BigNumber.from(urlTokenId) : undefined
   const { loading, position: positionDetails } = useV3PositionFromTokenId(parsedTokenId)
 
   const {
@@ -578,22 +579,40 @@ export function PositionPage() {
       !collectMigrationHash
   )
 
-  return loading || poolState === PoolState.LOADING || !feeAmount ? (
-    <LoadingRows>
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-    </LoadingRows>
-  ) : (
+  const urlChainId = urlChainName ? getChainIdFromUrlName(urlChainName) : undefined
+
+  if (!chainId) {
+    return null
+  }
+
+  if (poolState === PoolState.NOT_EXISTS || poolState === PoolState.INVALID) {
+    navigate('/not-found')
+  }
+
+  if (loading || poolState === PoolState.LOADING || !feeAmount) {
+    return (
+      <LoadingRows>
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+      </LoadingRows>
+    )
+  }
+
+  if (!urlChainId || chainId !== parseInt(urlChainId)) {
+    return <div>invalid chain</div>
+  }
+
+  return (
     <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
       <>
         <PageWrapper>

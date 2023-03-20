@@ -35,7 +35,7 @@ import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
 import NotFound from './NotFound'
 import Pool from './Pool'
-import { PositionPage } from './Pool/PositionPage'
+import PositionPage from './Pool/PositionPage'
 import PoolV2 from './Pool/v2'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
@@ -98,7 +98,6 @@ function getCurrentPageFromLocation(locationPathname: string): InterfacePageName
     case locationPathname.startsWith('/vote'):
       return InterfacePageName.VOTE_PAGE
     case locationPathname.startsWith('/pools'):
-    case locationPathname.startsWith('/pool'):
       return InterfacePageName.POOL_PAGE
     case locationPathname.startsWith('/tokens'):
       return InterfacePageName.TOKENS_PAGE
@@ -233,15 +232,10 @@ export default function App() {
                   <Route path="send" element={<RedirectPathToSwapOnly />} />
                   <Route path="swap" element={<Swap />} />
 
-                  <Route path="pool/v2/find" element={<PoolFinder />} />
-                  <Route path="pool/v2" element={<PoolV2 />} />
-                  <Route path="pool" element={<Pool />} />
-                  <Route path="pool/:tokenId" element={<PositionPage />} />
-
                   <Route path="pools/v2/find" element={<PoolFinder />} />
                   <Route path="pools/v2" element={<PoolV2 />} />
                   <Route path="pools" element={<Pool />} />
-                  <Route path="pools/:tokenId" element={<PositionPage />} />
+                  <Route path="pools/:chainName/:tokenId" element={<PositionPage />} />
 
                   <Route path="add/v2" element={<RedirectDuplicateTokenIdsV2 />}>
                     <Route path=":currencyIdA" />
