@@ -131,9 +131,9 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
       const poolPairs: [Token, Token][] = []
       positionDetails.forEach((details) => {
         const tokenA =
-          allTokens[chainId][details.token0].token ?? new Token(chainId, details.token0, DEFAULT_ERC20_DECIMALS)
+          allTokens[chainId][details.token0]?.token ?? new Token(chainId, details.token0, DEFAULT_ERC20_DECIMALS)
         const tokenB =
-          allTokens[chainId][details.token1].token ?? new Token(chainId, details.token1, DEFAULT_ERC20_DECIMALS)
+          allTokens[chainId][details.token1]?.token ?? new Token(chainId, details.token1, DEFAULT_ERC20_DECIMALS)
 
         const factoryAddress = V3_CORE_FACTORY_ADDRESSES[chainId]
         const poolAddress = computePoolAddress({ factoryAddress, tokenA, tokenB, fee: details.fee })

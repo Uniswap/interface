@@ -1,9 +1,8 @@
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
-import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import Row from 'components/Row'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import { PortfolioBalancesQuery, usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { getTokenDetailsURL } from 'graphql/data/util'
+import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useState } from 'react'
@@ -15,6 +14,7 @@ import { useToggleWalletDrawer } from '..'
 import { PortfolioArrow } from '../AuthenticatedHeader'
 import { hideSmallBalancesAtom } from '../SmallBalanceToggle'
 import { ExpandoRow } from './ExpandoRow'
+import { PortfolioLogo } from './PortfolioLogo'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from './PortfolioRow'
 
 const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
@@ -97,9 +97,10 @@ function TokenRow({ token, quantity, denominatedValue }: TokenBalance & { token:
     toggleWalletDrawer()
   }, [navigate, token, toggleWalletDrawer])
 
+  const currency = gqlToCurrency(token)
   return (
     <PortfolioRow
-      left={<QueryTokenLogo token={token} size="40px" />}
+      left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size="40px" />}
       title={<ThemedText.SubHeader fontWeight={500}>{token?.name}</ThemedText.SubHeader>}
       descriptor={
         <TokenBalanceText>

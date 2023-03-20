@@ -2,11 +2,9 @@ import { t } from '@lingui/macro'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { L2NetworkLogo, LogoContainer } from 'components/Logo/AssetLogo'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useToggleWalletDrawer } from 'components/WalletDropdown'
-import { getChainInfo } from 'constants/chainInfo'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -14,8 +12,8 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
 
-import { ActivityLogo } from '../Activity'
 import { ExpandoRow } from '../ExpandoRow'
+import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
 import { useFeeValues } from './hooks'
 import useMultiChainPositions, { PositionInfo } from './useMultiChainPositions'
@@ -110,17 +108,10 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
     navigate('/pool/' + details.tokenId)
   }, [walletChainId, chainId, connector, toggleWalletDrawer, navigate, details.tokenId])
 
-  const L2Icon = getChainInfo(chainId)?.circleLogoUrl
-
   return (
     <PortfolioRow
       onClick={onClick}
-      left={
-        <LogoContainer>
-          <ActivityLogo chainId={chainId} tokenAddresses={[details.token0, details.token1]} />
-          <L2NetworkLogo networkUrl={L2Icon} parentSize="40px" />
-        </LogoContainer>
-      }
+      left={<PortfolioLogo chainId={chainId} currencies={[pool.token0, pool.token1]} />}
       title={
         <Row>
           <ThemedText.SubHeader fontWeight={500}>

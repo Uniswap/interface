@@ -1,3 +1,4 @@
+import { Currency } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { AssetActivityPartsFragment, TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 
@@ -11,7 +12,7 @@ export type Activity = {
   title: string
   descriptor?: string
   logos?: Array<string | undefined>
-  tokenAddresses?: Array<string>
+  currencies?: Array<Currency>
   otherAccount?: string
   receipt?: Receipt
 }

@@ -67,7 +67,7 @@ export function usePoolPriceMap(positions: PositionInfo[] | undefined) {
 
   const priceMap = useMemo(
     () =>
-      data?.tokens?.reduce((acc: PriceMap, current) => {
+      data?.tokens?.filter(Boolean).reduce((acc: PriceMap, current) => {
         acc[currencyKeyFromGraphQL(current)] = current.market?.price?.value
         return acc
       }, {}) ?? {},

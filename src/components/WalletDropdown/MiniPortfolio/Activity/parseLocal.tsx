@@ -46,7 +46,7 @@ function parseSwap(
   swap: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo,
   chainId: SupportedChainId,
   tokens: TokenAddressMap
-) {
+): Partial<Activity> {
   const tokenIn = getCurrency(swap.inputCurrencyId, chainId, tokens)
   const tokenOut = getCurrency(swap.outputCurrencyId, chainId, tokens)
   const [inputRaw, outputRaw] =
@@ -56,29 +56,33 @@ function parseSwap(
 
   return {
     descriptor: buildCurrencyDescriptor(tokenIn, inputRaw, tokenOut, outputRaw),
-    tokenAddresses: [swap.inputCurrencyId, swap.outputCurrencyId],
+    currencies: [tokenIn, tokenOut],
   }
 }
 
-function parseWrap(wrap: WrapTransactionInfo, chainId: SupportedChainId, status: TransactionStatus) {
+function parseWrap(wrap: WrapTransactionInfo, chainId: SupportedChainId, status: TransactionStatus): Partial<Activity> {
   const native = nativeOnChain(chainId)
   const wrapped = native.wrapped
   const [input, output] = wrap.unwrapped ? [wrapped, native] : [native, wrapped]
 
   const descriptor = buildCurrencyDescriptor(input, wrap.currencyAmountRaw, output, wrap.currencyAmountRaw)
   const title = getActivityTitle(TransactionType.WRAP, status, wrap.unwrapped)
-  const tokenAddresses = wrap.unwrapped ? [wrapped.address, 'ETH'] : ['ETH', wrapped.address]
+  const currencies = wrap.unwrapped ? [wrapped, native] : [native, wrapped]
 
-  return { title, descriptor, tokenAddresses }
+  return { title, descriptor, currencies }
 }
 
-function parseApproval(approval: ApproveTransactionInfo, chainId: SupportedChainId, tokens: TokenAddressMap) {
+function parseApproval(
+  approval: ApproveTransactionInfo,
+  chainId: SupportedChainId,
+  tokens: TokenAddressMap
+): Partial<Activity> {
   // TODO: Add 'amount' approved to ApproveTransactionInfo so we can distinguish between revoke and approve
   const currency = getCurrency(approval.tokenAddress, chainId, tokens)
   const descriptor = t`${currency.symbol ?? currency.name}`
   return {
     descriptor,
-    tokenAddresses: [approval.tokenAddress],
+    currencies: [currency],
   }
 }
 
@@ -86,16 +90,20 @@ type GenericLPInfo = Omit<
   AddLiquidityV3PoolTransactionInfo | RemoveLiquidityV3TransactionInfo | AddLiquidityV2PoolTransactionInfo,
   'type'
 >
-function parseLP(lp: GenericLPInfo, chainId: SupportedChainId, tokens: TokenAddressMap) {
+function parseLP(lp: GenericLPInfo, chainId: SupportedChainId, tokens: TokenAddressMap): Partial<Activity> {
   const baseCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
-  const quoteCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
+  const quoteCurrency = getCurrency(lp.quoteCurrencyId, chainId, tokens)
   const [baseRaw, quoteRaw] = [lp.expectedAmountBaseRaw, lp.expectedAmountQuoteRaw]
   const descriptor = buildCurrencyDescriptor(baseCurrency, baseRaw, quoteCurrency, quoteRaw, t`and`)
 
-  return { descriptor, tokenAddresses: [lp.baseCurrencyId, lp.quoteCurrencyId] }
+  return { descriptor, currencies: [baseCurrency, quoteCurrency] }
 }
 
-function parseCollectFees(collect: CollectFeesTransactionInfo, chainId: SupportedChainId, tokens: TokenAddressMap) {
+function parseCollectFees(
+  collect: CollectFeesTransactionInfo,
+  chainId: SupportedChainId,
+  tokens: TokenAddressMap
+): Partial<Activity> {
   // Adapts CollectFeesTransactionInfo to generic LP type
   const {
     currencyId0: baseCurrencyId,
@@ -110,12 +118,12 @@ function parseMigrateCreateV3(
   lp: MigrateV2LiquidityToV3TransactionInfo | CreateV3PoolTransactionInfo,
   chainId: SupportedChainId,
   tokens: TokenAddressMap
-) {
+): Partial<Activity> {
   const baseCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
   const quoteCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
   const descriptor = t`${baseCurrency.symbol} and ${quoteCurrency.symbol}`
 
-  return { descriptor, tokenAddresses: [lp.baseCurrencyId, lp.baseCurrencyId] }
+  return { descriptor, currencies: [baseCurrency, quoteCurrency] }
 }
 
 function parseLocalActivity(
@@ -178,18 +186,15 @@ export function useLocalActivities(): ActivityMap | undefined {
   return useMemo(
     () =>
       chainId
-        ? Object.entries(allTransactions).reduce(
-            (acc: { [hash: string]: Activity }, [hash, [transaction, chainId]]) => {
-              try {
-                const localActivity = parseLocalActivity(transaction, chainId, tokens)
-                if (localActivity) acc[hash] = localActivity
-              } catch (error) {
-                console.error('Failed to parse local activity', transaction)
-              }
-              return acc
-            },
-            {}
-          )
+        ? allTransactions.reduce((acc: { [hash: string]: Activity }, [transaction, chainId]) => {
+            try {
+              const localActivity = parseLocalActivity(transaction, chainId, tokens)
+              if (localActivity) acc[localActivity.hash] = localActivity
+            } catch (error) {
+              console.error('Failed to parse local activity', transaction)
+            }
+            return acc
+          }, {})
         : undefined,
     [allTransactions, chainId, tokens]
   )

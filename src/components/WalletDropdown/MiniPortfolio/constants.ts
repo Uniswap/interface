@@ -151,5 +151,5 @@ export function getActivityTitle(type: TransactionType, status: TransactionStatu
     const alternateTitle = AlternateTransactionTitleTable[type]
     if (alternateTitle !== undefined) return alternateTitle[status]
   }
-  return TransactionTitleTable[type][TransactionStatus.Pending]
+  return TransactionTitleTable[type][status]
 }

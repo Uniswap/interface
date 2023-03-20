@@ -1,25 +1,19 @@
 import { t } from '@lingui/macro'
-import { ReactComponent as UnknownStatus } from 'assets/svg/contract-interaction.svg'
 import Column from 'components/Column'
-import Loader from 'components/Loader'
-import { L2NetworkLogo, LogoContainer } from 'components/Logo/AssetLogo'
+import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
+import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { Unicon } from 'components/Unicon'
 import { useToggleWalletDrawer } from 'components/WalletDropdown'
-import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { TransactionStatus, useTransactionListQuery } from 'graphql/data/__generated__/types-and-hooks'
-import useTokenLogoSource from 'hooks/useAssetLogoSource'
-import useENSAvatar from 'hooks/useENSAvatar'
 import useENSName from 'hooks/useENSName'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useMemo } from 'react'
-import { HelpCircle } from 'react-feather'
 import styled from 'styled-components/macro'
 import { EllipsisStyle, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
+import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
 import { useLocalActivities } from './parseLocal'
 import { parseRemoteActivities, useTimeSince } from './parseRemote'
@@ -117,116 +111,37 @@ export default function ActivityTab({ account }: { account: string }) {
   }, [data?.portfolios, localMap])
   const toggleWalletDrawer = useToggleWalletDrawer()
 
-  if (!data || loading) {
+  if (!data && loading)
     return (
       <>
         <LoadingBubble height="16px" width="80px" margin="16px 16px 8px" />
         <PortfolioSkeleton shrinkRight />
       </>
     )
-  }
-
-  if (activityGroups.length === 0) {
+  else if (activityGroups.length === 0) {
     return <EmptyWalletModule type="activity" onNavigateClick={toggleWalletDrawer} />
-  }
-
-  return (
-    <PortfolioTabWrapper>
-      {activityGroups.map((activityGroup) => (
-        <ActivityGroupWrapper key={activityGroup.title}>
-          <ThemedText.SubHeader color="textSecondary" fontWeight={500} marginLeft="16px">
-            {activityGroup.title}
-          </ThemedText.SubHeader>
-          <Column>
-            {activityGroup.transactions.map((activity) => (
-              <ActivityRow key={activity.hash} activity={activity} />
-            ))}
-          </Column>
-        </ActivityGroupWrapper>
-      ))}
-    </PortfolioTabWrapper>
-  )
-}
-
-const StyledLogo = styled.img`
-  height: 40px;
-  width: 40px;
-  border-radius: 50%;
-  aspect-ratio: 1;
-`
-
-const DoubleLogoContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 2px;
-  ${StyledLogo}:nth-child(n) {
-    width: 19px;
-    object-fit: cover;
-  }
-  ${StyledLogo}:nth-child(1) {
-    border-radius: 20px 0 0 20px;
-    object-position: 0 0;
-  }
-  ${StyledLogo}:nth-child(2) {
-    border-radius: 0 20px 20px 0;
-    object-position: 100% 0;
-  }
-`
-
-const ENSAvatarImg = styled.img`
-  border-radius: 8px;
-  height: 40px;
-  width: 40px;
-`
-
-const UnknownContract = styled(UnknownStatus)`
-  color: ${({ theme }) => theme.textSecondary};
-  height: 40px;
-  width: 40px;
-`
-
-export function ActivityLogo({
-  srcs = [],
-  tokenAddresses,
-  chainId,
-  otherAccount,
-}: {
-  srcs?: Array<string | undefined>
-  tokenAddresses: Array<string> | undefined
-  chainId: SupportedChainId
-  otherAccount?: string
-}) {
-  const [tokenLogo1] = useTokenLogoSource(tokenAddresses?.[0], chainId, tokenAddresses?.[0] === 'ETH')
-  const [tokenLogo2] = useTokenLogoSource(tokenAddresses?.[1], chainId, tokenAddresses?.[1] === 'ETH')
-
-  if (tokenLogo1) srcs?.push(tokenLogo1)
-  if (tokenLogo2) srcs?.push(tokenLogo2)
-
-  const { avatar, loading } = useENSAvatar(otherAccount, false)
-  if (otherAccount) {
-    return loading ? (
-      <Loader size="40px" />
-    ) : avatar ? (
-      <ENSAvatarImg src={avatar} alt="avatar" />
-    ) : (
-      <Unicon size={40} address={otherAccount} />
-    )
-  } else if (!srcs || srcs.length === 0) {
-    return <UnknownContract />
-  } else if (srcs.length > 1) {
-    // TODO(cartcrom): add default img for half logo component w/ undefined src
-    return (
-      <DoubleLogoContainer>
-        <StyledLogo src={srcs[0]} />
-        <StyledLogo src={srcs[srcs.length - 1]} />
-      </DoubleLogoContainer>
-    )
   } else {
-    return srcs[0] ? <StyledLogo src={srcs[0]} /> : <HelpCircle size={40} />
+    return (
+      <PortfolioTabWrapper>
+        {activityGroups.map((activityGroup) => (
+          <ActivityGroupWrapper key={activityGroup.title}>
+            <ThemedText.SubHeader color="textSecondary" fontWeight={500} marginLeft="16px">
+              {activityGroup.title}
+            </ThemedText.SubHeader>
+            <Column>
+              {activityGroup.transactions.map((activity) => (
+                <ActivityRow key={activity.hash} activity={activity} />
+              ))}
+            </Column>
+          </ActivityGroupWrapper>
+        ))}
+      </PortfolioTabWrapper>
+    )
   }
 }
 
 const StyledDescriptor = styled(ThemedText.BodySmall)`
+  color: ${({ theme }) => theme.textSecondary};
   ${EllipsisStyle}
 `
 
@@ -237,35 +152,34 @@ const StyledTimestamp = styled(ThemedText.Caption)`
 `
 
 function ActivityRow({ activity }: { activity: Activity }) {
-  const { chainId, status, title, descriptor, logos, otherAccount, tokenAddresses } = activity
+  const { chainId, status, title, descriptor, logos, otherAccount, currencies } = activity
   const { ENSName } = useENSName(otherAccount)
+
   const explorerUrl = getExplorerLink(activity.chainId, activity.hash, ExplorerDataType.TRANSACTION)
-  const L2Icon = getChainInfo(chainId)?.circleLogoUrl
   const timeSince = useTimeSince(activity.timestamp)
 
   return (
     <PortfolioRow
       left={
         <Column>
-          <LogoContainer>
-            <ActivityLogo srcs={logos} tokenAddresses={tokenAddresses} chainId={chainId} otherAccount={otherAccount} />
-            <L2NetworkLogo networkUrl={L2Icon} parentSize="40px" />
-          </LogoContainer>
+          <PortfolioLogo chainId={chainId} currencies={currencies} images={logos} accountAddress={otherAccount} />
         </Column>
       }
-      title={
-        <ThemedText.SubHeader fontWeight={500} color="accentSuccess">
-          {title}
-        </ThemedText.SubHeader>
-      }
+      title={<ThemedText.SubHeader fontWeight={500}>{title}</ThemedText.SubHeader>}
       descriptor={
-        <StyledDescriptor>
+        <StyledDescriptor color="textSecondary">
           {descriptor}
           {ENSName ?? otherAccount}
         </StyledDescriptor>
       }
       right={
-        status === TransactionStatus.Pending ? <Loader size="16px" /> : <StyledTimestamp>{timeSince}</StyledTimestamp>
+        status === TransactionStatus.Pending ? (
+          <LoaderV2 />
+        ) : status === TransactionStatus.Confirmed ? (
+          <StyledTimestamp>{timeSince}</StyledTimestamp>
+        ) : (
+          <AlertTriangleFilled />
+        )
       }
       onClick={() => window.open(explorerUrl, '_blank')}
     />

@@ -1,4 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
+import Loader from 'components/Icons/LoadingSpinner'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { useMemo } from 'react'
@@ -8,7 +9,6 @@ import { ExternalLink } from 'theme'
 import { colors } from 'theme/colors'
 
 import { TransactionDetails } from '../../state/transactions/types'
-import Loader from '../Loader'
 import LogoView from './LogoView'
 import TransactionBody from './TransactionBody'
 
