@@ -1,15 +1,13 @@
 import '@sentry/tracing' // required to populate Sentry.startTransaction, which is not included in the core module
 
 import * as Sentry from '@sentry/react'
-import { Hub } from '@sentry/react'
 import { Transaction } from '@sentry/tracing'
 import assert from 'assert'
 
-import { maybeTrace, trace } from './trace'
+import { trace } from './trace'
 
 jest.mock('@sentry/react', () => {
   return {
-    getCurrentHub: jest.fn(),
     startTransaction: jest.fn(),
   }
 })
@@ -23,16 +21,16 @@ function getTransaction(index = 0): Transaction {
   return transaction
 }
 
-beforeEach(() => {
-  const Sentry = jest.requireActual('@sentry/react')
-  startTransaction.mockReset().mockImplementation((context) => {
-    const transaction: Transaction = Sentry.startTransaction(context)
-    transaction.initSpanRecorder()
-    return transaction
-  })
-})
-
 describe('trace', () => {
+  beforeEach(() => {
+    const Sentry = jest.requireActual('@sentry/react')
+    startTransaction.mockReset().mockImplementation((context) => {
+      const transaction: Transaction = Sentry.startTransaction(context)
+      transaction.initSpanRecorder()
+      return transaction
+    })
+  })
+
   it('propagates callback', async () => {
     await expect(trace('test', () => Promise.resolve('resolved'))).resolves.toBe('resolved')
     await expect(trace('test', () => Promise.reject('rejected'))).rejects.toBe('rejected')
@@ -142,34 +140,5 @@ describe('trace', () => {
       expect(span.data).toEqual({ e: 'e' })
       expect(span.tags).toEqual({ is_widget: true })
     })
-  })
-})
-
-describe('maybeTrace', () => {
-  const getScope = jest.fn()
-
-  beforeEach(() => {
-    getScope.mockReset()
-    const hub = { getScope } as unknown as Hub
-    jest.spyOn(Sentry, 'getCurrentHub').mockReturnValue(hub)
-  })
-
-  it('propagates callback', async () => {
-    await expect(maybeTrace('test', () => Promise.resolve('resolved'))).resolves.toBe('resolved')
-    await expect(maybeTrace('test', () => Promise.reject('rejected'))).rejects.toBe('rejected')
-  })
-
-  it('creates a span under the active transaction', async () => {
-    getScope.mockReturnValue({ getTransaction })
-    await trace('test', () => {
-      maybeTrace('child', () => Promise.resolve(), { data: { e: 'e' }, tags: { is_widget: true } })
-      return Promise.resolve()
-    })
-    const transaction = getTransaction()
-    const span = transaction.spanRecorder?.spans[1]
-    assert(span)
-    expect(span.op).toBe('child')
-    expect(span.data).toEqual({ e: 'e' })
-    expect(span.tags).toEqual({ is_widget: true })
   })
 })
