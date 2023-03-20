@@ -110,7 +110,7 @@ export const StyledXButton = styled(X)`
 
 const TAX_SERVICE_DISMISSED = 'TaxServiceToast-dismissed'
 
-const MAX_RENDER_COUNT = 3
+const MAX_RENDER_COUNT = 1
 
 export default function TaxServiceBanner() {
   const isDarkMode = useIsDarkMode()
