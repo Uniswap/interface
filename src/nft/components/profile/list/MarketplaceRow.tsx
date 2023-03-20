@@ -4,7 +4,12 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { RowsCollpsedIcon, RowsExpandedIcon } from 'nft/components/icons'
-import { getRoyalty, useHandleGlobalPriceToggle, useSyncPriceWithGlobalMethod } from 'nft/components/profile/list/utils'
+import {
+  getMarketplaceFee,
+  getRoyalty,
+  useHandleGlobalPriceToggle,
+  useSyncPriceWithGlobalMethod,
+} from 'nft/components/profile/list/utils'
 import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
@@ -150,11 +155,11 @@ export const MarketplaceRow = ({
 
   const fees = useMemo(() => {
     if (selectedMarkets.length === 1) {
-      return getRoyalty(selectedMarkets[0], asset) + selectedMarkets[0].fee
+      return getRoyalty(selectedMarkets[0], asset) + getMarketplaceFee(selectedMarkets[0], asset)
     } else {
       let max = 0
       for (const selectedMarket of selectedMarkets) {
-        const fee = selectedMarket.fee + getRoyalty(selectedMarket, asset)
+        const fee = getRoyalty(selectedMarket, asset) + getMarketplaceFee(selectedMarket, asset)
         max = Math.max(fee, max)
       }
 

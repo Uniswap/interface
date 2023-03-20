@@ -1,15 +1,13 @@
 import { Plural, t, Trans } from '@lingui/macro'
 import { BaseButton } from 'components/Button'
-import ms from 'ms.macro'
 import { BelowFloorWarningModal } from 'nft/components/profile/list/Modal/BelowFloorWarningModal'
 import { useIsMobile, useSellAsset } from 'nft/hooks'
-import { Listing, WalletAsset } from 'nft/types'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { shallow } from 'zustand/shallow'
 
-const BELOW_FLOOR_PRICE_THRESHOLD = 0.8
+import { findListingIssues } from './utils'
 
 const StyledListingButton = styled(BaseButton)<{ showResolveIssues: boolean; missingPrices: boolean }>`
   background: ${({ showResolveIssues, theme }) => (showResolveIssues ? theme.accentFailure : theme.accentAction)};
@@ -47,35 +45,13 @@ export const ListingButton = ({ onClick }: { onClick: () => void }) => {
 
   // Find issues with item listing data
   const [listingsMissingPrice, listingsBelowFloor] = useMemo(() => {
-    const missingExpiration = sellAssets.some((asset) => {
-      return (
-        asset.expirationTime != null &&
-        (isNaN(asset.expirationTime) || asset.expirationTime * 1000 - Date.now() < ms`60 seconds`)
-      )
-    })
-    const overMaxExpiration = sellAssets.some((asset) => {
-      return asset.expirationTime != null && asset.expirationTime * 1000 - Date.now() > ms`180 days`
-    })
-
-    const listingsMissingPrice: [WalletAsset, Listing][] = []
-    const listingsBelowFloor: [WalletAsset, Listing][] = []
-    const listingsAboveSellOrderFloor: [WalletAsset, Listing][] = []
-    const invalidPrices: [WalletAsset, Listing][] = []
-    for (const asset of sellAssets) {
-      if (asset.newListings) {
-        for (const listing of asset.newListings) {
-          if (!listing.price) listingsMissingPrice.push([asset, listing])
-          else if (isNaN(listing.price) || listing.price < 0) invalidPrices.push([asset, listing])
-          else if (
-            listing.price < (asset?.floorPrice ?? 0) * BELOW_FLOOR_PRICE_THRESHOLD &&
-            !listing.overrideFloorPrice
-          )
-            listingsBelowFloor.push([asset, listing])
-          else if (asset.floor_sell_order_price && listing.price >= asset.floor_sell_order_price)
-            listingsAboveSellOrderFloor.push([asset, listing])
-        }
-      }
-    }
+    const {
+      missingExpiration,
+      overMaxExpiration,
+      listingsMissingPrice,
+      listingsBelowFloor,
+      listingsAboveSellOrderFloor,
+    } = findListingIssues(sellAssets)
 
     // set number of issues
     const foundIssues =

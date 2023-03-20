@@ -1,10 +1,17 @@
 import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { addressesByNetwork, SupportedChainId } from '@looksrare/sdk'
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
+import ms from 'ms.macro'
 import { SetPriceMethod, WarningType } from 'nft/components/profile/list/shared'
 import { useNFTList, useSellAsset } from 'nft/hooks'
-import { LOOKSRARE_MARKETPLACE_CONTRACT, X2Y2_TRANSFER_CONTRACT } from 'nft/queries'
+import {
+  LOOKSRARE_MARKETPLACE_CONTRACT_721,
+  LOOKSRARE_MARKETPLACE_CONTRACT_1155,
+  X2Y2_TRANSFER_CONTRACT_721,
+  X2Y2_TRANSFER_CONTRACT_1155,
+} from 'nft/queries'
 import { OPENSEA_CROSS_CHAIN_CONDUIT } from 'nft/queries/openSea'
-import { CollectionRow, ListingMarket, ListingRow, ListingStatus, WalletAsset } from 'nft/types'
+import { CollectionRow, Listing, ListingMarket, ListingRow, ListingStatus, WalletAsset } from 'nft/types'
 import { approveCollection, LOOKS_RARE_CREATOR_BASIS_POINTS, signListing } from 'nft/utils/listNfts'
 import { Dispatch, useEffect } from 'react'
 import { shallow } from 'zustand/shallow'
@@ -20,19 +27,27 @@ export async function approveCollectionRow(
 ) {
   const callback = () => approveCollectionRow(collectionRow, signer, setCollectionStatusAndCallback)
   setCollectionStatusAndCallback(collectionRow, ListingStatus.SIGNING, callback)
-  const { marketplace, collectionAddress } = collectionRow
+  const { marketplace, collectionAddress, nftStandard } = collectionRow
   const addresses = addressesByNetwork[SupportedChainId.MAINNET]
   const spender =
     marketplace.name === 'OpenSea'
       ? OPENSEA_CROSS_CHAIN_CONDUIT
-      : marketplace.name === 'Rarible'
-      ? LOOKSRARE_MARKETPLACE_CONTRACT
+      : marketplace.name === 'LooksRare'
+      ? collectionRow.nftStandard === NftStandard.Erc721
+        ? LOOKSRARE_MARKETPLACE_CONTRACT_721
+        : LOOKSRARE_MARKETPLACE_CONTRACT_1155
       : marketplace.name === 'X2Y2'
-      ? X2Y2_TRANSFER_CONTRACT
+      ? collectionRow.nftStandard === NftStandard.Erc721
+        ? X2Y2_TRANSFER_CONTRACT_721
+        : X2Y2_TRANSFER_CONTRACT_1155
       : addresses.TRANSFER_MANAGER_ERC721
   !!collectionAddress &&
-    (await approveCollection(spender, collectionAddress, signer, (newStatus: ListingStatus) =>
-      setCollectionStatusAndCallback(collectionRow, newStatus, callback)
+    (await approveCollection(
+      spender,
+      collectionAddress,
+      signer,
+      (newStatus: ListingStatus) => setCollectionStatusAndCallback(collectionRow, newStatus, callback),
+      nftStandard
     ))
 }
 
@@ -100,6 +115,7 @@ const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], ListingRow[]]
           collectionAddress: asset.asset_contract.address,
           isVerified: asset.collectionIsVerified,
           marketplace,
+          nftStandard: asset.asset_contract.tokenType,
         }
         newCollectionsToApprove.push(newCollectionRow)
       }
@@ -183,14 +199,75 @@ export function useUpdateInputAndWarnings(
     const price = listPrice ?? 0
     inputRef.current.value = `${price}`
     if (price < (asset?.floorPrice ?? 0) && price > 0) setWarningType(WarningType.BELOW_FLOOR)
-    else if (asset.floor_sell_order_price && price >= asset.floor_sell_order_price)
+    else if (
+      asset.floor_sell_order_price &&
+      price >= asset.floor_sell_order_price &&
+      asset.asset_contract.tokenType !== NftStandard.Erc1155
+    )
       setWarningType(WarningType.ALREADY_LISTED)
-  }, [asset?.floorPrice, asset.floor_sell_order_price, inputRef, listPrice, setWarningType])
+  }, [
+    asset.asset_contract.tokenType,
+    asset?.floorPrice,
+    asset.floor_sell_order_price,
+    inputRef,
+    listPrice,
+    setWarningType,
+  ])
 }
 
 export const getRoyalty = (listingMarket: ListingMarket, asset: WalletAsset) => {
-  // LooksRare is a unique case where royalties for creators are a flat 0.5% or 50 basis points
-  const baseFee = listingMarket.name === 'LooksRare' ? LOOKS_RARE_CREATOR_BASIS_POINTS : asset.basisPoints ?? 0
+  // LooksRare is a unique case where royalties for creators are a flat 0.5% or 50 basis points if royalty is set
+  const baseFee =
+    listingMarket.name === 'LooksRare'
+      ? asset.basisPoints
+        ? LOOKS_RARE_CREATOR_BASIS_POINTS
+        : 0
+      : asset.basisPoints ?? 0
 
   return baseFee * 0.01
+}
+
+// OpenSea has a 0.5% fee for all assets that do not have a royalty set
+export const getMarketplaceFee = (listingMarket: ListingMarket, asset: WalletAsset) => {
+  return listingMarket.name === 'OpenSea' && !asset.basisPoints ? 0.5 : listingMarket.fee
+}
+
+const BELOW_FLOOR_PRICE_THRESHOLD = 0.8
+
+export const findListingIssues = (sellAssets: WalletAsset[]) => {
+  const missingExpiration = sellAssets.some((asset) => {
+    return (
+      asset.expirationTime != null &&
+      (isNaN(asset.expirationTime) || asset.expirationTime * 1000 - Date.now() < ms`60 seconds`)
+    )
+  })
+  const overMaxExpiration = sellAssets.some((asset) => {
+    return asset.expirationTime != null && asset.expirationTime * 1000 - Date.now() > ms`180 days`
+  })
+
+  const listingsMissingPrice: [WalletAsset, Listing][] = []
+  const listingsBelowFloor: [WalletAsset, Listing][] = []
+  const listingsAboveSellOrderFloor: [WalletAsset, Listing][] = []
+  for (const asset of sellAssets) {
+    if (asset.newListings) {
+      for (const listing of asset.newListings) {
+        if (!listing.price) listingsMissingPrice.push([asset, listing])
+        else if (listing.price < (asset?.floorPrice ?? 0) * BELOW_FLOOR_PRICE_THRESHOLD && !listing.overrideFloorPrice)
+          listingsBelowFloor.push([asset, listing])
+        else if (
+          asset.floor_sell_order_price &&
+          listing.price >= asset.floor_sell_order_price &&
+          asset.asset_contract.tokenType !== NftStandard.Erc1155
+        )
+          listingsAboveSellOrderFloor.push([asset, listing])
+      }
+    }
+  }
+  return {
+    missingExpiration,
+    overMaxExpiration,
+    listingsMissingPrice,
+    listingsBelowFloor,
+    listingsAboveSellOrderFloor,
+  }
 }

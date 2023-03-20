@@ -105,6 +105,7 @@ export interface CollectionRow extends AssetRow {
   collectionAddress?: string
   isVerified?: boolean
   marketplace: ListingMarket
+  nftStandard?: NftStandard
 }
 
 // Creating this as an enum and not boolean as we will likely have a success screen state to show

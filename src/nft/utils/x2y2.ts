@@ -5,8 +5,9 @@ import { AddressZero } from '@ethersproject/constants'
 import { keccak256 } from '@ethersproject/keccak256'
 import type { Web3Provider } from '@ethersproject/providers'
 import { randomBytes } from '@ethersproject/random'
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 
-const dataParamType = `tuple(address token, uint256 tokenId)[]`
+const dataParamType = `tuple(address token, uint256 tokenId, uint256 amount)[]`
 const orderItemParamType = `tuple(uint256 price, bytes data)`
 const orderParamTypes = [
   `uint256`,
@@ -27,6 +28,7 @@ export type OfferItem = {
   tokens: {
     token: string
     tokenId: BigNumberish
+    amount: number
   }[]
 }
 
@@ -67,7 +69,7 @@ const randomSalt = () => {
   return hexZeroPad(randomHex, 64)
 }
 
-const encodeItemData = (data: { token: string; tokenId: BigNumberish }[]) => {
+const encodeItemData = (data: { token: string; tokenId: BigNumberish; amount: number }[]) => {
   return defaultAbiCoder.encode([dataParamType], [data])
 }
 
@@ -105,11 +107,16 @@ export const encodeOrder = (order: Order): string => {
   return defaultAbiCoder.encode([orderParamType], [order])
 }
 
-export const createSellOrder = (user: string, deadline: number, items: OfferItem[]): Order => {
+export const createSellOrder = (
+  user: string,
+  deadline: number,
+  items: OfferItem[],
+  nftStandard: NftStandard = NftStandard.Erc721
+): Order => {
   const salt = randomSalt()
   const network = 1 // mainnet
   const intent = 1 // INTENT_SELL
-  const delegateType = 1 // DELEGATION_TYPE_ERC721
+  const delegateType = nftStandard === NftStandard.Erc721 ? 1 : 2
   const currency = AddressZero // ETH
   return {
     salt,

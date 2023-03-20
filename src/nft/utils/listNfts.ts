@@ -8,17 +8,20 @@ import { Seaport } from '@opensea/seaport-js'
 import { ItemType } from '@opensea/seaport-js/lib/constants'
 import { ConsiderationInputItem } from '@opensea/seaport-js/lib/types'
 import { ZERO_ADDRESS } from 'constants/misc'
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import {
   OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY,
+  OPENSEA_FEE_ADDRESS,
   OPENSEA_KEY_TO_CONDUIT,
   OPENSEA_SEAPORT_V1_4_CONTRACT,
 } from 'nft/queries/openSea'
 
 import ERC721 from '../../abis/erc721.json'
+import ERC1155 from '../../abis/erc1155.json'
 import {
   createLooksRareOrder,
   getOrderId,
-  LOOKSRARE_MARKETPLACE_CONTRACT,
+  LOOKSRARE_MARKETPLACE_CONTRACT_721,
   newX2Y2Order,
   PostOpenSeaSellOrder,
 } from '../queries'
@@ -60,15 +63,18 @@ const getConsiderationItems = (
 ): {
   sellerFee: ConsiderationInputItem
   creatorFee?: ConsiderationInputItem
+  openSeaFee?: ConsiderationInputItem
 } => {
   const creatorFeeBasisPoints = asset?.basisPoints ?? 0
-  const sellerBasisPoints = INVERSE_BASIS_POINTS - creatorFeeBasisPoints
+  const openSeaBasisPoints = !asset?.basisPoints ? 50 : 0
+  const sellerBasisPoints = INVERSE_BASIS_POINTS - creatorFeeBasisPoints - openSeaBasisPoints
 
   const creatorFee = price
     .mul(BigNumber.from(creatorFeeBasisPoints))
     .div(BigNumber.from(INVERSE_BASIS_POINTS))
     .toString()
   const sellerFee = price.mul(BigNumber.from(sellerBasisPoints)).div(BigNumber.from(INVERSE_BASIS_POINTS)).toString()
+  const openSeaFee = price.mul(BigNumber.from(openSeaBasisPoints)).div(BigNumber.from(INVERSE_BASIS_POINTS)).toString()
 
   return {
     sellerFee: createConsiderationItem(sellerFee, signerAddress),
@@ -76,6 +82,7 @@ const getConsiderationItems = (
       creatorFeeBasisPoints > 0
         ? createConsiderationItem(creatorFee, asset?.asset_contract?.payout_address ?? '')
         : undefined,
+    openSeaFee: openSeaBasisPoints ? createConsiderationItem(openSeaFee, OPENSEA_FEE_ADDRESS) : undefined,
   }
 }
 
@@ -83,22 +90,21 @@ export async function approveCollection(
   operator: string,
   collectionAddress: string,
   signer: Signer,
-  setStatus: (newStatus: ListingStatus) => void
+  setStatus: (newStatus: ListingStatus) => void,
+  nftStandard: NftStandard = NftStandard.Erc721
 ): Promise<void> {
-  // This will work for both 721s & 1155s because they both have the
-  // setApprovalForAll() method
-  const ERC721Contract = new Contract(collectionAddress, ERC721, signer)
+  const contract = new Contract(collectionAddress, nftStandard === NftStandard.Erc721 ? ERC721 : ERC1155, signer)
   const signerAddress = await signer.getAddress()
 
   try {
-    const approved = await ERC721Contract.isApprovedForAll(signerAddress, operator)
+    const approved = await contract.isApprovedForAll(signerAddress, operator)
     if (approved) {
       setStatus(ListingStatus.APPROVED)
       return
     }
 
     setStatus(ListingStatus.SIGNING)
-    const approvalTransaction = await ERC721Contract.setApprovalForAll(operator, true)
+    const approvalTransaction = await contract.setApprovalForAll(operator, true)
 
     setStatus(ListingStatus.PENDING)
     const tx = await approvalTransaction.wait()
@@ -133,8 +139,8 @@ export async function signListing(
     case 'OpenSea':
       try {
         const listingInWei = parseEther(`${listingPrice}`)
-        const { sellerFee, creatorFee } = getConsiderationItems(asset, listingInWei, signerAddress)
-        const considerationItems = [sellerFee, creatorFee].filter(
+        const { sellerFee, creatorFee, openSeaFee } = getConsiderationItems(asset, listingInWei, signerAddress)
+        const considerationItems = [sellerFee, creatorFee, openSeaFee].filter(
           (item): item is ConsiderationInputItem => item !== undefined
         )
 
@@ -142,9 +148,10 @@ export async function signListing(
           {
             offer: [
               {
-                itemType: ItemType.ERC721,
+                itemType: asset.asset_contract.tokenType === NftStandard.Erc721 ? ItemType.ERC721 : ItemType.ERC1155,
                 token: asset.asset_contract.address,
                 identifier: asset.tokenId,
+                amount: '1',
               },
             ],
             consideration: considerationItems,
@@ -206,7 +213,7 @@ export async function signListing(
           signer,
           SupportedChainId.MAINNET,
           makerOrder,
-          LOOKSRARE_MARKETPLACE_CONTRACT
+          LOOKSRARE_MARKETPLACE_CONTRACT_721
         )
         setStatus(ListingStatus.PENDING)
         const payload = {
@@ -241,10 +248,11 @@ export async function signListing(
           {
             token: asset.asset_contract.address,
             tokenId: BigNumber.from(asset.tokenId),
+            amount: 1,
           },
         ],
       }
-      const order = createSellOrder(signerAddress, asset.expirationTime, [orderItem])
+      const order = createSellOrder(signerAddress, asset.expirationTime, [orderItem], asset.asset_contract.tokenType)
       try {
         const prevOrderId = await getOrderId(asset.asset_contract.address, asset.tokenId)
         await signOrderData(provider, order)

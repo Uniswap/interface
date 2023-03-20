@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import { useTrace } from '@uniswap/analytics'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
-import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { NftCard, NftCardDisplayProps } from 'nft/components/card'
 import { VerifiedIcon } from 'nft/components/icons'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
@@ -59,7 +58,7 @@ export const ViewMyNftsAsset = ({
       toggleCart()
   }
 
-  const isDisabled = asset.asset_contract.tokenType === NftStandard.Erc1155 || asset.susFlag
+  const isDisabled = asset.susFlag
 
   const display: NftCardDisplayProps = useMemo(() => {
     return {
