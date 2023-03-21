@@ -108,8 +108,19 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key: string]: SupportedChainId } = {
 
 export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Ethereum, Chain.Polygon, Chain.Optimism, Chain.Arbitrum, Chain.Celo]
 
-export function getTokenDetailsURL({ address, chain }: { address?: string | null; chain: Chain }) {
-  return `/tokens/${chain.toLowerCase()}/${address ?? NATIVE_CHAIN_ID}`
+export function getTokenDetailsURL({
+  address,
+  chain,
+  inputAddress,
+}: {
+  address?: string | null
+  chain: Chain
+  inputAddress?: string | null
+}) {
+  const chainName = chain.toLowerCase()
+  const tokenAddress = address ?? NATIVE_CHAIN_ID
+  const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
+  return `/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
 }
 
 export function unwrapToken<

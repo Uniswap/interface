@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, Field } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
@@ -23,6 +23,7 @@ import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget from 'components/Widget'
+import { SwapTokens } from 'components/Widget/inputs'
 import { getChainInfo } from 'constants/chainInfo'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
@@ -33,6 +34,7 @@ import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
+import { getTokenAddress } from 'lib/utils/analytics'
 import { useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
@@ -88,6 +90,7 @@ function useRelevantToken(
 
 type TokenDetailsProps = {
   urlAddress: string | undefined
+  inputTokenAddress?: string
   chain: Chain
   tokenQuery: TokenQuery
   tokenPriceQuery: TokenPriceQuery | undefined
@@ -95,6 +98,7 @@ type TokenDetailsProps = {
 }
 export default function TokenDetails({
   urlAddress,
+  inputTokenAddress,
   chain,
   tokenQuery,
   tokenPriceQuery,
@@ -120,7 +124,8 @@ export default function TokenDetails({
     [tokenQueryData]
   )
 
-  const { token, didFetchFromChain } = useRelevantToken(address, pageChainId, tokenQueryData)
+  const { token: detailedToken, didFetchFromChain } = useRelevantToken(address, pageChainId, tokenQueryData)
+  const { token: inputToken } = useRelevantToken(inputTokenAddress, pageChainId, undefined)
 
   const tokenWarning = address ? checkWarning(address) : null
   const isBlockedToken = tokenWarning?.canProceed === false
@@ -134,18 +139,27 @@ export default function TokenDetails({
       const bridgedAddress = crossChainMap[update]
       if (bridgedAddress) {
         startTokenTransition(() => navigate(getTokenDetailsURL({ address: bridgedAddress, chain })))
-      } else if (didFetchFromChain || token?.isNative) {
+      } else if (didFetchFromChain || detailedToken?.isNative) {
         startTokenTransition(() => navigate(getTokenDetailsURL({ address, chain })))
       }
     },
-    [address, chain, crossChainMap, didFetchFromChain, navigate, token?.isNative]
+    [address, chain, crossChainMap, didFetchFromChain, navigate, detailedToken?.isNative]
   )
   useOnGlobalChainSwitch(navigateToTokenForChain)
 
   const navigateToWidgetSelectedToken = useCallback(
-    (token: Currency) => {
-      const address = token.isNative ? NATIVE_CHAIN_ID : token.address
-      startTokenTransition(() => navigate(getTokenDetailsURL({ address, chain })))
+    (tokens: SwapTokens) => {
+      const newDefaultToken = tokens[Field.OUTPUT] ?? tokens.default
+      const address = newDefaultToken?.isNative ? NATIVE_CHAIN_ID : newDefaultToken?.address
+      startTokenTransition(() =>
+        navigate(
+          getTokenDetailsURL({
+            address,
+            chain,
+            inputAddress: tokens[Field.INPUT] ? getTokenAddress(tokens[Field.INPUT] as Currency) : null,
+          })
+        )
+      )
     },
     [chain, navigate]
   )
@@ -170,30 +184,30 @@ export default function TokenDetails({
   )
 
   // address will never be undefined if token is defined; address is checked here to appease typechecker
-  if (token === undefined || !address) {
+  if (detailedToken === undefined || !address) {
     return <InvalidTokenDetails chainName={address && getChainInfo(pageChainId)?.label} />
   }
   return (
     <Trace
       page={InterfacePageName.TOKEN_DETAILS_PAGE}
-      properties={{ tokenAddress: address, tokenName: token?.name }}
+      properties={{ tokenAddress: address, tokenName: detailedToken?.name }}
       shouldLogImpression
     >
       <TokenDetailsLayout>
-        {token && !isPending ? (
+        {detailedToken && !isPending ? (
           <LeftPanel>
             <BreadcrumbNavLink to={`/tokens/${chain.toLowerCase()}`}>
               <ArrowLeft data-testid="token-details-return-button" size={14} /> Tokens
             </BreadcrumbNavLink>
             <TokenInfoContainer data-testid="token-info-container">
               <TokenNameCell>
-                <CurrencyLogo currency={token} size="32px" hideL2Icon={false} />
+                <CurrencyLogo currency={detailedToken} size="32px" hideL2Icon={false} />
 
-                {token.name ?? <Trans>Name not found</Trans>}
-                <TokenSymbol>{token.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
+                {detailedToken.name ?? <Trans>Name not found</Trans>}
+                <TokenSymbol>{detailedToken.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
               </TokenNameCell>
               <TokenActions>
-                <ShareButton currency={token} />
+                <ShareButton currency={detailedToken} />
               </TokenActions>
             </TokenInfoContainer>
             <ChartSection tokenPriceQuery={tokenPriceQuery} onChangeTimePeriod={onChangeTimePeriod} />
@@ -211,7 +225,7 @@ export default function TokenDetails({
               homepageUrl={tokenQueryData?.project?.homepageUrl}
               twitterName={tokenQueryData?.project?.twitterName}
             />
-            {!token.isNative && <AddressSection address={address} />}
+            {!detailedToken.isNative && <AddressSection address={address} />}
           </LeftPanel>
         ) : (
           <TokenDetailsSkeleton />
@@ -221,16 +235,17 @@ export default function TokenDetails({
           <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto' }}>
             <Widget
               defaultTokens={{
-                default: token ?? undefined,
+                [Field.INPUT]: inputToken ?? undefined,
+                default: detailedToken ?? undefined,
               }}
               onDefaultTokenChange={navigateToWidgetSelectedToken}
               onReviewSwapClick={onReviewSwapClick}
             />
           </div>
           {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}
-          {token && <BalanceSummary token={token} />}
+          {detailedToken && <BalanceSummary token={detailedToken} />}
         </RightPanel>
-        {token && <MobileBalanceSummaryFooter token={token} />}
+        {detailedToken && <MobileBalanceSummaryFooter token={detailedToken} />}
 
         <TokenSafetyModal
           isOpen={openTokenSafetyModal || !!continueSwap}
