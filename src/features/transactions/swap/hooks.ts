@@ -3,12 +3,8 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
-import { SwapRouter } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import {
-  SwapRouter as UniversalSwapRouter,
-  UNIVERSAL_ROUTER_ADDRESS,
-} from '@uniswap/universal-router-sdk'
+import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { providers } from 'ethers'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnyAction } from 'redux'
@@ -43,9 +39,9 @@ import { swapActions } from 'src/features/transactions/swap/swapSaga'
 import { usePermit2Signature } from 'src/features/transactions/swap/usePermit2Signature'
 import { Trade, useSetTradeSlippage, useTrade } from 'src/features/transactions/swap/useTrade'
 import {
+  getSwapMethodParameters,
   getWrapType,
   isWrapAction,
-  slippageToleranceToPercent,
   sumGasFees,
 } from 'src/features/transactions/swap/utils'
 import {
@@ -687,65 +683,27 @@ export function useSwapTransactionRequest(
       return { transactionRequest: undefined, gasFallbackUsed }
     }
 
-    const baseSwapTx = {
+    // if the swap transaction does not require a Tenderly gas limit simulation, submit "undefined" here
+    // so that ethers can calculate the gasLimit later using .estimateGas(tx) instead
+    const gasLimit = shouldFetchSimulatedGasLimit ? simulatedGasLimit : undefined
+    const { calldata, value } = getSwapMethodParameters({
+      permit2Signature,
+      permitInfo,
+      trade,
+      address,
+      universalRouterEnabled: permit2Enabled,
+    })
+
+    const transactionRequest = {
       from: address,
       to: permit2Enabled ? UNIVERSAL_ROUTER_ADDRESS(chainId) : SWAP_ROUTER_ADDRESSES[chainId],
+      gasLimit,
       chainId,
+      data: calldata,
+      value,
     }
 
-    const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance)
-
-    if (permitInfo) {
-      const { calldata, value } = SwapRouter.swapCallParameters(trade, {
-        slippageTolerance: slippageTolerancePercent,
-        recipient: address,
-        inputTokenPermit: permitInfo,
-      })
-
-      return {
-        transactionRequest: { ...baseSwapTx, data: calldata, value },
-        gasFallbackUsed,
-      }
-    }
-
-    if (permit2Signature) {
-      const { calldata, value } = UniversalSwapRouter.swapERC20CallParameters(trade, {
-        slippageTolerance: slippageTolerancePercent,
-        recipient: address,
-        inputTokenPermit: {
-          signature: permit2Signature.signature,
-          ...permit2Signature.permitMessage,
-        },
-      })
-
-      return {
-        transactionRequest: {
-          ...baseSwapTx,
-          data: calldata,
-          value,
-          gasLimit: shouldFetchSimulatedGasLimit ? simulatedGasLimit : undefined,
-        },
-        gasFallbackUsed,
-      }
-    }
-
-    const methodParameters = trade.quote?.methodParameters
-    if (!methodParameters) {
-      throw new Error('Trade quote methodParameters were not provided by the router endpoint')
-    }
-
-    return {
-      transactionRequest: {
-        ...baseSwapTx,
-        data: methodParameters.calldata,
-        value: methodParameters.value,
-
-        // if the swap transaction does not require a Tenderly gas limit simulation, submit "undefined" here
-        // so that ethers can calculate the gasLimit later using .estimateGas(tx) instead
-        gasLimit: shouldFetchSimulatedGasLimit ? simulatedGasLimit : undefined,
-      },
-      gasFallbackUsed,
-    }
+    return { transactionRequest, gasFallbackUsed }
   }, [
     address,
     chainId,

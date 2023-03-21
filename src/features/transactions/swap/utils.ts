@@ -1,9 +1,16 @@
+import { SwapOptions, SwapRouter } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import {
+  SwapOptions as UniversalRouterSwapOptions,
+  SwapRouter as UniversalSwapRouter,
+} from '@uniswap/universal-router-sdk'
 import { BigNumber, BigNumberish } from 'ethers'
 import { TFunction } from 'i18next'
 import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { AssetType } from 'src/entities/assets'
+import { PermitOptions } from 'src/features/transactions/permit/usePermitSignature'
+import { PermitSignatureInfo } from 'src/features/transactions/swap/usePermit2Signature'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import {
@@ -172,7 +179,47 @@ export const prepareSwapFormState = ({
 }
 
 // rounds to nearest basis point
-export const slippageToleranceToPercent = (slippage: number): Percent => {
+const slippageToleranceToPercent = (slippage: number): Percent => {
   const basisPoints = Math.round(slippage * 100)
   return new Percent(basisPoints, 10_000)
+}
+
+interface MethodParameterArgs {
+  permit2Signature?: PermitSignatureInfo
+  permitInfo: NullUndefined<PermitOptions>
+  trade: Trade
+  address: string
+  universalRouterEnabled: boolean
+}
+
+export const getSwapMethodParameters = ({
+  permit2Signature,
+  trade,
+  address,
+  permitInfo,
+  universalRouterEnabled,
+}: MethodParameterArgs): { calldata: string; value: string } => {
+  const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance)
+  const baseOptions = {
+    slippageTolerance: slippageTolerancePercent,
+    recipient: address,
+  }
+
+  if (universalRouterEnabled || permit2Signature) {
+    const universalRouterSwapOptions: UniversalRouterSwapOptions = permit2Signature
+      ? {
+          ...baseOptions,
+          inputTokenPermit: {
+            signature: permit2Signature.signature,
+            ...permit2Signature.permitMessage,
+          },
+        }
+      : baseOptions
+    return UniversalSwapRouter.swapERC20CallParameters(trade, universalRouterSwapOptions)
+  }
+
+  const swapOptions: SwapOptions = permitInfo
+    ? { ...baseOptions, inputTokenPermit: permitInfo }
+    : { ...baseOptions }
+  return SwapRouter.swapCallParameters(trade, swapOptions)
 }
