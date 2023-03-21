@@ -9,6 +9,7 @@ import { HistoryDuration, SafetyLevel } from 'graphql/data/__generated__/types-a
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import useTrendingTokens from 'graphql/data/TrendingTokens'
+import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -360,7 +361,9 @@ export const SearchBarDropdown = ({
     searchHistory,
   ])
 
-  const showBNBComingSoonBadge = Boolean(chainId !== undefined && chainId === SupportedChainId.BNB && !isLoading)
+  const showBNBComingSoonBadge = Boolean(
+    chainId !== undefined && chainId === SupportedChainId.BNB && !isLoading && !CHAIN_ID_TO_BACKEND_NAME[chainId]
+  )
 
   return (
     <Box className={styles.searchBarDropdownNft}>
