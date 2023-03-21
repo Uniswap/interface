@@ -90,7 +90,7 @@ export const TransactionSummary = ({
         </IconStyleWrap>
       ) : (
         <IconStyleWrap>
-          <AlertTriangle color={colors.gold200} size="16px" />
+          <AlertTriangle color={colors.gold400} size="16px" />
         </IconStyleWrap>
       )}
     </Grid>

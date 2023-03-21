@@ -10,7 +10,7 @@ export const darkTheme: Theme = {
 
     explicitWhite: '#FFFFFF',
     green: vars.color.green200,
-    gold: vars.color.gold200,
+    gold: vars.color.gold400,
     violet: vars.color.violet200,
 
     backgroundFloating: '0000000C',
