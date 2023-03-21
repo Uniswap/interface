@@ -5,6 +5,8 @@ import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { bodySmall, subhead } from 'nft/css/common.css'
 import { useCallback, useState } from 'react'
 import { X } from 'react-feather'
+import { useModalIsOpen, useToggleTaxServiceModal } from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/reducer'
 import { useTaxServiceDismissal } from 'state/user/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
@@ -117,7 +119,9 @@ const MAX_RENDER_COUNT = 1
 export default function TaxServiceBanner() {
   const isDarkMode = useIsDarkMode()
   const [dismissals, addTaxServiceDismissal] = useTaxServiceDismissal()
-  const [modalOpen, setModalOpen] = useState(false)
+  const modalOpen = useModalIsOpen(ApplicationModal.TAX_SERVICE)
+  const toggleTaxServiceModal = useToggleTaxServiceModal()
+
   const sessionStorageTaxServiceDismissed = sessionStorage.getItem(TAX_SERVICE_DISMISSED)
 
   if (!sessionStorageTaxServiceDismissed) {
@@ -126,9 +130,6 @@ export default function TaxServiceBanner() {
   const [bannerOpen, setBannerOpen] = useState(
     sessionStorageTaxServiceDismissed !== 'true' && (dismissals === undefined || dismissals < MAX_RENDER_COUNT)
   )
-  const onDismiss = useCallback(() => {
-    setModalOpen(false)
-  }, [])
 
   const handleClose = useCallback(() => {
     sessionStorage.setItem(TAX_SERVICE_DISMISSED, 'true')
@@ -136,11 +137,14 @@ export default function TaxServiceBanner() {
     dismissals === undefined ? addTaxServiceDismissal(1) : addTaxServiceDismissal(dismissals + 1)
   }, [addTaxServiceDismissal, dismissals])
 
-  const handleLearnMoreClick = useCallback((e: any) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setModalOpen(true)
-  }, [])
+  const handleLearnMoreClick = useCallback(
+    (e: any) => {
+      e.preventDefault()
+      e.stopPropagation()
+      toggleTaxServiceModal()
+    },
+    [toggleTaxServiceModal]
+  )
 
   return (
     <PopupContainer show={bannerOpen} isDarkMode={isDarkMode}>
@@ -175,7 +179,7 @@ export default function TaxServiceBanner() {
           </Button>
         </TraceEvent>
       </InnerContainer>
-      <TaxServiceModal isOpen={modalOpen} onDismiss={onDismiss} />
+      <TaxServiceModal isOpen={modalOpen} onDismiss={toggleTaxServiceModal} />
     </PopupContainer>
   )
 }

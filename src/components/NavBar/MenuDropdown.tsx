@@ -19,7 +19,7 @@ import { NavLink, NavLinkProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 
-import { useToggleModal } from '../../state/application/hooks'
+import { useToggleModal, useToggleTaxServiceModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import * as styles from './MenuDropdown.css'
 import { NavDropdown } from './NavDropdown'
@@ -123,6 +123,7 @@ export const MenuDropdown = () => {
   const openFeatureFlagsModal = useToggleModal(ApplicationModal.FEATURE_FLAGS)
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, isOpen ? toggleOpen : undefined)
+  const toggleTaxServiceModal = useToggleTaxServiceModal()
 
   return (
     <>
@@ -162,6 +163,14 @@ export const MenuDropdown = () => {
               >
                 <SecondaryLinkedText href="https://help.uniswap.org/en/">
                   <Trans>Help center</Trans> ↗
+                </SecondaryLinkedText>
+                <SecondaryLinkedText
+                  onClick={() => {
+                    toggleTaxServiceModal()
+                    toggleOpen()
+                  }}
+                >
+                  <Trans>Save on Tax Services</Trans> ↗
                 </SecondaryLinkedText>
                 <SecondaryLinkedText href="https://docs.uniswap.org/">
                   <Trans>Documentation</Trans> ↗
