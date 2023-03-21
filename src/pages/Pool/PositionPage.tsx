@@ -65,10 +65,11 @@ const getTokenLink = (chainId: SupportedChainId, address: string) => {
 }
 
 const PositionPageButtonCss = css`
-  width: 100%;
+  width: 228px;
   height: 40px;
   font-size: 16px;
   line-height: 20px;
+  border-radius: 12px;
 `
 
 const PositionPageButtonPrimary = styled(ButtonPrimary)`
@@ -623,7 +624,7 @@ export default function PositionPage() {
           <ThemedText.BodyPrimary style={{ marginBottom: '32px' }}>
             <Trans>You must be connected to {chainLabel} to see this position.</Trans>
           </ThemedText.BodyPrimary>
-          <div style={{ display: 'flex' }}>
+          <div style={{ display: 'flex', gap: '24px' }}>
             <PositionPageButtonPrimary
               onClick={async () => {
                 await switchChain(connector, parsedUrlChainId)
