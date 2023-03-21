@@ -30,6 +30,7 @@ schema.graphql
 .env.production.local
 
 instrumented
+.nyc_output
 .nyc_output/**/*
 
 /.netlify
