@@ -323,7 +323,7 @@ export default function Landing() {
                 </WidgetLandingLink>
               ) : (
                 <Link to="/swap">
-                  <LandingSwap intro={queryParams.intro === 'true'} />
+                  <LandingSwap intro={true} />
                 </Link>
               )}
             </TraceEvent>
