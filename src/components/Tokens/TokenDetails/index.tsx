@@ -24,7 +24,6 @@ import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget from 'components/Widget'
 import { SwapTokens } from 'components/Widget/inputs'
-import { getChainInfo } from 'constants/chainInfo'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { TokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
@@ -182,10 +181,9 @@ export default function TokenDetails({
     },
     [continueSwap, setContinueSwap]
   )
-
   // address will never be undefined if token is defined; address is checked here to appease typechecker
   if (detailedToken === undefined || !address) {
-    return <InvalidTokenDetails chainName={address && getChainInfo(pageChainId)?.label} />
+    return <InvalidTokenDetails pageChainId={pageChainId} isInvalidAddress={!address} />
   }
   return (
     <Trace
@@ -211,7 +209,10 @@ export default function TokenDetails({
               </TokenActions>
             </TokenInfoContainer>
             <ChartSection tokenPriceQuery={tokenPriceQuery} onChangeTimePeriod={onChangeTimePeriod} />
+
             <StatsSection
+              chainId={pageChainId}
+              address={address}
               TVL={tokenQueryData?.market?.totalValueLocked?.value}
               volume24H={tokenQueryData?.market?.volume24H?.value}
               priceHigh52W={tokenQueryData?.market?.priceHigh52W?.value}

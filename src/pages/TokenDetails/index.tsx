@@ -38,6 +38,7 @@ export default function TokenDetailsPage() {
       address: detailedTokenAddress,
       chain,
     },
+    errorPolicy: 'all',
   })
 
   const { data: tokenPriceQuery } = useTokenPriceQuery({
@@ -46,6 +47,7 @@ export default function TokenDetailsPage() {
       chain,
       duration,
     },
+    errorPolicy: 'all',
   })
 
   // Saves already-loaded chart data into state to display while tokenPriceQuery is undefined timePeriod input changes

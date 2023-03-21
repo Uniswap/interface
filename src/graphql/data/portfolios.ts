@@ -2,7 +2,7 @@ import gql from 'graphql-tag'
 
 gql`
   query PortfolioBalances($ownerAddress: String!) {
-    portfolios(ownerAddresses: [$ownerAddress]) {
+    portfolios(ownerAddresses: [$ownerAddress], chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BNB]) {
       id
       tokensTotalDenominatedValue {
         id
@@ -26,6 +26,16 @@ gql`
           currency
           value
         }
+        tokenProjectMarket {
+          pricePercentChange(duration: DAY) {
+            id
+            value
+          }
+          tokenProject {
+            id
+            logoUrl
+          }
+        }
         token {
           id
           chain
@@ -34,20 +44,6 @@ gql`
           symbol
           standard
           decimals
-          market {
-            id
-            pricePercentChange(duration: DAY) {
-              id
-              currency
-              value
-            }
-          }
-          project {
-            id
-            logoUrl
-            safetyLevel
-            isSpam
-          }
         }
       }
     }

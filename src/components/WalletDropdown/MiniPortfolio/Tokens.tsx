@@ -90,8 +90,8 @@ type TokenBalance = NonNullable<
 
 type PortfolioToken = NonNullable<TokenBalance['token']>
 
-function TokenRow({ token, quantity, denominatedValue }: TokenBalance & { token: PortfolioToken }) {
-  const percentChange = token.market?.pricePercentChange?.value ?? 0
+function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: TokenBalance & { token: PortfolioToken }) {
+  const percentChange = tokenProjectMarket?.pricePercentChange?.value ?? 0
 
   const navigate = useNavigate()
   const toggleWalletDrawer = useToggleWalletDrawer()

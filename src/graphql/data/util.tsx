@@ -67,6 +67,7 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.ARBITRUM_GOERLI]: Chain.Arbitrum,
   [SupportedChainId.OPTIMISM]: Chain.Optimism,
   [SupportedChainId.OPTIMISM_GOERLI]: Chain.Optimism,
+  [SupportedChainId.BNB]: Chain.Bnb,
 }
 
 export function chainIdToBackendName(chainId: number | undefined) {
@@ -110,6 +111,7 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
   celo: Chain.Celo,
   arbitrum: Chain.Arbitrum,
   optimism: Chain.Optimism,
+  bnb: Chain.Bnb,
 }
 
 export function validateUrlChainParam(chainName: string | undefined) {
