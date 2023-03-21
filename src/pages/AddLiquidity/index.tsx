@@ -173,15 +173,9 @@ export default function AddLiquidity({
     console.log('value:', value?.toString())
     setAttemptingTxn(true)
     console.log('before estimatedGasLimit')
-    if (false) {
-      // 当时设定了一下固定的 gasLimit, 然后添加流动池就可以了
-      // 然后切换回原来的代码，前端就没有-32603错误了，不报错了，就可以顺利执行后续的其他操作了。
-      const estimatedGasLimit: BigNumber = BigNumber.from(200000)
-      console.log(estimatedGasLimit)
-    }
     const estimatedGasLimit: BigNumber = await estimate(...args, {
       ...(value ? { value } : {}),
-      gasLimit: 200000
+      gasLimit: 3000000
     })
     console.log('after estimatedGasLimit')
     console.log('estimatedGasLimit:', estimatedGasLimit.toString())
