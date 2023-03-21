@@ -39,7 +39,7 @@ const CampaignNavGroup = () => {
           </StyledNavLink>
 
           <StyledNavLink id="project-trading-grant" to={APP_PATHS.GRANT_PROGRAMS}>
-            <Trans>Project Trading Grant</Trans>{' '}
+            <Trans>Trading Grant Campaign</Trans>{' '}
             <NewLabel>
               <Trans>New</Trans>
             </NewLabel>
