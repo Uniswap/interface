@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 import styled, { css, keyframes } from 'styled-components/macro'
 
 const RowWrapper = styled(Row)<{ onClick?: any }>`
-  gap: 8px;
+  gap: 12px;
   height: 68px;
   padding: 0 16px;
 
@@ -33,7 +33,7 @@ export default function PortfolioRow({
 }: {
   left: React.ReactNode
   title: React.ReactNode
-  descriptor: React.ReactNode
+  descriptor?: React.ReactNode
   right: React.ReactNode
   setIsHover?: (b: boolean) => void
   onClick?: () => void

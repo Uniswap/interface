@@ -74,17 +74,6 @@ const ActiveDot = styled.span<{ closed: boolean; outOfRange: boolean }>`
   margin-top: 1px;
 `
 
-const DoubleArrow = styled.span`
-  font-variant: all-small-caps;
-  font-feature-settings: 'tnum' on, 'lnum' on, 'ss02' on;
-  color: ${({ theme }) => theme.textSecondary};
-  :after {
-    content: '<->';
-  }
-  line-height: 5px;
-  padding: 0 4px;
-`
-
 function calculcateLiquidityValue(price0: number | undefined, price1: number | undefined, position: Position) {
   if (!price0 || !price1) return undefined
 
@@ -117,16 +106,9 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
           <ThemedText.SubHeader fontWeight={500}>
             {pool.token0.symbol} / {pool.token1?.symbol}
           </ThemedText.SubHeader>
-          <ThemedText.Caption color="textSecondary" marginLeft="4px">{`(${pool.fee / 10000}%)`}</ThemedText.Caption>
         </Row>
       }
-      descriptor={
-        <ThemedText.Caption>
-          {formatNumber(priceA, NumberType.FiatTokenPrice)}
-          <DoubleArrow />
-          {formatNumber(priceB, NumberType.FiatTokenPrice)}
-        </ThemedText.Caption>
-      }
+      descriptor={<ThemedText.Caption>{`${pool.fee / 10000}%`}</ThemedText.Caption>}
       right={
         <>
           <MouseoverTooltip

@@ -29,11 +29,13 @@ gql`
       address
       chain
       standard
-      market(currency: USD) {
-        id
-        price {
+      project {
+        markets(currencies: [USD]) {
           id
-          value
+          price {
+            id
+            value
+          }
         }
       }
     }
