@@ -36,7 +36,7 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components/macro'
 import { ExternalLink, HideExtraSmall, HideSmall, ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -63,6 +63,21 @@ const getTokenLink = (chainId: SupportedChainId, address: string) => {
     return getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
   }
 }
+
+const PositionPageButtonCss = css`
+  width: 100%;
+  height: 40px;
+  font-size: 16px;
+  line-height: 20px;
+`
+
+const PositionPageButtonPrimary = styled(ButtonPrimary)`
+  ${PositionPageButtonCss}
+`
+
+const PositionPageButtonSecondary = styled(ButtonSecondary)`
+  ${PositionPageButtonCss}
+`
 
 const PageWrapper = styled.div`
   padding: 68px 16px 16px 16px;
@@ -566,9 +581,9 @@ export default function PositionPage() {
         <ThemedText.DeprecatedItalic>
           <Trans>Collecting fees will withdraw currently available fees for you.</Trans>
         </ThemedText.DeprecatedItalic>
-        <ButtonPrimary onClick={collect}>
+        <PositionPageButtonPrimary onClick={collect}>
           <Trans>Collect</Trans>
-        </ButtonPrimary>
+        </PositionPageButtonPrimary>
       </AutoColumn>
     )
   }
@@ -608,18 +623,28 @@ export default function PositionPage() {
           <ThemedText.BodyPrimary style={{ marginBottom: '32px' }}>
             <Trans>You must be connected to {chainLabel} to see this position.</Trans>
           </ThemedText.BodyPrimary>
-          <div>
-            <ButtonPrimary
+          <div style={{ display: 'flex' }}>
+            <PositionPageButtonPrimary
               onClick={async () => {
                 await switchChain(connector, parsedUrlChainId)
               }}
-              width="fit-content"
+              width="228px"
+              height="40px"
+              fontSize="16px"
+              lineHeight="20px"
             >
               <Trans>Connect to {chainLabel}</Trans>
-            </ButtonPrimary>
-            <ButtonSecondary as={Link} to="/pools" width="fit-content">
+            </PositionPageButtonPrimary>
+            <PositionPageButtonSecondary
+              as={Link}
+              to="/pools"
+              width="228px"
+              height="40px"
+              fontSize="16px"
+              lineHeight="20px"
+            >
               <Trans>Back to Pools</Trans>
-            </ButtonSecondary>
+            </PositionPageButtonSecondary>
           </div>
         </div>
       </PageWrapper>
@@ -636,9 +661,9 @@ export default function PositionPage() {
           <ThemedText.BodyPrimary style={{ marginBottom: '32px' }}>
             <Trans>To view a position, you must be connected to the network it belongs to.</Trans>
           </ThemedText.BodyPrimary>
-          <ButtonPrimary as={Link} to="/pools" width="fit-content">
+          <PositionPageButtonPrimary as={Link} to="/pools" width="fit-content">
             <Trans>Back to Pools</Trans>
-          </ButtonPrimary>
+          </PositionPageButtonPrimary>
         </div>
       </PageWrapper>
     )
