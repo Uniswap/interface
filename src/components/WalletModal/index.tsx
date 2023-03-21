@@ -5,6 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
+import { useWalletDrawer } from 'components/WalletDropdown'
 import { connectionErrorAtom } from 'components/WalletDropdown/DefaultMenu'
 import IconButton from 'components/WalletDropdown/IconButton'
 import { Connection, ConnectionType, networkConnection, useConnections } from 'connection'
@@ -13,7 +14,7 @@ import { ErrorCode } from 'connection/utils'
 import { isSupportedChain } from 'constants/chains'
 import { useMgtmEnabled } from 'featureFlags/flags/mgtm'
 import { useAtom } from 'jotai'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Settings } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
@@ -85,6 +86,7 @@ function didUserReject(connection: Connection, error: any): boolean {
 export default function WalletModal({ openSettings }: { openSettings: () => void }) {
   const dispatch = useAppDispatch()
   const { connector, account, chainId, provider } = useWeb3React()
+  const [drawerOpen, toggleWalletDrawer] = useWalletDrawer()
 
   const [connectedWallets, addWalletToConnectedWallets] = useConnectedWallets()
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
@@ -135,6 +137,10 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
     getConnection,
   ])
 
+  // Used to track the state of the drawer in async function
+  const drawerOpenRef = useRef(drawerOpen)
+  drawerOpenRef.current = drawerOpen
+
   const tryActivation = useCallback(
     async (connection: Connection) => {
       // log selected wallet
@@ -149,8 +155,8 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
         setPendingError(undefined)
 
         await connection.connector.activate()
-
         dispatch(updateSelectedWallet({ wallet: connection.type }))
+        if (drawerOpenRef.current) toggleWalletDrawer()
       } catch (error) {
         if (didUserReject(connection, error)) {
           setPendingConnection(undefined)
@@ -166,7 +172,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
         }
       }
     },
-    [dispatch, setPendingError]
+    [dispatch, setPendingError, toggleWalletDrawer]
   )
 
   const mgtmEnabled = useMgtmEnabled()

@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { EllipsisStyle, ThemedText } from 'theme'
 
-import { useToggleWalletDrawer, useWalletDrawer } from '..'
+import { useToggleWalletDrawer } from '..'
 import { PortfolioArrow } from '../AuthenticatedHeader'
 import { hideSmallBalancesAtom } from '../SmallBalanceToggle'
 import { ExpandoRow } from './ExpandoRow'
@@ -24,14 +24,13 @@ function meetsThreshold(tokenBalance: TokenBalance, hideSmallBalances: boolean) 
 }
 
 export default function Tokens({ account }: { account: string }) {
-  const [drawerOpen, toggleWalletDrawer] = useWalletDrawer()
+  const toggleWalletDrawer = useToggleWalletDrawer()
   const hideSmallBalances = useAtomValue(hideSmallBalancesAtom)
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
   const { data, loading } = usePortfolioBalancesQuery({
     variables: { ownerAddress: account },
-    skip: !drawerOpen,
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'cache-only', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
   })
 
   const visibleTokens = useMemo(() => {
