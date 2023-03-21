@@ -8,7 +8,7 @@ import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { useMemo } from 'react'
 import { isL2ChainId } from 'utils/chains'
 
-import { useAllLists, useCombinedTokenMapFromUrls } from '../state/lists/hooks'
+import { useAllLists, useCombinedActiveList, useCombinedTokenMapFromUrls } from '../state/lists/hooks'
 import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'
 import { useUserAddedTokens, useUserAddedTokensOnChain } from '../state/user/hooks'
 import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks'
@@ -31,9 +31,10 @@ export function useAllTokensMultichain(): TokenAddressMap {
   return useCombinedTokenMapFromUrls(DEFAULT_LIST_OF_LISTS)
 }
 
-export function useAllTokens(): { [address: string]: Token } {
-  const allTokens = useAllTokensMultichain()
-  const tokensFromMap = useTokensFromMap(allTokens)
+// Returns all tokens from the default list + user added tokens
+export function useDefaultActiveTokens(): { [address: string]: Token } {
+  const defaultListTokens = useCombinedActiveList()
+  const tokensFromMap = useTokensFromMap(defaultListTokens)
   const userAddedTokens = useUserAddedTokens()
   return useMemo(() => {
     return (
@@ -109,7 +110,7 @@ export function useSearchInactiveTokenLists(search: string | undefined, minResul
   const lists = useAllLists()
   const inactiveUrls = DEFAULT_INACTIVE_LIST_URLS
   const { chainId } = useWeb3React()
-  const activeTokens = useAllTokens()
+  const activeTokens = useDefaultActiveTokens()
   return useMemo(() => {
     if (!search || search.trim().length === 0) return []
     const tokenFilter = getTokenFilter(search)
@@ -166,11 +167,11 @@ export function useIsUserAddedTokenOnChain(
 // null if loading or null was passed
 // otherwise returns the token
 export function useToken(tokenAddress?: string | null): Token | null | undefined {
-  const tokens = useAllTokens()
+  const tokens = useDefaultActiveTokens()
   return useTokenFromMapOrNetwork(tokens, tokenAddress)
 }
 
 export function useCurrency(currencyId?: string | null): Currency | null | undefined {
-  const tokens = useAllTokens()
+  const tokens = useDefaultActiveTokens()
   return useCurrencyFromMap(tokens, currencyId)
 }
