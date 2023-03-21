@@ -2,6 +2,7 @@ import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
 import { getClassContainsSelector, getTestSelector } from '../utils'
 
 const UNI_GOERLI = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
+const WETH_GOERLI = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6'
 
 describe('swap widget integration tests', () => {
   const verifyInputToken = (inputText: string) => {
@@ -47,47 +48,47 @@ describe('swap widget integration tests', () => {
         verifyInputToken('ETH')
         verifyOutputToken('Select token')
 
-        selectOutputAndSwitch('UNI')
+        selectOutputAndSwitch('WETH')
 
-        verifyInputToken('UNI')
+        verifyInputToken('WETH')
         verifyOutputToken('ETH')
       })
     })
 
     it('should have the correct default input from URL params ', () => {
-      cy.visit(`/swap?inputCurrency=${UNI_GOERLI}`, {
+      cy.visit(`/swap?inputCurrency=${WETH_GOERLI}`, {
         featureFlags: [FeatureFlag.swapWidget],
       }).then(() => {
         cy.wait('@eth_blockNumber')
       })
 
-      verifyInputToken('UNI')
+      verifyInputToken('WETH')
       verifyOutputToken('Select token')
 
-      selectOutputAndSwitch('WETH')
+      selectOutputAndSwitch('Ether')
 
-      verifyInputToken('WETH')
-      verifyOutputToken('UNI')
+      verifyInputToken('ETH')
+      verifyOutputToken('WETH')
     })
 
     it('should have the correct default output from URL params ', () => {
-      cy.visit(`/swap?outputCurrency=${UNI_GOERLI}`, {
+      cy.visit(`/swap?outputCurrency=${WETH_GOERLI}`, {
         featureFlags: [FeatureFlag.swapWidget],
       }).then(() => {
         cy.wait('@eth_blockNumber')
       })
 
       verifyInputToken('Select token')
-      verifyOutputToken('UNI')
+      verifyOutputToken('WETH')
 
       cy.get(getClassContainsSelector('ReverseButton')).first().click()
-      verifyInputToken('UNI')
+      verifyInputToken('WETH')
       verifyOutputToken('Select token')
 
-      selectOutputAndSwitch('WETH')
+      selectOutputAndSwitch('Ether')
 
-      verifyInputToken('WETH')
-      verifyOutputToken('UNI')
+      verifyInputToken('ETH')
+      verifyOutputToken('WETH')
     })
   })
 
