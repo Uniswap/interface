@@ -15,8 +15,9 @@ import { switchChain } from 'utils/switchChain'
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
+import { PositionInfo } from './cache'
 import { useFeeValues } from './hooks'
-import useMultiChainPositions, { PositionInfo } from './useMultiChainPositions'
+import useMultiChainPositions from './useMultiChainPositions'
 
 export default function Pools({ account }: { account: string }) {
   const { positions, loading } = useMultiChainPositions(account)

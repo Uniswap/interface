@@ -15,7 +15,7 @@ import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'types/v3'
 import { getContract } from 'utils'
 import { CurrencyKey, currencyKey, currencyKeyFromGraphQL } from 'utils/currencyKey'
 
-import { PositionInfo } from './useMultiChainPositions'
+import { PositionInfo } from './cache'
 
 type ContractMap<T extends BaseContract> = { [key: number]: T }
 
@@ -67,8 +67,8 @@ export function usePoolPriceMap(positions: PositionInfo[] | undefined) {
 
   const priceMap = useMemo(
     () =>
-      data?.tokens?.filter(Boolean).reduce((acc: PriceMap, current) => {
-        acc[currencyKeyFromGraphQL(current)] = current.project?.markets?.[0]?.price?.value
+      data?.tokens?.reduce((acc: PriceMap, current) => {
+        if (current) acc[currencyKeyFromGraphQL(current)] = current.project?.markets?.[0]?.price?.value
         return acc
       }, {}) ?? {},
     [data?.tokens]

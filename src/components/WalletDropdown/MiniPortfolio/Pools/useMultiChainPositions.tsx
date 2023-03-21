@@ -6,26 +6,15 @@ import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import { Interface } from 'ethers/lib/utils'
-import { useAllTokensMultichain } from 'hooks/Tokens'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { PositionDetails } from 'types/position'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'types/v3'
 import { UniswapV3PoolInterface } from 'types/v3/UniswapV3Pool'
 import { currencyKey } from 'utils/currencyKey'
 
+import { PositionInfo, useCachedPositions, useGetCachedTokens, usePoolAddressCache } from './cache'
+import { Call, DEFAULT_GAS_LIMIT } from './getTokensAsync'
 import { useInterfaceMulticallContracts, usePoolPriceMap, useV3ManagerContracts } from './hooks'
-
-export type PositionInfo = {
-  owner: string
-  chainId: SupportedChainId
-  position: Position
-  pool: Pool
-  details: PositionDetails
-  inRange: boolean
-  closed: boolean
-  fees?: [number?, number?]
-  prices?: [number?, number?]
-}
 
 function createPositionInfo(
   owner: string,
@@ -74,10 +63,14 @@ type UseMultiChainPositionsData = { positions: PositionInfo[] | undefined; loadi
 export default function useMultiChainPositions(account: string, chains = DEFAULT_CHAINS): UseMultiChainPositionsData {
   const pms = useV3ManagerContracts(chains)
   const multicalls = useInterfaceMulticallContracts(chains)
-  const allTokens = useAllTokensMultichain()
-  const [positions, setPositions] = useState<PositionInfo[] | undefined>()
+
+  const getTokens = useGetCachedTokens(chains)
+  const poolAddressCache = usePoolAddressCache()
+
+  const [cachedPositions, setPositions] = useCachedPositions(account)
+  const positions = cachedPositions?.result
   const positionsFetching = useRef(false)
-  const positionsLoading = !positions && positionsFetching.current
+  const positionsLoading = !cachedPositions?.result && positionsFetching.current
 
   const [feeMap, setFeeMap] = useState<{ [key: string]: FeeAmounts }>({})
 
@@ -126,23 +119,28 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
   const fetchPositionInfo = useCallback(
     async (positionDetails: PositionDetails[], chainId: SupportedChainId, multicall: UniswapInterfaceMulticall) => {
       const poolInterface = new Interface(IUniswapV3PoolStateABI) as UniswapV3PoolInterface
+      const tokens = await getTokens(
+        positionDetails.flatMap((details) => [details.token0, details.token1]),
+        chainId
+      )
 
-      const calls: { target: string; callData: string; gasLimit: number }[] = []
+      const calls: Call[] = []
       const poolPairs: [Token, Token][] = []
       positionDetails.forEach((details) => {
-        const tokenA =
-          allTokens[chainId][details.token0]?.token ?? new Token(chainId, details.token0, DEFAULT_ERC20_DECIMALS)
-        const tokenB =
-          allTokens[chainId][details.token1]?.token ?? new Token(chainId, details.token1, DEFAULT_ERC20_DECIMALS)
+        const tokenA = tokens[details.token0] ?? new Token(chainId, details.token0, DEFAULT_ERC20_DECIMALS)
+        const tokenB = tokens[details.token1] ?? new Token(chainId, details.token1, DEFAULT_ERC20_DECIMALS)
 
-        const factoryAddress = V3_CORE_FACTORY_ADDRESSES[chainId]
-        const poolAddress = computePoolAddress({ factoryAddress, tokenA, tokenB, fee: details.fee })
-
+        let poolAddress = poolAddressCache.get(details, chainId)
+        if (!poolAddress) {
+          const factoryAddress = V3_CORE_FACTORY_ADDRESSES[chainId]
+          poolAddress = computePoolAddress({ factoryAddress, tokenA, tokenB, fee: details.fee })
+          poolAddressCache.set(details, chainId, poolAddress)
+        }
         poolPairs.push([tokenA, tokenB])
         calls.push({
           target: poolAddress,
           callData: poolInterface.encodeFunctionData('slot0'),
-          gasLimit: 1_000_000,
+          gasLimit: DEFAULT_GAS_LIMIT,
         })
       }, [])
 
@@ -156,23 +154,27 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
         return acc
       }, [])
     },
-    [account, allTokens]
+    [account, poolAddressCache, getTokens]
   )
 
   const fetchPositionsForChain = useCallback(
     async (chainId: SupportedChainId): Promise<PositionInfo[]> => {
-      const pm = pms[chainId]
-      const multicall = multicalls[chainId]
-      const balance = await pm?.balanceOf(account)
-      if (!pm || !multicall || balance.lt(1)) return []
+      try {
+        const pm = pms[chainId]
+        const multicall = multicalls[chainId]
+        const balance = await pm?.balanceOf(account)
+        if (!pm || !multicall || balance.lt(1)) return []
 
-      const positionIds = await fetchPositionIds(pm, balance)
+        const positionIds = await fetchPositionIds(pm, balance)
+        // Fetches fees in the background and stores them separetely from the results of this function
+        fetchPositionFees(pm, positionIds, chainId)
 
-      // Fetches fees in the background and stores them separetely from the results of this function
-      fetchPositionFees(pm, positionIds, chainId)
-
-      const postionDetails = await fetchPositionDetails(pm, positionIds)
-      return fetchPositionInfo(postionDetails, chainId, multicall)
+        const postionDetails = await fetchPositionDetails(pm, positionIds)
+        return fetchPositionInfo(postionDetails, chainId, multicall)
+      } catch (error) {
+        console.error(`Failed to fetch positions for chain ${chainId}`, error)
+        return []
+      }
     },
     [account, fetchPositionDetails, fetchPositionFees, fetchPositionIds, fetchPositionInfo, pms, multicalls]
   )
@@ -186,7 +188,7 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
 
   // Fetches positions when existing positions are stale and the document has focus
   useEffect(() => {
-    if (positionsFetching.current) return
+    if (positionsFetching.current || cachedPositions?.stale === false) return
     else if (document.hasFocus()) {
       fetchAllPositions()
     } else {
@@ -201,7 +203,7 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
       }
     }
     return
-  }, [fetchAllPositions, positionsFetching])
+  }, [fetchAllPositions, positionsFetching, cachedPositions?.stale])
 
   const positionsWithFeesAndPrices: PositionInfo[] | undefined = useMemo(
     () =>

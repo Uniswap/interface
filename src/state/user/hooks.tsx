@@ -27,7 +27,7 @@ import {
 } from './reducer'
 import { SerializedPair, SerializedToken } from './types'
 
-function serializeToken(token: Token): SerializedToken {
+export function serializeToken(token: Token): SerializedToken {
   return {
     chainId: token.chainId,
     address: token.address,
@@ -37,7 +37,7 @@ function serializeToken(token: Token): SerializedToken {
   }
 }
 
-function deserializeToken(serializedToken: SerializedToken, Class: typeof Token = Token): Token {
+export function deserializeToken(serializedToken: SerializedToken, Class: typeof Token = Token): Token {
   return new Class(
     serializedToken.chainId,
     serializedToken.address,
