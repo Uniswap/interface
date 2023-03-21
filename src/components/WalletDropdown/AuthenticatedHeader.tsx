@@ -49,7 +49,7 @@ const BuyCryptoButtonBorderKeyframes = keyframes`
 `
 
 const AuthenticatedHeaderWrapper = styled.div`
-  padding: 14px 16px 16px;
+  padding: 14px 12px 16px 16px;
   display: flex;
   flex-direction: column;
   flex: 1;
