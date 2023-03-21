@@ -3,7 +3,6 @@ import celoCircleLogoUrl from 'assets/images/celoCircle.png'
 import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import polygonCircleLogoUrl from 'assets/images/polygonCircle.png'
 import { default as arbitrumCircleLogoUrl, default as arbitrumLogoUrl } from 'assets/svg/arbitrum_logo.svg'
-import arbitrumSquareLogoUrl from 'assets/svg/arbitrum_square_logo.svg'
 import bnbSquareLogoUrl from 'assets/svg/bnb_square_logo.svg'
 import bnbLogo from 'assets/svg/bnb-logo.svg'
 import celoLogo from 'assets/svg/celo_logo.svg'
@@ -127,7 +126,6 @@ const CHAIN_INFO: ChainInfoMap = {
     label: 'Arbitrum',
     logoUrl: arbitrumLogoUrl,
     circleLogoUrl: arbitrumCircleLogoUrl,
-    squareLogoUrl: arbitrumSquareLogoUrl,
     defaultListUrl: ARBITRUM_LIST,
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },

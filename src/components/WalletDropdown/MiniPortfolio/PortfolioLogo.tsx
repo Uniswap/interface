@@ -57,9 +57,11 @@ const ENSAvatarImg = styled.img`
   width: 40px;
 `
 
-const StyledChainLogo = styled.img`
-  height: 18px;
-  width: 18px;
+const StyledChainLogo = styled.img<{ isSquare: boolean }>`
+  height: ${({ isSquare }) => (isSquare ? '16px' : '14px')};
+  width: ${({ isSquare }) => (isSquare ? '16px' : '14px')};
+  margin-top: ${({ isSquare }) => (isSquare ? '0px' : '1px')};
+  margin-left: ${({ isSquare }) => (isSquare ? '0px' : '1px')};
   position: absolute;
   top: 68%;
   left: 68%;
@@ -75,6 +77,16 @@ const ChainLogoSquareBackground = styled.div`
   left: 60%;
 `
 
+const SquareBackgroundForNonSquareLogo = styled.div`
+  height: 16px;
+  width: 16px;
+  border-radius: 2px;
+  background-color: ${({ theme }) => theme.textPrimary};
+  position: absolute;
+  top: 68%;
+  left: 68%;
+`
+
 /**
  * Renders an image by prioritizing a list of sources, and then eventually a fallback triangle alert
  */
@@ -86,7 +98,8 @@ export function PortfolioLogo({
   size = '40px',
   style,
 }: MultiLogoProps) {
-  const { squareLogoUrl: chainLogo } = getChainInfo(chainId)
+  const { squareLogoUrl, logoUrl } = getChainInfo(chainId)
+  const chainLogo = squareLogoUrl ?? logoUrl
   const { avatar, loading } = useENSAvatar(accountAddress, false)
 
   const [src, nextSrc] = useTokenLogoSource(currencies?.[0]?.wrapped.address, chainId, currencies?.[0]?.isNative)
@@ -133,11 +146,19 @@ export function PortfolioLogo({
     return <UnknownContract width={size} height={size} />
   }
 
+  const L2Logo =
+    chainId === SupportedChainId.MAINNET ? null : (
+      <div>
+        {chainLogo && <ChainLogoSquareBackground />}
+        {!squareLogoUrl && logoUrl && <SquareBackgroundForNonSquareLogo />}
+        {chainLogo && <StyledChainLogo isSquare={!!squareLogoUrl} src={chainLogo} alt="chainLogo" />}
+      </div>
+    )
+
   return (
     <StyledLogoParentContainer>
       {component}
-      {chainLogo && <ChainLogoSquareBackground />}
-      {chainLogo && <StyledChainLogo src={chainLogo} alt="chainLogo" />}
+      {L2Logo}
     </StyledLogoParentContainer>
   )
 }
