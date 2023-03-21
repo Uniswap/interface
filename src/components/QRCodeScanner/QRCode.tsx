@@ -91,7 +91,6 @@ type QRCodeDisplayProps = {
   size: number
   backgroundColor?: keyof Theme['colors']
   containerBackgroundColor?: keyof Theme['colors']
-  safeAreaSize?: number
   safeAreaColor?: keyof Theme['colors']
   logoSize?: number
   overlayOpacityPercent?: number
@@ -105,7 +104,6 @@ const _QRCodeDisplay = ({
   size,
   backgroundColor = 'background0',
   containerBackgroundColor,
-  safeAreaSize = 32,
   overlayOpacityPercent,
   logoSize = 32,
   safeAreaColor,

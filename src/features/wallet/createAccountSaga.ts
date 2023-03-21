@@ -8,7 +8,6 @@ import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { call, put } from 'typed-redux-saga'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function* createAccount() {
   const sortedMnemonicAccounts: SignerMnemonicAccount[] = yield* appSelect(
     selectSortedSignerMnemonicAccounts

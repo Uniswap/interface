@@ -1,5 +1,3 @@
-const nonSagaTs = '(?<!saga).ts'
-
 // reduces code complexity
 const complexityRules = {
   'max-depth': ['error', 4], // prevent deeply nested code paths which are hard to read
@@ -164,12 +162,20 @@ module.exports = {
     },
     {
       // enable the rule specifically for TypeScript files
-      files: [nonSagaTs, '*.mts', '*.cts', '*.tsx'],
+      files: ['*.ts', '*.mts', '*.cts', '*.tsx'],
       rules: {
         '@typescript-eslint/explicit-function-return-type': [
           'error',
           { allowedNames: ['useEffect'] },
         ],
+      },
+    },
+    // ignore return type in saga files given return types are unwieldy and tied
+    // to implementation details.
+    {
+      files: ['*saga*.ts', '*Saga.ts'],
+      rules: {
+        '@typescript-eslint/explicit-function-return-type': 'off',
       },
     },
     {
@@ -212,7 +218,8 @@ module.exports = {
               'you’ll',
               'you’re',
               'you’ve',
-              'unhide'
+              'unhide',
+              'unhidden'
             ],
           },
         ],

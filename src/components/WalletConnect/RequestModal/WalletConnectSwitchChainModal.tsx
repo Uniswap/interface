@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { LinkButton } from 'src/components/buttons/LinkButton'
@@ -29,7 +29,6 @@ interface Props {
 export function WalletConnectSwitchChainModal({ onClose, request }: Props): JSX.Element | null {
   const { t } = useTranslation()
   const theme = useAppTheme()
-  const dispatch = useAppDispatch()
   const didOpenFromDeepLink = useAppSelector(selectDidOpenFromDeepLink)
 
   /**

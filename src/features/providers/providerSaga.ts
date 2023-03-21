@@ -14,7 +14,6 @@ import { logger } from 'src/utils/logger'
 import { call, fork, join, put, take, takeEvery } from 'typed-redux-saga'
 
 // Initialize Ethers providers for the chains the wallet interacts with
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function* initProviders() {
   // Wait for rehydration so we know which networks are enabled
   const persisted = yield* take<PayloadAction<RootState>>(REHYDRATE)
@@ -35,7 +34,6 @@ export function* initProviders() {
   yield* takeEvery(setChainActiveStatus.type, modifyProviders)
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function* initProvider(chainId: ChainId, manager: ProviderManager) {
   try {
     logger.debug('providerSaga', 'initProvider', 'Creating a provider for:', chainId)
@@ -63,7 +61,6 @@ function destroyProvider(chainId: ChainId, manager: ProviderManager): void {
   manager.removeProvider(chainId)
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function* modifyProviders(action: PayloadAction<{ chainId: ChainId; isActive: boolean }>) {
   const { chainId, isActive } = action.payload
   try {
@@ -93,7 +90,6 @@ async function createProvider(
 }
 
 // Sagas can use this to delay execution until the providers have been initialized
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function* waitForProvidersInitialized() {
   const isInitialized = yield* appSelect((state) => state.providers.isInitialized)
   if (isInitialized) return

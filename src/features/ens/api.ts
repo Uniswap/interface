@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { createApi, fetchBaseQuery, retry, skipToken } from '@reduxjs/toolkit/query/react'
 import { walletContextValue } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
