@@ -109,8 +109,8 @@ const Application = () => (
 const Widget = () => (
   <AppWrapper>
     <Switch>
-      <Route exact strict path="/swap-widget/dark" component={SwapWidget} />
-      <Route exact strict path="/swap-widget/light" component={SwapWidget} />
+      <Route path="/swap-widget/dark" component={SwapWidget} />
+      <Route path="/swap-widget/light" component={SwapWidget} />
     </Switch>
   </AppWrapper>
 )

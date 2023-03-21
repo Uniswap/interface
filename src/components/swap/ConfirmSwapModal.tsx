@@ -96,11 +96,11 @@ export default function ConfirmSwapModal({
       <SwapModalFooter
         onConfirm={onConfirm}
         trade={trade}
-        disabledConfirm={showAcceptChanges || chainId === 137}
+        disabledConfirm={showAcceptChanges}
         swapErrorMessage={swapErrorMessage}
       />
     ) : null
-  }, [chainId, onConfirm, showAcceptChanges, swapErrorMessage, trade])
+  }, [onConfirm, showAcceptChanges, swapErrorMessage, trade])
 
   // text to show while loading
   const pendingText = trade ? (

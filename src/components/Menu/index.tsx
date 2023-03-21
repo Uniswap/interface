@@ -78,7 +78,7 @@ const StyledMenu = styled.div`
 
 const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   min-width: 230px;
-  max-height: fit-content;
+  max-height: 600px;
   overflow: auto;
   background-color: ${({ theme }) => theme.bg1};
   box-shadow: 0 0 2px 2px ${({ theme }) => theme.shadow2};

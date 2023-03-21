@@ -93,7 +93,7 @@ const SwapCallbackErrorInner = styled.div`
   align-items: center;
   font-size: 0.825rem;
   width: 100%;
-  padding: 3rem 1.25rem 1rem 1rem;
+  padding: 1rem;
   margin-top: 12px;
   color: ${({ theme }) => theme.red1};
   z-index: -1;

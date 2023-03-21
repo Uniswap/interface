@@ -746,7 +746,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                         <Trans>Insufficient liquidity for this trade.</Trans>
                       </TYPE.main>
                     </GreyCard>
-                  ) : showApproveFlow && chainId !== 137 ? (
+                  ) : showApproveFlow ? (
                     <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
                       <AutoColumn style={{ width: '100%' }} gap="md">
                         <ButtonConfirmed
@@ -809,7 +809,6 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                           width="100%"
                           id="swap-button"
                           disabled={
-                            chainId === 137 ||
                             !isValid ||
                             !approvalState ||
                             (approvalState !== ApprovalState.APPROVED && signatureState !== UseERC20PermitState.SIGNED)
@@ -834,7 +833,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                         })
                       }}
                       id="swap-button"
-                      disabled={!isValid || !!swapCallbackError || chainId === 137}
+                      disabled={!isValid || !!swapCallbackError}
                       error={isValid && !swapCallbackError}
                     >
                       <Text fontSize={16} fontWeight={400}>
@@ -1130,55 +1129,52 @@ export default function LimitOrder({ history }: RouteComponentProps) {
               ) : showApproveFlow ? (
                 <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
                   <AutoColumn style={{ width: '100%' }} gap="md">
-                    {chainId !== 137 && (
-                      <ButtonConfirmed
-                        onClick={handleApprove}
-                        disabled={
-                          approvalState !== ApprovalState.NOT_APPROVED ||
-                          approvalSubmitted ||
-                          signatureState === UseERC20PermitState.SIGNED
-                        }
-                        width="100%"
-                        altDisabledStyle={approvalState === ApprovalState.PENDING} // show solid button while waiting
-                        confirmed={
-                          approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
-                        }
-                      >
-                        <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                          <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'break-spaces' }}>
-                            <CurrencyLogo
-                              currency={currencies[Field.INPUT]}
-                              size={'20px'}
-                              style={{ marginRight: '8px', flexShrink: 0 }}
-                            />
-                            {/* we need to shorten this string on mobile */}
-                            {approvalState === ApprovalState.APPROVED ||
-                            signatureState === UseERC20PermitState.SIGNED ? (
-                              <Trans>You can now trade {currencies[Field.INPUT]?.symbol}</Trans>
-                            ) : (
-                              <Trans>Allow Kromatika to use your {currencies[Field.INPUT]?.symbol}</Trans>
-                            )}
-                          </span>
-                          {approvalState === ApprovalState.PENDING ? (
-                            <Loader stroke="white" />
-                          ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
-                            signatureState === UseERC20PermitState.SIGNED ? (
-                            <CheckCircle size="20" color={theme.green1} />
+                    <ButtonConfirmed
+                      onClick={handleApprove}
+                      disabled={
+                        approvalState !== ApprovalState.NOT_APPROVED ||
+                        approvalSubmitted ||
+                        signatureState === UseERC20PermitState.SIGNED
+                      }
+                      width="100%"
+                      altDisabledStyle={approvalState === ApprovalState.PENDING} // show solid button while waiting
+                      confirmed={
+                        approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
+                      }
+                    >
+                      <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
+                        <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'break-spaces' }}>
+                          <CurrencyLogo
+                            currency={currencies[Field.INPUT]}
+                            size={'20px'}
+                            style={{ marginRight: '8px', flexShrink: 0 }}
+                          />
+                          {/* we need to shorten this string on mobile */}
+                          {approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED ? (
+                            <Trans>You can now trade {currencies[Field.INPUT]?.symbol}</Trans>
                           ) : (
-                            <MouseoverTooltip
-                              text={
-                                <Trans>
-                                  You must give the Kromatika smart contracts permission to use your{' '}
-                                  {currencies[Field.INPUT]?.symbol}. You only have to do this once per token.
-                                </Trans>
-                              }
-                            >
-                              <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
-                            </MouseoverTooltip>
+                            <Trans>Allow Kromatika to use your {currencies[Field.INPUT]?.symbol}</Trans>
                           )}
-                        </AutoRow>
-                      </ButtonConfirmed>
-                    )}
+                        </span>
+                        {approvalState === ApprovalState.PENDING ? (
+                          <Loader stroke="white" />
+                        ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
+                          signatureState === UseERC20PermitState.SIGNED ? (
+                          <CheckCircle size="20" color={theme.green1} />
+                        ) : (
+                          <MouseoverTooltip
+                            text={
+                              <Trans>
+                                You must give the Kromatika smart contracts permission to use your{' '}
+                                {currencies[Field.INPUT]?.symbol}. You only have to do this once per token.
+                              </Trans>
+                            }
+                          >
+                            <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
+                          </MouseoverTooltip>
+                        )}
+                      </AutoRow>
+                    </ButtonConfirmed>
                     <ButtonError
                       onClick={() => {
                         setSwapState({
@@ -1192,7 +1188,6 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                       width="100%"
                       id="swap-button"
                       disabled={
-                        chainId === 137 ||
                         !isValid ||
                         (approvalState !== ApprovalState.APPROVED && signatureState !== UseERC20PermitState.SIGNED)
                       }
@@ -1216,7 +1211,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                     })
                   }}
                   id="swap-button"
-                  disabled={!isValid || !!swapCallbackError || chainId === 137}
+                  disabled={!isValid || !!swapCallbackError}
                   error={isValid && !swapCallbackError}
                 >
                   <Text fontSize={16} fontWeight={400}>
