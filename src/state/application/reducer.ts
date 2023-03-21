@@ -30,6 +30,7 @@ export enum ApplicationModal {
   SELF_CLAIM,
   SETTINGS,
   SHARE,
+  TAX_SERVICE,
   TIME_SELECTOR,
   VOTE,
   WALLET,
