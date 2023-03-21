@@ -30,10 +30,7 @@ const PageContainer = styled.div<{ isDarkMode: boolean }>`
   scroll-behavior: smooth;
   overflow-x: hidden;
 
-  background: ${({ isDarkMode }) =>
-    isDarkMode
-      ? 'linear-gradient(rgba(0, 0, 0, 0) 0%, rgb(0 0 0 / 100%) 45%)'
-      : 'linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(255 255 255 /100%) 45%)'};
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
 `
 
 const Gradient = styled.div<{ isDarkMode: boolean }>`
@@ -45,10 +42,7 @@ const Gradient = styled.div<{ isDarkMode: boolean }>`
   bottom: 0;
   width: 100%;
   min-height: 550px;
-  background: ${({ isDarkMode }) =>
-    isDarkMode
-      ? 'linear-gradient(rgba(8, 10, 24, 0) 0%, rgb(8 10 24 / 100%) 45%)'
-      : 'linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(255 255 255 /100%) 45%)'};
+  background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgb(0 0 0 / 100%) 45%);
   z-index: ${Z_INDEX.under_dropdown};
   pointer-events: none;
   height: ${({ theme }) => `calc(100vh - ${theme.mobileBottomBarHeight}px)`};
@@ -213,10 +207,7 @@ const AboutContentContainer = styled.div<{ isDarkMode: boolean }>`
   align-items: center;
   padding: 0 24px 5rem;
   width: 100%;
-  background: ${({ isDarkMode }) =>
-    isDarkMode
-      ? 'linear-gradient(179.82deg, rgba(0, 0, 0, 0) 0.16%, #050026 99.85%)'
-      : 'linear-gradient(179.82deg, rgba(255, 255, 255, 0) 0.16%, #eaeaea 99.85%)'};
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     padding: 0 96px 5rem;
   }
@@ -366,7 +357,7 @@ export default function Landing() {
               <LearnMoreArrow />
             </LearnMoreContainer>
           </ContentContainer>
-          <AboutContentContainer isDarkMode={isDarkMode}>
+          <AboutContentContainer isDarkMode={true}>
             <CardGrid cols={2} ref={cardsRef}>
               {MAIN_CARDS.map(({ darkBackgroundImgSrc, lightBackgroundImgSrc, ...card }) => (
                 <Card

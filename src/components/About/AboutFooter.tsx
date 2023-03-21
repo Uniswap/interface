@@ -1,12 +1,9 @@
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
-import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { BREAKPOINTS, ExternalLink, StyledRouterLink } from 'theme'
+import { BREAKPOINTS, ExternalLink } from 'theme'
 
 import { DiscordIcon, GithubIcon, TwitterIcon } from './Icons'
-import darkUnicornImgSrc from './images/unicornEmbossDark.png'
-import lightUnicornImgSrc from './images/unicornEmbossLight.png'
 
 const Footer = styled.div`
   display: flex;
@@ -39,16 +36,6 @@ const LogoSectionBottom = styled(LogoSection)`
 
   @media screen and (min-width: ${BREAKPOINTS.lg}px) {
     display: none;
-  }
-`
-
-const StyledLogo = styled.img`
-  width: 72px;
-  height: 72px;
-  display: none;
-
-  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
-    display: block;
   }
 `
 
@@ -96,12 +83,6 @@ const ExternalTextLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.textSecondary};
 `
 
-const TextLink = styled(StyledRouterLink)`
-  font-size: 16px;
-  line-height: 20px;
-  color: ${({ theme }) => theme.textSecondary};
-`
-
 const Copyright = styled.span`
   font-size: 16px;
   line-height: 20px;
@@ -110,10 +91,9 @@ const Copyright = styled.span`
 `
 
 const LogoSectionContent = () => {
-  const isDarkMode = useIsDarkMode()
   return (
     <>
-      <StyledLogo src={isDarkMode ? darkUnicornImgSrc : lightUnicornImgSrc} alt="Uniswap Logo" />
+      <img style={{ width: '220px', height: '40px' }} src="/images/ForgeLogoFinal.png" />{' '}
       <SocialLinks>
         <SocialLink href="https://discord.gg/FCfyBSbCU5" target="_blank" rel="noopener noreferrer">
           <DiscordIcon size={32} />
@@ -123,15 +103,15 @@ const LogoSectionContent = () => {
           name={SharedEventName.ELEMENT_CLICKED}
           element={InterfaceElementName.TWITTER_LINK}
         >
-          <SocialLink href="https://twitter.com/uniswap" target="_blank" rel="noopener noreferrer">
+          <SocialLink href="https://twitter.com/forgeDEX" target="_blank" rel="noopener noreferrer">
             <TwitterIcon size={32} />
           </SocialLink>
         </TraceEvent>
-        <SocialLink href="https://github.com/Uniswap" target="_blank" rel="noopener noreferrer">
+        <SocialLink href="https://github.com/Orbital-Apes-Labs" target="_blank" rel="noopener noreferrer">
           <GithubIcon size={32} />
         </SocialLink>
       </SocialLinks>
-      <Copyright>© {new Date().getFullYear()} Uniswap Labs</Copyright>
+      <Copyright>© {new Date().getFullYear()} Evmos community</Copyright>
     </>
   )
 }
@@ -145,57 +125,45 @@ export const AboutFooter = () => {
 
       <FooterLinks>
         <LinkGroup>
-          <LinkGroupTitle>App</LinkGroupTitle>
-          <TextLink to="/swap">Swap</TextLink>
-          <TextLink to="/tokens">Tokens</TextLink>
-          <TextLink to="/nfts">NFTs</TextLink>
-          <TextLink to="/pool">Pools</TextLink>
+          <LinkGroupTitle>Orbital Apes</LinkGroupTitle>
+          <ExternalTextLink href="https://uniswap.org/community">Validator</ExternalTextLink>
+          <ExternalTextLink href="https://uniswap.org/community">Orbit Market</ExternalTextLink>
+          <ExternalTextLink href="https://uniswap.org/community">OA Hub</ExternalTextLink>
+          <ExternalTextLink href="https://uniswap.org/community">Rumble</ExternalTextLink>
         </LinkGroup>
         <LinkGroup>
-          <LinkGroupTitle>Protocol</LinkGroupTitle>
-          <ExternalTextLink href="https://uniswap.org/community">Community</ExternalTextLink>
-          <ExternalTextLink href="https://uniswap.org/governance">Governance</ExternalTextLink>
-          <ExternalTextLink href="https://uniswap.org/developers">Developers</ExternalTextLink>
+          <LinkGroupTitle>Evmos DAO</LinkGroupTitle>
+          <ExternalTextLink href="https://uniswap.org/community">Link 1</ExternalTextLink>
+          <ExternalTextLink href="https://uniswap.org/governance">Link 2</ExternalTextLink>
+          <ExternalTextLink href="https://uniswap.org/developers">Link 3</ExternalTextLink>
         </LinkGroup>
         <LinkGroup>
-          <LinkGroupTitle>Company</LinkGroupTitle>
+          <LinkGroupTitle>Evmos Org</LinkGroupTitle>
           <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.ELEMENT_CLICKED}
             element={InterfaceElementName.CAREERS_LINK}
           >
-            <ExternalTextLink href="https://boards.greenhouse.io/uniswaplabs">Careers</ExternalTextLink>
+            <ExternalTextLink href="https://boards.greenhouse.io/uniswaplabs">Link 1</ExternalTextLink>
           </TraceEvent>
           <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.ELEMENT_CLICKED}
             element={InterfaceElementName.BLOG_LINK}
           >
-            <ExternalTextLink href="https://uniswap.org/blog">Blog</ExternalTextLink>
+            <ExternalTextLink href="https://uniswap.org/blog">Link 2</ExternalTextLink>
           </TraceEvent>
         </LinkGroup>
         <LinkGroup>
           <LinkGroupTitle>Get Help</LinkGroupTitle>
-          <TraceEvent
-            events={[BrowserEvent.onClick]}
-            name={SharedEventName.ELEMENT_CLICKED}
-            element={InterfaceElementName.SUPPORT_LINK}
+
+          <ExternalTextLink
+            href="https://support.uniswap.org/hc/en-us/requests/new"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <ExternalTextLink
-              href="https://support.uniswap.org/hc/en-us/requests/new"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Contact Us
-            </ExternalTextLink>
-          </TraceEvent>
-          <TraceEvent
-            events={[BrowserEvent.onClick]}
-            name={SharedEventName.ELEMENT_CLICKED}
-            element={InterfaceElementName.SUPPORT_LINK}
-          >
-            <ExternalTextLink href="https://support.uniswap.org/hc/en-us">Help Center</ExternalTextLink>
-          </TraceEvent>
+            Discord
+          </ExternalTextLink>
         </LinkGroup>
       </FooterLinks>
 

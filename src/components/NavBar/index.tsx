@@ -3,7 +3,6 @@ import Web3Status from 'components/Web3Status'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
-import { UniIcon } from 'nft/components/icons'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -86,17 +85,16 @@ const Navbar = () => {
         <Box display="flex" height="full" flexWrap="nowrap">
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
-              <UniIcon
-                width="48"
-                height="48"
-                data-testid="uniswap-logo"
-                className={styles.logo}
+              <img
                 onClick={() => {
                   navigate({
                     pathname: '/',
                     search: '?intro=true',
                   })
                 }}
+                className={styles.logo}
+                style={{ width: '48px', height: '48px' }}
+                src="/images/ForgeIcon.png"
               />
             </Box>
             {!isNftPage && (
