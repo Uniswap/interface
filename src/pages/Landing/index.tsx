@@ -30,7 +30,7 @@ const PageContainer = styled.div<{ isDarkMode: boolean }>`
   scroll-behavior: smooth;
   overflow-x: hidden;
 
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+  background: linear-gradient(0deg, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.7));
 `
 
 const Gradient = styled.div<{ isDarkMode: boolean }>`
@@ -207,7 +207,7 @@ const AboutContentContainer = styled.div<{ isDarkMode: boolean }>`
   align-items: center;
   padding: 0 24px 5rem;
   width: 100%;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+  background: rgba(0, 0, 0, 0);
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
     padding: 0 96px 5rem;
   }
