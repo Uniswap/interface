@@ -14,5 +14,6 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
   'tokenlist.aave.eth',
   'https://app.tryroll.com/tokens.json',
   'https://raw.githubusercontent.com/compound-finance/token-list/master/compound.tokenlist.json',
+  'https://gist.githubusercontent.com/d1onys1us/8f8824daed0882b1094296f824fae53c/raw/0f90c917660e4cd77019bff8e9b7fe918f796d54/taiko_tokens.json',
   'https://gist.githubusercontent.com/alexshliu/2aa5edb61d8d0e6502428c0f5531bada/raw/28f4a66fd8f6cc5ed4530ebe2611ec1d504e586d/taiko-test-token-list.json'
 ]
