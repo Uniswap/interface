@@ -1,6 +1,8 @@
-import { MessageType, TransactionDetails } from '../src/types'
+import { MessageType, TransactionDetails } from './types'
 import { useEffect, useState } from 'react'
 import { Button } from 'ui/src/components/button/Button'
+import { Flex } from 'ui/src/components/layout/Flex'
+import { Text } from 'ui/src/components/text/Text'
 
 const onConfirm = (transactionId: string): void => {
   chrome.runtime.sendMessage({
@@ -34,16 +36,16 @@ export default function TransactionContent(): JSX.Element {
   }
 
   return (
-    <div>
-      <h1>{transactionDetails?.title}</h1>
-      <h2>{transactionDetails?.message}</h2>
-      <h3>{transactionDetails?.id}</h3>
+    <Flex>
+      <Text variant="headlineLarge">{transactionDetails?.title}</Text>
+      <Text variant="bodyLarge">{transactionDetails?.message}</Text>
+      <Text variant="bodyLarge">{transactionDetails?.id}</Text>
       <Button onPress={(): void => onConfirm(transactionDetails.id)}>
         Confirm
       </Button>
       <Button onPress={(): void => onCancel(transactionDetails.id)}>
         Cancel
       </Button>
-    </div>
+    </Flex>
   )
 }
