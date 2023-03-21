@@ -10,7 +10,7 @@ import { SupportedChainId } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import Badge from 'components/Badge'
-import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
+import { ButtonConfirmed, ButtonGray, ButtonPrimary, ButtonSecondary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
@@ -20,6 +20,8 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
+import { getChainInfo } from 'constants/chainInfo'
+import { isSupportedChain } from 'constants/chains'
 import { getChainIdFromUrlName, getUrlNameFromChainId, isGqlSupportedChain } from 'graphql/data/util'
 import { useToken } from 'hooks/Tokens'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
@@ -39,6 +41,7 @@ import { ExternalLink, HideExtraSmall, HideSmall, ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { formatTickPrice } from 'utils/formatTickPrice'
+import { switchChain } from 'utils/switchChain'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 import RangeBadge from '../../components/Badge/RangeBadge'
@@ -340,7 +343,7 @@ const useInverter = ({
 export default function PositionPage() {
   const navigate = useNavigate()
   const { tokenId: urlTokenId, chainName: urlChainName } = useParams<{ tokenId?: string; chainName?: string }>()
-  const { chainId, account, provider } = useWeb3React()
+  const { chainId, account, provider, connector } = useWeb3React()
   const theme = useTheme()
 
   const parsedTokenId = urlTokenId ? BigNumber.from(urlTokenId) : undefined
@@ -585,7 +588,45 @@ export default function PositionPage() {
     return null
   }
 
-  if (!loading && !positionDetails) {
+  if (!urlChainId) {
+    return null
+  }
+
+  const parsedUrlChainId = parseInt(urlChainId)
+  if (!isSupportedChain(parsedUrlChainId)) {
+    return null
+  }
+
+  if (chainId !== parsedUrlChainId) {
+    const chainLabel = getChainInfo(parsedUrlChainId)?.label
+    return (
+      <PageWrapper>
+        <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+          <ThemedText.HeadlineLarge style={{ marginBottom: '8px' }}>
+            <Trans>Position unavailable</Trans>
+          </ThemedText.HeadlineLarge>
+          <ThemedText.BodyPrimary style={{ marginBottom: '32px' }}>
+            <Trans>You must be connected to {chainLabel} to see this position.</Trans>
+          </ThemedText.BodyPrimary>
+          <div>
+            <ButtonPrimary
+              onClick={async () => {
+                await switchChain(connector, parsedUrlChainId)
+              }}
+              width="fit-content"
+            >
+              <Trans>Connect to {chainLabel}</Trans>
+            </ButtonPrimary>
+            <ButtonSecondary as={Link} to="/pools" width="fit-content">
+              <Trans>Back to Pools</Trans>
+            </ButtonSecondary>
+          </div>
+        </div>
+      </PageWrapper>
+    )
+  }
+
+  if (!positionDetails && !loading) {
     return (
       <PageWrapper>
         <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
@@ -620,10 +661,6 @@ export default function PositionPage() {
         <div />
       </LoadingRows>
     )
-  }
-
-  if (!urlChainId || chainId !== parseInt(urlChainId)) {
-    return <div>invalid chain</div>
   }
 
   return (
