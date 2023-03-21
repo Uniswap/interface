@@ -7,7 +7,15 @@ const commitHash = require('child_process').execSync('git rev-parse HEAD')
 
 module.exports = {
   babel: {
-    plugins: ['@vanilla-extract/babel-plugin', 'istanbul'],
+    plugins: ['@vanilla-extract/babel-plugin'],
+    env: {
+      test: {
+        plugins: ['istanbul'],
+      },
+      development: {
+        plugins: ['istanbul'],
+      },
+    },
   },
   jest: {
     configure(jestConfig) {
