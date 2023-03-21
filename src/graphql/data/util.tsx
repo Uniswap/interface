@@ -117,9 +117,10 @@ export function getTokenDetailsURL({
   chain: Chain
   inputAddress?: string | null
 }) {
-  return `/tokens/${chain.toLowerCase()}/${address ?? NATIVE_CHAIN_ID}${
-    inputAddress ? `?inputCurrency=${inputAddress}` : ''
-  }`
+  const chainName = chain.toLowerCase()
+  const tokenAddress = address ?? NATIVE_CHAIN_ID
+  const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
+  return `/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
 }
 
 export function unwrapToken<
