@@ -386,10 +386,12 @@ export function useVotingInfo() {
   }, [merkleData])
 
   const { data: userRewards } = useSWRImmutable(
-    account && merkleDataFileUrl ? [merkleDataFileUrl, account] : null,
-    (url: string, address: string) => {
+    account && merkleDataFileUrl ? { url: merkleDataFileUrl, address: account } : null,
+    ({ url, address }) => {
       return fetch(url)
-        .then(res => res.json())
+        .then(res => {
+          return res.json()
+        })
         .then(res => {
           res.userReward = address ? res.userRewards[address] : undefined
           delete res.userRewards
@@ -400,6 +402,8 @@ export function useVotingInfo() {
 
   const [claimedRewardAmounts, setClaimedRewardAmounts] = useState<any>()
   useEffect(() => {
+    if (!rewardsDistributorContract || !account || !userRewards?.userReward?.tokens) return
+
     rewardsDistributorContract
       ?.getClaimedAmounts?.(account, userRewards?.userReward?.tokens)
       .then((res: any) => setClaimedRewardAmounts(res))
@@ -407,7 +411,7 @@ export function useVotingInfo() {
   }, [rewardsDistributorContract, account, userRewards?.userReward?.tokens])
 
   const remainingCumulativeAmount: BigNumber = useMemo(() => {
-    if (!userRewards?.userReward?.tokens || !claimedRewardAmounts) return BigNumber.from(0)
+    if (!userRewards?.userReward?.tokens || !claimedRewardAmounts?.[0]) return BigNumber.from(0)
     return (
       userRewards?.userReward?.tokens?.map((_: string, index: number) => {
         const cummulativeAmount =
@@ -418,9 +422,8 @@ export function useVotingInfo() {
         if (!cummulativeAmount) {
           return BigNumber.from(0)
         }
-        const claimedAmount = claimedRewardAmounts?.[0]?.[index] || 0
 
-        return BigNumber.from(cummulativeAmount).sub(BigNumber.from(claimedAmount))
+        return BigNumber.from(cummulativeAmount).sub(BigNumber.from(claimedRewardAmounts[0]))
       })[0] || BigNumber.from(0)
     )
   }, [claimedRewardAmounts, userRewards?.userReward])
@@ -500,6 +503,7 @@ export function useVotingInfo() {
     proposals,
     userReward: userRewards?.userReward,
     remainingCumulativeAmount,
+    claimedRewardAmount: claimedRewardAmounts?.[0] ? BigNumber.from(claimedRewardAmounts[0]) : BigNumber.from(0),
     stakerInfo,
     stakerInfoNextEpoch,
     votesInfo,

@@ -82,5 +82,5 @@ export const fixedFormatting = (value: BigNumber, decimals: number) => {
 }
 
 export const formatUnitsToFixed = (amount: BigNumber, decimals?: number, decimalPlaces?: number) => {
-  return (+(+formatUnits(amount, decimals)).toFixed(decimalPlaces || 3)).toString()
+  return (+(+formatUnits(amount, decimals)).toFixed(decimalPlaces ?? 3)).toString()
 }
