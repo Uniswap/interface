@@ -6,14 +6,12 @@ import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { useWalletDrawer } from 'components/WalletDropdown'
-import { connectionErrorAtom } from 'components/WalletDropdown/DefaultMenu'
 import IconButton from 'components/WalletDropdown/IconButton'
 import { Connection, ConnectionType, networkConnection, useConnections } from 'connection'
 import { useGetConnection } from 'connection'
 import { ErrorCode } from 'connection/utils'
 import { isSupportedChain } from 'constants/chains'
 import { useMgtmEnabled } from 'featureFlags/flags/mgtm'
-import { useAtom } from 'jotai'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Settings } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
@@ -91,7 +89,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
   const [connectedWallets, addWalletToConnectedWallets] = useConnectedWallets()
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
   const [pendingConnection, setPendingConnection] = useState<Connection | undefined>()
-  const [pendingError, setPendingError] = useAtom(connectionErrorAtom)
+  const [pendingError, setPendingError] = useState<any>()
 
   const connections = useConnections()
   const getConnection = useGetConnection()

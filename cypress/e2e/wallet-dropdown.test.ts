@@ -48,13 +48,6 @@ describe('Wallet Dropdown', () => {
     cy.get(getTestSelector('wallet-back')).click()
   })
 
-  /* TODO(cartcrom): WEB-2920 Reenable w/ mini portfolio activity tab instead */
-  // it('should be able to view transactions', () => {
-  //   cy.get(getTestSelector('wallet-transactions')).click()
-  //   cy.get(getTestSelector('wallet-empty-transaction-text')).should('exist')
-  //   cy.get(getTestSelector('wallet-back')).click()
-  // })
-
   it('should change the theme when not connected', () => {
     cy.get(getTestSelector('wallet-disconnect')).click()
     cy.get(getTestSelector('wallet-settings')).click()
