@@ -30,6 +30,7 @@ gql`
       chain
       standard
       project {
+        id
         markets(currencies: [USD]) {
           id
           price {
