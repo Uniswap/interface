@@ -20,12 +20,12 @@ export const MissingImageLogo = styled.div<{ size?: string }>`
 export const LogoImage = styled.img<{ size: string; useBG?: boolean }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
+  border-radius: 50%;
 
   ${({ useBG }) =>
     useBG &&
     css`
       background: radial-gradient(white 60%, #ffffff00 calc(70% + 1px));
-      border-radius: 50%;
       box-shadow: 0 0 1px white;
     `}
 `
