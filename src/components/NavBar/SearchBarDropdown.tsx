@@ -2,11 +2,14 @@ import { Trans } from '@lingui/macro'
 import { useTrace } from '@uniswap/analytics'
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import Badge from 'components/Badge'
+import { SupportedChainId } from 'constants/chains'
 import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
 import { HistoryDuration, SafetyLevel } from 'graphql/data/__generated__/types-and-hooks'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import useTrendingTokens from 'graphql/data/TrendingTokens'
+import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -17,7 +20,10 @@ import { formatEthPrice } from 'nft/utils/currency'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
+import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
+import BnbLogoURI from '../../assets/svg/bnb-logo.svg'
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
 import { useRecentlySearchedAssets } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
@@ -101,6 +107,24 @@ function isKnownToken(token: SearchToken) {
   return token.project?.safetyLevel == SafetyLevel.Verified || token.project?.safetyLevel == SafetyLevel.MediumWarning
 }
 
+const BNBLogo = styled.img`
+  height: 20px;
+  width: 20px;
+  margin-right: 8px;
+`
+const BNBComingSoonBadge = styled(Badge)`
+  align-items: center;
+  background-color: ${({ theme }) => theme.backgroundModule};
+  color: ${({ theme }) => theme.textSecondary};
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  opacity: 1;
+  padding: 8px;
+  margin: 16px 16px 4px;
+  width: calc(100% - 32px);
+`
+
 interface SearchBarDropdownProps {
   toggleOpen: () => void
   tokens: SearchToken[]
@@ -124,6 +148,7 @@ export const SearchBarDropdown = ({
   const shortenedHistory = useMemo(() => searchHistory?.slice(0, 2) ?? [...Array<SearchToken>(2)], [searchHistory])
 
   const { pathname } = useLocation()
+  const { chainId } = useWeb3React()
   const isNFTPage = useIsNftPage()
   const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const isTokenPage = pathname.includes('/tokens')
@@ -336,10 +361,22 @@ export const SearchBarDropdown = ({
     searchHistory,
   ])
 
+  const showBNBComingSoonBadge = Boolean(
+    chainId !== undefined && chainId === SupportedChainId.BNB && !isLoading && !CHAIN_ID_TO_BACKEND_NAME[chainId]
+  )
+
   return (
     <Box className={styles.searchBarDropdownNft}>
       <Box opacity={isLoading ? '0.3' : '1'} transition="125">
         {resultsState}
+        {showBNBComingSoonBadge && (
+          <BNBComingSoonBadge>
+            <BNBLogo src={BnbLogoURI} />
+            <ThemedText.BodySmall color="textSecondary" fontSize="14px" fontWeight="400" lineHeight="20px">
+              <Trans>Coming soon: search and explore tokens on BNB Chain</Trans>
+            </ThemedText.BodySmall>
+          </BNBComingSoonBadge>
+        )}
       </Box>
     </Box>
   )
