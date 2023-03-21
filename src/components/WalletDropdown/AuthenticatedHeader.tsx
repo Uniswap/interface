@@ -20,7 +20,7 @@ import { ArrowDownRight, ArrowUpRight, Copy, CreditCard, IconProps, Info, Power,
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
-import styled, { keyframes, useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { CopyHelper, ExternalLink, ThemedText } from 'theme'
 
 import { shortenAddress } from '../../nft/utils/address'
@@ -32,21 +32,6 @@ import { useToggleWalletDrawer, useWalletDrawer } from '.'
 import IconButton, { IconHoverText } from './IconButton'
 import MiniPortfolio from './MiniPortfolio'
 import { portfolioFadeInAnimation } from './MiniPortfolio/PortfolioRow'
-
-const BuyCryptoButtonBorderKeyframes = keyframes`
-  0% {
-    border-color: transparent;
-  }
-  33% {
-    border-color: hsla(225, 95%, 63%, 1);
-  }
-  66% {
-    border-color: hsla(267, 95%, 63%, 1);
-  }
-  100% {
-    border-color: transparent;
-  }
-`
 
 const AuthenticatedHeaderWrapper = styled.div`
   padding: 14px 12px 16px 16px;
@@ -64,14 +49,6 @@ const HeaderButton = styled(ThemeButton)`
   margin-top: 8px;
 `
 
-const BuyCryptoButton = styled(HeaderButton)`
-  animation-direction: alternate;
-  animation-duration: ${({ theme }) => theme.transition.duration.slow};
-  animation-fill-mode: none;
-  animation-iteration-count: 2;
-  animation-name: ${BuyCryptoButtonBorderKeyframes};
-  animation-timing-function: ${({ theme }) => theme.transition.timing.inOut};
-`
 const WalletButton = styled(ThemeButton)`
   border-radius: 12px;
   padding-top: 10px;
@@ -308,7 +285,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             <LoadingBubble height="16px" width="100px" margin="4px 0 20px 0" />
           </Column>
         )}
-        <BuyCryptoButton
+        <HeaderButton
           size={ButtonSize.medium}
           emphasis={ButtonEmphasis.medium}
           onClick={handleBuyCryptoClick}
@@ -326,7 +303,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               <Trans>Buy crypto</Trans>
             </>
           )}
-        </BuyCryptoButton>
+        </HeaderButton>
         <HeaderButton
           data-testid="nft-view-self-nfts"
           onClick={navigateToProfile}
