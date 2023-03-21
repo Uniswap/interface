@@ -11,7 +11,7 @@ const LastUpdatedText = styled.span`
   color: ${({ theme }) => theme.textTertiary};
 `
 
-const LAST_UPDATED_DATE = '11.30.22'
+const LAST_UPDATED_DATE = '11.17.22'
 
 export default function PrivacyPolicyNotice() {
   return (
