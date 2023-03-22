@@ -8,6 +8,7 @@ import { ENV_TYPE } from 'constants/type'
 import annoucementApi from '../services/announcement'
 import geckoTerminalApi from '../services/geckoTermial'
 import ksSettingApi from '../services/ksSetting'
+import notificationApi from '../services/notification'
 import application from './application/reducer'
 import bridge from './bridge/reducer'
 import burnProAmm from './burn/proamm/reducer'
@@ -57,6 +58,7 @@ const store = configureStore({
     vesting,
     [annoucementApi.reducerPath]: annoucementApi.reducer,
     [geckoTerminalApi.reducerPath]: geckoTerminalApi.reducer,
+    [notificationApi.reducerPath]: notificationApi.reducer,
     [ksSettingApi.reducerPath]: ksSettingApi.reducer,
     campaigns,
     tutorial,
@@ -72,6 +74,7 @@ const store = configureStore({
     getDefaultMiddleware({ thunk: true, immutableCheck: false, serializableCheck: false })
       .concat(save({ states: PERSISTED_KEYS, debounce: 100 }))
       .concat(geckoTerminalApi.middleware)
+      .concat(notificationApi.middleware)
       .concat(ksSettingApi.middleware)
       .concat(annoucementApi.middleware)
       .concat(routeApi.middleware),
