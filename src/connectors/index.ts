@@ -35,7 +35,7 @@ export const walletconnect = new WalletConnectConnector({
   rpc: {
     167004: 'https://l2rpc.a2.taiko.xyz/'
   },
-  bridge: 'https://bridge.a2.taiko.xyz/',
+  bridge: 'https://bridge.walletconnect.org',
   qrcode: true,
   pollingInterval: 15000
 })
