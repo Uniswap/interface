@@ -705,7 +705,7 @@ const LimitOrderForm = function LimitOrderForm({
           <InputWrapper>
             <Flex justifyContent={'space-between'} alignItems="center">
               <DeltaRate symbolIn={currencyIn?.symbol ?? ''} marketPrice={tradeInfo} rateInfo={rateInfo} />
-              {tradeInfo && (
+              {tradeInfo && !isArbPair && (
                 <Set2Market onClick={setPriceRateMarket}>
                   <Trans>Market</Trans>
                 </Set2Market>
