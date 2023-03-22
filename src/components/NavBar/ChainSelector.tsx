@@ -6,14 +6,14 @@ import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
-import { Column, Row } from 'nft/components/Flex'
+import { Column } from 'nft/components/Flex'
 import { TokenWarningRedIcon } from 'nft/components/icons'
 import { subhead } from 'nft/css/common.css'
-import { themeVars } from 'nft/css/sprinkles.css'
+import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { useCallback, useRef, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
-import { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import * as styles from './ChainSelector.css'
 import ChainSelectorRow from './ChainSelectorRow'
@@ -31,6 +31,23 @@ const NETWORK_SELECTOR_CHAINS = [
 interface ChainSelectorProps {
   leftAlign?: boolean
 }
+
+const ChainSelect = styled.button<{ isOpen: boolean }>`
+  display: flex;
+  border-radius: 8px;
+  height: 40px;
+  cursor: pointer;
+  border: none;
+  gap: 8px;
+  color: ${({ theme }) => theme.textPrimary};
+  background: ${({ isOpen, theme }) => (isOpen ? theme.accentActionSoft : 'none')};
+  align-items: center;
+  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} background`};
+
+  &:hover {
+    background: ${vars.color.lightGrayOverlay};
+  }
+`
 
 export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const { chainId } = useWeb3React()
@@ -89,14 +106,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
 
   return (
     <Box position="relative" ref={ref}>
-      <Row
-        as="button"
-        gap="8"
-        className={styles.ChainSelector}
-        background={isOpen ? 'accentActiveSoft' : 'none'}
-        data-testid="chain-selector"
-        onClick={() => setIsOpen(!isOpen)}
-      >
+      <ChainSelect data-testid="chain-selector" isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
         {!isSupported ? (
           <>
             <TokenWarningRedIcon fill={themeVars.colors.textSecondary} width={24} height={24} />
@@ -113,7 +123,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
           </>
         )}
         {isOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
-      </Row>
+      </ChainSelect>
       {isOpen && (isMobile ? <Portal>{dropdown}</Portal> : <>{dropdown}</>)}
     </Box>
   )
