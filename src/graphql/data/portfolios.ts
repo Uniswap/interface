@@ -27,6 +27,7 @@ gql`
           value
         }
         tokenProjectMarket {
+          id
           pricePercentChange(duration: DAY) {
             id
             value
