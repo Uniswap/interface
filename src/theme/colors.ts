@@ -58,6 +58,7 @@ export const colors = {
   yellowVibrant: '#FAF40A',
   // TODO: add gold 50-900
   gold200: '#EEB317',
+  gold400: '#B17900',
   goldVibrant: '#FEB239',
   green50: '#E3F3E6',
   green100: '#BFEECA',
@@ -148,14 +149,14 @@ export const darkTheme = {
   accentAction: colors.blue400,
   accentActive: colors.blue400,
   accentSuccess: colors.green200,
-  accentWarning: colors.gold200,
+  accentWarning: colors.gold400,
   accentFailure: colors.red300,
   accentCritical: colors.red300,
 
   accentActionSoft: opacify(24, colors.blue400),
   accentActiveSoft: opacify(24, colors.blue400),
   accentSuccessSoft: opacify(24, colors.green400),
-  accentWarningSoft: opacify(24, colors.gold200),
+  accentWarningSoft: opacify(24, colors.gold400),
   accentFailureSoft: opacify(12, colors.red300),
 
   accentTextDarkPrimary: opacify(80, colors.gray900),
@@ -200,14 +201,14 @@ export const lightTheme: Theme = {
   accentAction: colors.pink400,
   accentActive: colors.blue400,
   accentSuccess: colors.green300,
-  accentWarning: colors.gold200,
+  accentWarning: colors.gold400,
   accentFailure: colors.red400,
   accentCritical: colors.red400,
 
   accentActionSoft: opacify(12, colors.pink400),
   accentActiveSoft: opacify(24, colors.blue400),
   accentSuccessSoft: opacify(24, colors.green300),
-  accentWarningSoft: opacify(24, colors.gold200),
+  accentWarningSoft: opacify(24, colors.gold400),
   accentFailureSoft: opacify(12, colors.red400),
 
   accentTextDarkPrimary: opacify(80, colors.gray900),
