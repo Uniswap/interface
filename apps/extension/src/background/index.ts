@@ -168,9 +168,7 @@ const delay = (ms: number) => new Promise((res) => setTimeout(res, ms))
 async function onSendTransactionMessage(
   message: {
     data: {
-      data: {
-        transaction: ethers.utils.Deferrable<ethers.providers.TransactionRequest>
-      }
+      transaction: ethers.utils.Deferrable<ethers.providers.TransactionRequest>
     }
   },
   sendResponse: (response: any) => void
@@ -186,7 +184,7 @@ async function onSendTransactionMessage(
     return
   }
 
-  const sentTx = await signer.sendTransaction(message.data.data.transaction)
+  const sentTx = await signer.sendTransaction(message.data.transaction)
   sendResponse({ status: 'success', data: sentTx })
   onTransactionSent(sentTx)
 }

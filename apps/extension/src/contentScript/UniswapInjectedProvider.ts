@@ -464,8 +464,11 @@ function sendMessageAndWaitForResponse(
     window.addEventListener('message', (event: MessageEvent<any>) => {
       const messageData = event.data
       if (messageData?.type === responseType) {
-        console.log('{EVENT} sendMessageAndWaitForResponse', messageData)
-        resolve(messageData?.data)
+        console.log(
+          '{EVENT} sendMessageAndWaitForResponse',
+          messageData.data.data
+        )
+        resolve(messageData.data.data)
       }
 
       //TODO  Add timeout here or logic for rejecting response
