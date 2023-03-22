@@ -263,7 +263,7 @@ export function PoolPositionPage() {
     [userAccount]
   )
   // TODO: check results on altchains
-  const baseTokenSymbol = base?.isNative ? 'ETH' : base?.symbol
+  const baseTokenSymbol = base?.symbol //base?.isNative ? 'ETH' : base?.symbol
 
   const poolValue = JSBI.divide(
     JSBI.multiply(JSBI.BigInt(unitaryValue ?? 0), JSBI.BigInt(totalSupply ?? 0)),
