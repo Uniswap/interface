@@ -22,7 +22,7 @@ import {
   useUserVotes,
 } from 'state/governance/hooks'
 import styled from 'styled-components/macro'
-import { ExternalLink, ThemedText } from 'theme'
+import { ExternalLink, StyledInternalLink, ThemedText } from 'theme'
 
 import { CreateProposalTabs } from '../../components/NavigationTabs'
 import { GRG } from '../../constants/tokens'
@@ -314,8 +314,8 @@ ${bodyValue}
             />
             {!hasEnoughVote ? (
               <AutonomousProposalCTA>
-                Don’t have enough votes? Earn GRG rewards by{' '}
-                <ExternalLink href="https://app.rigoblock.com/#/swap">operating a pool</ExternalLink>
+                Don’t have enough votes? Earn GRG tokens by{' '}
+                <StyledInternalLink to="/mint">operating a pool</StyledInternalLink>
               </AutonomousProposalCTA>
             ) : null}
           </CreateProposalWrapper>
