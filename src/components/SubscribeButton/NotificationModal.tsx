@@ -382,8 +382,8 @@ export default function NotificationModal() {
     toggleModal()
     notify(
       {
-        title: t`Unsubscribe Successfully`,
-        summary: t`You have successfully unsubscribe from further receiving email notification from us`,
+        title: t`Unsubscribed Successfully`,
+        summary: t`You have successfully unsubscribed from receiving further email notifications from us`,
         type: NotificationType.SUCCESS,
         icon: <MailIcon color={theme.primary} />,
       },
@@ -427,7 +427,7 @@ export default function NotificationModal() {
           }}
           onClick={onUnsubscribeAll}
         >
-          <Trans>Opt out from all future email</Trans>
+          <Trans>Opt out from all future emails</Trans>
         </Text>
       </ActionWrapper>
     )
