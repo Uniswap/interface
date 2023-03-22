@@ -12,6 +12,10 @@ _[Summary of the change, motivation, and context]_
 ### How Has This Been Tested?
 _[e.g. Manually, E2E tests, unit tests, Storybook]_
 
+### (Optional) QA Cases
+
+_[Detail added or updated [QA test cases](https://docs.google.com/spreadsheets/d/1ZUqE4Z8D1yPkDiOOaaSe65eTcCBLCC4OazBvTvQScyI/edit#gid=1614848801) for any core flows or significant new features added in this PR]_
+
 ### (Optional) Feedback Focus
 _[Specific parts of this PR you'd like feedback on, or that reviewers should pay closer attention to]_
 
