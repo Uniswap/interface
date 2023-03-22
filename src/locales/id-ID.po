@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-03-14 20:05\n"
+"PO-Revision-Date: 2023-03-21 23:05\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -619,10 +619,6 @@ msgstr "Buat Proposal"
 #: src/pages/Pool/v2.tsx
 msgid "Create a pair"
 msgstr "Buat pasangan"
-
-#: src/pages/Pool/index.tsx
-msgid "Create a pool"
-msgstr "Buat pool"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
@@ -1419,7 +1415,6 @@ msgid "Please type the word \"{confirmWord}\" to enable expert mode."
 msgstr "Ketik kata \"{confirmWord}\" untuk mengaktifkan mode ahli."
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
-#: src/components/NavBar/index.tsx
 msgid "Pool"
 msgstr "Kolam"
 
@@ -1443,6 +1438,7 @@ msgstr "Token pool di pool hadiah:"
 msgid "Pooled {0}:"
 msgstr "Dikumpulkan {0}:"
 
+#: src/components/NavBar/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Pools"
@@ -1682,6 +1678,10 @@ msgstr ""
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Same Price"
+msgstr ""
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Save on Tax Services"
 msgstr ""
 
 #: src/components/TaxServiceModal/TaxServiceBanner.tsx
@@ -2005,10 +2005,6 @@ msgstr "Harga pool ini berada dalam rentang yang Anda pilih. Posisi Anda saat in
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Rasio token yang Anda tambahkan akan menetapkan harga pool ini."
 
-#: src/utils/swapErrorToUserReadableMessage.tsx
-msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
-msgstr "Transaksi tidak dapat dikirim karena tenggat waktu telah berlalu. Harap periksa bahwa tenggat waktu transaksi Anda tidak terlalu rendah."
-
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "There is no liquidity data."
 msgstr "Tidak ada data likuiditas."
@@ -2048,6 +2044,10 @@ msgstr ""
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Alat ini akan memigrasikan {0} likuiditas Anda ke V3 dengan aman. Prosesnya benar-benar tidak dapat dipercaya berkat"
+
+#: src/utils/swapErrorToUserReadableMessage.tsx
+msgid "This transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
+msgstr ""
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -2133,7 +2133,6 @@ msgid "Transaction pending"
 msgstr ""
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
-#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Transaction rejected"
 msgstr "Transaksi ditolak"
 
@@ -2192,6 +2191,10 @@ msgstr ""
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Uniswap Labs' Terms of Service"
+msgstr ""
+
+#: src/pages/Pool/v2.tsx
+msgid "Uniswap V2 is not available on this network."
 msgstr ""
 
 #: src/components/SwitchLocaleLink/index.tsx
@@ -2262,10 +2265,6 @@ msgstr "Perbarui Delegasi"
 msgid "Use the Uniswap Labs API to get faster quotes."
 msgstr ""
 
-#: src/pages/Pool/v2.tsx
-msgid "V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum."
-msgstr ""
-
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
 msgstr "Likuiditas V2"
@@ -2287,7 +2286,6 @@ msgstr ""
 msgid "View more analytics"
 msgstr ""
 
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/nft/components/collection/TransactionCompleteModal.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
@@ -2297,6 +2295,10 @@ msgstr "Lihat di Etherscan"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "Lihat di Explorer"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on {0}"
+msgstr ""
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -2535,6 +2537,9 @@ msgid "Your positions"
 msgstr "Posisi Anda"
 
 #: src/hooks/useUniversalRouter.ts
+msgid "Your swap is expected to fail."
+msgstr ""
+
 #: src/hooks/useUniversalRouter.ts
 msgid "Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds."
 msgstr ""
