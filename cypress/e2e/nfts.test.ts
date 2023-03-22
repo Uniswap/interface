@@ -49,9 +49,8 @@ describe('Testing nfts', () => {
     cy.get(getTestSelector('nft-bag')).should('exist')
   })
 
-  it('should navigate to the listing flow', () => {
+  it('should navigate to the owned nfts page', () => {
     cy.get(getTestSelector('web3-status-connected')).click()
     cy.get(getTestSelector('nft-view-self-nfts')).click()
-    // todo: get goerli NFTs on this wallet, add one to the bag, and navigate to the listing flow
   })
 })
