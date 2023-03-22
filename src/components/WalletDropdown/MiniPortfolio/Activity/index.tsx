@@ -101,7 +101,7 @@ function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = 
 
 const lastFetchedAtom = atom<number | undefined>(0)
 
-export default function ActivityTab({ account }: { account: string }) {
+export function ActivityTab({ account }: { account: string }) {
   const [drawerOpen, toggleWalletDrawer] = useWalletDrawer()
   const [lastFetched, setLastFetched] = useAtom(lastFetchedAtom)
 
@@ -159,7 +159,7 @@ export default function ActivityTab({ account }: { account: string }) {
   }
 }
 
-const StyledDescriptor = styled(ThemedText.BodySmall)`
+export const ActivityRowStyledDescriptor = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.textSecondary};
   ${EllipsisStyle}
 `
@@ -186,10 +186,10 @@ function ActivityRow({ activity }: { activity: Activity }) {
       }
       title={<ThemedText.SubHeader fontWeight={500}>{title}</ThemedText.SubHeader>}
       descriptor={
-        <StyledDescriptor color="textSecondary">
+        <ActivityRowStyledDescriptor color="textSecondary">
           {descriptor}
           {ENSName ?? otherAccount}
-        </StyledDescriptor>
+        </ActivityRowStyledDescriptor>
       }
       right={
         status === TransactionStatus.Pending ? (
