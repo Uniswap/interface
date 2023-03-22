@@ -99,16 +99,10 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
     navigate('/pool/' + details.tokenId)
   }, [walletChainId, chainId, connector, toggleWalletDrawer, navigate, details.tokenId])
 
-  const [token0, token1] = [position.amount0.currency, position.amount1.currency]
-
-  const containsURL = useMemo(
-    () =>
-      [token0?.name, token0?.symbol, token1?.name, token1?.symbol].reduce(
-        (acc, testString) => acc || Boolean(testString && hasURL(testString)),
-        false
-      ),
-    [token0?.name, token0?.symbol, token1?.name, token1?.symbol]
-  )
+const containsURL = useMemo(
+    () => [pool.token0.name, pool.token0.symbol, pool.token1.name, pool.token1.symbol].some(hasUrl),
+    [pool])
+ 
 
   if (containsURL) {
     return null
