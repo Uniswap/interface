@@ -58,7 +58,11 @@ const Pages: Array<Page> = [
   },
   { title: <Trans>NFTs</Trans>, component: NFTs, loggingElementName: InterfaceElementName.MINI_PORTFOLIO_NFT_TAB },
   { title: <Trans>Pools</Trans>, component: Pools, loggingElementName: InterfaceElementName.MINI_PORTFOLIO_POOLS_TAB },
-  { title: <Trans>Activity</Trans>, component: Activity, loggingElementName: InterfaceElementName.MINI_PORTFOLIO_ACTIVITY_TAB },
+  {
+    title: <Trans>Activity</Trans>,
+    component: Activity,
+    loggingElementName: InterfaceElementName.MINI_PORTFOLIO_ACTIVITY_TAB,
+  },
 ]
 
 function MiniPortfolio({ account }: { account: string }) {
