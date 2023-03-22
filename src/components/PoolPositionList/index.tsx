@@ -89,10 +89,22 @@ export default function PoolPositionList({ positions, filterByOperator, filterBy
       <MobileHeader>
         <Trans>Operated pools</Trans>
       </MobileHeader>
-      {/* return <PoolPositionListItem key={p.id.toString()} positionDetails={p} /> */}
-      {operatedPools.map((p: any) => {
-        return <PoolPositionListItem key={p?.name.toString()} positionDetails={p} />
-      })}
+      {operatedPools.length !== 0 ? (
+        operatedPools.map((p: any) => {
+          return <PoolPositionListItem key={p?.name.toString()} positionDetails={p} />
+        })
+      ) : (
+        <>
+          <DesktopHeader>
+            <div>
+              <Trans>You are not operating any pool, click &quot;Create Pool&quot; to deploy one</Trans>
+            </div>
+          </DesktopHeader>
+          <MobileHeader>
+            <Trans>You are not operating any pool, click &quot;Create Pool&quot; to deploy one</Trans>
+          </MobileHeader>
+        </>
+      )}
     </>
   )
 }
