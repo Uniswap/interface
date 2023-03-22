@@ -1,11 +1,15 @@
 import { Message, MessageType, PortName, TransactionType } from '../types'
 import { ethers, providers, Wallet } from 'ethers'
-import { decryptPassword } from './utils'
+import { decryptPassword, sendMessageToSpecificTab } from './utils'
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { initStore } from './store'
+import { logger } from 'app/src/features/logger/logger'
+
+logger.info('background', 'main', 'initialized')
 
 initStore()
 
+// TODO - make the provider initalization a singleton instance
 const infuraProvider = new providers.InfuraProvider(
   'goerli',
   'b14063d3418c40ec984f510cf64083b4'
@@ -18,106 +22,59 @@ signer = new ethers.Wallet(
 )
 
 chrome.runtime.onMessage.addListener(
-  async (message: Message, _sender, sendResponse) => {
-    // Check if the message is a valid message
-    // TODO check if this is necessary when we have message passing type marked
-    if ((message as Message) === undefined) return
+  (message: Message, _sender, sendResponse) => {
+    // TODO: Add sender validation
 
     switch (message.type) {
       case MessageType.SignMessage: {
-        if (!signer) {
-          throw new Error('Import wallet first')
-        }
+        // To be implemented
         break
       }
-
       case MessageType.SignTransaction: {
-        if (!signer) {
-          throw new Error('Import wallet first')
-        }
+        // To be implemented
         break
       }
-
       case MessageType.SendTransaction: {
-        if (!signer) {
-          throw new Error('Import wallet first')
-        }
-
-        // We need to get the active tab id before opening the popup
-        const activeTabId = await new Promise<number>((resolve) => {
-          chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-            if (tab?.id) {
-              resolve(tab.id)
-            }
-          })
-        })
-
-        const confirmed = await confirmSendTransaction()
-        if (!confirmed) {
-          console.log('Transaction not confirmed')
-          // TODO: Send transaction not confirmed message to provider
-          return
-        }
-
-        const sentTx = await signer.sendTransaction(
-          message.data.data.transaction
-        )
-        onTransactionSent(sentTx, activeTabId)
-        // return true - TODO: check if we need this / lets us use sendResponse to the tab
-
+        onSendTransactionMessage(message, sendResponse)
         break
       }
       case MessageType.ValidatePassword: {
-        const {
-          iv: ivStr,
-          salt: saltStr,
-          pw,
-        } = await chrome.storage.local.get(['iv', 'pw', 'salt'])
-
-        const iv = new Uint8Array(ivStr.split(','))
-        const salt = new Uint8Array(saltStr.split(','))
-        const cipherText = new Uint8Array(pw.split(','))
-
-        const isCorrectPW = await decryptPassword(
-          message.data.message,
-          cipherText,
-          iv,
-          salt
-        )
-        sendResponse({ isValid: isCorrectPW })
+        onValidatePasswordMessage(message, sendResponse)
+        break
       }
     }
+    return true
   }
 )
 
-function sendMessageToActiveTab(message: Message) {
-  chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-    if (tab?.id) {
-      chrome.tabs.sendMessage(tab.id, message)
-    }
-  })
+async function onValidatePasswordMessage(
+  message: Message,
+  sendResponse: (response?: unknown) => void
+) {
+  const {
+    iv: ivStr,
+    salt: saltStr,
+    pw,
+  } = await chrome.storage.local.get(['iv', 'pw', 'salt'])
+
+  const iv = new Uint8Array(ivStr.split(','))
+  const salt = new Uint8Array(saltStr.split(','))
+  const cipherText = new Uint8Array(pw.split(','))
+
+  const isCorrectPW = await decryptPassword(
+    message.data.message,
+    cipherText,
+    iv,
+    salt
+  )
+  sendResponse({ isValid: isCorrectPW })
 }
 
-function sendMessageToSpecificTab(message: Message, tabId: number) {
-  chrome.tabs.sendMessage(tabId, message)
-}
-
-function onTransactionSent(
-  transactionResponse: TransactionResponse,
-  tabId: number
-): void {
+function onTransactionSent(transactionResponse: TransactionResponse): void {
   // Update chrome icon
   chrome.action.setIcon({
     path: 'pending.png',
   })
-
-  sendMessageToSpecificTab(
-    {
-      type: MessageType.SendTransactionResponse,
-      data: transactionResponse,
-    },
-    tabId
-  )
 
   // Listen for transaction receipt
   signer?.provider
@@ -207,3 +164,29 @@ function confirmSendTransaction() {
 }
 
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms))
+
+async function onSendTransactionMessage(
+  message: {
+    data: {
+      data: {
+        transaction: ethers.utils.Deferrable<ethers.providers.TransactionRequest>
+      }
+    }
+  },
+  sendResponse: (response: any) => void
+) {
+  if (!signer) {
+    throw new Error('Import wallet first')
+  }
+
+  const confirmed = await confirmSendTransaction()
+  if (!confirmed) {
+    logger.info('background', 'sendTransaction', 'Transaction not confirmed')
+    sendResponse({ status: 'fail', data: 'Transaction not confirmed' })
+    return
+  }
+
+  const sentTx = await signer.sendTransaction(message.data.data.transaction)
+  sendResponse({ status: 'success', data: sentTx })
+  onTransactionSent(sentTx)
+}
