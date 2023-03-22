@@ -553,6 +553,7 @@ export default function AddLiquidity() {
 
   const owner = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
   const ownsNFT = owner === account || existingPositionDetails?.operator === account
+  const showOwnershipWarning = Boolean(account && !ownsNFT)
 
   return (
     <>
@@ -918,7 +919,7 @@ export default function AddLiquidity() {
             </ResponsiveTwoColumns>
           </Wrapper>
         </PageWrapper>
-        {Boolean(account && !ownsNFT) && <OwnershipWarning ownerAddress={owner} />}
+        {showOwnershipWarning && <OwnershipWarning ownerAddress={owner} />}
         {addIsUnsupported && (
           <UnsupportedCurrencyFooter
             show={addIsUnsupported}
