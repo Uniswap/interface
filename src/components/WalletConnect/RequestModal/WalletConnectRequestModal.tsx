@@ -214,10 +214,9 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
         signWcRequestActions.trigger({
           sessionId: request.sessionId,
           requestInternalId: request.internalId,
-          method: request.type,
           // this is EthSignMessage type
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          message: (request as any).message || (request as any).rawMessage,
+          method: request.type,
+          message: request.message || request.rawMessage,
           account: signerAccount,
           dapp: request.dapp,
           chainId,

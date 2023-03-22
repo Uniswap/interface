@@ -27,8 +27,8 @@ export async function signMessage(
   }
 
   let signature
-  if (isHexString(ensureLeading0x(message))) {
-    signature = await signer.signMessage(arrayify(ensureLeading0x(message)))
+  if (isHexString(message)) {
+    signature = await signer.signMessage(arrayify(message))
   } else {
     signature = await signer.signMessage(message)
   }
