@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
+import { hasURL } from 'utils/urlChecks'
 
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
@@ -97,6 +98,21 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
     toggleWalletDrawer()
     navigate('/pool/' + details.tokenId)
   }, [walletChainId, chainId, connector, toggleWalletDrawer, navigate, details.tokenId])
+
+  const [token0, token1] = [position.amount0.currency, position.amount1.currency]
+
+  const containsURL = useMemo(
+    () =>
+      [token0?.name, token0?.symbol, token1?.name, token1?.symbol].reduce(
+        (acc, testString) => acc || Boolean(testString && hasURL(testString)),
+        false
+      ),
+    [token0?.name, token0?.symbol, token1?.name, token1?.symbol]
+  )
+
+  if (containsURL) {
+    return null
+  }
 
   return (
     <PortfolioRow
