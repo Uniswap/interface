@@ -6,7 +6,7 @@ import { ReactNode, useCallback, useMemo } from 'react'
 import { useActiveWeb3React } from 'hooks'
 import { useToken } from 'hooks/Tokens'
 import { usePool } from 'hooks/usePools'
-import { useProAmmPositionFees } from 'hooks/useProAmmPositionFees'
+import { useTotalFeeOwedByElasticPosition } from 'hooks/useProAmmPreviousTicks'
 import { AppState } from 'state'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { tryParseAmount } from 'state/swap/hooks'
@@ -31,6 +31,7 @@ export function useDerivedProAmmBurnInfo(
   pooledAmount1?: CurrencyAmount<Currency>
   feeValue0?: CurrencyAmount<Currency>
   feeValue1?: CurrencyAmount<Currency>
+  loadingFee: boolean
   outOfRange: boolean
   error?: ReactNode
   parsedAmounts: {
@@ -111,20 +112,9 @@ export function useDerivedProAmmBurnInfo(
   //   error = error ?? <Trans>Enter a percent</Trans>
   // }
 
-  const { current } = useProAmmPositionFees(
-    position?.tokenId,
-    pool && position
-      ? new Position({
-          pool: pool,
-          liquidity: position.liquidity.toString(),
-          tickLower: position.tickLower,
-          tickUpper: position.tickUpper,
-        })
-      : undefined,
-    asWETH,
-  )
+  const { feeOwed, loading: loadingFee } = useTotalFeeOwedByElasticPosition(pool, position?.tokenId.toString())
 
-  const [feeValue0, feeValue1] = current
+  const [feeValue0, feeValue1] = feeOwed
 
   const parsedAmounts: {
     [Field.LIQUIDITY_PERCENT]: Percent
@@ -149,8 +139,9 @@ export function useDerivedProAmmBurnInfo(
     liquidityPercentage,
     liquidityValue0,
     liquidityValue1,
-    feeValue0: feeValue0,
-    feeValue1: feeValue1,
+    feeValue0,
+    feeValue1,
+    loadingFee,
     outOfRange,
     error,
     parsedAmounts,

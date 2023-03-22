@@ -201,7 +201,6 @@ export default function Updater({ isInterval = true }: { isInterval?: boolean })
         fairLaunchAddresses.forEach((address, index) => {
           result[address] = promiseResult[index]
         })
-        console.log({ promiseResult, result })
 
         if (latestChainId.current === chainId && (Object.keys(farmsDataRef.current).length === 0 || !cancelled)) {
           dispatch(setFarmsData(result))

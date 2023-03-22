@@ -49,7 +49,6 @@ const useGetUserFarmingInfo = (interval?: boolean) => {
     const farmAddresses = elasticFarm.farms?.map(farm => farm.id)
 
     if (isEVM(chainId) && account && farmAddresses?.length && multicallContract) {
-      console.time('getUserFarmInfo')
       // get userDepositedNFTs
       const userDepositedNFTsFragment = farmInterface.getFunction('getDepositedNFTs')
       const callData = farmInterface.encodeFunctionData(userDepositedNFTsFragment, [account])
@@ -240,7 +239,6 @@ const useGetUserFarmingInfo = (interval?: boolean) => {
       }, {} as UserFarmInfo)
 
       if (userInfo) dispatch(setUserFarmInfo({ chainId, userInfo }))
-      console.timeEnd('getUserFarmInfo')
     }
   }, [elasticFarm.farms, chainId, account, multicallContract, dispatch])
 

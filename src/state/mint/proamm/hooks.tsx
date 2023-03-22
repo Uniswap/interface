@@ -131,16 +131,16 @@ export function useProAmmMintActionHandlers(
 const ENHANCED_TICK_SPACINGS: {
   [amount in FeeAmount]: number
 } = {
-  [FeeAmount.VERY_STABLE]: TICK_SPACINGS[FeeAmount.VERY_STABLE] * 2,
-  [FeeAmount.VERY_STABLE1]: TICK_SPACINGS[FeeAmount.VERY_STABLE1] * 2,
-  [FeeAmount.VERY_STABLE2]: TICK_SPACINGS[FeeAmount.VERY_STABLE2] * 2,
+  [FeeAmount.VERY_STABLE]: TICK_SPACINGS[FeeAmount.VERY_STABLE],
+  [FeeAmount.VERY_STABLE1]: TICK_SPACINGS[FeeAmount.VERY_STABLE1],
+  [FeeAmount.VERY_STABLE2]: TICK_SPACINGS[FeeAmount.VERY_STABLE2],
   [FeeAmount.STABLE]: TICK_SPACINGS[FeeAmount.STABLE],
-  [FeeAmount.MOST_PAIR]: TICK_SPACINGS[FeeAmount.MOST_PAIR],
-  [FeeAmount.MOST_PAIR1]: TICK_SPACINGS[FeeAmount.MOST_PAIR1],
-  [FeeAmount.MOST_PAIR2]: TICK_SPACINGS[FeeAmount.MOST_PAIR2],
+  [FeeAmount.MOST_PAIR]: TICK_SPACINGS[FeeAmount.MOST_PAIR] * 0.95,
+  [FeeAmount.MOST_PAIR1]: TICK_SPACINGS[FeeAmount.MOST_PAIR1] * 0.95,
+  [FeeAmount.MOST_PAIR2]: TICK_SPACINGS[FeeAmount.MOST_PAIR2] * 0.9,
   [FeeAmount.EXOTIC]: TICK_SPACINGS[FeeAmount.EXOTIC] * 0.7,
-  [FeeAmount.VOLATILE]: TICK_SPACINGS[FeeAmount.VOLATILE] * 0.7,
-  [FeeAmount.RARE]: TICK_SPACINGS[FeeAmount.RARE] * 0.7,
+  [FeeAmount.VOLATILE]: TICK_SPACINGS[FeeAmount.VOLATILE],
+  [FeeAmount.RARE]: TICK_SPACINGS[FeeAmount.RARE],
 }
 
 export function useProAmmDerivedMintInfo(
@@ -1109,9 +1109,17 @@ export function useProAmmDerivedAllMintInfo(
 
         if ((!currencyAAmount && !depositADisabled) || (!currencyBAmount && !depositBDisabled)) {
           if (positionIndex !== index) {
-            return <Trans key={index}>Position {index + 1}: Enter an amount</Trans>
+            return positions[positionIndex].typedValue ? (
+              <Trans key={index}>Position {index + 1}: Invalid amount</Trans>
+            ) : (
+              <Trans key={index}>Position {index + 1}: Enter an amount</Trans>
+            )
           } else {
-            return <Trans key={index}>Enter an amount</Trans>
+            return positions[index].typedValue ? (
+              <Trans key={index}>Invalid amount</Trans>
+            ) : (
+              <Trans key={index}>Enter an amount</Trans>
+            )
           }
         }
 
@@ -1325,7 +1333,7 @@ export function useRangeHopCallbacks(
       if (typeof tickLower === 'number' && tickLower < TickMath.MAX_TICK - 2 && tickLower > TickMath.MIN_TICK + 2) {
         const newPrice = tickToPrice(baseToken, quoteToken, tickLower - TICK_SPACINGS[feeAmount])
         return newPrice.toSignificant(9, undefined, Rounding.ROUND_UP)
-      } else if (initTick) {
+      } else if (initTick !== undefined) {
         const newPrice = tickToPrice(baseToken, quoteToken, initTick - TICK_SPACINGS[feeAmount])
         return newPrice.toSignificant(9, undefined, Rounding.ROUND_UP)
       }
@@ -1338,7 +1346,7 @@ export function useRangeHopCallbacks(
       if (typeof tickLower === 'number' && tickLower < TickMath.MAX_TICK - 2 && tickLower > TickMath.MIN_TICK + 2) {
         const newPrice = tickToPrice(baseToken, quoteToken, tickLower + TICK_SPACINGS[feeAmount])
         return newPrice.toSignificant(9, undefined, Rounding.ROUND_UP)
-      } else if (initTick) {
+      } else if (initTick !== undefined) {
         const newPrice = tickToPrice(baseToken, quoteToken, initTick + TICK_SPACINGS[feeAmount])
         return newPrice.toSignificant(9, undefined, Rounding.ROUND_UP)
       }
@@ -1351,7 +1359,7 @@ export function useRangeHopCallbacks(
       if (typeof tickUpper === 'number' && tickUpper < TickMath.MAX_TICK - 2 && tickUpper > TickMath.MIN_TICK + 2) {
         const newPrice = tickToPrice(baseToken, quoteToken, tickUpper - TICK_SPACINGS[feeAmount])
         return newPrice.toSignificant(9, undefined, Rounding.ROUND_UP)
-      } else if (initTick) {
+      } else if (initTick !== undefined) {
         const newPrice = tickToPrice(baseToken, quoteToken, initTick - TICK_SPACINGS[feeAmount])
         return newPrice.toSignificant(9, undefined, Rounding.ROUND_UP)
       }
@@ -1364,7 +1372,7 @@ export function useRangeHopCallbacks(
       if (typeof tickUpper === 'number' && tickUpper < TickMath.MAX_TICK - 2 && tickUpper > TickMath.MIN_TICK + 2) {
         const newPrice = tickToPrice(baseToken, quoteToken, tickUpper + TICK_SPACINGS[feeAmount])
         return newPrice.toSignificant(9, undefined, Rounding.ROUND_UP)
-      } else if (initTick) {
+      } else if (initTick !== undefined) {
         const newPrice = tickToPrice(baseToken, quoteToken, initTick + TICK_SPACINGS[feeAmount])
         return newPrice.toSignificant(9, undefined, Rounding.ROUND_UP)
       }

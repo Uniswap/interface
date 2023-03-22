@@ -29,20 +29,16 @@ export const useFeeTierDistribution = (
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
 ): { [key in FeeAmount]: number } => {
-  const { isEVM, networkInfo } = useActiveWeb3React()
+  const { isEVM } = useActiveWeb3React()
   const { elasticClient } = useKyberSwapConfig()
   const poolIds = useProAmmPoolInfos(currencyA, currencyB, FEE_AMOUNTS).filter(Boolean)
 
   const [feeTierDistribution, setFeeTierDistribution] = useState<{ [key in FeeAmount]: number }>(initState)
 
-  // reset feeTierDistribution when change token
-  useEffect(() => {
-    setFeeTierDistribution(initState)
-  }, [currencyA, currencyB])
-
   useEffect(() => {
     if (!isEVM) return
     if (!poolIds.length) return
+    setFeeTierDistribution(initState)
     elasticClient
       .query({
         query: POOL_POSITION_COUNT(poolIds),
@@ -72,8 +68,8 @@ export const useFeeTierDistribution = (
         )
       })
       .catch(err => console.warn({ err }))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initState, JSON.stringify(poolIds), isEVM, networkInfo])
+    // eslint-disable-next-line
+  }, [JSON.stringify(poolIds), isEVM, elasticClient])
 
   return feeTierDistribution
 }

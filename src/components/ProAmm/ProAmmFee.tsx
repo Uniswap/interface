@@ -30,6 +30,7 @@ import { unwrappedToken } from 'utils/wrappedCurrency'
 export default function ProAmmFee({
   tokenId,
   position,
+  // legacy props... layout means not collect fee
   layout = 0,
   text = '',
   hasUserDepositedInFarm,

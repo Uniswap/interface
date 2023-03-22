@@ -17,5 +17,5 @@ export function formatTickPrice(
   if (!price && placeholder !== undefined) {
     return placeholder
   }
-  return formatPrice(price, 6)
+  return formatPrice(price, 5)
 }

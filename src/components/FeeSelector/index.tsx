@@ -1,4 +1,4 @@
-import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
+import { Currency } from '@kyberswap/ks-sdk-core'
 import { FeeAmount } from '@kyberswap/ks-sdk-elastic'
 import { Trans } from '@lingui/macro'
 import { rgba } from 'polished'
@@ -8,13 +8,12 @@ import styled from 'styled-components'
 
 import { ReactComponent as Down } from 'assets/svg/down.svg'
 import { MoneyBag } from 'components/Icons'
-import { useActiveWeb3React } from 'hooks'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useProAmmPoolInfos } from 'hooks/useProAmmPoolInfo'
 import useTheme from 'hooks/useTheme'
 import { useElasticFarms } from 'state/farms/elastic/hooks'
 
-import { FEE_AMOUNTS as ALL_FEE_AMOUNTS, useFeeTierDistribution } from './hook'
+import { FEE_AMOUNTS, useFeeTierDistribution } from './hook'
 
 const FEE_AMOUNT_DETAIL: { [key in FeeAmount]: { label: string; description: ReactNode } } = {
   [FeeAmount.VERY_STABLE]: {
@@ -189,11 +188,6 @@ function FeeSelector({
   currencyB: Currency | undefined
 }) {
   const theme = useTheme()
-  const { chainId } = useActiveWeb3React()
-
-  const FEE_AMOUNTS = [ChainId.ARBITRUM, ChainId.FANTOM, ChainId.BTTC].includes(chainId)
-    ? ALL_FEE_AMOUNTS
-    : [FeeAmount.VERY_STABLE, FeeAmount.VERY_STABLE1, FeeAmount.STABLE, FeeAmount.MOST_PAIR2, FeeAmount.EXOTIC]
 
   const [show, setShow] = useState(false)
   const feeTierDistribution = useFeeTierDistribution(currencyA, currencyB)

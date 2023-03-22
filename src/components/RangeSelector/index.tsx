@@ -6,6 +6,7 @@ import { Flex } from 'rebass'
 import StepCounter from 'components/InputStepCounter/InputStepCounter'
 import { Bound } from 'state/mint/proamm/type'
 import { MEDIA_WIDTHS } from 'theme'
+import { toSignificantOrMaxIntegerPart } from 'utils/formatCurrencyAmount'
 
 // currencyA is the base token
 export default function RangeSelector({
@@ -47,7 +48,9 @@ export default function RangeSelector({
   return (
     <Flex sx={{ gap: '16px' }} flexDirection={upToMedium ? 'column' : 'row'}>
       <StepCounter
-        value={ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] ? '0' : leftPrice?.toSignificant(5) ?? ''}
+        value={
+          ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] ? '0' : toSignificantOrMaxIntegerPart(leftPrice, 5) ?? ''
+        }
         onUserInput={onLeftRangeInput}
         width="100%"
         decrement={isSorted ? getDecrementLower : getIncrementUpper}
@@ -61,7 +64,9 @@ export default function RangeSelector({
         tokenB={currencyB?.symbol}
       />
       <StepCounter
-        value={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] ? '∞' : rightPrice?.toSignificant(5) ?? ''}
+        value={
+          ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] ? '∞' : toSignificantOrMaxIntegerPart(rightPrice, 5) ?? ''
+        }
         onUserInput={onRightRangeInput}
         width="100%"
         decrement={isSorted ? getDecrementUpper : getIncrementLower}

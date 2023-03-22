@@ -1,6 +1,8 @@
 import { Currency, CurrencyAmount, Fraction, Price } from '@kyberswap/ks-sdk-core'
 import JSBI from 'jsbi'
 
+import { MouseoverTooltip } from 'components/Tooltip'
+
 export function formatCurrencyAmount(amount: CurrencyAmount<Currency> | undefined, sigFigs: number) {
   if (!amount) {
     return '-'
@@ -17,6 +19,15 @@ export function formatCurrencyAmount(amount: CurrencyAmount<Currency> | undefine
   return amount.toSignificant(sigFigs)
 }
 
+export function toSignificantOrMaxIntegerPart(price: Price<Currency, Currency> | undefined, sigFigs: number): string {
+  if (!price) return ''
+
+  const n = price.toSignificant(18).split('.')[0].length
+  if (n > sigFigs) return price.toSignificant(n)
+
+  return price.toSignificant(sigFigs)
+}
+
 export function formatPrice(price: Price<Currency, Currency> | undefined, sigFigs: number) {
   if (!price) {
     return '-'
@@ -27,7 +38,11 @@ export function formatPrice(price: Price<Currency, Currency> | undefined, sigFig
   }
 
   if (parseFloat(price.toFixed(sigFigs)) > 10 ** sigFigs - 1) {
-    return price.toSignificant(sigFigs).slice(0, sigFigs) + '...'
+    return (
+      <MouseoverTooltip text={toSignificantOrMaxIntegerPart(price, sigFigs)} placement="top" width="fit-content">
+        {price.toSignificant(sigFigs).slice(0, sigFigs) + '...'}
+      </MouseoverTooltip>
+    )
   }
   return price.toSignificant(sigFigs)
 }

@@ -152,10 +152,8 @@ const FarmUpdaterV1: React.FC<CommonProps> = ({ interval }) => {
 
   useEffect(() => {
     if (!elasticFarm.farms && !elasticFarm.loading) {
-      console.time('getFarmFromSubgraph')
       dispatch(setLoading({ chainId, loading: true }))
       getElasticFarms().finally(() => {
-        console.timeEnd('getFarmFromSubgraph')
         dispatch(setLoading({ chainId, loading: false }))
       })
     }

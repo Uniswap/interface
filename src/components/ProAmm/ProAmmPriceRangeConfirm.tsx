@@ -12,6 +12,7 @@ import InfoHelper from 'components/InfoHelper'
 import { RowBetween, RowFixed } from 'components/Row'
 import useTheme from 'hooks/useTheme'
 import { Bound } from 'state/mint/proamm/type'
+import { toSignificantOrMaxIntegerPart } from 'utils/formatCurrencyAmount'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 
@@ -72,7 +73,7 @@ export default function ProAmmPriceRangeConfirm({
           </Text>
           <RowFixed>
             <Text fontSize={'12px'} fontWeight="500" style={{ textAlign: 'right' }}>
-              1 {baseCurrency.symbol} = {price.toSignificant(6)} {quoteCurrency.symbol}
+              1 {baseCurrency.symbol} = {toSignificantOrMaxIntegerPart(price, 6)} {quoteCurrency.symbol}
             </Text>
             <span onClick={handleRateChange} style={{ marginLeft: '2px', cursor: 'pointer' }}>
               <RotateSwapIcon rotated={baseCurrency !== currency0} size={16} />
@@ -103,7 +104,7 @@ export default function ProAmmPriceRangeConfirm({
               lineHeight="20px"
               sx={{ display: 'flex', alignItems: 'center' }}
             >
-              <Trans>{formatTickPrice(priceLower, ticksAtLimit, Bound.LOWER)}</Trans>
+              {formatTickPrice(priceLower, ticksAtLimit, Bound.LOWER)}
               <InfoHelper
                 text={t`Your position will be 100% composed of ${baseCurrency?.symbol} at this price`}
                 placement={'right'}
@@ -120,7 +121,7 @@ export default function ProAmmPriceRangeConfirm({
               lineHeight="20px"
               sx={{ display: 'flex', alignItems: 'center' }}
             >
-              <Trans>{formatTickPrice(priceUpper, ticksAtLimit, Bound.UPPER)}</Trans>
+              {formatTickPrice(priceUpper, ticksAtLimit, Bound.UPPER)}
               <InfoHelper
                 text={t`Your position will be 100% composed of ${quoteCurrency?.symbol} at this price`}
                 placement={'right'}

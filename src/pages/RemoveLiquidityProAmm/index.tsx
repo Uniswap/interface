@@ -158,10 +158,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     pooledAmount1,
     feeValue0,
     feeValue1,
+    loadingFee,
     outOfRange,
     error,
     parsedAmounts,
   } = useDerivedProAmmBurnInfo(position, receiveWETH)
+
   const currency0IsETHER = !!(chainId && liquidityValue0?.currency.isNative)
   const currency0IsWETH = !!(chainId && liquidityValue0?.currency.equals(WETH[chainId]))
   const currency1IsETHER = !!(chainId && liquidityValue1?.currency.isNative)
@@ -548,7 +550,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                       marginBottom="0.75rem"
                     >
                       <Text>My Fee Earnings</Text>
-                      <Text>{formattedNumLong(totalFeeRewardUSD, true)}</Text>
+                      {loadingFee && !feeValue0 ? <Loader /> : <Text>{formattedNumLong(totalFeeRewardUSD, true)}</Text>}
                     </Flex>
 
                     <Divider />
@@ -669,6 +671,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                       confirmed={false}
                       disabled={
                         removed ||
+                        (loadingFee && !feeValue0) ||
                         liquidityPercentage?.equalTo(new Percent(0, 100)) ||
                         !liquidityValue0 ||
                         (!!owner && !!account && !ownsNFT)

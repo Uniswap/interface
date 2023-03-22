@@ -1,3 +1,4 @@
+import { CurrencyAmount } from '@kyberswap/ks-sdk-core'
 import { Pool, Position, TickMath } from '@kyberswap/ks-sdk-elastic'
 import { BigNumber } from 'ethers'
 import { useEffect, useMemo, useState } from 'react'
@@ -5,7 +6,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { NETWORKS_INFO, isEVM } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import { Result, useSingleContractMultipleData } from 'state/multicall/hooks'
-import { usePoolBlocks } from 'state/prommPools/hooks'
 
 import { useProAmmTickReader } from './useContract'
 import useProAmmPoolInfo from './useProAmmPoolInfo'
@@ -83,49 +83,41 @@ export function useProAmmMultiplePreviousTicks(
   }, [pool, loading, error, results, positions])
 }
 
-export function useProAmmTotalFeeOwedByPosition(pool: Pool | null | undefined, tokenID: string | undefined) {
+export function useTotalFeeOwedByElasticPosition(pool: Pool | null | undefined, tokenID: string | undefined) {
   const tickReader = useProAmmTickReader()
   const poolAddress = useProAmmPoolInfo(pool?.token0, pool?.token1, pool?.fee)
   const { chainId } = useActiveWeb3React()
-  const { blockLast24h } = usePoolBlocks()
 
-  const [currentRes, setCurrentRes] = useState(['0', '0'])
-  const [last24hRes, setLast24hRes] = useState(['0', '0'])
+  const [fee, setFee] = useState<[string | undefined, string | undefined]>([undefined, undefined])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
+    let i: number
     if (isEVM(chainId)) {
-      if (blockLast24h)
+      const getFee = () => {
+        setLoading(true)
         tickReader
-          ?.getTotalFeesOwedToPosition(
-            NETWORKS_INFO[chainId].elastic.nonfungiblePositionManager,
-            poolAddress,
-            tokenID,
-            {
-              blockTag: Number(blockLast24h),
-            },
-          )
-          .then((res: { token0Owed: BigNumber; token1Owed: BigNumber }) =>
-            setLast24hRes([res.token0Owed.toString(), res.token1Owed.toString()]),
-          )
-          .catch((e: any) => {
-            console.debug('Failed to get last 24h data, maybe position is just created', e)
+          ?.getTotalFeesOwedToPosition(NETWORKS_INFO[chainId].elastic.nonfungiblePositionManager, poolAddress, tokenID)
+          .then((res: { token0Owed: BigNumber; token1Owed: BigNumber }) => {
+            setFee([res.token0Owed.toString(), res.token1Owed.toString()])
           })
+          .finally(() => setLoading(false))
+      }
+
+      getFee()
+      i = window.setInterval(() => getFee(), 6_969)
     }
-  }, [blockLast24h, chainId, poolAddress, tokenID, tickReader])
-  useEffect(() => {
-    if (isEVM(chainId)) {
-      tickReader
-        ?.getTotalFeesOwedToPosition(
-          NETWORKS_INFO[chainId].elastic.nonfungiblePositionManager,
-          poolAddress,
-          tokenID,
-          {},
-        )
-        .then((res: { token0Owed: BigNumber; token1Owed: BigNumber }) => {
-          setCurrentRes([res.token0Owed.toString(), res.token1Owed.toString()])
-        })
+
+    return () => {
+      i && clearInterval(i)
     }
   }, [chainId, poolAddress, tickReader, tokenID])
 
-  return { current: currentRes, last24h: last24hRes }
+  return {
+    feeOwed:
+      pool && fee[0] && fee[1]
+        ? [CurrencyAmount.fromRawAmount(pool.token0, fee[0]), CurrencyAmount.fromRawAmount(pool.token1, fee[1])]
+        : [undefined, undefined],
+    loading,
+  }
 }

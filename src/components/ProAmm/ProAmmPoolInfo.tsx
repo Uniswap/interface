@@ -156,7 +156,7 @@ export default function ProAmmPoolInfo({
                   <Trans>
                     <Flex>
                       <Text color={theme.subText}>Current Price:</Text>&nbsp;1 {tokenB.currency.symbol} ={' '}
-                      {position.pool.priceOf(tokenB.currency).toSignificant(6)} {tokenA.currency.symbol}
+                      {position.pool.priceOf(tokenB.currency).toSignificant(10)} {tokenA.currency.symbol}
                     </Flex>
                   </Trans>
                 </Text>

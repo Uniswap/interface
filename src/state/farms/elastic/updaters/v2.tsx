@@ -61,10 +61,8 @@ const FarmUpdaterV2: React.FC<CommonProps> = ({ interval }) => {
 
   useEffect(() => {
     if (isValidating) {
-      console.time('getFarmFromBackend')
       dispatch(setLoading({ chainId, loading: true }))
     } else {
-      console.timeEnd('getFarmFromBackend')
       dispatch(setLoading({ chainId, loading: false }))
     }
   }, [chainId, dispatch, isValidating])
