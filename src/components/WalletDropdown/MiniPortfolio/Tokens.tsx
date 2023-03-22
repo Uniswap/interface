@@ -28,9 +28,10 @@ export default function Tokens({ account }: { account: string }) {
   const hideSmallBalances = useAtomValue(hideSmallBalancesAtom)
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
-  const { data, loading } = usePortfolioBalancesQuery({
+  const { data } = usePortfolioBalancesQuery({
     variables: { ownerAddress: account },
     fetchPolicy: 'cache-only', // PrefetchBalancesWrapper handles balance fetching/staleness; this component only reads from cache
+    errorPolicy: 'all',
   })
 
   const visibleTokens = useMemo(() => {
@@ -49,7 +50,7 @@ export default function Tokens({ account }: { account: string }) {
         ) ?? []
   }, [data?.portfolios, hideSmallBalances])
 
-  if (!data && loading) {
+  if (!data) {
     return <PortfolioSkeleton />
   }
 
