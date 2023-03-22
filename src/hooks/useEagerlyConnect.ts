@@ -1,5 +1,5 @@
 import { Connector } from '@web3-react/types'
-import { Connection, gnosisSafeConnection, networkConnection } from 'connection'
+import { Connection, getGnosisSafeConnection, getNetworkConnection } from 'connection'
 import { useGetConnection } from 'connection'
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -33,8 +33,8 @@ export default function useEagerlyConnect() {
   }
 
   useEffect(() => {
-    connect(gnosisSafeConnection.connector)
-    connect(networkConnection.connector)
+    connect(getGnosisSafeConnection().connector)
+    connect(getNetworkConnection().connector)
 
     if (selectedConnection) {
       connect(selectedConnection.connector)

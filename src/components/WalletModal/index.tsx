@@ -7,7 +7,7 @@ import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { useWalletDrawer } from 'components/WalletDropdown'
 import IconButton from 'components/WalletDropdown/IconButton'
-import { Connection, ConnectionType, networkConnection, useConnections } from 'connection'
+import { Connection, ConnectionType, getNetworkConnection, useConnections } from 'connection'
 import { useGetConnection } from 'connection'
 import { ErrorCode } from 'connection/utils'
 import { isSupportedChain } from 'constants/chains'
@@ -108,8 +108,8 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
 
   // Keep the network connector in sync with any active user connector to prevent chain-switching on wallet disconnection.
   useEffect(() => {
-    if (chainId && isSupportedChain(chainId) && connector !== networkConnection.connector) {
-      networkConnection.connector.activate(chainId)
+    if (chainId && isSupportedChain(chainId) && connector !== getNetworkConnection().connector) {
+      getNetworkConnection().connector.activate(chainId)
     }
   }, [chainId, connector])
 
