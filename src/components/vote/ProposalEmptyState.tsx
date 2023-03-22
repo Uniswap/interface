@@ -40,28 +40,28 @@ export default function ProposalEmptyState() {
   const { chainId } = useWeb3React()
   // TODO: add bsc support
   if (
-    (chainId && chainId !== SupportedChainId.MAINNET) ||
-    (chainId && chainId !== SupportedChainId.GOERLI) ||
-    (chainId && chainId !== SupportedChainId.ARBITRUM_ONE) ||
-    (chainId && chainId !== SupportedChainId.OPTIMISM) ||
-    (chainId && chainId !== SupportedChainId.POLYGON)
+    (chainId && chainId === SupportedChainId.MAINNET) ||
+    (chainId && chainId === SupportedChainId.GOERLI) ||
+    (chainId && chainId === SupportedChainId.ARBITRUM_ONE) ||
+    (chainId && chainId === SupportedChainId.OPTIMISM) ||
+    (chainId && chainId === SupportedChainId.POLYGON)
   ) {
     return (
       <EmptyState
-        HeaderContent={() => <Trans>Please connect to a supported network</Trans>}
-        SubHeaderContent={() => (
-          <Trans>
-            No Proposal Found. Rigoblock governance is available on Ethereum, Arbitrum, Optimism and Polygon. Switch
-            your network to a supported one to view Proposals and Vote.
-          </Trans>
-        )}
+        HeaderContent={() => <Trans>No proposals found.</Trans>}
+        SubHeaderContent={() => <Trans>Proposals submitted by community members will appear here.</Trans>}
       />
     )
   }
   return (
     <EmptyState
-      HeaderContent={() => <Trans>No proposals found.</Trans>}
-      SubHeaderContent={() => <Trans>Proposals submitted by community members will appear here.</Trans>}
+      HeaderContent={() => <Trans>Please connect to a supported network</Trans>}
+      SubHeaderContent={() => (
+        <Trans>
+          No proposals found. Rigoblock governance is available on Ethereum, Arbitrum, Optimism and Polygon. Switch your
+          network to a supported one to view Proposals and Vote.
+        </Trans>
+      )}
     />
   )
 }
