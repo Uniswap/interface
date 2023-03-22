@@ -9,19 +9,12 @@ import React, {
   ReactNode,
   useCallback,
   useImperativeHandle,
+  useRef,
   useState,
 } from 'react'
-import {
-  ArrowLeft,
-  CheckCircle,
-  Copy,
-  ExternalLink as ExternalLinkIconFeather,
-  Link as LinkIconFeather,
-  X,
-} from 'react-feather'
+import { ArrowLeft, CheckCircle, Copy, ExternalLink as ExternalLinkIconFeather, Icon, X } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css, keyframes } from 'styled-components/macro'
-import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 
 import { ReactComponent as TooltipTriangle } from '../../assets/svg/tooltip_triangle.svg'
@@ -30,7 +23,7 @@ import { anonymizeLink } from '../../utils/anonymizeLink'
 // TODO: Break this file into a components folder
 
 export const CloseIcon = styled(X)<{ onClick: () => void }>`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.textPrimary};
   cursor: pointer;
 `
 
@@ -91,6 +84,12 @@ export const ButtonText = styled.button`
   :focus {
     text-decoration: underline;
   }
+`
+
+export const EllipsisStyle = css`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 export const ClickableStyle = css`
@@ -339,34 +338,33 @@ export function CopyContractAddress({ address }: { address: string }) {
   )
 }
 
-const CopyHelperContainer = styled(LinkStyledButton)<{ clicked: boolean }>`
-  ${({ clicked }) => !clicked && ClickableStyle};
-  color: ${({ color, theme }) => color || theme.accentAction};
-  padding: 0;
-  flex-shrink: 0;
+const CopyHelperContainer = styled.div<{ clicked: boolean; color?: string; gap: number }>`
+  ${ClickableStyle}
   display: flex;
-  text-decoration: none;
-  :hover,
-  :active,
-  :focus {
-    text-decoration: none;
-    color: ${({ color, theme }) => color || theme.accentAction};
-  }
-`
-
-const CopyHelperText = styled.span<{ fontSize: number }>`
-  ${flexRowNoWrap};
-  font-size: ${({ fontSize }) => fontSize + 'px'};
-  font-weight: 400;
+  flex-direction: row;
+  gap: ${({ gap }) => gap + 'px'};
   align-items: center;
+  color: ${({ color }) => color ?? 'inherit'};
 `
 
-const CopiedIcon = styled(CheckCircle)`
+const CopyHelperText = styled.div<{ fontSize?: number; offset: number }>`
+  ${EllipsisStyle}
+  ${({ fontSize }) => (fontSize ? 'font-size: ' + fontSize + 'px' : 'inherit')};
+  max-width: calc(100% - ${({ offset }) => offset + 'px'});
+`
+
+const StyledCheckCircle = styled(CheckCircle)`
   color: ${({ theme }) => theme.accentSuccess};
   stroke-width: 1.5px;
 `
+
+function isEllipsisActive(element: HTMLDivElement | null) {
+  return Boolean(element && element.offsetWidth < element.scrollWidth)
+}
+
 interface CopyHelperProps {
-  link?: boolean
+  InitialIcon?: Icon | null
+  CopiedIcon?: Icon
   toCopy: string
   color?: string
   fontSize?: number
@@ -381,14 +379,15 @@ export type CopyHelperRefType = { forceCopy: () => void }
 export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
   (
     {
-      link,
+      InitialIcon = Copy,
+      CopiedIcon = StyledCheckCircle,
       toCopy,
       color,
-      fontSize = 16,
+      fontSize,
       iconSize = 20,
-      gap = 12,
+      gap = 4,
       iconPosition = 'left',
-      iconColor,
+      iconColor = 'currentColor',
       children,
     }: CopyHelperProps,
     ref
@@ -404,15 +403,35 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
       },
     }))
 
-    const BaseIcon = isCopied ? CopiedIcon : link ? LinkIconFeather : Copy
+    // Detects is text is ellipsing in order to shorten gap caused by extra space browsers add after ... chars
+    const textRef = useRef<HTMLDivElement>(null)
+    const isEllipsis = isEllipsisActive(textRef.current)
+    const displayGap = isEllipsis ? gap - 4 : gap
 
+    const [isHover, setIsHover] = useState(false)
+    const onHover = useCallback(() => setIsHover(true), [])
+    const offHover = useCallback(() => setIsHover(false), [])
+
+    // Copy-helpers w/ left icon always show icon & display "Copied!" in copied state
+    // Copy-helpers w/ right icon show icon on hover & do not change text
+    const showIcon = Boolean(iconPosition === 'left' || isHover || isCopied)
+    const Icon = isCopied ? CopiedIcon : showIcon ? InitialIcon : null
+    const offset = showIcon ? gap + iconSize : 0
     return (
-      <CopyHelperContainer onClick={copy} color={color} clicked={isCopied}>
-        <div style={{ display: 'flex', flexDirection: 'row', gap }}>
-          {iconPosition === 'left' && <BaseIcon size={iconSize} strokeWidth={1.5} color={iconColor} />}
-          <CopyHelperText fontSize={fontSize}>{isCopied ? <Trans>Copied!</Trans> : children}</CopyHelperText>
-          {iconPosition === 'right' && <BaseIcon size={iconSize} strokeWidth={1.5} color={iconColor} />}
-        </div>
+      <CopyHelperContainer
+        onClick={copy}
+        color={color}
+        clicked={isCopied}
+        gap={displayGap}
+        onMouseEnter={onHover}
+        onMouseLeave={offHover}
+      >
+        {iconPosition === 'left' && Icon && <Icon size={iconSize} strokeWidth={1.5} color={iconColor} />}
+        <CopyHelperText ref={textRef} fontSize={fontSize} offset={offset}>
+          {isCopied && iconPosition === 'left' ? <Trans>Copied!</Trans> : children}
+        </CopyHelperText>
+        <div style={{ clear: 'both' }} />
+        {iconPosition === 'right' && Icon && <Icon size={iconSize} strokeWidth={1.5} color={iconColor} />}
       </CopyHelperContainer>
     )
   }

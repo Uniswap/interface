@@ -1,88 +1,44 @@
 import { ScrollBarStyles } from 'components/Common'
-import { ChevronLeft } from 'react-feather'
+import { ArrowLeft } from 'react-feather'
 import styled from 'styled-components/macro'
+import { ClickableStyle, ThemedText } from 'theme'
 
 const Menu = styled.div`
   width: 100%;
-  font-size: 16px;
   overflow: auto;
-  max-height: 450px;
-
+  margin-top: 4px;
+  padding: 14px 16px 16px;
   ${ScrollBarStyles}
-
   ::-webkit-scrollbar-track {
     margin-top: 40px;
   }
 `
 
-const Header = styled.span`
+const Title = styled.span`
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
 `
 
-const ClearAll = styled.div`
-  display: inline-block;
-  cursor: pointer;
-  color: ${({ theme }) => theme.accentAction};
-  font-weight: 600;
-  font-size: 14px;
-  margin-top: auto;
-  margin-bottom: auto;
-
-  :hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `${duration.fast} opacity ${timing.in}`};
-  }
+const StyledArrow = styled(ArrowLeft)`
+  ${ClickableStyle}
 `
 
-const StyledChevron = styled(ChevronLeft)`
-  cursor: pointer;
+const Header = styled.div`
+  color: ${({ theme }) => theme.textPrimary};
 
-  &:hover {
-    color: ${({ theme }) => theme.textPrimary};
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `${duration.fast} color ${timing.in}`};
-  }
-`
-
-const BackSection = styled.div`
-  position: absolute;
-  background-color: ${({ theme }) => theme.backgroundSurface};
-  width: fill-available;
-  margin: 0px 2vw 0px 0px;
-  padding: 0px 0px 2vh 0px;
-  color: ${({ theme }) => theme.textSecondary};
-  cursor: default;
-  display: flex;
-  justify-content: space-between;
-  z-index: 1;
-`
-
-const BackSectionContainer = styled.div`
   display: flex;
   justify-content: space-between;
   position: relative;
   width: 100%;
-`
-
-const ChildrenContainer = styled.div`
-  margin-top: 40px;
+  margin-bottom: 20px;
 `
 
 export const SlideOutMenu = ({
   children,
   onClose,
   title,
-  onClear,
 }: {
   onClose: () => void
   title: React.ReactNode
@@ -90,14 +46,13 @@ export const SlideOutMenu = ({
   onClear?: () => void
 }) => (
   <Menu>
-    <BackSection>
-      <BackSectionContainer>
-        <StyledChevron data-testid="wallet-back" onClick={onClose} size={24} />
-        <Header data-testid="wallet-header">{title}</Header>
-        {onClear && <ClearAll onClick={onClear}>Clear All</ClearAll>}
-      </BackSectionContainer>
-    </BackSection>
+    <Header>
+      <StyledArrow data-testid="wallet-back" onClick={onClose} size={24} />
+      <Title>
+        <ThemedText.SubHeader fontWeight={500}>{title}</ThemedText.SubHeader>
+      </Title>
+    </Header>
 
-    <ChildrenContainer>{children}</ChildrenContainer>
+    {children}
   </Menu>
 )

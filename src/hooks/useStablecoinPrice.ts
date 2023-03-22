@@ -25,7 +25,6 @@ const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
  */
 export default function useStablecoinPrice(currency?: Currency): Price<Currency, Token> | undefined {
   const chainId = currency?.chainId
-
   const amountOut = chainId ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
   const stablecoin = amountOut?.currency
 

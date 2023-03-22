@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-03-14 20:05\n"
+"PO-Revision-Date: 2023-03-21 23:05\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -619,10 +619,6 @@ msgstr "創建提案"
 #: src/pages/Pool/v2.tsx
 msgid "Create a pair"
 msgstr "創建幣對"
-
-#: src/pages/Pool/index.tsx
-msgid "Create a pool"
-msgstr "創建流動池"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
@@ -1419,7 +1415,6 @@ msgid "Please type the word \"{confirmWord}\" to enable expert mode."
 msgstr "請輸入單詞“{confirmWord}”以啟用專家模式。"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
-#: src/components/NavBar/index.tsx
 msgid "Pool"
 msgstr "流動池"
 
@@ -1443,6 +1438,7 @@ msgstr "獎勵池中的流動池代幣："
 msgid "Pooled {0}:"
 msgstr "流動池匯集 {0}:"
 
+#: src/components/NavBar/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Pools"
@@ -1682,6 +1678,10 @@ msgstr ""
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Same Price"
+msgstr ""
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Save on Tax Services"
 msgstr ""
 
 #: src/components/TaxServiceModal/TaxServiceBanner.tsx
@@ -2005,10 +2005,6 @@ msgstr "此流動池的兌換率在您選定的範圍內。因此您的流動資
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "您註入的代幣比率將決定此流動池的初始兌換率。"
 
-#: src/utils/swapErrorToUserReadableMessage.tsx
-msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
-msgstr "由於期限已過，因此無法發送交易。請檢查您的交易截止期限設置。"
-
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "There is no liquidity data."
 msgstr "沒有流動性數據。"
@@ -2048,6 +2044,10 @@ msgstr ""
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "該工具將安全地將您的 {0} 流動資金遷移到 V3。該過程完全不依賴任何信任需求"
+
+#: src/utils/swapErrorToUserReadableMessage.tsx
+msgid "This transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
+msgstr ""
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -2133,7 +2133,6 @@ msgid "Transaction pending"
 msgstr "交易待定"
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
-#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Transaction rejected"
 msgstr "交易被拒絕"
 
@@ -2193,6 +2192,10 @@ msgstr ""
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Uniswap Labs' Terms of Service"
 msgstr "Uniswap Labs 的服務條款"
+
+#: src/pages/Pool/v2.tsx
+msgid "Uniswap V2 is not available on this network."
+msgstr ""
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
@@ -2262,10 +2265,6 @@ msgstr "更新投票權委托"
 msgid "Use the Uniswap Labs API to get faster quotes."
 msgstr "使用 Uniswap Labs API 獲得更快的報價。"
 
-#: src/pages/Pool/v2.tsx
-msgid "V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum."
-msgstr ""
-
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
 msgstr "V2 流動資金"
@@ -2287,7 +2286,6 @@ msgstr ""
 msgid "View more analytics"
 msgstr ""
 
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/nft/components/collection/TransactionCompleteModal.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
@@ -2297,6 +2295,10 @@ msgstr "在Etherscan上查看"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "在以太坊資源瀏覽器上查看"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on {0}"
+msgstr ""
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -2535,6 +2537,9 @@ msgid "Your positions"
 msgstr "您的倉位"
 
 #: src/hooks/useUniversalRouter.ts
+msgid "Your swap is expected to fail."
+msgstr ""
+
 #: src/hooks/useUniversalRouter.ts
 msgid "Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds."
 msgstr ""

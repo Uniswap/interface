@@ -13,6 +13,7 @@ import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
+import { SystemThemeUpdater } from 'theme/components/ThemeToggle'
 
 import Web3Provider from './components/Web3Provider'
 import { LanguageProvider } from './i18n'
@@ -23,7 +24,6 @@ import ApplicationUpdater from './state/application/updater'
 import ListsUpdater from './state/lists/updater'
 import LogsUpdater from './state/logs/updater'
 import TransactionUpdater from './state/transactions/updater'
-import UserUpdater from './state/user/updater'
 import ThemeProvider, { ThemedGlobalStyle } from './theme'
 import RadialGradientByChainUpdater from './theme/components/RadialGradientByChainUpdater'
 
@@ -36,7 +36,7 @@ function Updaters() {
     <>
       <RadialGradientByChainUpdater />
       <ListsUpdater />
-      <UserUpdater />
+      <SystemThemeUpdater />
       <ApplicationUpdater />
       <TransactionUpdater />
       <MulticallUpdater />

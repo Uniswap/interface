@@ -1,9 +1,9 @@
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
 import { Link } from 'react-router-dom'
-import { useIsDarkMode } from 'state/user/hooks'
 import styled, { DefaultTheme } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 export enum CardType {
   Primary = 'Primary',

@@ -73,11 +73,10 @@ const IconBlock = (props: React.ComponentPropsWithoutRef<'a' | 'button'>) => {
   return <IconBlockButton {...props} />
 }
 
-const IconButton = ({ Icon, children, ...rest }: IconButtonProps | IconLinkProps) => (
+const IconButton = ({ Icon, ...rest }: IconButtonProps | IconLinkProps) => (
   <IconBlock {...rest}>
     <IconWrapper>
       <Icon strokeWidth={1.5} size={16} />
-      <IconHoverText>{children}</IconHoverText>
     </IconWrapper>
   </IconBlock>
 )

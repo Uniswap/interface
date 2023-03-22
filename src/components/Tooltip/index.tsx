@@ -109,7 +109,7 @@ export function MouseoverTooltipContent({
   }, [openCallback])
   const close = useCallback(() => setShow(false), [setShow])
   return (
-    <TooltipContent {...rest} show={show} content={disableHover ? null : content}>
+    <TooltipContent {...rest} show={!disableHover && show} content={disableHover ? null : content}>
       <div
         style={{ display: 'inline-block', lineHeight: 0, padding: '0.25rem' }}
         onMouseEnter={open}
