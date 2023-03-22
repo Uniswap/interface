@@ -3,7 +3,7 @@ import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { ButtonPrimary, SmallButtonPrimary } from 'components/Button'
+import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/styled'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
@@ -198,7 +198,7 @@ export default function Landing() {
                 {loadingProposals || loadingAvailableVotes ? <Loader /> : null}
                 {showUnlockVoting ? (
                   <ButtonPrimary
-                    style={{ width: 'fit-content' }}
+                    style={{ width: 'fit-content', height: '40px' }}
                     padding="8px"
                     $borderRadius="8px"
                     onClick={toggleDelegateModal}
@@ -223,14 +223,14 @@ export default function Landing() {
                 ) : (
                   ''
                 )}
-                <SmallButtonPrimary
+                <ButtonPrimary
                   as={Link}
                   to="/create-proposal"
-                  style={{ width: 'fit-content', borderRadius: '8px' }}
-                  padding="6px 8px"
+                  style={{ width: 'fit-content', borderRadius: '8px', height: '40px' }}
+                  padding="8px"
                 >
                   <Trans>Create Proposal</Trans>
-                </SmallButtonPrimary>
+                </ButtonPrimary>
               </AutoRow>
             </WrapSmall>
             {!showUnlockVoting && (
