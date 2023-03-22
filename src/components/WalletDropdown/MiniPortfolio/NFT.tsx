@@ -1,4 +1,5 @@
-import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { useTrace } from '@uniswap/analytics'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import Column from 'components/Column'
 import Row from 'components/Row'
@@ -51,12 +52,6 @@ export function NFT({
 
   const navigateToNFTDetails = () => {
     navigate(`/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}`)
-    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-      element: InterfaceElementName.MINI_PORTFOLIO_NFT_ITEM,
-      collection_name: asset.collection?.name,
-      token_id: asset.tokenId,
-      ...trace,
-    })
     toggleWalletDrawer()
   }
 
@@ -72,6 +67,15 @@ export function NFT({
         unselectAsset={() => {
           /* */
         }}
+        sendAnalyticsEvent={() =>
+          sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+            element: InterfaceElementName.MINI_PORTFOLIO_NFT_ITEM,
+            collection_name: asset.collection?.name,
+            collection_address: asset.collection?.address,
+            token_id: asset.tokenId,
+            ...trace,
+          })
+        }
         mediaShouldBePlaying={mediaShouldBePlaying}
         setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
       />

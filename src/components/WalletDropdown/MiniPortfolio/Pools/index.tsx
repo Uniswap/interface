@@ -104,7 +104,7 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
     <TraceEvent
       events={[BrowserEvent.onClick]}
       name={SharedEventName.ELEMENT_CLICKED}
-      element={InterfaceElementName.MINI_PORTFOLIO_TOKEN_ROW}
+      element={InterfaceElementName.MINI_PORTFOLIO_POOLS_ROW}
       properties={{ chain_id: chainId, pool_token_0: pool.token0, pool_token_1: pool.token1 }}
     >
       <PortfolioRow
