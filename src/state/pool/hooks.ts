@@ -85,22 +85,18 @@ function useStartBlock(chainId: number | undefined): number | undefined {
 export function useFormattedPoolCreatedLogs(
   contract: Contract | null,
   account: string | undefined,
-  fromBlock?: number,
-  toBlock?: number
+  fromBlock: number
 ): PoolRegisteredLog[] | undefined {
   // create filters for Registered events
   const filter = useMemo(() => {
+    const logFilter = contract?.filters?.Registered()
     // we do not poll events until account is connected
-    if (!account) return undefined
-
-    const filter = contract?.filters?.Registered()
-    if (!filter) return undefined
+    if (!account || !logFilter) return undefined
     return {
-      ...filter,
+      ...logFilter,
       fromBlock,
-      toBlock,
     }
-  }, [account, contract, fromBlock, toBlock])
+  }, [account, contract, fromBlock])
 
   const useLogsResult = useLogs(filter)
 
@@ -140,6 +136,8 @@ export function useAllPoolsData(): { data: PoolRegisteredLog[] | undefined; load
     registryStartBlock = 34629059
   } else if (chainId === SupportedChainId.POLYGON) {
     registryStartBlock = 35228892
+  } else {
+    registryStartBlock = 1
   }
 
   // we want to be able to filter by account
