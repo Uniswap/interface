@@ -6,9 +6,11 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import usePrevious from 'hooks/usePrevious'
+import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -548,6 +550,10 @@ export default function AddLiquidity() {
     }),
     [usdcValueCurrencyB]
   )
+
+  const owner = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
+  const ownsNFT = owner === account || existingPositionDetails?.operator === account
+
   return (
     <>
       <ScrollablePage>
@@ -912,6 +918,7 @@ export default function AddLiquidity() {
             </ResponsiveTwoColumns>
           </Wrapper>
         </PageWrapper>
+        {Boolean(account && !ownsNFT) && <OwnershipWarning ownerAddress={owner} />}
         {addIsUnsupported && (
           <UnsupportedCurrencyFooter
             show={addIsUnsupported}
