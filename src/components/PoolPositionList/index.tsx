@@ -97,11 +97,11 @@ export default function PoolPositionList({ positions, filterByOperator, filterBy
         <>
           <DesktopHeader>
             <div>
-              <Trans>You are not operating any pool, click &quot;Create Pool&quot; to deploy one</Trans>
+              <Trans>You are not operating a pool. Click the &quot;Create Pool&quot; button to deploy one.</Trans>
             </div>
           </DesktopHeader>
           <MobileHeader>
-            <Trans>You are not operating any pool, click &quot;Create Pool&quot; to deploy one</Trans>
+            <Trans>You are not operating a pool. Click the &quot;Create Pool&quot; button to deploy one.</Trans>
           </MobileHeader>
         </>
       )}
