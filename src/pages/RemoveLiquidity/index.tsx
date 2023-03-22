@@ -7,6 +7,7 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
+import { useToggleWalletDrawer } from 'components/WalletDropdown'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
@@ -32,7 +33,6 @@ import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallbac
 import { usePairContract, useV2RouterContract } from '../../hooks/useContract'
 import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import { useToggleWalletModal } from '../../state/application/hooks'
 import { Field } from '../../state/burn/actions'
 import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from '../../state/burn/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -57,7 +57,7 @@ export default function RemoveLiquidity() {
   const theme = useTheme()
 
   // toggle wallet when disconnected
-  const toggleWalletModal = useToggleWalletModal()
+  const toggleWalletDrawer = useToggleWalletDrawer()
 
   // burn state
   const { independentField, typedValue } = useBurnState()
@@ -630,7 +630,7 @@ export default function RemoveLiquidity() {
                   properties={{ received_swap_quote: false }}
                   element={InterfaceElementName.CONNECT_WALLET_BUTTON}
                 >
-                  <ButtonLight onClick={toggleWalletModal}>
+                  <ButtonLight onClick={toggleWalletDrawer}>
                     <Trans>Connect Wallet</Trans>
                   </ButtonLight>
                 </TraceEvent>

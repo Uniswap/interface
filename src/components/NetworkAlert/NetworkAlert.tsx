@@ -3,10 +3,10 @@ import { useWeb3React } from '@web3-react/core'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { ArrowUpRight } from 'react-feather'
-import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, HideSmall } from 'theme'
 import { colors } from 'theme/colors'
+import { useDarkModeManager } from 'theme/components/ThemeToggle'
 
 import { AutoRow } from '../Row'
 

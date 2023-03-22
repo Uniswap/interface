@@ -2,7 +2,7 @@ import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useEffect } from 'react'
-import { useDarkModeManager } from 'state/user/hooks'
+import { useDarkModeManager } from 'theme/components/ThemeToggle'
 
 import { darkTheme, lightTheme } from '../colors'
 

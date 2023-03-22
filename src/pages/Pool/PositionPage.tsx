@@ -14,7 +14,7 @@ import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import Loader from 'components/Loader'
+import Loader from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
@@ -60,6 +60,14 @@ const getTokenLink = (chainId: SupportedChainId, address: string) => {
     return getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
   }
 }
+
+const PositionPageButtonPrimary = styled(ButtonPrimary)`
+  width: 228px;
+  height: 40px;
+  font-size: 16px;
+  line-height: 20px;
+  border-radius: 12px;
+`
 
 const PageWrapper = styled.div`
   padding: 68px 16px 16px 16px;
@@ -577,6 +585,24 @@ export function PositionPage() {
       (currency0.isNative || currency1.isNative) &&
       !collectMigrationHash
   )
+
+  if (!positionDetails && !loading) {
+    return (
+      <PageWrapper>
+        <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+          <ThemedText.HeadlineLarge style={{ marginBottom: '8px' }}>
+            <Trans>Position unavailable</Trans>
+          </ThemedText.HeadlineLarge>
+          <ThemedText.BodyPrimary style={{ marginBottom: '32px' }}>
+            <Trans>To view a position, you must be connected to the network it belongs to.</Trans>
+          </ThemedText.BodyPrimary>
+          <PositionPageButtonPrimary as={Link} to="/pools" width="fit-content">
+            <Trans>Back to Pools</Trans>
+          </PositionPageButtonPrimary>
+        </div>
+      </PageWrapper>
+    )
+  }
 
   return loading || poolState === PoolState.LOADING || !feeAmount ? (
     <LoadingRows>

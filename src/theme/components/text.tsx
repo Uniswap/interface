@@ -35,13 +35,16 @@ export const ThemedText = {
     return <TextWrapper fontWeight={500} fontSize={28} color="textPrimary" {...props} />
   },
   HeadlineLarge(props: TextProps) {
-    return <TextWrapper fontWeight={600} fontSize={36} lineHeight="36px" color="textPrimary" {...props} />
+    return <TextWrapper fontWeight={600} fontSize={36} lineHeight="44px" color="textPrimary" {...props} />
   },
   LargeHeader(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={36} color="textPrimary" {...props} />
   },
   Hero(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={48} color="textPrimary" {...props} />
+  },
+  LabelSmall(props: TextProps) {
+    return <TextWrapper fontWeight={600} fontSize={14} color="textSecondary" {...props} />
   },
   Link(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={14} color="accentAction" {...props} />
@@ -55,6 +58,9 @@ export const ThemedText = {
   },
   SubHeaderSmall(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={14} color="textSecondary" {...props} />
+  },
+  UtilityBadge(props: TextProps) {
+    return <TextWrapper fontWeight={600} fontSize="8px" lineHeight="12px" {...props} />
   },
   DeprecatedMain(props: TextProps) {
     return <TextWrapper fontWeight={500} color="textSecondary" {...props} />

@@ -15,6 +15,7 @@ import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { magicalGradientOnHover } from 'nft/css/common.css'
 import { useIsMobile, useIsTablet } from 'nft/hooks'
+import { useIsNavSearchInputVisible } from 'nft/hooks/useIsNavSearchInputVisible'
 import { fetchSearchCollections } from 'nft/queries'
 import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -52,6 +53,7 @@ export const SearchBar = () => {
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
   const isNftGraphqlEnabled = useNftGraphqlEnabled()
+  const isNavSearchInputVisible = useIsNavSearchInputVisible()
 
   useOnClickOutside(searchRef, () => {
     isOpen && toggleOpen()
@@ -117,7 +119,7 @@ export const SearchBar = () => {
     }
   }, [isOpen])
 
-  const isMobileOrTablet = isMobile || isTablet
+  const isMobileOrTablet = isMobile || isTablet || !isNavSearchInputVisible
 
   const trace = useTrace({ section: InterfaceSectionName.NAVBAR_SEARCH })
 

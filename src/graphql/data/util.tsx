@@ -1,10 +1,12 @@
 import { QueryResult } from '@apollo/client'
+import { Currency, Token } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import ms from 'ms.macro'
 import { useEffect } from 'react'
+import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
-import { Chain, HistoryDuration } from './__generated__/types-and-hooks'
+import { Chain, ContractInput, HistoryDuration, TokenStandard } from './__generated__/types-and-hooks'
 
 export enum PollingInterval {
   Slow = ms`5m`,
@@ -65,6 +67,7 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.ARBITRUM_GOERLI]: Chain.Arbitrum,
   [SupportedChainId.OPTIMISM]: Chain.Optimism,
   [SupportedChainId.OPTIMISM_GOERLI]: Chain.Optimism,
+  [SupportedChainId.BNB]: Chain.Bnb,
 }
 
 export function chainIdToBackendName(chainId: number | undefined) {
@@ -84,6 +87,23 @@ const GQL_CHAINS: number[] = [
 export function isGqlSupportedChain(chainId: number | undefined): chainId is SupportedChainId {
   return !!chainId && GQL_CHAINS.includes(chainId)
 }
+export function toContractInput(currency: Currency): ContractInput {
+  const chain = chainIdToBackendName(currency.chainId)
+  return { chain, address: currency.isToken ? currency.address : getNativeTokenDBAddress(chain) }
+}
+
+export function gqlToCurrency(token: {
+  address?: string
+  chain: Chain
+  standard?: TokenStandard
+  decimals?: number
+  name?: string
+  symbol?: string
+}): Currency {
+  const chainId = fromGraphQLChain(token.chain)
+  if (token.standard === TokenStandard.Native || !token.address) return nativeOnChain(chainId)
+  else return new Token(chainId, token.address, token.decimals ?? 18, token.name, token.symbol)
+}
 
 const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
   ethereum: Chain.Ethereum,
@@ -91,19 +111,27 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
   celo: Chain.Celo,
   arbitrum: Chain.Arbitrum,
   optimism: Chain.Optimism,
+  bnb: Chain.Bnb,
 }
 
 export function validateUrlChainParam(chainName: string | undefined) {
   return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum
 }
 
-export const CHAIN_NAME_TO_CHAIN_ID: { [key: string]: SupportedChainId } = {
-  ETHEREUM: SupportedChainId.MAINNET,
-  POLYGON: SupportedChainId.POLYGON,
-  CELO: SupportedChainId.CELO,
-  ARBITRUM: SupportedChainId.ARBITRUM_ONE,
-  OPTIMISM: SupportedChainId.OPTIMISM,
-  BNB: SupportedChainId.BNB,
+// TODO(cartcrom): refactor into safer lookup & replace usage
+export const CHAIN_NAME_TO_CHAIN_ID: { [key in Chain]: SupportedChainId } = {
+  [Chain.Ethereum]: SupportedChainId.MAINNET,
+  [Chain.EthereumGoerli]: SupportedChainId.GOERLI,
+  [Chain.Polygon]: SupportedChainId.POLYGON,
+  [Chain.Celo]: SupportedChainId.CELO,
+  [Chain.Optimism]: SupportedChainId.OPTIMISM,
+  [Chain.Arbitrum]: SupportedChainId.ARBITRUM_ONE,
+  [Chain.UnknownChain]: SupportedChainId.MAINNET,
+  [Chain.Bnb]: SupportedChainId.BNB,
+}
+
+export function fromGraphQLChain(chain: Chain): SupportedChainId {
+  return CHAIN_NAME_TO_CHAIN_ID[chain]
 }
 
 export const BACKEND_CHAIN_NAMES: Chain[] = [Chain.Ethereum, Chain.Polygon, Chain.Optimism, Chain.Arbitrum, Chain.Celo]
