@@ -24,7 +24,7 @@ import {
   getIsCoinbaseWallet,
   getIsCoinbaseWalletBrowser,
   getIsInjected,
-  getIsInjectedMobileBrowser,
+  getIsKnownWalletBrowser,
   getIsMetaMaskWallet,
 } from './utils'
 import { UniwalletConnect, WalletConnectPopup } from './WalletConnect'
@@ -68,43 +68,30 @@ export function getNetworkConnection(): Connection {
 }
 
 const [web3Injected, web3InjectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))
-// const baseInjectedConnection: Omit<Connection, 'icon'> = {
-//   name: isGenericInjector ? 'Browser Wallet' : 'MetaMask',
-//   connector: web3Injected,
-//   hooks: web3InjectedHooks,
-//   type: ConnectionType.INJECTED,
-//   shouldDisplay: getIsMetaMaskWallet() || getShouldAdvertiseMetaMask || isGenericInjector,
-//   // If on non-injected, non-mobile browser, prompt user to install Metamask
-//   overrideActivate: getShouldAdvertiseMetaMask ? () => window.open('https://metamask.io/', 'inst_metamask') : undefined,
-// }
-
-// export const darkInjectedConnection: Connection = {
-//   ...baseInjectedConnection,
-//   icon: isGenericInjector ? INJECTED_DARK_ICON_URL : METAMASK_ICON_URL,
-// }
-
-// export const lightInjectedConnection: Connection = {
-//   ...baseInjectedConnection,
-//   icon: isGenericInjector ? INJECTED_LIGHT_ICON_URL : METAMASK_ICON_URL,
-// }
 
 function getInjectedConnection(isDarkMode: boolean): Connection {
   const shouldAdvertiseMetaMask = !getIsMetaMaskWallet() && !isMobile && (!getIsInjected() || getIsCoinbaseWallet())
   const isGenericInjector = getIsInjected() && !getIsMetaMaskWallet() && !getIsCoinbaseWallet()
 
-  const baseInjectedConnection = {
-    name: isGenericInjector ? t`Browser Wallet` : shouldAdvertiseMetaMask ? t`Install MetaMask` : 'MetaMask',
-    connector: web3Injected,
-    hooks: web3InjectedHooks,
-    type: ConnectionType.INJECTED,
-    shouldDisplay: getIsMetaMaskWallet() || shouldAdvertiseMetaMask || isGenericInjector,
+  const mmMetadata = {
+    name: shouldAdvertiseMetaMask ? t`Install MetaMask` : 'MetaMask',
+    shouldDisplay: getIsMetaMaskWallet() || shouldAdvertiseMetaMask,
     // If on non-injected, non-mobile browser, prompt user to install Metamask
     overrideActivate: shouldAdvertiseMetaMask ? () => window.open('https://metamask.io/', 'inst_metamask') : undefined,
+    icon: METAMASK_ICON_URL,
+  }
+
+  const genericMetadata = {
+    name: t`Browser Wallet`,
+    shouldDisplay: isGenericInjector,
+    icon: isDarkMode ? INJECTED_DARK_ICON_URL : INJECTED_LIGHT_ICON_URL,
   }
 
   return {
-    ...baseInjectedConnection,
-    icon: isGenericInjector ? (isDarkMode ? INJECTED_DARK_ICON_URL : INJECTED_LIGHT_ICON_URL) : METAMASK_ICON_URL,
+    ...(isGenericInjector ? genericMetadata : mmMetadata),
+    connector: web3Injected,
+    hooks: web3InjectedHooks,
+    type: ConnectionType.INJECTED,
   }
 }
 
@@ -132,22 +119,13 @@ export function getWalletConnectConnection(): Connection {
     hooks: web3WalletConnectHooks,
     type: ConnectionType.WALLET_CONNECT,
     icon: WALLET_CONNECT_ICON_URL,
-    shouldDisplay: !getIsInjectedMobileBrowser(),
+    shouldDisplay: !getIsKnownWalletBrowser(),
   }
 }
 
 const [web3UniwalletConnect, web3UniwalletConnectHooks] = initializeConnector<UniwalletConnect>(
   (actions) => new UniwalletConnect({ actions, onError })
 )
-export const uniwalletConnectConnection: Connection = {
-  name: 'Uniswap Wallet',
-  connector: web3UniwalletConnect,
-  hooks: web3UniwalletConnectHooks,
-  type: ConnectionType.UNIWALLET,
-  icon: UNIWALLET_ICON_URL,
-  shouldDisplay: Boolean(!getIsInjectedMobileBrowser() && !isNonIOSPhone),
-  isNew: true,
-}
 
 export function getUniwalletConnectConnection(): Connection {
   return {
@@ -156,7 +134,7 @@ export function getUniwalletConnectConnection(): Connection {
     hooks: web3UniwalletConnectHooks,
     type: ConnectionType.UNIWALLET,
     icon: UNIWALLET_ICON_URL,
-    shouldDisplay: Boolean(!getIsInjectedMobileBrowser() && !isNonIOSPhone),
+    shouldDisplay: Boolean(!getIsKnownWalletBrowser() && !isNonIOSPhone),
     isNew: true,
   }
 }
@@ -176,16 +154,19 @@ const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<Coinba
 )
 
 function getCoinbaseWalletConnection(): Connection {
+  // Coinbase option should be displayed any time unless on a known wallet browser that isn't coinbase
+  const shouldHideCoinbase = getIsKnownWalletBrowser() && !getIsCoinbaseWalletBrowser()
+
   return {
     name: 'Coinbase Wallet',
     connector: web3CoinbaseWallet,
     hooks: web3CoinbaseWalletHooks,
     type: ConnectionType.COINBASE_WALLET,
     icon: COINBASE_ICON_URL,
-    shouldDisplay: Boolean((isMobile && !getIsInjectedMobileBrowser()) || !isMobile || getIsCoinbaseWalletBrowser()),
+    shouldDisplay: !shouldHideCoinbase,
     // If on a mobile browser that isn't the coinbase wallet browser, deeplink to the coinbase wallet app
     overrideActivate:
-      isMobile && !getIsInjectedMobileBrowser()
+      isMobile && !getIsKnownWalletBrowser()
         ? () => window.open('https://go.cb-w.com/mtUDhEZPy1', 'cbwallet')
         : undefined,
   }

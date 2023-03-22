@@ -7,13 +7,15 @@ export const getIsInjected = () => Boolean(window.ethereum)
 // https://wallet-docs.brave.com/ethereum/wallet-detection#compatability-with-metamask
 type NonMetaMaskFlag = 'isRabby' | 'isBraveWallet' | 'isTrustWallet'
 const allNonMetamaskFlags: NonMetaMaskFlag[] = ['isRabby', 'isBraveWallet', 'isTrustWallet']
-export const getIsMetaMaskWallet = () =>
-  Boolean(window.ethereum?.isMetaMask && !allNonMetamaskFlags.some((flag) => window.ethereum?.[flag]))
+const getIsKnownGenericInjector = () => allNonMetamaskFlags.some((flag) => window.ethereum?.[flag])
+
+export const getIsMetaMaskWallet = () => Boolean(window.ethereum?.isMetaMask && !getIsKnownGenericInjector())
 
 export const getIsCoinbaseWallet = () => Boolean(window.ethereum?.isCoinbaseWallet)
 export const getIsCoinbaseWalletBrowser = () => isMobile && Boolean(window.ethereum?.isCoinbaseWallet)
 
-export const getIsInjectedMobileBrowser = () => isMobile && (getIsCoinbaseWallet() || getIsMetaMaskWallet())
+export const getIsKnownWalletBrowser = () =>
+  isMobile && (getIsCoinbaseWallet() || getIsMetaMaskWallet() || getIsKnownGenericInjector())
 
 // https://eips.ethereum.org/EIPS/eip-1193#provider-errors
 export enum ErrorCode {
