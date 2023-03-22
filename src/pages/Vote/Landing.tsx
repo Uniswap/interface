@@ -6,14 +6,14 @@ import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/styled'
-import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
-import Loader from 'components/Loader'
+//import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
+//import Loader from 'components/Loader'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import Toggle from 'components/Toggle'
 import DelegateModal from 'components/vote/DelegateModal'
 import ProposalEmptyState from 'components/vote/ProposalEmptyState'
-import JSBI from 'jsbi'
+//import JSBI from 'jsbi'
 import { darken } from 'polished'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -22,7 +22,7 @@ import { useModalIsOpen, useToggleDelegateModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { useTokenBalance } from 'state/connection/hooks'
 import { ProposalData, ProposalState } from 'state/governance/hooks'
-import { useAllProposalData, useUserDelegatee, useUserVotes } from 'state/governance/hooks'
+import { useAllProposalData, useUserDelegatee /*, useUserVotes*/ } from 'state/governance/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 import { shortenAddress } from 'utils'
@@ -132,7 +132,7 @@ export default function Landing() {
   const { data: allProposals, loading: loadingProposals } = useAllProposalData()
 
   // user data
-  const { loading: loadingAvailableVotes, votes: availableVotes } = useUserVotes()
+  //const { loading: loadingAvailableVotes, votes: availableVotes } = useUserVotes()
   const grgBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
     account ?? undefined,
     chainId ? GRG[chainId] : undefined
@@ -140,9 +140,10 @@ export default function Landing() {
   const userDelegatee: string | undefined = useUserDelegatee()
 
   // show delegation option if they have have a balance, but have not delegated
-  const showUnlockVoting = Boolean(
+  /*const showUnlockVoting = Boolean(
     grgBalance && JSBI.notEqual(grgBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
-  )
+  )*/
+  const showUnlockVoting = true
   return (
     <>
       <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
@@ -195,34 +196,44 @@ export default function Landing() {
                 <Trans>Proposals</Trans>
               </ThemedText.DeprecatedMediumHeader>
               <AutoRow gap="6px" justify="flex-end">
-                {loadingProposals || loadingAvailableVotes ? <Loader /> : null}
-                {showUnlockVoting ? (
-                  <ButtonPrimary
-                    style={{ width: 'fit-content' }}
-                    padding="8px"
-                    $borderRadius="8px"
-                    onClick={toggleDelegateModal}
-                  >
-                    <Trans>Unlock Voting</Trans>
-                  </ButtonPrimary>
-                ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
-                  <ThemedText.DeprecatedBody fontWeight={500} mr="6px">
-                    <Trans>
-                      <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
-                    </Trans>
-                  </ThemedText.DeprecatedBody>
-                ) : grgBalance &&
-                  userDelegatee &&
-                  userDelegatee !== ZERO_ADDRESS &&
-                  JSBI.notEqual(JSBI.BigInt(0), grgBalance?.quotient) ? (
-                  <ThemedText.DeprecatedBody fontWeight={500} mr="6px">
-                    <Trans>
-                      <FormattedCurrencyAmount currencyAmount={grgBalance} /> Votes
-                    </Trans>
-                  </ThemedText.DeprecatedBody>
-                ) : (
-                  ''
-                )}
+                <ButtonPrimary
+                  style={{ width: 'fit-content' }}
+                  padding="8px"
+                  $borderRadius="8px"
+                  onClick={toggleDelegateModal}
+                >
+                  <Trans>Unlock Votes</Trans>
+                </ButtonPrimary>
+                {/*
+                  {loadingProposals || loadingAvailableVotes ? <Loader /> : null}
+                  {showUnlockVoting ? (
+                    <ButtonPrimary
+                      style={{ width: 'fit-content' }}
+                      padding="8px"
+                      $borderRadius="8px"
+                      onClick={toggleDelegateModal}
+                    >
+                      <Trans>Unlock Votes</Trans>
+                    </ButtonPrimary>
+                  ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
+                    <ThemedText.DeprecatedBody fontWeight={500} mr="6px">
+                      <Trans>
+                        <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
+                      </Trans>
+                    </ThemedText.DeprecatedBody>
+                  ) : grgBalance &&
+                    userDelegatee &&
+                    userDelegatee !== ZERO_ADDRESS &&
+                    JSBI.notEqual(JSBI.BigInt(0), grgBalance?.quotient) ? (
+                    <ThemedText.DeprecatedBody fontWeight={500} mr="6px">
+                      <Trans>
+                        <FormattedCurrencyAmount currencyAmount={grgBalance} /> Votes
+                      </Trans>
+                    </ThemedText.DeprecatedBody>
+                  ) : (
+                    ''
+                  )}
+                */}
                 <ButtonPrimary
                   as={Link}
                   to="/create-proposal"
