@@ -3,6 +3,7 @@ import Web3Status from 'components/Web3Status'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
+import { useIsMobile } from 'nft/hooks'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -41,6 +42,7 @@ const MenuItem = ({ href, dataTestId, id, isActive, children }: MenuItemProps) =
 
 export const PageTabs = () => {
   const { pathname } = useLocation()
+  const isMobile = useIsMobile()
 
   const isPoolActive =
     (pathname.startsWith('/pool') ||
@@ -57,16 +59,17 @@ export const PageTabs = () => {
       <MenuItem href="/pools" isActive={pathname.startsWith('/pools')}>
         <Trans>Pools</Trans>
       </MenuItem>
-
-      <a
-        href="https://www.orbitmarket.io"
-        className={styles.menuItem}
-        style={{ textDecoration: 'none' }}
-        rel="noreferrer"
-        target="_blank"
-      >
-        <Trans>NFTs</Trans>
-      </a>
+      {!isMobile && (
+        <a
+          href="https://www.orbitmarket.io"
+          className={styles.menuItem}
+          style={{ textDecoration: 'none' }}
+          rel="noreferrer"
+          target="_blank"
+        >
+          <Trans>NFTs</Trans>
+        </a>
+      )}
 
       <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
         <Trans>Add Liquidity</Trans>

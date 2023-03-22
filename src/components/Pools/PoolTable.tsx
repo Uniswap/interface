@@ -8,6 +8,7 @@ import { RowFixed } from 'components/Row'
 import { Arrow, Break, PageButtons } from 'components/shared'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { SupportedChainId } from 'constants/chains'
+import { useIsMobile } from 'nft/hooks'
 import numbro from 'numbro'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -186,6 +187,8 @@ const GridContainer = styled.div`
 `
 
 const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => {
+  const isMobile = useIsMobile()
+
   const currency0 = new Token(
     SupportedChainId.TESTNET,
     poolData.token0.address,
@@ -213,9 +216,9 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
             </GreyBadge>
           </RowFixed>
         </Label>
-        <Label end={1}>{formatDollarAmount(poolData.tvlUSD)}</Label>
+        {!isMobile && <Label end={1}>{formatDollarAmount(poolData.tvlUSD)}</Label>}
         <Label end={1}>{formatDollarAmount(poolData.volumeUSD)}</Label>
-        <Label end={1}>{formatDollarAmount(poolData.volumeUSDWeek)}</Label>
+        {!isMobile && <Label end={1}>{formatDollarAmount(poolData.volumeUSDWeek)}</Label>}
       </ResponsiveGrid>
     </LinkWrapper>
   )
@@ -227,6 +230,7 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
   // for sorting
   const [sortField, setSortField] = useState(SORT_FIELD.tvlUSD)
   const [sortDirection, setSortDirection] = useState<boolean>(true)
+  const isMobile = useIsMobile()
 
   // pagination
   const [page, setPage] = useState(1)
@@ -284,19 +288,23 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
               <ClickableText color={darkTheme.textQuaternary} onClick={() => handleSort(SORT_FIELD.feeTier)}>
                 Pool {arrow(SORT_FIELD.feeTier)}
               </ClickableText>
-              <ClickableText color={darkTheme.textQuaternary} end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
-                TVL {arrow(SORT_FIELD.tvlUSD)}
-              </ClickableText>
+              {!isMobile && (
+                <ClickableText color={darkTheme.textQuaternary} end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
+                  TVL {arrow(SORT_FIELD.tvlUSD)}
+                </ClickableText>
+              )}
               <ClickableText color={darkTheme.textQuaternary} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSD)}>
                 Volume 24H {arrow(SORT_FIELD.volumeUSD)}
               </ClickableText>
-              <ClickableText
-                color={darkTheme.textQuaternary}
-                end={1}
-                onClick={() => handleSort(SORT_FIELD.volumeUSDWeek)}
-              >
-                Volume 7D {arrow(SORT_FIELD.volumeUSDWeek)}
-              </ClickableText>
+              {!isMobile && (
+                <ClickableText
+                  color={darkTheme.textQuaternary}
+                  end={1}
+                  onClick={() => handleSort(SORT_FIELD.volumeUSDWeek)}
+                >
+                  Volume 7D {arrow(SORT_FIELD.volumeUSDWeek)}
+                </ClickableText>
+              )}
             </ResponsiveGrid>
             <Break />
             {sortedPools.map((poolData, i) => {
