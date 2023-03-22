@@ -641,7 +641,7 @@ export default function Swap() {
                 <RowFixed>
                   {operatedPools && (
                     <StyledTokenName className="pool-name-container" active={true}>
-                      {smartPoolName}
+                      {smartPoolName ?? <Trans>Create your pool first</Trans>}
                     </StyledTokenName>
                   )}
                 </RowFixed>
@@ -664,7 +664,7 @@ export default function Swap() {
               fiatValueInput={fiatValueInput}
               fiatValueOutput={fiatValueOutput}
             />
-            {operatedPools && (
+            {operatedPools && smartPoolName && (
               <SmartPoolSearchModal
                 isOpen={modalOpen}
                 onDismiss={handleDismissSearch}
