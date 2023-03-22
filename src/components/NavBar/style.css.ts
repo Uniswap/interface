@@ -6,7 +6,8 @@ import { sprinkles, vars } from '../../nft/css/sprinkles.css'
 export const logoContainer = style([
   sprinkles({
     display: 'flex',
-    marginRight: { sm: '12', xxl: '20' },
+    marginRight: '12',
+    alignItems: 'center',
     cursor: 'pointer',
   }),
 ])
@@ -40,7 +41,7 @@ export const searchContainer = style([
     flex: '1',
     flexShrink: '1',
     justifyContent: { lg: 'flex-end', xl: 'center' },
-    display: { sm: 'none', xl: 'flex' },
+    display: { sm: 'none', navSearchInputVisible: 'flex' },
     alignSelf: 'center',
     height: '48',
     alignItems: 'flex-start',
@@ -59,13 +60,16 @@ const baseMenuItem = style([
   subhead,
   sprinkles({
     paddingY: '8',
-    paddingX: '16',
+    paddingX: '14',
     marginY: '4',
     borderRadius: '12',
     transition: '250',
     height: 'min',
     width: 'full',
     textAlign: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4',
   }),
   {
     lineHeight: '24px',

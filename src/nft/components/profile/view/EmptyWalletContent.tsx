@@ -1,27 +1,35 @@
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
-import { EmptyNFTWalletIcon } from 'nft/components/icons'
 import { headlineMedium } from 'nft/css/common.css'
+import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { shortenAddress } from 'utils'
+import { ThemedText } from 'theme'
+
+import { EmptyActivityIcon, EmptyNftsIcon, EmptyTokensIcon } from './icons'
 
 const EmptyWalletContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 190px 0px;
   flex-wrap: wrap;
+  height: 100%;
+  width: 100%;
 `
 
-const EmptyWalletText = styled.div`
+const EmptyWalletText = styled(ThemedText.SubHeader)`
   white-space: normal;
   margin-top: 12px;
   text-align: center;
 `
 
-const ExploreNFTsButton = styled.button`
+const EmptyWalletSubtitle = styled(ThemedText.BodySmall)`
+  white-space: normal;
+  text-align: center;
+  margin-top: 8px;
+`
+
+const ActionButton = styled.button`
   background-color: ${({ theme }) => theme.accentAction};
   padding: 10px 24px;
   color: ${({ theme }) => theme.white};
@@ -37,18 +45,78 @@ const ExploreNFTsButton = styled.button`
   line-height: 24px;
 `
 
-export const EmptyWalletContent = () => {
-  const { account, ENSName } = useWeb3React()
+type EmptyWalletContent = {
+  title: React.ReactNode
+  subtitle: React.ReactNode
+  actionText?: React.ReactNode
+  urlPath?: string
+  icon: React.ReactNode
+}
+type EmptyWalletContentType = 'nft' | 'token' | 'activity' | 'pool'
+const EMPTY_WALLET_CONTENT: { [key in EmptyWalletContentType]: EmptyWalletContent } = {
+  nft: {
+    title: <Trans>No NFTs yet</Trans>,
+    subtitle: <Trans>Buy or transfer NFTs to this wallet to get started.</Trans>,
+    actionText: <Trans>Explore NFTs</Trans>,
+    urlPath: '/nfts',
+    icon: <EmptyNftsIcon />,
+  },
+  token: {
+    title: <Trans>No tokens yet</Trans>,
+    subtitle: <Trans>Buy or transfer tokens to this wallet to get started.</Trans>,
+    actionText: <Trans>Explore tokens</Trans>,
+    urlPath: '/tokens',
+    icon: <EmptyTokensIcon />,
+  },
+  activity: {
+    title: <Trans>No activity yet</Trans>,
+    subtitle: <Trans>Your onchain transactions and crypto purchases will appear here.</Trans>,
+    icon: <EmptyActivityIcon />,
+  },
+  pool: {
+    title: <Trans>No positions yet</Trans>,
+    subtitle: <Trans>Open a new position or create a pool to get started.</Trans>,
+    actionText: <Trans>+ New position</Trans>,
+    urlPath: '/pool',
+    icon: <EmptyTokensIcon />,
+  },
+}
+
+interface EmptyWalletContentProps {
+  type?: EmptyWalletContentType
+  onNavigateClick?: () => void
+}
+
+const EmptyWalletContent = ({ type = 'nft', onNavigateClick }: EmptyWalletContentProps) => {
   const navigate = useNavigate()
+
+  const content = EMPTY_WALLET_CONTENT[type]
+
+  const actionButtonClick = useCallback(() => {
+    if (content.urlPath) {
+      onNavigateClick?.()
+      navigate(content.urlPath)
+    }
+  }, [content.urlPath, navigate, onNavigateClick])
+
+  return (
+    <>
+      {content.icon}
+      <EmptyWalletText className={headlineMedium}>{content.title}</EmptyWalletText>
+      <EmptyWalletSubtitle color="textSecondary">{content.subtitle}</EmptyWalletSubtitle>
+      {content.actionText && (
+        <ActionButton data-testid="nft-explore-nfts-button" onClick={actionButtonClick}>
+          {content.actionText}
+        </ActionButton>
+      )}
+    </>
+  )
+}
+
+export const EmptyWalletModule = (props?: EmptyWalletContentProps) => {
   return (
     <EmptyWalletContainer>
-      <EmptyNFTWalletIcon />
-      <EmptyWalletText className={headlineMedium}>
-        <Trans>No NFTs in</Trans>&nbsp;{ENSName || shortenAddress(account ?? '')}
-      </EmptyWalletText>
-      <ExploreNFTsButton data-testid="nft-explore-nfts-button" onClick={() => navigate('/nfts')}>
-        <Trans>Explore NFTs</Trans>
-      </ExploreNFTsButton>
+      <EmptyWalletContent {...props} />
     </EmptyWalletContainer>
   )
 }

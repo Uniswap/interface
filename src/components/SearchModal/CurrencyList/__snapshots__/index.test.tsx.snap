@@ -2,7 +2,43 @@
 
 exports[`renders currency rows correctly when currencies list is non-empty 1`] = `
 <DocumentFragment>
-  .c10 {
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c11 {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.c10 {
   color: #98A1C0;
 }
 
@@ -43,42 +79,6 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
   grid-auto-rows: auto;
 }
 
-.c0 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c1 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c2 {
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-
-.c11 {
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-}
-
 .c3 {
   padding: 4px 20px;
   height: 56px;
@@ -90,7 +90,7 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
 }
 
 .c3:hover {
-  background-color: #B8C0DC14;
+  background-color: #98A1C014;
 }
 
 .c6 {

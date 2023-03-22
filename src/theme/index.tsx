@@ -1,8 +1,8 @@
 import { rootCssString } from 'nft/css/cssStringFromTheme'
 import React, { useMemo } from 'react'
 import { createGlobalStyle, css, ThemeProvider as StyledComponentsThemeProvider } from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
-import { useIsDarkMode } from '../state/user/hooks'
 import { darkTheme, lightTheme } from './colors'
 import { darkDeprecatedTheme, lightDeprecatedTheme } from './deprecatedColors'
 
@@ -33,6 +33,7 @@ export const BREAKPOINTS = {
   sm: 640,
   md: 768,
   lg: 1024,
+  navSearchInputVisible: 1100,
   xl: 1280,
   xxl: 1536,
   xxxl: 1920,

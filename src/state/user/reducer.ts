@@ -16,9 +16,6 @@ export interface UserState {
   // the timestamp of the last updateVersion action
   lastUpdateVersionTimestamp?: number
 
-  matchesDarkMode: boolean // whether the dark mode media query matches
-
-  userDarkMode: boolean | null // the user's choice for dark mode or light mode
   userLocale: SupportedLocale | null
 
   userExpertMode: boolean
@@ -50,7 +47,7 @@ export interface UserState {
 
   timestamp: number
   URLWarningVisible: boolean
-
+  hideUniswapWalletBanner: boolean
   // undefined means has not gone through A/B split yet
   showSurveyPopup: boolean | undefined
 }
@@ -62,8 +59,6 @@ function pairKey(token0Address: string, token1Address: string) {
 export const initialState: UserState = {
   taxServiceDismissals: 0,
   selectedWallet: undefined,
-  matchesDarkMode: false,
-  userDarkMode: null,
   userExpertMode: false,
   userLocale: null,
   userClientSideRouter: false,
@@ -75,6 +70,7 @@ export const initialState: UserState = {
   pairs: {},
   timestamp: currentTimestamp(),
   URLWarningVisible: true,
+  hideUniswapWalletBanner: false,
   showSurveyPopup: undefined,
 }
 
@@ -87,14 +83,6 @@ const userSlice = createSlice({
     },
     updateSelectedWallet(state, { payload: { wallet } }) {
       state.selectedWallet = wallet
-    },
-    updateUserDarkMode(state, action) {
-      state.userDarkMode = action.payload.userDarkMode
-      state.timestamp = currentTimestamp()
-    },
-    updateMatchesDarkMode(state, action) {
-      state.matchesDarkMode = action.payload.matchesDarkMode
-      state.timestamp = currentTimestamp()
     },
     updateUserExpertMode(state, action) {
       state.userExpertMode = action.payload.userExpertMode
@@ -117,6 +105,9 @@ const userSlice = createSlice({
     },
     updateHideClosedPositions(state, action) {
       state.userHideClosedPositions = action.payload.userHideClosedPositions
+    },
+    updateHideUniswapWalletBanner(state, action) {
+      state.hideUniswapWalletBanner = action.payload.hideUniswapWalletBanner
     },
     addSerializedToken(state, { payload: { serializedToken } }) {
       if (!state.tokens) {
@@ -181,12 +172,11 @@ export const {
   updateTaxServiceAcknowledgments,
   updateSelectedWallet,
   updateHideClosedPositions,
-  updateMatchesDarkMode,
   updateUserClientSideRouter,
-  updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
   updateUserLocale,
   updateUserSlippageTolerance,
+  updateHideUniswapWalletBanner,
 } = userSlice.actions
 export default userSlice.reducer

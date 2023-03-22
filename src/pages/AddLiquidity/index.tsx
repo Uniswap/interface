@@ -8,6 +8,7 @@ import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
+import { useToggleWalletDrawer } from 'components/WalletDropdown'
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -48,7 +49,6 @@ import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from '../../hooks/useV3Positions'
-import { useToggleWalletModal } from '../../state/application/hooks'
 import { Bound, Field } from '../../state/mint/v3/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { TransactionType } from '../../state/transactions/types'
@@ -88,7 +88,7 @@ export default function AddLiquidity() {
   const { account, chainId, provider } = useWeb3React()
   const theme = useTheme()
 
-  const toggleWalletModal = useToggleWalletModal() // toggle wallet when disconnected
+  const toggleWalletDrawer = useToggleWalletDrawer() // toggle wallet when disconnected
   const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
@@ -472,7 +472,7 @@ export default function AddLiquidity() {
         properties={{ received_swap_quote: false }}
         element={InterfaceElementName.CONNECT_WALLET_BUTTON}
       >
-        <ButtonLight onClick={toggleWalletModal} $borderRadius="12px" padding="12px">
+        <ButtonLight onClick={toggleWalletDrawer} $borderRadius="12px" padding="12px">
           <Trans>Connect Wallet</Trans>
         </ButtonLight>
       </TraceEvent>

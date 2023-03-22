@@ -9,9 +9,16 @@ interface NavIconProps {
   isActive?: boolean
   label?: string
   onClick: () => void
+  activeBackground?: boolean
 }
 
-export const NavIcon = ({ children, isActive, label = t`Navigation button`, onClick }: NavIconProps) => {
+export const NavIcon = ({
+  children,
+  isActive,
+  label = t`Navigation button`,
+  onClick,
+  activeBackground,
+}: NavIconProps) => {
   return (
     <Box
       as="button"
@@ -21,6 +28,7 @@ export const NavIcon = ({ children, isActive, label = t`Navigation button`, onCl
       height="40"
       width="40"
       aria-label={label}
+      backgroundColor={activeBackground ? 'accentActiveSoft' : 'transparent'}
     >
       {children}
     </Box>

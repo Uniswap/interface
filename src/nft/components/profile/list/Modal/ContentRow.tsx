@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
-import Loader from 'components/Loader'
+import Loader from 'components/Icons/LoadingSpinner'
 import Row from 'components/Row'
 import { VerifiedIcon } from 'nft/components/icons'
 import { AssetRow, CollectionRow, ListingStatus } from 'nft/types'

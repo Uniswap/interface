@@ -1,18 +1,18 @@
 import { getDeviceId, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
 import { CustomUserProperties, getBrowser, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import Loader from 'components/Loader'
-import { MenuDropdown } from 'components/NavBar/MenuDropdown'
+import Loader from 'components/Icons/LoadingSpinner'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
+import { useMGTMMicrositeEnabled } from 'featureFlags/flags/mgtm'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { Box } from 'nft/components/Box'
+import { useBag } from 'nft/hooks/useBag'
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import { useIsDarkMode } from 'state/user/hooks'
 import { StatsigProvider, StatsigUser } from 'statsig-react'
 import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import { STATSIG_DUMMY_KEY } from 'tracing'
@@ -46,6 +46,7 @@ import Tokens from './Tokens'
 
 const TokenDetails = lazy(() => import('./TokenDetails'))
 const Vote = lazy(() => import('./Vote'))
+const Wallet = lazy(() => import('./Wallet'))
 const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile/profile'))
@@ -178,7 +179,10 @@ export default function App() {
     return () => window.removeEventListener('scroll', scrollListener)
   }, [])
 
-  const isHeaderTransparent = !scrolledState
+  const isBagExpanded = useBag((state) => state.bagExpanded)
+  const isOnWalletPage = useLocation().pathname === '/wallet'
+  const micrositeEnabled = useMGTMMicrositeEnabled()
+  const isHeaderTransparent = (!scrolledState && !isBagExpanded) || isOnWalletPage
 
   const { account } = useWeb3React()
   const statsigUser: StatsigUser = useMemo(
@@ -205,7 +209,7 @@ export default function App() {
           }}
         >
           <HeaderWrapper transparent={isHeaderTransparent}>
-            <NavBar />
+            <NavBar blur={isHeaderTransparent} />
           </HeaderWrapper>
           <BodyWrapper>
             <Popups />
@@ -229,7 +233,7 @@ export default function App() {
                     }
                   />
                   <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
-
+                  {micrositeEnabled && <Route path="wallet" element={<Wallet />} />}
                   <Route path="send" element={<RedirectPathToSwapOnly />} />
                   <Route path="swap" element={<Swap />} />
 
@@ -318,9 +322,6 @@ export default function App() {
           </BodyWrapper>
           <MobileBottomBar>
             <PageTabs />
-            <Box marginY="4">
-              <MenuDropdown />
-            </Box>
           </MobileBottomBar>
         </StatsigProvider>
       </Trace>

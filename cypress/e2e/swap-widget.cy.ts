@@ -17,7 +17,7 @@ describe('swap widget integration tests', () => {
     // open token selector...
     cy.contains('Select token').click()
     // select token...
-    cy.contains(outputText).click()
+    cy.contains(outputText).click({ force: true })
 
     cy.get('body')
       .then(($body) => {
