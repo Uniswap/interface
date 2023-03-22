@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-03-14 20:05\n"
+"PO-Revision-Date: 2023-03-21 23:04\n"
 "Last-Translator: \n"
 "Language: fr_FR\n"
 "Language-Team: French\n"
@@ -619,10 +619,6 @@ msgstr "Créer une Proposition"
 #: src/pages/Pool/v2.tsx
 msgid "Create a pair"
 msgstr "Créer une paire"
-
-#: src/pages/Pool/index.tsx
-msgid "Create a pool"
-msgstr "Créer un pool"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
@@ -1419,7 +1415,6 @@ msgid "Please type the word \"{confirmWord}\" to enable expert mode."
 msgstr "Veuillez taper le mot \"{confirmWord}\" pour activer le mode expert."
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
-#: src/components/NavBar/index.tsx
 msgid "Pool"
 msgstr "Pool"
 
@@ -1443,6 +1438,7 @@ msgstr "Jetons de pool dans le pool de récompenses :"
 msgid "Pooled {0}:"
 msgstr "Récupéré {0} :"
 
+#: src/components/NavBar/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Pools"
@@ -1683,6 +1679,10 @@ msgstr "Retour à mes NFTs"
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Same Price"
 msgstr "Même prix"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Save on Tax Services"
+msgstr ""
 
 #: src/components/TaxServiceModal/TaxServiceBanner.tsx
 #: src/components/TaxServiceModal/index.tsx
@@ -2005,10 +2005,6 @@ msgstr "Le prix de ce pool est dans votre fourchette sélectionnée. Votre posit
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Le ratio de jetons que vous ajoutez fixera le prix de ce pool."
 
-#: src/utils/swapErrorToUserReadableMessage.tsx
-msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
-msgstr "La transaction n'a pas pu être envoyée car la date limite est passée. Veuillez vérifier que la date limite de votre transaction n'est pas trop basse."
-
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "There is no liquidity data."
 msgstr "Il n'y a pas de données de liquidité."
@@ -2048,6 +2044,10 @@ msgstr "Ce jeton n'existe pas sur {chainName}"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Cet outil va migrer en toute sécurité vos liquidités {0} vers V3. Le processus est complètement sans confiance grâce à la"
+
+#: src/utils/swapErrorToUserReadableMessage.tsx
+msgid "This transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
+msgstr "Cette transaction n'a pas pu être envoyée car la date limite est passée. Veuillez vérifier que la date limite de votre transaction n'est pas trop basse."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -2133,7 +2133,6 @@ msgid "Transaction pending"
 msgstr "Transaction en attente"
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
-#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Transaction rejected"
 msgstr "Transaction rejetée"
 
@@ -2192,6 +2191,10 @@ msgstr ""
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Uniswap Labs' Terms of Service"
+msgstr ""
+
+#: src/pages/Pool/v2.tsx
+msgid "Uniswap V2 is not available on this network."
 msgstr ""
 
 #: src/components/SwitchLocaleLink/index.tsx
@@ -2262,10 +2265,6 @@ msgstr "Mettre à jour la délégation"
 msgid "Use the Uniswap Labs API to get faster quotes."
 msgstr ""
 
-#: src/pages/Pool/v2.tsx
-msgid "V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum."
-msgstr ""
-
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
 msgstr "liquidités V2"
@@ -2287,7 +2286,6 @@ msgstr ""
 msgid "View more analytics"
 msgstr ""
 
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/nft/components/collection/TransactionCompleteModal.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
@@ -2297,6 +2295,10 @@ msgstr "Voir sur Etherscan"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "Voir sur Explorer"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on {0}"
+msgstr ""
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -2535,6 +2537,9 @@ msgid "Your positions"
 msgstr "Vos positions"
 
 #: src/hooks/useUniversalRouter.ts
+msgid "Your swap is expected to fail."
+msgstr ""
+
 #: src/hooks/useUniversalRouter.ts
 msgid "Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds."
 msgstr "Votre échange a été modifié via votre portefeuille. Si c'était une erreur, veuillez annuler immédiatement ou vous risquez de perdre vos fonds."

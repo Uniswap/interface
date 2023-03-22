@@ -2,9 +2,9 @@ import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import React from 'react'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 
-const MissingImageLogo = styled.div<{ size?: string }>`
+export const MissingImageLogo = styled.div<{ size?: string }>`
   --size: ${({ size }) => size};
   border-radius: 100px;
   color: ${({ theme }) => theme.textPrimary};
@@ -17,12 +17,17 @@ const MissingImageLogo = styled.div<{ size?: string }>`
   width: ${({ size }) => size ?? '24px'};
 `
 
-const LogoImage = styled.img<{ size: string }>`
+export const LogoImage = styled.img<{ size: string; useBG?: boolean }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
-  background: radial-gradient(white 60%, #ffffff00 calc(70% + 1px));
   border-radius: 50%;
-  box-shadow: 0 0 1px white;
+
+  ${({ useBG }) =>
+    useBG &&
+    css`
+      background: radial-gradient(white 60%, #ffffff00 calc(70% + 1px));
+      box-shadow: 0 0 1px white;
+    `}
 `
 
 export type AssetLogoBaseProps = {
@@ -76,7 +81,7 @@ export default function AssetLogo({
   return (
     <LogoContainer style={style}>
       {src ? (
-        <LogoImage {...imageProps} src={src} onError={nextSrc} />
+        <LogoImage {...imageProps} src={src} onError={nextSrc} useBG={true} />
       ) : (
         <MissingImageLogo size={size}>
           {/* use only first 3 characters of Symbol for design reasons */}

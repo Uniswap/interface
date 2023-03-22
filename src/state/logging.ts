@@ -36,8 +36,6 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
         taxServiceDismissals: user.taxServiceDismissals,
         selectedWallet: user.selectedWallet,
         lastUpdateVersionTimestamp: user.lastUpdateVersionTimestamp,
-        matchesDarkMode: user.matchesDarkMode,
-        userDarkMode: user.userDarkMode,
         userLocale: user.userLocale,
         userExpertMode: user.userExpertMode,
         userClientSideRouter: user.userClientSideRouter,

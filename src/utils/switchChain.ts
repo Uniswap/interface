@@ -1,5 +1,5 @@
 import { Connector } from '@web3-react/types'
-import { networkConnection, walletConnectConnection } from 'connection'
+import { networkConnection, uniwalletConnectConnection, walletConnectConnection } from 'connection'
 import { getChainInfo } from 'constants/chainInfo'
 import { isSupportedChain, SupportedChainId } from 'constants/chains'
 import { FALLBACK_URLS, RPC_URLS } from 'constants/networks'
@@ -20,7 +20,11 @@ function getRpcUrl(chainId: SupportedChainId): string {
 export const switchChain = async (connector: Connector, chainId: SupportedChainId) => {
   if (!isSupportedChain(chainId)) {
     throw new Error(`Chain ${chainId} not supported for connector (${typeof connector})`)
-  } else if (connector === walletConnectConnection.connector || connector === networkConnection.connector) {
+  } else if (
+    connector === walletConnectConnection.connector ||
+    connector === uniwalletConnectConnection.connector ||
+    connector === networkConnection.connector
+  ) {
     await connector.activate(chainId)
   } else {
     const info = getChainInfo(chainId)

@@ -119,8 +119,11 @@ const commonTheme = {
   chain_42161_background: colors.blue900,
   chain_56_background: colors.networkBsc,
 
+  brandedGradient: 'linear-gradient(139.57deg, #FF79C9 4.35%, #FFB8E2 96.44%);',
+  promotionalGradient: 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%);',
+
   hoverState: opacify(24, colors.blue200),
-  hoverDefault: opacify(8, colors.gray200),
+  hoverDefault: opacify(8, colors.gray300),
 }
 
 export const darkTheme = {
@@ -134,7 +137,7 @@ export const darkTheme = {
   backgroundModule: colors.gray800,
   backgroundInteractive: colors.gray700,
   backgroundFloating: opacify(12, colors.black),
-  backgroundOutline: colors.gray750,
+  backgroundOutline: opacify(24, colors.gray300),
   backgroundScrim: opacify(72, colors.gray900),
   backgroundScrolledSurface: opacify(72, colors.gray900),
 

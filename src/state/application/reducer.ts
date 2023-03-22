@@ -13,6 +13,7 @@ export type PopupContent =
     }
 
 export enum ApplicationModal {
+  UNIWALLET_CONNECT,
   ADDRESS_CLAIM,
   BLOCKED_ACCOUNT,
   CLAIM_POPUP,
@@ -30,10 +31,10 @@ export enum ApplicationModal {
   SELF_CLAIM,
   SETTINGS,
   SHARE,
+  TAX_SERVICE,
   TIME_SELECTOR,
   VOTE,
   WALLET,
-  WALLET_DROPDOWN,
   UNISWAP_NFT_AIRDROP_CLAIM,
 }
 

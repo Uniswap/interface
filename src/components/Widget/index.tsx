@@ -16,6 +16,7 @@ import {
   SwapWidgetSkeleton,
 } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
+import { useToggleWalletDrawer } from 'components/WalletDropdown'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import {
   formatPercentInBasisPointsNumber,
@@ -26,12 +27,11 @@ import {
   getTokenAddress,
 } from 'lib/utils/analytics'
 import { useCallback, useState } from 'react'
-import { useToggleWalletModal } from 'state/application/hooks'
-import { useIsDarkMode } from 'state/user/hooks'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { computeRealizedPriceImpact } from 'utils/prices'
 import { switchChain } from 'utils/switchChain'
 
-import { DefaultTokens, useSyncWidgetInputs } from './inputs'
+import { DefaultTokens, SwapTokens, useSyncWidgetInputs } from './inputs'
 import { useSyncWidgetSettings } from './settings'
 import { DARK_THEME, LIGHT_THEME } from './theme'
 import { useSyncWidgetTransactions } from './transactions'
@@ -47,7 +47,7 @@ function useWidgetTheme() {
 interface WidgetProps {
   defaultTokens: DefaultTokens
   width?: number | string
-  onDefaultTokenChange?: (token: Currency) => void
+  onDefaultTokenChange?: (tokens: SwapTokens) => void
   onReviewSwapClick?: OnReviewSwapClick
 }
 
@@ -67,11 +67,11 @@ export default function Widget({
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
 
-  const toggleWalletModal = useToggleWalletModal()
+  const toggleWalletDrawer = useToggleWalletDrawer()
   const onConnectWalletClick = useCallback(() => {
-    toggleWalletModal()
+    toggleWalletDrawer()
     return false // prevents the in-widget wallet modal from opening
-  }, [toggleWalletModal])
+  }, [toggleWalletDrawer])
 
   const onSwitchChain = useCallback(
     // TODO(WEB-1757): Widget should not break if this rejects - upstream the catch to ignore it.

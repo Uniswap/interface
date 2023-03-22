@@ -1,11 +1,15 @@
-import bnbCircleLogoUrl from 'assets/images/bnbCircle.png'
+import bnbCircleLogoUrl from 'assets/images/bnbCircle.svg'
 import celoCircleLogoUrl from 'assets/images/celoCircle.png'
 import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import polygonCircleLogoUrl from 'assets/images/polygonCircle.png'
 import { default as arbitrumCircleLogoUrl, default as arbitrumLogoUrl } from 'assets/svg/arbitrum_logo.svg'
+import bnbSquareLogoUrl from 'assets/svg/bnb_square_logo.svg'
 import bnbLogo from 'assets/svg/bnb-logo.svg'
 import celoLogo from 'assets/svg/celo_logo.svg'
+import celoSquareLogoUrl from 'assets/svg/celo_square_logo.svg'
+import optimismSquareLogoUrl from 'assets/svg/optimism_square_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimistic_ethereum.svg'
+import polygonSquareLogoUrl from 'assets/svg/polygon_square_logo.svg'
 import polygonMaticLogo from 'assets/svg/polygon-matic-logo.svg'
 import { SupportedChainId } from 'constants/chains'
 import ms from 'ms.macro'
@@ -29,6 +33,7 @@ interface BaseChainInfo {
   readonly infoLink: string
   readonly logoUrl: string
   readonly circleLogoUrl?: string
+  readonly squareLogoUrl?: string
   readonly label: string
   readonly helpCenterUrl?: string
   readonly nativeCurrency: {
@@ -89,6 +94,7 @@ const CHAIN_INFO: ChainInfoMap = {
     logoUrl: optimismLogoUrl,
     // Optimism perfers same icon for both
     circleLogoUrl: optimismLogoUrl,
+    squareLogoUrl: optimismSquareLogoUrl,
     statusPage: 'https://optimism.io/status',
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
@@ -150,6 +156,7 @@ const CHAIN_INFO: ChainInfoMap = {
     label: 'Polygon',
     logoUrl: polygonMaticLogo,
     circleLogoUrl: polygonCircleLogoUrl,
+    squareLogoUrl: polygonSquareLogoUrl,
     nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
     color: darkTheme.chain_137,
     backgroundColor: darkTheme.chain_137_background,
@@ -175,6 +182,7 @@ const CHAIN_INFO: ChainInfoMap = {
     label: 'Celo',
     logoUrl: celoLogo,
     circleLogoUrl: celoCircleLogoUrl,
+    squareLogoUrl: celoSquareLogoUrl,
     nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
     defaultListUrl: CELO_LIST,
   },
@@ -200,6 +208,7 @@ const CHAIN_INFO: ChainInfoMap = {
     label: 'BNB Chain',
     logoUrl: bnbLogo,
     circleLogoUrl: bnbCircleLogoUrl,
+    squareLogoUrl: bnbSquareLogoUrl,
     nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
     defaultListUrl: PLASMA_BNB_LIST,
     color: darkTheme.chain_56,

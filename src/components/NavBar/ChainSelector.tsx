@@ -1,4 +1,8 @@
+import { t } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { ConnectionType } from 'connection'
+import { useGetConnection } from 'connection'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -7,15 +11,12 @@ import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Column } from 'nft/components/Flex'
-import { TokenWarningRedIcon } from 'nft/components/icons'
-import { subhead } from 'nft/css/common.css'
-import { themeVars, vars } from 'nft/css/sprinkles.css'
+import { vars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { useCallback, useRef, useState } from 'react'
-import { ChevronDown, ChevronUp } from 'react-feather'
+import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 
-import * as styles from './ChainSelector.css'
 import ChainSelectorRow from './ChainSelectorRow'
 import { NavDropdown } from './NavDropdown'
 
@@ -49,8 +50,13 @@ const ChainSelect = styled.button<{ isOpen: boolean }>`
   }
 `
 
+const Image = styled.img`
+  width: 20px;
+  height: 20px;
+`
+
 export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
-  const { chainId } = useWeb3React()
+  const { chainId, connector } = useWeb3React()
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const isMobile = useIsMobile()
 
@@ -77,6 +83,10 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
     [selectChain, setIsOpen]
   )
 
+  const getConnection = useGetConnection()
+  const connectionType = getConnection(connector).type
+  const isUniWallet = connectionType === ConnectionType.UNIWALLET
+
   if (!chainId) {
     return null
   }
@@ -88,6 +98,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
       <Column paddingX="8">
         {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) => (
           <ChainSelectorRow
+            disabled={isUniWallet && chainId === SupportedChainId.CELO}
             onSelectChain={onSelectChain}
             targetChain={chainId}
             key={chainId}
@@ -106,24 +117,16 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
 
   return (
     <Box position="relative" ref={ref}>
-      <ChainSelect data-testid="chain-selector" isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
-        {!isSupported ? (
-          <>
-            <TokenWarningRedIcon fill={themeVars.colors.textSecondary} width={24} height={24} />
-            <Box as="span" className={subhead} display={{ sm: 'none', xxl: 'flex' }} style={{ lineHeight: '20px' }}>
-              Unsupported
-            </Box>
-          </>
-        ) : (
-          <>
-            <img src={info.logoUrl} alt={info.label} className={styles.Image} />
-            <Box as="span" className={subhead} display={{ sm: 'none', xxl: 'flex' }} style={{ lineHeight: '20px' }}>
-              {info.label}
-            </Box>
-          </>
-        )}
-        {isOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
-      </ChainSelect>
+      <MouseoverTooltip text={t`Your wallet's current network is unsupported.`} disableHover={isSupported}>
+        <ChainSelect data-testid="chain-selector" isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
+          {!isSupported ? (
+            <AlertTriangle size={20} color={theme.textSecondary} />
+          ) : (
+            <Image src={info.logoUrl} alt={info.label} data-testid="chain-selector-logo" />
+          )}
+          {isOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
+        </ChainSelect>
+      </MouseoverTooltip>
       {isOpen && (isMobile ? <Portal>{dropdown}</Portal> : <>{dropdown}</>)}
     </Box>
   )
