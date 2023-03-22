@@ -1,14 +1,19 @@
+import { logger } from 'app/src/features/logger/logger'
+import { RootState } from 'app/src/state'
 import React, { lazy } from 'react'
 import { createRoot } from 'react-dom/client'
-import { Provider } from 'react-redux'
 import { Store } from 'webext-redux'
-import { RootState } from 'app/src/state'
 import { PortName } from './types'
-import { logger } from 'app/src/features/logger/logger'
 
 logger.debug('popup', 'init', 'popup: initial load')
 
 const App = lazy(() => import('./app/App'))
+
+const isWindow = window.location.hash === '#window'
+
+if (!isWindow) {
+  chrome.tabs.create({ url: 'index.html#window' })
+}
 
 chrome.runtime.connect({ name: PortName.Popup })
 chrome.runtime.onMessage.addListener((req) => {
@@ -34,9 +39,7 @@ function initPopup(): void {
     const root = createRoot(container!)
     root.render(
       <React.StrictMode>
-        <Provider store={store}>
-          <App />
-        </Provider>
+        <App store={store} />
       </React.StrictMode>
     )
   })

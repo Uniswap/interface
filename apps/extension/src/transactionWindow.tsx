@@ -8,8 +8,6 @@ const container = window.document.querySelector('#root')
 const root = createRoot(container!)
 root.render(
   <React.StrictMode>
-    <Provider>
-      <TransactionContent />
-    </Provider>
+    <TransactionContent />
   </React.StrictMode>
 )

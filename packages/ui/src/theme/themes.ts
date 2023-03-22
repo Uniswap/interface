@@ -26,20 +26,20 @@ const light = createTheme({
 type BaseTheme = typeof light
 
 const dark: BaseTheme = {
-  ...colorsDark,
   ...light,
-  //   background: '#000',
-  //   backgroundHover: tokens.color.gray2Dark,
-  //   backgroundPress: tokens.color.gray3Dark,
-  //   backgroundFocus: tokens.color.gray4Dark,
-  //   borderColor: tokens.color.gray3Dark,
-  //   borderColorHover: tokens.color.gray4Dark,
-  //   color: '#ddd',
-  //   colorHover: tokens.color.gray11Dark,
-  //   colorPress: tokens.color.gray10Dark,
-  //   colorFocus: tokens.color.gray6Dark,
-  //   shadowColor: tokens.color.grayA6,
-  //   shadowColorHover: tokens.color.grayA7,
+  ...colorsDark,
+  background: colorsDark.background0,
+  backgroundHover: colorsDark.background1,
+  backgroundPress: colorsDark.background1,
+  backgroundFocus: colorsDark.background1,
+  borderColor: colorsDark.none,
+  borderColorHover: colorsDark.none,
+  color: colorsDark.textPrimary,
+  colorHover: colorsDark.userThemeMagenta,
+  colorPress: colorsDark.userThemeMagenta,
+  colorFocus: colorsDark.userThemeMagenta,
+  shadowColor: colorsDark.none,
+  shadowColorHover: colorsDark.none,
 }
 
 // if you need to add non-token values, use createTheme

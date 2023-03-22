@@ -1,27 +1,28 @@
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const { ProgressPlugin, ProvidePlugin, DefinePlugin } = require("webpack");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
-const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const path = require("path");
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
-const fs = require("fs");
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const { ProgressPlugin, ProvidePlugin, DefinePlugin } = require('webpack')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const path = require('path')
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+const fs = require('fs')
 const { shouldExclude } = require('tamagui-loader')
 const DotenvPlugin = require('dotenv-webpack')
 
-const NODE_ENV = process.env.NODE_ENV || "development";
-const EXTENSION_NAME =
-  NODE_ENV === "development" ? "(DEV) Uniswap Wallet" : "Uniswap Wallet";
+const rootDir = path.join(__dirname, '..')
 
-const isDevelopment = NODE_ENV === "development";
-const appDirectory = path.resolve(__dirname);
+const NODE_ENV = process.env.NODE_ENV || 'development'
+const EXTENSION_NAME = NODE_ENV === 'development' ? '(DEV) Uniswap Wallet' : 'Uniswap Wallet'
+
+const isDevelopment = NODE_ENV === 'development'
+const appDirectory = path.resolve(__dirname)
 
 const tamaguiOptions = {
   config: './tamagui.config.ts',
   components: ['ui', 'tamagui'],
   importsWhitelist: [],
   logTimings: true,
-  disableExtraction: isDevelopment
+  disableExtraction: isDevelopment,
 }
 
 // This is needed for webpack to compile JavaScript.
@@ -35,35 +36,35 @@ const babelLoaderConfiguration = {
   include: [
     // path.resolve(appDirectory, "index.web.js"),
     // path.resolve(appDirectory, "src"),
-    path.resolve(appDirectory, "node_modules/react-native-uncompiled"),
+    path.resolve(appDirectory, 'node_modules/react-native-uncompiled'),
   ],
   use: {
-    loader: "babel-loader",
+    loader: 'babel-loader',
     options: {
       cacheDirectory: true,
       // The 'metro-react-native-babel-preset' preset is recommended to match React Native's packager
-      presets: ["module:metro-react-native-babel-preset"],
+      presets: ['module:metro-react-native-babel-preset'],
       // Re-write paths to import only the modules needed by the app
-      plugins: ["react-native-web"],
+      plugins: ['react-native-web'],
     },
   },
-};
+}
 
 const swcLoaderConfiguration = {
-  test: [".jsx", ".js", ".tsx", ".ts"].map((ext) => new RegExp(`${ext}$`)),
+  test: ['.jsx', '.js', '.tsx', '.ts'].map((ext) => new RegExp(`${ext}$`)),
   exclude: /node_modules/,
   use: {
-    loader: "swc-loader",
+    loader: 'swc-loader',
     options: {
       // parseMap: true, // required when using with babel-loader
       env: {
-        targets: require("./package.json").browserslist,
+        targets: require('./package.json').browserslist,
       },
       sourceMap: isDevelopment,
       jsc: {
-        target: "es2022",
+        target: 'es2022',
         parser: {
-          syntax: "typescript",
+          syntax: 'typescript',
           tsx: true,
           dynamicImport: true,
         },
@@ -76,28 +77,23 @@ const swcLoaderConfiguration = {
       },
     },
   },
-};
+}
+
+const imageLoaderConfiguration = {
+  test: /\.(ttf|png)$/,
+  loader: 'file-loader',
+  include: [path.resolve(rootDir, 'node_modules/@react-navigation/elements')],
+}
 
 const tamaguiLoaderConfiguration = {
-  loader: "tamagui-loader",
+  loader: 'tamagui-loader',
   options: {
-    config: "./tamagui.config.ts",
-    components: ["@uniswap/ui", "tamagui"],
+    config: './tamagui.config.ts',
+    components: ['@uniswap/ui', 'tamagui'],
   },
-};
+}
 
-const fileExtensions = [
-  "eot",
-  "gif",
-  "jpeg",
-  "jpg",
-  "otf",
-  "png",
-  "svg",
-  "ttf",
-  "woff",
-  "woff2",
-];
+const fileExtensions = ['eot', 'gif', 'jpeg', 'jpg', 'otf', 'png', 'svg', 'ttf', 'woff', 'woff2']
 
 const {
   dir,
@@ -105,23 +101,23 @@ const {
   ...extras
 } = isDevelopment
   ? {
-      dir: "dev",
+      dir: 'dev',
       devServer: {
         // watchFiles: ['src/**/*', 'webpack.config.js'],
-        host: "localhost",
+        host: 'localhost',
         port: 9997,
-        server: fs.existsSync("localhost.pem")
+        server: fs.existsSync('localhost.pem')
           ? {
-              type: "https",
+              type: 'https',
               options: {
-                key: "localhost-key.pem",
-                cert: "localhost.pem",
+                key: 'localhost-key.pem',
+                cert: 'localhost.pem',
               },
             }
           : {},
         compress: false,
         static: {
-          directory: path.join(__dirname, "../dev"),
+          directory: path.join(__dirname, '../dev'),
         },
         client: {
           // logging: "info",
@@ -136,36 +132,33 @@ const {
           writeToDisk: true,
         },
       },
-      devtool: "cheap-module-source-map",
-      plugins: [
-        new ForkTsCheckerWebpackPlugin(),
-        new ReactRefreshWebpackPlugin(),
-      ],
+      devtool: 'cheap-module-source-map',
+      plugins: [new ForkTsCheckerWebpackPlugin(), new ReactRefreshWebpackPlugin()],
     }
   : {
-      dir: "build",
+      dir: 'build',
       plugins: [new ForkTsCheckerWebpackPlugin()],
-    };
+    }
 
 const options = {
   mode: NODE_ENV,
   entry: {
-    background: "./src/background/index.ts",
+    background: './src/background/index.ts',
     // options: "./src/options/index.tsx",
     // permissions: "./src/permissions/index.tsx",
-    popup: "./src/popup.tsx",
-    transactionWindow: "./src/transactionWindow.tsx",
-    providerScript: "./src/contentScript/provider.ts",
-    injected: "./src/contentScript/injected.js"
+    popup: './src/popup.tsx',
+    transactionWindow: './src/transactionWindow.tsx',
+    providerScript: './src/contentScript/provider.ts',
+    injected: './src/contentScript/injected.js',
     // contentScript: "./src/contentScript/index.ts",
     // injected: "../provider-injection/dist/browser/index.js",
   },
   output: {
-    filename: "[name].js",
-    chunkFilename: "[name].js",
+    filename: '[name].js',
+    chunkFilename: '[name].js',
     path: path.resolve(__dirname, dir),
     clean: true,
-    publicPath: "",
+    publicPath: '',
   },
   module: {
     rules: [
@@ -179,28 +172,29 @@ const options = {
         test: /\.css$/,
         use: [
           {
-            loader: "style-loader",
+            loader: 'style-loader',
           },
           {
-            loader: "css-loader",
+            loader: 'css-loader',
           },
         ],
       },
       {
-        type: "javascript/auto",
+        type: 'javascript/auto',
         test: /\.json$/,
-        use: ["file-loader"],
+        use: ['file-loader'],
         include: /tokenlist/,
       },
       {
-        test: new RegExp(".(" + fileExtensions.join("|") + ")$"),
-        type: "asset/resource",
-        exclude: /node_modules/,
-        loader: "file-loader",
+        test: new RegExp('.(' + fileExtensions.join('|') + ')$'),
+        type: 'asset/resource',
+        // exclude: /node_modules/,
+        loader: 'file-loader',
         options: {
-          name: "assets/[name].[ext]",
+          name: 'assets/[name].[ext]',
         },
       },
+      imageLoaderConfiguration,
       babelLoaderConfiguration,
       swcLoaderConfiguration,
       // tamaguiLoaderConfiguration, // NOTE(peter) turned off for now bc it's not working with our webpack conifg. it's just an optimization compiler that we can configure later once i figure it out
@@ -211,47 +205,48 @@ const options = {
       // // NOTE(peter): for whatever reason react is being installed in multiple places and breaking tamagui
       // // this was the best i could do to ensure it pulls the correct version until i figure out why. this is what's supposed to happen anyway
       // // if you find yourself here, run `ls node_modules/react` and if the folder exists, this stays, if it doesn't, you can safely remove
-      react: path.resolve("../../node_modules/react"),
-      "react-dom": path.resolve("../../node_modules/react-dom"),
-      "react-native$": "react-native-web",
+      react: path.resolve('../../node_modules/react'),
+      'react-dom': path.resolve('../../node_modules/react-dom'),
+      'react-native$': 'react-native-web',
+      'react-native-vector-icons$': 'react-native-vector-icons/dist',
     },
     // Add support for web-based extensions so we can share code between mobile/extension
     extensions: [
-      ".web.js",
-      ".web.jsx",
-      ".web.ts",
-      ".web.tsx",
+      '.web.js',
+      '.web.jsx',
+      '.web.ts',
+      '.web.tsx',
       ...fileExtensions.map((e) => `.${e}`),
-      ...[".js", ".jsx", ".ts", ".tsx", ".css"],
+      ...['.js', '.jsx', '.ts', '.tsx', '.css'],
     ],
     fallback: {
-      buffer: require.resolve("buffer/"), // trailing slash is intentional
-      crypto: require.resolve("crypto-browserify"),
-      stream: require.resolve("stream-browserify"),
+      buffer: require.resolve('buffer/'), // trailing slash is intentional
+      crypto: require.resolve('crypto-browserify'),
+      stream: require.resolve('stream-browserify'),
     },
   },
   plugins: [
     new DotenvPlugin(),
     new DefinePlugin({
-      'process.env.__DEV__': NODE_ENV === "development" ? "true" : "false",
+      'process.env.__DEV__': NODE_ENV === 'development' ? 'true' : 'false',
       'process.env.IS_STATIC': '""',
       'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
-      'process.env.TAMAGUI_TARGET': JSON.stringify("web"),
-      'process.env.DEBUG': JSON.stringify(process.env.DEBUG || "0")
+      'process.env.TAMAGUI_TARGET': JSON.stringify('web'),
+      'process.env.DEBUG': JSON.stringify(process.env.DEBUG || '0'),
     }),
     new CleanWebpackPlugin(),
     ...plugins,
     new MiniCssExtractPlugin(),
     new ProgressPlugin(),
     new ProvidePlugin({
-      process: "process/browser",
-      React: "react",
-      Buffer: ["buffer", "Buffer"],
+      process: 'process/browser',
+      React: 'react',
+      Buffer: ['buffer', 'Buffer'],
     }),
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "src/manifest.json",
+          from: 'src/manifest.json',
           force: true,
           transform: function (content, path) {
             return Buffer.from(
@@ -265,17 +260,17 @@ const options = {
                 null,
                 2
               )
-            );
+            )
           },
         },
         {
-          from: "src/assets/*.{html,png,svg}",
-          to: "[name][ext]",
+          from: 'src/assets/*.{html,png,svg}',
+          to: '[name][ext]',
           force: true,
         },
         {
-          from: "src/*.{html,png,svg}",
-          to: "[name][ext]",
+          from: 'src/*.{html,png,svg}',
+          to: '[name][ext]',
           force: true,
         },
         // {
@@ -298,6 +293,6 @@ const options = {
     }),
   ],
   ...extras,
-};
+}
 
-module.exports = options;
+module.exports = options

@@ -17,7 +17,7 @@ const infuraProvider = new providers.InfuraProvider(
 // TODO - make the provider initalization a singleton instance
 let signer: ethers.Signer | null = null
 signer = new ethers.Wallet(
-  Wallet.fromMnemonic(process.env.TEST_SEED_PHRASE || '').privateKey,
+  Wallet.fromMnemonic(process.env.TEST_SEED_PHRASE || 'primary claw weird neck fly keep equal garden float below bridge market').privateKey,
   infuraProvider
 )
 
