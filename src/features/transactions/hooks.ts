@@ -27,7 +27,7 @@ import { theme } from 'src/styles/theme'
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function usePendingTransactions(
   address: Address | null,
-  ignoreTransactionTypes = [TransactionType.FiatPurchase]
+  ignoreTransactionTypes: TransactionType[] = []
 ) {
   const transactions = useSelectAddressTransactions(address)
   return useMemo(() => {

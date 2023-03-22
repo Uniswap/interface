@@ -161,6 +161,8 @@ export function* watchFiatOnRampTransaction(transaction: TransactionDetails): Ge
         updatedTransaction.status === TransactionStatus.Success ||
         updatedTransaction.status === TransactionStatus.Unknown
       ) {
+        // Flip status to true so we can render Notification badge on home
+        yield* put(setNotificationStatus({ address: transaction.from, hasNotifications: true }))
         // can stop polling once transaction is final
         break
       }
