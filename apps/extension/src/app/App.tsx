@@ -20,27 +20,38 @@ function App(): JSX.Element {
 
   return (
     <TamaguiProvider config={config} defaultTheme="light">
-      <Stack margin='$spacing8' space='$spacing16'>
-        <Stack backgroundColor={'$background3'} space='$spacing8'>
+      <Stack margin="$spacing8" space="$spacing16">
+        <Stack backgroundColor="$background3" space="$spacing8">
           <Text>Imported accounts</Text>{' '}
-          {Object.values(accounts).map((a) => <Text>{a.address}</Text>)}
+          {Object.values(accounts).map((a) => (
+            <Text>{a.address}</Text>
+          ))}
         </Stack>
-        <form onSubmit={(e) => {
-          e.preventDefault()
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
 
-          // TODO: use Tamagui
-          const form = e.target as HTMLFormElement
-          const formData = new FormData(form)
+            // TODO: use Tamagui
+            const form = e.target as HTMLFormElement
+            const formData = new FormData(form)
 
-          dispatch(importAccountActions.trigger({
-            type: ImportAccountType.Mnemonic,
-            validatedMnemonic: formData.get('mnemonic')
-          }))
-        }}>
+            dispatch(
+              importAccountActions.trigger({
+                type: ImportAccountType.Mnemonic,
+                validatedMnemonic: formData.get('mnemonic'),
+              })
+            )
+          }}>
           {/* dummy seed phrase as default value */}
-          <label>Seed phrase: <input name="mnemonic" placeholder='Enter seed phrase to import' defaultValue="stereo gain space check elbow say usual help cinnamon inquiry snap expose" />
+          <label>
+            Seed phrase:{' '}
+            <input
+              defaultValue="stereo gain space check elbow say usual help cinnamon inquiry snap expose"
+              name="mnemonic"
+              placeholder="Enter seed phrase to import"
+            />
           </label>
-          <button type='submit'>Import</button>
+          <button type="submit">Import</button>
         </form>
       </Stack>
     </TamaguiProvider>

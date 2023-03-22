@@ -6,29 +6,29 @@ export enum PortName {
 /** Message Passing */
 
 export type Message = {
-    type: MessageType;
-    data: any;
-};
+  type: MessageType
+  data: any
+}
 
 export enum MessageType {
-  GetLocalStorage = "getLocalStorage",
-  SetLocalStorage = "setLocalStorage",
-  SendTransaction = "sendTransaction",
-  SendTransactionResponse = "sendTransactionResponse",
-  UndoTransaction = "undoTransaction",
-  ScriptInjectionAlert = "scriptInjectionAlert",
-  UpdateIcon = "updateIcon",
-  UpdateNotifications = "UpdateNotifications",
-  ViewNotificationData = "ViewNotificationData",
-  SignMessage = "SignMessage",
-  SignTransaction = "SignTransaction",
-  SignedTransaction = "SignedTransaction",
-  SignMessageResponse = "SignMessageResponse",
-  ValidatePassword = "ValidatePassword",
-  SignTransactionResponse = "SignTransactionResponse",
-  ConfirmSendTransaction = "ConfirmSendTransaction",
-  CancelSendTransaction = "CancelSendTransaction",
-  TransactionDetails = "TransactionDetails"
+  GetLocalStorage = 'getLocalStorage',
+  SetLocalStorage = 'setLocalStorage',
+  SendTransaction = 'sendTransaction',
+  SendTransactionResponse = 'sendTransactionResponse',
+  UndoTransaction = 'undoTransaction',
+  ScriptInjectionAlert = 'scriptInjectionAlert',
+  UpdateIcon = 'updateIcon',
+  UpdateNotifications = 'UpdateNotifications',
+  ViewNotificationData = 'ViewNotificationData',
+  SignMessage = 'SignMessage',
+  SignTransaction = 'SignTransaction',
+  SignedTransaction = 'SignedTransaction',
+  SignMessageResponse = 'SignMessageResponse',
+  ValidatePassword = 'ValidatePassword',
+  SignTransactionResponse = 'SignTransactionResponse',
+  ConfirmSendTransaction = 'ConfirmSendTransaction',
+  CancelSendTransaction = 'CancelSendTransaction',
+  TransactionDetails = 'TransactionDetails',
 }
 
 /** Notifications */
@@ -76,9 +76,12 @@ export interface SwapCancelledNotification extends SwapNotification {
   type: NotificationType.swapCancelled
 }
 
-export type Notification = SwapCompleteNotification | SwapFailedNotification | SwapCancelledNotification | SwapSubmittingNotification | SwapInProgressNotification
-
-
+export type Notification =
+  | SwapCompleteNotification
+  | SwapFailedNotification
+  | SwapCancelledNotification
+  | SwapSubmittingNotification
+  | SwapInProgressNotification
 
 export enum TransactionType {
   'SwapApproval' = 'SwapApproval',
