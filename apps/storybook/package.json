@@ -45,7 +45,7 @@
     "build": "TAMAGUI_TARGET=web build-storybook -s public -o dist",
     "build-storybook": "TAMAGUI_TARGET=web build-storybook -s public -o dist",
     "chromatic": "chromatic --exit-zero-on-changes",
-    "format": "prettier --write \"**/*.{ts,tsx}\" --config ../../.prettierrc",
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
     "format:check": "prettier -c \"**/*.{ts,tsx}\"",
     "lint": "eslint . --ext ts,tsx",
     "lint:fix": "eslint . --ext ts,tsx --fix",

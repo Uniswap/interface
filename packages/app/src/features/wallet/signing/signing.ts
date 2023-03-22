@@ -1,12 +1,12 @@
 // If the message to be signed is a hex string, it must be converted to an array:
 
+import { NativeSigner } from 'app/src/features/wallet/signing/NativeSigner'
 import { ensureLeading0x } from 'app/src/utils/addresses'
 import { TypedDataDomain, TypedDataField, Wallet } from 'ethers'
 import { arrayify, isHexString } from 'ethers/lib/utils'
 import { logger } from '../../logger/logger'
 import { Account } from '../types'
 import { SignerManager } from './SignerManager'
-// import { NativeSigner } from './NativeSigner'
 
 type EthTypedMessage = {
   domain: TypedDataDomain
@@ -47,11 +47,10 @@ export async function signTypedData(
 
   // https://github.com/LedgerHQ/ledgerjs/issues/86
   // Ledger does not support signTypedData yet
-  // TODO: ...
-  // if (!(signer instanceof NativeSigner) && !(signer instanceof Wallet)) {
-  //   logger.error('signers', 'signTypedData', 'cannot sign typed data')
-  //   return ''
-  // }
+  if (!(signer instanceof NativeSigner) && !(signer instanceof Wallet)) {
+    logger.error('signers', 'signTypedData', 'cannot sign typed data')
+    return ''
+  }
 
   const signature = await signer._signTypedData(domain, types, value)
 

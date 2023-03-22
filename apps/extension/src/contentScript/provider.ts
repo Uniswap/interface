@@ -34,7 +34,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   )
 
   if (chromeMessageToWindowMessageTypes.includes(message.type)) {
-    console.log("response is")
+    console.log('response is')
     window.postMessage({ type: message.type, data: message.data }, '*')
   }
 })

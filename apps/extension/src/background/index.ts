@@ -4,8 +4,6 @@ import { decryptPassword } from './utils'
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { initStore } from './store'
 
-console.log('background: init')
-
 initStore()
 
 const infuraProvider = new providers.InfuraProvider(
@@ -13,7 +11,6 @@ const infuraProvider = new providers.InfuraProvider(
   'b14063d3418c40ec984f510cf64083b4'
 )
 // TODO - make the provider initalization a singleton instance
-
 let signer: ethers.Signer | null = null
 signer = new ethers.Wallet(
   Wallet.fromMnemonic(process.env.TEST_SEED_PHRASE || '').privateKey,

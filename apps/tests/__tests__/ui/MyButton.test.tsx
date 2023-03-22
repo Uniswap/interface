@@ -1,7 +1,7 @@
 import React from 'react'
 import { renderUi } from '../../src'
 
-import { Button } from 'ui/src/components/my-button/MyButton'
+import { Button } from 'ui/src/components/button/Button'
 
 describe('<MyButton />', () => {
   it('has 1 child', () => {

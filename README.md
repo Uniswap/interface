@@ -225,3 +225,4 @@ yarn add react-native-reanimated
 
 [ ] Lint all file extensions including json (`lint: eslint .`)
 [ ] Upgrade ethers 6.0
+[ ] Define standard for checksumming addresses

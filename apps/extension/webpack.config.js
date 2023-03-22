@@ -18,7 +18,7 @@ const appDirectory = path.resolve(__dirname);
 
 const tamaguiOptions = {
   config: './tamagui.config.ts',
-  components: ['@uniswap/ui', 'tamagui'],
+  components: ['ui', 'tamagui'],
   importsWhitelist: [],
   logTimings: true,
   disableExtraction: isDevelopment

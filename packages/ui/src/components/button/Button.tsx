@@ -31,7 +31,10 @@ export const ButtonText = styled(Text, {
 
 // TODO: use extractable and themable for compile time benefits
 // or migrate to tamaui
-export function Button({ children, ...props }: PropsWithChildren<StackProps>): JSX.Element {
+export function Button({
+  children,
+  ...props
+}: PropsWithChildren<StackProps>): JSX.Element {
   return (
     <ButtonFrame {...props}>
       <ButtonText>{children}</ButtonText>

@@ -20,16 +20,30 @@
     "preserveSymlinks": true,
     "preserveConstEnums": true,
     "removeComments": false,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "noUncheckedIndexedAccess": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2017", "dom"],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
     "baseUrl": "../../",
     "rootDir": "../../",
     "outDir": "../../dist/out-tsc",
-    "types": ["jest", "node"],
+    "types": [
+      "node"
+    ],
     "paths": {
-      "app/*": ["packages/app/*"],
-      "ui/*": ["packages/ui/*"]
+      "app/*": [
+        "packages/app/*"
+      ],
+      "ui/*": [
+        "packages/ui/*"
+      ]
     }
   }
 }

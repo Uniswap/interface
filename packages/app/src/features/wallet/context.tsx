@@ -16,15 +16,18 @@ import { ProviderManager } from '../providers/ProviderManager'
 import { SignerManager } from './signing/SignerManager'
 
 export interface WalletContextValue {
-  signers: SignerManager
-  providers: ProviderManager
+  // Manages contracts
   contracts: ContractManager
+  // Manages ethers.Providers
+  providers: ProviderManager
+  // Provides secure key management and signing capability
+  signers: SignerManager
 }
 
 export const walletContextValue: WalletContextValue = {
-  signers: new SignerManager(),
-  providers: new ProviderManager(),
   contracts: new ContractManager(),
+  providers: new ProviderManager(),
+  signers: new SignerManager(),
 }
 
 export const WalletContext = createContext<{

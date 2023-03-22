@@ -1,22 +1,25 @@
+import { IKeyring, Keyring } from 'app/src/features/wallet/Keyring/Keyring'
 import { Signer } from 'ethers'
 
 import { Account, AccountType } from '../types'
+import { NativeSigner } from './NativeSigner'
 
+/** Manages initialized ethers.Signers across the app */
 export class SignerManager {
-  private readonly _signers: Record<Address, Signer> = {}
+  private readonly signers: Record<Address, Signer> = {}
 
   async getSignerForAccount(account: Account): Promise<Signer | undefined> {
-    if (this._signers[account.address]) {
-      return this._signers[account.address]
+    if (this.signers[account.address]) {
+      return this.signers[account.address]
     }
 
     if (account.type === AccountType.SignerMnemonic) {
-      // const addresses = await getAddressesForStoredPrivateKeys()
-      // if (!addresses.includes(account.address)) {
-      //   throw Error('No private key found for address')
-      // }
-      // this._signers[account.address] = new NativeSigner(account.address)
-      return this._signers[account.address]
+      const addresses = await Keyring.getAddressesForStoredPrivateKeys()
+      if (!addresses.includes(account.address)) {
+        throw Error('No private key found for address')
+      }
+      this.signers[account.address] = new NativeSigner(account.address)
+      return this.signers[account.address]
     }
 
     throw Error('Signer type currently unsupported')

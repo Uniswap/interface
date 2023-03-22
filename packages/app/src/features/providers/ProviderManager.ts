@@ -1,4 +1,3 @@
-
 import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
 import { ChainId, CHAIN_INFO, L1ChainInfo, L2ChainInfo } from '../chains/chains'

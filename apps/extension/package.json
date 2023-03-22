@@ -43,7 +43,7 @@
     "webpack-dev-server": "^4.11.1"
   },
   "scripts": {
-    "format": "prettier --write \"**/*.{ts,tsx}\" --config ../../.prettierrc",
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
     "format:check": "prettier -c \"**/*.{ts,tsx}\"",
     "lint": "eslint . --ext ts,tsx",
     "lint:fix": "eslint . --ext ts,tsx --fix",

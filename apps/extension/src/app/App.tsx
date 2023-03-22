@@ -9,8 +9,6 @@ import { AppDispatch, RootState } from 'app/src/state'
 import { importAccountActions } from 'app/src/features/wallet/import/importAccountSaga'
 import { ImportAccountType } from 'app/src/features/wallet/import/types'
 
-const hayden = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
-
 // NOTE(judo): could not import app dispatch from @background, react-redux
 // complains about missing Provider context value.
 const useAppDispatch: () => AppDispatch = useDispatch
@@ -18,46 +16,32 @@ const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 
 function App(): JSX.Element {
   const dispatch = useAppDispatch()
-  const onPress = (): void => {
-    dispatch(
-      importAccountActions.trigger({
-        type: ImportAccountType.Address,
-        address: hayden,
-      })
-    )
-  }
   const accounts = useAppSelector((state) => state?.wallet?.accounts)
 
   return (
     <TamaguiProvider config={config} defaultTheme="light">
-      <Text>Imported accounts</Text>{' '}
-      {Object.values(accounts).map((a) => a.address)}
-      <Button onPress={onPress}>Import Account hayden.eth (readonly)</Button>
-      <Stack backgroundColor="$background0" flex={1} height={200} width={300}>
-        <Stack
-          backgroundColor="$background3"
-          borderRadius="$rounded12"
-          flex={1}>
-          <Stack flex={1} justifyContent="space-between">
-            <Stack>
-              <Text color="$textPrimary" fontSize={32}>
-                Account
-              </Text>
-              <Text color="$textPrimary">corncobs.eth</Text>
-            </Stack>
-            <Stack
-              alignContent="flex-end"
-              alignItems="flex-end"
-              justifyContent="flex-end">
-              <Text
-                backgroundColor="$accentBranded"
-                borderRadius="$rounded12"
-                padding="$spacing8">
-                More
-              </Text>
-            </Stack>
-          </Stack>
+      <Stack margin='$spacing8' space='$spacing16'>
+        <Stack backgroundColor={'$background3'} space='$spacing8'>
+          <Text>Imported accounts</Text>{' '}
+          {Object.values(accounts).map((a) => <Text>{a.address}</Text>)}
         </Stack>
+        <form onSubmit={(e) => {
+          e.preventDefault()
+
+          // TODO: use Tamagui
+          const form = e.target as HTMLFormElement
+          const formData = new FormData(form)
+
+          dispatch(importAccountActions.trigger({
+            type: ImportAccountType.Mnemonic,
+            validatedMnemonic: formData.get('mnemonic')
+          }))
+        }}>
+          {/* dummy seed phrase as default value */}
+          <label>Seed phrase: <input name="mnemonic" placeholder='Enter seed phrase to import' defaultValue="stereo gain space check elbow say usual help cinnamon inquiry snap expose" />
+          </label>
+          <button type='submit'>Import</button>
+        </form>
       </Stack>
     </TamaguiProvider>
   )

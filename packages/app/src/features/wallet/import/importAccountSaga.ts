@@ -2,8 +2,9 @@ import { getChecksumAddress } from 'app/src/utils/addresses'
 import { createMonitoredSaga } from 'app/src/utils/saga'
 import dayjs from 'dayjs'
 import { CallEffect } from 'redux-saga/effects'
-import { call, put } from 'typed-redux-saga'
+import { all, call, put } from 'typed-redux-saga'
 import { logger } from '../../logger/logger'
+import { Keyring } from '../Keyring/Keyring'
 
 import { addAccounts } from '../slice'
 import { Account, AccountType } from '../types'
@@ -22,15 +23,15 @@ function* importAccount(params: ImportAccountParams) {
       name,
       params.ignoreActivate
     )
-    // } else if (type === ImportAccountType.Mnemonic) {
-    //   yield* call(
-    //     importMnemonicAccounts,
-    //     params.validatedMnemonic,
-    //     name,
-    //     params.indexes,
-    //     params.markAsActive,
-    //     params.ignoreActivate
-    //   )
+  } else if (type === ImportAccountType.Mnemonic) {
+    yield* call(
+      importMnemonicAccounts,
+      params.validatedMnemonic,
+      name,
+      params.indexes,
+      params.markAsActive,
+      params.ignoreActivate
+    )
     // } else if (type === ImportAccountType.RestoreBackup) {
     //   yield* call(importRestoreBackupAccounts, params.mnemonicId, params.indexes)
   } else {
@@ -54,49 +55,53 @@ function* importAddressAccount(
   yield* call(onAccountImport, account, ignoreActivate)
 }
 
-// function* importMnemonicAccounts(
-//   validatedMnemonic: string,
-//   name?: string,
-//   indexes = [0],
-//   markAsActive?: boolean,
-//   ignoreActivate?: boolean
-// ) {
-//   const mnemonicId = yield* call(importMnemonic, validatedMnemonic)
-//   // generate private keys and return addresses for all derivation indexes
-//   const addresses = yield* all(
-//     indexes.map((index) => {
-//       return call(generateAndStorePrivateKey, mnemonicId, index)
-//     })
-//   )
+function* importMnemonicAccounts(
+  validatedMnemonic: string,
+  name?: string,
+  indexes = [0],
+  markAsActive?: boolean,
+  ignoreActivate?: boolean
+) {
+  const mnemonicId = yield* call(Keyring.importMnemonic, validatedMnemonic)
+  // generate private keys and return addresses for all derivation indexes
+  const addresses = yield* all(
+    indexes.map((index) => {
+      return call(Keyring.generateAndStorePrivateKey, mnemonicId, index)
+    })
+  )
 
-//   if (!addresses[0]) throw new Error('Cannot import account with undefined address')
-//   if (indexes[0] === undefined) throw new Error('Cannot import account with undefined derivation index')
+  if (!addresses[0])
+    throw new Error('Cannot import account with undefined address')
+  if (indexes[0] === undefined)
+    throw new Error('Cannot import account with undefined derivation index')
 
-//   const accounts = addresses.slice(1, addresses.length).map((address, index) => {
-//     const account: Account = {
-//       type: AccountType.SignerMnemonic,
-//       address,
-//       name,
-//       pending: true,
-//       timeImportedMs: dayjs().valueOf(),
-//       derivationIndex: index + 1,
-//       mnemonicId,
-//     }
-//     return account
-//   })
-//   yield* put(addAccounts(accounts))
+  const accounts = addresses
+    .slice(1, addresses.length)
+    .map((address, index) => {
+      const account: Account = {
+        type: AccountType.SignerMnemonic,
+        address,
+        name,
+        pending: true,
+        timeImportedMs: dayjs().valueOf(),
+        derivationIndex: index + 1,
+        mnemonicId,
+      }
+      return account
+    })
+  yield* put(addAccounts(accounts))
 
-//   const activeAccount: Account = {
-//     type: AccountType.SignerMnemonic,
-//     address: addresses[0],
-//     name,
-//     pending: !markAsActive,
-//     timeImportedMs: dayjs().valueOf(),
-//     derivationIndex: indexes[0],
-//     mnemonicId,
-//   }
-//   yield* call(onAccountImport, activeAccount, ignoreActivate)
-// }
+  const activeAccount: Account = {
+    type: AccountType.SignerMnemonic,
+    address: addresses[0],
+    name,
+    pending: !markAsActive,
+    timeImportedMs: dayjs().valueOf(),
+    derivationIndex: indexes[0],
+    mnemonicId,
+  }
+  yield* call(onAccountImport, activeAccount, ignoreActivate)
+}
 
 // function* importRestoreBackupAccounts(
 //   mnemonicId: string,

@@ -1,6 +1,6 @@
 export enum PortName {
-    Popup = 'popup',
-    Store = 'store',
+  Popup = 'popup',
+  Store = 'store',
 }
 
 /** Message Passing */
@@ -31,50 +31,49 @@ export enum MessageType {
   TransactionDetails = "TransactionDetails"
 }
 
-
 /** Notifications */
 export enum NotificationType {
-    swapSubmitting = 'swapSubmitting',
-    swapInProgress = 'swapInProgress',
-    swapComplete = 'swapComplete',
-    swapFailed = 'swapFailed',
-    swapCancelled = 'swapCancelled',
-    approvalPending = 'approvalPending',
-    approvalComplete = 'approvalComplete',
-    approvalFailed = 'approvalFailed',
+  swapSubmitting = 'swapSubmitting',
+  swapInProgress = 'swapInProgress',
+  swapComplete = 'swapComplete',
+  swapFailed = 'swapFailed',
+  swapCancelled = 'swapCancelled',
+  approvalPending = 'approvalPending',
+  approvalComplete = 'approvalComplete',
+  approvalFailed = 'approvalFailed',
 }
 
 export interface BaseNotification {
-    type: NotificationType
+  type: NotificationType
 }
 
 export interface SwapNotification extends BaseNotification {
-    swapInput: string
-    swapOutput: string
-    transactionHash?: string
+  swapInput: string
+  swapOutput: string
+  transactionHash?: string
 }
 
 export interface ApprovalNotification extends BaseNotification {
-    transactionHash: string
+  transactionHash: string
 }
 
 export interface SwapSubmittingNotification extends SwapNotification {
-    type: NotificationType.swapSubmitting
+  type: NotificationType.swapSubmitting
 }
 export interface SwapInProgressNotification extends SwapNotification {
-    type: NotificationType.swapInProgress
+  type: NotificationType.swapInProgress
 }
 
 export interface SwapCompleteNotification extends SwapNotification {
-    type: NotificationType.swapComplete
+  type: NotificationType.swapComplete
 }
 
 export interface SwapFailedNotification extends SwapNotification {
-    type: NotificationType.swapFailed
+  type: NotificationType.swapFailed
 }
 
 export interface SwapCancelledNotification extends SwapNotification {
-    type: NotificationType.swapCancelled
+  type: NotificationType.swapCancelled
 }
 
 export type Notification = SwapCompleteNotification | SwapFailedNotification | SwapCancelledNotification | SwapSubmittingNotification | SwapInProgressNotification

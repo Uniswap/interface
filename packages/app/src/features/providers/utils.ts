@@ -1,4 +1,4 @@
-import { ChainId } from "../chains/chains"
+import { ChainId } from '../chains/chains'
 
 export function getInfuraChainName(
   chainId: ChainId
