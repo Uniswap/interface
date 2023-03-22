@@ -1,10 +1,9 @@
 export function hasURL(str: string): boolean {
   const pattern = new RegExp(
-    '(http|https):\\/\\/' + // Match either "http" or "https" for the protocol
-      '(\\w+:{0,1}\\w*)?' + // Allow for an optional username and password in the URL
-      '(\\S+)' + // Match the domain name or IP address
-      '(:[0-9]+)?' + // Allow for an optional port number in the URL
-      '(\\/|\\/([\\w#!:.?+=&%!\\-\\/]))?' // Allow for an optional path and query string in the URL
+    '([a-zA-Z0-9]+://)?' + // optional protocol
+      '([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?' + //  optional username:password
+      '([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})' + // host name and subdomain
+      '(:[0-9]+)?(/.*)?' // optional port and path
   )
 
   return pattern.test(str)
