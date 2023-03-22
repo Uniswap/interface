@@ -129,7 +129,7 @@ export const useWeb3Solana = () => {
   return { connection }
 }
 
-async function isAuthorized(): Promise<boolean> {
+export async function isAuthorized(): Promise<boolean> {
   // Check if previous connected to Coinbase Link
   if (window.localStorage.getItem(WALLETLINK_LOCALSTORAGE_NAME)) {
     return true

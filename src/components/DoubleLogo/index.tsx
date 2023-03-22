@@ -69,12 +69,12 @@ export function DoubleCurrencyLogoV2({
     <Wrapper sizeraw={size} margin={false} style={style}>
       {logoUrl1 && (
         <HigherLogo>
-          <Logo srcs={[logoUrl1]} style={{ width: size, height: size }} />
+          <Logo srcs={[logoUrl1]} style={{ width: size, height: size, borderRadius: '100%' }} />
         </HigherLogo>
       )}
       {logoUrl2 && (
         <CoveredLogo sizeraw={size}>
-          <Logo srcs={[logoUrl2]} style={{ width: size, height: size }} />
+          <Logo srcs={[logoUrl2]} style={{ width: size, height: size, borderRadius: '100%' }} />
         </CoveredLogo>
       )}
     </Wrapper>

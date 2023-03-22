@@ -52,6 +52,7 @@ type LimitOrderAnnouncement = {
   // for partial fill
   filledPercent: string
   increasedFilledPercent: string
+  chainId: string
 }
 
 type PoolPositionAnnouncement = {
@@ -64,6 +65,7 @@ type PoolPositionAnnouncement = {
   currentPrice: string
   poolAddress: string
   type: 'OUT_OF_RANGE' | 'IN_RANGE'
+  chainId: string
 }
 
 export type AnnouncementTemplateLimitOrder = {

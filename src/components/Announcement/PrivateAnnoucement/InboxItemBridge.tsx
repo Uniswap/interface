@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { ReactComponent as ArrowDown } from 'assets/svg/arrow_down.svg'
-import { ReactComponent as BridgeIcon } from 'assets/svg/bridge_icon.svg'
 import { PrivateAnnouncementProp } from 'components/Announcement/PrivateAnnoucement'
+import InboxIcon from 'components/Announcement/PrivateAnnoucement/Icon'
 import {
   Dot,
   InboxItemRow,
@@ -14,7 +14,7 @@ import {
   RowItem,
   Title,
 } from 'components/Announcement/PrivateAnnoucement/styled'
-import { AnnouncementTemplateBridge } from 'components/Announcement/type'
+import { AnnouncementTemplateBridge, PrivateAnnouncementType } from 'components/Announcement/type'
 import { CheckCircle } from 'components/Icons'
 import IconFailure from 'components/Icons/Failed'
 import { NetworkLogo } from 'components/Logo'
@@ -50,7 +50,7 @@ function InboxItemBridge({ announcement, onRead, style, time }: PrivateAnnouncem
     <InboxItemWrapper isRead={isRead} onClick={onClick} style={style}>
       <InboxItemRow>
         <RowItem>
-          <BridgeIcon />
+          <InboxIcon type={PrivateAnnouncementType.BRIDGE} />
           <Title isRead={isRead}>
             <Trans>Bridge Token</Trans>
           </Title>

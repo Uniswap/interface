@@ -11,6 +11,7 @@ import { useActiveWeb3React } from 'hooks'
 import { AppState } from 'state'
 import { setLoadingNotification, setSubscribedNotificationTopic } from 'state/application/actions'
 import { useNotificationModalToggle } from 'state/application/hooks'
+import { pushUnique } from 'utils'
 
 export type Topic = {
   id: number
@@ -25,9 +26,9 @@ type SaveNotificationParam = {
   subscribeIds: number[]
   unsubscribeIds: number[]
   email: string
-  isChangeEmailOnly: boolean
+  isChangeEmailOnly?: boolean
   isEmail: boolean
-  isTelegram: boolean
+  isTelegram?: boolean
 }
 
 const useNotification = () => {
@@ -101,6 +102,18 @@ const useNotification = () => {
     [setLoading, account, chainId, topicGroups, callSubscribeTopic, callUnSubscribeTopic, buildTelegramVerification],
   )
 
+  const unsubscribeAll = useCallback(() => {
+    let unsubscribeIds: number[] = []
+    topicGroups.forEach(topic => {
+      if (!topic.isSubscribed) return
+      topic.topics.forEach(topic => {
+        unsubscribeIds = pushUnique(unsubscribeIds, topic.id)
+      })
+    })
+    if (!unsubscribeIds.length) return
+    saveNotification({ isEmail: true, unsubscribeIds, subscribeIds: [], email: userInfo.email })
+  }, [topicGroups, saveNotification, userInfo?.email])
+
   const showNotificationModal = useCallback(() => {
     refreshTopics()
     toggleSubscribeModal()
@@ -113,6 +126,7 @@ const useNotification = () => {
     saveNotification,
     showNotificationModal,
     refreshTopics,
+    unsubscribeAll,
   }
 }
 

@@ -293,11 +293,13 @@ const LimitOrderForm = function LimitOrderForm({
 
   const enoughAllowance = useMemo(() => {
     try {
+      const allowanceSubtracted = parsedActiveOrderMakingAmount
+        ? currentAllowance?.subtract(parsedActiveOrderMakingAmount)
+        : undefined
       return Boolean(
         currencyIn?.isNative ||
-          (parsedActiveOrderMakingAmount &&
-            parseInputAmount &&
-            currentAllowance?.subtract(parsedActiveOrderMakingAmount).greaterThan(parseInputAmount)),
+          (parseInputAmount &&
+            (allowanceSubtracted?.greaterThan(parseInputAmount) || allowanceSubtracted?.equalTo(parseInputAmount))),
       )
     } catch (error) {
       return false

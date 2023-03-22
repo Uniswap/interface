@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 
 import { PrivateAnnouncementProp } from 'components/Announcement/PrivateAnnoucement'
+import InboxIcon from 'components/Announcement/PrivateAnnoucement/Icon'
 import { Dot, InboxItemRow, InboxItemWrapper, RowItem, Title } from 'components/Announcement/PrivateAnnoucement/styled'
-import { AnnouncementTemplateTrendingSoon, TrueSightToken } from 'components/Announcement/type'
-import DiscoverIcon from 'components/Icons/DiscoverIcon'
+import { AnnouncementTemplateTrendingSoon, PrivateAnnouncementType, TrueSightToken } from 'components/Announcement/type'
 import DeltaTokenAmount from 'components/WalletPopup/Transactions/DeltaTokenAmount'
 import { APP_PATHS } from 'constants/index'
 import useTheme from 'hooks/useTheme'
@@ -40,7 +40,7 @@ function InboxItemBridge({
     <InboxItemWrapper isRead={isRead} onClick={onClick} style={style}>
       <InboxItemRow>
         <RowItem>
-          <DiscoverIcon size={16} />
+          <InboxIcon type={PrivateAnnouncementType.TRENDING_SOON_TOKEN} />
           <Title isRead={isRead}>
             <Trans>Trending Soon</Trans>
           </Title>

@@ -1,9 +1,10 @@
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { useNavigate } from 'react-router-dom'
 import { Flex } from 'rebass'
 
-import { ReactComponent as LiquidityIcon } from 'assets/svg/liquidity_icon.svg'
 import { PrivateAnnouncementProp } from 'components/Announcement/PrivateAnnoucement'
+import InboxIcon from 'components/Announcement/PrivateAnnoucement/Icon'
 import {
   Dot,
   InboxItemRow,
@@ -12,11 +13,12 @@ import {
   RowItem,
   Title,
 } from 'components/Announcement/PrivateAnnoucement/styled'
-import { AnnouncementTemplatePoolPosition } from 'components/Announcement/type'
+import { AnnouncementTemplatePoolPosition, PrivateAnnouncementType } from 'components/Announcement/type'
 import { DoubleCurrencyLogoV2 } from 'components/DoubleLogo'
 import { MoneyBag } from 'components/Icons'
 import { APP_PATHS } from 'constants/index'
-import { useActiveWeb3React } from 'hooks'
+import { NETWORKS_INFO } from 'constants/networks'
+import { useChangeNetwork } from 'hooks/useChangeNetwork'
 import useTheme from 'hooks/useTheme'
 
 function InboxItemBridge({
@@ -25,7 +27,6 @@ function InboxItemBridge({
   style,
   time,
 }: PrivateAnnouncementProp<AnnouncementTemplatePoolPosition>) {
-  const { networkInfo } = useActiveWeb3React()
   const { templateBody, isRead } = announcement
   const theme = useTheme()
 
@@ -39,21 +40,27 @@ function InboxItemBridge({
     token1Symbol,
     poolAddress,
     type,
+    chainId: rawChain,
   } = templateBody.position
+
+  const chainId = Number(rawChain) as ChainId
   const isInRange = type === 'IN_RANGE'
   const statusMessage = isInRange ? t`Back in range` : t`Out of range`
 
   const navigate = useNavigate()
+  const changeNetwork = useChangeNetwork()
   const onClick = () => {
-    navigate(`${APP_PATHS.MY_POOLS}/${networkInfo.route}?search=${poolAddress}`)
-    onRead(announcement, statusMessage)
+    changeNetwork(chainId, () => {
+      navigate(`${APP_PATHS.MY_POOLS}/${NETWORKS_INFO[chainId].route}?search=${poolAddress}`)
+      onRead(announcement, statusMessage)
+    })
   }
 
   return (
     <InboxItemWrapper isRead={isRead} onClick={onClick} style={style}>
       <InboxItemRow>
         <RowItem>
-          <LiquidityIcon />
+          <InboxIcon type={PrivateAnnouncementType.POOL_POSITION} chainId={chainId} />
           <Title isRead={isRead}>
             <Trans>Liquidity Pool Alert</Trans>
           </Title>
@@ -66,9 +73,9 @@ function InboxItemBridge({
       </InboxItemRow>
 
       <InboxItemRow>
-        <Flex alignItems={'center'}>
+        <Flex alignItems={'center'} style={{ gap: '4px' }}>
           <DoubleCurrencyLogoV2
-            style={{ marginRight: 12 }}
+            style={{ marginRight: 10 }}
             logoUrl1={token0LogoURL}
             logoUrl2={token1LogoURL}
             size={12}

@@ -167,7 +167,7 @@ export default function PoolCombination() {
   const { tab = VERSION.ELASTIC } = useParsedQueryString<{
     tab: string
   }>()
-
+  useSyncNetworkParamWithStore()
   return (
     <>
       <PageWrapper>
@@ -198,8 +198,6 @@ function Pool() {
     searchParams.set('search', search)
     setSearchParams(searchParams)
   }
-
-  useSyncNetworkParamWithStore()
 
   const userFarms = useMemo(
     () =>

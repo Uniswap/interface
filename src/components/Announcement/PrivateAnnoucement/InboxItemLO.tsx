@@ -1,9 +1,10 @@
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { Repeat } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 
-import { ReactComponent as LimitOrderIcon } from 'assets/svg/limit_order.svg'
 import { PrivateAnnouncementProp } from 'components/Announcement/PrivateAnnoucement'
+import InboxIcon from 'components/Announcement/PrivateAnnoucement/Icon'
 import {
   Dot,
   InboxItemRow,
@@ -12,7 +13,7 @@ import {
   RowItem,
   Title,
 } from 'components/Announcement/PrivateAnnoucement/styled'
-import { AnnouncementTemplateLimitOrder } from 'components/Announcement/type'
+import { AnnouncementTemplateLimitOrder, PrivateAnnouncementType } from 'components/Announcement/type'
 import { CheckCircle } from 'components/Icons'
 import DeltaTokenAmount from 'components/WalletPopup/Transactions/DeltaTokenAmount'
 import { LimitOrderStatus } from 'components/swapv2/LimitOrder/type'
@@ -40,10 +41,11 @@ function InboxItemBridge({
     filledPercent,
     increasedFilledPercent,
     takingAmountRate,
+    chainId: rawChainId,
   } = templateBody.order
   const isFilled = status === LimitOrderStatus.FILLED
   const isPartialFilled = status === LimitOrderStatus.PARTIALLY_FILLED
-
+  const chainId = rawChainId && rawChainId !== '{{.chainId}}' ? (Number(rawChainId) as ChainId) : undefined
   const statusMessage = isFilled
     ? t`100% Filled`
     : isPartialFilled
@@ -60,7 +62,7 @@ function InboxItemBridge({
     <InboxItemWrapper isRead={isRead} onClick={onClick} style={style}>
       <InboxItemRow>
         <RowItem>
-          <LimitOrderIcon />
+          <InboxIcon type={PrivateAnnouncementType.LIMIT_ORDER} chainId={chainId} />
           <Title isRead={isRead}>
             <Trans>Limit Order</Trans>
           </Title>

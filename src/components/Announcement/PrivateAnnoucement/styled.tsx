@@ -53,5 +53,5 @@ export const InboxItemRow = styled.div`
 export const RowItem = styled.div`
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 `
