@@ -17,12 +17,12 @@ export default function Updater(): null {
 
   // filterout kyberswap dexes, will hardcode
   const normalizeDexes = useMemo(() => {
-    const temp =
+    const dexesOutsideKyberswap =
       dexes?.map(item => ({ ...item, id: item.dexId })).filter(item => !item.dexId.includes('kyberswap')) || []
     const isSupportKSElastic = !ELASTIC_NOT_SUPPORTED[chainId]
     return [
-      ...temp,
-      ...(isEVM ? kyberswapDexes.filter(item => (isSupportKSElastic ? true : item.id !== 'kyberswapv2')) : []),
+      ...dexesOutsideKyberswap,
+      ...(isEVM ? kyberswapDexes.filter(item => isSupportKSElastic || item.id !== 'kyberswapv2') : []),
     ]
   }, [dexes, chainId, isEVM])
 

@@ -9,4 +9,9 @@ export const kyberswapDexes = [
     id: 'kyberswapv1',
     logoURL: 'https://kyberswap.com/favicon.ico',
   },
+  {
+    name: 'KyberSwap Limit Order',
+    id: 'kyberswap-limit-order',
+    logoURL: 'https://kyberswap.com/favicon.ico',
+  },
 ]
