@@ -12,15 +12,16 @@ const BadgeWrapper = styled.div`
 
 const BadgeText = styled.div`
   font-weight: 500;
-  font-size: 14px;
+  font-size: 12px;
+  line-height: 14px;
   margin-right: 8px;
 `
 
 const ActiveDot = styled.span`
   background-color: ${({ theme }) => theme.accentSuccess};
   border-radius: 50%;
-  height: 12px;
-  width: 12px;
+  height: 8px;
+  width: 8px;
 `
 
 const LabelText = styled.div<{ color: string }>`
@@ -28,8 +29,7 @@ const LabelText = styled.div<{ color: string }>`
   color: ${({ color }) => color};
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  width: 108px;
+  justify-content: flex-end;
 `
 
 export default function RangeBadge({
@@ -61,7 +61,7 @@ export default function RangeBadge({
         >
           <LabelText color={theme.accentSuccess}>
             <BadgeText>
-              <Trans>Active</Trans>
+              <Trans>In Range</Trans>
             </BadgeText>
             <ActiveDot />
           </LabelText>
