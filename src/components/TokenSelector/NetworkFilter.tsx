@@ -1,4 +1,4 @@
-import { selectionAsync } from 'expo-haptics'
+import { ImpactFeedbackStyle, selectionAsync } from 'expo-haptics'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
@@ -80,6 +80,8 @@ export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProp
   return (
     <>
       <TouchableArea
+        hapticFeedback
+        hapticStyle={ImpactFeedbackStyle.Light}
         py="spacing8"
         onPress={(): void => {
           Keyboard.dismiss()

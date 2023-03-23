@@ -58,7 +58,7 @@ interface RecipientProps {
 
 export function RecipientRow({ recipient, onPress }: RecipientProps): JSX.Element {
   return (
-    <TouchableArea onPress={(): void => onPress(recipient.address)}>
+    <TouchableArea hapticFeedback onPress={(): void => onPress(recipient.address)}>
       <AddressDisplay address={recipient.address} size={35} />
     </TouchableArea>
   )
