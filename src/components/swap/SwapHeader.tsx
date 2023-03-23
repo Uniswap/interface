@@ -78,27 +78,25 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
   const [shouldCheck, setShouldCheck] = useState(false)
   const [fiatOnRampUnavailable, setFiatOnRampUnavailable] = useState(false)
   const [buyFiatClicked, setBuyFiatClicked] = useBuyFiatClicked()
-  const {
-    available: fiatOnrampAvailable,
-    availabilityChecked: fiatOnrampAvailabilityChecked,
-    error,
-    loading: fiatOnrampAvailabilityLoading,
-  } = useFiatOnrampAvailability(shouldCheck, openFiatOnrampModal)
+  const { available: fiatOnrampAvailable, availabilityChecked: fiatOnrampAvailabilityChecked } =
+    useFiatOnrampAvailability(shouldCheck, openFiatOnrampModal)
 
   const handleBuyCryptoClick = useCallback(() => {
-    setBuyFiatClicked(true)
     if (!fiatOnrampAvailabilityChecked) {
       setShouldCheck(true)
     } else if (fiatOnrampAvailable) {
       openFiatOnrampModal()
-    } else if (!fiatOnrampAvailable) {
-      setFiatOnRampUnavailable(true)
+      setBuyFiatClicked(true)
     }
   }, [fiatOnrampAvailabilityChecked, fiatOnrampAvailable, openFiatOnrampModal, setBuyFiatClicked])
 
   useEffect(() => {
-    if (!fiatOnrampAvailable) setFiatOnRampUnavailable(true)
-  }, [fiatOnrampAvailable])
+    if (!fiatOnrampAvailable && !buyFiatClicked) {
+      setFiatOnRampUnavailable(true)
+      console.log('fiatOnRampUnavailable', fiatOnRampUnavailable)
+      setBuyFiatClicked(true)
+    }
+  }, [buyFiatClicked, fiatOnRampUnavailable, fiatOnrampAvailable, setBuyFiatClicked])
 
   return (
     <StyledSwapHeader>
