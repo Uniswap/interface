@@ -93,20 +93,6 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
   optimism: Chain.Optimism,
 }
 
-export const CHAIN_ID_TO_URL_NAME: Record<SupportedChainId, string> = {
-  [SupportedChainId.ARBITRUM_ONE]: 'arbitrum',
-  [SupportedChainId.ARBITRUM_GOERLI]: 'arbitrum_goerli',
-  [SupportedChainId.BNB]: 'bnb',
-  [SupportedChainId.CELO]: 'celo',
-  [SupportedChainId.CELO_ALFAJORES]: 'celo_alfajores',
-  [SupportedChainId.MAINNET]: 'ethereum',
-  [SupportedChainId.GOERLI]: 'goerli',
-  [SupportedChainId.OPTIMISM]: 'optimism',
-  [SupportedChainId.OPTIMISM_GOERLI]: 'optimism_goerli',
-  [SupportedChainId.POLYGON]: 'polygon',
-  [SupportedChainId.POLYGON_MUMBAI]: 'polygon_mumbai',
-}
-
 export function validateUrlChainParam(chainName: string | undefined) {
   return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum
 }
