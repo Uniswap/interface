@@ -24,13 +24,14 @@ import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { AnimatedBox, AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
+import { useHighestBalanceNativeCurrencyId } from 'src/features/dataApi/balances'
 import { openModal } from 'src/features/modals/modalSlice'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { prepareSwapFormState } from 'src/features/transactions/swap/utils'
+import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { Theme } from 'src/styles/theme'
-import { CurrencyId } from 'src/utils/currencyId'
 import SearchIcon from '../../assets/icons/search.svg'
 
 export const NAV_BAR_HEIGHT_XS = 52
@@ -113,15 +114,17 @@ type SwapTabBarButtonProps = {
    * @default 0.96
    */
   activeScale?: number
-  inputCurrencyId?: CurrencyId
 }
 
-const SwapFAB = memo(({ activeScale = 0.96, inputCurrencyId }: SwapTabBarButtonProps) => {
+const SwapFAB = memo(({ activeScale = 0.96 }: SwapTabBarButtonProps) => {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
   const theme = useAppTheme()
   const isDarkMode = useIsDarkMode()
+
+  const activeAccountAddress = useActiveAccountAddressWithThrow()
+  const inputCurrencyId = useHighestBalanceNativeCurrencyId(activeAccountAddress)
 
   const onPress = useCallback(() => {
     impactAsync()
