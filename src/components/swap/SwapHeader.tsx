@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { StyledXButton } from 'components/TaxServiceModal/TaxServiceBanner'
-import { MouseoverTooltip } from 'components/Tooltip'
+import { MouseoverTooltipContent } from 'components/Tooltip'
 import { bodySmall, subhead } from 'nft/css/common.css'
 import { useCallback, useEffect, useState } from 'react'
 import { useBuyFiatClicked } from 'state/user/hooks'
@@ -88,18 +88,18 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
       setShouldCheck(true)
     } else if (fiatOnrampAvailable) {
       openFiatOnrampModal()
-      console.log('fiatOnrampAvailable', fiatOnrampAvailable)
+      console.log('opening modal, fiatOnrampAvailable ', fiatOnrampAvailable)
       setBuyFiatClicked(true)
     }
   }, [fiatOnrampAvailabilityChecked, fiatOnrampAvailable, openFiatOnrampModal, setBuyFiatClicked])
 
   useEffect(() => {
-    if (!fiatOnrampAvailable && !buyFiatClicked) {
+    if (fiatOnrampAvailabilityChecked && !fiatOnrampAvailable && !buyFiatClicked) {
       setFiatOnRampUnavailable(true)
-      console.log('fiatOnRampUnavailable', fiatOnRampUnavailable)
+      console.log('unavail, fiatOnRampUnavailable', fiatOnRampUnavailable)
       setBuyFiatClicked(true)
     }
-  }, [buyFiatClicked, fiatOnRampUnavailable, fiatOnrampAvailable, setBuyFiatClicked])
+  }, [buyFiatClicked, fiatOnRampUnavailable, fiatOnrampAvailabilityChecked, fiatOnrampAvailable, setBuyFiatClicked])
 
   return (
     <StyledSwapHeader>
@@ -108,8 +108,17 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
           <TextHeader className={subhead} color={theme.textPrimary}>
             <Trans>Swap</Trans>
           </TextHeader>
-          <MouseoverTooltip
-            text={<Trans>Crypto purchases are not available in your region. Learn more</Trans>}
+          <MouseoverTooltipContent
+            wrap={true}
+            content={
+              <div>
+                <Trans>Crypto purchases are not available in your region. </Trans>
+                <ExternalLink href={TOKEN_SAFETY_ARTICLE} style={{ paddingLeft: '4px' }}>
+                  <Trans>Learn more</Trans>
+                </ExternalLink>
+              </div>
+            }
+            placement="bottom"
             disableHover={!fiatOnrampAvailabilityChecked || fiatOnrampAvailable}
           >
             <TextHeader
@@ -122,56 +131,54 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
               <Trans>Buy</Trans>
               {!buyFiatClicked && <Dot />}
             </TextHeader>
-          </MouseoverTooltip>
+          </MouseoverTooltipContent>
         </RowFixed>
         <RowFixed>
           <SettingsTab placeholderSlippage={allowedSlippage} />
         </RowFixed>
       </RowBetween>
-      {!buyFiatClicked && (
-        <PopupContainer show={fiatOnRampUnavailable}>
+      <PopupContainer show={fiatOnRampUnavailable}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            padding: '16px',
+          }}
+        >
           <div
             style={{
               display: 'flex',
               flexDirection: 'row',
-              justifyContent: 'space-between',
-              padding: '12px',
+              alignItems: 'center',
             }}
           >
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <AlertTriangleFilled size="40px" />
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                padding: '12px 16px',
-              }}
-            >
-              <div className={subhead}>
-                <Trans>Crypto purchases are not available in your region.</Trans>
-              </div>
-              <ExternalLink href={TOKEN_SAFETY_ARTICLE} className={bodySmall}>
-                <Trans>Learn more</Trans>
-              </ExternalLink>
-            </div>
-            <StyledXButton
-              size={28}
-              color={theme.textSecondary}
-              onClick={() => {
-                setFiatOnRampUnavailable(false)
-              }}
-            />
+            <AlertTriangleFilled size="40px" />
           </div>
-        </PopupContainer>
-      )}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              padding: '0px 16px',
+            }}
+          >
+            <div className={subhead}>
+              <Trans>Unavailable in your region</Trans>
+            </div>
+            <ExternalLink href={TOKEN_SAFETY_ARTICLE} className={bodySmall}>
+              <Trans>Learn more</Trans>
+            </ExternalLink>
+          </div>
+          <StyledXButton
+            size={28}
+            color={theme.textSecondary}
+            onClick={() => {
+              setFiatOnRampUnavailable(false)
+            }}
+          />
+        </div>
+      </PopupContainer>
     </StyledSwapHeader>
   )
 }
