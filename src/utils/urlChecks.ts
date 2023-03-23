@@ -1,4 +1,5 @@
-export function hasURL(str: string): boolean {
+export function hasURL(str?: string): boolean {
+  if (!str) return false
   const pattern = new RegExp(
     '([a-zA-Z0-9]+://)?' + // optional protocol
       '([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?' + //  optional username:password
