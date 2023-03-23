@@ -360,7 +360,7 @@ export const SearchBarDropdown = ({
     searchHistory,
   ])
 
-  const showBNBComingSoonBadge = Boolean(chainId !== undefined && chainId === SupportedChainId.BNB && !isLoading)
+  const showBNBComingSoonBadge = Boolean(chainId === SupportedChainId.BNB && !isLoading)
 
   return (
     <Box className={styles.searchBarDropdownNft}>
