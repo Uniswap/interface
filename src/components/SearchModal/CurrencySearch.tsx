@@ -15,7 +15,7 @@ import { ChangeEvent, KeyboardEvent, RefObject, useCallback, useEffect, useMemo,
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
-import { useAllTokenBalances } from 'state/connection/hooks'
+import { useAllTokenBalances, useTokenPrices } from 'state/connection/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { UserAddedToken } from 'types/tokens'
 
@@ -91,9 +91,11 @@ export function CurrencySearch({
   }, [defaultTokens, debouncedQuery])
 
   const [balances, balancesAreLoading] = useAllTokenBalances()
+  const balancePrices = useTokenPrices(balances)
+
   const sortedTokens: Token[] = useMemo(
     () =>
-      !balancesAreLoading
+      !balancesAreLoading && balancePrices
         ? filteredTokens
             .filter((token) => {
               if (onlyShowCurrenciesWithBalance) {
@@ -107,16 +109,17 @@ export function CurrencySearch({
               }
               return true
             })
-            .sort(tokenComparator.bind(null, balances))
+            .sort(tokenComparator.bind(null, balances, balancePrices))
         : [],
     [
-      balances,
       balancesAreLoading,
-      debouncedQuery,
       filteredTokens,
-      otherSelectedCurrency,
-      selectedCurrency,
+      balances,
+      balancePrices,
       onlyShowCurrenciesWithBalance,
+      debouncedQuery,
+      selectedCurrency,
+      otherSelectedCurrency,
     ]
   )
   const isLoading = Boolean(balancesAreLoading && !tokenLoaderTimerElapsed)

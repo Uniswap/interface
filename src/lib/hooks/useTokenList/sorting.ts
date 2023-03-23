@@ -1,23 +1,42 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { TokenInfo } from '@uniswap/token-lists'
 import { useMemo } from 'react'
+import { BalancesResult, PricesResult } from 'state/connection/hooks'
 
 /** Sorts currency amounts (descending). */
 function balanceComparator(a?: CurrencyAmount<Currency>, b?: CurrencyAmount<Currency>) {
+  return valueComparator(a, b) // defaults to price of 1, so this will just compare the balances directly
+}
+
+/** Sorts currency amounts by value (descending). */
+function valueComparator(a?: CurrencyAmount<Currency>, b?: CurrencyAmount<Currency>, aPrice?: number, bPrice?: number) {
+  const aBalance: number = parseFloat(a?.toFixed(2) ?? '0')
+  const bBalance: number = parseFloat(b?.toFixed(2) ?? '0')
   if (a && b) {
-    return a.greaterThan(b) ? -1 : a.equalTo(b) ? 0 : 1
-  } else if (a?.greaterThan('0')) {
+    return aBalance * (aPrice ?? 1) > bBalance * (bPrice ?? 1)
+      ? -1
+      : aBalance * (aPrice ?? 1) === bBalance * (bPrice ?? 1)
+      ? 0
+      : 1
+  } else if (aBalance && aBalance * (aPrice ?? 1) > 0) {
     return -1
-  } else if (b?.greaterThan('0')) {
+  } else if (bBalance && bBalance * (bPrice ?? 1) > 0) {
     return 1
   }
   return 0
 }
 
-type TokenBalances = { [tokenAddress: string]: CurrencyAmount<Token> | undefined }
+/** Sorts tokens by USD Value (descending), then currency amount (descending), then safety, then symbol (ascending). */
+export function tokenComparator(balances: BalancesResult, prices: PricesResult, a: Token, b: Token) {
+  // Sorts by USD value
+  const valueComparison = valueComparator(
+    balances[a.address],
+    balances[b.address],
+    prices?.[a.address],
+    prices?.[b.address]
+  )
+  if (valueComparison !== 0) return valueComparison
 
-/** Sorts tokens by currency amount (descending), then safety, then symbol (ascending). */
-export function tokenComparator(balances: TokenBalances, a: Token, b: Token) {
   // Sorts by balances
   const balanceComparison = balanceComparator(balances[a.address], balances[b.address])
   if (balanceComparison !== 0) return balanceComparison
