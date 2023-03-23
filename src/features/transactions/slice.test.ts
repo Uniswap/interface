@@ -199,7 +199,7 @@ describe('transaction reducer', () => {
         )
       } catch (error) {
         expect(error).toEqual(
-          Error(`cancelTransaction: Attempted to cancel a tx that doesnt exist with id ${id}`)
+          Error(`cancelTransaction: Attempted to cancel a tx that doesn't exist with id ${id}`)
         )
       }
       expect(store.getState()).toEqual({})

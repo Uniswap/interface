@@ -1,4 +1,4 @@
-import { providers } from 'ethers'
+import { BigNumberish, providers } from 'ethers'
 import { PutEffect, TakeEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
@@ -27,13 +27,13 @@ import {
 } from 'src/features/transactions/slice'
 import {
   FinalizedTransactionDetails,
-  FinalizedTransactionStatus,
   TransactionDetails,
   TransactionId,
   TransactionReceipt,
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
+import { getFinalizedTransactionStatus } from 'src/features/transactions/utils'
 import { logger } from 'src/utils/logger'
 import { ONE_SECOND_MS } from 'src/utils/time'
 import { sleep } from 'src/utils/timing'
@@ -189,37 +189,45 @@ export function* watchFiatOnRampTransaction(transaction: TransactionDetails): Ge
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function* watchTransaction(transaction: TransactionDetails): Generator<any> {
-  const { chainId, id, hash, options, from: address } = transaction
+  const { chainId, id, hash, options } = transaction
 
   logger.debug('transactionWatcherSaga', 'watchTransaction', 'Watching for updates for tx:', hash)
   const provider = yield* call(getProvider, chainId)
 
-  // Check if monitored transaction has been replaced on chain
-  const highestConfirmedNonce = yield* call([provider, provider.getTransactionCount], address)
-  const nonce = options.request.nonce
-
-  const hasInvalidNonce = nonce === undefined || highestConfirmedNonce > nonce
-
-  // Dont wait for receipt if tx is invalid, it wont get picked up. Only apply to Mainnet
-  // because L2s may confirm before this saga runs causing it to think the tx was invalid
-  if (hasInvalidNonce && chainId === ChainId.Mainnet) {
-    yield* call(finalizeTransaction, transaction, undefined, undefined, hasInvalidNonce)
-    return
-  }
-
-  const { receipt, cancel, replace } = yield* race({
+  const { receipt, cancel, replace, invalidated } = yield* race({
     receipt: call(waitForReceipt, hash, provider),
     cancel: call(waitForCancellation, chainId, id),
     replace: call(waitForReplacement, chainId, id),
+    invalidated: call(waitForTxnInvalidated, chainId, id, options.request.nonce),
   })
 
   if (cancel) {
+    // reset watcher for the current txn, as it can still be mined (or invalidated by the new txn)
+    yield* fork(watchTransaction, transaction)
+    // Cancel the current txn, which submits a new txn on chain and monitored in state
     yield* call(attemptCancelTransaction, transaction)
     return
   }
 
   if (replace) {
+    // Same logic as cancelation, but skip directly to replacement
+    yield* fork(watchTransaction, transaction)
     yield* call(attemptReplaceTransaction, transaction, replace.newTxParams)
+    return
+  }
+
+  if (invalidated) {
+    yield* call(deleteTransaction, transaction)
+    // Show popup if invalidated cancelation - was not mined before original txn
+    if (transaction.status === TransactionStatus.Cancelling) {
+      yield* put(
+        pushNotification({
+          type: AppNotificationType.Error,
+          address: transaction.from,
+          errorMessage: i18n.t('Unable to cancel transaction'),
+        })
+      )
+    }
     return
   }
 
@@ -265,6 +273,23 @@ function* waitForReplacement(
     if (payload.chainId === chainId && payload.id === id) return payload
   }
 }
+/**
+ * Monitor for transactions with the same nonce as the current transaction. If any duplicate is finalized, it means
+ * the current transaction has been invalidated and wont be picked up on chain.
+ */
+export function* waitForTxnInvalidated(
+  chainId: ChainId,
+  id: string,
+  nonce: BigNumberish | undefined
+): Generator<TakeEffect, boolean, unknown> {
+  while (true) {
+    const { payload } = yield* take<ReturnType<typeof transactionActions.finalizeTransaction>>(
+      transactionActions.finalizeTransaction.type
+    )
+    if (payload.chainId === chainId && payload.id !== id && payload.options.request.nonce === nonce)
+      return true
+  }
+}
 
 function* finalizeTransaction(
   transaction: TransactionDetails,
@@ -272,11 +297,14 @@ function* finalizeTransaction(
   statusOverride?:
     | TransactionStatus.Success
     | TransactionStatus.Failed
-    | TransactionStatus.Cancelled,
-  hasInvalidNonce?: boolean
+    | TransactionStatus.Cancelled
 ): Generator<
   | PutEffect<{
       payload: FinalizedTransactionDetails
+      type: string
+    }>
+  | PutEffect<{
+      payload: TransactionDetails
       type: string
     }>
   | PutEffect<{
@@ -287,8 +315,7 @@ function* finalizeTransaction(
   unknown
 > {
   const status =
-    statusOverride ??
-    getUpdatedTransactionStatus(transaction.status, ethersReceipt?.status, hasInvalidNonce)
+    statusOverride ?? getFinalizedTransactionStatus(transaction.status, ethersReceipt?.status)
 
   const receipt: TransactionReceipt | undefined = ethersReceipt
     ? {
@@ -312,25 +339,24 @@ function* finalizeTransaction(
   yield* put(setNotificationStatus({ address: transaction.from, hasNotifications: true }))
 }
 
-// Path where we detect a pending/in-progress txn has been replaced or finalized.
-// Based on the current status of the transaction, we determine the new status.
-function getUpdatedTransactionStatus(
-  currentStatus: TransactionStatus,
-  receiptStatus?: number,
-  hasInvalidNonce?: boolean
-): FinalizedTransactionStatus {
-  // Unable to cancel transaction, invalid flag is set based on nonce above.
-  if (hasInvalidNonce && currentStatus === TransactionStatus.Cancelling) {
-    return TransactionStatus.FailedCancel
-  }
-
-  if (!receiptStatus) {
-    return TransactionStatus.Failed
-  }
-
-  if (currentStatus === TransactionStatus.Cancelling) {
-    return TransactionStatus.Cancelled
-  }
-
-  return TransactionStatus.Success
+/**
+ * Delete transaction from state. Should be called when a transaction should no longer
+ * be monitored. Often used when txn is replaced or cancelled.
+ * @param transaction txn to delete from state
+ */
+export function* deleteTransaction(transaction: TransactionDetails): Generator<
+  PutEffect<{
+    payload: { address: string }
+    type: string
+  }>,
+  void,
+  unknown
+> {
+  yield* put(
+    transactionActions.deleteTransaction({
+      address: transaction.from,
+      id: transaction.id,
+      chainId: transaction.chainId,
+    })
+  )
 }

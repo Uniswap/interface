@@ -5,6 +5,8 @@ import { ChainId } from 'src/constants/chains'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  FinalizedTransactionStatus,
+  TransactionStatus,
 } from 'src/features/transactions/types'
 import { v4 as uuid } from 'uuid'
 
@@ -87,4 +89,18 @@ export function isOffline(networkStatus: NetInfoState): boolean {
     typeof networkStatus.isInternetReachable === 'boolean' &&
     networkStatus.isConnected === false
   )
+}
+
+// Based on the current status of the transaction, we determine the new status.
+export function getFinalizedTransactionStatus(
+  currentStatus: TransactionStatus,
+  receiptStatus?: number
+): FinalizedTransactionStatus {
+  if (!receiptStatus) {
+    return TransactionStatus.Failed
+  }
+  if (currentStatus === TransactionStatus.Cancelling) {
+    return TransactionStatus.Cancelled
+  }
+  return TransactionStatus.Success
 }

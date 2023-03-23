@@ -53,6 +53,16 @@ const slice = createSlice({
       state[from]![chainId]![id]!.status = status
       if (receipt) state[from]![chainId]![id]!.receipt = receipt
     },
+    deleteTransaction: (
+      state,
+      { payload: { chainId, id, address } }: PayloadAction<TransactionId & { address: string }>
+    ) => {
+      assert(
+        state?.[address]?.[chainId]?.[id],
+        `deleteTransaction: Attempted to delete a tx that doesn't exist with id ${id}`
+      )
+      delete state[address]![chainId]![id]
+    },
     cancelTransaction: (
       state,
       {
@@ -63,7 +73,7 @@ const slice = createSlice({
     ) => {
       assert(
         state?.[address]?.[chainId]?.[id],
-        `cancelTransaction: Attempted to cancel a tx that doesnt exist with id ${id}`
+        `cancelTransaction: Attempted to cancel a tx that doesn't exist with id ${id}`
       )
       state[address]![chainId]![id]!.status = TransactionStatus.Cancelling
       state[address]![chainId]![id]!.cancelRequest = cancelRequest
@@ -128,6 +138,7 @@ export const forceFetchFiatOnRampTransactions = createAction(
 export const {
   addTransaction,
   cancelTransaction,
+  deleteTransaction,
   finalizeTransaction,
   replaceTransaction,
   resetTransactions,

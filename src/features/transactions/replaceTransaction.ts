@@ -6,9 +6,12 @@ import { getProvider, getSignerManager } from 'src/app/walletContext'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotification, AppNotificationType } from 'src/features/notifications/types'
 import { signAndSendTransaction } from 'src/features/transactions/sendTransaction'
-import { finalizeTransaction, updateTransaction } from 'src/features/transactions/slice'
+import { addTransaction, deleteTransaction } from 'src/features/transactions/slice'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
-import { getSerializableTransactionRequest } from 'src/features/transactions/utils'
+import {
+  createTransactionId,
+  getSerializableTransactionRequest,
+} from 'src/features/transactions/utils'
 import { selectAccounts } from 'src/features/wallet/selectors'
 import { SignerManager } from 'src/features/wallet/signing/SignerManager'
 import { getValidAddress } from 'src/utils/addresses'
@@ -32,6 +35,10 @@ export function* attemptReplaceTransaction(
       type: string
     }>
   | PutEffect<{
+      payload: { address: string }
+      type: string
+    }>
+  | PutEffect<{
       payload: AppNotification
       type: string
     }>,
@@ -40,6 +47,8 @@ export function* attemptReplaceTransaction(
 > {
   const { chainId, hash, options } = transaction
   logger.debug('replaceTransaction', '', 'Attempting tx replacement', hash)
+  const replacementTxnId = createTransactionId()
+
   try {
     const { from, nonce } = options.request
     if (!from || !nonce || !BigNumber.from(nonce).gte(0)) {
@@ -74,41 +83,34 @@ export function* attemptReplaceTransaction(
     )
     logger.debug('replaceTransaction', '', 'Tx submitted. New hash:', transactionResponse.hash)
 
-    const updatedTransaction: TransactionDetails = {
+    const replacementTransaction: TransactionDetails = {
       ...transaction,
+      // Ensure we create a new, unique txn to monitor
+      id: replacementTxnId,
       hash: transactionResponse.hash,
       status: isCancellation ? TransactionStatus.Cancelling : TransactionStatus.Pending,
       receipt: undefined,
+      addedTime: Date.now(), // update timestamp to now
       options: {
         ...options,
         request: getSerializableTransactionRequest(populatedRequest, chainId),
       },
     }
-    yield* put(updateTransaction(updatedTransaction))
+
+    // Add new transaction for monitoring after submitting on chain
+    yield* put(addTransaction(replacementTransaction))
   } catch (error) {
     logger.error('replaceTransaction', '', 'Error while attempting tx replacement', hash, error)
 
-    // Caught an invalid replacement, which is a failed cancelation attempt. Aka previous
-    // txn was already mined. Mark as finalized.
-    if (transaction.status === TransactionStatus.Cancelling && isCancellation) {
-      const updatedTransaction: TransactionDetails = {
-        ...transaction,
-        hash,
-        status: TransactionStatus.FailedCancel,
-        receipt: undefined,
-        options: {
-          ...options,
-        },
-      }
-      yield* put(
-        finalizeTransaction({ ...updatedTransaction, status: TransactionStatus.FailedCancel })
-      )
-    } else {
-      // Finalize and end attempts to replace.
-      // TODO: [MOB-3898] Can we check for specific errors here?.  Sometimes this might mark actually succesful result.
-      // TODO: [MOB-3898] should we even finalize this?
-      yield* put(finalizeTransaction({ ...transaction, status: TransactionStatus.Success }))
-    }
+    // Unable to submit txn on chain, delete from state. This can sometimes be the case where we
+    // attempt to replace a txn that has already been mined. Delete new txn in case it was added
+    yield* put(
+      deleteTransaction({
+        address: transaction.from,
+        id: replacementTxnId,
+        chainId: transaction.chainId,
+      })
+    )
 
     yield* put(
       pushNotification({
