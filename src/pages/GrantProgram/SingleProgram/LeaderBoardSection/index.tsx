@@ -7,7 +7,6 @@ import Loader from 'components/Loader'
 import useGetLeaderboardGrantProgram, { RankByParam } from 'hooks/campaigns/useGetLeaderboardGrantProgram'
 import useTheme from 'hooks/useTheme'
 import { ProjectRanking } from 'types/grantProgram'
-import { formattedNumLong } from 'utils'
 
 import { HeaderText } from '../../styleds'
 import LeaderBoard from './LeaderBoard'
@@ -26,6 +25,18 @@ const EmptyRankings: any[] = []
 
 export const ITEMS_PER_PAGE = 5
 
+const formatTradingVolume = (num: number) => {
+  const notation = num > 100_000_000 ? 'compact' : 'standard'
+  const formatter = new Intl.NumberFormat('en-US', {
+    notation,
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  })
+  return formatter.format(num)
+}
+
 export type RankByConfig = {
   extracter: (p: ProjectRanking) => string // used to extract the value
   param: RankByParam // used as param in GET request
@@ -42,7 +53,7 @@ const rankByConfigs: RankByConfig[] = [
   },
   {
     extracter: (p: ProjectRanking) => {
-      return formattedNumLong(Number(p.totalVolume), true)
+      return formatTradingVolume(Number(p.totalVolume))
     },
     param: 'total_volume',
     title: t`Trading Volume`,

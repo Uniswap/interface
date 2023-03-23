@@ -1,12 +1,17 @@
 import { t } from '@lingui/macro'
 import dayjs from 'dayjs'
 import { rgba } from 'polished'
+import { useEffect, useState } from 'react'
 import { Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
 import { MouseoverTooltip } from 'components/Tooltip'
 import useTheme from 'hooks/useTheme'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
+
+const getNow = () => {
+  return Math.floor(Date.now() / 1000)
+}
 
 const TimeWrapper = styled.div<{ $background: string }>`
   width: fit-content;
@@ -107,10 +112,19 @@ type Props = {
   startTime: number
   endTime: number
 }
-
 const CountdownTimer: React.FC<Props> = ({ startTime, endTime }) => {
   const theme = useTheme()
-  const now = Math.floor(Date.now() / 1000)
+  const [now, setNow] = useState(getNow())
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(getNow())
+    }, 1_000)
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [])
 
   if (now < startTime) {
     return (

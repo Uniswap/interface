@@ -47,7 +47,9 @@ const useGetLeaderboardGrantProgram = (args: Args) => {
   )
 
   const refresh = () => {
-    mutate(url)
+    mutate(url, undefined, {
+      revalidate: true,
+    })
   }
 
   return {
