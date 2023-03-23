@@ -22,6 +22,7 @@ import {
   STAKING_PROXY_ADDRESSES,
 } from 'constants/addresses'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
 import { useContract } from 'hooks/useContract'
@@ -124,6 +125,7 @@ export interface StakeData {
   pool: string | null
   poolId: string | undefined
   poolContract?: Contract | null
+  stakingPoolExists?: boolean
 }
 
 export enum ProposalState {
@@ -409,11 +411,14 @@ export function useUserVotesAsOfBlock(block: number | undefined): CurrencyAmount
   return votes && uni ? CurrencyAmount.fromRawAmount(uni, votes) : undefined
 }
 
-export function usePoolIdByAddress(pool: string | undefined): string {
+export function usePoolIdByAddress(pool: string | undefined): { poolId: string; stakingPoolExists: boolean } {
   const registryContract = useRegistryContract()
   const poolId = useSingleCallResult(registryContract ?? undefined, 'getPoolIdFromAddress', [pool ?? undefined])
     ?.result?.[0]
-  return poolId
+  const stakingContract = useStakingContract()
+  const stakingPool = useSingleCallResult(stakingContract ?? undefined, 'getStakingPool', [poolId])?.result?.[0]
+  const stakingPoolExists = stakingPool !== undefined ? stakingPool?.operator !== ZERO_ADDRESS : false
+  return { poolId, stakingPoolExists }
 }
 
 export function useCreateCallback(): (
@@ -459,6 +464,7 @@ export function useDelegateCallback(): (stakeData: StakeData | undefined) => und
     (stakeData: StakeData | undefined) => {
       if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) return undefined
       //if (!stakeData.amount) return
+      const createPoolCall = stakingContract?.interface.encodeFunctionData('createStakingPool', [stakeData.pool])
       const stakeCall = stakingContract?.interface.encodeFunctionData('stake', [stakeData.amount])
       const fromInfo = { status: '0', poolId: stakeData.poolId }
       const toInfo = { status: '1', poolId: stakeData.poolId }
@@ -470,7 +476,10 @@ export function useDelegateCallback(): (stakeData: StakeData | undefined) => und
       const delegatee = stakeData.pool
       if (!delegatee) return
       //const args = [delegatee]
-      const args = [[stakeCall, moveStakeCall]]
+      // if the staking pool does not exist, user creates it and becomes staking pal
+      const args = !stakeData.stakingPoolExists
+        ? [[createPoolCall, stakeCall, moveStakeCall]]
+        : [[stakeCall, moveStakeCall]]
       if (!stakingProxy) throw new Error('No Staking Contract!')
       return stakingProxy.estimateGas.batchExecute(...args, {}).then((estimatedGasLimit) => {
         return stakingProxy

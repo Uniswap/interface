@@ -1,8 +1,9 @@
 import { isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { ReactNode, useCallback, useState } from 'react'
+import JSBI from 'jsbi'
+import { ReactNode, /*useCallback,*/ useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -11,7 +12,12 @@ import { GRG_TRANSFER_PROXY_ADDRESSES } from '../../constants/addresses'
 //import { isSupportedChain } from '../../constants/chains'
 import { GRG } from '../../constants/tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
+import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
 import useENS from '../../hooks/useENS'
+import { ResponsiveHeaderText, SmallMaxButton } from '../../pages/RemoveLiquidity/styled'
+// TODO: check if should write into state stake hooks
+import { useBurnV3ActionHandlers, useBurnV3State } from '../../state/burn/v3/hooks'
+//import { useDerivedPoolInfo } from '../../state/buy/hooks'
 import { useTokenBalance } from '../../state/connection/hooks'
 import {
   useDelegateCallback,
@@ -23,11 +29,12 @@ import { ThemedText } from '../../theme'
 import AddressInputPanel from '../AddressInputPanel'
 import { ButtonConfirmed, ButtonPrimary } from '../Button'
 //import { ButtonError } from '../Button'
+import { LightCard } from '../Card'
 import { AutoColumn } from '../Column'
-import CurrencyInputPanel from '../CurrencyInputPanel'
 import Modal from '../Modal'
 import { LoadingView, SubmittedView } from '../ModalViews'
-import { RowBetween } from '../Row'
+import { AutoRow, RowBetween } from '../Row'
+import Slider from '../Slider'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -60,16 +67,13 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
   const [currencyValue] = useState<Currency>(GRG[chainId ?? 1])
   const [usingDelegate, setUsingDelegate] = useState(false)
   const [typed, setTyped] = useState('')
-  const [typedValue, setTypedValue] = useState('')
 
   function handleRecipientType(val: string) {
     setTyped(val)
   }
 
-  // wrapped onUserInput to clear signatures
-  const onUserInput = useCallback((typedValue: string) => {
-    setTypedValue(typedValue)
-  }, [])
+  const { percent } = useBurnV3State()
+  const { onPercentSelect } = useBurnV3ActionHandlers()
 
   // monitor for self delegation or input for third part delegate
   // default is self delegation
@@ -80,16 +84,28 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
   // get the number of votes available to delegate
   const grgUserBalance = useTokenBalance(account ?? undefined, chainId ? GRG[chainId] : undefined)
   const grgPoolBalance = useTokenBalance(parsedAddress ?? undefined, chainId ? GRG[chainId] : undefined)
-  const poolId = usePoolIdByAddress(parsedAddress ?? undefined)
+  const { poolId, stakingPoolExists } = usePoolIdByAddress(parsedAddress ?? undefined)
   // we only pass the pool extended instance if we have to call the pool directly
   const poolContract = usePoolExtendedContract(parsedAddress ?? undefined)
   const grgBalance = usingDelegate ? grgPoolBalance : grgUserBalance
 
+  // boilerplate for the slider
+  const [percentForSlider, onPercentSelectForSlider] = useDebouncedChangeHandler(percent, onPercentSelect)
+  //CurrencyAmount.fromRawAmount(currency, JSBI.BigInt(typedValueParsed))
+  const parsedAmount = CurrencyAmount.fromRawAmount(
+    currencyValue,
+    JSBI.divide(
+      JSBI.multiply(grgBalance ? grgBalance.quotient : JSBI.BigInt(0), JSBI.BigInt(percentForSlider)),
+      JSBI.BigInt(100)
+    )
+  )
+
   const stakeData = {
-    amount: grgBalance?.quotient.toString(),
+    amount: parsedAmount?.quotient.toString(),
     pool: parsedAddress,
     poolId,
     poolContract: usingDelegate ? poolContract : undefined,
+    stakingPoolExists,
   }
 
   const delegateUserCallback = useDelegateCallback()
@@ -102,6 +118,10 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
 
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {
+    // if there was a tx hash, we want to clear the input
+    if (hash) {
+      onPercentSelectForSlider(0)
+    }
     setHash(undefined)
     setAttempting(false)
     onDismiss()
@@ -166,20 +186,6 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
             <ThemedText.DeprecatedBody>
               <Trans>Your voting power will unlock at the beginning of the next Rigoblock epoch.</Trans>
             </ThemedText.DeprecatedBody>
-            {/* TODO: fix input panel now working properly here, using mock condition to prevent display */}
-            {!chainId && (
-              <CurrencyInputPanel
-                value={typedValue}
-                currency={currencyValue ?? null}
-                onUserInput={onUserInput}
-                showMaxButton={false}
-                showCurrencyAmount={true}
-                label=""
-                id="stake-grg-token"
-                showCommonBases
-                locked={!grgBalance}
-              />
-            )}
             {/* confirmed={approval === ApprovalState.APPROVED} disabled={approval !== ApprovalState.NOT_APPROVED} */}
             {!usingDelegate && approval !== ApprovalState.APPROVED && (
               <ButtonConfirmed mr="0.5rem" onClick={onAttemptToApprove}>
@@ -187,6 +193,35 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
               </ButtonConfirmed>
             )}
             <AddressInputPanel value={typed} onChange={handleRecipientType} />
+            <RowBetween>
+              <ResponsiveHeaderText>
+                <Trans>{percentForSlider}%</Trans>
+              </ResponsiveHeaderText>
+              <AutoRow gap="4px" justify="flex-end">
+                <SmallMaxButton onClick={() => onPercentSelect(25)} width="20%">
+                  <Trans>25%</Trans>
+                </SmallMaxButton>
+                <SmallMaxButton onClick={() => onPercentSelect(50)} width="20%">
+                  <Trans>50%</Trans>
+                </SmallMaxButton>
+                <SmallMaxButton onClick={() => onPercentSelect(75)} width="20%">
+                  <Trans>75%</Trans>
+                </SmallMaxButton>
+                <SmallMaxButton onClick={() => onPercentSelect(100)} width="20%">
+                  <Trans>Max</Trans>
+                </SmallMaxButton>
+              </AutoRow>
+            </RowBetween>
+            <Slider value={percentForSlider} onChange={onPercentSelectForSlider} />
+            <LightCard>
+              <AutoColumn gap="md">
+                <RowBetween>
+                  <ThemedText.DeprecatedBody fontSize={16} fontWeight={500}>
+                    <Trans>Staking {formatCurrencyAmount(parsedAmount, 4)} GRG</Trans>
+                  </ThemedText.DeprecatedBody>
+                </RowBetween>
+              </AutoColumn>
+            </LightCard>
             <ButtonPrimary
               disabled={!isAddress(parsedAddress ?? '') || approval !== ApprovalState.APPROVED}
               onClick={onDelegate}
@@ -209,7 +244,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
             <ThemedText.DeprecatedLargeHeader>
               {usingDelegate ? <Trans>Staking From Pool</Trans> : <Trans>Unlocking Votes</Trans>}
             </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}> {formatCurrencyAmount(grgBalance, 4)}</ThemedText.DeprecatedMain>
+            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(parsedAmount, 4)}</ThemedText.DeprecatedMain>
           </AutoColumn>
         </LoadingView>
       )}
@@ -219,7 +254,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
             <ThemedText.DeprecatedLargeHeader>
               <Trans>Transaction Submitted</Trans>
             </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(grgBalance, 4)}</ThemedText.DeprecatedMain>
+            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(parsedAmount, 4)}</ThemedText.DeprecatedMain>
           </AutoColumn>
         </SubmittedView>
       )}
