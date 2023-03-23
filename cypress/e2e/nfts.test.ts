@@ -48,4 +48,9 @@ describe('Testing nfts', () => {
     cy.get(getTestSelector('nft-details-toggle-bag')).eq(1).click()
     cy.get(getTestSelector('nft-bag')).should('exist')
   })
+
+  it('should navigate to the owned nfts page', () => {
+    cy.get(getTestSelector('web3-status-connected')).click()
+    cy.get(getTestSelector('nft-view-self-nfts')).click()
+  })
 })
