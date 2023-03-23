@@ -9,7 +9,7 @@ import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { StatsigProvider, StatsigUser } from 'statsig-react'
 import styled from 'styled-components/macro'
@@ -136,7 +136,7 @@ export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
   const [shouldDisableNFTRoutes, setShouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
 
-  const { pathname, search } = useLocation()
+  const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
   const isDarkMode = useIsDarkMode()
   const isExpertMode = useIsExpertMode()
@@ -149,9 +149,10 @@ export default function App() {
     setScrolledState(false)
   }, [pathname])
 
+  const [searchParams] = useSearchParams()
   useEffect(() => {
-    setShouldDisableNFTRoutes(Boolean(search && search.includes('disableNfts=true')))
-  }, [search, setShouldDisableNFTRoutes])
+    if (searchParams.has('disableNFTs')) setShouldDisableNFTRoutes(true)
+  }, [searchParams, setShouldDisableNFTRoutes])
 
   useEffect(() => {
     // User properties *must* be set before sending corresponding event properties,
