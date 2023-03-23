@@ -1,4 +1,6 @@
 import { t } from '@lingui/macro'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import Column from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
@@ -178,29 +180,36 @@ function ActivityRow({ activity }: { activity: Activity }) {
   const timeSince = useTimeSince(activity.timestamp)
 
   return (
-    <PortfolioRow
-      left={
-        <Column>
-          <PortfolioLogo chainId={chainId} currencies={currencies} images={logos} accountAddress={otherAccount} />
-        </Column>
-      }
-      title={<ThemedText.SubHeader fontWeight={500}>{title}</ThemedText.SubHeader>}
-      descriptor={
-        <StyledDescriptor color="textSecondary">
-          {descriptor}
-          {ENSName ?? otherAccount}
-        </StyledDescriptor>
-      }
-      right={
-        status === TransactionStatus.Pending ? (
-          <LoaderV2 />
-        ) : status === TransactionStatus.Confirmed ? (
-          <StyledTimestamp>{timeSince}</StyledTimestamp>
-        ) : (
-          <AlertTriangleFilled />
-        )
-      }
-      onClick={() => window.open(explorerUrl, '_blank')}
-    />
+    <TraceEvent
+      events={[BrowserEvent.onClick]}
+      name={SharedEventName.ELEMENT_CLICKED}
+      element={InterfaceElementName.MINI_PORTFOLIO_ACTIVITY_ROW}
+      properties={{ hash: activity.hash, chain_id: chainId, explorer_url: explorerUrl }}
+    >
+      <PortfolioRow
+        left={
+          <Column>
+            <PortfolioLogo chainId={chainId} currencies={currencies} images={logos} accountAddress={otherAccount} />
+          </Column>
+        }
+        title={<ThemedText.SubHeader fontWeight={500}>{title}</ThemedText.SubHeader>}
+        descriptor={
+          <StyledDescriptor color="textSecondary">
+            {descriptor}
+            {ENSName ?? otherAccount}
+          </StyledDescriptor>
+        }
+        right={
+          status === TransactionStatus.Pending ? (
+            <LoaderV2 />
+          ) : status === TransactionStatus.Confirmed ? (
+            <StyledTimestamp>{timeSince}</StyledTimestamp>
+          ) : (
+            <AlertTriangleFilled />
+          )
+        }
+        onClick={() => window.open(explorerUrl, '_blank')}
+      />
+    </TraceEvent>
   )
 }

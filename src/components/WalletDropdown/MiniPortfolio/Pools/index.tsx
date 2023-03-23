@@ -1,4 +1,6 @@
 import { t } from '@lingui/macro'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -112,43 +114,50 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
   }
 
   return (
-    <PortfolioRow
-      onClick={onClick}
-      left={<PortfolioLogo chainId={chainId} currencies={[pool.token0, pool.token1]} />}
-      title={
-        <Row>
-          <ThemedText.SubHeader fontWeight={500}>
-            {pool.token0.symbol} / {pool.token1?.symbol}
-          </ThemedText.SubHeader>
-        </Row>
-      }
-      descriptor={<ThemedText.Caption>{`${pool.fee / 10000}%`}</ThemedText.Caption>}
-      right={
-        <>
-          <MouseoverTooltip
-            placement="left"
-            text={
-              <div style={{ padding: '4px 0px' }}>
-                <ThemedText.Caption>{`${formatNumber(
-                  liquidityValue,
-                  NumberType.PortfolioBalance
-                )} (liquidity) + ${formatNumber(feeValue, NumberType.PortfolioBalance)} (fees)`}</ThemedText.Caption>
-              </div>
-            }
-          >
+    <TraceEvent
+      events={[BrowserEvent.onClick]}
+      name={SharedEventName.ELEMENT_CLICKED}
+      element={InterfaceElementName.MINI_PORTFOLIO_POOLS_ROW}
+      properties={{ chain_id: chainId, pool_token_0: pool.token0, pool_token_1: pool.token1 }}
+    >
+      <PortfolioRow
+        onClick={onClick}
+        left={<PortfolioLogo chainId={chainId} currencies={[pool.token0, pool.token1]} />}
+        title={
+          <Row>
             <ThemedText.SubHeader fontWeight={500}>
-              {formatNumber((liquidityValue ?? 0) + (feeValue ?? 0), NumberType.PortfolioBalance)}
+              {pool.token0.symbol} / {pool.token1?.symbol}
             </ThemedText.SubHeader>
-          </MouseoverTooltip>
-
-          <Row justify="flex-end">
-            <ThemedText.Caption color="textSecondary">
-              {closed ? t`Closed` : inRange ? t`In range` : t`Out of range`}
-            </ThemedText.Caption>
-            <ActiveDot closed={closed} outOfRange={!inRange} />
           </Row>
-        </>
-      }
-    />
+        }
+        descriptor={<ThemedText.Caption>{`${pool.fee / 10000}%`}</ThemedText.Caption>}
+        right={
+          <>
+            <MouseoverTooltip
+              placement="left"
+              text={
+                <div style={{ padding: '4px 0px' }}>
+                  <ThemedText.Caption>{`${formatNumber(
+                    liquidityValue,
+                    NumberType.PortfolioBalance
+                  )} (liquidity) + ${formatNumber(feeValue, NumberType.PortfolioBalance)} (fees)`}</ThemedText.Caption>
+                </div>
+              }
+            >
+              <ThemedText.SubHeader fontWeight={500}>
+                {formatNumber((liquidityValue ?? 0) + (feeValue ?? 0), NumberType.PortfolioBalance)}
+              </ThemedText.SubHeader>
+            </MouseoverTooltip>
+
+            <Row justify="flex-end">
+              <ThemedText.Caption color="textSecondary">
+                {closed ? t`Closed` : inRange ? t`In range` : t`Out of range`}
+              </ThemedText.Caption>
+              <ActiveDot closed={closed} outOfRange={!inRange} />
+            </Row>
+          </>
+        }
+      />
+    </TraceEvent>
   )
 }
