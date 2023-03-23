@@ -11,6 +11,6 @@
     }
   ],
   "compilerOptions": {
-    "types": ["chrome"]
+    "types": ["chrome", "jest"]
   }
 }

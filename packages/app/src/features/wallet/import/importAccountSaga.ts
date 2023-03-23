@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import { CallEffect } from 'redux-saga/effects'
 import { all, call, put } from 'typed-redux-saga'
 import { logger } from '../../logger/logger'
-import { Keyring } from '../Keyring/Keyring'
+import { Keyring } from 'app/src/features/wallet/Keyring/Keyring'
 
 import { addAccounts } from '../slice'
 import { Account, AccountType } from '../types'
@@ -12,7 +12,7 @@ import { ImportAccountParams, ImportAccountType } from './types'
 
 export const IMPORT_WALLET_AMOUNT = 10
 
-function* importAccount(params: ImportAccountParams) {
+export function* importAccount(params: ImportAccountParams) {
   const { type, name } = params
   logger.debug('importAccountSaga', 'importAccount', 'Importing type:', type)
 

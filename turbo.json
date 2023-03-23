@@ -32,7 +32,7 @@
       "outputs": []
     },
     "tests#test": {
-      "inputs": ["apps/tests/**", "packages/ui/**"],
+      "inputs": ["packages/ui/**"],
       "outputs": []
     },
     "build": {

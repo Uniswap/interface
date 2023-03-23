@@ -52,11 +52,12 @@ export class NativeCurrency implements NativeCurrencyClass {
     {}
 
   public static onChain(chainId: number): NativeCurrency {
-    this.cachedNativeCurrency[chainId] ??= isPolygonChain(chainId)
-      ? new MaticNativeCurrency(chainId)
-      : new NativeCurrency(chainId)
-
-    return this.cachedNativeCurrency[chainId]
+    return (
+      this.cachedNativeCurrency[chainId] ??
+      (this.cachedNativeCurrency[chainId] = isPolygonChain(chainId)
+        ? new MaticNativeCurrency(chainId)
+        : new NativeCurrency(chainId))
+    )
   }
 }
 

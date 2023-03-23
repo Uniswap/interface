@@ -15,9 +15,9 @@
     "eslint.workingDirectories": [
       "./apps/extension",
       "./apps/storybook",
-      "./apps/tests",
       "./packages/app",
       "./packages/eslint-config-custom",
+      "./packages/jest-presets",
       "./packages/tsconfig",
       "./packages/ui"
     ]

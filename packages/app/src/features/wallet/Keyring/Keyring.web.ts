@@ -63,11 +63,13 @@ export class WebKeyring implements IKeyring {
 
     const address = wallet.address
 
-    if (!(await this.storeNewMnemonic(mnemonic, address))) {
+    const mnemonicId = await this.storeNewMnemonic(mnemonic, address)
+
+    if (!mnemonicId) {
       throw new Error('Failed to import mnemonic')
     }
 
-    return address
+    return mnemonicId
   }
 
   /**
@@ -93,11 +95,13 @@ export class WebKeyring implements IKeyring {
     mnemonic: string,
     address: string
   ): Promise<string | undefined> {
-    const newMnemonicKey = this.keyForMnemonicId(address)
-    const checkStored = await this.retrieveMnemonic(newMnemonicKey)
+    const checkStored = await this.retrieveMnemonic(address)
 
     if (checkStored === undefined) {
-      this.store.set({ [newMnemonicKey]: mnemonic })
+      const newMnemonicKey = this.keyForMnemonicId(address)
+
+      const items = { [newMnemonicKey]: mnemonic }
+      this.store.set(items)
       return address
     }
 
@@ -110,14 +114,17 @@ export class WebKeyring implements IKeyring {
   }
 
   private keyForMnemonicId(mnemonicId: string): string {
-    return mnemonicPrefix + mnemonicId
+    // NOTE: small difference with mobile implementation--native keychain prepends
+    // a custom prefix, but we missed do it ourselves here.
+    return entireMnemonicPrefix + mnemonicId
   }
 
   private async retrieveMnemonic(
     mnemonicId: string
   ): Promise<string | undefined> {
     const key = this.keyForMnemonicId(mnemonicId)
-    return (await this.store.get(key))[key]
+    const results = await this.store.get([key])
+    return (results ?? {})[key]
   }
 
   /**
@@ -176,10 +183,11 @@ export class WebKeyring implements IKeyring {
     address: string
   ): Promise<string | undefined> {
     const key = this.keyForPrivateKey(address)
-    return (await this.store.get(key))[key]
+    return (await this.store.get([key]))[key]
   }
+
   private keyForPrivateKey(address: string): string {
-    return privateKeyPrefix + address
+    return entirePrivateKeyPrefix + address
   }
 
   signTransactionHashForAddress(

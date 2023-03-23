@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
 
+import { isTest } from '../../utils/environment'
+
 type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 
 /**
@@ -54,10 +56,7 @@ function logMessage(
   functionName ||= fileName // To allow omitting function when it's same as file
   const formatted = formatMessage(fileName, functionName, message)
 
-  // if (__DEV__) {
   console[level](formatted, ...args)
-
-  // }
 }
 
 function formatMessage(

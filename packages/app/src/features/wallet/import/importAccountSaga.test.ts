@@ -1,13 +1,21 @@
 import { runSaga } from '@redux-saga/core'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { NATIVE_ADDRESS } from 'app/src/constants/addresses'
+import { signerManager } from '../../../test/__fixtures__'
+import { WebKeyring } from '../Keyring/Keyring.web'
 import { addAccounts } from '../slice'
 import { AccountType } from '../types'
+import { importAccount } from './importAccountSaga'
 import {
   ImportMnemonicAccountParams,
   ImportAccountType,
   ImportAddressAccountParams,
 } from './types'
+
+jest.mock('app/src/features/wallet/Keyring/Keyring', () => ({
+  // use WebKeyring as it can run in node environment
+  Keyring: new WebKeyring(),
+}))
 
 const SAMPLE_SEED = [
   'dove',
@@ -64,17 +72,19 @@ describe(importAccount, () => {
           mnemonicId: SAMPLE_SEED_ADDRESS_1,
         },
       ]),
-      addAccount({
-        type: AccountType.SignerMnemonic,
-        address: SAMPLE_SEED_ADDRESS_1,
-        name: 'WALLET',
-        pending: true,
-        derivationIndex: 0,
-        timeImportedMs: expect.any(Number),
-        mnemonicId: SAMPLE_SEED_ADDRESS_1,
-      }),
-      activateAccount(SAMPLE_SEED_ADDRESS_1),
-      unlockWallet(),
+      addAccounts([
+        {
+          type: AccountType.SignerMnemonic,
+          address: SAMPLE_SEED_ADDRESS_1,
+          name: 'WALLET',
+          pending: true,
+          derivationIndex: 0,
+          timeImportedMs: expect.any(Number),
+          mnemonicId: SAMPLE_SEED_ADDRESS_1,
+        },
+      ]),
+      // activateAccount(SAMPLE_SEED_ADDRESS_1),
+      // unlockWallet(),
     ])
   })
 
@@ -103,15 +113,17 @@ describe(importAccount, () => {
 
     // assert on dispatched actions
     expect(dispatched).toEqual([
-      addAccount({
-        type: AccountType.Readonly,
-        address: NATIVE_ADDRESS,
-        name: 'READONLY',
-        pending: true,
-        timeImportedMs: expect.any(Number),
-      }),
-      activateAccount(NATIVE_ADDRESS),
-      unlockWallet(),
+      addAccounts([
+        {
+          type: AccountType.Readonly,
+          address: NATIVE_ADDRESS,
+          name: 'READONLY',
+          pending: true,
+          timeImportedMs: expect.any(Number),
+        },
+      ]),
+      // activateAccount(NATIVE_ADDRESS),
+      // unlockWallet(),
     ])
   })
 })

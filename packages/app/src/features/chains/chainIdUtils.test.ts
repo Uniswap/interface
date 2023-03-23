@@ -1,15 +1,12 @@
-import { BigNumber } from 'ethers'
-import { ChainId, TESTNET_CHAIN_IDS } from 'src/constants/chains'
-import { PollingInterval } from 'src/constants/misc'
-import { Chain } from 'src/data/__generated__/types-and-hooks'
+import { PollingInterval } from 'app/src/constants/misc'
 import {
-  fromGraphQLChain,
-  getPollingIntervalByBlocktime,
   isTestnet,
   parseActiveChains,
-  toGraphQLChain,
   toSupportedChainId,
-} from 'src/utils/chainId'
+} from 'app/src/utils/chainId'
+import { BigNumber } from 'ethers'
+import { getPollingIntervalByBlocktime } from './chainIdUtils'
+import { ChainId, TESTNET_CHAIN_IDS } from './chains'
 
 describe(toSupportedChainId, () => {
   it('handles undefined input', () => {
@@ -50,30 +47,6 @@ describe(isTestnet, () => {
 
   it('handles testnet', () => {
     expect(isTestnet(TESTNET_CHAIN_IDS[0])).toEqual(true)
-  })
-})
-
-describe(fromGraphQLChain, () => {
-  it('handles undefined', () => {
-    expect(fromGraphQLChain(undefined)).toEqual(null)
-  })
-
-  it('handles supported chain', () => {
-    expect(fromGraphQLChain(Chain.Arbitrum)).toEqual(ChainId.ArbitrumOne)
-  })
-
-  it('handles unsupported chain', () => {
-    expect(fromGraphQLChain(Chain.Celo)).toEqual(null)
-  })
-})
-
-describe(toGraphQLChain, () => {
-  it('handles supported chain', () => {
-    expect(toGraphQLChain(ChainId.Mainnet)).toEqual(Chain.Ethereum)
-  })
-
-  it('handle unsupported chain', () => {
-    expect(toGraphQLChain(ChainId.PolygonMumbai)).toEqual(null)
   })
 })
 

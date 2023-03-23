@@ -65,56 +65,48 @@ Fetches all public addresses from private keys stored under `privateKeyPrefix` i
 /** Dummy Keyring implementation.  */
 class NullKeyring implements IKeyring {
   getMnemonicIds(): Promise<string[]> {
-    return notImplemented('getMnemonicIds')
+    throw new NotImplementedError('getMnemonicIds')
   }
 
   // returns the mnemonicId (derived address at index 0) of the imported mnemonic
-  importMnemonic(mnemonic: string): Promise<string> {
-    return notImplemented('importMnemonic')
+  importMnemonic(): Promise<string> {
+    throw new NotImplementedError('importMnemonic')
   }
 
   // returns the mnemonicId (derived address at index 0) of the stored mnemonic
   generateAndStoreMnemonic(): Promise<string> {
-    return notImplemented('generateAndStoreMnemonic')
+    throw new NotImplementedError('generateAndStoreMnemonic')
   }
 
   getAddressesForStoredPrivateKeys(): Promise<string[]> {
-    return notImplemented('getAddressesForStoredPrivateKeys')
+    throw new NotImplementedError('getAddressesForStoredPrivateKeys')
   }
 
   // returns the address of the generated key
-  generateAndStorePrivateKey(
-    mnemonicId: string,
-    derivationIndex: number
-  ): Promise<string> {
-    return notImplemented('generateAndStorePrivateKey')
+  generateAndStorePrivateKey(): Promise<string> {
+    throw new NotImplementedError('generateAndStorePrivateKey')
   }
 
-  signTransactionHashForAddress(
-    address: string,
-    hash: string,
-    chainId: number
-  ): Promise<string> {
-    return notImplemented('signTransactionHashForAddress')
+  signTransactionHashForAddress(): Promise<string> {
+    throw new NotImplementedError('signTransactionHashForAddress')
   }
 
   signMessageForAddress(address: string, message: string): Promise<string> {
-    return notImplemented('signMessageForAddress')
+    throw new NotImplementedError('signMessageForAddress')
   }
 
-  signHashForAddress(
-    address: string,
-    hash: string,
-    chainId: number
-  ): Promise<string> {
-    return notImplemented('signHashForAddress')
+  signHashForAddress(): Promise<string> {
+    throw new NotImplementedError('signHashForAddress')
   }
 }
 
-const notImplemented = (functionName: string) => {
-  throw new Error(
-    `KeyManager.${functionName}() not implemented. Did you forget a platform override?`
-  )
+class NotImplementedError extends Error {
+  constructor(functionName: string) {
+    super(
+      `KeyManager.${functionName}() not implemented. Did you forget a platform override?`
+    )
+    this.name = this.constructor.name
+  }
 }
 
 // Will be overriden by the compiler with platform-specific Keyring
