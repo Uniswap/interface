@@ -18,7 +18,6 @@ const ColumnContainer = styled(AutoColumn)`
 
 export const PopupAlertTriangle = styled(AlertTriangleFilled)`
   flex-shrink: 0;
-  color: ${({ theme }) => (theme.darkMode ? theme.backgroundSurface : 'white')};
   width: 32px;
   height: 32px;
   margin-right: 12px;
