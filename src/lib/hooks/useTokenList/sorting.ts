@@ -2,6 +2,7 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { TokenInfo } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { BalancesResult, PricesResult } from 'state/connection/hooks'
+import { currencyAmountToPreciseFloat } from 'utils/formatNumbers'
 
 /** Sorts currency amounts (descending). */
 function balanceComparator(a?: CurrencyAmount<Currency>, b?: CurrencyAmount<Currency>) {
@@ -10,8 +11,8 @@ function balanceComparator(a?: CurrencyAmount<Currency>, b?: CurrencyAmount<Curr
 
 /** Sorts currency amounts by value (descending). */
 function valueComparator(a?: CurrencyAmount<Currency>, b?: CurrencyAmount<Currency>, aPrice?: number, bPrice?: number) {
-  const aBalance: number = parseFloat(a?.toFixed(2) ?? '0')
-  const bBalance: number = parseFloat(b?.toFixed(2) ?? '0')
+  const aBalance = currencyAmountToPreciseFloat(a) ?? 1
+  const bBalance = currencyAmountToPreciseFloat(b) ?? 1
   if (a && b) {
     return aBalance * (aPrice ?? 1) > bBalance * (bPrice ?? 1)
       ? -1
@@ -26,7 +27,7 @@ function valueComparator(a?: CurrencyAmount<Currency>, b?: CurrencyAmount<Curren
   return 0
 }
 
-/** Sorts tokens by USD Value (descending), then currency amount (descending), then safety, then symbol (ascending). */
+/** Sorts tokens by USD Value (descending), then currency amount (descending), then symbol (ascending). */
 export function tokenComparator(balances: BalancesResult, prices: PricesResult, a: Token, b: Token) {
   // Sorts by USD value
   const valueComparison = valueComparator(
