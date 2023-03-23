@@ -11,6 +11,8 @@ const currentTimestamp = () => new Date().getTime()
 export interface UserState {
   taxServiceDismissals: number | undefined
 
+  buyFiatClicked: boolean | undefined
+
   selectedWallet?: ConnectionType
 
   // the timestamp of the last updateVersion action
@@ -58,6 +60,7 @@ function pairKey(token0Address: string, token1Address: string) {
 
 export const initialState: UserState = {
   taxServiceDismissals: 0,
+  buyFiatClicked: false,
   selectedWallet: undefined,
   userExpertMode: false,
   userLocale: null,
@@ -80,6 +83,9 @@ const userSlice = createSlice({
   reducers: {
     updateTaxServiceAcknowledgments(state, action) {
       state.taxServiceDismissals = action.payload.taxServiceDismissals
+    },
+    updateUserBuyFiatClicked(state, action) {
+      state.buyFiatClicked = action.payload.buyFiatClicked
     },
     updateSelectedWallet(state, { payload: { wallet } }) {
       state.selectedWallet = wallet
@@ -170,6 +176,7 @@ export const {
   addSerializedPair,
   addSerializedToken,
   updateTaxServiceAcknowledgments,
+  updateUserBuyFiatClicked,
   updateSelectedWallet,
   updateHideClosedPositions,
   updateUserClientSideRouter,

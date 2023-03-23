@@ -19,6 +19,7 @@ import {
   updateHideClosedPositions,
   updateHideUniswapWalletBanner,
   updateTaxServiceAcknowledgments,
+  updateUserBuyFiatClicked,
   updateUserClientSideRouter,
   updateUserDeadline,
   updateUserExpertMode,
@@ -67,6 +68,18 @@ export function useUserLocaleManager(): [SupportedLocale | null, (newLocale: Sup
 
 export function useIsExpertMode(): boolean {
   return useAppSelector((state) => state.user.userExpertMode)
+}
+
+export function useBuyFiatClicked(): [boolean | undefined, (buyFiatClicked: boolean) => void] {
+  const dispatch = useAppDispatch()
+  const buyFiatClicked = useAppSelector((state) => state.user.buyFiatClicked)
+  const setBuyFiatClicked = useCallback(
+    (buyFiatClicked: boolean) => {
+      dispatch(updateUserBuyFiatClicked({ buyFiatClicked }))
+    },
+    [dispatch]
+  )
+  return [buyFiatClicked, setBuyFiatClicked]
 }
 
 export function useTaxServiceDismissal(): [number | undefined, (dismissals: number) => void] {

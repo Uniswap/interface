@@ -99,8 +99,10 @@ const TextContainer = styled.div`
   justify-content: center;
 `
 
-export const StyledXButton = styled(X)`
+export const StyledXButton = styled(X)<{ size: number }>`
   color: ${({ theme }) => theme.textPrimary};
+  height: ${({ size }) => `${size}px`};
+  width: ${({ size }) => `${size}px`};
   cursor: pointer;
   &:hover {
     opacity: ${({ theme }) => theme.opacity.hover};
