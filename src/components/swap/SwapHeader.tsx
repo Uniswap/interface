@@ -78,14 +78,17 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
   const [shouldCheck, setShouldCheck] = useState(false)
   const [fiatOnRampUnavailable, setFiatOnRampUnavailable] = useState(false)
   const [buyFiatClicked, setBuyFiatClicked] = useBuyFiatClicked()
+  console.log('buyFiatClicked', buyFiatClicked)
   const { available: fiatOnrampAvailable, availabilityChecked: fiatOnrampAvailabilityChecked } =
     useFiatOnrampAvailability(shouldCheck, openFiatOnrampModal)
 
   const handleBuyCryptoClick = useCallback(() => {
     if (!fiatOnrampAvailabilityChecked) {
+      console.log('fiatOnrampAvailabilityChecked', fiatOnrampAvailabilityChecked)
       setShouldCheck(true)
     } else if (fiatOnrampAvailable) {
       openFiatOnrampModal()
+      console.log('fiatOnrampAvailable', fiatOnrampAvailable)
       setBuyFiatClicked(true)
     }
   }, [fiatOnrampAvailabilityChecked, fiatOnrampAvailable, openFiatOnrampModal, setBuyFiatClicked])
@@ -125,43 +128,50 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
           <SettingsTab placeholderSlippage={allowedSlippage} />
         </RowFixed>
       </RowBetween>
-      <PopupContainer show={fiatOnRampUnavailable}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            padding: '12px',
-          }}
-        >
+      {!buyFiatClicked && (
+        <PopupContainer show={fiatOnRampUnavailable}>
           <div
             style={{
               display: 'flex',
               flexDirection: 'row',
-              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '12px',
             }}
           >
-            <AlertTriangleFilled size="40px" />
-          </div>
-          <div
-            style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '12px 16px' }}
-          >
-            <div className={subhead}>
-              <Trans>Crypto purchases are not available in your region.</Trans>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              <AlertTriangleFilled size="40px" />
             </div>
-            <ExternalLink href={TOKEN_SAFETY_ARTICLE} className={bodySmall}>
-              <Trans>Learn more</Trans>
-            </ExternalLink>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                padding: '12px 16px',
+              }}
+            >
+              <div className={subhead}>
+                <Trans>Crypto purchases are not available in your region.</Trans>
+              </div>
+              <ExternalLink href={TOKEN_SAFETY_ARTICLE} className={bodySmall}>
+                <Trans>Learn more</Trans>
+              </ExternalLink>
+            </div>
+            <StyledXButton
+              size={28}
+              color={theme.textSecondary}
+              onClick={() => {
+                setFiatOnRampUnavailable(false)
+              }}
+            />
           </div>
-          <StyledXButton
-            size={28}
-            color={theme.textSecondary}
-            onClick={() => {
-              setFiatOnRampUnavailable(false)
-            }}
-          />
-        </div>
-      </PopupContainer>
+        </PopupContainer>
+      )}
     </StyledSwapHeader>
   )
 }
