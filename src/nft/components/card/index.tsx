@@ -16,6 +16,7 @@ interface NftCardProps {
   selectAsset: () => void
   unselectAsset: () => void
   onClick?: () => void
+  sendAnalyticsEvent?: () => void
   doNotLinkToDetails?: boolean
   mediaShouldBePlaying: boolean
   uniformAspectRatio?: UniformAspectRatio
@@ -24,6 +25,7 @@ interface NftCardProps {
   setRenderedHeight?: (renderedHeight: number | undefined) => void
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
   testId?: string
+  hideDetails?: boolean
 }
 
 export interface NftCardDisplayProps {
@@ -44,6 +46,7 @@ export const NftCard = ({
   unselectAsset,
   isDisabled,
   onClick,
+  sendAnalyticsEvent,
   doNotLinkToDetails = false,
   mediaShouldBePlaying,
   uniformAspectRatio = UniformAspectRatios.square,
@@ -52,6 +55,7 @@ export const NftCard = ({
   setRenderedHeight,
   setCurrentTokenPlayingMedia,
   testId,
+  hideDetails = false,
 }: NftCardProps) => {
   const clickActionButton = useSelectAsset(selectAsset, unselectAsset, isSelected, isDisabled, onClick)
   const { bagExpanded, setBagExpanded } = useBag(
@@ -78,6 +82,7 @@ export const NftCard = ({
       testId={testId}
       onClick={() => {
         if (bagExpanded) setBagExpanded({ bagExpanded: false })
+        sendAnalyticsEvent?.()
       }}
     >
       <MediaContainer isDisabled={isDisabled}>
@@ -97,27 +102,31 @@ export const NftCard = ({
           setRenderedHeight
         )}
       </MediaContainer>
-      <Card.DetailsRelativeContainer>
-        <Card.DetailsContainer>
-          <Card.InfoContainer>
-            <Card.PrimaryRow>
-              <Card.PrimaryDetails>
-                <Card.PrimaryInfo>{display.primaryInfo}</Card.PrimaryInfo>
-                {display.primaryInfoIcon}
-              </Card.PrimaryDetails>
-              {display.primaryInfoRight}
-            </Card.PrimaryRow>
-            <Card.SecondaryRow>
-              <Card.SecondaryDetails>
-                <Card.SecondaryInfo>{display.secondaryInfo}</Card.SecondaryInfo>
-              </Card.SecondaryDetails>
-            </Card.SecondaryRow>
-          </Card.InfoContainer>
-        </Card.DetailsContainer>
-      </Card.DetailsRelativeContainer>
-      <Card.ActionButton clickActionButton={clickActionButton} isDisabled={isDisabled} isSelected={isSelected}>
-        {isSelected ? display.selectedInfo : isDisabled ? display.disabledInfo : display.notSelectedInfo}
-      </Card.ActionButton>
+      {!hideDetails && (
+        <>
+          <Card.DetailsRelativeContainer>
+            <Card.DetailsContainer>
+              <Card.InfoContainer>
+                <Card.PrimaryRow>
+                  <Card.PrimaryDetails>
+                    <Card.PrimaryInfo>{display.primaryInfo}</Card.PrimaryInfo>
+                    {display.primaryInfoIcon}
+                  </Card.PrimaryDetails>
+                  {display.primaryInfoRight}
+                </Card.PrimaryRow>
+                <Card.SecondaryRow>
+                  <Card.SecondaryDetails>
+                    <Card.SecondaryInfo>{display.secondaryInfo}</Card.SecondaryInfo>
+                  </Card.SecondaryDetails>
+                </Card.SecondaryRow>
+              </Card.InfoContainer>
+            </Card.DetailsContainer>
+          </Card.DetailsRelativeContainer>
+          <Card.ActionButton clickActionButton={clickActionButton} isDisabled={isDisabled} isSelected={isSelected}>
+            {isSelected ? display.selectedInfo : isDisabled ? display.disabledInfo : display.notSelectedInfo}
+          </Card.ActionButton>
+        </>
+      )}
     </Card.Container>
   )
 }

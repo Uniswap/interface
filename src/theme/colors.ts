@@ -58,6 +58,7 @@ export const colors = {
   yellowVibrant: '#FAF40A',
   // TODO: add gold 50-900
   gold200: '#EEB317',
+  gold400: '#B17900',
   goldVibrant: '#FEB239',
   green50: '#E3F3E6',
   green100: '#BFEECA',
@@ -119,8 +120,11 @@ const commonTheme = {
   chain_42161_background: colors.blue900,
   chain_56_background: colors.networkBsc,
 
+  brandedGradient: 'linear-gradient(139.57deg, #FF79C9 4.35%, #FFB8E2 96.44%);',
+  promotionalGradient: 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%);',
+
   hoverState: opacify(24, colors.blue200),
-  hoverDefault: opacify(8, colors.gray200),
+  hoverDefault: opacify(8, colors.gray300),
 }
 
 export const darkTheme = {
@@ -134,7 +138,7 @@ export const darkTheme = {
   backgroundModule: colors.gray800,
   backgroundInteractive: colors.gray700,
   backgroundFloating: opacify(12, colors.black),
-  backgroundOutline: colors.gray750,
+  backgroundOutline: opacify(24, colors.gray300),
   backgroundScrim: opacify(72, colors.gray900),
   backgroundScrolledSurface: opacify(72, colors.gray900),
 
@@ -197,14 +201,14 @@ export const lightTheme: Theme = {
   accentAction: colors.pink400,
   accentActive: colors.blue400,
   accentSuccess: colors.green300,
-  accentWarning: colors.gold200,
+  accentWarning: colors.gold400,
   accentFailure: colors.red400,
   accentCritical: colors.red400,
 
   accentActionSoft: opacify(12, colors.pink400),
   accentActiveSoft: opacify(24, colors.blue400),
   accentSuccessSoft: opacify(24, colors.green300),
-  accentWarningSoft: opacify(24, colors.gold200),
+  accentWarningSoft: opacify(24, colors.gold400),
   accentFailureSoft: opacify(12, colors.red400),
 
   accentTextDarkPrimary: opacify(80, colors.gray900),

@@ -6,9 +6,12 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
+import { useToggleWalletDrawer } from 'components/WalletDropdown'
 import usePrevious from 'hooks/usePrevious'
+import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -20,6 +23,7 @@ import {
   useV3MintState,
 } from 'state/mint/v3/hooks'
 import { useTheme } from 'styled-components/macro'
+import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from '../../components/Button'
 import { BlueCard, OutlineCard, YellowCard } from '../../components/Card'
@@ -48,7 +52,6 @@ import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from '../../hooks/useV3Positions'
-import { useToggleWalletModal } from '../../state/application/hooks'
 import { Bound, Field } from '../../state/mint/v3/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { TransactionType } from '../../state/transactions/types'
@@ -88,7 +91,7 @@ export default function AddLiquidity() {
   const { account, chainId, provider } = useWeb3React()
   const theme = useTheme()
 
-  const toggleWalletModal = useToggleWalletModal() // toggle wallet when disconnected
+  const toggleWalletDrawer = useToggleWalletDrawer() // toggle wallet when disconnected
   const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
@@ -472,7 +475,7 @@ export default function AddLiquidity() {
         properties={{ received_swap_quote: false }}
         element={InterfaceElementName.CONNECT_WALLET_BUTTON}
       >
-        <ButtonLight onClick={toggleWalletModal} $borderRadius="12px" padding="12px">
+        <ButtonLight onClick={toggleWalletDrawer} $borderRadius="12px" padding="12px">
           <Trans>Connect Wallet</Trans>
         </ButtonLight>
       </TraceEvent>
@@ -548,6 +551,12 @@ export default function AddLiquidity() {
     }),
     [usdcValueCurrencyB]
   )
+
+  const owner = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
+  const ownsNFT =
+    addressesAreEquivalent(owner, account) || addressesAreEquivalent(existingPositionDetails?.operator, account)
+  const showOwnershipWarning = Boolean(hasExistingPosition && account && !ownsNFT)
+
   return (
     <>
       <ScrollablePage>
@@ -912,6 +921,7 @@ export default function AddLiquidity() {
             </ResponsiveTwoColumns>
           </Wrapper>
         </PageWrapper>
+        {showOwnershipWarning && <OwnershipWarning ownerAddress={owner} />}
         {addIsUnsupported && (
           <UnsupportedCurrencyFooter
             show={addIsUnsupported}

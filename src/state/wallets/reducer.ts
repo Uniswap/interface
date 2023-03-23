@@ -29,5 +29,5 @@ const walletsSlice = createSlice({
   },
 })
 
-export const { addConnectedWallet, removeConnectedWallet } = walletsSlice.actions
+export const { addConnectedWallet } = walletsSlice.actions
 export default walletsSlice.reducer

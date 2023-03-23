@@ -1,3 +1,4 @@
+import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
 import { BACKEND_CHAIN_NAMES, CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -6,7 +7,8 @@ import { Check, ChevronDown, ChevronUp } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components/macro'
+import { EllipsisStyle } from 'theme'
 
 import FilterOption from './FilterOption'
 
@@ -20,7 +22,7 @@ const InternalMenuItem = styled.div`
     text-decoration: none;
   }
 `
-const InternalLinkMenuItem = styled(InternalMenuItem)`
+const InternalLinkMenuItem = styled(InternalMenuItem)<{ disabled?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -32,6 +34,13 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
     background-color: ${({ theme }) => theme.hoverState};
     text-decoration: none;
   }
+
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      opacity: 60%;
+      pointer-events: none;
+    `}
 `
 const MenuTimeFlyout = styled.span`
   min-width: 240px;
@@ -72,6 +81,7 @@ const Chevron = styled.span<{ open: boolean }>`
   color: ${({ open, theme }) => (open ? theme.accentActive : theme.textSecondary)};
 `
 const NetworkLabel = styled.div`
+  ${EllipsisStyle}
   display: flex;
   gap: 8px;
   align-items: center;
@@ -85,7 +95,14 @@ const CheckContainer = styled.div`
   flex-direction: flex-end;
 `
 const NetworkFilterOption = styled(FilterOption)`
-  width: 156px;
+  min-width: 156px;
+`
+const Tag = styled(Badge)`
+  background-color: ${({ theme }) => theme.backgroundModule};
+  color: ${({ theme }) => theme.textSecondary};
+  font-size: 10px;
+  opacity: 1;
+  padding: 4px 6px;
 `
 
 export default function NetworkFilter() {
@@ -100,6 +117,7 @@ export default function NetworkFilter() {
   const currentChainName = validateUrlChainParam(chainName)
 
   const chainInfo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[currentChainName])
+  const BNBChainInfo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID.BNB)
 
   return (
     <StyledMenu ref={node}>
@@ -148,6 +166,13 @@ export default function NetworkFilter() {
               </InternalLinkMenuItem>
             )
           })}
+          <InternalLinkMenuItem data-testid="tokens-network-filter-option-bnb-chain" disabled>
+            <NetworkLabel>
+              <Logo src={BNBChainInfo.logoUrl} />
+              {BNBChainInfo.label}
+            </NetworkLabel>
+            <Tag>Coming soon</Tag>
+          </InternalLinkMenuItem>
         </MenuTimeFlyout>
       )}
     </StyledMenu>

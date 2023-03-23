@@ -10,7 +10,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 const EMPTY_AMOUNT = ''
 
 type SwapValue = Required<SwapController>['value']
-type SwapTokens = Pick<SwapValue, Field.INPUT | Field.OUTPUT> & { default?: Currency }
+export type SwapTokens = Pick<SwapValue, Field.INPUT | Field.OUTPUT> & { default?: Currency }
 export type DefaultTokens = Partial<SwapTokens>
 
 function missingDefaultToken(tokens: SwapTokens) {
@@ -47,7 +47,7 @@ export function useSyncWidgetInputs({
   onDefaultTokenChange,
 }: {
   defaultTokens: DefaultTokens
-  onDefaultTokenChange?: (token: Currency) => void
+  onDefaultTokenChange?: (tokens: SwapTokens) => void
 }) {
   const trace = useTrace({ section: InterfaceSectionName.WIDGET })
 
@@ -65,13 +65,18 @@ export function useSyncWidgetInputs({
   const baseTokens = usePrevious(defaultTokens)
   useEffect(() => {
     if (!tokensEqual(baseTokens, defaultTokens)) {
+      const input = defaultTokens[Field.INPUT]
+      const output = defaultTokens[Field.OUTPUT] ?? defaultTokens.default
       setTokens({
         ...defaultTokens,
-        [Field.OUTPUT]: defaultTokens[Field.OUTPUT] ?? defaultTokens.default,
+        [Field.OUTPUT]: currenciesEqual(output, input) ? undefined : output,
       })
     }
   }, [baseTokens, defaultTokens])
 
+  /**
+   * Clear the tokens if the chain changes.
+   */
   useEffect(() => {
     if (chainId !== previousChainId && !!previousChainId && isSupportedChain(chainId)) {
       setTokens({
@@ -137,7 +142,10 @@ export function useSyncWidgetInputs({
       })
 
       if (missingDefaultToken(update)) {
-        onDefaultTokenChange?.(update[Field.OUTPUT] ?? selectingToken)
+        onDefaultTokenChange?.({
+          ...update,
+          default: update[Field.OUTPUT] ?? selectingToken,
+        })
         return
       }
       setTokens(update)

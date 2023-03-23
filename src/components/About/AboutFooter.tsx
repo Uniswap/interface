@@ -1,8 +1,8 @@
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
-import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ExternalLink, StyledRouterLink } from 'theme'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import { DiscordIcon, GithubIcon, TwitterIcon } from './Icons'
 import darkUnicornImgSrc from './images/unicornEmbossDark.png'

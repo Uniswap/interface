@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-03-14 20:05\n"
+"PO-Revision-Date: 2023-03-21 23:05\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -619,10 +619,6 @@ msgstr ""
 #: src/pages/Pool/v2.tsx
 msgid "Create a pair"
 msgstr "Egy pár létrehozása"
-
-#: src/pages/Pool/index.tsx
-msgid "Create a pool"
-msgstr "Pool létrehozása"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
@@ -1420,7 +1416,6 @@ msgid "Please type the word \"{confirmWord}\" to enable expert mode."
 msgstr "Írja be a \"{confirmWord}\" szót a szakértői mód engedélyezéséhez."
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
-#: src/components/NavBar/index.tsx
 msgid "Pool"
 msgstr "Pool"
 
@@ -1444,6 +1439,7 @@ msgstr "Pool tokenek a jutalom poolban:"
 msgid "Pooled {0}:"
 msgstr "Összevonva {0}:"
 
+#: src/components/NavBar/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Pools"
@@ -1683,6 +1679,10 @@ msgstr ""
 
 #: src/nft/components/profile/list/NFTListingsGrid.tsx
 msgid "Same Price"
+msgstr ""
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Save on Tax Services"
 msgstr ""
 
 #: src/components/TaxServiceModal/TaxServiceBanner.tsx
@@ -2006,10 +2006,6 @@ msgstr "Ennek a poolnak az ára az Ön által kiválasztott tartományon belül 
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Az Ön által hozzáadott tokenek aránya határozza meg ennek a poolnak az árát."
 
-#: src/utils/swapErrorToUserReadableMessage.tsx
-msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
-msgstr "A tranzakciót nem sikerült elküldeni, mert a határidő lejárt. Kérjük, ellenőrizze, hogy a tranzakció határideje nem túl alacsony-e."
-
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "There is no liquidity data."
 msgstr ""
@@ -2049,6 +2045,10 @@ msgstr ""
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Ez az eszköz biztonságosan migrálja a {0} likviditását a V3-ba. A folyamat teljesen megbízhatatlan köszönhetően"
+
+#: src/utils/swapErrorToUserReadableMessage.tsx
+msgid "This transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
+msgstr ""
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -2134,7 +2134,6 @@ msgid "Transaction pending"
 msgstr ""
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
-#: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "Transaction rejected"
 msgstr "Tranzakció elutasítva"
 
@@ -2193,6 +2192,10 @@ msgstr ""
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Uniswap Labs' Terms of Service"
+msgstr ""
+
+#: src/pages/Pool/v2.tsx
+msgid "Uniswap V2 is not available on this network."
 msgstr ""
 
 #: src/components/SwitchLocaleLink/index.tsx
@@ -2263,10 +2266,6 @@ msgstr "Delegálás frissítése"
 msgid "Use the Uniswap Labs API to get faster quotes."
 msgstr ""
 
-#: src/pages/Pool/v2.tsx
-msgid "V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum."
-msgstr ""
-
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
 msgstr "V2 likviditás"
@@ -2288,7 +2287,6 @@ msgstr ""
 msgid "View more analytics"
 msgstr ""
 
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/nft/components/collection/TransactionCompleteModal.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
@@ -2298,6 +2296,10 @@ msgstr "Nézd meg az Etherscan webhelyen"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "Megtekintés az Explorerben"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "View on {0}"
+msgstr ""
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -2536,6 +2538,9 @@ msgid "Your positions"
 msgstr "Saját pozíciók"
 
 #: src/hooks/useUniversalRouter.ts
+msgid "Your swap is expected to fail."
+msgstr ""
+
 #: src/hooks/useUniversalRouter.ts
 msgid "Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds."
 msgstr ""

@@ -1,8 +1,10 @@
 import { useWeb3React } from '@web3-react/core'
+import UniswapWalletBanner from 'components/Banner/UniswapWalletBanner'
 import AddressClaimModal from 'components/claim/AddressClaimModal'
 import ConnectedAccountBlocked from 'components/ConnectedAccountBlocked'
 import FiatOnrampModal from 'components/FiatOnrampModal'
 import TaxServiceBanner from 'components/TaxServiceModal/TaxServiceBanner'
+import UniwalletModal from 'components/WalletDropdown/UniwalletModal'
 import { useTaxServiceBannerEnabled } from 'featureFlags/flags/taxServiceBanner'
 import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import { useIsNftPage } from 'hooks/useIsNftPage'
@@ -36,6 +38,8 @@ export default function TopLevelModals() {
       <AddressClaimModal isOpen={addressClaimOpen} onDismiss={addressClaimToggle} />
       <ConnectedAccountBlocked account={account} isOpen={accountBlocked} />
       <Bag />
+      <UniwalletModal />
+      <UniswapWalletBanner />
       <TransactionCompleteModal />
       <AirdropModal />
       <FiatOnrampModal />

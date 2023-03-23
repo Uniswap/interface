@@ -13,12 +13,14 @@ import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sd
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
+import Loader from 'components/Icons/LoadingSpinner'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { useToggleWalletDrawer } from 'components/WalletDropdown'
 import Widget from 'components/Widget'
 import { isSupportedChain } from 'constants/chains'
 import { useSwapWidgetEnabled } from 'featureFlags/flags/swapWidget'
@@ -33,7 +35,6 @@ import { ReactNode } from 'react'
 import { ArrowDown, Info } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
-import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
@@ -45,7 +46,6 @@ import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button
 import { GrayCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
-import Loader from '../../components/Loader'
 import { AutoRow } from '../../components/Row'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
@@ -53,7 +53,7 @@ import { ArrowWrapper, PageWrapper, SwapCallbackError, SwapWrapper } from '../..
 import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
-import { useAllTokens, useCurrency } from '../../hooks/Tokens'
+import { useCurrency, useDefaultActiveTokens } from '../../hooks/Tokens'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import useWrapCallback, { WrapErrorText, WrapType } from '../../hooks/useWrapCallback'
 import { Field } from '../../state/swap/actions'
@@ -171,7 +171,7 @@ export default function Swap({ className }: { className?: string }) {
   }, [])
 
   // dismiss warning if all imported tokens are in active lists
-  const defaultTokens = useAllTokens()
+  const defaultTokens = useDefaultActiveTokens()
   const importTokensNotInDefault = useMemo(
     () =>
       urlLoadedTokens &&
@@ -194,7 +194,7 @@ export default function Swap({ className }: { className?: string }) {
   const theme = useTheme()
 
   // toggle wallet when disconnected
-  const toggleWalletModal = useToggleWalletModal()
+  const toggleWalletDrawer = useToggleWalletDrawer()
 
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
@@ -634,7 +634,7 @@ export default function Swap({ className }: { className?: string }) {
                       properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
                       element={InterfaceElementName.CONNECT_WALLET_BUTTON}
                     >
-                      <ButtonLight onClick={toggleWalletModal} fontWeight={600}>
+                      <ButtonLight onClick={toggleWalletDrawer} fontWeight={600}>
                         <Trans>Connect Wallet</Trans>
                       </ButtonLight>
                     </TraceEvent>

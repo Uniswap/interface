@@ -1,6 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import NewBadge from 'components/WalletModal/NewBadge'
 import Web3Status from 'components/Web3Status'
+import { useMGTMMicrositeEnabled } from 'featureFlags/flags/mgtm'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useIsPoolsPage } from 'hooks/useIsPoolsPage'
@@ -14,6 +16,7 @@ import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-do
 import styled from 'styled-components/macro'
 
 import { Bag } from './Bag'
+import Blur from './Blur'
 import { ChainSelector } from './ChainSelector'
 import { MenuDropdown } from './MenuDropdown'
 import { SearchBar } from './SearchBar'
@@ -55,6 +58,7 @@ export const PageTabs = () => {
 
   const isPoolActive = useIsPoolsPage()
   const isNftPage = useIsNftPage()
+  const micrositeEnabled = useMGTMMicrositeEnabled()
 
   return (
     <>
@@ -67,20 +71,34 @@ export const PageTabs = () => {
       <MenuItem dataTestId="nft-nav" href="/nfts" isActive={isNftPage}>
         <Trans>NFTs</Trans>
       </MenuItem>
-      <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
-        <Trans>Pools</Trans>
-      </MenuItem>
+      <Box display={{ sm: 'flex', lg: 'none', xxl: 'flex' }} width="full">
+        <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
+          <Trans>Pools</Trans>
+        </MenuItem>
+      </Box>
+      {micrositeEnabled && (
+        <Box display={{ sm: 'none', xxxl: 'flex' }}>
+          <MenuItem href="/wallet" isActive={pathname.startsWith('/wallet')}>
+            <Trans>Wallet</Trans>
+            <NewBadge />
+          </MenuItem>
+        </Box>
+      )}
+      <Box marginY={{ sm: '4', md: 'unset' }}>
+        <MenuDropdown />
+      </Box>
     </>
   )
 }
 
-const Navbar = () => {
+const Navbar = ({ blur }: { blur: boolean }) => {
   const isNftPage = useIsNftPage()
   const sellPageState = useProfilePageState((state) => state.state)
   const navigate = useNavigate()
 
   return (
     <>
+      {blur && <Blur />}
       <Nav>
         <Box display="flex" height="full" flexWrap="nowrap">
           <Box className={styles.leftSideContainer}>
@@ -103,7 +121,7 @@ const Navbar = () => {
                 <ChainSelector leftAlign={true} />
               </Box>
             )}
-            <Row gap={{ xl: '0', xxl: '8' }} display={{ sm: 'none', lg: 'flex' }}>
+            <Row display={{ sm: 'none', lg: 'flex' }}>
               <PageTabs />
             </Row>
           </Box>
@@ -112,11 +130,8 @@ const Navbar = () => {
           </Box>
           <Box className={styles.rightSideContainer}>
             <Row gap="12">
-              <Box position="relative" display={{ sm: 'flex', xl: 'none' }}>
+              <Box position="relative" display={{ sm: 'flex', navSearchInputVisible: 'none' }}>
                 <SearchBar />
-              </Box>
-              <Box display={{ sm: 'none', lg: 'flex' }}>
-                <MenuDropdown />
               </Box>
               {isNftPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}
               {!isNftPage && (

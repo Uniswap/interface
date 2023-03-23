@@ -1,10 +1,12 @@
-import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
+import { BaseVariant, FeatureFlag, featureFlagSettings, useBaseFlag, useUpdateFlag } from 'featureFlags'
+import { MgtmVariant, useMgtmFlag } from 'featureFlags/flags/mgtm'
+import { useMiniPortfolioFlag } from 'featureFlags/flags/miniPortfolio'
 import { NftGraphqlVariant, useNftGraphqlFlag } from 'featureFlags/flags/nftlGraphql'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
 import { SwapWidgetVariant, useSwapWidgetFlag } from 'featureFlags/flags/swapWidget'
 import { TaxServiceVariant, useTaxServiceBannerFlag } from 'featureFlags/flags/taxServiceBanner'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
-import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
@@ -166,10 +168,9 @@ function FeatureFlagGroup({ name, children }: PropsWithChildren<{ name: string }
   )
 }
 
-function FeatureFlagOption({ variant, featureFlag, label }: FeatureFlagProps) {
+function FeatureFlagOption({ value, variant, featureFlag, label }: FeatureFlagProps) {
   const updateFlag = useUpdateFlag()
   const [count, setCount] = useState(0)
-  const featureFlags = useAtomValue(featureFlagSettings)
 
   return (
     <Row key={featureFlag}>
@@ -183,7 +184,7 @@ function FeatureFlagOption({ variant, featureFlag, label }: FeatureFlagProps) {
           updateFlag(featureFlag, e.target.value)
           setCount(count + 1)
         }}
-        value={featureFlags[featureFlag]}
+        value={value}
       >
         {Object.values(variant).map((variant) => (
           <Variant key={variant} option={variant} />
@@ -205,6 +206,24 @@ export default function FeatureFlagModal() {
           <X size={24} />
         </CloseButton>
       </Header>
+      <FeatureFlagOption
+        variant={MgtmVariant}
+        value={useMgtmFlag()}
+        featureFlag={FeatureFlag.mgtm}
+        label="Mobile Wallet go-to-market assets"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useBaseFlag(FeatureFlag.walletMicrosite)}
+        featureFlag={FeatureFlag.walletMicrosite}
+        label="Mobile Wallet microsite (requires mgtm to also be enabled)"
+      />
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useMiniPortfolioFlag()}
+        featureFlag={FeatureFlag.miniPortfolio}
+        label="MiniPortfolio"
+      />
       <FeatureFlagOption
         variant={PayWithAnyTokenVariant}
         value={usePayWithAnyTokenFlag()}

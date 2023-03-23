@@ -1,7 +1,5 @@
 import { useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import { Connection } from 'connection'
-import { getConnectionName } from 'connection/utils'
 import { isSupportedChain } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
@@ -14,7 +12,7 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
   const connections = useOrderedConnections()
   const connectors: [Connector, Web3ReactHooks][] = connections.map(({ hooks, connector }) => [connector, hooks])
 
-  const key = useMemo(() => connections.map(({ type }: Connection) => getConnectionName(type)).join('-'), [connections])
+  const key = useMemo(() => connections.map((connection) => connection.name).join('-'), [connections])
 
   return (
     <Web3ReactProvider connectors={connectors} key={key}>

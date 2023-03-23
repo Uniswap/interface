@@ -3,6 +3,7 @@ import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
+import { useToggleWalletDrawer } from 'components/WalletDropdown'
 import { XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { ListPage } from 'nft/components/profile/list/ListPage'
 import { ProfilePage } from 'nft/components/profile/view/ProfilePage'
@@ -10,7 +11,6 @@ import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfileP
 import { useBag, useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { Suspense, useEffect, useRef } from 'react'
-import { useToggleWalletModal } from 'state/application/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
 
@@ -67,7 +67,7 @@ const ProfileContent = () => {
 
   const { account } = useWeb3React()
   const accountRef = useRef(account)
-  const toggleWalletModal = useToggleWalletModal()
+  const toggleWalletDrawer = useToggleWalletDrawer()
 
   useEffect(() => {
     if (accountRef.current !== account) {
@@ -92,7 +92,7 @@ const ProfileContent = () => {
             <ThemedText.HeadlineMedium lineHeight="36px" color="textSecondary" fontWeight="600" marginBottom="24px">
               <Trans>No items to display</Trans>
             </ThemedText.HeadlineMedium>
-            <ConnectWalletButton onClick={toggleWalletModal}>
+            <ConnectWalletButton onClick={toggleWalletDrawer}>
               <ThemedText.SubHeader color="white" lineHeight="20px">
                 <Trans>Connect Wallet</Trans>
               </ThemedText.SubHeader>

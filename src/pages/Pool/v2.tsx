@@ -59,6 +59,7 @@ const ButtonRow = styled(RowFixed)`
 `
 
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
+  height: 40px;
   width: fit-content;
   border-radius: 12px;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
@@ -67,6 +68,7 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
 `
 
 const ResponsiveButtonSecondary = styled(ButtonSecondary)`
+  height: 40px;
   width: fit-content;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     width: 48%;
