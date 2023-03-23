@@ -87,7 +87,11 @@ class NullKeyring implements IKeyring {
     throw new NotImplementedError('generateAndStorePrivateKey')
   }
 
-  signTransactionHashForAddress(): Promise<string> {
+  signTransactionHashForAddress(
+    address: string,
+    hash: string,
+    chainId: number
+  ): Promise<string> {
     throw new NotImplementedError('signTransactionHashForAddress')
   }
 
@@ -95,7 +99,11 @@ class NullKeyring implements IKeyring {
     throw new NotImplementedError('signMessageForAddress')
   }
 
-  signHashForAddress(): Promise<string> {
+  signHashForAddress(
+    address: string,
+    hash: string,
+    chainId: number
+  ): Promise<string> {
     throw new NotImplementedError('signHashForAddress')
   }
 }

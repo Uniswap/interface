@@ -7,6 +7,7 @@ import { useSagaStatus } from '../state/useSagaStatus'
 import { authSagaName } from '../features/auth/saga'
 import { SagaStatus } from '../utils/saga'
 import Locked from '../features/auth/Locked'
+import { AppStackParamList, OnboardingStackParamList } from './types'
 
 const AppStack = createNativeStackNavigator<AppStackParamList>()
 const OnboardingStack = createNativeStackNavigator<OnboardingStackParamList>()
