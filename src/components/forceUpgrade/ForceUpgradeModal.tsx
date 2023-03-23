@@ -18,7 +18,7 @@ import { useNonPendingSignerAccounts } from 'src/features/wallet/hooks'
 import { openUri } from 'src/utils/linking'
 import { Statsig } from 'statsig-react-native'
 
-const APP_STORE_LINK = 'https://apps.apple.com/us/app/uniswap-wallet-defi-nfts/id6443944476'
+const APP_STORE_LINK = 'https://apps.apple.com/us/app/uniswap-wallet/id6443944476'
 const TESTFLIGHT_LINK = 'itms-beta://testflight.apple.com/v1/app/'
 
 export function ForceUpgradeModal(): JSX.Element {
