@@ -149,14 +149,14 @@ export const darkTheme = {
   accentAction: colors.blue400,
   accentActive: colors.blue400,
   accentSuccess: colors.green200,
-  accentWarning: colors.gold400,
+  accentWarning: colors.gold200,
   accentFailure: colors.red300,
   accentCritical: colors.red300,
 
   accentActionSoft: opacify(24, colors.blue400),
   accentActiveSoft: opacify(24, colors.blue400),
   accentSuccessSoft: opacify(24, colors.green400),
-  accentWarningSoft: opacify(24, colors.gold400),
+  accentWarningSoft: opacify(24, colors.gold200),
   accentFailureSoft: opacify(12, colors.red300),
 
   accentTextDarkPrimary: opacify(80, colors.gray900),
