@@ -2,7 +2,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { Percent, Price, Token } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
-import Badge from 'components/Badge'
 import RangeBadge from 'components/Badge/RangeBadge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverInlineText from 'components/HoverInlineText'
@@ -15,7 +14,7 @@ import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components/macro'
-import { HideSmall, MEDIA_WIDTHS, SmallOnly } from 'theme'
+import { HideSmall, MEDIA_WIDTHS, SmallOnly, ThemedText } from 'theme'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import { hasURL } from 'utils/urlChecks'
@@ -52,14 +51,6 @@ const LinkRow = styled(Link)`
   `};
 `
 
-const BadgeText = styled.div`
-  font-weight: 500;
-  font-size: 14px;
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    font-size: 12px;
-  `};
-`
-
 const DataLineItem = styled.div`
   font-size: 14px;
 `
@@ -73,20 +64,27 @@ const RangeLineItem = styled(DataLineItem)`
 `
 
 const DoubleArrow = styled.span`
+  font-size: 12px;
   margin: 0 2px;
   color: ${({ theme }) => theme.textTertiary};
 `
 
-const RangeText = styled.div`
+const RangeText = styled(ThemedText.Caption)`
+  font-size: 12px !important;
   word-break: break-word;
   padding: 0.25rem 0.25rem;
   border-radius: 8px;
 `
 
-const ExtentsText = styled.span`
+const FeeTierText = styled(ThemedText.UtilityBadge)`
+  font-size: 10px !important;
+  margin-left: 14px !important;
+`
+const ExtentsText = styled(ThemedText.Caption)`
   color: ${({ theme }) => theme.textTertiary};
-  font-size: 14px;
-  margin-right: 4px;
+  display: inline-block;
+  line-height: 16px;
+  margin-right: 4px !important;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     display: none;
   `};
@@ -99,15 +97,6 @@ const PrimaryPositionIdData = styled.div`
   > * {
     margin-right: 8px;
   }
-`
-
-const DataText = styled.div`
-  font-weight: 600;
-  font-size: 18px;
-
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    font-size: 18px;
-  `};
 `
 
 interface PositionListItemProps {
@@ -228,15 +217,13 @@ export default function PositionListItem({
       <RowBetween>
         <PrimaryPositionIdData>
           <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={18} margin />
-          <DataText>
+          <ThemedText.SubHeader>
             &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
-          </DataText>
-          &nbsp;
-          <Badge>
-            <BadgeText>
-              <Trans>{new Percent(feeAmount, 1_000_000).toSignificant()}%</Trans>
-            </BadgeText>
-          </Badge>
+          </ThemedText.SubHeader>
+
+          <FeeTierText>
+            <Trans>{new Percent(feeAmount, 1_000_000).toSignificant()}%</Trans>
+          </FeeTierText>
         </PrimaryPositionIdData>
         <RangeBadge removed={removed} inRange={!outOfRange} />
       </RowBetween>
@@ -259,10 +246,10 @@ export default function PositionListItem({
             </Trans>
           </RangeText>{' '}
           <HideSmall>
-            <DoubleArrow>⟷</DoubleArrow>{' '}
+            <DoubleArrow>↔</DoubleArrow>{' '}
           </HideSmall>
           <SmallOnly>
-            <DoubleArrow>⟷</DoubleArrow>{' '}
+            <DoubleArrow>↔</DoubleArrow>{' '}
           </SmallOnly>
           <RangeText>
             <ExtentsText>
