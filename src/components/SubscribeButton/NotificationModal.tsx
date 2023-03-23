@@ -438,7 +438,7 @@ export default function NotificationModal() {
       <Wrapper>
         <RowBetween>
           <Row fontSize={20} fontWeight={500} gap="10px">
-            <MailIcon /> <Trans>Notifications</Trans>
+            <MailIcon /> <Trans>Email Notifications</Trans>
           </Row>
           <CloseIcon onClick={toggleModal} />
         </RowBetween>

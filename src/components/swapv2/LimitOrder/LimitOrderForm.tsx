@@ -659,8 +659,8 @@ const LimitOrderForm = function LimitOrderForm({
       messages.push(
         <Text>
           <Trans>
-            The price may not be accurate as ARB is a new token from Arbitrum Foundation, please review your transaction
-            carefully.
+            The market price may not be accurate as ARB is a new token from Arbitrum Foundation, please review your
+            transaction carefully.
           </Trans>
         </Text>,
       )
