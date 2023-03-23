@@ -23,6 +23,7 @@ import {
   useV3MintState,
 } from 'state/mint/v3/hooks'
 import { useTheme } from 'styled-components/macro'
+import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from '../../components/Button'
 import { BlueCard, OutlineCard, YellowCard } from '../../components/Card'
@@ -552,7 +553,8 @@ export default function AddLiquidity() {
   )
 
   const owner = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
-  const ownsNFT = owner === account || existingPositionDetails?.operator === account
+  const ownsNFT =
+    addressesAreEquivalent(owner, account) || addressesAreEquivalent(existingPositionDetails?.operator, account)
   const showOwnershipWarning = Boolean(account && !ownsNFT)
 
   return (
