@@ -1,21 +1,24 @@
 ## Description
 
-[Replace this with the description of your change. Be explicit and mention the problem being solved, how it's being solved, and why it's being solved. Link to JIRA ticket, slack thread, design doc, or relevant resources helpful for providing context to reviewers.]
+_[Summary of change, motivation, and context.]_
+
+_[Link to JIRA ticket, slack thread, or relevant docs helpful for providing context to reviewers.]_
+
+## Screen Capture
+| Before           | After           |
+| ---------------- |-----------------|
+|  _insert_before_ | _insert_after_  |
+
 
 ## Test Plan
-
 #### Manual
 
-[Replace this with the description of how you are testing the change and validating there is no regression. Include screenshots where applicable.]
-
+_[Steps of how you are testing the change and ensuring no regression.]_
 
 #### Automated
 - [ ] Unit test
 - [ ] Integration/E2E test
 
-[Remove this line. Guidance here is that code coverage on each PR should increase OR at minimum remain the same.]
-
-
 ## Monitoring
 
-[If applicable, replace this with alerts and metrics you added to monitor this change.]
+_[If applicable, alerts and metrics you added to monitor this change.]_
