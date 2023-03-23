@@ -82,7 +82,7 @@ export const NftCard = ({
       testId={testId}
       onClick={() => {
         if (bagExpanded) setBagExpanded({ bagExpanded: false })
-        if (sendAnalyticsEvent) sendAnalyticsEvent()
+        sendAnalyticsEvent?.()
       }}
     >
       <MediaContainer isDisabled={isDisabled}>
