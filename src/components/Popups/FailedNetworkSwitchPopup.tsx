@@ -12,6 +12,10 @@ const RowNoFlex = styled(AutoRow)`
   flex-wrap: nowrap;
 `
 
+const ColumnContainer = styled(AutoColumn)`
+  margin: 0 12px 0;
+`
+
 export const PopupAlertTriangle = styled(AlertTriangleFilled)`
   flex-shrink: 0;
   color: ${({ theme }) => (theme.darkMode ? theme.backgroundSurface : 'white')};
@@ -26,7 +30,7 @@ export default function FailedNetworkSwitchPopup({ chainId }: { chainId: Support
   return (
     <RowNoFlex>
       <PopupAlertTriangle />
-      <AutoColumn gap="sm" margin="0 12px 0">
+      <ColumnContainer gap="sm">
         <ThemedText.SubHeader color="textSecondary">
           <Trans>Failed to switch networks</Trans>
         </ThemedText.SubHeader>
@@ -34,7 +38,7 @@ export default function FailedNetworkSwitchPopup({ chainId }: { chainId: Support
         <ThemedText.BodySmall color="textSecondary">
           <Trans>To use Uniswap on {chainInfo.label}, switch the network in your wallet’s settings.</Trans>
         </ThemedText.BodySmall>
-      </AutoColumn>
+      </ColumnContainer>
     </RowNoFlex>
   )
 }

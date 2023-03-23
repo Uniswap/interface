@@ -31,7 +31,7 @@ export default function PortfolioRow({
   left: React.ReactNode
   title: React.ReactNode
   descriptor?: React.ReactNode
-  right: React.ReactNode
+  right?: React.ReactNode
   setIsHover?: (b: boolean) => void
   onClick?: () => void
 }) {

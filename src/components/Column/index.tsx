@@ -19,14 +19,12 @@ export const AutoColumn = styled.div<{
   gap?: Gap | string
   justify?: 'stretch' | 'center' | 'start' | 'end' | 'flex-start' | 'flex-end' | 'space-between'
   grow?: true
-  margin?: string
 }>`
   display: grid;
   grid-auto-rows: auto;
   grid-row-gap: ${({ gap, theme }) => (gap && theme.grids[gap as Gap]) || gap};
   justify-items: ${({ justify }) => justify && justify};
   flex-grow: ${({ grow }) => grow && 1};
-  margin: ${({ margin }) => margin};
 `
 
 export default Column

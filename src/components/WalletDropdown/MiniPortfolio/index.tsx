@@ -9,7 +9,7 @@ import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { ActivityTab } from './Activity'
+import { ActivityTab } from './Activity/ActivityTab'
 import NFTs from './NFTs'
 import Pools from './Pools'
 import { PortfolioRowWrapper } from './PortfolioRow'

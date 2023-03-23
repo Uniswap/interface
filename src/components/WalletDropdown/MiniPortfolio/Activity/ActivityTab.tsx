@@ -1,24 +1,20 @@
 import { t } from '@lingui/macro'
 import Column from 'components/Column'
-import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
-import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useWalletDrawer } from 'components/WalletDropdown'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { TransactionStatus, useTransactionListQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { PollingInterval } from 'graphql/data/util'
-import useENSName from 'hooks/useENSName'
 import { atom, useAtom } from 'jotai'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useEffect, useMemo } from 'react'
 import styled from 'styled-components/macro'
-import { EllipsisStyle, ThemedText } from 'theme'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { ThemedText } from 'theme'
 
-import { PortfolioLogo } from '../PortfolioLogo'
-import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
+import { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
+import { ActivityRow } from './ActivityRow'
 import { useLocalActivities } from './parseLocal'
-import { parseRemoteActivities, useTimeSince } from './parseRemote'
+import { parseRemoteActivities } from './parseRemote'
 import { Activity, ActivityMap } from './types'
 
 interface ActivityGroup {
@@ -157,50 +153,4 @@ export function ActivityTab({ account }: { account: string }) {
       </PortfolioTabWrapper>
     )
   }
-}
-
-export const ActivityRowStyledDescriptor = styled(ThemedText.BodySmall)`
-  color: ${({ theme }) => theme.textSecondary};
-  ${EllipsisStyle}
-`
-
-const StyledTimestamp = styled(ThemedText.Caption)`
-  color: ${({ theme }) => theme.textSecondary};
-  font-variant: small;
-  font-feature-settings: 'tnum' on, 'lnum' on, 'ss02' on;
-`
-
-function ActivityRow({ activity }: { activity: Activity }) {
-  const { chainId, status, title, descriptor, logos, otherAccount, currencies } = activity
-  const { ENSName } = useENSName(otherAccount)
-
-  const explorerUrl = getExplorerLink(activity.chainId, activity.hash, ExplorerDataType.TRANSACTION)
-  const timeSince = useTimeSince(activity.timestamp)
-
-  return (
-    <PortfolioRow
-      left={
-        <Column>
-          <PortfolioLogo chainId={chainId} currencies={currencies} images={logos} accountAddress={otherAccount} />
-        </Column>
-      }
-      title={<ThemedText.SubHeader fontWeight={500}>{title}</ThemedText.SubHeader>}
-      descriptor={
-        <ActivityRowStyledDescriptor color="textSecondary">
-          {descriptor}
-          {ENSName ?? otherAccount}
-        </ActivityRowStyledDescriptor>
-      }
-      right={
-        status === TransactionStatus.Pending ? (
-          <LoaderV2 />
-        ) : status === TransactionStatus.Confirmed ? (
-          <StyledTimestamp>{timeSince}</StyledTimestamp>
-        ) : (
-          <AlertTriangleFilled />
-        )
-      }
-      onClick={() => window.open(explorerUrl, '_blank')}
-    />
-  )
 }
