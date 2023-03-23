@@ -7,16 +7,28 @@ import {
   importAccountSaga,
   importAccountSagaName,
 } from '../features/wallet/import/importAccountSaga'
+import {
+  authActions,
+  authReducer,
+  authSaga,
+  authSagaName,
+} from '../features/auth/saga'
 import { SagaState } from '../utils/saga'
 
 const sagas = [initProviders] as const
 
-const monitoredSagas = {
+export const monitoredSagas = {
   [importAccountSagaName]: {
     name: importAccountSagaName,
     wrappedSaga: importAccountSaga,
     reducer: importAccountReducer,
     actions: importAccountActions,
+  },
+  [authSagaName]: {
+    name: authSagaName,
+    wrappedSaga: authSaga,
+    reducer: authReducer,
+    actions: authActions,
   },
 } as const
 
