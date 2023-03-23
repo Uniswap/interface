@@ -1,17 +1,17 @@
-import { Wallet } from "ethers";
-import { defaultPath } from "ethers/lib/utils";
-import { logger } from "../../logger/logger";
-import { IKeyring } from "./Keyring";
+import { Wallet } from 'ethers'
+import { defaultPath } from 'ethers/lib/utils'
+import { logger } from '../../logger/logger'
+import { IKeyring } from './Keyring'
 
-const prefix = "com.uniswap.web";
-const mnemonicPrefix = ".mnemonic.";
-const privateKeyPrefix = ".privateKey.";
-const entireMnemonicPrefix = prefix + mnemonicPrefix;
-const entirePrivateKeyPrefix = prefix + privateKeyPrefix;
+const prefix = 'com.uniswap.web'
+const mnemonicPrefix = '.mnemonic.'
+const privateKeyPrefix = '.privateKey.'
+const entireMnemonicPrefix = prefix + mnemonicPrefix
+const entirePrivateKeyPrefix = prefix + privateKeyPrefix
 
 enum ErrorType {
-  StoreMnemonicError = "storeMnemonicError",
-  RetrieveMnemonicError = "retrieveMnemonicError",
+  StoreMnemonicError = 'storeMnemonicError',
+  RetrieveMnemonicError = 'retrieveMnemonicError',
 }
 
 /**
@@ -25,14 +25,13 @@ export class WebKeyring implements IKeyring {
   constructor(
     private store: chrome.storage.StorageArea = chrome.storage.local
   ) {
-    this.generateAndStoreMnemonic = this.generateAndStoreMnemonic.bind(this);
-    this.generateAndStorePrivateKey =
-      this.generateAndStorePrivateKey.bind(this);
-    this.importMnemonic = this.importMnemonic.bind(this);
-    this.keyForMnemonicId = this.keyForMnemonicId.bind(this);
-    this.keyForPrivateKey = this.keyForPrivateKey.bind(this);
-    this.retrieveMnemonic = this.retrieveMnemonic.bind(this);
-    this.storeNewMnemonic = this.storeNewMnemonic.bind(this);
+    this.generateAndStoreMnemonic = this.generateAndStoreMnemonic.bind(this)
+    this.generateAndStorePrivateKey = this.generateAndStorePrivateKey.bind(this)
+    this.importMnemonic = this.importMnemonic.bind(this)
+    this.keyForMnemonicId = this.keyForMnemonicId.bind(this)
+    this.keyForPrivateKey = this.keyForPrivateKey.bind(this)
+    this.retrieveMnemonic = this.retrieveMnemonic.bind(this)
+    this.storeNewMnemonic = this.storeNewMnemonic.bind(this)
   }
 
   /**
@@ -42,13 +41,13 @@ export class WebKeyring implements IKeyring {
    * @returns array of mnemonic IDs
    */
   async getMnemonicIds(): Promise<string[]> {
-    const allKeys = Object.keys(await this.store.get(null));
+    const allKeys = Object.keys(await this.store.get(null))
 
     const mnemonicIds = allKeys
       .filter((k) => k.includes(mnemonicPrefix))
-      .map((k) => k.replaceAll(entireMnemonicPrefix, ""));
+      .map((k) => k.replaceAll(entireMnemonicPrefix, ''))
 
-    return mnemonicIds;
+    return mnemonicIds
   }
 
   /**
@@ -60,15 +59,15 @@ export class WebKeyring implements IKeyring {
    * @returns public address from the mnemonic's first derived private key
    */
   async importMnemonic(mnemonic: string): Promise<string> {
-    const wallet = Wallet.fromMnemonic(mnemonic);
+    const wallet = Wallet.fromMnemonic(mnemonic)
 
-    const address = wallet.address;
+    const address = wallet.address
 
     if (!(await this.storeNewMnemonic(mnemonic, address))) {
-      throw new Error("Failed to import mnemonic");
+      throw new Error('Failed to import mnemonic')
     }
 
-    return address;
+    return address
   }
 
   /**
@@ -77,16 +76,16 @@ export class WebKeyring implements IKeyring {
    @returns public address from the mnemonic's first derived private key
    */
   async generateAndStoreMnemonic(): Promise<string> {
-    const newWallet = Wallet.createRandom();
+    const newWallet = Wallet.createRandom()
 
-    const mnemonic = newWallet.mnemonic.phrase;
-    const address = newWallet.address;
+    const mnemonic = newWallet.mnemonic.phrase
+    const address = newWallet.address
 
     if (!(await this.storeNewMnemonic(mnemonic, address))) {
-      throw new Error("Failed to generate and store mnemonic");
+      throw new Error('Failed to generate and store mnemonic')
     }
 
-    return address;
+    return address
   }
 
   // TODO: encrypt
@@ -94,44 +93,44 @@ export class WebKeyring implements IKeyring {
     mnemonic: string,
     address: string
   ): Promise<string | undefined> {
-    const newMnemonicKey = this.keyForMnemonicId(address);
-    const checkStored = await this.retrieveMnemonic(newMnemonicKey);
+    const newMnemonicKey = this.keyForMnemonicId(address)
+    const checkStored = await this.retrieveMnemonic(newMnemonicKey)
 
     if (checkStored === undefined) {
-      this.store.set({ [newMnemonicKey]: mnemonic });
-      return address;
+      this.store.set({ [newMnemonicKey]: mnemonic })
+      return address
     }
 
     logger.debug(
-      "Keyring.web",
-      "storeNewMnemonic",
-      "mnemonic already stored. Did you mean to reimport?"
-    );
-    return undefined;
+      'Keyring.web',
+      'storeNewMnemonic',
+      'mnemonic already stored. Did you mean to reimport?'
+    )
+    return undefined
   }
 
   private keyForMnemonicId(mnemonicId: string): string {
-    return mnemonicPrefix + mnemonicId;
+    return mnemonicPrefix + mnemonicId
   }
 
   private async retrieveMnemonic(
     mnemonicId: string
   ): Promise<string | undefined> {
-    const key = this.keyForMnemonicId(mnemonicId);
-    return (await this.store.get(key))[key];
+    const key = this.keyForMnemonicId(mnemonicId)
+    return (await this.store.get(key))[key]
   }
 
   /**
    * Fetches all public addresses from private keys stored under `privateKeyPrefix` in store.
    * Used from to verify the store has the private key for an account that is attempting create a NativeSigner that calls signing methods
    * @returns public addresses for all stored private keys
-*/
+   */
   async getAddressesForStoredPrivateKeys(): Promise<string[]> {
     const addresses = Object.keys(await this.store.get(null))
       .filter((k) => k.includes(privateKeyPrefix))
-      .map((k) => k.replaceAll(entirePrivateKeyPrefix, ""));
+      .map((k) => k.replaceAll(entirePrivateKeyPrefix, ''))
 
-    return addresses;
+    return addresses
   }
 
   /**
@@ -144,21 +143,21 @@ export class WebKeyring implements IKeyring {
     mnemonicId: string,
     derivationIndex: number
   ): Promise<string> {
-    const mnemonic = await this.retrieveMnemonic(mnemonicId);
+    const mnemonic = await this.retrieveMnemonic(mnemonicId)
 
     if (!mnemonic) {
-      throw new Error(ErrorType.RetrieveMnemonicError);
+      throw new Error(ErrorType.RetrieveMnemonicError)
     }
 
-    const derivationPath = defaultPath + derivationIndex;
-    const walletAtIndex = Wallet.fromMnemonic(mnemonic, derivationPath);
+    const derivationPath = defaultPath + derivationIndex
+    const walletAtIndex = Wallet.fromMnemonic(mnemonic, derivationPath)
 
-    const privateKey = walletAtIndex.privateKey;
-    const address = walletAtIndex.address;
+    const privateKey = walletAtIndex.privateKey
+    const address = walletAtIndex.address
 
-    await this.storeNewPrivateKey(address, privateKey);
+    await this.storeNewPrivateKey(address, privateKey)
 
-    return walletAtIndex.address;
+    return walletAtIndex.address
   }
 
   private storeNewPrivateKey(
@@ -166,21 +165,21 @@ export class WebKeyring implements IKeyring {
     privateKey: string
   ): Promise<void> {
     try {
-      const newKey = this.keyForPrivateKey(address);
-      return this.store.set({ [newKey]: privateKey });
+      const newKey = this.keyForPrivateKey(address)
+      return this.store.set({ [newKey]: privateKey })
     } catch (e) {
-      throw new Error(ErrorType.StoreMnemonicError + `: ${e}`);
+      throw new Error(ErrorType.StoreMnemonicError + `: ${e}`)
     }
   }
 
   private async retrievePrivateKey(
     address: string
   ): Promise<string | undefined> {
-    const key = this.keyForPrivateKey(address);
-    return (await this.store.get(key))[key];
+    const key = this.keyForPrivateKey(address)
+    return (await this.store.get(key))[key]
   }
   private keyForPrivateKey(address: string): string {
-    return privateKeyPrefix + address;
+    return privateKeyPrefix + address
   }
 
   signTransactionHashForAddress(
@@ -189,12 +188,12 @@ export class WebKeyring implements IKeyring {
     chainId: number
   ): Promise<string> {
     // return RNEthersRS.signTransactionHashForAddress(address, hash, chainId)
-    return Promise.resolve("");
+    return Promise.resolve('')
   }
 
   signMessageForAddress(address: string, message: string): Promise<string> {
     // return RNEthersRS.signMessageForAddress(address, message)
-    return Promise.resolve("");
+    return Promise.resolve('')
   }
 
   signHashForAddress(
@@ -203,8 +202,8 @@ export class WebKeyring implements IKeyring {
     chainId: number
   ): Promise<string> {
     // return RNEthersRS.signHashForAddress(address, hash, chainId)
-    return Promise.resolve("");
+    return Promise.resolve('')
   }
 }
 
-export const Keyring = new WebKeyring();
+export const Keyring = new WebKeyring()

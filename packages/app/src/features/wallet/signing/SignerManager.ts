@@ -1,4 +1,4 @@
-import { IKeyring, Keyring } from 'app/src/features/wallet/Keyring/Keyring'
+import { Keyring } from 'app/src/features/wallet/Keyring/Keyring'
 import { Signer } from 'ethers'
 
 import { Account, AccountType } from '../types'

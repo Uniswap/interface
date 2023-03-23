@@ -1,8 +1,16 @@
-import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/native'
+import {
+  NavigationContainer,
+  DarkTheme,
+  DefaultTheme,
+} from '@react-navigation/native'
 import { useMemo } from 'react'
 import { useColorScheme } from 'react-native'
 
-export function NavigationProvider({ children }: { children: React.ReactNode }): JSX.Element {
+export function NavigationProvider({
+  children,
+}: {
+  children: React.ReactNode
+}): JSX.Element {
   const scheme = useColorScheme()
   return (
     <NavigationContainer
@@ -18,8 +26,7 @@ export function NavigationProvider({ children }: { children: React.ReactNode }):
         }),
         []
       )}
-      theme={scheme === 'dark' ? DarkTheme : DefaultTheme}
-    >
+      theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       {children}
     </NavigationContainer>
   )

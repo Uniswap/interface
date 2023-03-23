@@ -13,10 +13,7 @@ import { Keyring } from 'app/src/features/wallet/Keyring/Keyring'
  */
 
 export class NativeSigner extends Signer {
-  constructor(
-    private readonly address: string,
-    provider?: providers.Provider,
-  ) {
+  constructor(private readonly address: string, provider?: providers.Provider) {
     super()
 
     if (provider && !providers.Provider.isProvider(provider)) {

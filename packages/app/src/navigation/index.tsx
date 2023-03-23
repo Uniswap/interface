@@ -1,8 +1,7 @@
-import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { HomeScreen } from '../features/home/HomeScreen'
 import { IntroScreen } from '../features/onboarding/IntroScreen'
-import { AppStackParamList, OnboardingStackParamList } from './types'
+import { useAppSelector } from '../state'
 import { OnboardingScreen, Screen } from './screens'
 import { useSagaStatus } from '../state/useSagaStatus'
 import { authSagaName } from '../features/auth/saga'
@@ -23,9 +22,6 @@ export function WebNavigation(): JSX.Element {
       </AppStack.Navigator>
     )
   }
-
-  // TODO: check if they are onboarded. if not then show the pw lock screen
-  return <Locked />
 
   return (
     <OnboardingStack.Navigator>
