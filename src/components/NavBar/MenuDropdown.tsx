@@ -232,7 +232,7 @@ export const MenuDropdown = () => {
                     <DollarSign size="24px" color={theme.textSecondary} />
                   </Icon>
                   <PrimaryMenuRow.Text>
-                    <Trans>Tax Services</Trans>
+                    <Trans>Tax resources</Trans>
                   </PrimaryMenuRow.Text>
                 </PrimaryMenuRow>
                 {mgtmEnabled && (
