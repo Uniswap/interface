@@ -241,9 +241,11 @@ export function ButtonConfirmed({
   }
 }
 
-export function ButtonError({ error, ...rest }: { error?: boolean } & ButtonProps) {
+export function ButtonError({ error, warning, ...rest }: { error?: boolean; warning?: boolean } & ButtonProps) {
   if (error) {
     return <ButtonErrorStyle {...rest} />
+  } else if (warning && !rest.disabled) {
+    return <ButtonWarning {...rest} />
   } else {
     return <ButtonPrimary {...rest} />
   }

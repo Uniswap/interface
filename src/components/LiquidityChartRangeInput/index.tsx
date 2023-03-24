@@ -3,7 +3,7 @@ import { FeeAmount } from '@kyberswap/ks-sdk-elastic'
 import { Trans } from '@lingui/macro'
 import { format } from 'd3'
 import { saturate } from 'polished'
-import { CSSProperties, ReactNode, useCallback, useMemo, useState } from 'react'
+import { CSSProperties, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BarChart2, Inbox } from 'react-feather'
 import { batch } from 'react-redux'
 import { Text } from 'rebass'
@@ -133,7 +133,7 @@ export default function LiquidityChartRangeInput({
   height?: string
 }) {
   const theme = useTheme()
-  const [ref, setRef] = useState<HTMLDivElement | null>(null)
+  const ref = useRef<HTMLDivElement>(null)
 
   const tokenAColor = useColor(currencyA?.wrapped)
   const tokenBColor = useColor(currencyB?.wrapped)
@@ -198,14 +198,29 @@ export default function LiquidityChartRangeInput({
     [isSorted, price, ticksAtLimit],
   )
 
+  const [, reRender] = useState({})
+  const isClient = typeof window === 'object'
+
+  useEffect(() => {
+    // reset width of warning on screen resize (mobile device rotating, resizing browser window)
+    if (!isClient) return
+
+    function handleResize() {
+      reRender({})
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [isClient])
+
+  const clientWidth = ref.current?.clientWidth
   const viewBoxWidth = useMemo(() => {
     if (!height) return 400
-    if (ref?.clientWidth) return ref.clientWidth * 0.8
+    if (clientWidth) return clientWidth * 0.8
     return 400
-  }, [height, ref])
+  }, [height, clientWidth])
 
   return (
-    <AutoColumn ref={newRef => setRef(newRef)} gap="md" style={{ minHeight: '237px', ...style }}>
+    <AutoColumn ref={ref} gap="md" style={{ minHeight: '237px', ...style }}>
       {isUninitialized ? (
         <InfoBox
           message={<Trans>Your position will appear here.</Trans>}

@@ -12,7 +12,7 @@ import { useMedia } from 'react-use'
 import { Box, Flex, Text } from 'rebass'
 
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
-import { OutlineCard, WarningCard } from 'components/Card'
+import { OutlineCard, SubTextCard, WarningCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import FeeSelector from 'components/FeeSelector'
@@ -74,6 +74,7 @@ import { basisPointsToPercent, calculateGasMargin, formattedNum } from 'utils'
 import { currencyId } from 'utils/currencyId'
 import { toSignificantOrMaxIntegerPart } from 'utils/formatCurrencyAmount'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
+import { formatNotDollarAmount } from 'utils/numbers'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 
 import NewPoolNote from './components/NewPoolNote'
@@ -144,7 +145,6 @@ export default function AddLiquidity() {
     position,
     noLiquidity,
     currencies,
-    // errorMessage,
     invalidPool,
     invalidRange,
     outOfRange,
@@ -213,8 +213,6 @@ export default function AddLiquidity() {
     },
     [mixpanelHandler, onRemovePosition, tokenA?.symbol, tokenB?.symbol],
   )
-
-  const isValid = !errorMessage && !invalidRange
 
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
@@ -609,6 +607,21 @@ export default function AddLiquidity() {
   const upToMedium = useMedia(`(max-width: ${MEDIA_WIDTHS.upToMedium}px)`)
   const upToXXSmall = useMedia(`(max-width: ${MEDIA_WIDTHS.upToXXSmall}px)`)
 
+  const isPriceDeviated =
+    baseCurrency &&
+    quoteCurrency &&
+    tokenA &&
+    tokenB &&
+    price &&
+    Math.abs(
+      Number((isSorted ? price : price?.invert())?.toSignificant(18)) /
+        (usdPrices[tokenA.wrapped.address] / usdPrices[tokenB.wrapped.address]) -
+        1,
+    ) >= 0.02
+  const isFullRange = activeRange === RANGE.FULL_RANGE
+  const isValid = !errorMessage && !invalidRange
+  const isWarningButton = isPriceDeviated || isFullRange || outOfRange
+
   const Buttons = () =>
     !account ? (
       <ButtonLight onClick={toggleWalletModal} width={upToMedium ? '100%' : 'fit-content'} minWidth="164px !important">
@@ -670,7 +683,8 @@ export default function AddLiquidity() {
             (approvalA !== ApprovalState.APPROVED && (!depositADisabled || noLiquidity)) ||
             (approvalB !== ApprovalState.APPROVED && (!depositBDisabled || noLiquidity))
           }
-          error={!isValid && !!parsedAmounts_A && !!parsedAmounts_B && false}
+          error={!isValid && !!parsedAmounts_A && !!parsedAmounts_B}
+          warning={isWarningButton}
           minWidth="164px"
           width={upToMedium ? '100%' : 'fit-content'}
         >
@@ -681,45 +695,100 @@ export default function AddLiquidity() {
       </Flex>
     )
 
-  const warning = errorLabel ? (
-    <WarningCard padding="10px 16px">
-      <Flex alignItems="center">
-        <AlertTriangle stroke={theme.warning} size="16px" />
-        <TYPE.warning ml="12px" fontSize="12px" flex={1}>
-          {errorLabel}
-        </TYPE.warning>
-      </Flex>
-    </WarningCard>
-  ) : invalidRange ? (
-    <WarningCard padding="10px 16px">
-      <Flex alignItems="center">
-        <AlertTriangle stroke={theme.warning} size="16px" />
-        <TYPE.warning ml="12px" fontSize="12px" flex={1}>
-          <Trans>Invalid range selected. The min price must be lower than the max price.</Trans>
-        </TYPE.warning>
-      </Flex>
-    </WarningCard>
-  ) : activeRange === RANGE.FULL_RANGE ? (
-    <WarningCard padding="10px 16px">
-      <Flex alignItems="center">
-        <AlertTriangle stroke={theme.warning} size="16px" />
-        <TYPE.warning ml="12px" fontSize="12px" flex={1}>
-          <Trans>Efficiency Comparison: Full range positions may earn less fees than concentrated positions.</Trans>
-        </TYPE.warning>
-      </Flex>
-    </WarningCard>
-  ) : outOfRange ? (
-    <WarningCard padding="10px 16px">
-      <Flex alignItems="center">
-        <AlertTriangle stroke={theme.warning} size="16px" />
-        <TYPE.warning ml="12px" fontSize="12px" flex={1}>
-          <Trans>
-            Your position will not earn fees until the market price of the pool moves into your price range.
-          </Trans>
-        </TYPE.warning>
-      </Flex>
-    </WarningCard>
-  ) : null
+  const chartRef = useRef<HTMLDivElement>(null)
+
+  const [, reRender] = useState({})
+  const isClient = typeof window === 'object'
+  useEffect(() => {
+    // reset width of warning on screen resize (mobile device rotating, resizing browser window)
+    if (!isClient) return
+
+    function handleResize() {
+      reRender({})
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [isClient])
+
+  const warning = (
+    <Flex flexDirection="column" sx={{ gap: '12px' }} alignItems="flex-end" maxWidth={chartRef?.current?.clientWidth}>
+      {noLiquidity && (
+        <SubTextCard padding="10px 16px">
+          <Flex alignItems="center">
+            <TYPE.black ml="12px" fontSize="12px" flex={1}>
+              <Trans>
+                Note: A very small amount of your liquidity about {formattedNum(amountUnlockUSD.toString(), true)}{' '}
+                <Text as="span" color={theme.text}>
+                  ({amountUnlocks[Field.CURRENCY_A].toSignificant(6)} {amountUnlocks[Field.CURRENCY_A].currency.symbol},{' '}
+                  {amountUnlocks[Field.CURRENCY_B].toSignificant(6)} {amountUnlocks[Field.CURRENCY_B].currency.symbol})
+                </Text>{' '}
+                will be used to first initialize the pool. Read more{' '}
+                <ExternalLink href="https://docs.kyberswap.com/liquidity-solutions/kyberswap-elastic/concepts/pool-process-flows#pool-unlocking--initialization">
+                  here↗
+                </ExternalLink>
+              </Trans>
+            </TYPE.black>
+          </Flex>
+        </SubTextCard>
+      )}
+      {isPriceDeviated && (
+        <WarningCard padding="10px 16px">
+          <Flex alignItems="center">
+            <AlertTriangle stroke={theme.warning} size="16px" />
+            <TYPE.black ml="12px" fontSize="12px" flex={1}>
+              <Trans>
+                The pool’s current price of 1 {baseCurrency.symbol} ={' '}
+                {(invertPrice ? price.invert() : price).toSignificant(4)} {quoteCurrency.symbol} deviates from the
+                market price (1 {baseCurrency.symbol} ={' '}
+                {formatNotDollarAmount(usdPrices[tokenA.wrapped.address] / usdPrices[tokenB.wrapped.address], 4)}{' '}
+                {quoteCurrency.symbol}). You might have high impermanent loss after the pool is created
+              </Trans>
+            </TYPE.black>
+          </Flex>
+        </WarningCard>
+      )}
+      {errorLabel && (
+        <WarningCard padding="10px 16px">
+          <Flex alignItems="center">
+            <AlertTriangle stroke={theme.warning} size="16px" />
+            <TYPE.black ml="12px" fontSize="12px" flex={1}>
+              {errorLabel}
+            </TYPE.black>
+          </Flex>
+        </WarningCard>
+      )}
+      {invalidRange ? (
+        <WarningCard padding="10px 16px">
+          <Flex alignItems="center">
+            <AlertTriangle stroke={theme.warning} size="16px" />
+            <TYPE.black ml="12px" fontSize="12px" flex={1}>
+              <Trans>Invalid range selected. The min price must be lower than the max price.</Trans>
+            </TYPE.black>
+          </Flex>
+        </WarningCard>
+      ) : isFullRange ? (
+        <WarningCard padding="10px 16px">
+          <Flex alignItems="center">
+            <AlertTriangle stroke={theme.warning} size="16px" />
+            <TYPE.black ml="12px" fontSize="12px" flex={1}>
+              <Trans>Efficiency Comparison: Full range positions may earn less fees than concentrated positions.</Trans>
+            </TYPE.black>
+          </Flex>
+        </WarningCard>
+      ) : outOfRange ? (
+        <WarningCard padding="10px 16px">
+          <Flex alignItems="center">
+            <AlertTriangle stroke={theme.warning} size="16px" />
+            <TYPE.black ml="12px" fontSize="12px" flex={1}>
+              <Trans>
+                Your position will not earn fees until the market price of the pool moves into your price range.
+              </Trans>
+            </TYPE.black>
+          </Flex>
+        </WarningCard>
+      ) : null}
+    </Flex>
+  )
 
   const disableFeeSelect = !currencyIdA || !currencyIdB
   const disableRangeSelect = !feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue)
@@ -728,7 +797,7 @@ export default function AddLiquidity() {
   const [shownTooltip, setShownTooltip] = useState<RANGE | null>(null)
   const pairFactor = usePairFactor([tokenA, tokenB])
   const chart = (
-    <ChartWrapper>
+    <ChartWrapper ref={chartRef}>
       {hasTab && (
         <Tabs
           tabsCount={positionsState.length}
@@ -1016,26 +1085,24 @@ export default function AddLiquidity() {
             title={!!noLiquidity ? t`Create a new pool` : t`Add Liquidity`}
             onDismiss={handleDismissConfirmation}
             topContent={modalContent}
-            // showGridListOption={isMultiplePosition} //todo enable this again when support multiple position chart
             showGridListOption={false}
-            bottomContent={() =>
-              isMultiplePosition ? (
-                <RowBetween>
-                  <div />
-                  <ButtonPrimary id="btnSupply" onClick={onAdd} width="160px">
+            bottomContent={() => (
+              <Flex flexDirection="column" sx={{ gap: '12px' }}>
+                {warning}
+                <Row justify={isMultiplePosition ? 'flex-end' : 'flex-start'}>
+                  <ButtonError
+                    warning={isWarningButton}
+                    id="btnSupply"
+                    onClick={onAdd}
+                    width={isMultiplePosition ? '160px' : '100%'}
+                  >
                     <Text fontWeight={500}>
                       <Trans>Supply</Trans>
                     </Text>
-                  </ButtonPrimary>
-                </RowBetween>
-              ) : (
-                <ButtonPrimary id="btnSupply" onClick={onAdd} width="100%">
-                  <Text fontWeight={500}>
-                    <Trans>Supply</Trans>
-                  </Text>
-                </ButtonPrimary>
-              )
-            }
+                  </ButtonError>
+                </Row>
+              </Flex>
+            )}
           />
         )}
         pendingText={pendingText}
@@ -1183,7 +1250,7 @@ export default function AddLiquidity() {
                       </TYPE.body>
                     </Flex>
                   </AutoColumn>
-                  <AutoColumn gap="8px">
+                  <AutoColumn gap="12px">
                     <OutlineCard
                       padding="12px 16px"
                       style={{ borderRadius: '999px', backgroundColor: theme.buttonBlack, border: 'none' }}
@@ -1224,8 +1291,6 @@ export default function AddLiquidity() {
                       marketPrice={marketPrice}
                       baseCurrency={baseCurrency}
                       quoteCurrency={quoteCurrency}
-                      amountUnlockUSD={amountUnlockUSD}
-                      amountUnlocks={amountUnlocks}
                     />
                   </AutoColumn>
                 </AutoColumn>

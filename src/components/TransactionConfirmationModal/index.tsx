@@ -26,9 +26,10 @@ import { errorFriendly } from 'utils/dmm'
 
 const Wrapper = styled.div`
   width: 100%;
+  overflow-y: auto;
 `
 const Section = styled(AutoColumn)`
-  padding: 24px;
+  padding: 20px;
 `
 
 const BottomSection = styled(Section)`
