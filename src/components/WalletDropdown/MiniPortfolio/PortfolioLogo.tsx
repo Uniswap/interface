@@ -60,31 +60,20 @@ const ENSAvatarImg = styled.img`
 const StyledChainLogo = styled.img<{ isSquare: boolean }>`
   height: ${({ isSquare }) => (isSquare ? '16px' : '14px')};
   width: ${({ isSquare }) => (isSquare ? '16px' : '14px')};
-  margin-top: ${({ isSquare }) => (isSquare ? '0px' : '1px')};
-  margin-left: ${({ isSquare }) => (isSquare ? '0px' : '1px')};
-  position: absolute;
-  top: 68%;
-  left: 68%;
 `
 
-const ChainLogoSquareBackground = styled.div`
-  height: 18px;
-  width: 18px;
-  border-radius: 4px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+const L2LogoContainer = styled.div<{ nonSquareLogo?: boolean }>`
+  background-color: ${({ theme, nonSquareLogo }) => (nonSquareLogo ? theme.textPrimary : theme.backgroundSurface)};
+  border-radius: 2px;
+  height: 16px;
+  left: 60%;
   position: absolute;
   top: 60%;
-  left: 60%;
-`
-
-const SquareBackgroundForNonSquareLogo = styled.div`
-  height: 16px;
+  outline: 2px solid ${({ theme }) => theme.backgroundSurface};
   width: 16px;
-  border-radius: 2px;
-  background-color: ${({ theme }) => theme.textPrimary};
-  position: absolute;
-  top: 68%;
-  left: 68%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 /**
@@ -147,12 +136,10 @@ export function PortfolioLogo({
   }
 
   const L2Logo =
-    chainId === SupportedChainId.MAINNET ? null : (
-      <div>
-        {chainLogo && <ChainLogoSquareBackground />}
-        {!squareLogoUrl && logoUrl && <SquareBackgroundForNonSquareLogo />}
-        {chainLogo && <StyledChainLogo isSquare={!!squareLogoUrl} src={chainLogo} alt="chainLogo" />}
-      </div>
+    chainId === SupportedChainId.MAINNET && chainLogo ? null : (
+      <L2LogoContainer nonSquareLogo={Boolean(!squareLogoUrl && logoUrl)}>
+        <StyledChainLogo isSquare={!!squareLogoUrl} src={chainLogo} alt="chainLogo" />
+      </L2LogoContainer>
     )
 
   return (
