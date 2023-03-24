@@ -87,7 +87,7 @@ export const NftCard = ({
     >
       <MediaContainer isDisabled={isDisabled}>
         <MarketplaceContainer
-          hideDetails={hideDetails}
+          hidePrice={hideDetails}
           isSelected={isSelected}
           marketplace={marketplace}
           tokenType={tokenType}
