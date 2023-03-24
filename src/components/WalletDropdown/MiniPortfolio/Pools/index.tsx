@@ -111,13 +111,7 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
     [chainId, pool.token0.address, pool.token0.symbol, pool.token1.address, pool.token1.symbol]
   )
 
-  const containsURL = useMemo(
-    () =>
-      [pool.token0.name, pool.token0.symbol, pool.token1.name, pool.token1.symbol].some((testString) =>
-        hasURL(testString)
-      ),
-    [pool]
-  )
+  const containsURL = hasURL(pool.token0.symbol) || hasURL(pool.token1.symbol)
 
   if (containsURL) {
     return null
