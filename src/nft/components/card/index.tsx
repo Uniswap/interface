@@ -71,9 +71,7 @@ export const NftCard = ({
   const tokenType = collectionNft ? asset.tokenType : profileNft ? asset.asset_contract.tokenType : undefined
   const marketplace = collectionNft ? asset.marketplace : undefined
   const listedPrice =
-    profileNft && !isDisabled && !hideDetails && asset.floor_sell_order_price
-      ? floorFormatter(asset.floor_sell_order_price)
-      : undefined
+    profileNft && !isDisabled && asset.floor_sell_order_price ? floorFormatter(asset.floor_sell_order_price) : undefined
 
   return (
     <Card.Container
@@ -89,6 +87,7 @@ export const NftCard = ({
     >
       <MediaContainer isDisabled={isDisabled}>
         <MarketplaceContainer
+          hideDetails={hideDetails}
           isSelected={isSelected}
           marketplace={marketplace}
           tokenType={tokenType}
