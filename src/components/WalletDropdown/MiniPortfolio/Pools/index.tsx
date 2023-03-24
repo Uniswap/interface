@@ -100,6 +100,16 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
     toggleWalletDrawer()
     navigate('/pool/' + details.tokenId)
   }, [walletChainId, chainId, connector, toggleWalletDrawer, navigate, details.tokenId])
+  const analyticsEventProperties = useMemo(
+    () => ({
+      chain_id: chainId,
+      pool_token_0_symbol: pool.token0.symbol,
+      pool_token_1_symbol: pool.token1.symbol,
+      pool_token_0_address: pool.token0.address,
+      pool_token_1_address: pool.token1.address,
+    }),
+    [chainId, pool.token0.address, pool.token0.symbol, pool.token1.address, pool.token1.symbol]
+  )
 
   const containsURL = useMemo(
     () =>
@@ -118,7 +128,7 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
       events={[BrowserEvent.onClick]}
       name={SharedEventName.ELEMENT_CLICKED}
       element={InterfaceElementName.MINI_PORTFOLIO_POOLS_ROW}
-      properties={{ chain_id: chainId, pool_token_0: pool.token0, pool_token_1: pool.token1 }}
+      properties={analyticsEventProperties}
     >
       <PortfolioRow
         onClick={onClick}
