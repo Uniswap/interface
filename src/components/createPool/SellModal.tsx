@@ -143,6 +143,7 @@ export default function SellModal({ isOpen, onDismiss, poolInfo, userBaseTokenBa
                 onMax={handleMax}
                 showMaxButton={!atMaxAmount}
                 currency={poolInfo.poolPriceAmount?.currency ?? null}
+                isAccount={true}
                 label=""
                 renderBalance={(amount) => <Trans>Available to withdraw: {formatCurrencyAmount(amount, 4)}</Trans>}
                 id="buy-pool-tokens"

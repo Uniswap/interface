@@ -159,6 +159,7 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
                 onMax={handleMax}
                 showMaxButton={!atMaxAmount}
                 currency={userBaseTokenBalance.currency}
+                isAccount={true}
                 label=""
                 renderBalance={(amount) => <Trans>Available to deposit: {formatCurrencyAmount(amount, 4)}</Trans>}
                 id="buy-pool-tokens"
