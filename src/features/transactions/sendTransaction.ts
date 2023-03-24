@@ -1,6 +1,5 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { BigNumberish, BytesLike, providers } from 'ethers'
-import { AccessListish } from 'ethers/lib/utils'
+import { providers } from 'ethers'
 import { CallEffect, PutEffect } from 'redux-saga/effects'
 import { getProvider, getSignerManager } from 'src/app/walletContext'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
@@ -94,22 +93,9 @@ export async function signAndSendTransaction(
 }
 
 // hexlifyTransaction is idemnpotent so it's safe to call more than once on a singular transaction request
-function hexlifyTransaction(transferTxRequest: providers.TransactionRequest): {
-  maxPriorityFeePerGas?: BigNumberish | undefined
-  maxFeePerGas?: BigNumberish | undefined
-  gasPrice?: BigNumberish | undefined
-  nonce: string | undefined
-  value: string | undefined
-  gasLimit: string | undefined
-  to?: string | undefined
-  from?: string | undefined
-  data?: BytesLike | undefined
-  chainId?: number | undefined
-  type?: number | undefined
-  accessList?: AccessListish | undefined
-  customData?: Record<string, unknown> | undefined
-  ccipReadEnabled?: boolean | undefined
-} {
+function hexlifyTransaction(
+  transferTxRequest: providers.TransactionRequest
+): providers.TransactionRequest {
   const { value, nonce, gasLimit, gasPrice, maxPriorityFeePerGas, maxFeePerGas } = transferTxRequest
   return {
     ...transferTxRequest,

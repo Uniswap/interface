@@ -722,9 +722,19 @@ export function useSwapTransactionRequest(
     wrapType,
   ])
 }
-// TODO(MOB-3968): Add more specific types to transaction return types
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function useSwapTxAndGasInfo(derivedSwapInfo: DerivedSwapInfo, skipGasFeeQuery: boolean) {
+
+interface SwapTxAndGasInfo {
+  txRequest?: providers.TransactionRequest
+  approveTxRequest?: providers.TransactionRequest
+  totalGasFee?: string
+  gasFallbackUsed: boolean
+  isLoading: boolean
+}
+
+export function useSwapTxAndGasInfo(
+  derivedSwapInfo: DerivedSwapInfo,
+  skipGasFeeQuery: boolean
+): SwapTxAndGasInfo {
   const { chainId, wrapType, currencyAmounts } = derivedSwapInfo
 
   const tokenApprovalInfo = useTokenApprovalInfo(

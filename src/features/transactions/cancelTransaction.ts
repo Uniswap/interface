@@ -12,10 +12,7 @@ export function* attemptCancelTransaction(
   transaction: TransactionDetails
 ): Generator<SelectEffect | CallEffect<void>, void, unknown> {
   const { from, chainId, id } = transaction
-  // get updated TransactionDetails object to query for cancelRequest
-  // TODO(MOB-3968): Add more specific type definition here
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const tx: any = yield* appSelect(makeSelectTransaction(from, chainId, id))
+  const tx = yield* appSelect(makeSelectTransaction(from, chainId, id))
   if (!tx?.cancelRequest) {
     throw new Error('attempted to cancel a transaction without cancelRequest set')
   }

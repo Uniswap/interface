@@ -1,8 +1,9 @@
-import { createSelector } from '@reduxjs/toolkit'
+import { createSelector, Selector } from '@reduxjs/toolkit'
 import { RootState } from 'src/app/rootReducer'
 import { SearchableRecipient } from 'src/components/RecipientSelect/types'
 import { uniqueAddressesOnly } from 'src/components/RecipientSelect/utils'
 import { ChainId } from 'src/constants/chains'
+import { EMPTY_ARRAY } from 'src/constants/misc'
 import { TransactionState } from 'src/features/transactions/slice'
 import {
   SendTokenTransactionInfo,
@@ -15,13 +16,13 @@ import { flattenObjectOfObjects } from 'src/utils/objects'
 
 export const selectTransactions = (state: RootState): TransactionState => state.transactions
 
-// TODO(MOB-3968): Add more specific type definition here
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const makeSelectAddressTransactions = (address: Address | null): any =>
+export const makeSelectAddressTransactions = (
+  address: Address | null
+): Selector<RootState, TransactionDetails[]> =>
   createSelector(selectTransactions, (transactions) => {
-    if (!address) return undefined
+    if (!address) return EMPTY_ARRAY
     const addressTransactions = transactions[address]
-    if (!addressTransactions) return undefined
+    if (!addressTransactions) return EMPTY_ARRAY
 
     return unique(flattenObjectOfObjects(addressTransactions), (tx, _, self) => {
       // Remove dummy fiat onramp transactions from TransactionList, notification badge, etc.
@@ -49,9 +50,8 @@ export const makeSelectTransaction = (
   address: Address | undefined,
   chainId: ChainId | undefined,
   txId: string | undefined
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): any =>
-  createSelector(selectTransactions, (transactions) => {
+): Selector<RootState, TransactionDetails | undefined> =>
+  createSelector(selectTransactions, (transactions): TransactionDetails | undefined => {
     if (!address || !transactions[address] || !chainId || !txId) {
       return undefined
     }

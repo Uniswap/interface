@@ -23,12 +23,10 @@ import {
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { theme } from 'src/styles/theme'
 
-// TODO(MOB-3968): Add more specific type definition here
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function usePendingTransactions(
   address: Address | null,
   ignoreTransactionTypes: TransactionType[] = []
-) {
+): TransactionDetails[] | undefined {
   const transactions = useSelectAddressTransactions(address)
   return useMemo(() => {
     if (!transactions) return
@@ -41,9 +39,9 @@ export function usePendingTransactions(
 }
 
 // sorted oldest to newest
-// TODO(MOB-3968): Add more specific type definition here
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function useSortedPendingTransactions(address: Address | null) {
+export function useSortedPendingTransactions(
+  address: Address | null
+): TransactionDetails[] | undefined {
   const transactions = usePendingTransactions(address)
   return useMemo(() => {
     if (!transactions) return
@@ -123,28 +121,27 @@ export function useCreateWrapFormState(
 /**
  * Merge local and remote transactions. If duplicated hash found use data from local store.
  */
-// TODO(MOB-3968): Add more specific type definition here
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useMergeLocalAndRemoteTransactions(
   address: string,
   remoteTransactions: TransactionDetails[]
-) {
+): TransactionDetails[] {
   const localTransactions = useSelectAddressTransactions(address)
 
   // Merge local and remote txns into array of single type.
-  const combinedTransactionList = useMemo(() => {
+  const combinedTransactionList = useMemo((): TransactionDetails[] => {
     if (!address) return EMPTY_ARRAY
+
     const localHashes: Set<string> = new Set()
-    localTransactions?.map((t: { hash: string }) => {
-      localHashes.add(t.hash)
-    })
-    const formattedRemote = remoteTransactions.reduce((accum: TransactionDetails[], txn) => {
+    localTransactions.forEach((t: { hash: string }) => localHashes.add(t.hash))
+
+    const deDupedRemoteTxs = remoteTransactions.reduce((accum: TransactionDetails[], txn) => {
       if (!localHashes.has(txn.hash)) accum.push(txn) // dedupe
       return accum
     }, [])
-    return (localTransactions ?? [])
-      .concat(formattedRemote)
-      .sort((a: TransactionDetails, b: TransactionDetails) => (a.addedTime > b.addedTime ? -1 : 1))
+
+    return [...localTransactions, ...deDupedRemoteTxs].sort((a, b) =>
+      a.addedTime > b.addedTime ? -1 : 1
+    )
   }, [address, localTransactions, remoteTransactions])
 
   return combinedTransactionList
@@ -174,7 +171,6 @@ export function useAllTransactionsBetweenAddresses(
   sender: Address,
   recipient: string | undefined | null
 ): TransactionDetails[] {
-  // TODO(MOB-3968): Add more specific type definition here
   const txnsToSearch = useSelectAddressTransactions(sender)
   return useMemo(() => {
     if (!sender || !recipient || !txnsToSearch) return EMPTY_ARRAY
