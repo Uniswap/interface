@@ -118,10 +118,6 @@ export function useToggleSelfClaimModal(): () => void {
   return useToggleModal(ApplicationModal.SELF_CLAIM)
 }
 
-export function useToggleTaxServiceModal(): () => void {
-  return useToggleModal(ApplicationModal.TAX_SERVICE)
-}
-
 export function useToggleDelegateModal(): () => void {
   return useToggleModal(ApplicationModal.DELEGATE)
 }

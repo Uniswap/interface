@@ -11,12 +11,12 @@ import { Column, Row } from 'nft/components/Flex'
 import { BarChartIcon, EllipsisIcon, GovernanceIcon, PoolIcon } from 'nft/components/icons'
 import { body, bodySmall } from 'nft/css/common.css'
 import { ReactNode, useReducer, useRef } from 'react'
-import { DollarSign, HelpCircle, Shield, Terminal } from 'react-feather'
+import { HelpCircle, Shield, Terminal } from 'react-feather'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 
-import { useToggleModal, useToggleTaxServiceModal } from '../../state/application/hooks'
+import { useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import * as styles from './MenuDropdown.css'
 import { NavDropdown } from './NavDropdown'
@@ -140,7 +140,6 @@ export const MenuDropdown = () => {
   const openFeatureFlagsModal = useToggleModal(ApplicationModal.FEATURE_FLAGS)
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, isOpen ? toggleOpen : undefined)
-  const toggleTaxServiceModal = useToggleTaxServiceModal()
   const theme = useTheme()
 
   const mgtmEnabled = useMgtmEnabled()
@@ -220,19 +219,6 @@ export const MenuDropdown = () => {
                   </Icon>
                   <PrimaryMenuRow.Text>
                     <Trans>Legal & Privacy</Trans>
-                  </PrimaryMenuRow.Text>
-                </PrimaryMenuRow>
-                <PrimaryMenuRow
-                  onClick={() => {
-                    toggleTaxServiceModal()
-                    toggleOpen()
-                  }}
-                >
-                  <Icon>
-                    <DollarSign size="24px" color={theme.textSecondary} />
-                  </Icon>
-                  <PrimaryMenuRow.Text>
-                    <Trans>Tax resources</Trans>
                   </PrimaryMenuRow.Text>
                 </PrimaryMenuRow>
                 {mgtmEnabled && (
