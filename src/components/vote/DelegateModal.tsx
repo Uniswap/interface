@@ -173,15 +173,10 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
               <Trans>Actively staked GRG tokens represent voting power in Rigoblock governance.</Trans>
             </ThemedText.DeprecatedBody>
             <ThemedText.DeprecatedBody>
-              <Trans>
-                You must stake to a Rigoblock Pool in order to activate your voting power. You keep 100% of votes, your
-                votes are not delegated.
-              </Trans>
+              <Trans>By staking GRG to a Rigoblock Pool your activate your voting power. You keep 100% of votes.</Trans>
             </ThemedText.DeprecatedBody>
             <ThemedText.DeprecatedBody>
-              <Trans>
-                You may also use GRG in a Rigoblock Pool operated by yourself and directly stake from the pool.
-              </Trans>
+              <Trans>You may also stake GRG from a Rigoblock Pool operated by yourself.</Trans>
             </ThemedText.DeprecatedBody>
             <ThemedText.DeprecatedBody>
               <Trans>Your voting power will unlock at the beginning of the next Rigoblock epoch.</Trans>
@@ -227,12 +222,12 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
               onClick={onDelegate}
             >
               <ThemedText.DeprecatedMediumHeader color="white">
-                {usingDelegate ? <Trans>Stake From Pool</Trans> : <Trans>Stake For Yourself</Trans>}
+                {usingDelegate ? <Trans>Stake From Pool</Trans> : <Trans>Stake From Wallet</Trans>}
               </ThemedText.DeprecatedMediumHeader>
             </ButtonPrimary>
             <TextButton onClick={() => setUsingDelegate(!usingDelegate)}>
               <ThemedText.DeprecatedBlue>
-                {usingDelegate ? <Trans>Stake For Yourself</Trans> : <Trans>Stake From Your Rigoblock Pool</Trans>}
+                {usingDelegate ? <Trans>Stake From Wallet</Trans> : <Trans>Stake From Pool</Trans>}
               </ThemedText.DeprecatedBlue>
             </TextButton>
           </AutoColumn>
