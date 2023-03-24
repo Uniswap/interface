@@ -8,13 +8,18 @@ import { ThemedText } from 'theme'
 import { ExternalLink } from '../../theme'
 
 const CTASection = styled.section`
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 8px;
   opacity: 0.8;
+
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+  `};
 `
 
 const CTA = styled(ExternalLink)`
-  flex: 1;
   padding: 16px;
   border-radius: 20px;
   position: relative;
@@ -42,12 +47,19 @@ const HeaderText = styled(ThemedText.DeprecatedLabel)`
 
   font-weight: 400;
   font-size: 16px;
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
+    font-size: 16px;
+  `};
 `
 
 const ResponsiveColumn = styled(AutoColumn)`
   grid-template-columns: 1fr;
   width: 100%;
   gap: 8px;
+
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
+    gap: 8px;
+  `};
   justify-content: space-between;
 `
 
