@@ -16,6 +16,7 @@ interface NftCardProps {
   selectAsset: () => void
   unselectAsset: () => void
   onClick?: () => void
+  onNavigation?: () => void
   sendAnalyticsEvent?: () => void
   doNotLinkToDetails?: boolean
   mediaShouldBePlaying: boolean
@@ -46,6 +47,7 @@ export const NftCard = ({
   unselectAsset,
   isDisabled,
   onClick,
+  onNavigation,
   sendAnalyticsEvent,
   doNotLinkToDetails = false,
   mediaShouldBePlaying,
@@ -82,6 +84,7 @@ export const NftCard = ({
       testId={testId}
       onClick={() => {
         if (bagExpanded) setBagExpanded({ bagExpanded: false })
+        if (!doNotLinkToDetails) onNavigation?.()
         sendAnalyticsEvent?.()
       }}
     >

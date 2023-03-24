@@ -8,7 +8,6 @@ import { NftCard } from 'nft/components/card'
 import { VerifiedIcon } from 'nft/components/icons'
 import { WalletAsset } from 'nft/types'
 import { floorFormatter } from 'nft/utils'
-import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -46,13 +45,7 @@ export function NFT({
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }) {
   const toggleWalletDrawer = useToggleWalletDrawer()
-  const navigate = useNavigate()
   const trace = useTrace()
-
-  const navigateToNFTDetails = () => {
-    navigate(`/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}`)
-    toggleWalletDrawer()
-  }
 
   return (
     <NFTContainer>
@@ -62,10 +55,9 @@ export function NFT({
         display={{ disabledInfo: true }}
         isSelected={false}
         isDisabled={false}
-        selectAsset={navigateToNFTDetails}
-        unselectAsset={() => {
-          /* */
-        }}
+        selectAsset={() => null}
+        unselectAsset={() => null}
+        onNavigation={toggleWalletDrawer}
         sendAnalyticsEvent={() =>
           sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
             element: InterfaceElementName.MINI_PORTFOLIO_NFT_ITEM,
