@@ -19,6 +19,7 @@ import { APP_PATHS, PROMM_ANALYTICS_URL } from 'constants/index'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
 import useDebounce from 'hooks/useDebounce'
+import { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useFarmPositions, useProAmmPositions } from 'hooks/useProAmmPositions'
 import useTheme from 'hooks/useTheme'
@@ -72,6 +73,7 @@ const renderNotificationButton = (iconOnly: boolean) => {
           </Trans>
         </div>
       }
+      trackingEvent={MIXPANEL_TYPE.MYPOOLS_CLICK_SUBSCRIBE_BTN}
     />
   )
 }

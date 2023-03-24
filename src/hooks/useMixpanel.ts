@@ -66,6 +66,8 @@ export enum MIXPANEL_TYPE {
   IMPORT_POOL_INITIATED,
   MYPOOLS_STAKED_VIEWED,
   MYPOOLS_POOLS_VIEWED,
+  MYPOOLS_CLICK_SUBSCRIBE_BTN,
+
   FARMS_ACTIVE_VIEWED,
   FARMS_ENDING_VIEWED,
   FARMS_UPCOMING_VIEWED,
@@ -154,6 +156,7 @@ export enum MIXPANEL_TYPE {
   BRIDGE_CLICK_TRANSFER,
   BRIDGE_TRANSACTION_SUBMIT,
   BRIDGE_CLICK_HISTORY_TRANSFER_TAB,
+  BRIDGE_CLICK_SUBSCRIBE_BTN,
 
   //Kyber DAO
   KYBER_DAO_STAKE_CLICK,
@@ -186,6 +189,7 @@ export enum MIXPANEL_TYPE {
   LO_CLICK_REVIEW_PLACE_ORDER,
   LO_CLICK_EDIT_ORDER,
   LO_DISPLAY_SETTING_CLICK,
+  LO_CLICK_SUBSCRIBE_BTN,
 
   // Wallet UI
   WUI_WALLET_CLICK,
@@ -466,6 +470,11 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
 
           break
         }
+        case MIXPANEL_TYPE.MYPOOLS_CLICK_SUBSCRIBE_BTN: {
+          mixpanel.track('My Pools - User click to Subscribe button')
+          break
+        }
+
         case MIXPANEL_TYPE.FARMS_ACTIVE_VIEWED: {
           mixpanel.track(`Farms - 'Active' Tab Viewed`)
 
@@ -820,6 +829,11 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
           })
           break
         }
+        case MIXPANEL_TYPE.BRIDGE_CLICK_SUBSCRIBE_BTN: {
+          mixpanel.track('Bridge - User click to Subscribe button')
+          break
+        }
+
         case MIXPANEL_TYPE.NOTIFICATION_CLICK_MENU: {
           mixpanel.track('Notification Clicked')
           break
@@ -922,6 +936,11 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
           mixpanel.track('Limit Order - Display settings on Limit settings', payload)
           break
         }
+        case MIXPANEL_TYPE.LO_CLICK_SUBSCRIBE_BTN: {
+          mixpanel.track('Limit Order - User click to Subscribe button')
+          break
+        }
+
         case MIXPANEL_TYPE.WUI_WALLET_CLICK: {
           mixpanel.track('Wallet UI - Wallet Click')
           break

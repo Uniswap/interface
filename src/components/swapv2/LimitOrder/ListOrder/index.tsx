@@ -517,7 +517,10 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
           setActiveTab={onSelectTab}
           activeTab={isTabActive ? LimitOrderStatus.ACTIVE : LimitOrderStatus.CLOSED}
         />
-        <SubscribeNotificationButton subscribeTooltip={t`Subscribe to receive notifications on your limit orders`} />
+        <SubscribeNotificationButton
+          subscribeTooltip={t`Subscribe to receive notifications on your limit orders`}
+          trackingEvent={MIXPANEL_TYPE.LO_CLICK_SUBSCRIBE_BTN}
+        />
       </Flex>
 
       <Flex flexDirection={'column'} style={{ gap: '1rem' }}>
