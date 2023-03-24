@@ -9,7 +9,6 @@ import { useActiveWeb3React } from '../../hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 
 import { YellowCard } from '../Card'
-import Menu from '../Menu'
 import Settings from '../Settings'
 
 import Row, { RowBetween } from '../Row'
@@ -165,7 +164,7 @@ export default function Header() {
           <HeaderElementWrap>
             <VersionSwitch />
             <Settings />
-            <Menu />
+            {/* <Menu /> */}
           </HeaderElementWrap>
         </HeaderControls>
       </RowBetween>
