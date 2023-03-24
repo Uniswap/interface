@@ -1,5 +1,4 @@
 import { ChainId, Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
-import { SerializedError } from '@reduxjs/toolkit'
 import { useEffect, useMemo, useState } from 'react'
 import { Box, Flex } from 'rebass'
 import { parseGetRouteResponse } from 'services/route/utils'
@@ -82,11 +81,7 @@ const SwapForm: React.FC<SwapFormProps> = props => {
 
   const isStablePairSwap = useCheckStablePairSwap(currencyIn, currencyOut)
 
-  const {
-    fetcher: getRoute,
-    abort,
-    result,
-  } = useGetRoute({
+  const { fetcher: getRoute, result } = useGetRoute({
     currencyIn,
     currencyOut,
     feeConfig,
@@ -96,15 +91,7 @@ const SwapForm: React.FC<SwapFormProps> = props => {
 
   const { data: getRouteRawResponse, isFetching: isGettingRoute, error: getRouteError } = result
   const getRouteResponse = useMemo(() => {
-    const serializedError = getRouteError as SerializedError
-
-    // skip this check if it's AbortError
-    if (
-      !getRouteRawResponse?.data ||
-      (serializedError?.name && serializedError.name !== 'AbortError') ||
-      !currencyIn ||
-      !currencyOut
-    ) {
+    if (!getRouteRawResponse?.data || getRouteError || !currencyIn || !currencyOut) {
       return undefined
     }
 
@@ -182,7 +169,6 @@ const SwapForm: React.FC<SwapFormProps> = props => {
                     <RefreshButton
                       shouldDisable={!parsedAmount || parsedAmount.equalTo(0) || isProcessingSwap}
                       callback={getRoute}
-                      abort={abort}
                     />
                     <TradePrice price={routeSummary?.executionPrice} />
                   </>

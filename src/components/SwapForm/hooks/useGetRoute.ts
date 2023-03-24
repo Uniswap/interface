@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, WETH } from '@kyberswap/ks-sdk-core'
 import { debounce } from 'lodash'
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useMemo } from 'react'
 import routeApi from 'services/route'
 import { GetRouteParams } from 'services/route/types/getRoute'
 
@@ -37,10 +37,9 @@ const useGetRoute = (args: Args) => {
   const { chargeFeeBy = '', feeReceiver = '', feeAmount = '' } = feeConfig || {}
   const isInBps = feeConfig?.isInBps !== undefined ? (feeConfig.isInBps ? '1' : '0') : ''
 
-  const currentRequestRef = useRef<any>()
-  const debounceFuncRef = useRef<any>()
+  const triggerDebounced = useMemo(() => debounce(trigger, INPUT_DEBOUNCE_TIME), [trigger])
 
-  const fetcherWithoutDebounce = useCallback(async () => {
+  const fetcher = useCallback(async () => {
     const amountIn = parsedAmount?.quotient?.toString() || ''
 
     if (!currencyIn || !currencyOut || !amountIn || !parsedAmount?.currency?.equals(currencyIn)) {
@@ -73,7 +72,7 @@ const useGetRoute = (args: Args) => {
 
     const url = `${aggregatorDomain}/${NETWORKS_INFO[chainId].aggregatorRoute}/api/v1/routes`
 
-    currentRequestRef.current = trigger({
+    triggerDebounced({
       url,
       params,
     })
@@ -92,24 +91,10 @@ const useGetRoute = (args: Args) => {
     isSaveGas,
     parsedAmount?.currency,
     parsedAmount?.quotient,
-    trigger,
+    triggerDebounced,
   ])
 
-  const fetcher = useMemo(() => {
-    const debouncedFunc = debounce(fetcherWithoutDebounce, INPUT_DEBOUNCE_TIME, {
-      leading: true,
-      trailing: true,
-    })
-    debounceFuncRef.current = debouncedFunc
-    return debouncedFunc
-  }, [fetcherWithoutDebounce])
-
-  const abort = useCallback(() => {
-    currentRequestRef.current?.abort()
-    debounceFuncRef.current?.cancel()
-  }, [])
-
-  return { fetcher, abort, result }
+  return { fetcher, result }
 }
 
 export default useGetRoute

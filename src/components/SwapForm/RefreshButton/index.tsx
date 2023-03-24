@@ -30,9 +30,8 @@ const IconButton = styled.button`
 type Props = {
   shouldDisable: boolean
   callback: () => void
-  abort: () => void
 }
-const RefreshButton: React.FC<Props> = ({ shouldDisable, callback, abort }) => {
+const RefreshButton: React.FC<Props> = ({ shouldDisable, callback }) => {
   const svgRef = useRef<SVGSVGElement>(null)
 
   useEffect(() => {
@@ -43,8 +42,6 @@ const RefreshButton: React.FC<Props> = ({ shouldDisable, callback, abort }) => {
     }
 
     if (shouldDisable) {
-      abort()
-
       // reset svg animate duration to 0 and PAUSE animations
       element.setCurrentTime(0)
       element.pauseAnimations()
@@ -62,7 +59,7 @@ const RefreshButton: React.FC<Props> = ({ shouldDisable, callback, abort }) => {
     return () => {
       clearInterval(interval)
     }
-  }, [callback, abort, shouldDisable])
+  }, [callback, shouldDisable])
 
   return (
     <IconButton
