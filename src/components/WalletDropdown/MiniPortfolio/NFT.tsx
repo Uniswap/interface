@@ -55,8 +55,6 @@ export function NFT({
         display={{ disabledInfo: true }}
         isSelected={false}
         isDisabled={false}
-        selectAsset={() => null}
-        unselectAsset={() => null}
         onNavigation={toggleWalletDrawer}
         sendAnalyticsEvent={() =>
           sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {

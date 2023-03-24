@@ -186,7 +186,7 @@ const Container = ({
   isSelected,
   isDisabled,
   detailsHref,
-  doNotLinkToDetails = false,
+  linkToDetails = true,
   testId,
   onClick,
   children,
@@ -194,14 +194,14 @@ const Container = ({
   isSelected: boolean
   isDisabled: boolean
   detailsHref: string
-  doNotLinkToDetails: boolean
+  linkToDetails: boolean
   testId?: string
   children: ReactNode
   onClick?: (e: React.MouseEvent) => void
 }) => {
   return (
     <CardContainer isSelected={isSelected} isDisabled={isDisabled} testId={testId} onClick={onClick}>
-      <StyledLink to={doNotLinkToDetails ? '' : detailsHref}>{children}</StyledLink>
+      {linkToDetails ? <StyledLink to={detailsHref}>{children}</StyledLink> : <>{children}</>}
     </CardContainer>
   )
 }

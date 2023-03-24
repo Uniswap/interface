@@ -79,11 +79,11 @@ export const ViewMyNftsAsset = ({
       isDisabled={Boolean(isDisabled)}
       selectAsset={() => handleSelect(false)}
       unselectAsset={() => handleSelect(true)}
-      onClick={onCardClick}
+      onButtonClick={onCardClick}
       mediaShouldBePlaying={mediaShouldBePlaying}
       setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
       testId="nft-profile-asset"
-      doNotLinkToDetails={hideDetails}
+      linkToDetails={!hideDetails}
     />
   )
 }

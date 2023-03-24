@@ -13,12 +13,12 @@ interface NftCardProps {
   display: NftCardDisplayProps
   isSelected: boolean
   isDisabled: boolean
-  selectAsset: () => void
-  unselectAsset: () => void
-  onClick?: () => void
+  selectAsset?: () => void
+  unselectAsset?: () => void
+  onButtonClick?: () => void
   onNavigation?: () => void
   sendAnalyticsEvent?: () => void
-  doNotLinkToDetails?: boolean
+  linkToDetails?: boolean
   mediaShouldBePlaying: boolean
   uniformAspectRatio?: UniformAspectRatio
   setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
@@ -39,6 +39,12 @@ export interface NftCardDisplayProps {
   disabledInfo?: ReactNode
 }
 
+/**
+ * NftCard is a component that displays an NFT asset.
+ *
+ * By default, clicking on the card will navigate to the details page.
+ * If `linkToDetails` is set to false, clicking on the card will not navigate to the details page.
+ */
 export const NftCard = ({
   asset,
   display,
@@ -46,10 +52,10 @@ export const NftCard = ({
   selectAsset,
   unselectAsset,
   isDisabled,
-  onClick,
+  onButtonClick,
   onNavigation,
   sendAnalyticsEvent,
-  doNotLinkToDetails = false,
+  linkToDetails = true,
   mediaShouldBePlaying,
   uniformAspectRatio = UniformAspectRatios.square,
   setUniformAspectRatio,
@@ -59,7 +65,13 @@ export const NftCard = ({
   testId,
   hideDetails = false,
 }: NftCardProps) => {
-  const clickActionButton = useSelectAsset(selectAsset, unselectAsset, isSelected, isDisabled, onClick)
+  const clickActionButton = useSelectAsset({
+    selectAsset,
+    unselectAsset,
+    isSelected,
+    isDisabled,
+    onClick: onButtonClick,
+  })
   const { bagExpanded, setBagExpanded } = useBag(
     (state) => ({
       bagExpanded: state.bagExpanded,
@@ -80,11 +92,11 @@ export const NftCard = ({
       isSelected={isSelected}
       isDisabled={isDisabled}
       detailsHref={detailsHref(asset)}
-      doNotLinkToDetails={doNotLinkToDetails}
+      linkToDetails={linkToDetails}
       testId={testId}
       onClick={() => {
         if (bagExpanded) setBagExpanded({ bagExpanded: false })
-        if (!doNotLinkToDetails) onNavigation?.()
+        if (linkToDetails) onNavigation?.()
         sendAnalyticsEvent?.()
       }}
     >
