@@ -123,7 +123,6 @@ export const defaultShowLiveCharts: { [chainId in ChainId]: boolean } = {
   [ChainId.MUMBAI]: false,
   [ChainId.BSCTESTNET]: false,
   [ChainId.AVAXTESTNET]: false,
-  [ChainId.ETHW]: true,
 }
 
 const initialState: UserState = {

@@ -60,7 +60,7 @@ const Settings: React.FC = () => {
       customStyle={customStyleMenu}
     >
       <Column>
-        {chainId !== ChainId.ETHW && chainId !== ChainId.SOLANA && (
+        {chainId !== ChainId.SOLANA && (
           <MenuItemLink href={`${PROMM_ANALYTICS_URL[chainId]}/account/${account}`}>
             <BarChart2 size={16} />
             <Trans>Analytics ↗</Trans>

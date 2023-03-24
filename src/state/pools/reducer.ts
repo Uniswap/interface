@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 
-import { setError, setLoading, setSelectedPool, setSharedPoolId, setUrlOnEthPowAck, updatePools } from './actions'
+import { setError, setLoading, setSelectedPool, setSharedPoolId, updatePools } from './actions'
 import { SubgraphPoolData, UserLiquidityPosition } from './hooks'
 
 interface SelectedPool {
@@ -14,7 +14,6 @@ interface PoolsState {
   readonly error: Error | undefined
   readonly selectedPool: SelectedPool | undefined
   readonly sharedPoolId: string | undefined
-  readonly urlOnEthPoWAckModal: string
 }
 
 const initialState: PoolsState = {
@@ -23,7 +22,6 @@ const initialState: PoolsState = {
   error: undefined,
   selectedPool: undefined,
   sharedPoolId: undefined,
-  urlOnEthPoWAckModal: '',
 }
 
 export default createReducer<PoolsState>(initialState, builder =>
@@ -62,12 +60,6 @@ export default createReducer<PoolsState>(initialState, builder =>
       return {
         ...state,
         sharedPoolId: poolId,
-      }
-    })
-    .addCase(setUrlOnEthPowAck, (state, { payload: url }) => {
-      return {
-        ...state,
-        urlOnEthPoWAckModal: url,
       }
     }),
 )

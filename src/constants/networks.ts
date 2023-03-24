@@ -12,7 +12,6 @@ import {
   bttc,
   cronos,
   ethereum,
-  ethw,
   fantom,
   görli,
   matic,
@@ -29,7 +28,6 @@ type NETWORKS_INFO_CONFIG_TYPE = { [chainId in EVM_NETWORK]: EVMNetworkInfo } & 
 }
 export const NETWORKS_INFO_CONFIG: NETWORKS_INFO_CONFIG_TYPE = {
   [ChainId.MAINNET]: ethereum,
-  [ChainId.ETHW]: ethw,
   [ChainId.GÖRLI]: görli,
   [ChainId.MATIC]: matic,
   [ChainId.MUMBAI]: mumbai,
@@ -73,7 +71,6 @@ export const MAINNET_NETWORKS = [
   ChainId.CRONOS,
   ChainId.VELAS,
   ChainId.AURORA,
-  ChainId.ETHW,
 ] as const
 
 export const EVM_NETWORKS = SUPPORTED_NETWORKS.filter(chainId => getChainType(chainId) === ChainType.EVM) as Exclude<
@@ -88,7 +85,6 @@ export const EVM_MAINNET_NETWORKS = MAINNET_NETWORKS.filter(
 
 export const WALLET_CONNECT_SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.MAINNET,
-  ChainId.ETHW,
   ChainId.MUMBAI,
   ChainId.MATIC,
   ChainId.BSCTESTNET,
@@ -132,7 +128,6 @@ export const TRUESIGHT_NETWORK_TO_CHAINID: NetToChain = SUPPORTED_NETWORKS.reduc
 export const FAUCET_NETWORKS = [ChainId.BTTC]
 export const CHAINS_SUPPORT_NEW_POOL_FARM_API: readonly ChainId[] = [
   ChainId.MAINNET,
-  // ChainId.ETHW,
   // ChainId.MUMBAI,
   ChainId.MATIC,
   // ChainId.BSCTESTNET,

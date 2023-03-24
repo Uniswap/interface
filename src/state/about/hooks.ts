@@ -101,7 +101,7 @@ export function useGlobalData() {
     }
 
     async function getGlobalData() {
-      const result = await getResultByChainIds(EVM_MAINNET_NETWORKS.filter(chain => chain !== ChainId.ETHW))
+      const result = await getResultByChainIds(EVM_MAINNET_NETWORKS)
 
       setGlobalData({
         ...result.data,

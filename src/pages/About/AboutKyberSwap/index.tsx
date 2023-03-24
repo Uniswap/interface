@@ -31,7 +31,6 @@ import {
   CronosLogoFull,
   Drop,
   Enter,
-  EthW,
   Ethereum,
   Fantom,
   FantomLogoFull,
@@ -498,7 +497,6 @@ function AboutKyberSwap() {
 
           <SupportedChain>
             <Ethereum />
-            <EthW />
             <Polygon />
             <Binance />
             <Avalanche />

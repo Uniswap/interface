@@ -125,10 +125,6 @@ export function useNotificationModalToggle(): () => void {
   return useToggleModal(ApplicationModal.NOTIFICATION_SUBSCRIPTION)
 }
 
-export function useToggleEthPowAckModal(): () => void {
-  return useToggleModal(ApplicationModal.ETH_POW_ACK)
-}
-
 // returns a function that allows adding a popup
 export function useAddPopup(): (
   content: PopupContent,

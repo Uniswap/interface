@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
+import { Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
 import { useEffect, useMemo, useState } from 'react'
 import { Box, Flex } from 'rebass'
 import { parseGetRouteResponse } from 'services/route/utils'
@@ -68,7 +68,7 @@ const SwapForm: React.FC<SwapFormProps> = props => {
     onChangeCurrencyOut,
   } = props
 
-  const { chainId, isEVM, isSolana } = useActiveWeb3React()
+  const { isEVM, isSolana } = useActiveWeb3React()
 
   const [isProcessingSwap, setProcessingSwap] = useState(false)
   const [typedValue, setTypedValue] = useState('1')
@@ -198,7 +198,7 @@ const SwapForm: React.FC<SwapFormProps> = props => {
         <Flex flexDirection="column" style={{ gap: '1.25rem' }}>
           <TradeTypeSelection isSaveGas={isSaveGas} setSaveGas={setSaveGas} />
 
-          {chainId !== ChainId.ETHW && <TrendingSoonTokenBanner currencyIn={currencyIn} currencyOut={currencyOut} />}
+          <TrendingSoonTokenBanner currencyIn={currencyIn} currencyOut={currencyOut} />
 
           {!isWrapOrUnwrap && <SlippageWarningNote rawSlippage={slippage} isStablePairSwap={isStablePairSwap} />}
 

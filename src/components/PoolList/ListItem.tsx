@@ -1,4 +1,4 @@
-import { ChainId, Fraction } from '@kyberswap/ks-sdk-core'
+import { Fraction } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import JSBI from 'jsbi'
 import { rgba } from 'polished'
@@ -21,10 +21,10 @@ import { APP_PATHS, MAX_ALLOW_APY } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { IconWrapper } from 'pages/Pools/styleds'
-import { usePoolDetailModalToggle, useToggleEthPowAckModal } from 'state/application/hooks'
+import { usePoolDetailModalToggle } from 'state/application/hooks'
 import { useActiveAndUniqueFarmsData } from 'state/farms/classic/hooks'
 import { setSelectedPool } from 'state/pools/actions'
-import { SubgraphPoolData, UserLiquidityPosition, useSharedPoolIdManager, useUrlOnEthPowAck } from 'state/pools/hooks'
+import { SubgraphPoolData, UserLiquidityPosition, useSharedPoolIdManager } from 'state/pools/hooks'
 import { formattedNum, shortenAddress } from 'utils'
 import { currencyId } from 'utils/currencyId'
 import { getMyLiquidity, getTradingFeeAPR, parseSubgraphPoolData } from 'utils/dmm'
@@ -44,8 +44,6 @@ const ListItem = ({ poolData, userLiquidityPositions }: ListItemGroupProps) => {
   const amp = new Fraction(poolData.amp).divide(JSBI.BigInt(10000))
 
   const navigate = useNavigate()
-  const [, setUrlOnEthPoWAck] = useUrlOnEthPowAck()
-  const toggleEthPowAckModal = useToggleEthPowAckModal()
 
   const { data: uniqueAndActiveFarms } = useActiveAndUniqueFarmsData()
   const farm = uniqueAndActiveFarms.find(f => f.id.toLowerCase() === poolData.id.toLowerCase())
@@ -200,15 +198,8 @@ const ListItem = ({ poolData, userLiquidityPositions }: ListItemGroupProps) => {
           }}
           onClick={(e: React.MouseEvent) => {
             e.stopPropagation()
-
             const url = `/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${poolData.id}`
-            setUrlOnEthPoWAck(url)
-
-            if (chainId === ChainId.ETHW) {
-              toggleEthPowAckModal()
-            } else {
-              navigate(url)
-            }
+            navigate(url)
           }}
         >
           <Plus size={16} color={theme.primary} />

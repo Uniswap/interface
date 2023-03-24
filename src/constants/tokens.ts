@@ -34,12 +34,6 @@ export const STABLE_COINS_ADDRESS: { [chainId in ChainId]: string[] } = {
     '0xB0B195aEFA3650A6908f15CdaC7D92F8a5791B0B', // BOB
     '0x99D8a9C45b2ecA8864373A26D1459e3Dff1e17F3', // MIM
   ],
-  [ChainId.ETHW]: [
-    '0x6B175474E89094C44Da98b954EedeAC495271d0F', // DAI
-    '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', // USDC
-    '0xdAC17F958D2ee523a2206206994597C13D831ec7', // USDT
-    '0x4Fabb145d64652a948d72533023f6E7A623C7C53', // BUSD
-  ],
   [ChainId.MATIC]: [
     '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063', // DAI
     '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', // usdc
@@ -144,12 +138,6 @@ export const SUPER_STABLE_COINS_ADDRESS: { [chainId in ChainId]: string[] } = {
     '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', // USDC
     '0xdAC17F958D2ee523a2206206994597C13D831ec7', // USDT
   ],
-  [ChainId.ETHW]: [
-    '0x6B175474E89094C44Da98b954EedeAC495271d0F', // DAI
-    '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', // USDC
-    '0xdAC17F958D2ee523a2206206994597C13D831ec7', // USDT
-    '0x4Fabb145d64652a948d72533023f6E7A623C7C53', // BUSD
-  ],
   [ChainId.MATIC]: [
     '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063', // DAI
     '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', // usdc
@@ -244,7 +232,6 @@ export const CORRELATED_COINS_ADDRESS: { [chainId in ChainId]: string[][] } = {
       '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202', //KNC
     ],
   ],
-  [ChainId.ETHW]: [],
   [ChainId.MATIC]: [
     [
       '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', //WMATIC
@@ -282,7 +269,6 @@ export const DAI = {
     'DAI',
     'Dai Stablecoin',
   ),
-  [ChainId.ETHW]: new Token(ChainId.ETHW, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, '0x1BBeeEdCF32dc2c1Ebc2F138e3FC7f3DeCD44D6A', 18, 'DAI', 'Dai Stablecoin'),
   [ChainId.MATIC]: new Token(ChainId.MATIC, '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063', 18, 'DAI', 'Dai Stablecoin'),
   [ChainId.MUMBAI]: new Token(
@@ -371,7 +357,6 @@ export const DAI = {
 
 export const USDC: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD Coin'),
-  [ChainId.ETHW]: new Token(ChainId.MAINNET, '0x25de68ef588cb0c2c8f3537861e828ae699cd0db', 6, 'USDC', 'USD Coin'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, '0x8e9Bd30D15420bAe4B7EC0aC014B7ECeE864373C', 18, 'USDC', 'USD Coin'),
   [ChainId.MATIC]: new Token(ChainId.MATIC, '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', 6, 'USDC', 'USD Coin'),
   [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, '0x2CeC76B26A8d96BF3072D34A01BB3a4edE7c06BE', 6, 'USDC', 'USD Coin'),
@@ -422,7 +407,6 @@ export const USDC: { [chainId in ChainId]: Token } = {
 
 export const USDT: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD'),
-  [ChainId.ETHW]: new Token(ChainId.MAINNET, '0x2ad7868ca212135c6119fd7ad1ce51cfc5702892', 6, 'USDT', 'Tether USD'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, '0x2bf64acf7ead856209749d0d125e9ade2d908e7f', 18, 'USDT', 'Tether USD'),
   [ChainId.MATIC]: new Token(ChainId.MATIC, '0xc2132D05D31c914a87C6611C10748AEb04B58e8F', 6, 'USDT', 'Tether USD'),
   [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, '0x064B91Bda6d178DfE03835de9450BFe78201c43F', 6, 'USDT', 'Tether USD'),
@@ -494,7 +478,6 @@ export const KNCL_ADDRESS = '0xdd974D5C2e2928deA5F71b9825b8b646686BD200'
 // todo: make it nullable
 export const KNC: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
-  [ChainId.ETHW]: new Token(ChainId.ETHW, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.GÖRLI]: new Token(
     ChainId.GÖRLI,
     '0xd19e5119Efc73FeA1e70f9fbbc105DaB89D914e4',
@@ -582,7 +565,6 @@ export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } 
 
 export const DEFAULT_OUTPUT_TOKEN_BY_CHAIN: Partial<Record<ChainId, Token>> = {
   [ChainId.MAINNET]: USDT[ChainId.MAINNET],
-  [ChainId.ETHW]: USDT[ChainId.ETHW],
   [ChainId.MATIC]: USDT[ChainId.MATIC],
   [ChainId.BSCMAINNET]: new Token(ChainId.BSCMAINNET, '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', 18, 'BUSD', 'BUSD'),
   [ChainId.AVAXMAINNET]: USDC[ChainId.AVAXMAINNET], // USDC.e

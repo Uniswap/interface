@@ -1,4 +1,4 @@
-import { ChainId, Fraction, Percent } from '@kyberswap/ks-sdk-core'
+import { Fraction, Percent } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
@@ -33,11 +33,10 @@ import { NativeCurrencies } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { IconWrapper } from 'pages/Pools/styleds'
-import { useToggleEthPowAckModal } from 'state/application/hooks'
 import { useActiveAndUniqueFarmsData } from 'state/farms/classic/hooks'
 import { Farm } from 'state/farms/classic/types'
 import { useMultipleContractSingleData } from 'state/multicall/hooks'
-import { SubgraphPoolData, UserLiquidityPosition, useSharedPoolIdManager, useUrlOnEthPowAck } from 'state/pools/hooks'
+import { SubgraphPoolData, UserLiquidityPosition, useSharedPoolIdManager } from 'state/pools/hooks'
 import { tryParseAmount } from 'state/swap/hooks'
 import { ExternalLink } from 'theme'
 import { formattedNum, shortenAddress } from 'utils'
@@ -73,8 +72,6 @@ const ItemCard = ({ poolData, myLiquidity }: ListItemProps) => {
   const { chainId, networkInfo } = useActiveWeb3React()
   const amp = new Fraction(poolData.amp).divide(JSBI.BigInt(SUBGRAPH_AMP_MULTIPLIER))
   const navigate = useNavigate()
-  const [, setUrlOnEthPoWAck] = useUrlOnEthPowAck()
-  const toggleEthPowAckModal = useToggleEthPowAckModal()
   const [showDetail, setShowDetail] = useState(false)
 
   const { data: uniqueAndActiveFarms } = useActiveAndUniqueFarmsData()
@@ -212,12 +209,7 @@ const ItemCard = ({ poolData, myLiquidity }: ListItemProps) => {
       <ButtonLight
         onClick={() => {
           const url = `/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${poolData.id}`
-          if (chainId === ChainId.ETHW) {
-            setUrlOnEthPoWAck(url)
-            toggleEthPowAckModal()
-          } else {
-            navigate(url)
-          }
+          navigate(url)
         }}
         style={{
           padding: '10px',

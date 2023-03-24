@@ -24,9 +24,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useAllTokens } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { IconWrapper } from 'pages/Pools/styleds'
-import { useToggleEthPowAckModal } from 'state/application/hooks'
 import { useElasticFarms } from 'state/farms/elastic/hooks'
-import { useUrlOnEthPowAck } from 'state/pools/hooks'
 import { ExternalLink } from 'theme'
 import { ElasticPoolDetail } from 'types/pool'
 import { isAddressString, shortenAddress } from 'utils'
@@ -61,8 +59,6 @@ export default function ProAmmPoolCardItem({ pool, onShared, userPositions }: Li
   const { chainId, networkInfo } = useActiveWeb3React()
   const theme = useTheme()
   const navigate = useNavigate()
-  const [, setUrlOnEthPoWAck] = useUrlOnEthPowAck()
-  const toggleEthPowAckModal = useToggleEthPowAckModal()
 
   const allTokens = useAllTokens()
   const { farms } = useElasticFarms()
@@ -260,13 +256,7 @@ export default function ProAmmPoolCardItem({ pool, onShared, userPositions }: Li
           style={{ height: '36px' }}
           onClick={() => {
             const url = `${APP_PATHS.ELASTIC_CREATE_POOL}/${token0Slug}/${token1Slug}/${pool.feeTier}`
-
-            if (chainId === ChainId.ETHW) {
-              setUrlOnEthPoWAck(url)
-              toggleEthPowAckModal()
-            } else {
-              navigate(url)
-            }
+            navigate(url)
           }}
         >
           <Plus size={16} />

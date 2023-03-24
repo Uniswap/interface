@@ -18,7 +18,7 @@ import { useETHPrice, useKyberSwapConfig } from 'state/application/hooks'
 import { AppState } from 'state/index'
 import { get24hValue, getBlocksFromTimestamps, getPercentChange, getTimestampsForChanges } from 'utils'
 
-import { setError, setLoading, setSharedPoolId, setUrlOnEthPowAck, updatePools } from './actions'
+import { setError, setLoading, setSharedPoolId, updatePools } from './actions'
 
 export interface SubgraphPoolData {
   id: string
@@ -426,18 +426,4 @@ export function useSharedPoolIdManager(): [string | undefined, (newSharedPoolId:
   )
 
   return useMemo(() => [sharedPoolId, onSetSharedPoolId], [onSetSharedPoolId, sharedPoolId])
-}
-
-export const useUrlOnEthPowAck = (): [string, (url: string) => void] => {
-  const dispatch = useDispatch()
-  const url = useSelector((state: AppState) => state.pools.urlOnEthPoWAckModal)
-
-  const setUrl = useCallback(
-    (url: string) => {
-      dispatch(setUrlOnEthPowAck(url))
-    },
-    [dispatch],
-  )
-
-  return [url, setUrl]
 }

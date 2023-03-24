@@ -10,4 +10,3 @@ export const setSelectedPool = createAction<{
   myLiquidity?: UserLiquidityPosition
 }>('pools/setSelectedPool')
 export const setSharedPoolId = createAction<{ poolId: string | undefined }>('pools/setSharedPoolId')
-export const setUrlOnEthPowAck = createAction<string>('pools/setUrlOnEthPowAck')

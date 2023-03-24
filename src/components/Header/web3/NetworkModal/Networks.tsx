@@ -209,11 +209,6 @@ const Networks = ({
                   <Text color={theme.subText} as="span" textAlign="left">
                     {name}
                   </Text>
-                  {key === ChainId.ETHW && (
-                    <Text color={theme.warning} as="span" fontSize="10px" fontWeight={400} textAlign="left">
-                      <Trans>To be disabled</Trans>
-                    </Text>
-                  )}
                 </Flex>
                 {key === ChainId.SOLANA && (
                   <NewLabel>

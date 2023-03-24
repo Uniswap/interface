@@ -1,4 +1,4 @@
-import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
+import { Currency } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { useCallback, useMemo, useState } from 'react'
 import { Plus, Share2 } from 'react-feather'
@@ -31,13 +31,11 @@ import useTheme from 'hooks/useTheme'
 import { Instruction } from 'pages/Pools/InstructionAndGlobalData'
 import ProAmmPoolList from 'pages/ProAmmPools'
 import { ApplicationModal } from 'state/application/actions'
-import { useOpenModal, useToggleEthPowAckModal } from 'state/application/hooks'
+import { useOpenModal } from 'state/application/hooks'
 import { Field } from 'state/pair/actions'
-import { useUrlOnEthPowAck } from 'state/pools/hooks'
 import { MEDIA_WIDTHS } from 'theme'
 import { currencyId } from 'utils/currencyId'
 
-import ModalEthPoWAck from './ModalEthPoWAck'
 import { CurrencyWrapper, PoolsPageWrapper, Tab } from './styleds'
 
 const PoolSort = styled(FarmPoolSort)`
@@ -98,9 +96,6 @@ const Pools = () => {
 
   const [onlyShowStable, setOnlyShowStable] = useState(false)
   const shouldHighlightCreatePoolButton = highlightCreateButton === 'true'
-
-  const [, setUrlOnEthPowAck] = useUrlOnEthPowAck()
-  const toggleEthPowAckModal = useToggleEthPowAckModal()
 
   const onSearch = (search: string) => {
     navigate(location.pathname + '?search=' + search + '&tab=' + tab, { replace: true })
@@ -169,12 +164,7 @@ const Pools = () => {
               : ''
           }`
 
-    if (chainId === ChainId.ETHW) {
-      setUrlOnEthPowAck(url)
-      toggleEthPowAckModal()
-    } else {
-      navigate(url)
-    }
+    navigate(url)
   }
 
   if (!isEVM) return <Navigate to="/" />
@@ -374,8 +364,6 @@ const Pools = () => {
         )}
       </PoolsPageWrapper>
       <SwitchLocaleLink />
-
-      <ModalEthPoWAck />
     </>
   )
 }

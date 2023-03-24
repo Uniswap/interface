@@ -26,7 +26,6 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.OASIS]: [WETH[ChainId.OASIS]],
   [ChainId.OPTIMISM]: [WETH[ChainId.OPTIMISM]],
   [ChainId.SOLANA]: [WETH[ChainId.SOLANA]],
-  [ChainId.ETHW]: [WETH[ChainId.ETHW]],
 }
 
 // used to construct intermediary pairs for trading
@@ -112,7 +111,6 @@ export const SUGGESTED_BASES: ChainTokenList = {
     USDT[ChainId.MAINNET],
     new Token(ChainId.MAINNET, '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0', 18, 'wstETH', 'Wrapped stETH (Lido)'),
   ],
-  [ChainId.ETHW]: [USDT[ChainId.ETHW], USDC[ChainId.ETHW]],
   [ChainId.GÖRLI]: [...WETH_ONLY[ChainId.GÖRLI], DAI[ChainId.GÖRLI], USDC[ChainId.GÖRLI], USDT[ChainId.GÖRLI]],
   [ChainId.MATIC]: [
     ...WETH_ONLY[ChainId.MATIC],

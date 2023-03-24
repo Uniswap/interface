@@ -370,19 +370,17 @@ export const getTokenLogoURL = (inputAddress: string, chainId: ChainId): string 
     address = WETH[chainId].address
   }
 
-  if (chainId !== ChainId.ETHW) {
-    if (address.toLowerCase() === KNC[chainId].address.toLowerCase()) {
-      return 'https://raw.githubusercontent.com/KyberNetwork/kyberswap-interface/develop/src/assets/images/KNC.svg'
-    }
+  if (address.toLowerCase() === KNC[chainId].address.toLowerCase()) {
+    return 'https://raw.githubusercontent.com/KyberNetwork/kyberswap-interface/develop/src/assets/images/KNC.svg'
+  }
 
-    if (address.toLowerCase() === KNCL_ADDRESS.toLowerCase()) {
-      return 'https://raw.githubusercontent.com/KyberNetwork/kyberswap-interface/develop/src/assets/images/KNCL.png'
-    }
+  if (address.toLowerCase() === KNCL_ADDRESS.toLowerCase()) {
+    return 'https://raw.githubusercontent.com/KyberNetwork/kyberswap-interface/develop/src/assets/images/KNCL.png'
+  }
 
-    // WBTC
-    if (address.toLowerCase() === '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f') {
-      return 'https://assets.coingecko.com/coins/images/7598/thumb/wrapped_bitcoin_wbtc.png?1548822744'
-    }
+  // WBTC
+  if (address.toLowerCase() === '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f') {
+    return 'https://assets.coingecko.com/coins/images/7598/thumb/wrapped_bitcoin_wbtc.png?1548822744'
   }
 
   const imageURL = store.getState()?.lists?.mapWhitelistTokens?.[chainId]?.[address]?.logoURI
