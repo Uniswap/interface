@@ -17,6 +17,29 @@ const space = {
 
 const size = space
 
+const iconSize = {
+  icon8: 8,
+  icon12: 12,
+  icon16: 16,
+  icon20: 20,
+  icon24: 24,
+  icon28: 28,
+  icon36: 36,
+  icon40: 40,
+  icon64: 64,
+}
+
+const imageSize = {
+  image12: 12,
+  image16: 16,
+  image20: 20,
+  image24: 24,
+  image32: 32,
+  image36: 36,
+  image40: 40,
+  image48: 48,
+}
+
 const radius = {
   none: 0,
   rounded4: 4,
@@ -46,6 +69,8 @@ export const tokens = createTokens({
   color,
   space,
   size,
+  iconSize,
+  imageSize,
   zIndex,
   radius,
 })

@@ -1,6 +1,9 @@
 {
   "extensions": {
-    "recommendations": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+    "recommendations": [
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode"
+    ]
   },
   "settings": {
     "editor.formatOnSave": true,
@@ -13,6 +16,7 @@
     },
     "eslint.alwaysShowStatus": true,
     "eslint.workingDirectories": [
+      "./apps/expo",
       "./apps/extension",
       "./apps/storybook",
       "./packages/app",

@@ -53,6 +53,7 @@
     "semantic-release:expo-app": "yarn workspace expo-app semantic-release",
     "staged:lint:fix": "eslint --fix",
     "start:sb": "yarn workspace storybook start",
+    "start:expo": "yarn workspace expo-app start",
     "start:ext": "yarn workspace extension-app start",
     "upgrade:next": "manypkg upgrade next && manypkg upgrade eslint-config-next",
     "upgrade:rnw": "manypkg upgrade react-native-web",
