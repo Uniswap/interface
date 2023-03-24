@@ -56,11 +56,11 @@ const Pools = () => {
       <ExploreContainer>
         <TitleContainer>
           <MouseoverTooltip
-            text={<Trans>This table contains the top pools by Orbitswap volume, sorted based on your input.</Trans>}
+            text={<Trans>This table contains the top pools by volume, sorted based on your input.</Trans>}
             placement="bottom"
           >
             <ThemedText.LargeHeader>
-              <Trans>Top pools on Orbitswap</Trans>
+              <Trans>Top pools on Forge</Trans>
             </ThemedText.LargeHeader>
           </MouseoverTooltip>
         </TitleContainer>

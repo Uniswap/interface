@@ -3,9 +3,13 @@ import { DollarSign, Terminal } from 'react-feather'
 import styled from 'styled-components/macro'
 import { lightTheme } from 'theme/colors'
 
-import darkArrowImgSrc from './images/aboutArrowDark.png'
+import Arrow from '../../pages/Landing/images/arrow.svg'
+import Bridge from '../../pages/Landing/images/bridge.svg'
+import Building from '../../pages/Landing/images/building.svg'
+import Code from '../../pages/Landing/images/code.svg'
+import Drop from '../../pages/Landing/images/droplet.svg'
+import People from '../../pages/Landing/images/people.svg'
 import lightArrowImgSrc from './images/aboutArrowLight.png'
-import darkTerminalImgSrc from './images/aboutTerminalDark.png'
 import nftCardImgSrc from './images/nftCard.png'
 import swapCardImgSrc from './images/swapCard.png'
 
@@ -44,7 +48,7 @@ export const MORE_CARDS = [
     title: 'Bridge',
     description: 'Transfer assets to Evmos from EVM and Cosmos chains through Axelar Bridge',
     lightIcon: <DollarSign color={lightTheme.textTertiary} size={48} />,
-    darkIcon: <StyledCardLogo src={darkTerminalImgSrc} alt="Developers" />,
+    darkIcon: <img style={{ width: '42px', height: '42px' }} src={Bridge} />,
     cta: 'Bridge now',
     elementName: InterfaceElementName.ABOUT_PAGE_BUY_CRYPTO_CARD,
   },
@@ -54,7 +58,7 @@ export const MORE_CARDS = [
     title: 'Liquid stake',
     description: 'Stake your Evmos to earn rewards while using staking it staked token in DeFi',
     lightIcon: <DollarSign color={lightTheme.textTertiary} size={48} />,
-    darkIcon: <StyledCardLogo src={darkTerminalImgSrc} alt="Developers" />,
+    darkIcon: <img style={{ width: '42px', height: '42px' }} src={Drop} />,
     cta: 'Liquid stake your assets',
     elementName: InterfaceElementName.ABOUT_PAGE_BUY_CRYPTO_CARD,
   },
@@ -65,7 +69,7 @@ export const MORE_CARDS = [
     title: 'Governance',
     description: 'Shape the future of Forge. Vote in Evmos governance and discuss upcoming blueprints',
     lightIcon: <DollarSign color={lightTheme.textTertiary} size={48} />,
-    darkIcon: <StyledCardLogo src={darkTerminalImgSrc} alt="Developers" />,
+    darkIcon: <img style={{ width: '42px', height: '42px' }} src={Building} />,
     cta: 'Trade NFTs',
     elementName: InterfaceElementName.ABOUT_PAGE_BUY_CRYPTO_CARD,
   },
@@ -76,7 +80,7 @@ export const MORE_CARDS = [
     title: 'IBC conversion',
     description: 'Convert your IBC assets in and out of the Evmos EVM',
     lightIcon: <Terminal color={lightTheme.textTertiary} size={48} />,
-    darkIcon: <StyledCardLogo src={darkTerminalImgSrc} alt="Developers" />,
+    darkIcon: <img style={{ width: '42px', height: '42px' }} src={Arrow} />,
     cta: 'Developer docs',
     elementName: InterfaceElementName.ABOUT_PAGE_DEV_DOCS_CARD,
   },
@@ -87,7 +91,7 @@ export const MORE_CARDS = [
     title: 'Build dApps',
     description: 'Learn of ways to contribute to the development of Forge',
     lightIcon: <Terminal color={lightTheme.textTertiary} size={48} />,
-    darkIcon: <StyledCardLogo src={darkTerminalImgSrc} alt="Developers" />,
+    darkIcon: <img style={{ width: '42px', height: '42px' }} src={Code} />,
     cta: 'Developer docs',
     elementName: InterfaceElementName.ABOUT_PAGE_DEV_DOCS_CARD,
   },
@@ -97,7 +101,7 @@ export const MORE_CARDS = [
     title: 'Community',
     description: 'Join our thriving community and connect with like-minded people',
     lightIcon: <StyledCardLogo src={lightArrowImgSrc} alt="Analytics" />,
-    darkIcon: <StyledCardLogo src={darkArrowImgSrc} alt="Analytics" />,
+    darkIcon: <img style={{ width: '42px', height: '42px' }} src={People} />,
     cta: 'Join the community',
     elementName: InterfaceElementName.ABOUT_PAGE_EARN_CARD,
   },

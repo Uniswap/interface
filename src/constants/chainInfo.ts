@@ -51,8 +51,8 @@ const CHAIN_INFO: ChainInfoMap = {
   [SupportedChainId.TESTNET]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms`10m`,
-    docs: 'https://docs.avax.network/quickstart/fuji-workflow',
-    explorer: 'https://testnet.snowtrace.io/',
+    docs: 'https://evm.evmos.dev/',
+    explorer: 'https://evm.evmos.dev/',
     infoLink: '',
     label: 'Test Evmos',
     logoUrl: 'https://raw.githubusercontent.com/cosmos/chain-registry/master/evmos/images/evmos.png',

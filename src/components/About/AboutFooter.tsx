@@ -3,7 +3,8 @@ import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/an
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ExternalLink } from 'theme'
 
-import { DiscordIcon, GithubIcon, TwitterIcon } from './Icons'
+import Telegram from '../../pages/Landing/images/telegram.svg'
+import { GithubIcon, TwitterIcon } from './Icons'
 
 const Footer = styled.div`
   display: flex;
@@ -95,8 +96,8 @@ const LogoSectionContent = () => {
     <>
       <img style={{ width: '220px', height: '40px' }} src="/images/ForgeLogoFinal.png" />{' '}
       <SocialLinks>
-        <SocialLink href="https://discord.gg/FCfyBSbCU5" target="_blank" rel="noopener noreferrer">
-          <DiscordIcon size={32} />
+        <SocialLink href="https://t.me/forgeDEX" target="_blank" rel="noopener noreferrer">
+          <img src={Telegram} style={{ width: '28px', height: '28px' }} />
         </SocialLink>
         <TraceEvent
           events={[BrowserEvent.onClick]}
@@ -104,11 +105,11 @@ const LogoSectionContent = () => {
           element={InterfaceElementName.TWITTER_LINK}
         >
           <SocialLink href="https://twitter.com/forgeDEX" target="_blank" rel="noopener noreferrer">
-            <TwitterIcon size={32} />
+            <TwitterIcon fill="white" size={28} />
           </SocialLink>
         </TraceEvent>
-        <SocialLink href="https://github.com/Orbital-Apes-Labs" target="_blank" rel="noopener noreferrer">
-          <GithubIcon size={32} />
+        <SocialLink href="https://github.com/Forge-Trade" target="_blank" rel="noopener noreferrer">
+          <GithubIcon fill="white" size={28} />
         </SocialLink>
       </SocialLinks>
       <Copyright>© {new Date().getFullYear()} Evmos community</Copyright>
@@ -126,43 +127,24 @@ export const AboutFooter = () => {
       <FooterLinks>
         <LinkGroup>
           <LinkGroupTitle>Orbital Apes</LinkGroupTitle>
-          <ExternalTextLink href="https://uniswap.org/community">Validator</ExternalTextLink>
-          <ExternalTextLink href="https://uniswap.org/community">Orbit Market</ExternalTextLink>
-          <ExternalTextLink href="https://uniswap.org/community">OA Hub</ExternalTextLink>
-          <ExternalTextLink href="https://uniswap.org/community">Rumble</ExternalTextLink>
+          <ExternalTextLink href="https://orbitalapes.com">Validator</ExternalTextLink>
+          <ExternalTextLink href="https://www.orbitmarket.io">Orbit Market</ExternalTextLink>
+          <ExternalTextLink href="https://hub.orbitalapes.com">OA Hub</ExternalTextLink>
+          <ExternalTextLink href="https://www.orbitrumble.com/">Rumble</ExternalTextLink>
         </LinkGroup>
         <LinkGroup>
           <LinkGroupTitle>Evmos DAO</LinkGroupTitle>
-          <ExternalTextLink href="https://uniswap.org/community">Link 1</ExternalTextLink>
-          <ExternalTextLink href="https://uniswap.org/governance">Link 2</ExternalTextLink>
-          <ExternalTextLink href="https://uniswap.org/developers">Link 3</ExternalTextLink>
+          <ExternalTextLink href="https://gov.evmos.community">Governance Workstream</ExternalTextLink>
         </LinkGroup>
         <LinkGroup>
           <LinkGroupTitle>Evmos Org</LinkGroupTitle>
-          <TraceEvent
-            events={[BrowserEvent.onClick]}
-            name={SharedEventName.ELEMENT_CLICKED}
-            element={InterfaceElementName.CAREERS_LINK}
-          >
-            <ExternalTextLink href="https://boards.greenhouse.io/uniswaplabs">Link 1</ExternalTextLink>
-          </TraceEvent>
-          <TraceEvent
-            events={[BrowserEvent.onClick]}
-            name={SharedEventName.ELEMENT_CLICKED}
-            element={InterfaceElementName.BLOG_LINK}
-          >
-            <ExternalTextLink href="https://uniswap.org/blog">Link 2</ExternalTextLink>
-          </TraceEvent>
+          <ExternalTextLink href="https://app.evmos.org">Dashboard</ExternalTextLink>
+          <ExternalTextLink href="https://docs.evmos.org/">Docs</ExternalTextLink>
         </LinkGroup>
         <LinkGroup>
           <LinkGroupTitle>Get Help</LinkGroupTitle>
-
-          <ExternalTextLink
-            href="https://support.uniswap.org/hc/en-us/requests/new"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Discord
+          <ExternalTextLink href="https://t.me/forgeDEX" target="_blank" rel="noopener noreferrer">
+            Telegram
           </ExternalTextLink>
         </LinkGroup>
       </FooterLinks>
