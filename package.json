@@ -51,7 +51,6 @@
     "g:typecheck": "turbo run typecheck --parallel --since=HEAD^1",
     "postinstall": "is-ci || yarn husky install",
     "semantic-release:expo-app": "yarn workspace expo-app semantic-release",
-    "staged:format": "prettier --write",
     "staged:lint:fix": "eslint --fix",
     "start:sb": "yarn workspace storybook start",
     "start:ext": "yarn workspace extension-app start",
