@@ -11,8 +11,7 @@ export enum ImportType {
 
 export enum OnboardingEntryPoint {
   Sidebar = 'Sidebar',
-  FreshInstall = 'FreshInstall',
-  ReplaceAccount = 'ReplaceAccount',
+  FreshInstallOrReplace = 'FreshInstallOrReplace',
 }
 
 // Screens in order based on the import method being used. Currently only used for onboarding header indicator

@@ -18,7 +18,7 @@ import { spacing } from 'src/styles/sizing'
 // Most screens can fit more but this is set conservatively
 const MIN_ACCOUNTS_TO_ENABLE_SCROLL = 5
 
-type AccountListProps = Pick<ComponentProps<typeof AccountCardItem>, 'onPress' | 'onPressEdit'> & {
+type AccountListProps = Pick<ComponentProps<typeof AccountCardItem>, 'onPress'> & {
   accounts: Account[]
   isVisible?: boolean
 }
@@ -42,12 +42,7 @@ const ViewOnlyHeader = (): JSX.Element => {
   )
 }
 
-export function AccountList({
-  accounts,
-  onPressEdit,
-  onPress,
-  isVisible,
-}: AccountListProps): JSX.Element {
+export function AccountList({ accounts, onPress, isVisible }: AccountListProps): JSX.Element {
   const theme = useAppTheme()
   const activeAccount = useActiveAccount()
   const addresses = accounts.map((a) => a.address)
@@ -102,7 +97,6 @@ export function AccountList({
       isViewOnly={item.account.type === AccountType.Readonly}
       portfolioValue={item.portfolioValue}
       onPress={onPress}
-      onPressEdit={onPressEdit}
     />
   )
 

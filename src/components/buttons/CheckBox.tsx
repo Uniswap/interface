@@ -9,7 +9,7 @@ import { useIsDarkMode } from 'src/features/appearance/hooks'
 
 export type CheckBoxProps = {
   checked: boolean
-  text?: string
+  text?: string | JSX.Element
   onCheckPressed?: (currentState: boolean) => void
 }
 

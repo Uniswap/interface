@@ -27,10 +27,7 @@ const mock: MockedResponse<AccountListQuery> = {
 
 describe(AccountList, () => {
   it('renders without error', async () => {
-    const tree = render(
-      <AccountList accounts={[account]} onPress={jest.fn()} onPressEdit={jest.fn()} />,
-      { mocks: [mock] }
-    )
+    const tree = render(<AccountList accounts={[account]} onPress={jest.fn()} />, { mocks: [mock] })
 
     expect(
       await screen.findByText(
@@ -45,7 +42,7 @@ describe(AccountList, () => {
 
   it('handles press on card items', async () => {
     const onPressSpy = jest.fn()
-    render(<AccountList accounts={[account]} onPress={onPressSpy} onPressEdit={jest.fn()} />, {
+    render(<AccountList accounts={[account]} onPress={onPressSpy} />, {
       mocks: [mock],
     })
     // go to success state

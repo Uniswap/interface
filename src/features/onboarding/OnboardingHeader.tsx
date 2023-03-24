@@ -15,7 +15,7 @@ export const OnboardingHeader = ({ children: routeName }: HeaderTitleProps): JSX
   const { requiredForTransactions: isBiometricAuthEnabled } = useBiometricAppSettings()
   const isInitialOnboarding =
     navigationState.routes[navigationState.index]?.params?.entryPoint ===
-    OnboardingEntryPoint.FreshInstall
+    OnboardingEntryPoint.FreshInstallOrReplace
 
   if (!importType) return null
 

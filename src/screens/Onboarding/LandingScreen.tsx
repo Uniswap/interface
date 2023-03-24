@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useResponsiveProp } from '@shopify/restyle'
 import * as SplashScreen from 'expo-splash-screen'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -24,18 +24,8 @@ import { useTimeout } from 'src/utils/timing'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Landing>
 
-export function LandingScreen({ navigation, route: { params } }: Props): JSX.Element {
+export function LandingScreen({ navigation }: Props): JSX.Element {
   const dispatch = useAppDispatch()
-
-  // If we're replacing a seed phrase, skip to the seed phrase input screen.
-  // We navigate from here so that the landing screen is still in the stack.
-  useEffect(() => {
-    if (params?.shouldSkipToSeedPhraseInput === true)
-      navigation.navigate(OnboardingScreens.SeedPhraseInput, {
-        importType: ImportType.SeedPhrase,
-        entryPoint: OnboardingEntryPoint.ReplaceAccount,
-      })
-  }, [navigation, params])
 
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
@@ -44,7 +34,7 @@ export function LandingScreen({ navigation, route: { params } }: Props): JSX.Ele
     dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
     navigation.navigate(OnboardingScreens.ImportMethod, {
       importType: ImportType.NotYetSelected,
-      entryPoint: OnboardingEntryPoint.FreshInstall,
+      entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
     })
   }
 

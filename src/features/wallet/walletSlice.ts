@@ -10,10 +10,6 @@ export interface WalletState {
   accounts: Record<Address, Account>
   activeAccountAddress: Address | null
   finishedOnboarding?: boolean
-  replaceAccountOptions: {
-    isReplacingAccount: boolean
-    skipToSeedPhrase: boolean
-  }
   flashbotsEnabled: boolean
   isUnlocked: boolean
   // Persisted UI configs set by the user through interaction with filters and settings
@@ -30,10 +26,6 @@ export const initialWalletState: WalletState = {
   flashbotsEnabled: false,
   isUnlocked: false,
   settings: {},
-  replaceAccountOptions: {
-    isReplacingAccount: false,
-    skipToSeedPhrase: false,
-  },
 }
 
 const slice = createSlice({
@@ -114,14 +106,6 @@ const slice = createSlice({
     ) => {
       state.finishedOnboarding = finishedOnboarding
     },
-    setReplaceAccountOptions: (
-      state,
-      {
-        payload: { isReplacingAccount, skipToSeedPhrase },
-      }: PayloadAction<{ isReplacingAccount: boolean; skipToSeedPhrase: boolean }>
-    ) => {
-      state.replaceAccountOptions = { isReplacingAccount, skipToSeedPhrase }
-    },
     setNFTViewType: (state, action: PayloadAction<NFTViewType>) => {
       state.settings.nftViewType = action.payload
     },
@@ -147,7 +131,6 @@ export const {
   unlockWallet,
   resetWallet,
   setFinishedOnboarding,
-  setReplaceAccountOptions,
   toggleFlashbots,
   setNFTViewType,
   setTokensOrderBy,

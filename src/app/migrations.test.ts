@@ -35,6 +35,7 @@ import {
   v34Schema,
   v35Schema,
   v36Schema,
+  v37Schema,
   v3Schema,
   v4Schema,
   v5Schema,
@@ -1054,5 +1055,11 @@ describe('Redux state migrations', () => {
     expect(v36Stub.transactions[account.address]?.[ChainId.Mainnet][id3]).toEqual(
       txDetailsConfirmed
     )
+  })
+
+  it('migrates from v37 to 38', () => {
+    const v37Stub = { ...v37Schema }
+    const v38 = migrations[38](v37Stub)
+    expect(v38.wallet.replaceAccountOptions).toBeUndefined()
   })
 })

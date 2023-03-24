@@ -540,4 +540,9 @@ export const migrations = {
     }
     return { ...newState, transactions: newTransactionState }
   },
+  38: function removeReplaceAccountOptions(state: any) {
+    const newState = { ...state }
+    delete newState.wallet.replaceAccountOptions
+    return newState
+  },
 }

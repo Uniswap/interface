@@ -26,7 +26,6 @@ type AccountCardItemProps = {
   isActive?: boolean
   isViewOnly: boolean
   onPress: (address: Address) => void
-  onPressEdit: (address: Address) => void
 } & PortfolioValueProps
 
 type PortfolioValueProps = {

@@ -17,7 +17,7 @@ const navigationProp = {} as CompositeNavigationProp<
 const routeProp = {
   params: {
     importType: ImportType.CreateNew,
-    entryPoint: OnboardingEntryPoint.FreshInstall,
+    entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
   },
 } as RouteProp<OnboardingStackParamList, OnboardingScreens.Backup>
 

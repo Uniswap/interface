@@ -20,10 +20,7 @@ import { usePreloadedHomeScreenQueries } from 'src/data/preload/usePreloadedHome
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
-import {
-  selectFinishedOnboarding,
-  selectReplaceAccountOptions,
-} from 'src/features/wallet/selectors'
+import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
@@ -158,7 +155,6 @@ const renderEmptyBackImage = (): JSX.Element => <></>
 export function OnboardingStackNavigator(): JSX.Element {
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
-  const replaceAccountOptions = useAppSelector(selectReplaceAccountOptions)
 
   const renderHeaderBackImage = useCallback(
     () => <Chevron color={theme.colors.textSecondary} height={28} width={28} />,
@@ -181,9 +177,6 @@ export function OnboardingStackNavigator(): JSX.Element {
         }}>
         <OnboardingStack.Screen
           component={LandingScreen}
-          initialParams={{
-            shouldSkipToSeedPhraseInput: replaceAccountOptions?.skipToSeedPhrase,
-          }}
           name={OnboardingScreens.Landing}
           options={{ headerShown: false }}
         />
@@ -255,7 +248,6 @@ export function OnboardingStackNavigator(): JSX.Element {
 
 export function AppStackNavigator(): JSX.Element {
   const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
-  const replaceAccountOptions = useAppSelector(selectReplaceAccountOptions)
 
   // preload home screen queries before `finishedOnboarding` is truthy
   // this helps load the home screen fast from a fresh install
@@ -264,18 +256,14 @@ export function AppStackNavigator(): JSX.Element {
   return (
     <AppStack.Navigator
       screenOptions={{ headerShown: false, fullScreenGestureEnabled: true, gestureEnabled: true }}>
-      {finishedOnboarding && !replaceAccountOptions?.isReplacingAccount && (
-        <AppStack.Screen component={WrappedHomeScreen} name={Screens.Home} />
-      )}
+      {finishedOnboarding && <AppStack.Screen component={WrappedHomeScreen} name={Screens.Home} />}
       <AppStack.Screen
         component={OnboardingStackNavigator}
         name={Screens.OnboardingStack}
         navigationKey={
           finishedOnboarding
-            ? replaceAccountOptions?.isReplacingAccount
-              ? OnboardingEntryPoint.Sidebar.valueOf()
-              : OnboardingEntryPoint.ReplaceAccount.valueOf()
-            : OnboardingEntryPoint.FreshInstall.valueOf()
+            ? OnboardingEntryPoint.Sidebar.valueOf()
+            : OnboardingEntryPoint.FreshInstallOrReplace.valueOf()
         }
       />
       <AppStack.Screen component={ExternalProfileScreen} name={Screens.ExternalProfile} />

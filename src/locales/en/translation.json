@@ -10,7 +10,7 @@
   "Go to settings": "Go to settings",
   "Not now": "Not now",
   "Create a new wallet": "Create a new wallet",
-  "Import a wallet": "Import a wallet",
+  "Import a new wallet": "Import a new wallet",
   "Add a view-only wallet": "Add a view-only wallet",
   "Restore from iCloud": "Restore from iCloud",
   "Your wallets": "Your wallets",
@@ -478,5 +478,9 @@
   "Security": "Security",
   "Invalid phrase": "Invalid phrase",
   "Invalid word: {{word}}": "Invalid word: {{word}}",
-  "Recovery phrase must be 12-24 words": "Recovery phrase must be 12-24 words"
+  "Recovery phrase must be 12-24 words": "Recovery phrase must be 12-24 words",
+  "You can only store one recovery phrase at a time. To continue importing a new one, you’ll need to remove your current recovery phrase and any associated wallets from this device.": "You can only store one recovery phrase at a time. To continue importing a new one, you’ll need to remove your current recovery phrase and any associated wallets from this device.",
+  "You’re removing your <1>recovery phrase</1>": "You’re removing your <1>recovery phrase</1>",
+  "Make sure you’ve written down your recovery phrase or backed it up on iCloud. <2>You will not be able to access your funds otherwise.</2>": "Make sure you’ve written down your recovery phrase or backed it up on iCloud. <2>You will not be able to access your funds otherwise.</2>",
+  "<0>I backed up my recovery phrase</0><1>I understand that Uniswap Labs can’t help me recover my wallets if I failed to do so</1>": "<0>I backed up my recovery phrase</0><1>I understand that Uniswap Labs can’t help me recover my wallets if I failed to do so</1>"
 }

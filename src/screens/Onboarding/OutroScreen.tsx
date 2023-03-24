@@ -13,7 +13,7 @@ import {
   pendingAccountActions,
   PendingAccountActions,
 } from 'src/features/wallet/pendingAccountsSaga'
-import { setFinishedOnboarding, setReplaceAccountOptions } from 'src/features/wallet/walletSlice'
+import { setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { OnboardingCompleteAnimation } from 'src/screens/Onboarding/OnboardingCompleteAnimation/OnboardingCompleteAnimation'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 
@@ -42,7 +42,6 @@ export function OutroScreen({ navigation, route: { params } }: Props): JSX.Eleme
     )
 
     // Remove pending flag from all new accounts.
-    dispatch(setReplaceAccountOptions({ isReplacingAccount: false, skipToSeedPhrase: false }))
     dispatch(pendingAccountActions.trigger(PendingAccountActions.ACTIVATE))
     dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
     if (params?.entryPoint === OnboardingEntryPoint.Sidebar) {
