@@ -190,6 +190,7 @@ interface CurrencyInputPanelProps {
   showCommonBases?: boolean
   showCurrencyAmount?: boolean
   disableNonToken?: boolean
+  isAccount?: boolean
   renderBalance?: (amount: CurrencyAmount<Currency>) => ReactNode
   locked?: boolean
   loading?: boolean
@@ -207,6 +208,7 @@ export default function CurrencyInputPanel({
   showCommonBases,
   showCurrencyAmount,
   disableNonToken,
+  isAccount,
   renderBalance,
   fiatValue,
   priceImpact,
@@ -220,7 +222,11 @@ export default function CurrencyInputPanel({
   const [modalOpen, setModalOpen] = useState(false)
   const { account, chainId } = useWeb3React()
   const { smartPoolAddress } = useSwapState()
-  const selectedCurrencyBalance = useCurrencyBalance(smartPoolAddress ?? undefined, currency ?? undefined)
+  // TODO: check if should invert definition and modify swap currency input panel
+  const selectedCurrencyBalance = useCurrencyBalance(
+    !isAccount ? smartPoolAddress ?? undefined : account,
+    currency ?? undefined
+  )
   const theme = useTheme()
 
   const handleDismissSearch = useCallback(() => {
