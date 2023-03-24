@@ -19,14 +19,10 @@ const CTASection = styled.section`
   `};
 `
 
-const CTA1 = styled(ExternalLink)`
+const CTA = styled(ExternalLink)`
   padding: 16px;
   border-radius: 20px;
-  display: flex;
-  flex-direction: column;
   position: relative;
-  justify-content: center;
-  align-items: center;
   overflow: hidden;
   border: 1px solid ${({ theme }) => theme.deprecated_bg3};
 
@@ -39,30 +35,6 @@ const CTA1 = styled(ExternalLink)`
     border: 1px solid ${({ theme }) => theme.deprecated_bg4};
 
     text-decoration: none;
-    * {
-      text-decoration: none !important;
-    }
-  }
-`
-
-const CTA2 = styled(ExternalLink)`
-  position: relative;
-  overflow: hidden;
-  padding: 16px;
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
-
-  * {
-    color: ${({ theme }) => theme.textPrimary};
-    text-decoration: none !important;
-  }
-
-  :hover {
-    border: 1px solid ${({ theme }) => theme.deprecated_bg4};
-    text-decoration: none !important;
     * {
       text-decoration: none !important;
     }
@@ -97,7 +69,7 @@ export default function CTACards() {
 
   return (
     <CTASection>
-      <CTA1 href="https://support.uniswap.org/hc/en-us/categories/8122334631437-Providing-Liquidity-">
+      <CTA href="https://support.uniswap.org/hc/en-us/categories/8122334631437-Providing-Liquidity-">
         <ResponsiveColumn>
           <HeaderText>
             <Trans>Learn about providing liquidity</Trans> ↗
@@ -106,8 +78,8 @@ export default function CTACards() {
             <Trans>Check out our v3 LP walkthrough and migration guides.</Trans>
           </ThemedText.DeprecatedBody>
         </ResponsiveColumn>
-      </CTA1>
-      <CTA2 data-testid="cta-infolink" href={infoLink + 'pools'}>
+      </CTA>
+      <CTA data-testid="cta-infolink" href={infoLink + 'pools'}>
         <ResponsiveColumn>
           <HeaderText style={{ alignSelf: 'flex-start' }}>
             <Trans>Top pools</Trans> ↗
@@ -116,7 +88,7 @@ export default function CTACards() {
             <Trans>Explore Uniswap Analytics.</Trans>
           </ThemedText.DeprecatedBody>
         </ResponsiveColumn>
-      </CTA2>
+      </CTA>
     </CTASection>
   )
 }
