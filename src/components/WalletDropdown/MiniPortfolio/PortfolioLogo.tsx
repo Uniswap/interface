@@ -136,7 +136,7 @@ export function PortfolioLogo({
   }
 
   const L2Logo =
-    chainId === SupportedChainId.MAINNET && chainLogo ? null : (
+    chainId === SupportedChainId.MAINNET || !chainLogo ? null : (
       <L2LogoContainer nonSquareLogo={Boolean(!squareLogoUrl && logoUrl)}>
         <StyledChainLogo isSquare={!!squareLogoUrl} src={chainLogo} alt="chainLogo" />
       </L2LogoContainer>
