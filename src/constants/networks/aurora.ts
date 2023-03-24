@@ -31,7 +31,7 @@ const auroraInfo: EVMNetworkInfo = {
     name: 'ETH',
     logo: EthereumLogo,
     decimal: 18,
-    minForGas: 10 ** 16,
+    minForGas: 2 * 10 ** 16,
   },
   defaultRpcUrl: 'https://aurora.kyberengineering.io',
   multicall: '0xBF69a56D35B8d6f5A8e0e96B245a72F735751e54',
