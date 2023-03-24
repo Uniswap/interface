@@ -6,11 +6,11 @@ import { ButtonSize, ThemeButton } from 'components/Button'
 import { Box } from 'nft/components/Box'
 import { bodySmall, subhead } from 'nft/css/common.css'
 import { memo } from 'react'
+import { X } from 'react-feather'
 import styled from 'styled-components/macro'
 
 import Modal from '../Modal'
 import CointrackerFullLogo from './CointrackerFullLogo.png'
-import { StyledXButton } from './TaxServiceBanner'
 import TokenTaxFullLogo from './TokenTaxFullLogo.png'
 
 interface TaxServiceModalProps {
@@ -75,6 +75,17 @@ const Button = styled(ThemeButton)`
   cursor: pointer;
   width: 100%;
   margin-right: auto;
+`
+
+const StyledXButton = styled(X)`
+  color: ${({ theme }) => theme.textPrimary};
+  cursor: pointer;
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+  &:active {
+    opacity: ${({ theme }) => theme.opacity.click};
+  }
 `
 
 const TOKEN_TAX_URL = 'https://tokentax.co/uniswap?via=uniswap'
