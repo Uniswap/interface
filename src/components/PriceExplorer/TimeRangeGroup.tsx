@@ -82,9 +82,8 @@ export function TimeRangeGroup({
       </View>
       {TIME_RANGES.map(([duration, label, element], index) => {
         return (
-          <TracePressEvent element={element}>
+          <TracePressEvent key={label} element={element}>
             <TouchableArea
-              key={label}
               p="spacing4"
               width={BUTTON_WIDTH}
               onPress={(): void => {
