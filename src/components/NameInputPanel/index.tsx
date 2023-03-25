@@ -97,7 +97,7 @@ export default function NameInputPanel({
   )
 
   // max name length is 31, max symbol length is 5
-  const error = !label ? Boolean(value.length > 31) : Boolean(value.length > 5)
+  const error = !label ? Boolean(value.length > 31) : label === 'Pool Symbol' ? Boolean(value.length > 5) : false
 
   return (
     <InputPanel id={id}>
