@@ -10,6 +10,7 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { useToggleWalletDrawer } from 'components/WalletDropdown'
 import { isSupportedChain } from 'constants/chains'
+import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useMemo } from 'react'
 import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers } from 'react-feather'
@@ -216,6 +217,8 @@ export default function Pool() {
     [closedPositions, openPositions, userHideClosedPositions]
   )
 
+  const safePositions = useFilterPossiblyMaliciousPositions(filteredPositions)
+
   if (!isSupportedChain(chainId)) {
     return <WrongNetworkCard />
   }
@@ -289,9 +292,9 @@ export default function Pool() {
             <MainContentWrapper>
               {positionsLoading ? (
                 <PositionsLoadingPlaceholder />
-              ) : filteredPositions && closedPositions && filteredPositions.length > 0 ? (
+              ) : safePositions && closedPositions && safePositions.length > 0 ? (
                 <PositionList
-                  positions={filteredPositions}
+                  positions={safePositions}
                   setUserHideClosedPositions={setUserHideClosedPositions}
                   userHideClosedPositions={userHideClosedPositions}
                 />

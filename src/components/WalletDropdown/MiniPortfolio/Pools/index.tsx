@@ -7,13 +7,13 @@ import { useWeb3React } from '@web3-react/core'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useToggleWalletDrawer } from 'components/WalletDropdown'
+import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
-import { hasURL } from 'utils/urlChecks'
 
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
@@ -33,6 +33,9 @@ export default function Pools({ account }: { account: string }) {
     return [openPositions, closedPositions]
   }, [positions])
 
+  const safeOpenPositions = useFilterPossiblyMaliciousPositions(openPositions)
+  const safeClosedPositions = useFilterPossiblyMaliciousPositions(closedPositions)
+
   const toggleWalletDrawer = useToggleWalletDrawer()
 
   if (!positions || loading) {
@@ -45,7 +48,7 @@ export default function Pools({ account }: { account: string }) {
 
   return (
     <PortfolioTabWrapper>
-      {openPositions.map((positionInfo) => (
+      {safeOpenPositions.map((positionInfo) => (
         <PositionListItem
           key={positionInfo.details.tokenId.toString() + positionInfo.chainId}
           positionInfo={positionInfo}
@@ -55,9 +58,9 @@ export default function Pools({ account }: { account: string }) {
         title={t`Closed Positions`}
         isExpanded={showClosed}
         toggle={toggleShowClosed}
-        numItems={closedPositions.length}
+        numItems={safeClosedPositions.length}
       >
-        {closedPositions.map((positionInfo) => (
+        {safeClosedPositions.map((positionInfo) => (
           <PositionListItem
             key={positionInfo.details.tokenId.toString() + positionInfo.chainId}
             positionInfo={positionInfo}
@@ -110,12 +113,6 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
     }),
     [chainId, pool.token0.address, pool.token0.symbol, pool.token1.address, pool.token1.symbol]
   )
-
-  const containsURL = hasURL(pool.token0.symbol) || hasURL(pool.token1.symbol)
-
-  if (containsURL) {
-    return null
-  }
 
   return (
     <TraceEvent
