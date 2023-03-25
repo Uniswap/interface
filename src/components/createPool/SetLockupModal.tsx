@@ -41,9 +41,9 @@ export default function SetLockupModal({ isOpen, onDismiss, title }: SetLockupMo
 
   // wrapped onUserInput to clear signatures
   const onUserInput = useCallback((typed: string) => {
-    // TODO: check why following validation does not prevent non-numerical inputs
-    const numberRegEx = /-?\d*\.?\d{1,2}/
-    if (numberRegEx.test(String(typed).toLowerCase())) {
+    // TODO: prevent reset if non-number
+    const numberRegEx = RegExp(`[0-9]`)
+    if (numberRegEx.test(String(typed))) {
       setTyped(typed)
     }
   }, [])
@@ -100,7 +100,7 @@ export default function SetLockupModal({ isOpen, onDismiss, title }: SetLockupMo
             </ThemedText.DeprecatedBody>
             {/* name input panel will return warning if number bigger than 5 units, fix */}
             <NameInputPanel
-              value={typed}
+              value={parsedLockup}
               onChange={onUserInput}
               label="Lockup"
               placeholder="max 2592000 seconds (30 days)"
