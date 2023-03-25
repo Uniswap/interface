@@ -428,11 +428,25 @@ export function PoolPositionPage() {
                             </ThemedText.DeprecatedMain>
                           </RowFixed>
                           <RowFixed>
-                            <ThemedText.DeprecatedMain>
-                              <Trans>
-                                {formatCurrencyAmount(poolPrice, 4)}&nbsp;{baseTokenSymbol}
-                              </Trans>
-                            </ThemedText.DeprecatedMain>
+                            {owner === account ? (
+                              <ResponsiveButtonPrimary
+                                onClick={handleWithdrawClick}
+                                height="1em"
+                                width="fit-content"
+                                padding="6px 8px"
+                                $borderRadius="12px"
+                              >
+                                <Trans>
+                                  {formatCurrencyAmount(poolPrice, 4)}&nbsp;{baseTokenSymbol}
+                                </Trans>
+                              </ResponsiveButtonPrimary>
+                            ) : (
+                              <ThemedText.DeprecatedMain>
+                                <Trans>
+                                  {formatCurrencyAmount(poolPrice, 4)}&nbsp;{baseTokenSymbol}
+                                </Trans>
+                              </ThemedText.DeprecatedMain>
+                            )}
                           </RowFixed>
                         </RowBetween>
                       )}
@@ -496,9 +510,21 @@ export function PoolPositionPage() {
                               </ThemedText.DeprecatedMain>
                             </RowFixed>
                             <RowFixed>
-                              <ThemedText.DeprecatedMain>
-                                <Trans>{new Percent(spread, 10_000).toSignificant()}%</Trans>
-                              </ThemedText.DeprecatedMain>
+                              {owner === account ? (
+                                <ResponsiveButtonPrimary
+                                  onClick={handleWithdrawClick}
+                                  height="1em"
+                                  width="fit-content"
+                                  padding="6px 8px"
+                                  $borderRadius="12px"
+                                >
+                                  <Trans>{new Percent(spread, 10_000).toSignificant()}%</Trans>
+                                </ResponsiveButtonPrimary>
+                              ) : (
+                                <ThemedText.DeprecatedMain>
+                                  <Trans>{new Percent(spread, 10_000).toSignificant()}%</Trans>
+                                </ThemedText.DeprecatedMain>
+                              )}
                             </RowFixed>
                           </RowBetween>
                         )}
@@ -524,9 +550,22 @@ export function PoolPositionPage() {
                               </ThemedText.DeprecatedMain>
                             </RowFixed>
                             <RowFixed>
-                              <ThemedText.DeprecatedMain>
-                                <Trans>{lockup} seconds</Trans>
-                              </ThemedText.DeprecatedMain>
+                              {owner === account ? (
+                                <ResponsiveButtonPrimary
+                                  onClick={handleWithdrawClick}
+                                  height="1em"
+                                  width="fit-content"
+                                  fontSize={4}
+                                  padding="6px 8px"
+                                  $borderRadius="12px"
+                                >
+                                  <Trans>{lockup} seconds</Trans>
+                                </ResponsiveButtonPrimary>
+                              ) : (
+                                <ThemedText.DeprecatedMain>
+                                  <Trans>{lockup} seconds</Trans>
+                                </ThemedText.DeprecatedMain>
+                              )}
                             </RowFixed>
                           </RowBetween>
                         )}
