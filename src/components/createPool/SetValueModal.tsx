@@ -1,10 +1,12 @@
 import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import JSBI from 'jsbi'
 import { ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'
 
+import { PoolInfo } from '../../state/buy/hooks'
 import { useSetValueCallback } from '../../state/pool/hooks'
 import { ThemedText } from '../../theme'
 import { ButtonPrimary } from '../Button'
@@ -29,11 +31,12 @@ const StyledClosed = styled(X)`
 interface SetValueModalProps {
   isOpen: boolean
   onDismiss: () => void
+  poolInfo: PoolInfo
   title: ReactNode
 }
 
 // TODO: 'scrollOverlay' prop returns warning in console
-export default function SetValueModal({ isOpen, onDismiss, title }: SetValueModalProps) {
+export default function SetValueModal({ isOpen, onDismiss, poolInfo, title }: SetValueModalProps) {
   const { account, chainId } = useWeb3React()
 
   // state for create input
@@ -60,11 +63,10 @@ export default function SetValueModal({ isOpen, onDismiss, title }: SetValueModa
     onDismiss()
   }
 
-  //const { parsedAmount /*, error*/ } = useDerivedPoolInfo(typedValue, userBaseTokenBalance?.currency, userBaseTokenBalance)
   let parsedValue = ''
   // TODO: use currency, as decimals are passed from parent
   try {
-    parsedValue = parseUnits(typed, 18).toString()
+    parsedValue = parseUnits(typed, poolInfo.pool.decimals).toString()
   } catch (error) {
     console.debug(`Failed to parse input amount: "${typed}"`, error)
   }
@@ -105,7 +107,21 @@ export default function SetValueModal({ isOpen, onDismiss, title }: SetValueModa
               label="Unitary Value"
               placeholder="+- 5x current, max 30x liquidity"
             />
-            <ButtonPrimary disabled={typed === '' || typed.length > 10} onClick={onSetValue}>
+            <ButtonPrimary
+              disabled={
+                typed === '' ||
+                typed.length > 10 ||
+                JSBI.lessThan(
+                  JSBI.BigInt(parsedValue),
+                  JSBI.divide(poolInfo.poolPriceAmount.quotient, JSBI.BigInt(5))
+                ) ||
+                JSBI.greaterThan(
+                  JSBI.BigInt(parsedValue),
+                  JSBI.divide(poolInfo.poolPriceAmount.quotient, JSBI.BigInt(5))
+                )
+              }
+              onClick={onSetValue}
+            >
               <ThemedText.DeprecatedMediumHeader color="white">
                 <Trans>Update Value</Trans>
               </ThemedText.DeprecatedMediumHeader>

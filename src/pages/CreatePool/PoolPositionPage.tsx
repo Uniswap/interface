@@ -363,6 +363,7 @@ export function PoolPositionPage() {
             <SetValueModal
               isOpen={showSetValueModal}
               onDismiss={() => setShowSetValueModal(false)}
+              poolInfo={poolInfo}
               title={<Trans>Set Value</Trans>}
             />
           </>
