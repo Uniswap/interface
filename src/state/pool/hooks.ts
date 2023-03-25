@@ -251,3 +251,20 @@ export function useSetLockupCallback(): (lockup: string | undefined) => undefine
     [account, chainId, provider, poolContract]
   )
 }
+
+export function useSetValueCallback(): (value: string | undefined) => undefined | Promise<string> {
+  const { account, chainId, provider } = useWeb3React()
+  const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
+  const poolContract = usePoolExtendedContract(poolAddressFromUrl ?? undefined)
+
+  return useCallback(
+    (value: string | undefined) => {
+      if (!provider || !chainId || !account) return undefined
+      if (!poolContract) throw new Error('No Pool Contract!')
+      return poolContract.estimateGas.setUnitaryValue(value, {}).then((estimatedGasLimit) => {
+        return poolContract.setUnitaryValue(value, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+      })
+    },
+    [account, chainId, provider, poolContract]
+  )
+}

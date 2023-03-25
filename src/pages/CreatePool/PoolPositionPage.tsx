@@ -14,6 +14,7 @@ import { AutoColumn } from 'components/Column'
 import BuyModal from 'components/createPool/BuyModal'
 import SellModal from 'components/createPool/SellModal'
 import SetLockupModal from 'components/createPool/SetLockupModal'
+import SetValueModal from 'components/createPool/SetValueModal'
 //import Loader from 'components/Loader'
 import { RowBetween, RowFixed } from 'components/Row'
 //import { Dots } from 'components/swap/styleds'
@@ -238,6 +239,7 @@ export function PoolPositionPage() {
   const [showBuyModal, setShowBuyModal] = useState(false)
   const [showSellModal, setShowSellModal] = useState(false)
   const [showSetLockupModal, setShowSetLockupModal] = useState(false)
+  const [showSetValueModal, setShowSetValueModal] = useState(false)
 
   // TODO: check how can reduce number of calls by limit update of poolStorage
   //  id is stored in registry so we could save rpc call by using storing in state?
@@ -304,6 +306,14 @@ export function PoolPositionPage() {
     }
   }, [account, toggleWalletModal])
 
+  const handleSetValueClick = useCallback(() => {
+    if (account) {
+      setShowSetValueModal(true)
+    } else {
+      toggleWalletModal()
+    }
+  }, [account, toggleWalletModal])
+
   function modalHeader() {
     return (
       <AutoColumn gap="md" style={{ marginTop: '20px' }}>
@@ -349,6 +359,11 @@ export function PoolPositionPage() {
               isOpen={showSetLockupModal}
               onDismiss={() => setShowSetLockupModal(false)}
               title={<Trans>Set Lockup</Trans>}
+            />
+            <SetValueModal
+              isOpen={showSetValueModal}
+              onDismiss={() => setShowSetValueModal(false)}
+              title={<Trans>Set Value</Trans>}
             />
           </>
         )}
@@ -445,7 +460,7 @@ export function PoolPositionPage() {
                           <RowFixed>
                             {owner === account ? (
                               <ResponsiveButtonPrimary
-                                onClick={handleWithdrawClick}
+                                onClick={handleSetValueClick}
                                 height="1.1em"
                                 width="fit-content"
                                 padding="6px 8px"
