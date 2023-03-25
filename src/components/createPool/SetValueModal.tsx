@@ -41,7 +41,10 @@ export default function SetValueModal({ isOpen, onDismiss, title }: SetValueModa
 
   // wrapped onUserInput to clear signatures
   const onUserInput = useCallback((typed: string) => {
-    setTyped(typed)
+    const numberRegEx = RegExp(`^[0-9]*[.,]?[0-9]*$`)
+    if (numberRegEx.test(String(typed))) {
+      setTyped(typed)
+    }
   }, [])
 
   const setValueCallback = useSetValueCallback()
@@ -57,6 +60,7 @@ export default function SetValueModal({ isOpen, onDismiss, title }: SetValueModa
     onDismiss()
   }
 
+  //const { parsedAmount /*, error*/ } = useDerivedPoolInfo(typedValue, userBaseTokenBalance?.currency, userBaseTokenBalance)
   let parsedValue = ''
   // TODO: use currency, as decimals are passed from parent
   try {
