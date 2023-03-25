@@ -151,7 +151,11 @@ export default function App() {
 
   const [searchParams] = useSearchParams()
   useEffect(() => {
-    if (searchParams.has('disableNFTs')) setShouldDisableNFTRoutes(true)
+    if (searchParams.get('disableNFTs') === 'true') {
+      setShouldDisableNFTRoutes(true)
+    } else if (searchParams.get('disableNFTs') === 'false') {
+      setShouldDisableNFTRoutes(false)
+    }
   }, [searchParams, setShouldDisableNFTRoutes])
 
   useEffect(() => {

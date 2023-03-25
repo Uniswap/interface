@@ -1,3 +1,5 @@
-import { atomWithStorage } from 'jotai/utils'
+import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 
-export const shouldDisableNFTRoutesAtom = atomWithStorage<boolean>('shouldDisableNFTRoutes', false)
+const storage = createJSONStorage(() => sessionStorage)
+
+export const shouldDisableNFTRoutesAtom = atomWithStorage('shouldDisableNFTRoutes', false, storage)
