@@ -13,6 +13,7 @@ import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import BuyModal from 'components/createPool/BuyModal'
 import SellModal from 'components/createPool/SellModal'
+import SetLockupModal from 'components/createPool/SetLockupModal'
 //import Loader from 'components/Loader'
 import { RowBetween, RowFixed } from 'components/Row'
 //import { Dots } from 'components/swap/styleds'
@@ -236,6 +237,7 @@ export function PoolPositionPage() {
 
   const [showBuyModal, setShowBuyModal] = useState(false)
   const [showSellModal, setShowSellModal] = useState(false)
+  const [showSetLockupModal, setShowSetLockupModal] = useState(false)
 
   // TODO: check how can reduce number of calls by limit update of poolStorage
   //  id is stored in registry so we could save rpc call by using storing in state?
@@ -294,6 +296,14 @@ export function PoolPositionPage() {
     }
   }, [account, toggleWalletModal])
 
+  const handleSetLockupClick = useCallback(() => {
+    if (account) {
+      setShowSetLockupModal(true)
+    } else {
+      toggleWalletModal()
+    }
+  }, [account, toggleWalletModal])
+
   function modalHeader() {
     return (
       <AutoColumn gap="md" style={{ marginTop: '20px' }}>
@@ -334,6 +344,11 @@ export function PoolPositionPage() {
               onDismiss={() => setShowSellModal(false)}
               poolInfo={poolInfo}
               userBaseTokenBalance={userBaseTokenBalance}
+            />
+            <SetLockupModal
+              isOpen={showSetLockupModal}
+              onDismiss={() => setShowSetLockupModal(false)}
+              title={<Trans>Set Lockup</Trans>}
             />
           </>
         )}
@@ -431,7 +446,7 @@ export function PoolPositionPage() {
                             {owner === account ? (
                               <ResponsiveButtonPrimary
                                 onClick={handleWithdrawClick}
-                                height="1em"
+                                height="1.1em"
                                 width="fit-content"
                                 padding="6px 8px"
                                 $borderRadius="12px"
@@ -513,7 +528,7 @@ export function PoolPositionPage() {
                               {owner === account ? (
                                 <ResponsiveButtonPrimary
                                   onClick={handleWithdrawClick}
-                                  height="1em"
+                                  height="1.1em"
                                   width="fit-content"
                                   padding="6px 8px"
                                   $borderRadius="12px"
@@ -552,8 +567,8 @@ export function PoolPositionPage() {
                             <RowFixed>
                               {owner === account ? (
                                 <ResponsiveButtonPrimary
-                                  onClick={handleWithdrawClick}
-                                  height="1em"
+                                  onClick={handleSetLockupClick}
+                                  height="1.1em"
                                   width="fit-content"
                                   fontSize={4}
                                   padding="6px 8px"
