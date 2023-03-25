@@ -111,13 +111,13 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, title }: Se
               disabled={
                 typed === '' ||
                 typed.length > 10 ||
-                JSBI.lessThan(
+                JSBI.lessThanOrEqual(
                   JSBI.BigInt(parsedValue),
                   JSBI.divide(poolInfo.poolPriceAmount.quotient, JSBI.BigInt(5))
                 ) ||
-                JSBI.greaterThan(
+                JSBI.greaterThanOrEqual(
                   JSBI.BigInt(parsedValue),
-                  JSBI.divide(poolInfo.poolPriceAmount.quotient, JSBI.BigInt(5))
+                  JSBI.multiply(poolInfo.poolPriceAmount.quotient, JSBI.BigInt(5))
                 )
               }
               onClick={onSetValue}
