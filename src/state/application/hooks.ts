@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unused-modules */
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
