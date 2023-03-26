@@ -7,7 +7,6 @@ import { useWeb3React } from '@web3-react/core'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useToggleWalletDrawer } from 'components/WalletDropdown'
-import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -33,9 +32,6 @@ export default function Pools({ account }: { account: string }) {
     return [openPositions, closedPositions]
   }, [positions])
 
-  const safeOpenPositions = useFilterPossiblyMaliciousPositions(openPositions)
-  const safeClosedPositions = useFilterPossiblyMaliciousPositions(closedPositions)
-
   const toggleWalletDrawer = useToggleWalletDrawer()
 
   if (!positions || loading) {
@@ -48,7 +44,7 @@ export default function Pools({ account }: { account: string }) {
 
   return (
     <PortfolioTabWrapper>
-      {safeOpenPositions.map((positionInfo) => (
+      {openPositions.map((positionInfo) => (
         <PositionListItem
           key={positionInfo.details.tokenId.toString() + positionInfo.chainId}
           positionInfo={positionInfo}
@@ -58,9 +54,9 @@ export default function Pools({ account }: { account: string }) {
         title={t`Closed Positions`}
         isExpanded={showClosed}
         toggle={toggleShowClosed}
-        numItems={safeClosedPositions.length}
+        numItems={closedPositions.length}
       >
-        {safeClosedPositions.map((positionInfo) => (
+        {closedPositions.map((positionInfo) => (
           <PositionListItem
             key={positionInfo.details.tokenId.toString() + positionInfo.chainId}
             positionInfo={positionInfo}
