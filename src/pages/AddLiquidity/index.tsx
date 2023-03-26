@@ -351,11 +351,7 @@ export default function AddLiquidity({
           onClick={() => {
             setShowConfirm(true)
           }}
-          disabled={
-            !isValid ||
-            (!argentWalletContract && approvalA !== ApprovalState.APPROVED && !depositADisabled) ||
-            chainId == 137
-          }
+          disabled={!isValid || (!argentWalletContract && approvalA !== ApprovalState.APPROVED && !depositADisabled)}
           error={!isValid && !!parsedAmounts[Field.CURRENCY_A]}
         >
           <Text fontWeight={400}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>

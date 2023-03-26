@@ -1293,7 +1293,59 @@ export default function Market({ history }: RouteComponentProps) {
               {!showWrap && trade && (
                 <AutoColumn gap="sm">
                   <RowBetween>
-                    <TYPE.body color={theme.text2} fontWeight={400} fontSize={14} justifyContent="end">
+                    <TYPE.body color={theme.text2} fontWeight={400} fontSize={14} justifyContent="start">
+                      <MouseoverTooltipContent
+                        wrap={false}
+                        content={
+                          <ResponsiveTooltipContainer origin="top right" width={'295px'}>
+                            <Row justify={!trade ? 'center' : 'space-between'}>
+                              <RowFixed>
+                                <Text fontSize={14} fontWeight={400}>
+                                  <Trans>Allowed Slippage:</Trans>
+                                </Text>
+                              </RowFixed>
+                              <RowFixed>
+                                <Text fontSize={14} fontWeight={400}>
+                                  <Trans>{allowedSlippage.toSignificant(2)}%</Trans>
+                                </Text>
+                              </RowFixed>
+                            </Row>
+                            <Row justify={!trade ? 'center' : 'space-between'}>
+                              <RowFixed>
+                                <Text fontSize={14} fontWeight={400}>
+                                  <Trans>Minimum Received:</Trans>
+                                </Text>
+                              </RowFixed>
+                              <RowFixed>
+                                <Text fontSize={14} fontWeight={400}>
+                                  {isGaslessMode ? (
+                                    <span>
+                                      {amountToReceive?.toSignificant(6)} {trade?.outputAmount.currency.symbol}
+                                    </span>
+                                  ) : (
+                                    <span>
+                                      {trade
+                                        ? `${trade?.minimumAmountOut(allowedSlippage).toSignificant(4)} ${
+                                            trade?.outputAmount.currency.symbol
+                                          }`
+                                        : '-'}
+                                    </span>
+                                  )}
+                                </Text>
+                              </RowFixed>
+                            </Row>
+                          </ResponsiveTooltipContainer>
+                        }
+                        placement="bottom"
+                        onOpen={() =>
+                          ReactGA.event({
+                            category: 'Swap',
+                            action: 'Transaction Details Tooltip Open',
+                          })
+                        }
+                      >
+                        <StyledInfo />
+                      </MouseoverTooltipContent>
                       <Trans>Price</Trans>
                     </TYPE.body>
                     <RowFixed>
@@ -1330,64 +1382,6 @@ export default function Market({ history }: RouteComponentProps) {
                       </MouseoverTooltipContent>
                     </RowFixed>
                   </RowBetween>
-                  <RowFixed>
-                    <TYPE.body color={theme.text2} fontWeight={400} fontSize={14} justifyContent="end">
-                      <Trans>Transaction Details</Trans>
-                    </TYPE.body>
-                    <MouseoverTooltipContent
-                      wrap={false}
-                      content={
-                        <ResponsiveTooltipContainer origin="top right" width={'295px'}>
-                          <Row justify={!trade ? 'center' : 'space-between'}>
-                            <RowFixed>
-                              <Text fontSize={14} fontWeight={400}>
-                                <Trans>Allowed Slippage:</Trans>
-                              </Text>
-                            </RowFixed>
-                            <RowFixed>
-                              <Text fontSize={14} fontWeight={400}>
-                                <Trans>{allowedSlippage.toSignificant(2)}%</Trans>
-                              </Text>
-                            </RowFixed>
-                          </Row>
-                          <Row justify={!trade ? 'center' : 'space-between'}>
-                            <RowFixed>
-                              <Text fontSize={14} fontWeight={400}>
-                                <Trans>Minimum Received:</Trans>
-                              </Text>
-                            </RowFixed>
-                            <RowFixed>
-                              <Text fontSize={14} fontWeight={400}>
-                                {isGaslessMode ? (
-                                  <span>
-                                    {amountToReceive?.toSignificant(6)} {trade?.outputAmount.currency.symbol}
-                                  </span>
-                                ) : (
-                                  <span>
-                                    {trade
-                                      ? `${trade?.minimumAmountOut(allowedSlippage).toSignificant(4)} ${
-                                          trade?.outputAmount.currency.symbol
-                                        }`
-                                      : '-'}
-                                  </span>
-                                )}
-                              </Text>
-                            </RowFixed>
-                          </Row>
-                        </ResponsiveTooltipContainer>
-                      }
-                      placement="bottom"
-                      onOpen={() =>
-                        ReactGA.event({
-                          category: 'Swap',
-                          action: 'Transaction Details Tooltip Open',
-                        })
-                      }
-                    >
-                      <StyledInfo />
-                    </MouseoverTooltipContent>
-                  </RowFixed>
-
                   {isGaslessMode && (
                     <Row justify={!trade ? 'center' : 'space-between'}>
                       <RowFixed style={{ position: 'relative' }}>

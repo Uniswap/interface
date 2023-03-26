@@ -624,10 +624,12 @@ export default function SwapWidget() {
       <StyledSwap>
         <AppBody>
           <WidgetHeader>
-            <PoweredBy>
-              <Text>Powered by</Text>
-              <img src={KromLogo} alt="KROM Logo" height="24px" />
-            </PoweredBy>
+            <a href="https://app.kromatika.finance" style={{ all: 'unset' }}>
+              <PoweredBy>
+                <Text>Powered by</Text>
+                <img src={KromLogo} alt="KROM Logo" height="24px" />
+              </PoweredBy>
+            </a>
             <MarketHeader allowedSlippage={allowedSlippage} />
           </WidgetHeader>
           <Wrapper id="swap-page">
