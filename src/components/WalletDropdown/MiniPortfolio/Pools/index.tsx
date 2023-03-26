@@ -7,6 +7,7 @@ import { useWeb3React } from '@web3-react/core'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useToggleWalletDrawer } from 'components/WalletDropdown'
+import { useFilterPossiblyMaliciousPositions as useFilterPossiblyMaliciousPositionDetails } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -21,24 +22,42 @@ import { PositionInfo } from './cache'
 import { useFeeValues } from './hooks'
 import useMultiChainPositions from './useMultiChainPositions'
 
+function useFilterPossiblyMaliciousPositions(positions: PositionInfo[] | undefined): PositionInfo[] | undefined {
+  const tokenIdsToPositionInfo: Record<string, PositionInfo> = useMemo(
+    () =>
+      positions
+        ? positions.reduce((acc, position) => ({ ...acc, [position.details.tokenId.toString()]: position }), {})
+        : {},
+    [positions]
+  )
+  const positionDetails = useMemo(() => positions?.map((position) => position.details) ?? [], [positions])
+  const safePositionDetails = useFilterPossiblyMaliciousPositionDetails(positionDetails)
+
+  return useMemo(
+    () => safePositionDetails.map((positionDetails) => tokenIdsToPositionInfo[positionDetails.tokenId.toString()]),
+    [safePositionDetails, tokenIdsToPositionInfo]
+  )
+}
+
 export default function Pools({ account }: { account: string }) {
   const { positions, loading } = useMultiChainPositions(account)
+  const safePositions = useFilterPossiblyMaliciousPositions(positions)
   const [showClosed, toggleShowClosed] = useReducer((showClosed) => !showClosed, false)
 
   const [openPositions, closedPositions] = useMemo(() => {
     const openPositions: PositionInfo[] = []
     const closedPositions: PositionInfo[] = []
-    positions?.forEach((position) => (position.closed ? closedPositions : openPositions).push(position))
+    safePositions?.forEach((position) => (position.closed ? closedPositions : openPositions).push(position))
     return [openPositions, closedPositions]
-  }, [positions])
+  }, [safePositions])
 
   const toggleWalletDrawer = useToggleWalletDrawer()
 
-  if (!positions || loading) {
+  if (!safePositions || loading) {
     return <PortfolioSkeleton />
   }
 
-  if (positions?.length === 0) {
+  if (safePositions?.length === 0) {
     return <EmptyWalletModule type="pool" onNavigateClick={toggleWalletDrawer} />
   }
 
