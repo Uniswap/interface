@@ -12,14 +12,14 @@ import { useDefaultActiveTokens } from './Tokens'
 const ERC20Interface = new Interface(ERC20ABI) as Erc20Interface
 
 export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]): PositionDetails[] {
-  const tokens = useDefaultActiveTokens()
+  const tokenList = useDefaultActiveTokens()
 
   const nonListPositionTokenAddresses = useMemo(
     () =>
       Array.from(
         new Set(positions.reduce((acc, position) => acc.concat(position.token0, position.token1), [] as string[]))
-      ).filter((address) => !tokens[address]),
-    [positions, tokens]
+      ).filter((address) => !tokenList[address]),
+    [positions, tokenList]
   )
 
   // todo: fetch non-list position token symbols from chain
@@ -40,8 +40,8 @@ export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]
   return useMemo(
     () =>
       positions.filter((position) => {
-        const token0FromList = tokens[position.token0] as Token | undefined
-        const token1FromList = tokens[position.token1] as Token | undefined
+        const token0FromList = tokenList[position.token0] as Token | undefined
+        const token1FromList = tokenList[position.token1] as Token | undefined
         const bothTokensInList = token0FromList && token1FromList
         if (bothTokensInList) return true
 
@@ -57,6 +57,6 @@ export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]
         const neitherTokenHasAUrlSymbol = !token0HasUrlSymbol && !token1HasUrlSymbol
         return neitherTokenHasAUrlSymbol
       }),
-    [addressesToSymbol, positions, tokens]
+    [addressesToSymbol, positions, tokenList]
   )
 }
