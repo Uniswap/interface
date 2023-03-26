@@ -10,6 +10,7 @@ import RB_REGISTRY_ABI from 'abis/rb-registry.json'
 import { RB_FACTORY_ADDRESSES, RB_REGISTRY_ADDRESSES } from 'constants/addresses'
 import { useContract } from 'hooks/useContract'
 import { useCallback, useMemo } from 'react'
+import { useParams } from 'react-router-dom'
 import { useAppSelector } from 'state/hooks'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
@@ -232,4 +233,55 @@ export function useRegisteredPools(): PoolRegisteredLog[] | undefined {
       return poolData
     })
     .reverse()
+}
+
+export function useSetLockupCallback(): (lockup: string | undefined) => undefined | Promise<string> {
+  const { account, chainId, provider } = useWeb3React()
+  const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
+  const poolContract = usePoolExtendedContract(poolAddressFromUrl ?? undefined)
+
+  return useCallback(
+    (lockup: string | undefined) => {
+      if (!provider || !chainId || !account) return undefined
+      if (!poolContract) throw new Error('No Pool Contract!')
+      return poolContract.estimateGas.changeMinPeriod(lockup, {}).then((estimatedGasLimit) => {
+        return poolContract.changeMinPeriod(lockup, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+      })
+    },
+    [account, chainId, provider, poolContract]
+  )
+}
+
+export function useSetSpreadCallback(): (spread: string | undefined) => undefined | Promise<string> {
+  const { account, chainId, provider } = useWeb3React()
+  const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
+  const poolContract = usePoolExtendedContract(poolAddressFromUrl ?? undefined)
+
+  return useCallback(
+    (spread: string | undefined) => {
+      if (!provider || !chainId || !account) return undefined
+      if (!poolContract) throw new Error('No Pool Contract!')
+      return poolContract.estimateGas.changeSpread(spread, {}).then((estimatedGasLimit) => {
+        return poolContract.changeSpread(spread, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+      })
+    },
+    [account, chainId, provider, poolContract]
+  )
+}
+
+export function useSetValueCallback(): (value: string | undefined) => undefined | Promise<string> {
+  const { account, chainId, provider } = useWeb3React()
+  const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
+  const poolContract = usePoolExtendedContract(poolAddressFromUrl ?? undefined)
+
+  return useCallback(
+    (value: string | undefined) => {
+      if (!provider || !chainId || !account) return undefined
+      if (!poolContract) throw new Error('No Pool Contract!')
+      return poolContract.estimateGas.setUnitaryValue(value, {}).then((estimatedGasLimit) => {
+        return poolContract.setUnitaryValue(value, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+      })
+    },
+    [account, chainId, provider, poolContract]
+  )
 }
