@@ -99,14 +99,12 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, title }: Se
               <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
             </RowBetween>
             <ThemedText.DeprecatedBody>
-              <Trans>Update the pool&apos;s unitary value.</Trans>
+              <Trans>New value must be between 1/5th and 5 times the current value.</Trans>
             </ThemedText.DeprecatedBody>
-            <NameInputPanel
-              value={typed}
-              onChange={onUserInput}
-              label="Unitary Value"
-              placeholder="+- 5x current, max 30x liquidity"
-            />
+            <ThemedText.DeprecatedBody>
+              <Trans>Pool base token liquidity must be at least 3% of new unitary value.</Trans>
+            </ThemedText.DeprecatedBody>
+            <NameInputPanel value={typed} onChange={onUserInput} label="Unitary Value" placeholder="New Value" />
             <ButtonPrimary
               disabled={
                 typed === '' ||
