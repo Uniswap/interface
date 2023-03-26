@@ -1,5 +1,7 @@
+import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import JSBI from 'jsbi'
 import { ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -40,10 +42,18 @@ export default function SetSpreadModal({ isOpen, onDismiss, title }: SetSpreadMo
 
   // wrapped onUserInput to clear signatures
   const onUserInput = useCallback((typed: string) => {
-    setTyped(typed)
+    const numberRegEx = RegExp(`^[0-9]*[.,]?[0-9]*$`)
+    if (numberRegEx.test(String(typed))) {
+      setTyped(typed)
+    }
   }, [])
 
-  const parsedSpread = typed
+  let parsedSpread = ''
+  try {
+    parsedSpread = typed !== '' ? parseUnits(typed, 2).toString() : typed
+  } catch (error) {
+    console.debug(`Failed to parse spread: "${typed}"`, error)
+  }
 
   const setSpreadCallback = useSetSpreadCallback()
 
@@ -85,7 +95,15 @@ export default function SetSpreadModal({ isOpen, onDismiss, title }: SetSpreadMo
               <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
             </RowBetween>
             <NameInputPanel value={typed} onChange={onUserInput} label="Pool Spread" placeholder="max 10%" />
-            <ButtonPrimary disabled={typed === '' || typed.length > 4} onClick={onSetSpread}>
+            <ButtonPrimary
+              disabled={
+                typed === '' ||
+                typed.length > 4 ||
+                JSBI.lessThan(JSBI.BigInt(parsedSpread), JSBI.BigInt(1)) ||
+                JSBI.greaterThan(JSBI.BigInt(parsedSpread), JSBI.BigInt(1000))
+              }
+              onClick={onSetSpread}
+            >
               <ThemedText.DeprecatedMediumHeader color="white">
                 <Trans>Update Spread</Trans>
               </ThemedText.DeprecatedMediumHeader>
