@@ -41,8 +41,7 @@ export default function SetLockupModal({ isOpen, onDismiss, title }: SetLockupMo
 
   // wrapped onUserInput to clear signatures
   const onUserInput = useCallback((typed: string) => {
-    // TODO: prevent reset if non-number
-    const numberRegEx = RegExp(`[0-9]`)
+    const numberRegEx = RegExp(`^[0-9]*$`)
     if (numberRegEx.test(String(typed))) {
       setTyped(typed)
     }
@@ -67,7 +66,6 @@ export default function SetLockupModal({ isOpen, onDismiss, title }: SetLockupMo
   } catch (error) {
     console.debug(`Failed to parse input amount: "${typed}"`, error)
   }
-  //const parsedLockup = typed
 
   async function onSetLockup() {
     setAttempting(true)
@@ -75,7 +73,7 @@ export default function SetLockupModal({ isOpen, onDismiss, title }: SetLockupMo
     // if callback not returned properly ignore
     if (!account || !chainId || !setLockupCallback || !parsedLockup) return
 
-    // try delegation and store hash
+    // try set lockup and store hash
     const hash = await setLockupCallback(parsedLockup)?.catch((error) => {
       setAttempting(false)
       console.log(error)
@@ -98,7 +96,6 @@ export default function SetLockupModal({ isOpen, onDismiss, title }: SetLockupMo
             <ThemedText.DeprecatedBody>
               <Trans>The minimum holder lockup.</Trans>
             </ThemedText.DeprecatedBody>
-            {/* name input panel will return warning if number bigger than 5 units, fix */}
             <NameInputPanel
               value={parsedLockup}
               onChange={onUserInput}
