@@ -1,6 +1,7 @@
 import { FlattenSimpleInterpolation, ThemedCssFunction } from 'styled-components/macro'
 
 export type Color = string
+
 export interface Colors {
   darkMode: boolean
 
@@ -27,7 +28,7 @@ export interface Colors {
   modalBG: Color
   advancedBG: Color
 
-  //blues
+  //purples
   primary1: Color
   primary2: Color
   primary3: Color
@@ -53,6 +54,7 @@ export interface Colors {
   blue2: Color
 
   blue4: Color
+  purple1: Color
 
   error: Color
   success: Color
@@ -65,6 +67,8 @@ declare module 'styled-components/macro' {
 
     // shadows
     shadow1: string
+    shadow2: string
+    shadow3: string
 
     // media queries
     mediaWidth: {

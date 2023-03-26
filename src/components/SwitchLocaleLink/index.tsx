@@ -8,6 +8,10 @@ import { navigatorLocale, useActiveLocale } from '../../hooks/useActiveLocale'
 import { StyledInternalLink, TYPE } from '../../theme'
 
 const Container = styled(TYPE.small)`
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  padding: 1rem;
   opacity: 0.6;
   :hover {
     opacity: 1;

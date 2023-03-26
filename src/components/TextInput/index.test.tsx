@@ -13,7 +13,7 @@ describe('TextInput', () => {
         value="My test input"
         onUserInput={() => null}
         placeholder="Test Placeholder"
-        fontSize="12"
+        fontSize="14"
       />
     )
     expect(asFragment()).toMatchSnapshot()
@@ -27,7 +27,7 @@ describe('TextInput', () => {
         value=""
         onUserInput={onUserInputSpy}
         placeholder="Test Placeholder"
-        fontSize="12"
+        fontSize="14"
       />
     )
 
@@ -46,7 +46,7 @@ describe('ResizableTextArea', () => {
         value="My test input"
         onUserInput={() => null}
         placeholder="Test Placeholder"
-        fontSize="12"
+        fontSize="14"
       />
     )
     expect(asFragment()).toMatchSnapshot()
@@ -60,7 +60,7 @@ describe('ResizableTextArea', () => {
         value=""
         onUserInput={onUserInputSpy}
         placeholder="Test Placeholder"
-        fontSize="12"
+        fontSize="14"
       />
     )
 

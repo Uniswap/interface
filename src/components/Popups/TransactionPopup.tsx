@@ -30,7 +30,7 @@ export default function TransactionPopup({ hash }: { hash: string }) {
         {success ? <CheckCircle color={theme.green1} size={24} /> : <AlertCircle color={theme.red1} size={24} />}
       </div>
       <AutoColumn gap="8px">
-        <TYPE.body fontWeight={500}>
+        <TYPE.body fontWeight={400}>
           <TransactionSummary info={tx.info} />
         </TYPE.body>
         {chainId && (

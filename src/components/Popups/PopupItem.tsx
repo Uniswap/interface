@@ -20,8 +20,8 @@ const StyledClose = styled(X)`
 const Popup = styled.div`
   display: inline-block;
   width: 100%;
-  padding: 1em;
-  background-color: ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.bg1};
+  box-shadow: 0 0 12px 6px ${({ theme }) => theme.shadow2};
   position: relative;
   border-radius: 10px;
   padding: 20px;
@@ -86,10 +86,14 @@ export default function PopupItem({
   })
 
   return (
-    <Popup>
-      <StyledClose color={theme.text2} onClick={removeThisPopup} />
-      {popupContent}
-      {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
-    </Popup>
+    <>
+      {popupContent && (
+        <Popup>
+          <StyledClose color={theme.text2} onClick={removeThisPopup} />
+          {popupContent}
+          {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
+        </Popup>
+      )}
+    </>
   )
 }

@@ -6,12 +6,7 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useCallback, useMemo } from 'react'
 import { SwapTransaction } from 'state/validator/types'
 
-import {
-  KROMATIKA_METASWAP_ADDRESSES,
-  LIMIT_ORDER_MANAGER_ADDRESSES,
-  SWAP_ROUTER_ADDRESSES,
-  V2_ROUTER_ADDRESS,
-} from '../constants/addresses'
+import { LIMIT_ORDER_MANAGER_ADDRESSES } from '../constants/addresses'
 import { TransactionType } from '../state/transactions/actions'
 import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin } from '../utils/calculateGasMargin'
@@ -35,6 +30,8 @@ export function useApproveCallback(
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
+
+  // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
     if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
     if (amountToApprove.currency.isNative) return ApprovalState.APPROVED
@@ -48,6 +45,7 @@ export function useApproveCallback(
         : ApprovalState.NOT_APPROVED
       : ApprovalState.APPROVED
   }, [amountToApprove, currentAllowance, pendingApproval, spender])
+
   const tokenContract = useTokenContract(token?.address)
   const addTransaction = useTransactionAdder()
 

@@ -105,7 +105,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
                     </TYPE.main>
                   </RowFixed>
                   <ExternalLink href={`https://tokenlists.org/token-list?url=${listURL}`}>
-                    <TYPE.main fontSize={'12px'} color={theme.blue1}>
+                    <TYPE.main fontSize={'14px'} color={theme.blue1}>
                       {listURL}
                     </TYPE.main>
                   </ExternalLink>
@@ -116,13 +116,13 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
           <Card style={{ backgroundColor: transparentize(0.8, theme.red1) }}>
             <AutoColumn justify="center" style={{ textAlign: 'center', gap: '16px', marginBottom: '12px' }}>
               <AlertTriangle stroke={theme.red1} size={32} />
-              <TYPE.body fontWeight={500} fontSize={20} color={theme.red1}>
+              <TYPE.body fontWeight={400} fontSize={16} color={theme.red1}>
                 <Trans>Import at your own risk</Trans>
               </TYPE.body>
             </AutoColumn>
 
             <AutoColumn style={{ textAlign: 'center', gap: '16px', marginBottom: '12px' }}>
-              <TYPE.body fontWeight={500} color={theme.red1}>
+              <TYPE.body fontWeight={400} color={theme.red1}>
                 <Trans>
                   By adding this list you are implicitly trusting that the data is correct. Anyone can create a list,
                   including creating fake versions of existing lists and lists that claim to represent projects that do
@@ -140,7 +140,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
                 checked={confirmed}
                 onChange={() => setConfirmed(!confirmed)}
               />
-              <TYPE.body ml="10px" fontSize="16px" color={theme.red1} fontWeight={500}>
+              <TYPE.body ml="10px" fontSize="16px" color={theme.red1} fontWeight={400}>
                 <Trans>I understand</Trans>
               </TYPE.body>
             </AutoRow>

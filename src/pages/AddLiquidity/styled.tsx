@@ -25,8 +25,8 @@ export const Wrapper = styled.div`
   `};
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-  min-width: 340px;
-`};
+    min-width: 340px;
+  `};
 `
 
 export const ScrollablePage = styled.div`
@@ -51,7 +51,7 @@ export const CurrencyDropdown = styled(CurrencyInputPanel)`
 `
 
 export const StyledInput = styled(Input)`
-  background-color: ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.bg1};
   text-align: left;
   font-size: 18px;
   width: 100%;

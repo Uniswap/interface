@@ -7,7 +7,7 @@ import { TYPE } from 'theme'
 const EmptyProposals = styled.div`
   border: 1px solid ${({ theme }) => theme.text4};
   padding: 16px 12px;
-  border-radius: 12px;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -19,10 +19,12 @@ const Sub = styled.i`
   justify-content: center;
   text-align: center;
 `
+
 interface EmptyStateProps {
   HeaderContent: () => JSX.Element
   SubHeaderContent: () => JSX.Element
 }
+
 const EmptyState = ({ HeaderContent, SubHeaderContent }: EmptyStateProps) => (
   <EmptyProposals>
     <TYPE.body style={{ marginBottom: '8px' }}>

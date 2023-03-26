@@ -82,7 +82,7 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
             <CardSection gap="sm">
               <AutoColumn gap="md" justify="center">
                 <UniTokenAnimated width="48px" src={tokenLogo} />{' '}
-                <TYPE.white fontSize={48} fontWeight={600} color="white">
+                <TYPE.white fontSize={[16, 24, 48]} fontWeight={600} color="white">
                   {total?.toFixed(2, { groupSeparator: ',' })}
                 </TYPE.white>
               </AutoColumn>

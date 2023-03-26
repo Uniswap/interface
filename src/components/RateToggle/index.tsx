@@ -21,10 +21,10 @@ export default function RateToggle({
   return tokenA && tokenB ? (
     <div style={{ width: 'fit-content', display: 'flex', alignItems: 'center' }} onClick={handleRateToggle}>
       <ToggleWrapper width="fit-content">
-        <ToggleElement isActive={isSorted} fontSize="12px">
+        <ToggleElement isActive={isSorted} fontSize="14px">
           <Trans>{isSorted ? currencyA.symbol : currencyB.symbol}</Trans>
         </ToggleElement>
-        <ToggleElement isActive={!isSorted} fontSize="12px">
+        <ToggleElement isActive={!isSorted} fontSize="14px">
           <Trans>{isSorted ? currencyB.symbol : currencyA.symbol}</Trans>
         </ToggleElement>
       </ToggleWrapper>

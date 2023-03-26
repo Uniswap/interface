@@ -1,7 +1,5 @@
-import { Currency, CurrencyAmount, Ether, Percent, sqrt, Token, TradeType, WETH9 } from '@uniswap/sdk-core'
-import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
+import { CurrencyAmount, sqrt, Token } from '@uniswap/sdk-core'
 import { encodeSqrtRatioX96, FeeAmount, nearestUsableTick, Pool, TICK_SPACINGS, TickMath } from '@uniswap/v3-sdk'
-import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import JSBI from 'jsbi'
 
 export function v2StylePool(

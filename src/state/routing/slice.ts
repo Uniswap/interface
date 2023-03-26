@@ -1,12 +1,4 @@
-import {
-  BaseQueryFn,
-  createApi,
-  FetchArgs,
-  fetchBaseQuery,
-  FetchBaseQueryError,
-  retry,
-} from '@reduxjs/toolkit/query/react'
-import { SupportedChainId } from 'constants/chains'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import qs from 'qs'
 
 import { GetQuoteInchResult, GetSwapInchResult } from './types'

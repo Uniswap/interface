@@ -1,4 +1,4 @@
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 
 export enum V3TradeState {
   LOADING,

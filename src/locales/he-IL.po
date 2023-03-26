@@ -22,18 +22,13 @@ msgstr "$-"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "$<0/>"
-msgstr ""
+msgstr "$<0/>"
 
 #: src/components/earn/PoolCard.tsx
-#: src/pages/Market/index.tsx
-#: src/pages/Market/index.tsx
+#: src/components/swap/TradePrice.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
 msgstr "${0}"
-
-#: src/components/swap/TradePrice.tsx
-msgid "(${0})"
-msgstr "(${0})"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
@@ -61,6 +56,7 @@ msgstr "(עריכה)"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "- Remove recipient"
 msgstr "- הסר את הנמען"
 
@@ -71,7 +67,7 @@ msgstr "0 UNI לשבוע"
 
 #: src/pages/Earn/Manage.tsx
 msgid "0 sKrom / week"
-msgstr ""
+msgstr "0 סקרום לשבוע"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
@@ -106,29 +102,41 @@ msgstr "<0/> כל ההצעות"
 msgid "<0/> Votes"
 msgstr "<0/> הצבעות"
 
+#: src/components/Perpetual/index.tsx
+msgid "<0/><1/>By clicking \"Agree\" you accept the <2>Terms and Conditions </2>by Kromatika.Finance<3/><4/>"
+msgstr "<0/><1/>על ידי לחיצה על \"הסכמה\" אתה מקבל את <2>התנאים וההגבלות </2>על ידי Kromatika.Finance<3/><4/>"
+
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "<0><1><2><3/><4/><5/><6/><7/></2></1><8>Earn crypto by sharing the following referral link <9><10>{0} {1}</10></9></8></0>"
+msgstr "<0><1><2><3/><4/><5/><6/><7/></2></1><8>הרוויח קריפטו על ידי שיתוף קישור ההפניה הבא <9 ><10>{0} {1}</10></9></8></0>"
+
+#: src/components/LimitWarning/LimitWarningModal.tsx
+msgid "<0>ALL OTHER CHAINS</0> and <1>FEATURES ARE SECURE</1> (Polygon swaps & gasless swaps are also secure).<2/> <3/>As a security measure, Limit Order UI is paused on <4>Polygon Network only</4>."
+msgstr "<0>כל שאר הרשתות</0> ו<1>התכונות מאובטחות</1> (החלפות פוליגון והחלפות ללא גז מאובטחות גם כן).<2/> <3/>כאמצעי אבטחה, ממשק המשתמש של Limit Order מושהה ב<4>רשת פוליגון בלבד</4>."
+
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
 msgstr "<0> ניתוח חשבונות ועמלות שנצברו</0> <1> ↗</1>"
 
-#: 
-#~ msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
-#~ msgstr "<0> מחיר נוכחי:</0> <1> <2 /></1> <3>{0} לכל {1}</3>"
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "<0>Connect wallet to generate referral link. How it works ? <1>Read More</1></0>"
+msgstr "<0>חבר ארנק כדי ליצור קישור הפניה. איך זה עובד ? <1>קרא עוד</1></0>"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "<0>Error occured, reattempting transaction building! If the error persists, cancel the trade and try again.</0>"
+msgstr "<0>אירעה שגיאה, מנסה מחדש לבנות עסקה! אם השגיאה נמשכת, בטל את המסחר ונסה שוב.</0>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
 msgstr "<0> טיפ:</0> הסרת אסימונים לבריכה ממירה את עמדתך בחזרה לאסימונים בסיסיים בקצב הנוכחי, פרופורציונלי ביחס לחלקך בבריכה. העמלות שנצברו כלולות בסכומים שאתה מקבל."
 
-#: 
-#~ msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
-#~ msgstr "<0> טיפ:</0> בחר פעולה ותיאר את ההצעה שלך לקהילה. לא ניתן לשנות את ההצעה לאחר הגשתה, לכן אנא בדוק את כל המידע לפני הגשתה. תקופת ההצבעה תחל מיידית ותמשך 7 ימים. כדי להציע פעולה מותאמת אישית, <1> קרא את המסמכים</1> ."
-
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
 msgstr "<0> טיפ:</0> השתמש בכלי זה כדי למצוא מאגרי v2 שלא מופיעים אוטומטית בממשק."
-
-#: 
-#~ msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-#~ msgstr "<0> טיפ:</0> כשתוסיף נזילות, תקבל אסימונים לבריכה המייצגים את עמדתך. אסימונים אלה מרוויחים עמלות באופן אוטומטי ביחס לחלקך בבריכה, וניתן לפדותם בכל עת."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
@@ -137,7 +145,11 @@ msgstr "<0> בטל את ההצבעה</0> להתכונן להצעה הבאה."
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "<0>{0} per {1}</0>"
-msgstr ""
+msgstr "<0>{0} לכל {1}</0>"
+
+#: src/pages/Market/index.tsx
+msgid "<0> Price: </0>"
+msgstr "<0> מחיר: </0>"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
@@ -149,28 +161,28 @@ msgstr "הגשת הצעות נדרשת רף מינימלי של 0.25% מסך ה�
 
 #: src/pages/Stake/index.tsx
 msgid "APY"
-msgstr ""
+msgstr "APY"
 
 #: src/pages/Earn/Manage.tsx
 msgid "APY - add explanational tooltip"
-msgstr ""
+msgstr "APY - הוסף הסבר כלי הסבר"
 
 #: src/pages/Stake/index.tsx
 msgid "APY is calculated as a participation percentage compared to the overall staked balance.It is updated every 2 weeks."
-msgstr ""
+msgstr "APY מחושב כאחוז השתתפות בהשוואה ליתרת ההימור הכוללת. הוא מתעדכן כל שבועיים."
 
 #: src/components/Stake/index.tsx
 msgid "APY is calculated as a participation percentage in relation to the overall staked balance pool.It is updated every 2 weeks."
-msgstr ""
+msgstr "APY מחושב כאחוז השתתפות ביחס למאגר היתרה הכולל. הוא מתעדכן כל שבועיים."
 
 #: src/components/PositionCard/index.tsx
 msgid "APY is calculated as participating percentage in the total value staked. The APY percentage is therefore applied on total amount collected in the Fee Treasury."
-msgstr ""
+msgstr "APY מחושב כאחוז משתתף בשווי הכולל. לפיכך, אחוז ה-APY מוחל על הסכום הכולל שנגבה באוצר האגרות."
 
 #: src/components/PositionCard/index.tsx
 #: src/components/Stake/index.tsx
 msgid "APY:"
-msgstr ""
+msgstr "APY:"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -188,19 +200,13 @@ msgstr "חֶשְׁבּוֹן"
 
 #: src/components/PositionCard/index.tsx
 msgid "Account Status:"
-msgstr ""
+msgstr "מצב חשבון:"
 
 #: src/components/PositionCard/index.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "פָּעִיל"
-
-#: 
-#: 
-#: 
-#~ msgid "Add"
-#~ msgstr "הוספה"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add <0/> and <1/> to Kromatika V2"
@@ -210,11 +216,6 @@ msgstr "הוסף את <0/> ו- <1/> ל- Kromatika V2"
 msgid "Add Delegate +"
 msgstr "הוסף נציג +"
 
-#: 
-#: 
-#~ msgid "Add Liquidity"
-#~ msgstr "הוסף נזילות"
-
 #: src/pages/Pool/v2.tsx
 msgid "Add V2 Liquidity"
 msgstr "הוסף נזילות V2"
@@ -222,10 +223,6 @@ msgstr "הוסף נזילות V2"
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
 msgstr "הוסף נזילות."
-
-#: 
-#~ msgid "Add more liquidity"
-#~ msgstr "הוסף עוד נזילות"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
@@ -252,37 +249,35 @@ msgstr "לכתובת אין כל תביעה זמינה"
 msgid "Against"
 msgstr "נגד"
 
+#: src/components/LimitWarning/LimitWarningModal.tsx
+#: src/components/Perpetual/index.tsx
+msgid "Agree"
+msgstr "לְהַסכִּים"
+
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Allow Kromatika to use your {0}"
-msgstr ""
+msgstr "אפשר ל-Kromatika להשתמש ב-{0} שלך"
 
 #: 
-#~ msgid "Allow LP token migration"
-#~ msgstr "אפשר העברת אסימון LP"
-
 #: 
-#~ msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-#~ msgstr "אפשר עסקאות עם השפעות מחיר גבוהות ודלג על מסך האישור. השימוש על אחריותך בלבד."
-
-#: src/pages/Market/index.tsx
-#: src/pages/Market/index.tsx
-msgid "Allow the Kromatika Aggregator to use your {0}"
-msgstr ""
-
-#: 
-#~ msgid "Allow the Kromatika Protocol to use your {0}"
-#~ msgstr "אפשר לפרוטוקול Kromatika להשתמש ב- {0}"
-
-#: 
-#~ msgid "Allowed"
-#~ msgstr "מוּתָר"
+#~ msgid "Allow the Kromatika Aggregator to use your {0}"
+#~ msgstr "אפשר ל-Kromatika Aggregator להשתמש ב-{0} שלך"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 msgid "Allowed Slippage"
 msgstr "מותר החלקה"
+
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "Allowed Slippage:"
+msgstr "החלקה מותרת:"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -292,30 +287,29 @@ msgstr "כמות"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Amounts"
-msgstr ""
-
-#: 
-#~ msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
-#~ msgstr "אירעה שגיאה בניסיון לבצע החלפה זו. יתכן שתצטרך להגביר את סובלנות ההחלקה שלך. אם זה לא עובד, ייתכן שיש אי התאמה לאסימון שאתה סוחר בו. הערה: עמלה על אסימון העברה וריבוס אינם תואמים ל- Kromatika V3."
+msgstr "סכומים"
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
-msgstr ""
+msgstr "אירעה שגיאה בעת ניסיון לבצע החלפה זו. ייתכן שתצטרך להגביר את סובלנות ההחלקה שלך. אם זה לא עובד, ייתכן שיש אי תאימות עם האסימון שאתה סוחר בו. הערה: עמלה על העברה ואסימוני בסיס מחדש אינם תואמים ל- Kromatika."
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Any missing order(s)? Try switching between networks."
+msgstr "הזמנות חסרות? נסה לעבור בין רשתות."
 
 #: 
-#~ msgid "Analytics"
-#~ msgstr "ניתוח"
+#: 
+#~ msgid "Any missing order? Try switching between"
+#~ msgstr "הזמנה חסרה? נסה להחליף בין"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "לְאַשֵׁר"
 
-#: 
-#~ msgid "Approve Token"
-#~ msgstr "אשר אסימון"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/Stake/StakingModal.tsx
 msgid "Approve {0}"
@@ -329,6 +323,7 @@ msgstr "אושר"
 msgid "Approving"
 msgstr "מאשר"
 
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/Stake/StakingModal.tsx
 msgid "Approving {0}"
@@ -351,24 +346,16 @@ msgid "Are you sure?"
 msgstr "האם אתה בטוח?"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Kromatika community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "כחבר בקהילת Kromatika אתה יכול לטעון ש- UNI משמשת להצבעה ולממשל. <0/> <1/> <2> קרא עוד על UNI</2>"
-
-#: 
-#~ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
-#~ msgstr "לפחות {0} {1} ו {2} {3} יוחזרו לארנק שלך בגלל טווח המחירים שנבחר."
+msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
+msgstr "כחבר בקהילת Uniswap אתה רשאי לטעון כי UNI משמש להצבעה ולממשל.<0/><1/><2>קרא עוד על UNI</2>"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
 msgstr "אוטומטי"
 
-#: 
-#~ msgid "Auto Router"
-#~ msgstr "נתב אוטומטי"
-
-#: 
-#~ msgid "Available to deposit: {0}"
-#~ msgstr "זמין להפקדה: {0}"
+#: src/components/Settings/index.tsx
+msgid "BETA FEATURE. Use at own risk."
+msgstr "תכונת בטא. השימוש באחריות בלבד."
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
@@ -402,6 +389,10 @@ msgstr "כתובת חסומה"
 msgid "Bridge"
 msgstr "לְגַשֵׁר"
 
+#: src/state/market/hooks.tsx
+msgid "Buy amount lower than fee amount"
+msgstr "קנה סכום נמוך מסכום העמלה"
+
 #: src/components/PositionCard/index.tsx
 #: src/components/Stake/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
@@ -411,18 +402,14 @@ msgstr "על ידי הוספת נזילות תרוויח 0.3% מכלל העסק�
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
 msgstr "על ידי הוספת רשימה זו אתה סומך באופן מרומז על כך שהנתונים נכונים. כל אחד יכול ליצור רשימה, כולל יצירת גרסאות מזויפות של רשימות קיימות ורשימות המתיימרות לייצג פרויקטים שאין להם."
 
-#: 
-#~ msgid "By connecting a wallet, you agree to Kromatika Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Kromatika protocol disclaimer</1>."
-#~ msgstr "על ידי חיבור ארנק אתה מסכים <0>לתנאי השירות</0> של Kromatika Labs ומודה כי קראת והבנת את כתב הוויתור על פרוטוקול <1>Kromatika</1>."
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancel"
-msgstr ""
+msgstr "לְבַטֵל"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancel Trade"
-msgstr ""
+msgstr "בטל את המסחר"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Vote/styled.tsx
@@ -431,23 +418,23 @@ msgstr "מבוטל"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Canceling the trade will withdraw available amounts for you."
-msgstr ""
+msgstr "ביטול העסקה ימשוך עבורך סכומים זמינים."
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Cancelled:"
+msgstr "מבוטל:"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancelling"
-msgstr ""
+msgstr "מבטל"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancelling trade"
-msgstr ""
+msgstr "ביטול המסחר"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "שינוי"
-
-#: 
-#~ msgid "Charts"
-#~ msgstr "תרשימים"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Check network status"
@@ -468,7 +455,7 @@ msgstr "תבעו את <0/> עבור {0}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Claim KROM"
-msgstr ""
+msgstr "תבע KROM"
 
 #: src/components/Header/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -484,10 +471,6 @@ msgstr "תבע את אסימון UNI"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim UNI reward for {0}"
 msgstr "תבעו תגמול של UNI עבור {0}"
-
-#: 
-#~ msgid "Claim fees"
-#~ msgstr "דמי תביעה"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Claim your UNI tokens"
@@ -520,10 +503,6 @@ msgstr "תביעת UNI"
 msgid "Claiming {0} UNI"
 msgstr "תביעת {0} UNI"
 
-#: 
-#~ msgid "Clear All"
-#~ msgstr "נקה הכל"
-
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Clear all"
 msgstr "נקה הכל"
@@ -536,6 +515,10 @@ msgstr "סגור"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Closed"
 msgstr "סָגוּר"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Closed:"
+msgstr "סָגוּר:"
 
 #: src/components/Menu/index.tsx
 msgid "Code"
@@ -550,10 +533,6 @@ msgstr "לגבות"
 msgid "Collect as WETH"
 msgstr "לגבות כ- WETH"
 
-#: 
-#~ msgid "Collect fees"
-#~ msgstr "גבה עמלות"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Collect {0}/{1} fees"
 msgstr "אסוף {0}/{1} ודמים"
@@ -564,32 +543,24 @@ msgstr "נגבה"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
-msgstr ""
+msgstr "נאספו {0} {1}{2} ו-{3} {4}{5}"
 
-#: 
-#~ msgid "Collecting"
-#~ msgstr "גבייה"
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Collected:"
+msgstr "נאסף:"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting amounts will withdraw currently available amounts for you."
-msgstr ""
-
-#: 
-#~ msgid "Collecting fees"
-#~ msgstr "גביית עמלות"
-
-#: 
-#~ msgid "Collecting fees will withdraw currently available fees for you."
-#~ msgstr "דמי גבייה ימשכו עבורך את העמלות הזמינות כיום."
+msgstr "איסוף סכומים ימשוך עבורך סכומים זמינים כרגע."
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting tokens"
-msgstr ""
+msgstr "איסוף אסימונים"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
 msgid "Coming Soon"
-msgstr ""
+msgstr "בקרוב"
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
@@ -600,17 +571,9 @@ msgstr "מכנים משותפים"
 msgid "Confirm"
 msgstr "לְאַשֵׁר"
 
-#: 
-#~ msgid "Confirm Create"
-#~ msgstr "אשר יצירת"
-
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Confirm Limit Order"
-msgstr ""
-
-#: 
-#~ msgid "Confirm Supply"
-#~ msgstr "אשר אספקה"
+msgstr "אשר את סדר הגבלה"
 
 #: src/components/market/ConfirmMarketModal.tsx
 #: src/components/market/MarketModalFooter.tsx
@@ -639,6 +602,7 @@ msgstr "אשר עסקה בארנק"
 #: src/pages/Stake/StakingModal.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/burn/v3/hooks.tsx
 #: src/state/market/hooks.tsx
@@ -650,8 +614,6 @@ msgid "Connect Wallet"
 msgstr "חבר ארנק"
 
 #: src/components/earn/UnstakingModal.tsx
-#: src/pages/LimitOrder/index.tsx
-#: src/pages/LimitOrder/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -660,7 +622,6 @@ msgstr "חבר ארנק"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/WalletModal/index.tsx
-#: src/components/Web3Status/index.tsx
 msgid "Connect to a wallet"
 msgstr "התחבר לארנק"
 
@@ -668,13 +629,13 @@ msgstr "התחבר לארנק"
 msgid "Connect to a wallet to find pools"
 msgstr "התחבר לארנק כדי למצוא בריכות"
 
-#: 
-#~ msgid "Connect to a wallet to view your V2 liquidity."
-#~ msgstr "התחבר לארנק כדי להציג את נזילות V2 שלך."
-
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
 msgstr "התחבר לארנק כדי להציג את הנזילות שלך."
+
+#: src/components/Web3Status/index.tsx
+msgid "Connect wallet"
+msgstr "חבר ארנק"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -689,14 +650,6 @@ msgstr "מוּעֲתָק"
 msgid "Copy Address"
 msgstr "העתק כתובת"
 
-#: 
-#~ msgid "Create"
-#~ msgstr "לִיצוֹר"
-
-#: 
-#~ msgid "Create Pool & Supply"
-#~ msgstr "צור בריכה ואספקה"
-
 #: src/pages/Vote/index.tsx
 msgid "Create Proposal"
 msgstr "צור הצעה"
@@ -705,10 +658,6 @@ msgstr "צור הצעה"
 #: src/pages/Pool/v2.tsx
 msgid "Create a pair"
 msgstr "צור זוג"
-
-#: 
-#~ msgid "Create a pool"
-#~ msgstr "צור מאגר"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Create an issue on GitHub"
@@ -728,7 +677,7 @@ msgstr "צור {0}/{1} הבריכה V3"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Created Limit Trade {0} {1} {2}for {3} {4}{5}↗"
-msgstr ""
+msgstr "נוצר מסחר מוגבל {0} {1} {2}עבור {3} {4}{5}↗"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -736,33 +685,25 @@ msgstr ""
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Current Price"
-msgstr ""
+msgstr "מחיר נוכחי"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Current Price:"
-msgstr ""
+msgstr "מחיר נוכחי:"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
 msgid "Current Price: 0"
-msgstr ""
+msgstr "מחיר נוכחי: 0"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Current price"
 msgstr "מחיר נוכחי"
 
-#: 
-#~ msgid "Current {0} Price:"
-#~ msgstr "מחיר {0} נוכחי:"
-
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "ערכת נושא כהה"
-
-#: src/components/Header/index.tsx
-msgid "Dashboard"
-msgstr ""
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
@@ -791,22 +732,19 @@ msgstr "האצלת קולות"
 msgid "Deposit"
 msgstr "לְהַפְקִיד"
 
-#: 
-#~ msgid "Deposit Amounts"
-#~ msgstr "סכומי הפקדה"
-
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit Assets"
 msgstr "נכסי הפקדה"
 
-#: src/components/PositionCard/index.tsx
-msgid "Deposit Balance:"
-msgstr ""
-
 #: src/components/NavigationTabs/index.tsx
+#: src/components/PositionCard/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Deposit KROM"
-msgstr ""
+msgstr "הפקד KROM"
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "Deposit KROM to process trade"
+msgstr "הפקד KROM לעיבוד מסחר"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
@@ -818,32 +756,24 @@ msgid "Deposit liquidity"
 msgstr "הפקדת נזילות"
 
 #: src/pages/Earn/index.tsx
-msgid "Deposit your Liquidity Provider tokens to receive KROM, the Kromatika protocol governance token."
-msgstr ""
-
-#: 
-#~ msgid "Deposit your Liquidity Provider tokens to receive UNI, the Kromatika protocol governance token."
-#~ msgstr "הפקד את אסימוני ספק הנזילות שלך לקבלת UNI, אסימון הממשל לפרוטוקול Kromatika."
+msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
+msgstr "הפקד את אסימוני ספק הנזילות שלך כדי לקבל את UNI, אסימון הממשל של פרוטוקול Uniswap."
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit {0}"
-msgstr ""
+msgstr "הפקד {0}"
+
+#: src/components/PositionCard/index.tsx
+msgid "Deposited Balance:"
+msgstr "יתרה מופקדת:"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
 msgstr "נזילות שהופקדה:"
 
-#: 
-#~ msgid "Deposited {0} UNI-V2"
-#~ msgstr "הופקד {0} UNI-V2"
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "Depositing KROM will allow the system to automatically process trades"
-msgstr ""
-
-#: 
-#~ msgid "Depositing Liquidity"
-#~ msgstr "הפקדת נזילות"
+msgstr "הפקדת KROM תאפשר למערכת לעבד עסקאות אוטומטית"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
@@ -873,35 +803,35 @@ msgstr "לשחרר"
 msgid "Docs"
 msgstr "מסמכים"
 
-#: 
-#~ msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
-#~ msgstr "אינך רואה את אחת מעמדות ה- v2 שלך? <0> יבא אותו.</0>"
+#: src/components/Perpetual/index.tsx
+msgid "Don't show this message again for the next 30 days."
+msgstr "אל תציג את ההודעה הזו שוב במהלך 30 הימים הבאים."
+
+#: src/components/LimitWarning/LimitWarningModal.tsx
+msgid "Due to the recent LastPass breach, there may be a potential security breach on Kromatika's Limit Order Contract on <0>Polygon Network only</0>."
+msgstr "עקב הפרת LastPass האחרונה, תיתכן פרצת אבטחה פוטנציאלית בחוזה ההזמנה המוגבלה של Kromatika ב<0>רשת Polygon בלבד</0>."
 
 #: src/components/PositionCard/index.tsx
 #: src/components/Stake/index.tsx
 msgid "Earned Balance:"
-msgstr ""
+msgstr "יתרה שהרווחת:"
 
 #: src/components/vote/DelegateModal.tsx
-msgid "Earned UNI tokens represent voting shares in Kromatika governance."
-msgstr "אסימונים של UNI שהושכרו מייצגים מניות הצבעה בממשל Kromatika."
+msgid "Earned UNI tokens represent voting shares in Uniswap governance."
+msgstr "אסימוני UNI שהרווחו מייצגים מניות הצבעה בממשל Uniswap."
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "Earned sKrom"
-msgstr ""
+msgstr "הרווחת sKrom"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
 msgstr "לַעֲרוֹך"
 
-#: 
-#~ msgid "Efficiency Comparison"
-#~ msgstr "השוואת יעילות"
-
 #: src/components/Settings/index.tsx
 msgid "Enables gasless transactions by compensating them with KROM."
-msgstr ""
+msgstr "מאפשר עסקאות ללא גז על ידי פיצוי עליהן באמצעות KROM."
 
 #: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
@@ -958,37 +888,40 @@ msgstr "שגיאה בהתחברות. נסה לרענן את הדף."
 msgid "Error importing list"
 msgstr "שגיאה בייבוא הרשימה"
 
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "Est. Fees:"
+msgstr "הערכה עמלות:"
+
 #: src/components/Header/NetworkSelector.tsx
 msgid "Etherscan"
-msgstr ""
+msgstr "Etherscan"
 
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "יצא לפועל"
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Executed Orders"
+msgstr "פקודות שבוצעו"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "תוצאות מורחבות מרשימות אסימון לא פעילות"
-
-#: 
-#~ msgid "Expert Mode"
-#~ msgstr "מצב מומחה"
-
-#: 
-#~ msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
-#~ msgstr "מצב מומחה מכבה את בקשת האישור לעסקה ומאפשר עסקאות החלקה גבוהות שלעתים קרובות גורמות לשיעורים גרועים ולאובדן כספים."
 
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "לא בתוקף"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Kromatika Analytics."
-msgstr "גלה בריכות פופולריות ב- Kromatika Analytics."
+msgid "Explore popular pools on Uniswap Analytics."
+msgstr "חקור מאגרים פופולריים ב-Uniswap Analytics."
 
-#: 
-#~ msgid "Explorer"
-#~ msgstr "מגלה ארצות"
+#: src/components/LimitWarning/LimitWarningModal.tsx
+msgid "FOR POLYGON KROMATIKA LIMIT ORDERS USERS - <0><1>ACTION REQUIRED</1></0>:<2/>a) Cancel Polygon chain limit orders<3/>b) Withdraw deposited KROM on polygon<4/>c) Revoke approval to old limit order manager contract: \"0xd1fdf0144be118c30a53e1d08cc1e61d600e508e\" <5>CLICK HERE</5> and follow the guide."
+msgstr "למשתמשי הזמנות מוגבלות של POLYGON KROMATIKA - <0><1>נדרשת פעולה</1></0>:<2/>א) ביטול הזמנות הגבלת שרשרת פוליגון<3/>ב) משיכת KROM שהופקד במצולע<4/> ג) בטל את האישור לחוזה הישן של מנהל הזמנות הגבלה: \"0xd1fdf0144be118c30a53e1d08cc1e61d600e508e\" <5>לחץ כאן</5> ופעל לפי המדריך."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -1000,15 +933,11 @@ msgstr "שכבת שכר טרחה"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Filling"
-msgstr ""
+msgstr "מילוי"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "ל"
-
-#: 
-#~ msgid "For each pool shown below, click migrate to remove your liquidity from Kromatika V2 and deposit it into Kromatika V3."
-#~ msgstr "עבור כל מאגר המוצג למטה, לחץ על העבר כדי להסיר את הנזילות שלך מ- Kromatika V2 והפקד אותו ל- Kromatika V3."
 
 #: src/components/market/MarketModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
@@ -1018,6 +947,7 @@ msgstr "ל"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "From"
 msgstr "מ"
 
@@ -1027,32 +957,25 @@ msgstr "מ"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "From (at most)"
 msgstr "מאת (לכל היותר)"
 
 #: src/components/Settings/index.tsx
 msgid "Frontrun Protection"
-msgstr ""
+msgstr "הגנה חזיתית"
 
 #: src/components/RangeSelector/PresetsButtons.tsx
 msgid "Full Range"
 msgstr "טווח מלא"
 
-#: 
-#~ msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
-#~ msgstr "תפקידים בטווח מלא עשויים להרוויח פחות שכר טרחה ממשרות מרוכזות. למידע נוסף <0> כאן</0> ."
-
 #: src/components/Settings/index.tsx
 msgid "Gasless Mode"
-msgstr ""
+msgstr "מצב ללא גז"
 
 #: src/components/Settings/index.tsx
 msgid "Gasless mode enables users to send blockchain transactions without paying network gas fees."
-msgstr ""
-
-#: src/components/PositionCard/index.tsx
-msgid "Get KROM tokens here<0>↗</0>"
-msgstr ""
+msgstr "מצב ללא גז מאפשר למשתמשים לשלוח עסקאות בלוקצ'יין מבלי לשלם עמלות גז ברשת."
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
@@ -1066,9 +989,21 @@ msgstr "מרכז עזרה"
 msgid "Hide"
 msgstr "להתחבא"
 
-#: 
-#~ msgid "High Price Impact"
-#~ msgstr "השפעה על מחיר גבוה"
+#: src/components/Menu/index.tsx
+msgid "How to use FELO"
+msgstr "כיצד להשתמש ב-FELO"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Gasless"
+msgstr "כיצד להשתמש ב- Gasless"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Perpetuals"
+msgstr "כיצד להשתמש ב-Perpetuals"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Swap"
+msgstr "כיצד להשתמש ב-Swap"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
@@ -1077,6 +1012,10 @@ msgstr "אני מבין"
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "אם אתה רוכש אסימון מרשימה זו, ייתכן שלא תוכל למכור אותו בחזרה."
+
+#: src/state/market/hooks.tsx
+msgid "Impact is too high"
+msgstr "ההשפעה גבוהה מדי"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
@@ -1101,21 +1040,20 @@ msgstr "יְיבוּא בריכת V2"
 msgid "Import at your own risk"
 msgstr "ייבא על אחריותך בלבד"
 
-#: 
-#~ msgid "In range"
-#~ msgstr "בטווח"
-
-#: 
-#~ msgid "Increase Liquidity"
-#~ msgstr "הגדל את הנזילות"
-
-#: 
-#~ msgid "Initial prices and pool share"
-#~ msgstr "מחירים ראשוניים ונתח בריכה"
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "In Range"
+msgstr "בטווח"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
 msgstr "מאתחל ..."
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Input"
+msgstr "קֶלֶט"
 
 #: src/components/market/MarketModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
@@ -1131,6 +1069,7 @@ msgstr "התקן את Metamask"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "לא מספיק נזילות למסחר זה."
 
@@ -1144,11 +1083,7 @@ msgstr "איזון {0} לא מספיק"
 
 #: src/state/mint/v3/hooks.tsx
 msgid "Insufficient {0} deposit"
-msgstr ""
-
-#: 
-#~ msgid "Interface Settings"
-#~ msgstr "הגדרות ממשק"
+msgstr "הפקדה של {0} לא מספקת"
 
 #: src/state/mint/hooks.tsx
 msgid "Invalid pair"
@@ -1158,15 +1093,6 @@ msgstr "זוג לא חוקי"
 msgid "Invalid pair."
 msgstr "זוג לא חוקי."
 
-#: 
-#~ msgid "Invalid price input"
-#~ msgstr "קלט מחירים לא חוקי"
-
-#: 
-#: 
-#~ msgid "Invalid range selected. The min price must be lower than the max price."
-#~ msgstr "נבחר טווח לא חוקי. המחיר המינימלי חייב להיות נמוך מהמחיר המקסימלי."
-
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 #: src/state/market/hooks.tsx
@@ -1174,37 +1100,25 @@ msgstr "זוג לא חוקי."
 msgid "Invalid recipient"
 msgstr "נמען לא חוקי"
 
-#: src/pages/Vote/index.tsx
-msgid "Kromatika Governance"
-msgstr "ממשל לא מוחלף"
+#: src/components/PositionCard/index.tsx
+msgid "KROM deposit required"
+msgstr "נדרשת הפקדת KROM"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Kromatika available in: <0>{0}</0>"
 msgstr "Kromatika זמין ב: <0>{0}</0>"
 
-#: src/components/vote/ProposalEmptyState.tsx
-msgid "Kromatika governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
-msgstr "ממשל ללא החלפה זמין רק בשכבה 1. העבר את הרשת שלך ל- Ethereum Mainnet כדי להציג הצעות והצבעה."
-
-#: src/pages/Earn/index.tsx
-msgid "Kromatika liquidity mining"
-msgstr "כריית נזילות ללא החלפה"
-
 #: 
-#~ msgid "Kromatika migration contract↗"
-#~ msgstr "חוזה הגירה מביטול החלפה↗"
-
-#: 
-#~ msgid "Kromatika on {0}"
-#~ msgstr "ביטול החלפה ב- {0}"
+#~ msgid "LP fees earned:"
+#~ msgstr "עמלות LP שנצברו:"
 
 #: src/components/Menu/index.tsx
 msgid "Language"
 msgstr "שפה"
 
-#: 
-#~ msgid "Learn"
-#~ msgstr "לִלמוֹד"
+#: src/components/Perpetual/index.tsx
+msgid "Launch Perpetual Trading"
+msgstr "הפעל מסחר מתמיד"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Learn More"
@@ -1218,21 +1132,29 @@ msgstr "למד אודות מתן נזילות"
 msgid "Light Theme"
 msgstr "נושא קל"
 
-#: src/components/Header/index.tsx
-msgid "Limit"
-msgstr ""
-
 #: src/pages/Pool/index.tsx
 msgid "Limit Orders"
-msgstr ""
+msgstr "הזמנות מוגבלות"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Limit Price"
+msgstr "מחיר הגבלה"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Limit price (USD):"
+msgstr "מחיר הגבלה (דולר ארה\"ב):"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Limit price:"
+msgstr "מחיר מוגבל:"
+
+#: src/components/NavigationLinks/index.tsx
+msgid "Limit/FELO"
+msgstr "Limit/FELO"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "Liquidity"
 msgstr "נְזִילוּת"
-
-#: 
-#~ msgid "Liquidity Provider Fee"
-#~ msgstr "עמלת ספק נזילות"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
@@ -1264,8 +1186,13 @@ msgstr "עמוס"
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Loading"
 msgstr "טוען"
+
+#: src/state/market/hooks.tsx
+msgid "Loading ..."
+msgstr "טוען ..."
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1273,10 +1200,6 @@ msgstr "טוען"
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
 msgstr "לנהל"
-
-#: 
-#~ msgid "Manage Liquidity in Rewards Pool"
-#~ msgstr "נהל נזילות במאגר תגמולים"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Manage Token Lists"
@@ -1295,14 +1218,6 @@ msgstr "מקסימום"
 msgid "Max Price"
 msgstr "מחיר מירבי"
 
-#: 
-#~ msgid "Max price"
-#~ msgstr "מחיר מירבי"
-
-#: 
-#~ msgid "Max:"
-#~ msgstr "מקסימום:"
-
 #: src/components/market/AdvancedMarketDetails.tsx
 msgid "Maximum sent"
 msgstr "מקסימום נשלח"
@@ -1316,30 +1231,13 @@ msgstr "תַפרִיט"
 msgid "Migrate"
 msgstr "להעביר"
 
-#: 
-#~ msgid "Migrate Liquidity"
-#~ msgstr "העבר נזילות"
-
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
 msgstr "העבר נזילות ל- V3"
 
-#: 
-#: 
-#~ msgid "Migrate V2 Liquidity"
-#~ msgstr "העבר נזילות V2"
-
-#: 
-#~ msgid "Migrate your liquidity tokens from Kromatika V2 to Kromatika V3."
-#~ msgstr "העבר את אסימוני הנזילות שלך מ- Kromatika V2 ל- Kromatika V3."
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Migrate {0}/{1} liquidity to V3"
 msgstr "העבר {0}/{1} ל- V3"
-
-#: 
-#~ msgid "Migrating"
-#~ msgstr "נודדים"
 
 #: src/components/RangeSelector/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -1352,42 +1250,39 @@ msgstr "מחיר מינימלי"
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
 msgid "Min Price: 0"
-msgstr ""
-
-#: 
-#~ msgid "Min price"
-#~ msgstr "מחיר מינימלי"
-
-#: 
-#~ msgid "Min:"
-#~ msgstr "דקה:"
+msgstr "מחיר מינימלי: 0"
 
 #: src/components/PositionCard/index.tsx
 msgid "Minimum Balance:"
-msgstr ""
+msgstr "יתרה מינימלית:"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Minimum Price"
-msgstr ""
+msgstr "מחיר מינימום"
 
-#: src/components/market/AdvancedMarketDetails.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "Minimum Received:"
+msgstr "מינימום קבלה:"
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Minimum received"
 msgstr "מינימום שהתקבל"
+
+#: src/components/market/AdvancedMarketDetails.tsx
+msgid "Minimum received {0}"
+msgstr "מינימום התקבל {0}"
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "חסרות תלות"
 
-#: 
-#~ msgid "More"
-#~ msgstr "יותר"
-
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
 msgid "My limit orders"
-msgstr ""
+msgstr "הזמנות הגבלה שלי"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Network Warning"
@@ -1395,24 +1290,12 @@ msgstr "אזהרת רשת"
 
 #: src/pages/Pool/index.tsx
 msgid "New Limit Order"
-msgstr ""
-
-#: 
-#~ msgid "New Position"
-#~ msgstr "עמדה חדשה"
-
-#: 
-#~ msgid "No V2 Liquidity found."
-#~ msgstr "לא נמצאה נזילות V2."
+msgstr "צו גבול חדש"
 
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
 msgid "No active pools"
 msgstr "אין בריכות פעילות"
-
-#: 
-#~ msgid "No data"
-#~ msgstr "אין מידע"
 
 #: src/state/governance/hooks.ts
 msgid "No description."
@@ -1434,14 +1317,6 @@ msgstr "לא נמצאו הצעות."
 msgid "No results found."
 msgstr "לא נמצאו תוצאות."
 
-#: src/components/Badge/RangeBadge.tsx
-msgid "Not Processing"
-msgstr ""
-
-#: 
-#~ msgid "Not created"
-#~ msgstr "לא נוצר"
-
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
 msgstr "כבוי"
@@ -1449,14 +1324,6 @@ msgstr "כבוי"
 #: src/components/Toggle/ListToggle.tsx
 msgid "ON"
 msgstr "דלוק"
-
-#: src/components/Settings/index.tsx
-msgid "ONLY USE THIS MODE IF YOU HAVE ENOUGH KROM DEPOSIT BALANCE IN KROMATIKA."
-msgstr ""
-
-#: 
-#~ msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
-#~ msgstr "השתמש במצב זה בלבד אם אתה יודע מה אתה עושה."
 
 #: src/components/Toggle/index.tsx
 msgid "Off"
@@ -1466,10 +1333,6 @@ msgstr "כבוי"
 msgid "On"
 msgstr "דלוק"
 
-#: 
-#~ msgid "Once you are happy with the rate click supply to review."
-#~ msgstr "ברגע שאתה מרוצה מההספק לחץ על האספקה לבדיקה."
-
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
 msgstr "זכאים להצביע רק קולות של UNI שהועברו בעצמם או הועברו לכתובת אחרת לפני גוש {0}"
@@ -1477,6 +1340,15 @@ msgstr "זכאים להצביע רק קולות של UNI שהועברו בעצמ
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "אופס! אירעה שגיאה לא ידועה. אנא רענן את הדף, או בקר בדפדפן או במכשיר אחר."
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Open Orders"
+msgstr "הזמנות פתוחות"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Opened:"
+msgstr "נפתח:"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimism Gateway"
@@ -1490,47 +1362,51 @@ msgstr "Ethereum אופטימי נמצא בגרסת ביטא ועשוי לחוו
 msgid "Optimistic Etherscan"
 msgstr "את'רקאן אופטימי"
 
-#: 
-#~ msgid "Out of range"
-#~ msgstr "מחוץ לטווח"
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Output"
+msgstr "תְפוּקָה"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
 msgstr "התפוקה משוערת. אם המחיר ישתנה ביותר מ- {0}% העסקה שלך תחזור."
 
 #: src/components/market/MarketModalHeader.tsx
-msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
-msgstr "התפוקה משוערת. תקבל <0>{0} {1}</0> או שהעסקה תחזור."
+msgid "Output is estimated. You will receive at least <0>{0} </0> or the transaction will revert."
+msgstr "התפוקה מוערכת. תקבל לפחות <0>{0} </0> או שהעסקה תחזור."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> when the current market price reaches your target price."
-msgstr ""
+msgstr "התפוקה מוערכת. תקבל לפחות <0>{0} {1}</0> כאשר מחיר השוק הנוכחי יגיע למחיר היעד שלך."
 
 #: src/components/market/MarketModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
 msgstr "התפוקה תישלח אל <0>{0}</0>"
 
-#: 
-#~ msgid "Owner"
-#~ msgstr "בעלים"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Paid {0} {1} {2}service fees ↗"
-msgstr ""
+msgstr "שילם {0} {1} {2}דמי שירות ↗"
 
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
 msgstr "בריכות המשתתפות"
 
 #: src/components/Badge/RangeBadge.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "ממתין ל"
 
+#: src/components/NavigationLinks/index.tsx
+msgid "Perpetuals"
+msgstr "נצחים"
+
 #: src/state/swap/hooks.tsx
 msgid "Place limit order above the minimum price"
-msgstr ""
+msgstr "בצע הזמנה מוגבלת מעל למחיר המינימום"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Please confirm you would like to remove this list by typing REMOVE"
@@ -1545,24 +1421,28 @@ msgid "Please connect to the appropriate Ethereum network."
 msgstr "אנא התחבר לרשת Ethereum המתאימה."
 
 #: src/components/PositionCard/index.tsx
-msgid "Please deposit KROM up to the minimum balance. Recommendation is to deposit at least twice the minimum balance."
-msgstr ""
-
-#: 
-#~ msgid "Please type the word \"{confirmWord}\" to enable expert mode."
-#~ msgstr "אנא הקלד את המילה \"{confirmWord}\" כדי להפעיל מצב מומחה."
+msgid "Please deposit $KROM to process your limit order.<0/><1/>Recommendation is to deposit at least twice the minimum balance."
+msgstr "אנא הפקד $KROM כדי לעבד את הזמנת המגבלה שלך.<0/><1/>ההמלצה היא להפקיד לפחות פי שניים מהיתרה המינימלית."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable gasless mode."
-msgstr ""
+msgstr "אנא הקלד את המילה \"{confirmWord}\" כדי להפעיל מצב ללא גז."
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Please wait while the transaction is being built"
+msgstr "אנא המתן בזמן בניית העסקה"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygon Bridge"
-msgstr ""
+msgstr "גשר מצולע"
+
+#: src/components/LimitWarning/LimitWarningModal.tsx
+msgid "Polygon User Warning"
+msgstr "אזהרת משתמש מצולע"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygonscan"
-msgstr ""
+msgstr "פוליגונסקן"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
@@ -1571,10 +1451,6 @@ msgstr "מאגר"
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
 msgstr "מאגר נמצא!"
-
-#: 
-#~ msgid "Pool Rate"
-#~ msgstr "תעריף מאגר"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Pool rate"
@@ -1593,13 +1469,13 @@ msgstr "אסימונים למאגר בבריכת תגמולים:"
 msgid "Pooled {0}:"
 msgstr "מאוגד {0}:"
 
-#: 
-#~ msgid "Pools Overview"
-#~ msgstr "סקירת מאגרים"
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Preparing transaction"
+msgstr "הכנת עסקה"
 
 #: src/components/Settings/index.tsx
 msgid "Prevents front-running of swaps"
-msgstr ""
+msgstr "מונע הרצה קדמית של החלפות"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/Stake/StakingModal.tsx
@@ -1607,58 +1483,29 @@ msgid "Preview"
 msgstr "תצוגה מקדימה"
 
 #: src/components/market/MarketModalHeader.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Price"
 msgstr "מחיר"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price Details"
-msgstr ""
-
-#: 
-#~ msgid "Price Difference:"
-#~ msgstr "הבדל במחיר:"
-
-#: 
-#~ msgid "Price Impact"
-#~ msgstr "השפעת מחיר"
-
-#: 
-#~ msgid "Price Impact Too High"
-#~ msgstr "השפעת המחיר גבוהה מדי"
+msgstr "פרטי מחיר"
 
 #: src/components/market/MarketModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "המחיר עודכן"
 
-#: 
-#~ msgid "Price range"
-#~ msgstr "טווח מחירים"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
 msgstr "מחיר:"
 
-#: 
-#~ msgid "Prices and pool share"
-#~ msgstr "מחירים ונתח בריכה"
-
 #: src/components/Badge/RangeBadge.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 msgid "Processed"
-msgstr ""
-
-#: 
-#~ msgid "Proposal"
-#~ msgstr "הצעה"
-
-#: 
-#~ msgid "Proposal Submitted"
-#~ msgstr "ההצעה הוגשה"
-
-#: 
-#~ msgid "Proposal Title"
-#~ msgstr "כותרת ההצעה"
+msgstr "מעובד"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
@@ -1668,10 +1515,6 @@ msgstr "הצעות"
 msgid "Proposals submitted by community members will appear here."
 msgstr "הצעות שהוגשו על ידי חברי הקהילה יופיעו כאן."
 
-#: 
-#~ msgid "Proposed Action"
-#~ msgstr "הצעה לפעולה"
-
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
 msgstr "מציע"
@@ -1680,21 +1523,13 @@ msgstr "מציע"
 msgid "Queued"
 msgstr "בתור"
 
-#: 
-#~ msgid "Rates"
-#~ msgstr "תעריפים"
-
 #: src/pages/Earn/index.tsx
 msgid "Read more about KROM"
-msgstr ""
+msgstr "קרא עוד על KROM"
 
 #: src/pages/Vote/index.tsx
-msgid "Read more about Kromatika governance"
-msgstr "קרא עוד על ממשל Kromatika"
-
-#: 
-#~ msgid "Read more about UNI"
-#~ msgstr "קרא עוד על UNI"
+msgid "Read more about Uniswap governance"
+msgstr "קרא עוד על ממשל Uniswap"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1756,16 +1591,11 @@ msgstr "לַחֲזוֹר"
 msgid "Search name or paste address"
 msgstr "חפש שם או הדבק כתובת"
 
-#: 
-#~ msgid "Select Pair"
-#~ msgstr "בחר זוג"
-
 #: src/components/Header/NetworkSelector.tsx
 msgid "Select a network"
 msgstr "בחר רשת"
 
 #: src/components/CurrencyInputPanel/index.tsx
-#: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/market/hooks.tsx
@@ -1773,17 +1603,13 @@ msgstr "בחר רשת"
 msgid "Select a token"
 msgstr "בחר אסימון"
 
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Select a token - Uniswap V3 pairs only"
+msgstr "בחר אסימון - זוגות Uniswap V3 בלבד"
+
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
 msgstr "בחר אסימון כדי למצוא את נזילות ה- v2 שלך."
-
-#: 
-#~ msgid "Select an action"
-#~ msgstr "בחר פעולה"
-
-#: 
-#~ msgid "Selected Range"
-#~ msgstr "טווח נבחר"
 
 #: src/pages/Vote/index.tsx
 msgid "Self"
@@ -1795,33 +1621,16 @@ msgstr "נציג עצמי"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Service Fee"
-msgstr ""
+msgstr "עמלת שירות"
 
-#: 
-#: 
-#: 
-#~ msgid "Set Price Range"
-#~ msgstr "הגדר טווח מחירים"
-
-#: 
-#~ msgid "Set Starting Price"
-#~ msgstr "הגדר מחיר התחלתי"
-
-#: 
-#~ msgid "Share of Pool"
-#~ msgstr "נתח המאגר"
-
-#: 
-#~ msgid "Share of Pool:"
-#~ msgstr "נתח המאגר:"
+#: src/components/market/MarketHeader.tsx
+#: src/components/swap/SwapHeader.tsx
+msgid "Show Chart"
+msgstr "הצג תרשים"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
 msgstr "הראה את פורטיס"
-
-#: 
-#~ msgid "Show closed positions"
-#~ msgstr "הראה עמדות סגורות"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
@@ -1834,11 +1643,15 @@ msgstr "סובלנות להחלקה"
 #: src/components/swap/SwapRoute.tsx
 #: src/components/swap/SwapRoute.tsx
 msgid "Smart Route"
-msgstr ""
+msgstr "מסלול חכם"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "חלק מהנכסים אינם זמינים דרך ממשק זה מכיוון שהם עשויים שלא לעבוד היטב עם החוזים החכמים או שאיננו יכולים לאפשר מסחר מסיבות משפטיות."
+
+#: src/components/Perpetual/index.tsx
+msgid "Some countries may not be allowed to use perpetual trading - see the details under section 2 within our terms of use."
+msgstr "מדינות מסוימות עשויות שלא להיות מורשות להשתמש במסחר תמידי - ראה את הפרטים בסעיף 2 בתנאי השימוש שלנו."
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
@@ -1846,39 +1659,43 @@ msgstr "משהו השתבש"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Stake"
-msgstr ""
+msgstr "לְהַמֵר"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "Stake KROM"
-msgstr ""
+msgstr "הימור KROM"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Stake Summary called"
-msgstr ""
+msgstr "סיכום הימור נקרא"
 
 #: src/components/PositionCard/index.tsx
 #: src/components/Stake/index.tsx
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "Staked Balance:"
-msgstr ""
+msgstr "יתרת סיכון:"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Staking - make it bigger, maybe positioned at the centre"
-msgstr ""
+msgstr "הימור - הפוך אותו לגדול יותר, אולי ממוקם במרכז"
 
 #: src/pages/Stake/index.tsx
 msgid "Staking - style it. Commafy values."
-msgstr ""
+msgstr "סטקינג - סגנון. ערכים מפנקים."
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Staking KROM will allow the system to automatically process trades"
-msgstr ""
+msgstr "Staking KROM יאפשר למערכת לעבד עסקאות באופן אוטומטי"
 
 #: src/components/PositionList/index.tsx
 msgid "Status"
 msgstr "סטָטוּס"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Status:"
+msgstr "סטָטוּס:"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
@@ -1888,10 +1705,6 @@ msgstr "שלב 1. קבל תווי נזילות של UNI-V2"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Submit new proposal"
 msgstr "הגישו הצעה חדשה"
-
-#: 
-#~ msgid "Submitting Proposal"
-#~ msgstr "הגשת הצעה"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -1905,31 +1718,20 @@ msgstr "הצליח"
 msgid "Success"
 msgstr "הַצלָחָה"
 
-#: 
-#~ msgid "Supply"
-#~ msgstr "לְסַפֵּק"
-
-#: 
-#~ msgid "Supplying {0} {1} and{2} {3}"
-#~ msgstr "מתן {0} {1} ו{2} {3}"
-
-#: src/components/Header/index.tsx
+#: src/components/NavigationLinks/index.tsx
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Swap"
 msgstr "לְהַחלִיף"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap <0/> for exactly <1/>"
 msgstr "החלף את <0/> בדיוק ל <1/>"
-
-#: 
-#: 
-#~ msgid "Swap Anyway"
-#~ msgstr "החלף בכל מקרה"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
@@ -1947,20 +1749,26 @@ msgid "Swapping {0} {1} for {2} {3}"
 msgstr "החלפת {0} {1} ב- {2} {3}"
 
 #: src/components/swap/SwapModalHeader.tsx
-#: src/pages/LimitOrder/index.tsx
-#: src/pages/LimitOrder/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Target Price"
-msgstr ""
+msgstr "מחיר היעד"
+
+#: src/pages/LimitOrder/index.tsx
+msgid "Target Price+++"
+msgstr "מחיר היעד+++"
+
+#: src/pages/LimitOrder/index.tsx
+msgid "Target Price---"
+msgstr "מחיר היעד---"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Target Price:"
-msgstr ""
+msgstr "מחיר היעד:"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Target price"
-msgstr ""
+msgstr "מחיר היעד"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Kromatika community <0/>"
@@ -1970,17 +1778,18 @@ msgstr "תודה שהיית חלק מקהילת Kromatika <0 />"
 msgid "The % you will earn in fees."
 msgstr "האחוזים שתרוויחו בעמלות."
 
-#: src/hooks/useSwapCallback.tsx
-msgid "The Kromatika invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "המשתנה של Kromatika x * y = k לא הסתפק בהחלפה. זה בדרך כלל אומר שאחד מהאסימונים שאתה מחליף משלב התנהגות מותאמת אישית בהעברה."
+#: src/components/Perpetual/index.tsx
+msgid "The Perpetual Trading is currently in beta-stage. Trade at your own risk."
+msgstr "המסחר התמידי נמצא כעת בשלב בטא. המסחר על אחריותך בלבד."
 
 #: src/hooks/useMarketCallback.tsx
+#: src/hooks/useSwapCallback.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr ""
+msgstr "ה-Uniswap אינווריאנט x*y=k לא היה מרוצה מההחלפה. זה בדרך כלל אומר שאחד מהאסימונים שאתה מחליף משלב התנהגות מותאמת אישית בהעברה."
 
 #: src/components/Header/Polling.tsx
-msgid "The current fast gas amount for sending a transaction on the network. Gas fees are paid in native currency Ether (ETH) and denominated in gwei."
-msgstr ""
+msgid "The current fast gas amount for sending a transaction on the network. Gas fees are paid in native currency {0} and denominated in gwei."
+msgstr "כמות הגז המהיר הנוכחית לשליחת עסקה ברשת. עמלות הגז משולמות במטבע המקומי {0} ונקובות ב-gwei."
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -1993,48 +1802,32 @@ msgstr "מחיר השוק הוא מחוץ לטווח המחירים שצוין. 
 
 #: src/components/Header/Polling.tsx
 msgid "The most recent block number on this network. Prices update on every block."
-msgstr ""
+msgstr "מספר החסימה העדכני ביותר ברשת זו. המחירים מתעדכנים בכל בלוק."
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "לא ניתן להעביר את אסימון הפלט. ייתכן שיש בעיה באסימון הפלט."
 
-#: 
-#~ msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
-#~ msgstr "לא ניתן להעביר את אסימון הפלט. ייתכן שיש בעיה באסימון הפלט. הערה: עמלה על אסימון העברה וריבוס אינם תואמים ל- Kromatika V3."
-
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
-msgstr ""
+msgstr "לא ניתן להעביר את אסימון הפלט. ייתכן שיש בעיה עם אסימון הפלט. הערה: עמלה על העברה ואסימוני בסיס מחדש אינם תואמים ל- Kromatika."
 
 #: src/hooks/useMarketCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr ""
-
-#: 
-#~ msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
-#~ msgstr "המחיר של המאגר הזה מחוץ לטווח שבחרתם. עמדתך אינה מרוויחה כרגע עמלות."
-
-#: 
-#~ msgid "The price of this pool is within your selected range. Your position is currently earning fees."
-#~ msgstr "המחיר של המאגר הזה הוא בטווח שבחרתם. עמדתך מרוויחה כרגע עמלות."
-
-#: 
-#~ msgid "The ratio of tokens you add will set the price of this pool."
-#~ msgstr "יחס האסימונים שתוסיף יקבע את מחיר הבריכה הזו."
+msgstr "לא ניתן להעביר את אסימון הפלט. ייתכן שיש בעיה עם אסימון הפלט. הערה: עמלה על העברה ואסימוני בסיס מחדש אינם תואמים ל-Uniswap V3."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The trade has been processed"
-msgstr ""
+msgstr "המסחר עבר עיבוד"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The trade is filling in."
-msgstr ""
+msgstr "המסחר הולך ומתמלא."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The trade is pending, waiting for the current market price to reach the specified target price."
-msgstr ""
+msgstr "המסחר בהמתנה, ממתין שמחיר השוק הנוכחי יגיע למחיר היעד שצוין."
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -2049,14 +1842,6 @@ msgstr "אין נתוני נזילות."
 msgid "These tokens are commonly paired with other tokens."
 msgstr "אסימונים אלה משויכים בדרך כלל לאסימונים אחרים."
 
-#: 
-#~ msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
-#~ msgstr "יש לאתחל את המאגר הזה לפני שתוכל להוסיף נזילות. כדי לאתחל, בחר מחיר התחלתי לבריכה. לאחר מכן, הזן את טווח מחירי הנזילות ואת סכום ההפקדה. דמי הגז יהיו גבוהים מהרגיל עקב עסקת האתחול."
-
-#: 
-#~ msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-#~ msgstr "יש לאתחל את המאגר הזה ב- {0} לפני שתוכל להוסיף נזילות. כדי לאתחל, בחר מחיר התחלתי לבריכה. לאחר מכן, הזן את טווח מחירי הנזילות ואת סכום ההפקדה."
-
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
 msgstr "מסלול זה מייעל את המחיר שלך על ידי התחשבות במסלולים מפוצלים, כשות מרובות ועלויות גז."
@@ -2065,21 +1850,13 @@ msgstr "מסלול זה מייעל את המחיר שלך על ידי התחשב
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "אסימון זה אינו מופיע ברשימות האסימונים הפעילות. ודא שזה האסימון שאתה רוצה לסחור בו."
 
-#: 
-#~ msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
-#~ msgstr "כלי זה יעביר בבטחה את נזילות {0} שלך ל- V3. התהליך חסר אמון לחלוטין בזכות"
-
-#: 
-#~ msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
-#~ msgstr "עסקה זו לא תצליח בגלל תנועת מחירים. נסה להגביר את סובלנות ההחלקה שלך. הערה: עמלה על אסימון העברה ומיקום מחדש אינם תואמים ל- Kromatika V3."
-
 #: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
-msgstr ""
+msgstr "עסקה זו לא תצליח עקב תנועת מחיר. נסה להגדיל את סובלנות ההחלקה שלך. הערה: עמלה על העברה ואסימוני בסיס מחדש אינם תואמים ל- Kromatika."
 
 #: src/hooks/useMarketCallback.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr ""
+msgstr "עסקה זו לא תצליח עקב תנועת מחיר. נסה להגדיל את סובלנות ההחלקה שלך. הערה: עמלה על העברה ואסימוני בסיס מחדש אינם תואמים ל-Uniswap V3."
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -2097,6 +1874,7 @@ msgstr "טיפ: אסימונים מותאמים אישית נשמרים באופ
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "To"
 msgstr "ל"
 
@@ -2106,6 +1884,7 @@ msgstr "ל"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "To (at least)"
 msgstr "עבור (לפחות)"
 
@@ -2131,23 +1910,19 @@ msgstr "סך ההיצע"
 
 #: src/pages/Stake/index.tsx
 msgid "Total Value Locked"
-msgstr ""
+msgstr "ערך כולל נעול"
 
 #: src/components/PositionCard/index.tsx
 msgid "Total Value Locked:"
-msgstr ""
+msgstr "ערך כולל ננעל:"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Total Value Staked"
-msgstr ""
+msgstr "ערך כולל"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
 msgstr "סה\"כ מה שהופקד"
-
-#: 
-#~ msgid "Total deposits"
-#~ msgstr "סך ההפקדות"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2158,34 +1933,33 @@ msgstr "סה\"כ מה שהופקד"
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Trade"
-msgstr ""
+msgstr "Trade"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Trade History"
-msgstr ""
+msgstr "היסטוריית מסחר"
 
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Pool"
-msgstr ""
-
-#: 
-#~ msgid "Trade Route"
-#~ msgstr "נתיב מסחר"
+msgstr "מאגר סחר"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Trades not processing. Please fund your account with KROM."
-msgstr ""
+msgstr "עסקאות לא מעובדות. נא לממן את חשבונך באמצעות KROM."
 
 #: src/state/swap/hooks.tsx
 msgid "Trading pair not available"
-msgstr ""
+msgstr "צמד מסחר לא זמין"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Trading {0} {1} for {2} {3}"
-msgstr ""
+msgstr "מסחר ב-{0} {1} תמורת {2} {3}"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Transaction Details"
 msgstr "פרטי העברה"
 
@@ -2207,10 +1981,6 @@ msgstr "העסקה הוגשה"
 msgid "Transaction completed in"
 msgstr "העסקה הושלמה בשנת"
 
-#: 
-#~ msgid "Transaction deadline"
-#~ msgstr "מועד אחרון לעסקה"
-
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -2218,21 +1988,18 @@ msgstr "העסקה הושלמה בשנת"
 msgid "Transaction rejected."
 msgstr "העסקה נדחתה."
 
-#: 
-#~ msgid "Transfer Token"
-#~ msgstr "העברת אסימון"
+#: src/hooks/useMarketCallback.tsx
+#: src/hooks/useMarketCallback.tsx
+msgid "Transaction rejected: {0}"
+msgstr "עסקה נדחתה: {0}"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "נסה שוב"
 
-#: 
-#~ msgid "Turn On Expert Mode"
-#~ msgstr "הפעל את מצב המומחה"
-
 #: src/components/Settings/index.tsx
 msgid "Turn On Gasless Mode"
-msgstr ""
+msgstr "הפעל מצב ללא גז"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "UNI has arrived"
@@ -2247,8 +2014,8 @@ msgid "UNI price:"
 msgstr "מחיר UNI:"
 
 #: src/pages/Vote/index.tsx
-msgid "UNI tokens represent voting shares in Kromatika governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "אסימונים של UNI מייצגים מניות הצבעה בממשל Kromatika. אתה יכול להצביע על כל הצעה בעצמך או להאציל את קולותיך לצד שלישי."
+msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
+msgstr "אסימוני UNI מייצגים את מניות ההצבעה בממשל של Uniswap. אתה יכול להצביע על כל הצעה בעצמך או להאציל את הקולות שלך לצד שלישי."
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
@@ -2259,30 +2026,18 @@ msgstr "UNI {0}/{1} שרופה"
 msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
 msgstr "נדרשים אסימונים של UNI-V2 LP. לאחר שהוספת נזילות {0}-{1} תוכל להניח את אסימוני הנזילות שלך בדף זה."
 
-#: 
-#~ msgid "UNI-V2 {0}-{1}"
-#~ msgstr "UNI-V2 {0}-{1}"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "UnStake Summary called"
-msgstr ""
+msgstr "UnStake Summary נקרא"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Unclaimed UNI"
 msgstr "UNI שלא נדרש"
 
-#: 
-#~ msgid "Unclaimed fees"
-#~ msgstr "עמלות שלא נדרשו"
-
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Unclaimed:"
 msgstr "ללא דרישה:"
-
-#: src/components/PositionCard/index.tsx
-msgid "Underfunded"
-msgstr ""
 
 #: src/pages/Vote/styled.tsx
 msgid "Undetermined"
@@ -2297,18 +2052,26 @@ msgstr "שגיאה לא צפויה. לא ניתן היה לאמוד גז להח�
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "בעיה בלתי צפויה בהערכת הגז. בבקשה נסה שוב."
 
+#: src/pages/Vote/index.tsx
+msgid "Uniswap Governance"
+msgstr "ממשל חד-החלפה"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgstr "ממשל Uniswap זמין רק בשכבה 1. העבר את הרשת שלך ל-Ethereum Mainnet כדי להציג הצעות ולהצביע."
+
+#: src/pages/Earn/index.tsx
+msgid "Uniswap liquidity mining"
+msgstr "כריית נזילות ללא החלפה"
+
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
 msgstr "מקור לא ידוע"
 
-#: 
-#~ msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
-#~ msgstr "שגיאה לא ידועה{0}. נסה להגביר את סובלנות ההחלקה שלך. הערה: עמלה על אסימון העברה ומיקום מחדש אינם תואמים ל- Kromatika V3."
-
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
-msgstr ""
+msgstr "שגיאה לא ידועה{0}. נסה להגדיל את סובלנות ההחלקה שלך. הערה: עמלה על העברה ואסימוני בסיס מחדש אינם תואמים ל- Kromatika."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -2325,16 +2088,16 @@ msgstr "נעילת הצבעות"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Unstake"
-msgstr ""
+msgstr "בטל הימור"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "Unstake KROM"
-msgstr ""
+msgstr "בטל את ה-KROM"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Unstaking KROM may prevent the system to calculate rewards"
-msgstr ""
+msgstr "ביטול ה-KROM עשוי למנוע מהמערכת לחשב תגמולים"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2342,6 +2105,7 @@ msgstr ""
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Unsupported Asset"
 msgstr "נכס לא נתמך"
 
@@ -2359,16 +2123,13 @@ msgstr "ללא כותרת"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Unwrap"
 msgstr "לְגוֹלֵל"
 
-#: 
-#~ msgid "Unwrap <0/> to ETH"
-#~ msgstr "פרק את <0/> ל- ETH"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
-msgstr ""
+msgstr "בטל את הגלישה של <0/> ל-{0}"
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
@@ -2378,54 +2139,21 @@ msgstr "עדכן משלחת"
 msgid "Update list"
 msgstr "רשימת עדכונים"
 
-#: 
-#~ msgid "Use the Kromatika Labs API to get better pricing through a more efficient route."
-#~ msgstr "השתמש בממשק ה- Kromatika Labs כדי לקבל תמחור טוב יותר דרך מסלול יעיל יותר."
-
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "מִשׁתַמֵשׁ"
-
-#: 
-#~ msgid "V2"
-#~ msgstr "V2"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
 msgstr "V2 אינו זמין בשכבה 2. עבור לשכבה 1 אתריום."
 
-#: 
-#~ msgid "V2 liquidity"
-#~ msgstr "נזילות V2"
-
-#: 
-#~ msgid "V3"
-#~ msgstr "V3"
-
-#: 
-#: 
-#~ msgid "V3 {0} Price:"
-#~ msgstr "מחיר V3 {0}"
-
 #: src/components/Header/UniBalanceContent.tsx
 msgid "View UNI Analytics"
 msgstr "צפה ב- UNI Analytics"
 
-#: 
-#~ msgid "View V2 Liquidity"
-#~ msgstr "צפה בנזילות V2"
-
-#: 
-#~ msgid "View accrued fees and analytics<0>↗</0>"
-#~ msgstr "צפו בעמלות וניתוחים צבורים <0> ↗</0>"
-
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
 msgstr "רשימת צפייה"
-
-#: 
-#~ msgid "View on Etherscan"
-#~ msgstr "מבט על אתרסקאן"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
@@ -2440,10 +2168,6 @@ msgstr "צפה ב- Explorer"
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "צפה בעסקה ב- Explorer"
-
-#: 
-#~ msgid "Vote"
-#~ msgstr "הַצבָּעָה"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
@@ -2510,15 +2234,11 @@ msgstr "כתובת ארנק או שם ENS"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Wallet: {0}, Balance: {1}"
-msgstr ""
+msgstr "ארנק: {0}, יתרה: {1}"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Wallet: {0}, Staked: {stakedBalance}"
-msgstr ""
-
-#: 
-#~ msgid "Weekly Rewards"
-#~ msgstr "תגמולים שבועיים"
+msgstr "ארנק: {0}, סטד: {stakedBalance}"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
@@ -2527,10 +2247,6 @@ msgstr "ברוך הבא לצוות חד קרן :)"
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
 msgstr "כאשר אתה טוען מבלי למשוך את הנזילות שלך נשאר בבריכת הכרייה."
-
-#: 
-#~ msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-#~ msgstr "כשתסוג, החוזה יטען אוטומטית את UNI בשמך!"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
@@ -2548,9 +2264,10 @@ msgid "Withdraw & Claim"
 msgstr "משיכה ותביעה"
 
 #: src/components/NavigationTabs/index.tsx
+#: src/components/PositionCard/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Withdraw KROM"
-msgstr ""
+msgstr "למשוך את KROM"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
@@ -2558,11 +2275,11 @@ msgstr "משיכת נזילות שהופקדה"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw {0}"
-msgstr ""
+msgstr "משך {0}"
 
 #: src/pages/AddLiquidity/index.tsx
-msgid "Withdrawing KROM may prevent the system to automatically processing trades"
-msgstr ""
+msgid "Withdrawing KROM may prevent the system to automatically process trades"
+msgstr "משיכת KROM עלולה למנוע מהמערכת לעבד עסקאות אוטומטית"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrawing {0} UNI-V2"
@@ -2578,37 +2295,32 @@ msgstr "משך את UNI-V2!"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Wrap"
 msgstr "לַעֲטוֹף"
 
-#: 
-#~ msgid "Wrap <0/> to WETH"
-#~ msgstr "עטפו את <0/> ל- WETH"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
-msgstr ""
+msgstr "גלישת <0/> ל-{0}"
+
+#: src/state/market/hooks.tsx
+msgid "Wrap your native token"
+msgstr "עטוף את האסימון המקורי שלך"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "רשת לא נכונה"
 
-#: 
-#~ msgid "You already have an active or pending proposal"
-#~ msgstr "כבר יש לך הצעה פעילה או ממתינה"
+#: src/components/Perpetual/index.tsx
+msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
+msgstr "אתה עוזב את Kromatika.Finance ותועבר לאתר צד שלישי עצמאי."
 
-#: 
-#~ msgid "You are creating a pool"
-#~ msgstr "אתה יוצר בריכה"
-
-#: 
-#~ msgid "You are the first liquidity provider for this Kromatika V3 pool. Your liquidity will migrate at the current {0} price."
-#~ msgstr "אתה ספק הנזילות הראשון לבריכת Kromatika V3 זו. הנזילות שלך תעבור במחיר {0} הנוכחי."
-
-#: 
-#~ msgid "You are the first liquidity provider."
-#~ msgstr "אתה ספק הנזילות הראשון."
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "You buy"
+msgstr "Tu achètes"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
@@ -2616,8 +2328,9 @@ msgstr "אתה יכול להצביע בעצמך על כל הצעה או להאצ
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You can now swap {0}"
-msgstr ""
+msgstr "כעת תוכל להחליף {0}"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2625,10 +2338,6 @@ msgstr ""
 #: src/pages/Swap/index.tsx
 msgid "You can now trade {0}"
 msgstr "כעת אתה יכול לסחור ב {0}"
-
-#: 
-#~ msgid "You don't have enough votes to submit a proposal"
-#~ msgstr "אין לך מספיק קולות כדי להגיש הצעה"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
@@ -2642,14 +2351,11 @@ msgstr "ייתכן שאיבדת את חיבור הרשת שלך, או {label} מ
 msgid "You may have lost your network connection."
 msgstr "יכול להיות שאיבדת את חיבור הרשת שלך."
 
-#: 
-#~ msgid "You must connect an account."
-#~ msgstr "עליך לחבר חשבון."
-
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You must give the Kromatika Aggregator a permission to use your {0}. You only have to do this once per token."
-msgstr ""
+msgstr "עליך לתת ל-Kromatika Aggregator הרשאה להשתמש ב-{0} שלך. אתה צריך לעשות זאת רק פעם אחת לכל אסימון."
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2658,26 +2364,29 @@ msgstr ""
 msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "עליך לתת לחוזים החכמים של Kromatika להשתמש ב- {0}שלך. אתה צריך לעשות זאת רק פעם אחת לכל אסימון."
 
-#: 
-#~ msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
-#~ msgstr "עליך {formattedProposalThreshold} קולות כדי להגיש הצעה"
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "You receive at least"
+msgstr "אתה מקבל לפחות"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
-msgid "You save:"
-msgstr ""
+#: src/pages/SwapWidget/index.tsx
+msgid "You sell"
+msgstr "Vous vendez"
 
-#: 
-#~ msgid "You should only deposit liquidity into Kromatika V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-#~ msgstr "עליכם להפקיד נזילות רק ב- Kromatika V3 במחיר שלדעתכם נכון. <0/> אם נראה שהמחיר שגוי, באפשרותך להחליף כדי להזיז את המחיר או לחכות שמישהו אחר יעשה זאת."
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "You send"
+msgstr "אתה שולח"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
 msgstr "אתה גם יגבה עמלות שהרווחת מתפקיד זה."
 
 #: src/components/PositionCard/index.tsx
-msgid "You will need to maintain a minimum KROM balance to cover for the service fees. Recommendation is to deposit at least twice the minimum balance."
-msgstr ""
+msgid "You will need to maintain a minimum KROM balance to cover for the service fees.<0/><1/>Recommendation is to deposit at least twice the minimum balance."
+msgstr "תצטרך לשמור על יתרת KROM מינימלית כדי לכסות את דמי השירות.<0/><1/>ההמלצה היא להפקיד לפחות פי שניים מהיתרה המינימלית."
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
@@ -2691,23 +2400,13 @@ msgstr "התמוטטות של ה- UNI שלך"
 msgid "Your V2 liquidity"
 msgstr "נזילות ה- V2 שלך"
 
-#: 
-#~ msgid "Your V3 liquidity positions will appear here."
-#~ msgstr "עמדות הנזילות שלך ב- V3 יופיעו כאן."
-
 #: src/components/PositionCard/index.tsx
-msgid "Your account is actively processing trades. Recommendation is to deposit at least twice the minimum balance."
-msgstr ""
+msgid "Your account is actively processing trades.<0/><1/>Recommendation is to deposit at least twice the minimum balance."
+msgstr "החשבון שלך מעבד באופן פעיל עסקאות.<0/><1/>ההמלצה היא להפקיד לפחות פי שניים מהיתרה המינימלית."
 
-#: src/pages/LimitOrder/index.tsx
-#: src/pages/LimitOrder/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Your limit orders will appear here."
-msgstr ""
-
-#: 
-#~ msgid "Your liquidity deposits"
-#~ msgstr "הפקדות הנזילות שלך"
+msgstr "הזמנות הגבלה שלך יופיעו כאן."
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -2720,10 +2419,6 @@ msgstr "נתח המאגר שלך:"
 msgid "Your position"
 msgstr "העמדה שלך"
 
-#: 
-#~ msgid "Your position has 0 liquidity, and is not earning fees."
-#~ msgstr "לתפקיד שלך יש 0 נזילות, והיא לא מרוויחה עמלות."
-
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Your position will appear here."
 msgstr "עמדתך תופיע כאן."
@@ -2732,21 +2427,6 @@ msgstr "עמדתך תופיע כאן."
 #: src/components/PositionPreview/index.tsx
 msgid "Your position will be 100% composed of {0} at this price"
 msgstr "עמדתך תורכב ב 100% מ- {0} במחיר זה"
-
-#: 
-#: 
-#~ msgid "Your position will be 100% {0} at this price."
-#~ msgstr "עמדתך תהיה 100% {0} במחיר זה."
-
-#: 
-#: 
-#~ msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
-#~ msgstr "העמדה שלך לא תרוויח עמלות ולא תשמש בעסקאות עד שמחיר השוק יעבור לטווח שלך."
-
-#: 
-#: 
-#~ msgid "Your positions"
-#~ msgstr "העמדות שלך"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Your rate"
@@ -2759,11 +2439,7 @@ msgstr "סך כל אסימוני המאגר שלך:"
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Your trade will appear here."
-msgstr ""
-
-#: 
-#~ msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
-#~ msgstr "עלות העסקה שלך תהיה גבוהה בהרבה מכיוון שהיא כוללת את הגז ליצירת המאגר."
+msgstr "המסחר שלך יופיע כאן."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
@@ -2773,10 +2449,6 @@ msgstr "העסקה שלך עשויה להתקדם מראש"
 msgid "Your transaction may fail"
 msgstr "העסקה שלך עלולה להיכשל"
 
-#: 
-#~ msgid "Your transaction will revert if it is pending for more than this period of time."
-#~ msgstr "העסקה שלך תחזור אם היא ממתינה למשך יותר מפרק זמן זה."
-
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
 msgstr "העסקה שלך תחזור אם המחיר ישתנה בצורה לא טובה ביותר מאחוז זה."
@@ -2785,25 +2457,17 @@ msgstr "העסקה שלך תחזור אם המחיר ישתנה בצורה לא 
 msgid "Your transactions will appear here..."
 msgstr "העסקאות שלך יופיעו כאן ..."
 
-#: 
-#~ msgid "Your unclaimed UNI"
-#~ msgstr "ה-UNI שלך לא נדרש"
-
-#: 
-#~ msgid "confirm"
-#~ msgstr "לְאַשֵׁר"
-
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "עבור {0}"
 
 #: src/components/Settings/index.tsx
 msgid "gasless"
-msgstr ""
+msgstr "ללא גז"
 
 #: src/components/Header/Polling.tsx
 msgid "gwei"
-msgstr ""
+msgstr "gwei"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
@@ -2818,8 +2482,9 @@ msgid "https:// or ipfs:// or ENS name"
 msgstr "https: // או ipfs: // או שם ENS"
 
 #: 
-#~ msgid "minutes"
-#~ msgstr "דקות"
+#: 
+#~ msgid "networks."
+#~ msgstr "רשתות."
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
@@ -2833,6 +2498,12 @@ msgstr "דרך רשימת אסימונים {0}"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {ייבוא אסימון} other {ייבא אסימונים}}"
 
+#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2849,27 +2520,21 @@ msgstr "{0}"
 msgid "{0} %"
 msgstr "{0} %"
 
+#: 
+#~ msgid "{0} + {1}"
+#~ msgstr "{0} + {1}"
+
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/>  per <1/> <2>{1} </2>"
-msgstr ""
-
-#: 
-#: 
-#~ msgid "{0} <0/> per <1/>"
-#~ msgstr "{0} <0 /> לכל <1/>"
+msgstr "{0} <0/> לכל <1/> <2>{1} </2>"
 
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/> <2>{1} </2>"
-msgstr ""
+msgstr "{0} <0/> לכל <1/> <2>{1} </2>"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} אסימונים בהתאמה אישית"
-
-#: 
-#: 
-#~ msgid "{0} Deposited"
-#~ msgstr "{0} מופקד"
 
 #: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
@@ -2899,10 +2564,6 @@ msgstr "{0} UNI"
 msgid "{0} UNI / week"
 msgstr "{0} UNI לשבוע"
 
-#: 
-#~ msgid "{0} UNI-V2"
-#~ msgstr "{0} UNI-V2"
-
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "{0} UNI-V2 LP tokens available"
@@ -2920,21 +2581,20 @@ msgstr "{0} לכל {1}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0} sKrom / week"
-msgstr ""
+msgstr "{0} סקרום לשבוע"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} אסימונים"
 
-#: 
-#: 
-#~ msgid "{0} {1} Price:"
-#~ msgstr "{0} {1} מחיר:"
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
 
-#: src/components/Header/index.tsx
-msgid "{0} {nativeCurrencySymbol}"
-msgstr ""
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{0} {1} + {2} {3}"
+msgstr "{0} {1} + {2} {3}"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "{0} • Added by user"
@@ -2942,31 +2602,17 @@ msgstr "{0} • נוסף על ידי המשתמש"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/PositionPreview/index.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "{0}%"
 msgstr "{0}%"
 
 #: src/components/FeeSelector/index.tsx
 msgid "{0}% fee tier"
 msgstr "שכבת שכר טרחה של {0}"
-
-#: 
-#~ msgid "{0}% select"
-#~ msgstr "בחר {0}"
-
-#: 
-#~ msgid "{0}-{1} Liquidity Mining"
-#~ msgstr "{0}-{1} כריית נזילות"
-
-#: 
-#~ msgid "{0}/{1} LP NFT"
-#~ msgstr "{0}/{1} LP NFT"
-
-#: 
-#~ msgid "{0}/{1} LP Tokens"
-#~ msgstr "{0}/{1} אסימוני LP"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{SOCKS_AMOUNT} UNI"
@@ -2976,26 +2622,34 @@ msgstr "{SOCKS_AMOUNT} UNI"
 msgid "{USER_AMOUNT} UNI"
 msgstr "{USER_AMOUNT} UNI"
 
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "{actionLabel}"
+msgstr "{actionLabel}"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} אסימונים"
+
+#: src/components/Collapsible/index.tsx
+msgid "{label}"
+msgstr "{label}"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
 
+#: 
+#~ msgid "{status}"
+#~ msgstr "{status}"
+
+#: 
+#~ msgid "{token0CreatedAmount}"
+#~ msgstr "{token0CreatedAmount}"
+
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} לכל {tokenA}"
 
-#: 
-#~ msgid "~$ <0/>"
-#~ msgstr "~ $ <0/>"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Limit Orders"
-msgstr ""
-
-#: 
-#~ msgid "← Back to Pools Overview"
-#~ msgstr "← חזרה לסקירת מאגרים"
+msgstr "← חזרה להזמנות מוגבלות"

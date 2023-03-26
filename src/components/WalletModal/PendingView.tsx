@@ -5,6 +5,7 @@ import styled from 'styled-components/macro'
 
 import { injected } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
+import { ButtonError } from '../Button'
 import Loader from '../Loader'
 import Option from './Option'
 
@@ -26,7 +27,7 @@ const LoadingMessage = styled.div<{ error?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
   justify-content: flex-start;
-  border-radius: 12px;
+  border-radius: 20px;
   margin-bottom: 20px;
   color: ${({ theme, error }) => (error ? theme.red1 : 'inherit')};
   border: 1px solid ${({ theme, error }) => (error ? theme.red1 : theme.text4)};
@@ -39,14 +40,15 @@ const LoadingMessage = styled.div<{ error?: boolean }>`
 const ErrorGroup = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
+  width: 100%;
 `
 
 const ErrorButton = styled.div`
   border-radius: 8px;
   font-size: 12px;
   color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg4};
+  background-color: ${({ theme }) => theme.red2};
   margin-left: 1rem;
   padding: 0.5rem;
   font-weight: 600;
@@ -54,14 +56,15 @@ const ErrorButton = styled.div`
 
   &:hover {
     cursor: pointer;
-    background-color: ${({ theme }) => darken(0.1, theme.text4)};
+    background-color: ${({ theme }) => darken(0.1, theme.red2)};
   }
 `
 
 const LoadingWrapper = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  width: 100%;
 `
 
 export default function PendingView({

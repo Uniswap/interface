@@ -2,50 +2,43 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
-import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
+import { Position } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
-import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
+import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import Loader from 'components/Loader'
 import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
-import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { LIMIT_ORDER_MANAGER_ADDRESSES } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
 import { DAI, KROM, USDC, USDT } from 'constants/tokens'
 import { poll } from 'ethers/lib/utils'
 import { useToken } from 'hooks/Tokens'
-import { useKromatikaRouter, useLimitOrderManager, useV3NFTPositionManagerContract } from 'hooks/useContract'
+import { useKromatikaRouter, useLimitOrderManager } from 'hooks/useContract'
 import { useGaslessCallback } from 'hooks/useGaslessCallback'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { PoolState, usePool } from 'hooks/usePools'
 import useUSDCPrice from 'hooks/useUSDCPrice'
-import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useActiveWeb3React } from 'hooks/web3'
 import JSBI from 'jsbi'
 import { DateTime } from 'luxon/src/luxon'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { darken } from 'polished'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Link, RouteComponentProps } from 'react-router-dom'
-import { Bound } from 'state/mint/v3/actions'
-import { useSingleCallResult } from 'state/multicall/hooks'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled from 'styled-components/macro'
-import { ExternalLink, HideExtraSmall, HideSmall, TYPE } from 'theme'
-import { MEDIA_WIDTHS } from 'theme'
+import { ExternalLink, HideSmall, MEDIA_WIDTHS, TYPE } from 'theme'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 import RangeBadge from '../../components/Badge/RangeBadge'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
-import RateToggle from '../../components/RateToggle'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
 import useTheme from '../../hooks/useTheme'
@@ -60,7 +53,6 @@ const Q192 = JSBI.exponentiate(Q96, JSBI.BigInt(2))
 const PageWrapper = styled.div`
   min-width: 800px;
   max-width: 960px;
-  margin-top: 60px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     min-width: 680px;
@@ -83,29 +75,6 @@ const PageWrapper = styled.div`
   `};
 `
 
-const StyledUSD = styled.small`
-  color: gray;
-`
-
-const DesktopHeader = styled.div`
-  display: none;
-  font-size: 14px;
-  font-weight: 500;
-  padding: 8px;
-
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    align-items: center;
-    display: flex;
-
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    & > div:last-child {
-      text-align: right;
-      margin-right: 12px;
-    }
-  }
-`
-
 const DataLineItem = styled.div`
   font-size: 14px;
 `
@@ -120,7 +89,7 @@ const RangeLineItem = styled(DataLineItem)`
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
   background-color: ${({ theme }) => theme.bg2};
-    border-radius: 12px;
+    border-radius: 20px;
     padding: 8px 0;
 `};
 `
@@ -128,7 +97,6 @@ const RangeLineItem = styled(DataLineItem)`
 const LinkRow = styled(ExternalLink)`
   align-items: center;
   border-radius: 20px;
-  display: flex;
   cursor: pointer;
   user-select: none;
   display: flex;
@@ -140,16 +108,18 @@ const LinkRow = styled(ExternalLink)`
   padding: 16px;
   text-decoration: none;
   font-weight: 500;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.bg6};
 
   &:last-of-type {
     margin: 8px 0 0 0;
   }
+
   & > div:not(:first-child) {
     text-align: center;
   }
+
   :hover {
-    background-color: ${({ theme }) => theme.bg2};
+    background-color: ${({ theme }) => darken(0.03, theme.bg6)};
   }
 
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
@@ -162,14 +132,12 @@ const LinkRow = styled(ExternalLink)`
   `};
 `
 
-const MobileHeader = styled.div`
-  font-weight: medium;
-  font-size: 16px;
-  font-weight: 500;
-  padding: 8px;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    display: none;
-  }
+const PriceDetails = styled(DarkCard)`
+  box-shadow: 0 0 12px 6px ${({ theme }) => theme.shadow2};
+`
+
+const TradeHistory = styled(DarkCard)`
+  box-shadow: 0 0 12px 6px ${({ theme }) => theme.shadow2};
 `
 
 const BadgeText = styled.div`
@@ -198,6 +166,7 @@ const ExtentsText = styled.span`
 const HoverText = styled(TYPE.main)`
   text-decoration: none;
   color: ${({ theme }) => theme.text3};
+
   :hover {
     color: ${({ theme }) => theme.text1};
     text-decoration: none;
@@ -215,23 +184,6 @@ const ResponsiveRow = styled(RowBetween)`
     row-gap: 16px;
     width: 100%:
   `};
-`
-
-const NFTGrid = styled.div`
-  display: grid;
-  grid-template: 'overlap';
-  min-height: 400px;
-`
-
-const NFTCanvas = styled.canvas`
-  grid-area: overlap;
-`
-
-const NFTImage = styled.img`
-  grid-area: overlap;
-  height: 400px;
-  /* Ensures SVG appears on top of canvas. */
-  z-index: 1;
 `
 
 function LinkedCurrency({ chainId, currency }: { chainId?: number; currency?: Currency }) {
@@ -935,7 +887,7 @@ export function PositionPage({
             <ResponsiveRow>
               <RowFixed>
                 <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={24} margin={true} />
-                <TYPE.label fontSize={'24px'} mr="10px">
+                <TYPE.label fontSize={24} mr="10px">
                   &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
                 </TYPE.label>
                 <Badge style={{ marginRight: '8px' }}>
@@ -952,7 +904,7 @@ export function PositionPage({
                       disabled={collecting || !!collectMigrationHash}
                       confirmed={!!collectMigrationHash && !isCollectPending}
                       width="fit-content"
-                      style={{ borderRadius: '12px' }}
+                      style={{ borderRadius: '20px' }}
                       padding="4px 8px"
                       onClick={() => setShowConfirm(true)}
                     >
@@ -980,7 +932,7 @@ export function PositionPage({
                       disabled={true}
                       confirmed={!!collectMigrationHash && !isCollectPending}
                       width="fit-content"
-                      style={{ borderRadius: '12px' }}
+                      style={{ borderRadius: '20px' }}
                       padding="4px 8px"
                       onClick={() => setShowConfirm(true)}
                     >
@@ -994,20 +946,20 @@ export function PositionPage({
             </ResponsiveRow>
             <RowBetween></RowBetween>
           </AutoColumn>
-          <DarkCard>
+          <PriceDetails>
             <AutoColumn gap="md">
-              <DarkCard>
+              <DarkCard style={{ padding: '0' }}>
                 <AutoColumn gap="md" style={{ width: '100%' }}>
                   <AutoColumn gap="md">
                     <Label>
                       <Trans>Amounts</Trans>
                     </Label>
                     {fiatValueOfLiquidity?.greaterThan(new Fraction(1, 100)) ? (
-                      <TYPE.largeHeader fontSize="36px" fontWeight={500}>
+                      <TYPE.largeHeader fontSize={36} fontWeight={400}>
                         <Trans>${fiatValueOfLiquidity.toFixed(2, { groupSeparator: ',' })}</Trans>
                       </TYPE.largeHeader>
                     ) : (
-                      <TYPE.largeHeader color={theme.text1} fontSize="36px" fontWeight={500}>
+                      <TYPE.largeHeader color={theme.text1} fontSize={36} fontWeight={400}>
                         <Trans>$-</Trans>
                       </TYPE.largeHeader>
                     )}
@@ -1039,7 +991,7 @@ export function PositionPage({
                           </TYPE.darkGray>
                           {typeof ratio === 'number' && !removed ? (
                             <Badge style={{ marginLeft: '10px' }}>
-                              <TYPE.main fontSize={11}>
+                              <TYPE.main fontSize={14}>
                                 <Trans>{inverted ? ratio : 100 - ratio}%</Trans>
                               </TYPE.main>
                             </Badge>
@@ -1071,7 +1023,7 @@ export function PositionPage({
 
                           {typeof ratio === 'number' && !removed ? (
                             <Badge style={{ marginLeft: '10px' }}>
-                              <TYPE.main color={theme.text2} fontSize={11}>
+                              <TYPE.main color={theme.text2} fontSize={14}>
                                 <Trans>{inverted ? 100 - ratio : ratio}%</Trans>
                               </TYPE.main>
                             </Badge>
@@ -1082,83 +1034,85 @@ export function PositionPage({
                   </LightCard>
                 </AutoColumn>
               </DarkCard>
-              <RowBetween>
-                <RowFixed>
-                  <Label display="flex" style={{ marginRight: '12px' }}>
-                    <Trans>Price Details</Trans>
-                  </Label>
-                </RowFixed>
-              </RowBetween>
-              <RowBetween>
-                <LightCard padding="12px" width="100%">
-                  <AutoColumn gap="8px" justify="center">
-                    <ExtentsText>
-                      <Trans>Current price </Trans>
-                    </ExtentsText>
-                    <TYPE.mediumHeader textAlign="center">
-                      <span onClick={() => setInvert(!invert)}>
-                        {inverted
-                          ? pool && commafy(pool.token1Price?.toSignificant(6))
-                          : pool && commafy(pool.token0Price?.toSignificant(6))}
-                      </span>
-                    </TYPE.mediumHeader>
-                    <TYPE.darkGray>
-                      {!isTokenStable && currentPriceInUSD && numberOfZeros <= 2 ? (
-                        <span>(${formatPrice(currentPriceInUSD)})</span>
-                      ) : (
-                        ''
-                      )}
-                      {numberOfZeros > 2 && !isTokenStable ? (
-                        <span>
-                          ($ 0.0<sub>{numberOfZeros}</sub>
-                          {leftoverDigits.substring(0, 4)})
-                        </span>
-                      ) : (
-                        ''
-                      )}
-                    </TYPE.darkGray>
-                    <ExtentsText>
-                      {' '}
-                      <Trans>
+              <DarkCard style={{ padding: '0' }}>
+                <RowBetween>
+                  <RowFixed>
+                    <Label display="flex" style={{ marginRight: '12px' }}>
+                      <Trans>Price Details</Trans>
+                    </Label>
+                  </RowFixed>
+                </RowBetween>
+                <br />
+                <RowBetween>
+                  <LightCard padding="12px" width="100%">
+                    <AutoColumn gap="8px" justify="center">
+                      <ExtentsText>
+                        <Trans>Current price </Trans>
+                      </ExtentsText>
+                      <TYPE.mediumHeader textAlign="center">
                         <span onClick={() => setInvert(!invert)}>
-                          {invert ? currencyQuote?.symbol : currencyBase?.symbol} per{' '}
-                          {invert ? currencyBase?.symbol : currencyQuote?.symbol}
+                          {inverted
+                            ? pool && commafy(pool.token1Price?.toSignificant(6))
+                            : pool && commafy(pool.token0Price?.toSignificant(6))}
                         </span>
-                      </Trans>
-                    </ExtentsText>
-                  </AutoColumn>
-                </LightCard>
+                      </TYPE.mediumHeader>
+                      <TYPE.darkGray>
+                        {!isTokenStable && currentPriceInUSD && numberOfZeros <= 2 ? (
+                          <span>(${formatPrice(currentPriceInUSD)})</span>
+                        ) : (
+                          ''
+                        )}
+                        {numberOfZeros > 2 && !isTokenStable ? (
+                          <span>
+                            ($ 0.0<sub>{numberOfZeros}</sub>
+                            {leftoverDigits.substring(0, 4)})
+                          </span>
+                        ) : (
+                          ''
+                        )}
+                      </TYPE.darkGray>
+                      <ExtentsText>
+                        {' '}
+                        <Trans>
+                          <span onClick={() => setInvert(!invert)}>
+                            {invert ? currencyQuote?.symbol : currencyBase?.symbol} per{' '}
+                            {invert ? currencyBase?.symbol : currencyQuote?.symbol}
+                          </span>
+                        </Trans>
+                      </ExtentsText>
+                    </AutoColumn>
+                  </LightCard>
 
-                <DoubleArrow>⟷</DoubleArrow>
-                <LightCard padding="12px" width="100%">
-                  <AutoColumn gap="8px" justify="center">
-                    <ExtentsText>
-                      <Trans>Target price</Trans>
-                    </ExtentsText>
-                    <TYPE.mediumHeader textAlign="center">
-                      {priceUpper ? commafy(priceUpper?.toSignificant(6)) : ''}
-                      {''}{' '}
-                    </TYPE.mediumHeader>
-                    <TYPE.darkGray>
-                      {targetPriceUSD && !isTokenStable ? <span>(${formatPrice(targetPriceUSD)})</span> : ''}
-                    </TYPE.darkGray>
+                  <DoubleArrow>⟷</DoubleArrow>
+                  <LightCard padding="12px" width="100%">
+                    <AutoColumn gap="8px" justify="center">
+                      <ExtentsText>
+                        <Trans>Target price</Trans>
+                      </ExtentsText>
+                      <TYPE.mediumHeader textAlign="center">
+                        {priceUpper ? commafy(priceUpper?.toSignificant(6)) : ''}
+                        {''}{' '}
+                      </TYPE.mediumHeader>
+                      <TYPE.darkGray>
+                        {targetPriceUSD && !isTokenStable ? <span>(${formatPrice(targetPriceUSD)})</span> : ''}
+                      </TYPE.darkGray>
 
-                    <ExtentsText>
-                      {' '}
-                      <Trans>
-                        <span onClick={() => setInvert(!invert)}>
-                          {invert ? currencyQuote?.symbol : currencyBase?.symbol} per{' '}
-                          {invert ? currencyBase?.symbol : currencyQuote?.symbol}
-                        </span>
-                      </Trans>
-                    </ExtentsText>
-                  </AutoColumn>
-                </LightCard>
-              </RowBetween>
+                      <ExtentsText>
+                        {' '}
+                        <Trans>
+                          <span onClick={() => setInvert(!invert)}>
+                            {invert ? currencyQuote?.symbol : currencyBase?.symbol} per{' '}
+                            {invert ? currencyBase?.symbol : currencyQuote?.symbol}
+                          </span>
+                        </Trans>
+                      </ExtentsText>
+                    </AutoColumn>
+                  </LightCard>
+                </RowBetween>
+              </DarkCard>
             </AutoColumn>
-          </DarkCard>
-
-          <DarkCard>
+          </PriceDetails>
+          <TradeHistory>
             <AutoColumn gap="2px" style={{ width: '100%' }}>
               <AutoColumn gap="2px">
                 <RowBetween style={{ alignItems: 'flex-start' }}>
@@ -1179,21 +1133,21 @@ export function PositionPage({
                     <HideSmall>
                       <DoubleArrow>⟷</DoubleArrow>{' '}
                     </HideSmall>
-                    <TYPE.subHeader>
+                    <TYPE.small>
                       <Trans>
-                        Created Limit Trade {commafy(currencyCreatedEventAmount?.toSignificant(4))}{' '}
+                        Created Limit Trade {commafy(currencyCreatedEventAmount?.toSignificant())}{' '}
                         {currencyCreatedEventAmount?.currency
                           ? unwrappedToken(currencyCreatedEventAmount?.currency)?.symbol
                           : ''}{' '}
                         {limitOrder0USD ? <span>(${formatPrice(limitOrder0USD)}) </span> : ' '}
                         for{' '}
                         {targetPrice && currencyCreatedEventAmount
-                          ? commafy(targetPrice?.quote(currencyCreatedEventAmount).toSignificant(2))
+                          ? commafy(targetPrice?.quote(currencyCreatedEventAmount).toSignificant())
                           : ''}{' '}
                         {targetPrice?.quoteCurrency ? unwrappedToken(targetPrice?.quoteCurrency)?.symbol : ''}
                         {limitOrder1USD ? <span> (${formatPrice(limitOrder1USD)}) </span> : ''}↗
                       </Trans>
-                    </TYPE.subHeader>
+                    </TYPE.small>
                   </RangeLineItem>
                 </LinkRow>
               ) : (
@@ -1208,7 +1162,7 @@ export function PositionPage({
                     <HideSmall>
                       <DoubleArrow>⟷</DoubleArrow>{' '}
                     </HideSmall>
-                    <TYPE.subHeader>
+                    <TYPE.small>
                       <Trans>
                         Collected {collectedValue0 ? commafy(collectedValue0?.toSignificant(3)) : ''}{' '}
                         {collectedValue0?.currency ? unwrappedToken(collectedValue0?.currency)?.symbol : ''}
@@ -1217,7 +1171,7 @@ export function PositionPage({
                         {collectedValue1?.currency ? unwrappedToken(collectedValue1?.currency)?.symbol : ''}
                         {collectedAmount1USD ? <span> (${formatPrice(collectedAmount1USD)})</span> : ''}
                       </Trans>
-                    </TYPE.subHeader>
+                    </TYPE.small>
                   </RangeLineItem>
                 </LinkRow>
               ) : (
@@ -1233,21 +1187,21 @@ export function PositionPage({
                     <HideSmall>
                       <DoubleArrow>⟷</DoubleArrow>{' '}
                     </HideSmall>
-                    <TYPE.subHeader>
+                    <TYPE.small>
                       <Trans>
                         Paid {serviceFeePaidKrom?.toSignificant(2)}{' '}
                         {serviceFeePaidKrom?.currency ? unwrappedToken(serviceFeePaidKrom?.currency)?.symbol : ''}{' '}
                         {serviceFeePaidUSD ? <span>(${formatPrice(serviceFeePaidUSD)}) </span> : ' '}
                         service fees ↗
                       </Trans>
-                    </TYPE.subHeader>
+                    </TYPE.small>
                   </RangeLineItem>
                 </LinkRow>
               ) : (
                 ''
               )}
             </AutoColumn>
-          </DarkCard>
+          </TradeHistory>
         </AutoColumn>
       </PageWrapper>
       <SwitchLocaleLink />

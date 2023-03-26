@@ -5,8 +5,8 @@ import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { darken } from 'polished'
 import { useMemo } from 'react'
 import { Activity } from 'react-feather'
-import { useDarkModeManager } from 'state/user/hooks'
-import styled, { css } from 'styled-components/macro'
+import { Text } from 'rebass'
+import styled from 'styled-components/macro'
 
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
@@ -30,6 +30,7 @@ const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
   align-items: center;
   justify-content: center;
+
   & > * {
     height: ${({ size }) => (size ? size + 'px' : '32px')};
     width: ${({ size }) => (size ? size + 'px' : '32px')};
@@ -40,84 +41,69 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
   align-items: center;
-  padding: 0.5rem;
-  border-radius: 12px;
   cursor: pointer;
   user-select: none;
+  padding: 8px 16px;
+
   :focus {
     outline: none;
   }
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding: 0.5rem;
+  `};
 `
 const Web3StatusError = styled(Web3StatusGeneric)`
   background-color: ${({ theme }) => theme.red1};
-  border: 1px solid ${({ theme }) => theme.red1};
+  border: 2px solid ${({ theme }) => theme.red1};
   color: ${({ theme }) => theme.white};
-  font-weight: 500;
+  font-weight: 400;
+
   :hover,
   :focus {
     background-color: ${({ theme }) => darken(0.1, theme.red1)};
+    border: 2px solid ${({ theme }) => theme.bg3};
   }
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding: 0.5rem;
+  `};
 `
 
 const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
-  background-color: ${({ theme }) => theme.primary4};
+  background-color: ${({ theme }) => theme.primary1};
   border: none;
-
-  color: ${({ theme }) => theme.primaryText1};
-  font-weight: 500;
+  color: ${({ theme }) => theme.white};
 
   :hover,
   :focus {
-    border: 1px solid ${({ theme }) => darken(0.05, theme.primary4)};
-    color: ${({ theme }) => theme.primaryText1};
+    border: none;
+    background-color: ${({ theme }) => darken(0.05, theme.primary1)};
   }
 
-  ${({ faded }) =>
-    faded &&
-    css`
-      background-color: ${({ theme }) => theme.primary5};
-      border: 1px solid ${({ theme }) => theme.primary5};
-      color: ${({ theme }) => theme.primaryText1};
-
-      :hover,
-      :focus {
-        border: 1px solid ${({ theme }) => darken(0.05, theme.primary4)};
-        color: ${({ theme }) => darken(0.05, theme.primaryText1)};
-      }
-    `}
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding: 0.5rem;
+  `};
 `
 
-const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean; darkMode?: boolean }>`
-  background-color: ${({ darkMode }) => (darkMode ? '#212429 ' : '#F5F5F5')};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg1)};
+const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
+  background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg0)};
+  border: 2px solid ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg0)};
   color: ${({ pending, theme }) => (pending ? theme.white : theme.text1)};
-  font-weight: 500;
+  font-weight: 400;
+
   :hover,
-  :focus {
-    border: 1px solid ${({ theme }) => darken(0.05, theme.bg3)};
-
-    :focus {
-      border: 1px solid ${({ pending, theme }) => (pending ? darken(0.1, theme.primary1) : darken(0.1, theme.bg2))};
-    }
+  :focus,
+  :active {
+    cursor: pointer;
+    outline: none;
+    box-shadow: none;
+    border: 2px solid ${({ theme }) => theme.bg3};
   }
-`
 
-const Text = styled.p`
-  flex: 1 1 auto;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin: 0 0.5rem 0 0.25rem;
-  font-size: 1rem;
-  width: fit-content;
-  font-weight: 500;
-
-  @media (max-width: 400px) {
-    font-size: 0.4rem;
-  }
-  @media (max-width: 600px) {
-    font-size: 0.65rem;
-  }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding: 0.5rem;
+  `};
 `
 
 const NetworkIcon = styled(Activity)`
@@ -146,25 +132,25 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
     return <Identicon />
   } else if (connector === walletconnect) {
     return (
-      <IconWrapper size={16}>
+      <IconWrapper size={24}>
         <img src={WalletConnectIcon} alt={'WalletConnect'} />
       </IconWrapper>
     )
   } else if (connector === walletlink) {
     return (
-      <IconWrapper size={16}>
+      <IconWrapper size={24}>
         <img src={CoinbaseWalletIcon} alt={'CoinbaseWallet'} />
       </IconWrapper>
     )
   } else if (connector === fortmatic) {
     return (
-      <IconWrapper size={16}>
+      <IconWrapper size={24}>
         <img src={FortmaticIcon} alt={'Fortmatic'} />
       </IconWrapper>
     )
   } else if (connector === portis) {
     return (
-      <IconWrapper size={16}>
+      <IconWrapper size={24}>
         <img src={PortisIcon} alt={'Portis'} />
       </IconWrapper>
     )
@@ -189,20 +175,13 @@ function Web3StatusInner() {
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
   const toggleWalletModal = useWalletModalToggle()
-  const [darkMode] = useDarkModeManager()
 
   if (account) {
     return (
-      <Web3StatusConnected
-        id="web3-status-connected"
-        onClick={toggleWalletModal}
-        pending={hasPendingTransactions}
-        darkMode={darkMode}
-      >
-        {' '}
+      <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
         {hasPendingTransactions ? (
           <RowBetween>
-            <Text>
+            <Text fontSize={16}>
               <Trans>{pending?.length} Pending</Trans>
             </Text>{' '}
             <Loader stroke="white" />
@@ -210,7 +189,7 @@ function Web3StatusInner() {
         ) : (
           <>
             {hasSocks ? <Sock /> : null}
-            <Text>{ENSName || shortenAddress(account)}</Text>
+            <Text fontSize={16}>{ENSName || shortenAddress(account)}</Text>
           </>
         )}
         {!hasPendingTransactions && connector && <StatusIcon connector={connector} />}
@@ -225,9 +204,9 @@ function Web3StatusInner() {
     )
   } else {
     return (
-      <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
-        <Text>
-          <Trans>Connect to a wallet</Trans>
+      <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal}>
+        <Text fontSize={16} fontWeight={700}>
+          <Trans>Connect wallet</Trans>
         </Text>
       </Web3StatusConnect>
     )

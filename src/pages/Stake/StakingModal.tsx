@@ -3,7 +3,6 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { toHex } from '@uniswap/v3-sdk'
 import CurrencyLogo from 'components/CurrencyLogo'
-import DowntimeWarning from 'components/DowntimeWarning'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useCallback, useState } from 'react'
 import ReactGA from 'react-ga'
@@ -22,11 +21,11 @@ import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
-import { LIMIT_ORDER_MANAGER_ADDRESSES, STAKING_ADDRESS } from '../../constants/addresses'
+import { STAKING_ADDRESS } from '../../constants/addresses'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { useArgentWalletContract } from '../../hooks/useArgentWalletContract'
-import { useLimitOrderManager, useNewStakingContract } from '../../hooks/useContract'
+import { useNewStakingContract } from '../../hooks/useContract'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -35,9 +34,7 @@ import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
-import approveAmountCalldata from '../../utils/approveAmountCalldata'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
-import { currencyId } from '../../utils/currencyId'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { DynamicSection, PageWrapper, ScrollablePage, Wrapper } from '../AddLiquidity/styled'
 import { Dots } from '../Pool/styleds'
@@ -246,7 +243,7 @@ export default function StakingModal({
 
   const Buttons = () =>
     !account ? (
-      <ButtonLight onClick={toggleWalletModal} $borderRadius="12px" padding={'12px'}>
+      <ButtonLight onClick={toggleWalletModal} $borderRadius="20px" padding={'12px'}>
         <Trans>Connect Wallet</Trans>
       </ButtonLight>
     ) : (
@@ -274,7 +271,7 @@ export default function StakingModal({
           disabled={!isValid || (!argentWalletContract && approvalA !== ApprovalState.APPROVED && !depositADisabled)}
           error={!isValid && !!parsedAmounts[Field.CURRENCY_A]}
         >
-          <Text fontWeight={500}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
+          <Text fontWeight={400}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
         </ButtonError>
       </AutoColumn>
     )

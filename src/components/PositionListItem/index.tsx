@@ -1,11 +1,9 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
-import Badge from 'components/Badge'
 import RangeBadge from 'components/Badge/RangeBadge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverInlineText from 'components/HoverInlineText'
-import Loader from 'components/Loader'
 import { RowBetween } from 'components/Row'
 import { useToken } from 'hooks/Tokens'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -13,12 +11,9 @@ import { usePool } from 'hooks/usePools'
 import useUSDCPrice from 'hooks/useUSDCPrice'
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components/macro'
-import { ExternalLink, HideExtraSmall, TYPE } from 'theme'
-import { HideSmall, MEDIA_WIDTHS, SmallOnly } from 'theme'
+import { MEDIA_WIDTHS } from 'theme'
 import { PositionDetails } from 'types/position'
-import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 import { DAI, USDC, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
@@ -43,9 +38,11 @@ const LinkRow = styled(Link)`
   &:last-of-type {
     margin: 8px 0 0 0;
   }
+
   & > div:not(:first-child) {
     text-align: center;
   }
+
   :hover {
     background-color: ${({ theme }) => theme.bg2};
   }
@@ -82,7 +79,7 @@ const RangeLineItem = styled(DataLineItem)`
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
   background-color: ${({ theme }) => theme.bg2};
-    border-radius: 12px;
+    border-radius: 20px;
     padding: 8px 0;
 `};
 `
@@ -230,6 +227,7 @@ function formatPrice(value: string | number | undefined) {
 
   return commafy(Number(value).toFixed(3))
 }
+
 export default function PositionListItem({ positionDetails, isUnderfunded }: PositionListItemProps) {
   const {
     token0: token0Address,

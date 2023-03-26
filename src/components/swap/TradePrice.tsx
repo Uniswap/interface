@@ -1,9 +1,8 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
-import useUSDCPrice, { useUSDCValue } from 'hooks/useUSDCPrice'
-import { useCallback, useContext, useEffect } from 'react'
+import { Currency, Price } from '@uniswap/sdk-core'
+import useUSDCPrice from 'hooks/useUSDCPrice'
+import { useCallback, useContext } from 'react'
 import { Text } from 'rebass'
-import { tryParseAmount } from 'state/swap/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { TYPE } from 'theme'
 
@@ -14,16 +13,17 @@ interface TradePriceProps {
 }
 
 const StyledPriceContainer = styled.button`
-  align-items: center;
   background-color: transparent;
   border: none;
   cursor: pointer;
-  display: grid;
-  height: 24px;
-  justify-content: center;
   padding: 0;
-  grid-template-columns: 1fr auto;
-  grid-gap: 0.25rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px;
+  text-align: left;
 `
 
 export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
@@ -45,13 +45,13 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
 
   return (
     <StyledPriceContainer onClick={flipPrice} title={text}>
-      <Text fontWeight={500} fontSize={14} color={theme.text1}>
+      <Text fontWeight={500} fontSize={16} color={theme.text1}>
         {text}
-      </Text>{' '}
+      </Text>
       {usdcPrice && (
-        <TYPE.darkGray>
-          <Trans>(${usdcPrice.toSignificant(6, { groupSeparator: ',' })})</Trans>{' '}
-        </TYPE.darkGray>
+        <TYPE.small color={theme.text2}>
+          <Trans>${usdcPrice.toSignificant(6, { groupSeparator: ',' })}</Trans>
+        </TYPE.small>
       )}
     </StyledPriceContainer>
   )

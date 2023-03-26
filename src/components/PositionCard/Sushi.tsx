@@ -45,7 +45,7 @@ export default function SushiPositionCard({ tokenA, tokenB, liquidityToken, bord
         <FixedHeightRow>
           <AutoRow gap="8px">
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
-            <Text fontWeight={500} fontSize={20}>
+            <Text fontWeight={400} fontSize={16}>
               {!currency0 || !currency1 ? (
                 <Dots>
                   <Trans>Loading</Trans>
@@ -60,7 +60,7 @@ export default function SushiPositionCard({ tokenA, tokenB, liquidityToken, bord
           <RowFixed gap="8px">
             <ButtonEmpty
               padding="0px 35px 0px 0px"
-              $borderRadius="12px"
+              $borderRadius="20px"
               width="fit-content"
               as={Link}
               to={`/migrate/v2/${liquidityToken.address}`}

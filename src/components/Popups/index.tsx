@@ -14,11 +14,11 @@ const MobilePopupWrapper = styled.div<{ height: string | number }>`
   max-width: 100%;
   height: ${({ height }) => height};
   margin: ${({ height }) => (height ? '0 auto;' : 0)};
-  margin-bottom: ${({ height }) => (height ? '20px' : 0)}};
+  margin-bottom: ${({ height }) => (height ? '20px' : 0)};
 
   display: none;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: block;
+    display: inline-block;
   `};
 `
 
@@ -29,6 +29,7 @@ const MobilePopupInner = styled.div`
   display: flex;
   flex-direction: row;
   -webkit-overflow-scrolling: touch;
+
   ::-webkit-scrollbar {
     display: none;
   }
@@ -40,18 +41,19 @@ const StopOverflowQuery = `@media screen and (min-width: ${MEDIA_WIDTHS.upToMedi
 
 const FixedPopupColumn = styled(AutoColumn)<{ extraPadding: boolean; xlPadding: boolean }>`
   position: fixed;
-  top: ${({ extraPadding }) => (extraPadding ? '64px' : '56px')};
+  top: ${({ extraPadding }) => (extraPadding ? '90px' : '56px')};
   right: 1rem;
   max-width: 355px !important;
   width: 100%;
   z-index: 3;
 
+  display: block;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
   `};
 
   ${StopOverflowQuery} {
-    top: ${({ extraPadding, xlPadding }) => (xlPadding ? '64px' : extraPadding ? '64px' : '56px')};
+    top: ${({ extraPadding, xlPadding }) => (xlPadding ? '90px' : extraPadding ? '90px' : '56px')};
   }
 `
 
@@ -69,9 +71,11 @@ export default function Popups() {
     <>
       <FixedPopupColumn gap="20px" extraPadding={urlWarningActive} xlPadding={isNotOnMainnet}>
         <ClaimPopup />
-        {activePopups.map((item) => (
-          <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
-        ))}
+        {activePopups.map((item) => {
+          return (
+            <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
+          )
+        })}
       </FixedPopupColumn>
       <MobilePopupWrapper height={activePopups?.length > 0 ? 'fit-content' : 0}>
         <MobilePopupInner>

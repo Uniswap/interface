@@ -48,8 +48,8 @@ const PageWrapper = styled(AutoColumn)`
 `
 
 const ProposalInfo = styled(AutoColumn)`
-  background: ${({ theme }) => theme.bg0};
-  border-radius: 12px;
+  background: ${({ theme }) => theme.bg1};
+  border-radius: 20px;
   padding: 1.5rem;
   position: relative;
   max-width: 640px;
@@ -67,6 +67,7 @@ const ArrowWrapper = styled(StyledInternalLink)`
     color: ${({ theme }) => theme.text1};
     text-decoration: none;
   }
+
   :hover {
     text-decoration: none;
   }

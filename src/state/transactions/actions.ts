@@ -76,6 +76,7 @@ export interface ExactInputSwapTransactionInfo extends BaseSwapTransactionInfo {
   expectedOutputCurrencyAmountRaw: string
   minimumOutputCurrencyAmountRaw: string
 }
+
 export interface ExactOutputSwapTransactionInfo extends BaseSwapTransactionInfo {
   tradeType: TradeType.EXACT_OUTPUT
   outputCurrencyAmountRaw: string

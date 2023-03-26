@@ -3,7 +3,6 @@ import 'inter-ui'
 import 'polyfills'
 import 'components/analytics'
 
-import { ChakraProvider } from '@chakra-ui/provider'
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
@@ -23,7 +22,7 @@ import MulticallUpdater from './state/multicall/updater'
 import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
 import ThemeProvider, { ThemedGlobalStyle } from './theme'
-import RadialGradientByChainUpdater from './theme/RadialGradientByChainUpdater'
+import LinearGradientByChainUpdater from './theme/LinearGradientByChainUpdater'
 import getLibrary from './utils/getLibrary'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
@@ -35,7 +34,7 @@ if (!!window.ethereum) {
 function Updaters() {
   return (
     <>
-      <RadialGradientByChainUpdater />
+      <LinearGradientByChainUpdater />
       <ListsUpdater />
       <UserUpdater />
       <ApplicationUpdater />

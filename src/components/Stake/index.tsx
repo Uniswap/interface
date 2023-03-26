@@ -1,37 +1,26 @@
-import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import Badge, { BadgeVariant } from 'components/Badge'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { KROM } from 'constants/tokens'
-import { formatUnits } from 'ethers/lib/utils'
 import { useNewStakingContract } from 'hooks/useContract'
 import JSBI from 'jsbi'
-import { transparentize } from 'polished'
 import { useState } from 'react'
-import { AlertCircle, ChevronDown, ChevronUp, HelpCircle } from 'react-feather'
-import { Link } from 'react-router-dom'
+import { HelpCircle } from 'react-feather'
 import { Text } from 'rebass'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import styled from 'styled-components/macro'
 
-import { BIG_INT_ZERO } from '../../constants/misc'
-import { useColor } from '../../hooks/useColor'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { ExternalLink, TYPE } from '../../theme'
-import { currencyId } from '../../utils/currencyId'
+import { TYPE } from '../../theme'
 import { unwrappedToken } from '../../utils/unwrappedToken'
-import { ButtonEmpty, ButtonPrimary, ButtonSecondary } from '../Button'
 import { GreyCard, LightCard } from '../Card'
 import { AutoColumn } from '../Column'
-import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../earn/styled'
-import { AutoRow, RowBetween, RowFixed } from '../Row'
-import { Dots } from '../swap/styleds'
+import { RowBetween, RowFixed } from '../Row'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -97,7 +86,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
           <AutoColumn gap="12px">
             <FixedHeightRow>
               <RowFixed>
-                <Text fontWeight={500} fontSize={16}>
+                <Text fontWeight={400} fontSize={16}>
                   <Trans>Your position</Trans>
                 </Text>
               </RowFixed>
@@ -105,32 +94,32 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
             <FixedHeightRow onClick={() => setShowMore(!showMore)}>
               <RowFixed>
                 <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={20} />
-                <Text fontWeight={500} fontSize={20}>
+                <Text fontWeight={400} fontSize={16}>
                   {currency0.symbol}/{currency1.symbol}
                 </Text>
               </RowFixed>
               <RowFixed>
-                <Text fontWeight={500} fontSize={20}>
+                <Text fontWeight={400} fontSize={16}>
                   {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
                 </Text>
               </RowFixed>
             </FixedHeightRow>
             <AutoColumn gap="4px">
               <FixedHeightRow>
-                <Text fontSize={16} fontWeight={500}>
+                <Text fontSize={16} fontWeight={400}>
                   <Trans>Your pool share:</Trans>
                 </Text>
-                <Text fontSize={16} fontWeight={500}>
+                <Text fontSize={16} fontWeight={400}>
                   {poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}
                 </Text>
               </FixedHeightRow>
               <FixedHeightRow>
-                <Text fontSize={16} fontWeight={500}>
+                <Text fontSize={16} fontWeight={400}>
                   {currency0.symbol}:
                 </Text>
                 {token0Deposited ? (
                   <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                    <Text fontSize={16} fontWeight={400} marginLeft={'6px'}>
                       {token0Deposited?.toSignificant(6)}
                     </Text>
                   </RowFixed>
@@ -139,12 +128,12 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                 )}
               </FixedHeightRow>
               <FixedHeightRow>
-                <Text fontSize={16} fontWeight={500}>
+                <Text fontSize={16} fontWeight={400}>
                   {currency1.symbol}:
                 </Text>
                 {token1Deposited ? (
                   <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                    <Text fontSize={16} fontWeight={400} marginLeft={'6px'}>
                       {token1Deposited?.toSignificant(6)}
                     </Text>
                   </RowFixed>
@@ -171,6 +160,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
     </>
   )
 }
+
 export default function StakePositionCard({ fundingBalance, minBalance, gasPrice }: FundingCardProps) {
   const showMore = true
   const { chainId } = useActiveWeb3React()
@@ -195,7 +185,7 @@ export default function StakePositionCard({ fundingBalance, minBalance, gasPrice
             <AutoColumn gap="8px">
               <FixedHeightRow>
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500}>
+                  <Text fontSize={16} fontWeight={400}>
                     <TYPE.white>
                       <Trans>Staked Balance:</Trans>
                     </TYPE.white>
@@ -203,13 +193,13 @@ export default function StakePositionCard({ fundingBalance, minBalance, gasPrice
                 </RowFixed>
                 {earnedBalance != null ? (
                   <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                    <Text fontSize={16} fontWeight={400} marginLeft={'6px'}>
                       <TYPE.white>{{ earnedBalance }}</TYPE.white>
                     </Text>
                   </RowFixed>
                 ) : (
                   <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                    <Text fontSize={16} fontWeight={400} marginLeft={'6px'}>
                       <TYPE.white>{{ earnedBalance }}</TYPE.white>
                     </Text>
                   </RowFixed>
@@ -217,7 +207,7 @@ export default function StakePositionCard({ fundingBalance, minBalance, gasPrice
               </FixedHeightRow>
               <FixedHeightRow>
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500}>
+                  <Text fontSize={16} fontWeight={400}>
                     <TYPE.white>
                       <Trans>Earned Balance:</Trans>
                     </TYPE.white>
@@ -225,7 +215,7 @@ export default function StakePositionCard({ fundingBalance, minBalance, gasPrice
                 </RowFixed>
                 {minBalance ? (
                   <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                    <Text fontSize={16} fontWeight={400} marginLeft={'6px'}>
                       <TYPE.white>
                         {minBalance?.toSignificant(6)} {minBalance?.currency.symbol}
                       </TYPE.white>
@@ -237,7 +227,7 @@ export default function StakePositionCard({ fundingBalance, minBalance, gasPrice
               </FixedHeightRow>
               <FixedHeightRow>
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500}>
+                  <Text fontSize={16} fontWeight={400}>
                     <TYPE.white>
                       <Trans>APY:</Trans>
                     </TYPE.white>
@@ -254,7 +244,7 @@ export default function StakePositionCard({ fundingBalance, minBalance, gasPrice
                   </MouseoverTooltip>
                 </RowFixed>
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                  <Text fontSize={16} fontWeight={400} marginLeft={'6px'}>
                     <TYPE.white>
                       <p>10 KROM</p>
                     </TYPE.white>

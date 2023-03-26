@@ -18,8 +18,7 @@ import AddressInputPanel from '../AddressInputPanel'
 import { ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Confetti from '../Confetti'
-import { Break, CardSection, DataCard } from '../earn/styled'
-import { CardBGImage, CardBGImageSmaller, CardNoise } from '../earn/styled'
+import { Break, CardBGImage, CardBGImageSmaller, CardNoise, CardSection, DataCard } from '../earn/styled'
 import Modal from '../Modal'
 import { RowBetween } from '../Row'
 
@@ -50,6 +49,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
 
   // state for smart contract input
   const [typed, setTyped] = useState('')
+
   function handleRecipientType(val: string) {
     setTyped(val)
   }
@@ -105,19 +105,19 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             <CardNoise />
             <CardSection gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={500}>
+                <TYPE.white fontWeight={400}>
                   <Trans>Claim UNI Token</Trans>
                 </TYPE.white>
                 <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="white" />
               </RowBetween>
-              <TYPE.white fontWeight={700} fontSize={36}>
+              <TYPE.white fontWeight={700} fontSize={[16, 26, 36]}>
                 <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
               </TYPE.white>
             </CardSection>
             <Break />
           </ModalUpper>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
-            <TYPE.subHeader fontWeight={500}>
+            <TYPE.subHeader fontWeight={400}>
               <Trans>
                 Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on
                 submission.
@@ -133,7 +133,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
               disabled={!isAddress(parsedAddress ?? '') || !hasAvailableClaim}
               padding="16px 16px"
               width="100%"
-              $borderRadius="12px"
+              $borderRadius="20px"
               mt="1rem"
               onClick={onClaim}
             >
@@ -163,7 +163,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
                 {claimConfirmed ? <Trans>Claimed</Trans> : <Trans>Claiming</Trans>}
               </TYPE.largeHeader>
               {!claimConfirmed && (
-                <Text fontSize={36} color={'#ff007a'} fontWeight={800}>
+                <Text fontSize={[24, 28, 36]} color={'#ff007a'} fontWeight={800}>
                   <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
                 </Text>
               )}
@@ -175,7 +175,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             </AutoColumn>
             {claimConfirmed && (
               <>
-                <TYPE.subHeader fontWeight={500} color="black">
+                <TYPE.subHeader fontWeight={400} color="black">
                   <span role="img" aria-label="party-hat">
                     🎉{' '}
                   </span>

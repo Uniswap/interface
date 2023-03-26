@@ -17,7 +17,6 @@ import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { isTokenOnList } from '../../utils'
-import { unwrappedToken } from '../../utils/unwrappedToken'
 import Column from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import Loader from '../Loader'
@@ -134,10 +133,10 @@ function CurrencyRow({
     >
       <CurrencyLogo currency={currency} size={'24px'} />
       <Column>
-        <Text title={currency.name} fontWeight={500}>
+        <Text title={currency.name} fontWeight={400} fontSize={16}>
           {currency.symbol}
         </Text>
-        <TYPE.darkGray ml="0px" fontSize={'12px'} fontWeight={300}>
+        <TYPE.darkGray ml="0px" fontSize={'14px'} fontWeight={300}>
           {!currency.isNative && !isOnSelectedList && customAdded ? (
             <Trans>{currency.name} • Added by user</Trans>
           ) : (
@@ -157,6 +156,7 @@ function CurrencyRow({
 
 const BREAK_LINE = 'BREAK'
 type BreakLine = typeof BREAK_LINE
+
 function isBreakLine(x: unknown): x is BreakLine {
   return x === BREAK_LINE
 }
@@ -169,7 +169,7 @@ function BreakLineComponent({ style }: { style: CSSProperties }) {
         <RowBetween>
           <RowFixed>
             <TokenListLogoWrapper src={TokenListLogo} />
-            <TYPE.main ml="6px" fontSize="12px" color={theme.text1}>
+            <TYPE.main ml="6px" fontSize="14px" color={theme.text1}>
               <Trans>Expanded results from inactive Token Lists</Trans>
             </TYPE.main>
           </RowFixed>

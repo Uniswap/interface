@@ -1,4 +1,3 @@
-import { Checkbox, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import PositionListItem from 'components/PositionListItem'
@@ -27,7 +26,6 @@ const DesktopHeader = styled.div`
 `
 
 const MobileHeader = styled.div`
-  font-weight: medium;
   font-size: 16px;
   font-weight: 500;
   padding: 8px;

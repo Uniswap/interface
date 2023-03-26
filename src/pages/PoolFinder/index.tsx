@@ -7,8 +7,7 @@ import { useLocation } from 'react-router'
 import { Text } from 'rebass'
 
 import { ButtonDropdownLight } from '../../components/Button'
-import { LightCard } from '../../components/Card'
-import { BlueCard } from '../../components/Card'
+import { BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { FindPoolTabs } from '../../components/NavigationTabs'
@@ -21,8 +20,7 @@ import { PairState, useV2Pair } from '../../hooks/useV2Pairs'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { usePairAdder } from '../../state/user/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { StyledInternalLink } from '../../theme'
-import { TYPE } from '../../theme'
+import { StyledInternalLink, TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
@@ -117,12 +115,12 @@ export default function PoolFinder() {
             {currency0 ? (
               <Row>
                 <CurrencyLogo currency={currency0} />
-                <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
+                <Text fontWeight={400} fontSize={20} marginLeft={'12px'}>
                   {currency0.symbol}
                 </Text>
               </Row>
             ) : (
-              <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
+              <Text fontWeight={400} fontSize={20} marginLeft={'12px'}>
                 <Trans>Select a token</Trans>
               </Text>
             )}
@@ -141,12 +139,12 @@ export default function PoolFinder() {
             {currency1 ? (
               <Row>
                 <CurrencyLogo currency={currency1} />
-                <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
+                <Text fontWeight={400} fontSize={20} marginLeft={'12px'}>
                   {currency1.symbol}
                 </Text>
               </Row>
             ) : (
-              <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
+              <Text fontWeight={400} fontSize={20} marginLeft={'12px'}>
                 <Trans>Select a token</Trans>
               </Text>
             )}
@@ -154,9 +152,9 @@ export default function PoolFinder() {
 
           {hasPosition && (
             <ColumnCenter
-              style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}
+              style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '20px' }}
             >
-              <Text textAlign="center" fontWeight={500}>
+              <Text textAlign="center" fontWeight={400}>
                 <Trans>Pool Found!</Trans>
               </Text>
               <StyledInternalLink to={`/pool/v2`}>
@@ -199,7 +197,7 @@ export default function PoolFinder() {
             ) : pairState === PairState.INVALID ? (
               <LightCard padding="45px 10px">
                 <AutoColumn gap="sm" justify="center">
-                  <Text textAlign="center" fontWeight={500}>
+                  <Text textAlign="center" fontWeight={400}>
                     <Trans>Invalid pair.</Trans>
                   </Text>
                 </AutoColumn>

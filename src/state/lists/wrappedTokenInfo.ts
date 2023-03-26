@@ -4,9 +4,11 @@ import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { isAddress } from '../../utils'
 
 type TagDetails = Tags[keyof Tags]
+
 interface TagInfo extends TagDetails {
   id: string
 }
+
 /**
  * Token instances created from token info on a token list.
  */
@@ -16,13 +18,12 @@ export class WrappedTokenInfo implements Token {
   public readonly list: TokenList
 
   public readonly tokenInfo: TokenInfo
+  private _checksummedAddress: string | null = null
 
   constructor(tokenInfo: TokenInfo, list: TokenList) {
     this.tokenInfo = tokenInfo
     this.list = list
   }
-
-  private _checksummedAddress: string | null = null
 
   public get address(): string {
     if (this._checksummedAddress) return this._checksummedAddress
@@ -66,6 +67,10 @@ export class WrappedTokenInfo implements Token {
     }))
   }
 
+  public get wrapped(): Token {
+    return this
+  }
+
   equals(other: Currency): boolean {
     return other.chainId === this.chainId && other.isToken && other.address.toLowerCase() === this.address.toLowerCase()
   }
@@ -73,9 +78,5 @@ export class WrappedTokenInfo implements Token {
   sortsBefore(other: Token): boolean {
     if (this.equals(other)) throw new Error('Addresses should not be equal')
     return this.address.toLowerCase() < other.address.toLowerCase()
-  }
-
-  public get wrapped(): Token {
-    return this
   }
 }

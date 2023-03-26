@@ -17,7 +17,7 @@ export const Wrapper = styled.div`
 
 export const ArrowWrapper = styled.div<{ clickable: boolean }>`
   padding: 4px;
-  border-radius: 12px;
+  border-radius: 20px;
   height: 32px;
   width: 32px;
   position: relative;
@@ -26,7 +26,7 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
   left: calc(50% - 16px);
   /* transform: rotate(90deg); */
   background-color: ${({ theme }) => theme.bg1};
-  border: 4px solid ${({ theme }) => theme.bg0};
+  border: 4px solid ${({ theme }) => theme.bg1};
   z-index: 2;
   ${({ clickable }) =>
     clickable
@@ -92,10 +92,11 @@ const SwapCallbackErrorInner = styled.div`
   align-items: center;
   font-size: 0.825rem;
   width: 100%;
-  padding: 3rem 1.25rem 1rem 1rem;
-  margin-top: -2rem;
+  padding: 1rem;
+  margin-top: 12px;
   color: ${({ theme }) => theme.red1};
   z-index: -1;
+
   p {
     padding: 0;
     margin: 0;
@@ -109,7 +110,7 @@ const SwapCallbackErrorInnerAlertTriangle = styled.div`
   align-items: center;
   justify-content: center;
   margin-right: 12px;
-  border-radius: 12px;
+  border-radius: 20px;
   min-width: 48px;
   height: 48px;
 `
@@ -129,7 +130,7 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
   background-color: ${({ theme }) => transparentize(0.95, theme.primary3)};
   color: ${({ theme }) => theme.primaryText1};
   padding: 0.5rem;
-  border-radius: 12px;
+  border-radius: 20px;
   margin-top: 8px;
 `
 
@@ -139,7 +140,7 @@ export const TransactionDetailsLabel = styled(TYPE.black)`
 `
 
 export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: string; width?: string }>`
-  background-color: ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.bg1};
   border: 1px solid ${({ theme }) => theme.bg2};
   padding: 1rem;
   width: ${({ width }) => width ?? 'auto'};

@@ -1,11 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
-import { L2_CHAIN_IDS } from 'constants/chains'
-import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
-import { useActiveWeb3React } from 'hooks/web3'
 import { darken } from 'polished'
 import { useContext, useState } from 'react'
-import { useSetUserSlippageTolerance, useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
+import { useSetUserSlippageTolerance, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { TYPE } from '../../theme'
@@ -32,9 +29,11 @@ const FancyButton = styled.button`
   border: 1px solid ${({ theme }) => theme.bg3};
   outline: none;
   background: ${({ theme }) => theme.bg1};
+
   :hover {
     border: 1px solid ${({ theme }) => theme.bg4};
   }
+
   :focus {
     border: 1px solid ${({ theme }) => theme.primary1};
   }
@@ -42,9 +41,11 @@ const FancyButton = styled.button`
 
 const Option = styled(FancyButton)<{ active: boolean }>`
   margin-right: 8px;
+
   :hover {
     cursor: pointer;
   }
+
   background-color: ${({ active, theme }) => active && theme.primary1};
   color: ${({ active, theme }) => (active ? theme.white : theme.text1)};
 `
@@ -54,10 +55,12 @@ const Input = styled.input`
   font-size: 16px;
   width: auto;
   outline: none;
+
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
+
   color: ${({ theme, color }) => (color === 'red' ? theme.red1 : theme.text1)};
   text-align: right;
 `
@@ -69,6 +72,7 @@ const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }
   flex: 1;
   border: ${({ theme, active, warning }) =>
     active ? `1px solid ${warning ? theme.red1 : theme.primary1}` : warning && `1px solid ${theme.red1}`};
+
   :hover {
     border: ${({ theme, active, warning }) =>
       active && `1px solid ${warning ? darken(0.1, theme.red1) : darken(0.1, theme.primary1)}`};

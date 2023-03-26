@@ -1,16 +1,15 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useContext, useState } from 'react'
-import { AlertTriangle, ArrowDown } from 'react-feather'
+import { AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import { TYPE } from '../../theme'
 import { isAddress, shortenAddress } from '../../utils'
-import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { ButtonPrimary } from '../Button'
 import { LightCard } from '../Card'
 import { AutoColumn } from '../Column'
@@ -23,7 +22,7 @@ import { SwapShowAcceptChanges, TruncatedText } from './styleds'
 
 const ArrowWrapper = styled.div`
   padding: 4px;
-  border-radius: 12px;
+  border-radius: 20px;
   height: 32px;
   width: 32px;
   position: relative;
@@ -35,7 +34,7 @@ const ArrowWrapper = styled.div`
   align-items: center;
   background-color: ${({ theme }) => theme.bg1};
   border: 4px solid;
-  border-color: ${({ theme }) => theme.bg0};
+  border-color: ${({ theme }) => theme.bg1};
   z-index: 2;
 `
 
@@ -65,11 +64,11 @@ export default function SwapModalHeader({
   const fiatValueInput = useUSDCValue(inputAmount)
 
   return (
-    <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
+    <AutoColumn gap={'6px'} style={{ marginTop: '1rem' }}>
       <LightCard padding="0.75rem 1rem">
         <AutoColumn gap={'8px'}>
           <RowBetween>
-            <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
+            <TYPE.body color={theme.text3} fontWeight={400} fontSize={14}>
               <Trans>From</Trans>
             </TYPE.body>
             <FiatValue fiatValue={fiatValueInput} />
@@ -77,14 +76,14 @@ export default function SwapModalHeader({
           <RowBetween align="center">
             <RowFixed gap={'0px'}>
               <CurrencyLogo currency={inputAmount?.currency} size={'20px'} style={{ marginRight: '12px' }} />
-              <Text fontSize={20} fontWeight={500}>
+              <Text fontSize={16} fontWeight={400}>
                 {inputAmount?.currency.symbol}
               </Text>
             </RowFixed>
             <RowFixed gap={'0px'}>
               <TruncatedText
                 fontSize={24}
-                fontWeight={500}
+                fontWeight={400}
                 color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.primary1 : ''}
               >
                 {inputAmount?.toSignificant(6)}
@@ -95,7 +94,7 @@ export default function SwapModalHeader({
       </LightCard>
       {priceAmount ? (
         <RowBetween style={{ marginTop: '0.25rem', padding: '0 1rem' }}>
-          <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
+          <TYPE.body color={theme.text2} fontWeight={400} fontSize={14}>
             <Trans>Target Price</Trans>
           </TYPE.body>
           <TradePrice price={priceAmount} showInverted={showInverted} setShowInverted={setShowInverted} />
@@ -103,7 +102,7 @@ export default function SwapModalHeader({
       ) : null}
 
       <RowBetween style={{ marginTop: '0.25rem', padding: '0 1rem' }}>
-        <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
+        <TYPE.body color={theme.text2} fontWeight={400} fontSize={14}>
           <Trans>Current Price</Trans>
         </TYPE.body>
         <TradePrice price={trade.route.midPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
@@ -128,7 +127,7 @@ export default function SwapModalHeader({
               </TYPE.main>
             </RowFixed>
             <ButtonPrimary
-              style={{ padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}
+              style={{ padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '20px' }}
               onClick={onAcceptChanges}
             >
               <Trans>Accept</Trans>
@@ -138,7 +137,7 @@ export default function SwapModalHeader({
       ) : null}
 
       <AutoColumn justify="flex-start" gap="sm" style={{ padding: '.75rem 1rem' }}>
-        <TYPE.italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
+        <TYPE.italic fontSize={14} fontWeight={400} textAlign="left" style={{ width: '100%' }}>
           <Trans>
             Output is estimated. You will receive at least{' '}
             <b>

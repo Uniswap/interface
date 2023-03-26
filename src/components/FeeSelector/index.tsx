@@ -75,7 +75,7 @@ function FeeTierPercentageBadge({
 }) {
   return (
     <Badge>
-      <TYPE.label fontSize={12}></TYPE.label>
+      <TYPE.label fontSize={16}></TYPE.label>
     </Badge>
   )
 }
@@ -183,7 +183,7 @@ export default function FeeSelector({
                   <TYPE.label>
                     <Trans>Fee tier</Trans>
                   </TYPE.label>
-                  <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
+                  <TYPE.main fontWeight={400} fontSize={14} textAlign="left">
                     <Trans>The % you will earn in fees.</Trans>
                   </TYPE.main>
                 </>
@@ -223,7 +223,7 @@ export default function FeeSelector({
                   <ResponsiveText>
                     <Trans>0.05% fee</Trans>
                   </ResponsiveText>
-                  <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
+                  <TYPE.main fontWeight={400} fontSize={14} textAlign="left">
                     <Trans>Best for stable pairs.</Trans>
                   </TYPE.main>
                 </AutoColumn>
@@ -247,7 +247,7 @@ export default function FeeSelector({
                   <ResponsiveText>
                     <Trans>0.3% fee</Trans>
                   </ResponsiveText>
-                  <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
+                  <TYPE.main fontWeight={400} fontSize={14} textAlign="left">
                     <Trans>Best for most pairs.</Trans>
                   </TYPE.main>
                 </AutoColumn>
@@ -271,7 +271,7 @@ export default function FeeSelector({
                   <ResponsiveText>
                     <Trans>1% fee</Trans>
                   </ResponsiveText>
-                  <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
+                  <TYPE.main fontWeight={400} fontSize={14} textAlign="left">
                     <Trans>Best for exotic pairs.</Trans>
                   </TYPE.main>
                 </AutoColumn>

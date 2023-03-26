@@ -4,9 +4,9 @@ import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sd
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
-import { FEE_IMPACT_MIN, TWO_PERCENT } from 'constants/misc'
+import { FEE_IMPACT_MIN } from 'constants/misc'
 import { CHAIN_NATIVE_TOKEN_SYMBOL, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import { useBestMarketTrade, useBestV3Trade } from 'hooks/useBestV3Trade'
+import { useBestMarketTrade } from 'hooks/useBestV3Trade'
 import { SignatureData } from 'hooks/useERC20Permit'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
@@ -15,7 +15,6 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { useIsGaslessMode } from 'state/user/hooks'
 import { SwapTransaction, V3TradeState } from 'state/validator/types'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
-import { isTradeBetter } from 'utils/isTradeBetter'
 
 import { useCurrency } from '../../hooks/Tokens'
 import useENS from '../../hooks/useENS'
@@ -329,6 +328,7 @@ function parseIndependentFieldURLParameter(urlParam: any): Field {
 
 const ENS_NAME_REGEX = /^[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)?$/
 const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/
+
 function validatedRecipient(recipient: any): string | null {
   if (typeof recipient !== 'string') return null
   const address = isAddress(recipient)

@@ -1,15 +1,12 @@
-import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { Skeleton } from '@chakra-ui/react'
+// eslint-disable-next-line no-restricted-imports
+import { t, Trans } from '@lingui/macro'
+import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { FiatValue } from 'components/CurrencyInputPanel/FiatValue'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
-import { AdvancedMarketDetails } from 'components/market/AdvancedMarketDetails'
 import ConfirmMarketModal from 'components/market/ConfirmMarketModal'
 import MarketHeader from 'components/market/MarketHeader'
-import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
-import PositionList from 'components/PositionList'
-import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
 import { AutoRouterLogo } from 'components/swap/RouterLabel'
 import SwapRoute from 'components/swap/SwapRoute'
 import TradePrice from 'components/swap/TradePrice'
@@ -19,19 +16,16 @@ import { SupportedChainId } from 'constants/chains'
 import { CHAIN_NATIVE_TOKEN_SYMBOL, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useMarketCallback } from 'hooks/useMarketCallback'
 import JSBI from 'jsbi'
-import { LoadingRows } from 'pages/Pool/styleds'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, CheckCircle, HelpCircle, Inbox, Info, X } from 'react-feather'
+import React, { Suspense, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
 import ReactGA from 'react-ga'
-import { RouteComponentProps, useLocation } from 'react-router-dom'
+import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useDerivedMarketInfo, useMarketActionHandlers, useMarketState } from 'state/market/hooks'
 import { SwapTransaction, V3TradeState } from 'state/validator/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { shortenAddress } from 'utils'
 
-import GasIconLight from '../../assets/images/gas-pump.svg'
-import GasIconDark from '../../assets/images/gas-pump-dark.png'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
@@ -39,9 +33,8 @@ import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import Loader from '../../components/Loader'
-import Row, { AutoRow, RowFixed } from '../../components/Row'
+import Row, { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
-import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import {
   ArrowWrapper,
   Dots,
@@ -49,7 +42,6 @@ import {
   SwapCallbackError,
   Wrapper,
 } from '../../components/swap/styleds'
-import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
@@ -58,13 +50,13 @@ import useENSAddress from '../../hooks/useENSAddress'
 import { SignatureData, useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
-import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
+import { Version } from '../../hooks/useToggledVersion'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/market/actions'
-import { useDefaultsFromURLSearch, useDerivedSwapInfo, usePoolAddress } from '../../state/swap/hooks'
+import { useDefaultsFromURLSearch, usePoolAddress } from '../../state/swap/hooks'
 import { useDarkModeManager, useExpertModeManager, useIsGaslessMode } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
@@ -72,10 +64,11 @@ import { getTradeVersion } from '../../utils/getTradeVersion'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
-import { MemoizedCandleSticks } from '../LimitOrder/CandleSticks'
+
+const MemoizedCandleSticks = React.lazy(() => import('../../components/CandleSticks'))
 
 const PageWrapper = styled(AutoColumn)`
-  max-width: 100%;94
+  max-width: 100%;
   width: 100%;
   margin-top: 10px;
   border: 1.5px solid #ff4343;
@@ -99,29 +92,12 @@ const WarningDescription = styled.div`
 const StyledButton = styled.button`
   width: 100%;
   border-radius: 15px;
-  heigth: 50px;
+  height: 50px;
   font-weight: 750;
   font-size: 20px;
   padding: 5px;
   background-color: #ff4343;
   color: white;
-`
-
-const StyledDiscountLight = styled.div`
-  border: 1px solid white;
-  padding: 0px 7px;
-  border-radius: 5px;
-  opacity: 0.5;
-  color: white;
-  background-color: black;
-`
-const StyledDiscountDark = styled.div`
-  border: 1px solid white;
-  padding: 0px 7px;
-  border-radius: 5px;
-  opacity: 0.5;
-  color: black;
-  background-color: white;
 `
 
 const PriceImpactWarning = styled.div`
@@ -138,7 +114,6 @@ const PriceImpactWarning = styled.div`
 const RefferalStylePro = styled.div`
   margin: 5px 0px;
   width: 100%;
-  position: end;
   display: flex;
   justify-content: center;
   vertical-align: middle;
@@ -147,7 +122,6 @@ const RefferalStylePro = styled.div`
 const RefferalStyle = styled.div`
   margin: 10px 10px;
   width: 100%;
-  position: end;
   display: flex;
   justify-content: center;
   height: 100%;
@@ -190,111 +164,6 @@ const NoWalletStyle = styled.div`
   padding-right: 5px;
 `
 
-const StyledInfo = styled(Info)`
-  height: 16px;
-  width: 16px;
-  margin-left: 4px;
-  color: ${({ theme }) => theme.text3};
-  :hover {
-    color: ${({ theme }) => theme.text1};
-  }
-`
-const StyledSwap = styled.div`
-  flex-grow: 1;
-  max-width: 100%;
-  width: 100%;
-
-  @media screen and (max-width: 1592px) {
-    flex: 0 0 480px;
-  }
-`
-const ButtonStyle = styled.div`
-  margin-top: 0px;
-`
-
-const MarketContainer = styled.div`
-  margin-top: 100px;
-  width: 100%;
-  height: 100vh;
-
-  @media screen and (max-width: 600px) {
-    margin-top: 0px;
-  }
-`
-
-const ClassicModeContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  @media screen and (max-width: 900px) {
-    width: 95%;
-    margin-left: 20px;
-  }
-
-  @media screen and (max-width: 600px) {
-    width: 98%;
-    margin-left: 2px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-`
-
-export const FlexContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: stretch;
-  align-content: stretch;
-  margin-top: 20px;
-  gap: 0.2rem;
-  width: 100%;
-  min-height: 94vh;
-  border: none;
-
-  @media screen and (max-width: 1600px) {
-    flex-direction: column;
-  }
-`
-
-export const FlexItemLeft = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-
-  @media screen and (max-width: 1592px) {
-    flex-direction: row;
-    gap: 1rem;
-    width: 95%;
-    margin-left: 10px;
-  }
-`
-
-export const FlexItemRight = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 500px;
-
-  @media screen and (max-width: 1592px) {
-    flex-direction: row-reverse;
-    gap: 0.5rem;
-    width: 100%;
-    justify-content: start;
-  }
-
-  @media screen and (max-width: 900px) {
-    flex-direction: column;
-    width: 95%;
-    margin-left: 10px;
-  }
-`
-
 const StyledCopyButton = styled.a`
   :hover {
     text-decoration: underline;
@@ -306,6 +175,82 @@ const StyledCopyButton = styled.a`
 
   :visited {
     color: darkblue;
+  }
+`
+
+const ClassicModeContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+  border: none;
+  height: 100%;
+  width: 475px;
+  padding: 1rem 0 8rem 0;
+  z-index: 0;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    width: 100%;
+    justify-content: center;
+    padding: 1rem 1rem 8rem 1rem;
+  `};
+`
+
+const StyledSwap = styled.div`
+  flex-grow: 1;
+  max-width: 100%;
+  width: 100%;
+  @media screen and (max-width: 1592px) {
+    flex: 0 0 475px;
+  }
+`
+
+const StyledInfo = styled(Info)`
+  height: 16px;
+  width: 16px;
+  margin-left: 4px;
+  color: ${({ theme }) => theme.text3};
+
+  :hover {
+    color: ${({ theme }) => theme.text1};
+  }
+`
+
+const FlexContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  border: none;
+  padding: 1rem;
+  width: calc(100% - 1rem);
+  height: 100%;
+  min-height: 90vh;
+  z-index: 0;
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    flex-direction: column;
+    height: 100%;
+    padding: 1rem 1rem 8rem 1rem;
+  `};
+`
+
+const FlexItem = styled.div`
+  align-self: stretch;
+  justify-self: stretch;
+
+  :nth-child(1) {
+    flex: 1;
+  }
+
+  :nth-child(2) {
+    flex: 0 0 475px;
+    max-width: 475px;
+    ${({ theme }) => theme.mediaWidth.upToLarge`
+      flex: 1;
+      max-width: 100%;
+    `};
   }
 `
 
@@ -706,10 +651,12 @@ export default function Market({ history }: RouteComponentProps) {
     return (
       <>
         <FlexContainer>
-          <FlexItemLeft>
-            <MemoizedCandleSticks networkName={networkName} poolAddress={poolAddress} />
-          </FlexItemLeft>
-          <FlexItemRight>
+          <FlexItem>
+            <Suspense fallback={<Skeleton height="60px" />}>
+              <MemoizedCandleSticks networkName={networkName} poolAddress={poolAddress} />
+            </Suspense>
+          </FlexItem>
+          <FlexItem>
             <StyledSwap>
               <TokenWarningModal
                 isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
@@ -718,7 +665,7 @@ export default function Market({ history }: RouteComponentProps) {
                 onDismiss={handleDismissTokenWarning}
               />
               <AppBody>
-                <MarketHeader allowedSlippage={allowedSlippage} />
+                <MarketHeader showChartSwitch={true} allowedSlippage={allowedSlippage} />
                 <Wrapper id="swap-page">
                   <ConfirmMarketModal
                     isOpen={showConfirm}
@@ -746,7 +693,7 @@ export default function Market({ history }: RouteComponentProps) {
                     routeIsNotFound={routeNotFound}
                   />
 
-                  <AutoColumn gap={'sm'}>
+                  <AutoColumn gap={'md'}>
                     <div style={{ display: 'relative' }}>
                       <CurrencyInputPanel
                         label={
@@ -756,6 +703,7 @@ export default function Market({ history }: RouteComponentProps) {
                             <Trans>From</Trans>
                           )
                         }
+                        actionLabel={t`You sell`}
                         value={formattedAmounts[Field.INPUT]}
                         showMaxButton={showMaxButton}
                         currency={currencies[Field.INPUT]}
@@ -779,6 +727,7 @@ export default function Market({ history }: RouteComponentProps) {
                         />
                       </ArrowWrapper>
                       <CurrencyInputPanel
+                        actionLabel={t`You buy`}
                         value={formattedAmounts[Field.OUTPUT]}
                         onUserInput={handleTypeOutput}
                         label={
@@ -822,14 +771,25 @@ export default function Market({ history }: RouteComponentProps) {
                               content={
                                 <ResponsiveTooltipContainer origin="top right" width={'295px'}>
                                   <Row justify={!trade ? 'center' : 'space-between'}>
-                                    <RowFixed>Allowed Slippage:</RowFixed>
-                                    <RowFixed>{allowedSlippage.toSignificant(2)}%</RowFixed>
+                                    <RowFixed>
+                                      <Text fontSize={14} fontWeight={400}>
+                                        <Trans>Allowed Slippage:</Trans>
+                                      </Text>
+                                    </RowFixed>
+                                    <RowFixed>
+                                      <Text fontSize={14} fontWeight={400}>
+                                        {allowedSlippage.toSignificant(2)}%
+                                      </Text>
+                                    </RowFixed>
                                   </Row>
                                   <Row justify={!trade ? 'center' : 'space-between'}>
-                                    <RowFixed>Minimum Received:</RowFixed>
                                     <RowFixed>
-                                      <span style={{ font: '10px' }}>
-                                        {' '}
+                                      <Text fontSize={14} fontWeight={400}>
+                                        <Trans>Minimum Received:</Trans>
+                                      </Text>
+                                    </RowFixed>
+                                    <RowFixed>
+                                      <Text fontSize={14} fontWeight={400}>
                                         {isGaslessMode ? (
                                           <span>
                                             {amountToReceive?.toSignificant(6)} {trade?.outputAmount.currency.symbol}
@@ -840,7 +800,7 @@ export default function Market({ history }: RouteComponentProps) {
                                             {trade?.outputAmount.currency.symbol}
                                           </span>
                                         )}
-                                      </span>
+                                      </Text>
                                     </RowFixed>
                                   </Row>
                                 </ResponsiveTooltipContainer>
@@ -1000,7 +960,6 @@ export default function Market({ history }: RouteComponentProps) {
                         </span>
                       </PriceImpactWarning>
                     )}
-                    <div></div>
                     <div>
                       {swapIsUnsupported ? (
                         <ButtonPrimary disabled={true}>
@@ -1037,7 +996,7 @@ export default function Market({ history }: RouteComponentProps) {
                         </GreyCard>
                       ) : showApproveFlow ? (
                         <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
-                          <AutoColumn style={{ width: '100%' }} gap="12px">
+                          <AutoColumn style={{ width: '100%' }} gap="md">
                             <ButtonConfirmed
                               onClick={handleApprove}
                               disabled={
@@ -1053,7 +1012,7 @@ export default function Market({ history }: RouteComponentProps) {
                               }
                             >
                               <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                                <span style={{ display: 'flex', alignItems: 'center' }}>
+                                <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'break-spaces' }}>
                                   <CurrencyLogo
                                     currency={currencies[Field.INPUT]}
                                     size={'20px'}
@@ -1064,9 +1023,7 @@ export default function Market({ history }: RouteComponentProps) {
                                   signatureState === UseERC20PermitState.SIGNED ? (
                                     <Trans>You can now swap {currencies[Field.INPUT]?.symbol}</Trans>
                                   ) : (
-                                    <Trans>
-                                      Allow the Kromatika Aggregator to use your {currencies[Field.INPUT]?.symbol}
-                                    </Trans>
+                                    <Trans>Allow Kromatika to use your {currencies[Field.INPUT]?.symbol}</Trans>
                                   )}
                                 </span>
                                 {approvalState === ApprovalState.PENDING ? (
@@ -1090,19 +1047,15 @@ export default function Market({ history }: RouteComponentProps) {
                             </ButtonConfirmed>
                             <ButtonError
                               onClick={() => {
-                                if (false) {
-                                  handleSwap()
-                                } else {
-                                  setSwapState({
-                                    tradeToConfirm: trade,
-                                    attemptingTxn: false,
-                                    swapErrorMessage: undefined,
-                                    showConfirm: true,
-                                    signatureDataNew: signatureData,
-                                    swapTransactionNew: swapTransaction,
-                                    txHash: undefined,
-                                  })
-                                }
+                                setSwapState({
+                                  tradeToConfirm: trade,
+                                  attemptingTxn: false,
+                                  swapErrorMessage: undefined,
+                                  showConfirm: true,
+                                  signatureDataNew: signatureData,
+                                  swapTransactionNew: swapTransaction,
+                                  txHash: undefined,
+                                })
                               }}
                               width="100%"
                               id="swap-button"
@@ -1122,19 +1075,15 @@ export default function Market({ history }: RouteComponentProps) {
                       ) : (
                         <ButtonError
                           onClick={() => {
-                            if (false) {
-                              handleSwap()
-                            } else {
-                              setSwapState({
-                                tradeToConfirm: trade,
-                                attemptingTxn: false,
-                                swapErrorMessage: undefined,
-                                showConfirm: true,
-                                signatureDataNew: signatureData,
-                                swapTransactionNew: swapTransaction,
-                                txHash: undefined,
-                              })
-                            }
+                            setSwapState({
+                              tradeToConfirm: trade,
+                              attemptingTxn: false,
+                              swapErrorMessage: undefined,
+                              showConfirm: true,
+                              signatureDataNew: signatureData,
+                              swapTransactionNew: swapTransaction,
+                              txHash: undefined,
+                            })
                           }}
                           id="swap-button"
                           disabled={!isValid || !!swapCallbackError}
@@ -1236,23 +1185,23 @@ export default function Market({ history }: RouteComponentProps) {
                 </RefferalStylePro>
               )}
             </StyledSwap>
-          </FlexItemRight>
+          </FlexItem>
         </FlexContainer>
       </>
     )
   }
 
   return (
-    <MarketContainer>
-      <ClassicModeContainer>
-        <TokenWarningModal
-          isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
-          tokens={importTokensNotInDefault}
-          onConfirm={handleConfirmTokenWarning}
-          onDismiss={handleDismissTokenWarning}
-        />
+    <ClassicModeContainer>
+      <TokenWarningModal
+        isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
+        tokens={importTokensNotInDefault}
+        onConfirm={handleConfirmTokenWarning}
+        onDismiss={handleDismissTokenWarning}
+      />
+      <StyledSwap>
         <AppBody>
-          <MarketHeader allowedSlippage={allowedSlippage} />
+          <MarketHeader showChartSwitch={true} allowedSlippage={allowedSlippage} />
           <Wrapper id="swap-page">
             <ConfirmMarketModal
               isOpen={showConfirm}
@@ -1280,9 +1229,10 @@ export default function Market({ history }: RouteComponentProps) {
               routeIsNotFound={routeNotFound}
             />
 
-            <AutoColumn gap={'sm'}>
+            <AutoColumn gap={'md'}>
               <div style={{ display: 'relative' }}>
                 <CurrencyInputPanel
+                  actionLabel={t`You sell`}
                   label={
                     independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
                   }
@@ -1309,6 +1259,7 @@ export default function Market({ history }: RouteComponentProps) {
                   />
                 </ArrowWrapper>
                 <CurrencyInputPanel
+                  actionLabel={t`You buy`}
                   value={formattedAmounts[Field.OUTPUT]}
                   onUserInput={handleTypeOutput}
                   label={
@@ -1340,33 +1291,47 @@ export default function Market({ history }: RouteComponentProps) {
                 </>
               ) : null}
               {!showWrap && trade && (
-                <div>
-                  <Row justify={!trade ? 'center' : 'space-between'}>
-                    <RowFixed style={{ position: 'relative' }}>
+                <AutoColumn gap="sm">
+                  <RowBetween>
+                    <TYPE.body color={theme.text2} fontWeight={400} fontSize={14} justifyContent="start">
                       <MouseoverTooltipContent
                         wrap={false}
                         content={
                           <ResponsiveTooltipContainer origin="top right" width={'295px'}>
                             <Row justify={!trade ? 'center' : 'space-between'}>
-                              <RowFixed>Allowed Slippage:</RowFixed>
-                              <RowFixed>{allowedSlippage.toSignificant(2)}%</RowFixed>
+                              <RowFixed>
+                                <Text fontSize={14} fontWeight={400}>
+                                  <Trans>Allowed Slippage:</Trans>
+                                </Text>
+                              </RowFixed>
+                              <RowFixed>
+                                <Text fontSize={14} fontWeight={400}>
+                                  <Trans>{allowedSlippage.toSignificant(2)}%</Trans>
+                                </Text>
+                              </RowFixed>
                             </Row>
                             <Row justify={!trade ? 'center' : 'space-between'}>
-                              <RowFixed>Minimum Received:</RowFixed>
                               <RowFixed>
-                                <span style={{ font: '10px' }}>
-                                  {' '}
+                                <Text fontSize={14} fontWeight={400}>
+                                  <Trans>Minimum Received:</Trans>
+                                </Text>
+                              </RowFixed>
+                              <RowFixed>
+                                <Text fontSize={14} fontWeight={400}>
                                   {isGaslessMode ? (
-                                    <span style={{ font: '10px' }}>
+                                    <span>
                                       {amountToReceive?.toSignificant(6)} {trade?.outputAmount.currency.symbol}
                                     </span>
                                   ) : (
                                     <span>
-                                      {trade?.minimumAmountOut(allowedSlippage).toSignificant(4)}{' '}
-                                      {trade?.outputAmount.currency.symbol} {trade?.outputAmount.currency.symbol}
+                                      {trade
+                                        ? `${trade?.minimumAmountOut(allowedSlippage).toSignificant(4)} ${
+                                            trade?.outputAmount.currency.symbol
+                                          }`
+                                        : '-'}
                                     </span>
                                   )}
-                                </span>
+                                </Text>
                               </RowFixed>
                             </Row>
                           </ResponsiveTooltipContainer>
@@ -1381,8 +1346,8 @@ export default function Market({ history }: RouteComponentProps) {
                       >
                         <StyledInfo />
                       </MouseoverTooltipContent>
-                      <Trans>Price:</Trans>
-                    </RowFixed>
+                      <Trans>Price</Trans>
+                    </TYPE.body>
                     <RowFixed>
                       <LoadingOpacityContainer $loading={routeIsSyncing}>
                         <TradePrice
@@ -1416,7 +1381,7 @@ export default function Market({ history }: RouteComponentProps) {
                         </AutoRow>
                       </MouseoverTooltipContent>
                     </RowFixed>
-                  </Row>
+                  </RowBetween>
                   {isGaslessMode && (
                     <Row justify={!trade ? 'center' : 'space-between'}>
                       <RowFixed style={{ position: 'relative' }}>
@@ -1462,7 +1427,7 @@ export default function Market({ history }: RouteComponentProps) {
                       )}
                     </Row>
                   )}
-                </div>
+                </AutoColumn>
               )}
               {inputTokenShouldBeWrapped && isGaslessMode && (
                 <PageWrapper gap="lg" justify="center">
@@ -1555,7 +1520,7 @@ export default function Market({ history }: RouteComponentProps) {
                   </GreyCard>
                 ) : showApproveFlow ? (
                   <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
-                    <AutoColumn style={{ width: '100%' }} gap="12px">
+                    <AutoColumn style={{ width: '100%' }} gap="md">
                       <ButtonConfirmed
                         onClick={handleApprove}
                         disabled={
@@ -1570,7 +1535,7 @@ export default function Market({ history }: RouteComponentProps) {
                         }
                       >
                         <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                          <span style={{ display: 'flex', alignItems: 'center' }}>
+                          <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'break-spaces' }}>
                             <CurrencyLogo
                               currency={currencies[Field.INPUT]}
                               size={'20px'}
@@ -1581,9 +1546,7 @@ export default function Market({ history }: RouteComponentProps) {
                             signatureState === UseERC20PermitState.SIGNED ? (
                               <Trans>You can now swap {currencies[Field.INPUT]?.symbol}</Trans>
                             ) : (
-                              <Trans>
-                                Allow the Kromatika Aggregator to use your {currencies[Field.INPUT]?.symbol}
-                              </Trans>
+                              <Trans>Allow Kromatika to use your {currencies[Field.INPUT]?.symbol}</Trans>
                             )}
                           </span>
                           {approvalState === ApprovalState.PENDING ? (
@@ -1607,19 +1570,15 @@ export default function Market({ history }: RouteComponentProps) {
                       </ButtonConfirmed>
                       <ButtonError
                         onClick={() => {
-                          if (false) {
-                            handleSwap()
-                          } else {
-                            setSwapState({
-                              tradeToConfirm: trade,
-                              attemptingTxn: false,
-                              swapErrorMessage: undefined,
-                              showConfirm: true,
-                              signatureDataNew: signatureData,
-                              swapTransactionNew: swapTransaction,
-                              txHash: undefined,
-                            })
-                          }
+                          setSwapState({
+                            tradeToConfirm: trade,
+                            attemptingTxn: false,
+                            swapErrorMessage: undefined,
+                            showConfirm: true,
+                            signatureDataNew: signatureData,
+                            swapTransactionNew: swapTransaction,
+                            txHash: undefined,
+                          })
                         }}
                         width="100%"
                         id="swap-button"
@@ -1638,19 +1597,15 @@ export default function Market({ history }: RouteComponentProps) {
                 ) : (
                   <ButtonError
                     onClick={() => {
-                      if (false) {
-                        handleSwap()
-                      } else {
-                        setSwapState({
-                          tradeToConfirm: trade,
-                          attemptingTxn: false,
-                          swapErrorMessage: undefined,
-                          showConfirm: true,
-                          signatureDataNew: signatureData,
-                          swapTransactionNew: swapTransaction,
-                          txHash: undefined,
-                        })
-                      }
+                      setSwapState({
+                        tradeToConfirm: trade,
+                        attemptingTxn: false,
+                        swapErrorMessage: undefined,
+                        showConfirm: true,
+                        signatureDataNew: signatureData,
+                        swapTransactionNew: swapTransaction,
+                        txHash: undefined,
+                      })
                     }}
                     id="swap-button"
                     disabled={!isValid || !!swapCallbackError}
@@ -1666,92 +1621,92 @@ export default function Market({ history }: RouteComponentProps) {
             </AutoColumn>
           </Wrapper>
         </AppBody>
-        <SwitchLocaleLink />
-        {!swapIsUnsupported ? null : (
-          <UnsupportedCurrencyFooter
-            show={swapIsUnsupported}
-            currencies={[currencies[Field.INPUT], currencies[Field.OUTPUT]]}
-          />
-        )}
-        {refEnabled && (
-          <RefferalStyle>
-            <AppBody>
-              {' '}
-              {account ? (
-                <Trans>
-                  <ReferralContainer>
-                    <ReferralElement1>
-                      <svg
-                        width="40px"
-                        height="40px"
-                        viewBox="0 0 23 23"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        style={{ marginRight: '30px' }}
-                      >
-                        <rect
-                          x="2"
-                          y="21"
-                          width="7"
-                          height="5"
-                          rx="0.6"
-                          transform="rotate(-90 2 21)"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                        />
-                        <rect
-                          x="17"
-                          y="15.5"
-                          width="7"
-                          height="5"
-                          rx="0.6"
-                          transform="rotate(-90 17 15.5)"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                        />
-                        <rect
-                          x="2"
-                          y="10"
-                          width="7"
-                          height="5"
-                          rx="0.6"
-                          transform="rotate(-90 2 10)"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                        />
-                        <path
-                          d="M7 17.5H10.5C11.6046 17.5 12.5 16.6046 12.5 15.5V8.5C12.5 7.39543 11.6046 6.5 10.5 6.5H7"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                        />
-                        <path d="M12.5 12H17" stroke="currentColor" strokeWidth="1.5" />
-                      </svg>
-                    </ReferralElement1>
-                    <ReferralElement2>
-                      Earn crypto by sharing the following referral link{' '}
-                      <div>
-                        <StyledCopyButton onClick={handleCopy} id="walletAddress">
-                          {shortenAddress(account)} {copied ? <span>(Copied)</span> : <span>Copy</span>}
-                        </StyledCopyButton>
-                      </div>
-                    </ReferralElement2>
-                  </ReferralContainer>
-                </Trans>
-              ) : (
-                <Trans>
-                  <NoWalletStyle>
-                    {' '}
-                    Connect wallet to generate referral link. How it works ?{' '}
-                    <a href="https://docs.kromatika.finance" target="_blank" rel="noreferrer">
-                      Read More
-                    </a>
-                  </NoWalletStyle>
-                </Trans>
-              )}
-            </AppBody>
-          </RefferalStyle>
-        )}
-      </ClassicModeContainer>
-    </MarketContainer>
+      </StyledSwap>
+      <SwitchLocaleLink />
+      {!swapIsUnsupported ? null : (
+        <UnsupportedCurrencyFooter
+          show={swapIsUnsupported}
+          currencies={[currencies[Field.INPUT], currencies[Field.OUTPUT]]}
+        />
+      )}
+      {refEnabled && (
+        <RefferalStyle>
+          <AppBody>
+            {' '}
+            {account ? (
+              <Trans>
+                <ReferralContainer>
+                  <ReferralElement1>
+                    <svg
+                      width="40px"
+                      height="40px"
+                      viewBox="0 0 23 23"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      style={{ marginRight: '30px' }}
+                    >
+                      <rect
+                        x="2"
+                        y="21"
+                        width="7"
+                        height="5"
+                        rx="0.6"
+                        transform="rotate(-90 2 21)"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      />
+                      <rect
+                        x="17"
+                        y="15.5"
+                        width="7"
+                        height="5"
+                        rx="0.6"
+                        transform="rotate(-90 17 15.5)"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      />
+                      <rect
+                        x="2"
+                        y="10"
+                        width="7"
+                        height="5"
+                        rx="0.6"
+                        transform="rotate(-90 2 10)"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      />
+                      <path
+                        d="M7 17.5H10.5C11.6046 17.5 12.5 16.6046 12.5 15.5V8.5C12.5 7.39543 11.6046 6.5 10.5 6.5H7"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      />
+                      <path d="M12.5 12H17" stroke="currentColor" strokeWidth="1.5" />
+                    </svg>
+                  </ReferralElement1>
+                  <ReferralElement2>
+                    Earn crypto by sharing the following referral link{' '}
+                    <div>
+                      <StyledCopyButton onClick={handleCopy} id="walletAddress">
+                        {shortenAddress(account)} {copied ? <span>(Copied)</span> : <span>Copy</span>}
+                      </StyledCopyButton>
+                    </div>
+                  </ReferralElement2>
+                </ReferralContainer>
+              </Trans>
+            ) : (
+              <Trans>
+                <NoWalletStyle>
+                  {' '}
+                  Connect wallet to generate referral link. How it works ?{' '}
+                  <a href="https://docs.kromatika.finance" target="_blank" rel="noreferrer">
+                    Read More
+                  </a>
+                </NoWalletStyle>
+              </Trans>
+            )}
+          </AppBody>
+        </RefferalStyle>
+      )}
+    </ClassicModeContainer>
   )
 }

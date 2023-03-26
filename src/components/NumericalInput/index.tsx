@@ -11,15 +11,14 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   outline: none;
   border: none;
   flex: 1 1 auto;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.bg6};
   font-size: ${({ fontSize }) => fontSize ?? '24px'};
-  text-align: ${({ align }) => align && align};
+  text-align: ${({ align }) => (align ? align : 'right')};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 0px;
   -webkit-appearance: textfield;
-  text-align: right;
 
   ::-webkit-search-decoration {
     -webkit-appearance: none;

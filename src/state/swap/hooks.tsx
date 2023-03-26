@@ -1,10 +1,8 @@
 import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Ether, NativeCurrency, Price, Token, TradeType } from '@uniswap/sdk-core'
-import { FACTORY_ADDRESS, Trade as V2Trade } from '@uniswap/v2-sdk'
-import { computePairAddress, Pair } from '@uniswap/v2-sdk'
+import { Currency, CurrencyAmount, NativeCurrency, Price, Token, TradeType } from '@uniswap/sdk-core'
+import { Pair, Trade as V2Trade } from '@uniswap/v2-sdk'
 import {
-  computePoolAddress,
   encodeSqrtRatioX96,
   FeeAmount,
   nearestUsableTick,
@@ -12,38 +10,32 @@ import {
   TICK_SPACINGS,
   TickMath,
   tickToPrice,
-  toHex,
   Trade as V3Trade,
 } from '@uniswap/v3-sdk'
-import { KROMATIKA_ROUTER_ADDRESSES, V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
+import { KROMATIKA_ROUTER_ADDRESSES } from 'constants/addresses'
 import { ChainName } from 'constants/chains'
 import { KROM } from 'constants/tokens'
-import { constants } from 'crypto'
 import { useBestV3Trade } from 'hooks/useBestV3Trade'
-import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { PoolState, usePools } from 'hooks/usePools'
-import { useV2Pair, useV2Pairs } from 'hooks/useV2Pairs'
+import { useV2Pair } from 'hooks/useV2Pairs'
 import { useV3SwapPools } from 'hooks/useV3SwapPools'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { tryParseTick } from 'state/mint/v3/utils'
 import { useSingleCallResult } from 'state/multicall/hooks'
-import { useNetworkGasPrice, useUserTickOffset, useUserTickSize } from 'state/user/hooks'
+import { useNetworkGasPrice, useUserTickOffset } from 'state/user/hooks'
 import { V3TradeState } from 'state/validator/types'
 
-import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { useCurrency } from '../../hooks/Tokens'
-import { useLimitOrderManager, useUniswapUtils } from '../../hooks/useContract'
+import { useLimitOrderManager } from '../../hooks/useContract'
 import useENS from '../../hooks/useENS'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { isAddress } from '../../utils'
 import { AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { Field, Rate, replaceSwapState, selectCurrency, setRecipient, switchCurrencies } from './actions'
-import { typeInput } from './actions'
+import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { SwapState } from './reducer'
 
 const Q96 = JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(96))
@@ -634,6 +626,7 @@ export function useDefaultsFromURLSearch():
 
 const ENS_NAME_REGEX = /^[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)?$/
 const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/
+
 function validatedRecipient(recipient: any): string | null {
   if (typeof recipient !== 'string') return null
   const address = isAddress(recipient)

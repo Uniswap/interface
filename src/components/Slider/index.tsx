@@ -79,9 +79,11 @@ const StyledRangeInput = styled.input<{ size: number }>`
     background: ${({ theme }) => theme.bg5};
     height: 2px;
   }
+
   &::-ms-fill-lower {
     background: ${({ theme }) => theme.bg5};
   }
+
   &::-ms-fill-upper {
     background: ${({ theme }) => theme.bg3};
   }

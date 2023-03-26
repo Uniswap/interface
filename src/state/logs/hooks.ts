@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useBlockNumber } from '../application/hooks'

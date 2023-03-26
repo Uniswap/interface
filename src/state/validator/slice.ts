@@ -1,11 +1,4 @@
-import {
-  BaseQueryFn,
-  createApi,
-  FetchArgs,
-  fetchBaseQuery,
-  FetchBaseQueryError,
-  retry,
-} from '@reduxjs/toolkit/query/react'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import qs from 'qs'
 
 import { GetValidatorGaslessQuoteResult, GetValidatorQuoteResult } from './types'

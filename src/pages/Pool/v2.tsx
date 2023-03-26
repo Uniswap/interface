@@ -13,7 +13,6 @@ import Card from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
-import FullPositionCard from '../../components/PositionCard'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { Dots } from '../../components/swap/styleds'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
@@ -55,7 +54,7 @@ const ButtonRow = styled(RowFixed)`
 
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   width: fit-content;
-  border-radius: 12px;
+  border-radius: 20px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 48%;
   `};
@@ -71,7 +70,7 @@ const ResponsiveButtonSecondary = styled(ButtonSecondary)`
 const EmptyProposals = styled.div`
   border: 1px solid ${({ theme }) => theme.text4};
   padding: 16px 12px;
-  border-radius: 12px;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -149,7 +148,7 @@ export default function Pool() {
                 </TYPE.white>
               </RowBetween>
               <RowBetween>
-                <TYPE.white fontSize={14}>
+                <TYPE.white fontSize={[10, 12, 14]}>
                   <Trans>
                     Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are
                     added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
@@ -161,7 +160,7 @@ export default function Pool() {
                 target="_blank"
                 href="https://uniswap.org/docs/v2/core-concepts/pools/"
               >
-                <TYPE.white fontSize={14}>
+                <TYPE.white fontSize={[10, 12, 14]}>
                   <Trans>Read more about providing liquidity</Trans>
                 </TYPE.white>
               </ExternalLink>
@@ -195,12 +194,12 @@ export default function Pool() {
                     <Trans>Create a pair</Trans>
                   </ResponsiveButtonSecondary>
                   <ResponsiveButtonPrimary id="find-pool-button" as={Link} to="/pool/v2/find" padding="6px 8px">
-                    <Text fontWeight={500} fontSize={16}>
+                    <Text fontWeight={400} fontSize={16}>
                       <Trans>Import Pool</Trans>
                     </Text>
                   </ResponsiveButtonPrimary>
                   <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/v2/ETH" padding="6px 8px">
-                    <Text fontWeight={500} fontSize={16}>
+                    <Text fontWeight={400} fontSize={16}>
                       <Trans>Add V2 Liquidity</Trans>
                     </Text>
                   </ResponsiveButtonPrimary>
@@ -241,7 +240,7 @@ export default function Pool() {
                       style={{
                         padding: '8px 16px',
                         margin: '0 4px',
-                        borderRadius: '12px',
+                        borderRadius: '20px',
                         width: 'fit-content',
                         fontSize: '14px',
                       }}

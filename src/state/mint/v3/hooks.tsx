@@ -1,39 +1,14 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Price, Rounding, Token } from '@uniswap/sdk-core'
-import {
-  encodeSqrtRatioX96,
-  FeeAmount,
-  nearestUsableTick,
-  Pool,
-  Position,
-  priceToClosestTick,
-  TICK_SPACINGS,
-  TickMath,
-  tickToPrice,
-} from '@uniswap/v3-sdk'
-import { usePool } from 'hooks/usePools'
-import JSBI from 'jsbi'
+import { Currency, CurrencyAmount, Rounding, Token } from '@uniswap/sdk-core'
+import { FeeAmount, Pool, TICK_SPACINGS, tickToPrice } from '@uniswap/v3-sdk'
 import { ReactNode, useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { useNetworkGasPrice, useUserGasPrice } from 'state/user/hooks'
-import { getTickToPrice } from 'utils/getTickToPrice'
 
-import { BIG_INT_ZERO } from '../../../constants/misc'
-import { PoolState } from '../../../hooks/usePools'
 import { useActiveWeb3React } from '../../../hooks/web3'
 import { AppState } from '../../index'
 import { tryParseAmount } from '../../swap/hooks'
 import { useCurrencyBalances } from '../../wallet/hooks'
-import {
-  Bound,
-  Field,
-  setFullRange,
-  typeInput,
-  typeLeftRangeInput,
-  typeRightRangeInput,
-  typeStartPriceInput,
-} from './actions'
-import { tryParseTick } from './utils'
+import { Field, setFullRange, typeInput, typeLeftRangeInput, typeRightRangeInput, typeStartPriceInput } from './actions'
 
 export function useV3MintState(): AppState['mintV3'] {
   return useAppSelector((state) => state.mintV3)

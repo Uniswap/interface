@@ -60,38 +60,38 @@ function colors(darkMode: boolean): Colors {
 
     // text
     text1: darkMode ? '#FFFFFF' : '#000000',
-    text2: darkMode ? '#C3C5CB' : '#565A69',
+    text2: darkMode ? '#C3C5CB' : '#6C86AD',
     text3: darkMode ? '#8F96AC' : '#6E727D',
     text4: darkMode ? '#B2B9D2' : '#C3C5CB',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
     // backgrounds / greys
-    bg0: darkMode ? '#191B1F' : '#FFF',
-    bg1: darkMode ? '#212429' : '#F7F8FA',
-    bg2: darkMode ? '#2C2F36' : '#EDEEF2',
-    bg3: darkMode ? '#40444F' : '#CED0D9',
-    bg4: darkMode ? '#565A69' : '#888D9B',
-    bg5: darkMode ? '#6C7284' : '#888D9B',
-    bg6: darkMode ? '#1A2028' : '#6C7284',
+    bg0: darkMode ? '#17161A' : '#FFFFFF',
+    bg1: darkMode ? '#212121' : '#FFFFFF',
+    bg2: darkMode ? '#292929' : '#F3F5FA',
+    bg3: darkMode ? '#40444F' : '#EDF1FF',
+    bg4: darkMode ? '#565A69' : '#ECF0F9',
+    bg5: darkMode ? '#6C7284' : '#F3F5FA',
+    bg6: darkMode ? '#17161A' : '#ecf1f8',
 
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#E8006F',
-    primary2: darkMode ? '#3680E7' : '#FF8CC3',
-    primary3: darkMode ? '#4D8FEA' : '#FF99C9',
-    primary4: darkMode ? '#376bad70' : '#F6DDE8',
-    primary5: darkMode ? '#153d6f70' : '#FDEAF1',
+    primary1: darkMode ? '#945DC8' : '#2F8AF5',
+    primary2: darkMode ? '#9F6DCE' : '#2F8AF5D9',
+    primary3: darkMode ? '#A97DD3' : '#2F8AF590',
+    primary4: darkMode ? '#8554B470' : '#2F8AF560',
+    primary5: darkMode ? '#764AA070' : '#2F8AF530',
 
     // color text
-    primaryText1: darkMode ? '#5090ea' : '#D50066',
+    primaryText1: darkMode ? '#FFFFFF' : '#2f8af5',
 
     // secondary colors
-    secondary1: darkMode ? '#2172E5' : '#E8006F',
+    secondary1: darkMode ? '#2D9CDB' : '#2D9CDB',
     secondary2: darkMode ? '#17000b26' : '#F6DDE8',
-    secondary3: darkMode ? '#17000b26' : '#FDEAF1',
+    secondary3: darkMode ? '#17000b26' : '#2F8AF530',
 
     // other
     red1: darkMode ? '#FF4343' : '#DA2D2B',
@@ -103,13 +103,14 @@ function colors(darkMode: boolean): Colors {
     yellow3: '#F3B71E',
     blue1: darkMode ? '#2172E5' : '#0068FC',
     blue2: darkMode ? '#5199FF' : '#0068FC',
-    error: darkMode ? '#FD4040' : '#DF1F38',
+    purple1: darkMode ? '#945DC8' : '#764aa0',
+    error: darkMode ? '#EB5757' : '#DF1F38',
     success: darkMode ? '#27AE60' : '#007D35',
     warning: '#FF8F00',
 
     // dont wanna forget these blue yet
-    blue4: darkMode ? '#153d6f70' : '#C4D9F8',
-    // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
+    blue4: darkMode ? '#764aa070' : '#C4D9F8',
+    // blue5: darkMode ? '#764aa070' : '#EBF4FF',
   }
 }
 
@@ -125,6 +126,8 @@ function theme(darkMode: boolean): DefaultTheme {
 
     //shadows
     shadow1: darkMode ? '#000' : '#2F80ED',
+    shadow2: darkMode ? '#17161A' : '#E2E9F6',
+    shadow3: darkMode ? '#292929' : '#E2E9F6',
 
     // media queries
     mediaWidth: mediaWidthTemplates,
@@ -154,63 +157,66 @@ const TextWrapper = styled(Text)<{ color: keyof Colors }>`
 `
 
 export const TYPE = {
+  largeHeader(props: TextProps) {
+    return <TextWrapper fontWeight={600} fontSize={24} {...props} />
+  },
+  mediumHeader(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={20} {...props} />
+  },
+  subHeader(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={18} {...props} />
+  },
+  body(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...props} />
+  },
+  small(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={14} {...props} />
+  },
+  italic(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={16} fontStyle={'italic'} color={'text2'} {...props} />
+  },
   main(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'text2'} {...props} />
+    return <TextWrapper fontWeight={400} color={'text2'} {...props} />
   },
   link(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'primary1'} {...props} />
+    return <TextWrapper fontWeight={400} color={'primary1'} {...props} />
   },
   label(props: TextProps) {
     return <TextWrapper fontWeight={600} color={'text1'} {...props} />
   },
   black(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'text1'} {...props} />
+    return <TextWrapper fontWeight={400} color={'text1'} {...props} />
   },
   white(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'white'} {...props} />
-  },
-  body(props: TextProps) {
-    return <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...props} />
-  },
-  largeHeader(props: TextProps) {
-    return <TextWrapper fontWeight={600} fontSize={24} {...props} />
-  },
-  mediumHeader(props: TextProps) {
-    return <TextWrapper fontWeight={500} fontSize={20} {...props} />
-  },
-  subHeader(props: TextProps) {
-    return <TextWrapper fontWeight={400} fontSize={14} {...props} />
-  },
-  small(props: TextProps) {
-    return <TextWrapper fontWeight={500} fontSize={11} {...props} />
+    return <TextWrapper fontWeight={400} color={'white'} {...props} />
   },
   blue(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'blue1'} {...props} />
+    return <TextWrapper fontWeight={400} color={'blue1'} {...props} />
+  },
+  purple(props: TextProps) {
+    return <TextWrapper fontWeight={400} color={'primary1'} {...props} />
   },
   yellow(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'yellow3'} {...props} />
+    return <TextWrapper fontWeight={400} color={'yellow3'} {...props} />
   },
   darkGray(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'text3'} {...props} />
+    return <TextWrapper fontWeight={400} color={'text2'} {...props} />
   },
   gray(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'bg3'} {...props} />
-  },
-  italic(props: TextProps) {
-    return <TextWrapper fontWeight={500} fontSize={12} fontStyle={'italic'} color={'text2'} {...props} />
+    return <TextWrapper fontWeight={400} color={'bg3'} {...props} />
   },
   error({ error, ...props }: { error: boolean } & TextProps) {
-    return <TextWrapper fontWeight={500} color={error ? 'red1' : 'text2'} {...props} />
+    return <TextWrapper fontWeight={400} color={error ? 'red1' : 'text2'} {...props} />
   },
 }
 
 export const ThemedGlobalStyle = createGlobalStyle`
-html {
-  color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg1} !important;
-}
+  html {
+    color: ${({ theme }) => theme.text1};
+    background-color: ${({ theme }) => theme.black} !important;
+  }
 
-a {
- color: ${({ theme }) => theme.blue1}; 
-}
+  a {
+    color: ${({ theme }) => theme.blue1};
+  }
 `

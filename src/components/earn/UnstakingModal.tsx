@@ -83,7 +83,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
           </RowBetween>
           {stakingInfo?.stakedAmount && (
             <AutoColumn justify="center" gap="md">
-              <TYPE.body fontWeight={600} fontSize={36}>
+              <TYPE.body fontWeight={600} fontSize={[16, 26, 36]}>
                 {<FormattedCurrencyAmount currencyAmount={stakingInfo.stakedAmount} />}
               </TYPE.body>
               <TYPE.body>
@@ -93,7 +93,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
           )}
           {stakingInfo?.earnedAmount && (
             <AutoColumn justify="center" gap="md">
-              <TYPE.body fontWeight={600} fontSize={36}>
+              <TYPE.body fontWeight={600} fontSize={[16, 26, 36]}>
                 {<FormattedCurrencyAmount currencyAmount={stakingInfo?.earnedAmount} />}
               </TYPE.body>
               <TYPE.body>

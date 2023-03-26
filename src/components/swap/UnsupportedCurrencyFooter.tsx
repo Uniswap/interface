@@ -42,7 +42,7 @@ const AddressText = styled(TYPE.blue)`
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     font-size: 10px;
-`}
+  `}
 `
 
 export default function UnsupportedCurrencyFooter({
@@ -84,7 +84,7 @@ export default function UnsupportedCurrencyFooter({
                     <AutoColumn gap="10px">
                       <AutoRow gap="5px" align="center">
                         <CurrencyLogo currency={token} size={'24px'} />
-                        <TYPE.body fontWeight={500}>{token.symbol}</TYPE.body>
+                        <TYPE.body fontWeight={400}>{token.symbol}</TYPE.body>
                       </AutoRow>
                       {chainId && (
                         <ExternalLink href={getExplorerLink(chainId, token.address, ExplorerDataType.ADDRESS)}>
@@ -97,7 +97,7 @@ export default function UnsupportedCurrencyFooter({
               )
             })}
             <AutoColumn gap="lg">
-              <TYPE.body fontWeight={500}>
+              <TYPE.body fontWeight={400}>
                 <Trans>
                   Some assets are not available through this interface because they may not work well with the smart
                   contracts or we are unable to allow trading for legal reasons.

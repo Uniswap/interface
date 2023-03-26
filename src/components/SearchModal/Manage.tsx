@@ -21,7 +21,7 @@ const Wrapper = styled.div`
 
 const ToggleWrapper = styled(RowBetween)`
   background-color: ${({ theme }) => theme.bg3};
-  border-radius: 12px;
+  border-radius: 20px;
   padding: 6px;
 `
 
@@ -31,7 +31,7 @@ const ToggleOption = styled.div<{ active?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
+  border-radius: 20px;
   font-weight: 600;
   background-color: ${({ theme, active }) => (active ? theme.bg1 : theme.bg3)};
   color: ${({ theme, active }) => (active ? theme.text1 : theme.text2)};
@@ -64,7 +64,7 @@ export default function Manage({
       <PaddedColumn>
         <RowBetween>
           <ArrowLeft style={{ cursor: 'pointer' }} onClick={() => setModalView(CurrencyModalView.search)} />
-          <Text fontWeight={500} fontSize={20}>
+          <Text fontWeight={400} fontSize={16}>
             <Trans>Manage</Trans>
           </Text>
           <CloseIcon onClick={onDismiss} />

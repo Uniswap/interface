@@ -1,13 +1,12 @@
 import styled from 'styled-components/macro'
 
 import uImage from '../../assets/images/background_account_stats.png'
-import noise from '../../assets/images/noise.png'
 import xlUnicorn from '../../assets/images/xl_uni.png'
 import { AutoColumn } from '../Column'
 
 export const DataCard = styled(AutoColumn)<{ disabled?: boolean }>`
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ff007a 0%, #2172e5 100%);
-  border-radius: 12px;
+  border-radius: 20px;
   width: 100%;
   position: relative;
   overflow: hidden;
@@ -20,7 +19,7 @@ export const CardBGImage = styled.span<{ desaturate?: boolean }>`
   width: 1000px;
   height: 600px;
   position: absolute;
-  border-radius: 12px;
+  border-radius: 20px;
   // opacity: 0.4;
   user-select: none;
   ${({ desaturate }) => desaturate && `filter: saturate(0)`}
@@ -31,7 +30,7 @@ export const CardBGImageSmaller = styled.span<{ desaturate?: boolean }>`
   width: 1200px;
   height: 1200px;
   position: absolute;
-  border-radius: 12px;
+  border-radius: 20px;
   top: -300px;
   left: -300px;
   opacity: 0.4;
@@ -44,7 +43,7 @@ export const CardNoise = styled.span`
   background-color: green;
   background-size: cover;
   mix-blend-mode: overlay;
-  border-radius: 12px;
+  border-radius: 20px;
   width: 100%;
   height: 100%;
   opacity: 0.15;

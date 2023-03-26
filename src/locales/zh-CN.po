@@ -22,18 +22,13 @@ msgstr "$-"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "$<0/>"
-msgstr ""
+msgstr "$<0/>"
 
 #: src/components/earn/PoolCard.tsx
-#: src/pages/Market/index.tsx
-#: src/pages/Market/index.tsx
+#: src/components/swap/TradePrice.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
 msgstr "${0}"
-
-#: src/components/swap/TradePrice.tsx
-msgid "(${0})"
-msgstr "(${0})"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
@@ -61,6 +56,7 @@ msgstr "(编辑)"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "- Remove recipient"
 msgstr "- 删除接收人"
 
@@ -71,7 +67,7 @@ msgstr "0 UNI 代币 / 每周"
 
 #: src/pages/Earn/Manage.tsx
 msgid "0 sKrom / week"
-msgstr ""
+msgstr "0 sKrom /周"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
@@ -106,29 +102,41 @@ msgstr "<0/> 所有提案"
 msgid "<0/> Votes"
 msgstr "<0/> 票"
 
+#: src/components/Perpetual/index.tsx
+msgid "<0/><1/>By clicking \"Agree\" you accept the <2>Terms and Conditions </2>by Kromatika.Finance<3/><4/>"
+msgstr "<0/><1/>点击“同意”即表示您接受 Kromatika.Finance<3/><4/> 的<2>条款和条件</2>"
+
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "<0><1><2><3/><4/><5/><6/><7/></2></1><8>Earn crypto by sharing the following referral link <9><10>{0} {1}</10></9></8></0>"
+msgstr "<0><1><2><3/><4/><5/><6/></2></1><8>通过分享以下推荐链接赚取加密货币 <9 ><10>{0} {1}</10></9></8></0>"
+
+#: src/components/LimitWarning/LimitWarningModal.tsx
+msgid "<0>ALL OTHER CHAINS</0> and <1>FEATURES ARE SECURE</1> (Polygon swaps & gasless swaps are also secure).<2/> <3/>As a security measure, Limit Order UI is paused on <4>Polygon Network only</4>."
+msgstr "<0>所有其他链</0>和<1>功能是安全的</1>（多边形交换和无气体交换也是安全的）。<2/> <3/>作为一项安全措施，限价订单用户界面已暂停 在<4>仅限多边形网络</4>。"
+
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
 msgstr "<0>账户分析和已累积的手续费</0><1> ↗ </1>"
 
-#: 
-#~ msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
-#~ msgstr "<0>当前兑换率：</0> <1><2/></1> <3>{0} 每 {1}</3>"
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "<0>Connect wallet to generate referral link. How it works ? <1>Read More</1></0>"
+msgstr "<0>连接钱包生成推荐链接。 怎么运行的 ？ <1>阅读更多</1></0>"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "<0>Error occured, reattempting transaction building! If the error persists, cancel the trade and try again.</0>"
+msgstr "<0>发生错误，重新尝试建立交易！ 如果错误仍然存在，请取消交易并重试。</0>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
 msgstr "<0>提示：</0>退出资金池，按照当前汇率将您的资金池份额转换回原本代币。您收到的代币数额中将包含已累计的手续费。"
 
-#: 
-#~ msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
-#~ msgstr "<0>提示：</0>选择操作并描述您的提案。提案提交后不可修改，提交前请核对所有信息。投票期将立即开始，持续 7 天。若要提议自定义操作，请<1>阅读文档</1>。"
-
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
 msgstr "<0>提示：</0>使用此工具可查找未自动出现在界面中的 v2 池。"
-
-#: 
-#~ msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-#~ msgstr "<0>提示：</0>当您注入流动资金时，您将收到代表您份额的流动池代币。这些代币将根据您在池中所占份额，自动赚取和累计相称的手续费，并且可以随时赎回流动池币对。"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
@@ -137,7 +145,11 @@ msgstr "<0>解锁投票</0>，以准备下一个提案。"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "<0>{0} per {1}</0>"
-msgstr ""
+msgstr "<0>{0} 每 {1}</0>"
+
+#: src/pages/Market/index.tsx
+msgid "<0> Price: </0>"
+msgstr "<0>价格：</0>"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
@@ -149,28 +161,28 @@ msgstr "提交提案所需的最低门槛为 UNI 总供应量的 0.25%"
 
 #: src/pages/Stake/index.tsx
 msgid "APY"
-msgstr ""
+msgstr "APY"
 
 #: src/pages/Earn/Manage.tsx
 msgid "APY - add explanational tooltip"
-msgstr ""
+msgstr "APY - 添加解释性工具提示"
 
 #: src/pages/Stake/index.tsx
 msgid "APY is calculated as a participation percentage compared to the overall staked balance.It is updated every 2 weeks."
-msgstr ""
+msgstr "APY 计算为与总质押余额相比的参与百分比。它每 2 周更新一次。"
 
 #: src/components/Stake/index.tsx
 msgid "APY is calculated as a participation percentage in relation to the overall staked balance pool.It is updated every 2 weeks."
-msgstr ""
+msgstr "APY 计算为相对于整体质押余额池的参与百分比。它每 2 周更新一次。"
 
 #: src/components/PositionCard/index.tsx
 msgid "APY is calculated as participating percentage in the total value staked. The APY percentage is therefore applied on total amount collected in the Fee Treasury."
-msgstr ""
+msgstr "APY 计算为质押总价值中的参与百分比。 因此，APY 百分比适用于 Fee Treasury 中收取的总额。"
 
 #: src/components/PositionCard/index.tsx
 #: src/components/Stake/index.tsx
 msgid "APY:"
-msgstr ""
+msgstr "APY:"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -188,19 +200,13 @@ msgstr "账户"
 
 #: src/components/PositionCard/index.tsx
 msgid "Account Status:"
-msgstr ""
+msgstr "帐户状态:"
 
 #: src/components/PositionCard/index.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "已激活"
-
-#: 
-#: 
-#: 
-#~ msgid "Add"
-#~ msgstr "添加"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add <0/> and <1/> to Kromatika V2"
@@ -210,11 +216,6 @@ msgstr "将 <0/> 和 <1/> 添加到 Kromatika V2"
 msgid "Add Delegate +"
 msgstr "添加委托 +"
 
-#: 
-#: 
-#~ msgid "Add Liquidity"
-#~ msgstr "添加流动性"
-
 #: src/pages/Pool/v2.tsx
 msgid "Add V2 Liquidity"
 msgstr "添加 V2 流动性"
@@ -222,10 +223,6 @@ msgstr "添加 V2 流动性"
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
 msgstr "添加流动性。"
-
-#: 
-#~ msgid "Add more liquidity"
-#~ msgstr "增加更多流动性"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
@@ -252,37 +249,35 @@ msgstr "地址没有可领取的代币"
 msgid "Against"
 msgstr "反对"
 
+#: src/components/LimitWarning/LimitWarningModal.tsx
+#: src/components/Perpetual/index.tsx
+msgid "Agree"
+msgstr "同意"
+
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Allow Kromatika to use your {0}"
-msgstr ""
+msgstr "允许 Kromatika 使用您的 {0}"
 
 #: 
-#~ msgid "Allow LP token migration"
-#~ msgstr "允许流动池代币迁移"
-
 #: 
-#~ msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-#~ msgstr "允许高度影响价格的交易，并跳过确认步骤。须自行承担使用风险。"
-
-#: src/pages/Market/index.tsx
-#: src/pages/Market/index.tsx
-msgid "Allow the Kromatika Aggregator to use your {0}"
-msgstr ""
-
-#: 
-#~ msgid "Allow the Kromatika Protocol to use your {0}"
-#~ msgstr "允许 Kromatika 调用您的 {0}"
-
-#: 
-#~ msgid "Allowed"
-#~ msgstr "已允许"
+#~ msgid "Allow the Kromatika Aggregator to use your {0}"
+#~ msgstr "允许 Kromatika 聚合器使用您的 {0}"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 msgid "Allowed Slippage"
 msgstr "允许滑点"
+
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "Allowed Slippage:"
+msgstr "允许滑点："
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -292,30 +287,29 @@ msgstr "数额"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Amounts"
-msgstr ""
-
-#: 
-#~ msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
-#~ msgstr "尝试执行此兑换时发生错误。您可能需要增加滑点限制。如果还是不行，则可能是您正在交易的代币与Kromatika不兼容。注：Kromatika V3不兼容转账时带扣除费用（fee-on-transfer）的代币和弹性供应（rebase）代币。"
+msgstr "数额"
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
-msgstr ""
+msgstr "尝试执行此交换时发生错误。 您可能需要增加滑点容忍度。 如果这不起作用，则可能与您正在交易的代币不兼容。 注意：转账费用和变基代币与 Kromatika 不兼容。"
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Any missing order(s)? Try switching between networks."
+msgstr "有遗漏的订单吗？ 尝试在网络之间切换。"
 
 #: 
-#~ msgid "Analytics"
-#~ msgstr "数据分析"
+#: 
+#~ msgid "Any missing order? Try switching between"
+#~ msgstr "有遗漏的订单吗？ 尝试切换"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "批准"
 
-#: 
-#~ msgid "Approve Token"
-#~ msgstr "批准代币"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/Stake/StakingModal.tsx
 msgid "Approve {0}"
@@ -329,6 +323,7 @@ msgstr "已批准"
 msgid "Approving"
 msgstr "批准中"
 
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/Stake/StakingModal.tsx
 msgid "Approving {0}"
@@ -351,24 +346,16 @@ msgid "Are you sure?"
 msgstr "您确定吗？"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Kromatika community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "作为Kromatika社区的成员，您可以认领 UNI 代币，用于投票和治理。<0/><1/><2>阅读更多关于 UNI 代币信息</2>"
-
-#: 
-#~ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
-#~ msgstr "根据选定的兑换率范围，至少会有 {0} {1} 和 {2} {3} 将退还到您的钱包。"
+msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
+msgstr "作为 Uniswap 社区的成员，您可以声明 UNI 用于投票和治理。<0/><1/><2>阅读有关 UNI 的更多信息</2>"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
 msgstr "自动"
 
-#: 
-#~ msgid "Auto Router"
-#~ msgstr "自动路由"
-
-#: 
-#~ msgid "Available to deposit: {0}"
-#~ msgstr "可调用的数额：{0}"
+#: src/components/Settings/index.tsx
+msgid "BETA FEATURE. Use at own risk."
+msgstr "测试版功能。 使用风险自负。"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
@@ -402,6 +389,10 @@ msgstr "已屏蔽地址"
 msgid "Bridge"
 msgstr "桥"
 
+#: src/state/market/hooks.tsx
+msgid "Buy amount lower than fee amount"
+msgstr "购买金额低于费用金额"
+
 #: src/components/PositionCard/index.tsx
 #: src/components/Stake/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
@@ -411,18 +402,14 @@ msgstr "通过添加流动性，您将按您在流动池中所占比例赚取对
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
 msgstr "添加此代币列表代表您信任其数据是正确的。任何人都可以创建代币列表，包括创建假冒实际列表的造假版本，以及自我声称代表了某项目的代币列表。"
 
-#: 
-#~ msgid "By connecting a wallet, you agree to Kromatika Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Kromatika protocol disclaimer</1>."
-#~ msgstr "通过连接钱包，您同意接受 Kromatika 实验室的<0>服务条款</0>，并确认您已阅读和理解<1>Kromatika协议免责声明</1>。"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancel Trade"
-msgstr ""
+msgstr "取消交易"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Vote/styled.tsx
@@ -431,23 +418,23 @@ msgstr "已取消"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Canceling the trade will withdraw available amounts for you."
-msgstr ""
+msgstr "取消交易将为您提取可用金额。"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Cancelled:"
+msgstr "取消:"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancelling"
-msgstr ""
+msgstr "取消"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancelling trade"
-msgstr ""
+msgstr "取消交易"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "更改"
-
-#: 
-#~ msgid "Charts"
-#~ msgstr "图表"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Check network status"
@@ -468,7 +455,7 @@ msgstr "为 {0} 领取 <0/>"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Claim KROM"
-msgstr ""
+msgstr "索取KROM"
 
 #: src/components/Header/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -484,10 +471,6 @@ msgstr "领取 UNI 代币"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim UNI reward for {0}"
 msgstr "{0} 领取 UNI 奖励"
-
-#: 
-#~ msgid "Claim fees"
-#~ msgstr "领取已累积的手续费"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Claim your UNI tokens"
@@ -520,10 +503,6 @@ msgstr "正在领取UNI"
 msgid "Claiming {0} UNI"
 msgstr "正在领取 {0} UNI 代币"
 
-#: 
-#~ msgid "Clear All"
-#~ msgstr "全部清除"
-
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Clear all"
 msgstr "全部清除"
@@ -536,6 +515,10 @@ msgstr "关闭"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Closed"
 msgstr "已关闭"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Closed:"
+msgstr "关闭:"
 
 #: src/components/Menu/index.tsx
 msgid "Code"
@@ -550,10 +533,6 @@ msgstr "收取"
 msgid "Collect as WETH"
 msgstr "以 WETH 方式收取"
 
-#: 
-#~ msgid "Collect fees"
-#~ msgstr "收取手续费"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Collect {0}/{1} fees"
 msgstr "收取 {0}/{1} 手续费"
@@ -564,32 +543,24 @@ msgstr "已收取"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
-msgstr ""
+msgstr "收集了 {0} {1}{2} 和 {3} {4}{5}"
 
-#: 
-#~ msgid "Collecting"
-#~ msgstr "收取中"
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Collected:"
+msgstr "集:"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting amounts will withdraw currently available amounts for you."
-msgstr ""
-
-#: 
-#~ msgid "Collecting fees"
-#~ msgstr "收取手续费"
-
-#: 
-#~ msgid "Collecting fees will withdraw currently available fees for you."
-#~ msgstr "收取手续费的操作将为您提取您当前已累积的手续费。"
+msgstr "收集金额将为您提取当前可用的金额。"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting tokens"
-msgstr ""
+msgstr "收集代币"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
 msgid "Coming Soon"
-msgstr ""
+msgstr "即将推出"
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
@@ -600,17 +571,9 @@ msgstr "常用代币"
 msgid "Confirm"
 msgstr "确认"
 
-#: 
-#~ msgid "Confirm Create"
-#~ msgstr "确认创建"
-
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Confirm Limit Order"
-msgstr ""
-
-#: 
-#~ msgid "Confirm Supply"
-#~ msgstr "确认供应"
+msgstr "确认限价单"
 
 #: src/components/market/ConfirmMarketModal.tsx
 #: src/components/market/MarketModalFooter.tsx
@@ -639,6 +602,7 @@ msgstr "在钱包中确认交易"
 #: src/pages/Stake/StakingModal.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/burn/v3/hooks.tsx
 #: src/state/market/hooks.tsx
@@ -650,8 +614,6 @@ msgid "Connect Wallet"
 msgstr "连接钱包"
 
 #: src/components/earn/UnstakingModal.tsx
-#: src/pages/LimitOrder/index.tsx
-#: src/pages/LimitOrder/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -660,7 +622,6 @@ msgstr "连接钱包"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/WalletModal/index.tsx
-#: src/components/Web3Status/index.tsx
 msgid "Connect to a wallet"
 msgstr "连接钱包"
 
@@ -668,13 +629,13 @@ msgstr "连接钱包"
 msgid "Connect to a wallet to find pools"
 msgstr "连接到钱包以查找流动池"
 
-#: 
-#~ msgid "Connect to a wallet to view your V2 liquidity."
-#~ msgstr "连接到钱包以查看您的 V2 流动资金。"
-
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
 msgstr "连接到钱包以查看您的流动资金。"
+
+#: src/components/Web3Status/index.tsx
+msgid "Connect wallet"
+msgstr "连接钱包"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -689,14 +650,6 @@ msgstr "已复制"
 msgid "Copy Address"
 msgstr "复制地址"
 
-#: 
-#~ msgid "Create"
-#~ msgstr "创建"
-
-#: 
-#~ msgid "Create Pool & Supply"
-#~ msgstr "创建流动池和供应流动资金"
-
 #: src/pages/Vote/index.tsx
 msgid "Create Proposal"
 msgstr "创建提案"
@@ -705,10 +658,6 @@ msgstr "创建提案"
 #: src/pages/Pool/v2.tsx
 msgid "Create a pair"
 msgstr "创建币对"
-
-#: 
-#~ msgid "Create a pool"
-#~ msgstr "创建流动池"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Create an issue on GitHub"
@@ -728,7 +677,7 @@ msgstr "创建 {0}/{1} V3 池"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Created Limit Trade {0} {1} {2}for {3} {4}{5}↗"
-msgstr ""
+msgstr "已为 {3} {4}{5}创建限价交易 {0} {1} {2}↗"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -736,33 +685,25 @@ msgstr ""
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Current Price"
-msgstr ""
+msgstr "时价"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Current Price:"
-msgstr ""
+msgstr "时价："
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
 msgid "Current Price: 0"
-msgstr ""
+msgstr "时价： 0"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Current price"
 msgstr "当前兑换率"
 
-#: 
-#~ msgid "Current {0} Price:"
-#~ msgstr "当前 {0} 兑换率："
-
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "深色主题"
-
-#: src/components/Header/index.tsx
-msgid "Dashboard"
-msgstr ""
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
@@ -791,22 +732,19 @@ msgstr "委托投票"
 msgid "Deposit"
 msgstr "充值"
 
-#: 
-#~ msgid "Deposit Amounts"
-#~ msgstr "充值数额"
-
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit Assets"
 msgstr "存入资产"
 
-#: src/components/PositionCard/index.tsx
-msgid "Deposit Balance:"
-msgstr ""
-
 #: src/components/NavigationTabs/index.tsx
+#: src/components/PositionCard/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Deposit KROM"
-msgstr ""
+msgstr "存入KROM"
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "Deposit KROM to process trade"
+msgstr "存入KROM进行加工贸易"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
@@ -818,32 +756,24 @@ msgid "Deposit liquidity"
 msgstr "充入流动资金"
 
 #: src/pages/Earn/index.tsx
-msgid "Deposit your Liquidity Provider tokens to receive KROM, the Kromatika protocol governance token."
-msgstr ""
-
-#: 
-#~ msgid "Deposit your Liquidity Provider tokens to receive UNI, the Kromatika protocol governance token."
-#~ msgstr "充入您的流动池代币以领取 UNI（Kromatika 的治理代币）。"
+msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
+msgstr "存入您的流动性提供者代币以接收 UNI，Uniswap 协议治理代币。"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit {0}"
-msgstr ""
+msgstr "存款 {0}"
+
+#: src/components/PositionCard/index.tsx
+msgid "Deposited Balance:"
+msgstr "存款余额："
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
 msgstr "已充入的流动资金："
 
-#: 
-#~ msgid "Deposited {0} UNI-V2"
-#~ msgstr "已充入 {0} UNI-V2 流动池代币"
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "Depositing KROM will allow the system to automatically process trades"
-msgstr ""
-
-#: 
-#~ msgid "Depositing Liquidity"
-#~ msgstr "充入流动资金"
+msgstr "存入 KROM 将允许系统自动处理交易"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
@@ -873,35 +803,35 @@ msgstr "关闭"
 msgid "Docs"
 msgstr "文档"
 
-#: 
-#~ msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
-#~ msgstr "看不到您的一些 v2 流动资金吗？<0>将它手动导入。</0>"
+#: src/components/Perpetual/index.tsx
+msgid "Don't show this message again for the next 30 days."
+msgstr "在接下来的 30 天内不再显示此消息。"
+
+#: src/components/LimitWarning/LimitWarningModal.tsx
+msgid "Due to the recent LastPass breach, there may be a potential security breach on Kromatika's Limit Order Contract on <0>Polygon Network only</0>."
+msgstr "由于最近的 LastPass 漏洞，Kromatika 在<0>仅 Polygon Network</0> 上的限价订单合约可能存在潜在的安全漏洞。"
 
 #: src/components/PositionCard/index.tsx
 #: src/components/Stake/index.tsx
 msgid "Earned Balance:"
-msgstr ""
+msgstr "赚取余额："
 
 #: src/components/vote/DelegateModal.tsx
-msgid "Earned UNI tokens represent voting shares in Kromatika governance."
-msgstr "已赚取的 UNI 代币代表了 Kromatika 治理中的投票份额。"
+msgid "Earned UNI tokens represent voting shares in Uniswap governance."
+msgstr "获得的 UNI 代币代表 Uniswap 治理中的投票份额。"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "Earned sKrom"
-msgstr ""
+msgstr "挣钱"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
 msgstr "修改"
 
-#: 
-#~ msgid "Efficiency Comparison"
-#~ msgstr "效率对比"
-
 #: src/components/Settings/index.tsx
 msgid "Enables gasless transactions by compensating them with KROM."
-msgstr ""
+msgstr "通过使用 KROM 补偿交易来实现无气体交易。"
 
 #: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
@@ -958,37 +888,40 @@ msgstr "连接出错。请尝试刷新页面。"
 msgid "Error importing list"
 msgstr "导入列表出错"
 
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "Est. Fees:"
+msgstr "美东时间。 费用："
+
 #: src/components/Header/NetworkSelector.tsx
 msgid "Etherscan"
-msgstr ""
+msgstr "Etherscan"
 
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "已执行"
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Executed Orders"
+msgstr "已执行订单"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "从待用代币列表中扩展出的结果"
-
-#: 
-#~ msgid "Expert Mode"
-#~ msgstr "专家模式"
-
-#: 
-#~ msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
-#~ msgstr "“专家模式”将解除确认交易的提示，并允许兑换率高滑点的交易，从而可能导致较不利的兑换率和资金损失。"
 
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "已过期"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Kromatika Analytics."
-msgstr "在Kromatika分析中探索热门的流动池。"
+msgid "Explore popular pools on Uniswap Analytics."
+msgstr "探索 Uniswap Analytics 上的热门矿池。"
 
-#: 
-#~ msgid "Explorer"
-#~ msgstr "浏览器"
+#: src/components/LimitWarning/LimitWarningModal.tsx
+msgid "FOR POLYGON KROMATIKA LIMIT ORDERS USERS - <0><1>ACTION REQUIRED</1></0>:<2/>a) Cancel Polygon chain limit orders<3/>b) Withdraw deposited KROM on polygon<4/>c) Revoke approval to old limit order manager contract: \"0xd1fdf0144be118c30a53e1d08cc1e61d600e508e\" <5>CLICK HERE</5> and follow the guide."
+msgstr "对于 POLYGON KROMATIKA 限价订单用户 - <0><1>需要采取行动</1></0>：<2/>a) 取消 Polygon 链限价订单<3/>b) 提取在多边形上存入的 KROM<4/> c) 撤销对旧限价订单经理合约的批准：\"0xd1fdf0144be118c30a53e1d08cc1e61d600e508e\" <5>单击此处</5> 并按照指南操作。"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -1000,15 +933,11 @@ msgstr "手续费级别"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Filling"
-msgstr ""
+msgstr "填充"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "赞成"
-
-#: 
-#~ msgid "For each pool shown below, click migrate to remove your liquidity from Kromatika V2 and deposit it into Kromatika V3."
-#~ msgstr "对于下面显示的每个流动池，单击“迁移”以从 Kromatika V2 赎回您的流动资金，并将其注入到 Kromatika V3。"
 
 #: src/components/market/MarketModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
@@ -1018,6 +947,7 @@ msgstr "赞成"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "From"
 msgstr "源自"
 
@@ -1027,32 +957,25 @@ msgstr "源自"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "From (at most)"
 msgstr "来源 (最多为)"
 
 #: src/components/Settings/index.tsx
 msgid "Frontrun Protection"
-msgstr ""
+msgstr "抢先保护"
 
 #: src/components/RangeSelector/PresetsButtons.tsx
 msgid "Full Range"
 msgstr "全范围"
 
-#: 
-#~ msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
-#~ msgstr "全范围仓位可能比集中仓位赚取更少的费用。在<0>此处</0>了解更多。"
-
 #: src/components/Settings/index.tsx
 msgid "Gasless Mode"
-msgstr ""
+msgstr "无气体模式"
 
 #: src/components/Settings/index.tsx
 msgid "Gasless mode enables users to send blockchain transactions without paying network gas fees."
-msgstr ""
-
-#: src/components/PositionCard/index.tsx
-msgid "Get KROM tokens here<0>↗</0>"
-msgstr ""
+msgstr "Gasless 模式使用户能够在不支付网络 gas 费用的情况下发送区块链交易。"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
@@ -1066,9 +989,21 @@ msgstr "帮助中心"
 msgid "Hide"
 msgstr "隐藏"
 
-#: 
-#~ msgid "High Price Impact"
-#~ msgstr "对兑换率有高度影响"
+#: src/components/Menu/index.tsx
+msgid "How to use FELO"
+msgstr "FELO的使用方法"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Gasless"
+msgstr "如何使用无气体"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Perpetuals"
+msgstr "如何使用永续合约"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Swap"
+msgstr "如何使用永续合约"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
@@ -1077,6 +1012,10 @@ msgstr "我已知悉"
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "如果您从这个代币列表中购买代币，您可能无法再将其售出。"
+
+#: src/state/market/hooks.tsx
+msgid "Impact is too high"
+msgstr "影响太大"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
@@ -1101,21 +1040,20 @@ msgstr "导入 V2 流动池"
 msgid "Import at your own risk"
 msgstr "自行承担导入的风险"
 
-#: 
-#~ msgid "In range"
-#~ msgstr "在范围内"
-
-#: 
-#~ msgid "Increase Liquidity"
-#~ msgstr "增加流动资金"
-
-#: 
-#~ msgid "Initial prices and pool share"
-#~ msgstr "初始兑换率和流动池份额"
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "In Range"
+msgstr "在范围内"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
 msgstr "正在初始化..."
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Input"
+msgstr "输入"
 
 #: src/components/market/MarketModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
@@ -1131,6 +1069,7 @@ msgstr "安装Metamask"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "现有流动量不足以支持此交易。"
 
@@ -1144,11 +1083,7 @@ msgstr "{0} 余额不足"
 
 #: src/state/mint/v3/hooks.tsx
 msgid "Insufficient {0} deposit"
-msgstr ""
-
-#: 
-#~ msgid "Interface Settings"
-#~ msgstr "界面设置"
+msgstr "{0}存款不足"
 
 #: src/state/mint/hooks.tsx
 msgid "Invalid pair"
@@ -1158,15 +1093,6 @@ msgstr "无效的币对"
 msgid "Invalid pair."
 msgstr "无效的币对。"
 
-#: 
-#~ msgid "Invalid price input"
-#~ msgstr "无效的兑换率输入"
-
-#: 
-#: 
-#~ msgid "Invalid range selected. The min price must be lower than the max price."
-#~ msgstr "选择的范围无效。最小兑换率必须低于最大兑换率。"
-
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 #: src/state/market/hooks.tsx
@@ -1174,37 +1100,25 @@ msgstr "无效的币对。"
 msgid "Invalid recipient"
 msgstr "无效的接收方"
 
-#: src/pages/Vote/index.tsx
-msgid "Kromatika Governance"
-msgstr "Kromatika治理"
+#: src/components/PositionCard/index.tsx
+msgid "KROM deposit required"
+msgstr "需要 KROM 押金"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Kromatika available in: <0>{0}</0>"
 msgstr "Kromatika可用：<0>{0}</0>"
 
-#: src/components/vote/ProposalEmptyState.tsx
-msgid "Kromatika governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
-msgstr "Kromatika 治理仅在 Layer 1 可用。将您的网络切换到以太坊主网以查看提案和投票。"
-
-#: src/pages/Earn/index.tsx
-msgid "Kromatika liquidity mining"
-msgstr "Kromatika 流动性挖矿："
-
 #: 
-#~ msgid "Kromatika migration contract↗"
-#~ msgstr "Kromatika 迁移合约↗"
-
-#: 
-#~ msgid "Kromatika on {0}"
-#~ msgstr "在 {0} 上的 Kromatika"
+#~ msgid "LP fees earned:"
+#~ msgstr "赚取的 LP 费用："
 
 #: src/components/Menu/index.tsx
 msgid "Language"
 msgstr "语言"
 
-#: 
-#~ msgid "Learn"
-#~ msgstr "学习"
+#: src/components/Perpetual/index.tsx
+msgid "Launch Perpetual Trading"
+msgstr "启动永续交易"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Learn More"
@@ -1218,21 +1132,29 @@ msgstr "了解提供流动性的相关信息"
 msgid "Light Theme"
 msgstr "浅色主题"
 
-#: src/components/Header/index.tsx
-msgid "Limit"
-msgstr ""
-
 #: src/pages/Pool/index.tsx
 msgid "Limit Orders"
-msgstr ""
+msgstr "限价单"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Limit Price"
+msgstr "限价"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Limit price (USD):"
+msgstr "限价（美元）："
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Limit price:"
+msgstr "限价："
+
+#: src/components/NavigationLinks/index.tsx
+msgid "Limit/FELO"
+msgstr "限制/FELO"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "Liquidity"
 msgstr "流动资金"
-
-#: 
-#~ msgid "Liquidity Provider Fee"
-#~ msgstr "流动资金提供者手续费"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
@@ -1264,8 +1186,13 @@ msgstr "已加载"
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Loading"
 msgstr "正在加载"
+
+#: src/state/market/hooks.tsx
+msgid "Loading ..."
+msgstr "加载中..."
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1273,10 +1200,6 @@ msgstr "正在加载"
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
 msgstr "管理"
-
-#: 
-#~ msgid "Manage Liquidity in Rewards Pool"
-#~ msgstr "在奖励池中管理流动资金"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Manage Token Lists"
@@ -1295,14 +1218,6 @@ msgstr "最大值"
 msgid "Max Price"
 msgstr "最高兑换率"
 
-#: 
-#~ msgid "Max price"
-#~ msgstr "最高兑换率"
-
-#: 
-#~ msgid "Max:"
-#~ msgstr "最大值："
-
 #: src/components/market/AdvancedMarketDetails.tsx
 msgid "Maximum sent"
 msgstr "发送的最大值"
@@ -1316,30 +1231,13 @@ msgstr "菜单"
 msgid "Migrate"
 msgstr "迁移"
 
-#: 
-#~ msgid "Migrate Liquidity"
-#~ msgstr "迁移流动资金"
-
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
 msgstr "将流动资金迁移到V3"
 
-#: 
-#: 
-#~ msgid "Migrate V2 Liquidity"
-#~ msgstr "迁移V2 流动资金"
-
-#: 
-#~ msgid "Migrate your liquidity tokens from Kromatika V2 to Kromatika V3."
-#~ msgstr "将您的流动资金从 Kromatika V2 迁移到 Kromatika V3。"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Migrate {0}/{1} liquidity to V3"
 msgstr "将 {0}/{1} 流动性迁移到 V3"
-
-#: 
-#~ msgid "Migrating"
-#~ msgstr "迁移中"
 
 #: src/components/RangeSelector/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -1352,42 +1250,39 @@ msgstr "最低兑换率"
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
 msgid "Min Price: 0"
-msgstr ""
-
-#: 
-#~ msgid "Min price"
-#~ msgstr "最低兑换率"
-
-#: 
-#~ msgid "Min:"
-#~ msgstr "最小值："
+msgstr "最低价格：0"
 
 #: src/components/PositionCard/index.tsx
 msgid "Minimum Balance:"
-msgstr ""
+msgstr "最低余额："
 
 #: src/components/PositionPreview/index.tsx
 msgid "Minimum Price"
-msgstr ""
+msgstr "最低价格"
 
-#: src/components/market/AdvancedMarketDetails.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "Minimum Received:"
+msgstr "最低收到："
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Minimum received"
 msgstr "收到的最低数额"
+
+#: src/components/market/AdvancedMarketDetails.tsx
+msgid "Minimum received {0}"
+msgstr "最少收到 {0}"
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "缺少依赖项"
 
-#: 
-#~ msgid "More"
-#~ msgstr "更多"
-
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
 msgid "My limit orders"
-msgstr ""
+msgstr "我的限价单"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Network Warning"
@@ -1395,24 +1290,12 @@ msgstr "网络警告"
 
 #: src/pages/Pool/index.tsx
 msgid "New Limit Order"
-msgstr ""
-
-#: 
-#~ msgid "New Position"
-#~ msgstr "新仓位"
-
-#: 
-#~ msgid "No V2 Liquidity found."
-#~ msgstr "找不到V2流动资金。"
+msgstr "新限价单"
 
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
 msgid "No active pools"
 msgstr "无运行中的流动池"
-
-#: 
-#~ msgid "No data"
-#~ msgstr "没有数据"
 
 #: src/state/governance/hooks.ts
 msgid "No description."
@@ -1434,14 +1317,6 @@ msgstr "没有提案。"
 msgid "No results found."
 msgstr "未找到结果。"
 
-#: src/components/Badge/RangeBadge.tsx
-msgid "Not Processing"
-msgstr ""
-
-#: 
-#~ msgid "Not created"
-#~ msgstr "未创建"
-
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
 msgstr "关闭"
@@ -1449,14 +1324,6 @@ msgstr "关闭"
 #: src/components/Toggle/ListToggle.tsx
 msgid "ON"
 msgstr "开启"
-
-#: src/components/Settings/index.tsx
-msgid "ONLY USE THIS MODE IF YOU HAVE ENOUGH KROM DEPOSIT BALANCE IN KROMATIKA."
-msgstr ""
-
-#: 
-#~ msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
-#~ msgstr "务必在详细了解此模式应用后才使用此模式操作。"
 
 #: src/components/Toggle/index.tsx
 msgid "Off"
@@ -1466,10 +1333,6 @@ msgstr "关闭"
 msgid "On"
 msgstr "开启"
 
-#: 
-#~ msgid "Once you are happy with the rate click supply to review."
-#~ msgstr "对费率感到满意的话，请点击“供应”键，到审查步骤。"
-
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
 msgstr "只有在 {0} 区块编号之前已自行委托或委托给另一个区块链地址的 UNI 代币才有资格投票。"
@@ -1477,6 +1340,15 @@ msgstr "只有在 {0} 区块编号之前已自行委托或委托给另一个区�
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "糟糕！出现未知错误。请刷新页面，或从其他浏览器或设备访问。"
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Open Orders"
+msgstr "打开订单"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Opened:"
+msgstr "开业:"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimism Gateway"
@@ -1490,47 +1362,51 @@ msgstr "Optimistic 以太坊处于 Beta 阶段，可能会遇到停机问题。O
 msgid "Optimistic Etherscan"
 msgstr "Optimistic Etherscan"
 
-#: 
-#~ msgid "Out of range"
-#~ msgstr "超出范围"
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Output"
+msgstr "输出"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
 msgstr "输出数额仅为估值。如果兑换率变化超过 {0}%，您的交易将会还原。"
 
 #: src/components/market/MarketModalHeader.tsx
-msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
-msgstr "输出数额仅为估值。您将收到至少 <0>{0} {1}</0> 代币，否则将还原交易。"
+msgid "Output is estimated. You will receive at least <0>{0} </0> or the transaction will revert."
+msgstr "估计输出。 您将至少收到 <0>{0} </0>，否则交易将被还原。"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> when the current market price reaches your target price."
-msgstr ""
+msgstr "估计输出。 当当前市场价格达到您的目标价格时，您将至少收到 <0>{0} {1}</0>。"
 
 #: src/components/market/MarketModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
 msgstr "输出代币将发送至 <0>{0}</0>"
 
-#: 
-#~ msgid "Owner"
-#~ msgstr "拥有者"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Paid {0} {1} {2}service fees ↗"
-msgstr ""
+msgstr "已支付 {0} {1} {2}服务费 ↗"
 
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
 msgstr "参与的流动池"
 
 #: src/components/Badge/RangeBadge.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "待办"
 
+#: src/components/NavigationLinks/index.tsx
+msgid "Perpetuals"
+msgstr "永续"
+
 #: src/state/swap/hooks.tsx
 msgid "Place limit order above the minimum price"
-msgstr ""
+msgstr "将限价订单置于最低价格之上"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Please confirm you would like to remove this list by typing REMOVE"
@@ -1545,24 +1421,28 @@ msgid "Please connect to the appropriate Ethereum network."
 msgstr "请连接到适当的以太坊网络。"
 
 #: src/components/PositionCard/index.tsx
-msgid "Please deposit KROM up to the minimum balance. Recommendation is to deposit at least twice the minimum balance."
-msgstr ""
-
-#: 
-#~ msgid "Please type the word \"{confirmWord}\" to enable expert mode."
-#~ msgstr "请输入单词 \"{confirmWord}\" 以启用专家模式。"
+msgid "Please deposit $KROM to process your limit order.<0/><1/>Recommendation is to deposit at least twice the minimum balance."
+msgstr "请存入 $KROM 以处理您的限价订单。<0/><1/>建议至少存入最低余额的两倍。"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable gasless mode."
-msgstr ""
+msgstr "请输入单词 \"{confirmWord}\" 以启用 gasless 模式。"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Please wait while the transaction is being built"
+msgstr "正在建立交易，请稍候"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygon Bridge"
-msgstr ""
+msgstr "多边形桥"
+
+#: src/components/LimitWarning/LimitWarningModal.tsx
+msgid "Polygon User Warning"
+msgstr "多边形用户警告"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygonscan"
-msgstr ""
+msgstr "Polygonscan"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
@@ -1571,10 +1451,6 @@ msgstr "流动池"
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
 msgstr "已找到流动池！"
-
-#: 
-#~ msgid "Pool Rate"
-#~ msgstr "流动池费率"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Pool rate"
@@ -1593,13 +1469,13 @@ msgstr "奖励池中的流动池代币："
 msgid "Pooled {0}:"
 msgstr "流动池汇集 {0}:"
 
-#: 
-#~ msgid "Pools Overview"
-#~ msgstr "流动池概览"
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Preparing transaction"
+msgstr "准备交易"
 
 #: src/components/Settings/index.tsx
 msgid "Prevents front-running of swaps"
-msgstr ""
+msgstr "防止互换的提前运行"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/Stake/StakingModal.tsx
@@ -1607,58 +1483,29 @@ msgid "Preview"
 msgstr "预览"
 
 #: src/components/market/MarketModalHeader.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Price"
 msgstr "兑换率"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price Details"
-msgstr ""
-
-#: 
-#~ msgid "Price Difference:"
-#~ msgstr "兑换率差异："
-
-#: 
-#~ msgid "Price Impact"
-#~ msgstr "兑换率影响"
-
-#: 
-#~ msgid "Price Impact Too High"
-#~ msgstr "太过影响兑换率"
+msgstr "价格详情"
 
 #: src/components/market/MarketModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "兑换率已更新"
 
-#: 
-#~ msgid "Price range"
-#~ msgstr "兑换率范围"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
 msgstr "兑换率："
 
-#: 
-#~ msgid "Prices and pool share"
-#~ msgstr "兑换率和流动池份额"
-
 #: src/components/Badge/RangeBadge.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 msgid "Processed"
-msgstr ""
-
-#: 
-#~ msgid "Proposal"
-#~ msgstr "提案"
-
-#: 
-#~ msgid "Proposal Submitted"
-#~ msgstr "已提交提案"
-
-#: 
-#~ msgid "Proposal Title"
-#~ msgstr "提案标题"
+msgstr "处理"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
@@ -1668,10 +1515,6 @@ msgstr "提案"
 msgid "Proposals submitted by community members will appear here."
 msgstr "社区成员提交的提案将在此显示。"
 
-#: 
-#~ msgid "Proposed Action"
-#~ msgstr "提议操作"
-
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
 msgstr "提案者"
@@ -1680,21 +1523,13 @@ msgstr "提案者"
 msgid "Queued"
 msgstr "待执行"
 
-#: 
-#~ msgid "Rates"
-#~ msgstr "费率"
-
 #: src/pages/Earn/index.tsx
 msgid "Read more about KROM"
-msgstr ""
+msgstr "阅读更多关于 KROM 的信息"
 
 #: src/pages/Vote/index.tsx
-msgid "Read more about Kromatika governance"
-msgstr "阅读有关Kromatika治理的更多信息"
-
-#: 
-#~ msgid "Read more about UNI"
-#~ msgstr "阅读更多关于 UNI 代币的信息"
+msgid "Read more about Uniswap governance"
+msgstr "阅读有关 Uniswap 治理的更多信息"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1756,16 +1591,11 @@ msgstr "返回"
 msgid "Search name or paste address"
 msgstr "搜索名称或粘贴地址"
 
-#: 
-#~ msgid "Select Pair"
-#~ msgstr "选择币对"
-
 #: src/components/Header/NetworkSelector.tsx
 msgid "Select a network"
 msgstr "选择网络"
 
 #: src/components/CurrencyInputPanel/index.tsx
-#: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/market/hooks.tsx
@@ -1773,17 +1603,13 @@ msgstr "选择网络"
 msgid "Select a token"
 msgstr "选择代币"
 
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Select a token - Uniswap V3 pairs only"
+msgstr "选择代币 - 仅限 Uniswap V3 对"
+
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
 msgstr "选择代币以查找您的 v2 流动资金。"
-
-#: 
-#~ msgid "Select an action"
-#~ msgstr "选择一个操作。"
-
-#: 
-#~ msgid "Selected Range"
-#~ msgstr "选定范围"
 
 #: src/pages/Vote/index.tsx
 msgid "Self"
@@ -1795,33 +1621,16 @@ msgstr "自我委托"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Service Fee"
-msgstr ""
+msgstr "服务费"
 
-#: 
-#: 
-#: 
-#~ msgid "Set Price Range"
-#~ msgstr "设置兑换率范围"
-
-#: 
-#~ msgid "Set Starting Price"
-#~ msgstr "设置起始兑换率"
-
-#: 
-#~ msgid "Share of Pool"
-#~ msgstr "流动池份额"
-
-#: 
-#~ msgid "Share of Pool:"
-#~ msgstr "流动池份额："
+#: src/components/market/MarketHeader.tsx
+#: src/components/swap/SwapHeader.tsx
+msgid "Show Chart"
+msgstr "显示图表"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
 msgstr "显示 Portis"
-
-#: 
-#~ msgid "Show closed positions"
-#~ msgstr "显示已关闭的仓位"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
@@ -1834,11 +1643,15 @@ msgstr "滑点容差"
 #: src/components/swap/SwapRoute.tsx
 #: src/components/swap/SwapRoute.tsx
 msgid "Smart Route"
-msgstr ""
+msgstr "智能路线"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "有些代币无法通过此界面使用，因为它们可能无法很好地调用智能合约，或者由于法律原因无法允许交易。"
+
+#: src/components/Perpetual/index.tsx
+msgid "Some countries may not be allowed to use perpetual trading - see the details under section 2 within our terms of use."
+msgstr "某些国家/地区可能不允许使用永久交易 - 请参阅我们的使用条款中第 2 节的详细信息。"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
@@ -1846,39 +1659,43 @@ msgstr "出错了"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Stake"
-msgstr ""
+msgstr "赌注"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "Stake KROM"
-msgstr ""
+msgstr "质押KROM"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Stake Summary called"
-msgstr ""
+msgstr "股份摘要称为"
 
 #: src/components/PositionCard/index.tsx
 #: src/components/Stake/index.tsx
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "Staked Balance:"
-msgstr ""
+msgstr "质押余额："
 
 #: src/pages/Earn/Manage.tsx
 msgid "Staking - make it bigger, maybe positioned at the centre"
-msgstr ""
+msgstr "Staking - 让它变大，可能位于中心"
 
 #: src/pages/Stake/index.tsx
 msgid "Staking - style it. Commafy values."
-msgstr ""
+msgstr "放样 - 设计风格。 舒适的价值观。"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Staking KROM will allow the system to automatically process trades"
-msgstr ""
+msgstr "质押 KROM 将允许系统自动处理交易"
 
 #: src/components/PositionList/index.tsx
 msgid "Status"
 msgstr "状态"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Status:"
+msgstr "地位:"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
@@ -1888,10 +1705,6 @@ msgstr "第 1 步：获取 UNI-V2 流动池代币"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Submit new proposal"
 msgstr "提交新提案"
-
-#: 
-#~ msgid "Submitting Proposal"
-#~ msgstr "正提交提案"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -1905,31 +1718,20 @@ msgstr "投票通过"
 msgid "Success"
 msgstr "成功"
 
-#: 
-#~ msgid "Supply"
-#~ msgstr "供应"
-
-#: 
-#~ msgid "Supplying {0} {1} and{2} {3}"
-#~ msgstr "供应 {0} {1} 和{2} {3}"
-
-#: src/components/Header/index.tsx
+#: src/components/NavigationLinks/index.tsx
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Swap"
 msgstr "兑换"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap <0/> for exactly <1/>"
 msgstr "将约 <0/> 兑换成 <1/>"
-
-#: 
-#: 
-#~ msgid "Swap Anyway"
-#~ msgstr "仍要兑换"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
@@ -1947,20 +1749,26 @@ msgid "Swapping {0} {1} for {2} {3}"
 msgstr "将 {0} {1} 兑换为 {2} {3}"
 
 #: src/components/swap/SwapModalHeader.tsx
-#: src/pages/LimitOrder/index.tsx
-#: src/pages/LimitOrder/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Target Price"
-msgstr ""
+msgstr "目标价"
+
+#: src/pages/LimitOrder/index.tsx
+msgid "Target Price+++"
+msgstr "目标价+++"
+
+#: src/pages/LimitOrder/index.tsx
+msgid "Target Price---"
+msgstr "目标价---"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Target Price:"
-msgstr ""
+msgstr "目标价:"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Target price"
-msgstr ""
+msgstr "目标价"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Kromatika community <0/>"
@@ -1970,17 +1778,18 @@ msgstr "感谢您加入 Kromatika 社区 <0/>"
 msgid "The % you will earn in fees."
 msgstr "您将赚取的手续费百分比。"
 
-#: src/hooks/useSwapCallback.tsx
-msgid "The Kromatika invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "兑换交易不满足 Kromatika 不变量 X × Y = K 的要求。这通常意味着您要兑换的代币之一在代币转账过程中带有一些自定义代币合约特性。"
+#: src/components/Perpetual/index.tsx
+msgid "The Perpetual Trading is currently in beta-stage. Trade at your own risk."
+msgstr "永续交易目前处于测试阶段。 自负风险。"
 
 #: src/hooks/useMarketCallback.tsx
+#: src/hooks/useSwapCallback.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr ""
+msgstr "交换不满足 Uniswap 不变量 x*y=k。 这通常意味着您要交换的代币之一在转移时包含自定义行为。"
 
 #: src/components/Header/Polling.tsx
-msgid "The current fast gas amount for sending a transaction on the network. Gas fees are paid in native currency Ether (ETH) and denominated in gwei."
-msgstr ""
+msgid "The current fast gas amount for sending a transaction on the network. Gas fees are paid in native currency {0} and denominated in gwei."
+msgstr "当前用于在网络上发送交易的快速气体量。 汽油费以本地货币 {0} 支付并以 gwei 计价。"
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -1993,48 +1802,32 @@ msgstr "市场兑换率超出您指定的范围。将只注入单项代币。"
 
 #: src/components/Header/Polling.tsx
 msgid "The most recent block number on this network. Prices update on every block."
-msgstr ""
+msgstr "该网络上的最新块号。 每个街区的价格都会更新。"
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "输出代币无法进行转账。输出代币可能有些问题。"
 
-#: 
-#~ msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
-#~ msgstr "无法对输出代币进行转账。输出代币可能有些问题。注：转账时额外抽取费用（fee-on-transfer）的代币和弹性供应（rebase）代币都与Kromatika V3不兼容。"
-
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
-msgstr ""
+msgstr "输出令牌无法转移。 输出令牌可能存在问题。 注意：转账费用和变基代币与 Kromatika 不兼容。"
 
 #: src/hooks/useMarketCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr ""
-
-#: 
-#~ msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
-#~ msgstr "此流动池的兑换率超出了您选定的范围。因此您的流动资金目前没在赚取手续费。"
-
-#: 
-#~ msgid "The price of this pool is within your selected range. Your position is currently earning fees."
-#~ msgstr "此流动池的兑换率在您选定的范围内。因此您的流动资金目前正在赚取手续费。"
-
-#: 
-#~ msgid "The ratio of tokens you add will set the price of this pool."
-#~ msgstr "您注入的代币比率将决定此流动池的初始兑换率。"
+msgstr "输出令牌无法转移。 输出令牌可能存在问题。 注意：转账费用和变基代币与 Uniswap V3 不兼容。"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The trade has been processed"
-msgstr ""
+msgstr "交易已处理"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The trade is filling in."
-msgstr ""
+msgstr "交易正在填补。"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The trade is pending, waiting for the current market price to reach the specified target price."
-msgstr ""
+msgstr "交易挂单，等待当前市场价格达到指定的目标价格。"
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -2049,14 +1842,6 @@ msgstr "没有流动性数据。"
 msgid "These tokens are commonly paired with other tokens."
 msgstr "这些代币通常与其他代币配对。"
 
-#: 
-#~ msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
-#~ msgstr "需要先初始化，然后再添加流动性。初始化时，请先选择起始价格，然后输入您的流动性价格范围和存款金额。因需进行初始化相关操作，Gas 费将比平时高一些。"
-
-#: 
-#~ msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-#~ msgstr "在您添加流动性之前， {0} 池需要先初始化。请先选择起始价格，然后输入您的流动性价格范围和存款金额。"
-
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
 msgstr "这个路由方案通过考虑拆分路由、多级路由和gas 成本等因素来优化价格。"
@@ -2065,21 +1850,13 @@ msgstr "这个路由方案通过考虑拆分路由、多级路由和gas 成本�
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "此代币未出现在激活的代币列表中。请确保这是您想要交易的代币。"
 
-#: 
-#~ msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
-#~ msgstr "该工具将安全地将您的 {0} 流动资金迁移到 V3。该过程完全不依赖任何信任需求"
-
-#: 
-#~ msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
-#~ msgstr "由于兑换率变动，此交易将不会成功。尝试增加您的滑点容差。注：转账时额外抽取费用（fee-on-transfer）的代币和弹性供应（rebase）代币都与Kromatika V3不兼容。"
-
 #: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
-msgstr ""
+msgstr "由于价格变动，该交易将不会成功。 尝试增加滑点容忍度。 注意：转账费用和变基代币与 Kromatika 不兼容。"
 
 #: src/hooks/useMarketCallback.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr ""
+msgstr "由于价格变动，该交易将不会成功。 尝试增加滑点容忍度。 注意：转账费用和变基代币与 Uniswap V3 不兼容。"
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -2097,6 +1874,7 @@ msgstr "提示：自定义代币信息会本地存储在您的浏览器中"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "To"
 msgstr "兑换到"
 
@@ -2106,6 +1884,7 @@ msgstr "兑换到"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "To (at least)"
 msgstr "兑换到(至少数额)"
 
@@ -2131,23 +1910,19 @@ msgstr "总供应量"
 
 #: src/pages/Stake/index.tsx
 msgid "Total Value Locked"
-msgstr ""
+msgstr "总价值锁定"
 
 #: src/components/PositionCard/index.tsx
 msgid "Total Value Locked:"
-msgstr ""
+msgstr "总价值锁定:"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Total Value Staked"
-msgstr ""
+msgstr "总价值"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
 msgstr "存入总额"
-
-#: 
-#~ msgid "Total deposits"
-#~ msgstr "存入总额"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2158,34 +1933,33 @@ msgstr "存入总额"
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Trade"
-msgstr ""
+msgstr "贸易"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Trade History"
-msgstr ""
+msgstr "交易历史"
 
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Pool"
-msgstr ""
-
-#: 
-#~ msgid "Trade Route"
-#~ msgstr "交易路由"
+msgstr "交易池"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Trades not processing. Please fund your account with KROM."
-msgstr ""
+msgstr "贸易不加工。 请使用 KROM 为您的帐户注资。"
 
 #: src/state/swap/hooks.tsx
 msgid "Trading pair not available"
-msgstr ""
+msgstr "交易对不可用"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Trading {0} {1} for {2} {3}"
-msgstr ""
+msgstr "用 {0} {1} 换 {2} {3}"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Transaction Details"
 msgstr "交易明细"
 
@@ -2207,10 +1981,6 @@ msgstr "已提交交易"
 msgid "Transaction completed in"
 msgstr "交易完成于"
 
-#: 
-#~ msgid "Transaction deadline"
-#~ msgstr "交易截止期限"
-
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -2218,21 +1988,18 @@ msgstr "交易完成于"
 msgid "Transaction rejected."
 msgstr "交易被拒绝。"
 
-#: 
-#~ msgid "Transfer Token"
-#~ msgstr "代币转账"
+#: src/hooks/useMarketCallback.tsx
+#: src/hooks/useMarketCallback.tsx
+msgid "Transaction rejected: {0}"
+msgstr "交易被拒绝：{0}"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "再试一次"
 
-#: 
-#~ msgid "Turn On Expert Mode"
-#~ msgstr "开启专家模式"
-
 #: src/components/Settings/index.tsx
 msgid "Turn On Gasless Mode"
-msgstr ""
+msgstr "打开无气体模式"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "UNI has arrived"
@@ -2247,8 +2014,8 @@ msgid "UNI price:"
 msgstr "UNI 代币兑换率："
 
 #: src/pages/Vote/index.tsx
-msgid "UNI tokens represent voting shares in Kromatika governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "UNI代币代表了Kromatika治理中的投票份额。您可以自行为提案进行投票，或将您的投票权委托给第三方。"
+msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
+msgstr "UNI 代币代表 Uniswap 治理中的投票份额。 您可以自己对每个提案进行投票，也可以将您的选票委托给第三方。"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
@@ -2259,30 +2026,18 @@ msgstr "UNI {0}/{1} 被摧毁"
 msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
 msgstr "需要 UNI-V2 流动池代币。一旦您已注入流动资金到 {0}-{1} 池，您就可以在此页面上抵押您的流动池代币。"
 
-#: 
-#~ msgid "UNI-V2 {0}-{1}"
-#~ msgstr "UNI-V2 {0}-{1}"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "UnStake Summary called"
-msgstr ""
+msgstr "UnStake 摘要调用"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Unclaimed UNI"
 msgstr "未被领取的 UNI 代币"
 
-#: 
-#~ msgid "Unclaimed fees"
-#~ msgstr "未领取的手续费"
-
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Unclaimed:"
 msgstr "未领取："
-
-#: src/components/PositionCard/index.tsx
-msgid "Underfunded"
-msgstr ""
 
 #: src/pages/Vote/styled.tsx
 msgid "Undetermined"
@@ -2297,18 +2052,26 @@ msgstr "意外的错误。无法估计交换的gas。"
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "估计气体的意外问题。请再试一次。"
 
+#: src/pages/Vote/index.tsx
+msgid "Uniswap Governance"
+msgstr "Uniswap 治理"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgstr "Uniswap 治理仅在第 1 层可用。将您的网络切换到以太坊主网以查看提案和投票。"
+
+#: src/pages/Earn/index.tsx
+msgid "Uniswap liquidity mining"
+msgstr "Uniswap 流动性挖矿"
+
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
 msgstr "未知来源"
 
-#: 
-#~ msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
-#~ msgstr "未知错误{0}。可以尝试增加滑点容差。注：转账时额外抽取费用（fee-on-transfer）的代币和弹性供应（rebase）代币都与Kromatika V3不兼容。"
-
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
-msgstr ""
+msgstr "未知错误{0}。 尝试增加滑点容忍度。 注意：转账费用和变基代币与 Kromatika 不兼容。"
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -2325,16 +2088,16 @@ msgstr "解锁投票"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Unstake"
-msgstr ""
+msgstr "解除质押"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "Unstake KROM"
-msgstr ""
+msgstr "取消抵押 KROM"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Unstaking KROM may prevent the system to calculate rewards"
-msgstr ""
+msgstr "取消质押 KROM 可能会阻止系统计算奖励"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2342,6 +2105,7 @@ msgstr ""
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Unsupported Asset"
 msgstr "不支持的代币"
 
@@ -2359,16 +2123,13 @@ msgstr "无标题"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Unwrap"
 msgstr "展开"
 
-#: 
-#~ msgid "Unwrap <0/> to ETH"
-#~ msgstr "将 <0/> 换回为 ETH"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
-msgstr ""
+msgstr "将 <0/> 展开为 {0}"
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
@@ -2378,54 +2139,21 @@ msgstr "更新投票权委托"
 msgid "Update list"
 msgstr "更新代币列表"
 
-#: 
-#~ msgid "Use the Kromatika Labs API to get better pricing through a more efficient route."
-#~ msgstr "使用 Kromatika Labs API 通过更有效的路由获得更好的定价。"
-
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "用户"
-
-#: 
-#~ msgid "V2"
-#~ msgstr "V2"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
 msgstr "V2 在 Layer 2 不可用。切换到以太坊 Layer 1。"
 
-#: 
-#~ msgid "V2 liquidity"
-#~ msgstr "V2 流动资金"
-
-#: 
-#~ msgid "V3"
-#~ msgstr "V3"
-
-#: 
-#: 
-#~ msgid "V3 {0} Price:"
-#~ msgstr "V3 {0} 兑换率："
-
 #: src/components/Header/UniBalanceContent.tsx
 msgid "View UNI Analytics"
 msgstr "查看 UNI 代币分析"
 
-#: 
-#~ msgid "View V2 Liquidity"
-#~ msgstr "查看 V2 流动资金"
-
-#: 
-#~ msgid "View accrued fees and analytics<0>↗</0>"
-#~ msgstr "查看已累积手续费和数据分析<0>↗</0>"
-
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
 msgstr "查看代币列表"
-
-#: 
-#~ msgid "View on Etherscan"
-#~ msgstr "在 Etherscan 上查看"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
@@ -2440,10 +2168,6 @@ msgstr "在以太坊资源浏览器上查看"
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "在以太坊资源浏览器上查看交易"
-
-#: 
-#~ msgid "Vote"
-#~ msgstr "投票"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
@@ -2510,15 +2234,11 @@ msgstr "钱包地址或 ENS 名"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Wallet: {0}, Balance: {1}"
-msgstr ""
+msgstr "钱包：{0}，余额：{1}"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Wallet: {0}, Staked: {stakedBalance}"
-msgstr ""
-
-#: 
-#~ msgid "Weekly Rewards"
-#~ msgstr "每周奖励"
+msgstr "钱包：{0}，质押：{stakedBalance}"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
@@ -2527,10 +2247,6 @@ msgstr "欢迎来到 Unicorn （独角兽）团队 :)"
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
 msgstr "当您领取奖励但没赎回流动资金时，流动资金仍然留在矿池内。"
-
-#: 
-#~ msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-#~ msgstr "当您赎回流动资金时，智能合约将自动为您领取 UNI 代币！"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
@@ -2548,9 +2264,10 @@ msgid "Withdraw & Claim"
 msgstr "赎回和领取"
 
 #: src/components/NavigationTabs/index.tsx
+#: src/components/PositionCard/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Withdraw KROM"
-msgstr ""
+msgstr "提取KROM"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
@@ -2558,11 +2275,11 @@ msgstr "赎回注入的流动资金"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw {0}"
-msgstr ""
+msgstr "取款{0}"
 
 #: src/pages/AddLiquidity/index.tsx
-msgid "Withdrawing KROM may prevent the system to automatically processing trades"
-msgstr ""
+msgid "Withdrawing KROM may prevent the system to automatically process trades"
+msgstr "提取 KROM 可能会阻止系统自动处理交易"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrawing {0} UNI-V2"
@@ -2578,37 +2295,32 @@ msgstr "已赎回 UNI-V2！"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Wrap"
 msgstr "兑换"
 
-#: 
-#~ msgid "Wrap <0/> to WETH"
-#~ msgstr "将 <0/> 换为 WETH"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
-msgstr ""
+msgstr "将 <0/> 包装到 {0}"
+
+#: src/state/market/hooks.tsx
+msgid "Wrap your native token"
+msgstr "包装您的原生令牌"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "错误的网络"
 
-#: 
-#~ msgid "You already have an active or pending proposal"
-#~ msgstr "您已经有一个现有或待处理的提案"
+#: src/components/Perpetual/index.tsx
+msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
+msgstr "您将离开 Kromatika.Finance 并将被重定向到一个独立的第三方网站。"
 
-#: 
-#~ msgid "You are creating a pool"
-#~ msgstr "您正在创建一个流动池"
-
-#: 
-#~ msgid "You are the first liquidity provider for this Kromatika V3 pool. Your liquidity will migrate at the current {0} price."
-#~ msgstr "您是此 Kromatika V3 流动池的第一个流动资金提供者。您的流动资金将以当前的 {0} 兑换率迁移。"
-
-#: 
-#~ msgid "You are the first liquidity provider."
-#~ msgstr "您是第一个流动资金提供者。"
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "You buy"
+msgstr "你买"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
@@ -2616,8 +2328,9 @@ msgstr "您可以对每个提案自行进行投票，也可以将您的投票权
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You can now swap {0}"
-msgstr ""
+msgstr "您现在可以交换 {0}"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2625,10 +2338,6 @@ msgstr ""
 #: src/pages/Swap/index.tsx
 msgid "You can now trade {0}"
 msgstr "您现在可以交易 {0}"
-
-#: 
-#~ msgid "You don't have enough votes to submit a proposal"
-#~ msgstr "您没有足够的票数来提交提案"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
@@ -2642,14 +2351,11 @@ msgstr "您的网络连接可能已断开，或者 {label} 可能正处停机状
 msgid "You may have lost your network connection."
 msgstr "您的网络连接可能断了。"
 
-#: 
-#~ msgid "You must connect an account."
-#~ msgstr "您必须连接帐户。"
-
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You must give the Kromatika Aggregator a permission to use your {0}. You only have to do this once per token."
-msgstr ""
+msgstr "您必须授予 Kromatika 聚合器使用您的 {0} 的权限。 您只需为每个令牌执行一次此操作。"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2658,26 +2364,29 @@ msgstr ""
 msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "您必须授予 Kromatika 智能合约使用您的 {0} 的权限。每个代币只需要授权一次。"
 
-#: 
-#~ msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
-#~ msgstr "您必须有 {formattedProposalThreshold} 票才能提交提案"
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "You receive at least"
+msgstr "你至少收到"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
-msgid "You save:"
-msgstr ""
+#: src/pages/SwapWidget/index.tsx
+msgid "You sell"
+msgstr "你卖"
 
-#: 
-#~ msgid "You should only deposit liquidity into Kromatika V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-#~ msgstr "请确保以您认为是正确的兑换率来将流动资金注入到 Kromatika V3。 <0/>如果兑换率看起来不正确，您可以进行兑换交易以移动兑换率，或者等待别人进行此操作。"
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "You send"
+msgstr "你发"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
 msgstr "您还将从此仓位中领取已赚取的手续费。"
 
 #: src/components/PositionCard/index.tsx
-msgid "You will need to maintain a minimum KROM balance to cover for the service fees. Recommendation is to deposit at least twice the minimum balance."
-msgstr ""
+msgid "You will need to maintain a minimum KROM balance to cover for the service fees.<0/><1/>Recommendation is to deposit at least twice the minimum balance."
+msgstr "您将需要保持最低 KROM 余额以支付服务费。<0/><1/>建议至少存入最低余额的两倍。"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
@@ -2691,23 +2400,13 @@ msgstr "您的 UNI 代币明细表"
 msgid "Your V2 liquidity"
 msgstr "您的V2流动资金"
 
-#: 
-#~ msgid "Your V3 liquidity positions will appear here."
-#~ msgstr "您的 V3 流动资金将在此显示。"
-
 #: src/components/PositionCard/index.tsx
-msgid "Your account is actively processing trades. Recommendation is to deposit at least twice the minimum balance."
-msgstr ""
+msgid "Your account is actively processing trades.<0/><1/>Recommendation is to deposit at least twice the minimum balance."
+msgstr "您的账户正在积极处理交易。<0/><1/>建议至少存入最低余额的两倍。"
 
-#: src/pages/LimitOrder/index.tsx
-#: src/pages/LimitOrder/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Your limit orders will appear here."
-msgstr ""
-
-#: 
-#~ msgid "Your liquidity deposits"
-#~ msgstr "您注入的流动资金"
+msgstr "您的限价单将出现在这里。"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -2720,10 +2419,6 @@ msgstr "您的流动池份额："
 msgid "Your position"
 msgstr "您的流动资金仓位"
 
-#: 
-#~ msgid "Your position has 0 liquidity, and is not earning fees."
-#~ msgstr "您的仓位没有任何流动资金，没在赚取手续费。"
-
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Your position will appear here."
 msgstr "您的仓位将在此显示。"
@@ -2732,21 +2427,6 @@ msgstr "您的仓位将在此显示。"
 #: src/components/PositionPreview/index.tsx
 msgid "Your position will be 100% composed of {0} at this price"
 msgstr "在达到此兑换率时，您的仓位流动资金将 100% 由 {0} 代币所组成。"
-
-#: 
-#: 
-#~ msgid "Your position will be 100% {0} at this price."
-#~ msgstr "在达到此兑换率时，您的仓位流动资金将 100% 由 {0} 代币所组成。"
-
-#: 
-#: 
-#~ msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
-#~ msgstr "您的仓位在市场兑换率变化进入到您设置的范围内之前不会赚取手续费或被用于进行兑换交易。"
-
-#: 
-#: 
-#~ msgid "Your positions"
-#~ msgstr "您的仓位"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Your rate"
@@ -2759,11 +2439,7 @@ msgstr "您的流动池代币总额："
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Your trade will appear here."
-msgstr ""
-
-#: 
-#~ msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
-#~ msgstr "由于需包含创建流动池的 gas 费用，您的此交易成本将高出许多。"
+msgstr "您的交易将出现在这里。"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
@@ -2773,10 +2449,6 @@ msgstr "您的交易可能会被别人“抢先”（从而赚取差价）"
 msgid "Your transaction may fail"
 msgstr "您的交易可能失败"
 
-#: 
-#~ msgid "Your transaction will revert if it is pending for more than this period of time."
-#~ msgstr "如果您的交易待处理超过此时间期限，则将还原该交易。"
-
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
 msgstr "如果兑换率变动超过此百分比，则将还原该交易。"
@@ -2785,25 +2457,17 @@ msgstr "如果兑换率变动超过此百分比，则将还原该交易。"
 msgid "Your transactions will appear here..."
 msgstr "您的交易将出现在这里..."
 
-#: 
-#~ msgid "Your unclaimed UNI"
-#~ msgstr "您未领取的 UNI 代币"
-
-#: 
-#~ msgid "confirm"
-#~ msgstr "确认"
-
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "为 {0}"
 
 #: src/components/Settings/index.tsx
 msgid "gasless"
-msgstr ""
+msgstr "无气体"
 
 #: src/components/Header/Polling.tsx
 msgid "gwei"
-msgstr ""
+msgstr "gwei"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
@@ -2818,8 +2482,9 @@ msgid "https:// or ipfs:// or ENS name"
 msgstr "https:// 或 ipfs:// 或 ENS 名"
 
 #: 
-#~ msgid "minutes"
-#~ msgstr "分钟"
+#: 
+#~ msgid "networks."
+#~ msgstr "网络."
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
@@ -2833,6 +2498,12 @@ msgstr "从 {0} 代币列表"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {导入代币} other {导入代币}}"
 
+#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2849,27 +2520,21 @@ msgstr "{0}"
 msgid "{0} %"
 msgstr "{0} %"
 
+#: 
+#~ msgid "{0} + {1}"
+#~ msgstr "{0} + {1}"
+
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/>  per <1/> <2>{1} </2>"
-msgstr ""
-
-#: 
-#: 
-#~ msgid "{0} <0/> per <1/>"
-#~ msgstr "{0} <0/> 每 <1/>"
+msgstr "{0} <0/> 每 <1/> <2>{1} </2>"
 
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/> <2>{1} </2>"
-msgstr ""
+msgstr "{0} <0/> 每 <1/> <2>{1} </2>"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} 自定义代币"
-
-#: 
-#: 
-#~ msgid "{0} Deposited"
-#~ msgstr "注入 {0}"
 
 #: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
@@ -2899,10 +2564,6 @@ msgstr "{0} UNI 代币"
 msgid "{0} UNI / week"
 msgstr "{0} UNI 代币 / 每周"
 
-#: 
-#~ msgid "{0} UNI-V2"
-#~ msgstr "{0} UNI-V2 流动池代币"
-
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "{0} UNI-V2 LP tokens available"
@@ -2920,21 +2581,20 @@ msgstr "{0} 每 {1}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0} sKrom / week"
-msgstr ""
+msgstr "{0} sKrom/周"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} 代币"
 
-#: 
-#: 
-#~ msgid "{0} {1} Price:"
-#~ msgstr "{0} {1} 兑换率："
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
 
-#: src/components/Header/index.tsx
-msgid "{0} {nativeCurrencySymbol}"
-msgstr ""
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{0} {1} + {2} {3}"
+msgstr "{0} {1} + {2} {3}"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "{0} • Added by user"
@@ -2942,31 +2602,17 @@ msgstr "{0} • 由用户添加"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/PositionPreview/index.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "{0}%"
 msgstr "{0}%"
 
 #: src/components/FeeSelector/index.tsx
 msgid "{0}% fee tier"
 msgstr "{0}% 手续费级别"
-
-#: 
-#~ msgid "{0}% select"
-#~ msgstr "选择 {0}%"
-
-#: 
-#~ msgid "{0}-{1} Liquidity Mining"
-#~ msgstr "{0}-{1} 流动资金采矿"
-
-#: 
-#~ msgid "{0}/{1} LP NFT"
-#~ msgstr "{0}/{1} 流动池 NFT 代币"
-
-#: 
-#~ msgid "{0}/{1} LP Tokens"
-#~ msgstr "{0}/{1} 流动池代币"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{SOCKS_AMOUNT} UNI"
@@ -2976,26 +2622,34 @@ msgstr "{SOCKS_AMOUNT} UNI 代币"
 msgid "{USER_AMOUNT} UNI"
 msgstr "{USER_AMOUNT} UNI 代币"
 
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "{actionLabel}"
+msgstr "{actionLabel}"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} 代币"
+
+#: src/components/Collapsible/index.tsx
+msgid "{label}"
+msgstr "{label}"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
 
+#: 
+#~ msgid "{status}"
+#~ msgstr "{status}"
+
+#: 
+#~ msgid "{token0CreatedAmount}"
+#~ msgstr "{token0CreatedAmount}"
+
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} 每 {tokenA}"
 
-#: 
-#~ msgid "~$ <0/>"
-#~ msgstr "~$ <0/>"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Limit Orders"
-msgstr ""
-
-#: 
-#~ msgid "← Back to Pools Overview"
-#~ msgstr "← 返回流动池概述"
+msgstr "← 返回限价单"

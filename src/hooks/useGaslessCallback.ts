@@ -1,7 +1,7 @@
 import { Biconomy } from '@biconomy/mexa'
 import { Web3Provider } from '@ethersproject/providers'
 import { BICONOMY_DAPP_API } from 'constants/addresses'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useIsGaslessMode } from 'state/user/hooks'
 
 import { useActiveWeb3React } from './web3'

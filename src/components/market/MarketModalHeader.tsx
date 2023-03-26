@@ -26,7 +26,7 @@ import { SwapShowAcceptChanges, TruncatedText } from './styleds'
 
 const ArrowWrapper = styled.div`
   padding: 4px;
-  border-radius: 12px;
+  border-radius: 20px;
   height: 32px;
   width: 32px;
   position: relative;
@@ -38,7 +38,7 @@ const ArrowWrapper = styled.div`
   align-items: center;
   background-color: ${({ theme }) => theme.bg1};
   border: 4px solid;
-  border-color: ${({ theme }) => theme.bg0};
+  border-color: ${({ theme }) => theme.bg1};
   z-index: 2;
 `
 
@@ -118,11 +118,11 @@ export default function MarketModalHeader({
   const isGaslessMode = useIsGaslessMode() && chainId == SupportedChainId.POLYGON
 
   return (
-    <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
+    <AutoColumn gap={'6px'} style={{ marginTop: '1rem' }}>
       <LightCard padding="0.75rem 1rem">
         <AutoColumn gap={'8px'}>
           <RowBetween>
-            <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
+            <TYPE.body color={theme.text3} fontWeight={400} fontSize={16}>
               <Trans>From</Trans>
             </TYPE.body>
             <FiatValue fiatValue={fiatValueInput} />
@@ -130,14 +130,14 @@ export default function MarketModalHeader({
           <RowBetween align="center">
             <RowFixed gap={'0px'}>
               <CurrencyLogo currency={trade.inputAmount.currency} size={'20px'} style={{ marginRight: '12px' }} />
-              <Text fontSize={20} fontWeight={500}>
+              <Text fontSize={16} fontWeight={400}>
                 {trade.inputAmount.currency.symbol}
               </Text>
             </RowFixed>
             <RowFixed gap={'0px'}>
               <TruncatedText
-                fontSize={24}
-                fontWeight={500}
+                fontSize={[16, 18, 24]}
+                fontWeight={400}
                 color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.primary1 : ''}
               >
                 {trade.inputAmount.toSignificant(6)}
@@ -149,13 +149,13 @@ export default function MarketModalHeader({
       <ArrowWrapper>
         <ArrowDown size="16" color={theme.text2} />
       </ArrowWrapper>
-      <LightCard padding="0.75rem 1rem" style={{ marginBottom: '0', borderRadius: '5px 5px 0px 0px' }}>
+      <LightCard padding="0.75rem 1rem" style={{ marginBottom: '0', borderRadius: '20px' }}>
         <AutoColumn gap={'8px'}>
           <RowBetween>
-            <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
+            <TYPE.body color={theme.text3} fontWeight={400} fontSize={16}>
               <Trans>To</Trans>
             </TYPE.body>
-            <TYPE.body fontSize={14} color={theme.text3}>
+            <TYPE.body fontSize={16} color={theme.text3}>
               <FiatValue
                 fiatValue={fiatValueOutput}
                 priceImpact={computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)}
@@ -165,12 +165,12 @@ export default function MarketModalHeader({
           <RowBetween align="flex-end">
             <RowFixed gap={'0px'}>
               <CurrencyLogo currency={trade.outputAmount.currency} size={'20px'} style={{ marginRight: '12px' }} />
-              <Text fontSize={20} fontWeight={500}>
+              <Text fontSize={16} fontWeight={400}>
                 {trade.outputAmount.currency.symbol}
               </Text>
             </RowFixed>
             <RowFixed gap={'0px'}>
-              <TruncatedText fontSize={24} fontWeight={500}>
+              <TruncatedText fontSize={[16, 18, 24]} fontWeight={400}>
                 {trade.outputAmount.toSignificant(6)}
               </TruncatedText>
             </RowFixed>
@@ -205,7 +205,7 @@ export default function MarketModalHeader({
       )}
 
       <RowBetween style={{ marginTop: '0.25rem', padding: '0 1rem' }}>
-        <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
+        <TYPE.body color={theme.text2} fontWeight={400} fontSize={16}>
           <Trans>Price</Trans>
         </TYPE.body>
         <TradePrice price={trade.executionPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
@@ -232,7 +232,7 @@ export default function MarketModalHeader({
               </TYPE.main>
             </RowFixed>
             <ButtonPrimary
-              style={{ padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}
+              style={{ padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '20px' }}
               onClick={onAcceptChanges}
             >
               <Trans>Accept</Trans>
@@ -243,7 +243,7 @@ export default function MarketModalHeader({
 
       <AutoColumn justify="flex-start" gap="sm" style={{ padding: '.75rem 1rem' }}>
         {trade.tradeType === TradeType.EXACT_INPUT ? (
-          <TYPE.italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
+          <TYPE.italic fontSize={14} fontWeight={400} textAlign="left" style={{ width: '100%' }}>
             <Trans>
               Output is estimated. You will receive at least{' '}
               <b>
@@ -264,7 +264,7 @@ export default function MarketModalHeader({
             </Trans>
           </TYPE.italic>
         ) : (
-          <TYPE.italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
+          <TYPE.italic fontSize={14} fontWeight={400} textAlign="left" style={{ width: '100%' }}>
             <Trans>
               Input is estimated. You will sell at most{' '}
               <b>

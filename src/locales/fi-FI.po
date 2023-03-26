@@ -22,18 +22,13 @@ msgstr "$-"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "$<0/>"
-msgstr ""
+msgstr "$<0/>"
 
 #: src/components/earn/PoolCard.tsx
-#: src/pages/Market/index.tsx
-#: src/pages/Market/index.tsx
+#: src/components/swap/TradePrice.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
 msgstr "${0}"
-
-#: src/components/swap/TradePrice.tsx
-msgid "(${0})"
-msgstr "(${0})"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
@@ -61,6 +56,7 @@ msgstr "(edit)"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "- Remove recipient"
 msgstr "- Poista vastaanottaja"
 
@@ -71,7 +67,7 @@ msgstr "0 UNI / viikko"
 
 #: src/pages/Earn/Manage.tsx
 msgid "0 sKrom / week"
-msgstr ""
+msgstr "0 skromia / viikko"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
@@ -106,29 +102,41 @@ msgstr "<0/> Kaikki ehdotukset"
 msgid "<0/> Votes"
 msgstr "<0/> Äänet"
 
+#: src/components/Perpetual/index.tsx
+msgid "<0/><1/>By clicking \"Agree\" you accept the <2>Terms and Conditions </2>by Kromatika.Finance<3/><4/>"
+msgstr "<0/><1/>Klikkaamalla \"Hyväksyn\" hyväksyt Kromatika.Financen <2>käyttöehdot</2><3/><4/>"
+
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "<0><1><2><3/><4/><5/><6/><7/></2></1><8>Earn crypto by sharing the following referral link <9><10>{0} {1}</10></9></8></0>"
+msgstr "<0><1><2><3/><4/><5/><6/><7/></2></1><8>Ansaitse kryptoa jakamalla seuraava viittauslinkki <9 ><10>{0} {1}</10></9></8></0>"
+
+#: src/components/LimitWarning/LimitWarningModal.tsx
+msgid "<0>ALL OTHER CHAINS</0> and <1>FEATURES ARE SECURE</1> (Polygon swaps & gasless swaps are also secure).<2/> <3/>As a security measure, Limit Order UI is paused on <4>Polygon Network only</4>."
+msgstr "<0>KAIKKI MUUT KETJUT</0> ja <1>OMINAISUUDET OVAT TURVATTUJA</1> (myös polygonien vaihto ja kaasuttomat vaihdot ovat turvallisia).<2/> <3/>Turvallisuussyistä Limit Order UI on keskeytetty <4>vain monikulmioverkostossa</4>."
+
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
 msgstr "<0>Tilin analytiikka ja kertyneet maksut</0><1> ↗ </1>"
 
-#: 
-#~ msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
-#~ msgstr "<0> Nykyinen hinta:</0> <1> <2 /></1> <3>{0} per {1}</3>"
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "<0>Connect wallet to generate referral link. How it works ? <1>Read More</1></0>"
+msgstr "<0>Yhdistä lompakko luodaksesi viittauslinkin. Kuinka se toimii ? <1>Lue lisää</1></0>"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "<0>Error occured, reattempting transaction building! If the error persists, cancel the trade and try again.</0>"
+msgstr "<0>Tapahtui virhe, yritetään uudelleen tapahtuman luomista! Jos virhe jatkuu, peruuta kauppa ja yritä uudelleen.</0>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
 msgstr "<0>Vinkki:</0> Poolirahakkeiden poistaminen palauttaa positiosi taustalla oleviin rahakkeisiin nykyisen kurssin mukaisesti, suhteutettuna omaan osuuteesi poolista. Kertyneet palkkiot sisältyvät saamiisi määriin."
 
-#: 
-#~ msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
-#~ msgstr "<0> Vinkki:</0> Valitse toiminto ja kuvaa ehdotuksesi yhteisölle. Ehdotusta ei voi muuttaa lähettämisen jälkeen, joten tarkista kaikki tiedot ennen lähettämistä. Äänestyskausi alkaa välittömästi ja kestää 7 päivää. Voit ehdottaa mukautettua toimintoa <1> lukemalla asiakirjat</1> ."
-
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
 msgstr "<0> Vinkki:</0> Käytä tätä työkalua etsiäksesi v2-pooleja, jotka eivät automaattisesti näy käyttöliittymässä."
-
-#: 
-#~ msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-#~ msgstr "<0>Vinkki:</0> Kun lisäät likviditeettiä, saat poolin rahakkeita, jotka edustavat positiotasi. Nämä rahakkeet ansaitsevat automaattisesti palkkioita suhteessa osuutesi poolista, ja ne voidaan lunastaa milloin tahansa."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
@@ -137,7 +145,11 @@ msgstr "<0>Vapauta äänestys</0> valmistautuaksesi seuraavaan ehdotukseen."
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "<0>{0} per {1}</0>"
-msgstr ""
+msgstr "<0>{0} / {1}</0>"
+
+#: src/pages/Market/index.tsx
+msgid "<0> Price: </0>"
+msgstr "<0> Hinta: </0>"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
@@ -149,28 +161,28 @@ msgstr "Ehdotusten jättämiseen vaaditaan vähintään 0,25 prosentin kynnysarv
 
 #: src/pages/Stake/index.tsx
 msgid "APY"
-msgstr ""
+msgstr "APY"
 
 #: src/pages/Earn/Manage.tsx
 msgid "APY - add explanational tooltip"
-msgstr ""
+msgstr "APY - lisää selittävä työkaluvihje"
 
 #: src/pages/Stake/index.tsx
 msgid "APY is calculated as a participation percentage compared to the overall staked balance.It is updated every 2 weeks."
-msgstr ""
+msgstr "APY lasketaan osallistumisprosenttina suhteessa panostettuun kokonaissaldoon. Se päivitetään 2 viikon välein."
 
 #: src/components/Stake/index.tsx
 msgid "APY is calculated as a participation percentage in relation to the overall staked balance pool.It is updated every 2 weeks."
-msgstr ""
+msgstr "APY lasketaan osallistumisprosenttina suhteessa panostettuun saldopooliin. Se päivitetään 2 viikon välein."
 
 #: src/components/PositionCard/index.tsx
 msgid "APY is calculated as participating percentage in the total value staked. The APY percentage is therefore applied on total amount collected in the Fee Treasury."
-msgstr ""
+msgstr "APY lasketaan osallistumisprosenttina panoksen kokonaisarvosta. APY-prosenttia sovelletaan siten palkkiokassaan kerättyyn kokonaissummaan."
 
 #: src/components/PositionCard/index.tsx
 #: src/components/Stake/index.tsx
 msgid "APY:"
-msgstr ""
+msgstr "APY:"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -188,19 +200,13 @@ msgstr "Tili"
 
 #: src/components/PositionCard/index.tsx
 msgid "Account Status:"
-msgstr ""
+msgstr "Tilin tila:"
 
 #: src/components/PositionCard/index.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "Aktiivinen"
-
-#: 
-#: 
-#: 
-#~ msgid "Add"
-#~ msgstr "Lisää"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add <0/> and <1/> to Kromatika V2"
@@ -210,11 +216,6 @@ msgstr "Lisää <0/> ja <1/> Kromatika V2: een"
 msgid "Add Delegate +"
 msgstr "Lisää delegaatti +"
 
-#: 
-#: 
-#~ msgid "Add Liquidity"
-#~ msgstr "Lisää likviditeettiä"
-
 #: src/pages/Pool/v2.tsx
 msgid "Add V2 Liquidity"
 msgstr "Lisää V2-likviditeettiä"
@@ -222,10 +223,6 @@ msgstr "Lisää V2-likviditeettiä"
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
 msgstr "Lisää likviditeettiä."
-
-#: 
-#~ msgid "Add more liquidity"
-#~ msgstr "Lisää lisää likviditeettiä"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
@@ -252,37 +249,35 @@ msgstr "Osoitteella ei ole lunastettavaa"
 msgid "Against"
 msgstr "Vastaan"
 
+#: src/components/LimitWarning/LimitWarningModal.tsx
+#: src/components/Perpetual/index.tsx
+msgid "Agree"
+msgstr "Olla samaa mieltä"
+
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Allow Kromatika to use your {0}"
-msgstr ""
+msgstr "Salli Kromatikan käyttää {0}"
 
 #: 
-#~ msgid "Allow LP token migration"
-#~ msgstr "Salli LP-rahakkeen siirtäminen"
-
 #: 
-#~ msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-#~ msgstr "Salli korkean hintavaikutuksen kaupat ja ohita vahvistusnäyttö. Käytä omalla vastuullasi."
-
-#: src/pages/Market/index.tsx
-#: src/pages/Market/index.tsx
-msgid "Allow the Kromatika Aggregator to use your {0}"
-msgstr ""
-
-#: 
-#~ msgid "Allow the Kromatika Protocol to use your {0}"
-#~ msgstr "Salli Kromatika-protokollan käyttää {0}"
-
-#: 
-#~ msgid "Allowed"
-#~ msgstr "Sallittu"
+#~ msgid "Allow the Kromatika Aggregator to use your {0}"
+#~ msgstr "Salli Kromatika Aggregatorin käyttää {0}"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 msgid "Allowed Slippage"
 msgstr "Sallittu liukuminen"
+
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "Allowed Slippage:"
+msgstr "Sallittu lipsahdus:"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -292,30 +287,29 @@ msgstr "Määrä"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Amounts"
-msgstr ""
-
-#: 
-#~ msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
-#~ msgstr "Tapahtui virhe yritettäessä suorittaa tämä vaihto. Saatat joutua lisäämään luistonsietokykyäsi. Jos se ei toimi, kaupankäynnin kohteena olevan tunnuksen kanssa saattaa olla ristiriita. Huomautus: siirto- ja uudelleentase-tunnusten maksu ei ole yhteensopiva Kromatika V3: n kanssa."
+msgstr "Summat"
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
-msgstr ""
+msgstr "Virhe yritettäessä suorittaa tätä vaihtoa. Saatat joutua lisäämään liukastumistoleranssiasi. Jos tämä ei auta, kaupankäynnin kohteena olevan tunnuksen kanssa saattaa olla yhteensopimattomuus. Huomaa: siirto- ja uudelleenperustamismaksut eivät ole yhteensopivia Kromatikan kanssa."
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Any missing order(s)? Try switching between networks."
+msgstr "Puuttuuko tilaus/tilauksia? Kokeile vaihtaa verkkojen välillä."
 
 #: 
-#~ msgid "Analytics"
-#~ msgstr "Analytiikka"
+#: 
+#~ msgid "Any missing order? Try switching between"
+#~ msgstr "Puuttuuko tilaus? Kokeile vaihtaa välillä"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Hyväksy"
 
-#: 
-#~ msgid "Approve Token"
-#~ msgstr "Hyväksy tunnus"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/Stake/StakingModal.tsx
 msgid "Approve {0}"
@@ -329,6 +323,7 @@ msgstr "Hyväksytty"
 msgid "Approving"
 msgstr "Hyväksytään"
 
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/Stake/StakingModal.tsx
 msgid "Approving {0}"
@@ -351,24 +346,16 @@ msgid "Are you sure?"
 msgstr "Oletko varma?"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Kromatika community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Kromatika-yhteisön jäsenenä voit lunastaa UNI-rahakkeita käytettäväksi äänestämiseen ja hallintoon.<0/><1/><2>Lue lisää UNIsta</2>"
-
-#: 
-#~ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
-#~ msgstr "Vähintään {0} {1} ja {2} {3} palautetaan lompakkoosi valitun hinta-alueen vuoksi."
+msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
+msgstr "Uniswap-yhteisön jäsenenä voit vaatia UNI:n käyttämistä äänestämiseen ja hallintoon.<0/><1/><2>Lue lisää UNIsta</2>"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
 msgstr "Automaattinen"
 
-#: 
-#~ msgid "Auto Router"
-#~ msgstr "Automaattinen reititin"
-
-#: 
-#~ msgid "Available to deposit: {0}"
-#~ msgstr "Talletettavissa: {0}"
+#: src/components/Settings/index.tsx
+msgid "BETA FEATURE. Use at own risk."
+msgstr "BETA-OMINAISUUDET. Käyttö omalla vastuulla."
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
@@ -402,6 +389,10 @@ msgstr "Estetty osoite"
 msgid "Bridge"
 msgstr "Silta"
 
+#: src/state/market/hooks.tsx
+msgid "Buy amount lower than fee amount"
+msgstr "Ostosumma pienempi kuin maksun summa"
+
 #: src/components/PositionCard/index.tsx
 #: src/components/Stake/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
@@ -411,18 +402,14 @@ msgstr "Lisäämällä likviditeettiä ansaitset 0,3 % kaikista tämän parin ka
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
 msgstr "Lisäämällä tämän luettelon luotat ehdottomasti siihen, että tiedot ovat oikein. Kuka tahansa voi luoda luettelon ja luoda myös väärennettyjä versioita olemassa olevista luetteloista ja luetteloista, jotka väittävät edustavansa hankkeita, joilla ei sellaista ole."
 
-#: 
-#~ msgid "By connecting a wallet, you agree to Kromatika Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Kromatika protocol disclaimer</1>."
-#~ msgstr "Yhdistämällä lompakon hyväksyt Kromatika Labsin <0>käyttöehdot</0> ja vahvistat, että olet lukenut ja ymmärtänyt <1>Kromatika-protokollan vastuuvapauslausekkeen</1>."
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancel"
-msgstr ""
+msgstr "Peruuttaa"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancel Trade"
-msgstr ""
+msgstr "Peruuta kauppa"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Vote/styled.tsx
@@ -431,23 +418,23 @@ msgstr "Peruutettu"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Canceling the trade will withdraw available amounts for you."
-msgstr ""
+msgstr "Kaupan peruuttaminen nostaa käytettävissäsi olevat summat."
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Cancelled:"
+msgstr "Peruutettu:"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancelling"
-msgstr ""
+msgstr "Peruutetaan"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancelling trade"
-msgstr ""
+msgstr "Kaupan peruuttaminen"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Muuta"
-
-#: 
-#~ msgid "Charts"
-#~ msgstr "Kaaviot"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Check network status"
@@ -468,7 +455,7 @@ msgstr "Väitä <0/> {0}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Claim KROM"
-msgstr ""
+msgstr "Lunasta KROM"
 
 #: src/components/Header/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -484,10 +471,6 @@ msgstr "Lunasta UNI-rahake"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim UNI reward for {0}"
 msgstr "Lunasta UNI -palkinto {0}"
-
-#: 
-#~ msgid "Claim fees"
-#~ msgstr "Lunasta palkkiot"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Claim your UNI tokens"
@@ -520,10 +503,6 @@ msgstr "UNIn lunastaminen"
 msgid "Claiming {0} UNI"
 msgstr "Lunastetaan {0} UNIa"
 
-#: 
-#~ msgid "Clear All"
-#~ msgstr "Tyhjennä kaikki"
-
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Clear all"
 msgstr "Tyhjennä kaikki"
@@ -536,6 +515,10 @@ msgstr "Sulje"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Closed"
 msgstr "Suljettu"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Closed:"
+msgstr "Suljettu:"
 
 #: src/components/Menu/index.tsx
 msgid "Code"
@@ -550,10 +533,6 @@ msgstr "Kerää"
 msgid "Collect as WETH"
 msgstr "Kerää WETH:na"
 
-#: 
-#~ msgid "Collect fees"
-#~ msgstr "Kerää palkkiot"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Collect {0}/{1} fees"
 msgstr "Kerää {0}/{1} -maksuja"
@@ -564,32 +543,24 @@ msgstr "Kerätty"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
-msgstr ""
+msgstr "Kerätty {0} {1}{2} ja {3} {4}{5}"
 
-#: 
-#~ msgid "Collecting"
-#~ msgstr "Kerätään"
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Collected:"
+msgstr "Kerätty:"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting amounts will withdraw currently available amounts for you."
-msgstr ""
-
-#: 
-#~ msgid "Collecting fees"
-#~ msgstr "Kerätään palkkioita"
-
-#: 
-#~ msgid "Collecting fees will withdraw currently available fees for you."
-#~ msgstr "Keräämällä palkkiot lunastat tällä hetkellä saatavilla olevat palkkiot."
+msgstr "Summien kerääminen nostaa sinulle tällä hetkellä käytettävissä olevat summat."
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting tokens"
-msgstr ""
+msgstr "Tokenien kerääminen"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
 msgid "Coming Soon"
-msgstr ""
+msgstr "Tulossa pian"
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
@@ -600,17 +571,9 @@ msgstr "Yleiset baset"
 msgid "Confirm"
 msgstr "Vahvista"
 
-#: 
-#~ msgid "Confirm Create"
-#~ msgstr "Vahvista Luo"
-
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Confirm Limit Order"
-msgstr ""
-
-#: 
-#~ msgid "Confirm Supply"
-#~ msgstr "Vahvista tarjonta"
+msgstr "Vahvista rajatilaus"
 
 #: src/components/market/ConfirmMarketModal.tsx
 #: src/components/market/MarketModalFooter.tsx
@@ -639,6 +602,7 @@ msgstr "Vahvista tapahtuma lompakossa"
 #: src/pages/Stake/StakingModal.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/burn/v3/hooks.tsx
 #: src/state/market/hooks.tsx
@@ -650,8 +614,6 @@ msgid "Connect Wallet"
 msgstr "Yhdistä lompakko"
 
 #: src/components/earn/UnstakingModal.tsx
-#: src/pages/LimitOrder/index.tsx
-#: src/pages/LimitOrder/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -660,7 +622,6 @@ msgstr "Yhdistä lompakko"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/WalletModal/index.tsx
-#: src/components/Web3Status/index.tsx
 msgid "Connect to a wallet"
 msgstr "Yhdistä lompakkoon"
 
@@ -668,13 +629,13 @@ msgstr "Yhdistä lompakkoon"
 msgid "Connect to a wallet to find pools"
 msgstr "Yhdistä lompakkoon löytääksesi pooleja"
 
-#: 
-#~ msgid "Connect to a wallet to view your V2 liquidity."
-#~ msgstr "Yhdistä lompakkoon nähdäksesi V2-likviditeettisi."
-
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Yhdistä lompakkoon nähdäksesi likviditeettisi."
+
+#: src/components/Web3Status/index.tsx
+msgid "Connect wallet"
+msgstr "Yhdistä lompakko"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -689,14 +650,6 @@ msgstr "Kopioitu"
 msgid "Copy Address"
 msgstr "Kopioi osoite"
 
-#: 
-#~ msgid "Create"
-#~ msgstr "Luoda"
-
-#: 
-#~ msgid "Create Pool & Supply"
-#~ msgstr "Luo pooli ja tarjonta"
-
 #: src/pages/Vote/index.tsx
 msgid "Create Proposal"
 msgstr "Luo ehdotus"
@@ -705,10 +658,6 @@ msgstr "Luo ehdotus"
 #: src/pages/Pool/v2.tsx
 msgid "Create a pair"
 msgstr "Luo pari"
-
-#: 
-#~ msgid "Create a pool"
-#~ msgstr "Luo pooli"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Create an issue on GitHub"
@@ -728,7 +677,7 @@ msgstr "Luo {0}/{1} V3 pool"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Created Limit Trade {0} {1} {2}for {3} {4}{5}↗"
-msgstr ""
+msgstr "Luotu Limit Trade {0} {1} {2}{3} {4}{5}↗"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -736,33 +685,25 @@ msgstr ""
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Current Price"
-msgstr ""
+msgstr "Nykyinen hinta"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Current Price:"
-msgstr ""
+msgstr "Nykyinen hinta:"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
 msgid "Current Price: 0"
-msgstr ""
+msgstr "Nykyinen hinta: 0"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Current price"
 msgstr "Nykyinen hinta"
 
-#: 
-#~ msgid "Current {0} Price:"
-#~ msgstr "Nykyinen {0} hinta:"
-
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "Tumma teema"
-
-#: src/components/Header/index.tsx
-msgid "Dashboard"
-msgstr ""
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
@@ -791,22 +732,19 @@ msgstr "Delegoidaan ääniä"
 msgid "Deposit"
 msgstr "Talletus"
 
-#: 
-#~ msgid "Deposit Amounts"
-#~ msgstr "Talletusten määrä"
-
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit Assets"
 msgstr "Talletusomaisuus"
 
-#: src/components/PositionCard/index.tsx
-msgid "Deposit Balance:"
-msgstr ""
-
 #: src/components/NavigationTabs/index.tsx
+#: src/components/PositionCard/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Deposit KROM"
-msgstr ""
+msgstr "Talleta KROM"
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "Deposit KROM to process trade"
+msgstr "Talleta KROM käsitelläksesi kauppaa"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
@@ -818,32 +756,24 @@ msgid "Deposit liquidity"
 msgstr "Talleta likviditeettiä"
 
 #: src/pages/Earn/index.tsx
-msgid "Deposit your Liquidity Provider tokens to receive KROM, the Kromatika protocol governance token."
-msgstr ""
-
-#: 
-#~ msgid "Deposit your Liquidity Provider tokens to receive UNI, the Kromatika protocol governance token."
-#~ msgstr "Talleta likviditeetin tarjoajan rahakkeesi saadaksesi UNI-rahakkeita, Kromatika-protokollan hallintorahakkeita."
+msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
+msgstr "Talleta Likviditeetintarjoajan tunnuksesi saadaksesi UNI, Uniswap-protokollan hallintotunnus."
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit {0}"
-msgstr ""
+msgstr "Talleta {0}"
+
+#: src/components/PositionCard/index.tsx
+msgid "Deposited Balance:"
+msgstr "Talletettu saldo:"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
 msgstr "Talletettu likviditeetti:"
 
-#: 
-#~ msgid "Deposited {0} UNI-V2"
-#~ msgstr "Talletettu {0} UNI-V2"
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "Depositing KROM will allow the system to automatically process trades"
-msgstr ""
-
-#: 
-#~ msgid "Depositing Liquidity"
-#~ msgstr "Talletetaan likviditeettiä"
+msgstr "KROM:in tallettaminen antaa järjestelmän käsitellä kaupat automaattisesti"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
@@ -873,35 +803,35 @@ msgstr "Sulje"
 msgid "Docs"
 msgstr "Asiakirjat"
 
-#: 
-#~ msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
-#~ msgstr "Etkö näe yhtä v2-positiostasi? <0>Tuo se.</0>"
+#: src/components/Perpetual/index.tsx
+msgid "Don't show this message again for the next 30 days."
+msgstr "Älä näytä tätä viestiä uudelleen seuraavien 30 päivän aikana."
+
+#: src/components/LimitWarning/LimitWarningModal.tsx
+msgid "Due to the recent LastPass breach, there may be a potential security breach on Kromatika's Limit Order Contract on <0>Polygon Network only</0>."
+msgstr "Äskettäisen LastPass-rikkomuksen vuoksi Kromatikan Limit Order -sopimuksessa voi olla mahdollinen tietoturvaloukkaus <0>vain polygoniverkossa</0>."
 
 #: src/components/PositionCard/index.tsx
 #: src/components/Stake/index.tsx
 msgid "Earned Balance:"
-msgstr ""
+msgstr "Ansaittu saldo:"
 
 #: src/components/vote/DelegateModal.tsx
-msgid "Earned UNI tokens represent voting shares in Kromatika governance."
-msgstr "Ansaitut UNI-rahakkeet edustavat äänioikeusosakkeita Kromatikain hallinnossa."
+msgid "Earned UNI tokens represent voting shares in Uniswap governance."
+msgstr "Ansaitut UNI-tunnukset edustavat ääniosuuksia Uniswap-hallinnossa."
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "Earned sKrom"
-msgstr ""
+msgstr "Ansainnut sKrom"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
 msgstr "Muokata"
 
-#: 
-#~ msgid "Efficiency Comparison"
-#~ msgstr "Tehokkuuden vertailu"
-
 #: src/components/Settings/index.tsx
 msgid "Enables gasless transactions by compensating them with KROM."
-msgstr ""
+msgstr "Mahdollistaa kaasuttomat tapahtumat kompensoimalla ne KROMilla."
 
 #: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
@@ -958,37 +888,40 @@ msgstr "Virhe yhdistettäessä. Yritä päivittää sivu."
 msgid "Error importing list"
 msgstr "Virhe tuotaessa luetteloa"
 
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "Est. Fees:"
+msgstr "Arvioitu Maksut:"
+
 #: src/components/Header/NetworkSelector.tsx
 msgid "Etherscan"
-msgstr ""
+msgstr "Etherscan"
 
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Suoritettu"
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Executed Orders"
+msgstr "Toteutetut tilaukset"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Laajennetut tulokset passiivisista rahakeluetteloista"
-
-#: 
-#~ msgid "Expert Mode"
-#~ msgstr "Asiantuntijatila"
-
-#: 
-#~ msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
-#~ msgstr "Asiantuntijatila ottaa vahvistuskehotuksen pois käytöstä ja mahdollistaa korkean luiston kaupat, jotka johtavat usein huonoihin kursseihin ja varojen menettämiseen."
 
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Vanhentunut"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Kromatika Analytics."
-msgstr "Tutki suosittuja pooleja Kromatika Analyticsissä."
+msgid "Explore popular pools on Uniswap Analytics."
+msgstr "Tutustu suosittuihin pooleihin Uniswap Analyticsissa."
 
-#: 
-#~ msgid "Explorer"
-#~ msgstr "tutkimusmatkailija"
+#: src/components/LimitWarning/LimitWarningModal.tsx
+msgid "FOR POLYGON KROMATIKA LIMIT ORDERS USERS - <0><1>ACTION REQUIRED</1></0>:<2/>a) Cancel Polygon chain limit orders<3/>b) Withdraw deposited KROM on polygon<4/>c) Revoke approval to old limit order manager contract: \"0xd1fdf0144be118c30a53e1d08cc1e61d600e508e\" <5>CLICK HERE</5> and follow the guide."
+msgstr "POLYGON KROMATIKA -RAJATILAUKSIEN KÄYTTÄJILLE - <0><1>TARVITTAVAT TOIMENPITEET</1></0>:<2/>a) Peruuta polygoniketjurajatilaukset<3/>b) Nosta talletettu KROM polygonille<4/> c) Peruuta hyväksyntä vanhalle rajatilausjohtajasopimukselle: \"0xd1fdf0144be118c30a53e1d08cc1e61d600e508e\" <5>NAPSAUTA TÄTÄ</5> ja seuraa ohjeita."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -1000,15 +933,11 @@ msgstr "Maksutaso"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Filling"
-msgstr ""
+msgstr "Täyte"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "Kohteelle"
-
-#: 
-#~ msgid "For each pool shown below, click migrate to remove your liquidity from Kromatika V2 and deposit it into Kromatika V3."
-#~ msgstr "Kunkin alla olevan poolin kohdalla paina \"siirrä\" poistaaksesi likviditeettisi Kromatika V2:sta ja tallettaaksesi sen Kromatika V3:een."
 
 #: src/components/market/MarketModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
@@ -1018,6 +947,7 @@ msgstr "Kohteelle"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "From"
 msgstr "Alkaen"
 
@@ -1027,32 +957,25 @@ msgstr "Alkaen"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "From (at most)"
 msgstr "Alkaen (enintään)"
 
 #: src/components/Settings/index.tsx
 msgid "Frontrun Protection"
-msgstr ""
+msgstr "Etukulkusuoja"
 
 #: src/components/RangeSelector/PresetsButtons.tsx
 msgid "Full Range"
 msgstr "Täysi valikoima"
 
-#: 
-#~ msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
-#~ msgstr "Täyden valikoiman positiot voivat ansaita vähemmän palkkioita kuin keskitetyt positiot. Lisätietoja <0> täältä</0> ."
-
 #: src/components/Settings/index.tsx
 msgid "Gasless Mode"
-msgstr ""
+msgstr "Kaasuton tila"
 
 #: src/components/Settings/index.tsx
 msgid "Gasless mode enables users to send blockchain transactions without paying network gas fees."
-msgstr ""
-
-#: src/components/PositionCard/index.tsx
-msgid "Get KROM tokens here<0>↗</0>"
-msgstr ""
+msgstr "Kaasuttoman tilan avulla käyttäjät voivat lähettää blockchain-tapahtumia maksamatta verkon kaasumaksuja."
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
@@ -1066,9 +989,21 @@ msgstr "Ohjekeskus"
 msgid "Hide"
 msgstr "Piilottaa"
 
-#: 
-#~ msgid "High Price Impact"
-#~ msgstr "Korkea hintavaikutus"
+#: src/components/Menu/index.tsx
+msgid "How to use FELO"
+msgstr "Kuinka käyttää FELOa"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Gasless"
+msgstr "Kuinka käyttää Gaslessia"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Perpetuals"
+msgstr "Kuinka käyttää Perpetualsia"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Swap"
+msgstr "Kuinka käyttää Swapia"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
@@ -1077,6 +1012,10 @@ msgstr "Ymmärrän"
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "Jos ostat rahakkeen tästä luettelosta, et ehkä pysty myymään sitä takaisin."
+
+#: src/state/market/hooks.tsx
+msgid "Impact is too high"
+msgstr "Vaikutus on liian suuri"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
@@ -1101,21 +1040,20 @@ msgstr "Tuo V2-pooli"
 msgid "Import at your own risk"
 msgstr "Tuo omalla vastuullasi"
 
-#: 
-#~ msgid "In range"
-#~ msgstr "Välillä"
-
-#: 
-#~ msgid "Increase Liquidity"
-#~ msgstr "Lisää likviditeettiä"
-
-#: 
-#~ msgid "Initial prices and pool share"
-#~ msgstr "Alkuhinnat ja poolin osake"
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "In Range"
+msgstr "Alueella"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
 msgstr "Valmistellaan..."
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Input"
+msgstr "Syöte"
 
 #: src/components/market/MarketModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
@@ -1131,6 +1069,7 @@ msgstr "Asenna Metamask"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Ei riittävästi likviditeettiä tälle kaupalle."
 
@@ -1144,11 +1083,7 @@ msgstr "Riittämätön {0} saldo"
 
 #: src/state/mint/v3/hooks.tsx
 msgid "Insufficient {0} deposit"
-msgstr ""
-
-#: 
-#~ msgid "Interface Settings"
-#~ msgstr "Käyttöliittymän asetukset"
+msgstr "Riittämätön {0} talletus"
 
 #: src/state/mint/hooks.tsx
 msgid "Invalid pair"
@@ -1158,15 +1093,6 @@ msgstr "Virheellinen pari"
 msgid "Invalid pair."
 msgstr "Virheellinen pari."
 
-#: 
-#~ msgid "Invalid price input"
-#~ msgstr "Virheellinen hintatieto"
-
-#: 
-#: 
-#~ msgid "Invalid range selected. The min price must be lower than the max price."
-#~ msgstr "Virheellinen vaihteluväli valittu. Minimihinnan on oltava pienempi kuin maksimihinta."
-
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 #: src/state/market/hooks.tsx
@@ -1174,37 +1100,25 @@ msgstr "Virheellinen pari."
 msgid "Invalid recipient"
 msgstr "Virheellinen vastaanottaja"
 
-#: src/pages/Vote/index.tsx
-msgid "Kromatika Governance"
-msgstr "Kromatikain hallinto"
+#: src/components/PositionCard/index.tsx
+msgid "KROM deposit required"
+msgstr "KROM-talletus vaaditaan"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Kromatika available in: <0>{0}</0>"
 msgstr "Kromatika käytettävissä: <0>{0}</0>"
 
-#: src/components/vote/ProposalEmptyState.tsx
-msgid "Kromatika governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
-msgstr "Kromatika-hallinta on käytettävissä vain kerroksessa 1. Vaihda verkko Ethereum Mainnet -palveluun nähdäksesi ehdotuksia ja äänestystä."
-
-#: src/pages/Earn/index.tsx
-msgid "Kromatika liquidity mining"
-msgstr "Kromatikain likviditeetin louhinta"
-
 #: 
-#~ msgid "Kromatika migration contract↗"
-#~ msgstr "Kromatikain siirtosopimus ↗"
-
-#: 
-#~ msgid "Kromatika on {0}"
-#~ msgstr "Peruuta {0}"
+#~ msgid "LP fees earned:"
+#~ msgstr "Ansaitut LP-maksut:"
 
 #: src/components/Menu/index.tsx
 msgid "Language"
 msgstr "Kieli"
 
-#: 
-#~ msgid "Learn"
-#~ msgstr "Opi"
+#: src/components/Perpetual/index.tsx
+msgid "Launch Perpetual Trading"
+msgstr "Aloita jatkuva kauppa"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Learn More"
@@ -1218,21 +1132,29 @@ msgstr "Lisätietoja likviditeetin tarjoamisesta"
 msgid "Light Theme"
 msgstr "Kevyt teema"
 
-#: src/components/Header/index.tsx
-msgid "Limit"
-msgstr ""
-
 #: src/pages/Pool/index.tsx
 msgid "Limit Orders"
-msgstr ""
+msgstr "Rajoitustilaukset"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Limit Price"
+msgstr "Rajahinta"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Limit price (USD):"
+msgstr "Rajahinta (USD):"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Limit price:"
+msgstr "Rajahinta:"
+
+#: src/components/NavigationLinks/index.tsx
+msgid "Limit/FELO"
+msgstr "Limit/FELO"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "Liquidity"
 msgstr "Likviditeetti"
-
-#: 
-#~ msgid "Liquidity Provider Fee"
-#~ msgstr "Likviditeetin tarjoajan palkkio"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
@@ -1264,8 +1186,13 @@ msgstr "Ladattu"
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Loading"
 msgstr "Ladataan"
+
+#: src/state/market/hooks.tsx
+msgid "Loading ..."
+msgstr "Ladataan ..."
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1273,10 +1200,6 @@ msgstr "Ladataan"
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
 msgstr "Hallitse"
-
-#: 
-#~ msgid "Manage Liquidity in Rewards Pool"
-#~ msgstr "Hallinnoi palkintopoolin likviditeettiä"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Manage Token Lists"
@@ -1295,14 +1218,6 @@ msgstr "Maksimi"
 msgid "Max Price"
 msgstr "Maksimihinta"
 
-#: 
-#~ msgid "Max price"
-#~ msgstr "Maksimihinta"
-
-#: 
-#~ msgid "Max:"
-#~ msgstr "Maksimi:"
-
 #: src/components/market/AdvancedMarketDetails.tsx
 msgid "Maximum sent"
 msgstr "Maksimimäärä lähetetty"
@@ -1316,30 +1231,13 @@ msgstr "Valikko"
 msgid "Migrate"
 msgstr "Siirrä"
 
-#: 
-#~ msgid "Migrate Liquidity"
-#~ msgstr "Siirrä likviditeetti"
-
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
 msgstr "Siirrä likviditeetti V3:een"
 
-#: 
-#: 
-#~ msgid "Migrate V2 Liquidity"
-#~ msgstr "Siirrä V2-likviditeetti"
-
-#: 
-#~ msgid "Migrate your liquidity tokens from Kromatika V2 to Kromatika V3."
-#~ msgstr "Siirrä likviditeettirahakkeesi Kromatika V2:sta Kromatika V3:een."
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Migrate {0}/{1} liquidity to V3"
 msgstr "Siirrä {0}/{1} -likviditeetti V3: een"
-
-#: 
-#~ msgid "Migrating"
-#~ msgstr "Siirretään"
 
 #: src/components/RangeSelector/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -1352,42 +1250,39 @@ msgstr "Minimihinta"
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
 msgid "Min Price: 0"
-msgstr ""
-
-#: 
-#~ msgid "Min price"
-#~ msgstr "Minimihinta"
-
-#: 
-#~ msgid "Min:"
-#~ msgstr "Minimi:"
+msgstr "Minimihinta: 0"
 
 #: src/components/PositionCard/index.tsx
 msgid "Minimum Balance:"
-msgstr ""
+msgstr "Vähimmäissaldo:"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Minimum Price"
-msgstr ""
+msgstr "Minimihinta"
 
-#: src/components/market/AdvancedMarketDetails.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "Minimum Received:"
+msgstr "Minimi vastaanotettu:"
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Minimum received"
 msgstr "Minimi vastaanotettu"
+
+#: src/components/market/AdvancedMarketDetails.tsx
+msgid "Minimum received {0}"
+msgstr "Vähintään vastaanotettu {0}"
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Puuttuvat riippuvuudet"
 
-#: 
-#~ msgid "More"
-#~ msgstr "Lisää"
-
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
 msgid "My limit orders"
-msgstr ""
+msgstr "Minun rajatilaukseni"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Network Warning"
@@ -1395,24 +1290,12 @@ msgstr "Varoitus verkosta"
 
 #: src/pages/Pool/index.tsx
 msgid "New Limit Order"
-msgstr ""
-
-#: 
-#~ msgid "New Position"
-#~ msgstr "Uusi positio"
-
-#: 
-#~ msgid "No V2 Liquidity found."
-#~ msgstr "V2-likviditeettiä ei löytynyt."
+msgstr "Uusi rajamääräys"
 
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
 msgid "No active pools"
 msgstr "Ei aktiivisia pooleja"
-
-#: 
-#~ msgid "No data"
-#~ msgstr "Ei dataa"
 
 #: src/state/governance/hooks.ts
 msgid "No description."
@@ -1434,14 +1317,6 @@ msgstr "Ehdotuksia ei löytynyt."
 msgid "No results found."
 msgstr "Tuloksia ei löytynyt."
 
-#: src/components/Badge/RangeBadge.tsx
-msgid "Not Processing"
-msgstr ""
-
-#: 
-#~ msgid "Not created"
-#~ msgstr "Ei luotu"
-
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
 msgstr "OFF"
@@ -1449,14 +1324,6 @@ msgstr "OFF"
 #: src/components/Toggle/ListToggle.tsx
 msgid "ON"
 msgstr "ON"
-
-#: src/components/Settings/index.tsx
-msgid "ONLY USE THIS MODE IF YOU HAVE ENOUGH KROM DEPOSIT BALANCE IN KROMATIKA."
-msgstr ""
-
-#: 
-#~ msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
-#~ msgstr "KÄYTÄ TÄTÄ TILAA VAIN, JOS TIEDÄT MITÄ TEET."
 
 #: src/components/Toggle/index.tsx
 msgid "Off"
@@ -1466,10 +1333,6 @@ msgstr "Off"
 msgid "On"
 msgstr "On"
 
-#: 
-#~ msgid "Once you are happy with the rate click supply to review."
-#~ msgstr "Kun olet tyytyväinen kurssiin, paina \"tarjonta\" tarkistaaksesi."
-
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
 msgstr "Ainoastaan itsedelegoidut ja toiseen osoitteeseen ennen lohkoa {0} delegoidut UNI-äänet ovat oikeutettuja äänestämään."
@@ -1477,6 +1340,15 @@ msgstr "Ainoastaan itsedelegoidut ja toiseen osoitteeseen ennen lohkoa {0} deleg
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "Hups! Tapahtui tuntematon virhe. Ole hyvä ja päivitä sivu tai vieraile sivulla toisella selaimella tai laitteella."
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Open Orders"
+msgstr "Avaa tilaukset"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Opened:"
+msgstr "Avattu:"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimism Gateway"
@@ -1490,47 +1362,51 @@ msgstr "Optimistinen Ethereum on betavaiheessa ja saattaa joutua seisokkeihin. O
 msgid "Optimistic Etherscan"
 msgstr "Optimistinen eetteriskannaus"
 
-#: 
-#~ msgid "Out of range"
-#~ msgstr "Alueen ulkopuolella"
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Output"
+msgstr "Lähtö"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
 msgstr "Tuotto on arvio. Jos hinta muuttuu enemmän kuin {0}%, tapahtuma perutaan."
 
 #: src/components/market/MarketModalHeader.tsx
-msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
-msgstr "Tuotos on arvioitu. Saat vähintään <0>{0} {1}</0> tai tapahtuma perutaan."
+msgid "Output is estimated. You will receive at least <0>{0} </0> or the transaction will revert."
+msgstr "Tuotos on arvioitu. Saat vähintään <0>{0}</0> tai tapahtuma palautetaan."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> when the current market price reaches your target price."
-msgstr ""
+msgstr "Tuotos on arvioitu. Saat vähintään <0>{0} {1}</0>, kun nykyinen markkinahinta saavuttaa tavoitehintasi."
 
 #: src/components/market/MarketModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
 msgstr "Tuotto lähetetään kohteeseen <0>{0}</0>"
 
-#: 
-#~ msgid "Owner"
-#~ msgstr "Omistaja"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Paid {0} {1} {2}service fees ↗"
-msgstr ""
+msgstr "Maksettu {0} {1} {2}palvelumaksut ↗"
 
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
 msgstr "Osallistuvat poolit"
 
 #: src/components/Badge/RangeBadge.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Odottaa"
 
+#: src/components/NavigationLinks/index.tsx
+msgid "Perpetuals"
+msgstr "Ikuiset"
+
 #: src/state/swap/hooks.tsx
 msgid "Place limit order above the minimum price"
-msgstr ""
+msgstr "Tee rajatilaus minimihinnan yläpuolelle"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Please confirm you would like to remove this list by typing REMOVE"
@@ -1545,24 +1421,28 @@ msgid "Please connect to the appropriate Ethereum network."
 msgstr "Ole hyvä ja yhdistä asianmukaiseen Ethereum-verkkoon."
 
 #: src/components/PositionCard/index.tsx
-msgid "Please deposit KROM up to the minimum balance. Recommendation is to deposit at least twice the minimum balance."
-msgstr ""
-
-#: 
-#~ msgid "Please type the word \"{confirmWord}\" to enable expert mode."
-#~ msgstr "Ole hyvä ja kirjoita sana \"{confirmWord}\" ottaaksesi asiantuntijatilan käyttöön."
+msgid "Please deposit $KROM to process your limit order.<0/><1/>Recommendation is to deposit at least twice the minimum balance."
+msgstr "Talleta $KROM käsitelläksesi rajatilauksesi.<0/><1/>Suositus on tallettaa vähintään kaksinkertainen vähimmäissaldo."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable gasless mode."
-msgstr ""
+msgstr "Ota kaasuton tila käyttöön kirjoittamalla sana \"{confirmWord}\"."
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Please wait while the transaction is being built"
+msgstr "Odota, kun tapahtumaa rakennetaan"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygon Bridge"
-msgstr ""
+msgstr "Polygon silta"
+
+#: src/components/LimitWarning/LimitWarningModal.tsx
+msgid "Polygon User Warning"
+msgstr "Monikulmion käyttäjän varoitus"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygonscan"
-msgstr ""
+msgstr "Polygonscan"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
@@ -1571,10 +1451,6 @@ msgstr "Pooli"
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
 msgstr "Pooli löydetty!"
-
-#: 
-#~ msgid "Pool Rate"
-#~ msgstr "Poolin kurssi"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Pool rate"
@@ -1593,13 +1469,13 @@ msgstr "Poolirahakkeita palkintopoolissa:"
 msgid "Pooled {0}:"
 msgstr "Poolattu {0}:"
 
-#: 
-#~ msgid "Pools Overview"
-#~ msgstr "Poolien yleiskatsaus"
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Preparing transaction"
+msgstr "Kauppaa valmistellaan"
 
 #: src/components/Settings/index.tsx
 msgid "Prevents front-running of swaps"
-msgstr ""
+msgstr "Estää vaihtojen etuajassa"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/Stake/StakingModal.tsx
@@ -1607,58 +1483,29 @@ msgid "Preview"
 msgstr "Esikatselu"
 
 #: src/components/market/MarketModalHeader.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Price"
 msgstr "Hinta"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price Details"
-msgstr ""
-
-#: 
-#~ msgid "Price Difference:"
-#~ msgstr "Hintaero:"
-
-#: 
-#~ msgid "Price Impact"
-#~ msgstr "Hintavaikutus"
-
-#: 
-#~ msgid "Price Impact Too High"
-#~ msgstr "Liian suuri hintavaikutus"
+msgstr "Hinnan tiedot"
 
 #: src/components/market/MarketModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "Hinta päivitetty"
 
-#: 
-#~ msgid "Price range"
-#~ msgstr "Hintaluokka"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
 msgstr "Hinta:"
 
-#: 
-#~ msgid "Prices and pool share"
-#~ msgstr "Hinnat ja poolin osuus"
-
 #: src/components/Badge/RangeBadge.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 msgid "Processed"
-msgstr ""
-
-#: 
-#~ msgid "Proposal"
-#~ msgstr "Ehdotus"
-
-#: 
-#~ msgid "Proposal Submitted"
-#~ msgstr "Ehdotus lähetetty"
-
-#: 
-#~ msgid "Proposal Title"
-#~ msgstr "Ehdotuksen otsikko"
+msgstr "Käsitelty"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
@@ -1668,10 +1515,6 @@ msgstr "Ehdotukset"
 msgid "Proposals submitted by community members will appear here."
 msgstr "Yhteisön jäsenten tekemät ehdotukset näkyvät täällä."
 
-#: 
-#~ msgid "Proposed Action"
-#~ msgstr "Ehdotettu toimi"
-
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
 msgstr "Ehdottaja"
@@ -1680,21 +1523,13 @@ msgstr "Ehdottaja"
 msgid "Queued"
 msgstr "Jonossa"
 
-#: 
-#~ msgid "Rates"
-#~ msgstr "Kurssit"
-
 #: src/pages/Earn/index.tsx
 msgid "Read more about KROM"
-msgstr ""
+msgstr "Lue lisää KROMista"
 
 #: src/pages/Vote/index.tsx
-msgid "Read more about Kromatika governance"
-msgstr "Lue lisää Kromatikain hallinnosta"
-
-#: 
-#~ msgid "Read more about UNI"
-#~ msgstr "Lue lisää UNIsta"
+msgid "Read more about Uniswap governance"
+msgstr "Lue lisää Uniswap-hallinnasta"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1756,16 +1591,11 @@ msgstr "Palaa"
 msgid "Search name or paste address"
 msgstr "Etsi nimeä tai liitä osoite"
 
-#: 
-#~ msgid "Select Pair"
-#~ msgstr "Valitse Pariliitos"
-
 #: src/components/Header/NetworkSelector.tsx
 msgid "Select a network"
 msgstr "Valitse verkko"
 
 #: src/components/CurrencyInputPanel/index.tsx
-#: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/market/hooks.tsx
@@ -1773,17 +1603,13 @@ msgstr "Valitse verkko"
 msgid "Select a token"
 msgstr "Valitse rahake"
 
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Select a token - Uniswap V3 pairs only"
+msgstr "Valitse tunnus - Uniswap vain V3-parit"
+
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
 msgstr "Valitse rahake löytääksesi v2-likviditeettisi."
-
-#: 
-#~ msgid "Select an action"
-#~ msgstr "Valitse toiminto"
-
-#: 
-#~ msgid "Selected Range"
-#~ msgstr "Valittu vaihteluväli"
 
 #: src/pages/Vote/index.tsx
 msgid "Self"
@@ -1795,33 +1621,16 @@ msgstr "Delegoi itse"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Service Fee"
-msgstr ""
+msgstr "Palvelumaksu"
 
-#: 
-#: 
-#: 
-#~ msgid "Set Price Range"
-#~ msgstr "Aseta hintaluokka"
-
-#: 
-#~ msgid "Set Starting Price"
-#~ msgstr "Aseta aloitushinta"
-
-#: 
-#~ msgid "Share of Pool"
-#~ msgstr "Poolin osuus"
-
-#: 
-#~ msgid "Share of Pool:"
-#~ msgstr "Poolin osuus:"
+#: src/components/market/MarketHeader.tsx
+#: src/components/swap/SwapHeader.tsx
+msgid "Show Chart"
+msgstr "Näytä kaavio"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
 msgstr "Näytä Portis"
-
-#: 
-#~ msgid "Show closed positions"
-#~ msgstr "Näytä suljetut sijainnit"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
@@ -1834,11 +1643,15 @@ msgstr "Luistonsieto"
 #: src/components/swap/SwapRoute.tsx
 #: src/components/swap/SwapRoute.tsx
 msgid "Smart Route"
-msgstr ""
+msgstr "Älykäs reitti"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Jotkut varat eivät ole käytettävissä tämän käyttöliittymän kautta, koska ne eivät saata toimia hyvin älykkäiden sopimusten kanssa tai emme voi sallia kaupankäyntiä oikeudellisista syistä."
+
+#: src/components/Perpetual/index.tsx
+msgid "Some countries may not be allowed to use perpetual trading - see the details under section 2 within our terms of use."
+msgstr "Jotkin maat eivät ehkä saa käyttää jatkuvaa kaupankäyntiä - katso yksityiskohdat käyttöehtojemme osiosta 2."
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
@@ -1846,39 +1659,43 @@ msgstr "Jotain meni pieleen"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Stake"
-msgstr ""
+msgstr "Panos"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "Stake KROM"
-msgstr ""
+msgstr "Panoksen KROM"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Stake Summary called"
-msgstr ""
+msgstr "Vaarnan yhteenveto kutsutaan"
 
 #: src/components/PositionCard/index.tsx
 #: src/components/Stake/index.tsx
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "Staked Balance:"
-msgstr ""
+msgstr "Panostettu saldo:"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Staking - make it bigger, maybe positioned at the centre"
-msgstr ""
+msgstr "Panostus - tee siitä isompi, ehkä sijoita keskelle"
 
 #: src/pages/Stake/index.tsx
 msgid "Staking - style it. Commafy values."
-msgstr ""
+msgstr "Staking - tyyli se. Kommaat arvot."
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Staking KROM will allow the system to automatically process trades"
-msgstr ""
+msgstr "KROM-panos antaa järjestelmän käsitellä kauppoja automaattisesti"
 
 #: src/components/PositionList/index.tsx
 msgid "Status"
 msgstr "Tila"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Status:"
+msgstr "Tila:"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
@@ -1888,10 +1705,6 @@ msgstr "Vaihe 1. Hanki UNI-V2 likviditeettirahakkeita"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Submit new proposal"
 msgstr "Lähetä uusi ehdotus"
-
-#: 
-#~ msgid "Submitting Proposal"
-#~ msgstr "Lähetetään ehdotus"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -1905,31 +1718,20 @@ msgstr "Menestyi"
 msgid "Success"
 msgstr "Menestys"
 
-#: 
-#~ msgid "Supply"
-#~ msgstr "Tarjonta"
-
-#: 
-#~ msgid "Supplying {0} {1} and{2} {3}"
-#~ msgstr "Toimitetaan {0} {1} ja{2} {3}"
-
-#: src/components/Header/index.tsx
+#: src/components/NavigationLinks/index.tsx
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Swap"
 msgstr "Vaihda"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap <0/> for exactly <1/>"
 msgstr "Vaihda <0/> täsmälleen <1/>"
-
-#: 
-#: 
-#~ msgid "Swap Anyway"
-#~ msgstr "Vaihda silti"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
@@ -1947,20 +1749,26 @@ msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Vaihdetaan {0} {1} kohteeseen {2} {3}"
 
 #: src/components/swap/SwapModalHeader.tsx
-#: src/pages/LimitOrder/index.tsx
-#: src/pages/LimitOrder/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Target Price"
-msgstr ""
+msgstr "Tavoitehinta"
+
+#: src/pages/LimitOrder/index.tsx
+msgid "Target Price+++"
+msgstr "Tavoitehinta+++"
+
+#: src/pages/LimitOrder/index.tsx
+msgid "Target Price---"
+msgstr "Tavoitehinta---"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Target Price:"
-msgstr ""
+msgstr "Tavoitehinta:"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Target price"
-msgstr ""
+msgstr "Tavoitehinta"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Kromatika community <0/>"
@@ -1970,17 +1778,18 @@ msgstr "Kiitos, että olet osa Kromatika-yhteisöä <0/>"
 msgid "The % you will earn in fees."
 msgstr "% Ansaitset palkkioita."
 
-#: src/hooks/useSwapCallback.tsx
-msgid "The Kromatika invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "Vaihto ei tyydyttänyt Kromatika-invarianttia x*y=k. Tämä tarkoittaa yleensä sitä, että yksi vaihtamistasi rahakkeista käyttäytyy mukautetusti siirron yhteydessä."
+#: src/components/Perpetual/index.tsx
+msgid "The Perpetual Trading is currently in beta-stage. Trade at your own risk."
+msgstr "Perpetual Trading on tällä hetkellä beta-vaiheessa. Tee kauppaa omalla riskilläsi."
 
 #: src/hooks/useMarketCallback.tsx
+#: src/hooks/useSwapCallback.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr ""
+msgstr "Vaihto ei tyydyttänyt Uniswap-invarianttia x*y=k. Tämä tarkoittaa yleensä sitä, että yksi vaihdettavista tokeneista sisältää mukautetun toiminnan siirron aikana."
 
 #: src/components/Header/Polling.tsx
-msgid "The current fast gas amount for sending a transaction on the network. Gas fees are paid in native currency Ether (ETH) and denominated in gwei."
-msgstr ""
+msgid "The current fast gas amount for sending a transaction on the network. Gas fees are paid in native currency {0} and denominated in gwei."
+msgstr "Nykyinen nopea kaasun määrä tapahtuman lähettämiseksi verkossa. Kaasumaksut maksetaan kotivaluutassa {0} ja gwei-määräisenä."
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -1993,48 +1802,32 @@ msgstr "Markkinahinta on määritellyn hintaluokan ulkopuolella. Vain yksittäis
 
 #: src/components/Header/Polling.tsx
 msgid "The most recent block number on this network. Prices update on every block."
-msgstr ""
+msgstr "Viimeisin lohkonumero tässä verkossa. Hinnat päivittyvät joka lohkossa."
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "Tulosrahaketta ei voida siirtää. Tulosrahakkeessa voi olla ongelma."
 
-#: 
-#~ msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
-#~ msgstr "Tulostunnusta ei voi siirtää. Tulostunnuksessa voi olla ongelma. Huomautus: siirto- ja uudelleentase-tunnusten maksu ei ole yhteensopiva Kromatika V3: n kanssa."
-
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
-msgstr ""
+msgstr "Tulostustunnusta ei voi siirtää. Tulostustunnuksessa voi olla ongelma. Huomaa: siirto- ja uudelleenperustamismaksut eivät ole yhteensopivia Kromatikan kanssa."
 
 #: src/hooks/useMarketCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr ""
-
-#: 
-#~ msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
-#~ msgstr "Tämän poolin hinta on valitsemasi hintaluokan ulkopuolella. Positiosi ei tällä hetkellä ansaitse palkkioita."
-
-#: 
-#~ msgid "The price of this pool is within your selected range. Your position is currently earning fees."
-#~ msgstr "Tämän poolin hinta sopii vallittuun hintaluokkaan. Positiosi ansaitsee tällä hetkellä palkkioita."
-
-#: 
-#~ msgid "The ratio of tokens you add will set the price of this pool."
-#~ msgstr "Lisäämiesi rahakkeiden suhde määrittää tämän poolin hinnan."
+msgstr "Tulostustunnusta ei voi siirtää. Tulostustunnuksessa voi olla ongelma. Huomautus: siirtomaksu ja uudelleenperustamistunnukset eivät ole yhteensopivia Uniswap V3:n kanssa."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The trade has been processed"
-msgstr ""
+msgstr "Kauppa on käsitelty"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The trade is filling in."
-msgstr ""
+msgstr "Kauppa täyttyy."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The trade is pending, waiting for the current market price to reach the specified target price."
-msgstr ""
+msgstr "Kauppa on vireillä ja odottaa, että nykyinen markkinahinta saavuttaa määritellyn tavoitehinnan."
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -2049,14 +1842,6 @@ msgstr "Likviditeettitietoja ei ole."
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Näitä rahakkeita liitetään usein muihin rahakkeisiin."
 
-#: 
-#~ msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
-#~ msgstr "Tämä pooli on alustettava, ennen kuin voit lisätä likviditeettiä. Alusta valitsemalla altaan aloitushinta. Syötä sitten likviditeetin hintaluokka ja talletussumma. Kaasumaksut ovat tavallista korkeampia alustustapahtuman takia."
-
-#: 
-#~ msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-#~ msgstr "Tämä pooli on alustettava arvoon {0} ennen kuin voit lisätä likviditeettiä. Alusta valitsemalla altaan aloitushinta. Syötä sitten likviditeetin hintaluokka ja talletussumma."
-
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
 msgstr "Tämä reitti optimoi hintasi ottamalla huomioon jaetut reitit, useita hyppyjä ja kaasukustannuksia."
@@ -2065,21 +1850,13 @@ msgstr "Tämä reitti optimoi hintasi ottamalla huomioon jaetut reitit, useita h
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Tätä rahaketta ei näy aktiivisissa rahakeluetteloissa. Varmista, että tämä on rahake, jonka haluat vaihtaa."
 
-#: 
-#~ msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
-#~ msgstr "Tämä työkalu siirtää {0} likviditeettisi turvallisesti V3:lle. Prosessi on täysin luotettava kiitos"
-
-#: 
-#~ msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
-#~ msgstr "Tämä kauppa ei onnistu hintaliikkeen vuoksi. Yritä lisätä liukastumistoleranssia. Huomautus: siirto- ja uudelleentase-tunnusten maksu ei ole yhteensopiva Kromatika V3: n kanssa."
-
 #: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
-msgstr ""
+msgstr "Tämä kauppa ei onnistu hintaliikkeen vuoksi. Yritä lisätä liukastumistoleranssiasi. Huomaa: siirto- ja uudelleenperustamismaksut eivät ole yhteensopivia Kromatikan kanssa."
 
 #: src/hooks/useMarketCallback.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr ""
+msgstr "Tämä kauppa ei onnistu hintaliikkeen vuoksi. Yritä lisätä liukastumistoleranssiasi. Huomautus: siirtomaksu ja uudelleenperustamistunnukset eivät ole yhteensopivia Uniswap V3:n kanssa."
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -2097,6 +1874,7 @@ msgstr "Vinkki: Mukautetut rahakkeet tallennetaan paikallisesti selaimellesi"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "To"
 msgstr "Vastaanottaja"
 
@@ -2106,6 +1884,7 @@ msgstr "Vastaanottaja"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "To (at least)"
 msgstr "Mihin (ainakin)"
 
@@ -2131,23 +1910,19 @@ msgstr "Kokonaistarjonta"
 
 #: src/pages/Stake/index.tsx
 msgid "Total Value Locked"
-msgstr ""
+msgstr "Kokonaisarvo lukittu"
 
 #: src/components/PositionCard/index.tsx
 msgid "Total Value Locked:"
-msgstr ""
+msgstr "Lukittu kokonaisarvo:"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Total Value Staked"
-msgstr ""
+msgstr "Panoksen kokonaisarvo"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
 msgstr "Talletettu yhteensä"
-
-#: 
-#~ msgid "Total deposits"
-#~ msgstr "Talletuksia yhteensä"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2158,34 +1933,33 @@ msgstr "Talletettu yhteensä"
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Trade"
-msgstr ""
+msgstr "Käydä kauppaa"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Trade History"
-msgstr ""
+msgstr "Kaupan historia"
 
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Pool"
-msgstr ""
-
-#: 
-#~ msgid "Trade Route"
-#~ msgstr "Kauppareitti"
+msgstr "Kauppa-allas"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Trades not processing. Please fund your account with KROM."
-msgstr ""
+msgstr "Kauppoja ei käsitellä. Rahoita tilillesi KROM."
 
 #: src/state/swap/hooks.tsx
 msgid "Trading pair not available"
-msgstr ""
+msgstr "Kauppapari ei saatavilla"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Trading {0} {1} for {2} {3}"
-msgstr ""
+msgstr "Kauppa {0} {1} hintaan {2} {3}"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Transaction Details"
 msgstr "maksutapahtuman tiedot"
 
@@ -2207,10 +1981,6 @@ msgstr "Tapahtuma lähetetty"
 msgid "Transaction completed in"
 msgstr "Kauppa suoritettu vuonna"
 
-#: 
-#~ msgid "Transaction deadline"
-#~ msgstr "Tapahtuman määräaika"
-
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -2218,21 +1988,18 @@ msgstr "Kauppa suoritettu vuonna"
 msgid "Transaction rejected."
 msgstr "Tapahtuma hylätty."
 
-#: 
-#~ msgid "Transfer Token"
-#~ msgstr "Siirtotunnus"
+#: src/hooks/useMarketCallback.tsx
+#: src/hooks/useMarketCallback.tsx
+msgid "Transaction rejected: {0}"
+msgstr "Tapahtuma hylätty: {0}"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Yritä uudelleen"
 
-#: 
-#~ msgid "Turn On Expert Mode"
-#~ msgstr "Ota asiantuntijatila käyttöön"
-
 #: src/components/Settings/index.tsx
 msgid "Turn On Gasless Mode"
-msgstr ""
+msgstr "Ota kaasuton tila käyttöön"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "UNI has arrived"
@@ -2247,8 +2014,8 @@ msgid "UNI price:"
 msgstr "UNI:n hinta:"
 
 #: src/pages/Vote/index.tsx
-msgid "UNI tokens represent voting shares in Kromatika governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "UNI-rahakkeet edustavat Kromatikain hallinnon äänestysosakkeita. Voit äänestää jokaisesta ehdotuksesta itse tai delegoida äänesi kolmannelle osapuolelle."
+msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
+msgstr "UNI-tunnukset edustavat Uniswap-hallinnon ääniosuuksia. Voit äänestää jokaisesta ehdotuksesta itse tai delegoida äänesi kolmannelle osapuolelle."
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
@@ -2259,30 +2026,18 @@ msgstr "UNI {0}/{1} Poltettu"
 msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
 msgstr "UNI-V2 LP -rahakkeita vaaditaan. Kun olet lisännyt likviditeettiä {0}-{1} pooliin, voit käyttää likviditeettirahakkeitasi tällä sivulla."
 
-#: 
-#~ msgid "UNI-V2 {0}-{1}"
-#~ msgstr "UNI-V2 {0}-{1}"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "UnStake Summary called"
-msgstr ""
+msgstr "Unstake Summary soitti"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Unclaimed UNI"
 msgstr "Lunastamaton UNI"
 
-#: 
-#~ msgid "Unclaimed fees"
-#~ msgstr "Lunastamattomat palkkiot"
-
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Unclaimed:"
 msgstr "Lunastamaton:"
-
-#: src/components/PositionCard/index.tsx
-msgid "Underfunded"
-msgstr ""
 
 #: src/pages/Vote/styled.tsx
 msgid "Undetermined"
@@ -2297,18 +2052,26 @@ msgstr "Odottamaton virhe. Vaihdon kaasua ei voitu arvioida."
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Odottamaton ongelma kaasun arvioinnissa. Yritä uudelleen."
 
+#: src/pages/Vote/index.tsx
+msgid "Uniswap Governance"
+msgstr "Uniswap-hallinta"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgstr "Uniswap-hallinta on saatavilla vain tasossa 1. Vaihda verkkosi Ethereum Mainnetiin nähdäksesi ehdotukset ja äänestys."
+
+#: src/pages/Earn/index.tsx
+msgid "Uniswap liquidity mining"
+msgstr "Uniswap likviditeetin louhinta"
+
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
 msgstr "Tuntematon lähde"
 
-#: 
-#~ msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
-#~ msgstr "Tuntematon virhe{0}. Yritä lisätä liukastumissietokykyäsi. Huomaa: siirto- ja uudelleenkorotusmaksut eivät ole yhteensopivia Kromatika V3: n kanssa."
-
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
-msgstr ""
+msgstr "Tuntematon virhe{0}. Yritä lisätä liukastumistoleranssiasi. Huomaa: siirto- ja uudelleenperustamismaksut eivät ole yhteensopivia Kromatikan kanssa."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -2325,16 +2088,16 @@ msgstr "Vapautetaan ääniä"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Unstake"
-msgstr ""
+msgstr "Poista panos"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "Unstake KROM"
-msgstr ""
+msgstr "Poista KROM-panos"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Unstaking KROM may prevent the system to calculate rewards"
-msgstr ""
+msgstr "KROM-panoksen poistaminen voi estää järjestelmää laskemasta palkintoja"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2342,6 +2105,7 @@ msgstr ""
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Unsupported Asset"
 msgstr "Ei-tuettu vara"
 
@@ -2359,16 +2123,13 @@ msgstr "Nimetön"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Unwrap"
 msgstr "Unwrap"
 
-#: 
-#~ msgid "Unwrap <0/> to ETH"
-#~ msgstr "Pura <0/> ETH: ksi"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
-msgstr ""
+msgstr "Pura paketti <0/> kohteeseen {0}"
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
@@ -2378,54 +2139,21 @@ msgstr "Päivitä delegointi"
 msgid "Update list"
 msgstr "Päivitä luettelo"
 
-#: 
-#~ msgid "Use the Kromatika Labs API to get better pricing through a more efficient route."
-#~ msgstr "Käytä Kromatika Labs -sovellusliittymää saadaksesi paremman hinnan tehokkaamman reitin kautta."
-
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "Käyttäjä"
-
-#: 
-#~ msgid "V2"
-#~ msgstr "V2"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
 msgstr "V2 ei ole käytettävissä kerroksessa 2. Vaihda kerrokseen 1 Ethereum."
 
-#: 
-#~ msgid "V2 liquidity"
-#~ msgstr "V2-likviditeetti"
-
-#: 
-#~ msgid "V3"
-#~ msgstr "V3"
-
-#: 
-#: 
-#~ msgid "V3 {0} Price:"
-#~ msgstr "V3 {0} Hinta:"
-
 #: src/components/Header/UniBalanceContent.tsx
 msgid "View UNI Analytics"
 msgstr "Näytä UNI-analytiikka"
 
-#: 
-#~ msgid "View V2 Liquidity"
-#~ msgstr "Näytä V2-likviditeetti"
-
-#: 
-#~ msgid "View accrued fees and analytics<0>↗</0>"
-#~ msgstr "Näytä kertyneet palkkiot ja analytiikka<0>↗</0>"
-
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
 msgstr "Näytä luettelo"
-
-#: 
-#~ msgid "View on Etherscan"
-#~ msgstr "Näkymä Etherscanissa"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
@@ -2440,10 +2168,6 @@ msgstr "Näytä Explorerissa"
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "Näytä tapahtuma Explorerissa"
-
-#: 
-#~ msgid "Vote"
-#~ msgstr "Äänestä"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
@@ -2510,15 +2234,11 @@ msgstr "Lompakon osoite tai ENS-nimi"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Wallet: {0}, Balance: {1}"
-msgstr ""
+msgstr "Lompakko: {0}, Saldo: {1}"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Wallet: {0}, Staked: {stakedBalance}"
-msgstr ""
-
-#: 
-#~ msgid "Weekly Rewards"
-#~ msgstr "Viikoittaiset palkinnot"
+msgstr "Lompakko: {0}, panos: {stakedBalance}"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
@@ -2527,10 +2247,6 @@ msgstr "Tervetuloa Team Unicorniin :)"
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
 msgstr "Kun lunastat vetäytymättä, likviditeettisi jää louhintapooliin."
-
-#: 
-#~ msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-#~ msgstr "Kun vetäydyt, sopimus lunastaa automaattisesti UNIn puolestasi!"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
@@ -2548,9 +2264,10 @@ msgid "Withdraw & Claim"
 msgstr "Vetäydy & lunasta"
 
 #: src/components/NavigationTabs/index.tsx
+#: src/components/PositionCard/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Withdraw KROM"
-msgstr ""
+msgstr "Poista KROM"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
@@ -2558,11 +2275,11 @@ msgstr "Vedä talletettu likviditeetti takaisin"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw {0}"
-msgstr ""
+msgstr "Nosta {0}"
 
 #: src/pages/AddLiquidity/index.tsx
-msgid "Withdrawing KROM may prevent the system to automatically processing trades"
-msgstr ""
+msgid "Withdrawing KROM may prevent the system to automatically process trades"
+msgstr "KROMin nostaminen voi estää järjestelmää käsittelemästä kauppoja automaattisesti"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrawing {0} UNI-V2"
@@ -2578,37 +2295,32 @@ msgstr "UNI-V2 vedetty pois!"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Wrap"
 msgstr "Wrap"
 
-#: 
-#~ msgid "Wrap <0/> to WETH"
-#~ msgstr "Kääri <0/> WETH -kohtaan"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
-msgstr ""
+msgstr "Kääri <0/> muotoon {0}"
+
+#: src/state/market/hooks.tsx
+msgid "Wrap your native token"
+msgstr "Kääri alkuperäisen merkkisi"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "Väärä verkko"
 
-#: 
-#~ msgid "You already have an active or pending proposal"
-#~ msgstr "Sinulla on jo aktiivinen tai odottava ehdotus"
+#: src/components/Perpetual/index.tsx
+msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
+msgstr "Poistut Kromatika.Financesta ja sinut ohjataan itsenäiselle kolmannen osapuolen verkkosivustolle."
 
-#: 
-#~ msgid "You are creating a pool"
-#~ msgstr "Olet luomassa poolia"
-
-#: 
-#~ msgid "You are the first liquidity provider for this Kromatika V3 pool. Your liquidity will migrate at the current {0} price."
-#~ msgstr "Olet tämän Kromatika V3 -poolin ensimmäinen likviditeetin tarjoaja. Likviditeettisi siirtyy nykyiseen {0} hintaan."
-
-#: 
-#~ msgid "You are the first liquidity provider."
-#~ msgstr "Olet ensimmäinen likviditeetin tarjoaja."
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "You buy"
+msgstr "Sinä ostat"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
@@ -2616,8 +2328,9 @@ msgstr "Voit joko äänestää jokaisesta ehdotuksesta itse tai delegoida ääne
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You can now swap {0}"
-msgstr ""
+msgstr "Voit nyt vaihtaa {0}"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2625,10 +2338,6 @@ msgstr ""
 #: src/pages/Swap/index.tsx
 msgid "You can now trade {0}"
 msgstr "Voit nyt käydä kauppaa {0}"
-
-#: 
-#~ msgid "You don't have enough votes to submit a proposal"
-#~ msgstr "Sinulla ei ole tarpeeksi ääniä ehdotuksen lähettämiseen"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
@@ -2642,14 +2351,11 @@ msgstr "Olet saattanut menettää verkkoyhteytesi tai {label} voi olla katkennut
 msgid "You may have lost your network connection."
 msgstr "Olet ehkä menettänyt verkkoyhteytesi."
 
-#: 
-#~ msgid "You must connect an account."
-#~ msgstr "Sinun on yhdistettävä tili."
-
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You must give the Kromatika Aggregator a permission to use your {0}. You only have to do this once per token."
-msgstr ""
+msgstr "Sinun on annettava Kromatika Aggregatorille lupa käyttää {0}-laitettasi. Sinun tarvitsee tehdä tämä vain kerran per merkki."
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2658,26 +2364,29 @@ msgstr ""
 msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "Sinun täytyy antaa Kromatikain älykkäille sopimuksille lupa käyttää {0}. Sinun täytyy tehdä tämä vain kerran per rahake."
 
-#: 
-#~ msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
-#~ msgstr "Sinulla on oltava {formattedProposalThreshold} ääntä voidaksesi lähettää ehdotuksen"
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "You receive at least"
+msgstr "Saat ainakin"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
-msgid "You save:"
-msgstr ""
+#: src/pages/SwapWidget/index.tsx
+msgid "You sell"
+msgstr "Sinä myyt"
 
-#: 
-#~ msgid "You should only deposit liquidity into Kromatika V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-#~ msgstr "Sinun tulisi tallettaa likviditeettiä Kromatika V3:een ainoastaan hintaan, jonka uskot olevan oikein. <0/>Jos hinta vaikuttaa virheelliseltä, voit joko vaihtaa hintaa tai odottaa jonkun muun tekevän niin."
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "You send"
+msgstr "Lähetät"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
 msgstr "Keräät myös tästä positiosta ansaittuja palkkioita."
 
 #: src/components/PositionCard/index.tsx
-msgid "You will need to maintain a minimum KROM balance to cover for the service fees. Recommendation is to deposit at least twice the minimum balance."
-msgstr ""
+msgid "You will need to maintain a minimum KROM balance to cover for the service fees.<0/><1/>Recommendation is to deposit at least twice the minimum balance."
+msgstr "Sinun on säilytettävä vähintään KROM-saldo kattaaksesi palvelumaksut.<0/><1/>Suositus on tallettaa vähintään kaksinkertainen vähimmäissaldo."
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
@@ -2691,23 +2400,13 @@ msgstr "Sinun UNI-erittelysi"
 msgid "Your V2 liquidity"
 msgstr "Sinun V2-likviditeettisi"
 
-#: 
-#~ msgid "Your V3 liquidity positions will appear here."
-#~ msgstr "V3-likviditeettipositiosi näkyvät täällä."
-
 #: src/components/PositionCard/index.tsx
-msgid "Your account is actively processing trades. Recommendation is to deposit at least twice the minimum balance."
-msgstr ""
+msgid "Your account is actively processing trades.<0/><1/>Recommendation is to deposit at least twice the minimum balance."
+msgstr "Tilisi käsittelee aktiivisesti kauppoja.<0/><1/>Suositus on tallettaa vähintään kaksinkertainen vähimmäissaldo."
 
-#: src/pages/LimitOrder/index.tsx
-#: src/pages/LimitOrder/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Your limit orders will appear here."
-msgstr ""
-
-#: 
-#~ msgid "Your liquidity deposits"
-#~ msgstr "Sinun likviditeettitalletuksesi"
+msgstr "Rajoitustilauksesi näkyvät täällä."
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -2720,10 +2419,6 @@ msgstr "Sinun pooliosuutesi:"
 msgid "Your position"
 msgstr "Oma positiosi"
 
-#: 
-#~ msgid "Your position has 0 liquidity, and is not earning fees."
-#~ msgstr "Positiosi likviditeetti on 0, eikä se ansaitse palkkioita."
-
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Your position will appear here."
 msgstr "Sijaintisi näkyy täällä."
@@ -2732,21 +2427,6 @@ msgstr "Sijaintisi näkyy täällä."
 #: src/components/PositionPreview/index.tsx
 msgid "Your position will be 100% composed of {0} at this price"
 msgstr "Positiosi tulee olemaan 100-prosenttisesti {0} tällä hinnalla"
-
-#: 
-#: 
-#~ msgid "Your position will be 100% {0} at this price."
-#~ msgstr "Positiosi tulee olemaan 100-prosenttisesti {0} tällä hinnalla"
-
-#: 
-#: 
-#~ msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
-#~ msgstr "Positiosi ei ansaitse maksuja eikä sitä käytetä kaupankäynnissä ennen kuin markkinahinta sopii hintaluokkaasi."
-
-#: 
-#: 
-#~ msgid "Your positions"
-#~ msgstr "Sinun positiosi"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Your rate"
@@ -2759,11 +2439,7 @@ msgstr "Kaikki poolirahakkeesi:"
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Your trade will appear here."
-msgstr ""
-
-#: 
-#~ msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
-#~ msgstr "Tapahtuman hinta on paljon korkeampi, koska se sisältää kaasua poolin luomiseen."
+msgstr "Kauppasi näkyy täällä."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
@@ -2773,10 +2449,6 @@ msgstr "Tapahtumasi voi joutua front running -toiminnan kohteeksi"
 msgid "Your transaction may fail"
 msgstr "Tapahtumasi voi epäonnistua"
 
-#: 
-#~ msgid "Your transaction will revert if it is pending for more than this period of time."
-#~ msgstr "Tapahtumasi peruuntuu, jos se odottaa tätä ajanjaksoa kauemmin."
-
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
 msgstr "Tapahtumasi peruuntuu, jos hinta muuttuu epäsuotuisasti tätä prosenttiosuutta enemmän."
@@ -2785,25 +2457,17 @@ msgstr "Tapahtumasi peruuntuu, jos hinta muuttuu epäsuotuisasti tätä prosentt
 msgid "Your transactions will appear here..."
 msgstr "Tapahtumasi näkyvät täällä..."
 
-#: 
-#~ msgid "Your unclaimed UNI"
-#~ msgstr "Lunastamattomat UNIsi"
-
-#: 
-#~ msgid "confirm"
-#~ msgstr "vahvista"
-
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "kohteelle {0}"
 
 #: src/components/Settings/index.tsx
 msgid "gasless"
-msgstr ""
+msgstr "kaasuton"
 
 #: src/components/Header/Polling.tsx
 msgid "gwei"
-msgstr ""
+msgstr "gwei"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
@@ -2818,8 +2482,9 @@ msgid "https:// or ipfs:// or ENS name"
 msgstr "https:// tai ipfs:// tai ENS-nimi"
 
 #: 
-#~ msgid "minutes"
-#~ msgstr "minuuttia"
+#: 
+#~ msgid "networks."
+#~ msgstr "verkkoja."
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
@@ -2833,6 +2498,12 @@ msgstr "rahakeluettelon {0} kautta"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Tuo rahake} other {Tuo rahakkeita}}"
 
+#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2849,27 +2520,21 @@ msgstr "{0}"
 msgid "{0} %"
 msgstr "{0} %"
 
+#: 
+#~ msgid "{0} + {1}"
+#~ msgstr "{0} + {1}"
+
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/>  per <1/> <2>{1} </2>"
-msgstr ""
-
-#: 
-#: 
-#~ msgid "{0} <0/> per <1/>"
-#~ msgstr "{0} <0/> per <1/>"
+msgstr "{0} <0/> / <1/> <2>{1}</2>"
 
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/> <2>{1} </2>"
-msgstr ""
+msgstr "{0} <0/> / <1/> <2>{1}</2>"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} mukautettua rahaketta"
-
-#: 
-#: 
-#~ msgid "{0} Deposited"
-#~ msgstr "{0} talletettu"
 
 #: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
@@ -2899,10 +2564,6 @@ msgstr "{0} UNI"
 msgid "{0} UNI / week"
 msgstr "{0} UNI / viikko"
 
-#: 
-#~ msgid "{0} UNI-V2"
-#~ msgstr "{0} UNI-V2"
-
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "{0} UNI-V2 LP tokens available"
@@ -2920,21 +2581,20 @@ msgstr "{0} per {1}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0} sKrom / week"
-msgstr ""
+msgstr "{0} sKrom / viikko"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} rahaketta"
 
-#: 
-#: 
-#~ msgid "{0} {1} Price:"
-#~ msgstr "{0} {1} Hinta:"
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
 
-#: src/components/Header/index.tsx
-msgid "{0} {nativeCurrencySymbol}"
-msgstr ""
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{0} {1} + {2} {3}"
+msgstr "{0} {1} + {2} {3}"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "{0} • Added by user"
@@ -2942,31 +2602,17 @@ msgstr "{0} • Käyttäjän lisäämä"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/PositionPreview/index.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "{0}%"
 msgstr "{0}%"
 
 #: src/components/FeeSelector/index.tsx
 msgid "{0}% fee tier"
 msgstr "{0}%: n palkkataso"
-
-#: 
-#~ msgid "{0}% select"
-#~ msgstr "{0}% valitse"
-
-#: 
-#~ msgid "{0}-{1} Liquidity Mining"
-#~ msgstr "{0}-{1} Likviditeetin louhinta"
-
-#: 
-#~ msgid "{0}/{1} LP NFT"
-#~ msgstr "{0}/{1} LP NFT"
-
-#: 
-#~ msgid "{0}/{1} LP Tokens"
-#~ msgstr "{0}/{1} LP-rahaketta"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{SOCKS_AMOUNT} UNI"
@@ -2976,26 +2622,34 @@ msgstr "{SOCKS_AMOUNT} UNI"
 msgid "{USER_AMOUNT} UNI"
 msgstr "{USER_AMOUNT} UNI"
 
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "{actionLabel}"
+msgstr "{actionLabel}"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} rahaketta"
+
+#: src/components/Collapsible/index.tsx
+msgid "{label}"
+msgstr "{label}"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
 
+#: 
+#~ msgid "{status}"
+#~ msgstr "{status}"
+
+#: 
+#~ msgid "{token0CreatedAmount}"
+#~ msgstr "{token0CreatedAmount}"
+
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} per {tokenA}"
 
-#: 
-#~ msgid "~$ <0/>"
-#~ msgstr "~$ <0/>"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Limit Orders"
-msgstr ""
-
-#: 
-#~ msgid "← Back to Pools Overview"
-#~ msgstr "← Takaisin poolien yleiskatsaukseen"
+msgstr "← Takaisin rajatilauksiin"

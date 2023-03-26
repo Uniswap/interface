@@ -100,12 +100,12 @@ export default function ClaimModal() {
             <CardNoise />
             <CardSection gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={500}>
+                <TYPE.white fontWeight={400}>
                   <Trans>Claim UNI</Trans>
                 </TYPE.white>
                 <CloseIcon onClick={toggleClaimModal} style={{ zIndex: 99 }} color="white" />
               </RowBetween>
-              <TYPE.white fontWeight={700} fontSize={36}>
+              <TYPE.white fontWeight={700} fontSize={[16, 26, 36]}>
                 <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
               </TYPE.white>
             </CardSection>
@@ -149,7 +149,7 @@ export default function ClaimModal() {
             </CardSection>
           </ModalUpper>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
-            <TYPE.subHeader fontWeight={500}>
+            <TYPE.subHeader fontWeight={400}>
               <Trans>
                 As a member of the Uniswap community you may claim UNI to be used for voting and governance.
                 <br />
@@ -161,7 +161,7 @@ export default function ClaimModal() {
               disabled={!isAddress(account ?? '')}
               padding="16px 16px"
               width="100%"
-              $borderRadius="12px"
+              $borderRadius="20px"
               mt="1rem"
               onClick={onClaim}
             >
@@ -191,14 +191,14 @@ export default function ClaimModal() {
                 {claimConfirmed ? <Trans>Claimed!</Trans> : <Trans>Claiming</Trans>}
               </TYPE.largeHeader>
               {!claimConfirmed && (
-                <Text fontSize={36} color={'#ff007a'} fontWeight={800}>
+                <Text fontSize={[24, 28, 36]} color={'#ff007a'} fontWeight={800}>
                   <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
                 </Text>
               )}
             </AutoColumn>
             {claimConfirmed && (
               <>
-                <TYPE.subHeader fontWeight={500} color="black">
+                <TYPE.subHeader fontWeight={400} color="black">
                   <Trans>
                     <span role="img" aria-label="party-hat">
                       🎉{' '}

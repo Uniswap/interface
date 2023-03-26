@@ -10,6 +10,7 @@ const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
   color: ${({ theme, isActive }) => (isActive ? theme.white : theme.text2)};
   font-size: 14px;
   font-weight: ${({ isOnSwitch }) => (isOnSwitch ? '500' : '400')};
+
   :hover {
     user-select: ${({ isOnSwitch }) => (isOnSwitch ? 'none' : 'initial')};
     background: ${({ theme, isActive, isOnSwitch }) =>
@@ -19,9 +20,9 @@ const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
 `
 
 const StyledToggle = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
-  border-radius: 12px;
+  border-radius: 20px;
   border: none;
-  background: ${({ theme }) => theme.bg0};
+  background: ${({ theme }) => theme.bg1};
   display: flex;
   width: fit-content;
   cursor: pointer;
@@ -49,7 +50,7 @@ export default function Toggle({
       <ToggleElement isActive={isActive} isOnSwitch={true}>
         {checked}
       </ToggleElement>
-      <ToggleElement isActive={!isActive} isOnSwitch={false}>
+      <ToggleElement isActive={!isActive} isOnSwitch={true}>
         {unchecked}
       </ToggleElement>
     </StyledToggle>

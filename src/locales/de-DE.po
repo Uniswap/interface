@@ -22,18 +22,13 @@ msgstr "$-"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "$<0/>"
-msgstr ""
+msgstr "$<0/>"
 
 #: src/components/earn/PoolCard.tsx
-#: src/pages/Market/index.tsx
-#: src/pages/Market/index.tsx
+#: src/components/swap/TradePrice.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
 msgstr "${0}"
-
-#: src/components/swap/TradePrice.tsx
-msgid "(${0})"
-msgstr "(${0})"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
@@ -61,6 +56,7 @@ msgstr "(bearbeiten)"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "- Remove recipient"
 msgstr "- Empfänger entfernen"
 
@@ -71,7 +67,7 @@ msgstr "0 UNI / Woche"
 
 #: src/pages/Earn/Manage.tsx
 msgid "0 sKrom / week"
-msgstr ""
+msgstr "0 Skrom / Woche"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
@@ -106,29 +102,41 @@ msgstr "<0/> Alle Vorschläge"
 msgid "<0/> Votes"
 msgstr "<0/> Stimmen"
 
+#: src/components/Perpetual/index.tsx
+msgid "<0/><1/>By clicking \"Agree\" you accept the <2>Terms and Conditions </2>by Kromatika.Finance<3/><4/>"
+msgstr "<0/> <1/> durch Klicken auf \\ \"zustimmen \" Sie akzeptieren die <2> -Anwhen- und -bedingungen </2> von kromatika.finance <3/> <4/>"
+
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "<0><1><2><3/><4/><5/><6/><7/></2></1><8>Earn crypto by sharing the following referral link <9><10>{0} {1}</10></9></8></0>"
+msgstr "<0> <1> <2> <3/> <4/> <5/> <6/> <7/> </2> </1> <8> Verdiene Krypto, indem sie den folgenden Empfehlungsverbindungslink <9 teilen <9 > <10> {0} {1} </10> </9> </8> </0>"
+
+#: src/components/LimitWarning/LimitWarningModal.tsx
+msgid "<0>ALL OTHER CHAINS</0> and <1>FEATURES ARE SECURE</1> (Polygon swaps & gasless swaps are also secure).<2/> <3/>As a security measure, Limit Order UI is paused on <4>Polygon Network only</4>."
+msgstr "<0> Alle anderen Ketten </0> und <1> sind sicher </1> (Polygon -Swaps und gaslose Swaps sind ebenfalls sicher). auf <4> Polygon -Netzwerk nur </4>."
+
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
 msgstr "<0>Kontoanalyse und eingenommene Gebühren</0><1> ↗ </1>"
 
-#: 
-#~ msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
-#~ msgstr "<0>Aktueller Preis:</0><1><2/></1> <3>{0} pro {1}</3>"
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "<0>Connect wallet to generate referral link. How it works ? <1>Read More</1></0>"
+msgstr "<0> Brieftasche anschließen, um eine Überweisungsverbindung zu erstellen. Wie es funktioniert ? <1> Lesen Sie mehr </1> </0>"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "<0>Error occured, reattempting transaction building! If the error persists, cancel the trade and try again.</0>"
+msgstr "<0> Fehler aufgetreten, das Transaktionsgebäude wiederholt! Wenn der Fehler bestehen, stornieren Sie den Handel und versuchen Sie es erneut. </0>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
 msgstr "<0>Tipp:</0> Durch das Entfernen von Pool-Token wird Ihre Position zum aktuellen Kurs proportional zu Ihrem Anteil am Pool in die zugrunde liegenden Token umgewandelt. Eingenommene Gebühren sind in den Beträgen enthalten, die Sie erhalten."
 
-#: 
-#~ msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
-#~ msgstr "<0>Tipp:</0> Wählen Sie eine Aktion aus und beschreiben Sie Ihren Antrag für die Community. Der Antrag kann nach der Einreichung nicht mehr geändert werden. Überprüfen Sie daher alle Informationen vor dem Einreichen. Die Abstimmungsperiode beginnt sofort und dauert 7 Tage. Um eine benutzerdefinierte Aktion vorzuschlagen, <1>lesen Sie die Dokumentation</1>."
-
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
 msgstr "<0>Tipp:</0> Verwenden Sie dieses Tool, um v2-Pools zu finden, die nicht automatisch in der Benutzeroberfläche angezeigt werden."
-
-#: 
-#~ msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-#~ msgstr "<0>Tipp:</0> Wenn Sie Liquidität hinzufügen, erhalten Sie Pool-Token, die Ihre Position repräsentieren. Diese Token verdienen automatisch im Verhältnis zu Ihrem Anteil am Pool, und können jederzeit eingelöst werden."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
@@ -137,7 +145,11 @@ msgstr "<0>Abstimmen freischalten</0> um bereit zu sein für den nächsten Vorsc
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "<0>{0} per {1}</0>"
-msgstr ""
+msgstr "<0> {0} per {1} </0>"
+
+#: src/pages/Market/index.tsx
+msgid "<0> Price: </0>"
+msgstr "<0> Preis: </0>"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
@@ -149,28 +161,28 @@ msgstr "Für das Einreichen von Anträgen ist eine Mindestschwelle von 0,25% des
 
 #: src/pages/Stake/index.tsx
 msgid "APY"
-msgstr ""
+msgstr "APY"
 
 #: src/pages/Earn/Manage.tsx
 msgid "APY - add explanational tooltip"
-msgstr ""
+msgstr "APY - Erläutertes Tooltip hinzufügen"
 
 #: src/pages/Stake/index.tsx
 msgid "APY is calculated as a participation percentage compared to the overall staked balance.It is updated every 2 weeks."
-msgstr ""
+msgstr "APY wird als Teilnahmeprozentsatz im Vergleich zum Gesamtbetrag des Gesamtbetrags berechnet. Es wird alle 2 Wochen aktualisiert."
 
 #: src/components/Stake/index.tsx
 msgid "APY is calculated as a participation percentage in relation to the overall staked balance pool.It is updated every 2 weeks."
-msgstr ""
+msgstr "APY wird als Teilnahmeprozentsatz in Bezug auf den Gesamtbalancepool in der Gesamtbalance berechnet. Es wird alle 2 Wochen aktualisiert."
 
 #: src/components/PositionCard/index.tsx
 msgid "APY is calculated as participating percentage in the total value staked. The APY percentage is therefore applied on total amount collected in the Fee Treasury."
-msgstr ""
+msgstr "APY wird als teilnehmender Prozentsatz im Gesamtwert berechnet. Der APY -Prozentsatz wird daher auf den Gesamtbetrag angewendet, der in der Gebührendasse gesammelt wird."
 
 #: src/components/PositionCard/index.tsx
 #: src/components/Stake/index.tsx
 msgid "APY:"
-msgstr ""
+msgstr "APY:"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -188,19 +200,13 @@ msgstr "Konto"
 
 #: src/components/PositionCard/index.tsx
 msgid "Account Status:"
-msgstr ""
+msgstr "Kontostatus:"
 
 #: src/components/PositionCard/index.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "Aktiv"
-
-#: 
-#: 
-#: 
-#~ msgid "Add"
-#~ msgstr "Hinzufügen"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add <0/> and <1/> to Kromatika V2"
@@ -210,11 +216,6 @@ msgstr "<0/> und <1/> zu Kromatika V2 hinzufügen"
 msgid "Add Delegate +"
 msgstr "Delegierung hinzufügen +"
 
-#: 
-#: 
-#~ msgid "Add Liquidity"
-#~ msgstr "Liquidität hinzufügen"
-
 #: src/pages/Pool/v2.tsx
 msgid "Add V2 Liquidity"
 msgstr "V2 Liquidität hinzufügen"
@@ -222,10 +223,6 @@ msgstr "V2 Liquidität hinzufügen"
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
 msgstr "Liquidität hinzufügen."
-
-#: 
-#~ msgid "Add more liquidity"
-#~ msgstr "Mehr Liquidität hinzufügen"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
@@ -252,37 +249,35 @@ msgstr "Adresse hat keinen gültigen Anspruch"
 msgid "Against"
 msgstr "Gegen"
 
+#: src/components/LimitWarning/LimitWarningModal.tsx
+#: src/components/Perpetual/index.tsx
+msgid "Agree"
+msgstr "Zustimmen"
+
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Allow Kromatika to use your {0}"
-msgstr ""
+msgstr "Erlauben Sie Kromatika, Ihre {0} zu verwenden"
 
 #: 
-#~ msgid "Allow LP token migration"
-#~ msgstr "LP-Token Migration erlauben"
-
 #: 
-#~ msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-#~ msgstr "Erlaube hohe Preisauswirkungen und überspringe den Bestätigungsbildschirm. Auf eigene Gefahr."
-
-#: src/pages/Market/index.tsx
-#: src/pages/Market/index.tsx
-msgid "Allow the Kromatika Aggregator to use your {0}"
-msgstr ""
-
-#: 
-#~ msgid "Allow the Kromatika Protocol to use your {0}"
-#~ msgstr "Erlaube dem Kromatika Protokoll, {0} zu verwenden"
-
-#: 
-#~ msgid "Allowed"
-#~ msgstr "Erlaubt"
+#~ msgid "Allow the Kromatika Aggregator to use your {0}"
+#~ msgstr "Erlauben Sie dem Kromatika -Aggregator, Ihren {0} zu verwenden"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 msgid "Allowed Slippage"
 msgstr "Zulässiges Rutschen"
+
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "Allowed Slippage:"
+msgstr "Zulässiges Schlupf:"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -292,30 +287,29 @@ msgstr "Betrag"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Amounts"
-msgstr ""
-
-#: 
-#~ msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
-#~ msgstr "Beim Versuch, diesen Swap auszuführen, ist ein Fehler aufgetreten. Möglicherweise müssen Sie Ihre Schlupftoleranz erhöhen. Wenn dies nicht funktioniert, liegt möglicherweise eine Inkompatibilität mit dem Token vor, den Sie handeln. Hinweis: Gebühren für Transfer- und Rebase-Token sind nicht mit Kromatika V3 kompatibel."
+msgstr "Beträge"
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
-msgstr ""
+msgstr "Bei dem Versuch, diesen Tausch auszuführen, trat ein Fehler auf. Möglicherweise müssen Sie Ihre Schlupftoleranz erhöhen. Wenn dies nicht funktioniert, kann es zu einer Inkompatibilität mit dem Token geben, mit dem Sie handeln. Hinweis: Die Gebühr für Übertragungs- und Rebase -Token ist mit Kromatika unvereinbar."
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Any missing order(s)? Try switching between networks."
+msgstr "Irgendwelche fehlenden Bestellungen? Versuchen Sie, zwischen den Netzwerken zu wechseln."
 
 #: 
-#~ msgid "Analytics"
-#~ msgstr "Statistiken"
+#: 
+#~ msgid "Any missing order? Try switching between"
+#~ msgstr "Irgendwelche fehlenden Bestellung? Versuchen Sie, zwischen zu wechseln"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Bestätigen"
 
-#: 
-#~ msgid "Approve Token"
-#~ msgstr "Token genehmigen"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/Stake/StakingModal.tsx
 msgid "Approve {0}"
@@ -329,6 +323,7 @@ msgstr "Bestätigt"
 msgid "Approving"
 msgstr "Bestätige"
 
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/Stake/StakingModal.tsx
 msgid "Approving {0}"
@@ -351,24 +346,16 @@ msgid "Are you sure?"
 msgstr "Sind Sie sicher?"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Kromatika community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Als Mitglied der Kromatika-Community können Sie UNI beantragen, dass für Abstimmungen verwendet wird.<0/><1/><2>Lesen Sie mehr über UNI</2>"
-
-#: 
-#~ msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
-#~ msgstr "Mindestens {0} {1} und {2} {3} werden aufgrund des gewählten Preisbereichs in Ihre Wallet zurückerstattet."
+msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
+msgstr "Als Mitglied der Uniswap -Community können Sie behaupten, dass Uni zur Abstimmung und Governance verwendet werden kann. <0/> <1/> <2> Lesen Sie mehr über Uni </2>"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
 msgstr "Autom."
 
-#: 
-#~ msgid "Auto Router"
-#~ msgstr "Automatischer Router"
-
-#: 
-#~ msgid "Available to deposit: {0}"
-#~ msgstr "Zur Einlage verfügbar: {0}"
+#: src/components/Settings/index.tsx
+msgid "BETA FEATURE. Use at own risk."
+msgstr "Beta -Funktion. Verwendung auf eigene Gefahr."
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
@@ -402,6 +389,10 @@ msgstr "Gesperrte Adresse"
 msgid "Bridge"
 msgstr "Brücke"
 
+#: src/state/market/hooks.tsx
+msgid "Buy amount lower than fee amount"
+msgstr "Kaufen Sie den Betrag niedriger als Gebührsbetrag"
+
 #: src/components/PositionCard/index.tsx
 #: src/components/Stake/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
@@ -411,18 +402,14 @@ msgstr "Durch das Hinzufügen von Liquidität verdienen Sie 0,3% aller Transakti
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
 msgstr "Durch das Hinzufügen dieser Liste vertrauen Sie implizit darauf, dass die Daten korrekt sind. Jeder kann eine Liste erstellen, einschließlich gefälschter Versionen bestehender Listen oder Listen die vorgeben Projekte zu repräsentieren, die keine Liste haben."
 
-#: 
-#~ msgid "By connecting a wallet, you agree to Kromatika Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Kromatika protocol disclaimer</1>."
-#~ msgstr "Durch das Verbinden mit einer Wallet erklären Sie sich mit den <0>Nutzungsbedingungen</0> von Kromatika Labs einverstanden und bestätigen, dass Sie den <1>Kromatika Protokoll Haftungsausschluss</1> gelesen und verstanden haben."
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancel"
-msgstr ""
+msgstr "Stornieren"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancel Trade"
-msgstr ""
+msgstr "Handel stornieren"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Vote/styled.tsx
@@ -431,23 +418,23 @@ msgstr "Abgesagt"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Canceling the trade will withdraw available amounts for you."
-msgstr ""
+msgstr "Durch das Abbrechen des Handels werden die verfügbaren Beträge für Sie abgeholt."
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Cancelled:"
+msgstr "Abgesagt:"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancelling"
-msgstr ""
+msgstr "Stornierung"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Cancelling trade"
-msgstr ""
+msgstr "Handel stornieren"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Ändern"
-
-#: 
-#~ msgid "Charts"
-#~ msgstr "Charts"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Check network status"
@@ -468,7 +455,7 @@ msgstr "Anspruch auf <0/> für {0}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Claim KROM"
-msgstr ""
+msgstr "Anspruch auf Krom"
 
 #: src/components/Header/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -484,10 +471,6 @@ msgstr "UNI Token einfordern"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim UNI reward for {0}"
 msgstr "Fordern Sie die UNI-Belohnung für {0}"
-
-#: 
-#~ msgid "Claim fees"
-#~ msgstr "Gebühren einfordern"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Claim your UNI tokens"
@@ -520,10 +503,6 @@ msgstr "Beziehe UNI"
 msgid "Claiming {0} UNI"
 msgstr "Fordere {0} UNI ein"
 
-#: 
-#~ msgid "Clear All"
-#~ msgstr "Alles löschen"
-
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Clear all"
 msgstr "Alles löschen"
@@ -536,6 +515,10 @@ msgstr "Schließen"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Closed"
 msgstr "Geschlossen"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Closed:"
+msgstr "Geschlossen:"
 
 #: src/components/Menu/index.tsx
 msgid "Code"
@@ -550,10 +533,6 @@ msgstr "Beziehen"
 msgid "Collect as WETH"
 msgstr "Als WETH beziehen"
 
-#: 
-#~ msgid "Collect fees"
-#~ msgstr "Gebühren beziehen"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Collect {0}/{1} fees"
 msgstr "Sammle {0}/{1} Gebühren"
@@ -564,32 +543,24 @@ msgstr "Eingezogen"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected {0} {1}{2} and {3} {4}{5}"
-msgstr ""
+msgstr "Erfasst {0} {1} {2} und {3} {4} {5}"
 
-#: 
-#~ msgid "Collecting"
-#~ msgstr "Ziehe ein"
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Collected:"
+msgstr "Gesammelt:"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting amounts will withdraw currently available amounts for you."
-msgstr ""
-
-#: 
-#~ msgid "Collecting fees"
-#~ msgstr "Ziehe Gebühren ein"
-
-#: 
-#~ msgid "Collecting fees will withdraw currently available fees for you."
-#~ msgstr "Gebühren einziehen wird für Sie derzeit verfügbare Gebühren beziehen."
+msgstr "Durch das Sammeln von Beträgen werden derzeit verfügbare Beträge für Sie abgehoben."
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting tokens"
-msgstr ""
+msgstr "Token sammeln"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
 msgid "Coming Soon"
-msgstr ""
+msgstr "Demnächst"
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
@@ -600,17 +571,9 @@ msgstr "Häufige Basistoken"
 msgid "Confirm"
 msgstr "Bestätigen"
 
-#: 
-#~ msgid "Confirm Create"
-#~ msgstr "Erstellen bestätigen"
-
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Confirm Limit Order"
-msgstr ""
-
-#: 
-#~ msgid "Confirm Supply"
-#~ msgstr "Angebot bestätigen"
+msgstr "Bestätigen Sie die Grenzbestellung"
 
 #: src/components/market/ConfirmMarketModal.tsx
 #: src/components/market/MarketModalFooter.tsx
@@ -639,6 +602,7 @@ msgstr "Transaktion in Wallet bestätigen"
 #: src/pages/Stake/StakingModal.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 #: src/state/burn/hooks.tsx
 #: src/state/burn/v3/hooks.tsx
 #: src/state/market/hooks.tsx
@@ -650,8 +614,6 @@ msgid "Connect Wallet"
 msgstr "Wallet verbinden"
 
 #: src/components/earn/UnstakingModal.tsx
-#: src/pages/LimitOrder/index.tsx
-#: src/pages/LimitOrder/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -660,7 +622,6 @@ msgstr "Eine Wallet verbinden"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/WalletModal/index.tsx
-#: src/components/Web3Status/index.tsx
 msgid "Connect to a wallet"
 msgstr "Mit einer Wallet verbinden"
 
@@ -668,13 +629,13 @@ msgstr "Mit einer Wallet verbinden"
 msgid "Connect to a wallet to find pools"
 msgstr "Mit einer Wallet verbinden, um Pools zu finden"
 
-#: 
-#~ msgid "Connect to a wallet to view your V2 liquidity."
-#~ msgstr "Verbinden Sie sich mit einer Wallet, um Ihre V2-Liquidität anzuzeigen."
-
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Verbinden Sie sich mit einer Wallet, um Ihre Liquidität anzuzeigen."
+
+#: src/components/Web3Status/index.tsx
+msgid "Connect wallet"
+msgstr "Brieftasche anschließen"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -689,14 +650,6 @@ msgstr "Kopiert"
 msgid "Copy Address"
 msgstr "Adresse kopieren"
 
-#: 
-#~ msgid "Create"
-#~ msgstr "Hinzufügen"
-
-#: 
-#~ msgid "Create Pool & Supply"
-#~ msgstr "Pool erstellen & versorgen"
-
 #: src/pages/Vote/index.tsx
 msgid "Create Proposal"
 msgstr "Vorschlag erstellen"
@@ -705,10 +658,6 @@ msgstr "Vorschlag erstellen"
 #: src/pages/Pool/v2.tsx
 msgid "Create a pair"
 msgstr "Paar erstellen"
-
-#: 
-#~ msgid "Create a pool"
-#~ msgstr "Pool erstellen"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Create an issue on GitHub"
@@ -728,7 +677,7 @@ msgstr "{0}/{1} V3-Pool erstellen"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Created Limit Trade {0} {1} {2}for {3} {4}{5}↗"
-msgstr ""
+msgstr "Erstellte Limit Trade {0} {1} {2} für {3} {4} {5} ↗"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -736,33 +685,25 @@ msgstr ""
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Current Price"
-msgstr ""
+msgstr "Derzeitiger Preis"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Current Price:"
-msgstr ""
+msgstr "Derzeitiger Preis:"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
 msgid "Current Price: 0"
-msgstr ""
+msgstr "Aktueller Preis: 0"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Current price"
 msgstr "Aktueller Preis"
 
-#: 
-#~ msgid "Current {0} Price:"
-#~ msgstr "Aktueller {0}-Preis:"
-
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "Dunkles Design"
-
-#: src/components/Header/index.tsx
-msgid "Dashboard"
-msgstr ""
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
@@ -791,22 +732,19 @@ msgstr "Delegiere Stimmrecht"
 msgid "Deposit"
 msgstr "Einzahlung"
 
-#: 
-#~ msgid "Deposit Amounts"
-#~ msgstr "Betrag deponieren"
-
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit Assets"
 msgstr "Vermögenswerte einzahlen"
 
-#: src/components/PositionCard/index.tsx
-msgid "Deposit Balance:"
-msgstr ""
-
 #: src/components/NavigationTabs/index.tsx
+#: src/components/PositionCard/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Deposit KROM"
-msgstr ""
+msgstr "Einzahlung Krom"
+
+#: src/components/Badge/RangeBadge.tsx
+msgid "Deposit KROM to process trade"
+msgstr "KROM einzahlt, um den Handel zu verarbeiten"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
@@ -818,32 +756,24 @@ msgid "Deposit liquidity"
 msgstr "Liquidität einzahlen"
 
 #: src/pages/Earn/index.tsx
-msgid "Deposit your Liquidity Provider tokens to receive KROM, the Kromatika protocol governance token."
-msgstr ""
-
-#: 
-#~ msgid "Deposit your Liquidity Provider tokens to receive UNI, the Kromatika protocol governance token."
-#~ msgstr "Deponieren Sie Ihre Liquiditäts-Provider Token um UNI zu erhalten, den Kromatika-Protokoll-Governance-Token."
+msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
+msgstr "Zahlen Sie Ihre Liquiditätsanbieter -Token ein, um Uni zu erhalten, das Uniswap Protocol Governance Token."
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit {0}"
-msgstr ""
+msgstr "Einzahlung {0}"
+
+#: src/components/PositionCard/index.tsx
+msgid "Deposited Balance:"
+msgstr "Abgelagerte Balance:"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
 msgstr "Deponierte Liquidität:"
 
-#: 
-#~ msgid "Deposited {0} UNI-V2"
-#~ msgstr "{0} UNI-V2 deponiert"
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "Depositing KROM will allow the system to automatically process trades"
-msgstr ""
-
-#: 
-#~ msgid "Depositing Liquidity"
-#~ msgstr "Liquidität einzahlen"
+msgstr "Durch die Ablagerung von KROM kann das System Geschäfte automatisch verarbeiten"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
@@ -873,35 +803,35 @@ msgstr "Verwerfen"
 msgid "Docs"
 msgstr "Dokumentation"
 
-#: 
-#~ msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
-#~ msgstr "Sie sehen eine Ihrer v2-Positionen nicht? <0>Importiere sie.</0>"
+#: src/components/Perpetual/index.tsx
+msgid "Don't show this message again for the next 30 days."
+msgstr "Zeigen Sie diese Nachricht für die nächsten 30 Tage nicht noch einmal an."
+
+#: src/components/LimitWarning/LimitWarningModal.tsx
+msgid "Due to the recent LastPass breach, there may be a potential security breach on Kromatika's Limit Order Contract on <0>Polygon Network only</0>."
+msgstr "Zeigen Sie diese Nachricht für die nächsten 30 Tage nicht noch einmal an."
 
 #: src/components/PositionCard/index.tsx
 #: src/components/Stake/index.tsx
 msgid "Earned Balance:"
-msgstr ""
+msgstr "Verdienstbetrag:"
 
 #: src/components/vote/DelegateModal.tsx
-msgid "Earned UNI tokens represent voting shares in Kromatika governance."
-msgstr "Erhaltene UNI-Token stellen Stimmbeteiligungen an der Kromatika-Governance dar."
+msgid "Earned UNI tokens represent voting shares in Uniswap governance."
+msgstr "Verdiente Uni -Token repräsentieren Abstimmungsaktien an der Uniswap -Governance."
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "Earned sKrom"
-msgstr ""
+msgstr "Verdiente Skrom"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: 
-#~ msgid "Efficiency Comparison"
-#~ msgstr "Effizienzvergleich"
-
 #: src/components/Settings/index.tsx
 msgid "Enables gasless transactions by compensating them with KROM."
-msgstr ""
+msgstr "Ermöglicht gaslose Transaktionen, indem sie sie mit KROM kompensieren."
 
 #: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
@@ -958,37 +888,40 @@ msgstr "Verbindungsfehler. Versuchen Sie die Seite neu zu laden."
 msgid "Error importing list"
 msgstr "Fehler beim Import der Liste"
 
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "Est. Fees:"
+msgstr "Europäische Sommerzeit. Gebühren:"
+
 #: src/components/Header/NetworkSelector.tsx
 msgid "Etherscan"
-msgstr ""
+msgstr "Etherscan"
 
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Ausgeführt"
 
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Executed Orders"
+msgstr "Ausgeführte Aufträge"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Erweiterte Ergebnisse aus inaktiven Token-Listen"
-
-#: 
-#~ msgid "Expert Mode"
-#~ msgstr "Expertenmodus"
-
-#: 
-#~ msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
-#~ msgstr "Der Expertenmodus schaltet die Transaktions-Bestätigung aus und ermöglicht Transaktionen mit viel Schlupf, was zu schlechten Kursen und verlorenem Geld führen kann."
 
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Verfallen"
 
 #: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Kromatika Analytics."
-msgstr "Entdecken Sie populäre Pools auf Kromatika Analytics."
+msgid "Explore popular pools on Uniswap Analytics."
+msgstr "Erkunden Sie beliebte Pools auf Uniswap -Analysen."
 
-#: 
-#~ msgid "Explorer"
-#~ msgstr "Forscher"
+#: src/components/LimitWarning/LimitWarningModal.tsx
+msgid "FOR POLYGON KROMATIKA LIMIT ORDERS USERS - <0><1>ACTION REQUIRED</1></0>:<2/>a) Cancel Polygon chain limit orders<3/>b) Withdraw deposited KROM on polygon<4/>c) Revoke approval to old limit order manager contract: \"0xd1fdf0144be118c30a53e1d08cc1e61d600e508e\" <5>CLICK HERE</5> and follow the guide."
+msgstr "Für Polygon Kromatika -Grenzbestellungen Benutzer - <0> <1 1> Erforderliche Aktion c) Genehmigung für den alten Grenzbestellmanagervertrag: \\ \"0xD1FDF0144BE118C30A53E1D08CC1E61D600E508E \" <5> Klicken Sie hier </5> und folgen Sie dem Handbuch."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -1000,15 +933,11 @@ msgstr "Gebührenstufe"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Filling"
-msgstr ""
+msgstr "Füllung"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
 msgstr "Dafür"
-
-#: 
-#~ msgid "For each pool shown below, click migrate to remove your liquidity from Kromatika V2 and deposit it into Kromatika V3."
-#~ msgstr "Klicken Sie für jeden unten angezeigten Pool auf migrieren, um Ihre Liquidität aus Kromatika V2 zu entfernen und in Kromatika V3 zu deponieren."
 
 #: src/components/market/MarketModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
@@ -1018,6 +947,7 @@ msgstr "Dafür"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "From"
 msgstr "Von"
 
@@ -1027,32 +957,25 @@ msgstr "Von"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "From (at most)"
 msgstr "Von (höchstens)"
 
 #: src/components/Settings/index.tsx
 msgid "Frontrun Protection"
-msgstr ""
+msgstr "Vorreiterschutz"
 
 #: src/components/RangeSelector/PresetsButtons.tsx
 msgid "Full Range"
 msgstr "Gesamter Bereich"
 
-#: 
-#~ msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
-#~ msgstr "Positionen über den gesamten Bereich können weniger Gebühren einbringen als konzentrierte Positionen. Erfahren Sie mehr <0>hier</0>."
-
 #: src/components/Settings/index.tsx
 msgid "Gasless Mode"
-msgstr ""
+msgstr "Gasloser Modus"
 
 #: src/components/Settings/index.tsx
 msgid "Gasless mode enables users to send blockchain transactions without paying network gas fees."
-msgstr ""
-
-#: src/components/PositionCard/index.tsx
-msgid "Get KROM tokens here<0>↗</0>"
-msgstr ""
+msgstr "Mit dem Gaslosen Modus können Benutzer Blockchain -Transaktionen senden, ohne Netzwerkgasgebühren zu zahlen."
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
@@ -1066,9 +989,21 @@ msgstr "Hilfezentrum"
 msgid "Hide"
 msgstr "Ausblenden"
 
-#: 
-#~ msgid "High Price Impact"
-#~ msgstr "Hoher Preiseinfluss"
+#: src/components/Menu/index.tsx
+msgid "How to use FELO"
+msgstr "So verwenden Sie FELO"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Gasless"
+msgstr "So verwenden Sie Gasless"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Perpetuals"
+msgstr "So verwenden Sie Perpetuals"
+
+#: src/components/Menu/index.tsx
+msgid "How to use Swap"
+msgstr "So verwenden Sie Swap"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
@@ -1077,6 +1012,10 @@ msgstr "Einverstanden"
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "Wenn Sie Token aus dieser Liste kaufen, können Sie sie möglicherweise nicht zurückverkaufen."
+
+#: src/state/market/hooks.tsx
+msgid "Impact is too high"
+msgstr "Der Einfluss ist zu hoch"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
@@ -1101,21 +1040,20 @@ msgstr "V2-Pool importieren"
 msgid "Import at your own risk"
 msgstr "Importieren auf eigene Gefahr"
 
-#: 
-#~ msgid "In range"
-#~ msgstr "Im Bereich"
-
-#: 
-#~ msgid "Increase Liquidity"
-#~ msgstr "Liquidität erhöhen"
-
-#: 
-#~ msgid "Initial prices and pool share"
-#~ msgstr "Anfangspreis und Poolanteil"
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "In Range"
+msgstr "Im Bereich"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
 msgstr "Wird initialisiert ..."
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Input"
+msgstr "Eingang"
 
 #: src/components/market/MarketModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
@@ -1131,6 +1069,7 @@ msgstr "Metamask installieren"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Unzureichende Liquidität für diesen Handel."
 
@@ -1144,11 +1083,7 @@ msgstr "Unzureichendes {0} Guthaben"
 
 #: src/state/mint/v3/hooks.tsx
 msgid "Insufficient {0} deposit"
-msgstr ""
-
-#: 
-#~ msgid "Interface Settings"
-#~ msgstr "Einstellungen der Benutzeroberfläche"
+msgstr "Unzureichende {0} Einzahlung"
 
 #: src/state/mint/hooks.tsx
 msgid "Invalid pair"
@@ -1158,15 +1093,6 @@ msgstr "Ungültiges Paar"
 msgid "Invalid pair."
 msgstr "Ungültiges Paar."
 
-#: 
-#~ msgid "Invalid price input"
-#~ msgstr "Ungültige Preisangabe"
-
-#: 
-#: 
-#~ msgid "Invalid range selected. The min price must be lower than the max price."
-#~ msgstr "Ungültiger Bereich ausgewählt. Der Mindestpreis muss kleiner als der Maximalpreis sein."
-
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 #: src/state/market/hooks.tsx
@@ -1174,37 +1100,25 @@ msgstr "Ungültiges Paar."
 msgid "Invalid recipient"
 msgstr "Ungültiger Empfänger"
 
-#: src/pages/Vote/index.tsx
-msgid "Kromatika Governance"
-msgstr "Kromatika Governance"
+#: src/components/PositionCard/index.tsx
+msgid "KROM deposit required"
+msgstr "KROM-Kaution erforderlich"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Kromatika available in: <0>{0}</0>"
 msgstr "Kromatika verfügbar in: <0>{0}</0>"
 
-#: src/components/vote/ProposalEmptyState.tsx
-msgid "Kromatika governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
-msgstr "Kromatika-Governance ist nur auf Layer 1 verfügbar. Schalten Sie Ihr Netzwerk auf Ethereum Mainnet um, um Anträge und Abstimmungen anzuzeigen."
-
-#: src/pages/Earn/index.tsx
-msgid "Kromatika liquidity mining"
-msgstr "Kromatika Liquiditätsförderung"
-
 #: 
-#~ msgid "Kromatika migration contract↗"
-#~ msgstr "Kromatika Migrations-contract↗"
-
-#: 
-#~ msgid "Kromatika on {0}"
-#~ msgstr "Kromatika auf {0}"
+#~ msgid "LP fees earned:"
+#~ msgstr "LP -Gebühren verdient:"
 
 #: src/components/Menu/index.tsx
 msgid "Language"
 msgstr "Sprache"
 
-#: 
-#~ msgid "Learn"
-#~ msgstr "Lernen"
+#: src/components/Perpetual/index.tsx
+msgid "Launch Perpetual Trading"
+msgstr "Start Perpetual Trading"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Learn More"
@@ -1218,21 +1132,29 @@ msgstr "Erfahren Sie mehr über die Bereitstellung von Liquidität"
 msgid "Light Theme"
 msgstr "Helles Design"
 
-#: src/components/Header/index.tsx
-msgid "Limit"
-msgstr ""
-
 #: src/pages/Pool/index.tsx
 msgid "Limit Orders"
-msgstr ""
+msgstr "Bestellungen begrenzen"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Limit Price"
+msgstr "Preis begrenzen"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Limit price (USD):"
+msgstr "Preis begrenzen (USD):"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Limit price:"
+msgstr "Preis begrenzen:"
+
+#: src/components/NavigationLinks/index.tsx
+msgid "Limit/FELO"
+msgstr "Limit/Felo"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "Liquidity"
 msgstr "Liquidität"
-
-#: 
-#~ msgid "Liquidity Provider Fee"
-#~ msgstr "Liquiditätsanbieter-Gebühr"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
@@ -1264,8 +1186,13 @@ msgstr "Geladen"
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Loading"
 msgstr "Lädt"
+
+#: src/state/market/hooks.tsx
+msgid "Loading ..."
+msgstr "Wird geladen ..."
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1273,10 +1200,6 @@ msgstr "Lädt"
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
 msgstr "Verwalten"
-
-#: 
-#~ msgid "Manage Liquidity in Rewards Pool"
-#~ msgstr "Liquidität im Belohnungspool verwalten"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Manage Token Lists"
@@ -1295,14 +1218,6 @@ msgstr "Max."
 msgid "Max Price"
 msgstr "Max. Preis"
 
-#: 
-#~ msgid "Max price"
-#~ msgstr "Max. Preis"
-
-#: 
-#~ msgid "Max:"
-#~ msgstr "Max.:"
-
 #: src/components/market/AdvancedMarketDetails.tsx
 msgid "Maximum sent"
 msgstr "Maximum gesendet"
@@ -1316,30 +1231,13 @@ msgstr "Menü"
 msgid "Migrate"
 msgstr "Migrieren"
 
-#: 
-#~ msgid "Migrate Liquidity"
-#~ msgstr "Liquidität migrieren"
-
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
 msgstr "Liquidität nach V3 migrieren"
 
-#: 
-#: 
-#~ msgid "Migrate V2 Liquidity"
-#~ msgstr "V2-Liquidität migrieren"
-
-#: 
-#~ msgid "Migrate your liquidity tokens from Kromatika V2 to Kromatika V3."
-#~ msgstr "Migrieren Sie Ihre Liquiditäts-Token von Kromatika V2 nach Kromatika V3."
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Migrate {0}/{1} liquidity to V3"
 msgstr "Migrieren Sie {0}/{1} Liquidität zu V3"
-
-#: 
-#~ msgid "Migrating"
-#~ msgstr "Migrieren"
 
 #: src/components/RangeSelector/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -1352,42 +1250,39 @@ msgstr "Min. Preis"
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
 msgid "Min Price: 0"
-msgstr ""
-
-#: 
-#~ msgid "Min price"
-#~ msgstr "Min. Preis"
-
-#: 
-#~ msgid "Min:"
-#~ msgstr "Min.:"
+msgstr "Min Preis: 0"
 
 #: src/components/PositionCard/index.tsx
 msgid "Minimum Balance:"
-msgstr ""
+msgstr "Mindestbilanz:"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Minimum Price"
-msgstr ""
+msgstr "Minimaler Preis"
 
-#: src/components/market/AdvancedMarketDetails.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "Minimum Received:"
+msgstr "Minimum erhalten:"
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Minimum received"
 msgstr "Minimum erhalten"
+
+#: src/components/market/AdvancedMarketDetails.tsx
+msgid "Minimum received {0}"
+msgstr "Minimum empfangen {0}"
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Fehlende Abhängigkeiten"
 
-#: 
-#~ msgid "More"
-#~ msgstr "Mehr"
-
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
 msgid "My limit orders"
-msgstr ""
+msgstr "Meine Grenzbestellungen"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Network Warning"
@@ -1395,24 +1290,12 @@ msgstr "Netzwerkwarnung"
 
 #: src/pages/Pool/index.tsx
 msgid "New Limit Order"
-msgstr ""
-
-#: 
-#~ msgid "New Position"
-#~ msgstr "Neue Position"
-
-#: 
-#~ msgid "No V2 Liquidity found."
-#~ msgstr "Keine V2-Liquidität gefunden."
+msgstr "Neue Grenzbestellung"
 
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
 msgid "No active pools"
 msgstr "Keine aktiven Pools"
-
-#: 
-#~ msgid "No data"
-#~ msgstr "Keine Daten"
 
 #: src/state/governance/hooks.ts
 msgid "No description."
@@ -1434,14 +1317,6 @@ msgstr "Keine Vorschläge gefunden."
 msgid "No results found."
 msgstr "Keine Ergebnisse gefunden."
 
-#: src/components/Badge/RangeBadge.tsx
-msgid "Not Processing"
-msgstr ""
-
-#: 
-#~ msgid "Not created"
-#~ msgstr "Nicht erstellt"
-
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
 msgstr "AUS"
@@ -1449,14 +1324,6 @@ msgstr "AUS"
 #: src/components/Toggle/ListToggle.tsx
 msgid "ON"
 msgstr "EIN"
-
-#: src/components/Settings/index.tsx
-msgid "ONLY USE THIS MODE IF YOU HAVE ENOUGH KROM DEPOSIT BALANCE IN KROMATIKA."
-msgstr ""
-
-#: 
-#~ msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
-#~ msgstr "VERWENDEN SIE DIESEN MODUS NUR, WENN SIE WISSEN, WAS SIE TUN."
 
 #: src/components/Toggle/index.tsx
 msgid "Off"
@@ -1466,10 +1333,6 @@ msgstr "Aus"
 msgid "On"
 msgstr "Ein"
 
-#: 
-#~ msgid "Once you are happy with the rate click supply to review."
-#~ msgstr "Sobald Sie mit dem Preis zufrieden sind, klicken Sie auf Bereitstellen zum Überprüfen."
-
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
 msgstr "Nur UNI-Stimmen, die vor Block {0} an die eigene oder eine fremde Adresse delegiert wurden, sind zur Abstimmung berechtigt."
@@ -1477,6 +1340,15 @@ msgstr "Nur UNI-Stimmen, die vor Block {0} an die eigene oder eine fremde Adress
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "Hoppla! Ein unbekannter Fehler ist aufgetreten. Bitte aktualisieren Sie die Seite oder besuchen Sie uns von einem anderen Browser oder Gerät."
+
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Open Orders"
+msgstr "Offene Bestellungen"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Opened:"
+msgstr "Geöffnet:"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimism Gateway"
@@ -1490,47 +1362,51 @@ msgstr "Optimistisches Ethereum befindet sich in der Beta-Phase und es kann zu A
 msgid "Optimistic Etherscan"
 msgstr "Optimism Etherscan"
 
-#: 
-#~ msgid "Out of range"
-#~ msgstr "Nicht im Bereich"
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "Output"
+msgstr "Ausgang"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
 msgstr "Ausgabemenge geschätzt. Wenn sich der Preis um mehr als {0}% ändert, wird Ihre Transaktion rückgängig gemacht."
 
 #: src/components/market/MarketModalHeader.tsx
-msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
-msgstr "Ausgabemenge geschätzt. Sie erhalten mindestens <0>{0} {1}</0> oder die Transaktion wird rückgängig gemacht."
+msgid "Output is estimated. You will receive at least <0>{0} </0> or the transaction will revert."
+msgstr "Ausgang wird geschätzt. Sie erhalten mindestens <0> {0} </0> oder die Transaktion wird zurückgekehrt."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> when the current market price reaches your target price."
-msgstr ""
+msgstr "Ausgang wird geschätzt. Sie erhalten mindestens <0> {0} {1} </0>, wenn der aktuelle Marktpreis Ihr Kursziel erreicht."
 
 #: src/components/market/MarketModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
 msgstr "Ausgabe wird an <0>{0}</0> gesendet"
 
-#: 
-#~ msgid "Owner"
-#~ msgstr "Besitzer"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Paid {0} {1} {2}service fees ↗"
-msgstr ""
+msgstr "Bezahlt {0} {1} {2} Servicegebühren ↗"
 
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
 msgstr "Teilnehmende Pools"
 
 #: src/components/Badge/RangeBadge.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Ausstehend"
 
+#: src/components/NavigationLinks/index.tsx
+msgid "Perpetuals"
+msgstr "Perpetuale"
+
 #: src/state/swap/hooks.tsx
 msgid "Place limit order above the minimum price"
-msgstr ""
+msgstr "Platzieren Sie die Grenzbestellung über den Mindestpreis"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Please confirm you would like to remove this list by typing REMOVE"
@@ -1545,24 +1421,28 @@ msgid "Please connect to the appropriate Ethereum network."
 msgstr "Bitte verbinden Sie sich mit dem entsprechenden Ethereum-Netzwerk."
 
 #: src/components/PositionCard/index.tsx
-msgid "Please deposit KROM up to the minimum balance. Recommendation is to deposit at least twice the minimum balance."
-msgstr ""
-
-#: 
-#~ msgid "Please type the word \"{confirmWord}\" to enable expert mode."
-#~ msgstr "Bitte geben Sie das Wort \"{confirmWord}\" ein, um den Experten-Modus zu aktivieren."
+msgid "Please deposit $KROM to process your limit order.<0/><1/>Recommendation is to deposit at least twice the minimum balance."
+msgstr "Bitte zahlen Sie $ krom, um Ihre Limit -Bestellung zu bearbeiten."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable gasless mode."
-msgstr ""
+msgstr "Bitte geben Sie das Wort \"{confirmWord}\" ein, um den gaslosen Modus zu aktivieren."
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Please wait while the transaction is being built"
+msgstr "Bitte warten Sie, während die Transaktion gebaut wird"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygon Bridge"
-msgstr ""
+msgstr "Polygonbrücke"
+
+#: src/components/LimitWarning/LimitWarningModal.tsx
+msgid "Polygon User Warning"
+msgstr "Polygon -Benutzerwarnung"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Polygonscan"
-msgstr ""
+msgstr "Polygonscan"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
@@ -1571,10 +1451,6 @@ msgstr "Pool"
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
 msgstr "Pool gefunden!"
-
-#: 
-#~ msgid "Pool Rate"
-#~ msgstr "Pool Rate"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Pool rate"
@@ -1593,13 +1469,13 @@ msgstr "Pool-Token im Belohnungspool:"
 msgid "Pooled {0}:"
 msgstr "{0} gepoolt:"
 
-#: 
-#~ msgid "Pools Overview"
-#~ msgstr "Pool-Übersicht"
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Preparing transaction"
+msgstr "Transaktion vorbereiten"
 
 #: src/components/Settings/index.tsx
 msgid "Prevents front-running of swaps"
-msgstr ""
+msgstr "Verhindert vorne mit Swaps"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/Stake/StakingModal.tsx
@@ -1607,58 +1483,29 @@ msgid "Preview"
 msgstr "Vorschau"
 
 #: src/components/market/MarketModalHeader.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Price"
 msgstr "Preis"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price Details"
-msgstr ""
-
-#: 
-#~ msgid "Price Difference:"
-#~ msgstr "Preisunterschied:"
-
-#: 
-#~ msgid "Price Impact"
-#~ msgstr "Preiseinfluss"
-
-#: 
-#~ msgid "Price Impact Too High"
-#~ msgstr "Preiseinfluss zu hoch"
+msgstr "Preisdetails"
 
 #: src/components/market/MarketModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "Preis aktualisiert"
 
-#: 
-#~ msgid "Price range"
-#~ msgstr "Preisbereich"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
 msgstr "Preis:"
 
-#: 
-#~ msgid "Prices and pool share"
-#~ msgstr "Preise und Pool-Anteil"
-
 #: src/components/Badge/RangeBadge.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 msgid "Processed"
-msgstr ""
-
-#: 
-#~ msgid "Proposal"
-#~ msgstr "Vorschlag"
-
-#: 
-#~ msgid "Proposal Submitted"
-#~ msgstr "Vorschlag eingereicht"
-
-#: 
-#~ msgid "Proposal Title"
-#~ msgstr "Titel des Vorschlags"
+msgstr "Verarbeitet"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
@@ -1668,10 +1515,6 @@ msgstr "Vorschläge"
 msgid "Proposals submitted by community members will appear here."
 msgstr "Vorschläge von Community-Mitgliedern werden hier erscheinen."
 
-#: 
-#~ msgid "Proposed Action"
-#~ msgstr "Vorgeschlagene Aktion"
-
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
 msgstr "Antragsteller"
@@ -1680,21 +1523,13 @@ msgstr "Antragsteller"
 msgid "Queued"
 msgstr "In Warteschlange"
 
-#: 
-#~ msgid "Rates"
-#~ msgstr "Preise"
-
 #: src/pages/Earn/index.tsx
 msgid "Read more about KROM"
-msgstr ""
+msgstr "Lesen Sie mehr über Krom"
 
 #: src/pages/Vote/index.tsx
-msgid "Read more about Kromatika governance"
-msgstr "Erfahren Sie mehr über Kromatika Governance"
-
-#: 
-#~ msgid "Read more about UNI"
-#~ msgstr "Erfahre mehr über UNI"
+msgid "Read more about Uniswap governance"
+msgstr "Lesen Sie mehr über Uniswap Governance"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1756,16 +1591,11 @@ msgstr "Zurück"
 msgid "Search name or paste address"
 msgstr "Name suchen oder Adresse einfügen"
 
-#: 
-#~ msgid "Select Pair"
-#~ msgstr "Paar auswählen"
-
 #: src/components/Header/NetworkSelector.tsx
 msgid "Select a network"
 msgstr "Wählen Sie ein Netzwerk"
 
 #: src/components/CurrencyInputPanel/index.tsx
-#: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/market/hooks.tsx
@@ -1773,17 +1603,13 @@ msgstr "Wählen Sie ein Netzwerk"
 msgid "Select a token"
 msgstr "Token auswählen"
 
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Select a token - Uniswap V3 pairs only"
+msgstr "Wählen Sie einen Token aus – nur Uniswap V3-Paare"
+
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
 msgstr "Wählen Sie einen Token aus, um Ihre v2-Liquidität zu finden."
-
-#: 
-#~ msgid "Select an action"
-#~ msgstr "Wählen Sie eine Aktion"
-
-#: 
-#~ msgid "Selected Range"
-#~ msgstr "Ausgewählter Bereich"
 
 #: src/pages/Vote/index.tsx
 msgid "Self"
@@ -1795,33 +1621,16 @@ msgstr "Selbstdelegierung"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Service Fee"
-msgstr ""
+msgstr "Servicegebühr"
 
-#: 
-#: 
-#: 
-#~ msgid "Set Price Range"
-#~ msgstr "Preisbereich festlegen"
-
-#: 
-#~ msgid "Set Starting Price"
-#~ msgstr "Startpreis festlegen"
-
-#: 
-#~ msgid "Share of Pool"
-#~ msgstr "Anteil am Pool"
-
-#: 
-#~ msgid "Share of Pool:"
-#~ msgstr "Anteil am Pool:"
+#: src/components/market/MarketHeader.tsx
+#: src/components/swap/SwapHeader.tsx
+msgid "Show Chart"
+msgstr "Diagramm anzeigen"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
 msgstr "Portis anzeigen"
-
-#: 
-#~ msgid "Show closed positions"
-#~ msgstr "Geschlossene Positionen anzeigen"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
@@ -1834,11 +1643,15 @@ msgstr "Schlupftoleranz"
 #: src/components/swap/SwapRoute.tsx
 #: src/components/swap/SwapRoute.tsx
 msgid "Smart Route"
-msgstr ""
+msgstr "Smart Route"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Einige Assets sind über diese Benutzeroberfläche nicht verfügbar, da sie möglicherweise nicht gut mit den Smart Contracts funktionieren oder wir den Handel aus rechtlichen Gründen nicht zulassen können."
+
+#: src/components/Perpetual/index.tsx
+msgid "Some countries may not be allowed to use perpetual trading - see the details under section 2 within our terms of use."
+msgstr "Einige Länder dürfen den ewigen Handel möglicherweise nicht verwenden - siehe die Details gemäß Abschnitt 2 in unseren Nutzungsbedingungen."
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
@@ -1846,39 +1659,43 @@ msgstr "Etwas ist schief gelaufen"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Stake"
-msgstr ""
+msgstr "Einsatz"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "Stake KROM"
-msgstr ""
+msgstr "Pfahl krom"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Stake Summary called"
-msgstr ""
+msgstr "Pfahlübersicht aufgerufen"
 
 #: src/components/PositionCard/index.tsx
 #: src/components/Stake/index.tsx
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "Staked Balance:"
-msgstr ""
+msgstr "Abgesteckte Balance:"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Staking - make it bigger, maybe positioned at the centre"
-msgstr ""
+msgstr "Halten - machen es größer, vielleicht in der Mitte positioniert"
 
 #: src/pages/Stake/index.tsx
 msgid "Staking - style it. Commafy values."
-msgstr ""
+msgstr "Hafen - stylen Sie es. Commafy -Werte."
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Staking KROM will allow the system to automatically process trades"
-msgstr ""
+msgstr "Durch das Einstellen von KROM kann das System Trades automatisch verarbeiten"
 
 #: src/components/PositionList/index.tsx
 msgid "Status"
 msgstr "Status"
+
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "Status:"
+msgstr "Status:"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
@@ -1888,10 +1705,6 @@ msgstr "Schritt 1. Holen Sie sich UNI-V2-Liquiditätstoken"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Submit new proposal"
 msgstr "Neues Angebot einreichen"
-
-#: 
-#~ msgid "Submitting Proposal"
-#~ msgstr "Angebot einreichen"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -1905,31 +1718,20 @@ msgstr "Erfolgreich"
 msgid "Success"
 msgstr "Erfolg"
 
-#: 
-#~ msgid "Supply"
-#~ msgstr "Bereitstellen"
-
-#: 
-#~ msgid "Supplying {0} {1} and{2} {3}"
-#~ msgstr "Versorgung {0} {1} und{2} {3}"
-
-#: src/components/Header/index.tsx
+#: src/components/NavigationLinks/index.tsx
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Swap"
 msgstr "Tauschen"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap <0/> for exactly <1/>"
 msgstr "Tausche <0/> gegen genau <1/>"
-
-#: 
-#: 
-#~ msgid "Swap Anyway"
-#~ msgstr "Trotzdem tauschen"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
@@ -1947,20 +1749,26 @@ msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Tausche {0} {1} gegen {2} {3}"
 
 #: src/components/swap/SwapModalHeader.tsx
-#: src/pages/LimitOrder/index.tsx
-#: src/pages/LimitOrder/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Target Price"
-msgstr ""
+msgstr "Zielpreis"
+
+#: src/pages/LimitOrder/index.tsx
+msgid "Target Price+++"
+msgstr "Zielpreis+++"
+
+#: src/pages/LimitOrder/index.tsx
+msgid "Target Price---"
+msgstr "Zielpreis---"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Target Price:"
-msgstr ""
+msgstr "Zielpreis:"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Target price"
-msgstr ""
+msgstr "Zielpreis"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Kromatika community <0/>"
@@ -1970,17 +1778,18 @@ msgstr "Danke, dass du Teil der Kromatika-Community bist <0/>"
 msgid "The % you will earn in fees."
 msgstr "Der Prozentsatz, den Sie an Gebühren verdienen."
 
-#: src/hooks/useSwapCallback.tsx
-msgid "The Kromatika invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "Die Kromatika-Invariante x*y=k wurde durch den Tausch nicht erfüllt. Dies bedeutet normalerweise, dass einer der Token, die Sie austauschen, ein benutzerdefiniertes Verhalten bei der Übertragung enthält."
+#: src/components/Perpetual/index.tsx
+msgid "The Perpetual Trading is currently in beta-stage. Trade at your own risk."
+msgstr "Der ewige Handel befindet sich derzeit im Beta-Stadium. Handel auf eigenes Risiko."
 
 #: src/hooks/useMarketCallback.tsx
+#: src/hooks/useSwapCallback.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr ""
+msgstr "Die Uniswap -Invariante x*y = k war vom Tausch nicht zufrieden. Dies bedeutet normalerweise, dass eines der Token, die Sie austauschen, ein individuelles Verhalten beim Übertragungen enthält."
 
 #: src/components/Header/Polling.tsx
-msgid "The current fast gas amount for sending a transaction on the network. Gas fees are paid in native currency Ether (ETH) and denominated in gwei."
-msgstr ""
+msgid "The current fast gas amount for sending a transaction on the network. Gas fees are paid in native currency {0} and denominated in gwei."
+msgstr "Der aktuelle schnelle Gasbetrag für das Senden einer Transaktion im Netzwerk. Die Gasgebühren werden in der nativen Währung {0} bezahlt und in Gwei abgelehnt."
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -1993,48 +1802,32 @@ msgstr "Der Marktpreis liegt außerhalb der angegebenen Preisklasse. Nur einseit
 
 #: src/components/Header/Polling.tsx
 msgid "The most recent block number on this network. Prices update on every block."
-msgstr ""
+msgstr "Die neueste Blocknummer in diesem Netzwerk. Preise aktualisieren jeden Block."
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "Der Ausgabe-Token kann nicht übertragen werden. Möglicherweise liegt ein Problem mit dem Token vor."
 
-#: 
-#~ msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
-#~ msgstr "Das Ausgabetoken kann nicht übertragen werden. Möglicherweise liegt ein Problem mit dem Ausgabetoken vor. Hinweis: Gebühren für Transfer- und Rebase-Token sind nicht mit Kromatika V3 kompatibel."
-
 #: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
-msgstr ""
+msgstr "Der Ausgangs -Token kann nicht übertragen werden. Es kann ein Problem mit dem Ausgabe -Token geben. Hinweis: Die Gebühr für Übertragungs- und Rebase -Token ist mit Kromatika unvereinbar."
 
 #: src/hooks/useMarketCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr ""
-
-#: 
-#~ msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
-#~ msgstr "Der Preis für diesen Pool liegt außerhalb des gewählten Bereichs. Ihre Position verdient derzeit keine Gebühren."
-
-#: 
-#~ msgid "The price of this pool is within your selected range. Your position is currently earning fees."
-#~ msgstr "Der Preis für diesen Pool liegt innerhalb des gewählten Bereichs. Ihre Position verdient derzeit Gebühren."
-
-#: 
-#~ msgid "The ratio of tokens you add will set the price of this pool."
-#~ msgstr "Das Verhältnis der von Ihnen hinzugefügten Token legt den Preis für diesen Pool fest."
+msgstr "Der Ausgangs -Token kann nicht übertragen werden. Es kann ein Problem mit dem Ausgabe -Token geben. Hinweis: Die Gebühr für Übertragungs- und Rebase -Token ist mit UNISWAP V3 nicht kompatibel."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The trade has been processed"
-msgstr ""
+msgstr "Der Handel wurde verarbeitet"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The trade is filling in."
-msgstr ""
+msgstr "Der Handel füllt sich."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The trade is pending, waiting for the current market price to reach the specified target price."
-msgstr ""
+msgstr "Der Handel steht aus und wartet auf den aktuellen Marktpreis, um das angegebene Kursziel zu erreichen."
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -2049,14 +1842,6 @@ msgstr "Keine Liquiditätsdaten vorhanden."
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Diese Token werden üblicherweise mit anderen Token gepaart."
 
-#: 
-#~ msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
-#~ msgstr "Dieser Pool muss initialisiert werden, bevor Sie Liquidität hinzufügen können. Wählen Sie zum Initialisieren einen Startpreis für den Pool aus. Geben Sie dann Ihre Liquiditätspreisspanne und den Einzahlungsbetrag ein. Die Gasgebühren werden aufgrund der Initialisierungstransaktion höher als üblich sein."
-
-#: 
-#~ msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-#~ msgstr "Dieser Pool muss auf {0} initialisiert werden, bevor Sie Liquidität hinzufügen können. Wählen Sie zum Initialisieren einen Startpreis für den Pool aus. Geben Sie dann Ihre Liquiditätspreisspanne und den Einzahlungsbetrag ein."
-
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
 msgstr "Diese Route optimiert Ihren Preis, indem geteilte Routen, mehrere Hops und Benzinkosten berücksichtigt werden."
@@ -2065,21 +1850,13 @@ msgstr "Diese Route optimiert Ihren Preis, indem geteilte Routen, mehrere Hops u
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Dieser Token erscheint nicht in der/den aktiven Token-Liste(n). Stellen Sie sicher, dass dies der Token ist, den Sie handeln möchten."
 
-#: 
-#~ msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
-#~ msgstr "Dieses Tool wird Ihre {0}-Liquidität sicher auf V3 migrieren. Der Prozess ist dank des"
-
-#: 
-#~ msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
-#~ msgstr "Diese Transaktion wird aufgrund von Preisbewegungen nicht erfolgreich sein. Versuchen Sie, Ihre Schlupftoleranz zu erhöhen. Hinweis: Gebühren für Transfer- und Rebase-Token sind nicht mit Kromatika V3 kompatibel."
-
 #: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
-msgstr ""
+msgstr "Diese Transaktion wird aufgrund der Preisbewegung nicht erfolgreich sein. Versuchen Sie, Ihre Schlupftoleranz zu erhöhen. Hinweis: Die Gebühr für Übertragungs- und Rebase -Token ist mit Kromatika unvereinbar."
 
 #: src/hooks/useMarketCallback.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr ""
+msgstr "Diese Transaktion wird aufgrund der Preisbewegung nicht erfolgreich sein. Versuchen Sie, Ihre Schlupftoleranz zu erhöhen. Hinweis: Die Gebühr für Übertragungs- und Rebase -Token ist mit UNISWAP V3 nicht kompatibel."
 
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -2097,6 +1874,7 @@ msgstr "Tipp: Benutzerdefinierte Token werden lokal in Ihrem Browser gespeichert
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "To"
 msgstr "Nach"
 
@@ -2106,6 +1884,7 @@ msgstr "Nach"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "To (at least)"
 msgstr "Nach (mindestens)"
 
@@ -2131,23 +1910,19 @@ msgstr "Gesamtmenge"
 
 #: src/pages/Stake/index.tsx
 msgid "Total Value Locked"
-msgstr ""
+msgstr "Gesamtwert gesperrt"
 
 #: src/components/PositionCard/index.tsx
 msgid "Total Value Locked:"
-msgstr ""
+msgstr "Gesamtwert gesperrt:"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Total Value Staked"
-msgstr ""
+msgstr "Gesamtwert abgesteckt"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
 msgstr "Gesamt deponiert"
-
-#: 
-#~ msgid "Total deposits"
-#~ msgstr "Gesamteinlagen"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2158,34 +1933,33 @@ msgstr "Gesamt deponiert"
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Trade"
-msgstr ""
+msgstr "Handeln"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Trade History"
-msgstr ""
+msgstr "Handelsgeschichte"
 
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Pool"
-msgstr ""
-
-#: 
-#~ msgid "Trade Route"
-#~ msgstr "Handelsroute"
+msgstr "Handelspool"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Trades not processing. Please fund your account with KROM."
-msgstr ""
+msgstr "Trades nicht verarbeiten. Bitte finanzieren Sie Ihr Konto mit Krom."
 
 #: src/state/swap/hooks.tsx
 msgid "Trading pair not available"
-msgstr ""
+msgstr "Handelspaar nicht verfügbar"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Trading {0} {1} for {2} {3}"
-msgstr ""
+msgstr "Handel {0} {1} für {2} {3}"
 
 #: src/components/market/AdvancedMarketDetails.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Transaction Details"
 msgstr "Transaktionsdetails"
 
@@ -2207,10 +1981,6 @@ msgstr "Transaktion gesendet"
 msgid "Transaction completed in"
 msgstr "Transaktion abgeschlossen in"
 
-#: 
-#~ msgid "Transaction deadline"
-#~ msgstr "Transaktionsfrist"
-
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
@@ -2218,21 +1988,18 @@ msgstr "Transaktion abgeschlossen in"
 msgid "Transaction rejected."
 msgstr "Transaktion abgelehnt."
 
-#: 
-#~ msgid "Transfer Token"
-#~ msgstr "Token übertragen"
+#: src/hooks/useMarketCallback.tsx
+#: src/hooks/useMarketCallback.tsx
+msgid "Transaction rejected: {0}"
+msgstr "Transaktion abgelehnt: {0}"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Erneut versuchen"
 
-#: 
-#~ msgid "Turn On Expert Mode"
-#~ msgstr "Experten-Modus aktivieren"
-
 #: src/components/Settings/index.tsx
 msgid "Turn On Gasless Mode"
-msgstr ""
+msgstr "Gaslosen Modus einschalten"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "UNI has arrived"
@@ -2247,8 +2014,8 @@ msgid "UNI price:"
 msgstr "UNI-Preis:"
 
 #: src/pages/Vote/index.tsx
-msgid "UNI tokens represent voting shares in Kromatika governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "UNI-Token stellen Stimmbeteiligung an der Kromatika Governance dar. Sie können über jeden Vorschlag selbst abstimmen oder Ihre Stimmen an Dritte delegieren."
+msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
+msgstr "Uni -Token vertreten Stimmrechtsaktien an der Uniswap -Governance. Sie können selbst über jeden Vorschlag abstimmen oder Ihre Stimmen an einen Dritten delegieren."
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
@@ -2259,30 +2026,18 @@ msgstr "UNI {0}/{1} verbrannt"
 msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
 msgstr "UNI-V2 LP-Token sind erforderlich. Sobald Sie dem Pool von {0}-{1} Liquidität hinzugefügt haben, können Sie Ihre Liquiditäts-Token auf dieser Seite \"staken\"."
 
-#: 
-#~ msgid "UNI-V2 {0}-{1}"
-#~ msgstr "UNI-V2 {0}-{1}"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "UnStake Summary called"
-msgstr ""
+msgstr "Abstandszusammenfassung aufgerufen"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Unclaimed UNI"
 msgstr "Noch nicht bezogene UNI"
 
-#: 
-#~ msgid "Unclaimed fees"
-#~ msgstr "Noch nicht bezogene Gebühren"
-
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Unclaimed:"
 msgstr "Noch nicht bezogen:"
-
-#: src/components/PositionCard/index.tsx
-msgid "Underfunded"
-msgstr ""
 
 #: src/pages/Vote/styled.tsx
 msgid "Undetermined"
@@ -2297,18 +2052,26 @@ msgstr "Unerwarteter Fehler. Gas für den Tausch konnte nicht geschätzt werden.
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Unerwartetes Problem bei der Schätzung des Gases. Bitte versuche es erneut."
 
+#: src/pages/Vote/index.tsx
+msgid "Uniswap Governance"
+msgstr "Uniswap Governance"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgstr "UNISWAP Governance ist nur auf Schicht 1 verfügbar. Schalten Sie Ihr Netzwerk auf Ethereum Mainnet, um Vorschläge und Abstimmung anzuzeigen."
+
+#: src/pages/Earn/index.tsx
+msgid "Uniswap liquidity mining"
+msgstr "UNISWAP -Liquiditätsabbau"
+
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
 msgstr "Unbekannte Quelle"
 
-#: 
-#~ msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika V3."
-#~ msgstr "Unbekannter Fehler{0}. Versuchen Sie, Ihre Schlupftoleranz zu erhöhen. Hinweis: Gebühren für Transfer- und Rebase-Token sind nicht mit Kromatika V3 kompatibel."
-
 #: src/hooks/useMarketCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Kromatika."
-msgstr ""
+msgstr "Unbekannter Fehler {0}. Versuchen Sie, Ihre Schlupftoleranz zu erhöhen. Hinweis: Die Gebühr für Übertragungs- und Rebase -Token ist mit Kromatika unvereinbar."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -2325,16 +2088,16 @@ msgstr "Stimmen werden freigeschalten"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Unstake"
-msgstr ""
+msgstr "Ungehörig"
 
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "Unstake KROM"
-msgstr ""
+msgstr "Unstake Krom"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Unstaking KROM may prevent the system to calculate rewards"
-msgstr ""
+msgstr "Unstackener Krom kann verhindern, dass das System Belohnungen berechnet"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2342,6 +2105,7 @@ msgstr ""
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Unsupported Asset"
 msgstr "Nicht unterstütztes Asset"
 
@@ -2359,16 +2123,13 @@ msgstr "Ohne Titel"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Unwrap"
 msgstr "Unwrap"
 
-#: 
-#~ msgid "Unwrap <0/> to ETH"
-#~ msgstr "<0/> in ETH auspacken"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
-msgstr ""
+msgstr "Ausschalten <0/> zu {0}"
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
@@ -2378,54 +2139,21 @@ msgstr "Delegation aktualisieren"
 msgid "Update list"
 msgstr "Liste aktualisieren"
 
-#: 
-#~ msgid "Use the Kromatika Labs API to get better pricing through a more efficient route."
-#~ msgstr "Verwenden Sie die Kromatika Labs-API, um durch eine effizientere Route bessere Preise zu erzielen."
-
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "Benutzer"
-
-#: 
-#~ msgid "V2"
-#~ msgstr "V2"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
 msgstr "V2 ist auf Layer 2 nicht verfügbar. Wechseln Sie zu Layer 1 Ethereum."
 
-#: 
-#~ msgid "V2 liquidity"
-#~ msgstr "V2-Liquidität"
-
-#: 
-#~ msgid "V3"
-#~ msgstr "V3"
-
-#: 
-#: 
-#~ msgid "V3 {0} Price:"
-#~ msgstr "V3 {0} Preis:"
-
 #: src/components/Header/UniBalanceContent.tsx
 msgid "View UNI Analytics"
 msgstr "UNI-Analytik anzeigen"
 
-#: 
-#~ msgid "View V2 Liquidity"
-#~ msgstr "V2-Liquidität anzeigen"
-
-#: 
-#~ msgid "View accrued fees and analytics<0>↗</0>"
-#~ msgstr "Eingenommene Gebühren und Analysen anzeigen<0>↗</0>"
-
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
 msgstr "Liste anzeigen"
-
-#: 
-#~ msgid "View on Etherscan"
-#~ msgstr "Auf Etherscan ansehen"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
@@ -2440,10 +2168,6 @@ msgstr "Im Explorer anzeigen"
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "Transaktion im Explorer anzeigen"
-
-#: 
-#~ msgid "Vote"
-#~ msgstr "Abstimmung"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
@@ -2510,15 +2234,11 @@ msgstr "Wallet-Adresse oder ENS-Name"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Wallet: {0}, Balance: {1}"
-msgstr ""
+msgstr "Brieftasche: {0}, Balance: {1}"
 
 #: src/pages/Stake/StakingModal.tsx
 msgid "Wallet: {0}, Staked: {stakedBalance}"
-msgstr ""
-
-#: 
-#~ msgid "Weekly Rewards"
-#~ msgstr "Wöchentliche Belohnungen"
+msgstr "Brieftasche: {0}, Einsätze: {stakedBalance}"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
@@ -2527,10 +2247,6 @@ msgstr "Willkommen bei Team Unicorn :)"
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
 msgstr "Wenn Sie Einfordern ohne die Liquidität abzuheben, bleibt Ihre Liquidität im Förder-Pool."
-
-#: 
-#~ msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-#~ msgstr "Wenn Sie Abheben wird der contract \"automagisch\" UNI für Sie einziehen!"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
@@ -2548,9 +2264,10 @@ msgid "Withdraw & Claim"
 msgstr "Abheben & Einfordern"
 
 #: src/components/NavigationTabs/index.tsx
+#: src/components/PositionCard/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Withdraw KROM"
-msgstr ""
+msgstr "Krom zurückziehen"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
@@ -2558,11 +2275,11 @@ msgstr "Deponierte Liquidität abheben"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw {0}"
-msgstr ""
+msgstr "Abziehen {0}"
 
 #: src/pages/AddLiquidity/index.tsx
-msgid "Withdrawing KROM may prevent the system to automatically processing trades"
-msgstr ""
+msgid "Withdrawing KROM may prevent the system to automatically process trades"
+msgstr "Das Zurückziehen von KROM kann das System verhindern, dass Trades automatisch verarbeitet werden"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrawing {0} UNI-V2"
@@ -2578,37 +2295,32 @@ msgstr "UNI-V2 abgehoben!"
 #: src/pages/Market/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "Wrap"
 msgstr "Wrap"
 
-#: 
-#~ msgid "Wrap <0/> to WETH"
-#~ msgstr "<0/> nach WETH umwickeln"
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
-msgstr ""
+msgstr "Wrap <0/> zu {0}"
+
+#: src/state/market/hooks.tsx
+msgid "Wrap your native token"
+msgstr "Wickeln Sie Ihr einheimisches Token"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "Falsches Netzwerk"
 
-#: 
-#~ msgid "You already have an active or pending proposal"
-#~ msgstr "Sie haben bereits ein aktives oder ausstehendes Angebot"
+#: src/components/Perpetual/index.tsx
+msgid "You are leaving Kromatika.Finance and will be redirected to an independent third-party website."
+msgstr "Sie verlassen Kromatika.finance und werden zu einer unabhängigen Website von Drittanbietern umgeleitet."
 
-#: 
-#~ msgid "You are creating a pool"
-#~ msgstr "Sie erstellen einen Pool"
-
-#: 
-#~ msgid "You are the first liquidity provider for this Kromatika V3 pool. Your liquidity will migrate at the current {0} price."
-#~ msgstr "Sie sind der erste Liquiditätsgeber für diesen Kromatika V3 Pool. Ihre Liquidität wird zum aktuellen {0}-Preis migriert."
-
-#: 
-#~ msgid "You are the first liquidity provider."
-#~ msgstr "Sie sind der erste Liquiditätsanbieter."
+#: src/pages/Market/index.tsx
+#: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
+msgid "You buy"
+msgstr "Sie kaufen"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
@@ -2616,8 +2328,9 @@ msgstr "Sie können entweder über jeden Vorschlag selbst abstimmen oder Ihre St
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You can now swap {0}"
-msgstr ""
+msgstr "Sie können jetzt {0} tauschen"
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2625,10 +2338,6 @@ msgstr ""
 #: src/pages/Swap/index.tsx
 msgid "You can now trade {0}"
 msgstr "Du kannst jetzt {0} handeln"
-
-#: 
-#~ msgid "You don't have enough votes to submit a proposal"
-#~ msgstr "Ihr Stimmrecht reicht nicht aus, um einen Vorschlag einzureichen"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
@@ -2642,14 +2351,11 @@ msgstr "Möglicherweise haben Sie Ihre Netzwerkverbindung verloren oder {label} 
 msgid "You may have lost your network connection."
 msgstr "Möglicherweise haben Sie Ihre Netzwerkverbindung verloren."
 
-#: 
-#~ msgid "You must connect an account."
-#~ msgstr "Sie müssen ein Konto verbinden."
-
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "You must give the Kromatika Aggregator a permission to use your {0}. You only have to do this once per token."
-msgstr ""
+msgstr "Sie müssen dem Kromatika -Aggregator eine Erlaubnis geben, Ihre {0} zu verwenden. Sie müssen dies nur einmal pro Token tun."
 
 #: src/pages/LimitOrder/index.tsx
 #: src/pages/LimitOrder/index.tsx
@@ -2658,26 +2364,29 @@ msgstr ""
 msgid "You must give the Kromatika smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "Sie müssen den Kromatika Smart Contracts die Erlaubnis erteilen, Ihre {0} zu verwenden. Sie müssen dies nur einmal pro Token tun."
 
-#: 
-#~ msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
-#~ msgstr "Sie müssen {formattedProposalThreshold} Stimmen haben, um einen Vorschlag einzureichen"
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "You receive at least"
+msgstr "Sie erhalten mindestens"
 
 #: src/pages/Market/index.tsx
 #: src/pages/Market/index.tsx
-msgid "You save:"
-msgstr ""
+#: src/pages/SwapWidget/index.tsx
+msgid "You sell"
+msgstr "Du verkaufst"
 
-#: 
-#~ msgid "You should only deposit liquidity into Kromatika V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-#~ msgstr "Sie sollten nur Liquidität in Kromatika V3 zu einem Preis einzahlen, den Sie für richtig halten. <0/>Wenn der Preis falsch erscheint, können Sie entweder durch einen Tausch den Preis verändern oder warten bis jemand anderes dies tut."
+#: src/pages/LimitOrder/index.tsx
+#: src/pages/LimitOrder/index.tsx
+msgid "You send"
+msgstr "Du sendest"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
 msgstr "Sie werden auch die Gebühren einziehen, die diese Position eingenommen hat."
 
 #: src/components/PositionCard/index.tsx
-msgid "You will need to maintain a minimum KROM balance to cover for the service fees. Recommendation is to deposit at least twice the minimum balance."
-msgstr ""
+msgid "You will need to maintain a minimum KROM balance to cover for the service fees.<0/><1/>Recommendation is to deposit at least twice the minimum balance."
+msgstr "Sie müssen einen MindestkROM -Saldo beibehalten, um die Servicegebühren zu decken."
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
@@ -2691,23 +2400,13 @@ msgstr "Ihre UNI-Aufschlüsselung"
 msgid "Your V2 liquidity"
 msgstr "Ihre V2-Liquidität"
 
-#: 
-#~ msgid "Your V3 liquidity positions will appear here."
-#~ msgstr "Ihre V3 Liquiditätspositionen werden hier erscheinen."
-
 #: src/components/PositionCard/index.tsx
-msgid "Your account is actively processing trades. Recommendation is to deposit at least twice the minimum balance."
-msgstr ""
+msgid "Your account is actively processing trades.<0/><1/>Recommendation is to deposit at least twice the minimum balance."
+msgstr "Ihr Konto verarbeitet Handels aktiv."
 
-#: src/pages/LimitOrder/index.tsx
-#: src/pages/LimitOrder/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Your limit orders will appear here."
-msgstr ""
-
-#: 
-#~ msgid "Your liquidity deposits"
-#~ msgstr "Ihre Liquiditätspositionen"
+msgstr "Ihre Grenzbestellungen werden hier angezeigt."
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -2720,10 +2419,6 @@ msgstr "Ihr Poolanteil:"
 msgid "Your position"
 msgstr "Deine Position"
 
-#: 
-#~ msgid "Your position has 0 liquidity, and is not earning fees."
-#~ msgstr "Ihre Position hat 0 Liquidität und verdient keine Gebühren."
-
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Your position will appear here."
 msgstr "Ihre Position wird hier angezeigt."
@@ -2732,21 +2427,6 @@ msgstr "Ihre Position wird hier angezeigt."
 #: src/components/PositionPreview/index.tsx
 msgid "Your position will be 100% composed of {0} at this price"
 msgstr "Ihre Position wird zu 100% aus {0} bestehen bei diesem Preis"
-
-#: 
-#: 
-#~ msgid "Your position will be 100% {0} at this price."
-#~ msgstr "Ihre Position wird bei diesem Preis 100% {0} sein."
-
-#: 
-#: 
-#~ msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
-#~ msgstr "Ihre Position wird keine Gebühren verdienen oder in Geschäften genutzt werden, bis sich der Marktpreis in Ihren Bereich bewegt."
-
-#: 
-#: 
-#~ msgid "Your positions"
-#~ msgstr "Ihre Positionen"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Your rate"
@@ -2759,11 +2439,7 @@ msgstr "Ihre gesamten Liquiditätsgeber-Token:"
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Your trade will appear here."
-msgstr ""
-
-#: 
-#~ msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
-#~ msgstr "Ihre Transaktionskosten werden wesentlich höher sein, da sie das Gas beinhalten, um den Pool zu erstellen."
+msgstr "Ihr Handel wird hier erscheinen."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
@@ -2773,10 +2449,6 @@ msgstr "Ihre Transaktion könnte anfällig für \"Frontrunning\" sein"
 msgid "Your transaction may fail"
 msgstr "Ihre Transaktion könnte fehlschlagen"
 
-#: 
-#~ msgid "Your transaction will revert if it is pending for more than this period of time."
-#~ msgstr "Ihre Transaktion wird rückgängig gemacht, wenn sie für mehr als diesen Zeitraum aussteht."
-
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
 msgstr "Ihre Transaktion wird rückgängig gemacht, wenn sich der Preis ungünstig um mehr als diesen Prozentsatz ändert."
@@ -2785,25 +2457,17 @@ msgstr "Ihre Transaktion wird rückgängig gemacht, wenn sich der Preis ungünst
 msgid "Your transactions will appear here..."
 msgstr "Ihre Transaktionen werden hier erscheinen..."
 
-#: 
-#~ msgid "Your unclaimed UNI"
-#~ msgstr "Deine noch nicht bezogenen UNI"
-
-#: 
-#~ msgid "confirm"
-#~ msgstr "bestätigen"
-
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "für {0}"
 
 #: src/components/Settings/index.tsx
 msgid "gasless"
-msgstr ""
+msgstr "gaslos"
 
 #: src/components/Header/Polling.tsx
 msgid "gwei"
-msgstr ""
+msgstr "gwei"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
@@ -2818,8 +2482,9 @@ msgid "https:// or ipfs:// or ENS name"
 msgstr "https: // oder ipfs: // oder ENS-Name"
 
 #: 
-#~ msgid "minutes"
-#~ msgstr "Minuten"
+#: 
+#~ msgid "networks."
+#~ msgstr "Netzwerke."
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
@@ -2833,6 +2498,12 @@ msgstr "über {0} Token-Liste"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Token importieren} other {Token importieren}}"
 
+#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrdersListItem/index.tsx
+#: src/components/LimitOrdersListItem/index.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -2849,27 +2520,21 @@ msgstr "{0}"
 msgid "{0} %"
 msgstr "{0} %"
 
+#: 
+#~ msgid "{0} + {1}"
+#~ msgstr "{0} + {1}"
+
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/>  per <1/> <2>{1} </2>"
-msgstr ""
-
-#: 
-#: 
-#~ msgid "{0} <0/> per <1/>"
-#~ msgstr "{0} <0/>/<1/>"
+msgstr "{0} <0/>  pro <1/> <2>{1} </2>"
 
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/> <2>{1} </2>"
-msgstr ""
+msgstr "{0} <0/> pro <1/> <2> {1} </2>"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} Benutzerdefinierte Token"
-
-#: 
-#: 
-#~ msgid "{0} Deposited"
-#~ msgstr "{0} deponiert"
 
 #: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
@@ -2899,10 +2564,6 @@ msgstr "{0} UNI"
 msgid "{0} UNI / week"
 msgstr "{0} UNI / Woche"
 
-#: 
-#~ msgid "{0} UNI-V2"
-#~ msgstr "{0} UNI-V2"
-
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Stake/index.tsx
 msgid "{0} UNI-V2 LP tokens available"
@@ -2920,21 +2581,20 @@ msgstr "{0} pro {1}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0} sKrom / week"
-msgstr ""
+msgstr "{0} Skrom / Woche"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} Token"
 
-#: 
-#: 
-#~ msgid "{0} {1} Price:"
-#~ msgstr "{0} {1} Preis:"
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{0} {1}"
+msgstr "{0} {1}"
 
-#: src/components/Header/index.tsx
-msgid "{0} {nativeCurrencySymbol}"
-msgstr ""
+#: src/components/LimitOrdersListItem/index.tsx
+msgid "{0} {1} + {2} {3}"
+msgstr "{0} {1} + {2} {3}"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "{0} • Added by user"
@@ -2942,31 +2602,17 @@ msgstr "{0} • Vom Benutzer hinzugefügt"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/PositionPreview/index.tsx
+#: src/pages/Market/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
+#: src/pages/SwapWidget/index.tsx
 msgid "{0}%"
 msgstr "{0}%"
 
 #: src/components/FeeSelector/index.tsx
 msgid "{0}% fee tier"
 msgstr "{0}% Gebührenstufe"
-
-#: 
-#~ msgid "{0}% select"
-#~ msgstr "{0}% auswählen"
-
-#: 
-#~ msgid "{0}-{1} Liquidity Mining"
-#~ msgstr "{0}-{1} Liquiditätsförderung"
-
-#: 
-#~ msgid "{0}/{1} LP NFT"
-#~ msgstr "{0}/{1} LP NFT"
-
-#: 
-#~ msgid "{0}/{1} LP Tokens"
-#~ msgstr "{0}/{1} LP-Token"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{SOCKS_AMOUNT} UNI"
@@ -2976,26 +2622,34 @@ msgstr "{SOCKS_AMOUNT} UNI"
 msgid "{USER_AMOUNT} UNI"
 msgstr "{USER_AMOUNT} UNI"
 
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "{actionLabel}"
+msgstr "{actionLabel}"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} Token"
+
+#: src/components/Collapsible/index.tsx
+msgid "{label}"
+msgstr "{label}"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
 msgstr "{percentForSlider}%"
 
+#: 
+#~ msgid "{status}"
+#~ msgstr "{status}"
+
+#: 
+#~ msgid "{token0CreatedAmount}"
+#~ msgstr "{token0CreatedAmount}"
+
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} pro {tokenA}"
 
-#: 
-#~ msgid "~$ <0/>"
-#~ msgstr "~$ <0/>"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Limit Orders"
-msgstr ""
-
-#: 
-#~ msgid "← Back to Pools Overview"
-#~ msgstr "← Zurück zur Pool-Übersicht"
+msgstr "← Zurück, um Bestellungen zu begrenzen"

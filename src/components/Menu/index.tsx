@@ -1,19 +1,27 @@
 // eslint-disable-next-line no-restricted-imports
-import { t } from '@lingui/macro'
-import { Trans } from '@lingui/macro'
-import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
+import { t, Trans } from '@lingui/macro'
 import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import React, { useEffect, useRef, useState } from 'react'
-import { BookOpen, Check, ChevronLeft, Code, Globe, Info, MessageCircle, Moon, Sun } from 'react-feather'
+import {
+  BookOpen,
+  Check,
+  ChevronLeft,
+  Code,
+  ExternalLink as ExternalLinkIcon,
+  Globe,
+  Info,
+  MessageCircle,
+  Moon,
+  Sun,
+} from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled, { css } from 'styled-components/macro'
 
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { ExternalLink } from '../../theme'
@@ -24,35 +32,39 @@ export enum FlyoutAlignment {
 }
 
 const StyledMenuIcon = styled(MenuIcon)`
+  height: 20px;
+  width: 20px;
+
   path {
     stroke: ${({ theme }) => theme.text1};
   }
 `
 
 const StyledMenuButton = styled.button`
-  width: 100%;
-  height: 100%;
-  border: none;
-  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg3)};
+  border: 2px solid ${({ theme }) => (theme.darkMode ? theme.bg3 : theme.bg0)};
+  border-radius: 20px;
   margin: 0;
-  padding: 0;
-  height: 38px;
-  background-color: ${({ theme }) => theme.bg0};
-  border: 1px solid ${({ theme }) => theme.bg0};
-
-  padding: 0.15rem 0.5rem;
-  border-radius: 12px;
+  padding: 8px;
 
   :hover,
   :focus {
     cursor: pointer;
     outline: none;
-    border: 1px solid ${({ theme }) => theme.bg3};
+    background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg0)};
+    border: 2px solid ${({ theme }) => theme.bg3};
+
+    path {
+      stroke: ${({ theme }) => theme.text1};
+    }
   }
 
-  svg {
-    margin-top: 2px;
-  }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding: 0.5rem;
+  `};
 `
 
 const StyledMenu = styled.div`
@@ -65,20 +77,19 @@ const StyledMenu = styled.div`
 `
 
 const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
-  min-width: 196px;
-  max-height: 350px;
+  min-width: 230px;
+  max-height: 600px;
   overflow: auto;
   background-color: ${({ theme }) => theme.bg1};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
-  border: 1px solid ${({ theme }) => theme.bg0};
-  border-radius: 12px;
+  box-shadow: 0 0 2px 2px ${({ theme }) => theme.shadow2};
+  border: 1px solid ${({ theme }) => theme.bg1};
+  border-radius: 20px;
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
   font-size: 16px;
   position: absolute;
-  top: 3rem;
+  top: 70px;
   z-index: 100;
 
   ${({ flyoutAlignment = FlyoutAlignment.RIGHT }) =>
@@ -104,8 +115,11 @@ const MenuItem = styled(ExternalLink)`
   padding: 0.5rem 0.5rem;
   justify-content: space-between;
   color: ${({ theme }) => theme.text2};
+  border-radius: 10px;
+
   :hover {
     color: ${({ theme }) => theme.text1};
+    background-color: ${({ theme }) => theme.bg2};
     cursor: pointer;
     text-decoration: none;
   }
@@ -115,11 +129,13 @@ const InternalMenuItem = styled(Link)`
   flex: 1;
   padding: 0.5rem 0.5rem;
   color: ${({ theme }) => theme.text2};
+
   :hover {
     color: ${({ theme }) => theme.text1};
     cursor: pointer;
     text-decoration: none;
   }
+
   > svg {
     margin-right: 8px;
   }
@@ -132,6 +148,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   padding: 0.5rem 0.5rem;
   justify-content: space-between;
   text-decoration: none;
+
   :hover {
     color: ${({ theme }) => theme.text1};
     cursor: pointer;
@@ -142,8 +159,8 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
 const ToggleMenuItem = styled.button`
   background-color: transparent;
   margin: 0;
-  padding: 0;
   border: none;
+  border-radius: 10px;
   display: flex;
   flex: 1;
   flex-direction: row;
@@ -153,11 +170,18 @@ const ToggleMenuItem = styled.button`
   font-size: 1rem;
   font-weight: 500;
   color: ${({ theme }) => theme.text2};
+
   :hover {
     color: ${({ theme }) => theme.text1};
+    background-color: ${({ theme }) => theme.bg2};
     cursor: pointer;
     text-decoration: none;
   }
+`
+
+const MenuDivider = styled.div`
+  border-bottom: 2px solid ${({ theme }) => theme.bg2};
+  margin: 8px 0;
 `
 
 const CODE_LINK = 'https://github.com/Kromatika-Finance/interface'
@@ -191,16 +215,11 @@ function LanguageMenu({ close }: { close: () => void }) {
 }
 
 export default function Menu() {
-  const { account, chainId } = useActiveWeb3React()
-
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.MENU)
   const toggle = useToggleModal(ApplicationModal.MENU)
   useOnClickOutside(node, open ? toggle : undefined)
-  const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
-
   const [darkMode, toggleDarkMode] = useDarkModeManager()
-
   const [menu, setMenu] = useState<'main' | 'lang'>('main')
 
   useEffect(() => {
@@ -257,6 +276,31 @@ export default function Menu() {
                     <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
                     {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
                   </ToggleMenuItem>
+                  <MenuDivider />
+                  <MenuItem href="https://docs.kromatika.finance/kromatika-dapp-2.0/tutorials/how-to-use-felo">
+                    <div>
+                      <Trans>How to use FELO</Trans>
+                    </div>
+                    <ExternalLinkIcon opacity={0.6} size={16} />
+                  </MenuItem>
+                  <MenuItem href="https://docs.kromatika.finance/kromatika-dapp-2.0/tutorials/how-to-use-swap">
+                    <div>
+                      <Trans>How to use Swap</Trans>
+                    </div>
+                    <ExternalLinkIcon opacity={0.6} size={16} />
+                  </MenuItem>
+                  <MenuItem href="https://docs.kromatika.finance/kromatika-dapp-2.0/tutorials/how-to-use-gasless">
+                    <div>
+                      <Trans>How to use Gasless</Trans>
+                    </div>
+                    <ExternalLinkIcon opacity={0.6} size={16} />
+                  </MenuItem>
+                  <MenuItem href="https://docs.kromatika.finance/kromatika-dapp-2.0/tutorials/how-to-use-perpetuals">
+                    <div>
+                      <Trans>How to use Perpetuals</Trans>
+                    </div>
+                    <ExternalLinkIcon opacity={0.6} size={16} />
+                  </MenuItem>
                 </MenuFlyout>
               )
           }

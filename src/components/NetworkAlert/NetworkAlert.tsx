@@ -95,11 +95,13 @@ const LearnMoreLink = styled(ExternalLink)<{ thin?: boolean }>`
   padding: 12px 16px;
   text-decoration: none;
   width: auto;
+
   :hover,
   :focus,
   :active {
     background-color: rgba(255, 255, 255, 0.05);
   }
+
   transition: background-color 150ms ease-in-out;
   ${({ thin }) =>
     thin &&
@@ -145,6 +147,7 @@ const ContentWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean
   overflow: hidden;
   position: relative;
   width: 100%;
+
   ${({ thin }) =>
     thin &&
     css`

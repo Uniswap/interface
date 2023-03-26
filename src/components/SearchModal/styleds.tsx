@@ -28,9 +28,11 @@ export const MenuItem = styled(RowBetween)`
   grid-gap: 16px;
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
+
   :hover {
-    background-color: ${({ theme, disabled }) => !disabled && theme.bg2};
+    background-color: ${({ theme, disabled }) => !disabled && theme.shadow2};
   }
+
   opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
 `
 
@@ -41,21 +43,21 @@ export const SearchInput = styled.input`
   align-items: center;
   width: 100%;
   white-space: nowrap;
-  background: none;
-  border: none;
   outline: none;
-  border-radius: 20px;
   color: ${({ theme }) => theme.text1};
-  border-style: solid;
+  background: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.bg5)};
   border: 1px solid ${({ theme }) => theme.bg3};
+  border-radius: 20px;
   -webkit-appearance: none;
 
-  font-size: 18px;
+  font-size: 16px;
 
   ::placeholder {
     color: ${({ theme }) => theme.text3};
   }
+
   transition: border 100ms;
+
   :focus {
     border: 1px solid ${({ theme }) => theme.primary1};
     outline: none;

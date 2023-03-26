@@ -1,46 +1,43 @@
 import { Trans } from '@lingui/macro'
-import { Box, FormControlLabel, Switch } from '@material-ui/core'
+import { Switch } from '@material-ui/core'
 import { Percent } from '@uniswap/sdk-core'
+import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 
 import { useExpertModeManager } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
-import { RowBetween, RowFixed } from '../Row'
+import { RowFixed } from '../Row'
 import SettingsTab from '../Settings'
 
-const StyledSwapHeader = styled.div`
+const StyledMarketHeader = styled.div`
+  display: flex;
   padding: 1rem 1.25rem 0.5rem 1.25rem;
   width: 100%;
   color: ${({ theme }) => theme.text2};
 `
 
-const HoverText = styled(TYPE.main)`
-  text-decoration: none;
-  color: ${({ theme }) => theme.text3};
-  :hover {
-    color: ${({ theme }) => theme.text1};
-    text-decoration: none;
-  }
-`
-
-export default function MarketHeader({ allowedSlippage }: { allowedSlippage: Percent }) {
+export default function MarketHeader({
+  showChartSwitch = false,
+  allowedSlippage,
+}: {
+  showChartSwitch?: boolean
+  allowedSlippage: Percent
+}) {
   const [expertMode, toggleExpertMode] = useExpertModeManager()
 
   return (
-    <StyledSwapHeader>
-      <RowBetween>
-        <RowFixed>
-          <HoverText>
-            <Box>
-              PRO Mode
-              <Switch checked={expertMode} color="primary" onClick={() => toggleExpertMode()} />
-            </Box>
-          </HoverText>
+    <StyledMarketHeader>
+      {showChartSwitch && (
+        <RowFixed width="100%">
+          <Text>
+            <Trans>Show Chart</Trans>
+          </Text>
+          <Switch checked={expertMode} color="primary" onClick={() => toggleExpertMode()} />
         </RowFixed>
-        <RowFixed>
-          <SettingsTab placeholderSlippage={allowedSlippage} />
-        </RowFixed>
-      </RowBetween>
-    </StyledSwapHeader>
+      )}
+
+      <RowFixed justify="flex-end" width="100%">
+        <SettingsTab placeholderSlippage={allowedSlippage} />
+      </RowFixed>
+    </StyledMarketHeader>
   )
 }

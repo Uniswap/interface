@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { SignatureData, UseERC20PermitState } from 'hooks/useERC20Permit'
 import { useActiveWeb3React } from 'hooks/web3'
 import { ReactNode, useCallback, useMemo } from 'react'
 
@@ -106,7 +105,7 @@ export default function ConfirmSwapModal({
   // text to show while loading
   const pendingText = trade ? (
     <Trans>
-      Trading {inputAmount?.toSignificant(6)} {inputAmount?.currency?.symbol} for {priceAmount?.toSignificant(6)}{' '}
+      Trading {inputAmount?.toSignificant(6)} {inputAmount?.currency?.symbol} for {outputAmount?.toSignificant(6)}{' '}
       {outputAmount?.currency?.symbol}
     </Trans>
   ) : null

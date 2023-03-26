@@ -26,7 +26,7 @@ export default function PresetsButtons({ setFullRange }: { setFullRange: () => v
           })
         }}
       >
-        <TYPE.body fontSize={12}>
+        <TYPE.body fontSize={14}>
           <Trans>Full Range</Trans>
         </TYPE.body>
       </Button>

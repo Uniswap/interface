@@ -67,13 +67,13 @@ function ConfirmationPendingContent({
           <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={'center'}>
-          <Text fontWeight={500} fontSize={20} textAlign="center">
+          <Text fontWeight={400} fontSize={20} textAlign="center">
             <Trans>Waiting For Confirmation</Trans>
           </Text>
           <Text fontWeight={400} fontSize={16} textAlign="center">
             {pendingText}
           </Text>
-          <Text fontWeight={500} fontSize={14} color="#565A69" textAlign="center" marginBottom="12px">
+          <Text fontWeight={400} fontSize={14} color="#565A69" textAlign="center" marginBottom="12px">
             <Trans>Confirm this transaction in your wallet</Trans>
           </Text>
         </AutoColumn>
@@ -81,6 +81,7 @@ function ConfirmationPendingContent({
     </Wrapper>
   )
 }
+
 export function TransactionPreparingContent({
   onDismiss,
   inline,
@@ -126,6 +127,7 @@ export function TransactionPreparingContent({
     </Wrapper>
   )
 }
+
 function TransactionSubmittedContent({
   onDismiss,
   chainId,
@@ -158,12 +160,12 @@ function TransactionSubmittedContent({
           <ArrowUpCircle strokeWidth={0.5} size={inline ? '40px' : '90px'} color={theme.primary1} />
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={'center'}>
-          <Text fontWeight={500} fontSize={20} textAlign="center">
+          <Text fontWeight={400} fontSize={20} textAlign="center">
             <Trans>Transaction Submitted</Trans>
           </Text>
           {chainId && hash && (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <Text fontWeight={500} fontSize={14} color={theme.primary1}>
+              <Text fontWeight={400} fontSize={14} color={theme.primary1}>
                 <Trans>View on Explorer</Trans>
               </Text>
             </ExternalLink>
@@ -185,7 +187,7 @@ function TransactionSubmittedContent({
             </ButtonLight>
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
-            <Text fontWeight={500} fontSize={20}>
+            <Text fontWeight={400} fontSize={20}>
               {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
             </Text>
           </ButtonPrimary>
@@ -210,7 +212,7 @@ export function ConfirmationModalContent({
     <Wrapper>
       <Section>
         <RowBetween>
-          <Text fontWeight={500} fontSize={16}>
+          <Text fontWeight={400} fontSize={16}>
             {title}
           </Text>
           <CloseIcon onClick={onDismiss} />
@@ -228,7 +230,7 @@ export function TransactionErrorContent({ message, onDismiss }: { message: React
     <Wrapper>
       <Section>
         <RowBetween>
-          <Text fontWeight={500} fontSize={20}>
+          <Text fontWeight={400} fontSize={20}>
             <Trans>Error</Trans>
           </Text>
           <CloseIcon onClick={onDismiss} />
@@ -236,7 +238,7 @@ export function TransactionErrorContent({ message, onDismiss }: { message: React
         <AutoColumn style={{ marginTop: 20, padding: '2rem 0' }} gap="24px" justify="center">
           <AlertTriangle color={theme.red1} style={{ strokeWidth: 1.5 }} size={64} />
           <Text
-            fontWeight={500}
+            fontWeight={400}
             fontSize={16}
             color={theme.red1}
             style={{ textAlign: 'center', width: '85%', wordBreak: 'break-word' }}
@@ -271,6 +273,7 @@ function L2Content({
   const theme = useContext(ThemeContext)
 
   const transaction = useTransaction(hash)
+
   const confirmed = useIsTransactionConfirmed(hash)
   const transactionSuccess = transaction?.receipt?.status === 1
 
@@ -308,7 +311,7 @@ function L2Content({
           )}
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={'center'}>
-          <Text fontWeight={500} fontSize={20} textAlign="center">
+          <Text fontWeight={400} fontSize={20} textAlign="center">
             {!hash ? (
               <Trans>Confirm transaction in wallet</Trans>
             ) : !confirmed ? (
@@ -324,7 +327,7 @@ function L2Content({
           </Text>
           {chainId && hash ? (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <Text fontWeight={500} fontSize={14} color={theme.primary1}>
+              <Text fontWeight={400} fontSize={14} color={theme.primary1}>
                 <Trans>View on Explorer</Trans>
               </Text>
             </ExternalLink>
@@ -344,7 +347,7 @@ function L2Content({
             )}
           </Text>
           <ButtonPrimary onClick={onDismiss} style={{ margin: '4px 0 0 0' }}>
-            <Text fontWeight={500} fontSize={20}>
+            <Text fontWeight={400} fontSize={20}>
               {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
             </Text>
           </ButtonPrimary>

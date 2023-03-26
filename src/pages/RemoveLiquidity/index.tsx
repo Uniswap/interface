@@ -292,12 +292,12 @@ export default function RemoveLiquidity({
     return (
       <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
         <RowBetween align="flex-end">
-          <Text fontSize={24} fontWeight={500}>
+          <Text fontSize={[16, 18, 24]} fontWeight={400}>
             {parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}
           </Text>
           <RowFixed gap="4px">
             <CurrencyLogo currency={currencyA} size={'24px'} />
-            <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
+            <Text fontSize={[16, 18, 24]} fontWeight={400} style={{ marginLeft: '10px' }}>
               {currencyA?.symbol}
             </Text>
           </RowFixed>
@@ -306,18 +306,18 @@ export default function RemoveLiquidity({
           <Plus size="16" color={theme.text2} />
         </RowFixed>
         <RowBetween align="flex-end">
-          <Text fontSize={24} fontWeight={500}>
+          <Text fontSize={[16, 18, 24]} fontWeight={400}>
             {parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}
           </Text>
           <RowFixed gap="4px">
             <CurrencyLogo currency={currencyB} size={'24px'} />
-            <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
+            <Text fontSize={[16, 18, 24]} fontWeight={400} style={{ marginLeft: '10px' }}>
               {currencyB?.symbol}
             </Text>
           </RowFixed>
         </RowBetween>
 
-        <TYPE.italic fontSize={12} color={theme.text2} textAlign="left" padding={'12px 0 0 0'}>
+        <TYPE.italic fontSize={14} color={theme.text2} textAlign="left" padding={'12px 0 0 0'}>
           <Trans>
             Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your transaction
             will revert.
@@ -331,14 +331,14 @@ export default function RemoveLiquidity({
     return (
       <>
         <RowBetween>
-          <Text color={theme.text2} fontWeight={500} fontSize={16}>
+          <Text color={theme.text2} fontWeight={400} fontSize={16}>
             <Trans>
               UNI {currencyA?.symbol}/{currencyB?.symbol} Burned
             </Trans>
           </Text>
           <RowFixed>
             <DoubleCurrencyLogo currency0={currencyA} currency1={currencyB} margin={true} />
-            <Text fontWeight={500} fontSize={16}>
+            <Text fontWeight={400} fontSize={16}>
               {parsedAmounts[Field.LIQUIDITY]?.toSignificant(6)}
             </Text>
           </RowFixed>
@@ -346,23 +346,23 @@ export default function RemoveLiquidity({
         {pair && (
           <>
             <RowBetween>
-              <Text color={theme.text2} fontWeight={500} fontSize={16}>
+              <Text color={theme.text2} fontWeight={400} fontSize={16}>
                 <Trans>Price</Trans>
               </Text>
-              <Text fontWeight={500} fontSize={16} color={theme.text1}>
+              <Text fontWeight={400} fontSize={16} color={theme.text1}>
                 1 {currencyA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {currencyB?.symbol}
               </Text>
             </RowBetween>
             <RowBetween>
               <div />
-              <Text fontWeight={500} fontSize={16} color={theme.text1}>
+              <Text fontWeight={400} fontSize={16} color={theme.text1}>
                 1 {currencyB?.symbol} = {tokenB ? pair.priceOf(tokenB).toSignificant(6) : '-'} {currencyA?.symbol}
               </Text>
             </RowBetween>
           </>
         )}
         <ButtonPrimary disabled={!(approval === ApprovalState.APPROVED || signatureData !== null)} onClick={onRemove}>
-          <Text fontWeight={500} fontSize={20}>
+          <Text fontWeight={400} fontSize={16}>
             <Trans>Confirm</Trans>
           </Text>
         </ButtonPrimary>
@@ -460,11 +460,11 @@ export default function RemoveLiquidity({
             <LightCard>
               <AutoColumn gap="20px">
                 <RowBetween>
-                  <Text fontWeight={500}>
+                  <Text fontWeight={400}>
                     <Trans>Remove Amount</Trans>
                   </Text>
                   <ClickableText
-                    fontWeight={500}
+                    fontWeight={400}
                     onClick={() => {
                       setShowDetailed(!showDetailed)
                     }}
@@ -473,7 +473,7 @@ export default function RemoveLiquidity({
                   </ClickableText>
                 </RowBetween>
                 <Row style={{ alignItems: 'flex-end' }}>
-                  <Text fontSize={72} fontWeight={500}>
+                  <Text fontSize={[48, 64, 72]} fontWeight={400}>
                     {formattedAmounts[Field.LIQUIDITY_PERCENT]}%
                   </Text>
                 </Row>
@@ -506,23 +506,23 @@ export default function RemoveLiquidity({
                 <LightCard>
                   <AutoColumn gap="10px">
                     <RowBetween>
-                      <Text fontSize={24} fontWeight={500}>
+                      <Text fontSize={[16, 18, 24]} fontWeight={400}>
                         {formattedAmounts[Field.CURRENCY_A] || '-'}
                       </Text>
                       <RowFixed>
                         <CurrencyLogo currency={currencyA} style={{ marginRight: '12px' }} />
-                        <Text fontSize={24} fontWeight={500} id="remove-liquidity-tokena-symbol">
+                        <Text fontSize={[16, 18, 24]} fontWeight={400} id="remove-liquidity-tokena-symbol">
                           {currencyA?.symbol}
                         </Text>
                       </RowFixed>
                     </RowBetween>
                     <RowBetween>
-                      <Text fontSize={24} fontWeight={500}>
+                      <Text fontSize={[16, 18, 24]} fontWeight={400}>
                         {formattedAmounts[Field.CURRENCY_B] || '-'}
                       </Text>
                       <RowFixed>
                         <CurrencyLogo currency={currencyB} style={{ marginRight: '12px' }} />
-                        <Text fontSize={24} fontWeight={500} id="remove-liquidity-tokenb-symbol">
+                        <Text fontSize={[16, 18, 24]} fontWeight={400} id="remove-liquidity-tokenb-symbol">
                           {currencyB?.symbol}
                         </Text>
                       </RowFixed>
@@ -624,7 +624,7 @@ export default function RemoveLiquidity({
                     confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
                     disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
                     mr="0.5rem"
-                    fontWeight={500}
+                    fontWeight={400}
                     fontSize={16}
                   >
                     {approval === ApprovalState.PENDING ? (
@@ -644,7 +644,7 @@ export default function RemoveLiquidity({
                     disabled={!isValid || (signatureData === null && approval !== ApprovalState.APPROVED)}
                     error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
                   >
-                    <Text fontSize={16} fontWeight={500}>
+                    <Text fontSize={16} fontWeight={400}>
                       {error || <Trans>Remove</Trans>}
                     </Text>
                   </ButtonError>

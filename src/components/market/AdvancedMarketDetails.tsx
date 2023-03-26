@@ -6,6 +6,7 @@ import { LoadingRows } from 'components/Loader/styled'
 import { SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useContext, useMemo } from 'react'
+import { Text } from 'rebass'
 import { useIsGaslessMode } from 'state/user/hooks'
 import { ThemeContext } from 'styled-components/macro'
 
@@ -14,7 +15,6 @@ import { shortenAddress } from '../../utils'
 import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
-import FormattedPriceImpact from '../swap/FormattedPriceImpact'
 import { TransactionDetailsLabel } from './styleds'
 
 interface AdvancedMarketDetailsProps {
@@ -68,15 +68,15 @@ export function AdvancedMarketDetails({
 
   return !trade ? null : (
     <AutoColumn gap="8px">
-      <TransactionDetailsLabel fontWeight={500} fontSize={14}>
+      <TransactionDetailsLabel fontWeight={400} fontSize={14}>
         <Trans>Transaction Details</Trans>
       </TransactionDetailsLabel>
 
       <RowBetween>
         <RowFixed>
-          <TYPE.subHeader color={theme.text1}>
+          <TYPE.small color={theme.text1}>
             <Trans>Allowed Slippage</Trans>
-          </TYPE.subHeader>
+          </TYPE.small>
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={45}>
           <TYPE.black textAlign="right" fontSize={14}>
@@ -87,13 +87,13 @@ export function AdvancedMarketDetails({
 
       <RowBetween>
         <RowFixed>
-          <TYPE.subHeader color={theme.text1}>
+          <TYPE.small color={theme.text1}>
             {trade.tradeType === TradeType.EXACT_INPUT ? (
               <Trans>Minimum received {isGaslessMode ? <span>(including fees)</span> : ''}</Trans>
             ) : (
               <Trans>Maximum sent</Trans>
             )}
-          </TYPE.subHeader>
+          </TYPE.small>
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={70}>
           <TYPE.black textAlign="right" fontSize={14}>

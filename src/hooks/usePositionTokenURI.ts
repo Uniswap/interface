@@ -3,7 +3,7 @@ import JSBI from 'jsbi'
 import { useMemo } from 'react'
 
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
-import { useLimitOrderManager, useV3NFTPositionManagerContract } from './useContract'
+import { useLimitOrderManager } from './useContract'
 
 type TokenId = number | JSBI | BigNumber
 

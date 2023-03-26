@@ -26,6 +26,7 @@ interface UserClaimData {
 type LastAddress = string
 type ClaimAddressMapping = { [firstAddress: string]: LastAddress }
 let FETCH_CLAIM_MAPPING_PROMISE: Promise<ClaimAddressMapping> | null = null
+
 function fetchClaimMapping(): Promise<ClaimAddressMapping> {
   return (
     FETCH_CLAIM_MAPPING_PROMISE ??
@@ -41,6 +42,7 @@ function fetchClaimMapping(): Promise<ClaimAddressMapping> {
 }
 
 const FETCH_CLAIM_FILE_PROMISES: { [startingAddress: string]: Promise<{ [address: string]: UserClaimData }> } = {}
+
 function fetchClaimFile(key: string): Promise<{ [address: string]: UserClaimData }> {
   return (
     FETCH_CLAIM_FILE_PROMISES[key] ??
@@ -56,6 +58,7 @@ function fetchClaimFile(key: string): Promise<{ [address: string]: UserClaimData
 }
 
 const FETCH_CLAIM_PROMISES: { [key: string]: Promise<UserClaimData> } = {}
+
 // returns the claim for the given address, or null if not valid
 function fetchClaim(account: string): Promise<UserClaimData> {
   const formatted = isAddress(account)

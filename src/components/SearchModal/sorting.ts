@@ -1,8 +1,6 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 
-import { useAllTokenBalances } from '../../state/wallet/hooks'
-
 // compare two token amounts with highest one coming first
 function balanceComparator(balanceA?: CurrencyAmount<Currency>, balanceB?: CurrencyAmount<Currency>) {
   if (balanceA && balanceB) {

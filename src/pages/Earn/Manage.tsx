@@ -3,23 +3,20 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { KROM } from 'constants/tokens'
 import JSBI from 'jsbi'
 import { useCallback, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { RouteComponentProps } from 'react-router-dom'
+import { Link, RouteComponentProps } from 'react-router-dom'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import styled from 'styled-components/macro'
-import { CountUp } from 'use-count-up'
 import Web3 from 'web3-utils'
 
-import { ButtonEmpty, ButtonPrimary } from '../../components/Button'
+import { ButtonPrimary } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import ClaimRewardModal from '../../components/earn/ClaimRewardModal'
 import StakingModal from '../../components/earn/StakingModal'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
 import UnstakingModal from '../../components/earn/UnstakingModal'
-import { RowFixed } from '../../components/Row'
-import { RowBetween } from '../../components/Row'
-import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants/misc'
+import { RowBetween, RowFixed } from '../../components/Row'
+import { BIG_INT_SECONDS_IN_WEEK } from '../../constants/misc'
 import { useCurrency } from '../../hooks/Tokens'
 import { useColor } from '../../hooks/useColor'
 import { useNewStakingContract } from '../../hooks/useContract'
@@ -43,7 +40,7 @@ const TitleRow = styled(RowBetween)`
   `};
 `
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
-  border-radius: 12px;
+  border-radius: 20px;
   padding: 6px 8px;
   width: fit-content;
   margin-left: 8px;
@@ -79,7 +76,7 @@ const PositionInfo = styled(AutoColumn)<{ dim: any }>`
 `
 
 const BottomSection = styled(AutoColumn)`
-  border-radius: 12px;
+  border-radius: 20px;
   width: 100%;
   position: relative;
 `
@@ -215,7 +212,7 @@ export default function Manage({
             <TYPE.body style={{ margin: 0 }}>
               <Trans>Staked Balance:</Trans>
             </TYPE.body>
-            <TYPE.body fontSize={24} fontWeight={500}>
+            <TYPE.body fontSize={[14, 18, 24]} fontWeight={400}>
               {stakedBalance
                 ? `${stakedBalance} KROM`
                 : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`}
@@ -227,7 +224,7 @@ export default function Manage({
             <TYPE.body style={{ margin: 0 }}>
               <Trans>Total Value Staked</Trans>
             </TYPE.body>
-            <TYPE.body fontSize={24} fontWeight={500}>
+            <TYPE.body fontSize={[14, 18, 24]} fontWeight={400}>
               888888 KROM
             </TYPE.body>
           </AutoColumn>
@@ -246,7 +243,7 @@ export default function Manage({
                 </TYPE.white>
               </RowBetween>
               <RowBetween style={{ marginBottom: '1rem' }}>
-                <TYPE.white fontSize={14}>
+                <TYPE.white fontSize={[10, 12, 14]}>
                   <Trans>
                     UNI-V2 LP tokens are required. Once you&apos;ve added liquidity to the {currencyA?.symbol}-
                     {currencyB?.symbol} pool you can stake your liquidity tokens on this page.
@@ -305,7 +302,7 @@ export default function Manage({
                   </TYPE.white>
                 </RowBetween>
                 <RowBetween style={{ alignItems: 'baseline' }}>
-                  <TYPE.white fontSize={36} fontWeight={600}>
+                  <TYPE.white fontSize={[24, 28, 36]} fontWeight={600}>
                     100%
                   </TYPE.white>
                 </RowBetween>
@@ -334,10 +331,10 @@ export default function Manage({
                 )} */}
               </RowBetween>
               <RowBetween style={{ alignItems: 'baseline' }}>
-                <TYPE.largeHeader fontSize={36} fontWeight={600}>
+                <TYPE.largeHeader fontSize={[24, 28, 36]} fontWeight={600}>
                   {earnedSKrom}
                 </TYPE.largeHeader>
-                <TYPE.black fontSize={16} fontWeight={500}>
+                <TYPE.black fontSize={[12, 14, 16]} fontWeight={400}>
                   <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px ' }}>
                     ⚡
                   </span>

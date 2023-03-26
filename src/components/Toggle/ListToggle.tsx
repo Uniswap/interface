@@ -20,6 +20,7 @@ const ToggleElement = styled.span<{ isActive?: boolean; bgColor?: string }>`
   height: 24px;
   width: 24px;
   background-color: ${({ isActive, bgColor, theme }) => (isActive ? bgColor : theme.bg4)};
+
   :hover {
     opacity: 0.8;
   }

@@ -5,8 +5,9 @@ import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
 import TradePrice from 'components/swap/TradePrice'
 import { darken } from 'polished'
-import { Fragment, ReactNode, useCallback, useMemo, useState } from 'react'
-import { Lock } from 'react-feather'
+import { Fragment, ReactNode, useCallback, useEffect, useState } from 'react'
+import { Lock, Minus, Plus } from 'react-feather'
+import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
@@ -60,12 +61,13 @@ const FixedContainer = styled.div`
 
 const Container = styled.div<{ hideInput: boolean }>`
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
-  border: 1px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : theme.bg2)};
-  background-color: ${({ theme }) => theme.bg1};
+  border: 2px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : theme.bg2)};
+  background-color: ${({ theme }) => theme.bg6};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
+
   :focus,
   :hover {
-    border: 1px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : theme.bg3)};
+    border: 2px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : theme.bg3)};
   }
 `
 
@@ -74,11 +76,10 @@ const CurrencySelect = styled(ButtonGray)<{ visible: boolean; selected: boolean;
   align-items: center;
   font-size: 24px;
   font-weight: 500;
-  background-color: ${({ selected, theme }) => (selected ? theme.bg0 : theme.primary1)};
+  background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.primary1)};
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
   border-radius: 16px;
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
   outline: none;
   cursor: pointer;
   user-select: none;
@@ -88,6 +89,7 @@ const CurrencySelect = styled(ButtonGray)<{ visible: boolean; selected: boolean;
   padding: 0 8px;
   justify-content: space-between;
   margin-right: ${({ hideInput }) => (hideInput ? '0' : '12px')};
+
   :focus,
   :hover {
     background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
@@ -98,7 +100,7 @@ const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   justify-content: space-between;
-  padding: ${({ selected }) => (selected ? ' 1rem 1rem 0.75rem 1rem' : '1rem 1rem 0.75rem 1rem')};
+  padding: 1rem;
 `
 
 const LabelRow = styled.div`
@@ -108,6 +110,7 @@ const LabelRow = styled.div`
   font-size: 0.75rem;
   line-height: 1rem;
   padding: 0 1rem 1rem;
+
   span:hover {
     cursor: pointer;
     color: ${({ theme }) => darken(0.2, theme.text2)};
@@ -128,6 +131,7 @@ const Aligner = styled.span`
 const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   margin: 0 0.25rem 0 0.35rem;
   height: 35%;
+
   path {
     stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
     stroke-width: 1.5px;
@@ -136,13 +140,13 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
-  font-size:  ${({ active }) => (active ? '18px' : '18px')};
+  font-size: ${({ active }) => (active ? '18px' : '18px')};
 `
 
 const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   background-color: transparent;
   border: none;
-  border-radius: 12px;
+  border-radius: 20px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -151,9 +155,11 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   pointer-events: ${({ disabled }) => (!disabled ? 'initial' : 'none')};
   margin-left: 0.25rem;
+
   :focus {
     outline: none;
   }
+
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     margin-right: 0.5rem;
   `};
@@ -163,8 +169,47 @@ const StyledNumericalInput = styled(NumericalInput)<{ $loading: boolean }>`
   ${loadingOpacityMixin}
 `
 
+const StyledButtonGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-left: 10px;
+`
+
+const SmallButton = styled(ButtonGray)`
+  background-color: ${({ theme }) => theme.primary1};
+  border-radius: 4px;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+
+  :hover {
+    background-color: ${({ theme }) => darken(0.05, theme.primary1)};
+  }
+`
+
+const ButtonLabel = styled(TYPE.white)<{ disabled: boolean }>`
+  color: ${({ theme, disabled }) => (disabled ? theme.text2 : theme.white)} !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const ActionLabel = styled(Text)`
+  font-size: 14px;
+  font-weight: 400;
+  color: ${({ theme }) => theme.text2};
+  padding: 10px 16px 0;
+`
+
 interface CurrencyInputPanelProps {
   value: string
+  decrement?: () => string
+  increment?: () => string
+  decrementDisabled?: boolean
+  incrementDisabled?: boolean
   onUserInput: (value: string) => void
   onMax?: () => void
   showMaxButton: boolean
@@ -188,6 +233,7 @@ interface CurrencyInputPanelProps {
   showRate?: boolean
   isInvertedRate?: boolean
   price?: Price<Currency, Currency> | undefined
+  actionLabel?: string
 }
 
 export default function CurrencyInputPanel({
@@ -214,6 +260,7 @@ export default function CurrencyInputPanel({
   showRate = false,
   isInvertedRate = false,
   price,
+  actionLabel,
   ...rest
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
@@ -225,7 +272,31 @@ export default function CurrencyInputPanel({
     setModalOpen(false)
   }, [setModalOpen])
 
-  const [showInverted, setShowInverted] = useState<boolean>(true)
+  const [showInverted, setShowInverted] = useState<boolean>(isInvertedRate)
+
+  const [localValue, setLocalValue] = useState('0')
+
+  useEffect(() => {
+    setLocalValue(value)
+  }, [value])
+
+  const calculateChange = (increment?: boolean) => {
+    const numValue = Number(localValue)
+    const step = numValue / 100
+    return increment ? (numValue + step).toFixed(8) : (numValue - step).toFixed(8)
+  }
+
+  const handleIncrement = () => {
+    const newValue = calculateChange(true)
+    onUserInput(newValue)
+    setLocalValue(newValue)
+  }
+
+  const handleDecrement = () => {
+    const newValue = calculateChange()
+    onUserInput(newValue)
+    setLocalValue(newValue)
+  }
 
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
@@ -233,13 +304,18 @@ export default function CurrencyInputPanel({
         <FixedContainer>
           <AutoColumn gap="sm" justify="center">
             <Lock />
-            <TYPE.label fontSize="12px" textAlign="center" padding="0 12px">
+            <TYPE.label fontSize={16} textAlign="center" padding="0 12px">
               <Trans>The market price is outside your specified price range. Single-asset deposit only.</Trans>
             </TYPE.label>
           </AutoColumn>
         </FixedContainer>
       )}
       <Container hideInput={hideInput}>
+        {actionLabel && (
+          <ActionLabel>
+            <Trans>{actionLabel}</Trans>
+          </ActionLabel>
+        )}
         <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
           {showCurrencySelector ? (
             <CurrencySelect
@@ -281,17 +357,35 @@ export default function CurrencyInputPanel({
             </CurrencySelect>
           ) : null}
           {showRate && (
-            <RowFixed style={{ height: '17px' }}>
-              <TYPE.main>{'Target Price'}</TYPE.main>
+            <RowFixed style={{ height: '17px', marginRight: '12px' }}>
+              <TYPE.main>
+                <Trans>Limit Price</Trans>
+              </TYPE.main>
             </RowFixed>
           )}
           {!hideInput && (
-            <StyledNumericalInput
-              className="token-amount-input"
-              value={value}
-              onUserInput={onUserInput}
-              $loading={loading}
-            />
+            <Fragment>
+              <StyledNumericalInput
+                className="token-amount-input"
+                value={localValue}
+                onUserInput={onUserInput}
+                $loading={loading}
+              />
+              {showRate && value && price && (
+                <StyledButtonGroup>
+                  <SmallButton onClick={handleIncrement} disabled={false}>
+                    <ButtonLabel disabled={false} fontSize="12px">
+                      <Plus size={18} />
+                    </ButtonLabel>
+                  </SmallButton>
+                  <SmallButton onClick={handleDecrement} disabled={false}>
+                    <ButtonLabel disabled={false} fontSize="12px">
+                      <Minus size={18} />
+                    </ButtonLabel>
+                  </SmallButton>
+                </StyledButtonGroup>
+              )}
+            </Fragment>
           )}
         </InputRow>
         {!hideInput && !hideBalance && !showRate && (
@@ -332,21 +426,11 @@ export default function CurrencyInputPanel({
           </FiatRow>
         )}
 
-        {showRate && !value && !price && (
-          <Fragment>
-            <FiatRow>
-              <RowBetween>
-                <StyledPriceContainer> </StyledPriceContainer>
-              </RowBetween>
-            </FiatRow>
-          </Fragment>
-        )}
-
         {showRate && value && price && (
           <Fragment>
             <FiatRow>
               <RowBetween>
-                <TradePrice price={price} showInverted={showInverted} setShowInverted={setShowInverted} />
+                <TradePrice price={price} showInverted={isInvertedRate} setShowInverted={setShowInverted} />
               </RowBetween>
             </FiatRow>
           </Fragment>

@@ -1,10 +1,9 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import { ConnectionInfo, fetchJson, poll } from '@ethersproject/web'
+import { poll } from '@ethersproject/web'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { toHex } from '@uniswap/v3-sdk'
 import CurrencyLogo from 'components/CurrencyLogo'
-import DowntimeWarning from 'components/DowntimeWarning'
 import { useGaslessCallback } from 'hooks/useGaslessCallback'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useCallback, useState } from 'react'
@@ -278,7 +277,7 @@ export default function AddLiquidity({
         </LightCard>
         <TYPE.italic>
           {withdraw ? (
-            <Trans>Withdrawing KROM may prevent the system to automatically processing trades</Trans>
+            <Trans>Withdrawing KROM may prevent the system to automatically process trades</Trans>
           ) : (
             <Trans>Depositing KROM will allow the system to automatically process trades</Trans>
           )}
@@ -315,7 +314,7 @@ export default function AddLiquidity({
 
   const Buttons = () =>
     !account ? (
-      <ButtonLight onClick={toggleWalletModal} $borderRadius="12px" padding={'12px'}>
+      <ButtonLight onClick={toggleWalletModal} $borderRadius="20px" padding={'12px'}>
         <Trans>Connect Wallet</Trans>
       </ButtonLight>
     ) : (
@@ -355,7 +354,7 @@ export default function AddLiquidity({
           disabled={!isValid || (!argentWalletContract && approvalA !== ApprovalState.APPROVED && !depositADisabled)}
           error={!isValid && !!parsedAmounts[Field.CURRENCY_A]}
         >
-          <Text fontWeight={500}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
+          <Text fontWeight={400}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
         </ButtonError>
       </AutoColumn>
     )
@@ -383,10 +382,9 @@ export default function AddLiquidity({
             adding={true}
             defaultSlippage={DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE}
             showBackLink={true}
-          ></AddRemoveTabs>
+          />
           <Wrapper>
-            <AutoColumn gap="lg"></AutoColumn>
-            <div>
+            <AutoColumn gap="lg" justify="space-between">
               <DynamicSection disabled={false}>
                 <AutoColumn gap="md">
                   <TYPE.label>
@@ -415,9 +413,8 @@ export default function AddLiquidity({
                   />
                 </AutoColumn>
               </DynamicSection>
-            </div>
-
-            <Buttons />
+              <Buttons />
+            </AutoColumn>
           </Wrapper>
         </PageWrapper>
       </ScrollablePage>

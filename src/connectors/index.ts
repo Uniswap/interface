@@ -21,6 +21,7 @@ export const network = new NetworkConnector({
 })
 
 let networkLibrary: Web3Provider | undefined
+
 export function getNetworkLibrary(): Web3Provider {
   return (networkLibrary = networkLibrary ?? getLibrary(network.provider))
 }

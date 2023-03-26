@@ -47,10 +47,8 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   transition: visibility 150ms linear, opacity 150ms linear;
   background: ${({ theme }) => theme.bg2};
   border: 1px solid ${({ theme }) => theme.bg3};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
   color: ${({ theme }) => theme.text2};
-  border-radius: 0.5rem;
+  border-radius: 20px;
   padding: 1rem;
   display: grid;
   grid-template-rows: 1fr;
@@ -323,6 +321,7 @@ export function ManageLists({
         .then((list) => setTempList(list))
         .catch(() => setAddError(t`Error importing list`))
     }
+
     // if valid url, fetch details for card
     if (validUrl) {
       fetchTempList()

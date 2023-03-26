@@ -49,9 +49,9 @@ export function AutoRouterLabel() {
   const routingAPIEnabled = useRoutingAPIEnabled()
 
   return routingAPIEnabled ? (
-    <StyledAutoRouterLabel fontSize={14}>Auto Router</StyledAutoRouterLabel>
+    <StyledAutoRouterLabel fontSize={16}>Auto Router</StyledAutoRouterLabel>
   ) : (
-    <TYPE.black fontSize={14}>
+    <TYPE.black fontSize={[10, 12, 14]}>
       <Trans>Trade Pool</Trans>
     </TYPE.black>
   )

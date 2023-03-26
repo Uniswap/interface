@@ -1,10 +1,7 @@
-import { Switch } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, Trade as V3Trade } from '@uniswap/v3-sdk'
-import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
-import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PositionList from 'components/PositionList'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
 import { AutoRouterLogo } from 'components/swap/RouterLabel'
@@ -12,30 +9,24 @@ import SwapRoute from 'components/swap/SwapRoute'
 import TradePrice from 'components/swap/TradePrice'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
-import { ChainName, SupportedChainId } from 'constants/chains'
-import { KROM } from 'constants/tokens'
 import { useV3Positions } from 'hooks/useV3Positions'
-import JSBI from 'jsbi'
-import { constantToCode } from 'multicodec/src/maps'
 import { LoadingRows } from 'pages/Pool/styleds'
-import React from 'react'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, Inbox, Info, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/reducer'
-import { useDarkModeManager, useUserHideClosedPositions } from 'state/user/hooks'
+import { useUserHideClosedPositions } from 'state/user/hooks'
 import { V3TradeState } from 'state/validator/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { PositionDetails } from 'types/position'
-import { IUniswapV3Factory } from 'types/v3'
-import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
+import MemoizedCandleSticks from '../../components/CandleSticks'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -73,15 +64,13 @@ import {
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
-import { useExpertModeManager } from '../../state/user/hooks'
-import { useNetworkGasPrice } from '../../state/user/hooks'
+import { useExpertModeManager, useNetworkGasPrice } from '../../state/user/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { getTradeVersion } from '../../utils/getTradeVersion'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
-import { CandleSticks, MemoizedCandleSticks } from './CandleSticks'
 
 const NoLiquidity = styled.div`
   align-items: center;
@@ -134,7 +123,7 @@ const DivWrapperNoPro = styled.div`
 `
 
 const MainContentWrapper = styled.main`
-  background-color: ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.bg1};
   padding: 8px;
   border-radius: 20px;
   display: flex;
@@ -155,7 +144,7 @@ const MainContentWrapper = styled.main`
 
   &::-webkit-scrollbar {
     width: 10px;
-    border: 1px solid dark-gray;
+    border: 1px solid darkgray;
   }
 
   &::-webkit-thumb {
@@ -167,7 +156,7 @@ const MainContentWrapperNoPro = styled.main`
   width: 65%;
   overflow-x: hidden;
   margin-top: 16px;
-  background-color: ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.bg1};
   border-radius: 20px;
 
   @media screen and (max-width: 1000px) {
@@ -186,13 +175,14 @@ const StyledInfo = styled(Info)`
   width: 16px;
   margin-left: 4px;
   color: ${({ theme }) => theme.text3};
+
   :hover {
     color: ${({ theme }) => theme.text1};
   }
 `
 
 export const StyledInput = styled(NumericalInput)`
-  background-color: ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.bg1};
   text-align: left;
   font-size: 18px;
   width: 100%;
@@ -241,6 +231,7 @@ export const FlexItemRight = styled.div`
     width: 100%;
   }
 `
+
 // we want the latest one to come first, so return negative if a is after b
 function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
@@ -688,7 +679,7 @@ export default function Swap({ history }: RouteComponentProps) {
                             </MouseoverTooltipContent>
                           </RowFixed>
                           <RowFixed style={{ position: 'relative' }}>
-                            <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
+                            <TYPE.body color={theme.text2} fontWeight={400} fontSize={[10, 12, 14]}>
                               <Trans>Current Price</Trans>
                             </TYPE.body>
                           </RowFixed>
@@ -726,9 +717,8 @@ export default function Swap({ history }: RouteComponentProps) {
                           </RowFixed>
                         </Row>
                         <Row justify={!trade ? 'center' : 'space-between'}>
-                          <RowFixed style={{ position: 'relative' }}></RowFixed>
                           <RowFixed style={{ position: 'relative' }}>
-                            <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
+                            <TYPE.body color={theme.text2} fontWeight={400} fontSize={[10, 12, 14]}>
                               <Trans>Min Price</Trans>
                             </TYPE.body>
                           </RowFixed>
@@ -796,7 +786,7 @@ export default function Swap({ history }: RouteComponentProps) {
                               }
                             >
                               <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                                <span style={{ display: 'flex', alignItems: 'center' }}>
+                                <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'break-spaces' }}>
                                   <CurrencyLogo
                                     currency={currencies[Field.INPUT]}
                                     size={'20px'}
@@ -848,7 +838,7 @@ export default function Swap({ history }: RouteComponentProps) {
                               }
                               error={isValid}
                             >
-                              <Text fontSize={16} fontWeight={500}>
+                              <Text fontSize={16} fontWeight={400}>
                                 {<Trans>Trade</Trans>}
                               </Text>
                             </ButtonError>
@@ -869,7 +859,7 @@ export default function Swap({ history }: RouteComponentProps) {
                           disabled={!isValid || !!swapCallbackError}
                           error={isValid && !swapCallbackError}
                         >
-                          <Text fontSize={20} fontWeight={500}>
+                          <Text fontSize={16} fontWeight={400}>
                             {swapInputError ? swapInputError : <Trans>Trade</Trans>}
                           </Text>
                         </ButtonError>
@@ -1105,7 +1095,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       </MouseoverTooltipContent>
                     </RowFixed>
                     <RowFixed style={{ position: 'relative' }}>
-                      <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
+                      <TYPE.body color={theme.text2} fontWeight={400} fontSize={14}>
                         <Trans>Current Price</Trans>
                       </TYPE.body>
                     </RowFixed>
@@ -1143,9 +1133,8 @@ export default function Swap({ history }: RouteComponentProps) {
                     </RowFixed>
                   </Row>
                   <Row justify={!trade ? 'center' : 'space-between'}>
-                    <RowFixed style={{ position: 'relative' }}></RowFixed>
                     <RowFixed style={{ position: 'relative' }}>
-                      <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
+                      <TYPE.body color={theme.text2} fontWeight={400} fontSize={14}>
                         <Trans>Min Price</Trans>
                       </TYPE.body>
                     </RowFixed>
@@ -1208,7 +1197,7 @@ export default function Swap({ history }: RouteComponentProps) {
                         }
                       >
                         <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                          <span style={{ display: 'flex', alignItems: 'center' }}>
+                          <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'break-spaces' }}>
                             <CurrencyLogo
                               currency={currencies[Field.INPUT]}
                               size={'20px'}
@@ -1259,7 +1248,7 @@ export default function Swap({ history }: RouteComponentProps) {
                         }
                         error={isValid}
                       >
-                        <Text fontSize={16} fontWeight={500}>
+                        <Text fontSize={16} fontWeight={400}>
                           {<Trans>Trade</Trans>}
                         </Text>
                       </ButtonError>
@@ -1280,7 +1269,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     disabled={!isValid || !!swapCallbackError}
                     error={isValid && !swapCallbackError}
                   >
-                    <Text fontSize={20} fontWeight={500}>
+                    <Text fontSize={16} fontWeight={400}>
                       {swapInputError ? swapInputError : <Trans>Trade</Trans>}
                     </Text>
                   </ButtonError>

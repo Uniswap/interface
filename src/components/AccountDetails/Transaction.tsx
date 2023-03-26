@@ -13,6 +13,7 @@ const TransactionStatusText = styled.div`
   margin-right: 0.5rem;
   display: flex;
   align-items: center;
+
   :hover {
     text-decoration: underline;
   }
@@ -23,7 +24,7 @@ const TransactionState = styled(ExternalLink)<{ pending: boolean; success?: bool
   justify-content: space-between;
   align-items: center;
   text-decoration: none !important;
-  border-radius: 0.5rem;
+  border-radius: 20px;
   padding: 0.25rem 0rem;
   font-weight: 500;
   font-size: 0.825rem;

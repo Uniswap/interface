@@ -47,6 +47,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
   // state for delegate input
   const [usingDelegate, setUsingDelegate] = useState(false)
   const [typed, setTyped] = useState('')
+
   function handleRecipientType(val: string) {
     setTyped(val)
   }
@@ -95,7 +96,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
-              <TYPE.mediumHeader fontWeight={500}>{title}</TYPE.mediumHeader>
+              <TYPE.mediumHeader fontWeight={400}>{title}</TYPE.mediumHeader>
               <StyledClosed stroke="black" onClick={wrappedOndismiss} />
             </RowBetween>
             <TYPE.body>
@@ -122,7 +123,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
             <TYPE.largeHeader>
               {usingDelegate ? <Trans>Delegating votes</Trans> : <Trans>Unlocking Votes</Trans>}
             </TYPE.largeHeader>
-            <TYPE.main fontSize={36}> {formatCurrencyAmount(uniBalance, 4)}</TYPE.main>
+            <TYPE.main fontSize={[24, 28, 36]}> {formatCurrencyAmount(uniBalance, 4)}</TYPE.main>
           </AutoColumn>
         </LoadingView>
       )}
@@ -132,7 +133,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
             <TYPE.largeHeader>
               <Trans>Transaction Submitted</Trans>
             </TYPE.largeHeader>
-            <TYPE.main fontSize={36}>{formatCurrencyAmount(uniBalance, 4)}</TYPE.main>
+            <TYPE.main fontSize={[24, 28, 36]}>{formatCurrencyAmount(uniBalance, 4)}</TYPE.main>
           </AutoColumn>
         </SubmittedView>
       )}

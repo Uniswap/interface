@@ -11,6 +11,7 @@ function waitRandom(min: number, max: number): Promise<void> {
  */
 class CancelledError extends Error {
   public isCancelledError: true = true
+
   constructor() {
     super('Cancelled')
   }

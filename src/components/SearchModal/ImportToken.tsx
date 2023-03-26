@@ -90,7 +90,7 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
                 <CurrencyLogo currency={token} size={'32px'} />
 
                 <AutoColumn gap="4px" justify="center">
-                  <TYPE.body ml="8px" mr="8px" fontWeight={500} fontSize={20}>
+                  <TYPE.body ml="8px" mr="8px" fontWeight={400} fontSize={16}>
                     {token.symbol}
                   </TYPE.body>
                   <TYPE.darkGray fontWeight={400} fontSize={14}>
@@ -99,7 +99,7 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
                 </AutoColumn>
                 {chainId && (
                   <ExternalLink href={getExplorerLink(chainId, token.address, ExplorerDataType.ADDRESS)}>
-                    <AddressText fontSize={12}>{token.address}</AddressText>
+                    <AddressText fontSize={14}>{token.address}</AddressText>
                   </ExternalLink>
                 )}
                 {list !== undefined ? (
@@ -113,7 +113,7 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
                   <WarningWrapper $borderRadius="4px" padding="4px" highWarning={true}>
                     <RowFixed>
                       <AlertCircle stroke={theme.red1} size="10px" />
-                      <TYPE.body color={theme.red1} ml="4px" fontSize="10px" fontWeight={500}>
+                      <TYPE.body color={theme.red1} ml="4px" fontSize="14px" fontWeight={400}>
                         <Trans>Unknown Source</Trans>
                       </TYPE.body>
                     </RowFixed>

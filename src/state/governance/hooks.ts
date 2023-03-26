@@ -82,6 +82,7 @@ interface FormattedProposalLog {
   description: string
   details: { target: string; functionSig: string; callData: string }[]
 }
+
 /**
  * Need proposal events to get description data emitted from
  * new proposal event.

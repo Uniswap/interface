@@ -16,7 +16,7 @@ import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import usePrevious from '../../hooks/usePrevious'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
-import { ExternalLink, TYPE } from '../../theme'
+import { TYPE } from '../../theme'
 import { isMobile } from '../../utils/userAgent'
 import AccountDetails from '../AccountDetails'
 import { LightCard } from '../Card'
@@ -58,7 +58,7 @@ const HeaderRow = styled.div`
 `
 
 const ContentWrapper = styled.div`
-  background-color: ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.bg1};
   padding: 0 1rem 1rem 1rem;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
@@ -345,7 +345,7 @@ export default function WalletModal({
         <ContentWrapper>
           <LightCard style={{ marginBottom: '16px' }}>
             <AutoRow style={{ flexWrap: 'nowrap' }}>
-              <TYPE.black fontSize={14}>
+              <TYPE.black fontSize={16}>
                 <Trans>Connect to a wallet</Trans>
               </TYPE.black>
             </AutoRow>

@@ -28,7 +28,7 @@ export default function SwapModalFooter({
           style={{ margin: '10px 0 0 0' }}
           id="confirm-swap-or-send"
         >
-          <Text fontSize={20} fontWeight={500}>
+          <Text fontSize={16} fontWeight={400}>
             <Trans>Confirm</Trans>
           </Text>
         </ButtonError>

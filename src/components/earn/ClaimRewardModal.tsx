@@ -81,7 +81,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
           </RowBetween>
           {stakingInfo?.earnedAmount && (
             <AutoColumn justify="center" gap="md">
-              <TYPE.body fontWeight={600} fontSize={36}>
+              <TYPE.body fontWeight={600} fontSize={[16, 26, 36]}>
                 {stakingInfo?.earnedAmount?.toSignificant(6)}
               </TYPE.body>
               <TYPE.body>

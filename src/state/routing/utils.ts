@@ -1,5 +1,4 @@
-import { Currency, CurrencyAmount, Ether, Percent, sqrt, Token, TradeType } from '@uniswap/sdk-core'
-import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
+import { Currency, CurrencyAmount, Percent, sqrt, Token } from '@uniswap/sdk-core'
 import { encodeSqrtRatioX96, FeeAmount, nearestUsableTick, Pool, TICK_SPACINGS, TickMath } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 

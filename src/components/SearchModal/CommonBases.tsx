@@ -7,7 +7,6 @@ import { AutoRow } from 'components/Row'
 import { COMMON_BASES } from 'constants/routing'
 import { KROM } from 'constants/tokens'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
-import { useActiveWeb3React } from 'hooks/web3'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 import { currencyId } from 'utils/currencyId'
@@ -25,6 +24,7 @@ const BaseWrapper = styled.div<{ disable?: boolean }>`
   padding: 6px;
 
   align-items: center;
+
   :hover {
     cursor: ${({ disable }) => !disable && 'pointer'};
     background-color: ${({ theme, disable }) => !disable && theme.bg2};
@@ -51,7 +51,7 @@ export default function CommonBases({
   return bases.length > 0 ? (
     <MobileWrapper gap="md">
       <AutoRow>
-        <Text fontWeight={500} fontSize={14}>
+        <Text fontWeight={400} fontSize={16}>
           <Trans>Common bases</Trans>
         </Text>
         <QuestionHelper text={<Trans>These tokens are commonly paired with other tokens.</Trans>} />
@@ -66,7 +66,7 @@ export default function CommonBases({
               key={currencyId(currency)}
             >
               <CurrencyLogoFromList currency={currency} />
-              <Text fontWeight={500} fontSize={16}>
+              <Text fontWeight={400} fontSize={16}>
                 {currency.symbol}
               </Text>
             </BaseWrapper>

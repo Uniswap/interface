@@ -37,6 +37,7 @@ export const IconWrapper = styled.div<{ stroke?: string; size?: string; marginRi
   height: ${({ size }) => size ?? '20px'};
   margin-right: ${({ marginRight }) => marginRight ?? 0};
   margin-left: ${({ marginLeft }) => marginLeft ?? 0};
+
   & > * {
     stroke: ${({ theme, stroke }) => stroke ?? theme.blue1};
   }
@@ -230,6 +231,7 @@ const Spinner = styled.img`
 const BackArrowLink = styled(StyledInternalLink)`
   color: ${({ theme }) => theme.text1};
 `
+
 export function BackArrow({ to }: { to: string }) {
   return (
     <BackArrowLink to={to}>

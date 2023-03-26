@@ -330,8 +330,9 @@ function isMatic(chainId: number): chainId is SupportedChainId.POLYGON | Support
 }
 
 class MaticNativeCurrency extends NativeCurrency {
-  equals(other: Currency): boolean {
-    return other.isNative && other.chainId === this.chainId
+  public constructor(chainId: number) {
+    if (!isMatic(chainId)) throw new Error('Not matic')
+    super(chainId, 18, 'MATIC', 'Polygon Matic')
   }
 
   get wrapped(): Token {
@@ -339,19 +340,18 @@ class MaticNativeCurrency extends NativeCurrency {
     return WRAPPED_NATIVE_CURRENCY[this.chainId]
   }
 
-  public constructor(chainId: number) {
-    if (!isMatic(chainId)) throw new Error('Not matic')
-    super(chainId, 18, 'MATIC', 'Polygon Matic')
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId
   }
 }
 
 export class ExtendedEther extends Ether {
+  private static _cachedExtendedEther: { [chainId: number]: NativeCurrency } = {}
+
   public get wrapped(): Token {
     if (this.chainId in WRAPPED_NATIVE_CURRENCY) return WRAPPED_NATIVE_CURRENCY[this.chainId]
     throw new Error('Unsupported chain ID')
   }
-
-  private static _cachedExtendedEther: { [chainId: number]: NativeCurrency } = {}
 
   public static onChain(chainId: number): ExtendedEther {
     return this._cachedExtendedEther[chainId] ?? (this._cachedExtendedEther[chainId] = new ExtendedEther(chainId))
@@ -359,6 +359,7 @@ export class ExtendedEther extends Ether {
 }
 
 const cachedNativeCurrency: { [chainId: number]: NativeCurrency } = {}
+
 export function nativeOnChain(chainId: number): NativeCurrency {
   return (
     cachedNativeCurrency[chainId] ??

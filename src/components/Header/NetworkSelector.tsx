@@ -16,6 +16,7 @@ const ActiveRowLinkList = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 8px;
+
   & > a {
     align-items: center;
     color: ${({ theme }) => theme.text2};
@@ -27,6 +28,7 @@ const ActiveRowLinkList = styled.div`
     padding: 8px 0 4px;
     text-decoration: none;
   }
+
   & > a:first-child {
     border-top: 1px solid ${({ theme }) => theme.text2};
     margin: 0;
@@ -47,9 +49,8 @@ const FlyoutHeader = styled.div`
 `
 const FlyoutMenu = styled.div`
   align-items: flex-start;
-  background-color: ${({ theme }) => theme.bg1};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
+  background-color: ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg0)};
+  box-shadow: 0 0 2px 2px ${({ theme }) => theme.shadow2};
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -57,27 +58,34 @@ const FlyoutMenu = styled.div`
   overflow: auto;
   padding: 16px;
   position: absolute;
-  top: 64px;
+  top: 100px;
   width: 272px;
   z-index: 99;
+
   & > *:not(:last-child) {
     margin-bottom: 12px;
   }
+
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    top: 50px;
+    top: 70px;
   }
 `
 const FlyoutRow = styled.div<{ active: boolean }>`
   align-items: center;
-  background-color: ${({ active, theme }) => (active ? theme.bg2 : 'transparent')};
+  background-color: ${({ active, theme }) => (active ? theme.bg0 : 'transparent')};
   border-radius: 8px;
   cursor: pointer;
   display: flex;
   font-weight: 500;
   justify-content: space-between;
   padding: 6px 8px;
+  margin: 0 auto;
   text-align: left;
-  width: 100%;
+  width: calc(100% - 8px);
+
+  :hover {
+    background-color: ${({ theme }) => theme.bg2};
+  }
 `
 const FlyoutRowActiveIndicator = styled.div`
   background-color: ${({ theme }) => theme.green1};
@@ -95,11 +103,16 @@ const Logo = styled.img`
   width: 20px;
   margin-right: 8px;
 `
-const NetworkLabel = styled.div`
+const NetworkLabel = styled.div<{ bold?: boolean }>`
   flex: 1 1 auto;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-style: normal;
+  font-size: 16px;
+  font-weight: ${({ bold }) => (bold ? 700 : 400)};
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
 `
 const SelectorLabel = styled(NetworkLabel)`
   display: none;
@@ -110,15 +123,26 @@ const SelectorLabel = styled(NetworkLabel)`
 `
 const SelectorControls = styled.div<{ interactive: boolean }>`
   align-items: center;
-  background-color: ${({ theme }) => theme.bg1};
-  border: 2px solid ${({ theme }) => theme.bg1};
-  border-radius: 12px;
-  color: ${({ theme }) => theme.text1};
+  background-color: ${({ theme }) => (theme.darkMode ? theme.bg2 : theme.primary1)};
+  box-shadow: 0 0 0 2px ${({ theme }) => (theme.darkMode ? theme.bg1 : theme.bg0)};
+  border-radius: 20px;
+  color: ${({ theme }) => theme.white};
   cursor: ${({ interactive }) => (interactive ? 'pointer' : 'auto')};
   display: flex;
   font-weight: 500;
   justify-content: space-between;
-  padding: 6px 8px;
+  padding: 8px 16px;
+
+  :hover,
+  :focus {
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 0 0 2px ${({ theme }) => (theme.darkMode ? theme.bg3 : theme.bg0)};
+  }
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding: 0.5rem;
+  `};
 `
 const SelectorLogo = styled(Logo)<{ interactive?: boolean }>`
   margin-right: ${({ interactive }) => (interactive ? 8 : 0)}px;
@@ -132,7 +156,8 @@ const SelectorWrapper = styled.div`
   }
 `
 const StyledChevronDown = styled(ChevronDown)`
-  width: 12px;
+  width: 20px;
+  height: 20px;
 `
 const BridgeLabel = ({ chainId }: { chainId: SupportedChainId }) => {
   switch (chainId) {
@@ -245,7 +270,7 @@ export default function NetworkSelector() {
 
   return (
     <SelectorWrapper ref={node as any}>
-      <SelectorControls onClick={toggle} interactive>
+      <SelectorControls onClick={toggle} interactive tabIndex={0}>
         <SelectorLogo interactive src={info.logoUrl} />
         <SelectorLabel>{info.label}</SelectorLabel>
         <StyledChevronDown />

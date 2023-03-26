@@ -46,7 +46,7 @@ export default memo(function SwapRoute({
           </LoadingRows>
         ) : (
           <Badge>
-            <TYPE.black fontSize={12}>
+            <TYPE.black fontSize={16}>
               {getTradeVersion(trade) === Version.v2 ? <Trans>Smart Route</Trans> : <Trans>Smart Route</Trans>}
             </TYPE.black>
           </Badge>
@@ -65,7 +65,7 @@ export default memo(function SwapRoute({
         />
       )}
       {routingAPIEnabled && (
-        <TYPE.main fontSize={12} width={400}>
+        <TYPE.main fontSize={14} width={400}>
           <Trans>This route optimizes your price by considering split routes, multiple hops, and gas costs.</Trans>
         </TYPE.main>
       )}
