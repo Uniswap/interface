@@ -474,7 +474,7 @@ export function PoolPositionPage() {
                             </ThemedText.DeprecatedMain>
                           </RowFixed>
                           <RowFixed>
-                            {owner === account ? (
+                            {owner === account && JSBI.greaterThan(poolValue, JSBI.BigInt(0)) ? (
                               <ResponsiveButtonPrimary
                                 onClick={handleSetValueClick}
                                 height="1.1em"
