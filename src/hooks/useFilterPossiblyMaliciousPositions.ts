@@ -22,9 +22,6 @@ export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]
     [positions, tokenList]
   )
 
-  // todo: fetch non-list position token symbols from chain
-  console.log('nonListPositionTokens', nonListPositionTokenAddresses)
-
   const results = useMultipleContractSingleData(nonListPositionTokenAddresses, ERC20Interface, 'symbol')
   const addressesToSymbol: Record<string, string | undefined> = useMemo(
     () =>
@@ -48,7 +45,6 @@ export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]
         const token0IsInList = !!token0FromList
         const token1IsInList = !!token1FromList
         const atLeastOneTokenIsInList = token0IsInList || token1IsInList
-        // todo: check symbols of both (one from list, other from chain)
         const token0HasUrlSymbol = hasURL(token0IsInList ? token0FromList.symbol : addressesToSymbol[position.token0])
         const token1HasUrlSymbol = hasURL(token1IsInList ? token1FromList.symbol : addressesToSymbol[position.token1])
         const maxOneUrlTokenSymbol = token0HasUrlSymbol ? !token1HasUrlSymbol : true
