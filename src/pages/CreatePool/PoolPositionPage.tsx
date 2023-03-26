@@ -14,6 +14,7 @@ import { AutoColumn } from 'components/Column'
 import BuyModal from 'components/createPool/BuyModal'
 import SellModal from 'components/createPool/SellModal'
 import SetLockupModal from 'components/createPool/SetLockupModal'
+import SetSpreadModal from 'components/createPool/SetSpreadModal'
 import SetValueModal from 'components/createPool/SetValueModal'
 //import Loader from 'components/Loader'
 import { RowBetween, RowFixed } from 'components/Row'
@@ -239,6 +240,7 @@ export function PoolPositionPage() {
   const [showBuyModal, setShowBuyModal] = useState(false)
   const [showSellModal, setShowSellModal] = useState(false)
   const [showSetLockupModal, setShowSetLockupModal] = useState(false)
+  const [showSetSpreadModal, setShowSetSpreadModal] = useState(false)
   const [showSetValueModal, setShowSetValueModal] = useState(false)
 
   // TODO: check how can reduce number of calls by limit update of poolStorage
@@ -306,6 +308,14 @@ export function PoolPositionPage() {
     }
   }, [account, toggleWalletModal])
 
+  const handleSetSpreadClick = useCallback(() => {
+    if (account) {
+      setShowSetSpreadModal(true)
+    } else {
+      toggleWalletModal()
+    }
+  }, [account, toggleWalletModal])
+
   const handleSetValueClick = useCallback(() => {
     if (account) {
       setShowSetValueModal(true)
@@ -359,6 +369,11 @@ export function PoolPositionPage() {
               isOpen={showSetLockupModal}
               onDismiss={() => setShowSetLockupModal(false)}
               title={<Trans>Set Lockup</Trans>}
+            />
+            <SetSpreadModal
+              isOpen={showSetSpreadModal}
+              onDismiss={() => setShowSetSpreadModal(false)}
+              title={<Trans>Set Spread</Trans>}
             />
             <SetValueModal
               isOpen={showSetValueModal}
@@ -543,7 +558,7 @@ export function PoolPositionPage() {
                             <RowFixed>
                               {owner === account ? (
                                 <ResponsiveButtonPrimary
-                                  onClick={handleWithdrawClick}
+                                  onClick={handleSetSpreadClick}
                                   height="1.1em"
                                   width="fit-content"
                                   padding="6px 8px"
