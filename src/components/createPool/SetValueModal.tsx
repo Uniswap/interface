@@ -105,6 +105,7 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, title }: Se
               <Trans>Pool base token liquidity must be at least 3% of new unitary value.</Trans>
             </ThemedText.DeprecatedBody>
             <NameInputPanel value={typed} onChange={onUserInput} label="Unitary Value" placeholder="New Value" />
+            {/* TODO: disables if same as current */}
             <ButtonPrimary
               disabled={
                 typed === '' ||
