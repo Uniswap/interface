@@ -39,7 +39,7 @@ Note: if you are indeed using an Apple Silicon Mac, we recommend setting up your
 ### Xcode
 You should start with downloading Xcode if you don't already have it installed, since the file is so large. You can find it here: [developer.apple.com/xcode](https://developer.apple.com/xcode/)
 
-Note: The version shouldn’t matter too much for Xcode, but at the time of writing, the app is built using version 14.0.1.
+Note: The version shouldn’t matter too much for Xcode, but at the time of writing, the app is built using version 14.2.
 
 ### Homebrew
 We’ll be using Homebrew to install many of the other required tools through the command line.
