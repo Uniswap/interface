@@ -298,6 +298,8 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
     govStartBlock = 74115128
   } else if (chainId === SupportedChainId.POLYGON) {
     govStartBlock = 39249858
+  } else if (chainId === SupportedChainId.BNB) {
+    govStartBlock = 25551953
   }
 
   const formattedLogsV1 = useFormattedProposalCreatedLogs(gov, govProposalIndexes, govStartBlock)
