@@ -7,7 +7,7 @@ import { useWeb3React } from '@web3-react/core'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useToggleWalletDrawer } from 'components/WalletDropdown'
-import { useFilterPossiblyMaliciousPositions as useFilterPossiblyMaliciousPositionDetails } from 'hooks/useFilterPossiblyMaliciousPositions'
+import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -22,7 +22,13 @@ import { PositionInfo } from './cache'
 import { useFeeValues } from './hooks'
 import useMultiChainPositions from './useMultiChainPositions'
 
-function useFilterPossiblyMaliciousPositions(positions: PositionInfo[] | undefined): PositionInfo[] | undefined {
+/*
+  This hook takes an array of PositionInfo objects (format used by the Uniswap Labs gql API).
+  The hook access PositionInfo.details (format used by the NFT position contract),
+  filters the PositionDetails data for malicious content,
+  and then returns the original data in its original format. 
+*/
+function useFilterPossiblyMaliciousPositionInfo(positions: PositionInfo[] | undefined): PositionInfo[] | undefined {
   const tokenIdsToPositionInfo: Record<string, PositionInfo> = useMemo(
     () =>
       positions
@@ -31,33 +37,33 @@ function useFilterPossiblyMaliciousPositions(positions: PositionInfo[] | undefin
     [positions]
   )
   const positionDetails = useMemo(() => positions?.map((position) => position.details) ?? [], [positions])
-  const safePositionDetails = useFilterPossiblyMaliciousPositionDetails(positionDetails)
+  const filteredPositionDetails = useFilterPossiblyMaliciousPositions(positionDetails)
 
   return useMemo(
-    () => safePositionDetails.map((positionDetails) => tokenIdsToPositionInfo[positionDetails.tokenId.toString()]),
-    [safePositionDetails, tokenIdsToPositionInfo]
+    () => filteredPositionDetails.map((positionDetails) => tokenIdsToPositionInfo[positionDetails.tokenId.toString()]),
+    [filteredPositionDetails, tokenIdsToPositionInfo]
   )
 }
 
 export default function Pools({ account }: { account: string }) {
   const { positions, loading } = useMultiChainPositions(account)
-  const safePositions = useFilterPossiblyMaliciousPositions(positions)
+  const filteredPositions = useFilterPossiblyMaliciousPositionInfo(positions)
   const [showClosed, toggleShowClosed] = useReducer((showClosed) => !showClosed, false)
 
   const [openPositions, closedPositions] = useMemo(() => {
     const openPositions: PositionInfo[] = []
     const closedPositions: PositionInfo[] = []
-    safePositions?.forEach((position) => (position.closed ? closedPositions : openPositions).push(position))
+    filteredPositions?.forEach((position) => (position.closed ? closedPositions : openPositions).push(position))
     return [openPositions, closedPositions]
-  }, [safePositions])
+  }, [filteredPositions])
 
   const toggleWalletDrawer = useToggleWalletDrawer()
 
-  if (!safePositions || loading) {
+  if (!filteredPositions || loading) {
     return <PortfolioSkeleton />
   }
 
-  if (safePositions?.length === 0) {
+  if (filteredPositions?.length === 0) {
     return <EmptyWalletModule type="pool" onNavigateClick={toggleWalletDrawer} />
   }
 
