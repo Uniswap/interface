@@ -13,21 +13,20 @@ const RowNoFlex = styled(AutoRow)`
 `
 
 const ColumnContainer = styled(AutoColumn)`
-  margin: 0 12px 0;
+  margin: 0 12px;
 `
 
 export const PopupAlertTriangle = styled(AlertTriangleFilled)`
   flex-shrink: 0;
   width: 32px;
   height: 32px;
-  margin-right: 12px;
 `
 
 export default function FailedNetworkSwitchPopup({ chainId }: { chainId: SupportedChainId }) {
   const chainInfo = getChainInfo(chainId)
 
   return (
-    <RowNoFlex>
+    <RowNoFlex gap="12px">
       <PopupAlertTriangle />
       <ColumnContainer gap="sm">
         <ThemedText.SubHeader color="textSecondary">

@@ -25,19 +25,22 @@ const StyledTimestamp = styled(ThemedText.Caption)`
   font-feature-settings: 'tnum' on, 'lnum' on, 'ss02' on;
 `
 
-export function ActivityRow({ activity }: { activity: Activity }) {
-  const { chainId, status, title, descriptor, logos, otherAccount, currencies } = activity
+export function ActivityRow({
+  activity: { chainId, status, title, descriptor, logos, otherAccount, currencies, timestamp, hash },
+}: {
+  activity: Activity
+}) {
   const { ENSName } = useENSName(otherAccount)
+  const timeSince = useTimeSince(timestamp)
 
-  const explorerUrl = getExplorerLink(activity.chainId, activity.hash, ExplorerDataType.TRANSACTION)
-  const timeSince = useTimeSince(activity.timestamp)
+  const explorerUrl = getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)
 
   return (
     <TraceEvent
       events={[BrowserEvent.onClick]}
       name={SharedEventName.ELEMENT_CLICKED}
       element={InterfaceElementName.MINI_PORTFOLIO_ACTIVITY_ROW}
-      properties={{ hash: activity.hash, chain_id: chainId, explorer_url: explorerUrl }}
+      properties={{ hash, chain_id: chainId, explorer_url: explorerUrl }}
     >
       <PortfolioRow
         left={
