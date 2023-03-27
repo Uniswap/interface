@@ -25,7 +25,7 @@ export default function useSelectChain() {
         console.error('Failed to switch networks', error)
 
         dispatch(updateConnectionError({ connectionType, error: error.message }))
-        dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
+        dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: 'failed-network-switch' }))
       }
     },
     [connector, dispatch, getConnection]

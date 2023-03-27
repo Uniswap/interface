@@ -137,12 +137,12 @@ export default function TokenDetails({
       if (!address) return
       const bridgedAddress = crossChainMap[update]
       if (bridgedAddress) {
-        startTokenTransition(() => navigate(getTokenDetailsURL({ address: bridgedAddress, chain })))
+        startTokenTransition(() => navigate(getTokenDetailsURL({ address: bridgedAddress, chain: update })))
       } else if (didFetchFromChain || detailedToken?.isNative) {
-        startTokenTransition(() => navigate(getTokenDetailsURL({ address, chain })))
+        startTokenTransition(() => navigate(getTokenDetailsURL({ address, chain: update })))
       }
     },
-    [address, chain, crossChainMap, didFetchFromChain, navigate, detailedToken?.isNative]
+    [address, crossChainMap, didFetchFromChain, navigate, detailedToken?.isNative]
   )
   useOnGlobalChainSwitch(navigateToTokenForChain)
 

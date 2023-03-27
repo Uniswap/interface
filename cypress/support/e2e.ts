@@ -8,6 +8,7 @@
 // Import commands.ts using ES2015 syntax:
 import { injected } from './ethereum'
 import assert = require('assert')
+import '@cypress/code-coverage/support'
 
 import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
 

@@ -1,0 +1,22 @@
+ignore:
+  - "**/generated/**/*"
+  - "**/generated/*"
+  - "**/cypress/**/*"
+  - "cypress/**/*"
+  - "**/instrumented/**/*"
+  - "**/styles/**/*"
+  - "styles/**/*"
+  - "**/constants/**/*"
+  - "constants/**/*"
+
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 5%
+        if_ci_failed: error
+    patch:
+      default:
+        enabled: no
+        if_not_found: success

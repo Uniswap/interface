@@ -1,3 +1,5 @@
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import Row from 'components/Row'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
@@ -102,28 +104,35 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
 
   const currency = gqlToCurrency(token)
   return (
-    <PortfolioRow
-      left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size="40px" />}
-      title={<ThemedText.SubHeader fontWeight={500}>{token?.name}</ThemedText.SubHeader>}
-      descriptor={
-        <TokenBalanceText>
-          {formatNumber(quantity, NumberType.TokenNonTx)} {token?.symbol}
-        </TokenBalanceText>
-      }
-      onClick={navigateToTokenDetails}
-      right={
-        denominatedValue && (
-          <>
-            <ThemedText.SubHeader fontWeight={500}>
-              {formatNumber(denominatedValue?.value, NumberType.PortfolioBalance)}
-            </ThemedText.SubHeader>
-            <Row justify="flex-end">
-              <PortfolioArrow change={percentChange} size={20} strokeWidth={1.75} />
-              <ThemedText.BodySecondary>{formatDelta(percentChange)}</ThemedText.BodySecondary>
-            </Row>
-          </>
-        )
-      }
-    />
+    <TraceEvent
+      events={[BrowserEvent.onClick]}
+      name={SharedEventName.ELEMENT_CLICKED}
+      element={InterfaceElementName.MINI_PORTFOLIO_TOKEN_ROW}
+      properties={{ chain_id: currency.chainId, token_name: token?.name, address: token?.address }}
+    >
+      <PortfolioRow
+        left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size="40px" />}
+        title={<ThemedText.SubHeader fontWeight={500}>{token?.name}</ThemedText.SubHeader>}
+        descriptor={
+          <TokenBalanceText>
+            {formatNumber(quantity, NumberType.TokenNonTx)} {token?.symbol}
+          </TokenBalanceText>
+        }
+        onClick={navigateToTokenDetails}
+        right={
+          denominatedValue && (
+            <>
+              <ThemedText.SubHeader fontWeight={500}>
+                {formatNumber(denominatedValue?.value, NumberType.PortfolioBalance)}
+              </ThemedText.SubHeader>
+              <Row justify="flex-end">
+                <PortfolioArrow change={percentChange} size={20} strokeWidth={1.75} />
+                <ThemedText.BodySecondary>{formatDelta(percentChange)}</ThemedText.BodySecondary>
+              </Row>
+            </>
+          )
+        }
+      />
+    </TraceEvent>
   )
 }

@@ -126,7 +126,7 @@ function parseMigrateCreateV3(
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
 }
 
-function parseLocalActivity(
+export function parseLocalActivity(
   details: TransactionDetails,
   chainId: SupportedChainId,
   tokens: TokenAddressMap

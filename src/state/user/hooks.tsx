@@ -18,7 +18,6 @@ import {
   addSerializedToken,
   updateHideClosedPositions,
   updateHideUniswapWalletBanner,
-  updateTaxServiceAcknowledgments,
   updateUserBuyFiatClicked,
   updateUserClientSideRouter,
   updateUserDeadline,
@@ -80,18 +79,6 @@ export function useBuyFiatClicked(): [boolean | undefined, (buyFiatClicked: bool
     [dispatch]
   )
   return [buyFiatClicked, setBuyFiatClicked]
-}
-
-export function useTaxServiceDismissal(): [number | undefined, (dismissals: number) => void] {
-  const dispatch = useAppDispatch()
-  const taxServiceDismissals = useAppSelector((state) => state.user.taxServiceDismissals)
-  const setDismissals = useCallback(
-    (dismissals: number) => {
-      dispatch(updateTaxServiceAcknowledgments({ taxServiceDismissals: dismissals }))
-    },
-    [dispatch]
-  )
-  return [taxServiceDismissals, setDismissals]
 }
 
 export function useExpertModeManager(): [boolean, () => void] {
