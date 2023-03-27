@@ -1,46 +1,43 @@
-import { Interface } from '@ethersproject/abi'
 import { Token } from '@uniswap/sdk-core'
-import ERC20ABI from 'abis/erc20.json'
-import { Erc20Interface } from 'abis/types/Erc20'
-import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
 import { hasURL } from 'utils/urlChecks'
-
 import { useDefaultActiveTokens } from './Tokens'
+import { useTokenContractsConstant } from './useTokenContractsConstant'
 
-const ERC20Interface = new Interface(ERC20ABI) as Erc20Interface
 
 function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[] {
-  return Array.from(new Set(positions.reduce<string[]>((acc, position) => acc.concat(position.token0, position.token1), [])))
+  return Array.from(
+    new Set(positions.reduce<string[]>((acc, position) => acc.concat(position.token0, position.token1), []))
+  )
 }
 
 export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]): PositionDetails[] {
-  const tokenList = useDefaultActiveTokens()
+  const activeTokensList = useDefaultActiveTokens()
 
   const nonListPositionTokenAddresses = useMemo(
-    () =>
-      getUniqueAddressesFromPositions(positions).filter((address) => !tokenList[address]),
-    [positions, tokenList]
+    () => getUniqueAddressesFromPositions(positions).filter((address) => !activeTokensList[address]),
+    [positions, activeTokensList]
   )
 
-  const results = useMultipleContractSingleData(nonListPositionTokenAddresses, ERC20Interface, 'symbol')
+  const symbols = useTokenContractsConstant(nonListPositionTokenAddresses, 'symbol')
+
   const addressesToSymbol: Record<string, string | undefined> = useMemo(
     () =>
       nonListPositionTokenAddresses.reduce(
         (acc, address, i) => ({
           ...acc,
-          [address]: results[i].result as string | undefined,
+          [address]: symbols[i].result as string | undefined,
         }),
         {}
       ),
-    [nonListPositionTokenAddresses, results]
+    [nonListPositionTokenAddresses, symbols]
   )
   return useMemo(
     () =>
       positions.filter((position) => {
-        const token0FromList = tokenList[position.token0] as Token | undefined
-        const token1FromList = tokenList[position.token1] as Token | undefined
+        const token0FromList = activeTokensList[position.token0] as Token | undefined
+        const token1FromList = activeTokensList[position.token1] as Token | undefined
         const bothTokensInList = token0FromList && token1FromList
         if (bothTokensInList) return true
 
@@ -55,6 +52,6 @@ export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]
         const neitherTokenHasAUrlSymbol = !token0HasUrlSymbol && !token1HasUrlSymbol
         return neitherTokenHasAUrlSymbol
       }),
-    [addressesToSymbol, positions, tokenList]
+    [addressesToSymbol, positions, activeTokensList]
   )
 }
