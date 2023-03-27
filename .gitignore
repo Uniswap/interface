@@ -41,3 +41,7 @@ cypress/videos
 cypress/screenshots
 
 .vercel
+
+#front page test images
+src/components/About/images/nftCard_*.png
+src/components/About/images/swapCard_*.png
