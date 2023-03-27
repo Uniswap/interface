@@ -9,7 +9,7 @@ import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import useENSAvatar from 'hooks/useENSAvatar'
 import React from 'react'
 import { Loader } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 const UnknownContract = styled(UnknownStatus)`
   color: ${({ theme }) => theme.textSecondary};
 `
@@ -57,13 +57,13 @@ const ENSAvatarImg = styled.img`
   width: 40px;
 `
 
-const StyledChainLogo = styled.img<{ isSquare: boolean }>`
-  height: ${({ isSquare }) => (isSquare ? '16px' : '14px')};
-  width: ${({ isSquare }) => (isSquare ? '16px' : '14px')};
+const StyledChainLogo = styled.img<{ $padded: boolean }>`
+  height: ${({ $padded }) => ($padded ? '14px' : '16px')};
+  width: ${({ $padded }) => ($padded ? '14px' : '16px')};
 `
 
-const L2LogoContainer = styled.div<{ nonSquareLogo?: boolean }>`
-  background-color: ${({ theme, nonSquareLogo }) => (nonSquareLogo ? theme.textPrimary : theme.backgroundSurface)};
+const L2LogoContainer = styled.div<{ $backgroundColor?: string }>`
+  background-color: ${({ $backgroundColor }) => $backgroundColor};
   border-radius: 2px;
   height: 16px;
   left: 60%;
@@ -90,6 +90,7 @@ export function PortfolioLogo({
   const { squareLogoUrl, logoUrl } = getChainInfo(chainId)
   const chainLogo = squareLogoUrl ?? logoUrl
   const { avatar, loading } = useENSAvatar(accountAddress, false)
+  const theme = useTheme()
 
   const [src, nextSrc] = useTokenLogoSource(currencies?.[0]?.wrapped.address, chainId, currencies?.[0]?.isNative)
   const [src2, nextSrc2] = useTokenLogoSource(currencies?.[1]?.wrapped.address, chainId, currencies?.[1]?.isNative)
@@ -136,11 +137,11 @@ export function PortfolioLogo({
   }
 
   const L2Logo =
-    chainId === SupportedChainId.MAINNET || !chainLogo ? null : (
-      <L2LogoContainer nonSquareLogo={Boolean(!squareLogoUrl && logoUrl)}>
-        <StyledChainLogo isSquare={!!squareLogoUrl} src={chainLogo} alt="chainLogo" />
+    chainId !== SupportedChainId.MAINNET && chainLogo ? (
+      <L2LogoContainer $backgroundColor={squareLogoUrl ? theme.backgroundSurface : theme.textPrimary}>
+        <StyledChainLogo $padded={!squareLogoUrl} src={chainLogo} alt="chainLogo" />
       </L2LogoContainer>
-    )
+    ) : null
 
   return (
     <StyledLogoParentContainer>
