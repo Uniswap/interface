@@ -7,6 +7,7 @@ import styled, { useTheme } from 'styled-components/macro'
 import { useRemovePopup } from '../../state/application/hooks'
 import { PopupContent } from '../../state/application/reducer'
 import FailedNetworkSwitchPopup from './FailedNetworkSwitchPopup'
+import TransactionPopup from './TransactionPopup'
 
 const StyledClose = styled(X)`
   position: absolute;
@@ -77,7 +78,9 @@ export default function PopupItem({
   })
 
   let popupContent
-  if ('failedSwitchNetwork' in content) {
+  if ('txn' in content) {
+    popupContent = <TransactionPopup hash={content.txn.hash} />
+  } else if ('failedSwitchNetwork' in content) {
     popupContent = <FailedNetworkSwitchPopup chainId={content.failedSwitchNetwork} />
   }
 
