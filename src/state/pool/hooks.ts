@@ -73,6 +73,8 @@ function useStartBlock(chainId: number | undefined): number | undefined {
     registryStartBlock = 34629059
   } else if (chainId === SupportedChainId.POLYGON) {
     registryStartBlock = 35228892
+  } else if (chainId === SupportedChainId.BNB) {
+    registryStartBlock = 25549625
   } else {
     registryStartBlock = undefined
   }
