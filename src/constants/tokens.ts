@@ -570,7 +570,7 @@ export const DEFAULT_OUTPUT_TOKEN_BY_CHAIN: Partial<Record<ChainId, Token>> = {
   [ChainId.AVAXMAINNET]: USDC[ChainId.AVAXMAINNET], // USDC.e
   [ChainId.FANTOM]: USDC[ChainId.FANTOM],
   [ChainId.CRONOS]: USDC[ChainId.CRONOS],
-  [ChainId.ARBITRUM]: USDC[ChainId.ARBITRUM],
+  [ChainId.ARBITRUM]: new Token(ChainId.ARBITRUM, '0x912CE59144191C1204E64559FE8253a0e49E6548', 18, 'ARB', 'Arbitrum'),
   [ChainId.OPTIMISM]: USDC[ChainId.OPTIMISM],
   [ChainId.VELAS]: USDC[ChainId.VELAS],
   [ChainId.AURORA]: USDC[ChainId.AURORA],
