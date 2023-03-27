@@ -3,7 +3,7 @@ import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
-import meshSrc from './images/Mesh.png'
+//import meshSrc from './images/Mesh.png'
 
 const DARK_MODE_GRADIENT = 'radial-gradient(101.8% 4091.31% at 0% 0%, #3e3e3e 0%, #000000 100%)'
 
@@ -92,8 +92,6 @@ const ProtocolBanner = () => {
         <HeaderText color="#ed4e33">Powered by OrbitalApes and the Evmos DAO.</HeaderText>
         <DescriptionText>Community funded. No swap fees. No investment token.</DescriptionText>
       </TextContainer>
-      <BannerButtonContainer>
-      </BannerButtonContainer>
     </Banner>
   )
 }
