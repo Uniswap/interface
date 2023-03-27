@@ -305,7 +305,7 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
   const formattedLogsV1 = useFormattedProposalCreatedLogs(gov, govProposalIndexes, govStartBlock)
 
   // TODO: we must use staked GRG instead
-  const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
+  const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
 
   // early return until events are fetched
   return useMemo(() => {
@@ -315,7 +315,7 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
     const formattedLogs = [...(formattedLogsV1 ?? [])]
 
     if (
-      !uni ||
+      !grg ||
       proposalsCallData.some((p) => p.loading) ||
       proposalStatesCallData.some((p) => p.loading) ||
       (gov && !formattedLogs)
@@ -343,8 +343,8 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
           description: description ?? t`No description.`,
           proposer: proposal?.result?.proposer,
           status: proposalStatesCallData[i]?.result?.[0] ?? ProposalState.UNDETERMINED,
-          forCount: CurrencyAmount.fromRawAmount(uni, proposal?.result?.forVotes),
-          againstCount: CurrencyAmount.fromRawAmount(uni, proposal?.result?.againstVotes),
+          forCount: CurrencyAmount.fromRawAmount(grg, proposal?.result?.forVotes),
+          againstCount: CurrencyAmount.fromRawAmount(grg, proposal?.result?.againstVotes),
           startBlock,
           endBlock: parseInt(proposal?.result?.endBlock?.toString()),
           eta: proposal?.result?.eta,
@@ -354,7 +354,7 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
       }),
       loading: false,
     }
-  }, [formattedLogsV1, gov, proposalStates, proposals, uni])
+  }, [formattedLogsV1, gov, proposalStates, proposals, grg])
 }
 
 export function useProposalData(governorIndex: number, id: string): ProposalData | undefined {
@@ -366,18 +366,18 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
   const latestGovernanceContract = useLatestGovernanceContract()
   const quorumVotes = useSingleCallResult(latestGovernanceContract, 'quorumVotes')?.result?.[0]
   const { chainId } = useWeb3React()
-  const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
+  const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
 
   if (
     !latestGovernanceContract ||
     !quorumVotes ||
     chainId !== SupportedChainId.MAINNET ||
-    !uni ||
+    !grg ||
     governorIndex !== LATEST_GOVERNOR_INDEX
   )
     return undefined
 
-  return CurrencyAmount.fromRawAmount(uni, quorumVotes)
+  return CurrencyAmount.fromRawAmount(grg, quorumVotes)
 }
 
 // get the users delegatee if it exists
