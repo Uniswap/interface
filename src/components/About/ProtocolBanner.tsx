@@ -90,7 +90,7 @@ const ProtocolBanner = () => {
     <Banner isDarkMode={isDarkMode}>
       <TextContainer>
         <HeaderText color="#ed4e33">Powered by OrbitalApes and the Evmos DAO.</HeaderText>
-        <DescriptionText>Community funded. No swap fees. No investment token.</DescriptionText>
+        <DescriptionText>Community funded. No protocol fees.</DescriptionText>
       </TextContainer>
     </Banner>
   )
