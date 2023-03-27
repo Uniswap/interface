@@ -1,5 +1,5 @@
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
@@ -73,6 +73,10 @@ const TopLevelModals = () => {
 }
 
 export default function App() {
+  const { pathname } = useLocation()
+  const showFallbackRoute =
+    !pathname.includes('swap') && !pathname.includes('limitorder') && !pathname.includes('balance')
+
   return (
     <ErrorBoundary>
       <Route component={GoogleAnalyticsReporter} />
@@ -80,8 +84,8 @@ export default function App() {
       <Route component={ApeModeQueryParamReader} />
       <Web3ReactManager>
         <Switch>
-          <Route path="/darkswapwidget/" component={SwapWidget} />
-          <Route path="/lightswapwidget/" component={SwapWidget} />
+          <Route exact strict path="/darkswapwidget" component={SwapWidget} />
+          <Route exact strict path="/lightswapwidget" component={SwapWidget} />
           <AppWrapper>
             <HeaderWrapper>
               <Header />
@@ -99,7 +103,7 @@ export default function App() {
               <Route exact strict path="/limitorder" component={LimitOrder} />
               <Route exact strict path="/limitorder/:tokenId" component={PositionPage} />
               <Route exact strict path="/swap" component={Market} />
-              <Route component={RedirectPathToLimitOrderOnly} />
+              {showFallbackRoute && <Route component={RedirectPathToLimitOrderOnly} />}
             </BodyWrapper>
           </AppWrapper>
         </Switch>
