@@ -9,9 +9,10 @@ import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import Activity from './Activity'
+import { ActivityTab } from './Activity/ActivityTab'
 import NFTs from './NFTs'
 import Pools from './Pools'
+import { PortfolioRowWrapper } from './PortfolioRow'
 import Tokens from './Tokens'
 
 const Wrapper = styled(Column)`
@@ -20,6 +21,12 @@ const Wrapper = styled(Column)`
   flex-direction: column;
   height: 100%;
   gap: 12px;
+
+  ${PortfolioRowWrapper} {
+    &:hover {
+      background: ${({ theme }) => theme.hoverDefault};
+    }
+  }
 `
 
 const Nav = styled(AutoRow)`
@@ -60,7 +67,7 @@ const Pages: Array<Page> = [
   { title: <Trans>Pools</Trans>, component: Pools, loggingElementName: InterfaceElementName.MINI_PORTFOLIO_POOLS_TAB },
   {
     title: <Trans>Activity</Trans>,
-    component: Activity,
+    component: ActivityTab,
     loggingElementName: InterfaceElementName.MINI_PORTFOLIO_ACTIVITY_TAB,
   },
 ]
