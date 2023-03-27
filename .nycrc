@@ -1,0 +1,7 @@
+{
+  "extends": "@istanbuljs/nyc-config-typescript",
+  "all": true,
+  "report-dir": "coverage",
+  "soureMap": false,
+  "instrument": false
+}
