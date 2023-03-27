@@ -1,13 +1,13 @@
 /** Notifications */
 export enum NotificationType {
-  swapSubmitting = 'swapSubmitting',
-  swapInProgress = 'swapInProgress',
-  swapComplete = 'swapComplete',
-  swapFailed = 'swapFailed',
-  swapCancelled = 'swapCancelled',
-  approvalPending = 'approvalPending',
-  approvalComplete = 'approvalComplete',
-  approvalFailed = 'approvalFailed',
+  ApprovalComplete = 'approvalComplete',
+  ApprovalFailed = 'approvalFailed',
+  ApprovalPending = 'approvalPending',
+  SwapCancelled = 'swapCancelled',
+  SwapComplete = 'swapComplete',
+  SwapFailed = 'swapFailed',
+  SwapInProgress = 'swapInProgress',
+  SwapSubmitting = 'swapSubmitting',
 }
 
 export interface BaseNotification {
@@ -25,22 +25,22 @@ export interface ApprovalNotification extends BaseNotification {
 }
 
 export interface SwapSubmittingNotification extends SwapNotification {
-  type: NotificationType.swapSubmitting
+  type: NotificationType.SwapSubmitting
 }
 export interface SwapInProgressNotification extends SwapNotification {
-  type: NotificationType.swapInProgress
+  type: NotificationType.SwapInProgress
 }
 
 export interface SwapCompleteNotification extends SwapNotification {
-  type: NotificationType.swapComplete
+  type: NotificationType.SwapComplete
 }
 
 export interface SwapFailedNotification extends SwapNotification {
-  type: NotificationType.swapFailed
+  type: NotificationType.SwapFailed
 }
 
 export interface SwapCancelledNotification extends SwapNotification {
-  type: NotificationType.swapCancelled
+  type: NotificationType.SwapCancelled
 }
 
 export type Notification =

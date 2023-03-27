@@ -54,7 +54,7 @@ export class WebKeyring implements IKeyring {
    * Derives private key from mnemonic with derivation index 0 and retrieves
    * associated public address. Stores imported mnemonic in store with the
    * mnemonic ID key as the public address.
-   
+
    * @param mnemonic The mnemonic phrase to import
    * @returns public address from the mnemonic's first derived private key
    */
@@ -74,7 +74,7 @@ export class WebKeyring implements IKeyring {
 
   /**
    Generates a new mnemonic and retrieves associated public address. Stores new mnemonic in native keychain with the mnemonic ID key as the public address.
-   
+
    @returns public address from the mnemonic's first derived private key
    */
   async generateAndStoreMnemonic(): Promise<string> {
@@ -179,35 +179,35 @@ export class WebKeyring implements IKeyring {
     }
   }
 
-  private async retrievePrivateKey(
-    address: string
-  ): Promise<string | undefined> {
-    const key = this.keyForPrivateKey(address)
-    return (await this.store.get([key]))[key]
-  }
+  // private async retrievePrivateKey(
+  //   address: string
+  // ): Promise<string | undefined> {
+  //   const key = this.keyForPrivateKey(address)
+  //   return (await this.store.get([key]))[key]
+  // }
 
   private keyForPrivateKey(address: string): string {
     return entirePrivateKeyPrefix + address
   }
 
   signTransactionHashForAddress(
-    address: string,
-    hash: string,
-    chainId: number
+    _address: string,
+    _hash: string,
+    _chainId: number
   ): Promise<string> {
     // return RNEthersRS.signTransactionHashForAddress(address, hash, chainId)
     return Promise.resolve('')
   }
 
-  signMessageForAddress(address: string, message: string): Promise<string> {
+  signMessageForAddress(_address: string, _message: string): Promise<string> {
     // return RNEthersRS.signMessageForAddress(address, message)
     return Promise.resolve('')
   }
 
   signHashForAddress(
-    address: string,
-    hash: string,
-    chainId: number
+    _address: string,
+    _hash: string,
+    _chainId: number
   ): Promise<string> {
     // return RNEthersRS.signHashForAddress(address, hash, chainId)
     return Promise.resolve('')

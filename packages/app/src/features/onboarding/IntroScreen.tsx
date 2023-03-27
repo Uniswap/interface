@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Text } from 'ui/src'
-import { useTranslation } from 'react-i18next'
 import {
   Button,
   Card,
@@ -24,7 +23,6 @@ const DUMMY_SEED_PHRASE =
   'stereo gain space check elbow say usual help cinnamon inquiry snap expose'
 
 export function IntroScreen(): JSX.Element {
-  const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
   const [mnemonic, setMnemonic] = useState(DUMMY_SEED_PHRASE)
@@ -34,12 +32,11 @@ export function IntroScreen(): JSX.Element {
     <Card alignItems="center" backgroundColor="$background0">
       <Card.Header padded alignItems="center">
         <Circle backgroundColor="$brandedAccentSoft" height={60} width={60} />
-        <H2>{t('Say hello to your new wallet')}</H2>
+        <H2>Say hello to your new wallet</H2>
 
         <Paragraph>
-          {t(
-            'It has a public address for making transactions, and a nickname that’s only visible to you.'
-          )}
+          It has a public address for making transactions, and a nickname that’s
+          only visible to you.
         </Paragraph>
       </Card.Header>
 
@@ -54,19 +51,19 @@ export function IntroScreen(): JSX.Element {
         <input
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e): void => setPassword(e.target.value)}
         />
         <Button
-          onPress={() => {
+          onPress={(): void => {
             dispatch(authActions.trigger({ password }))
           }}>
           <Text>Unlock</Text>
         </Button>
 
-        <H1>{t('Import wallet')}</H1>
+        <H1>Import wallet</H1>
 
         <Form
-          onSubmit={() => {
+          onSubmit={(): void => {
             dispatch(
               importAccountActions.trigger({
                 type: ImportAccountType.Mnemonic,
@@ -85,7 +82,7 @@ export function IntroScreen(): JSX.Element {
               />
             </XStack>
             <Form.Trigger asChild>
-              <Button>{t('Import')}</Button>
+              <Button>Import</Button>
             </Form.Trigger>
           </YStack>
         </Form>

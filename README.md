@@ -148,7 +148,7 @@ The dependency graph looks like this:
 
 3. Commits his changes
   - commit messages must respect the [conventional commit format](https://github.com/conventional-changelog/commitlint#what-is-commitlint), eg: `fix(login screen): adjusted font size`
-  - on commit, husky runs `npx lint-staged --allow-empty && yarn g:run-all-checks`, where the checks are: `turbo run typecheck lint format:check test build --parallel --since=HEAD^1`
+  - on commit, husky runs `npx lint-staged --allow-empty && yarn g:run-all-checks`, where the checks are: `turbo run typecheck lint test build --parallel --since=HEAD^1`
 4. Pushes his changes and opens a new PR
 - Gihub Actions kick in: 
   - `ci-build-test.yml`: runs Typecheck, Lint, Format check, Build, Unit tests for all configured packages

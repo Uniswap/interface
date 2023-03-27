@@ -16,6 +16,7 @@ import {
   SignTransactionResponse,
 } from '../types/messageTypes'
 import { v4 as uuidv4 } from 'uuid'
+import { logger } from 'app/src/features/logger/logger'
 
 export type EthersSendCallback = (error: unknown, response: unknown) => void
 
@@ -67,13 +68,13 @@ const messages = {
   },
 }
 
-const originRequiresMetaMask = [
-  'opensea.io',
-  'matcha.xyz',
-  'kwenta.io',
-  'etherscan.io',
-  'uniswap.org',
-]
+// const originRequiresMetaMask = [
+//   'opensea.io',
+//   'matcha.xyz',
+//   'kwenta.io',
+//   'etherscan.io',
+//   'uniswap.org',
+// ]
 
 export interface BaseProviderState {
   isConnected: boolean
@@ -288,7 +289,11 @@ export class UniswapInjectedProvider extends EventEmitter {
       try {
         rpcResult = await func(...(<[]>(params ? params : [])))
       } catch (error) {
-        console.error('rpc response error', error)
+        logger.error(
+          'UniswapInjectedProvider',
+          'rpc response error',
+          `${error}`
+        )
         return reject(error)
       }
       return resolve(rpcResult)
@@ -318,7 +323,7 @@ export class UniswapInjectedProvider extends EventEmitter {
       'b14063d3418c40ec984f510cf64083b4'
     )
 
-    console.log('chain changed', chainId)
+    logger.info('UniswapInjectedProvider', 'chain changed', chainId)
 
     // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#chainchanged
     this.emit('chainChanged', chainId)

@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  extends: ['universe/native', 'custom'],
+  extends: ['custom'],
   ignorePatterns: [
     'node_modules',
     '.expo',

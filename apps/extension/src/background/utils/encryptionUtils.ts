@@ -66,10 +66,8 @@ export async function decryptPassword(
       key,
       cipherText
     )
-    console.log('password is correct', new TextDecoder().decode(result))
     return result
   } catch (e) {
-    console.log('password is incorrect')
     return undefined
   }
 }

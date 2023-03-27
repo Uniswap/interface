@@ -6,12 +6,12 @@
     "app": "workspace:^",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-native": "0.70.5",
+    "react-native": "^0.71.4",
     "react-native-web": "^0.18.12",
     "ui": "workspace:^"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.9",
+    "@babel/core": "^7.19.3",
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
@@ -45,8 +45,6 @@
     "build": "TAMAGUI_TARGET=web build-storybook -s public -o dist",
     "build-storybook": "TAMAGUI_TARGET=web build-storybook -s public -o dist",
     "chromatic": "chromatic --exit-zero-on-changes",
-    "format": "prettier --write \"**/*.{ts,tsx}\"",
-    "format:check": "prettier -c \"**/*.{ts,tsx}\"",
     "lint": "eslint . --ext ts,tsx",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "publish": "dotenv -- npx chromatic",

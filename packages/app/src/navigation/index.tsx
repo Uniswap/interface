@@ -1,12 +1,10 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { authSagaName } from '../features/auth/saga'
 import { HomeScreen } from '../features/home/HomeScreen'
 import { IntroScreen } from '../features/onboarding/IntroScreen'
-import { useAppSelector } from '../state'
-import { OnboardingScreen, Screen } from './screens'
 import { useSagaStatus } from '../state/useSagaStatus'
-import { authSagaName } from '../features/auth/saga'
 import { SagaStatus } from '../utils/saga'
-import Locked from '../features/auth/Locked'
+import { OnboardingScreen, Screen } from './screens'
 import { AppStackParamList, OnboardingStackParamList } from './types'
 
 const AppStack = createNativeStackNavigator<AppStackParamList>()

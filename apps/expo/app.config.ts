@@ -1,4 +1,3 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
 import { ConfigContext, ExpoConfig } from '@expo/config'
 import dotenv from 'dotenv'
 

@@ -103,7 +103,7 @@ export class PersistedStorage {
 
   public static async setSessionStorage(
     key: string,
-    value: any
+    value: unknown
   ): Promise<void> {
     return new Promise((resolve, reject) => {
       chrome.storage.local.set({ [key]: value }, () => {

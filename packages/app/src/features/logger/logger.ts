@@ -1,7 +1,5 @@
 /* eslint-disable no-console */
 
-import { isTest } from '../../utils/environment'
-
 type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 
 /**

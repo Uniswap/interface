@@ -19,7 +19,7 @@ function Locked(): JSX.Element {
       <input
         type="password"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e): void => setPassword(e.target.value)}
       />
       <Button onPress={onPress}>
         <Text>Unlock</Text>

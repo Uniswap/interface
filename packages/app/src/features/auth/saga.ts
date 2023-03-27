@@ -11,7 +11,7 @@ function* auth({ password }: AuthParams) {
 }
 
 function decryptPassword(password: string) {
-  console.log('decryptingPassword', password)
+  logger.debug('saga', 'decryptingPassword', password)
 }
 
 export const {

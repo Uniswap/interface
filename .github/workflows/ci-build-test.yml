@@ -3,19 +3,19 @@ name: CI-Build-Test
 on:
   workflow_call:
 
-  # pull_request:
-  #   types:
-  #     - opened
-  #     - synchronize
-  #     - reopened
-  #   paths:
-  #     - 'apps/**'
-  #     - 'packages/**'
-  #     - 'package.json'
-  #     - '*.lock'
-  #     - '.yarnrc.yml'
-  #     - '.prettier*'
-  #     - '.github/**'
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    paths:
+      - 'apps/**'
+      - 'packages/**'
+      - 'package.json'
+      - '*.lock'
+      - '.yarnrc.yml'
+      - '.prettier*'
+      - '.github/**'
 
 jobs:
   build-and-test:
@@ -47,9 +47,6 @@ jobs:
 
       - name: 🔬 Lint
         run: yarn g:lint
-
-      - name: 📐 Format check
-        run: yarn g:format:check
 
       - name: 🏗 Build
         run: yarn g:build

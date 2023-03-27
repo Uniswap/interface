@@ -30,8 +30,6 @@
   "private": true,
   "scripts": {
     "build": "tamagui-build",
-    "format": "prettier --write \"**/*.{ts,tsx}\"",
-    "format:check": "prettier -c \"**/*.{ts,tsx}\"",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "typecheck": "tsc -b",
