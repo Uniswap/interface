@@ -475,5 +475,5 @@ export const isChristmasTime = () => {
 
 export const getLimitOrderContract = (chainId: ChainId) => {
   const { production, development } = NETWORKS_INFO_CONFIG[chainId]?.limitOrder ?? {}
-  return [ENV_TYPE.PROD, ENV_TYPE.ADPR].includes(ENV_LEVEL) ? production : development
+  return [ENV_TYPE.PROD, ENV_TYPE.STG].includes(ENV_LEVEL) ? production : development
 }
