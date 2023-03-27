@@ -18,6 +18,7 @@ import { useIsDarkMode } from 'state/user/hooks'
 import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import headerBG from './images/forge-header.png'
 
 const PageContainer = styled.div<{ isDarkMode: boolean }>`
   position: absolute;
@@ -29,7 +30,6 @@ const PageContainer = styled.div<{ isDarkMode: boolean }>`
   align-items: center;
   scroll-behavior: smooth;
   overflow-x: hidden;
-
   background: linear-gradient(0deg, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.7));
 `
 
@@ -38,15 +38,16 @@ const Gradient = styled.div<{ isDarkMode: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  top: 0;
+  top: 0px;
   bottom: 0;
   width: 100%;
   min-height: 550px;
-  background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgb(0 0 0 / 100%) 45%);
-  z-index: ${Z_INDEX.under_dropdown};
+  background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgb(0 0 0 / 80%) 45%);
+    z-index: ${Z_INDEX.under_dropdown};
   pointer-events: none;
   height: ${({ theme }) => `calc(100vh - ${theme.mobileBottomBarHeight}px)`};
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+    top: 72px;
     height: 100vh;
   }
 `
@@ -69,6 +70,7 @@ const GlowContainer = styled.div`
 const Glow = styled.div`
   position: absolute;
   top: 68px;
+  opacity: 0.5;
   bottom: 0;
   background: radial-gradient(72.04% 72.04% at 50% 3.99%, #ed4e33 0%, rgba(166, 151, 255, 0) 100%);
   filter: blur(72px);
@@ -86,8 +88,8 @@ const ContentContainer = styled.div<{ isDarkMode: boolean }>`
   justify-content: flex-end;
   width: 100%;
   padding: 0 0 40px;
-  max-width: min(720px, 90%);
   min-height: 500px;
+  max-width: min(720px, 90%);
   z-index: ${Z_INDEX.under_dropdown};
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
   height: ${({ theme }) => `calc(100vh - ${theme.navHeight + theme.mobileBottomBarHeight}px)`};
@@ -104,9 +106,10 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
   font-weight: 700;
   text-align: center;
   margin: 0 0 24px;
+  text-transform: uppercase;
   background: ${({ isDarkMode }) =>
     isDarkMode
-      ? 'linear-gradient(20deg, rgba(255, 244, 207, 1) 10%, rgba(237, 78, 51, 1) 100%)'
+      ? 'linear-gradient(20deg, rgba(255, 244, 207, 1) 10%, rgba(237, 78, 51, 1) 80%)'
       : 'linear-gradient(10deg, rgba(255,79,184,1) 0%, rgba(255,159,251,1) 100%)'};
   background-clip: text;
   -webkit-background-clip: text;
@@ -117,13 +120,13 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
   }
 
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
-    font-size: 64px;
-    line-height: 72px;
+    font-size: 54px;
+    line-height: 62px;
   }
 `
 
 const SubText = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
+  color: #faf1e4;
   font-size: 16px;
   line-height: 24px;
   font-weight: 500;
@@ -148,7 +151,7 @@ const LandingButton = styled(BaseButton)`
 `
 
 const ButtonCTA = styled(LandingButton)`
-  background: linear-gradient(93.06deg, #ed4e33 2.66%, #4f4740 98.99%);
+  background: linear-gradient(93.06deg, #ed4e33 12.66%, #531c12 98.99%);
   border: none;
   color: ${({ theme }) => theme.white};
   transition: ${({ theme }) => `all ${theme.transition.duration.medium} ${theme.transition.timing.ease}`};
@@ -177,7 +180,7 @@ const ActionsContainer = styled.span`
 
 const LearnMoreContainer = styled.div`
   align-items: center;
-  color: ${({ theme }) => theme.textTertiary};
+  color: #faf1e4;
   cursor: pointer;
   font-size: 20px;
   font-weight: 600;
@@ -247,14 +250,21 @@ const LandingSwapContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 1;
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    z-index: 1;
+    background-image: url(${headerBG});
+    background-size: cover;
+    background-position: -200px center;
+    height: 100vh !important;
+    }
 `
 
 const SwapCss = css`
   * {
     pointer-events: none;
   }
-
+  transform: scale(0.95);
   &:hover {
     transform: translateY(-4px);
     transition: ${({ theme }) => `transform ${theme.transition.duration.medium} ${theme.transition.timing.ease}`};
@@ -296,7 +306,7 @@ export default function Landing() {
     ignoreQueryPrefix: true,
   })
 
-  const swapWidgetEnabled = useSwapWidgetEnabled()
+  const swapWidgetEnabled = false
 
   // This can be simplified significantly once the flag is removed! For now being explicit is clearer.
   useEffect(() => {
@@ -318,13 +328,13 @@ export default function Landing() {
               element={InterfaceElementName.LANDING_PAGE_SWAP_ELEMENT}
             >
               {swapWidgetEnabled ? (
-                <WidgetLandingLink to="/swap">
-                  <Swap />
-                </WidgetLandingLink>
-              ) : (
                 <Link to="/swap">
                   <LandingSwap intro={true} />
                 </Link>
+              ) : (
+              <Link to="/swap">
+                <LandingSwap intro={true} />
+              </Link>
               )}
             </TraceEvent>
           </LandingSwapContainer>

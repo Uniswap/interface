@@ -54,7 +54,7 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://evm.evmos.dev/',
     explorer: 'https://evm.evmos.dev/',
     infoLink: '',
-    label: 'Test Evmos',
+    label: 'Evmos Testnet',
     logoUrl: 'https://raw.githubusercontent.com/cosmos/chain-registry/master/evmos/images/evmos.png',
     circleLogoUrl: 'https://raw.githubusercontent.com/cosmos/chain-registry/master/evmos/images/evmos.png',
     nativeCurrency: { name: 'Test Evmos', symbol: 'TEVMOS', decimals: 18 },
