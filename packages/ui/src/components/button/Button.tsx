@@ -1,6 +1,5 @@
-import { StackProps } from '@tamagui/core'
-import { Stack, styled } from '@tamagui/core'
-import { PropsWithChildren } from 'react'
+import { Stack, styled } from 'tamagui'
+import { ComponentProps, PropsWithChildren } from 'react'
 import { Text } from '../text/Text'
 
 export const ButtonFrame = styled(Stack, {
@@ -34,7 +33,7 @@ export const ButtonText = styled(Text, {
 export function Button({
   children,
   ...props
-}: PropsWithChildren<StackProps>): JSX.Element {
+}: PropsWithChildren<ComponentProps<typeof ButtonFrame>>): JSX.Element {
   return (
     <ButtonFrame {...props}>
       <ButtonText>{children}</ButtonText>

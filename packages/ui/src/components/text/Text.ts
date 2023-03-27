@@ -1,4 +1,4 @@
-import { styled, Text as TamaguiText } from '@tamagui/core'
+import { styled, Text as TamaguiText } from 'tamagui'
 
 export const Text = styled(TamaguiText, {
   name: 'Text',

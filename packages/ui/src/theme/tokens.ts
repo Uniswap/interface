@@ -1,4 +1,4 @@
-import { createTokens } from '@tamagui/core'
+import { createTokens } from 'tamagui'
 import { color } from './color'
 
 const space = {
@@ -13,6 +13,7 @@ const space = {
   spacing36: 36,
   spacing48: 48,
   spacing60: 60,
+  true: 16,
 }
 
 const size = space
@@ -53,17 +54,7 @@ const radius = {
 }
 
 // Standard z-index system https://getbootstrap.com/docs/5.0/layout/z-index/
-const zIndex = {
-  background: 0,
-  dropdown: 1000,
-  sticky: 1020,
-  fixed: 1030,
-  modalBackdrop: 1040,
-  offcanvas: 1050,
-  modal: 1060,
-  popover: 1070,
-  tooltip: 1080,
-}
+const zIndex = space
 
 export const tokens = createTokens({
   color,

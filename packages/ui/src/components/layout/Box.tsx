@@ -1,3 +1,3 @@
-import { Stack } from '@tamagui/core'
+import { Stack } from 'tamagui'
 
 export const Box = Stack

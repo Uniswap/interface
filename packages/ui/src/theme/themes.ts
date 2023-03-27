@@ -1,6 +1,6 @@
 // Tamagui syntax for defining sub-themes
 
-import { createTheme } from '@tamagui/core'
+import { createTheme } from 'tamagui'
 import { colorsDark, colorsLight } from './color'
 
 // TODO: use tokens.color instead of colorsLight/Dark

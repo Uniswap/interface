@@ -1,6 +1,6 @@
 // consider compile-time babel plugin
 import { opacify } from 'polished'
-import { createTheme } from '@tamagui/core'
+import { createTheme } from 'tamagui'
 
 export const color = {
   white: '#FFFFFF',

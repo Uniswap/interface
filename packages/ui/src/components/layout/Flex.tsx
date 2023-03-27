@@ -1,4 +1,4 @@
-import { Stack, styled } from '@tamagui/core'
+import { Stack, styled } from 'tamagui'
 
 export const Flex = styled(Stack, {
   name: 'Flex',

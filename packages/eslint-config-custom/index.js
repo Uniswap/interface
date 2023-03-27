@@ -96,6 +96,10 @@ module.exports = {
             importNames: ['logException'],
             message: 'Please use `logger.error` instead.',
           },
+          {
+            name: '@tamagui/core',
+            message: "Please import from 'tamagui' direcly to prevent mismatches.",
+          }
         ],
       },
     ],
