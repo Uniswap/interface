@@ -18,7 +18,6 @@ import JSBI from 'jsbi'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
 import ReactGA from 'react-ga'
-import { useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useDerivedMarketInfo, useMarketActionHandlers, useMarketState } from 'state/market/hooks'
 import { SwapTransaction, V3TradeState } from 'state/validator/types'
@@ -339,13 +338,13 @@ export default function SwapWidget() {
   const { address: recipientAddress } = useENSAddress(recipient)
 
   const [darkMode, toggleSetDarkMode] = useDarkModeManager()
-  const { themeMode } = useParams<{ themeMode: string }>()
+  const { pathname } = window.location
 
-  if (darkMode && themeMode === 'light') {
+  if (darkMode && pathname.includes('lightswapwidget')) {
     toggleSetDarkMode()
   }
 
-  if (!darkMode && themeMode === 'dark') {
+  if (!darkMode && pathname.includes('darkswapwidget')) {
     toggleSetDarkMode()
   }
 
