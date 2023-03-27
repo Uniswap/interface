@@ -15,8 +15,8 @@ export enum SupportedChainId {
 
 export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.MAINNET]: 'evmos',
-  [SupportedChainId.FUJI]: 'fuji',
-  [SupportedChainId.OPTIMISM]: 'optimism',
+  //[SupportedChainId.FUJI]: 'fuji',
+  //[SupportedChainId.OPTIMISM]: 'optimism',
   [SupportedChainId.TESTNET]: 'tevmos',
 }
 
