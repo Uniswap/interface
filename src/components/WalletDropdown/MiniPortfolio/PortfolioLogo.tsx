@@ -57,9 +57,9 @@ const ENSAvatarImg = styled.img`
   width: 40px;
 `
 
-const StyledChainLogo = styled.img<{ $padded: boolean }>`
-  height: ${({ $padded }) => ($padded ? '14px' : '16px')};
-  width: ${({ $padded }) => ($padded ? '14px' : '16px')};
+const StyledChainLogo = styled.img<{ $fillParent: boolean }>`
+  height: ${({ $fillParent }) => ($fillParent ? '100%' : '14px')};
+  width: ${({ $fillParent }) => ($fillParent ? '100%' : '14px')};
 `
 
 const L2LogoContainer = styled.div<{ $backgroundColor?: string }>`
@@ -139,7 +139,7 @@ export function PortfolioLogo({
   const L2Logo =
     chainId !== SupportedChainId.MAINNET && chainLogo ? (
       <L2LogoContainer $backgroundColor={squareLogoUrl ? theme.backgroundSurface : theme.textPrimary}>
-        <StyledChainLogo $padded={!squareLogoUrl} src={chainLogo} alt="chainLogo" />
+        <StyledChainLogo $fillParent={Boolean(squareLogoUrl)} src={chainLogo} alt="chainLogo" />
       </L2LogoContainer>
     ) : null
 
