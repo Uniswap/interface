@@ -45,12 +45,12 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
 
   return (
     <StyledPriceContainer onClick={flipPrice} title={text}>
-      <Text fontWeight={500} fontSize={16} color={theme.text1}>
+      <Text fontWeight={400} fontSize={14} color={theme.text1}>
         {text}
       </Text>
       {usdcPrice && (
         <TYPE.small color={theme.text2}>
-          <Trans>${usdcPrice.toSignificant(6, { groupSeparator: ',' })}</Trans>
+          <Trans>(${usdcPrice.toSignificant(6, { groupSeparator: ',' })})</Trans>
         </TYPE.small>
       )}
     </StyledPriceContainer>

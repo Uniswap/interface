@@ -87,7 +87,7 @@ export default function MarketModalHeader({
 }) {
   const theme = useContext(ThemeContext)
 
-  const [showInverted, setShowInverted] = useState<boolean>(false)
+  const [showInverted, setShowInverted] = useState<boolean>(true)
 
   const fiatValueInput = useUSDCValue(trade.inputAmount)
   const fiatValueOutput = useUSDCValue(trade.outputAmount)

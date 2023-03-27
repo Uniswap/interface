@@ -15,10 +15,10 @@ import { SupportedChainId } from 'constants/chains'
 import { CHAIN_NATIVE_TOKEN_SYMBOL, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useMarketCallback } from 'hooks/useMarketCallback'
 import JSBI from 'jsbi'
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
 import ReactGA from 'react-ga'
-import { RouteComponentProps } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useDerivedMarketInfo, useMarketActionHandlers, useMarketState } from 'state/market/hooks'
 import { SwapTransaction, V3TradeState } from 'state/validator/types'
@@ -339,13 +339,13 @@ export default function SwapWidget() {
   const { address: recipientAddress } = useENSAddress(recipient)
 
   const [darkMode, toggleSetDarkMode] = useDarkModeManager()
-  const { pathname } = window.location
+  const { themeMode } = useParams<{ themeMode: string }>()
 
-  if (darkMode && pathname.includes('light')) {
+  if (darkMode && themeMode === 'light') {
     toggleSetDarkMode()
   }
 
-  if (!darkMode && pathname.includes('dark')) {
+  if (!darkMode && themeMode === 'dark') {
     toggleSetDarkMode()
   }
 
@@ -527,7 +527,7 @@ export default function SwapWidget() {
   ])
 
   // errors
-  const [showInverted, setShowInverted] = useState<boolean>(false)
+  const [showInverted, setShowInverted] = useState<boolean>(true)
 
   // warnings on the greater of fiat value price impact and execution price impact
   const priceImpactSeverity = useMemo(() => {
@@ -582,7 +582,7 @@ export default function SwapWidget() {
 
   const handleInputSelect = useCallback(
     (inputCurrency) => {
-      setApprovalSubmitted(false) // reset 2 step UI for approvals
+      setApprovalSubmitted(false)
       onCurrencySelection(Field.INPUT, inputCurrency)
     },
     [onCurrencySelection]
@@ -625,12 +625,10 @@ export default function SwapWidget() {
       <StyledSwap>
         <AppBody>
           <WidgetHeader>
-            <a href="https://app.kromatika.finance" style={{ all: 'unset' }}>
-              <PoweredBy>
-                <Text>Powered by</Text>
-                <img src={KromLogo} alt="KROM Logo" height="24px" />
-              </PoweredBy>
-            </a>
+            <PoweredBy>
+              <Text>Powered by</Text>
+              <img src={KromLogo} alt="KROM Logo" height="24px" />
+            </PoweredBy>
             <MarketHeader allowedSlippage={allowedSlippage} />
           </WidgetHeader>
           <Wrapper id="swap-page">
@@ -660,49 +658,53 @@ export default function SwapWidget() {
               routeIsNotFound={routeNotFound}
             />
             <AutoColumn gap={'md'}>
-              <CurrencyInputPanel
-                actionLabel={t`You sell`}
-                label={
-                  independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
-                }
-                value={formattedAmounts[Field.INPUT]}
-                showMaxButton={showMaxButton}
-                currency={currencies[Field.INPUT]}
-                onUserInput={handleTypeInput}
-                onMax={handleMaxInput}
-                fiatValue={fiatValueInput ?? undefined}
-                onCurrencySelect={handleInputSelect}
-                otherCurrency={currencies[Field.OUTPUT]}
-                showCommonBases={true}
-                id="swap-currency-input"
-                loading={independentField === Field.OUTPUT && routeIsSyncing}
-              />
-              <ArrowWrapper clickable>
-                <ArrowDown
-                  size="16"
-                  onClick={() => {
-                    setApprovalSubmitted(false) // reset 2 step UI for approvals
-                    onSwitchTokens()
-                  }}
-                  color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
+              <div style={{ display: 'relative' }}>
+                <CurrencyInputPanel
+                  actionLabel={t`You sell`}
+                  label={
+                    independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
+                  }
+                  value={formattedAmounts[Field.INPUT]}
+                  showMaxButton={showMaxButton}
+                  currency={currencies[Field.INPUT]}
+                  onUserInput={handleTypeInput}
+                  onMax={handleMaxInput}
+                  fiatValue={fiatValueInput ?? undefined}
+                  onCurrencySelect={handleInputSelect}
+                  otherCurrency={currencies[Field.OUTPUT]}
+                  showCommonBases={true}
+                  id="swap-currency-input"
+                  loading={independentField === Field.OUTPUT && routeIsSyncing}
                 />
-              </ArrowWrapper>
-              <CurrencyInputPanel
-                actionLabel={t`You buy`}
-                value={formattedAmounts[Field.OUTPUT]}
-                onUserInput={handleTypeOutput}
-                label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
-                showMaxButton={false}
-                hideBalance={false}
-                fiatValue={fiatValueOutput ?? undefined}
-                priceImpact={priceImpact}
-                currency={currencies[Field.OUTPUT]}
-                onCurrencySelect={handleOutputSelect}
-                otherCurrency={currencies[Field.INPUT]}
-                showCommonBases={true}
-                id="swap-currency-output"
-                loading={independentField === Field.INPUT && routeIsSyncing}
-              />
+                <ArrowWrapper clickable>
+                  <ArrowDown
+                    size="16"
+                    onClick={() => {
+                      setApprovalSubmitted(false) // reset 2 step UI for approvals
+                      onSwitchTokens()
+                    }}
+                    color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
+                  />
+                </ArrowWrapper>
+                <CurrencyInputPanel
+                  actionLabel={t`You buy`}
+                  value={formattedAmounts[Field.OUTPUT]}
+                  onUserInput={handleTypeOutput}
+                  label={
+                    independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>
+                  }
+                  showMaxButton={false}
+                  hideBalance={false}
+                  fiatValue={fiatValueOutput ?? undefined}
+                  priceImpact={priceImpact}
+                  currency={currencies[Field.OUTPUT]}
+                  onCurrencySelect={handleOutputSelect}
+                  otherCurrency={currencies[Field.INPUT]}
+                  showCommonBases={true}
+                  id="swap-currency-output"
+                  loading={independentField === Field.INPUT && routeIsSyncing}
+                />
+              </div>
               {recipient !== null && !showWrap ? (
                 <>
                   <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
@@ -719,9 +721,63 @@ export default function SwapWidget() {
               {!showWrap && trade && (
                 <AutoColumn gap="sm">
                   <RowBetween>
-                    <TYPE.body color={theme.text2} fontWeight={400} fontSize={14} justifyContent="end">
-                      <Trans>Price</Trans>
-                    </TYPE.body>
+                    <RowFixed>
+                      <MouseoverTooltipContent
+                        wrap={false}
+                        content={
+                          <ResponsiveTooltipContainer origin="top right" width={'295px'}>
+                            <Row justify={!trade ? 'center' : 'space-between'}>
+                              <RowFixed>
+                                <Text fontSize={14} fontWeight={400}>
+                                  <Trans>Allowed Slippage:</Trans>
+                                </Text>
+                              </RowFixed>
+                              <RowFixed>
+                                <Text fontSize={14} fontWeight={400}>
+                                  <Trans>{allowedSlippage.toSignificant(2)}%</Trans>
+                                </Text>
+                              </RowFixed>
+                            </Row>
+                            <Row justify={!trade ? 'center' : 'space-between'}>
+                              <RowFixed>
+                                <Text fontSize={14} fontWeight={400}>
+                                  <Trans>Minimum Received:</Trans>
+                                </Text>
+                              </RowFixed>
+                              <RowFixed>
+                                <Text fontSize={14} fontWeight={400}>
+                                  {isGaslessMode ? (
+                                    <span>
+                                      {amountToReceive?.toSignificant(6)} {trade?.outputAmount.currency.symbol}
+                                    </span>
+                                  ) : (
+                                    <span>
+                                      {trade
+                                        ? `${trade?.minimumAmountOut(allowedSlippage).toSignificant(4)} ${
+                                            trade?.outputAmount.currency.symbol
+                                          }`
+                                        : '-'}
+                                    </span>
+                                  )}
+                                </Text>
+                              </RowFixed>
+                            </Row>
+                          </ResponsiveTooltipContainer>
+                        }
+                        placement="bottom"
+                        onOpen={() =>
+                          ReactGA.event({
+                            category: 'Swap',
+                            action: 'Transaction Details Tooltip Open',
+                          })
+                        }
+                      >
+                        <StyledInfo />
+                      </MouseoverTooltipContent>
+                      <TYPE.body color={theme.text2} fontWeight={400} fontSize={14} justifyContent="start">
+                        <Trans>Price</Trans>
+                      </TYPE.body>
+                    </RowFixed>
                     <RowFixed>
                       <LoadingOpacityContainer $loading={routeIsSyncing}>
                         <TradePrice
@@ -756,64 +812,6 @@ export default function SwapWidget() {
                       </MouseoverTooltipContent>
                     </RowFixed>
                   </RowBetween>
-                  <RowFixed>
-                    <TYPE.body color={theme.text2} fontWeight={400} fontSize={14} justifyContent="end">
-                      <Trans>Transaction Details</Trans>
-                    </TYPE.body>
-                    <MouseoverTooltipContent
-                      wrap={false}
-                      content={
-                        <ResponsiveTooltipContainer origin="top right" width={'295px'}>
-                          <Row justify={!trade ? 'center' : 'space-between'}>
-                            <RowFixed>
-                              <Text fontSize={14} fontWeight={400}>
-                                <Trans>Allowed Slippage:</Trans>
-                              </Text>
-                            </RowFixed>
-                            <RowFixed>
-                              <Text fontSize={14} fontWeight={400}>
-                                <Trans>{allowedSlippage.toSignificant(2)}%</Trans>
-                              </Text>
-                            </RowFixed>
-                          </Row>
-                          <Row justify={!trade ? 'center' : 'space-between'}>
-                            <RowFixed>
-                              <Text fontSize={14} fontWeight={400}>
-                                <Trans>Minimum Received:</Trans>
-                              </Text>
-                            </RowFixed>
-                            <RowFixed>
-                              <Text fontSize={14} fontWeight={400}>
-                                {isGaslessMode ? (
-                                  <span>
-                                    {amountToReceive?.toSignificant(6)} {trade?.outputAmount.currency.symbol}
-                                  </span>
-                                ) : (
-                                  <span>
-                                    {trade
-                                      ? `${trade?.minimumAmountOut(allowedSlippage).toSignificant(4)} ${
-                                          trade?.outputAmount.currency.symbol
-                                        }`
-                                      : '-'}
-                                  </span>
-                                )}
-                              </Text>
-                            </RowFixed>
-                          </Row>
-                        </ResponsiveTooltipContainer>
-                      }
-                      placement="bottom"
-                      onOpen={() =>
-                        ReactGA.event({
-                          category: 'Swap',
-                          action: 'Transaction Details Tooltip Open',
-                        })
-                      }
-                    >
-                      <StyledInfo />
-                    </MouseoverTooltipContent>
-                  </RowFixed>
-
                   {isGaslessMode && (
                     <Row justify={!trade ? 'center' : 'space-between'}>
                       <RowFixed style={{ position: 'relative' }}>
@@ -834,7 +832,9 @@ export default function SwapWidget() {
                         >
                           <StyledInfo />
                         </MouseoverTooltipContent>
-                        <Trans>&nbsp;Est. Fees:</Trans>
+                        <TYPE.body color={theme.text2} fontWeight={400} fontSize={14} justifyContent="start">
+                          <Trans>Est. Fees:</Trans>
+                        </TYPE.body>
                       </RowFixed>
                       {paymentFees && (
                         <RowFixed>
@@ -1015,9 +1015,9 @@ export default function SwapWidget() {
                         !isValid ||
                         (approvalState !== ApprovalState.APPROVED && signatureState !== UseERC20PermitState.SIGNED)
                       }
-                      error={isValid}
+                      error={!isValid}
                     >
-                      <Text fontSize={16} fontWeight={500}>
+                      <Text fontSize={20} fontWeight={500}>
                         <Trans>Swap</Trans>
                       </Text>
                     </ButtonError>
@@ -1038,7 +1038,7 @@ export default function SwapWidget() {
                   }}
                   id="swap-button"
                   disabled={!isValid || !!swapCallbackError}
-                  error={isValid && !swapCallbackError}
+                  error={!isValid && !swapCallbackError}
                 >
                   <Text fontSize={20} fontWeight={500}>
                     {swapInputError ? swapInputError : <Trans>Swap</Trans>}

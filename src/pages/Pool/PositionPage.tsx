@@ -871,7 +871,7 @@ export function PositionPage({
           content={() => (
             <ConfirmationModalContent
               title={isClosed ? <Trans>Collect</Trans> : <Trans>Cancel</Trans>}
-              onDismiss={() => handleDismissConfirmation}
+              onDismiss={handleDismissConfirmation}
               topContent={modalHeader}
             />
           )}

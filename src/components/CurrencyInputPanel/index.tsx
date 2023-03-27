@@ -205,6 +205,7 @@ const ActionLabel = styled(Text)`
 `
 
 interface CurrencyInputPanelProps {
+  currencySearchTitle?: string
   value: string
   decrement?: () => string
   increment?: () => string
@@ -237,6 +238,7 @@ interface CurrencyInputPanelProps {
 }
 
 export default function CurrencyInputPanel({
+  currencySearchTitle = 'Select a token',
   value,
   onUserInput,
   onMax,
@@ -438,6 +440,7 @@ export default function CurrencyInputPanel({
       </Container>
       {onCurrencySelect && (
         <CurrencySearchModal
+          title={currencySearchTitle}
           isOpen={modalOpen}
           onDismiss={handleDismissSearch}
           onCurrencySelect={onCurrencySelect}

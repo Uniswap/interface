@@ -14,15 +14,9 @@ import { ApplicationModal } from '../state/application/reducer'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import LimitOrder from './LimitOrder'
-import { RedirectPathToLimitOrderOnly, RedirectToLimitOrder } from './LimitOrder/redirects'
+import { RedirectPathToLimitOrderOnly } from './LimitOrder/redirects'
 import Market from './Market'
-import { RedirectToMarket } from './Market/redirects'
-import Pool from './Pool'
 import { PositionPage } from './Pool/PositionPage'
-import RemoveLiquidity from './RemoveLiquidity'
-import RemoveLiquidityV3 from './RemoveLiquidity/V3'
-import StakingModal from './Stake/StakingModal'
-import { RedirectPathToSwapOnly } from './Swap/redirects'
 import SwapWidget from './SwapWidget'
 
 const AppWrapper = styled.div`
@@ -78,46 +72,50 @@ const TopLevelModals = () => {
   return <AddressClaimModal isOpen={open} onDismiss={toggle} />
 }
 
+const Application = () => (
+  <AppWrapper>
+    <HeaderWrapper>
+      <Header />
+    </HeaderWrapper>
+    <BodyWrapper>
+      <Popups />
+      <Polling />
+      <TopLevelModals />
+      <Switch>
+        <Route
+          exact
+          strict
+          path="/balance/:action/:currencyIdA?/:currencyIdB?/:feeAmount?"
+          component={RedirectDuplicateTokenIds}
+        />
+        <Route exact strict path="/limitorder" component={LimitOrder} />
+        <Route exact strict path="/limitorder/:tokenId" component={PositionPage} />
+        <Route exact strict path="/swap" component={Market} />
+        <Route component={RedirectPathToLimitOrderOnly} />
+      </Switch>
+    </BodyWrapper>
+  </AppWrapper>
+)
+
+const Widget = () => (
+  <AppWrapper>
+    <Switch>
+      <Route exact strict path="/swap-widget/:themeMode" component={SwapWidget} />
+      <Route component={SwapWidget} />
+    </Switch>
+  </AppWrapper>
+)
+
 export default function App() {
+  const { pathname } = useLocation()
+  const isApp = !pathname.includes('swap-widget')
+
   return (
     <ErrorBoundary>
       <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
       <Route component={ApeModeQueryParamReader} />
-      <Web3ReactManager>
-        <Switch>
-          <Route path="/darkswapwidget/" component={SwapWidget} />
-          <Route path="/lightswapwidget/" component={SwapWidget} />
-          <AppWrapper>
-            <HeaderWrapper>
-              <Header />
-            </HeaderWrapper>
-            <BodyWrapper>
-              <Popups />
-              <Polling />
-              <TopLevelModals />
-              <Route exact strict path="/limitorder/:outputCurrency" component={RedirectToLimitOrder} />
-              <Route exact strict path="/limitorder" component={LimitOrder} />
-              <Route exact strict path="/swap/:outputCurrency" component={RedirectToMarket} />
-              <Route path="/swap" component={Market} />
-              <Route exact strict path="/pool" component={Pool} />
-              <Route exact strict path="/pool/:tokenId" component={PositionPage} />
-              <Route exact strict path="/stake/:tokenId" component={StakingModal} />
-              <Route exact strict path="/unstake/:tokenId/remove" component={StakingModal} />
-              <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
-              <Route exact strict path="/remove/:tokenId" component={RemoveLiquidityV3} />
-              <Route
-                exact
-                strict
-                path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
-                component={RedirectDuplicateTokenIds}
-              />
-              <Route component={RedirectPathToLimitOrderOnly} />
-              <Route component={RedirectPathToSwapOnly} />
-            </BodyWrapper>
-          </AppWrapper>
-        </Switch>
-      </Web3ReactManager>
+      <Web3ReactManager>{isApp ? <Application /> : <Widget />}</Web3ReactManager>
     </ErrorBoundary>
   )
 }
