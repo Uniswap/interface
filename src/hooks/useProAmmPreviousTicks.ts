@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { NETWORKS_INFO, isEVM } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import { Result, useSingleContractMultipleData } from 'state/multicall/hooks'
+import { unwrappedToken } from 'utils/wrappedCurrency'
 
 import { useProAmmTickReader } from './useContract'
 import useProAmmPoolInfo from './useProAmmPoolInfo'
@@ -83,7 +84,11 @@ export function useProAmmMultiplePreviousTicks(
   }, [pool, loading, error, results, positions])
 }
 
-export function useTotalFeeOwedByElasticPosition(pool: Pool | null | undefined, tokenID: string | undefined) {
+export function useTotalFeeOwedByElasticPosition(
+  pool: Pool | null | undefined,
+  tokenID: string | undefined,
+  asWETH = false,
+) {
   const tickReader = useProAmmTickReader()
   const poolAddress = useProAmmPoolInfo(pool?.token0, pool?.token1, pool?.fee)
   const { chainId } = useActiveWeb3React()
@@ -116,7 +121,10 @@ export function useTotalFeeOwedByElasticPosition(pool: Pool | null | undefined, 
   return {
     feeOwed:
       pool && fee[0] && fee[1]
-        ? [CurrencyAmount.fromRawAmount(pool.token0, fee[0]), CurrencyAmount.fromRawAmount(pool.token1, fee[1])]
+        ? [
+            CurrencyAmount.fromRawAmount(asWETH ? pool.token0 : unwrappedToken(pool.token0), fee[0]),
+            CurrencyAmount.fromRawAmount(asWETH ? pool.token1 : unwrappedToken(pool.token1), fee[1]),
+          ]
         : [undefined, undefined],
     loading,
   }

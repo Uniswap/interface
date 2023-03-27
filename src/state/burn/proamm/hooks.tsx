@@ -112,7 +112,7 @@ export function useDerivedProAmmBurnInfo(
   //   error = error ?? <Trans>Enter a percent</Trans>
   // }
 
-  const { feeOwed, loading: loadingFee } = useTotalFeeOwedByElasticPosition(pool, position?.tokenId.toString())
+  const { feeOwed, loading: loadingFee } = useTotalFeeOwedByElasticPosition(pool, position?.tokenId.toString(), asWETH)
 
   const [feeValue0, feeValue1] = feeOwed
 

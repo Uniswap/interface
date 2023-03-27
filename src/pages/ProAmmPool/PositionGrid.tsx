@@ -70,15 +70,15 @@ function PositionGrid({
     skip: !isEVM || !positionIds.length,
   })
 
-  const now = Date.now() / 1000
-  const liquidityTimes = data?.positions.reduce(
-    (acc: { [id: string]: number }, item: { id: string; lastCollectedFeeAt: string }) => {
-      return {
-        ...acc,
-        [item.id]: now - Number(item.lastCollectedFeeAt), // seconds
-      }
-    },
-    {},
+  const liquidityTimes = useMemo(
+    () =>
+      data?.positions.reduce((acc: { [id: string]: number }, item: { id: string; lastCollectedFeeAt: string }) => {
+        return {
+          ...acc,
+          [item.id]: Date.now() / 1000 - Number(item.lastCollectedFeeAt), // seconds
+        }
+      }, {}),
+    [data?.positions],
   )
 
   const createdAts = data?.positions.reduce(
