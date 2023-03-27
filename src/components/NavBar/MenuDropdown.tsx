@@ -10,6 +10,7 @@ import {
   EllipsisIcon,
   GithubIconMenu,
   GovernanceIcon,
+  PoolIcon,
   TwitterIconMenu,
 } from 'nft/components/icons'
 import { body, bodySmall } from 'nft/css/common.css'
@@ -17,7 +18,7 @@ import { themeVars } from 'nft/css/sprinkles.css'
 import { ReactNode, useReducer, useRef } from 'react'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 import { useToggleModal } from 'state/application/hooks'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 
 import { ApplicationModal } from '../../state/application/reducer'
@@ -118,6 +119,7 @@ const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
 }
 
 export const MenuDropdown = () => {
+  const theme = useTheme()
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
   const togglePrivacyPolicy = useToggleModal(ApplicationModal.PRIVACY_POLICY)
   const openFeatureFlagsModal = useToggleModal(ApplicationModal.FEATURE_FLAGS)
@@ -135,9 +137,19 @@ export const MenuDropdown = () => {
           <NavDropdown top={{ sm: 'unset', lg: '56' }} bottom={{ sm: '56', lg: 'unset' }} right="0">
             <Column gap="16">
               <Column paddingX="8" gap="4">
+                <Box display={{ sm: 'none', lg: 'flex', xxl: 'none' }}>
+                  <PrimaryMenuRow to="/pool" close={toggleOpen}>
+                    <Icon>
+                      <PoolIcon width={24} height={24} color={theme.textSecondary} />
+                    </Icon>
+                    <PrimaryMenuRow.Text>
+                      <Trans>Pool</Trans>
+                    </PrimaryMenuRow.Text>
+                  </PrimaryMenuRow>
+                </Box>
                 <PrimaryMenuRow to="/vote" close={toggleOpen}>
                   <Icon>
-                    <GovernanceIcon width={24} height={24} />
+                    <GovernanceIcon width={24} height={24} color={theme.textSecondary} />
                   </Icon>
                   <PrimaryMenuRow.Text>
                     <Trans>Vote in governance</Trans>
@@ -145,7 +157,7 @@ export const MenuDropdown = () => {
                 </PrimaryMenuRow>
                 <PrimaryMenuRow href="https://info.uniswap.org/#/">
                   <Icon>
-                    <BarChartIcon width={24} height={24} />
+                    <BarChartIcon width={24} height={24} color={theme.textSecondary} />
                   </Icon>
                   <PrimaryMenuRow.Text>
                     <Trans>View more analytics</Trans>
