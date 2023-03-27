@@ -333,9 +333,9 @@ export default function Landing() {
             <Glow />
           </GlowContainer>
           <ContentContainer isDarkMode={isDarkMode}>
-            <TitleText isDarkMode={isDarkMode}>The most seamless trading experience</TitleText>
+            <TitleText isDarkMode={isDarkMode}>The strongest interchain exchange</TitleText>
             <SubTextContainer>
-              <SubText>Trade, earn, govern and build on the leading decentralized exchange on Evmos</SubText>
+              <SubText>Swap, earn, and build on the premier Evmos community owned DEX</SubText>
             </SubTextContainer>
             <ActionsContainer>
               <TraceEvent

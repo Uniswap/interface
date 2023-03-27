@@ -22,10 +22,8 @@ const Banner = styled.div<{ isDarkMode: boolean }>`
 
   box-shadow: 0px 10px 24px rgba(51, 53, 72, 0.04);
 
-  background: ${({ isDarkMode }) =>
-    isDarkMode
-      ? `url(${meshSrc}), ${DARK_MODE_GRADIENT}`
-      : `url(${meshSrc}), linear-gradient(93.06deg, #FF00C7 2.66%, #FF9FFB 98.99%);`};
+  background: #121211;
+  border: 1px;
 
   @media screen and (min-width: ${BREAKPOINTS.lg}px) {
     height: 140px;
@@ -57,7 +55,7 @@ const DescriptionText = styled.div`
   font-weight: 500;
   font-size: 16px;
   line-height: 20px;
-  color: #918378;
+  color: #ed4e33;
 
   @media screen and (min-width: ${BREAKPOINTS.xl}px) {
     font-size: 20px;
@@ -82,8 +80,8 @@ const BannerButtonContainer = styled.div`
 `
 
 const BannerButton = styled(ButtonEmpty)`
-  color: #ed4e33;
-  border: 1px solid #ed4e33;
+  color: white;
+  border: 1px solid white;
 `
 
 const ProtocolBanner = () => {
@@ -95,9 +93,6 @@ const ProtocolBanner = () => {
         <DescriptionText>Community funded. No swap fees. No investment token.</DescriptionText>
       </TextContainer>
       <BannerButtonContainer>
-        <BannerButton width="200px" as="a" href="https://forge.trade" rel="noopener noreferrer" target="_blank">
-          Learn more
-        </BannerButton>
       </BannerButtonContainer>
     </Banner>
   )

@@ -59,18 +59,6 @@ export const PageTabs = () => {
       <MenuItem href="/pools" isActive={pathname.startsWith('/pools')}>
         <Trans>Pools</Trans>
       </MenuItem>
-      {!isMobile && (
-        <a
-          href="https://www.orbitmarket.io"
-          className={styles.menuItem}
-          style={{ textDecoration: 'none' }}
-          rel="noreferrer"
-          target="_blank"
-        >
-          <Trans>NFTs</Trans>
-        </a>
-      )}
-
       <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
         <Trans>Add Liquidity</Trans>
       </MenuItem>
