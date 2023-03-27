@@ -340,11 +340,11 @@ export default function SwapWidget() {
   const [darkMode, toggleSetDarkMode] = useDarkModeManager()
   const { pathname } = window.location
 
-  if (darkMode && pathname.includes('lightswapwidget')) {
+  if (darkMode && pathname.includes('light')) {
     toggleSetDarkMode()
   }
 
-  if (!darkMode && pathname.includes('darkswapwidget')) {
+  if (!darkMode && pathname.includes('dark')) {
     toggleSetDarkMode()
   }
 

@@ -65,11 +65,47 @@ const BodyWrapper = styled.div`
     background-size: 100% auto;
   }
 `
-
 const TopLevelModals = () => {
   const open = useModalOpen(ApplicationModal.ADDRESS_CLAIM)
   const toggle = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   return <AddressClaimModal isOpen={open} onDismiss={toggle} />
+}
+
+const Application = () => (
+  <AppWrapper>
+    <HeaderWrapper>
+      <Header />
+    </HeaderWrapper>
+    <BodyWrapper>
+      <Popups />
+      <Polling />
+      <TopLevelModals />
+      <Switch>
+        <Route
+          exact
+          strict
+          path="/balance/:action/:currencyIdA?/:currencyIdB?/:feeAmount?"
+          component={RedirectDuplicateTokenIds}
+        />
+        <Route exact strict path="/limitorder" component={LimitOrder} />
+        <Route exact strict path="/limitorder/:tokenId" component={PositionPage} />
+        <Route exact strict path="/swap" component={Market} />
+        <Route component={RedirectPathToLimitOrderOnly} />
+      </Switch>
+    </BodyWrapper>
+  </AppWrapper>
+)
+
+const Widget = () => {
+  return (
+    <AppWrapper>
+      <Switch>
+        <Route path={'/swap-widget'} exact={true} component={SwapWidget} />
+        <Route path={`/swap-widget/dark`} exact={true} component={SwapWidget} />
+        <Route path={`/swap-widget/light`} exact={true} component={SwapWidget} />
+      </Switch>
+    </AppWrapper>
+  )
 }
 
 export default function App() {
@@ -80,28 +116,8 @@ export default function App() {
       <Route component={ApeModeQueryParamReader} />
       <Web3ReactManager>
         <Switch>
-          <Route path="/darkswapwidget/" component={SwapWidget} />
-          <Route path="/lightswapwidget/" component={SwapWidget} />
-          <AppWrapper>
-            <HeaderWrapper>
-              <Header />
-            </HeaderWrapper>
-            <BodyWrapper>
-              <Popups />
-              <Polling />
-              <TopLevelModals />
-              <Route
-                exact
-                strict
-                path="/balance/:action/:currencyIdA?/:currencyIdB?/:feeAmount?"
-                component={RedirectDuplicateTokenIds}
-              />
-              <Route exact strict path="/limitorder" component={LimitOrder} />
-              <Route exact strict path="/limitorder/:tokenId" component={PositionPage} />
-              <Route exact strict path="/swap" component={Market} />
-              <Route component={RedirectPathToLimitOrderOnly} />
-            </BodyWrapper>
-          </AppWrapper>
+          <Route path="/swap-widget" component={Widget} />
+          <Route component={Application} />
         </Switch>
       </Web3ReactManager>
     </ErrorBoundary>
