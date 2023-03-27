@@ -134,12 +134,16 @@ export const AboutFooter = () => {
         </LinkGroup>
         <LinkGroup>
           <LinkGroupTitle>Evmos DAO</LinkGroupTitle>
-          <ExternalTextLink href="https://gov.evmos.community">Governance Workstream</ExternalTextLink>
+          <ExternalTextLink href="https://gov.evmos.community">Governance Overview</ExternalTextLink>
+          <ExternalTextLink href="https://docs.evmos.community">Governance Docs</ExternalTextLink>
+          <ExternalTextLink href="https://twitter.com/EvmosDAO">EvmosDAO Twitter</ExternalTextLink>
+          <ExternalTextLink href="https://t.me/EvmosDAO">EvmosDAO Telegram</ExternalTextLink>
         </LinkGroup>
         <LinkGroup>
-          <LinkGroupTitle>Evmos Org</LinkGroupTitle>
+          <LinkGroupTitle>Evmos Network</LinkGroupTitle>
           <ExternalTextLink href="https://app.evmos.org">Dashboard</ExternalTextLink>
-          <ExternalTextLink href="https://docs.evmos.org/">Docs</ExternalTextLink>
+          <ExternalTextLink href="https://docs.evmos.org/">Developers</ExternalTextLink>
+          <ExternalTextLink href="https://wallet.keplr.app/chains/evmos?tab=governance">Stake & Vote</ExternalTextLink>
         </LinkGroup>
         <LinkGroup>
           <LinkGroupTitle>Get Help</LinkGroupTitle>
