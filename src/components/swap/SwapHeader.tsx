@@ -3,12 +3,12 @@ import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
-import { StyledXButton } from 'components/TaxServiceModal/TaxServiceBanner'
 import { MouseoverTooltipContent } from 'components/Tooltip'
 import { useWalletDrawer } from 'components/WalletDropdown'
 import { Row } from 'nft/components/Flex'
 import { bodySmall, subhead } from 'nft/css/common.css'
 import { useCallback, useEffect, useState } from 'react'
+import { X } from 'react-feather'
 import { useBuyFiatClicked } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { ExternalLink } from 'theme'
@@ -70,6 +70,17 @@ const TextHeader = styled.div<{ color: string; marginLeft?: string; isClickable?
   cursor: ${({ isClickable }) => isClickable && 'pointer'};
   justify-content: center;
   align-items: center;
+`
+
+const StyledXButton = styled(X)`
+  color: ${({ theme }) => theme.textPrimary};
+  cursor: pointer;
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+  &:active {
+    opacity: ${({ theme }) => theme.opacity.click};
+  }
 `
 
 const TOKEN_SAFETY_ARTICLE =
