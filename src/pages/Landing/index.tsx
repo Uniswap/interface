@@ -6,7 +6,6 @@ import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
 import { BaseButton } from 'components/Button'
-import { useSwapWidgetEnabled } from 'featureFlags/flags/swapWidget'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
 import { useEffect, useRef, useState } from 'react'
@@ -18,6 +17,7 @@ import { useIsDarkMode } from 'state/user/hooks'
 import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+
 import headerBG from './images/forge-header.png'
 
 const PageContainer = styled.div<{ isDarkMode: boolean }>`
@@ -43,7 +43,7 @@ const Gradient = styled.div<{ isDarkMode: boolean }>`
   width: 100%;
   min-height: 550px;
   background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgb(0 0 0 / 80%) 45%);
-    z-index: ${Z_INDEX.under_dropdown};
+  z-index: ${Z_INDEX.under_dropdown};
   pointer-events: none;
   height: ${({ theme }) => `calc(100vh - ${theme.mobileBottomBarHeight}px)`};
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
@@ -257,7 +257,7 @@ const LandingSwapContainer = styled.div`
     background-size: cover;
     background-position: -200px center;
     height: 100vh !important;
-    }
+  }
 `
 
 const SwapCss = css`
@@ -332,9 +332,9 @@ export default function Landing() {
                   <LandingSwap intro={true} />
                 </Link>
               ) : (
-              <Link to="/swap">
-                <LandingSwap intro={true} />
-              </Link>
+                <Link to="/swap">
+                  <LandingSwap intro={true} />
+                </Link>
               )}
             </TraceEvent>
           </LandingSwapContainer>
