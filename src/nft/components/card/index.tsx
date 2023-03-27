@@ -16,9 +16,8 @@ interface NftCardProps {
   selectAsset?: () => void
   unselectAsset?: () => void
   onButtonClick?: () => void
-  onNavigation?: () => void
+  onCardClick?: () => void
   sendAnalyticsEvent?: () => void
-  linkToDetails?: boolean
   mediaShouldBePlaying: boolean
   uniformAspectRatio?: UniformAspectRatio
   setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
@@ -43,7 +42,7 @@ export interface NftCardDisplayProps {
  * NftCard is a component that displays an NFT asset.
  *
  * By default, clicking on the card will navigate to the details page.
- * If `linkToDetails` is set to false, clicking on the card will not navigate to the details page.
+ * If you wish to override this behavior, pass a value for the onCardClick prop.
  */
 export const NftCard = ({
   asset,
@@ -53,9 +52,8 @@ export const NftCard = ({
   unselectAsset,
   isDisabled,
   onButtonClick,
-  onNavigation,
+  onCardClick,
   sendAnalyticsEvent,
-  linkToDetails = true,
   mediaShouldBePlaying,
   uniformAspectRatio = UniformAspectRatios.square,
   setUniformAspectRatio,
@@ -92,11 +90,10 @@ export const NftCard = ({
       isSelected={isSelected}
       isDisabled={isDisabled}
       detailsHref={detailsHref(asset)}
-      linkToDetails={linkToDetails}
       testId={testId}
       onClick={() => {
         if (bagExpanded) setBagExpanded({ bagExpanded: false })
-        if (linkToDetails) onNavigation?.()
+        onCardClick?.()
         sendAnalyticsEvent?.()
       }}
     >
