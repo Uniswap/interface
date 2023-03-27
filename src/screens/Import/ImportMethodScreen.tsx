@@ -187,7 +187,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
           onPress={(): void =>
             handleOnPress(OnboardingScreens.RestoreCloudBackup, ImportType.Restore)
           }>
-          Restore from iCloud
+          {t('Restore from iCloud')}
         </Text>
       </Flex>
     </OnboardingScreen>

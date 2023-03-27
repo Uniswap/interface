@@ -2,7 +2,7 @@ import { useHeaderHeight } from '@react-navigation/elements'
 import { useResponsiveProp } from '@shopify/restyle'
 import { LinearGradient } from 'expo-linear-gradient'
 import React, { PropsWithChildren } from 'react'
-import { KeyboardAvoidingView, StyleSheet } from 'react-native'
+import { KeyboardAvoidingView, ScrollView, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppTheme } from 'src/app/hooks'
@@ -100,17 +100,19 @@ export function SafeKeyboardOnboardingScreen({
         behavior="padding"
         contentContainerStyle={containerStyle}
         style={[styles.base, { marginBottom: responsiveBottom }]}>
-        <AnimatedFlex
-          entering={FadeIn}
-          exiting={FadeOut}
-          gap={responsiveSpacing}
-          minHeight={minHeight}
-          pb="spacing16"
-          px="spacing16"
-          style={[containerStyle, { paddingTop: headerHeight }]}>
-          {header}
-          {page}
-        </AnimatedFlex>
+        <ScrollView bounces={false} keyboardShouldPersistTaps="handled">
+          <AnimatedFlex
+            entering={FadeIn}
+            exiting={FadeOut}
+            gap={responsiveSpacing}
+            minHeight={minHeight}
+            pb="spacing16"
+            px="spacing16"
+            style={[containerStyle, { paddingTop: headerHeight }]}>
+            {header}
+            {page}
+          </AnimatedFlex>
+        </ScrollView>
       </KeyboardAvoidingView>
       {topGradient}
     </Screen>

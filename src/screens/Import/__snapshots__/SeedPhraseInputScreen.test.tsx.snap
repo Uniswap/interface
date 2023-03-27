@@ -35,117 +35,11 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
       ]
     }
   >
-    <View
-      style={
-        Array [
-          Object {
-            "alignItems": "stretch",
-            "display": "flex",
-            "flexDirection": "column",
-            "justifyContent": "flex-start",
-            "minHeight": 0,
-            "paddingBottom": 16,
-            "paddingHorizontal": 16,
-          },
-          Array [
-            Object {
-              "flexGrow": 1,
-            },
-            Object {
-              "paddingTop": 200,
-            },
-          ],
-        ]
-      }
+    <RCTScrollView
+      bounces={false}
+      keyboardShouldPersistTaps="handled"
     >
-      <View
-        style={
-          Array [
-            Object {
-              "alignItems": "stretch",
-              "display": "flex",
-              "flexDirection": "column",
-              "justifyContent": "flex-start",
-              "margin": 12,
-            },
-          ]
-        }
-      >
-        <Text
-          allowFontScaling={true}
-          maxFontSizeMultiplier={1.2}
-          style={
-            Array [
-              Object {
-                "color": "#0E1524",
-                "display": "flex",
-                "fontFamily": "Inter-Medium",
-                "fontSize": 24,
-                "lineHeight": 28,
-                "paddingTop": 0,
-                "textAlign": "center",
-              },
-            ]
-          }
-        >
-          Enter your recovery phrase
-        </Text>
-        <View
-          style={
-            Array [
-              Object {
-                "display": "flex",
-                "flexGrow": 0,
-                "flexShrink": 0,
-                "height": 12,
-              },
-            ]
-          }
-        />
-        <Text
-          allowFontScaling={true}
-          maxFontSizeMultiplier={1.4}
-          style={
-            Array [
-              Object {
-                "color": "#5D6785",
-                "display": "flex",
-                "fontFamily": "Inter-Regular",
-                "fontSize": 15,
-                "lineHeight": 20,
-                "textAlign": "center",
-              },
-            ]
-          }
-        >
-          Your recovery phrase will only be stored locally on your device.
-        </Text>
-      </View>
-      <View
-        style={
-          Array [
-            Object {
-              "display": "flex",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "height": 16,
-            },
-          ]
-        }
-      />
-      <View
-        style={
-          Array [
-            Object {
-              "alignItems": "stretch",
-              "display": "flex",
-              "flexDirection": "column",
-              "flexGrow": 1,
-              "justifyContent": "space-between",
-            },
-          ]
-        }
-      >
+      <View>
         <View
           style={
             Array [
@@ -154,12 +48,22 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                 "display": "flex",
                 "flexDirection": "column",
                 "justifyContent": "flex-start",
+                "minHeight": 0,
+                "paddingBottom": 16,
+                "paddingHorizontal": 16,
               },
+              Array [
+                Object {
+                  "flexGrow": 1,
+                },
+                Object {
+                  "paddingTop": 200,
+                },
+              ],
             ]
           }
         >
           <View
-            onTouchEnd={[Function]}
             style={
               Array [
                 Object {
@@ -167,6 +71,82 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                   "display": "flex",
                   "flexDirection": "column",
                   "justifyContent": "flex-start",
+                  "margin": 12,
+                },
+              ]
+            }
+          >
+            <Text
+              allowFontScaling={true}
+              maxFontSizeMultiplier={1.2}
+              style={
+                Array [
+                  Object {
+                    "color": "#0E1524",
+                    "display": "flex",
+                    "fontFamily": "Inter-Medium",
+                    "fontSize": 24,
+                    "lineHeight": 28,
+                    "paddingTop": 0,
+                    "textAlign": "center",
+                  },
+                ]
+              }
+            >
+              Enter your recovery phrase
+            </Text>
+            <View
+              style={
+                Array [
+                  Object {
+                    "display": "flex",
+                    "flexGrow": 0,
+                    "flexShrink": 0,
+                    "height": 12,
+                  },
+                ]
+              }
+            />
+            <Text
+              allowFontScaling={true}
+              maxFontSizeMultiplier={1.4}
+              style={
+                Array [
+                  Object {
+                    "color": "#5D6785",
+                    "display": "flex",
+                    "fontFamily": "Inter-Regular",
+                    "fontSize": 15,
+                    "lineHeight": 20,
+                    "textAlign": "center",
+                  },
+                ]
+              }
+            >
+              Your recovery phrase will only be stored locally on your device.
+            </Text>
+          </View>
+          <View
+            style={
+              Array [
+                Object {
+                  "display": "flex",
+                  "flexGrow": 0,
+                  "flexShrink": 0,
+                  "height": 16,
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              Array [
+                Object {
+                  "alignItems": "stretch",
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "flexGrow": 1,
+                  "justifyContent": "space-between",
                 },
               ]
             }
@@ -175,193 +155,148 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               style={
                 Array [
                   Object {
-                    "alignItems": "center",
-                    "backgroundColor": "#FFFFFF",
-                    "borderColor": "#F5F6FC",
-                    "borderRadius": 20,
-                    "borderWidth": 1,
+                    "alignItems": "stretch",
                     "display": "flex",
                     "flexDirection": "column",
-                    "flexShrink": 1,
-                    "justifyContent": "center",
-                    "minHeight": 120,
-                    "paddingHorizontal": 36,
-                    "paddingVertical": 16,
-                    "width": "100%",
+                    "justifyContent": "flex-start",
                   },
                 ]
               }
             >
               <View
+                onTouchEnd={[Function]}
                 style={
                   Array [
                     Object {
-                      "alignItems": "flex-end",
+                      "alignItems": "stretch",
                       "display": "flex",
-                      "flexDirection": "row",
-                      "justifyContent": "center",
-                      "width": "100%",
+                      "flexDirection": "column",
+                      "justifyContent": "flex-start",
                     },
                   ]
                 }
               >
-                <TextInput
-                  autoCapitalize="none"
-                  autoComplete="off"
-                  autoCorrect={true}
-                  autoFocus={true}
-                  blurOnSubmit={true}
-                  maxFontSizeMultiplier={1.4}
-                  multiline={true}
-                  numberOfLines={4}
-                  onBlur={[Function]}
-                  onChangeText={[Function]}
-                  onFocus={[Function]}
-                  onSubmitEditing={[Function]}
-                  placeholderTextColor="#888FAB"
-                  returnKeyType="done"
-                  scrollEnabled={false}
-                  selectionColor="#0E1524"
-                  spellCheck={false}
+                <View
                   style={
                     Array [
                       Object {
-                        "backgroundColor": "transparent",
-                        "borderRadius": 12,
-                        "color": "#0E1524",
-                        "fontSize": 17,
-                        "justifyContent": "center",
-                        "lineHeight": 17,
-                        "paddingHorizontal": 0,
-                        "paddingVertical": 0,
-                        "textAlign": "left",
-                        "width": 8,
-                      },
-                    ]
-                  }
-                  testID="import_account_form/input"
-                />
-              </View>
-              <View
-                style={
-                  Array [
-                    Object {
-                      "display": "flex",
-                      "flexGrow": 0,
-                      "flexShrink": 0,
-                      "height": 0,
-                    },
-                  ]
-                }
-              />
-              <View
-                onLayout={[Function]}
-                style={
-                  Array [
-                    Object {
-                      "alignItems": "center",
-                      "display": "flex",
-                      "flexDirection": "row",
-                      "flexGrow": 1,
-                      "justifyContent": "center",
-                      "paddingTop": 4,
-                      "position": "absolute",
-                    },
-                  ]
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={true}
-                  maxFontSizeMultiplier={1.4}
-                  numberOfLines={1}
-                  style={
-                    Array [
-                      Object {
-                        "color": "#5D6785",
+                        "alignItems": "center",
+                        "backgroundColor": "#FFFFFF",
+                        "borderColor": "#F5F6FC",
+                        "borderRadius": 20,
+                        "borderWidth": 1,
                         "display": "flex",
-                        "fontFamily": "Inter-Medium",
-                        "fontSize": 17,
-                        "lineHeight": 24,
-                      },
-                      Object {
+                        "flexDirection": "column",
                         "flexShrink": 1,
+                        "justifyContent": "center",
+                        "minHeight": 120,
+                        "paddingHorizontal": 36,
+                        "paddingVertical": 16,
+                        "width": "100%",
                       },
                     ]
-                  }
-                >
-                  Type or
-                </Text>
-                <View
-                  style={
-                    Array [
-                      Object {
-                        "display": "flex",
-                        "flexGrow": 0,
-                        "flexShrink": 0,
-                        "height": 8,
-                        "width": 8,
-                      },
-                    ]
-                  }
-                />
-                <View
-                  accessibilityState={
-                    Object {
-                      "disabled": false,
-                    }
-                  }
-                  accessible={true}
-                  collapsable={false}
-                  focusable={true}
-                  hitSlop={
-                    Object {
-                      "bottom": 5,
-                      "left": 5,
-                      "right": 5,
-                      "top": 5,
-                    }
-                  }
-                  onClick={[Function]}
-                  onResponderGrant={[Function]}
-                  onResponderMove={[Function]}
-                  onResponderRelease={[Function]}
-                  onResponderTerminate={[Function]}
-                  onResponderTerminationRequest={[Function]}
-                  onStartShouldSetResponder={[Function]}
-                  style={
-                    Object {
-                      "alignItems": "center",
-                      "backgroundColor": "#E8ECFB",
-                      "borderColor": "transparent",
-                      "borderRadius": 8,
-                      "borderWidth": 1,
-                      "display": "flex",
-                      "opacity": 1,
-                    }
                   }
                 >
                   <View
                     style={
                       Array [
                         Object {
-                          "alignItems": "center",
+                          "alignItems": "flex-end",
                           "display": "flex",
                           "flexDirection": "row",
                           "justifyContent": "center",
-                          "paddingHorizontal": 8,
-                          "paddingVertical": 8,
+                          "width": "100%",
                         },
                       ]
                     }
                   >
-                    <svg
-                      color="#0E1524"
-                      data-file-name="SvgPaste"
-                      height={16}
-                      strokeWidth={2}
-                      width={16}
+                    <TextInput
+                      autoCapitalize="none"
+                      autoComplete="off"
+                      autoCorrect={true}
+                      autoFocus={true}
+                      blurOnSubmit={true}
+                      maxFontSizeMultiplier={1.4}
+                      multiline={true}
+                      numberOfLines={4}
+                      onBlur={[Function]}
+                      onChangeText={[Function]}
+                      onFocus={[Function]}
+                      onSubmitEditing={[Function]}
+                      placeholderTextColor="#888FAB"
+                      returnKeyType="done"
+                      scrollEnabled={false}
+                      selectionColor="#0E1524"
+                      spellCheck={false}
+                      style={
+                        Array [
+                          Object {
+                            "backgroundColor": "transparent",
+                            "borderRadius": 12,
+                            "color": "#0E1524",
+                            "fontSize": 17,
+                            "justifyContent": "center",
+                            "lineHeight": 17,
+                            "paddingHorizontal": 0,
+                            "paddingVertical": 0,
+                            "textAlign": "left",
+                            "width": 8,
+                          },
+                        ]
+                      }
+                      testID="import_account_form/input"
                     />
+                  </View>
+                  <View
+                    style={
+                      Array [
+                        Object {
+                          "display": "flex",
+                          "flexGrow": 0,
+                          "flexShrink": 0,
+                          "height": 0,
+                        },
+                      ]
+                    }
+                  />
+                  <View
+                    onLayout={[Function]}
+                    style={
+                      Array [
+                        Object {
+                          "alignItems": "center",
+                          "display": "flex",
+                          "flexDirection": "row",
+                          "flexGrow": 1,
+                          "justifyContent": "center",
+                          "paddingTop": 4,
+                          "position": "absolute",
+                        },
+                      ]
+                    }
+                  >
+                    <Text
+                      adjustsFontSizeToFit={true}
+                      allowFontScaling={true}
+                      maxFontSizeMultiplier={1.4}
+                      numberOfLines={1}
+                      style={
+                        Array [
+                          Object {
+                            "color": "#5D6785",
+                            "display": "flex",
+                            "fontFamily": "Inter-Medium",
+                            "fontSize": 17,
+                            "lineHeight": 24,
+                          },
+                          Object {
+                            "flexShrink": 1,
+                          },
+                        ]
+                      }
+                    >
+                      Type or
+                    </Text>
                     <View
                       style={
                         Array [
@@ -369,29 +304,136 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                             "display": "flex",
                             "flexGrow": 0,
                             "flexShrink": 0,
-                            "height": 4,
-                            "width": 4,
+                            "height": 8,
+                            "width": 8,
+                          },
+                        ]
+                      }
+                    />
+                    <View
+                      accessibilityState={
+                        Object {
+                          "disabled": false,
+                        }
+                      }
+                      accessible={true}
+                      collapsable={false}
+                      focusable={true}
+                      hitSlop={
+                        Object {
+                          "bottom": 5,
+                          "left": 5,
+                          "right": 5,
+                          "top": 5,
+                        }
+                      }
+                      onClick={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        Object {
+                          "alignItems": "center",
+                          "backgroundColor": "#E8ECFB",
+                          "borderColor": "transparent",
+                          "borderRadius": 8,
+                          "borderWidth": 1,
+                          "display": "flex",
+                          "opacity": 1,
+                        }
+                      }
+                    >
+                      <View
+                        style={
+                          Array [
+                            Object {
+                              "alignItems": "center",
+                              "display": "flex",
+                              "flexDirection": "row",
+                              "justifyContent": "center",
+                              "paddingHorizontal": 8,
+                              "paddingVertical": 8,
+                            },
+                          ]
+                        }
+                      >
+                        <svg
+                          color="#0E1524"
+                          data-file-name="SvgPaste"
+                          height={16}
+                          strokeWidth={2}
+                          width={16}
+                        />
+                        <View
+                          style={
+                            Array [
+                              Object {
+                                "display": "flex",
+                                "flexGrow": 0,
+                                "flexShrink": 0,
+                                "height": 4,
+                                "width": 4,
+                              },
+                            ]
+                          }
+                        />
+                        <Text
+                          allowFontScaling={true}
+                          maxFontSizeMultiplier={1.2}
+                          style={
+                            Array [
+                              Object {
+                                "color": "#0E1524",
+                                "display": "flex",
+                                "fontFamily": "Inter-SemiBold",
+                                "fontSize": 15,
+                                "lineHeight": 20,
+                                "textAlign": "center",
+                              },
+                            ]
+                          }
+                        >
+                          Paste
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={
+                        Array [
+                          Object {
+                            "display": "flex",
+                            "flexGrow": 0,
+                            "flexShrink": 0,
+                            "height": 8,
+                            "width": 8,
                           },
                         ]
                       }
                     />
                     <Text
+                      adjustsFontSizeToFit={true}
                       allowFontScaling={true}
-                      maxFontSizeMultiplier={1.2}
+                      maxFontSizeMultiplier={1.4}
+                      numberOfLines={1}
                       style={
                         Array [
                           Object {
-                            "color": "#0E1524",
+                            "color": "#5D6785",
                             "display": "flex",
-                            "fontFamily": "Inter-SemiBold",
-                            "fontSize": 15,
-                            "lineHeight": 20,
-                            "textAlign": "center",
+                            "fontFamily": "Inter-Medium",
+                            "fontSize": 17,
+                            "lineHeight": 24,
+                          },
+                          Object {
+                            "flexShrink": 1,
                           },
                         ]
                       }
                     >
-                      Paste
+                      recovery phrase
                     </Text>
                   </View>
                 </View>
@@ -402,34 +444,23 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                         "display": "flex",
                         "flexGrow": 0,
                         "flexShrink": 0,
-                        "height": 8,
-                        "width": 8,
+                        "height": 16,
                       },
                     ]
                   }
                 />
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={true}
-                  maxFontSizeMultiplier={1.4}
-                  numberOfLines={1}
+                <View
                   style={
                     Array [
                       Object {
-                        "color": "#5D6785",
+                        "alignItems": "stretch",
                         "display": "flex",
-                        "fontFamily": "Inter-Medium",
-                        "fontSize": 17,
-                        "lineHeight": 24,
-                      },
-                      Object {
-                        "flexShrink": 1,
+                        "flexDirection": "column",
+                        "justifyContent": "flex-start",
                       },
                     ]
                   }
-                >
-                  recovery phrase
-                </Text>
+                />
               </View>
             </View>
             <View
@@ -448,197 +479,173 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               style={
                 Array [
                   Object {
-                    "alignItems": "stretch",
                     "display": "flex",
-                    "flexDirection": "column",
-                    "justifyContent": "flex-start",
-                  },
-                ]
-              }
-            />
-          </View>
-        </View>
-        <View
-          style={
-            Array [
-              Object {
-                "display": "flex",
-                "flexGrow": 0,
-                "flexShrink": 0,
-                "height": 16,
-              },
-            ]
-          }
-        />
-        <View
-          style={
-            Array [
-              Object {
-                "display": "flex",
-                "paddingBottom": 4,
-              },
-            ]
-          }
-        >
-          <View
-            accessibilityState={
-              Object {
-                "disabled": false,
-              }
-            }
-            accessible={true}
-            collapsable={false}
-            focusable={true}
-            hitSlop={
-              Object {
-                "bottom": 5,
-                "left": 5,
-                "right": 5,
-                "top": 5,
-              }
-            }
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
-            style={
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "#FC72FF",
-                "borderColor": "transparent",
-                "borderRadius": 16,
-                "borderWidth": 1,
-                "display": "flex",
-                "opacity": 1,
-              }
-            }
-            testID="next"
-          >
-            <View
-              style={
-                Array [
-                  Object {
-                    "alignItems": "stretch",
-                    "borderRadius": 16,
-                    "display": "flex",
-                    "flexDirection": "column",
-                    "height": "100%",
-                    "justifyContent": "flex-start",
-                    "overflow": "hidden",
-                    "position": "absolute",
-                    "width": "100%",
+                    "paddingBottom": 4,
                   },
                 ]
               }
             >
-              <RNSVGSvgView
-                bbHeight="100%"
-                bbWidth="100%"
-                focusable={false}
-                height="100%"
-                style={
-                  Array [
-                    Object {
-                      "backgroundColor": "transparent",
-                      "borderWidth": 0,
-                    },
-                    Object {
-                      "flex": 0,
-                      "height": "100%",
-                      "width": "100%",
-                    },
-                  ]
+              <View
+                accessibilityState={
+                  Object {
+                    "disabled": false,
+                  }
                 }
-                width="100%"
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                hitSlop={
+                  Object {
+                    "bottom": 5,
+                    "left": 5,
+                    "right": 5,
+                    "top": 5,
+                  }
+                }
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "backgroundColor": "#FC72FF",
+                    "borderColor": "transparent",
+                    "borderRadius": 16,
+                    "borderWidth": 1,
+                    "display": "flex",
+                    "opacity": 1,
+                  }
+                }
+                testID="next"
               >
-                <RNSVGGroup
-                  fill={
-                    Object {
-                      "payload": 4278190080,
-                      "type": 0,
-                    }
+                <View
+                  style={
+                    Array [
+                      Object {
+                        "alignItems": "stretch",
+                        "borderRadius": 16,
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "height": "100%",
+                        "justifyContent": "flex-start",
+                        "overflow": "hidden",
+                        "position": "absolute",
+                        "width": "100%",
+                      },
+                    ]
                   }
                 >
-                  <RNSVGDefs>
-                    <RNSVGLinearGradient
-                      gradient={
-                        Array [
-                          0,
-                          -958215,
-                          1,
-                          -2011415,
-                        ]
-                      }
-                      gradientTransform={null}
-                      gradientUnits={0}
-                      name="background"
-                      x1="0%"
-                      x2="0%"
-                      y1="0%"
-                      y2="100%"
-                    />
-                  </RNSVGDefs>
-                  <RNSVGRect
-                    fill={
-                      Object {
-                        "brushRef": "background",
-                        "type": 1,
-                      }
-                    }
-                    height="150%"
-                    opacity={1}
-                    propList={
+                  <RNSVGSvgView
+                    bbHeight="100%"
+                    bbWidth="100%"
+                    focusable={false}
+                    height="100%"
+                    style={
                       Array [
-                        "fill",
+                        Object {
+                          "backgroundColor": "transparent",
+                          "borderWidth": 0,
+                        },
+                        Object {
+                          "flex": 0,
+                          "height": "100%",
+                          "width": "100%",
+                        },
                       ]
                     }
                     width="100%"
-                    x="0"
-                    y="0"
-                  />
-                </RNSVGGroup>
-              </RNSVGSvgView>
-            </View>
-            <View
-              style={
-                Array [
-                  Object {
-                    "alignItems": "center",
-                    "display": "flex",
-                    "flexDirection": "row",
-                    "justifyContent": "center",
-                    "paddingHorizontal": 12,
-                    "paddingVertical": 12,
-                  },
-                ]
-              }
-            >
-              <Text
-                allowFontScaling={true}
-                maxFontSizeMultiplier={1.2}
-                style={
-                  Array [
-                    Object {
-                      "color": "#FFFFFF",
-                      "display": "flex",
-                      "fontFamily": "Inter-SemiBold",
-                      "fontSize": 17,
-                      "lineHeight": 20,
-                      "textAlign": "center",
-                    },
-                  ]
-                }
-              >
-                Continue
-              </Text>
+                  >
+                    <RNSVGGroup
+                      fill={
+                        Object {
+                          "payload": 4278190080,
+                          "type": 0,
+                        }
+                      }
+                    >
+                      <RNSVGDefs>
+                        <RNSVGLinearGradient
+                          gradient={
+                            Array [
+                              0,
+                              -958215,
+                              1,
+                              -2011415,
+                            ]
+                          }
+                          gradientTransform={null}
+                          gradientUnits={0}
+                          name="background"
+                          x1="0%"
+                          x2="0%"
+                          y1="0%"
+                          y2="100%"
+                        />
+                      </RNSVGDefs>
+                      <RNSVGRect
+                        fill={
+                          Object {
+                            "brushRef": "background",
+                            "type": 1,
+                          }
+                        }
+                        height="150%"
+                        opacity={1}
+                        propList={
+                          Array [
+                            "fill",
+                          ]
+                        }
+                        width="100%"
+                        x="0"
+                        y="0"
+                      />
+                    </RNSVGGroup>
+                  </RNSVGSvgView>
+                </View>
+                <View
+                  style={
+                    Array [
+                      Object {
+                        "alignItems": "center",
+                        "display": "flex",
+                        "flexDirection": "row",
+                        "justifyContent": "center",
+                        "paddingHorizontal": 12,
+                        "paddingVertical": 12,
+                      },
+                    ]
+                  }
+                >
+                  <Text
+                    allowFontScaling={true}
+                    maxFontSizeMultiplier={1.2}
+                    style={
+                      Array [
+                        Object {
+                          "color": "#FFFFFF",
+                          "display": "flex",
+                          "fontFamily": "Inter-SemiBold",
+                          "fontSize": 17,
+                          "lineHeight": 20,
+                          "textAlign": "center",
+                        },
+                      ]
+                    }
+                  >
+                    Continue
+                  </Text>
+                </View>
+              </View>
             </View>
           </View>
         </View>
       </View>
-    </View>
+    </RCTScrollView>
   </View>
   ExpoLinearGradient
 </View>
