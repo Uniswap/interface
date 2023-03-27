@@ -1,8 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
+import Column from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { StyledXButton } from 'components/TaxServiceModal/TaxServiceBanner'
 import { MouseoverTooltipContent } from 'components/Tooltip'
+import { useWalletDrawer } from 'components/WalletDropdown'
+import { Row } from 'nft/components/Flex'
 import { bodySmall, subhead } from 'nft/css/common.css'
 import { useCallback, useEffect, useState } from 'react'
 import { useBuyFiatClicked } from 'state/user/hooks'
@@ -19,7 +23,7 @@ const PopupContainer = styled.div<{ show: boolean }>`
   box-shadow: ${({ theme }) => theme.deepShadow};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   background-color: ${({ theme }) => theme.backgroundSurface};
-  border-radius: 13px;
+  border-radius: 16px;
   cursor: pointer;
   color: ${({ theme }) => theme.textPrimary};
   display: ${({ show }) => (show ? 'flex' : 'none')};
@@ -38,7 +42,6 @@ const PopupContainer = styled.div<{ show: boolean }>`
     border-style: solid none;
     width: 100%;
     border-radius: 0;
-    right: auto;
   }
 `
 
@@ -72,34 +75,66 @@ const TextHeader = styled.div<{ color: string; marginLeft?: string; isClickable?
 const TOKEN_SAFETY_ARTICLE =
   'https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-'
 
+const MAX_FIAT_ON_RAMP_UNAVAILABLE_TOAST_RENDER_COUNT = 1
+
+// TODO(lynnshaoyu): add analytics and logging
 export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Percent }) {
   const theme = useTheme()
-  const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
-  const [shouldCheck, setShouldCheck] = useState(false)
-  const [fiatOnRampUnavailable, setFiatOnRampUnavailable] = useState(false)
+
+  const { account } = useWeb3React()
+
+  const openFiatOnRampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
+  const openFiatOnRampModalLocal = useCallback(() => {
+    setShouldOpenFiatOnRampModal(false)
+    openFiatOnRampModal()
+  }, [openFiatOnRampModal])
+
+  const [shouldOpenFiatOnRampModal, setShouldOpenFiatOnRampModal] = useState(false)
+
+  const [fiatOnRampUnavailableRenderCount, setFiatOnRampUnavailableRenderCount] = useState(0)
   const [buyFiatClicked, setBuyFiatClicked] = useBuyFiatClicked()
-  console.log('buyFiatClicked', buyFiatClicked)
+
+  const [shouldCheck, setShouldCheck] = useState(false)
   const { available: fiatOnrampAvailable, availabilityChecked: fiatOnrampAvailabilityChecked } =
-    useFiatOnrampAvailability(shouldCheck, openFiatOnrampModal)
+    useFiatOnrampAvailability(shouldCheck, openFiatOnRampModalLocal)
+
+  const [, toggleWalletDrawer] = useWalletDrawer()
 
   const handleBuyCryptoClick = useCallback(() => {
-    if (!fiatOnrampAvailabilityChecked) {
-      console.log('fiatOnrampAvailabilityChecked', fiatOnrampAvailabilityChecked)
+    if (!account) {
+      toggleWalletDrawer()
+      setShouldOpenFiatOnRampModal(true)
+    } else if (!fiatOnrampAvailabilityChecked) {
       setShouldCheck(true)
     } else if (fiatOnrampAvailable) {
-      openFiatOnrampModal()
-      console.log('opening modal, fiatOnrampAvailable ', fiatOnrampAvailable)
-      setBuyFiatClicked(true)
+      openFiatOnRampModalLocal()
     }
-  }, [fiatOnrampAvailabilityChecked, fiatOnrampAvailable, openFiatOnrampModal, setBuyFiatClicked])
+    setBuyFiatClicked(true)
+  }, [
+    account,
+    setShouldCheck,
+    fiatOnrampAvailabilityChecked,
+    fiatOnrampAvailable,
+    openFiatOnRampModalLocal,
+    setBuyFiatClicked,
+    toggleWalletDrawer,
+  ])
 
   useEffect(() => {
-    if (fiatOnrampAvailabilityChecked && !fiatOnrampAvailable && !buyFiatClicked) {
-      setFiatOnRampUnavailable(true)
-      console.log('unavail, fiatOnRampUnavailable', fiatOnRampUnavailable)
-      setBuyFiatClicked(true)
+    if (shouldOpenFiatOnRampModal && account && !fiatOnrampAvailabilityChecked) {
+      setShouldCheck(true)
+    } else if (shouldOpenFiatOnRampModal && account && fiatOnrampAvailabilityChecked && fiatOnrampAvailable) {
+      openFiatOnRampModalLocal()
     }
-  }, [buyFiatClicked, fiatOnRampUnavailable, fiatOnrampAvailabilityChecked, fiatOnrampAvailable, setBuyFiatClicked])
+  }, [
+    openFiatOnRampModalLocal,
+    shouldOpenFiatOnRampModal,
+    account,
+    setShouldCheck,
+    fiatOnrampAvailabilityChecked,
+    fiatOnrampAvailable,
+    setBuyFiatClicked,
+  ])
 
   return (
     <StyledSwapHeader>
@@ -137,47 +172,42 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
           <SettingsTab placeholderSlippage={allowedSlippage} />
         </RowFixed>
       </RowBetween>
-      <PopupContainer show={fiatOnRampUnavailable}>
-        <div
+      <PopupContainer
+        show={
+          !fiatOnrampAvailable &&
+          fiatOnrampAvailabilityChecked &&
+          fiatOnRampUnavailableRenderCount < MAX_FIAT_ON_RAMP_UNAVAILABLE_TOAST_RENDER_COUNT
+        }
+      >
+        <RowBetween
           style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
+            alignItems: 'start',
             padding: '16px',
           }}
         >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}
-          >
+          <Row>
             <AlertTriangleFilled size="40px" />
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              padding: '0px 16px',
-            }}
-          >
-            <div className={subhead}>
-              <Trans>Unavailable in your region</Trans>
-            </div>
-            <ExternalLink href={TOKEN_SAFETY_ARTICLE} className={bodySmall}>
-              <Trans>Learn more</Trans>
-            </ExternalLink>
-          </div>
+            <Column
+              style={{
+                padding: '0px 16px',
+              }}
+            >
+              <div className={subhead}>
+                <Trans>Unavailable in your region</Trans>
+              </div>
+              <ExternalLink href={TOKEN_SAFETY_ARTICLE} className={bodySmall}>
+                <Trans>Learn more</Trans>
+              </ExternalLink>
+            </Column>
+          </Row>
           <StyledXButton
-            size={28}
+            size={22}
             color={theme.textSecondary}
             onClick={() => {
-              setFiatOnRampUnavailable(false)
+              setFiatOnRampUnavailableRenderCount(fiatOnRampUnavailableRenderCount + 1)
             }}
           />
-        </div>
+        </RowBetween>
       </PopupContainer>
     </StyledSwapHeader>
   )
