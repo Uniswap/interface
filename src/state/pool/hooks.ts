@@ -161,6 +161,12 @@ export function useAllPoolsData(): { data: PoolRegisteredLog[] | undefined; load
       return { data: undefined, loading: false }
     }
 
+    // TODO: check why quicknode returns error on log query
+    // prevent display of bsc loader until fix quicknode rpc returned error
+    /*if (chainId === 56) {
+      return { data: [], loading: false }
+    }*/
+
     if (registry && !formattedLogsV1) {
       return { data: [], loading: true }
     }
