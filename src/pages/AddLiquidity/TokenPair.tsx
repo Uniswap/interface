@@ -39,7 +39,7 @@ import { Field } from 'state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from 'state/mint/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TRANSACTION_TYPE } from 'state/transactions/type'
-import { useExpertModeManager, usePairAdderByTokens, useUserSlippageTolerance } from 'state/user/hooks'
+import { useDegenModeManager, usePairAdderByTokens, useUserSlippageTolerance } from 'state/user/hooks'
 import { StyledInternalLink, TYPE, UppercaseText } from 'theme'
 import { calculateGasMargin, calculateSlippageAmount, formattedNum } from 'utils'
 import { feeRangeCalc, useCurrencyConvertedToNative } from 'utils/dmm'
@@ -86,7 +86,7 @@ const TokenPair = ({
 
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
 
-  const [expertMode] = useExpertModeManager()
+  const [isDegenMode] = useDegenModeManager()
 
   // mint state
   const { independentField, typedValue, otherTypedValue } = useMintState()
@@ -707,7 +707,7 @@ const TokenPair = ({
 
                 <ButtonError
                   onClick={() => {
-                    expertMode ? onAdd() : setShowConfirm(true)
+                    isDegenMode ? onAdd() : setShowConfirm(true)
                   }}
                   disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
                   error={

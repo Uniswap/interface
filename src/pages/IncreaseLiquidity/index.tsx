@@ -59,7 +59,7 @@ import { useSingleCallResult } from 'state/multicall/hooks'
 import { useTokenPrices } from 'state/tokenPrices/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TRANSACTION_TYPE } from 'state/transactions/type'
-import { useExpertModeManager, useUserSlippageTolerance } from 'state/user/hooks'
+import { useDegenModeManager, useUserSlippageTolerance } from 'state/user/hooks'
 import { MEDIA_WIDTHS } from 'theme'
 import { calculateGasMargin, formattedNum, formattedNumLong, isAddressString, shortenAddress } from 'utils'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
@@ -74,7 +74,7 @@ export default function AddLiquidity() {
   const navigate = useNavigate()
   const theme = useTheme()
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
-  const [expertMode] = useExpertModeManager()
+  const [isDegenMode] = useDegenModeManager()
   const addTransactionWithType = useTransactionAdder()
 
   const prevChainId = usePrevious(chainId)
@@ -380,7 +380,7 @@ export default function AddLiquidity() {
         <ButtonError
           style={{ width: upToMedium ? '100%' : 'fit-content', minWidth: '164px' }}
           onClick={() => {
-            expertMode ? onAdd() : setShowConfirm(true)
+            isDegenMode ? onAdd() : setShowConfirm(true)
           }}
           disabled={
             !isValid ||

@@ -32,7 +32,7 @@ import {
 } from 'state/swap/actions'
 import { SwapState } from 'state/swap/reducer'
 import { SolanaEncode } from 'state/swap/types'
-import { useExpertModeManager, useUserSlippageTolerance } from 'state/user/hooks'
+import { useDegenModeManager, useUserSlippageTolerance } from 'state/user/hooks'
 import { useCurrencyBalances } from 'state/wallet/hooks'
 import { isAddress } from 'utils'
 import { Aggregator } from 'utils/aggregator'
@@ -80,11 +80,12 @@ export function useSwapActionHandlers(): {
     },
     [dispatch, chainId],
   )
-  const [expertMode] = useExpertModeManager()
+
+  const [isDegenMode] = useDegenModeManager()
 
   useEffect(() => {
-    if (expertMode) dispatch(setRecipient({ recipient: null }))
-  }, [expertMode, dispatch])
+    if (isDegenMode) dispatch(setRecipient({ recipient: null }))
+  }, [isDegenMode, dispatch])
 
   const onResetSelectCurrency = useCallback(
     (field: Field) => {

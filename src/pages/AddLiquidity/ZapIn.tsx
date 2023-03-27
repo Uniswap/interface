@@ -42,7 +42,7 @@ import { useDerivedZapInInfo, useMintState, useZapInActionHandlers } from 'state
 import { tryParseAmount } from 'state/swap/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TRANSACTION_TYPE } from 'state/transactions/type'
-import { useExpertModeManager, useUserSlippageTolerance } from 'state/user/hooks'
+import { useDegenModeManager, useUserSlippageTolerance } from 'state/user/hooks'
 import { StyledInternalLink, TYPE, UppercaseText } from 'theme'
 import { calculateGasMargin, formattedNum } from 'utils'
 import { currencyId } from 'utils/currencyId'
@@ -85,7 +85,7 @@ const ZapIn = ({
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
   const [zapInError, setZapInError] = useState<string>('')
 
-  const [expertMode] = useExpertModeManager()
+  const [isDegenMode] = useDegenModeManager()
 
   // mint state
   const { independentField, typedValue, otherTypedValue } = useMintState()
@@ -722,12 +722,12 @@ const ZapIn = ({
               <AutoColumn gap={'md'}>
                 {(approval === ApprovalState.NOT_APPROVED || approval === ApprovalState.PENDING) &&
                   isValid &&
-                  (expertMode || priceImpactSeverity <= 3) && (
+                  (isDegenMode || priceImpactSeverity <= 3) && (
                     <RowBetween>
                       <ButtonPrimary
                         onClick={approveCallback}
                         disabled={
-                          !isValid || approval === ApprovalState.PENDING || (priceImpactSeverity > 3 && !expertMode)
+                          !isValid || approval === ApprovalState.PENDING || (priceImpactSeverity > 3 && !isDegenMode)
                         }
                         width={'100%'}
                       >
@@ -743,9 +743,11 @@ const ZapIn = ({
                 <ButtonError
                   id="btnSupply"
                   onClick={() => {
-                    expertMode ? onZapIn() : setShowConfirm(true)
+                    isDegenMode ? onZapIn() : setShowConfirm(true)
                   }}
-                  disabled={!isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !expertMode)}
+                  disabled={
+                    !isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isDegenMode)
+                  }
                   error={
                     !!parsedAmounts[independentField] &&
                     !!parsedAmounts[dependentField] &&
@@ -757,7 +759,7 @@ const ZapIn = ({
                     {error ??
                       (!pairAddress && +amp < 1
                         ? t`Enter amp (>=1)`
-                        : priceImpactSeverity > 3 && !expertMode
+                        : priceImpactSeverity > 3 && !isDegenMode
                         ? t`Supply`
                         : priceImpactSeverity > 2
                         ? t`Supply Anyway`

@@ -42,7 +42,7 @@ export type SwapFormProps = {
   routeSummary: DetailedRouteSummary | undefined
   setRouteSummary: React.Dispatch<React.SetStateAction<DetailedRouteSummary | undefined>>
 
-  isAdvancedMode: boolean
+  isDegenMode: boolean
   slippage: number
   feeConfig: FeeConfig | undefined
   transactionTimeout: number
@@ -60,7 +60,7 @@ const SwapForm: React.FC<SwapFormProps> = props => {
     balanceIn,
     balanceOut,
     setRouteSummary,
-    isAdvancedMode,
+    isDegenMode,
     slippage,
     feeConfig,
     transactionTimeout,
@@ -101,7 +101,7 @@ const SwapForm: React.FC<SwapFormProps> = props => {
   const routeSummary = getRouteResponse?.routeSummary
 
   const buildRoute = useBuildRoute({
-    recipient: isAdvancedMode && recipient ? recipient : '',
+    recipient: isDegenMode && recipient ? recipient : '',
     routeSummary: getRouteRawResponse?.data?.routeSummary || undefined,
     slippage,
     transactionTimeout,
@@ -147,7 +147,7 @@ const SwapForm: React.FC<SwapFormProps> = props => {
       isSaveGas={isSaveGas}
       recipient={recipient}
       isStablePairSwap={isStablePairSwap}
-      isAdvancedMode={isAdvancedMode}
+      isAdvancedMode={isDegenMode}
     >
       <Box sx={{ flexDirection: 'column', gap: '16px', display: hidden ? 'none' : 'flex' }}>
         <Wrapper id={TutorialIds.SWAP_FORM_CONTENT}>
@@ -188,7 +188,7 @@ const SwapForm: React.FC<SwapFormProps> = props => {
               onChangeCurrencyOut={handleChangeCurrencyOut}
             />
 
-            {isAdvancedMode && isEVM && !isWrapOrUnwrap && (
+            {isDegenMode && isEVM && !isWrapOrUnwrap && (
               <AddressInputPanel id="recipient" value={recipient} onChange={setRecipient} />
             )}
 
@@ -202,14 +202,14 @@ const SwapForm: React.FC<SwapFormProps> = props => {
 
           {!isWrapOrUnwrap && <SlippageWarningNote rawSlippage={slippage} isStablePairSwap={isStablePairSwap} />}
 
-          <PriceImpactNote priceImpact={routeSummary?.priceImpact} isAdvancedMode={isAdvancedMode} />
+          <PriceImpactNote priceImpact={routeSummary?.priceImpact} isDegenMode={isDegenMode} />
 
           <SwapActionButton
             isGettingRoute={isGettingRoute}
             parsedAmountFromTypedValue={parsedAmount}
             balanceIn={balanceIn}
             balanceOut={balanceOut}
-            isAdvancedMode={isAdvancedMode}
+            isAdvancedMode={isDegenMode}
             typedValue={typedValue}
             currencyIn={currencyIn}
             currencyOut={currencyOut}

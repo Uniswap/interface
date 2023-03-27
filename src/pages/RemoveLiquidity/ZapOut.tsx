@@ -51,7 +51,7 @@ import { Field } from 'state/burn/actions'
 import { useBurnState, useDerivedZapOutInfo, useZapOutActionHandlers } from 'state/burn/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TRANSACTION_TYPE } from 'state/transactions/type'
-import { useExpertModeManager, useUserSlippageTolerance } from 'state/user/hooks'
+import { useDegenModeManager, useUserSlippageTolerance } from 'state/user/hooks'
 import { StyledInternalLink, TYPE, UppercaseText } from 'theme'
 import { calculateGasMargin, formattedNum } from 'utils'
 import { currencyId } from 'utils/currencyId'
@@ -93,7 +93,7 @@ export default function ZapOut({
 
   const theme = useTheme()
 
-  const [expertMode] = useExpertModeManager()
+  const [isDegenMode] = useDegenModeManager()
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
@@ -822,7 +822,7 @@ export default function ZapOut({
                         signatureData !== null ||
                         !userLiquidity ||
                         userLiquidity.equalTo('0') ||
-                        (priceImpactSeverity > 3 && !expertMode)
+                        (priceImpactSeverity > 3 && !isDegenMode)
                       }
                       margin="0 1rem 0 0"
                       padding="16px"
@@ -846,7 +846,7 @@ export default function ZapOut({
                       disabled={
                         !isValid ||
                         (signatureData === null && approval !== ApprovalState.APPROVED) ||
-                        (priceImpactSeverity > 3 && !expertMode)
+                        (priceImpactSeverity > 3 && !isDegenMode)
                       }
                       error={
                         !!parsedAmounts[Field.CURRENCY_A] &&
@@ -857,7 +857,7 @@ export default function ZapOut({
                       <Text fontSize={16} fontWeight={500}>
                         {error
                           ? error
-                          : priceImpactSeverity > 3 && !expertMode
+                          : priceImpactSeverity > 3 && !isDegenMode
                           ? t`Remove`
                           : priceImpactSeverity > 2
                           ? t`Remove Anyway`

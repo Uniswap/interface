@@ -67,7 +67,7 @@ import { useTokenPricesWithLoading } from 'state/tokenPrices/hooks'
 import { usePairFactor } from 'state/topTokens/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TRANSACTION_TYPE } from 'state/transactions/type'
-import { useExpertModeManager, useUserSlippageTolerance } from 'state/user/hooks'
+import { useDegenModeManager, useUserSlippageTolerance } from 'state/user/hooks'
 import { VIEW_MODE } from 'state/user/reducer'
 import { ExternalLink, MEDIA_WIDTHS, StyledInternalLink, TYPE } from 'theme'
 import { basisPointsToPercent, calculateGasMargin, formattedNum } from 'utils'
@@ -102,7 +102,7 @@ export default function AddLiquidity() {
   const { library } = useWeb3React()
   const theme = useTheme()
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
-  const [expertMode] = useExpertModeManager()
+  const [isDegenMode] = useDegenModeManager()
   const addTransactionWithType = useTransactionAdder()
   const positionManager = useProAmmNFTPositionManagerContract()
   const [showChart, setShowChart] = useState(false)
@@ -676,7 +676,7 @@ export default function AddLiquidity() {
         <ButtonError
           id="btnSupply"
           onClick={() => {
-            expertMode ? onAdd() : setShowConfirm(true)
+            isDegenMode ? onAdd() : setShowConfirm(true)
           }}
           disabled={
             !isValid ||
@@ -689,7 +689,7 @@ export default function AddLiquidity() {
           width={upToMedium ? '100%' : 'fit-content'}
         >
           <Text fontWeight={500}>
-            {errorMessage ? errorMessage : expertMode ? <Trans>Supply</Trans> : <Trans>Preview</Trans>}
+            {errorMessage ? errorMessage : isDegenMode ? <Trans>Supply</Trans> : <Trans>Preview</Trans>}
           </Text>
         </ButtonError>
       </Flex>

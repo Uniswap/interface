@@ -24,7 +24,7 @@ import {
   useToggleTradeRoutes,
 } from 'state/user/hooks'
 
-import AdvancedModeSetting from './AdvancedModeSetting'
+import DegenModeSetting from './DegenModeSetting'
 import GasPriceTrackerSetting from './GasPriceTrackerSetting'
 import LiquiditySourcesSetting from './LiquiditySourcesSetting'
 import SettingLabel from './SettingLabel'
@@ -130,7 +130,7 @@ const SettingsPanel: React.FC<Props> = ({
 
               <SlippageSetting />
               <TransactionTimeLimitSetting />
-              <AdvancedModeSetting />
+              <DegenModeSetting />
               <GasPriceTrackerSetting onClick={onClickGasPriceTracker} />
               <LiquiditySourcesSetting onClick={onClickLiquiditySources} />
             </>

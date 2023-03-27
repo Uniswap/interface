@@ -34,7 +34,7 @@ import {
   updateIsUserManuallyDisconnect,
   updateUserDarkMode,
   updateUserDeadline,
-  updateUserExpertMode,
+  updateUserDegenMode,
   updateUserLocale,
   updateUserSlippageTolerance,
 } from 'state/user/actions'
@@ -141,15 +141,15 @@ export function useIsAcceptedTerm(): [boolean, (isAcceptedTerm: boolean) => void
   return [isAcceptedTerm, setIsAcceptedTerm]
 }
 
-export function useExpertModeManager(): [boolean, () => void] {
+export function useDegenModeManager(): [boolean, () => void] {
   const dispatch = useDispatch<AppDispatch>()
-  const expertMode = useSelector<AppState, AppState['user']['userExpertMode']>(state => state.user.userExpertMode)
+  const degenMode = useSelector<AppState, AppState['user']['userDegenMode']>(state => state.user.userDegenMode)
 
-  const toggleSetExpertMode = useCallback(() => {
-    dispatch(updateUserExpertMode({ userExpertMode: !expertMode }))
-  }, [expertMode, dispatch])
+  const toggleSetDegenMode = useCallback(() => {
+    dispatch(updateUserDegenMode({ userDegenMode: !degenMode }))
+  }, [degenMode, dispatch])
 
-  return [expertMode, toggleSetExpertMode]
+  return [degenMode, toggleSetDegenMode]
 }
 
 export function useUserSlippageTolerance(): [number, (slippage: number) => void] {

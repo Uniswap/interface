@@ -27,7 +27,7 @@ import {
   updateMatchesDarkMode,
   updateUserDarkMode,
   updateUserDeadline,
-  updateUserExpertMode,
+  updateUserDegenMode,
   updateUserLocale,
   updateUserSlippageTolerance,
 } from './actions'
@@ -48,7 +48,7 @@ interface UserState {
 
   userLocale: SupportedLocale | null
 
-  userExpertMode: boolean
+  userDegenMode: boolean
 
   // user defined slippage tolerance in bips, used in all txns
   userSlippageTolerance: number
@@ -128,7 +128,7 @@ export const defaultShowLiveCharts: { [chainId in ChainId]: boolean } = {
 const initialState: UserState = {
   userDarkMode: null, // default to system preference
   matchesDarkMode: true,
-  userExpertMode: false,
+  userDegenMode: false,
   userLocale: null,
   userSlippageTolerance: INITIAL_ALLOWED_SLIPPAGE,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
@@ -177,8 +177,8 @@ export default createReducer(initialState, builder =>
       state.matchesDarkMode = action.payload.matchesDarkMode
       state.timestamp = currentTimestamp()
     })
-    .addCase(updateUserExpertMode, (state, action) => {
-      state.userExpertMode = action.payload.userExpertMode
+    .addCase(updateUserDegenMode, (state, action) => {
+      state.userDegenMode = action.payload.userDegenMode
       state.timestamp = currentTimestamp()
     })
     .addCase(updateUserLocale, (state, action) => {

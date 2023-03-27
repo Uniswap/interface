@@ -1,14 +1,15 @@
 import { Trans, t } from '@lingui/macro'
+import { FC } from 'react'
 import { Text } from 'rebass'
 
 import WarningNote from 'components/WarningNote'
 import { checkPriceImpact } from 'utils/prices'
 
 type Props = {
-  isAdvancedMode?: boolean
+  isDegenMode?: boolean
   priceImpact: number | undefined
 }
-const PriceImpactNote: React.FC<Props> = ({ isAdvancedMode, priceImpact }) => {
+const PriceImpactNote: FC<Props> = ({ isDegenMode, priceImpact }) => {
   const priceImpactResult = checkPriceImpact(priceImpact)
 
   if (typeof priceImpact !== 'number') {
@@ -27,7 +28,7 @@ const PriceImpactNote: React.FC<Props> = ({ isAdvancedMode, priceImpact }) => {
         }
         longText={
           <Text>
-            {isAdvancedMode ? (
+            {isDegenMode ? (
               <Trans>
                 You have turned on <b>Advanced Mode</b> from settings. Trades can still be executed when price impact
                 cannot be calculated.
@@ -58,7 +59,7 @@ const PriceImpactNote: React.FC<Props> = ({ isAdvancedMode, priceImpact }) => {
         }
         longText={
           <Text>
-            {isAdvancedMode ? (
+            {isDegenMode ? (
               <Trans>
                 You have turned on <b>Advanced Mode</b> from settings. Trades with <b>very</b> high price impact can be
                 executed.

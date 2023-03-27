@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { rgba } from 'polished'
-import { useState } from 'react'
+import { FC, useState } from 'react'
 import { Flex } from 'rebass'
 import styled from 'styled-components'
 
@@ -8,18 +8,18 @@ import InfoHelper from 'components/InfoHelper'
 import Toggle from 'components/Toggle'
 import AdvanceModeModal from 'components/TransactionSettings/AdvanceModeModal'
 import SettingLabel from 'components/swapv2/SwapSettingsPanel/SettingLabel'
-import { useExpertModeManager } from 'state/user/hooks'
+import { useDegenModeManager } from 'state/user/hooks'
 
 type Props = {
   className?: string
 }
-const AdvancedModeSetting: React.FC<Props> = ({ className }) => {
-  const [expertMode, toggleExpertMode] = useExpertModeManager()
+const DegenModeSetting: FC<Props> = ({ className }) => {
+  const [isDegenMode, toggleDegenMode] = useDegenModeManager()
   const [showConfirmation, setShowConfirmation] = useState(false)
 
   const handleToggleAdvancedMode = () => {
-    if (expertMode /* is already ON */) {
-      toggleExpertMode()
+    if (isDegenMode /* is already ON */) {
+      toggleDegenMode()
       setShowConfirmation(false)
       return
     }
@@ -45,7 +45,7 @@ const AdvancedModeSetting: React.FC<Props> = ({ className }) => {
             }
           />
         </Flex>
-        <Toggle id="toggle-expert-mode-button" isActive={expertMode} toggle={handleToggleAdvancedMode} />
+        <Toggle id="toggle-expert-mode-button" isActive={isDegenMode} toggle={handleToggleAdvancedMode} />
       </Flex>
 
       <AdvanceModeModal show={showConfirmation} setShow={setShowConfirmation} />
@@ -53,7 +53,7 @@ const AdvancedModeSetting: React.FC<Props> = ({ className }) => {
   )
 }
 
-export default styled(AdvancedModeSetting)`
+export default styled(DegenModeSetting)`
   ${Toggle} {
     background: ${({ theme }) => theme.buttonBlack};
     &[data-active='true'] {

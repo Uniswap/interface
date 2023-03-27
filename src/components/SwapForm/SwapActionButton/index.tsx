@@ -114,7 +114,7 @@ const SwapActionButton: React.FC<Props> = ({
   }, [currencyIn, typedValue, isProcessingSwap])
 
   // show approve flow when: no error on inputs, not approved or pending, or approved in current session
-  // never show if price impact is above threshold in non expert mode
+  // never show if price impact is above threshold in non degen mode
   const showApproveFlow =
     !swapInputError &&
     (approval === ApprovalState.NOT_APPROVED ||

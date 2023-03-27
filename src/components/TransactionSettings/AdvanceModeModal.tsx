@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { ButtonWarning } from 'components/Button'
 import Modal from 'components/Modal'
 import useTheme from 'hooks/useTheme'
-import { useExpertModeManager } from 'state/user/hooks'
+import { useDegenModeManager } from 'state/user/hooks'
 
 const ModalContentWrapper = styled.div`
   display: flex;
@@ -44,13 +44,13 @@ const StyledCloseIcon = styled(X)`
 `
 
 function AdvanceModeModal({ show, setShow }: { show: boolean; setShow: (v: boolean) => void }) {
-  const [, toggleExpertMode] = useExpertModeManager()
+  const [, toggleDegenMode] = useDegenModeManager()
   const [confirmText, setConfirmText] = useState('')
   const theme = useTheme()
 
   const handleConfirm = () => {
     if (confirmText.trim().toLowerCase() === 'confirm') {
-      toggleExpertMode()
+      toggleDegenMode()
       setConfirmText('')
       setShow(false)
     }

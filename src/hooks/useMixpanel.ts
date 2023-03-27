@@ -42,7 +42,7 @@ export enum MIXPANEL_TYPE {
   SWAP_TOKEN_INFO_CLICK,
   SWAP_MORE_INFO_CLICK,
   SWAP_DISPLAY_SETTING_CLICK,
-  ADVANCED_MODE_ON,
+  DEGEN_MODE_ON,
   ADD_RECIPIENT_CLICKED,
   SLIPPAGE_CHANGED,
   LIVE_CHART_ON_OFF,
@@ -324,8 +324,9 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
           mixpanel.track('Swap - Display settings on Swap settings', payload)
           break
         }
-        case MIXPANEL_TYPE.ADVANCED_MODE_ON: {
+        case MIXPANEL_TYPE.DEGEN_MODE_ON: {
           mixpanel.track('Advanced Mode Switched On', {
+            // TODO: Event name will be updated after release degen mode.
             input_token: inputSymbol,
             output_token: outputSymbol,
           })

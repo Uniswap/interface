@@ -40,7 +40,7 @@ import { useDerivedMintInfo, useMintActionHandlers, useMintState } from 'state/m
 import { useDerivedPairInfo } from 'state/pair/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TRANSACTION_TYPE } from 'state/transactions/type'
-import { useExpertModeManager, usePairAdderByTokens, useUserSlippageTolerance } from 'state/user/hooks'
+import { useDegenModeManager, usePairAdderByTokens, useUserSlippageTolerance } from 'state/user/hooks'
 import { StyledInternalLink, TYPE } from 'theme'
 import { calculateGasMargin, calculateSlippageAmount, formattedNum } from 'utils'
 import { currencyId } from 'utils/currencyId'
@@ -91,7 +91,7 @@ export default function CreatePool() {
 
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
 
-  const [expertMode] = useExpertModeManager()
+  const [isDegenMode] = useDegenModeManager()
 
   // fee types
   const [feeType, setFeeType] = useState<string>(FEE_TYPE.STATIC)
@@ -768,7 +768,7 @@ export default function CreatePool() {
 
                     <ButtonError
                       onClick={() => {
-                        expertMode && !linkToUnamplifiedPool ? onAdd() : setShowConfirm(true)
+                        isDegenMode && !linkToUnamplifiedPool ? onAdd() : setShowConfirm(true)
                       }}
                       disabled={
                         !isValid ||

@@ -7,7 +7,7 @@ import useUpdateSlippageInStableCoinSwap from 'pages/SwapV3/useUpdateSlippageInS
 import { useAppSelector } from 'state/hooks'
 import { Field } from 'state/swap/actions'
 import { useInputCurrency, useOutputCurrency, useSwapActionHandlers, useSwapState } from 'state/swap/hooks'
-import { useExpertModeManager, useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
+import { useDegenModeManager, useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
 import { useCurrencyBalances } from 'state/wallet/hooks'
 import { DetailedRouteSummary } from 'types/route'
 
@@ -28,7 +28,7 @@ const PopulatedSwapForm: React.FC<Props> = ({ routeSummary, setRouteSummary, goT
     useMemo(() => [currencyIn ?? undefined, currencyOut ?? undefined], [currencyIn, currencyOut]),
   )
   const [ttl] = useUserTransactionTTL()
-  const [isAdvancedMode] = useExpertModeManager()
+  const [isDegenMode] = useDegenModeManager()
   const [slippage] = useUserSlippageTolerance()
 
   const { feeConfig } = useSwapState()
@@ -72,7 +72,7 @@ const PopulatedSwapForm: React.FC<Props> = ({ routeSummary, setRouteSummary, goT
     currencyOut,
     balanceIn,
     balanceOut,
-    isAdvancedMode,
+    isDegenMode,
     slippage,
     feeConfig,
     transactionTimeout: ttl,

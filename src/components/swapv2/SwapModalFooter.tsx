@@ -17,7 +17,7 @@ import { FeeConfig } from 'hooks/useSwapV2Callback'
 import useTheme from 'hooks/useTheme'
 import { Field } from 'state/swap/actions'
 import { useCheckStablePairSwap, useEncodeSolana } from 'state/swap/hooks'
-import { useExpertModeManager } from 'state/user/hooks'
+import { useDegenModeManager } from 'state/user/hooks'
 import { TYPE } from 'theme'
 import { formattedNum } from 'utils'
 import { Aggregator } from 'utils/aggregator'
@@ -54,7 +54,7 @@ export default function SwapModalFooter({
     () => computeSlippageAdjustedAmounts(trade, allowedSlippage),
     [allowedSlippage, trade],
   )
-  const [isAdvancedMode] = useExpertModeManager()
+  const [isAdvancedMode] = useDegenModeManager()
   const isWarningSlippge = checkWarningSlippage(allowedSlippage, isStablePairSwap)
   const [encodeSolana] = useEncodeSolana()
 
@@ -175,7 +175,7 @@ export default function SwapModalFooter({
       >
         <SlippageWarningNote rawSlippage={allowedSlippage} isStablePairSwap={isStablePairSwap} />
 
-        <PriceImpactNote priceImpact={priceImpact} isAdvancedMode={isAdvancedMode} />
+        <PriceImpactNote priceImpact={priceImpact} isDegenMode={isAdvancedMode} />
 
         <HurryUpBanner startedTime={startedTime} />
         <AutoRow>

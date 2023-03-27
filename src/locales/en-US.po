@@ -305,7 +305,7 @@ msgid "Adjust the advanced settings for your trades like the max slippage."
 msgstr "Adjust the advanced settings for your trades like the max slippage."
 
 #: src/components/TransactionSettings/index.tsx
-#: src/components/swapv2/SwapSettingsPanel/AdvancedModeSetting.tsx
+#: src/components/swapv2/SwapSettingsPanel/DegenModeSetting.tsx
 msgid "Advanced Mode"
 msgstr "Advanced Mode"
 
@@ -4260,7 +4260,7 @@ msgstr "You can get in touch with us by joining our <0>Discord channel ↗</0> a
 msgid "You can include the chain in your referral link so referees are automatically re-directed to this network on KyberSwap. You will still earn commission on trades that are made on other chains and use your referral link"
 msgstr "You can include the chain in your referral link so referees are automatically re-directed to this network on KyberSwap. You will still earn commission on trades that are made on other chains and use your referral link"
 
-#: src/components/swapv2/SwapSettingsPanel/AdvancedModeSetting.tsx
+#: src/components/swapv2/SwapSettingsPanel/DegenModeSetting.tsx
 msgid "You can make trades with high price impact and without any confirmation prompts. Enable at your own risk"
 msgstr "You can make trades with high price impact and without any confirmation prompts. Enable at your own risk"
 

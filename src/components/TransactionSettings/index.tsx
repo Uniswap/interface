@@ -16,7 +16,7 @@ import { StyledActionButtonSwapForm } from 'components/swapv2/styleds'
 import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleTransactionSettingsMenu } from 'state/application/hooks'
-import { useExpertModeManager } from 'state/user/hooks'
+import { useDegenModeManager } from 'state/user/hooks'
 
 import AdvanceModeModal from './AdvanceModeModal'
 
@@ -66,7 +66,7 @@ type Props = {
 }
 export default function TransactionSettings({ hoverBg }: Props) {
   const theme = useTheme()
-  const [expertMode, toggleExpertMode] = useExpertModeManager()
+  const [isDegenMode, toggleDegenMode] = useDegenModeManager()
   const toggle = useToggleTransactionSettingsMenu()
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
@@ -77,8 +77,8 @@ export default function TransactionSettings({ hoverBg }: Props) {
   const hideTooltip = useCallback(() => setIsShowTooltip(false), [setIsShowTooltip])
 
   const handleToggleAdvancedMode = () => {
-    if (expertMode /* is already ON */) {
-      toggleExpertMode()
+    if (isDegenMode /* is already ON */) {
+      toggleDegenMode()
       setShowConfirmation(false)
       return
     }
@@ -94,7 +94,7 @@ export default function TransactionSettings({ hoverBg }: Props) {
       <StyledMenu>
         <MenuFlyout
           trigger={
-            <Tooltip text={t`Advanced mode is on!`} show={expertMode && isShowTooltip}>
+            <Tooltip text={t`Advanced mode is on!`} show={isDegenMode && isShowTooltip}>
               <div onMouseEnter={showTooltip} onMouseLeave={hideTooltip}>
                 <StyledActionButtonSwapForm
                   hoverBg={hoverBg}
@@ -103,7 +103,7 @@ export default function TransactionSettings({ hoverBg }: Props) {
                   id="open-settings-dialog-button"
                   aria-label="Transaction Settings"
                 >
-                  <TransactionSettingsIcon fill={expertMode ? theme.warning : theme.subText} />
+                  <TransactionSettingsIcon fill={isDegenMode ? theme.warning : theme.subText} />
                 </StyledActionButtonSwapForm>
               </div>
             </Tooltip>
@@ -129,7 +129,7 @@ export default function TransactionSettings({ hoverBg }: Props) {
                   text={t`You can make trades with high price impact and without any confirmation prompts. Enable at your own risk`}
                 />
               </Flex>
-              <Toggle id="toggle-expert-mode-button" isActive={expertMode} toggle={handleToggleAdvancedMode} />
+              <Toggle id="toggle-expert-mode-button" isActive={isDegenMode} toggle={handleToggleAdvancedMode} />
             </Flex>
           </SettingsWrapper>
         </MenuFlyout>

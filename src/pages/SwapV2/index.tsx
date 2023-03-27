@@ -95,7 +95,7 @@ import { useDefaultsFromURLSearch, useEncodeSolana, useSwapActionHandlers, useSw
 import { useDerivedSwapInfoV2 } from 'state/swap/useAggregator'
 import { useTutorialSwapGuide } from 'state/tutorial/hooks'
 import {
-  useExpertModeManager,
+  useDegenModeManager,
   useHolidayMode,
   useShowLiveChart,
   useShowTokenInfo,
@@ -242,7 +242,7 @@ export default function Swap() {
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
 
-  const [isExpertMode] = useExpertModeManager()
+  const [isDegenMode] = useDegenModeManager()
 
   // get custom setting values for user
   const [allowedSlippage] = useUserSlippageTolerance()
@@ -350,7 +350,7 @@ export default function Swap() {
   // reset recipient
   useEffect(() => {
     onChangeRecipient(null)
-  }, [onChangeRecipient, isExpertMode])
+  }, [onChangeRecipient, isDegenMode])
 
   useEffect(() => {
     // Save current trade to store
@@ -474,7 +474,7 @@ export default function Swap() {
   ])
 
   // show approve flow when: no error on inputs, not approved or pending, or approved in current session
-  // never show if price impact is above threshold in non expert mode
+  // never show if price impact is above threshold in non degen mode
   const showApproveFlow =
     !swapInputError &&
     (approval === ApprovalState.NOT_APPROVED ||
@@ -584,10 +584,10 @@ export default function Swap() {
   const isLoadedTokenDefault = useIsLoadedTokenDefault()
 
   useEffect(() => {
-    if (isExpertMode) {
-      mixpanelHandler(MIXPANEL_TYPE.ADVANCED_MODE_ON)
+    if (isDegenMode) {
+      mixpanelHandler(MIXPANEL_TYPE.DEGEN_MODE_ON)
     }
-  }, [isExpertMode, mixpanelHandler])
+  }, [isDegenMode, mixpanelHandler])
 
   const [rawSlippage] = useUserSlippageTolerance()
 
@@ -743,12 +743,12 @@ export default function Swap() {
                   aria-label="Swap Settings"
                 >
                   <MouseoverTooltip
-                    text={!isExpertMode ? <Trans>Settings</Trans> : <Trans>Advanced mode is on!</Trans>}
+                    text={!isDegenMode ? <Trans>Settings</Trans> : <Trans>Advanced mode is on!</Trans>}
                     placement="top"
                     width="fit-content"
                   >
                     <span id={TutorialIds.BUTTON_SETTING_SWAP_FORM}>
-                      <TransactionSettingsIcon fill={isExpertMode ? theme.warning : theme.subText} />
+                      <TransactionSettingsIcon fill={isDegenMode ? theme.warning : theme.subText} />
                     </span>
                   </MouseoverTooltip>
                 </StyledActionButtonSwapForm>
@@ -874,7 +874,7 @@ export default function Swap() {
                         />
                       </Box>
 
-                      {isExpertMode && isEVM && !showWrap && (
+                      {isDegenMode && isEVM && !showWrap && (
                         <AddressInputPanel id="recipient" value={recipient} onChange={handleRecipientChange} />
                       )}
 
@@ -890,7 +890,7 @@ export default function Swap() {
                         <SlippageWarningNote rawSlippage={rawSlippage} isStablePairSwap={isStableCoinSwap} />
                       )}
 
-                      <PriceImpactNote priceImpact={trade?.priceImpact} isAdvancedMode={isExpertMode} />
+                      <PriceImpactNote priceImpact={trade?.priceImpact} isDegenMode={isDegenMode} />
 
                       {isLargeSwap && (
                         <PriceImpactHigh>
@@ -954,7 +954,7 @@ export default function Swap() {
                                 // TODO check this button, it will never run, is it?
                                 // console.error('This will never be run')
                                 mixpanelSwapInit()
-                                if (isExpertMode) {
+                                if (isDegenMode) {
                                   handleSwap()
                                 } else {
                                   setSwapState({
@@ -1012,8 +1012,8 @@ export default function Swap() {
                             !!swapInputError ||
                             !!swapCallbackError ||
                             approval !== ApprovalState.APPROVED ||
-                            (!isExpertMode && (isPriceImpactVeryHigh || isPriceImpactInvalid)) ||
-                            (isExpertMode && isSolana && !encodeSolana)
+                            (!isDegenMode && (isPriceImpactVeryHigh || isPriceImpactInvalid)) ||
+                            (isDegenMode && isSolana && !encodeSolana)
                           }
                           style={{
                             position: 'relative',
@@ -1022,8 +1022,8 @@ export default function Swap() {
                               !!swapInputError ||
                               !!swapCallbackError ||
                               approval !== ApprovalState.APPROVED ||
-                              (!isExpertMode && (isPriceImpactVeryHigh || isPriceImpactInvalid)) ||
-                              (isExpertMode && isSolana && !encodeSolana)
+                              (!isDegenMode && (isPriceImpactVeryHigh || isPriceImpactInvalid)) ||
+                              (isDegenMode && isSolana && !encodeSolana)
                             ) &&
                             (isPriceImpactHigh || isPriceImpactInvalid)
                               ? {
@@ -1040,7 +1040,7 @@ export default function Swap() {
                               <Dots>
                                 <Trans>Checking allowance</Trans>
                               </Dots>
-                            ) : isExpertMode && isSolana && !encodeSolana ? (
+                            ) : isDegenMode && isSolana && !encodeSolana ? (
                               <Dots>
                                 <Trans>Checking accounts</Trans>
                               </Dots>
@@ -1059,7 +1059,7 @@ export default function Swap() {
                         </ButtonError>
                       )}
 
-                      {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
+                      {isDegenMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
                     </BottomGrouping>
                   </Wrapper>
                 </>
