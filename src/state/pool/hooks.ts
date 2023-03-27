@@ -73,6 +73,8 @@ function useStartBlock(chainId: number | undefined): number | undefined {
     registryStartBlock = 34629059
   } else if (chainId === SupportedChainId.POLYGON) {
     registryStartBlock = 35228892
+  } else if (chainId === SupportedChainId.BNB) {
+    registryStartBlock = 25549625
   } else {
     registryStartBlock = undefined
   }
@@ -137,6 +139,8 @@ export function useAllPoolsData(): { data: PoolRegisteredLog[] | undefined; load
     registryStartBlock = 34629059
   } else if (chainId === SupportedChainId.POLYGON) {
     registryStartBlock = 35228892
+  } else if (chainId === SupportedChainId.BNB) {
+    registryStartBlock = 25549625
   } else {
     registryStartBlock = 1
   }
@@ -157,12 +161,18 @@ export function useAllPoolsData(): { data: PoolRegisteredLog[] | undefined; load
       return { data: undefined, loading: false }
     }
 
+    // TODO: check why quicknode returns error on log query, seems app keeps calling infura
+    // prevent display of bsc loader until fix quicknode rpc returned error
+    if (chainId === 56 && registry && !formattedLogsV1) {
+      return { data: [], loading: false }
+    }
+
     if (registry && !formattedLogsV1) {
       return { data: [], loading: true }
     }
 
     return { data: formattedLogsV1, loading: false }
-  }, [account, formattedLogsV1, registry])
+  }, [account, chainId, formattedLogsV1, registry])
 }
 
 export function useCreateCallback(): (

@@ -14,6 +14,7 @@ export const GRG_ADDRESS: AddressMap = {
   [SupportedChainId.ARBITRUM_ONE]: '0x7F4638A58C0615037deCc86f1daE60E55fE92874',
   [SupportedChainId.OPTIMISM]: '0xEcF46257ed31c329F204Eb43E254C609dee143B3',
   [SupportedChainId.POLYGON]: '0xBC0BEA8E634ec838a2a45F8A43E7E16Cd2a8BA99',
+  [SupportedChainId.BNB]: '0x3d473C3eF4Cd4C909b020f48477a2EE2617A8e3C',
 }
 
 export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS)
@@ -28,6 +29,14 @@ const CELO_QUOTER_ADDRESSES = '0x82825d0554fA07f7FC52Ab63c961F330fdEFa8E8'
 const CELO_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES = '0x3d79EdAaBC0EaB6F08ED885C05Fc0B014290D95A'
 const CELO_TICK_LENS_ADDRESSES = '0x5f115D9113F88e0a0Db1b5033D90D4a9690AcD3D'
 
+// BNB v3 addresses
+const BNB_V3_CORE_FACTORY_ADDRESSES = '0xdB1d10011AD0Ff90774D0C6Bb92e5C5c8b4461F7'
+const BNB_V3_MIGRATOR_ADDRESSES = '0x32681814957e0C13117ddc0c2aba232b5c9e760f'
+const BNB_MULTICALL_ADDRESS = '0x963Df249eD09c358A4819E39d9Cd5736c3087184'
+const BNB_QUOTER_ADDRESSES = '0x78D78E420Da98ad378D7799bE8f4AF69033EB077'
+const BNB_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES = '0x7b8A01B39D58278b5DE7e48c8449c9f4F5170613'
+const BNB_TICK_LENS_ADDRESSES = '0xD9270014D396281579760619CCf4c3af0501A47C'
+
 /* V3 Contract Addresses */
 export const V3_CORE_FACTORY_ADDRESSES: AddressMap = {
   ...constructSameAddressMap(V3_FACTORY_ADDRESS, [
@@ -40,6 +49,7 @@ export const V3_CORE_FACTORY_ADDRESSES: AddressMap = {
   ]),
   [SupportedChainId.CELO]: CELO_V3_CORE_FACTORY_ADDRESSES,
   [SupportedChainId.CELO_ALFAJORES]: CELO_V3_CORE_FACTORY_ADDRESSES,
+  [SupportedChainId.BNB]: BNB_V3_CORE_FACTORY_ADDRESSES,
 }
 
 export const V3_MIGRATOR_ADDRESSES: AddressMap = {
@@ -51,6 +61,7 @@ export const V3_MIGRATOR_ADDRESSES: AddressMap = {
   ]),
   [SupportedChainId.CELO]: CELO_V3_MIGRATOR_ADDRESSES,
   [SupportedChainId.CELO_ALFAJORES]: CELO_V3_MIGRATOR_ADDRESSES,
+  [SupportedChainId.BNB]: BNB_V3_MIGRATOR_ADDRESSES,
 }
 
 export const MULTICALL_ADDRESS: AddressMap = {
@@ -64,6 +75,7 @@ export const MULTICALL_ADDRESS: AddressMap = {
   [SupportedChainId.ARBITRUM_RINKEBY]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
   [SupportedChainId.CELO]: CELO_MULTICALL_ADDRESS,
   [SupportedChainId.CELO_ALFAJORES]: CELO_MULTICALL_ADDRESS,
+  [SupportedChainId.BNB]: BNB_MULTICALL_ADDRESS,
 }
 
 export const SWAP_ROUTER_ADDRESSES: AddressMap = {
@@ -74,6 +86,7 @@ export const SWAP_ROUTER_ADDRESSES: AddressMap = {
     SupportedChainId.ARBITRUM_RINKEBY,
     SupportedChainId.POLYGON,
     SupportedChainId.POLYGON_MUMBAI,
+    SupportedChainId.BNB, // this is a mock address as bnb chain uses universal router
   ]),
   [SupportedChainId.CELO]: CELO_ROUTER_ADDRESS,
   [SupportedChainId.CELO_ALFAJORES]: CELO_ROUTER_ADDRESS,
@@ -107,6 +120,7 @@ export const GOVERNANCE_PROXY_ADDRESSES: AddressMap = {
     SupportedChainId.OPTIMISM,
     SupportedChainId.ARBITRUM_ONE,
     SupportedChainId.POLYGON,
+    SupportedChainId.BNB,
   ]),
 }
 
@@ -117,6 +131,7 @@ export const STAKING_PROXY_ADDRESSES: AddressMap = {
   [SupportedChainId.OPTIMISM]: '0xB844bDCC64a748fDC8c9Ee74FA4812E4BC28FD70',
   [SupportedChainId.ARBITRUM_ONE]: '0xD495296510257DAdf0d74846a8307bf533a0fB48',
   [SupportedChainId.POLYGON]: '0xC87d1B952303ae3A9218727692BAda6723662dad',
+  [SupportedChainId.BNB]: '0xa4a94cCACa8ccCdbCD442CF8eECa0cd98f69e99e',
 }
 
 /* GRG Transfer Proxy Addresses */
@@ -127,6 +142,7 @@ export const GRG_TRANSFER_PROXY_ADDRESSES: AddressMap = {
     SupportedChainId.OPTIMISM,
     SupportedChainId.ARBITRUM_ONE,
     SupportedChainId.POLYGON,
+    SupportedChainId.BNB,
   ]),
   [SupportedChainId.MAINNET]: '0x8C96182c1B2FE5c49b1bc9d9e039e369f131ED37',
 }
@@ -139,6 +155,7 @@ export const RB_FACTORY_ADDRESSES: AddressMap = {
     SupportedChainId.OPTIMISM,
     SupportedChainId.ARBITRUM_ONE,
     SupportedChainId.POLYGON,
+    SupportedChainId.BNB,
   ]),
 }
 
@@ -150,6 +167,7 @@ export const RB_REGISTRY_ADDRESSES: AddressMap = {
     SupportedChainId.OPTIMISM,
     SupportedChainId.ARBITRUM_ONE,
     SupportedChainId.POLYGON,
+    SupportedChainId.BNB,
   ]),
 }
 
@@ -174,6 +192,7 @@ export const QUOTER_ADDRESSES: AddressMap = {
   ]),
   [SupportedChainId.CELO]: CELO_QUOTER_ADDRESSES,
   [SupportedChainId.CELO_ALFAJORES]: CELO_QUOTER_ADDRESSES,
+  [SupportedChainId.BNB]: BNB_QUOTER_ADDRESSES,
 }
 
 export const NONFUNGIBLE_POSITION_MANAGER_ADDRESSES: AddressMap = {
@@ -187,6 +206,7 @@ export const NONFUNGIBLE_POSITION_MANAGER_ADDRESSES: AddressMap = {
   ]),
   [SupportedChainId.CELO]: CELO_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
   [SupportedChainId.CELO_ALFAJORES]: CELO_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
+  [SupportedChainId.BNB]: BNB_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
 }
 
 export const ENS_REGISTRAR_ADDRESSES: AddressMap = {
@@ -205,4 +225,5 @@ export const TICK_LENS_ADDRESSES: AddressMap = {
   [SupportedChainId.ARBITRUM_RINKEBY]: '0xbfd8137f7d1516D3ea5cA83523914859ec47F573',
   [SupportedChainId.CELO]: CELO_TICK_LENS_ADDRESSES,
   [SupportedChainId.CELO_ALFAJORES]: CELO_TICK_LENS_ADDRESSES,
+  [SupportedChainId.BNB]: BNB_TICK_LENS_ADDRESSES,
 }

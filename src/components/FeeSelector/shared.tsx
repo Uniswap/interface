@@ -17,6 +17,7 @@ export const FEE_AMOUNT_DETAIL: Record<
       SupportedChainId.CELO,
       SupportedChainId.CELO_ALFAJORES,
       SupportedChainId.OPTIMISM,
+      SupportedChainId.BNB,
     ],
   },
   [FeeAmount.LOW]: {

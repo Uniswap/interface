@@ -625,7 +625,7 @@ export default function Swap() {
           showCancel={true}
         />
         <PageWrapper>
-          <SwapWrapper id="swap-page">
+          <SwapWrapper chainId={chainId} id="swap-page">
             <SwapHeader allowedSlippage={allowedSlippage} />
             <PoolSelect
               disabled={!isSupportedChain(chainId)}

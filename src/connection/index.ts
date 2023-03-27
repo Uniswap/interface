@@ -11,6 +11,7 @@ import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
 import { RPC_URLS } from '../constants/networks'
 import { RPC_PROVIDERS } from '../constants/providers'
 
+// TODO: trust and 1inch connections should be added here
 export enum ConnectionType {
   INJECTED = 'INJECTED',
   COINBASE_WALLET = 'COINBASE_WALLET',

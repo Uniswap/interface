@@ -11,12 +11,10 @@ export default function Updater(): null {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state.logs)
   const { chainId, provider } = useWeb3React()
-
   const blockNumber = useBlockNumber()
 
   const filtersNeedFetch: Filter[] = useMemo(() => {
     if (!chainId || typeof blockNumber !== 'number') return []
-
     const active = state[chainId]
     if (!active) return []
 
@@ -43,6 +41,7 @@ export default function Updater(): null {
       let toBlock = filter.toBlock ?? blockNumber
       if (typeof fromBlock === 'string') fromBlock = Number.parseInt(fromBlock)
       if (typeof toBlock === 'string') toBlock = Number.parseInt(toBlock)
+      // TODO: check why bsc quicknode endpoint returns an error here, seems like it's overriding toBlock=undefined
       provider
         .getLogs({
           ...filter,

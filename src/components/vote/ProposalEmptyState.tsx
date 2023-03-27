@@ -58,8 +58,8 @@ export default function ProposalEmptyState() {
       HeaderContent={() => <Trans>Please connect to a supported network</Trans>}
       SubHeaderContent={() => (
         <Trans>
-          No proposals found. Rigoblock governance is available on Ethereum, Arbitrum, Optimism and Polygon. Switch your
-          network to a supported one to view Proposals and Vote.
+          No proposals found. Rigoblock governance is available on Ethereum, Arbitrum, Optimism, Bsc and Polygon. Switch
+          your network to a supported one to view Proposals and Vote.
         </Trans>
       )}
     />
