@@ -42,7 +42,7 @@ export default function PortfolioRow({
         {title}
         {descriptor}
       </AutoColumn>
-      <EndColumn>{right}</EndColumn>
+      {right && <EndColumn>{right}</EndColumn>}
     </PortfolioRowWrapper>
   )
 }

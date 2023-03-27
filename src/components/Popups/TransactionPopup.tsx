@@ -18,7 +18,7 @@ const Descriptor = styled(ThemedText.BodySmall)`
 `
 
 function TransactionPopupContent({ tx, chainId }: { tx: TransactionDetails; chainId: number }) {
-  const success = Boolean(tx.receipt?.status === 1)
+  const success = tx.receipt?.status === 1
   const tokens = useCombinedActiveList()
   const activity = parseLocalActivity(tx, chainId, tokens)
   const { ENSName } = useENSName(activity?.otherAccount)

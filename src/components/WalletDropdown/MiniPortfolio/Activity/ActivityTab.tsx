@@ -1,6 +1,4 @@
 import { t } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import Column from 'components/Column'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useWalletDrawer } from 'components/WalletDropdown'
