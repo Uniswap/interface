@@ -79,7 +79,6 @@ const TopLevelModals = () => {
 }
 
 export default function App() {
-
   return (
     <ErrorBoundary>
       <Route component={GoogleAnalyticsReporter} />
