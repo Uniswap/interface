@@ -264,7 +264,7 @@ const SwapCss = css`
   * {
     pointer-events: none;
   }
-  transform: scale(0.75);
+  transform: scale(0.95);
   &:hover {
     transform: translateY(-4px);
     transition: ${({ theme }) => `transform ${theme.transition.duration.medium} ${theme.transition.timing.ease}`};
