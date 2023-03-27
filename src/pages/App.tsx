@@ -100,7 +100,7 @@ const Application = () => (
 const Widget = () => (
   <AppWrapper>
     <Switch>
-      <Route exact strict path="/swap-widget/:themeMode" component={SwapWidget} />
+      <Route exact strict path="/widgetswap/:themeMode" component={SwapWidget} />
       <Route component={SwapWidget} />
     </Switch>
   </AppWrapper>
@@ -108,7 +108,7 @@ const Widget = () => (
 
 export default function App() {
   const { pathname } = useLocation()
-  const isApp = !pathname.includes('swap-widget')
+  const isApp = !pathname.includes('widgetswap')
 
   return (
     <ErrorBoundary>
