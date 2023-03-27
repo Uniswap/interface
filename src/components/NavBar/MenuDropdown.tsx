@@ -1,22 +1,26 @@
 import { t, Trans } from '@lingui/macro'
-import { ReactComponent as AppleLogo } from 'assets/svg/apple_logo.svg'
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
-import { APP_STORE_LINK } from 'components/WalletDropdown/DownloadButton'
-import NewBadge from 'components/WalletModal/NewBadge'
-import { useMgtmEnabled, useMGTMMicrositeEnabled } from 'featureFlags/flags/mgtm'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { BarChartIcon, EllipsisIcon, GovernanceIcon, PoolIcon } from 'nft/components/icons'
+import {
+  BarChartIcon,
+  DiscordIconMenu,
+  EllipsisIcon,
+  GithubIconMenu,
+  GovernanceIcon,
+  PoolIcon,
+  TwitterIconMenu,
+} from 'nft/components/icons'
 import { body, bodySmall } from 'nft/css/common.css'
+import { themeVars } from 'nft/css/sprinkles.css'
 import { ReactNode, useReducer, useRef } from 'react'
-import { HelpCircle, Shield, Terminal } from 'react-feather'
 import { NavLink, NavLinkProps } from 'react-router-dom'
+import { useToggleModal } from 'state/application/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 
-import { useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import * as styles from './MenuDropdown.css'
 import { NavDropdown } from './NavDropdown'
@@ -27,30 +31,20 @@ const PrimaryMenuRow = ({
   href,
   close,
   children,
-  onClick,
 }: {
   to?: NavLinkProps['to']
   href?: string
   close?: () => void
   children: ReactNode
-  onClick?: () => void
 }) => {
   return (
     <>
       {to ? (
-        <NavLink to={to} className={styles.MenuRow} onClick={onClick}>
+        <NavLink to={to} className={styles.MenuRow}>
           <Row onClick={close}>{children}</Row>
         </NavLink>
       ) : (
-        <Row
-          as="a"
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.MenuRow}
-          onClick={onClick}
-          cursor="pointer"
-        >
+        <Row as="a" href={href} target="_blank" rel="noopener noreferrer" className={styles.MenuRow}>
           {children}
         </Row>
       )}
@@ -97,6 +91,10 @@ const Separator = () => {
   return <Box className={styles.Separator} />
 }
 
+const IconRow = ({ children }: { children: ReactNode }) => {
+  return <Row className={styles.IconRow}>{children}</Row>
+}
+
 const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
   return (
     <>
@@ -107,7 +105,7 @@ const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
         rel={href ? 'noopener noreferrer' : undefined}
         display="flex"
         flexDirection="column"
-        color="textSecondary"
+        color="textPrimary"
         background="none"
         border="none"
         justifyContent="center"
@@ -120,46 +118,19 @@ const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
   )
 }
 
-const StyledAppleLogo = styled(AppleLogo)`
-  fill: ${({ theme }) => theme.textSecondary};
-  padding: 2px;
-  width: 24px;
-  height: 24px;
-`
-
-const BadgeWrapper = styled.div`
-  margin-left: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
 export const MenuDropdown = () => {
+  const theme = useTheme()
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
   const togglePrivacyPolicy = useToggleModal(ApplicationModal.PRIVACY_POLICY)
   const openFeatureFlagsModal = useToggleModal(ApplicationModal.FEATURE_FLAGS)
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, isOpen ? toggleOpen : undefined)
-  const theme = useTheme()
-
-  const mgtmEnabled = useMgtmEnabled()
-  const micrositeEnabled = useMGTMMicrositeEnabled()
 
   return (
     <>
       <Box position="relative" ref={ref}>
-        <NavIcon
-          isActive={isOpen}
-          onClick={toggleOpen}
-          label={isOpen ? t`Show resources` : t`Hide resources`}
-          activeBackground={isOpen}
-        >
-          <EllipsisIcon
-            viewBox="0 0 20 20"
-            width={24}
-            height={24}
-            color={isOpen ? theme.accentActive : theme.textSecondary}
-          />
+        <NavIcon isActive={isOpen} onClick={toggleOpen} label={isOpen ? t`Show resources` : t`Hide resources`}>
+          <EllipsisIcon viewBox="0 0 20 20" width={24} height={24} />
         </NavIcon>
 
         {isOpen && (
@@ -178,77 +149,78 @@ export const MenuDropdown = () => {
                 </Box>
                 <PrimaryMenuRow to="/vote" close={toggleOpen}>
                   <Icon>
-                    <GovernanceIcon width={24} height={24} />
+                    <GovernanceIcon width={24} height={24} color={theme.textSecondary} />
                   </Icon>
                   <PrimaryMenuRow.Text>
-                    <Trans>Governance</Trans>
+                    <Trans>Vote in governance</Trans>
                   </PrimaryMenuRow.Text>
                 </PrimaryMenuRow>
                 <PrimaryMenuRow href="https://info.uniswap.org/#/">
                   <Icon>
-                    <BarChartIcon width={24} height={24} />
+                    <BarChartIcon width={24} height={24} color={theme.textSecondary} />
                   </Icon>
                   <PrimaryMenuRow.Text>
-                    <Trans>Token analytics</Trans>
+                    <Trans>View more analytics</Trans>
                   </PrimaryMenuRow.Text>
                 </PrimaryMenuRow>
-                <PrimaryMenuRow href="https://help.uniswap.org/en/">
-                  <Icon>
-                    <HelpCircle color={theme.textSecondary} />
-                  </Icon>
-                  <PrimaryMenuRow.Text>
-                    <Trans>Help center</Trans>
-                  </PrimaryMenuRow.Text>
-                </PrimaryMenuRow>
-                <PrimaryMenuRow href="https://docs.uniswap.org/">
-                  <Icon>
-                    <Terminal color={theme.textSecondary} />
-                  </Icon>
-                  <PrimaryMenuRow.Text>
-                    <Trans>Documentation</Trans>
-                  </PrimaryMenuRow.Text>
-                </PrimaryMenuRow>
-                <PrimaryMenuRow
+              </Column>
+              <Separator />
+              <Box
+                display="flex"
+                flexDirection={{ sm: 'row', md: 'column' }}
+                flexWrap="wrap"
+                alignItems={{ sm: 'center', md: 'flex-start' }}
+                paddingX="8"
+              >
+                <SecondaryLinkedText href="https://help.uniswap.org/en/">
+                  <Trans>Help center</Trans> ↗
+                </SecondaryLinkedText>
+                <SecondaryLinkedText href="https://docs.uniswap.org/">
+                  <Trans>Documentation</Trans> ↗
+                </SecondaryLinkedText>
+                <SecondaryLinkedText href="https://uniswap.canny.io/feature-requests">
+                  <Trans>Feedback</Trans> ↗
+                </SecondaryLinkedText>
+                <SecondaryLinkedText
                   onClick={() => {
                     toggleOpen()
                     togglePrivacyPolicy()
                   }}
                 >
-                  <Icon>
-                    <Shield color={theme.textSecondary} />
-                  </Icon>
-                  <PrimaryMenuRow.Text>
-                    <Trans>Legal & Privacy</Trans>
-                  </PrimaryMenuRow.Text>
-                </PrimaryMenuRow>
-                {mgtmEnabled && (
-                  <Box display={micrositeEnabled ? { xxl: 'flex', xxxl: 'none' } : 'flex'}>
-                    <PrimaryMenuRow
-                      to={micrositeEnabled ? '/wallet' : undefined}
-                      href={micrositeEnabled ? undefined : APP_STORE_LINK}
-                      close={toggleOpen}
-                    >
-                      <Icon>
-                        <StyledAppleLogo />
-                      </Icon>
-                      <PrimaryMenuRow.Text>
-                        <Trans>Uniswap Wallet</Trans>
-                      </PrimaryMenuRow.Text>
-                      <BadgeWrapper>
-                        <NewBadge />
-                      </BadgeWrapper>
-                    </PrimaryMenuRow>
-                  </Box>
-                )}
+                  <Trans>Legal & Privacy</Trans> ↗
+                </SecondaryLinkedText>
                 {(isDevelopmentEnv() || isStagingEnv()) && (
-                  <>
-                    <Separator />
-                    <SecondaryLinkedText onClick={openFeatureFlagsModal}>
-                      <Trans>Feature Flags</Trans>
-                    </SecondaryLinkedText>
-                  </>
+                  <SecondaryLinkedText onClick={openFeatureFlagsModal}>
+                    <Trans>Feature Flags</Trans>
+                  </SecondaryLinkedText>
                 )}
-              </Column>
+              </Box>
+              <IconRow>
+                <Icon href="https://discord.com/invite/FCfyBSbCU5">
+                  <DiscordIconMenu
+                    className={styles.hover}
+                    width={24}
+                    height={24}
+                    color={themeVars.colors.textSecondary}
+                  />
+                </Icon>
+                <Icon href="https://twitter.com/Uniswap">
+                  <TwitterIconMenu
+                    className={styles.hover}
+                    width={24}
+                    height={24}
+                    color={themeVars.colors.textSecondary}
+                  />
+                </Icon>
+                <Icon href="https://github.com/Uniswap">
+                  <GithubIconMenu
+                    className={styles.hover}
+                    width={24}
+                    height={24}
+                    color={themeVars.colors.textSecondary}
+                  />
+                </Icon>
+              </IconRow>
             </Column>
           </NavDropdown>
         )}
