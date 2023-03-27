@@ -3,7 +3,19 @@
 import { ethers, providers } from 'ethers'
 import EventEmitter from 'eventemitter3'
 import { ethErrors } from 'eth-rpc-errors'
-import { MessageType } from '../types'
+import {
+  ContentScriptRequest,
+  ContentScriptResponse,
+  RequestType,
+  ResponseType,
+  SendTransactionRequest,
+  SendTransactionResponse,
+  SignMessageRequest,
+  SignMessageResponse,
+  SignTransactionRequest,
+  SignTransactionResponse,
+} from '../types/messageTypes'
+import { v4 as uuidv4 } from 'uuid'
 
 export type EthersSendCallback = (error: unknown, response: unknown) => void
 
@@ -349,21 +361,20 @@ export class UniswapInjectedProvider extends EventEmitter {
    */
   handleEthSignMessage = async (messageHex: string) => {
     if (!this.publicKey) {
-      throw new Error('wallet not connected')
+      throw new Error('Wallet not connected')
     }
 
-    const message = {
-      type: MessageType.SignMessage,
-      data: {
-        messageHex: ethers.utils.toUtf8String(messageHex),
-        address: this.publicKey,
-      },
+    const request: SignMessageRequest = {
+      type: RequestType.SignMessage,
+      requestId: uuidv4(),
+      messageHex: ethers.utils.toUtf8String(messageHex),
     }
-    const response = await sendMessageAndWaitForResponse(
-      message,
-      MessageType.SignMessageResponse
+
+    const response: SignMessageResponse = await sendRequestAndWaitForReponse(
+      request,
+      ResponseType.SignMessageResponse
     )
-    return response.hash
+    return response?.signedMessage
   }
 
   /**
@@ -371,21 +382,20 @@ export class UniswapInjectedProvider extends EventEmitter {
    */
   handleEthSignTransaction = async (transaction: unknown) => {
     if (!this.publicKey) {
-      throw new Error('wallet not connected')
+      throw new Error('Wallet not connected')
     }
 
-    const message = {
-      type: MessageType.SignTransaction,
-      data: {
-        transaction,
-        address: this.publicKey,
-      },
+    const request: SignTransactionRequest = {
+      type: RequestType.SignTransaction,
+      requestId: uuidv4(),
+      transaction: adaptTransactionForEthers(transaction),
     }
-    const response = await sendMessageAndWaitForResponse(
-      message,
-      MessageType.SignTransactionResponse
-    )
-    return response.hash
+    const response: SignTransactionResponse =
+      await sendRequestAndWaitForReponse(
+        request,
+        ResponseType.SignTransactionResponse
+      )
+    return response.signedTransactionHash
   }
 
   /**
@@ -400,20 +410,19 @@ export class UniswapInjectedProvider extends EventEmitter {
       throw new Error('Wallet not connected')
     }
 
-    const message = {
-      type: MessageType.SendTransaction,
-      data: {
-        transaction: adaptTransactionForEthers(transaction),
-        address: this.publicKey,
-      },
+    const request: SendTransactionRequest = {
+      type: RequestType.SendTransaction,
+      requestId: uuidv4(),
+      transaction: adaptTransactionForEthers(transaction),
     }
 
     // filter by some kind of ID on the transaction
-    const response = await sendMessageAndWaitForResponse(
-      message,
-      MessageType.SendTransactionResponse
-    )
-    return response.hash
+    const response: SendTransactionResponse =
+      await sendRequestAndWaitForReponse(
+        request,
+        ResponseType.SendTransactionResponse
+      )
+    return response?.transaction?.hash
   }
 
   handleWalletSwitchEthereumChain = async (chainId: string) => {
@@ -454,21 +463,17 @@ function adaptTransactionForEthers(transaction: any) {
   return transaction
 }
 
-function sendMessageAndWaitForResponse(
-  message: any,
-  responseType: MessageType
-): any {
+function sendRequestAndWaitForReponse<T extends ContentScriptResponse>(
+  request: ContentScriptRequest,
+  responseType: T['type']
+): Promise<T> {
   // TODO - add a unique ID to the message
-  window.postMessage(message)
+  window.postMessage(request)
   return new Promise((resolve) => {
     window.addEventListener('message', (event: MessageEvent<any>) => {
       const messageData = event.data
       if (messageData?.type === responseType) {
-        console.log(
-          '{EVENT} sendMessageAndWaitForResponse',
-          messageData.data.data
-        )
-        resolve(messageData.data.data)
+        resolve(messageData)
       }
 
       //TODO  Add timeout here or logic for rejecting response

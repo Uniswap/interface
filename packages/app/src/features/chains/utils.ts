@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
-import { useSelector } from 'react-redux'
 import { SelectEffect } from 'redux-saga/effects'
 import { select } from 'typed-redux-saga'
+import { useAppSelector } from '../../state'
 import { ChainId, ChainIdTo, ALL_SUPPORTED_CHAIN_IDS } from './chains'
 
 import { ChainState, PartialRootState } from './slice'
 
 export function useActiveChainIds(): ChainId[] {
-  const chains = useSelector(
+  const chains = useAppSelector(
     (state: PartialRootState) => state.chains.byChainId
   )
   return useMemo(() => getSortedActiveChainIds(chains), [chains])

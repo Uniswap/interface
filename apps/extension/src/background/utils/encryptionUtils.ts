@@ -1,5 +1,3 @@
-import { Message } from '../types'
-
 function getKeyMaterial(password: string) {
   return crypto.subtle.importKey(
     'raw',
@@ -74,16 +72,4 @@ export async function decryptPassword(
     console.log('password is incorrect')
     return undefined
   }
-}
-
-export function sendMessageToActiveTab(message: Message) {
-  chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-    if (tab?.id) {
-      chrome.tabs.sendMessage(tab.id, message)
-    }
-  })
-}
-
-export function sendMessageToSpecificTab(message: Message, tabId: number) {
-  chrome.tabs.sendMessage(tabId, message)
 }

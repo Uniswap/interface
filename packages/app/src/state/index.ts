@@ -2,7 +2,6 @@ import createSagaMiddleware from 'redux-saga'
 import type { Middleware, PreloadedState } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
-
 import { loggerMiddleware } from '../features/logger/middleware'
 import { walletContextValue } from '../features/wallet/context'
 import { reducer } from './reducer'

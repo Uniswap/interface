@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "browserslist": "last 2 chrome versions",
   "dependencies": {
+    "@types/uuid": "9.0.1",
     "app": "workspace:^",
     "dotenv-webpack": "8.0.1",
     "eth-rpc-errors": "4.0.3",
@@ -16,6 +17,7 @@
     "react-native-web-lite": "^1.9.0",
     "react-redux": "^8.0.5",
     "ui": "workspace:^",
+    "uuid": "9.0.0",
     "webext-redux": "^2.1.9"
   },
   "devDependencies": {
