@@ -11,14 +11,16 @@ import { useDefaultActiveTokens } from './Tokens'
 
 const ERC20Interface = new Interface(ERC20ABI) as Erc20Interface
 
+function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[] {
+  return Array.from(new Set(positions.reduce<string[]>((acc, position) => acc.concat(position.token0, position.token1), [])))
+}
+
 export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]): PositionDetails[] {
   const tokenList = useDefaultActiveTokens()
 
   const nonListPositionTokenAddresses = useMemo(
     () =>
-      Array.from(
-        new Set(positions.reduce((acc, position) => acc.concat(position.token0, position.token1), [] as string[]))
-      ).filter((address) => !tokenList[address]),
+      getUniqueAddressesFromPositions(positions).filter((address) => !tokenList[address]),
     [positions, tokenList]
   )
 
