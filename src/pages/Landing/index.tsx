@@ -42,7 +42,7 @@ const Gradient = styled.div<{ isDarkMode: boolean }>`
   bottom: 0;
   width: 100%;
   min-height: 550px;
-  background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgb(0 0 0 / 80%) 45%);
+  background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgb(0 0 0 / 85%) 45%);
   z-index: ${Z_INDEX.under_dropdown};
   pointer-events: none;
   height: ${({ theme }) => `calc(100vh - ${theme.mobileBottomBarHeight}px)`};
@@ -85,7 +85,7 @@ const ContentContainer = styled.div<{ isDarkMode: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   width: 100%;
   padding: 0 0 40px;
   min-height: 500px;
@@ -96,6 +96,11 @@ const ContentContainer = styled.div<{ isDarkMode: boolean }>`
   pointer-events: none;
   * {
     pointer-events: auto;
+  }
+  @media screen and (min-width: ${BREAKPOINTS.xl}px) {
+    padding: 0 0 1rem;
+    justify-content: center;
+    top: 180px;
   }
 `
 
@@ -212,6 +217,7 @@ const AboutContentContainer = styled.div<{ isDarkMode: boolean }>`
   width: 100%;
   background: rgba(0, 0, 0, 0);
   @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    margin-top: 40px;
     padding: 0 96px 5rem;
   }
 `
