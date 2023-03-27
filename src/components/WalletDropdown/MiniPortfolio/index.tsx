@@ -46,6 +46,7 @@ const PageWrapper = styled.div`
 
 interface Page {
   title: React.ReactNode
+  key: string
   component: ({ account }: { account: string }) => JSX.Element
   loggingElementName: string
 }
@@ -53,13 +54,25 @@ interface Page {
 const Pages: Array<Page> = [
   {
     title: <Trans>Tokens</Trans>,
+    key: 'tokens',
     component: Tokens,
     loggingElementName: InterfaceElementName.MINI_PORTFOLIO_TOKENS_TAB,
   },
-  { title: <Trans>NFTs</Trans>, component: NFTs, loggingElementName: InterfaceElementName.MINI_PORTFOLIO_NFT_TAB },
-  { title: <Trans>Pools</Trans>, component: Pools, loggingElementName: InterfaceElementName.MINI_PORTFOLIO_POOLS_TAB },
+  {
+    title: <Trans>NFTs</Trans>,
+    key: 'nfts',
+    component: NFTs,
+    loggingElementName: InterfaceElementName.MINI_PORTFOLIO_NFT_TAB,
+  },
+  {
+    title: <Trans>Pools</Trans>,
+    key: 'pools',
+    component: Pools,
+    loggingElementName: InterfaceElementName.MINI_PORTFOLIO_POOLS_TAB,
+  },
   {
     title: <Trans>Activity</Trans>,
+    key: 'activity',
     component: Activity,
     loggingElementName: InterfaceElementName.MINI_PORTFOLIO_ACTIVITY_TAB,
   },
@@ -73,7 +86,7 @@ function MiniPortfolio({ account }: { account: string }) {
   return (
     <Wrapper>
       <Nav>
-        {Pages.map(({ title }, index) => (
+        {Pages.map(({ title, key }, index) => (
           <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.NAVBAR_CLICKED}
@@ -81,6 +94,7 @@ function MiniPortfolio({ account }: { account: string }) {
             key={index}
           >
             <NavItem
+              data-testid={`mini-portfolio-nav-${key}`}
               onClick={() => setCurrentPage(index)}
               active={currentPage === index}
               key={`Mini Portfolio page ${index}`}

@@ -47,8 +47,13 @@ export function NFT({
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }) {
   const toggleWalletDrawer = useToggleWalletDrawer()
-  const trace = useTrace()
   const navigate = useNavigate()
+  const trace = useTrace()
+
+  const navigateToNFTDetails = () => {
+    toggleWalletDrawer()
+    navigate(detailsHref(asset))
+  }
 
   return (
     <NFTContainer>
@@ -58,10 +63,7 @@ export function NFT({
         display={{ disabledInfo: true }}
         isSelected={false}
         isDisabled={false}
-        onCardClick={() => {
-          toggleWalletDrawer()
-          navigate(detailsHref(asset))
-        }}
+        onCardClick={navigateToNFTDetails}
         sendAnalyticsEvent={() =>
           sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
             element: InterfaceElementName.MINI_PORTFOLIO_NFT_ITEM,
@@ -73,6 +75,7 @@ export function NFT({
         }
         mediaShouldBePlaying={mediaShouldBePlaying}
         setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+        testId="mini-portfolio-nft"
       />
       <NFTDetails asset={asset} />
     </NFTContainer>

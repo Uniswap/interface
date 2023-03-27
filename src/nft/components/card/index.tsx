@@ -89,7 +89,7 @@ export const NftCard = ({
     <Card.Container
       isSelected={isSelected}
       isDisabled={isDisabled}
-      detailsHref={detailsHref(asset)}
+      detailsHref={onCardClick ? undefined : detailsHref(asset)}
       testId={testId}
       onClick={() => {
         if (bagExpanded) setBagExpanded({ bagExpanded: false })
