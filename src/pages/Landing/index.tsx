@@ -42,7 +42,7 @@ const Gradient = styled.div<{ isDarkMode: boolean }>`
   bottom: 0;
   width: 100%;
   min-height: 550px;
-  background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgb(0 0 0 / 98%) 45%);
+  background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgb(0 0 0 / 80%) 45%);
     z-index: ${Z_INDEX.under_dropdown};
   pointer-events: none;
   height: ${({ theme }) => `calc(100vh - ${theme.mobileBottomBarHeight}px)`};
@@ -264,7 +264,7 @@ const SwapCss = css`
   * {
     pointer-events: none;
   }
-
+  transform: scale(0.75);
   &:hover {
     transform: translateY(-4px);
     transition: ${({ theme }) => `transform ${theme.transition.duration.medium} ${theme.transition.timing.ease}`};
@@ -306,7 +306,7 @@ export default function Landing() {
     ignoreQueryPrefix: true,
   })
 
-  const swapWidgetEnabled = true
+  const swapWidgetEnabled = false
 
   // This can be simplified significantly once the flag is removed! For now being explicit is clearer.
   useEffect(() => {
