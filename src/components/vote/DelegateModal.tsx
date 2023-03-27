@@ -92,7 +92,6 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
   // boilerplate for the slider
   const [percentForSlider, onPercentSelectForSlider] = useDebouncedChangeHandler(percent, onPercentSelect)
   //CurrencyAmount.fromRawAmount(currency, JSBI.BigInt(typedValueParsed))
-  console.log(currencyValue)
   const parsedAmount = CurrencyAmount.fromRawAmount(
     currencyValue,
     JSBI.divide(
