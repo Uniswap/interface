@@ -38,17 +38,17 @@ const Gradient = styled.div<{ isDarkMode: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  top: 0px;
+  top: 72px;
   bottom: 0;
   width: 100%;
   min-height: 550px;
-  background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgb(0 0 0 / 85%) 45%);
+  background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgb(0 0 0 / 88%) 45%);
   z-index: ${Z_INDEX.under_dropdown};
   pointer-events: none;
   height: ${({ theme }) => `calc(100vh - ${theme.mobileBottomBarHeight}px)`};
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
     top: 72px;
-    height: 100vh;
+    height: calc(100vh - 72px);
   }
 `
 
@@ -57,7 +57,7 @@ const GlowContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  top: 0;
+  top: 72px;
   bottom: 0;
   width: 100%;
   overflow-y: hidden;
@@ -100,7 +100,7 @@ const ContentContainer = styled.div<{ isDarkMode: boolean }>`
   @media screen and (min-width: ${BREAKPOINTS.xl}px) {
     padding: 0 0 1rem;
     justify-content: center;
-    top: 180px;
+    top: 200px;
   }
 `
 
@@ -226,7 +226,7 @@ const CardGrid = styled.div<{ cols: number }>`
   display: grid;
   gap: 12px;
   width: 100%;
-  padding: 24px 0 0;
+  padding: 40px 0 0;
   max-width: 1440px;
   scroll-margin: ${({ theme }) => `${theme.navHeight}px 0 0`};
 
@@ -237,7 +237,7 @@ const CardGrid = styled.div<{ cols: number }>`
       Array.from(Array(cols === 2 ? 2 : 1))
         .map(() => '1fr')
         .join(' ')};
-    gap: 32px;
+    gap: 40px;
   }
 
   @media screen and (min-width: ${BREAKPOINTS.lg}px) {
@@ -246,7 +246,7 @@ const CardGrid = styled.div<{ cols: number }>`
       Array.from(Array(cols))
         .map(() => '1fr')
         .join(' ')};
-    gap: 32px;
+    gap: 40px;
   }
 `
 
@@ -262,7 +262,7 @@ const LandingSwapContainer = styled.div`
     background-image: url(${headerBG});
     background-size: cover;
     background-position: -200px center;
-    height: 100vh !important;
+    height: calc(100vh - 72px);
   }
 `
 
