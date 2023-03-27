@@ -78,53 +78,46 @@ const TopLevelModals = () => {
   return <AddressClaimModal isOpen={open} onDismiss={toggle} />
 }
 
-const Application = () => (
-  <AppWrapper>
-    <HeaderWrapper>
-      <Header />
-    </HeaderWrapper>
-    <BodyWrapper>
-      <Popups />
-      <Polling />
-      <TopLevelModals />
-      <Switch>
-        <Route exact strict path="/limitorder/:outputCurrency" component={RedirectToLimitOrder} />
-        <Route exact strict path="/limitorder" component={LimitOrder} />
-        <Route exact strict path="/swap/:outputCurrency" component={RedirectToMarket} />
-        <Route path="/swap" component={Market} />
-        <Route exact strict path="/pool" component={Pool} />
-        <Route exact strict path="/pool/:tokenId" component={PositionPage} />
-        <Route exact strict path="/stake/:tokenId" component={StakingModal} />
-        <Route exact strict path="/unstake/:tokenId/remove" component={StakingModal} />
-        <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
-        <Route exact strict path="/remove/:tokenId" component={RemoveLiquidityV3} />
-        <Route exact strict path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?" component={RedirectDuplicateTokenIds} />
-        <Route component={RedirectPathToLimitOrderOnly} />
-        <Route component={RedirectPathToSwapOnly} />
-      </Switch>
-    </BodyWrapper>
-  </AppWrapper>
-)
-
-const Widget = () => (
-  <AppWrapper>
-    <Switch>
-      <Route path="/swap-widget/dark" component={SwapWidget} />
-      <Route path="/swap-widget/light" component={SwapWidget} />
-    </Switch>
-  </AppWrapper>
-)
-
 export default function App() {
-  const { pathname } = useLocation()
-  const isApp = !pathname.includes('swap-widget')
-
   return (
     <ErrorBoundary>
       <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
       <Route component={ApeModeQueryParamReader} />
-      <Web3ReactManager>{isApp ? <Application /> : <Widget />}</Web3ReactManager>
+      <Web3ReactManager>
+        <Switch>
+          <Route path="/darkswapwidget/" component={SwapWidget} />
+          <Route path="/lightswapwidget/" component={SwapWidget} />
+          <AppWrapper>
+            <HeaderWrapper>
+              <Header />
+            </HeaderWrapper>
+            <BodyWrapper>
+              <Popups />
+              <Polling />
+              <TopLevelModals />
+              <Route exact strict path="/limitorder/:outputCurrency" component={RedirectToLimitOrder} />
+              <Route exact strict path="/limitorder" component={LimitOrder} />
+              <Route exact strict path="/swap/:outputCurrency" component={RedirectToMarket} />
+              <Route path="/swap" component={Market} />
+              <Route exact strict path="/pool" component={Pool} />
+              <Route exact strict path="/pool/:tokenId" component={PositionPage} />
+              <Route exact strict path="/stake/:tokenId" component={StakingModal} />
+              <Route exact strict path="/unstake/:tokenId/remove" component={StakingModal} />
+              <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
+              <Route exact strict path="/remove/:tokenId" component={RemoveLiquidityV3} />
+              <Route
+                exact
+                strict
+                path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
+                component={RedirectDuplicateTokenIds}
+              />
+              <Route component={RedirectPathToLimitOrderOnly} />
+              <Route component={RedirectPathToSwapOnly} />
+            </BodyWrapper>
+          </AppWrapper>
+        </Switch>
+      </Web3ReactManager>
     </ErrorBoundary>
   )
 }
