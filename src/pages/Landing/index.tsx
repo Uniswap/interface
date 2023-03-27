@@ -347,10 +347,20 @@ export default function Landing() {
           </GlowContainer>
           <ContentContainer isDarkMode={isDarkMode}>
             <TitleText isDarkMode={isDarkMode}>
-              {`Trade crypto ${shouldDisableNFTRoutes && '& NFTs '}with confidence`}
+              {shouldDisableNFTRoutes ? (
+                <Trans>Trade crypto with confidence</Trans>
+              ) : (
+                <Trans>Trade crypto and NFTs with confidence</Trans>
+              )}
             </TitleText>
             <SubTextContainer>
-              <SubText>Buy, sell, and explore tokens and NFTs</SubText>
+              <SubText>
+                {shouldDisableNFTRoutes ? (
+                  <Trans>Buy, sell, and explore tokens</Trans>
+                ) : (
+                  <Trans>Buy, sell, and explore tokens and NFTs</Trans>
+                )}
+              </SubText>
             </SubTextContainer>
             <ActionsContainer>
               <TraceEvent
