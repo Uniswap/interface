@@ -100,7 +100,7 @@ const Application = () => (
 const Widget = () => (
   <AppWrapper>
     <Switch>
-      <Route exact strict path="/widgetswap/:themeMode" component={SwapWidget} />
+      <Route path="/widgetswap/:themeMode" component={SwapWidget} />
       <Route component={SwapWidget} />
     </Switch>
   </AppWrapper>
