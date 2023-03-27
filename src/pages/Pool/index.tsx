@@ -212,12 +212,12 @@ export default function Pool() {
     [[], []]
   ) ?? [[], []]
 
-  const filteredPositions = useMemo(
+  const userSelectedPositionSet = useMemo(
     () => [...openPositions, ...(userHideClosedPositions ? [] : closedPositions)],
     [closedPositions, openPositions, userHideClosedPositions]
   )
 
-  const safePositions = useFilterPossiblyMaliciousPositions(filteredPositions)
+  const filteredPositions = useFilterPossiblyMaliciousPositions(userSelectedPositionSet)
 
   if (!isSupportedChain(chainId)) {
     return <WrongNetworkCard />
@@ -292,9 +292,9 @@ export default function Pool() {
             <MainContentWrapper>
               {positionsLoading ? (
                 <PositionsLoadingPlaceholder />
-              ) : safePositions && closedPositions && safePositions.length > 0 ? (
+              ) : filteredPositions && closedPositions && filteredPositions.length > 0 ? (
                 <PositionList
-                  positions={safePositions}
+                  positions={filteredPositions}
                   setUserHideClosedPositions={setUserHideClosedPositions}
                   userHideClosedPositions={userHideClosedPositions}
                 />
