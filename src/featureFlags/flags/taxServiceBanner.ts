@@ -5,7 +5,7 @@ export function useTaxServiceBannerFlag(): BaseVariant {
 }
 
 export function useTaxServiceBannerEnabled(): boolean {
-  return useTaxServiceBannerFlag() === BaseVariant.Enabled
+  return false
 }
 
 export { BaseVariant as TaxServiceVariant }
