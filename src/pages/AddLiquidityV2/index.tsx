@@ -736,13 +736,23 @@ export default function AddLiquidity() {
           <Flex alignItems="center">
             <AlertTriangle stroke={theme.warning} size="16px" />
             <TYPE.black ml="12px" fontSize="12px" flex={1}>
-              <Trans>
-                The pool’s current price of 1 {baseCurrency.symbol} ={' '}
-                {(invertPrice ? price.invert() : price).toSignificant(4)} {quoteCurrency.symbol} deviates from the
-                market price (1 {baseCurrency.symbol} ={' '}
-                {formatNotDollarAmount(usdPrices[tokenA.wrapped.address] / usdPrices[tokenB.wrapped.address], 4)}{' '}
-                {quoteCurrency.symbol}). You might have high impermanent loss after the pool is created
-              </Trans>
+              {noLiquidity ? (
+                <Trans>
+                  The pool’s current price of 1 {baseCurrency.symbol} ={' '}
+                  {(invertPrice ? price.invert() : price).toSignificant(4)} {quoteCurrency.symbol} deviates from the
+                  market price (1 {baseCurrency.symbol} ={' '}
+                  {formatNotDollarAmount(usdPrices[tokenA.wrapped.address] / usdPrices[tokenB.wrapped.address], 4)}{' '}
+                  {quoteCurrency.symbol}). You might have high impermanent loss after the pool is created
+                </Trans>
+              ) : (
+                <Trans>
+                  The pool’s current price of 1 {baseCurrency.symbol} ={' '}
+                  {(invertPrice ? price.invert() : price).toSignificant(4)} {quoteCurrency.symbol} deviates from the
+                  market price (1 {baseCurrency.symbol} ={' '}
+                  {formatNotDollarAmount(usdPrices[tokenA.wrapped.address] / usdPrices[tokenB.wrapped.address], 4)}{' '}
+                  {quoteCurrency.symbol}). You might have high impermanent loss after you add liquidity to this pool
+                </Trans>
+              )}
             </TYPE.black>
           </Flex>
         </WarningCard>
