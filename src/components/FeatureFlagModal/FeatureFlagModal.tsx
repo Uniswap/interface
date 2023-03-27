@@ -4,7 +4,6 @@ import { useMiniPortfolioFlag } from 'featureFlags/flags/miniPortfolio'
 import { NftGraphqlVariant, useNftGraphqlFlag } from 'featureFlags/flags/nftlGraphql'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
 import { SwapWidgetVariant, useSwapWidgetFlag } from 'featureFlags/flags/swapWidget'
-import { TaxServiceVariant, useTaxServiceBannerFlag } from 'featureFlags/flags/taxServiceBanner'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
@@ -241,12 +240,6 @@ export default function FeatureFlagModal() {
         value={useNftGraphqlFlag()}
         featureFlag={FeatureFlag.nftGraphql}
         label="Migrate NFT read endpoints to GQL"
-      />
-      <FeatureFlagOption
-        variant={TaxServiceVariant}
-        value={useTaxServiceBannerFlag()}
-        featureFlag={FeatureFlag.taxService}
-        label="Tax Service Banner"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption

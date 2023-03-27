@@ -54,7 +54,7 @@ const PageWrapper = styled.div`
 interface Page {
   title: React.ReactNode
   component: ({ account }: { account: string }) => JSX.Element
-  loggingElementName?: string
+  loggingElementName: string
 }
 
 const Pages: Array<Page> = [
@@ -65,7 +65,11 @@ const Pages: Array<Page> = [
   },
   { title: <Trans>NFTs</Trans>, component: NFTs, loggingElementName: InterfaceElementName.MINI_PORTFOLIO_NFT_TAB },
   { title: <Trans>Pools</Trans>, component: Pools, loggingElementName: InterfaceElementName.MINI_PORTFOLIO_POOLS_TAB },
-  { title: <Trans>Activity</Trans>, component: ActivityTab },
+  {
+    title: <Trans>Activity</Trans>,
+    component: ActivityTab,
+    loggingElementName: InterfaceElementName.MINI_PORTFOLIO_ACTIVITY_TAB,
+  },
 ]
 
 function MiniPortfolio({ account }: { account: string }) {
@@ -81,7 +85,6 @@ function MiniPortfolio({ account }: { account: string }) {
             events={[BrowserEvent.onClick]}
             name={SharedEventName.NAVBAR_CLICKED}
             element={Pages[index].loggingElementName}
-            shouldLogImpression={!!Pages[index].loggingElementName}
             key={index}
           >
             <NavItem

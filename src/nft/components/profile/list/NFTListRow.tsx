@@ -7,7 +7,6 @@ import { Dispatch, useEffect, useReducer, useState } from 'react'
 import { Trash2 } from 'react-feather'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
-import { opacify } from 'theme/utils'
 
 import { MarketplaceRow } from './MarketplaceRow'
 import { SetPriceMethod } from './shared'
@@ -20,7 +19,7 @@ const NFTListRowWrapper = styled(Row)`
   border-radius: 8px;
 
   &:hover {
-    background: ${({ theme }) => opacify(24, theme.backgroundOutline)};
+    background: ${({ theme }) => theme.backgroundOutline};
   }
 `
 

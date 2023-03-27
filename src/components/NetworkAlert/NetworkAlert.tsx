@@ -141,7 +141,7 @@ const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
   [SupportedChainId.OPTIMISM]: '#ff3856',
   [SupportedChainId.OPTIMISM_GOERLI]: '#ff3856',
   [SupportedChainId.ARBITRUM_ONE]: '#0490ed',
-  [SupportedChainId.BNB]: colors.gold200,
+  [SupportedChainId.BNB]: colors.gold400,
   [SupportedChainId.ARBITRUM_GOERLI]: '#0490ed',
 }
 

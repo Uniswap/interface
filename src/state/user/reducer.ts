@@ -9,8 +9,6 @@ import { SerializedPair, SerializedToken } from './types'
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
-  taxServiceDismissals: number | undefined
-
   selectedWallet?: ConnectionType
 
   // the timestamp of the last updateVersion action
@@ -57,7 +55,6 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
-  taxServiceDismissals: 0,
   selectedWallet: undefined,
   userExpertMode: false,
   userLocale: null,
@@ -78,9 +75,6 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    updateTaxServiceAcknowledgments(state, action) {
-      state.taxServiceDismissals = action.payload.taxServiceDismissals
-    },
     updateSelectedWallet(state, { payload: { wallet } }) {
       state.selectedWallet = wallet
     },
@@ -169,7 +163,6 @@ const userSlice = createSlice({
 export const {
   addSerializedPair,
   addSerializedToken,
-  updateTaxServiceAcknowledgments,
   updateSelectedWallet,
   updateHideClosedPositions,
   updateUserClientSideRouter,
