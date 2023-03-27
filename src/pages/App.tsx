@@ -1,5 +1,5 @@
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { Route, Switch, useLocation } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
@@ -72,50 +72,38 @@ const TopLevelModals = () => {
   return <AddressClaimModal isOpen={open} onDismiss={toggle} />
 }
 
-const Application = () => (
-  <AppWrapper>
-    <HeaderWrapper>
-      <Header />
-    </HeaderWrapper>
-    <BodyWrapper>
-      <Popups />
-      <Polling />
-      <TopLevelModals />
-      <Switch>
-        <Route
-          exact
-          strict
-          path="/balance/:action/:currencyIdA?/:currencyIdB?/:feeAmount?"
-          component={RedirectDuplicateTokenIds}
-        />
-        <Route exact strict path="/limitorder" component={LimitOrder} />
-        <Route exact strict path="/limitorder/:tokenId" component={PositionPage} />
-        <Route exact strict path="/swap" component={Market} />
-        <Route component={RedirectPathToLimitOrderOnly} />
-      </Switch>
-    </BodyWrapper>
-  </AppWrapper>
-)
-
-const Widget = () => (
-  <AppWrapper>
-    <Switch>
-      <Route path="/darkswapwidget/" component={SwapWidget} />
-      <Route path="/lightswapwidget/" component={SwapWidget} />
-    </Switch>
-  </AppWrapper>
-)
-
 export default function App() {
-  const { pathname } = useLocation()
-  const isApp = !pathname.includes('darkswapwidget') || !pathname.includes('lightswapwidget')
-
   return (
     <ErrorBoundary>
       <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
       <Route component={ApeModeQueryParamReader} />
-      <Web3ReactManager>{isApp ? <Application /> : <Widget />}</Web3ReactManager>
+      <Web3ReactManager>
+        <Switch>
+          <Route path="/darkswapwidget/" component={SwapWidget} />
+          <Route path="/lightswapwidget/" component={SwapWidget} />
+          <AppWrapper>
+            <HeaderWrapper>
+              <Header />
+            </HeaderWrapper>
+            <BodyWrapper>
+              <Popups />
+              <Polling />
+              <TopLevelModals />
+              <Route
+                exact
+                strict
+                path="/balance/:action/:currencyIdA?/:currencyIdB?/:feeAmount?"
+                component={RedirectDuplicateTokenIds}
+              />
+              <Route exact strict path="/limitorder" component={LimitOrder} />
+              <Route exact strict path="/limitorder/:tokenId" component={PositionPage} />
+              <Route exact strict path="/swap" component={Market} />
+              <Route component={RedirectPathToLimitOrderOnly} />
+            </BodyWrapper>
+          </AppWrapper>
+        </Switch>
+      </Web3ReactManager>
     </ErrorBoundary>
   )
 }
