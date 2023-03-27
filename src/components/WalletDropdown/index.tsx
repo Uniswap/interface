@@ -126,7 +126,7 @@ const CloseDrawer = styled.div`
   height: calc(100% - 2 * ${DRAWER_MARGIN});
   position: fixed;
   right: calc(${DRAWER_MARGIN} + ${DRAWER_WIDTH} - ${DRAWER_OFFSET});
-  top: 4px;
+  top: ${DRAWER_MARGIN};
   z-index: ${Z_INDEX.dropdown};
   // When the drawer is not hovered, the icon should be 18px from the edge of the sidebar.
   padding: 24px calc(18px + ${DRAWER_OFFSET}) 24px 14px;
