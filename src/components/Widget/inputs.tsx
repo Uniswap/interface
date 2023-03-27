@@ -32,6 +32,7 @@ export function useSyncWidgetInputs({
   const [amount, setAmount] = useState<SwapValue['amount']>(EMPTY_AMOUNT)
   const [tokens, setTokens] = useState<SwapTokens>({ [Field.OUTPUT]: token, default: token })
 
+  // TODO: check update file
   useEffect(() => {
     setTokens((tokens) => {
       const update = { ...tokens, default: token }

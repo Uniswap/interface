@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-//import { useWeb3React } from '@web3-react/core'
+import { useWeb3React } from '@web3-react/core'
 import Web3Status from 'components/Web3Status'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 //import { chainIdToBackendName } from 'graphql/data/util'
@@ -39,7 +39,7 @@ const MenuItem = ({ href, id, isActive, children }: MenuItemProps) => {
 const PageTabs = () => {
   const { pathname } = useLocation()
   const nftFlag = useNftFlag()
-  //const { chainId: connectedChainId } = useWeb3React()
+  const { chainId: connectedChainId } = useWeb3React()
   //const chainName = chainIdToBackendName(connectedChainId)
 
   const isPoolActive =
@@ -56,9 +56,11 @@ const PageTabs = () => {
       <MenuItem href="/mint" isActive={pathname.startsWith('/mint')}>
         <Trans>Mint</Trans>
       </MenuItem>
-      <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
-        <Trans>Swap</Trans>
-      </MenuItem>
+      {connectedChainId !== 56 && (
+        <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
+          <Trans>Swap</Trans>
+        </MenuItem>
+      )}
       {/*
       <MenuItem href={`/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/tokens')}>
         <Trans>Tokens</Trans>
@@ -69,9 +71,11 @@ const PageTabs = () => {
           <Trans>NFTs</Trans>
         </MenuItem>
       )}
-      <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
-        <Trans>Liquidity</Trans>
-      </MenuItem>
+      {connectedChainId !== 56 && (
+        <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
+          <Trans>Liquidity</Trans>
+        </MenuItem>
+      )}
     </>
   )
 }
