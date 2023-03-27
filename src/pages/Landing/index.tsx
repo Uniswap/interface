@@ -48,7 +48,7 @@ const Gradient = styled.div<{ isDarkMode: boolean }>`
   height: ${({ theme }) => `calc(100vh - ${theme.mobileBottomBarHeight}px)`};
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
     top: 72px;
-    height: calc(100vh - 72px)
+    height: calc(100vh - 72px);
   }
 `
 
@@ -262,7 +262,7 @@ const LandingSwapContainer = styled.div`
     background-image: url(${headerBG});
     background-size: cover;
     background-position: -200px center;
-    height: calc(100vh - 72px)
+    height: calc(100vh - 72px);
   }
 `
 
