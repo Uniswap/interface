@@ -808,9 +808,7 @@ export default function Swap({ className, intro }: { className?: string; intro?:
                                 </ThemedText.SubHeader>
                               ) : (
                                 <ThemedText.SubHeader width="100%" textAlign="center" color="white">
-                                  <Trans>
-                                    Allow the Uniswap Protocol to use your {currencies[Field.INPUT]?.symbol}
-                                  </Trans>
+                                  <Trans>Allow Forge to use your {currencies[Field.INPUT]?.symbol}</Trans>
                                 </ThemedText.SubHeader>
                               )}
 

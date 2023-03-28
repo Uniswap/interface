@@ -1,9 +1,6 @@
-import { ButtonEmpty } from 'components/Button'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
-
-const DARK_MODE_GRADIENT = 'radial-gradient(101.8% 4091.31% at 0% 0%, #3e3e3e 0%, #000000 100%)'
 
 const Banner = styled.div<{ isDarkMode: boolean }>`
   height: 340px;
@@ -60,28 +57,6 @@ const DescriptionText = styled.div`
     line-height: 28px;
   }
 `
-
-const BannerButtonContainer = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-
-  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} opacity`};
-
-  &:hover {
-    opacity: 0.6;
-  }
-
-  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
-    width: auto;
-  }
-`
-
-const BannerButton = styled(ButtonEmpty)`
-  color: white;
-  border: 1px solid white;
-`
-
 const ProtocolBanner = () => {
   const isDarkMode = useIsDarkMode()
   return (

@@ -294,11 +294,6 @@ const Link = styled(NativeLink)`
   ${LinkCss}
 `
 
-const WidgetLandingLink = styled(NativeLink)`
-  ${LinkCss}
-  ${SwapCss}
-`
-
 export default function Landing() {
   const isDarkMode = useIsDarkMode()
 

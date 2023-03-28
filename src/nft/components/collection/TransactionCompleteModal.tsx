@@ -179,7 +179,7 @@ const TxCompleteModal = () => {
                     </Row>
                     <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
                       <Box color="textSecondary" fontWeight="normal">
-                        <Trans>View on Etherscan</Trans>
+                        <Trans>View on Explorer</Trans>
                       </Box>
                     </a>
                   </Box>
@@ -248,7 +248,7 @@ const TxCompleteModal = () => {
                               color="textSecondary"
                               className={styles.totalEthCost}
                             >
-                              View on Etherscan
+                              View on Explorer
                             </Box>
                           </a>
                         </Box>
