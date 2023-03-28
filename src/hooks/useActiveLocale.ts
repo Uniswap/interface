@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unused-modules */
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { useMemo } from 'react'
 import store from 'state'
