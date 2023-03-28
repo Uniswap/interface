@@ -96,31 +96,34 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
 
   const openFiatOnRampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const openFiatOnRampModalLocal = useCallback(() => {
-    setShouldOpenFiatOnRampModal(false)
+    setContinueHandleBuyCryptoFlow(false)
     openFiatOnRampModal()
   }, [openFiatOnRampModal])
 
-  const [shouldOpenFiatOnRampModal, setShouldOpenFiatOnRampModal] = useState(false)
+  const [continueHandleBuyCryptoFlow, setContinueHandleBuyCryptoFlow] = useState(false)
 
   const [fiatOnRampUnavailableRenderCount, setFiatOnRampUnavailableRenderCount] = useState(0)
   const [buyFiatClicked, setBuyFiatClicked] = useBuyFiatClicked()
 
   const [shouldCheck, setShouldCheck] = useState(false)
   const { available: fiatOnrampAvailable, availabilityChecked: fiatOnrampAvailabilityChecked } =
-    useFiatOnrampAvailability(shouldCheck, openFiatOnRampModalLocal)
+    useFiatOnrampAvailability(shouldCheck)
 
   const [, toggleWalletDrawer] = useWalletDrawer()
 
   const handleBuyCryptoClick = useCallback(() => {
-    if (!account) {
-      toggleWalletDrawer()
-      setShouldOpenFiatOnRampModal(true)
-    } else if (!fiatOnrampAvailabilityChecked) {
+    if (!fiatOnrampAvailabilityChecked) {
       setShouldCheck(true)
-    } else if (fiatOnrampAvailable) {
+      setContinueHandleBuyCryptoFlow(true)
+    } else if (fiatOnrampAvailable && !account) {
+      toggleWalletDrawer()
+      setContinueHandleBuyCryptoFlow(true)
+    } else if (fiatOnrampAvailable && account) {
       openFiatOnRampModalLocal()
+      setBuyFiatClicked(true)
+    } else if (!fiatOnrampAvailable) {
+      setBuyFiatClicked(true)
     }
-    setBuyFiatClicked(true)
   }, [
     account,
     setShouldCheck,
@@ -132,19 +135,19 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
   ])
 
   useEffect(() => {
-    if (shouldOpenFiatOnRampModal && account && !fiatOnrampAvailabilityChecked) {
-      setShouldCheck(true)
-    } else if (shouldOpenFiatOnRampModal && account && fiatOnrampAvailabilityChecked && fiatOnrampAvailable) {
-      openFiatOnRampModalLocal()
+    if (continueHandleBuyCryptoFlow) {
+      handleBuyCryptoClick()
     }
   }, [
     openFiatOnRampModalLocal,
-    shouldOpenFiatOnRampModal,
+    continueHandleBuyCryptoFlow,
     account,
     setShouldCheck,
     fiatOnrampAvailabilityChecked,
     fiatOnrampAvailable,
     setBuyFiatClicked,
+    toggleWalletDrawer,
+    handleBuyCryptoClick,
   ])
 
   return (
