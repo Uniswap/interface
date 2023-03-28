@@ -90,6 +90,7 @@ const TOKEN_SAFETY_ARTICLE =
 const MAX_FIAT_ON_RAMP_UNAVAILABLE_TOAST_RENDER_COUNT = 1
 
 // TODO(lynnshaoyu): add analytics and logging
+// TODO(lynnshaoyu): add animation & timeout to buy fiat unavailable toast
 export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Percent }) {
   const theme = useTheme()
   const { account } = useWeb3React()
@@ -100,13 +101,13 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
   const [continueBuyFiatFlowPostRegionCheck, setContinueBuyFiatFlowPostRegionCheck] = useState(false)
   const [continueBuyFiatFlowPostWalletModal, setContinueBuyFiatFlowPostWalletModal] = useState(false)
 
-  const [shouldCheckFiatOnRampAvailability, setShouldCheckFiatOnRampAvailability] = useState(false)
+  const [checkFiatRegionAvailability, setCheckFiatRegionAvailability] = useState(false)
   const {
     available: fiatOnrampAvailable,
     availabilityChecked: fiatOnrampAvailabilityChecked,
     error,
     loading: fiatOnrampAvailabilityLoading,
-  } = useFiatOnrampAvailability(shouldCheckFiatOnRampAvailability)
+  } = useFiatOnrampAvailability(checkFiatRegionAvailability)
 
   const disableBuyCryptoButton = Boolean(
     error || (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) || fiatOnrampAvailabilityLoading
@@ -116,7 +117,7 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
 
   const handleBuyCrypto = useCallback(() => {
     if (!fiatOnrampAvailabilityChecked) {
-      setShouldCheckFiatOnRampAvailability(true)
+      setCheckFiatRegionAvailability(true)
       setContinueBuyFiatFlowPostRegionCheck(true)
     } else if (fiatOnrampAvailable && !account) {
       toggleWalletDrawer()
@@ -148,7 +149,7 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
   }, [
     openFiatOnRampModal,
     account,
-    shouldCheckFiatOnRampAvailability,
+    checkFiatRegionAvailability,
     fiatOnrampAvailabilityChecked,
     fiatOnrampAvailable,
     setBuyFiatClicked,
