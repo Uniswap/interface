@@ -1,10 +1,9 @@
 import Column, { AutoColumn } from 'components/Column'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { useMemo } from 'react'
 import styled, { css, keyframes } from 'styled-components/macro'
 
-const RowWrapper = styled(Row)<{ onClick?: any }>`
+export const PortfolioRowWrapper = styled(Row)<{ onClick?: any }>`
   gap: 12px;
   height: 68px;
   padding: 0 16px;
@@ -14,7 +13,6 @@ const RowWrapper = styled(Row)<{ onClick?: any }>`
   ${({ onClick }) => onClick && 'cursor: pointer'};
 
   &:hover {
-    background: ${({ theme }) => theme.hoverDefault};
     cursor: pointer;
   }
 `
@@ -28,39 +26,30 @@ export default function PortfolioRow({
   title,
   descriptor,
   right,
-  setIsHover,
   onClick,
 }: {
   left: React.ReactNode
   title: React.ReactNode
   descriptor?: React.ReactNode
-  right: React.ReactNode
+  right?: React.ReactNode
   setIsHover?: (b: boolean) => void
   onClick?: () => void
 }) {
-  const onHover = useMemo(
-    () =>
-      setIsHover && {
-        onMouseEnter: () => setIsHover?.(true),
-        onMouseLeave: () => setIsHover?.(false),
-      },
-    [setIsHover]
-  )
   return (
-    <RowWrapper {...onHover} onClick={onClick}>
+    <PortfolioRowWrapper onClick={onClick}>
       {left}
       <AutoColumn grow>
         {title}
         {descriptor}
       </AutoColumn>
-      <EndColumn>{right}</EndColumn>
-    </RowWrapper>
+      {right && <EndColumn>{right}</EndColumn>}
+    </PortfolioRowWrapper>
   )
 }
 
 function PortfolioSkeletonRow({ shrinkRight }: { shrinkRight?: boolean }) {
   return (
-    <RowWrapper>
+    <PortfolioRowWrapper>
       <LoadingBubble height="40px" width="40px" round />
       <AutoColumn grow gap="4px">
         <LoadingBubble height="16px" width="60px" delay="300ms" />
@@ -76,7 +65,7 @@ function PortfolioSkeletonRow({ shrinkRight }: { shrinkRight?: boolean }) {
           </>
         )}
       </EndColumn>
-    </RowWrapper>
+    </PortfolioRowWrapper>
   )
 }
 

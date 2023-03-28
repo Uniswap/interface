@@ -6,6 +6,7 @@ import { useMGTMMicrositeEnabled } from 'featureFlags/flags/mgtm'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useIsPoolsPage } from 'hooks/useIsPoolsPage'
+import { useAtomValue } from 'jotai/utils'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
@@ -13,6 +14,7 @@ import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
+import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import styled from 'styled-components/macro'
 
 import { Bag } from './Bag'
@@ -60,6 +62,8 @@ export const PageTabs = () => {
   const isNftPage = useIsNftPage()
   const micrositeEnabled = useMGTMMicrositeEnabled()
 
+  const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
+
   return (
     <>
       <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
@@ -68,9 +72,11 @@ export const PageTabs = () => {
       <MenuItem href={`/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/tokens')}>
         <Trans>Tokens</Trans>
       </MenuItem>
-      <MenuItem dataTestId="nft-nav" href="/nfts" isActive={isNftPage}>
-        <Trans>NFTs</Trans>
-      </MenuItem>
+      {!shouldDisableNFTRoutes && (
+        <MenuItem dataTestId="nft-nav" href="/nfts" isActive={isNftPage}>
+          <Trans>NFTs</Trans>
+        </MenuItem>
+      )}
       <Box display={{ sm: 'flex', lg: 'none', xxl: 'flex' }} width="full">
         <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
           <Trans>Pools</Trans>

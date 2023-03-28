@@ -29,6 +29,10 @@ schema.graphql
 .env.test.local
 .env.production.local
 
+instrumented
+.nyc_output
+.nyc_output/**/*
+
 /.netlify
 
 npm-debug.log*

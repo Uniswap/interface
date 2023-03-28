@@ -20,7 +20,8 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-import { CHAIN_ID_TO_BACKEND_NAME, isGqlSupportedChain } from 'graphql/data/util'
+import { CHAIN_IDS_TO_NAMES } from 'constants/chains'
+import { isGqlSupportedChain } from 'graphql/data/util'
 import { useToken } from 'hooks/Tokens'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -54,7 +55,7 @@ import { LoadingRows } from './styleds'
 
 const getTokenLink = (chainId: SupportedChainId, address: string) => {
   if (isGqlSupportedChain(chainId)) {
-    const chainName = CHAIN_ID_TO_BACKEND_NAME[chainId]
+    const chainName = CHAIN_IDS_TO_NAMES[chainId]
     return `${window.location.origin}/#/tokens/${chainName}/${address}`
   } else {
     return getExplorerLink(chainId, address, ExplorerDataType.TOKEN)

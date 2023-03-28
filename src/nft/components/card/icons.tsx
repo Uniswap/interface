@@ -40,11 +40,13 @@ export const MarketplaceContainer = ({
   marketplace,
   tokenType,
   listedPrice,
+  hidePrice,
 }: {
   isSelected: boolean
   marketplace?: Markets
   tokenType?: NftStandard
   listedPrice?: string
+  hidePrice?: boolean
 }) => {
   if (isSelected) {
     if (!marketplace) {
@@ -62,7 +64,7 @@ export const MarketplaceContainer = ({
     )
   }
 
-  if (listedPrice) {
+  if (listedPrice && !hidePrice) {
     return (
       <StyledMarketplaceContainer isText={true}>
         <ListPriceRowContainer>

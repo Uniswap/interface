@@ -1,12 +1,11 @@
 import { useCallback, useEffect } from 'react'
 import { X } from 'react-feather'
-import { animated } from 'react-spring'
-import { useSpring } from 'react-spring'
 import styled, { useTheme } from 'styled-components/macro'
 
 import { useRemovePopup } from '../../state/application/hooks'
 import { PopupContent } from '../../state/application/reducer'
 import FailedNetworkSwitchPopup from './FailedNetworkSwitchPopup'
+import TransactionPopup from './TransactionPopup'
 
 const StyledClose = styled(X)`
   position: absolute;
@@ -23,7 +22,7 @@ const Popup = styled.div`
   padding: 1em;
   background-color: ${({ theme }) => theme.backgroundSurface};
   position: relative;
-  border-radius: 10px;
+  border-radius: 16px;
   padding: 20px;
   padding-right: 35px;
   overflow: hidden;
@@ -35,16 +34,6 @@ const Popup = styled.div`
     }
   `}
 `
-const Fader = styled.div`
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
-  width: 100%;
-  height: 2px;
-  background-color: ${({ theme }) => theme.deprecated_bg3};
-`
-
-const AnimatedFader = animated(Fader)
 
 export default function PopupItem({
   removeAfterMs,
@@ -70,14 +59,11 @@ export default function PopupItem({
   }, [removeAfterMs, removeThisPopup])
 
   const theme = useTheme()
-  const faderStyle = useSpring({
-    from: { width: '100%' },
-    to: { width: '0%' },
-    config: { duration: removeAfterMs ?? undefined },
-  })
 
   let popupContent
-  if ('failedSwitchNetwork' in content) {
+  if ('txn' in content) {
+    popupContent = <TransactionPopup hash={content.txn.hash} />
+  } else if ('failedSwitchNetwork' in content) {
     popupContent = <FailedNetworkSwitchPopup chainId={content.failedSwitchNetwork} />
   }
 
@@ -85,7 +71,6 @@ export default function PopupItem({
     <Popup>
       <StyledClose color={theme.textSecondary} onClick={removeThisPopup} />
       {popupContent}
-      {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
     </Popup>
   ) : null
 }

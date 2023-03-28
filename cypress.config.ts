@@ -1,3 +1,4 @@
+import codeCoverageTask from '@cypress/code-coverage/task'
 import { defineConfig } from 'cypress'
 
 export default defineConfig({
@@ -7,6 +8,7 @@ export default defineConfig({
   chromeWebSecurity: false,
   e2e: {
     setupNodeEvents(on, config) {
+      codeCoverageTask(on, config)
       return {
         ...config,
         // Only enable Chrome.
