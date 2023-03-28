@@ -22,7 +22,7 @@ import {
 import {
   getAccountAddressFromEIP155String,
   getChainIdFromEIP155String,
-  getSupportedWalletConnectChains,
+  parseProposalNamespaces,
   parseSignRequest,
   parseTransactionRequest,
 } from 'src/features/walletConnectV2/utils'
@@ -58,53 +58,62 @@ function createWalletConnectV2Channel(): EventChannel<Action<unknown>> {
     const sessionProposalHandler = async (
       proposal: Omit<Web3WalletTypes.BaseEventArgs<ProposalTypes.Struct>, 'topic'>
     ): Promise<void> => {
-      const dapp = proposal.params.proposer.metadata
-      const proposalNamespaces = proposal.params.requiredNamespaces
+      const {
+        params: {
+          requiredNamespaces,
+          optionalNamespaces,
+          proposer: { metadata: dapp },
+        },
+        id,
+      } = proposal
 
-      // Check if proposal namespaces includes any unsupported EVM chains
-      const hasUnsupportedEIP155Chains = proposalNamespaces.eip155?.chains?.some(
-        (chain) => getChainIdFromEIP155String(chain) === null
-      )
-
-      const chains = getSupportedWalletConnectChains(proposalNamespaces.eip155?.chains)
-
-      // Reject pending session if namespaces includes non-EVM chains or unsupported EVM chains
-      if (!proposalNamespaces.eip155 || hasUnsupportedEIP155Chains) {
-        const chainLabels = ALL_SUPPORTED_CHAIN_IDS.map(
-          (chainId) => CHAIN_INFO[chainId].label
-        ).join(', ')
-        Alert.alert(
-          i18n.t('Connection Error'),
-          i18n.t('Uniswap Wallet currently only supports {{ chains }}', { chains: chainLabels })
+      try {
+        const { chains, proposalNamespaces } = parseProposalNamespaces(
+          requiredNamespaces,
+          optionalNamespaces
         )
+        emit(
+          addPendingSession({
+            wcSession: {
+              id: id.toString(),
+              proposalNamespaces,
+              chains,
+              version: '2',
+              dapp: {
+                name: dapp.name,
+                url: dapp.url,
+                icon: dapp.icons[0] ?? null,
+                version: '2',
+              },
+            },
+          })
+        )
+      } catch (e) {
+        // Reject pending session if required namespaces includes non-EVM chains or unsupported EVM chains
         wcWeb3Wallet.rejectSession({
           id: proposal.id,
           reason: getSdkError('UNSUPPORTED_CHAINS'),
         })
-        logger.info(
+
+        const chainLabels = ALL_SUPPORTED_CHAIN_IDS.map(
+          (chainId) => CHAIN_INFO[chainId].label
+        ).join(', ')
+
+        Alert.alert(
+          i18n.t('Connection Error'),
+          i18n.t('Uniswap Wallet currently only supports {{ chains }}. \n\n {{ error }}', {
+            chains: chainLabels,
+            error: e,
+          })
+        )
+
+        logger.debug(
           'WalletConnectV2Saga',
           'sessionProposalHandler',
-          `Rejected session proposal due to unsupported chains: ${proposalNamespaces.eip155?.chains}`
+          'Rejected session proposal due to invalid proposal namespaces: ',
+          e
         )
-        return
       }
-
-      emit(
-        addPendingSession({
-          wcSession: {
-            id: proposal.id.toString(),
-            proposalNamespaces,
-            chains,
-            version: '2',
-            dapp: {
-              name: dapp.name,
-              url: dapp.url,
-              icon: dapp.icons[0] ?? null,
-              version: '2',
-            },
-          },
-        })
-      )
     }
 
     const sessionRequestHandler = async (event: Web3WalletTypes.SessionRequest): Promise<void> => {

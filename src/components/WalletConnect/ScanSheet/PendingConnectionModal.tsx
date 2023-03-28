@@ -35,7 +35,7 @@ import { returnToPreviousApp, settlePendingSession } from 'src/features/walletCo
 import {
   addSession,
   removePendingSession,
-  WalletConnectSession,
+  WalletConnectPendingSession,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { getSessionNamespaces } from 'src/features/walletConnectV2/utils'
@@ -43,7 +43,7 @@ import { toSupportedChainId } from 'src/utils/chainId'
 import { ONE_SECOND_MS } from 'src/utils/time'
 
 type Props = {
-  pendingSession: WalletConnectSession
+  pendingSession: WalletConnectPendingSession
   onClose: () => void
 }
 
@@ -198,10 +198,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
 
       // Handle WC 2.0 session request
       if (approved) {
-        const { namespaces, chains } = getSessionNamespaces(
-          activeAddress,
-          pendingSession.proposalNamespaces
-        )
+        const namespaces = getSessionNamespaces(activeAddress, pendingSession.proposalNamespaces)
 
         const session = await wcWeb3Wallet.approveSession({
           id: Number(pendingSession.id),
@@ -218,8 +215,8 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
                 icon: session.peer.metadata.icons[0] ?? null,
                 version: '2',
               },
-              chains,
-              proposalNamespaces: pendingSession.proposalNamespaces,
+              chains: pendingSession.chains,
+              namespaces,
               version: '2',
             },
             account: activeAddress,
@@ -245,6 +242,9 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
       }
 
       onClose()
+      if (didOpenFromDeepLink) {
+        returnToPreviousApp()
+      }
     },
     [activeAddress, dispatch, onClose, selectedChainId, pendingSession, didOpenFromDeepLink]
   )

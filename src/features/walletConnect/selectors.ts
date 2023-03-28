@@ -1,6 +1,7 @@
 import { RootState } from 'src/app/rootReducer'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import {
+  WalletConnectPendingSession,
   WalletConnectRequest,
   WalletConnectSession,
 } from 'src/features/walletConnect/walletConnectSlice'
@@ -20,7 +21,7 @@ export const selectPendingRequests = (state: RootState): WalletConnectRequest[] 
   return state.walletConnect.pendingRequests
 }
 
-export const selectPendingSession = (state: RootState): WalletConnectSession | null => {
+export const selectPendingSession = (state: RootState): WalletConnectPendingSession | null => {
   return state.walletConnect.pendingSession
 }
 

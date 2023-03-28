@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ProposalTypes } from '@walletconnect/types'
+import { ProposalTypes, SessionTypes } from '@walletconnect/types'
 import { ChainId } from 'src/constants/chains'
 import {
   DappInfo,
@@ -16,7 +16,7 @@ export type WalletConnectSessionV1 = {
   version: '1'
 }
 
-export type WalletConnectSessionV2 = {
+export type WalletConnectPendingSessionV2 = {
   id: string
   chains: ChainId[]
   dapp: DappInfoV2
@@ -24,7 +24,17 @@ export type WalletConnectSessionV2 = {
   version: '2'
 }
 
+export type WalletConnectSessionV2 = {
+  id: string
+  chains: ChainId[]
+  dapp: DappInfoV2
+  namespaces: SessionTypes.Namespaces
+  version: '2'
+}
+
 export type WalletConnectSession = WalletConnectSessionV1 | WalletConnectSessionV2
+
+export type WalletConnectPendingSession = WalletConnectSessionV1 | WalletConnectPendingSessionV2
 
 interface SessionMapping {
   [sessionId: string]: WalletConnectSession
@@ -69,7 +79,7 @@ export interface WalletConnectState {
       sessions: SessionMapping
     }
   }
-  pendingSession: WalletConnectSession | null
+  pendingSession: WalletConnectPendingSession | null
   pendingRequests: WalletConnectRequest[]
   didOpenFromDeepLink?: boolean
 }
@@ -114,7 +124,10 @@ const slice = createSlice({
       }
     },
 
-    addPendingSession: (state, action: PayloadAction<{ wcSession: WalletConnectSession }>) => {
+    addPendingSession: (
+      state,
+      action: PayloadAction<{ wcSession: WalletConnectPendingSession }>
+    ) => {
       const { wcSession } = action.payload
       state.pendingSession = wcSession
     },

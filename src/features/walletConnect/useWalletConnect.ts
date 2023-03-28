@@ -9,6 +9,7 @@ import {
   selectSessions,
 } from 'src/features/walletConnect/selectors'
 import {
+  WalletConnectPendingSession,
   WalletConnectRequest,
   WalletConnectSession,
 } from 'src/features/walletConnect/walletConnectSlice'
@@ -17,7 +18,7 @@ interface WalletConnect {
   sessions: WalletConnectSession[]
   pendingRequests: WalletConnectRequest[]
   modalState: AppModalState<ScannerModalState>
-  pendingSession: WalletConnectSession | null
+  pendingSession: WalletConnectPendingSession | null
 }
 
 export function useWalletConnect(address: NullUndefined<string>): WalletConnect {

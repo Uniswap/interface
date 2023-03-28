@@ -90,7 +90,6 @@ export function WalletConnectModal({
       }
 
       if (walletConnectV2Enabled && supportedURI.type === URIType.WalletConnectV2URL) {
-        setShouldFreezeCamera(true)
         wcWeb3Wallet.core.pairing.pair({ uri: supportedURI.value })
       }
 
