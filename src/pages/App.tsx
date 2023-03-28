@@ -1,5 +1,5 @@
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
@@ -71,44 +71,11 @@ const TopLevelModals = () => {
   return <AddressClaimModal isOpen={open} onDismiss={toggle} />
 }
 
-const Application = () => (
-  <AppWrapper>
-    <HeaderWrapper>
-      <Header />
-    </HeaderWrapper>
-    <BodyWrapper>
-      <Popups />
-      <Polling />
-      <TopLevelModals />
-      <Switch>
-        <Route
-          exact
-          strict
-          path="/balance/:action/:currencyIdA?/:currencyIdB?/:feeAmount?"
-          component={RedirectDuplicateTokenIds}
-        />
-        <Route exact strict path="/limitorder" component={LimitOrder} />
-        <Route exact strict path="/limitorder/:tokenId" component={PositionPage} />
-        <Route exact strict path="/swap" component={Market} />
-        <Route component={RedirectPathToLimitOrderOnly} />
-      </Switch>
-    </BodyWrapper>
-  </AppWrapper>
-)
-
-const Widget = () => {
-  return (
-    <AppWrapper>
-      <Switch>
-        <Route path={'/swap-widget'} exact={true} component={SwapWidget} />
-        <Route path={`/swap-widget/dark`} exact={true} component={SwapWidget} />
-        <Route path={`/swap-widget/light`} exact={true} component={SwapWidget} />
-      </Switch>
-    </AppWrapper>
-  )
-}
-
 export default function App() {
+  const { pathname } = useLocation()
+  const showFallbackRoute =
+    !pathname.includes('swap') && !pathname.includes('limitorder') && !pathname.includes('balance')
+
   return (
     <ErrorBoundary>
       <Route component={GoogleAnalyticsReporter} />
@@ -116,8 +83,28 @@ export default function App() {
       <Route component={ApeModeQueryParamReader} />
       <Web3ReactManager>
         <Switch>
-          <Route path="/swap-widget" component={Widget} />
-          <Route component={Application} />
+          <Route exact strict path="/darkswapwidget" component={SwapWidget} />
+          <Route exact strict path="/lightswapwidget" component={SwapWidget} />
+          <AppWrapper>
+            <HeaderWrapper>
+              <Header />
+            </HeaderWrapper>
+            <BodyWrapper>
+              <Popups />
+              <Polling />
+              <TopLevelModals />
+              <Route
+                exact
+                strict
+                path="/balance/:action/:currencyIdA?/:currencyIdB?/:feeAmount?"
+                component={RedirectDuplicateTokenIds}
+              />
+              <Route exact strict path="/limitorder" component={LimitOrder} />
+              <Route exact strict path="/limitorder/:tokenId" component={PositionPage} />
+              <Route exact strict path="/swap" component={Market} />
+              {showFallbackRoute && <Route component={RedirectPathToLimitOrderOnly} />}
+            </BodyWrapper>
+          </AppWrapper>
         </Switch>
       </Web3ReactManager>
     </ErrorBoundary>
