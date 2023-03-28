@@ -1,13 +1,15 @@
+import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import { parseLocalActivity } from 'components/WalletDropdown/MiniPortfolio/Activity/parseLocal'
 import { PortfolioLogo } from 'components/WalletDropdown/MiniPortfolio/PortfolioLogo'
 import PortfolioRow from 'components/WalletDropdown/MiniPortfolio/PortfolioRow'
 import useENSName from 'hooks/useENSName'
+import { CheckCircle } from 'react-feather'
 import { useCombinedActiveList } from 'state/lists/hooks'
 import { useTransaction } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/types'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { EllipsisStyle, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -22,22 +24,29 @@ function TransactionPopupContent({ tx, chainId }: { tx: TransactionDetails; chai
   const tokens = useCombinedActiveList()
   const activity = parseLocalActivity(tx, chainId, tokens)
   const { ENSName } = useENSName(activity?.otherAccount)
+  const theme = useTheme()
 
   if (!activity) return null
 
   const explorerUrl = getExplorerLink(chainId, tx.hash, ExplorerDataType.TRANSACTION)
+
+  const currencies = activity.currencies?.filter((c) => c) as Currency[]
 
   return (
     <PortfolioRow
       left={
         success ? (
           <Column>
-            <PortfolioLogo
-              chainId={chainId}
-              currencies={activity.currencies}
-              images={activity.logos}
-              accountAddress={activity.otherAccount}
-            />
+            {currencies.length > 0 ? (
+              <PortfolioLogo
+                chainId={chainId}
+                currencies={currencies}
+                images={activity.logos}
+                accountAddress={activity.otherAccount}
+              />
+            ) : (
+              <CheckCircle color={theme.accentSuccess} size={24} />
+            )}
           </Column>
         ) : (
           <PopupAlertTriangle />

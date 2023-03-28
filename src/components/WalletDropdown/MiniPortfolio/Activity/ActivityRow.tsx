@@ -1,11 +1,13 @@
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
+import { Currency } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import useENSName from 'hooks/useENSName'
-import styled from 'styled-components/macro'
+import { CheckCircle } from 'react-feather'
+import styled, { useTheme } from 'styled-components/macro'
 import { EllipsisStyle, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -32,8 +34,10 @@ export function ActivityRow({
 }) {
   const { ENSName } = useENSName(otherAccount)
   const timeSince = useTimeSince(timestamp)
+  const theme = useTheme()
 
   const explorerUrl = getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)
+  const definedCurrencies = currencies?.filter((c) => c) as Currency[]
 
   return (
     <TraceEvent
@@ -45,7 +49,16 @@ export function ActivityRow({
       <PortfolioRow
         left={
           <Column>
-            <PortfolioLogo chainId={chainId} currencies={currencies} images={logos} accountAddress={otherAccount} />
+            {definedCurrencies?.length > 0 ? (
+              <PortfolioLogo
+                chainId={chainId}
+                currencies={definedCurrencies}
+                images={logos}
+                accountAddress={otherAccount}
+              />
+            ) : (
+              <CheckCircle color={theme.accentSuccess} size={24} />
+            )}
           </Column>
         }
         title={<ThemedText.SubHeader fontWeight={500}>{title}</ThemedText.SubHeader>}
