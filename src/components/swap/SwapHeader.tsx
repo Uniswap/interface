@@ -92,30 +92,45 @@ const MAX_FIAT_ON_RAMP_UNAVAILABLE_TOAST_RENDER_COUNT = 1
 // TODO(lynnshaoyu): add analytics and logging
 export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Percent }) {
   const theme = useTheme()
-
   const { account } = useWeb3React()
-
   const openFiatOnRampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
 
-  const [fiatOnRampUnavailableRenderCount, setFiatOnRampUnavailableRenderCount] = useState(0)
   const [buyFiatClicked, setBuyFiatClicked] = useBuyFiatClicked()
+  const [fiatOnRampUnavailableRenderCount, setFiatOnRampUnavailableRenderCount] = useState(buyFiatClicked ? 1 : 0)
+  const [continueBuyFiatFlowPostRegionCheck, setContinueBuyFiatFlowPostRegionCheck] = useState(false)
+  const [continueBuyFiatFlowPostWalletModal, setContinueBuyFiatFlowPostWalletModal] = useState(false)
 
-  const [shouldCheck, setShouldCheck] = useState(false)
-  const { available: fiatOnrampAvailable, availabilityChecked: fiatOnrampAvailabilityChecked } =
-    useFiatOnrampAvailability(shouldCheck)
+  const [shouldCheckFiatOnRampAvailability, setShouldCheckFiatOnRampAvailability] = useState(false)
+  const {
+    available: fiatOnrampAvailable,
+    availabilityChecked: fiatOnrampAvailabilityChecked,
+    error,
+    loading: fiatOnrampAvailabilityLoading,
+  } = useFiatOnrampAvailability(shouldCheckFiatOnRampAvailability)
+
+  const disableBuyCryptoButton = Boolean(
+    error || (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) || fiatOnrampAvailabilityLoading
+  )
 
   const [, toggleWalletDrawer] = useWalletDrawer()
 
-  const handleBuyCryptoClick = useCallback(() => {
+  const handleBuyCrypto = useCallback(() => {
     if (!fiatOnrampAvailabilityChecked) {
-      setShouldCheck(true)
+      setShouldCheckFiatOnRampAvailability(true)
+      setContinueBuyFiatFlowPostRegionCheck(true)
     } else if (fiatOnrampAvailable && !account) {
       toggleWalletDrawer()
+      setContinueBuyFiatFlowPostRegionCheck(false)
+      setContinueBuyFiatFlowPostWalletModal(true)
     } else if (fiatOnrampAvailable && account) {
       openFiatOnRampModal()
       setBuyFiatClicked(true)
+      setContinueBuyFiatFlowPostRegionCheck(false)
+      setContinueBuyFiatFlowPostWalletModal(false)
     } else if (!fiatOnrampAvailable) {
       setBuyFiatClicked(true)
+      setContinueBuyFiatFlowPostRegionCheck(false)
+      setContinueBuyFiatFlowPostWalletModal(false)
     }
   }, [
     fiatOnrampAvailabilityChecked,
@@ -127,18 +142,21 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
   ])
 
   useEffect(() => {
-    if (fiatOnrampAvailabilityChecked || account) {
-      handleBuyCryptoClick()
+    if (continueBuyFiatFlowPostRegionCheck || (account && continueBuyFiatFlowPostWalletModal)) {
+      handleBuyCrypto()
     }
   }, [
     openFiatOnRampModal,
     account,
-    setShouldCheck,
+    shouldCheckFiatOnRampAvailability,
     fiatOnrampAvailabilityChecked,
     fiatOnrampAvailable,
     setBuyFiatClicked,
     toggleWalletDrawer,
-    handleBuyCryptoClick,
+    handleBuyCrypto,
+    setContinueBuyFiatFlowPostRegionCheck,
+    continueBuyFiatFlowPostWalletModal,
+    continueBuyFiatFlowPostRegionCheck,
   ])
 
   return (
@@ -165,9 +183,9 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
               className={subhead}
               color={theme.textSecondary}
               marginLeft="8px"
-              disabled={fiatOnrampAvailabilityChecked && !fiatOnrampAvailable}
+              disabled={disableBuyCryptoButton}
               isClickable={true}
-              onClick={handleBuyCryptoClick}
+              onClick={handleBuyCrypto}
             >
               <Trans>Buy</Trans>
               {!buyFiatClicked && <Dot />}
