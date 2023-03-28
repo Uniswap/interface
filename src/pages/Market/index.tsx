@@ -560,7 +560,7 @@ export default function Market({ history }: RouteComponentProps) {
   ])
 
   // errors
-  const [showInverted, setShowInverted] = useState<boolean>(false)
+  const [showInverted, setShowInverted] = useState<boolean>(true)
 
   // warnings on the greater of fiat value price impact and execution price impact
   const priceImpactSeverity = useMemo(() => {
@@ -692,7 +692,6 @@ export default function Market({ history }: RouteComponentProps) {
                     feeImpactAccepted={feeImpactAccepted}
                     routeIsNotFound={routeNotFound}
                   />
-
                   <AutoColumn gap={'md'}>
                     <div style={{ display: 'relative' }}>
                       <CurrencyInputPanel
@@ -750,7 +749,7 @@ export default function Market({ history }: RouteComponentProps) {
                       />
                     </div>
                     {recipient !== null && !showWrap ? (
-                      <>
+                      <AutoColumn>
                         <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
                           <ArrowWrapper clickable={false}>
                             <ArrowDown size="16" color={theme.text2} />
@@ -760,7 +759,7 @@ export default function Market({ history }: RouteComponentProps) {
                           </LinkStyledButton>
                         </AutoRow>
                         <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
-                      </>
+                      </AutoColumn>
                     ) : null}
                     {!showWrap && trade && (
                       <div>
@@ -873,7 +872,9 @@ export default function Market({ history }: RouteComponentProps) {
                               >
                                 <StyledInfo />
                               </MouseoverTooltipContent>
-                              <Trans>&nbsp;Est. Fees:</Trans>
+                              <TYPE.body color={theme.text2} fontWeight={400} fontSize={14} justifyContent="start">
+                                <Trans>Est. Fees:</Trans>
+                              </TYPE.body>
                             </RowFixed>
                             {paymentFees && (
                               <RowFixed>
@@ -1064,7 +1065,7 @@ export default function Market({ history }: RouteComponentProps) {
                                 (approvalState !== ApprovalState.APPROVED &&
                                   signatureState !== UseERC20PermitState.SIGNED)
                               }
-                              error={isValid}
+                              error={!isValid}
                             >
                               <Text fontSize={16} fontWeight={500}>
                                 <Trans>Swap</Trans>
@@ -1087,7 +1088,7 @@ export default function Market({ history }: RouteComponentProps) {
                           }}
                           id="swap-button"
                           disabled={!isValid || !!swapCallbackError}
-                          error={isValid && !swapCallbackError}
+                          error={!isValid && !swapCallbackError}
                         >
                           <Text fontSize={20} fontWeight={500}>
                             {swapInputError ? swapInputError : <Trans>Swap</Trans>}
@@ -1228,7 +1229,6 @@ export default function Market({ history }: RouteComponentProps) {
               feeImpactAccepted={feeImpactAccepted}
               routeIsNotFound={routeNotFound}
             />
-
             <AutoColumn gap={'md'}>
               <div style={{ display: 'relative' }}>
                 <CurrencyInputPanel
@@ -1293,7 +1293,7 @@ export default function Market({ history }: RouteComponentProps) {
               {!showWrap && trade && (
                 <AutoColumn gap="sm">
                   <RowBetween>
-                    <TYPE.body color={theme.text2} fontWeight={400} fontSize={14} justifyContent="start">
+                    <RowFixed>
                       <MouseoverTooltipContent
                         wrap={false}
                         content={
@@ -1346,8 +1346,10 @@ export default function Market({ history }: RouteComponentProps) {
                       >
                         <StyledInfo />
                       </MouseoverTooltipContent>
-                      <Trans>Price</Trans>
-                    </TYPE.body>
+                      <TYPE.body color={theme.text2} fontWeight={400} fontSize={14} justifyContent="start">
+                        <Trans>Price</Trans>
+                      </TYPE.body>
+                    </RowFixed>
                     <RowFixed>
                       <LoadingOpacityContainer $loading={routeIsSyncing}>
                         <TradePrice
@@ -1402,7 +1404,9 @@ export default function Market({ history }: RouteComponentProps) {
                         >
                           <StyledInfo />
                         </MouseoverTooltipContent>
-                        <Trans>&nbsp;Est. Fees:</Trans>
+                        <TYPE.body color={theme.text2} fontWeight={400} fontSize={14} justifyContent="start">
+                          <Trans>Est. Fees:</Trans>
+                        </TYPE.body>
                       </RowFixed>
                       {paymentFees && (
                         <RowFixed>
@@ -1470,7 +1474,6 @@ export default function Market({ history }: RouteComponentProps) {
                   </span>
                 </PriceImpactWarning>
               )}
-
               {feeImpactHigh && (
                 <PriceImpactWarning>
                   <span>
@@ -1483,7 +1486,6 @@ export default function Market({ history }: RouteComponentProps) {
                   </span>
                 </PriceImpactWarning>
               )}
-              <div></div>
               <div>
                 {swapIsUnsupported ? (
                   <ButtonPrimary disabled={true}>
@@ -1586,7 +1588,7 @@ export default function Market({ history }: RouteComponentProps) {
                           !isValid ||
                           (approvalState !== ApprovalState.APPROVED && signatureState !== UseERC20PermitState.SIGNED)
                         }
-                        error={isValid}
+                        error={!isValid}
                       >
                         <Text fontSize={16} fontWeight={500}>
                           <Trans>Swap</Trans>
@@ -1609,7 +1611,7 @@ export default function Market({ history }: RouteComponentProps) {
                     }}
                     id="swap-button"
                     disabled={!isValid || !!swapCallbackError}
-                    error={isValid && !swapCallbackError}
+                    error={!isValid && !swapCallbackError}
                   >
                     <Text fontSize={20} fontWeight={500}>
                       {swapInputError ? swapInputError : <Trans>Swap</Trans>}

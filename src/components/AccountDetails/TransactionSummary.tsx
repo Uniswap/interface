@@ -285,7 +285,7 @@ function SwapSummary({ info }: { info: ExactInputSwapTransactionInfo | ExactOutp
   if (info.tradeType === TradeType.EXACT_INPUT) {
     return (
       <Trans>
-        Swap exactly{' '}
+        Trade exactly{' '}
         <FormattedCurrencyAmountManaged
           rawAmount={info.inputCurrencyAmountRaw}
           currencyId={info.inputCurrencyId}
@@ -302,7 +302,7 @@ function SwapSummary({ info }: { info: ExactInputSwapTransactionInfo | ExactOutp
   } else {
     return (
       <Trans>
-        Swap{' '}
+        Trade{' '}
         <FormattedCurrencyAmountManaged
           rawAmount={info.expectedInputCurrencyAmountRaw}
           currencyId={info.inputCurrencyId}

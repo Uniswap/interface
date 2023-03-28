@@ -12,6 +12,7 @@ import { ImportToken } from './ImportToken'
 import Manage from './Manage'
 
 interface CurrencySearchModalProps {
+  title?: string
   isOpen: boolean
   onDismiss: () => void
   selectedCurrency?: Currency | null
@@ -30,6 +31,7 @@ export enum CurrencyModalView {
 }
 
 export default function CurrencySearchModal({
+  title,
   isOpen,
   onDismiss,
   onCurrencySelect,
@@ -73,6 +75,7 @@ export default function CurrencySearchModal({
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80} minHeight={minHeight}>
       {modalView === CurrencyModalView.search ? (
         <CurrencySearch
+          title={title}
           isOpen={isOpen}
           onDismiss={onDismiss}
           onCurrencySelect={handleCurrencySelect}

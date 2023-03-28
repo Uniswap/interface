@@ -457,7 +457,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
   }, [swapCallback, tradeToConfirm, showConfirm, recipient, recipientAddress, account, trade])
 
   // errors
-  const [showInverted, setShowInverted] = useState<boolean>(true)
+  const [showInverted, setShowInverted] = useState<boolean>(false)
 
   const isArgentWallet = useIsArgentWallet()
 
@@ -535,81 +535,81 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                   inputAmount={parsedAmounts.input}
                   outputAmount={parsedAmounts.output}
                 />
-
-                <AutoColumn gap={'md'}>
-                  <CurrencyInputPanel
-                    actionLabel={t`You send`}
-                    label={
-                      independentField === Field.OUTPUT && !showWrap ? (
-                        <Trans>From (at most)</Trans>
-                      ) : (
-                        <Trans>From</Trans>
-                      )
-                    }
-                    value={formattedAmounts.input}
-                    showMaxButton={showMaxButton}
-                    currency={currencies[Field.INPUT]}
-                    onUserInput={handleTypeInput}
-                    onMax={handleMaxInput}
-                    fiatValue={fiatValueInput ?? undefined}
-                    onCurrencySelect={handleInputSelect}
-                    otherCurrency={currencies[Field.OUTPUT]}
-                    showCommonBases={true}
-                    id="swap-currency-input"
-                    loading={independentField === Field.OUTPUT && routeIsSyncing}
-                  />
-
-                  <ArrowWrapper clickable={false}>
-                    <X size="16" />
-                  </ArrowWrapper>
-
-                  <CurrencyInputPanel
-                    value={formattedAmounts.price}
-                    onUserInput={handleTypePrice}
-                    label={<Trans>Target Price+++</Trans>}
-                    showMaxButton={false}
-                    hideBalance={true}
-                    currency={currencies[Field.OUTPUT] ?? null}
-                    otherCurrency={currencies[Field.INPUT]}
-                    id="target-price"
-                    showCommonBases={false}
-                    locked={false}
-                    showCurrencySelector={false}
-                    showRate={true}
-                    isInvertedRate={showInverted}
-                    price={price}
-                    loading={independentField === Field.INPUT && routeIsSyncing}
-                  />
-
-                  <ArrowWrapper clickable>
-                    <ArrowDown
-                      size="16"
-                      onClick={() => {
-                        setApprovalSubmitted(false) // reset 2 step UI for approvals
-                        onSwitchTokens()
-                      }}
-                      color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
+                <AutoColumn gap="md">
+                  <div style={{ display: 'relative' }}>
+                    <CurrencyInputPanel
+                      currencySearchTitle="Select a token - Uniswap V3 pairs only"
+                      actionLabel={t`You send`}
+                      label={
+                        independentField === Field.OUTPUT && !showWrap ? (
+                          <Trans>From (at most)</Trans>
+                        ) : (
+                          <Trans>From</Trans>
+                        )
+                      }
+                      value={formattedAmounts.input}
+                      showMaxButton={showMaxButton}
+                      currency={currencies[Field.INPUT]}
+                      onUserInput={handleTypeInput}
+                      onMax={handleMaxInput}
+                      fiatValue={fiatValueInput ?? undefined}
+                      onCurrencySelect={handleInputSelect}
+                      otherCurrency={currencies[Field.OUTPUT]}
+                      showCommonBases={true}
+                      id="swap-currency-input"
+                      loading={independentField === Field.OUTPUT && routeIsSyncing}
                     />
-                  </ArrowWrapper>
-
-                  <CurrencyInputPanel
-                    actionLabel={t`You receive at least`}
-                    value={formattedAmounts.output}
-                    onUserInput={handleTypeOutput}
-                    label={
-                      independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>
-                    }
-                    showMaxButton={false}
-                    hideBalance={false}
-                    fiatValue={fiatValueOutput ?? undefined}
-                    priceImpact={priceImpact}
-                    currency={currencies[Field.OUTPUT]}
-                    onCurrencySelect={handleOutputSelect}
-                    otherCurrency={currencies[Field.INPUT]}
-                    showCommonBases={true}
-                    id="swap-currency-output"
-                    loading={independentField === Field.INPUT && routeIsSyncing}
-                  />
+                    <ArrowWrapper clickable={false}>
+                      <X size="16" />
+                    </ArrowWrapper>
+                    <CurrencyInputPanel
+                      currencySearchTitle="Select a token - Uniswap V3 pairs only"
+                      value={formattedAmounts.price}
+                      onUserInput={handleTypePrice}
+                      label={<Trans>Target Price+++</Trans>}
+                      showMaxButton={false}
+                      hideBalance={true}
+                      currency={currencies[Field.OUTPUT] ?? null}
+                      otherCurrency={currencies[Field.INPUT]}
+                      id="target-price"
+                      showCommonBases={false}
+                      locked={false}
+                      showCurrencySelector={false}
+                      showRate={true}
+                      isInvertedRate={showInverted}
+                      price={price}
+                      loading={independentField === Field.INPUT && routeIsSyncing}
+                    />
+                    <ArrowWrapper clickable>
+                      <ArrowDown
+                        size="16"
+                        onClick={() => {
+                          setApprovalSubmitted(false) // reset 2 step UI for approvals
+                          onSwitchTokens()
+                        }}
+                        color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
+                      />
+                    </ArrowWrapper>
+                    <CurrencyInputPanel
+                      currencySearchTitle="Select a token - Uniswap V3 pairs only"
+                      actionLabel={t`You receive at least`}
+                      value={formattedAmounts.output}
+                      onUserInput={handleTypeOutput}
+                      label={
+                        independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>
+                      }
+                      showMaxButton={false}
+                      hideBalance={false}
+                      fiatValue={fiatValueOutput ?? undefined}
+                      priceImpact={priceImpact}
+                      currency={currencies[Field.OUTPUT]}
+                      onCurrencySelect={handleOutputSelect}
+                      otherCurrency={currencies[Field.INPUT]}
+                      showCommonBases={true}
+                      id="swap-currency-output"
+                      loading={independentField === Field.INPUT && routeIsSyncing}
+                    />
+                  </div>
 
                   {recipient !== null && !showWrap ? (
                     <>
@@ -625,7 +625,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                     </>
                   ) : null}
                   {!showWrap && trade && minPrice && (
-                    <>
+                    <AutoColumn gap="sm" style={{ margin: '8px' }}>
                       <Row justify={'flex-end'}>
                         <RowFixed style={{ position: 'relative' }}>
                           <Toggle
@@ -657,10 +657,10 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                           <TradePrice price={minPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
                         </LoadingOpacityContainer>
                       </RowBetween>
-                    </>
+                    </AutoColumn>
                   )}
                   {!trade && !minPrice && (
-                    <>
+                    <AutoColumn gap="sm">
                       <Row justify={'flex-end'}>
                         <RowFixed style={{ position: 'relative' }}>
                           <Toggle
@@ -688,7 +688,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                           </TYPE.body>
                         </RowFixed>
                       </Row>
-                    </>
+                    </AutoColumn>
                   )}
                   {swapIsUnsupported ? (
                     <ButtonPrimary disabled={true}>
@@ -760,7 +760,16 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                               signatureState === UseERC20PermitState.SIGNED ? (
                               <CheckCircle size="20" color={theme.green1} />
                             ) : (
-                              <Trans>Allow Kromatika to use your {currencies[Field.INPUT]?.symbol}</Trans>
+                              <MouseoverTooltip
+                                text={
+                                  <Trans>
+                                    You must give the Kromatika smart contracts permission to use your{' '}
+                                    {currencies[Field.INPUT]?.symbol}. You only have to do this once per token.
+                                  </Trans>
+                                }
+                              >
+                                <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
+                              </MouseoverTooltip>
                             )}
                           </AutoRow>
                         </ButtonConfirmed>
@@ -781,10 +790,10 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                             !approvalState ||
                             (approvalState !== ApprovalState.APPROVED && signatureState !== UseERC20PermitState.SIGNED)
                           }
-                          error={isValid}
+                          error={!isValid}
                         >
-                          <Text fontSize={16} fontWeight={400}>
-                            {<Trans>Trade</Trans>}
+                          <Text fontSize={20} fontWeight={500}>
+                            {<Trans>Create FELO</Trans>}
                           </Text>
                         </ButtonError>
                       </AutoColumn>
@@ -802,10 +811,10 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                       }}
                       id="swap-button"
                       disabled={!isValid || !!swapCallbackError}
-                      error={isValid && !swapCallbackError}
+                      error={!isValid && !swapCallbackError}
                     >
-                      <Text fontSize={16} fontWeight={400}>
-                        {swapInputError ? swapInputError : <Trans>Trade</Trans>}
+                      <Text fontSize={20} fontWeight={500}>
+                        {swapInputError ? swapInputError : <Trans>Create FELO</Trans>}
                       </Text>
                     </ButtonError>
                   )}
@@ -881,75 +890,75 @@ export default function LimitOrder({ history }: RouteComponentProps) {
             outputAmount={parsedAmounts.output}
           />
 
-          <AutoColumn gap={'md'}>
-            <CurrencyInputPanel
-              actionLabel={t`You send`}
-              label={
-                independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
-              }
-              value={formattedAmounts.input}
-              showMaxButton={showMaxButton}
-              currency={currencies[Field.INPUT]}
-              onUserInput={handleTypeInput}
-              onMax={handleMaxInput}
-              fiatValue={fiatValueInput ?? undefined}
-              onCurrencySelect={handleInputSelect}
-              otherCurrency={currencies[Field.OUTPUT]}
-              showCommonBases={true}
-              id="swap-currency-input"
-              loading={independentField === Field.OUTPUT && routeIsSyncing}
-            />
-
-            <ArrowWrapper clickable={false}>
-              <X size="16" />
-            </ArrowWrapper>
-
-            <CurrencyInputPanel
-              value={formattedAmounts.price}
-              onUserInput={handleTypePrice}
-              label={<Trans>Target Price---</Trans>}
-              showMaxButton={false}
-              hideBalance={true}
-              currency={currencies[Field.OUTPUT] ?? null}
-              otherCurrency={currencies[Field.INPUT]}
-              id="target-price"
-              showCommonBases={false}
-              locked={false}
-              showCurrencySelector={false}
-              showRate={true}
-              isInvertedRate={showInverted}
-              price={price}
-              loading={independentField === Field.INPUT && routeIsSyncing}
-            />
-
-            <ArrowWrapper clickable>
-              <ArrowDown
-                size="16"
-                onClick={() => {
-                  setApprovalSubmitted(false) // reset 2 step UI for approvals
-                  onSwitchTokens()
-                }}
-                color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
+          <AutoColumn gap="md">
+            <div style={{ display: 'relative' }}>
+              <CurrencyInputPanel
+                currencySearchTitle="Select a token - Uniswap V3 pairs only"
+                actionLabel={t`You send`}
+                label={
+                  independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
+                }
+                value={formattedAmounts.input}
+                showMaxButton={showMaxButton}
+                currency={currencies[Field.INPUT]}
+                onUserInput={handleTypeInput}
+                onMax={handleMaxInput}
+                fiatValue={fiatValueInput ?? undefined}
+                onCurrencySelect={handleInputSelect}
+                otherCurrency={currencies[Field.OUTPUT]}
+                showCommonBases={true}
+                id="swap-currency-input"
+                loading={independentField === Field.OUTPUT && routeIsSyncing}
               />
-            </ArrowWrapper>
-
-            <CurrencyInputPanel
-              actionLabel={t`You receive at least`}
-              value={formattedAmounts.output}
-              onUserInput={handleTypeOutput}
-              label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
-              showMaxButton={false}
-              hideBalance={false}
-              fiatValue={fiatValueOutput ?? undefined}
-              priceImpact={priceImpact}
-              currency={currencies[Field.OUTPUT]}
-              onCurrencySelect={handleOutputSelect}
-              otherCurrency={currencies[Field.INPUT]}
-              showCommonBases={true}
-              id="swap-currency-output"
-              loading={independentField === Field.INPUT && routeIsSyncing}
-            />
-
+              <ArrowWrapper clickable={false}>
+                <X size="16" />
+              </ArrowWrapper>
+              <CurrencyInputPanel
+                currencySearchTitle="Select a token - Uniswap V3 pairs only"
+                value={formattedAmounts.price}
+                onUserInput={handleTypePrice}
+                label={<Trans>Target Price---</Trans>}
+                showMaxButton={false}
+                hideBalance={true}
+                currency={currencies[Field.OUTPUT] ?? null}
+                otherCurrency={currencies[Field.INPUT]}
+                id="target-price"
+                showCommonBases={false}
+                locked={false}
+                showCurrencySelector={false}
+                showRate={true}
+                isInvertedRate={showInverted}
+                price={price}
+                loading={independentField === Field.INPUT && routeIsSyncing}
+              />
+              <ArrowWrapper clickable>
+                <ArrowDown
+                  size="16"
+                  onClick={() => {
+                    setApprovalSubmitted(false) // reset 2 step UI for approvals
+                    onSwitchTokens()
+                  }}
+                  color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
+                />
+              </ArrowWrapper>
+              <CurrencyInputPanel
+                currencySearchTitle="Select a token - Uniswap V3 pairs only"
+                actionLabel={t`You receive at least`}
+                value={formattedAmounts.output}
+                onUserInput={handleTypeOutput}
+                label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
+                showMaxButton={false}
+                hideBalance={false}
+                fiatValue={fiatValueOutput ?? undefined}
+                priceImpact={priceImpact}
+                currency={currencies[Field.OUTPUT]}
+                onCurrencySelect={handleOutputSelect}
+                otherCurrency={currencies[Field.INPUT]}
+                showCommonBases={true}
+                id="swap-currency-output"
+                loading={independentField === Field.INPUT && routeIsSyncing}
+              />
+            </div>
             {recipient !== null && !showWrap ? (
               <>
                 <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
@@ -964,7 +973,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
               </>
             ) : null}
             {!showWrap && trade && minPrice && (
-              <AutoColumn gap="sm">
+              <AutoColumn gap="sm" style={{ margin: '8px' }}>
                 <Row justify={'flex-end'}>
                   <RowFixed style={{ position: 'relative' }}>
                     <Toggle
@@ -989,21 +998,17 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                   </LoadingOpacityContainer>
                 </RowBetween>
                 <RowBetween>
-                  <RowFixed style={{ position: 'relative', marginRight: 'auto' }}>
-                    <TYPE.body color={theme.text2} fontWeight={400} fontSize={14}>
-                      <Trans>Min Price</Trans>
-                    </TYPE.body>
-                  </RowFixed>
-                  <RowFixed style={{ justifySelf: 'end' }}>
-                    <LoadingOpacityContainer $loading={routeIsSyncing}>
-                      <TradePrice price={minPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
-                    </LoadingOpacityContainer>
-                  </RowFixed>
+                  <TYPE.body color={theme.text2} fontWeight={400} fontSize={14}>
+                    <Trans>Min Price</Trans>
+                  </TYPE.body>
+                  <LoadingOpacityContainer $loading={routeIsSyncing}>
+                    <TradePrice price={minPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
+                  </LoadingOpacityContainer>
                 </RowBetween>
               </AutoColumn>
             )}
             {!trade && !minPrice && (
-              <>
+              <AutoColumn gap="sm" style={{ margin: '8px' }}>
                 <Row justify={'flex-end'}>
                   <RowFixed style={{ position: 'relative' }}>
                     <Toggle
@@ -1029,9 +1034,8 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                     </TYPE.body>
                   </RowFixed>
                 </Row>
-              </>
+              </AutoColumn>
             )}
-
             <ButtonStyle>
               {swapIsUnsupported ? (
                 <ButtonPrimary disabled={true}>
@@ -1131,10 +1135,10 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                         !isValid ||
                         (approvalState !== ApprovalState.APPROVED && signatureState !== UseERC20PermitState.SIGNED)
                       }
-                      error={isValid}
+                      error={!isValid}
                     >
-                      <Text fontSize={16} fontWeight={400}>
-                        {<Trans>Trade</Trans>}
+                      <Text fontSize={20} fontWeight={500}>
+                        {<Trans>Create FELO</Trans>}
                       </Text>
                     </ButtonError>
                   </AutoColumn>
@@ -1152,10 +1156,10 @@ export default function LimitOrder({ history }: RouteComponentProps) {
                   }}
                   id="swap-button"
                   disabled={!isValid || !!swapCallbackError}
-                  error={isValid && !swapCallbackError}
+                  error={!isValid && !swapCallbackError}
                 >
-                  <Text fontSize={16} fontWeight={400}>
-                    {swapInputError ? swapInputError : <Trans>Trade</Trans>}
+                  <Text fontSize={20} fontWeight={500}>
+                    {swapInputError ? swapInputError : <Trans>Create FELO</Trans>}
                   </Text>
                 </ButtonError>
               )}

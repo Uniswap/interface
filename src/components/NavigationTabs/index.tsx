@@ -118,7 +118,7 @@ export function AddRemoveTabs({
     ? '/limitorder/v2'
     : '/limitorder' + (!!positionID ? `/${positionID.toString()}` : '')
 
-  const remove = location.pathname.includes('/remove')
+  const withdrawKROM = location.pathname.includes('/withdraw')
 
   return (
     <Tabs>
@@ -143,7 +143,7 @@ export function AddRemoveTabs({
         >
           {creating ? (
             <Trans>Create a pair</Trans>
-          ) : remove ? (
+          ) : withdrawKROM ? (
             <Trans>Withdraw KROM</Trans>
           ) : (
             <Trans>Deposit KROM</Trans>

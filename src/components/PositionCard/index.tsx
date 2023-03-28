@@ -223,11 +223,9 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
           <AutoColumn gap="5px">
             <FixedHeightRow>
               <RowFixed>
-                <Text fontSize={16} fontWeight={400}>
-                  <TYPE.darkGray>
-                    <Trans>Account Status:</Trans>
-                  </TYPE.darkGray>
-                </Text>
+                <TYPE.darkGray>
+                  <Trans>Account Status:</Trans>
+                </TYPE.darkGray>
               </RowFixed>
               <RowFixed>
                 <MouseoverTooltip
@@ -248,18 +246,16 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
               {isUnderfunded ? (
                 <AutoColumn>
                   <RowFixed gap="1rem">
-                    <Text fontSize={16} fontWeight={500}>
-                      <TYPE.error error>
-                        <Trans>KROM deposit required</Trans>
-                      </TYPE.error>
-                    </Text>
+                    <TYPE.error error>
+                      <Trans>KROM deposit required</Trans>
+                    </TYPE.error>
                   </RowFixed>
                 </AutoColumn>
               ) : (
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500}>
+                  <TYPE.success>
                     <Trans>Active</Trans>
-                  </Text>
+                  </TYPE.success>
                 </RowFixed>
               )}
             </RowFixed>
@@ -267,11 +263,9 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
           <AutoColumn>
             <FixedHeightRow>
               <RowFixed>
-                <Text fontSize={16} fontWeight={400}>
-                  <TYPE.darkGray>
-                    <Trans>Deposited Balance:</Trans>
-                  </TYPE.darkGray>
-                </Text>
+                <TYPE.darkGray>
+                  <Trans>Deposited Balance:</Trans>
+                </TYPE.darkGray>
               </RowFixed>
               <RowFixed>
                 <MouseoverTooltip
@@ -310,11 +304,9 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
           <AutoColumn>
             <FixedHeightRow>
               <RowFixed>
-                <Text fontSize={16} fontWeight={400}>
-                  <TYPE.darkGray>
-                    <Trans>Minimum Balance:</Trans>
-                  </TYPE.darkGray>
-                </Text>
+                <TYPE.darkGray>
+                  <Trans>Minimum Balance:</Trans>
+                </TYPE.darkGray>
               </RowFixed>
               <RowFixed>
                 <MouseoverTooltip
@@ -353,12 +345,12 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
         </AutoColumn>
       </AccountStatusCard>
       <ButtonGroup>
-        <StyledButtonSecondary as={Link} to={`/add/${kromToken?.address}`}>
+        <StyledButtonSecondary as={Link} to={`/balance/deposit/${kromToken?.address}`}>
           <Text fontSize={16} fontWeight={600}>
             <Trans>Deposit KROM</Trans>
           </Text>
         </StyledButtonSecondary>
-        <StyledButtonSecondary as={Link} to={`/add/${kromToken?.address}/remove`}>
+        <StyledButtonSecondary as={Link} to={`/balance/withdraw/${kromToken?.address}`}>
           <Text fontSize={16} fontWeight={600}>
             <Trans>Withdraw KROM</Trans>
           </Text>
@@ -397,11 +389,9 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
             <AutoColumn gap="8px">
               <FixedHeightRow>
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={400}>
-                    <TYPE.body>
-                      <Trans>Staked Balance:</Trans>
-                    </TYPE.body>
-                  </Text>
+                  <TYPE.body>
+                    <Trans>Staked Balance:</Trans>
+                  </TYPE.body>
                 </RowFixed>
                 {stakedBalance != null ? (
                   <RowFixed>
@@ -415,11 +405,9 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
               </FixedHeightRow>
               <FixedHeightRow>
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={400}>
-                    <TYPE.body>
-                      <Trans>Earned Balance:</Trans>
-                    </TYPE.body>
-                  </Text>
+                  <TYPE.body>
+                    <Trans>Earned Balance:</Trans>
+                  </TYPE.body>
                 </RowFixed>
                 {earnedBalance ? (
                   <RowFixed>
@@ -433,11 +421,9 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
               </FixedHeightRow>
               <FixedHeightRow>
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={400}>
-                    <TYPE.body>
-                      <Trans>APY:</Trans>
-                    </TYPE.body>
-                  </Text>
+                  <TYPE.body>
+                    <Trans>APY:</Trans>
+                  </TYPE.body>
                   <MouseoverTooltip
                     text={
                       <Trans>
@@ -463,11 +449,9 @@ export function StakePositionCard({ fundingBalance, minBalance, gasPrice }: Fund
               </FixedHeightRow>
               <FixedHeightRow>
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={400}>
-                    <TYPE.body>
-                      <Trans>Total Value Locked:</Trans>
-                    </TYPE.body>
-                  </Text>
+                  <TYPE.body>
+                    <Trans>Total Value Locked:</Trans>
+                  </TYPE.body>
                 </RowFixed>
                 {totalValueLocked != null ? (
                   <RowFixed>

@@ -56,13 +56,13 @@ export default function AddLiquidity({
   const limitManager = useLimitOrderManager()
 
   const baseCurrency = useCurrency(currencyIdA)
-  const withdraw = location.pathname.includes('/remove')
+  const withdrawKROM = location.pathname.includes('/withdraw')
   const { fundingBalance } = useV3Positions(account)
 
   const { parsedAmounts, currencyBalances, currencies, errorMessage, depositADisabled } = useV3DerivedMintInfo(
     baseCurrency ?? undefined,
     baseCurrency ?? undefined,
-    withdraw ? fundingBalance : undefined
+    withdrawKROM ? fundingBalance : undefined
   )
 
   const { independentField, typedValue } = useV3MintState()
@@ -134,7 +134,7 @@ export default function AddLiquidity({
 
     if (account && amount0) {
       calldatas.push(
-        limitManager.interface.encodeFunctionData(withdraw ? 'withdrawFunding' : 'addFunding', [toHex(amount0)])
+        limitManager.interface.encodeFunctionData(withdrawKROM ? 'withdrawFunding' : 'addFunding', [toHex(amount0)])
       )
       const calldata =
         calldatas.length === 1 ? calldatas[0] : limitManager.interface.encodeFunctionData('multicall', [calldatas])
@@ -209,7 +209,7 @@ export default function AddLiquidity({
 
                 if (txResponse) {
                   addTransaction(txResponse, {
-                    type: withdraw ? TransactionType.WITHDRAW_FUNDING : TransactionType.ADD_FUNDING,
+                    type: withdrawKROM ? TransactionType.WITHDRAW_FUNDING : TransactionType.ADD_FUNDING,
                     baseCurrencyId: currencyId(baseCurrency),
                     expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient?.toString() ?? '0',
                   })
@@ -219,7 +219,7 @@ export default function AddLiquidity({
 
                 ReactGA.event({
                   category: 'Liquidity',
-                  action: withdraw ? 'Remove' : 'Add',
+                  action: withdrawKROM ? 'Remove' : 'Add',
                   label: [currencies[Field.CURRENCY_A]?.symbol].join('/'),
                 })
               })
@@ -231,14 +231,14 @@ export default function AddLiquidity({
               .then((response: TransactionResponse) => {
                 setAttemptingTxn(false)
                 addTransaction(response, {
-                  type: withdraw ? TransactionType.WITHDRAW_FUNDING : TransactionType.ADD_FUNDING,
+                  type: withdrawKROM ? TransactionType.WITHDRAW_FUNDING : TransactionType.ADD_FUNDING,
                   baseCurrencyId: currencyId(baseCurrency),
                   expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient?.toString() ?? '0',
                 })
                 setTxHash(response.hash)
                 ReactGA.event({
                   category: 'Liquidity',
-                  action: withdraw ? 'Remove' : 'Add',
+                  action: withdrawKROM ? 'Remove' : 'Add',
                   label: [currencies[Field.CURRENCY_A]?.symbol].join('/'),
                 })
               })
@@ -276,14 +276,14 @@ export default function AddLiquidity({
           </AutoColumn>
         </LightCard>
         <TYPE.italic>
-          {withdraw ? (
+          {withdrawKROM ? (
             <Trans>Withdrawing KROM may prevent the system to automatically process trades</Trans>
           ) : (
             <Trans>Depositing KROM will allow the system to automatically process trades</Trans>
           )}
         </TYPE.italic>
         <ButtonPrimary onClick={onAdd}>
-          <Trans>{withdraw ? 'Withdraw' : 'Add'}</Trans>
+          <Trans>{withdrawKROM ? 'Withdraw' : 'Add'}</Trans>
         </ButtonPrimary>
       </AutoColumn>
     )
@@ -304,7 +304,7 @@ export default function AddLiquidity({
   const showApprovalA =
     !argentWalletContract && approvalA !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_A]
 
-  const pendingText = withdraw
+  const pendingText = withdrawKROM
     ? `Withdraw ${!depositADisabled ? parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) : ''} ${
         !depositADisabled ? currencies[Field.CURRENCY_A]?.symbol : ''
       }`
@@ -331,19 +331,7 @@ export default function AddLiquidity({
                   <Trans>Approve {currencies[Field.CURRENCY_A]?.symbol}</Trans>
                 )}
               </ButtonPrimary>
-            ) : showApprovalA && chainId === 137 && withdraw === true ? (
-              <ButtonPrimary onClick={approveACallback} disabled={approvalA === ApprovalState.PENDING} width={'100%'}>
-                {approvalA === ApprovalState.PENDING ? (
-                  <Dots>
-                    <Trans>Approving {currencies[Field.CURRENCY_A]?.symbol}</Trans>
-                  </Dots>
-                ) : (
-                  <Trans>Approve {currencies[Field.CURRENCY_A]?.symbol}</Trans>
-                )}
-              </ButtonPrimary>
-            ) : (
-              <ButtonPrimary style={{ visibility: 'hidden' }}></ButtonPrimary>
-            )}
+            ) : null}
           </RowBetween>
         )}
         <ButtonError
@@ -369,7 +357,7 @@ export default function AddLiquidity({
           hash={txHash}
           content={() => (
             <ConfirmationModalContent
-              title={withdraw ? <Trans>Withdraw</Trans> : <Trans>Deposit</Trans>}
+              title={withdrawKROM ? <Trans>Withdraw</Trans> : <Trans>Deposit</Trans>}
               onDismiss={() => setShowConfirm(false)}
               topContent={modalHeader}
             />
@@ -396,10 +384,10 @@ export default function AddLiquidity({
                     onUserInput={onFieldAInput}
                     onMax={() => {
                       onFieldAInput(
-                        withdraw ? fundingBalance?.toExact() ?? '' : maxAmounts[Field.CURRENCY_A]?.toExact() ?? ''
+                        withdrawKROM ? fundingBalance?.toExact() ?? '' : maxAmounts[Field.CURRENCY_A]?.toExact() ?? ''
                       )
                     }}
-                    showMaxButton={!(withdraw ? fundingBalance : atMaxAmounts[Field.CURRENCY_A])}
+                    showMaxButton={!(withdrawKROM ? fundingBalance : atMaxAmounts[Field.CURRENCY_A])}
                     currency={currencies[Field.CURRENCY_A] ?? null}
                     id="add-liquidity-input-tokena"
                     fiatValue={usdcValues[Field.CURRENCY_A]}

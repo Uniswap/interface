@@ -64,6 +64,9 @@ const TextValue = styled(Text)`
   padding-left: 1rem;
   font-size: 14px;
 `
+const HorizontalDivider = styled.div`
+  border-bottom: 2px solid ${({ theme }) => theme.bg2};
+`
 
 interface OrderDetails {
   owner: string
@@ -179,7 +182,7 @@ function formatPrice(value: string | number | undefined) {
   return commafy(Number(value).toFixed(3))
 }
 
-function LimitOrdersListItem({ limitOrderDetails }: OrderListItemProps) {
+function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItemProps) {
   const {
     token0: token0Address,
     token1: token1Address,
@@ -194,7 +197,7 @@ function LimitOrdersListItem({ limitOrderDetails }: OrderListItemProps) {
     owner,
   } = limitOrderDetails || {}
 
-  const positionSummaryLink = '/pool/' + tokenId
+  const positionSummaryLink = '/limitorder/' + tokenId
 
   const { createdLogs, collectedLogs } = useV3PositionFromTokenId(tokenId)
   const { event: createdEvent } = createdLogs || {}
@@ -315,113 +318,128 @@ function LimitOrdersListItem({ limitOrderDetails }: OrderListItemProps) {
   const inRange: boolean = typeof below === 'boolean' && typeof above === 'boolean' ? !below && !above : false
 
   return (
-    <LimitOrderWrapper to={positionSummaryLink}>
-      <RowFixedHeight>
-        <Token0>
-          <Trans>{`${commafy(currencyCreatedEventAmount?.toSignificant())} ${
-            currencyCreatedEventAmount?.currency ? unwrappedToken(currencyCreatedEventAmount?.currency)?.symbol : ''
-          }`}</Trans>
-        </Token0>
-        <Token1>
-          <Trans>
-            {targetPrice && currencyCreatedEventAmount
-              ? `${commafy(targetPrice?.quote(currencyCreatedEventAmount).toSignificant())} ${
-                  targetPrice?.quoteCurrency ? unwrappedToken(targetPrice?.quoteCurrency)?.symbol : ''
-                }`
-              : ''}
-          </Trans>
-        </Token1>
-      </RowFixedHeight>
-      <RowFixedHeight>
-        <TextLabel>
-          <TYPE.darkGray>
-            <Trans>Status:</Trans>
-          </TYPE.darkGray>
-        </TextLabel>
-        <TextValue fontWeight={700}>
-          {processed ? <Trans>Processed</Trans> : inRange ? <Trans>In Range</Trans> : <Trans>Pending</Trans>}
-        </TextValue>
-      </RowFixedHeight>
-      {createdBlockDate && (
+    <>
+      <LimitOrderWrapper to={positionSummaryLink}>
+        <RowFixedHeight>
+          <Token0>
+            <Trans>{`${commafy(currencyCreatedEventAmount?.toSignificant())} ${
+              currencyCreatedEventAmount?.currency ? unwrappedToken(currencyCreatedEventAmount?.currency)?.symbol : ''
+            }`}</Trans>
+          </Token0>
+          <Token1>
+            <Trans>
+              {targetPrice && currencyCreatedEventAmount
+                ? `${commafy(targetPrice?.quote(currencyCreatedEventAmount).toSignificant())} ${
+                    targetPrice?.quoteCurrency ? unwrappedToken(targetPrice?.quoteCurrency)?.symbol : ''
+                  }`
+                : ''}
+            </Trans>
+          </Token1>
+        </RowFixedHeight>
         <RowFixedHeight>
           <TextLabel>
             <TYPE.darkGray>
-              <Trans>Opened:</Trans>
+              <Trans>Status:</Trans>
             </TYPE.darkGray>
           </TextLabel>
-          <TextValue>
-            <Trans>{createdBlockDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
-          </TextValue>
-        </RowFixedHeight>
-      )}
-      {cancelledBlockDate && (
-        <RowFixedHeight>
-          <TextLabel>
-            <TYPE.darkGray>
-              <Trans>Cancelled:</Trans>
-            </TYPE.darkGray>
-          </TextLabel>
-          <TextValue>
-            <Trans>{cancelledBlockDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
-          </TextValue>
-        </RowFixedHeight>
-      )}
-      {collectedBlockDate && (
-        <RowFixedHeight>
-          <TextLabel>
-            <TYPE.darkGray>
-              <Trans>Closed:</Trans>
-            </TYPE.darkGray>
-          </TextLabel>
-          <TextValue>
-            <Trans>{collectedBlockDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
-          </TextValue>
-        </RowFixedHeight>
-      )}
-      <RowFixedHeight>
-        <TextLabel>
-          <TYPE.darkGray>
-            <Trans>Limit price:</Trans>
-          </TYPE.darkGray>
-        </TextLabel>
-        <TextValue>
-          <Trans>
-            {targetPrice ? (
-              <>
-                <span>1 {currencyAmount0?.currency.symbol} = </span>
-                <span>{commafy(targetPrice?.toSignificant(6))}</span>
-                <span> {currencyAmount1?.currency.symbol}</span>{' '}
-              </>
+          <TextValue fontWeight={700}>
+            {processed ? (
+              <TYPE.success>
+                <Trans>Processed</Trans>
+              </TYPE.success>
+            ) : isUnderfunded ? (
+              <TYPE.error error={true}>
+                <Trans>Deposit KROM to process trade</Trans>
+              </TYPE.error>
+            ) : inRange ? (
+              <Trans>In range</Trans>
             ) : (
-              ''
+              <Trans>Out of range</Trans>
             )}
-          </Trans>
-        </TextValue>
-      </RowFixedHeight>
-      <RowFixedHeight>
-        <TextLabel>
-          <TYPE.darkGray>
-            <Trans>Limit price (USD):</Trans>
-          </TYPE.darkGray>
-        </TextLabel>
-        <TextValue>
-          <Trans>{targetPriceUSD && !isTokenStable ? <span>${formatPrice(targetPriceUSD)}</span> : ''}</Trans>
-        </TextValue>
-      </RowFixedHeight>
-      <RowFixedHeight>
-        <TextLabel>
-          <TYPE.darkGray>
-            <Trans>Collected:</Trans>
-          </TYPE.darkGray>
-        </TextLabel>
-        <TextValue>
-          <Trans>
-            {`${commafy(collectedValue0?.toSignificant())} ${currency0?.symbol} + 
+          </TextValue>
+        </RowFixedHeight>
+        {createdBlockDate && (
+          <RowFixedHeight>
+            <TextLabel>
+              <TYPE.darkGray>
+                <Trans>Opened:</Trans>
+              </TYPE.darkGray>
+            </TextLabel>
+            <TextValue>
+              <Trans>{createdBlockDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
+            </TextValue>
+          </RowFixedHeight>
+        )}
+        {cancelledBlockDate && (
+          <RowFixedHeight>
+            <TextLabel>
+              <TYPE.darkGray>
+                <Trans>Cancelled:</Trans>
+              </TYPE.darkGray>
+            </TextLabel>
+            <TextValue>
+              <Trans>{cancelledBlockDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
+            </TextValue>
+          </RowFixedHeight>
+        )}
+        {collectedBlockDate && (
+          <RowFixedHeight>
+            <TextLabel>
+              <TYPE.darkGray>
+                <Trans>Closed:</Trans>
+              </TYPE.darkGray>
+            </TextLabel>
+            <TextValue>
+              <Trans>{collectedBlockDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
+            </TextValue>
+          </RowFixedHeight>
+        )}
+        <RowFixedHeight>
+          <TextLabel>
+            <TYPE.darkGray>
+              <Trans>Limit price:</Trans>
+            </TYPE.darkGray>
+          </TextLabel>
+          <TextValue>
+            <Trans>
+              {targetPrice ? (
+                <>
+                  <span>1 {currencyAmount0?.currency.symbol} = </span>
+                  <span>{commafy(targetPrice?.toSignificant(6))}</span>
+                  <span> {currencyAmount1?.currency.symbol}</span>{' '}
+                </>
+              ) : (
+                ''
+              )}
+            </Trans>
+          </TextValue>
+        </RowFixedHeight>
+        <RowFixedHeight>
+          <TextLabel>
+            <TYPE.darkGray>
+              <Trans>Limit price (USD):</Trans>
+            </TYPE.darkGray>
+          </TextLabel>
+          <TextValue>
+            <Trans>{targetPriceUSD && !isTokenStable ? <span>${formatPrice(targetPriceUSD)}</span> : ''}</Trans>
+          </TextValue>
+        </RowFixedHeight>
+        <RowFixedHeight>
+          <TextLabel>
+            <TYPE.darkGray>
+              <Trans>Collected:</Trans>
+            </TYPE.darkGray>
+          </TextLabel>
+          <TextValue>
+            <Trans>
+              {`${commafy(collectedValue0?.toSignificant())} ${currency0?.symbol} + 
               ${commafy(collectedValue1?.toSignificant())} ${currency1?.symbol}`}
-          </Trans>
-        </TextValue>
-      </RowFixedHeight>
-    </LimitOrderWrapper>
+            </Trans>
+          </TextValue>
+        </RowFixedHeight>
+      </LimitOrderWrapper>
+      <HorizontalDivider />
+    </>
   )
 }
 

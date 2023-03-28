@@ -205,6 +205,9 @@ export const TYPE = {
   gray(props: TextProps) {
     return <TextWrapper fontWeight={400} color={'bg3'} {...props} />
   },
+  success(props: TextProps) {
+    return <TextWrapper fontWeight={400} color={'green1'} {...props} />
+  },
   error({ error, ...props }: { error: boolean } & TextProps) {
     return <TextWrapper fontWeight={400} color={error ? 'red1' : 'text2'} {...props} />
   },
