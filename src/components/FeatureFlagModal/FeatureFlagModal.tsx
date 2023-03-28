@@ -1,4 +1,5 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useBaseFlag, useUpdateFlag } from 'featureFlags'
+import { FiatOnRampButtonVariant, useFiatOnRampButtonFlag } from 'featureFlags/flags/fiatOnRampButton'
 import { MgtmVariant, useMgtmFlag } from 'featureFlags/flags/mgtm'
 import { useMiniPortfolioFlag } from 'featureFlags/flags/miniPortfolio'
 import { NftGraphqlVariant, useNftGraphqlFlag } from 'featureFlags/flags/nftlGraphql'
@@ -240,6 +241,12 @@ export default function FeatureFlagModal() {
         value={useNftGraphqlFlag()}
         featureFlag={FeatureFlag.nftGraphql}
         label="Migrate NFT read endpoints to GQL"
+      />
+      <FeatureFlagOption
+        variant={FiatOnRampButtonVariant}
+        value={useFiatOnRampButtonFlag()}
+        featureFlag={FeatureFlag.fiatOnRampButtonOnSwap}
+        label="Fiat on ramp button on main swap page"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption
