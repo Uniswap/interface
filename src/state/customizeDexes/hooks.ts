@@ -5,15 +5,15 @@ import { useActiveWeb3React } from 'hooks'
 import { AppState } from 'state'
 import { useAppDispatch } from 'state/hooks'
 
-import { updateExcludeDex } from '.'
+import { Dex, updateExcludeDex } from '.'
 
-export const useAllDexes = () => {
+export const useAllDexes: () => Dex[] = () => {
   const { chainId } = useActiveWeb3React()
   const dexes = useSelector<AppState, AppState['customizeDexes']['allDexes']>(state => state.customizeDexes.allDexes)
 
   return useMemo(() => {
     if (!chainId) return []
-    return dexes[chainId]
+    return dexes[chainId] || []
   }, [chainId, dexes])
 }
 

@@ -5,7 +5,7 @@ import { KS_SETTING_API } from 'constants/env'
 import { NETWORKS_INFO } from 'constants/networks'
 
 const useLiquiditySources = (chainId: ChainId) => {
-  return useSWR<{ name: string; logoURL: string; dexId: string }[]>(
+  return useSWR<{ name: string; logoURL: string; dexId: string; id: number }[]>(
     `${KS_SETTING_API}/v1/dexes?chain=${NETWORKS_INFO[chainId].ksSettingRoute}&isEnabled=true&pageSize=100`,
     async (url: string) => {
       if (!NETWORKS_INFO[chainId].ksSettingRoute) return

@@ -5,6 +5,7 @@ export interface Dex {
   name: string
   logoURL: string
   id: string
+  sortId: number
 }
 
 interface CustomizeDexeState {

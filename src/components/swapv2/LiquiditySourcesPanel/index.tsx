@@ -5,8 +5,6 @@ import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import Checkbox from 'components/CheckBox'
-import { kyberswapDexes } from 'constants/dexes'
-import { ELASTIC_NOT_SUPPORTED } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
 import useDebounce from 'hooks/useDebounce'
 import { useAllDexes, useExcludeDexes } from 'state/customizeDexes/hooks'
@@ -111,7 +109,7 @@ const LiquiditySourceHeader = styled.div`
 const LiquiditySourcesPanel: React.FC<Props> = ({ onBack }) => {
   const [searchText, setSearchText] = useState('')
   const debouncedSearchText = useDebounce(searchText.toLowerCase(), 200).trim()
-  const { chainId, isEVM } = useActiveWeb3React()
+  const { isEVM } = useActiveWeb3React()
 
   const dexes = useAllDexes()
   const [excludeDexes, setExcludeDexes] = useExcludeDexes()
@@ -137,8 +135,8 @@ const LiquiditySourcesPanel: React.FC<Props> = ({ onBack }) => {
   }, [excludeDexes, dexes])
 
   const ksDexes = useMemo(
-    () => kyberswapDexes.filter(item => (ELASTIC_NOT_SUPPORTED[chainId] ? item.id !== 'kyberswapv2' : true)),
-    [chainId],
+    () => dexes.filter(item => item.id.includes('kyberswap')).sort((a, b) => a.sortId - b.sortId),
+    [dexes],
   )
 
   useEffect(() => {
