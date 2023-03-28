@@ -1,12 +1,10 @@
 import { BottomSheetSectionList } from '@gorhom/bottom-sheet'
 import React from 'react'
-import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionListData } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex, Inset } from 'src/components/layout'
-import { Loader } from 'src/components/loading'
 import { SearchableRecipient } from 'src/components/RecipientSelect/types'
 import { Text } from 'src/components/Text'
 
@@ -61,17 +59,5 @@ export function RecipientRow({ recipient, onPress }: RecipientProps): JSX.Elemen
     <TouchableArea hapticFeedback onPress={(): void => onPress(recipient.address)}>
       <AddressDisplay address={recipient.address} size={35} />
     </TouchableArea>
-  )
-}
-
-export function RecipientLoadingRow(): JSX.Element {
-  const { t } = useTranslation()
-  return (
-    <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="spacing8">
-      <Text color="textTertiary" variant="bodySmall">
-        {t('Search Results')}
-      </Text>
-      <Loader.Token />
-    </AnimatedFlex>
   )
 }

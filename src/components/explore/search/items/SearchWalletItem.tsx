@@ -4,16 +4,20 @@ import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
-import { AddressDisplay } from 'src/components/AddressDisplay'
+import { AccountIcon } from 'src/components/AccountIcon'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { SearchContext } from 'src/components/explore/search/SearchResultsSection'
+import { Box } from 'src/components/layout'
 import { Flex } from 'src/components/layout/Flex'
+import { Text } from 'src/components/Text'
+import { useENSAvatar, useENSName } from 'src/features/ens/api'
+import { getCompletedENSName } from 'src/features/ens/useENS'
 import { addToSearchHistory, WalletSearchResult } from 'src/features/explore/searchHistorySlice'
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
-import { useDisplayName } from 'src/features/wallet/hooks'
+import { sanitizeAddressText, shortenAddress } from 'src/utils/addresses'
 
 type SearchWalletItemProps = {
   wallet: WalletSearchResult
@@ -26,8 +30,26 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
   const dispatch = useAppDispatch()
   const { preload, navigate } = useEagerExternalProfileNavigation()
 
-  const { address } = wallet
-  const displayName = useDisplayName(address)
+  // Use `savedPrimaryEnsName` for WalletSearchResults that are stored in the search history
+  // so that we don't have to do an additional ENS fetch when loading search history
+  const { address, ensName, primaryENSName: savedPrimaryENSName } = wallet
+
+  /*
+   * Fetch primary ENS associated with `address` since it may resolve to an
+   * ENS different than the `ensName` searched
+   * ex. if searching `uni.eth` resolves to 0x123, and the primary ENS for 0x123
+   * is `uniswap.eth`, then we should show "uni.eth | owned by uniswap.eth"
+   */
+  const completedENSName = getCompletedENSName(ensName ?? null)
+  const { data: fetchedPrimaryENSName, isFetching: isFetchingPrimaryENSName } = useENSName(
+    savedPrimaryENSName ? undefined : address
+  )
+
+  const primaryENSName = savedPrimaryENSName ?? fetchedPrimaryENSName
+  const isPrimaryENSName = completedENSName === primaryENSName
+  const showOwnedBy = !isFetchingPrimaryENSName && !isPrimaryENSName
+
+  const { data: avatar } = useENSAvatar(address)
 
   const isFavorited = useAppSelector(selectWatchedAddressSet).has(address)
 
@@ -37,14 +59,18 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
     if (searchContext) {
       sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
         query: searchContext.query,
-        name: displayName?.name ?? address,
-        address: address ?? '',
+        name: ensName ?? address,
+        address,
         type: 'address',
         suggestion_count: searchContext.suggestionCount,
         position: searchContext.position,
       })
     }
-    dispatch(addToSearchHistory({ searchResult: wallet }))
+    dispatch(
+      addToSearchHistory({
+        searchResult: { ...wallet, primaryENSName: primaryENSName ?? undefined },
+      })
+    )
   }
 
   const toggleFavoriteWallet = useToggleWatchedWalletCallback(address)
@@ -63,13 +89,28 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
         name={ElementName.SearchWalletItem}
         testID={`wallet-item-${address}`}
         onPress={onPress}>
-        <Flex row justifyContent="space-between" px="spacing8" py="spacing12">
-          <AddressDisplay
-            hideAddressInSubtitle
-            address={address}
-            size={theme.iconSizes.icon40}
-            variant="bodyLarge"
-          />
+        <Flex row alignItems="center" gap="spacing12" px="spacing8" py="spacing12">
+          <AccountIcon address={address} avatarUri={avatar} size={theme.imageSizes.image40} />
+          <Box flexShrink={1}>
+            <Text
+              ellipsizeMode="tail"
+              numberOfLines={1}
+              testID={`address-display/name/${ensName}`}
+              variant="bodyLarge">
+              {completedENSName}
+            </Text>
+            {showOwnedBy ? (
+              <Text
+                color="textSecondary"
+                ellipsizeMode="tail"
+                numberOfLines={1}
+                variant="subheadSmall">
+                {t('Owned by {{owner}}', {
+                  owner: primaryENSName || sanitizeAddressText(shortenAddress(address)),
+                })}
+              </Text>
+            ) : null}
+          </Box>
         </Flex>
       </TouchableArea>
     </ContextMenu>

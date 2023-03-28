@@ -8,7 +8,7 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { filterRecipientByNameAndAddress } from 'src/components/RecipientSelect/filter'
 import { useRecipients } from 'src/components/RecipientSelect/hooks'
-import { RecipientList, RecipientLoadingRow } from 'src/components/RecipientSelect/RecipientList'
+import { RecipientList } from 'src/components/RecipientSelect/RecipientList'
 import { RecipientScanModal } from 'src/components/RecipientSelect/RecipientScanModal'
 import { filterSections } from 'src/components/RecipientSelect/utils'
 import { Text } from 'src/components/Text'
@@ -77,7 +77,6 @@ export function _RecipientSelect({
           onBack={onToggleShowRecipientSelector}
           onChangeText={onChangePattern}
         />
-        {loading && <RecipientLoadingRow />}
         {noResults ? (
           <Flex centered gap="spacing12" mt="spacing24" px="spacing24">
             <Text variant="buttonLabelMedium">{t('No results found')}</Text>

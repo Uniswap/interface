@@ -20,6 +20,7 @@ export interface WalletSearchResult extends SearchResultBase {
   type: SearchResultType.Wallet
   address: Address
   ensName?: string
+  primaryENSName?: string
 }
 
 export interface TokenSearchResult extends SearchResultBase {
