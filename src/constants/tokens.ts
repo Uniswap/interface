@@ -30,7 +30,7 @@ export const USDC_TEVMOS = new Token(
   SupportedChainId.TESTNET,
   '0xBf6942D20D1460334B9b147199c4f03c97b70d02',
   6,
-  'USDC',
+  'axlUSDC',
   'USD//C'
 )
 
@@ -40,7 +40,7 @@ export const WETH_TEVMOS = new Token(
   SupportedChainId.TESTNET,
   '0x43bDe47a34801f6aB2d66016Aef723Ba1b3A62b3',
   18,
-  'WETH',
+  'axlWETH',
   'Wrapped Ether'
 )
 

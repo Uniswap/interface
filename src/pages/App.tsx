@@ -2,12 +2,10 @@ import { getDeviceId, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics
 import { CustomUserProperties, getBrowser, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import Loader from 'components/Loader'
-import { MenuDropdown } from 'components/NavBar/MenuDropdown'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { STATSIG_DUMMY_KEY } from 'integrations'
-import { Box } from 'nft/components/Box'
 import React, { Suspense, useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -222,9 +220,6 @@ export default function App() {
           </BodyWrapper>
           <MobileBottomBar>
             <PageTabs />
-            <Box marginY="4">
-              <MenuDropdown />
-            </Box>
           </MobileBottomBar>
         </StatsigProvider>
       </Trace>

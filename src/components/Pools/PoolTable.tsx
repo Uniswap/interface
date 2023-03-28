@@ -8,6 +8,7 @@ import { RowFixed } from 'components/Row'
 import { Arrow, Break, PageButtons } from 'components/shared'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { SupportedChainId } from 'constants/chains'
+import { USDC_TEVMOS, WETH_TEVMOS } from 'constants/tokens'
 import { useIsMobile } from 'nft/hooks'
 import numbro from 'numbro'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -188,19 +189,52 @@ const GridContainer = styled.div`
 
 const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => {
   const isMobile = useIsMobile()
+  let currency0
+  let currency1
+  if (poolData?.token1?.address?.toLowerCase() === WETH_TEVMOS?.address?.toLowerCase()) {
+    currency1 = WETH_TEVMOS
+  } else {
+    currency1 = new Token(
+      SupportedChainId.TESTNET,
+      poolData.token1.address,
+      poolData.token1.decimals,
+      poolData.token1.symbol
+    )
+  }
+  if (poolData?.token0?.address?.toLowerCase() === WETH_TEVMOS?.address?.toLowerCase()) {
+    currency0 = WETH_TEVMOS
+    console.log('true', WETH_TEVMOS, currency0)
+  } else {
+    currency0 = new Token(
+      SupportedChainId.TESTNET,
+      poolData.token0.address,
+      poolData.token0.decimals,
+      poolData.token0.symbol
+    )
+  }
 
-  const currency0 = new Token(
-    SupportedChainId.TESTNET,
-    poolData.token0.address,
-    poolData.token0.decimals,
-    poolData.token0.symbol
-  )
-  const currency1 = new Token(
-    SupportedChainId.TESTNET,
-    poolData.token1.address,
-    poolData.token1.decimals,
-    poolData.token1.symbol
-  )
+  if (poolData?.token1?.address?.toLowerCase() === USDC_TEVMOS?.address?.toLowerCase()) {
+    currency1 = USDC_TEVMOS
+  } else {
+    currency1 = new Token(
+      SupportedChainId.TESTNET,
+      poolData.token1.address,
+      poolData.token1.decimals,
+      poolData.token1.symbol
+    )
+  }
+  if (poolData?.token0?.address?.toLowerCase() === USDC_TEVMOS?.address?.toLowerCase()) {
+    currency0 = USDC_TEVMOS
+    console.log('true', WETH_TEVMOS, currency0)
+  } else {
+    currency0 = new Token(
+      SupportedChainId.TESTNET,
+      poolData.token0.address,
+      poolData.token0.decimals,
+      poolData.token0.symbol
+    )
+  }
+
   return (
     <LinkWrapper to={'/add/' + poolData.token0.address + '/' + poolData.token1.address}>
       <ResponsiveGrid>
@@ -209,7 +243,7 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
           <RowFixed>
             <DoubleCurrencyLogo size={20} currency0={currency0} currency1={currency1} />
             <span style={{ marginLeft: '8px' }}>
-              {poolData.token0.symbol}/{poolData.token1.symbol}
+              {currency0.symbol}/{currency1.symbol}
             </span>
             <GreyBadge ml="10px" fontSize="14px">
               {feeTierPercent(poolData.feeTier)}
