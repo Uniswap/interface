@@ -658,7 +658,6 @@ const LimitOrderForm = function LimitOrderForm({
       <Flex flexDirection={'column'} style={{ gap: '1rem' }}>
         <Tooltip text={inputError} show={!!inputError} placement="top" style={styleTooltip} width="fit-content">
           <CurrencyInputPanel
-            maxLength={16}
             error={!!inputError}
             value={inputAmount}
             positionMax="top"
