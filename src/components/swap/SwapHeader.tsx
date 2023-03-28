@@ -61,8 +61,9 @@ const Dot = styled.span`
   display: inline-block;
 `
 
-const TextHeader = styled.div<{ color: string; marginLeft?: string; isClickable?: boolean }>`
+const TextHeader = styled.div<{ color: string; marginLeft?: string; isClickable?: boolean; disabled?: boolean }>`
   color: ${({ color }) => color};
+  opacity: ${({ disabled }) => disabled && '60%'};
   margin-left: ${({ marginLeft }) => marginLeft};
   margin-right: 8px;
   display: flex;
@@ -173,7 +174,8 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
             <TextHeader
               className={subhead}
               color={theme.textSecondary}
-              marginLeft="4px"
+              marginLeft="8px"
+              disabled={fiatOnrampAvailabilityChecked && !fiatOnrampAvailable}
               isClickable={true}
               onClick={handleBuyCryptoClick}
             >
