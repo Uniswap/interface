@@ -14,6 +14,7 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverDropdown from 'components/HoverDropdown'
 import Modal from 'components/Modal'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { FARM_TAB } from 'constants/index'
 import { NETWORKS_INFO, isEVM } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import { useToken } from 'hooks/Tokens'
@@ -220,7 +221,11 @@ function WithdrawModal({
 
   const poolAddresses =
     selectedFarm?.pools
-      .filter(pool => (tab === 'active' ? pool.endTime > +new Date() / 1000 : pool.endTime < +new Date() / 1000))
+      .filter(
+        pool =>
+          tab === FARM_TAB.MY_FARMS ||
+          (tab === FARM_TAB.ACTIVE ? pool.endTime > +new Date() / 1000 : pool.endTime < +new Date() / 1000),
+      )
       .map(pool => pool.poolAddress.toLowerCase()) || []
 
   const failedNFTs = useFailedNFTs()
