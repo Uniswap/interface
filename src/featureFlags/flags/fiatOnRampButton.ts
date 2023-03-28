@@ -1,7 +1,7 @@
 import { BaseVariant, FeatureFlag, useBaseFlag } from '../index'
 
 export function useFiatOnRampButtonFlag(): BaseVariant {
-  return useBaseFlag(FeatureFlag.fiatOnRampButtonOnSwap, BaseVariant.Enabled)
+  return useBaseFlag(FeatureFlag.fiatOnRampButtonOnSwap)
 }
 
 export function useFiatOnRampButtonEnabled(): boolean {

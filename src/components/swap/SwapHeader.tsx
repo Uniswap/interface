@@ -70,13 +70,13 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
     error || (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) || fiatOnrampAvailabilityLoading
   )
 
-  const [, toggleWalletDrawer] = useWalletDrawer()
+  const [walletDrawerOpen, toggleWalletDrawer] = useWalletDrawer()
 
   const handleBuyCrypto = useCallback(() => {
     if (!fiatOnrampAvailabilityChecked) {
       setCheckFiatRegionAvailability(true)
       setContinueBuyFiatFlowPostRegionCheck(true)
-    } else if (fiatOnrampAvailable && !account) {
+    } else if (fiatOnrampAvailable && !account && !walletDrawerOpen) {
       toggleWalletDrawer()
       setContinueBuyFiatFlowPostRegionCheck(false)
       setContinueBuyFiatFlowPostWalletModal(true)
@@ -91,6 +91,7 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
       setContinueBuyFiatFlowPostWalletModal(false)
     }
   }, [
+    walletDrawerOpen,
     fiatOnrampAvailabilityChecked,
     fiatOnrampAvailable,
     account,
