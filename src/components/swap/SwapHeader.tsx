@@ -96,12 +96,6 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
   const { account } = useWeb3React()
 
   const openFiatOnRampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
-  const openFiatOnRampModalLocal = useCallback(() => {
-    setContinueHandleBuyCryptoFlow(false)
-    openFiatOnRampModal()
-  }, [openFiatOnRampModal])
-
-  const [continueHandleBuyCryptoFlow, setContinueHandleBuyCryptoFlow] = useState(false)
 
   const [fiatOnRampUnavailableRenderCount, setFiatOnRampUnavailableRenderCount] = useState(0)
   const [buyFiatClicked, setBuyFiatClicked] = useBuyFiatClicked()
@@ -115,33 +109,29 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
   const handleBuyCryptoClick = useCallback(() => {
     if (!fiatOnrampAvailabilityChecked) {
       setShouldCheck(true)
-      setContinueHandleBuyCryptoFlow(true)
     } else if (fiatOnrampAvailable && !account) {
       toggleWalletDrawer()
-      setContinueHandleBuyCryptoFlow(true)
     } else if (fiatOnrampAvailable && account) {
-      openFiatOnRampModalLocal()
+      openFiatOnRampModal()
       setBuyFiatClicked(true)
     } else if (!fiatOnrampAvailable) {
       setBuyFiatClicked(true)
     }
   }, [
-    account,
-    setShouldCheck,
     fiatOnrampAvailabilityChecked,
     fiatOnrampAvailable,
-    openFiatOnRampModalLocal,
-    setBuyFiatClicked,
+    account,
     toggleWalletDrawer,
+    openFiatOnRampModal,
+    setBuyFiatClicked,
   ])
 
   useEffect(() => {
-    if (continueHandleBuyCryptoFlow) {
+    if (fiatOnrampAvailabilityChecked || account) {
       handleBuyCryptoClick()
     }
   }, [
-    openFiatOnRampModalLocal,
-    continueHandleBuyCryptoFlow,
+    openFiatOnRampModal,
     account,
     setShouldCheck,
     fiatOnrampAvailabilityChecked,
