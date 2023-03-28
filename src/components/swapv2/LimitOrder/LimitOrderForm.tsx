@@ -612,11 +612,6 @@ const LimitOrderForm = function LimitOrderForm({
       !enoughAllowance ||
       (approvalSubmitted && approval === ApprovalState.APPROVED))
 
-  const arbToken = '0x912ce59144191c1204e64559fe8253a0e49e6548'.toLowerCase()
-  const isArbPair =
-    chainId === ChainId.ARBITRUM &&
-    (currencyIn?.wrapped.address.toLowerCase() === arbToken || currencyOut?.wrapped.address.toLowerCase() === arbToken)
-
   const warningMessage = useMemo(() => {
     const messages = []
 
@@ -655,18 +650,8 @@ const LimitOrderForm = function LimitOrderForm({
       )
     }
 
-    if (isArbPair) {
-      messages.push(
-        <Text>
-          <Trans>
-            The market price may not be accurate as ARB is a new token from Arbitrum Foundation, please review your
-            transaction carefully.
-          </Trans>
-        </Text>,
-      )
-    }
     return messages
-  }, [currencyIn, currencyOut, displayRate, deltaRate, estimateUSD, outputAmount, chainId, tradeInfo, isArbPair])
+  }, [currencyIn, currencyOut, displayRate, deltaRate, estimateUSD, outputAmount, chainId, tradeInfo])
 
   return (
     <>
@@ -705,7 +690,7 @@ const LimitOrderForm = function LimitOrderForm({
           <InputWrapper>
             <Flex justifyContent={'space-between'} alignItems="center">
               <DeltaRate symbolIn={currencyIn?.symbol ?? ''} marketPrice={tradeInfo} rateInfo={rateInfo} />
-              {tradeInfo && !isArbPair && (
+              {tradeInfo && (
                 <Set2Market onClick={setPriceRateMarket}>
                   <Trans>Market</Trans>
                 </Set2Market>
@@ -758,7 +743,7 @@ const LimitOrderForm = function LimitOrderForm({
         </RowBetween>
 
         <RowBetween>
-          {currencyIn && currencyOut && !isArbPair ? (
+          {currencyIn && currencyOut ? (
             <TradePrice
               price={tradeInfo}
               style={{ width: 'fit-content', fontStyle: 'italic' }}
