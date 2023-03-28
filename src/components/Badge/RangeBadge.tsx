@@ -39,7 +39,7 @@ export default function RangeBadge({
     <BadgeWrapper>
       {closed ? (
         <MouseoverTooltip text={<Trans>The trade has been processed</Trans>}>
-          <Badge variant={BadgeVariant.DEFAULT}>
+          <Badge variant={BadgeVariant.POSITIVE}>
             <AlertCircle width={14} height={14} />
             &nbsp;
             <BadgeText>

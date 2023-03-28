@@ -3,6 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
+import RangeBadge from 'components/Badge/RangeBadge'
 import JSBI from 'jsbi'
 import { DateTime } from 'luxon/src/luxon'
 import { memo, useMemo } from 'react'
@@ -317,6 +318,9 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
   const above = pool && typeof tickUpper === 'number' ? pool.tickCurrent >= tickUpper : undefined
   const inRange: boolean = typeof below === 'boolean' && typeof above === 'boolean' ? !below && !above : false
 
+  const removed = position?.liquidity && JSBI.equal(position?.liquidity, JSBI.BigInt(0))
+  const closedOrder: boolean = processed ? true : false
+
   return (
     <>
       <LimitOrderWrapper to={positionSummaryLink}>
@@ -342,21 +346,7 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
               <Trans>Status:</Trans>
             </TYPE.darkGray>
           </TextLabel>
-          <TextValue fontWeight={700}>
-            {processed ? (
-              <TYPE.success>
-                <Trans>Processed</Trans>
-              </TYPE.success>
-            ) : isUnderfunded ? (
-              <TYPE.error error={true}>
-                <Trans>Deposit KROM to process trade</Trans>
-              </TYPE.error>
-            ) : inRange ? (
-              <Trans>In range</Trans>
-            ) : (
-              <Trans>Out of range</Trans>
-            )}
-          </TextValue>
+          <RangeBadge removed={removed} inRange={inRange} closed={closedOrder} isUnderfunded={isUnderfunded} />
         </RowFixedHeight>
         {createdBlockDate && (
           <RowFixedHeight>
@@ -424,19 +414,21 @@ function LimitOrdersListItem({ limitOrderDetails, isUnderfunded }: OrderListItem
             <Trans>{targetPriceUSD && !isTokenStable ? <span>${formatPrice(targetPriceUSD)}</span> : ''}</Trans>
           </TextValue>
         </RowFixedHeight>
-        <RowFixedHeight>
-          <TextLabel>
-            <TYPE.darkGray>
-              <Trans>Collected:</Trans>
-            </TYPE.darkGray>
-          </TextLabel>
-          <TextValue>
-            <Trans>
-              {`${commafy(collectedValue0?.toSignificant())} ${currency0?.symbol} + 
+        {(collectedValue0 || collectedValue1) && (
+          <RowFixedHeight>
+            <TextLabel>
+              <TYPE.darkGray>
+                <Trans>Collected:</Trans>
+              </TYPE.darkGray>
+            </TextLabel>
+            <TextValue>
+              <Trans>
+                {`${commafy(collectedValue0?.toSignificant())} ${currency0?.symbol} + 
               ${commafy(collectedValue1?.toSignificant())} ${currency1?.symbol}`}
-            </Trans>
-          </TextValue>
-        </RowFixedHeight>
+              </Trans>
+            </TextValue>
+          </RowFixedHeight>
+        )}
       </LimitOrderWrapper>
       <HorizontalDivider />
     </>

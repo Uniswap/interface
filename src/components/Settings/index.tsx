@@ -161,7 +161,6 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                 <Trans>BETA FEATURE. Use at own risk.</Trans>
               </Text>
               <ButtonError
-                error={true}
                 padding={'12px'}
                 onClick={() => {
                   const confirmWord = t`gasless`
