@@ -1,25 +1,12 @@
 name: Monorepo
 
 on:
+  pull_request:
+    branches:
+      - '**'
   push:
     branches:
       - main
-    paths:
-      - 'package.json'
-      - '*.lock'
-      - '.yarnrc.yml'
-      - '.github/**'
-
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-    paths:
-      - 'package.json'
-      - '*.lock'
-      - '.yarnrc.yml'
-      - '.github/**'
 
 jobs:
   monorepo-integrity:
