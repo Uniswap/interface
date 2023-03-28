@@ -12,12 +12,14 @@ import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import Tooltip from 'components/Tooltip'
 import { useGetConnection } from 'connection'
 import { usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { useAtomValue } from 'jotai/utils'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight, Copy, CreditCard, IconProps, Info, Power, Settings } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
+import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import styled, { useTheme } from 'styled-components/macro'
@@ -166,6 +168,8 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
+  const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
+
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
   const isUnclaimed = useUserHasAvailableClaim(account)
   const getConnection = useGetConnection()
@@ -302,14 +306,16 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             </>
           )}
         </HeaderButton>
-        <HeaderButton
-          data-testid="nft-view-self-nfts"
-          onClick={navigateToProfile}
-          size={ButtonSize.medium}
-          emphasis={ButtonEmphasis.medium}
-        >
-          <Trans>View and sell NFTs</Trans>
-        </HeaderButton>
+        {!shouldDisableNFTRoutes && (
+          <HeaderButton
+            data-testid="nft-view-self-nfts"
+            onClick={navigateToProfile}
+            size={ButtonSize.medium}
+            emphasis={ButtonEmphasis.medium}
+          >
+            <Trans>View and sell NFTs</Trans>
+          </HeaderButton>
+        )}
         {Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) && (
           <FiatOnrampNotAvailableText marginTop="8px">
             <Trans>Not available in your region</Trans>

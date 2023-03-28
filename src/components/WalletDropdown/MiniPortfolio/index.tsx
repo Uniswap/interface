@@ -5,7 +5,9 @@ import Column from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { useMiniPortfolioEnabled } from 'featureFlags/flags/miniPortfolio'
 import { useIsNftPage } from 'hooks/useIsNftPage'
+import { useAtomValue } from 'jotai/utils'
 import { useState } from 'react'
+import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -75,27 +77,31 @@ const Pages: Array<Page> = [
 function MiniPortfolio({ account }: { account: string }) {
   const isNftPage = useIsNftPage()
   const [currentPage, setCurrentPage] = useState(isNftPage ? 1 : 0)
+  const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
 
   const Page = Pages[currentPage].component
   return (
     <Wrapper>
       <Nav>
-        {Pages.map(({ title }, index) => (
-          <TraceEvent
-            events={[BrowserEvent.onClick]}
-            name={SharedEventName.NAVBAR_CLICKED}
-            element={Pages[index].loggingElementName}
-            key={index}
-          >
-            <NavItem
-              onClick={() => setCurrentPage(index)}
-              active={currentPage === index}
-              key={`Mini Portfolio page ${index}`}
+        {Pages.map(({ title, loggingElementName }, index) => {
+          if (shouldDisableNFTRoutes && loggingElementName.includes('nft')) return null
+          return (
+            <TraceEvent
+              events={[BrowserEvent.onClick]}
+              name={SharedEventName.NAVBAR_CLICKED}
+              element={loggingElementName}
+              key={index}
             >
-              {title}
-            </NavItem>
-          </TraceEvent>
-        ))}
+              <NavItem
+                onClick={() => setCurrentPage(index)}
+                active={currentPage === index}
+                key={`Mini Portfolio page ${index}`}
+              >
+                {title}
+              </NavItem>
+            </TraceEvent>
+          )
+        })}
       </Nav>
       <PageWrapper>
         <Page account={account} />
