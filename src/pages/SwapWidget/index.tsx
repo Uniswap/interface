@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line no-restricted-imports, simple-import-sort/imports
 import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
@@ -23,7 +23,7 @@ import { useDerivedMarketInfo, useMarketActionHandlers, useMarketState } from 's
 import { SwapTransaction, V3TradeState } from 'state/validator/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { shortenAddress } from 'utils'
-
+import Web3Status from '../../components/Web3Status'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
@@ -228,6 +228,10 @@ const PoweredBy = styled.div`
   font-size: 18px;
   font-weight: 500;
   color: ${({ theme }) => theme.text2};
+`
+
+const HiddenWeb3Status = styled.span`
+  display: none;
 `
 
 export default function SwapWidget() {
@@ -627,6 +631,9 @@ export default function SwapWidget() {
 
   return (
     <WidgetWrapper>
+      <HiddenWeb3Status>
+        <Web3Status />
+      </HiddenWeb3Status>
       <ClassicModeContainer>
         <TokenWarningModal
           isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
