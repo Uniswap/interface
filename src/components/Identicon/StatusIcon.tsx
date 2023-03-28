@@ -1,12 +1,8 @@
 import { useWeb3React } from '@web3-react/core'
-import { MouseoverTooltip } from 'components/Tooltip'
 import { Unicon } from 'components/Unicon'
 import { Connection, ConnectionType } from 'connection'
 import useENSAvatar from 'hooks/useENSAvatar'
-import { useIsMobile } from 'nft/hooks'
-import { PropsWithChildren } from 'react'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
 import { flexColumnNoWrap } from 'theme/styles'
 
 import sockImg from '../../assets/svg/socks.svg'
@@ -69,72 +65,26 @@ const MiniWalletIcon = ({ connection, side }: { connection: Connection; side: 'l
   )
 }
 
-const Divider = styled.div`
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
-  margin: 12px 0;
-`
-
-function UniconTooltip({ children, enabled }: PropsWithChildren<{ enabled?: boolean }>) {
-  return (
-    <MouseoverTooltip
-      offsetY={8}
-      disableHover={!enabled}
-      text={
-        // TODO(cartcrom): add Learn More link when unicon microsite is polished
-        <>
-          <ThemedText.SubHeaderSmall color="textPrimary" paddingTop="4px">
-            This is your Unicon
-          </ThemedText.SubHeaderSmall>
-          <Divider />
-          <ThemedText.Caption paddingBottom="4px">
-            Unicons are avatars for your wallet, generated from your address.
-          </ThemedText.Caption>
-        </>
-      }
-      placement="bottom"
-    >
-      <div>{children}</div>
-    </MouseoverTooltip>
-  )
-}
-
-const MainWalletIcon = ({
-  connection,
-  size,
-  enableInfotips,
-}: {
-  connection: Connection
-  size: number
-  enableInfotips?: boolean
-}) => {
+const MainWalletIcon = ({ connection, size }: { connection: Connection; size: number }) => {
   const { account } = useWeb3React()
   const { avatar } = useENSAvatar(account ?? undefined)
-  const isMobile = useIsMobile()
 
   if (!account) {
     return null
   } else if (avatar || (connection.type === ConnectionType.INJECTED && connection.name === 'MetaMask')) {
     return <Identicon size={size} />
   } else {
-    return isMobile ? (
-      <Unicon address={account} size={size} />
-    ) : (
-      <UniconTooltip enabled={enableInfotips}>
-        <Unicon address={account} size={size} />
-      </UniconTooltip>
-    )
+    return <Unicon address={account} size={size} />
   }
 }
 
 export default function StatusIcon({
   connection,
   size = 16,
-  enableInfotips,
   showMiniIcons = true,
 }: {
   connection: Connection
   size?: number
-  enableInfotips?: boolean
   showMiniIcons?: boolean
 }) {
   const hasSocks = useHasSocks()
@@ -142,7 +92,7 @@ export default function StatusIcon({
   return (
     <IconWrapper size={size}>
       {hasSocks && showMiniIcons && <Socks />}
-      <MainWalletIcon connection={connection} size={size} enableInfotips={enableInfotips} />
+      <MainWalletIcon connection={connection} size={size} />
       {showMiniIcons && <MiniWalletIcon connection={connection} side="right" />}
     </IconWrapper>
   )

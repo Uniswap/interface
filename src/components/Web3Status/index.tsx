@@ -202,9 +202,7 @@ function Web3StatusInner() {
           pending={hasPendingTransactions}
           isClaimAvailable={isClaimAvailable}
         >
-          {!hasPendingTransactions && (
-            <StatusIcon enableInfotips={true} size={24} connection={connection} showMiniIcons={false} />
-          )}
+          {!hasPendingTransactions && <StatusIcon size={24} connection={connection} showMiniIcons={false} />}
           {hasPendingTransactions ? (
             <RowBetween>
               <Text>

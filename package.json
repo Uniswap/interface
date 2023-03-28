@@ -113,6 +113,7 @@
   "dependencies": {
     "@apollo/client": "^3.7.2",
     "@coinbase/wallet-sdk": "^3.6.4",
+    "@cypress/code-coverage": "^3.10.0",
     "@fontsource/ibm-plex-mono": "^4.5.1",
     "@fontsource/inter": "^4.5.1",
     "@graphql-codegen/cli": "^2.15.0",
@@ -178,6 +179,7 @@
     "@web3-react/walletconnect": "8.1.2-beta.0",
     "array.prototype.flat": "^1.2.4",
     "array.prototype.flatmap": "^1.2.4",
+    "babel-plugin-istanbul": "^6.1.1",
     "cids": "^1.0.0",
     "clsx": "^1.1.1",
     "copy-to-clipboard": "^3.2.0",
