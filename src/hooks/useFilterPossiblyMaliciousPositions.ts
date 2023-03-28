@@ -2,9 +2,9 @@ import { Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
 import { hasURL } from 'utils/urlChecks'
+
 import { useDefaultActiveTokens } from './Tokens'
 import { useTokenContractsConstant } from './useTokenContractsConstant'
-
 
 function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[] {
   return Array.from(
@@ -22,17 +22,17 @@ export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]
 
   const symbols = useTokenContractsConstant(nonListPositionTokenAddresses, 'symbol')
 
-  const addressesToSymbol: Record<string, string | undefined> = useMemo(
-    () =>
-      nonListPositionTokenAddresses.reduce(
-        (acc, address, i) => ({
-          ...acc,
-          [address]: symbols[i].result as string | undefined,
-        }),
-        {}
-      ),
-    [nonListPositionTokenAddresses, symbols]
-  )
+  const addressesToSymbol: Record<string, string> = useMemo(() => {
+    const result: Record<string, string> = {}
+    for (let i = 0; i < nonListPositionTokenAddresses.length; i++) {
+      const callResult = symbols[i].result
+      if (!callResult) continue
+      const address = nonListPositionTokenAddresses[i]
+      result[address] = callResult as unknown as string
+    }
+    return result
+  }, [nonListPositionTokenAddresses, symbols])
+
   return useMemo(
     () =>
       positions.filter((position) => {
