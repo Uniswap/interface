@@ -117,7 +117,7 @@ const SwitchNetworkRow = ({ selectedChainId, setModalState }: SwitchNetworkProps
         gap="spacing12"
         justifyContent="space-between"
         p="spacing12">
-        <Flex row shrink gap="spacing12">
+        <Flex row shrink gap="spacing8">
           <NetworkLogo chainId={selectedChainId} />
           <Text color="textPrimary" variant="subheadSmall">
             {CHAIN_INFO[selectedChainId].label}
