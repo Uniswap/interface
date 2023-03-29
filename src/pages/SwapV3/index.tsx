@@ -68,17 +68,6 @@ import PopulatedSwapForm from './PopulatedSwapForm'
 const TradeRouting = lazy(() => import('components/TradeRouting'))
 const LiveChart = lazy(() => import('components/LiveChart'))
 
-const BetaTag = styled.span`
-  font-size: 10px;
-  color: ${({ theme }) => theme.subText};
-  position: absolute;
-  top: 4px;
-  right: -38px;
-  padding: 2px 6px;
-  background-color: ${({ theme }) => theme.buttonGray};
-  border-radius: 10px;
-`
-
 const TutorialIcon = styled(TutorialSvg)`
   width: 22px;
   height: 22px;
@@ -345,9 +334,6 @@ export default function Swap() {
                       <Text fontSize={20} fontWeight={500}>
                         <Trans>Limit</Trans>
                       </Text>
-                      <BetaTag>
-                        <Trans>Beta</Trans>
-                      </BetaTag>
                     </Tab>
                   )}
                 </TabWrapper>

@@ -48,17 +48,6 @@ const StyledBuyCrypto = styled(BuyCrypto)`
   }
 `
 
-const BetaTag = styled.span`
-  position: absolute;
-  right: 14px;
-  top: -2px;
-  font-size: 10px;
-  border-radius: 10px;
-  background-color: ${({ theme }) => theme.buttonGray};
-  color: ${({ theme }) => theme.subText};
-  padding: 2px 6px;
-`
-
 const SwapNavGroup = () => {
   const { isSolana, networkInfo, chainId } = useActiveWeb3React()
   const isDark = useIsDarkMode()
@@ -106,9 +95,8 @@ const SwapNavGroup = () => {
                 <IconWrapper>
                   <LimitOrderIcon />
                 </IconWrapper>
-                <Flex alignItems={'center'} sx={{ flex: 1, position: 'relative' }} justifyContent={'space-between'}>
+                <Flex alignItems={'center'} sx={{ flex: 1 }} justifyContent={'space-between'}>
                   <Trans>Limit Order</Trans>
-                  <BetaTag>Beta</BetaTag>
                 </Flex>
               </Flex>
             </StyledNavLink>

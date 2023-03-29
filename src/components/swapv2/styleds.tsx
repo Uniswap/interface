@@ -78,17 +78,6 @@ export const Tab = styled(ButtonEmpty)<{ isActive: boolean }>`
   `}
 `
 
-export const BetaTag = styled.span`
-  font-size: 10px;
-  color: ${({ theme }) => theme.subText};
-  position: absolute;
-  top: 4px;
-  right: -38px;
-  padding: 2px 6px;
-  background-color: ${({ theme }) => theme.buttonGray};
-  border-radius: 10px;
-`
-
 export const Container = styled.div`
   display: flex;
   align-items: flex-start;
