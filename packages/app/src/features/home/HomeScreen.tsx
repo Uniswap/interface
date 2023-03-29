@@ -1,4 +1,5 @@
 import { H1, Stack } from 'tamagui'
+import { Text } from 'ui/src'
 
 import { useAppSelector } from '../../state'
 
@@ -17,7 +18,7 @@ export function HomeScreen(): JSX.Element {
           key={a.address}
           backgroundColor="$background2"
           padding="$spacing16">
-          {a.address}
+          <Text variant="bodyLarge">{a.address}</Text>
         </Stack>
       ))}
     </Stack>

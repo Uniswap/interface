@@ -38,7 +38,7 @@ export const createStore = ({
   // Required to make `webext-redux` work with Manifest V3 given bg script
   // runs in transient service workers.
   store.subscribe(() => {
-    // chrome.storage.local.set({ state: store.getState() })
+    chrome.storage.local.set({ state: store.getState() })
   })
 
   sagaMiddleware.run(rootSaga)
@@ -48,5 +48,7 @@ export const createStore = ({
 
 export type RootState = ReturnType<typeof reducer>
 export type AppDispatch = ReturnType<typeof createStore>['dispatch']
+export type AppSelector<T> = (state: RootState) => T
+
 export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
