@@ -36,6 +36,7 @@ import {
   v35Schema,
   v36Schema,
   v37Schema,
+  v38Schema,
   v3Schema,
   v4Schema,
   v5Schema,
@@ -53,7 +54,6 @@ import { ChainsState, initialChainsState } from 'src/features/chains/chainsSlice
 import { initialCloudBackupState } from 'src/features/CloudBackup/cloudBackupSlice'
 import { initialPasswordLockoutState } from 'src/features/CloudBackup/passwordLockoutSlice'
 import { ensApi } from 'src/features/ens/api'
-import { initialExperimentsState } from 'src/features/experiments/slice'
 import { initialSearchHistoryState } from 'src/features/explore/searchHistorySlice'
 import { initialFavoritesState } from 'src/features/favorites/slice'
 import { initialModalState } from 'src/features/modals/modalSlice'
@@ -120,7 +120,6 @@ describe('Redux state migrations', () => {
       chains: initialChainsState,
       cloudBackup: initialCloudBackupState,
       ens: { ensForAddress: {} },
-      experiments: initialExperimentsState,
       favorites: initialFavoritesState,
       modals: initialModalState,
       notifications: initialNotificationsState,
@@ -1061,5 +1060,12 @@ describe('Redux state migrations', () => {
     const v37Stub = { ...v37Schema }
     const v38 = migrations[38](v37Stub)
     expect(v38.wallet.replaceAccountOptions).toBeUndefined()
+  })
+
+  it('migrates from v38 to 39', () => {
+    const v38Stub = { ...v38Schema }
+    expect(v38Stub.experiments).toBeDefined()
+    const v39 = migrations[39](v38Stub)
+    expect(v39.experiments).toBeUndefined()
   })
 })

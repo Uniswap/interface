@@ -55,7 +55,6 @@ const whitelist: Array<ReducerNames> = [
   'appearanceSettings',
   'biometricSettings',
   'chains',
-  'experiments',
   'favorites',
   'notifications',
   'passwordLockout',
@@ -73,7 +72,7 @@ export const persistConfig = {
   key: 'root',
   storage: reduxStorage,
   whitelist,
-  version: 38,
+  version: 39,
   migrate: createMigrate(migrations),
 }
 

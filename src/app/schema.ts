@@ -251,6 +251,14 @@ delete v37SchemaIntermediate.wallet.replaceAccountOptions
 
 export const v38Schema = { ...v37SchemaIntermediate }
 
+const v38SchemaIntermediate = {
+  ...v38Schema,
+  experiments: undefined,
+}
+delete v38SchemaIntermediate.experiments
+
+export const v39Schema = { ...v38SchemaIntermediate }
+
 // TODO: [MOB-3864] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v38Schema => v38Schema
+export const getSchema = (): typeof v39Schema => v39Schema

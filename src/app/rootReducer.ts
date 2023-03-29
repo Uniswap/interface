@@ -7,7 +7,6 @@ import { chainsReducer } from 'src/features/chains/chainsSlice'
 import { cloudBackupReducer } from 'src/features/CloudBackup/cloudBackupSlice'
 import { passwordLockoutReducer } from 'src/features/CloudBackup/passwordLockoutSlice'
 import { ensApi } from 'src/features/ens/api'
-import { experimentsReducer } from 'src/features/experiments/slice'
 import { searchHistoryReducer } from 'src/features/explore/searchHistorySlice'
 import { favoritesReducer } from 'src/features/favorites/slice'
 import { fiatOnRampApi } from 'src/features/fiatOnRamp/api'
@@ -34,7 +33,6 @@ const reducers = {
   biometricSettings: biometricSettingsReducer,
   chains: chainsReducer,
   cloudBackup: cloudBackupReducer,
-  experiments: experimentsReducer,
   favorites: favoritesReducer,
   modals: modalsReducer,
   notifications: notificationReducer,

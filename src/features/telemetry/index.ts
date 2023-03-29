@@ -24,7 +24,7 @@ const DUMMY_KEY = '00000000000000000000000000000000'
 export async function initAnalytics(): Promise<void> {
   try {
     init(
-      // reporting to test project until we add the proxy in a comming PR
+      // Amplitude custom reverse proxy takes care of API key
       DUMMY_KEY,
       undefined, // User ID should be undefined to let Amplitude default to Device ID
       {

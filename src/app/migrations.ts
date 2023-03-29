@@ -545,4 +545,9 @@ export const migrations = {
     delete newState.wallet.replaceAccountOptions
     return newState
   },
+  39: function removeExperimentsSlice(state: any) {
+    const newState = { ...state }
+    delete newState.experiments
+    return newState
+  },
 }
