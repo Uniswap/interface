@@ -26,20 +26,22 @@ import {
 import { getActivityTitle } from '../constants'
 import { Activity, ActivityMap } from './types'
 
-function getCurrency(currencyId: string, chainId: SupportedChainId, tokens: TokenAddressMap) {
-  return currencyId === 'ETH' ? nativeOnChain(chainId) : tokens[chainId][currencyId].token
+function getCurrency(currencyId: string, chainId: SupportedChainId, tokens: TokenAddressMap): Currency | undefined {
+  return currencyId === 'ETH' ? nativeOnChain(chainId) : tokens[chainId]?.[currencyId]?.token
 }
 
 function buildCurrencyDescriptor(
-  currencyA: Currency,
+  currencyA: Currency | undefined,
   amtA: string,
-  currencyB: Currency,
+  currencyB: Currency | undefined,
   amtB: string,
   delimiter = t`for`
 ) {
-  const formattedA = formatCurrencyAmount(CurrencyAmount.fromRawAmount(currencyA, amtA))
-  const formattedB = formatCurrencyAmount(CurrencyAmount.fromRawAmount(currencyB, amtB))
-  return `${formattedA} ${currencyA.symbol} ${delimiter} ${formattedB} ${currencyB.symbol}`
+  const formattedA = currencyA ? formatCurrencyAmount(CurrencyAmount.fromRawAmount(currencyA, amtA)) : t`Unknown`
+  const symbolA = currencyA?.symbol ?? ''
+  const formattedB = currencyB ? formatCurrencyAmount(CurrencyAmount.fromRawAmount(currencyB, amtB)) : t`Unknown`
+  const symbolB = currencyB?.symbol ?? ''
+  return [formattedA, symbolA, delimiter, formattedB, symbolB].filter(Boolean).join(' ')
 }
 
 function parseSwap(
@@ -79,7 +81,7 @@ function parseApproval(
 ): Partial<Activity> {
   // TODO: Add 'amount' approved to ApproveTransactionInfo so we can distinguish between revoke and approve
   const currency = getCurrency(approval.tokenAddress, chainId, tokens)
-  const descriptor = t`${currency.symbol ?? currency.name}`
+  const descriptor = currency?.symbol ?? currency?.name ?? t`Unknown`
   return {
     descriptor,
     currencies: [currency],
@@ -120,8 +122,10 @@ function parseMigrateCreateV3(
   tokens: TokenAddressMap
 ): Partial<Activity> {
   const baseCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
+  const baseSymbol = baseCurrency?.symbol ?? t`Unknown`
   const quoteCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
-  const descriptor = t`${baseCurrency.symbol} and ${quoteCurrency.symbol}`
+  const quoteSymbol = quoteCurrency?.symbol ?? t`Unknown`
+  const descriptor = t`${baseSymbol} and ${quoteSymbol}`
 
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
 }

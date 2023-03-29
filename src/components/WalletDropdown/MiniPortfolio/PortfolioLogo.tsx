@@ -39,7 +39,7 @@ const DoubleLogoContainer = styled.div`
 type MultiLogoProps = {
   chainId: SupportedChainId
   accountAddress?: string
-  currencies?: Currency[]
+  currencies?: Array<Currency | undefined>
   images?: (string | undefined)[]
   size?: string
   style?: React.CSSProperties
