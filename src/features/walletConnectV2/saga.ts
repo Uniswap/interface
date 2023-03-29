@@ -12,6 +12,7 @@ import { config } from 'src/config'
 import { ALL_SUPPORTED_CHAIN_IDS, CHAIN_INFO } from 'src/constants/chains'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
+import { registerWCv2ClientForPushNotifications } from 'src/features/walletConnect/api'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { EthMethod } from 'src/features/walletConnect/types'
 import {
@@ -47,6 +48,9 @@ async function initializeWeb3Wallet(): Promise<void> {
       icons: ['https://gateway.pinata.cloud/ipfs/QmR1hYqhDMoyvJtwrQ6f1kVyfEKyK65XH3nbCimXBMkHJg'],
     },
   })
+
+  const clientId = await wcCore.crypto.getClientId()
+  registerWCv2ClientForPushNotifications(clientId)
 }
 
 function createWalletConnectV2Channel(): EventChannel<Action<unknown>> {

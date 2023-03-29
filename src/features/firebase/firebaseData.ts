@@ -7,8 +7,8 @@ import {
   getFirebaseUidOrError,
   getFirestoreMetadataRef,
   getFirestoreUidRef,
-  getOneSignalUserIdOrError,
 } from 'src/features/firebase/utils'
+import { getOneSignalUserIdOrError } from 'src/features/notifications/Onesignal'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import {
   EditAccountAction,

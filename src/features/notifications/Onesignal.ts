@@ -45,3 +45,15 @@ export const promptPushPermission = (
     }
   })
 }
+
+export const getOneSignalUserIdOrError = async (): Promise<string> => {
+  const onesignalUserId = (await OneSignal.getDeviceState())?.userId
+  if (!onesignalUserId) throw new Error('Onesignal user ID is not defined')
+  return onesignalUserId
+}
+
+export const getOnesignalPushTokenOrError = async (): Promise<string> => {
+  const onesignalPushToken = (await OneSignal.getDeviceState())?.pushToken
+  if (!onesignalPushToken) throw new Error('Onesignal push token is not defined')
+  return onesignalPushToken
+}
