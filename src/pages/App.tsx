@@ -1,19 +1,15 @@
-import { getDeviceId, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
+import { sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
 import { CustomUserProperties, getBrowser, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { STATSIG_DUMMY_KEY } from 'integrations'
-import React, { Suspense, useEffect, useMemo, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
-import { StatsigProvider, StatsigUser } from 'statsig-react'
 import styled from 'styled-components/macro'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { getEnvName } from 'utils/env'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
@@ -148,80 +144,60 @@ export default function App() {
 
   const isHeaderTransparent = !scrolledState
 
-  const { account } = useWeb3React()
-  const statsigUser: StatsigUser = useMemo(
-    () => ({
-      userID: getDeviceId(),
-      customIDs: { address: account ?? '' },
-    }),
-    [account]
-  )
-
   return (
     <ErrorBoundary>
       <DarkModeQueryParamReader />
       <ApeModeQueryParamReader />
       <Trace page={currentPage}>
-        <StatsigProvider
-          user={statsigUser}
-          // TODO: replace with proxy and cycle key
-          sdkKey={STATSIG_DUMMY_KEY}
-          waitForInitialization={false}
-          options={{
-            environment: { tier: getEnvName() },
-            api: process.env.REACT_APP_STATSIG_PROXY_URL,
-          }}
-        >
-          <HeaderWrapper transparent={isHeaderTransparent}>
-            <NavBar />
-          </HeaderWrapper>
-          <BodyWrapper>
-            <Popups />
-            <Polling />
-            <TopLevelModals />
-            <Suspense fallback={<Loader />}>
-              {isLoaded ? (
-                <Routes>
-                  <Route path="/" element={<Landing />} />
+        <HeaderWrapper transparent={isHeaderTransparent}>
+          <NavBar />
+        </HeaderWrapper>
+        <BodyWrapper>
+          <Popups />
+          <Polling />
+          <TopLevelModals />
+          <Suspense fallback={<Loader />}>
+            {isLoaded ? (
+              <Routes>
+                <Route path="/" element={<Landing />} />
 
-                  <Route path="swap" element={<Swap />} />
+                <Route path="swap" element={<Swap />} />
 
-                  <Route path="pools" element={<Pools />} />
+                <Route path="pools" element={<Pools />} />
 
-                  <Route path="pool" element={<Pool />} />
-                  <Route path="pool/:tokenId" element={<PositionPage />} />
+                <Route path="pool" element={<Pool />} />
+                <Route path="pool/:tokenId" element={<PositionPage />} />
 
-                  <Route path="add" element={<RedirectDuplicateTokenIds />}>
-                    {/* this is workaround since react-router-dom v6 doesn't support optional parameters any more */}
-                    <Route path=":currencyIdA" />
-                    <Route path=":currencyIdA/:currencyIdB" />
-                    <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
-                  </Route>
+                <Route path="add" element={<RedirectDuplicateTokenIds />}>
+                  {/* this is workaround since react-router-dom v6 doesn't support optional parameters any more */}
+                  <Route path=":currencyIdA" />
+                  <Route path=":currencyIdA/:currencyIdB" />
+                  <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
+                </Route>
 
-                  <Route path="increase" element={<AddLiquidity />}>
-                    <Route path=":currencyIdA" />
-                    <Route path=":currencyIdA/:currencyIdB" />
-                    <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
-                    <Route path=":currencyIdA/:currencyIdB/:feeAmount/:tokenId" />
-                  </Route>
+                <Route path="increase" element={<AddLiquidity />}>
+                  <Route path=":currencyIdA" />
+                  <Route path=":currencyIdA/:currencyIdB" />
+                  <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
+                  <Route path=":currencyIdA/:currencyIdB/:feeAmount/:tokenId" />
+                </Route>
 
-                  <Route path="remove/:tokenId" element={<RemoveLiquidityV3 />} />
+                <Route path="remove/:tokenId" element={<RemoveLiquidityV3 />} />
 
-                  <Route path="migrate/v2" element={<MigrateV2 />} />
-                  <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
+                <Route path="migrate/v2" element={<MigrateV2 />} />
+                <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
 
-                  <Route path="*" element={<Navigate to="/not-found" replace />} />
-                  <Route path="/not-found" element={<NotFound />} />
-                </Routes>
-              ) : (
-                <Loader />
-              )}
-            </Suspense>
-          </BodyWrapper>
-          <MobileBottomBar>
-            <PageTabs />
-          </MobileBottomBar>
-        </StatsigProvider>
+                <Route path="*" element={<Navigate to="/not-found" replace />} />
+                <Route path="/not-found" element={<NotFound />} />
+              </Routes>
+            ) : (
+              <Loader />
+            )}
+          </Suspense>
+        </BodyWrapper>
+        <MobileBottomBar>
+          <PageTabs />
+        </MobileBottomBar>
       </Trace>
     </ErrorBoundary>
   )
