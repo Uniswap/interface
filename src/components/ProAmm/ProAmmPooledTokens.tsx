@@ -138,7 +138,7 @@ export default function ProAmmPooledTokens({
                 {createdAt && (
                   <InfoHelper
                     placement="top"
-                    text={<Trans>Position has created at {dayjs(createdAt * 1000).format('YYYY-MM-DD HH:mm')}</Trans>}
+                    text={<Trans>Position was created at {dayjs(createdAt * 1000).format('YYYY-MM-DD HH:mm')}</Trans>}
                   />
                 )}
               </Text>
