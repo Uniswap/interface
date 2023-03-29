@@ -69,7 +69,7 @@ export default function Updater(): null {
             if (bump >= min) {
               dispatch(acceptListUpdate(listUrl))
             } else {
-              console.error(
+              console.debug(
                 `List at url ${listUrl} could not automatically update because the version bump was only PATCH/MINOR while the update had breaking changes and should have been MAJOR`
               )
             }
