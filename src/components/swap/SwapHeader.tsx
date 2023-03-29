@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { MouseoverTooltipContent } from 'components/Tooltip'
@@ -114,25 +116,38 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
               content={
                 <div>
                   <Trans>Crypto purchases are not available in your region. </Trans>
-                  <ExternalLink href={MOONPAY_REGION_AVAILABILITY_ARTICLE} style={{ paddingLeft: '4px' }}>
-                    <Trans>Learn more</Trans>
-                  </ExternalLink>
+                  <TraceEvent
+                    events={[BrowserEvent.onClick]}
+                    name={SharedEventName.ELEMENT_CLICKED}
+                    element={InterfaceElementName.TWITTER_LINK}
+                  >
+                    <ExternalLink href={MOONPAY_REGION_AVAILABILITY_ARTICLE} style={{ paddingLeft: '4px' }}>
+                      <Trans>Learn more</Trans>
+                    </ExternalLink>
+                  </TraceEvent>
                 </div>
               }
               placement="bottom"
               disableHover={!fiatOnrampAvailabilityChecked || fiatOnrampAvailable}
             >
-              <TextHeader
-                className={subhead}
-                color={theme.textSecondary}
-                disabled={disableBuyCryptoButton}
-                isClickable={true}
-                onClick={handleBuyCrypto}
-                style={{ gap: '4px' }}
+              <TraceEvent
+                events={[BrowserEvent.onClick]}
+                name={SharedEventName.ELEMENT_CLICKED}
+                element={InterfaceElementName.BLOG_LINK}
+                properties={{ account_connected: !!account }}
               >
-                <Trans>Buy</Trans>
-                {!buyFiatClicked && <Dot />}
-              </TextHeader>
+                <TextHeader
+                  className={subhead}
+                  color={theme.textSecondary}
+                  disabled={disableBuyCryptoButton}
+                  isClickable={true}
+                  onClick={handleBuyCrypto}
+                  style={{ gap: '4px' }}
+                >
+                  <Trans>Buy</Trans>
+                  {!buyFiatClicked && <Dot />}
+                </TextHeader>
+              </TraceEvent>
             </MouseoverTooltipContent>
           )}
         </RowFixed>
