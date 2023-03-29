@@ -7,6 +7,8 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { isSentryEnabled } from 'utils/env'
 import { getEnvName, isProductionEnv } from 'utils/env'
 
+import { beforeSend } from './config'
+
 export { trace } from './trace'
 
 // Dump some metadata into the window to allow client verification.
@@ -23,6 +25,7 @@ Sentry.init({
   environment: getEnvName(),
   // exception reporting:
   enabled: isSentryEnabled(),
+  beforeSend,
   // performance tracing:
   tracesSampleRate: Number(process.env.REACT_APP_SENTRY_TRACES_SAMPLE_RATE ?? 0),
   integrations: [
