@@ -111,6 +111,7 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
           {fiatOnRampButtonEnabled && (
             <MouseoverTooltipContent
               wrap
+              delay={500}
               content={
                 <div>
                   <Trans>Crypto purchases are not available in your region. </Trans>

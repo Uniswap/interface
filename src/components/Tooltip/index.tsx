@@ -38,6 +38,8 @@ interface TooltipContentProps extends Omit<PopoverProps, 'content'> {
   onOpen?: () => void
   open?: () => void
   close?: () => void
+  // time delay before showing tooltip upon hover
+  delay?: number
   // whether to wrap the content in a `TooltipContainer`
   wrap?: boolean
   disableHover?: boolean // disable the hover and content display
@@ -117,23 +119,40 @@ export function MouseoverTooltipContent({
   children,
   onOpen: openCallback = undefined,
   disableHover,
+  delay,
   ...rest
 }: Omit<TooltipContentProps, 'show'>) {
   const [show, setShow] = useState(false)
+  // Default delay is undefined (no delay), so delayShow should initialize to be true.
+  const [delayShow, setDelayShow] = useState(delay ? false : true)
   const open = () => {
     setShow(true)
     openCallback?.()
   }
   const close = () => {
     setShow(false)
+    if (delay) setDelayShow(false)
   }
+
+  useEffect(() => {
+    if (show && delay) {
+      const tooltipTimer = setTimeout(() => {
+        setDelayShow(true)
+      }, delay)
+
+      return () => {
+        clearTimeout(tooltipTimer)
+      }
+    }
+    return
+  }, [show, delay])
 
   return (
     <TooltipContent
       {...rest}
       open={open}
       close={close}
-      show={!disableHover && show}
+      show={!disableHover && show && delayShow}
       content={disableHover ? null : content}
     >
       <div onMouseEnter={open} onMouseLeave={close}>
