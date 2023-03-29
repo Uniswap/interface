@@ -34,7 +34,7 @@ function prioritizeLogoSources(uris: string[]) {
   return coingeckoUrl ? [...preferredUris, coingeckoUrl] : preferredUris
 }
 
-function getInitialUrl(address?: string | null, chainId?: number | null, isNative?: boolean) {
+function getGhHostedLogo(address?: string | null, chainId?: number | null, isNative?: boolean) {
   if (chainId && isNative) return getNativeLogoURI(chainId)
 
   const networkName = chainId ? chainIdToNetworkName(chainId) : 'ethereum'
@@ -52,30 +52,42 @@ export default function useAssetLogoSource(
   isNative?: boolean,
   backupImg?: string | null
 ): [string | undefined, () => void] {
-  const [current, setCurrent] = useState<string | undefined>(getInitialUrl(address, chainId, isNative))
+  const [current, setCurrent] = useState<string | undefined>(undefined)
   const [fallbackSrcs, setFallbackSrcs] = useState<string[] | undefined>(undefined)
 
+  const initSrcs = useCallback(() => {
+    const uris = TokenLogoLookupTable.getIcons(address, chainId) ?? []
+    const ghHostedLogo = getGhHostedLogo(address, chainId, isNative)
+    if (backupImg) uris.push(backupImg)
+    const tokenListIcons = prioritizeLogoSources(parseLogoSources(uris))
+    if (ghHostedLogo) tokenListIcons.push(ghHostedLogo)
+    setCurrent(tokenListIcons[0])
+    setFallbackSrcs(tokenListIcons)
+  }, [address, backupImg, chainId, isNative])
+
   useEffect(() => {
-    setCurrent(getInitialUrl(address, chainId, isNative))
-    setFallbackSrcs(undefined)
-  }, [address, chainId, isNative])
+    if (!fallbackSrcs) {
+      initSrcs()
+    }
+  }, [fallbackSrcs, initSrcs])
+
+  // reset state when address or chainId change
+  useEffect(() => {
+    if (address && chainId) {
+      initSrcs()
+    }
+  }, [address, chainId, initSrcs])
 
   const nextSrc = useCallback(() => {
     if (current) {
       BAD_SRCS[current] = true
     }
-    // Parses and stores logo sources from tokenlists if assets repo url fails
     if (!fallbackSrcs) {
-      const uris = TokenLogoLookupTable.getIcons(address, chainId) ?? []
-      if (backupImg) uris.push(backupImg)
-      const tokenListIcons = prioritizeLogoSources(parseLogoSources(uris))
-
-      setCurrent(tokenListIcons.find((src) => !BAD_SRCS[src]))
-      setFallbackSrcs(tokenListIcons)
+      initSrcs()
     } else {
       setCurrent(fallbackSrcs.find((src) => !BAD_SRCS[src]))
     }
-  }, [current, fallbackSrcs, address, chainId, backupImg])
+  }, [current, fallbackSrcs, initSrcs])
 
   return [current, nextSrc]
 }
