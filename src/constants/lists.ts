@@ -1,6 +1,6 @@
 export const FUJI_LIST = 'https://raw.githubusercontent.com/Orbital-Apes-Labs/tokenlist/fuji-testnet/src/tokenlist.json'
 export const TESTNET_LIST =
-  'https://raw.githubusercontent.com/Orbital-Apes-Labs/tokenlist/evmos-testnet/src/tokenlist_testnet.json'
+  'https://raw.githubusercontent.com/Forge-Trade/tokenlist/evmos-testnet/src/tokenlist_testnet.json'
 
 export const UNSUPPORTED_LIST_URLS: string[] = []
 
