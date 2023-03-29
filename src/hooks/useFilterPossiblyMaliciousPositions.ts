@@ -20,18 +20,18 @@ export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]
     [positions, activeTokensList]
   )
 
-  const symbols = useTokenContractsConstant(nonListPositionTokenAddresses, 'symbol')
+  const symbolCallStates = useTokenContractsConstant(nonListPositionTokenAddresses, 'symbol')
 
   const addressesToSymbol: Record<string, string> = useMemo(() => {
     const result: Record<string, string> = {}
     for (let i = 0; i < nonListPositionTokenAddresses.length; i++) {
-      const callResult = symbols[i].result
+      const callResult = symbolCallStates[i].result
       if (!callResult) continue
       const address = nonListPositionTokenAddresses[i]
       result[address] = callResult as unknown as string
     }
     return result
-  }, [nonListPositionTokenAddresses, symbols])
+  }, [nonListPositionTokenAddresses, symbolCallStates])
 
   return useMemo(
     () =>
