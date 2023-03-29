@@ -25,7 +25,6 @@ import { LockScreenContextProvider } from 'src/features/authentication/lockScree
 import { BiometricContextProvider } from 'src/features/biometrics/context'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
-import { initializeRemoteConfig } from 'src/features/remoteConfig'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
@@ -60,7 +59,6 @@ if (!__DEV__) {
   })
 }
 
-initializeRemoteConfig()
 initOneSignal()
 
 function App(): JSX.Element | null {

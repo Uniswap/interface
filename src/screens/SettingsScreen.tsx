@@ -30,8 +30,6 @@ import { Text } from 'src/components/Text'
 import { APP_FEEDBACK_LINK, GET_HELP_LINK, uniswapUrls } from 'src/constants/urls'
 import { useCurrentAppearanceSetting, useIsDarkMode } from 'src/features/appearance/hooks'
 import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
-import { isEnabled } from 'src/features/remoteConfig'
-import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { resetWallet, setFinishedOnboarding } from 'src/features/wallet/walletSlice'
@@ -50,8 +48,6 @@ export function SettingsScreen(): JSX.Element {
     useDeviceSupportsBiometricAuth()
   const authenticationTypeName = isTouchIdSupported ? 'Touch' : 'Face'
 
-  // Defining them inline instead of outside component b.c. they need t()
-  const showDevSettings = isEnabled(TestConfig.ShowDevSettings)
   const currentAppearanceSetting = useCurrentAppearanceSetting()
 
   const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
@@ -64,6 +60,7 @@ export function SettingsScreen(): JSX.Element {
       width: 24,
     }
 
+    // Defining them inline instead of outside component b.c. they need t()
     return [
       {
         subTitle: t('App settings'),
@@ -140,17 +137,12 @@ export function SettingsScreen(): JSX.Element {
       },
       {
         subTitle: t('Developer settings'),
-        isHidden: !showDevSettings,
+        isHidden: !__DEV__,
         data: [
           {
             screen: Screens.SettingsChains,
             text: t('Chains'),
             // TODO [MOB-3921] use chains icon when available
-            icon: <FlashbotsIcon {...iconProps} />,
-          },
-          {
-            screen: Screens.SettingsTestConfigs,
-            text: 'Test Configs',
             icon: <FlashbotsIcon {...iconProps} />,
           },
           {
@@ -169,7 +161,6 @@ export function SettingsScreen(): JSX.Element {
     isTouchIdSupported,
     isFaceIdSupported,
     authenticationTypeName,
-    showDevSettings,
   ])
 
   const renderItem = ({
