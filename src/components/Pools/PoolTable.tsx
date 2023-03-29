@@ -203,7 +203,6 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
   }
   if (poolData?.token0?.address?.toLowerCase() === WETH_TEVMOS?.address?.toLowerCase()) {
     currency0 = WETH_TEVMOS
-    console.log('true', WETH_TEVMOS, currency0)
   } else {
     currency0 = new Token(
       SupportedChainId.TESTNET,
@@ -225,7 +224,6 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
   }
   if (poolData?.token0?.address?.toLowerCase() === USDC_TEVMOS?.address?.toLowerCase()) {
     currency0 = USDC_TEVMOS
-    console.log('true', WETH_TEVMOS, currency0)
   } else {
     currency0 = new Token(
       SupportedChainId.TESTNET,
