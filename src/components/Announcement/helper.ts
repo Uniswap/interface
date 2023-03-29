@@ -45,9 +45,9 @@ export const useNavigateCtaPopup = () => {
   const onNavigate = (actionURL: string) => {
     try {
       if (!actionURL) return
-      const { pathname, host } = new URL(actionURL)
+      const { pathname, host, search } = new URL(actionURL)
       if (window.location.host === host) {
-        navigate(pathname)
+        navigate(`${pathname}${search}`)
       } else {
         window.open(actionURL)
       }
