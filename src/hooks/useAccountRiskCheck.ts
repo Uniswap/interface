@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unused-modules */
 import { sendEvent } from 'components/analytics'
 import ms from 'ms.macro'
 import { useEffect } from 'react'
