@@ -1,5 +1,5 @@
 import { gql, useLazyQuery } from '@apollo/client'
-import { CurrencyAmount, Token, TokenAmount, WETH } from '@kyberswap/ks-sdk-core'
+import { ChainId, CurrencyAmount, Token, TokenAmount, WETH } from '@kyberswap/ks-sdk-core'
 import { FeeAmount, Pool, Position } from '@kyberswap/ks-sdk-elastic'
 import { useEffect } from 'react'
 
@@ -237,7 +237,7 @@ const FarmUpdaterV1: React.FC<CommonProps> = ({ interval }) => {
 
             return {
               startTime: Number(pool.startTime),
-              endTime: Number(pool.endTime),
+              endTime: chainId === ChainId.AVAXMAINNET && pool.pid === '125' ? Date.now() / 1000 : Number(pool.endTime),
               pid: pool.pid,
               id: pool.id,
               feeTarget: pool.feeTarget,
