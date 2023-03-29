@@ -119,7 +119,7 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
                   <TraceEvent
                     events={[BrowserEvent.onClick]}
                     name={SharedEventName.ELEMENT_CLICKED}
-                    element={InterfaceElementName.TWITTER_LINK}
+                    element={InterfaceElementName.FIAT_ON_RAMP_LEARN_MORE_LINK}
                   >
                     <ExternalLink href={MOONPAY_REGION_AVAILABILITY_ARTICLE} style={{ paddingLeft: '4px' }}>
                       <Trans>Learn more</Trans>
@@ -133,7 +133,7 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
               <TraceEvent
                 events={[BrowserEvent.onClick]}
                 name={SharedEventName.ELEMENT_CLICKED}
-                element={InterfaceElementName.BLOG_LINK}
+                element={InterfaceElementName.FIAT_ON_RAMP_BUY_BUTTON}
                 properties={{ account_connected: !!account }}
               >
                 <TextHeader
