@@ -74,7 +74,7 @@ export function useBuyFiatClicked(): [boolean | undefined, (buyFiatClicked: bool
   const buyFiatClicked = useAppSelector((state) => state.user.buyFiatClicked)
   const setBuyFiatClicked = useCallback(
     (buyFiatClicked: boolean) => {
-      dispatch(updateUserBuyFiatClicked({ buyFiatClicked }))
+      dispatch(updateUserBuyFiatClicked(buyFiatClicked))
     },
     [dispatch]
   )

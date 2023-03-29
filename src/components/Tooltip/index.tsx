@@ -4,6 +4,7 @@ import styled from 'styled-components/macro'
 
 import Popover, { PopoverProps } from '../Popover'
 
+// TODO(lynnshaoyu): migrate noOps throughout web to a shared util file.
 const noOp = () => null
 
 export const TooltipContainer = styled.div`

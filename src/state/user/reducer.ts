@@ -79,7 +79,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     updateUserBuyFiatClicked(state, action) {
-      state.buyFiatClicked = action.payload.buyFiatClicked
+      state.buyFiatClicked = action.payload
     },
     updateSelectedWallet(state, { payload: { wallet } }) {
       state.selectedWallet = wallet
