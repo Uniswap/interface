@@ -15,7 +15,7 @@ module.exports = {
               {
                 name: 'zustand',
                 importNames: ['default'],
-                message: 'Default import from zustand is depracated. Use named import instead.',
+                message: 'Default import from zustand is deprecated. Import `{ create }` instead.',
               },
             ],
           },
