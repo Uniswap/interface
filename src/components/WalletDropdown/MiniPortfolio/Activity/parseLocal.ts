@@ -41,7 +41,7 @@ function buildCurrencyDescriptor(
   const symbolA = currencyA?.symbol ?? ''
   const formattedB = currencyB ? formatCurrencyAmount(CurrencyAmount.fromRawAmount(currencyB, amtB)) : t`Unknown`
   const symbolB = currencyB?.symbol ?? ''
-  return `${formattedA} ${symbolA} ${delimiter} ${formattedB} ${symbolB}`
+  return [formattedA, symbolA, delimiter, formattedB, symbolB].filter(Boolean).join(' ')
 }
 
 function parseSwap(
@@ -81,9 +81,7 @@ function parseApproval(
 ): Partial<Activity> {
   // TODO: Add 'amount' approved to ApproveTransactionInfo so we can distinguish between revoke and approve
   const currency = getCurrency(approval.tokenAddress, chainId, tokens)
-  const symbol = currency?.symbol
-  const name = currency?.name ?? 'Unknown'
-  const descriptor = t`${symbol ?? name}`
+  const descriptor = currency?.symbol ?? currency?.name ?? t`Unknown`
   return {
     descriptor,
     currencies: [currency],
@@ -124,9 +122,9 @@ function parseMigrateCreateV3(
   tokens: TokenAddressMap
 ): Partial<Activity> {
   const baseCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
-  const baseSymbol = baseCurrency?.symbol ?? 'Unknown'
+  const baseSymbol = baseCurrency?.symbol ?? t`Unknown`
   const quoteCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
-  const quoteSymbol = quoteCurrency?.symbol ?? 'Unknown'
+  const quoteSymbol = quoteCurrency?.symbol ?? t`Unknown`
   const descriptor = t`${baseSymbol} and ${quoteSymbol}`
 
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
