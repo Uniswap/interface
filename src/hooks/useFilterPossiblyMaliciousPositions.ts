@@ -36,18 +36,19 @@ export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]
   return useMemo(
     () =>
       positions.filter((position) => {
+        let tokensInListCount = 0
         const token0FromList = activeTokensList[position.token0] as Token | undefined
         const token1FromList = activeTokensList[position.token1] as Token | undefined
-        const bothTokensInList = token0FromList && token1FromList
-        if (bothTokensInList) return true
+        if (token0FromList) tokensInListCount++
+        if (token1FromList) tokensInListCount++
+        if (tokensInListCount === 2) return true
 
         const token0IsInList = !!token0FromList
         const token1IsInList = !!token1FromList
-        const atLeastOneTokenIsInList = token0IsInList || token1IsInList
         const token0HasUrlSymbol = hasURL(token0IsInList ? token0FromList.symbol : addressesToSymbol[position.token0])
         const token1HasUrlSymbol = hasURL(token1IsInList ? token1FromList.symbol : addressesToSymbol[position.token1])
         const maxOneUrlTokenSymbol = token0HasUrlSymbol ? !token1HasUrlSymbol : true
-        if (atLeastOneTokenIsInList && maxOneUrlTokenSymbol) return true
+        if (tokensInListCount >= 1 && maxOneUrlTokenSymbol) return true
 
         const neitherTokenHasAUrlSymbol = !token0HasUrlSymbol && !token1HasUrlSymbol
         return neitherTokenHasAUrlSymbol
