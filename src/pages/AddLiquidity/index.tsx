@@ -3,6 +3,7 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { ZERO } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -11,6 +12,7 @@ import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { useToggleWalletDrawer } from 'components/WalletDropdown'
 import usePrevious from 'hooks/usePrevious'
+import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -215,7 +217,7 @@ export default function AddLiquidity() {
       return
     }
 
-    if (position && account && deadline) {
+    if (position && JSBI.greaterThan(position.liquidity, ZERO) && account && deadline) {
       const useNative = baseCurrency.isNative ? baseCurrency : quoteCurrency.isNative ? quoteCurrency : undefined
       const { calldata, value } =
         hasExistingPosition && tokenId
