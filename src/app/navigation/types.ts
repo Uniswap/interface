@@ -81,7 +81,6 @@ export type AppStackParamList = {
     type: EducationContentType
   } & OnboardingStackBaseParams
   [Screens.Home]?: { tab?: TabIndex }
-  [Screens.SettingsWalletManageConnection]: { address: Address }
   [Screens.OnboardingStack]: NavigatorScreenParams<OnboardingStackParamList>
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
   [Screens.TokenDetails]: {

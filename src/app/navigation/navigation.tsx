@@ -65,7 +65,8 @@ const SettingsStack = createNativeStackNavigator<SettingsStackParamList>()
 
 function SettingsStackGroup(): JSX.Element {
   return (
-    <SettingsStack.Navigator screenOptions={navOptions.noHeader}>
+    <SettingsStack.Navigator
+      screenOptions={{ ...navOptions.noHeader, fullScreenGestureEnabled: true }}>
       <SettingsStack.Screen component={SettingsScreen} name={Screens.Settings} />
       <SettingsStack.Screen component={SettingsWallet} name={Screens.SettingsWallet} />
       <SettingsStack.Screen component={SettingsWalletEdit} name={Screens.SettingsWalletEdit} />
@@ -270,10 +271,6 @@ export function AppStackNavigator(): JSX.Element {
       <AppStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
       <AppStack.Screen component={WebViewScreen} name={Screens.WebView} />
       <AppStack.Screen component={SettingsStackGroup} name={Screens.SettingsStack} />
-      <AppStack.Screen
-        component={SettingsWalletManageConnection}
-        name={Screens.SettingsWalletManageConnection}
-      />
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AppStack.Screen component={EducationScreen} name={Screens.Education} />
       </AppStack.Group>
