@@ -14,12 +14,13 @@ export function getQueryToken(currency0: Currency | null, currency1: Currency | 
     return WRAPPED_NATIVE_CURRENCY[SupportedChainId.TESTNET] ?? null
   }
   if (
-    token1?.address === undefined ||
-    token1?.address?.toLowerCase() === WRAPPED_NATIVE_CURRENCY[SupportedChainId.TESTNET]?.address?.toLowerCase()
+    (token1?.address === undefined ||
+      token1?.address?.toLowerCase() === WRAPPED_NATIVE_CURRENCY[SupportedChainId.TESTNET]?.address?.toLowerCase()) &&
+    !TEVMOS_STABLE_COINS.includes(token0?.address?.toLowerCase() ?? '')
   ) {
     return currency0 as Token
   }
-  console.log(token1, 'cuuur', token1?.address)
+
   if (TEVMOS_STABLE_COINS.includes(token1?.address?.toLowerCase() ?? '')) {
     if (TEVMOS_STABLE_COINS.includes(token0?.address?.toLowerCase() ?? '')) {
       return currency1 as Token

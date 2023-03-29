@@ -8,7 +8,7 @@ import { NATIVE_CHAIN_ID } from '../../constants/tokens'
 
 type Network = 'evmos' | 'fuji' | 'tevmos'
 
-export function chainIdToNetworkName(networkId: SupportedChainId): Network {
+function chainIdToNetworkName(networkId: SupportedChainId): Network {
   switch (networkId) {
     case SupportedChainId.FUJI:
       return 'fuji'
@@ -32,7 +32,7 @@ export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.TE
 
 function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedChainId.TESTNET): string | void {
   const networkName = chainIdToNetworkName(chainId)
-  const networksWithUrls = [SupportedChainId.FUJI, SupportedChainId.MAINNET, SupportedChainId.TESTNET]
+  const networksWithUrls = [SupportedChainId.FUJI]
   if (networksWithUrls.includes(chainId)) {
     return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
   }

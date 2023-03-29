@@ -1,5 +1,5 @@
 import TokenLogoLookupTable from 'constants/TokenLogoLookupTable'
-import { chainIdToNetworkName, getNativeLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
+import { getNativeLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { useCallback, useEffect, useState } from 'react'
 import { isAddress } from 'utils'
@@ -37,10 +37,9 @@ function prioritizeLogoSources(uris: string[]) {
 function getInitialUrl(address?: string | null, chainId?: number | null, isNative?: boolean) {
   if (chainId && isNative) return getNativeLogoURI(chainId)
 
-  const networkName = chainId ? chainIdToNetworkName(chainId) : 'ethereum'
   const checksummedAddress = isAddress(address)
   if (checksummedAddress) {
-    return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`
+    return `https`
   } else {
     return undefined
   }
