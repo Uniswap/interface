@@ -22,13 +22,11 @@ const StyledSwapHeader = styled.div`
   color: ${({ theme }) => theme.textSecondary};
 `
 
-const Dot = styled.span`
+const Dot = styled.div`
   height: 8px;
   width: 8px;
   background-color: ${({ theme }) => theme.accentActive};
   border-radius: 50%;
-  margin: 0px 4px;
-  display: inline-block;
 `
 
 const TextHeader = styled.div<{ color: string; marginLeft?: string; isClickable?: boolean; disabled?: boolean }>`
@@ -37,6 +35,7 @@ const TextHeader = styled.div<{ color: string; marginLeft?: string; isClickable?
   margin-left: ${({ marginLeft }) => marginLeft};
   margin-right: 8px;
   display: flex;
+  line-height: 20px;
   flex-direction: row;
   cursor: ${({ isClickable }) => isClickable && 'pointer'};
   justify-content: center;
@@ -105,7 +104,7 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
   return (
     <StyledSwapHeader>
       <RowBetween>
-        <RowFixed>
+        <RowFixed style={{ gap: '8px' }}>
           <TextHeader className={subhead} color={theme.textPrimary}>
             <Trans>Swap</Trans>
           </TextHeader>
@@ -126,10 +125,10 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
               <TextHeader
                 className={subhead}
                 color={theme.textSecondary}
-                marginLeft="8px"
                 disabled={disableBuyCryptoButton}
                 isClickable={true}
                 onClick={handleBuyCrypto}
+                style={{ gap: '4px' }}
               >
                 <Trans>Buy</Trans>
                 {!buyFiatClicked && <Dot />}
