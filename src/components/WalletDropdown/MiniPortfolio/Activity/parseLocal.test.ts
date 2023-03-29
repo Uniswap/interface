@@ -138,7 +138,7 @@ describe('parseLocalActivity', () => {
     expect(parseLocalActivity(details, chainId, tokens)).toEqual({
       chainId: 1,
       currencies: [undefined, undefined],
-      descriptor: 'Unknown  for Unknown',
+      descriptor: 'Unknown for Unknown',
       hash: undefined,
       receipt: {
         id: '0x123',
