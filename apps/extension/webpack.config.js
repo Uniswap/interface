@@ -12,7 +12,8 @@ const DotenvPlugin = require('dotenv-webpack')
 const rootDir = path.join(__dirname, '..')
 
 const NODE_ENV = process.env.NODE_ENV || 'development'
-const EXTENSION_NAME = NODE_ENV === 'development' ? '(DEV) Uniswap Wallet' : 'Uniswap Wallet'
+const EXTENSION_NAME =
+  NODE_ENV === 'development' ? '(DEV) Uniswap Wallet' : 'Uniswap Wallet'
 
 const isDevelopment = NODE_ENV === 'development'
 const appDirectory = path.resolve(__dirname)
@@ -93,7 +94,18 @@ const tamaguiLoaderConfiguration = {
   },
 }
 
-const fileExtensions = ['eot', 'gif', 'jpeg', 'jpg', 'otf', 'png', 'svg', 'ttf', 'woff', 'woff2']
+const fileExtensions = [
+  'eot',
+  'gif',
+  'jpeg',
+  'jpg',
+  'otf',
+  'png',
+  'svg',
+  'ttf',
+  'woff',
+  'woff2',
+]
 
 const {
   dir,
@@ -133,7 +145,10 @@ const {
         },
       },
       devtool: 'cheap-module-source-map',
-      plugins: [new ForkTsCheckerWebpackPlugin(), new ReactRefreshWebpackPlugin()],
+      plugins: [
+        new ForkTsCheckerWebpackPlugin(),
+        new ReactRefreshWebpackPlugin(),
+      ],
     }
   : {
       dir: 'build',
@@ -248,7 +263,7 @@ const options = {
         {
           from: 'src/manifest.json',
           force: true,
-          transform: function (content, path) {
+          transform(content, path) {
             return Buffer.from(
               JSON.stringify(
                 {
@@ -265,7 +280,7 @@ const options = {
         },
         {
           from: 'src/assets/*.{html,png,svg}',
-          to: '[name][ext]',
+          to: 'assets/[name][ext]',
           force: true,
         },
         {

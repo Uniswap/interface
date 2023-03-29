@@ -16,11 +16,15 @@ const mockStore = ({
 
 describe(WebKeyring, () => {
   it('returns all mnemonic ids', async () => {
-    const data = { 'com.uniswap.web.mnemonic.address1': 'my mnemonic' }
+    const data = {
+      'com.uniswap.web.mnemonic.address1': 'my mnemonic',
+      'com.uniswap.web.mnemonic.address2': 'my mnemonic',
+      'com.uniswap.web.privateKey.address3': 'private-key',
+    }
     const keyring = new WebKeyring(mockStore({ data }))
 
     const allMnemonics = await keyring.getMnemonicIds()
 
-    expect(allMnemonics).toEqual(['address1'])
+    expect(allMnemonics).toEqual(['address1', 'address2'])
   })
 })

@@ -187,7 +187,7 @@ async function requestValidatePassword(
 function onTransactionSent(transactionResponse: TransactionResponse): void {
   // Update chrome icon
   chrome.action.setIcon({
-    path: 'pending.png',
+    path: 'assets/pending.png',
   })
 
   // Listen for transaction receipt
@@ -196,24 +196,24 @@ function onTransactionSent(transactionResponse: TransactionResponse): void {
     .then((receipt) => {
       if (receipt.status === 1) {
         chrome.action.setIcon({
-          path: 'success.png',
+          path: 'assets/success.png',
         })
 
         // Send chrome notification that transaction was successful
         chrome.notifications.create({
           type: 'basic',
-          iconUrl: 'success.png',
+          iconUrl: 'assets/success.png',
           title: 'Transaction successful',
           message: `Transaction ${transactionResponse.hash} was successful`,
         })
       } else {
         chrome.action.setIcon({
-          path: 'fail.png',
+          path: 'assets/fail.png',
         })
         // Send chrome notification that transaction failed
         chrome.notifications.create({
           type: 'basic',
-          iconUrl: 'fail.png',
+          iconUrl: 'assets/fail.png',
           title: 'Transaction failed',
           message: `Transaction ${transactionResponse.hash} failed`,
           buttons: [
@@ -225,7 +225,7 @@ function onTransactionSent(transactionResponse: TransactionResponse): void {
       }
       setTimeout(() => {
         chrome.action.setIcon({
-          path: 'default.png',
+          path: 'assets/default.png',
         })
       }, 7000)
     })
