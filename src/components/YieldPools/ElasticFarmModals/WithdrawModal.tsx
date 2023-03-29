@@ -1,3 +1,4 @@
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Position, computePoolAddress } from '@kyberswap/ks-sdk-elastic'
 import { Trans } from '@lingui/macro'
 import { BigNumber } from 'ethers'
@@ -56,8 +57,8 @@ const PositionRow = ({
   farmAddress: string
 }) => {
   const { token0: token0Address, token1: token1Address, fee: feeAmount, liquidity, tickLower, tickUpper } = position
-
-  const { unstake } = useFarmAction(farmAddress)
+  const { chainId } = useActiveWeb3React()
+  const { unstake, emergencyWithdraw } = useFarmAction(farmAddress)
   const { userFarmInfo } = useElasticFarms()
 
   const joinedPositions = userFarmInfo?.[farmAddress]?.joinedPositions
@@ -153,15 +154,20 @@ const PositionRow = ({
               style={{ height: '28px' }}
               disabled={position.stakedLiquidity.eq(BigNumber.from(0))}
               onClick={() => {
-                if (!!pid && positionSDK)
-                  unstake(BigNumber.from(pid), [
-                    {
-                      nftId: position.tokenId,
-                      stakedLiquidity: position.stakedLiquidity.toString(),
-                      poolAddress: position.poolId,
-                      position: positionSDK,
-                    },
-                  ])
+                if (!!pid && positionSDK) {
+                  if (chainId === ChainId.AVAXMAINNET && Number(pid) === 125) {
+                    emergencyWithdraw([position.tokenId])
+                  } else {
+                    unstake(BigNumber.from(pid), [
+                      {
+                        nftId: position.tokenId,
+                        stakedLiquidity: position.stakedLiquidity.toString(),
+                        poolAddress: position.poolId,
+                        position: positionSDK,
+                      },
+                    ])
+                  }
+                }
               }}
             >
               <Minus size={16} /> Unstake

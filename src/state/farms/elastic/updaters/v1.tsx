@@ -237,7 +237,7 @@ const FarmUpdaterV1: React.FC<CommonProps> = ({ interval }) => {
 
             return {
               startTime: Number(pool.startTime),
-              endTime: chainId === ChainId.AVAXMAINNET && pool.pid === '125' ? Date.now() / 1000 : Number(pool.endTime),
+              endTime: chainId === ChainId.AVAXMAINNET && pool.pid === '125' ? 1680104783 : Number(pool.endTime),
               pid: pool.pid,
               id: pool.id,
               feeTarget: pool.feeTarget,

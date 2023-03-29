@@ -2,7 +2,7 @@ import { gql, useLazyQuery } from '@apollo/client'
 import { defaultAbiCoder } from '@ethersproject/abi'
 import { getCreate2Address } from '@ethersproject/address'
 import { keccak256 } from '@ethersproject/solidity'
-import { Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
 import { BigNumber } from 'ethers'
 import { Interface } from 'ethers/lib/utils'
 import { useCallback, useEffect, useRef } from 'react'
@@ -205,8 +205,12 @@ const useGetUserFarmingInfo = (interval?: boolean) => {
                   if (!rewardPendings[pid]) {
                     rewardPendings[pid] = []
                   }
+                  const isWrongFarm = chainId === ChainId.AVAXMAINNET && Number(pid) === 125
                   farmingPool.rewardTokens.forEach((currency, i) => {
-                    const amount = CurrencyAmount.fromRawAmount(currency, result[index].rewardPending[i])
+                    const amount = CurrencyAmount.fromRawAmount(
+                      currency,
+                      isWrongFarm ? 0 : result[index].rewardPending[i],
+                    )
                     rewardByNft[id][i] = amount
                     if (!rewardPendings[pid][i]) {
                       rewardPendings[pid][i] = amount

@@ -1,3 +1,4 @@
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { computePoolAddress } from '@kyberswap/ks-sdk-elastic'
 import { Trans } from '@lingui/macro'
 import { BigNumber } from 'ethers'
@@ -229,7 +230,7 @@ function StakeModal({
   const { farms, userFarmInfo } = useElasticFarms()
   const selectedFarm = farms?.find(farm => farm.id.toLowerCase() === selectedFarmAddress.toLowerCase())
 
-  const { stake, unstake } = useFarmAction(selectedFarmAddress)
+  const { stake, unstake, emergencyWithdraw } = useFarmAction(selectedFarmAddress)
 
   const selectedPool = selectedFarm?.pools.find(pool => Number(pool.pid) === Number(poolId))
 
@@ -316,12 +317,16 @@ function StakeModal({
         })
       }
     } else {
-      const txhash = await unstake(BigNumber.from(poolId), params)
-      if (txhash) {
-        mixpanelHandler(MIXPANEL_TYPE.ELASTIC_UNSTAKE_LIQUIDITY_COMPLETED, {
-          token_1: token0?.symbol,
-          token_2: token1?.symbol,
-        })
+      if (chainId === ChainId.AVAXMAINNET && Number(poolId) === 125) {
+        await emergencyWithdraw(params.map(item => item.nftId))
+      } else {
+        const txhash = await unstake(BigNumber.from(poolId), params)
+        if (txhash) {
+          mixpanelHandler(MIXPANEL_TYPE.ELASTIC_UNSTAKE_LIQUIDITY_COMPLETED, {
+            token_1: token0?.symbol,
+            token_2: token1?.symbol,
+          })
+        }
       }
     }
     onDismiss()
