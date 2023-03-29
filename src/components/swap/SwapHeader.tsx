@@ -43,21 +43,18 @@ const TextHeader = styled.div<{ color: string; marginLeft?: string; isClickable?
   align-items: center;
 `
 
-const TOKEN_SAFETY_ARTICLE =
+const MOONPAY_REGION_AVAILABILITY_ARTICLE =
   'https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-'
 
 // TODO(lynnshaoyu): add analytics and logging
-// TODO(lynnshaoyu): add animation & timeout to buy fiat unavailable toast
 export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Percent }) {
   const theme = useTheme()
   const { account } = useWeb3React()
   const openFiatOnRampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const fiatOnRampButtonEnabled = useFiatOnRampButtonEnabled()
-
   const [buyFiatClicked, setBuyFiatClicked] = useBuyFiatClicked()
   const [continueBuyFiatFlowPostRegionCheck, setContinueBuyFiatFlowPostRegionCheck] = useState(false)
   const [continueBuyFiatFlowPostWalletModal, setContinueBuyFiatFlowPostWalletModal] = useState(false)
-
   const [checkFiatRegionAvailability, setCheckFiatRegionAvailability] = useState(false)
   const {
     available: fiatOnrampAvailable,
@@ -65,11 +62,6 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
     error,
     loading: fiatOnrampAvailabilityLoading,
   } = useFiatOnrampAvailability(checkFiatRegionAvailability)
-
-  const disableBuyCryptoButton = Boolean(
-    error || (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) || fiatOnrampAvailabilityLoading
-  )
-
   const [walletDrawerOpen, toggleWalletDrawer] = useWalletDrawer()
 
   const handleBuyCrypto = useCallback(() => {
@@ -104,19 +96,11 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
     if (continueBuyFiatFlowPostRegionCheck || (account && continueBuyFiatFlowPostWalletModal)) {
       handleBuyCrypto()
     }
-  }, [
-    openFiatOnRampModal,
-    account,
-    checkFiatRegionAvailability,
-    fiatOnrampAvailabilityChecked,
-    fiatOnrampAvailable,
-    setBuyFiatClicked,
-    toggleWalletDrawer,
-    handleBuyCrypto,
-    setContinueBuyFiatFlowPostRegionCheck,
-    continueBuyFiatFlowPostWalletModal,
-    continueBuyFiatFlowPostRegionCheck,
-  ])
+  }, [account, handleBuyCrypto, continueBuyFiatFlowPostWalletModal, continueBuyFiatFlowPostRegionCheck])
+
+  const disableBuyCryptoButton = Boolean(
+    error || (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) || fiatOnrampAvailabilityLoading
+  )
 
   return (
     <StyledSwapHeader>
@@ -127,11 +111,11 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
           </TextHeader>
           {fiatOnRampButtonEnabled && (
             <MouseoverTooltipContent
-              wrap={true}
+              wrap
               content={
                 <div>
                   <Trans>Crypto purchases are not available in your region. </Trans>
-                  <ExternalLink href={TOKEN_SAFETY_ARTICLE} style={{ paddingLeft: '4px' }}>
+                  <ExternalLink href={MOONPAY_REGION_AVAILABILITY_ARTICLE} style={{ paddingLeft: '4px' }}>
                     <Trans>Learn more</Trans>
                   </ExternalLink>
                 </div>
