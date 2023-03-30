@@ -86,13 +86,15 @@ describe('connection utility/metadata tests', () => {
   })
 
   it('Generic Wallet Browser with delayed injection', async () => {
-    const { injected: preInjected } = createWalletEnvironment(undefined)
+    const { injected } = createWalletEnvironment(undefined)
 
-    expect(preInjected.getName()).toBe('Install MetaMask')
+    expect(injected.getName()).toBe('Install MetaMask')
+    expect(injected.overrideActivate?.()).toBeTruthy()
 
-    const { injected: postInjected } = createWalletEnvironment({ isTrustWallet: true })
+    createWalletEnvironment({ isTrustWallet: true })
 
-    expect(postInjected.getName()).toBe('Browser Wallet')
+    expect(injected.getName()).toBe('Browser Wallet')
+    expect(injected.overrideActivate?.()).toBeFalsy()
   })
 
   it('Generic Known Injected Wallet Browser', async () => {
@@ -100,6 +102,7 @@ describe('connection utility/metadata tests', () => {
 
     expect(displayed.includes(injected)).toBe(true)
     expect(injected.getName()).toBe('Browser Wallet')
+    expect(injected.overrideActivate?.()).toBeFalsy()
     expect(displayed.length).toEqual(1)
   })
 
@@ -109,6 +112,7 @@ describe('connection utility/metadata tests', () => {
 
     expect(displayed.includes(injected)).toBe(true)
     expect(injected.getName()).toBe('Browser Wallet')
+    expect(injected.overrideActivate?.()).toBeFalsy()
 
     // Ensures we provide multiple connection options if in an unknown injected browser
     expect(displayed.length).toEqual(3)
@@ -119,6 +123,7 @@ describe('connection utility/metadata tests', () => {
 
     expect(displayed.includes(injected)).toBe(true)
     expect(injected.getName()).toBe('MetaMask')
+    expect(injected.overrideActivate?.()).toBeFalsy()
     expect(displayed.length).toEqual(1)
   })
 
