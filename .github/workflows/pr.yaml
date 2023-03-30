@@ -74,6 +74,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16.18.1
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@kybernetwork'
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@master
@@ -103,6 +105,8 @@ jobs:
 
       - name: Install dependences
         uses: bahmutov/npm-install@HEAD
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GH_PAT }} ### authen npm
 
       - name: Yarn Build
         env:
@@ -144,9 +148,13 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16.18.1
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@kybernetwork'
 
       - name: Install dependences
         uses: bahmutov/npm-install@HEAD
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GH_PAT }} ### authen npm
 
       - name: Run Lint
         run: yarn lint --quiet

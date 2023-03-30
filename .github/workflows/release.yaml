@@ -40,6 +40,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16.18.1
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@kybernetwork'
 
       - name: Restore node_modules
         uses: actions/cache@v2
@@ -49,6 +51,8 @@ jobs:
 
       - name: Install dependences
         uses: bahmutov/npm-install@HEAD
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GH_PAT }} ### authen npm
 
       - name: Run Lint
         run: yarn lint --quiet

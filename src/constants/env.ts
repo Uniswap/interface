@@ -43,6 +43,7 @@ export const LIMIT_ORDER_API_WRITE = required('LIMIT_ORDER_API_WRITE')
 export const KYBER_DAO_STATS_API = required('KYBER_DAO_STATS_API')
 
 export const PRICE_ALERT_API = required('PRICE_ALERT_API')
+export const OAUTH_CLIENT_ID = required('OAUTH_CLIENT_ID')
 
 type FirebaseConfig = {
   apiKey: string
