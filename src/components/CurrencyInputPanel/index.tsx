@@ -98,14 +98,15 @@ export const Container = styled.div<{ selected: boolean; hideInput: boolean; err
   border-radius: 16px;
   background-color: ${({ theme, hideInput }) => (hideInput ? 'transparent' : theme.buttonBlack)};
   padding: ${({ hideInput }) => (hideInput ? 0 : '0.75rem')};
+  border: 1px solid transparent;
   ${({ error, theme, $outline }) =>
     error
       ? css`
-          border: 1px solid ${theme.red};
+          border-color: ${theme.red};
         `
       : $outline
       ? css`
-          border: 1px solid ${theme.border};
+          border-color: ${theme.border};
         `
       : ''}
 `

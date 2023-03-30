@@ -1,5 +1,6 @@
 import { Trans, t } from '@lingui/macro'
-import { memo, useCallback, useMemo } from 'react'
+import { rgba } from 'polished'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { X } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
@@ -13,36 +14,94 @@ import { NETWORKS_INFO } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { OutputBridgeInfo, useBridgeState } from 'state/bridge/hooks'
+import { ExternalLink } from 'theme'
 import { TransactionFlowState } from 'types'
 import { formatNumberWithPrecisionRange, shortenAddress } from 'utils'
 
+const Disclaimer = styled.div`
+  padding: 8px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 10px;
+  line-height: 14px;
+  font-weight: 400;
+
+  border-radius: 16px;
+  background-color: ${({ theme }) => rgba(theme.buttonBlack, 0.35)};
+  color: ${({ theme }) => theme.text};
+  accent-color: ${({ theme }) => theme.primary};
+
+  cursor: pointer;
+  transition: background-color 100ms linear;
+
+  :hover {
+    background-color: ${({ theme }) => rgba(theme.buttonBlack, 0.5)};
+  }
+`
+
+const Multichain = () => {
+  return (
+    <ExternalLink href="https://multichain.org/" onClick={e => e.stopPropagation()}>
+      Multichain
+    </ExternalLink>
+  )
+}
+
 const Container = styled.div`
-  padding: 25px 30px;
+  padding: 20px;
   width: 100%;
 `
 const Row = styled.div`
-  line-height: 20px;
+  line-height: 16px;
   display: flex;
   justify-content: space-between;
   width: 100%;
 `
 
 const Value = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  font-size: 14px;
+  line-height: 20px;
   color: ${({ theme }) => theme.text};
   font-weight: 500;
-  display: flex;
-  gap: 5px;
-  align-items: center;
 `
+
 const Label = styled.div`
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
   color: ${({ theme }) => theme.subText};
-  font-weight: 500;
 `
+
+const SubLabel = styled.div`
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+  color: ${({ theme }) => theme.subText};
+`
+
+const SubValue = styled.div`
+  display: flex;
+  align-items: center;
+
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.text};
+`
+
 const formatValue = (amount: string) =>
   !amount ? '' : formatNumberWithPrecisionRange(parseFloat(amount.toString()), 0, 10)
 
-const styleLogo = { width: 20, height: 20 }
-export default memo(function Disclaimer({
+const styleLogo = { width: 16, height: 16 }
+
+export default memo(function ConfirmBridgeModal({
   onSwap,
   onDismiss,
   outputInfo,
@@ -54,6 +113,7 @@ export default memo(function Disclaimer({
   swapState: TransactionFlowState
 }) {
   const theme = useTheme()
+  const [accepted, setAccepted] = useState(false)
   const { account, chainId } = useActiveWeb3React()
   const [{ chainIdOut, currencyIn, currencyOut }] = useBridgeState()
 
@@ -75,7 +135,7 @@ export default memo(function Disclaimer({
         content: (
           <Value>
             <NetworkLogo chainId={chainId} style={styleLogo} />
-            <Text>{chainId && NETWORKS_INFO?.[chainId]?.name}</Text>
+            <span>{chainId && NETWORKS_INFO?.[chainId]?.name}</span>
           </Value>
         ),
       },
@@ -84,7 +144,7 @@ export default memo(function Disclaimer({
         content: (
           <Value>
             {chainIdOut && <NetworkLogo chainId={chainIdOut} style={styleLogo} />}
-            {chainIdOut && <Text>{NETWORKS_INFO[chainIdOut].name}</Text>}
+            {chainIdOut && <span>{NETWORKS_INFO[chainIdOut].name}</span>}
           </Value>
         ),
       },
@@ -93,9 +153,9 @@ export default memo(function Disclaimer({
         content: (
           <Value>
             <CurrencyLogo currency={currencyOut} style={styleLogo} />
-            <Text>
+            <span>
               {formatValue(outputInfo?.outputAmount?.toString())} {currencyOut?.symbol}
-            </Text>
+            </span>
           </Value>
         ),
       },
@@ -103,7 +163,7 @@ export default memo(function Disclaimer({
         label: t`at this address`,
         content: account && (
           <Value>
-            <Text>{shortenAddress(chainId, account, 5)}</Text>
+            <span>{shortenAddress(chainId, account, 5)}</span>
             <CopyHelper toCopy={account} style={{ color: theme.subText }} />
           </Value>
         ),
@@ -117,15 +177,13 @@ export default memo(function Disclaimer({
         <TransactionErrorContent onDismiss={onDismiss} message={swapState.errorMessage} />
       ) : (
         <Container>
-          <Flex flexDirection={'column'} style={{ gap: 25 }}>
-            <Flex justifyContent={'space-between'}>
-              <Flex color={theme.text} alignItems="center" style={{ gap: 8 }}>
-                <Text fontSize={20}>{t`Review your transfer`}</Text>
-              </Flex>
+          <Flex flexDirection={'column'} style={{ gap: '16px' }}>
+            <Flex justifyContent={'space-between'} alignItems="center">
+              <Text color={theme.text} fontSize={20}>{t`Review your transfer`}</Text>
               <X onClick={onDismiss} style={{ cursor: 'pointer' }} color={theme.text} />
             </Flex>
 
-            <Flex style={{ gap: 20 }} flexDirection="column">
+            <Flex sx={{ gap: '12px' }} flexDirection="column">
               {listData.map(item => (
                 <Row key={item.label}>
                   <Label>{item.label}</Label>
@@ -138,37 +196,73 @@ export default memo(function Disclaimer({
               flexDirection={'column'}
               style={{
                 borderRadius: 16,
-                padding: '14px 18px',
+                padding: '12px',
                 border: `1px solid ${theme.border}`,
-                gap: 8,
-                fontSize: 13,
+                gap: '12px',
+                fontSize: '12px',
               }}
             >
               <Row>
-                <Label>
+                <SubLabel>
                   <Trans>Estimated Processing Time</Trans>
-                </Label>
-                <Value>{outputInfo.time}</Value>
+                </SubLabel>
+                <SubValue>{outputInfo.time}</SubValue>
               </Row>
               <Row>
-                <Label>
+                <SubLabel>
                   <Trans>Transaction Fee</Trans>
-                </Label>
-                <Value>{outputInfo.fee ? `~${outputInfo.fee} ${currencyIn?.symbol}` : '--'}</Value>
+                </SubLabel>
+                <SubValue>{outputInfo.fee ? `~${outputInfo.fee} ${currencyIn?.symbol}` : '--'}</SubValue>
               </Row>
             </Flex>
 
             <Text fontSize={12} fontStyle="italic" color={theme.subText}>
-              <Trans>Note: It may take upto 30 minutes for your transaction to show up under Transfer History.</Trans>
+              <Trans>Note: It may take upto 30 minutes for your transaction to show up under Transfer History</Trans>
             </Text>
-            <ButtonPrimary onClick={onSwap}>
+
+            <Disclaimer role="button" onClick={() => setAccepted(e => !e)}>
+              <input
+                onChange={() => {
+                  // empty
+                }}
+                type="checkbox"
+                checked={accepted}
+                style={{ height: '16px', width: '16px', cursor: 'pointer' }}
+              />
+              <span>
+                <Trans>
+                  You agree that KyberSwap is using <Multichain /> to facilitate transfer of tokens between chains, and
+                  in case of a security breach on Multichain, KyberSwap won&apos;t assume any liability for any losses
+                </Trans>
+              </span>
+            </Disclaimer>
+
+            <ButtonPrimary onClick={onSwap} disabled={!accepted}>
               <Trans>Transfer</Trans>
             </ButtonPrimary>
           </Flex>
         </Container>
       ),
-    [onDismiss, swapState.errorMessage, listData, onSwap, outputInfo, theme, currencyIn?.symbol],
+    [
+      accepted,
+      currencyIn?.symbol,
+      listData,
+      onDismiss,
+      onSwap,
+      outputInfo.fee,
+      outputInfo.time,
+      swapState.errorMessage,
+      theme.border,
+      theme.subText,
+      theme.text,
+    ],
   )
+
+  useEffect(() => {
+    if (!swapState.showConfirm) {
+      setAccepted(false)
+    }
+  }, [swapState.showConfirm])
 
   return (
     <TransactionConfirmationModal
