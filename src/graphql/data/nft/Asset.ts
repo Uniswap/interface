@@ -11,7 +11,7 @@ import {
   NftAssetSortableField,
   NftAssetTraitInput,
   NftMarketplace,
-  useAssetQuery
+  useAssetQuery,
 } from '../__generated__/types-and-hooks'
 
 gql`
@@ -34,7 +34,7 @@ gql`
       after: $after
       last: $last
       before: $before
-      _fs: "DATASOURCE:LEGACY"
+      _fs: "DATASOURCE:ALTERNATE"
     ) {
       edges {
         node {

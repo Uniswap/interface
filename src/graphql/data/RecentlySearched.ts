@@ -2,7 +2,7 @@ import gql from 'graphql-tag'
 
 gql`
   query RecentlySearchedAssets($collectionAddresses: [String!]!, $contracts: [ContractInput!]!) {
-    nftCollections(filter: { addresses: $collectionAddresses }, _fs: "DATASOURCE:LEGACY") {
+    nftCollections(filter: { addresses: $collectionAddresses }, _fs: "DATASOURCE:ALTERNATE") {
       edges {
         node {
           collectionId

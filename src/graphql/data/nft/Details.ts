@@ -7,7 +7,7 @@ import { NftAsset, useDetailsQuery } from '../__generated__/types-and-hooks'
 
 gql`
   query Details($address: String!, $tokenId: String!) {
-    nftAssets(address: $address, filter: { listed: false, tokenIds: [$tokenId] }, _fs: "DATASOURCE:LEGACY") {
+    nftAssets(address: $address, filter: { listed: false, tokenIds: [$tokenId] }, _fs: "DATASOURCE:ALTERNATE") {
       edges {
         node {
           id
