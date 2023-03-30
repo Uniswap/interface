@@ -72,6 +72,7 @@ describe('connection utility/metadata tests', () => {
 
     expect(displayed.includes(injected)).toBe(true)
     expect(injected.getName()).toBe('Browser Wallet')
+    expect(injected.overrideActivate?.()).toBeFalsy()
 
     expect(displayed.length).toEqual(3)
   })
@@ -81,6 +82,7 @@ describe('connection utility/metadata tests', () => {
 
     expect(displayed.includes(injected)).toBe(true)
     expect(injected.getName()).toBe('Browser Wallet')
+    expect(injected.overrideActivate?.()).toBeFalsy()
 
     expect(displayed.length).toEqual(3)
   })

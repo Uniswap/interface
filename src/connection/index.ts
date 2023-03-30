@@ -177,6 +177,7 @@ export function getConnection(c: Connector | ConnectionType) {
   }
 }
 
+// Returns a list of connections that should be displayed for the current browser/wallet enviroment
 export function useDisplayableConnections(): Connection[] {
   const mgtmEnabled = useMgtmEnabled()
 
