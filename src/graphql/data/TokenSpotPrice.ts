@@ -2,7 +2,7 @@ import gql from 'graphql-tag'
 
 gql`
   query TokenSpotPrice($chain: Chain!, $address: String = null) {
-    token(chain: $chain, address: $address, _fs: "DATASOURCE:ALTERNATE") {
+    token(chain: $chain, address: $address, _fs: "DATASOURCE:LEGACY") {
       id
       address
       chain

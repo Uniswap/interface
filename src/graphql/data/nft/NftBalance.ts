@@ -22,7 +22,7 @@ gql`
       after: $after
       last: $last
       before: $before
-      _fs: "DATASOURCE:ALTERNATE"
+      _fs: "DATASOURCE:LEGACY"
     ) {
       edges {
         node {
