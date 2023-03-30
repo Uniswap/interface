@@ -9,7 +9,7 @@ import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import useENSAvatar from 'hooks/useENSAvatar'
 import React from 'react'
 import { Loader } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 const UnknownContract = styled(UnknownStatus)`
   color: ${({ theme }) => theme.textSecondary};
 `
@@ -57,34 +57,28 @@ const ENSAvatarImg = styled.img`
   width: 40px;
 `
 
-const StyledChainLogo = styled.img<{ isSquare: boolean }>`
-  height: ${({ isSquare }) => (isSquare ? '16px' : '14px')};
-  width: ${({ isSquare }) => (isSquare ? '16px' : '14px')};
-  margin-top: ${({ isSquare }) => (isSquare ? '0px' : '1px')};
-  margin-left: ${({ isSquare }) => (isSquare ? '0px' : '1px')};
-  position: absolute;
-  top: 68%;
-  left: 68%;
+const StyledChainLogo = styled.img`
+  height: 14px;
+  width: 14px;
 `
 
-const ChainLogoSquareBackground = styled.div`
-  height: 18px;
-  width: 18px;
-  border-radius: 4px;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+const SquareChainLogo = styled.img`
+  height: 100%;
+  width: 100%;
+`
+
+const L2LogoContainer = styled.div<{ $backgroundColor?: string }>`
+  background-color: ${({ $backgroundColor }) => $backgroundColor};
+  border-radius: 2px;
+  height: 16px;
+  left: 60%;
   position: absolute;
   top: 60%;
-  left: 60%;
-`
-
-const SquareBackgroundForNonSquareLogo = styled.div`
-  height: 16px;
+  outline: 2px solid ${({ theme }) => theme.backgroundSurface};
   width: 16px;
-  border-radius: 2px;
-  background-color: ${({ theme }) => theme.textPrimary};
-  position: absolute;
-  top: 68%;
-  left: 68%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 /**
@@ -101,6 +95,7 @@ export function PortfolioLogo({
   const { squareLogoUrl, logoUrl } = getChainInfo(chainId)
   const chainLogo = squareLogoUrl ?? logoUrl
   const { avatar, loading } = useENSAvatar(accountAddress, false)
+  const theme = useTheme()
 
   const [src, nextSrc] = useTokenLogoSource(currencies?.[0]?.wrapped.address, chainId, currencies?.[0]?.isNative)
   const [src2, nextSrc2] = useTokenLogoSource(currencies?.[1]?.wrapped.address, chainId, currencies?.[1]?.isNative)
@@ -147,13 +142,15 @@ export function PortfolioLogo({
   }
 
   const L2Logo =
-    chainId === SupportedChainId.MAINNET ? null : (
-      <div>
-        {chainLogo && <ChainLogoSquareBackground />}
-        {!squareLogoUrl && logoUrl && <SquareBackgroundForNonSquareLogo />}
-        {chainLogo && <StyledChainLogo isSquare={!!squareLogoUrl} src={chainLogo} alt="chainLogo" />}
-      </div>
-    )
+    chainId !== SupportedChainId.MAINNET && chainLogo ? (
+      <L2LogoContainer $backgroundColor={squareLogoUrl ? theme.backgroundSurface : theme.textPrimary}>
+        {squareLogoUrl ? (
+          <SquareChainLogo src={chainLogo} alt="chainLogo" />
+        ) : (
+          <StyledChainLogo src={chainLogo} alt="chainLogo" />
+        )}
+      </L2LogoContainer>
+    ) : null
 
   return (
     <StyledLogoParentContainer>
