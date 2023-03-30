@@ -14,7 +14,7 @@ import INJECTED_LIGHT_ICON_URL from 'assets/svg/browser-wallet-light.svg'
 import UNISWAP_LOGO_URL from 'assets/svg/logo.svg'
 import { SupportedChainId } from 'constants/chains'
 import { useMgtmEnabled } from 'featureFlags/flags/mgtm'
-import { isMobile } from 'utils/userAgent'
+import { isMobile, isNonIOSPhone } from 'utils/userAgent'
 
 import { RPC_URLS } from '../constants/networks'
 import { RPC_PROVIDERS } from '../constants/providers'
@@ -187,7 +187,7 @@ export function useDisplayableConnections(): Connection[] {
 
   const connections: Connection[] = []
 
-  if (mgtmEnabled) connections.push(uniwalletConnectConnection)
+  if (mgtmEnabled && !isNonIOSPhone) connections.push(uniwalletConnectConnection)
 
   // Includes injected option on all desktop browsers and in unknown injected wallet browsers
   if (!isMobile || getIsInjected()) connections.push(injectedConnection)
