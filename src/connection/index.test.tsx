@@ -126,7 +126,7 @@ describe('connection utility/metadata tests', () => {
     const { displayed, coinbase } = createWalletEnvironment({ isCoinbaseWallet: true }, true)
 
     expect(displayed.includes(coinbase)).toBe(true)
-    // Expect coinbase option to only override activation if not in a mobile browser
+    // Expect coinbase option to not override activation in a the cb mobile browser
     expect(coinbase.overrideActivate?.()).toBeFalsy()
     expect(displayed.length).toEqual(1)
   })
