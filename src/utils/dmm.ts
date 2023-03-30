@@ -391,13 +391,12 @@ export function useFarmApr(farm: Farm, poolLiquidityUsd: string): number {
 }
 
 export function useCurrencyConvertedToNative(currency?: Currency): Currency | undefined {
-  const { chainId } = useActiveWeb3React()
   return useMemo(() => {
-    if (!!currency && !!chainId) {
-      return currency.isNative ? NativeCurrencies[chainId] : currency
+    if (!!currency) {
+      return currency.isNative ? NativeCurrencies[currency.chainId] : currency
     }
     return undefined
-  }, [chainId, currency])
+  }, [currency])
 }
 
 export function useFarmRewards(farms?: Farm[], onlyCurrentUser = true): Reward[] {

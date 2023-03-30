@@ -9,9 +9,9 @@ import { useCurrencyV2 } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { TransactionFlowState } from 'types'
 
+import { BaseTradeInfoLO, useBaseTradeInfoLimitOrder } from '../../../../hooks/useBaseTradeInfo'
 import { calcPercentFilledOrder, formatAmountOrder } from '../helpers'
 import { LimitOrder, LimitOrderStatus } from '../type'
-import useBaseTradeInfo, { BaseTradeInfo } from '../useBaseTradeInfo'
 import { Container, Header, Label, ListInfo, MarketInfo, Note, Rate, Value } from './styled'
 
 const styleLogo = { width: 20, height: 20 }
@@ -24,7 +24,7 @@ function ContentCancel({
 }: {
   isCancelAll: boolean
   order: LimitOrder | undefined
-  marketPrice: BaseTradeInfo | undefined
+  marketPrice: BaseTradeInfoLO | undefined
   onSubmit: () => void
   onDismiss: () => void
 }) {
@@ -140,7 +140,7 @@ export default function CancelOrderModal({
 }) {
   const currencyIn = useCurrencyV2(order?.makerAsset) || undefined
   const currencyOut = useCurrencyV2(order?.takerAsset) || undefined
-  const { tradeInfo } = useBaseTradeInfo(currencyIn, currencyOut)
+  const { tradeInfo } = useBaseTradeInfoLimitOrder(currencyIn, currencyOut)
   const confirmationContent = useCallback(
     () =>
       flowState.errorMessage ? (

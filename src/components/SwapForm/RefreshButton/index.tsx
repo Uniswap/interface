@@ -30,8 +30,10 @@ const IconButton = styled.button`
 type Props = {
   shouldDisable: boolean
   callback: () => void
+  size?: number
+  skipFirst?: boolean
 }
-const RefreshButton: React.FC<Props> = ({ shouldDisable, callback }) => {
+const RefreshButton: React.FC<Props> = ({ shouldDisable, callback, size, skipFirst }) => {
   const svgRef = useRef<SVGSVGElement>(null)
 
   useEffect(() => {
@@ -50,7 +52,7 @@ const RefreshButton: React.FC<Props> = ({ shouldDisable, callback }) => {
 
       element.setCurrentTime(0)
       element.unpauseAnimations()
-      callback()
+      if (!skipFirst) callback()
       interval = setInterval(() => {
         callback()
       }, TIME_TO_REFRESH_SWAP_RATE * 1000)
@@ -59,7 +61,7 @@ const RefreshButton: React.FC<Props> = ({ shouldDisable, callback }) => {
     return () => {
       clearInterval(interval)
     }
-  }, [callback, shouldDisable])
+  }, [callback, shouldDisable, skipFirst])
 
   return (
     <IconButton
@@ -71,6 +73,7 @@ const RefreshButton: React.FC<Props> = ({ shouldDisable, callback }) => {
       }}
     >
       <LoadingIcon
+        size={size}
         ref={svgRef}
         clickable={ENABLE_CLICK_TO_REFRESH_GET_ROUTE}
         durationInSeconds={TIME_TO_REFRESH_SWAP_RATE}

@@ -8,7 +8,7 @@ import { Swiper, SwiperSlide } from 'swiper/react/swiper-react'
 
 import NotificationImage from 'assets/images/notification_default.png'
 import CtaButton from 'components/Announcement/Popups/CtaButton'
-import { useNavigateCtaPopup } from 'components/Announcement/helper'
+import { useNavigateToUrl } from 'components/Announcement/helper'
 import {
   AnnouncementTemplatePopup,
   PopupContentAnnouncement,
@@ -102,7 +102,7 @@ function SnippetPopupItem({
     showDetailAnnouncement(index)
     removePopup(data)
   }
-  const navigate = useNavigateCtaPopup()
+  const navigate = useNavigateToUrl()
   const ctaInfo = ctas[0]
   const hasCta = Boolean(ctaInfo?.name && ctaInfo?.url)
 

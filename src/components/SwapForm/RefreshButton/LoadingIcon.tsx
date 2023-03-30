@@ -5,9 +5,11 @@ import useTheme from 'hooks/useTheme'
 type Props = {
   clickable: boolean
   durationInSeconds: number
+  size?: number
 }
 
 const LoadingIcon = React.forwardRef<SVGSVGElement, Props>((props, ref) => {
+  const { size = 20 } = props
   const theme = useTheme()
   return (
     <svg
@@ -16,8 +18,8 @@ const LoadingIcon = React.forwardRef<SVGSVGElement, Props>((props, ref) => {
       xmlns="http://www.w3.org/2000/svg"
       viewBox="2 2 20 20"
       className="arrow-loading"
-      width="20"
-      height="20"
+      width={size}
+      height={size}
       color={theme.subText}
     >
       <path

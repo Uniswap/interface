@@ -3,7 +3,7 @@ import React, { memo, useMemo } from 'react'
 import styled from 'styled-components'
 
 import Logo from 'components/Logo'
-import { useActiveWeb3React } from 'hooks'
+import { NETWORKS_INFO } from 'constants/networks'
 import useHttpLocations from 'hooks/useHttpLocations'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { getTokenLogoURL } from 'utils'
@@ -32,7 +32,6 @@ function CurrencyLogo({
   size?: string
   style?: React.CSSProperties
 }) {
-  const { chainId, networkInfo } = useActiveWeb3React()
   const logoURI = currency instanceof WrappedTokenInfo ? currency?.logoURI : undefined
   const uriLocations = useHttpLocations(logoURI)
 
@@ -41,18 +40,18 @@ function CurrencyLogo({
 
     if (currency?.isToken) {
       if (logoURI) {
-        return [...uriLocations, getTokenLogoURL(currency.address, chainId)]
+        return [...uriLocations, getTokenLogoURL(currency.address, currency.chainId)]
       }
-      return [getTokenLogoURL((currency as any)?.address, chainId)]
+      return [getTokenLogoURL((currency as any)?.address, currency.chainId)]
     }
 
     return []
-  }, [chainId, currency, uriLocations, logoURI])
+  }, [currency, uriLocations, logoURI])
 
-  if (currency?.isNative && chainId) {
+  if (currency?.isNative) {
     return (
       <StyledNativeCurrencyLogo
-        src={networkInfo.nativeToken.logo}
+        src={NETWORKS_INFO[currency.chainId].nativeToken.logo}
         size={size}
         style={style}
         alt={`${currency.symbol}Logo`}

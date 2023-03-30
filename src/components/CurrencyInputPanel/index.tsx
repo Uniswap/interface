@@ -1,9 +1,9 @@
-import { Currency } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import { darken, lighten, rgba } from 'polished'
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { Box, Flex, Text } from 'rebass'
-import styled, { css } from 'styled-components'
+import styled, { CSSProperties, css } from 'styled-components'
 
 import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
 import { ReactComponent as Lock } from 'assets/svg/ic_lock.svg'
@@ -45,14 +45,13 @@ export const CurrencySelect = styled.button<{
   font-size: 20px;
   font-weight: 500;
   background-color: ${({ theme, hideInput }) => (hideInput ? theme.buttonBlack : theme.background)};
-  border: 1px solid ${({ theme, selected }) => (selected ? 'transparent' : theme.primary)} !important;
+  border: 1px solid ${({ theme, selected }) => (selected ? 'transparent' : theme.primary)};
   color: ${({ selected, theme }) => (selected ? theme.subText : theme.primary)};
   border-radius: 999px;
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   outline: none;
   cursor: pointer;
   user-select: none;
-  border: none;
   padding: 6px 8px;
   padding-right: ${({ hideInput, tight }) => (hideInput && !tight ? '8px' : 0)};
   cursor: ${({ isDisable: disabled }) => (disabled ? 'default' : 'pointer')};
@@ -203,6 +202,8 @@ interface CurrencyInputPanelProps {
   loadingText?: string
   lockIcon?: boolean
   tight?: boolean
+  styleSelect?: CSSProperties
+  customChainId?: ChainId
 }
 
 export default function CurrencyInputPanel({
@@ -240,6 +241,8 @@ export default function CurrencyInputPanel({
   lockIcon = false, // lock when need approve
   tight: tightProp,
   loadingText,
+  styleSelect = {},
+  customChainId,
 }: CurrencyInputPanelProps) {
   const tight = Boolean(tightProp && !currency)
   const [modalOpen, setModalOpen] = useState(false)
@@ -353,6 +356,7 @@ export default function CurrencyInputPanel({
                   onClickSelect?.()
                 }}
                 tight={tight}
+                style={styleSelect}
               >
                 <Aligner>
                   <RowFixed>
@@ -388,6 +392,7 @@ export default function CurrencyInputPanel({
             otherSelectedCurrency={otherCurrency}
             showCommonBases={showCommonBases}
             filterWrap={filterWrap}
+            customChainId={customChainId}
           />
         )}
       </InputPanel>

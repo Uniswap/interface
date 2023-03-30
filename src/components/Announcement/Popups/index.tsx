@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import CenterPopup from 'components/Announcement/Popups/CenterPopup'
 import SnippetPopup from 'components/Announcement/Popups/SnippetPopup'
-import { PopupType } from 'components/Announcement/type'
+import { PopupType, PrivateAnnouncementType } from 'components/Announcement/type'
 import { ButtonEmpty } from 'components/Button'
 import { Z_INDEXS } from 'constants/styles'
 import { useActiveWeb3React } from 'hooks'
@@ -15,9 +15,9 @@ import {
   useToggleNotificationCenter,
 } from 'state/application/hooks'
 import { useTutorialSwapGuide } from 'state/tutorial/hooks'
-import { subscribeAnnouncement } from 'utils/firebase'
+import { subscribeAnnouncement, subscribePrivateAnnouncement } from 'utils/firebase'
 
-import PopupItem from './TopRightPopup'
+import TopRightPopup from './TopRightPopup'
 
 const FixedPopupColumn = styled.div<{ hasTopbarPopup: boolean }>`
   position: fixed;
@@ -90,7 +90,18 @@ export default function Popups() {
       isInit.current = true
     })
 
-    return () => unsubscribe?.()
+    const unsubscribePrivate = subscribePrivateAnnouncement(account, data => {
+      data.forEach(item => {
+        if (item.templateType === PrivateAnnouncementType.PRICE_ALERT) {
+          // only support price alert
+          addPopup(item, PopupType.TOP_RIGHT, item.metaMessageId, 15_000)
+        }
+      })
+    })
+    return () => {
+      unsubscribe?.()
+      unsubscribePrivate?.()
+    }
   }, [account, isShowTutorial, addPopup, chainId])
 
   const totalTopRightPopup = topRightPopups.length
@@ -113,7 +124,7 @@ export default function Popups() {
           </ActionWrapper>
 
           {topRightPopups.slice(0, MAX_NOTIFICATION).map((item, i) => (
-            <PopupItem key={item.key} popup={item} hasOverlay={i === MAX_NOTIFICATION - 1} />
+            <TopRightPopup key={item.key} popup={item} hasOverlay={i === MAX_NOTIFICATION - 1} />
           ))}
         </FixedPopupColumn>
       )}

@@ -13,7 +13,7 @@ import { useAppSelector } from 'state/hooks'
 import { tryParseAmount } from 'state/swap/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TRANSACTION_TYPE } from 'state/transactions/type'
-import { useCurrencyBalance, useETHBalance } from 'state/wallet/hooks'
+import { useCurrencyBalance, useNativeBalance } from 'state/wallet/hooks'
 import { formatNumberWithPrecisionRange, isAddress } from 'utils'
 
 const NOT_APPLICABLE = {
@@ -158,7 +158,7 @@ function useRouterSwap(
   const { account, chainId } = useActiveWeb3React()
   const bridgeContract = useBridgeContract(isAddress(chainId, routerToken), chainIdOut && isNaN(chainIdOut) ? 'V2' : '')
 
-  const ethBalance = useETHBalance()
+  const ethBalance = useNativeBalance()
   const anyBalance = useCurrencyBalance(currencyIn)
   const balance = isNative ? ethBalance : anyBalance
 
@@ -267,7 +267,7 @@ function useBridgeSwap(
   const { library } = useWeb3React()
 
   const tokenBalance = useCurrencyBalance(currencyIn)
-  const ethBalance = useETHBalance()
+  const ethBalance = useNativeBalance()
   const balance = tokenInfoIn && tokenInfoIn?.tokenType !== 'NATIVE' ? tokenBalance : ethBalance
 
   const inputAmount = useMemo(() => tryParseAmount(typedValue, currencyIn), [currencyIn, typedValue])

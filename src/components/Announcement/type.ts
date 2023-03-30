@@ -2,6 +2,7 @@ import { ReactNode } from 'react'
 
 import { LimitOrderStatus } from 'components/swapv2/LimitOrder/type'
 import { MultichainTransfer } from 'hooks/bridge/useGetBridgeTransfers'
+import { HistoricalPriceAlert } from 'pages/NotificationCenter/const'
 
 export type Announcement = {
   isRead: boolean
@@ -14,6 +15,7 @@ export enum PrivateAnnouncementType {
   BRIDGE = 'BRIDGE_ASSET',
   TRENDING_SOON_TOKEN = 'TRENDING_SOON',
   POOL_POSITION = 'ELASTIC_POOLS',
+  PRICE_ALERT = 'PRICE_ALERT',
 }
 
 export type PrivateAnnouncement<T extends AnnouncementTemplate = AnnouncementTemplate> = {
@@ -79,6 +81,11 @@ export type AnnouncementTemplatePoolPosition = {
   popupType: PopupType
 }
 
+export type AnnouncementTemplatePriceAlert = {
+  alert: HistoricalPriceAlert
+  popupType: PopupType
+}
+
 // for general announcement
 export type AnnouncementTemplatePopup = {
   name: string
@@ -100,6 +107,7 @@ export type AnnouncementTemplate =
   | AnnouncementTemplateTrendingSoon
   | AnnouncementTemplatePoolPosition
   | AnnouncementTemplatePopup
+  | AnnouncementTemplatePriceAlert
 
 export enum NotificationType {
   SUCCESS,

@@ -16,9 +16,9 @@ import {
 import useTheme from 'hooks/useTheme'
 import { useRemovePopup } from 'state/application/hooks'
 
+import getPopupTopRightDescriptionByType from './PopupTopRightDescriptions'
 import SimplePopup from './SimplePopup'
 import TransactionPopup from './TransactionPopup'
-import getPopupTopRightDescriptionByType from './getPopupTopRightDescriptionByType'
 
 const StyledClose = styled(X)`
   margin-left: 10px;
@@ -166,11 +166,10 @@ export default function PopupItem({ popup, hasOverlay }: { popup: PopupItemType;
       break
     }
     case PopupType.TOP_RIGHT: {
-      const { title, summary, type, link } = getPopupTopRightDescriptionByType(
-        popup as PopupItemType<PopupContentAnnouncement>,
-      )
-      notiType = type
-      popupContent = <SimplePopup title={title} type={notiType} summary={summary} link={link} />
+      const data = getPopupTopRightDescriptionByType(content as PopupContentAnnouncement)
+      if (!data) return null
+      notiType = data.type
+      popupContent = <SimplePopup {...data} onRemove={removeThisPopup} />
       break
     }
   }

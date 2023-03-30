@@ -1,5 +1,5 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import { Trans, t } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -14,7 +14,7 @@ import {
   RowItem,
   Title,
 } from 'components/Announcement/PrivateAnnoucement/styled'
-import { AnnouncementTemplateBridge, PrivateAnnouncementType } from 'components/Announcement/type'
+import { AnnouncementTemplateBridge } from 'components/Announcement/type'
 import { CheckCircle } from 'components/Icons'
 import IconFailure from 'components/Icons/Failed'
 import { NetworkLogo } from 'components/Logo'
@@ -30,8 +30,14 @@ const NetWorkRow = styled.div`
   gap: 4px;
 `
 
-function InboxItemBridge({ announcement, onRead, style, time }: PrivateAnnouncementProp<AnnouncementTemplateBridge>) {
-  const { templateBody, isRead } = announcement
+function InboxItemBridge({
+  announcement,
+  onRead,
+  style,
+  time,
+  title,
+}: PrivateAnnouncementProp<AnnouncementTemplateBridge>) {
+  const { templateBody, isRead, templateType } = announcement
   const { status, srcTokenSymbol, srcAmount, dstChainId, srcChainId } = templateBody.transaction
   const isSuccess = Number(status) === MultichainTransferStatus.Success
   const chainIdIn = Number(srcChainId) as ChainId
@@ -50,10 +56,8 @@ function InboxItemBridge({ announcement, onRead, style, time }: PrivateAnnouncem
     <InboxItemWrapper isRead={isRead} onClick={onClick} style={style}>
       <InboxItemRow>
         <RowItem>
-          <InboxIcon type={PrivateAnnouncementType.BRIDGE} />
-          <Title isRead={isRead}>
-            <Trans>Bridge Token</Trans>
-          </Title>
+          <InboxIcon type={templateType} />
+          <Title isRead={isRead}>{title}</Title>
           {!isRead && <Dot />}
         </RowItem>
         <RowItem>

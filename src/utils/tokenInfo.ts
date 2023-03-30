@@ -56,7 +56,7 @@ export const getFormattedAddress = (chainId: ChainId, address?: string, fallback
 
 export const isTokenNative = (
   currency: Currency | WrappedTokenInfo | undefined,
-  chainId: ChainId,
+  chainId: ChainId | undefined,
 ): currency is NativeCurrency => {
   if (currency?.isNative) return true
   // case multichain token

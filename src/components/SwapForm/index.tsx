@@ -8,7 +8,7 @@ import { AutoRow } from 'components/Row'
 import SlippageWarningNote from 'components/SlippageWarningNote'
 import InputCurrencyPanel from 'components/SwapForm/InputCurrencyPanel'
 import OutputCurrencyPanel from 'components/SwapForm/OutputCurrencyPanel'
-import SlippageSetting from 'components/SwapForm/SlippageSetting'
+import SlippageSettingGroup from 'components/SwapForm/SlippageSettingGroup'
 import { SwapFormContextProvider } from 'components/SwapForm/SwapFormContext'
 import useBuildRoute from 'components/SwapForm/hooks/useBuildRoute'
 import useCheckStablePairSwap from 'components/SwapForm/hooks/useCheckStablePairSwap'
@@ -191,8 +191,7 @@ const SwapForm: React.FC<SwapFormProps> = props => {
             {isDegenMode && isEVM && !isWrapOrUnwrap && (
               <AddressInputPanel id="recipient" value={recipient} onChange={setRecipient} />
             )}
-
-            {!isWrapOrUnwrap && <SlippageSetting isStablePairSwap={isStablePairSwap} />}
+            <SlippageSettingGroup isWrapOrUnwrap={isWrapOrUnwrap} isStablePairSwap={isStablePairSwap} />
           </Flex>
         </Wrapper>
         <Flex flexDirection="column" style={{ gap: '1.25rem' }}>

@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import React, { useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
@@ -23,8 +23,9 @@ const DropdownIcon = styled(DropdownSVG)`
 
 type Props = {
   isStablePairSwap: boolean
+  rightComponent?: ReactNode
 }
-const SlippageSetting: React.FC<Props> = ({ isStablePairSwap }) => {
+const SlippageSetting = ({ isStablePairSwap, rightComponent }: Props) => {
   const theme = useTheme()
   const isSlippageControlPinned = useAppSelector(state => state.user.isSlippageControlPinned)
   const [expanded, setExpanded] = useState(false)
@@ -39,6 +40,7 @@ const SlippageSetting: React.FC<Props> = ({ isStablePairSwap }) => {
     <Flex
       sx={{
         flexDirection: 'column',
+        width: '100%',
       }}
     >
       <Flex
@@ -46,48 +48,52 @@ const SlippageSetting: React.FC<Props> = ({ isStablePairSwap }) => {
           alignItems: 'center',
           color: theme.subText,
           gap: '4px',
+          justifyContent: 'space-between',
         }}
       >
-        <Flex
-          sx={{
-            alignItems: 'center',
-            color: theme.subText,
-            fontSize: '12px',
-            fontWeight: 500,
-            lineHeight: '1',
-          }}
-        >
-          <Text as="span">
-            <Trans>Max Slippage</Trans>
-          </Text>
-          <InfoHelperForMaxSlippage />
-          <Text as="span" marginLeft="4px">
-            :
-          </Text>
-        </Flex>
-
-        <Flex
-          sx={{
-            alignItems: 'center',
-            gap: '4px',
-            cursor: 'pointer',
-          }}
-          role="button"
-          onClick={() => setExpanded(e => !e)}
-        >
-          <Text
+        <Flex sx={{ gap: '4px' }}>
+          <Flex
             sx={{
-              fontSize: isMobile ? '16px' : '14px',
+              alignItems: 'center',
+              color: theme.subText,
+              fontSize: '12px',
               fontWeight: 500,
               lineHeight: '1',
-              color: theme.text,
             }}
           >
-            {formatSlippage(rawSlippage)}
-          </Text>
+            <Text as="span">
+              <Trans>Max Slippage</Trans>
+            </Text>
+            <InfoHelperForMaxSlippage />
+            <Text as="span" marginLeft="4px">
+              :
+            </Text>
+          </Flex>
 
-          <DropdownIcon data-flip={expanded} />
+          <Flex
+            sx={{
+              alignItems: 'center',
+              gap: '4px',
+              cursor: 'pointer',
+            }}
+            role="button"
+            onClick={() => setExpanded(e => !e)}
+          >
+            <Text
+              sx={{
+                fontSize: isMobile ? '16px' : '14px',
+                fontWeight: 500,
+                lineHeight: '1',
+                color: theme.text,
+              }}
+            >
+              {formatSlippage(rawSlippage)}
+            </Text>
+
+            <DropdownIcon data-flip={expanded} />
+          </Flex>
         </Flex>
+        {rightComponent}
       </Flex>
 
       <Flex

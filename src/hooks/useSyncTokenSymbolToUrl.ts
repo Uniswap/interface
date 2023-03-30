@@ -2,6 +2,7 @@ import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
 import { stringify } from 'querystring'
 import { useCallback, useEffect, useRef } from 'react'
 import { Params, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { usePrevious } from 'react-use'
 
 import { APP_PATHS } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
@@ -14,12 +15,12 @@ import { convertSymbol } from 'utils/tokenInfo'
 import { useAllTokens, useIsLoadedTokenDefault } from './Tokens'
 import useParsedQueryString from './useParsedQueryString'
 
-type TokenSymbolUrl = {
+type TokenSymbolParams = {
   fromCurrency: string
   toCurrency: string
   network: string
 }
-const getUrlMatchParams = (params: Params): TokenSymbolUrl => {
+const getUrlMatchParams = (params: Params): TokenSymbolParams => {
   const fromCurrency = (params.fromCurrency || '').toLowerCase()
   const toCurrency = (params.toCurrency || '').toLowerCase()
   const network: string = convertToSlug(params.network || '')
@@ -36,8 +37,10 @@ export default function useSyncTokenSymbolToUrl(
   isSelectCurrencyManual: boolean,
   disabled = false,
 ) {
-  const params = useParams()
+  const params = useParams<TokenSymbolParams>()
+  const prevParams = usePrevious(params)
   const { fromCurrency, toCurrency, network } = getUrlMatchParams(params)
+
   const { chainId } = useActiveWeb3React()
   const navigate = useNavigate()
   const qs = useParsedQueryString()
@@ -105,25 +108,37 @@ export default function useSyncTokenSymbolToUrl(
     [findTokenBySymbol, redirect, onCurrencySelection, fromCurrency, network, toCurrency],
   )
 
-  const checkedTokenFromUrl = useRef(false)
+  const checkedTokenFromUrlWhenInit = useRef(false)
+  const needFindTokenFromUrl =
+    fromCurrency && toCurrency && (prevParams?.fromCurrency !== fromCurrency || prevParams?.toCurrency !== toCurrency)
+
   useEffect(() => {
     if (
-      !checkedTokenFromUrl.current &&
+      (!checkedTokenFromUrlWhenInit.current || needFindTokenFromUrl) &&
       isLoadedTokenDefault &&
       Object.values(allTokens)[0]?.chainId === chainId &&
       network === NETWORKS_INFO[chainId].route &&
       !disabled
     ) {
-      // call once
+      // call at least once when init and when url change
       setTimeout(() => findTokenPairFromUrl(chainId))
-      checkedTokenFromUrl.current = true
+      checkedTokenFromUrlWhenInit.current = true
     }
-  }, [allTokens, findTokenPairFromUrl, chainId, isLoadedTokenDefault, disabled, network])
+  }, [allTokens, findTokenPairFromUrl, chainId, isLoadedTokenDefault, disabled, network, needFindTokenFromUrl])
 
   // when token change, sync symbol to url
+
   useEffect(() => {
-    if (isSelectCurrencyManual && isLoadedTokenDefault && !disabled) {
+    if (isSelectCurrencyManual && isLoadedTokenDefault && !disabled && !needFindTokenFromUrl) {
       syncTokenSymbolToUrl(currencyIn, currencyOut)
     }
-  }, [currencyIn, currencyOut, isSelectCurrencyManual, syncTokenSymbolToUrl, isLoadedTokenDefault, disabled])
+  }, [
+    currencyIn,
+    currencyOut,
+    isSelectCurrencyManual,
+    syncTokenSymbolToUrl,
+    isLoadedTokenDefault,
+    disabled,
+    needFindTokenFromUrl,
+  ])
 }

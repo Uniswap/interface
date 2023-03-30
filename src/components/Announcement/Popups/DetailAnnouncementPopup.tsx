@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import NotificationImage from 'assets/images/notification_default.png'
 import CtaButton from 'components/Announcement/Popups/CtaButton'
-import { useNavigateCtaPopup } from 'components/Announcement/helper'
+import { useNavigateToUrl } from 'components/Announcement/helper'
 import { AnnouncementTemplatePopup } from 'components/Announcement/type'
 import Modal from 'components/Modal'
 import Row from 'components/Row'
@@ -132,7 +132,12 @@ const Desc = styled.div`
   font-size: 14px;
   line-height: 20px;
   > * {
-    margin: 0;
+    :first-child {
+      margin-top: 0;
+    }
+    :last-child {
+      margin-bottom: 0;
+    }
   }
 `
 
@@ -151,7 +156,7 @@ export default function DetailAnnouncementPopup({
   const isMobile = useMedia(`(max-width: ${MEDIA_WIDTHS.upToMedium}px)`)
   const [{ selectedIndex, announcements = [], hasMore }, setAnnouncementDetail] = useDetailAnnouncement()
 
-  const navigate = useNavigateCtaPopup()
+  const navigate = useNavigateToUrl()
 
   const onDismiss = () => setAnnouncementDetail({ selectedIndex: null, announcements: [], hasMore: false })
   const onNext = async () => {

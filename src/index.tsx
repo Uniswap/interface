@@ -5,6 +5,8 @@ import { Web3ReactProvider, createWeb3ReactRoot } from '@web3-react/core'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import dayjs from 'dayjs'
+import duration from 'dayjs/plugin/duration'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import utc from 'dayjs/plugin/utc'
 import 'inter-ui'
 import mixpanel from 'mixpanel-browser'
@@ -39,6 +41,8 @@ import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import getLibrary from './utils/getLibrary'
 
 dayjs.extend(utc)
+dayjs.extend(duration)
+dayjs.extend(relativeTime)
 
 mixpanel.init(MIXPANEL_PROJECT_TOKEN, {
   debug: ENV_LEVEL < ENV_TYPE.PROD,

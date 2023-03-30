@@ -17,7 +17,7 @@ function VerifyComponent() {
   const qs = useParsedQueryString()
   const notify = useNotify()
   const calledApi = useRef(false)
-  const { showNotificationModal } = useNotification()
+  const { refreshTopics } = useNotification()
   const navigate = useNavigate()
   const theme = useTheme()
 
@@ -39,7 +39,7 @@ function VerifyComponent() {
           10000,
         )
         setTimeout(() => {
-          showNotificationModal()
+          refreshTopics()
         }, 1000)
         const { confirmation, email, ...rest } = qs
         navigate({ search: stringify(rest) })
@@ -57,7 +57,7 @@ function VerifyComponent() {
             : t`Error occur, please try again.`,
         })
       })
-  }, [qs, notify, navigate, showNotificationModal, theme])
+  }, [qs, notify, navigate, theme, refreshTopics])
 
   return null
 }

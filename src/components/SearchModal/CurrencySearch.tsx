@@ -155,13 +155,13 @@ export function CurrencySearch({
 
   const { favoriteTokens, toggleFavoriteToken } = useUserFavoriteTokens(chainId)
 
-  const defaultTokens = useAllTokens()
+  const defaultTokens = useAllTokens(false, chainId)
 
-  const tokenImports = useUserAddedTokens()
+  const tokenImports = useUserAddedTokens(chainId)
   const [pageCount, setPageCount] = useState(0)
   const [fetchedTokens, setFetchedTokens] = useState<Token[]>(Object.values(defaultTokens))
 
-  const tokenComparator = useTokenComparator(false)
+  const tokenComparator = useTokenComparator(false, customChainId)
 
   const [commonTokens, setCommonTokens] = useState<(Token | Currency)[]>([])
   const [loadingCommon, setLoadingCommon] = useState(true)
@@ -534,6 +534,7 @@ export function CurrencySearch({
           setImportToken={setImportToken}
           loadMoreRows={fetchListTokens}
           hasMore={hasMoreToken}
+          customChainId={customChainId}
         />
       ) : (
         <NoResult />

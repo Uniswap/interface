@@ -12,7 +12,6 @@ import { AutoColumn } from 'components/Column'
 import CopyHelper from 'components/Copy'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { RowBetween } from 'components/Row'
-import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { useAddUserToken } from 'state/user/hooks'
 import { CloseIcon, TYPE } from 'theme'
@@ -62,8 +61,6 @@ interface ImportProps {
 
 export function ImportToken({ enterToImport = false, tokens, onBack, onDismiss, handleCurrencySelect }: ImportProps) {
   const theme = useTheme()
-
-  const { chainId } = useActiveWeb3React()
 
   const addToken = useAddUserToken()
 
@@ -120,13 +117,13 @@ export function ImportToken({ enterToImport = false, tokens, onBack, onDismiss, 
                   </Text>
                   <Flex alignItems={'center'} color={theme.text} style={{ gap: 5 }}>
                     <AddressText>
-                      <Trans>Address</Trans>: {shortenAddress(chainId, token.address, 7)}
+                      <Trans>Address</Trans>: {shortenAddress(token.chainId, token.address, 7)}
                     </AddressText>
                     <CopyHelper toCopy={token.address} style={{ color: theme.subText }} />
                     <ExternalLinkIcon
                       color={theme.subText}
                       size={16}
-                      href={getEtherscanLink(chainId, token.address, 'address')}
+                      href={getEtherscanLink(token.chainId, token.address, 'address')}
                     />
                   </Flex>
                 </AutoColumn>

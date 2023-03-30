@@ -1,9 +1,9 @@
 import styled, { CSSProperties } from 'styled-components'
 
 import NotificationImage from 'assets/images/notification_default.png'
-import { formatTime } from 'components/Announcement/helper'
 import { Announcement } from 'components/Announcement/type'
 import { escapeScriptHtml } from 'utils/string'
+import { formatTime } from 'utils/time'
 
 const HEIGHT = '92px'
 

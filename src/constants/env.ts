@@ -1,5 +1,7 @@
 import invariant from 'tiny-invariant'
 
+import { PrivateAnnouncementType } from 'components/Announcement/type'
+
 import { ENV_TYPE } from './type'
 
 const required = (envKey: string): string => {
@@ -40,7 +42,7 @@ export const LIMIT_ORDER_API_READ = required('LIMIT_ORDER_API_READ')
 export const LIMIT_ORDER_API_WRITE = required('LIMIT_ORDER_API_WRITE')
 export const KYBER_DAO_STATS_API = required('KYBER_DAO_STATS_API')
 
-export const NOTIFICATION_IGNORE_TEMPLATE_IDS = required('NOTIFICATION_IGNORE_TEMPLATE_IDS')
+export const PRICE_ALERT_API = required('PRICE_ALERT_API')
 
 type FirebaseConfig = {
   apiKey: string
@@ -99,4 +101,41 @@ export const FIREBASE: { [key: string]: { DEFAULT: FirebaseConfig; LIMIT_ORDER?:
       appId: '1:541963997326:web:a6cc676067bc65f32679df',
     },
   },
+}
+
+const ANNOUNCEMENT_TEMPLATE_IDS = {
+  development: {
+    [PrivateAnnouncementType.PRICE_ALERT]: '44,45',
+    [PrivateAnnouncementType.LIMIT_ORDER]: '8,9,10,11,33,34,35,36',
+    [PrivateAnnouncementType.BRIDGE]: '37,38',
+    [PrivateAnnouncementType.TRENDING_SOON_TOKEN]: '1',
+    [PrivateAnnouncementType.POOL_POSITION]: '39,40',
+    EXCLUDE: '2,29',
+  },
+  staging: {
+    [PrivateAnnouncementType.PRICE_ALERT]: '22,23',
+    [PrivateAnnouncementType.LIMIT_ORDER]: '14,15,16,17',
+    [PrivateAnnouncementType.BRIDGE]: '12,13',
+    [PrivateAnnouncementType.TRENDING_SOON_TOKEN]: '1',
+    [PrivateAnnouncementType.POOL_POSITION]: '20,21',
+    EXCLUDE: '2,11',
+  },
+  production: {
+    [PrivateAnnouncementType.PRICE_ALERT]: '21,22',
+    [PrivateAnnouncementType.LIMIT_ORDER]: '12,13,14,15',
+    [PrivateAnnouncementType.BRIDGE]: '10,11',
+    [PrivateAnnouncementType.TRENDING_SOON_TOKEN]: '9',
+    [PrivateAnnouncementType.POOL_POSITION]: '17,18',
+    EXCLUDE: '2,16',
+  },
+}
+
+export const getAnnouncementsTemplateIds = () => {
+  const config =
+    ENV_LEVEL === ENV_TYPE.PROD
+      ? ANNOUNCEMENT_TEMPLATE_IDS.production
+      : ENV_LEVEL === ENV_TYPE.STG
+      ? ANNOUNCEMENT_TEMPLATE_IDS.staging
+      : ANNOUNCEMENT_TEMPLATE_IDS.development
+  return config
 }

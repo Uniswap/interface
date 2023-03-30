@@ -208,6 +208,8 @@ export const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3'
 export const KNC_COINGECKO_ID = 'kyber-network-crystal'
 
 export const ETHER_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
+export const ETHER_ADDRESS_SOLANA = 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+
 export const KYBER_NETWORK_DISCORD_URL = 'https://discord.com/invite/NB3vc8J9uv'
 export const KYBER_NETWORK_TWITTER_URL = 'https://twitter.com/KyberNetwork'
 
@@ -281,6 +283,7 @@ export const APP_PATHS = {
   LIMIT: '/limit',
   VERIFY_EXTERNAL: '/verify-external',
   GRANT_PROGRAMS: '/inter-project-trading-campaigns',
+  NOTIFICATION_CENTER: '/notification-center',
 }
 
 export const TERM_FILES_PATH = {
@@ -314,3 +317,17 @@ if (ENV.ENV_LEVEL < ENV_TYPE.PROD) {
 export const INPUT_DEBOUNCE_TIME = 300
 
 export const ENABLE_CLICK_TO_REFRESH_GET_ROUTE = false
+
+export const TIMES_IN_SECS = {
+  ONE_DAY: 86400,
+  ONE_HOUR: 3600,
+  ONE_MIN: 60,
+}
+
+export const RTK_QUERY_TAGS = {
+  GET_PRIVATE_ANN_BY_ID: 'GET_PRIVATE_ANN_BY_ID',
+  GET_ALL_PRIVATE_ANN: 'GET_ALL_PRIVATE_ANN',
+  GET_ALERTS: 'GET_ALERTS',
+  GET_ALERTS_HISTORY: 'GET_ALERTS_HISTORY',
+  GET_ALERTS_STAT: 'GET_ALERTS_STAT',
+}

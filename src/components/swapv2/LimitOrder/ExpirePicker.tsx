@@ -11,7 +11,7 @@ import Modal from 'components/Modal'
 import Select from 'components/Select'
 import useTheme from 'hooks/useTheme'
 
-import { EXPIRED_OPTIONS, MIN_TIME_MINUTES } from './const'
+import { MIN_TIME_MINUTES, getExpireOptions } from './const'
 
 const HOURS = Array.from({ length: 24 }, (_, i) => ({ label: i, value: i }))
 const MINS = Array.from({ length: 60 }, (_, i) => ({ label: i, value: i }))
@@ -168,7 +168,7 @@ export default function DateTimePicker({
             <Text color={theme.border}>
               <Trans>Default Options</Trans>
             </Text>
-            {EXPIRED_OPTIONS.map(opt => (
+            {getExpireOptions().map(opt => (
               <Text
                 style={{ cursor: 'pointer' }}
                 color={opt.value === defaultExpire ? theme.primary : theme.subText}

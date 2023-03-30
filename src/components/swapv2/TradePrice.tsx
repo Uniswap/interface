@@ -1,8 +1,9 @@
 import { Currency, Price } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
-import React, { useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
+import { CSSProperties } from 'styled-components'
 
 import useTheme from 'hooks/useTheme'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
@@ -11,9 +12,13 @@ import { Dots, StyledBalanceMaxMini } from './styleds'
 
 interface TradePriceProps {
   price: Price<Currency, Currency> | undefined
+  label?: ReactNode
+  icon?: ReactNode
+  style?: CSSProperties
+  color?: string
 }
 
-export default function TradePrice({ price }: TradePriceProps) {
+export default function TradePrice({ price, label, icon, style = {}, color }: TradePriceProps) {
   const theme = useTheme()
   const [showInverted, setShowInverted] = useState<boolean>(false)
   let formattedPrice
@@ -33,16 +38,14 @@ export default function TradePrice({ price }: TradePriceProps) {
       fontWeight={500}
       fontSize={12}
       color={theme.subText}
-      style={{ alignItems: 'center', display: 'flex', cursor: 'pointer' }}
+      style={{ alignItems: 'center', display: 'flex', cursor: 'pointer', ...style }}
       onClick={() => setShowInverted(!showInverted)}
       height="22px"
     >
       {show ? (
         <>
-          <Text>{value}</Text>
-          <StyledBalanceMaxMini>
-            <Repeat size={12} />
-          </StyledBalanceMaxMini>
+          {label && <>{label}&nbsp;</>} <Text color={color}>{value}</Text>
+          <StyledBalanceMaxMini>{icon || <Repeat size={12} />}</StyledBalanceMaxMini>
         </>
       ) : (
         <Dots>

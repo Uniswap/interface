@@ -1,15 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useMedia, usePrevious } from 'react-use'
-import AnnouncementApi from 'services/announcement'
+import {
+  useAckPrivateAnnouncementsMutation,
+  useLazyGetAnnouncementsQuery,
+  useLazyGetPrivateAnnouncementsQuery,
+} from 'services/announcement'
 import styled, { css } from 'styled-components'
 
 import AnnouncementView, { Tab } from 'components/Announcement/AnnoucementView'
 import DetailAnnouncementPopup from 'components/Announcement/Popups/DetailAnnouncementPopup'
-import { formatNumberOfUnread } from 'components/Announcement/helper'
+import { formatNumberOfUnread, useInvalidateTagAnnouncement } from 'components/Announcement/helper'
 import { Announcement, PrivateAnnouncement } from 'components/Announcement/type'
 import NotificationIcon from 'components/Icons/NotificationIcon'
 import MenuFlyout from 'components/MenuFlyout'
 import Modal from 'components/Modal'
+import { RTK_QUERY_TAGS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useInterval from 'hooks/useInterval'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
@@ -93,8 +98,6 @@ export default function AnnouncementComponent() {
   const [announcements, setAnnouncements] = useState<Announcement[]>([])
   const [privateAnnouncements, setPrivateAnnouncements] = useState<PrivateAnnouncement[]>([])
 
-  const { useLazyGetAnnouncementsQuery, useLazyGetPrivateAnnouncementsQuery, useAckPrivateAnnouncementsMutation } =
-    AnnouncementApi
   const [fetchGeneralAnnouncement, { data: respAnnouncement = responseDefault }] = useLazyGetAnnouncementsQuery()
   const [fetchPrivateAnnouncement, { data: respPrivateAnnouncement = responseDefault, isError }] =
     useLazyGetPrivateAnnouncementsQuery()
@@ -191,18 +194,26 @@ export default function AnnouncementComponent() {
     tab !== activeTab && fetchAnnouncementsByTab(true, tab)
   }
 
+  const resetUnread = useInvalidateTagAnnouncement()
+
   const prefetchPrivateAnnouncements = useCallback(async () => {
     try {
       if (!account) return []
       const { data } = await fetchPrivateAnnouncement({ account, page: 1 })
       const notifications = (data?.notifications ?? []) as PrivateAnnouncement[]
       setPrivateAnnouncements(notifications)
+
+      if (data?.numberOfUnread !== numberOfUnread) {
+        // has new msg
+        resetUnread(RTK_QUERY_TAGS.GET_PRIVATE_ANN_BY_ID)
+      }
+
       return notifications
     } catch (error) {
       setPrivateAnnouncements([])
       return []
     }
-  }, [account, fetchPrivateAnnouncement])
+  }, [account, fetchPrivateAnnouncement, resetUnread, numberOfUnread])
 
   const prevOpen = usePrevious(isOpenNotificationCenter)
   useEffect(() => {
@@ -239,6 +250,7 @@ export default function AnnouncementComponent() {
     toggleNotificationCenter()
     if (isOpenNotificationCenter && numberOfUnread && account) {
       ackAnnouncement({ account, action: 'read-all' })
+      resetUnread(RTK_QUERY_TAGS.GET_PRIVATE_ANN_BY_ID)
     }
   }
 
@@ -273,6 +285,7 @@ export default function AnnouncementComponent() {
     showDetailAnnouncement,
   }
 
+  const badgeText = numberOfUnread > 0 ? formatNumberOfUnread(numberOfUnread) : null
   const bellIcon = (
     <StyledMenuButton
       active={isOpenNotificationCenter || numberOfUnread > 0}
@@ -282,11 +295,7 @@ export default function AnnouncementComponent() {
       }}
     >
       <NotificationIcon />
-      {numberOfUnread > 0 && (
-        <Badge isOverflow={formatNumberOfUnread(numberOfUnread).length >= 3}>
-          {formatNumberOfUnread(numberOfUnread)}
-        </Badge>
-      )}
+      {badgeText && <Badge isOverflow={badgeText.length >= 3}>{badgeText}</Badge>}
     </StyledMenuButton>
   )
   return (

@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { Swap as SwapIcon } from 'components/Icons'
 import TradePrice from 'components/swapv2/LimitOrder/TradePrice'
-import { BaseTradeInfo } from 'components/swapv2/LimitOrder/useBaseTradeInfo'
+import { BaseTradeInfoLO } from 'hooks/useBaseTradeInfo'
 import useTheme from 'hooks/useTheme'
 
 import { formatAmountOrder, formatRateLimitOrder } from '../helpers'
@@ -87,7 +87,7 @@ export const MarketInfo = ({
   symbolIn,
   symbolOut,
 }: {
-  marketPrice: BaseTradeInfo | undefined
+  marketPrice: BaseTradeInfoLO | undefined
   symbolIn: string | undefined
   symbolOut: string | undefined
 }) => {

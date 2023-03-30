@@ -11,6 +11,7 @@ import { useNotify } from 'state/application/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { updateChainId } from 'state/user/actions'
 import { isEVMWallet, isSolanaWallet } from 'utils'
+import { wait } from 'utils/retry'
 
 import { useActivationWallet } from './useActivationWallet'
 import { useLazyKyberswapConfig } from './useKyberSwapConfig'
@@ -27,6 +28,7 @@ const getEVMAddNetworkParams = (chainId: EVM_NETWORK, rpc: string) => ({
   blockExplorerUrls: [NETWORKS_INFO[chainId].etherscanUrl],
 })
 
+let latestChainId: ChainId
 export function useChangeNetwork() {
   const { chainId, walletKey, walletEVM, walletSolana } = useActiveWeb3React()
   const { library, error } = useWeb3React()
@@ -44,14 +46,32 @@ export function useChangeNetwork() {
     [dispatch],
   )
 
+  latestChainId = chainId
   const changeNetwork = useCallback(
-    async (desiredChainId: ChainId, successCallback?: () => void, failureCallback?: () => void) => {
+    async (
+      desiredChainId: ChainId,
+      successCb?: () => void,
+      failureCallback?: () => void,
+      waitUtilUpdatedChainId = false,
+    ) => {
       if (desiredChainId === chainId) {
-        successCallback?.()
+        successCb?.()
         return
       }
 
+      const successCallback = async () => {
+        /** although change chain successfully, but it take 1-2s for chainId has a new value
+         * => this option will wait util chainId has actually update to new value to prevent some edge case
+         */
+        while (waitUtilUpdatedChainId) {
+          await wait(1000)
+          if (desiredChainId === latestChainId) break
+        }
+        successCb?.()
+      }
+
       const wallet = walletKey && SUPPORTED_WALLETS[walletKey]
+
       if (
         wallet &&
         isEVMWallet(wallet) &&
@@ -98,6 +118,14 @@ export function useChangeNetwork() {
             })
             successCallback?.()
           } catch (switchError) {
+            const notifyFailed = () => {
+              notify({
+                title: t`Failed to switch network`,
+                type: NotificationType.ERROR,
+                summary: t`In order to use KyberSwap on ${NETWORKS_INFO[desiredChainId].name}, you must accept the network in your wallet.`,
+              })
+              failureCallback?.()
+            }
             // This is a workaround solution for Coin98
             const isSwitchError =
               typeof switchError === 'object' && switchError && Object.keys(switchError)?.length === 0
@@ -113,21 +141,11 @@ export function useChangeNetwork() {
               if (value === null) {
                 successCallback?.()
               } else {
-                notify({
-                  title: t`Failed to switch network`,
-                  type: NotificationType.ERROR,
-                  summary: t`In order to use KyberSwap on ${NETWORKS_INFO[desiredChainId].name}, you must accept the network in your wallet.`,
-                })
-                failureCallback?.()
+                notifyFailed()
               }
             } else {
               // handle other "switch" errors
-              failureCallback?.()
-              notify({
-                title: t`Failed to switch network`,
-                type: NotificationType.ERROR,
-                summary: t`In order to use KyberSwap on ${NETWORKS_INFO[desiredChainId].name}, you must change the network in your wallet.`,
-              })
+              notifyFailed()
             }
           }
         }

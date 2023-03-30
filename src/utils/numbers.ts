@@ -1,4 +1,7 @@
-import { EPSILON } from 'constants/index'
+import { Fraction } from '@kyberswap/ks-sdk-core'
+import JSBI from 'jsbi'
+
+import { EPSILON, RESERVE_USD_DECIMALS } from 'constants/index'
 
 // using a currency library here in case we want to add more in future
 export const formatDollarAmount = (num: number | undefined, digits = 2) => {
@@ -58,3 +61,6 @@ export function toFixed(x: number): string {
   }
   return x.toString()
 }
+
+export const uint256ToFraction = (value: string, decimals = RESERVE_USD_DECIMALS) =>
+  new Fraction(value, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals)))

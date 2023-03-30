@@ -1,10 +1,15 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
+import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import AnnouncementApi from 'services/announcement'
 
 import { AnnouncementTemplatePopup, PopupContentAnnouncement, PopupItemType } from 'components/Announcement/type'
+import { useActiveWeb3React } from 'hooks'
+import { useChangeNetwork } from 'hooks/useChangeNetwork'
+import { useAppDispatch } from 'state/hooks'
 
 const LsKey = 'ack-announcements'
-const getAnnouncementsAckMap = () => JSON.parse(localStorage[LsKey] || '{}')
+export const getAnnouncementsAckMap = () => JSON.parse(localStorage[LsKey] || '{}')
 
 export const ackAnnouncementPopup = (id: string | number) => {
   const announcementsMap = getAnnouncementsAckMap()
@@ -17,7 +22,7 @@ export const ackAnnouncementPopup = (id: string | number) => {
   )
 }
 
-export const formatNumberOfUnread = (num: number) => (num > 10 ? '10+' : num + '')
+export const formatNumberOfUnread = (num: number | undefined) => (num ? (num > 10 ? '10+' : num + '') : null)
 
 export const isPopupCanShow = (popupInfo: PopupItemType<PopupContentAnnouncement>, chainId: ChainId) => {
   const { templateBody = {}, metaMessageId } = popupInfo.content
@@ -29,29 +34,56 @@ export const isPopupCanShow = (popupInfo: PopupItemType<PopupContentAnnouncement
   return !isRead && !isExpired && isRightChain
 }
 
-export const formatTime = (time: number) => {
-  const delta = (Date.now() - time * 1000) / 1000
-  const min = Math.floor(delta / 60)
-  if (min < 1) return `< 1 minute ago`
-  if (min < 60) return `${min} minutes ago`
-  const hour = Math.floor(delta / 3600)
-  if (hour < 24) return `${hour} hours ago`
-  const day = Math.floor(delta / (24 * 3600))
-  return `${day} days ago`
-}
-
-export const useNavigateCtaPopup = () => {
+/**
+ * this hook to navigate to specific url
+ * detect using window.open or navigate (react-router)
+ * check change chain if needed
+ */
+export const useNavigateToUrl = () => {
   const navigate = useNavigate()
-  const onNavigate = (actionURL: string) => {
-    try {
-      if (!actionURL) return
+  const { chainId: currentChain } = useActiveWeb3React()
+  const changeNetwork = useChangeNetwork()
+
+  const redirect = useCallback(
+    (actionURL: string) => {
+      if (actionURL && actionURL.startsWith('/')) {
+        navigate(actionURL)
+        return
+      }
       const { pathname, host, search } = new URL(actionURL)
       if (window.location.host === host) {
         navigate(`${pathname}${search}`)
       } else {
         window.open(actionURL)
       }
-    } catch (error) {}
-  }
-  return onNavigate
+    },
+    [navigate],
+  )
+
+  return useCallback(
+    (actionURL: string, chainId?: ChainId) => {
+      try {
+        if (!actionURL) return
+        if (chainId && chainId !== currentChain) {
+          changeNetwork(chainId, () => redirect(actionURL), undefined, true)
+        } else {
+          redirect(actionURL)
+        }
+      } catch (error) {}
+    },
+    [changeNetwork, currentChain, redirect],
+  )
+}
+
+export const useInvalidateTagAnnouncement = () => {
+  const dispatch = useAppDispatch()
+  return useCallback(
+    (tag: string) => {
+      dispatch({
+        type: `${AnnouncementApi.reducerPath}/invalidateTags`,
+        payload: [tag],
+      })
+    },
+    [dispatch],
+  )
 }

@@ -1,5 +1,5 @@
 import { rgba } from 'polished'
-import React, { CSSProperties } from 'react'
+import React, { CSSProperties, ReactNode } from 'react'
 import styled from 'styled-components'
 
 export interface ToggleProps {
@@ -8,6 +8,7 @@ export interface ToggleProps {
   isActive: boolean
   toggle: () => void
   style?: CSSProperties
+  icon?: ReactNode
 }
 
 const Dot = styled.div`
@@ -23,12 +24,16 @@ const Dot = styled.div`
 
   transform: translateY(-50%);
   transition: all 0.2s ease-in-out;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
-const Toggle: React.FC<ToggleProps> = ({ id, isActive, toggle, style, className }) => {
+const Toggle: React.FC<ToggleProps> = ({ id, isActive, toggle, style, className, icon }) => {
   return (
     <div id={id} onClick={toggle} style={style} data-active={isActive} className={className}>
-      <Dot />
+      <Dot>{isActive && icon}</Dot>
     </div>
   )
 }

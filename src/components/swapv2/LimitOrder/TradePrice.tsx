@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
-import React, { CSSProperties, useState } from 'react'
+import React, { CSSProperties, ReactNode, useState } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
 
-import { BaseTradeInfo } from 'components/swapv2/LimitOrder/useBaseTradeInfo'
 import { StyledBalanceMaxMini } from 'components/swapv2/styleds'
+import { BaseTradeInfo } from 'hooks/useBaseTradeInfo'
 import useTheme from 'hooks/useTheme'
 import { toFixed } from 'utils/numbers'
 
@@ -16,9 +16,19 @@ interface TradePriceProps {
   symbolIn: string | undefined
   symbolOut: string | undefined
   loading: boolean
+  icon?: ReactNode
 }
 
-export default function TradePrice({ price, style = {}, label, color, symbolIn, symbolOut, loading }: TradePriceProps) {
+export default function TradePrice({
+  price,
+  style = {},
+  label,
+  color,
+  symbolIn,
+  symbolOut,
+  loading,
+  icon,
+}: TradePriceProps) {
   const theme = useTheme()
   const [showInverted, setShowInverted] = useState<boolean>(false)
   let formattedPrice
@@ -48,9 +58,7 @@ export default function TradePrice({ price, style = {}, label, color, symbolIn, 
         <>
           {label && <>{label}&nbsp;</>}
           <Text color={color}>{loading ? null : `${value}`}</Text>
-          <StyledBalanceMaxMini>
-            <Repeat size={12} />
-          </StyledBalanceMaxMini>
+          <StyledBalanceMaxMini hover={!icon}>{icon || <Repeat size={12} />}</StyledBalanceMaxMini>
         </>
       ) : (
         <Text color={theme.warning}>

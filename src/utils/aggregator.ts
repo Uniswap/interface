@@ -39,6 +39,26 @@ import {
 } from './solanaInstructions'
 import { convertToVersionedTx } from './versionedTx'
 
+const toCurrencyAmount = function (value: string, currency: Currency): CurrencyAmount<Currency> {
+  try {
+    return TokenAmount.fromRawAmount(currency, JSBI.BigInt(value))
+  } catch (e) {
+    return TokenAmount.fromRawAmount(currency, 0)
+  }
+}
+
+const isResultInvalid = (result: any) => {
+  return (
+    !result ||
+    !result.inputAmount ||
+    !result.outputAmount ||
+    typeof result.swaps?.[0]?.[0].pool !== 'string' ||
+    !result.tokens ||
+    result.inputAmount === '0' ||
+    result.outputAmount === '0'
+  )
+}
+
 type Swap = {
   pool: string
   tokenIn: string
@@ -273,24 +293,8 @@ export class Aggregator {
         )
         if (Math.round(response.status / 100) !== 2) throw new Error('Aggregator status fail: ' + response.status)
         const result = await response.json()
-        if (
-          !result ||
-          !result.inputAmount ||
-          !result.outputAmount ||
-          typeof result.swaps?.[0]?.[0].pool !== 'string' ||
-          !result.tokens ||
-          result.inputAmount === '0' ||
-          result.outputAmount === '0'
-        ) {
+        if (isResultInvalid(result)) {
           return null
-        }
-
-        const toCurrencyAmount = function (value: string, currency: Currency): CurrencyAmount<Currency> {
-          try {
-            return TokenAmount.fromRawAmount(currency, JSBI.BigInt(value))
-          } catch (e) {
-            return TokenAmount.fromRawAmount(currency, 0)
-          }
         }
 
         const outputAmount = toCurrencyAmount(result?.outputAmount, currencyOut)
@@ -326,6 +330,64 @@ export class Aggregator {
           captureException(sentryError, { level: 'error' })
         }
       }
+    }
+
+    return null
+  }
+
+  public static async baseTradeSolana({
+    aggregatorAPI,
+    currencyAmountIn,
+    currencyOut,
+    to,
+    signal,
+  }: {
+    aggregatorAPI: string
+    currencyAmountIn: CurrencyAmount<Currency>
+    currencyOut: Currency
+    to: string
+    signal: AbortSignal
+  }): Promise<Price<Currency, Currency> | null> {
+    const programState = new Keypair()
+    const amountIn = currencyAmountIn
+    const tokenOut = currencyOut.wrapped
+
+    const tokenInAddress = amountIn.currency.wrapped.address
+    const tokenOutAddress = tokenOut.address
+    if (!tokenInAddress || !tokenOutAddress) return null
+
+    const search = new URLSearchParams({
+      tokenIn: tokenInAddress,
+      tokenOut: tokenOutAddress,
+      amountIn: currencyAmountIn.quotient?.toString(),
+      to,
+      programState: programState.publicKey.toBase58() ?? '',
+      clientData: KYBERSWAP_SOURCE,
+    })
+    try {
+      const response = await fetchWaiting(`${aggregatorAPI}?${search}`, {
+        signal,
+        headers: {
+          'X-Request-Id': sentryRequestId,
+          'Accept-Version': 'Latest',
+        },
+      })
+      if (Math.round(response.status / 100) !== 2) throw new Error('Aggregator status fail: ' + response.status)
+      const result = await response.json()
+      if (isResultInvalid(result)) {
+        return null
+      }
+
+      const outputAmount = toCurrencyAmount(result?.outputAmount, currencyOut)
+
+      return new Price(
+        currencyAmountIn.currency,
+        outputAmount.currency,
+        currencyAmountIn.quotient,
+        outputAmount.quotient,
+      )
+    } catch (e) {
+      console.error('Base trade error:', e?.stack || e)
     }
 
     return null

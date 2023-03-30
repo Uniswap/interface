@@ -1,5 +1,5 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import { Trans, t } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import { Repeat } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 
@@ -13,7 +13,7 @@ import {
   RowItem,
   Title,
 } from 'components/Announcement/PrivateAnnoucement/styled'
-import { AnnouncementTemplateLimitOrder, PrivateAnnouncementType } from 'components/Announcement/type'
+import { AnnouncementTemplateLimitOrder } from 'components/Announcement/type'
 import { CheckCircle } from 'components/Icons'
 import DeltaTokenAmount from 'components/WalletPopup/Transactions/DeltaTokenAmount'
 import { LimitOrderStatus } from 'components/swapv2/LimitOrder/type'
@@ -25,8 +25,9 @@ function InboxItemBridge({
   onRead,
   style,
   time,
+  title,
 }: PrivateAnnouncementProp<AnnouncementTemplateLimitOrder>) {
-  const { templateBody, isRead } = announcement
+  const { templateBody, isRead, templateType } = announcement
   const theme = useTheme()
   const {
     status,
@@ -62,10 +63,8 @@ function InboxItemBridge({
     <InboxItemWrapper isRead={isRead} onClick={onClick} style={style}>
       <InboxItemRow>
         <RowItem>
-          <InboxIcon type={PrivateAnnouncementType.LIMIT_ORDER} chainId={chainId} />
-          <Title isRead={isRead}>
-            <Trans>Limit Order</Trans>
-          </Title>
+          <InboxIcon type={templateType} chainId={chainId} />
+          <Title isRead={isRead}>{title}</Title>
           {!isRead && <Dot />}
         </RowItem>
         <RowItem>

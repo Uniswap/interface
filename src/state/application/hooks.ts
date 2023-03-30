@@ -7,7 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { ETH_PRICE, PROMM_ETH_PRICE, TOKEN_DERIVED_ETH } from 'apollo/queries'
-import { ackAnnouncementPopup, isPopupCanShow } from 'components/Announcement/helper'
+import { ackAnnouncementPopup, getAnnouncementsAckMap, isPopupCanShow } from 'components/Announcement/helper'
 import {
   AnnouncementTemplatePopup,
   PopupContent,
@@ -210,9 +210,13 @@ export function useActivePopups() {
   const { chainId } = useActiveWeb3React()
 
   return useMemo(() => {
-    const topRightPopups = popups.filter(e =>
-      [PopupType.SIMPLE, PopupType.TOP_RIGHT, PopupType.TRANSACTION].includes(e.popupType),
-    )
+    const topRightPopups = popups.filter(e => {
+      if ([PopupType.SIMPLE, PopupType.TRANSACTION].includes(e.popupType)) return true
+      const announcementsAckMap = getAnnouncementsAckMap()
+      const isRead = announcementsAckMap[e.content.metaMessageId]
+      if (e.popupType === PopupType.TOP_RIGHT) return !isRead
+      return false
+    })
 
     const topPopups = popups.filter(e => e.popupType === PopupType.TOP_BAR && isPopupCanShow(e, chainId))
     const snippetPopups = popups.filter(e => e.popupType === PopupType.SNIPPET && isPopupCanShow(e, chainId))

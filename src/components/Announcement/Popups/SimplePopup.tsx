@@ -22,12 +22,14 @@ export default function SimplePopup({
   type = NotificationType.ERROR,
   icon,
   link,
+  onRemove,
 }: {
   title: string
   type?: NotificationType
   summary?: ReactNode
   icon?: ReactNode
   link?: string
+  onRemove?: () => void
 }) {
   const theme = useTheme()
   const mapColor = {
@@ -45,6 +47,7 @@ export default function SimplePopup({
   const navigate = useNavigate()
   const onClickLink = () => {
     link && navigate(link)
+    onRemove?.()
   }
   return (
     <RowNoFlex>

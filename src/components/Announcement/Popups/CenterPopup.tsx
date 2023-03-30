@@ -4,7 +4,7 @@ import { useMedia } from 'react-use'
 import styled from 'styled-components'
 
 import CtaButton from 'components/Announcement/Popups/CtaButton'
-import { useNavigateCtaPopup } from 'components/Announcement/helper'
+import { useNavigateToUrl } from 'components/Announcement/helper'
 import {
   AnnouncementTemplatePopup,
   PopupContentAnnouncement,
@@ -108,7 +108,7 @@ export default function CenterPopup({
     thumbnailImageURL,
   } = templateBody as AnnouncementTemplatePopup
 
-  const navigate = useNavigateCtaPopup()
+  const navigate = useNavigateToUrl()
   const trackingClose = () => mixpanelHandler(MIXPANEL_TYPE.ANNOUNCEMENT_CLICK_CLOSE_POPUP, { message_title: name })
 
   const onClickCta = (ctaUrl?: string) => {

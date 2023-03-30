@@ -77,6 +77,7 @@ function Select({
   value: selectedValue,
   className,
   forceMenuPlacementTop = false,
+  arrowColor,
 }: {
   value?: string | number
   className?: string
@@ -88,6 +89,7 @@ function Select({
   optionStyle?: CSSProperties
   onChange: (value: any) => void
   forceMenuPlacementTop?: boolean
+  arrowColor?: string
 }) {
   const [selected, setSelected] = useState(getOptionValue(options[0]))
   const [showMenu, setShowMenu] = useState(false)
@@ -121,7 +123,7 @@ function Select({
       className={className}
     >
       <SelectedWrap>{activeRender ? activeRender(selectedInfo) : getOptionLabel(selectedInfo)}</SelectedWrap>
-      <DropdownArrowIcon rotate={showMenu} />
+      <DropdownArrowIcon rotate={showMenu} color={arrowColor} />
       {showMenu && (
         <SelectMenu style={{ ...menuStyle, ...(menuPlacementTop ? { bottom: 40, top: 'unset' } : {}) }} ref={refMenu}>
           {options.map(item => {
@@ -136,12 +138,6 @@ function Select({
                 onChange(value)
               }
             }
-            if (optionRender)
-              return (
-                <div key={value} onClick={onClick}>
-                  {optionRender(item)}
-                </div>
-              )
             return (
               <Option
                 key={value}
@@ -150,7 +146,7 @@ function Select({
                 onClick={onClick}
                 style={optionStyle}
               >
-                {getOptionLabel(item)}
+                {optionRender ? optionRender(item) : getOptionLabel(item)}
               </Option>
             )
           })}
@@ -160,4 +156,4 @@ function Select({
   )
 }
 
-export default Select
+export default styled(Select)``

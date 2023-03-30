@@ -136,8 +136,8 @@ export default function SwapForm() {
   useEffect(() => {
     const address = anyToken?.address
     let poolValueIn: string | undefined
-    if (address && poolDataIn?.[address]?.balanceOf) {
-      poolValueIn = calcPoolValue(poolDataIn[address]?.balanceOf, anyToken?.decimals)
+    if (address && poolDataIn?.[address]) {
+      poolValueIn = calcPoolValue(poolDataIn[address], anyToken?.decimals)
     }
     setPoolValue(poolValue => ({ ...poolValue, poolValueIn }))
   }, [poolDataIn, anyToken])
@@ -159,8 +159,8 @@ export default function SwapForm() {
           return
         }
 
-        if (!poolInfo?.balanceOf || !token?.multichainInfo?.anytoken?.decimals) return
-        const calcValue = calcPoolValue(poolInfo?.balanceOf, token?.multichainInfo?.anytoken?.decimals)
+        if (!poolInfo || !token?.multichainInfo?.anytoken?.decimals) return
+        const calcValue = calcPoolValue(poolInfo, token?.multichainInfo?.anytoken?.decimals)
         poolValueOutMap[anytokenAddress] = calcValue
         if (Number(calcValue) > maxPoolValue && !hasUnlimitedPool) {
           tokenWithMaxPool = token

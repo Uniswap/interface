@@ -22,13 +22,13 @@ import DeltaRate, { useGetDeltaRateLimitOrder } from 'components/swapv2/LimitOrd
 import { SummaryNotifyOrderPlaced } from 'components/swapv2/LimitOrder/ListOrder/SummaryNotify'
 import ConfirmOrderModal from 'components/swapv2/LimitOrder/Modals/ConfirmOrderModal'
 import TradePrice from 'components/swapv2/LimitOrder/TradePrice'
-import useBaseTradeInfo from 'components/swapv2/LimitOrder/useBaseTradeInfo'
 import useValidateInputError from 'components/swapv2/LimitOrder/useValidateInputError'
 import useWrapEthStatus from 'components/swapv2/LimitOrder/useWrapEthStatus'
 import { Z_INDEXS } from 'constants/styles'
 import { useTokenAllowance } from 'data/Allowances'
 import { useActiveWeb3React, useWeb3React } from 'hooks'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
+import { useBaseTradeInfoLimitOrder } from 'hooks/useBaseTradeInfo'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import useWrapCallback from 'hooks/useWrapCallback'
@@ -44,7 +44,7 @@ import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { toFixed } from 'utils/numbers'
 
 import ExpirePicker from './ExpirePicker'
-import { DEFAULT_EXPIRED, EXPIRED_OPTIONS, USD_THRESHOLD } from './const'
+import { DEFAULT_EXPIRED, USD_THRESHOLD, getExpireOptions } from './const'
 import {
   calcInvert,
   calcOutput,
@@ -148,7 +148,7 @@ const LimitOrderForm = function LimitOrderForm({
   const [approvalSubmitted, setApprovalSubmitted] = useState(false)
   const { library } = useWeb3React()
 
-  const { loading: loadingTrade, tradeInfo } = useBaseTradeInfo(currencyIn, currencyOut)
+  const { loading: loadingTrade, tradeInfo } = useBaseTradeInfoLimitOrder(currencyIn, currencyOut)
   const deltaRate = useGetDeltaRateLimitOrder({ marketPrice: tradeInfo, rateInfo })
 
   const { execute: onWrap, inputError: wrapInputError } = useWrapCallback(currencyIn, currencyOut, inputAmount, true)
@@ -726,7 +726,7 @@ const LimitOrderForm = function LimitOrderForm({
               optionStyle={isEdit ? { paddingTop: 8, paddingBottom: 8 } : {}}
               menuStyle={isEdit ? { paddingTop: 8, paddingBottom: 8 } : {}}
               style={{ width: '100%', padding: 0, height: INPUT_HEIGHT }}
-              options={[...EXPIRED_OPTIONS, { label: 'Custom', onSelect: toggleDatePicker }]}
+              options={[...getExpireOptions(), { label: 'Custom', onSelect: toggleDatePicker }]}
               activeRender={item => {
                 const displayTime = customDateExpire ? dayjs(customDateExpire).format('DD/MM/YYYY HH:mm') : item?.label
                 return (

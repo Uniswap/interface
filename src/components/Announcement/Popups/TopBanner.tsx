@@ -5,7 +5,7 @@ import { useMedia } from 'react-use'
 import styled, { css, keyframes } from 'styled-components'
 
 import CtaButton from 'components/Announcement/Popups/CtaButton'
-import { useNavigateCtaPopup } from 'components/Announcement/helper'
+import { useNavigateToUrl } from 'components/Announcement/helper'
 import { AnnouncementTemplatePopup, PopupType } from 'components/Announcement/type'
 import Announcement from 'components/Icons/Announcement'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
@@ -113,7 +113,7 @@ function TopBanner() {
   const contentNode = refContent.current
   const [isOverflowParent, setIsOverflowParent] = useState(false)
 
-  const navigate = useNavigateCtaPopup()
+  const navigate = useNavigateToUrl()
   const [animationDuration, setAnimationDuration] = useState(15)
 
   useEffect(() => {

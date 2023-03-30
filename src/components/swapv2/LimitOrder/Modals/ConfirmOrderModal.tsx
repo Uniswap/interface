@@ -8,8 +8,8 @@ import { ButtonPrimary, ButtonWarning } from 'components/Button'
 import Column from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import TransactionConfirmationModal, { TransactionErrorContent } from 'components/TransactionConfirmationModal'
-import { BaseTradeInfo } from 'components/swapv2/LimitOrder/useBaseTradeInfo'
 import { useActiveWeb3React } from 'hooks'
+import { BaseTradeInfoLO } from 'hooks/useBaseTradeInfo'
 import ErrorWarningPanel from 'pages/Bridge/ErrorWarning'
 import { TransactionFlowState } from 'types'
 
@@ -41,7 +41,7 @@ export default memo(function ConfirmOrderModal({
   inputAmount: string
   outputAmount: string
   expireAt: number
-  marketPrice: BaseTradeInfo | undefined
+  marketPrice: BaseTradeInfoLO | undefined
   rateInfo: RateInfo
   note?: string
   warningMessage: ReactNode[]

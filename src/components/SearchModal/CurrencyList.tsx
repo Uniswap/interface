@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Token } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency, CurrencyAmount, Token } from '@kyberswap/ks-sdk-core'
 import { rgba } from 'polished'
 import React, { CSSProperties, ReactNode, memo, useCallback } from 'react'
 import { Star, Trash } from 'react-feather'
@@ -12,6 +12,7 @@ import Column from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import Loader from 'components/Loader'
 import { RowBetween, RowFixed } from 'components/Row'
+import { isEVM } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
@@ -117,6 +118,7 @@ export function CurrencyRow({
   usdBalance?: number
   hoverColor?: string
   hideBalance?: boolean
+  customChainId?: ChainId
 }) {
   const { chainId, account } = useActiveWeb3React()
   const theme = useTheme()
@@ -214,6 +216,7 @@ function CurrencyList({
   listTokenRef,
   showFavoriteIcon,
   itemStyle = {},
+  customChainId,
 }: {
   showFavoriteIcon?: boolean
   showImported?: boolean
@@ -228,13 +231,16 @@ function CurrencyList({
   loadMoreRows?: () => Promise<void>
   listTokenRef?: React.Ref<HTMLDivElement>
   itemStyle?: CSSProperties
+  customChainId?: ChainId
 }) {
-  const currencyBalances = useCurrencyBalances(currencies)
+  const currencyBalances = useCurrencyBalances(currencies, customChainId)
+  const { chainId } = useActiveWeb3React()
 
   const Row: any = useCallback(
     function TokenRow({ style, currency, currencyBalance }: TokenRowProps) {
       const isSelected = Boolean(selectedCurrency && currency && selectedCurrency.equals(currency))
       const otherSelected = Boolean(otherCurrency && currency && otherCurrency.equals(currency))
+      const canShowBalance = customChainId && customChainId !== chainId ? isEVM(customChainId) === isEVM(chainId) : true
 
       const token = currency?.wrapped
       const extendCurrency = currency as WrappedTokenInfo
@@ -260,6 +266,7 @@ function CurrencyList({
             style={{ ...style, ...itemStyle }}
             currency={currency}
             currencyBalance={currencyBalance}
+            customBalance={canShowBalance ? undefined : <div />}
             isSelected={isSelected}
             showFavoriteIcon={showFavoriteIcon}
             onSelect={onCurrencySelect}
@@ -280,6 +287,8 @@ function CurrencyList({
       removeImportedToken,
       itemStyle,
       showFavoriteIcon,
+      chainId,
+      customChainId,
     ],
   )
   const loadMoreItems = useCallback(() => loadMoreRows?.(), [loadMoreRows])
