@@ -1,5 +1,5 @@
-import { Wallet } from 'ethers'
-import { defaultPath } from 'ethers/lib/utils'
+import { Signature, Wallet } from 'ethers'
+import { defaultPath, joinSignature, SigningKey } from 'ethers/lib/utils'
 import { logger } from '../../logger/logger'
 import { IKeyring } from './Keyring'
 
@@ -179,38 +179,53 @@ export class WebKeyring implements IKeyring {
     }
   }
 
-  // private async retrievePrivateKey(
-  //   address: string
-  // ): Promise<string | undefined> {
-  //   const key = this.keyForPrivateKey(address)
-  //   return (await this.store.get([key]))[key]
-  // }
+  private async retrievePrivateKey(
+    address: string
+  ): Promise<string | undefined> {
+    const key = this.keyForPrivateKey(address)
+    return (await this.store.get([key]))[key]
+  }
 
   private keyForPrivateKey(address: string): string {
     return entirePrivateKeyPrefix + address
   }
 
+  /**
+   * @returns the Signature of the signed transaction in string form.
+   **/
   signTransactionHashForAddress(
-    _address: string,
-    _hash: string,
-    _chainId: number
+    address: string,
+    hash: string,
+    chainId: number
   ): Promise<string> {
-    // return RNEthersRS.signTransactionHashForAddress(address, hash, chainId)
-    return Promise.resolve('')
+    // Ethers.js doesn't differentiate between signing a random hash and signing a transaction hash
+    return this.signHashForAddress(address, hash, chainId)
   }
 
-  signMessageForAddress(_address: string, _message: string): Promise<string> {
-    // return RNEthersRS.signMessageForAddress(address, message)
-    return Promise.resolve('')
+  signMessageForAddress(address: string, message: string): Promise<string> {
+    const privateKey = this.retrievePrivateKey(address)
+    return privateKey.then((key) => {
+      if (!key) throw Error('No private key found for address')
+      const wallet = new Wallet(key)
+      return wallet.signMessage(message)
+    })
   }
 
+  /**
+   * @returns the Signature of the signed hash in string form.
+   **/
   signHashForAddress(
-    _address: string,
-    _hash: string,
+    address: string,
+    hash: string,
     _chainId: number
   ): Promise<string> {
-    // return RNEthersRS.signHashForAddress(address, hash, chainId)
-    return Promise.resolve('')
+    const privateKey = this.retrievePrivateKey(address)
+    return privateKey.then((key) => {
+      if (!key) throw Error('No private key found for address')
+      const signingKey = new SigningKey(key)
+      const signature: Signature = signingKey.signDigest(hash)
+      return joinSignature(signature)
+    })
   }
 }
 
