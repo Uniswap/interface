@@ -8,7 +8,7 @@ import { NftActivityFilterInput, useNftActivityQuery } from '../__generated__/ty
 
 gql`
   query NftActivity($filter: NftActivityFilterInput, $after: String, $first: Int) {
-    nftActivity(filter: $filter, after: $after, first: $first, _fs: "DATASOURCE:ALTERNATE") {
+    nftActivity(filter: $filter, after: $after, first: $first, _fs: "DATASOURCE:LEGACY") {
       edges {
         node {
           id
