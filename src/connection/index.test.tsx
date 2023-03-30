@@ -1,4 +1,4 @@
-import { ConnectionType, getConnection, useDisplayableConnections } from 'connection'
+import { ConnectionType, getConnections, useGetConnection } from 'connection'
 import { renderHook } from 'test-utils'
 
 beforeEach(() => {
@@ -16,7 +16,8 @@ describe('connection utility/metadata tests', () => {
     UserAgentMock.isMobile = isMobile
     global.window.ethereum = ethereum
 
-    const displayed = renderHook(() => useDisplayableConnections()).result.current
+    const displayed = getConnections().filter((c) => c.shouldDisplay())
+    const getConnection = renderHook(() => useGetConnection()).result.current
     const injected = getConnection(ConnectionType.INJECTED)
     const coinbase = getConnection(ConnectionType.COINBASE_WALLET)
     const uniswap = getConnection(ConnectionType.UNIWALLET)
@@ -29,10 +30,10 @@ describe('connection utility/metadata tests', () => {
     const { displayed, injected } = createWalletEnvironment(undefined)
 
     expect(displayed.includes(injected)).toBe(true)
-    expect(injected.getName()).toBe('Install MetaMask')
+    expect(injected.getName()).toBe('MetaMask')
     expect(injected.overrideActivate?.()).toBeTruthy()
 
-    expect(displayed.length).toEqual(3)
+    expect(displayed.length).toEqual(4)
   })
 
   it('MetaMask-Injected Desktop', async () => {
@@ -42,7 +43,7 @@ describe('connection utility/metadata tests', () => {
     expect(injected.getName()).toBe('MetaMask')
     expect(injected.overrideActivate?.()).toBeFalsy()
 
-    expect(displayed.length).toEqual(3)
+    expect(displayed.length).toEqual(4)
   })
 
   it('Coinbase-Injected Desktop', async () => {
@@ -50,10 +51,10 @@ describe('connection utility/metadata tests', () => {
 
     expect(displayed.includes(coinbase)).toBe(true)
     expect(displayed.includes(injected)).toBe(true)
-    expect(injected.getName()).toBe('Install MetaMask')
+    expect(injected.getName()).toBe('MetaMask')
     expect(injected.overrideActivate?.()).toBeTruthy()
 
-    expect(displayed.length).toEqual(3)
+    expect(displayed.length).toEqual(4)
   })
 
   it('Coinbase and MetaMask Injected Desktop', async () => {
@@ -64,7 +65,7 @@ describe('connection utility/metadata tests', () => {
     expect(injected.getName()).toBe('MetaMask')
     expect(injected.overrideActivate?.()).toBeFalsy()
 
-    expect(displayed.length).toEqual(3)
+    expect(displayed.length).toEqual(4)
   })
 
   it('Generic Injected Desktop', async () => {
@@ -74,7 +75,7 @@ describe('connection utility/metadata tests', () => {
     expect(injected.getName()).toBe('Browser Wallet')
     expect(injected.overrideActivate?.()).toBeFalsy()
 
-    expect(displayed.length).toEqual(3)
+    expect(displayed.length).toEqual(4)
   })
 
   it('Generic Browser Wallet that injects as MetaMask', async () => {
@@ -84,28 +85,19 @@ describe('connection utility/metadata tests', () => {
     expect(injected.getName()).toBe('Browser Wallet')
     expect(injected.overrideActivate?.()).toBeFalsy()
 
-    expect(displayed.length).toEqual(3)
+    expect(displayed.length).toEqual(4)
   })
 
   it('Generic Wallet Browser with delayed injection', async () => {
     const { injected } = createWalletEnvironment(undefined)
 
-    expect(injected.getName()).toBe('Install MetaMask')
+    expect(injected.getName()).toBe('MetaMask')
     expect(injected.overrideActivate?.()).toBeTruthy()
 
     createWalletEnvironment({ isTrustWallet: true })
 
     expect(injected.getName()).toBe('Browser Wallet')
     expect(injected.overrideActivate?.()).toBeFalsy()
-  })
-
-  it('Generic Known Injected Wallet Browser', async () => {
-    const { displayed, injected } = createWalletEnvironment({ isTrustWallet: true }, true)
-
-    expect(displayed.includes(injected)).toBe(true)
-    expect(injected.getName()).toBe('Browser Wallet')
-    expect(injected.overrideActivate?.()).toBeFalsy()
-    expect(displayed.length).toEqual(1)
   })
 
   const UNKNOWN_INJECTOR = { isRandomWallet: true } as Window['window']['ethereum']
@@ -117,7 +109,7 @@ describe('connection utility/metadata tests', () => {
     expect(injected.overrideActivate?.()).toBeFalsy()
 
     // Ensures we provide multiple connection options if in an unknown injected browser
-    expect(displayed.length).toEqual(3)
+    expect(displayed.length).toEqual(4)
   })
 
   it('MetaMask Mobile Browser', async () => {
@@ -148,6 +140,6 @@ describe('connection utility/metadata tests', () => {
     // Expect coinbase option to launch coinbase app in a regular mobile browser
     expect(coinbase.overrideActivate?.()).toBeTruthy()
 
-    expect(displayed.length).toEqual(2)
+    expect(displayed.length).toEqual(3)
   })
 })

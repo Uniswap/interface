@@ -66,6 +66,7 @@ const getIsGenericInjector = () => getIsInjected() && !getIsMetaMaskWallet() && 
 
 const [web3Injected, web3InjectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))
 const injectedConnection: Connection = {
+  // TODO(WEB-3131) re-add "Install MetaMask" string when no injector is present
   getName: () => (getIsGenericInjector() ? 'Browser Wallet' : 'MetaMask'),
   connector: web3Injected,
   hooks: web3InjectedHooks,
@@ -74,7 +75,7 @@ const injectedConnection: Connection = {
   shouldDisplay: () => getIsMetaMaskWallet() || getShouldAdvertiseMetaMask() || getIsGenericInjector(),
   // If on non-injected, non-mobile browser, prompt user to install Metamask
   overrideActivate: () => {
-    if (!getIsMetaMaskWallet() && !getIsGenericInjector()) {
+    if (getShouldAdvertiseMetaMask()) {
       window.open('https://metamask.io/', 'inst_metamask')
       return true
     }
@@ -149,7 +150,7 @@ const coinbaseWalletConnection: Connection = {
   },
 }
 
-function getConnections() {
+export function getConnections() {
   return [
     uniwalletConnectConnection,
     injectedConnection,
@@ -158,10 +159,6 @@ function getConnections() {
     gnosisSafeConnection,
     networkConnection,
   ]
-}
-
-export function useConnections() {
-  return getConnections()
 }
 
 export function useGetConnection() {
