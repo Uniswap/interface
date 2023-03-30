@@ -63,10 +63,17 @@ export default async function fetchTokenList(
       continue
     }
 
-    const json = await response.json()
-    const list = skipValidation ? json : await validateTokenList(json)
-    listCache?.set(listUrl, list)
-    return list
+    try {
+      const json = await response.json()
+      const list = skipValidation ? json : await validateTokenList(json)
+      listCache?.set(listUrl, list)
+      return list
+    } catch (error) {
+      const message = `failed to parse list response: ${listUrl}`
+      console.debug(message, error)
+      if (isLast) throw new Error(message)
+      continue
+    }
   }
 
   throw new Error('Unrecognized list URL protocol.')

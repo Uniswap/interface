@@ -38,4 +38,12 @@ describe('fetchTokenList', () => {
     await expect(fetchTokenList(DEFAULT_TOKEN_LIST, resolver)).resolves.toStrictEqual(defaultTokenList)
     expect(resolver).not.toHaveBeenCalled()
   })
+
+  it('throws for a list with invalid json response', async () => {
+    const url = 'https://example.com/invalid-tokenlist.json'
+    fetch.mockOnceIf(url, () => Promise.resolve('invalid json'))
+    await expect(fetchTokenList(url, resolver)).rejects.toThrow(`failed to parse list response: ${url}`)
+    expect(console.debug).toHaveBeenCalled()
+    expect(resolver).not.toHaveBeenCalled()
+  })
 })
