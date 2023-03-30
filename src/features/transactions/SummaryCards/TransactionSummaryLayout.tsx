@@ -115,7 +115,7 @@ function TransactionSummaryLayout({
                 {icon}
               </Flex>
             )}
-            <Flex grow gap="none">
+            <Flex shrink gap="none">
               <Flex row alignItems="center" gap="spacing4">
                 <Text numberOfLines={1} variant="bodyLarge">
                   {title}
