@@ -5,7 +5,7 @@ import { WalletConnect } from '@web3-react/walletconnect'
 import Column, { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
-import { uniwalletConnectConnection } from 'connection'
+import { ConnectionType, getConnection } from 'connection'
 import { UniwalletConnect } from 'connection/WalletConnect'
 import { QRCodeSVG } from 'qrcode.react'
 import { useCallback, useEffect, useState } from 'react'
@@ -37,19 +37,17 @@ const Divider = styled.div`
   width: 100%;
 `
 
+const connector = getConnection(ConnectionType.UNIWALLET).connector as WalletConnect
 export default function UniwalletModal() {
   const open = useModalIsOpen(ApplicationModal.UNIWALLET_CONNECT)
   const toggle = useToggleUniwalletModal()
 
   const [uri, setUri] = useState<string>()
   useEffect(() => {
-    ;(uniwalletConnectConnection.connector as WalletConnect).events.addListener(
-      UniwalletConnect.UNI_URI_AVAILABLE,
-      (uri) => {
-        uri && setUri(uri)
-        toggle()
-      }
-    )
+    connector.events.addListener(UniwalletConnect.UNI_URI_AVAILABLE, (uri) => {
+      uri && setUri(uri)
+      toggle()
+    })
   }, [toggle])
 
   const { account } = useWeb3React()
@@ -63,7 +61,7 @@ export default function UniwalletModal() {
   }, [account, open, toggle])
 
   const onClose = useCallback(() => {
-    uniwalletConnectConnection.connector.deactivate?.()
+    connector.deactivate?.()
     toggle()
   }, [toggle])
 

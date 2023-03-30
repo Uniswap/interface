@@ -1,15 +1,21 @@
-export const isInjected = Boolean(window.ethereum)
+import { isMobile } from 'utils/userAgent'
+
+export const getIsInjected = () => Boolean(window.ethereum)
 
 // When using Brave browser, `isMetaMask` is set to true when using the built-in wallet
 // This variable should be true only when using the MetaMask extension
 // https://wallet-docs.brave.com/ethereum/wallet-detection#compatability-with-metamask
 type NonMetaMaskFlag = 'isRabby' | 'isBraveWallet' | 'isTrustWallet' | 'isLedgerConnect'
 const allNonMetamaskFlags: NonMetaMaskFlag[] = ['isRabby', 'isBraveWallet', 'isTrustWallet', 'isLedgerConnect']
-export const isMetaMaskWallet = Boolean(
-  window.ethereum?.isMetaMask && !allNonMetamaskFlags.some((flag) => window.ethereum?.[flag])
-)
+const getIsKnownGenericInjector = () => allNonMetamaskFlags.some((flag) => window.ethereum?.[flag])
 
-export const isCoinbaseWallet = Boolean(window.ethereum?.isCoinbaseWallet)
+export const getIsMetaMaskWallet = () => Boolean(window.ethereum?.isMetaMask && !getIsKnownGenericInjector())
+
+export const getIsCoinbaseWallet = () => Boolean(window.ethereum?.isCoinbaseWallet)
+export const getIsCoinbaseWalletBrowser = () => isMobile && Boolean(window.ethereum?.isCoinbaseWallet)
+
+export const getIsKnownWalletBrowser = () =>
+  isMobile && (getIsCoinbaseWallet() || getIsMetaMaskWallet() || getIsKnownGenericInjector())
 
 // https://eips.ethereum.org/EIPS/eip-1193#provider-errors
 export enum ErrorCode {

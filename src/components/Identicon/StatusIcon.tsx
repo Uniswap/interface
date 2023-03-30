@@ -3,6 +3,7 @@ import { Unicon } from 'components/Unicon'
 import { Connection, ConnectionType } from 'connection'
 import useENSAvatar from 'hooks/useENSAvatar'
 import styled from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap } from 'theme/styles'
 
 import sockImg from '../../assets/svg/socks.svg'
@@ -58,9 +59,10 @@ const Socks = () => {
 }
 
 const MiniWalletIcon = ({ connection, side }: { connection: Connection; side: 'left' | 'right' }) => {
+  const isDarkMode = useIsDarkMode()
   return (
     <MiniIconContainer side={side}>
-      <MiniImg src={connection.icon} alt={`${connection.name} icon`} />
+      <MiniImg src={connection.getIcon?.(isDarkMode)} alt={`${connection.getName()} icon`} />
     </MiniIconContainer>
   )
 }
@@ -71,7 +73,7 @@ const MainWalletIcon = ({ connection, size }: { connection: Connection; size: nu
 
   if (!account) {
     return null
-  } else if (avatar || (connection.type === ConnectionType.INJECTED && connection.name === 'MetaMask')) {
+  } else if (avatar || (connection.type === ConnectionType.INJECTED && connection.getName() === 'MetaMask')) {
     return <Identicon size={size} />
   } else {
     return <Unicon address={account} size={size} />

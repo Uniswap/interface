@@ -6,7 +6,7 @@ import Loader from 'components/Icons/LoadingSpinner'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
 import WalletDropdown, { useWalletDrawer } from 'components/WalletDropdown'
 import PrefetchBalancesWrapper from 'components/WalletDropdown/PrefetchBalancesWrapper'
-import { useGetConnection } from 'connection'
+import { getConnection } from 'connection'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { getIsValidSwapQuote } from 'pages/Swap'
@@ -151,7 +151,6 @@ const StyledConnectButton = styled.button`
 
 function Web3StatusInner() {
   const { account, connector, chainId, ENSName } = useWeb3React()
-  const getConnection = useGetConnection()
   const connection = getConnection(connector)
   const {
     trade: { state: tradeState, trade },

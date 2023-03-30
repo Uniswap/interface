@@ -1,5 +1,5 @@
 import { ConnectionType } from 'connection'
-import { useGetConnection } from 'connection'
+import { getConnection } from 'connection'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 
@@ -12,7 +12,6 @@ const SELECTABLE_WALLETS = [
 
 export default function useOrderedConnections() {
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
-  const getConnection = useGetConnection()
   return useMemo(() => {
     const orderedConnectionTypes: ConnectionType[] = []
 
@@ -29,5 +28,5 @@ export default function useOrderedConnections() {
     orderedConnectionTypes.push(ConnectionType.NETWORK)
 
     return orderedConnectionTypes.map((connectionType) => getConnection(connectionType))
-  }, [getConnection, selectedWallet])
+  }, [selectedWallet])
 }
