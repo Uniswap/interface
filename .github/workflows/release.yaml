@@ -42,6 +42,8 @@ jobs:
     needs: tag
     if: ${{ needs.tag.outputs.new_tag != null }}
     runs-on: ubuntu-latest
+    environment:
+        name: release
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -105,7 +107,6 @@ jobs:
       - name: Update Cloudflare Pages deployment
         uses: cloudflare/pages-action@364c7ca09a4b57837c5967871d64a2c31adb8c0d
         with:
-          environment: release
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
