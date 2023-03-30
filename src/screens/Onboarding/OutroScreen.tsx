@@ -37,6 +37,7 @@ export function OutroScreen({ navigation, route: { params } }: Props): JSX.Eleme
       {
         wallet_type: params?.importType,
         accounts_imported_count: Object.entries(pendingAccounts).length,
+        wallets_imported: Object.keys(pendingAccounts),
         ...parentTrace,
       }
     )

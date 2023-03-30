@@ -72,6 +72,7 @@ export type EventProperties = {
   [MobileEventName.OnboardingCompleted]: {
     wallet_type: ImportType
     accounts_imported_count: number
+    wallets_imported: string[]
   } & BaseEventProperty
   [MobileEventName.PerformanceReport]: RenderPassReport
   [MobileEventName.PerformanceGraphql]: {
@@ -87,6 +88,7 @@ export type EventProperties = {
   [MobileEventName.WalletAdded]: {
     wallet_type: ImportType
     accounts_imported_count: number
+    wallets_imported: string[]
   } & BaseEventProperty
   [MobileEventName.WalletConnectSheetCompleted]: {
     request_type: WCEventType
