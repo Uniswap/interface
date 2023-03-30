@@ -9,22 +9,15 @@ import GNOSIS_ICON_URL from 'assets/images/gnosis.png'
 import METAMASK_ICON_URL from 'assets/images/metamask.svg'
 import UNIWALLET_ICON_URL from 'assets/images/uniwallet.svg'
 import WALLET_CONNECT_ICON_URL from 'assets/images/walletConnectIcon.svg'
-import INJECTED_DARK_ICON_URL from 'assets/svg/browser-wallet-dark.svg'
 import INJECTED_LIGHT_ICON_URL from 'assets/svg/browser-wallet-light.svg'
 import UNISWAP_LOGO_URL from 'assets/svg/logo.svg'
 import { SupportedChainId } from 'constants/chains'
-import { useMgtmEnabled } from 'featureFlags/flags/mgtm'
+import { useCallback } from 'react'
 import { isMobile, isNonIOSPhone } from 'utils/userAgent'
 
 import { RPC_URLS } from '../constants/networks'
 import { RPC_PROVIDERS } from '../constants/providers'
-import {
-  getIsCoinbaseWallet,
-  getIsCoinbaseWalletBrowser,
-  getIsInjected,
-  getIsKnownWalletBrowser,
-  getIsMetaMaskWallet,
-} from './utils'
+import { getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
 import { UniwalletConnect, WalletConnectPopup } from './WalletConnect'
 
 export enum ConnectionType {
@@ -41,7 +34,9 @@ export interface Connection {
   connector: Connector
   hooks: Web3ReactHooks
   type: ConnectionType
-  getIcon?(isDarkMode: boolean): string
+  // TODO(WEB-3130): add darkmode check for icons
+  getIcon?(): string
+  shouldDisplay(): boolean
   overrideActivate?: () => boolean
   isNew?: boolean
 }
@@ -53,29 +48,33 @@ function onError(error: Error) {
 const [web3Network, web3NetworkHooks] = initializeConnector<Network>(
   (actions) => new Network({ actions, urlMap: RPC_PROVIDERS, defaultChainId: 1 })
 )
-const networkConnection: Connection = {
+export const networkConnection: Connection = {
   getName: () => 'Network',
   connector: web3Network,
   hooks: web3NetworkHooks,
   type: ConnectionType.NETWORK,
+  shouldDisplay: () => false,
 }
 
-function isGenericInjector(): boolean {
-  return !getIsMetaMaskWallet() && getIsInjected() && !getIsCoinbaseWallet()
-}
+const getIsCoinbaseWalletBrowser = () => isMobile && getIsCoinbaseWallet()
+const getIsMetaMaskBrowser = () => isMobile && getIsMetaMaskWallet()
+const getIsInjectedMobileBrowser = () => getIsCoinbaseWalletBrowser() || getIsMetaMaskBrowser()
+
+const getShouldAdvertiseMetaMask = () =>
+  !getIsMetaMaskWallet() && !isMobile && (!getIsInjected() || getIsCoinbaseWallet())
+const getIsGenericInjector = () => getIsInjected() && !getIsMetaMaskWallet() && !getIsCoinbaseWallet()
 
 const [web3Injected, web3InjectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))
 const injectedConnection: Connection = {
-  getName: () => (getIsMetaMaskWallet() ? 'MetaMask' : isGenericInjector() ? 'Browser Wallet' : 'Install MetaMask'),
+  getName: () => (getIsGenericInjector() ? 'Browser Wallet' : 'MetaMask'),
   connector: web3Injected,
   hooks: web3InjectedHooks,
   type: ConnectionType.INJECTED,
-  getIcon(isDarkMode: boolean) {
-    return isGenericInjector() ? (isDarkMode ? INJECTED_DARK_ICON_URL : INJECTED_LIGHT_ICON_URL) : METAMASK_ICON_URL
-  },
-  // If on non-injected browser, prompt user to install Metamask
-  overrideActivate() {
-    if (!getIsMetaMaskWallet() && !isGenericInjector()) {
+  getIcon: () => (getIsGenericInjector() ? INJECTED_LIGHT_ICON_URL : METAMASK_ICON_URL),
+  shouldDisplay: () => getIsMetaMaskWallet() || getShouldAdvertiseMetaMask() || getIsGenericInjector(),
+  // If on non-injected, non-mobile browser, prompt user to install Metamask
+  overrideActivate: () => {
+    if (!getIsMetaMaskWallet() && !getIsGenericInjector()) {
       window.open('https://metamask.io/', 'inst_metamask')
       return true
     }
@@ -84,34 +83,37 @@ const injectedConnection: Connection = {
 }
 
 const [web3GnosisSafe, web3GnosisSafeHooks] = initializeConnector<GnosisSafe>((actions) => new GnosisSafe({ actions }))
-const gnosisSafeConnection: Connection = {
+export const gnosisSafeConnection: Connection = {
   getName: () => 'Gnosis Safe',
   connector: web3GnosisSafe,
   hooks: web3GnosisSafeHooks,
   type: ConnectionType.GNOSIS_SAFE,
   getIcon: () => GNOSIS_ICON_URL,
+  shouldDisplay: () => false,
 }
 
 const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletConnectPopup>(
   (actions) => new WalletConnectPopup({ actions, onError })
 )
-const walletConnectConnection: Connection = {
+export const walletConnectConnection: Connection = {
   getName: () => 'WalletConnect',
   connector: web3WalletConnect,
   hooks: web3WalletConnectHooks,
   type: ConnectionType.WALLET_CONNECT,
   getIcon: () => WALLET_CONNECT_ICON_URL,
+  shouldDisplay: () => !getIsInjectedMobileBrowser(),
 }
 
 const [web3UniwalletConnect, web3UniwalletConnectHooks] = initializeConnector<UniwalletConnect>(
   (actions) => new UniwalletConnect({ actions, onError })
 )
-const uniwalletConnectConnection: Connection = {
+export const uniwalletConnectConnection: Connection = {
   getName: () => 'Uniswap Wallet',
   connector: web3UniwalletConnect,
   hooks: web3UniwalletConnectHooks,
   type: ConnectionType.UNIWALLET,
   getIcon: () => UNIWALLET_ICON_URL,
+  shouldDisplay: () => Boolean(!getIsInjectedMobileBrowser() && !isNonIOSPhone),
   isNew: true,
 }
 
@@ -135,9 +137,11 @@ const coinbaseWalletConnection: Connection = {
   hooks: web3CoinbaseWalletHooks,
   type: ConnectionType.COINBASE_WALLET,
   getIcon: () => COINBASE_ICON_URL,
+  shouldDisplay: () =>
+    Boolean((isMobile && !getIsInjectedMobileBrowser()) || !isMobile || getIsCoinbaseWalletBrowser()),
   // If on a mobile browser that isn't the coinbase wallet browser, deeplink to the coinbase wallet app
-  overrideActivate() {
-    if (isMobile && !getIsCoinbaseWalletBrowser()) {
+  overrideActivate: () => {
+    if (isMobile && !getIsInjectedMobileBrowser()) {
       window.open('https://go.cb-w.com/mtUDhEZPy1', 'cbwallet')
       return true
     }
@@ -145,53 +149,44 @@ const coinbaseWalletConnection: Connection = {
   },
 }
 
-export function getConnection(c: Connector | ConnectionType) {
-  if (c instanceof Connector) {
-    const connection = [
-      injectedConnection,
-      coinbaseWalletConnection,
-      walletConnectConnection,
-      uniwalletConnectConnection,
-      networkConnection,
-      gnosisSafeConnection,
-    ].find((connection) => connection.connector === c)
-    if (!connection) {
-      throw Error('unsupported connector')
-    }
-    return connection
-  } else {
-    switch (c) {
-      case ConnectionType.INJECTED:
-        return injectedConnection
-      case ConnectionType.COINBASE_WALLET:
-        return coinbaseWalletConnection
-      case ConnectionType.WALLET_CONNECT:
-        return walletConnectConnection
-      case ConnectionType.UNIWALLET:
-        return uniwalletConnectConnection
-      case ConnectionType.NETWORK:
-        return networkConnection
-      case ConnectionType.GNOSIS_SAFE:
-        return gnosisSafeConnection
-    }
-  }
+function getConnections() {
+  return [
+    uniwalletConnectConnection,
+    injectedConnection,
+    walletConnectConnection,
+    coinbaseWalletConnection,
+    gnosisSafeConnection,
+    networkConnection,
+  ]
 }
 
-// Returns a list of connections that should be displayed for the current browser/wallet enviroment
-export function useDisplayableConnections(): Connection[] {
-  const mgtmEnabled = useMgtmEnabled()
+export function useConnections() {
+  return getConnections()
+}
 
-  if (getIsKnownWalletBrowser()) {
-    // Return only a single connection option for known wallet browsers
-    return [getIsCoinbaseWalletBrowser() ? coinbaseWalletConnection : injectedConnection]
-  }
-
-  const connections: Connection[] = []
-
-  if (mgtmEnabled && !isNonIOSPhone) connections.push(uniwalletConnectConnection)
-
-  // Includes injected option on all desktop browsers and in unknown injected wallet browsers
-  if (!isMobile || getIsInjected()) connections.push(injectedConnection)
-
-  return [...connections, walletConnectConnection, coinbaseWalletConnection]
+export function useGetConnection() {
+  return useCallback((c: Connector | ConnectionType) => {
+    if (c instanceof Connector) {
+      const connection = getConnections().find((connection) => connection.connector === c)
+      if (!connection) {
+        throw Error('unsupported connector')
+      }
+      return connection
+    } else {
+      switch (c) {
+        case ConnectionType.INJECTED:
+          return injectedConnection
+        case ConnectionType.COINBASE_WALLET:
+          return coinbaseWalletConnection
+        case ConnectionType.WALLET_CONNECT:
+          return walletConnectConnection
+        case ConnectionType.UNIWALLET:
+          return uniwalletConnectConnection
+        case ConnectionType.NETWORK:
+          return networkConnection
+        case ConnectionType.GNOSIS_SAFE:
+          return gnosisSafeConnection
+      }
+    }
+  }, [])
 }

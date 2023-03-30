@@ -3,7 +3,6 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap
 import Loader from 'components/Icons/LoadingSpinner'
 import { Connection, ConnectionType } from 'connection'
 import styled from 'styled-components/macro'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 
 import NewBadge from './NewBadge'
@@ -68,8 +67,6 @@ type OptionProps = {
   pendingConnectionType?: ConnectionType
 }
 export default function Option({ connection, pendingConnectionType, activate }: OptionProps) {
-  const isDarkMode = useIsDarkMode()
-
   const isPending = pendingConnectionType === connection.type
   const content = (
     <TraceEvent
@@ -86,7 +83,7 @@ export default function Option({ connection, pendingConnectionType, activate }: 
       >
         <OptionCardLeft>
           <IconWrapper>
-            <img src={connection.getIcon?.(isDarkMode)} alt={`${connection.getName()} icon`} />
+            <img src={connection.getIcon?.()} alt="Icon" />
           </IconWrapper>
           <HeaderText>{connection.getName()}</HeaderText>
           {connection.isNew && <NewBadge />}
