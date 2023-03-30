@@ -485,9 +485,11 @@ export default function Vote() {
               <Clock size="12px" />{' '}
               {daoInfo
                 ? readableTime(
-                    daoInfo.first_epoch_start_timestamp +
-                      daoInfo.current_epoch * daoInfo.epoch_period_in_seconds -
-                      Date.now() / 1000,
+                    Math.floor(
+                      daoInfo.first_epoch_start_timestamp +
+                        daoInfo.current_epoch * daoInfo.epoch_period_in_seconds -
+                        Date.now() / 1000,
+                    ),
                   ) + ' left'
                 : '--:--:--'}
             </Box>

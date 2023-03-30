@@ -1,4 +1,4 @@
-import { ChainId, MaxUint256, Token, TokenAmount } from '@kyberswap/ks-sdk-core'
+import { ChainId, Token, TokenAmount } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { parseUnits } from 'ethers/lib/utils'
 import { useEffect, useState } from 'react'
@@ -48,15 +48,17 @@ export default function MigrateModal({
   const [value, setValue] = useState('1')
   const [error, setError] = useState('')
   const [approval, approveCallback] = useApproveCallback(
-    TokenAmount.fromRawAmount(
-      new Token(
-        chainId === ChainId.GÖRLI ? ChainId.GÖRLI : ChainId.MAINNET,
-        kyberDAOInfo?.KNCLAddress || '',
-        18,
-        'KNCL',
-      ),
-      MaxUint256,
-    ),
+    value
+      ? TokenAmount.fromRawAmount(
+          new Token(
+            chainId === ChainId.GÖRLI ? ChainId.GÖRLI : ChainId.MAINNET,
+            kyberDAOInfo?.KNCLAddress || '',
+            18,
+            'KNCL',
+          ),
+          parseUnits(value, 18).toString(),
+        )
+      : undefined,
     kyberDAOInfo?.KNCAddress,
   )
   const oldKNCBalance = useTokenBalance(kyberDAOInfo?.KNCLAddress || '')
