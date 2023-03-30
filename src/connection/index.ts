@@ -18,7 +18,13 @@ import { isMobile } from 'utils/userAgent'
 
 import { RPC_URLS } from '../constants/networks'
 import { RPC_PROVIDERS } from '../constants/providers'
-import { getIsCoinbaseWalletBrowser, getIsInjected, getIsKnownWalletBrowser, getIsMetaMaskWallet } from './utils'
+import {
+  getIsCoinbaseWallet,
+  getIsCoinbaseWalletBrowser,
+  getIsInjected,
+  getIsKnownWalletBrowser,
+  getIsMetaMaskWallet,
+} from './utils'
 import { UniwalletConnect, WalletConnectPopup } from './WalletConnect'
 
 export enum ConnectionType {
@@ -55,12 +61,12 @@ const networkConnection: Connection = {
 }
 
 function isGenericInjector(): boolean {
-  return !getIsMetaMaskWallet() && getIsInjected()
+  return !getIsMetaMaskWallet() && getIsInjected() && !getIsCoinbaseWallet()
 }
 
 const [web3Injected, web3InjectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))
 const injectedConnection: Connection = {
-  getName: () => (isGenericInjector() ? 'Browser Wallet' : getIsMetaMaskWallet() ? 'MetaMask' : 'Install MetaMask'),
+  getName: () => (getIsMetaMaskWallet() ? 'MetaMask' : isGenericInjector() ? 'Browser Wallet' : 'Install MetaMask'),
   connector: web3Injected,
   hooks: web3InjectedHooks,
   type: ConnectionType.INJECTED,

@@ -11,7 +11,7 @@ const getIsKnownGenericInjector = () => allNonMetamaskFlags.some((flag) => windo
 
 export const getIsMetaMaskWallet = () => Boolean(window.ethereum?.isMetaMask && !getIsKnownGenericInjector())
 
-const getIsCoinbaseWallet = () => Boolean(window.ethereum?.isCoinbaseWallet)
+export const getIsCoinbaseWallet = () => Boolean(window.ethereum?.isCoinbaseWallet)
 export const getIsCoinbaseWalletBrowser = () => isMobile && Boolean(window.ethereum?.isCoinbaseWallet)
 
 export const getIsKnownWalletBrowser = () =>
