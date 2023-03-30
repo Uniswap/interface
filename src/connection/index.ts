@@ -42,7 +42,6 @@ export interface Connection {
   hooks: Web3ReactHooks
   type: ConnectionType
   getIcon?(isDarkMode: boolean): string
-  darkModeIcon?: string
   overrideActivate?: () => boolean
   isNew?: boolean
 }
