@@ -25,6 +25,8 @@ jobs:
   tag:
     needs: wait-on-tests
     runs-on: ubuntu-latest
+    environment:
+        name: release
     outputs:
       new_tag: ${{ steps.github-tag-action.outputs.new_tag }}
       changelog: ${{ steps.github-tag-action.outputs.changelog }}
@@ -105,7 +107,6 @@ jobs:
       - name: Update Cloudflare Pages deployment
         uses: cloudflare/pages-action@364c7ca09a4b57837c5967871d64a2c31adb8c0d
         with:
-          environment: release
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
