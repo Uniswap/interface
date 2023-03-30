@@ -75,7 +75,7 @@ const injectedConnection: Connection = {
   },
   // If on non-injected browser, prompt user to install Metamask
   overrideActivate() {
-    if (!getIsMetaMaskWallet()) {
+    if (!getIsMetaMaskWallet() && !isGenericInjector()) {
       window.open('https://metamask.io/', 'inst_metamask')
       return true
     }
