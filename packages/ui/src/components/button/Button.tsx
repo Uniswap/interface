@@ -1,42 +1,115 @@
-import { Stack, styled } from 'tamagui'
-import { ComponentProps, PropsWithChildren } from 'react'
-import { Text } from '../text/Text'
+import { forwardRef } from 'react'
 
-export const ButtonFrame = styled(Stack, {
-  name: 'ButtonFrame',
-  tag: 'button',
+import {
+  ButtonFrame,
+  ButtonText,
+  GetProps,
+  ButtonProps as TamaguiButtonProps,
+  TamaguiElement,
+  styled,
+  themeable,
+  useButton,
+} from 'tamagui'
 
-  justifyContent: 'center',
-  alignItems: 'center',
-  flexWrap: 'nowrap',
-  flexDirection: 'row',
-  cursor: 'pointer',
-
-  // TODO: move to `tamagui` or
-  // https://github.com/tamagui/tamagui/blob/master/packages/button/src/Button.tsx
-})
-
-export const ButtonText = styled(Text, {
-  name: 'ButtonText',
-  userSelect: 'none',
-  cursor: 'pointer',
-  // flexGrow 1 leads to inconsistent native style where text pushes to start of view
-  flexGrow: 0,
-  flexShrink: 1,
-  ellipse: true,
-
-  // TODO: ditto
-})
-
-// TODO: use extractable and themable for compile time benefits
-// or migrate to tamaui
-export function Button({
-  children,
-  ...props
-}: PropsWithChildren<ComponentProps<typeof ButtonFrame>>): JSX.Element {
-  return (
-    <ButtonFrame {...props}>
-      <ButtonText>{children}</ButtonText>
-    </ButtonFrame>
-  )
+export enum ButtonSize {
+  Small = 'small',
+  Medium = 'medium',
+  Large = 'large',
 }
+
+export enum ButtonEmphasis {
+  Primary = 'primary',
+  Secondary = 'secondary',
+  Tertiary = 'tertiary',
+  Detrimental = 'detrimental',
+  Warning = 'warning',
+}
+
+const CustomButtonFrame = styled(ButtonFrame, {
+  name: 'Button',
+  tag: 'button',
+  // instead of setting border: 0 when no border, make it 1px but transparent, so the
+  // size or alignment of a button won't change unexpectedly between variants
+  borderWidth: 1,
+
+  variants: {
+    buttonSize: {
+      [ButtonSize.Small]: {
+        padding: '$spacing8',
+        borderRadius: '$rounded8',
+      },
+      [ButtonSize.Medium]: {
+        padding: '$spacing12',
+        borderRadius: '$rounded16',
+      },
+      [ButtonSize.Large]: {
+        padding: '$spacing16',
+        borderRadius: '$rounded20',
+      },
+    },
+    buttonEmphasis: {
+      [ButtonEmphasis.Primary]: {
+        backgroundColor: '$magentaVibrant',
+        borderColor: '$none',
+      },
+      [ButtonEmphasis.Secondary]: {
+        backgroundColor: '$background3',
+        borderColor: '$none',
+      },
+      [ButtonEmphasis.Tertiary]: {
+        backgroundColor: '$none',
+        borderColor: '$backgroundOutline',
+      },
+      [ButtonEmphasis.Detrimental]: {
+        backgroundColor: '$accentCriticalSoft',
+        borderColor: '$none',
+      },
+      [ButtonEmphasis.Warning]: {
+        backgroundColor: '$accentWarningSoft',
+        borderColor: '$none',
+      },
+    },
+  },
+
+  defaultVariants: {
+    buttonSize: ButtonSize.Medium,
+    buttonEmphasis: ButtonEmphasis.Primary,
+  },
+})
+
+const CustomButtonText = styled(ButtonText, {
+  variants: {
+    buttonEmphasis: {
+      [ButtonEmphasis.Primary]: {
+        color: '$white',
+      },
+      [ButtonEmphasis.Secondary]: {
+        color: '$textPrimary',
+      },
+      [ButtonEmphasis.Tertiary]: {
+        color: '$textPrimary',
+      },
+      [ButtonEmphasis.Detrimental]: {
+        color: '$accentCritical',
+      },
+      [ButtonEmphasis.Warning]: {
+        color: '$accentWarning',
+      },
+    },
+  },
+})
+
+type CustomButtonProps = GetProps<typeof CustomButtonFrame>
+
+type CustomButtonTextProps = GetProps<typeof CustomButtonText>
+
+export type ButtonProps = TamaguiButtonProps &
+  CustomButtonProps &
+  CustomButtonTextProps
+
+export const Button = themeable(
+  forwardRef<TamaguiElement, ButtonProps>((propsIn, ref) => {
+    const { props } = useButton(propsIn, { Text: CustomButtonText })
+    return <CustomButtonFrame {...props} ref={ref} role="button" />
+  })
+)

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Text } from 'ui/src'
+import { Button } from 'ui/src/components/button/Button'
 import {
-  Button,
   Card,
   Circle,
   Form,

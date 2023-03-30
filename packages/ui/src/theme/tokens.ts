@@ -28,6 +28,7 @@ const iconSize = {
   icon36: 36,
   icon40: 40,
   icon64: 64,
+  true: 40,
 }
 
 const imageSize = {
@@ -39,6 +40,24 @@ const imageSize = {
   image36: 36,
   image40: 40,
   image48: 48,
+  true: 40,
+}
+
+const fontSize = {
+  headlineLarge: 40,
+  headlineMedium: 32,
+  headlineSmall: 24,
+  subheadLarge: 20,
+  subheadSmall: 15,
+  bodyLarge: 17,
+  bodySmall: 15,
+  bodyMicro: 12,
+  buttonLabelLarge: 20,
+  buttonLabelMedium: 17,
+  buttonLabelSmall: 15,
+  buttonLabelMicro: 12,
+  monospace: 15,
+  true: 'bodySmall',
 }
 
 const radius = {
@@ -51,6 +70,7 @@ const radius = {
   rounded24: 24,
   rounded32: 32,
   roundedFull: 999999,
+  true: 'none',
 }
 
 // Standard z-index system https://getbootstrap.com/docs/5.0/layout/z-index/
@@ -60,6 +80,7 @@ export const tokens = createTokens({
   color,
   space,
   size,
+  fontSize,
   iconSize,
   imageSize,
   zIndex,

@@ -2,7 +2,7 @@ import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs'
 
 import { Box } from '../layout/Box'
 import { Text } from '../text/Text'
-import { Button } from './Button'
+import { Button, ButtonEmphasis, ButtonSize } from './Button'
 
 <Meta title="WIP/Button" component={Button} />
 
@@ -17,10 +17,8 @@ _Add description..._
     name="Button"
     args={{
       children: 'Click me',
-      backgroundColor: '$accentAction',
-      borderRadius: '$rounded16',
-      width: '30%',
-      padding: '$spacing16',
+      buttonEmphasis: ButtonEmphasis.Primary,
+      buttonSize: ButtonSize.Medium,
       onClick: () => alert('clicked')
     }}>
     {Template.bind({})}
