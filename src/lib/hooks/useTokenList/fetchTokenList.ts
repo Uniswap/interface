@@ -43,23 +43,24 @@ export default async function fetchTokenList(
     urls = uriToHttp(listUrl)
   }
 
+  if (urls.length === 0) {
+    throw new Error('Unrecognized list URL protocol.')
+  }
+
   for (let i = 0; i < urls.length; i++) {
     const url = urls[i]
-    const isLast = i === urls.length - 1
     let response
     try {
       response = await fetch(url, { credentials: 'omit' })
     } catch (error) {
       const message = `failed to fetch list: ${listUrl}`
       console.debug(message, error)
-      if (isLast) throw new Error(message)
       continue
     }
 
     if (!response.ok) {
       const message = `failed to fetch list: ${listUrl}`
       console.debug(message, response.statusText)
-      if (isLast) throw new Error(message)
       continue
     }
 
@@ -71,10 +72,9 @@ export default async function fetchTokenList(
     } catch (error) {
       const message = `failed to parse list response: ${listUrl}`
       console.debug(message, error)
-      if (isLast) throw new Error(message)
       continue
     }
   }
 
-  throw new Error('Unrecognized list URL protocol.')
+  throw new Error(`No valid list URL provided for ${listUrl}.`)
 }
