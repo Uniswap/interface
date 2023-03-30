@@ -42,7 +42,7 @@ describe('fetchTokenList', () => {
   })
 
   it('fetches and validates a list from an ENS address', async () => {
-    jest.mock('lib/utils/contentHashToUri', () =>
+    jest.mock('../../utils/contenthashToUri', () =>
       jest.fn().mockImplementation(() => 'ipfs://QmPgEqyV3m8SB52BS2j2mJpu9zGprhj2BGCHtRiiw2fdM1')
     )
     const url = 'example.eth'
