@@ -8,7 +8,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { isSentryEnabled } from 'utils/env'
 import { getEnvName, isProductionEnv } from 'utils/env'
 
-import { onerror, onunhandledrejection } from './errors'
+import { beforeSendAddMechanism, onerror, onunhandledrejection } from './errors'
 
 export { trace } from './trace'
 
@@ -27,10 +27,6 @@ Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
   release: process.env.REACT_APP_GIT_COMMIT_HASH,
   environment: getEnvName(),
-  // Exception reporting configuration:
-  enabled: isSentryEnabled(),
-  // Performance tracing configuration:
-  tracesSampleRate: Number(process.env.REACT_APP_SENTRY_TRACES_SAMPLE_RATE ?? 0),
   integrations: [
     new GlobalHandlers({
       // Global handlers are set above, not defaulted.
@@ -42,6 +38,9 @@ Sentry.init({
       startTransactionOnPageLoad: true,
     }),
   ],
+  enabled: isSentryEnabled(),
+  beforeSend: beforeSendAddMechanism,
+  tracesSampleRate: Number(process.env.REACT_APP_SENTRY_TRACES_SAMPLE_RATE ?? 0),
 })
 
 initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {

@@ -1,11 +1,26 @@
 import * as Sentry from '@sentry/react'
+import { addExceptionMechanism } from '@sentry/utils'
 
-// We still want handled/mechanism tags despite using our own handler. These exceptions are still unhandled.
-const ON_ERROR_TAGS = { handled: 'no', mechanism: 'onerror' }
-const ON_UNHANDLED_REJECTION_TAGS = { handled: 'no', mechanism: 'onunhandledrejection' }
+const ON_ERROR = 'onerror'
+const ON_UNHANDLED_REJECTION = 'onunhandledrejection'
+
+/** Adds a mechanism to events which have been sent from our global exception handlers. */
+export function beforeSendAddMechanism(event: Sentry.Event): Sentry.Event {
+  // Global exception handlers set an extra.mechanism, but the actual mechanism must be set on the event explicitly for
+  // Sentry to correctly process and display it in the Sentry UI. We still want mechanism to be set, despite using our
+  // own handler, because it aids in identifying unhandled errors and rejections.
+  if (event.extra?.mechanism) {
+    if (event.extra.mechanism === ON_ERROR || event.extra.mechanism === ON_UNHANDLED_REJECTION) {
+      addExceptionMechanism(event, { handled: false, type: event.extra.mechanism })
+      delete event.extra.mechanism // delete this so it doesn't clutter the Sentry UI
+    }
+  }
+
+  return event
+}
 
 export function onerror(event: Event | string, source?: string, lineno?: number, colno?: number, error?: Error) {
-  Sentry.captureException(error ?? event, { tags: ON_ERROR_TAGS })
+  Sentry.captureException(error ?? event, { extra: { mechanism: ON_ERROR } })
 }
 
 export function onunhandledrejection({ reason }: { reason: unknown }) {
@@ -25,7 +40,7 @@ export function onunhandledrejection({ reason }: { reason: unknown }) {
     }
   }
 
-  Sentry.captureException(reason, { tags: ON_UNHANDLED_REJECTION_TAGS })
+  Sentry.captureException(reason, { extra: { mechanism: ON_UNHANDLED_REJECTION } })
 }
 
 /** Identifies ethers request errors (as thrown by {@type import(@ethersproject/web).fetchJson}). */
