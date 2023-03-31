@@ -37,6 +37,7 @@ import {
   v36Schema,
   v37Schema,
   v38Schema,
+  v39Schema,
   v3Schema,
   v4Schema,
   v5Schema,
@@ -1067,5 +1068,12 @@ describe('Redux state migrations', () => {
     expect(v38Stub.experiments).toBeDefined()
     const v39 = migrations[39](v38Stub)
     expect(v39.experiments).toBeUndefined()
+  })
+
+  it('migrates from v39 to 40', () => {
+    const v39Stub = { ...v39Schema }
+    const v40 = migrations[40](v39Stub)
+    // walletConnect slice still exists but should not be persisted
+    expect(v40.walletConnect).toBeUndefined()
   })
 })

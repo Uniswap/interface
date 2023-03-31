@@ -259,6 +259,8 @@ delete v38SchemaIntermediate.experiments
 
 export const v39Schema = { ...v38SchemaIntermediate }
 
+export const v40Schema = { ...v39Schema }
+
 // TODO: [MOB-3864] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v39Schema => v39Schema
+export const getSchema = (): typeof v40Schema => v40Schema

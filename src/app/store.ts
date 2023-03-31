@@ -63,7 +63,6 @@ const whitelist: Array<ReducerNames> = [
   'tokens',
   'transactions',
   'wallet',
-  'walletConnect',
   ensApi.reducerPath,
   trmApi.reducerPath,
 ]
@@ -72,7 +71,7 @@ export const persistConfig = {
   key: 'root',
   storage: reduxStorage,
   whitelist,
-  version: 39,
+  version: 40,
   migrate: createMigrate(migrations),
 }
 

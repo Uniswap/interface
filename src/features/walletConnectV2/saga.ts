@@ -7,22 +7,26 @@ import { IWeb3Wallet, Web3Wallet, Web3WalletTypes } from '@walletconnect/web3wal
 import { Alert } from 'react-native'
 import { EventChannel, eventChannel } from 'redux-saga'
 import { CallEffect, ChannelTakeEffect, PutEffect } from 'redux-saga/effects'
+import { appSelect } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
 import { config } from 'src/config'
-import { ALL_SUPPORTED_CHAIN_IDS, CHAIN_INFO } from 'src/constants/chains'
+import { ALL_SUPPORTED_CHAIN_IDS, ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
+import { selectAccounts } from 'src/features/wallet/selectors'
 import { registerWCv2ClientForPushNotifications } from 'src/features/walletConnect/api'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { EthMethod } from 'src/features/walletConnect/types'
 import {
   addPendingSession,
   addRequest,
+  addSession,
   removeSession,
 } from 'src/features/walletConnect/walletConnectSlice'
 import {
   getAccountAddressFromEIP155String,
   getChainIdFromEIP155String,
+  getSupportedWalletConnectChains,
   parseProposalNamespaces,
   parseSignRequest,
   parseTransactionRequest,
@@ -260,7 +264,57 @@ export function* watchWalletConnectV2Events(): Generator<
   }
 }
 
+export function* populateActiveSessions() {
+  // Fetch all active sessions and add to store
+  const sessions = wcWeb3Wallet.getActiveSessions()
+
+  const accounts = yield* appSelect(selectAccounts)
+
+  for (const session of Object.values(sessions)) {
+    // Get account address connected to the session from first namespace
+    const namespaces = Object.values(session.namespaces)
+    const eip155Account = namespaces[0]?.accounts[0]
+    if (!eip155Account) continue
+
+    const accountAddress = getAccountAddressFromEIP155String(eip155Account)
+
+    if (!accountAddress) continue
+
+    // Verify account address for session exists in wallet's accounts
+    const matchingAccount = Object.values(accounts).find(
+      (account) => account.address.toLowerCase() === accountAddress.toLowerCase()
+    )
+    if (!matchingAccount) continue
+
+    // Get all chains for session namespaces, supporting `eip155:CHAIN_ID` and `eip155` namespace formats
+    const chains: ChainId[] = []
+    Object.entries(session.namespaces).forEach(([key, namespace]) => {
+      const eip155Chains = key.includes(':') ? [key] : namespace.chains
+      chains.push(...getSupportedWalletConnectChains(eip155Chains))
+    })
+
+    yield* put(
+      addSession({
+        wcSession: {
+          id: session.topic,
+          dapp: {
+            name: session.peer.metadata.name,
+            url: session.peer.metadata.url,
+            icon: session.peer.metadata.icons[0] ?? null,
+            version: '2',
+          },
+          chains,
+          namespaces: session.namespaces,
+          version: '2',
+        },
+        account: accountAddress,
+      })
+    )
+  }
+}
+
 export function* walletConnectV2Saga(): Generator<CallEffect<void>, void, unknown> {
   yield* call(initializeWeb3Wallet)
+  yield* call(populateActiveSessions)
   yield* call(watchWalletConnectV2Events)
 }

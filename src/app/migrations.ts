@@ -550,4 +550,10 @@ export const migrations = {
     delete newState.experiments
     return newState
   },
+  40: function removePersistedWalletConnectSlice(state: any) {
+    // Remove `walletConnect` slice from persisted whitelist
+    const newState = { ...state }
+    delete newState.walletConnect
+    return newState
+  },
 }
