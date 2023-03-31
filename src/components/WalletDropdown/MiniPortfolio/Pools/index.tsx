@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
-import { checkStringForURL } from 'utils/urlChecks'
+import { hasURL } from 'utils/urlChecks'
 
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
@@ -111,7 +111,7 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
     [chainId, pool.token0.address, pool.token0.symbol, pool.token1.address, pool.token1.symbol]
   )
 
-  const shouldHidePosition = checkStringForURL(pool.token0.symbol) || checkStringForURL(pool.token1.symbol)
+  const shouldHidePosition = hasURL(pool.token0.symbol) || hasURL(pool.token1.symbol)
 
   if (shouldHidePosition) {
     return null
