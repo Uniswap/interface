@@ -18,7 +18,9 @@ describe('fetchTokenList', () => {
     fetch.mockOnceIf(url, () => {
       throw new Error()
     })
-    await expect(fetchTokenList(url, resolver)).rejects.toThrow(`No valid list URL provided for ${url}.`)
+    await expect(fetchTokenList(url, resolver)).rejects.toThrow(
+      `No valid token list found at any URLs derived from ${url}.`
+    )
     expect(console.debug).toHaveBeenCalled()
     expect(resolver).not.toHaveBeenCalled()
   })
@@ -62,7 +64,9 @@ describe('fetchTokenList', () => {
   it('logs a debug statement if the response is not successful', async () => {
     const url = 'https://example.com/invalid-tokenlist.json'
     fetch.mockOnceIf(url, () => Promise.resolve({ status: 404 }))
-    await expect(fetchTokenList(url, resolver)).rejects.toThrow(`No valid list URL provided for ${url}.`)
+    await expect(fetchTokenList(url, resolver)).rejects.toThrow(
+      `No valid token list found at any URLs derived from ${url}.`
+    )
     expect(console.debug).toHaveBeenCalled()
     expect(resolver).not.toHaveBeenCalled()
   })
@@ -76,7 +80,9 @@ describe('fetchTokenList', () => {
   it('throws for a list with invalid json response', async () => {
     const url = 'https://example.com/invalid-tokenlist.json'
     fetch.mockOnceIf(url, () => Promise.resolve('invalid json'))
-    await expect(fetchTokenList(url, resolver)).rejects.toThrow(`No valid list URL provided for ${url}.`)
+    await expect(fetchTokenList(url, resolver)).rejects.toThrow(
+      `No valid token list found at any URLs derived from ${url}.`
+    )
     expect(console.debug).toHaveBeenCalled()
     expect(resolver).not.toHaveBeenCalled()
   })
