@@ -28,4 +28,12 @@ describe('onunhandledrejection', () => {
       tags: { handled: 'no', mechanism: 'onunhandledrejection' },
     })
   })
+
+  it('ignores eth_blockNumber exceptions', () => {
+    const reason = new (class extends Error {
+      requestBody = JSON.stringify({ method: 'eth_blockNumber', params: [] })
+    })()
+    onunhandledrejection({ reason })
+    expect(Sentry.captureException).not.toHaveBeenCalled()
+  })
 })
