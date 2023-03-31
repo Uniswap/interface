@@ -87,10 +87,12 @@ if (typeof WALLETCONNECT_PROJECT_ID === 'undefined') {
 }
 
 const [web3WalletConnectV2, web3WalletConnectV2Hooks] = initializeConnector<WalletConnectV2>((actions) => {
+  const [mainnet, ...optionalChains] = NETWORK_SELECTOR_CHAINS
   return new WalletConnectV2({
     actions,
     options: {
-      chains: NETWORK_SELECTOR_CHAINS,
+      chains: [mainnet],
+      optionalChains,
       rpcMap: RPC_URLS_WITHOUT_FALLBACKS,
       projectId: WALLETCONNECT_PROJECT_ID,
       qrModalOptions: {
