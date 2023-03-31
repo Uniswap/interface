@@ -33,7 +33,6 @@ jest.mock('@web3-react/core', () => {
 })
 
 const susToken0Address = '0x39AA39c021dfbaE8faC545936693aC917d5E7563'
-const token1Address = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
 
 beforeEach(() => {
   const susToken0 = new Token(1, susToken0Address, 8, 'https://www.example.com', 'example.com coin')
