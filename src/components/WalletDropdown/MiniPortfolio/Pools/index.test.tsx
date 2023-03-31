@@ -10,7 +10,7 @@ import useMultiChainPositions from './useMultiChainPositions'
 jest.mock('./useMultiChainPositions')
 const mockUseMultiChainPositions = useMultiChainPositions as jest.MockedFunction<typeof useMultiChainPositions>
 
-const owner = '0x48c89D77ae34Ae475e4523b25aB01e363dce5A78'
+const owner = '0xf5b6bb25f5beaea03dd014c6ef9fa9f3926bf36c'
 
 const pool = new Pool(
   USDC_MAINNET,
