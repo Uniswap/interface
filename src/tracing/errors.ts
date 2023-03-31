@@ -1,9 +1,11 @@
 import * as Sentry from '@sentry/react'
 
+// We still want handled/mechanism tags despite using our own handler. These exceptions are still unhandled.
+const ON_ERROR_TAGS = { handled: 'no', mechanism: 'onerror' }
+const ON_UNHANDLED_REJECTION_TAGS = { handled: 'no', mechanism: 'onunhandledrejection' }
+
 export function onerror(event: Event | string, source?: string, lineno?: number, colno?: number, error?: Error) {
-  // We still send handled/mechanism tags despite using our own handler. These errors are still unhandled.
-  const tags = { handled: 'no', mechanism: 'onerror' }
-  Sentry.captureException(error ?? event, { tags })
+  Sentry.captureException(error ?? event, { tags: ON_ERROR_TAGS })
 }
 
 export function onunhandledrejection({ reason }: { reason: unknown }) {
@@ -24,7 +26,5 @@ export function onunhandledrejection({ reason }: { reason: unknown }) {
     }
   }
 
-  // We still send handled/mechanism tags despite using our own handler. These rejections are still unhandled.
-  const tags = { handled: 'no', mechanism: 'onunhandledrejection' }
-  Sentry.captureException(reason, { tags })
+  Sentry.captureException(reason, { tags: ON_UNHANDLED_REJECTION_TAGS })
 }
