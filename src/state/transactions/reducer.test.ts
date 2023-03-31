@@ -1,3 +1,5 @@
+import { BigNumber } from '@ethersproject/bignumber'
+import { TradeType } from '@uniswap/sdk-core'
 import { createStore, Store } from 'redux'
 
 import { updateVersion } from '../global/actions'
@@ -73,6 +75,46 @@ describe('transaction reducer', () => {
         spender: 'def',
       })
     })
+    it('adds a swap transaction with tradeType EXACT_OUTPUT', () => {
+      const beforeTime = new Date().getTime()
+      store.dispatch(
+        addTransaction({
+          chainId: 1,
+          hash: '0x0',
+          from: 'abc',
+          info: {
+            type: TransactionType.SWAP,
+            tradeType: TradeType.EXACT_OUTPUT,
+            inputCurrencyId: 'XYZ',
+            maximumInputCurrencyAmountRaw: '201',
+            outputCurrencyId: '0x123',
+            outputCurrencyAmountRaw: '100',
+            expectedInputCurrencyAmountRaw: '202',
+            deadline: BigNumber.from(100),
+          },
+        })
+      )
+      const txs = store.getState()
+      expect(txs[1]).toBeTruthy()
+      expect(txs[1]?.['0x0']).toBeTruthy()
+      const tx = txs[1]?.['0x0']
+      expect(tx).toBeTruthy()
+      expect(tx?.hash).toEqual('0x0')
+      expect(tx?.from).toEqual('abc')
+      expect(tx?.addedTime).toBeGreaterThanOrEqual(beforeTime)
+      expect(tx?.info).toEqual(
+        expect.objectContaining({
+          type: TransactionType.SWAP,
+          tradeType: TradeType.EXACT_OUTPUT,
+          inputCurrencyId: 'XYZ',
+          maximumInputCurrencyAmountRaw: '201',
+          outputCurrencyId: '0x123',
+          outputCurrencyAmountRaw: '100',
+          expectedInputCurrencyAmountRaw: '202',
+          deadline: BigNumber.from(100),
+        })
+      )
+    })
   })
 
   describe('finalizeTransaction', () => {
@@ -132,6 +174,40 @@ describe('transaction reducer', () => {
         contractAddress: '0x0',
         blockHash: '0x0',
         blockNumber: 1,
+      })
+    })
+    it('sets receipt with status 0 when receipt received from provider is null and block timestamp is greater than transaction deadline', () => {
+      store.dispatch(
+        addTransaction({
+          chainId: 4,
+          hash: '0x0',
+          from: 'abc',
+          info: {
+            type: TransactionType.SWAP,
+            tradeType: TradeType.EXACT_OUTPUT,
+            inputCurrencyId: 'XYZ',
+            maximumInputCurrencyAmountRaw: '201',
+            outputCurrencyId: '0x123',
+            outputCurrencyAmountRaw: '100',
+            expectedInputCurrencyAmountRaw: '202',
+            deadline: BigNumber.from(100),
+          },
+        })
+      )
+      const beforeTime = new Date().getTime()
+      store.dispatch(
+        finalizeTransaction({
+          chainId: 4,
+          hash: '0x0',
+          receipt: {
+            status: 0,
+          },
+        })
+      )
+      const tx = store.getState()[4]?.['0x0']
+      expect(tx?.confirmedTime).toBeGreaterThanOrEqual(beforeTime)
+      expect(tx?.receipt).toEqual({
+        status: 0,
       })
     })
   })
