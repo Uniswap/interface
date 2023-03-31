@@ -10,7 +10,8 @@ import { useAllLists } from 'state/lists/hooks'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { acceptListUpdate } from './actions'
-import { shouldAcceptMinorVersionUpdate } from './utils'
+import { shouldAcceptVersionUpdate } from './utils'
+
 export default function Updater(): null {
   const { provider } = useWeb3React()
   const dispatch = useAppDispatch()
@@ -65,7 +66,7 @@ export default function Updater(): null {
             throw new Error('unexpected no version bump')
           case VersionUpgrade.PATCH:
           case VersionUpgrade.MINOR: {
-            if (shouldAcceptMinorVersionUpdate(listUrl, list.current, list.pendingUpdate, bump)) {
+            if (shouldAcceptVersionUpdate(listUrl, list.current, list.pendingUpdate, bump)) {
               dispatch(acceptListUpdate(listUrl))
             }
             break

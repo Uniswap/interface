@@ -1,6 +1,6 @@
 import { TokenList, VersionUpgrade } from '@uniswap/token-lists'
 
-import { shouldAcceptMinorVersionUpdate } from './utils'
+import { shouldAcceptVersionUpdate } from './utils'
 
 function buildTokenList(count: number): TokenList {
   const tokens = []
@@ -33,32 +33,32 @@ function buildTokenList(count: number): TokenList {
 
 describe('shouldAcceptMinorVersionUpdate', () => {
   it('returns false for patch when tokens have changed', () => {
-    expect(
-      shouldAcceptMinorVersionUpdate('test_list', buildTokenList(1), buildTokenList(2), VersionUpgrade.PATCH)
-    ).toEqual(false)
+    expect(shouldAcceptVersionUpdate('test_list', buildTokenList(1), buildTokenList(2), VersionUpgrade.PATCH)).toEqual(
+      false
+    )
   })
 
   it('returns true for patch when tokens are the same', () => {
-    expect(
-      shouldAcceptMinorVersionUpdate('test_list', buildTokenList(1), buildTokenList(1), VersionUpgrade.PATCH)
-    ).toEqual(true)
+    expect(shouldAcceptVersionUpdate('test_list', buildTokenList(1), buildTokenList(1), VersionUpgrade.PATCH)).toEqual(
+      true
+    )
   })
 
   it('returns true for minor version bump with tokens added', () => {
-    expect(
-      shouldAcceptMinorVersionUpdate('test_list', buildTokenList(1), buildTokenList(2), VersionUpgrade.MINOR)
-    ).toEqual(true)
+    expect(shouldAcceptVersionUpdate('test_list', buildTokenList(1), buildTokenList(2), VersionUpgrade.MINOR)).toEqual(
+      true
+    )
   })
 
   it('returns true for no version bump', () => {
-    expect(
-      shouldAcceptMinorVersionUpdate('test_list', buildTokenList(1), buildTokenList(2), VersionUpgrade.MINOR)
-    ).toEqual(true)
+    expect(shouldAcceptVersionUpdate('test_list', buildTokenList(1), buildTokenList(2), VersionUpgrade.MINOR)).toEqual(
+      true
+    )
   })
 
   it('returns false for minor version bump with tokens removed', () => {
-    expect(
-      shouldAcceptMinorVersionUpdate('test_list', buildTokenList(2), buildTokenList(1), VersionUpgrade.MINOR)
-    ).toEqual(false)
+    expect(shouldAcceptVersionUpdate('test_list', buildTokenList(2), buildTokenList(1), VersionUpgrade.MINOR)).toEqual(
+      false
+    )
   })
 })

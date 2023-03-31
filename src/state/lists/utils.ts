@@ -1,13 +1,13 @@
 import { minVersionBump, TokenList, VersionUpgrade } from '@uniswap/token-lists'
 
-export function shouldAcceptMinorVersionUpdate(
+export function shouldAcceptVersionUpdate(
   listUrl: string,
   current: TokenList,
   update: TokenList,
   targetBump: VersionUpgrade.PATCH | VersionUpgrade.MINOR
 ): boolean {
   const min = minVersionBump(current.tokens, update.tokens)
-  // automatically update minor/patch as long as bump matches the min update
+  // Automatically update minor/patch as long as bump matches the min update.
   if (targetBump >= min) {
     return true
   } else {
