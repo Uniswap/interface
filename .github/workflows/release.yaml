@@ -42,6 +42,8 @@ jobs:
     needs: tag
     if: ${{ needs.tag.outputs.new_tag != null }}
     runs-on: ubuntu-latest
+    environment:
+        name: release
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
