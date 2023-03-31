@@ -227,19 +227,20 @@ export const ButtonEmpty = styled(BaseButton)`
   }
 `
 
-export const ButtonText = styled(BaseButton)`
+export const ButtonText = styled(BaseButton)<{ color?: string; noUnderline?: boolean }>`
   padding: 0;
+  color: ${({ color }) => color};
   width: fit-content;
   background: none;
   text-decoration: none;
   &:focus {
-    text-decoration: underline;
+    text-decoration: ${({ noUnderline }) => (noUnderline ? 'none' : 'underline')};
   }
   &:hover {
     opacity: 0.9;
   }
   &:active {
-    text-decoration: underline;
+    text-decoration: ${({ noUnderline }) => (noUnderline ? 'none' : 'underline')};
   }
   &:disabled {
     opacity: 50%;
