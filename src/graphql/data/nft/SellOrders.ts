@@ -48,6 +48,7 @@ export function useNftSellOrders(address: string, tokenId: string, enabled: bool
       tokenId,
     },
     skip: !enabled,
+    fetchPolicy: 'no-cache',
   })
 
   const asset = data?.nftAssets?.edges[0]?.node as NonNullable<NftAsset> | undefined
