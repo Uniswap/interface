@@ -165,6 +165,7 @@ export default function App() {
     user.set(CustomUserProperties.BROWSER, getBrowser())
     user.set(CustomUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
     user.set(CustomUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
+    user.set(CustomUserProperties.REFERRER, document.referrer)
 
     sendAnalyticsEvent(SharedEventName.APP_LOADED)
     getCLS(({ delta }: Metric) => sendAnalyticsEvent(SharedEventName.WEB_VITALS, { cumulative_layout_shift: delta }))
