@@ -203,12 +203,9 @@ export default function PositionListItem({
 
   const removed = liquidity?.eq(0)
 
-  const containsURL = useMemo(
-    () => [token0?.name, token0?.symbol, token1?.name, token1?.symbol].some((testString) => hasURL(testString)),
-    [token0?.name, token0?.symbol, token1?.name, token1?.symbol]
-  )
+  const shouldHidePosition = hasURL(token0?.symbol) || hasURL(token1?.symbol)
 
-  if (containsURL) {
+  if (shouldHidePosition) {
     return null
   }
 
