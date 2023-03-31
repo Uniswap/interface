@@ -1,20 +1,26 @@
 import 'components/analytics'
 
 import * as Sentry from '@sentry/react'
+import { GlobalHandlers } from '@sentry/react'
 import { BrowserTracing } from '@sentry/tracing'
 import { initializeAnalytics, OriginApplication } from '@uniswap/analytics'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { isSentryEnabled } from 'utils/env'
 import { getEnvName, isProductionEnv } from 'utils/env'
 
-export { trace } from './trace'
+import { onerror, onunhandledrejection } from './errors'
 
-// Dump some metadata into the window to allow client verification.
-window.GIT_COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
+export { trace } from './trace'
 
 // Actual KEYs are set by proxy servers.
 const AMPLITUDE_DUMMY_KEY = '00000000000000000000000000000000'
 export const STATSIG_DUMMY_KEY = 'client-0000000000000000000000000000000000000000000'
+
+// Dump some metadata into the window to allow client verification.
+window.GIT_COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
+
+window.onerror = onerror
+window.onunhandledrejection = onunhandledrejection
 
 Sentry.init({
   // General configuration:
@@ -26,6 +32,11 @@ Sentry.init({
   // Performance tracing configuration:
   tracesSampleRate: Number(process.env.REACT_APP_SENTRY_TRACES_SAMPLE_RATE ?? 0),
   integrations: [
+    new GlobalHandlers({
+      // Global handlers are set above, not defaulted.
+      onerror: false,
+      onunhandledrejection: false,
+    }),
     new BrowserTracing({
       startTransactionOnLocationChange: false,
       startTransactionOnPageLoad: true,
