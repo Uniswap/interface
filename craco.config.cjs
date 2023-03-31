@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-env node */
 const { VanillaExtractPlugin } = require('@vanilla-extract/webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { DefinePlugin } = require('webpack')
@@ -7,15 +7,30 @@ const commitHash = require('child_process').execSync('git rev-parse HEAD')
 
 module.exports = {
   babel: {
-    plugins: ['@vanilla-extract/babel-plugin'],
-    env: {
-      test: {
-        plugins: ['istanbul'],
-      },
-      development: {
-        plugins: ['istanbul'],
-      },
-    },
+    plugins: [
+      '@vanilla-extract/babel-plugin',
+      ...(process.env.REACT_APP_UNSAFE_EVAL
+        ? [
+            [
+              'istanbul',
+              {
+                all: true,
+                include: ['src/**/*.tsx', 'src/**/*.ts'],
+                exclude: [
+                  'src/**/*.css',
+                  'src/**/*.css.ts',
+                  'src/**/*.test.ts',
+                  'src/**/*.test.tsx',
+                  'src/**/*.spec.ts',
+                  'src/**/*.spec.tsx',
+                  'src/**/graphql/**/*',
+                  'src/**/*.d.ts',
+                ],
+              },
+            ],
+          ]
+        : []),
+    ],
   },
   jest: {
     configure(jestConfig) {

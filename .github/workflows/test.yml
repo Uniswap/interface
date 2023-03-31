@@ -49,6 +49,19 @@ jobs:
           path: build
           if-no-files-found: error
 
+  build-instrumented:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: yarn prepare
+      - run: yarn build:instrumented
+      - uses: actions/upload-artifact@v2
+        with:
+          name: build-instrumented
+          path: build
+          if-no-files-found: error
+
   size-tests:
     needs: [build]
     runs-on: ubuntu-latest
@@ -79,7 +92,7 @@ jobs:
           yarn cypress info
 
   cypress-test-matrix:
-    needs: [build, cypress-build]
+    needs: [build-instrumented, cypress-build]
     runs-on: ubuntu-latest
     container: cypress/browsers:node-18.14.1-chrome-111.0.5563.64-1-ff-111.0-edge-111.0.1661.43-1
     strategy:
@@ -91,7 +104,7 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: actions/download-artifact@v2
         with:
-          name: build
+          name: build-instrumented
           path: build
       - uses: actions/cache@v3
         id: cypress-cache
