@@ -14,6 +14,13 @@ export const getListOrder = (
   return fetch(`${LIMIT_ORDER_API_READ}/v1/orders?${stringify(params)}`, { signal })
     .then(data => data.json())
     .then(data => data.data)
+    .then(data => {
+      data.orders.forEach((order: any) => {
+        order.chainId = Number(order.chainId) as ChainId
+      })
+
+      return data
+    })
 }
 
 export const submitOrder = (data: any) => {

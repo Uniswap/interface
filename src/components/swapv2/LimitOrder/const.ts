@@ -65,3 +65,6 @@ export const USD_THRESHOLD = new Proxy(_USD_THRESHOLD, {
     return 10
   },
 })
+
+export const WORSE_PRICE_DIFF_THRESHOLD = -5
+export const BETTER_PRICE_DIFF_THRESHOLD = 30

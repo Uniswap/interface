@@ -27,7 +27,9 @@ const RowNoFlex = styled(AutoRow)`
   flex-wrap: nowrap;
 `
 
-type SummaryFunction = (summary: TransactionDetails) => { success: string; error: string } | string
+type SummaryFunction = (
+  summary: TransactionDetails,
+) => { success: string; error: string; customTitleSuccess?: string } | string
 
 // ex: approve 3 knc
 const summary1Token = (txs: TransactionDetails) => {
@@ -103,10 +105,18 @@ const summaryDelegateDao = (txs: TransactionDetails) => {
 const summaryCancelLimitOrder = (txs: TransactionDetails) => {
   const { tokenAmountIn, tokenAmountOut, tokenSymbolIn, tokenSymbolOut } = (txs.extraInfo ||
     {}) as TransactionExtraInfo2Token
-  const summary = txs.extraInfo
+  const totalOrder = txs?.extraInfo?.arbitrary?.totalOrder
+  const isCancelAll = totalOrder !== undefined
+  const summary = !isCancelAll
     ? t`order to pay ${tokenAmountIn} ${tokenSymbolIn} and receive ${tokenAmountOut} ${tokenSymbolOut}`
     : t`all orders`
-  return { success: `Your cancellation ${summary} has been submitted`, error: `Error cancel ${summary}` }
+  return {
+    success: isCancelAll
+      ? t`Your ${totalOrder} cancellation orders have been submitted`
+      : t`Your cancellation ${summary} has been submitted`,
+    error: `Error cancel ${summary}`,
+    customTitleSuccess: isCancelAll ? t`Cancel Limit Orders Submitted!` : undefined,
+  }
 }
 
 const summaryTypeOnly = (txs: TransactionDetails) => `${txs.type}`
@@ -171,16 +181,18 @@ const getSummary = (transaction: TransactionDetails) => {
 
   const summary = group ? SUMMARY[type]?.(transaction) ?? shortHash : shortHash
 
-  let formatSummary
+  let formatSummary,
+    title = getTitle(type, success)
   if (summary === shortHash) {
     formatSummary = summary
   } else if (typeof summary === 'string') {
     formatSummary = success ? summary : `Error ${summary}`
   } else {
     formatSummary = success ? summary.success : summary.error
+    if (success) title = summary.customTitleSuccess || title
   }
 
-  return { title: getTitle(type, success), summary: formatSummary }
+  return { title, summary: formatSummary }
 }
 
 export default function TransactionPopup({ hash, notiType }: { hash: string; notiType: NotificationType }) {

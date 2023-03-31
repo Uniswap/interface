@@ -19,12 +19,14 @@ import SearchInput from 'components/SearchInput'
 import Select from 'components/Select'
 import SubscribeNotificationButton from 'components/SubscribeButton'
 import LIMIT_ORDER_ABI from 'constants/abis/limit_order.json'
+import { EMPTY_ARRAY } from 'constants/index'
 import { useActiveWeb3React, useWeb3React } from 'hooks'
 import { useContract } from 'hooks/useContract'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useNotify } from 'state/application/hooks'
 import { useLimitState } from 'state/limit/hooks'
+import { useTokenPricesWithLoading } from 'state/tokenPrices/hooks'
 import { useAllTransactions, useTransactionAdder } from 'state/transactions/hooks'
 import { TRANSACTION_TYPE } from 'state/transactions/type'
 import { TRANSACTION_STATE_DEFAULT, TransactionFlowState } from 'types'
@@ -111,6 +113,15 @@ const SearchInputWrapped = styled(SearchInput)`
   `};
 `
 
+export const checkOrderActive = (order: LimitOrder) => {
+  return ![
+    LimitOrderStatus.FILLED,
+    LimitOrderStatus.CANCELLED,
+    LimitOrderStatus.CANCELLING,
+    LimitOrderStatus.EXPIRED,
+  ].includes(order.status)
+}
+
 export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
   const { account, chainId, networkInfo } = useActiveWeb3React()
   const { library } = useWeb3React()
@@ -135,6 +146,23 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
   const [currentOrder, setCurrentOrder] = useState<LimitOrder>()
   const [isCancelAll, setIsCancelAll] = useState(false)
   const [loading, setLoading] = useState(true)
+
+  const tokenAddresses = useMemo(() => {
+    const activeOrders = orders.filter(checkOrderActive)
+    if (!activeOrders.length) {
+      return EMPTY_ARRAY
+    }
+    return activeOrders.flatMap(order => [order.takerAsset, order.makerAsset])
+  }, [orders])
+
+  const { refetch, data: tokenPrices } = useTokenPricesWithLoading(tokenAddresses)
+  useEffect(() => {
+    // Refresh token prices each 10 seconds
+    const interval = setInterval(refetch, 10_000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [refetch])
 
   const onPageChange = (page: number) => {
     setCurPage(page)
@@ -473,7 +501,7 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
               tokenAmountOut: amountOut,
               arbitrary: getPayloadTracking(order),
             }
-          : undefined,
+          : { arbitrary: { totalOrder } },
       })
     }
 
@@ -553,6 +581,7 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
                     order={order}
                     onCancelOrder={showConfirmCancel}
                     onEditOrder={showEditOrderModal}
+                    tokenPrices={tokenPrices}
                   />
                 ))}
               </Column>

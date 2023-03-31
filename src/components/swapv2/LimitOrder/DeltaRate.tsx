@@ -32,11 +32,12 @@ export function useGetDeltaRateLimitOrder({
     } catch (error) {
       console.log(error)
     }
-    return { percent: '', deltaText: '' }
+    return { percent: undefined, deltaText: '' }
   }, [marketPrice, rateInfo])
 
   const percentText = Math.abs(Number(percent)) > 0.009 ? deltaText : ''
   return {
+    rawPercent: percent,
     percent: percentText,
     profit: percent && Number(percent) > 0,
   }

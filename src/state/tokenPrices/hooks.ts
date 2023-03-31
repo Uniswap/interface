@@ -46,6 +46,10 @@ const useTokenPricesLocal = (
 
   const fetchPrices = useCallback(
     async (list: string[]) => {
+      if (list.length === 0) {
+        return
+      }
+
       try {
         setLoading(true)
         const payload = {
