@@ -36,4 +36,12 @@ describe('onunhandledrejection', () => {
     onunhandledrejection({ reason })
     expect(Sentry.captureException).not.toHaveBeenCalled()
   })
+
+  it('ignores network change exceptions', () => {
+    const reason = new Error('~~~underlying network changed~~~')
+    jest.spyOn(console, 'warn').mockImplementation(() => undefined)
+    onunhandledrejection({ reason })
+    expect(Sentry.captureException).not.toHaveBeenCalled()
+    expect(console.warn).toHaveBeenCalledWith(reason)
+  })
 })

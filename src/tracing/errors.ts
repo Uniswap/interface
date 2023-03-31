@@ -16,6 +16,12 @@ export function onunhandledrejection({ reason }: { reason: unknown }) {
       // If it fails, it should not be considered an exception.
       if (method === 'eth_blockNumber') return
     }
+
+    // If the error is a network change, it should not be considered an exception, but should still be breadcrumbed.
+    if (reason.message.match(/underlying network changed/)) {
+      console.warn(reason) // logging adds the message to the breadcrumbs
+      return
+    }
   }
 
   // We still send handled/mechanism tags despite using our own handler. These rejections are still unhandled.
