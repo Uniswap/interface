@@ -2,7 +2,6 @@ import { t } from '@lingui/macro'
 import { formatCurrencyAmount } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { nativeOnChain } from '@uniswap/smart-order-router'
-import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import { TransactionPartsFragment, TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { useMemo } from 'react'
@@ -182,24 +181,22 @@ export function parseLocalActivity(
   return { ...defaultFields, ...additionalFields }
 }
 
-export function useLocalActivities(): ActivityMap | undefined {
+export function useLocalActivities(account: string): ActivityMap {
   const allTransactions = useMultichainTransactions()
-  const { chainId } = useWeb3React()
   const tokens = useCombinedActiveList()
 
   return useMemo(
     () =>
-      chainId
-        ? allTransactions.reduce((acc: { [hash: string]: Activity }, [transaction, chainId]) => {
-            try {
-              const localActivity = parseLocalActivity(transaction, chainId, tokens)
-              if (localActivity) acc[localActivity.hash] = localActivity
-            } catch (error) {
-              console.error('Failed to parse local activity', transaction)
-            }
-            return acc
-          }, {})
-        : undefined,
-    [allTransactions, chainId, tokens]
+      allTransactions.reduce((acc: { [hash: string]: Activity }, [transaction, chainId]) => {
+        if (transaction.from !== account) return acc
+        try {
+          const localActivity = parseLocalActivity(transaction, chainId, tokens)
+          if (localActivity) acc[localActivity.hash] = localActivity
+        } catch (error) {
+          console.error('Failed to parse local activity', transaction)
+        }
+        return acc
+      }, {}),
+    [account, allTransactions, tokens]
   )
 }
