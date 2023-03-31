@@ -302,8 +302,16 @@ export const fetchListTokenByAddresses = async (address: string[], chainId: Chai
   return filterTruthy(tokens.map(formatAndCacheToken)) as WrappedTokenInfo[]
 }
 
-export const formatAndCacheToken = (tokenResponse: TokenInfo) => {
+// ex: `"BTT_b"` => BTT_b
+const escapeQuoteString = (str: string) =>
+  str?.startsWith('"') && str?.endsWith('"') ? str.substring(1, str.length - 1) : str
+
+export const formatAndCacheToken = (rawTokenResponse: TokenInfo) => {
   try {
+    const tokenResponse = { ...rawTokenResponse }
+    tokenResponse.symbol = escapeQuoteString(tokenResponse.symbol)
+    tokenResponse.name = escapeQuoteString(tokenResponse.name)
+
     const tokenInfo = new WrappedTokenInfo(tokenResponse)
     if (!tokenInfo.decimals && !tokenInfo.symbol && !tokenInfo.name) {
       return
