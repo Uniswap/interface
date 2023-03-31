@@ -10,8 +10,7 @@ export function onerror(event: Event | string, source?: string, lineno?: number,
 
 export function onunhandledrejection({ reason }: { reason: unknown }) {
   if (reason instanceof Error) {
-    // Parse ethers request errors (formated by {@type import(@ethersproject/web).fetchJson}):
-    if ('requestBody' in reason && typeof reason.requestBody === 'string') {
+    if (isEthersRequestError(reason)) {
       const method = JSON.parse(reason.requestBody).method
 
       // ethers aggressively polls for block number, and it sometimes fails (whether spuriously or through rate-limiting).
@@ -27,4 +26,9 @@ export function onunhandledrejection({ reason }: { reason: unknown }) {
   }
 
   Sentry.captureException(reason, { tags: ON_UNHANDLED_REJECTION_TAGS })
+}
+
+/** Identifies ethers request errors (as thrown by {@type import(@ethersproject/web).fetchJson}). */
+function isEthersRequestError(error: Error): error is Error & { requestBody: string } {
+  return 'requestBody' in error && typeof (error as unknown as Record<'requestBody', unknown>).requestBody === 'string'
 }
