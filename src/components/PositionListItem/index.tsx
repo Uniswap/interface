@@ -17,7 +17,7 @@ import styled from 'styled-components/macro'
 import { HideSmall, MEDIA_WIDTHS, SmallOnly, ThemedText } from 'theme'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
-import { hasURL } from 'utils/urlChecks'
+import { checkStringForURL } from 'utils/urlChecks'
 
 import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 
@@ -203,9 +203,9 @@ export default function PositionListItem({
 
   const removed = liquidity?.eq(0)
 
-  const containsURL = hasURL(token0?.symbol) || hasURL(token1?.symbol)
+  const shouldHidePosition = checkStringForURL(token0?.symbol) || checkStringForURL(token1?.symbol)
 
-  if (containsURL) {
+  if (shouldHidePosition) {
     return null
   }
 
