@@ -8,7 +8,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { isSentryEnabled } from 'utils/env'
 import { getEnvName, isProductionEnv } from 'utils/env'
 
-import { beforeSendAddMechanism, onerror, onunhandledrejection } from './errors'
+import { beforeSendAddMechanism, onUnhandledRejection } from './errors'
 
 export { trace } from './trace'
 
@@ -19,8 +19,7 @@ export const STATSIG_DUMMY_KEY = 'client-000000000000000000000000000000000000000
 // Dump some metadata into the window to allow client verification.
 window.GIT_COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
 
-window.onerror = onerror
-window.onunhandledrejection = onunhandledrejection
+window.onunhandledrejection = onUnhandledRejection
 
 Sentry.init({
   // General configuration:
@@ -29,8 +28,9 @@ Sentry.init({
   environment: getEnvName(),
   integrations: [
     new GlobalHandlers({
-      // Global handlers are set above, not defaulted.
-      onerror: false,
+      onerror: true,
+      // Use our own handler for unhandled rejections; we want to have more control over which rejections are reported,
+      // as many originate in third-party libraries and can be safely ignored.
       onunhandledrejection: false,
     }),
     new BrowserTracing({
