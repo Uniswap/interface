@@ -1,7 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { parseEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
+import { useNftSellOrders } from 'graphql/data/nft/SellOrders'
 import { NftCard, NftCardDisplayProps } from 'nft/components/card'
 import { Ranking as RankingContainer, Suspicious as SuspiciousContainer } from 'nft/components/card/icons'
 import { useBag } from 'nft/hooks'
@@ -38,6 +41,7 @@ export const CollectionAsset = ({
   const bagExpanded = useBag((state) => state.bagExpanded)
   const setBagExpanded = useBag((state) => state.setBagExpanded)
   const trace = useTrace({ page: InterfacePageName.NFT_COLLECTION_PAGE })
+  const isErc1155 = asset.tokenType === NftStandard.Erc1155
 
   const { isSelected, quantitySelected } = useMemo(() => {
     const matchingItems = itemsInBag.filter(
@@ -52,9 +56,28 @@ export const CollectionAsset = ({
 
   const notForSale = asset.notForSale || BigNumber.from(asset.priceInfo ? asset.priceInfo.ETHPrice : 0).lt(0)
   const provider = asset?.rarity?.providers ? asset.rarity.providers[0] : undefined
+
+  const sellOrders = useNftSellOrders(asset.address, asset.tokenId, isErc1155 && isSelected)
+
   const handleAddAssetToBag = useCallback(() => {
-    if (BigNumber.from(asset.priceInfo?.ETHPrice ?? 0).gt(0)) {
-      addAssetsToBag([asset])
+    const shouldUseSellOrders = isErc1155 && isSelected && sellOrders && sellOrders.length > quantitySelected
+    const newSellOrderPrice = shouldUseSellOrders
+      ? parseEther(sellOrders[quantitySelected].price.value.toString()).toString()
+      : undefined
+    const assetToAdd: GenieAsset = newSellOrderPrice
+      ? {
+          ...asset,
+          priceInfo: {
+            ...asset.priceInfo,
+            ETHPrice: newSellOrderPrice,
+            basePrice: newSellOrderPrice,
+          },
+        }
+      : asset
+
+    if (BigNumber.from(assetToAdd.priceInfo.ETHPrice).gt(0)) {
+      addAssetsToBag([assetToAdd])
+
       if (!bagExpanded && !isMobile && !bagManuallyClosed) {
         setBagExpanded({ bagExpanded: true })
       }
@@ -65,11 +88,38 @@ export const CollectionAsset = ({
         ...trace,
       })
     }
-  }, [addAssetsToBag, asset, bagExpanded, bagManuallyClosed, isMobile, setBagExpanded, trace])
+  }, [
+    addAssetsToBag,
+    asset,
+    bagExpanded,
+    bagManuallyClosed,
+    isErc1155,
+    isMobile,
+    isSelected,
+    quantitySelected,
+    sellOrders,
+    setBagExpanded,
+    trace,
+  ])
 
   const handleRemoveAssetFromBag = useCallback(() => {
-    removeAssetsFromBag([asset])
-  }, [asset, removeAssetsFromBag])
+    if (!isErc1155) {
+      removeAssetsFromBag([asset])
+      return
+    }
+
+    const assets = itemsInBag
+      .filter((item) => item.asset.address === asset.address && item.asset.tokenId === asset.tokenId)
+      .map((item) => item.asset)
+    if (assets.length === 0) return
+
+    const mostExpensiveAsset = assets.reduce(
+      (acc, cur) => (BigNumber.from(cur.priceInfo.basePrice).gte(BigNumber.from(acc.priceInfo.basePrice)) ? cur : acc),
+      assets[0]
+    )
+
+    removeAssetsFromBag([mostExpensiveAsset])
+  }, [asset, isErc1155, itemsInBag, removeAssetsFromBag])
 
   const display: NftCardDisplayProps = useMemo(() => {
     return {
