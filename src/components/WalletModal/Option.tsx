@@ -72,7 +72,7 @@ export default function Option({ connection, pendingConnectionType, activate }: 
     <TraceEvent
       events={[BrowserEvent.onClick]}
       name={InterfaceEventName.WALLET_SELECTED}
-      properties={{ wallet_type: connection.name }}
+      properties={{ wallet_type: connection.getName() }}
       element={InterfaceElementName.WALLET_TYPE_OPTION}
     >
       <OptionCardClickable
@@ -83,9 +83,9 @@ export default function Option({ connection, pendingConnectionType, activate }: 
       >
         <OptionCardLeft>
           <IconWrapper>
-            <img src={connection.icon} alt="Icon" />
+            <img src={connection.getIcon?.()} alt="Icon" />
           </IconWrapper>
-          <HeaderText>{connection.name}</HeaderText>
+          <HeaderText>{connection.getName()}</HeaderText>
           {connection.isNew && <NewBadge />}
         </OptionCardLeft>
         {isPending && <Loader />}

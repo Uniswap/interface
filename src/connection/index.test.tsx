@@ -1,111 +1,145 @@
-// eslint-disable-next-line jest/no-export
-export {}
+import { ConnectionType, getConnections, useGetConnection } from 'connection'
+import { renderHook } from 'test-utils'
 
 beforeEach(() => {
   jest.resetModules()
   jest.resetAllMocks()
 })
 
-it('Non-injected Desktop', async () => {
-  jest.mock('connection/utils', () => ({ isInjected: false, isMetaMaskWallet: false, isCoinbaseWallet: false }))
-  jest.mock('utils/userAgent', () => ({ isMobile: false }))
-  const connection = await import('connection')
-  expect(connection.darkInjectedConnection.shouldDisplay).toBe(true)
-  expect(connection.darkInjectedConnection.name).toBe('MetaMask')
-  expect(connection.darkInjectedConnection.overrideActivate).toBeDefined()
-  expect(connection.coinbaseWalletConnection.shouldDisplay).toBe(true)
-  expect(connection.uniwalletConnectConnection.shouldDisplay).toBe(true)
-  expect(connection.walletConnectConnection.shouldDisplay).toBe(true)
-  expect(connection.getConnections(true).filter((c) => c.shouldDisplay).length).toEqual(4)
-})
+const UserAgentMock = jest.requireMock('utils/userAgent')
+jest.mock('utils/userAgent', () => ({
+  isMobile: false,
+}))
 
-it('MetaMask Injected Desktop', async () => {
-  jest.mock('connection/utils', () => ({ isInjected: true, isMetaMaskWallet: true, isCoinbaseWallet: false }))
-  jest.mock('utils/userAgent', () => ({ isMobile: false }))
-  const connection = await import('connection')
-  expect(connection.darkInjectedConnection.shouldDisplay).toBe(true)
-  expect(connection.darkInjectedConnection.name).toBe('MetaMask')
-  expect(connection.darkInjectedConnection.overrideActivate).toBeUndefined()
-  expect(connection.coinbaseWalletConnection.shouldDisplay).toBe(true)
-  expect(connection.uniwalletConnectConnection.shouldDisplay).toBe(true)
-  expect(connection.walletConnectConnection.shouldDisplay).toBe(true)
-  expect(connection.getConnections(true).filter((c) => c.shouldDisplay).length).toEqual(4)
-})
+describe('connection utility/metadata tests', () => {
+  const createWalletEnvironment = (ethereum: Window['window']['ethereum'], isMobile = false) => {
+    UserAgentMock.isMobile = isMobile
+    global.window.ethereum = ethereum
 
-it('Coinbase Injected Desktop', async () => {
-  jest.mock('connection/utils', () => ({ isInjected: true, isMetaMaskWallet: false, isCoinbaseWallet: true }))
-  jest.mock('utils/userAgent', () => ({ isMobile: false }))
-  const connection = await import('connection')
-  expect(connection.darkInjectedConnection.shouldDisplay).toBe(true)
-  expect(connection.darkInjectedConnection.name).toBe('MetaMask')
-  expect(connection.darkInjectedConnection.overrideActivate).toBeDefined()
-  expect(connection.coinbaseWalletConnection.shouldDisplay).toBe(true)
-  expect(connection.uniwalletConnectConnection.shouldDisplay).toBe(true)
-  expect(connection.walletConnectConnection.shouldDisplay).toBe(true)
-  expect(connection.getConnections(true).filter((c) => c.shouldDisplay).length).toEqual(4)
-})
+    const displayed = getConnections().filter((c) => c.shouldDisplay())
+    const getConnection = renderHook(() => useGetConnection()).result.current
+    const injected = getConnection(ConnectionType.INJECTED)
+    const coinbase = getConnection(ConnectionType.COINBASE_WALLET)
+    const uniswap = getConnection(ConnectionType.UNIWALLET)
+    const walletconnect = getConnection(ConnectionType.WALLET_CONNECT)
 
-it('Coinbase and MetaMask Injected Desktop', async () => {
-  jest.mock('connection/utils', () => ({ isInjected: true, isMetaMaskWallet: true, isCoinbaseWallet: true }))
-  jest.mock('utils/userAgent', () => ({ isMobile: false }))
-  const connection = await import('connection')
-  expect(connection.darkInjectedConnection.shouldDisplay).toBe(true)
-  expect(connection.darkInjectedConnection.name).toBe('MetaMask')
-  expect(connection.darkInjectedConnection.overrideActivate).toBeUndefined()
-  expect(connection.coinbaseWalletConnection.shouldDisplay).toBe(true)
-  expect(connection.uniwalletConnectConnection.shouldDisplay).toBe(true)
-  expect(connection.walletConnectConnection.shouldDisplay).toBe(true)
-  expect(connection.getConnections(true).filter((c) => c.shouldDisplay).length).toEqual(4)
-})
+    return { displayed, injected, coinbase, uniswap, walletconnect }
+  }
 
-it('Generic Injected Desktop', async () => {
-  jest.mock('connection/utils', () => ({ isInjected: true, isMetaMaskWallet: false, isCoinbaseWallet: false }))
-  jest.mock('utils/userAgent', () => ({ isMobile: false }))
-  const connection = await import('connection')
-  expect(connection.darkInjectedConnection.shouldDisplay).toBe(true)
-  expect(connection.darkInjectedConnection.name).toBe('Browser Wallet')
-  expect(connection.darkInjectedConnection.overrideActivate).toBeUndefined()
-  expect(connection.coinbaseWalletConnection.shouldDisplay).toBe(true)
-  expect(connection.uniwalletConnectConnection.shouldDisplay).toBe(true)
-  expect(connection.walletConnectConnection.shouldDisplay).toBe(true)
-  expect(connection.getConnections(true).filter((c) => c.shouldDisplay).length).toEqual(4)
-})
+  it('Non-injected Desktop', async () => {
+    const { displayed, injected } = createWalletEnvironment(undefined)
 
-it('Generic Injected Mobile Browser', async () => {
-  jest.mock('connection/utils', () => ({ isInjected: true, isMetaMaskWallet: false, isCoinbaseWallet: false }))
-  jest.mock('utils/userAgent', () => ({ isMobile: true }))
-  const connection = await import('connection')
-  expect(connection.darkInjectedConnection.shouldDisplay).toBe(true)
-  expect(connection.darkInjectedConnection.name).toBe('Browser Wallet')
-})
+    expect(displayed.includes(injected)).toBe(true)
+    expect(injected.getName()).toBe('MetaMask')
+    expect(injected.overrideActivate?.()).toBeTruthy()
 
-it('MetaMask Mobile Browser', async () => {
-  jest.mock('connection/utils', () => ({ isInjected: true, isMetaMaskWallet: true, isCoinbaseWallet: false }))
-  jest.mock('utils/userAgent', () => ({ isMobile: true }))
-  const connection = await import('connection')
-  expect(connection.darkInjectedConnection.shouldDisplay).toBe(true)
-  expect(connection.darkInjectedConnection.name).toBe('MetaMask')
-  expect(connection.getConnections(true).filter((c) => c.shouldDisplay).length).toEqual(1)
-})
+    expect(displayed.length).toEqual(4)
+  })
 
-it('Coinbase Mobile Browser', async () => {
-  jest.mock('connection/utils', () => ({ isInjected: true, isMetaMaskWallet: false, isCoinbaseWallet: true }))
-  jest.mock('utils/userAgent', () => ({ isMobile: true }))
-  const connection = await import('connection')
+  it('MetaMask-Injected Desktop', async () => {
+    const { displayed, injected } = createWalletEnvironment({ isMetaMask: true })
 
-  expect(connection.coinbaseWalletConnection.shouldDisplay).toBe(true)
-  expect(connection.coinbaseWalletConnection.overrideActivate).toBeUndefined()
-  expect(connection.getConnections(true).filter((c) => c.shouldDisplay).length).toEqual(1)
-})
+    expect(displayed.includes(injected)).toBe(true)
+    expect(injected.getName()).toBe('MetaMask')
+    expect(injected.overrideActivate?.()).toBeFalsy()
 
-it('mWeb Browser', async () => {
-  jest.mock('connection/utils', () => ({ isInjected: false, isMetaMaskWallet: false, isCoinbaseWallet: false }))
-  jest.mock('utils/userAgent', () => ({ isMobile: true }))
-  const connection = await import('connection')
-  expect(connection.darkInjectedConnection.shouldDisplay).toBe(false)
-  expect(connection.coinbaseWalletConnection.shouldDisplay).toBe(true)
-  expect(connection.coinbaseWalletConnection.overrideActivate).toBeDefined()
-  expect(connection.uniwalletConnectConnection.shouldDisplay).toBe(true)
-  expect(connection.walletConnectConnection.shouldDisplay).toBe(true)
-  expect(connection.getConnections(true).filter((c) => c.shouldDisplay).length).toEqual(3)
+    expect(displayed.length).toEqual(4)
+  })
+
+  it('Coinbase-Injected Desktop', async () => {
+    const { displayed, injected, coinbase } = createWalletEnvironment({ isCoinbaseWallet: true })
+
+    expect(displayed.includes(coinbase)).toBe(true)
+    expect(displayed.includes(injected)).toBe(true)
+    expect(injected.getName()).toBe('MetaMask')
+    expect(injected.overrideActivate?.()).toBeTruthy()
+
+    expect(displayed.length).toEqual(4)
+  })
+
+  it('Coinbase and MetaMask Injected Desktop', async () => {
+    const { displayed, injected, coinbase } = createWalletEnvironment({ isCoinbaseWallet: true, isMetaMask: true })
+
+    expect(displayed.includes(coinbase)).toBe(true)
+    expect(displayed.includes(injected)).toBe(true)
+    expect(injected.getName()).toBe('MetaMask')
+    expect(injected.overrideActivate?.()).toBeFalsy()
+
+    expect(displayed.length).toEqual(4)
+  })
+
+  it('Generic Injected Desktop', async () => {
+    const { displayed, injected } = createWalletEnvironment({ isTrustWallet: true })
+
+    expect(displayed.includes(injected)).toBe(true)
+    expect(injected.getName()).toBe('Browser Wallet')
+    expect(injected.overrideActivate?.()).toBeFalsy()
+
+    expect(displayed.length).toEqual(4)
+  })
+
+  it('Generic Browser Wallet that injects as MetaMask', async () => {
+    const { displayed, injected } = createWalletEnvironment({ isRabby: true, isMetaMask: true })
+
+    expect(displayed.includes(injected)).toBe(true)
+    expect(injected.getName()).toBe('Browser Wallet')
+    expect(injected.overrideActivate?.()).toBeFalsy()
+
+    expect(displayed.length).toEqual(4)
+  })
+
+  it('Generic Wallet Browser with delayed injection', async () => {
+    const { injected } = createWalletEnvironment(undefined)
+
+    expect(injected.getName()).toBe('MetaMask')
+    expect(injected.overrideActivate?.()).toBeTruthy()
+
+    createWalletEnvironment({ isTrustWallet: true })
+
+    expect(injected.getName()).toBe('Browser Wallet')
+    expect(injected.overrideActivate?.()).toBeFalsy()
+  })
+
+  const UNKNOWN_INJECTOR = { isRandomWallet: true } as Window['window']['ethereum']
+  it('Generic Unknown Injected Wallet Browser', async () => {
+    const { displayed, injected } = createWalletEnvironment(UNKNOWN_INJECTOR, true)
+
+    expect(displayed.includes(injected)).toBe(true)
+    expect(injected.getName()).toBe('Browser Wallet')
+    expect(injected.overrideActivate?.()).toBeFalsy()
+
+    // Ensures we provide multiple connection options if in an unknown injected browser
+    expect(displayed.length).toEqual(4)
+  })
+
+  it('MetaMask Mobile Browser', async () => {
+    const { displayed, injected } = createWalletEnvironment({ isMetaMask: true }, true)
+
+    expect(displayed.includes(injected)).toBe(true)
+    expect(injected.getName()).toBe('MetaMask')
+    expect(injected.overrideActivate?.()).toBeFalsy()
+    expect(displayed.length).toEqual(1)
+  })
+
+  it('Coinbase Mobile Browser', async () => {
+    const { displayed, coinbase } = createWalletEnvironment({ isCoinbaseWallet: true }, true)
+
+    expect(displayed.includes(coinbase)).toBe(true)
+    // Expect coinbase option to not override activation in a the cb mobile browser
+    expect(coinbase.overrideActivate?.()).toBeFalsy()
+    expect(displayed.length).toEqual(1)
+  })
+
+  it('Uninjected mWeb Browser', async () => {
+    const { displayed, injected, coinbase, walletconnect } = createWalletEnvironment(undefined, true)
+
+    expect(displayed.includes(coinbase)).toBe(true)
+    expect(displayed.includes(walletconnect)).toBe(true)
+    // Don't show injected connection on plain mWeb browser
+    expect(displayed.includes(injected)).toBe(false)
+    // Expect coinbase option to launch coinbase app in a regular mobile browser
+    expect(coinbase.overrideActivate?.()).toBeTruthy()
+
+    expect(displayed.length).toEqual(3)
+  })
 })

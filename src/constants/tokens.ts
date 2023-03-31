@@ -489,7 +489,7 @@ class ExtendedEther extends Ether {
   public get wrapped(): Token {
     const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
     if (wrapped) return wrapped
-    throw new Error('Unsupported chain ID')
+    throw new Error(`Unsupported chain ID: ${this.chainId}`)
   }
 
   private static _cachedExtendedEther: { [chainId: number]: NativeCurrency } = {}
