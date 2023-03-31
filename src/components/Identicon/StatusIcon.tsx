@@ -60,7 +60,7 @@ const Socks = () => {
 const MiniWalletIcon = ({ connection, side }: { connection: Connection; side: 'left' | 'right' }) => {
   return (
     <MiniIconContainer side={side}>
-      <MiniImg src={connection.icon} alt={`${connection.name} icon`} />
+      <MiniImg src={connection.getIcon?.()} alt={`${connection.getName()} icon`} />
     </MiniIconContainer>
   )
 }
@@ -71,7 +71,7 @@ const MainWalletIcon = ({ connection, size }: { connection: Connection; size: nu
 
   if (!account) {
     return null
-  } else if (avatar || (connection.type === ConnectionType.INJECTED && connection.name === 'MetaMask')) {
+  } else if (avatar || (connection.type === ConnectionType.INJECTED && connection.getName() === 'MetaMask')) {
     return <Identicon size={size} />
   } else {
     return <Unicon address={account} size={size} />

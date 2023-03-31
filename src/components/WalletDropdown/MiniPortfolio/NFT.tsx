@@ -5,6 +5,7 @@ import Row from 'components/Row'
 import { useToggleWalletDrawer } from 'components/WalletDropdown'
 import { Box } from 'nft/components/Box'
 import { NftCard } from 'nft/components/card'
+import { detailsHref } from 'nft/components/card/utils'
 import { VerifiedIcon } from 'nft/components/icons'
 import { WalletAsset } from 'nft/types'
 import { floorFormatter } from 'nft/utils'
@@ -50,8 +51,8 @@ export function NFT({
   const trace = useTrace()
 
   const navigateToNFTDetails = () => {
-    navigate(`/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}`)
     toggleWalletDrawer()
+    navigate(detailsHref(asset))
   }
 
   return (
@@ -62,10 +63,7 @@ export function NFT({
         display={{ disabledInfo: true }}
         isSelected={false}
         isDisabled={false}
-        selectAsset={navigateToNFTDetails}
-        unselectAsset={() => {
-          /* */
-        }}
+        onCardClick={navigateToNFTDetails}
         sendAnalyticsEvent={() =>
           sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
             element: InterfaceElementName.MINI_PORTFOLIO_NFT_ITEM,
@@ -77,6 +75,7 @@ export function NFT({
         }
         mediaShouldBePlaying={mediaShouldBePlaying}
         setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+        testId="mini-portfolio-nft"
       />
       <NFTDetails asset={asset} />
     </NFTContainer>
