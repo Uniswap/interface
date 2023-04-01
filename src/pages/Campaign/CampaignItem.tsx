@@ -122,11 +122,10 @@ const CampaignItem = ({ campaign, onSelectCampaign, isSelected }: CampaignItemPr
       />
     )
   })
-  const totalRewardAmountString = totalRewardAmount.toSignificant(DEFAULT_SIGNIFICANT, { groupSeparator: ',' })
+  const totalRewardAmountString = totalRewardAmount.equalTo(0)
+    ? ''
+    : totalRewardAmount.toSignificant(DEFAULT_SIGNIFICANT, { groupSeparator: ',' })
   const tokenSymbol = campaign.rewardDistribution[0]?.token?.symbol
-  const rCampaignReward = isRewardInUSD
-    ? t`$${totalRewardAmountString} in ${tokenSymbol}`
-    : `${totalRewardAmountString} ${tokenSymbol}`
 
   const isShowProgressBar = isOngoing && account && campaign?.userInfo?.status === CampaignUserInfoStatus.Eligible
   const percentTradingNumber = !tradingNumberRequired ? 0 : Math.floor((tradingNumber / tradingNumberRequired) * 100)
@@ -173,11 +172,18 @@ const CampaignItem = ({ campaign, onSelectCampaign, isSelected }: CampaignItemPr
         </Text>
       </Container>
 
-      <Container>
-        <Text fontSize="12px">
-          <Trans>Total Reward: {rCampaignReward}</Trans>
-        </Text>
-      </Container>
+      {totalRewardAmountString ? (
+        <Container>
+          <Text fontSize="12px">
+            <Trans>
+              Total Reward:{' '}
+              {isRewardInUSD
+                ? `$${totalRewardAmountString} ${t`in`} ${tokenSymbol}`
+                : `${totalRewardAmountString} ${tokenSymbol}`}
+            </Trans>
+          </Text>
+        </Container>
+      ) : null}
 
       {isQualified ? (
         <Flex style={{ gap: 10 }} flexDirection="column">
