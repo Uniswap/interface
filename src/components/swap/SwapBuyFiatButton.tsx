@@ -22,8 +22,8 @@ const MOONPAY_REGION_AVAILABILITY_ARTICLE =
   'https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-'
 
 enum BuyFiatFlowState {
-  // Default initial state, when user is not active in the middle of buy fiat flow.
-  NONE,
+  // Default initial state
+  INACTIVE,
   // Buy fiat flow is active and region availability has been checked.
   ACTIVE_POST_REGION_CHECK,
   // Buy fiat flow is active, feature is available in user's region & needs wallet connection.
@@ -49,7 +49,7 @@ export default function SwapBuyFiatButton() {
     error,
     loading: fiatOnrampAvailabilityLoading,
   } = useFiatOnrampAvailability(checkFiatRegionAvailability)
-  const [buyFiatFlowState, setBuyFiatFlowState] = useState(BuyFiatFlowState.NONE)
+  const [buyFiatFlowState, setBuyFiatFlowState] = useState(BuyFiatFlowState.INACTIVE)
   const [walletDrawerOpen, toggleWalletDrawer] = useWalletDrawer()
 
   /*
@@ -103,7 +103,7 @@ export default function SwapBuyFiatButton() {
   useEffect(() => {
     if (TerminalBuyFiatFlowStates.has(buyFiatFlowState)) {
       setBuyFiatClicked(true)
-      setBuyFiatFlowState(BuyFiatFlowState.NONE)
+      setBuyFiatFlowState(BuyFiatFlowState.INACTIVE)
     }
   }, [buyFiatFlowState, handleBuyCrypto, setBuyFiatClicked])
 
