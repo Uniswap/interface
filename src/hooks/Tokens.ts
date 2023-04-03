@@ -23,7 +23,8 @@ function useTokensFromMap(tokenMap: ChainToTokenInfoMap): TokenMap {
 
     // reduce to just tokens
     return Object.keys(tokenMap[chainId] ?? {}).reduce<TokenMap>((newMap, address) => {
-      newMap[address] = tokenMap[chainId][address].token
+      const entry = tokenMap[chainId][address]
+      if (entry) newMap[address] = entry.token
       return newMap
     }, {})
   }, [chainId, tokenMap])
