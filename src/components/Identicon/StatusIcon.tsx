@@ -90,10 +90,10 @@ export default function StatusIcon({
   const hasSocks = useHasSocks()
 
   return (
-    <IconWrapper size={size}>
-      {hasSocks && showMiniIcons && <Socks />}
+    <IconWrapper size={size} data-testid="StatusIconRoot">
       <MainWalletIcon connection={connection} size={size} />
       {showMiniIcons && <MiniWalletIcon connection={connection} side="right" />}
+      {hasSocks && showMiniIcons && <Socks />}
     </IconWrapper>
   )
 }
