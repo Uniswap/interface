@@ -19,14 +19,10 @@ const AMPLITUDE_DUMMY_KEY = '00000000000000000000000000000000'
 export const STATSIG_DUMMY_KEY = 'client-0000000000000000000000000000000000000000000'
 
 Sentry.init({
-  // general configuration:
   dsn: process.env.REACT_APP_SENTRY_DSN,
   release: process.env.REACT_APP_GIT_COMMIT_HASH,
   environment: getEnvName(),
-  // exception reporting:
   enabled: isSentryEnabled(),
-  beforeSend,
-  // performance tracing:
   tracesSampleRate: Number(process.env.REACT_APP_SENTRY_TRACES_SAMPLE_RATE ?? 0),
   integrations: [
     new BrowserTracing({
@@ -34,6 +30,7 @@ Sentry.init({
       startTransactionOnPageLoad: true,
     }),
   ],
+  beforeSend,
 })
 
 initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {

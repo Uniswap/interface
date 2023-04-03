@@ -1,5 +1,5 @@
 import { CollectionRow, ListingRow, ListingStatus } from 'nft/types'
-import create from 'zustand'
+import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
 interface NFTListState {
