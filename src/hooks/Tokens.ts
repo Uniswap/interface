@@ -5,34 +5,36 @@ import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_INACTIVE_LIST_URLS, DEFAULT_LIST_OF_LISTS } from 'constants/lists'
 import { useCurrencyFromMap, useTokenFromMapOrNetwork } from 'lib/hooks/useCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
+import { ChainToTokenInfoMap } from 'lib/hooks/useTokenList/utils'
 import { useMemo } from 'react'
 import { isL2ChainId } from 'utils/chains'
 
 import { useAllLists, useCombinedActiveList, useCombinedTokenMapFromUrls } from '../state/lists/hooks'
 import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'
 import { useUserAddedTokens, useUserAddedTokensOnChain } from '../state/user/hooks'
-import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks'
+import { useUnsupportedTokenList } from './../state/lists/hooks'
 
+export type TokenMap = { [address: string]: Token | undefined }
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
-function useTokensFromMap(tokenMap: TokenAddressMap): { [address: string]: Token } {
+function useTokensFromMap(tokenMap: ChainToTokenInfoMap): TokenMap {
   const { chainId } = useWeb3React()
   return useMemo(() => {
     if (!chainId) return {}
 
     // reduce to just tokens
-    return Object.keys(tokenMap[chainId] ?? {}).reduce<{ [address: string]: Token }>((newMap, address) => {
+    return Object.keys(tokenMap[chainId] ?? {}).reduce<TokenMap>((newMap, address) => {
       newMap[address] = tokenMap[chainId][address].token
       return newMap
     }, {})
   }, [chainId, tokenMap])
 }
 
-export function useAllTokensMultichain(): TokenAddressMap {
+export function useAllTokensMultichain(): ChainToTokenInfoMap {
   return useCombinedTokenMapFromUrls(DEFAULT_LIST_OF_LISTS)
 }
 
 // Returns all tokens from the default list + user added tokens
-export function useDefaultActiveTokens(): { [address: string]: Token } {
+export function useDefaultActiveTokens(): TokenMap {
   const defaultListTokens = useCombinedActiveList()
   const tokensFromMap = useTokensFromMap(defaultListTokens)
   const userAddedTokens = useUserAddedTokens()
@@ -40,7 +42,7 @@ export function useDefaultActiveTokens(): { [address: string]: Token } {
     return (
       userAddedTokens
         // reduce into all ALL_TOKENS filtered by the current chain
-        .reduce<{ [address: string]: Token }>(
+        .reduce<TokenMap>(
           (tokenMap, token) => {
             tokenMap[token.address] = token
             return tokenMap
@@ -62,7 +64,7 @@ type BridgeInfo = Record<
   }
 >
 
-export function useUnsupportedTokens(): { [address: string]: Token } {
+export function useUnsupportedTokens(): TokenMap {
   const { chainId } = useWeb3React()
   const listsByUrl = useAllLists()
   const unsupportedTokensMap = useUnsupportedTokenList()

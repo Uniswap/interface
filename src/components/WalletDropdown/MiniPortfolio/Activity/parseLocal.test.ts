@@ -2,7 +2,7 @@
 
 import { SupportedChainId, Token, TradeType } from '@uniswap/sdk-core'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
-import { TokenAddressMap } from 'state/lists/hooks'
+import { ChainToTokenInfoMap } from 'lib/hooks/useTokenList/utils'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import {
   ExactInputSwapTransactionInfo,
@@ -46,7 +46,7 @@ function buildSwapInfo(
   }
 }
 
-function buildTokenAddressMap(...tokens: WrappedTokenInfo[]): TokenAddressMap {
+function buildTokenAddressMap(...tokens: WrappedTokenInfo[]): ChainToTokenInfoMap {
   return {
     [SupportedChainId.MAINNET]: Object.fromEntries(tokens.map((token) => [token.address, { token }])),
   }

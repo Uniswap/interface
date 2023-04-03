@@ -3,6 +3,7 @@ import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { isSupportedChain } from 'constants/chains'
+import { TokenMap } from 'hooks/Tokens'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -71,8 +72,6 @@ export function useTokenFromActiveNetwork(tokenAddress: string | undefined): Tok
     return new Token(chainId, formattedAddress, parsedDecimals, parsedSymbol, parsedName)
   }, [chainId, tokenAddress, formattedAddress, isLoading, parsedDecimals, parsedSymbol, parsedName])
 }
-
-type TokenMap = { [address: string]: Token }
 
 /**
  * Returns a Token from the tokenAddress.

@@ -1,7 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
 import { Pool, Position } from '@uniswap/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
-import { useAllTokensMultichain } from 'hooks/Tokens'
+import { TokenMap, useAllTokensMultichain } from 'hooks/Tokens'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import ms from 'ms.macro'
@@ -123,7 +123,7 @@ export function useGetCachedTokens(chains: SupportedChainId[]): TokenGetterFn {
   // Uses tokens from local state if available, otherwise fetches them
   const getTokens: TokenGetterFn = useCallback(
     async (addresses, chainId) => {
-      const local: { [address: string]: Token | undefined } = {}
+      const local: TokenMap = {}
       const missing = new Set<string>()
       addresses.forEach((address) => {
         const cached = tokenCache.get(chainId, address) ?? allTokens[chainId][address]?.token

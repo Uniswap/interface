@@ -87,7 +87,8 @@ export function CurrencySearch({
 
   const defaultTokens = useDefaultActiveTokens()
   const filteredTokens: Token[] = useMemo(() => {
-    return Object.values(defaultTokens).filter(getTokenFilter(debouncedQuery))
+    const queryFilter = getTokenFilter(debouncedQuery)
+    return Object.values(defaultTokens).filter((token): token is Token => Boolean(token && queryFilter(token)))
   }, [defaultTokens, debouncedQuery])
 
   const [balances, balancesAreLoading] = useAllTokenBalances()
