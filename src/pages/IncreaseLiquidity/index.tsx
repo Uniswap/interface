@@ -5,32 +5,28 @@ import { Trans, t } from '@lingui/macro'
 import { BigNumber } from 'ethers'
 import JSBI from 'jsbi'
 import { useCallback, useEffect, useState } from 'react'
-import { ChevronLeft } from 'react-feather'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useMedia, usePrevious } from 'react-use'
 import { Box, Flex, Text } from 'rebass'
 
-import { ReactComponent as TutorialIcon } from 'assets/svg/play_circle_outline.svg'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { BlackCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import Copy from 'components/Copy'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import CurrencyLogo from 'components/CurrencyLogo'
 import Divider from 'components/Divider'
 import Dots from 'components/Dots'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
 import Loader from 'components/Loader'
-import { StyledMenuButton } from 'components/NavigationTabs'
+import { AddRemoveTabs, LiquidityAction } from 'components/NavigationTabs'
 import ProAmmPoolInfo from 'components/ProAmm/ProAmmPoolInfo'
 import ProAmmPooledTokens from 'components/ProAmm/ProAmmPooledTokens'
 import ProAmmPriceRangeConfirm from 'components/ProAmm/ProAmmPriceRangeConfirm'
 import Rating from 'components/Rating'
 import { RowBetween } from 'components/Row'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-import TransactionSettings from 'components/TransactionSettings'
-import Tutorial, { TutorialType } from 'components/Tutorial'
+import { TutorialType } from 'components/Tutorial'
 import { APP_PATHS } from 'constants/index'
 import { EVMNetworkInfo } from 'constants/networks/type'
 import { NativeCurrencies } from 'constants/tokens'
@@ -61,7 +57,7 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { TRANSACTION_TYPE } from 'state/transactions/type'
 import { useDegenModeManager, useUserSlippageTolerance } from 'state/user/hooks'
 import { MEDIA_WIDTHS } from 'theme'
-import { calculateGasMargin, formattedNum, formattedNumLong, isAddressString, shortenAddress } from 'utils'
+import { calculateGasMargin, formattedNum, formattedNumLong, isAddressString } from 'utils'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 
@@ -93,6 +89,7 @@ export default function AddLiquidity() {
   )
 
   const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
+
   const ownsNFT = owner === account || existingPositionDetails?.operator === account
   const ownByFarm = isEVM
     ? (networkInfo as EVMNetworkInfo).elastic.farms.flat().includes(isAddressString(chainId, owner))
@@ -433,45 +430,18 @@ export default function AddLiquidity() {
         pendingText={pendingText}
       />
       <Container>
-        <Flex justifyContent="space-between" alignItems="center" marginTop="32px" marginBottom="24px">
-          <Flex
-            role="button"
-            onClick={() => navigate(-1)}
-            alignItems="center"
-            sx={{ cursor: 'pointer', ':hover': { opacity: '0.8' } }}
-          >
-            <ChevronLeft size={28} color={theme.subText} />
-            <Text fontSize="24px" fontWeight="500" marginLeft="8px">
-              <Trans>Increase Liquidity</Trans>
-            </Text>
-          </Flex>
-
-          <Flex>
-            {owner && account && !ownsNFT && !ownByFarm && (
-              <Text
-                fontSize="12px"
-                fontWeight="500"
-                color={theme.subText}
-                display="flex"
-                alignItems="center"
-                marginRight="8px"
-              >
-                <Trans>The owner of this liquidity position is {shortenAddress(chainId, owner)}</Trans>
-                <Copy toCopy={owner}></Copy>
-              </Text>
-            )}
-
-            <Tutorial
-              type={TutorialType.ELASTIC_INCREASE_LIQUIDITY}
-              customIcon={
-                <StyledMenuButton>
-                  <TutorialIcon />
-                </StyledMenuButton>
-              }
-            />
-            <TransactionSettings hoverBg={theme.buttonBlack} />
-          </Flex>
-        </Flex>
+        <AddRemoveTabs
+          hideShare
+          alignTitle="left"
+          action={LiquidityAction.INCREASE}
+          showTooltip={false}
+          onBack={() => {
+            navigate(`${APP_PATHS.POOLS}/${networkInfo.route}?tab=elastic`)
+          }}
+          tutorialType={TutorialType.ELASTIC_INCREASE_LIQUIDITY}
+          owner={owner}
+          showOwner={owner && account && !ownsNFT && !ownByFarm}
+        />
 
         <Content>
           {existingPosition ? (

@@ -463,8 +463,10 @@ export default function SwapForm() {
               )
             )}
             {!showApproveFlow && account && (
-              <ButtonError onClick={showPreview} disabled={disableBtnReviewTransfer}>
-                <Text fontWeight={500}>{t`Review Transfer`}</Text>
+              <ButtonError id="review-transfer-button" onClick={showPreview} disabled={disableBtnReviewTransfer}>
+                <Text fontWeight={500}>
+                  <Trans>Review Transfer</Trans>
+                </Text>
               </ButtonError>
             )}
             <Flex justifyContent={'flex-end'}>

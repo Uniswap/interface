@@ -445,6 +445,7 @@ function StakeModal({
             <Flex justifyContent="space-between" marginTop="24px">
               <div></div>
               <ButtonPrimary
+                id="stake-selected-button"
                 fontSize="14px"
                 padding="10px 24px"
                 width="fit-content"

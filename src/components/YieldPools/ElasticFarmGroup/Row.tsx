@@ -213,7 +213,7 @@ const Row = ({
         placement="top"
         width="300px"
       >
-        <MinimalActionButton onClick={() => onOpenModal('stake', farmingPool)}>
+        <MinimalActionButton id="stake-button" onClick={() => onOpenModal('stake', farmingPool)}>
           <Plus size={16} />
         </MinimalActionButton>
       </MouseoverTooltipDesktopOnly>

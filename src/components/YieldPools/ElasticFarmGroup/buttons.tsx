@@ -75,6 +75,7 @@ export const DepositButton: React.FC<React.ComponentPropsWithoutRef<'button'>> =
   const renderButton = () => {
     return (
       <ButtonOutlined
+        id="deposit-button"
         disabled={disabled}
         onClick={onClick}
         style={{

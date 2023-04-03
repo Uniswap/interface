@@ -7,24 +7,21 @@ import { Trans, t } from '@lingui/macro'
 import { captureException } from '@sentry/react'
 import JSBI from 'jsbi'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { ChevronLeft } from 'react-feather'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useMedia, usePrevious } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
-import { ReactComponent as TutorialIcon } from 'assets/svg/play_circle_outline.svg'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
 import { BlackCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import Copy from 'components/Copy'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import CurrencyLogo from 'components/CurrencyLogo'
 import Divider from 'components/Divider'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
 import Loader from 'components/Loader'
-import { StyledMenuButton } from 'components/NavigationTabs'
+import { AddRemoveTabs, LiquidityAction } from 'components/NavigationTabs'
 import ProAmmFee from 'components/ProAmm/ProAmmFee'
 import ProAmmPoolInfo from 'components/ProAmm/ProAmmPoolInfo'
 import ProAmmPooledTokens from 'components/ProAmm/ProAmmPooledTokens'
@@ -33,8 +30,7 @@ import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,
 } from 'components/TransactionConfirmationModal'
-import TransactionSettings from 'components/TransactionSettings'
-import Tutorial, { TutorialType } from 'components/Tutorial'
+import { TutorialType } from 'components/Tutorial'
 import { useActiveWeb3React, useWeb3React } from 'hooks'
 import { useProAmmNFTPositionManagerContract } from 'hooks/useContract'
 import useProAmmPoolInfo from 'hooks/useProAmmPoolInfo'
@@ -51,7 +47,7 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { TRANSACTION_TYPE } from 'state/transactions/type'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { MEDIA_WIDTHS } from 'theme'
-import { basisPointsToPercent, calculateGasMargin, formattedNum, formattedNumLong, shortenAddress } from 'utils'
+import { basisPointsToPercent, calculateGasMargin, formattedNum, formattedNumLong } from 'utils'
 import { ErrorName } from 'utils/sentry'
 import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
 
@@ -447,45 +443,16 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         pendingText={pendingText}
       />
       <Container>
-        <Flex justifyContent="space-between" alignItems="center" marginTop="32px" marginBottom="24px">
-          <Flex
-            role="button"
-            onClick={() => navigate(-1)}
-            alignItems="center"
-            sx={{ cursor: 'pointer', ':hover': { opacity: '0.8' } }}
-          >
-            <ChevronLeft size={28} color={theme.subText} />
-            <Text fontSize="24px" fontWeight="500" marginLeft="8px">
-              Remove Liquidity
-            </Text>
-          </Flex>
-
-          <Flex>
-            {owner && account && !ownsNFT && (
-              <Text
-                fontSize="12px"
-                fontWeight="500"
-                color={theme.subText}
-                display="flex"
-                alignItems="center"
-                marginRight="8px"
-              >
-                <Trans>The owner of this liquidity position is {shortenAddress(chainId, owner)}</Trans>
-                <Copy toCopy={owner} />
-              </Text>
-            )}
-
-            <Tutorial
-              type={TutorialType.ELASTIC_REMOVE_LIQUIDITY}
-              customIcon={
-                <StyledMenuButton>
-                  <TutorialIcon />
-                </StyledMenuButton>
-              }
-            />
-            <TransactionSettings hoverBg={theme.buttonBlack} />
-          </Flex>
-        </Flex>
+        <AddRemoveTabs
+          hideShare
+          alignTitle="left"
+          action={LiquidityAction.REMOVE}
+          showTooltip={false}
+          onBack={() => navigate(-1)}
+          tutorialType={TutorialType.ELASTIC_REMOVE_LIQUIDITY}
+          owner={owner}
+          showOwner={owner && account && !ownsNFT}
+        />
 
         <Content>
           {position ? (

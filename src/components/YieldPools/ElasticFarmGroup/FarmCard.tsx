@@ -337,7 +337,7 @@ const FarmCard = ({
 
           <Flex marginTop="20px" justifyContent="space-between">
             <Flex sx={{ gap: '12px' }}>
-              <Button color={theme.primary} disabled={disableStake} onClick={onStake}>
+              <Button id="stake-button" color={theme.primary} disabled={disableStake} onClick={onStake}>
                 <Plus size={16} /> Stake
               </Button>
               <Button color={theme.red} disabled={disableUnstake} onClick={onUnstake}>

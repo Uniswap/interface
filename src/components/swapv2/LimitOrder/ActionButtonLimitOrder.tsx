@@ -92,7 +92,7 @@ export default function ActionButtonLimitOrder({
               approval={approval}
             />
           )}
-          <ButtonError width="48%" id="swap-button" disabled={disableBtnReview} onClick={showPreview}>
+          <ButtonError width="48%" id="review-order-button" disabled={disableBtnReview} onClick={showPreview}>
             <Text fontSize={16} fontWeight={500}>
               <Trans>Review Order</Trans>
             </Text>
@@ -109,7 +109,7 @@ export default function ActionButtonLimitOrder({
   )
   if (showWarning && !disableBtnReview) return <ButtonWarning onClick={showPreview}>{contentButton}</ButtonWarning>
   return (
-    <ButtonPrimary onClick={showPreview} disabled={disableBtnReview}>
+    <ButtonPrimary id="review-order-button" onClick={showPreview} disabled={disableBtnReview}>
       {contentButton}
     </ButtonPrimary>
   )

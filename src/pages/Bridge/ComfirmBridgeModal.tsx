@@ -237,7 +237,7 @@ export default memo(function ConfirmBridgeModal({
               </span>
             </Disclaimer>
 
-            <ButtonPrimary onClick={onSwap} disabled={!accepted}>
+            <ButtonPrimary id="transfer-button" onClick={onSwap} disabled={!accepted}>
               <Trans>Transfer</Trans>
             </ButtonPrimary>
           </Flex>

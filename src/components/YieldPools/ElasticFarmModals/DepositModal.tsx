@@ -336,6 +336,7 @@ function ProMMDepositNFTModal({
             <Flex justifyContent="space-between" marginTop="24px">
               <div></div>
               <ButtonPrimary
+                id="deposit-selected-button"
                 fontSize="14px"
                 padding="10px 24px"
                 width="fit-content"

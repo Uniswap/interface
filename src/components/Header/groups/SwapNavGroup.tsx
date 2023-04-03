@@ -88,6 +88,7 @@ const SwapNavGroup = () => {
 
           {getLimitOrderContract(chainId) && (
             <StyledNavLink
+              id="limit-order-nav-link"
               to={`${APP_PATHS.LIMIT}/${networkInfo.route}`}
               style={{ flexDirection: 'column', width: '100%' }}
             >
@@ -103,7 +104,11 @@ const SwapNavGroup = () => {
           )}
 
           {isSolana || (
-            <StyledNavLink to={APP_PATHS.BRIDGE} style={{ flexDirection: 'column', width: '100%' }}>
+            <StyledNavLink
+              id="bridge-nav-link"
+              to={APP_PATHS.BRIDGE}
+              style={{ flexDirection: 'column', width: '100%' }}
+            >
               <Flex alignItems="center" sx={{ gap: '12px' }} justifyContent="space-between">
                 <IconWrapper>
                   <StyledBridgeIcon height={15} />
@@ -121,7 +126,7 @@ const SwapNavGroup = () => {
             </StyledNavLink>
           )}
           <StyledNavLink
-            id={`buy-crypto-nav-link`}
+            id="buy-crypto-nav-link"
             to={APP_PATHS.BUY_CRYPTO}
             onClick={() => {
               mixpanelHandler(MIXPANEL_TYPE.SWAP_BUY_CRYPTO_CLICKED)

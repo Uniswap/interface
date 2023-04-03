@@ -2,17 +2,20 @@ import { Trans, t } from '@lingui/macro'
 import { ArrowLeft, ChevronLeft, Trash } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { useMedia } from 'react-use'
-import { Flex } from 'rebass'
+import { Flex, Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
 import { ReactComponent as TutorialIcon } from 'assets/svg/play_circle_outline.svg'
 import { ButtonEmpty } from 'components/Button'
+import Copy from 'components/Copy'
 import QuestionHelper from 'components/QuestionHelper'
 import { RowBetween } from 'components/Row'
 import { ShareButtonWithModal } from 'components/ShareModal'
 import TransactionSettings from 'components/TransactionSettings'
 import Tutorial, { TutorialType } from 'components/Tutorial'
+import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
+import { shortenAddress } from 'utils'
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -123,6 +126,8 @@ export function AddRemoveTabs({
   onBack,
   tooltip,
   tutorialType,
+  owner,
+  showOwner,
 }: {
   action: LiquidityAction
   alignTitle?: 'center' | 'left'
@@ -132,8 +137,11 @@ export function AddRemoveTabs({
   onCleared?: () => void
   onBack?: () => void
   tooltip?: string
+  owner?: string
+  showOwner?: boolean
   tutorialType?: TutorialType
 }) {
+  const { chainId } = useActiveWeb3React()
   const navigate = useNavigate()
   const below768 = useMedia('(max-width: 768px)')
   const goBack = () => {
@@ -191,6 +199,20 @@ export function AddRemoveTabs({
           </>
         )}
         <Flex style={{ gap: '0px' }}>
+          {showOwner && owner && (
+            <Text
+              fontSize="12px"
+              fontWeight="500"
+              color={theme.subText}
+              display="flex"
+              alignItems="center"
+              marginRight="8px"
+            >
+              <Trans>The owner of this liquidity position is {shortenAddress(chainId, owner)}</Trans>
+              <Copy toCopy={owner}></Copy>
+            </Text>
+          )}
+
           {tutorialType && (
             <Tutorial
               type={tutorialType}

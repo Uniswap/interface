@@ -122,7 +122,7 @@ export default memo(function ConfirmOrderModal({
 
     if (shouldDisable) {
       return (
-        <ButtonPrimary disabled>
+        <ButtonPrimary id="place-order-button" disabled>
           <Trans>Place Order</Trans>
         </ButtonPrimary>
       )
@@ -130,14 +130,14 @@ export default memo(function ConfirmOrderModal({
 
     if (warningMessage?.length) {
       return (
-        <ButtonWarning onClick={onSubmit}>
+        <ButtonWarning id="place-order-button" onClick={onSubmit}>
           <Trans>Place Order</Trans>
         </ButtonWarning>
       )
     }
 
     return (
-      <ButtonPrimary onClick={onSubmit}>
+      <ButtonPrimary id="place-order-button" onClick={onSubmit}>
         <Trans>Place Order</Trans>
       </ButtonPrimary>
     )
