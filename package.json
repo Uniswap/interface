@@ -39,6 +39,9 @@
       "src/state/**/*.ts*",
       "src/utils/**/*.ts*"
     ],
+    "coveragePathIgnorePatterns": [
+      ".snap"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 4,
