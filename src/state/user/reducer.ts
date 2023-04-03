@@ -4,7 +4,7 @@ import { SupportedLocale } from 'constants/locales'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { updateVersion } from '../global/actions'
-import { SerializedPair, SerializedToken } from './types'
+import { SerializedPair, SerializedTokenMap } from './types'
 
 const currentTimestamp = () => new Date().getTime()
 
@@ -30,11 +30,7 @@ export interface UserState {
   // deadline set by user in minutes, used in all txns
   userDeadline: number
 
-  tokens: {
-    [chainId: number]: {
-      [address: string]: SerializedToken
-    }
-  }
+  tokens: SerializedTokenMap
 
   pairs: {
     [chainId: number]: {

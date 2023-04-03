@@ -10,3 +10,5 @@ export interface SerializedPair {
   token0: SerializedToken
   token1: SerializedToken
 }
+
+export type SerializedTokenMap = { [chainId: number]: { [address: string]: SerializedToken } }

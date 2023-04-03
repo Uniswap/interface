@@ -11,7 +11,7 @@ import { UserAddedToken } from 'types/tokens'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
-import { useDefaultActiveTokens } from '../../hooks/Tokens'
+import { ChainToTokensMap, TokenMap, useDefaultActiveTokens } from '../../hooks/Tokens'
 import { AppState } from '../types'
 import {
   addSerializedPair,
@@ -24,7 +24,7 @@ import {
   updateUserLocale,
   updateUserSlippageTolerance,
 } from './reducer'
-import { SerializedPair, SerializedToken } from './types'
+import { SerializedPair, SerializedToken, SerializedTokenMap } from './types'
 
 export function serializeToken(token: Token): SerializedToken {
   return {
@@ -44,6 +44,16 @@ export function deserializeToken(serializedToken: SerializedToken, Class: typeof
     serializedToken.symbol,
     serializedToken.name
   )
+}
+
+function deserializeMap(map: SerializedTokenMap): ChainToTokensMap {
+  return Object.entries(map).reduce((acc, [chainId, tokenMap]) => {
+    acc[parseInt(chainId)] = Object.entries(tokenMap).reduce((acc, [address, token]) => {
+      acc[address] = deserializeToken(token)
+      return acc
+    }, {} as TokenMap)
+    return acc
+  }, {} as ChainToTokensMap)
 }
 
 export function useUserLocale(): SupportedLocale | null {
@@ -185,15 +195,19 @@ export function useAddUserToken(): (token: Token) => void {
   )
 }
 
+export function useUserAddedTokensMultichain(): SerializedTokenMap {
+  return useAppSelector(({ user: { tokens } }) => tokens)
+}
+
 export function useUserAddedTokensOnChain(chainId: number | undefined | null): Token[] {
-  const serializedTokensMap = useAppSelector(({ user: { tokens } }) => tokens)
+  const serializedTokensMap = useUserAddedTokensMultichain()
 
   return useMemo(() => {
     if (!chainId) return []
-    const tokenMap: Token[] = serializedTokensMap?.[chainId]
+    const tokens: Token[] = serializedTokensMap?.[chainId]
       ? Object.values(serializedTokensMap[chainId]).map((value) => deserializeToken(value, UserAddedToken))
       : []
-    return tokenMap
+    return tokens
   }, [serializedTokensMap, chainId])
 }
 
