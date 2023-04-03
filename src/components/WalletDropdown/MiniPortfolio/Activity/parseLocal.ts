@@ -188,13 +188,11 @@ export function useLocalActivities(account: string): ActivityMap {
   return useMemo(
     () =>
       allTransactions.reduce((acc: { [hash: string]: Activity }, [transaction, chainId]) => {
-        if (transaction.from !== account) return acc
-        try {
+        if (transaction.from === account) {
           const localActivity = parseLocalActivity(transaction, chainId, tokens)
           if (localActivity) acc[localActivity.hash] = localActivity
-        } catch (error) {
-          console.error('Failed to parse local activity', transaction)
         }
+
         return acc
       }, {}),
     [account, allTransactions, tokens]
