@@ -4,7 +4,7 @@ import { ButtonText } from 'components/Button'
 import { MouseoverTooltipContent } from 'components/Tooltip'
 import { useWalletDrawer } from 'components/WalletDropdown'
 import { useCallback, useEffect, useState } from 'react'
-import { useBuyFiatClicked } from 'state/user/hooks'
+import { useBuyFiatFlowCompleted } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { ExternalLink } from 'theme'
 
@@ -22,26 +22,19 @@ const MOONPAY_REGION_AVAILABILITY_ARTICLE =
   'https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-'
 
 enum BuyFiatFlowState {
-  // Default initial state
+  // Default initial state. User is not actively trying to buy fiat.
   INACTIVE,
   // Buy fiat flow is active and region availability has been checked.
   ACTIVE_POST_REGION_CHECK,
   // Buy fiat flow is active, feature is available in user's region & needs wallet connection.
   ACTIVE_NEEDS_WALLET_CONNECTION,
-  AVAILABLE_IN_REGION,
-  UNAVAILABLE_IN_REGION,
 }
-
-const TerminalBuyFiatFlowStates = new Set([
-  BuyFiatFlowState.AVAILABLE_IN_REGION,
-  BuyFiatFlowState.UNAVAILABLE_IN_REGION,
-])
 
 export default function SwapBuyFiatButton() {
   const theme = useTheme()
   const { account } = useWeb3React()
   const openFiatOnRampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
-  const [buyFiatClicked, setBuyFiatClicked] = useBuyFiatClicked()
+  const [buyFiatFlowCompleted, setBuyFiatFlowCompleted] = useBuyFiatFlowCompleted()
   const [checkFiatRegionAvailability, setCheckFiatRegionAvailability] = useState(false)
   const {
     available: fiatOnrampAvailable,
@@ -51,6 +44,15 @@ export default function SwapBuyFiatButton() {
   } = useFiatOnrampAvailability(checkFiatRegionAvailability)
   const [buyFiatFlowState, setBuyFiatFlowState] = useState(BuyFiatFlowState.INACTIVE)
   const [walletDrawerOpen, toggleWalletDrawer] = useWalletDrawer()
+
+  /* 
+  Once the buy fiat flow has been completed, reset BuyFiatFlowState and also save to 
+  local storage that user has completed this flow already.
+  */
+  const terminateBuyFiatFlow = useCallback(() => {
+    setBuyFiatFlowCompleted(true)
+    setBuyFiatFlowState(BuyFiatFlowState.INACTIVE)
+  }, [setBuyFiatFlowCompleted, setBuyFiatFlowState])
 
   /*
   Depending on the current state of the buy fiat flow the user is in (buyFiatFlowState),
@@ -71,19 +73,18 @@ export default function SwapBuyFiatButton() {
       setBuyFiatFlowState(BuyFiatFlowState.ACTIVE_NEEDS_WALLET_CONNECTION)
     } else if (fiatOnrampAvailable && account) {
       openFiatOnRampModal()
-      setBuyFiatFlowState(BuyFiatFlowState.AVAILABLE_IN_REGION)
+      terminateBuyFiatFlow()
     } else if (!fiatOnrampAvailable) {
-      setBuyFiatFlowState(BuyFiatFlowState.UNAVAILABLE_IN_REGION)
+      terminateBuyFiatFlow()
     }
   }, [
-    setBuyFiatFlowState,
-    setCheckFiatRegionAvailability,
-    account,
     fiatOnrampAvailabilityChecked,
     fiatOnrampAvailable,
-    toggleWalletDrawer,
+    account,
     walletDrawerOpen,
+    toggleWalletDrawer,
     openFiatOnRampModal,
+    terminateBuyFiatFlow,
   ])
 
   // Increment buy fiat flow state automatically, when requisite state changes have occured.
@@ -95,17 +96,6 @@ export default function SwapBuyFiatButton() {
       handleBuyCrypto()
     }
   }, [account, handleBuyCrypto, buyFiatFlowState])
-
-  /* 
-  Once a terminal state in the buy fiat flow has been reached, reset BuyFiatFlowState
-  and also save to local storage that the flow has completed once for this user. 
-  */
-  useEffect(() => {
-    if (TerminalBuyFiatFlowStates.has(buyFiatFlowState)) {
-      setBuyFiatClicked(true)
-      setBuyFiatFlowState(BuyFiatFlowState.INACTIVE)
-    }
-  }, [buyFiatFlowState, handleBuyCrypto, setBuyFiatClicked])
 
   useEffect(() => {
     if (error) console.error(error)
@@ -132,7 +122,7 @@ export default function SwapBuyFiatButton() {
         </div>
       }
       placement="bottom"
-      disableHover={fiatOnrampAvailabilityChecked && !fiatOnrampAvailable}
+      disableHover={!fiatOnrampAvailabilityChecked || (fiatOnrampAvailabilityChecked && fiatOnrampAvailable)}
     >
       <ButtonText
         onClick={handleBuyCrypto}
@@ -142,7 +132,7 @@ export default function SwapBuyFiatButton() {
         style={{ gap: '4px' }}
       >
         <Trans>Buy</Trans>
-        {!buyFiatClicked && <Dot />}
+        {!buyFiatFlowCompleted && <Dot />}
       </ButtonText>
     </MouseoverTooltipContent>
   )
