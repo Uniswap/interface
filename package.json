@@ -37,6 +37,7 @@
       "src/lib/utils/**/*.ts*",
       "src/pages/**/*.ts*",
       "src/state/**/*.ts*",
+      "src/tracing/**/*.ts*",
       "src/utils/**/*.ts*"
     ],
     "coveragePathIgnorePatterns": [
