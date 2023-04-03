@@ -7,14 +7,14 @@ type AreaName = keyof Pick<
 export class PersistedStorage {
   constructor(private area: AreaName = 'local') {}
 
-  async get(key: string | null): Promise<string> {
+  async get(key: string): Promise<string | undefined> {
     const result = await chrome.storage[this.area].get(key)
-
-    return key ? result[key] : result
+    return result[key]
   }
 
-  getAll(): Promise<string> {
-    return this.get(null)
+  async getAll(): Promise<Record<string, string>> {
+    const result = await chrome.storage[this.area].get(null)
+    return result ?? {}
   }
 
   set(key: string, value: string): Promise<void> {

@@ -27,6 +27,7 @@ export function* importAccount(params: ImportAccountParams) {
     yield* call(
       importMnemonicAccounts,
       params.validatedMnemonic,
+      params.validatedPassword,
       name,
       params.indexes,
       params.markAsActive,
@@ -55,18 +56,51 @@ function* importAddressAccount(
   yield* call(onAccountImport, account, ignoreActivate)
 }
 
+/**
+ * Imports an account with a seed phrase, and handles secure storage.
+ * Storage is encrypted via the provided password. Password is discarded
+ * after function execution.
+ *
+ *       [seed]
+ *       [ pw ] ┌───────┐    ┌──────────┬────────────────────────┐
+ *  User───────►│ Popup │    │Background│                        │
+ *              └───┬───┘    ├──────────┘                        │
+ *                  │        │  ┌─────────────────┐              │
+ *                  └────────┼─►│ImportAccountSaga│              │
+ *                    [seed] │  └┬────────────────┘              │
+ *                    [ pw ] │   │                               │
+ *                           │  ┌▼────────┐ [enc seed]┌─────────┐│
+ *                           │  │ Keyring ├──────────►│ Storage ││
+ *                           │  └─────┬─▲─┘           └─────────┘│
+ *                           │ [seed] │ │ [encrypted seed]       │
+ *                           │ [ pw ] │ │                        │
+ *                           │      ┌─▼─┴──┐                     │
+ *                           │      │Crypto│                     │
+ *                           │      └──────┘                     │
+ *                           └───────────────────────────────────┘
+ */
 function* importMnemonicAccounts(
   validatedMnemonic: string,
+  validatedPassword: string,
   name?: string,
   indexes = [0],
   markAsActive?: boolean,
   ignoreActivate?: boolean
 ) {
-  const mnemonicId = yield* call(Keyring.importMnemonic, validatedMnemonic)
+  const mnemonicId = yield* call(
+    Keyring.importMnemonic,
+    validatedMnemonic,
+    validatedPassword
+  )
   // generate private keys and return addresses for all derivation indexes
   const addresses = yield* all(
     indexes.map((index) => {
-      return call(Keyring.generateAndStorePrivateKey, mnemonicId, index)
+      return call(
+        Keyring.generateAndStorePrivateKey,
+        mnemonicId,
+        index,
+        validatedPassword
+      )
     })
   )
 

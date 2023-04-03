@@ -4,6 +4,9 @@
  * Provides the generation, storage, and signing logic for mnemonics and private keys.
  */
 export interface IKeyring {
+  /** @returns true if password can successfully decrypt mnemonics stored in storage. */
+  unlock(password: string): Promise<boolean>
+
   /**
    * Fetches all mnemonic IDs, which are used as keys to access the actual mnemonics
    * in key-value store.
@@ -17,34 +20,45 @@ export interface IKeyring {
    * mnemonic ID key as the public address.
 
    * @param mnemonic The mnemonic phrase to import
+   * @param password The password used to encrypt the mnemonic. Marked as optional depending on the platform.
    * @returns public address from the mnemonic's first derived private key
    */
-  importMnemonic(mnemonic: string): Promise<string>
+  importMnemonic(mnemonic: string, password?: string): Promise<string>
 
   /**
-   Generates a new mnemonic and retrieves associated public address. Stores new mnemonic in native keychain with the mnemonic ID key as the public address.
-
-   @returns public address from the mnemonic's first derived private key
+   * Generates a new mnemonic and retrieves associated public address. Stores new mnemonic in local storage
+   * with the mnemonic ID key as the public address.
+   *
+   * @param password The password used to encrypt the mnemonic. Marked as optional depending on the platform.
+   * @returns public address from the mnemonic's first derived private key
    */
-  generateAndStoreMnemonic(): Promise<string>
+  generateAndStoreMnemonic(password?: string): Promise<string>
 
   /**
-Fetches all public addresses from private keys stored under `privateKeyPrefix` in native keychain. Used from React Native to verify the native keychain has the private key for an account that is attempting create a NativeSigner that calls native signing methods
-
-@returns public addresses for all stored private keys
-*/
+   * Fetches all public addresses from private keys stored under `privateKeyPrefix` in platform storage.
+   *
+   * Used to verify platform storage has the private key for an account that is attempting create a NativeSigner
+   * that calls native signing methods
+   *
+   * @returns public addresses for all stored private keys
+   */
   getAddressesForStoredPrivateKeys(): Promise<string[]>
 
   /**
-   Derives private key and public address from mnemonic associated with `mnemonicId` for given `derivationIndex`. Stores the private key in native keychain with key.
-
-   @param mnemonicId key string associated with mnemonic to generate private key for (currently convention is to use public address associated with mnemonic)
-   @param derivationIndex number used to specify a which derivation index to use for deriving a private key from the mnemonic
-   @returns public address associated with private key generated from the mnemonic at given derivation index
+   * Derives private key and public address from mnemonic associated with `mnemonicId` for given `derivationIndex`.
+   * Stores the private key in platform storage with key.
+   *
+   * @param mnemonicId key string associated with mnemonic to generate private key for (currently convention is to
+   * use public address associated with mnemonic)
+   * @param derivationIndex number used to specify a which derivation index to use for deriving a private key
+   * from the mnemonic
+   * @param password The password used to encrypt the private key. Marked as optional depending on the platform.
+   * @returns public address associated with private key generated from the mnemonic at given derivation index
    */
   generateAndStorePrivateKey(
     mnemonicId: string,
-    derivationIndex: number
+    derivationIndex: number,
+    password?: string
   ): Promise<string>
 
   signTransactionHashForAddress(
@@ -64,6 +78,10 @@ Fetches all public addresses from private keys stored under `privateKeyPrefix` i
 
 /** Dummy Keyring implementation.  */
 class NullKeyring implements IKeyring {
+  unlock(): Promise<boolean> {
+    return Promise.resolve(true)
+  }
+
   getMnemonicIds(): Promise<string[]> {
     throw new NotImplementedError('getMnemonicIds')
   }
@@ -118,5 +136,4 @@ class NotImplementedError extends Error {
 }
 
 // Will be overriden by the compiler with platform-specific Keyring
-// TODO: consider moving to wallet context? Global keyring is closer to lib/RNEthersRS
 export const Keyring = new NullKeyring()

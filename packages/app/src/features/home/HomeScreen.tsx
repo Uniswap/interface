@@ -1,10 +1,13 @@
 import { H1, Stack } from 'tamagui'
+import { authActions } from '../auth/saga'
 import { Text } from 'ui/src'
+import { Button } from 'ui/src/components/button/Button'
 
-import { useAppSelector } from '../../state'
+import { useAppDispatch, useAppSelector } from '../../state'
 
 export function HomeScreen(): JSX.Element {
   const accounts = useAppSelector((state) => state?.wallet?.accounts)
+  const dispatch = useAppDispatch()
 
   return (
     <Stack
@@ -21,6 +24,12 @@ export function HomeScreen(): JSX.Element {
           <Text variant="bodyLarge">{a.address}</Text>
         </Stack>
       ))}
+      <Button
+        onPress={(): void => {
+          return dispatch(authActions.reset())
+        }}>
+        Lock
+      </Button>
     </Stack>
   )
 }

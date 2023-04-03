@@ -1,25 +1,49 @@
 import { Button } from 'ui/src/components/button/Button'
-import { Stack, Text } from 'ui/src'
+import { Input, InputProps, Stack, Text } from 'ui/src'
 import { useState } from 'react'
 import { useAppDispatch } from '../../state'
-import { authActions } from './saga'
+import { authActions, authSagaName } from './saga'
+import { useSagaStatus } from 'app/src/state/useSagaStatus'
+
+export function usePasswordInput(
+  defaultValue = ''
+): Pick<InputProps, 'value' | 'onChangeText' | 'disabled'> {
+  const [value, setValue] = useState(defaultValue)
+
+  const onChangeText: InputProps['onChangeText'] = (newValue): void => {
+    setValue(newValue)
+  }
+
+  return {
+    value,
+    disabled: !value,
+    onChangeText,
+  }
+}
 
 function Locked(): JSX.Element {
   const dispatch = useAppDispatch()
-  const [password, setPassword] = useState('')
+  const passwordInputProps = usePasswordInput()
+
+  const { status } = useSagaStatus(authSagaName, undefined, false)
 
   const onPress = (): void => {
-    dispatch(authActions.trigger({ password }))
+    dispatch(authActions.trigger({ password: passwordInputProps.value }))
   }
 
-  //TODO: use Tamagui for input
   return (
-    <Stack>
-      <Text>hello</Text>
-      <input
-        type="password"
-        value={password}
-        onChange={(e): void => setPassword(e.target.value)}
+    <Stack padding="$spacing24" space="$spacing24">
+      <Text color="$textPrimary" variant="headlineLarge">
+        Unlock with password
+      </Text>
+      <Text color="$textPrimary" variant="headlineSmall">
+        Status {status}
+      </Text>
+      <Input
+        secureTextEntry
+        {...passwordInputProps}
+        backgroundColor="$background3"
+        color="$textPrimary"
       />
       <Button onPress={onPress}>
         <Text>Unlock</Text>

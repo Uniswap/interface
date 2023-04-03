@@ -1,7 +1,10 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import Locked from '../features/auth/Locked'
 import { authSagaName } from '../features/auth/saga'
 import { HomeScreen } from '../features/home/HomeScreen'
 import { IntroScreen } from '../features/onboarding/IntroScreen'
+import { isOnboardedSelector } from '../features/wallet/selectors'
+import { useAppSelector } from '../state'
 import { useSagaStatus } from '../state/useSagaStatus'
 import { SagaStatus } from '../utils/saga'
 import { OnboardingScreen, Screen } from './screens'
@@ -11,8 +14,32 @@ const AppStack = createNativeStackNavigator<AppStackParamList>()
 const OnboardingStack = createNativeStackNavigator<OnboardingStackParamList>()
 
 export function WebNavigation(): JSX.Element {
+  const isOnboarded = useAppSelector(isOnboardedSelector)
   const isLoggedIn =
     useSagaStatus(authSagaName, undefined, false).status === SagaStatus.Success
+
+  if (!isOnboarded) {
+    return (
+      <OnboardingStack.Navigator>
+        <OnboardingStack.Screen
+          component={IntroScreen}
+          name={OnboardingScreen.Landing}
+        />
+        <OnboardingStack.Screen
+          component={IntroScreen}
+          name={OnboardingScreen.Backup}
+        />
+        <OnboardingStack.Screen
+          component={IntroScreen}
+          name={OnboardingScreen.Outro}
+        />
+        <OnboardingStack.Screen
+          component={IntroScreen}
+          name={OnboardingScreen.Security}
+        />
+      </OnboardingStack.Navigator>
+    )
+  }
 
   if (isLoggedIn) {
     return (
@@ -22,24 +49,5 @@ export function WebNavigation(): JSX.Element {
     )
   }
 
-  return (
-    <OnboardingStack.Navigator>
-      <OnboardingStack.Screen
-        component={IntroScreen}
-        name={OnboardingScreen.Landing}
-      />
-      <OnboardingStack.Screen
-        component={IntroScreen}
-        name={OnboardingScreen.Backup}
-      />
-      <OnboardingStack.Screen
-        component={IntroScreen}
-        name={OnboardingScreen.Outro}
-      />
-      <OnboardingStack.Screen
-        component={IntroScreen}
-        name={OnboardingScreen.Security}
-      />
-    </OnboardingStack.Navigator>
-  )
+  return <Locked />
 }

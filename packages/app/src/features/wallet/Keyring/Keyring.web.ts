@@ -2,6 +2,7 @@ import { PersistedStorage } from 'app/src/utils/persistedStorage'
 import { Signature, Wallet } from 'ethers'
 import { defaultPath, joinSignature, SigningKey } from 'ethers/lib/utils'
 import { logger } from '../../logger/logger'
+import { decrypt, encrypt } from './crypto'
 import { IKeyring } from './Keyring'
 
 const prefix = 'com.uniswap.web'
@@ -26,13 +27,14 @@ export class WebKeyring implements IKeyring {
   constructor(private storage = new PersistedStorage()) {
     this.generateAndStoreMnemonic = this.generateAndStoreMnemonic.bind(this)
     this.generateAndStorePrivateKey = this.generateAndStorePrivateKey.bind(this)
+    this.getMnemonicIds = this.getMnemonicIds.bind(this)
     this.importMnemonic = this.importMnemonic.bind(this)
     this.keyForMnemonicId = this.keyForMnemonicId.bind(this)
     this.keyForPrivateKey = this.keyForPrivateKey.bind(this)
     this.retrieveMnemonic = this.retrieveMnemonic.bind(this)
     this.storeNewMnemonic = this.storeNewMnemonic.bind(this)
+    this.unlock = this.unlock.bind(this)
   }
-
   /**
    * Fetches all mnemonic IDs, which are used as keys to access the actual mnemonics
    * in key-value store.
@@ -49,80 +51,119 @@ export class WebKeyring implements IKeyring {
     return mnemonicIds
   }
 
+  async unlock(password: string): Promise<boolean> {
+    // assumes every mnemonic is encrypted withe same password
+    const firstMnemonicId = (await this.getMnemonicIds())[0]
+
+    if (!firstMnemonicId) {
+      throw new Error(
+        `${ErrorType.RetrieveMnemonicError}: Attempted to unlock wallet, but storage is empty.`
+      )
+    }
+
+    const mnemonic = await this.retrieveMnemonic(firstMnemonicId, password)
+
+    return Boolean(mnemonic)
+  }
+
   /**
    * Derives private key from mnemonic with derivation index 0 and retrieves
    * associated public address. Stores imported mnemonic in store with the
    * mnemonic ID key as the public address.
 
-   * @param mnemonic The mnemonic phrase to import
+   * @param mnemonic the mnemonic phrase to import
+   * @param password the password to encrypt the mnemonic. Marked as optional depending on the platform.
+*                    Currently only used on web.
    * @returns public address from the mnemonic's first derived private key
    */
-  async importMnemonic(mnemonic: string): Promise<string> {
+  async importMnemonic(mnemonic: string, password: string): Promise<string> {
     const wallet = Wallet.fromMnemonic(mnemonic)
 
     const address = wallet.address
 
-    const mnemonicId = await this.storeNewMnemonic(mnemonic, address)
+    const mnemonicId = await this.storeNewMnemonic(mnemonic, password, address)
 
     if (!mnemonicId) {
-      throw new Error('Failed to import mnemonic')
+      throw new Error(
+        `${ErrorType.StoreMnemonicError}: Failed to import mnemonic`
+      )
     }
 
     return mnemonicId
   }
 
   /**
-   Generates a new mnemonic and retrieves associated public address. Stores new mnemonic in native keychain with the mnemonic ID key as the public address.
-
-   @returns public address from the mnemonic's first derived private key
+   * Generates a new mnemonic and retrieves associated public address. Stores new mnemonic in native keychain with the mnemonic ID key as the public address.
+   * @param password the password to encrypt the mnemonic
+   * @returns public address from the mnemonic's first derived private key
    */
-  async generateAndStoreMnemonic(): Promise<string> {
+  async generateAndStoreMnemonic(password: string): Promise<string> {
     const newWallet = Wallet.createRandom()
 
     const mnemonic = newWallet.mnemonic.phrase
     const address = newWallet.address
 
-    if (!(await this.storeNewMnemonic(mnemonic, address))) {
-      throw new Error('Failed to generate and store mnemonic')
+    if (!(await this.storeNewMnemonic(mnemonic, password, address))) {
+      throw new Error(
+        `${ErrorType.StoreMnemonicError}: Failed to generate and store mnemonic`
+      )
     }
 
     return address
   }
 
-  // TODO: encrypt
   private async storeNewMnemonic(
     mnemonic: string,
+    password: string,
     address: string
   ): Promise<string | undefined> {
-    const checkStored = await this.retrieveMnemonic(address)
+    const checkStored = await this.retrieveMnemonic(address, password)
 
-    if (checkStored === undefined) {
-      const newMnemonicKey = this.keyForMnemonicId(address)
-
-      await this.storage.set(newMnemonicKey, mnemonic)
+    if (checkStored !== undefined) {
+      logger.debug(
+        'Keyring.web',
+        'storeNewMnemonic',
+        'mnemonic already stored. Did you mean to reimport?'
+      )
 
       return address
     }
 
-    logger.debug(
-      'Keyring.web',
-      'storeNewMnemonic',
-      'mnemonic already stored. Did you mean to reimport?'
-    )
-    return undefined
+    const secretPayload = await encrypt(mnemonic, password)
+
+    const newMnemonicKey = this.keyForMnemonicId(address)
+    await this.storage.set(newMnemonicKey, JSON.stringify(secretPayload))
+
+    return address
   }
 
   private keyForMnemonicId(mnemonicId: string): string {
-    // NOTE: small difference with mobile implementation--native keychain prepends
-    // a custom prefix, but we missed do it ourselves here.
+    // NOTE: small difference with mobile implementation--native keychain prepends a custom prefix, but we missed do it ourselves here.
     return entireMnemonicPrefix + mnemonicId
   }
 
   private async retrieveMnemonic(
-    mnemonicId: string
+    mnemonicId: string,
+    password: string
   ): Promise<string | undefined> {
     const key = this.keyForMnemonicId(mnemonicId)
-    return await this.storage.get(key)
+    const result = await this.storage.get(key)
+
+    if (!result) return undefined
+
+    try {
+      const maybeSecretPayload = JSON.parse(result)
+      const mnemonic = await decrypt(password, maybeSecretPayload)
+
+      if (!mnemonic) return undefined
+
+      // validate mnemonic (will throw if invalid)
+      Wallet.fromMnemonic(mnemonic)
+
+      return mnemonic
+    } catch (e) {
+      throw new Error(`${ErrorType.RetrieveMnemonicError}: ${e}`)
+    }
   }
 
   /**
@@ -140,15 +181,17 @@ export class WebKeyring implements IKeyring {
 
   /**
    * Derives private key and public address from mnemonic associated with `mnemonicId` for given `derivationIndex`. Stores the private key in store with key.
-   @param mnemonicId key string associated with mnemonic to generate private key for (currently convention is to use public address associated with mnemonic)
-   @param derivationIndex number used to specify a which derivation index to use for deriving a private key from the mnemonic
-   @returns public address associated with private key generated from the mnemonic at given derivation index
+   * @param mnemonicId key string associated with mnemonic to generate private key for (currently convention is to use public address associated with mnemonic)
+   * @param derivationIndex number used to specify a which derivation index to use for deriving a private key from the mnemonic
+   * @param password the password to decrypt the private key
+   * @returns public address associated with private key generated from the mnemonic at given derivation index
    */
   async generateAndStorePrivateKey(
     mnemonicId: string,
-    derivationIndex: number
+    derivationIndex: number,
+    password: string
   ): Promise<string> {
-    const mnemonic = await this.retrieveMnemonic(mnemonicId)
+    const mnemonic = await this.retrieveMnemonic(mnemonicId, password)
 
     if (!mnemonic) {
       throw new Error(ErrorType.RetrieveMnemonicError)
@@ -165,11 +208,12 @@ export class WebKeyring implements IKeyring {
     return walletAtIndex.address
   }
 
-  private storeNewPrivateKey(
+  private async storeNewPrivateKey(
     address: string,
     privateKey: string
   ): Promise<void> {
     try {
+      // TODO: encrypt
       const newKey = this.keyForPrivateKey(address)
       return this.storage.set(newKey, privateKey)
     } catch (e) {

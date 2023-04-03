@@ -1,8 +1,13 @@
 import { runSaga } from '@redux-saga/core'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { NATIVE_ADDRESS } from 'app/src/constants/addresses'
-import { signerManager } from '../../../test/__fixtures__'
-import { WebKeyring } from '../Keyring/Keyring.web'
+import {
+  SAMPLE_PASSWORD,
+  SAMPLE_SEED,
+  SAMPLE_SEED_ADDRESS_1,
+  SAMPLE_SEED_ADDRESS_2,
+  signerManager,
+} from '../../../test/__fixtures__'
 import { addAccounts } from '../slice'
 import { AccountType } from '../types'
 import { importAccount } from './importAccountSaga'
@@ -12,32 +17,15 @@ import {
   ImportAddressAccountParams,
 } from './types'
 
-jest.mock('app/src/features/wallet/Keyring/Keyring', () => ({
-  // use WebKeyring as it can run in node environment
-  Keyring: new WebKeyring(),
-}))
-
-const SAMPLE_SEED = [
-  'dove',
-  'lumber',
-  'quote',
-  'board',
-  'young',
-  'robust',
-  'kit',
-  'invite',
-  'plastic',
-  'regular',
-  'skull',
-  'history',
-].join(' ')
-const SAMPLE_SEED_ADDRESS_1 = '0x82D56A352367453f74FC0dC7B071b311da373Fa6'
-const SAMPLE_SEED_ADDRESS_2 = '0x55f4B664C68F398f9e81EFf63ef4444A1A184F98'
+// uses , () => ({__mocks__
+jest.mock('../Keyring/crypto')
+jest.mock('app/src/features/wallet/Keyring/Keyring')
 
 describe(importAccount, () => {
   it('imports native account', async () => {
     const params: ImportMnemonicAccountParams = {
       validatedMnemonic: SAMPLE_SEED,
+      validatedPassword: SAMPLE_PASSWORD,
       name: 'WALLET',
       type: ImportAccountType.Mnemonic,
       indexes: [0, 1],
