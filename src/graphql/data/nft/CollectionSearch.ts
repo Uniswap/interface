@@ -12,7 +12,7 @@ const MAX_SEARCH_RESULTS = 6
 
 gql`
   query CollectionSearch($query: String!) {
-    nftCollections(filter: { nameQuery: $query }, _fs: "DATASOURCE:ALTERNATE") {
+    nftCollections(filter: { nameQuery: $query }, _fs: "DATASOURCE:LEGACY") {
       edges {
         cursor
         node {
@@ -29,8 +29,8 @@ gql`
             symbol
             totalSupply
           }
-          markets(currencies: ETH, _fs: "DATASOURCE:ALTERNATE") {
-            floorPrice(_fs: "DATASOURCE:ALTERNATE") {
+          markets(currencies: ETH, _fs: "DATASOURCE:LEGACY") {
+            floorPrice(_fs: "DATASOURCE:LEGACY") {
               currency
               value
             }

@@ -2,12 +2,12 @@ import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import gql from 'graphql-tag'
 import { useMemo } from 'react'
 
-import { Chain, SearchTokensQuery, useSearchTokensQuery } from './__generated__/types-and-hooks'
 import { chainIdToBackendName } from './util'
+import { Chain, SearchTokensQuery, useSearchTokensQuery } from './__generated__/types-and-hooks'
 
 gql`
   query SearchTokens($searchQuery: String!) {
-    searchTokens(searchQuery: $searchQuery, _fs: "DATASOURCE:ALTERNATE") {
+    searchTokens(searchQuery: $searchQuery, _fs: "DATASOURCE:LEGACY") {
       id
       decimals
       name
