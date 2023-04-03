@@ -72,23 +72,21 @@ export default function PoolPositionList({ positions, filterByOperator, filterBy
         if (!chainId || loading || !pools || !pools?.[0]) return ''
         const { name, symbol, decimals, owner } = pools?.[0]
         const isPoolOperator = owner === account
-        if (!isPoolOperator) return ''
+        if (filterByOperator && !isPoolOperator) return ''
         return new Token(chainId, poolAddresses[i], decimals, symbol, name)
       })
       .filter((p) => p !== '')
-  }, [account, chainId, poolAddresses, results])
+  }, [account, chainId, filterByOperator, poolAddresses, results])
 
   return (
     <>
       <DesktopHeader>
         <div>
-          <Trans>Operated pools</Trans>
+          {filterByOperator ? <Trans>Operated pools</Trans> : <Trans>Loaded pools</Trans>}
           {positions && ' (' + operatedPools.length + ')'}
         </div>
       </DesktopHeader>
-      <MobileHeader>
-        <Trans>Operated pools</Trans>
-      </MobileHeader>
+      <MobileHeader>{filterByOperator ? <Trans>Operated pools</Trans> : <Trans>Loaded pools</Trans>}</MobileHeader>
       {operatedPools.length !== 0 ? (
         operatedPools.map((p: any) => {
           return <PoolPositionListItem key={p?.name.toString()} positionDetails={p} />
