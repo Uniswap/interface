@@ -7,7 +7,7 @@ import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { useWalletDrawer } from 'components/WalletDropdown'
 import IconButton from 'components/WalletDropdown/IconButton'
-import { Connection, ConnectionType, networkConnection, useConnections } from 'connection'
+import { Connection, ConnectionType, getConnections, networkConnection } from 'connection'
 import { useGetConnection } from 'connection'
 import { ErrorCode } from 'connection/utils'
 import { isSupportedChain } from 'constants/chains'
@@ -91,7 +91,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
   const [pendingConnection, setPendingConnection] = useState<Connection | undefined>()
   const [pendingError, setPendingError] = useState<any>()
 
-  const connections = useConnections()
+  const connections = getConnections()
   const getConnection = useGetConnection()
 
   useEffect(() => {
@@ -116,7 +116,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
   // When new wallet is successfully set by the user, trigger logging of Amplitude analytics event.
   useEffect(() => {
     if (account && account !== lastActiveWalletAddress) {
-      const walletName = getConnection(connector).name
+      const walletName = getConnection(connector).getName()
       const peerWalletAgent = provider ? getWalletMeta(provider)?.agent : undefined
       const isReconnect =
         connectedWallets.filter((wallet) => wallet.account === account && wallet.walletType === walletName).length > 0
@@ -141,6 +141,9 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
 
   const tryActivation = useCallback(
     async (connection: Connection) => {
+      // Skips wallet connection if the connection should override the default behavior, i.e. install metamask or launch coinbase app
+      if (connection.overrideActivate?.()) return
+
       // log selected wallet
       sendEvent({
         category: 'Wallet',
@@ -165,7 +168,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
 
           sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
             result: WalletConnectionResult.FAILED,
-            wallet_type: connection.name,
+            wallet_type: connection.getName(),
           })
         }
       }
@@ -190,11 +193,11 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
           <OptionGrid data-testid="option-grid">
             {connections.map((connection) =>
               // Hides Uniswap Wallet if mgtm is disabled
-              connection.shouldDisplay && !(connection.type === ConnectionType.UNIWALLET && !mgtmEnabled) ? (
+              connection.shouldDisplay() && !(connection.type === ConnectionType.UNIWALLET && !mgtmEnabled) ? (
                 <Option
-                  key={connection.name}
+                  key={connection.getName()}
                   connection={connection}
-                  activate={connection.overrideActivate ?? (() => tryActivation(connection))}
+                  activate={() => tryActivation(connection)}
                   pendingConnectionType={pendingConnection?.type}
                 />
               ) : null

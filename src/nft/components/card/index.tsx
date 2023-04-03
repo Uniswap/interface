@@ -13,11 +13,11 @@ interface NftCardProps {
   display: NftCardDisplayProps
   isSelected: boolean
   isDisabled: boolean
-  selectAsset: () => void
-  unselectAsset: () => void
-  onClick?: () => void
+  selectAsset?: () => void
+  unselectAsset?: () => void
+  onButtonClick?: () => void
+  onCardClick?: () => void
   sendAnalyticsEvent?: () => void
-  doNotLinkToDetails?: boolean
   mediaShouldBePlaying: boolean
   uniformAspectRatio?: UniformAspectRatio
   setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
@@ -38,6 +38,12 @@ export interface NftCardDisplayProps {
   disabledInfo?: ReactNode
 }
 
+/**
+ * NftCard is a component that displays an NFT asset.
+ *
+ * By default, clicking on the card will navigate to the details page.
+ * If you wish to override this behavior, pass a value for the onCardClick prop.
+ */
 export const NftCard = ({
   asset,
   display,
@@ -45,9 +51,9 @@ export const NftCard = ({
   selectAsset,
   unselectAsset,
   isDisabled,
-  onClick,
+  onButtonClick,
+  onCardClick,
   sendAnalyticsEvent,
-  doNotLinkToDetails = false,
   mediaShouldBePlaying,
   uniformAspectRatio = UniformAspectRatios.square,
   setUniformAspectRatio,
@@ -57,7 +63,13 @@ export const NftCard = ({
   testId,
   hideDetails = false,
 }: NftCardProps) => {
-  const clickActionButton = useSelectAsset(selectAsset, unselectAsset, isSelected, isDisabled, onClick)
+  const clickActionButton = useSelectAsset({
+    selectAsset,
+    unselectAsset,
+    isSelected,
+    isDisabled,
+    onClick: onButtonClick,
+  })
   const { bagExpanded, setBagExpanded } = useBag(
     (state) => ({
       bagExpanded: state.bagExpanded,
@@ -77,11 +89,11 @@ export const NftCard = ({
     <Card.Container
       isSelected={isSelected}
       isDisabled={isDisabled}
-      detailsHref={detailsHref(asset)}
-      doNotLinkToDetails={doNotLinkToDetails}
+      detailsHref={onCardClick ? undefined : detailsHref(asset)}
       testId={testId}
       onClick={() => {
         if (bagExpanded) setBagExpanded({ bagExpanded: false })
+        onCardClick?.()
         sendAnalyticsEvent?.()
       }}
     >
