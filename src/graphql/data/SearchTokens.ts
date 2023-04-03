@@ -2,8 +2,8 @@ import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import gql from 'graphql-tag'
 import { useMemo } from 'react'
 
-import { chainIdToBackendName } from './util'
 import { Chain, SearchTokensQuery, useSearchTokensQuery } from './__generated__/types-and-hooks'
+import { chainIdToBackendName } from './util'
 
 gql`
   query SearchTokens($searchQuery: String!) {

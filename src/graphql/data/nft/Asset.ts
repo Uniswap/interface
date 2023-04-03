@@ -11,7 +11,7 @@ import {
   NftAssetSortableField,
   NftAssetTraitInput,
   NftMarketplace,
-  useAssetQuery
+  useAssetQuery,
 } from '../__generated__/types-and-hooks'
 
 gql`
