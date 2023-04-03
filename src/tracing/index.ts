@@ -7,7 +7,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { isSentryEnabled } from 'utils/env'
 import { getEnvName, isProductionEnv } from 'utils/env'
 
-import { beforeSend } from './config'
+import { filterKnownErrors } from './errors'
 
 export { trace } from './trace'
 
@@ -30,7 +30,7 @@ Sentry.init({
       startTransactionOnPageLoad: true,
     }),
   ],
-  beforeSend,
+  beforeSend: filterKnownErrors,
 })
 
 initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {
