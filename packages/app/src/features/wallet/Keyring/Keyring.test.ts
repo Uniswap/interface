@@ -1,27 +1,19 @@
 import { WebKeyring } from 'app/src/features/wallet/Keyring/Keyring.web'
 
-const mockStore = ({
-  data,
-  failGet,
-  failSet,
-}: {
-  data: Record<string, string>
-  failGet?: boolean
-  failSet?: boolean
-}) =>
-  ({
-    get: () => (failGet ? Promise.reject('failed get') : Promise.resolve(data)),
-    set: () => (failSet ? Promise.reject('failed set') : Promise.resolve()),
-  } as unknown as chrome.storage.StorageArea)
+const mockStore = async ({ data }: { data: Record<string, string> }) => {
+  await chrome.storage.local.set(data)
+}
 
 describe(WebKeyring, () => {
   it('returns all mnemonic ids', async () => {
-    const data = {
-      'com.uniswap.web.mnemonic.address1': 'my mnemonic',
-      'com.uniswap.web.mnemonic.address2': 'my mnemonic',
-      'com.uniswap.web.privateKey.address3': 'private-key',
-    }
-    const keyring = new WebKeyring(mockStore({ data }))
+    await mockStore({
+      data: {
+        'com.uniswap.web.mnemonic.address1': 'my mnemonic',
+        'com.uniswap.web.mnemonic.address2': 'my mnemonic',
+        'com.uniswap.web.privateKey.address3': 'private-key',
+      },
+    })
+    const keyring = new WebKeyring()
 
     const allMnemonics = await keyring.getMnemonicIds()
 

@@ -1,3 +1,4 @@
+import { PersistedStorage } from 'app/src/utils/persistedStorage'
 import { Signature, Wallet } from 'ethers'
 import { defaultPath, joinSignature, SigningKey } from 'ethers/lib/utils'
 import { logger } from '../../logger/logger'
@@ -22,9 +23,7 @@ enum ErrorType {
  * @link https://github.com/Uniswap/mobile/blob/main/ios/RNEthersRS.swift
  */
 export class WebKeyring implements IKeyring {
-  constructor(
-    private store: chrome.storage.StorageArea = chrome.storage.local
-  ) {
+  constructor(private storage = new PersistedStorage()) {
     this.generateAndStoreMnemonic = this.generateAndStoreMnemonic.bind(this)
     this.generateAndStorePrivateKey = this.generateAndStorePrivateKey.bind(this)
     this.importMnemonic = this.importMnemonic.bind(this)
@@ -41,7 +40,7 @@ export class WebKeyring implements IKeyring {
    * @returns array of mnemonic IDs
    */
   async getMnemonicIds(): Promise<string[]> {
-    const allKeys = Object.keys(await this.store.get(null))
+    const allKeys = Object.keys(await this.storage.getAll())
 
     const mnemonicIds = allKeys
       .filter((k) => k.includes(mnemonicPrefix))
@@ -100,8 +99,8 @@ export class WebKeyring implements IKeyring {
     if (checkStored === undefined) {
       const newMnemonicKey = this.keyForMnemonicId(address)
 
-      const items = { [newMnemonicKey]: mnemonic }
-      this.store.set(items)
+      await this.storage.set(newMnemonicKey, mnemonic)
+
       return address
     }
 
@@ -123,8 +122,7 @@ export class WebKeyring implements IKeyring {
     mnemonicId: string
   ): Promise<string | undefined> {
     const key = this.keyForMnemonicId(mnemonicId)
-    const results = await this.store.get([key])
-    return (results ?? {})[key]
+    return await this.storage.get(key)
   }
 
   /**
@@ -133,7 +131,7 @@ export class WebKeyring implements IKeyring {
    * @returns public addresses for all stored private keys
    */
   async getAddressesForStoredPrivateKeys(): Promise<string[]> {
-    const addresses = Object.keys(await this.store.get(null))
+    const addresses = Object.keys(await this.storage.getAll())
       .filter((k) => k.includes(privateKeyPrefix))
       .map((k) => k.replaceAll(entirePrivateKeyPrefix, ''))
 
@@ -173,7 +171,7 @@ export class WebKeyring implements IKeyring {
   ): Promise<void> {
     try {
       const newKey = this.keyForPrivateKey(address)
-      return this.store.set({ [newKey]: privateKey })
+      return this.storage.set(newKey, privateKey)
     } catch (e) {
       throw new Error(ErrorType.StoreMnemonicError + `: ${e}`)
     }
@@ -183,7 +181,7 @@ export class WebKeyring implements IKeyring {
     address: string
   ): Promise<string | undefined> {
     const key = this.keyForPrivateKey(address)
-    return (await this.store.get([key]))[key]
+    return this.storage.get(key)
   }
 
   private keyForPrivateKey(address: string): string {
