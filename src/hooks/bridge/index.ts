@@ -146,7 +146,6 @@ const formatResult = (responseData: any, calls: CallParam[], defaultValue?: any)
 // get pool of list token of a chain
 export function useMultichainPool(chainId: ChainId | undefined, tokenList: TokenList) {
   const [poolData, setPoolData] = useState<PoolBridgeInfoMap>()
-  const { account } = useActiveWeb3React()
   const multicallContract = useMulticallContract(chainId)
   const getEvmPoolsData = useCallback(async (): Promise<PoolBridgeInfoMap> => {
     if (!chainId) return Promise.reject('Wrong input')
@@ -176,9 +175,10 @@ export function useMultichainPool(chainId: ChainId | undefined, tokenList: Token
 
   useEffect(() => {
     fetchPoolCallback()
-  }, [chainId, account, tokenList, fetchPoolCallback])
+  }, [fetchPoolCallback])
 
-  useInterval(fetchPoolCallback, 1000 * 10)
+  useInterval(fetchPoolCallback, 10_000)
 
-  return !chainId ? undefined : poolData
+  const isStale = poolData && Object.keys(poolData).length && !tokenList.some(e => poolData[e.anytoken] !== undefined)
+  return !chainId || isStale ? undefined : poolData
 }

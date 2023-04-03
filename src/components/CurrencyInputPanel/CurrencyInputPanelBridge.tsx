@@ -105,7 +105,7 @@ export default function CurrencyInputPanelBridge({
   }, [currencyIn, refetch])
 
   const disabledSelect = listTokenOut.length === 1 && isOutput
-  const formatDestBalance = destBalance?.greaterThan('0') ? destBalance.toFixed(10) : 0
+  const formatDestBalance = destBalance?.toSignificant(10) || '0'
 
   return (
     <div style={{ width: '100%' }}>

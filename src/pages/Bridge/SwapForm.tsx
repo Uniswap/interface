@@ -19,16 +19,16 @@ import { AdvancedSwapDetailsDropdownBridge } from 'components/swapv2/AdvancedSwa
 import { SwapFormWrapper } from 'components/swapv2/styleds'
 import { NETWORKS_INFO, SUPPORTED_NETWORKS } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
-import { useMultichainPool } from 'hooks/bridge'
 import useBridgeCallback from 'hooks/bridge/useBridgeCallback'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useChangeNetwork } from 'hooks/useChangeNetwork'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { BodyWrapper } from 'pages/AppBody'
+import useGetPool from 'pages/Bridge/useGetPool'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { useBridgeOutputValue, useBridgeState, useBridgeStateHandler } from 'state/bridge/hooks'
-import { PoolValueOutMap } from 'state/bridge/reducer'
+import { PoolBridgeValue, PoolValueOutMap } from 'state/bridge/reducer'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { tryParseAmount } from 'state/swap/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -61,17 +61,17 @@ const Label = styled.div`
   font-size: 12px;
   margin-bottom: 0.75rem;
 `
-const calcPoolValue = (amount: string, decimals: number) => {
+const calcPoolValue = (amount: string | null, decimals: number) => {
   try {
-    if (Number(amount))
+    if (amount !== null && amount !== undefined)
       return new Fraction(amount, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals ?? 18))).toFixed(5)
   } catch (error) {}
-  return '0'
+  return amount
 }
 
 type PoolValueType = {
-  poolValueIn: string | number | undefined // undefined: unlimited
-  poolValueOut: string | number | undefined
+  poolValueIn: PoolBridgeValue // undefined: unlimited, null: loading
+  poolValueOut: PoolBridgeValue
 }
 
 export default function SwapForm() {
@@ -99,8 +99,8 @@ export default function SwapForm() {
   const [inputAmount, setInputAmount] = useState('')
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
   const [poolValue, setPoolValue] = useState<PoolValueType>({
-    poolValueIn: undefined,
-    poolValueOut: undefined,
+    poolValueIn: null,
+    poolValueOut: null,
   })
 
   // modal and loading
@@ -115,28 +115,14 @@ export default function SwapForm() {
 
   const anyToken = tokenInfoOut?.fromanytoken
 
-  const poolParamIn = useMemo(() => {
-    const anytoken = tokenInfoOut?.isFromLiquidity && tokenInfoOut?.isLiquidity ? anyToken?.address : undefined
-    const underlying = tokenInfoIn?.address
-    return anytoken && underlying ? [{ anytoken, underlying }] : []
-  }, [anyToken?.address, tokenInfoIn?.address, tokenInfoOut?.isFromLiquidity, tokenInfoOut?.isLiquidity])
-
-  const poolParamOut = useMemo(() => {
-    return listTokenOut
-      .map(({ multichainInfo: token }) => ({
-        anytoken: token?.isLiquidity ? token?.anytoken?.address : undefined,
-        underlying: token?.underlying?.address,
-      }))
-      .filter(e => e.anytoken && e.underlying) as { anytoken: string; underlying: string }[]
-  }, [listTokenOut])
-
-  const poolDataIn = useMultichainPool(chainId, poolParamIn)
-  const poolDataOut = useMultichainPool(chainIdOut, poolParamOut)
+  const { poolDataOut, poolDataIn } = useGetPool()
 
   useEffect(() => {
     const address = anyToken?.address
-    let poolValueIn: string | undefined
-    if (address && poolDataIn?.[address]) {
+    let poolValueIn: PoolBridgeValue
+    if (!poolDataIn) {
+      poolValueIn = null
+    } else if (address && poolDataIn?.[address]) {
       poolValueIn = calcPoolValue(poolDataIn[address], anyToken?.decimals)
     }
     setPoolValue(poolValue => ({ ...poolValue, poolValueIn }))
@@ -144,23 +130,24 @@ export default function SwapForm() {
 
   useEffect(() => {
     const poolValueOutMap: PoolValueOutMap = {}
-    let poolValueOut: string | undefined | number
+    let poolValueOut: PoolBridgeValue
     let tokenWithMaxPool
     let maxPoolValue = -1
     let hasUnlimitedPool = false
 
     if (poolDataOut && listTokenOut.length) {
       listTokenOut.forEach(token => {
-        const anytokenAddress = token.multichainInfo?.anytoken?.address ?? ''
+        const anytoken = token.multichainInfo?.anytoken
+        const anytokenAddress = anytoken?.address ?? ''
         const poolInfo = poolDataOut?.[anytokenAddress]
-        if (!poolInfo) {
+        if (poolInfo === undefined) {
           tokenWithMaxPool = token
           hasUnlimitedPool = true
           return
         }
 
-        if (!poolInfo || !token?.multichainInfo?.anytoken?.decimals) return
-        const calcValue = calcPoolValue(poolInfo, token?.multichainInfo?.anytoken?.decimals)
+        if (!poolInfo || !anytoken?.decimals) return
+        const calcValue = calcPoolValue(poolInfo, anytoken?.decimals)
         poolValueOutMap[anytokenAddress] = calcValue
         if (Number(calcValue) > maxPoolValue && !hasUnlimitedPool) {
           tokenWithMaxPool = token
@@ -170,11 +157,11 @@ export default function SwapForm() {
     }
     const tokenOut = tokenWithMaxPool || listTokenOut[0] || null
     const anyTokenOut = tokenOut?.multichainInfo?.anytoken?.address
-    if (typeof anyTokenOut === 'string' && poolValueOutMap[anyTokenOut]) {
+    if (anyTokenOut && poolValueOutMap[anyTokenOut]) {
       poolValueOut = poolValueOutMap[anyTokenOut]
     }
     setBridgeState({ tokenOut })
-    setPoolValue(poolValue => ({ ...poolValue, poolValueOut }))
+    setPoolValue(poolValue => ({ ...poolValue, poolValueOut: poolDataOut ? poolValueOut : null }))
     setBridgePoolInfo({ poolValueOutMap })
   }, [poolDataOut, listTokenOut, setBridgePoolInfo, setBridgeState])
 

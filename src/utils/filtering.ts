@@ -2,6 +2,7 @@ import { ChainId, Token } from '@kyberswap/ks-sdk-core'
 
 import { TokenInfo } from 'state/lists/wrappedTokenInfo'
 import { isAddress } from 'utils'
+import { convertToSlug } from 'utils/string'
 
 const alwaysTrue = () => true
 
@@ -49,7 +50,11 @@ export function filterTokensWithExactKeyword<T extends Token | TokenInfo>(
   search: string,
 ): T[] {
   const result = filterTokens(chainId, tokens, search)
-  if (isAddress(chainId, search)) return result
   const filterExact = result.filter(e => (e.symbol ? e.symbol.toLowerCase() === search.toLowerCase() : true)) // Exact Keyword
-  return filterExact.length ? filterExact : result
+  const data = filterExact.length ? filterExact : result
+  if (data.length) {
+    return data
+  }
+  // case token has special letter
+  return tokens.filter(e => (e.symbol ? convertToSlug(e.symbol) === convertToSlug(search) : false))
 }

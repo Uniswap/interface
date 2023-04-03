@@ -47,12 +47,13 @@ export default function useSyncTokenSymbolToUrl(
   const { pathname } = useLocation()
   const allTokens = useAllTokens()
   const isLoadedTokenDefault = useIsLoadedTokenDefault()
+
   const currentPath = [APP_PATHS.SWAP, APP_PATHS.LIMIT].find(path => pathname.startsWith(path)) || APP_PATHS.SWAP
 
   const redirect = useCallback(
     (url: string) => {
       const { inputCurrency, outputCurrency, ...newQs } = qs
-      navigate(`${currentPath}${url ? `/${url}` : ''}?${stringify(newQs)}`) // keep query params
+      navigate(`${currentPath}${url ? `/${url}` : ''}?${stringify(newQs)}`, { replace: true }) // keep query params
     },
     [navigate, qs, currentPath],
   )
@@ -90,7 +91,7 @@ export default function useSyncTokenSymbolToUrl(
           onCurrencySelection(fromToken)
           if (isSame) redirect(`${network}/${fromCurrency}`)
         } else {
-          redirect('')
+          redirect(network)
         }
         return
       }
@@ -100,7 +101,7 @@ export default function useSyncTokenSymbolToUrl(
       const toToken = findTokenBySymbol(convertSymbol(network, toCurrency), chainId)
 
       if (!toToken || !fromToken) {
-        redirect('')
+        redirect(network)
         return
       }
       onCurrencySelection(fromToken, toToken)

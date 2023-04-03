@@ -4,8 +4,7 @@ import styled, { css } from 'styled-components'
 
 import { CheckCircle, TransferIcon, XCircle } from 'components/Icons'
 import { MultichainTransferStatus } from 'hooks/bridge/useGetBridgeTransfers'
-
-import { getLabelByStatus } from '../utils'
+import { getLabelByStatus } from 'pages/Bridge/helpers'
 
 const cssByStatus: Record<MultichainTransferStatus, any> = {
   [MultichainTransferStatus.Success]: css`

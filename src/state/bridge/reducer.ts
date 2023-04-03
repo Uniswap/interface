@@ -6,7 +6,8 @@ import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import { resetBridgeState, setBridgePoolInfo, setBridgeState, setHistoryURL } from './actions'
 
-export type PoolValueOutMap = { [address: string]: string | number }
+export type PoolBridgeValue = undefined | string | number | null
+export type PoolValueOutMap = { [address: string]: PoolBridgeValue }
 export interface BridgeState {
   tokenInfoIn: MultiChainTokenInfo | undefined
   tokenInfoOut: MultiChainTokenInfo | undefined

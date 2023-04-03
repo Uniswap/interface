@@ -3,6 +3,8 @@ import { t } from '@lingui/macro'
 import axios from 'axios'
 
 import { NETWORKS_INFO_CONFIG } from 'constants/networks'
+import { MultichainTransferStatus } from 'hooks/bridge/useGetBridgeTransfers'
+import { PoolBridgeValue } from 'state/bridge/reducer'
 import { formatNumberWithPrecisionRange, isAddress } from 'utils'
 import { getTokenSymbolWithHardcode } from 'utils/tokenInfo'
 
@@ -129,8 +131,9 @@ export async function getChainlist(isStaleData: boolean) {
   }
 }
 
-export const formatPoolValue = (amount: string | number | undefined) => {
+export const formatPoolValue = (amount: PoolBridgeValue) => {
   try {
+    if (amount === null) return t`loading`
     if (amount === undefined) return t`Unlimited`
     if (Number(amount) && amount) return formatNumberWithPrecisionRange(parseFloat(amount + ''), 0, 2)
   } catch (error) {}
@@ -138,3 +141,13 @@ export const formatPoolValue = (amount: string | number | undefined) => {
 }
 
 export const formatAmountBridge = (amount: string) => formatNumberWithPrecisionRange(parseFloat(amount ?? '0'), 0, 6)
+
+export const getLabelByStatus = (status: MultichainTransferStatus): string => {
+  const labelByGeneralStatus: Record<MultichainTransferStatus, string> = {
+    [MultichainTransferStatus.Success]: t`Success`,
+    [MultichainTransferStatus.Failure]: t`Failed`,
+    [MultichainTransferStatus.Processing]: t`Processing`,
+  }
+
+  return labelByGeneralStatus[status]
+}
