@@ -132,7 +132,7 @@ export default function SwapBuyFiatButton() {
         </div>
       }
       placement="bottom"
-      disableHover={buyFiatFlowState !== BuyFiatFlowState.UNAVAILABLE_IN_REGION}
+      disableHover={fiatOnrampAvailabilityChecked && !fiatOnrampAvailable}
     >
       <ButtonText
         onClick={handleBuyCrypto}
