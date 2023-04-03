@@ -161,7 +161,6 @@ describe('swap reducer', () => {
     it('adds a pair to the uninitialized list', () => {
       store = createStore(reducer, {
         ...initialState,
-        pairs: undefined as any,
       })
       store.dispatch(
         addSerializedPair({
