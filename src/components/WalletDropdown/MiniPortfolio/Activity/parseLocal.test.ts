@@ -46,7 +46,7 @@ function buildSwapInfo(
   }
 }
 
-function buildTokenAddressMap(...tokens: WrappedTokenInfo[]): ChainToTokenInfoMap {
+function buildChainTokenMap(...tokens: WrappedTokenInfo[]): ChainToTokenInfoMap {
   return {
     [SupportedChainId.MAINNET]: Object.fromEntries(tokens.map((token) => [token.address, { token }])),
   }
@@ -62,7 +62,7 @@ describe('parseLocalActivity', () => {
       },
     } as TransactionDetails
     const chainId = SupportedChainId.MAINNET
-    const tokens = buildTokenAddressMap(USDC_MAINNET as WrappedTokenInfo, DAI as WrappedTokenInfo)
+    const tokens = buildChainTokenMap(USDC_MAINNET as WrappedTokenInfo, DAI as WrappedTokenInfo)
     expect(parseLocalActivity(details, chainId, tokens)).toEqual({
       chainId: 1,
       currencies: [USDC_MAINNET, DAI],
@@ -98,7 +98,7 @@ describe('parseLocalActivity', () => {
       },
     } as TransactionDetails
     const chainId = SupportedChainId.MAINNET
-    const tokens = buildTokenAddressMap(USDC_MAINNET as WrappedTokenInfo, DAI as WrappedTokenInfo)
+    const tokens = buildChainTokenMap(USDC_MAINNET as WrappedTokenInfo, DAI as WrappedTokenInfo)
     expect(parseLocalActivity(details, chainId, tokens)).toEqual({
       chainId: 1,
       currencies: [USDC_MAINNET, DAI],
@@ -134,7 +134,7 @@ describe('parseLocalActivity', () => {
       },
     } as TransactionDetails
     const chainId = SupportedChainId.MAINNET
-    const tokens = {} as TokenAddressMap
+    const tokens = {} as ChainToTokenInfoMap
     expect(parseLocalActivity(details, chainId, tokens)).toEqual({
       chainId: 1,
       currencies: [undefined, undefined],
