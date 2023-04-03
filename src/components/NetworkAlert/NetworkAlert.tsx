@@ -28,8 +28,7 @@ const RootWrapper = styled.div`
 `
 
 const SHOULD_SHOW_ALERT = {
-  [SupportedChainId.FUJI]: false,
-  [SupportedChainId.TESTNET]: false,
+  [SupportedChainId.MAINNET]: false,
 }
 
 type NetworkAlertChains = keyof typeof SHOULD_SHOW_ALERT
@@ -38,15 +37,11 @@ const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
   [darkMode in 'dark' | 'light']: { [chainId in NetworkAlertChains]: string }
 } = {
   dark: {
-    [SupportedChainId.FUJI]:
-      'radial-gradient(100% 93.36% at 0% 6.64%, rgba(160, 108, 247, 0.1) 0%, rgba(82, 32, 166, 0.1) 100%)',
-    [SupportedChainId.TESTNET]:
+    [SupportedChainId.MAINNET]:
       'radial-gradient(100% 93.36% at 0% 6.64%, rgba(160, 108, 247, 0.1) 0%, rgba(82, 32, 166, 0.1) 100%)',
   },
   light: {
-    [SupportedChainId.TESTNET]:
-      'radial-gradient(182.71% 205.59% at 2.81% 7.69%, rgba(130, 71, 229, 0.2) 0%, rgba(167, 202, 255, 0.2) 100%)',
-    [SupportedChainId.FUJI]:
+    [SupportedChainId.MAINNET]:
       'radial-gradient(182.71% 205.59% at 2.81% 7.69%, rgba(130, 71, 229, 0.2) 0%, rgba(167, 202, 255, 0.2) 100%)',
   },
 }
@@ -98,8 +93,7 @@ const StyledArrowUpRight = styled(ArrowUpRight)`
 `
 
 const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
-  [SupportedChainId.FUJI]: 'rgba(130, 71, 229)',
-  [SupportedChainId.TESTNET]: 'rgba(130, 71, 229)',
+  [SupportedChainId.MAINNET]: 'rgba(130, 71, 229)',
 }
 
 function shouldShowAlert(chainId: number | undefined): chainId is NetworkAlertChains {

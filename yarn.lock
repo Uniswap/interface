@@ -3326,10 +3326,10 @@
     node-cache "^5.1.2"
     stats-lite "^2.2.0"
 
-"@orbitalapes/smart-order-router@^3.5.4":
-  version "3.5.4"
-  resolved "https://registry.yarnpkg.com/@orbitalapes/smart-order-router/-/smart-order-router-3.5.4.tgz#1cb153aecf5153448b943d13575ff0a41c8fed94"
-  integrity sha512-x6IpeENGstWTPoW/cvJ8Aq+HlgdJ16stMbJ41OnZIP3fF9d3c/ng3Soaqn5yg1hkPvRVMQiKLwnDxB960/ploA==
+"@orbitalapes/smart-order-router@^3.5.5":
+  version "3.5.5"
+  resolved "https://registry.yarnpkg.com/@orbitalapes/smart-order-router/-/smart-order-router-3.5.5.tgz#05168e766f9ca47f86a331e9921ae1c81d5ad21b"
+  integrity sha512-y53ZisuuB9y4l1Gqidug+YsJKEMEhZ0Wtk9GuL8BuJ0eQWrhcaddXPvrm9ZgM1Bh7TYjZmI5/0CymXiKtNpDQQ==
   dependencies:
     "@orbitalapes/smart-order-router" "^3.5.0"
     "@uniswap/default-token-list" "^2.0.0"

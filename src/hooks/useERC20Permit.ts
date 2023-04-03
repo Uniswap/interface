@@ -3,12 +3,12 @@ import { splitSignature } from '@ethersproject/bytes'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { USDC_EVMOS } from 'constants/tokens'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo, useState } from 'react'
 
 import { SWAP_ROUTER_ADDRESSES } from '../constants/addresses'
-import { USDC_FUJI, USDC_TEVMOS } from '../constants/tokens'
 import { useEIP2612Contract } from './useContract'
 import useIsArgentWallet from './useIsArgentWallet'
 
@@ -33,14 +33,8 @@ const PERMITTABLE_TOKENS: {
     [checksummedTokenAddress: string]: PermitInfo
   }
 } = {
-  43113: {
-    [USDC_FUJI.address]: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
-  },
   9001: {
-    [USDC_FUJI.address]: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
-  },
-  9000: {
-    [USDC_TEVMOS.address]: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
+    [USDC_EVMOS.address]: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
   },
 }
 

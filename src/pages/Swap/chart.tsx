@@ -28,7 +28,7 @@ const TOKEN_PRICE = (tokenId = '') => {
 }
 
 const fujiClient = new ApolloClient({
-  uri: 'https://dev.orbitmarket.io/subgraphs/name/orbital-apes-labs/v3-subgraph',
+  uri: 'https://api.orbitmarket.io/subgraphs/name/forge-trade/v3-subgraph',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {

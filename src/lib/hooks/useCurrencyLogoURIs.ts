@@ -6,36 +6,29 @@ import { isAddress } from 'utils'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import { NATIVE_CHAIN_ID } from '../../constants/tokens'
 
-type Network = 'evmos' | 'fuji' | 'tevmos'
+type Network = 'evmos'
 
 function chainIdToNetworkName(networkId: SupportedChainId): Network {
   switch (networkId) {
-    case SupportedChainId.FUJI:
-      return 'fuji'
-    case SupportedChainId.TESTNET:
-      return 'tevmos'
+    case SupportedChainId.MAINNET:
+      return 'evmos'
     default:
       return 'evmos'
   }
 }
 
-export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.TESTNET): string {
+export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MAINNET): string {
   switch (chainId) {
-    case SupportedChainId.TESTNET:
+    case SupportedChainId.MAINNET:
       return 'https://raw.githubusercontent.com/cosmos/chain-registry/master/evmos/images/evmos.png'
-    case SupportedChainId.FUJI:
-      return 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/avalanchec/assets/0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7/logo.png'
     default:
       return EthereumLogo
   }
 }
 
-function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedChainId.TESTNET): string | void {
-  const networkName = chainIdToNetworkName(chainId)
-  const networksWithUrls = [SupportedChainId.FUJI]
-  if (networksWithUrls.includes(chainId)) {
-    return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
-  }
+function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedChainId.MAINNET): string | void {
+  console.log('skipping', address, chainIdToNetworkName(chainId))
+  return
 }
 
 export default function useCurrencyLogoURIs(

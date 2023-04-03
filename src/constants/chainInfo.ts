@@ -3,7 +3,7 @@ import ms from 'ms.macro'
 import { darkTheme } from 'theme/colors'
 
 import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from './chains'
-import { FUJI_LIST, TESTNET_LIST } from './lists'
+import { EVMOS_LIST } from './lists'
 
 export const AVERAGE_L1_BLOCK_TIME = ms`12s`
 
@@ -48,47 +48,23 @@ type ChainInfoMap = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } & 
 } & { readonly [chainId in SupportedL1ChainId]: L1ChainInfo }
 
 const CHAIN_INFO: ChainInfoMap = {
-  [SupportedChainId.TESTNET]: {
-    networkType: NetworkType.L1,
-    blockWaitMsBeforeWarning: ms`10m`,
-    docs: 'https://evm.evmos.dev/',
-    explorer: 'https://evm.evmos.dev/',
-    infoLink: '',
-    label: 'Evmos Testnet',
-    logoUrl: 'https://raw.githubusercontent.com/cosmos/chain-registry/master/evmos/images/evmos.png',
-    circleLogoUrl: 'https://raw.githubusercontent.com/cosmos/chain-registry/master/evmos/images/evmos.png',
-    nativeCurrency: { name: 'Test Evmos', symbol: 'TEVMOS', decimals: 18 },
-    defaultListUrl: TESTNET_LIST,
-  },
-  [SupportedChainId.FUJI]: {
-    networkType: NetworkType.L1,
-    blockWaitMsBeforeWarning: ms`10m`,
-    docs: 'https://docs.avax.network/quickstart/fuji-workflow',
-    explorer: 'https://testnet.snowtrace.io/',
-    infoLink: '',
-    label: 'Fuji',
-    logoUrl:
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/avalanchec/assets/0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7/logo.png',
-    circleLogoUrl:
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/avalanchec/assets/0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7/logo.png',
-    nativeCurrency: { name: 'Avax', symbol: 'AVAX', decimals: 18 },
-    defaultListUrl: FUJI_LIST,
-  },
   [SupportedChainId.MAINNET]: {
     networkType: NetworkType.L1,
+    blockWaitMsBeforeWarning: ms`10m`,
     docs: 'https://docs.uniswap.org/',
-    explorer: 'https://etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/',
-    label: 'Ethereum',
-    logoUrl: ethereumLogoUrl,
-    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-    color: darkTheme.chain_1,
+    explorer: 'https://escan.live/',
+    infoLink: 'https://docs.evmos.org/',
+    label: 'Evmos',
+    logoUrl: 'https://raw.githubusercontent.com/cosmos/chain-registry/master/evmos/images/evmos.png',
+    circleLogoUrl: 'https://raw.githubusercontent.com/cosmos/chain-registry/master/evmos/images/evmos.png',
+    nativeCurrency: { name: 'Evmos', symbol: 'EVMOS', decimals: 18 },
+    defaultListUrl: EVMOS_LIST,
   },
   [SupportedChainId.OPTIMISM]: {
     networkType: NetworkType.L2,
     blockWaitMsBeforeWarning: ms`25m`,
     bridge: 'https://app.optimism.io/bridge',
-    defaultListUrl: FUJI_LIST,
+    defaultListUrl: EVMOS_LIST,
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism/',

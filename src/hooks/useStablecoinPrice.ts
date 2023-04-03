@@ -6,15 +6,12 @@ import { useMemo, useRef } from 'react'
 import { RouterPreference } from 'state/routing/slice'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 
-import { USDC_FUJI, USDC_TEVMOS } from '../constants/tokens'
+import { USDC_EVMOS } from '../constants/tokens'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
 const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
-  // TODO: replace USDC fuji by mainnet
-  [SupportedChainId.MAINNET]: CurrencyAmount.fromRawAmount(USDC_FUJI, 100_000e6),
-  [SupportedChainId.FUJI]: CurrencyAmount.fromRawAmount(USDC_FUJI, 10_000e18),
-  [SupportedChainId.TESTNET]: CurrencyAmount.fromRawAmount(USDC_TEVMOS, 1_000e1),
+  [SupportedChainId.MAINNET]: CurrencyAmount.fromRawAmount(USDC_EVMOS, 1_000e1),
 }
 
 /**

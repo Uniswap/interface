@@ -47,20 +47,14 @@ export default function RadialGradientByChainUpdater(): null {
     }
 
     switch (chainId) {
-      case SupportedChainId.FUJI: {
+      case SupportedChainId.MAINNET: {
         setBackground(backgroundResetStyles)
         const polygonDarkGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.05) 52.6%, rgba(0, 0, 0, 0) 100%), #0D0E0E'
         backgroundRadialGradientElement.style.background = polygonDarkGradient
         break
       }
-      case SupportedChainId.TESTNET: {
-        setBackground(backgroundResetStyles)
-        const polygonDarkGradient =
-          'radial-gradient(100% 100% at 50% 0%, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.05) 52.6%, rgba(0, 0, 0, 0) 100%), #0D0E0E'
-        backgroundRadialGradientElement.style.background = polygonDarkGradient
-        break
-      }
+
       default: {
         setBackground(initialStyles)
         const defaultDarkGradient =

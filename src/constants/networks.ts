@@ -18,21 +18,12 @@ if (typeof INFURA_KEY === 'undefined') {
 export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
   [SupportedChainId.MAINNET]: [
     // "Safe" URLs
-    'https://api.mycryptoapi.com/eth',
-    'https://cloudflare-eth.com',
-    // "Fallback" URLs
-    'https://rpc.ankr.com/eth',
-    'https://eth-mainnet.public.blastapi.io',
-  ],
-  [SupportedChainId.FUJI]: [
-    // "Safe" URLs
-    'https://ava-testnet.public.blastapi.io/ext/bc/C/rpc	',
+    'https://jsonrpc-evmos-ia.cosmosia.notional.ventures',
   ],
   [SupportedChainId.OPTIMISM]: [
     // "Safe" URLs
     'https://ava-testnet.public.blastapi.io/ext/bc/C/rpc	',
   ],
-  [SupportedChainId.TESTNET]: ['https://eth.bd.evmos.dev:8545'],
 }
 
 /**
@@ -40,11 +31,10 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
  * These are the URLs used by the interface when there is not another available source of chain data.
  */
 export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
-  [SupportedChainId.MAINNET]: [
-    `https://mainnet.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.MAINNET]: [`https://eth.bd.evmos.org:8545`, ...FALLBACK_URLS[SupportedChainId.MAINNET]],
+
+  [SupportedChainId.OPTIMISM]: [
+    `https://api.avax-test.network/ext/bc/C/rpc`,
     ...FALLBACK_URLS[SupportedChainId.MAINNET],
   ],
-  [SupportedChainId.TESTNET]: ['https://eth.bd.evmos.dev:8545', ...FALLBACK_URLS[SupportedChainId.FUJI]],
-  [SupportedChainId.FUJI]: [`https://api.avax-test.network/ext/bc/C/rpc`, ...FALLBACK_URLS[SupportedChainId.FUJI]],
-  [SupportedChainId.OPTIMISM]: [`https://api.avax-test.network/ext/bc/C/rpc`, ...FALLBACK_URLS[SupportedChainId.FUJI]],
 }

@@ -8,7 +8,7 @@ import { RowFixed } from 'components/Row'
 import { Arrow, Break, PageButtons } from 'components/shared'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { SupportedChainId } from 'constants/chains'
-import { USDC_TEVMOS, WETH_TEVMOS } from 'constants/tokens'
+import { USDC_EVMOS, WETH_EVMOS } from 'constants/tokens'
 import { useIsMobile } from 'nft/hooks'
 import numbro from 'numbro'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -191,42 +191,42 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
   const isMobile = useIsMobile()
   let currency0
   let currency1
-  if (poolData?.token1?.address?.toLowerCase() === WETH_TEVMOS?.address?.toLowerCase()) {
-    currency1 = WETH_TEVMOS
+  if (poolData?.token1?.address?.toLowerCase() === WETH_EVMOS?.address?.toLowerCase()) {
+    currency1 = WETH_EVMOS
   } else {
     currency1 = new Token(
-      SupportedChainId.TESTNET,
+      SupportedChainId.MAINNET,
       poolData.token1.address,
       poolData.token1.decimals,
       poolData.token1.symbol
     )
   }
-  if (poolData?.token0?.address?.toLowerCase() === WETH_TEVMOS?.address?.toLowerCase()) {
-    currency0 = WETH_TEVMOS
+  if (poolData?.token0?.address?.toLowerCase() === WETH_EVMOS?.address?.toLowerCase()) {
+    currency0 = WETH_EVMOS
   } else {
     currency0 = new Token(
-      SupportedChainId.TESTNET,
+      SupportedChainId.MAINNET,
       poolData.token0.address,
       poolData.token0.decimals,
       poolData.token0.symbol
     )
   }
 
-  if (poolData?.token1?.address?.toLowerCase() === USDC_TEVMOS?.address?.toLowerCase()) {
-    currency1 = USDC_TEVMOS
-  } else if (poolData?.token1?.address?.toLowerCase() !== WETH_TEVMOS?.address?.toLowerCase()) {
+  if (poolData?.token1?.address?.toLowerCase() === USDC_EVMOS?.address?.toLowerCase()) {
+    currency1 = USDC_EVMOS
+  } else if (poolData?.token1?.address?.toLowerCase() !== WETH_EVMOS?.address?.toLowerCase()) {
     currency1 = new Token(
-      SupportedChainId.TESTNET,
+      SupportedChainId.MAINNET,
       poolData.token1.address,
       poolData.token1.decimals,
       poolData.token1.symbol
     )
   }
-  if (poolData?.token0?.address?.toLowerCase() === USDC_TEVMOS?.address?.toLowerCase()) {
-    currency0 = USDC_TEVMOS
-  } else if (poolData?.token0?.address?.toLowerCase() !== WETH_TEVMOS?.address?.toLowerCase()) {
+  if (poolData?.token0?.address?.toLowerCase() === USDC_EVMOS?.address?.toLowerCase()) {
+    currency0 = USDC_EVMOS
+  } else if (poolData?.token0?.address?.toLowerCase() !== WETH_EVMOS?.address?.toLowerCase()) {
     currency0 = new Token(
-      SupportedChainId.TESTNET,
+      SupportedChainId.MAINNET,
       poolData.token0.address,
       poolData.token0.decimals,
       poolData.token0.symbol

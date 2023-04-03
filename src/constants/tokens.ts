@@ -10,35 +10,35 @@ export const NATIVE_CHAIN_ID = 'NATIVE'
 // https://docs.openzeppelin.com/contracts/3.x/erc20
 export const DEFAULT_ERC20_DECIMALS = 18
 
-export const USDC_FUJI = new Token(
-  SupportedChainId.FUJI,
-  '0xeC5bfc01218e1CA43027A987c185E94A67AeDB6D',
-  18,
-  'USDC',
-  'USD//C'
-)
-
-export const WETH_FUJI = new Token(
-  SupportedChainId.FUJI,
-  '0x0F70b839BDdC6E95113cA3A51dFfC0CEd73d55a5',
-  18,
-  'WETH',
-  'Wrapped Ether'
-)
-
-export const USDC_TEVMOS = new Token(
-  SupportedChainId.TESTNET,
-  '0xBf6942D20D1460334B9b147199c4f03c97b70d02',
+export const USDC_EVMOS = new Token(
+  SupportedChainId.MAINNET,
+  '0x15C3Eb3B621d1Bff62CbA1c9536B7c1AE9149b57',
   6,
   'axlUSDC',
   'USD//C'
 )
 
-export const TEVMOS_STABLE_COINS = [USDC_TEVMOS.address.toLowerCase()]
+export const STEVMOS = new Token(
+  SupportedChainId.MAINNET,
+  '0x2C68D1d6aB986Ff4640b51e1F14C716a076E44C4',
+  18,
+  'stEVMOS',
+  'Stride Staked Evmos'
+)
 
-export const WETH_TEVMOS = new Token(
-  SupportedChainId.TESTNET,
-  '0x43bDe47a34801f6aB2d66016Aef723Ba1b3A62b3',
+export const STATOM = new Token(
+  SupportedChainId.MAINNET,
+  '0xB5124FA2b2cF92B2D469b249433BA1c96BDF536D',
+  6,
+  'stATOM',
+  'Stride Staked Atom'
+)
+
+export const EVMOS_STABLE_COINS = [USDC_EVMOS.address.toLowerCase()]
+
+export const WETH_EVMOS = new Token(
+  SupportedChainId.MAINNET,
+  '0x50dE24B3f0B3136C50FA8A3B8ebc8BD80a269ce5',
   18,
   'axlWETH',
   'Wrapped Ether'
@@ -47,26 +47,12 @@ export const WETH_TEVMOS = new Token(
 export const UNI: { [chainId: number]: Token } = {}
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
-  [SupportedChainId.TESTNET]: new Token(
-    SupportedChainId.TESTNET,
-    '0xBeFe898407483f0f2fF605971FBD8Cf8FbD8B160',
-    18,
-    'WtEVMOS',
-    'Wrapped tEVMOS'
-  ),
-  [SupportedChainId.FUJI]: new Token(
-    SupportedChainId.FUJI,
-    '0x1D308089a2D1Ced3f1Ce36B1FcaF815b07217be3',
-    18,
-    'WAVAX',
-    'Wrapped AVAX'
-  ),
   [SupportedChainId.MAINNET]: new Token(
-    SupportedChainId.FUJI,
-    '0x0F70b839BDdC6E95113cA3A51dFfC0CEd73d55a5',
+    SupportedChainId.MAINNET,
+    '0xD4949664cD82660AaE99bEdc034a0deA8A0bd517',
     18,
-    'WMATIC',
-    'Wrapped MATIC'
+    'WEVMOS',
+    'Wrapped EVMOS'
   ),
 }
 
@@ -84,39 +70,21 @@ class ExtendedEther extends Ether {
   }
 }
 
-class FujiNativeCurrency extends NativeCurrency {
+class EvmosNativeCurrency extends NativeCurrency {
   equals(other: Currency): boolean {
     return other.isNative && other.chainId === this.chainId
   }
 
   get wrapped(): Token {
-    if (this.chainId !== SupportedChainId.FUJI) throw new Error('Not Fuji')
+    if (this.chainId !== SupportedChainId.MAINNET) throw new Error('Not Evmos')
     const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
     invariant(wrapped instanceof Token)
     return wrapped
   }
 
   public constructor(chainId: number) {
-    if (chainId !== SupportedChainId.FUJI) throw new Error('Not Fuji')
-    super(chainId, 18, 'AVAX', 'Avax')
-  }
-}
-
-class TEvmosNativeCurrency extends NativeCurrency {
-  equals(other: Currency): boolean {
-    return other.isNative && other.chainId === this.chainId
-  }
-
-  get wrapped(): Token {
-    if (this.chainId !== SupportedChainId.TESTNET) throw new Error('Not tEvmos')
-    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
-    invariant(wrapped instanceof Token)
-    return wrapped
-  }
-
-  public constructor(chainId: number) {
-    if (chainId !== SupportedChainId.TESTNET) throw new Error('Not tEvmos')
-    super(chainId, 18, 'tEVMOS', 'Test Evmos')
+    if (chainId !== SupportedChainId.MAINNET) throw new Error('Not Evmos')
+    super(chainId, 18, 'EVMOS', 'Evmos')
   }
 }
 
@@ -124,10 +92,8 @@ const cachedNativeCurrency: { [chainId: number]: NativeCurrency | Token } = {}
 export function nativeOnChain(chainId: number): NativeCurrency | Token {
   if (cachedNativeCurrency[chainId]) return cachedNativeCurrency[chainId]
   let nativeCurrency: NativeCurrency | Token
-  if (chainId === SupportedChainId.FUJI) {
-    nativeCurrency = new FujiNativeCurrency(chainId)
-  } else if (chainId === SupportedChainId.TESTNET) {
-    nativeCurrency = new TEvmosNativeCurrency(chainId)
+  if (chainId === SupportedChainId.MAINNET) {
+    nativeCurrency = new EvmosNativeCurrency(chainId)
   } else {
     nativeCurrency = ExtendedEther.onChain(chainId)
   }
@@ -136,7 +102,6 @@ export function nativeOnChain(chainId: number): NativeCurrency | Token {
 
 export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedChainId]?: string } } = {
   USDC: {
-    [SupportedChainId.TESTNET]: USDC_TEVMOS.address,
-    [SupportedChainId.FUJI]: USDC_FUJI.address,
+    [SupportedChainId.MAINNET]: USDC_EVMOS.address,
   },
 }

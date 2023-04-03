@@ -1,27 +1,20 @@
 import { ApolloClient, InMemoryCache, NormalizedCacheObject, useQuery } from '@apollo/client'
 import { PoolData } from 'components/Pools/PoolTable'
 import { SupportedChainId } from 'constants/chains'
-import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import dayjs from 'dayjs'
 import gql from 'graphql-tag'
 import { useEffect, useMemo, useState } from 'react'
 
 function formatTokenSymbol(address: string, symbol: string) {
-  if (address === WRAPPED_NATIVE_CURRENCY[SupportedChainId.FUJI]?.address) {
-    return 'AVAX'
-  }
   return symbol
 }
 
 function formatTokenName(address: string, name: string) {
-  if (address === WRAPPED_NATIVE_CURRENCY[SupportedChainId.FUJI]?.address) {
-    return 'AVAX'
-  }
   return name
 }
 
 const fujiClient = new ApolloClient({
-  uri: 'https://dev.orbitmarket.io/subgraphs/name/orbital-apes-labs/v3-subgraph',
+  uri: 'https://api.orbitmarket.io/subgraphs/name/forge-trade/v3-subgraph',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -48,7 +41,7 @@ const fujiClient = new ApolloClient({
   },
 })
 const fujiBlockClient = new ApolloClient({
-  uri: 'https://dev.orbitmarket.io/subgraphs/name/orbital-apes-labs/blocks-subgraph',
+  uri: 'https://api.orbitmarket.io/subgraphs/name/forge-trade/blocks-subgraph',
   cache: new InMemoryCache(),
   queryDeduplication: true,
   defaultOptions: {
@@ -122,7 +115,7 @@ function useBlocksFromTimestamps(timestamps: number[]): {
     | undefined
   error: boolean
 } {
-  const activeNetwork = { id: SupportedChainId.FUJI }
+  const activeNetwork = { id: SupportedChainId.MAINNET }
   const [blocks, setBlocks] = useState<any>()
   const [error, setError] = useState(false)
 
