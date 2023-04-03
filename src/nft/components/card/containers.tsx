@@ -174,7 +174,9 @@ const Erc1155ActionContainer = ({
         <Minus size="24" />
       </StyledErc1155ActionButton>
       <Row justify="center">
-        <ThemedText.HeadlineSmall color="textPrimary">{quantity}</ThemedText.HeadlineSmall>
+        <ThemedText.BodySmall color="textPrimary" fontWeight={600} lineHeight="16px">
+          {quantity}
+        </ThemedText.BodySmall>
       </Row>
       <StyledErc1155ActionButton
         onClick={(e) => {
