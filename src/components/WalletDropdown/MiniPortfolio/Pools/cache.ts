@@ -126,7 +126,7 @@ export function useGetCachedTokens(chains: SupportedChainId[]): TokenGetterFn {
       const local: TokenMap = {}
       const missing = new Set<string>()
       addresses.forEach((address) => {
-        const cached = tokenCache.get(chainId, address) ?? allTokens[chainId][address]?.token
+        const cached = tokenCache.get(chainId, address) ?? allTokens[chainId]?.[address]?.token
         cached ? (local[address] = cached) : missing.add(address)
       })
 

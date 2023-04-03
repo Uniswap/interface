@@ -19,7 +19,13 @@ import { useAllTokenBalances } from 'state/connection/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { UserAddedToken } from 'types/tokens'
 
-import { useDefaultActiveTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
+import {
+  tokenMapToArray,
+  useDefaultActiveTokens,
+  useIsUserAddedToken,
+  useSearchInactiveTokenLists,
+  useToken,
+} from '../../hooks/Tokens'
 import { CloseIcon, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
@@ -85,11 +91,11 @@ export function CurrencySearch({
     }
   }, [isAddressSearch])
 
-  const defaultTokens = useDefaultActiveTokens()
+  const defaultTokenMap = useDefaultActiveTokens()
   const filteredTokens: Token[] = useMemo(() => {
-    const queryFilter = getTokenFilter(debouncedQuery)
-    return Object.values(defaultTokens).filter((token): token is Token => Boolean(token && queryFilter(token)))
-  }, [defaultTokens, debouncedQuery])
+    const defaultTokens = tokenMapToArray(defaultTokenMap)
+    return defaultTokens.filter(getTokenFilter(debouncedQuery))
+  }, [defaultTokenMap, debouncedQuery])
 
   const [balances, balancesAreLoading] = useAllTokenBalances()
   const sortedTokens: Token[] = useMemo(
