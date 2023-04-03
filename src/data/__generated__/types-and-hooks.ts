@@ -78,6 +78,7 @@ export type AssetChange = NftApproval | NftApproveForAll | NftTransfer | TokenAp
 
 export enum Chain {
   Arbitrum = 'ARBITRUM',
+  Bnb = 'BNB',
   Celo = 'CELO',
   Ethereum = 'ETHEREUM',
   EthereumGoerli = 'ETHEREUM_GOERLI',
@@ -97,6 +98,7 @@ export type ContractInput = {
 
 export enum Currency {
   Eth = 'ETH',
+  Matic = 'MATIC',
   Usd = 'USD'
 }
 
@@ -150,7 +152,7 @@ export type NftActivity = {
   asset?: Maybe<NftAsset>;
   fromAddress: Scalars['String'];
   id: Scalars['ID'];
-  marketplace?: Maybe<NftMarketplace>;
+  marketplace?: Maybe<Scalars['String']>;
   orderStatus?: Maybe<OrderStatus>;
   price?: Maybe<Amount>;
   quantity?: Maybe<Scalars['Int']>;
@@ -235,9 +237,11 @@ export type NftAsset = {
 
 
 export type NftAssetListingsArgs = {
+  _fs?: InputMaybe<Scalars['String']>;
   after?: InputMaybe<Scalars['String']>;
   asc?: InputMaybe<Scalars['Boolean']>;
   before?: InputMaybe<Scalars['String']>;
+  chain?: InputMaybe<Chain>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
 };
@@ -303,6 +307,7 @@ export type NftBalance = {
   listedMarketplaces?: Maybe<Array<NftMarketplace>>;
   listingFees?: Maybe<Array<Maybe<NftFee>>>;
   ownedAsset?: Maybe<NftAsset>;
+  quantity?: Maybe<Scalars['Int']>;
 };
 
 export type NftBalanceConnection = {
@@ -351,6 +356,7 @@ export type NftCollection = {
 
 
 export type NftCollectionMarketsArgs = {
+  _fs?: InputMaybe<Scalars['String']>;
   currencies: Array<Currency>;
 };
 
@@ -382,6 +388,11 @@ export type NftCollectionMarket = {
   volume?: Maybe<TimestampedAmount>;
   volume24h?: Maybe<Amount>;
   volumePercentChange?: Maybe<TimestampedAmount>;
+};
+
+
+export type NftCollectionMarketFloorPriceArgs = {
+  _fs?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -632,6 +643,7 @@ export type Portfolio = {
 
 
 export type PortfolioAssetActivitiesArgs = {
+  _fs?: InputMaybe<Scalars['String']>;
   includeOffChain?: InputMaybe<Scalars['Boolean']>;
   page?: InputMaybe<Scalars['Int']>;
   pageSize?: InputMaybe<Scalars['Int']>;
@@ -651,6 +663,7 @@ export type Query = {
   nftCollectionsById?: Maybe<Array<Maybe<NftCollection>>>;
   nftRoute?: Maybe<NftRouteResponse>;
   portfolios?: Maybe<Array<Maybe<Portfolio>>>;
+  /** @deprecated Use searchTokens */
   searchTokenProjects?: Maybe<Array<Maybe<TokenProject>>>;
   searchTokens?: Maybe<Array<Maybe<Token>>>;
   token?: Maybe<Token>;
@@ -662,46 +675,46 @@ export type Query = {
 
 
 export type QueryNftActivityArgs = {
+  _fs?: InputMaybe<Scalars['String']>;
+  after?: InputMaybe<Scalars['String']>;
   chain?: InputMaybe<Chain>;
-  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<NftActivityFilterInput>;
-  limit?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
 };
 
 
 export type QueryNftAssetsArgs = {
+  _fs?: InputMaybe<Scalars['String']>;
   address: Scalars['String'];
   after?: InputMaybe<Scalars['String']>;
   asc?: InputMaybe<Scalars['Boolean']>;
   before?: InputMaybe<Scalars['String']>;
   chain?: InputMaybe<Chain>;
-  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<NftAssetsFilterInput>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<NftAssetSortableField>;
 };
 
 
 export type QueryNftBalancesArgs = {
+  _fs?: InputMaybe<Scalars['String']>;
   after?: InputMaybe<Scalars['String']>;
   before?: InputMaybe<Scalars['String']>;
   chain?: InputMaybe<Chain>;
-  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<NftBalancesFilterInput>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
   ownerAddress: Scalars['String'];
 };
 
 
 export type QueryNftCollectionsArgs = {
+  _fs?: InputMaybe<Scalars['String']>;
+  after?: InputMaybe<Scalars['String']>;
   chain?: InputMaybe<Chain>;
-  cursor?: InputMaybe<Scalars['String']>;
   filter?: InputMaybe<NftCollectionsFilterInput>;
-  limit?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -719,6 +732,7 @@ export type QueryNftRouteArgs = {
 
 
 export type QueryPortfoliosArgs = {
+  chains?: InputMaybe<Array<Chain>>;
   ownerAddresses: Array<Scalars['String']>;
 };
 
@@ -729,11 +743,13 @@ export type QuerySearchTokenProjectsArgs = {
 
 
 export type QuerySearchTokensArgs = {
+  _fs?: InputMaybe<Scalars['String']>;
   searchQuery: Scalars['String'];
 };
 
 
 export type QueryTokenArgs = {
+  _fs?: InputMaybe<Scalars['String']>;
   address?: InputMaybe<Scalars['String']>;
   chain: Chain;
 };
@@ -750,9 +766,11 @@ export type QueryTokensArgs = {
 
 
 export type QueryTopCollectionsArgs = {
+  after?: InputMaybe<Scalars['String']>;
   chains?: InputMaybe<Array<Chain>>;
   cursor?: InputMaybe<Scalars['String']>;
   duration?: InputMaybe<HistoryDuration>;
+  first?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<CollectionSortableField>;
 };
@@ -796,6 +814,11 @@ export type Token = IContract & {
 
 export type TokenMarketArgs = {
   currency?: InputMaybe<Currency>;
+};
+
+
+export type TokenProjectArgs = {
+  _fs?: InputMaybe<Scalars['String']>;
 };
 
 export type TokenAmount = {
@@ -1030,6 +1053,11 @@ export type AccountListQueryVariables = Exact<{
 
 export type AccountListQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, tokensTotalDenominatedValue?: { __typename?: 'Amount', id: string, value: number } | null } | null> | null };
 
+export type SearchPopularNftCollectionsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SearchPopularNftCollectionsQuery = { __typename?: 'Query', topCollections?: { __typename?: 'NftCollectionConnection', edges: Array<{ __typename?: 'NftCollectionEdge', node: { __typename?: 'NftCollection', id: string, name?: string | null, collectionId: string, isVerified?: boolean | null, nftContracts?: Array<{ __typename?: 'NftContract', id: string, chain: Chain, address: string }> | null, image?: { __typename?: 'Image', id: string, url: string } | null } }> } | null };
+
 export type SearchPopularTokensQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1137,12 +1165,13 @@ export type SearchTokensQueryVariables = Exact<{
 
 export type SearchTokensQuery = { __typename?: 'Query', searchTokens?: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, decimals?: number | null, name?: string | null, symbol?: string | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null, safetyLevel?: SafetyLevel | null } | null } | null> | null };
 
-export type ExploreSearchTokensQueryVariables = Exact<{
+export type ExploreSearchQueryVariables = Exact<{
   searchQuery: Scalars['String'];
+  nftCollectionsFilter: NftCollectionsFilterInput;
 }>;
 
 
-export type ExploreSearchTokensQuery = { __typename?: 'Query', searchTokens?: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, decimals?: number | null, name?: string | null, symbol?: string | null, market?: { __typename?: 'TokenMarket', volume?: { __typename?: 'Amount', id: string, value: number } | null } | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null, safetyLevel?: SafetyLevel | null } | null } | null> | null };
+export type ExploreSearchQuery = { __typename?: 'Query', searchTokens?: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, decimals?: number | null, name?: string | null, symbol?: string | null, market?: { __typename?: 'TokenMarket', volume?: { __typename?: 'Amount', id: string, value: number } | null } | null, project?: { __typename?: 'TokenProject', id: string, logoUrl?: string | null, safetyLevel?: SafetyLevel | null } | null } | null> | null, nftCollections?: { __typename?: 'NftCollectionConnection', edges: Array<{ __typename?: 'NftCollectionEdge', node: { __typename?: 'NftCollection', id: string, name?: string | null, collectionId: string, isVerified?: boolean | null, nftContracts?: Array<{ __typename?: 'NftContract', id: string, chain: Chain, address: string }> | null, image?: { __typename?: 'Image', id: string, url: string } | null } }> } | null };
 
 export type SpotPricesQueryVariables = Exact<{
   contracts: Array<ContractInput> | ContractInput;
@@ -1313,9 +1342,59 @@ export function useAccountListLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type AccountListQueryHookResult = ReturnType<typeof useAccountListQuery>;
 export type AccountListLazyQueryHookResult = ReturnType<typeof useAccountListLazyQuery>;
 export type AccountListQueryResult = Apollo.QueryResult<AccountListQuery, AccountListQueryVariables>;
+export const SearchPopularNftCollectionsDocument = gql`
+    query SearchPopularNFTCollections {
+  topCollections(chains: [ETHEREUM], orderBy: VOLUME, duration: DAY, first: 2) {
+    edges {
+      node {
+        id
+        name
+        collectionId
+        isVerified
+        nftContracts {
+          id
+          chain
+          address
+        }
+        image {
+          id
+          url
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useSearchPopularNftCollectionsQuery__
+ *
+ * To run a query within a React component, call `useSearchPopularNftCollectionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchPopularNftCollectionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchPopularNftCollectionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSearchPopularNftCollectionsQuery(baseOptions?: Apollo.QueryHookOptions<SearchPopularNftCollectionsQuery, SearchPopularNftCollectionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchPopularNftCollectionsQuery, SearchPopularNftCollectionsQueryVariables>(SearchPopularNftCollectionsDocument, options);
+      }
+export function useSearchPopularNftCollectionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchPopularNftCollectionsQuery, SearchPopularNftCollectionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchPopularNftCollectionsQuery, SearchPopularNftCollectionsQueryVariables>(SearchPopularNftCollectionsDocument, options);
+        }
+export type SearchPopularNftCollectionsQueryHookResult = ReturnType<typeof useSearchPopularNftCollectionsQuery>;
+export type SearchPopularNftCollectionsLazyQueryHookResult = ReturnType<typeof useSearchPopularNftCollectionsLazyQuery>;
+export type SearchPopularNftCollectionsQueryResult = Apollo.QueryResult<SearchPopularNftCollectionsQuery, SearchPopularNftCollectionsQueryVariables>;
 export const SearchPopularTokensDocument = gql`
     query SearchPopularTokens {
-  topTokens(chain: ETHEREUM, orderBy: VOLUME, page: 1, pageSize: 3) {
+  topTokens(chain: ETHEREUM, orderBy: VOLUME, page: 1, pageSize: 2) {
     id
     address
     chain
@@ -2305,8 +2384,8 @@ export function useSearchTokensLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type SearchTokensQueryHookResult = ReturnType<typeof useSearchTokensQuery>;
 export type SearchTokensLazyQueryHookResult = ReturnType<typeof useSearchTokensLazyQuery>;
 export type SearchTokensQueryResult = Apollo.QueryResult<SearchTokensQuery, SearchTokensQueryVariables>;
-export const ExploreSearchTokensDocument = gql`
-    query ExploreSearchTokens($searchQuery: String!) {
+export const ExploreSearchDocument = gql`
+    query ExploreSearch($searchQuery: String!, $nftCollectionsFilter: NftCollectionsFilterInput!) {
   searchTokens(searchQuery: $searchQuery) {
     id
     chain
@@ -2326,36 +2405,56 @@ export const ExploreSearchTokensDocument = gql`
       safetyLevel
     }
   }
+  nftCollections(filter: $nftCollectionsFilter, first: 4) {
+    edges {
+      node {
+        id
+        name
+        collectionId
+        isVerified
+        nftContracts {
+          id
+          chain
+          address
+        }
+        image {
+          id
+          url
+        }
+      }
+    }
+  }
 }
     `;
 
 /**
- * __useExploreSearchTokensQuery__
+ * __useExploreSearchQuery__
  *
- * To run a query within a React component, call `useExploreSearchTokensQuery` and pass it any options that fit your needs.
- * When your component renders, `useExploreSearchTokensQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useExploreSearchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useExploreSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useExploreSearchTokensQuery({
+ * const { data, loading, error } = useExploreSearchQuery({
  *   variables: {
  *      searchQuery: // value for 'searchQuery'
+ *      nftCollectionsFilter: // value for 'nftCollectionsFilter'
  *   },
  * });
  */
-export function useExploreSearchTokensQuery(baseOptions: Apollo.QueryHookOptions<ExploreSearchTokensQuery, ExploreSearchTokensQueryVariables>) {
+export function useExploreSearchQuery(baseOptions: Apollo.QueryHookOptions<ExploreSearchQuery, ExploreSearchQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ExploreSearchTokensQuery, ExploreSearchTokensQueryVariables>(ExploreSearchTokensDocument, options);
+        return Apollo.useQuery<ExploreSearchQuery, ExploreSearchQueryVariables>(ExploreSearchDocument, options);
       }
-export function useExploreSearchTokensLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ExploreSearchTokensQuery, ExploreSearchTokensQueryVariables>) {
+export function useExploreSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ExploreSearchQuery, ExploreSearchQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ExploreSearchTokensQuery, ExploreSearchTokensQueryVariables>(ExploreSearchTokensDocument, options);
+          return Apollo.useLazyQuery<ExploreSearchQuery, ExploreSearchQueryVariables>(ExploreSearchDocument, options);
         }
-export type ExploreSearchTokensQueryHookResult = ReturnType<typeof useExploreSearchTokensQuery>;
-export type ExploreSearchTokensLazyQueryHookResult = ReturnType<typeof useExploreSearchTokensLazyQuery>;
-export type ExploreSearchTokensQueryResult = Apollo.QueryResult<ExploreSearchTokensQuery, ExploreSearchTokensQueryVariables>;
+export type ExploreSearchQueryHookResult = ReturnType<typeof useExploreSearchQuery>;
+export type ExploreSearchLazyQueryHookResult = ReturnType<typeof useExploreSearchLazyQuery>;
+export type ExploreSearchQueryResult = Apollo.QueryResult<ExploreSearchQuery, ExploreSearchQueryVariables>;
 export const SpotPricesDocument = gql`
     query SpotPrices($contracts: [ContractInput!]!) {
   tokenProjects(contracts: $contracts) {

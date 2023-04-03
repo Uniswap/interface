@@ -567,7 +567,10 @@ query SearchTokens($searchQuery: String!) {
   }
 }
 
-query ExploreSearchTokens($searchQuery: String!) {
+query ExploreSearch(
+  $searchQuery: String!
+  $nftCollectionsFilter: NftCollectionsFilterInput!
+) {
   searchTokens(searchQuery: $searchQuery) {
     id
     chain
@@ -586,6 +589,25 @@ query ExploreSearchTokens($searchQuery: String!) {
       id
       logoUrl
       safetyLevel
+    }
+  }
+  nftCollections(filter: $nftCollectionsFilter, first: 4) {
+    edges {
+      node {
+        id
+        name
+        collectionId
+        isVerified
+        nftContracts {
+          id
+          chain
+          address
+        }
+        image {
+          id
+          url
+        }
+      }
     }
   }
 }

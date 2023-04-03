@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
+import { getSearchResultId } from 'src/components/explore/search/utils'
 import { Inset } from 'src/components/layout'
 import { Loader } from 'src/components/loading'
 import { ChainId } from 'src/constants/chains'
@@ -14,7 +15,6 @@ import {
 import { SearchResultType, TokenSearchResult } from 'src/features/explore/searchHistorySlice'
 import { areAddressesEqual } from 'src/utils/addresses'
 import { fromGraphQLChain } from 'src/utils/chainId'
-import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
 export function SearchPopularTokens(): JSX.Element {
   // Load popular tokens by top Uniswap trading volume
@@ -49,7 +49,7 @@ export function SearchPopularTokens(): JSX.Element {
   if (loading) {
     return (
       <Inset all="spacing8">
-        <Loader.Token repeat={3} />
+        <Loader.Token repeat={2} />
       </Inset>
     )
   }
@@ -57,7 +57,7 @@ export function SearchPopularTokens(): JSX.Element {
   return (
     <FlatList
       data={popularTokens}
-      keyExtractor={tokenKey}
+      keyExtractor={getSearchResultId}
       listKey="tokens"
       renderItem={renderTokenItem}
     />
@@ -86,9 +86,3 @@ function gqlTokenToTokenSearchResult(
 const renderTokenItem = ({ item }: ListRenderItemInfo<TokenSearchResult>): JSX.Element => (
   <SearchTokenItem token={item} />
 )
-
-const tokenKey = (token: TokenSearchResult): string => {
-  return token.address
-    ? buildCurrencyId(token.chainId, token.address)
-    : buildNativeCurrencyId(token.chainId)
-}

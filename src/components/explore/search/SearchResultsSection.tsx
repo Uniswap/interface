@@ -1,33 +1,66 @@
-/* eslint-disable complexity */
-// TODO: Complexity was increased when tracking numTotalResults for analytics
-// should decrease complexity when possible using subcomponents
-import { default as React, useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { i18n } from 'src/app/i18n'
 import { SearchEtherscanItem } from 'src/components/explore/search/items/SearchEtherscanItem'
+import { SearchNFTCollectionItem } from 'src/components/explore/search/items/SearchNFTCollectionItem'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { SearchWalletItem } from 'src/components/explore/search/items/SearchWalletItem'
+import { SearchResultsLoader } from 'src/components/explore/search/SearchResultsLoader'
+import { SectionHeaderText } from 'src/components/explore/search/SearchSectionHeader'
+import {
+  formatNFTCollectionSearchResults,
+  formatTokenSearchResults,
+  getSearchResultId,
+} from 'src/components/explore/search/utils'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
-import { useExploreSearchTokensQuery } from 'src/data/__generated__/types-and-hooks'
+import { SafetyLevel, useExploreSearchQuery } from 'src/data/__generated__/types-and-hooks'
 import { useENS } from 'src/features/ens/useENS'
-import { SearchResultType, TokenSearchResult } from 'src/features/explore/searchHistorySlice'
+import {
+  NFTCollectionSearchResult,
+  SearchResult,
+  SearchResultType,
+  TokenSearchResult,
+  WalletSearchResult,
+} from 'src/features/explore/searchHistorySlice'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
 import { getValidAddress } from 'src/utils/addresses'
-import { fromGraphQLChain } from 'src/utils/chainId'
-import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
+import { logger } from 'src/utils/logger'
 
-const MAX_TOKEN_RESULTS_COUNT = 5
+export const SEARCH_RESULT_HEADER_KEY = 'header'
+
+// Header type used to render header text instead of SearchResult item
+export type SearchResultOrHeader =
+  | SearchResult
+  | { type: typeof SEARCH_RESULT_HEADER_KEY; title: string }
+
+const WalletHeaderItem: SearchResultOrHeader = {
+  type: SEARCH_RESULT_HEADER_KEY,
+  title: i18n.t('Wallets'),
+}
+const TokenHeaderItem: SearchResultOrHeader = {
+  type: SEARCH_RESULT_HEADER_KEY,
+  title: i18n.t('Tokens'),
+}
+const NFTHeaderItem: SearchResultOrHeader = {
+  type: SEARCH_RESULT_HEADER_KEY,
+  title: i18n.t('NFT Collections'),
+}
+const EtherscanHeaderItem: SearchResultOrHeader = {
+  type: SEARCH_RESULT_HEADER_KEY,
+  title: i18n.t('View on Etherscan'),
+}
 
 export interface SearchContext {
-  query: string
-  position: number
-  suggestionCount: number
+  query?: string
+  position?: number
+  suggestionCount?: number
+  isHistory?: boolean // history item click
 }
 
 export function SearchResultsSection({ searchQuery }: { searchQuery: string }): JSX.Element {
@@ -35,66 +68,23 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 
   // Search for matching tokens
   const {
-    data: tokenResultsData,
-    loading: tokenResultsLoading,
+    data: searchResultsData,
+    loading: searchResultsLoading,
     error,
     refetch,
-  } = useExploreSearchTokensQuery({
-    variables: { searchQuery },
+  } = useExploreSearchQuery({
+    variables: { searchQuery, nftCollectionsFilter: { nameQuery: searchQuery } },
   })
 
   const tokenResults = useMemo(() => {
-    if (!tokenResultsData || !tokenResultsData.searchTokens) return EMPTY_ARRAY
+    if (!searchResultsData || !searchResultsData.searchTokens) return EMPTY_ARRAY
+    return formatTokenSearchResults(searchResultsData.searchTokens, searchQuery)
+  }, [searchQuery, searchResultsData])
 
-    // Prevent showing "duplicate" token search results for tokens that are on multiple chains
-    // and share the same TokenProject id. Only show the token that has the highest 1Y Uniswap trading volume
-    // ex. UNI on Mainnet, Arbitrum, Optimism -> only show UNI on Mainnet b/c it has highest 1Y volume
-    const tokenResultsMap = tokenResultsData.searchTokens.reduce<
-      Record<string, TokenSearchResult & { volume1Y: number }>
-    >((tokensMap, token) => {
-      if (!token) return tokensMap
-
-      const { chain, address, symbol, name, project, market } = token
-      const chainId = fromGraphQLChain(chain)
-
-      if (!chainId || !project) return tokensMap
-
-      const tokenResult = {
-        type: SearchResultType.Token,
-        chainId,
-        address,
-        name,
-        symbol: symbol ?? '',
-        safetyLevel: project.safetyLevel,
-        logoUrl: project.logoUrl,
-        volume1Y: market?.volume?.value ?? 0,
-      } as TokenSearchResult & { volume1Y: number }
-
-      // For token results that share the same TokenProject id, use the token with highest volume
-      const currentTokenResult = tokensMap[project.id]
-      if (!currentTokenResult || tokenResult.volume1Y > currentTokenResult.volume1Y) {
-        tokensMap[project.id] = tokenResult
-      }
-      return tokensMap
-    }, {})
-
-    const results = Object.values(tokenResultsMap)
-      .slice(0, MAX_TOKEN_RESULTS_COUNT)
-      .sort((res1: TokenSearchResult, res2: TokenSearchResult) => {
-        const res1Match = isExactTokenMatch(res1, searchQuery)
-        const res2Match = isExactTokenMatch(res2, searchQuery)
-
-        if (res1Match && !res2Match) {
-          return -1
-        } else if (!res1Match && res2Match) {
-          return 1
-        } else {
-          return 0
-        }
-      })
-
-    return results
-  }, [searchQuery, tokenResultsData])
+  const nftCollectionResults = useMemo(() => {
+    if (!searchResultsData || !searchResultsData.nftCollections) return EMPTY_ARRAY
+    return formatNFTCollectionSearchResults(searchResultsData.nftCollections)
+  }, [searchResultsData])
 
   // Search for matching ENS
   const {
@@ -119,7 +109,91 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
     refetch()
   }, [refetch])
 
-  if (tokenResultsLoading || walletsLoading) return <SearchResultsLoader />
+  const hasENSResult = ensName && ensAddress
+  const hasEOAResult = validAddress && !isSmartContractAddress
+  const walletSearchResults: WalletSearchResult[] = useMemo(() => {
+    if (hasENSResult) {
+      return [
+        {
+          type: SearchResultType.Wallet,
+          address: ensAddress,
+          ensName,
+        },
+      ]
+    }
+    if (hasEOAResult) {
+      return [
+        {
+          type: SearchResultType.Wallet,
+          address: validAddress,
+        },
+      ]
+    }
+    return []
+  }, [ensAddress, ensName, hasENSResult, hasEOAResult, validAddress])
+
+  const numTotalResults =
+    tokenResults.length + nftCollectionResults.length + (hasENSResult || hasEOAResult ? 1 : 0)
+
+  // Only consider queries with the .eth suffix as an exact ENS match
+  const exactENSMatch =
+    ensName?.toLowerCase() === searchQuery.toLowerCase() && searchQuery.includes('.eth')
+
+  const prefixTokenMatch = tokenResults.find((res: TokenSearchResult) =>
+    isPrefixTokenMatch(res, searchQuery)
+  )
+
+  const hasVerifiedTokenResults = tokenResults.some(
+    (res: TokenSearchResult) => res.safetyLevel === SafetyLevel.Verified
+  )
+  const hasVerifiedNFTResults = nftCollectionResults.some(
+    (res: NFTCollectionSearchResult) => res.isVerified
+  )
+
+  const showWalletSectionFirst = exactENSMatch && !prefixTokenMatch
+  const showNftCollectionsBeforeTokens = hasVerifiedNFTResults && !hasVerifiedTokenResults
+
+  const sortedSearchResults: SearchResultOrHeader[] = useMemo(() => {
+    // Format results arrays with header, and handle empty results
+    const nftsWithHeader =
+      nftCollectionResults.length > 0 ? [NFTHeaderItem, ...nftCollectionResults] : []
+    const tokensWithHeader = tokenResults.length > 0 ? [TokenHeaderItem, ...tokenResults] : []
+    const walletsWithHeader =
+      walletSearchResults.length > 0 ? [WalletHeaderItem, ...walletSearchResults] : []
+
+    // Rank token and nft results
+    const searchResultItems: SearchResultOrHeader[] = showNftCollectionsBeforeTokens
+      ? [...nftsWithHeader, ...tokensWithHeader]
+      : [...tokensWithHeader, ...nftsWithHeader]
+
+    // Add wallet results at beginning or end
+    if (walletsWithHeader.length > 0) {
+      if (showWalletSectionFirst) {
+        searchResultItems.unshift(...walletsWithHeader)
+      } else {
+        searchResultItems.push(...walletsWithHeader)
+      }
+    }
+
+    // Add etherscan items at end
+    if (validAddress) {
+      searchResultItems.push(EtherscanHeaderItem, {
+        type: SearchResultType.Etherscan,
+        address: validAddress,
+      })
+    }
+
+    return searchResultItems
+  }, [
+    nftCollectionResults,
+    showNftCollectionsBeforeTokens,
+    showWalletSectionFirst,
+    tokenResults,
+    validAddress,
+    walletSearchResults,
+  ])
+
+  if (searchResultsLoading || walletsLoading) return <SearchResultsLoader />
 
   if (error) {
     return (
@@ -145,129 +219,63 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
     )
   }
 
-  const hasENSResult = ensName && ensAddress
-  const hasEOAResult = validAddress && !isSmartContractAddress
-
-  const numTotalResults = tokenResults.length + (hasENSResult || hasEOAResult ? 1 : 0)
-
-  const exactENSMatch = ensName?.toLowerCase() === searchQuery.toLowerCase()
-  const prefixTokenMatch = tokenResults.find((res: TokenSearchResult) =>
-    isPrefixTokenMatch(res, searchQuery)
-  )
-
-  const showWalletSectionFirst = exactENSMatch && !prefixTokenMatch
-
-  const renderTokenItem = ({ item, index }: ListRenderItemInfo<TokenSearchResult>): JSX.Element => (
-    <SearchTokenItem
-      searchContext={{
-        position: showWalletSectionFirst ? index + 2 : index + 1,
-        suggestionCount: numTotalResults,
-        query: searchQuery,
-      }}
-      token={item}
-    />
-  )
-
-  const TokenSection = tokenResults.length > 0 && (
-    <FlatList
-      ListHeaderComponent={
-        <Text color="textSecondary" mb="spacing4" mx="spacing8" variant="subheadSmall">
-          {t('Tokens')}
-        </Text>
-      }
-      data={tokenResults}
-      keyExtractor={tokenKey}
-      listKey="tokens"
-      renderItem={renderTokenItem}
-    />
-  )
-
-  const WalletSection = (hasENSResult || hasEOAResult) && (
-    <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="none">
-      <Text color="textSecondary" mx="spacing8" variant="subheadSmall">
-        {t('Wallets')}
-      </Text>
-      {hasENSResult ? (
-        <SearchWalletItem
-          searchContext={{
-            query: searchQuery,
-            position: showWalletSectionFirst ? 1 : numTotalResults,
-            suggestionCount: numTotalResults,
-          }}
-          wallet={{ type: SearchResultType.Wallet, address: ensAddress, ensName }}
-        />
-      ) : hasEOAResult ? (
-        <SearchWalletItem
-          searchContext={{
-            query: searchQuery,
-            position: showWalletSectionFirst ? 1 : numTotalResults,
-            suggestionCount: numTotalResults,
-          }}
-          wallet={{ type: SearchResultType.Wallet, address: validAddress }}
-        />
-      ) : null}
-    </AnimatedFlex>
-  )
-
   return (
     <Flex grow gap="spacing8">
-      {showWalletSectionFirst ? (
-        <>
-          {WalletSection}
-          {TokenSection}
-        </>
-      ) : (
-        <>
-          {TokenSection}
-          {WalletSection}
-        </>
-      )}
-
-      {validAddress && (
-        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="none">
-          <Text color="textSecondary" mx="spacing8" variant="subheadSmall">
-            {t('View on Etherscan')}
-          </Text>
-          <SearchEtherscanItem
-            etherscanResult={{ type: SearchResultType.Etherscan, address: validAddress }}
-          />
-        </AnimatedFlex>
-      )}
+      <FlatList
+        data={sortedSearchResults}
+        keyExtractor={getSearchResultId}
+        listKey="wallets"
+        renderItem={(props): JSX.Element | null => {
+          // Find position of search result in list, but exclude header items
+          const position =
+            props.item.type === SEARCH_RESULT_HEADER_KEY
+              ? undefined
+              : props.index +
+                1 -
+                sortedSearchResults
+                  .slice(0, props.index + 1)
+                  .filter((item) => item.type === SEARCH_RESULT_HEADER_KEY).length
+          return renderSearchItem({
+            ...props,
+            searchContext: {
+              query: searchQuery,
+              suggestionCount: numTotalResults,
+              position,
+            },
+          })
+        }}
+      />
     </Flex>
   )
 }
 
-const SearchResultsLoader = (): JSX.Element => {
-  const { t } = useTranslation()
-  return (
-    <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="spacing16" mx="spacing8">
-      <Flex gap="spacing12">
-        <Text color="textSecondary" variant="subheadSmall">
-          {t('Tokens')}
-        </Text>
-        <Loader.Token repeat={2} />
-      </Flex>
-      <Flex gap="spacing12">
-        <Text color="textSecondary" variant="subheadSmall">
-          {t('Wallets')}
-        </Text>
-        <Loader.Token />
-      </Flex>
-    </AnimatedFlex>
-  )
-}
-
-const tokenKey = (token: TokenSearchResult): string => {
-  return token.address
-    ? buildCurrencyId(token.chainId, token.address)
-    : buildNativeCurrencyId(token.chainId)
-}
-
-function isExactTokenMatch(searchResult: TokenSearchResult, query: string): boolean {
-  return (
-    searchResult.name.toLowerCase() === query.toLowerCase() ||
-    searchResult.symbol.toLowerCase() === query.toLowerCase()
-  )
+// Render function for FlatList of SearchResult items
+export const renderSearchItem = ({
+  item: searchResult,
+  searchContext,
+  index,
+}: ListRenderItemInfo<SearchResultOrHeader> & {
+  searchContext?: SearchContext
+}): JSX.Element | null => {
+  switch (searchResult.type) {
+    case SEARCH_RESULT_HEADER_KEY:
+      return <SectionHeaderText mt={index === 0 ? 'none' : 'spacing8'} title={searchResult.title} />
+    case SearchResultType.Token:
+      return <SearchTokenItem searchContext={searchContext} token={searchResult} />
+    case SearchResultType.Wallet:
+      return <SearchWalletItem searchContext={searchContext} wallet={searchResult} />
+    case SearchResultType.NFTCollection:
+      return <SearchNFTCollectionItem collection={searchResult} searchContext={searchContext} />
+    case SearchResultType.Etherscan:
+      return <SearchEtherscanItem etherscanResult={searchResult} />
+    default:
+      logger.warn(
+        'SearchResultsSection',
+        'renderSearchItem',
+        `Found invalid list item in search results: ${JSON.stringify(searchResult)}`
+      )
+      return null
+  }
 }
 
 function isPrefixTokenMatch(searchResult: TokenSearchResult, query: string): boolean {

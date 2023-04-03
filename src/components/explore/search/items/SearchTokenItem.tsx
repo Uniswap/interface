@@ -43,6 +43,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
         type: 'token',
         suggestion_count: searchContext.suggestionCount,
         position: searchContext.position,
+        isHistory: searchContext.isHistory,
       })
     }
     dispatch(

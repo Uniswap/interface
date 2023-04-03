@@ -9,6 +9,7 @@ export enum SearchResultType {
   Wallet,
   Token,
   Etherscan,
+  NFTCollection,
 }
 
 export interface SearchResultBase {
@@ -33,12 +34,25 @@ export interface TokenSearchResult extends SearchResultBase {
   safetyLevel: SafetyLevel
 }
 
+export interface NFTCollectionSearchResult extends SearchResultBase {
+  type: SearchResultType.NFTCollection
+  chainId: ChainId
+  address: Address
+  name: string
+  imageUrl: string | null
+  isVerified: boolean
+}
+
 export interface EtherscanSearchResult extends SearchResultBase {
   type: SearchResultType.Etherscan
   address: Address
 }
 
-export type SearchResult = TokenSearchResult | WalletSearchResult | EtherscanSearchResult
+export type SearchResult =
+  | TokenSearchResult
+  | WalletSearchResult
+  | EtherscanSearchResult
+  | NFTCollectionSearchResult
 
 export function searchResultId(searchResult: SearchResult): string {
   switch (searchResult.type) {
@@ -48,6 +62,8 @@ export function searchResultId(searchResult: SearchResult): string {
       return `wallet-${searchResult.address}`
     case SearchResultType.Etherscan:
       return `etherscan-${searchResult.address}`
+    case SearchResultType.NFTCollection:
+      return `nftCollection-${searchResult.chainId}-${searchResult.address}`
   }
 }
 

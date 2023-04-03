@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { faker } from '@faker-js/faker'
 import { ChainId } from 'src/constants/chains'
 import { DAI, USDC, WBTC, WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
@@ -8,6 +9,7 @@ import {
   AssetChange,
   Chain,
   Currency,
+  NftCollection,
   Portfolio,
   SafetyLevel,
   SearchTokensQuery,
@@ -421,6 +423,43 @@ export const EthToken: [Token] = [
       id: faker.datatype.uuid(),
       logoUrl: 'ethlogo.png',
       tokens: [],
+    },
+  },
+]
+
+export const TopNFTCollections: [NftCollection, NftCollection] = [
+  {
+    id: faker.datatype.uuid(),
+    name: 'Test NFT 1',
+    collectionId: faker.datatype.uuid(),
+    isVerified: true,
+    nftContracts: [
+      {
+        id: faker.datatype.uuid(),
+        chain: Chain.Ethereum,
+        address: '',
+      },
+    ],
+    image: {
+      id: faker.datatype.uuid(),
+      url: 'image.url',
+    },
+  },
+  {
+    id: faker.datatype.uuid(),
+    name: 'Test NFT 2',
+    collectionId: faker.datatype.uuid(),
+    isVerified: true,
+    nftContracts: [
+      {
+        id: faker.datatype.uuid(),
+        chain: Chain.Ethereum,
+        address: '',
+      },
+    ],
+    image: {
+      id: faker.datatype.uuid(),
+      url: 'image.url',
     },
   },
 ]

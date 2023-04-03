@@ -1,18 +1,19 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlatList, ListRenderItemInfo } from 'react-native'
+import { FlatList } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import ClockIcon from 'src/assets/icons/clock.svg'
+import TrendArrowIcon from 'src/assets/icons/trend-up.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { SearchEtherscanItem } from 'src/components/explore/search/items/SearchEtherscanItem'
-import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
-import { SearchWalletItem } from 'src/components/explore/search/items/SearchWalletItem'
+import { SearchPopularNFTCollections } from 'src/components/explore/search/SearchPopularNFTCollections'
 import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
+import { renderSearchItem } from 'src/components/explore/search/SearchResultsSection'
+import { SectionHeaderText } from 'src/components/explore/search/SearchSectionHeader'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import {
   clearSearchHistory,
-  SearchResult,
   SearchResultType,
   selectSearchHistory,
   WalletSearchResult,
@@ -47,15 +48,8 @@ export function SearchEmptySection(): JSX.Element {
         <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
           <FlatList
             ListHeaderComponent={
-              <Flex
-                row
-                alignItems="center"
-                justifyContent="space-between"
-                mb="spacing4"
-                ml="spacing8">
-                <Text color="textSecondary" variant="subheadSmall">
-                  {t('Recent searches')}
-                </Text>
+              <Flex row alignItems="center" justifyContent="space-between" mb="spacing4">
+                <SectionHeaderText icon={<RecentIcon />} title={t('Recent searches')} />
                 <TouchableArea onPress={onPressClearSearchHistory}>
                   <Text color="accentAction" variant="buttonLabelSmall">
                     {t('Clear all')}
@@ -64,47 +58,49 @@ export function SearchEmptySection(): JSX.Element {
               </Flex>
             }
             data={searchHistory}
-            renderItem={renderSearchHistoryItem}
+            renderItem={(props): JSX.Element | null =>
+              renderSearchItem({ ...props, searchContext: { isHistory: true } })
+            }
           />
         </AnimatedFlex>
       )}
       <Flex gap="spacing4">
-        <Text color="textSecondary" mx="spacing8" variant="subheadSmall">
-          {t('Popular tokens')}
-        </Text>
+        <SectionHeaderText icon={<TrendIcon />} title={t('Popular tokens')} />
         <SearchPopularTokens />
+      </Flex>
+      <Flex gap="spacing4">
+        <SectionHeaderText icon={<TrendIcon />} title={t('Popular NFT collections')} />
+        <SearchPopularNFTCollections />
       </Flex>
       <FlatList
         ListHeaderComponent={
-          <Text color="textSecondary" mb="spacing4" mx="spacing8" variant="subheadSmall">
-            {t('Suggested wallets')}
-          </Text>
+          <SectionHeaderText icon={<TrendIcon />} title={t('Suggested wallets')} />
         }
         data={SUGGESTED_WALLETS}
         keyExtractor={walletKey}
         listKey="wallets"
-        renderItem={renderWalletItem}
+        renderItem={renderSearchItem}
       />
     </AnimatedFlex>
   )
 }
 
-const renderSearchHistoryItem = ({
-  item: searchResult,
-}: ListRenderItemInfo<SearchResult>): JSX.Element => {
-  if (searchResult.type === SearchResultType.Token) {
-    return <SearchTokenItem token={searchResult} />
-  } else if (searchResult.type === SearchResultType.Wallet) {
-    return <SearchWalletItem wallet={searchResult} />
-  } else {
-    return <SearchEtherscanItem etherscanResult={searchResult} />
-  }
-}
-
-const renderWalletItem = ({ item }: ListRenderItemInfo<WalletSearchResult>): JSX.Element => (
-  <SearchWalletItem wallet={item} />
-)
-
 const walletKey = (wallet: WalletSearchResult): string => {
   return wallet.address
+}
+
+export const TrendIcon = (): JSX.Element => {
+  const theme = useAppTheme()
+  return <TrendArrowIcon color={theme.colors.textSecondary} height={theme.iconSizes.icon12} />
+}
+
+export const RecentIcon = (): JSX.Element => {
+  const theme = useAppTheme()
+  return (
+    <ClockIcon
+      color={theme.colors.textSecondary}
+      height={theme.iconSizes.icon16}
+      width={theme.iconSizes.icon16}
+    />
+  )
 }

@@ -139,6 +139,7 @@ export const enum ElementName {
   ReviewSwap = 'review-swap',
   ReviewTransfer = 'review-transfer',
   SearchEtherscanItem = 'search-etherscan-item',
+  SearchNFTCollectionItem = 'search-nft-collection-item',
   SearchTokenItem = 'search-token-item',
   SearchWalletItem = 'search-wallet-item',
   SelectColor = 'select-color',

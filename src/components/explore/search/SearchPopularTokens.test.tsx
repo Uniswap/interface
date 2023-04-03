@@ -1,10 +1,13 @@
 import React from 'react'
 import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
-import { SearchPopularTokensDocument } from 'src/data/__generated__/types-and-hooks'
-import { EthToken, TopTokens } from 'src/test/gqlFixtures'
+import {
+  SearchPopularNftCollectionsDocument,
+  SearchPopularTokensDocument,
+} from 'src/data/__generated__/types-and-hooks'
+import { EthToken, TopNFTCollections, TopTokens } from 'src/test/gqlFixtures'
 import { render, screen } from 'src/test/test-utils'
 
-const mock = {
+const TokensMock = {
   request: {
     query: SearchPopularTokensDocument,
   },
@@ -16,9 +19,20 @@ const mock = {
   },
 }
 
+const NFTsMock = {
+  request: {
+    query: SearchPopularNftCollectionsDocument,
+  },
+  result: {
+    data: {
+      topCollections: TopNFTCollections,
+    },
+  },
+}
+
 describe(SearchPopularTokens, () => {
   it('renders without error', async () => {
-    const tree = render(<SearchPopularTokens />, { mocks: [mock] })
+    const tree = render(<SearchPopularTokens />, { mocks: [TokensMock, NFTsMock] })
 
     // Loading should show Token loader
     expect(screen.getAllByText('Token Full Name')).toBeDefined()

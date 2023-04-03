@@ -43,13 +43,14 @@ export type EventProperties = {
     filter_type: string
   }
   [MobileEventName.ExploreSearchResultClicked]: {
-    query: string
-    type: 'collection' | 'token' | 'address'
-    suggestion_count: number
-    position: number
     name: string
     address: string
+    type: 'collection' | 'token' | 'address'
+    query?: string
+    suggestion_count?: number
+    position?: number
     chain?: number
+    isHistory?: boolean
   }
   [MobileEventName.ExploreSearchCancel]: {
     query: string

@@ -64,6 +64,7 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
         type: 'address',
         suggestion_count: searchContext.suggestionCount,
         position: searchContext.position,
+        isHistory: searchContext.isHistory,
       })
     }
     dispatch(

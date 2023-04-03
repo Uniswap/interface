@@ -1,5 +1,5 @@
 query SearchPopularTokens {
-  topTokens(chain: ETHEREUM, orderBy: VOLUME, page: 1, pageSize: 3) {
+  topTokens(chain: ETHEREUM, orderBy: VOLUME, page: 1, pageSize: 2) {
     id
     address
     chain
