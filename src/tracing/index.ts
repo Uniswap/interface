@@ -8,7 +8,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { isSentryEnabled } from 'utils/env'
 import { getEnvName, isProductionEnv } from 'utils/env'
 
-import { beforeSendAddMechanism, onUnhandledRejection } from './errors'
+import { onUnhandledRejection } from './errors'
 
 export { trace } from './trace'
 
@@ -30,7 +30,7 @@ Sentry.init({
     new GlobalHandlers({
       onerror: true,
       // Use our own handler for unhandled rejections; we want to have more control over which rejections are reported,
-      // as many originate in third-party libraries and can be safely ignored.
+      // because many originate in third-party libraries and can be safely ignored.
       onunhandledrejection: false,
     }),
     new BrowserTracing({
@@ -39,7 +39,6 @@ Sentry.init({
     }),
   ],
   enabled: isSentryEnabled(),
-  beforeSend: beforeSendAddMechanism,
   tracesSampleRate: Number(process.env.REACT_APP_SENTRY_TRACES_SAMPLE_RATE ?? 0),
 })
 

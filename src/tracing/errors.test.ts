@@ -1,38 +1,22 @@
 import * as Sentry from '@sentry/react'
 
-import { beforeSendAddMechanism, onUnhandledRejection } from './errors'
+import { onUnhandledRejection } from './errors'
 
-jest.mock('@sentry/react', () => ({
-  captureException: jest.fn(),
-}))
-
-describe('beforeSendAddMechanism', () => {
-  it.each(['onunhandledrejection'])('adds mechanism to events with extra.mechanism set to "%s"', (mechanism) => {
-    const event = {
-      exception: { values: [{} as Record<'mechanism', unknown>] },
-      extra: { mechanism },
-    }
-    beforeSendAddMechanism(event as Sentry.Event)
-    expect(event.extra.mechanism).toBeUndefined()
-    expect(event.exception.values[0].mechanism).toEqual({ handled: false, type: mechanism })
-  })
-
-  it('does not add mechanism to other events', () => {
-    const event = {
-      exception: { values: [{} as Record<'mechanism', unknown>] },
-      extra: { mechanism: 'onother' },
-    }
-    beforeSendAddMechanism(event as Sentry.Event)
-    expect(event.extra.mechanism).toBe('onother')
-    expect(event.exception.values[0].mechanism).toBeUndefined()
-  })
+jest.mock('@sentry/react', () => {
+  return { getCurrentHub: jest.fn() }
 })
 
+const captureException = jest.fn()
+beforeEach(() => (Sentry.getCurrentHub as jest.Mock).mockReturnValue({ captureException }))
+
 describe('onUnhandledRejection', () => {
-  it('calls Sentry.captureException with the reason', () => {
+  it('calls Sentry.captureException', () => {
     const reason = new Error('test')
     onUnhandledRejection({ reason })
-    expect(Sentry.captureException).toHaveBeenCalledWith(reason, { extra: { mechanism: 'onunhandledrejection' } })
+    expect(Sentry.getCurrentHub().captureException).toHaveBeenCalledWith(reason, {
+      originalException: reason,
+      data: { mechanism: { handled: false, type: 'onunhandledrejection' } },
+    })
   })
 
   it('ignores eth_blockNumber exceptions', () => {
@@ -40,14 +24,14 @@ describe('onUnhandledRejection', () => {
       requestBody = JSON.stringify({ method: 'eth_blockNumber', params: [] })
     })()
     onUnhandledRejection({ reason })
-    expect(Sentry.captureException).not.toHaveBeenCalled()
+    expect(Sentry.getCurrentHub().captureException).not.toHaveBeenCalled()
   })
 
   it('ignores network change exceptions', () => {
     const reason = new Error('~~~underlying network changed~~~')
     jest.spyOn(console, 'warn').mockImplementation(() => undefined)
     onUnhandledRejection({ reason })
-    expect(Sentry.captureException).not.toHaveBeenCalled()
+    expect(Sentry.getCurrentHub().captureException).not.toHaveBeenCalled()
     expect(console.warn).toHaveBeenCalledWith(reason)
   })
 })

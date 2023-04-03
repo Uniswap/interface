@@ -1,27 +1,4 @@
 import * as Sentry from '@sentry/react'
-import { addExceptionMechanism } from '@sentry/utils'
-
-const ON_UNHANDLED_REJECTION = 'onunhandledrejection'
-
-/**
- * Adds a mechanism to events which have been sent from onUnhandledRejection.
- *
- * This is necessary to access the Sentry.Event directly, in order to call addExceptionMechanism. Alternatively
- * Alternatively, we could create a Sentry.Event in onUnhandledRejection, but custom events are non-trivial and poorly documented.
- */
-export function beforeSendAddMechanism(event: Sentry.Event): Sentry.Event {
-  // Global exception handlers set an extra.mechanism, but the actual mechanism must be set on the event explicitly for
-  // Sentry to correctly process and display it in the Sentry UI. We still want mechanism to be set, despite using our
-  // own handler, because it aids in identifying unhandled errors and rejections.
-  if (event.extra?.mechanism) {
-    if (event.extra.mechanism === ON_UNHANDLED_REJECTION) {
-      addExceptionMechanism(event, { handled: false, type: event.extra.mechanism })
-      delete event.extra.mechanism // delete this so it doesn't clutter the Sentry UI
-    }
-  }
-
-  return event
-}
 
 /** Identifies ethers request errors (as thrown by {@type import(@ethersproject/web).fetchJson}). */
 function isEthersRequestError(error: Error): error is Error & { requestBody: string } {
@@ -47,5 +24,8 @@ export function onUnhandledRejection({ reason }: { reason: unknown }) {
     }
   }
 
-  Sentry.captureException(reason, { extra: { mechanism: ON_UNHANDLED_REJECTION } })
+  Sentry.getCurrentHub().captureException(reason, {
+    originalException: reason,
+    data: { mechanism: { handled: false, type: 'onunhandledrejection' } },
+  })
 }
