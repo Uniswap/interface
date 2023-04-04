@@ -37,17 +37,29 @@ const ListPriceRowContainer = styled(Row)`
 
 export const MarketplaceContainer = ({
   isSelected,
+  quantitySelected = 0,
   marketplace,
   tokenType,
   listedPrice,
   hidePrice,
 }: {
   isSelected: boolean
+  quantitySelected?: number
   marketplace?: Markets
   tokenType?: NftStandard
   listedPrice?: string
   hidePrice?: boolean
 }) => {
+  if (quantitySelected > 0) {
+    return (
+      <StyledMarketplaceContainer>
+        <ThemedText.SubHeader color="accentTextLightPrimary" lineHeight="24px">
+          {quantitySelected}
+        </ThemedText.SubHeader>
+      </StyledMarketplaceContainer>
+    )
+  }
+
   if (isSelected) {
     if (!marketplace) {
       return (

@@ -39,14 +39,14 @@ export const CollectionAsset = ({
   const setBagExpanded = useBag((state) => state.setBagExpanded)
   const trace = useTrace({ page: InterfacePageName.NFT_COLLECTION_PAGE })
 
-  const { isSelected } = useMemo(() => {
+  const { isSelected, quantitySelected } = useMemo(() => {
     const matchingItems = itemsInBag.filter(
       (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
     )
 
-    const isSelected = matchingItems.length > 0
     return {
-      isSelected,
+      isSelected: matchingItems.length > 0,
+      quantitySelected: matchingItems.length,
     }
   }, [asset, itemsInBag])
 
@@ -88,6 +88,7 @@ export const CollectionAsset = ({
       asset={asset}
       display={display}
       isSelected={isSelected}
+      quantitySelected={quantitySelected}
       isDisabled={Boolean(asset.notForSale)}
       selectAsset={handleAddAssetToBag}
       unselectAsset={handleRemoveAssetFromBag}

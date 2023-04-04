@@ -2,6 +2,7 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { StyledImage } from 'nft/components/card/media'
 import { ReactNode } from 'react'
+import { Minus, Plus } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS, ThemedText } from 'theme'
@@ -30,33 +31,40 @@ const StyledDetailsContainer = styled(Column)`
   }
 `
 
-const StyledActionButton = styled(ThemedText.BodySmall)<{
-  selected: boolean
-  isDisabled: boolean
-}>`
+const StyledActionContainer = styled.div`
   position: absolute;
-  display: flex;
-  padding: 8px 0px;
   bottom: -32px;
   left: 8px;
   right: 8px;
-  color: ${({ theme, isDisabled }) => (isDisabled ? theme.textPrimary : theme.accentTextLightPrimary)};
-  background: ${({ theme, selected, isDisabled }) =>
-    selected ? theme.accentCritical : isDisabled ? theme.backgroundInteractive : theme.accentAction};
   transition: ${({ theme }) =>
     `${theme.transition.duration.medium} ${theme.transition.timing.ease} bottom, ${theme.transition.duration.medium} ${theme.transition.timing.ease} visibility`};
   will-change: transform;
-  border-radius: 8px;
-  justify-content: center;
-  font-weight: 600 !important;
-  line-height: 16px;
   visibility: hidden;
-  cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     visibility: visible;
     bottom: 8px;
   }
+`
+
+const ActionContainer = ({ children }: { children: ReactNode }) => (
+  <StyledActionContainer>{children}</StyledActionContainer>
+)
+
+const StyledActionButton = styled(ThemedText.BodySmall)<{
+  selected: boolean
+  isDisabled: boolean
+}>`
+  display: flex;
+  padding: 8px 0px;
+  color: ${({ theme, isDisabled }) => (isDisabled ? theme.textPrimary : theme.accentTextLightPrimary)};
+  background: ${({ theme, selected, isDisabled }) =>
+    selected ? theme.accentCritical : isDisabled ? theme.backgroundInteractive : theme.accentAction};
+  border-radius: 8px;
+  justify-content: center;
+  font-weight: 600 !important;
+  line-height: 16px;
+  cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
 
   &:before {
     background-size: 100%;
@@ -102,6 +110,91 @@ const ActionButton = ({
   )
 }
 
+const StyledErc1155ActionButton = styled.div<{ $disabled?: boolean }>`
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background: ${({ theme, $disabled }) => ($disabled ? theme.accentActionSoft : theme.accentAction)};
+  padding: 4px 0px;
+  justify-content: center;
+  cursor: ${({ $disabled }) => ($disabled ? 'default' : 'pointer')};
+
+  &:before {
+    background-size: 100%;
+    border-radius: inherit;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+    content: '';
+  }
+
+  &:hover:before {
+    background-color: ${({ theme, $disabled }) => !$disabled && theme.stateOverlayHover};
+  }
+
+  &:active:before {
+    background-color: ${({ theme, $disabled }) => !$disabled && theme.stateOverlayPressed};
+  }
+`
+
+const StyledErc1155ActionContainer = styled(ThemedText.BodySmall)`
+  display: flex;
+  background: ${({ theme }) => theme.backgroundModule};
+  color: ${({ theme }) => theme.backgroundSurface};
+  border-radius: 8px;
+  justify-content: center;
+  font-weight: 600 !important;
+  line-height: 16px;
+  cursor: 'pointer';
+  overflow: hidden;
+`
+
+const Erc1155ActionContainer = ({
+  selectAsset,
+  unselectAsset,
+  quantity,
+  disableErc1155AddToBag,
+}: {
+  selectAsset: () => void
+  unselectAsset: () => void
+  quantity: number
+  disableErc1155AddToBag: boolean
+}) => {
+  return (
+    <StyledErc1155ActionContainer>
+      <StyledErc1155ActionButton
+        onClick={(e) => {
+          e.stopPropagation()
+          e.preventDefault()
+          unselectAsset()
+        }}
+      >
+        <Minus size="24" />
+      </StyledErc1155ActionButton>
+      <Row justify="center">
+        <ThemedText.BodySmall color="textPrimary" fontWeight={600} lineHeight="16px">
+          {quantity}
+        </ThemedText.BodySmall>
+      </Row>
+      <StyledErc1155ActionButton
+        $disabled={disableErc1155AddToBag}
+        onClick={(e) => {
+          e.stopPropagation()
+          e.preventDefault()
+          if (!disableErc1155AddToBag) selectAsset()
+        }}
+      >
+        <Plus size="24" />
+      </StyledErc1155ActionButton>
+    </StyledErc1155ActionContainer>
+  )
+}
+
 const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean }>`
   position: relative;
   border-radius: ${BORDER_RADIUS}px;
@@ -125,18 +218,10 @@ const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean 
     pointer-events: none;
     transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} border`};
     will-change: border;
-
-    @media screen and (max-width: ${BREAKPOINTS.sm}px) {
-      ${({ selected, theme }) => selected && `border-color: ${theme.accentCritical}`};
-    }
-  }
-
-  :hover::after {
-    ${({ selected, theme }) => selected && `border-color: ${theme.accentCritical}`};
   }
 
   :hover {
-    ${StyledActionButton} {
+    ${StyledActionContainer} {
       visibility: visible;
       bottom: 8px;
     }
@@ -282,9 +367,11 @@ const SecondaryInfo = ({ children }: { children: ReactNode }) => {
 
 export {
   ActionButton,
+  ActionContainer,
   Container,
   DetailsContainer,
   DetailsRelativeContainer,
+  Erc1155ActionContainer,
   InfoContainer,
   PrimaryDetails,
   PrimaryInfo,

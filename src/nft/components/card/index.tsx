@@ -1,3 +1,4 @@
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import * as Card from 'nft/components/card/containers'
 import { MarketplaceContainer } from 'nft/components/card/icons'
 import { MediaContainer } from 'nft/components/card/media'
@@ -12,7 +13,9 @@ interface NftCardProps {
   asset: GenieAsset | WalletAsset
   display: NftCardDisplayProps
   isSelected: boolean
+  quantitySelected?: number
   isDisabled: boolean
+  disableErc1155AddToBag?: boolean
   selectAsset?: () => void
   unselectAsset?: () => void
   onButtonClick?: () => void
@@ -48,9 +51,11 @@ export const NftCard = ({
   asset,
   display,
   isSelected,
+  quantitySelected = 0,
   selectAsset,
   unselectAsset,
   isDisabled,
+  disableErc1155AddToBag = false,
   onButtonClick,
   onCardClick,
   sendAnalyticsEvent,
@@ -82,6 +87,8 @@ export const NftCard = ({
   const profileNft = 'asset_contract' in asset
   const tokenType = collectionNft ? asset.tokenType : profileNft ? asset.asset_contract.tokenType : undefined
   const marketplace = collectionNft ? asset.marketplace : undefined
+  const showErc1155BuyButton =
+    tokenType && tokenType === NftStandard.Erc1155 && quantitySelected > 0 && selectAsset && unselectAsset
   const listedPrice =
     profileNft && !isDisabled && asset.floor_sell_order_price ? floorFormatter(asset.floor_sell_order_price) : undefined
 
@@ -104,6 +111,7 @@ export const NftCard = ({
           marketplace={marketplace}
           tokenType={tokenType}
           listedPrice={listedPrice}
+          quantitySelected={showErc1155BuyButton ? quantitySelected : 0}
         />
         {getNftDisplayComponent(
           asset,
@@ -135,9 +143,20 @@ export const NftCard = ({
               </Card.InfoContainer>
             </Card.DetailsContainer>
           </Card.DetailsRelativeContainer>
-          <Card.ActionButton clickActionButton={clickActionButton} isDisabled={isDisabled} isSelected={isSelected}>
-            {isSelected ? display.selectedInfo : isDisabled ? display.disabledInfo : display.notSelectedInfo}
-          </Card.ActionButton>
+          <Card.ActionContainer>
+            {showErc1155BuyButton ? (
+              <Card.Erc1155ActionContainer
+                selectAsset={selectAsset}
+                unselectAsset={unselectAsset}
+                quantity={quantitySelected}
+                disableErc1155AddToBag={disableErc1155AddToBag}
+              />
+            ) : (
+              <Card.ActionButton clickActionButton={clickActionButton} isDisabled={isDisabled} isSelected={isSelected}>
+                {isSelected ? display.selectedInfo : isDisabled ? display.disabledInfo : display.notSelectedInfo}
+              </Card.ActionButton>
+            )}
+          </Card.ActionContainer>
         </>
       )}
     </Card.Container>
