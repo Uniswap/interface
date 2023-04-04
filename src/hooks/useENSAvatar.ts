@@ -7,7 +7,7 @@ import { useMemo } from 'react'
 
 import { isAddress } from '../utils'
 import isZero from '../utils/isZero'
-import { useENSRegistrarContract, useENSResolverContract } from './useContract'
+import { useENSRegistrarContract, useENSResolverContract, useERC721Contract, useERC1155Contract } from './useContract'
 import useDebounce from './useDebounce'
 import useENSName from './useENSName'
 
@@ -71,11 +71,52 @@ function useAvatarFromNFT(nftUri = '', enforceOwnership: boolean): { avatar?: st
   const parts = nftUri.toLowerCase().split(':')
   const [contractAddress, id] = parts[2]?.split('/') ?? []
   const { data, loading } = useNftAssetDetails(contractAddress, id)
-  const isOwner = data?.[0]?.ownerAddress?.toLowerCase() === account?.toLowerCase()
+  const { owner } = useERC721Owner(contractAddress, id)
+  const { balance: erc1155Balance } = useERC1155BalanceForOwner(contractAddress, id, account)
+  const isOwner = owner?.toLowerCase() === account?.toLowerCase() || erc1155Balance > 0
   return useMemo(() => {
     return {
       avatar: isOwner || !enforceOwnership ? data?.[0]?.imageUrl : undefined,
       loading,
     }
   }, [data, enforceOwnership, isOwner, loading])
+}
+
+function useERC721Owner(
+  contractAddress: string | undefined,
+  id: string | undefined
+): { owner?: string; loading: boolean } {
+  const idArgument = useMemo(() => [id], [id])
+  const contract = useERC721Contract(contractAddress)
+  const owner = useSingleCallResult(contract, 'ownerOf', idArgument)
+  return useMemo(
+    () => ({
+      owner: owner.result?.[0],
+      loading: owner.loading,
+    }),
+    [owner.loading, owner.result]
+  )
+}
+
+function useERC1155BalanceForOwner(
+  contractAddress: string | undefined,
+  id: string | undefined,
+  ownerAddress: string | undefined
+): { balance: number; loading: boolean } {
+  const idArgument = useMemo(() => [id], [id])
+  const accountArgument = useMemo(() => [ownerAddress || '', id], [ownerAddress, id])
+  const contract = useERC1155Contract(contractAddress)
+  const balance = useSingleCallResult(contract, 'balanceOf', accountArgument)
+  const uri = useSingleCallResult(contract, 'uri', idArgument)
+  return useMemo(() => {
+    try {
+      return {
+        balance: balance.result?.[0] ?? 0,
+        loading: balance.loading || uri.loading,
+      }
+    } catch (error) {
+      console.error('Invalid token id', error)
+      return { loading: false, balance: 0 }
+    }
+  }, [balance.loading, balance.result, uri.loading])
 }
