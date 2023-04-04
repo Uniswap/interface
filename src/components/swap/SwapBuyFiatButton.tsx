@@ -30,8 +30,9 @@ enum BuyFiatFlowState {
   ACTIVE_NEEDS_WALLET_CONNECTION,
 }
 
-const StyledTextButton = styled(ButtonText)<{ color?: string }>`
-  color: ${({ color }) => color};
+const StyledTextButton = styled(ButtonText)`
+  color: ${({ theme }) => theme.textSecondary};
+  gap: 4px;
   &:focus {
     text-decoration: none;
   }
@@ -136,12 +137,7 @@ export default function SwapBuyFiatButton() {
       placement="bottom"
       disableHover={!fiatOnrampAvailabilityChecked || (fiatOnrampAvailabilityChecked && fiatOnrampAvailable)}
     >
-      <StyledTextButton
-        onClick={handleBuyCrypto}
-        color={theme.textSecondary}
-        disabled={disableBuyCryptoButton}
-        style={{ gap: '4px' }}
-      >
+      <StyledTextButton onClick={handleBuyCrypto} disabled={disableBuyCryptoButton}>
         <Trans>Buy</Trans>
         {!buyFiatFlowCompleted && <Dot />}
       </StyledTextButton>
