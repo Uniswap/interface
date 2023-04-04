@@ -69,17 +69,22 @@ function useAvatarFromNode(node?: string): { avatar?: string; loading: boolean }
 function useAvatarFromNFT(nftUri = '', enforceOwnership: boolean): { avatar?: string; loading: boolean } {
   const { account } = useWeb3React()
   const parts = nftUri.toLowerCase().split(':')
+  // TODO: when backend supports other chain's NFTs, use the EIP155 chain ID here.
   const [contractAddress, id] = parts[2]?.split('/') ?? []
-  const { data, loading } = useNftAssetDetails(contractAddress, id)
-  const { owner } = useERC721Owner(contractAddress, id)
-  const { balance: erc1155Balance } = useERC1155BalanceForOwner(contractAddress, id, account)
+  const { data, loading: assetLoading } = useNftAssetDetails(contractAddress, id)
+  const { owner, loading: erc721OwnerLoading } = useERC721Owner(contractAddress, id)
+  const { balance: erc1155Balance, loading: erc1155BalanceLoading } = useERC1155BalanceForOwner(
+    contractAddress,
+    id,
+    account
+  )
   const isOwner = owner?.toLowerCase() === account?.toLowerCase() || erc1155Balance > 0
   return useMemo(() => {
     return {
       avatar: isOwner || !enforceOwnership ? data?.[0]?.imageUrl : undefined,
-      loading,
+      loading: assetLoading || erc721OwnerLoading || erc1155BalanceLoading,
     }
-  }, [data, enforceOwnership, isOwner, loading])
+  }, [assetLoading, data, enforceOwnership, erc1155BalanceLoading, erc721OwnerLoading, isOwner])
 }
 
 function useERC721Owner(
