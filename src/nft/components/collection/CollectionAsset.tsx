@@ -58,15 +58,17 @@ export const CollectionAsset = ({
   const provider = asset?.rarity?.providers ? asset.rarity.providers[0] : undefined
 
   const { sellOrders, hasNext, loadMore } = useNftSellOrders(asset.address, asset.tokenId, isErc1155 && isSelected)
-  const shouldUseSellOrders = isErc1155 && isSelected && sellOrders && sellOrders.length > quantitySelected
-  const shouldDisableErc1155AddButton = isErc1155 && isSelected && sellOrders && sellOrders.length === quantitySelected
+  const shouldUseSellOrders = isErc1155 && isSelected
+  const shouldDisableErc1155AddButton = shouldUseSellOrders && (!sellOrders || sellOrders.length <= quantitySelected)
 
   const handleAddAssetToBag = useCallback(() => {
     if (shouldDisableErc1155AddButton) return
 
-    const newSellOrderPrice = shouldUseSellOrders
-      ? parseEther(sellOrders[quantitySelected].price.value.toString()).toString()
-      : undefined
+    const newSellOrderPrice =
+      shouldUseSellOrders && sellOrders
+        ? parseEther(sellOrders[quantitySelected].price.value.toString()).toString()
+        : undefined
+
     const assetToAdd: GenieAsset = newSellOrderPrice
       ? {
           ...asset,
@@ -79,7 +81,7 @@ export const CollectionAsset = ({
       : asset
 
     if (BigNumber.from(assetToAdd.priceInfo.ETHPrice).gt(0)) {
-      if (shouldUseSellOrders && sellOrders.length === quantitySelected + 2 && hasNext) {
+      if (shouldUseSellOrders && sellOrders && sellOrders.length === quantitySelected + 2 && hasNext) {
         loadMore()
       }
 
