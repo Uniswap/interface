@@ -1,11 +1,10 @@
-<!-- NOTE: Your PR title must follow [conventional commits](https://github.com/Uniswap/interface#pr-title) -->
+<!-- Your PR title must follow conventional commits: https://github.com/Uniswap/interface#pr-title -->
 
 ## Description
-<!-- Summary of change, including motivation and context.                     -->
+<!-- Summary of change, including motivation and context. -->
 <!-- Use verb-driven language: "Fixes XYZ" instead of "This change fixes XYZ" -->
 
 
-### Context
 <!-- Delete inapplicable lines: -->
 _JIRA ticket:_
 _Slack thread:_
@@ -41,6 +40,6 @@ _Relevant docs:_
 ### Automated testing
 
 <!-- If N/A, do not check nor delete, but strike through. -->
-<!-- eg - [ ] <s>Unit test</s>                            -->
+<!-- eg - [ ] <s>Unit test</s> -->
 - [ ] Unit test
 - [ ] Integration/E2E test
