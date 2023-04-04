@@ -33,6 +33,7 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
   // Use `savedPrimaryEnsName` for WalletSearchResults that are stored in the search history
   // so that we don't have to do an additional ENS fetch when loading search history
   const { address, ensName, primaryENSName: savedPrimaryENSName } = wallet
+  const formattedAddress = sanitizeAddressText(shortenAddress(address))
 
   /*
    * Fetch primary ENS associated with `address` since it may resolve to an
@@ -98,7 +99,7 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
               numberOfLines={1}
               testID={`address-display/name/${ensName}`}
               variant="bodyLarge">
-              {completedENSName}
+              {completedENSName || formattedAddress}
             </Text>
             {showOwnedBy ? (
               <Text
@@ -107,7 +108,7 @@ export function SearchWalletItem({ wallet, searchContext }: SearchWalletItemProp
                 numberOfLines={1}
                 variant="subheadSmall">
                 {t('Owned by {{owner}}', {
-                  owner: primaryENSName || sanitizeAddressText(shortenAddress(address)),
+                  owner: primaryENSName || formattedAddress,
                 })}
               </Text>
             ) : null}
