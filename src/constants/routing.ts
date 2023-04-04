@@ -23,7 +23,12 @@ const WRAPPED_NATIVE_CURRENCIES_ONLY: ChainTokenList = Object.fromEntries(
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WRAPPED_NATIVE_CURRENCIES_ONLY,
-  [SupportedChainId.MAINNET]: [...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.MAINNET], USDC_EVMOS, WETH_EVMOS],
+  [SupportedChainId.MAINNET]: [
+    STEVMOS,
+    ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.MAINNET],
+    USDC_EVMOS,
+    WETH_EVMOS,
+  ],
 }
 export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {}
 /**

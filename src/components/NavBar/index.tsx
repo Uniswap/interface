@@ -3,6 +3,7 @@ import Web3Status from 'components/Web3Status'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
+import { useIsMobile } from 'nft/hooks'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -41,7 +42,7 @@ const MenuItem = ({ href, dataTestId, id, isActive, children }: MenuItemProps) =
 
 export const PageTabs = () => {
   const { pathname } = useLocation()
-
+  const isMobile = useIsMobile()
   const isPoolActive =
     (pathname.startsWith('/pool') ||
       pathname.startsWith('/add') ||
@@ -60,6 +61,17 @@ export const PageTabs = () => {
       <MenuItem href="/pool" id="pool-nav-link" isActive={isPoolActive}>
         <Trans>Add Liquidity</Trans>
       </MenuItem>
+      {!isMobile && (
+        <a
+          href="https://app.stride.zone"
+          target="_blank"
+          rel="noopener noreferrer"
+          id="pool-nav-link"
+          className={styles.menuItem}
+        >
+          <Trans>Liquidity Stake</Trans>
+        </a>
+      )}
     </div>
   )
 }
