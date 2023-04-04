@@ -135,7 +135,7 @@ export const MenuDropdown = () => {
                     <GovernanceIcon width={24} height={24} />
                   </Icon>
                   <PrimaryMenuRow.Text>
-                    <Trans>Vote in governance</Trans>
+                    <Trans>Governance</Trans>
                   </PrimaryMenuRow.Text>
                 </PrimaryMenuRow>
                 {/*

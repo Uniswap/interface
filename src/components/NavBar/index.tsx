@@ -6,7 +6,7 @@ import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
-import { UniIcon } from 'nft/components/icons'
+import { GrgIcon } from 'nft/components/icons'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
 
@@ -76,6 +76,9 @@ const PageTabs = () => {
           <Trans>Liquidity</Trans>
         </MenuItem>
       )}
+      <MenuItem href="/stake" isActive={pathname.startsWith('/stake')}>
+        <Trans>Staking</Trans>
+      </MenuItem>
     </>
   )
 }
@@ -89,7 +92,7 @@ const Navbar = () => {
         <Box display="flex" height="full" flexWrap="nowrap" alignItems="stretch">
           <Box className={styles.leftSideContainer}>
             <Box as="a" href="#/mint" className={styles.logoContainer}>
-              <UniIcon width="48" height="48" className={styles.logo} />
+              <GrgIcon width="48" height="48" className={styles.logo} />
             </Box>
             {!isNftPage && (
               <Box display={{ sm: 'flex', lg: 'none' }}>
@@ -99,6 +102,9 @@ const Navbar = () => {
             <Row gap="8" display={{ sm: 'none', lg: 'flex' }}>
               <PageTabs />
             </Row>
+            <Box display={{ sm: 'none', lg: 'flex' }}>
+              <MenuDropdown />
+            </Box>
           </Box>
           <Box className={styles.searchContainer}>
             <SearchBar />
@@ -107,9 +113,6 @@ const Navbar = () => {
             <Row gap="12">
               <Box position="relative" display={{ sm: 'flex', xl: 'none' }}>
                 <SearchBar />
-              </Box>
-              <Box display={{ sm: 'none', lg: 'flex' }}>
-                <MenuDropdown />
               </Box>
               {isNftPage && <Bag />}
               {!isNftPage && (

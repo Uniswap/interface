@@ -4,7 +4,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 //import { useInfiniteQuery } from 'react-query'
 import styled from 'styled-components/macro'
 
-import { ButtonPrimary } from '../../components/Button'
+//import { ButtonPrimary } from '../../components/Button'
 import { OutlineCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CreateModal from '../../components/createPool/CreateModal'
@@ -143,9 +143,9 @@ export default function Stake() {
           </ThemedText.DeprecatedMediumHeader>
           {/* TODO: must add stake modal to stake for user or for pool */}
           <CreateModal isOpen={showDelegateModal} onDismiss={toggleCreateModal} title={<Trans>Stake</Trans>} />
-          <ButtonPrimary style={{ width: 'fit-content' }} padding="8px" $borderRadius="8px" onClick={toggleCreateModal}>
+          {/*<ButtonPrimary style={{ width: 'fit-content' }} padding="8px" $borderRadius="8px" onClick={toggleCreateModal}>
             <Trans>Stake</Trans>
-          </ButtonPrimary>
+          </ButtonPrimary>*/}
         </DataRow>
 
         <MainContentWrapper>
