@@ -87,7 +87,7 @@ export default function SwapBuyFiatButton() {
     terminateBuyFiatFlow,
   ])
 
-  // Increment buy fiat flow state automatically, when requisite state changes have occured.
+  // Continue buy fiat flow automatically when requisite state changes have occured.
   useEffect(() => {
     if (
       buyFiatFlowState === BuyFiatFlowState.ACTIVE_POST_REGION_CHECK ||
