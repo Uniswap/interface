@@ -197,9 +197,10 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
 
   const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const openFoRModalWithAnalytics = useCallback(() => {
+    toggleWalletDrawer()
     sendAnalyticsEvent(InterfaceEventName.FIAT_ONRAMP_WIDGET_OPENED)
     openFiatOnrampModal()
-  }, [openFiatOnrampModal])
+  }, [openFiatOnrampModal, toggleWalletDrawer])
 
   const [shouldCheck, setShouldCheck] = useState(false)
   const {
@@ -210,13 +211,12 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   } = useFiatOnrampAvailability(shouldCheck, openFoRModalWithAnalytics)
 
   const handleBuyCryptoClick = useCallback(() => {
-    toggleWalletDrawer()
     if (!fiatOnrampAvailabilityChecked) {
       setShouldCheck(true)
     } else if (fiatOnrampAvailable) {
       openFoRModalWithAnalytics()
     }
-  }, [fiatOnrampAvailabilityChecked, fiatOnrampAvailable, openFoRModalWithAnalytics, toggleWalletDrawer])
+  }, [fiatOnrampAvailabilityChecked, fiatOnrampAvailable, openFoRModalWithAnalytics])
   const disableBuyCryptoButton = Boolean(
     error || (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) || fiatOnrampAvailabilityLoading
   )
