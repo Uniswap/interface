@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
 import { ButtonText } from 'components/Button'
 import { MouseoverTooltipContent } from 'components/Tooltip'
 import { useWalletDrawer } from 'components/WalletDropdown'
@@ -131,13 +131,13 @@ export default function SwapBuyFiatButton() {
         <div>
           <Trans>Crypto purchases are not available in your region. </Trans>
           <TraceEvent
-                    events={[BrowserEvent.onClick]}
-                    name={SharedEventName.ELEMENT_CLICKED}
-                    element={InterfaceElementName.FIAT_ON_RAMP_LEARN_MORE_LINK}
-                  >
-          <ExternalLink href={MOONPAY_REGION_AVAILABILITY_ARTICLE} style={{ paddingLeft: '4px' }}>
-            <Trans>Learn more</Trans>
-          </ExternalLink>
+            events={[BrowserEvent.onClick]}
+            name={SharedEventName.ELEMENT_CLICKED}
+            element={InterfaceElementName.FIAT_ON_RAMP_LEARN_MORE_LINK}
+          >
+            <ExternalLink href={MOONPAY_REGION_AVAILABILITY_ARTICLE} style={{ paddingLeft: '4px' }}>
+              <Trans>Learn more</Trans>
+            </ExternalLink>
           </TraceEvent>
         </div>
       }
@@ -145,20 +145,20 @@ export default function SwapBuyFiatButton() {
       disableHover={!fiatOnrampAvailabilityChecked || (fiatOnrampAvailabilityChecked && fiatOnrampAvailable)}
     >
       <TraceEvent
-                events={[BrowserEvent.onClick]}
-                name={SharedEventName.ELEMENT_CLICKED}
-                element={InterfaceElementName.FIAT_ON_RAMP_BUY_BUTTON}
-                properties={{ account_connected: !!account }}
-              >
-      <StyledTextButton
-        onClick={handleBuyCrypto}
-        color={theme.textSecondary}
-        disabled={disableBuyCryptoButton}
-        style={{ gap: '4px' }}
+        events={[BrowserEvent.onClick]}
+        name={SharedEventName.ELEMENT_CLICKED}
+        element={InterfaceElementName.FIAT_ON_RAMP_BUY_BUTTON}
+        properties={{ account_connected: !!account }}
       >
-        <Trans>Buy</Trans>
-        {!buyFiatFlowCompleted && <Dot />}
-      </StyledTextButton>
+        <StyledTextButton
+          onClick={handleBuyCrypto}
+          color={theme.textSecondary}
+          disabled={disableBuyCryptoButton}
+          style={{ gap: '4px' }}
+        >
+          <Trans>Buy</Trans>
+          {!buyFiatFlowCompleted && <Dot />}
+        </StyledTextButton>
       </TraceEvent>
     </MouseoverTooltipContent>
   )
