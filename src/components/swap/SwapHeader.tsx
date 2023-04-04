@@ -15,15 +15,12 @@ const StyledSwapHeader = styled.div`
   color: ${({ theme }) => theme.textSecondary};
 `
 
-const TextHeader = styled.div<{ color: string; marginLeft?: string; isClickable?: boolean; disabled?: boolean }>`
+const TextHeader = styled.div<{ color: string }>`
   color: ${({ color }) => color};
-  opacity: ${({ disabled }) => disabled && '60%'};
-  margin-left: ${({ marginLeft }) => marginLeft};
   margin-right: 8px;
   display: flex;
   line-height: 20px;
   flex-direction: row;
-  cursor: ${({ isClickable }) => isClickable && 'pointer'};
   justify-content: center;
   align-items: center;
 `

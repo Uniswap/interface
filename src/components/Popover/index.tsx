@@ -126,21 +126,19 @@ export default function Popover({
   useInterval(updateCallback, show ? 200 : null)
 
   useEffect(() => {
-    if (delayBeforeShow) {
-      if (show) {
-        const tooltipTimer = setTimeout(() => {
-          setDelayShow(true)
-        }, delayBeforeShow)
+    if (!delayBeforeShow) return
+    if (show) {
+      const tooltipTimer = setTimeout(() => {
+        setDelayShow(true)
+      }, delayBeforeShow)
 
-        return () => {
-          clearTimeout(tooltipTimer)
-        }
-      } else {
-        setDelayShow(false)
-        return
+      return () => {
+        clearTimeout(tooltipTimer)
       }
+    } else {
+      setDelayShow(false)
+      return
     }
-    return
   }, [show, delayBeforeShow])
 
   return showInline ? (

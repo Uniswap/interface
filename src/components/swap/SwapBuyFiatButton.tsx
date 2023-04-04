@@ -30,6 +30,18 @@ enum BuyFiatFlowState {
   ACTIVE_NEEDS_WALLET_CONNECTION,
 }
 
+const StyledTextButton = styled(ButtonText)<{ color?: string }>`
+  color: ${({ color }) => color};
+  &:focus {
+    text-decoration: none;
+  }
+  &:active {
+    text-decoration: none;
+  }
+`
+
+const POPOVER_DELAY_BEFORE_SHOW_MS = 500
+
 export default function SwapBuyFiatButton() {
   const theme = useTheme()
   const { account } = useWeb3React()
@@ -112,7 +124,7 @@ export default function SwapBuyFiatButton() {
   return (
     <MouseoverTooltipContent
       wrap
-      delayBeforeShow={500}
+      delayBeforeShow={POPOVER_DELAY_BEFORE_SHOW_MS}
       content={
         <div>
           <Trans>Crypto purchases are not available in your region. </Trans>
@@ -124,16 +136,15 @@ export default function SwapBuyFiatButton() {
       placement="bottom"
       disableHover={!fiatOnrampAvailabilityChecked || (fiatOnrampAvailabilityChecked && fiatOnrampAvailable)}
     >
-      <ButtonText
+      <StyledTextButton
         onClick={handleBuyCrypto}
         color={theme.textSecondary}
-        noUnderline={true}
         disabled={disableBuyCryptoButton}
         style={{ gap: '4px' }}
       >
         <Trans>Buy</Trans>
         {!buyFiatFlowCompleted && <Dot />}
-      </ButtonText>
+      </StyledTextButton>
     </MouseoverTooltipContent>
   )
 }
