@@ -5,6 +5,7 @@ import { useAppTheme } from 'src/app/hooks'
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
+import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
@@ -41,6 +42,7 @@ interface Props {
   currencyId: string
   safetyLevel: NullUndefined<SafetyLevel>
   disableAccept?: boolean // only show message and close button
+  tokenLogoUrl: NullUndefined<string>
   onClose: () => void
   onAccept: () => void
 }
@@ -53,6 +55,7 @@ export default function TokenWarningModal({
   currencyId,
   safetyLevel,
   disableAccept,
+  tokenLogoUrl,
   onClose,
   onAccept,
 }: Props): JSX.Element | null {
@@ -74,21 +77,30 @@ export default function TokenWarningModal({
     openUri(TOKEN_WARNING_HELP_PAGE_URL)
   }
 
+  const showWarningIcon =
+    safetyLevel === SafetyLevel.StrongWarning || safetyLevel === SafetyLevel.Blocked
+
   if (!isVisible) return null
 
   return (
     <BottomSheetModal name={ModalName.TokenWarningModal} onClose={onClose}>
-      <Flex centered gap="spacing16" mb="spacing16" p="spacing24">
-        <Flex
-          centered
-          borderRadius="rounded12"
-          p="spacing12"
-          style={{
-            backgroundColor: opacify(12, theme.colors[warningColor]),
-          }}>
-          <WarningIcon safetyLevel={safetyLevel} width={theme.iconSizes.icon24} />
-        </Flex>
-        <Text variant="buttonLabelMedium">{getTokenSafetyHeaderText(safetyLevel, t)}</Text>
+      <Flex centered gap="spacing16" mb="spacing16" p="spacing12">
+        {showWarningIcon ? (
+          <Flex centered gap="spacing16">
+            <Flex
+              centered
+              borderRadius="rounded12"
+              p="spacing12"
+              style={{
+                backgroundColor: opacify(12, theme.colors[warningColor]),
+              }}>
+              <WarningIcon safetyLevel={safetyLevel} width={theme.iconSizes.icon24} />
+            </Flex>
+            <Text variant="buttonLabelMedium">{getTokenSafetyHeaderText(safetyLevel, t)}</Text>
+          </Flex>
+        ) : (
+          <TokenLogo size={theme.imageSizes.image48} url={tokenLogoUrl} />
+        )}
         <Flex centered gap="spacing4" width="90%">
           <Text color="textSecondary" textAlign="center" variant="bodySmall">
             {getTokenSafetyBodyText(safetyLevel, t)}{' '}
@@ -101,7 +113,7 @@ export default function TokenWarningModal({
         </Flex>
         <TouchableArea
           alignItems="center"
-          bg="background2"
+          bg="accentActiveSoft"
           borderRadius="rounded16"
           flexDirection="row"
           mx="spacing48"
@@ -109,7 +121,7 @@ export default function TokenWarningModal({
           py="spacing8"
           onPress={(): Promise<void> => openUri(explorerLink)}>
           <Text
-            color="textSecondary"
+            color="accentActive"
             ellipsizeMode="tail"
             mx="spacing8"
             numberOfLines={1}
@@ -117,7 +129,7 @@ export default function TokenWarningModal({
             {explorerLink}
           </Text>
           <ExternalLinkIcon
-            color={theme.colors.textSecondary}
+            color={theme.colors.accentActive}
             height={iconSizes.icon16}
             width={iconSizes.icon16}
           />
@@ -134,7 +146,7 @@ export default function TokenWarningModal({
             <Button
               fill
               emphasis={getButtonEmphasis(safetyLevel)}
-              label={t('I understand')}
+              label={showWarningIcon ? t('I understand') : t('Continue')}
               name={ElementName.TokenWarningAccept}
               onPress={onAccept}
             />
@@ -148,7 +160,7 @@ export default function TokenWarningModal({
 function getButtonEmphasis(safetyLevel: NullUndefined<SafetyLevel>): ButtonEmphasis | undefined {
   switch (safetyLevel) {
     case SafetyLevel.MediumWarning:
-      return ButtonEmphasis.Warning
+      return ButtonEmphasis.Secondary
     case SafetyLevel.StrongWarning:
       return ButtonEmphasis.Detrimental
     default:

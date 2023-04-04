@@ -24,7 +24,7 @@ export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProp
   const theme = useAppTheme()
 
   const { currencyInfo, quantity, balanceUSD } = option
-  const { currency, currencyId, safetyLevel } = currencyInfo
+  const { currency, currencyId, safetyLevel, logoUrl } = currencyInfo
 
   const [showWarningModal, setShowWarningModal] = useState(false)
   const { tokenWarningDismissed, dismissWarningCallback } = useTokenWarningDismissed(currencyId)
@@ -106,6 +106,7 @@ export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProp
           isVisible
           currencyId={currencyId}
           safetyLevel={safetyLevel}
+          tokenLogoUrl={logoUrl}
           onAccept={onAcceptTokenWarning}
           onClose={(): void => setShowWarningModal(false)}
         />
