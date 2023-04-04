@@ -81,7 +81,7 @@ export const CollectionAsset = ({
       : asset
 
     if (BigNumber.from(assetToAdd.priceInfo.ETHPrice).gt(0)) {
-      if (shouldUseSellOrders && sellOrders && sellOrders.length === quantitySelected + 2 && hasNext) {
+      if (shouldUseSellOrders && sellOrders && sellOrders.length === quantitySelected + 1 && hasNext) {
         loadMore()
       }
 
