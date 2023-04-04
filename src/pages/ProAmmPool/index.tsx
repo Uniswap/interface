@@ -84,6 +84,7 @@ export default function ProAmmPool() {
   const { positions, loading: positionsLoading } = useProAmmPositions(account)
 
   const { farmPositions, loading, activeFarmAddress, farms, userFarmInfo } = useFarmPositions()
+
   const [openPositions, closedPositions] = useMemo(
     () =>
       positions?.reduce<[PositionDetails[], PositionDetails[]]>(
@@ -127,7 +128,8 @@ export default function ProAmmPool() {
             tokenAddressSymbolMap.current[pos.token0.toLowerCase()].includes(debouncedSearchText)) ||
           (!!tokenAddressSymbolMap.current[pos.token1.toLowerCase()] &&
             tokenAddressSymbolMap.current[pos.token1.toLowerCase()].includes(debouncedSearchText)) ||
-          pos.poolId.toLowerCase() === debouncedSearchText
+          pos.poolId.toLowerCase() === debouncedSearchText ||
+          pos.tokenId.toString() === debouncedSearchText
         )
       }),
     [debouncedSearchText, farmPositions],
@@ -147,10 +149,12 @@ export default function ProAmmPool() {
               tokenAddressSymbolMap.current[position.token0.toLowerCase()].includes(debouncedSearchText)) ||
             (!!tokenAddressSymbolMap.current[position.token1.toLowerCase()] &&
               tokenAddressSymbolMap.current[position.token1.toLowerCase()].includes(debouncedSearchText)) ||
-            position.poolId.toLowerCase() === debouncedSearchText
+            position.poolId.toLowerCase() === debouncedSearchText ||
+            position.tokenId.toString() === debouncedSearchText
           )
         })
-        .filter((pos, index, array) => array.findIndex(pos2 => pos2.tokenId.eq(pos.tokenId)) === index),
+        .filter((pos, index, array) => array.findIndex(pos2 => pos2.tokenId.eq(pos.tokenId)) === index)
+        .sort((a, b) => +a.tokenId.toString() - +b.tokenId.toString()),
     [showClosed, openPositions, closedPositions, debouncedSearchText, filteredFarmPositions, nftId],
   )
 
