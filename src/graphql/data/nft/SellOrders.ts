@@ -2,7 +2,7 @@ import gql from 'graphql-tag'
 import { SellOrder } from 'nft/types'
 import { useCallback, useMemo, useReducer } from 'react'
 
-import { NftAsset, useSellOrdersQuery } from '../__generated__/types-and-hooks'
+import { useSellOrdersQuery } from '../__generated__/types-and-hooks'
 
 gql`
   query SellOrders($address: String!, $tokenId: String!, $first: Int) {
@@ -59,9 +59,6 @@ export function useNftSellOrders(address: string, tokenId: string, enabled: bool
     fetchPolicy: 'no-cache',
   })
 
-  const asset = data?.nftAssets?.edges[0]?.node as NonNullable<NftAsset> | undefined
-
-  const hasNext = asset?.listings?.pageInfo?.hasNextPage
   const loadMore = useCallback(() => {
     refetch({
       first,
@@ -69,9 +66,9 @@ export function useNftSellOrders(address: string, tokenId: string, enabled: bool
     incFirst()
   }, [first, refetch])
 
-  const sellOrders = useMemo(
-    () =>
-      asset?.listings?.edges.map((listingNode) => {
+  return useMemo(
+    () => ({
+      sellOrders: data?.nftAssets?.edges[0]?.node?.listings?.edges.map((listingNode) => {
         return {
           ...listingNode.node,
           protocolParameters: listingNode.node.protocolParameters
@@ -79,8 +76,9 @@ export function useNftSellOrders(address: string, tokenId: string, enabled: bool
             : undefined,
         } as SellOrder
       }),
-    [asset]
+      hasNext: data?.nftAssets?.edges[0]?.node?.listings?.pageInfo?.hasNextPage,
+      loadMore,
+    }),
+    [data?.nftAssets?.edges, loadMore]
   )
-
-  return useMemo(() => ({ sellOrders, hasNext, loadMore }), [sellOrders, hasNext, loadMore])
 }
