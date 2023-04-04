@@ -186,6 +186,8 @@ const VoteButton = ({
   )
 }
 
+const FORCED_TO_BINARY_OPTION_PROPOSALS = [14]
+
 function ProposalItem({
   proposal,
   showByDefault,
@@ -266,12 +268,15 @@ function ProposalItem({
   useEffect(() => {
     setSelectedOptions([])
   }, [votedOfCurrentProposal])
+
+  // Proposals is Generic but force to be Binary option
+  const isForcedBinaryOption = FORCED_TO_BINARY_OPTION_PROPOSALS.includes(proposal.proposal_id)
+
   const handleOptionClick = useCallback(
     (option: number) => {
-      if (proposal.proposal_type === ProposalType.BinaryProposal) {
+      if (proposal.proposal_type === ProposalType.BinaryProposal || isForcedBinaryOption) {
         setSelectedOptions([option])
-      }
-      if (proposal.proposal_type === ProposalType.GenericProposal) {
+      } else if (proposal.proposal_type === ProposalType.GenericProposal) {
         if (selectedOptions.length === 0) {
           setSelectedOptions([option])
         } else {
@@ -286,7 +291,7 @@ function ProposalItem({
         }
       }
     },
-    [proposal.proposal_type, setSelectedOptions, selectedOptions],
+    [proposal.proposal_type, setSelectedOptions, selectedOptions, isForcedBinaryOption],
   )
   const isActive = proposal.status === ProposalStatus.Active
 
@@ -317,14 +322,14 @@ function ProposalItem({
                   ? 'Active'
                   : 'Finished'
               }
-              isCheckBox={proposal.proposal_type === ProposalType.GenericProposal}
+              isCheckBox={proposal.proposal_type === ProposalType.GenericProposal && !isForcedBinaryOption}
               id={index}
             />
           )
         })}
       </OptionsWrapper>
     )
-  }, [proposal, selectedOptions, votedOfCurrentProposal?.options, handleOptionClick, isActive])
+  }, [proposal, selectedOptions, votedOfCurrentProposal?.options, handleOptionClick, isActive, isForcedBinaryOption])
 
   return (
     <ProposalItemWrapper>

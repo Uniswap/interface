@@ -100,7 +100,7 @@ const TabReward = styled.span<{ active?: boolean }>`
 `
 
 export function readableTime(seconds: number) {
-  if (seconds < 60) return seconds + 's'
+  if (seconds < 60) return Math.floor(seconds) + 's'
 
   const levels = [
     [Math.floor(seconds / 31536000), 'years'],
@@ -485,11 +485,9 @@ export default function Vote() {
               <Clock size="12px" />{' '}
               {daoInfo
                 ? readableTime(
-                    Math.floor(
-                      daoInfo.first_epoch_start_timestamp +
-                        daoInfo.current_epoch * daoInfo.epoch_period_in_seconds -
-                        Date.now() / 1000,
-                    ),
+                    daoInfo.first_epoch_start_timestamp +
+                      daoInfo.current_epoch * daoInfo.epoch_period_in_seconds -
+                      Date.now() / 1000,
                   ) + ' left'
                 : '--:--:--'}
             </Box>
