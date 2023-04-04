@@ -76,7 +76,7 @@ const WalletDropdownScrollWrapper = styled.div`
   border-radius: 12px;
 `
 
-const Wrapper = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: row;
   height: calc(100% - 2 * ${DRAWER_MARGIN});
@@ -87,12 +87,11 @@ const Wrapper = styled.div`
   z-index: ${Z_INDEX.fixed};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    top: unset;
+    top: 100%;
     left: 0;
     right: 0;
-    bottom: 0;
-    height: calc(100% - ${DRAWER_TOP_MARGIN_MOBILE_WEB});
     width: 100%;
+    overflow: visible;
   }
 `
 
@@ -105,12 +104,13 @@ const WalletDropdownWrapper = styled.div<{ open: boolean }>`
     z-index: ${Z_INDEX.modal};
     position: absolute;
     margin-right: 0;
-    bottom: ${({ open }) => (open ? 0 : `calc(-1 * (100%))`)};
+    top: ${({ open }) => (open ? `calc(-1 * (100% - ${DRAWER_TOP_MARGIN_MOBILE_WEB}))` : 0)};
 
     width: 100%;
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
     box-shadow: unset;
+    transition: top ${({ theme }) => theme.transition.duration.medium};
   }
 
   @media screen and (min-width: 1440px) {
@@ -125,8 +125,7 @@ const WalletDropdownWrapper = styled.div<{ open: boolean }>`
   border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
 
   box-shadow: ${({ theme }) => theme.deepShadow};
-  transition: margin-right ${({ theme }) => theme.transition.duration.medium},
-    bottom ${({ theme }) => theme.transition.duration.medium};
+  transition: margin-right ${({ theme }) => theme.transition.duration.medium};
 `
 
 const CloseIcon = styled(ChevronsRight).attrs({ size: 24 })`
@@ -143,7 +142,8 @@ const CloseDrawer = styled.div`
   transition: ${({ theme }) =>
     `${theme.transition.duration.medium} ${theme.transition.timing.ease} background-color, ${theme.transition.duration.medium} ${theme.transition.timing.ease} margin`};
   &:hover {
-    margin: 0 -4px 0 0;
+    z-index: -1;
+    margin: 0 -8px 0 0;
     background-color: ${({ theme }) => theme.stateOverlayHover};
   }
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
@@ -193,7 +193,7 @@ function WalletDropdown() {
   }, [walletDrawerOpen, toggleWalletDrawer])
 
   return (
-    <Wrapper>
+    <Container>
       {walletDrawerOpen && (
         <TraceEvent
           events={[BrowserEvent.onClick]}
@@ -212,7 +212,7 @@ function WalletDropdown() {
           <DefaultMenu />
         </WalletDropdownScrollWrapper>
       </WalletDropdownWrapper>
-    </Wrapper>
+    </Container>
   )
 }
 
