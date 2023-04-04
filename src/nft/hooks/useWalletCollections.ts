@@ -1,5 +1,5 @@
 import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
-import create from 'zustand'
+import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
 import { WalletAsset, WalletCollection } from '../types'

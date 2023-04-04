@@ -12,7 +12,7 @@ export type Activity = {
   title: string
   descriptor?: string
   logos?: Array<string | undefined>
-  currencies?: Array<Currency>
+  currencies?: Array<Currency | undefined>
   otherAccount?: string
   receipt?: Receipt
 }
