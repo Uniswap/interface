@@ -5,7 +5,7 @@ import { RPC_PROVIDERS } from 'constants/providers'
 import { getClientSideQuote, toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms.macro'
 import qs from 'qs'
-import { trace } from 'tracing'
+import { trace } from 'tracing/trace'
 
 import { GetQuoteResult } from './types'
 

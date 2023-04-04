@@ -18,13 +18,8 @@ const walletsSlice = createSlice({
   initialState,
   reducers: {
     addConnectedWallet(state, { payload }) {
-      const existsAlready = state.connectedWallets.find((wallet) => shallowEqual(payload, wallet))
-      if (!existsAlready) {
-        state.connectedWallets = state.connectedWallets.concat(payload)
-      }
-    },
-    removeConnectedWallet(state, { payload }) {
-      state.connectedWallets = state.connectedWallets.filter((wallet) => !shallowEqual(wallet, payload))
+      if (state.connectedWallets.some((wallet) => shallowEqual(payload, wallet))) return
+      state.connectedWallets = [...state.connectedWallets, payload]
     },
   },
 })

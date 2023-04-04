@@ -1,11 +1,13 @@
 import { act, render } from '@testing-library/react'
+import { sendAnalyticsEvent, user } from '@uniswap/analytics'
+import { InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { initializeConnector } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
 // TODO(INFRA-163): Export MockEIP1193Provider from @web3-react/eip1193 to facilitate testing.
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { MockEIP1193Provider } from '@web3-react/eip1193/dist/mock'
 import { Provider as EIP1193Provider } from '@web3-react/types'
-import { Connection, ConnectionType } from 'connection'
+import { Connection, ConnectionType, useGetConnection } from 'connection'
 import useEagerlyConnect from 'hooks/useEagerlyConnect'
 import useOrderedConnections from 'hooks/useOrderedConnections'
 import { Provider } from 'react-redux'
@@ -14,8 +16,24 @@ import { asMock } from 'test-utils'
 
 import Web3Provider from '.'
 
+jest.mock('@uniswap/analytics', () => ({
+  sendAnalyticsEvent: jest.fn(),
+  user: { set: jest.fn(), postInsert: jest.fn() },
+}))
+jest.mock('connection', () => {
+  const { ConnectionType } = jest.requireActual('connection')
+  return { ConnectionType, useGetConnection: jest.fn() }
+})
 jest.mock('hooks/useEagerlyConnect', () => jest.fn())
 jest.mock('hooks/useOrderedConnections', () => jest.fn())
+
+function first<T>(array: T[]): T {
+  return array[0]
+}
+
+function last<T>(array: T[]): T {
+  return array[array.length - 1]
+}
 
 const UI = (
   <Provider store={store}>
@@ -47,5 +65,71 @@ describe('Web3Provider', () => {
     })
     expect(useEagerlyConnect).toHaveBeenCalled()
     expect(result).toBeTruthy()
+  })
+
+  describe('analytics', () => {
+    beforeEach(() => {
+      asMock(useGetConnection).mockReturnValue(jest.fn().mockReturnValue(connection))
+    })
+
+    it('sends event when the active account changes', async () => {
+      // Arrange
+      const result = render(UI)
+      await act(async () => {
+        await result
+      })
+
+      // Act
+      act(() => {
+        provider.emitConnect('0x1')
+        provider.emitAccountsChanged(['0x0000000000000000000000000000000000000000'])
+      })
+
+      // Assert
+      expect(sendAnalyticsEvent).toHaveBeenCalledTimes(1)
+      expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
+        result: WalletConnectionResult.SUCCEEDED,
+        wallet_address: '0x0000000000000000000000000000000000000000',
+        wallet_type: 'test',
+        is_reconnect: false,
+        peer_wallet_agent: '(Injected)',
+      })
+      expect(first(asMock(sendAnalyticsEvent).mock.invocationCallOrder)).toBeGreaterThan(
+        last(asMock(user.set).mock.invocationCallOrder)
+      )
+      expect(first(asMock(sendAnalyticsEvent).mock.invocationCallOrder)).toBeGreaterThan(
+        last(asMock(user.postInsert).mock.invocationCallOrder)
+      )
+    })
+
+    it('sends event with is_reconnect when a previous account reconnects', async () => {
+      // Arrange
+      const result = render(UI)
+      await act(async () => {
+        await result
+      })
+
+      // Act
+      act(() => {
+        provider.emitConnect('0x1')
+        provider.emitAccountsChanged(['0x0000000000000000000000000000000000000000'])
+      })
+      act(() => {
+        provider.emitAccountsChanged(['0x0000000000000000000000000000000000000001'])
+      })
+      act(() => {
+        provider.emitAccountsChanged(['0x0000000000000000000000000000000000000000'])
+      })
+
+      // Assert
+      expect(sendAnalyticsEvent).toHaveBeenCalledTimes(3)
+      expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
+        result: WalletConnectionResult.SUCCEEDED,
+        wallet_address: '0x0000000000000000000000000000000000000000',
+        wallet_type: 'test',
+        is_reconnect: true,
+        peer_wallet_agent: '(Injected)',
+      })
+    })
   })
 })
