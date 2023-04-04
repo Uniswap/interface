@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-env node */
 const { VanillaExtractPlugin } = require('@vanilla-extract/webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { DefinePlugin } = require('webpack')
@@ -24,6 +24,7 @@ module.exports = {
         moduleNameMapper: {
           '@uniswap/conedison/format': '@uniswap/conedison/dist/format',
           '@uniswap/conedison/provider': '@uniswap/conedison/dist/provider',
+          'node:events': 'eventemitter3',
         },
       })
     },
