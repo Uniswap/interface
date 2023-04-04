@@ -42,9 +42,6 @@ gql`
           image {
             url
           }
-          smallImage {
-            url
-          }
           tokenId
           animationUrl
           suspiciousFlag
