@@ -84,7 +84,6 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
 
 .c3 {
   padding: 0;
-  color: #7780A0;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -94,8 +93,8 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
 }
 
 .c3:focus {
-  -webkit-text-decoration: none;
-  text-decoration: none;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
 }
 
 .c3:hover {
@@ -103,8 +102,8 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
 }
 
 .c3:active {
-  -webkit-text-decoration: none;
-  text-decoration: none;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
 }
 
 .c3:disabled {
@@ -117,11 +116,25 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
   height: inherit;
 }
 
-.c4 {
+.c5 {
   height: 8px;
   width: 8px;
   background-color: #4C82FB;
   border-radius: 50%;
+}
+
+.c4 {
+  color: #7780A0;
+}
+
+.c4:focus {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c4:active {
+  -webkit-text-decoration: none;
+  text-decoration: none;
 }
 
 <div
@@ -129,13 +142,13 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
   >
     <div>
       <button
-        class="c1 c2 c3"
+        class="c1 c2 c3 c4"
         color="#7780A0"
         style="gap: 4px;"
       >
         Buy
         <div
-          class="c4"
+          class="c5"
         />
       </button>
     </div>
