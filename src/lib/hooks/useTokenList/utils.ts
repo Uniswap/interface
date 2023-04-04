@@ -22,12 +22,11 @@ export function tokensToChainTokenInfoMap(tokens: TokenList | TokenInfo[]): Chai
         console.warn(`Duplicate token skipped: ${token.address}`)
         return map
       }
-      const currentChainMap = map[token.chainId]
-      if (!currentChainMap) {
-        map[token.chainId] = { [token.address]: { token, list } }
-      } else {
-        currentChainMap[token.address] = { token, list }
-      }
+
+      const tokenInfoMap = map[token.chainId] || {}
+      tokenInfoMap[token.address] = { token, list }
+      map[token.chainId] = tokenInfoMap
+
       return map
     } catch {
       return map

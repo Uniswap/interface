@@ -14,12 +14,12 @@ import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'
 import { useUserAddedTokens, useUserAddedTokensOnChain } from '../state/user/hooks'
 import { useUnsupportedTokenList } from './../state/lists/hooks'
 
-export type TokenMap = { [address: string]: Token | undefined }
+export type TokenMap = { [address in string]?: Token }
 export function tokenMapToArray(tokens: TokenMap): Array<Token> {
-  return Object.values(tokens).filter((token): token is Token => token !== undefined)
+  return Object.values(tokens).filter(Boolean) as Array<Token>
 }
 
-// reduce ChainTokenInfoMap to standard TokenMap type
+/** Reduces ChainTokenInfoMap to the standard TokenMap type. */
 function useTokensFromMap(chainTokenInfoMap: ChainTokenInfoMap): TokenMap {
   const { chainId } = useWeb3React()
   return useMemo(() => {
