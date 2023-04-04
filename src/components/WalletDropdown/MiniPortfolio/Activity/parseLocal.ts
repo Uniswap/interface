@@ -134,67 +134,69 @@ export function parseLocalActivity(
   chainId: SupportedChainId,
   tokens: TokenAddressMap
 ): Activity | undefined {
-  const status = !details.receipt
-    ? TransactionStatus.Pending
-    : details.receipt.status === 1 || details.receipt?.status === undefined
-    ? TransactionStatus.Confirmed
-    : TransactionStatus.Failed
+  try {
+    const status = !details.receipt
+      ? TransactionStatus.Pending
+      : details.receipt.status === 1 || details.receipt?.status === undefined
+      ? TransactionStatus.Confirmed
+      : TransactionStatus.Failed
 
-  const receipt: TransactionPartsFragment | undefined = details.receipt
-    ? {
-        id: details.receipt.transactionHash,
-        ...details.receipt,
-        ...details,
-        status,
-      }
-    : undefined
+    const receipt: TransactionPartsFragment | undefined = details.receipt
+      ? {
+          id: details.receipt.transactionHash,
+          ...details.receipt,
+          ...details,
+          status,
+        }
+      : undefined
 
-  const defaultFields = {
-    hash: details.hash,
-    chainId,
-    title: getActivityTitle(details.info.type, status),
-    status,
-    timestamp: (details.confirmedTime ?? details.addedTime) / 1000,
-    receipt,
+    const defaultFields = {
+      hash: details.hash,
+      chainId,
+      title: getActivityTitle(details.info.type, status),
+      status,
+      timestamp: (details.confirmedTime ?? details.addedTime) / 1000,
+      receipt,
+    }
+
+    let additionalFields: Partial<Activity> = {}
+    const info = details.info
+    if (info.type === TransactionType.SWAP) {
+      additionalFields = parseSwap(info, chainId, tokens)
+    } else if (info.type === TransactionType.APPROVAL) {
+      additionalFields = parseApproval(info, chainId, tokens)
+    } else if (info.type === TransactionType.WRAP) {
+      additionalFields = parseWrap(info, chainId, status)
+    } else if (
+      info.type === TransactionType.ADD_LIQUIDITY_V3_POOL ||
+      info.type === TransactionType.REMOVE_LIQUIDITY_V3 ||
+      info.type === TransactionType.ADD_LIQUIDITY_V2_POOL
+    ) {
+      additionalFields = parseLP(info, chainId, tokens)
+    } else if (info.type === TransactionType.COLLECT_FEES) {
+      additionalFields = parseCollectFees(info, chainId, tokens)
+    } else if (info.type === TransactionType.MIGRATE_LIQUIDITY_V3 || info.type === TransactionType.CREATE_V3_POOL) {
+      additionalFields = parseMigrateCreateV3(info, chainId, tokens)
+    }
+
+    return { ...defaultFields, ...additionalFields }
+  } catch (error) {
+    console.debug(`Failed to parse transaction ${details.hash}`, error)
+    return undefined
   }
-
-  let additionalFields: Partial<Activity> = {}
-  const info = details.info
-  if (info.type === TransactionType.SWAP) {
-    additionalFields = parseSwap(info, chainId, tokens)
-  } else if (info.type === TransactionType.APPROVAL) {
-    additionalFields = parseApproval(info, chainId, tokens)
-  } else if (info.type === TransactionType.WRAP) {
-    additionalFields = parseWrap(info, chainId, status)
-  } else if (
-    info.type === TransactionType.ADD_LIQUIDITY_V3_POOL ||
-    info.type === TransactionType.REMOVE_LIQUIDITY_V3 ||
-    info.type === TransactionType.ADD_LIQUIDITY_V2_POOL
-  ) {
-    additionalFields = parseLP(info, chainId, tokens)
-  } else if (info.type === TransactionType.COLLECT_FEES) {
-    additionalFields = parseCollectFees(info, chainId, tokens)
-  } else if (info.type === TransactionType.MIGRATE_LIQUIDITY_V3 || info.type === TransactionType.CREATE_V3_POOL) {
-    additionalFields = parseMigrateCreateV3(info, chainId, tokens)
-  }
-
-  return { ...defaultFields, ...additionalFields }
 }
 
 export function useLocalActivities(account: string): ActivityMap {
   const allTransactions = useMultichainTransactions()
   const tokens = useCombinedActiveList()
 
-  return useMemo(
-    () =>
-      allTransactions.reduce((acc: { [hash: string]: Activity }, [transaction, chainId]) => {
-        if (transaction.from === account) {
-          const localActivity = parseLocalActivity(transaction, chainId, tokens)
-          if (localActivity) acc[localActivity.hash] = localActivity
-        }
+  return useMemo(() => {
+    const activityByHash: ActivityMap = {}
+    for (const [transaction, chainId] of allTransactions) {
+      if (transaction.from !== account) continue
 
-        return acc
-      }, {}),
-    [account, allTransactions, tokens]
-  )
+      activityByHash[transaction.hash] = parseLocalActivity(transaction, chainId, tokens)
+    }
+    return activityByHash
+  }, [account, allTransactions, tokens])
 }
