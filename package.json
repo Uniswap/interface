@@ -118,7 +118,7 @@
     "qrcode": "1.5.1",
     "react": "18.2.0",
     "react-i18next": "11.12.0",
-    "react-native": "0.70.6",
+    "react-native": "0.70.8",
     "react-native-context-menu-view": "1.6.0",
     "react-native-device-info": "10.0.2",
     "react-native-fast-image": "8.6.3",
