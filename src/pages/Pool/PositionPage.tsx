@@ -424,7 +424,7 @@ export function PositionPage({
     // if there was a tx hash, we want to clear the input
     if (collectMigrationHash) {
       // dont jump to pool page if creating
-      history.push('/limitorder/')
+      history.push('/limitorder')
     }
     //setCollectMigrationHash('')
   }, [history, collectMigrationHash])
@@ -683,7 +683,7 @@ export function PositionPage({
                   currencyId1: currencyId(feeValue1.currency),
                 })
               }
-              history.push('/limitorder/')
+              history.push('/limitorder')
             })
           })
         } else {
@@ -705,7 +705,7 @@ export function PositionPage({
                 currencyId0: currencyId(feeValue0.currency),
                 currencyId1: currencyId(feeValue1.currency),
               })
-              history.push('/limitorder/')
+              history.push('/limitorder')
             })
         }
       })

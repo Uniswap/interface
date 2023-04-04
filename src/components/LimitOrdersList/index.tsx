@@ -26,7 +26,7 @@ type OrderListProps = React.PropsWithChildren<{
 }>
 
 export default function LimitOrdersList({ orders, fundingBalance, minBalance }: OrderListProps) {
-  const isUnderfunded = fundingBalance ? !minBalance?.lessThan(fundingBalance?.quotient) : true
+  const isUnderfunded = minBalance && fundingBalance ? !minBalance?.lessThan(fundingBalance?.quotient) : false
 
   return (
     <AutoColumn gap="1rem">

@@ -344,7 +344,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
   // reset if they close warning without tokens in params
   const handleDismissTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
-    history.push('/limitorder/')
+    history.push('/limitorder')
   }, [history])
 
   // modal and loading
@@ -474,7 +474,7 @@ export default function LimitOrder({ history }: RouteComponentProps) {
     setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
     // if there was a tx hash, we want to clear the input
     if (txHash) {
-      history.push('/limitorder/')
+      history.push('/limitorder')
     }
   }, [attemptingTxn, history, swapErrorMessage, tradeToConfirm, txHash])
 

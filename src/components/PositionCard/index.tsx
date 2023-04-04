@@ -203,7 +203,7 @@ export default function FullPositionCard({ fundingBalance }: FundingCardProps) {
   const { account, chainId } = useActiveWeb3React()
   const { minBalance } = useV3Positions(account)
 
-  const isUnderfunded = fundingBalance ? !minBalance?.lessThan(fundingBalance?.quotient) : true
+  const isUnderfunded = minBalance && fundingBalance ? !minBalance?.lessThan(fundingBalance?.quotient) : false
   const depositedAmount = fundingBalance?.toSignificant(2)
 
   const kromToken = chainId ? KROM[chainId] : undefined

@@ -63,20 +63,13 @@ import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import KromLogo from './../../assets/images/KROM_Transparent_1.png'
 
-const PageWrapper = styled(AutoColumn)`
-  max-width: 100%;
-  width: 100%;
-  margin-top: 10px;
-  border: 1.5px solid #ff4343;
-  border-radius: 15px;
-  padding: 15px;
-`
-const WrapperStyle = styled.div`
+const WarningTitle = styled.div`
   width: 95%;
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: bold;
+  color: ${({ theme }) => theme.white};
 `
 const WarningDescription = styled.div`
   border-radius: 15px;
@@ -84,16 +77,7 @@ const WarningDescription = styled.div`
   width: 100%;
   padding: 10px;
   font-size: 15px;
-`
-const StyledButton = styled.button`
-  width: 100%;
-  border-radius: 15px;
-  height: 50px;
-  font-weight: 750;
-  font-size: 20px;
-  padding: 5px;
-  background-color: #ff4343;
-  color: white;
+  color: ${({ theme }) => theme.white};
 `
 
 const PriceImpactWarning = styled.div`
@@ -885,9 +869,9 @@ export default function SwapWidget() {
                   </AutoColumn>
                 )}
                 {inputTokenShouldBeWrapped && isGaslessMode && (
-                  <PageWrapper gap="lg" justify="center">
+                  <AutoColumn gap="lg" justify="center">
                     <WarningDescription>
-                      <WrapperStyle>
+                      <WarningTitle>
                         <span style={{ position: 'relative', top: '-8px', left: '-5px' }}>
                           {' '}
                           <svg
@@ -909,13 +893,13 @@ export default function SwapWidget() {
                         Switch to {WRAPPED_NATIVE_CURRENCY[chainId ?? 1]?.symbol} or wrap your{' '}
                         {CHAIN_NATIVE_TOKEN_SYMBOL[chainId ?? 1]} <br />
                         <br />{' '}
-                      </WrapperStyle>
+                      </WarningTitle>
                       Gasless trading operates with ERC20 tokens in order to execute the trade. Since{' '}
                       {CHAIN_NATIVE_TOKEN_SYMBOL[chainId ?? 1]} is native token (not ERC20 token), wrap operation is
                       needed to proceed with the trade.
                     </WarningDescription>
-                    <StyledButton onClick={wrapToken}>Wrap my {CHAIN_NATIVE_TOKEN_SYMBOL[chainId ?? 1]}</StyledButton>
-                  </PageWrapper>
+                    <ButtonPrimary onClick={wrapToken}>Wrap my {CHAIN_NATIVE_TOKEN_SYMBOL[chainId ?? 1]}</ButtonPrimary>
+                  </AutoColumn>
                 )}
                 {priceImpactHigh && (
                   <PriceImpactWarning>
