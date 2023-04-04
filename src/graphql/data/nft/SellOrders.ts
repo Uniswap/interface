@@ -1,15 +1,16 @@
 import gql from 'graphql-tag'
 import { SellOrder } from 'nft/types'
-import { useMemo } from 'react'
+import { useCallback, useMemo, useReducer } from 'react'
 
 import { NftAsset, useSellOrdersQuery } from '../__generated__/types-and-hooks'
 
 gql`
-  query SellOrders($address: String!, $tokenId: String!) {
+  query SellOrders($address: String!, $tokenId: String!, $first: Int) {
     nftAssets(address: $address, filter: { listed: false, tokenIds: [$tokenId] }) {
       edges {
         node {
-          listings(first: 10) {
+          tokenId
+          listings(first: $first) {
             edges {
               node {
                 address
@@ -32,7 +33,12 @@ gql`
                 type
                 protocolParameters
               }
-              cursor
+            }
+            pageInfo {
+              endCursor
+              hasNextPage
+              hasPreviousPage
+              startCursor
             }
           }
         }
@@ -42,10 +48,12 @@ gql`
 `
 
 export function useNftSellOrders(address: string, tokenId: string, enabled: boolean) {
-  const { data } = useSellOrdersQuery({
+  const [first, incFirst] = useReducer((prev) => prev + 10, 10)
+  const { data, refetch } = useSellOrdersQuery({
     variables: {
       address,
       tokenId,
+      first,
     },
     skip: !enabled,
     fetchPolicy: 'no-cache',
@@ -53,7 +61,15 @@ export function useNftSellOrders(address: string, tokenId: string, enabled: bool
 
   const asset = data?.nftAssets?.edges[0]?.node as NonNullable<NftAsset> | undefined
 
-  return useMemo(
+  const hasNext = asset?.listings?.pageInfo?.hasNextPage
+  const loadMore = useCallback(() => {
+    refetch({
+      first,
+    })
+    incFirst()
+  }, [first, refetch])
+
+  const sellOrders = useMemo(
     () =>
       asset?.listings?.edges.map((listingNode) => {
         return {
@@ -65,4 +81,6 @@ export function useNftSellOrders(address: string, tokenId: string, enabled: bool
       }),
     [asset]
   )
+
+  return useMemo(() => ({ sellOrders, hasNext, loadMore }), [sellOrders, hasNext, loadMore])
 }

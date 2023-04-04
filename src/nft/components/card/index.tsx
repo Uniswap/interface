@@ -15,6 +15,7 @@ interface NftCardProps {
   isSelected: boolean
   quantitySelected?: number
   isDisabled: boolean
+  disableErc1155AddToBag?: boolean
   selectAsset?: () => void
   unselectAsset?: () => void
   onButtonClick?: () => void
@@ -54,6 +55,7 @@ export const NftCard = ({
   selectAsset,
   unselectAsset,
   isDisabled,
+  disableErc1155AddToBag = false,
   onButtonClick,
   onCardClick,
   sendAnalyticsEvent,
@@ -147,6 +149,7 @@ export const NftCard = ({
                 selectAsset={selectAsset}
                 unselectAsset={unselectAsset}
                 quantity={quantitySelected}
+                disableErc1155AddToBag={disableErc1155AddToBag}
               />
             ) : (
               <Card.ActionButton clickActionButton={clickActionButton} isDisabled={isDisabled} isSelected={isSelected}>

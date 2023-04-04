@@ -57,10 +57,13 @@ export const CollectionAsset = ({
   const notForSale = asset.notForSale || BigNumber.from(asset.priceInfo ? asset.priceInfo.ETHPrice : 0).lt(0)
   const provider = asset?.rarity?.providers ? asset.rarity.providers[0] : undefined
 
-  const sellOrders = useNftSellOrders(asset.address, asset.tokenId, isErc1155 && isSelected)
+  const { sellOrders, hasNext, loadMore } = useNftSellOrders(asset.address, asset.tokenId, isErc1155 && isSelected)
+  const shouldUseSellOrders = isErc1155 && isSelected && sellOrders && sellOrders.length > quantitySelected
+  const shouldDisableErc1155AddButton = isErc1155 && isSelected && sellOrders && sellOrders.length === quantitySelected
 
   const handleAddAssetToBag = useCallback(() => {
-    const shouldUseSellOrders = isErc1155 && isSelected && sellOrders && sellOrders.length > quantitySelected
+    if (shouldDisableErc1155AddButton) return
+
     const newSellOrderPrice = shouldUseSellOrders
       ? parseEther(sellOrders[quantitySelected].price.value.toString()).toString()
       : undefined
@@ -76,11 +79,16 @@ export const CollectionAsset = ({
       : asset
 
     if (BigNumber.from(assetToAdd.priceInfo.ETHPrice).gt(0)) {
+      if (shouldUseSellOrders && sellOrders.length === quantitySelected + 2 && hasNext) {
+        loadMore()
+      }
+
       addAssetsToBag([assetToAdd])
 
       if (!bagExpanded && !isMobile && !bagManuallyClosed) {
         setBagExpanded({ bagExpanded: true })
       }
+
       sendAnalyticsEvent(NFTEventName.NFT_BUY_ADDED, {
         collection_address: asset.address,
         token_id: asset.tokenId,
@@ -93,12 +101,14 @@ export const CollectionAsset = ({
     asset,
     bagExpanded,
     bagManuallyClosed,
-    isErc1155,
+    hasNext,
     isMobile,
-    isSelected,
+    loadMore,
     quantitySelected,
     sellOrders,
     setBagExpanded,
+    shouldDisableErc1155AddButton,
+    shouldUseSellOrders,
     trace,
   ])
 
@@ -140,6 +150,7 @@ export const CollectionAsset = ({
       isSelected={isSelected}
       quantitySelected={quantitySelected}
       isDisabled={Boolean(asset.notForSale)}
+      disableErc1155AddToBag={shouldDisableErc1155AddButton}
       selectAsset={handleAddAssetToBag}
       unselectAsset={handleRemoveAssetFromBag}
       mediaShouldBePlaying={mediaShouldBePlaying}

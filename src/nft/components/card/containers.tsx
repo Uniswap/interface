@@ -110,14 +110,15 @@ const ActionButton = ({
   )
 }
 
-const StyledErc1155ActionButton = styled.div`
+const StyledErc1155ActionButton = styled.div<{ $disabled?: boolean }>`
   position: relative;
   display: flex;
   width: 100%;
   height: 100%;
-  background: ${({ theme }) => theme.accentAction};
+  background: ${({ theme, $disabled }) => ($disabled ? theme.accentActionSoft : theme.accentAction)};
   padding: 4px 0px;
   justify-content: center;
+  cursor: ${({ $disabled }) => ($disabled ? 'default' : 'pointer')};
 
   &:before {
     background-size: 100%;
@@ -133,11 +134,11 @@ const StyledErc1155ActionButton = styled.div`
   }
 
   &:hover:before {
-    background-color: ${({ theme }) => theme.stateOverlayHover};
+    background-color: ${({ theme, $disabled }) => !$disabled && theme.stateOverlayHover};
   }
 
   &:active:before {
-    background-color: ${({ theme }) => theme.stateOverlayPressed};
+    background-color: ${({ theme, $disabled }) => !$disabled && theme.stateOverlayPressed};
   }
 `
 
@@ -157,10 +158,12 @@ const Erc1155ActionContainer = ({
   selectAsset,
   unselectAsset,
   quantity,
+  disableErc1155AddToBag,
 }: {
   selectAsset: () => void
   unselectAsset: () => void
   quantity: number
+  disableErc1155AddToBag: boolean
 }) => {
   return (
     <StyledErc1155ActionContainer>
@@ -179,10 +182,11 @@ const Erc1155ActionContainer = ({
         </ThemedText.BodySmall>
       </Row>
       <StyledErc1155ActionButton
+        $disabled={disableErc1155AddToBag}
         onClick={(e) => {
           e.stopPropagation()
           e.preventDefault()
-          selectAsset()
+          if (!disableErc1155AddToBag) selectAsset()
         }}
       >
         <Plus size="24" />
