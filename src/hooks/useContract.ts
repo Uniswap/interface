@@ -14,9 +14,7 @@ import ENS_PUBLIC_RESOLVER_ABI from 'abis/ens-public-resolver.json'
 import ENS_ABI from 'abis/ens-registrar.json'
 import ERC20_ABI from 'abis/erc20.json'
 import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
-import ERC721_ABI from 'abis/erc721.json'
-import ERC1155_ABI from 'abis/erc1155.json'
-import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Erc721, Erc1155, Weth } from 'abis/types'
+import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Weth } from 'abis/types'
 import WETH_ABI from 'abis/weth.json'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
@@ -82,14 +80,6 @@ export function useWETHContract(withSignerIfPossible?: boolean) {
     WETH_ABI,
     withSignerIfPossible
   )
-}
-
-export function useERC721Contract(nftAddress?: string) {
-  return useContract<Erc721>(nftAddress, ERC721_ABI, false)
-}
-
-export function useERC1155Contract(nftAddress?: string) {
-  return useContract<Erc1155>(nftAddress, ERC1155_ABI, false)
 }
 
 export function useArgentWalletDetectorContract() {
