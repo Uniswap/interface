@@ -42,12 +42,18 @@ gql`
           image {
             url
           }
+          smallImage {
+            url
+          }
           tokenId
           animationUrl
           suspiciousFlag
           collection {
+            name
+            isVerified
             nftContracts {
               address
+              standard
             }
           }
           listings(first: 1) {
