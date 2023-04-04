@@ -138,12 +138,32 @@ export const CollectionAsset = ({
       primaryInfo: asset.name ? asset.name : `#${asset.tokenId}`,
       primaryInfoIcon: asset.susFlag ? <SuspiciousContainer /> : null,
       primaryInfoRight: asset.rarity && provider ? <RankingContainer provider={provider} /> : null,
-      secondaryInfo: notForSale ? '' : `${formatWeiToDecimal(asset.priceInfo.ETHPrice, true)} ETH`,
+      secondaryInfo:
+        notForSale || shouldDisableErc1155AddButton
+          ? ''
+          : `${formatWeiToDecimal(
+              shouldUseSellOrders && sellOrders
+                ? parseEther(sellOrders[quantitySelected].price.value.toString()).toString()
+                : asset.priceInfo.ETHPrice,
+              true
+            )} ETH`,
       selectedInfo: <Trans>Remove from bag</Trans>,
       notSelectedInfo: <Trans>Add to bag</Trans>,
       disabledInfo: <Trans>Not listed</Trans>,
     }
-  }, [asset.name, asset.priceInfo.ETHPrice, asset.rarity, asset.susFlag, asset.tokenId, notForSale, provider])
+  }, [
+    asset.name,
+    asset.priceInfo.ETHPrice,
+    asset.rarity,
+    asset.susFlag,
+    asset.tokenId,
+    notForSale,
+    provider,
+    quantitySelected,
+    sellOrders,
+    shouldDisableErc1155AddButton,
+    shouldUseSellOrders,
+  ])
 
   return (
     <NftCard
