@@ -9,7 +9,7 @@ import { SerializedPair, SerializedToken } from './types'
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
-  buyFiatClicked: boolean | undefined
+  buyFiatFlowCompleted: boolean | undefined
 
   selectedWallet?: ConnectionType
 
@@ -57,7 +57,7 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
-  buyFiatClicked: false,
+  buyFiatFlowCompleted: false,
   selectedWallet: undefined,
   userExpertMode: false,
   userLocale: null,
@@ -78,8 +78,8 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    updateUserBuyFiatClicked(state, action) {
-      state.buyFiatClicked = action.payload
+    updateUserBuyFiatFlowCompleted(state, action) {
+      state.buyFiatFlowCompleted = action.payload
     },
     updateSelectedWallet(state, { payload: { wallet } }) {
       state.selectedWallet = wallet
@@ -169,7 +169,7 @@ const userSlice = createSlice({
 export const {
   addSerializedPair,
   addSerializedToken,
-  updateUserBuyFiatClicked,
+  updateUserBuyFiatFlowCompleted,
   updateSelectedWallet,
   updateHideClosedPositions,
   updateUserClientSideRouter,

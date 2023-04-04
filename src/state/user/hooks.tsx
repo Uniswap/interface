@@ -18,7 +18,7 @@ import {
   addSerializedToken,
   updateHideClosedPositions,
   updateHideUniswapWalletBanner,
-  updateUserBuyFiatClicked,
+  updateUserBuyFiatFlowCompleted,
   updateUserClientSideRouter,
   updateUserDeadline,
   updateUserExpertMode,
@@ -69,16 +69,16 @@ export function useIsExpertMode(): boolean {
   return useAppSelector((state) => state.user.userExpertMode)
 }
 
-export function useBuyFiatClicked(): [boolean | undefined, (buyFiatClicked: boolean) => void] {
+export function useBuyFiatFlowCompleted(): [boolean | undefined, (buyFiatFlowCompleted: boolean) => void] {
   const dispatch = useAppDispatch()
-  const buyFiatClicked = useAppSelector((state) => state.user.buyFiatClicked)
-  const setBuyFiatClicked = useCallback(
-    (buyFiatClicked: boolean) => {
-      dispatch(updateUserBuyFiatClicked(buyFiatClicked))
+  const buyFiatFlowCompleted = useAppSelector((state) => state.user.buyFiatFlowCompleted)
+  const setBuyFiatFlowCompleted = useCallback(
+    (buyFiatFlowCompleted: boolean) => {
+      dispatch(updateUserBuyFiatFlowCompleted(buyFiatFlowCompleted))
     },
     [dispatch]
   )
-  return [buyFiatClicked, setBuyFiatClicked]
+  return [buyFiatFlowCompleted, setBuyFiatFlowCompleted]
 }
 
 export function useExpertModeManager(): [boolean, () => void] {
