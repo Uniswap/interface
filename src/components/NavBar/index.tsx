@@ -69,7 +69,7 @@ export const PageTabs = () => {
           id="pool-nav-link"
           className={styles.menuItem}
         >
-          <Trans>Liquidity Stake</Trans>
+          <Trans>Liquid Stake</Trans>
         </a>
       )}
     </div>
