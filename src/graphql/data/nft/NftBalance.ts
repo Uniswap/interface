@@ -123,7 +123,7 @@ export function useNftBalance(
   after?: string,
   last?: number,
   before?: string,
-  disabled = false
+  skip = false
 ) {
   const { data, loading, fetchMore } = useNftBalanceQuery({
     variables: {
@@ -141,7 +141,7 @@ export function useNftBalance(
       last,
       before,
     },
-    skip: disabled,
+    skip,
   })
 
   const hasNext = data?.nftBalances?.pageInfo?.hasNextPage
