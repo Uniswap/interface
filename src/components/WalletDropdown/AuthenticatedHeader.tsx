@@ -210,12 +210,13 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   } = useFiatOnrampAvailability(shouldCheck, openFoRModalWithAnalytics)
 
   const handleBuyCryptoClick = useCallback(() => {
+    toggleWalletDrawer()
     if (!fiatOnrampAvailabilityChecked) {
       setShouldCheck(true)
     } else if (fiatOnrampAvailable) {
       openFoRModalWithAnalytics()
     }
-  }, [fiatOnrampAvailabilityChecked, fiatOnrampAvailable, openFoRModalWithAnalytics])
+  }, [fiatOnrampAvailabilityChecked, fiatOnrampAvailable, openFoRModalWithAnalytics, toggleWalletDrawer])
   const disableBuyCryptoButton = Boolean(
     error || (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) || fiatOnrampAvailabilityLoading
   )
@@ -292,6 +293,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           emphasis={ButtonEmphasis.medium}
           onClick={handleBuyCryptoClick}
           disabled={disableBuyCryptoButton}
+          data-testid="wallet-buy-crypto"
         >
           {error ? (
             <ThemedText.BodyPrimary>{error}</ThemedText.BodyPrimary>
