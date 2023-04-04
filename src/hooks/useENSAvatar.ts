@@ -1,14 +1,13 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { hexZeroPad } from '@ethersproject/bytes'
 import { namehash } from '@ethersproject/hash'
 import { useWeb3React } from '@web3-react/core'
+import { useNftAssetDetails } from 'graphql/data/nft/Details'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import uriToHttp from 'lib/utils/uriToHttp'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 import { isAddress } from '../utils'
 import isZero from '../utils/isZero'
-import { useENSRegistrarContract, useENSResolverContract, useERC721Contract, useERC1155Contract } from './useContract'
+import { useENSRegistrarContract, useENSResolverContract } from './useContract'
 import useDebounce from './useDebounce'
 import useENSName from './useENSName'
 
@@ -68,85 +67,15 @@ function useAvatarFromNode(node?: string): { avatar?: string; loading: boolean }
 }
 
 function useAvatarFromNFT(nftUri = '', enforceOwnership: boolean): { avatar?: string; loading: boolean } {
+  const { account } = useWeb3React()
   const parts = nftUri.toLowerCase().split(':')
-  const protocol = parts[0]
-  // ignore the chain from eip155
-  // TODO: when we are able, pull only from the specified chain
-  const [, erc] = parts[1]?.split('/') ?? []
   const [contractAddress, id] = parts[2]?.split('/') ?? []
-  const isERC721 = protocol === 'eip155' && erc === 'erc721'
-  const isERC1155 = protocol === 'eip155' && erc === 'erc1155'
-  const erc721 = useERC721Uri(isERC721 ? contractAddress : undefined, isERC721 ? id : undefined, enforceOwnership)
-  const erc1155 = useERC1155Uri(isERC1155 ? contractAddress : undefined, isERC1155 ? id : undefined, enforceOwnership)
-  const uri = erc721.uri || erc1155.uri
-  const http = uri && uriToHttp(uri)[0]
-
-  const [loading, setLoading] = useState(false)
-  const [avatar, setAvatar] = useState(undefined)
-  useEffect(() => {
-    setAvatar(undefined)
-    if (http) {
-      setLoading(true)
-      fetch(http)
-        .then((res) => res.json())
-        .then(({ image }) => {
-          setAvatar(image)
-        })
-        .catch((e) => console.warn(e))
-        .finally(() => {
-          setLoading(false)
-        })
-    }
-  }, [http])
-
-  return useMemo(
-    () => ({ avatar, loading: erc721.loading || erc1155.loading || loading }),
-    [avatar, erc1155.loading, erc721.loading, loading]
-  )
-}
-
-function useERC721Uri(
-  contractAddress: string | undefined,
-  id: string | undefined,
-  enforceOwnership: boolean
-): { uri?: string; loading: boolean } {
-  const idArgument = useMemo(() => [id], [id])
-  const { account } = useWeb3React()
-  const contract = useERC721Contract(contractAddress)
-  const owner = useSingleCallResult(contract, 'ownerOf', idArgument)
-  const uri = useSingleCallResult(contract, 'tokenURI', idArgument)
-  return useMemo(
-    () => ({
-      uri: !enforceOwnership || account === owner.result?.[0] ? uri.result?.[0] : undefined,
-      loading: owner.loading || uri.loading,
-    }),
-    [account, enforceOwnership, owner.loading, owner.result, uri.loading, uri.result]
-  )
-}
-
-function useERC1155Uri(
-  contractAddress: string | undefined,
-  id: string | undefined,
-  enforceOwnership: boolean
-): { uri?: string; loading: boolean } {
-  const { account } = useWeb3React()
-  const idArgument = useMemo(() => [id], [id])
-  const accountArgument = useMemo(() => [account || '', id], [account, id])
-  const contract = useERC1155Contract(contractAddress)
-  const balance = useSingleCallResult(contract, 'balanceOf', accountArgument)
-  const uri = useSingleCallResult(contract, 'uri', idArgument)
+  const { data, loading } = useNftAssetDetails(contractAddress, id)
+  const isOwner = data?.[0]?.ownerAddress?.toLowerCase() === account?.toLowerCase()
   return useMemo(() => {
-    try {
-      // ERC-1155 allows a generic {id} in the URL, so prepare to replace if relevant,
-      // in lowercase hexadecimal (with no 0x prefix) and leading zero padded to 64 hex characters.
-      const idHex = id ? hexZeroPad(BigNumber.from(id).toHexString(), 32).substring(2) : id
-      return {
-        uri: !enforceOwnership || balance.result?.[0] > 0 ? uri.result?.[0]?.replaceAll('{id}', idHex) : undefined,
-        loading: balance.loading || uri.loading,
-      }
-    } catch (error) {
-      console.error('Invalid token id', error)
-      return { loading: false }
+    return {
+      avatar: isOwner || !enforceOwnership ? data?.[0]?.imageUrl : undefined,
+      loading,
     }
-  }, [balance.loading, balance.result, enforceOwnership, uri.loading, uri.result, id])
+  }, [data, enforceOwnership, isOwner, loading])
 }
