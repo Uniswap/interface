@@ -77,4 +77,11 @@ describe('Wallet Dropdown', () => {
     cy.get(getTestSelector('theme-auto')).click()
     cy.get(getTestSelector('wallet-header')).should('have.css', 'color', 'rgb(119, 128, 160)')
   })
+
+  it('should render the ENS name and avatar', () => {
+    visit(true)
+    cy.get(getTestSelector('web3-status-connected')).click()
+    cy.contains('averylongtestaddress.eth').should('exist')
+    cy.get(getTestSelector('identicon-styled-avatar')).should('be.visible')
+  })
 })

@@ -46,7 +46,12 @@ export default function Identicon({ size }: { size?: number }) {
   return (
     <StyledIdenticon iconSize={iconSize}>
       {avatar && fetchable ? (
-        <StyledAvatar alt="avatar" src={avatar} onError={handleError}></StyledAvatar>
+        <StyledAvatar
+          data-testid="identicon-styled-avatar"
+          alt="avatar"
+          src={avatar}
+          onError={handleError}
+        ></StyledAvatar>
       ) : (
         <span ref={iconRef} />
       )}

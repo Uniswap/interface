@@ -11,7 +11,7 @@ import { SupportedChainId } from '../../src/constants/chains'
 
 // todo: figure out how env vars actually work in CI
 // const TEST_PRIVATE_KEY = Cypress.env('INTEGRATION_TEST_PRIVATE_KEY')
-const TEST_PRIVATE_KEY = '0xe580410d7c37d26c6ad1a837bbae46bc27f9066a466fb3a66e770523b4666d19'
+const TEST_PRIVATE_KEY = 'c19d41225c87bf8c7d82264f1559555f8f46a1e22584a269fb905f63ef2bec3a'
 
 // address of the above key
 const TEST_ADDRESS_NEVER_USE = new Wallet(TEST_PRIVATE_KEY).address
