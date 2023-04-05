@@ -21,6 +21,7 @@ import {
 } from 'state/transactions/type'
 import { ExternalLink, HideSmall } from 'theme'
 import { findTx, getEtherscanLink } from 'utils'
+import getShortenAddress from 'utils/getShortenAddress'
 import { getTransactionStatus } from 'utils/transaction'
 
 const RowNoFlex = styled(AutoRow)`
@@ -119,6 +120,15 @@ const summaryCancelLimitOrder = (txs: TransactionDetails) => {
   }
 }
 
+const summaryTransferToken = (txs: TransactionDetails) => {
+  const { tokenAmount, tokenSymbol, contract } = (txs.extraInfo || {}) as TransactionExtraInfo1Token
+  const postFix = `${tokenAmount} ${tokenSymbol} to ${getShortenAddress(contract ?? '', false)}`
+  return {
+    success: t`You have successfully transferred ${postFix}`,
+    error: `Transfer ${postFix} failed`,
+  }
+}
+
 const summaryTypeOnly = (txs: TransactionDetails) => `${txs.type}`
 
 // to render summary in notify transaction
@@ -148,7 +158,7 @@ const SUMMARY: { [type in TRANSACTION_TYPE]: SummaryFunction } = {
 
   [TRANSACTION_TYPE.SETUP_SOLANA_SWAP]: summaryTypeOnly,
   [TRANSACTION_TYPE.CANCEL_LIMIT_ORDER]: summaryCancelLimitOrder,
-  [TRANSACTION_TYPE.TRANSFER_TOKEN]: summary1Token,
+  [TRANSACTION_TYPE.TRANSFER_TOKEN]: summaryTransferToken,
 
   [TRANSACTION_TYPE.KYBERDAO_CLAIM]: summary1Token,
   [TRANSACTION_TYPE.KYBERDAO_UNDELEGATE]: summaryDelegateDao,
@@ -167,7 +177,7 @@ const CUSTOM_SUCCESS_STATUS: { [key in string]: string } = {
 const getTitle = (type: string, success: boolean) => {
   const statusText = success ? 'Success' : 'Failed'
   if (success && CUSTOM_SUCCESS_STATUS[type]) {
-    return `${type} ${CUSTOM_SUCCESS_STATUS[type]}!`
+    return `${type} ${CUSTOM_SUCCESS_STATUS[type]}`
   }
   return `${type} - ${statusText}!`
 }
