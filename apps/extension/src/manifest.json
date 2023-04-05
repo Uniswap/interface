@@ -4,9 +4,18 @@
   "description": "UL Wallet Extension",
   "version": "0.0.0.0",
   "icons": {
-    "64": "assets/default.png"
+    "16": "assets/icon16.png",
+    "32": "assets/icon32.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
   },
   "action": {
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "32": "assets/icon32.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    },
     "default_popup": "index.html"
   },
   "background": {
