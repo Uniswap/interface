@@ -189,7 +189,6 @@
     "clsx": "^1.1.1",
     "copy-to-clipboard": "^3.2.0",
     "d3": "^7.6.1",
-    "enzyme": "^3.11.0",
     "ethers": "^5.7.2",
     "focus-visible": "^5.2.0",
     "get-graphql-schema": "^2.1.2",
