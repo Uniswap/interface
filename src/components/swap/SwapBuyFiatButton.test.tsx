@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event'
 import { useWalletDrawer } from 'components/WalletDropdown'
-import { cleanup, fireEvent, render, screen } from 'test-utils'
+import { fireEvent, render, screen } from 'test-utils'
 
 import { useFiatOnrampAvailability, useOpenModal } from '../../state/application/hooks'
 import SwapBuyFiatButton, { MOONPAY_REGION_AVAILABILITY_ARTICLE } from './SwapBuyFiatButton'
@@ -70,12 +70,6 @@ describe('SwapBuyFiatButton.tsx', () => {
 
   beforeEach(() => {
     jest.resetModules()
-    jest.clearAllMocks()
-    jest.clearAllTimers()
-  })
-
-  afterEach(() => {
-    cleanup()
   })
 
   it('matches base snapshot', () => {
