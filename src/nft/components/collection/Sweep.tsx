@@ -366,7 +366,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
     <SweepContainer data-testid="nft-sweep-slider">
       <SweepLeftmostContainer>
         <SweepHeaderContainer>
-          <ThemedText.SubHeader color="textPrimary" lineHeight="20px" paddingTop="6px" paddingBottom="6px">
+          <ThemedText.SubHeader lineHeight="20px" paddingTop="6px" paddingBottom="6px">
             Sweep
           </ThemedText.SubHeader>
         </SweepHeaderContainer>

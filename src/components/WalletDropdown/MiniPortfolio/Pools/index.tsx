@@ -129,7 +129,7 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
         left={<PortfolioLogo chainId={chainId} currencies={[pool.token0, pool.token1]} />}
         title={
           <Row>
-            <ThemedText.SubHeader fontWeight={500}>
+            <ThemedText.SubHeader>
               {pool.token0.symbol} / {pool.token1?.symbol}
             </ThemedText.SubHeader>
           </Row>
@@ -148,7 +148,7 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
                 </div>
               }
             >
-              <ThemedText.SubHeader fontWeight={500}>
+              <ThemedText.SubHeader>
                 {formatNumber((liquidityValue ?? 0) + (feeValue ?? 0), NumberType.PortfolioBalance)}
               </ThemedText.SubHeader>
             </MouseoverTooltip>

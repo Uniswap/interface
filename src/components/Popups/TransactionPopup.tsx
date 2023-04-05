@@ -43,7 +43,7 @@ function TransactionPopupContent({ tx, chainId }: { tx: TransactionDetails; chai
           <PopupAlertTriangle />
         )
       }
-      title={<ThemedText.SubHeader fontWeight={500}>{activity.title}</ThemedText.SubHeader>}
+      title={<ThemedText.SubHeader>{activity.title}</ThemedText.SubHeader>}
       descriptor={
         <Descriptor color="textSecondary">
           {activity.descriptor}

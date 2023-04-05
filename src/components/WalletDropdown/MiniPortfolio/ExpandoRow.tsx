@@ -36,9 +36,7 @@ export function ExpandoRow({ title = t`Hidden`, numItems, isExpanded, toggle, ch
   return (
     <>
       <Row align="center" justify="space-between" padding="16px">
-        <ThemedText.SubHeader color="textSecondary" variant="subheadSmall">
-          {`${title} (${numItems})`}
-        </ThemedText.SubHeader>
+        <ThemedText.SubHeader variant="subheadSmall">{`${title} (${numItems})`}</ThemedText.SubHeader>
         <ToggleButton align="center" onClick={toggle}>
           <ThemedText.LabelSmall color="textSecondary" variant="buttonLabelSmall">
             {isExpanded ? t`Hide` : t`Show`}
