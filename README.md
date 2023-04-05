@@ -1,12 +1,13 @@
 ## 🍔 TLDR
-- the aim of this project is to implement a sane DX and a CI/CD workflow using Github Actions and Expo EAS
-- we have 3 builds/apps: Development, Staging and Preview
-- developers can build features using a browser
-- the UI team can review UI components using Chromatic/Storybook
-- the whole team can view updates for each of these 3 apps along the development process
+
+To run the extension:
+
+- run `yarn`, run `yarn start:ext`
+- [Add the extension to your browser](#run-extension-in-chrome)
 
 ## ⚡️ Tech
-- Yarn 
+
+- Yarn
 - TypeScript
 - react-native
 - Expo
@@ -16,9 +17,10 @@
 - Storybook
 - Jest, testing-library
 - Turbo
+
 ## 🔥 About & Motivation
 
-This is a monorepo for an Expo + NextJS app ⚡️
+This is a monorepo for an Expo + NextJS app ⚡️ (forked from <https://github.com/pax-k/pax-react-native-starter/blob/main/README.md>)
 
 While our main objective is to develop a mobile app, now thanks to [Solito](https://solito.dev/) and [Tamagui](https://tamagui.dev/) we can target the web also. Just Tamagui alone brings great value due to its performance and [theme-ui](https://theme-ui.com/) styles, while Solito provides cross-platform navigation.
 
@@ -31,6 +33,7 @@ Another good reason is Tamagui itself. It has [the best performance](https://tam
 Another reason for organizing everything in a monorepo is because we're targeting 2 different platforms (web & mobile), each having its own config. Overall, we're keeping each package clean of unwanted dependencies and with their own specific structure and configuration that are easy to follow.
 
 This monorepo is the result of:
+
 - initial scaffold using `npm create tamagui` (see the [docs](https://tamagui.dev/))
 - getting some inspiration from `tamagui-kitchen-sync` for adding Storybook to it ([link](https://github.com/dohomi/tamagui-kitchen-sink))
 - adding `turbo` as a build and task runner cache system ([link](https://turbo.build/repo))
@@ -44,6 +47,7 @@ This monorepo is the result of:
 - overall nitting and bolting everything together, occasionally with some help from the fantastic Discord communities of Tamagui, Turbo and Expo
 
 An easier alternative for setting up a monorepo would've been NX ([link](https://nx.dev/)), which I tried initially and didn't work out because:
+
 - you can leverage the full power of NX only in its `integrated` mode and not in `package` mode
 - integrated means you have only one root `package.json` + TS path aliases, and each app configuration is black-boxed behind NX custom config generators
 - you lose the flexibility of running custom `package.json` commands for your internal packages
@@ -73,6 +77,7 @@ The dependency graph looks like this:
 ![](/docs/dep-graph.png)
 
 ## 🛠️ Prerequisites for setting everything up
+
 - create an Expo account and a new Expo team
 - create a Turbo team
 - create a Chromatic account
@@ -83,6 +88,7 @@ The dependency graph looks like this:
 - at this point you can safely start developing as described in [Workflow]() below: Github Actions, Chromatic updates and EAS Updates should work as expected
 
 ## 📱 App variants
+
 - see [eas.json](apps/expo/eas.json)
 - builds are real apps with different identifiers: `dev.com.REPLACE-ME`, `staging.com.REPLACE-ME`, `preview.com.REPLACE-ME`, see [app.config.ts](apps/expo/app.config.ts), [docs](https://docs.expo.dev/build/introduction/), [expo/package.json build commands](apps/expo/package.json)
 - for first time builds, use:
@@ -98,6 +104,7 @@ The dependency graph looks like this:
 - The Preview app is updated on each new git release (merges to main) and acts as an exact preview of the Production app (which hasn't been built yet) used for testing before an official release. Team demos use this app.
 
 ## 🎬 Github Actions setup
+
 - set the following secrets
   - `CHROMATIC_PROJECT_TOKEN` - you can get one after you create a Chromatic project
   - `EXPO_TOKEN` - get it from your Expo account
@@ -114,6 +121,7 @@ The dependency graph looks like this:
     - `TAMAGUI_TARGET`=native
 
 ## 👨🏻‍💻 Prerequisites for development
+
 - install [Android Studio Emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
 - install [iOS Simulator](https://docs.expo.dev/workflow/ios-simulator/)
 - install [Flipper](https://fbflipper.com/) (useful for debugging RN apps)
@@ -125,6 +133,7 @@ The dependency graph looks like this:
 - read the docs for [Expo](https://docs.expo.dev/), [Tamagui](https://tamagui.dev/), [Turbo](https://turbo.build/repo)
 
 ## 🏁 Start the app
+
 - run `yarn` to install dependencies
 - run `yarn start:expo` to start Expo
 - run `yarn start:next` to start Next
@@ -136,40 +145,53 @@ The dependency graph looks like this:
 
 1. The developer creates a new branch off `main`
 2. Starts Storybook `yarn start:sb` and Expo `yarn start:expo`
-  - mainly uses Chrome + Storybook for UI development in `packages/ui`
-  - can also use Chrome + NextJS for app logic development in `packages/app` - run `yarn start:next`
-  - checks his changes inside the iOS Simulator and Android Studio (press "i" / "a" in the console)
-  - checks the app on his real mobile device using the consle QR Code
-  - can share his changes live before opening a PR with other devs in 2 ways:
-    - using Expo Go, by running `yarn start:tunnel` and sharing the QR code with others
-    - using the Development Build Client (has to be installed by others), running `yarn start:devclient` and sharing the QR Code
-    - the difference between these two is that the Development Build Client is more closer to the production app
-  - checks the minified app running `start:ios:prod` and `start:android:prod`. Same as `yarn start:expo`, but it's a minified and closer to production build. Sometimes you can catch some 3rd party lib bugs this way.
+
+- mainly uses Chrome + Storybook for UI development in `packages/ui`
+- can also use Chrome + NextJS for app logic development in `packages/app` - run `yarn start:next`
+- checks his changes inside the iOS Simulator and Android Studio (press "i" / "a" in the console)
+- checks the app on his real mobile device using the consle QR Code
+- can share his changes live before opening a PR with other devs in 2 ways:
+  - using Expo Go, by running `yarn start:tunnel` and sharing the QR code with others
+  - using the Development Build Client (has to be installed by others), running `yarn start:devclient` and sharing the QR Code
+  - the difference between these two is that the Development Build Client is more closer to the production app
+- checks the minified app running `start:ios:prod` and `start:android:prod`. Same as `yarn start:expo`, but it's a minified and closer to production build. Sometimes you can catch some 3rd party lib bugs this way.
 
 3. Commits his changes
-  - commit messages must respect the [conventional commit format](https://github.com/conventional-changelog/commitlint#what-is-commitlint), eg: `fix(login screen): adjusted font size`
-  - on commit, husky runs `npx lint-staged --allow-empty && yarn g:run-all-checks`, where the checks are: `turbo run typecheck lint test build --parallel --since=HEAD^1`
+
+- commit messages must respect the [conventional commit format](https://github.com/conventional-changelog/commitlint#what-is-commitlint), eg: `fix(login screen): adjusted font size`
+- on commit, husky runs `npx lint-staged --allow-empty && yarn g:run-all-checks`, where the checks are: `turbo run typecheck lint test build --parallel --since=HEAD^1`
+
 4. Pushes his changes and opens a new PR
-- Gihub Actions kick in: 
+
+- Gihub Actions kick in:
   - `ci-build-test.yml`: runs Typecheck, Lint, Format check, Build, Unit tests for all configured packages
   - `ci-monorepo-integrity.yml`: Check for duplicate dependencies and yarn constraints
   - `cd-chromatic.yml`: Deploys the Storybook to Chromatic to be reviewed by the team ❗️
   - `cd-eas-update-staging.yml`: Updates the Staging app to be reviewed by the team ❗️. Also a QR code is automaticallty generated in the PR comments and links to the Expo Go client.
 - requires at least 1 reviewer to accept the PR
+
 5. On merging the PR to `main`, the same Github Actions run again, with the following additional actions:
-  - `ci-semantic-release.yml`: Runs semantic-release which bumps the version of `apps/expo/package.json`, bumps `buildNumber` and `versionCode` for `apps/expo/app.json`, updates `apps/expo/CHANGELOG.md` by aggregating the conventional commit messages, creates a new git tag version and a new git release based on it. See [Releases](https://github.com/REPLACE-ME-io/REPLACE-ME/releases). Please join the `#REPLACE-ME-github` Slack channel for updates 📫
-  - `cd-eas-update-preview.yml`: Triggered by a new git release, updates the Preview app
+
+- `ci-semantic-release.yml`: Runs semantic-release which bumps the version of `apps/expo/package.json`, bumps `buildNumber` and `versionCode` for `apps/expo/app.json`, updates `apps/expo/CHANGELOG.md` by aggregating the conventional commit messages, creates a new git tag version and a new git release based on it. See [Releases](https://github.com/REPLACE-ME-io/REPLACE-ME/releases). Please join the `#REPLACE-ME-github` Slack channel for updates 📫
+- `cd-eas-update-preview.yml`: Triggered by a new git release, updates the Preview app
+
+## Run Extension in Chrome
+
+1. Go to **chrome://extensions**
+2. At the top right, turn on **Developer mode**
+3. Click **Load unpacked**
+4. Find and select the extension folder (Universe/apps/extension/dev)
 
 ## 🏎️ Performance
+
 - we have yet to document the bundle size, but my memory recalls 1.9M for this barebone project
 - Tamagui by itself delivers great performance with respect to style updates and animations, leaving others in dust
 - Github Actions CI checks take around 10 minutes without Turbo cache, and around 2-3 minutes with Turbo cache
 - Manual Expo Builds take around 10 minutes using the Free Trial (we anyway trigger new builds very rarely because we leverage CI EAS hot Updates instead). Putting this in context, building in CI by yourself with fastlane takes around 1H from my experience (yeah very debatable, but still).
 
 ## 📐 Mobile app architecture and other considerations
-- which libs to use for state management and data fetching? [RTK](https://redux-toolkit.js.org/) handles both well in an integrated fashion. Jotai is another strong candidate, as it has [React-Query integration](https://jotai.org/docs/integrations/query) and [tRPC integration](https://jotai.org/docs/integrations/trpc) (we want to use tRPC on the backend)
 
-## 🆕 Add new dependencies
+- which libs to use for state management and data fetching? [RTK](https://redux-toolkit.js.org/) handles both well in an integrated fashion. Jotai is another strong candidate, as it has [React-Query integration](https://jotai.org/docs/integrations/query) and [tRPC integration](https://jotai.org/docs/integrations/trpc) (we want to use tRPC on the backend)
 
 ### Pure JS dependencies
 
@@ -189,11 +211,8 @@ cd apps/expo
 yarn add react-native-reanimated
 ```
 
-## 📟 NPM Commands
-- go over each `package.json` to get accustomed with NPM commands specific to each package
-- the root `package.json` should contain only monorepo specific commands
-
 ## Notes
+
 - this repo serves as a good starting point for development with Expo EAS, and will be improved in terms of workflow and tooling as we progress and discover new stuff that we might need, for example:
   - for Storybook, we might swap Webpack in favor of Vite or Turbopack because of the slow build time
   - better testing architecture? Right now `apps/tests` is configured to run user interaction tests with `testing-library` ([docs](https://reactnative.dev/docs/testing-overview#testing-user-interactions)). We might want to add Snapshot testing and E2E Detox tests. Or picking between moving `jest` to each individual package VS root jest config with `projects: [...]`. Not a priority right now.
@@ -204,7 +223,6 @@ yarn add react-native-reanimated
 - some tweaking is needed around file globs used in Turbo and Github Actions, to prevent running unnecessary commands (eg: it doesn't make sense to trigger a typecheck when only the README.md file was updated)
 - we should be really careful when upgrading react, react-native, react-native-web, tamagui. Experience and public Github issues show us that things can break really easily for lots of people at once and often. Manual and automated tests are key.
 - before going public, we should scan and update our dependencies with [Snyk](https://snyk.io/), update this readme with respect to Release Management and check again all permissions regarding this process
-
 
 ## FAQ
 
@@ -217,7 +235,7 @@ yarn add react-native-reanimated
     [!] Invalid `RNGestureHandler.podspec` file: undefined method `exists?' for File:Class.
     ```
 
-    Check this https://github.com/facebook/react-native/issues/35807#issuecomment-1378831502
+    Check this <https://github.com/facebook/react-native/issues/35807#issuecomment-1378831502>
 
 - devs are encouraged to update this section any time they run into unexpected problems
 
