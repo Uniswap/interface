@@ -55,7 +55,6 @@ export default function SwapBuyFiatButton() {
   const {
     available: fiatOnrampAvailable,
     availabilityChecked: fiatOnrampAvailabilityChecked,
-    error,
     loading: fiatOnrampAvailabilityLoading,
   } = useFiatOnrampAvailability(checkFiatRegionAvailability)
   const [buyFiatFlowState, setBuyFiatFlowState] = useState(BuyFiatFlowState.INACTIVE)
@@ -112,10 +111,6 @@ export default function SwapBuyFiatButton() {
       handleBuyCrypto()
     }
   }, [account, handleBuyCrypto, buyFiatFlowState])
-
-  useEffect(() => {
-    if (error) console.error(error)
-  }, [error])
 
   const disableBuyCryptoButton = Boolean(
     (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) ||

@@ -31,13 +31,12 @@ const mockUseFiatOnRampsUnavailable = (shouldCheck: boolean) => {
       error: null,
       loading: false,
     }
-  } else {
-    return {
-      available: false,
-      availabilityChecked: false,
-      error: null,
-      loading: false,
-    }
+  }
+  return {
+    available: false,
+    availabilityChecked: false,
+    error: null,
+    loading: false,
   }
 }
 
@@ -49,13 +48,12 @@ const mockUseFiatOnRampsAvailable = (shouldCheck: boolean) => {
       error: null,
       loading: false,
     }
-  } else {
-    return {
-      available: false,
-      availabilityChecked: false,
-      error: null,
-      loading: false,
-    }
+  }
+  return {
+    available: false,
+    availabilityChecked: false,
+    error: null,
+    loading: false,
   }
 }
 
