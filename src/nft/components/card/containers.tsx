@@ -31,7 +31,7 @@ const StyledDetailsContainer = styled(Column)`
   }
 `
 
-const StyledActionContainer = styled.div`
+const ActionContainer = styled.div`
   position: absolute;
   bottom: -32px;
   left: 8px;
@@ -46,10 +46,6 @@ const StyledActionContainer = styled.div`
     bottom: 8px;
   }
 `
-
-const ActionContainer = ({ children }: { children: ReactNode }) => (
-  <StyledActionContainer>{children}</StyledActionContainer>
-)
 
 const StyledActionButton = styled(ThemedText.BodySmall)<{
   selected: boolean
@@ -110,15 +106,21 @@ const ActionButton = ({
   )
 }
 
-const StyledErc1155ActionButton = styled.div<{ $disabled?: boolean }>`
+const StyledErc1155ActionButton = styled.button`
   position: relative;
   display: flex;
   width: 100%;
   height: 100%;
-  background: ${({ theme, $disabled }) => ($disabled ? theme.accentActionSoft : theme.accentAction)};
+  background: ${({ theme }) => theme.accentAction};
   padding: 4px 0px;
   justify-content: center;
-  cursor: ${({ $disabled }) => ($disabled ? 'default' : 'pointer')};
+  border: none;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+    background: ${({ theme }) => theme.accentActionSoft};
+  }
 
   &:before {
     background-size: 100%;
@@ -133,12 +135,12 @@ const StyledErc1155ActionButton = styled.div<{ $disabled?: boolean }>`
     content: '';
   }
 
-  &:hover:before {
-    background-color: ${({ theme, $disabled }) => !$disabled && theme.stateOverlayHover};
+  &:hover:enabled:before {
+    background-color: ${({ theme }) => theme.stateOverlayHover};
   }
 
-  &:active:before {
-    background-color: ${({ theme, $disabled }) => !$disabled && theme.stateOverlayPressed};
+  &:active:enabled:before {
+    background-color: ${({ theme }) => theme.stateOverlayPressed};
   }
 `
 
@@ -148,7 +150,7 @@ const StyledErc1155ActionContainer = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.backgroundSurface};
   border-radius: 8px;
   justify-content: center;
-  font-weight: 600 !important;
+  font-weight: 600;
   line-height: 16px;
   cursor: 'pointer';
   overflow: hidden;
@@ -182,7 +184,7 @@ const Erc1155ActionContainer = ({
         </ThemedText.BodySmall>
       </Row>
       <StyledErc1155ActionButton
-        $disabled={disableErc1155AddToBag}
+        disabled={disableErc1155AddToBag}
         onClick={(e) => {
           e.stopPropagation()
           e.preventDefault()
@@ -221,7 +223,7 @@ const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean 
   }
 
   :hover {
-    ${StyledActionContainer} {
+    ${ActionContainer} {
       visibility: visible;
       bottom: 8px;
     }
