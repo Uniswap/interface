@@ -118,7 +118,7 @@ describe('SwapBuyFiatButton.tsx', () => {
     mockUseFiatOnrampAvailability.mockImplementation(mockUseFiatOnRampsUnavailable)
     mockUseWalletDrawer.mockImplementation(() => [false, toggleWalletDrawer])
     render(<SwapBuyFiatButton />)
-    userEvent.click(screen.getByTestId('buy-fiat-button'))
+    await userEvent.click(screen.getByTestId('buy-fiat-button'))
     fireEvent.mouseOver(screen.getByTestId('buy-fiat-button'))
     expect(await screen.findByTestId('fiat-on-ramp-unavailable-tooltip')).toBeInTheDocument()
     expect(await screen.findByText(/Learn more/i)).toHaveAttribute('href', MOONPAY_REGION_AVAILABILITY_ARTICLE)
