@@ -105,14 +105,13 @@ describe('SwapBuyFiatButton.tsx', () => {
     mockUseFiatOnrampAvailability.mockImplementation(mockUseFiatOnRampsAvailable)
     mockUseWalletDrawer.mockImplementation(() => [false, toggleWalletDrawer])
     mockUseOpenModal.mockImplementation(() => useOpenModal)
-    const { unmount } = render(<SwapBuyFiatButton />)
+    render(<SwapBuyFiatButton />)
     expect(screen.getByTestId('buy-fiat-flow-incomplete-indicator')).toBeInTheDocument()
     await userEvent.click(screen.getByTestId('buy-fiat-button'))
     expect(toggleWalletDrawer).toHaveBeenCalledTimes(0)
     expect(useOpenModal).toHaveBeenCalledTimes(1)
     expect(screen.queryByTestId('fiat-on-ramp-unavailable-tooltip')).not.toBeInTheDocument()
     expect(screen.queryByTestId('buy-fiat-flow-incomplete-indicator')).not.toBeInTheDocument()
-    unmount()
   })
 
   it('fiat on ramps unavailable in region', async () => {
