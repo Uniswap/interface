@@ -84,6 +84,18 @@ const store = configureStore({
   preloadedState: load({ states: PERSISTED_KEYS }),
 })
 
+// remove unused redux keys in local storage
+try {
+  const prefix = 'redux_localstorage_simple_'
+  Object.keys(localStorage).forEach(key => {
+    if (!key.startsWith(prefix)) return
+    const name = key.replace(prefix, '')
+    if (!PERSISTED_KEYS.includes(name)) {
+      localStorage.removeItem(key)
+    }
+  })
+} catch (error) {}
+
 store.dispatch(updateVersion())
 // setupListeners(store.dispatch)
 
