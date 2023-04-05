@@ -15,7 +15,7 @@ export function HomeScreen(): JSX.Element {
       backgroundColor="$background3"
       padding="$spacing12"
       space="$spacing16">
-      <H1>Uniswap Wallet</H1>
+      <Text variant="headlineLarge">Uniswap Wallet</Text>
       {Object.values(accounts).map((a) => (
         <Stack
           key={a.address}

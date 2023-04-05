@@ -7,8 +7,6 @@ import { themes } from './theme/themes'
 import { tokens } from './theme/tokens'
 
 export const config = createTamagui({
-  // TODO: re-enable animations when type is fixed
-  // https://discord.com/channels/909986013848412191/1074217558867198023/1076817576509837402
   animations,
   shouldAddPrefersColorThemes: true,
   themeClassNameOnRoot: true,

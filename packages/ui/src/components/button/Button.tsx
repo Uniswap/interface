@@ -69,7 +69,7 @@ const CustomButtonFrame = styled(ButtonFrame, {
         borderColor: '$none',
       },
     },
-  },
+  } as const,
 
   defaultVariants: {
     buttonSize: ButtonSize.Medium,
@@ -82,20 +82,30 @@ const CustomButtonText = styled(ButtonText, {
     buttonEmphasis: {
       [ButtonEmphasis.Primary]: {
         color: '$white',
+        fontFamily: '$body',
       },
       [ButtonEmphasis.Secondary]: {
         color: '$textPrimary',
+        fontFamily: '$body',
       },
       [ButtonEmphasis.Tertiary]: {
         color: '$textPrimary',
+        fontFamily: '$body',
       },
       [ButtonEmphasis.Detrimental]: {
         color: '$accentCritical',
+        fontFamily: '$body',
       },
       [ButtonEmphasis.Warning]: {
         color: '$accentWarning',
+        fontFamily: '$body',
       },
     },
+  } as const,
+
+  defaultVariants: {
+    buttonSize: ButtonSize.Medium,
+    buttonEmphasis: ButtonEmphasis.Primary,
   },
 })
 

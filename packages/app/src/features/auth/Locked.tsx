@@ -45,9 +45,7 @@ function Locked(): JSX.Element {
         backgroundColor="$background3"
         color="$textPrimary"
       />
-      <Button onPress={onPress}>
-        <Text>Unlock</Text>
-      </Button>
+      <Button onPress={onPress}>Unlock</Button>
     </Stack>
   )
 }
