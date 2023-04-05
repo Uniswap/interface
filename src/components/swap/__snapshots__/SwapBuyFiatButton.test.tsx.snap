@@ -23,7 +23,6 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
   background-color: primary;
   border: 0;
   border-radius: 4px;
-  color: #7780A0;
 }
 
 .c2 {
@@ -125,6 +124,7 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
 
 .c4 {
   color: #7780A0;
+  gap: 4px;
 }
 
 .c4:focus {
@@ -143,12 +143,12 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
     <div>
       <button
         class="c1 c2 c3 c4"
-        color="#7780A0"
-        style="gap: 4px;"
+        data-testid="buy-fiat-button"
       >
         Buy
         <div
           class="c5"
+          data-testid="buy-fiat-flow-incomplete-indicator"
         />
       </button>
     </div>

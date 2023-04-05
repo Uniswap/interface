@@ -1,11 +1,10 @@
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
 import { ButtonText } from 'components/Button'
 import { MouseoverTooltipContent } from 'components/Tooltip'
 import { useWalletDrawer } from 'components/WalletDropdown'
 import { useCallback, useEffect, useState } from 'react'
 import { useBuyFiatFlowCompleted } from 'state/user/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { ExternalLink } from 'theme'
 
 import { useFiatOnrampAvailability, useOpenModal } from '../../state/application/hooks'
@@ -18,7 +17,7 @@ const Dot = styled.div`
   border-radius: 50%;
 `
 
-const MOONPAY_REGION_AVAILABILITY_ARTICLE =
+export const MOONPAY_REGION_AVAILABILITY_ARTICLE =
   'https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-'
 
 enum BuyFiatFlowState {
@@ -44,7 +43,11 @@ const StyledTextButton = styled(ButtonText)`
 const POPOVER_DELAY_BEFORE_SHOW_MS = 500
 
 export default function SwapBuyFiatButton() {
-  const theme = useTheme()
+  // Importing useWeb3React here is necessary for mocking different behavior in
+  // different tests in SwapBuyFiatButton.test.tsx
+
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { useWeb3React } = require('@web3-react/core')
   const { account } = useWeb3React()
   const openFiatOnRampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const [buyFiatFlowCompleted, setBuyFiatFlowCompleted] = useBuyFiatFlowCompleted()
@@ -127,7 +130,7 @@ export default function SwapBuyFiatButton() {
       wrap
       delayBeforeShow={POPOVER_DELAY_BEFORE_SHOW_MS}
       content={
-        <div>
+        <div data-testid="fiat-on-ramp-unavailable-tooltip">
           <Trans>Crypto purchases are not available in your region. </Trans>
           <ExternalLink href={MOONPAY_REGION_AVAILABILITY_ARTICLE} style={{ paddingLeft: '4px' }}>
             <Trans>Learn more</Trans>
@@ -137,9 +140,9 @@ export default function SwapBuyFiatButton() {
       placement="bottom"
       disableHover={!fiatOnrampAvailabilityChecked || (fiatOnrampAvailabilityChecked && fiatOnrampAvailable)}
     >
-      <StyledTextButton onClick={handleBuyCrypto} disabled={disableBuyCryptoButton}>
+      <StyledTextButton onClick={handleBuyCrypto} disabled={disableBuyCryptoButton} data-testid="buy-fiat-button">
         <Trans>Buy</Trans>
-        {!buyFiatFlowCompleted && <Dot />}
+        {!buyFiatFlowCompleted && <Dot data-testid="buy-fiat-flow-incomplete-indicator" />}
       </StyledTextButton>
     </MouseoverTooltipContent>
   )
