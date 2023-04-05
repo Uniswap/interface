@@ -8,7 +8,6 @@ import SwapBuyFiatButton, { MOONPAY_REGION_AVAILABILITY_ARTICLE } from './SwapBu
 jest.mock('@web3-react/core', () => {
   const web3React = jest.requireActual('@web3-react/core')
   return {
-    __esModule: true,
     ...web3React,
     useWeb3React: () => ({
       account: undefined,
@@ -100,7 +99,6 @@ describe('SwapBuyFiatButton.tsx', () => {
     jest.doMock('@web3-react/core', () => {
       const web3React = jest.requireActual('@web3-react/core')
       return {
-        __esModule: true,
         ...web3React,
         useWeb3React: () => ({
           account: '0x52270d8234b864dcAC9947f510CE9275A8a116Db',
