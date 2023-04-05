@@ -1,24 +1,45 @@
+<!-- Your PR title must follow conventional commits: https://github.com/Uniswap/interface#pr-title -->
+
 ## Description
-
-_[Summary of change, motivation, and context.]_
-
-- _Link to JIRA ticket, slack thread, or relevant docs helpful for providing context to reviewers._
-
-- _Note: Your PR title must follow conventions [outlined here](https://github.com/Uniswap/interface#contributions)._
-
-## Screen Capture
-| Before           | After (Desktop)  | After (Mobile) |
-| ---------------- |----------------- | -------------- |
-|  _insert_before_ | _insert_after_   | _insert_after_ |
+<!-- Summary of change, including motivation and context. -->
+<!-- Use verb-driven language: "Fixes XYZ" instead of "This change fixes XYZ" -->
 
 
-## Test Plan
-#### Manual
+<!-- Delete inapplicable lines: -->
+_JIRA ticket:_
+_Slack thread:_
+_Relevant docs:_
 
-_[Steps of how you are testing the change and ensuring no regression.]_
 
-_[Different devices and screen sizes that may be affected and how you tested.]_
+<!-- Delete this section if your change does not affect UI. -->
+## Screen capture
 
-#### Automated
+| Before                  | After (Desktop)        | After (Mobile)         |
+| ----------------------- |----------------------- | ---------------------- |
+| <!-- Paste "before" --> | <!-- Paste "after" --> | <!-- Paste "after" --> |
+
+
+## Test plan
+
+<!-- Delete this section if your change is not a bug fix. -->
+### Reproducing the error
+
+<!-- Include steps to reproduce the bug. -->
+1. 
+
+### QA (ie manual testing)
+
+<!-- Include steps to test the change, ensuring no regression. -->
+- [ ] N/A
+
+
+#### Devices
+<!-- If applicable, include different devices and screen sizes that may be affected, and how you've tested them. -->
+
+
+### Automated testing
+
+<!-- If N/A, do not check nor delete, but strike through. -->
+<!-- eg - [ ] <s>Unit test</s> -->
 - [ ] Unit test
 - [ ] Integration/E2E test
