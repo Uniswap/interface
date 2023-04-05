@@ -25,6 +25,8 @@ import { AnimatedBox, AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { useIsDarkMode } from 'src/features/appearance/hooks'
 import { useHighestBalanceNativeCurrencyId } from 'src/features/dataApi/balances'
+import { FEATURE_FLAGS } from 'src/features/experiments/constants'
+import { useFeatureFlag } from 'src/features/experiments/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -66,6 +68,8 @@ export const NavBar = (): JSX.Element => {
   const BUTTONS_OFFSET =
     useResponsiveProp({ xs: theme.spacing.spacing24, sm: theme.spacing.none }) ?? theme.spacing.none
 
+  const hideSwapButton = useFeatureFlag(FEATURE_FLAGS.HideSwap)
+
   return (
     <>
       <Box pointerEvents="none" style={StyleSheet.absoluteFill}>
@@ -101,7 +105,7 @@ export const NavBar = (): JSX.Element => {
           mx="spacing24"
           pointerEvents="auto">
           <ExploreTabBarButton />
-          <SwapFAB />
+          {hideSwapButton ? null : <SwapFAB />}
         </Flex>
       </Flex>
     </>

@@ -4,6 +4,7 @@
  */
 export enum FEATURE_FLAGS {
   FiatOnRamp = 'fiat-onramp',
+  HideSwap = 'hide-swap',
   SwapPermit2 = 'swap-permit-2',
   WalletConnectV2 = 'wc-v2',
 }
