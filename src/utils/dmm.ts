@@ -31,7 +31,10 @@ export function priceRangeCalc(
   const temp = amp?.divide(amp?.subtract(JSBI.BigInt(1)))
   if (!amp || !temp || !price) return [undefined, undefined]
   if (price instanceof Price) {
-    return [price.asFraction.multiply(temp.multiply(temp)), price.asFraction.divide(temp.multiply(temp))]
+    return [
+      price.asFraction.multiply(price.scalar).multiply(temp.multiply(temp)),
+      price.asFraction.multiply(price.scalar).divide(temp.multiply(temp)),
+    ]
   }
   return [price.asFraction.multiply(temp.multiply(temp)), price?.divide(temp.multiply(temp))]
 }
