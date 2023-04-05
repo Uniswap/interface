@@ -120,7 +120,7 @@ export default function SwapBuyFiatButton() {
   return (
     <MouseoverTooltipContent
       wrap
-      delayBeforeShow={POPOVER_DELAY_BEFORE_SHOW_MS}
+      delayShowTimeout={POPOVER_DELAY_BEFORE_SHOW_MS}
       content={
         <div data-testid="fiat-on-ramp-unavailable-tooltip">
           <Trans>Crypto purchases are not available in your region. </Trans>
