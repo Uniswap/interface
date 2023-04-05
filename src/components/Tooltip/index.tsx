@@ -4,8 +4,8 @@ import styled from 'styled-components/macro'
 
 import Popover, { PopoverProps } from '../Popover'
 
-// TODO(lynnshaoyu): migrate noOps throughout web to a shared util file.
-const noOp = () => null
+// TODO(WEB-3163): migrate noops throughout web to a shared util file.
+const noop = () => null
 
 export const TooltipContainer = styled.div`
   max-width: 256px;
@@ -50,7 +50,7 @@ export default function Tooltip({ text, open, close, disableHover, ...rest }: To
     <Popover
       content={
         text && (
-          <TooltipContainer onMouseEnter={disableHover ? noOp : open} onMouseLeave={disableHover ? noOp : close}>
+          <TooltipContainer onMouseEnter={disableHover ? noop : open} onMouseLeave={disableHover ? noop : close}>
             {text}
           </TooltipContainer>
         )
@@ -74,7 +74,7 @@ function TooltipContent({
       delayBeforeShow={delayBeforeShow}
       content={
         wrap ? (
-          <TooltipContainer onMouseEnter={disableHover ? noOp : open} onMouseLeave={disableHover ? noOp : close}>
+          <TooltipContainer onMouseEnter={disableHover ? noop : open} onMouseLeave={disableHover ? noop : close}>
             {content}
           </TooltipContainer>
         ) : (
@@ -105,7 +105,6 @@ export function MouseoverTooltip({ text, disableHover, children, timeout, ...res
     return
   }, [timeout, show])
 
-  const noOp = () => null
   return (
     <Tooltip
       {...rest}
@@ -115,7 +114,7 @@ export function MouseoverTooltip({ text, disableHover, children, timeout, ...res
       show={show}
       text={disableHover ? null : text}
     >
-      <div onMouseEnter={disableHover ? noOp : open} onMouseLeave={disableHover || timeout ? noOp : close}>
+      <div onMouseEnter={disableHover ? noop : open} onMouseLeave={disableHover || timeout ? noop : close}>
         {children}
       </div>
     </Tooltip>

@@ -90,7 +90,7 @@ export default function Popover({
   content,
   show,
   children,
-  delayBeforeShow,
+  delayBeforeShow = 0,
   placement = 'auto',
   offsetX = 8,
   offsetY = 8,
@@ -103,7 +103,7 @@ export default function Popover({
   const [arrowElement, setArrowElement] = useState<HTMLDivElement | null>(null)
   // Default delayBeforeShow is undefined (no delay before showing),
   // so delayShow should initialize to be true.
-  const [delayShow, setDelayShow] = useState(delayBeforeShow ? false : true)
+  const [shouldShow, setShouldShow] = useState(Boolean(delayBeforeShow))
 
   const options = useMemo(
     (): Options => ({
@@ -129,20 +129,20 @@ export default function Popover({
     if (!delayBeforeShow) return
     if (show) {
       const tooltipTimer = setTimeout(() => {
-        setDelayShow(true)
+        setShouldShow(true)
       }, delayBeforeShow)
 
       return () => {
         clearTimeout(tooltipTimer)
       }
     } else {
-      setDelayShow(false)
+      setShouldShow(false)
       return
     }
   }, [show, delayBeforeShow])
 
   return showInline ? (
-    <PopoverContainer show={show && delayShow}>{content}</PopoverContainer>
+    <PopoverContainer show={show && shouldShow}>{content}</PopoverContainer>
   ) : (
     <>
       <ReferenceElement style={style} ref={setReferenceElement as any}>
@@ -150,7 +150,7 @@ export default function Popover({
       </ReferenceElement>
       <Portal>
         <PopoverContainer
-          show={show && delayShow}
+          show={show && shouldShow}
           ref={setPopperElement as any}
           style={styles.popper}
           {...attributes.popper}

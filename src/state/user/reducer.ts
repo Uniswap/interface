@@ -57,7 +57,6 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
-  // TODO(lynnshaoyu): change buyFiatFlowCompleted initial state to false after finishing redux migration.
   buyFiatFlowCompleted: undefined,
   selectedWallet: undefined,
   userExpertMode: false,
