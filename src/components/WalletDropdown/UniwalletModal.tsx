@@ -112,7 +112,7 @@ function InfoSection({ onClose }: { onClose: () => void }) {
   return (
     <InfoSectionWrapper>
       <AutoColumn gap="4px">
-        <ThemedText.SubHeaderSmall>
+        <ThemedText.SubHeaderSmall color="textPrimary">
           <Trans>Don&apos;t have Uniswap Wallet?</Trans>
         </ThemedText.SubHeaderSmall>
         <ThemedText.Caption color="textSecondary">
