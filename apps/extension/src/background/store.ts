@@ -1,7 +1,6 @@
 import { createStore } from 'app/src/state'
-import { aliases } from './aliases'
+import { wrapStore } from 'webext-redux'
 import { PortName } from '../types'
-import { alias, wrapStore } from 'webext-redux'
 
 // Since we are in a service worker, this is not persistent
 // and this will be reset to false, as expected, whenever
@@ -13,25 +12,34 @@ export function initStore() {
   // Triggers whenever extension "wakes up" from idle.
   // With Manifest V3, we must reinitialize the store from storage each time.
   chrome.runtime.onConnect.addListener((port) => {
-    if (port.name === PortName.Popup) {
-      chrome.storage.local.get('state', (storage) => {
-        if (!isInitialized) {
-          const beforeMiddleware = [alias(aliases)]
-
-          const store = createStore({
-            preloadedState: storage.state,
-            beforeMiddleware,
-          })
-
-          wrapStore(store, { portName: PortName.Store })
-          isInitialized = true
-        }
-
-        // 2. sends a message to notify store is ready
-        chrome.runtime.sendMessage({
-          type: 'STORE_INITIALIZED',
-        })
-      })
+    if (port.name !== PortName.Popup) {
+      // ignore requests not from known ports
+      return
     }
+
+    if (isInitialized) {
+      return
+    }
+
+    onConnect()
   })
+}
+
+function onConnect() {
+  const notifyStoreHydrated = (): void => {
+    chrome.runtime
+      .sendMessage({
+        type: 'STORE_INITIALIZED',
+      })
+      .catch(() => undefined)
+  }
+
+  const store = createStore({
+    hydrationCallback: notifyStoreHydrated,
+  })
+
+  // wraps store in webext-redux
+  wrapStore(store, { portName: PortName.Store })
+
+  isInitialized = true
 }

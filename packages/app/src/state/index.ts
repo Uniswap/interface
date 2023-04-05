@@ -4,17 +4,20 @@ import { configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { loggerMiddleware } from '../features/logger/middleware'
 import { walletContextValue } from '../features/wallet/context'
-import { reducer } from './reducer'
+import { rootReducer, persistStore } from './reducer'
 import { rootSaga } from './saga'
 
 export const createStore = ({
   afterMiddleware = [],
   beforeMiddleware = [],
+  hydrationCallback,
   preloadedState = {},
 }: {
   afterMiddleware?: Array<Middleware<unknown>>
   beforeMiddleware?: Array<Middleware<unknown>>
   preloadedState?: PreloadedState<RootState>
+  // invoked after store is rehydrated
+  hydrationCallback?: () => void
 }) => {
   const sagaMiddleware = createSagaMiddleware({
     context: {
@@ -25,7 +28,7 @@ export const createStore = ({
   })
 
   const store = configureStore({
-    reducer,
+    reducer: rootReducer,
     preloadedState,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware()
@@ -34,19 +37,14 @@ export const createStore = ({
         .concat(afterMiddleware),
   })
 
-  // Subscribes to redux store changes. For each, store new state in storage.
-  // Required to make `webext-redux` work with Manifest V3 given bg script
-  // runs in transient service workers.
-  store.subscribe(() => {
-    chrome.storage.local.set({ state: store.getState() })
-  })
+  persistStore(store, null, hydrationCallback)
 
   sagaMiddleware.run(rootSaga)
 
   return store
 }
 
-export type RootState = ReturnType<typeof reducer>
+export type RootState = ReturnType<typeof rootReducer>
 export type AppDispatch = ReturnType<typeof createStore>['dispatch']
 export type AppSelector<T> = (state: RootState) => T
 

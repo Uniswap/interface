@@ -3,11 +3,16 @@ type AreaName = keyof Pick<
   'sync' | 'local' | 'managed' | 'session'
 >
 
-/** Chrome storage wrapper */
+/**
+ * Chrome storage wrapper
+ * @implements {redux-persist#Storage}
+ *
+ * NOTE: class avoids dependency on redux-persist by not explicity definiing implements
+ * */
 export class PersistedStorage {
   constructor(private area: AreaName = 'local') {}
 
-  async get(key: string): Promise<string | undefined> {
+  async getItem(key: string): Promise<string | undefined> {
     const result = await chrome.storage[this.area].get(key)
     return result[key]
   }
@@ -17,8 +22,12 @@ export class PersistedStorage {
     return result ?? {}
   }
 
-  set(key: string, value: string): Promise<void> {
+  setItem(key: string, value: string): Promise<void> {
     return chrome.storage[this.area].set({ [key]: value })
+  }
+
+  removeItem(key: string): Promise<void> {
+    return chrome.storage[this.area].remove(key)
   }
 
   clear(): Promise<void> {

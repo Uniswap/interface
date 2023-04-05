@@ -132,7 +132,7 @@ export class WebKeyring implements IKeyring {
     const secretPayload = await encrypt(mnemonic, password)
 
     const newMnemonicKey = this.keyForMnemonicId(address)
-    await this.storage.set(newMnemonicKey, JSON.stringify(secretPayload))
+    await this.storage.setItem(newMnemonicKey, JSON.stringify(secretPayload))
 
     return address
   }
@@ -147,7 +147,7 @@ export class WebKeyring implements IKeyring {
     password: string
   ): Promise<string | undefined> {
     const key = this.keyForMnemonicId(mnemonicId)
-    const result = await this.storage.get(key)
+    const result = await this.storage.getItem(key)
 
     if (!result) return undefined
 
@@ -215,7 +215,7 @@ export class WebKeyring implements IKeyring {
     try {
       // TODO: encrypt
       const newKey = this.keyForPrivateKey(address)
-      return this.storage.set(newKey, privateKey)
+      return this.storage.setItem(newKey, privateKey)
     } catch (e) {
       throw new Error(ErrorType.StoreMnemonicError + `: ${e}`)
     }
@@ -225,7 +225,7 @@ export class WebKeyring implements IKeyring {
     address: string
   ): Promise<string | undefined> {
     const key = this.keyForPrivateKey(address)
-    return this.storage.get(key)
+    return this.storage.getItem(key)
   }
 
   private keyForPrivateKey(address: string): string {
