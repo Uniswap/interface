@@ -18,6 +18,7 @@ import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useOpenModal } from 'state/application/hooks'
 import { useElasticFarms, useFailedNFTs } from 'state/farms/elastic/hooks'
 import { FarmingPool } from 'state/farms/elastic/types'
+import { useTokenPrices } from 'state/tokenPrices/hooks'
 import { StyledInternalLink } from 'theme'
 import { isAddressString } from 'utils'
 
@@ -180,6 +181,14 @@ function ElasticFarms({ stakedOnly }: { stakedOnly: { active: boolean; ended: bo
     ? `${window.location.origin}/farms/${networkRoute}?search=${sharePoolAddress}&tab=elastic&type=${activeTab}`
     : undefined
 
+  const tokenAddressList = farms
+    ?.map(farm => farm.pools)
+    .flat()
+    .map(p => [p.token0.wrapped.address, p.token1.wrapped.address, ...p.rewardTokens.map(rw => rw.wrapped.address)])
+    .flat()
+
+  const tokenPrices = useTokenPrices([...new Set(tokenAddressList)])
+
   const onDismiss = () => {
     setSeletedFarm(null)
     setSeletedModal(null)
@@ -318,6 +327,7 @@ function ElasticFarms({ stakedOnly }: { stakedOnly: { active: boolean; ended: bo
                 }}
                 pools={farm.pools}
                 userInfo={userFarmInfo?.[farm.id]}
+                tokenPrices={tokenPrices}
               />
             )
           })}

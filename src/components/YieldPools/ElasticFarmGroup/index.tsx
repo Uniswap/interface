@@ -26,7 +26,6 @@ import { useWalletModalToggle } from 'state/application/hooks'
 import { useElasticFarms, useFailedNFTs, useFarmAction } from 'state/farms/elastic/hooks'
 import { FarmingPool, UserInfo } from 'state/farms/elastic/types'
 import { useSingleCallResult } from 'state/multicall/hooks'
-import { useTokenPrices } from 'state/tokenPrices/hooks'
 import { useIsTransactionPending } from 'state/transactions/hooks'
 import { useViewMode } from 'state/user/hooks'
 import { VIEW_MODE } from 'state/user/reducer'
@@ -60,6 +59,7 @@ type Props = {
   ) => void
   pools: FarmingPool[]
   userInfo?: UserInfo
+  tokenPrices: { [key: string]: number }
 }
 
 enum SORT_FIELD {
@@ -76,7 +76,7 @@ enum SORT_DIRECTION {
   DESC = 'desc',
 }
 
-const ProMMFarmGroup: React.FC<Props> = ({ address, onOpenModal, pools, userInfo }) => {
+const ProMMFarmGroup: React.FC<Props> = ({ address, onOpenModal, pools, userInfo, tokenPrices }) => {
   const theme = useTheme()
   const { account, chainId } = useActiveWeb3React()
   const above1000 = useMedia('(min-width: 1000px)')
@@ -86,12 +86,6 @@ const ProMMFarmGroup: React.FC<Props> = ({ address, onOpenModal, pools, userInfo
   const sortDirection = searchParams.get('orderDirection') || SORT_DIRECTION.DESC
 
   const { poolFeeLast24h } = useElasticFarms()
-
-  const tokenAddressList = pools
-    .map(p => [p.token0.wrapped.address, p.token1.wrapped.address, ...p.rewardTokens.map(rw => rw.wrapped.address)])
-    .flat()
-
-  const tokenPrices = useTokenPrices([...new Set(tokenAddressList)])
 
   const depositedUsd =
     userInfo?.depositedPositions.reduce(

@@ -212,9 +212,11 @@ function PositionListItem({
             }),
         ])
 
-        const rewardPending = currentReward?.map((item: BigNumber, index: number) => {
-          return item.sub(BigNumber.from(last24hReward?.[index] || '0'))
-        })
+        const rewardPending =
+          last24hReward.length &&
+          currentReward?.map((item: BigNumber, index: number) => {
+            return item.sub(BigNumber.from(last24hReward?.[index] || '0'))
+          })
 
         setReward24h(rewardPending)
       }
