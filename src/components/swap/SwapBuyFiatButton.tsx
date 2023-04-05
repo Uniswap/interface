@@ -43,8 +43,7 @@ const StyledTextButton = styled(ButtonText)`
 const POPOVER_DELAY_BEFORE_SHOW_MS = 500
 
 export default function SwapBuyFiatButton() {
-  // Importing useWeb3React here is necessary for mocking different behavior in
-  // different tests in SwapBuyFiatButton.test.tsx
+  // Importing useWeb3React here is necessary for mocking different behavior in different tests in SwapBuyFiatButton.test.tsx
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const { useWeb3React } = require('@web3-react/core')
@@ -60,25 +59,25 @@ export default function SwapBuyFiatButton() {
   const [buyFiatFlowState, setBuyFiatFlowState] = useState(BuyFiatFlowState.INACTIVE)
   const [walletDrawerOpen, toggleWalletDrawer] = useWalletDrawer()
 
-  /* 
-  Once the buy fiat flow has been completed, reset BuyFiatFlowState and also save to 
-  local storage that user has completed this flow already.
-  */
+  /*
+   * Once the buy fiat flow has been completed, reset BuyFiatFlowState and also save to
+   * local storage that user has completed this flow already.
+   */
   const terminateBuyFiatFlow = useCallback(() => {
     setBuyFiatFlowCompleted(true)
     setBuyFiatFlowState(BuyFiatFlowState.INACTIVE)
   }, [setBuyFiatFlowCompleted, setBuyFiatFlowState])
 
   /*
-  Depending on the current state of the buy fiat flow the user is in (buyFiatFlowState),
-  the desired behavior of clicking the 'Buy' button is different:
-  1) Initially upon first click, need to check the availability of the feature in the user's 
-  region, and continue the flow.
-  2) If the feature is available in the user's region, need to connect a wallet, and continue
-  the flow.
-  3) If the feature is available and a wallet account is connected, show fiat on ramp modal.
-  4) If the feature is unavailable, show feature unavailable tooltip. 
-  */
+   * Depending on the current state of the buy fiat flow the user is in (buyFiatFlowState),
+   * the desired behavior of clicking the 'Buy' button is different.
+   * 1) Initially upon first click, need to check the availability of the feature in the user's
+   * region, and continue the flow.
+   * 2) If the feature is available in the user's region, need to connect a wallet, and continue
+   * the flow.
+   * 3) If the feature is available and a wallet account is connected, show fiat on ramp modal.
+   * 4) If the feature is unavailable, show feature unavailable tooltip.
+   */
   const handleBuyCrypto = useCallback(() => {
     if (!fiatOnrampAvailabilityChecked) {
       setCheckFiatRegionAvailability(true)
@@ -112,13 +111,11 @@ export default function SwapBuyFiatButton() {
     }
   }, [account, handleBuyCrypto, buyFiatFlowState])
 
-  const disableBuyCryptoButton = Boolean(
+  const buyCryptoButtonDisabled =
     (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) ||
-      fiatOnrampAvailabilityLoading ||
-      // When wallet drawer is open AND user is in the connect wallet step
-      // of the buy fiat flow, disable buy fiat button.
-      (walletDrawerOpen && buyFiatFlowState === BuyFiatFlowState.ACTIVE_NEEDS_WALLET_CONNECTION)
-  )
+    fiatOnrampAvailabilityLoading ||
+    // When wallet drawer is open AND user is in the connect wallet step of the buy fiat flow, disable buy fiat button.
+    (walletDrawerOpen && buyFiatFlowState === BuyFiatFlowState.ACTIVE_NEEDS_WALLET_CONNECTION)
 
   return (
     <MouseoverTooltipContent
@@ -135,7 +132,7 @@ export default function SwapBuyFiatButton() {
       placement="bottom"
       disableHover={!fiatOnrampAvailabilityChecked || (fiatOnrampAvailabilityChecked && fiatOnrampAvailable)}
     >
-      <StyledTextButton onClick={handleBuyCrypto} disabled={disableBuyCryptoButton} data-testid="buy-fiat-button">
+      <StyledTextButton onClick={handleBuyCrypto} disabled={buyCryptoButtonDisabled} data-testid="buy-fiat-button">
         <Trans>Buy</Trans>
         {!buyFiatFlowCompleted && <Dot data-testid="buy-fiat-flow-incomplete-indicator" />}
       </StyledTextButton>
