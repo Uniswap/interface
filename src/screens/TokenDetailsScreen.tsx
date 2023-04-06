@@ -293,74 +293,72 @@ function TokenDetails({
 
   return (
     <Trace screen={Screens.TokenDetails}>
-      <Box bg="background1" flexGrow={1} pb={pb}>
-        <HeaderScrollScreen
-          centerElement={<HeaderTitleElement data={data} />}
-          renderedInModal={inModal}
-          rightElement={<TokenDetailsFavoriteButton currencyId={_currencyId} />}
-          showHandleBar={inModal}>
-          <Flex gap="spacing36" my="spacing8">
-            <Flex gap="spacing4">
-              <TokenDetailsHeader
-                data={data}
-                loading={loading}
-                onPressWarningIcon={(): void => setShowWarningModal(true)}
-              />
-              <PriceExplorer
-                currencyId={_currencyId}
-                tokenColor={
-                  tokenColorLoading
-                    ? theme.colors.textTertiary
-                    : tokenColor ?? theme.colors.magentaVibrant
-                }
-                onRetry={onPriceChartRetry}
-              />
-            </Flex>
-            {error ? (
-              <AnimatedBox entering={FadeInDown} exiting={FadeOutDown} px="spacing24">
-                <BaseCard.InlineErrorState onRetry={retry} />
-              </AnimatedBox>
-            ) : null}
-            <Flex gap="spacing24">
-              <TokenBalances
-                currentChainBalance={currentChainBalance}
-                otherChainBalances={otherChainBalances}
-                onPressSend={onPressSend}
-              />
-              <Box mb="spacing8" mx="spacing16">
-                <TokenDetailsStats currencyId={_currencyId} data={data} tokenColor={tokenColor} />
-              </Box>
-            </Flex>
-          </Flex>
-        </HeaderScrollScreen>
-
-        {!hideSwapButton && !loading && !tokenColorLoading ? (
-          <AnimatedFlex entering={FadeInDown}>
-            <TokenDetailsActionButtons
-              tokenColor={tokenColor}
-              onPressSwap={
-                safetyLevel === SafetyLevel.Blocked
-                  ? undefined
-                  : (): void =>
-                      onPressSwap(currentChainBalance ? TransactionType.SELL : TransactionType.BUY)
-              }
+      <HeaderScrollScreen
+        centerElement={<HeaderTitleElement data={data} />}
+        renderedInModal={inModal}
+        rightElement={<TokenDetailsFavoriteButton currencyId={_currencyId} />}
+        showHandleBar={inModal}>
+        <Flex gap="spacing36" my="spacing8" pb="spacing16">
+          <Flex gap="spacing4">
+            <TokenDetailsHeader
+              data={data}
+              loading={loading}
+              onPressWarningIcon={(): void => setShowWarningModal(true)}
             />
-          </AnimatedFlex>
-        ) : null}
+            <PriceExplorer
+              currencyId={_currencyId}
+              tokenColor={
+                tokenColorLoading
+                  ? theme.colors.textTertiary
+                  : tokenColor ?? theme.colors.magentaVibrant
+              }
+              onRetry={onPriceChartRetry}
+            />
+          </Flex>
+          {error ? (
+            <AnimatedBox entering={FadeInDown} exiting={FadeOutDown} px="spacing24">
+              <BaseCard.InlineErrorState onRetry={retry} />
+            </AnimatedBox>
+          ) : null}
+          <Flex gap="spacing24">
+            <TokenBalances
+              currentChainBalance={currentChainBalance}
+              otherChainBalances={otherChainBalances}
+              onPressSend={onPressSend}
+            />
+            <Box mb="spacing8" mx="spacing16">
+              <TokenDetailsStats currencyId={_currencyId} data={data} tokenColor={tokenColor} />
+            </Box>
+          </Flex>
+        </Flex>
+      </HeaderScrollScreen>
 
-        <TokenWarningModal
-          currencyId={_currencyId}
-          disableAccept={activeTransactionType === undefined}
-          isVisible={showWarningModal}
-          safetyLevel={safetyLevel}
-          tokenLogoUrl={token?.project?.logoUrl}
-          onAccept={onAcceptWarning}
-          onClose={(): void => {
-            setActiveTransactionType(undefined)
-            setShowWarningModal(false)
-          }}
-        />
-      </Box>
+      {!hideSwapButton && !loading && !tokenColorLoading ? (
+        <AnimatedFlex entering={FadeInDown} pb={pb}>
+          <TokenDetailsActionButtons
+            tokenColor={tokenColor}
+            onPressSwap={
+              safetyLevel === SafetyLevel.Blocked
+                ? undefined
+                : (): void =>
+                    onPressSwap(currentChainBalance ? TransactionType.SELL : TransactionType.BUY)
+            }
+          />
+        </AnimatedFlex>
+      ) : null}
+
+      <TokenWarningModal
+        currencyId={_currencyId}
+        disableAccept={activeTransactionType === undefined}
+        isVisible={showWarningModal}
+        safetyLevel={safetyLevel}
+        tokenLogoUrl={token?.project?.logoUrl}
+        onAccept={onAcceptWarning}
+        onClose={(): void => {
+          setActiveTransactionType(undefined)
+          setShowWarningModal(false)
+        }}
+      />
     </Trace>
   )
 }
