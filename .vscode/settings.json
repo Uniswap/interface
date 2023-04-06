@@ -5,14 +5,14 @@
     "[javascript]": {
       "editor.codeActionsOnSave": {
         "source.fixAll": true,
-        "source.organizeImports": false
+        "source.organizeImports": true
       },
       "editor.formatOnSave": true
     },
     "[javascriptreact]": {
       "editor.codeActionsOnSave": {
         "source.fixAll": true,
-        "source.organizeImports": false
+        "source.organizeImports": true
       },
       "editor.formatOnSave": true
     },
@@ -22,7 +22,7 @@
     "[typescript]": {
       "editor.codeActionsOnSave": {
         "source.fixAll": true,
-        "source.organizeImports": false
+        "source.organizeImports": true
       },
       "editor.defaultFormatter": "dbaeumer.vscode-eslint",
       "editor.formatOnSave": true
@@ -30,7 +30,7 @@
     "[typescriptreact]": {
       "editor.codeActionsOnSave": {
         "source.fixAll": true,
-        "source.organizeImports": false
+        "source.organizeImports": true
       },
       "editor.defaultFormatter": "dbaeumer.vscode-eslint",
       "editor.formatOnSave": true
