@@ -3,7 +3,7 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
-    "src/**/*.json",
+    "src/**/*.json"
   ],
   "references": [
     {
@@ -11,6 +11,9 @@
     }
   ],
   "compilerOptions": {
-    "types": ["chrome", "jest"]
+    "types": [
+      "chrome",
+      "jest"
+    ]
   }
 }

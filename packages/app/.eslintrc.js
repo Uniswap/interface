@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   extends: ['custom'],
-  ignorePatterns: ['node_modules', '.turbo', '.eslintrc.js'],
+  ignorePatterns: ['node_modules', '.turbo', '.eslintrc.js', 'codegen.ts'],
   parserOptions: {
     project: 'tsconfig.json',
     tsconfigRootDir: __dirname,

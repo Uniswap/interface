@@ -4,6 +4,7 @@ import { Text } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
 
 import { useAppDispatch, useAppSelector } from '../../state'
+import { PortfolioBalance } from './PortfolioBalance'
 
 export function HomeScreen(): JSX.Element {
   const accounts = useAppSelector((state) => state?.wallet?.accounts)
@@ -22,6 +23,7 @@ export function HomeScreen(): JSX.Element {
           backgroundColor="$background2"
           padding="$spacing16">
           <Text variant="bodyLarge">{a.address}</Text>
+          <PortfolioBalance address={a.address} />
         </Stack>
       ))}
       <Button
