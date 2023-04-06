@@ -11,10 +11,9 @@ jest.mock('@sentry/react', () => {
     startTransaction: jest.fn(),
   }
 })
-const startTransaction = Sentry.startTransaction as jest.Mock
 
 function getTransaction(index = 0): Transaction {
-  const transactions = startTransaction.mock.results.map(({ value }) => value)
+  const transactions = jest.asMock(Sentry.startTransaction).mock.results.map(({ value }) => value)
   expect(transactions).toHaveLength(index + 1)
   const transaction = transactions[index]
   expect(transaction).toBeDefined()
@@ -23,12 +22,14 @@ function getTransaction(index = 0): Transaction {
 
 describe('trace', () => {
   beforeEach(() => {
-    const Sentry = jest.requireActual('@sentry/react')
-    startTransaction.mockReset().mockImplementation((context) => {
-      const transaction: Transaction = Sentry.startTransaction(context)
-      transaction.initSpanRecorder()
-      return transaction
-    })
+    jest
+      .asMock(Sentry.startTransaction)
+      .mockReset()
+      .mockImplementation((context) => {
+        const transaction: Transaction = jest.requireActual('@sentry/react').startTransaction(context)
+        transaction.initSpanRecorder()
+        return transaction
+      })
   })
 
   it('propagates callback', async () => {

@@ -8,7 +8,6 @@ import Pools from '.'
 import useMultiChainPositions from './useMultiChainPositions'
 
 jest.mock('./useMultiChainPositions')
-const mockUseMultiChainPositions = useMultiChainPositions as jest.MockedFunction<typeof useMultiChainPositions>
 
 const owner = '0xf5b6bb25f5beaea03dd014c6ef9fa9f3926bf36c'
 
@@ -58,7 +57,7 @@ const useMultiChainPositionsReturnValue = {
 }
 
 beforeEach(() => {
-  mockUseMultiChainPositions.mockReturnValue(useMultiChainPositionsReturnValue)
+  jest.asMock(useMultiChainPositions).mockReturnValue(useMultiChainPositionsReturnValue)
 })
 test('Pools should render LP positions', () => {
   const props = { account: owner }
