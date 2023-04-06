@@ -8,7 +8,7 @@ import useSWR from 'swr'
 
 import ERC20_INTERFACE, { ERC20_BYTES32_INTERFACE } from 'constants/abis/erc20'
 import { KS_SETTING_API } from 'constants/env'
-import { ZERO_ADDRESS } from 'constants/index'
+import { ETHER_ADDRESS, ZERO_ADDRESS } from 'constants/index'
 import { NativeCurrencies } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks/index'
 import { useBytes32TokenContract, useMulticallContract, useTokenContract } from 'hooks/useContract'
@@ -323,8 +323,12 @@ export const formatAndCacheToken = (rawTokenResponse: TokenInfo) => {
   }
 }
 
-function useTokenV2(tokenAddress?: string): WrappedTokenInfo | Token | NativeCurrency | undefined | null {
-  const { chainId } = useActiveWeb3React()
+function useTokenV2(
+  tokenAddress?: string,
+  customChain?: ChainId,
+): WrappedTokenInfo | Token | NativeCurrency | undefined | null {
+  const { chainId: currentChain } = useActiveWeb3React()
+  const chainId = customChain || currentChain
   const address = isAddress(chainId, tokenAddress)
   const { data, isValidating } = useSWR(
     address.toString() + chainId?.toString(),
@@ -350,20 +354,22 @@ export function useCurrency(currencyId: string | undefined): Currency | null | u
 }
 
 // not use data from contract, in the future we will remove useCurrency
-export function useCurrencyV2(currencyId: string | undefined): Currency | null | undefined {
-  const { chainId } = useActiveWeb3React()
+export function useCurrencyV2(currencyId: string | undefined, customChainId?: ChainId): Currency | null | undefined {
+  const { chainId: currentChain } = useActiveWeb3React()
+  const chainId = customChainId || currentChain
+  const lowercaseId = currencyId?.toLowerCase()
   const isETH = useMemo(
     () =>
-      chainId &&
-      (currencyId?.toUpperCase() === NativeCurrencies[chainId].symbol?.toUpperCase() ||
-        currencyId?.toLowerCase() === 'eth'),
-    [chainId, currencyId],
+      lowercaseId === NativeCurrencies[chainId].symbol?.toLowerCase() ||
+      lowercaseId === 'eth' ||
+      lowercaseId === ETHER_ADDRESS.toLowerCase(),
+    [chainId, lowercaseId],
   )
   const whitelistTokens = useAllTokens()
   const tokenInWhitelist = currencyId
     ? whitelistTokens[currencyId] || whitelistTokens[currencyId?.toLowerCase()]
     : undefined
-  const token = useTokenV2(isETH || tokenInWhitelist ? undefined : currencyId)
+  const token = useTokenV2(isETH || tokenInWhitelist ? undefined : currencyId, chainId)
 
   return useMemo(() => {
     if (!currencyId) return

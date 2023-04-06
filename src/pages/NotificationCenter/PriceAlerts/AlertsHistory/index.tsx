@@ -55,6 +55,7 @@ const AlertsHistory = ({ setDisabledClearAll }: { setDisabledClearAll: (v: boole
       </Flex>
 
       <CommonPagination
+        style={{ margin: 0 }}
         onPageChange={setPage}
         totalCount={data?.pagination?.totalItems || 0}
         currentPage={page}

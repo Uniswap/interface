@@ -226,6 +226,10 @@ export default forwardRef<ListOrderHandle>(function ListLimitOrder(props, ref) {
     fetchListOrderDebounce(orderType, keyword, curPage)
   }, [orderType, keyword, fetchListOrderDebounce, curPage])
 
+  useEffect(() => {
+    onReset()
+  }, [chainId])
+
   const refreshListOrder = useCallback(() => {
     onReset()
     fetchListOrderDebounce(orderType, '', 1)

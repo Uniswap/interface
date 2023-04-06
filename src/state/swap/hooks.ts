@@ -309,7 +309,7 @@ export function queryParametersToSwapState(
   parsedQs: ParsedUrlQuery,
   chainId: ChainId,
   isMatchPath: boolean,
-): Omit<SwapState, 'saveGas' | 'typedValue'> {
+): Omit<SwapState, 'saveGas'> {
   let inputCurrency = parseCurrencyFromURLParameter(isMatchPath ? parsedQs.inputCurrency : null, chainId)
   let outputCurrency = parseCurrencyFromURLParameter(isMatchPath ? parsedQs.outputCurrency : null, chainId)
   if (inputCurrency === outputCurrency) {
@@ -331,6 +331,7 @@ export function queryParametersToSwapState(
           feeAmount: feePercent < 1 ? '1' : feePercent > 10 ? '10' : feePercent.toString(),
         }
       : undefined
+  const typedValue = (parsedQs.amountIn ?? '') as string
   return {
     [Field.INPUT]: {
       currencyId: inputCurrency,
@@ -347,6 +348,7 @@ export function queryParametersToSwapState(
     swapErrorMessage: undefined,
     txHash: undefined,
     isSelectTokenManually: false,
+    typedValue,
   }
 }
 
@@ -419,6 +421,7 @@ export const useDefaultsFromURLSearch = ():
         outputCurrencyId,
         recipient: parsed.recipient,
         feeConfig: parsed.feeConfig,
+        typedValue: parsed.typedValue,
       }),
     )
 

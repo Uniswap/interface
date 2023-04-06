@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Box, Flex } from 'rebass'
 import { parseGetRouteResponse } from 'services/route/utils'
 
@@ -21,6 +21,8 @@ import TradePrice from 'components/swapv2/TradePrice'
 import { Wrapper } from 'components/swapv2/styleds'
 import { useActiveWeb3React } from 'hooks'
 import useWrapCallback, { WrapType } from 'hooks/useWrapCallback'
+import { Field } from 'state/swap/actions'
+import { useSwapActionHandlers, useSwapState } from 'state/swap/hooks'
 import { DetailedRouteSummary, FeeConfig } from 'types/route'
 
 import PriceImpactNote from './PriceImpactNote'
@@ -71,9 +73,20 @@ const SwapForm: React.FC<SwapFormProps> = props => {
   const { isEVM, isSolana } = useActiveWeb3React()
 
   const [isProcessingSwap, setProcessingSwap] = useState(false)
-  const [typedValue, setTypedValue] = useState('1')
+  const { typedValue } = useSwapState()
   const [recipient, setRecipient] = useState<string | null>(null)
   const [isSaveGas, setSaveGas] = useState(false)
+
+  const { onUserInput: updateInputAmount } = useSwapActionHandlers()
+  const onUserInput = useCallback(
+    (value: string) => {
+      updateInputAmount(Field.INPUT, value)
+    },
+    [updateInputAmount],
+  )
+  useEffect(() => {
+    onUserInput('1')
+  }, [onUserInput])
 
   const parsedAmount = useParsedAmount(currencyIn, typedValue)
   const { wrapType, inputError: wrapInputError, execute: onWrap } = useWrapCallback(currencyIn, currencyOut, typedValue)
@@ -131,8 +144,8 @@ const SwapForm: React.FC<SwapFormProps> = props => {
     // reset value for unwrapping WSOL
     // because on Solana, unwrap WSOL is closing WSOL account,
     // which mean it will unwrap all WSOL at once and we can't unwrap partial amount of WSOL
-    if (isSolanaUnwrap) setTypedValue(balanceIn?.toExact() ?? '')
-  }, [balanceIn, isSolanaUnwrap])
+    if (isSolanaUnwrap) onUserInput(balanceIn?.toExact() ?? '')
+  }, [balanceIn, isSolanaUnwrap, onUserInput])
 
   useEffect(() => {
     setRouteSummary(routeSummary)
@@ -155,7 +168,7 @@ const SwapForm: React.FC<SwapFormProps> = props => {
             <InputCurrencyPanel
               wrapType={wrapType}
               typedValue={typedValue}
-              setTypedValue={setTypedValue}
+              setTypedValue={onUserInput}
               currencyIn={currencyIn}
               currencyOut={currencyOut}
               balanceIn={balanceIn}

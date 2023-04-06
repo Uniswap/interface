@@ -6,6 +6,7 @@ import CenterPopup from 'components/Announcement/Popups/CenterPopup'
 import SnippetPopup from 'components/Announcement/Popups/SnippetPopup'
 import { PopupType, PrivateAnnouncementType } from 'components/Announcement/type'
 import { ButtonEmpty } from 'components/Button'
+import { TIMES_IN_SECS } from 'constants/index'
 import { Z_INDEXS } from 'constants/styles'
 import { useActiveWeb3React } from 'hooks'
 import {
@@ -94,7 +95,8 @@ export default function Popups() {
       data.forEach(item => {
         if (item.templateType === PrivateAnnouncementType.PRICE_ALERT) {
           // only support price alert
-          addPopup(item, PopupType.TOP_RIGHT, item.metaMessageId, 15_000)
+          const mins = (Date.now() / 1000 - item.createdAt) / TIMES_IN_SECS.ONE_MIN
+          if (mins <= 5) addPopup(item, PopupType.TOP_RIGHT, item.metaMessageId, 15_000)
         }
       })
     })

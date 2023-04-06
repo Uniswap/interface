@@ -11,8 +11,8 @@ export const Wrapper = styled.div`
   flex-direction: column;
   width: 100%;
   cursor: pointer;
-  :nth-child(2) {
-    padding: 20px 0px;
+  :last-child {
+    border: none;
   }
 `
 

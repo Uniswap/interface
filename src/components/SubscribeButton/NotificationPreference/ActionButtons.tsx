@@ -51,7 +51,7 @@ export default function ActionButtons({
       }}
       onClick={onUnsubscribeAll}
     >
-      <Trans>Opt out from all future email</Trans>
+      <Trans>Opt out from all future emails</Trans>
     </Text>
   ) : (
     isHorizontal && <div />

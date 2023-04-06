@@ -26,6 +26,9 @@ const Wrapper = styled.div`
   :first-child {
     padding-top: 0;
   }
+  :last-child {
+    border: none;
+  }
   ${({ theme }) => theme.mediaWidth.upToMedium`
     :first-child {
       padding: 16px 0px;

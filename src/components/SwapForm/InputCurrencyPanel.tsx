@@ -15,7 +15,7 @@ type Props = {
   currencyOut: Currency | undefined
   balanceIn: CurrencyAmount<Currency> | undefined
   onChangeCurrencyIn: (c: Currency) => void
-  setTypedValue: React.Dispatch<React.SetStateAction<string>>
+  setTypedValue: (v: string) => void
 }
 const InputCurrencyPanel: React.FC<Props> = ({
   wrapType,

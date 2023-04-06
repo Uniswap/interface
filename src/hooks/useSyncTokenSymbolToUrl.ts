@@ -2,7 +2,6 @@ import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
 import { stringify } from 'querystring'
 import { useCallback, useEffect, useRef } from 'react'
 import { Params, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { usePrevious } from 'react-use'
 
 import { APP_PATHS } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
@@ -38,7 +37,6 @@ export default function useSyncTokenSymbolToUrl(
   disabled = false,
 ) {
   const params = useParams<TokenSymbolParams>()
-  const prevParams = usePrevious(params)
   const { fromCurrency, toCurrency, network } = getUrlMatchParams(params)
 
   const { chainId } = useActiveWeb3React()
@@ -110,36 +108,26 @@ export default function useSyncTokenSymbolToUrl(
   )
 
   const checkedTokenFromUrlWhenInit = useRef(false)
-  const needFindTokenFromUrl =
-    fromCurrency && toCurrency && (prevParams?.fromCurrency !== fromCurrency || prevParams?.toCurrency !== toCurrency)
 
   useEffect(() => {
     if (
-      (!checkedTokenFromUrlWhenInit.current || needFindTokenFromUrl) &&
+      !checkedTokenFromUrlWhenInit.current &&
       isLoadedTokenDefault &&
       Object.values(allTokens)[0]?.chainId === chainId &&
       network === NETWORKS_INFO[chainId].route &&
       !disabled
     ) {
-      // call at least once when init and when url change
+      // call once
       setTimeout(() => findTokenPairFromUrl(chainId))
       checkedTokenFromUrlWhenInit.current = true
     }
-  }, [allTokens, findTokenPairFromUrl, chainId, isLoadedTokenDefault, disabled, network, needFindTokenFromUrl])
+  }, [allTokens, findTokenPairFromUrl, chainId, isLoadedTokenDefault, disabled, network])
 
   // when token change, sync symbol to url
 
   useEffect(() => {
-    if (isSelectCurrencyManual && isLoadedTokenDefault && !disabled && !needFindTokenFromUrl) {
+    if (isSelectCurrencyManual && isLoadedTokenDefault && !disabled) {
       syncTokenSymbolToUrl(currencyIn, currencyOut)
     }
-  }, [
-    currencyIn,
-    currencyOut,
-    isSelectCurrencyManual,
-    syncTokenSymbolToUrl,
-    isLoadedTokenDefault,
-    disabled,
-    needFindTokenFromUrl,
-  ])
+  }, [currencyIn, currencyOut, isSelectCurrencyManual, syncTokenSymbolToUrl, isLoadedTokenDefault, disabled])
 }

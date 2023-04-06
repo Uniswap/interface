@@ -5,6 +5,7 @@ import { useAckPrivateAnnouncementsByIdsMutation, useGetPrivateAnnouncementsById
 
 import { getAnnouncementsTemplateIds } from 'constants/env'
 import { useActiveWeb3React } from 'hooks'
+import useDebounce from 'hooks/useDebounce'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import ActiveAlerts from 'pages/NotificationCenter/PriceAlerts/ActiveAlerts'
 import AlertsHistory from 'pages/NotificationCenter/PriceAlerts/AlertsHistory'
@@ -47,7 +48,8 @@ const useAckAnnouncement = (templateIds: string) => {
 const PriceAlerts = () => {
   const { tab, ...rest } = useParsedQueryString<{ tab: Tab }>()
   const [currentTab, setCurrentTab] = useState(tab || Tab.ACTIVE)
-  const [disabledClearAll, setDisabledClearAll] = useState(true)
+  const [_disabledClearAll, setDisabledClearAll] = useState(true)
+  const disabledClearAll = useDebounce(_disabledClearAll, 50)
 
   const navigate = useNavigate()
   const onSetTab = (tab: Tab) => {

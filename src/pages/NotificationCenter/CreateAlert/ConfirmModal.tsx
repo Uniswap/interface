@@ -157,10 +157,12 @@ export default function ConfirmModal({
               <Trans>the price of</Trans>
             </Label>
 
-            <CurrencyLogo currency={currencyIn} size={'16px'} />
-            <Value>
-              {uint256ToFraction(tokenInAmount, currencyIn.decimals)?.toSignificant(6)} {currencyIn.symbol}
-            </Value>
+            <Flex sx={{ gap: '6px' }}>
+              <CurrencyLogo currency={currencyIn} size={'16px'} />
+              <Value>
+                {uint256ToFraction(tokenInAmount, currencyIn.decimals)?.toSignificant(6)} {currencyIn.symbol}
+              </Value>
+            </Flex>
 
             <Label>
               <Trans>to</Trans>
@@ -185,7 +187,7 @@ export default function ConfirmModal({
             </Value>
 
             <Value>
-              {threshold} {currencyOut.symbol} per token
+              {threshold} {currencyOut.symbol}
             </Value>
           </Row>
 

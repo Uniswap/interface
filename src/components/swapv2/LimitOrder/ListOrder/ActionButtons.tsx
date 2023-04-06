@@ -119,7 +119,7 @@ const ActionButtons = ({
               <MouseoverTooltipDesktopOnly
                 text={!isDisabledCopy ? networkInfo.etherscanName : ''}
                 placement="top"
-                width="150px"
+                width="fit-content"
               >
                 <IconWrap color={isChildren ? '' : theme.primary} isDisabled={isDisabledCopy} style={itemStyle}>
                   <ExternalLink href={chainId ? getEtherscanLink(chainId, txHash, 'transaction') : ''}>

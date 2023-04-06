@@ -191,10 +191,14 @@ const Close = styled(X)`
   position: absolute;
   right: 12px;
   top: 12px;
+  width: 18px;
+  height: 18px;
   cursor: pointer;
   z-index: 1;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    right: calc(12px + ${PADDING_MOBILE});
+    right: calc(12px + ${PADDING_MOBILE}); 
+    width: 22px;
+    height: 22px;
   `}
 `
 export default function SnippetPopup({
@@ -238,7 +242,6 @@ export default function SnippetPopup({
         ))}
       </Swiper>
       <Close
-        size={18}
         color={theme.subText}
         onClick={() => {
           clearAll()

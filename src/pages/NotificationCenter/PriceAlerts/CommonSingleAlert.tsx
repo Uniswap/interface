@@ -22,6 +22,9 @@ const Wrapper = styled.div`
       background: ${({ theme }) => theme.buttonBlack};
     }
   }
+  :last-child {
+    border: none;
+  }
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 16px 0;
   `}

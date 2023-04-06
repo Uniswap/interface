@@ -18,16 +18,16 @@ import useTheme from 'hooks/useTheme'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { useUserAddedTokens, useUserFavoriteTokens } from 'state/user/hooks'
 import { useCurrencyBalances } from 'state/wallet/hooks'
-import { formattedNum } from 'utils'
+import { formatDollarSignificantAmount } from 'utils'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 
 import ImportRow from './ImportRow'
 
 const StyledBalanceText = styled(Text)`
-  white-space: nowrap;
-  overflow: hidden;
-  max-width: 5rem;
-  text-overflow: ellipsis;
+  font-size: 16px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+     font-size : 14px;
+  `}
 `
 
 const FavoriteButton = styled(Star)`
@@ -187,7 +187,7 @@ export function CurrencyRow({
         </RowFixed>
         {usdBalance !== undefined && !hideBalance && (
           <Text fontSize={'12px'} color={theme.subText}>
-            {formattedNum(usdBalance + '', true)}
+            {formatDollarSignificantAmount(usdBalance, 2)}
           </Text>
         )}
       </Column>

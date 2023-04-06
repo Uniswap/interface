@@ -16,6 +16,7 @@ const Bar = styled.div<{ percent: number; color?: string }>`
   height: 100%;
   background: ${({ theme, color }) => color || theme.primary};
   width: ${({ percent }) => percent}%;
+  ${({ percent }) => percent !== 0 && 'min-width: 8px;'};
   position: absolute;
   left: 0;
   top: 0;
@@ -51,7 +52,7 @@ export default function ProgressBar({
         </Flex>
       ) : null}
       <Wrapper height={height} width={width ?? 'unset'} background={backgroundColor}>
-        <Bar percent={Math.min(100, percent)} color={color} />
+        <Bar percent={Math.min(100, percent < 0.5 ? 0 : percent)} color={color} />
       </Wrapper>
     </Flex>
   )

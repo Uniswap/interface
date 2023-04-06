@@ -116,7 +116,7 @@ export const MENU_TITLE = {
   [PrivateAnnouncementType.LIMIT_ORDER]: t`Limit Orders`,
   [PrivateAnnouncementType.TRENDING_SOON_TOKEN]: t`Trending Soon Tokens`,
   [PrivateAnnouncementType.PRICE_ALERT]: t`Price Alerts`,
-  [PrivateAnnouncementType.POOL_POSITION]: t`My Elastic Pools`,
+  [PrivateAnnouncementType.POOL_POSITION]: t`Elastic Liquidity Positions`,
 }
 
 const MenuForMobile = ({ unread }: { unread: Unread }) => {
