@@ -1,4 +1,5 @@
 import userEvent from '@testing-library/user-event'
+import { useWeb3React } from '@web3-react/core'
 import { useWalletDrawer } from 'components/WalletDropdown'
 import { fireEvent, render, screen } from 'test-utils'
 
@@ -9,10 +10,7 @@ jest.mock('@web3-react/core', () => {
   const web3React = jest.requireActual('@web3-react/core')
   return {
     ...web3React,
-    useWeb3React: () => ({
-      account: undefined,
-      isActive: false,
-    }),
+    useWeb3React: jest.fn(),
   }
 })
 
@@ -67,7 +65,11 @@ describe('SwapBuyFiatButton.tsx', () => {
   })
 
   beforeEach(() => {
-    jest.resetModules()
+    jest.resetAllMocks()
+    ;(useWeb3React as jest.Mock).mockReturnValue({
+      account: undefined,
+      isActive: false,
+    })
   })
 
   it('matches base snapshot', () => {
@@ -88,18 +90,10 @@ describe('SwapBuyFiatButton.tsx', () => {
   })
 
   it('fiat on ramps available in region, account connected', async () => {
-    jest.doMock('@web3-react/core', () => {
-      const web3React = jest.requireActual('@web3-react/core')
-      return {
-        ...web3React,
-        useWeb3React: () => ({
-          account: '0x52270d8234b864dcAC9947f510CE9275A8a116Db',
-          isActive: true,
-        }),
-      }
+    ;(useWeb3React as jest.Mock).mockReturnValue({
+      account: '0x52270d8234b864dcAC9947f510CE9275A8a116Db',
+      isActive: true,
     })
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    require('@web3-react/core')
     mockUseFiatOnrampAvailability.mockImplementation(mockUseFiatOnRampsAvailable)
     mockUseWalletDrawer.mockImplementation(() => [false, toggleWalletDrawer])
     mockUseOpenModal.mockImplementation(() => useOpenModal)

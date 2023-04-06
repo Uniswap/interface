@@ -81,7 +81,7 @@ export interface PopoverProps {
   offsetY?: number
   hideArrow?: boolean
   showInline?: boolean
-  // time delay in milliseconds before the popover shows
+  /** time delay in milliseconds before the popover shows */
   delayShowTimeout?: number
   style?: CSSProperties
 }

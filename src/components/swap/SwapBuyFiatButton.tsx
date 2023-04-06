@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import { ButtonText } from 'components/Button'
 import { MouseoverTooltipContent } from 'components/Tooltip'
 import { useWalletDrawer } from 'components/WalletDropdown'
@@ -43,10 +44,6 @@ const StyledTextButton = styled(ButtonText)`
 const POPOVER_DELAY_BEFORE_SHOW_MS = 500
 
 export default function SwapBuyFiatButton() {
-  // Importing useWeb3React here is necessary for mocking different behavior in different tests in SwapBuyFiatButton.test.tsx
-
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { useWeb3React } = require('@web3-react/core')
   const { account } = useWeb3React()
   const openFiatOnRampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const [buyFiatFlowCompleted, setBuyFiatFlowCompleted] = useBuyFiatFlowCompleted()
