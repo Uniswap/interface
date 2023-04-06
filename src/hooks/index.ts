@@ -27,7 +27,9 @@ export function useActiveWeb3React(): {
   isSolana: boolean
   networkInfo: NetworkInfo
 } {
-  const chainIdState = useSelector<AppState, ChainId>(state => state.user.chainId) || ChainId.MAINNET
+  const rawChainIdState = useSelector<AppState, ChainId>(state => state.user.chainId) || ChainId.MAINNET
+  const chainIdState = ChainId[rawChainIdState] ? rawChainIdState : ChainId.MAINNET
+
   /**Hook for EVM infos */
   const { connector: connectedConnectorEVM, active: isConnectedEVM, account, chainId: chainIdEVM } = useWeb3React()
   /**Hook for Solana infos */
