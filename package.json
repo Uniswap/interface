@@ -50,10 +50,7 @@
         "lines": 9,
         "statements": 9
       }
-    },
-    "setupFilesAfterEnv": [
-      "setupJest.ts"
-    ]
+    }
   },
   "browserslist": {
     "production": [

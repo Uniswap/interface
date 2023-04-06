@@ -23,7 +23,7 @@
     "strict": true,
     "strictNullChecks": true,
     "target": "es5",
-    "types": ["jest", "./setupJest"],
+    "types": ["jest"],
     "useUnknownInCatchVariables": false
   },
   "exclude": ["node_modules", "cypress"],

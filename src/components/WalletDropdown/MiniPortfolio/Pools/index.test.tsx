@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { SupportedChainId, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position } from '@uniswap/v3-sdk'
 import { USDC_MAINNET } from 'constants/tokens'
-import { render } from 'test-utils'
+import { mocked, render } from 'test-utils'
 
 import Pools from '.'
 import useMultiChainPositions from './useMultiChainPositions'
@@ -57,7 +57,7 @@ const useMultiChainPositionsReturnValue = {
 }
 
 beforeEach(() => {
-  jest.asMock(useMultiChainPositions).mockReturnValue(useMultiChainPositionsReturnValue)
+  mocked(useMultiChainPositions).mockReturnValue(useMultiChainPositionsReturnValue)
 })
 test('Pools should render LP positions', () => {
   const props = { account: owner }

@@ -5,7 +5,7 @@ import { USDC_MAINNET } from 'constants/tokens'
 import { useToken } from 'hooks/Tokens'
 import { usePool } from 'hooks/usePools'
 import { PoolState } from 'hooks/usePools'
-import { render } from 'test-utils'
+import { mocked, render } from 'test-utils'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 import PositionListItem from '.'
@@ -33,18 +33,16 @@ const susToken0Address = '0x39AA39c021dfbaE8faC545936693aC917d5E7563'
 
 beforeEach(() => {
   const susToken0 = new Token(1, susToken0Address, 8, 'https://www.example.com', 'example.com coin')
-  jest.asMock(useToken).mockImplementation((tokenAddress?: string | null | undefined) => {
+  mocked(useToken).mockImplementation((tokenAddress?: string | null | undefined) => {
     if (!tokenAddress) return null
     if (tokenAddress === susToken0.address) return susToken0
     return new Token(1, tokenAddress, 8, 'symbol', 'name')
   })
-  jest
-    .asMock(usePool)
-    .mockReturnValue([
-      PoolState.EXISTS,
-      new Pool(susToken0, USDC_MAINNET, FeeAmount.HIGH, '2437312313659959819381354528', '10272714736694327408', -69633),
-    ])
-  jest.asMock(unwrappedToken).mockReturnValue(susToken0)
+  mocked(usePool).mockReturnValue([
+    PoolState.EXISTS,
+    new Pool(susToken0, USDC_MAINNET, FeeAmount.HIGH, '2437312313659959819381354528', '10272714736694327408', -69633),
+  ])
+  mocked(unwrappedToken).mockReturnValue(susToken0)
 })
 
 test('PositionListItem should not render when token0 symbol contains a url', () => {

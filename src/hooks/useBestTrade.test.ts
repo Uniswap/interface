@@ -4,6 +4,7 @@ import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { RouterPreference } from 'state/routing/slice'
 import { TradeState } from 'state/routing/types'
 import { useClientSideRouter } from 'state/user/hooks'
+import { mocked } from 'test-utils'
 
 import { useRoutingAPITrade } from '../state/routing/useRoutingAPITrade'
 import useAutoRouterSupported from './useAutoRouterSupported'
@@ -31,25 +32,25 @@ jest.mock('state/user/hooks')
 
 // helpers to set mock expectations
 const expectRouterMock = (state: TradeState) => {
-  jest.asMock(useRoutingAPITrade).mockReturnValue({ state, trade: undefined })
+  mocked(useRoutingAPITrade).mockReturnValue({ state, trade: undefined })
 }
 
 const expectClientSideMock = (state: TradeState) => {
-  jest.asMock(useClientSideV3Trade).mockReturnValue({ state, trade: undefined })
+  mocked(useClientSideV3Trade).mockReturnValue({ state, trade: undefined })
 }
 
 beforeEach(() => {
   // ignore debounced value
-  jest.asMock(useDebounce).mockImplementation((value) => value)
+  mocked(useDebounce).mockImplementation((value) => value)
 
-  jest.asMock(useIsWindowVisible).mockReturnValue(true)
-  jest.asMock(useAutoRouterSupported).mockReturnValue(true)
-  jest.asMock(useClientSideRouter).mockReturnValue([true, () => undefined])
+  mocked(useIsWindowVisible).mockReturnValue(true)
+  mocked(useAutoRouterSupported).mockReturnValue(true)
+  mocked(useClientSideRouter).mockReturnValue([true, () => undefined])
 })
 
 describe('#useBestV3Trade ExactIn', () => {
   it('does not compute routing api trade when routing API is not supported', async () => {
-    jest.asMock(useAutoRouterSupported).mockReturnValue(false)
+    mocked(useAutoRouterSupported).mockReturnValue(false)
     expectRouterMock(TradeState.INVALID)
     expectClientSideMock(TradeState.VALID)
 
@@ -61,7 +62,7 @@ describe('#useBestV3Trade ExactIn', () => {
   })
 
   it('does not compute routing api trade when window is not focused', async () => {
-    jest.asMock(useIsWindowVisible).mockReturnValue(false)
+    mocked(useIsWindowVisible).mockReturnValue(false)
     expectRouterMock(TradeState.NO_ROUTE_FOUND)
     expectClientSideMock(TradeState.VALID)
 
@@ -124,7 +125,7 @@ describe('#useBestV3Trade ExactIn', () => {
 
 describe('#useBestV3Trade ExactOut', () => {
   it('does not compute routing api trade when routing API is not supported', () => {
-    jest.asMock(useAutoRouterSupported).mockReturnValue(false)
+    mocked(useAutoRouterSupported).mockReturnValue(false)
     expectRouterMock(TradeState.INVALID)
     expectClientSideMock(TradeState.VALID)
 
@@ -141,7 +142,7 @@ describe('#useBestV3Trade ExactOut', () => {
   })
 
   it('does not compute routing api trade when window is not focused', () => {
-    jest.asMock(useIsWindowVisible).mockReturnValue(false)
+    mocked(useIsWindowVisible).mockReturnValue(false)
     expectRouterMock(TradeState.NO_ROUTE_FOUND)
     expectClientSideMock(TradeState.VALID)
 

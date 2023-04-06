@@ -3,6 +3,7 @@ import '@sentry/tracing' // required to populate Sentry.startTransaction, which 
 import * as Sentry from '@sentry/react'
 import { Transaction } from '@sentry/tracing'
 import assert from 'assert'
+import { mocked } from 'test-utils'
 
 import { trace } from './trace'
 
@@ -13,7 +14,7 @@ jest.mock('@sentry/react', () => {
 })
 
 function getTransaction(index = 0): Transaction {
-  const transactions = jest.asMock(Sentry.startTransaction).mock.results.map(({ value }) => value)
+  const transactions = mocked(Sentry.startTransaction).mock.results.map(({ value }) => value)
   expect(transactions).toHaveLength(index + 1)
   const transaction = transactions[index]
   expect(transaction).toBeDefined()
@@ -22,8 +23,7 @@ function getTransaction(index = 0): Transaction {
 
 describe('trace', () => {
   beforeEach(() => {
-    jest
-      .asMock(Sentry.startTransaction)
+    mocked(Sentry.startTransaction)
       .mockReset()
       .mockImplementation((context) => {
         const transaction: Transaction = jest.requireActual('@sentry/react').startTransaction(context)
