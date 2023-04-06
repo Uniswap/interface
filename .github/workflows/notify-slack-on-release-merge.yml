@@ -1,0 +1,41 @@
+name: Slack notifications for releases/* merges
+
+# This CI job will push notifications to Slack whenever code is merged into any of the
+# release branches.
+
+on:
+  push:
+    branches:
+      - 'releases/*'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  notify-slack:
+    name: 'Emit Slack notification(s)'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send custom JSON data to Slack workflow
+        id: slack
+        uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
+        with:
+          payload: |
+            {
+              "text": "This is a really cool test!",
+              "blocks": [
+                {
+                    "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Cool tests can be cool"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
