@@ -4,7 +4,6 @@ import {
   AMPLITUDE_API_URL,
   AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY,
   DEBUG,
-  DEMO_SEED_PHRASE,
   INFURA_PROJECT_ID,
   MOONPAY_API_KEY,
   MOONPAY_API_URL,
@@ -30,7 +29,6 @@ export interface Config {
   amplitudeExperimentsDeploymentKey: string
   amplitudeApiUrl: string
   debug: boolean
-  demoSeedPhrase: string
   moonpayApiKey: string
   moonpayApiUrl: string
   moonpayWidgetApiUrl: string
@@ -53,7 +51,6 @@ const _config: Config = {
     process.env.AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY || AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY,
   alchemyApiKey: process.env.ALCHEMY_API_KEY || ALCHEMY_API_KEY,
   debug: parseBoolean(DEBUG),
-  demoSeedPhrase: process.env.DEMO_SEED_PHRASE || DEMO_SEED_PHRASE,
   moonpayApiKey: process.env.MOONPAY_API_KEY || MOONPAY_API_KEY,
   moonpayApiUrl: process.env.MOONPAY_API_URL || MOONPAY_API_URL,
   moonpayWidgetApiUrl: process.env.MOONPAY_WIDGET_API_URL || MOONPAY_WIDGET_API_URL,

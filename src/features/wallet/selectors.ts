@@ -2,7 +2,6 @@ import { createSelector, Selector } from '@reduxjs/toolkit'
 import type { RootState } from 'src/app/rootReducer'
 import { TokenSortableField } from 'src/data/__generated__/types-and-hooks'
 import { TokensOrderBy } from 'src/features/explore/types'
-import { DEMO_ACCOUNT_ADDRESS } from 'src/features/wallet/accounts/useTestAccount'
 import { Account, AccountType, SignerMnemonicAccount } from './accounts/types'
 
 const DEFAULT_TOKENS_ORDER_BY = TokenSortableField.Volume
@@ -31,11 +30,7 @@ export const selectViewOnlyAccounts = createSelector(selectAccounts, (accounts) 
 
 export const selectSortedSignerMnemonicAccounts = createSelector(selectAccounts, (accounts) =>
   Object.values(accounts)
-    .filter(
-      // We filter out demo account to avoid account creation issues
-      (account) =>
-        account.type === AccountType.SignerMnemonic && account.address !== DEMO_ACCOUNT_ADDRESS
-    )
+    .filter((account) => account.type === AccountType.SignerMnemonic)
     .sort(
       (a, b) =>
         (a as SignerMnemonicAccount).derivationIndex - (b as SignerMnemonicAccount).derivationIndex
@@ -46,10 +41,7 @@ export const selectSortedSignerMnemonicAccounts = createSelector(selectAccounts,
 export const selectSignerMnemonicAccountExists = createSelector(
   selectNonPendingAccounts,
   (accounts) =>
-    Object.values(accounts).findIndex((value) => {
-      // We filter out demo account to avoid account creation issues
-      return value.type === AccountType.SignerMnemonic && value.address !== DEMO_ACCOUNT_ADDRESS
-    }) >= 0
+    Object.values(accounts).findIndex((value) => value.type === AccountType.SignerMnemonic) >= 0
 )
 
 export const selectActiveAccountAddress = (state: RootState): string | null =>

@@ -3,7 +3,7 @@
 import { BigNumber } from 'ethers'
 import mockdate from 'mockdate'
 import createMigrate from 'src/app/createMigrate'
-import { migrations } from 'src/app/migrations'
+import { migrations, OLD_DEMO_ACCOUNT_ADDRESS } from 'src/app/migrations'
 import {
   getSchema,
   initialSchema,
@@ -70,7 +70,6 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { Account, AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
-import { DEMO_ACCOUNT_ADDRESS } from 'src/features/wallet/accounts/useTestAccount'
 import { initialWalletState } from 'src/features/wallet/walletSlice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 import { account, fiatOnRampTxDetailsFailed, txDetailsConfirmed } from 'src/test/fixtures'
@@ -452,7 +451,7 @@ describe('Redux state migrations', () => {
   })
 
   it('migrates from v9 to v10', () => {
-    const TEST_ADDRESSES = ['0xTest', DEMO_ACCOUNT_ADDRESS, '0xTest2', '0xTest3']
+    const TEST_ADDRESSES = ['0xTest', OLD_DEMO_ACCOUNT_ADDRESS, '0xTest2', '0xTest3']
     const TEST_IMPORT_TIME_MS = 12345678912345
 
     const accounts = TEST_ADDRESSES.reduce((acc, address) => {
@@ -474,11 +473,11 @@ describe('Redux state migrations', () => {
     }
 
     expect(Object.values(v9SchemaStub.wallet.accounts)).toHaveLength(4)
-    expect(Object.keys(v9SchemaStub.wallet.accounts)).toContain(DEMO_ACCOUNT_ADDRESS)
+    expect(Object.keys(v9SchemaStub.wallet.accounts)).toContain(OLD_DEMO_ACCOUNT_ADDRESS)
 
     const migratedSchema = migrations[10](v9SchemaStub)
     expect(Object.values(migratedSchema.wallet.accounts)).toHaveLength(3)
-    expect(Object.keys(migratedSchema.wallet.accounts)).not.toContain(DEMO_ACCOUNT_ADDRESS)
+    expect(Object.keys(migratedSchema.wallet.accounts)).not.toContain(OLD_DEMO_ACCOUNT_ADDRESS)
   })
 
   it('migrates from v10 to v11', () => {

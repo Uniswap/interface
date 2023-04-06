@@ -59,7 +59,6 @@ import {
 } from 'src/features/telemetry/constants'
 import { useLastBalancesReporter } from 'src/features/telemetry/hooks'
 import { AccountType } from 'src/features/wallet/accounts/types'
-import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
@@ -80,7 +79,6 @@ export enum TabIndex {
  * Borrowed from: https://stormotion.io/blog/how-to-create-collapsing-tab-header-using-react-native/
  */
 export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Element {
-  useTestAccount() // imports test account for easy development/testing
   const activeAccount = useActiveAccountWithThrow()
   const { t } = useTranslation()
   const theme = useAppTheme()
