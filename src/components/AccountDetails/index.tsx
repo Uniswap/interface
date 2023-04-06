@@ -9,18 +9,18 @@ import { AutoRow } from '../Row'
 import Copy from './Copy'
 import Transaction from './Transaction'
 
-import { SUPPORTED_WALLETS } from '../../constants'
-import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { getEtherscanLink } from '../../utils'
-import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
+import { ExternalLink as LinkIcon } from 'react-feather'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
-import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import PortisIcon from '../../assets/images/portisIcon.png'
-import Identicon from '../Identicon'
-import { ButtonSecondary } from '../Button'
-import { ExternalLink as LinkIcon } from 'react-feather'
+import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
+import { ReactComponent as Close } from '../../assets/images/x.svg'
+import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
+import { SUPPORTED_WALLETS } from '../../constants'
 import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
+import { getEtherscanLink } from '../../utils'
+import { ButtonSecondary } from '../Button'
+import Identicon from '../Identicon'
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
@@ -358,7 +358,7 @@ export default function AccountDetails({
                             href={chainId && getEtherscanLink(chainId, ENSName, 'address')}
                           >
                             <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
+                            <span style={{ marginLeft: '4px' }}>View on Taiko</span>
                           </AddressLink>
                         )}
                       </div>
@@ -380,7 +380,7 @@ export default function AccountDetails({
                             href={getEtherscanLink(chainId, account, 'address')}
                           >
                             <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
+                            <span style={{ marginLeft: '4px' }}>View on Taiko</span>
                           </AddressLink>
                         )}
                       </div>

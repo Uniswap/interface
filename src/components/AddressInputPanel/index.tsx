@@ -1,11 +1,11 @@
-import React, { useContext, useCallback } from 'react'
+import React, { useCallback, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import useENS from '../../hooks/useENS'
 import { useActiveWeb3React } from '../../hooks'
+import useENS from '../../hooks/useENS'
 import { ExternalLink, TYPE } from '../../theme'
+import { getEtherscanLink } from '../../utils'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
-import { getEtherscanLink } from '../../utils'
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -103,7 +103,7 @@ export default function AddressInputPanel({
               </TYPE.black>
               {address && chainId && (
                 <ExternalLink href={getEtherscanLink(chainId, name ?? address, 'address')} style={{ fontSize: '14px' }}>
-                  (View on Etherscan)
+                  (View on Taiko)
                 </ExternalLink>
               )}
             </RowBetween>
