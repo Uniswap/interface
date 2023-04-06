@@ -1,7 +1,7 @@
 import { t } from '@lingui/macro'
 import Column from 'components/Column'
+import { useWalletDrawer } from 'components/Portfolio'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { useWalletDrawer } from 'components/WalletDropdown'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { TransactionStatus, useTransactionListQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { PollingInterval } from 'graphql/data/util'

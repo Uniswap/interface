@@ -63,7 +63,7 @@ const Scrim = ({ onClick, open }: { onClick: () => void; open: boolean }) => {
   return <ScrimBackground onClick={onClick} open={open} />
 }
 
-const WalletDropdownScrollWrapper = styled.div`
+const PortfolioDrawerScrollWrapper = styled.div`
   overflow: hidden;
   &:hover {
     overflow-y: auto;
@@ -76,7 +76,7 @@ const WalletDropdownScrollWrapper = styled.div`
   border-radius: 12px;
 `
 
-const WalletDropdownWrapper = styled.div<{ open: boolean }>`
+const PortfolioDrawerWrapper = styled.div<{ open: boolean }>`
   position: fixed;
   top: ${DRAWER_MARGIN};
   right: ${({ open }) => (open ? DRAWER_MARGIN : '-' + DRAWER_WIDTH)};
@@ -145,7 +145,7 @@ const CloseDrawer = styled.div`
   }
 `
 
-function WalletDropdown() {
+function PortfolioDrawer() {
   const [walletDrawerOpen, toggleWalletDrawer] = useWalletDrawer()
   const scrollRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -200,14 +200,14 @@ function WalletDropdown() {
         </TraceEvent>
       )}
       <Scrim onClick={toggleWalletDrawer} open={walletDrawerOpen} />
-      <WalletDropdownWrapper open={walletDrawerOpen}>
+      <PortfolioDrawerWrapper open={walletDrawerOpen}>
         {/* id used for child InfiniteScrolls to reference when it has reached the bottom of the component */}
-        <WalletDropdownScrollWrapper ref={scrollRef} id="wallet-dropdown-scroll-wrapper">
+        <PortfolioDrawerScrollWrapper ref={scrollRef} id="wallet-dropdown-scroll-wrapper">
           <DefaultMenu />
-        </WalletDropdownScrollWrapper>
-      </WalletDropdownWrapper>
+        </PortfolioDrawerScrollWrapper>
+      </PortfolioDrawerWrapper>
     </>
   )
 }
 
-export default WalletDropdown
+export default PortfolioDrawer

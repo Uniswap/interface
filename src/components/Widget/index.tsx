@@ -16,7 +16,7 @@ import {
   SwapWidgetSkeleton,
 } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
-import { useToggleWalletDrawer } from 'components/WalletDropdown'
+import { useToggleWalletDrawer } from 'components/Portfolio'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import {
   formatPercentInBasisPointsNumber,

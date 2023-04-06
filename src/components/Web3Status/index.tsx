@@ -4,8 +4,8 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap
 import { useWeb3React } from '@web3-react/core'
 import Loader from 'components/Icons/LoadingSpinner'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
-import WalletDropdown, { useWalletDrawer } from 'components/WalletDropdown'
-import PrefetchBalancesWrapper from 'components/WalletDropdown/PrefetchBalancesWrapper'
+import PortfolioDrawer, { useWalletDrawer } from 'components/Portfolio'
+import PrefetchBalancesWrapper from 'components/Portfolio/PrefetchBalancesWrapper'
 import { useGetConnection } from 'connection'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
@@ -241,13 +241,12 @@ function Web3StatusInner() {
   }
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export default function Web3Status() {
   return (
     <PrefetchBalancesWrapper>
       <Web3StatusInner />
       <Portal>
-        <WalletDropdown />
+        <PortfolioDrawer />
       </Portal>
     </PrefetchBalancesWrapper>
   )
