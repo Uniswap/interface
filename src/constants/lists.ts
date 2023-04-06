@@ -10,7 +10,6 @@ const COINGECKO_ARBITRUM_LIST = 'https://tokens.coingecko.com/arbitrum-one/all.j
 const COINGECKO_OPTIMISM_LIST = 'https://tokens.coingecko.com/optimistic-ethereum/all.json'
 const COINGECKO_CELO_LIST = 'https://tokens.coingecko.com/celo/all.json'
 const COINGECKO_POLYGON_LIST = 'https://tokens.coingecko.com/polygon-pos/all.json'
-
 const COMPOUND_LIST = 'https://raw.githubusercontent.com/compound-finance/token-list/master/compound.tokenlist.json'
 const GEMINI_LIST = 'https://www.gemini.com/uniswap/manifest.json'
 const KLEROS_LIST = 't2crtokens.eth'
