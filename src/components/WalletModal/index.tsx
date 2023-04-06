@@ -21,7 +21,7 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { flexColumnNoWrap } from 'theme/styles'
 
-import ConnectionErrorView from './ConnectionErrorView'
+import ConnectionErrorModal from './ConnectionErrorModal'
 import Option from './Option'
 import PrivacyPolicyNotice from './PrivacyPolicyNotice'
 
@@ -161,10 +161,9 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
       } catch (error) {
         if (didUserReject(connection, error)) {
           setPendingConnection(undefined)
-        } // Prevents showing error caused by MetaMask being prompted twice
-        else if (error?.code !== ErrorCode.MM_ALREADY_PENDING) {
+        } else {
           console.debug(`web3-react connection error: ${error}`)
-          setPendingError(error.message)
+          setPendingError(error)
 
           sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
             result: WalletConnectionResult.FAILED,
@@ -180,34 +179,33 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
 
   return (
     <Wrapper data-testid="wallet-modal">
+      <ConnectionErrorModal
+        error={pendingError}
+        openOptions={openOptions}
+        retryActivation={() => pendingConnection && tryActivation(pendingConnection)}
+      />
       <AutoRow justify="space-between" width="100%" marginBottom="16px">
         <ThemedText.SubHeader fontWeight={500}>Connect a wallet</ThemedText.SubHeader>
         <IconButton Icon={Settings} onClick={openSettings} data-testid="wallet-settings" />
       </AutoRow>
-      {pendingError ? (
-        pendingConnection && (
-          <ConnectionErrorView openOptions={openOptions} retryActivation={() => tryActivation(pendingConnection)} />
-        )
-      ) : (
-        <AutoColumn gap="16px">
-          <OptionGrid data-testid="option-grid">
-            {connections.map((connection) =>
-              // Hides Uniswap Wallet if mgtm is disabled
-              connection.shouldDisplay() && !(connection.type === ConnectionType.UNIWALLET && !mgtmEnabled) ? (
-                <Option
-                  key={connection.getName()}
-                  connection={connection}
-                  activate={() => tryActivation(connection)}
-                  pendingConnectionType={pendingConnection?.type}
-                />
-              ) : null
-            )}
-          </OptionGrid>
-          <PrivacyPolicyWrapper>
-            <PrivacyPolicyNotice />
-          </PrivacyPolicyWrapper>
-        </AutoColumn>
-      )}
+      <AutoColumn gap="16px">
+        <OptionGrid data-testid="option-grid">
+          {connections.map((connection) =>
+            // Hides Uniswap Wallet if mgtm is disabled
+            connection.shouldDisplay() && !(connection.type === ConnectionType.UNIWALLET && !mgtmEnabled) ? (
+              <Option
+                key={connection.getName()}
+                connection={connection}
+                activate={() => tryActivation(connection)}
+                pendingConnectionType={pendingConnection?.type}
+              />
+            ) : null
+          )}
+        </OptionGrid>
+        <PrivacyPolicyWrapper>
+          <PrivacyPolicyNotice />
+        </PrivacyPolicyWrapper>
+      </AutoColumn>
     </Wrapper>
   )
 }
