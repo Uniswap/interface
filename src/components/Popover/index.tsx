@@ -11,7 +11,7 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   pointer-events: none;
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.show ? 1 : 0)};
-  transition: visibility 125ms ease-in-out, opacity 125ms ease-in-out;
+  transition: visibility 150ms linear, opacity 150ms linear;
   color: ${({ theme }) => theme.textSecondary};
 `
 
