@@ -915,18 +915,18 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.15.5)
     - SDWebImageWebPCoder (~> 0.8.4)
-  - RNFBApp (14.11.1):
+  - RNFBApp (14.12.0):
     - Firebase/CoreOnly (= 8.8.0)
     - React-Core
-  - RNFBAuth (14.5.1):
+  - RNFBAuth (14.12.0):
     - Firebase/Auth (= 8.8.0)
     - React-Core
     - RNFBApp
-  - RNFBFirestore (14.5.1):
+  - RNFBFirestore (14.12.0):
     - Firebase/Firestore (= 8.8.0)
     - React-Core
     - RNFBApp
-  - RNFBRemoteConfig (14.2.2):
+  - RNFBRemoteConfig (14.12.0):
     - Firebase/RemoteConfig (= 8.8.0)
     - React-Core
     - RNFBApp
@@ -1394,10 +1394,10 @@ SPEC CHECKSUMS:
   RNCMaskedView: bc0170f389056201c82a55e242e5d90070e18e5a
   RNDeviceInfo: 0a7c1d2532aa7691f9b9925a27e43af006db4dae
   RNFastImage: 246de6b52d7642992cfd01e2005dda36d00a6660
-  RNFBApp: 51f0e199c968b7b5792fb1445e75d6e65221cfec
-  RNFBAuth: ae42431577d611536eaf14d1b24e52b4d4242a19
-  RNFBFirestore: 0b505d0b0ab2de6ca1555af7dfe092d42cec0a52
-  RNFBRemoteConfig: c1248accec3d59d6f09a526e5b04405a17e8093d
+  RNFBApp: 728d00a39edf445fb44b0bc11a465a73d69d097e
+  RNFBAuth: 968868437ff19cb26579ee11929a2ab0e7fb0880
+  RNFBFirestore: 4019488f872b1423a79c91ea25e54c570f6b6c1c
+  RNFBRemoteConfig: a735b4f7a4ef15adb57b51f0041cfba2925a4393
   RNFlashList: 18d906a373da5ff16776e5013df9495d826edc7e
   RNGestureHandler: 920eb17f5b1e15dae6e5ed1904045f8f90e0b11e
   RNImageColors: fd9777591fc765780e035f4bec7a42edabc86eb4
