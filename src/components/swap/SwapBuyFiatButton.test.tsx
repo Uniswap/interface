@@ -22,7 +22,7 @@ jest.mock('components/WalletDropdown')
 const mockUseWalletDrawer = useWalletDrawer as jest.MockedFunction<typeof useWalletDrawer>
 
 const mockUseFiatOnRampsUnavailable = (shouldCheck: boolean) => {
-return {
+  return {
     available: false,
     availabilityChecked: shouldCheck,
     error: null,
