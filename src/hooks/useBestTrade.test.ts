@@ -4,7 +4,7 @@ import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { RouterPreference } from 'state/routing/slice'
 import { TradeState } from 'state/routing/types'
 import { useClientSideRouter } from 'state/user/hooks'
-import { mocked } from 'test-utils'
+import { mocked } from 'test-utils/mocked'
 
 import { useRoutingAPITrade } from '../state/routing/useRoutingAPITrade'
 import useAutoRouterSupported from './useAutoRouterSupported'

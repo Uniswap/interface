@@ -3,7 +3,7 @@ import '@sentry/tracing' // required to populate Sentry.startTransaction, which 
 import * as Sentry from '@sentry/react'
 import { Transaction } from '@sentry/tracing'
 import assert from 'assert'
-import { mocked } from 'test-utils'
+import { mocked } from 'test-utils/mocked'
 
 import { trace } from './trace'
 

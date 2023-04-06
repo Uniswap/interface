@@ -1,6 +1,6 @@
 import * as chains from 'constants/chains'
 import * as useV3Positions from 'hooks/useV3Positions'
-import { render, screen } from 'test-utils'
+import { render, screen } from 'test-utils/render'
 
 import Pool from '.'
 

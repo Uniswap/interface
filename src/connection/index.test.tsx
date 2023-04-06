@@ -1,5 +1,5 @@
 import { ConnectionType, getConnections, useGetConnection } from 'connection'
-import { renderHook } from 'test-utils'
+import { renderHook } from 'test-utils/render'
 
 beforeEach(() => {
   jest.resetModules()

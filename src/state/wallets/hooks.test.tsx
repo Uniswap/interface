@@ -1,4 +1,4 @@
-import { act, renderHook } from 'test-utils'
+import { act, renderHook } from 'test-utils/render'
 
 import { useConnectedWallets } from './hooks'
 import { Wallet } from './types'
