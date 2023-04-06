@@ -101,7 +101,7 @@ export function ActivityTab({ account }: { account: string }) {
   const [drawerOpen, toggleWalletDrawer] = useWalletDrawer()
   const [lastFetched, setLastFetched] = useAtom(lastFetchedAtom)
 
-  const localMap = useLocalActivities()
+  const localMap = useLocalActivities(account)
 
   const { data, loading, refetch } = useTransactionListQuery({
     variables: { account },
