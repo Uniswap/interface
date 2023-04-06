@@ -51,9 +51,7 @@ export default async function fetchTokenList(
     throw new Error('Unrecognized list URL protocol.')
   }
 
-  /**
-   * Try each of the derived URLs until one succeeds.
-   */
+  // Try each of the derived URLs until one succeeds.
   for (let i = 0; i < urls.length; i++) {
     const url = urls[i]
     let response
