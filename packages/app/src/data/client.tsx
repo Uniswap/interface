@@ -8,7 +8,7 @@ import {
 import { PropsWithChildren } from 'react'
 
 const httpLink = createHttpLink({
-  uri: process.env.UNISWAP_APP_URL,
+  uri: process.env.UNISWAP_API_URL,
   headers: {
     'Content-Type': 'application/json',
     'X-API-KEY': process.env.UNISWAP_API_KEY ?? '',
