@@ -1,0 +1,25 @@
+name: 1 | Push changes to releases/staging
+
+# This CI job is responsible for pushing the current contents of the `main` branch to the
+# releases/staging branch, which will in turn kick off a deploy to the staging environment.
+
+on:
+  workflow_dispatch:
+
+# https://stackoverflow.com/questions/57921401/push-to-origin-from-github-action
+jobs:
+  staging-branch-push:
+    name: 'Push to staging branch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
+        with:
+          token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
+          ref: main
+      - name: Setup git
+        run: |
+          git config user.name "UL Service Account"
+          git config user.email "hello-happy-puppy@users.noreply.github.com"
+      - name: Push to releases/staging
+        run: |
+          git push -u origin main:releases/staging --force
