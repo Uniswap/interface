@@ -83,7 +83,7 @@ gql`
             }
           }
           rarities {
-            provider
+            rank
           }
         }
         cursor
