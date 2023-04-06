@@ -110,7 +110,7 @@ export default function SwapBuyFiatButton() {
     (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) ||
     fiatOnrampAvailabilityLoading ||
     // When wallet drawer is open AND user is in the connect wallet step of the buy fiat flow, disable buy fiat button.
-    (walletDrawerOpen && buyFiatFlowState === BuyFiatFlowState.ACTIVE_NEEDS_WALLET_CONNECTION)
+    (walletDrawerOpen && buyFiatFlowState === BuyFiatFlowState.ACTIVE_NEEDS_ACCOUNT)
 
   return (
     <MouseoverTooltipContent
