@@ -82,7 +82,7 @@ export function AboutSection({ address, chainId, description, homepageUrl, twitt
 
   const baseExplorerUrl = getChainInfo(chainId).explorer
 
-  const { label } = getChainInfo(isSupportedChain(chainId) ? chainId : SupportedChainId.MAINNET)
+  const { infoLink } = getChainInfo(isSupportedChain(chainId) ? chainId : SupportedChainId.MAINNET)
 
   return (
     <AboutContainer data-testid="token-details-about-section">
@@ -111,12 +111,7 @@ export function AboutSection({ address, chainId, description, homepageUrl, twitt
           name={chainId === SupportedChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}
           link={`${baseExplorerUrl}${address === 'NATIVE' ? '' : 'address/' + address}`}
         />
-        <Resource
-          name="More analytics"
-          link={`https://info.uniswap.org/#/${
-            chainId === SupportedChainId.MAINNET ? '' : label.toLowerCase() + '/'
-          }tokens/${address}`}
-        />
+        <Resource name="More analytics" link={`${infoLink}/tokens/${address}`} />
         {homepageUrl && <Resource name="Website" link={homepageUrl} />}
         {twitterName && <Resource name="Twitter" link={`https://twitter.com/${twitterName}`} />}
       </ResourcesContainer>
