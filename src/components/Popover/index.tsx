@@ -1,7 +1,7 @@
 import { Options, Placement } from '@popperjs/core'
 import Portal from '@reach/portal'
 import useInterval from 'lib/hooks/useInterval'
-import React, { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { CSSProperties, useCallback, useMemo, useState } from 'react'
 import { usePopper } from 'react-popper'
 import styled from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
@@ -81,8 +81,6 @@ export interface PopoverProps {
   offsetY?: number
   hideArrow?: boolean
   showInline?: boolean
-  /** time delay in milliseconds before the popover shows */
-  delayShowTimeout?: number
   style?: CSSProperties
 }
 
@@ -90,7 +88,6 @@ export default function Popover({
   content,
   show,
   children,
-  delayShowTimeout = 0,
   placement = 'auto',
   offsetX = 8,
   offsetY = 8,
@@ -101,8 +98,6 @@ export default function Popover({
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null)
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null)
   const [arrowElement, setArrowElement] = useState<HTMLDivElement | null>(null)
-  // In default case where delayShowTimeout is 0 (no delay before showing) shouldShow initializes to true.
-  const [shouldShow, setShouldShow] = useState(Boolean(delayShowTimeout))
 
   const options = useMemo(
     (): Options => ({
@@ -122,36 +117,17 @@ export default function Popover({
   const updateCallback = useCallback(() => {
     update && update()
   }, [update])
-  useInterval(updateCallback, show ? 200 : null)
-
-  useEffect(() => {
-    if (show) {
-      if (!delayShowTimeout) {
-        setShouldShow(true)
-        return
-      }
-      const tooltipTimer = setTimeout(() => {
-        setShouldShow(true)
-      }, delayShowTimeout)
-
-      return () => {
-        clearTimeout(tooltipTimer)
-      }
-    } else {
-      setShouldShow(false)
-      return
-    }
-  }, [show, delayShowTimeout])
+  useInterval(updateCallback, show ? 100 : null)
 
   return showInline ? (
-    <PopoverContainer show={shouldShow}>{content}</PopoverContainer>
+    <PopoverContainer show={show}>{content}</PopoverContainer>
   ) : (
     <>
       <ReferenceElement style={style} ref={setReferenceElement as any}>
         {children}
       </ReferenceElement>
       <Portal>
-        <PopoverContainer show={shouldShow} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
+        <PopoverContainer show={show} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
           {content}
           {!hideArrow && (
             <Arrow

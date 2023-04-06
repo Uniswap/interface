@@ -27,7 +27,7 @@ enum BuyFiatFlowState {
   // Buy fiat flow is active and region availability has been checked.
   ACTIVE_POST_REGION_CHECK,
   // Buy fiat flow is active, feature is available in user's region & needs wallet connection.
-  ACTIVE_NEEDS_WALLET_CONNECTION,
+  ACTIVE_NEEDS_ACCOUNT,
 }
 
 const StyledTextButton = styled(ButtonText)`
@@ -40,8 +40,6 @@ const StyledTextButton = styled(ButtonText)`
     text-decoration: none;
   }
 `
-
-const POPOVER_DELAY_BEFORE_SHOW_MS = 500
 
 export default function SwapBuyFiatButton() {
   const { account } = useWeb3React()
@@ -81,7 +79,7 @@ export default function SwapBuyFiatButton() {
       setBuyFiatFlowState(BuyFiatFlowState.ACTIVE_POST_REGION_CHECK)
     } else if (fiatOnrampAvailable && !account && !walletDrawerOpen) {
       toggleWalletDrawer()
-      setBuyFiatFlowState(BuyFiatFlowState.ACTIVE_NEEDS_WALLET_CONNECTION)
+      setBuyFiatFlowState(BuyFiatFlowState.ACTIVE_NEEDS_ACCOUNT)
     } else if (fiatOnrampAvailable && account) {
       openFiatOnRampModal()
       terminateBuyFiatFlow()
@@ -102,7 +100,7 @@ export default function SwapBuyFiatButton() {
   useEffect(() => {
     if (
       buyFiatFlowState === BuyFiatFlowState.ACTIVE_POST_REGION_CHECK ||
-      (account && buyFiatFlowState === BuyFiatFlowState.ACTIVE_NEEDS_WALLET_CONNECTION)
+      (account && buyFiatFlowState === BuyFiatFlowState.ACTIVE_NEEDS_ACCOUNT)
     ) {
       handleBuyCrypto()
     }
@@ -117,7 +115,6 @@ export default function SwapBuyFiatButton() {
   return (
     <MouseoverTooltipContent
       wrap
-      delayShowTimeout={POPOVER_DELAY_BEFORE_SHOW_MS}
       content={
         <div data-testid="fiat-on-ramp-unavailable-tooltip">
           <Trans>Crypto purchases are not available in your region. </Trans>
