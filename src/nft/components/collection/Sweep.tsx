@@ -2,6 +2,7 @@ import 'rc-slider/assets/index.css'
 
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'
+import { Trans } from '@lingui/macro'
 import { SweepFetcherParams, useSweepNftAssets } from 'graphql/data/nft/Asset'
 import { useBag, useCollectionFilters } from 'nft/hooks'
 import { GenieAsset, isPooledMarket, Markets } from 'nft/types'
@@ -367,7 +368,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
       <SweepLeftmostContainer>
         <SweepHeaderContainer>
           <ThemedText.SubHeader lineHeight="20px" paddingTop="6px" paddingBottom="6px">
-            Sweep
+            <Trans>Sweep</Trans>
           </ThemedText.SubHeader>
         </SweepHeaderContainer>
         <SweepSubContainer>
