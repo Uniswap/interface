@@ -159,6 +159,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
         dispatch(updateSelectedWallet({ wallet: connection.type }))
         if (drawerOpenRef.current) toggleWalletDrawer()
       } catch (error) {
+        console.log(JSON.stringify(error))
         if (didUserReject(connection, error)) {
           setPendingConnection(undefined)
         } // Prevents showing error caused by MetaMask being prompted twice

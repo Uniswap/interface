@@ -7,11 +7,10 @@ import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { UserAddedToken } from 'types/tokens'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
-import { ChainToTokensMap, TokenMap, useDefaultActiveTokens } from '../../hooks/Tokens'
+import { ChainTokenMap, TokenMap, tokenMapToArray, useDefaultActiveTokens } from '../../hooks/Tokens'
 import { AppState } from '../types'
 import {
   addSerializedPair,
@@ -46,14 +45,14 @@ export function deserializeToken(serializedToken: SerializedToken, Class: typeof
   )
 }
 
-function deserializeMap(map: SerializedTokenMap): ChainToTokensMap {
+export function deserializeMap(map: SerializedTokenMap): ChainTokenMap {
   return Object.entries(map).reduce((acc, [chainId, tokenMap]) => {
     acc[parseInt(chainId)] = Object.entries(tokenMap).reduce((acc, [address, token]) => {
       acc[address] = deserializeToken(token)
       return acc
     }, {} as TokenMap)
     return acc
-  }, {} as ChainToTokensMap)
+  }, {} as ChainTokenMap)
 }
 
 export function useUserLocale(): SupportedLocale | null {
@@ -195,20 +194,22 @@ export function useAddUserToken(): (token: Token) => void {
   )
 }
 
-export function useUserAddedTokensMultichain(): SerializedTokenMap {
-  return useAppSelector(({ user: { tokens } }) => tokens)
+export function useUserAddedTokensMultichain(): ChainTokenMap {
+  const serializedMap = useAppSelector(({ user: { tokens } }) => tokens)
+  const deserializedMap = useMemo(() => deserializeMap(serializedMap), [serializedMap])
+
+  return deserializedMap
 }
 
 export function useUserAddedTokensOnChain(chainId: number | undefined | null): Token[] {
-  const serializedTokensMap = useUserAddedTokensMultichain()
+  const userAddedChainTokenMap = useUserAddedTokensMultichain()
 
   return useMemo(() => {
-    if (!chainId) return []
-    const tokens: Token[] = serializedTokensMap?.[chainId]
-      ? Object.values(serializedTokensMap[chainId]).map((value) => deserializeToken(value, UserAddedToken))
-      : []
-    return tokens
-  }, [serializedTokensMap, chainId])
+    const userAddedTokenMap = chainId ? userAddedChainTokenMap?.[chainId] : undefined
+    if (!userAddedTokenMap) return []
+
+    return tokenMapToArray(userAddedTokenMap)
+  }, [userAddedChainTokenMap, chainId])
 }
 
 export function useUserAddedTokens(): Token[] {

@@ -11,12 +11,30 @@ import { isL2ChainId } from 'utils/chains'
 
 import { useAllLists, useCombinedActiveList, useCombinedTokenMapFromUrls } from '../state/lists/hooks'
 import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'
-import { useUserAddedTokens, useUserAddedTokensOnChain } from '../state/user/hooks'
+import { useUserAddedTokens, useUserAddedTokensMultichain, useUserAddedTokensOnChain } from '../state/user/hooks'
 import { useUnsupportedTokenList } from './../state/lists/hooks'
 
 export type TokenMap = { [address in string]?: Token }
+export type ChainTokenMap = { [chain in number]?: TokenMap }
 export function tokenMapToArray(tokens: TokenMap): Array<Token> {
   return Object.values(tokens).filter(Boolean) as Array<Token>
+}
+
+function toTokenMap(TokenInfoMap: ChainTokenInfoMap[number]) {
+  const tokenMap: TokenMap = {}
+  for (const tokenAddress in TokenInfoMap) {
+    const tokenInfo = TokenInfoMap[tokenAddress]
+    if (tokenInfo) tokenMap[tokenAddress] = tokenInfo.token
+  }
+  return tokenMap
+}
+
+function toChainTokenMap(chainTokenInfoMap: ChainTokenInfoMap) {
+  const chainTokenMap: ChainTokenMap = {}
+  for (const chain in chainTokenInfoMap) {
+    chainTokenMap[chain] = toTokenMap(chainTokenInfoMap[chain])
+  }
+  return chainTokenMap
 }
 
 /** Reduces ChainTokenInfoMap to the standard TokenMap type. */
@@ -34,8 +52,25 @@ function useTokensFromMap(chainTokenInfoMap: ChainTokenInfoMap): TokenMap {
   }, [chainId, chainTokenInfoMap])
 }
 
-export function useAllTokensMultichain(): ChainTokenInfoMap {
-  return useCombinedTokenMapFromUrls(DEFAULT_LIST_OF_LISTS)
+export function useAllTokensMultichain(): ChainTokenMap {
+  const userAddedChainTokenMap = useUserAddedTokensMultichain()
+  const allListsChainTokenInfoMap = useCombinedTokenMapFromUrls(DEFAULT_LIST_OF_LISTS)
+
+  return useMemo(() => {
+    const allTokensMap = toChainTokenMap(allListsChainTokenInfoMap)
+
+    for (const chain in userAddedChainTokenMap) {
+      for (const tokenAddress in userAddedChainTokenMap[chain]) {
+        if (allTokensMap[chain]?.[tokenAddress]) continue
+
+        const token = userAddedChainTokenMap[chain]?.[tokenAddress]
+        const currentChainMap = allTokensMap[chain]
+        if (token && currentChainMap) currentChainMap[tokenAddress] = token
+      }
+    }
+
+    return allTokensMap
+  }, [allListsChainTokenInfoMap, userAddedChainTokenMap])
 }
 
 // Returns all tokens from the default list + user added tokens

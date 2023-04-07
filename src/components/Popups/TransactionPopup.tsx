@@ -3,8 +3,8 @@ import Column from 'components/Column'
 import { parseLocalActivity } from 'components/WalletDropdown/MiniPortfolio/Activity/parseLocal'
 import { PortfolioLogo } from 'components/WalletDropdown/MiniPortfolio/PortfolioLogo'
 import PortfolioRow from 'components/WalletDropdown/MiniPortfolio/PortfolioRow'
+import { useAllTokensMultichain } from 'hooks/Tokens'
 import useENSName from 'hooks/useENSName'
-import { useCombinedActiveList } from 'state/lists/hooks'
 import { useTransaction } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/types'
 import styled from 'styled-components/macro'
@@ -19,7 +19,7 @@ const Descriptor = styled(ThemedText.BodySmall)`
 
 function TransactionPopupContent({ tx, chainId }: { tx: TransactionDetails; chainId: number }) {
   const success = tx.receipt?.status === 1
-  const tokens = useCombinedActiveList()
+  const tokens = useAllTokensMultichain()
   const activity = parseLocalActivity(tx, chainId, tokens)
   const { ENSName } = useENSName(activity?.otherAccount)
 
