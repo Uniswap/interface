@@ -5,7 +5,7 @@ import { themeVars, vars } from '../css/sprinkles.css'
 
 type SVGProps = React.SVGProps<SVGSVGElement>
 
-export const UniIcon = (props: SVGProps) => (
+export const GrgIcon = (props: SVGProps) => (
   <svg
     {...props}
     id="svg"

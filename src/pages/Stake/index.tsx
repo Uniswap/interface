@@ -1,7 +1,10 @@
 import { Trans } from '@lingui/macro'
+import { useMemo, useState } from 'react'
+import InfiniteScroll from 'react-infinite-scroll-component'
+//import { useInfiniteQuery } from 'react-query'
 import styled from 'styled-components/macro'
 
-import { ButtonPrimary } from '../../components/Button'
+//import { ButtonPrimary } from '../../components/Button'
 import { OutlineCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CreateModal from '../../components/createPool/CreateModal'
@@ -10,10 +13,20 @@ import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/
 import Loader from '../../components/Loader'
 import PoolPositionList from '../../components/PoolPositionList'
 import { RowBetween } from '../../components/Row'
+//import { LoadingSparkle } from '../../nft/components/common/Loading/LoadingSparkle'
+import { Center } from '../../nft/components/Flex'
 import { useModalIsOpen, useToggleCreateModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
-import { useAllPoolsData } from '../../state/pool/hooks'
+import { PoolRegisteredLog, useRegisteredPools } from '../../state/pool/hooks'
 import { ThemedText } from '../../theme'
+//import { PoolPositionDetails } from '../../types/position'
+
+/*
+export interface PoolEventResponse {
+  events: PoolRegisteredLog[]
+  cursor?: string
+}
+*/
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;
@@ -62,11 +75,46 @@ flex-direction: column;
 `};
 `
 
-export default function CreatePool() {
+export default function Stake() {
   const showDelegateModal = useModalIsOpen(ApplicationModal.CREATE)
   const toggleCreateModal = useToggleCreateModal()
 
-  const { data: allPools, loading: loadingPools } = useAllPoolsData()
+  const itemsPerPage = 10
+  const [hasMore, setHasMore] = useState(true)
+  const [records, setRecords] = useState(itemsPerPage)
+
+  // TODO: return loading
+  const allPools = useRegisteredPools()
+  const loadingPools = false
+
+  //const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
+
+  const fetchMoreData = () => {
+    if (allPools && records === allPools.length) {
+      setHasMore(false)
+    } else {
+      setTimeout(() => {
+        setRecords(records + itemsPerPage)
+      }, 500)
+    }
+  }
+
+  const showItems = (records: number, allPools: PoolRegisteredLog[]) => {
+    const items: PoolRegisteredLog[] = []
+
+    for (let i = 0; i < records; i++) {
+      if (allPools[i] !== undefined) {
+        items.push(allPools[i])
+      }
+    }
+
+    return items
+  }
+
+  const items = useMemo(() => {
+    if (!allPools) return []
+    return showItems(records, allPools)
+  }, [records, allPools])
 
   return (
     <PageWrapper gap="lg" justify="center">
@@ -78,12 +126,12 @@ export default function CreatePool() {
             <AutoColumn gap="md">
               <RowBetween>
                 <ThemedText.DeprecatedWhite fontWeight={600}>
-                  <Trans>Rigoblock Pools</Trans>
+                  <Trans>Staking Pools</Trans>
                 </ThemedText.DeprecatedWhite>
               </RowBetween>
               <RowBetween>
                 <ThemedText.DeprecatedWhite fontSize={14}>
-                  <Trans>Unleash the force of smart pools for your portfolio. No more token allowances hassle!</Trans>
+                  <Trans>Select a pool to stake to, you will keep your voting power and earn staking rewards.</Trans>
                 </ThemedText.DeprecatedWhite>
               </RowBetween>{' '}
             </AutoColumn>
@@ -96,12 +144,13 @@ export default function CreatePool() {
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
           <ThemedText.DeprecatedMediumHeader style={{ marginTop: '0.5rem' }}>
-            <Trans>Pools</Trans>
+            <Trans>All Pools</Trans>
           </ThemedText.DeprecatedMediumHeader>
-          <CreateModal isOpen={showDelegateModal} onDismiss={toggleCreateModal} title={<Trans>Create Pool</Trans>} />
-          <ButtonPrimary style={{ width: 'fit-content' }} padding="8px" $borderRadius="8px" onClick={toggleCreateModal}>
-            <Trans>Create Pool</Trans>
-          </ButtonPrimary>
+          {/* TODO: must add stake modal to stake for user or for pool */}
+          <CreateModal isOpen={showDelegateModal} onDismiss={toggleCreateModal} title={<Trans>Stake</Trans>} />
+          {/*<ButtonPrimary style={{ width: 'fit-content' }} padding="8px" $borderRadius="8px" onClick={toggleCreateModal}>
+            <Trans>Stake</Trans>
+          </ButtonPrimary>*/}
         </DataRow>
 
         <MainContentWrapper>
@@ -113,10 +162,24 @@ export default function CreatePool() {
           ) : loadingPools ? (
             <Loader style={{ margin: 'auto' }} />
           ) : allPools?.length > 0 ? (
-            <PoolPositionList positions={allPools} filterByOperator={true} />
+            <InfiniteScroll
+              next={fetchMoreData}
+              hasMore={!!hasMore}
+              loader={
+                loadingPools ? (
+                  <Center paddingY="20">
+                    <h4>Loading...</h4>
+                  </Center>
+                ) : null
+              }
+              dataLength={allPools.length}
+              style={{ overflow: 'unset' }}
+            >
+              <PoolPositionList positions={items} filterByOperator={false} />
+            </InfiniteScroll>
           ) : allPools?.length === 0 ? (
             <OutlineCard>
-              <Trans>No pool found, create your own!</Trans>
+              <Trans>No pool found</Trans>
             </OutlineCard>
           ) : null}
         </MainContentWrapper>

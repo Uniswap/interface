@@ -40,6 +40,7 @@ import PoolV2 from './Pool/v2'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
+import Stake from './Stake'
 import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import Tokens from './Tokens'
@@ -221,7 +222,9 @@ export default function App() {
 
                   <Route path="mint" element={<CreatePool />} />
                   <Route path="smart-pool/:poolAddress" element={<PoolPositionPage />} />
-                  <Route path="smart-pool/:poolAddress/:poolId" element={<PoolPositionPage />} />
+                  <Route path="smart-pool/:poolAddress/:returnPage" element={<PoolPositionPage />} />
+
+                  <Route path="stake" element={<Stake />} />
 
                   <Route path="send" element={<RedirectPathToSwapOnly />} />
                   <Route path="swap/:outputCurrency" element={<RedirectToSwap />} />

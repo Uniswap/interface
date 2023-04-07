@@ -227,10 +227,9 @@ function AddressCard({
 }
 
 export function PoolPositionPage() {
-  // TODO: we can implement all staking methods since we pass pool id, otherwise remove from url if not using
-  const { poolAddress: poolAddressFromUrl /*, poolId: poolIdFromUrl*/ } = useParams<{
-    poolAddress?: string
-    poolId?: string
+  const { poolAddress: poolAddressFromUrl, returnPage: originFromUrl } = useParams<{
+    poolAddress: string
+    returnPage: string
   }>()
   const { chainId, account } = useWeb3React()
   //const theme = useTheme()
@@ -385,15 +384,17 @@ export function PoolPositionPage() {
         )}
         <AutoColumn gap="md">
           <AutoColumn gap="sm">
-            <Link
-              data-cy="visit-pool"
-              style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }}
-              to="/mint"
-            >
-              <HoverText>
-                <Trans>← Back to Pools</Trans>
-              </HoverText>
-            </Link>
+            {originFromUrl && (
+              <Link
+                data-cy="visit-pool"
+                style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }}
+                to={originFromUrl === 'mint' ? '/mint' : '/stake'}
+              >
+                <HoverText>
+                  <Trans>← Back to Pools</Trans>
+                </HoverText>
+              </Link>
+            )}
             <ResponsiveRow>
               <RowFixed>
                 <ThemedText.DeprecatedLabel fontSize="24px" mr="10px">
