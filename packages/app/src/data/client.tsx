@@ -1,14 +1,14 @@
 import {
   ApolloClient,
-  InMemoryCache,
   ApolloProvider,
   createHttpLink,
   from,
+  InMemoryCache,
 } from '@apollo/client'
 import { PropsWithChildren } from 'react'
 
 const httpLink = createHttpLink({
-  uri: process.env.UNISWAP_API_URL,
+  uri: `${process.env.UNISWAP_API_BASE_URL}/v1/graphql`,
   headers: {
     'Content-Type': 'application/json',
     'X-API-KEY': process.env.UNISWAP_API_KEY ?? '',
