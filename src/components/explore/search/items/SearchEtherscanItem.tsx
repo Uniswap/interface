@@ -1,7 +1,6 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import { default as React } from 'react'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Arrow } from 'src/components/icons/Arrow'
 import { EtherscanIcon } from 'src/components/icons/EtherscanIcon'
@@ -10,9 +9,8 @@ import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { addToSearchHistory, EtherscanSearchResult } from 'src/features/explore/searchHistorySlice'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Screens } from 'src/screens/Screens'
 import { shortenAddress } from 'src/utils/addresses'
-import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
+import { ExplorerDataType, getExplorerLink, openUri } from 'src/utils/linking'
 
 type SearchEtherscanItemProps = {
   etherscanResult: EtherscanSearchResult
@@ -21,16 +19,12 @@ type SearchEtherscanItemProps = {
 export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProps): JSX.Element {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
-  const navigation = useExploreStackNavigation()
 
   const { address } = etherscanResult
 
   const onPressViewEtherscan = (): void => {
     const explorerLink = getExplorerLink(ChainId.Mainnet, address, ExplorerDataType.ADDRESS)
-    navigation.navigate(Screens.WebView, {
-      headerTitle: shortenAddress(address),
-      uriLink: explorerLink,
-    })
+    openUri(explorerLink)
     dispatch(
       addToSearchHistory({
         searchResult: etherscanResult,
