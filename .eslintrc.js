@@ -3,8 +3,18 @@
 require('@uniswap/eslint-config/load')
 
 module.exports = {
-  extends: '@uniswap/eslint-config/react',
+  extends: ['@uniswap/eslint-config/react'],
+  parserOptions: {
+    tsconfigRootDir: __dirname,
+    project: './tsconfig.json',
+  },
   overrides: [
+    {
+      files: ['**/*.config.*', '**/*.d.ts'],
+      rules: {
+        'import/no-unused-modules': 'off',
+      },
+    },
     {
       files: ['**/*.ts', '**/*.tsx'],
       rules: {
