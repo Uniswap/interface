@@ -2320,7 +2320,7 @@ msgstr "Vous quittez Kromatika.Finance et serez redirigé vers un site Web tiers
 #: src/pages/Market/index.tsx
 #: src/pages/SwapWidget/index.tsx
 msgid "You buy"
-msgstr "Tu achètes"
+msgstr "Vous achètes"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
