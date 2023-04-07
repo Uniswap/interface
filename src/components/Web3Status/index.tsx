@@ -7,11 +7,12 @@ import { IconWrapper } from 'components/Identicon/StatusIcon'
 import WalletDropdown, { useWalletDrawer } from 'components/WalletDropdown'
 import PrefetchBalancesWrapper from 'components/WalletDropdown/PrefetchBalancesWrapper'
 import { useGetConnection } from 'connection'
+import { MAINNET_PROVIDER } from 'constants/providers'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
@@ -150,7 +151,15 @@ const StyledConnectButton = styled.button`
 `
 
 function Web3StatusInner() {
-  const { account, connector, chainId, ENSName } = useWeb3React()
+  const { account, connector, chainId } = useWeb3React()
+
+  const [ENSName, setENSName] = useState<string | null>(null)
+  useEffect(() => {
+    if (account) {
+      MAINNET_PROVIDER.lookupAddress(account).then((ENSName) => setENSName(ENSName))
+    }
+  }, [account, setENSName])
+
   const getConnection = useGetConnection()
   const connection = getConnection(connector)
   const {

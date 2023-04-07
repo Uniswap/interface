@@ -11,11 +11,12 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import { formatDelta } from 'components/Tokens/TokenDetails/PriceChart'
 import Tooltip from 'components/Tooltip'
 import { useGetConnection } from 'connection'
+import { MAINNET_PROVIDER } from 'constants/providers'
 import { usePortfolioBalancesQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { ProfilePageStateType } from 'nft/types'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight, Copy, CreditCard, IconProps, Info, Power, Settings } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
@@ -157,7 +158,12 @@ export function PortfolioArrow({ change, ...rest }: { change: number } & IconPro
 }
 
 export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
-  const { connector, ENSName } = useWeb3React()
+  const { connector } = useWeb3React()
+  const [ENSName, setENSName] = useState<string | null>(null)
+  useEffect(() => {
+    MAINNET_PROVIDER.lookupAddress(account).then((ENSName) => setENSName(ENSName))
+  }, [account, setENSName])
+
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const closeModal = useCloseModal()
