@@ -7,6 +7,8 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { isSentryEnabled } from 'utils/env'
 import { getEnvName, isProductionEnv } from 'utils/env'
 
+import { filterKnownErrors } from './errors'
+
 export { trace } from './trace'
 
 // Dump some metadata into the window to allow client verification.
@@ -28,13 +30,7 @@ Sentry.init({
       startTransactionOnPageLoad: true,
     }),
   ],
-  /**
-   * TODO(INFRA-143)
-   * According to Sentry, this shouldn't be necessary, as they default to `3` when not set.
-   * Unfortunately, that doesn't work right now, so we workaround it by explicitly setting
-   * the `normalizeDepth` to `10`. This should be removed once the issue is fixed.
-   */
-  normalizeDepth: 10,
+  beforeSend: filterKnownErrors,
 })
 
 initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {

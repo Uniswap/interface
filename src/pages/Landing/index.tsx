@@ -7,12 +7,14 @@ import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
 import { BaseButton } from 'components/Button'
 import { useSwapWidgetEnabled } from 'featureFlags/flags/swapWidget'
+import { useAtomValue } from 'jotai/utils'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
 import { useEffect, useRef, useState } from 'react'
 import { ArrowDownCircle } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
+import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useAppSelector } from 'state/hooks'
 import styled, { css } from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
@@ -316,6 +318,8 @@ export default function Landing() {
     }
   }, [navigate, selectedWallet, queryParams.intro])
 
+  const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
+
   return (
     <Trace page={InterfacePageName.LANDING_PAGE} shouldLogImpression>
       {showContent && (
@@ -342,9 +346,21 @@ export default function Landing() {
             <Glow />
           </GlowContainer>
           <ContentContainer isDarkMode={isDarkMode}>
-            <TitleText isDarkMode={isDarkMode}>Trade crypto & NFTs with confidence</TitleText>
+            <TitleText isDarkMode={isDarkMode}>
+              {shouldDisableNFTRoutes ? (
+                <Trans>Trade crypto with confidence</Trans>
+              ) : (
+                <Trans>Trade crypto and NFTs with confidence</Trans>
+              )}
+            </TitleText>
             <SubTextContainer>
-              <SubText>Buy, sell, and explore tokens and NFTs</SubText>
+              <SubText>
+                {shouldDisableNFTRoutes ? (
+                  <Trans>Buy, sell, and explore tokens</Trans>
+                ) : (
+                  <Trans>Buy, sell, and explore tokens and NFTs</Trans>
+                )}
+              </SubText>
             </SubTextContainer>
             <ActionsContainer>
               <TraceEvent

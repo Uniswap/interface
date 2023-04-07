@@ -5,7 +5,7 @@ import { ContractReceipt } from '@ethersproject/contracts'
 import type { JsonRpcSigner } from '@ethersproject/providers'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
-import create from 'zustand'
+import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
 import ERC721 from '../../abis/erc721.json'

@@ -2,7 +2,6 @@ import { t } from '@lingui/macro'
 import { formatCurrencyAmount } from '@uniswap/conedison/format'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { nativeOnChain } from '@uniswap/smart-order-router'
-import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import { TransactionPartsFragment, TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { useMemo } from 'react'
@@ -26,20 +25,22 @@ import {
 import { getActivityTitle } from '../constants'
 import { Activity, ActivityMap } from './types'
 
-function getCurrency(currencyId: string, chainId: SupportedChainId, tokens: TokenAddressMap) {
-  return currencyId === 'ETH' ? nativeOnChain(chainId) : tokens[chainId][currencyId].token
+function getCurrency(currencyId: string, chainId: SupportedChainId, tokens: TokenAddressMap): Currency | undefined {
+  return currencyId === 'ETH' ? nativeOnChain(chainId) : tokens[chainId]?.[currencyId]?.token
 }
 
 function buildCurrencyDescriptor(
-  currencyA: Currency,
+  currencyA: Currency | undefined,
   amtA: string,
-  currencyB: Currency,
+  currencyB: Currency | undefined,
   amtB: string,
   delimiter = t`for`
 ) {
-  const formattedA = formatCurrencyAmount(CurrencyAmount.fromRawAmount(currencyA, amtA))
-  const formattedB = formatCurrencyAmount(CurrencyAmount.fromRawAmount(currencyB, amtB))
-  return `${formattedA} ${currencyA.symbol} ${delimiter} ${formattedB} ${currencyB.symbol}`
+  const formattedA = currencyA ? formatCurrencyAmount(CurrencyAmount.fromRawAmount(currencyA, amtA)) : t`Unknown`
+  const symbolA = currencyA?.symbol ?? ''
+  const formattedB = currencyB ? formatCurrencyAmount(CurrencyAmount.fromRawAmount(currencyB, amtB)) : t`Unknown`
+  const symbolB = currencyB?.symbol ?? ''
+  return [formattedA, symbolA, delimiter, formattedB, symbolB].filter(Boolean).join(' ')
 }
 
 function parseSwap(
@@ -79,7 +80,7 @@ function parseApproval(
 ): Partial<Activity> {
   // TODO: Add 'amount' approved to ApproveTransactionInfo so we can distinguish between revoke and approve
   const currency = getCurrency(approval.tokenAddress, chainId, tokens)
-  const descriptor = t`${currency.symbol ?? currency.name}`
+  const descriptor = currency?.symbol ?? currency?.name ?? t`Unknown`
   return {
     descriptor,
     currencies: [currency],
@@ -120,8 +121,10 @@ function parseMigrateCreateV3(
   tokens: TokenAddressMap
 ): Partial<Activity> {
   const baseCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
+  const baseSymbol = baseCurrency?.symbol ?? t`Unknown`
   const quoteCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
-  const descriptor = t`${baseCurrency.symbol} and ${quoteCurrency.symbol}`
+  const quoteSymbol = quoteCurrency?.symbol ?? t`Unknown`
+  const descriptor = t`${baseSymbol} and ${quoteSymbol}`
 
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
 }
@@ -131,71 +134,69 @@ export function parseLocalActivity(
   chainId: SupportedChainId,
   tokens: TokenAddressMap
 ): Activity | undefined {
-  const status = !details.receipt
-    ? TransactionStatus.Pending
-    : details.receipt.status === 1 || details.receipt?.status === undefined
-    ? TransactionStatus.Confirmed
-    : TransactionStatus.Failed
+  try {
+    const status = !details.receipt
+      ? TransactionStatus.Pending
+      : details.receipt.status === 1 || details.receipt?.status === undefined
+      ? TransactionStatus.Confirmed
+      : TransactionStatus.Failed
 
-  const receipt: TransactionPartsFragment | undefined = details.receipt
-    ? {
-        id: details.receipt.transactionHash,
-        ...details.receipt,
-        ...details,
-        status,
-      }
-    : undefined
+    const receipt: TransactionPartsFragment | undefined = details.receipt
+      ? {
+          id: details.receipt.transactionHash,
+          ...details.receipt,
+          ...details,
+          status,
+        }
+      : undefined
 
-  const defaultFields = {
-    hash: details.hash,
-    chainId,
-    title: getActivityTitle(details.info.type, status),
-    status,
-    timestamp: (details.confirmedTime ?? details.addedTime) / 1000,
-    receipt,
+    const defaultFields = {
+      hash: details.hash,
+      chainId,
+      title: getActivityTitle(details.info.type, status),
+      status,
+      timestamp: (details.confirmedTime ?? details.addedTime) / 1000,
+      receipt,
+    }
+
+    let additionalFields: Partial<Activity> = {}
+    const info = details.info
+    if (info.type === TransactionType.SWAP) {
+      additionalFields = parseSwap(info, chainId, tokens)
+    } else if (info.type === TransactionType.APPROVAL) {
+      additionalFields = parseApproval(info, chainId, tokens)
+    } else if (info.type === TransactionType.WRAP) {
+      additionalFields = parseWrap(info, chainId, status)
+    } else if (
+      info.type === TransactionType.ADD_LIQUIDITY_V3_POOL ||
+      info.type === TransactionType.REMOVE_LIQUIDITY_V3 ||
+      info.type === TransactionType.ADD_LIQUIDITY_V2_POOL
+    ) {
+      additionalFields = parseLP(info, chainId, tokens)
+    } else if (info.type === TransactionType.COLLECT_FEES) {
+      additionalFields = parseCollectFees(info, chainId, tokens)
+    } else if (info.type === TransactionType.MIGRATE_LIQUIDITY_V3 || info.type === TransactionType.CREATE_V3_POOL) {
+      additionalFields = parseMigrateCreateV3(info, chainId, tokens)
+    }
+
+    return { ...defaultFields, ...additionalFields }
+  } catch (error) {
+    console.debug(`Failed to parse transaction ${details.hash}`, error)
+    return undefined
   }
-
-  let additionalFields: Partial<Activity> = {}
-  const info = details.info
-  if (info.type === TransactionType.SWAP) {
-    additionalFields = parseSwap(info, chainId, tokens)
-  } else if (info.type === TransactionType.APPROVAL) {
-    additionalFields = parseApproval(info, chainId, tokens)
-  } else if (info.type === TransactionType.WRAP) {
-    additionalFields = parseWrap(info, chainId, status)
-  } else if (
-    info.type === TransactionType.ADD_LIQUIDITY_V3_POOL ||
-    info.type === TransactionType.REMOVE_LIQUIDITY_V3 ||
-    info.type === TransactionType.ADD_LIQUIDITY_V2_POOL
-  ) {
-    additionalFields = parseLP(info, chainId, tokens)
-  } else if (info.type === TransactionType.COLLECT_FEES) {
-    additionalFields = parseCollectFees(info, chainId, tokens)
-  } else if (info.type === TransactionType.MIGRATE_LIQUIDITY_V3 || info.type === TransactionType.CREATE_V3_POOL) {
-    additionalFields = parseMigrateCreateV3(info, chainId, tokens)
-  }
-
-  return { ...defaultFields, ...additionalFields }
 }
 
-export function useLocalActivities(): ActivityMap | undefined {
+export function useLocalActivities(account: string): ActivityMap {
   const allTransactions = useMultichainTransactions()
-  const { chainId } = useWeb3React()
   const tokens = useCombinedActiveList()
 
-  return useMemo(
-    () =>
-      chainId
-        ? allTransactions.reduce((acc: { [hash: string]: Activity }, [transaction, chainId]) => {
-            try {
-              const localActivity = parseLocalActivity(transaction, chainId, tokens)
-              if (localActivity) acc[localActivity.hash] = localActivity
-            } catch (error) {
-              console.error('Failed to parse local activity', transaction)
-            }
-            return acc
-          }, {})
-        : undefined,
-    [allTransactions, chainId, tokens]
-  )
+  return useMemo(() => {
+    const activityByHash: ActivityMap = {}
+    for (const [transaction, chainId] of allTransactions) {
+      if (transaction.from !== account) continue
+
+      activityByHash[transaction.hash] = parseLocalActivity(transaction, chainId, tokens)
+    }
+    return activityByHash
+  }, [account, allTransactions, tokens])
 }

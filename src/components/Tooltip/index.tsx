@@ -4,8 +4,8 @@ import styled from 'styled-components/macro'
 
 import Popover, { PopoverProps } from '../Popover'
 
-// TODO(lynnshaoyu): migrate noOps throughout web to a shared util file.
-const noOp = () => null
+// TODO(WEB-3163): migrate noops throughout web to a shared util file.
+const noop = () => null
 
 export const TooltipContainer = styled.div`
   max-width: 256px;
@@ -38,8 +38,6 @@ interface TooltipContentProps extends Omit<PopoverProps, 'content'> {
   onOpen?: () => void
   open?: () => void
   close?: () => void
-  // time delay in milliseconds before showing tooltip upon hover
-  delayBeforeShow?: number
   // whether to wrap the content in a `TooltipContainer`
   wrap?: boolean
   disableHover?: boolean // disable the hover and content display
@@ -50,7 +48,7 @@ export default function Tooltip({ text, open, close, disableHover, ...rest }: To
     <Popover
       content={
         text && (
-          <TooltipContainer onMouseEnter={disableHover ? noOp : open} onMouseLeave={disableHover ? noOp : close}>
+          <TooltipContainer onMouseEnter={disableHover ? noop : open} onMouseLeave={disableHover ? noop : close}>
             {text}
           </TooltipContainer>
         )
@@ -60,21 +58,12 @@ export default function Tooltip({ text, open, close, disableHover, ...rest }: To
   )
 }
 
-function TooltipContent({
-  content,
-  wrap = false,
-  open,
-  delayBeforeShow,
-  close,
-  disableHover,
-  ...rest
-}: TooltipContentProps) {
+function TooltipContent({ content, wrap = false, open, close, disableHover, ...rest }: TooltipContentProps) {
   return (
     <Popover
-      delayBeforeShow={delayBeforeShow}
       content={
         wrap ? (
-          <TooltipContainer onMouseEnter={disableHover ? noOp : open} onMouseLeave={disableHover ? noOp : close}>
+          <TooltipContainer onMouseEnter={disableHover ? noop : open} onMouseLeave={disableHover ? noop : close}>
             {content}
           </TooltipContainer>
         ) : (
@@ -105,7 +94,6 @@ export function MouseoverTooltip({ text, disableHover, children, timeout, ...res
     return
   }, [timeout, show])
 
-  const noOp = () => null
   return (
     <Tooltip
       {...rest}
@@ -115,7 +103,7 @@ export function MouseoverTooltip({ text, disableHover, children, timeout, ...res
       show={show}
       text={disableHover ? null : text}
     >
-      <div onMouseEnter={disableHover ? noOp : open} onMouseLeave={disableHover || timeout ? noOp : close}>
+      <div onMouseEnter={disableHover ? noop : open} onMouseLeave={disableHover || timeout ? noop : close}>
         {children}
       </div>
     </Tooltip>
@@ -128,7 +116,6 @@ export function MouseoverTooltipContent({
   children,
   onOpen: openCallback = undefined,
   disableHover,
-  delayBeforeShow,
   ...rest
 }: Omit<TooltipContentProps, 'show'>) {
   const [show, setShow] = useState(false)
@@ -143,7 +130,6 @@ export function MouseoverTooltipContent({
   return (
     <TooltipContent
       {...rest}
-      delayBeforeShow={delayBeforeShow}
       open={open}
       close={close}
       show={!disableHover && show}
