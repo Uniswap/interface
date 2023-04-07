@@ -35,6 +35,7 @@
       "src/lib/hooks/**/*.ts*",
       "src/lib/state/**/*.ts*",
       "src/lib/utils/**/*.ts*",
+      "src/nft/hooks/**/*.ts*",
       "src/pages/**/*.ts*",
       "src/state/**/*.ts*",
       "src/tracing/**/*.ts*",
