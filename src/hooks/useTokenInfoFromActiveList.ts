@@ -14,6 +14,6 @@ export function useTokenInfoFromActiveList(currency: Currency) {
     if (!chainId) return
     if (currency.isNative) return currency
 
-    return activeList[chainId]?.[currency.wrapped.address]?.token ?? currency
+    return activeList[chainId]?.[currency.wrapped.address] ?? currency
   }, [activeList, chainId, currency])
 }

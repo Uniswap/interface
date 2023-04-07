@@ -5,7 +5,6 @@ import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_INACTIVE_LIST_URLS, DEFAULT_LIST_OF_LISTS } from 'constants/lists'
 import { useCurrencyFromMap, useTokenFromMapOrNetwork } from 'lib/hooks/useCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
-import { ChainTokenInfoMap } from 'lib/hooks/useTokenList/utils'
 import { useMemo } from 'react'
 import { isL2ChainId } from 'utils/chains'
 
@@ -15,12 +14,16 @@ import { useUserAddedTokens, useUserAddedTokensOnChain } from '../state/user/hoo
 import { useUnsupportedTokenList } from './../state/lists/hooks'
 
 export type TokenMap = { [address in string]?: Token }
+
+export type MutableChainTokenMap = { [chainId in number]?: TokenMap }
+export type ChainTokenMap = Readonly<MutableChainTokenMap>
+
 export function tokenMapToArray(tokens: TokenMap): Array<Token> {
   return Object.values(tokens).filter(Boolean) as Array<Token>
 }
 
 /** Reduces ChainTokenInfoMap to the standard TokenMap type. */
-function useTokensFromMap(chainTokenInfoMap: ChainTokenInfoMap): TokenMap {
+function useTokensFromMap(chainTokenInfoMap: ChainTokenMap): TokenMap {
   const { chainId } = useWeb3React()
   return useMemo(() => {
     if (!chainId) return {}
@@ -28,13 +31,13 @@ function useTokensFromMap(chainTokenInfoMap: ChainTokenInfoMap): TokenMap {
     // reduce to just tokens
     return Object.keys(chainTokenInfoMap[chainId] ?? {}).reduce<TokenMap>((newMap, address) => {
       const entry = chainTokenInfoMap[chainId]?.[address]
-      if (entry) newMap[address] = entry.token
+      if (entry) newMap[address] = entry
       return newMap
     }, {})
   }, [chainId, chainTokenInfoMap])
 }
 
-export function useAllTokensMultichain(): ChainTokenInfoMap {
+export function useAllTokensMultichain(): ChainTokenMap {
   return useCombinedTokenMapFromUrls(DEFAULT_LIST_OF_LISTS)
 }
 

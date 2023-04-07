@@ -1,4 +1,5 @@
-import { ChainTokenInfoMap, tokensToChainTokenInfoMap } from 'lib/hooks/useTokenList/utils'
+import { ChainTokenMap, MutableChainTokenMap } from 'hooks/Tokens'
+import { tokensToChainTokenMap } from 'lib/hooks/useTokenList/utils'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import sortByListPriority from 'utils/listSort'
@@ -6,10 +7,6 @@ import sortByListPriority from 'utils/listSort'
 import BROKEN_LIST from '../../constants/tokenLists/broken.tokenlist.json'
 import { AppState } from '../types'
 import { DEFAULT_ACTIVE_LIST_URLS, UNSUPPORTED_LIST_URLS } from './../../constants/lists'
-
-type Mutable<T> = {
-  -readonly [P in keyof T]: Mutable<T[P]>
-}
 
 export function useAllLists(): AppState['lists']['byUrl'] {
   return useAppSelector((state) => state.lists.byUrl)
@@ -20,7 +17,7 @@ export function useAllLists(): AppState['lists']['byUrl'] {
  * @param map1 the base token map
  * @param map2 the map of additioanl tokens to add to the base map
  */
-function combineMaps(map1: ChainTokenInfoMap, map2: ChainTokenInfoMap): ChainTokenInfoMap {
+function combineMaps(map1: ChainTokenMap, map2: ChainTokenMap): ChainTokenMap {
   const chainIds = Object.keys(
     Object.keys(map1)
       .concat(Object.keys(map2))
@@ -30,18 +27,18 @@ function combineMaps(map1: ChainTokenInfoMap, map2: ChainTokenInfoMap): ChainTok
       }, {})
   ).map((id) => parseInt(id))
 
-  return chainIds.reduce<Mutable<ChainTokenInfoMap>>((memo, chainId) => {
+  return chainIds.reduce<MutableChainTokenMap>((memo, chainId) => {
     memo[chainId] = {
       ...map2[chainId],
       // map1 takes precedence
       ...map1[chainId],
     }
     return memo
-  }, {}) as ChainTokenInfoMap
+  }, {})
 }
 
 // merge tokens contained within lists from urls
-export function useCombinedTokenMapFromUrls(urls: string[] | undefined): ChainTokenInfoMap {
+export function useCombinedTokenMapFromUrls(urls: string[] | undefined): ChainTokenMap {
   const lists = useAllLists()
   return useMemo(() => {
     if (!urls) return {}
@@ -54,7 +51,7 @@ export function useCombinedTokenMapFromUrls(urls: string[] | undefined): ChainTo
           const current = lists[currentUrl]?.current
           if (!current) return allTokens
           try {
-            return combineMaps(allTokens, tokensToChainTokenInfoMap(current))
+            return combineMaps(allTokens, tokensToChainTokenMap(current))
           } catch (error) {
             console.error('Could not show token list due to error', error)
             return allTokens
@@ -65,15 +62,15 @@ export function useCombinedTokenMapFromUrls(urls: string[] | undefined): ChainTo
 }
 
 // get all the tokens from active lists, combine with local default tokens
-export function useCombinedActiveList(): ChainTokenInfoMap {
+export function useCombinedActiveList(): ChainTokenMap {
   const activeTokens = useCombinedTokenMapFromUrls(DEFAULT_ACTIVE_LIST_URLS)
   return activeTokens
 }
 
 // list of tokens not supported on interface for various reasons, used to show warnings and prevent swaps and adds
-export function useUnsupportedTokenList(): ChainTokenInfoMap {
+export function useUnsupportedTokenList(): ChainTokenMap {
   // get hard-coded broken tokens
-  const brokenListMap = useMemo(() => tokensToChainTokenInfoMap(BROKEN_LIST), [])
+  const brokenListMap = useMemo(() => tokensToChainTokenMap(BROKEN_LIST), [])
 
   // get dynamic list of unsupported tokens
   const loadedUnsupportedListMap = useCombinedTokenMapFromUrls(UNSUPPORTED_LIST_URLS)

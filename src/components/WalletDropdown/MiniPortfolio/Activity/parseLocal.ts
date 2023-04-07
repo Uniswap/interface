@@ -5,7 +5,7 @@ import { nativeOnChain } from '@uniswap/smart-order-router'
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import { TransactionPartsFragment, TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
-import { ChainTokenInfoMap } from 'lib/hooks/useTokenList/utils'
+import { ChainTokenMap } from 'hooks/Tokens'
 import { useMemo } from 'react'
 import { useCombinedActiveList } from 'state/lists/hooks'
 import { useMultichainTransactions } from 'state/transactions/hooks'
@@ -27,8 +27,8 @@ import {
 import { getActivityTitle } from '../constants'
 import { Activity, ActivityMap } from './types'
 
-function getCurrency(currencyId: string, chainId: SupportedChainId, tokens: ChainTokenInfoMap): Currency | undefined {
-  return currencyId === 'ETH' ? nativeOnChain(chainId) : tokens[chainId]?.[currencyId]?.token
+function getCurrency(currencyId: string, chainId: SupportedChainId, tokens: ChainTokenMap): Currency | undefined {
+  return currencyId === 'ETH' ? nativeOnChain(chainId) : tokens[chainId]?.[currencyId]
 }
 
 function buildCurrencyDescriptor(
@@ -48,7 +48,7 @@ function buildCurrencyDescriptor(
 function parseSwap(
   swap: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo,
   chainId: SupportedChainId,
-  tokens: ChainTokenInfoMap
+  tokens: ChainTokenMap
 ): Partial<Activity> {
   const tokenIn = getCurrency(swap.inputCurrencyId, chainId, tokens)
   const tokenOut = getCurrency(swap.outputCurrencyId, chainId, tokens)
@@ -78,7 +78,7 @@ function parseWrap(wrap: WrapTransactionInfo, chainId: SupportedChainId, status:
 function parseApproval(
   approval: ApproveTransactionInfo,
   chainId: SupportedChainId,
-  tokens: ChainTokenInfoMap
+  tokens: ChainTokenMap
 ): Partial<Activity> {
   // TODO: Add 'amount' approved to ApproveTransactionInfo so we can distinguish between revoke and approve
   const currency = getCurrency(approval.tokenAddress, chainId, tokens)
@@ -93,7 +93,7 @@ type GenericLPInfo = Omit<
   AddLiquidityV3PoolTransactionInfo | RemoveLiquidityV3TransactionInfo | AddLiquidityV2PoolTransactionInfo,
   'type'
 >
-function parseLP(lp: GenericLPInfo, chainId: SupportedChainId, tokens: ChainTokenInfoMap): Partial<Activity> {
+function parseLP(lp: GenericLPInfo, chainId: SupportedChainId, tokens: ChainTokenMap): Partial<Activity> {
   const baseCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
   const quoteCurrency = getCurrency(lp.quoteCurrencyId, chainId, tokens)
   const [baseRaw, quoteRaw] = [lp.expectedAmountBaseRaw, lp.expectedAmountQuoteRaw]
@@ -105,7 +105,7 @@ function parseLP(lp: GenericLPInfo, chainId: SupportedChainId, tokens: ChainToke
 function parseCollectFees(
   collect: CollectFeesTransactionInfo,
   chainId: SupportedChainId,
-  tokens: ChainTokenInfoMap
+  tokens: ChainTokenMap
 ): Partial<Activity> {
   // Adapts CollectFeesTransactionInfo to generic LP type
   const {
@@ -120,7 +120,7 @@ function parseCollectFees(
 function parseMigrateCreateV3(
   lp: MigrateV2LiquidityToV3TransactionInfo | CreateV3PoolTransactionInfo,
   chainId: SupportedChainId,
-  tokens: ChainTokenInfoMap
+  tokens: ChainTokenMap
 ): Partial<Activity> {
   const baseCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
   const baseSymbol = baseCurrency?.symbol ?? t`Unknown`
@@ -134,7 +134,7 @@ function parseMigrateCreateV3(
 export function parseLocalActivity(
   details: TransactionDetails,
   chainId: SupportedChainId,
-  tokens: ChainTokenInfoMap
+  tokens: ChainTokenMap
 ): Activity | undefined {
   const status = !details.receipt
     ? TransactionStatus.Pending

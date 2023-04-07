@@ -1,21 +1,15 @@
 import { TokenInfo, TokenList } from '@uniswap/token-lists'
+import { ChainTokenMap, MutableChainTokenMap } from 'hooks/Tokens'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
-type TokenInfoMap = Readonly<{ [tokenAddress in string]?: { token: WrappedTokenInfo; list?: TokenList } }>
-export type ChainTokenInfoMap = Readonly<{ [chainId in number]?: TokenInfoMap }>
+const mapCache = typeof WeakMap !== 'undefined' ? new WeakMap<TokenList | TokenInfo[], ChainTokenMap>() : null
 
-type Mutable<T> = {
-  -readonly [P in keyof T]: Mutable<T[P]>
-}
-
-const mapCache = typeof WeakMap !== 'undefined' ? new WeakMap<TokenList | TokenInfo[], ChainTokenInfoMap>() : null
-
-export function tokensToChainTokenInfoMap(tokens: TokenList | TokenInfo[]): ChainTokenInfoMap {
+export function tokensToChainTokenMap(tokens: TokenList | TokenInfo[]): ChainTokenMap {
   const cached = mapCache?.get(tokens)
   if (cached) return cached
 
   const [list, infos] = Array.isArray(tokens) ? [undefined, tokens] : [tokens, tokens.tokens]
-  const map = infos.reduce<Mutable<ChainTokenInfoMap>>((map, info) => {
+  const map = infos.reduce<MutableChainTokenMap>((map, info) => {
     try {
       const token = new WrappedTokenInfo(info, list)
       if (map[token.chainId]?.[token.address] !== undefined) {
@@ -24,14 +18,14 @@ export function tokensToChainTokenInfoMap(tokens: TokenList | TokenInfo[]): Chai
       }
 
       const tokenInfoMap = map[token.chainId] || {}
-      tokenInfoMap[token.address] = { token, list }
+      tokenInfoMap[token.address] = token
       map[token.chainId] = tokenInfoMap
 
       return map
     } catch {
       return map
     }
-  }, {}) as ChainTokenInfoMap
+  }, {}) as ChainTokenMap
   mapCache?.set(tokens, map)
   return map
 }
