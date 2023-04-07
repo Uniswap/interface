@@ -16,11 +16,7 @@ import {
   WrapNotification,
 } from 'src/features/notifications/Notifications'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
-import {
-  AppNotification,
-  AppNotificationType,
-  CopyNotificationType,
-} from 'src/features/notifications/types'
+import { AppNotification, AppNotificationType } from 'src/features/notifications/types'
 import { TransactionType } from 'src/features/transactions/types'
 
 export function NotificationToastWrapper(): JSX.Element | null {
@@ -45,12 +41,7 @@ export function NotificationToastRouter({
     case AppNotificationType.Default:
       return <DefaultNotification notification={notification} />
     case AppNotificationType.Copied:
-      switch (notification.copyType) {
-        case CopyNotificationType.Address:
-          return <CopiedNotification notification={notification} />
-        case CopyNotificationType.TransactionId:
-          return <CopiedNotification notification={notification} />
-      }
+      return <CopiedNotification notification={notification} />
     case AppNotificationType.SwapNetwork:
       return <SwapNetworkNotification notification={notification} />
     case AppNotificationType.NFTVisibility:
