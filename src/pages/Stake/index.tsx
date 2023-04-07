@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { /*useMemo,*/ useState } from 'react'
+import { useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 //import { useInfiniteQuery } from 'react-query'
 import styled from 'styled-components/macro'
@@ -99,7 +99,7 @@ export default function Stake() {
     }
   }
 
-  const showItems = (allPools: PoolRegisteredLog[]) => {
+  const showItems = (records: number, allPools: PoolRegisteredLog[]) => {
     const items: PoolRegisteredLog[] = []
 
     for (let i = 0; i < records; i++) {
@@ -110,6 +110,11 @@ export default function Stake() {
 
     return items
   }
+
+  const items = useMemo(() => {
+    if (!allPools) return []
+    return showItems(records, allPools)
+  }, [records, allPools])
 
   return (
     <PageWrapper gap="lg" justify="center">
@@ -170,7 +175,7 @@ export default function Stake() {
               dataLength={allPools.length}
               style={{ overflow: 'unset' }}
             >
-              <PoolPositionList positions={showItems(allPools)} filterByOperator={false} />
+              <PoolPositionList positions={items} filterByOperator={false} />
             </InfiniteScroll>
           ) : allPools?.length === 0 ? (
             <OutlineCard>
