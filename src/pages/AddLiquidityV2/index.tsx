@@ -5,8 +5,8 @@ import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { sendEvent } from 'components/analytics'
-import { useToggleWalletDrawer } from 'components/Portfolio'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { useCallback, useState } from 'react'
@@ -67,7 +67,7 @@ export default function AddLiquidity() {
       ((currencyA && currencyA.equals(wrappedNativeCurrency)) || (currencyB && currencyB.equals(wrappedNativeCurrency)))
   )
 
-  const toggleWalletDrawer = useToggleWalletDrawer() // toggle wallet when disconnected
+  const toggleWalletDrawer = useToggleAccountDrawer() // toggle wallet when disconnected
 
   const expertMode = useIsExpertMode()
 

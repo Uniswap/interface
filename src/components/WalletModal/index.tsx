@@ -2,10 +2,10 @@ import { sendAnalyticsEvent, user } from '@uniswap/analytics'
 import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { getWalletMeta } from '@uniswap/conedison/provider/meta'
 import { useWeb3React } from '@web3-react/core'
+import { useAccountDrawer } from 'components/AccountDrawer'
+import IconButton from 'components/AccountDrawer/IconButton'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
-import { useWalletDrawer } from 'components/Portfolio'
-import IconButton from 'components/Portfolio/IconButton'
 import { AutoRow } from 'components/Row'
 import { Connection, ConnectionType, getConnections, networkConnection } from 'connection'
 import { useGetConnection } from 'connection'
@@ -84,7 +84,7 @@ function didUserReject(connection: Connection, error: any): boolean {
 export default function WalletModal({ openSettings }: { openSettings: () => void }) {
   const dispatch = useAppDispatch()
   const { connector, account, chainId, provider } = useWeb3React()
-  const [drawerOpen, toggleWalletDrawer] = useWalletDrawer()
+  const [drawerOpen, toggleWalletDrawer] = useAccountDrawer()
 
   const [connectedWallets, addWalletToConnectedWallets] = useConnectedWallets()
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)

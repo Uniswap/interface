@@ -2,10 +2,10 @@ import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import PortfolioDrawer, { useAccountDrawer } from 'components/AccountDrawer'
+import PrefetchBalancesWrapper from 'components/AccountDrawer/PrefetchBalancesWrapper'
 import Loader from 'components/Icons/LoadingSpinner'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
-import PortfolioDrawer, { useWalletDrawer } from 'components/Portfolio'
-import PrefetchBalancesWrapper from 'components/Portfolio/PrefetchBalancesWrapper'
 import { useGetConnection } from 'connection'
 import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
@@ -158,11 +158,11 @@ function Web3StatusInner() {
     inputError: swapInputError,
   } = useDerivedSwapInfo()
   const validSwapQuote = getIsValidSwapQuote(trade, tradeState, swapInputError)
-  const [, toggleWalletDrawer] = useWalletDrawer()
+  const [, toggleAccountDrawer] = useAccountDrawer()
   const handleWalletDropdownClick = useCallback(() => {
     sendAnalyticsEvent(InterfaceEventName.ACCOUNT_DROPDOWN_BUTTON_CLICKED)
-    toggleWalletDrawer()
-  }, [toggleWalletDrawer])
+    toggleAccountDrawer()
+  }, [toggleAccountDrawer])
   const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])

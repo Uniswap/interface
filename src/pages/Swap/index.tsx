@@ -12,10 +12,10 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { sendEvent } from 'components/analytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
-import { useToggleWalletDrawer } from 'components/Portfolio'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
@@ -194,7 +194,7 @@ export default function Swap({ className }: { className?: string }) {
   const theme = useTheme()
 
   // toggle wallet when disconnected
-  const toggleWalletDrawer = useToggleWalletDrawer()
+  const toggleWalletDrawer = useToggleAccountDrawer()
 
   // for expert mode
   const [isExpertMode] = useExpertModeManager()

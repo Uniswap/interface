@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro'
+import { useAccountDrawer } from 'components/AccountDrawer'
 import Column from 'components/Column'
-import { useWalletDrawer } from 'components/Portfolio'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { TransactionStatus, useTransactionListQuery } from 'graphql/data/__generated__/types-and-hooks'
@@ -98,7 +98,7 @@ function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = 
 const lastFetchedAtom = atom<number | undefined>(0)
 
 export function ActivityTab({ account }: { account: string }) {
-  const [drawerOpen, toggleWalletDrawer] = useWalletDrawer()
+  const [drawerOpen, toggleWalletDrawer] = useAccountDrawer()
   const [lastFetched, setLastFetched] = useAtom(lastFetchedAtom)
 
   const localMap = useLocalActivities(account)
