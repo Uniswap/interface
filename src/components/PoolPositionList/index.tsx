@@ -89,7 +89,13 @@ export default function PoolPositionList({ positions, filterByOperator, filterBy
       <MobileHeader>{filterByOperator ? <Trans>Operated pools</Trans> : <Trans>Loaded pools</Trans>}</MobileHeader>
       {operatedPools.length !== 0 ? (
         operatedPools.map((p: any) => {
-          return <PoolPositionListItem key={p?.name.toString()} positionDetails={p} />
+          return (
+            <PoolPositionListItem
+              key={p?.name.toString()}
+              positionDetails={p}
+              returnPage={filterByOperator ? 'mint' : 'stake'}
+            />
+          )
         })
       ) : (
         <>

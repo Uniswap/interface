@@ -86,9 +86,10 @@ const ExtentsText = styled.span`
 
 interface PoolPositionListItemProps {
   positionDetails: PoolPositionDetails
+  returnPage: string
 }
 
-export default function PoolPositionListItem({ positionDetails }: PoolPositionListItemProps) {
+export default function PoolPositionListItem({ positionDetails, returnPage }: PoolPositionListItemProps) {
   const { name, symbol } = positionDetails
 
   // TODO: get some pool data like, all data with 1 call. Only problem this call will be made for each pool
@@ -100,7 +101,7 @@ export default function PoolPositionListItem({ positionDetails }: PoolPositionLi
   //}, [name, symbol, pool, id])
 
   //const positionSummaryLink = '/smart-pool/' + positionDetails.pool '/' + positionDetails.id
-  const positionSummaryLink = `/smart-pool/${positionDetails.address}` ///${positionDetails.id}
+  const positionSummaryLink = `/smart-pool/${positionDetails.address}/${returnPage}` ///${positionDetails.id}
 
   return (
     <LinkRow to={positionSummaryLink}>
