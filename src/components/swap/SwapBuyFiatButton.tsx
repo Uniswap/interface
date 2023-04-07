@@ -114,7 +114,7 @@ export default function SwapBuyFiatButton() {
     <MouseoverTooltipContent
       wrap
       content={
-        <div>
+        <div data-testid="fiat-on-ramp-unavailable-tooltip">
           <Trans>Crypto purchases are not available in your region. </Trans>
           <TraceEvent
             events={[BrowserEvent.onClick]}

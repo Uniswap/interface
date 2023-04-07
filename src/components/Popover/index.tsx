@@ -1,7 +1,7 @@
 import { Options, Placement } from '@popperjs/core'
 import Portal from '@reach/portal'
 import useInterval from 'lib/hooks/useInterval'
-import React, { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { CSSProperties, useCallback, useMemo, useState } from 'react'
 import { usePopper } from 'react-popper'
 import styled from 'styled-components/macro'
 import { Z_INDEX } from 'theme/zIndex'
@@ -11,7 +11,7 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   pointer-events: none;
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.show ? 1 : 0)};
-  transition: visibility 125ms ease-in-out, opacity 125ms ease-in-out;
+  transition: visibility 150ms linear, opacity 150ms linear;
   color: ${({ theme }) => theme.textSecondary};
 `
 
@@ -81,8 +81,6 @@ export interface PopoverProps {
   offsetY?: number
   hideArrow?: boolean
   showInline?: boolean
-  // time delay in milliseconds before the popover shows
-  delayBeforeShow?: number
   style?: CSSProperties
 }
 
@@ -90,7 +88,6 @@ export default function Popover({
   content,
   show,
   children,
-  delayBeforeShow,
   placement = 'auto',
   offsetX = 8,
   offsetY = 8,
@@ -101,9 +98,6 @@ export default function Popover({
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null)
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null)
   const [arrowElement, setArrowElement] = useState<HTMLDivElement | null>(null)
-  // Default delayBeforeShow is undefined (no delay before showing),
-  // so delayShow should initialize to be true.
-  const [delayShow, setDelayShow] = useState(delayBeforeShow ? false : true)
 
   const options = useMemo(
     (): Options => ({
@@ -123,38 +117,17 @@ export default function Popover({
   const updateCallback = useCallback(() => {
     update && update()
   }, [update])
-  useInterval(updateCallback, show ? 200 : null)
-
-  useEffect(() => {
-    if (!delayBeforeShow) return
-    if (show) {
-      const tooltipTimer = setTimeout(() => {
-        setDelayShow(true)
-      }, delayBeforeShow)
-
-      return () => {
-        clearTimeout(tooltipTimer)
-      }
-    } else {
-      setDelayShow(false)
-      return
-    }
-  }, [show, delayBeforeShow])
+  useInterval(updateCallback, show ? 100 : null)
 
   return showInline ? (
-    <PopoverContainer show={show && delayShow}>{content}</PopoverContainer>
+    <PopoverContainer show={show}>{content}</PopoverContainer>
   ) : (
     <>
       <ReferenceElement style={style} ref={setReferenceElement as any}>
         {children}
       </ReferenceElement>
       <Portal>
-        <PopoverContainer
-          show={show && delayShow}
-          ref={setPopperElement as any}
-          style={styles.popper}
-          {...attributes.popper}
-        >
+        <PopoverContainer show={show} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
           {content}
           {!hideArrow && (
             <Arrow
