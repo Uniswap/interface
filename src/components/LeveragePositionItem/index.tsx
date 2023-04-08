@@ -269,7 +269,7 @@ export default function LeveragePositionItem({
             <RangeLineItem>
               <RangeText>
                 <ExtentsText>
-                  <Trans>Min: </Trans>
+                  <Trans>Start: </Trans>
                 </ExtentsText>
                 <Trans>
                   <span>
@@ -286,7 +286,7 @@ export default function LeveragePositionItem({
               </SmallOnly>
               <RangeText>
                 <ExtentsText>
-                  <Trans>Max:</Trans>
+                  <Trans>End:</Trans>
                 </ExtentsText>
                 <Trans>
                   <span>
