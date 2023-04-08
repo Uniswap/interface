@@ -261,49 +261,70 @@ export default function LeveragePositionItem({
 
         <PrimaryPositionIdData>
           <AutoColumn>
-          <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={18} margin />
-          <ThemedText.SubHeader>
-            &nbsp;{currency0?.symbol}&nbsp;/&nbsp;{currency1?.symbol}
-          </ThemedText.SubHeader>
-          {true ? (
-            <RangeLineItem>
-              <RangeText>
-                <ExtentsText>
-                  <Trans>Start: </Trans>
-                </ExtentsText>
-                <Trans>
-                  <span>
-                    {"1.00"}{' '}
-                  </span>
-                  <HoverInlineText text={currency0?.symbol} /> per <HoverInlineText text={currency1?.symbol ?? ''} />
-                </Trans>
-              </RangeText>{' '}
-              <HideSmall>
-                <DoubleArrow>↔</DoubleArrow>{' '}
-              </HideSmall>
-              <SmallOnly>
-                <DoubleArrow>↔</DoubleArrow>{' '}
-              </SmallOnly>
-              <RangeText>
-                <ExtentsText>
-                  <Trans>End:</Trans>
-                </ExtentsText>
-                <Trans>
-                  <span>
-                    {"2.00"}{' '}
-                  </span>
-                  <HoverInlineText text={currency0?.symbol} /> per{' '}
-                  <HoverInlineText maxCharacters={10} text={currency1?.symbol} />
-                </Trans>
-              </RangeText>
-            </RangeLineItem>
-          ) : (
-            <Loader />
-          )}
+            <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={18} margin />
+            <ThemedText.SubHeader>
+              &nbsp;{currency0?.symbol}&nbsp;/&nbsp;{currency1?.symbol}
+            </ThemedText.SubHeader>
+            {true ? (
+              <RangeLineItem>
+                <RangeText>
+                  <ExtentsText>
+                    <Trans>Start: </Trans>
+                  </ExtentsText>
+                  <Trans>
+                    <span>
+                      {"1.00"}{' '}
+                    </span>
+                    <HoverInlineText text={currency0?.symbol} /> per <HoverInlineText text={currency1?.symbol ?? ''} />
+                  </Trans>
+                </RangeText>{' '}
+                <HideSmall>
+                  <DoubleArrow>↔</DoubleArrow>{' '}
+                </HideSmall>
+                <SmallOnly>
+                  <DoubleArrow>↔</DoubleArrow>{' '}
+                </SmallOnly>
+                <RangeText>
+                  <ExtentsText>
+                    <Trans>End:</Trans>
+                  </ExtentsText>
+                  <Trans>
+                    <span>
+                      {"2.00"}{' '}
+                    </span>
+                    <HoverInlineText text={currency0?.symbol} /> per{' '}
+                    <HoverInlineText maxCharacters={10} text={currency1?.symbol} />
+                  </Trans>
+                </RangeText>
+              </RangeLineItem>
+            ) : (
+              <Loader />
+            )}
           </AutoColumn>
         </PrimaryPositionIdData>
       </RowBetween>
-      <AutoRow gap="5px" style={{ alignSelf:"flex-end"}}>
+      <AutoRow gap="5px" style={{ alignSelf: "flex-end" }}>
+        <RangeText>
+          <ExtentsText>
+            <Trans>Enter Price:</Trans>
+          </ExtentsText>
+          <Trans>
+            <span>
+              {"2.00"}{' '}
+            </span>
+          </Trans>
+        </RangeText>
+
+        <RangeText>
+          <ExtentsText>
+            <Trans>Current Price:</Trans>
+          </ExtentsText>
+          <Trans>
+            <span>
+              {"2.00"}{' '}
+            </span>
+          </Trans>
+        </RangeText>
         <ResponsiveButtonPrimary data-cy="join-pool-button" id="join-pool-button" as={Link} to="/add/ETH">
           <Trans>Close Position</Trans>
         </ResponsiveButtonPrimary>
