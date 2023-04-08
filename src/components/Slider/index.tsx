@@ -94,6 +94,7 @@ interface InputSliderProps {
   min?: number
   max?: number
   size?: number
+  float?: boolean
 }
 
 export default function Slider({
@@ -103,11 +104,12 @@ export default function Slider({
   step = 1,
   max = 100,
   size = 28,
+  float = false,
   ...rest
 }: InputSliderProps) {
   const changeCallback = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      onChange(parseInt(e.target.value))
+      onChange(float ? parseFloat(e.target.value) : parseInt(e.target.value))
     },
     [onChange]
   )

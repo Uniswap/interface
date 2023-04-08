@@ -3,7 +3,9 @@ import PositionListItem from 'components/PositionListItem'
 import React from 'react'
 import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
-import { PositionDetails } from 'types/position'
+import { LeveragePositionDetails } from 'types/leveragePosition'
+import LeveragePositionItem from 'components/LeveragePositionItem'
+import { AutoColumn } from 'components/Column'
 
 const DesktopHeader = styled.div`
   display: none;
@@ -21,6 +23,7 @@ const DesktopHeader = styled.div`
       margin-right: 12px;
     }
   }
+  margin-bottom: 4px;
 `
 
 const MobileHeader = styled.div`
@@ -43,6 +46,7 @@ const MobileHeader = styled.div`
     flex-direction: row;
     justify-content: space-between;
   }
+  margin-bottom: 4px;
 `
 
 const ToggleWrap = styled.div`
@@ -59,17 +63,17 @@ const ToggleLabel = styled.button`
   font-size: 1rem;
 `
 
-type PositionListProps = React.PropsWithChildren<{
-  positions: PositionDetails[]
+type LeveragePositionListProps = React.PropsWithChildren<{
+  positions: LeveragePositionDetails[]
   setUserHideClosedPositions: any
   userHideClosedPositions: boolean
 }>
 
-export default function PositionList({
+export default function LeveragePositionsList({
   positions,
   setUserHideClosedPositions,
   userHideClosedPositions,
-}: PositionListProps) {
+}: LeveragePositionListProps) {
   return (
     <>
       <DesktopHeader>
@@ -77,6 +81,7 @@ export default function PositionList({
           <Trans>Your positions</Trans>
           {positions && ' (' + positions.length + ')'}
         </div>
+
         <ToggleLabel
           id="desktop-hide-closed-positions"
           onClick={() => {
@@ -98,9 +103,12 @@ export default function PositionList({
           </ToggleLabel>
         </ToggleWrap>
       </MobileHeader>
+      <AutoColumn gap="4px">
       {positions.map((p) => (
-        <PositionListItem key={p.tokenId.toString()} {...p} />
+        <LeveragePositionItem key={p.tokenId.toString()} {...p} />
       ))}
+      </AutoColumn>
+
     </>
   )
 }

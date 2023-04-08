@@ -17,7 +17,7 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { useCurrencyBalances } from '../connection/hooks'
 import { AppState } from '../types'
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
+import { Field, replaceSwapState, selectCurrency, setHideClosedLeveragePositions, setLeverageFactor, setRecipient, switchCurrencies, typeInput } from './actions'
 import { SwapState } from './reducer'
 
 export function useSwapState(): AppState['swap'] {
@@ -29,6 +29,8 @@ export function useSwapActionHandlers(): {
   onSwitchTokens: () => void
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
+  onLeverageChange: (leverage: string) => void
+  onHideClosedLeveragePositions: (hide: boolean) => void
 } {
   const dispatch = useAppDispatch()
   const onCurrencySelection = useCallback(
@@ -61,11 +63,27 @@ export function useSwapActionHandlers(): {
     [dispatch]
   )
 
+  const onLeverageChange = useCallback(
+    (leverageFactor: string) => {
+      dispatch(setLeverageFactor({ leverageFactor }))
+    },
+    [dispatch]
+  )
+
+  const onHideClosedLeveragePositions = useCallback(
+    (hide: boolean) => {
+      dispatch(setHideClosedLeveragePositions({ hideClosedLeveragePositions: hide }))
+    },
+    [dispatch]
+  )
+
   return {
     onSwitchTokens,
     onCurrencySelection,
     onUserInput,
     onChangeRecipient,
+    onLeverageChange,
+    onHideClosedLeveragePositions,
   }
 }
 
@@ -242,6 +260,8 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
     typedValue,
     independentField,
     recipient,
+    leverageFactor: "1",
+    hideClosedLeveragePositions: true
   }
 }
 
@@ -267,6 +287,8 @@ export function useDefaultsFromURLSearch(): SwapState {
         inputCurrencyId,
         outputCurrencyId,
         recipient: parsedSwapState.recipient,
+        leverageFactor: "1",
+        hideClosedLeveragePositions: true
       })
     )
   }, [dispatch, chainId, parsedSwapState])
