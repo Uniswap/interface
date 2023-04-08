@@ -525,51 +525,51 @@ export default function Swap({ className }: { className?: string }) {
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
   )
 
-  // const leveragePositions: LeveragePositionDetails[] = [
-  //   {
-  //     token0: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-  //     token1: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-  //     tokenId: BigNumber.from(1),
-  //     totalLiquidity: BigNumber.from(1),
-  //     totalDebt: BigNumber.from(1),
-  //     totalDebtInput: BigNumber.from(1),
-  //     borrowedLiquidity: BigNumber.from(1),
-  //     isToken0: true,
-  //     openBlock: 1,
-  //     tickStart: 1,
-  //     tickFinish: 1,
-  //     timeUntilFinish:1
-  //   },
-  //   {
-  //     token0: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-  //     token1: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-  //     tokenId: BigNumber.from(1),
-  //     totalLiquidity: BigNumber.from(1),
-  //     totalDebt: BigNumber.from(1),
-  //     totalDebtInput: BigNumber.from(1),
-  //     borrowedLiquidity: BigNumber.from(1),
-  //     isToken0: true,
-  //     openBlock: 1,
-  //     tickStart: 1,
-  //     tickFinish: 1,
-  //     timeUntilFinish:1
-  //   },
-  //   {
-  //     token0: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-  //     token1: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-  //     tokenId: BigNumber.from(1),
-  //     totalLiquidity: BigNumber.from(1),
-  //     totalDebt: BigNumber.from(1),
-  //     totalDebtInput: BigNumber.from(1),
-  //     borrowedLiquidity: BigNumber.from(1),
-  //     isToken0: true,
-  //     openBlock: 1,
-  //     tickStart: 1,
-  //     tickFinish: 1,
-  //     timeUntilFinish:1
-  //   }
-  // ]
-  const leveragePositions: LeveragePositionDetails[] = []
+  const leveragePositions: LeveragePositionDetails[] = [
+    {
+      token0: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+      token1: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+      tokenId: BigNumber.from(1),
+      totalLiquidity: BigNumber.from(1),
+      totalDebt: BigNumber.from(1),
+      totalDebtInput: BigNumber.from(1),
+      borrowedLiquidity: BigNumber.from(1),
+      isToken0: true,
+      openBlock: 1,
+      tickStart: 1,
+      tickFinish: 1,
+      timeUntilFinish:1
+    },
+    {
+      token0: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+      token1: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+      tokenId: BigNumber.from(1),
+      totalLiquidity: BigNumber.from(1),
+      totalDebt: BigNumber.from(1),
+      totalDebtInput: BigNumber.from(1),
+      borrowedLiquidity: BigNumber.from(1),
+      isToken0: true,
+      openBlock: 1,
+      tickStart: 1,
+      tickFinish: 1,
+      timeUntilFinish:1
+    },
+    {
+      token0: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+      token1: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+      tokenId: BigNumber.from(1),
+      totalLiquidity: BigNumber.from(1),
+      totalDebt: BigNumber.from(1),
+      totalDebtInput: BigNumber.from(1),
+      borrowedLiquidity: BigNumber.from(1),
+      isToken0: true,
+      openBlock: 1,
+      tickStart: 1,
+      tickFinish: 1,
+      timeUntilFinish:1
+    }
+  ]
+  // const leveragePositions: LeveragePositionDetails[] = []
 
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
