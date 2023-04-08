@@ -75,7 +75,7 @@ import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import LeveragePositionsList from 'components/LeveragedPositionsList'
 import { LeveragePositionDetails } from 'types/leveragePosition'
 import { BigNumber } from '@ethersproject/bignumber'
-
+import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers } from 'react-feather'
 const ArrowContainer = styled.div`
   display: inline-block;
   display: inline-flex;
@@ -141,6 +141,20 @@ const DetailsSwapSection = styled(SwapSection)`
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 `
+
+const ErrorContainer = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+  max-width: 300px;
+  min-height: 25vh;
+`
+
+
+
+
 
 const LeveragePositionsWrapper = styled.main`
   background-color: ${({ theme }) => theme.backgroundSurface};
@@ -511,50 +525,51 @@ export default function Swap({ className }: { className?: string }) {
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
   )
 
-  const leveragePositions: LeveragePositionDetails[] = [
-    {
-      token0: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-      token1: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-      tokenId: BigNumber.from(1),
-      totalLiquidity: BigNumber.from(1),
-      totalDebt: BigNumber.from(1),
-      totalDebtInput: BigNumber.from(1),
-      borrowedLiquidity: BigNumber.from(1),
-      isToken0: true,
-      openBlock: 1,
-      tickStart: 1,
-      tickFinish: 1,
-      timeUntilFinish:1
-    },
-    {
-      token0: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-      token1: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-      tokenId: BigNumber.from(1),
-      totalLiquidity: BigNumber.from(1),
-      totalDebt: BigNumber.from(1),
-      totalDebtInput: BigNumber.from(1),
-      borrowedLiquidity: BigNumber.from(1),
-      isToken0: true,
-      openBlock: 1,
-      tickStart: 1,
-      tickFinish: 1,
-      timeUntilFinish:1
-    },
-    {
-      token0: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-      token1: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-      tokenId: BigNumber.from(1),
-      totalLiquidity: BigNumber.from(1),
-      totalDebt: BigNumber.from(1),
-      totalDebtInput: BigNumber.from(1),
-      borrowedLiquidity: BigNumber.from(1),
-      isToken0: true,
-      openBlock: 1,
-      tickStart: 1,
-      tickFinish: 1,
-      timeUntilFinish:1
-    }
-  ]
+  // const leveragePositions: LeveragePositionDetails[] = [
+  //   {
+  //     token0: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+  //     token1: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+  //     tokenId: BigNumber.from(1),
+  //     totalLiquidity: BigNumber.from(1),
+  //     totalDebt: BigNumber.from(1),
+  //     totalDebtInput: BigNumber.from(1),
+  //     borrowedLiquidity: BigNumber.from(1),
+  //     isToken0: true,
+  //     openBlock: 1,
+  //     tickStart: 1,
+  //     tickFinish: 1,
+  //     timeUntilFinish:1
+  //   },
+  //   {
+  //     token0: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+  //     token1: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+  //     tokenId: BigNumber.from(1),
+  //     totalLiquidity: BigNumber.from(1),
+  //     totalDebt: BigNumber.from(1),
+  //     totalDebtInput: BigNumber.from(1),
+  //     borrowedLiquidity: BigNumber.from(1),
+  //     isToken0: true,
+  //     openBlock: 1,
+  //     tickStart: 1,
+  //     tickFinish: 1,
+  //     timeUntilFinish:1
+  //   },
+  //   {
+  //     token0: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+  //     token1: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+  //     tokenId: BigNumber.from(1),
+  //     totalLiquidity: BigNumber.from(1),
+  //     totalDebt: BigNumber.from(1),
+  //     totalDebtInput: BigNumber.from(1),
+  //     borrowedLiquidity: BigNumber.from(1),
+  //     isToken0: true,
+  //     openBlock: 1,
+  //     tickStart: 1,
+  //     tickFinish: 1,
+  //     timeUntilFinish:1
+  //   }
+  // ]
+  const leveragePositions: LeveragePositionDetails[] = []
 
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
@@ -844,9 +859,27 @@ export default function Swap({ className }: { className?: string }) {
                   </div>
                 </AutoColumn>
               </SwapWrapper>
-              <LeveragePositionsWrapper>
-                <LeveragePositionsList positions={leveragePositions} userHideClosedPositions={hideClosedLeveragePositions} setUserHideClosedPositions={onHideClosedLeveragePositions}/>
-              </LeveragePositionsWrapper>
+              <AutoRow>
+                <ThemedText.LargeHeader style={{ "paddingLeft": "20px", "paddingBottom": "4px"}}>
+                  Leverage Positions
+                </ThemedText.LargeHeader>
+                <LeveragePositionsWrapper>
+                  {leveragePositions.length > 0 ? (
+                    <LeveragePositionsList positions={leveragePositions} userHideClosedPositions={hideClosedLeveragePositions} setUserHideClosedPositions={onHideClosedLeveragePositions} />
+                  ) : (
+                    <ErrorContainer>
+                      <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
+                        {/* <InboxIcon strokeWidth={1} style={{ marginTop: '2em' }} /> */}
+                        <div>
+                          <Trans>Your active borrow positions will appear here.</Trans>
+                        </div>
+                      </ThemedText.DeprecatedBody>
+                    </ErrorContainer>
+                  )
+                  }
+
+                </LeveragePositionsWrapper>
+              </AutoRow>
             </RowBetween>
           )}
           <NetworkAlert />
