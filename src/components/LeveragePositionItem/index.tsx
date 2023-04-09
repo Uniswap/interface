@@ -6,7 +6,7 @@ import RangeBadge from 'components/Badge/RangeBadge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverInlineText from 'components/HoverInlineText'
 import Loader from 'components/Icons/LoadingSpinner'
-import { AutoRow, RowBetween } from 'components/Row'
+import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { useToken } from 'hooks/Tokens'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { usePool } from 'hooks/usePools'
@@ -21,7 +21,7 @@ import { hasURL } from 'utils/urlChecks'
 import { SmallButtonPrimary } from 'components/Button'
 
 import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
-import { AutoColumn } from 'components/Column'
+import Column, { AutoColumn } from 'components/Column'
 
 const ResponsiveButtonPrimary = styled(SmallButtonPrimary)`
   border-radius: 12px;
@@ -120,6 +120,17 @@ const PrimaryPositionIdData = styled(AutoColumn)`
   }
   margin-bottom: 8px;
 `
+
+const ItemValueLabel = ({label, value}: { label: string, value: string}) => (
+  <Column gap="sm" style={{width: "100px"}}>
+    <ThemedText.Caption style={{whiteSpace: "nowrap"}}>
+      {label}
+    </ThemedText.Caption>
+    <ThemedText.SubHeader>
+      {value}
+    </ThemedText.SubHeader>
+  </Column>
+)
 
 // interface PositionListItemProps {
 //   token0: string
@@ -229,33 +240,6 @@ export default function LeveragePositionItem({
   return (
     <ItemWrapper>
       <RowBetween>
-        <AutoRow width="auto">
-          <AutoRow gap="2px">
-            <ThemedText.Caption>
-              Position Size:
-            </ThemedText.Caption>
-            <ThemedText.SubHeader>
-              {"100k"}
-            </ThemedText.SubHeader>
-          </AutoRow>
-          <AutoRow gap="2px">
-            <ThemedText.Caption>
-              Debt:
-            </ThemedText.Caption>
-            <ThemedText.SubHeader>
-              {"100k"}
-            </ThemedText.SubHeader>
-          </AutoRow>
-          <AutoRow gap="2px">
-            <ThemedText.Caption>
-              Time Remaining:
-            </ThemedText.Caption>
-            <ThemedText.SubHeader>
-              {"100k"}
-            </ThemedText.SubHeader>
-          </AutoRow>
-        </AutoRow>
-
         <PrimaryPositionIdData>
           <AutoColumn>
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={18} margin />
@@ -299,38 +283,45 @@ export default function LeveragePositionItem({
             )}
           </AutoColumn>
         </PrimaryPositionIdData>
+        <AutoRow gap="4px" width="100%">
+        <ItemValueLabel label={"Total Position"} value={"1000k"}/>
+        <ItemValueLabel label={"Debt"} value={"1000k"}/>
+        <ItemValueLabel label={"Time of Creation"} value={"1000k"}/>
+        <ItemValueLabel label={"Time Remaining"} value={"1000k"}/>
+        </AutoRow>
       </RowBetween>
-      <AutoRow gap="5px" style={{ alignSelf: "flex-end" }}>
-        <RangeText>
-          <ExtentsText>
-            <Trans>Enter Price:</Trans>
-          </ExtentsText>
-          <Trans>
-            <span>
-              {"2.00"}{' '}
-            </span>
-          </Trans>
-        </RangeText>
-
-        <RangeText>
-          <ExtentsText>
-            <Trans>Current Price:</Trans>
-          </ExtentsText>
-          <Trans>
-            <span>
-              {"2.00"}{' '}
-            </span>
-          </Trans>
-        </RangeText>
-        <ResponsiveButtonPrimary data-cy="join-pool-button" id="join-pool-button" as={Link} to="/add/ETH">
-          <Trans>Close Position</Trans>
-        </ResponsiveButtonPrimary>
-        <ResponsiveButtonPrimary data-cy="join-pool-button" id="join-pool-button" as={Link} to="/add/ETH">
-          <Trans>Add Interest</Trans>
-        </ResponsiveButtonPrimary>
-      </AutoRow>
-
-
+      <RowBetween>
+        <AutoRow>
+          <RangeText>
+            <ExtentsText>
+              <Trans>Enter Price:</Trans>
+            </ExtentsText>
+            <Trans>
+              <span>
+                {"2.00"}{' '}
+              </span>
+            </Trans>
+          </RangeText>
+          <RangeText>
+            <ExtentsText>
+              <Trans>Current Price:</Trans>
+            </ExtentsText>
+            <Trans>
+              <span>
+                {"2.00"}{' '}
+              </span>
+            </Trans>
+          </RangeText>
+        </AutoRow>
+        <AutoRow gap="8px">
+          <ResponsiveButtonPrimary data-cy="join-pool-button" id="join-pool-button" as={Link} to="/add/ETH">
+            <Trans>Close Position</Trans>
+          </ResponsiveButtonPrimary>
+          <ResponsiveButtonPrimary data-cy="join-pool-button" id="join-pool-button" as={Link} to="/add/ETH">
+            <Trans>Add Interest</Trans>
+          </ResponsiveButtonPrimary>
+        </AutoRow>
+      </RowBetween>
     </ItemWrapper>
   )
 }
