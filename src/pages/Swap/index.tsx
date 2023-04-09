@@ -76,6 +76,23 @@ import LeveragePositionsList from 'components/LeveragedPositionsList'
 import { LeveragePositionDetails } from 'types/leveragePosition'
 import { BigNumber } from '@ethersproject/bignumber'
 import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers } from 'react-feather'
+import { Chain, TokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
+import ChartSection, { PairChartSection } from 'components/Tokens/TokenDetails/ChartSection'
+import TokenDetailsSkeleton, {
+  Hr,
+  LeftPanel,
+  RightPanel,
+  TokenDetailsLayout,
+  TokenInfoContainer,
+  TokenNameCell,
+} from 'components/Tokens/TokenDetails/Skeleton'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
+import { useTokenPriceQuery, useTokenQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
+import { pageTimePeriodAtom } from 'pages/TokenDetails'
+import { useAtom } from 'jotai'
+import { CHAIN_ID_TO_BACKEND_NAME, toHistoryDuration } from 'graphql/data/util'
+
 const ArrowContainer = styled.div`
   display: inline-block;
   display: inline-flex;
@@ -161,6 +178,7 @@ const LeveragePositionsWrapper = styled.main`
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   padding: 4px;
   margin-left: 20px;
+  margin-right:20px;
   border-radius: 16px;
   width:100%;
   display: flex;
@@ -525,10 +543,49 @@ export default function Swap({ className }: { className?: string }) {
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
   )
 
+  // const leveragePositions: LeveragePositionDetails[] = []
+  
+  const [inputCurrency, outputCurrency] = [currencies[Field.INPUT] ? currencies[Field.INPUT] : undefined, currencies[Field.OUTPUT] ? currencies[Field.OUTPUT] : undefined]
+  const [timePeriod, setTimePeriod] = useAtom(pageTimePeriodAtom)
+  const [inputAddress, outputAddress] = useMemo(
+    () => {
+      let input
+      let out
+      if (inputCurrency && outputCurrency) {
+        input = inputCurrency.isNative ? inputCurrency.wrapped.address : inputCurrency.address
+        out = outputCurrency.isNative ? outputCurrency.wrapped.address : outputCurrency.address
+      }
+      return [input, out]
+    }
+  , [inputCurrency, outputCurrency])
+
+  const duration = useMemo(() => {
+    return toHistoryDuration(timePeriod)
+  }, [timePeriod])
+  const chain = chainId ? CHAIN_ID_TO_BACKEND_NAME[chainId] : Chain.Ethereum
+
+  const { data: token0PriceQuery } = useTokenPriceQuery({
+    variables: {
+      address: inputAddress,
+      chain,
+      duration,
+    },
+    errorPolicy: 'all',
+  })
+  
+  const { data: token1PriceQuery } = useTokenPriceQuery({
+    variables: {
+      address: outputAddress,
+      chain,
+      duration,
+    },
+    errorPolicy: 'all',
+  })
+
   const leveragePositions: LeveragePositionDetails[] = [
     {
-      token0: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-      token1: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+      token0: inputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+      token1: outputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
       tokenId: BigNumber.from(1),
       totalLiquidity: BigNumber.from(1),
       totalDebt: BigNumber.from(1),
@@ -538,11 +595,11 @@ export default function Swap({ className }: { className?: string }) {
       openBlock: 1,
       tickStart: 1,
       tickFinish: 1,
-      timeUntilFinish:1
+      timeUntilFinish: 1
     },
     {
-      token0: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-      token1: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+      token0: inputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+      token1: outputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
       tokenId: BigNumber.from(1),
       totalLiquidity: BigNumber.from(1),
       totalDebt: BigNumber.from(1),
@@ -552,11 +609,11 @@ export default function Swap({ className }: { className?: string }) {
       openBlock: 1,
       tickStart: 1,
       tickFinish: 1,
-      timeUntilFinish:1
+      timeUntilFinish: 1
     },
     {
-      token0: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-      token1: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+      token0: inputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+      token1: outputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
       tokenId: BigNumber.from(1),
       totalLiquidity: BigNumber.from(1),
       totalDebt: BigNumber.from(1),
@@ -566,10 +623,9 @@ export default function Swap({ className }: { className?: string }) {
       openBlock: 1,
       tickStart: 1,
       tickFinish: 1,
-      timeUntilFinish:1
+      timeUntilFinish: 1
     }
   ]
-  // const leveragePositions: LeveragePositionDetails[] = []
 
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
@@ -592,8 +648,20 @@ export default function Swap({ className }: { className?: string }) {
               width="100%"
             />
           ) : (
-            <RowBetween align="flex-start">
-              <SwapWrapper chainId={chainId} className={className} id="swap-page">
+            <AutoColumn>
+              <RowBetween align="flex-start">
+                <AutoRow marginRight="20px" marginLeft="20px" marginBottom="10px">
+                  <TokenInfoContainer data-testid="token-info-container">
+                    <TokenNameCell>
+                      {inputCurrency && outputCurrency && <DoubleCurrencyLogo currency0={inputCurrency as Currency} currency1={outputCurrency as Currency} size={18} margin />}
+                      {inputCurrency && outputCurrency
+                      ? `${(inputCurrency.symbol)}/${(outputCurrency.symbol)}` 
+                      : <Trans>Pair not found</Trans>}
+                    </TokenNameCell>
+                  </TokenInfoContainer>
+                  <PairChartSection token0PriceQuery={token0PriceQuery} token1PriceQuery={token1PriceQuery} token0symbol={inputCurrency?.symbol} token1symbol={outputCurrency?.symbol} onChangeTimePeriod={setTimePeriod}/>
+                </AutoRow>
+                <SwapWrapper chainId={chainId} className={className} id="swap-page">
                 <SwapHeader allowedSlippage={allowedSlippage} />
                 <ConfirmSwapModal
                   isOpen={showConfirm}
@@ -859,28 +927,29 @@ export default function Swap({ className }: { className?: string }) {
                   </div>
                 </AutoColumn>
               </SwapWrapper>
-              <AutoRow>
-                <ThemedText.LargeHeader style={{ "paddingLeft": "20px", "paddingBottom": "4px"}}>
-                  Leverage Positions
-                </ThemedText.LargeHeader>
-                <LeveragePositionsWrapper>
-                  {leveragePositions.length > 0 ? (
-                    <LeveragePositionsList positions={leveragePositions} userHideClosedPositions={hideClosedLeveragePositions} setUserHideClosedPositions={onHideClosedLeveragePositions} />
-                  ) : (
-                    <ErrorContainer>
-                      <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
-                        {/* <InboxIcon strokeWidth={1} style={{ marginTop: '2em' }} /> */}
-                        <div>
-                          <Trans>Your active borrow positions will appear here.</Trans>
-                        </div>
-                      </ThemedText.DeprecatedBody>
-                    </ErrorContainer>
-                  )
-                  }
+              </RowBetween>
 
-                </LeveragePositionsWrapper>
+              <AutoRow>
+                  <ThemedText.MediumHeader style={{ "paddingLeft": "20px", "paddingBottom": "8px" }}>
+                    Leverage Positions
+                  </ThemedText.MediumHeader>
+                  <LeveragePositionsWrapper>
+                    {leveragePositions.length > 0 ? (
+                      <LeveragePositionsList positions={leveragePositions} userHideClosedPositions={hideClosedLeveragePositions} setUserHideClosedPositions={onHideClosedLeveragePositions} />
+                    ) : (
+                      <ErrorContainer>
+                        <ThemedText.DeprecatedBody color={theme.textTertiary} textAlign="center">
+                          {/* <InboxIcon strokeWidth={1} style={{ marginTop: '2em' }} /> */}
+                          <div>
+                            <Trans>Your active borrow positions will appear here.</Trans>
+                          </div>
+                        </ThemedText.DeprecatedBody>
+                      </ErrorContainer>
+                    )
+                    }
+                  </LeveragePositionsWrapper>
               </AutoRow>
-            </RowBetween>
+            </AutoColumn>
           )}
           <NetworkAlert />
         </PageWrapper>

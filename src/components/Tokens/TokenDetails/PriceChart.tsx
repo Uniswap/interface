@@ -126,9 +126,11 @@ interface PriceChartProps {
   height: number
   prices: PricePoint[] | undefined | null
   timePeriod: TimePeriod
+  priceFormatBool?: boolean
+  priceFormat?: (price: string) => string
 }
 
-export function PriceChart({ width, height, prices: originalPrices, timePeriod }: PriceChartProps) {
+export function PriceChart({ width, height, prices: originalPrices, timePeriod, priceFormat, priceFormatBool }: PriceChartProps) {
   const locale = useActiveLocale()
   const theme = useTheme()
 
@@ -278,7 +280,7 @@ export function PriceChart({ width, height, prices: originalPrices, timePeriod }
       <ChartHeader data-cy="chart-header">
         {displayPrice.value ? (
           <>
-            <TokenPrice>{formatDollar({ num: displayPrice.value, isPrice: true })}</TokenPrice>
+            <TokenPrice>{priceFormatBool && priceFormat ? priceFormat(formatDollar({ num: displayPrice.value, isPrice: true })) : formatDollar({ num: displayPrice.value, isPrice: true })}</TokenPrice>
             <DeltaContainer>
               {formattedDelta}
               <ArrowCell>{arrow}</ArrowCell>

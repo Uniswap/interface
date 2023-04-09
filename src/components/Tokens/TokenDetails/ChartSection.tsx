@@ -45,6 +45,34 @@ export default function ChartSection({
   )
 }
 
+export function PairChartSection(
+  {
+    token0PriceQuery,
+    token1PriceQuery,
+    onChangeTimePeriod,
+    token0symbol = "UNK",
+    token1symbol = "UNK"
+  }: {
+    token0PriceQuery?: TokenPriceQuery
+    token1PriceQuery?: TokenPriceQuery
+    onChangeTimePeriod: OnChangeTimePeriod
+    token0symbol?: string
+    token1symbol?: string
+  }
+) {
+  if (!token0PriceQuery || !token1PriceQuery) {
+    return <LoadingChart />
+  }
+
+  return (
+    <Suspense fallback={<LoadingChart />}>
+      <ChartContainer>
+        <PairChart token0PriceQuery={token0PriceQuery} token1PriceQuery={token1PriceQuery} onChangeTimePeriod={onChangeTimePeriod} token0symbol={token0symbol} token1symbol={token1symbol}/>
+      </ChartContainer>
+    </Suspense>
+  )
+}
+
 export type OnChangeTimePeriod = (t: TimePeriod) => void
 function Chart({
   tokenPriceQuery,
@@ -61,6 +89,63 @@ function Chart({
     <ChartContainer data-testid="chart-container">
       <ParentSize>
         {({ width }) => <PriceChart prices={prices ?? null} width={width} height={436} timePeriod={timePeriod} />}
+      </ParentSize>
+      <TimePeriodSelector
+        currentTimePeriod={timePeriod}
+        onTimeChange={(t: TimePeriod) => {
+          startTransition(() => onChangeTimePeriod(t))
+        }}
+      />
+    </ChartContainer>
+  )
+}
+
+function PairChart({
+  token0PriceQuery,
+  token1PriceQuery,
+  onChangeTimePeriod,
+  token0symbol,
+  token1symbol
+}: {
+  token0PriceQuery: TokenPriceQuery
+  token1PriceQuery: TokenPriceQuery
+  onChangeTimePeriod: OnChangeTimePeriod
+  token0symbol: string
+  token1symbol: string
+}) {
+  const prices0 = usePriceHistory(token0PriceQuery)
+  const prices1 = usePriceHistory(token1PriceQuery)
+  const timePeriod = useAtomValue(pageTimePeriodAtom)
+
+  const prices = useMemo(() => {
+    if (prices0 && prices1) {
+      return prices0.map((price0, i) => {
+        const price1 = prices1[i]
+        return {
+          timestamp: price0.timestamp,
+          value: price0.value / price1.value
+        }
+      })
+    }
+    return null
+  }, [prices0, prices1])
+
+  const priceFormat = useMemo(() => {
+    const f = (price: string) => {
+      if (price === '-') {
+        return price
+      }
+      price = price.replace('$', '')
+      return `${price} ${token0symbol}/${token1symbol}`
+    }
+    return f
+  }, [token0PriceQuery, token1PriceQuery])
+
+
+  return (
+    <ChartContainer data-testid="chart-container">
+      <ParentSize>
+        {({ width }) => <PriceChart prices={prices} width={width} height={436} timePeriod={timePeriod} priceFormatBool={true} priceFormat={priceFormat}/>}
       </ParentSize>
       <TimePeriodSelector
         currentTimePeriod={timePeriod}

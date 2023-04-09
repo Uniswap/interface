@@ -228,9 +228,6 @@ export default function LeveragePositionItem({
 
   return (
     <ItemWrapper>
-      {/* <RowBetween> */}
-
-
       <RowBetween>
         <AutoRow width="auto">
           <AutoRow gap="2px">
