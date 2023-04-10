@@ -21,6 +21,9 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
 
     // If the error is a network change, it should not be considered an exception.
     if (error.message.match(/underlying network changed/)) return null
+
+    // If the error is based on a user rejecting, it should not be considered an exception.
+    if (error.message.match(/user rejected transaction/)) return null
   }
 
   return event
