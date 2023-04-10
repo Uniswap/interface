@@ -12,9 +12,9 @@ import { addAccounts } from '../slice'
 import { AccountType } from '../types'
 import { importAccount } from './importAccountSaga'
 import {
-  ImportMnemonicAccountParams,
   ImportAccountType,
   ImportAddressAccountParams,
+  ImportMnemonicAccountParams,
 } from './types'
 
 // uses , () => ({__mocks__

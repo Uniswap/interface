@@ -24,17 +24,10 @@ enum ErrorType {
  * @link https://github.com/Uniswap/mobile/blob/main/ios/RNEthersRS.swift
  */
 export class WebKeyring implements IKeyring {
-  constructor(private storage = new PersistedStorage()) {
-    this.generateAndStoreMnemonic = this.generateAndStoreMnemonic.bind(this)
-    this.generateAndStorePrivateKey = this.generateAndStorePrivateKey.bind(this)
-    this.getMnemonicIds = this.getMnemonicIds.bind(this)
-    this.importMnemonic = this.importMnemonic.bind(this)
-    this.keyForMnemonicId = this.keyForMnemonicId.bind(this)
-    this.keyForPrivateKey = this.keyForPrivateKey.bind(this)
-    this.retrieveMnemonic = this.retrieveMnemonic.bind(this)
-    this.storeNewMnemonic = this.storeNewMnemonic.bind(this)
-    this.unlock = this.unlock.bind(this)
-  }
+  private _password: string | null = null
+
+  private storage = new PersistedStorage()
+
   /**
    * Fetches all mnemonic IDs, which are used as keys to access the actual mnemonics
    * in key-value store.
@@ -62,8 +55,13 @@ export class WebKeyring implements IKeyring {
     }
 
     const mnemonic = await this.retrieveMnemonic(firstMnemonicId, password)
+    if (!mnemonic) {
+      return false
+    }
 
-    return Boolean(mnemonic)
+    this.password = password
+
+    return true
   }
 
   /**
@@ -82,12 +80,13 @@ export class WebKeyring implements IKeyring {
     const address = wallet.address
 
     const mnemonicId = await this.storeNewMnemonic(mnemonic, password, address)
-
     if (!mnemonicId) {
       throw new Error(
         `${ErrorType.StoreMnemonicError}: Failed to import mnemonic`
       )
     }
+
+    this.password = password
 
     return mnemonicId
   }
@@ -108,6 +107,8 @@ export class WebKeyring implements IKeyring {
         `${ErrorType.StoreMnemonicError}: Failed to generate and store mnemonic`
       )
     }
+
+    this.password = password
 
     return address
   }
@@ -188,10 +189,9 @@ export class WebKeyring implements IKeyring {
    */
   async generateAndStorePrivateKey(
     mnemonicId: string,
-    derivationIndex: number,
-    password: string
+    derivationIndex: number
   ): Promise<string> {
-    const mnemonic = await this.retrieveMnemonic(mnemonicId, password)
+    const mnemonic = await this.retrieveMnemonic(mnemonicId, this.password)
 
     if (!mnemonic) {
       throw new Error(ErrorType.RetrieveMnemonicError)
@@ -203,19 +203,33 @@ export class WebKeyring implements IKeyring {
     const privateKey = walletAtIndex.privateKey
     const address = walletAtIndex.address
 
-    await this.storeNewPrivateKey(address, privateKey)
-
-    return walletAtIndex.address
+    return await this.storeNewPrivateKey(address, privateKey)
   }
 
+  /** @returns address is store call was successfull. */
   private async storeNewPrivateKey(
     address: string,
     privateKey: string
-  ): Promise<void> {
+  ): Promise<string> {
+    const checkStored = await this.retrievePrivateKey(address)
+
+    if (checkStored !== undefined) {
+      logger.debug(
+        'Keyring.web',
+        'storeNewPrivateKey',
+        'privateKey already stored. Did you mean to reimport?'
+      )
+
+      return address
+    }
+
     try {
-      // TODO: encrypt
+      const secretPayload = await encrypt(privateKey, this.password)
+
       const newKey = this.keyForPrivateKey(address)
-      return this.storage.setItem(newKey, privateKey)
+      await this.storage.setItem(newKey, JSON.stringify(secretPayload))
+
+      return address
     } catch (e) {
       throw new Error(ErrorType.StoreMnemonicError + `: ${e}`)
     }
@@ -225,7 +239,25 @@ export class WebKeyring implements IKeyring {
     address: string
   ): Promise<string | undefined> {
     const key = this.keyForPrivateKey(address)
-    return this.storage.getItem(key)
+    const result = await this.storage.getItem(key)
+
+    if (!result) return undefined
+
+    try {
+      const maybeSecretPayload = JSON.parse(result)
+      const privateKey = await decrypt(this.password, maybeSecretPayload)
+
+      if (!privateKey) return undefined
+
+      // validate mnemonic (will throw if invalid)
+      if (!SigningKey.isSigningKey(privateKey)) {
+        throw new Error('Invalid private key')
+      }
+
+      return privateKey
+    } catch (e) {
+      throw new Error(`${ErrorType.RetrieveMnemonicError}: ${e}`)
+    }
   }
 
   private keyForPrivateKey(address: string): string {
@@ -268,6 +300,26 @@ export class WebKeyring implements IKeyring {
       const signature: Signature = signingKey.signDigest(hash)
       return joinSignature(signature)
     })
+  }
+
+  private get password(): string {
+    if (!this._password) {
+      throw new Error('Password is missing')
+    }
+
+    return this._password
+  }
+
+  private set password(password: string) {
+    if (this._password) {
+      logger.warn(
+        'Keyring.web',
+        'setPassword',
+        'Attempted to set password again'
+      )
+    }
+
+    this._password = password
   }
 }
 
