@@ -99,7 +99,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
     return () => setPendingError(undefined)
   }, [setPendingError])
 
-  const openOptions = useCallback(() => {
+  const onClearPending = useCallback(() => {
     if (pendingConnection) {
       setPendingError(undefined)
       setPendingConnection(undefined)
@@ -181,7 +181,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
     <Wrapper data-testid="wallet-modal">
       <ConnectionErrorModal
         error={pendingError}
-        openOptions={openOptions}
+        onDismiss={onClearPending}
         retryActivation={() => pendingConnection && tryActivation(pendingConnection)}
       />
       <AutoRow justify="space-between" width="100%" marginBottom="16px">

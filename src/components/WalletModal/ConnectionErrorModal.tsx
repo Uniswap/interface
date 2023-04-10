@@ -41,16 +41,16 @@ const DEFAULT_MESSAGE: ErrorMessage = {
 export default function ConnectionErrorModal({
   error,
   retryActivation,
-  openOptions,
+  onDismiss,
 }: {
   error?: any
   retryActivation: () => void
-  openOptions: () => void
+  onDismiss: () => void
 }) {
   const { icon, title, description, displayRetryButton } = DEFAULT_MESSAGE
 
   return (
-    <Modal isOpen={Boolean(error)} onDismiss={openOptions}>
+    <Modal isOpen={Boolean(error)} onDismiss={onDismiss}>
       <Wrapper>
         {icon}
         <ThemedText.HeadlineSmall marginBottom="16px">{title}</ThemedText.HeadlineSmall>
@@ -62,7 +62,7 @@ export default function ConnectionErrorModal({
             <Trans>Try Again</Trans>
           </ButtonPrimary>
         )}
-        <StyledCancelButton onClick={openOptions}>
+        <StyledCancelButton onClick={onDismiss}>
           <Trans>Cancel</Trans>
         </StyledCancelButton>
       </Wrapper>
