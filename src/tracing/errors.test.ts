@@ -21,7 +21,7 @@ describe('filterKnownErrors', () => {
   })
 
   it('filters user rejected request errors', () => {
-    const originalException = new Error('user rejected request')
+    const originalException = new Error('user rejected transaction')
     expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
   })
 })
