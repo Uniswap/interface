@@ -16,7 +16,7 @@ describe('StatusIcon', () => {
   })
 
   it('renders with no account and showMiniIcons=false', () => {
-    const supportedConnections = getConnections(false)
+    const supportedConnections = getConnections(/* isDarkMode= */ false)
     const injectedConnection = supportedConnections[1]
     const component = render(<StatusIcon connection={injectedConnection} showMiniIcons={false} />)
     expect(component.getByTestId('StatusIconRoot').children.length).toEqual(0)
