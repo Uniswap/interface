@@ -14,9 +14,9 @@ _Relevant docs:_
 <!-- Delete this section if your change does not affect UI. -->
 ## Screen capture
 
-| Before                  | After (Desktop)        | After (Mobile)         |
-| ----------------------- |----------------------- | ---------------------- |
-| <!-- Paste "before" --> | <!-- Paste "after" --> | <!-- Paste "after" --> |
+| Before       | After (Desktop) | After (Mobile) |
+| ------------ |---------------- | -------------- |
+| paste_before | past_after      | paste_after    |
 
 
 ## Test plan
@@ -39,7 +39,7 @@ _Relevant docs:_
 
 ### Automated testing
 
-<!-- If N/A, do not check nor delete, but strike through. -->
-<!-- eg - [ ] <s>Unit test</s> -->
+<!-- If N/A, check and note so it is obvious to your reviewers and does not show up as an incomplete task. -->
+<!-- eg - [x] Unit test N/A -->
 - [ ] Unit test
 - [ ] Integration/E2E test
