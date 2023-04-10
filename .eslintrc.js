@@ -3,7 +3,7 @@
 require('@uniswap/eslint-config/load')
 
 module.exports = {
-  extends: ['@uniswap/eslint-config/react'],
+  extends: '@uniswap/eslint-config/react',
   overrides: [
     {
       files: ['**/*.config.*', '**/*.d.ts'],
