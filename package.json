@@ -19,7 +19,7 @@
     "prepare": "yarn contracts:compile && yarn graphql:fetch && yarn graphql:generate && yarn i18n:compile",
     "start": "craco start",
     "build": "craco build",
-    "build:instrumented": "REACT_APP_UNSAFE_EVAL=true craco --max_old_space_size=4096 build",
+    "build:e2e": "REACT_APP_CSP_ALLOW_UNSAFE_EVAL=true REACT_APP_ADD_COVERAGE_INSTRUMENTATION=true craco --max_old_space_size=4096 build",
     "serve": "serve build -l 3000",
     "deduplicate": "yarn-deduplicate --strategy=highest",
     "lint": "yarn eslint .",

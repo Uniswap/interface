@@ -9,7 +9,7 @@ module.exports = {
   babel: {
     plugins: [
       '@vanilla-extract/babel-plugin',
-      ...(process.env.REACT_APP_UNSAFE_EVAL
+      ...(process.env.REACT_APP_ADD_COVERAGE_INSTRUMENTATION
         ? [
             [
               'istanbul',
