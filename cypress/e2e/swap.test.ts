@@ -77,7 +77,7 @@ describe('Swap', () => {
   it('should have the correct default input/output and token selection should work', () => {
     cy.visit('/swap')
     verifyToken('input', 'ETH')
-    verifyToken('output', 'Select token')
+    verifyToken('output', null)
 
     selectOutput('WETH')
     cy.get(getTestSelector('swap-currency-button')).first().click()
@@ -90,7 +90,7 @@ describe('Swap', () => {
     cy.visit(`/swap?inputCurrency=${WETH_GOERLI}`)
 
     verifyToken('input', 'WETH')
-    verifyToken('output', 'Select token')
+    verifyToken('output', null)
 
     selectOutput('Ether')
     cy.get(getTestSelector('swap-currency-button')).first().click()
@@ -102,12 +102,12 @@ describe('Swap', () => {
   it('should have the correct default output from URL params ', () => {
     cy.visit(`/swap?outputCurrency=${WETH_GOERLI}`)
 
-    verifyToken('input', 'Select token')
+    verifyToken('input', null)
     verifyToken('output', 'WETH')
 
     cy.get(getTestSelector('swap-currency-button')).first().click()
     verifyToken('input', 'WETH')
-    verifyToken('output', 'Select token')
+    verifyToken('output', null)
 
     selectOutput('Ether')
     cy.get(getTestSelector('swap-currency-button')).first().click()
