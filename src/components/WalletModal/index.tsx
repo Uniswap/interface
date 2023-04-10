@@ -99,12 +99,10 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
     return () => setPendingError(undefined)
   }, [setPendingError])
 
-  const onClearPending = useCallback(() => {
-    if (pendingConnection) {
-      setPendingError(undefined)
-      setPendingConnection(undefined)
-    }
-  }, [pendingConnection, setPendingError])
+  const onResetPendingState = useCallback(() => {
+    setPendingError(undefined)
+    setPendingConnection(undefined)
+  }, [])
 
   // Keep the network connector in sync with any active user connector to prevent chain-switching on wallet disconnection.
   useEffect(() => {
@@ -181,7 +179,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
     <Wrapper data-testid="wallet-modal">
       <ConnectionErrorModal
         error={pendingError}
-        onDismiss={onClearPending}
+        onDismiss={onResetPendingState}
         retryActivation={() => pendingConnection && tryActivation(pendingConnection)}
       />
       <AutoRow justify="space-between" width="100%" marginBottom="16px">

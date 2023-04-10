@@ -22,11 +22,6 @@ import { anonymizeLink } from '../../utils/anonymizeLink'
 
 // TODO: Break this file into a components folder
 
-export const CloseIcon = styled(X)<{ onClick: () => void }>`
-  color: ${({ theme }) => theme.textPrimary};
-  cursor: pointer;
-`
-
 // for wrapper react feather icons
 export const IconWrapper = styled.div<{ stroke?: string; size?: string; marginRight?: string; marginLeft?: string }>`
   display: flex;
@@ -121,6 +116,14 @@ const LinkIconWrapper = styled.a`
   align-items: center;
   justify-content: center;
   display: flex;
+`
+
+export const CloseIcon = styled(X)<{ onClick: () => void }>`
+  color: ${({ theme }) => theme.textPrimary};
+  cursor: pointer;
+`
+export const HoverableCloseIcon = styled(CloseIcon)`
+  ${ClickableStyle}
 `
 
 const IconStyle = css`
