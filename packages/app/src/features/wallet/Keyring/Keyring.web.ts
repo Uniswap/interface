@@ -26,7 +26,17 @@ enum ErrorType {
 export class WebKeyring implements IKeyring {
   private _password: string | null = null
 
-  private storage = new PersistedStorage()
+  constructor(private storage = new PersistedStorage()) {
+    this.generateAndStoreMnemonic = this.generateAndStoreMnemonic.bind(this)
+    this.generateAndStorePrivateKey = this.generateAndStorePrivateKey.bind(this)
+    this.getMnemonicIds = this.getMnemonicIds.bind(this)
+    this.importMnemonic = this.importMnemonic.bind(this)
+    this.keyForMnemonicId = this.keyForMnemonicId.bind(this)
+    this.keyForPrivateKey = this.keyForPrivateKey.bind(this)
+    this.retrieveMnemonic = this.retrieveMnemonic.bind(this)
+    this.storeNewMnemonic = this.storeNewMnemonic.bind(this)
+    this.unlock = this.unlock.bind(this)
+  }
 
   /**
    * Fetches all mnemonic IDs, which are used as keys to access the actual mnemonics
