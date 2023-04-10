@@ -32,7 +32,7 @@ describe('Landing Page', () => {
   })
 
   it('allows navigation to pool on mobile', () => {
-    cy.viewport(375, 667)
+    cy.viewport('iphone-6')
     cy.visit('/swap')
     cy.get(getTestSelector('pool-nav-link')).last().click()
     cy.url().should('include', '/pools')

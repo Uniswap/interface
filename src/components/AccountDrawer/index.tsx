@@ -114,7 +114,7 @@ const AccountDrawerWrapper = styled.div<{ open: boolean }>`
   }
 
   @media screen and (min-width: 1440px) {
-    margin-right: ${({ open }) => (open ? 0 : '-' + DRAWER_WIDTH_XL)};
+    margin-right: ${({ open }) => (open ? 0 : `-${DRAWER_WIDTH_XL}`)};
     width: ${DRAWER_WIDTH_XL};
   }
 
