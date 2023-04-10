@@ -51,7 +51,7 @@ const StyledButton = styled(ButtonPrimary)`
   font-weight: 600;
 `
 
-export const StyledCancelButton = styled(ButtonText)`
+const StyledCancelButton = styled(ButtonText)`
   margin-top: 16px;
   color: ${({ theme }) => theme.textSecondary};
   font-weight: 600;

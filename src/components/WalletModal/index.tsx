@@ -157,6 +157,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
         dispatch(updateSelectedWallet({ wallet: connection.type }))
         if (drawerOpenRef.current) toggleWalletDrawer()
       } catch (error) {
+        // TODO(WEB-3162): re-add special treatment for already-pending injected errors
         if (didUserReject(connection, error)) {
           setPendingConnection(undefined)
         } else {
