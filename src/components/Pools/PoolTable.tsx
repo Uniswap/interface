@@ -256,7 +256,7 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
   )
 }
 
-const MAX_ITEMS = 10
+const MAX_ITEMS = 15
 
 export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDatas: PoolData[]; maxItems?: number }) {
   // for sorting
