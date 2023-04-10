@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 import { ChainId, Fraction } from '@kyberswap/ks-sdk-core'
 import { BigNumber, Contract, ethers } from 'ethers'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocalStorage } from 'react-use'
 
 import { ERC20_ABI } from 'constants/abis/erc20'
@@ -93,12 +93,18 @@ export default function useTotalVotingReward(): {
     'kyberdao-totalVotingRewards',
     0,
   )
+  const [localStoredKNCPrice, setLocalStoredKNCPrice] = useLocalStorage('kyberdao-KNCPrice', 0)
 
   useEffect(() => {
     if (totalVotingReward) {
       setLocalStoredTotalVotingReward(totalVotingReward)
     }
   }, [totalVotingReward, setLocalStoredTotalVotingReward])
+  useEffect(() => {
+    if (kncPriceETH) {
+      setLocalStoredKNCPrice(kncPriceETH)
+    }
+  }, [kncPriceETH, setLocalStoredKNCPrice])
 
   useEffect(() => {
     const run = async () => {
@@ -176,7 +182,9 @@ export default function useTotalVotingReward(): {
             return parseFloat(new Fraction(kncBalance.toString(), 10 ** 18).toSignificant(18)) * kncPriceETH
           })(),
         ])
-        setTotalVotingReward(rewards.reduce((a: number, b: number) => a + b, 0))
+        // TODO Diep: temporary hard code for Elastic Fee
+        const hardCodedElasticFeeUSD = 110000
+        setTotalVotingReward(rewards.reduce((a: number, b: number) => a + b, 0) + hardCodedElasticFeeUSD)
       } catch {
         setTotalVotingReward(0)
       }
@@ -194,15 +202,12 @@ export default function useTotalVotingReward(): {
     checkForKNCPrice()
   }, [classicClientMainnet, blockClient])
 
+  const totalVotingRewardWithCache = Math.floor(totalVotingReward || localStoredTotalVotingReward || 0)
+  const kncPriceWithCache = kncPriceETH || localStoredKNCPrice || 0
+
   return {
-    usd: Math.floor(totalVotingReward || localStoredTotalVotingReward || 0),
-    knc: useMemo(
-      () =>
-        kncPriceETH && kncPriceETH !== 0
-          ? Math.floor((totalVotingReward || localStoredTotalVotingReward || 0) / kncPriceETH)
-          : 0,
-      [totalVotingReward, kncPriceETH, localStoredTotalVotingReward],
-    ),
-    kncPriceETH,
+    usd: totalVotingRewardWithCache,
+    knc: kncPriceWithCache !== 0 ? Math.floor(totalVotingRewardWithCache / kncPriceWithCache) : 0,
+    kncPriceETH: kncPriceWithCache,
   }
 }
