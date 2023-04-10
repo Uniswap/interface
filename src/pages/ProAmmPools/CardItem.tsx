@@ -103,7 +103,7 @@ export default function ProAmmPoolCardItem({ pool, onShared, userPositions }: Li
   }, [farms, pool.address])
 
   return (
-    <Wrapper key={pool.address}>
+    <Wrapper key={pool.address} data-testid={pool.address}>
       <Link
         to={`${APP_PATHS.ELASTIC_CREATE_POOL}/${token0Slug}/${token1Slug}/${pool.feeTier}`}
         style={{

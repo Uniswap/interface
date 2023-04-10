@@ -158,7 +158,7 @@ export default function ProAmmPoolListItem({ pool, onShared, userPositions }: Li
   }
 
   return (
-    <TableRow key={pool.address}>
+    <TableRow key={pool.address} data-testid={pool.address}>
       <div>
         <Link
           to={`${APP_PATHS.ELASTIC_CREATE_POOL}/${token0Slug}/${token1Slug}/${pool.feeTier}`}

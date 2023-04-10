@@ -122,7 +122,7 @@ const FarmCard = ({
   const token1Symbol = getTokenSymbolWithHardcode(chainId, pool?.token1?.wrapped?.address, pool.token1.symbol)
 
   return (
-    <FlipCard flip={showPosition} joined={!!depositedPositions.length}>
+    <FlipCard flip={showPosition} joined={!!depositedPositions.length} data-testid={pool.id}>
       {!showPosition && (
         <FlipCardFront>
           <Flex alignItems="center" justifyContent="space-between">

@@ -288,7 +288,7 @@ const Row = ({
   }
 
   return (
-    <RowWrapper isOpen={rowOpen && !!depositedPositions.length}>
+    <RowWrapper isOpen={rowOpen && !!depositedPositions.length} data-testid={farmingPool.id}>
       <ProMMFarmTableRow isOpen={rowOpen && !!depositedPositions.length}>
         <div>
           <Flex alignItems="center">
