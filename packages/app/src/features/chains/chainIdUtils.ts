@@ -1,19 +1,12 @@
-import { BigNumberish } from 'ethers'
+import { PollingInterval } from 'app/src/constants/misc'
 import {
   ChainId,
   isL2Chain,
   TESTNET_CHAIN_IDS,
 } from 'app/src/features/chains/chains'
-import { PollingInterval } from 'app/src/constants/misc'
+import { BigNumberish } from 'ethers'
 
-// TODO: gql generation
-enum Chain {
-  Ethereum,
-  Arbitrum,
-  EthereumGoerli,
-  Optimism,
-  Polygon,
-}
+import { Chain } from 'app/src/data/__generated__/types-and-hooks'
 
 const supportedChains = Object.values(ChainId).map((c) => c.toString())
 

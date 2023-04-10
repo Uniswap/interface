@@ -18,7 +18,7 @@ const space = {
 
 const size = space
 
-const iconSize = {
+export const iconSize = {
   icon8: 8,
   icon12: 12,
   icon16: 16,

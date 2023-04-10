@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { getAddress } from 'ethers/lib/utils'
 
-import { Account } from './types'
+import { Account } from 'app/src/features/wallet/types'
 
 export interface WalletState {
   accounts: Record<string, Account>

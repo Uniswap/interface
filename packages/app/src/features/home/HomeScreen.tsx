@@ -1,10 +1,11 @@
-import { H1, Stack } from 'tamagui'
-import { authActions } from '../auth/saga'
+import { Stack } from 'tamagui'
 import { Text } from 'ui/src'
 import { Button } from 'ui/src/components/button/Button'
+import { authActions } from '../auth/saga'
 
 import { useAppDispatch, useAppSelector } from '../../state'
 import { PortfolioBalance } from './PortfolioBalance'
+import { TokenBalanceList } from './TokenBalanceList'
 
 export function HomeScreen(): JSX.Element {
   const accounts = useAppSelector((state) => state?.wallet?.accounts)
@@ -24,6 +25,7 @@ export function HomeScreen(): JSX.Element {
           padding="$spacing16">
           <Text variant="bodyLarge">{a.address}</Text>
           <PortfolioBalance address={a.address} />
+          <TokenBalanceList owner={a.address} />
         </Stack>
       ))}
       <Button

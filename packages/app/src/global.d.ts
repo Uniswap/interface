@@ -1,7 +1,9 @@
 declare type Address = string
 declare type AddressTo<T> = Record<Address, T>
-declare type Maybe<T> = T | null | undefined
+
 declare type Nullable<T> = T | null
+declare type Maybe<T> = Nullable<T> | undefined
+
 declare type Primitive =
   | number
   | string

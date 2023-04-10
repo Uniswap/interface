@@ -1,0 +1,7 @@
+export const ETHEREUM_LOGO = require('./logos/ethereum-logo.png')
+export const OPTIMISM_LOGO = require('./logos/optimism-logo.png')
+export const ARBITRUM_LOGO = require('./logos/arbitrum-logo.png')
+export const POLYGON_LOGO = require('./logos/polygon-matic-logo.png')
+export const GOERLI_LOGO = require('./logos/goerli-logo.png')
+export const MUMBAI_LOGO = require('./logos/mumbai-logo.png')
+export const UNISWAP_LOGO_LARGE = require('./logos/uniswap-logo-large.png')

@@ -51,6 +51,7 @@
     "g:run-all-checks": "turbo run typecheck lint test build --parallel --since=HEAD^1",
     "g:test": "turbo run test --filter=tests --parallel --since=HEAD^1",
     "g:typecheck": "turbo run typecheck --parallel --since=HEAD^1",
+    "gql:ext": "yarn workspace extension-app graphql:generate",
     "postinstall": "is-ci || yarn husky install",
     "semantic-release:expo-app": "yarn workspace expo-app semantic-release",
     "staged:lint:fix": "eslint --fix",

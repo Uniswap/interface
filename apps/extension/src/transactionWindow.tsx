@@ -1,7 +1,7 @@
-import TransactionContent from './transactionContent'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { config, TamaguiProvider } from 'ui/src'
+import TransactionContent from './transactionContent'
 
 const container = window.document.querySelector('#root')
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

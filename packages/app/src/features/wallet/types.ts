@@ -1,5 +1,7 @@
 // import type { Palette } from '@uniswap/ui'
 
+import { TokenSortableField } from 'app/src/data/__generated__/types-and-hooks'
+
 export enum AccountType {
   SignerMnemonic = 'signerMnemonic', // Key lives in native keystore
   Readonly = 'readonly', // Accounts without keys (e.g. so user can track balances)
@@ -42,3 +44,23 @@ export interface ReadOnlyAccount extends AccountBase {
 }
 
 export type Account = SignerMnemonicAccount | ReadOnlyAccount
+
+export enum NFTViewType {
+  Grid,
+  Collection,
+}
+
+export enum ClientTokensOrderBy {
+  PriceChangePercentage24hAsc = 'PriceChangePercentage24hAsc',
+  PriceChangePercentage24hDesc = 'PriceChangePercentage24hDesc',
+  Volume24hDesc = 'Volume24hDesc',
+}
+
+export type TokensOrderBy = TokenSortableField | ClientTokensOrderBy
+
+export enum TokenMetadataDisplayType {
+  MarketCap,
+  Volume,
+  TVL,
+  Symbol,
+}
