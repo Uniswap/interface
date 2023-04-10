@@ -4,7 +4,6 @@ import { Flex } from 'rebass'
 import { useGetAlertStatsQuery, useGetListAlertsQuery } from 'services/priceAlert'
 
 import { PrivateAnnouncementType } from 'components/Announcement/type'
-import Loader from 'components/Loader'
 import { useActiveWeb3React } from 'hooks'
 import NoData from 'pages/NotificationCenter/NoData'
 import CommonPagination from 'pages/NotificationCenter/PriceAlerts/CommonPagination'
@@ -45,18 +44,10 @@ const ActiveAlerts = ({ setDisabledClearAll }: { setDisabledClearAll: (v: boolea
     return () => unsubscribePrivate?.()
   }, [account, refetch, refetchStat])
 
-  if (isLoading) {
-    return (
-      <Flex justifyContent="center" height="100%" minHeight="100%" alignItems="center">
-        <Loader size="36px" />
-      </Flex>
-    )
-  }
-
   const totalAlert = data?.alerts?.length ?? 0
 
-  if (!totalAlert) {
-    return <NoData msg={t`No price alerts created yet`} />
+  if (!totalAlert || isLoading) {
+    return <NoData msg={t`No price alerts created yet`} isLoading={isLoading} />
   }
 
   return (

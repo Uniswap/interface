@@ -17,6 +17,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import TradePrice from 'components/swapv2/TradePrice'
 import { useActiveWeb3React } from 'hooks'
 import { useBaseTradeInfoWithAggregator } from 'hooks/useBaseTradeInfo'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import InputNote from 'pages/NotificationCenter/CreateAlert/InputNote'
 import {
@@ -46,6 +47,7 @@ import {
 import { getTokenAddress } from 'pages/NotificationCenter/helper'
 import { useNotify, useWalletModalToggle } from 'state/application/hooks'
 import { tryParseAmount } from 'state/swap/hooks'
+import { formatTimeDuration } from 'utils/time'
 
 const defaultInput = {
   tokenInAmount: '1',
@@ -127,7 +129,7 @@ export default function CreateAlert({
     if (!fillAllInput || !parsedAmount) return false
     return true
   }
-
+  const { mixpanelHandler } = useMixpanel()
   const onSubmitAlert = async () => {
     try {
       if (!isInputValid()) return
@@ -151,6 +153,13 @@ export default function CreateAlert({
         currencyOut,
       })
       resetForm()
+      mixpanelHandler(MIXPANEL_TYPE.PA_CREATE_SUCCESS, {
+        input_token: currencyIn.symbol,
+        output_token: currencyOut.symbol,
+        goes: alertType,
+        cooldown: formatTimeDuration(cooldown),
+        disable_the_alert: disableAfterTrigger ? 'yes' : 'no',
+      })
     } catch (error) {
       console.error('create alert err', error)
       const msg = error?.data?.message || t`Error occur, please try again`

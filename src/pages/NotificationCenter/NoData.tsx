@@ -1,9 +1,10 @@
 import { Info } from 'react-feather'
 import { Flex, Text } from 'rebass'
 
+import Loader from 'components/Loader'
 import useTheme from 'hooks/useTheme'
 
-export default function NoData({ msg }: { msg: string }) {
+export default function NoData({ msg, isLoading }: { msg: string; isLoading: boolean }) {
   const theme = useTheme()
   return (
     <Flex flex="1 1 0" justifyContent="center" width="100%" alignItems="center">
@@ -15,8 +16,14 @@ export default function NoData({ msg }: { msg: string }) {
           gap: '0.75rem',
         }}
       >
-        <Info size={'24px'} />
-        <Text as="span">{msg}</Text>
+        {isLoading ? (
+          <Loader size="36px" />
+        ) : (
+          <>
+            <Info size={'24px'} />
+            <Text as="span">{msg}</Text>
+          </>
+        )}
       </Flex>
     </Flex>
   )

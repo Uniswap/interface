@@ -4,7 +4,9 @@ import styled from 'styled-components'
 
 import { formatNumberOfUnread } from 'components/Announcement/helper'
 import { APP_PATHS } from 'constants/index'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
+import { NOTIFICATION_ROUTES } from 'pages/NotificationCenter/const'
 
 const IconWrapper = styled.div`
   height: 16px;
@@ -87,8 +89,13 @@ const MenuItem: React.FC<Props> = ({ icon, text, unread, href, isMobile = false 
   const path = `${APP_PATHS.NOTIFICATION_CENTER}${href}`
   const isActive = location.pathname === path
 
+  const { mixpanelHandler } = useMixpanel()
+  const trackingPriceAlertTab = () => {
+    if (path.includes(NOTIFICATION_ROUTES.PRICE_ALERTS)) mixpanelHandler(MIXPANEL_TYPE.PA_CLICK_TAB_IN_NOTI_CENTER)
+  }
+
   return (
-    <Link to={path}>
+    <Link to={path} onClick={trackingPriceAlertTab}>
       <Wrapper $active={isActive} $mobile={isMobile}>
         <Flex
           sx={{

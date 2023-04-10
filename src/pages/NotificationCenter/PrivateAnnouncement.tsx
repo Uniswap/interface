@@ -35,11 +35,19 @@ export default function GeneralAnnouncement({ type }: { type?: PrivateAnnounceme
   const [page, setPage] = useState(1)
   const { account } = useActiveWeb3React()
   const templateIds = type ? getAnnouncementsTemplateIds()[type] : ''
-  const { data: respNotificationByType, refetch: refetchById } = useGetPrivateAnnouncementsByIdsQuery(
+  const {
+    data: respNotificationByType,
+    refetch: refetchById,
+    isLoading,
+  } = useGetPrivateAnnouncementsByIdsQuery(
     { page, account: account ?? '', templateIds, pageSize: ITEMS_PER_PAGE },
     { skip: !account || !templateIds },
   )
-  const { data: dataAllNotification, refetch: refetchAll } = useGetPrivateAnnouncementsQuery(
+  const {
+    data: dataAllNotification,
+    refetch: refetchAll,
+    isLoading: isLoadingAll,
+  } = useGetPrivateAnnouncementsQuery(
     { page, account: account ?? '', pageSize: ITEMS_PER_PAGE },
     { skip: !account || !!templateIds },
   )
@@ -106,7 +114,10 @@ export default function GeneralAnnouncement({ type }: { type?: PrivateAnnounceme
             <InboxItemNotificationCenter key={item.id} announcement={item as PrivateAnnouncement} />
           ))
         ) : (
-          <NoData msg={account ? t`No notification yet` : t`Connect wallet to view notification`} />
+          <NoData
+            msg={account ? t`No notification yet` : t`Connect wallet to view notification`}
+            isLoading={isLoading || isLoadingAll}
+          />
         )}
       </ShareContentWrapper>
       <CommonPagination

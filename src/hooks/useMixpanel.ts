@@ -205,6 +205,10 @@ export enum MIXPANEL_TYPE {
   MENU_PREFERENCE_CLICK,
   MENU_CLAIM_REWARDS_CLICK,
   SUPPORT_CLICK,
+
+  // price alert
+  PA_CLICK_TAB_IN_NOTI_CENTER,
+  PA_CREATE_SUCCESS,
 }
 
 export const NEED_CHECK_SUBGRAPH_TRANSACTION_TYPES: readonly TRANSACTION_TYPE[] = [
@@ -1031,6 +1035,15 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
           mixpanel.track('Elastic - Add Liquidity page - Click Pool analytic', { token_1, token_2 })
           break
         }
+
+        case MIXPANEL_TYPE.PA_CLICK_TAB_IN_NOTI_CENTER: {
+          mixpanel.track('Price Alert Click')
+          break
+        }
+        case MIXPANEL_TYPE.PA_CREATE_SUCCESS: {
+          mixpanel.track('Create Alert', payload)
+          break
+        }
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1334,6 +1347,7 @@ export const useGlobalMixpanelEvents = () => {
         '/kyberdao/stake-knc': 'KyberDAO Stake',
         '/kyberdao/vote': 'KyberDAO Vote',
         limit: 'Limit Order',
+        'notification-center': 'Notification',
       }
       const pageName = map[pathName] || map[location.pathname]
       pageName && mixpanelHandler(MIXPANEL_TYPE.PAGE_VIEWED, { page: pageName })

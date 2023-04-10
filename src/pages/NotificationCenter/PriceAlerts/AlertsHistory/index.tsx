@@ -4,7 +4,6 @@ import { Flex } from 'rebass'
 import { useGetListPriceAlertHistoryQuery } from 'services/priceAlert'
 
 import { AnnouncementTemplatePriceAlert, PrivateAnnouncement } from 'components/Announcement/type'
-import Loader from 'components/Loader'
 import { useActiveWeb3React } from 'hooks'
 import NoData from 'pages/NotificationCenter/NoData'
 import CommonPagination from 'pages/NotificationCenter/PriceAlerts/CommonPagination'
@@ -30,16 +29,8 @@ const AlertsHistory = ({ setDisabledClearAll }: { setDisabledClearAll: (v: boole
     setDisabledClearAll(!notifications?.length)
   }, [notifications?.length, setDisabledClearAll])
 
-  if (isLoading) {
-    return (
-      <Flex justifyContent="center" height="100%" minHeight="100%" alignItems="center">
-        <Loader size="36px" />
-      </Flex>
-    )
-  }
-
-  if (!notifications?.length) {
-    return <NoData msg={t`No alerts yet`} />
+  if (!notifications?.length || isLoading) {
+    return <NoData msg={t`No alerts yet`} isLoading={isLoading} />
   }
 
   return (

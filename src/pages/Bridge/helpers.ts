@@ -100,17 +100,20 @@ export async function getTokenlist(chainId: ChainId, isStaleData: boolean) {
     local = getTokenListCache() // make sure get latest data
     try {
       const filterChain = Object.keys(local).reduce<{ [chainId: string]: any }>((rs, chainId) => {
-        if (Object.keys(rs).length < 2) {
+        if (!Object.keys(rs).length) {
           rs[chainId] = local[chainId]
         }
         return rs
       }, {})
-      // only store info 3 chain
+      // only store info 2 chain
       localStorage.setItem(BridgeLocalStorageKeys.TOKEN_LIST, JSON.stringify({ ...filterChain, [chainId]: tokens }))
     } catch (error) {
       console.log('overflow localstorage QuotaExceededError')
       localStorage.removeItem(BridgeLocalStorageKeys.TOKEN_LIST)
-      localStorage.setItem(BridgeLocalStorageKeys.TOKEN_LIST, JSON.stringify({ [chainId]: tokens }))
+      try {
+        // still overflow, don't save into local
+        localStorage.setItem(BridgeLocalStorageKeys.TOKEN_LIST, JSON.stringify({ [chainId]: tokens }))
+      } catch (error) {}
     }
     return tokens
   } catch (e) {
