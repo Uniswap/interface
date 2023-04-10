@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event'
 import { useWeb3React } from '@web3-react/core'
-import { useAccountDrawer } from 'components/WalletDropdown'
+import { useAccountDrawer } from 'components/AccountDrawer'
 import { fireEvent, render, screen } from 'test-utils'
 
 import { useFiatOnrampAvailability, useOpenModal } from '../../state/application/hooks'
@@ -18,7 +18,7 @@ jest.mock('../../state/application/hooks')
 const mockUseFiatOnrampAvailability = useFiatOnrampAvailability as jest.MockedFunction<typeof useFiatOnrampAvailability>
 const mockUseOpenModal = useOpenModal as jest.MockedFunction<typeof useOpenModal>
 
-jest.mock('components/WalletDropdown')
+jest.mock('components/AccountDrawer')
 const mockuseAccountDrawer = useAccountDrawer as jest.MockedFunction<typeof useAccountDrawer>
 
 const mockUseFiatOnRampsUnavailable = (shouldCheck: boolean) => {
