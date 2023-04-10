@@ -5,12 +5,12 @@ import { useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import styled from 'styled-components/macro'
 
-import { useWalletDrawer } from '..'
+import { useAccountDrawer } from '..'
 import { DEFAULT_NFT_QUERY_AMOUNT } from './constants'
 import { NFT } from './NFT'
 
 export default function NFTs({ account }: { account: string }) {
-  const [walletDrawerOpen, toggleWalletDrawer] = useWalletDrawer()
+  const [walletDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
   const { walletAssets, loading, hasNext, loadMore } = useNftBalance(
     account,
     [],

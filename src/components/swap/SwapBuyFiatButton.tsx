@@ -2,9 +2,9 @@ import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { useAccountDrawer } from 'components/AccountDrawer'
 import { ButtonText } from 'components/Button'
 import { MouseoverTooltipContent } from 'components/Tooltip'
-import { useWalletDrawer } from 'components/WalletDropdown'
 import { useCallback, useEffect, useState } from 'react'
 import { useBuyFiatFlowCompleted } from 'state/user/hooks'
 import styled from 'styled-components/macro'
@@ -54,7 +54,7 @@ export default function SwapBuyFiatButton() {
     loading: fiatOnrampAvailabilityLoading,
   } = useFiatOnrampAvailability(checkFiatRegionAvailability)
   const [buyFiatFlowState, setBuyFiatFlowState] = useState(BuyFiatFlowState.INACTIVE)
-  const [walletDrawerOpen, toggleWalletDrawer] = useWalletDrawer()
+  const [walletDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
 
   /*
    * Depending on the current state of the buy fiat flow the user is in (buyFiatFlowState),
