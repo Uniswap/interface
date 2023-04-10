@@ -9,10 +9,12 @@ import GNOSIS_ICON_URL from 'assets/images/gnosis.png'
 import METAMASK_ICON_URL from 'assets/images/metamask.svg'
 import UNIWALLET_ICON_URL from 'assets/images/uniwallet.svg'
 import WALLET_CONNECT_ICON_URL from 'assets/images/walletConnectIcon.svg'
+import INJECTED_DARK_ICON_URL from 'assets/svg/browser-wallet-dark.svg'
 import INJECTED_LIGHT_ICON_URL from 'assets/svg/browser-wallet-light.svg'
 import UNISWAP_LOGO_URL from 'assets/svg/logo.svg'
 import { SupportedChainId } from 'constants/chains'
 import { useCallback } from 'react'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { isMobile, isNonIOSPhone } from 'utils/userAgent'
 
 import { RPC_URLS } from '../constants/networks'
@@ -34,7 +36,6 @@ export interface Connection {
   connector: Connector
   hooks: Web3ReactHooks
   type: ConnectionType
-  // TODO(WEB-3130): add darkmode check for icons
   getIcon?(): string
   shouldDisplay(): boolean
   overrideActivate?: () => boolean
@@ -65,13 +66,14 @@ const getShouldAdvertiseMetaMask = () =>
 const getIsGenericInjector = () => getIsInjected() && !getIsMetaMaskWallet() && !getIsCoinbaseWallet()
 
 const [web3Injected, web3InjectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))
-const injectedConnection: Connection = {
+const injectedConnection = (isDarkMode: boolean): Connection => ({
   // TODO(WEB-3131) re-add "Install MetaMask" string when no injector is present
   getName: () => (getIsGenericInjector() ? 'Browser Wallet' : 'MetaMask'),
   connector: web3Injected,
   hooks: web3InjectedHooks,
   type: ConnectionType.INJECTED,
-  getIcon: () => (getIsGenericInjector() ? INJECTED_LIGHT_ICON_URL : METAMASK_ICON_URL),
+  getIcon: () =>
+    getIsGenericInjector() ? (isDarkMode ? INJECTED_DARK_ICON_URL : INJECTED_LIGHT_ICON_URL) : METAMASK_ICON_URL,
   shouldDisplay: () => getIsMetaMaskWallet() || getShouldAdvertiseMetaMask() || getIsGenericInjector(),
   // If on non-injected, non-mobile browser, prompt user to install Metamask
   overrideActivate: () => {
@@ -81,7 +83,7 @@ const injectedConnection: Connection = {
     }
     return false
   },
-}
+})
 
 const [web3GnosisSafe, web3GnosisSafeHooks] = initializeConnector<GnosisSafe>((actions) => new GnosisSafe({ actions }))
 export const gnosisSafeConnection: Connection = {
@@ -150,10 +152,10 @@ const coinbaseWalletConnection: Connection = {
   },
 }
 
-export function getConnections() {
+export function getConnections(isDarkMode: boolean) {
   return [
     uniwalletConnectConnection,
-    injectedConnection,
+    injectedConnection(isDarkMode),
     walletConnectConnection,
     coinbaseWalletConnection,
     gnosisSafeConnection,
@@ -162,9 +164,10 @@ export function getConnections() {
 }
 
 export function useGetConnection() {
+  const isDarkMode = useIsDarkMode()
   return useCallback((c: Connector | ConnectionType) => {
     if (c instanceof Connector) {
-      const connection = getConnections().find((connection) => connection.connector === c)
+      const connection = getConnections(isDarkMode).find((connection) => connection.connector === c)
       if (!connection) {
         throw Error('unsupported connector')
       }
