@@ -1,4 +1,6 @@
-import { getTestSelector } from '../utils'
+import { getClassContainsSelector, getTestSelector } from '../utils'
+
+const UNI_GOERLI = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
 
 describe('Token details', () => {
   before(() => {
@@ -88,5 +90,29 @@ describe('Token details', () => {
     cy.get('[data-cy="token-safety-message"]')
       .should('include.text', 'Warning')
       .and('include.text', "This token isn't traded on leading U.S. centralized exchanges")
+  })
+
+  describe('Swap on Token Detail Page', () => {
+    const verifyOutputToken = (outputText: string) => {
+      cy.get(getClassContainsSelector('TokenButtonRow')).last().contains(outputText)
+    }
+
+    beforeEach(() => {
+      // On mobile widths, we just link back to /swap instead of rendering the swap component.
+      cy.viewport(1200, 800)
+      cy.visit(`/tokens/goerli/${UNI_GOERLI}`).then(() => {
+        cy.wait('@eth_blockNumber')
+      })
+    })
+
+    it('should have the expected output for a tokens detail page', () => {
+      verifyOutputToken('UNI')
+    })
+
+    it('should not share swap state with the main swap page', () => {
+      verifyOutputToken('UNI')
+      cy.visit('/swap')
+      cy.contains('UNI').should('not.exist')
+    })
   })
 })
