@@ -9,7 +9,7 @@ jest.mock('../../hooks/useSocksBalance', () => ({
 
 describe('StatusIcon', () => {
   it('renders children in correct order, with no account and with socks', () => {
-    const supportedConnections = getConnections(false)
+    const supportedConnections = getConnections(/* isDarkMode= */ false)
     const injectedConnection = supportedConnections[1]
     const component = render(<StatusIcon connection={injectedConnection} />)
     expect(component.getByTestId('StatusIconRoot')).toMatchSnapshot()
