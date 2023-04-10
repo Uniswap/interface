@@ -9,14 +9,14 @@ jest.mock('../../hooks/useSocksBalance', () => ({
 
 describe('StatusIcon', () => {
   it('renders children in correct order, with no account and with socks', () => {
-    const supportedConnections = getConnections()
+    const supportedConnections = getConnections(false)
     const injectedConnection = supportedConnections[1]
     const component = render(<StatusIcon connection={injectedConnection} />)
     expect(component.getByTestId('StatusIconRoot')).toMatchSnapshot()
   })
 
   it('renders with no account and showMiniIcons=false', () => {
-    const supportedConnections = getConnections()
+    const supportedConnections = getConnections(false)
     const injectedConnection = supportedConnections[1]
     const component = render(<StatusIcon connection={injectedConnection} showMiniIcons={false} />)
     expect(component.getByTestId('StatusIconRoot').children.length).toEqual(0)

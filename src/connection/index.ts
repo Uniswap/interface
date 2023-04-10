@@ -66,25 +66,27 @@ const getShouldAdvertiseMetaMask = () =>
 const getIsGenericInjector = () => getIsInjected() && !getIsMetaMaskWallet() && !getIsCoinbaseWallet()
 
 const [web3Injected, web3InjectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }))
-const injectedConnection = (isDarkMode: boolean): Connection => ({
-  // TODO(WEB-3131) re-add "Install MetaMask" string when no injector is present
-  getName: () => (getIsGenericInjector() ? 'Browser Wallet' : 'MetaMask'),
-  connector: web3Injected,
-  hooks: web3InjectedHooks,
-  type: ConnectionType.INJECTED,
-  getIcon: () =>
-    getIsGenericInjector() ? (isDarkMode ? INJECTED_DARK_ICON_URL : INJECTED_LIGHT_ICON_URL) : METAMASK_ICON_URL,
-  shouldDisplay: () => getIsMetaMaskWallet() || getShouldAdvertiseMetaMask() || getIsGenericInjector(),
-  // If on non-injected, non-mobile browser, prompt user to install Metamask
-  overrideActivate: () => {
-    if (getShouldAdvertiseMetaMask()) {
-      window.open('https://metamask.io/', 'inst_metamask')
-      return true
-    }
-    return false
-  },
-})
 
+const getInjectedConnection = (isDarkMode: boolean): Connection => {
+  return {
+    // TODO(WEB-3131) re-add "Install MetaMask" string when no injector is present
+    getName: () => (getIsGenericInjector() ? 'Browser Wallet' : 'MetaMask'),
+    connector: web3Injected,
+    hooks: web3InjectedHooks,
+    type: ConnectionType.INJECTED,
+    getIcon: () =>
+      getIsGenericInjector() ? (isDarkMode ? INJECTED_DARK_ICON_URL : INJECTED_LIGHT_ICON_URL) : METAMASK_ICON_URL,
+    shouldDisplay: () => getIsMetaMaskWallet() || getShouldAdvertiseMetaMask() || getIsGenericInjector(),
+    // If on non-injected, non-mobile browser, prompt user to install Metamask
+    overrideActivate: () => {
+      if (getShouldAdvertiseMetaMask()) {
+        window.open('https://metamask.io/', 'inst_metamask')
+        return true
+      }
+      return false
+    },
+  }
+}
 const [web3GnosisSafe, web3GnosisSafeHooks] = initializeConnector<GnosisSafe>((actions) => new GnosisSafe({ actions }))
 export const gnosisSafeConnection: Connection = {
   getName: () => 'Gnosis Safe',
@@ -155,7 +157,7 @@ const coinbaseWalletConnection: Connection = {
 export function getConnections(isDarkMode: boolean) {
   return [
     uniwalletConnectConnection,
-    injectedConnection(isDarkMode),
+    getInjectedConnection(isDarkMode),
     walletConnectConnection,
     coinbaseWalletConnection,
     gnosisSafeConnection,
@@ -165,28 +167,31 @@ export function getConnections(isDarkMode: boolean) {
 
 export function useGetConnection() {
   const isDarkMode = useIsDarkMode()
-  return useCallback((c: Connector | ConnectionType) => {
-    if (c instanceof Connector) {
-      const connection = getConnections(isDarkMode).find((connection) => connection.connector === c)
-      if (!connection) {
-        throw Error('unsupported connector')
+  return useCallback(
+    (c: Connector | ConnectionType) => {
+      if (c instanceof Connector) {
+        const connection = getConnections(isDarkMode).find((connection) => connection.connector === c)
+        if (!connection) {
+          throw Error('unsupported connector')
+        }
+        return connection
+      } else {
+        switch (c) {
+          case ConnectionType.INJECTED:
+            return getInjectedConnection(isDarkMode)
+          case ConnectionType.COINBASE_WALLET:
+            return coinbaseWalletConnection
+          case ConnectionType.WALLET_CONNECT:
+            return walletConnectConnection
+          case ConnectionType.UNIWALLET:
+            return uniwalletConnectConnection
+          case ConnectionType.NETWORK:
+            return networkConnection
+          case ConnectionType.GNOSIS_SAFE:
+            return gnosisSafeConnection
+        }
       }
-      return connection
-    } else {
-      switch (c) {
-        case ConnectionType.INJECTED:
-          return injectedConnection
-        case ConnectionType.COINBASE_WALLET:
-          return coinbaseWalletConnection
-        case ConnectionType.WALLET_CONNECT:
-          return walletConnectConnection
-        case ConnectionType.UNIWALLET:
-          return uniwalletConnectConnection
-        case ConnectionType.NETWORK:
-          return networkConnection
-        case ConnectionType.GNOSIS_SAFE:
-          return gnosisSafeConnection
-      }
-    }
-  }, [])
+    },
+    [isDarkMode]
+  )
 }
