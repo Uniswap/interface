@@ -1,9 +1,9 @@
 import { PersistedStorage } from 'app/src/utils/persistedStorage'
 import { Signature, Wallet } from 'ethers'
-import { defaultPath, joinSignature, SigningKey } from 'ethers/lib/utils'
+import { SigningKey, defaultPath, joinSignature } from 'ethers/lib/utils'
 import { logger } from '../../logger/logger'
-import { decrypt, encrypt } from './crypto'
 import { IKeyring } from './Keyring'
+import { decrypt, encrypt } from './crypto'
 
 const prefix = 'com.uniswap.web'
 const mnemonicPrefix = '.mnemonic.'
@@ -259,8 +259,9 @@ export class WebKeyring implements IKeyring {
 
       if (!privateKey) return undefined
 
-      // validate mnemonic (will throw if invalid)
-      if (!SigningKey.isSigningKey(privateKey)) {
+      // validate private key (will throw if invalid)
+      const wallet = new Wallet(privateKey)
+      if (!wallet) {
         throw new Error('Invalid private key')
       }
 
