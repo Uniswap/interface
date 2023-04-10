@@ -25,11 +25,11 @@ jest.mock(
 jest.mock('@web3-react/core', () => {
   const web3React = jest.requireActual('@web3-react/core')
   return {
+    ...web3React,
     useWeb3React: () => ({
       account: '123',
       isActive: true,
     }),
-    ...web3React,
   }
 })
 

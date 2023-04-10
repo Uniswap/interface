@@ -1,8 +1,8 @@
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { useToggleWalletDrawer } from 'components/WalletDropdown'
 import { Box } from 'nft/components/Box'
 import { NftCard } from 'nft/components/card'
 import { detailsHref } from 'nft/components/card/utils'
@@ -46,7 +46,7 @@ export function NFT({
   mediaShouldBePlaying: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }) {
-  const toggleWalletDrawer = useToggleWalletDrawer()
+  const toggleWalletDrawer = useToggleAccountDrawer()
   const navigate = useNavigate()
   const trace = useTrace()
 

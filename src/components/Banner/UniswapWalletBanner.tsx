@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { useAccountDrawer } from 'components/AccountDrawer'
+import { DownloadButton, LearnMoreButton } from 'components/AccountDrawer/DownloadButton'
 import { AutoColumn } from 'components/Column'
 import Row, { RowBetween } from 'components/Row'
-import { useWalletDrawer } from 'components/WalletDropdown'
-import { DownloadButton, LearnMoreButton } from 'components/WalletDropdown/DownloadButton'
 import { X } from 'react-feather'
 import { useLocation } from 'react-router-dom'
 import { useHideUniswapWalletBanner } from 'state/user/hooks'
@@ -66,7 +66,7 @@ const StyledXButton = styled(X)`
 
 export default function UniswapWalletBanner() {
   const [hideUniswapWalletBanner, toggleHideUniswapWalletBanner] = useHideUniswapWalletBanner()
-  const [walletDrawerOpen] = useWalletDrawer()
+  const [walletDrawerOpen] = useAccountDrawer()
 
   const theme = useTheme()
 
