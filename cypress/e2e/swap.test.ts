@@ -144,4 +144,13 @@ describe('Swap', () => {
     cy.get(getTestSelector('swap-settings-button')).click()
     cy.contains('Settings').should('not.exist')
   })
+
+  it('inputs reset when navigating between pages', () => {
+    cy.get('#swap-currency-input .token-amount-input').clear().type('0.01')
+    cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
+    cy.visit('/pool')
+    cy.visit('/swap')
+    cy.get('#swap-currency-input .token-amount-input').should('have.value', '')
+    cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
+  })
 })
