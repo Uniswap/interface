@@ -34,6 +34,7 @@ import { Swap } from 'pages/Swap'
 import { useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
+import { SwapState } from 'state/swap/reducer'
 import styled from 'styled-components/macro'
 import { isAddress } from 'utils'
 
@@ -143,6 +144,27 @@ export default function TokenDetails({
   )
   useOnGlobalChainSwitch(navigateToTokenForChain)
 
+  const handleCurrencyChange = useCallback(
+    (tokens: Partial<SwapState>) => {
+      if (tokens[Field.INPUT]?.currencyId !== address && tokens[Field.OUTPUT]?.currencyId !== address) {
+        const newDefaultTokenID = tokens[Field.OUTPUT]?.currencyId ?? tokens[Field.INPUT]?.currencyId
+        startTokenTransition(() =>
+          navigate(
+            getTokenDetailsURL({
+              address: newDefaultTokenID,
+              chain,
+              inputAddress:
+                tokens[Field.INPUT] && tokens[Field.INPUT]?.currencyId !== newDefaultTokenID
+                  ? tokens[Field.INPUT]?.currencyId
+                  : null,
+            })
+          )
+        )
+      }
+    },
+    [address, chain, navigate]
+  )
+
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
 
   const [openTokenSafetyModal, setOpenTokenSafetyModal] = useState(false)
@@ -212,6 +234,7 @@ export default function TokenDetails({
                 [Field.INPUT]: { currencyId: inputToken?.wrapped?.address },
                 [Field.OUTPUT]: { currencyId: address === NATIVE_CHAIN_ID ? 'ETH' : address },
               }}
+              onCurrencyChange={handleCurrencyChange}
             />
           </div>
           {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}

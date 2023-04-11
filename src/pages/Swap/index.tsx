@@ -50,6 +50,7 @@ import { ArrowWrapper, PageWrapper, SwapCallbackError, SwapWrapper } from '../..
 import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
+import { NATIVE_CHAIN_ID } from '../../constants/tokens'
 import { useCurrency, useDefaultActiveTokens } from '../../hooks/Tokens'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import useWrapCallback, { WrapErrorText, WrapType } from '../../hooks/useWrapCallback'
@@ -155,7 +156,15 @@ export default function SwapPage({ className }: { className?: string }) {
   )
 }
 
-export function Swap({ className, prefilledState }: { className?: string; prefilledState?: Partial<SwapState> }) {
+export function Swap({
+  className,
+  prefilledState,
+  onCurrencyChange,
+}: {
+  className?: string
+  prefilledState?: Partial<SwapState>
+  onCurrencyChange?: (selected: Partial<SwapState>) => void
+}) {
   const { account, chainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
@@ -432,8 +441,14 @@ export function Swap({ className, prefilledState }: { className?: string; prefil
   const handleInputSelect = useCallback(
     (inputCurrency: Currency) => {
       onCurrencySelection(Field.INPUT, inputCurrency)
+      onCurrencyChange?.({
+        [Field.INPUT]: {
+          currencyId: inputCurrency.isToken ? inputCurrency.address : inputCurrency.isNative ? NATIVE_CHAIN_ID : '',
+        },
+        [Field.OUTPUT]: state[Field.OUTPUT],
+      })
     },
-    [onCurrencySelection]
+    [onCurrencyChange, onCurrencySelection, state]
   )
 
   const handleMaxInput = useCallback(() => {
@@ -445,8 +460,16 @@ export function Swap({ className, prefilledState }: { className?: string; prefil
   }, [maxInputAmount, onUserInput])
 
   const handleOutputSelect = useCallback(
-    (outputCurrency: Currency) => onCurrencySelection(Field.OUTPUT, outputCurrency),
-    [onCurrencySelection]
+    (outputCurrency: Currency) => {
+      onCurrencySelection(Field.OUTPUT, outputCurrency)
+      onCurrencyChange?.({
+        [Field.INPUT]: state[Field.INPUT],
+        [Field.OUTPUT]: {
+          currencyId: outputCurrency.isToken ? outputCurrency.address : outputCurrency.isNative ? NATIVE_CHAIN_ID : '',
+        },
+      })
+    },
+    [onCurrencyChange, onCurrencySelection, state]
   )
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
