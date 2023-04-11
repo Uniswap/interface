@@ -5,7 +5,7 @@ import { logger } from '../logger/logger'
 import { Keyring } from '../wallet/Keyring/Keyring'
 
 function* auth({ password }: AuthParams) {
-  logger.debug('authSaga', 'auth', `Logging in with password}`)
+  logger.debug('authSaga', 'auth', `Logging in with password`)
 
   return yield* call(Keyring.unlock, password)
 }

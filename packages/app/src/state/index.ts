@@ -1,21 +1,24 @@
 import type { Middleware, PreloadedState } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
-import createSagaMiddleware from 'redux-saga'
+import createSagaMiddleware, { Saga } from 'redux-saga'
 import { SelectEffect } from 'redux-saga/effects'
 import { SagaGenerator, select } from 'typed-redux-saga'
 import { loggerMiddleware } from '../features/logger/middleware'
 import { walletContextValue } from '../features/wallet/context'
-import { rootReducer, persistStore } from './reducer'
+import { persistStore, rootReducer } from './reducer'
 import { rootSaga } from './saga'
 
 export const createStore = ({
   afterMiddleware = [],
+  additionalSaga,
   beforeMiddleware = [],
   hydrationCallback,
   preloadedState = {},
 }: {
   afterMiddleware?: Array<Middleware<unknown>>
+  // enables starting app-specific sagas
+  additionalSaga?: Saga<unknown[]>
   beforeMiddleware?: Array<Middleware<unknown>>
   preloadedState?: PreloadedState<RootState>
   // invoked after store is rehydrated
@@ -42,6 +45,7 @@ export const createStore = ({
   persistStore(store, null, hydrationCallback)
 
   sagaMiddleware.run(rootSaga)
+  additionalSaga && sagaMiddleware.run(additionalSaga)
 
   return store
 }

@@ -4,10 +4,11 @@ import { useState } from 'react'
 import { useAppDispatch } from '../../state'
 import { authActions, authSagaName } from './saga'
 import { useSagaStatus } from 'app/src/state/useSagaStatus'
+import { AuthType } from './types'
 
 export function usePasswordInput(
   defaultValue = ''
-): Pick<InputProps, 'value' | 'onChangeText' | 'disabled'> {
+): Pick<InputProps, 'onChangeText' | 'disabled'> & { value: string } {
   const [value, setValue] = useState(defaultValue)
 
   const onChangeText: InputProps['onChangeText'] = (newValue): void => {
@@ -28,7 +29,12 @@ function Locked(): JSX.Element {
   const { status } = useSagaStatus(authSagaName, undefined, false)
 
   const onPress = (): void => {
-    dispatch(authActions.trigger({ password: passwordInputProps.value }))
+    dispatch(
+      authActions.trigger({
+        type: AuthType.Password,
+        password: passwordInputProps.value,
+      })
+    )
   }
 
   return (
