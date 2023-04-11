@@ -98,15 +98,15 @@ class RNEthersRS: NSObject {
    - returns: public address if successfully stored in native keychain
    */
   func storeNewMnemonic(mnemonic: String, address: String) -> String? {
-    let newMnemonicKey = keychainKeyForMnemonicId(mnemonicId: address);
-    let checkStored = retrieveMnemonic(mnemonicId: newMnemonicKey)
+    let checkStored = retrieveMnemonic(mnemonicId: address)
     
     if checkStored == nil {
+      let newMnemonicKey = keychainKeyForMnemonicId(mnemonicId: address);
       keychain.set(mnemonic, forKey: newMnemonicKey, withAccess: .accessibleWhenUnlockedThisDeviceOnly)
       return address
     }
     
-    return nil
+    return address
   }
   
   func keychainKeyForMnemonicId(mnemonicId: String) -> String {
