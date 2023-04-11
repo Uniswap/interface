@@ -235,7 +235,6 @@ export default function OrderItem({
     filledTakingAmount,
     transactions = [],
     takerAssetSymbol,
-    makerAssetDecimals,
     takerAssetDecimals,
   } = order
   const status = isCancelling ? LimitOrderStatus.CANCELLING : order.status
@@ -333,7 +332,7 @@ export default function OrderItem({
               return (
                 <Flex key={txs.txHash} style={{ justifyContent: 'space-between' }}>
                   <SingleAmountInfo
-                    decimals={makerAssetDecimals}
+                    decimals={takerAssetDecimals}
                     color={theme.subText}
                     logoUrl={order.takerAssetLogoURL}
                     amount={txs.takingAmount}
