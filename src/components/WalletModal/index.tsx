@@ -164,8 +164,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
         // TODO(WEB-3162): re-add special treatment for already-pending injected errors
         if (didUserReject(connection, error)) {
           setPendingConnection(undefined)
-        } // Prevents showing error caused by MetaMask being prompted twice
-        else {
+        } else {
           setPendingError(error)
 
           sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
