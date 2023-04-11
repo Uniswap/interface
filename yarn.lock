@@ -2629,6 +2629,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ethersproject/shims@npm:5.7.0":
+  version: 5.7.0
+  resolution: "@ethersproject/shims@npm:5.7.0"
+  checksum: 605af6961dcadaa3540988d87e204703f48272e7578cb350cee9b81560719f67ffd011a2814018b1a2b9bfe7b17bb030368095a74a1343748b6d294ed9491b65
+  languageName: node
+  linkType: hard
+
 "@ethersproject/signing-key@npm:5.7.0, @ethersproject/signing-key@npm:^5.7.0":
   version: 5.7.0
   resolution: "@ethersproject/signing-key@npm:5.7.0"
@@ -2742,13 +2749,6 @@ __metadata:
     "@ethersproject/properties": ^5.7.0
     "@ethersproject/strings": ^5.7.0
   checksum: 30eb6eb0731f9ef5faa44bf9c0c6e950bcaaef61e4d2d9ce0ae6d341f4e2d6d1f4ab4f8880bfce03b7aac4b862fb740e1421170cfbf8e2aafc359277d49e6e97
-  languageName: node
-  linkType: hard
-
-"@expo-google-fonts/inter@npm:^0.2.2":
-  version: 0.2.3
-  resolution: "@expo-google-fonts/inter@npm:0.2.3"
-  checksum: eb6e971e250657df329708e91d32baebbd28e7da39d013fc71920c30d2fb91db4365a6055f57a93d7373c2f8332d7f1c48b3e0e7e82f349ed8b4de8dcb210b46
   languageName: node
   linkType: hard
 
@@ -17012,7 +17012,7 @@ __metadata:
     "@babel/core": ^7.19.3
     "@babel/runtime": ^7.18.9
     "@dmeents/semantic-release-yarn": ^1.1.2
-    "@expo-google-fonts/inter": ^0.2.2
+    "@ethersproject/shims": 5.7.0
     "@expo/config": ^7.0.2
     "@expo/metro-config": ^0.3.21
     "@google/semantic-release-replace-plugin": 1.2.0
@@ -17038,7 +17038,7 @@ __metadata:
     expo-cli: ^6.3.0
     expo-constants: ~14.0.2
     expo-dev-client: ~2.0.1
-    expo-font: ^11.0.1
+    expo-font: 11.1.1
     expo-linear-gradient: ~12.0.1
     expo-modules-autolinking: ~1.0.0
     expo-screen-orientation: ~5.0.1
@@ -17247,7 +17247,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-font@npm:^11.0.1, expo-font@npm:~11.1.1":
+"expo-font@npm:11.1.1, expo-font@npm:^11.0.1, expo-font@npm:~11.1.1":
   version: 11.1.1
   resolution: "expo-font@npm:11.1.1"
   dependencies:

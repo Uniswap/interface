@@ -1,4 +1,7 @@
 import { registerRootComponent } from 'expo'
+// Pull in the ethers shims (BEFORE importing ethers)
+// Not adding the shims will result in the `atob` function not being available
+import '@ethersproject/shims'
 
 import App from './App'
 
