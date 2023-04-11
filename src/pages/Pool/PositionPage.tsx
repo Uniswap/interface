@@ -1,5 +1,4 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
@@ -455,7 +454,7 @@ export function PositionPage() {
 
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
-  const collect = useCallback(() => {
+  const collect = useCallback(async () => {
     if (
       !currency0ForFeeCollectionPurposes ||
       !currency1ForFeeCollectionPurposes ||
@@ -484,45 +483,36 @@ export function PositionPage() {
       value,
     }
 
-    provider
-      .getSigner()
-      .estimateGas(txn)
-      .then((estimate) => {
-        const newTxn = {
-          ...txn,
-          gasLimit: calculateGasMargin(estimate),
-        }
+    try {
+      const estimate = await provider.getSigner().estimateGas(txn)
 
-        return provider
-          .getSigner()
-          .sendTransaction(newTxn)
-          .then((response: TransactionResponse) => {
-            setCollectMigrationHash(response.hash)
-            setCollecting(false)
+      const newTxn = {
+        ...txn,
+        gasLimit: calculateGasMargin(estimate),
+      }
 
-            sendEvent({
-              category: 'Liquidity',
-              action: 'CollectV3',
-              label: [currency0ForFeeCollectionPurposes.symbol, currency1ForFeeCollectionPurposes.symbol].join('/'),
-            })
+      const response = await provider.getSigner().sendTransaction(newTxn)
+      setCollectMigrationHash(response.hash)
 
-            addTransaction(response, {
-              type: TransactionType.COLLECT_FEES,
-              currencyId0: currencyId(currency0ForFeeCollectionPurposes),
-              currencyId1: currencyId(currency1ForFeeCollectionPurposes),
-              expectedCurrencyOwed0: CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0).toExact(),
-              expectedCurrencyOwed1: CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0).toExact(),
-            })
-          })
-          .catch((error) => {
-            setCollecting(false)
-            console.error(error)
-          })
+      setCollecting(false)
+
+      sendEvent({
+        category: 'Liquidity',
+        action: 'CollectV3',
+        label: [currency0ForFeeCollectionPurposes.symbol, currency1ForFeeCollectionPurposes.symbol].join('/'),
       })
-      .catch((error) => {
-        setCollecting(false)
-        console.error(error)
+
+      addTransaction(response, {
+        type: TransactionType.COLLECT_FEES,
+        currencyId0: currencyId(currency0ForFeeCollectionPurposes),
+        currencyId1: currencyId(currency1ForFeeCollectionPurposes),
+        expectedCurrencyOwed0: CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0).toExact(),
+        expectedCurrencyOwed1: CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0).toExact(),
       })
+    } catch (error) {
+      setCollecting(false)
+      console.error(error)
+    }
   }, [
     chainId,
     feeValue0,
