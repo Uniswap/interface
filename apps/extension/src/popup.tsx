@@ -9,12 +9,6 @@ logger.debug('popup', 'init', 'popup: initial load')
 
 const App = lazy(() => import('./app/App'))
 
-const isWindow = window.location.hash === '#window'
-
-if (!isWindow) {
-  chrome.tabs.create({ url: 'index.html#window' })
-}
-
 chrome.runtime.connect({ name: PortName.Popup })
 chrome.runtime.onMessage.addListener((req) => {
   logger.debug('popup', 'listener', `Received ${req.type}`)

@@ -17,29 +17,30 @@ export function initStore() {
       return
     }
 
-    if (isInitialized) {
-      return
-    }
-
     onConnect()
   })
 }
 
 function onConnect() {
-  const notifyStoreHydrated = (): void => {
-    chrome.runtime
-      .sendMessage({
-        type: 'STORE_INITIALIZED',
-      })
-      .catch(() => undefined)
+  if (isInitialized) {
+    notifyStoreInitialized()
+    return
   }
 
   const store = createStore({
-    hydrationCallback: notifyStoreHydrated,
+    hydrationCallback: notifyStoreInitialized,
   })
 
   // wraps store in webext-redux
   wrapStore(store, { portName: PortName.Store })
 
   isInitialized = true
+}
+
+function notifyStoreInitialized(): void {
+  chrome.runtime
+    .sendMessage({
+      type: 'STORE_INITIALIZED',
+    })
+    .catch(() => undefined)
 }
