@@ -320,7 +320,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     : formatEthPrice(lastSalePrice) || 0
   const formattedPrice = lastSalePrice
     ? isNftGraphqlEnabled
-      ? lastSalePrice
+      ? formattedEthprice
       : putCommas(parseFloat(formattedEthprice.toString())).toString()
     : null
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
