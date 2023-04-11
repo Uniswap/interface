@@ -514,6 +514,10 @@ export function PositionPage() {
               expectedCurrencyOwed1: CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0).toExact(),
             })
           })
+          .catch((error) => {
+            setCollecting(false)
+            console.error(error)
+          })
       })
       .catch((error) => {
         setCollecting(false)
