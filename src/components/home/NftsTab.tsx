@@ -3,7 +3,7 @@ import { FlashList } from '@shopify/flash-list'
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { forwardRef, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ListRenderItemInfo, NativeScrollEvent, NativeSyntheticEvent, View } from 'react-native'
+import { ListRenderItemInfo, View } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
@@ -14,7 +14,7 @@ import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
-import { TabContentProps } from 'src/components/layout/TabHelpers'
+import { TabProps } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { HiddenNftsRowLeft, HiddenNftsRowRight } from 'src/components/NFT/NFTHiddenRow'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
@@ -34,19 +34,13 @@ import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
+import { dimensions } from 'src/styles/sizing'
+import { useAdaptiveFooterHeight } from './hooks'
 
 const MAX_NFT_IMAGE_SIZE = 375
 const ESTIMATED_ITEM_SIZE = 251 // heuristic provided by FlashList
 const PREFETCH_ITEMS_THRESHOLD = 0.5
 const LOADING_ITEM = 'loading'
-
-const FOOTER_HEIGHT = 20
-
-type NftsTabProps = {
-  owner: string
-  containerProps?: TabContentProps
-  scrollHandler?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
-}
 
 function formatNftItems(data: NftsTabQuery | undefined): NFTItem[] {
   const items = data?.nftBalances?.edges?.flatMap((item) => item.node)
@@ -130,13 +124,17 @@ function NftView({ owner, item }: { owner: Address; item: NFTItem }): JSX.Elemen
   )
 }
 
-export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
-  ({ owner, containerProps, scrollHandler }, ref) => {
+export const NftsTab = forwardRef<FlashList<unknown>, TabProps>(
+  ({ owner, containerProps, scrollHandler, headerHeight }, ref) => {
     const { t } = useTranslation()
     const theme = useAppTheme()
     const dispatch = useAppDispatch()
 
     const [hiddenNftsExpanded, setHiddenNftsExpanded] = useState(false)
+
+    const { onContentSizeChange, footerHeight, setFooterHeight } = useAdaptiveFooterHeight({
+      headerHeight,
+    })
 
     const { data, fetchMore, refetch, networkStatus } = useNftsTabQuery({
       variables: { ownerAddress: owner, first: 30 },
@@ -174,8 +172,11 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
     const { nfts, numHidden } = useGroupNftsByVisibility(nftDataItems, hiddenNftsExpanded, owner)
 
     const onHiddenRowPressed = useCallback((): void => {
+      if (hiddenNftsExpanded) {
+        setFooterHeight(dimensions.fullHeight)
+      }
       setHiddenNftsExpanded(!hiddenNftsExpanded)
-    }, [hiddenNftsExpanded])
+    }, [hiddenNftsExpanded, setFooterHeight])
 
     useEffect(() => {
       if (numHidden === 0 && hiddenNftsExpanded) {
@@ -206,67 +207,51 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
       [hiddenNftsExpanded, numHidden, onHiddenRowPressed, owner]
     )
 
-    /**
-     * If tab container is smaller than the approximate screen height, we need to manually add
-     * padding so scroll works as intended since minHeight is not supported by FlashList in
-     * `contentContainerStyle`. Padding is proportional to the number of rows the data items take up.
-     */
-    const footerPadding =
-      nfts.length < 6 ? (ESTIMATED_ITEM_SIZE * (6 - nfts.length)) / 2 : FOOTER_HEIGHT
-
     const onRetry = useCallback(() => refetch(), [refetch])
-
-    // Initial loading state or refetch
-    if (isNonPollingRequestInFlight(networkStatus)) {
-      return (
-        <View
-          style={[
-            containerProps?.loadingContainerStyle,
-            { paddingHorizontal: theme.spacing.spacing12 },
-          ]}>
-          <Loader.NFT repeat={6} />
-        </View>
-      )
-    }
-
-    if (isError(networkStatus, !!data)) {
-      return (
-        <Flex grow style={containerProps?.emptyContainerStyle}>
-          <BaseCard.ErrorState
-            description={t('Something went wrong.')}
-            retryButtonLabel={t('Retry')}
-            title={t('Couldn’t load NFTs')}
-            onRetry={onRetry}
-          />
-        </Flex>
-      )
-    }
-
-    if (nfts.length === 0) {
-      return (
-        <Flex centered grow flex={1} style={containerProps?.emptyContainerStyle}>
-          <BaseCard.EmptyState
-            buttonLabel={t('Receive NFTs')}
-            description={t('Transfer NFTs from another wallet to get started.')}
-            icon={<NoNFTsIcon color={theme.colors.textSecondary} />}
-            title={t('No NFTs yet')}
-            onPress={onPressScan}
-          />
-        </Flex>
-      )
-    }
 
     return (
       <Flex grow px="spacing12">
         <AnimatedFlashList
           ref={ref}
-          ListFooterComponent={
-            // If not loading, we add a footer  to cover any possible space that is covered up by bottom tab bar
-            networkStatus === NetworkStatus.fetchMore ? (
-              <Loader.NFT repeat={4} />
+          ListEmptyComponent={
+            // initial loading
+            isNonPollingRequestInFlight(networkStatus) ? (
+              <View
+                style={[
+                  containerProps?.loadingContainerStyle,
+                  { paddingHorizontal: theme.spacing.spacing12 },
+                ]}>
+                <Loader.NFT repeat={6} />
+              </View>
+            ) : // no response and we're not loading already
+            isError(networkStatus, !!data) ? (
+              <Flex grow style={containerProps?.emptyContainerStyle}>
+                <BaseCard.ErrorState
+                  description={t('Something went wrong.')}
+                  retryButtonLabel={t('Retry')}
+                  title={t('Couldn’t load NFTs')}
+                  onRetry={onRetry}
+                />
+              </Flex>
             ) : (
-              <Box height={footerPadding} />
+              // empty view
+              <Box flexGrow={1} style={containerProps?.emptyContainerStyle}>
+                <BaseCard.EmptyState
+                  buttonLabel={t('Receive NFTs')}
+                  description={t('Transfer NFTs from another wallet to get started.')}
+                  icon={<NoNFTsIcon color={theme.colors.textSecondary} />}
+                  title={t('No NFTs yet')}
+                  onPress={onPressScan}
+                />
+              </Box>
             )
+          }
+          // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
+          ListFooterComponent={
+            <>
+              {networkStatus === NetworkStatus.fetchMore && <Loader.NFT repeat={4} />}
+              <Box height={footerHeight} />
+            </>
           }
           data={shouldAddInLoadingItem ? [...nfts, LOADING_ITEM] : nfts}
           estimatedItemSize={ESTIMATED_ITEM_SIZE}
@@ -274,6 +259,7 @@ export const NftsTab = forwardRef<FlashList<unknown>, NftsTabProps>(
           numColumns={2}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
+          onContentSizeChange={onContentSizeChange}
           onEndReached={onListEndReached}
           onEndReachedThreshold={PREFETCH_ITEMS_THRESHOLD}
           onScroll={scrollHandler}

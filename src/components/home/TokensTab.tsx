@@ -1,12 +1,11 @@
 import { FlashList } from '@shopify/flash-list'
 import React, { forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { NoTokens } from 'src/components/icons/NoTokens'
 import { Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { TabContentProps, TAB_STYLES } from 'src/components/layout/TabHelpers'
+import { TabProps, TAB_STYLES } from 'src/components/layout/TabHelpers'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
@@ -17,17 +16,10 @@ import { AccountType } from 'src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'src/features/wallet/hooks'
 import { CurrencyId } from 'src/utils/currencyId'
 
-type TokensTabProps = {
-  owner: Address
-  containerProps?: TabContentProps
-  scrollHandler?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
-  isExternalProfile?: boolean
-}
-
 // ignore ref type
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const TokensTab = forwardRef<FlashList<any>, TokensTabProps>(
-  ({ owner, containerProps, scrollHandler, isExternalProfile = false }, ref) => {
+export const TokensTab = forwardRef<FlashList<any>, TabProps & { isExternalProfile?: boolean }>(
+  ({ owner, containerProps, scrollHandler, isExternalProfile = false, headerHeight }, ref) => {
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
     const tokenDetailsNavigation = useTokenDetailsNavigation()
@@ -59,22 +51,21 @@ export const TokensTab = forwardRef<FlashList<any>, TokensTabProps>(
           ref={ref}
           containerProps={containerProps}
           empty={
-            <Flex centered flex={1}>
-              <BaseCard.EmptyState
-                buttonLabel={isFiatOnRampEnabled ? t('Buy crypto') : t('Receive tokens')}
-                description={
-                  isFiatOnRampEnabled
-                    ? t('Buy crypto at the lowest rates on Uniswap Wallet, powered by MoonPay.')
-                    : t(
-                        'Transfer tokens from a centralized exchange or another wallet to get started.'
-                      )
-                }
-                icon={<NoTokens />}
-                title={t('No tokens yet')}
-                onPress={onPressAction}
-              />
-            </Flex>
+            <BaseCard.EmptyState
+              buttonLabel={isFiatOnRampEnabled ? t('Buy crypto') : t('Receive tokens')}
+              description={
+                isFiatOnRampEnabled
+                  ? t('Buy crypto at the lowest rates on Uniswap Wallet, powered by MoonPay.')
+                  : t(
+                      'Transfer tokens from a centralized exchange or another wallet to get started.'
+                    )
+              }
+              icon={<NoTokens />}
+              title={t('No tokens yet')}
+              onPress={onPressAction}
+            />
           }
+          headerHeight={headerHeight}
           isExternalProfile={isExternalProfile}
           owner={owner}
           scrollHandler={scrollHandler}

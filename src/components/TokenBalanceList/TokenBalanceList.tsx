@@ -2,18 +2,13 @@ import { FlashList } from '@shopify/flash-list'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
 import React, { forwardRef, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
 import { FadeInDown, FadeOut } from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppSelector } from 'src/app/hooks'
-import { AnimatedBox, Box, Flex } from 'src/components/layout'
+import { useAdaptiveFooterHeight } from 'src/components/home/hooks'
+import { AnimatedBox, Box } from 'src/components/layout'
 import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import {
-  TabContentProps,
-  TAB_BAR_HEIGHT,
-  TAB_VIEW_SCROLL_THROTTLE,
-} from 'src/components/layout/TabHelpers'
+import { TabProps, TAB_VIEW_SCROLL_THROTTLE } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { HiddenTokensRow } from 'src/components/TokenBalanceList/HiddenTokensRow'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
@@ -30,12 +25,9 @@ import { dimensions } from 'src/styles/sizing'
 import { CurrencyId } from 'src/utils/currencyId'
 import { useSuspendUpdatesWhenBlured } from 'src/utils/hooks'
 
-type TokenBalanceListProps = {
-  owner: Address
+type TokenBalanceListProps = TabProps & {
   empty?: JSX.Element | null
   onPressToken: (currencyId: CurrencyId) => void
-  containerProps?: TabContentProps
-  scrollHandler?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
   isExternalProfile?: boolean
 }
 
@@ -46,14 +38,25 @@ const HIDDEN_TOKENS_ROW = 'HIDDEN_TOKENS_ROW'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps>(
   (
-    { owner, empty, onPressToken, containerProps, scrollHandler, isExternalProfile = false },
+    {
+      owner,
+      empty,
+      onPressToken,
+      containerProps,
+      scrollHandler,
+      isExternalProfile = false,
+      headerHeight,
+    },
     ref
   ) => {
     const { t } = useTranslation()
-    const insets = useSafeAreaInsets()
 
     const hideSmallBalances: boolean = useAppSelector(makeSelectAccountHideSmallBalances(owner))
     const hideSpamTokens: boolean = useAppSelector(makeSelectAccountHideSpamTokens(owner))
+
+    const { onContentSizeChange, footerHeight, setFooterHeight } = useAdaptiveFooterHeight({
+      headerHeight,
+    })
 
     // This function gets passed down through:
     // useSortedPortfolioBalances -> usePortfolioBalances -> the usePortfolioBalancesQuery query's onCompleted argument.
@@ -110,7 +113,6 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
       return [...balances, HIDDEN_TOKENS_ROW, ...smallBalances, ...spamBalances]
     }, [data, hiddenTokensExpanded])
 
-    const estimatedContentHeight = dimensions.fullHeight - TAB_BAR_HEIGHT - insets.top
     const numHiddenTokens = (data?.smallBalances?.length ?? 0) + (data?.spamBalances?.length ?? 0)
 
     // Note: `PerformanceView` must wrap the entire return statement to properly track interactive states.
@@ -139,22 +141,16 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
               />
             </Box>
           )
-        ) : listItems.length === 0 ? (
-          <Flex grow style={containerProps?.emptyContainerStyle}>
-            {empty}
-          </Flex>
         ) : (
           <AnimatedFlashList
             ref={ref}
-            ListFooterComponent={
-              <Box
-                height={
-                  // We need this since FlashList doesn't support minHeight as part of its contentContainerStyle.
-                  // Ensures content fills remainder of screen to support smooth tab switching
-                  estimatedContentHeight - (listItems.length + 1) * ESTIMATED_TOKEN_ITEM_HEIGHT
-                }
-              />
+            ListEmptyComponent={
+              <Box flexGrow={1} style={containerProps?.emptyContainerStyle}>
+                {empty}
+              </Box>
             }
+            // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
+            ListFooterComponent={<Box height={footerHeight} />}
             ListHeaderComponent={
               isError(networkStatus, !!data) ? (
                 <AnimatedBox entering={FadeInDown} exiting={FadeOut} py="spacing8">
@@ -174,7 +170,12 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
                   <HiddenTokensRow
                     isExpanded={hiddenTokensExpanded}
                     numHidden={numHiddenTokens}
-                    onPress={(): void => setHiddenTokensExpanded(!hiddenTokensExpanded)}
+                    onPress={(): void => {
+                      if (hiddenTokensExpanded) {
+                        setFooterHeight(dimensions.fullHeight)
+                      }
+                      setHiddenTokensExpanded(!hiddenTokensExpanded)
+                    }}
                   />
                 )
               } else if (isPortfolioBalance(item)) {
@@ -191,6 +192,7 @@ export const TokenBalanceList = forwardRef<FlashList<any>, TokenBalanceListProps
             scrollEventThrottle={TAB_VIEW_SCROLL_THROTTLE}
             showsVerticalScrollIndicator={false}
             windowSize={5}
+            onContentSizeChange={onContentSizeChange}
             onScroll={scrollHandler}
             {...containerProps}
           />

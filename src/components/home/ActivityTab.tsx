@@ -2,13 +2,13 @@ import { NetworkStatus } from '@apollo/client'
 import { FlashList } from '@shopify/flash-list'
 import React, { createElement, forwardRef, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
+import { useAdaptiveFooterHeight } from 'src/components/home/hooks'
 import { NoTransactions } from 'src/components/icons/NoTransactions'
 import { Box, Flex } from 'src/components/layout'
 import { AnimatedFlashList } from 'src/components/layout/AnimatedFlashList'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { TabContentProps, TAB_STYLES } from 'src/components/layout/TabHelpers'
+import { TabProps, TAB_STYLES } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { EMPTY_ARRAY } from 'src/constants/misc'
@@ -35,12 +35,6 @@ import { TransactionDetails, TransactionType } from 'src/features/transactions/t
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { makeSelectAccountHideSpamTokens } from 'src/features/wallet/selectors'
 
-type ActivityTabProps = {
-  owner: string
-  containerProps?: TabContentProps
-  scrollHandler?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
-}
-
 type LoadingItem = {
   itemType: 'LOADING'
   id: number
@@ -58,7 +52,6 @@ const isSectionHeader = (x: TransactionDetails | SectionHeader | LoadingItem): x
 const LOADING_ITEM = (index: number): LoadingItem => ({ itemType: 'LOADING', id: index })
 const LOADING_DATA = [LOADING_ITEM(1), LOADING_ITEM(2), LOADING_ITEM(3), LOADING_ITEM(4)]
 
-const FOOTER_HEIGHT = 20
 const ESTIMATED_ITEM_SIZE = 92
 
 const SectionTitle = ({ title }: { title: string }): JSX.Element => (
@@ -136,9 +129,13 @@ function getItemType(item: TransactionDetails | SectionHeader | LoadingItem): st
   }
 }
 
-export const ActivityTab = forwardRef<FlashList<unknown>, ActivityTabProps>(
-  ({ owner, containerProps, scrollHandler }, ref) => {
+export const ActivityTab = forwardRef<FlashList<unknown>, TabProps>(
+  ({ owner, containerProps, scrollHandler, headerHeight }, ref) => {
     const { t } = useTranslation()
+
+    const { onContentSizeChange, footerHeight } = useAdaptiveFooterHeight({
+      headerHeight,
+    })
 
     const keyExtractor = useCallback(
       (info: TransactionDetails | SectionHeader | LoadingItem) => {
@@ -223,16 +220,6 @@ export const ActivityTab = forwardRef<FlashList<unknown>, ActivityTabProps>(
       ]
     }, [showLoading, hasTransactions, pending, last24hTransactionList, priorByMonthTransactionList])
 
-    /**
-     * If tab container is smaller than the approximate screen height, we need to manually add
-     * padding so scroll works as intended since minHeight is not supported by FlashList in
-     * `contentContainerStyle`. Padding is proportional to the number of rows the data items take up.
-     */
-    const footerPadding =
-      transactions.length < 6
-        ? (ESTIMATED_ITEM_SIZE * (6 - transactions.length)) / 2
-        : FOOTER_HEIGHT
-
     const onRetry = useCallback(() => {
       refetch({
         address: owner,
@@ -251,27 +238,41 @@ export const ActivityTab = forwardRef<FlashList<unknown>, ActivityTabProps>(
       )
     }
 
-    return transactions.length === 0 && !isLoading ? (
-      <Flex centered grow flex={1} style={containerProps?.emptyContainerStyle}>
-        <BaseCard.EmptyState
-          description={t('When this wallet makes transactions, they’ll appear here.')}
-          icon={<NoTransactions />}
-          title={t('No activity yet')}
-        />
-      </Flex>
-    ) : (
+    return (
       <Flex grow style={TAB_STYLES.tabListContainer}>
         <AnimatedFlashList
           ref={ref}
-          ListFooterComponent={
-            // If not loading, we add a footer  to cover any possible space that is covered up by bottom tab bar
-            networkStatus === NetworkStatus.fetchMore ? (
-              <Box p="spacing12">
-                <Loader.Transaction repeat={4} />
-              </Box>
+          ListEmptyComponent={
+            // error view
+            !hasData && isError ? (
+              <Flex grow style={containerProps?.emptyContainerStyle}>
+                <BaseCard.ErrorState
+                  retryButtonLabel={t('Retry')}
+                  title={t('Couldn’t load activity')}
+                  onRetry={onRetry}
+                />
+              </Flex>
             ) : (
-              <Box height={footerPadding} />
+              // empty view
+              (!isLoading && (
+                <Box flexGrow={1} style={containerProps?.emptyContainerStyle}>
+                  <BaseCard.EmptyState
+                    description={t('When this wallet makes transactions, they’ll appear here.')}
+                    icon={<NoTransactions />}
+                    title={t('No activity yet')}
+                  />
+                </Box>
+              )) ||
+              null
             )
+            // initial loading is implemented inside sectionData
+          }
+          // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
+          ListFooterComponent={
+            <>
+              {isLoading && <Loader.Transaction repeat={4} />}
+              <Box height={footerHeight} />
+            </>
           }
           data={sectionData}
           estimatedItemSize={ESTIMATED_ITEM_SIZE}
@@ -282,6 +283,7 @@ export const ActivityTab = forwardRef<FlashList<unknown>, ActivityTabProps>(
           numColumns={1}
           renderItem={renderActivityItem}
           showsVerticalScrollIndicator={false}
+          onContentSizeChange={onContentSizeChange}
           onScroll={scrollHandler}
           {...containerProps}
         />

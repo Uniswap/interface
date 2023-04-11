@@ -81,10 +81,21 @@ export type ScrollPair = {
   index: number
 }
 
+export type TabProps = {
+  owner: string
+  containerProps?: TabContentProps
+  scrollHandler?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
+  headerHeight?: number
+}
+
 export type TabContentProps = Partial<FlatListProps<unknown>> & {
   loadingContainerStyle: StyleProp<ViewStyle>
   emptyContainerStyle: StyleProp<ViewStyle>
+  contentContainerStyle?: StyleProp<ViewStyle>
   estimatedItemSize?: number
+  onMomentumScrollEnd?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
+  onScrollEndDrag?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
+  scrollEventThrottle?: number
 }
 
 export const renderTabLabel = ({

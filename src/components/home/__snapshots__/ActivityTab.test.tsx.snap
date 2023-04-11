@@ -25,10 +25,16 @@ exports[`ActivityTab renders without error 1`] = `
     }
   >
     <RCTScrollView
+      ListEmptyComponent={null}
       ListFooterComponent={
-        <ForwardRef
-          height={276}
-        />
+        <React.Fragment>
+          <Memo
+            repeat={4}
+          />
+          <ForwardRef
+            height={0.1}
+          />
+        </React.Fragment>
       }
       applyWindowCorrection={[Function]}
       canChangeSize={true}
@@ -127,9 +133,15 @@ exports[`ActivityTab renders without error 1`] = `
             "span": undefined,
           },
           "props": Object {
-            "ListFooterComponent": <ForwardRef
-              height={276}
-            />,
+            "ListEmptyComponent": null,
+            "ListFooterComponent": <React.Fragment>
+              <Memo
+                repeat={4}
+              />
+              <ForwardRef
+                height={0.1}
+              />
+            </React.Fragment>,
             "data": Array [
               Object {
                 "id": 1,
@@ -152,6 +164,7 @@ exports[`ActivityTab renders without error 1`] = `
             "getItemType": [Function],
             "keyExtractor": [Function],
             "numColumns": 1,
+            "onContentSizeChange": undefined,
             "onScroll": [Function],
             "renderItem": [Function],
             "showsVerticalScrollIndicator": false,
@@ -270,10 +283,23 @@ exports[`ActivityTab renders without error 2`] = `
     }
   >
     <RCTScrollView
-      ListFooterComponent={
+      ListEmptyComponent={
         <ForwardRef
-          height={184}
-        />
+          flexGrow={1}
+        >
+          <EmptyState
+            description="When this wallet makes transactions, they’ll appear here."
+            icon={<Memo />}
+            title="No activity yet"
+          />
+        </ForwardRef>
+      }
+      ListFooterComponent={
+        <React.Fragment>
+          <ForwardRef
+            height={0.1}
+          />
+        </React.Fragment>
       }
       applyWindowCorrection={[Function]}
       canChangeSize={true}
@@ -424,9 +450,20 @@ exports[`ActivityTab renders without error 2`] = `
             "span": undefined,
           },
           "props": Object {
-            "ListFooterComponent": <ForwardRef
-              height={184}
-            />,
+            "ListEmptyComponent": <ForwardRef
+              flexGrow={1}
+            >
+              <EmptyState
+                description="When this wallet makes transactions, they’ll appear here."
+                icon={<Memo />}
+                title="No activity yet"
+              />
+            </ForwardRef>,
+            "ListFooterComponent": <React.Fragment>
+              <ForwardRef
+                height={0.1}
+              />
+            </React.Fragment>,
             "data": Array [
               Object {
                 "itemType": "HEADER",
@@ -475,6 +512,7 @@ exports[`ActivityTab renders without error 2`] = `
             "getItemType": [Function],
             "keyExtractor": [Function],
             "numColumns": 1,
+            "onContentSizeChange": undefined,
             "onScroll": [Function],
             "renderItem": [Function],
             "showsVerticalScrollIndicator": false,
