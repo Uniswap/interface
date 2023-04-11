@@ -9,7 +9,7 @@ import { Portal } from 'nft/components/common/Portal'
 import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
@@ -225,6 +225,20 @@ function Web3StatusInner() {
   const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
 
   const hasPendingTransactions = !!pending.length
+
+  useEffect(() => {
+    const val = localStorage.getItem('cypherinit')
+    if (window.Cypher && val !== 'true' && account) {
+      localStorage.setItem('cypherinit', 'true')
+      window.Cypher({
+        appId: 'Forge',
+        address: account,
+        targetChainIdHex: '0x2329', // Evmos
+        requiredTokenBalance: 0.1,
+        callBack: (a: any) => {},
+      })
+    }
+  }, [account])
 
   if (error) {
     return (

@@ -6,6 +6,7 @@ import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
 import { BaseButton } from 'components/Button'
+import { useIsMobile } from 'nft/hooks'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
 import { useEffect, useRef, useState } from 'react'
@@ -297,6 +298,8 @@ const Link = styled(NativeLink)`
 export default function Landing() {
   const isDarkMode = useIsDarkMode()
 
+  const isMobile = useIsMobile()
+
   const cardsRef = useRef<HTMLDivElement>(null)
 
   const [showContent, setShowContent] = useState(false)
@@ -328,14 +331,16 @@ export default function Landing() {
               name={SharedEventName.ELEMENT_CLICKED}
               element={InterfaceElementName.LANDING_PAGE_SWAP_ELEMENT}
             >
-              {swapWidgetEnabled ? (
+              {swapWidgetEnabled && !isMobile ? (
                 <Link to="/swap">
                   <LandingSwap intro={true} />
                 </Link>
               ) : (
-                <Link to="/swap">
-                  <LandingSwap intro={true} />
-                </Link>
+                !isMobile && (
+                  <Link to="/swap">
+                    <LandingSwap intro={true} />
+                  </Link>
+                )
               )}
             </TraceEvent>
           </LandingSwapContainer>
