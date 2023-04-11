@@ -15,7 +15,7 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
     if (isEthersRequestError(error)) {
       const method = JSON.parse(error.requestBody).method
       // ethers aggressively polls for block number, and it sometimes fails (whether spuriously or through rate-limiting).
-      // If block number polling, it should not be considered an exception.
+      // If block number polling fails, it should not be considered an exception.
       if (method === 'eth_blockNumber') return null
     }
 
