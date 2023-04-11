@@ -17,10 +17,11 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
       // ethers aggressively polls for block number, and it sometimes fails (whether spuriously or through rate-limiting).
       // If block number polling, it should not be considered an exception.
       if (method === 'eth_blockNumber') return null
-      // ethers exceptions are currently not caught in the codebase because we don't try/catch all provider calls.
-      // for now, these errors are not actionable so we should not report them.
-      if (error.message.match(/call revert exception/)) return null
     }
+
+    // for now, these errors are not actionable so we should not report them.
+    // ethers exceptions are currently not caught in the codebase because we don't try/catch all provider calls.
+    if (error.message.match(/call revert exception/)) return null
 
     // If the error is a network change, it should not be considered an exception.
     if (error.message.match(/underlying network changed/)) return null
