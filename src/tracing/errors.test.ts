@@ -19,4 +19,11 @@ describe('filterKnownErrors', () => {
     const originalException = new Error('underlying network changed')
     expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
   })
+
+  it('filters call revert errors', () => {
+    const originalException = new Error(
+      'call revert exception [ See: https://links.ethers.org/v5-errors-CALL_EXCEPTION ]'
+    )
+    expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
+  })
 })

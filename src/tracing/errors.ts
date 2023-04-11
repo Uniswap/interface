@@ -2,6 +2,7 @@ import { ClientOptions, ErrorEvent, EventHint } from '@sentry/types'
 
 /** Identifies ethers request errors (as thrown by {@type import(@ethersproject/web).fetchJson}). */
 function isEthersRequestError(error: Error): error is Error & { requestBody: string } {
+  if (error.message.match(/call revert exception/)) return true
   return 'requestBody' in error && typeof (error as unknown as Record<'requestBody', unknown>).requestBody === 'string'
 }
 
