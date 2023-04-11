@@ -51,6 +51,7 @@ interface WidgetProps {
   onReviewSwapClick?: OnReviewSwapClick
 }
 
+// eslint-disable-next-line import/no-unused-modules
 export default function Widget({
   defaultTokens,
   width = DEFAULT_WIDGET_WIDTH,
