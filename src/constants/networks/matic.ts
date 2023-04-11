@@ -81,6 +81,7 @@ const maticInfo: EVMNetworkInfo = {
   deBankSlug: 'matic',
   trueSightId: 'polygon',
   dexToCompare: 'quickswap',
+  geckoTermialId: 'polygon_pos',
 }
 
 export default maticInfo

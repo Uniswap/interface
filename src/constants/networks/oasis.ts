@@ -72,6 +72,7 @@ const oasisInfo: EVMNetworkInfo = {
   deBankSlug: EMPTY,
   trueSightId: NOT_SUPPORT,
   dexToCompare: 'valleyswap-v2',
+  geckoTermialId: 'oasis',
 }
 
 export default oasisInfo

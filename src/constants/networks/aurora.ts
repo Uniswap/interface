@@ -74,6 +74,7 @@ const auroraInfo: EVMNetworkInfo = {
   deBankSlug: 'aurora',
   trueSightId: NOT_SUPPORT,
   dexToCompare: 'trisolaris',
+  geckoTermialId: 'aurora',
 }
 
 export default auroraInfo

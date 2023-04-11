@@ -79,6 +79,7 @@ const bnbInfo: EVMNetworkInfo = {
   deBankSlug: 'bsc',
   trueSightId: 'bsc',
   dexToCompare: 'pancake',
+  geckoTermialId: 'bsc',
 }
 
 export default bnbInfo

@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { PoolResponse, useLazyCandelsticksQuery } from 'services/geckoTermial'
+import { PoolResponse, transformData, useLazyOhlcvQuery } from 'services/geckoTermial'
+
+import { useActiveWeb3React } from 'hooks'
 
 import {
   ErrorCallback,
@@ -13,11 +15,12 @@ import {
 } from './charting_library'
 
 const configurationData = {
-  supported_resolutions: ['1', '5', '15', '1H', '2H', '4H', '1D'],
+  supported_resolutions: ['1', '5', '15', '1H', '4H', '12H', '1D'],
 }
 
-export const useDatafeed = (poolDetail: PoolResponse, tokenId: string) => {
-  const [getCandles, { isLoading }] = useLazyCandelsticksQuery()
+export const useDatafeed = (poolDetail: PoolResponse, isReverse: boolean, label: string) => {
+  const { networkInfo } = useActiveWeb3React()
+  const [getCandles, { isLoading }] = useLazyOhlcvQuery()
 
   const intervalRef = useRef<any>()
 
@@ -28,17 +31,6 @@ export const useDatafeed = (poolDetail: PoolResponse, tokenId: string) => {
       }
     }
   }, [])
-
-  const base =
-    poolDetail.included[0].id === tokenId
-      ? poolDetail.included[0].attributes.symbol
-      : poolDetail.included[1].attributes.symbol
-  const quote =
-    poolDetail.included[0].id !== tokenId
-      ? poolDetail.included[0].attributes.symbol
-      : poolDetail.included[1].attributes.symbol
-
-  const label = `${base}/${quote}`
 
   return useMemo(() => {
     return {
@@ -65,7 +57,7 @@ export const useDatafeed = (poolDetail: PoolResponse, tokenId: string) => {
             minmov: 1,
             pricescale: 10000,
             has_intraday: true,
-            has_empty_bars: true,
+            // has_empty_bars: true,
             has_weekly_and_monthly: true,
             has_daily: true,
             supported_resolutions: configurationData.supported_resolutions as ResolutionString[],
@@ -86,33 +78,42 @@ export const useDatafeed = (poolDetail: PoolResponse, tokenId: string) => {
       ) => {
         if (isLoading) return
 
-        const data = await getCandles({
-          token_id: tokenId,
-          pool_id: poolDetail.data.id,
-          from: periodParams.from,
-          to: periodParams.to,
-          resolution,
-          count_back: periodParams.countBack,
-          for_update: false,
-          currency: 'token',
-        })
+        const { from, to, countBack } = periodParams
 
-        onHistoryCallback(
-          data?.data?.data.map((item: any) => ({
-            time: new Date(item.dt).getTime(),
-            open: item.o,
-            high: Math.min(item.h, item.c * 1.1),
-            close: item.c,
-            low: Math.max(item.l, item.c / 1.1),
-            volume: item.v,
-          })) || [],
-          {
-            noData: data?.data?.meta?.noData === true,
-          },
-        )
+        const timeframe = resolution === '1D' ? 'day' : Number(resolution) > 15 ? 'hour' : 'minute'
+        const timePeriod = resolution === '1D' ? '1' : Number(resolution) > 15 ? Number(resolution) / 60 : resolution
+
+        const secondsPerCandle = (to - from) / countBack
+
+        const promises = []
+        const n = Math.ceil(countBack / 1000)
+        for (let i = 0; i < n; i++) {
+          promises.push(
+            getCandles({
+              network: networkInfo.geckoTermialId || '',
+              poolAddress: poolDetail.attributes.address,
+              timeframe,
+              timePeriod,
+              token: isReverse ? 'quote' : 'base',
+              before_timestamp: Math.floor(to - i * 1000 * secondsPerCandle),
+              limit: countBack > 1000 ? (i === n - 1 ? countBack % 1000 : 1000) : countBack,
+            }),
+          )
+        }
+
+        const res = await Promise.all(promises)
+
+        if (res.some(data => data.error || !Array.isArray(data.data?.data?.attributes?.ohlcv_list))) {
+          onHistoryCallback([], { noData: true })
+          return
+        }
+
+        const bars = transformData(res.map(item => item.data?.data.attributes.ohlcv_list).flat() as any)
+
+        onHistoryCallback(bars, { noData: res.some(data => !data?.data?.data?.attributes.ohlcv_list.length) })
       },
       searchSymbols: () => {
-        // TODO(viet-nv): check no empty function rule
+        //
       },
       subscribeBars: async (
         _symbolInfo: LibrarySymbolInfo,
@@ -123,25 +124,16 @@ export const useDatafeed = (poolDetail: PoolResponse, tokenId: string) => {
       ) => {
         const getData = async () => {
           const data = await getCandles({
-            token_id: tokenId,
-            pool_id: poolDetail.data.id,
-            from: Math.floor(Date.now() / 1000) - +resolution * 60,
-            to: Math.floor(Date.now() / 1000),
-            resolution,
-            for_update: true,
-            currency: 'token',
+            network: networkInfo.geckoTermialId || '',
+            poolAddress: poolDetail.attributes.address,
+            timeframe: resolution === '1D' ? 'day' : Number(resolution) > 15 ? 'hour' : 'minute',
+            timePeriod: resolution === '1D' ? '1' : Number(resolution) > 15 ? Number(resolution) / 60 : resolution,
+            before_timestamp: Math.floor(Date.now() / 1000),
+            limit: 1,
+            token: isReverse ? 'quote' : 'base',
           })
-
-          onTick(
-            (data?.data?.data || []).map((item: any) => ({
-              time: new Date(item.dt).getTime(),
-              open: item.o,
-              high: item.h,
-              close: item.c,
-              low: item.l,
-              volume: item.v,
-            }))[0],
-          )
+          if (data.data?.data?.attributes?.ohlcv_list?.length)
+            onTick(transformData(data.data.data.attributes.ohlcv_list)[0])
         }
         if (intervalRef.current) clearInterval(intervalRef.current)
         intervalRef.current = setInterval(getData, 30000)
@@ -151,5 +143,5 @@ export const useDatafeed = (poolDetail: PoolResponse, tokenId: string) => {
         //
       },
     }
-  }, [getCandles, isLoading, poolDetail.data.id, label, tokenId])
+  }, [getCandles, isLoading, label, isReverse, networkInfo.geckoTermialId, poolDetail.attributes.address])
 }

@@ -74,6 +74,7 @@ const cronosInfo: EVMNetworkInfo = {
   deBankSlug: 'cro',
   trueSightId: 'cronos',
   dexToCompare: 'vvs',
+  geckoTermialId: 'cronos',
 }
 
 export default cronosInfo

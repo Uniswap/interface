@@ -72,6 +72,7 @@ const velasInfo: EVMNetworkInfo = {
   deBankSlug: EMPTY,
   trueSightId: NOT_SUPPORT,
   dexToCompare: 'wagyuswap',
+  geckoTermialId: 'velas',
 }
 
 export default velasInfo

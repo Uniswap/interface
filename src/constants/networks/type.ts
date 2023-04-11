@@ -39,6 +39,7 @@ export interface NetworkInfo {
   //   USDC: Token
   //   USDT: Token
   // }
+  readonly geckoTermialId: string | null
 }
 
 export interface EVMNetworkInfo extends NetworkInfo {

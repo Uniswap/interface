@@ -49,6 +49,7 @@ const solanaInfo: SolanaNetworkInfo = {
   trueSightId: NOT_SUPPORT,
   openBookAddress: new PublicKey('srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX'),
   dexToCompare: 'OrcaV2',
+  geckoTermialId: 'solana',
 }
 
 export default solanaInfo

@@ -74,6 +74,7 @@ const arbitrumInfo: EVMNetworkInfo = {
   deBankSlug: 'arb',
   trueSightId: NOT_SUPPORT,
   dexToCompare: 'uniswapv3',
+  geckoTermialId: 'arbitrum',
 }
 
 export default arbitrumInfo

@@ -69,6 +69,7 @@ const optimismInfo: EVMNetworkInfo = {
   deBankSlug: 'op',
   trueSightId: NOT_SUPPORT,
   dexToCompare: 'uniswapv3',
+  geckoTermialId: 'optimism',
 }
 
 export default optimismInfo

@@ -76,6 +76,7 @@ const bttcInfo: EVMNetworkInfo = {
   deBankSlug: EMPTY,
   trueSightId: NOT_SUPPORT,
   dexToCompare: NOT_SUPPORT,
+  geckoTermialId: 'bttc',
 }
 
 export default bttcInfo

@@ -83,6 +83,7 @@ const avaxInfo: EVMNetworkInfo = {
   deBankSlug: 'avax',
   trueSightId: 'avax',
   dexToCompare: 'traderjoe',
+  geckoTermialId: 'avax',
 }
 
 export default avaxInfo

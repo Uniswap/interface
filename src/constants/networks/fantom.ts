@@ -72,6 +72,7 @@ const fantomInfo: EVMNetworkInfo = {
   deBankSlug: 'ftm',
   trueSightId: 'fantom',
   dexToCompare: 'spookyswap',
+  geckoTermialId: 'fantom',
 }
 
 export default fantomInfo
