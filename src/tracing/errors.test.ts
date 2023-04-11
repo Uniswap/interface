@@ -21,9 +21,9 @@ describe('filterKnownErrors', () => {
   })
 
   it('filters call revert errors', () => {
-    const originalException = new Error(
-      'call revert exception [ See: https://links.ethers.org/v5-errors-CALL_EXCEPTION ]'
-    )
+    const originalException = new (class extends Error {
+      requestBody = JSON.stringify({ method: 'collect((uint256,address,uint128,uint128))' })
+    })()
     expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
   })
 })
