@@ -15,7 +15,7 @@ import { ActivityTab } from './Activity/ActivityTab'
 import NFTs from './NFTs'
 import Pools from './Pools'
 import { PortfolioRowWrapper } from './PortfolioRow'
-import Tokens from './Tokens'
+import Tokens from './Tokens/Tokens'
 
 const Wrapper = styled(Column)`
   margin-top: 28px;
