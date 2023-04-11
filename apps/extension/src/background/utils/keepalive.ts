@@ -32,7 +32,7 @@ export function* keepAliveSaga() {
     // start keep alive task in the background
     const keepAliveTask = yield* fork(keepAliveLoop)
 
-    // wait for aith reset action to be dispatched
+    // wait for auth reset action to be dispatched
     yield* take(authActions.reset.type)
 
     // after wallet is locked, cancel background keep alive task
