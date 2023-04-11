@@ -20,10 +20,6 @@ import { useCurrencyBalances } from '../connection/hooks'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { SwapState } from './reducer'
 
-// export function useSwapState(): AppState['swap'] {
-//   return useAppSelector((state) => state.swap)
-// }
-
 export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>): {
   onCurrencySelection: (field: Field, currency: Currency) => void
   onSwitchTokens: () => void

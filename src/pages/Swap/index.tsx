@@ -196,7 +196,6 @@ export default function Swap({ className }: { className?: string }) {
   // swap state
   const [state, dispatch] = useReducer(swapReducer, initialSwapState)
   const { typedValue, recipient, independentField } = state
-  // const { independentField, typedValue, recipient } = useSwapState()
   const {
     trade: { state: tradeState, trade },
     allowedSlippage,
