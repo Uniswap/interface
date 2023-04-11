@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react'
 import { useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { isSupportedChain } from 'constants/chains'
@@ -26,6 +27,10 @@ function Tracer() {
   const { chainId, provider } = useWeb3React()
   const networkProvider = isSupportedChain(chainId) ? RPC_PROVIDERS[chainId] : undefined
   const shouldTrace = useTraceJsonRpcFlag() === TraceJsonRpcVariant.Enabled
+
+  useEffect(() => {
+    Sentry.setTag('chain_id', chainId)
+  }, [chainId])
 
   useEffect(() => {
     if (shouldTrace) {
