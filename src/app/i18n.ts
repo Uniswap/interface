@@ -1,5 +1,5 @@
 import i18nBase from 'i18next'
-import { initReactI18next } from 'react-i18next'
+import { initReactI18next, TFunction } from 'react-i18next'
 import translationEn from 'src/locales/en/translation.json'
 
 // Note, adding/changing workspaces or locales sometimes requires
@@ -39,3 +39,6 @@ i18nBase
   })
 
 export const i18n = i18nBase // Just aliasing for named export
+
+// Typed TFunction
+export type AppTFunction = TFunction<'translation'>

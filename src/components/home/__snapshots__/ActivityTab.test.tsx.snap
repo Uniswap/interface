@@ -95,6 +95,7 @@ exports[`ActivityTab renders without error 1`] = `
       externalScrollView={[Function]}
       finalRenderAheadOffset={250}
       forceNonDeterministicRendering={true}
+      getItemType={[Function]}
       horizontal={false}
       initialOffset={0}
       initialRenderIndex={0}
@@ -148,6 +149,7 @@ exports[`ActivityTab renders without error 1`] = `
               },
             ],
             "estimatedItemSize": 92,
+            "getItemType": [Function],
             "keyExtractor": [Function],
             "numColumns": 1,
             "onScroll": [Function],
@@ -390,6 +392,7 @@ exports[`ActivityTab renders without error 2`] = `
       externalScrollView={[Function]}
       finalRenderAheadOffset={250}
       forceNonDeterministicRendering={true}
+      getItemType={[Function]}
       horizontal={false}
       initialOffset={0}
       initialRenderIndex={0}
@@ -469,6 +472,7 @@ exports[`ActivityTab renders without error 2`] = `
               },
             ],
             "estimatedItemSize": 92,
+            "getItemType": [Function],
             "keyExtractor": [Function],
             "numColumns": 1,
             "onScroll": [Function],

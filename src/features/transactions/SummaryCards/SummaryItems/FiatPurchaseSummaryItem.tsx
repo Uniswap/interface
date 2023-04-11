@@ -4,21 +4,16 @@ import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'src/entities/assets'
 import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import TransactionSummaryLayout, {
-  AssetUpdateLayout,
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
-import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
-import { getTransactionTitle } from 'src/features/transactions/SummaryCards/utils'
-import { FiatPurchaseTransactionInfo, TransactionStatus } from 'src/features/transactions/types'
+import { FiatPurchaseTransactionInfo, TransactionDetails } from 'src/features/transactions/types'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { formatFiatPrice } from 'src/utils/format'
 
 export default function FiatPurchaseSummaryItem({
   transaction,
-  readonly = true,
-  ...rest
-}: BaseTransactionSummaryProps & {
-  transaction: { typeInfo: FiatPurchaseTransactionInfo }
+}: {
+  transaction: TransactionDetails & { typeInfo: FiatPurchaseTransactionInfo }
 }): JSX.Element {
   const { t } = useTranslation()
 
@@ -31,32 +26,18 @@ export default function FiatPurchaseSummaryItem({
       : undefined
   )
 
-  const title = getTransactionTitle(transaction.status, t('Purchase'), t)
-
   const fiatPurchaseAmount = formatFiatPrice(
     inputCurrencyAmount && inputCurrencyAmount > 0 ? inputCurrencyAmount : undefined,
     inputCurrency?.code
   )
-  const caption = fiatPurchaseAmount
-    ? `${fiatPurchaseAmount} of ${outputCurrencyInfo?.currency.symbol ?? t('Unknown token')}`
-    : ''
-
-  const endAdornment =
-    outputCurrencyAmount && transaction.status !== TransactionStatus.Failed ? (
-      // bypassing BalanceUpdate since we do not have an actual raw amount here
-      <AssetUpdateLayout
-        caption={fiatPurchaseAmount}
-        title={
-          '+' + outputCurrencyAmount + ' ' + outputCurrencyInfo?.currency.symbol ??
-          t('unknown token')
-        }
-      />
-    ) : undefined
 
   return (
     <TransactionSummaryLayout
-      caption={caption}
-      endAdornment={endAdornment}
+      caption={t('{{cryptoAmount}} for {{fiatAmount}}', {
+        cryptoAmount:
+          outputCurrencyAmount + ' ' + outputCurrencyInfo?.currency.symbol ?? t('unknown token'),
+        fiatAmount: fiatPurchaseAmount,
+      })}
       icon={
         <LogoWithTxStatus
           assetType={AssetType.Currency}
@@ -66,10 +47,7 @@ export default function FiatPurchaseSummaryItem({
           txType={transaction.typeInfo.type}
         />
       }
-      readonly={readonly}
-      title={title}
       transaction={transaction}
-      {...rest}
     />
   )
 }

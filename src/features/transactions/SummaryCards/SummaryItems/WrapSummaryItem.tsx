@@ -1,73 +1,57 @@
 import React, { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
-import { SwapLogoOrLogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
+import { SplitLogo } from 'src/components/CurrencyLogo/SplitLogo'
+import { getFormattedCurrencyAmount } from 'src/features/notifications/utils'
 import {
   useNativeCurrencyInfo,
   useWrappedNativeCurrencyInfo,
 } from 'src/features/tokens/useCurrencyInfo'
-import BalanceUpdate from 'src/features/transactions/SummaryCards/BalanceUpdate'
 import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
-import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
-import { getTransactionTitle } from 'src/features/transactions/SummaryCards/utils'
-import { WrapTransactionInfo } from 'src/features/transactions/types'
+import { TransactionDetails, WrapTransactionInfo } from 'src/features/transactions/types'
 
 export default function WrapSummaryItem({
   transaction,
-  readonly,
-  ...rest
-}: BaseTransactionSummaryProps & { transaction: { typeInfo: WrapTransactionInfo } }): JSX.Element {
-  const { t } = useTranslation()
+}: {
+  transaction: TransactionDetails & { typeInfo: WrapTransactionInfo }
+}): JSX.Element {
   const { unwrapped } = transaction.typeInfo
 
   const nativeCurrencyInfo = useNativeCurrencyInfo(transaction.chainId)
   const wrappedCurrencyInfo = useWrappedNativeCurrencyInfo(transaction.chainId)
-  const outputCurrency = unwrapped ? nativeCurrencyInfo : wrappedCurrencyInfo
 
-  const titleText = unwrapped ? t('Unwrap') : t('Wrap')
-  const title = getTransactionTitle(transaction.status, titleText, t)
-
-  const caption = unwrapped
-    ? `${wrappedCurrencyInfo?.currency.symbol} → ${nativeCurrencyInfo?.currency.symbol}`
-    : `${nativeCurrencyInfo?.currency.symbol} → ${wrappedCurrencyInfo?.currency.symbol}`
-
-  const endAdornment = useMemo(() => {
-    if (outputCurrency && transaction.typeInfo.currencyAmountRaw) {
-      return (
-        <BalanceUpdate
-          amountRaw={transaction.typeInfo.currencyAmountRaw}
-          currency={outputCurrency.currency}
-          transactedUSDValue={transaction.typeInfo.transactedUSDValue}
-          transactionStatus={transaction.status}
-          transactionType={transaction.typeInfo.type}
-        />
-      )
+  const caption = useMemo(() => {
+    if (!nativeCurrencyInfo || !wrappedCurrencyInfo) {
+      return ''
     }
-  }, [
-    outputCurrency,
-    transaction.status,
-    transaction.typeInfo.currencyAmountRaw,
-    transaction.typeInfo.transactedUSDValue,
-    transaction.typeInfo.type,
-  ])
+
+    const inputCurrencyInfo = unwrapped ? wrappedCurrencyInfo : nativeCurrencyInfo
+    const outputCurrencyInfo = unwrapped ? nativeCurrencyInfo : wrappedCurrencyInfo
+
+    const { currency: inputCurrency } = inputCurrencyInfo
+    const { currency: outputCurrency } = outputCurrencyInfo
+    const currencyAmount = getFormattedCurrencyAmount(
+      inputCurrency,
+      transaction.typeInfo.currencyAmountRaw
+    )
+    const otherCurrencyAmount = getFormattedCurrencyAmount(
+      outputCurrency,
+      transaction.typeInfo.currencyAmountRaw
+    )
+    return `${currencyAmount}${inputCurrency.symbol} → ${otherCurrencyAmount}${outputCurrency.symbol}`
+  }, [nativeCurrencyInfo, transaction.typeInfo.currencyAmountRaw, unwrapped, wrappedCurrencyInfo])
 
   return (
     <TransactionSummaryLayout
       caption={caption}
-      endAdornment={endAdornment}
       icon={
-        <SwapLogoOrLogoWithTxStatus
+        <SplitLogo
           inputCurrencyInfo={unwrapped ? wrappedCurrencyInfo : nativeCurrencyInfo}
           outputCurrencyInfo={unwrapped ? nativeCurrencyInfo : wrappedCurrencyInfo}
           size={TXN_HISTORY_ICON_SIZE}
-          txStatus={transaction.status}
         />
       }
-      readonly={readonly}
-      title={title}
       transaction={transaction}
-      {...rest}
     />
   )
 }

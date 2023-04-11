@@ -24,7 +24,6 @@ const SPRING_ANIMATION = { damping: 30, stiffness: 150 }
 export interface NotificationContentProps {
   title: string
   icon?: JSX.Element
-  balanceUpdate?: JSX.Element
   actionButton?: {
     title: string
     onPress: () => void
@@ -42,7 +41,6 @@ export interface NotificationToastProps extends NotificationContentProps {
 export function NotificationToast({
   title,
   icon,
-  balanceUpdate,
   onPress,
   onPressIn,
   hideDelay,
@@ -128,7 +126,6 @@ export function NotificationToast({
             actionButton={
               actionButton ? { title: actionButton.title, onPress: onActionButtonPress } : undefined
             }
-            balanceUpdate={balanceUpdate}
             icon={icon}
             title={title}
             onPress={onNotificationPress}
@@ -143,12 +140,10 @@ export function NotificationToast({
 export function NotificationContent({
   title,
   icon,
-  balanceUpdate,
   actionButton,
   onPress,
   onPressIn,
 }: NotificationContentProps): JSX.Element {
-  const endAdornment = balanceUpdate || actionButton
   return (
     <TouchableArea
       alignItems="center"
@@ -166,7 +161,7 @@ export function NotificationContent({
           row
           shrink
           alignItems="center"
-          flexBasis={endAdornment ? '75%' : '100%'}
+          flexBasis={actionButton ? '75%' : '100%'}
           gap="spacing8"
           justifyContent="flex-start">
           {icon}
@@ -176,17 +171,13 @@ export function NotificationContent({
             </Text>
           </Flex>
         </Flex>
-        {endAdornment ? (
+        {actionButton && (
           <Flex shrink alignItems="flex-end" flexBasis="25%" gap="spacing4">
-            {balanceUpdate ? (
-              balanceUpdate
-            ) : actionButton ? (
-              <TouchableArea p="spacing8" onPress={actionButton.onPress}>
-                <Text color="accentActive">{actionButton.title}</Text>
-              </TouchableArea>
-            ) : null}
+            <TouchableArea p="spacing8" onPress={actionButton.onPress}>
+              <Text color="accentActive">{actionButton.title}</Text>
+            </TouchableArea>
           </Flex>
-        ) : null}
+        )}
       </Flex>
     </TouchableArea>
   )

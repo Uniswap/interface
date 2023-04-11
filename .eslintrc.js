@@ -219,10 +219,14 @@ module.exports = {
               'you’re',
               'you’ve',
               'unhide',
-              'unhidden'
+              'unhidden',
+              'cancelling',
+              'cancelled'
             ],
           },
+
         ],
+        'max-lines': ['off'], // cap file length
       },
     },
   ],

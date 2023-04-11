@@ -1,8 +1,13 @@
+/* eslint-disable complexity */
+import { ResponsiveValue } from '@shopify/restyle'
+import dayjs from 'dayjs'
 import { providers } from 'ethers'
-import { default as React, useEffect, useState } from 'react'
+import { default as React, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch } from 'src/app/hooks'
-import { BaseButtonProps, TouchableArea } from 'src/components/buttons/TouchableArea'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
+import SlashCircleIcon from 'src/assets/icons/slash-circle.svg'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout/Flex'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -14,12 +19,16 @@ import { useLowestPendingNonce } from 'src/features/transactions/hooks'
 import { cancelTransaction } from 'src/features/transactions/slice'
 import { CancelConfirmationView } from 'src/features/transactions/SummaryCards/CancelConfirmationView'
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
+import { getTransactionSummaryTitle } from 'src/features/transactions/SummaryCards/utils'
 import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
+import { AccountType } from 'src/features/wallet/accounts/types'
+import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { iconSizes } from 'src/styles/sizing'
+import { Theme } from 'src/styles/theme'
 import { openMoonpayTransactionLink, openTransactionLink } from 'src/utils/linking'
 
 export const TXN_HISTORY_ICON_SIZE = iconSizes.icon36
@@ -29,26 +38,30 @@ function TransactionSummaryLayout({
   transaction,
   title,
   caption,
-  endAdornment,
-  icon,
-  readonly,
   bg,
-  ...rest
+  icon,
+  onRetry,
 }: {
   transaction: TransactionDetails
-  title: string
-  caption: string | undefined
-  readonly: boolean
-  endAdornment?: JSX.Element
+  title?: string
+  caption?: string
+  bg?: ResponsiveValue<keyof Theme['colors'], Theme>
   icon?: JSX.Element
-} & BaseButtonProps): JSX.Element {
+  onRetry?: () => void
+}): JSX.Element {
   const { t } = useTranslation()
+  const theme = useAppTheme()
+
+  const { type } = useActiveAccountWithThrow()
+  const readonly = type === AccountType.Readonly
 
   const [showActionsModal, setShowActionsModal] = useState(false)
   const [showCancelModal, setShowCancelModal] = useState(false)
   const dispatch = useAppDispatch()
 
-  const { status, addedTime, hash, chainId } = transaction
+  const { status, addedTime, hash, chainId, typeInfo } = transaction
+
+  title = title ?? getTransactionSummaryTitle(transaction, t) ?? ''
 
   const inProgress = status === TransactionStatus.Cancelling || status === TransactionStatus.Pending
 
@@ -90,18 +103,39 @@ function TransactionSummaryLayout({
     }
   }
 
+  const formattedAddedTime = useMemo(() => {
+    const wrappedAddedTime = dayjs(transaction.addedTime)
+    return dayjs().isBefore(wrappedAddedTime.add(59, 'minute'), 'minute')
+      ? // We do not use dayjs.duration() as it uses Math.round under the hood,
+        // so for the first 30s it would show 0 minutes
+        `${Math.ceil(dayjs().diff(wrappedAddedTime) / 60000)}m` // withing an hour
+      : dayjs().isBefore(wrappedAddedTime.add(24, 'hour'))
+      ? wrappedAddedTime.format('h:mma') // withing last 24 hours
+      : wrappedAddedTime.format('MMM D') // current year
+  }, [transaction.addedTime])
+
+  const rightBlock = inProgress ? (
+    <SpinningLoader disabled={queued} size={LOADING_SPINNER_SIZE} />
+  ) : status === TransactionStatus.Failed && onRetry ? (
+    <Text color="accentActive" variant="buttonLabelSmall" onPress={onRetry}>
+      {t('Retry')}
+    </Text>
+  ) : (
+    <Text color="textTertiary" variant="bodyMicro">
+      {formattedAddedTime}
+    </Text>
+  )
+
   return (
     <>
-      <TouchableArea overflow="hidden" onPress={onPress} {...rest} mb="spacing24">
+      <TouchableArea mb="spacing24" overflow="hidden" onPress={onPress}>
         <Flex
           grow
           row
           alignItems="flex-start"
-          bg={inProgress ? 'background2' : bg ?? 'background0'}
+          bg={bg ?? 'background0'}
           borderRadius="rounded16"
-          justifyContent="space-between"
-          px={inProgress ? 'spacing12' : 'none'}
-          py={inProgress ? 'spacing12' : 'none'}>
+          justifyContent="space-between">
           <Flex
             row
             shrink
@@ -120,6 +154,24 @@ function TransactionSummaryLayout({
                 <Text numberOfLines={1} variant="bodyLarge">
                   {title}
                 </Text>
+                {(transaction.status === TransactionStatus.Cancelled ||
+                  transaction.status === TransactionStatus.Cancelling) && (
+                  <SlashCircleIcon
+                    color={theme.colors.textSecondary}
+                    fill={theme.colors.background0}
+                    fillOpacity={1}
+                    height={theme.iconSizes.icon16}
+                    width={theme.iconSizes.icon16}
+                  />
+                )}
+                {transaction.status === TransactionStatus.Failed && (
+                  <AlertTriangle
+                    color={theme.colors.accentWarning}
+                    fill={theme.colors.background0}
+                    height={theme.iconSizes.icon16}
+                    width={theme.iconSizes.icon16}
+                  />
+                )}
                 {chainId !== ChainId.Mainnet && <InlineNetworkPill chainId={chainId} />}
               </Flex>
               {caption && (
@@ -129,16 +181,11 @@ function TransactionSummaryLayout({
               )}
             </Flex>
           </Flex>
-          {inProgress ? (
-            <Flex alignItems="flex-end" gap="spacing2">
-              <SpinningLoader disabled={queued} size={LOADING_SPINNER_SIZE} />
-              <Text color="textSecondary" variant="subheadSmall">
-                {queued ? t('Queued') : t('Pending')}
-              </Text>
-            </Flex>
-          ) : (
-            endAdornment
-          )}
+          <Flex
+            height={inProgress ? '100%' : undefined}
+            justifyContent={inProgress ? 'center' : undefined}>
+            {rightBlock}
+          </Flex>
         </Flex>
       </TouchableArea>
       {showActionsModal && (
@@ -156,9 +203,9 @@ function TransactionSummaryLayout({
             return openTransactionLink(hash, chainId)
           }}
           onViewMoonpay={
-            transaction.typeInfo.type === TransactionType.FiatPurchase &&
+            typeInfo.type === TransactionType.FiatPurchase &&
             // only display `View on Moonpay` when an explorer url was provided by Moonpay
-            transaction.typeInfo.explorerUrl
+            typeInfo.explorerUrl
               ? (): Promise<void> | undefined => {
                   setShowActionsModal(false)
                   // avoids type casting
@@ -170,7 +217,6 @@ function TransactionSummaryLayout({
           }
         />
       )}
-
       {showCancelModal && (
         <BottomSheetModal
           hideHandlebar={false}

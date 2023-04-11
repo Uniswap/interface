@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, ReactNode } from 'react'
-import { TFunction } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
+import { AppTFunction } from 'src/app/i18n'
 import AlertTriangleIcon from 'src/assets/icons/alert-triangle.svg'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
@@ -28,10 +28,7 @@ export type WarningModalProps = {
   icon?: ReactNode
 }
 
-export function captionForAccountRemovalWarning(
-  accountType: AccountType,
-  t: TFunction<'translation'>
-): string {
+export function captionForAccountRemovalWarning(accountType: AccountType, t: AppTFunction): string {
   switch (accountType) {
     case AccountType.Readonly:
       return t('This action will remove this view-only wallet from appearing in your app.')

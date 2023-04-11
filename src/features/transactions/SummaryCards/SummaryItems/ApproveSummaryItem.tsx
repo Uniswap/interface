@@ -4,45 +4,43 @@ import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'src/entities/assets'
 import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import TransactionSummaryLayout, {
-  AssetUpdateLayout,
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
-import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
-import { getTransactionTitle } from 'src/features/transactions/SummaryCards/utils'
-import { ApproveTransactionInfo, TransactionType } from 'src/features/transactions/types'
-import { shortenAddress } from 'src/utils/addresses'
+import {
+  ApproveTransactionInfo,
+  TransactionDetails,
+  TransactionType,
+} from 'src/features/transactions/types'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { formatNumberOrString, NumberType } from 'src/utils/format'
 
+const INFINITE_AMOUNT = 'INF'
+const ZERO_AMOUNT = '0.0'
+
 export default function ApproveSummaryItem({
   transaction,
-  readonly,
-  ...rest
-}: BaseTransactionSummaryProps & {
-  transaction: { typeInfo: ApproveTransactionInfo }
+}: {
+  transaction: TransactionDetails & { typeInfo: ApproveTransactionInfo }
 }): JSX.Element {
   const { t } = useTranslation()
   const currencyInfo = useCurrencyInfo(
     buildCurrencyId(transaction.chainId, transaction.typeInfo.tokenAddress)
   )
 
-  const title = getTransactionTitle(transaction.status, t('Approve'), t)
-
   const { approvalAmount } = transaction.typeInfo
 
-  const approvalAmountCaption = approvalAmount === 'INF' ? t('Unlimited') : undefined
-  const approvalAmountTitle = `${
-    !approvalAmount || approvalAmount === 'INF'
-      ? ''
-      : formatNumberOrString(transaction.typeInfo.approvalAmount, NumberType.TokenNonTx)
-  } ${currencyInfo?.currency.symbol ?? ''}`
+  const amount =
+    approvalAmount === INFINITE_AMOUNT
+      ? t('Unlimited')
+      : approvalAmount && approvalAmount !== ZERO_AMOUNT
+      ? formatNumberOrString(approvalAmount, NumberType.TokenNonTx)
+      : ''
+
+  const caption = `${amount ? amount + ' ' : ''}${currencyInfo?.currency.symbol ?? ''}`
 
   return (
     <TransactionSummaryLayout
-      caption={shortenAddress(transaction.typeInfo.spender)}
-      endAdornment={
-        <AssetUpdateLayout caption={approvalAmountCaption} title={approvalAmountTitle} />
-      }
+      caption={caption}
       icon={
         <LogoWithTxStatus
           assetType={AssetType.Currency}
@@ -52,10 +50,7 @@ export default function ApproveSummaryItem({
           txType={TransactionType.Approve}
         />
       }
-      readonly={readonly}
-      title={title}
       transaction={transaction}
-      {...rest}
     />
   )
 }

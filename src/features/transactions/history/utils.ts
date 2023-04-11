@@ -20,9 +20,7 @@ import { fromGraphQLChain } from 'src/utils/chainId'
 import { getNativeCurrencyAddressForChain } from 'src/utils/currencyId'
 
 export interface AllFormattedTransactions {
-  combinedTransactionList: TransactionDetails[]
-  todayTransactionList: TransactionDetails[]
-  monthTransactionList: TransactionDetails[]
+  last24hTransactionList: TransactionDetails[]
   // Maps year <-> TransactionSummaryInfo[] for all months before current month
   priorByMonthTransactionList: Record<string, TransactionDetails[]>
   pending: TransactionDetails[]
@@ -32,34 +30,30 @@ export function formatTransactionsByDate(
   transactions: TransactionDetails[]
 ): AllFormattedTransactions {
   // timestamp in ms for start of time periods
-  const msTimestampCutoffDay = dayjs().startOf('day').unix() * 1000
-  const msTimestampCutoffMonth = dayjs().startOf('month').unix() * 1000
-  const msTimestampCutoffYear = dayjs().startOf('year').unix() * 1000
+  const msTimestampCutoff24h = dayjs().subtract(24, 'hour').valueOf()
+  const msTimestampCutoffYear = dayjs().startOf('year').valueOf()
 
   // Segement by time periods.
-  const [pending, todayTransactionList, monthTransactionList, beforeCurrentMonth] =
-    transactions.reduce<
-      [TransactionDetails[], TransactionDetails[], TransactionDetails[], TransactionDetails[]]
-    >(
-      (accum, item) => {
-        if (
-          // Want all incomplete transactions
-          item.status === TransactionStatus.Pending ||
-          item.status === TransactionStatus.Cancelling ||
-          item.status === TransactionStatus.Replacing
-        ) {
-          accum[0].push(item)
-        } else if (item.addedTime > msTimestampCutoffDay) {
-          accum[1].push(item)
-        } else if (item.addedTime > msTimestampCutoffMonth) {
-          accum[2].push(item)
-        } else {
-          accum[3].push(item)
-        }
-        return accum
-      },
-      [[], [], [], []]
-    )
+  const [pending, last24hTransactionList, olderThan24HTransactionList] = transactions.reduce<
+    [TransactionDetails[], TransactionDetails[], TransactionDetails[]]
+  >(
+    (accum, item) => {
+      if (
+        // Want all incomplete transactions
+        item.status === TransactionStatus.Pending ||
+        item.status === TransactionStatus.Cancelling ||
+        item.status === TransactionStatus.Replacing
+      ) {
+        accum[0].push(item)
+      } else if (item.addedTime > msTimestampCutoff24h) {
+        accum[1].push(item)
+      } else {
+        accum[2].push(item)
+      }
+      return accum
+    },
+    [[], [], []]
+  )
 
   // sort pending txns based on nonce, highest nonce first for reverse chronological order
   const pendingSorted = pending.sort((a, b) => {
@@ -68,8 +62,8 @@ export function formatTransactionsByDate(
     return nonceA && nonceB ? (nonceA < nonceB ? 1 : -1) : 1
   })
 
-  // For all transactions before current month, group by month
-  const priorByMonthTransactionList = beforeCurrentMonth.reduce(
+  // For all transactions before last 24 hours, group by month
+  const priorByMonthTransactionList = olderThan24HTransactionList.reduce(
     (accum: Record<string, TransactionDetails[]>, item) => {
       const isPreviousYear = item.addedTime < msTimestampCutoffYear
       const key = dayjs(item.addedTime)
@@ -86,10 +80,8 @@ export function formatTransactionsByDate(
   )
 
   return {
-    combinedTransactionList: transactions,
     pending: pendingSorted,
-    todayTransactionList,
-    monthTransactionList,
+    last24hTransactionList,
     priorByMonthTransactionList,
   }
 }
