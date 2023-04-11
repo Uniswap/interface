@@ -117,7 +117,7 @@ function InfoSection({ onClose }: { onClose: () => void }) {
         </ThemedText.SubHeaderSmall>
         <ThemedText.Caption color="textSecondary">
           <Trans>
-            Download in the App Store to safely store and send tokens and NFTs, swap tokens, and connect to crypto apps.
+            Download in the App Store to safely store your tokens and NFTs, swap tokens, and connect to crypto apps.
           </Trans>
         </ThemedText.Caption>
       </AutoColumn>
