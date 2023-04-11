@@ -33,7 +33,7 @@ function BaseButton({ onClick, branded, children }: PropsWithChildren<{ onClick?
   )
 }
 
-const APP_STORE_LINK = 'https://apps.apple.com/us/app/uniswap-wallet-defi-nfts/id6443944476'
+const APP_STORE_LINK = 'https://apps.apple.com/us/app/uniswap-wallet/id6443944476'
 
 // Launches App Store if on an iOS device, else navigates to Uniswap Wallet microsite
 export function DownloadButton({ onClick, text = 'Download' }: { onClick?: () => void; text?: string }) {
