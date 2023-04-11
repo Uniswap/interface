@@ -1,6 +1,6 @@
 {
   "extends": "tsconfig/nextjs.json",
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "package.json", "../../packages/app/src/utils/messageUtils.ts", "../../packages/app/src/features/dappRequests/dappRequestTypes.ts"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "package.json"],
   "exclude": ["node_modules"],
   "references": [
     {
