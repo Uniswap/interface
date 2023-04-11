@@ -37,11 +37,12 @@ export const ListingMarkets: ListingMarket[] = [
     fee: 0.5,
     icon: '/nft/svgs/marketplaces/x2y2.svg',
   },
-  {
-    name: 'LooksRare',
-    fee: 1.5,
-    icon: '/nft/svgs/marketplaces/looksrare.svg',
-  },
+  // Hiding LooksRare until we can support their v2 SDK
+  // {
+  //   name: 'LooksRare',
+  //   fee: 1.5,
+  //   icon: '/nft/svgs/marketplaces/looksrare.svg',
+  // },
   {
     name: 'OpenSea',
     fee: 0,
