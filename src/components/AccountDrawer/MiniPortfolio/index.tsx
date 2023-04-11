@@ -11,11 +11,11 @@ import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { ActivityTab } from './Activity/ActivityTab'
+import { ActivityTab } from './Activity'
 import NFTs from './NFTs'
 import Pools from './Pools'
 import { PortfolioRowWrapper } from './PortfolioRow'
-import Tokens from './Tokens/Tokens'
+import Tokens from './Tokens'
 
 const Wrapper = styled(Column)`
   margin-top: 28px;
