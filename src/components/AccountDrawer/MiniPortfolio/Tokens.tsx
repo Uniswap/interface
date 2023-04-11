@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { EllipsisStyle, ThemedText } from 'theme'
 
-import { useToggleWalletDrawer } from '..'
+import { useToggleAccountDrawer } from '..'
 import { PortfolioArrow } from '../AuthenticatedHeader'
 import { hideSmallBalancesAtom } from '../SmallBalanceToggle'
 import { ExpandoRow } from './ExpandoRow'
@@ -26,7 +26,7 @@ function meetsThreshold(tokenBalance: TokenBalance, hideSmallBalances: boolean) 
 }
 
 export default function Tokens({ account }: { account: string }) {
-  const toggleWalletDrawer = useToggleWalletDrawer()
+  const toggleWalletDrawer = useToggleAccountDrawer()
   const hideSmallBalances = useAtomValue(hideSmallBalancesAtom)
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
@@ -96,7 +96,7 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
   const percentChange = tokenProjectMarket?.pricePercentChange?.value ?? 0
 
   const navigate = useNavigate()
-  const toggleWalletDrawer = useToggleWalletDrawer()
+  const toggleWalletDrawer = useToggleAccountDrawer()
   const navigateToTokenDetails = useCallback(async () => {
     navigate(getTokenDetailsURL(token))
     toggleWalletDrawer()

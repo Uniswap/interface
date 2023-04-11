@@ -16,7 +16,7 @@ import {
   SwapWidgetSkeleton,
 } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
-import { useToggleWalletDrawer } from 'components/WalletDropdown'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import {
   formatPercentInBasisPointsNumber,
@@ -67,7 +67,7 @@ export default function Widget({
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
 
-  const toggleWalletDrawer = useToggleWalletDrawer()
+  const toggleWalletDrawer = useToggleAccountDrawer()
   const onConnectWalletClick = useCallback(() => {
     toggleWalletDrawer()
     return false // prevents the in-widget wallet modal from opening
