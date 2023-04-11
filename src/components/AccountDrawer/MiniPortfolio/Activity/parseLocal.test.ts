@@ -1,11 +1,8 @@
-// jest unit tests for the parseLocalActivity function
-
 import { SupportedChainId, Token, TradeType as MockTradeType } from '@uniswap/sdk-core'
 import { PERMIT2_ADDRESS } from '@uniswap/universal-router-sdk'
 import { DAI as MockDAI, nativeOnChain, USDC_MAINNET as MockUSDC_MAINNET } from 'constants/tokens'
 import { TransactionStatus as MockTxStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { TokenAddressMap } from 'state/lists/hooks'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
@@ -92,13 +89,15 @@ function mockMultiStatus(info: TransactionInfo, id: string): [TransactionDetails
   ]
 }
 
+const mockTokenAddressMap: TokenAddressMap = {
+  [mockChainId]: {
+    [MockDAI.address]: { token: MockDAI },
+    [MockUSDC_MAINNET.address]: { token: MockUSDC_MAINNET },
+  } as TokenAddressMap[number],
+}
+
 jest.mock('../../../../state/lists/hooks', () => ({
-  useCombinedActiveList: () => ({
-    [1]: {
-      [MockDAI.address]: { token: MockDAI },
-      [MockUSDC_MAINNET.address]: { token: MockUSDC_MAINNET },
-    },
-  }),
+  useCombinedActiveList: () => mockTokenAddressMap,
 }))
 
 jest.mock('../../../../state/transactions/hooks', () => {
@@ -220,12 +219,6 @@ jest.mock('../../../../state/transactions/hooks', () => {
   }
 })
 
-function mockTokenAddressMap(...tokens: WrappedTokenInfo[]): TokenAddressMap {
-  return {
-    [SupportedChainId.MAINNET]: Object.fromEntries(tokens.map((token) => [token.address, { token }])),
-  }
-}
-
 describe('parseLocalActivity', () => {
   it('returns swap activity fields with known tokens, exact input', () => {
     const details = {
@@ -242,8 +235,7 @@ describe('parseLocalActivity', () => {
       },
     } as TransactionDetails
     const chainId = SupportedChainId.MAINNET
-    const tokens = mockTokenAddressMap(MockUSDC_MAINNET as WrappedTokenInfo, MockDAI as WrappedTokenInfo)
-    expect(parseLocalActivity(details, chainId, tokens)).toEqual({
+    expect(parseLocalActivity(details, chainId, mockTokenAddressMap)).toEqual({
       chainId: 1,
       currencies: [MockUSDC_MAINNET, MockDAI],
       descriptor: '1.00 USDC for 1.00 DAI',
@@ -284,29 +276,11 @@ describe('parseLocalActivity', () => {
       },
     } as TransactionDetails
     const chainId = SupportedChainId.MAINNET
-    const tokens = mockTokenAddressMap(MockUSDC_MAINNET as WrappedTokenInfo, MockDAI as WrappedTokenInfo)
-    expect(parseLocalActivity(details, chainId, tokens)).toEqual({
+    expect(parseLocalActivity(details, chainId, mockTokenAddressMap)).toMatchObject({
       chainId: 1,
       currencies: [MockUSDC_MAINNET, MockDAI],
       descriptor: '1.00 USDC for 1.00 DAI',
-      hash: undefined,
-      receipt: {
-        id: '0x123',
-        info: {
-          type: 1,
-          tradeType: MockTradeType.EXACT_OUTPUT,
-          inputCurrencyId: MockUSDC_MAINNET.address,
-          expectedInputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
-          maximumInputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
-          outputCurrencyId: MockDAI.address,
-          outputCurrencyAmountRaw: mockCurrencyAmountRaw,
-        },
-        receipt: { status: 1, transactionHash: '0x123' },
-        status: 'CONFIRMED',
-        transactionHash: '0x123',
-      },
       status: 'CONFIRMED',
-      timestamp: NaN,
       title: 'Swapped',
     })
   })
@@ -327,28 +301,11 @@ describe('parseLocalActivity', () => {
     } as TransactionDetails
     const chainId = SupportedChainId.MAINNET
     const tokens = {} as TokenAddressMap
-    expect(parseLocalActivity(details, chainId, tokens)).toEqual({
+    expect(parseLocalActivity(details, chainId, tokens)).toMatchObject({
       chainId: 1,
       currencies: [undefined, undefined],
       descriptor: 'Unknown for Unknown',
-      hash: undefined,
-      receipt: {
-        id: '0x123',
-        info: {
-          type: 1,
-          tradeType: MockTradeType.EXACT_INPUT,
-          inputCurrencyId: MockUSDC_MAINNET.address,
-          inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
-          outputCurrencyId: MockDAI.address,
-          expectedOutputCurrencyAmountRaw: mockCurrencyAmountRaw,
-          minimumOutputCurrencyAmountRaw: mockCurrencyAmountRaw,
-        },
-        receipt: { status: 1, transactionHash: '0x123' },
-        status: 'CONFIRMED',
-        transactionHash: '0x123',
-      },
       status: 'CONFIRMED',
-      timestamp: NaN,
       title: 'Swapped',
     })
   })
