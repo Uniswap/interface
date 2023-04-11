@@ -14,14 +14,14 @@ export default function usePermit2Approval(
   amount?: CurrencyAmount<Token>,
   maximumAmount?: CurrencyAmount<Token>,
   enabled?: boolean,
-  useNftRouter?: boolean
+  shouldUseNftRouter?: boolean
 ) {
   const { chainId } = useWeb3React()
 
   const allowance = usePermit2Allowance(
     enabled ? maximumAmount ?? (amount?.currency.isToken ? (amount as CurrencyAmount<Token>) : undefined) : undefined,
     enabled && chainId
-      ? useNftRouter
+      ? shouldUseNftRouter && chainId === 1
         ? NFT_UNIVERSAL_ROUTER_MAINNET_ADDRESS
         : UNIVERSAL_ROUTER_ADDRESS(chainId)
       : undefined
