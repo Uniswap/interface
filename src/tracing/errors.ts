@@ -17,9 +17,10 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
       // If block number polling fails, it should not be considered an exception.
       if (method === 'eth_blockNumber') return null
 
+      const code = JSON.parse(error.requestBody).code
       // For now, these errors are not actionable so we should not report them.
       // ethers exceptions are currently not caught in the codebase because we don't try/catch all provider calls.
-      if (method.startsWith('collect(')) return null
+      if (code.startsWith('CALL_EXCEPTION')) return null
     }
 
     // If the error is a network change, it should not be considered an exception.
