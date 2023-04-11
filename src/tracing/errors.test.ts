@@ -19,4 +19,9 @@ describe('filterKnownErrors', () => {
     const originalException = new Error('underlying network changed')
     expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
   })
+
+  it('filters user rejected request errors', () => {
+    const originalException = new Error('user rejected transaction')
+    expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
+  })
 })
