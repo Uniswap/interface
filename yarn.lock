@@ -9446,13 +9446,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/chrome@npm:*":
-  version: 0.0.226
-  resolution: "@types/chrome@npm:0.0.226"
+"@types/chrome@npm:*, @types/chrome@npm:0.0.229":
+  version: 0.0.229
+  resolution: "@types/chrome@npm:0.0.229"
   dependencies:
     "@types/filesystem": "*"
     "@types/har-format": "*"
-  checksum: 17111041d2988382c30995906c4bd77a5f61527ba68e5c5ee8cfcd6645b0fcac65ec3759e042309ca51d12ef24222550825cd398729270dda6fd93a59c716b8f
+  checksum: dafddbfc0e0a93e0742b3fce9c028587d9a1be7e0a6ecde50cc49475b56afb2de43f4b44bff5b9c5da81a2ac5c9272a1026e22dcc68913c96889238d63fb2ad9
   languageName: node
   linkType: hard
 
@@ -11175,7 +11175,7 @@ __metadata:
     "@tamagui/lucide-icons": ^1.9.0
     "@tamagui/shorthands": ^1.9.0
     "@tamagui/theme-base": ^1.9.0
-    "@types/chrome": ^0.0.224
+    "@types/chrome": 0.0.229
     "@types/jest": 29.5.0
     "@types/react": ^18.0.15
     "@types/redux-logger": 3.0.9

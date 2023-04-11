@@ -1,4 +1,5 @@
 const DEFAULT_WINDOW_WIDTH = 2000
+export const REQUESTS_WINDOW_URL = 'requestsWindow.html'
 type WindowParams = {
   type: chrome.windows.createTypeEnum
   width: number
@@ -26,6 +27,22 @@ export async function openRequestsWindow(
   chrome.windows.create({
     ...windowParams,
     left: currentWindowWidth - 200,
-    url: 'approvalWindow.html',
+    url: REQUESTS_WINDOW_URL,
+  })
+}
+
+/**
+ * Loop through all open windows and see if there is a window whose first tab has the id of the requests window,
+ * so we don't open too duplicate windows
+ */
+export function openRequestsWindowIfNeeded() {
+  chrome.windows.getAll((windows) => {
+    const requestsWindow = windows.find((window) => {
+      if (window.tabs && window.tabs.length > 0) {
+        return window.tabs[0]?.url?.includes(REQUESTS_WINDOW_URL)
+      }
+    })
+    if (requestsWindow) return
+    openRequestsWindow()
   })
 }

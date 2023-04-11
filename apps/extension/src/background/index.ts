@@ -58,8 +58,6 @@ function onConnect() {
       // The type above for request doesn't guarantee that the type is SendTransactionRequest
       if (!Object.values(DappRequestType).includes(request.type)) return
 
-      // TODO: add redux state for open windows (disabled for now so that too many windows don't open)
-
       // Dispatches a saga action which will handle side effects as well
       store.dispatch(
         addRequest({

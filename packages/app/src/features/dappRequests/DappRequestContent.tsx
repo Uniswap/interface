@@ -17,11 +17,19 @@ export function DappRequestContent(): JSX.Element {
   const dispatch = useAppDispatch()
 
   const onConfirm = (requestDisplay: RequestDisplayDetails): void => {
+    const shouldCloseWindow = pendingRequests.length <= 1
     dispatch(confirmRequest(requestDisplay.request))
+    if (shouldCloseWindow) {
+      window.close()
+    }
   }
 
   const onCancel = (requestDisplay: RequestDisplayDetails): void => {
+    const shouldCloseWindow = pendingRequests.length <= 1
     dispatch(rejectRequest(requestDisplay.request))
+    if (shouldCloseWindow) {
+      window.close()
+    }
   }
 
   if (!pendingRequests || pendingRequests.length === 0) {

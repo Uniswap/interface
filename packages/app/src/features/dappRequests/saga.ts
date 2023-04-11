@@ -15,6 +15,7 @@ import {
   SendTransactionResponse,
 } from './dappRequestTypes'
 import { DappRequestStoreItem, dappRequestActions } from './slice'
+import { openRequestsWindowIfNeeded } from './utils'
 
 const DEFAULT_IMAGE_PATH = 'assets/default.png'
 const SUCCESS_IMAGE_PATH = 'assets/success.png'
@@ -59,6 +60,7 @@ export function* handleRequest(requestParams: DappRequestSagaParams) {
   }
 
   yield* put(dappRequestActions.add(requestForStore))
+  yield* call(openRequestsWindowIfNeeded)
 }
 
 export function* sendTransaction(

@@ -44,7 +44,6 @@ export function* dappRequestApprovalWatcher() {
               request.senderTabId
             )
             break
-
           // Add more request types here
         }
       } else if (type === rejectRequest.type) {
