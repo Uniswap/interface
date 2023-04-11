@@ -5,7 +5,6 @@ import { AutoColumn } from 'components/Column'
 import Row, { RowBetween } from 'components/Row'
 import { useMgtmEnabled } from 'featureFlags/flags/mgtm'
 import { X } from 'react-feather'
-import { useLocation } from 'react-router-dom'
 import { useHideUniswapWalletBanner } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -71,8 +70,6 @@ export default function UniswapWalletBanner() {
   const mgtmEnabled = useMgtmEnabled()
 
   const theme = useTheme()
-
-  const { pathname } = useLocation()
 
   const shouldDisplay = Boolean(mgtmEnabled && !walletDrawerOpen && !hideUniswapWalletBanner && isIOS)
 
