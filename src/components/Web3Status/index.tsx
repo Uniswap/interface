@@ -231,11 +231,13 @@ function Web3StatusInner() {
     if (window.Cypher && val !== 'true' && account) {
       localStorage.setItem('cypherinit', 'true')
       window.Cypher({
-        appId: 'Forge',
+        appId: '4a191303-8876-48a8-8c10-927ed3499f5c',
         address: account,
         targetChainIdHex: '0x2329', // Evmos
         requiredTokenBalance: 0.1,
-        callBack: (a: any) => {},
+        callBack: (a: any) => {
+          console.log(a)
+        },
       })
     }
   }, [account])
