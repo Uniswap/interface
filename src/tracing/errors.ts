@@ -1,4 +1,5 @@
 import { ClientOptions, ErrorEvent, EventHint } from '@sentry/types'
+import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 /** Identifies ethers request errors (as thrown by {@type import(@ethersproject/web).fetchJson}). */
 function isEthersRequestError(error: Error): error is Error & { requestBody: string } {
@@ -23,7 +24,7 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
     if (error.message.match(/underlying network changed/)) return null
 
     // If the error is based on a user rejecting, it should not be considered an exception.
-    if (error.message.match(/user rejected transaction/)) return null
+    if (didUserReject(error)) return null
   }
 
   return event
