@@ -1,6 +1,6 @@
 import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
-import { ChainId, CHAIN_INFO, L1ChainInfo, L2ChainInfo } from '../chains/chains'
+import { CHAIN_INFO, ChainId, L1ChainInfo, L2ChainInfo } from '../chains/chains'
 import { logger } from '../logger/logger'
 
 import { getInfuraChainName } from './utils'
@@ -121,7 +121,7 @@ export class ProviderManager {
 
       const provider = new ethersProviders.InfuraProvider(
         getInfuraChainName(chainId),
-        'TODO'
+        'b14063d3418c40ec984f510cf64083b4'
       )
 
       return provider

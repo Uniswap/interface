@@ -1,11 +1,11 @@
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { _TypedDataEncoder } from '@ethersproject/hash'
-import { Bytes, providers, Signer, UnsignedTransaction, utils } from 'ethers'
-import { hexlify } from 'ethers/lib/utils'
-import { areAddressesEqual } from 'app/src/utils/addresses'
-import { toSupportedChainId } from 'app/src/utils/chainId'
 import { ChainId } from 'app/src/features/chains/chains'
 import { Keyring } from 'app/src/features/wallet/Keyring/Keyring'
+import { areAddressesEqual } from 'app/src/utils/addresses'
+import { toSupportedChainId } from 'app/src/utils/chainId'
+import { Bytes, Signer, UnsignedTransaction, providers, utils } from 'ethers'
+import { hexlify } from 'ethers/lib/utils'
 
 /**
  * A signer that uses a native keyring to access keys
@@ -58,6 +58,7 @@ export class NativeSigner extends Signer {
     transaction: providers.TransactionRequest
   ): Promise<string> {
     const tx = await utils.resolveProperties(transaction)
+
     if (tx.chainId === undefined) {
       throw new Error('Expected chainId to be defined')
     }
@@ -72,11 +73,11 @@ export class NativeSigner extends Signer {
     const hashedTx = utils.keccak256(utils.serializeTransaction(ut))
     const signature = await Keyring.signTransactionHashForAddress(
       this.address,
-      hashedTx.slice(2),
-      tx.chainId
+      hashedTx,
+      tx.chainId || ChainId.Mainnet
     )
 
-    return utils.serializeTransaction(ut, `0x${signature}`)
+    return utils.serializeTransaction(ut, signature)
   }
 
   connect(provider: providers.Provider): NativeSigner {

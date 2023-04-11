@@ -162,7 +162,6 @@ const options = {
     // options: "./src/options/index.tsx",
     // permissions: "./src/permissions/index.tsx",
     popup: './src/popup.tsx',
-    transactionWindow: './src/transactionWindow.tsx',
     providerScript: './src/contentScript/provider.ts',
     injected: './src/contentScript/injected.js',
     // contentScript: "./src/contentScript/index.ts",

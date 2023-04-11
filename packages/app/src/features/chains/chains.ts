@@ -25,7 +25,7 @@ export const ALL_SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.Polygon,
   ChainId.ArbitrumOne,
   ChainId.Optimism,
-  // ChainId.Goerli,
+  ChainId.Goerli,
   // ChainId.PolygonMumbai,
 ]
 

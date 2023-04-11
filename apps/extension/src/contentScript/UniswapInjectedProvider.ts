@@ -1,24 +1,33 @@
+/* eslint-disable max-lines */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ethers, providers } from 'ethers'
-import EventEmitter from 'eventemitter3'
-import { ethErrors } from 'eth-rpc-errors'
 import {
-  ContentScriptRequest,
-  ContentScriptResponse,
-  RequestType,
-  ResponseType,
+  AccountResponse,
+  BaseDappRequest,
+  BaseDappResponse,
+  ChangeChainRequest,
+  ChangeChainResponse,
+  ConnectRequest,
+  ConnectResponse,
+  DappRequestType,
+  DappResponseType,
+  GetAccountRequest,
   SendTransactionRequest,
   SendTransactionResponse,
   SignMessageRequest,
   SignMessageResponse,
   SignTransactionRequest,
   SignTransactionResponse,
-} from '../types/messageTypes'
-import { v4 as uuidv4 } from 'uuid'
+  TransactionRejectedResponse,
+} from 'app/src/features/dappRequests/dappRequestTypes'
 import { logger } from 'app/src/features/logger/logger'
+import { ethErrors } from 'eth-rpc-errors'
+import { ethers, providers } from 'ethers'
+import EventEmitter from 'eventemitter3'
+import { v4 as uuidv4 } from 'uuid'
 
 export type EthersSendCallback = (error: unknown, response: unknown) => void
+const TIMEOUT_MS = 30000
 
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#request
 interface RequestArguments {
@@ -140,7 +149,6 @@ export class UniswapInjectedProvider extends EventEmitter {
 
     // Sometimes we want to pretend to be MetaMask
     this.isMetaMask = false
-    this.handleConnect('0x5')
     // originRequiresMetaMask.some((h) =>
     //     window.location.host.includes(h)
     // );
@@ -269,8 +277,6 @@ export class UniswapInjectedProvider extends EventEmitter {
         this.handleEthSignTransaction(transaction),
       eth_sendTransaction: (transaction: any) =>
         this.handleEthSendTransaction(transaction),
-      // wallet_addEthereumChain: (chain: any) =>
-      //   this.handleWalletAddEthereumChain(chain),
       wallet_switchEthereumChain: (chainId: any) =>
         this.handleWalletSwitchEthereumChain(chainId),
     }
@@ -302,27 +308,54 @@ export class UniswapInjectedProvider extends EventEmitter {
 
   /**
    * Update local state and emit required event for connect.
+   * Not used by Uniswap dApp
+   * https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connect
    */
   handleConnect = async (chainId: string) => {
     this.chainId = chainId
     if (!this.state.isConnected) {
-      this.setState({ ...this.state, isConnected: true })
+      try {
+        const handleConnectRequest: ConnectRequest = {
+          type: DappRequestType.Connect,
+          requestId: uuidv4(),
+          chainId,
+        }
+        const { provider } = await sendRequestAsync<ConnectResponse>(
+          handleConnectRequest,
+          DappResponseType.HandleConnectResponse
+        )
+        this.provider = provider
+        this.setState({ ...this.state, isConnected: true })
+      } catch (error) {
+        throw new Error('Failed to connect to wallet')
+      }
     }
-    // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connect
     this.emit('connect', { chainId } as ProviderConnectInfo)
   }
 
   /**
    * Update local state and emit required event for chain change.
    */
-  handleChainChanged = (chainId: string) => {
-    this.chainId = chainId
-
-    this.provider = new providers.InfuraProvider(
+  handleChainChanged = async (chainId: string) => {
+    const changeChainRequest: ChangeChainRequest = {
+      type: DappRequestType.ChangeChain,
+      requestId: uuidv4(),
       chainId,
-      'b14063d3418c40ec984f510cf64083b4'
-    )
+    }
 
+    const { chainId: newChainId, provider } =
+      await sendRequestAsync<ChangeChainResponse>(
+        changeChainRequest,
+        DappResponseType.ChainChange
+      )
+
+    if (newChainId !== chainId) {
+      throw new Error('ChainId mismatch')
+    }
+
+    this.chainId = newChainId
+    this.provider = provider
+    this.chainId = chainId
     logger.info('UniswapInjectedProvider', 'chain changed', chainId)
 
     // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#chainchanged
@@ -351,14 +384,21 @@ export class UniswapInjectedProvider extends EventEmitter {
    */
   handleEthRequestAccounts = async () => {
     // Send request to the RPC API.
-    if (this.isConnected()) {
-      // Temporary hack until we have an actual connection request
-      this.publicKey = '0x7e48f8a2CADA121853F75ECf1ca48447cd12E4c9'
-      return [this.publicKey]
-    } else {
-      // TODO - Add code to send a request to get addresses from wallet
-      return [this.publicKey]
+    if (!this.publicKey) {
+      const getAccountRequest: GetAccountRequest = {
+        type: DappRequestType.GetAccount,
+        requestId: uuidv4(),
+      }
+      const { accountAddress } = await sendRequestAsync<AccountResponse>(
+        getAccountRequest,
+        DappResponseType.AccountResponse
+      )
+      this.publicKey = accountAddress
+
+      // TODO: Remove this once we have a better way to handle the connection state.
+      this.setState({ ...this.state, isConnected: true })
     }
+    return [this.publicKey]
   }
 
   /**
@@ -370,14 +410,14 @@ export class UniswapInjectedProvider extends EventEmitter {
     }
 
     const request: SignMessageRequest = {
-      type: RequestType.SignMessage,
+      type: DappRequestType.SignMessage,
       requestId: uuidv4(),
       messageHex: ethers.utils.toUtf8String(messageHex),
     }
 
-    const response: SignMessageResponse = await sendRequestAndWaitForReponse(
+    const response: SignMessageResponse = await sendRequestAsync(
       request,
-      ResponseType.SignMessageResponse
+      DappResponseType.SignMessageResponse
     )
     return response?.signedMessage
   }
@@ -391,24 +431,22 @@ export class UniswapInjectedProvider extends EventEmitter {
     }
 
     const request: SignTransactionRequest = {
-      type: RequestType.SignTransaction,
+      type: DappRequestType.SignTransaction,
       requestId: uuidv4(),
       transaction: adaptTransactionForEthers(transaction),
     }
-    const response: SignTransactionResponse =
-      await sendRequestAndWaitForReponse(
-        request,
-        ResponseType.SignTransactionResponse
-      )
+    const response: SignTransactionResponse = await sendRequestAsync(
+      request,
+      DappResponseType.SignTransactionResponse
+    )
     return response.signedTransactionHash
   }
 
   /**
    * Handle eth_sendTransaction RPC requests.
    *
-   * // TODO: Make sure these return types are correct because this is tricky
    * // TODO: Unit tests for provider injection methods
-   * returns transaction hash
+   * @returns transaction hash
    */
   handleEthSendTransaction = async (transaction: unknown) => {
     if (!this.publicKey) {
@@ -416,17 +454,19 @@ export class UniswapInjectedProvider extends EventEmitter {
     }
 
     const request: SendTransactionRequest = {
-      type: RequestType.SendTransaction,
+      type: DappRequestType.SendTransaction,
       requestId: uuidv4(),
       transaction: adaptTransactionForEthers(transaction),
     }
 
     // filter by some kind of ID on the transaction
-    const response: SendTransactionResponse =
-      await sendRequestAndWaitForReponse(
-        request,
-        ResponseType.SendTransactionResponse
-      )
+    const response = await sendRequestAsync<
+      SendTransactionResponse | TransactionRejectedResponse
+    >(request, DappResponseType.SendTransactionResponse)
+
+    if (response.type === DappResponseType.TransactionRejected) {
+      throw new Error('Transaction rejected')
+    }
     return response?.transaction?.hash
   }
 
@@ -468,20 +508,37 @@ function adaptTransactionForEthers(transaction: any) {
   return transaction
 }
 
-function sendRequestAndWaitForReponse<T extends ContentScriptResponse>(
-  request: ContentScriptRequest,
+/**
+ *
+ * @param request ContentScriptRequest sent to background service-worker
+ * @param responseType type of ContentScriptResponse (can include TransactionRejected)
+ * @returns
+ */
+function sendRequestAsync<T extends BaseDappResponse>(
+  request: BaseDappRequest,
   responseType: T['type']
 ): Promise<T> {
-  // TODO - add a unique ID to the message
-  window.postMessage(request)
-  return new Promise((resolve) => {
-    window.addEventListener('message', (event: MessageEvent<any>) => {
-      const messageData = event.data
-      if (messageData?.type === responseType) {
-        resolve(messageData)
-      }
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      window.removeEventListener('message', handleDappRequest)
+      reject('Request timed out')
+    }, TIMEOUT_MS)
 
-      //TODO  Add timeout here or logic for rejecting response
-    })
+    const handleDappRequest = (event: MessageEvent<any>) => {
+      const messageData = event.data
+      if (
+        (messageData?.type === responseType ||
+          messageData?.type === DappResponseType.TransactionRejected) &&
+        messageData?.requestId === request.requestId
+      ) {
+        resolve(messageData)
+        // need to remove just this specific window listener
+        window.removeEventListener('message', handleDappRequest)
+        clearTimeout(timeout)
+      }
+    }
+
+    window.addEventListener('message', handleDappRequest)
+    window.postMessage(request)
   })
 }

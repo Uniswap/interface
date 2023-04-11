@@ -1,4 +1,5 @@
 export enum Screen {
+  DappRequests = 'DappRequests',
   Home = 'Home',
 }
 

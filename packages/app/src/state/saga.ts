@@ -1,5 +1,13 @@
 import { combineReducers, Reducer } from '@reduxjs/toolkit'
 import { spawn } from 'typed-redux-saga'
+import {
+  authActions,
+  authReducer,
+  authSaga,
+  authSagaName,
+} from '../features/auth/saga'
+import { dappRequestApprovalWatcher } from '../features/dappRequests/dappRequestApprovalWatcher'
+import { dappRequestWatcher } from '../features/dappRequests/saga'
 import { initProviders } from '../features/providers'
 import {
   importAccountActions,
@@ -7,15 +15,13 @@ import {
   importAccountSaga,
   importAccountSagaName,
 } from '../features/wallet/import/importAccountSaga'
-import {
-  authActions,
-  authReducer,
-  authSaga,
-  authSagaName,
-} from '../features/auth/saga'
 import { SagaState } from '../utils/saga'
 
-const sagas = [initProviders] as const
+const sagas = [
+  initProviders,
+  dappRequestWatcher,
+  dappRequestApprovalWatcher,
+] as const
 
 export const monitoredSagas = {
   [importAccountSagaName]: {

@@ -11,8 +11,6 @@ const App = lazy(() => import('./app/App'))
 
 chrome.runtime.connect({ name: PortName.Popup })
 chrome.runtime.onMessage.addListener((req) => {
-  logger.debug('popup', 'listener', `Received ${req.type}`)
-
   if (req.type === 'STORE_INITIALIZED') {
     initPopup()
   }

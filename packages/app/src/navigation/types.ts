@@ -6,6 +6,13 @@ export type AppStackParamList = {
   [Screen.Home]: undefined
 }
 
+export type DappRequestsStackParamList = {
+  [Screen.DappRequests]: undefined
+}
+
+export type DappRequestsStackNavigationProp =
+  NativeStackNavigationProp<DappRequestsStackParamList>
+
 export type AppStackNavigationProp =
   NativeStackNavigationProp<AppStackParamList>
 
