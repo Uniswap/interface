@@ -19,7 +19,7 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
       if (method === 'eth_blockNumber') return null
     }
 
-    // for now, these errors are not actionable so we should not report them.
+    // For now, these errors are not actionable so we should not report them.
     // ethers exceptions are currently not caught in the codebase because we don't try/catch all provider calls.
     if (error.message.match(/call revert exception/)) return null
 
