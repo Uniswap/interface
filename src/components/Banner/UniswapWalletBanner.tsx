@@ -87,7 +87,8 @@ const BannerButton = styled(BaseButton)`
 export default function UniswapWalletBanner() {
   const [hideUniswapWalletBanner, toggleHideUniswapWalletBanner] = useHideUniswapWalletBanner()
   const mgtmEnabled = useMgtmEnabled()
-  const isLandingScreen = useLocation().search === '?intro=true'
+  const location = useLocation()
+  const isLandingScreen = location.search === '?intro=true' || location.pathname === '/'
 
   const shouldDisplay = Boolean(mgtmEnabled && !hideUniswapWalletBanner && !isLandingScreen)
 
