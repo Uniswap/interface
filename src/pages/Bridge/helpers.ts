@@ -150,7 +150,37 @@ export const formatPoolValue = (amount: PoolBridgeValue) => {
   return '0'
 }
 
-export const formatAmountBridge = (amount: string) => formatNumberWithPrecisionRange(parseFloat(amount ?? '0'), 0, 6)
+/**
+  1.123456 => 1.12
+  12.123456 => 12.12
+  123.123456 => 123.12
+  1234.123456 => 1,234.12
+  12345.123456 => 12,345.12
+  123456.123456 => 123,456.12
+  1234567.123456 => 1,234,567.12
+  12345678.123456 => 12,345,678.12
+  123456789.123456 => 123.457M
+  1234567890.123456 => 1.23457B
+  12345678901.123456 => 12.3457B
+  123456789012.123456 => 123.457B
+  1234567890123.123456 => 1.23457T
+ */
+export const formatAmountBridge = (rawAmount: string) => {
+  const amount = parseFloat(String(rawAmount) ?? '0')
+  if (amount > 100_000_000) {
+    const formatter = Intl.NumberFormat('en-US', {
+      notation: 'compact',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+      minimumSignificantDigits: 1,
+      maximumSignificantDigits: 6,
+    })
+
+    return formatter.format(amount)
+  }
+
+  return formatNumberWithPrecisionRange(amount, 0, 2)
+}
 
 export const getLabelByStatus = (status: MultichainTransferStatus): string => {
   const labelByGeneralStatus: Record<MultichainTransferStatus, string> = {

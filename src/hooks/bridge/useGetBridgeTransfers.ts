@@ -19,6 +19,7 @@ export type MultichainTransfer = {
   dstAmount: string
   status: number
   createdAt: number
+  isReceiveAnyToken: boolean
 }
 
 type Response = {

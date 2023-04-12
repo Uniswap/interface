@@ -2,66 +2,15 @@ import { Trans } from '@lingui/macro'
 import { rgba } from 'polished'
 import { useEffect, useRef, useState } from 'react'
 import { ChevronLeft, ChevronRight, Info } from 'react-feather'
-import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 import LocalLoader from 'components/LocalLoader'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
-import { MEDIA_WIDTHS } from 'theme'
+import TransferHistoryTable from 'pages/Bridge/BridgeTransferHistory/TransferHistoryTable'
 
-import { ITEMS_PER_PAGE } from '../consts'
-import ActionCell from './ActionCell'
-import RouteCell from './RouteCell'
-import StatusBadge from './StatusBadge'
-import TimeCell from './TimeCell'
-import TimeStatusCell from './TimeStatusCell'
-import TokenReceiveCell from './TokenReceiveCell'
 import useTransferHistory from './useTransferHistory'
-
-const commonCSS = css`
-  width: 100%;
-  padding: 0 16px;
-
-  display: grid;
-  grid-template-columns: 112px 100px 80px 150px 48px;
-  justify-content: space-between;
-  align-items: center;
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    column-gap: 4px;
-    grid-template-columns: 112px 100px 64px minmax(auto, 130px) 48px;
-  `}
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    column-gap: 16px;
-    grid-template-columns: 156px 64px minmax(auto, 130px) 28px;
-  `}
-`
-
-const TableHeader = styled.div`
-  ${commonCSS}
-  height: 48px;
-  background: ${({ theme }) => theme.tableHeader};
-  border-radius: 20px 20px 0 0;
-`
-
-const TableColumnText = styled.div`
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 16px;
-  color: ${({ theme }) => theme.subText};
-`
-
-const TableRow = styled.div`
-  ${commonCSS}
-  height: 60px;
-  border-bottom: 1px solid ${({ theme }) => theme.border};
-
-  &:last-child {
-    border-bottom: none;
-  }
-`
 
 const PaginationButton = styled.button`
   flex: 0 0 36px;
@@ -100,8 +49,6 @@ type Props = {
   className?: string
 }
 const TransferHistory: React.FC<Props> = ({ className }) => {
-  const upToExtraSmall = useMedia(`(max-width: ${MEDIA_WIDTHS.upToExtraSmall}px)`)
-  const upToMedium = useMedia(`(max-width: ${MEDIA_WIDTHS.upToMedium}px)`)
   const theme = useTheme()
   const { account } = useActiveWeb3React()
   const [shouldShowLoading, setShouldShowLoading] = useState(true)
@@ -155,98 +102,10 @@ const TransferHistory: React.FC<Props> = ({ className }) => {
     )
   }
 
-  const renderInvisibleRows = () => {
-    if (transfers.length === ITEMS_PER_PAGE) {
-      return null
-    }
-    if (!upToMedium) {
-      return Array(ITEMS_PER_PAGE - transfers.length)
-        .fill(0)
-        .map((_, i) => {
-          return (
-            <TableRow
-              key={i}
-              style={{
-                visibility: 'hidden',
-              }}
-            />
-          )
-        })
-    }
-    return null
-  }
-
-  const getTxsUrl = (txHash: string) => `https://anyswap.net/explorer/tx?params=${txHash}`
-
-  const renderTable = () => {
-    if (upToExtraSmall) {
-      return (
-        <>
-          <TableHeader>
-            <TableColumnText>
-              <Trans>DATE | STATUS</Trans>
-            </TableColumnText>
-            <TableColumnText>
-              <Trans>ROUTE</Trans>
-            </TableColumnText>
-            <TableColumnText>
-              <Trans>AMOUNT</Trans>
-            </TableColumnText>
-            <TableColumnText />
-          </TableHeader>
-          {transfers.map((transfer, i) => (
-            <TableRow key={i}>
-              <Flex style={{ gap: '8px' }}>
-                <TimeStatusCell timestamp={transfer.createdAt * 1000} />
-                <StatusBadge status={transfer.status} iconOnly />
-              </Flex>
-              <RouteCell fromChainID={Number(transfer.srcChainId)} toChainID={Number(transfer.dstChainId)} />
-              <TokenReceiveCell transfer={transfer} />
-              <ActionCell url={getTxsUrl(transfer.srcTxHash)} />
-            </TableRow>
-          ))}
-          {renderInvisibleRows()}
-        </>
-      )
-    }
-
-    return (
-      <>
-        <TableHeader>
-          <TableColumnText>
-            <Trans>CREATED</Trans>
-          </TableColumnText>
-          <TableColumnText>
-            <Trans>STATUS</Trans>
-          </TableColumnText>
-          <TableColumnText>
-            <Trans>ROUTE</Trans>
-          </TableColumnText>
-          <TableColumnText>
-            <Trans>RECEIVED AMOUNT</Trans>
-          </TableColumnText>
-          <TableColumnText>
-            <Trans>ACTION</Trans>
-          </TableColumnText>
-        </TableHeader>
-        {transfers.map((transfer, i) => (
-          <TableRow key={i}>
-            <TimeCell timestamp={transfer.createdAt * 1000} />
-            <StatusBadge status={transfer.status} />
-            <RouteCell fromChainID={Number(transfer.srcChainId)} toChainID={Number(transfer.dstChainId)} />
-            <TokenReceiveCell transfer={transfer} />
-            <ActionCell url={getTxsUrl(transfer.srcTxHash)} />
-          </TableRow>
-        ))}
-        {renderInvisibleRows()}
-      </>
-    )
-  }
-
   return (
     <div className={className}>
       <Flex flexDirection="column" style={{ flex: 1 }}>
-        {renderTable()}
+        <TransferHistoryTable transfers={transfers} />
       </Flex>
       <Flex
         sx={{

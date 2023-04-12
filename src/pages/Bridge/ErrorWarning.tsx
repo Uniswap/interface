@@ -22,14 +22,14 @@ const ErrorWarningPanel = ({
   const theme = useTheme()
   const color = type === 'error' ? theme.red : theme.warning
   const style = {
-    gap: 8,
-    borderRadius: 16,
-    padding: '14px 18px',
+    gap: '8px',
+    borderRadius: '18px',
+    padding: '8px 12px',
     ...customStyle,
   }
   if (!desc)
     return (
-      <Flex color={color} alignItems="center" style={{ background: rgba(color, 0.25), ...style }}>
+      <Flex color={color} alignItems="center" sx={{ background: rgba(color, 0.25), minHeight: '40px', ...style }}>
         <AlertTriangle size={16} style={{ minWidth: 16 }} />
         <Text fontWeight={400} fontSize={12} color={theme.text}>
           {title}
@@ -38,14 +38,20 @@ const ErrorWarningPanel = ({
     )
   return (
     <CollapseItem
-      arrowComponent={<DropdownSVG />}
+      arrowComponent={
+        <DropdownSVG
+          style={{
+            marginRight: '-8px',
+          }}
+        />
+      }
       style={{ background: rgba(color, 0.25), ...style }}
       header={
-        <Flex color={color} alignItems="center" style={{ gap: 8 }}>
+        <Flex color={color} alignItems="center" sx={{ gap: 8 }}>
           <div>
-            <AlertTriangle size={15} />
+            <AlertTriangle size={16} style={{ minWidth: 16 }} />
           </div>
-          <Text fontWeight={500} fontSize={12}>
+          <Text fontWeight={500} fontSize={12} color={theme.text}>
             {title}
           </Text>
         </Flex>

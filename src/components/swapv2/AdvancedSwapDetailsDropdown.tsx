@@ -28,9 +28,15 @@ export default function AdvancedSwapDetailsDropdown({ trade, ...rest }: Advanced
   )
 }
 
-export function AdvancedSwapDetailsDropdownBridge({ outputInfo }: { outputInfo: OutputBridgeInfo }) {
+export function AdvancedSwapDetailsDropdownBridge({
+  outputInfo,
+  className,
+}: {
+  outputInfo: OutputBridgeInfo
+  className?: string
+}) {
   return (
-    <AdvancedDetailsFooter show={true} style={{ marginTop: 0 }}>
+    <AdvancedDetailsFooter show={true} style={{ marginTop: 0 }} className={className}>
       <TradeSummaryBridge outputInfo={outputInfo} />
     </AdvancedDetailsFooter>
   )

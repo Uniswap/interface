@@ -30,11 +30,14 @@ const ExternalLinkWrapper = styled.a<{ disabled: boolean }>`
 `
 
 type Props = {
-  url: string | undefined
+  hash: string | undefined
 }
 
-const ActionCell: React.FC<Props> = ({ url }) => {
+const getTxsUrl = (txHash: string) => `https://anyswap.net/explorer/tx?params=${txHash}`
+
+const ActionCell: React.FC<Props> = ({ hash }) => {
   const theme = useTheme()
+  const url = hash ? getTxsUrl(hash) : ''
 
   return (
     <WrapperActionCell>
@@ -51,6 +54,7 @@ const ActionCell: React.FC<Props> = ({ url }) => {
 }
 
 const WrapperActionCell = styled(Flex)`
+  width: fit-content;
   align-items: center;
 `
 

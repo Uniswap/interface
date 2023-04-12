@@ -42,25 +42,62 @@ import ErrorWarningPanel from './ErrorWarning'
 import PoolInfo from './PoolInfo'
 import { formatPoolValue } from './helpers'
 
+const CustomAdvancedSwapDetailsDropdownBridge = styled(AdvancedSwapDetailsDropdownBridge)`
+  background: ${({ theme }) => theme.buttonBlack};
+  border: none;
+`
+
 const AppBodyWrapped = styled(BodyWrapper)`
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
   padding: 20px 16px;
   margin-top: 0;
 `
 const ArrowWrapper = styled.div`
-  padding: 8px 10px;
-  background: ${({ theme }) => theme.buttonBlack};
-  height: fit-content;
-  width: fit-content;
+  width: 20px;
+  height: 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: ${({ theme }) => theme.buttonGray};
   border-radius: 999px;
-  margin-bottom: 0.75rem;
+  filter: ${({ theme }) => (theme.darkMode ? 'drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.16))' : 'unset')};
 `
 
-const Label = styled.div`
-  color: ${({ theme }) => theme.subText};
-  font-size: 12px;
-  margin-bottom: 0.75rem;
-`
+const Footer = () => {
+  const theme = useTheme()
+  const isDark = useIsDarkMode()
+  return (
+    <Flex justifyContent={'space-between'}>
+      <Flex alignItems={'center'} style={{ gap: 6 }}>
+        <Text color={theme.subText} fontSize={12} fontWeight={500} opacity={0.5}>
+          Powered by
+        </Text>
+        <ExternalLink href="https://multichain.org/">
+          <img
+            src={isDark ? MultichainLogoLight : MultichainLogoDark}
+            alt="KyberSwap with multichain"
+            height={13}
+            style={{
+              opacity: '0.3',
+            }}
+          />
+        </ExternalLink>
+      </Flex>
+
+      <ExternalLink
+        style={{
+          fontSize: '12px',
+        }}
+        href="https://docs.kyberswap.com/kyberswap-solutions/kyberswap-interface/user-guides/bridge-your-assets-across-multiple-chains"
+      >
+        Guide
+      </ExternalLink>
+    </Flex>
+  )
+}
+
 const calcPoolValue = (amount: string | null, decimals: number) => {
   try {
     if (amount !== null && amount !== undefined)
@@ -92,7 +129,7 @@ export default function SwapForm() {
   ] = useBridgeState()
   const { resetBridgeState, setBridgeState, setBridgePoolInfo } = useBridgeStateHandler()
   const toggleWalletModal = useWalletModalToggle()
-  const isDark = useIsDarkMode()
+
   const theme = useTheme()
   const { mixpanelHandler } = useMixpanel()
 
@@ -228,8 +265,9 @@ export default function SwapForm() {
               <Text as="p" fontSize={12} lineHeight={'16px'} marginTop={'5px'}>
                 <Trans>
                   There is a chance that during your transfer another high volume transaction utilizes the available
-                  liquidity. As a result, for the unavailable liquidity, you may receive ‘anyToken’ from Multichain. You
-                  can exchange your ‘anyToken’ when the Multichain pool has sufficient liquidity.
+                  liquidity. As a result, for the unavailable liquidity, you may receive &apos;anyToken&apos; from
+                  Multichain. You can exchange your &apos;anyToken&apos; when the Multichain pool has sufficient
+                  liquidity.
                 </Trans>
               </Text>
               <ExternalLink
@@ -385,10 +423,12 @@ export default function SwapForm() {
       <Flex style={{ position: 'relative', flexDirection: 'column', gap: 22, alignItems: 'center' }}>
         <SwapFormWrapper style={{ position: 'unset' }}>
           <AppBodyWrapped style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <Flex flexDirection={'column'}>
-              <Label>
-                <Trans>You Transfer</Trans>
-              </Label>
+            <Flex
+              flexDirection={'column'}
+              sx={{
+                gap: '8px',
+              }}
+            >
               <Tooltip
                 text={typeof inputError === 'string' ? inputError : ''}
                 show={typeof inputError === 'string'}
@@ -408,19 +448,22 @@ export default function SwapForm() {
                   id="swap-currency-input"
                 />
               </Tooltip>
+
+              <PoolInfo chainId={chainId} tokenIn={tokenInfoIn} poolValue={poolValue.poolValueIn} />
             </Flex>
 
-            <PoolInfo chainId={chainId} tokenIn={tokenInfoIn} poolValue={poolValue.poolValueIn} />
+            <Flex width="100%" alignItems="center" justifyContent="center">
+              <ArrowWrapper>
+                <ArrowUp width={14} height={14} fill={theme.subText} />
+              </ArrowWrapper>
+            </Flex>
 
-            <div>
-              <Flex alignItems={'flex-end'} justifyContent="space-between">
-                <Label>
-                  <Trans>You Receive</Trans>
-                </Label>
-                <ArrowWrapper>
-                  <ArrowUp width={24} fill={theme.subText} style={{ cursor: 'default' }} />
-                </ArrowWrapper>
-              </Flex>
+            <Flex
+              flexDirection={'column'}
+              sx={{
+                gap: '8px',
+              }}
+            >
               <CurrencyInputPanelBridge
                 chainIds={listChainOut}
                 onSelectNetwork={onSelectDestNetwork}
@@ -430,9 +473,8 @@ export default function SwapForm() {
                 onCurrencySelect={onCurrencySelectDest}
                 id="swap-currency-output"
               />
-            </div>
-
-            <PoolInfo chainId={chainIdOut} tokenIn={tokenInfoIn} poolValue={poolValue.poolValueOut} />
+              <PoolInfo chainId={chainIdOut} tokenIn={tokenInfoIn} poolValue={poolValue.poolValueOut} />
+            </Flex>
 
             {typeof inputError !== 'string' && inputError?.state && (
               <ErrorWarningPanel title={inputError?.tip} type={inputError?.state} desc={inputError?.desc} />
@@ -469,24 +511,12 @@ export default function SwapForm() {
                 </Text>
               </ButtonError>
             )}
-            <Flex justifyContent={'flex-end'}>
-              <Flex alignItems={'center'} style={{ gap: 6 }}>
-                <Text color={theme.subText} fontSize={12}>
-                  Powered by
-                </Text>
-                <ExternalLink href="https://multichain.org/">
-                  <img
-                    src={isDark ? MultichainLogoLight : MultichainLogoDark}
-                    alt="kyberswap with multichain"
-                    height={13}
-                  />
-                </ExternalLink>
-              </Flex>
-            </Flex>
+
+            <CustomAdvancedSwapDetailsDropdownBridge outputInfo={outputInfo} />
+
+            <Footer />
           </AppBodyWrapped>
         </SwapFormWrapper>
-
-        <AdvancedSwapDetailsDropdownBridge outputInfo={outputInfo} />
       </Flex>
 
       <ComfirmBridgeModal swapState={swapState} onDismiss={hidePreview} onSwap={handleSwap} outputInfo={outputInfo} />

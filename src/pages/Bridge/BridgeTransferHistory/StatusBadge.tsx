@@ -22,10 +22,11 @@ const cssByStatus: Record<MultichainTransferStatus, any> = {
 }
 
 const Wrapper = styled.div<{ status: MultichainTransferStatus; iconOnly: boolean }>`
-  width: 100%;
+  width: fit-content;
   padding: 4px 8px;
 
   display: flex;
+  flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
   gap: 8px;

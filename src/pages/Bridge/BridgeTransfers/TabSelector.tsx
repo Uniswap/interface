@@ -1,6 +1,4 @@
-import styled, { css } from 'styled-components'
-
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import styled from 'styled-components'
 
 const TabItem = styled.div<{ isActive?: boolean }>`
   text-align: center;
@@ -9,18 +7,10 @@ const TabItem = styled.div<{ isActive?: boolean }>`
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
-  color: ${({ theme }) => theme.subText};
+  color: ${({ theme }) => theme.text};
   user-select: none;
   border-radius: 20px;
   transition: all 150ms;
-  ${({ isActive, theme }) =>
-    isActive &&
-    css`
-      font-weight: 500;
-      text-align: center;
-      color: ${theme.text};
-      background: ${theme.buttonGray};
-    `}
 `
 
 type Props = {
@@ -28,18 +18,9 @@ type Props = {
 }
 
 const TabSelector: React.FC<Props> = ({ className }) => {
-  const { mixpanelHandler } = useMixpanel()
   return (
     <div className={className}>
-      <TabItem
-        isActive={true}
-        role="button"
-        onClick={() => {
-          mixpanelHandler(MIXPANEL_TYPE.BRIDGE_CLICK_HISTORY_TRANSFER_TAB)
-        }}
-      >
-        Transfer History
-      </TabItem>
+      <TabItem isActive={true}>Transfer History</TabItem>
     </div>
   )
 }

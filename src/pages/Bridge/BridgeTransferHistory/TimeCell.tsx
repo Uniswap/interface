@@ -3,8 +3,7 @@ import dayjs from 'dayjs'
 import { Flex, Text } from 'rebass'
 
 import useTheme from 'hooks/useTheme'
-
-import { ONLY_DATE_FORMAT, ONLY_TIME_FORMAT } from '../consts'
+import { ONLY_DATE_FORMAT, ONLY_TIME_FORMAT } from 'pages/Bridge/consts'
 
 type Props = {
   timestamp?: number | ''

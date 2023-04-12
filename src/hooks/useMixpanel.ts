@@ -157,6 +157,8 @@ export enum MIXPANEL_TYPE {
   BRIDGE_TRANSACTION_SUBMIT,
   BRIDGE_CLICK_HISTORY_TRANSFER_TAB,
   BRIDGE_CLICK_SUBSCRIBE_BTN,
+  BRIDGE_CLICK_DISCLAIMER,
+  BRIDGE_CLICK_UNDERSTAND_IN_FIRST_TIME_VISIT,
 
   //Kyber DAO
   KYBER_DAO_STAKE_CLICK,
@@ -836,6 +838,20 @@ export default function useMixpanel(currencies?: { [field in Field]?: Currency }
         }
         case MIXPANEL_TYPE.BRIDGE_CLICK_SUBSCRIBE_BTN: {
           mixpanel.track('Bridge - User click to Subscribe button')
+          break
+        }
+        case MIXPANEL_TYPE.BRIDGE_CLICK_DISCLAIMER: {
+          if (typeof payload !== 'boolean') {
+            throw new Error(`Wrong payload type for Mixpanel event: ${MIXPANEL_TYPE.BRIDGE_CLICK_DISCLAIMER}`)
+          }
+
+          mixpanel.track('Bridge - User click to Checkbox Disclaimer in Confirmation popup', {
+            checkbox: payload ? 'checked' : 'unchecked',
+          })
+          break
+        }
+        case MIXPANEL_TYPE.BRIDGE_CLICK_UNDERSTAND_IN_FIRST_TIME_VISIT: {
+          mixpanel.track('Bridge - User click to I understand button the first time visit Bridge page')
           break
         }
 

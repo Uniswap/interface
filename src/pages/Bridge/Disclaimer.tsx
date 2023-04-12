@@ -6,6 +6,7 @@ import styled from 'styled-components'
 
 import { ButtonWarning } from 'components/Button'
 import { ModalCenter } from 'components/Modal'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { ExternalLink } from 'theme'
 
@@ -22,8 +23,10 @@ export default function Disclaimer() {
   const showed = getBridgeLocalstorage(BridgeLocalStorageKeys.SHOWED_DISCLAIMED)
   const [show, setShow] = useState(!showed)
   const theme = useTheme()
+  const { mixpanelHandler } = useMixpanel()
 
-  const onDismiss = () => {
+  const handleClickUnderstand = () => {
+    mixpanelHandler(MIXPANEL_TYPE.BRIDGE_CLICK_UNDERSTAND_IN_FIRST_TIME_VISIT)
     setBridgeLocalstorage(BridgeLocalStorageKeys.SHOWED_DISCLAIMED, '1')
     setShow(false)
   }
@@ -48,7 +51,7 @@ export default function Disclaimer() {
             our partners platform, KyberSwap won&apos;t assume any liability for any losses incurred.
           </Trans>
         </TextWrapper>
-        <ButtonWarning style={{ marginTop: 20 }} onClick={onDismiss}>
+        <ButtonWarning style={{ marginTop: 20 }} onClick={handleClickUnderstand}>
           <Trans>I Understand</Trans>
         </ButtonWarning>
       </Container>
