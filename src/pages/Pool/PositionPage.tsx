@@ -346,7 +346,7 @@ const useInverter = ({
   }
 }
 
-const PositionPageInvalidContent = () => (
+const PositionPageUnsupportedContent = () => (
   <PageWrapper>
     <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
       <ThemedText.HeadlineLarge style={{ marginBottom: '8px' }}>
@@ -367,7 +367,7 @@ export default function PositionPage() {
   if (isSupportedChain(chainId)) {
     return <PositionPageContent />
   } else {
-    return <PositionPageInvalidContent />
+    return <PositionPageUnsupportedContent />
   }
 }
 
@@ -613,7 +613,7 @@ function PositionPageContent() {
   )
 
   if (!positionDetails && !loading) {
-    return <PositionPageInvalidContent />
+    return <PositionPageUnsupportedContent />
   }
 
   return loading || poolState === PoolState.LOADING || !feeAmount ? (
