@@ -27,6 +27,7 @@ describe(handleDeepLink, () => {
           accounts: {
             [account.address]: account,
           },
+          activeAccountAddress: account.address,
         },
       })
       .call(parseAndValidateUserAddress, account.address)
@@ -46,6 +47,7 @@ describe(handleDeepLink, () => {
           accounts: {
             [account.address]: account,
           },
+          activeAccountAddress: account.address,
         },
       })
       .call(handleTransactionLink)
@@ -64,6 +66,7 @@ describe(handleDeepLink, () => {
           accounts: {
             [account.address]: account,
           },
+          activeAccountAddress: account.address,
         },
       })
       .call(
@@ -80,14 +83,10 @@ describe(handleDeepLink, () => {
       .withState({
         wallet: {
           accounts: {},
+          activeAccountAddress: null,
         },
       })
-      .call(
-        logger.error,
-        'handleDeepLink',
-        'handleDeepLink',
-        `Error handling deep link ${swapDeepLinkPayload.url}: User address supplied in path does not exist in wallet`
-      )
+      .returns(undefined)
       .silentRun()
   })
 })

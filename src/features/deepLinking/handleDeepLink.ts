@@ -1,13 +1,13 @@
 import { createAction } from '@reduxjs/toolkit'
 import { URL } from 'react-native-url-polyfill'
-import { CallEffect, ForkEffect, PutEffect, SelectEffect } from 'redux-saga/effects'
+import { ForkEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
 import { handleMoonpayReturnLink } from 'src/features/deepLinking/handleMoonpayReturnLink'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLink'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLink'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { selectAccounts } from 'src/features/wallet/selectors'
+import { selectAccounts, selectActiveAccount } from 'src/features/wallet/selectors'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
 import { setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
@@ -25,24 +25,15 @@ export function* deepLinkWatcher(): Generator<ForkEffect<never>, void, unknown> 
   yield* takeLatest(openDeepLink.type, handleDeepLink)
 }
 
-export function* handleDeepLink(action: ReturnType<typeof openDeepLink>): Generator<
-  | CallEffect<boolean>
-  | ForkEffect<void>
-  | PutEffect<{
-      payload: boolean | undefined
-      type: string
-    }>
-  | CallEffect<string>
-  | PutEffect<{
-      payload: string
-      type: string
-    }>
-  | CallEffect<unknown>,
-  void,
-  unknown
-> {
+export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
   const { coldStart } = action.payload
   try {
+    // Skip handling any deep links if user doesn't have an active account
+    const activeAccount = yield* appSelect(selectActiveAccount)
+    if (!activeAccount) {
+      return
+    }
+
     // Skip handling any uniswap:// deep links for now for security reasons
     // currently only used for WalletConnect flow fallback
     if (action.payload.url.startsWith('uniswap://')) {
@@ -107,9 +98,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>): Genera
   }
 }
 
-export function* parseAndValidateUserAddress(
-  userAddress: string | null
-): Generator<SelectEffect, string, unknown> {
+export function* parseAndValidateUserAddress(userAddress: string | null) {
   if (!userAddress) {
     throw new Error('No `userAddress` provided')
   }
