@@ -19,7 +19,6 @@ import { updateSelectedWallet } from 'state/user/reducer'
 import { useConnectedWallets } from 'state/wallets/hooks'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap } from 'theme/styles'
 
 import ConnectionErrorView from './ConnectionErrorView'
@@ -86,14 +85,13 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
   const dispatch = useAppDispatch()
   const { connector, account, chainId, provider } = useWeb3React()
   const [drawerOpen, toggleWalletDrawer] = useAccountDrawer()
-  const isDarkMode = useIsDarkMode()
 
   const [connectedWallets, addWalletToConnectedWallets] = useConnectedWallets()
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
   const [pendingConnection, setPendingConnection] = useState<Connection | undefined>()
   const [pendingError, setPendingError] = useState<any>()
 
-  const connections = getConnections(isDarkMode)
+  const connections = getConnections()
   const getConnection = useGetConnection()
 
   useEffect(() => {
