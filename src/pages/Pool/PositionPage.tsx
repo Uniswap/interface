@@ -346,7 +346,7 @@ const useInverter = ({
   }
 }
 
-const INVALID_STATE = (
+const PositionPageInvalidContent = () => (
   <PageWrapper>
     <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
       <ThemedText.HeadlineLarge style={{ marginBottom: '8px' }}>
@@ -362,16 +362,16 @@ const INVALID_STATE = (
   </PageWrapper>
 )
 
-export default function PositionPageWrapper() {
+export default function PositionPage() {
   const { chainId } = useWeb3React()
   if (isSupportedChain(chainId)) {
-    return <PositionPage />
+    return <PositionPageContent />
   } else {
-    return INVALID_STATE
+    return <PositionPageInvalidContent />
   }
 }
 
-function PositionPage() {
+function PositionPageContent() {
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
   const { chainId, account, provider } = useWeb3React()
   const theme = useTheme()
@@ -613,7 +613,7 @@ function PositionPage() {
   )
 
   if (!positionDetails && !loading) {
-    return INVALID_STATE
+    return <PositionPageInvalidContent />
   }
 
   return loading || poolState === PoolState.LOADING || !feeAmount ? (
