@@ -18,18 +18,18 @@ const DRAWER_MARGIN = '8px'
 const DRAWER_OFFSET = '10px'
 const DRAWER_TOP_MARGIN_MOBILE_WEB = '72px'
 
-const walletDrawerOpenAtom = atom(false)
+const accountDrawerOpenAtom = atom(false)
 
-export function useToggleWalletDrawer() {
-  const updateWalletDrawerOpen = useUpdateAtom(walletDrawerOpenAtom)
+export function useToggleAccountDrawer() {
+  const updateAccountDrawerOpen = useUpdateAtom(accountDrawerOpenAtom)
   return useCallback(() => {
-    updateWalletDrawerOpen((open) => !open)
-  }, [updateWalletDrawerOpen])
+    updateAccountDrawerOpen((open) => !open)
+  }, [updateAccountDrawerOpen])
 }
 
-export function useWalletDrawer(): [boolean, () => void] {
-  const walletDrawerOpen = useAtomValue(walletDrawerOpenAtom)
-  return [walletDrawerOpen, useToggleWalletDrawer()]
+export function useAccountDrawer(): [boolean, () => void] {
+  const accountDrawerOpen = useAtomValue(accountDrawerOpenAtom)
+  return [accountDrawerOpen, useToggleAccountDrawer()]
 }
 
 const ScrimBackground = styled.div<{ open: boolean }>`
@@ -63,7 +63,7 @@ const Scrim = ({ onClick, open }: { onClick: () => void; open: boolean }) => {
   return <ScrimBackground onClick={onClick} open={open} />
 }
 
-const WalletDropdownScrollWrapper = styled.div`
+const AccountDrawerScrollWrapper = styled.div`
   overflow: hidden;
   &:hover {
     overflow-y: auto;
@@ -76,32 +76,45 @@ const WalletDropdownScrollWrapper = styled.div`
   border-radius: 12px;
 `
 
-const WalletDropdownWrapper = styled.div<{ open: boolean }>`
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  height: calc(100% - 2 * ${DRAWER_MARGIN});
+  overflow: hidden;
   position: fixed;
+  right: ${DRAWER_MARGIN};
   top: ${DRAWER_MARGIN};
-  right: ${({ open }) => (open ? DRAWER_MARGIN : '-' + DRAWER_WIDTH)};
   z-index: ${Z_INDEX.fixed};
 
-  overflow: hidden;
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    overflow: visible;
+  }
+`
 
-  height: calc(100% - 2 * ${DRAWER_MARGIN});
+const AccountDrawerWrapper = styled.div<{ open: boolean }>`
+  margin-right: ${({ open }) => (open ? 0 : '-' + DRAWER_WIDTH)};
+  height: 100%;
+  overflow: hidden;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     z-index: ${Z_INDEX.modal};
-    top: unset;
-    left: 0;
-    right: 0;
-    bottom: ${({ open }) => (open ? 0 : `calc(-1 * (100% - ${DRAWER_TOP_MARGIN_MOBILE_WEB}))`)};
+    position: absolute;
+    margin-right: 0;
+    top: ${({ open }) => (open ? `calc(-1 * (100% - ${DRAWER_TOP_MARGIN_MOBILE_WEB}))` : 0)};
 
     width: 100%;
-    height: calc(100% - ${DRAWER_TOP_MARGIN_MOBILE_WEB});
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
     box-shadow: unset;
+    transition: top ${({ theme }) => theme.transition.duration.medium};
   }
 
   @media screen and (min-width: 1440px) {
-    right: ${({ open }) => (open ? DRAWER_MARGIN : '-' + DRAWER_WIDTH_XL)};
+    margin-right: ${({ open }) => (open ? 0 : `-${DRAWER_WIDTH_XL}`)};
     width: ${DRAWER_WIDTH_XL};
   }
 
@@ -112,8 +125,7 @@ const WalletDropdownWrapper = styled.div<{ open: boolean }>`
   border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
 
   box-shadow: ${({ theme }) => theme.deepShadow};
-  transition: right ${({ theme }) => theme.transition.duration.medium},
-    bottom ${({ theme }) => theme.transition.duration.medium};
+  transition: margin-right ${({ theme }) => theme.transition.duration.medium};
 `
 
 const CloseIcon = styled(ChevronsRight).attrs({ size: 24 })`
@@ -123,30 +135,24 @@ const CloseIcon = styled(ChevronsRight).attrs({ size: 24 })`
 const CloseDrawer = styled.div`
   ${ClickableStyle}
   cursor: pointer;
-  height: calc(100% - 2 * ${DRAWER_MARGIN});
-  position: fixed;
-  right: calc(${DRAWER_MARGIN} + ${DRAWER_WIDTH} - ${DRAWER_OFFSET});
-  top: 4px;
-  z-index: ${Z_INDEX.dropdown};
+  height: 100%;
   // When the drawer is not hovered, the icon should be 18px from the edge of the sidebar.
   padding: 24px calc(18px + ${DRAWER_OFFSET}) 24px 14px;
   border-radius: 20px 0 0 20px;
   transition: ${({ theme }) =>
     `${theme.transition.duration.medium} ${theme.transition.timing.ease} background-color, ${theme.transition.duration.medium} ${theme.transition.timing.ease} margin`};
   &:hover {
-    margin: 0 -4px 0 0;
+    z-index: -1;
+    margin: 0 -8px 0 0;
     background-color: ${({ theme }) => theme.stateOverlayHover};
   }
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     display: none;
   }
-  @media screen and (min-width: 1440px) {
-    right: calc(${DRAWER_MARGIN} + ${DRAWER_WIDTH_XL} - ${DRAWER_OFFSET});
-  }
 `
 
-function WalletDropdown() {
-  const [walletDrawerOpen, toggleWalletDrawer] = useWalletDrawer()
+function AccountDrawer() {
+  const [walletDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
   const scrollRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (!walletDrawerOpen) {
@@ -187,7 +193,7 @@ function WalletDropdown() {
   }, [walletDrawerOpen, toggleWalletDrawer])
 
   return (
-    <>
+    <Container>
       {walletDrawerOpen && (
         <TraceEvent
           events={[BrowserEvent.onClick]}
@@ -200,14 +206,14 @@ function WalletDropdown() {
         </TraceEvent>
       )}
       <Scrim onClick={toggleWalletDrawer} open={walletDrawerOpen} />
-      <WalletDropdownWrapper open={walletDrawerOpen}>
+      <AccountDrawerWrapper open={walletDrawerOpen}>
         {/* id used for child InfiniteScrolls to reference when it has reached the bottom of the component */}
-        <WalletDropdownScrollWrapper ref={scrollRef} id="wallet-dropdown-scroll-wrapper">
+        <AccountDrawerScrollWrapper ref={scrollRef} id="wallet-dropdown-scroll-wrapper">
           <DefaultMenu />
-        </WalletDropdownScrollWrapper>
-      </WalletDropdownWrapper>
-    </>
+        </AccountDrawerScrollWrapper>
+      </AccountDrawerWrapper>
+    </Container>
   )
 }
 
-export default WalletDropdown
+export default AccountDrawer

@@ -3,7 +3,7 @@ import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/loca
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import { Check } from 'react-feather'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 import { ClickableStyle, ThemedText } from 'theme'
 import ThemeToggle from 'theme/components/ThemeToggle'
@@ -56,16 +56,13 @@ const BalanceToggleContainer = styled.div`
 export default function SettingsMenu({ onClose }: { onClose: () => void }) {
   const activeLocale = useActiveLocale()
 
-  const { pathname } = useLocation()
-  const isWalletPage = pathname.includes('/wallet')
-
   return (
     <SlideOutMenu title={<Trans>Settings</Trans>} onClose={onClose}>
       <SectionTitle>
         <Trans>Preferences</Trans>
       </SectionTitle>
       <ThemeToggleContainer>
-        <ThemeToggle disabled={isWalletPage} />
+        <ThemeToggle />
       </ThemeToggleContainer>
       <BalanceToggleContainer>
         <SmallBalanceToggle />

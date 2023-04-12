@@ -30,13 +30,13 @@ import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal 
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import StatusIcon from '../Identicon/StatusIcon'
-import { useToggleWalletDrawer } from '.'
+import { useToggleAccountDrawer } from '.'
 import IconButton, { IconHoverText } from './IconButton'
 import MiniPortfolio from './MiniPortfolio'
 import { portfolioFadeInAnimation } from './MiniPortfolio/PortfolioRow'
 
 const AuthenticatedHeaderWrapper = styled.div`
-  padding: 14px 12px 16px 16px;
+  padding: 20px 16px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -184,7 +184,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     dispatch(updateSelectedWallet({ wallet: undefined }))
   }, [connector, dispatch])
 
-  const toggleWalletDrawer = useToggleWalletDrawer()
+  const toggleWalletDrawer = useToggleAccountDrawer()
 
   const navigateToProfile = useCallback(() => {
     toggleWalletDrawer()
@@ -197,9 +197,10 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
 
   const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const openFoRModalWithAnalytics = useCallback(() => {
+    toggleWalletDrawer()
     sendAnalyticsEvent(InterfaceEventName.FIAT_ONRAMP_WIDGET_OPENED)
     openFiatOnrampModal()
-  }, [openFiatOnrampModal])
+  }, [openFiatOnrampModal, toggleWalletDrawer])
 
   const [shouldCheck, setShouldCheck] = useState(false)
   const {
@@ -287,11 +288,22 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             <LoadingBubble height="16px" width="100px" margin="4px 0 20px 0" />
           </Column>
         )}
+        {!shouldDisableNFTRoutes && (
+          <HeaderButton
+            data-testid="nft-view-self-nfts"
+            onClick={navigateToProfile}
+            size={ButtonSize.medium}
+            emphasis={ButtonEmphasis.medium}
+          >
+            <Trans>View and sell NFTs</Trans>
+          </HeaderButton>
+        )}
         <HeaderButton
           size={ButtonSize.medium}
           emphasis={ButtonEmphasis.medium}
           onClick={handleBuyCryptoClick}
           disabled={disableBuyCryptoButton}
+          data-testid="wallet-buy-crypto"
         >
           {error ? (
             <ThemedText.BodyPrimary>{error}</ThemedText.BodyPrimary>
@@ -306,16 +318,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             </>
           )}
         </HeaderButton>
-        {!shouldDisableNFTRoutes && (
-          <HeaderButton
-            data-testid="nft-view-self-nfts"
-            onClick={navigateToProfile}
-            size={ButtonSize.medium}
-            emphasis={ButtonEmphasis.medium}
-          >
-            <Trans>View and sell NFTs</Trans>
-          </HeaderButton>
-        )}
         {Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) && (
           <FiatOnrampNotAvailableText marginTop="8px">
             <Trans>Not available in your region</Trans>

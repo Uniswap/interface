@@ -1,10 +1,11 @@
 import { Trans } from '@lingui/macro'
+import { InterfaceElementName } from '@uniswap/analytics-events'
+import { useAccountDrawer } from 'components/AccountDrawer'
+import { DownloadButton, LearnMoreButton } from 'components/AccountDrawer/DownloadButton'
 import { AutoColumn } from 'components/Column'
 import Row, { RowBetween } from 'components/Row'
-import { useWalletDrawer } from 'components/WalletDropdown'
-import { DownloadButton, LearnMoreButton } from 'components/WalletDropdown/DownloadButton'
+import { useMgtmEnabled } from 'featureFlags/flags/mgtm'
 import { X } from 'react-feather'
-import { useLocation } from 'react-router-dom'
 import { useHideUniswapWalletBanner } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -36,7 +37,7 @@ const PopupContainer = styled.div<{ show: boolean }>`
     },
   }) => `${duration.slow} opacity ${timing.in}`};
   width: 100%;
-  bottom: 56px;
+  bottom: 52px;
   height: 20%;
 `
 
@@ -66,16 +67,12 @@ const StyledXButton = styled(X)`
 
 export default function UniswapWalletBanner() {
   const [hideUniswapWalletBanner, toggleHideUniswapWalletBanner] = useHideUniswapWalletBanner()
-  const [walletDrawerOpen] = useWalletDrawer()
+  const [walletDrawerOpen] = useAccountDrawer()
+  const mgtmEnabled = useMgtmEnabled()
 
   const theme = useTheme()
 
-  const { pathname } = useLocation()
-  // hardcodeToFalse hardcodes the banner to never display, temporarily:
-  const hardcodeToFalse = false
-  const shouldDisplay = Boolean(
-    !walletDrawerOpen && !hideUniswapWalletBanner && isIOS && !pathname.startsWith('/wallet') && hardcodeToFalse
-  )
+  const shouldDisplay = Boolean(mgtmEnabled && !walletDrawerOpen && !hideUniswapWalletBanner && isIOS)
 
   return (
     <PopupContainer show={shouldDisplay}>
@@ -103,7 +100,10 @@ export default function UniswapWalletBanner() {
 
         <ButtonRow>
           <LearnMoreButton />
-          <DownloadButton onClick={() => toggleHideUniswapWalletBanner()} />
+          <DownloadButton
+            onClick={() => toggleHideUniswapWalletBanner()}
+            element={InterfaceElementName.UNISWAP_WALLET_BANNER_DOWNLOAD_BUTTON}
+          />
         </ButtonRow>
       </InnerContainer>
     </PopupContainer>

@@ -5,7 +5,7 @@ import { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 're
 import { useAllTransactions } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/types'
 
-import { useWalletDrawer } from '.'
+import { useAccountDrawer } from '.'
 
 const isTxPending = (tx: TransactionDetails) => !tx.receipt
 function wasPending(previousTxs: { [hash: string]: TransactionDetails | undefined }, current: TransactionDetails) {
@@ -39,7 +39,7 @@ function useHasUpdatedTx() {
 export default function PrefetchBalancesWrapper({ children }: PropsWithChildren) {
   const { account } = useWeb3React()
   const [prefetchPortfolioBalances] = usePortfolioBalancesLazyQuery()
-  const [drawerOpen] = useWalletDrawer()
+  const [drawerOpen] = useAccountDrawer()
 
   const [hasUnfetchedBalances, setHasUnfetchedBalances] = useState(true)
   const fetchBalances = useCallback(() => {
