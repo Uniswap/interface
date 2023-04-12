@@ -51,12 +51,7 @@ export class UniwalletConnect extends WalletConnectPopup {
       this.events.emit(UniwalletConnect.UNI_URI_AVAILABLE, `hello_uniwallet:${uri}`)
 
       // Opens deeplink to Uniswap Wallet if on iOS
-      if (isIOS) {
-        const newTab = window.open(`https://uniswap.org/app/wc?uri=${encodeURIComponent(uri)}`)
-
-        // Fixes blank tab opening on mobile Chrome
-        newTab?.close()
-      }
+      if (isIOS) window.open(`https://uniswap.org/app/wc?uri=${encodeURIComponent(uri)}`)
     })
   }
 
