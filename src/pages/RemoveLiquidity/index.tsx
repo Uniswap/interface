@@ -102,6 +102,13 @@ export default function RemoveLiquidity() {
     router?.address
   )
   const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], router?.address)
+  const onApprove = async () => {
+    try {
+      await approveCallback()
+    } catch (e) {
+      console.debug(e)
+    }
+  }
 
   async function onAttemptToApprove() {
     if (!pairContract || !pair || !provider || !deadline) throw new Error('missing dependencies')
@@ -114,11 +121,11 @@ export default function RemoveLiquidity() {
       } catch (error) {
         // try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
         if (error?.code !== 4001) {
-          await approveCallback()
+          await onApprove()
         }
       }
     } else {
-      await approveCallback()
+      await onApprove()
     }
   }
 

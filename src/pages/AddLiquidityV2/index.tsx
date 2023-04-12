@@ -131,7 +131,21 @@ export default function AddLiquidity() {
 
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], router?.address)
+  const onApproveA = async () => {
+    try {
+      await approveACallback()
+    } catch (e) {
+      console.debug(e)
+    }
+  }
   const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], router?.address)
+  const onApproveB = async () => {
+    try {
+      await approveBCallback()
+    } catch (e) {
+      console.debug(e)
+    }
+  }
 
   const addTransaction = useTransactionAdder()
 
@@ -455,7 +469,7 @@ export default function AddLiquidity() {
                     <RowBetween>
                       {approvalA !== ApprovalState.APPROVED && (
                         <ButtonPrimary
-                          onClick={approveACallback}
+                          onClick={onApproveA}
                           disabled={approvalA === ApprovalState.PENDING}
                           width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
                         >
@@ -470,7 +484,7 @@ export default function AddLiquidity() {
                       )}
                       {approvalB !== ApprovalState.APPROVED && (
                         <ButtonPrimary
-                          onClick={approveBCallback}
+                          onClick={onApproveB}
                           disabled={approvalB === ApprovalState.PENDING}
                           width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
                         >

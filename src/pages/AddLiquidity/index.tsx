@@ -199,10 +199,24 @@ export default function AddLiquidity() {
     argentWalletContract ? undefined : parsedAmounts[Field.CURRENCY_A],
     chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined
   )
+  const onApproveA = async () => {
+    try {
+      await approveACallback()
+    } catch (e) {
+      console.debug(e)
+    }
+  }
   const [approvalB, approveBCallback] = useApproveCallback(
     argentWalletContract ? undefined : parsedAmounts[Field.CURRENCY_B],
     chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined
   )
+  const onApproveB = async () => {
+    try {
+      await approveBCallback()
+    } catch (e) {
+      console.debug(e)
+    }
+  }
 
   const allowedSlippage = useUserSlippageToleranceWithDefault(
     outOfRange ? ZERO_PERCENT : DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE
@@ -489,7 +503,7 @@ export default function AddLiquidity() {
             <RowBetween>
               {showApprovalA && (
                 <ButtonPrimary
-                  onClick={approveACallback}
+                  onClick={onApproveA}
                   disabled={approvalA === ApprovalState.PENDING}
                   width={showApprovalB ? '48%' : '100%'}
                 >
@@ -504,7 +518,7 @@ export default function AddLiquidity() {
               )}
               {showApprovalB && (
                 <ButtonPrimary
-                  onClick={approveBCallback}
+                  onClick={onApproveB}
                   disabled={approvalB === ApprovalState.PENDING}
                   width={showApprovalA ? '48%' : '100%'}
                 >
