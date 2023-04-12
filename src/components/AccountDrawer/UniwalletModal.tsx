@@ -95,7 +95,7 @@ export default function UniwalletModal() {
           )}
         </QRCodeWrapper>
         <Divider />
-        <InfoSection onClose={onClose} />
+        <InfoSection />
       </UniwalletConnectWrapper>
     </Modal>
   )
@@ -108,7 +108,7 @@ const InfoSectionWrapper = styled(RowBetween)`
   gap: 20px;
 `
 
-function InfoSection({ onClose }: { onClose: () => void }) {
+function InfoSection() {
   return (
     <InfoSectionWrapper>
       <AutoColumn gap="4px">
@@ -122,7 +122,7 @@ function InfoSection({ onClose }: { onClose: () => void }) {
         </ThemedText.Caption>
       </AutoColumn>
       <Column>
-        <DownloadButton onClick={onClose} />
+        <DownloadButton />
       </Column>
     </InfoSectionWrapper>
   )

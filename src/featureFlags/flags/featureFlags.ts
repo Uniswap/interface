@@ -10,6 +10,5 @@ export enum FeatureFlag {
   statsigDummy = 'web_dummy_gate_amplitude_id',
   nftGraphql = 'nft_graphql_migration',
   mgtm = 'web_mobile_go_to_market_enabled',
-  walletMicrosite = 'walletMicrosite',
   miniPortfolio = 'miniPortfolio',
 }
