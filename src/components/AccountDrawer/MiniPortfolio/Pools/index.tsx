@@ -28,7 +28,7 @@ import useMultiChainPositions from './useMultiChainPositions'
   filters the PositionDetails data for malicious content,
   and then returns the original data in its original format. 
 */
-function useFilterPossiblyMaliciousPositionInfo(positions: PositionInfo[] | undefined): PositionInfo[] | undefined {
+function useFilterPossiblyMaliciousPositionInfo(positions: PositionInfo[] | undefined): PositionInfo[] {
   const tokenIdsToPositionInfo: Record<string, PositionInfo> = useMemo(
     () =>
       positions
