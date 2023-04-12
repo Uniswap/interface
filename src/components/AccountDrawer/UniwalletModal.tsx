@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { InterfaceElementName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { WalletConnect } from '@web3-react/walletconnect'
 import Column, { AutoColumn } from 'components/Column'
@@ -122,7 +123,7 @@ function InfoSection() {
         </ThemedText.Caption>
       </AutoColumn>
       <Column>
-        <DownloadButton />
+        <DownloadButton element={InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON} />
       </Column>
     </InfoSectionWrapper>
   )

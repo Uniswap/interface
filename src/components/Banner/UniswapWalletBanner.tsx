@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { InterfaceElementName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { DownloadButton, LearnMoreButton } from 'components/AccountDrawer/DownloadButton'
 import { AutoColumn } from 'components/Column'
@@ -99,7 +100,10 @@ export default function UniswapWalletBanner() {
 
         <ButtonRow>
           <LearnMoreButton />
-          <DownloadButton onClick={() => toggleHideUniswapWalletBanner()} />
+          <DownloadButton
+            onClick={() => toggleHideUniswapWalletBanner()}
+            element={InterfaceElementName.UNISWAP_WALLET_BANNER_DOWNLOAD_BUTTON}
+          />
         </ButtonRow>
       </InnerContainer>
     </PopupContainer>

@@ -1,4 +1,5 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { InterfaceElementName, InterfaceEventName, SharedEventName } from '@uniswap/analytics-events'
 import { PropsWithChildren, useCallback } from 'react'
 import styled from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
@@ -35,23 +36,29 @@ const APP_STORE_LINK = 'https://apps.apple.com/us/app/uniswap-wallet/id644394447
 const MICROSITE_LINK = 'https://wallet.uniswap.org/'
 
 const openAppStore = () => {
-  sendAnalyticsEvent('Uniswap wallet app store link opened')
   window.open(APP_STORE_LINK, /* target = */ 'uniswap_wallet_appstore')
 }
 const openWalletMicrosite = () => {
-  sendAnalyticsEvent('Uniswap wallet microsite opened')
+  sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_MICROSITE_OPENED)
   window.open(MICROSITE_LINK, /* target = */ 'uniswap_wallet_microsite')
 }
-
 // Launches App Store if on an iOS device, else navigates to Uniswap Wallet microsite
-export function DownloadButton({ onClick, text = 'Download' }: { onClick?: () => void; text?: string }) {
+export function DownloadButton({
+  onClick,
+  text = 'Download',
+  element,
+}: {
+  onClick?: () => void
+  text?: string
+  element: InterfaceElementName
+}) {
   const onButtonClick = useCallback(() => {
     // handles any actions required by the parent, i.e. cancelling wallet connection attempt or dismissing an ad
     onClick?.()
-    sendAnalyticsEvent('Uniswap wallet download clicked')
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { element })
     if (isIOS) openAppStore()
     else openWalletMicrosite()
-  }, [onClick])
+  }, [element, onClick])
 
   return (
     <BaseButton branded onClick={onButtonClick}>
