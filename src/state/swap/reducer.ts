@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { parsedQueryString } from 'hooks/useParsedQueryString'
 
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, setLeverageFactor, setHideClosedLeveragePositions } from './actions'
+import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, setLeverageFactor, setHideClosedLeveragePositions, setLeverage } from './actions'
 import { queryParametersToSwapState } from './hooks'
 
 export interface SwapState {
@@ -15,8 +15,9 @@ export interface SwapState {
   }
   // the typed recipient address or ENS name, or null if swap should go to sender
   readonly recipient: string | null
-  readonly leverageFactor: string
+  readonly leverageFactor: string | null
   readonly hideClosedLeveragePositions: boolean
+  readonly leverage: boolean
 }
 
 const initialState: SwapState = queryParametersToSwapState(parsedQueryString())
@@ -25,7 +26,7 @@ export default createReducer<SwapState>(initialState, (builder) =>
   builder
     .addCase(
       replaceSwapState,
-      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId, leverageFactor, hideClosedLeveragePositions } }) => {
+      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId, leverage, leverageFactor, hideClosedLeveragePositions } }) => {
         return {
           [Field.INPUT]: {
             currencyId: inputCurrencyId ?? null,
@@ -36,7 +37,8 @@ export default createReducer<SwapState>(initialState, (builder) =>
           independentField: field,
           typedValue,
           recipient,
-          leverageFactor,
+          leverageFactor: leverageFactor ?? null,
+          leverage,
           hideClosedLeveragePositions
         }
       }
@@ -74,6 +76,12 @@ export default createReducer<SwapState>(initialState, (builder) =>
         typedValue,
       }
     })
+    .addCase(
+      setLeverage, (state, { payload: { leverage } }) => ({
+        ...state,
+        leverage
+      })
+    )
     .addCase(
       setLeverageFactor, (state, { payload: { leverageFactor } }) => {
         return {

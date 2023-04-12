@@ -17,7 +17,7 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { useCurrencyBalances } from '../connection/hooks'
 import { AppState } from '../types'
-import { Field, replaceSwapState, selectCurrency, setHideClosedLeveragePositions, setLeverageFactor, setRecipient, switchCurrencies, typeInput } from './actions'
+import { Field, replaceSwapState, selectCurrency, setHideClosedLeveragePositions, setLeverageFactor, setRecipient, switchCurrencies, typeInput, setLeverage } from './actions'
 import { SwapState } from './reducer'
 
 export function useSwapState(): AppState['swap'] {
@@ -29,8 +29,9 @@ export function useSwapActionHandlers(): {
   onSwitchTokens: () => void
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
-  onLeverageChange: (leverage: string) => void
+  onLeverageFactorChange: (leverage: string) => void
   onHideClosedLeveragePositions: (hide: boolean) => void
+  onLeverageChange: (leverage: boolean) => void
 } {
   const dispatch = useAppDispatch()
   const onCurrencySelection = useCallback(
@@ -63,7 +64,7 @@ export function useSwapActionHandlers(): {
     [dispatch]
   )
 
-  const onLeverageChange = useCallback(
+  const onLeverageFactorChange = useCallback(
     (leverageFactor: string) => {
       dispatch(setLeverageFactor({ leverageFactor }))
     },
@@ -77,13 +78,21 @@ export function useSwapActionHandlers(): {
     [dispatch]
   )
 
+  const onLeverageChange = useCallback(
+    (leverage: boolean) => {
+      dispatch(setLeverage({ leverage }))
+    },
+    [dispatch]
+  )
+
   return {
     onSwitchTokens,
     onCurrencySelection,
     onUserInput,
     onChangeRecipient,
-    onLeverageChange,
+    onLeverageFactorChange,
     onHideClosedLeveragePositions,
+    onLeverageChange
   }
 }
 
@@ -261,6 +270,7 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
     independentField,
     recipient,
     leverageFactor: "1",
+    leverage: false,
     hideClosedLeveragePositions: true
   }
 }
@@ -288,7 +298,8 @@ export function useDefaultsFromURLSearch(): SwapState {
         outputCurrencyId,
         recipient: parsedSwapState.recipient,
         leverageFactor: "1",
-        hideClosedLeveragePositions: true
+        hideClosedLeveragePositions: true,
+        leverage: false
       })
     )
   }, [dispatch, chainId, parsedSwapState])
