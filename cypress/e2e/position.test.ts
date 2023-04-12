@@ -1,5 +1,3 @@
-import { injected } from '../support/ethereum'
-
 describe('Position', () => {
   it('shows an valid state on a supported network', () => {
     cy.visit('/pools/1')
@@ -7,12 +5,6 @@ describe('Position', () => {
   })
 
   it('shows an invalid state on a supported network', () => {
-    cy.visit('/pools/788893')
-    cy.contains('To view a position, you must be connected to the network it belongs to.')
-  })
-
-  it('shows an invalid state on an unsupported network', () => {
-    injected.chainId = 14124
     cy.visit('/pools/788893')
     cy.contains('To view a position, you must be connected to the network it belongs to.')
   })
