@@ -53,7 +53,14 @@ export default function Pools({ account }: { account: string }) {
   const [openPositions, closedPositions] = useMemo(() => {
     const openPositions: PositionInfo[] = []
     const closedPositions: PositionInfo[] = []
-    filteredPositions?.forEach((position) => (position.closed ? closedPositions : openPositions).push(position))
+    for (let i = 0; i < filteredPositions.length; i++) {
+      const position = filteredPositions[i]
+      if (position.closed) {
+        closedPositions.push(position)
+      } else {
+        openPositions.push(position)
+      }
+    }
     return [openPositions, closedPositions]
   }, [filteredPositions])
 
@@ -63,7 +70,7 @@ export default function Pools({ account }: { account: string }) {
     return <PortfolioSkeleton />
   }
 
-  if (filteredPositions?.length === 0) {
+  if (filteredPositions.length === 0) {
     return <EmptyWalletModule type="pool" onNavigateClick={toggleWalletDrawer} />
   }
 
