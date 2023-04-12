@@ -1,5 +1,6 @@
 import { t } from '@lingui/macro'
 import { useState } from 'react'
+import { isMobile } from 'react-device-detect'
 import { Share2, X } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
@@ -181,7 +182,7 @@ export const ShareButtonWithModal: React.FC<Props> = ({ url, onShared, color, ti
   return (
     <>
       <StyledActionButtonSwapForm onClick={toggle}>
-        <MouseoverTooltip text={t`Share`} placement="top" width="fit-content">
+        <MouseoverTooltip text={t`Share`} placement="top" width="fit-content" disableTooltip={isMobile}>
           <Share2 size={18} color={color || theme.subText} />
         </MouseoverTooltip>
       </StyledActionButtonSwapForm>

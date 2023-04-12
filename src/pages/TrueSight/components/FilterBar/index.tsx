@@ -28,11 +28,11 @@ const TrueSightSearchBoxOnMobile = styled(TrueSightSearchBox)`
   background: ${({ theme }) => theme.background};
 
   ${SearchContainer} {
-    background: ${({ theme }) => theme.tabBackgound};
+    background: ${({ theme }) => theme.tabBackground};
   }
 
   ${SelectedOption} {
-    background: ${({ theme }) => theme.tabBackgound};
+    background: ${({ theme }) => theme.tabBackground};
     border-radius: 20px;
   }
 

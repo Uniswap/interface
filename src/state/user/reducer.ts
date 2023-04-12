@@ -2,7 +2,13 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import { createReducer } from '@reduxjs/toolkit'
 
 import { SUGGESTED_BASES } from 'constants/bases'
-import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from 'constants/index'
+import {
+  DEFAULT_DEADLINE_FROM_NOW,
+  DEFAULT_SLIPPAGE,
+  DEFAULT_SLIPPAGE_STABLE_PAIR_SWAP,
+  INITIAL_ALLOWED_SLIPPAGE,
+  MAX_NORMAL_SLIPPAGE_IN_BIPS,
+} from 'constants/index'
 import { SupportedLocale } from 'constants/locales'
 import { updateVersion } from 'state/global/actions'
 
@@ -33,6 +39,7 @@ import {
 } from './actions'
 
 const currentTimestamp = () => new Date().getTime()
+const AUTO_DISABLE_DEGEN_MODE_MINUTES = 30
 
 export enum VIEW_MODE {
   GRID = 'grid',
@@ -49,6 +56,7 @@ interface UserState {
   userLocale: SupportedLocale | null
 
   userDegenMode: boolean
+  userDegenModeAutoDisableTimestamp: number
 
   // user defined slippage tolerance in bips, used in all txns
   userSlippageTolerance: number
@@ -129,6 +137,7 @@ const initialState: UserState = {
   userDarkMode: null, // default to system preference
   matchesDarkMode: true,
   userDegenMode: false,
+  userDegenModeAutoDisableTimestamp: 0,
   userLocale: null,
   userSlippageTolerance: INITIAL_ALLOWED_SLIPPAGE,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
@@ -179,6 +188,20 @@ export default createReducer(initialState, builder =>
     })
     .addCase(updateUserDegenMode, (state, action) => {
       state.userDegenMode = action.payload.userDegenMode
+      if (action.payload.userDegenMode) {
+        state.userDegenModeAutoDisableTimestamp = Date.now() + AUTO_DISABLE_DEGEN_MODE_MINUTES * 60 * 1000
+      } else {
+        // If max slippage <= 19.99%, no need update slippage.
+        if (state.userSlippageTolerance <= MAX_NORMAL_SLIPPAGE_IN_BIPS) {
+          return
+        }
+        // Else, update to default slippage.
+        if (action.payload.isStablePairSwap) {
+          state.userSlippageTolerance = Math.min(state.userSlippageTolerance, DEFAULT_SLIPPAGE_STABLE_PAIR_SWAP)
+        } else {
+          state.userSlippageTolerance = Math.min(state.userSlippageTolerance, DEFAULT_SLIPPAGE)
+        }
+      }
       state.timestamp = currentTimestamp()
     })
     .addCase(updateUserLocale, (state, action) => {

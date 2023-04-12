@@ -1,11 +1,14 @@
-import { Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
+import { Currency, CurrencyAmount, Price } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
-import { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
+import { Info } from 'react-feather'
+import { Text } from 'rebass'
 import styled from 'styled-components'
 
 import { ButtonPrimary } from 'components/Button'
 import SwapModal from 'components/SwapForm/SwapModal'
 import { BuildRouteResult } from 'components/SwapForm/hooks/useBuildRoute'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { Dots } from 'components/swapv2/styleds'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
@@ -14,6 +17,7 @@ import useTheme from 'hooks/useTheme'
 import { Field } from 'state/swap/actions'
 import { useEncodeSolana } from 'state/swap/hooks'
 import { DetailedRouteSummary } from 'types/route'
+import { toCurrencyAmount } from 'utils/currencyAmount'
 import { checkPriceImpact } from 'utils/prices'
 
 const CustomPrimaryButton = styled(ButtonPrimary).attrs({
@@ -31,11 +35,11 @@ const CustomPrimaryButton = styled(ButtonPrimary).attrs({
 
 export type Props = {
   minimal?: boolean
-  isAdvancedMode: boolean
+  isDegenMode: boolean
   routeSummary: DetailedRouteSummary | undefined
   isGettingRoute: boolean
   isProcessingSwap: boolean
-  isDisabled?: boolean
+  isApproved?: boolean
 
   currencyIn: Currency | undefined
   currencyOut: Currency | undefined
@@ -50,11 +54,11 @@ export type Props = {
 
 const SwapOnlyButton: React.FC<Props> = ({
   minimal,
-  isAdvancedMode,
+  isDegenMode,
   routeSummary,
   isGettingRoute,
   isProcessingSwap,
-  isDisabled,
+  isApproved,
 
   currencyIn,
   currencyOut,
@@ -114,19 +118,51 @@ const SwapOnlyButton: React.FC<Props> = ({
     handleClickSwapForNormalMode()
   }
 
-  const handleClickRetryForNormalMode = () => {
-    setErrorWhileSwap('')
-    handleClickSwapForNormalMode()
-  }
-
   const swapCallbackForModal = useMemo(() => {
     if (buildResult?.data?.data && buildResult?.data?.routerAddress && swapCallback) {
       return () => {
+        let outputAmountDescription = ''
+        if (buildResult.data?.amountOut !== undefined && buildResult.data?.outputChange?.percent !== undefined) {
+          const amountOut = buildResult.data?.amountOut
+          const percent = buildResult.data?.outputChange?.percent
+          if (percent === 0) {
+            outputAmountDescription = 'Unchanged'
+          } else if (percent > 0) {
+            outputAmountDescription = 'New output amt is better than initial output amt'
+          } else if (percent > -1) {
+            outputAmountDescription = `New output amt is ${amountOut} to < 1% worse than initial output amt`
+          } else if (percent >= -5) {
+            outputAmountDescription = `New output amt is ${amountOut} to >= 1% to <= 5% worse than initial output amt`
+          } else {
+            outputAmountDescription = `New output amt is ${amountOut} to > 5% worse than initial output amt`
+          }
+        }
+
+        let currentPrice = ''
+        if (routeSummary !== undefined) {
+          const { amountIn, amountOut } = buildResult.data
+          const parsedAmountIn = toCurrencyAmount(routeSummary.parsedAmountIn.currency, amountIn)
+          const parsedAmountOut = toCurrencyAmount(routeSummary.parsedAmountOut.currency, amountOut)
+          const executionPrice = new Price(
+            parsedAmountIn.currency,
+            parsedAmountOut.currency,
+            parsedAmountIn.quotient,
+            parsedAmountOut.quotient,
+          )
+          const inputSymbol = executionPrice.baseCurrency?.symbol
+          const outputSymbol = executionPrice.quoteCurrency?.symbol
+          const formattedPrice = executionPrice?.toSignificant(6)
+          currentPrice = `1 ${inputSymbol} = ${formattedPrice} ${outputSymbol}`
+        }
+
         mixpanelHandler(MIXPANEL_TYPE.SWAP_CONFIRMED, {
           gasUsd: routeSummary?.gasUsd,
           inputAmount: routeSummary?.parsedAmountIn,
           priceImpact: routeSummary?.priceImpact,
+          outputAmountDescription,
+          currentPrice,
         })
+
         return swapCallback(buildResult.data.routerAddress, buildResult.data.data)
       }
     }
@@ -149,7 +185,7 @@ const SwapOnlyButton: React.FC<Props> = ({
       )
     }
 
-    if (isAdvancedMode && isSolana && !encodeSolana) {
+    if (isDegenMode && isSolana && !encodeSolana) {
       return (
         <CustomPrimaryButton disabled $minimal={minimal}>
           <Dots>
@@ -169,10 +205,10 @@ const SwapOnlyButton: React.FC<Props> = ({
       )
     }
 
-    const shouldDisableByPriceImpact = !isAdvancedMode && (priceImpactResult.isVeryHigh || priceImpactResult.isInvalid)
-    const shouldDisable = isDisabled || shouldDisableByPriceImpact
+    const shouldDisableByPriceImpact = !isDegenMode && (priceImpactResult.isVeryHigh || priceImpactResult.isInvalid)
+    const shouldDisable = !routeSummary || !isApproved || shouldDisableByPriceImpact
 
-    if (priceImpactResult.isVeryHigh || (priceImpactResult.isInvalid && isAdvancedMode)) {
+    if ((priceImpactResult.isVeryHigh || priceImpactResult.isInvalid) && isDegenMode) {
       return (
         <CustomPrimaryButton
           onClick={handleClickSwapButton}
@@ -185,22 +221,39 @@ const SwapOnlyButton: React.FC<Props> = ({
       )
     }
 
-    if (priceImpactResult.isHigh) {
-      return (
-        <CustomPrimaryButton
-          onClick={handleClickSwapButton}
-          $minimal={minimal}
-          disabled={shouldDisable}
-          style={isDisabled ? undefined : { background: theme.warning }}
-        >
-          <Trans>Swap Anyway</Trans>
-        </CustomPrimaryButton>
-      )
-    }
-
     return (
-      <CustomPrimaryButton disabled={shouldDisable} onClick={handleClickSwapButton} $minimal={minimal}>
-        <Trans>Swap</Trans>
+      <CustomPrimaryButton
+        disabled={shouldDisable}
+        onClick={handleClickSwapButton}
+        $minimal={minimal}
+        style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+      >
+        {shouldDisableByPriceImpact ? (
+          <MouseoverTooltip
+            text={
+              <Trans>
+                To ensure you dont lose funds due to very high price impact (≥10%), swap has been disabled for this
+                trade. If you still wish to continue, you can turn on Degen Mode from Settings
+              </Trans>
+            }
+          >
+            <Info size={14} />
+          </MouseoverTooltip>
+        ) : !routeSummary ? (
+          <MouseoverTooltip
+            text={
+              <Trans>
+                There was an issue while trying to find a price for these tokens. Please try again. Otherwise, you may
+                select some other tokens to swap
+              </Trans>
+            }
+          >
+            <Info size={14} />
+          </MouseoverTooltip>
+        ) : null}
+        <Text>
+          <Trans>{shouldDisable ? 'Swap Disabled' : 'Swap'}</Trans>
+        </Text>
       </CustomPrimaryButton>
     )
   }
@@ -215,7 +268,6 @@ const SwapOnlyButton: React.FC<Props> = ({
         isBuildingRoute={isBuildingRoute}
         onDismiss={onDismissModal}
         swapCallback={swapCallbackForModal}
-        onRetryBuild={handleClickRetryForNormalMode}
       />
     </>
   )

@@ -9,7 +9,7 @@ import { useActiveWeb3React } from 'hooks'
 const GroupButtonReturnTypes = styled.div`
   display: flex;
   border-radius: 999px;
-  background: ${({ theme }) => theme.tabBackgound};
+  background: ${({ theme }) => theme.tabBackground};
   padding: 2px;
 `
 
@@ -20,7 +20,7 @@ export const ButtonReturnType = styled.div<{ active?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${({ theme, active }) => (active ? theme.tabActive : theme.tabBackgound)};
+  background-color: ${({ theme, active }) => (active ? theme.tabActive : theme.tabBackground)};
   color: ${({ theme, active }) => (active ? theme.text : theme.subText)};
   font-size: 12px;
   font-weight: 500;

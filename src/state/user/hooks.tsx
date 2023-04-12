@@ -17,6 +17,7 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { useSingleContractMultipleData } from 'state/multicall/hooks'
 import { useUserLiquidityPositions } from 'state/pools/hooks'
+import { useCheckStablePairSwap } from 'state/swap/hooks'
 import {
   SerializedToken,
   ToggleFavoriteTokenPayload,
@@ -144,10 +145,11 @@ export function useIsAcceptedTerm(): [boolean, (isAcceptedTerm: boolean) => void
 export function useDegenModeManager(): [boolean, () => void] {
   const dispatch = useDispatch<AppDispatch>()
   const degenMode = useSelector<AppState, AppState['user']['userDegenMode']>(state => state.user.userDegenMode)
+  const isStablePairSwap = useCheckStablePairSwap()
 
   const toggleSetDegenMode = useCallback(() => {
-    dispatch(updateUserDegenMode({ userDegenMode: !degenMode }))
-  }, [degenMode, dispatch])
+    dispatch(updateUserDegenMode({ userDegenMode: !degenMode, isStablePairSwap }))
+  }, [degenMode, dispatch, isStablePairSwap])
 
   return [degenMode, toggleSetDegenMode]
 }

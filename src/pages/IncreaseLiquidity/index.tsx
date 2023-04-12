@@ -4,14 +4,16 @@ import { FeeAmount, NonfungiblePositionManager } from '@kyberswap/ks-sdk-elastic
 import { Trans, t } from '@lingui/macro'
 import { BigNumber } from 'ethers'
 import JSBI from 'jsbi'
-import { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+import { AlertTriangle } from 'react-feather'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useMedia, usePrevious } from 'react-use'
 import { Box, Flex, Text } from 'rebass'
+import styled from 'styled-components'
 
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
-import { BlackCard } from 'components/Card'
+import { BlackCard, WarningCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import CurrencyLogo from 'components/CurrencyLogo'
@@ -25,6 +27,7 @@ import ProAmmPooledTokens from 'components/ProAmm/ProAmmPooledTokens'
 import ProAmmPriceRangeConfirm from 'components/ProAmm/ProAmmPriceRangeConfirm'
 import Rating from 'components/Rating'
 import { RowBetween } from 'components/Row'
+import { SLIPPAGE_EXPLANATION_URL } from 'components/SlippageWarningNote'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { TutorialType } from 'components/Tutorial'
 import { APP_PATHS } from 'constants/index'
@@ -56,14 +59,30 @@ import { useTokenPrices } from 'state/tokenPrices/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TRANSACTION_TYPE } from 'state/transactions/type'
 import { useDegenModeManager, useUserSlippageTolerance } from 'state/user/hooks'
-import { MEDIA_WIDTHS } from 'theme'
+import { MEDIA_WIDTHS, TYPE } from 'theme'
 import { calculateGasMargin, formattedNum, formattedNumLong, isAddressString } from 'utils'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
+import { SLIPPAGE_STATUS, checkRangeSlippage } from 'utils/slippage'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 
 import Chart from './Chart'
 
-export default function AddLiquidity() {
+const TextUnderlineColor = styled(Text)`
+  border-bottom: 1px solid ${({ theme }) => theme.text};
+  width: fit-content;
+  display: inline;
+  cursor: pointer;
+  color: ${({ theme }) => theme.text};
+  font-weight: 500;
+`
+
+const TextUnderlineTransparent = styled(Text)`
+  border-bottom: 1px solid transparent;
+  width: fit-content;
+  display: inline;
+`
+
+export default function IncreaseLiquidity() {
   const { currencyIdB, currencyIdA, feeAmount: feeAmountFromUrl, tokenId } = useParams()
   const { account, chainId, isEVM, networkInfo } = useActiveWeb3React()
   const { library } = useWeb3React()
@@ -215,7 +234,7 @@ export default function AddLiquidity() {
     (networkInfo as EVMNetworkInfo).elastic.nonfungiblePositionManager,
   )
 
-  const allowedSlippage = useUserSlippageTolerance()
+  const [allowedSlippage] = useUserSlippageTolerance()
 
   async function onAdd() {
     if (!isEVM || !library || !account || !tokenId) {
@@ -234,7 +253,7 @@ export default function AddLiquidity() {
       const useNative = baseCurrency.isNative ? baseCurrency : quoteCurrency.isNative ? quoteCurrency : undefined
 
       const { calldata, value } = NonfungiblePositionManager.addCallParameters(position, previousTicks, {
-        slippageTolerance: new Percent(allowedSlippage[0], 10000),
+        slippageTolerance: new Percent(allowedSlippage, 10000),
         deadline: deadline.toString(),
         useNative,
         tokenId: JSBI.BigInt(tokenId),
@@ -393,7 +412,10 @@ export default function AddLiquidity() {
 
   const upToMedium = useMedia(`(max-width: ${MEDIA_WIDTHS.upToMedium}px)`)
 
+  const slippageStatus = checkRangeSlippage(allowedSlippage, false)
+
   if (!isEVM) return <Navigate to="/" />
+
   return (
     <>
       <TransactionConfirmationModal
@@ -419,11 +441,36 @@ export default function AddLiquidity() {
               )
             }
             bottomContent={() => (
-              <ButtonPrimary id="btnSupply" onClick={onAdd}>
-                <Text fontWeight={500}>
-                  <Trans>Supply</Trans>
-                </Text>
-              </ButtonPrimary>
+              <>
+                {slippageStatus === SLIPPAGE_STATUS.HIGH && (
+                  <WarningCard padding="10px 16px" m="0 0 20px">
+                    <Flex alignItems="center">
+                      <AlertTriangle stroke={theme.warning} size="16px" />
+                      <TYPE.black ml="12px" fontSize="12px" flex={1}>
+                        <Trans>
+                          <TextUnderlineColor
+                            style={{ minWidth: 'max-content' }}
+                            as="a"
+                            href={SLIPPAGE_EXPLANATION_URL}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Slippage
+                          </TextUnderlineColor>
+                          <TextUnderlineTransparent sx={{ ml: '0.5ch' }}>
+                            is high. Your transaction may be front-run
+                          </TextUnderlineTransparent>
+                        </Trans>
+                      </TYPE.black>
+                    </Flex>
+                  </WarningCard>
+                )}
+                <ButtonPrimary id="btnSupply" onClick={onAdd}>
+                  <Text fontWeight={500}>
+                    <Trans>Supply</Trans>
+                  </Text>
+                </ButtonPrimary>
+              </>
             )}
           />
         )}
@@ -508,7 +555,7 @@ export default function AddLiquidity() {
                 </FirstColumn>
 
                 <SecondColumn>
-                  <BlackCard style={{ marginBottom: '1rem' }}>
+                  <BlackCard style={{ marginBottom: '24px' }}>
                     <Box
                       sx={{
                         display: 'grid',
@@ -605,6 +652,30 @@ export default function AddLiquidity() {
                       </div>
                     </TokenInputWrapper>
                   </BlackCard>
+
+                  {slippageStatus === SLIPPAGE_STATUS.HIGH && (
+                    <WarningCard padding="10px 16px" mb="16px">
+                      <Flex alignItems="center">
+                        <AlertTriangle stroke={theme.warning} size="16px" />
+                        <TYPE.black ml="12px" fontSize="12px" flex={1}>
+                          <Trans>
+                            <TextUnderlineColor
+                              style={{ minWidth: 'max-content' }}
+                              as="a"
+                              href={SLIPPAGE_EXPLANATION_URL}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              Slippage
+                            </TextUnderlineColor>
+                            <TextUnderlineTransparent sx={{ ml: '0.5ch' }}>
+                              is high. Your transaction may be front-run
+                            </TextUnderlineTransparent>
+                          </Trans>
+                        </TYPE.black>
+                      </Flex>
+                    </WarningCard>
+                  )}
 
                   <Flex justifyContent="flex-end">
                     <Buttons />

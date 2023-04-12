@@ -32,11 +32,9 @@ function tradeMeaningfullyDiffers(tradeA: Aggregator, tradeB: Aggregator): boole
 export default function ConfirmSwapModal({
   trade,
   originalTrade,
-  onAcceptChanges,
   allowedSlippage,
   onConfirm,
   onDismiss,
-  recipient,
   swapErrorMessage,
   isOpen,
   attemptingTxn,
@@ -49,10 +47,8 @@ export default function ConfirmSwapModal({
   originalTrade: Aggregator | undefined
   attemptingTxn: boolean
   txHash: string | undefined
-  recipient: string | null
   allowedSlippage: number
   tokenAddToMetaMask: Currency | undefined
-  onAcceptChanges: () => void
   onConfirm: () => void
   swapErrorMessage: string | undefined
   onDismiss: () => void
@@ -74,16 +70,8 @@ export default function ConfirmSwapModal({
   )
 
   const modalHeader = useCallback(() => {
-    return trade ? (
-      <SwapModalHeader
-        trade={trade}
-        allowedSlippage={allowedSlippage}
-        recipient={recipient}
-        showAcceptChanges={showAcceptChanges}
-        onAcceptChanges={onAcceptChanges}
-      />
-    ) : null
-  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade])
+    return trade ? <SwapModalHeader trade={trade} /> : null
+  }, [trade])
 
   const modalBottom = useCallback(() => {
     return trade ? (
@@ -122,13 +110,13 @@ export default function ConfirmSwapModal({
         <TransactionErrorContent onDismiss={onDismiss} message={swapErrorMessage} />
       ) : (
         <ConfirmationModalContent
-          title={t`Confirm Swap`}
+          title={t`Confirm Swap Details`}
           onDismiss={onDismiss}
           topContent={modalHeader}
           bottomContent={modalBottom}
         />
       ),
-    [onDismiss, modalBottom, modalHeader, swapErrorMessage],
+    [swapErrorMessage, onDismiss, modalHeader, modalBottom],
   )
 
   return (

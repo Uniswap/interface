@@ -10,6 +10,7 @@ import { AlertTriangle, Repeat } from 'react-feather'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Box, Flex, Text } from 'rebass'
+import styled from 'styled-components'
 
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { OutlineCard, SubTextCard, WarningCard } from 'components/Card'
@@ -33,6 +34,7 @@ import RangeSelector from 'components/RangeSelector'
 import Rating from 'components/Rating'
 import Row, { RowBetween, RowFixed } from 'components/Row'
 import ShareModal from 'components/ShareModal'
+import { SLIPPAGE_EXPLANATION_URL } from 'components/SlippageWarningNote'
 import Tooltip from 'components/Tooltip'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { TutorialType } from 'components/Tutorial'
@@ -75,6 +77,7 @@ import { currencyId } from 'utils/currencyId'
 import { toSignificantOrMaxIntegerPart } from 'utils/formatCurrencyAmount'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { formatNotDollarAmount } from 'utils/numbers'
+import { SLIPPAGE_STATUS, checkRangeSlippage } from 'utils/slippage'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 
 import NewPoolNote from './components/NewPoolNote'
@@ -93,6 +96,21 @@ import {
   StackedItem,
   StyledInput,
 } from './styled'
+
+const TextUnderlineColor = styled(Text)`
+  border-bottom: 1px solid ${({ theme }) => theme.text};
+  width: fit-content;
+  display: inline;
+  cursor: pointer;
+  color: ${({ theme }) => theme.text};
+  font-weight: 500;
+`
+
+const TextUnderlineTransparent = styled(Text)`
+  border-bottom: 1px solid transparent;
+  width: fit-content;
+  display: inline;
+`
 
 export default function AddLiquidity() {
   const { currencyIdA, currencyIdB, feeAmount: feeAmountFromUrl } = useParams()
@@ -710,6 +728,9 @@ export default function AddLiquidity() {
     return () => window.removeEventListener('resize', handleResize)
   }, [isClient])
 
+  const [allowedSlippage] = useUserSlippageTolerance()
+  const slippageStatus = checkRangeSlippage(allowedSlippage, false)
+
   const warning = (
     <Flex flexDirection="column" sx={{ gap: '12px' }} alignItems="flex-end" maxWidth={chartRef?.current?.clientWidth}>
       {noLiquidity && (
@@ -772,7 +793,7 @@ export default function AddLiquidity() {
           <Flex alignItems="center">
             <AlertTriangle stroke={theme.warning} size="16px" />
             <TYPE.black ml="12px" fontSize="12px" flex={1}>
-              <Trans>Invalid range selected. The min price must be lower than the max price.</Trans>
+              <Trans>Invalid range selected. The min price must be lower than the max price</Trans>
             </TYPE.black>
           </Flex>
         </WarningCard>
@@ -781,7 +802,7 @@ export default function AddLiquidity() {
           <Flex alignItems="center">
             <AlertTriangle stroke={theme.warning} size="16px" />
             <TYPE.black ml="12px" fontSize="12px" flex={1}>
-              <Trans>Efficiency Comparison: Full range positions may earn less fees than concentrated positions.</Trans>
+              <Trans>Efficiency Comparison: Full range positions may earn less fees than concentrated positions</Trans>
             </TYPE.black>
           </Flex>
         </WarningCard>
@@ -791,12 +812,33 @@ export default function AddLiquidity() {
             <AlertTriangle stroke={theme.warning} size="16px" />
             <TYPE.black ml="12px" fontSize="12px" flex={1}>
               <Trans>
-                Your position will not earn fees until the market price of the pool moves into your price range.
+                Your position will not earn fees until the market price of the pool moves into your price range
               </Trans>
             </TYPE.black>
           </Flex>
         </WarningCard>
       ) : null}
+      {slippageStatus === SLIPPAGE_STATUS.HIGH && (
+        <WarningCard padding="10px 16px">
+          <Flex alignItems="center">
+            <AlertTriangle stroke={theme.warning} size="16px" />
+            <TYPE.black ml="12px" fontSize="12px" flex={1}>
+              <Trans>
+                <TextUnderlineColor
+                  style={{ minWidth: 'max-content' }}
+                  as="a"
+                  href={SLIPPAGE_EXPLANATION_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Slippage
+                </TextUnderlineColor>
+                <TextUnderlineTransparent> is high. Your transaction may be front-run</TextUnderlineTransparent>
+              </Trans>
+            </TYPE.black>
+          </Flex>
+        </WarningCard>
+      )}
     </Flex>
   )
 

@@ -6,7 +6,8 @@ import { FeeAmount, NonfungiblePositionManager } from '@kyberswap/ks-sdk-elastic
 import { Trans, t } from '@lingui/macro'
 import { captureException } from '@sentry/react'
 import JSBI from 'jsbi'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { AlertTriangle } from 'react-feather'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useMedia, usePrevious } from 'react-use'
 import { Flex, Text } from 'rebass'
@@ -14,7 +15,7 @@ import styled from 'styled-components'
 
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
-import { BlackCard } from 'components/Card'
+import { BlackCard, OutlineCard, WarningCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import CurrencyLogo from 'components/CurrencyLogo'
@@ -25,7 +26,10 @@ import { AddRemoveTabs, LiquidityAction } from 'components/NavigationTabs'
 import ProAmmFee from 'components/ProAmm/ProAmmFee'
 import ProAmmPoolInfo from 'components/ProAmm/ProAmmPoolInfo'
 import ProAmmPooledTokens from 'components/ProAmm/ProAmmPooledTokens'
+import { RowBetween } from 'components/Row'
 import Slider from 'components/Slider'
+import { SLIPPAGE_EXPLANATION_URL } from 'components/SlippageWarningNote'
+import { MouseoverTooltip, TextDashed } from 'components/Tooltip'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,
@@ -46,9 +50,10 @@ import { useTokenPrices } from 'state/tokenPrices/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TRANSACTION_TYPE } from 'state/transactions/type'
 import { useUserSlippageTolerance } from 'state/user/hooks'
-import { MEDIA_WIDTHS } from 'theme'
+import { ExternalLink, MEDIA_WIDTHS, TYPE } from 'theme'
 import { basisPointsToPercent, calculateGasMargin, formattedNum, formattedNumLong } from 'utils'
 import { ErrorName } from 'utils/sentry'
+import { SLIPPAGE_STATUS, checkRangeSlippage, checkWarningSlippage, formatSlippage } from 'utils/slippage'
 import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
 
 import {
@@ -61,6 +66,21 @@ import {
   TokenId,
   TokenInputWrapper,
 } from './styled'
+
+const TextUnderlineColor = styled(Text)`
+  border-bottom: 1px solid ${({ theme }) => theme.text};
+  width: fit-content;
+  display: inline;
+  cursor: pointer;
+  color: ${({ theme }) => theme.text};
+  font-weight: 500;
+`
+
+const TextUnderlineTransparent = styled(Text)`
+  border-bottom: 1px solid transparent;
+  width: fit-content;
+  display: inline;
+`
 
 const MaxButton = styled(MaxBtn)`
   margin: 0;
@@ -220,7 +240,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       : 0
 
   const deadline = useTransactionDeadline() // custom from users settings
-  const allowedSlippage = useUserSlippageTolerance()
+  const [allowedSlippage] = useUserSlippageTolerance()
   const [showConfirm, setShowConfirm] = useState(false)
   const [attemptingTxn, setAttemptingTxn] = useState(false)
   const [txnHash, setTxnHash] = useState<string | undefined>()
@@ -272,11 +292,11 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     const { calldata, value } = NonfungiblePositionManager.removeCallParameters(positionSDK, {
       tokenId: tokenId.toString(),
       liquidityPercentage,
-      slippageTolerance: basisPointsToPercent(allowedSlippage[0]),
+      slippageTolerance: basisPointsToPercent(allowedSlippage),
       deadline: deadline.toString(),
       collectOptions: {
-        expectedCurrencyOwed0: feeValue0.subtract(feeValue0.multiply(basisPointsToPercent(allowedSlippage[0]))),
-        expectedCurrencyOwed1: feeValue1.subtract(feeValue1.multiply(basisPointsToPercent(allowedSlippage[0]))),
+        expectedCurrencyOwed0: feeValue0.subtract(feeValue0.multiply(basisPointsToPercent(allowedSlippage))),
+        expectedCurrencyOwed1: feeValue1.subtract(feeValue1.multiply(basisPointsToPercent(allowedSlippage))),
         recipient: account,
         deadline: deadline.toString(),
         isRemovingLiquid: true,
@@ -398,6 +418,9 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
 
   const upToMedium = useMedia(`(max-width: ${MEDIA_WIDTHS.upToMedium}px)`)
 
+  const isWarningSlippage = checkWarningSlippage(allowedSlippage, false)
+  const slippageStatus = checkRangeSlippage(allowedSlippage, false)
+
   if (!isEVM) return <Navigate to="/" />
 
   return (
@@ -433,6 +456,63 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     />
                   ) : (
                     <Loader />
+                  )}
+
+                  <OutlineCard marginTop="1rem" padding="1rem">
+                    <AutoColumn gap="md">
+                      <Text fontSize={12} fontWeight={500}>
+                        <Trans>More Information</Trans>
+                      </Text>
+                      <Divider />
+                      <RowBetween>
+                        <TextDashed fontSize={12} fontWeight={500} color={theme.subText} minWidth="max-content">
+                          <MouseoverTooltip
+                            width="200px"
+                            text={
+                              <Text>
+                                <Trans>
+                                  During your swap if the price changes by more than this %, your transaction will
+                                  revert. Read more{' '}
+                                  <ExternalLink href="https://docs.kyberswap.com/getting-started/foundational-topics/decentralized-finance/slippage">
+                                    here ↗
+                                  </ExternalLink>
+                                </Trans>
+                              </Text>
+                            }
+                            placement="auto"
+                          >
+                            <Trans>Max Slippage</Trans>
+                          </MouseoverTooltip>
+                        </TextDashed>
+                        <TYPE.black fontSize={12} color={isWarningSlippage ? theme.warning : undefined}>
+                          {formatSlippage(allowedSlippage)}
+                        </TYPE.black>
+                      </RowBetween>
+                    </AutoColumn>
+                  </OutlineCard>
+
+                  {slippageStatus === SLIPPAGE_STATUS.HIGH && (
+                    <WarningCard padding="10px 16px" m="20px 0 0">
+                      <Flex alignItems="center">
+                        <AlertTriangle stroke={theme.warning} size="16px" />
+                        <TYPE.black ml="12px" fontSize="12px" flex={1}>
+                          <Trans>
+                            <TextUnderlineColor
+                              style={{ minWidth: 'max-content' }}
+                              as="a"
+                              href={SLIPPAGE_EXPLANATION_URL}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              Slippage
+                            </TextUnderlineColor>
+                            <TextUnderlineTransparent sx={{ ml: '0.5ch' }}>
+                              is high. Your transaction may be front-run
+                            </TextUnderlineTransparent>
+                          </Trans>
+                        </TYPE.black>
+                      </Flex>
+                    </WarningCard>
                   )}
                 </>
               )}
@@ -632,9 +712,33 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     </Text>
                   </AmoutToRemoveContent>
 
+                  {slippageStatus === SLIPPAGE_STATUS.HIGH && (
+                    <WarningCard padding="10px 16px" m="24px 0 0">
+                      <Flex alignItems="center">
+                        <AlertTriangle stroke={theme.warning} size="16px" />
+                        <TYPE.black ml="12px" fontSize="12px" flex={1}>
+                          <Trans>
+                            <TextUnderlineColor
+                              style={{ minWidth: 'max-content' }}
+                              as="a"
+                              href={SLIPPAGE_EXPLANATION_URL}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              Slippage
+                            </TextUnderlineColor>
+                            <TextUnderlineTransparent sx={{ ml: '0.5ch' }}>
+                              is high. Your transaction may be front-run
+                            </TextUnderlineTransparent>
+                          </Trans>
+                        </TYPE.black>
+                      </Flex>
+                    </WarningCard>
+                  )}
+
                   <Flex justifyContent="flex-end">
                     <ButtonConfirmed
-                      style={{ marginTop: '24px', width: upToMedium ? '100%' : 'fit-content', minWidth: '164px' }}
+                      style={{ marginTop: '16px', width: upToMedium ? '100%' : 'fit-content', minWidth: '164px' }}
                       confirmed={false}
                       disabled={
                         removed ||

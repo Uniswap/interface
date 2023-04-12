@@ -1,15 +1,18 @@
+import { Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import { transparentize } from 'polished'
 import React from 'react'
+import { Text } from 'rebass'
 import styled from 'styled-components'
 
 import { AutoColumn } from 'components/Column'
 import InfoHelper from 'components/InfoHelper'
+import { RESERVE_USD_DECIMALS } from 'constants/index'
 import useTheme from 'hooks/useTheme'
 
-const BadgeWrapper = styled(AutoColumn).attrs<Props>(props => ({
-  'data-level': props.$level,
-}))<Props>`
+const BadgeWrapper = styled(AutoColumn).attrs<Pick<Props, '$level'>>(props => ({
+  'data-level': props['$level'],
+}))<Pick<Props, '$level'>>`
   display: flex;
   align-items: center;
   gap: 4px;
@@ -19,7 +22,12 @@ const BadgeWrapper = styled(AutoColumn).attrs<Props>(props => ({
 
   line-height: 1;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 400;
+
+  &[data-level='worst'] {
+    background-color: ${({ theme }) => transparentize(0.9, theme.red)};
+    color: ${({ theme }) => theme.red};
+  }
 
   &[data-level='worse'] {
     background-color: ${({ theme }) => transparentize(0.9, theme.warning)};
@@ -32,10 +40,14 @@ const BadgeWrapper = styled(AutoColumn).attrs<Props>(props => ({
   }
 `
 
-export type Props = {
-  $level: 'better' | 'worse' | undefined
+export type Level = 'better' | 'worse' | 'worst' | undefined
+
+export interface Props {
+  $level: Level
+  outputAmount: CurrencyAmount<Currency>
 }
-const UpdatedBadge: React.FC<Props> = ({ $level }) => {
+
+export default function UpdatedBadge({ $level, outputAmount }: Props) {
   const theme = useTheme()
 
   if (!$level) {
@@ -49,20 +61,17 @@ const UpdatedBadge: React.FC<Props> = ({ $level }) => {
           placement="top"
           size={14}
           color={theme.primary}
-          style={{
-            marginLeft: 0,
-          }}
-          width="fit-content"
           text={
-            <Trans>
-              <i>We got you a better price!</i>
-            </Trans>
+            <Text fontSize={12}>
+              <Trans>
+                We got you a higher amount. The initial output amount was{' '}
+                {outputAmount.toSignificant(RESERVE_USD_DECIMALS)} {outputAmount.currency.symbol}
+              </Trans>
+            </Text>
           }
-        />
+        ></InfoHelper>
       )}
       <Trans>Updated</Trans>
     </BadgeWrapper>
   )
 }
-
-export default UpdatedBadge

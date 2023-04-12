@@ -13,7 +13,7 @@ const TimeframePickerItem = styled.div<{ isActive: boolean }>`
   font-size: 12px;
   font-weight: 500;
   color: ${({ theme, isActive }) => (isActive ? theme.text : theme.subText)};
-  background: ${({ theme, isActive }) => (isActive ? theme.tabActive : theme.tabBackgound)};
+  background: ${({ theme, isActive }) => (isActive ? theme.tabActive : theme.tabBackground)};
   cursor: pointer;
   transition: all 0.2s ease;
 `
@@ -28,7 +28,7 @@ const TimeframePicker = ({
   const theme = useTheme()
 
   return (
-    <Flex style={{ borderRadius: '999px', padding: '2px', background: theme.tabBackgound }}>
+    <Flex style={{ borderRadius: '999px', padding: '2px', background: theme.tabBackground }}>
       <TimeframePickerItem
         isActive={activeTimeframe === TrueSightTimeframe.ONE_DAY}
         onClick={() => {

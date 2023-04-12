@@ -29,7 +29,7 @@ import invariant from 'tiny-invariant'
 import { AbortedError, ETHER_ADDRESS, KYBERSWAP_SOURCE, ZERO_ADDRESS_SOLANA, sentryRequestId } from 'constants/index'
 import { NETWORKS_INFO, isEVM } from 'constants/networks'
 import { FeeConfig } from 'hooks/useSwapV2Callback'
-import { AggregationComparer, SolanaEncode } from 'state/swap/types'
+import { SolanaEncode } from 'state/swap/types'
 
 import fetchWaiting from './fetchWaiting'
 import {
@@ -300,7 +300,7 @@ export class Aggregator {
         const outputAmount = toCurrencyAmount(result?.outputAmount, currencyOut)
 
         const priceImpact = !result.amountOutUsd
-          ? -1
+          ? NaN
           : ((-result.amountOutUsd + result.amountInUsd) * 100) / result.amountInUsd
 
         return new Aggregator(
@@ -388,119 +388,6 @@ export class Aggregator {
       )
     } catch (e) {
       console.error('Base trade error:', e?.stack || e)
-    }
-
-    return null
-  }
-
-  /**
-   * @param baseURL
-   * @param currencyAmountIn exact amount of input currency to spend
-   * @param currencyOut the desired currency out
-   * @param slippageTolerance
-   * @param deadline
-   * @param to
-   * @param feeConfig
-   * @param signal
-   * @param minimumLoadingTime
-   */
-  public static async compareDex(
-    baseURL: string,
-    currencyAmountIn: CurrencyAmount<Currency>,
-    currencyOut: Currency,
-    slippageTolerance: number,
-    deadline: number | undefined,
-    to: string,
-    feeConfig: FeeConfig | undefined,
-    signal: AbortSignal,
-    minimumLoadingTime: number,
-  ): Promise<AggregationComparer | null> {
-    const amountIn = currencyAmountIn
-    const tokenOut = currencyOut.wrapped
-
-    const tokenInAddress = currencyAmountIn.currency.isNative
-      ? isEVM(currencyAmountIn.currency.chainId)
-        ? ETHER_ADDRESS
-        : WETH[currencyAmountIn.currency.chainId].address
-      : amountIn.currency.wrapped.address
-    const tokenOutAddress = currencyOut.isNative
-      ? isEVM(currencyOut.chainId)
-        ? ETHER_ADDRESS
-        : WETH[currencyOut.chainId].address
-      : tokenOut.address
-
-    const comparedDex = NETWORKS_INFO[currencyAmountIn.currency.chainId].dexToCompare
-
-    if (tokenInAddress && tokenOutAddress && comparedDex) {
-      const search = new URLSearchParams({
-        // Trade config
-        tokenIn: tokenInAddress,
-        tokenOut: tokenOutAddress,
-        amountIn: currencyAmountIn.quotient?.toString(),
-        saveGas: '0',
-        gasInclude: '1',
-        dexes: comparedDex,
-        slippageTolerance: slippageTolerance?.toString() ?? '',
-        deadline: deadline?.toString() ?? '',
-        to,
-        programState: ZERO_ADDRESS_SOLANA,
-
-        // Fee config
-        chargeFeeBy: feeConfig?.chargeFeeBy ?? '',
-        feeReceiver: feeConfig?.feeReceiver ?? '',
-        isInBps: feeConfig?.isInBps !== undefined ? (feeConfig.isInBps ? '1' : '0') : '',
-        feeAmount: feeConfig?.feeAmount ?? '',
-
-        // Client data
-        clientData: KYBERSWAP_SOURCE,
-      })
-      try {
-        const response = await fetchWaiting(
-          `${baseURL}?${search}`,
-          {
-            signal,
-            headers: {
-              'X-Request-Id': sentryRequestId,
-              'Accept-Version': 'Latest',
-            },
-          },
-          minimumLoadingTime,
-        )
-        const swapData = await response.json()
-
-        if (!swapData?.inputAmount || !swapData?.outputAmount) {
-          return null
-        }
-
-        const toCurrencyAmount = function (value: string, currency: Currency): CurrencyAmount<Currency> {
-          return TokenAmount.fromRawAmount(currency, JSBI.BigInt(value))
-        }
-
-        const inputAmount = toCurrencyAmount(swapData.inputAmount, currencyAmountIn.currency)
-        const outputAmount = toCurrencyAmount(swapData.outputAmount, currencyOut)
-        const amountInUsd = swapData.amountInUsd
-        const amountOutUsd = swapData.amountOutUsd
-        const receivedUsd = swapData.receivedUsd
-
-        // const outputPriceUSD = priceData.data[tokenOutAddress] || Object.values(priceData.data[0]) || '0'
-        return {
-          inputAmount,
-          outputAmount,
-          amountInUsd,
-          amountOutUsd,
-          receivedUsd,
-          // outputPriceUSD: parseFloat(outputPriceUSD),
-          comparedDex,
-        }
-      } catch (e) {
-        // ignore aborted request error
-        if (!e?.message?.includes('Fetch is aborted') && !e?.message?.includes('The user aborted a request')) {
-          console.error('Aggregator comparedDex error:', e?.stack || e)
-          const sentryError = new Error('Aggregator API (comparedDex) call failed', { cause: e })
-          sentryError.name = 'AggregatorAPIError'
-          captureException(sentryError, { level: 'error' })
-        }
-      }
     }
 
     return null

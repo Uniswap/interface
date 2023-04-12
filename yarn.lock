@@ -2659,14 +2659,13 @@
     bs58 "^5.0.0"
     uuid "^8.3.2"
 
-"@kybernetwork/oauth2@0.0.1-rc.1":
-  version "0.0.1-rc.1"
-  resolved "https://npm.pkg.github.com/download/@kybernetwork/oauth2/0.0.1-rc.1/2c98ffa84686889acdd469084fa27b206982f738#2c98ffa84686889acdd469084fa27b206982f738"
-  integrity sha512-BlpcdbB1zvZkiHygt+98ijv+YJDINPoz1XS1OCcLhUWSBM9gwdocz03jsH7GDQXK0cwtEnGG2KFYT6GgwPioww==
+"@kybernetwork/oauth2@0.0.2":
+  version "0.0.2"
+  resolved "https://npm.pkg.github.com/download/@kybernetwork/oauth2/0.0.2/35939bdd1a21ec5dbb63a650ca33dc25367a48ef#35939bdd1a21ec5dbb63a650ca33dc25367a48ef"
+  integrity sha512-aPtIkVzmaVzKFUwaH13k/Ltz9d0nLLXk5dzRKkk9BiwWSxp96D5FDVgCqX85Wl8FY6Y03x5Oj3N9m33S913Gsw==
   dependencies:
-    axios "^0.27.2"
+    axios "1.2.1"
     client-oauth2 "^4.3.3"
-    querystring "^0.2.1"
 
 "@kyberswap/ks-sdk-classic@^1.0.1":
   version "1.0.1"
@@ -6511,14 +6510,6 @@ axios@^0.25.0:
   integrity sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==
   dependencies:
     follow-redirects "^1.14.7"
-
-axios@^0.27.2:
-  version "0.27.2"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.27.2.tgz#207658cc8621606e586c85db4b41a750e756d972"
-  integrity sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==
-  dependencies:
-    follow-redirects "^1.14.9"
-    form-data "^4.0.0"
 
 axobject-query@^2.2.0:
   version "2.2.0"
@@ -10397,7 +10388,7 @@ focus-lock@^0.11.2:
   dependencies:
     tslib "^2.0.3"
 
-follow-redirects@^1.0.0, follow-redirects@^1.14.0, follow-redirects@^1.14.7, follow-redirects@^1.14.9, follow-redirects@^1.15.0:
+follow-redirects@^1.0.0, follow-redirects@^1.14.0, follow-redirects@^1.14.7, follow-redirects@^1.15.0:
   version "1.15.2"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.2.tgz#b460864144ba63f2681096f274c4e57026da2c13"
   integrity sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==
@@ -15294,7 +15285,7 @@ querystring@0.2.0:
   resolved "https://registry.yarnpkg.com/querystring/-/querystring-0.2.0.tgz#b209849203bb25df820da756e747005878521620"
   integrity sha512-X/xY82scca2tau62i9mDyU9K+I+djTMUsvwf7xnUX5GLvVzgJybOJf4Y6o9Zx3oJK/LSXg5tTZBjwzqVPaPO2g==
 
-querystring@^0.2.0, querystring@^0.2.1:
+querystring@^0.2.0:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/querystring/-/querystring-0.2.1.tgz#40d77615bb09d16902a85c3e38aa8b5ed761c2dd"
   integrity sha512-wkvS7mL/JMugcup3/rMitHmd9ecIGd2lhFhK9N3UUQ450h66d1r3Y9nvXzQAW1Lq+wyx61k/1pfKS5KuKiyEbg==

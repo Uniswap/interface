@@ -29,7 +29,7 @@ export interface Colors {
   background: Color
   background2: Color
   tabActive: Color
-  tabBackgound: Color
+  tabBackground: Color
   bg1: Color
   bg2: Color
   bg3: Color

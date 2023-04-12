@@ -111,7 +111,7 @@ const SwapForm: React.FC<SwapFormProps> = props => {
     return parseGetRouteResponse(getRouteRawResponse.data, currencyIn, currencyOut)
   }, [currencyIn, currencyOut, getRouteError, getRouteRawResponse])
 
-  const routeSummary = getRouteResponse?.routeSummary
+  const routeSummary = isGettingRoute ? undefined : getRouteResponse?.routeSummary
 
   const buildRoute = useBuildRoute({
     recipient: isDegenMode && recipient ? recipient : '',
@@ -130,12 +130,10 @@ const SwapForm: React.FC<SwapFormProps> = props => {
   })
 
   const handleChangeCurrencyIn = (c: Currency) => {
-    setRouteSummary(undefined)
     onChangeCurrencyIn(c)
   }
 
   const handleChangeCurrencyOut = (c: Currency) => {
-    setRouteSummary(undefined)
     onChangeCurrencyOut(c)
   }
 
@@ -176,12 +174,13 @@ const SwapForm: React.FC<SwapFormProps> = props => {
             />
 
             <AutoRow justify="space-between">
-              <Flex alignItems="center">
+              <Flex alignItems="center" style={{ gap: '4px' }}>
                 {!isWrapOrUnwrap && (
                   <>
                     <RefreshButton
                       shouldDisable={!parsedAmount || parsedAmount.equalTo(0) || isProcessingSwap}
                       callback={getRoute}
+                      size={16}
                     />
                     <TradePrice price={routeSummary?.executionPrice} />
                   </>

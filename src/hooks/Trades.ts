@@ -13,7 +13,6 @@ import useDebounce from 'hooks/useDebounce'
 import { AppState } from 'state'
 import { useAllDexes, useExcludeDexes } from 'state/customizeDexes/hooks'
 import { useEncodeSolana, useSwapState } from 'state/swap/hooks'
-import { AggregationComparer } from 'state/swap/types'
 import { useAllTransactions } from 'state/transactions/hooks'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { isAddress } from 'utils'
@@ -87,7 +86,7 @@ export function useTradeExactIn(
 }
 
 /**
- * Returns the best trade for the exact amount of tokens in to the given token out
+ * Returns the best trade for the exact amount of tokens in to the given token out.
  */
 export function useTradeExactInV2(
   currencyAmountIn: CurrencyAmount<Currency> | undefined,
@@ -95,7 +94,6 @@ export function useTradeExactInV2(
   recipient: string | null,
 ): {
   trade: Aggregator | null
-  comparer: AggregationComparer | null
   onUpdateCallback: (resetRoute: boolean, minimumLoadingTime: number) => void
   loading: boolean
 } {
@@ -117,7 +115,6 @@ export function useTradeExactInV2(
       : selectedDexes?.join(',').replace('kyberswapv1', 'kyberswap,kyberswap-static') || ''
 
   const [trade, setTrade] = useState<Aggregator | null>(null)
-  const [comparer, setComparer] = useState<AggregationComparer | null>(null)
   const [loading, setLoading] = useState(false)
 
   const debounceCurrencyAmountIn = useDebounce(currencyAmountIn, 100)
@@ -150,32 +147,19 @@ export function useTradeExactInV2(
 
         const deadline = Math.round(Date.now() / 1000) + ttl
 
-        const [state, comparedResult] = await Promise.all([
-          Aggregator.bestTradeExactIn(
-            aggregatorAPI,
-            debounceCurrencyAmountIn,
-            currencyOut,
-            saveGas,
-            dexes,
-            allowedSlippage,
-            deadline,
-            to,
-            feeConfig,
-            signal,
-            minimumLoadingTime,
-          ),
-          Aggregator.compareDex(
-            aggregatorAPI,
-            debounceCurrencyAmountIn,
-            currencyOut,
-            allowedSlippage,
-            deadline,
-            to,
-            feeConfig,
-            signal,
-            minimumLoadingTime,
-          ),
-        ])
+        const state = await Aggregator.bestTradeExactIn(
+          aggregatorAPI,
+          debounceCurrencyAmountIn,
+          currencyOut,
+          saveGas,
+          dexes,
+          allowedSlippage,
+          deadline,
+          to,
+          feeConfig,
+          signal,
+          minimumLoadingTime,
+        )
 
         if (!signal.aborted) {
           setTrade(prev => {
@@ -183,14 +167,6 @@ export function useTradeExactInV2(
               if (JSON.stringify(prev) !== JSON.stringify(state)) return state
             } catch (e) {
               return state
-            }
-            return prev
-          })
-          setComparer(prev => {
-            try {
-              if (JSON.stringify(prev) !== JSON.stringify(comparedResult)) return comparedResult
-            } catch (e) {
-              return comparedResult
             }
             return prev
           })
@@ -202,7 +178,6 @@ export function useTradeExactInV2(
         // }
       } else {
         setTrade(null)
-        setComparer(null)
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -243,7 +218,6 @@ export function useTradeExactInV2(
 
   return {
     trade, //todo: not return this anymore, set & use it from redux
-    comparer,
     onUpdateCallback,
     loading,
   }

@@ -59,9 +59,10 @@ export function formatExecutionPrice(trade?: AnyTrade | Aggregator, inverted?: b
   const nativeInput = trade.inputAmount.currency
 
   const nativeOutput = trade.outputAmount.currency
+
   return inverted
-    ? `${trade.executionPrice.invert().toSignificant(6)} ${nativeInput?.symbol} / ${nativeOutput?.symbol}`
-    : `${trade.executionPrice.toSignificant(6)} ${nativeOutput?.symbol} / ${nativeInput.symbol}`
+    ? `1 ${nativeOutput?.symbol} = ${trade.executionPrice.invert().toSignificant(6)} ${nativeInput?.symbol}`
+    : `1 ${nativeInput?.symbol} = ${trade.executionPrice.toSignificant(6)} ${nativeOutput.symbol}`
 }
 
 export function computePriceImpactWithoutFee(pairs: Pair[], priceImpact?: Percent): Percent | undefined {
@@ -89,8 +90,8 @@ export const checkPriceImpact = (
 } => {
   return {
     isInvalid: typeof priceImpact === 'number' && !Number.isFinite(priceImpact),
-    isHigh: !!priceImpact && priceImpact > 5,
-    isVeryHigh: !!priceImpact && priceImpact > 15,
+    isHigh: !!priceImpact && priceImpact > 2,
+    isVeryHigh: !!priceImpact && priceImpact > 10,
   }
 }
 

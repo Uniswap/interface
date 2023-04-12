@@ -1,17 +1,18 @@
 import { Trans, t } from '@lingui/macro'
 import { rgba } from 'polished'
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import { AutoColumn } from 'components/Column'
-import QuestionHelper from 'components/QuestionHelper'
 import { RowBetween, RowFixed } from 'components/Row'
 import Toggle from 'components/Toggle'
+import { MouseoverTooltip, TextDashed } from 'components/Tooltip'
 import useTopTrendingSoonTokensInCurrentNetwork from 'components/TopTrendingSoonTokensInCurrentNetwork/useTopTrendingSoonTokensInCurrentNetwork'
 import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
 import {
   useShowLiveChart,
@@ -27,7 +28,6 @@ import {
 import DegenModeSetting from './DegenModeSetting'
 import GasPriceTrackerSetting from './GasPriceTrackerSetting'
 import LiquiditySourcesSetting from './LiquiditySourcesSetting'
-import SettingLabel from './SettingLabel'
 import SlippageSetting from './SlippageSetting'
 import TransactionTimeLimitSetting from './TransactionTimeLimitSetting'
 
@@ -100,8 +100,13 @@ const SettingsPanel: React.FC<Props> = ({
     toggleTradeRoutes()
   }
 
+  const [showConfirmation, setShowConfirmation] = useState(false)
+
+  const containerRef = useRef<HTMLDivElement>(null)
+  useOnClickOutside(containerRef, () => !showConfirmation && onBack())
+
   return (
-    <Box width="100%" className={className} id={TutorialIds.TRADING_SETTING_CONTENT}>
+    <Box width="100%" className={className} id={TutorialIds.TRADING_SETTING_CONTENT} ref={containerRef}>
       <Flex width={'100%'} flexDirection={'column'} marginBottom="4px">
         <Flex
           alignItems="center"
@@ -130,7 +135,7 @@ const SettingsPanel: React.FC<Props> = ({
 
               <SlippageSetting />
               <TransactionTimeLimitSetting />
-              <DegenModeSetting />
+              <DegenModeSetting showConfirmation={showConfirmation} setShowConfirmation={setShowConfirmation} />
               <GasPriceTrackerSetting onClick={onClickGasPriceTracker} />
               <LiquiditySourcesSetting onClick={onClickLiquiditySources} />
             </>
@@ -156,10 +161,14 @@ const SettingsPanel: React.FC<Props> = ({
               {shouldShowTrendingSoonSetting && (
                 <RowBetween>
                   <RowFixed>
-                    <SettingLabel>
-                      <Trans>Trending Soon</Trans>
-                    </SettingLabel>
-                    <QuestionHelper text={t`Turn on to display tokens that could be trending soon`} />
+                    <TextDashed fontSize={12} fontWeight={400} color={theme.subText} underlineColor={theme.border}>
+                      <MouseoverTooltip
+                        text={<Trans>Turn on to display tokens that could be trending soon</Trans>}
+                        placement="right"
+                      >
+                        <Trans>Trending Soon</Trans>
+                      </MouseoverTooltip>
+                    </TextDashed>
                   </RowFixed>
                   <Toggle
                     isActive={isShowTrendingSoonTokens}
@@ -178,10 +187,11 @@ const SettingsPanel: React.FC<Props> = ({
               )}
               <RowBetween>
                 <RowFixed>
-                  <SettingLabel>
-                    <Trans>Live Chart</Trans>
-                  </SettingLabel>
-                  <QuestionHelper text={t`Turn on to display live chart`} />
+                  <TextDashed fontSize={12} fontWeight={400} color={theme.subText} underlineColor={theme.border}>
+                    <MouseoverTooltip text={<Trans>Turn on to display live chart</Trans>} placement="right">
+                      <Trans>Live Chart</Trans>
+                    </MouseoverTooltip>
+                  </TextDashed>
                 </RowFixed>
                 <Toggle isActive={isShowLiveChart} toggle={handleToggleLiveChart} />
               </RowBetween>
@@ -189,19 +199,21 @@ const SettingsPanel: React.FC<Props> = ({
                 <>
                   <RowBetween>
                     <RowFixed>
-                      <SettingLabel>
-                        <Trans>Trade Route</Trans>
-                      </SettingLabel>
-                      <QuestionHelper text={t`Turn on to display trade route`} />
+                      <TextDashed fontSize={12} fontWeight={400} color={theme.subText} underlineColor={theme.border}>
+                        <MouseoverTooltip text={<Trans>Turn on to display trade route</Trans>} placement="right">
+                          <Trans>Trade Route</Trans>
+                        </MouseoverTooltip>
+                      </TextDashed>
                     </RowFixed>
                     <Toggle isActive={isShowTradeRoutes} toggle={handleToggleTradeRoute} />
                   </RowBetween>
                   <RowBetween>
                     <RowFixed>
-                      <SettingLabel>
-                        <Trans>Token Info</Trans>
-                      </SettingLabel>
-                      <QuestionHelper text={t`Turn on to display token info`} />
+                      <TextDashed fontSize={12} fontWeight={400} color={theme.subText} underlineColor={theme.border}>
+                        <MouseoverTooltip text={<Trans>Turn on to display token info</Trans>} placement="right">
+                          <Trans>Token Info</Trans>
+                        </MouseoverTooltip>
+                      </TextDashed>
                     </RowFixed>
                     <Toggle
                       isActive={isShowTokenInfo}

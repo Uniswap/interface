@@ -1,14 +1,35 @@
-import { Trans, t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { FC } from 'react'
 import { Text } from 'rebass'
+import styled from 'styled-components'
 
+import Row from 'components/Row'
 import WarningNote from 'components/WarningNote'
 import { checkPriceImpact } from 'utils/prices'
+
+const TextUnderlineColor = styled(Text)`
+  border-bottom: 1px solid ${({ theme }) => theme.text};
+  width: fit-content;
+  cursor: pointer;
+  color: ${({ theme }) => theme.text};
+  font-weight: 500;
+  margin-right: 0.5ch;
+`
+
+const TextUnderlineTransparent = styled(Text)`
+  border-bottom: 1px solid transparent;
+  width: fit-content;
+  cursor: pointer;
+`
+
+const PRICE_IMPACT_EXPLANATION_URL =
+  'https://docs.kyberswap.com/getting-started/foundational-topics/decentralized-finance/price-impact'
 
 type Props = {
   isDegenMode?: boolean
   priceImpact: number | undefined
 }
+
 const PriceImpactNote: FC<Props> = ({ isDegenMode, priceImpact }) => {
   const priceImpactResult = checkPriceImpact(priceImpact)
 
@@ -22,21 +43,26 @@ const PriceImpactNote: FC<Props> = ({ isDegenMode, priceImpact }) => {
       <WarningNote
         level="serious"
         shortText={
-          <Text>
-            <Trans>Unable to calculate Price Impact</Trans>
-          </Text>
+          <Row alignItems="center" style={{ gap: '0.5ch' }}>
+            <Trans>
+              <TextUnderlineTransparent>Unable to calculate</TextUnderlineTransparent>
+              <TextUnderlineColor as="a" href={PRICE_IMPACT_EXPLANATION_URL} target="_blank" rel="noreferrer">
+                Price Impact
+              </TextUnderlineColor>
+            </Trans>
+          </Row>
         }
         longText={
           <Text>
             {isDegenMode ? (
               <Trans>
-                You have turned on <b>Advanced Mode</b> from settings. Trades can still be executed when price impact
+                You have turned on <b>Degen Mode</b> from settings. Trades can still be executed when price impact
                 cannot be calculated.
               </Trans>
             ) : (
               <Trans>
-                You can turn on <b>Advanced Mode</b> from Settings to execute trades when price impact cannot be
-                calculated. This can result in bad rates and loss of funds!
+                You can turn on Degen Mode from Settings to execute trades when price impact cannot be calculated. This
+                can result in bad rates and loss of funds!
               </Trans>
             )}
           </Text>
@@ -51,23 +77,27 @@ const PriceImpactNote: FC<Props> = ({ isDegenMode, priceImpact }) => {
       <WarningNote
         level="serious"
         shortText={
-          <Text>
+          <Row alignItems="center" style={{ gap: '0.5ch' }}>
             <Trans>
-              Price Impact is <b>very</b> high
+              <TextUnderlineTransparent>
+                <TextUnderlineColor as="a" href={PRICE_IMPACT_EXPLANATION_URL} target="_blank" rel="noreferrer">
+                  Price Impact
+                </TextUnderlineColor>
+                is very high. You will lose funds!
+              </TextUnderlineTransparent>
             </Trans>
-          </Text>
+          </Row>
         }
         longText={
           <Text>
             {isDegenMode ? (
               <Trans>
-                You have turned on <b>Advanced Mode</b> from settings. Trades with <b>very</b> high price impact can be
-                executed.
+                You have turned on Degen Mode from settings. Trades with very high price impact can be executed
               </Trans>
             ) : (
               <Trans>
-                You can turn on <b>Advanced Mode</b> from Settings to execute trades with <b>very</b> high price impact.
-                This can result in bad rates and loss of funds!
+                You can turn on Degen Mode from Settings to execute trades with very high price impact. This can result
+                in bad rates and loss of funds
               </Trans>
             )}
           </Text>
@@ -77,8 +107,20 @@ const PriceImpactNote: FC<Props> = ({ isDegenMode, priceImpact }) => {
   }
 
   // high
+
+  const shortText = (
+    <Row alignItems="center" style={{ gap: '0.5ch' }}>
+      <Trans>
+        <TextUnderlineColor as="a" href={PRICE_IMPACT_EXPLANATION_URL} target="_blank" rel="noreferrer">
+          Price Impact
+        </TextUnderlineColor>
+        <TextUnderlineTransparent> is high</TextUnderlineTransparent>
+      </Trans>
+    </Row>
+  )
+
   if (priceImpactResult.isHigh) {
-    return <WarningNote shortText={t`Price Impact is high`} />
+    return <WarningNote shortText={shortText} />
   }
 
   return null

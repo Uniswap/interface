@@ -205,7 +205,7 @@ const ButtonConfirmedStyle = styled(Base)`
   }
 `
 
-const ButtonErrorStyle = styled(Base)`
+export const ButtonErrorStyle = styled(Base)`
   background-color: ${({ theme }) => theme.red};
   border: 1px solid ${({ theme }) => theme.red};
 

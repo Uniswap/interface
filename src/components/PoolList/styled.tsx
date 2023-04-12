@@ -91,7 +91,7 @@ export const TokenRatioPercent = styled.div`
 
 export const TabContainer = styled.div`
   width: 100%;
-  background: ${({ theme }) => theme.tabBackgound};
+  background: ${({ theme }) => theme.tabBackground};
   border-radius: 20px;
   display: flex;
   padding: 2px;

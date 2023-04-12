@@ -159,9 +159,10 @@ export default function AddressInputPanel({
           alignItems: 'center',
           marginTop: '4px',
           color: theme.subText,
+          padding: '0 8px',
         }}
       >
-        <Text fontSize="12px" fontWeight="500">
+        <Text fontSize="12px" fontWeight="400" color={theme.subText}>
           <Trans>Recipient (Optional)</Trans>
 
           {address && (

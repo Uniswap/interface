@@ -22,11 +22,10 @@ type Props = {
 
   onDismiss: () => void
   swapCallback: (() => Promise<string>) | undefined
-  onRetryBuild: () => void
 }
 
 const SwapModal: React.FC<Props> = props => {
-  const { isOpen, tokenAddToMetaMask, onDismiss, swapCallback, buildResult, isBuildingRoute, onRetryBuild } = props
+  const { isOpen, tokenAddToMetaMask, onDismiss, swapCallback, buildResult, isBuildingRoute } = props
   const { chainId } = useActiveWeb3React()
 
   // modal and loading
@@ -124,7 +123,6 @@ const SwapModal: React.FC<Props> = props => {
         errorWhileBuildRoute={buildResult?.error}
         onDismiss={handleDismiss}
         onSwap={handleConfirmSwap}
-        onRetry={onRetryBuild}
         buildResult={buildResult}
       />
     )

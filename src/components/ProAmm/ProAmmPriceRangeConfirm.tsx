@@ -1,6 +1,6 @@
 import { Position } from '@kyberswap/ks-sdk-elastic'
 import { Trans, t } from '@lingui/macro'
-import { useCallback, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -10,10 +10,14 @@ import { AutoColumn } from 'components/Column'
 import Divider from 'components/Divider'
 import InfoHelper from 'components/InfoHelper'
 import { RowBetween, RowFixed } from 'components/Row'
+import { MouseoverTooltip, TextDashed } from 'components/Tooltip'
 import useTheme from 'hooks/useTheme'
 import { Bound } from 'state/mint/proamm/type'
+import { useUserSlippageTolerance } from 'state/user/hooks'
+import { ExternalLink, TYPE } from 'theme'
 import { toSignificantOrMaxIntegerPart } from 'utils/formatCurrencyAmount'
 import { formatTickPrice } from 'utils/formatTickPrice'
+import { checkWarningSlippage, formatSlippage } from 'utils/slippage'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 
 import { RotateSwapIcon } from './styles'
@@ -59,15 +63,18 @@ export default function ProAmmPriceRangeConfirm({
     setBaseCurrency(quoteCurrency)
   }, [quoteCurrency])
 
+  const [allowedSlippage] = useUserSlippageTolerance()
+  const isWarningSlippage = checkWarningSlippage(allowedSlippage, false)
+
   return (
     <OutlineCard marginTop="1rem" padding="1rem">
       <AutoColumn gap="12px">
         <Text fontSize="12px" fontWeight="500" lineHeight="16px">
-          Pool Information
+          More Information
         </Text>
         <Divider />
 
-        <Flex alignItems="center" justifyContent={'space-between'} sx={{ gap: '8px' }}>
+        <Flex alignItems="center" justifyContent="space-between" sx={{ gap: '8px' }}>
           <Text fontSize={12} fontWeight={500} color={theme.subText}>
             <Trans>Current Price</Trans>
           </Text>
@@ -80,19 +87,51 @@ export default function ProAmmPriceRangeConfirm({
             </span>
           </RowFixed>
         </Flex>
+
+        <Flex alignItems="center" justifyContent="space-between" sx={{ gap: '8px' }}>
+          <TextDashed fontSize={12} fontWeight={500} color={theme.subText} minWidth="max-content">
+            <MouseoverTooltip
+              width="200px"
+              text={
+                <Text>
+                  <Trans>
+                    During your swap if the price changes by more than this %, your transaction will revert. Read more{' '}
+                    <ExternalLink href="https://docs.kyberswap.com/getting-started/foundational-topics/decentralized-finance/slippage">
+                      here ↗
+                    </ExternalLink>
+                  </Trans>
+                </Text>
+              }
+              placement="auto"
+            >
+              <Trans>Max Slippage</Trans>
+            </MouseoverTooltip>
+          </TextDashed>
+          <TYPE.black fontSize={12} color={isWarningSlippage ? theme.warning : undefined}>
+            {formatSlippage(allowedSlippage)}
+          </TYPE.black>
+        </Flex>
+
         <Divider />
 
         <Flex>
-          <Text fontSize={12} fontWeight={500} color={theme.subText}>
-            <Trans>
-              Price Range ({quoteCurrency.symbol} per {baseCurrency.symbol})
-            </Trans>
-          </Text>
-          <InfoHelper
-            text={t`Represents the range where all your liquidity is concentrated. When market price of your token pair is no longer between your selected price range, your liquidity becomes inactive and you stop earning fees`}
-            placement="right"
-            size={12}
-          />
+          <TextDashed fontSize={12} fontWeight={500} color={theme.subText} minWidth="max-content">
+            <MouseoverTooltip
+              width="200px"
+              text={
+                <Trans>
+                  Represents the range where all your liquidity is concentrated. When market price of your token pair is
+                  no longer between your selected price range, your liquidity becomes inactive and you stop earning
+                  fees.
+                </Trans>
+              }
+              placement="auto"
+            >
+              <Trans>
+                Price Range ({quoteCurrency.symbol} per {baseCurrency.symbol})
+              </Trans>
+            </MouseoverTooltip>
+          </TextDashed>
         </Flex>
 
         <RowBetween style={{ gap: '10px' }}>

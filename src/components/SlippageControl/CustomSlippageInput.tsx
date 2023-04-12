@@ -3,8 +3,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
-import { DEFAULT_SLIPPAGES, MAX_SLIPPAGE_IN_BIPS } from 'constants/index'
+import Tooltip from 'components/Tooltip'
+import { DEFAULT_SLIPPAGES, MAX_DEGEN_SLIPPAGE_IN_BIPS, MAX_NORMAL_SLIPPAGE_IN_BIPS } from 'constants/index'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import { useDegenModeManager } from 'state/user/hooks'
 import { formatSlippage } from 'utils/slippage'
 
 export const parseSlippageInput = (str: string): number => Math.round(Number.parseFloat(str) * 100)
@@ -30,7 +32,7 @@ const slippageOptionCSS = css`
   border-radius: 20px;
   border: 1px solid transparent;
 
-  background-color: ${({ theme }) => theme.tabBackgound};
+  background-color: ${({ theme }) => theme.tabBackground};
   color: ${({ theme }) => theme.subText};
   text-align: center;
 
@@ -118,8 +120,10 @@ export type Props = {
   defaultRawSlippage: number
 }
 const CustomSlippageInput: React.FC<Props> = ({ rawSlippage, setRawSlippage, isWarning, defaultRawSlippage }) => {
+  const [tooltip, setTooltip] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
   const { mixpanelHandler } = useMixpanel()
+  const [isDegenMode] = useDegenModeManager()
 
   // rawSlippage = 10
   // slippage shown to user: = 10 / 10_000 = 0.001 = 0.1%
@@ -128,6 +132,7 @@ const CustomSlippageInput: React.FC<Props> = ({ rawSlippage, setRawSlippage, isW
   const isCustomOptionActive = !DEFAULT_SLIPPAGES.includes(rawSlippage)
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTooltip('')
     const value = e.target.value
 
     if (value === '') {
@@ -148,7 +153,9 @@ const CustomSlippageInput: React.FC<Props> = ({ rawSlippage, setRawSlippage, isW
       return
     }
 
-    if (parsedValue > MAX_SLIPPAGE_IN_BIPS) {
+    const maxSlippage = isDegenMode ? MAX_DEGEN_SLIPPAGE_IN_BIPS : MAX_NORMAL_SLIPPAGE_IN_BIPS
+    if (parsedValue > maxSlippage) {
+      setTooltip(t`Max is ${formatSlippage(maxSlippage)}`)
       e.preventDefault()
       return
     }
@@ -158,6 +165,7 @@ const CustomSlippageInput: React.FC<Props> = ({ rawSlippage, setRawSlippage, isW
   }
 
   const handleCommitChange = () => {
+    setTooltip('')
     setRawText(getSlippageText(rawSlippage))
     mixpanelHandler(MIXPANEL_TYPE.SLIPPAGE_CHANGED, { new_slippage: Number(formatSlippage(rawSlippage, false)) })
   }
@@ -179,35 +187,38 @@ const CustomSlippageInput: React.FC<Props> = ({ rawSlippage, setRawSlippage, isW
   useEffect(() => {
     if (inputRef.current !== document.activeElement) {
       setRawText(getSlippageText(rawSlippage))
+      setTooltip('')
     }
   }, [rawSlippage])
 
   return (
-    <CustomSlippageOption data-active={isCustomOptionActive} data-warning={isCustomOptionActive && isWarning}>
-      {isCustomOptionActive && isWarning && (
-        <EmojiContainer>
-          <span role="img" aria-label="warning">
-            ⚠️
-          </span>
-        </EmojiContainer>
-      )}
-      <CustomInput
-        ref={inputRef}
-        placeholder={t`Custom`}
-        value={rawText}
-        onChange={handleChangeInput}
-        onKeyPress={handleKeyPressInput}
-        onBlur={handleCommitChange}
-      />
-      <Text
-        as="span"
-        sx={{
-          flex: '0 0 12px',
-        }}
-      >
-        %
-      </Text>
-    </CustomSlippageOption>
+    <Tooltip text={tooltip} show={!!tooltip} placement="bottom" width="fit-content">
+      <CustomSlippageOption data-active={isCustomOptionActive} data-warning={isCustomOptionActive && isWarning}>
+        {isCustomOptionActive && isWarning && (
+          <EmojiContainer>
+            <span role="img" aria-label="warning">
+              ⚠️
+            </span>
+          </EmojiContainer>
+        )}
+        <CustomInput
+          ref={inputRef}
+          placeholder={t`Custom`}
+          value={rawText}
+          onChange={handleChangeInput}
+          onKeyPress={handleKeyPressInput}
+          onBlur={handleCommitChange}
+        />
+        <Text
+          as="span"
+          sx={{
+            flex: '0 0 12px',
+          }}
+        >
+          %
+        </Text>
+      </CustomSlippageOption>
+    </Tooltip>
   )
 }
 

@@ -32,7 +32,7 @@ const TabContainer = styled.div`
   display: flex;
   flex: 1;
   border-radius: 999px;
-  background-color: ${({ theme }) => theme.tabBackgound};
+  background-color: ${({ theme }) => theme.tabBackground};
   padding: 2px;
 `
 
@@ -41,7 +41,7 @@ const Tab = styled(ButtonEmpty)<{ isActive?: boolean; isLeft?: boolean }>`
   justify-content: center;
   align-items: center;
   flex: 1;
-  background-color: ${({ theme, isActive }) => (isActive ? theme.tabActive : theme.tabBackgound)};
+  background-color: ${({ theme, isActive }) => (isActive ? theme.tabActive : theme.tabBackground)};
   padding: 4px;
   font-size: 12px;
   font-weight: 500;
@@ -113,7 +113,7 @@ enum TAB {
   TOKEN_IN,
   TOKEN_OUT,
 }
-const TokenInfo = ({ currencies, onBack }: { currencies: { [field in Field]?: Currency }; onBack?: () => void }) => {
+const TokenInfoTab = ({ currencies, onBack }: { currencies: { [field in Field]?: Currency }; onBack?: () => void }) => {
   const { chainId } = useActiveWeb3React()
   const inputNativeCurrency = useCurrencyConvertedToNative(currencies[Field.INPUT])
   const outputNativeCurrency = useCurrencyConvertedToNative(currencies[Field.OUTPUT])
@@ -222,4 +222,4 @@ const TokenInfo = ({ currencies, onBack }: { currencies: { [field in Field]?: Cu
   )
 }
 
-export default TokenInfo
+export default TokenInfoTab

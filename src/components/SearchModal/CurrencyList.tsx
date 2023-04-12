@@ -18,7 +18,7 @@ import useTheme from 'hooks/useTheme'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { useUserAddedTokens, useUserFavoriteTokens } from 'state/user/hooks'
 import { useCurrencyBalances } from 'state/wallet/hooks'
-import { formatDollarSignificantAmount } from 'utils'
+import { formattedNum } from 'utils'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 
 import ImportRow from './ImportRow'
@@ -187,7 +187,7 @@ export function CurrencyRow({
         </RowFixed>
         {usdBalance !== undefined && !hideBalance && (
           <Text fontSize={'12px'} color={theme.subText}>
-            {formatDollarSignificantAmount(usdBalance, 2)}
+            {formattedNum(usdBalance + '', true)}
           </Text>
         )}
       </Column>

@@ -1,6 +1,5 @@
 import { Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
 import { t } from '@lingui/macro'
-import JSBI from 'jsbi'
 import { useMemo } from 'react'
 
 import { BAD_RECIPIENT_ADDRESSES } from 'constants/index'
@@ -16,7 +15,6 @@ import { computeSlippageAdjustedAmounts } from 'utils/prices'
 
 import { Field } from './actions'
 import { tryParseAmount, useSwapState } from './hooks'
-import { AggregationComparer } from './types'
 
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfoV2(): {
@@ -24,7 +22,6 @@ export function useDerivedSwapInfoV2(): {
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   parsedAmount: CurrencyAmount<Currency> | undefined
   v2Trade: Aggregator | undefined
-  tradeComparer: AggregationComparer | undefined
   inputError?: string
   onRefresh: (resetRoute: boolean, minimumLoadingTime: number) => void
   loading: boolean
@@ -59,41 +56,9 @@ export function useDerivedSwapInfoV2(): {
 
   const {
     trade: bestTradeExactIn,
-    comparer: baseTradeComparer,
     onUpdateCallback,
     loading,
   } = useTradeExactInV2(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined, to)
-
-  const tradeComparer = useMemo((): AggregationComparer | undefined => {
-    if (
-      bestTradeExactIn?.outputAmount?.greaterThan(JSBI.BigInt(0)) &&
-      baseTradeComparer?.outputAmount?.greaterThan(JSBI.BigInt(0))
-      // && baseTradeComparer?.outputPriceUSD
-    ) {
-      try {
-        const diffAmount = bestTradeExactIn.outputAmount.subtract(baseTradeComparer.outputAmount)
-        const diffAmountUSD = bestTradeExactIn.receivedUsd - parseFloat(baseTradeComparer.receivedUsd)
-        if (
-          diffAmount.greaterThan(JSBI.BigInt(0)) &&
-          bestTradeExactIn.receivedUsd > 0 &&
-          parseFloat(baseTradeComparer.receivedUsd) > 0 &&
-          diffAmountUSD > 0
-        ) {
-          const savedUsd = diffAmountUSD
-          // const savedUsd = parseFloat(diffAmount.toFixed()) * parseFloat(baseTradeComparer.outputPriceUSD.toString())
-          if (savedUsd) {
-            return Object.assign({}, baseTradeComparer, {
-              tradeSaved: {
-                usd: savedUsd.toString(),
-                percent: (savedUsd / bestTradeExactIn.receivedUsd) * 100,
-              },
-            })
-          }
-        }
-      } catch (e) {}
-    }
-    return baseTradeComparer ?? undefined
-  }, [bestTradeExactIn, baseTradeComparer])
 
   const v2Trade = isExactIn ? bestTradeExactIn : undefined
 
@@ -154,11 +119,10 @@ export function useDerivedSwapInfoV2(): {
       currencyBalances,
       parsedAmount,
       v2Trade: v2Trade ?? undefined,
-      tradeComparer,
       inputError,
       onRefresh: onUpdateCallback,
       loading,
     }),
-    [currencies, currencyBalances, inputError, loading, onUpdateCallback, parsedAmount, tradeComparer, v2Trade],
+    [currencies, currencyBalances, inputError, loading, onUpdateCallback, parsedAmount, v2Trade],
   )
 }

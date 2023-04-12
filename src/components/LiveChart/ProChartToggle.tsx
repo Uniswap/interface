@@ -86,7 +86,7 @@ export default function ProChartToggle({
       id={id}
       size={size}
       border={border}
-      background={`${theme.tabBackgound}${buttons.some((b: any) => b.disabled) ? '20' : ''}`}
+      background={`${theme.tabBackground}${buttons.some((b: any) => b.disabled) ? '20' : ''}`}
     >
       {buttons.map(button => {
         return (

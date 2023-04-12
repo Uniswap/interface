@@ -1,14 +1,13 @@
+import { Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
-import React, { useState } from 'react'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 import { X } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
-import { ButtonOutlined, ButtonWarning } from 'components/Button'
+import { ButtonErrorStyle, ButtonOutlined } from 'components/Button'
 import Modal from 'components/Modal'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
-import { useDegenModeManager } from 'state/user/hooks'
 
 const ModalContentWrapper = styled.div`
   display: flex;
@@ -38,28 +37,34 @@ const StyledCloseIcon = styled(X)`
   :hover {
     cursor: pointer;
   }
-
-  > * {
-    stroke: ${({ theme }) => theme.text};
-  }
 `
 
-function AdvanceModeModal({ show, setShow }: { show: boolean; setShow: (v: boolean) => void }) {
-  const [, toggleDegenMode] = useDegenModeManager()
+export default function SwapModalAreYouSure({
+  show,
+  setShow,
+  setHasAcceptedNewAmount,
+  parsedAmountOut,
+  parsedAmountOutFromBuild,
+  formattedOutputChangePercent,
+}: {
+  show: boolean
+  setShow: Dispatch<SetStateAction<boolean>>
+  setHasAcceptedNewAmount: Dispatch<SetStateAction<boolean>>
+  parsedAmountOut: CurrencyAmount<Currency> | undefined
+  parsedAmountOutFromBuild: CurrencyAmount<Currency> | undefined
+  formattedOutputChangePercent: string
+}) {
   const [confirmText, setConfirmText] = useState('')
-  const theme = useTheme()
-  const { mixpanelHandler } = useMixpanel()
 
   const handleConfirm = () => {
     if (confirmText.trim().toLowerCase() === 'confirm') {
-      mixpanelHandler(MIXPANEL_TYPE.DEGEN_MODE_TOGGLE, {
-        type: 'on',
-      })
-      toggleDegenMode()
+      setHasAcceptedNewAmount(true)
       setConfirmText('')
       setShow(false)
     }
   }
+
+  const theme = useTheme()
 
   return (
     <Modal
@@ -76,20 +81,20 @@ function AdvanceModeModal({ show, setShow }: { show: boolean; setShow: (v: boole
             <Trans>Are you sure?</Trans>
           </Text>
 
-          <StyledCloseIcon onClick={() => setShow(false)} />
+          <StyledCloseIcon color={theme.text} onClick={() => setShow(false)} />
         </Flex>
 
-        <Text marginTop="28px">
+        <Text fontSize={14} marginTop="28px">
           <Trans>
-            Turn this on to make trades with very high price impact or to set very high slippage tolerance. This can
-            result in bad rates and loss of funds. Be cautious.
+            Due to market conditions, your output has been updated from {parsedAmountOut?.toSignificant(10)}{' '}
+            {parsedAmountOut?.currency?.symbol} to {parsedAmountOutFromBuild?.toSignificant(10)}{' '}
+            {parsedAmountOut?.currency?.symbol} ({formattedOutputChangePercent}%).
           </Trans>
         </Text>
 
-        <Text marginTop="20px">
+        <Text fontSize={14} marginTop="28px">
           <Trans>
-            Please type the word &apos;confirm&apos; below to enable{' '}
-            <span style={{ color: theme.warning }}>Degen Mode</span>
+            If you&apos;re okay with this, please type the word &apos;confirm&apos; below to accept this new amount.
           </Trans>
         </Text>
 
@@ -103,12 +108,11 @@ function AdvanceModeModal({ show, setShow }: { show: boolean; setShow: (v: boole
             }
           }}
         />
-
         <Flex sx={{ gap: '16px' }} marginTop="28px" justifyContent={'center'}>
           <ButtonOutlined
             style={{
               flex: 1,
-              fontSize: '16px',
+              fontSize: '14px',
               padding: '10px',
             }}
             onClick={() => {
@@ -118,17 +122,15 @@ function AdvanceModeModal({ show, setShow }: { show: boolean; setShow: (v: boole
           >
             <Trans>No, go back</Trans>
           </ButtonOutlined>
-          <ButtonWarning
+          <ButtonErrorStyle
             disabled={confirmText.trim().toLowerCase() !== 'confirm'}
-            style={{ fontSize: '16px', flex: 1, padding: '10px' }}
+            style={{ fontSize: '14px', flex: 1, padding: '10px' }}
             onClick={handleConfirm}
           >
             <Trans>Confirm</Trans>
-          </ButtonWarning>
+          </ButtonErrorStyle>
         </Flex>
       </ModalContentWrapper>
     </Modal>
   )
 }
-
-export default AdvanceModeModal

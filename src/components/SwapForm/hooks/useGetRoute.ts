@@ -31,7 +31,7 @@ export const getRouteTokenAddressParam = (currency: Currency) =>
 
 const useGetRoute = (args: ArgsGetRoute) => {
   const [trigger, result] = routeApi.useLazyGetRouteQuery()
-  const { aggregatorDomain } = useKyberswapGlobalConfig()
+  const { aggregatorDomain, isEnableAuthenAggregator } = useKyberswapGlobalConfig()
 
   const { isSaveGas, parsedAmount, currencyIn, currencyOut, feeConfig, customChain } = args
   const { chainId: currentChain } = useActiveWeb3React()
@@ -85,6 +85,7 @@ const useGetRoute = (args: ArgsGetRoute) => {
     triggerDebounced({
       url,
       params,
+      authentication: isEnableAuthenAggregator,
     })
 
     return undefined
@@ -102,6 +103,7 @@ const useGetRoute = (args: ArgsGetRoute) => {
     parsedAmount?.currency,
     parsedAmount?.quotient,
     triggerDebounced,
+    isEnableAuthenAggregator,
   ])
 
   return { fetcher, result }

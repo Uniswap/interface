@@ -6,16 +6,17 @@ import { OutputBridgeInfo } from 'state/bridge/hooks'
 import { AdvancedSwapDetails, AdvancedSwapDetailsProps, TradeSummaryBridge } from './AdvancedSwapDetails'
 
 const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
-  padding: ${({ show }) => (show ? '12px 16px' : '0')};
+  padding: ${({ show }) => (show ? '12px' : '0')};
   width: 100%;
   max-width: 425px;
   border-radius: 16px;
   color: ${({ theme }) => theme.text2};
-  background-color: ${({ theme }) => theme.background};
+  background-color: ${({ theme }) => theme.buttonBlack};
   border: solid 1px ${({ theme, show }) => (show ? theme.border : 'none')};
   max-height: ${({ show }) => (show ? 'auto' : '0')};
   transition: height 300ms ease-in-out, transform 300ms;
   overflow: hidden;
+  margin-top: 20px;
 `
 
 export default function AdvancedSwapDetailsDropdown({ trade, ...rest }: AdvancedSwapDetailsProps) {

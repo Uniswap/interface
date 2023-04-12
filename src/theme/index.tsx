@@ -55,7 +55,7 @@ function colors(darkMode: boolean): Colors {
     background: darkMode ? '#1C1C1C' : '#ffffff',
     background2: darkMode ? '#1C1C1C' : '#f5f5f5',
     tabActive: darkMode ? '#313131' : '#ffffff',
-    tabBackgound: darkMode ? '#0F0F0F' : '#E2E2E2',
+    tabBackground: darkMode ? '#0F0F0F' : '#E2E2E2',
 
     tableHeader: darkMode ? '#313131' : '#FBFBFB',
     buttonBlack: darkMode ? '#0F0F0F' : '#f5f5f5',

@@ -145,7 +145,7 @@ export default function ProAmmFee({
     return (
       <OutlineCard marginTop="1rem" padding="1rem">
         <AutoColumn gap="md">
-          <Text fontSize="16px" fontWeight="500">
+          <Text fontSize="12px" fontWeight="500">
             Your Fee Earnings
           </Text>
           {text && (
@@ -160,7 +160,7 @@ export default function ProAmmFee({
               <Trans>Total Fees Earned</Trans>
             </Text>
             <RowFixed>
-              <Text fontSize={14} fontWeight={500} marginLeft={'6px'}>
+              <Text fontSize={12} fontWeight={500} marginLeft={'6px'}>
                 {formattedNumLong(totalFeeRewardUSD, true)}
               </Text>
             </RowFixed>
@@ -172,7 +172,7 @@ export default function ProAmmFee({
             </Text>
             <RowFixed>
               <CurrencyLogo size="16px" style={{ marginLeft: '8px' }} currency={token0Shown} />
-              <Text fontSize={14} fontWeight={500} marginLeft={'6px'}>
+              <Text fontSize={12} fontWeight={500} marginLeft={'6px'}>
                 {feeValue0 && <FormattedCurrencyAmount currencyAmount={feeValue0} />} {token0Shown.symbol}
               </Text>
             </RowFixed>
@@ -184,7 +184,7 @@ export default function ProAmmFee({
             </Text>
             <RowFixed>
               <CurrencyLogo size="16px" style={{ marginLeft: '8px' }} currency={token1Shown} />
-              <Text fontSize={14} fontWeight={500} marginLeft={'6px'}>
+              <Text fontSize={12} fontWeight={500} marginLeft={'6px'}>
                 {feeValue1 && <FormattedCurrencyAmount currencyAmount={feeValue1} />} {token1Shown.symbol}
               </Text>
             </RowFixed>

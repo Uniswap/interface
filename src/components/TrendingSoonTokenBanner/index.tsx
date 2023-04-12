@@ -69,7 +69,7 @@ const TrendingSoonTokenBanner = ({
 const Container = styled.div`
   background: ${({ theme }) => rgba(theme.primary, 0.25)};
   border-radius: 999px;
-  padding: 8px 12px;
+  padding: 8px 16px;
   display: grid;
   grid-template-columns: auto 1fr;
   row-gap: 4px;

@@ -1,25 +1,31 @@
 import { Trans } from '@lingui/macro'
 import { rgba } from 'polished'
-import { FC, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction } from 'react'
 import { Flex } from 'rebass'
 import styled from 'styled-components'
 
-import InfoHelper from 'components/InfoHelper'
 import Toggle from 'components/Toggle'
+import { MouseoverTooltip, TextDashed } from 'components/Tooltip'
 import AdvanceModeModal from 'components/TransactionSettings/AdvanceModeModal'
-import SettingLabel from 'components/swapv2/SwapSettingsPanel/SettingLabel'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import useTheme from 'hooks/useTheme'
 import { useDegenModeManager } from 'state/user/hooks'
 
 type Props = {
   className?: string
+  showConfirmation: boolean
+  setShowConfirmation: Dispatch<SetStateAction<boolean>>
 }
-const DegenModeSetting: FC<Props> = ({ className }) => {
+const DegenModeSetting: FC<Props> = ({ className, showConfirmation, setShowConfirmation }) => {
   const [isDegenMode, toggleDegenMode] = useDegenModeManager()
-  const [showConfirmation, setShowConfirmation] = useState(false)
+  const { mixpanelHandler } = useMixpanel()
 
-  const handleToggleAdvancedMode = () => {
+  const handleToggleDegenMode = () => {
     if (isDegenMode /* is already ON */) {
       toggleDegenMode()
+      mixpanelHandler(MIXPANEL_TYPE.DEGEN_MODE_TOGGLE, {
+        type: 'off',
+      })
       setShowConfirmation(false)
       return
     }
@@ -28,24 +34,27 @@ const DegenModeSetting: FC<Props> = ({ className }) => {
     setShowConfirmation(true)
   }
 
+  const theme = useTheme()
+
   return (
     <>
       <Flex justifyContent="space-between" className={className}>
         <Flex width="fit-content" alignItems="center">
-          <SettingLabel>
-            <Trans>Advanced Mode</Trans>
-          </SettingLabel>
-          <InfoHelper
-            placement="top"
-            text={
-              <Trans>
-                You can make trades with price impact which is <b>very</b> high, or cannot be calculated. Enable at your
-                own risk
-              </Trans>
-            }
-          />
+          <TextDashed fontSize={12} fontWeight={400} color={theme.subText} underlineColor={theme.border}>
+            <MouseoverTooltip
+              text={
+                <Trans>
+                  Turn this on to make trades with very high price impact or to set very high slippage tolerance. This
+                  can result in bad rates and loss of funds. Be cautious.
+                </Trans>
+              }
+              placement="right"
+            >
+              <Trans>Degen Mode</Trans>
+            </MouseoverTooltip>
+          </TextDashed>
         </Flex>
-        <Toggle id="toggle-expert-mode-button" isActive={isDegenMode} toggle={handleToggleAdvancedMode} />
+        <Toggle id="toggle-expert-mode-button" isActive={isDegenMode} toggle={handleToggleDegenMode} />
       </Flex>
 
       <AdvanceModeModal show={showConfirmation} setShow={setShowConfirmation} />

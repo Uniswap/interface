@@ -7,8 +7,8 @@ import LoadingIcon from './LoadingIcon'
 
 const IconButton = styled.button`
   position: relative;
-  width: 36px;
-  height: 36px;
+  width: 16px;
+  height: 16px;
 
   display: flex;
   align-items: center;

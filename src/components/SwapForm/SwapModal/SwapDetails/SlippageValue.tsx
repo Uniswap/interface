@@ -7,8 +7,9 @@ const SlippageValue: React.FC = () => {
   const theme = useTheme()
   const { slippage, isStablePairSwap } = useSwapFormContext()
   const isWarning = checkWarningSlippage(slippage, isStablePairSwap)
+
   return (
-    <TYPE.black fontSize={14} color={isWarning ? theme.warning : undefined}>
+    <TYPE.black fontSize={12} color={isWarning ? theme.warning : undefined}>
       {formatSlippage(slippage)}
     </TYPE.black>
   )

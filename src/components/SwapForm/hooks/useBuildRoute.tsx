@@ -1,6 +1,6 @@
 import { t } from '@lingui/macro'
 import { useCallback, useRef } from 'react'
-import { buildRoute } from 'services/route'
+import routeApi from 'services/route'
 import { BuildRouteData, BuildRoutePayload } from 'services/route/types/buildRoute'
 import { RouteSummary } from 'services/route/types/getRoute'
 
@@ -28,7 +28,8 @@ const useBuildRoute = (args: Args) => {
   const { recipient, routeSummary, slippage, transactionTimeout } = args
   const { chainId, account } = useActiveWeb3React()
   const abortControllerRef = useRef(new AbortController())
-  const { aggregatorDomain } = useKyberswapGlobalConfig()
+  const { aggregatorDomain, isEnableAuthenAggregator } = useKyberswapGlobalConfig()
+  const [buildRoute] = routeApi.useBuildRouteMutation()
 
   const fetcher = useCallback(async (): Promise<BuildRouteResult> => {
     if (!account) {
@@ -58,17 +59,38 @@ const useBuildRoute = (args: Args) => {
       abortControllerRef.current = new AbortController()
 
       const url = `${aggregatorDomain}/${NETWORKS_INFO[chainId].aggregatorRoute}/api/v1/route/build`
-      const response = await buildRoute(url, payload, abortControllerRef.current.signal)
 
+      const response = await buildRoute({
+        url,
+        payload,
+        signal: abortControllerRef.current.signal,
+        authentication: isEnableAuthenAggregator,
+      }).unwrap()
+      if (!response?.data?.data) throw new Error('Building route failed')
       return {
-        data: response,
+        data: response.data,
       }
     } catch (e) {
+      if (Array.isArray(e?.data?.errorEntities)) {
+        return {
+          error: e.data.errorEntities.join(' | '),
+        }
+      }
       return {
-        error: e.message || t`Something went wrong`,
+        error: e?.data?.errorEntities?.[0] || e.message || t`Something went wrong`,
       }
     }
-  }, [account, aggregatorDomain, chainId, recipient, routeSummary, slippage, transactionTimeout])
+  }, [
+    account,
+    aggregatorDomain,
+    chainId,
+    recipient,
+    routeSummary,
+    slippage,
+    transactionTimeout,
+    buildRoute,
+    isEnableAuthenAggregator,
+  ])
 
   return fetcher
 }

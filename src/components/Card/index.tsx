@@ -49,8 +49,8 @@ export const SubTextCard = styled(Card)`
 `
 
 export const WarningCard = styled(Card)`
-  background-color: rgba(255, 153, 1, 0.15);
-  color: ${({ theme }) => theme.warning};
+  background-color: ${({ theme }) => rgba(theme.warning, 0.25)};
+  color: ${({ theme }) => theme.text};
   font-weight: 500;
 `
 

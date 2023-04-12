@@ -9,6 +9,7 @@ import { AutoColumn } from 'components/Column'
 import Divider from 'components/Divider'
 import InfoHelper from 'components/InfoHelper'
 import { RowBetween, RowFixed } from 'components/Row'
+import { MouseoverTooltip, TextDashed } from 'components/Tooltip'
 import { useActiveWeb3React } from 'hooks'
 import { FeeConfig } from 'hooks/useSwapV2Callback'
 import useTheme from 'hooks/useTheme'
@@ -67,11 +68,16 @@ function TradeSummary({ trade, feeConfig, allowedSlippage }: TradeSummaryProps) 
         <ContentWrapper show={show} gap="0.75rem">
           <Divider />
           <RowBetween>
-            <RowFixed>
-              <TYPE.black fontSize={12} fontWeight={400} color={theme.subText}>
-                {isExactIn ? t`Minimum Received` : t`Maximum Sold`}
-              </TYPE.black>
-              <InfoHelper size={14} text={t`Minimum amount you will receive or your transaction will revert`} />
+            <RowFixed style={{ minWidth: 'max-content' }}>
+              <TextDashed fontSize={12} fontWeight={400} color={theme.subText} minWidth="max-content">
+                <MouseoverTooltip
+                  width="200px"
+                  text={<Trans>You will receive at least this amount or your transaction will revert</Trans>}
+                  placement="right"
+                >
+                  <Trans>Minimum Received</Trans>
+                </MouseoverTooltip>
+              </TextDashed>
             </RowFixed>
             <RowFixed>
               <TYPE.black color={theme.text} fontSize={12}>
@@ -106,10 +112,30 @@ function TradeSummary({ trade, feeConfig, allowedSlippage }: TradeSummaryProps) 
 
           <RowBetween>
             <RowFixed>
-              <TYPE.black fontSize={12} fontWeight={400} color={theme.subText}>
-                <Trans>Price Impact</Trans>
-              </TYPE.black>
-              <InfoHelper size={14} text={t`Estimated change in price due to the size of your transaction`} />
+              <TextDashed fontSize={12} fontWeight={400} color={theme.subText}>
+                <MouseoverTooltip
+                  text={
+                    <div>
+                      <Trans>Estimated change in price due to the size of your transaction.</Trans>
+                      <Trans>
+                        <Text fontSize={12}>
+                          Read more{' '}
+                          <a
+                            href="https://docs.kyberswap.com/getting-started/foundational-topics/decentralized-finance/price-impact"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <b>here ↗</b>
+                          </a>
+                        </Text>
+                      </Trans>
+                    </div>
+                  }
+                  placement="right"
+                >
+                  <Trans>Price Impact</Trans>
+                </MouseoverTooltip>
+              </TextDashed>
             </RowFixed>
             <TYPE.black
               fontSize={12}

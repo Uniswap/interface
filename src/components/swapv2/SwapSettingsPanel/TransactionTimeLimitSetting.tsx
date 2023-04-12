@@ -1,10 +1,9 @@
-import { Trans, t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import React, { useEffect, useRef, useState } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
-import InfoHelper from 'components/InfoHelper'
-import SettingLabel from 'components/swapv2/SwapSettingsPanel/SettingLabel'
+import { MouseoverTooltip, TextDashed } from 'components/Tooltip'
 import useTheme from 'hooks/useTheme'
 import { useUserTransactionTTL } from 'state/user/hooks'
 
@@ -65,13 +64,18 @@ const TransactionTimeLimitSetting: React.FC<Props> = ({ className }) => {
   return (
     <Flex justifyContent={'space-between'} alignItems="center" className={className}>
       <Flex alignItems="center">
-        <SettingLabel>
-          <Trans>Transaction time limit</Trans>
-        </SettingLabel>
-        <InfoHelper
-          placement="top"
-          text={t`Transaction will revert if it is pending for longer than the indicated time`}
-        />
+        <TextDashed fontSize={12} fontWeight={400} color={theme.subText} underlineColor={theme.border}>
+          <MouseoverTooltip
+            text={
+              <Text>
+                <Trans>Transaction will revert if it is pending for longer than the indicated time</Trans>
+              </Text>
+            }
+            placement="right"
+          >
+            <Trans>Transaction time limit</Trans>
+          </MouseoverTooltip>
+        </TextDashed>
       </Flex>
 
       <Flex
@@ -82,7 +86,7 @@ const TransactionTimeLimitSetting: React.FC<Props> = ({ className }) => {
           lineHeight: '16px',
           columnGap: '2px',
           alignItems: 'center',
-          backgroundColor: theme.tabBackgound,
+          backgroundColor: theme.tabBackground,
           padding: '0 8px',
           borderRadius: '40px',
         }}

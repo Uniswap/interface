@@ -101,9 +101,7 @@ export const Wrapper = styled.div`
   background: ${({ theme }) => theme.background};
 `
 
-export const BottomGrouping = styled.div`
-  margin-top: 24px;
-`
+export const BottomGrouping = styled.div``
 
 export const StyledBalanceMaxMini = styled.button<{ hover?: boolean }>`
   height: 22px;
@@ -114,7 +112,6 @@ export const StyledBalanceMaxMini = styled.button<{ hover?: boolean }>`
   padding: 0.2rem;
   font-size: 0.875rem;
   font-weight: 400;
-  margin-left: 0.25rem;
   cursor: pointer;
   color: ${({ theme }) => theme.text2};
   display: flex;
@@ -136,8 +133,9 @@ export const StyledBalanceMaxMini = styled.button<{ hover?: boolean }>`
 
 export const TruncatedText = styled(Text)`
   text-overflow: ellipsis;
-  width: 220px;
   overflow: hidden;
+  font-size: 24px;
+  font-weight: 500;
 `
 
 // styles
@@ -226,9 +224,8 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
 
 export const GroupButtonReturnTypes = styled.div`
   display: flex;
-  margin-top: 20px;
   border-radius: 999px;
-  background: ${({ theme }) => theme.tabBackgound};
+  background: ${({ theme }) => theme.tabBackground};
   padding: 2px;
 `
 
@@ -239,7 +236,7 @@ export const ButtonReturnType = styled.div<{ active?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${({ theme, active }) => (active ? theme.tabActive : theme.tabBackgound)};
+  background-color: ${({ theme, active }) => (active ? theme.tabActive : theme.tabBackground)};
   color: ${({ theme, active }) => (active ? theme.text : theme.subText)};
   font-size: 12px;
   font-weight: 500;

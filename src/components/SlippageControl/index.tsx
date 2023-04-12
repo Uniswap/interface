@@ -15,7 +15,7 @@ export const slippageOptionCSS = css`
   border-radius: 20px;
   border: 1px solid transparent;
 
-  background-color: ${({ theme }) => theme.tabBackgound};
+  background-color: ${({ theme }) => theme.tabBackground};
   color: ${({ theme }) => theme.subText};
   text-align: center;
 
@@ -71,7 +71,7 @@ const SlippageControl: React.FC<Props> = props => {
         maxWidth: '100%',
         height: '28px',
         borderRadius: '20px',
-        background: theme.tabBackgound,
+        background: theme.tabBackground,
         padding: '2px',
       }}
     >

@@ -6,7 +6,7 @@ import { Flex, Text } from 'rebass'
 
 import { RowBetween } from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
-import TokenInfo from 'components/swapv2/TokenInfo'
+import TokenInfoTab from 'components/swapv2/TokenInfoTab'
 import { MobileModalWrapper, StyledActionButtonSwapForm } from 'components/swapv2/styleds'
 import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
@@ -14,13 +14,7 @@ import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { Field } from 'state/swap/actions'
 import { ButtonText } from 'theme/components'
 
-function MobileTradeRoutes({
-  currencies,
-  onClick,
-}: {
-  currencies: { [field in Field]?: Currency }
-  onClick?: () => void
-}) {
+function TokenInfoIcon({ currencies, onClick }: { currencies: { [field in Field]?: Currency }; onClick?: () => void }) {
   const theme = useTheme()
   const isOpen = useModalOpen(ApplicationModal.MOBILE_TOKEN_INFO)
   const toggle = useToggleModal(ApplicationModal.MOBILE_TOKEN_INFO)
@@ -41,13 +35,13 @@ function MobileTradeRoutes({
               </RowBetween>
             </Flex>
             <Flex flexDirection="column" width="100%" padding="0px 16px" marginBottom={20}>
-              <TokenInfo currencies={currencies} />
+              <TokenInfoTab currencies={currencies} />
             </Flex>
           </Flex>
         </MobileModalWrapper>
       </MobileView>
       <StyledActionButtonSwapForm onClick={isMobile ? toggle : onClick}>
-        <MouseoverTooltip text={t`Token Info`} placement="top" width="fit-content">
+        <MouseoverTooltip text={t`Token Info`} placement="top" width="fit-content" disableTooltip={isMobile}>
           <Info color={theme.subText} size={20} />
         </MouseoverTooltip>
       </StyledActionButtonSwapForm>
@@ -55,4 +49,4 @@ function MobileTradeRoutes({
   )
 }
 
-export default MobileTradeRoutes
+export default TokenInfoIcon

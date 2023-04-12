@@ -154,13 +154,13 @@ const ChartDataTypeContainer = styled.div`
   display: flex;
   border-radius: 999px;
   padding: 2px;
-  background: ${({ theme }) => theme.tabBackgound};
+  background: ${({ theme }) => theme.tabBackground};
 `
 
 const ChartDataTypeItem = styled.div<{ isActive?: boolean }>`
   padding: 4px 12px;
   border-radius: 14px;
-  background: ${({ theme, isActive }) => (isActive ? theme.tabActive : theme.tabBackgound)};
+  background: ${({ theme, isActive }) => (isActive ? theme.tabActive : theme.tabBackground)};
   color: ${({ theme, isActive }) => (isActive ? theme.text : theme.subText)};
   font-size: 12px;
   font-weight: 500;

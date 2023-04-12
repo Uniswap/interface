@@ -1,5 +1,5 @@
 import { Trans, t } from '@lingui/macro'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -8,6 +8,7 @@ import { AutoColumn } from 'components/Column'
 import Divider from 'components/Divider'
 import InfoHelper from 'components/InfoHelper'
 import { RowBetween, RowFixed } from 'components/Row'
+import { MouseoverTooltip, TextDashed } from 'components/Tooltip'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { TYPE } from 'theme'
@@ -41,7 +42,7 @@ const Wrapper = styled.div.attrs<WrapperProps>(props => ({
   width: 100%;
   max-width: 425px;
   border-radius: 16px;
-  background-color: ${({ theme }) => theme.background};
+  background-color: ${({ theme }) => theme.buttonBlack};
   max-height: 0;
   transition: height 300ms ease-in-out, transform 300ms;
   border: 1px solid ${({ theme }) => theme.border};
@@ -49,7 +50,7 @@ const Wrapper = styled.div.attrs<WrapperProps>(props => ({
 
   &[data-visible='true'] {
     display: block;
-    padding: 12px 16px;
+    padding: 12px 12px;
     max-height: max-content;
     color: ${({ theme }) => theme.text};
   }
@@ -82,11 +83,11 @@ const TradeSummary: React.FC<Props> = ({ feeConfig, routeSummary, slippage }) =>
         as="span"
         sx={{
           color: theme.text,
-          fontWeight: 'bold',
+          fontWeight: '500',
           whiteSpace: 'nowrap',
         }}
       >
-        {formattedNum(minimumAmountOut.toSignificant(6), false, 6)} {currencyOut.symbol}
+        {formattedNum(minimumAmountOut.toSignificant(10), false, 10)} {currencyOut.symbol}
       </Text>
     ) : (
       ''
@@ -108,21 +109,26 @@ const TradeSummary: React.FC<Props> = ({ feeConfig, routeSummary, slippage }) =>
     <Wrapper $visible={alreadyVisible} $disabled={!hasTrade}>
       <AutoColumn>
         <RowBetween style={{ cursor: 'pointer' }} onClick={handleClickExpand} role="button">
-          <Text fontSize={12} fontWeight={500}>
+          <Text fontSize={12} fontWeight={500} color={theme.text}>
             <Trans>MORE INFORMATION</Trans>
           </Text>
           <IconWrapper $flip={expanded}>
-            <DropdownSVG />
+            <DropdownSVG color={theme.text} />
           </IconWrapper>
         </RowBetween>
         <ContentWrapper $expanded={expanded} gap="0.75rem">
           <Divider />
           <RowBetween>
             <RowFixed>
-              <TYPE.black fontSize={12} fontWeight={400} color={theme.subText}>
-                <Trans>Minimum Received</Trans>
-              </TYPE.black>
-              <InfoHelper size={14} text={t`Minimum amount you will receive or your transaction will revert`} />
+              <TextDashed fontSize={12} fontWeight={400} color={theme.subText}>
+                <MouseoverTooltip
+                  width="200px"
+                  text={<Trans>You will receive at least this amount or your transaction will revert</Trans>}
+                  placement="right"
+                >
+                  <Trans>Minimum Received</Trans>
+                </MouseoverTooltip>
+              </TextDashed>
             </RowFixed>
             <RowFixed>
               <TYPE.black color={theme.text} fontSize={12}>
@@ -133,11 +139,11 @@ const TradeSummary: React.FC<Props> = ({ feeConfig, routeSummary, slippage }) =>
 
           <RowBetween>
             <RowFixed>
-              <TYPE.black fontSize={12} fontWeight={400} color={theme.subText}>
-                <Trans>Gas Fee</Trans>
-              </TYPE.black>
-
-              <InfoHelper size={14} text={t`Estimated network fee for your transaction`} />
+              <TextDashed fontSize={12} fontWeight={400} color={theme.subText}>
+                <MouseoverTooltip text={<Trans>Estimated network fee for your transaction.</Trans>} placement="right">
+                  <Trans>Gas Fee</Trans>
+                </MouseoverTooltip>
+              </TextDashed>
             </RowFixed>
             <TYPE.black color={theme.text} fontSize={12}>
               {gasUsd ? formattedNum(gasUsd, true) : '--'}
@@ -146,10 +152,30 @@ const TradeSummary: React.FC<Props> = ({ feeConfig, routeSummary, slippage }) =>
 
           <RowBetween>
             <RowFixed>
-              <TYPE.black fontSize={12} fontWeight={400} color={theme.subText}>
-                <Trans>Price Impact</Trans>
-              </TYPE.black>
-              <InfoHelper size={14} text={t`Estimated change in price due to the size of your transaction`} />
+              <TextDashed fontSize={12} fontWeight={400} color={theme.subText}>
+                <MouseoverTooltip
+                  text={
+                    <div>
+                      <Trans>Estimated change in price due to the size of your transaction.</Trans>
+                      <Trans>
+                        <Text fontSize={12}>
+                          Read more{' '}
+                          <a
+                            href="https://docs.kyberswap.com/getting-started/foundational-topics/decentralized-finance/price-impact"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <b>here ↗</b>
+                          </a>
+                        </Text>
+                      </Trans>
+                    </div>
+                  }
+                  placement="right"
+                >
+                  <Trans>Price Impact</Trans>
+                </MouseoverTooltip>
+              </TextDashed>
             </RowFixed>
             <TYPE.black
               fontSize={12}

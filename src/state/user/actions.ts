@@ -21,7 +21,9 @@ export interface SerializedPair {
 
 export const updateMatchesDarkMode = createAction<{ matchesDarkMode: boolean }>('user/updateMatchesDarkMode')
 export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('user/updateUserDarkMode')
-export const updateUserDegenMode = createAction<{ userDegenMode: boolean }>('user/updateUserDegenMode')
+export const updateUserDegenMode = createAction<{ userDegenMode: boolean; isStablePairSwap: boolean }>(
+  'user/updateUserDegenMode',
+)
 export const updateUserLocale = createAction<{ userLocale: SupportedLocale }>('user/updateUserLocale')
 export const updateUserSlippageTolerance = createAction<{ userSlippageTolerance: number }>(
   'user/updateUserSlippageTolerance',
