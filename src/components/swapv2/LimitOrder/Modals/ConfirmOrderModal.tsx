@@ -96,6 +96,15 @@ export default memo(function ConfirmOrderModal({
     ]
   }, [account, currencyIn, displayCurrencyOut, inputAmount, rateInfo, outputAmount, expireAt])
 
+  const handleDismiss = () => {
+    onDismiss()
+
+    // delay till the animation's done
+    setTimeout(() => {
+      setConfirmed(false)
+    }, 200)
+  }
+
   const renderConfirmPriceButton = () => {
     if (!shouldShowConfirmFlow) {
       return null
@@ -151,7 +160,7 @@ export default memo(function ConfirmOrderModal({
             <TransactionErrorContent onDismiss={onDismiss} message={flowState.errorMessage} />
           ) : (
             <Container>
-              <Header title={t`Review your order`} onDismiss={onDismiss} />
+              <Header title={t`Review your order`} onDismiss={handleDismiss} />
               <ListInfo listData={listData} />
               <MarketInfo
                 marketPrice={marketPrice}
@@ -181,15 +190,6 @@ export default memo(function ConfirmOrderModal({
         </div>
       </Flex>
     )
-  }
-
-  const handleDismiss = () => {
-    onDismiss()
-
-    // delay till the animation's done
-    setTimeout(() => {
-      setConfirmed(false)
-    }, 200)
   }
 
   return (

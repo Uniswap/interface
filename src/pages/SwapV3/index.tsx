@@ -1,10 +1,9 @@
 import { Currency, Token } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import { rgba } from 'polished'
-import { stringify } from 'querystring'
 import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Skeleton from 'react-loading-skeleton'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 import styled, { DefaultTheme, keyframes } from 'styled-components'
 
@@ -34,9 +33,6 @@ import {
   PageWrapper,
   RoutesWrapper,
   SwapFormWrapper,
-  Tab,
-  TabContainer,
-  TabWrapper,
 } from 'components/swapv2/styleds'
 import { APP_PATHS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
@@ -45,6 +41,7 @@ import useParsedQueryString from 'hooks/useParsedQueryString'
 import useTheme from 'hooks/useTheme'
 import { BodyWrapper } from 'pages/AppBody'
 import HeaderRightMenu from 'pages/SwapV3/HeaderRightMenu'
+import Tabs from 'pages/SwapV3/Tabs'
 import { useLimitActionHandlers, useLimitState } from 'state/limit/hooks'
 import { Field } from 'state/swap/actions'
 import { useDefaultsFromURLSearch, useInputCurrency, useOutputCurrency, useSwapActionHandlers } from 'state/swap/hooks'
@@ -52,7 +49,6 @@ import { useTutorialSwapGuide } from 'state/tutorial/hooks'
 import { useDegenModeManager, useShowLiveChart, useShowTokenInfo, useShowTradeRoutes } from 'state/user/hooks'
 import { CloseIcon } from 'theme'
 import { DetailedRouteSummary } from 'types/route'
-import { getLimitOrderContract } from 'utils'
 import { getTradeComposition } from 'utils/aggregationRouting'
 import { getSymbolSlug } from 'utils/string'
 import { checkPairInWhiteList } from 'utils/tokenInfo'
@@ -118,8 +114,7 @@ const DegenBanner = styled(RowBetween)`
 `
 
 export default function Swap() {
-  const navigateFn = useNavigate()
-  const { chainId, networkInfo, isSolana } = useActiveWeb3React()
+  const { chainId, isSolana } = useActiveWeb3React()
   const isShowLiveChart = useShowLiveChart()
   const isShowTradeRoutes = useShowTradeRoutes()
   const isShowTokenInfoSetting = useShowTokenInfo()
@@ -255,18 +250,6 @@ export default function Swap() {
   const isShowModalImportToken =
     isLoadedTokenDefault && importTokensNotInDefault.length > 0 && (!dismissTokenWarning || showingPairSuggestionImport)
 
-  const onClickTab = (tab: TAB) => {
-    if (activeTab === tab) {
-      return
-    }
-
-    const { inputCurrency, outputCurrency, ...newQs } = qs
-    navigateFn({
-      pathname: `${tab === TAB.LIMIT ? APP_PATHS.LIMIT : APP_PATHS.SWAP}/${networkInfo.route}`,
-      search: stringify(newQs),
-    })
-  }
-
   const tradeRouteComposition = useMemo(() => {
     return getTradeComposition(chainId, routeSummary?.parsedAmountIn, undefined, routeSummary?.route, defaultTokens)
   }, [chainId, defaultTokens, routeSummary])
@@ -294,22 +277,7 @@ export default function Swap() {
           <SwapFormWrapper isShowTutorial={isShowTutorial}>
             <ColumnCenter gap="sm">
               <RowBetween>
-                <TabContainer>
-                  <TabWrapper>
-                    <Tab onClick={() => onClickTab(TAB.SWAP)} isActive={isSwapPage}>
-                      <Text fontSize={20} fontWeight={500}>
-                        <Trans>Swap</Trans>
-                      </Text>
-                    </Tab>
-                    {getLimitOrderContract(chainId) && (
-                      <Tab onClick={() => onClickTab(TAB.LIMIT)} isActive={isLimitPage}>
-                        <Text fontSize={20} fontWeight={500}>
-                          <Trans>Limit</Trans>
-                        </Text>
-                      </Tab>
-                    )}
-                  </TabWrapper>
-                </TabContainer>
+                <Tabs activeTab={activeTab} />
 
                 <HeaderRightMenu activeTab={activeTab} setActiveTab={setActiveTab} />
               </RowBetween>
