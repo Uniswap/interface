@@ -43,7 +43,7 @@ const CollectionTable = ({ data, timePeriod }: { data: CollectionTableColumn[]; 
 
   const floorChangeSort = useMemo(() => {
     return (rowA: Row<CollectionTableColumn>, rowB: Row<CollectionTableColumn>) => {
-      return compareFloats(rowA.original.floor.value, rowB.original.floor.change)
+      return compareFloats(rowA.original.floor.change, rowB.original.floor.change)
     }
   }, [])
 
