@@ -46,6 +46,7 @@ import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button
 import { GrayCard, LightCard } from '../../components/Card'
 import { AutoColumn, Column } from '../../components/Column'
 import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
+import LeveragedOutputPanel from '../../components/CurrencyInputPanel/leveragedOutputPanel'
 import { AutoRow, RowBetween } from '../../components/Row'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
@@ -708,6 +709,32 @@ export default function Swap({ className }: { className?: string }) {
                           showCommonBases={true}
                           id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
                           loading={independentField === Field.OUTPUT && routeIsSyncing}
+                          isInput={true}
+                        />
+                      </Trace>
+                    </SwapSection>
+                    <SwapSection>
+                      <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
+                        <LeveragedOutputPanel
+                          label={
+                            independentField === Field.OUTPUT && !showWrap ? (
+                              <Trans>From (at most)</Trans>
+                            ) : (
+                              <Trans>From</Trans>
+                            )
+                          }
+                          value={String(Number(sliderLeverageFactor) * Number(formattedAmounts[Field.INPUT])) }
+                          showMaxButton={showMaxButton}
+                          currency={currencies[Field.INPUT] ?? null}
+                          onUserInput={handleTypeInput}
+                          onMax={handleMaxInput}
+                          fiatValue={fiatValueInput}
+                          onCurrencySelect={handleInputSelect}
+                          otherCurrency={currencies[Field.OUTPUT]}
+                          showCommonBases={true}
+                          id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
+                          loading={independentField === Field.OUTPUT && routeIsSyncing}
+                          noLeverageValue={formattedAmounts[Field.INPUT]}
                         />
                       </Trace>
                     </SwapSection>
@@ -757,6 +784,8 @@ export default function Swap({ className }: { className?: string }) {
                             showCommonBases={true}
                             id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
                             loading={independentField === Field.INPUT && routeIsSyncing}
+                            isInput={false}
+                            isLevered= {Number(sliderLeverageFactor) != 1}
                           />
                         </Trace>
 
@@ -791,14 +820,14 @@ export default function Swap({ className }: { className?: string }) {
                                     <Trans>{sliderLeverageFactor}x</Trans>
                                   </ResponsiveHeaderText>
                                   <AutoRow gap="4px" justify="flex-end">
-                                    <SmallMaxButton onClick={() => (25)} width="20%">
-                                      <Trans>2</Trans>
-                                    </SmallMaxButton>
-                                    <SmallMaxButton onClick={() => (50)} width="20%">
-                                      <Trans>3</Trans>
+                                    <SmallMaxButton onClick={() => (75)} width="20%">
+                                      <Trans>10</Trans>
                                     </SmallMaxButton>
                                     <SmallMaxButton onClick={() => (75)} width="20%">
-                                      <Trans>5</Trans>
+                                      <Trans>100</Trans>
+                                    </SmallMaxButton>
+                                    <SmallMaxButton onClick={() => (75)} width="20%">
+                                      <Trans>1000</Trans>
                                     </SmallMaxButton>
                                     <SmallMaxButton onClick={() => (100)} width="20%">
                                       <Trans>Max</Trans>
@@ -809,8 +838,8 @@ export default function Swap({ className }: { className?: string }) {
                                   value={parseFloat(sliderLeverageFactor)}
                                   onChange={(val) => setSliderLeverageFactor(val.toString())}
                                   min={1.0}
-                                  max={10.0}
-                                  step={0.1}
+                                  max={1000.0}
+                                  step={10}
                                   float={true}
                                 />
                               </>
@@ -818,7 +847,9 @@ export default function Swap({ className }: { className?: string }) {
                           </AutoColumn>
                         </LightCard>
                       </LeverageGaugeSection>
-                      {showDetailsDropdown && (
+                      {
+                        //showDetailsDropdown 
+                        true&& (
                         <DetailsSwapSection>
                           <SwapDetailsDropdown
                             trade={trade}

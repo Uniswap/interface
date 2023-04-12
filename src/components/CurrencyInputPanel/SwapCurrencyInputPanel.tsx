@@ -204,6 +204,8 @@ interface SwapCurrencyInputPanelProps {
   renderBalance?: (amount: CurrencyAmount<Currency>) => ReactNode
   locked?: boolean
   loading?: boolean
+  isInput?:boolean
+  isLevered?: boolean
 }
 
 export default function SwapCurrencyInputPanel({
@@ -226,6 +228,8 @@ export default function SwapCurrencyInputPanel({
   hideInput = false,
   locked = false,
   loading = false,
+  isInput = true,
+  isLevered = false, 
   ...rest
 }: SwapCurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
@@ -252,6 +256,7 @@ export default function SwapCurrencyInputPanel({
         </FixedContainer>
       )}
       <Container hideInput={hideInput}>
+        <Trans>{isInput? "What you pay" : isLevered? "Total Output Position": "What you get"}</Trans>
         <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}>
           {!hideInput && (
             <StyledNumericalInput

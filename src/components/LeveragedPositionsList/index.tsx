@@ -6,6 +6,7 @@ import { MEDIA_WIDTHS } from 'theme'
 import { LeveragePositionDetails } from 'types/leveragePosition'
 import LeveragePositionItem from 'components/LeveragePositionItem'
 import { AutoColumn } from 'components/Column'
+import { ReactNode, useCallback, useMemo, useState } from 'react'
 
 const DesktopHeader = styled.div`
   display: none;

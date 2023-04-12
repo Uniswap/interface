@@ -10,7 +10,7 @@ import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { useToken } from 'hooks/Tokens'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { usePool } from 'hooks/usePools'
-import { useMemo } from 'react'
+import { useMemo , useState, useCallback} from 'react'
 import { Link } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components/macro'
@@ -18,8 +18,9 @@ import { HideSmall, MEDIA_WIDTHS, SmallOnly, ThemedText } from 'theme'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import { hasURL } from 'utils/urlChecks'
-import { SmallButtonPrimary } from 'components/Button'
-
+import { SmallButtonPrimary,ButtonPrimary } from 'components/Button'
+import ConfirmLeverageSwapModal from 'components/swap/confirmLeverageSwapModal'
+import ConfirmAddPremiumModal from 'components/swap/ConfirmAddPremiumModal'
 import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import Column, { AutoColumn } from 'components/Column'
 
@@ -230,13 +231,23 @@ export default function LeveragePositionItem({
   const currency0 = token0 ? unwrappedToken(token0) : undefined
   const currency1 = token1 ? unwrappedToken(token1) : undefined
 
-
+  const [showConfirm, setshowConfirm] = useState(false); 
+  const [showPremiumConfirm, setshowPremiumConfirm] = useState(false); 
   const shouldHidePosition = hasURL(token0?.symbol) || hasURL(token1?.symbol)
 
   if (shouldHidePosition) {
     return null
   }
+  const handleConfirmDismiss = ()=>{
+    setshowConfirm(false); 
+  } 
+  const handlePremiumConfirmDismiss = ()=>{
+    setshowPremiumConfirm(false); 
+  }
 
+  const txHash = ""
+  const recipient = ""
+  const attemptingTxn = true;
   return (
     <ItemWrapper>
       <RowBetween>
@@ -287,7 +298,7 @@ export default function LeveragePositionItem({
         <ItemValueLabel label={"Total Position"} value={"1000k"}/>
         <ItemValueLabel label={"Debt"} value={"1000k"}/>
         <ItemValueLabel label={"Time of Creation"} value={"1000k"}/>
-        <ItemValueLabel label={"Time Remaining"} value={"1000k"}/>
+        <ItemValueLabel label={"Time until repayment "} value={"1000k"}/>
         </AutoRow>
       </RowBetween>
       <RowBetween>
@@ -314,11 +325,49 @@ export default function LeveragePositionItem({
           </RangeText>
         </AutoRow>
         <AutoRow gap="8px">
-          <ResponsiveButtonPrimary data-cy="join-pool-button" id="join-pool-button" as={Link} to="/add/ETH">
+          <ResponsiveButtonPrimary 
+          //data-cy="join-pool-button" id="join-pool-button"
+           onClick={() => setshowConfirm(!showConfirm)} 
+           //as={Link} to="/add/ETH"
+           >
             <Trans>Close Position</Trans>
           </ResponsiveButtonPrimary>
-          <ResponsiveButtonPrimary data-cy="join-pool-button" id="join-pool-button" as={Link} to="/add/ETH">
-            <Trans>Add Interest</Trans>
+
+          <ConfirmLeverageSwapModal
+            isOpen={showConfirm}
+            // trade={trade}
+            // originalTrade={tradeToConfirm}
+            // onAcceptChanges={handleAcceptChanges}
+            attemptingTxn={attemptingTxn}
+            txHash={txHash}
+            recipient={recipient}
+            // allowedSlippage={allowedSlippage}
+            // onConfirm={handleSwap}
+            // swapErrorMessage={swapErrorMessage}
+            onDismiss={handleConfirmDismiss}
+            // swapQuoteReceivedDate={swapQuoteReceivedDate}
+            // fiatValueInput={fiatValueTradeInput}
+            // fiatValueOutput={fiatValueTradeOutput}
+          />
+          <ConfirmAddPremiumModal
+            isOpen={showPremiumConfirm}
+            // trade={trade}
+            // originalTrade={tradeToConfirm}
+            // onAcceptChanges={handleAcceptChanges}
+            attemptingTxn={attemptingTxn}
+            txHash={txHash}
+            recipient={recipient}
+            // allowedSlippage={allowedSlippage}
+            // onConfirm={handleSwap}
+            // swapErrorMessage={swapErrorMessage}
+            onDismiss={handlePremiumConfirmDismiss}
+            // swapQuoteReceivedDate={swapQuoteReceivedDate}
+            // fiatValueInput={fiatValueTradeInput}
+            // fiatValueOutput={fiatValueTradeOutput}
+          />
+
+          <ResponsiveButtonPrimary onClick={() => setshowConfirm(!showPremiumConfirm)} >
+            <Trans>Add Premium</Trans>
           </ResponsiveButtonPrimary>
         </AutoRow>
       </RowBetween>
