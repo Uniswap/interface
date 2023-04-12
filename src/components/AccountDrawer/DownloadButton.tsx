@@ -58,6 +58,5 @@ export function DownloadButton({ onClick, text = 'Download' }: { onClick?: () =>
 }
 
 export function LearnMoreButton() {
-  const navigate = useNavigate()
-  return <BaseButton onClick={() => navigate('/wallet')}>Learn More</BaseButton>
+  return <BaseButton onClick={() => window.open('https://wallet.uniswap.org/', '_blank')}>Learn More</BaseButton>
 }
