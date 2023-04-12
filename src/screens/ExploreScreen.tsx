@@ -8,7 +8,7 @@ import { ExploreSections } from 'src/components/explore/ExploreSections'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
-import { AnimatedFlex, Box } from 'src/components/layout'
+import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { HandleBar } from 'src/components/modals/HandleBar'
@@ -78,16 +78,18 @@ export function ExploreScreen(): JSX.Element {
       </Box>
       {isSearchMode ? (
         <KeyboardAvoidingView behavior="height" style={flex.fill}>
-          <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} mx="spacing16">
+          <Flex grow mx="spacing16">
             <VirtualizedList onScroll={onScroll}>
               <Box p="spacing4" />
               {debouncedSearchQuery.length === 0 ? (
                 <SearchEmptySection />
               ) : (
-                <SearchResultsSection searchQuery={debouncedSearchQuery} />
+                <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
+                  <SearchResultsSection searchQuery={debouncedSearchQuery} />
+                </AnimatedFlex>
               )}
             </VirtualizedList>
-          </AnimatedFlex>
+          </Flex>
         </KeyboardAvoidingView>
       ) : (
         <ExploreSections listRef={listRef} />

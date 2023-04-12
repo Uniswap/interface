@@ -102,8 +102,6 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
     useIsSmartContractAddress(validAddress ?? undefined, ChainId.Mainnet)
 
   const walletsLoading = ensLoading || loadingIsSmartContractAddress
-  const noENSResults = !ensLoading && !ensName && !ensAddress
-  const noResults = tokenResults.length === 0 && noENSResults && !validAddress
 
   const onRetry = useCallback(() => {
     refetch()
@@ -197,24 +195,12 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 
   if (error) {
     return (
-      <Flex pt="spacing24">
+      <AnimatedFlex entering={FadeIn} exiting={FadeOut} pt="spacing24">
         <BaseCard.ErrorState
           retryButtonLabel="Retry"
           title={t("Couldn't load search results")}
           onRetry={onRetry}
         />
-      </Flex>
-    )
-  }
-
-  if (noResults) {
-    return (
-      <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="spacing8" mx="spacing8">
-        <Text color="textSecondary" variant="bodyLarge">
-          <Trans t={t}>
-            No results found for <Text color="textPrimary">"{searchQuery}"</Text>
-          </Trans>
-        </Text>
       </AnimatedFlex>
     )
   }
@@ -222,6 +208,15 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
   return (
     <Flex grow gap="spacing8">
       <FlatList
+        ListEmptyComponent={
+          <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="spacing8" mx="spacing8">
+            <Text color="textSecondary" variant="bodyLarge">
+              <Trans t={t}>
+                No results found for <Text color="textPrimary">"{searchQuery}"</Text>
+              </Trans>
+            </Text>
+          </AnimatedFlex>
+        }
         data={sortedSearchResults}
         keyExtractor={getSearchResultId}
         listKey="wallets"
