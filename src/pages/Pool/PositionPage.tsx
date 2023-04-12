@@ -346,7 +346,7 @@ const useInverter = ({
   }
 }
 
-const INVALID_STATE = (
+export const INVALID_STATE = (
   <PageWrapper>
     <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
       <ThemedText.HeadlineLarge style={{ marginBottom: '8px' }}>
