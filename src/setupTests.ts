@@ -10,6 +10,8 @@ if (typeof global.TextEncoder === 'undefined') {
   global.TextDecoder = TextDecoder as typeof global.TextDecoder
 }
 
+global.ResizeObserver = require('resize-observer-polyfill')
+
 global.matchMedia =
   global.matchMedia ||
   function () {
