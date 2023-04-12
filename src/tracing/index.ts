@@ -32,7 +32,7 @@ Sentry.init({
     }),
   ],
   beforeSend(event: ErrorEvent, hint: EventHint) {
-    /**
+    /*
      * Since the interface currently uses HashRouter, URLs will have a # before the path.
      * This leads to issues when we send the URL into Sentry, as the path gets parsed as a "fragment".
      * Instead, this logic removes the # part of the URL.
