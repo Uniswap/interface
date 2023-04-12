@@ -1,4 +1,4 @@
-import { BaseVariant, FeatureFlag, featureFlagSettings, useBaseFlag, useUpdateFlag } from 'featureFlags'
+import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { MgtmVariant, useMgtmFlag } from 'featureFlags/flags/mgtm'
 import { useMiniPortfolioFlag } from 'featureFlags/flags/miniPortfolio'
 import { NftGraphqlVariant, useNftGraphqlFlag } from 'featureFlags/flags/nftlGraphql'
@@ -210,12 +210,6 @@ export default function FeatureFlagModal() {
         value={useMgtmFlag()}
         featureFlag={FeatureFlag.mgtm}
         label="Mobile Wallet go-to-market assets"
-      />
-      <FeatureFlagOption
-        variant={BaseVariant}
-        value={useBaseFlag(FeatureFlag.walletMicrosite)}
-        featureFlag={FeatureFlag.walletMicrosite}
-        label="Mobile Wallet microsite (requires mgtm to also be enabled)"
       />
       <FeatureFlagOption
         variant={BaseVariant}
