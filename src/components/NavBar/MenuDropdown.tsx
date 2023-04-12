@@ -146,7 +146,7 @@ export const MenuDropdown = () => {
                 <Box display={{ sm: 'none', lg: 'flex', xxl: 'none' }}>
                   <PrimaryMenuRow to="/pool" close={toggleOpen}>
                     <Icon>
-                      <PoolIcon width={24} height={24} color={theme.textSecondary} />
+                      <PoolIcon width={24} height={24} fill={theme.textPrimary} />
                     </Icon>
                     <PrimaryMenuRow.Text>
                       <Trans>Pool</Trans>

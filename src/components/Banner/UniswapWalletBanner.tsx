@@ -26,8 +26,14 @@ const PopupContainer = styled.div<{ show: boolean }>`
 
   background: url(${walletBannerPhoneImageSrc});
   background-repeat: no-repeat;
-  background-position: bottom 0px right 15px;
+  background-position: bottom -1px right 15px;
   background-size: 166px;
+
+  :hover {
+    background-size: 170px;
+  }
+  transition: background-size ${({ theme }) => theme.transition.duration.medium}
+    ${({ theme }) => theme.transition.timing.inOut};
 
   background-color: ${({ theme }) => theme.promotional};
   color: ${({ theme }) => theme.textPrimary};
