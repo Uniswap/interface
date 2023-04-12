@@ -1,7 +1,7 @@
 import {
-  NavigationContainer,
   DarkTheme,
   DefaultTheme,
+  NavigationContainer,
 } from '@react-navigation/native'
 import { useMemo } from 'react'
 import { useColorScheme } from 'react-native'
@@ -28,7 +28,7 @@ export function NavigationProvider({
         []
       )}
       theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Flex width={350}>{children}</Flex>
+      <Flex minWidth={350}>{children}</Flex>
     </NavigationContainer>
   )
 }

@@ -10,9 +10,9 @@ type WindowParams = {
 
 const APPROVAL_WINDOW_PARAMS: WindowParams = {
   type: 'popup',
-  width: 250,
-  height: 400,
-  top: 100,
+  width: 375,
+  height: 550,
+  top: 150,
   left: 1800,
 }
 
@@ -26,7 +26,7 @@ export async function openRequestsWindow(
 
   chrome.windows.create({
     ...windowParams,
-    left: currentWindowWidth - 200,
+    left: currentWindowWidth - 425,
     url: REQUESTS_WINDOW_URL,
   })
 }

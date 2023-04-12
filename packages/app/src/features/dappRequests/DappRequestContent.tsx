@@ -1,5 +1,10 @@
 import { useAppDispatch, useAppSelector } from 'app/src/state'
-import { Button } from 'ui/src/components/button/Button'
+import { YStack } from 'ui/src'
+import {
+  Button,
+  ButtonEmphasis,
+  ButtonSize,
+} from 'ui/src/components/button/Button'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
 import { DappRequestType } from './dappRequestTypes'
@@ -37,37 +42,62 @@ export function DappRequestContent(): JSX.Element {
   }
 
   return (
-    <>
+    <YStack
+      alignContent="center"
+      justifyContent="center"
+      paddingHorizontal="$spacing48"
+      paddingTop="$spacing48">
       {pendingRequests
         .map(parseRequest)
         .map((requestWithDisplay: RequestDisplayDetails) => {
           return (
-            <Flex key={requestWithDisplay.request.dappRequest.requestId}>
+            <Flex
+              key={requestWithDisplay.request.dappRequest.requestId}
+              gap="$spacing24">
               <Text variant="headlineLarge">{requestWithDisplay?.title}</Text>
-              <Text variant="bodyLarge">{requestWithDisplay?.message}</Text>
-              <Text variant="bodyLarge">
+              <Text variant="subheadLarge">{requestWithDisplay?.message}</Text>
+              <Text variant="bodySmall">
                 ID: {requestWithDisplay.request.dappRequest.requestId}
               </Text>
-              <Button onPress={(): void => onConfirm(requestWithDisplay)}>
-                Confirm
-              </Button>
-              <Button onPress={(): void => onCancel(requestWithDisplay)}>
-                Cancel
-              </Button>
+              <YStack gap="$spacing16" marginTop="$spacing16">
+                <Button
+                  buttonEmphasis={ButtonEmphasis.Primary}
+                  buttonSize={ButtonSize.Large}
+                  fontSize={18}
+                  fontWeight="medium"
+                  onPress={(): void => onConfirm(requestWithDisplay)}>
+                  Confirm
+                </Button>
+                <Button
+                  buttonEmphasis={ButtonEmphasis.Secondary}
+                  buttonSize={ButtonSize.Large}
+                  fontSize={18}
+                  fontWeight="medium"
+                  onPress={(): void => onCancel(requestWithDisplay)}>
+                  Cancel
+                </Button>
+              </YStack>
             </Flex>
           )
         })}
-    </>
+    </YStack>
   )
 }
 
 const parseRequest = (request: DappRequestStoreItem): RequestDisplayDetails => {
-  if (request.dappRequest.type === DappRequestType.SendTransaction) {
-    return {
-      message: 'Confirm this transaction?',
-      title: 'Transaction',
-      request,
-    }
+  switch (request.dappRequest.type) {
+    case DappRequestType.SendTransaction:
+      return {
+        message: 'Confirm this transaction?',
+        title: 'Transaction',
+        request,
+      }
+    case DappRequestType.GetAccount:
+      return {
+        message: 'Confirm this connection request?',
+        title: 'Connection Request',
+        request,
+      }
   }
   // TODO: Add other request types here
   return {
