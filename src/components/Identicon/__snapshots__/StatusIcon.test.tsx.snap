@@ -1,0 +1,129 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StatusIcon renders children in correct order, with no account and with socks 1`] = `
+.c0 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+.c0 > img,
+.c0 span {
+  height: 16px;
+  width: 16px;
+}
+
+.c1 {
+  position: absolute;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 16px;
+  height: 16px;
+  bottom: -4px;
+  right: -4px;
+  border-radius: 50%;
+  outline: 2px solid #FFFFFF;
+  outline-offset: -0.1px;
+  background-color: #FFFFFF;
+  overflow: hidden;
+}
+
+.c3 {
+  position: absolute;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 16px;
+  height: 16px;
+  bottom: -4px;
+  left: -4px;
+  border-radius: 50%;
+  outline: 2px solid #FFFFFF;
+  outline-offset: -0.1px;
+  background-color: #FFFFFF;
+  overflow: hidden;
+}
+
+.c2 {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width:960px) {
+  .c0 {
+    -webkit-align-items: flex-end;
+    -webkit-box-align: flex-end;
+    -ms-flex-align: flex-end;
+    align-items: flex-end;
+  }
+}
+
+@supports (overflow:clip) {
+  .c1 {
+    overflow: clip;
+  }
+}
+
+@supports (overflow:clip) {
+  .c3 {
+    overflow: clip;
+  }
+}
+
+<div
+  class="c0"
+  data-testid="StatusIconRoot"
+  size="16"
+>
+  <div
+    class="c1"
+  >
+    <img
+      alt="MetaMask icon"
+      class="c2"
+      src="metamask.svg"
+    />
+  </div>
+  <div
+    class="c3"
+  >
+    <img
+      class="c2"
+      src="socks.svg"
+    />
+  </div>
+</div>
+`;
