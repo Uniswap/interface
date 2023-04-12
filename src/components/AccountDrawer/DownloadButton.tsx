@@ -71,7 +71,3 @@ export function DownloadButton({
     </BaseButton>
   )
 }
-
-export function LearnMoreButton() {
-  return <BaseButton onClick={openWalletMicrosite}>Learn More</BaseButton>
-}
