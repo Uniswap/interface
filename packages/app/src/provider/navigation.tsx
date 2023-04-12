@@ -28,7 +28,9 @@ export function NavigationProvider({
         []
       )}
       theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Flex minWidth={350}>{children}</Flex>
+      <Flex flex={1} maxHeight={600} overflow="visible" width={350}>
+        {children}
+      </Flex>
     </NavigationContainer>
   )
 }

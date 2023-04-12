@@ -1,6 +1,8 @@
 // import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
 import { useMemo } from 'react'
-import { Text, YStack } from 'ui/src'
+import { ScrollView } from 'tamagui'
+import { Flex } from 'ui/src/components/layout/Flex'
+import { Text } from 'ui/src/components/text/Text'
 import { EMPTY_ARRAY } from '../../constants/misc'
 import { useSortedPortfolioBalances } from '../dataApi/balances'
 import { PortfolioBalance } from '../dataApi/types'
@@ -15,7 +17,7 @@ const HIDDEN_TOKENS_ROW = 'HIDDEN_TOKENS_ROW'
 export const TokenBalanceList = ({
   owner,
 }: TokenBalanceListProps): JSX.Element => {
-  const { data } = useSortedPortfolioBalances(
+  const { data, loading } = useSortedPortfolioBalances(
     owner,
     /*shouldPoll=*/ true,
     /* hideSmallBalances=*/ false,
@@ -48,19 +50,42 @@ export const TokenBalanceList = ({
     return [...balances, HIDDEN_TOKENS_ROW, ...smallBalances, ...spamBalances]
   }, [data])
 
+  if (!data && loading) {
+    return (
+      <Flex marginTop="$spacing16" paddingHorizontal="$spacing16" width="100%">
+        <Text color="$textSecondary" variant="bodyLarge">
+          Loading balances
+        </Text>
+      </Flex>
+    )
+  }
+
   if (!data || data?.balances?.length === 0) {
     return (
-      <Text color="accentCritical" variant="bodyLarge">
-        Error loading balances
-      </Text>
+      <Flex marginTop="$spacing16" paddingHorizontal="$spacing16" width="100%">
+        <Text color="$textTertiary" variant="bodyLarge">
+          No tokens
+        </Text>
+      </Flex>
     )
   }
 
   return (
-    <YStack marginTop="$spacing16">
+    <ScrollView
+      backgroundColor="$background1"
+      marginTop="$spacing16"
+      // TODO: make this dynamic
+      maxHeight={330}
+      width="100%">
       {listItems?.map((balance: PortfolioBalance) => {
-        return <TokenBalanceItem portfolioBalance={balance} />
+        return (
+          <TokenBalanceItem
+            // TODO: before passing down loading, add subtle animation on refresh of data, and make loaders take up same space as final objects
+            // loading={loading}
+            portfolioBalance={balance}
+          />
+        )
       })}
-    </YStack>
+    </ScrollView>
   )
 }

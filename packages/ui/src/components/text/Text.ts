@@ -3,6 +3,11 @@ import { styled, Text as TamaguiText } from 'tamagui'
 export const Text = styled(TamaguiText, {
   name: 'Text',
 
+  // TODO(EXT-61): keep investigating how to get text to wrap
+  wordWrap: 'break-word',
+  flex: 1,
+  flexWrap: 'wrap',
+
   variants: {
     // TODO: leverage font tokens instead
     // https://tamagui.dev/docs/core/configuration#font-tokens

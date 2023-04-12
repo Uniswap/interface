@@ -1,39 +1,41 @@
-import { Stack } from 'tamagui'
 import { Text } from 'ui/src'
-import { Button } from 'ui/src/components/button/Button'
-import { authActions } from '../auth/saga'
 
-import { useAppDispatch, useAppSelector } from '../../state'
-import { PortfolioBalance } from './PortfolioBalance'
-import { TokenBalanceList } from './TokenBalanceList'
+import { PortfolioBalance } from 'app/src/features/home/PortfolioBalance'
+import { PortfolioHeader } from 'app/src/features/home/PortfolioHeader'
+import { TokenBalanceList } from 'app/src/features/home/TokenBalanceList'
+import { Flex } from 'ui/src/components/layout/Flex'
+import { useAppSelector } from '../../state'
 
 export function HomeScreen(): JSX.Element {
   const accounts = useAppSelector((state) => state?.wallet?.accounts)
-  const dispatch = useAppDispatch()
+  const account = Object.values(accounts)?.[0]
+  const address = account?.address
 
   return (
-    <Stack
+    <Flex
       alignItems="center"
-      backgroundColor="$background3"
+      backgroundColor="$background2"
+      flexGrow={1}
       padding="$spacing12"
-      space="$spacing16">
-      <Text variant="headlineLarge">Uniswap Wallet</Text>
-      {Object.values(accounts).map((a) => (
-        <Stack
-          key={a.address}
-          backgroundColor="$background2"
-          padding="$spacing16">
-          <Text variant="bodyLarge">{a.address}</Text>
-          <PortfolioBalance address={a.address} />
-          <TokenBalanceList owner={a.address} />
-        </Stack>
-      ))}
-      <Button
-        onPress={(): void => {
-          return dispatch(authActions.reset())
-        }}>
-        Lock
-      </Button>
-    </Stack>
+      width="100%">
+      {address ? (
+        <Flex
+          backgroundColor="$background1"
+          borderRadius="$rounded16"
+          flexGrow={1}
+          gap="$spacing8"
+          paddingBottom="$spacing24"
+          paddingTop="$spacing8"
+          width="100%">
+          <PortfolioHeader address={address} />
+          <PortfolioBalance address={address} />
+          <TokenBalanceList owner={address} />
+        </Flex>
+      ) : (
+        <Text color="$accentCritical" variant="subheadLarge">
+          Error loading accounts
+        </Text>
+      )}
+    </Flex>
   )
 }

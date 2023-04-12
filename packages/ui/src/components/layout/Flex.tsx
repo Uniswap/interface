@@ -4,11 +4,7 @@ export const Flex = styled(Stack, {
   name: 'Flex',
 
   flexDirection: 'column',
-  variants: {
-    row: {
-      true: {
-        flexDirection: 'row',
-      },
-    },
-  },
+  flexWrap: 'wrap',
+
+  // TODO: make variants work to get Flex to same dev experience as mobile Flex
 })
