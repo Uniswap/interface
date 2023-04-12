@@ -127,10 +127,15 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
           element={InterfaceElementName.SWAP_DETAILS_DROPDOWN}
           shouldLogImpression={!showDetails}
         >
-          <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!trade} open={showDetails}>
+          <StyledHeaderRow
+            data-testid="swap-details-header-row"
+            onClick={() => setShowDetails(!showDetails)}
+            disabled={!trade}
+            open={showDetails}
+          >
             <RowFixed style={{ position: 'relative' }}>
               {loading || syncing ? (
-                <StyledPolling>
+                <StyledPolling data-testid="loading-indicator">
                   <StyledPollingDot>
                     <Spinner />
                   </StyledPollingDot>
@@ -141,7 +146,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
                     wrap={false}
                     content={
                       <ResponsiveTooltipContainer origin="top right" style={{ padding: '0' }}>
-                        <Card padding="12px">
+                        <Card padding="12px" data-testid="advanced-swap-details-tooltip-content">
                           <AdvancedSwapDetails
                             trade={trade}
                             allowedSlippage={allowedSlippage}
@@ -154,12 +159,12 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
                     placement="bottom"
                     disableHover={showDetails}
                   >
-                    <StyledInfoIcon color={trade ? theme.textTertiary : theme.deprecated_bg3} />
+                    <StyledInfoIcon data-testid="info-icon" color={trade ? theme.textTertiary : theme.deprecated_bg3} />
                   </MouseoverTooltipContent>
                 </HideSmall>
               )}
               {trade ? (
-                <LoadingOpacityContainer $loading={syncing}>
+                <LoadingOpacityContainer $loading={syncing} data-testid="trade-price-container">
                   <TradePrice price={trade.executionPrice} />
                 </LoadingOpacityContainer>
               ) : loading || syncing ? (
@@ -190,11 +195,11 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
         <AnimatedDropdown open={showDetails}>
           <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
             {trade ? (
-              <StyledCard>
+              <StyledCard data-testid="advanced-swap-details">
                 <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
               </StyledCard>
             ) : null}
-            {trade ? <SwapRoute trade={trade} syncing={syncing} /> : null}
+            {trade ? <SwapRoute data-testid="swap-route-info" trade={trade} syncing={syncing} /> : null}
           </AutoColumn>
         </AnimatedDropdown>
       </AutoColumn>
