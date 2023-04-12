@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "UL Wallet Extension",
   "description": "UL Wallet Extension",
-  "version": "0.0.0.2",
+  "version": "0.0.0.3",
   "icons": {
     "16": "assets/icon16.png",
     "32": "assets/icon32.png",
@@ -26,7 +26,9 @@
   "content_scripts": [
     {
       "matches": [
-        "<all_urls>"
+        "http://localhost:3000/*",
+        "https://*.vercel.app/*",
+        "https://app.uniswap.org/*"
       ],
       "js": [
         "providerScript.js"
@@ -39,7 +41,9 @@
         "injected.js"
       ],
       "matches": [
-        "<all_urls>"
+        "http://localhost:3000/*",
+        "https://*.vercel.app/*",
+        "https://app.uniswap.org/*"
       ]
     }
   ]
