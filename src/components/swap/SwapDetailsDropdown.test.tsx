@@ -41,6 +41,8 @@ describe('SwapDetailsDropdown.tsx', () => {
       <SwapDetailsDropdown trade={trade} syncing={false} loading={false} allowedSlippage={allowedSlippage} />
     )
     expect(asFragment()).toMatchSnapshot()
+    fireEvent.mouseOver(screen.getByTestId('info-icon'))
+    expect(screen.getByTestId('advanced-swap-details-tooltip-content')).toBeInTheDocument()
   })
 
   it('loading state contains expected elements', () => {
@@ -56,11 +58,8 @@ describe('SwapDetailsDropdown.tsx', () => {
     expect(screen.getByTestId('info-icon')).toBeInTheDocument()
     expect(screen.getByTestId('swap-details-header-row')).toBeInTheDocument()
     expect(screen.getByTestId('trade-price-container')).toBeInTheDocument()
-    // fireEvent.mouseOver(screen.getByTestId('info-icon'))
-    // expect(screen.findByTestId('advanced-swap-details-tooltip-content')).toBeInTheDocument()
     fireEvent.click(screen.getByTestId('swap-details-header-row'))
     expect(screen.getByTestId('advanced-swap-details')).toBeInTheDocument()
     expect(screen.getByTestId('swap-route-info')).toBeInTheDocument()
-    // expect(screen.getByTestId('gas-estimate-badge-icon')).toBeInTheDocument()
   })
 })

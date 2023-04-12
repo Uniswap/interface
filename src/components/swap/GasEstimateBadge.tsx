@@ -91,7 +91,7 @@ export default function GasEstimateBadge({
         })
       }
     >
-      <LoadingOpacityContainer $loading={loading} data-testid="gas-estimate-badge-icon">
+      <LoadingOpacityContainer $loading={loading}>
         <GasWrapper>
           <StyledGasIcon />
           {formattedGasPriceString ?? null}
