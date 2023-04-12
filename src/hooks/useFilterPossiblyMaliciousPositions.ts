@@ -51,15 +51,20 @@ export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]
         const token1FromList = activeTokensList[position.token1] as Token | undefined
         if (token0FromList) tokensInListCount++
         if (token1FromList) tokensInListCount++
+        // if both tokens are in the list, then we let both have url symbols (so we don't check)
         if (tokensInListCount === 2) return true
 
-        const token0HasUrlSymbol = hasURL(token0FromList?.symbol ?? addressesToSymbol[position.token0])
-        const token1HasUrlSymbol = hasURL(token1FromList?.symbol ?? addressesToSymbol[position.token1])
-        const maxOneUrlTokenSymbol = token0HasUrlSymbol ? !token1HasUrlSymbol : true
-        if (tokensInListCount >= 1 && maxOneUrlTokenSymbol) return true
+        // check the token symbols to see if they contain a url
+        // prioritize the token entity from the list if it exists
+        // if the token isn't in the list, then use the data returned from chain calls
+        let urlSymbolCount = 0
+        if (hasURL(token0FromList?.symbol ?? addressesToSymbol[position.token0])) urlSymbolCount++
+        if (hasURL(token1FromList?.symbol ?? addressesToSymbol[position.token1])) urlSymbolCount++
+        // if one token is in the list, then one token can have a url symbol
+        if (tokensInListCount === 1 && urlSymbolCount < 2) return true
 
-        const neitherTokenHasAUrlSymbol = !token0HasUrlSymbol && !token1HasUrlSymbol
-        return neitherTokenHasAUrlSymbol
+        // if neither token is in the list, then neither can have a url symbol
+        return urlSymbolCount === 0
       }),
     [addressesToSymbol, positions, activeTokensList]
   )
