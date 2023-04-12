@@ -1,52 +1,29 @@
 import { useState } from 'react'
-import {
-  Card,
-  Circle,
-  Form,
-  H1,
-  H2,
-  Input,
-  Label,
-  Paragraph,
-  Stack,
-  XStack,
-  YStack,
-} from 'tamagui'
+import { Card, Form, H2, Input, Label, Stack, XStack, YStack } from 'tamagui'
+import { Button } from 'ui/src/components/button/Button'
 import { useAppDispatch } from '../../state'
+import { usePasswordInput } from '../auth/Locked'
 import { importAccountActions } from '../wallet/import/importAccountSaga'
 import { ImportAccountType } from '../wallet/import/types'
-import { usePasswordInput } from '../auth/Locked'
-import { Button } from 'ui/src/components/button/Button'
-
-const DUMMY_SEED_PHRASE =
-  'stereo gain space check elbow say usual help cinnamon inquiry snap expose'
 
 export function IntroScreen(): JSX.Element {
   const dispatch = useAppDispatch()
 
-  const [mnemonic, setMnemonic] = useState(DUMMY_SEED_PHRASE)
+  const [mnemonic, setMnemonic] = useState('')
   const passwordInputProps = usePasswordInput()
 
   return (
     <Card alignItems="center" backgroundColor="$background0">
-      <Card.Header padded alignItems="center">
-        <Circle backgroundColor="$brandedAccentSoft" height={60} width={60} />
-        <H2>Say hello to your new wallet</H2>
-
-        <Paragraph>
-          It has a public address for making transactions, and a nickname that’s
-          only visible to you.
-        </Paragraph>
-      </Card.Header>
-
       <Stack
         alignItems="center"
         backgroundColor="$background3"
         borderRadius="$rounded16"
         justifyContent="center"
-        margin="$spacing16"
-        padding="$spacing36">
-        <H1>Import wallet</H1>
+        marginVertical="$spacing8"
+        paddingHorizontal="$spacing36"
+        paddingVertical="$spacing24"
+        space="$spacing24">
+        <H2>Import wallet</H2>
         <Form
           onSubmit={(): void => {
             dispatch(
@@ -57,13 +34,13 @@ export function IntroScreen(): JSX.Element {
               })
             )
           }}>
-          <YStack space="$spacing24">
+          <YStack alignItems="center" space="$spacing24">
             <XStack alignItems="center" space="$spacing16">
               <Label htmlFor="password">Password</Label>
               <Input
                 secureTextEntry
-                flex={1}
                 id="password"
+                maxWidth={180}
                 {...passwordInputProps}
               />
             </XStack>
@@ -71,20 +48,25 @@ export function IntroScreen(): JSX.Element {
             <XStack alignItems="center" space="$spacing16">
               <Label htmlFor="mnemonic">Mnemonic</Label>
               <Input
-                flex={1}
+                secureTextEntry
                 id="mnemonic"
-                value={DUMMY_SEED_PHRASE}
+                maxWidth={180}
+                value={mnemonic}
                 onChangeText={setMnemonic}
               />
             </XStack>
             <Form.Trigger asChild>
-              <Button>Import</Button>
+              <Button
+                fontSize={18}
+                fontWeight="400"
+                paddingHorizontal="$spacing24"
+                paddingVertical="$spacing16">
+                Import
+              </Button>
             </Form.Trigger>
           </YStack>
         </Form>
       </Stack>
-
-      <Card.Footer />
     </Card>
   )
 }

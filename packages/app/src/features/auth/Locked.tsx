@@ -1,10 +1,13 @@
-import { Button } from 'ui/src/components/button/Button'
-import { Input, InputProps, Stack, Text } from 'ui/src'
 import { useState } from 'react'
+
+import { Input, InputProps, Stack, Text, YStack } from 'ui/src'
+import { Button } from 'ui/src/components/button/Button'
 import { useAppDispatch } from '../../state'
+import { SagaStatus } from '../../utils/saga'
 import { authActions, authSagaName } from './saga'
-import { useSagaStatus } from 'app/src/state/useSagaStatus'
 import { AuthType } from './types'
+
+import { useSagaStatus } from 'app/src/state/useSagaStatus'
 
 export function usePasswordInput(
   defaultValue = ''
@@ -37,20 +40,26 @@ function Locked(): JSX.Element {
     )
   }
 
+  const isIncorrectPassword = status === SagaStatus.Failure
+
   return (
-    <Stack padding="$spacing24" space="$spacing24">
-      <Text color="$textPrimary" variant="headlineLarge">
-        Unlock with password
-      </Text>
+    <Stack padding="$spacing24" space="$spacing12">
       <Text color="$textPrimary" variant="headlineSmall">
-        Status {status}
+        Enter your password
       </Text>
-      <Input
-        secureTextEntry
-        {...passwordInputProps}
-        backgroundColor="$background3"
-        color="$textPrimary"
-      />
+      <YStack>
+        <Input
+          secureTextEntry
+          {...passwordInputProps}
+          backgroundColor="$background3"
+          color="$textPrimary"
+        />
+        {isIncorrectPassword && (
+          <Text color="red" variant="bodySmall">
+            Wrong password. Try again!
+          </Text>
+        )}
+      </YStack>
       <Button onPress={onPress}>Unlock</Button>
     </Stack>
   )
