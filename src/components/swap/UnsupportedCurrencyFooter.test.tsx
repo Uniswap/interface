@@ -36,7 +36,6 @@ describe('UnsupportedCurrencyFooter.tsx', () => {
   })
 
   it('works as expected when one unsupported token exists', async () => {
-    jest.setTimeout(10000)
     mockUseUnsupportedTokens.mockImplementation(() => ({ [unsupportedTokenAddress]: unsupportedToken }))
     mockGetExplorerLink.mockImplementation(() => unsupportedTokenExplorerLink)
     const rendered = render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
@@ -59,7 +58,7 @@ describe('UnsupportedCurrencyFooter.tsx', () => {
     expect(
       rendered.queryByText((content) => content.startsWith('Some assets are not available through this interface'))
     ).toBeNull()
-  })
+  }, 10_000)
 
   it('works as expected when no unsupported tokens exist', async () => {
     mockUseUnsupportedTokens.mockImplementation(() => ({}))
