@@ -43,9 +43,7 @@ const AssetPage = () => {
 
   const [asset, collection] = data
 
-  if (detailsV2Enabled) return <NftDetails asset={asset} collection={collection} />
-
-  if (loading) return <AssetDetailsLoading />
+  if (loading && !detailsV2Enabled) return <AssetDetailsLoading />
   return (
     <>
       <Trace
@@ -53,14 +51,18 @@ const AssetPage = () => {
         properties={{ collection_address: contractAddress, token_id: tokenId }}
         shouldLogImpression
       >
-        {!!asset && !!collection && (
-          <AssetContainer>
-            <AssetDetails collection={collection} asset={asset} />
-            <AssetPriceDetailsContainer>
-              <AssetPriceDetails collection={collection} asset={asset} />
-            </AssetPriceDetailsContainer>
-          </AssetContainer>
-        )}
+        {!!asset && !!collection ? (
+          detailsV2Enabled ? (
+            <NftDetails asset={asset} collection={collection} />
+          ) : (
+            <AssetContainer>
+              <AssetDetails collection={collection} asset={asset} />
+              <AssetPriceDetailsContainer>
+                <AssetPriceDetails collection={collection} asset={asset} />
+              </AssetPriceDetailsContainer>
+            </AssetContainer>
+          )
+        ) : null}
       </Trace>
     </>
   )
