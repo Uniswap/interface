@@ -1,9 +1,11 @@
 import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
+import { useDetailsV2Enabled } from 'featureFlags/flags/nftDetails'
 import { useNftAssetDetails } from 'graphql/data/nft/Details'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
+import { NftDetails } from 'nft/components/details/NftDetails'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -37,11 +39,13 @@ const AssetPriceDetailsContainer = styled.div`
 const AssetPage = () => {
   const { tokenId = '', contractAddress = '' } = useParams()
   const { data, loading } = useNftAssetDetails(contractAddress, tokenId)
+  const detailsV2Enabled = useDetailsV2Enabled()
 
   const [asset, collection] = data
 
-  if (loading) return <AssetDetailsLoading />
+  if (detailsV2Enabled) return <NftDetails asset={asset} collection={collection} />
 
+  if (loading) return <AssetDetailsLoading />
   return (
     <>
       <Trace
