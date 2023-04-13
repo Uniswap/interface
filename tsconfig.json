@@ -7,6 +7,7 @@
     "downlevelIteration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "incremental": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -23,6 +24,7 @@
     "strict": true,
     "strictNullChecks": true,
     "target": "es5",
+    "tsBuildInfoFile": "node_modules/.cache/.tsbuildinfo",
     "types": ["jest"],
     "useUnknownInCatchVariables": false
   },
