@@ -1,6 +1,5 @@
+import { WETH_GOERLI } from '../fixtures/constants'
 import { getTestSelector } from '../utils'
-
-const WETH_GOERLI = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6'
 
 describe('Swap', () => {
   const verifyAmount = (field: 'input' | 'output', amountText: string | null) => {
