@@ -26,9 +26,8 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
     // If the error is based on a user rejecting, it should not be considered an exception.
     if (didUserReject(error)) return null
 
-    // This is caused by HTML being returned for a chunk from Cloudflare.
-    // Usually, it's the result of a 499 exception right before it, which should be handled.
-    // Therefore, this can be ignored.
+    // Cloudflare may serve HTML error pages (eg from a 499), which are already raised as ChunkLoadError.
+    // Parsing the HTML results in a second SyntaxError. This not the root error (it is already reported as ChunkLoadError), so it should not be reported.
     if (error.message.match(/Unexpected token '<'/)) return null
   }
 
