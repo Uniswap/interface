@@ -130,14 +130,14 @@ export default function UniswapWalletBanner() {
 
             <BannerButton backgroundColor="black" onClick={openWalletMicrosite}>
               <ThemedText.LabelSmall color="white">
-                <Trans>Learn More</Trans>
+                <Trans>Learn more</Trans>
               </ThemedText.LabelSmall>
             </BannerButton>
           </>
         ) : (
           <BannerButton backgroundColor="white" width="125px" onClick={openWalletMicrosite}>
             <ThemedText.LabelSmall color="black">
-              <Trans>Learn More</Trans>
+              <Trans>Learn more</Trans>
             </ThemedText.LabelSmall>
           </BannerButton>
         )}
