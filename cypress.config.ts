@@ -1,4 +1,5 @@
 import codeCoverageTask from '@cypress/code-coverage/task'
+import { setupHardhatEvents } from 'cypress-hardhat'
 import { defineConfig } from 'cypress'
 
 export default defineConfig({
@@ -8,7 +9,8 @@ export default defineConfig({
   chromeWebSecurity: false,
   retries: { runMode: 2 },
   e2e: {
-    setupNodeEvents(on, config) {
+    async setupNodeEvents(on, config) {
+      await setupHardhatEvents(on, config)
       codeCoverageTask(on, config)
       return {
         ...config,
