@@ -5,6 +5,9 @@ name: 1 | Push changes to releases/staging
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - '**'
 
 # https://stackoverflow.com/questions/57921401/push-to-origin-from-github-action
 jobs:
@@ -14,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
         with:
-          token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
+          token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
           ref: main
       - name: Setup git
         run: |
