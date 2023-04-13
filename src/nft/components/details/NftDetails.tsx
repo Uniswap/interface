@@ -5,7 +5,6 @@ interface NftDetailsProps {
   collection: CollectionInfoForAsset
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export const NftDetails = ({ asset, collection }: NftDetailsProps) => {
   return (
     <div>
