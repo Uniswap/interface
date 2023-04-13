@@ -3,7 +3,7 @@ const { VanillaExtractPlugin } = require('@vanilla-extract/webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const EsLintWebpackPlugin = require('eslint-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
-const { DefinePlugin } = require('webpack')
+const { DefinePlugin, IgnorePlugin } = require('webpack')
 
 const isProduction = process.env.NODE_ENV === 'production'
 const commitHash = require('child_process').execSync('git rev-parse HEAD').toString().trim()
@@ -34,28 +34,34 @@ module.exports = {
   webpack: {
     plugins: [new VanillaExtractPlugin({ identifiers: 'short' })],
     configure: (webpackConfig) => {
-      // Extend process.env with dynamic values (eg commit hash).
-      // This will make dynamic values available to JavaScript only, not to interpolated HTML (ie index.html).
-      Object.assign(webpackConfig.plugins.find((plugin) => plugin instanceof DefinePlugin).definitions['process.env'], {
-        REACT_APP_GIT_COMMIT_HASH: JSON.stringify(commitHash),
-      })
+      webpackConfig.plugins = webpackConfig.plugins
+        .filter((plugin) => {
+          // Type checking and linting are only necessary as part of development and testing.
+          // Omit them from production builds, as they slow down the feedback loop.
+          if (isProduction) {
+            if (plugin instanceof ForkTsCheckerWebpackPlugin) return false
+            if (plugin instanceof EsLintWebpackPlugin) return false
+          }
 
-      // Type checking and linting are only necessary as part of development and testing.
-      // Omit them from production builds, as they slow down the feedback loop.
-      if (isProduction) {
-        webpackConfig.plugins = webpackConfig.plugins.filter((plugin) => {
-          if (plugin instanceof ForkTsCheckerWebpackPlugin) return false
-          if (plugin instanceof EsLintWebpackPlugin) return false
           return true
         })
-      }
+        .map((plugin) => {
+          // Extend process.env with dynamic values (eg commit hash).
+          // This will make dynamic values available to JavaScript only, not to interpolated HTML (ie index.html).
+          if (plugin instanceof DefinePlugin) {
+            Object.assign(plugin.definitions['process.env'], {
+              REACT_APP_GIT_COMMIT_HASH: JSON.stringify(commitHash),
+            })
+          }
 
-      // CSS ordering is mitigated through scoping / naming conventions, so we can ignore order warnings.
-      // See https://webpack.js.org/plugins/mini-css-extract-plugin/#remove-order-warnings.
-      const miniCssExtractPlugin = webpackConfig.plugins.find((plugin) => plugin instanceof MiniCssExtractPlugin)
-      if (miniCssExtractPlugin) {
-        miniCssExtractPlugin.options.ignoreOrder = true
-      }
+          // CSS ordering is mitigated through scoping / naming conventions, so we can ignore order warnings.
+          // See https://webpack.js.org/plugins/mini-css-extract-plugin/#remove-order-warnings.
+          if (plugin instanceof MiniCssExtractPlugin) {
+            plugin.options.ignoreOrder = true
+          }
+
+          return plugin
+        })
 
       // We're currently on Webpack 4.x which doesn't support the `exports` field in package.json.
       // Instead, we need to manually map the import path to the correct exports path (eg dist or build folder).
