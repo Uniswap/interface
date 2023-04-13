@@ -2,7 +2,7 @@ import { CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 import { InterfaceTrade } from 'state/routing/types'
-import { render, screen } from 'test-utils'
+import { render, screen } from 'test-utils/render'
 
 import SwapModalFooter from './SwapModalFooter'
 
@@ -37,7 +37,7 @@ describe('SwapModalFooter.tsx', () => {
         allowedSlippage={allowedSlippage}
         hash={undefined}
         onConfirm={() => null}
-        disabledConfirm={true}
+        disabledConfirm
         swapErrorMessage={swapErrorMessage}
         swapQuoteReceivedDate={undefined}
         fiatValueInput={fiatValue}
