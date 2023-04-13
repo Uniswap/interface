@@ -34,6 +34,8 @@ module.exports = {
   webpack: {
     plugins: [new VanillaExtractPlugin({ identifiers: 'short' })],
     configure: (webpackConfig) => {
+      webpackConfig.optimization.minimize = false
+
       webpackConfig.plugins = webpackConfig.plugins
         .filter((plugin) => {
           // Type checking and linting are only necessary as part of development and testing.
