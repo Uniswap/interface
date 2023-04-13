@@ -3,7 +3,7 @@ const { VanillaExtractPlugin } = require('@vanilla-extract/webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const EsLintWebpackPlugin = require('eslint-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
-const { DefinePlugin, IgnorePlugin } = require('webpack')
+const { DefinePlugin } = require('webpack')
 
 const isProduction = process.env.NODE_ENV === 'production'
 const commitHash = require('child_process').execSync('git rev-parse HEAD').toString().trim()
