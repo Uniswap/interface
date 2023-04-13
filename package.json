@@ -21,7 +21,7 @@
     "start": "craco start",
     "build": "craco build",
     "serve": "serve build -l 3000",
-    "lint": "yarn eslint --ignore-path .gitignore .",
+    "lint": "yarn eslint --ignore-path .gitignore --cache --cache-location node_modules/.cache/eslint/ .",
     "typecheck": "tsc --noEmit",
     "test": "craco test --coverage",
     "test:size": "node scripts/test-size.js",
