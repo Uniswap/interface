@@ -1,3 +1,4 @@
+import userEvent from '@testing-library/user-event'
 import { Token } from '@uniswap/sdk-core'
 import { useUnsupportedTokens } from 'hooks/Tokens'
 import { mocked } from 'test-utils/mocked'
@@ -38,7 +39,7 @@ describe('UnsupportedCurrencyFooter.tsx', () => {
     mockUseUnsupportedTokens.mockImplementation(() => ({ [unsupportedTokenAddress]: unsupportedToken }))
     mockGetExplorerLink.mockImplementation(() => unsupportedTokenExplorerLink)
     const rendered = render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
-    fireEvent.click(screen.getByTestId('read-more-button'))
+    await userEvent.click(screen.getByTestId('read-more-button'))
     expect(screen.getByText('Unsupported Assets')).toBeInTheDocument()
     expect(
       screen.getByText((content) => content.startsWith('Some assets are not available through this interface'))
@@ -50,7 +51,7 @@ describe('UnsupportedCurrencyFooter.tsx', () => {
       'href',
       unsupportedTokenExplorerLink
     )
-    fireEvent.click(screen.getByTestId('close-icon'))
+    await userEvent.click(screen.getByTestId('close-icon'))
     await waitForElementToBeRemoved(rendered.queryByTestId('unsupported-token-card'))
     expect(rendered.queryByText('Unsupported Assets')).toBeNull()
     expect(rendered.queryByTestId('unsupported-token-card')).toBeNull()
