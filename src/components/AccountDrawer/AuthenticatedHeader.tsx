@@ -30,13 +30,13 @@ import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal 
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import StatusIcon from '../Identicon/StatusIcon'
-import { useToggleWalletDrawer } from '.'
+import { useToggleAccountDrawer } from '.'
 import IconButton, { IconHoverText } from './IconButton'
 import MiniPortfolio from './MiniPortfolio'
 import { portfolioFadeInAnimation } from './MiniPortfolio/PortfolioRow'
 
 const AuthenticatedHeaderWrapper = styled.div`
-  padding: 14px 12px 16px 16px;
+  padding: 20px 16px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -184,7 +184,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     dispatch(updateSelectedWallet({ wallet: undefined }))
   }, [connector, dispatch])
 
-  const toggleWalletDrawer = useToggleWalletDrawer()
+  const toggleWalletDrawer = useToggleAccountDrawer()
 
   const navigateToProfile = useCallback(() => {
     toggleWalletDrawer()
@@ -197,9 +197,10 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
 
   const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const openFoRModalWithAnalytics = useCallback(() => {
+    toggleWalletDrawer()
     sendAnalyticsEvent(InterfaceEventName.FIAT_ONRAMP_WIDGET_OPENED)
     openFiatOnrampModal()
-  }, [openFiatOnrampModal])
+  }, [openFiatOnrampModal, toggleWalletDrawer])
 
   const [shouldCheck, setShouldCheck] = useState(false)
   const {
@@ -302,6 +303,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           emphasis={ButtonEmphasis.medium}
           onClick={handleBuyCryptoClick}
           disabled={disableBuyCryptoButton}
+          data-testid="wallet-buy-crypto"
         >
           {error ? (
             <ThemedText.BodyPrimary>{error}</ThemedText.BodyPrimary>

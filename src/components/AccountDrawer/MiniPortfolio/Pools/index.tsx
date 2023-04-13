@@ -4,9 +4,9 @@ import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/an
 import { formatNumber, NumberType } from '@uniswap/conedison/format'
 import { Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { useToggleWalletDrawer } from 'components/WalletDropdown'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -33,7 +33,7 @@ export default function Pools({ account }: { account: string }) {
     return [openPositions, closedPositions]
   }, [positions])
 
-  const toggleWalletDrawer = useToggleWalletDrawer()
+  const toggleWalletDrawer = useToggleAccountDrawer()
 
   if (!positions || loading) {
     return <PortfolioSkeleton />
@@ -93,7 +93,7 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
   const liquidityValue = calculcateLiquidityValue(priceA, priceB, position)
 
   const navigate = useNavigate()
-  const toggleWalletDrawer = useToggleWalletDrawer()
+  const toggleWalletDrawer = useToggleAccountDrawer()
   const { chainId: walletChainId, connector } = useWeb3React()
   const onClick = useCallback(async () => {
     if (walletChainId !== chainId) await switchChain(connector, chainId)

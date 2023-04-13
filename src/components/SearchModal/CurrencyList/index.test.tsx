@@ -1,3 +1,4 @@
+import { screen } from '@testing-library/react'
 import { Currency, CurrencyAmount as mockCurrencyAmount, Token as mockToken } from '@uniswap/sdk-core'
 import { DAI, USDC_MAINNET, WBTC } from 'constants/tokens'
 import * as mockJSBI from 'jsbi'
@@ -42,7 +43,7 @@ jest.mock('../../../state/connection/hooks', () => {
 })
 
 it('renders loading rows when isLoading is true', () => {
-  const { asFragment } = render(
+  const component = render(
     <CurrencyList
       height={10}
       currencies={[]}
@@ -54,11 +55,14 @@ it('renders loading rows when isLoading is true', () => {
       isAddressSearch=""
     />
   )
-  expect(asFragment()).toMatchSnapshot()
+  expect(component.findByTestId('loading-rows')).toBeTruthy()
+  expect(screen.queryByText('Wrapped BTC')).not.toBeInTheDocument()
+  expect(screen.queryByText('DAI')).not.toBeInTheDocument()
+  expect(screen.queryByText('USDC')).not.toBeInTheDocument()
 })
 
 it('renders currency rows correctly when currencies list is non-empty', () => {
-  const { asFragment } = render(
+  render(
     <CurrencyList
       height={10}
       currencies={[DAI, USDC_MAINNET, WBTC]}
@@ -70,5 +74,7 @@ it('renders currency rows correctly when currencies list is non-empty', () => {
       isAddressSearch=""
     />
   )
-  expect(asFragment()).toMatchSnapshot()
+  expect(screen.getByText('Wrapped BTC')).toBeInTheDocument()
+  expect(screen.getByText('DAI')).toBeInTheDocument()
+  expect(screen.getByText('USDC')).toBeInTheDocument()
 })

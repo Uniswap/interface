@@ -1,8 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import NewBadge from 'components/WalletModal/NewBadge'
 import Web3Status from 'components/Web3Status'
-import { useMGTMMicrositeEnabled } from 'featureFlags/flags/mgtm'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useIsPoolsPage } from 'hooks/useIsPoolsPage'
@@ -60,7 +58,6 @@ export const PageTabs = () => {
 
   const isPoolActive = useIsPoolsPage()
   const isNftPage = useIsNftPage()
-  const micrositeEnabled = useMGTMMicrositeEnabled()
 
   const shouldDisableNFTRoutes = useAtomValue(shouldDisableNFTRoutesAtom)
 
@@ -82,14 +79,6 @@ export const PageTabs = () => {
           <Trans>Pools</Trans>
         </MenuItem>
       </Box>
-      {micrositeEnabled && (
-        <Box display={{ sm: 'none', xxxl: 'flex' }}>
-          <MenuItem href="/wallet" isActive={pathname.startsWith('/wallet')}>
-            <Trans>Wallet</Trans>
-            <NewBadge />
-          </MenuItem>
-        </Box>
-      )}
       <Box marginY={{ sm: '4', md: 'unset' }}>
         <MenuDropdown />
       </Box>
