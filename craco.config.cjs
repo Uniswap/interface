@@ -24,6 +24,7 @@ module.exports = {
   jest: {
     configure(jestConfig) {
       return Object.assign({}, jestConfig, {
+        cacheDirectory: 'node_modules/.cache/jest',
         transformIgnorePatterns: ['@uniswap/conedison/format', '@uniswap/conedison/provider'],
         moduleNameMapper: {
           '@uniswap/conedison/format': '@uniswap/conedison/dist/format',
