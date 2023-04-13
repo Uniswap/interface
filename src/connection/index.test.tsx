@@ -1,3 +1,5 @@
+import INJECTED_DARK_ICON from 'assets/svg/browser-wallet-dark.svg'
+import INJECTED_LIGHT_ICON from 'assets/svg/browser-wallet-light.svg'
 import { ConnectionType, getConnections, useGetConnection } from 'connection'
 import { renderHook } from 'test-utils'
 
@@ -107,6 +109,9 @@ describe('connection utility/metadata tests', () => {
     expect(displayed.includes(injected)).toBe(true)
     expect(injected.getName()).toBe('Browser Wallet')
     expect(injected.overrideActivate?.()).toBeFalsy()
+
+    expect(injected.getIcon?.(/* isDarkMode */ false)).toBe(INJECTED_LIGHT_ICON)
+    expect(injected.getIcon?.(/* isDarkMode */ true)).toBe(INJECTED_DARK_ICON)
 
     // Ensures we provide multiple connection options if in an unknown injected browser
     expect(displayed.length).toEqual(4)
