@@ -1,0 +1,61 @@
+name: 3 | Generate PR for releases/staging to releases/prod
+
+# This CI job is responsible for generating PRs that bring the HEAD of releases/staging into releases/prod.
+# These PRs are meant to be the only (standard) way that code is merged into the releases/prod branch.
+#
+# https://github.com/peter-evans/create-pull-request/blob/main/docs/examples.md#keep-a-branch-up-to-date-with-another
+
+on:
+  workflow_dispatch:
+
+jobs:
+  prod-gen-pr:
+    name: 'Generate PR for merging to releases/prod branch'
+    runs-on: ubuntu-latest
+    environment:
+      name: release
+    steps:
+      - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
+        with:
+          token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
+          ref: main
+      - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
+        with:
+          token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
+          ref: releases/prod
+      - name: Reset promotion branch
+        run: |
+          git fetch origin releases/staging:releases/staging
+          git reset --hard releases/staging
+      - name: Setup git
+        run: |
+          git config user.name "UL Mobile Service Account"
+          git config user.email "hello-happy-puppy@users.noreply.github.com"
+      - uses: peter-evans/create-pull-request@ea54357f43e3d1cf1125471d0814f4d02cc0d364
+        id: cpr
+        with:
+          token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
+          commit-message: "This PR merges latest commits of `releases/staging` to `releases/prod`. Upon approval and successful merge, a Github action associated with the prod Fastlane setup will deploy to TestFlight, where the app can be submitted to Apple."
+          base: 'releases/prod'
+          title: 'ci: Release Staging to Prod'
+          delete-branch: 'true'
+          committer: 'UL Service Account <hello-happy-puppy@users.noreply.github.com>'
+          author: 'UL Service Account <hello-happy-puppy@users.noreply.github.com>'
+          branch: 'approvals/stagingToProd'
+      - uses: peter-evans/enable-pull-request-automerge@60812ab1c2c6c6a8932b4d6e059becafaf386256
+        with:
+          token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
+          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+          merge-method: merge
+      - name: Update PR body
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "### Description" > /tmp/pr_desc
+          echo "" >> /tmp/pr_desc
+          echo "This PR promotes the following commits from releases/staging to prod." >> /tmp/pr_desc
+          echo "" >> /tmp/pr_desc
+          gh pr view ${{ steps.cpr.outputs.pull-request-number }} --json commits | jq '.commits[] | [.oid, .messageHeadline] | @tsv' | sed 's/"//g' | sed 's/\\t/ - /g' >> /tmp/pr_desc
+          echo "" >> /tmp/pr_desc
+          echo "**Once approved this PR will automatically merge via a merge commit.**" >> /tmp/pr_desc
+          gh pr edit ${{ steps.cpr.outputs.pull-request-number }} -b "$(cat /tmp/pr_desc)"
