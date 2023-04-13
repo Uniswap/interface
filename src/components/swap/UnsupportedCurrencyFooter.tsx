@@ -64,7 +64,6 @@ export default function UnsupportedCurrencyFooter({
       : []
 
   const unsupportedTokens = useUnsupportedTokens()
-  console.log('link', getExplorerLink(1, '0x4e83b6287588a96321B2661c5E041845fF7814af', ExplorerDataType.ADDRESS))
 
   return (
     <DetailsFooter show={show}>
