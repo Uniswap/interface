@@ -1,6 +1,7 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { MgtmVariant, useMgtmFlag } from 'featureFlags/flags/mgtm'
 import { useMiniPortfolioFlag } from 'featureFlags/flags/miniPortfolio'
+import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
 import { NftGraphqlVariant, useNftGraphqlFlag } from 'featureFlags/flags/nftlGraphql'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
 import { SwapWidgetVariant, useSwapWidgetFlag } from 'featureFlags/flags/swapWidget'
@@ -234,6 +235,12 @@ export default function FeatureFlagModal() {
         value={useNftGraphqlFlag()}
         featureFlag={FeatureFlag.nftGraphql}
         label="Migrate NFT read endpoints to GQL"
+      />
+      <FeatureFlagOption
+        variant={DetailsV2Variant}
+        value={useDetailsV2Flag()}
+        featureFlag={FeatureFlag.detailsV2}
+        label="Use the new details page for nfts"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption

@@ -14,6 +14,7 @@ describe('application reducer', () => {
 
   beforeEach(() => {
     store = createStore(reducer, {
+      fiatOnramp: { available: false, availabilityChecked: false },
       chainId: null,
       openModal: null,
       popupList: [],

@@ -38,10 +38,17 @@ const MICROSITE_LINK = 'https://wallet.uniswap.org/'
 const openAppStore = () => {
   window.open(APP_STORE_LINK, /* target = */ 'uniswap_wallet_appstore')
 }
-const openWalletMicrosite = () => {
+export const openWalletMicrosite = () => {
   sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_MICROSITE_OPENED)
   window.open(MICROSITE_LINK, /* target = */ 'uniswap_wallet_microsite')
 }
+
+export function openDownloadApp(element: InterfaceElementName) {
+  sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { element })
+  if (isIOS) openAppStore()
+  else openWalletMicrosite()
+}
+
 // Launches App Store if on an iOS device, else navigates to Uniswap Wallet microsite
 export function DownloadButton({
   onClick,
@@ -55,9 +62,7 @@ export function DownloadButton({
   const onButtonClick = useCallback(() => {
     // handles any actions required by the parent, i.e. cancelling wallet connection attempt or dismissing an ad
     onClick?.()
-    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { element })
-    if (isIOS) openAppStore()
-    else openWalletMicrosite()
+    openDownloadApp(element)
   }, [element, onClick])
 
   return (
@@ -65,8 +70,4 @@ export function DownloadButton({
       {text}
     </BaseButton>
   )
-}
-
-export function LearnMoreButton() {
-  return <BaseButton onClick={openWalletMicrosite}>Learn More</BaseButton>
 }
