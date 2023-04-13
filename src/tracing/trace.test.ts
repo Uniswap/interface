@@ -4,8 +4,8 @@ import * as Sentry from '@sentry/react'
 import { Transaction } from '@sentry/tracing'
 import { ErrorEvent, EventHint } from '@sentry/types'
 import assert from 'assert'
-import { beforeSend } from 'tracing'
 
+import { beforeSend } from './errors'
 import { trace } from './trace'
 
 jest.mock('@sentry/react', () => {
