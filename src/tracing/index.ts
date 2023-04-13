@@ -19,6 +19,20 @@ window.GIT_COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
 const AMPLITUDE_DUMMY_KEY = '00000000000000000000000000000000'
 export const STATSIG_DUMMY_KEY = 'client-0000000000000000000000000000000000000000000'
 
+export function beforeSend(event: ErrorEvent, hint: EventHint) {
+  /*
+   * Since the interface currently uses HashRouter, URLs will have a # before the path.
+   * This leads to issues when we send the URL into Sentry, as the path gets parsed as a "fragment".
+   * Instead, this logic removes the # part of the URL.
+   * See https://romain-clement.net/articles/sentry-url-fragments/#url-fragments
+   **/
+  if (event.request?.url) {
+    event.request.url = event.request.url.replace('/#', '')
+  }
+
+  return filterKnownErrors(event, hint)
+}
+
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
   release: process.env.REACT_APP_GIT_COMMIT_HASH,
@@ -31,19 +45,7 @@ Sentry.init({
       startTransactionOnPageLoad: true,
     }),
   ],
-  beforeSend(event: ErrorEvent, hint: EventHint) {
-    /*
-     * Since the interface currently uses HashRouter, URLs will have a # before the path.
-     * This leads to issues when we send the URL into Sentry, as the path gets parsed as a "fragment".
-     * Instead, this logic removes the # part of the URL.
-     * See https://romain-clement.net/articles/sentry-url-fragments/#url-fragments
-     **/
-    if (event.request?.url) {
-      event.request.url = event.request.url.replace('/#', '')
-    }
-
-    return filterKnownErrors(event, hint)
-  },
+  beforeSend,
 })
 
 initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {
