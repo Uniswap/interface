@@ -1,7 +1,6 @@
 name: Slack notifications for releases/* merges
 
-# This CI job will push notifications to Slack whenever code is merged into any of the
-# release branches.
+# This CI job will push notifications to Slack whenever code is merged into any releases/* branch
 
 on:
   push:
@@ -16,9 +15,17 @@ jobs:
       - name: Parse event to Slack messages
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
+        # This is a bit of shell kung fu that formats the contents of the GitHub event into a multi-line Slack message
+        # The steps are as follows:
+        # 1. Pull commit data from the Github context and format it as a TSV with jq
+        # 2. Clean up the TSV output so that it's more easily parsed by awk
+        # 3. Use awk to format the TSV into a Slack message
+        # 4. Use sed and tr to deal with new-line escaping issues
+        # 5. Write the output to a file
+        # 6. Use Github action syntax to load the contents of the file into an environment variable
         run: |
-          echo $GITHUB_CONTEXT | jq '.event.commits[] | [.url, .id[0:7], .author.username, .timestamp, .message] | @tsv' | sed 's/"//g' | sed 's/\\t/;/g' | sed 's/\\n/;/g' | sed 's/\\//g' | awk -F';' '{print "• <"$1"|"$2"> (<https://github.com/"$3"|"$3">, "$4") - "$5}' | sed 's/$/\\n/g' | tr -d '\n' > /tmp/foo
-          echo "SLACK_COMMITS=$(cat /tmp/foo)" >> $GITHUB_ENV
+          echo $GITHUB_CONTEXT | jq '.event.commits[] | [.url, .id[0:7], .author.username, .timestamp, .message] | @tsv' | sed 's/"//g' | sed 's/\\t/;/g' | sed 's/\\n/;/g' | sed 's/\\//g' | awk -F';' '{print "• <"$1"|"$2"> (<https://github.com/"$3"|"$3">, "$4") - "$5}' | sed 's/$/\\n/g' | tr -d '\n' > /tmp/parsed_github_context
+          echo "SLACK_COMMITS=$(cat /tmp/parsed_github_context)" >> $GITHUB_ENV
       - name: Send custom JSON data to Slack workflow
         id: slack
         uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
