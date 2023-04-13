@@ -5,15 +5,14 @@ name: 1 | Push changes to releases/staging
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches:
-      - '**'
 
 # https://stackoverflow.com/questions/57921401/push-to-origin-from-github-action
 jobs:
   staging-branch-push:
     name: 'Push to staging branch'
     runs-on: ubuntu-latest
+    environment:
+      name: release
     steps:
       - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
         with:
