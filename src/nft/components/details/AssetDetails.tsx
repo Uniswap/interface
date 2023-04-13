@@ -313,18 +313,16 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     'no-cache'
   )
 
-  // TODO simplify typecasting when removing graphql flag
-  const lastSalePrice = isNftGraphqlEnabled ? gqlPriceData?.[0]?.price : priceData?.events[0]?.price
-  const formattedEthprice = isNftGraphqlEnabled
-    ? formatEth(parseFloat(lastSalePrice ?? ''))
-    : formatEthPrice(lastSalePrice) || 0
-  const formattedPrice = isNftGraphqlEnabled
-    ? formattedEthprice
-    : lastSalePrice
-    ? putCommas(parseFloat(formattedEthprice.toString())).toString()
-    : null
-  const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
+  let formattedPrice
+  if (isNftGraphqlEnabled) {
+    const weiPrice = gqlPriceData?.[0]?.price
+    formattedPrice = weiPrice ? formatEth(parseFloat(weiPrice)) : undefined
+  } else {
+    const ethPrice = priceData?.events[0]?.price
+    formattedPrice = ethPrice ? putCommas(formatEthPrice(priceData?.events[0]?.price)).toString() : undefined
+  }
 
+  const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
   const Filter = useCallback(
     function ActivityFilter({ eventType }: { eventType: ActivityEventType }) {
       const isActive = activeFilters[eventType]
