@@ -74,13 +74,7 @@ export default function UnsupportedCurrencyFooter({
               <ThemedText.DeprecatedMediumHeader>
                 <Trans>Unsupported Assets</Trans>
               </ThemedText.DeprecatedMediumHeader>
-              <CloseIcon
-                onClick={() => {
-                  console.log('set false')
-                  setShowDetails(false)
-                }}
-                data-testid="close-icon"
-              />
+              <CloseIcon onClick={() => setShowDetails(false)} data-testid="close-icon" />
             </RowBetween>
             {tokens.map((token) => {
               return (
