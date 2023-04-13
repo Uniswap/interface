@@ -26,7 +26,7 @@ describe('filterKnownErrors', () => {
   })
 
   it('filters invalid HTML response errors', () => {
-    const originalException = new Error("Unexpected token '<'")
+    const originalException = new SyntaxError("Unexpected token '<'")
     expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
   })
 })
