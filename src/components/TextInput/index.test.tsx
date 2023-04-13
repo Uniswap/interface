@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from 'test-utils'
+import { fireEvent, render, screen } from 'test-utils/render'
 
 import { ResizingTextArea, TextInput } from './'
 
