@@ -35,22 +35,26 @@ module.exports = {
     plugins: [new VanillaExtractPlugin({ identifiers: 'short' })],
     configure: (webpackConfig) => {
       // Extend process.env with dynamic values (eg commit hash).
+      // This will make dynamic values available to JavaScript only, not to interpolated HTML (ie index.html).
       Object.assign(webpackConfig.plugins.find((plugin) => plugin instanceof DefinePlugin).definitions['process.env'], {
         REACT_APP_GIT_COMMIT_HASH: JSON.stringify(commitHash),
       })
 
+      // Type checking and linting are only necessary as part of development and testing.
+      // Omit them from production builds, as they slow down the feedback loop.
       if (isProduction) {
-        // Type checking and linting are only necessary as part of development and testing.
-        // Omit them from production builds, as they slow down the feedback loop.
         webpackConfig.plugins = webpackConfig.plugins.filter((plugin) => {
           if (plugin instanceof ForkTsCheckerWebpackPlugin) return false
           if (plugin instanceof EsLintWebpackPlugin) return false
           return true
         })
+      }
 
-        // CSS ordering is mitigated through scoping / naming conventions, so we can ignore order warnings.
-        // See https://webpack.js.org/plugins/mini-css-extract-plugin/#remove-order-warnings.
-        webpackConfig.plugins.find((plugin) => plugin instanceof MiniCssExtractPlugin).options.ignoreOrder = true
+      // CSS ordering is mitigated through scoping / naming conventions, so we can ignore order warnings.
+      // See https://webpack.js.org/plugins/mini-css-extract-plugin/#remove-order-warnings.
+      const miniCssExtractPlugin = webpackConfig.plugins.find((plugin) => plugin instanceof MiniCssExtractPlugin)
+      if (miniCssExtractPlugin) {
+        miniCssExtractPlugin.options.ignoreOrder = true
       }
 
       // We're currently on Webpack 4.x which doesn't support the `exports` field in package.json.
