@@ -50,10 +50,10 @@ describe('UnsupportedCurrencyFooter.tsx', () => {
     ).toBeNull()
   })
 
-  it('works as expected when one unsupported token exists', async () => {
+  it('works as expected when one unsupported token exists', () => {
     mockUseUnsupportedTokens.mockImplementation(() => ({ [unsupportedTokenAddress]: unsupportedToken }))
     mockGetExplorerLink.mockImplementation(() => unsupportedTokenExplorerLink)
-    const rendered = render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
+    render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
     fireEvent.click(screen.getByTestId('read-more-button'))
     expect(screen.getByText('Unsupported Assets')).toBeInTheDocument()
     expect(
@@ -66,6 +66,13 @@ describe('UnsupportedCurrencyFooter.tsx', () => {
       'href',
       unsupportedTokenExplorerLink
     )
+  })
+
+  it('works as expected when one unsupported token exists and modal is closed', async () => {
+    mockUseUnsupportedTokens.mockImplementation(() => ({ [unsupportedTokenAddress]: unsupportedToken }))
+    mockGetExplorerLink.mockImplementation(() => unsupportedTokenExplorerLink)
+    const rendered = render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
+    fireEvent.click(screen.getByTestId('read-more-button'))
     fireEvent.click(screen.getByTestId('close-icon'))
     await waitForElementToBeRemoved(screen.getByTestId('unsupported-token-card'))
     expect(rendered.queryByText('Unsupported Assets')).toBeNull()
