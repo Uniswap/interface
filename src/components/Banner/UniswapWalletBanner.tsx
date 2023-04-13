@@ -6,6 +6,7 @@ import { AutoColumn } from 'components/Column'
 import { OpacityHoverState } from 'components/Common'
 import Row from 'components/Row'
 import { useMgtmEnabled } from 'featureFlags/flags/mgtm'
+import { useScreenSize } from 'hooks/useScreenSize'
 import { X } from 'react-feather'
 import { useLocation } from 'react-router-dom'
 import { useHideUniswapWalletBanner } from 'state/user/hooks'
@@ -81,6 +82,7 @@ const StyledXButton = styled(X)`
 const BannerButton = styled(BaseButton)`
   height: 40px;
   border-radius: 16px;
+  padding: 10px;
   ${OpacityHoverState};
 `
 
@@ -91,6 +93,8 @@ export default function UniswapWalletBanner() {
   const isLandingScreen = location.search === '?intro=true' || location.pathname === '/'
 
   const shouldDisplay = Boolean(mgtmEnabled && !hideUniswapWalletBanner && !isLandingScreen)
+
+  const screenSize = useScreenSize()
 
   return (
     <PopupContainer show={shouldDisplay}>
@@ -120,20 +124,20 @@ export default function UniswapWalletBanner() {
             >
               <AppleLogo width={16} height={16} />
               <ThemedText.LabelSmall color="black" marginLeft="4px">
-                Download App
+                {!screenSize['xs'] ? <Trans>Download</Trans> : <Trans>Download App</Trans>}
               </ThemedText.LabelSmall>
             </BannerButton>
 
             <BannerButton backgroundColor="black" onClick={openWalletMicrosite}>
-              <ThemedText.LabelSmall color="white" marginLeft="4px">
-                Learn More
+              <ThemedText.LabelSmall color="white">
+                <Trans>Learn More</Trans>
               </ThemedText.LabelSmall>
             </BannerButton>
           </>
         ) : (
           <BannerButton backgroundColor="white" width="125px" onClick={openWalletMicrosite}>
-            <ThemedText.LabelSmall color="black" marginLeft="4px">
-              Learn More
+            <ThemedText.LabelSmall color="black">
+              <Trans>Learn More</Trans>
             </ThemedText.LabelSmall>
           </BannerButton>
         )}
