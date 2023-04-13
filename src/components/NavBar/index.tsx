@@ -74,7 +74,7 @@ export const PageTabs = () => {
           <Trans>NFTs</Trans>
         </MenuItem>
       )}
-      <Box display={{ sm: 'flex', lg: 'none', xxl: 'flex' }} width="full">
+      <Box display={{ sm: 'flex', lg: 'none', xxl: 'flex' }}>
         <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
           <Trans>Pools</Trans>
         </MenuItem>
@@ -95,7 +95,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
     <>
       {blur && <Blur />}
       <Nav>
-        <Box display="flex" height="full" flexWrap="nowrap">
+        <Box display="flex" height="full" flexWrap="nowrap" justifyContent="space-between">
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
               <UniIcon

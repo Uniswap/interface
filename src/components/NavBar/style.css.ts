@@ -22,8 +22,6 @@ export const logo = style([
 export const baseSideContainer = style([
   sprinkles({
     display: 'flex',
-    width: 'full',
-    flex: '1',
     flexShrink: '2',
   }),
 ])
@@ -38,7 +36,6 @@ export const leftSideContainer = style([
 
 export const searchContainer = style([
   sprinkles({
-    flex: '1',
     flexShrink: '1',
     justifyContent: { lg: 'flex-end', xl: 'center' },
     display: { sm: 'none', navSearchInputVisible: 'flex' },
@@ -65,7 +62,6 @@ const baseMenuItem = style([
     borderRadius: '12',
     transition: '250',
     height: 'min',
-    width: 'full',
     textAlign: 'center',
     display: 'flex',
     alignItems: 'center',
