@@ -98,6 +98,7 @@ export default function UniswapWalletBanner() {
         data-testid="uniswap-wallet-banner"
         size={20}
         onClick={(e) => {
+          // prevent click from bubbling to UI on the page underneath, i.e. clicking a token row
           e.preventDefault()
           e.stopPropagation()
           toggleHideUniswapWalletBanner()
