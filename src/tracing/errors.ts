@@ -28,7 +28,7 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
 
     // Cloudflare may serve HTML error pages (eg from a 499), which are already raised as ChunkLoadError.
     // Parsing the HTML results in a second SyntaxError. This not the root error (it is already reported as ChunkLoadError), so it should not be reported.
-    if (error.message.match(/Unexpected token '<'/)) return null
+    if (error instanceof SyntaxError && error.message.match(/Unexpected token '<'/)) return null
   }
 
   return event
