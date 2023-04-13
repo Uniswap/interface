@@ -28,7 +28,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const backups = useCloudBackups()
-  const sortedBackups = backups.slice().sort((a, b) => a.createdAt - b.createdAt)
+  const sortedBackups = backups.slice().sort((a, b) => b.createdAt - a.createdAt)
 
   const onPressRestoreBackup = async (backup: ICloudMnemonicBackup): Promise<void> => {
     // Clear any existing pending accounts
@@ -65,7 +65,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                     <Unicon address={mnemonicId} size={32} />
                     <Flex gap="none">
                       <Text numberOfLines={1} variant="subheadSmall">
-                        {t('Backup {{backupIndex}}', { backupIndex: index + 1 })}
+                        {t('Backup {{backupIndex}}', { backupIndex: sortedBackups.length - index })}
                       </Text>
                       <Text color="textSecondary" variant="buttonLabelMicro">
                         {shortenAddress(mnemonicId)}
