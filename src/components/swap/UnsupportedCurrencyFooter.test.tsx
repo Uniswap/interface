@@ -1,6 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
 import { useUnsupportedTokens } from 'hooks/Tokens'
-import { fireEvent, render, screen, waitForElementToBeRemoved, within } from 'test-utils'
+import { mocked } from 'test-utils/mocked'
+import { fireEvent, render, screen, waitForElementToBeRemoved, within } from 'test-utils/render'
 import { getExplorerLink } from 'utils/getExplorerLink'
 
 import UnsupportedCurrencyFooter from './UnsupportedCurrencyFooter'
@@ -28,7 +29,7 @@ const mockGetExplorerLink = getExplorerLink as jest.MockedFunction<typeof getExp
 
 describe('UnsupportedCurrencyFooter.tsx', () => {
   it('matches base snapshot', () => {
-    mockUseUnsupportedTokens.mockImplementation(() => ({ unsupportedTokenAddress: unsupportedToken }))
+    mocked(useUnsupportedTokens).mockImplementation(() => ({ unsupportedTokenAddress: unsupportedToken }))
     const { asFragment } = render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
     expect(asFragment()).toMatchSnapshot()
   })
