@@ -5,12 +5,15 @@ import { call, put, select, take } from 'typed-redux-saga'
 import { RootState, appSelect } from '../../state'
 import { sendMessageToSpecificTab } from '../../utils/messageUtils'
 import { hexlifyTransaction } from '../../utils/transaction'
-import { ChainId } from '../chains/chains'
+import { getChainIdFromString } from '../chains/chains'
+import { setCurrentChain } from '../chains/slice'
 import { getProvider, getSignerManager } from '../wallet/context'
 import { SignerManager } from '../wallet/signing/SignerManager'
 import { Account, AccountType } from '../wallet/types'
 import {
   AccountResponse,
+  ChangeChainResponse,
+  ConnectResponse,
   DappResponseType,
   SendTransactionResponse,
 } from './dappRequestTypes'
@@ -69,8 +72,8 @@ export function* sendTransaction(
   requestId: string,
   senderTabId: number
 ) {
-  // TODO: Get chainId based on current wallet configuration
-  const chainId = ChainId.Goerli
+  // Get currently selected chain id
+  const chainId = yield* call(getCurrentChainId)
 
   // Sign and send the transaction
   const provider = yield* call(getProvider, chainId)
@@ -103,12 +106,13 @@ export function* getAccount(requestId: string, senderTabId: number) {
     (state: RootState) => state.wallet.accounts
   )
   const account = yield* call(getCurrentAccount, accounts)
+
   const response: AccountResponse = {
     type: DappResponseType.AccountResponse,
     requestId,
     accountAddress: account.address,
   }
-  sendMessageToSpecificTab(response, senderTabId)
+  yield* call(sendMessageToSpecificTab, response, senderTabId)
 }
 
 function handleTransactionResponse(
@@ -215,4 +219,60 @@ export function getCurrentAccount(accounts: Record<string, Account>): Account {
     throw new Error('No accounts found')
   }
   return account
+}
+
+export function* getCurrentChainId() {
+  const chainId = yield* select(
+    (state: RootState) => state.chains.currentChainId
+  )
+  return chainId
+}
+
+export function* connect(
+  requestId: string,
+  chainId: string,
+  senderTabId: number
+) {
+  // get chain id enum
+  const chainIdEnum = yield* call(getChainIdFromString, chainId)
+  if (!chainIdEnum) {
+    throw new Error(`Invalid chainId: ${chainId}`)
+  }
+
+  // get provider
+  const provider = yield* call(getProvider, chainIdEnum)
+  yield* put(setCurrentChain({ chainId: chainIdEnum }))
+
+  // prepare dapp response
+  const response: ConnectResponse = {
+    type: DappResponseType.ConnectResponse,
+    requestId,
+    providerUrl: provider.connection.url,
+  }
+  yield* call(sendMessageToSpecificTab, response, senderTabId)
+}
+
+export function* changeChain(
+  requestId: string,
+  chainId: string,
+  senderTabId: number
+) {
+  const chainIdEnum = yield* call(getChainIdFromString, chainId)
+  if (!chainIdEnum) {
+    throw new Error(`Invalid chainId: ${chainId}`)
+  }
+
+  // get provider
+  const provider = yield* call(getProvider, chainIdEnum)
+  yield* put(setCurrentChain({ chainId: chainIdEnum }))
+
+  const newChainId = yield* call(getCurrentChainId)
+  const response: ChangeChainResponse = {
+    type: DappResponseType.ChainChangeResponse,
+    requestId,
+    providerUrl: provider.connection.url,
+    chainId: newChainId.toString(),
+  }
+
+  yield* call(sendMessageToSpecificTab, response, senderTabId)
 }

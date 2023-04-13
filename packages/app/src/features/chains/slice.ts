@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ChainIdTo, ChainId } from './chains'
+import { ChainId, ChainIdTo } from './chains'
 
 export interface ChainState {
   isActive: boolean
@@ -8,10 +8,12 @@ export interface ChainState {
 }
 
 export interface ChainsState {
+  currentChainId: ChainId
   byChainId: ChainIdTo<ChainState>
 }
 
 export const initialChainsState: ChainsState = {
+  currentChainId: ChainId.Mainnet,
   byChainId: {},
 }
 
@@ -19,6 +21,11 @@ const slice = createSlice({
   name: 'chains',
   initialState: initialChainsState,
   reducers: {
+    setCurrentChain: (state, action: PayloadAction<{ chainId: ChainId }>) => {
+      const { chainId } = action.payload
+      state.currentChainId = chainId
+    },
+
     setChainActiveStatus: (
       state,
       action: PayloadAction<{ chainId: ChainId; isActive: boolean }>
@@ -32,7 +39,8 @@ const slice = createSlice({
   },
 })
 
-export const { setChainActiveStatus, resetNetwork } = slice.actions
+export const { setCurrentChain, setChainActiveStatus, resetNetwork } =
+  slice.actions
 
 export const chainsReducer = slice.reducer
 

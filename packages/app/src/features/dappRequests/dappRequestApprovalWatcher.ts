@@ -1,9 +1,16 @@
 import { call, put, take } from 'typed-redux-saga'
 import { sendRejectionToContentScript } from '../../utils/messageUtils'
 import { logger } from '../logger/logger'
-import { DappRequestType, SendTransactionRequest } from './dappRequestTypes'
 import {
+  ChangeChainRequest,
+  ConnectRequest,
+  DappRequestType,
+  SendTransactionRequest,
+} from './dappRequestTypes'
+import {
+  changeChain,
   confirmRequest,
+  connect,
   getAccount,
   rejectRequest,
   sendTransaction,
@@ -44,6 +51,21 @@ export function* dappRequestApprovalWatcher() {
               request.senderTabId
             )
             break
+          case DappRequestType.ChangeChain:
+            yield* call(
+              changeChain,
+              request.dappRequest.requestId,
+              (request.dappRequest as ChangeChainRequest).chainId,
+              request.senderTabId
+            )
+            break
+          case DappRequestType.Connect:
+            yield* call(
+              connect,
+              request.dappRequest.requestId,
+              (request.dappRequest as ConnectRequest).chainId,
+              request.senderTabId
+            )
           // Add more request types here
         }
       } else if (type === rejectRequest.type) {

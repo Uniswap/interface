@@ -28,8 +28,8 @@ export enum DappRequestType {
 
 export enum DappResponseType {
   AccountResponse = 'AccountResponse',
-  ChainChange = 'ChainChangeResponse',
-  HandleConnectResponse = 'HandleConnectResponse',
+  ChainChangeResponse = 'ChainChangeResponse',
+  ConnectResponse = 'ConnectResponse',
   SignTransactionResponse = 'SignTransactionResponse',
   SendTransactionResponse = 'SendTransactionResponse',
   SignMessageResponse = 'SignMessageResponse',
@@ -88,14 +88,14 @@ export interface TransactionRejectedResponse extends BaseDappResponse {
 }
 
 export interface ConnectResponse extends BaseDappResponse {
-  type: DappResponseType.HandleConnectResponse
-  provider: ethers.providers.JsonRpcProvider
+  type: DappResponseType.ConnectResponse
+  providerUrl: string
 }
 
 export interface ChangeChainResponse extends BaseDappResponse {
-  type: DappResponseType.ChainChange
+  type: DappResponseType.ChainChangeResponse
   chainId: string
-  provider: ethers.providers.JsonRpcProvider
+  providerUrl: string
 }
 
 export interface AccountResponse extends BaseDappResponse {

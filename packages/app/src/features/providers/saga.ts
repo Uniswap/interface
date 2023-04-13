@@ -14,7 +14,11 @@ import { initialized } from './slice'
 export function* initProviders() {
   // TODO:
   const chains: ChainIdTo<ChainState> = {
+    [ChainId.Mainnet]: { isActive: true },
     [ChainId.Goerli]: { isActive: true },
+    [ChainId.Polygon]: { isActive: true },
+    [ChainId.ArbitrumOne]: { isActive: true },
+    [ChainId.Optimism]: { isActive: true },
   }
   const activeChains = getSortedActiveChainIds(chains)
 

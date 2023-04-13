@@ -121,7 +121,7 @@ export class ProviderManager {
 
       const provider = new ethersProviders.InfuraProvider(
         getInfuraChainName(chainId),
-        'b14063d3418c40ec984f510cf64083b4'
+        process.env.INFURA_PROJECT_ID
       )
 
       return provider

@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { ChainId } from 'app/src/features/chains/chains'
 import {
   AccountResponse,
   BaseDappRequest,
@@ -22,7 +23,7 @@ import {
 } from 'app/src/features/dappRequests/dappRequestTypes'
 import { logger } from 'app/src/features/logger/logger'
 import { ethErrors } from 'eth-rpc-errors'
-import { ethers, providers } from 'ethers'
+import { ethers } from 'ethers'
 import EventEmitter from 'eventemitter3'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -44,6 +45,10 @@ interface ProviderRpcError extends Error {
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connect-1
 interface ProviderConnectInfo {
   readonly chainId: string
+}
+
+interface SwitchEthereumChainParameter {
+  chainId: string
 }
 
 export interface JsonRpcRequest {
@@ -77,14 +82,6 @@ const messages = {
   },
 }
 
-// const originRequiresMetaMask = [
-//   'opensea.io',
-//   'matcha.xyz',
-//   'kwenta.io',
-//   'etherscan.io',
-//   'uniswap.org',
-// ]
-
 export interface BaseProviderState {
   isConnected: boolean
 }
@@ -99,7 +96,7 @@ export class UniswapInjectedProvider extends EventEmitter {
   /**
    * The chain ID of the currently connected Ethereum chain.
    */
-  chainId: string
+  chainId?: string
 
   /**
    * The user's currently selected Ethereum address.
@@ -107,24 +104,14 @@ export class UniswapInjectedProvider extends EventEmitter {
   publicKey: string | null
 
   /**
-   *
-   */
-  public networkVersion?: string
-
-  /**
    * Boolean indicating that the provider is Uniswap Wallet.
    */
   isUniswapWallet: boolean
 
   /**
-   * Boolean for impersonating MetaMask.
-   */
-  isMetaMask: boolean
-
-  /**
    * Ethereum JSON RPC provider.
    */
-  provider: ethers.providers.JsonRpcProvider
+  provider?: ethers.providers.JsonRpcProvider
 
   constructor() {
     super()
@@ -134,24 +121,9 @@ export class UniswapInjectedProvider extends EventEmitter {
     })
 
     this.isUniswapWallet = true
-    this.chainId = '0x5' // default to Goerli
     this.publicKey = null
 
-    // const provider = new ethers.providers.JsonRpcProvider(
-    //   'https://goerli.infura.io/v3/b14063d3418c40ec984f510cf64083b4'
-    // )
-    const provider = new providers.InfuraProvider(
-      'goerli',
-      'b14063d3418c40ec984f510cf64083b4'
-    )
-
-    this.provider = provider
-
-    // Sometimes we want to pretend to be MetaMask
-    this.isMetaMask = false
-    // originRequiresMetaMask.some((h) =>
-    //     window.location.host.includes(h)
-    // );
+    this.handleConnect(ChainId.Goerli.toString())
   }
 
   setState = (updatedState: BaseProviderState) => {
@@ -246,23 +218,24 @@ export class UniswapInjectedProvider extends EventEmitter {
       eth_accounts: this.handleEthAccounts,
       eth_requestAccounts: this.handleEthRequestAccounts,
       eth_chainId: () => this.chainId,
-      // eslint-disable-next-line radix
-      net_version: () => `${parseInt(this.chainId)}`,
-      eth_getBalance: (address: string) => this.provider.getBalance(address),
-      eth_getCode: (address: string) => this.provider.getCode(address),
+      net_version: () =>
+        // eslint-disable-next-line radix
+        this.chainId ? `${parseInt(this.chainId)}` : undefined,
+      eth_getBalance: (address: string) => this.provider?.getBalance(address),
+      eth_getCode: (address: string) => this.provider?.getCode(address),
       eth_getStorageAt: (address: string, position: string) =>
-        this.provider.getStorageAt(address, position),
+        this.provider?.getStorageAt(address, position),
       eth_getTransactionCount: (address: string) =>
-        this.provider.getTransactionCount(address),
-      eth_blockNumber: () => this.provider.getBlockNumber(),
-      eth_getBlockByNumber: (block: number) => this.provider.getBlock(block),
-      eth_call: (transaction: any) => this.provider.call(transaction),
+        this.provider?.getTransactionCount(address),
+      eth_blockNumber: () => this.provider?.getBlockNumber(),
+      eth_getBlockByNumber: (block: number) => this.provider?.getBlock(block),
+      eth_call: (transaction: any) => this.provider?.call(transaction),
       eth_estimateGas: (transaction: any) =>
-        this.provider.estimateGas(transaction),
+        this.provider?.estimateGas(transaction),
       eth_getTransactionByHash: (hash: string) =>
-        this.provider.getTransaction(hash),
+        this.provider?.getTransaction(hash),
       eth_getTransactionReceipt: (hash: string) =>
-        this.provider.getTransactionReceipt(hash),
+        this.provider?.getTransactionReceipt(hash),
       eth_sign: (_address: string, _message: string) => {
         // Backpack mentioned this is a significant security risk because it can be used to
         // sign transactions.
@@ -277,8 +250,9 @@ export class UniswapInjectedProvider extends EventEmitter {
         this.handleEthSignTransaction(transaction),
       eth_sendTransaction: (transaction: any) =>
         this.handleEthSendTransaction(transaction),
-      wallet_switchEthereumChain: (chainId: any) =>
-        this.handleWalletSwitchEthereumChain(chainId),
+      wallet_switchEthereumChain: (
+        switchRequest: SwitchEthereumChainParameter
+      ) => this.handleWalletSwitchEthereumChain(switchRequest),
     }
 
     const func = functionMap[method]
@@ -320,11 +294,12 @@ export class UniswapInjectedProvider extends EventEmitter {
           requestId: uuidv4(),
           chainId,
         }
-        const { provider } = await sendRequestAsync<ConnectResponse>(
+        const { providerUrl } = await sendRequestAsync<ConnectResponse>(
           handleConnectRequest,
-          DappResponseType.HandleConnectResponse
+          DappResponseType.ConnectResponse
         )
-        this.provider = provider
+
+        this.provider = new ethers.providers.JsonRpcProvider(providerUrl)
         this.setState({ ...this.state, isConnected: true })
       } catch (error) {
         throw new Error('Failed to connect to wallet')
@@ -343,20 +318,15 @@ export class UniswapInjectedProvider extends EventEmitter {
       chainId,
     }
 
-    const { chainId: newChainId, provider } =
+    const { chainId: newChainId, providerUrl } =
       await sendRequestAsync<ChangeChainResponse>(
         changeChainRequest,
-        DappResponseType.ChainChange
+        DappResponseType.ChainChangeResponse
       )
 
-    if (newChainId !== chainId) {
-      throw new Error('ChainId mismatch')
-    }
-
+    this.provider = new ethers.providers.JsonRpcProvider(providerUrl)
     this.chainId = newChainId
-    this.provider = provider
-    this.chainId = chainId
-    logger.info('UniswapInjectedProvider', 'chain changed', chainId)
+    logger.info('UniswapInjectedProvider', 'chain changed', newChainId)
 
     // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#chainchanged
     this.emit('chainChanged', chainId)
@@ -470,13 +440,27 @@ export class UniswapInjectedProvider extends EventEmitter {
     return response?.transaction?.hash
   }
 
-  handleWalletSwitchEthereumChain = async (chainId: string) => {
+  handleWalletSwitchEthereumChain = async (
+    switchRequest: SwitchEthereumChainParameter
+  ) => {
     if (!this.publicKey) {
       throw new Error('Wallet not connected')
     }
 
-    this.handleChainChanged(chainId)
-    return
+    const changeChainRequest: ChangeChainRequest = {
+      type: DappRequestType.ChangeChain,
+      requestId: uuidv4(),
+      chainId: switchRequest.chainId,
+    }
+
+    const { providerUrl } = await sendRequestAsync<ChangeChainResponse>(
+      changeChainRequest,
+      DappResponseType.ChainChangeResponse
+    )
+
+    this.provider = new ethers.providers.JsonRpcProvider(providerUrl)
+    this.chainId = switchRequest.chainId
+    return null
   }
   /**
    * Handle a disconnection notification from Uniswap Extension.

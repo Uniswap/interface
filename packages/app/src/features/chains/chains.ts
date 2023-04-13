@@ -11,11 +11,30 @@ export type ChainIdToCurrencyIdTo<T> = ChainIdTo<{ [currencyId: string]: T }>
 export enum ChainId {
   Mainnet = 1,
   Goerli = 5,
-
   ArbitrumOne = 42161,
   Optimism = 10,
   Polygon = 137,
   PolygonMumbai = 80001,
+}
+
+export function getChainIdFromString(input: string): ChainId | undefined {
+  const parsedInput = parseInt(input, 16)
+  switch (parsedInput) {
+    case ChainId.Mainnet:
+      return ChainId.Mainnet
+    case ChainId.Goerli:
+      return ChainId.Goerli
+    case ChainId.ArbitrumOne:
+      return ChainId.ArbitrumOne
+    case ChainId.Optimism:
+      return ChainId.Optimism
+    case ChainId.Polygon:
+      return ChainId.Polygon
+    case ChainId.PolygonMumbai:
+      return ChainId.PolygonMumbai
+    default:
+      return undefined
+  }
 }
 
 // DON'T CHANGE - order here determines ordering of networks in app
