@@ -1,0 +1,64 @@
+import { Token } from '@uniswap/sdk-core'
+import { useUnsupportedTokens } from 'hooks/Tokens'
+import { fireEvent, render, screen, within } from 'test-utils'
+import { getExplorerLink } from 'utils/getExplorerLink'
+
+import UnsupportedCurrencyFooter from './UnsupportedCurrencyFooter'
+
+const unsupportedTokenAddress = '0x4e83b6287588a96321B2661c5E041845fF7814af'
+const unsupportedTokenSymbol = 'ALTDOM-MAR2021'
+const unsupportedToken = new Token(1, unsupportedTokenAddress, 18, 'ALTDOM-MAR2021')
+const unsupportedTokenExplorerLink = 'www.blahblah.com'
+
+jest.mock('@web3-react/core', () => {
+  const web3React = jest.requireActual('@web3-react/core')
+  return {
+    ...web3React,
+    useWeb3React: () => ({
+      chainId: 1,
+    }),
+  }
+})
+
+jest.mock('../../hooks/Tokens')
+const mockUseUnsupportedTokens = useUnsupportedTokens as jest.MockedFunction<typeof useUnsupportedTokens>
+
+jest.mock('../../utils/getExplorerLink')
+const mockGetExplorerLink = getExplorerLink as jest.MockedFunction<typeof getExplorerLink>
+
+describe('UnsupportedCurrencyFooter.tsx', () => {
+  it('matches base snapshot', () => {
+    mockUseUnsupportedTokens.mockImplementation(() => ({ unsupportedTokenAddress: unsupportedToken }))
+    const { asFragment } = render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
+    expect(asFragment()).toMatchSnapshot()
+  })
+
+  it('works as expected when no unsupported tokens exist', () => {
+    mockUseUnsupportedTokens.mockImplementation(() => ({}))
+    const rendered = render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
+    fireEvent.click(screen.getByTestId('read-more-button'))
+    expect(screen.getByText('Unsupported Assets')).toBeInTheDocument()
+    expect(
+      screen.getByText((content) => content.startsWith('Some assets are not available through this interface'))
+    ).toBeInTheDocument()
+    expect(rendered.queryByTestId('unsupported-token-card')).toBeNull()
+  })
+
+  it('expands and closes as expected when user interacts', () => {
+    mockUseUnsupportedTokens.mockImplementation(() => ({ [unsupportedTokenAddress]: unsupportedToken }))
+    mockGetExplorerLink.mockImplementation(() => unsupportedTokenExplorerLink)
+    render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
+    fireEvent.click(screen.getByTestId('read-more-button'))
+    expect(screen.getByText('Unsupported Assets')).toBeInTheDocument()
+    expect(
+      screen.getByText((content) => content.startsWith('Some assets are not available through this interface'))
+    ).toBeInTheDocument()
+    expect(screen.getAllByTestId('unsupported-token-card').length).toBe(1)
+    const unsupportedCard = screen.getByTestId('unsupported-token-card')
+    expect(within(unsupportedCard).getByText(unsupportedTokenSymbol)).toBeInTheDocument()
+    expect(within(unsupportedCard).getByText(unsupportedTokenAddress).closest('a')).toHaveAttribute(
+      'href',
+      unsupportedTokenExplorerLink
+    )
+  })
+})

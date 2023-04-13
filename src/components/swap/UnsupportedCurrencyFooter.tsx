@@ -64,6 +64,7 @@ export default function UnsupportedCurrencyFooter({
       : []
 
   const unsupportedTokens = useUnsupportedTokens()
+  console.log('link', getExplorerLink(1, '0x4e83b6287588a96321B2661c5E041845fF7814af', ExplorerDataType.ADDRESS))
 
   return (
     <DetailsFooter show={show}>
@@ -74,14 +75,14 @@ export default function UnsupportedCurrencyFooter({
               <ThemedText.DeprecatedMediumHeader>
                 <Trans>Unsupported Assets</Trans>
               </ThemedText.DeprecatedMediumHeader>
-              <CloseIcon onClick={() => setShowDetails(false)} />
+              <CloseIcon onClick={() => setShowDetails(false)} data-testid="close-icon" />
             </RowBetween>
             {tokens.map((token) => {
               return (
                 token &&
                 unsupportedTokens &&
                 Object.keys(unsupportedTokens).includes(token.address) && (
-                  <OutlineCard key={token.address?.concat('not-supported')}>
+                  <OutlineCard key={token.address?.concat('not-supported')} data-testid="unsupported-token-card">
                     <AutoColumn gap="10px">
                       <AutoRow gap="5px" align="center">
                         <CurrencyLogo currency={token} size="24px" />
@@ -108,7 +109,7 @@ export default function UnsupportedCurrencyFooter({
           </AutoColumn>
         </Card>
       </Modal>
-      <StyledButtonEmpty padding="0" onClick={() => setShowDetails(true)}>
+      <StyledButtonEmpty padding="0" onClick={() => setShowDetails(true)} data-testid="read-more-button">
         <ThemedText.DeprecatedBlue>
           <Trans>Read more about unsupported assets</Trans>
         </ThemedText.DeprecatedBlue>
