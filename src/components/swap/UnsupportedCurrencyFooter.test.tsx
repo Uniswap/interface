@@ -44,7 +44,7 @@ describe('UnsupportedCurrencyFooter.tsx', () => {
     expect(rendered.queryByTestId('unsupported-token-card')).toBeNull()
   })
 
-  it('expands and closes as expected when user interacts', () => {
+  it('works as expected when one unsupported token exists', () => {
     mockUseUnsupportedTokens.mockImplementation(() => ({ [unsupportedTokenAddress]: unsupportedToken }))
     mockGetExplorerLink.mockImplementation(() => unsupportedTokenExplorerLink)
     render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
