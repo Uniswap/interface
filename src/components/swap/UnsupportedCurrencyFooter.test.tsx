@@ -67,7 +67,7 @@ describe('UnsupportedCurrencyFooter.tsx', () => {
       unsupportedTokenExplorerLink
     )
     fireEvent.click(screen.getByTestId('close-icon'))
-    await waitForElementToBeRemoved(screen.getByText('Unsupported Assets'))
+    await waitForElementToBeRemoved(screen.getByTestId('unsupported-token-card'))
     expect(rendered.queryByText('Unsupported Assets')).toBeNull()
     expect(rendered.queryByTestId('unsupported-token-card')).toBeNull()
     expect(
