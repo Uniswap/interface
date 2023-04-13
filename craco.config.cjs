@@ -1,12 +1,13 @@
 /* eslint-env node */
 const { VanillaExtractPlugin } = require('@vanilla-extract/webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const { execSync } = require('child_process')
 const EsLintWebpackPlugin = require('eslint-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { DefinePlugin } = require('webpack')
 
 const isProduction = process.env.NODE_ENV === 'production'
-const commitHash = require('child_process').execSync('git rev-parse HEAD').toString().trim()
+const commitHash = execSync('git rev-parse HEAD').toString().trim()
 
 module.exports = {
   babel: {
