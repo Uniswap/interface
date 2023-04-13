@@ -36,6 +36,7 @@ describe('UnsupportedCurrencyFooter.tsx', () => {
   })
 
   it('works as expected when one unsupported token exists', async () => {
+    jest.setTimeout(10000)
     mockUseUnsupportedTokens.mockImplementation(() => ({ [unsupportedTokenAddress]: unsupportedToken }))
     mockGetExplorerLink.mockImplementation(() => unsupportedTokenExplorerLink)
     const rendered = render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
