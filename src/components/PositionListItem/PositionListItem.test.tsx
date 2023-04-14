@@ -5,17 +5,18 @@ import { USDC_MAINNET } from 'constants/tokens'
 import { useToken } from 'hooks/Tokens'
 import { PoolState } from 'hooks/usePools'
 import { usePool } from 'hooks/usePools'
+import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
 
 import PositionListItem from '.'
 
 jest.mock('hooks/usePools')
-const mockUsePool = usePool as jest.MockedFunction<typeof usePool>
+
+jest.mock('utils/unwrappedToken')
 
 jest.mock('hooks/Tokens')
-const mockUseToken = useToken as jest.MockedFunction<typeof useToken>
-// eslint-disable-next-line react/display-name
-jest.mock('components/DoubleLogo', () => () => <div />)
+
+jest.mock('components/DoubleLogo')
 
 jest.mock('@web3-react/core', () => {
   const web3React = jest.requireActual('@web3-react/core')
@@ -28,20 +29,22 @@ jest.mock('@web3-react/core', () => {
 })
 
 beforeEach(() => {
-  mockUseToken.mockImplementation((tokenAddress?: string | null | undefined) => {
+  mocked(useToken).mockImplementation((tokenAddress?: string | null | undefined) => {
     if (!tokenAddress) return null
-    return new Token(1, tokenAddress, 8, 'symbol', 'name')
+    return new Token(1, tokenAddress, 6, 'symbol', 'name')
   })
-
-  const pool = new Pool(
-    USDC_MAINNET,
-    WETH9[SupportedChainId.MAINNET],
-    FeeAmount.MEDIUM,
-    '1851127709498178402383049949138810',
-    '7076437181775065414',
-    201189
-  )
-  mockUsePool.mockReturnValue([PoolState.EXISTS, pool])
+  mocked(usePool).mockReturnValue([
+    PoolState.EXISTS,
+    // tokenA: Token, tokenB: Token, fee: FeeAmount, sqrtRatioX96: BigintIsh, liquidity: BigintIsh, tickCurrent: number
+    new Pool(
+      USDC_MAINNET,
+      WETH9[SupportedChainId.MAINNET],
+      FeeAmount.MEDIUM,
+      '1745948049099224684665158875285708',
+      '4203610460178577802',
+      200019
+    ),
+  ])
 })
 
 test('PositionListItem should render a position', () => {
