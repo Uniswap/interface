@@ -4,7 +4,10 @@ import { ITraceContext, TraceContext } from 'src/components/telemetry/Trace'
 import { useAccountListQuery } from 'src/data/__generated__/types-and-hooks'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { selectLastBalancesReport } from 'src/features/telemetry/selectors'
+import {
+  selectLastBalancesReport,
+  selectLastBalancesReportValue,
+} from 'src/features/telemetry/selectors'
 import { recordBalancesReport, shouldReportBalances } from 'src/features/telemetry/slice'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { useAccounts } from 'src/features/wallet/hooks'
@@ -19,6 +22,7 @@ export function useLastBalancesReporter(): () => void {
 
   const accounts = useAccounts()
   const lastBalancesReport = useAppSelector(selectLastBalancesReport)
+  const lastBalancesReportValue = useAppSelector(selectLastBalancesReportValue)
 
   const signerAccountAddresses = useMemo(() => {
     return Object.values(accounts)
@@ -44,14 +48,23 @@ export function useLastBalancesReporter(): () => void {
   }, [data?.portfolios])
 
   const reporter = (): void => {
-    if (shouldReportBalances(lastBalancesReport, signerAccountAddresses, signerAccountValues)) {
+    if (
+      shouldReportBalances(
+        lastBalancesReport,
+        lastBalancesReportValue,
+        signerAccountAddresses,
+        signerAccountValues
+      )
+    ) {
+      const totalBalance = signerAccountValues.reduce((a, b) => a + b, 0)
+
       sendAnalyticsEvent(MobileEventName.BalancesReport, {
-        total_balances_usd: signerAccountValues.reduce((a, b) => a + b, 0),
+        total_balances_usd: totalBalance,
         wallets: signerAccountAddresses,
         balances: signerAccountValues,
       })
       // record that a report has been sent
-      dispatch(recordBalancesReport())
+      dispatch(recordBalancesReport({ totalBalance }))
     }
   }
 

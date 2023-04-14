@@ -557,4 +557,14 @@ export const migrations = {
     delete newState.walletConnect
     return newState
   },
+
+  41: function addLastBalancesReportValue(state: any) {
+    const newState = { ...state }
+
+    newState.telemetry = {
+      ...state.telemetry,
+      lastBalancesReportValue: 0,
+    }
+    return newState
+  },
 }
