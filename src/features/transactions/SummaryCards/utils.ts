@@ -22,6 +22,8 @@ function getTransactionTypeVerbs(
       return [t('Swapped'), t('Swapping'), t('swap')]
     case TransactionType.Receive:
       return [t('Received')]
+    case TransactionType.Send:
+      return [t('Sent'), t('Sending'), t('send')]
     case TransactionType.Wrap:
       if (typeInfo.unwrapped) {
         return [t('Unwrapped'), t('Unwrapping'), t('unwrap')]

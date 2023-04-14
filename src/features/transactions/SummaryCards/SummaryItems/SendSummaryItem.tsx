@@ -70,7 +70,7 @@ export default function SendSummaryItem({
 
   const caption = t('{{what}} to {{recipient}}', {
     what: isCurrency
-      ? currencyAmount ?? '' + currencyInfo?.currency?.symbol ?? ''
+      ? (currencyAmount ?? '') + (currencyInfo?.currency?.symbol ?? '')
       : transaction.typeInfo.nftSummaryInfo?.name,
     recipient: recipientName,
   })

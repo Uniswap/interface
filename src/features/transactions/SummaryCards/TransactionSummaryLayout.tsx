@@ -12,9 +12,7 @@ import { Box } from 'src/components/layout'
 import { Flex } from 'src/components/layout/Flex'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
-import { ChainId } from 'src/constants/chains'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useLowestPendingNonce } from 'src/features/transactions/hooks'
 import { cancelTransaction } from 'src/features/transactions/slice'
@@ -174,7 +172,6 @@ function TransactionSummaryLayout({
                 <Text numberOfLines={1} variant="bodyLarge">
                   {title}
                 </Text>
-                {chainId !== ChainId.Mainnet && <InlineNetworkPill chainId={chainId} />}
               </Flex>
               {caption && (
                 <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
