@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { X } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 
@@ -26,6 +26,7 @@ const Popup = styled.div<{ isTransactionPopup: boolean }>`
   padding: ${({ isTransactionPopup }) => (!isTransactionPopup ? '20px' : '2px 0px')};
   padding-right: ${({ isTransactionPopup }) => !isTransactionPopup && '35px'};
   overflow: hidden;
+  box-shadow: ${({ theme }) => theme.deepShadow};
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     min-width: 290px;
@@ -46,17 +47,17 @@ export default function PopupItem({
 }) {
   const removePopup = useRemovePopup()
   const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
-  // useEffect(() => {
-  //   if (removeAfterMs === null) return undefined
+  useEffect(() => {
+    if (removeAfterMs === null) return undefined
 
-  //   const timeout = setTimeout(() => {
-  //     removeThisPopup()
-  //   }, removeAfterMs)
+    const timeout = setTimeout(() => {
+      removeThisPopup()
+    }, removeAfterMs)
 
-  //   return () => {
-  //     clearTimeout(timeout)
-  //   }
-  // }, [removeAfterMs, removeThisPopup])
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [removeAfterMs, removeThisPopup])
 
   const theme = useTheme()
   const isTxnPopup = 'txn' in content

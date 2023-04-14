@@ -41,7 +41,7 @@ const FixedPopupColumn = styled(AutoColumn)<{ extraPadding: boolean; xlPadding: 
   position: fixed;
   top: ${({ extraPadding }) => (extraPadding ? '72px' : '64px')};
   right: 1rem;
-  max-width: 376px !important;
+  max-width: 348px !important;
   width: 100%;
   z-index: 3;
 
@@ -63,10 +63,6 @@ export default function Popups() {
   // need extra padding if network is not L1 Ethereum
   const { chainId } = useWeb3React()
   const isNotOnMainnet = Boolean(chainId && chainId !== SupportedChainId.MAINNET)
-
-  activePopups.map((item) => {
-    console.log('key:', item.key)
-  })
 
   return (
     <>
