@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { selectFavoriteTokensSet, selectWatchedAddressSet } from 'src/features/favorites/selectors'
+import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import {
   addFavoriteToken,
   addWatchedAddress,
@@ -13,9 +13,8 @@ import { useCurrencyInfo } from 'src/features/tokens/useCurrencyInfo'
 import { useDisplayName } from 'src/features/wallet/hooks'
 import { CurrencyId, currencyIdToAddress, currencyIdToChain } from 'src/utils/currencyId'
 
-export function useToggleFavoriteCallback(id: CurrencyId): () => void {
+export function useToggleFavoriteCallback(id: CurrencyId, isFavoriteToken: boolean): () => void {
   const dispatch = useAppDispatch()
-  const isFavoriteToken = useAppSelector(selectFavoriteTokensSet).has(id)
   const token = useCurrencyInfo(id)
 
   return useCallback(() => {

@@ -91,13 +91,7 @@ const walletKey = (wallet: WalletSearchResult): string => {
 
 export const TrendIcon = (): JSX.Element => {
   const theme = useAppTheme()
-  return (
-    <TrendArrowIcon
-      color={theme.colors.textSecondary}
-      height={theme.iconSizes.icon12}
-      width={theme.iconSizes.icon16}
-    />
-  )
+  return <TrendArrowIcon color={theme.colors.textSecondary} width={theme.iconSizes.icon20} />
 }
 
 export const RecentIcon = (): JSX.Element => {
@@ -105,8 +99,8 @@ export const RecentIcon = (): JSX.Element => {
   return (
     <ClockIcon
       color={theme.colors.textSecondary}
-      height={theme.iconSizes.icon16}
-      width={theme.iconSizes.icon16}
+      height={theme.iconSizes.icon20}
+      width={theme.iconSizes.icon20}
     />
   )
 }

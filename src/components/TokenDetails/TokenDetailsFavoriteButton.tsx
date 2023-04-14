@@ -9,7 +9,7 @@ import { iconSizes } from 'src/styles/sizing'
 export function TokenDetailsFavoriteButton({ currencyId }: { currencyId: string }): JSX.Element {
   const id = currencyId.toLowerCase()
   const isFavoriteToken = useAppSelector(selectFavoriteTokensSet).has(id)
-  const onFavoritePress = useToggleFavoriteCallback(id)
+  const onFavoritePress = useToggleFavoriteCallback(id, isFavoriteToken)
 
   return (
     <TouchableArea hapticFeedback onPress={onFavoritePress}>

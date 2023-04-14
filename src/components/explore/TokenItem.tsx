@@ -89,7 +89,7 @@ export const TokenItem = memo(({ tokenItemData, index, metadataDisplayType }: To
     selectHasFavoriteToken(state, _currencyId.toLocaleLowerCase())
   )
 
-  const toggleFavoriteToken = useToggleFavoriteCallback(_currencyId)
+  const toggleFavoriteToken = useToggleFavoriteCallback(_currencyId, isFavorited)
 
   const navigateToSwapSell = useCallback(() => {
     if (!address) return
