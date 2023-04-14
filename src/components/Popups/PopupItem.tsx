@@ -7,10 +7,10 @@ import { PopupContent } from '../../state/application/reducer'
 import FailedNetworkSwitchPopup from './FailedNetworkSwitchPopup'
 import TransactionPopup from './TransactionPopup'
 
-const StyledClose = styled(X)<{ $padding: number }>`
+const StyledClose = styled(X)<{ isTransactionPopup: boolean }>`
   position: absolute;
-  right: ${({ $padding }) => `${$padding}px`};
-  top: ${({ $padding }) => `${$padding}px`};
+  right: ${({ isTransactionPopup }) => (isTransactionPopup ? '16px' : '20px')};
+  top: ${({ isTransactionPopup }) => (isTransactionPopup ? '16px' : '20px')};
 
   :hover {
     cursor: pointer;
@@ -71,7 +71,7 @@ export default function PopupItem({
 
   return (
     <Popup isTransactionPopup={isTxnPopup} show={!!popupContent}>
-      <StyledClose padding={isTxnPopup ? 16 : 20} color={theme.textSecondary} onClick={() => removePopup(popKey)} />
+      <StyledClose isTransactionPopup={isTxnPopup} color={theme.textSecondary} onClick={() => removePopup(popKey)} />
       {popupContent}
     </Popup>
   )
