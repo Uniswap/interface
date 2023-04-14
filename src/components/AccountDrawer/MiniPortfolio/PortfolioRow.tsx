@@ -38,7 +38,7 @@ export default function PortfolioRow({
   return (
     <PortfolioRowWrapper onClick={onClick}>
       {left}
-      <AutoColumn>
+      <AutoColumn grow>
         {title}
         {descriptor}
       </AutoColumn>

@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import { X } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 
@@ -16,9 +16,10 @@ const StyledClose = styled(X)<{ padding: number }>`
     cursor: pointer;
   }
 `
-const Popup = styled.div<{ isTransactionPopup: boolean }>`
+const Popup = styled.div<{ isTransactionPopup: boolean; show: boolean }>`
   display: inline-block;
   width: 100%;
+  opacity: ${({ show }) => (show ? '1' : '0')};
   background-color: ${({ theme }) => theme.backgroundSurface};
   position: relative;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
@@ -27,6 +28,7 @@ const Popup = styled.div<{ isTransactionPopup: boolean }>`
   padding-right: ${({ isTransactionPopup }) => !isTransactionPopup && '35px'};
   overflow: hidden;
   box-shadow: ${({ theme }) => theme.deepShadow};
+  transition: ${({ theme }) => `opacity ${theme.transition.duration.fast} ease-in-out`};
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     min-width: 290px;
@@ -46,20 +48,19 @@ export default function PopupItem({
   popKey: string
 }) {
   const removePopup = useRemovePopup()
-  const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
+  const theme = useTheme()
+
   useEffect(() => {
     if (removeAfterMs === null) return undefined
 
     const timeout = setTimeout(() => {
-      removeThisPopup()
+      removePopup(popKey)
     }, removeAfterMs)
 
     return () => {
       clearTimeout(timeout)
     }
-  }, [removeAfterMs, removeThisPopup])
-
-  const theme = useTheme()
+  }, [popKey, removeAfterMs, removePopup])
   const isTxnPopup = 'txn' in content
 
   let popupContent
@@ -69,10 +70,10 @@ export default function PopupItem({
     popupContent = <FailedNetworkSwitchPopup chainId={content.failedSwitchNetwork} />
   }
 
-  return popupContent ? (
-    <Popup isTransactionPopup={isTxnPopup}>
-      <StyledClose padding={isTxnPopup ? 16 : 20} color={theme.textSecondary} onClick={removeThisPopup} />
+  return (
+    <Popup isTransactionPopup={isTxnPopup} show={!!popupContent}>
+      <StyledClose padding={isTxnPopup ? 16 : 20} color={theme.textSecondary} onClick={() => removePopup(popKey)} />
       {popupContent}
     </Popup>
-  ) : null
+  )
 }
