@@ -29,6 +29,7 @@ module.exports = {
       return Object.assign(eslintConfig, {
         cache: true,
         cacheLocation: 'node_modules/.cache/eslint/',
+        ignorePath: '.gitignore',
       })
     },
   },
