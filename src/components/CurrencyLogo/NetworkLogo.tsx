@@ -6,11 +6,13 @@ import { Box } from 'src/components/layout/Box'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { iconSizes } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
-import { useNetworkColors } from 'src/utils/colors'
 
 type NetworkLogoProps = {
   chainId: ChainId
   borderWidth?: number
+  borderRadius?: keyof Theme['borderRadii']
+  borderColor?: string
+  backgroundColor?: string
   size?: number
 } & SpacingProps<Theme> &
   SpacingShorthandProps<Theme>
@@ -18,17 +20,19 @@ type NetworkLogoProps = {
 export function NetworkLogo({
   chainId,
   borderWidth = 0,
+  borderRadius = 'roundedFull',
+  backgroundColor,
+  borderColor,
   size = iconSizes.icon20,
   ...rest
 }: NetworkLogoProps): JSX.Element {
   const { logo } = CHAIN_INFO[chainId]
-  const { foreground } = useNetworkColors(chainId)
 
   return (
     <Box
-      borderRadius="roundedFull"
+      borderRadius={borderRadius}
       borderWidth={borderWidth}
-      style={{ borderColor: foreground }}
+      style={{ backgroundColor, borderColor }}
       {...rest}>
       {logo && (
         <Image

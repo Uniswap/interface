@@ -153,6 +153,7 @@ export function ApproveNotification({
   const icon = (
     <LogoWithTxStatus
       assetType={AssetType.Currency}
+      chainId={chainId}
       currencyInfo={currencyInfo}
       size={NOTIFICATION_ICON_SIZE}
       txStatus={txStatus}
@@ -219,6 +220,7 @@ export function SwapNotification({
 
   const icon = (
     <SplitLogo
+      chainId={chainId}
       inputCurrencyInfo={inputCurrencyInfo}
       outputCurrencyInfo={outputCurrencyInfo}
       size={NOTIFICATION_ICON_SIZE}
@@ -281,6 +283,7 @@ export function WrapNotification({
 
   const icon = (
     <SplitLogo
+      chainId={chainId}
       inputCurrencyInfo={inputCurrencyInfo}
       outputCurrencyInfo={outputCurrencyInfo}
       size={NOTIFICATION_ICON_SIZE}
@@ -334,6 +337,7 @@ export function TransferCurrencyNotification({
   const icon = (
     <LogoWithTxStatus
       assetType={assetType}
+      chainId={chainId}
       currencyInfo={currencyInfo}
       size={NOTIFICATION_ICON_SIZE}
       txStatus={txStatus}
@@ -380,6 +384,7 @@ export function TransferNFTNotification({
   const icon = (
     <LogoWithTxStatus
       assetType={assetType}
+      chainId={chainId}
       nftImageUrl={nft?.thumbnail?.url ?? undefined}
       size={NOTIFICATION_ICON_SIZE}
       txStatus={txStatus}
@@ -412,6 +417,7 @@ export function UnknownTxNotification({
   const icon = (
     <LogoWithTxStatus
       assetType={AssetType.Currency}
+      chainId={chainId}
       currencyInfo={currencyInfo}
       size={NOTIFICATION_ICON_SIZE}
       txStatus={txStatus}

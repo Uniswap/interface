@@ -17,6 +17,7 @@ export default function NFTTradeSummaryItem({
       icon={
         <LogoWithTxStatus
           assetType={AssetType.ERC721}
+          chainId={transaction.chainId}
           nftImageUrl={transaction.typeInfo.nftSummaryInfo.imageURL}
           nftTradeType={transaction.typeInfo.tradeType}
           size={TXN_HISTORY_ICON_SIZE}

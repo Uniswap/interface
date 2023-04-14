@@ -9,6 +9,8 @@ interface CurrencyLogoProps {
   hideNetworkLogo?: boolean
 }
 
+export const STATUS_RATIO = 2 / 5
+
 export function CurrencyLogo({
   currencyInfo,
   size = iconSizes.icon40,

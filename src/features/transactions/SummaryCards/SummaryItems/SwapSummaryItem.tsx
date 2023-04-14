@@ -67,6 +67,7 @@ export default function SwapSummaryItem({
       caption={caption}
       icon={
         <SplitLogo
+          chainId={transaction.chainId}
           inputCurrencyInfo={inputCurrencyInfo}
           outputCurrencyInfo={outputCurrencyInfo}
           size={TXN_HISTORY_ICON_SIZE}

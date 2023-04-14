@@ -1,6 +1,7 @@
 import React from 'react'
 import { Image } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
+import { STATUS_RATIO } from 'src/components/CurrencyLogo'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { SHADOW_OFFSET, style, THIN_BORDER } from 'src/components/CurrencyLogo/styles'
 import { Box } from 'src/components/layout/Box'
@@ -66,7 +67,7 @@ export function TokenLogo({
           shadowOffset={SHADOW_OFFSET}
           shadowOpacity={0.1}
           shadowRadius={2}>
-          <NetworkLogo chainId={chainId} size={size * (2 / 5)} />
+          <NetworkLogo chainId={chainId} size={size * STATUS_RATIO} />
         </Box>
       )}
     </Box>

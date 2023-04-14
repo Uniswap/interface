@@ -8,6 +8,7 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import SlashCircleIcon from 'src/assets/icons/slash-circle.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
+import { Box } from 'src/components/layout'
 import { Flex } from 'src/components/layout/Flex'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -31,7 +32,7 @@ import { iconSizes } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
 import { openMoonpayTransactionLink, openTransactionLink } from 'src/utils/linking'
 
-export const TXN_HISTORY_ICON_SIZE = iconSizes.icon36
+export const TXN_HISTORY_ICON_SIZE = iconSizes.icon40
 const LOADING_SPINNER_SIZE = 20
 
 function TransactionSummaryLayout({
@@ -116,10 +117,29 @@ function TransactionSummaryLayout({
 
   const rightBlock = inProgress ? (
     <SpinningLoader disabled={queued} size={LOADING_SPINNER_SIZE} />
-  ) : status === TransactionStatus.Failed && onRetry ? (
-    <Text color="accentActive" variant="buttonLabelSmall" onPress={onRetry}>
-      {t('Retry')}
-    </Text>
+  ) : transaction.status === TransactionStatus.Cancelled ||
+    transaction.status === TransactionStatus.Cancelling ? (
+    <SlashCircleIcon
+      color={theme.colors.accentCritical}
+      fill={theme.colors.background0}
+      fillOpacity={1}
+      height={theme.iconSizes.icon16}
+      width={theme.iconSizes.icon16}
+    />
+  ) : transaction.status === TransactionStatus.Failed ? (
+    <Box alignItems="flex-end" flexGrow={1} justifyContent="space-between">
+      <AlertTriangle
+        color={theme.colors.accentWarning}
+        fill={theme.colors.background0}
+        height={theme.iconSizes.icon16}
+        width={theme.iconSizes.icon16}
+      />
+      {status === TransactionStatus.Failed && onRetry && (
+        <Text color="accentActive" variant="buttonLabelSmall" onPress={onRetry}>
+          {t('Retry')}
+        </Text>
+      )}
+    </Box>
   ) : (
     <Text color="textTertiary" variant="bodyMicro">
       {formattedAddedTime}
@@ -154,24 +174,6 @@ function TransactionSummaryLayout({
                 <Text numberOfLines={1} variant="bodyLarge">
                   {title}
                 </Text>
-                {(transaction.status === TransactionStatus.Cancelled ||
-                  transaction.status === TransactionStatus.Cancelling) && (
-                  <SlashCircleIcon
-                    color={theme.colors.textSecondary}
-                    fill={theme.colors.background0}
-                    fillOpacity={1}
-                    height={theme.iconSizes.icon16}
-                    width={theme.iconSizes.icon16}
-                  />
-                )}
-                {transaction.status === TransactionStatus.Failed && (
-                  <AlertTriangle
-                    color={theme.colors.accentWarning}
-                    fill={theme.colors.background0}
-                    height={theme.iconSizes.icon16}
-                    width={theme.iconSizes.icon16}
-                  />
-                )}
                 {chainId !== ChainId.Mainnet && <InlineNetworkPill chainId={chainId} />}
               </Flex>
               {caption && (

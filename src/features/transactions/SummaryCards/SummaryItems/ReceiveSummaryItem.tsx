@@ -32,6 +32,7 @@ export default function ReceiveSummaryItem({
       return (
         <LogoWithTxStatus
           assetType={AssetType.Currency}
+          chainId={transaction.chainId}
           currencyInfo={currencyInfo}
           size={TXN_HISTORY_ICON_SIZE}
           txStatus={transaction.status}
@@ -42,6 +43,7 @@ export default function ReceiveSummaryItem({
     return (
       <LogoWithTxStatus
         assetType={AssetType.ERC721}
+        chainId={transaction.chainId}
         nftImageUrl={transaction.typeInfo.nftSummaryInfo?.imageURL}
         size={TXN_HISTORY_ICON_SIZE}
         txStatus={transaction.status}
@@ -51,6 +53,7 @@ export default function ReceiveSummaryItem({
   }, [
     currencyInfo,
     isCurrency,
+    transaction.chainId,
     transaction.status,
     transaction.typeInfo.nftSummaryInfo?.imageURL,
     transaction.typeInfo.type,
@@ -67,7 +70,7 @@ export default function ReceiveSummaryItem({
 
   const caption = t('{{what}} from {{sender}}', {
     what: isCurrency
-      ? currencyAmount ?? '' + currencyInfo?.currency?.symbol ?? ''
+      ? (currencyAmount ?? '') + (currencyInfo?.currency?.symbol ?? '')
       : transaction.typeInfo.nftSummaryInfo?.name,
     sender: senderName,
   })

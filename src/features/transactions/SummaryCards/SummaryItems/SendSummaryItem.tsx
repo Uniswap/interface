@@ -37,6 +37,7 @@ export default function SendSummaryItem({
       return (
         <LogoWithTxStatus
           assetType={AssetType.Currency}
+          chainId={transaction.chainId}
           currencyInfo={currencyInfo}
           size={TXN_HISTORY_ICON_SIZE}
           txStatus={transaction.status}
@@ -47,6 +48,7 @@ export default function SendSummaryItem({
     return (
       <LogoWithTxStatus
         assetType={AssetType.ERC721}
+        chainId={transaction.chainId}
         nftImageUrl={transaction.typeInfo.nftSummaryInfo?.imageURL}
         size={TXN_HISTORY_ICON_SIZE}
         txStatus={transaction.status}
@@ -56,6 +58,7 @@ export default function SendSummaryItem({
   }, [
     currencyInfo,
     isCurrency,
+    transaction.chainId,
     transaction.status,
     transaction.typeInfo.nftSummaryInfo?.imageURL,
     transaction.typeInfo.type,

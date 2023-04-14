@@ -41,6 +41,7 @@ export default function FiatPurchaseSummaryItem({
       icon={
         <LogoWithTxStatus
           assetType={AssetType.Currency}
+          chainId={transaction.chainId}
           currencyInfo={outputCurrencyInfo}
           size={TXN_HISTORY_ICON_SIZE}
           txStatus={transaction.status}

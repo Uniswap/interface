@@ -30,7 +30,7 @@ function getTransactionTypeVerbs(
       }
     case TransactionType.Approve:
       if (typeInfo.approvalAmount === '0.0') {
-        return [(t('Revoked'), t('Revoking'), t('revoke'))]
+        return [t('Revoked'), t('Revoking'), t('revoke')]
       } else {
         return [t('Approved'), t('Approving'), t('approve')]
       }

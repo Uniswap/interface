@@ -36,12 +36,16 @@ export function opacify(amount: number, hexColor: string): string {
   return `${hexColor.slice(0, 7)}${opacifySuffix}`
 }
 
+export function getNetworkForegroundColor(theme: Theme, chainId: ChainId): string {
+  const chainColorName = `chain_${chainId}` as keyof Theme['colors']
+  return theme.colors[chainColorName]
+}
+
 /** Helper to retrieve foreground and background colors for a given chain */
 export function useNetworkColors(chainId: ChainId): { foreground: string; background: string } {
   const theme = useAppTheme()
 
-  const chainColorName = `chain_${chainId}` as keyof Theme['colors']
-  const color = theme.colors[chainColorName]
+  const color = getNetworkForegroundColor(theme, chainId)
 
   const foreground = color
   assert(foreground, 'Network color is not defined in Theme')

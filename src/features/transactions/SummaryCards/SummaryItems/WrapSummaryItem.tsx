@@ -46,6 +46,7 @@ export default function WrapSummaryItem({
       caption={caption}
       icon={
         <SplitLogo
+          chainId={transaction.chainId}
           inputCurrencyInfo={unwrapped ? wrappedCurrencyInfo : nativeCurrencyInfo}
           outputCurrencyInfo={unwrapped ? nativeCurrencyInfo : wrappedCurrencyInfo}
           size={TXN_HISTORY_ICON_SIZE}

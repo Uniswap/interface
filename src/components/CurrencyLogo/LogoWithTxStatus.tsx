@@ -9,7 +9,7 @@ import OutgoingArrow from 'src/assets/icons/arrow-up-in-circle.svg'
 import UnknownStatus from 'src/assets/icons/question-in-circle.svg'
 import WalletConnectLogo from 'src/assets/icons/walletconnect.svg'
 import MoonpayLogo from 'src/assets/logos/moonpay.svg'
-import { CurrencyLogo } from 'src/components/CurrencyLogo'
+import { CurrencyLogo, STATUS_RATIO } from 'src/components/CurrencyLogo'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { ImageUri } from 'src/components/images/ImageUri'
 import { NFTViewer } from 'src/components/images/NFTViewer'
@@ -21,6 +21,7 @@ import { AssetType } from 'src/entities/assets'
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { NFTTradeType, TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
+import { getNetworkForegroundColor } from 'src/utils/colors'
 import { logger } from 'src/utils/logger'
 
 interface LogoWithTxStatusProps {
@@ -28,6 +29,7 @@ interface LogoWithTxStatusProps {
   txType: TransactionType
   txStatus: TransactionStatus
   size: number
+  chainId: ChainId | null
 }
 
 interface DappLogoWithTxStatusProps {
@@ -50,7 +52,7 @@ interface NFTStatusProps extends LogoWithTxStatusProps {
 }
 
 export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps): JSX.Element {
-  const { assetType, txType, txStatus, size } = props
+  const { assetType, txType, txStatus, size, chainId } = props
   const theme = useAppTheme()
 
   const statusSize = size / 2
@@ -77,36 +79,54 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps): J
     txStatus === TransactionStatus.Success ? theme.colors.accentSuccess : theme.colors.textSecondary
   const color = theme.colors.background1
 
-  let Icon: React.FC<SvgProps> | undefined
-  switch (txType) {
-    case TransactionType.Approve:
-    case TransactionType.NFTApprove:
-      Icon = Approve
-      break
-    case TransactionType.Send:
-      Icon = OutgoingArrow
-      break
-    case TransactionType.NFTTrade:
-      if (
-        (assetType === AssetType.ERC721 || assetType === AssetType.ERC1155) &&
-        props.nftTradeType === NFTTradeType.SELL
-      ) {
+  let icon: JSX.Element | undefined
+  if (chainId && chainId !== ChainId.Mainnet) {
+    icon = (
+      <NetworkLogo
+        backgroundColor={getNetworkForegroundColor(theme, chainId)}
+        borderColor={theme.colors.background0}
+        borderRadius="rounded8"
+        borderWidth={2}
+        chainId={chainId}
+        size={size * STATUS_RATIO}
+      />
+    )
+  } else {
+    let Icon: React.FC<SvgProps> | undefined
+    switch (txType) {
+      case TransactionType.Approve:
+      case TransactionType.NFTApprove:
+        Icon = Approve
+        break
+      case TransactionType.Send:
         Icon = OutgoingArrow
-      }
-      break
-    // Fiat purchases use the same icon as receive
-    case TransactionType.FiatPurchase:
-    case TransactionType.Receive:
-    case TransactionType.NFTMint:
-      Icon = IncomingArrow
-      break
-    case TransactionType.Unknown:
-      Icon = UnknownStatus
-      break
+        break
+      case TransactionType.NFTTrade:
+        if (assetType === AssetType.ERC721 || assetType === AssetType.ERC1155) {
+          if (props.nftTradeType === NFTTradeType.SELL) {
+            Icon = OutgoingArrow
+          } else {
+            Icon = IncomingArrow
+          }
+        }
+        break
+      // Fiat purchases use the same icon as receive
+      case TransactionType.FiatPurchase:
+      case TransactionType.Receive:
+      case TransactionType.NFTMint:
+        Icon = IncomingArrow
+        break
+      case TransactionType.Unknown:
+        Icon = UnknownStatus
+        break
+    }
+    if (Icon) {
+      icon = <Icon color={color} fill={fill} height={statusSize} width={statusSize} />
+    }
   }
 
   useEffect(() => {
-    if (!Icon) {
+    if (!icon) {
       logger.warn(
         'statusIcon',
         'GenerateStatusIcon',
@@ -114,14 +134,14 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps): J
         txType
       )
     }
-  }, [Icon, txType])
+  }, [icon, txType])
 
   return (
     <Box alignItems="center" height={size} justifyContent="center" width={size}>
       {logo}
-      {Icon && (
+      {icon && (
         <Box bottom={-4} position="absolute" right={-4}>
-          <Icon color={color} fill={fill} height={statusSize} width={statusSize} />
+          {icon}
         </Box>
       )}
     </Box>
@@ -212,7 +232,7 @@ export function DappLogoWithWCBadge({
 }): JSX.Element {
   const theme = useAppTheme()
   const dappImageSize = size
-  const statusSize = dappImageSize * (1 / 2)
+  const statusSize = dappImageSize * STATUS_RATIO
   const totalSize = dappImageSize + statusSize * (1 / 4)
   const dappImage = dappImageUrl ? (
     <RemoteImage
@@ -232,7 +252,9 @@ export function DappLogoWithWCBadge({
       </Box>
       <Box
         backgroundColor="background1"
-        borderRadius="rounded4"
+        borderColor="background0"
+        borderRadius="roundedFull"
+        borderWidth={2}
         bottom={0}
         position="absolute"
         right={0}>

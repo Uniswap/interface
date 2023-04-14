@@ -21,6 +21,7 @@ export default function NFTApproveSummaryItem({
       icon={
         <LogoWithTxStatus
           assetType={AssetType.ERC721}
+          chainId={transaction.chainId}
           size={TXN_HISTORY_ICON_SIZE}
           txStatus={transaction.status}
           txType={TransactionType.NFTApprove}

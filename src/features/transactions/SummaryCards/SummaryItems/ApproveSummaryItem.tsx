@@ -44,6 +44,7 @@ export default function ApproveSummaryItem({
       icon={
         <LogoWithTxStatus
           assetType={AssetType.Currency}
+          chainId={transaction.chainId}
           currencyInfo={currencyInfo}
           size={TXN_HISTORY_ICON_SIZE}
           txStatus={transaction.status}
