@@ -189,6 +189,8 @@ export function CurrencySearch({
     [debouncedQuery, native, searchCurrencies, handleCurrencySelect]
   )
 
+  console.log("searchCurrencies", searchCurrencies)
+
   // menu ui
   const [open, toggle] = useToggle(false)
   const node = useRef<HTMLDivElement>()

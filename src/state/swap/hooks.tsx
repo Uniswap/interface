@@ -81,6 +81,7 @@ export function useSwapActionHandlers(): {
   const onLeverageChange = useCallback(
     (leverage: boolean) => {
       dispatch(setLeverage({ leverage }))
+      dispatch(setLeverageFactor({ leverageFactor: "1" }))
     },
     [dispatch]
   )
@@ -101,6 +102,12 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
   '0xf164fC0Ec4E93095b804a4795bBe1e041497b92a': true, // v2 router 01
   '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D': true, // v2 router 02
 }
+
+// function createLevPosition(
+//   uint256 traderFund,
+//   uint256 maxSlippage,
+//   uint256 borrowAmount,
+//   bool isLong, // if long borrow token1 to buy token 0 
 
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(): {
@@ -164,7 +171,8 @@ export function useDerivedSwapInfo(): {
 
   // allowed slippage is either auto slippage, or custom user defined slippage if auto slippage disabled
   const autoSlippageTolerance = useAutoSlippageTolerance(trade.trade)
-  const allowedSlippage = useUserSlippageToleranceWithDefault(autoSlippageTolerance)
+  const allowedSlippage = autoSlippageTolerance// useUserSlippageToleranceWithDefault(autoSlippageTolerance)
+  // console.log("allowedSlippage:", allowedSlippage)
 
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined

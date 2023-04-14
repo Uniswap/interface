@@ -25,7 +25,7 @@ import Widget from 'components/Widget'
 import { isSupportedChain } from 'constants/chains'
 import { useSwapWidgetEnabled } from 'featureFlags/flags/swapWidget'
 import useENSAddress from 'hooks/useENSAddress'
-import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
+import usePermit2Allowance, { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
@@ -94,7 +94,14 @@ import { pageTimePeriodAtom } from 'pages/TokenDetails'
 import { useAtom } from 'jotai'
 import { CHAIN_ID_TO_BACKEND_NAME, toHistoryDuration } from 'graphql/data/util'
 import { Checkbox } from 'nft/components/layout/Checkbox'
-
+import { GlOBAL_STORAGE_ADDRESS, PS_ROUTER, V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
+import { ethers } from 'ethers'
+import GlobalStorageData from "../../perpspotContracts/GlobalStorage.json"
+import LeverageManagerData from "../../perpspotContracts/LeverageManager.json"
+import { useLeverageManagerAddress } from 'hooks/useGetLeverageManager'
+import { usePoolAddressCache } from 'components/WalletDropdown/MiniPortfolio/Pools/cache'
+import { computePoolAddress } from 'hooks/usePools'
+import { useTokenAllowance } from 'hooks/useTokenAllowance'
 
 const ArrowContainer = styled.div`
   display: inline-block;
@@ -139,6 +146,16 @@ const SwapSection = styled.div`
   &:focus-within:before {
     border-color: ${({ theme }) => theme.stateOverlayPressed};
   }
+`
+
+const InputLeverageSection = styled(SwapSection)`
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+`
+
+const InputSection = styled(SwapSection)<{ leverage: boolean }>`
+  border-bottom-left-radius: ${({ leverage }) => leverage && '0'};
+  border-bottom-right-radius: ${({ leverage }) => leverage && '0'};
 `
 
 const OutputSwapSection = styled(SwapSection) <{ showDetailsDropdown: boolean }>`
@@ -213,11 +230,13 @@ const TRADE_STRING = 'SwapRouter'
 
 export default function Swap({ className }: { className?: string }) {
   const navigate = useNavigate()
-  const { account, chainId } = useWeb3React()
+  const { account, chainId, provider } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
   const [fetchingSwapQuoteStartTime, setFetchingSwapQuoteStartTime] = useState<Date | undefined>()
   const swapWidgetEnabled = useSwapWidgetEnabled()
+
+  console.log("loadedUrlParams", loadedUrlParams)
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -272,10 +291,10 @@ export default function Swap({ className }: { className?: string }) {
     inputError: swapInputError,
   } = useDerivedSwapInfo()
 
-  console.log("tradeState", tradeState)
+  // console.log("tradeState", tradeState)
   console.log("trade", trade)
-  console.log("allowedSlippage", allowedSlippage)
-  console.log("currencies", currencies)
+  // console.log("allowedSlippage", allowedSlippage)
+  // console.log("currencies", currencies)
 
   const {
     wrapType,
@@ -377,8 +396,49 @@ export default function Swap({ className }: { className?: string }) {
     (parsedAmounts[Field.INPUT]?.currency.isToken
       ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
       : undefined),
-    isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
+    // isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
+    isSupportedChain(chainId) ? PS_ROUTER : undefined
   )
+
+  const [leverageManagerAllowance, setLeverageManagerAllowance] = useState(false)
+  const [leverageManagerAllowanceLoading, setLeverageManagerAllowanceLoading] = useState(false)
+  
+  let poolAddress = useMemo(() => {
+    if (
+      trade && trade.routes && trade.routes.length > 0 && trade.routes[0].pools.length > 0 && chainId && 
+      currencies[Field.INPUT] && currencies[Field.OUTPUT]
+      ) {
+      let pool = trade.routes[0]?.pools[0] as any
+      return computePoolAddress({ factoryAddress: V3_CORE_FACTORY_ADDRESSES[chainId], tokenA: currencies[Field.INPUT] as Token, tokenB: currencies[Field.OUTPUT] as Token, fee: pool.fee })
+    }
+    return 
+  }, [account, parsedAmounts, trade, currencies,  currencies[Field.OUTPUT],  currencies[Field.INPUT], chainId])
+
+  console.log("poolAddress", poolAddress)
+
+  const [leverageManagerAddress, setLeverageManagerAddress] = useState("")
+
+  useEffect(() => {
+    // declare the data fetching function
+    const fetchData = async () => {
+      console.log("poolAddresasdfas", poolAddress)
+      if (poolAddress && account && provider) {
+        let gs = new ethers.Contract(GlOBAL_STORAGE_ADDRESS, GlobalStorageData.abi, provider.getSigner(account).connectUnchecked())
+        let result = await gs.poolData(poolAddress)
+        setLeverageManagerAddress(result.leverageManager)
+      }
+    }
+  
+    // call the function
+    fetchData()
+      // make sure to catch any error
+      .catch(console.error);
+  }, [poolAddress, account, trade, currencies, account, provider])
+
+  // const leverageManagerAllowance2 = useTokenAllowance(currencies[Field.INPUT].isNative ? (currencies[Field.INPUT]) : undefined, account, leverageManagerAddress)  
+
+  // console.log("leverageManagerAddress", leverageManagerAddress)
+  
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
   const [isAllowancePending, setIsAllowancePending] = useState(false)
   const updateAllowance = useCallback(async () => {
@@ -422,6 +482,7 @@ export default function Swap({ className }: { className?: string }) {
     if (stablecoinPriceImpact && !confirmPriceImpactWithoutFee(stablecoinPriceImpact)) {
       return
     }
+    console.log("handleSwap")
     setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined })
     swapCallback()
       .then((hash) => {
@@ -688,7 +749,7 @@ export default function Swap({ className }: { className?: string }) {
                     fiatValueOutput={fiatValueTradeOutput}
                   />
                   <div style={{ display: 'relative' }}>
-                    <SwapSection>
+                    <InputSection leverage={leverage}>
                       <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
                         <SwapCurrencyInputPanel
                           label={
@@ -712,8 +773,8 @@ export default function Swap({ className }: { className?: string }) {
                           isInput={true}
                         />
                       </Trace>
-                    </SwapSection>
-                    <SwapSection>
+                    </InputSection>
+                    { leverage && <InputLeverageSection>
                       <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
                         <LeveragedOutputPanel
                           label={
@@ -723,7 +784,7 @@ export default function Swap({ className }: { className?: string }) {
                               <Trans>From</Trans>
                             )
                           }
-                          value={String(Number(sliderLeverageFactor) * Number(formattedAmounts[Field.INPUT])) }
+                          value={Number(formattedAmounts[Field.INPUT]) == 0 ? "" : String(Number(sliderLeverageFactor) * Number(formattedAmounts[Field.INPUT])) }
                           showMaxButton={showMaxButton}
                           currency={currencies[Field.INPUT] ?? null}
                           onUserInput={handleTypeInput}
@@ -735,9 +796,10 @@ export default function Swap({ className }: { className?: string }) {
                           id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
                           loading={independentField === Field.OUTPUT && routeIsSyncing}
                           noLeverageValue={formattedAmounts[Field.INPUT]}
+                          disabled={true}
                         />
                       </Trace>
-                    </SwapSection>
+                    </InputLeverageSection>}
                     <ArrowWrapper clickable={isSupportedChain(chainId)}>
                       <TraceEvent
                         events={[BrowserEvent.onClick]}
@@ -765,7 +827,7 @@ export default function Swap({ className }: { className?: string }) {
                       <OutputSwapSection showDetailsDropdown={showDetailsDropdown}>
                         <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
                           <SwapCurrencyInputPanel
-                            value={formattedAmounts[Field.OUTPUT]}
+                            value={!leverage ? formattedAmounts[Field.OUTPUT] : (Number(formattedAmounts[Field.OUTPUT]) == 0 ? "" : String(Number(sliderLeverageFactor) * Number(formattedAmounts[Field.OUTPUT])))}
                             onUserInput={handleTypeOutput}
                             label={
                               independentField === Field.INPUT && !showWrap ? (
@@ -785,7 +847,8 @@ export default function Swap({ className }: { className?: string }) {
                             id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
                             loading={independentField === Field.INPUT && routeIsSyncing}
                             isInput={false}
-                            isLevered= {Number(sliderLeverageFactor) != 1}
+                            isLevered={leverage}
+                            disabled={leverage}
                           />
                         </Trace>
 
@@ -820,16 +883,16 @@ export default function Swap({ className }: { className?: string }) {
                                     <Trans>{sliderLeverageFactor}x</Trans>
                                   </ResponsiveHeaderText>
                                   <AutoRow gap="4px" justify="flex-end">
-                                    <SmallMaxButton onClick={() => (75)} width="20%">
+                                    <SmallMaxButton onClick={() => onLeverageFactorChange("10")} width="20%">
                                       <Trans>10</Trans>
                                     </SmallMaxButton>
-                                    <SmallMaxButton onClick={() => (75)} width="20%">
+                                    <SmallMaxButton onClick={() => onLeverageFactorChange("100")} width="20%">
                                       <Trans>100</Trans>
                                     </SmallMaxButton>
-                                    <SmallMaxButton onClick={() => (75)} width="20%">
+                                    <SmallMaxButton onClick={() => onLeverageFactorChange("1000")} width="20%">
                                       <Trans>1000</Trans>
                                     </SmallMaxButton>
-                                    <SmallMaxButton onClick={() => (100)} width="20%">
+                                    <SmallMaxButton onClick={() => onLeverageFactorChange("1000")} width="20%">
                                       <Trans>Max</Trans>
                                     </SmallMaxButton>
                                   </AutoRow>
@@ -849,7 +912,7 @@ export default function Swap({ className }: { className?: string }) {
                       </LeverageGaugeSection>
                       {
                         //showDetailsDropdown 
-                        true&& (
+                        showDetailsDropdown && (
                         <DetailsSwapSection>
                           <SwapDetailsDropdown
                             trade={trade}

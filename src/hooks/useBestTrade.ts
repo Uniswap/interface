@@ -63,6 +63,8 @@ export function useBestTrade(
     useFallback ? debouncedAmount : undefined,
     useFallback ? debouncedOtherCurrency : undefined
   )
+  console.log("bestV3Trade", bestV3Trade)
+  console.log("routingAPITrade", routingAPITrade)
 
   // only return gas estimate from api if routing api trade is used
   return useMemo(

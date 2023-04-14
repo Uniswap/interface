@@ -16,6 +16,7 @@ import isZero from 'utils/isZero'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
 import { PermitSignature } from './usePermitAllowance'
+import { PS_ROUTER } from 'constants/addresses'
 
 /** Thrown when gas estimation fails. This class of error usually requires an emulator to determine the root cause. */
 class GasEstimationError extends Error {
@@ -67,9 +68,11 @@ export function useUniversalRouterSwapCallback(
             inputTokenPermit: options.permit,
             fee: options.feeOptions,
           })
+          console.log('data', data)
+          console.log('value', value)
           const tx = {
             from: account,
-            to: UNIVERSAL_ROUTER_ADDRESS(chainId),
+            to: PS_ROUTER,// UNIVERSAL_ROUTER_ADDRESS(chainId),
             data,
             // TODO(https://github.com/Uniswap/universal-router-sdk/issues/113): universal-router-sdk returns a non-hexlified value.
             ...(value && !isZero(value) ? { value: toHex(value) } : {}),

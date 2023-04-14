@@ -19,8 +19,8 @@ import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import { hasURL } from 'utils/urlChecks'
 import { SmallButtonPrimary,ButtonPrimary } from 'components/Button'
-import ConfirmLeverageSwapModal from 'components/swap/confirmLeverageSwapModal'
-import ConfirmAddPremiumModal from 'components/swap/ConfirmAddPremiumModal'
+// import ConfirmLeverageSwapModal from 'components/swap/confirmLeverageSwapModal'
+// import ConfirmAddPremiumModal from 'components/swap/ConfirmAddPremiumModal'
 import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import Column, { AutoColumn } from 'components/Column'
 
@@ -333,7 +333,7 @@ export default function LeveragePositionItem({
             <Trans>Close Position</Trans>
           </ResponsiveButtonPrimary>
 
-          <ConfirmLeverageSwapModal
+          {/* <ConfirmLeverageSwapModal
             isOpen={showConfirm}
             // trade={trade}
             // originalTrade={tradeToConfirm}
@@ -348,8 +348,8 @@ export default function LeveragePositionItem({
             // swapQuoteReceivedDate={swapQuoteReceivedDate}
             // fiatValueInput={fiatValueTradeInput}
             // fiatValueOutput={fiatValueTradeOutput}
-          />
-          <ConfirmAddPremiumModal
+          /> */}
+          {/* <ConfirmAddPremiumModal
             isOpen={showPremiumConfirm}
             // trade={trade}
             // originalTrade={tradeToConfirm}
@@ -364,7 +364,7 @@ export default function LeveragePositionItem({
             // swapQuoteReceivedDate={swapQuoteReceivedDate}
             // fiatValueInput={fiatValueTradeInput}
             // fiatValueOutput={fiatValueTradeOutput}
-          />
+          /> */}
 
           <ResponsiveButtonPrimary onClick={() => setshowConfirm(!showPremiumConfirm)} >
             <Trans>Add Premium</Trans>

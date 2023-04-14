@@ -1,14 +1,17 @@
 import { Interface } from '@ethersproject/abi'
 import { BigintIsh, Currency, Token } from '@uniswap/sdk-core'
 import { abi as IUniswapV3PoolStateABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
-import { computePoolAddress } from '@uniswap/v3-sdk'
+// import { computePoolAddress } from '@uniswap/v3-sdk'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
+import { defaultAbiCoder } from '@ethersproject/abi'
+import { getCreate2Address } from '@ethersproject/address'
+import { keccak256 } from '@ethersproject/solidity'
 
-import { V3_CORE_FACTORY_ADDRESSES } from '../constants/addresses'
+import { POOL_INIT_CODE_HASH, PS_ROUTER, PS_V3_POOL_FACTORY, V3_CORE_FACTORY_ADDRESSES, tokenA, tokenB } from '../constants/addresses'
 import { IUniswapV3PoolStateInterface } from '../types/v3/IUniswapV3PoolState'
 
 const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateABI) as IUniswapV3PoolStateInterface
@@ -41,6 +44,7 @@ class PoolCache {
         tokenA,
         tokenB,
         fee,
+        initCodeHashManualOverride: POOL_INIT_CODE_HASH,
       }),
     }
     this.addresses.unshift(address)
@@ -103,12 +107,16 @@ export function usePools(
     })
   }, [chainId, poolKeys])
 
+  // console.log('poolTokens', poolTokens)
+
   const poolAddresses: (string | undefined)[] = useMemo(() => {
     const v3CoreFactoryAddress = chainId && V3_CORE_FACTORY_ADDRESSES[chainId]
     if (!v3CoreFactoryAddress) return new Array(poolTokens.length)
 
     return poolTokens.map((value) => value && PoolCache.getPoolAddress(v3CoreFactoryAddress, ...value))
   }, [chainId, poolTokens])
+
+  // console.log('poolAddresses', poolAddresses)
 
   const slot0s = useMultipleContractSingleData(poolAddresses, POOL_STATE_INTERFACE, 'slot0')
   const liquidities = useMultipleContractSingleData(poolAddresses, POOL_STATE_INTERFACE, 'liquidity')
@@ -152,4 +160,29 @@ export function usePool(
   )
 
   return usePools(poolKeys)[0]
+}
+
+
+export function computePoolAddress({
+  factoryAddress,
+  tokenA,
+  tokenB,
+  fee,
+  initCodeHashManualOverride
+}: {
+  factoryAddress: string
+  tokenA: Token
+  tokenB: Token
+  fee: FeeAmount
+  initCodeHashManualOverride?: string
+}): string {
+  const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA] // does safety checks
+  return getCreate2Address(
+    factoryAddress,
+    keccak256(
+      ['bytes'],
+      [defaultAbiCoder.encode(['address', 'address', 'uint24'], [token0.address, token1.address, fee])]
+    ),
+    initCodeHashManualOverride ?? POOL_INIT_CODE_HASH
+  )
 }

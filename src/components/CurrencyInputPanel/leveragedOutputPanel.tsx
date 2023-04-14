@@ -205,6 +205,7 @@ interface SwapCurrencyInputPanelProps {
   locked?: boolean
   loading?: boolean
   noLeverageValue?: string
+  disabled?: boolean
 }
 
 export default function LeveragedOutputPanel({
@@ -228,6 +229,7 @@ export default function LeveragedOutputPanel({
   locked = false,
   loading = false,
   noLeverageValue="10",
+  disabled= false,
   ...rest
 }: SwapCurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
@@ -261,55 +263,18 @@ export default function LeveragedOutputPanel({
               className="token-amount-input"
               value={value}
               onUserInput={onUserInput}
-              disabled={!chainAllowed}
+              disabled={!chainAllowed || disabled}
               $loading={loading}
+
             />
           )}
           <CurrencyLogo style={{ marginRight: '2px' }} currency={currency} size="24px" />
-          {/*<CurrencySelect
-            disabled={!chainAllowed}
-            visible={currency !== undefined}
-            selected={!!currency}
-            hideInput={hideInput}
-            className="open-currency-select-button"
-            onClick={() => {
-              if (onCurrencySelect) {
-                setModalOpen(true)
-              }
-            }}
-          >
-            <Aligner>
-              <RowFixed>
-                {pair ? (
-                  <span style={{ marginRight: '0.5rem' }}>
-                    <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
-                  </span>
-                ) : currency ? (
-                  <CurrencyLogo style={{ marginRight: '2px' }} currency={currency} size="24px" />
-                ) : null}
-                {pair ? (
-                  <StyledTokenName className="pair-name-container">
-                    {pair?.token0.symbol}:{pair?.token1.symbol}
-                  </StyledTokenName>
-                ) : (
-                  <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
-                    {(currency && currency.symbol && currency.symbol.length > 20
-                      ? currency.symbol.slice(0, 4) +
-                        '...' +
-                        currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                      : currency?.symbol) || <Trans>Select token</Trans>}
-                  </StyledTokenName>
-                )}
-              </RowFixed>
-              {onCurrencySelect && <StyledDropDown selected={!!currency} />}
-            </Aligner>
-          </CurrencySelect>*/}
         </InputRow>
         {Boolean(!hideInput && !hideBalance) && (
           <FiatRow>
             <RowBetween>
               <LoadingOpacityContainer $loading={loading}>
-                 <Trans>{"You are borrowing: "}{String(Number(value) -Number(noLeverageValue))}</Trans>
+                 <Trans>{"You are borrowing: "}{String(Number(value) - Number(noLeverageValue))}</Trans>
                 {/*<FiatValue fiatValue={noLeverageValue} priceImpact={priceImpact} />*/}
               </LoadingOpacityContainer>
               {account ? (
@@ -328,7 +293,7 @@ export default function LeveragedOutputPanel({
                       )
                     ) : null*/}
                   </ThemedText.DeprecatedBody>
-                  {showMaxButton && selectedCurrencyBalance ? (
+                  {false && selectedCurrencyBalance ? (
                     <TraceEvent
                       events={[BrowserEvent.onClick]}
                       name={SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED}

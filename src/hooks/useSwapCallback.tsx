@@ -27,7 +27,7 @@ export function useSwapCallback(
   const deadline = useTransactionDeadline()
 
   const addTransaction = useTransactionAdder()
-
+  console.log("allowedSlippage", allowedSlippage)
   const universalRouterSwapCallback = useUniversalRouterSwapCallback(trade, fiatValues, {
     slippageTolerance: allowedSlippage,
     deadline,

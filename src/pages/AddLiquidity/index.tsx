@@ -4,7 +4,7 @@ import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
+import { computePoolAddress, FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
 import { sendEvent } from 'components/analytics'
@@ -16,6 +16,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Text } from 'rebass'
+import {PS_V3_POOL_FACTORY, tokenA, tokenB} from "../../constants/addresses"
 import {
   useRangeHopCallbacks,
   useV3DerivedMintInfo,
@@ -77,6 +78,7 @@ import {
   StyledInput,
   Wrapper,
 } from './styled'
+import { usePool } from 'hooks/usePools'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -145,6 +147,10 @@ export default function AddLiquidity() {
     baseCurrency ?? undefined,
     existingPosition
   )
+  // console.log("baseCurrency: ", baseCurrency)
+  // console.log("quoteCurrency: ", quoteCurrency)
+  // console.log("pool1: ", usePool(baseCurrency?? undefined , quoteCurrency ?? undefined, feeAmount))
+  console.log("pool: ", pool)
 
   const { onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput, onStartPriceInput } =
     useV3MintActionHandlers(noLiquidity)
@@ -216,6 +222,7 @@ export default function AddLiquidity() {
     }
 
     if (position && account && deadline) {
+      console.log("on add")
       const useNative = baseCurrency.isNative ? baseCurrency : quoteCurrency.isNative ? quoteCurrency : undefined
       const { calldata, value } =
         hasExistingPosition && tokenId

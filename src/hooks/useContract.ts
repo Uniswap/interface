@@ -32,6 +32,7 @@ import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, Quoter, QuoterV2, TickLens, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
+import { abi as LeverageManagerAbi} from "../perpspotContracts/LeverageManager.json"
 
 import { getContract } from '../utils'
 
@@ -74,6 +75,11 @@ export function useV2MigratorContract() {
 export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean) {
   return useContract<Erc20>(tokenAddress, ERC20_ABI, withSignerIfPossible)
 }
+
+export function useLeverageManagerContract(leverageManagerAddress?: string, withSignerIfPossible?: boolean) {
+  return useContract(leverageManagerAddress, LeverageManagerAbi, withSignerIfPossible)
+}
+
 
 export function useWETHContract(withSignerIfPossible?: boolean) {
   const { chainId } = useWeb3React()
