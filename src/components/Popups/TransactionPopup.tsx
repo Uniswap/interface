@@ -22,7 +22,6 @@ function TransactionPopupContent({ tx, chainId }: { tx: TransactionDetails; chai
   const tokens = useCombinedActiveList()
   const activity = parseLocalActivity(tx, chainId, tokens)
   const { ENSName } = useENSName(activity?.otherAccount)
-
   if (!activity) return null
 
   const explorerUrl = getExplorerLink(chainId, tx.hash, ExplorerDataType.TRANSACTION)
