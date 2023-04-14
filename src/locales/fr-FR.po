@@ -2198,7 +2198,7 @@ msgid "Uniswap V2 is not available on this network."
 msgstr ""
 
 #: src/components/SwitchLocaleLink/index.tsx
-msgid "Eosswap available in: <0>{0}</0>"
+msgid "Uniswap available in: <0>{0}</0>"
 msgstr "Eosswap disponible en : <0>{0}</0>"
 
 #: src/components/vote/ProposalEmptyState.tsx
