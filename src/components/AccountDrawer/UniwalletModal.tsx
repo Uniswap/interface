@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { InterfaceElementName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { WalletConnect } from '@web3-react/walletconnect'
 import Column, { AutoColumn } from 'components/Column'
@@ -95,7 +96,7 @@ export default function UniwalletModal() {
           )}
         </QRCodeWrapper>
         <Divider />
-        <InfoSection onClose={onClose} />
+        <InfoSection />
       </UniwalletConnectWrapper>
     </Modal>
   )
@@ -108,7 +109,7 @@ const InfoSectionWrapper = styled(RowBetween)`
   gap: 20px;
 `
 
-function InfoSection({ onClose }: { onClose: () => void }) {
+function InfoSection() {
   return (
     <InfoSectionWrapper>
       <AutoColumn gap="4px">
@@ -122,7 +123,7 @@ function InfoSection({ onClose }: { onClose: () => void }) {
         </ThemedText.Caption>
       </AutoColumn>
       <Column>
-        <DownloadButton onClick={onClose} />
+        <DownloadButton element={InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON} />
       </Column>
     </InfoSectionWrapper>
   )

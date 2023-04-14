@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { CallState } from '@uniswap/redux-multicall'
-import { renderHook } from 'test-utils'
+import { renderHook } from 'test-utils/render'
 import { PositionDetails } from 'types/position'
 
 import { useFilterPossiblyMaliciousPositions } from './useFilterPossiblyMaliciousPositions'

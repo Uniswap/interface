@@ -3,9 +3,9 @@ import { SupportedChainId, Token, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import { USDC_MAINNET } from 'constants/tokens'
 import { useToken } from 'hooks/Tokens'
-import { usePool } from 'hooks/usePools'
 import { PoolState } from 'hooks/usePools'
-import { render } from 'test-utils'
+import { usePool } from 'hooks/usePools'
+import { render } from 'test-utils/render'
 
 import PositionListItem from '.'
 
@@ -14,7 +14,6 @@ const mockUsePool = usePool as jest.MockedFunction<typeof usePool>
 
 jest.mock('hooks/Tokens')
 const mockUseToken = useToken as jest.MockedFunction<typeof useToken>
-
 // eslint-disable-next-line react/display-name
 jest.mock('components/DoubleLogo', () => () => <div />)
 
