@@ -7,10 +7,10 @@ import { PopupContent } from '../../state/application/reducer'
 import FailedNetworkSwitchPopup from './FailedNetworkSwitchPopup'
 import TransactionPopup from './TransactionPopup'
 
-const StyledClose = styled(X)<{ padding: number }>`
+const StyledClose = styled(X)<{ $padding: number }>`
   position: absolute;
-  right: ${({ padding }) => `${padding}px`};
-  top: ${({ padding }) => `${padding}px`};
+  right: ${({ $padding }) => `${$padding}px`};
+  top: ${({ $padding }) => `${$padding}px`};
 
   :hover {
     cursor: pointer;
@@ -19,16 +19,15 @@ const StyledClose = styled(X)<{ padding: number }>`
 const Popup = styled.div<{ isTransactionPopup: boolean; show: boolean }>`
   display: inline-block;
   width: 100%;
-  opacity: ${({ show }) => (show ? '1' : '0')};
+  visibility: ${({ show }) => (show ? 'visible' : 'hidden')};
   background-color: ${({ theme }) => theme.backgroundSurface};
   position: relative;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 16px;
-  padding: ${({ isTransactionPopup }) => (!isTransactionPopup ? '20px' : '2px 0px')};
-  padding-right: ${({ isTransactionPopup }) => !isTransactionPopup && '35px'};
+  padding: ${({ isTransactionPopup }) => (!isTransactionPopup ? '20px 35px 20px 20px' : '2px 0px')};
   overflow: hidden;
   box-shadow: ${({ theme }) => theme.deepShadow};
-  transition: ${({ theme }) => `opacity ${theme.transition.duration.fast} ease-in-out`};
+  transition: ${({ theme }) => `visibility ${theme.transition.duration.fast} ease-in-out`};
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     min-width: 290px;
