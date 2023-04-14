@@ -12,8 +12,13 @@ import TransactionConfirmationModal, {
   TransactionErrorContent,
 } from '../TransactionConfirmationModal'
 import SwapModalFooter from './SwapModalFooter'
-import SwapModalHeader from './SwapModalHeader'
-
+import CloseLevSwapModalHeader from './CloseLevSwapModalHeader'
+import {
+  // useDefaultsFromURLSearch,
+  useDerivedSwapInfo,
+  // useSwapActionHandlers,
+  // useSwapState,
+} from '../../state/swap/hooks'
 export default function ConfirmLeverageSwapModal({
   // trade,
   // originalTrade,
@@ -58,8 +63,30 @@ export default function ConfirmLeverageSwapModal({
     onDismiss()
   }, [isOpen, onDismiss])
 
+  const {
+    trade: { state: tradeState, trade },
+    allowedSlippage,
+    currencyBalances,
+    parsedAmount,
+    currencies,
+    inputError: swapInputError,
+  } = useDerivedSwapInfo()
+
+    // trade: new InterfaceTrade({
+    //   v2Routes: [],
+    //   v3Routes: [
+    //     {
+    //       routev3: "bestRoute",
+    //       inputAmount: "10",
+    //       outputAmount: "10",
+    //     },
+    //   ],
+    //   TradeType.EXACT_INPUT,
+    // }),
+
   const modalHeader = useCallback(() => {
     return null
+     
     // trade ? (
     //   <SwapModalHeader
     //     trade={trade}

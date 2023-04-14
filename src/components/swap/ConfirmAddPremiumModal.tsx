@@ -108,7 +108,7 @@ export default function ConfirmAddPremiumModal({
   const pendingText = (
     <Trans>
     Swapping USDC for ETH
-{/*      Swapping {trade?.inputAmount?.toSignificant(6)} {trade?.inputAmount?.currency?.symbol} for{' '}
+  {/*      Swapping {trade?.inputAmount?.toSignificant(6)} {trade?.inputAmount?.currency?.symbol} for{' '}
       {trade?.outputAmount?.toSignificant(6)} {trade?.outputAmount?.currency?.symbol} */}
     </Trans>
   )
