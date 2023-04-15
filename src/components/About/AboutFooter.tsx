@@ -131,7 +131,7 @@ const LogoSectionContent = () => {
           <GithubIcon size={32} />
         </SocialLink>
       </SocialLinks>
-      <Copyright>© {new Date().getFullYear()} Uniswap Labs</Copyright>
+      <Copyright>© {new Date().getFullYear()} Delab Studio</Copyright>
     </>
   )
 }
