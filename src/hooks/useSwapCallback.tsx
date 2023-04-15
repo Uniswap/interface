@@ -8,12 +8,14 @@ import { TransactionType } from '../state/transactions/types'
 import { currencyId } from '../utils/currencyId'
 import useTransactionDeadline from './useTransactionDeadline'
 import { useUniversalRouterSwapCallback } from './useUniversalRouter'
-import { Contract } from "ethers"
+import {Contract } from "ethers"
 import { useWeb3React } from '@web3-react/core'
 import { defaultAbiCoder } from '@ethersproject/abi'
 import { getCreate2Address } from '@ethersproject/address'
 import { keccak256 } from '@ethersproject/solidity'
 import LeverageManagerData from "../perpspotContracts/LeverageManager.json"
+import { BigNumber as BN } from "bignumber.js";
+
 import { arrayify } from 'ethers/lib/utils'
 
 // returns a function that will execute a swap, if the parameters are all valid
@@ -27,7 +29,7 @@ export function useSwapCallback(
   const deadline = useTransactionDeadline()
 
   const addTransaction = useTransactionAdder()
-  console.log("allowedSlippage", allowedSlippage)
+  // console.log("allowedSlippage", allowedSlippage)
   const universalRouterSwapCallback = useUniversalRouterSwapCallback(trade, fiatValues, {
     slippageTolerance: allowedSlippage,
     deadline,
@@ -82,33 +84,45 @@ export function useSwapCallback(
 const LEVERAGE_MANAGER_INIT_CODE_HASH = "0x96aa3c987863e85b14d6639858b42e28f0f6892b08af1dc757a3d389d4d88e0b"
 const LEVERAGE_MANAGER_FACTORY_ADDRESS = ""
 export function useLeverageBorrowCallback(
-  poolAddress: string,
+  leverageManagerAddress: string | undefined,
+  trade: Trade<Currency, Currency, TradeType> | undefined,  
   allowedSlippage: Percent, // in bips
-  values: { amountIn: number | undefined; amountOut: number | undefined }, // amountOut -> borrowAmount
-  isLong: boolean // if isLong then amountIn is in token0, otherwise amountIn is in token1
+  leverageFactor: string | undefined
 ) {
-  const deadline = useTransactionDeadline()
+  // const deadline = useTransactionDeadline()
   const { account, chainId, provider } = useWeb3React()
-  const addTransaction = useTransactionAdder()
 
   // compute leverage manager address
-  let leverageManagerAddress = computeLeverageManagerAddress(poolAddress)
 
-  const callback = useMemo( () => {
+  const callback = useMemo(() => {
+    if (!leverageManagerAddress) return null
+    if (!trade) return null
     if (!account) throw new Error('missing account')
     if (!chainId) throw new Error('missing chainId')
     if (!provider) throw new Error('missing provider')
 
+    let isLong = false
+    let decimals = trade?.inputAmount.currency.decimals ?? 18
+    if (trade?.inputAmount.currency.isToken && trade?.outputAmount.currency.isToken) {
+      if (trade.inputAmount.currency.sortsBefore(trade.outputAmount.currency)) {
+        isLong = true
+      }
+    }
+
+    let input = new BN(trade?.inputAmount.toExact() ?? 0).shiftedBy(decimals).toFixed(0)
+    let borrowedAmount = new BN(trade?.inputAmount.toExact() ?? 0).multipliedBy(leverageFactor ?? "0").minus(trade?.inputAmount.toExact() ?? 0).shiftedBy(decimals).toFixed(0)
+
     const leverageManagerContract = new Contract(leverageManagerAddress, LeverageManagerData.abi, provider.getSigner())
-    
-    leverageManagerContract.createLevPosition(
-      values.amountIn,
-      allowedSlippage.toFixed(2),
-      values.amountOut,
-      isLong
-    )
-    
-  }, [poolAddress, values, isLong, allowedSlippage, deadline, account, chainId])
+    return () => {
+      leverageManagerContract.createLevPosition(
+        input,
+        new BN(allowedSlippage.toFixed(2)).shiftedBy(decimals).toFixed(0),
+        borrowedAmount,
+        isLong
+      )
+    }
+  }, [leverageManagerAddress, allowedSlippage, account, chainId])
+  return callback;
 }
 
 export function computeLeverageManagerAddress(

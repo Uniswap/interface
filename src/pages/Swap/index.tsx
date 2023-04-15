@@ -26,7 +26,7 @@ import { isSupportedChain } from 'constants/chains'
 import { useSwapWidgetEnabled } from 'featureFlags/flags/swapWidget'
 import useENSAddress from 'hooks/useENSAddress'
 import usePermit2Allowance, { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
-import { useSwapCallback } from 'hooks/useSwapCallback'
+import { useLeverageBorrowCallback, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
@@ -49,7 +49,7 @@ import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurr
 import LeveragedOutputPanel from '../../components/CurrencyInputPanel/leveragedOutputPanel'
 import { AutoRow, RowBetween } from '../../components/Row'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
-import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
+import ConfirmSwapModal, { LeverageConfirmModal } from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, PageWrapper, SwapCallbackError, SwapWrapper } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
@@ -102,6 +102,10 @@ import { useLeverageManagerAddress } from 'hooks/useGetLeverageManager'
 import { usePoolAddressCache } from 'components/WalletDropdown/MiniPortfolio/Pools/cache'
 import { computePoolAddress } from 'hooks/usePools'
 import { useTokenAllowance } from 'hooks/useTokenAllowance'
+import { ApprovalState, useApproval } from 'lib/hooks/useApproval'
+import { useApproveCallback } from 'hooks/useApproveCallback'
+import ConfirmLeverageSwapModal from 'components/swap/confirmLeverageSwapModal'
+import { BigNumber as BN } from "bignumber.js";
 
 const ArrowContainer = styled.div`
   display: inline-block;
@@ -153,7 +157,7 @@ const InputLeverageSection = styled(SwapSection)`
   border-top-right-radius: 0;
 `
 
-const InputSection = styled(SwapSection)<{ leverage: boolean }>`
+const InputSection = styled(SwapSection) <{ leverage: boolean }>`
   border-bottom-left-radius: ${({ leverage }) => leverage && '0'};
   border-bottom-right-radius: ${({ leverage }) => leverage && '0'};
 `
@@ -236,7 +240,7 @@ export default function Swap({ className }: { className?: string }) {
   const [fetchingSwapQuoteStartTime, setFetchingSwapQuoteStartTime] = useState<Date | undefined>()
   const swapWidgetEnabled = useSwapWidgetEnabled()
 
-  console.log("loadedUrlParams", loadedUrlParams)
+  // console.log("loadedUrlParams", loadedUrlParams)
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -292,7 +296,7 @@ export default function Swap({ className }: { className?: string }) {
   } = useDerivedSwapInfo()
 
   // console.log("tradeState", tradeState)
-  console.log("trade", trade)
+  // console.log("trade", trade)
   // console.log("allowedSlippage", allowedSlippage)
   // console.log("currencies", currencies)
 
@@ -359,18 +363,20 @@ export default function Swap({ className }: { className?: string }) {
   }, [navigate])
 
   // modal and loading
-  const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
+  const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash, showLeverageConfirm }, setSwapState] = useState<{
     showConfirm: boolean
     tradeToConfirm: Trade<Currency, Currency, TradeType> | undefined
     attemptingTxn: boolean
     swapErrorMessage: string | undefined
     txHash: string | undefined
+    showLeverageConfirm: boolean
   }>({
     showConfirm: false,
     tradeToConfirm: undefined,
     attemptingTxn: false,
     swapErrorMessage: undefined,
     txHash: undefined,
+    showLeverageConfirm: false
   })
 
   const formattedAmounts = useMemo(
@@ -400,45 +406,53 @@ export default function Swap({ className }: { className?: string }) {
     isSupportedChain(chainId) ? PS_ROUTER : undefined
   )
 
-  const [leverageManagerAllowance, setLeverageManagerAllowance] = useState(false)
   const [leverageManagerAllowanceLoading, setLeverageManagerAllowanceLoading] = useState(false)
-  
+
   let poolAddress = useMemo(() => {
     if (
-      trade && trade.routes && trade.routes.length > 0 && trade.routes[0].pools.length > 0 && chainId && 
+      trade && trade.routes && trade.routes.length > 0 && trade.routes[0].pools.length > 0 && chainId &&
       currencies[Field.INPUT] && currencies[Field.OUTPUT]
-      ) {
+    ) {
       let pool = trade.routes[0]?.pools[0] as any
       return computePoolAddress({ factoryAddress: V3_CORE_FACTORY_ADDRESSES[chainId], tokenA: currencies[Field.INPUT] as Token, tokenB: currencies[Field.OUTPUT] as Token, fee: pool.fee })
     }
-    return 
-  }, [account, parsedAmounts, trade, currencies,  currencies[Field.OUTPUT],  currencies[Field.INPUT], chainId])
+    return
+  }, [account, parsedAmounts, trade, currencies, currencies[Field.OUTPUT], currencies[Field.INPUT], chainId])
 
-  console.log("poolAddress", poolAddress)
+  // console.log("poolAddress", poolAddress)
 
-  const [leverageManagerAddress, setLeverageManagerAddress] = useState("")
+  const [leverageManagerAddress, setLeverageManagerAddress] = useState<string>()
 
   useEffect(() => {
     // declare the data fetching function
     const fetchData = async () => {
-      console.log("poolAddresasdfas", poolAddress)
       if (poolAddress && account && provider) {
-        let gs = new ethers.Contract(GlOBAL_STORAGE_ADDRESS, GlobalStorageData.abi, provider.getSigner(account).connectUnchecked())
-        let result = await gs.poolData(poolAddress)
-        setLeverageManagerAddress(result.leverageManager)
+        try {
+          let gs = new ethers.Contract(GlOBAL_STORAGE_ADDRESS, GlobalStorageData.abi, provider.getSigner(account).connectUnchecked())
+          let result = await gs.poolData(poolAddress)
+          setLeverageManagerAddress(result.leverageManager)
+        } catch (e) {
+          console.log("LM address error:", e)
+        }
+
       }
     }
-  
+
     // call the function
     fetchData()
       // make sure to catch any error
       .catch(console.error);
   }, [poolAddress, account, trade, currencies, account, provider])
 
-  // const leverageManagerAllowance2 = useTokenAllowance(currencies[Field.INPUT].isNative ? (currencies[Field.INPUT]) : undefined, account, leverageManagerAddress)  
+  const { tokenAllowance: leverageManagerAllowanceAmount, isSyncing: boolean } = useTokenAllowance(
+    (parsedAmounts[Field.INPUT]?.currency.isToken ? (parsedAmounts[Field.INPUT]?.currency as Token) : undefined)
+    , account, leverageManagerAddress)
+
+  // console.log("leverageManagerAllowanceAmount", leverageManagerAllowanceAmount)
+
 
   // console.log("leverageManagerAddress", leverageManagerAddress)
-  
+
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
   const [isAllowancePending, setIsAllowancePending] = useState(false)
   const updateAllowance = useCallback(async () => {
@@ -457,6 +471,18 @@ export default function Swap({ className }: { className?: string }) {
       setIsAllowancePending(false)
     }
   }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol])
+
+  const [leverageApprovalState, approveLeverageManager] = useApproveCallback(parsedAmounts[Field.INPUT], leverageManagerAddress)
+  // const updateLeverageAllowance = () => {}
+
+  const updateLeverageAllowance = useCallback(async () => {
+    try {
+      await approveLeverageManager()
+    } catch (err) {
+      console.log("approveLeverageManager err: ", err)
+    }
+  }, [leverageManagerAddress, parsedAmounts[Field.INPUT], approveLeverageManager])
+  console.log("leverageApprovalState: ", leverageApprovalState)
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
     () => maxAmountSpend(currencyBalances[Field.INPUT]),
@@ -482,11 +508,10 @@ export default function Swap({ className }: { className?: string }) {
     if (stablecoinPriceImpact && !confirmPriceImpactWithoutFee(stablecoinPriceImpact)) {
       return
     }
-    console.log("handleSwap")
-    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined })
+    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined, showLeverageConfirm: false })
     swapCallback()
       .then((hash) => {
-        setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
+        setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash, showLeverageConfirm: false })
         sendEvent({
           category: 'Swap',
           action: 'transaction hash',
@@ -512,6 +537,7 @@ export default function Swap({ className }: { className?: string }) {
           showConfirm,
           swapErrorMessage: error.message,
           txHash: undefined,
+          showLeverageConfirm: false,
         })
       })
   }, [
@@ -526,6 +552,31 @@ export default function Swap({ className }: { className?: string }) {
     trade?.outputAmount?.currency?.symbol,
   ])
 
+  const leverageCallback = useLeverageBorrowCallback(
+    leverageManagerAddress,
+    trade,
+    allowedSlippage,
+    leverageFactor ?? undefined,
+  )
+
+  // poolAddress: string,
+  // trade: Trade<Currency, Currency, TradeType> | undefined,  
+  // allowedSlippage: Percent, // in bips
+  // leverageFactor: string
+
+  const handleLeverageCreation = useCallback(async () => {
+    if (!leverageCallback) {
+      return
+    }
+    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined, showLeverageConfirm: true })
+    try {
+      await leverageCallback()
+    } catch(err) {
+      console.log("handleLeverageCreation err: ", err)
+    }
+  }, [
+
+  ])
   // errors
   const [swapQuoteReceivedDate, setSwapQuoteReceivedDate] = useState<Date | undefined>()
 
@@ -537,7 +588,7 @@ export default function Swap({ className }: { className?: string }) {
   }, [stablecoinPriceImpact, trade])
 
   const handleConfirmDismiss = useCallback(() => {
-    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
+    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash, showLeverageConfirm: false })
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onUserInput(Field.INPUT, '')
@@ -545,7 +596,7 @@ export default function Swap({ className }: { className?: string }) {
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
 
   const handleAcceptChanges = useCallback(() => {
-    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
+    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm, showLeverageConfirm: false })
   }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
   const handleInputSelect = useCallback(
@@ -669,7 +720,7 @@ export default function Swap({ className }: { className?: string }) {
     {
       token0: inputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
       token1: outputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-      tokenId: BigNumber.from(1),
+      tokenId: BigNumber.from(2),
       totalLiquidity: BigNumber.from(1),
       totalDebt: BigNumber.from(1),
       totalDebtInput: BigNumber.from(1),
@@ -683,7 +734,7 @@ export default function Swap({ className }: { className?: string }) {
     {
       token0: inputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
       token1: outputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-      tokenId: BigNumber.from(1),
+      tokenId: BigNumber.from(3),
       totalLiquidity: BigNumber.from(1),
       totalDebt: BigNumber.from(1),
       totalDebtInput: BigNumber.from(1),
@@ -732,7 +783,26 @@ export default function Swap({ className }: { className?: string }) {
                 </AutoRow>
                 <SwapWrapper chainId={chainId} className={className} id="swap-page">
                   <SwapHeader allowedSlippage={allowedSlippage} />
-                  <ConfirmSwapModal
+                  { leverage ? (
+                    <LeverageConfirmModal
+                    isOpen={showLeverageConfirm}
+                    trade={trade}
+                    originalTrade={tradeToConfirm}
+                    onAcceptChanges={handleAcceptChanges}
+                    attemptingTxn={attemptingTxn}
+                    txHash={txHash}
+                    recipient={recipient}
+                    allowedSlippage={allowedSlippage}
+                    onConfirm={handleLeverageCreation}
+                    swapErrorMessage={swapErrorMessage}
+                    onDismiss={handleConfirmDismiss}
+                    swapQuoteReceivedDate={swapQuoteReceivedDate}
+                    fiatValueInput={fiatValueTradeInput}
+                    fiatValueOutput={fiatValueTradeOutput}
+                    leverageFactor={leverageFactor ?? "1"}
+                    />
+                  ) : (
+                    <ConfirmSwapModal
                     isOpen={showConfirm}
                     trade={trade}
                     originalTrade={tradeToConfirm}
@@ -748,6 +818,8 @@ export default function Swap({ className }: { className?: string }) {
                     fiatValueInput={fiatValueTradeInput}
                     fiatValueOutput={fiatValueTradeOutput}
                   />
+                  )}
+
                   <div style={{ display: 'relative' }}>
                     <InputSection leverage={leverage}>
                       <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
@@ -774,7 +846,7 @@ export default function Swap({ className }: { className?: string }) {
                         />
                       </Trace>
                     </InputSection>
-                    { leverage && <InputLeverageSection>
+                    {leverage && <InputLeverageSection>
                       <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
                         <LeveragedOutputPanel
                           label={
@@ -784,7 +856,7 @@ export default function Swap({ className }: { className?: string }) {
                               <Trans>From</Trans>
                             )
                           }
-                          value={Number(formattedAmounts[Field.INPUT]) == 0 ? "" : String(Number(sliderLeverageFactor) * Number(formattedAmounts[Field.INPUT])) }
+                          value={Number(formattedAmounts[Field.INPUT]) == 0 ? "" : String(Number(sliderLeverageFactor) * Number(formattedAmounts[Field.INPUT]))}
                           showMaxButton={showMaxButton}
                           currency={currencies[Field.INPUT] ?? null}
                           onUserInput={handleTypeInput}
@@ -890,7 +962,7 @@ export default function Swap({ className }: { className?: string }) {
                                       <Trans>100</Trans>
                                     </SmallMaxButton>
                                     <SmallMaxButton onClick={() => onLeverageFactorChange("1000")} width="20%">
-                                      <Trans>1000</Trans>
+                                      <Trans>200</Trans>
                                     </SmallMaxButton>
                                     <SmallMaxButton onClick={() => onLeverageFactorChange("1000")} width="20%">
                                       <Trans>Max</Trans>
@@ -901,8 +973,8 @@ export default function Swap({ className }: { className?: string }) {
                                   value={parseFloat(sliderLeverageFactor)}
                                   onChange={(val) => setSliderLeverageFactor(val.toString())}
                                   min={1.0}
-                                  max={1000.0}
-                                  step={10}
+                                  max={200.0}
+                                  step={1}
                                   float={true}
                                 />
                               </>
@@ -911,17 +983,16 @@ export default function Swap({ className }: { className?: string }) {
                         </LightCard>
                       </LeverageGaugeSection>
                       {
-                        //showDetailsDropdown 
                         showDetailsDropdown && (
-                        <DetailsSwapSection>
-                          <SwapDetailsDropdown
-                            trade={trade}
-                            syncing={routeIsSyncing}
-                            loading={routeIsLoading}
-                            allowedSlippage={allowedSlippage}
-                          />
-                        </DetailsSwapSection>
-                      )}
+                          <DetailsSwapSection>
+                            <SwapDetailsDropdown
+                              trade={trade}
+                              syncing={routeIsSyncing}
+                              loading={routeIsLoading}
+                              allowedSlippage={allowedSlippage}
+                            />
+                          </DetailsSwapSection>
+                        )}
                     </div>
                     {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
                     <div>
@@ -958,40 +1029,109 @@ export default function Swap({ className }: { className?: string }) {
                             <Trans>Insufficient liquidity for this trade.</Trans>
                           </ThemedText.DeprecatedMain>
                         </GrayCard>
-                      ) : isValid && allowance.state === AllowanceState.REQUIRED ? (
-                        <ButtonPrimary
-                          onClick={updateAllowance}
-                          disabled={isAllowancePending || isApprovalLoading}
-                          style={{ gap: 14 }}
+                      ) : isValid &&
+                        ((!leverage && allowance.state === AllowanceState.REQUIRED) || (leverage && (leverageApprovalState === ApprovalState.NOT_APPROVED))) ? (
+                        !leverage ? (
+                          <ButtonPrimary
+                            onClick={updateAllowance}
+                            disabled={isAllowancePending || isApprovalLoading}
+                            style={{ gap: 14 }}
+                          >
+                            {isAllowancePending ? (
+                              <>
+                                <Loader size="20px" />
+                                <Trans>Approve in your wallet</Trans>
+                              </>
+                            ) : isApprovalLoading ? (
+                              <>
+                                <Loader size="20px" />
+                                <Trans>Approval pending</Trans>
+                              </>
+                            ) : (
+                              <>
+                                <div style={{ height: 20 }}>
+                                  <MouseoverTooltip
+                                    text={
+                                      <Trans>
+                                        Permission is required for Uniswap to swap each token. This will expire after one
+                                        month for your security.
+                                      </Trans>
+                                    }
+                                  >
+                                    <Info size={20} />
+                                  </MouseoverTooltip>
+                                </div>
+                                <Trans>Approve use of {currencies[Field.INPUT]?.symbol}</Trans>
+                              </>
+                            )}
+                          </ButtonPrimary>
+                        ) : (
+                          <ButtonPrimary
+                            onClick={updateLeverageAllowance}
+                            disabled={isAllowancePending || isApprovalLoading}
+                            style={{ gap: 14 }}
+                          >
+                            {leverageApprovalState === ApprovalState.PENDING ? (
+                              <>
+                                <Loader size="20px" />
+                                <Trans>Approve pending</Trans>
+                              </>
+                            ) : (
+                              <>
+                                <div style={{ height: 20 }}>
+                                  <MouseoverTooltip
+                                    text={
+                                      <Trans>
+                                        Permission is required for Uniswap to swap each token. This will expire after one
+                                        month for your security.
+                                      </Trans>
+                                    }
+                                  >
+                                    <Info size={20} />
+                                  </MouseoverTooltip>
+                                </div>
+                                <Trans>Approve use of {currencies[Field.INPUT]?.symbol}</Trans>
+                              </>
+                            )}
+                          </ButtonPrimary>
+                        )
+                      ) : (leverage ? (
+                        <ButtonError
+                          onClick={() => {
+                            setSwapState({
+                              tradeToConfirm: trade,
+                              attemptingTxn: false,
+                              swapErrorMessage: undefined,
+                              showConfirm: false,
+                              txHash: undefined,
+                              showLeverageConfirm: true
+                            })
+                          }
+                          }
+                          id="leverage-button"
+                          disabled={
+                            !isValid ||
+                            routeIsSyncing ||
+                            routeIsLoading ||
+                            priceImpactTooHigh ||
+                            leverageApprovalState !== ApprovalState.APPROVED
+                          }
+
                         >
-                          {isAllowancePending ? (
-                            <>
-                              <Loader size="20px" />
-                              <Trans>Approve in your wallet</Trans>
-                            </>
-                          ) : isApprovalLoading ? (
-                            <>
-                              <Loader size="20px" />
-                              <Trans>Approval pending</Trans>
-                            </>
-                          ) : (
-                            <>
-                              <div style={{ height: 20 }}>
-                                <MouseoverTooltip
-                                  text={
-                                    <Trans>
-                                      Permission is required for Uniswap to swap each token. This will expire after one
-                                      month for your security.
-                                    </Trans>
-                                  }
-                                >
-                                  <Info size={20} />
-                                </MouseoverTooltip>
-                              </div>
-                              <Trans>Approve use of {currencies[Field.INPUT]?.symbol}</Trans>
-                            </>
-                          )}
-                        </ButtonPrimary>
+                          <Text fontSize={20} fontWeight={600}>
+                            {swapInputError ? (
+                              swapInputError
+                            ) : routeIsSyncing || routeIsLoading ? (
+                              <Trans>Leverage</Trans>
+                            ) : priceImpactTooHigh ? (
+                              <Trans>Price Impact Too High</Trans>
+                            ) : priceImpactSeverity > 2 ? (
+                              <Trans>Leverage Anyway</Trans>
+                            ) : (
+                              <Trans>Leverage</Trans>
+                            )}
+                          </Text>
+                        </ButtonError>
                       ) : (
                         <ButtonError
                           onClick={() => {
@@ -1004,6 +1144,7 @@ export default function Swap({ className }: { className?: string }) {
                                 swapErrorMessage: undefined,
                                 showConfirm: true,
                                 txHash: undefined,
+                                showLeverageConfirm: false
                               })
                             }
                           }}
@@ -1031,6 +1172,7 @@ export default function Swap({ className }: { className?: string }) {
                             )}
                           </Text>
                         </ButtonError>
+                      )
                       )}
                       {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
                     </div>
