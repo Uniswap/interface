@@ -106,7 +106,7 @@ const commonTheme = {
 
   chain_1: colors.networkEthereum,
   chain_3: colors.yellow400,
-  chain_4: colors.pink400,
+  chain_4: colors.black,
   chain_5: colors.green400,
   chain_10: colors.networkOptimism,
   chain_137: colors.networkPolygon,
