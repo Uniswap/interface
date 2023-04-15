@@ -1,4 +1,4 @@
-// Based mostly on https://github.com/Uniswap/interface/blob/main/src/theme/index.tsx
+// Based mostly on https://github.com/Uniswap/interface/blob/main/src/theme/index.tsx 
 import { opacify } from './utils'
 
 export const colors = {
