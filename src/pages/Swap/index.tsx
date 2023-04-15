@@ -695,7 +695,26 @@ export default function Swap({ className }: { className?: string }) {
       timeUntilFinish: 1
     }
   ]
-
+  // const params = {
+  //   gasUseEstimateUSD: null,
+  //   blockNumber: "0",
+  //   v2Routes: {},
+  //   // inputAmount as CurrencyAmount<Token>: 0,
+  //   // outputAmount as CurrencyAmount<Token>: 0,
+  //   // tradeType as TradeType: null,
+  //   inputAmount: null, 
+  //   outputAmount :null, 
+  //   tradeType : null ,
+  //   v3Routes: {}
+  // }
+  const fakeTrade = {} as InterfaceTrade<Currency, Currency, TradeType> 
+  // const fakeTrade: InterfaceTrade<Currency, Currency, TradeType> = new InterfaceTrade<Currency, Currency, TradeType>(
+  //  params
+  //   )
+      // loadedInputCurrency, 
+      // loadedOutputCurrency, TradeType)
+  console.log('fakeTrade', fakeTrade, fakeTrade.routes); 
+  
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <>
