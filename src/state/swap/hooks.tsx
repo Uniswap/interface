@@ -103,11 +103,69 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
   '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D': true, // v2 router 02
 }
 
-// function createLevPosition(
-//   uint256 traderFund,
-//   uint256 maxSlippage,
-//   uint256 borrowAmount,
-//   bool isLong, // if long borrow token1 to buy token 0 
+enum LeverageTradeState {
+  LOAD
+}
+
+// export function useDerivedLeverageCreationInfo(): {
+//   currencies: { [field in Field]?: Currency | null }
+//   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
+//   parsedAmount: CurrencyAmount<Currency> | undefined
+//   inputError?: ReactNode
+//   trade: {
+//     trade: {
+//       inputAmount: CurrencyAmount<Currency>
+//       outputAmount: CurrencyAmount<Currency>
+//     }
+//     state: LeverageTradeState
+//   }
+//   allowedSlippage: Percent
+// } {
+
+//   const { account } = useWeb3React()
+
+//   const {
+//     independentField,
+//     typedValue,
+//     [Field.INPUT]: { currencyId: inputCurrencyId },
+//     [Field.OUTPUT]: { currencyId: outputCurrencyId },
+//     recipient,
+//     leverage,
+//     leverageFactor
+//   } = useSwapState()
+
+//   const inputCurrency = useCurrency(inputCurrencyId)
+//   const outputCurrency = useCurrency(outputCurrencyId)
+
+//   // user fund amount
+//   const parsedAmount = useMemo(
+//     () => tryParseCurrencyAmount(typedValue, (inputCurrency) ?? undefined),
+//     [inputCurrency, outputCurrency, typedValue, leverage, leverageFactor]
+//   )
+
+//   const relevantTokenBalances = useCurrencyBalances(
+//     account ?? undefined,
+//     useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency])
+//   )
+
+//   const currencyBalances = useMemo(
+//     () => ({
+//       [Field.INPUT]: relevantTokenBalances[0],
+//       [Field.OUTPUT]: relevantTokenBalances[1],
+//     }),
+//     [relevantTokenBalances]
+//   )
+
+//   const currencies: { [field in Field]?: Currency | null } = useMemo(
+//     () => ({
+//       [Field.INPUT]: inputCurrency,
+//       [Field.OUTPUT]: outputCurrency,
+//     }),
+//     [inputCurrency, outputCurrency]
+//   )
+
+
+// }
 
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(): {
@@ -129,8 +187,9 @@ export function useDerivedSwapInfo(): {
     [Field.INPUT]: { currencyId: inputCurrencyId },
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     recipient,
+    leverage,
+    leverageFactor
   } = useSwapState()
-  console.log('swapstate',  typedValue ); 
 
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)
@@ -145,7 +204,7 @@ export function useDerivedSwapInfo(): {
   const isExactIn: boolean = independentField === Field.INPUT
   const parsedAmount = useMemo(
     () => tryParseCurrencyAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined),
-    [inputCurrency, isExactIn, outputCurrency, typedValue]
+    [inputCurrency, isExactIn, outputCurrency, typedValue, leverage, leverageFactor]
   )
 
   const trade = useBestTrade(
@@ -199,6 +258,10 @@ export function useDerivedSwapInfo(): {
       }
     }
 
+    if (leverage && Number(leverageFactor) <= 1) {
+      inputError = inputError ?? <Trans>Invalid Leverage</Trans>
+    }
+
     // compare input balance to max input based on version
     const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], trade.trade?.maximumAmountIn(allowedSlippage)]
 
@@ -207,7 +270,7 @@ export function useDerivedSwapInfo(): {
     }
 
     return inputError
-  }, [account, allowedSlippage, currencies, currencyBalances, parsedAmount, to, trade.trade])
+  }, [account, allowedSlippage, currencies, currencyBalances, parsedAmount, to, trade.trade, leverage, leverageFactor])
 
   return useMemo(
     () => ({
@@ -218,7 +281,7 @@ export function useDerivedSwapInfo(): {
       trade,
       allowedSlippage,
     }),
-    [allowedSlippage, currencies, currencyBalances, inputError, parsedAmount, trade]
+    [allowedSlippage, currencies, currencyBalances, inputError, parsedAmount, trade, leverage, leverageFactor]
   )
 }
 

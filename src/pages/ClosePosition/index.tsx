@@ -43,7 +43,7 @@ import { ResponsiveHeaderText, SmallMaxButton, Wrapper } from './styled'
 const DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
 // redirect invalid tokenIds
-export default function RemoveLiquidityV3() {
+export default function CloseLeveragePosition() {
   const { tokenId } = useParams<{ tokenId: string }>()
   const location = useLocation()
   const parsedTokenId = useMemo(() => {
@@ -58,10 +58,10 @@ export default function RemoveLiquidityV3() {
     return <Navigate to={{ ...location, pathname: '/pools' }} replace />
   }
 
-  return <Remove tokenId={parsedTokenId} />
+  return <Close tokenId={parsedTokenId} />
 }
 
-function Remove({ tokenId }: { tokenId: BigNumber }) {
+function Close({ tokenId }: { tokenId: BigNumber }) {
   const { position } = useV3PositionFromTokenId(tokenId)
   const theme = useTheme()
   const { account, chainId, provider } = useWeb3React()

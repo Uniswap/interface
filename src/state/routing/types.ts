@@ -11,6 +11,14 @@ export enum TradeState {
   SYNCING,
 }
 
+export enum LeverageTradeState {
+  LOADING,
+  INVALID,
+  NO_ROUTE_FOUND,
+  VALID,
+  SYNCING,
+}
+
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
 
 type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>

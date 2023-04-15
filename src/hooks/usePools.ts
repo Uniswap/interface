@@ -43,8 +43,7 @@ class PoolCache {
         factoryAddress,
         tokenA,
         tokenB,
-        fee,
-        initCodeHashManualOverride: POOL_INIT_CODE_HASH,
+        fee
       }),
     }
     this.addresses.unshift(address)

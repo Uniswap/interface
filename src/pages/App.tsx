@@ -42,6 +42,7 @@ import PoolV2 from './Pool/v2'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
+import ClosePosition from './ClosePosition'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly } from './Swap/redirects'
 import Tokens from './Tokens'
@@ -279,6 +280,7 @@ export default function App() {
 
                   <Route path="remove/v2/:currencyIdA/:currencyIdB" element={<RemoveLiquidity />} />
                   <Route path="remove/:tokenId" element={<RemoveLiquidityV3 />} />
+                  <Route path="close/:tokenId" element={<ClosePosition />} />
 
                   <Route path="migrate/v2" element={<MigrateV2 />} />
                   <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />

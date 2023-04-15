@@ -163,3 +163,67 @@ export default function SwapModalFooter({
     </>
   )
 }
+
+export function LeverageModalFooter({
+  trade,
+  allowedSlippage,
+  hash,
+  onConfirm,
+  swapErrorMessage,
+  disabledConfirm,
+  swapQuoteReceivedDate,
+  fiatValueInput,
+  fiatValueOutput,
+}: {
+  trade: InterfaceTrade<Currency, Currency, TradeType>
+  hash: string | undefined
+  allowedSlippage: Percent
+  onConfirm: () => void
+  swapErrorMessage: ReactNode | undefined
+  disabledConfirm: boolean
+  swapQuoteReceivedDate: Date | undefined
+  fiatValueInput: { data?: number; isLoading: boolean }
+  fiatValueOutput: { data?: number; isLoading: boolean }
+}) {
+  const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
+  const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
+  const [clientSideRouter] = useClientSideRouter()
+  const routes = getTokenPath(trade)
+
+  return (
+    <>
+      <AutoRow>
+        <TraceEvent
+          events={[BrowserEvent.onClick]}
+          element={InterfaceElementName.CONFIRM_SWAP_BUTTON}
+          name={SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED}
+          properties={formatAnalyticsEventProperties({
+            trade,
+            hash,
+            allowedSlippage,
+            transactionDeadlineSecondsSinceEpoch,
+            isAutoSlippage,
+            isAutoRouterApi: !clientSideRouter,
+            swapQuoteReceivedDate,
+            routes,
+            fiatValueInput: fiatValueInput.data,
+            fiatValueOutput: fiatValueOutput.data,
+          })}
+        >
+          <ButtonError
+            onClick={onConfirm}
+            disabled={disabledConfirm}
+            style={{ margin: '10px 0 0 0' }}
+            id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
+          >
+            <Text fontSize={20} fontWeight={500}>
+              <Trans>Confirm Position</Trans>
+            </Text>
+          </ButtonError>
+        </TraceEvent>
+
+        {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
+      </AutoRow>
+    </>
+  )
+}
