@@ -16,7 +16,7 @@ import { InterfaceTrade } from 'state/routing/types'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { HideSmall, ThemedText } from 'theme'
 
-import { AdvancedSwapDetails } from './AdvancedSwapDetails'
+import { AdvancedSwapDetails,AdvancedLeverageSwapDetails } from './AdvancedSwapDetails'
 import GasEstimateBadge from './GasEstimateBadge'
 import { ResponsiveTooltipContainer } from './styleds'
 import SwapRoute from './SwapRoute'
@@ -168,6 +168,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
                 </ThemedText.DeprecatedMain>
               ) : null}
             </RowFixed>
+
             <RowFixed>
               {!trade?.gasUseEstimateUSD ||
               showDetails ||
@@ -185,16 +186,24 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
                 open={Boolean(trade && showDetails)}
               />
             </RowFixed>
+
           </StyledHeaderRow>
         </TraceEvent>
-        <AnimatedDropdown open={showDetails}>
+        <AnimatedDropdown open={true}>
           <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
-            {trade ? (
+            {/*trade ? (
               <StyledCard>
                 <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
               </StyledCard>
+            ) : null*/}
+            {trade ? (
+              <StyledCard>
+                <AdvancedLeverageSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
+              </StyledCard>
             ) : null}
-            {trade ? <SwapRoute trade={trade} syncing={syncing} /> : null}
+
+
+            {/*trade ? <SwapRoute trade={trade} syncing={syncing} /> : null*/}
           </AutoColumn>
         </AnimatedDropdown>
       </AutoColumn>

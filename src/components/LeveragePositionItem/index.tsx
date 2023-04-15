@@ -261,7 +261,7 @@ export default function LeveragePositionItem({
               <RangeLineItem>
                 <RangeText>
                   <ExtentsText>
-                    <Trans>Start: </Trans>
+                    <Trans>Enter Price: </Trans>
                   </ExtentsText>
                   <Trans>
                     <span>
@@ -278,7 +278,7 @@ export default function LeveragePositionItem({
                 </SmallOnly>
                 <RangeText>
                   <ExtentsText>
-                    <Trans>End:</Trans>
+                    <Trans>Cur Price:</Trans>
                   </ExtentsText>
                   <Trans>
                     <span>
@@ -305,15 +305,15 @@ export default function LeveragePositionItem({
         <AutoRow>
           <RangeText>
             <ExtentsText>
-              <Trans>Enter Price:</Trans>
+              <Trans>PnL:</Trans>
             </ExtentsText>
             <Trans>
               <span>
-                {"2.00"}{' '}
+                {"+2.00"}{'UDSC '}
               </span>
             </Trans>
           </RangeText>
-          <RangeText>
+          {/*<RangeText>
             <ExtentsText>
               <Trans>Current Price:</Trans>
             </ExtentsText>
@@ -322,7 +322,7 @@ export default function LeveragePositionItem({
                 {"2.00"}{' '}
               </span>
             </Trans>
-          </RangeText>
+          </RangeText>*/}
         </AutoRow>
         <AutoRow gap="8px">
           <ResponsiveButtonPrimary 

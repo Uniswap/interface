@@ -6,10 +6,12 @@ import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
+import { SmallButtonPrimary,ButtonPrimary } from 'components/Button'
 
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,
+  LevTransactionConfirmationModal
 } from '../TransactionConfirmationModal'
 import SwapModalFooter from './SwapModalFooter'
 import CloseLevSwapModalHeader from './CloseLevSwapModalHeader'
@@ -50,6 +52,7 @@ export default function ConfirmLeverageSwapModal({
   // fiatValueInput: { data?: number; isLoading: boolean }
   // fiatValueOutput: { data?: number; isLoading: boolean }
 }) {
+  const [isLoadingQuote, setIsLoadingQuote] = useState(false); 
   // // shouldLogModalCloseEvent lets the child SwapModalHeader component know when modal has been closed
   // // and an event triggered by modal closing should be logged.
   const [shouldLogModalCloseEvent, setShouldLogModalCloseEvent] = useState(false)
@@ -57,7 +60,7 @@ export default function ConfirmLeverageSwapModal({
   //   () => Boolean(trade && originalTrade && tradeMeaningfullyDiffers(trade, originalTrade)),
   //   [originalTrade, trade]
   // )
-
+  // console.log('trade here')
   const onModalDismiss = useCallback(() => {
     if (isOpen) setShouldLogModalCloseEvent(true)
     onDismiss()
@@ -131,6 +134,8 @@ export default function ConfirmLeverageSwapModal({
   //   fiatValueOutput,
   // ])
 
+
+
   // // text to show while loading
   const pendingText = (
     <Trans>
@@ -157,14 +162,19 @@ export default function ConfirmLeverageSwapModal({
   )
 
   return (
+
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
-      <TransactionConfirmationModal
+
+
+      <LevTransactionConfirmationModal
         isOpen={isOpen}
         onDismiss={onModalDismiss}
         attemptingTxn={false}
         hash={txHash}
         content={confirmationContent}
         pendingText={pendingText}
+        isLoadingQuote ={isLoadingQuote}
+        setIsLoadingQuote = {setIsLoadingQuote}
         //currencyToAdd={trade?.outputAmount.currency}
         //currencyToAdd = {null}
       />

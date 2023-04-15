@@ -203,7 +203,7 @@ export function AdvancedLeverageSwapDetails({
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               {expectedOutputAmount
-                ? `${Number(expectedOutputAmount.toSignificant(6)) * Number(leverageFactor)}  ${expectedOutputAmount.currency.symbol}`
+                ? `${Number(expectedOutputAmount.toSignificant(6)) }  ${expectedOutputAmount.currency.symbol}`
                 : '-'}
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
@@ -220,7 +220,7 @@ export function AdvancedLeverageSwapDetails({
               disableHover={hideInfoTooltips}
             >
               <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                <Trans>Borrowed Amount</Trans>
+                <Trans>Strike Price</Trans>
               </ThemedText.DeprecatedSubHeader>
             </MouseoverTooltip>
           </RowFixed>
@@ -232,6 +232,58 @@ export function AdvancedLeverageSwapDetails({
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
         </RowBetween>
+
+
+        <RowBetween>
+          <RowFixed>
+            <MouseoverTooltip
+              text={
+                <Trans>
+                  The amount you expect to receive at the current market price. You may receive less or more if the
+                  market price changes while your transaction is pending.
+                </Trans>
+              }
+              disableHover={hideInfoTooltips}
+            >
+              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                <Trans>Quoted Premium</Trans>
+              </ThemedText.DeprecatedSubHeader>
+            </MouseoverTooltip>
+          </RowFixed>
+          <TextWithLoadingPlaceholder syncing={syncing} width={65}>
+            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+              {
+                trade.inputAmount ? `${Number(trade.inputAmount.toSignificant(6)) * Number(leverageFactor) - Number(trade.inputAmount.toSignificant(6))}  ${trade.inputAmount.currency.symbol}`
+                : '-'}
+            </ThemedText.DeprecatedBlack>
+          </TextWithLoadingPlaceholder>
+        </RowBetween>
+
+        <RowBetween>
+          <RowFixed>
+            <MouseoverTooltip
+              text={
+                <Trans>
+                  The amount you expect to receive at the current market price. You may receive less or more if the
+                  market price changes while your transaction is pending.
+                </Trans>
+              }
+              disableHover={hideInfoTooltips}
+            >
+              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                <Trans>Effective Leverage</Trans>
+              </ThemedText.DeprecatedSubHeader>
+            </MouseoverTooltip>
+          </RowFixed>
+          <TextWithLoadingPlaceholder syncing={syncing} width={65}>
+            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+              {
+                trade.inputAmount ? `${Number(trade.inputAmount.toSignificant(6)) * Number(leverageFactor) - Number(trade.inputAmount.toSignificant(6))}  ${trade.inputAmount.currency.symbol}`
+                : '-'}
+            </ThemedText.DeprecatedBlack>
+          </TextWithLoadingPlaceholder>
+        </RowBetween>
+        
         <RowBetween>
           <RowFixed>
             <MouseoverTooltip

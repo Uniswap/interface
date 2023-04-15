@@ -451,7 +451,7 @@ export default function Swap({ className }: { className?: string }) {
   // console.log("leverageManagerAllowanceAmount", leverageManagerAllowanceAmount)
 
 
-  // console.log("leverageManagerAddress", leverageManagerAddress)
+  console.log("leverageManagerAddress", leverageManagerAddress)
 
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
   const [isAllowancePending, setIsAllowancePending] = useState(false)
@@ -746,6 +746,7 @@ export default function Swap({ className }: { className?: string }) {
       timeUntilFinish: 1
     }
   ]
+  console.log('trade', trade); 
   // const params = {
   //   gasUseEstimateUSD: null,
   //   blockNumber: "0",
@@ -1002,7 +1003,7 @@ export default function Swap({ className }: { className?: string }) {
                         </LightCard>
                       </LeverageGaugeSection>
                       {
-                        showDetailsDropdown && (
+                        true && (
                           <DetailsSwapSection>
                             <SwapDetailsDropdown
                               trade={trade}
