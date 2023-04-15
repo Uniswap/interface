@@ -175,7 +175,7 @@ const CHAIN_INFO: ChainInfoMap = {
   [SupportedChainId.CELO]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms`10m`,
-    bridge: 'https://www.portalbridge.com/#/transfer',
+    bridge: 'https://bridge.evm.eosnetwork.com/',
     docs: 'https://docs.celo.org/',
     explorer: 'https://celoscan.io/',
     infoLink: 'https://info.uniswap.org/#/celo/',

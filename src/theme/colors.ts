@@ -1,4 +1,4 @@
-// Based mostly on https://github.com/Uniswap/interface/blob/main/src/theme/index.tsx
+// Based mostly on https://github.com/Uniswap/interface/blob/main/src/theme/index.tsx 
 import { opacify } from './utils'
 
 export const colors = {
@@ -23,28 +23,28 @@ export const colors = {
   gray850: '#0E1524',
   gray900: '#0D111C',
   gray950: '#080B11',
-  pink50: '#F9ECF1',
-  pink100: '#FFD9E4',
-  pink200: '#FBA4C0',
-  pink300: '#FF6FA3',
-  pink400: '#FB118E',
-  pink500: '#C41969',
-  pink600: '#8C0F49',
-  pink700: '#55072A',
-  pink800: '#350318',
-  pink900: '#2B000B',
-  pinkVibrant: '#F51A70',
-  red50: '#FAECEA',
-  red100: '#FED5CF',
-  red200: '#FEA79B',
-  red300: '#FD766B',
-  red400: '#FA2B39',
-  red500: '#C4292F',
-  red600: '#891E20',
-  red700: '#530F0F',
-  red800: '#380A03',
-  red900: '#240800',
-  redVibrant: '#F14544',
+  pink50: '#000000',
+  pink100: '#000000',
+  pink200: '#000000',
+  pink300: '#000000',
+  pink400: '#000000',
+  pink500: '#000000',
+  pink600: '#000000',
+  pink700: '#000000',
+  pink800: '#000000',
+  pink900: '#000000',
+  pinkVibrant: '#000000',
+  red50: '#000000',
+  red100: '#000000',
+  red200: '#000000',
+  red300: '#000000',
+  red400: '#000000',
+  red500: '#000000',
+  red600: '#000000',
+  red700: '#000000',
+  red800: '#000000',
+  red900: '#000000',
+  redVibrant: '#000000',
   yellow50: '#F6F2D5',
   yellow100: '#DBBC19',
   yellow200: '#DBBC19',
@@ -83,8 +83,8 @@ export const colors = {
   blue900: '#040E34',
   blueVibrant: '#587BFF',
   // TODO: add magenta 50-900
-  magenta300: '#FD82FF',
-  magentaVibrant: '#FC72FF',
+  magenta300: '#000000',
+  magentaVibrant: '#000000',
   purple300: '#8440F2',
   purple900: '#1C0337',
   // TODO: add all other vibrant variations
@@ -106,7 +106,7 @@ const commonTheme = {
 
   chain_1: colors.networkEthereum,
   chain_3: colors.yellow400,
-  chain_4: colors.pink400,
+  chain_4: colors.black,
   chain_5: colors.green400,
   chain_10: colors.networkOptimism,
   chain_137: colors.networkPolygon,
@@ -120,9 +120,9 @@ const commonTheme = {
   chain_10_background: colors.red900,
   chain_42161_background: colors.blue900,
   chain_56_background: colors.networkBsc,
-  promotional: colors.magenta300,
+  promotional: colors.blue900,
 
-  brandedGradient: 'linear-gradient(139.57deg, #FF79C9 4.35%, #FFB8E2 96.44%);',
+  brandedGradient: 'linear-gradient(139.57deg, #000000 4.35%, #000000 96.44%);',
   promotionalGradient: 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%);',
 
   hoverState: opacify(24, colors.blue200),
@@ -132,7 +132,7 @@ const commonTheme = {
 export const darkTheme = {
   ...commonTheme,
 
-  userThemeColor: colors.magentaVibrant,
+  userThemeColor: colors.black,
 
   background: colors.gray800,
   backgroundBackdrop: colors.gray950,
@@ -184,9 +184,9 @@ export const darkTheme = {
 export const lightTheme: Theme = {
   ...commonTheme,
 
-  userThemeColor: colors.magentaVibrant,
+  userThemeColor: colors.black,
 
-  background: '#faf9fa', //INTENTIONALLY OFF THEME TO GIVE WHITE BG A SOFTER VISUAL
+  background: '#000000', //INTENTIONALLY OFF THEME TO GIVE WHITE BG A SOFTER VISUAL
   backgroundBackdrop: colors.white,
   backgroundSurface: colors.white,
   backgroundModule: colors.gray50,
