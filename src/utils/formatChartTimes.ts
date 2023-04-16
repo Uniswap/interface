@@ -46,7 +46,7 @@ export const monthTickFormatter = (locale: string) => (timestamp: NumberValue) =
         ? new Date(date.getFullYear(), date.getMonth() + 1, 1)
         : new Date(date.getFullYear(), date.getMonth(), 1)
   }
-  return date.toLocaleDateString(locale, { month: 'long' })
+  return date.toLocaleDateString(locale, { month: 'long'})
 }
 
 export const weekFormatter = (locale: string) => (timestamp: NumberValue) =>

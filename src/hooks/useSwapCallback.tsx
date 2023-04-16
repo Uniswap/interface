@@ -91,37 +91,33 @@ export function useLeverageBorrowCallback(
 ) {
   // const deadline = useTransactionDeadline()
   const { account, chainId, provider } = useWeb3React()
+  if (!leverageManagerAddress) return null
+  if (!trade) return null
+  if (!account) throw new Error('missing account')
+  if (!chainId) throw new Error('missing chainId')
+  if (!provider) throw new Error('missing provider')
 
-  // compute leverage manager address
-
-  const callback = useMemo(() => {
-    if (!leverageManagerAddress) return null
-    if (!trade) return null
-    if (!account) throw new Error('missing account')
-    if (!chainId) throw new Error('missing chainId')
-    if (!provider) throw new Error('missing provider')
-
-    let isLong = false
-    let decimals = trade?.inputAmount.currency.decimals ?? 18
-    if (trade?.inputAmount.currency.isToken && trade?.outputAmount.currency.isToken) {
-      if (trade.inputAmount.currency.sortsBefore(trade.outputAmount.currency)) {
-        isLong = true
-      }
+  let isLong = true
+  let decimals = trade?.inputAmount.currency.decimals ?? 18
+  if (trade?.inputAmount.currency.isToken && trade?.outputAmount.currency.isToken) {
+    if (trade.inputAmount.currency.sortsBefore(trade.outputAmount.currency)) {
+      isLong = false
     }
+  }
 
-    let input = new BN(trade?.inputAmount.toExact() ?? 0).shiftedBy(decimals).toFixed(0)
-    let borrowedAmount = new BN(trade?.inputAmount.toExact() ?? 0).multipliedBy(leverageFactor ?? "0").minus(trade?.inputAmount.toExact() ?? 0).shiftedBy(decimals).toFixed(0)
-    const leverageManagerContract = new Contract(leverageManagerAddress, LeverageManagerData.abi, provider.getSigner())
-    return () => {
-      leverageManagerContract.createLevPosition(
-        input,
-        new BN(allowedSlippage.toFixed(2)).shiftedBy(decimals).toFixed(0),
-        borrowedAmount,
-        isLong
-      )
-    }
-  }, [leverageManagerAddress, allowedSlippage, account, chainId])
-  return callback;
+  let input = new BN(trade?.inputAmount.toExact() ?? 0).shiftedBy(decimals).toFixed(0)
+  let borrowedAmount = new BN(trade?.inputAmount.toExact() ?? 0).multipliedBy(leverageFactor ?? "0").minus(trade?.inputAmount.toExact() ?? 0).shiftedBy(decimals).toFixed(0)
+  const leverageManagerContract = new Contract(leverageManagerAddress, LeverageManagerData.abi, provider.getSigner())
+  let slippage = new BN(1 + Number(allowedSlippage.toFixed(6)) / 100).shiftedBy(decimals).toFixed(0)
+  console.log("arguments: ", input, allowedSlippage.toFixed(6), slippage, borrowedAmount, isLong)
+  return (): any => {
+    return leverageManagerContract.createLevPosition(
+      input,
+      slippage,
+      borrowedAmount,
+      isLong
+    )
+  }
 }
 
 export function computeLeverageManagerAddress(

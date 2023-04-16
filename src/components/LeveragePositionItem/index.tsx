@@ -1,13 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
-import { Percent, Price, Token } from '@uniswap/sdk-core'
-import { Position } from '@uniswap/v3-sdk'
+import { Currency, Percent, Price, Token } from '@uniswap/sdk-core'
+import { Position, tickToPrice } from '@uniswap/v3-sdk'
 import RangeBadge from 'components/Badge/RangeBadge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverInlineText from 'components/HoverInlineText'
 import Loader from 'components/Icons/LoadingSpinner'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
-import { useToken } from 'hooks/Tokens'
+import { useCurrency, useToken } from 'hooks/Tokens'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { usePool } from 'hooks/usePools'
 import { useMemo , useState, useCallback} from 'react'
@@ -23,6 +23,12 @@ import ConfirmLeverageSwapModal from 'components/swap/confirmLeverageSwapModal'
 import ConfirmAddPremiumModal from 'components/swap/ConfirmAddPremiumModal'
 import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import Column, { AutoColumn } from 'components/Column'
+import { useSwapState } from 'state/swap/hooks'
+import { Field } from '@uniswap/widgets'
+import { monthYearDayFormatter } from 'utils/formatChartTimes'
+import { useActiveLocale } from 'hooks/useActiveLocale'
+import moment from "moment"
+import { BigNumber as BN } from "bignumber.js"
 
 const ResponsiveButtonPrimary = styled(SmallButtonPrimary)`
   border-radius: 12px;
@@ -123,7 +129,7 @@ const PrimaryPositionIdData = styled(AutoColumn)`
 `
 
 const ItemValueLabel = ({label, value}: { label: string, value: string}) => (
-  <Column gap="sm" style={{width: "100px"}}>
+  <Column style={{width: "fit-content"}}>
     <ThemedText.Caption style={{whiteSpace: "nowrap"}}>
       {label}
     </ThemedText.Caption>
@@ -144,18 +150,17 @@ const ItemValueLabel = ({label, value}: { label: string, value: string}) => (
 // }
 
 interface LeveragePositionListItemProps {
-  token0: string
-  token1: string
-  tokenId: BigNumber
-  totalLiquidity: BigNumber // totalPosition
-  totalDebt: BigNumber // total debt in output token
-  totalDebtInput: BigNumber // total debt in input token
-  borrowedLiquidity: BigNumber
+  tokenId: string
+  totalLiquidity: string // totalPosition
+  totalDebt: string // total debt in output token
+  totalDebtInput: string // total debt in input token
+  borrowedLiquidity: string
+  creationTick: string
   isToken0: boolean
-  openBlock: number
-  tickStart: number // borrowStartTick
-  tickFinish: number // borrowFinishTick
-  timeUntilFinish: number // 24hr - timeElapsedSinceInterestPaid
+  openTime: string
+  repayTime: string
+  tickStart: string // borrowStartTick
+  tickFinish: string // borrowFinishTick
 }
 
 
@@ -214,30 +219,41 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
 }
 
 export default function LeveragePositionItem({
-  token0: token0Address,
-  token1: token1Address,
   tokenId,
   tickFinish,
   tickStart,
   totalLiquidity,
   borrowedLiquidity,
   totalDebtInput,
-  openBlock,
-  isToken0
+  isToken0,
+  openTime,
+  repayTime,
+  creationTick
 }: LeveragePositionListItemProps) {
-  const token0 = useToken(token0Address)
-  const token1 = useToken(token1Address)
+  // const token0 = useToken(token0Address)
+  // const token1 = useToken(token1Address)
+  const { 
+    [Field.INPUT]: { currencyId: inputCurrencyId },
+    [Field.OUTPUT]: { currencyId: outputCurrencyId },
+    leverageManagerAddress
+   } = useSwapState()
+   const swapInputCurrency = useCurrency(inputCurrencyId)
+   const swapOutputCurrency = useCurrency(outputCurrencyId)
+  const inputIsToken0 = useMemo(() => {
+    if (swapInputCurrency && swapOutputCurrency) {
+      return swapInputCurrency.wrapped.sortsBefore(swapOutputCurrency.wrapped)
+    } 
+    return false;
+  }, [inputCurrencyId, outputCurrencyId])
 
-  const currency0 = token0 ? unwrappedToken(token0) : undefined
-  const currency1 = token1 ? unwrappedToken(token1) : undefined
+  const currency0 = inputIsToken0 ? swapInputCurrency : swapOutputCurrency
+  const currency1 = inputIsToken0 ? swapOutputCurrency : swapInputCurrency
 
   const [showConfirm, setshowConfirm] = useState(false); 
-  const [showPremiumConfirm, setshowPremiumConfirm] = useState(false); 
-  const shouldHidePosition = hasURL(token0?.symbol) || hasURL(token1?.symbol)
+  const [showPremiumConfirm, setshowPremiumConfirm] = useState(false);
+  const locale = useActiveLocale()
+  const dateFormatter = monthYearDayFormatter(locale)
 
-  if (shouldHidePosition) {
-    return null
-  }
   const handleConfirmDismiss = ()=>{
     setshowConfirm(false); 
   } 
@@ -245,17 +261,21 @@ export default function LeveragePositionItem({
     setshowPremiumConfirm(false); 
   }
 
+  // enter token0 price in token1
+  const enterPrice = currency0?.wrapped && currency1?.wrapped ? tickToPrice(currency0.wrapped, currency1.wrapped, Number(creationTick)) : undefined
+  
   const txHash = ""
   const recipient = ""
   const attemptingTxn = true;
+  // &nbsp;{currency0?.symbol}&nbsp;/&nbsp;{currency1?.symbol}
   return (
     <ItemWrapper>
       <RowBetween>
         <PrimaryPositionIdData>
           <AutoColumn>
-            <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={18} margin />
+            <DoubleCurrencyLogo currency0={currency0 ?? undefined} currency1={currency1 ?? undefined} size={18} margin />
             <ThemedText.SubHeader>
-              &nbsp;{currency0?.symbol}&nbsp;/&nbsp;{currency1?.symbol}
+              Long {isToken0 ? currency0?.symbol : currency1?.symbol}
             </ThemedText.SubHeader>
             {true ? (
               <RangeLineItem>
@@ -265,9 +285,9 @@ export default function LeveragePositionItem({
                   </ExtentsText>
                   <Trans>
                     <span>
-                      {"1.00"}{' '}
+                      {enterPrice?.toSignificant(4)}{' '}
                     </span>
-                    <HoverInlineText text={currency0?.symbol} /> per <HoverInlineText text={currency1?.symbol ?? ''} />
+                    <HoverInlineText text={currency1?.symbol} /> per <HoverInlineText text={currency0?.symbol ?? ''} />
                   </Trans>
                 </RangeText>{' '}
                 <HideSmall>
@@ -282,10 +302,10 @@ export default function LeveragePositionItem({
                   </ExtentsText>
                   <Trans>
                     <span>
-                      {"2.00"}{' '}
+                      {"1.00"}{' '}
                     </span>
-                    <HoverInlineText text={currency0?.symbol} /> per{' '}
-                    <HoverInlineText maxCharacters={10} text={currency1?.symbol} />
+                    <HoverInlineText text={currency1?.symbol} /> per{' '}
+                    <HoverInlineText maxCharacters={10} text={currency0?.symbol} />
                   </Trans>
                 </RangeText>
               </RangeLineItem>
@@ -294,12 +314,17 @@ export default function LeveragePositionItem({
             )}
           </AutoColumn>
         </PrimaryPositionIdData>
-        <AutoRow gap="4px" width="100%">
-        <ItemValueLabel label={"Total Position"} value={"1000k"}/>
-        <ItemValueLabel label={"Debt"} value={"1000k"}/>
-        <ItemValueLabel label={"Time of Creation"} value={"1000k"}/>
-        <ItemValueLabel label={"Time until repayment "} value={"1000k"}/>
+        <AutoRow justify="flex-start" width="100%" marginBottom="16px">
+          <AutoColumn gap="8px" style={{marginRight: "150px"}}>
+          <ItemValueLabel label={"Total Position"} value={totalLiquidity + " " + (isToken0 ? currency0?.symbol : currency1?.symbol)}/>
+          <ItemValueLabel label={"Debt"} value={new BN(totalDebtInput).toString() + " " + (isToken0 ? currency1?.symbol : currency0?.symbol)}/>
+          </AutoColumn>
+          <AutoColumn gap="8px">
+          <ItemValueLabel label={"Time of Creation"} value={moment(new Date(Number(openTime) * 1000)).format("M/D/YYYY H:mm")}/>
+          <ItemValueLabel label={"Time until repayment "} value={moment(new Date(Number(repayTime) * 1000)).fromNow()}/>
+          </AutoColumn>
         </AutoRow>
+
       </RowBetween>
       <RowBetween>
         <AutoRow>
@@ -327,13 +352,11 @@ export default function LeveragePositionItem({
         <AutoRow gap="8px">
           <ResponsiveButtonPrimary 
           //data-cy="join-pool-button" id="join-pool-button"
-           onClick={() => setshowConfirm(!showConfirm)} 
-           //as={Link} to="/add/ETH"
-           >
+           onClick={() => setshowConfirm(!showConfirm)}>
             <Trans>Close Position</Trans>
           </ResponsiveButtonPrimary>
 
-          { <ConfirmLeverageSwapModal
+          <ConfirmLeverageSwapModal
             isOpen={showConfirm}
             // trade={trade}
             // originalTrade={tradeToConfirm}
@@ -348,8 +371,8 @@ export default function LeveragePositionItem({
             // swapQuoteReceivedDate={swapQuoteReceivedDate}
             // fiatValueInput={fiatValueTradeInput}
             // fiatValueOutput={fiatValueTradeOutput}
-          /> }
-          { <ConfirmAddPremiumModal
+          />
+          <ConfirmAddPremiumModal
             isOpen={showPremiumConfirm}
             // trade={trade}
             // originalTrade={tradeToConfirm}
@@ -364,7 +387,7 @@ export default function LeveragePositionItem({
             // swapQuoteReceivedDate={swapQuoteReceivedDate}
             // fiatValueInput={fiatValueTradeInput}
             // fiatValueOutput={fiatValueTradeOutput}
-          /> }
+          />
 
           <ResponsiveButtonPrimary onClick={() => setshowConfirm(!showPremiumConfirm)} >
             <Trans>Add Premium</Trans>

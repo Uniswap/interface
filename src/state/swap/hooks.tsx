@@ -125,7 +125,7 @@ export interface LeverageTrade {
   expectedOutput: string | undefined
   strikePrice: string | undefined
   quotedPremium: string | undefined
-  priceImpact: string | undefined
+  priceImpact: Percent | undefined
   effectiveLeverage: string | undefined
 }
 
@@ -244,11 +244,13 @@ export function useDerivedLeverageCreationInfo()
       const borrowedAmount = new BN(position.totalDebtInput.toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toFixed(6)
       const strikePrice = new BN(expectedOutput).div(new BN(borrowedAmount).plus(debouncedAmount.toExact())).toFixed(6)
       const quotedPremium = new BN((contractResult[2] as any ).toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toFixed(6)
-      const priceImpact = Number(initialPrice.toFixed(12)) < Number(strikePrice) 
-      ? String((Number(strikePrice) - Number(initialPrice.toFixed(12))) / Number(initialPrice.toFixed(12))) : 
-      String((Number(initialPrice.toFixed(12)) - Number(strikePrice)) / Number(initialPrice.toFixed(12)))
+      let t = new BN(strikePrice).minus(initialPrice.toFixed(12)).abs().dividedBy(initialPrice.toFixed(12)).multipliedBy(1000).toFixed(0)
+      const priceImpact = new Percent(t, 1000)
+      
+      // ? new Percent(String(Number(strikePrice) - Number(initialPrice.toFixed(12))), String(Number(initialPrice.toFixed(12)))) : 
+      // new Percent(String(Number(initialPrice.toFixed(12)) - Number(strikePrice)), String(Number(initialPrice.toFixed(12))))
       console.log("debounced: ", debouncedAmount.toExact(), borrowedAmount)
-      const effectiveLeverage = String ( ( Number(borrowedAmount) + Number(debouncedAmount.toExact()) + Number(quotedPremium) ) / (Number(debouncedAmount.toExact()) + Number(quotedPremium)))
+      const effectiveLeverage = new BN( ( Number(borrowedAmount) + Number(debouncedAmount.toExact()) + Number(quotedPremium) ) / (Number(debouncedAmount.toExact()) + Number(quotedPremium))).toFixed(6)
 
       return {
         inputAmount: debouncedAmount,

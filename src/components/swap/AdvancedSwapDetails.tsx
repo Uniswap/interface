@@ -53,6 +53,7 @@ export function AdvancedSwapDetails({
   allowedSlippage,
   syncing = false,
   hideInfoTooltips = false,
+  leverageTrade
 }: AdvancedSwapDetailsProps) {
   const theme = useTheme()
   const { chainId } = useWeb3React()
@@ -86,8 +87,8 @@ export function AdvancedSwapDetails({
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-              {expectedOutputAmount
-                ? `${expectedOutputAmount.toSignificant(6)}  ${expectedOutputAmount.currency.symbol}`
+              {leverageTrade?.expectedOutput
+                ? `${leverageTrade?.expectedOutput}  ${trade.outputAmount.currency.symbol}`
                 : '-'}
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
@@ -205,8 +206,8 @@ export function AdvancedLeverageSwapDetails({
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-              {expectedOutputAmount
-                ? `${Number(leverageTrade?.expectedOutput ?? "-") }  ${expectedOutputAmount.currency.symbol}`
+              {leverageTrade?.expectedOutput
+                ? `${Number(leverageTrade?.expectedOutput ?? "-") }  ${trade.outputAmount.currency.symbol}`
                 : '-'}
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
@@ -300,7 +301,7 @@ export function AdvancedLeverageSwapDetails({
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={50}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-              <FormattedPriceImpact priceImpact={priceImpact} />
+              <FormattedPriceImpact priceImpact={leverageTrade?.priceImpact} />
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
         </RowBetween>

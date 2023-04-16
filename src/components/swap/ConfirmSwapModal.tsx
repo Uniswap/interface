@@ -13,6 +13,7 @@ import TransactionConfirmationModal, {
 } from '../TransactionConfirmationModal'
 import SwapModalFooter, { LeverageModalFooter } from './SwapModalFooter'
 import SwapModalHeader, { LeverageModalHeader } from './SwapModalHeader'
+import { LeverageTrade } from 'state/swap/hooks'
 
 export default function ConfirmSwapModal({
   trade,
@@ -152,7 +153,8 @@ export function LeverageConfirmModal({
   swapQuoteReceivedDate,
   fiatValueInput,
   fiatValueOutput,
-  leverageFactor
+  leverageFactor,
+  leverageTrade
 }: {
   isOpen: boolean
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
@@ -169,6 +171,7 @@ export function LeverageConfirmModal({
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
   leverageFactor: string | undefined
+  leverageTrade: LeverageTrade
 }) {
   // shouldLogModalCloseEvent lets the child SwapModalHeader component know when modal has been closed
   // and an event triggered by modal closing should be logged.
@@ -184,9 +187,10 @@ export function LeverageConfirmModal({
   }, [isOpen, onDismiss])
 
   const modalHeader = useCallback(() => {
-    return trade ? (
+    return leverageTrade && trade ? (
       <LeverageModalHeader
         trade={trade}
+        leverageTrade={leverageTrade}
         shouldLogModalCloseEvent={shouldLogModalCloseEvent}
         setShouldLogModalCloseEvent={setShouldLogModalCloseEvent}
         allowedSlippage={allowedSlippage}
@@ -197,6 +201,7 @@ export function LeverageConfirmModal({
       />
     ) : null
   }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade, shouldLogModalCloseEvent])
+  console.log("showAcceptChanges", onConfirm)
 
   const modalBottom = useCallback(() => {
     return trade ? (
