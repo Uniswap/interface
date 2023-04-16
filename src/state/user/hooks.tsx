@@ -179,6 +179,7 @@ export function useAddUserToken(): (token: Token) => void {
   const dispatch = useAppDispatch()
   return useCallback(
     (token: Token) => {
+      console.log("dispatching...")
       dispatch(addSerializedToken({ serializedToken: serializeToken(token) }))
     },
     [dispatch]

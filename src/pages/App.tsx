@@ -280,7 +280,7 @@ export default function App() {
 
                   <Route path="remove/v2/:currencyIdA/:currencyIdB" element={<RemoveLiquidity />} />
                   <Route path="remove/:tokenId" element={<RemoveLiquidityV3 />} />
-                  <Route path="close/:tokenId" element={<ClosePosition />} />
+                  <Route path="close/:leverageManager/:trader/:nonce" element={<ClosePosition />} />
 
                   <Route path="migrate/v2" element={<MigrateV2 />} />
                   <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />

@@ -111,7 +111,6 @@ export function useLeverageBorrowCallback(
 
     let input = new BN(trade?.inputAmount.toExact() ?? 0).shiftedBy(decimals).toFixed(0)
     let borrowedAmount = new BN(trade?.inputAmount.toExact() ?? 0).multipliedBy(leverageFactor ?? "0").minus(trade?.inputAmount.toExact() ?? 0).shiftedBy(decimals).toFixed(0)
-
     const leverageManagerContract = new Contract(leverageManagerAddress, LeverageManagerData.abi, provider.getSigner())
     return () => {
       leverageManagerContract.createLevPosition(

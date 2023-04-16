@@ -86,9 +86,11 @@ export function CurrencySearch({
   }, [isAddressSearch])
 
   const defaultTokens = useDefaultActiveTokens()
+  // console.log('defaultTokens', defaultTokens)
   const filteredTokens: Token[] = useMemo(() => {
     return Object.values(defaultTokens).filter(getTokenFilter(debouncedQuery))
   }, [defaultTokens, debouncedQuery])
+  // console.log('filteredTokens', filteredTokens)
 
   const [balances, balancesAreLoading] = useAllTokenBalances()
   const sortedTokens: Token[] = useMemo(
@@ -119,6 +121,7 @@ export function CurrencySearch({
       onlyShowCurrenciesWithBalance,
     ]
   )
+  // console.log('sortedTokens', sortedTokens)
   const isLoading = Boolean(balancesAreLoading && !tokenLoaderTimerElapsed)
 
   const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
@@ -147,6 +150,8 @@ export function CurrencySearch({
     disableNonToken,
     native,
   ])
+
+  console.log('searchCurrencies', searchCurrencies)
 
   const handleCurrencySelect = useCallback(
     (currency: Currency, hasWarning?: boolean) => {

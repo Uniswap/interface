@@ -12,7 +12,7 @@ import { MouseoverTooltipContent } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { useState } from 'react'
 import { ChevronDown, Info } from 'react-feather'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceTrade, LeverageTradeState } from 'state/routing/types'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { HideSmall, ThemedText } from 'theme'
 
@@ -21,6 +21,7 @@ import GasEstimateBadge from './GasEstimateBadge'
 import { ResponsiveTooltipContainer } from './styleds'
 import SwapRoute from './SwapRoute'
 import TradePrice from './TradePrice'
+import { LeverageTrade, useSwapState } from 'state/swap/hooks'
 
 const Wrapper = styled(Row)`
   width: 100%;
@@ -111,12 +112,14 @@ interface SwapDetailsInlineProps {
   syncing: boolean
   loading: boolean
   allowedSlippage: Percent
+  leverageTrade: LeverageTrade
 }
 
-export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSlippage }: SwapDetailsInlineProps) {
+export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSlippage, leverageTrade }: SwapDetailsInlineProps) {
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const [showDetails, setShowDetails] = useState(false)
+  const { leverage } = useSwapState()
 
   return (
     <Wrapper style={{ marginTop: '0' }}>
@@ -129,7 +132,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
         >
           <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!trade} open={showDetails}>
             <RowFixed style={{ position: 'relative' }}>
-              {loading || syncing ? (
+              {!leverage ? (loading || syncing ? (
                 <StyledPolling>
                   <StyledPollingDot>
                     <Spinner />
@@ -157,16 +160,59 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
                     <StyledInfoIcon color={trade ? theme.textTertiary : theme.deprecated_bg3} />
                   </MouseoverTooltipContent>
                 </HideSmall>
+              )) : (
+                (leverageTrade.state === LeverageTradeState.LOADING || leverageTrade.state === LeverageTradeState.SYNCING) ? (
+                  <StyledPolling>
+                  <StyledPollingDot>
+                    <Spinner />
+                  </StyledPollingDot>
+                </StyledPolling>
+                ) : (
+                  <HideSmall>
+                  <MouseoverTooltipContent
+                    wrap={false}
+                    content={
+                      <ResponsiveTooltipContainer origin="top right" style={{ padding: '0' }}>
+                        <Card padding="12px">
+                          <AdvancedLeverageSwapDetails
+                            leverageTrade={leverageTrade}
+                            trade={trade}
+                            allowedSlippage={allowedSlippage}
+                            syncing={syncing}
+                            hideInfoTooltips={true}
+                          />
+                        </Card>
+                      </ResponsiveTooltipContainer>
+                    }
+                    placement="bottom"
+                    disableHover={showDetails}
+                  >
+                    <StyledInfoIcon color={trade ? theme.textTertiary : theme.deprecated_bg3} />
+                  </MouseoverTooltipContent>
+                </HideSmall>
+                )
               )}
-              {trade ? (
-                <LoadingOpacityContainer $loading={syncing}>
-                  <TradePrice price={trade.executionPrice} />
-                </LoadingOpacityContainer>
-              ) : loading || syncing ? (
-                <ThemedText.DeprecatedMain fontSize={14}>
-                  <Trans>Fetching best price...</Trans>
-                </ThemedText.DeprecatedMain>
-              ) : null}
+              {trade ? (!leverage ? (
+                loading || syncing ? (
+                  <ThemedText.DeprecatedMain fontSize={14}>
+                    <Trans>Fetching best price...</Trans>
+                  </ThemedText.DeprecatedMain>
+                ) : (
+                  <LoadingOpacityContainer $loading={syncing}>
+                    <TradePrice price={trade.executionPrice} />
+                  </LoadingOpacityContainer>
+                )
+              ) : (
+                leverageTrade.state === LeverageTradeState.LOADING ? (
+                  <ThemedText.DeprecatedMain fontSize={14}>
+                    <Trans>Simulating position ...</Trans>
+                  </ThemedText.DeprecatedMain>
+                ) : (
+                  <LoadingOpacityContainer $loading={syncing}>
+                    Trade Details
+                  </LoadingOpacityContainer>
+                )
+              )) : null}
             </RowFixed>
 
             <RowFixed>
@@ -189,18 +235,19 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
 
           </StyledHeaderRow>
         </TraceEvent>
-        <AnimatedDropdown open={true}>
+        <AnimatedDropdown open={showDetails}>
           <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
-            {/*trade ? (
-              <StyledCard>
+            { trade ? (
+              !leverage ? (
+                <StyledCard>
                 <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
               </StyledCard>
-            ) : null*/}
-            {trade ? (
-              <StyledCard>
-                <AdvancedLeverageSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
+              ) : (
+                <StyledCard>
+                <AdvancedLeverageSwapDetails leverageTrade={leverageTrade} trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
               </StyledCard>
-            ) : null}
+              )
+            ) : null }
 
 
             {/*trade ? <SwapRoute trade={trade} syncing={syncing} /> : null*/}

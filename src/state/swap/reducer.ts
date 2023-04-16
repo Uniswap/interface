@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { parsedQueryString } from 'hooks/useParsedQueryString'
 
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, setLeverageFactor, setHideClosedLeveragePositions, setLeverage } from './actions'
+import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, setLeverageFactor, setHideClosedLeveragePositions, setLeverage, setLeverageManagerAddress } from './actions'
 import { queryParametersToSwapState } from './hooks'
 
 export interface SwapState {
@@ -18,6 +18,7 @@ export interface SwapState {
   readonly leverageFactor: string | null
   readonly hideClosedLeveragePositions: boolean
   readonly leverage: boolean
+  readonly leverageManagerAddress: string | undefined | null
 }
 
 const initialState: SwapState = queryParametersToSwapState(parsedQueryString())
@@ -26,7 +27,7 @@ export default createReducer<SwapState>(initialState, (builder) =>
   builder
     .addCase(
       replaceSwapState,
-      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId, leverage, leverageFactor, hideClosedLeveragePositions } }) => {
+      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId, leverage, leverageFactor, hideClosedLeveragePositions, leverageManagerAddress } }) => {
         return {
           [Field.INPUT]: {
             currencyId: inputCurrencyId ?? null,
@@ -39,7 +40,8 @@ export default createReducer<SwapState>(initialState, (builder) =>
           recipient,
           leverageFactor: leverageFactor ?? null,
           leverage,
-          hideClosedLeveragePositions
+          hideClosedLeveragePositions,
+          leverageManagerAddress: leverageManagerAddress ?? null
         }
       }
     )
@@ -87,6 +89,14 @@ export default createReducer<SwapState>(initialState, (builder) =>
         return {
           ...state,
           leverageFactor
+        }
+      }
+    )
+    .addCase(
+      setLeverageManagerAddress, (state, { payload: { leverageManagerAddress } }) => {
+        return {
+          ...state,
+          leverageManagerAddress
         }
       }
     )

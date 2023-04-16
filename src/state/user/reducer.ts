@@ -110,6 +110,7 @@ const userSlice = createSlice({
       state.tokens[serializedToken.chainId] = state.tokens[serializedToken.chainId] || {}
       state.tokens[serializedToken.chainId][serializedToken.address] = serializedToken
       state.timestamp = currentTimestamp()
+      console.log('addSerializedToken', serializedToken)
     },
     addSerializedPair(state, { payload: { serializedPair } }) {
       if (

@@ -15,6 +15,7 @@ import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 import { MouseoverTooltip } from '../Tooltip'
 import FormattedPriceImpact from './FormattedPriceImpact'
+import { LeverageTrade } from 'state/swap/hooks'
 
 const StyledCard = styled(Card)`
   padding: 0;
@@ -26,6 +27,7 @@ interface AdvancedSwapDetailsProps {
   syncing?: boolean
   hideInfoTooltips?: boolean
   leverageFactor?: number
+  leverageTrade?: LeverageTrade
 }
 
 function TextWithLoadingPlaceholder({
@@ -168,7 +170,8 @@ export function AdvancedLeverageSwapDetails({
   allowedSlippage,
   syncing = false,
   hideInfoTooltips = false,
-  leverageFactor
+  leverageFactor,
+  leverageTrade
 }: AdvancedSwapDetailsProps) {
   const theme = useTheme()
   const { chainId } = useWeb3React()
@@ -203,7 +206,7 @@ export function AdvancedLeverageSwapDetails({
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               {expectedOutputAmount
-                ? `${Number(expectedOutputAmount.toSignificant(6)) }  ${expectedOutputAmount.currency.symbol}`
+                ? `${Number(leverageTrade?.expectedOutput ?? "-") }  ${expectedOutputAmount.currency.symbol}`
                 : '-'}
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
@@ -227,7 +230,7 @@ export function AdvancedLeverageSwapDetails({
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               {
-                trade.inputAmount ? `${Number(trade.inputAmount.toSignificant(6)) * Number(leverageFactor) - Number(trade.inputAmount.toSignificant(6))}  ${trade.inputAmount.currency.symbol}`
+                leverageTrade?.strikePrice ? `${leverageTrade?.strikePrice}  ${trade.inputAmount.currency.symbol} / ${trade.outputAmount.currency.symbol}`
                 : '-'}
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
@@ -253,7 +256,7 @@ export function AdvancedLeverageSwapDetails({
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               {
-                trade.inputAmount ? `${Number(trade.inputAmount.toSignificant(6)) * Number(leverageFactor) - Number(trade.inputAmount.toSignificant(6))}  ${trade.inputAmount.currency.symbol}`
+                leverageTrade?.quotedPremium ? `${leverageTrade?.quotedPremium}  ${trade.inputAmount.currency.symbol}`
                 : '-'}
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
@@ -278,7 +281,7 @@ export function AdvancedLeverageSwapDetails({
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               {
-                trade.inputAmount ? `${Number(trade.inputAmount.toSignificant(6)) * Number(leverageFactor) - Number(trade.inputAmount.toSignificant(6))}  ${trade.inputAmount.currency.symbol}`
+                leverageTrade?.effectiveLeverage ? `${leverageTrade?.effectiveLeverage}`
                 : '-'}
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>

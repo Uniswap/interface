@@ -35,7 +35,7 @@ import { ReactNode } from 'react'
 import { ArrowDown, Info } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceTrade, LeverageTradeState } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import invariant from 'tiny-invariant'
@@ -54,17 +54,18 @@ import { ArrowWrapper, PageWrapper, SwapCallbackError, SwapWrapper } from '../..
 import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
-import { useCurrency, useDefaultActiveTokens } from '../../hooks/Tokens'
+import { useCurrency, useDefaultActiveTokens, useToken } from '../../hooks/Tokens'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import useWrapCallback, { WrapErrorText, WrapType } from '../../hooks/useWrapCallback'
 import { Field } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
+  useDerivedLeverageCreationInfo,
   useDerivedSwapInfo,
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
-import { useExpertModeManager } from '../../state/user/hooks'
+import { useAddUserToken, useExpertModeManager } from '../../state/user/hooks'
 import { LinkStyledButton, ThemedText } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
@@ -94,7 +95,7 @@ import { pageTimePeriodAtom } from 'pages/TokenDetails'
 import { useAtom } from 'jotai'
 import { CHAIN_ID_TO_BACKEND_NAME, toHistoryDuration } from 'graphql/data/util'
 import { Checkbox } from 'nft/components/layout/Checkbox'
-import { GlOBAL_STORAGE_ADDRESS, PS_ROUTER, V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
+import { feth, fusdc, GlOBAL_STORAGE_ADDRESS, PS_ROUTER, V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
 import { ethers } from 'ethers'
 import GlobalStorageData from "../../perpspotContracts/GlobalStorage.json"
 import LeverageManagerData from "../../perpspotContracts/LeverageManager.json"
@@ -230,8 +231,8 @@ function largerPercentValue(a?: Percent, b?: Percent) {
   return undefined
 }
 
-const TRADE_STRING = 'SwapRouter'
-
+const TRADE_STRING = 'SwapRouter';
+let nonce = 0 
 export default function Swap({ className }: { className?: string }) {
   const navigate = useNavigate()
   const { account, chainId, provider } = useWeb3React()
@@ -239,6 +240,24 @@ export default function Swap({ className }: { className?: string }) {
   const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
   const [fetchingSwapQuoteStartTime, setFetchingSwapQuoteStartTime] = useState<Date | undefined>()
   const swapWidgetEnabled = useSwapWidgetEnabled()
+  const addToken = useAddUserToken()
+  const fETH = useToken(feth)
+  const fUSDC = useToken(fusdc)
+
+  // fake tokens
+  useEffect(() => {
+    if (nonce === 0 && chainId === 80001) {
+      nonce = 1
+      addToken(fUSDC as Token)
+      addToken(fETH as Token)
+    }
+  }, [chainId, account])
+
+  const {
+    trade: leverageTrade,
+    inputError
+  } = useDerivedLeverageCreationInfo()
+  console.log('leverageTrade:', leverageTrade)
 
   // console.log("loadedUrlParams", loadedUrlParams)
 
@@ -285,7 +304,7 @@ export default function Swap({ className }: { className?: string }) {
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
   // swap state
-  const { independentField, typedValue, recipient, leverageFactor, hideClosedLeveragePositions, leverage } = useSwapState()
+  const { independentField, typedValue, recipient, leverageFactor, hideClosedLeveragePositions, leverage, leverageManagerAddress } = useSwapState()
   const {
     trade: { state: tradeState, trade },
     allowedSlippage,
@@ -339,7 +358,7 @@ export default function Swap({ className }: { className?: string }) {
     [fiatValueTradeInput, fiatValueTradeOutput, routeIsSyncing, trade]
   )
 
-  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient, onLeverageFactorChange, onHideClosedLeveragePositions, onLeverageChange } = useSwapActionHandlers()
+  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient, onLeverageFactorChange, onHideClosedLeveragePositions, onLeverageChange, onLeverageManagerAddress } = useSwapActionHandlers()
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
@@ -421,7 +440,7 @@ export default function Swap({ className }: { className?: string }) {
 
   // console.log("poolAddress", poolAddress)
 
-  const [leverageManagerAddress, setLeverageManagerAddress] = useState<string>()
+  // const [leverageManagerAddress, setLeverageManagerAddress] = useState<string>()
 
   useEffect(() => {
     // declare the data fetching function
@@ -430,7 +449,7 @@ export default function Swap({ className }: { className?: string }) {
         try {
           let gs = new ethers.Contract(GlOBAL_STORAGE_ADDRESS, GlobalStorageData.abi, provider.getSigner(account).connectUnchecked())
           let result = await gs.poolData(poolAddress)
-          setLeverageManagerAddress(result.leverageManager)
+          onLeverageManagerAddress(result.leverageManager)
         } catch (e) {
           console.log("LM address error:", e)
         }
@@ -446,7 +465,7 @@ export default function Swap({ className }: { className?: string }) {
 
   const { tokenAllowance: leverageManagerAllowanceAmount, isSyncing: boolean } = useTokenAllowance(
     (parsedAmounts[Field.INPUT]?.currency.isToken ? (parsedAmounts[Field.INPUT]?.currency as Token) : undefined)
-    , account, leverageManagerAddress)
+    , account, leverageManagerAddress ?? undefined)
 
   // console.log("leverageManagerAllowanceAmount", leverageManagerAllowanceAmount)
 
@@ -471,8 +490,7 @@ export default function Swap({ className }: { className?: string }) {
       setIsAllowancePending(false)
     }
   }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol])
-
-  const [leverageApprovalState, approveLeverageManager] = useApproveCallback(parsedAmounts[Field.INPUT], leverageManagerAddress)
+  const [leverageApprovalState, approveLeverageManager] = useApproveCallback(parsedAmounts[Field.INPUT], leverageManagerAddress ?? undefined)
   // const updateLeverageAllowance = () => {}
 
   const updateLeverageAllowance = useCallback(async () => {
@@ -553,7 +571,7 @@ export default function Swap({ className }: { className?: string }) {
   ])
 
   const leverageCallback = useLeverageBorrowCallback(
-    leverageManagerAddress,
+    leverageManagerAddress ?? undefined,
     trade,
     allowedSlippage,
     leverageFactor ?? undefined,
@@ -765,7 +783,7 @@ export default function Swap({ className }: { className?: string }) {
   //   )
       // loadedInputCurrency, 
       // loadedOutputCurrency, TradeType)
-  console.log('fakeTrade', fakeTrade, fakeTrade.routes); 
+  // console.log('fakeTrade', fakeTrade, fakeTrade.routes); 
   
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
@@ -1003,13 +1021,14 @@ export default function Swap({ className }: { className?: string }) {
                         </LightCard>
                       </LeverageGaugeSection>
                       {
-                        true && (
+                        (
                           <DetailsSwapSection>
                             <SwapDetailsDropdown
                               trade={trade}
                               syncing={routeIsSyncing}
                               loading={routeIsLoading}
                               allowedSlippage={allowedSlippage}
+                              leverageTrade={leverageTrade}
                             />
                           </DetailsSwapSection>
                         )}
@@ -1130,17 +1149,14 @@ export default function Swap({ className }: { className?: string }) {
                           }
                           id="leverage-button"
                           disabled={
-                            !isValid ||
-                            routeIsSyncing ||
-                            routeIsLoading ||
-                            priceImpactTooHigh ||
-                            leverageApprovalState !== ApprovalState.APPROVED
+                            leverageTrade.state === LeverageTradeState.LOADING||
+                            !inputError
                           }
 
                         >
                           <Text fontSize={20} fontWeight={600}>
-                            {swapInputError ? (
-                              swapInputError
+                            { inputError ? (
+                              inputError
                             ) : routeIsSyncing || routeIsLoading ? (
                               <Trans>Leverage</Trans>
                             ) : priceImpactTooHigh ? (

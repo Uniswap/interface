@@ -17,8 +17,10 @@ export const replaceSwapState = createAction<{
   leverage: boolean
   leverageFactor?: string
   hideClosedLeveragePositions: boolean
+  leverageManagerAddress?: string
 }>('swap/replaceSwapState')
 export const setRecipient = createAction<{ recipient: string | null }>('swap/setRecipient')
 export const setLeverageFactor = createAction<{ leverageFactor: string }>('swap/setLeverageFactor')
 export const setHideClosedLeveragePositions = createAction<{ hideClosedLeveragePositions: boolean }>('swap/setHideClosedLeveragePositions')
 export const setLeverage = createAction<{ leverage: boolean }>('swap/setLeverage')
+export const setLeverageManagerAddress = createAction<{ leverageManagerAddress: string }>('swap/setLeverageManagerAddress')

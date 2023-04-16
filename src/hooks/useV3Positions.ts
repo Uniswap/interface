@@ -3,11 +3,18 @@ import { CallStateResult, useSingleCallResult, useSingleContractMultipleData } f
 import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
 
-import { useV3NFTPositionManagerContract } from './useContract'
+import { useLeverageManagerContract, useV3NFTPositionManagerContract } from './useContract'
 
 interface UseV3PositionsResults {
   loading: boolean
   positions: PositionDetails[] | undefined
+}
+
+export function useLeveragePositions(leverageManagerAddress: string | undefined, account: string | undefined) {
+  const leverageManager = useLeverageManagerContract(leverageManagerAddress)
+  const result = useSingleCallResult(leverageManager, 'getAllPositions', [account])
+  let positions = result
+  return positions;
 }
 
 function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3PositionsResults {
@@ -52,6 +59,11 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
 interface UseV3PositionResults {
   loading: boolean
   position: PositionDetails | undefined
+}
+
+export function useLeveragePosition(leverageManagerAddress: string | undefined, trader: string | undefined, nonce: string | undefined) {
+  const leverageManager = useLeverageManagerContract(leverageManagerAddress)
+  const result = useSingleCallResult(leverageManager, 'getPosition', [trader, nonce])
 }
 
 export function useV3PositionFromTokenId(tokenId: BigNumber | undefined): UseV3PositionResults {
