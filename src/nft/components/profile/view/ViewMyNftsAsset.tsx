@@ -3,10 +3,12 @@ import { useTrace } from '@uniswap/analytics'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { NFTEventName } from '@uniswap/analytics-events'
 import { NftCard, NftCardDisplayProps } from 'nft/components/card'
+import { detailsHref } from 'nft/components/card/utils'
 import { VerifiedIcon } from 'nft/components/icons'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 interface ViewMyNftsAssetProps {
   asset: WalletAsset
@@ -27,6 +29,7 @@ export const ViewMyNftsAsset = ({
   const cartExpanded = useBag((state) => state.bagExpanded)
   const toggleCart = useBag((state) => state.toggleBag)
   const isMobile = useIsMobile()
+  const navigate = useNavigate()
 
   const isSelected = useMemo(() => {
     return sellAssets.some(
@@ -35,7 +38,7 @@ export const ViewMyNftsAsset = ({
   }, [asset, sellAssets])
 
   const trace = useTrace()
-  const onCardClick = () => handleSelect(isSelected)
+  const toggleSelect = () => handleSelect(isSelected)
 
   const handleSelect = (removeAsset: boolean) => {
     if (removeAsset) {
@@ -79,11 +82,13 @@ export const ViewMyNftsAsset = ({
       isDisabled={Boolean(isDisabled)}
       selectAsset={() => handleSelect(false)}
       unselectAsset={() => handleSelect(true)}
-      onClick={onCardClick}
+      onButtonClick={toggleSelect}
+      onCardClick={() => {
+        if (!hideDetails) navigate(detailsHref(asset))
+      }}
       mediaShouldBePlaying={mediaShouldBePlaying}
       setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
       testId="nft-profile-asset"
-      doNotLinkToDetails={hideDetails}
     />
   )
 }

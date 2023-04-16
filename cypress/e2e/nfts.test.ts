@@ -53,4 +53,11 @@ describe('Testing nfts', () => {
     cy.get(getTestSelector('web3-status-connected')).click()
     cy.get(getTestSelector('nft-view-self-nfts')).click()
   })
+
+  it('should close the sidebar when navigating to NFT details', () => {
+    cy.get(getTestSelector('web3-status-connected')).click()
+    cy.get(getTestSelector('mini-portfolio-nav-nfts')).click()
+    cy.get(getTestSelector('mini-portfolio-nft')).first().click()
+    cy.contains('Buy crypto').should('not.be.visible')
+  })
 })
