@@ -246,11 +246,12 @@ export default function Swap({ className }: { className?: string }) {
 
   // fake tokens
   useEffect(() => {
+    if(fETH && fUSDC){
     if (nonce === 0 && chainId === 80001) {
       nonce = 1
       addToken(fUSDC as Token)
       addToken(fETH as Token)
-    }
+    }}
   }, [chainId, account])
 
   const {
