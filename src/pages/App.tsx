@@ -106,14 +106,14 @@ function getCurrentPageFromLocation(locationPathname: string): InterfacePageName
       return InterfacePageName.POOL_PAGE
     case locationPathname.startsWith('/tokens'):
       return InterfacePageName.TOKENS_PAGE
-    case locationPathname.startsWith('/nfts/profile'):
-      return InterfacePageName.NFT_PROFILE_PAGE
-    case locationPathname.startsWith('/nfts/asset'):
-      return InterfacePageName.NFT_DETAILS_PAGE
-    case locationPathname.startsWith('/nfts/collection'):
-      return InterfacePageName.NFT_COLLECTION_PAGE
-    case locationPathname.startsWith('/nfts'):
-      return InterfacePageName.NFT_EXPLORE_PAGE
+    // case locationPathname.startsWith('/nfts/profile'):
+    //   return InterfacePageName.NFT_PROFILE_PAGE
+    // case locationPathname.startsWith('/nfts/asset'):
+    //   return InterfacePageName.NFT_DETAILS_PAGE
+    // case locationPathname.startsWith('/nfts/collection'):
+    //   return InterfacePageName.NFT_COLLECTION_PAGE
+    // case locationPathname.startsWith('/nfts'):
+    //   return InterfacePageName.NFT_EXPLORE_PAGE
     default:
       return undefined
   }
@@ -285,7 +285,7 @@ export default function App() {
                   <Route path="migrate/v2" element={<MigrateV2 />} />
                   <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
 
-                  {!shouldDisableNFTRoutes && (
+                  {false && (
                     <>
                       <Route
                         path="/nfts"

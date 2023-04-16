@@ -227,6 +227,7 @@ export default function LeveragePositionItem({
   totalLiquidity,
   borrowedLiquidity,
   totalDebtInput,
+  totalDebt, 
   isToken0,
   openTime,
   repayTime,
@@ -256,7 +257,7 @@ export default function LeveragePositionItem({
   const [showPremiumConfirm, setshowPremiumConfirm] = useState(false);
   const locale = useActiveLocale()
   const dateFormatter = monthYearDayFormatter(locale)
-
+  // const collateral = (totalLiquidity - totalDebt)
   const handleConfirmDismiss = ()=>{
     setshowConfirm(false); 
   } 
@@ -275,7 +276,7 @@ export default function LeveragePositionItem({
   const PNL = useMemo(() => {
     let x = isToken0 ? Number(currentPrice) : 1/Number(currentPrice)
     console.log("x", x, totalDebtInput, totalLiquidity, currentPrice, enterPrice)
-    return Number(totalLiquidity)*(Number(currentPrice) - Number(enterPrice?.toFixed(10))) * (x) - Number(totalDebtInput)
+    return Number(totalLiquidity)*(Number(currentPrice) - Number(enterPrice?.toFixed(10))) * (x) //- Number(totalDebtInput)
   }, [pool, enterPrice])
 
   const txHash = ""
@@ -289,7 +290,8 @@ export default function LeveragePositionItem({
           <AutoColumn>
             <DoubleCurrencyLogo currency0={currency0 ?? undefined} currency1={currency1 ?? undefined} size={18} margin />
             <ThemedText.SubHeader>
-              Long {isToken0 ? currency0?.symbol : currency1?.symbol}
+              Long {isToken0 ? currency0?.symbol : currency1?.symbol}/ 
+              {isToken0 ? currency1?.symbol : currency0?.symbol}
             </ThemedText.SubHeader>
             {true ? (
               <RangeLineItem>
@@ -328,14 +330,22 @@ export default function LeveragePositionItem({
             )}
           </AutoColumn>
         </PrimaryPositionIdData>
+            <AutoColumn gap="8px" style={{marginRight: "150px"}}>
+            <ItemValueLabel label={"Total Position"} value={totalLiquidity + " " + (isToken0 ? currency0?.symbol : currency1?.symbol)}/>
+          </AutoColumn>
         <AutoRow justify="flex-start" width="100%" marginBottom="16px">
+
+
+
           <AutoColumn gap="8px" style={{marginRight: "150px"}}>
-          <ItemValueLabel label={"Total Position"} value={totalLiquidity + " " + (isToken0 ? currency0?.symbol : currency1?.symbol)}/>
-          <ItemValueLabel label={"Debt"} value={new BN(totalDebtInput).toString() + " " + (isToken0 ? currency1?.symbol : currency0?.symbol)}/>
+          <ItemValueLabel label={"Collateral"} value={new BN(totalDebtInput).toString() + " " + (isToken0 ? currency1?.symbol : currency0?.symbol)}/>
+          <ItemValueLabel label={"Borrowed"} value={new BN(totalDebtInput).toString() + " " + (isToken0 ? currency1?.symbol : currency0?.symbol)}/>
           </AutoColumn>
           <AutoColumn gap="8px">
           <ItemValueLabel label={"Time of Creation"} value={moment(new Date(Number(openTime) * 1000)).format("M/D/YYYY H:mm")}/>
-          <ItemValueLabel label={"Time until repayment "} value={moment(new Date(Number(repayTime) * 1000)).fromNow()}/>
+          <ItemValueLabel label={"Next Repayment Due "} value={
+            moment(new Date(Number(repayTime + 86400) * 1000)).fromNow()
+          }/>
           </AutoColumn>
         </AutoRow>
 

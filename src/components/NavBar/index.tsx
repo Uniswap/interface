@@ -70,17 +70,19 @@ export const PageTabs = () => {
         <Trans>Swap</Trans>
       </MenuItem>
       <MenuItem href={`/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/tokens')}>
-        <Trans>Tokens</Trans>
+        <Trans>Pairs</Trans>
       </MenuItem>
-      {!shouldDisableNFTRoutes && (
+      {false && (
         <MenuItem dataTestId="nft-nav" href="/nfts" isActive={isNftPage}>
           <Trans>NFTs</Trans>
         </MenuItem>
       )}
-      <Box display={{ sm: 'flex', lg: 'none', xxl: 'flex' }} width="full">
         <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
           <Trans>Pools</Trans>
         </MenuItem>
+
+      <Box display={{ sm: 'flex', lg: 'none', xxl: 'flex' }} width="full">
+
       </Box>
       {micrositeEnabled && (
         <Box display={{ sm: 'none', xxxl: 'flex' }}>
@@ -90,9 +92,9 @@ export const PageTabs = () => {
           </MenuItem>
         </Box>
       )}
-      <Box marginY={{ sm: '4', md: 'unset' }}>
+      {/*<Box marginY={{ sm: '4', md: 'unset' }}>
         <MenuDropdown />
-      </Box>
+      </Box>*/}
     </>
   )
 }
@@ -108,7 +110,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
       <Nav>
         <Box display="flex" height="full" flexWrap="nowrap">
           <Box className={styles.leftSideContainer}>
-            <Box className={styles.logoContainer}>
+            {/*<Box className={styles.logoContainer}>
               <UniIcon
                 width="48"
                 height="48"
@@ -121,7 +123,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
                   })
                 }}
               />
-            </Box>
+            </Box>*/}
             {!isNftPage && (
               <Box display={{ sm: 'flex', lg: 'none' }}>
                 <ChainSelector leftAlign={true} />

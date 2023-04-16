@@ -217,8 +217,7 @@ export function AdvancedLeverageSwapDetails({
             <MouseoverTooltip
               text={
                 <Trans>
-                  The amount you expect to receive at the current market price. You may receive less or more if the
-                  market price changes while your transaction is pending.
+                  Price around which your premium gets expensive. 
                 </Trans>
               }
               disableHover={hideInfoTooltips}
@@ -243,8 +242,7 @@ export function AdvancedLeverageSwapDetails({
             <MouseoverTooltip
               text={
                 <Trans>
-                  The amount you expect to receive at the current market price. You may receive less or more if the
-                  market price changes while your transaction is pending.
+                  The first premium payment required to open this position
                 </Trans>
               }
               disableHover={hideInfoTooltips}
@@ -268,8 +266,7 @@ export function AdvancedLeverageSwapDetails({
             <MouseoverTooltip
               text={
                 <Trans>
-                  The amount you expect to receive at the current market price. You may receive less or more if the
-                  market price changes while your transaction is pending.
+                  The real leverage after adding the first premium to your collateral: (borrow amount + collateral + premium)/(collateral+premium)
                 </Trans>
               }
               disableHover={hideInfoTooltips}

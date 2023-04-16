@@ -203,18 +203,29 @@ export function useDerivedLeverageCreationInfo()
   // TODO calculate slippage from the pool
   const allowedSlippage = new BN("103").shiftedBy(16).toFixed(0) // new Percent(JSBI.BigInt(50), JSBI.BigInt(10000))
   console.log("simulation: ", leverageManager)
+  if(debouncedAmount && Number(leverageFactor) > 1){
+  const _input = Number(debouncedAmount.toFixed()) * (10** Number(inputCurrency?.wrapped.decimals))
+  const _borrowAmount = _input * (Number(leverageFactor)-1)
+  console.log('wtf',_input.toFixed(0)
+    , _borrowAmount.toFixed(0) ); 
+  }
 
   const simulateTrade = useCallback(async () => {
     if (leverageManager && debouncedAmount && leverage && Number(leverageFactor) > 1
       && outputCurrency?.wrapped && inputCurrency?.wrapped
       ) {
       try {
-        let input = new BN(debouncedAmount.toFixed(12))
-        let borrowAmount = input.multipliedBy(new BN(leverageFactor ?? "0")).minus(input)
+        // let input = new BN(debouncedAmount.toFixed(12))
+        // let borrowAmount = input.multipliedBy(new BN(leverageFactor ?? "0")).minus(input)
+        // input = input.shiftedBy(inputCurrency?.wrapped.decimals)
+        // borrowAmount = borrowAmount.shiftedBy(outputCurrency?.wrapped.decimals)
+
         let isLong = !inputIsToken0 // borrowing token1 to buy token0
         setTradeState(LeverageTradeState.LOADING)
-        input = input.shiftedBy(inputCurrency?.wrapped.decimals)
-        borrowAmount = borrowAmount.shiftedBy(outputCurrency?.wrapped.decimals)
+        let input = Number(debouncedAmount.toFixed()) * (10** Number(inputCurrency?.wrapped.decimals))
+        let borrowAmount = input * (Number(leverageFactor)-1)
+
+
         const trade = await leverageManager.callStatic.createLevPosition(
           input.toFixed(0),
           allowedSlippage,
@@ -232,6 +243,7 @@ export function useDerivedLeverageCreationInfo()
       setTradeState(LeverageTradeState.INVALID)
     }
   }, [currencies,leverageManager, leverage, leverageFactor, debouncedAmount])
+  console.log("contractResultPost/tradestate", contractResult, tradeState)
 
   useMemo(() => {
     simulateTrade()

@@ -40,31 +40,52 @@ export function useLeveragePositions(leverageManagerAddress: string | undefined,
   }
 
   const inputCurrencyIsToken0 = inputCurrency?.wrapped.sortsBefore(outputCurrency?.wrapped);
-  // console.log("multiResult:", multiResult)
-  // console.log("positions:", positions)
-  const formattedPositions = multiResult.map((data: any, i) => {
-    let position = positions[i][0]
-    console.log("position:", position)
-    // output of trade position
-    let outputDecimals = position.isToken0 && inputCurrencyIsToken0 ? inputCurrency?.wrapped.decimals : outputCurrency?.wrapped.decimals
+  const _formattedPositions = positions[0].map((data: any)=>{
+
+    let outputDecimals = data.isToken0 && inputCurrencyIsToken0 ? inputCurrency?.wrapped.decimals : outputCurrency?.wrapped.decimals
     // input of trade position
-    let inputDecimals = position.isToken0 && inputCurrencyIsToken0 ? outputCurrency?.wrapped.decimals : inputCurrency?.wrapped.decimals
+    let inputDecimals = data.isToken0 && inputCurrencyIsToken0 ? outputCurrency?.wrapped.decimals : inputCurrency?.wrapped.decimals
     return {
-      tokenId: data.result.toString(),
-      totalLiquidity: new BN(position.totalPosition.toString()).shiftedBy(-outputDecimals).toFixed(6),
-      totalDebt: new BN(position.totalDebt.toString()).shiftedBy(-outputDecimals).toFixed(6),
-      totalDebtInput: new BN(position.totalDebtInput.toString()).shiftedBy(-inputDecimals).toFixed(6),
-      borrowedLiquidity: new BN(position.borrowedLiq.toString()).shiftedBy(-inputDecimals).toFixed(6),
-      creationTick: new BN(position.creationTick).toFixed(0),
-      isToken0: position.isToken0,
-      openTime: new BN(position.openTime).toFixed(0),
-      repayTime: new BN(position.repayTime).toFixed(0),
-      tickStart: new BN(position.borrowStartTick).toFixed(0),
-      tickFinish: new BN(position.borrowFinishTick).toFixed(0),
+      tokenId: 0,
+      totalLiquidity: new BN(data.totalPosition.toString()).shiftedBy(-outputDecimals).toFixed(6),
+      totalDebt: new BN(data.totalDebt.toString()).shiftedBy(-outputDecimals).toFixed(6),
+      totalDebtInput: new BN(data.totalDebtInput.toString()).shiftedBy(-inputDecimals).toFixed(6),
+      borrowedLiquidity: new BN(data.borrowedLiq.toString()).shiftedBy(-inputDecimals).toFixed(6),
+      creationTick: new BN(data.creationTick).toFixed(0),
+      isToken0: data.isToken0,
+      openTime: new BN(data.openTime).toFixed(0),
+      repayTime: new BN(data.repayTime).toFixed(0),
+      tickStart: new BN(data.borrowStartTick).toFixed(0),
+      tickFinish: new BN(data.borrowFinishTick).toFixed(0),
     }
+
   })
 
-  return formattedPositions
+  console.log('positionshere', _formattedPositions); 
+
+  // const formattedPositions = multiResult.map((data: any, i) => {
+  //   let position = positions[0][i]
+  //   console.log("position:", position)
+  //   // output of trade position
+  //   let outputDecimals = position.isToken0 && inputCurrencyIsToken0 ? inputCurrency?.wrapped.decimals : outputCurrency?.wrapped.decimals
+  //   // input of trade position
+  //   let inputDecimals = position.isToken0 && inputCurrencyIsToken0 ? outputCurrency?.wrapped.decimals : inputCurrency?.wrapped.decimals
+  //   return {
+  //     tokenId: data.result.toString(),
+  //     totalLiquidity: new BN(position.totalPosition.toString()).shiftedBy(-outputDecimals).toFixed(6),
+  //     totalDebt: new BN(position.totalDebt.toString()).shiftedBy(-outputDecimals).toFixed(6),
+  //     totalDebtInput: new BN(position.totalDebtInput.toString()).shiftedBy(-inputDecimals).toFixed(6),
+  //     borrowedLiquidity: new BN(position.borrowedLiq.toString()).shiftedBy(-inputDecimals).toFixed(6),
+  //     creationTick: new BN(position.creationTick).toFixed(0),
+  //     isToken0: position.isToken0,
+  //     openTime: new BN(position.openTime).toFixed(0),
+  //     repayTime: new BN(position.repayTime).toFixed(0),
+  //     tickStart: new BN(position.borrowStartTick).toFixed(0),
+  //     tickFinish: new BN(position.borrowFinishTick).toFixed(0),
+  //   }
+  // })
+
+  return _formattedPositions
   // console.log("formattedPositions:", formattedPositions)
 
 }
