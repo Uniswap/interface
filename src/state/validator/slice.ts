@@ -5,7 +5,7 @@ import { GetValidatorGaslessQuoteResult, GetValidatorQuoteResult } from './types
 
 export const routingApiKromatika = createApi({
   reducerPath: 'routingApiKromatika',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:4000/v1.0' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://api.metadexa.io/v1.0' }),
   endpoints: (build) => ({
     getQuote: build.query<
       GetValidatorQuoteResult,
