@@ -436,12 +436,18 @@ export default function Swap({ className }: { className?: string }) {
   let poolAddress = useMemo(() => {
     if (
       chainId && 
-      currencies[Field.INPUT] && currencies[Field.OUTPUT]
+      currencies[Field.INPUT] &&
+      currencies[Field.OUTPUT] &&
+      currencies[Field.INPUT]?.wrapped && currencies[Field.OUTPUT]?.wrapped
     ) {
+      const input = currencies[Field.INPUT]?.wrapped
+      const output = currencies[Field.OUTPUT]?.wrapped
       // let pool = trade.routes[0]?.pools[0] as any
-      return computePoolAddress({ factoryAddress: V3_CORE_FACTORY_ADDRESSES[chainId], tokenA: currencies[Field.INPUT] as Token, tokenB: currencies[Field.OUTPUT] as Token, fee: FeeAmount.LOW })
+      if (input && output && input.wrapped && output.wrapped) {
+        return computePoolAddress({ factoryAddress: V3_CORE_FACTORY_ADDRESSES[chainId], tokenA: input.wrapped, tokenB: output.wrapped, fee: FeeAmount.LOW })
+      }
     }
-    return
+    return undefined
   }, [account, parsedAmounts, trade, currencies, currencies[Field.OUTPUT], currencies[Field.INPUT], chainId])
 
   // console.log("poolAddress", poolAddress)
