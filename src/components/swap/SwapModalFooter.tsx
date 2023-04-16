@@ -189,7 +189,7 @@ export function LeverageModalFooter({
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const [clientSideRouter] = useClientSideRouter()
   const routes = getTokenPath(trade)
-
+  console.log("disabledConfirm", disabledConfirm)
   return (
     <>
       <AutoRow>

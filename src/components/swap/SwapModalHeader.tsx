@@ -22,6 +22,7 @@ import { RowBetween, RowFixed } from '../Row'
 import TradePrice from '../swap/TradePrice'
 import { AdvancedLeverageSwapDetails, AdvancedSwapDetails } from './AdvancedSwapDetails'
 import { SwapShowAcceptChanges, TruncatedText } from './styleds'
+import { LeverageTrade } from 'state/swap/hooks'
 
 const ArrowWrapper = styled.div`
   padding: 4px;
@@ -221,7 +222,8 @@ export function LeverageModalHeader({
   recipient,
   showAcceptChanges,
   onAcceptChanges,
-  leverageFactor
+  leverageFactor,
+  leverageTrade
 }: {
   trade: InterfaceTrade<Currency, Currency, TradeType>
   shouldLogModalCloseEvent: boolean
@@ -230,7 +232,8 @@ export function LeverageModalHeader({
   recipient: string | null
   showAcceptChanges: boolean
   onAcceptChanges: () => void
-  leverageFactor: number
+  leverageFactor: number,
+  leverageTrade: LeverageTrade
 }) {
   const theme = useTheme()
 
@@ -343,7 +346,7 @@ export function LeverageModalHeader({
         <TradePrice price={trade.executionPrice} />
       </RowBetween>
       <LightCard style={{ padding: '.75rem', marginTop: '0.5rem' }}>
-        <AdvancedLeverageSwapDetails leverageFactor={leverageFactor} trade={trade} allowedSlippage={allowedSlippage} />
+        <AdvancedLeverageSwapDetails leverageTrade={leverageTrade} leverageFactor={leverageFactor} trade={trade} allowedSlippage={allowedSlippage} />
       </LightCard>
       {showAcceptChanges ? (
         <SwapShowAcceptChanges justify="flex-start" gap="0px">
@@ -370,7 +373,7 @@ export function LeverageModalHeader({
             <Trans>
               Output is estimated. You will receive at least{' '}
               <b>
-                {trade.minimumAmountOut(allowedSlippage).toSignificant(6)} {trade.outputAmount.currency.symbol}
+                {leverageTrade?.expectedOutput} {trade.outputAmount.currency.symbol}
               </b>{' '}
               or the transaction will revert.
             </Trans>

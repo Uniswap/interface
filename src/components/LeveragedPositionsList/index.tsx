@@ -7,6 +7,7 @@ import { LeveragePositionDetails } from 'types/leveragePosition'
 import LeveragePositionItem from 'components/LeveragePositionItem'
 import { AutoColumn } from 'components/Column'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
+import { Currency } from '@uniswap/sdk-core'
 
 const DesktopHeader = styled.div`
   display: none;
@@ -73,7 +74,7 @@ type LeveragePositionListProps = React.PropsWithChildren<{
 export default function LeveragePositionsList({
   positions,
   setUserHideClosedPositions,
-  userHideClosedPositions,
+  userHideClosedPositions
 }: LeveragePositionListProps) {
   return (
     <>
@@ -106,7 +107,7 @@ export default function LeveragePositionsList({
       </MobileHeader>
       <AutoColumn gap="4px">
       {positions.map((p) => (
-        <LeveragePositionItem key={p.tokenId.toString()} {...p} />
+        <LeveragePositionItem key={p.tokenId} {...p} />
       ))}
       </AutoColumn>
 

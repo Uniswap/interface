@@ -4,17 +4,69 @@ import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
 
 import { useLeverageManagerContract, useV3NFTPositionManagerContract } from './useContract'
+import { LeveragePositionDetails } from 'types/leveragePosition'
+import { BigNumber as BN } from "bignumber.js"
+import { Currency, Field } from '@uniswap/widgets'
+
 
 interface UseV3PositionsResults {
   loading: boolean
   positions: PositionDetails[] | undefined
 }
 
-export function useLeveragePositions(leverageManagerAddress: string | undefined, account: string | undefined) {
+export function useLeveragePositions(leverageManagerAddress: string | undefined, account: string | undefined, currencies: { [field in Field]?: Currency | null }): LeveragePositionDetails[] {
   const leverageManager = useLeverageManagerContract(leverageManagerAddress)
-  const result = useSingleCallResult(leverageManager, 'getAllPositions', [account])
-  let positions = result
-  return positions;
+  const { result: positions, loading, error } = useSingleCallResult(leverageManager, 'getAllPositions', [account])
+
+  const inputCurrency = currencies[Field.INPUT]
+  const outputCurrency = currencies[Field.OUTPUT]
+
+  let args: any = []
+
+
+  if (positions) {
+    positions.forEach(
+      (pos, i) => {
+        args.push([account, i])
+      }
+    )
+  }
+
+
+  const multiResult= useSingleContractMultipleData(leverageManager, 'userpositions', args)
+
+  if (loading || error || !positions || !inputCurrency?.wrapped || !outputCurrency?.wrapped || multiResult[0].loading || multiResult[0].error || !multiResult[0].result) {
+    return []
+  }
+
+  const inputCurrencyIsToken0 = inputCurrency?.wrapped.sortsBefore(outputCurrency?.wrapped);
+  // console.log("multiResult:", multiResult)
+  // console.log("positions:", positions)
+  const formattedPositions = multiResult.map((data: any, i) => {
+    let position = positions[i][0]
+    console.log("position:", position)
+    // output of trade position
+    let outputDecimals = position.isToken0 && inputCurrencyIsToken0 ? inputCurrency?.wrapped.decimals : outputCurrency?.wrapped.decimals
+    // input of trade position
+    let inputDecimals = position.isToken0 && inputCurrencyIsToken0 ? outputCurrency?.wrapped.decimals : inputCurrency?.wrapped.decimals
+    return {
+      tokenId: data.result.toString(),
+      totalLiquidity: new BN(position.totalPosition.toString()).shiftedBy(-outputDecimals).toFixed(6),
+      totalDebt: new BN(position.totalDebt.toString()).shiftedBy(-outputDecimals).toFixed(6),
+      totalDebtInput: new BN(position.totalDebtInput.toString()).shiftedBy(-inputDecimals).toFixed(6),
+      borrowedLiquidity: new BN(position.borrowedLiq.toString()).shiftedBy(-inputDecimals).toFixed(6),
+      creationTick: new BN(position.creationTick).toFixed(0),
+      isToken0: position.isToken0,
+      openTime: new BN(position.openTime).toFixed(0),
+      repayTime: new BN(position.repayTime).toFixed(0),
+      tickStart: new BN(position.borrowStartTick).toFixed(0),
+      tickFinish: new BN(position.borrowFinishTick).toFixed(0),
+    }
+  })
+
+  return formattedPositions
+  // console.log("formattedPositions:", formattedPositions)
+
 }
 
 function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3PositionsResults {

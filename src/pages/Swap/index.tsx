@@ -107,6 +107,8 @@ import { ApprovalState, useApproval } from 'lib/hooks/useApproval'
 import { useApproveCallback } from 'hooks/useApproveCallback'
 import ConfirmLeverageSwapModal from 'components/swap/confirmLeverageSwapModal'
 import { BigNumber as BN } from "bignumber.js";
+import { useLeveragePositions } from 'hooks/useV3Positions'
+import { FeeAmount } from '@uniswap/v3-sdk'
 
 const ArrowContainer = styled.div`
   display: inline-block;
@@ -174,8 +176,10 @@ const LeverageGaugeSection = styled(SwapSection) <{ showDetailsDropdown: boolean
   border-bottom: ${({ theme }) => `1px solid ${theme.backgroundSurface}`};
   border-top-right-radius: 0;
   border-top-left-radius: 0;
-  border-bottom-left-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
-  border-bottom-right-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  // border-bottom-left-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
+  // border-bottom-right-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
 `
 
 const DetailsSwapSection = styled(SwapSection)`
@@ -255,7 +259,8 @@ export default function Swap({ className }: { className?: string }) {
 
   const {
     trade: leverageTrade,
-    inputError
+    inputError,
+    allowedSlippage: leverageAllowedSlippage
   } = useDerivedLeverageCreationInfo()
   console.log('leverageTrade:', leverageTrade)
 
@@ -429,11 +434,11 @@ export default function Swap({ className }: { className?: string }) {
 
   let poolAddress = useMemo(() => {
     if (
-      trade && trade.routes && trade.routes.length > 0 && trade.routes[0].pools.length > 0 && chainId &&
+      chainId && 
       currencies[Field.INPUT] && currencies[Field.OUTPUT]
     ) {
-      let pool = trade.routes[0]?.pools[0] as any
-      return computePoolAddress({ factoryAddress: V3_CORE_FACTORY_ADDRESSES[chainId], tokenA: currencies[Field.INPUT] as Token, tokenB: currencies[Field.OUTPUT] as Token, fee: pool.fee })
+      // let pool = trade.routes[0]?.pools[0] as any
+      return computePoolAddress({ factoryAddress: V3_CORE_FACTORY_ADDRESSES[chainId], tokenA: currencies[Field.INPUT] as Token, tokenB: currencies[Field.OUTPUT] as Token, fee: FeeAmount.LOW })
     }
     return
   }, [account, parsedAmounts, trade, currencies, currencies[Field.OUTPUT], currencies[Field.INPUT], chainId])
@@ -519,6 +524,12 @@ export default function Swap({ className }: { className?: string }) {
     allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined
   )
 
+  // const inputIsToken0 = useMemo(() => {
+  //   if (currencies && currencies[Field.INPUT] && currencies[Field.OUTPUT]) {
+  //     return currencies[Field.INPUT]?.wrapped.sortsBefore(currencies[Field.OUTPUT]?.wrapped)
+  //   }
+  // }, [currencies])
+
   const handleSwap = useCallback(() => {
     if (!swapCallback) {
       return
@@ -569,11 +580,11 @@ export default function Swap({ className }: { className?: string }) {
     trade?.inputAmount?.currency?.symbol,
     trade?.outputAmount?.currency?.symbol,
   ])
-
+  console.log("leverageAllowedSlippage: ", leverageAllowedSlippage.toFixed(6))
   const leverageCallback = useLeverageBorrowCallback(
     leverageManagerAddress ?? undefined,
     trade,
-    allowedSlippage,
+    leverageAllowedSlippage,
     leverageFactor ?? undefined,
   )
 
@@ -581,19 +592,44 @@ export default function Swap({ className }: { className?: string }) {
   // trade: Trade<Currency, Currency, TradeType> | undefined,  
   // allowedSlippage: Percent, // in bips
   // leverageFactor: string
-
-  const handleLeverageCreation = useCallback(async () => {
+  const handleLeverageCreation = useCallback(() => {
     if (!leverageCallback) {
       return
     }
     setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined, showLeverageConfirm: true })
-    try {
-      await leverageCallback()
-    } catch(err) {
-      console.log("handleLeverageCreation err: ", err)
-    }
+    leverageCallback().then((hash: any) => {
+      setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash, showLeverageConfirm: false })
+      sendEvent({
+        category: 'Swap',
+        action: 'transaction hash',
+        label: hash,
+      })
+      sendEvent({
+        category: 'Swap',
+        action:
+          recipient === null
+            ? 'Swap w/o Send'
+            : (recipientAddress ?? recipient) === account
+              ? 'Swap w/o Send + recipient'
+              : 'Swap w/ Send',
+        label: [TRADE_STRING, trade?.inputAmount?.currency?.symbol, trade?.outputAmount?.currency?.symbol, 'MH'].join(
+          '/'
+        ),
+      })
+    })
+    .catch((error: any) => {
+      console.log("leverageCreationError: ", error)
+      setSwapState({
+        attemptingTxn: false,
+        tradeToConfirm,
+        showConfirm,
+        swapErrorMessage: "Failed creation",//error.message,
+        txHash: undefined,
+        showLeverageConfirm: false,
+      })
+    })
   }, [
-
+    leverageCallback, leverageTrade
   ])
   // errors
   const [swapQuoteReceivedDate, setSwapQuoteReceivedDate] = useState<Date | undefined>()
@@ -680,7 +716,6 @@ export default function Swap({ className }: { className?: string }) {
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
   )
 
-  // const leveragePositions: LeveragePositionDetails[] = []
 
   const [inputCurrency, outputCurrency] = [currencies[Field.INPUT] ? currencies[Field.INPUT] : undefined, currencies[Field.OUTPUT] ? currencies[Field.OUTPUT] : undefined]
   const [timePeriod, setTimePeriod] = useAtom(pageTimePeriodAtom)
@@ -719,52 +754,54 @@ export default function Swap({ className }: { className?: string }) {
     errorPolicy: 'all',
   })
 
-  // fake data
-  const leveragePositions: LeveragePositionDetails[] = [
-    {
-      token0: inputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-      token1: outputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-      tokenId: BigNumber.from(1),
-      totalLiquidity: BigNumber.from(1),
-      totalDebt: BigNumber.from(1),
-      totalDebtInput: BigNumber.from(1),
-      borrowedLiquidity: BigNumber.from(1),
-      isToken0: true,
-      openBlock: 1,
-      tickStart: 1,
-      tickFinish: 1,
-      timeUntilFinish: 1
-    },
-    {
-      token0: inputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-      token1: outputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-      tokenId: BigNumber.from(2),
-      totalLiquidity: BigNumber.from(1),
-      totalDebt: BigNumber.from(1),
-      totalDebtInput: BigNumber.from(1),
-      borrowedLiquidity: BigNumber.from(1),
-      isToken0: true,
-      openBlock: 1,
-      tickStart: 1,
-      tickFinish: 1,
-      timeUntilFinish: 1
-    },
-    {
-      token0: inputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-      token1: outputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-      tokenId: BigNumber.from(3),
-      totalLiquidity: BigNumber.from(1),
-      totalDebt: BigNumber.from(1),
-      totalDebtInput: BigNumber.from(1),
-      borrowedLiquidity: BigNumber.from(1),
-      isToken0: true,
-      openBlock: 1,
-      tickStart: 1,
-      tickFinish: 1,
-      timeUntilFinish: 1
-    }
-  ]
-  console.log('trade', trade); 
+  const leveragePositions = useLeveragePositions(leverageManagerAddress ?? undefined, account, currencies)
+
+
+  // const leveragePositions: LeveragePositionDetails[] = [
+  //   {
+  //     token0: inputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+  //     token1: outputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+  //     tokenId: BigNumber.from(1),
+  //     totalLiquidity: BigNumber.from(1),
+  //     totalDebt: BigNumber.from(1),
+  //     totalDebtInput: BigNumber.from(1),
+  //     borrowedLiquidity: BigNumber.from(1),
+  //     isToken0: true,
+  //     openBlock: 1,
+  //     tickStart: 1,
+  //     tickFinish: 1,
+  //     timeUntilFinish: 1
+  //   },
+  //   {
+  //     token0: inputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+  //     token1: outputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+  //     tokenId: BigNumber.from(2),
+  //     totalLiquidity: BigNumber.from(1),
+  //     totalDebt: BigNumber.from(1),
+  //     totalDebtInput: BigNumber.from(1),
+  //     borrowedLiquidity: BigNumber.from(1),
+  //     isToken0: true,
+  //     openBlock: 1,
+  //     tickStart: 1,
+  //     tickFinish: 1,
+  //     timeUntilFinish: 1
+  //   },
+  //   {
+  //     token0: inputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+  //     token1: outputAddress ?? "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+  //     tokenId: BigNumber.from(3),
+  //     totalLiquidity: BigNumber.from(1),
+  //     totalDebt: BigNumber.from(1),
+  //     totalDebtInput: BigNumber.from(1),
+  //     borrowedLiquidity: BigNumber.from(1),
+  //     isToken0: true,
+  //     openBlock: 1,
+  //     tickStart: 1,
+  //     tickFinish: 1,
+  //     timeUntilFinish: 1
+  //   }
+  // ]
+  // console.log('trade', trade); 
   // const params = {
   //   gasUseEstimateUSD: null,
   //   blockNumber: "0",
@@ -838,6 +875,7 @@ export default function Swap({ className }: { className?: string }) {
                     fiatValueInput={fiatValueTradeInput}
                     fiatValueOutput={fiatValueTradeOutput}
                     leverageFactor={leverageFactor ?? "1"}
+                    leverageTrade={leverageTrade}
                     />
                   ) : (
                     <ConfirmSwapModal
