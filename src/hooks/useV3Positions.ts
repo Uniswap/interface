@@ -69,6 +69,24 @@ export function useLeveragePositions(leverageManagerAddress: string | undefined,
 
 }
 
+
+export enum PositionState {
+  LOADING,
+  NOT_EXISTS,
+  EXISTS,
+  INVALID
+}
+
+export function useLeveragePosition(leverageManagerAddress: string | undefined, account: string | undefined, tokenId: string | undefined): [PositionState, LeveragePositionDetails | undefined] {
+  const leverageManager = useLeverageManagerContract(leverageManagerAddress)
+  const { result: position, loading, error } = useSingleCallResult(leverageManager, 'getPosition', [account, tokenId])
+  if (loading || error || !position) {
+    return [PositionState.LOADING, undefined]
+  }
+  console.log("levposition:", position)
+  return [PositionState.LOADING, undefined]
+}
+
 function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3PositionsResults {
   const positionManager = useV3NFTPositionManagerContract()
   const inputs = useMemo(() => (tokenIds ? tokenIds.map((tokenId) => [BigNumber.from(tokenId)]) : []), [tokenIds])
@@ -113,10 +131,6 @@ interface UseV3PositionResults {
   position: PositionDetails | undefined
 }
 
-export function useLeveragePosition(leverageManagerAddress: string | undefined, trader: string | undefined, nonce: string | undefined) {
-  const leverageManager = useLeverageManagerContract(leverageManagerAddress)
-  const result = useSingleCallResult(leverageManager, 'getPosition', [trader, nonce])
-}
 
 export function useV3PositionFromTokenId(tokenId: BigNumber | undefined): UseV3PositionResults {
   const position = useV3PositionsFromTokenIds(tokenId ? [tokenId] : undefined)

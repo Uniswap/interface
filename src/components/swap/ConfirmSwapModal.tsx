@@ -12,7 +12,7 @@ import TransactionConfirmationModal, {
   TransactionErrorContent,
 } from '../TransactionConfirmationModal'
 import SwapModalFooter, { LeverageModalFooter } from './SwapModalFooter'
-import SwapModalHeader, { LeverageModalHeader } from './SwapModalHeader'
+import SwapModalHeader, { LeverageCloseModalHeader, LeverageModalHeader } from './SwapModalHeader'
 import { LeverageTrade } from 'state/swap/hooks'
 
 export default function ConfirmSwapModal({
@@ -61,7 +61,7 @@ export default function ConfirmSwapModal({
 
   const modalHeader = useCallback(() => {
     return trade ? (
-      <SwapModalHeader
+      <LeverageCloseModalHeader
         trade={trade}
         shouldLogModalCloseEvent={shouldLogModalCloseEvent}
         setShouldLogModalCloseEvent={setShouldLogModalCloseEvent}

@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, Price, Token } from '@uniswap/sdk-core'
-import { Position, tickToPrice } from '@uniswap/v3-sdk'
+import { FeeAmount, Position, tickToPrice } from '@uniswap/v3-sdk'
 import RangeBadge from 'components/Badge/RangeBadge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverInlineText from 'components/HoverInlineText'
@@ -29,6 +29,8 @@ import { monthYearDayFormatter } from 'utils/formatChartTimes'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import moment from "moment"
 import { BigNumber as BN } from "bignumber.js"
+import ClosePositionModal from 'components/swap/CloseLeveragePositionModal'
+import { useWeb3React } from '@web3-react/core'
 
 const ResponsiveButtonPrimary = styled(SmallButtonPrimary)`
   border-radius: 12px;
@@ -237,6 +239,7 @@ export default function LeveragePositionItem({
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     leverageManagerAddress
    } = useSwapState()
+    const { account } = useWeb3React()
    const swapInputCurrency = useCurrency(inputCurrencyId)
    const swapOutputCurrency = useCurrency(outputCurrencyId)
   const inputIsToken0 = useMemo(() => {
@@ -260,10 +263,21 @@ export default function LeveragePositionItem({
   const handlePremiumConfirmDismiss = ()=>{
     setshowPremiumConfirm(false); 
   }
+  const [poolState, pool] = usePool(currency0 ?? undefined, currency1?? undefined, FeeAmount.LOW)
 
   // enter token0 price in token1
-  const enterPrice = currency0?.wrapped && currency1?.wrapped ? tickToPrice(currency0.wrapped, currency1.wrapped, Number(creationTick)) : undefined
+  const enterPrice = currency0?.wrapped && currency1?.wrapped 
+  ? tickToPrice(currency0.wrapped, currency1.wrapped, Number(creationTick)) : undefined
+
+  // token0 price.
+  const currentPrice = pool?.token0Price.toSignificant(3)
   
+  const PNL = useMemo(() => {
+    let x = isToken0 ? Number(currentPrice) : 1/Number(currentPrice)
+    console.log("x", x, totalDebtInput, totalLiquidity, currentPrice, enterPrice)
+    return Number(totalLiquidity)*(Number(currentPrice) - Number(enterPrice?.toFixed(10))) * (x) - Number(totalDebtInput)
+  }, [pool, enterPrice])
+
   const txHash = ""
   const recipient = ""
   const attemptingTxn = true;
@@ -285,7 +299,7 @@ export default function LeveragePositionItem({
                   </ExtentsText>
                   <Trans>
                     <span>
-                      {enterPrice?.toSignificant(4)}{' '}
+                      {enterPrice?.toSignificant(3) ?? "-"}{' '}
                     </span>
                     <HoverInlineText text={currency1?.symbol} /> per <HoverInlineText text={currency0?.symbol ?? ''} />
                   </Trans>
@@ -302,7 +316,7 @@ export default function LeveragePositionItem({
                   </ExtentsText>
                   <Trans>
                     <span>
-                      {"1.00"}{' '}
+                      {pool?.token0Price.toSignificant(3) ?? "-"}{' '}
                     </span>
                     <HoverInlineText text={currency1?.symbol} /> per{' '}
                     <HoverInlineText maxCharacters={10} text={currency0?.symbol} />
@@ -334,20 +348,10 @@ export default function LeveragePositionItem({
             </ExtentsText>
             <Trans>
               <span>
-                {"+2.00"}{'UDSC '}
+                {(new BN(PNL).toFixed(3) ?? "-") + ` ${isToken0 ? currency1?.symbol : currency0?.symbol}`}
               </span>
             </Trans>
           </RangeText>
-          {/*<RangeText>
-            <ExtentsText>
-              <Trans>Current Price:</Trans>
-            </ExtentsText>
-            <Trans>
-              <span>
-                {"2.00"}{' '}
-              </span>
-            </Trans>
-          </RangeText>*/}
         </AutoRow>
         <AutoRow gap="8px">
           <ResponsiveButtonPrimary 
@@ -355,24 +359,16 @@ export default function LeveragePositionItem({
            onClick={() => setshowConfirm(!showConfirm)}>
             <Trans>Close Position</Trans>
           </ResponsiveButtonPrimary>
-
-          <ConfirmLeverageSwapModal
+          <ClosePositionModal
             isOpen={showConfirm}
-            // trade={trade}
-            // originalTrade={tradeToConfirm}
-            // onAcceptChanges={handleAcceptChanges}
-            attemptingTxn={attemptingTxn}
-            txHash={txHash}
-            recipient={recipient}
-            // allowedSlippage={allowedSlippage}
-            // onConfirm={handleSwap}
-            // swapErrorMessage={swapErrorMessage}
+            trader={account}
+            leverageManagerAddress={leverageManagerAddress ?? undefined}
+            tokenId={tokenId}
             onDismiss={handleConfirmDismiss}
-            // swapQuoteReceivedDate={swapQuoteReceivedDate}
-            // fiatValueInput={fiatValueTradeInput}
-            // fiatValueOutput={fiatValueTradeOutput}
+            onAcceptChanges={() => {}}
+            onConfirm={() => {}}
           />
-          <ConfirmAddPremiumModal
+          {/* <ConfirmAddPremiumModal
             isOpen={showPremiumConfirm}
             // trade={trade}
             // originalTrade={tradeToConfirm}
@@ -387,7 +383,7 @@ export default function LeveragePositionItem({
             // swapQuoteReceivedDate={swapQuoteReceivedDate}
             // fiatValueInput={fiatValueTradeInput}
             // fiatValueOutput={fiatValueTradeOutput}
-          />
+          /> */}
 
           <ResponsiveButtonPrimary onClick={() => setshowConfirm(!showPremiumConfirm)} >
             <Trans>Add Premium</Trans>
