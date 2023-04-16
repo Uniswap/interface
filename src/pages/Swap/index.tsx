@@ -1150,7 +1150,7 @@ export default function Swap({ className }: { className?: string }) {
                           id="leverage-button"
                           disabled={
                             leverageTrade.state === LeverageTradeState.LOADING||
-                            !inputError
+                            inputError
                           }
 
                         >
