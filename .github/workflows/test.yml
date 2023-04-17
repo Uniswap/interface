@@ -1,5 +1,9 @@
 name: Test
 
+# Many build steps have their own caches, so each job has its own cache to improve subsequent build times.
+# Build tools are configured to cache cache to node_modules/.cache, so this is cached independently of node_modules.
+# See https://jongleberry.medium.com/speed-up-your-ci-and-dx-with-node-modules-cache-ac8df82b7bb0.
+
 on:
   push:
     branches:

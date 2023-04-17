@@ -4,10 +4,10 @@
     "allowSyntheticDefaultImports": true,
     "alwaysStrict": true,
     "baseUrl": "src",
+    "composite": true,
     "downlevelIteration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "incremental": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -29,5 +29,5 @@
     "useUnknownInCatchVariables": false
   },
   "exclude": ["node_modules", "cypress"],
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "src/**/*.json"]
 }
