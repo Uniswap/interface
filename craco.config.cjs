@@ -1,6 +1,7 @@
 /* eslint-env node */
 const { VanillaExtractPlugin } = require('@vanilla-extract/webpack-plugin')
 const { execSync } = require('child_process')
+var HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { DefinePlugin } = require('webpack')
 
@@ -48,7 +49,12 @@ module.exports = {
     },
   },
   webpack: {
-    plugins: [new VanillaExtractPlugin({ identifiers: 'short' })],
+    plugins: [
+      new VanillaExtractPlugin({ identifiers: 'short' }),
+      // Cache Webpack output to speed up subsequent builds.
+      // Webpack 4 doesn't support native caching (eg cache: 'filesystem'), so we use a third-party plugin.
+      new HardSourceWebpackPlugin({ cacheDirectory: 'node_modules/.cache/webpack' }),
+    ],
     configure: (webpackConfig) => {
       webpackConfig.plugins = webpackConfig.plugins.map((plugin) => {
         // Extend process.env with dynamic values (eg commit hash).
@@ -68,8 +74,8 @@ module.exports = {
         return plugin
       })
 
-      // We're currently on Webpack 4.x which doesn't support the `exports` field in package.json.
-      // Instead, we need to manually map the import path to the correct exports path (eg dist or build folder).
+      // Manually map the import path to the correct exports path (eg dist or build folder).
+      // Webpack 4 doesn't support the `exports` field in package.json, so we map as a workaround.
       // See https://github.com/webpack/webpack/issues/9509.
       webpackConfig.resolve.alias['@uniswap/conedison'] = '@uniswap/conedison/dist'
 
