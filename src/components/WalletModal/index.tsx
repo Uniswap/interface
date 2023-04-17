@@ -160,7 +160,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
         dispatch(updateSelectedWallet({ wallet: connection.type }))
         if (drawerOpenRef.current) toggleWalletDrawer()
       } catch (error) {
-        console.debug(`web3-react connection error: ${error}`)
+        console.debug(`web3-react connection error: ${JSON.stringify(error)}`)
         // TODO(WEB-3162): re-add special treatment for already-pending injected errors
         if (didUserReject(connection, error)) {
           setPendingConnection(undefined)

@@ -1,5 +1,9 @@
 name: Test
 
+# Many build steps have their own caches, so each job has its own cache to improve subsequent build times.
+# Build tools are configured to cache cache to node_modules/.cache, so this is cached independently of node_modules.
+# See https://jongleberry.medium.com/speed-up-your-ci-and-dx-with-node-modules-cache-ac8df82b7bb0.
+
 on:
   push:
     branches:
@@ -14,6 +18,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
+      - uses: actions/cache@v3
+        id: eslint-cache
+        with:
+          path: node_modules/.cache
+          key: ${{ runner.os }}-eslint-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-eslint-${{ hashFiles('**/yarn.lock') }}-
       - run: yarn lint
   
   typecheck:
@@ -21,6 +31,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
+      - uses: actions/cache@v3
+        id: tsc-cache
+        with:
+          path: node_modules/.cache
+          key: ${{ runner.os }}-tsc-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-tsc-${{ hashFiles('**/yarn.lock') }}-
       - run: yarn prepare
       - run: yarn typecheck
 
@@ -36,6 +52,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
+      - uses: actions/cache@v3
+        id: jest-cache
+        with:
+          path: node_modules/.cache
+          key: ${{ runner.os }}-jest-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-jest-${{ hashFiles('**/yarn.lock') }}-
       - run: yarn prepare
       - run: yarn test
       - uses: codecov/codecov-action@v3
@@ -49,9 +71,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
+      - uses: actions/cache@v3
+        id: build-cache
+        with:
+          path: node_modules/.cache
+          key: ${{ runner.os }}-build-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-build-${{ hashFiles('**/yarn.lock') }}-
       - run: yarn prepare
       - run: yarn build
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: build
           path: build
@@ -63,31 +91,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: build
           path: build
       - run: yarn test:size
 
 
-  cypress-build:
-    runs-on: ubuntu-latest
-    container: cypress/browsers:node-18.14.1-chrome-111.0.5563.64-1-ff-111.0-edge-111.0.1661.43-1
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup
-      - uses: actions/cache@v3
-        id: cypress-cache
-        with:
-          path: /root/.cache/Cypress
-          key: ${{ runner.os }}-cypress-${{ hashFiles('yarn.lock') }}
-      - if: steps.cypress-cache.outputs.cache-hit != 'true'
-        run: |
-          yarn cypress install
-          yarn cypress info
-
   cypress-test-matrix:
-    needs: [build, cypress-build]
+    needs: [build]
     runs-on: ubuntu-latest
     container: cypress/browsers:node-18.14.1-chrome-111.0.5563.64-1-ff-111.0-edge-111.0.1661.43-1
     strategy:
@@ -97,17 +109,20 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - uses: actions/download-artifact@v2
-        with:
-          name: build
-          path: build
+
       - uses: actions/cache@v3
         id: cypress-cache
         with:
           path: /root/.cache/Cypress
-          key: ${{ runner.os }}-cypress-${{ hashFiles('yarn.lock') }}
-      - if: steps.cypress-cache.outputs.cache-hit != 'true'
-        run: yarn cypress install
+          key: ${{ runner.os }}-cypress
+      - run: |
+          yarn cypress install
+          yarn cypress info
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: build
 
       - uses: cypress-io/github-action@v4
         with:
