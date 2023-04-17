@@ -7,16 +7,16 @@ import { PopupContent } from '../../state/application/reducer'
 import FailedNetworkSwitchPopup from './FailedNetworkSwitchPopup'
 import TransactionPopup from './TransactionPopup'
 
-const StyledClose = styled(X)<{ padding: number }>`
+const StyledClose = styled(X)<{ $padding: number }>`
   position: absolute;
-  right: ${({ padding }) => `${padding}px`};
-  top: ${({ padding }) => `${padding}px`};
+  right: ${({ $padding }) => `${$padding}px`};
+  top: ${({ $padding }) => `${$padding}px`};
 
   :hover {
     cursor: pointer;
   }
 `
-const Popup = css<{ show: boolean }>`
+const PopupCss = css<{ show: boolean }>`
   display: inline-block;
   width: 100%;
   visibility: ${({ show }) => (show ? 'visible' : 'hidden')};
@@ -37,12 +37,12 @@ const Popup = css<{ show: boolean }>`
 `
 
 const TransactionPopupContainer = styled.div`
-  ${Popup}
+  ${PopupCss}
   padding: 2px 0px;
 `
 
 const FailedSwitchNetworkPopupContainer = styled.div<{ show: boolean }>`
-  ${Popup}
+  ${PopupCss}
   padding: 20px 35px 20px 20px;
 `
 
