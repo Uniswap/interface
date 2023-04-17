@@ -10,9 +10,4 @@ export function useMgtmEnabled(): boolean {
   return useMgtmFlag() === BaseVariant.Enabled
 }
 
-export function useMGTMMicrositeEnabled() {
-  const mgtmEnabled = useMgtmEnabled()
-  return useBaseFlag(FeatureFlag.walletMicrosite) === BaseVariant.Enabled && mgtmEnabled
-}
-
 export { BaseVariant as MgtmVariant }
