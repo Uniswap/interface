@@ -76,7 +76,7 @@ export default function LeveragePositionsList({
   setUserHideClosedPositions,
   userHideClosedPositions
 }: LeveragePositionListProps) {
-  console.log('positions here lev', positions)
+  // console.log('levpositions', positions)
   return (
     <>
       <DesktopHeader>

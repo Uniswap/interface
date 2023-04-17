@@ -8,6 +8,8 @@ import styled from 'styled-components/macro'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
 import { HeaderRow, LoadedRow, LoadingRow } from './TokenRow'
+// import { PHeaderRow, PLoadedRow, PLoadingRow } from './PairsRow'
+
 import { PHeaderRow, PLoadedRow, PLoadingRow } from './PairsRow'
 import { CallStateResult, useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useLeverageManagerContract, useTokenContract } from 'hooks/useContract'
@@ -83,7 +85,7 @@ const LoadingRows = ({ rowCount }: { rowCount: number }) => (
 function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
   return (
     <GridContainer>
-      <PHeaderRow />
+      {/* <PHeaderRow /> */}
       <TokenDataContainer>
         <LoadingRows rowCount={rowCount} />
       </TokenDataContainer>
@@ -175,7 +177,7 @@ export default function TokenTable() {
   } else {
     return (
       <GridContainer>
-        <PHeaderRow />
+        {/* <PHeaderRow /> */}
         <TokenDataContainer>
           {_tokens.map(
             ({token0, token1}) =>

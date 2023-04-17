@@ -11,10 +11,12 @@ import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,
 } from '../TransactionConfirmationModal'
-import SwapModalFooter, { LeverageModalFooter } from './SwapModalFooter'
+import SwapModalFooter, { CloseLeverageModalFooter, LeverageModalFooter } from './SwapModalFooter'
 import SwapModalHeader, { LeverageModalHeader } from './SwapModalHeader'
 import { LeverageTrade } from 'state/swap/hooks'
 import { useLeveragePosition } from 'hooks/useV3Positions'
+import { CloseLeveragePositionDetails } from './AdvancedSwapDetails'
+
 
 export default function ClosePositionModal({
   trader,
@@ -37,6 +39,8 @@ export default function ClosePositionModal({
   // and an event triggered by modal closing should be logged.
   const [shouldLogModalCloseEvent, setShouldLogModalCloseEvent] = useState(false)
 
+  // console.log("args: ", trader, isOpen, tokenId, leverageManagerAddress)
+
   const [positionState, position] = useLeveragePosition(leverageManagerAddress, trader, tokenId)
 
 
@@ -44,16 +48,16 @@ export default function ClosePositionModal({
     if (isOpen) setShouldLogModalCloseEvent(true)
     onDismiss()
   }, [isOpen, onDismiss])
+  // console.log("postionState: ", position)
 
   const modalHeader = useCallback(() => {
-    return (<div>
-
-    </div>
+    return (
+      <CloseLeveragePositionDetails leverageTrade={position}/>
     )
   }, [onAcceptChanges, shouldLogModalCloseEvent])
 
   const modalBottom = useCallback(() => {
-    return (<div></div>)
+    return (<CloseLeverageModalFooter leverageManagerAddress={leverageManagerAddress} tokenId={tokenId} trader={trader}/>)
   }, [
     onConfirm
   ])
@@ -61,7 +65,7 @@ export default function ClosePositionModal({
   // text to show while loading
   const pendingText = (
     <Trans>
-      text here
+      Loading...
     </Trans>
   )
 

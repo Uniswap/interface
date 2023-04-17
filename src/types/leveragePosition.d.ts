@@ -1,6 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { Token } from '@uniswap/sdk-core'
 
 export interface LeveragePositionDetails {
+  leverageManagerAddress: string | undefined
+  token0: Token | undefined
+  token1: Token | undefined
   tokenId: string
   totalLiquidity: string // totalPosition
   totalDebt: string // total debt in output token

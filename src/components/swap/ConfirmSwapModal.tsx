@@ -61,7 +61,7 @@ export default function ConfirmSwapModal({
 
   const modalHeader = useCallback(() => {
     return trade ? (
-      <LeverageCloseModalHeader
+      <SwapModalHeader
         trade={trade}
         shouldLogModalCloseEvent={shouldLogModalCloseEvent}
         setShouldLogModalCloseEvent={setShouldLogModalCloseEvent}
