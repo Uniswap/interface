@@ -1,22 +1,22 @@
 import { useEffect } from 'react'
 import { X } from 'react-feather'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components/macro'
 
 import { useRemovePopup } from '../../state/application/hooks'
 import { PopupContent } from '../../state/application/reducer'
 import FailedNetworkSwitchPopup from './FailedNetworkSwitchPopup'
 import TransactionPopup from './TransactionPopup'
 
-const StyledClose = styled(X)<{ isTransactionPopup: boolean }>`
+const StyledClose = styled(X)<{ padding: number }>`
   position: absolute;
-  right: ${({ isTransactionPopup }) => (isTransactionPopup ? '16px' : '20px')};
-  top: ${({ isTransactionPopup }) => (isTransactionPopup ? '16px' : '20px')};
+  right: ${({ padding }) => `${padding}px`};
+  top: ${({ padding }) => `${padding}px`};
 
   :hover {
     cursor: pointer;
   }
 `
-const Popup = styled.div<{ isTransactionPopup: boolean; show: boolean }>`
+const Popup = css<{ show: boolean }>`
   display: inline-block;
   width: 100%;
   visibility: ${({ show }) => (show ? 'visible' : 'hidden')};
@@ -24,17 +24,26 @@ const Popup = styled.div<{ isTransactionPopup: boolean; show: boolean }>`
   position: relative;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 16px;
-  padding: ${({ isTransactionPopup }) => (!isTransactionPopup ? '20px 35px 20px 20px' : '2px 0px')};
   overflow: hidden;
   box-shadow: ${({ theme }) => theme.deepShadow};
   transition: ${({ theme }) => `visibility ${theme.transition.duration.fast} ease-in-out`};
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    min-width: 290px;
-    &:not(:last-of-type) {
-      margin-right: 20px;
-    }
-  `}
+  min-width: 290px;
+  &:not(:last-of-type) {
+    margin-right: 20px;
+  }
+`}
+`
+
+const TransactionPopupContainer = styled.div`
+  ${Popup}
+  padding: 2px 0px;
+`
+
+const FailedSwitchNetworkPopupContainer = styled.div<{ show: boolean }>`
+  ${Popup}
+  padding: 20px 35px 20px 20px;
 `
 
 export default function PopupItem({
@@ -60,19 +69,21 @@ export default function PopupItem({
       clearTimeout(timeout)
     }
   }, [popKey, removeAfterMs, removePopup])
-  const isTxnPopup = 'txn' in content
 
-  let popupContent
-  if (isTxnPopup) {
-    popupContent = <TransactionPopup hash={content.txn.hash} />
+  if ('txn' in content) {
+    return (
+      <TransactionPopupContainer show={true}>
+        <StyledClose padding={16} color={theme.textSecondary} onClick={() => removePopup(popKey)} />
+        <TransactionPopup hash={content.txn.hash} />
+      </TransactionPopupContainer>
+    )
   } else if ('failedSwitchNetwork' in content) {
-    popupContent = <FailedNetworkSwitchPopup chainId={content.failedSwitchNetwork} />
+    return (
+      <FailedSwitchNetworkPopupContainer show={true}>
+        <StyledClose padding={20} color={theme.textSecondary} onClick={() => removePopup(popKey)} />
+        <FailedNetworkSwitchPopup chainId={content.failedSwitchNetwork} />
+      </FailedSwitchNetworkPopupContainer>
+    )
   }
-
-  return (
-    <Popup isTransactionPopup={isTxnPopup} show={!!popupContent}>
-      <StyledClose isTransactionPopup={isTxnPopup} color={theme.textSecondary} onClick={() => removePopup(popKey)} />
-      {popupContent}
-    </Popup>
-  )
+  return null
 }
