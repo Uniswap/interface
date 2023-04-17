@@ -73,14 +73,14 @@ export default function PopupItem({
   if ('txn' in content) {
     return (
       <TransactionPopupContainer show={true}>
-        <StyledClose padding={16} color={theme.textSecondary} onClick={() => removePopup(popKey)} />
+        <StyledClose $padding={16} color={theme.textSecondary} onClick={() => removePopup(popKey)} />
         <TransactionPopup hash={content.txn.hash} />
       </TransactionPopupContainer>
     )
   } else if ('failedSwitchNetwork' in content) {
     return (
       <FailedSwitchNetworkPopupContainer show={true}>
-        <StyledClose padding={20} color={theme.textSecondary} onClick={() => removePopup(popKey)} />
+        <StyledClose $padding={20} color={theme.textSecondary} onClick={() => removePopup(popKey)} />
         <FailedNetworkSwitchPopup chainId={content.failedSwitchNetwork} />
       </FailedSwitchNetworkPopupContainer>
     )
