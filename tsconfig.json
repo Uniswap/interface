@@ -28,10 +28,9 @@
     "types": ["jest"],
     "useUnknownInCatchVariables": false
   },
-  "exclude": ["node_modules", "cypress"],
+  "exclude": ["node_modules"],
   "include": ["src/**/*", "src/**/*.json"],
   "watchOptions": {
-    "excludeDirectories": ["node_modules"],
-    "excludeFiles": ["node_modules/**"]
+    "excludeDirectories": ["node_modules", "build"]
   }
 }

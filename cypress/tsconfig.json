@@ -3,5 +3,5 @@
   "compilerOptions": {
     "types": ["cypress"]
   },
-  "include": ["**/*.ts"]
+  "include": ["cypress/**/*.ts"]
 }
