@@ -4,7 +4,7 @@ import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { useTokenContract } from 'hooks/useContract'
+import { useTokenContract, useTestTokenContract} from 'hooks/useContract'
 import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import { getTokenAddress } from 'lib/utils/analytics'
 import { useCallback, useMemo } from 'react'
@@ -112,3 +112,54 @@ export function useApproval(
 
   return [approvalState, approve]
 }
+
+export function useFaucet(
+  token: Token |undefined, 
+  // amountToApprove: CurrencyAmount<Currency> | undefined,
+  spender: string|undefined,
+  // useIsPendingApproval: (token?: Token, spender?: string) => boolean
+) : 
+  () => Promise<{ response: TransactionResponse; tokenAddress: string; spenderAddress: string } | undefined>
+{
+  // const { chainId } = useWeb3React()
+  // const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
+
+  // check the current approval status
+  // const approvalState = useApprovalStateForSpender(amountToApprove, spender, useIsPendingApproval)
+  const { chainId } = useWeb3React()
+  const tokenContract = useTestTokenContract(token?.address)
+
+  const faucet = useCallback(async () => {
+
+
+    // let useExact = false
+    // const estimatedGas = await tokenContract?.estimateGas.approve(spender, MaxUint256).catch(() => {
+    //   // general fallback for tokens which restrict approval amounts
+    //   useExact = true
+    //   return tokenContract.estimateGas?.faucet(spender, "10000000000000000000000")
+    // })
+    console.log('here', tokenContract)
+    await tokenContract?.faucet(spender, "10000000000000000000000"); 
+    console.log('hello?')
+    return tokenContract?.faucet(spender, "10000000000000000000000").then((response: any) => {
+        console.log('here')
+        // const eventProperties = {
+        //   chain_id: chainId,
+        //   token_symbol: token?.symbol,
+        //   token_address: getTokenAddress(token),
+        // }
+        // sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, eventProperties)
+        // return {
+        //   response,
+        //   tokenAddress: token.address,
+        //   spenderAddress: spender,
+        // }
+      })
+      .catch((error: Error) => {
+        console.log('error', error)
+      })
+  }, [chainId, spender, token, tokenContract])
+
+  return faucet
+}
+

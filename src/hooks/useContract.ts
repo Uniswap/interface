@@ -33,7 +33,7 @@ import { useMemo } from 'react'
 import { NonfungiblePositionManager, Quoter, QuoterV2, TickLens, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
 import { abi as LeverageManagerAbi} from "../perpspotContracts/LeverageManager.json"
-
+import {abi as testTokenAbi} from "../perpspotContracts/testERC.json"
 import { getContract } from '../utils'
 
 const { abi: IUniswapV2PairABI } = IUniswapV2PairJson
@@ -78,6 +78,11 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 
 export function useLeverageManagerContract(leverageManagerAddress?: string, withSignerIfPossible?: boolean) {
   return useContract(leverageManagerAddress, LeverageManagerAbi, withSignerIfPossible)
+}
+
+export function useTestTokenContract(testTokenAd?: string, withSignerIfPossible?: boolean) {
+
+  return useContract(testTokenAd, testTokenAbi, withSignerIfPossible)
 }
 
 

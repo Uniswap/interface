@@ -104,7 +104,7 @@ import { usePoolAddressCache } from 'components/WalletDropdown/MiniPortfolio/Poo
 import { computePoolAddress } from 'hooks/usePools'
 import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import { ApprovalState, useApproval } from 'lib/hooks/useApproval'
-import { useApproveCallback } from 'hooks/useApproveCallback'
+import { useApproveCallback, useFaucetCallback} from 'hooks/useApproveCallback'
 import ConfirmLeverageSwapModal from 'components/swap/confirmLeverageSwapModal'
 import { BigNumber as BN } from "bignumber.js";
 import { useLeveragePositions } from 'hooks/useV3Positions'
@@ -234,6 +234,8 @@ function largerPercentValue(a?: Percent, b?: Percent) {
   }
   return undefined
 }
+
+
 
 const TRADE_STRING = 'SwapRouter';
 let nonce = 0 
@@ -504,7 +506,22 @@ export default function Swap({ className }: { className?: string }) {
   }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol])
   const [leverageApprovalState, approveLeverageManager] = useApproveCallback(parsedAmounts[Field.INPUT], leverageManagerAddress ?? undefined)
   // const updateLeverageAllowance = () => {}
+  const faucet_ = useFaucetCallback()
 
+  const faucet = useCallback(async() =>{
+
+    const token = (parsedAmounts[Field.INPUT]?.currency.isToken ? (parsedAmounts[Field.INPUT]?.currency as Token) : undefined)
+    try{
+      faucet_()
+      console.log('wtfff')
+    }catch (err){
+      console.log('err', err)
+    }
+
+
+  
+// loadedInputCurrency, loadedOutputCurrency
+  }, [currencies])
   const updateLeverageAllowance = useCallback(async () => {
     try {
       await approveLeverageManager()
@@ -853,6 +870,20 @@ export default function Swap({ className }: { className?: string }) {
           showCancel={true}
         />
         <PageWrapper>
+        {
+          inputCurrency && (
+            <SmallMaxButton onClick={() => faucet()} width="20%">
+              <Trans>Faucet {inputCurrency.symbol}</Trans>
+            </SmallMaxButton>
+            )
+        }
+        {
+          outputCurrency && (
+            <SmallMaxButton onClick={() => onLeverageFactorChange("10")} width="20%">
+              <Trans>Faucet {outputCurrency.symbol}</Trans>
+            </SmallMaxButton>
+            )
+        }
           {swapWidgetEnabled ? (
             <Widget
               defaultTokens={{

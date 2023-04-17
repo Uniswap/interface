@@ -1,5 +1,5 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { ApprovalState, useApproval } from 'lib/hooks/useApproval'
+import { Currency, CurrencyAmount , Token} from '@uniswap/sdk-core'
+import { ApprovalState, useApproval, useFaucet } from 'lib/hooks/useApproval'
 import { useCallback } from 'react'
 
 import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
@@ -25,4 +25,26 @@ export function useApproveCallback(
 ): [ApprovalState, () => Promise<void>] {
   const [approval, getApproval] = useApproval(amountToApprove, spender, useHasPendingApproval)
   return [approval, useGetAndTrackApproval(getApproval)]
+}
+
+export function useFaucetCallback(
+  token?: Token,
+  spender?: string
+  ):()=>Promise<void>{
+  const useFaucet_ = useFaucet(token, spender)
+  const addTransaction = useTransactionAdder()
+
+  return useCallback(() => {
+    return useFaucet_().then((pending) => {
+      if (pending) {
+        const { response, tokenAddress, spenderAddress: spender } = pending
+        addTransaction(response, { type: TransactionType.APPROVAL, tokenAddress, spender })
+      }
+    })
+  }, [ useFaucet_])
+
+
+  // return useFaucet_; 
+
+  
 }
