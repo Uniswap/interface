@@ -16,6 +16,8 @@ import { RowBetween, RowFixed } from '../Row'
 import { MouseoverTooltip } from '../Tooltip'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import { LeverageTrade } from 'state/swap/hooks'
+import { LeveragePositionDetails } from 'types/leveragePosition'
+import { BigNumber as BN } from "bignumber.js"
 
 const StyledCard = styled(Card)`
   padding: 0;
@@ -87,8 +89,8 @@ export function AdvancedSwapDetails({
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
             <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-              {leverageTrade?.expectedOutput
-                ? `${leverageTrade?.expectedOutput}  ${trade.outputAmount.currency.symbol}`
+              {trade?.outputAmount.toFixed(3)
+                ? `${trade?.outputAmount.toFixed(3)}  ${trade.outputAmount.currency.symbol}`
                 : '-'}
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
@@ -161,6 +163,71 @@ export function AdvancedSwapDetails({
             </TextWithLoadingPlaceholder>
           </RowBetween>
         )}
+      </AutoColumn>
+    </StyledCard>
+  )
+}
+
+export function CloseLeveragePositionDetails({
+  leverageTrade // user defined slippage.
+}: {
+  leverageTrade: LeveragePositionDetails | undefined,
+  // allowedSlippage: Percent | undefined
+}) {
+  const theme = useTheme()
+  const { chainId } = useWeb3React()
+  const nativeCurrency = useNativeCurrency()
+
+  // console.log("leveragePositionClose", leverageTrade)
+
+  const inputIsToken0 = !leverageTrade?.isToken0
+  
+  return (
+    <StyledCard>
+      <AutoColumn gap="sm">
+        <RowBetween>
+          <RowFixed>
+            <MouseoverTooltip
+              text={
+                <Trans>
+                  Total position size in the output token of the leverage trade
+                </Trans>
+              }
+              // disableHover={hideInfoTooltips}
+            >
+              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                <Trans>Total Position</Trans>
+              </ThemedText.DeprecatedSubHeader>
+            </MouseoverTooltip>
+          </RowFixed>
+          <TextWithLoadingPlaceholder syncing={false} width={65}>
+            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+              {leverageTrade?.totalLiquidity
+                ? `${new BN(leverageTrade?.totalLiquidity ?? "").toString()}  ${inputIsToken0 ? leverageTrade?.token1?.symbol : leverageTrade?.token0?.symbol}`
+                : '-'}
+            </ThemedText.DeprecatedBlack>
+          </TextWithLoadingPlaceholder>
+        </RowBetween>
+        <RowBetween>
+          <RowFixed>
+            <MouseoverTooltip
+              text={<Trans>Total debt of the position</Trans>}
+              // disableHover={hideInfoTooltips}
+            >
+              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                <Trans>Total Debt</Trans>
+              </ThemedText.DeprecatedSubHeader>
+            </MouseoverTooltip>
+          </RowFixed>
+          <TextWithLoadingPlaceholder syncing={false} width={50}>
+            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+              {leverageTrade?.totalDebtInput
+                ? `${new BN(leverageTrade?.totalDebtInput ?? "").toString()}  ${inputIsToken0 ? leverageTrade?.token0?.symbol : leverageTrade?.token1?.symbol}`
+                : '-'}
+            </ThemedText.DeprecatedBlack>
+          </TextWithLoadingPlaceholder>
+        </RowBetween>
+        <Separator />
       </AutoColumn>
     </StyledCard>
   )

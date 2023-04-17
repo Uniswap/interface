@@ -11,16 +11,40 @@ import {
   getDurationUntilTimestampSeconds,
   getTokenAddress,
 } from 'lib/utils/analytics'
-import { ReactNode } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
 import { useClientSideRouter, useUserSlippageTolerance } from 'state/user/hooks'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
 import { ButtonError } from '../Button'
-import { AutoRow } from '../Row'
-import { SwapCallbackError } from './styleds'
+import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
+import { ResponsiveTooltipContainer, SwapCallbackError } from './styleds'
 import { getTokenPath, RoutingDiagramEntry } from './SwapRoute'
+import { ModalInputPanel } from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
+import Card, { LightCard, OutlineCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import { Checkbox } from 'nft/components/layout/Checkbox'
+import { HideSmall, Separator, ThemedText } from 'theme'
+import { ResponsiveHeaderText, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
+import Slider from 'components/Slider'
+import styled, { keyframes, useTheme } from 'styled-components'
+
+import { ChevronDown, Info } from 'react-feather'
+import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
+import AnimatedDropdown from 'components/AnimatedDropdown'
+import useDebounce from 'hooks/useDebounce'
+import { useLeverageManagerContract } from 'hooks/useContract'
+import { useSingleCallResult } from 'lib/hooks/multicall'
+import { BigNumber as BN } from "bignumber.js"
+import { LoadingOpacityContainer } from 'components/Loader/styled'
+import TradePrice from './TradePrice'
+import { useToken } from 'hooks/Tokens'
+import { formatNumber, formatNumberOrString } from '@uniswap/conedison/format'
+import { NumberType } from '@uniswap/conedison/format'
+import { useLeveragePosition } from 'hooks/useV3Positions'
+import { LoadingRows } from 'components/Loader/styled'
+
 
 interface AnalyticsEventProps {
   trade: InterfaceTrade<Currency, Currency, TradeType>
@@ -164,6 +188,424 @@ export default function SwapModalFooter({
   )
 }
 
+const TransactionDetails = styled.div`
+  position: relative;
+  width: 100%;
+
+`
+const Wrapper = styled(Row)`
+  width: 100%;
+  justify-content: center;
+  border-radius: inherit;
+  padding: 8px 12px;
+  margin-top: 0;
+  min-height: 32px;
+`
+
+const StyledInfoIcon = styled(Info)`
+  height: 16px;
+  width: 16px;
+  margin-right: 4px;
+  color: ${({ theme }) => theme.textTertiary};
+`
+
+const StyledCard = styled(OutlineCard)`
+  padding: 12px;
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+`
+
+const StyledHeaderRow = styled(RowBetween) <{ disabled: boolean; open: boolean }>`
+  padding: 0;
+  align-items: center;
+  cursor: ${({ disabled }) => (disabled ? 'initial' : 'pointer')};
+`
+
+const RotatingArrow = styled(ChevronDown) <{ open?: boolean }>`
+  transform: ${({ open }) => (open ? 'rotate(180deg)' : 'none')};
+  transition: transform 0.1s linear;
+`
+
+const StyledPolling = styled.div`
+  display: flex;
+  height: 16px;
+  width: 16px;
+  margin-right: 2px;
+  margin-left: 10px;
+  align-items: center;
+  color: ${({ theme }) => theme.textPrimary};
+  transition: 250ms ease color;
+
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
+    display: none;
+  `}
+`
+
+const StyledPollingDot = styled.div`
+  width: 8px;
+  height: 8px;
+  min-height: 8px;
+  min-width: 8px;
+  border-radius: 50%;
+  position: relative;
+  background-color: ${({ theme }) => theme.backgroundInteractive};
+  transition: 250ms ease background-color;
+`
+
+const rotate360 = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`
+
+const Spinner = styled.div`
+  animation: ${rotate360} 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
+  transform: translateZ(0);
+  border-top: 1px solid transparent;
+  border-right: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  border-left: 2px solid ${({ theme }) => theme.textPrimary};
+  background: transparent;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  position: relative;
+  transition: 250ms ease border-color;
+  left: -3px;
+  top: -3px;
+`
+
+
+const StyledPriceContainer = styled.button`
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  grid-template-columns: 1fr auto;
+  grid-gap: 0.25rem;
+  display: flex;
+  flex-direction: row;
+  text-align: left;
+  flex-wrap: wrap;
+  padding: 8px 0;
+  user-select: text;
+`
+
+enum DerivedInfoState {
+  LOADING,
+  VALID,
+  INVALID
+}
+// (vars.amount0, vars.amount1)
+function useDerivedLeverageCloseInfo(
+  leverageManager: string | undefined,
+  trader: string | undefined,
+  tokenId: string | undefined,
+  allowedSlippage: string,
+  setState: (state: DerivedInfoState) => void,
+): {
+  token0: string | undefined
+  token1: string | undefined
+  token0Amount: string | undefined
+  token1Amount: string | undefined
+} {
+  const leverageManagerContract = useLeverageManagerContract(leverageManager)
+  const [contractResult, setContractResult] = useState<{
+    closePositionResult: any,
+    token0: any,
+    token1: any
+  }>()
+
+  useEffect(() => {
+    const laggedfxn = async () => {
+      if (!leverageManagerContract || !tokenId || !trader || parseFloat(allowedSlippage) <= 0) {
+        setState(DerivedInfoState.INVALID)
+        return
+      }
+
+      const formattedSlippage = new BN(allowedSlippage).plus(100).shiftedBy(16).toFixed(0)
+      setState(DerivedInfoState.LOADING)
+
+      try {
+
+        const closePositionResult = await leverageManagerContract.callStatic.closePosition(tokenId, trader, formattedSlippage)
+        // const position = await leverageManagerContract.callStatic.getPosition(trader, tokenId)
+        const token0 = await leverageManagerContract.callStatic.token0()
+        const token1 = await leverageManagerContract.callStatic.token1()
+
+        setContractResult({
+          closePositionResult,
+          token0,
+          token1
+        })
+        setState(DerivedInfoState.VALID)
+
+      } catch (error) {
+        console.error('Failed to get close info', error)
+        setState(DerivedInfoState.INVALID)
+      }
+    }
+
+    laggedfxn()
+  }, [leverageManager, trader, tokenId, allowedSlippage])
+
+  const info = useMemo(() => {
+    if (contractResult) {
+      const { closePositionResult, token0, token1 } = contractResult
+      let token0Amount = new BN(closePositionResult[0].toString()).shiftedBy(-18).toFixed(6)
+      let token1Amount = new BN(closePositionResult[1].toString()).shiftedBy(-18).toFixed(6)
+      return {
+        token0Amount,
+        token1Amount,
+        token0,
+        token1
+      }
+    } else {
+      return {
+        token0Amount: undefined,
+        token1Amount: undefined,
+        token0: undefined,
+        token1: undefined
+      }
+    }
+  }, [
+    contractResult
+  ])
+
+  return info
+}
+
+function TextWithLoadingPlaceholder({
+  syncing,
+  width,
+  children,
+}: {
+  syncing: boolean
+  width: number
+  children: JSX.Element
+}) {
+  return syncing ? (
+    <LoadingRows>
+      <div style={{ height: '15px', width: `${width}px` }} />
+    </LoadingRows>
+  ) : (
+    children
+  )
+}
+
+export function CloseLeverageModalFooter({
+  leverageManagerAddress,
+  tokenId,
+  trader
+}: {
+  leverageManagerAddress: string | undefined
+  tokenId: string | undefined
+  trader: string | undefined
+}) {
+
+  const [slippage, setSlippage] = useState("0.01")
+  const [derivedState, setDerivedState] = useState<DerivedInfoState>(DerivedInfoState.INVALID)
+  const [showDetails, setShowDetails] = useState(false)
+  const theme = useTheme()
+
+  const [state, position] = useLeveragePosition(leverageManagerAddress, trader, tokenId)
+
+  // what do we need for the simulation
+  const debouncedSlippage = useDebounce(slippage, 200)
+
+  const {
+    token0Amount,
+    token1Amount,
+    token0: token0Address,
+    token1: token1Address
+  } = useDerivedLeverageCloseInfo(leverageManagerAddress, trader, tokenId, debouncedSlippage, setDerivedState)
+
+  const token0 = useToken(token0Address)
+  const token1 = useToken(token1Address)
+
+  const loading = derivedState === DerivedInfoState.LOADING
+  const valid = derivedState === DerivedInfoState.VALID
+
+  const inputIsToken0 = !position?.isToken0
+  const leverageManagerContract = useLeverageManagerContract(leverageManagerAddress, true)
+
+  const handleClosePosition = useMemo(() => {
+    if (leverageManagerContract) {
+      const formattedSlippage = new BN(debouncedSlippage).plus(100).shiftedBy(16).toFixed(0)
+      return () => {
+        leverageManagerContract.closePosition(
+          tokenId,
+          trader,
+          formattedSlippage
+        ).then((hash: any) => {
+
+        }).catch((err: any) => {
+          console.log("error closing position: ", err)
+        })
+      }
+    }
+    return () => {}
+  }, [leverageManagerAddress, slippage, tokenId, trader])
+
+  return (
+    <AutoRow>
+      <LightCard marginTop="10px">
+        <AutoColumn gap="md">
+          <RowBetween>
+            <ThemedText.DeprecatedMain fontWeight={400}>
+              <Trans>Allowed Slippage</Trans>
+            </ThemedText.DeprecatedMain>
+          </RowBetween>
+          <>
+            <RowBetween>
+              <ResponsiveHeaderText>
+                <Trans>{slippage}%</Trans>
+              </ResponsiveHeaderText>
+              <AutoRow gap="4px" justify="flex-end">
+                <SmallMaxButton onClick={() => setSlippage("0.5")} width="20%">
+                  <Trans>0.5</Trans>
+                </SmallMaxButton>
+                <SmallMaxButton onClick={() => setSlippage("1")} width="20%">
+                  <Trans>1</Trans>
+                </SmallMaxButton>
+                <SmallMaxButton onClick={() => setSlippage("3")} width="20%">
+                  <Trans>3</Trans>
+                </SmallMaxButton>
+                <SmallMaxButton onClick={() => setSlippage("5")} width="20%">
+                  <Trans>Max</Trans>
+                </SmallMaxButton>
+              </AutoRow>
+            </RowBetween>
+            <Slider
+              value={parseFloat(slippage)}
+              onChange={(val) => setSlippage(val.toString())}
+              min={0.01}
+              max={5.0}
+              step={0.01}
+              float={true}
+              size={20}
+            />
+          </>
+        </AutoColumn>
+      </LightCard>
+      <TransactionDetails>
+        <Wrapper style={{ marginTop: '0' }}>
+          <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
+            <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!token0Address} open={showDetails}>
+              <RowFixed style={{ position: 'relative' }}>
+                {(loading ? (
+                  <StyledPolling>
+                    <StyledPollingDot>
+                      <Spinner />
+                    </StyledPollingDot>
+                  </StyledPolling>
+                ) : (
+                  <HideSmall>
+
+                    <StyledInfoIcon color={leverageManagerAddress ? theme.textTertiary : theme.deprecated_bg3} />
+
+                  </HideSmall>
+                ))}
+                {leverageManagerAddress ? (
+                  loading ? (
+                    <ThemedText.DeprecatedMain fontSize={14}>
+                      <Trans>Fetching returns...</Trans>
+                    </ThemedText.DeprecatedMain>
+                  ) : (
+                    <LoadingOpacityContainer $loading={loading}>
+                    Trade Details
+                    </LoadingOpacityContainer>
+                  )
+                ) : null}
+              </RowFixed>
+              <RowFixed>
+              <RotatingArrow
+                stroke={token0Address ? theme.textTertiary : theme.deprecated_bg3}
+                open={Boolean(token0Address && showDetails)}
+              />
+            </RowFixed>
+
+            </StyledHeaderRow>
+            <AnimatedDropdown open={showDetails}>
+              <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
+                {token0Amount && token1Amount ? (
+                  <StyledCard>
+                  <AutoColumn gap="sm">
+                    <RowBetween>
+                      <RowFixed>
+                        <MouseoverTooltip
+                          text={
+                            <Trans>
+                              The amount you expect to receive at the current market price. You may receive less or more if the
+                              market price changes while your transaction is pending.
+                            </Trans>
+                          }
+                        >
+                          <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                            <Trans>Expected Collateral Received</Trans>
+                          </ThemedText.DeprecatedSubHeader>
+                        </MouseoverTooltip>
+                      </RowFixed>
+                      <TextWithLoadingPlaceholder syncing={loading} width={65}>
+                        <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                        {inputIsToken0 ?
+                             `${inputIsToken0 ? new BN(token0Amount).abs().toString() : new BN(token1Amount).abs().toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                            : '-'}
+                        </ThemedText.DeprecatedBlack>
+                      </TextWithLoadingPlaceholder>
+                    </RowBetween>
+                    <Separator />
+                    <RowBetween>
+                      <RowFixed>
+                        <MouseoverTooltip
+                          text={
+                            <Trans>
+                              The amount you expect to receive at the current market price. You may receive less or more if the
+                              market price changes while your transaction is pending.
+                            </Trans>
+                          }
+                        >
+                          <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                            <Trans>Expected Payment</Trans>
+                          </ThemedText.DeprecatedSubHeader>
+                        </MouseoverTooltip>
+                      </RowFixed>
+                      <TextWithLoadingPlaceholder syncing={loading} width={65}>
+                        <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                          {inputIsToken0 ?
+                             `${inputIsToken0 ? new BN(token1Amount).abs().toString() : new BN(token0Amount).abs().toString()}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
+                            : '-'}
+                        </ThemedText.DeprecatedBlack>
+                      </TextWithLoadingPlaceholder>
+                    </RowBetween>
+                  </AutoColumn>
+                </StyledCard>
+                )
+                  : null}
+              </AutoColumn>
+            </AnimatedDropdown>
+          </AutoColumn>
+        </Wrapper>
+      </TransactionDetails>
+      <ButtonError
+        onClick={handleClosePosition}
+        disabled={false}
+        style={{ margin: '10px 0 0 0' }}
+        id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
+      >
+        <Text fontSize={20} fontWeight={500}>
+          <Trans>Close Position</Trans>
+        </Text>
+      </ButtonError>
+    </AutoRow>
+  )
+}
+
+
 export function LeverageModalFooter({
   trade,
   allowedSlippage,
@@ -189,7 +631,7 @@ export function LeverageModalFooter({
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const [clientSideRouter] = useClientSideRouter()
   const routes = getTokenPath(trade)
-  console.log("disabledConfirm", disabledConfirm)
+  // console.log("disabledConfirm", disabledConfirm)
   return (
     <>
       <AutoRow>

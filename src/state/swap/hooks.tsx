@@ -194,7 +194,7 @@ export function useDerivedLeverageCreationInfo()
   const leverageManager = useLeverageManagerContract(leverageManagerAddress ?? undefined, true)
   const inputIsToken0 = outputCurrency?.wrapped ? inputCurrency?.wrapped.sortsBefore(outputCurrency?.wrapped) : false; //inputCurrency?.wrapped.address === pool?.token0.address
   const initialPrice = pool ? (inputIsToken0 ? pool.token1Price : pool.token0Price) : undefined;
-  console.log("initialPrice: ", initialPrice, pool)
+  // console.log("initialPrice: ", initialPrice, pool)
   const debouncedAmount = useDebounce(
     useMemo(() => (parsedAmount), [parsedAmount]),
     200
@@ -202,12 +202,12 @@ export function useDerivedLeverageCreationInfo()
 
   // TODO calculate slippage from the pool
   const allowedSlippage = new BN("103").shiftedBy(16).toFixed(0) // new Percent(JSBI.BigInt(50), JSBI.BigInt(10000))
-  console.log("simulation: ", leverageManager)
+  // console.log("simulation: ", leverageManager)
   if(debouncedAmount && Number(leverageFactor) > 1){
   const _input = Number(debouncedAmount.toFixed()) * (10** Number(inputCurrency?.wrapped.decimals))
   const _borrowAmount = _input * (Number(leverageFactor)-1)
-  console.log('wtf',_input.toFixed(0)
-    , _borrowAmount.toFixed(0) ); 
+  // console.log('wtf',_input.toFixed(0)
+  //   , _borrowAmount.toFixed(0) ); 
   }
 
   const simulateTrade = useCallback(async () => {
@@ -243,9 +243,9 @@ export function useDerivedLeverageCreationInfo()
       setTradeState(LeverageTradeState.INVALID)
     }
   }, [currencies,leverageManager, leverage, leverageFactor, debouncedAmount])
-  console.log("contractResultPost/tradestate", contractResult, tradeState)
+  //console.log("contractResultPost/tradestate", contractResult, tradeState)
 
-  useMemo(() => {
+  useEffect(() => {
     simulateTrade()
   }, [currencies,leverageManager, leverage, leverageFactor, debouncedAmount])
 
