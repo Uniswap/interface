@@ -148,11 +148,11 @@ export const SearchBarDropdown = ({
   const isTokenPage = pathname.includes('/tokens')
   const [resultsState, setResultsState] = useState<ReactNode>()
 
-  const { data: gqlData, loading } = useTrendingCollections(3, HistoryDuration.Day)
+  const { data, loading } = useTrendingCollections(3, HistoryDuration.Day)
 
   const trendingCollections = useMemo(() => {
     return !loading
-      ? gqlData
+      ? data
           ?.map((collection) => ({
             ...collection,
             collectionAddress: collection.address,
@@ -165,7 +165,7 @@ export const SearchBarDropdown = ({
           }))
           .slice(0, isNFTPage ? 3 : 2)
       : [...Array<GenieCollection>(isNFTPage ? 3 : 2)]
-  }, [gqlData, isNFTPage, loading])
+  }, [data, isNFTPage, loading])
 
   const { data: trendingTokenData } = useTrendingTokens(useWeb3React().chainId)
 

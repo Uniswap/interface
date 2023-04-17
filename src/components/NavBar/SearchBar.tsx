@@ -55,14 +55,14 @@ export const SearchBar = () => {
     isOpen && toggleOpen()
   })
 
-  const { data: gqlCollections, loading } = useCollectionSearch(debouncedSearchValue)
+  const { data: collections, loading } = useCollectionSearch(debouncedSearchValue)
 
   const { chainId } = useWeb3React()
   const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, chainId ?? 1)
 
   const isNFTPage = useIsNftPage()
 
-  const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], gqlCollections ?? [])
+  const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], collections ?? [])
 
   // close dropdown on escape
   useEffect(() => {
@@ -78,7 +78,7 @@ export const SearchBar = () => {
     return () => {
       document.removeEventListener('keydown', escapeKeyDownHandler)
     }
-  }, [isOpen, toggleOpen, gqlCollections])
+  }, [isOpen, toggleOpen, collections])
 
   // clear searchbar when changing pages
   useEffect(() => {

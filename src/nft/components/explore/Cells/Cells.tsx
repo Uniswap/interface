@@ -2,12 +2,11 @@ import { formatEther } from '@ethersproject/units'
 import { SquareArrowDownIcon, SquareArrowUpIcon, VerifiedIcon } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
 import { Denomination } from 'nft/types'
-import { volumeFormatter } from 'nft/utils'
+import { ethNumberStandardFormatter, volumeFormatter } from 'nft/utils'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { ethNumberStandardFormatter } from '../../../utils/currency'
 import * as styles from './Cells.css'
 
 const TruncatedText = styled.div`

@@ -65,12 +65,7 @@ const baseHref = (event: ActivityEvent) => `/#/nfts/asset/${event.collectionAddr
 export const Activity = ({ contractAddress, rarityVerified, collectionName, chainId }: ActivityProps) => {
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
 
-  const {
-    nftActivity: gqlEventsData,
-    hasNext,
-    loadMore,
-    loading,
-  } = useNftActivity(
+  const { nftActivity, hasNext, loadMore, loading } = useNftActivity(
     {
       activityTypes: Object.keys(activeFilters)
         .map((key) => key as NftActivityType)
@@ -80,7 +75,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
     25
   )
 
-  const isLoadingMore = hasNext && gqlEventsData?.length
+  const isLoadingMore = hasNext && nftActivity?.length
   const itemsInBag = useBag((state) => state.itemsInBag)
   const addAssetsToBag = useBag((state) => state.addAssetsToBag)
   const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
@@ -124,17 +119,17 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
       {loading ? (
         <ActivityLoader />
       ) : (
-        gqlEventsData && (
+        nftActivity && (
           <Column marginTop="36">
             <HeaderRow />
             <InfiniteScroll
               next={loadMore}
               hasMore={!!hasNext}
               loader={isLoadingMore ? <ActivityPageLoader rowCount={2} /> : null}
-              dataLength={gqlEventsData?.length ?? 0}
+              dataLength={nftActivity?.length ?? 0}
               style={{ overflow: 'unset' }}
             >
-              {gqlEventsData.map(
+              {nftActivity.map(
                 (event, i) =>
                   event.eventType && (
                     <Box

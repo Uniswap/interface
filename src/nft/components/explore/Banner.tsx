@@ -114,16 +114,13 @@ const TRENDING_COLLECTION_SIZE = 5
 const Banner = () => {
   const navigate = useNavigate()
 
-  const { data: gqlData } = useTrendingCollections(
-    TRENDING_COLLECTION_SIZE + EXCLUDED_COLLECTIONS.length,
-    HistoryDuration.Day
-  )
+  const { data } = useTrendingCollections(TRENDING_COLLECTION_SIZE + EXCLUDED_COLLECTIONS.length, HistoryDuration.Day)
 
   const collections = useMemo(() => {
-    return gqlData
+    return data
       ?.filter((collection) => collection.address && !EXCLUDED_COLLECTIONS.includes(collection.address))
       .slice(0, TRENDING_COLLECTION_SIZE)
-  }, [gqlData])
+  }, [data])
 
   const [activeCollectionIdx, setActiveCollectionIdx] = useState(0)
   const onToggleNextSlide = useCallback(

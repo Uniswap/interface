@@ -306,13 +306,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     [activeFilters]
   )
 
-  const {
-    nftActivity: gqlEventsData,
-    hasNext,
-    loadMore,
-    loading,
-    error,
-  } = useNftActivity(
+  const { nftActivity, hasNext, loadMore, loading, error } = useNftActivity(
     {
       activityTypes: Object.keys(activeFilters)
         .map((key) => key as NftActivityType)
@@ -389,7 +383,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
           </ActivitySelectContainer>
           {loading ? (
             <LoadingAssetActivity rowCount={10} />
-          ) : gqlEventsData && gqlEventsData.length > 0 ? (
+          ) : nftActivity && nftActivity.length > 0 ? (
             <InfiniteScroll
               next={loadMore}
               hasMore={!!hasNext}
@@ -400,14 +394,14 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                   </Center>
                 )
               }
-              dataLength={gqlEventsData?.length ?? 0}
+              dataLength={nftActivity?.length ?? 0}
               scrollableTarget="activityContainer"
             >
-              <AssetActivity events={gqlEventsData} />
+              <AssetActivity events={nftActivity} />
             </InfiniteScroll>
           ) : (
             <>
-              {!error && gqlEventsData && (
+              {!error && nftActivity && (
                 <EmptyActivitiesContainer>
                   <div>No activities yet</div>
                   <Link to={`/nfts/collection/${asset.address}`}>View collection items</Link>{' '}
