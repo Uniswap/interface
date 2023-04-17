@@ -50,9 +50,8 @@ function getTransactionTypeVerbs(
       return [t('Purchased'), t('Purchasing'), t('purchase')]
     case TransactionType.Unknown:
     case TransactionType.WCConfirm:
-      return [t('Transaction submitted')]
     default:
-      return [t('Unknown')]
+      return [t('Transaction confirmed'), t('Transaction in progress'), t('confirm')]
   }
 }
 

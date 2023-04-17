@@ -15,6 +15,7 @@ export default function WCSummaryItem({
       caption={transaction.typeInfo.dapp.name}
       icon={
         <DappLogoWithWCBadge
+          chainId={transaction.typeInfo.chainId}
           dappImageUrl={transaction.typeInfo.dapp.icon}
           dappName={transaction.typeInfo.dapp.name}
           size={TXN_HISTORY_ICON_SIZE}

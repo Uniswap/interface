@@ -225,10 +225,12 @@ export function DappLogoWithWCBadge({
   dappImageUrl,
   dappName,
   size,
+  chainId,
 }: {
   dappImageUrl: string | null
   dappName: string
   size: number
+  chainId: ChainId | null
 }): JSX.Element {
   const theme = useAppTheme()
   const dappImageSize = size
@@ -258,7 +260,18 @@ export function DappLogoWithWCBadge({
         bottom={0}
         position="absolute"
         right={0}>
-        <WalletConnectLogo fill="red" height={statusSize} width={statusSize} />
+        {chainId && chainId !== ChainId.Mainnet ? (
+          <NetworkLogo
+            backgroundColor={getNetworkForegroundColor(theme, chainId)}
+            borderColor={theme.colors.background0}
+            borderRadius="rounded8"
+            borderWidth={2}
+            chainId={chainId}
+            size={size * STATUS_RATIO}
+          />
+        ) : (
+          <WalletConnectLogo height={statusSize} width={statusSize} />
+        )}
       </Box>
     </Box>
   )

@@ -169,7 +169,7 @@ function TransactionSummaryLayout({
             )}
             <Flex shrink gap="none">
               <Flex row alignItems="center" gap="spacing4">
-                <Text numberOfLines={1} variant="bodyLarge">
+                <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
                   {title}
                 </Text>
               </Flex>
@@ -238,24 +238,3 @@ function TransactionSummaryLayout({
 }
 
 export default TransactionSummaryLayout
-
-export function AssetUpdateLayout({
-  title,
-  caption,
-}: {
-  title: string | undefined
-  caption?: string | undefined
-}): JSX.Element {
-  return (
-    <Flex shrink alignItems="flex-end" gap="none">
-      <Text numberOfLines={1} variant="bodyLarge">
-        {title}
-      </Text>
-      {caption && (
-        <Text color="textSecondary" numberOfLines={1} variant="bodySmall">
-          {caption}
-        </Text>
-      )}
-    </Flex>
-  )
-}

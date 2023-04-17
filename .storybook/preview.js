@@ -2,8 +2,11 @@ import { MockedProvider } from '@apollo/client/testing'
 import { ThemeProvider } from '@shopify/restyle'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 import React from 'react'
+import { I18nextProvider } from 'react-i18next'
 import { useDarkMode } from 'storybook-dark-mode'
+import { i18n } from '../src/app/i18n'
 import { darkTheme, theme } from '../src/styles/theme'
+import { ReduxDecorator } from './ReduxDecorator'
 import { NavigationDecorator } from './StoryNavigator'
 
 export const parameters = {
@@ -12,6 +15,19 @@ export const parameters = {
   },
   // Notifies Chromatic to pause the animations when they finish at a global level
   chromatic: { pauseAnimationAtEnd: true },
+  backgrounds: {
+    default: 'dark',
+    values: [
+      {
+        name: 'light',
+        value: theme.colors.background0,
+      },
+      {
+        name: 'dark',
+        value: darkTheme.colors.background0,
+      },
+    ],
+  },
   darkMode: {
     current: 'dark',
     // Override the default dark theme
@@ -57,9 +73,15 @@ export const parameters = {
 
 export const decorators = [
   NavigationDecorator,
+  ReduxDecorator,
   (Story) => (
     <ThemeProvider theme={useDarkMode() ? darkTheme : theme}>
       <Story />
     </ThemeProvider>
+  ),
+  (Story) => (
+    <I18nextProvider i18n={i18n}>
+      <Story />
+    </I18nextProvider>
   ),
 ]

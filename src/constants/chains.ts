@@ -40,7 +40,7 @@ export const TESTNET_CHAIN_IDS = [ChainId.Goerli, ChainId.PolygonMumbai]
 export const L1_CHAIN_IDS = [ChainId.Mainnet, ChainId.Goerli] as const
 
 // Renamed from SupportedL1ChainId in web app
-export type L1ChainId = typeof L1_CHAIN_IDS[number]
+export type L1ChainId = (typeof L1_CHAIN_IDS)[number]
 
 export const L2_CHAIN_IDS = [
   ChainId.ArbitrumOne,
@@ -50,7 +50,7 @@ export const L2_CHAIN_IDS = [
 ] as const
 
 // Renamed from SupportedL2ChainId in web app
-export type L2ChainId = typeof L2_CHAIN_IDS[number]
+export type L2ChainId = (typeof L2_CHAIN_IDS)[number]
 
 export const isL2Chain = (chainId?: ChainId): boolean =>
   Boolean(chainId && L2_CHAIN_IDS.includes(chainId as L2ChainId))

@@ -31,7 +31,7 @@ exports[`AccountList renders without error 1`] = `
     }
   >
     <View>
-      <ContextMenu
+      <View
         actions={
           Array [
             Object {
@@ -365,7 +365,7 @@ exports[`AccountList renders without error 1`] = `
             />
           </View>
         </View>
-      </ContextMenu>
+      </View>
     </View>
   </RCTScrollView>
   ExpoLinearGradient

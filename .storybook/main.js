@@ -1,5 +1,4 @@
 const path = require('path')
-
 module.exports = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: [
@@ -14,18 +13,29 @@ module.exports = {
         babelPlugins: ['react-native-reanimated/plugin'],
       },
     },
+    '@storybook/addon-mdx-gfm',
+    'storybook-addon-apollo-client',
   ],
-  framework: '@storybook/react',
+  framework: {
+    name: '@storybook/react-webpack5',
+    options: {},
+  },
   webpackFinal: async (config) => {
     config.resolve.modules = [...(config.resolve.modules || []), path.resolve(__dirname, '..')]
-
     function setupSVG() {
       // handle SVG support inside Storybook
       const fileLoaderRule = config.module.rules.find((rule) => rule.test.test('.svg'))
       fileLoaderRule.exclude = /\.svg$/
       config.module.rules.push({
         test: /\.svg$/,
-        loader: 'svg-react-loader',
+        use: [
+          {
+            loader: 'babel-loader',
+          },
+          {
+            loader: 'react-svg-loader',
+          },
+        ],
       })
     }
 
@@ -48,17 +58,33 @@ module.exports = {
         // '@react-native-firebase/remote-config',
         '@react-native-masked-view/masked-view', // used by shimmer
         '@shopify/react-native-skia',
+        'react-native-permissions',
+        'react-native-fast-image',
+        'react-native-context-menu-view',
         // add mocks to `__mocks__/${mockName}.ts`, and mockName here
       ]
+
       __mocks__.forEach((mockName) => {
         config.resolve.alias[mockName] = require.resolve(`../__mocks__/${mockName}.ts`)
+      })
+    }
+
+    function setupGraphQLQueries() {
+      config.module.rules.push({
+        test: /\.(graphql|gql)$/,
+        exclude: /node_modules/,
+        loader: 'graphql-tag/loader',
       })
     }
 
     setupSVG()
     setupReactNativeMocks()
     setupLocalMocks()
+    setupGraphQLQueries()
 
     return config
+  },
+  docs: {
+    autodocs: false,
   },
 }

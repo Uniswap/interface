@@ -1,4 +1,4 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react'
+import { ComponentStory, Meta } from '@storybook/react'
 import React from 'react'
 import SendIcon from 'src/assets/icons/send-action.svg'
 import { Box } from 'src/components/layout'
@@ -26,7 +26,7 @@ export default {
       defaultValue: 'medium',
     },
   },
-} as ComponentMeta<typeof Button>
+} as Meta<typeof Button>
 
 const Template: ComponentStory<typeof Button> = (props) => <Button {...props} />
 export const DefaultButton = Template.bind({})
