@@ -53,7 +53,8 @@ module.exports = {
       new VanillaExtractPlugin({ identifiers: 'short' }),
       // Cache Webpack output to speed up subsequent builds.
       // Webpack 4 doesn't support native caching (eg cache: 'filesystem'), so we use a third-party plugin.
-      new HardSourceWebpackPlugin({ cacheDirectory: 'node_modules/.cache/webpack' }),
+      // NB: cacheDirectory defaults to node_modules/.cache/hard-source/[confighash] - configuring it fails to work 🤷
+      new HardSourceWebpackPlugin(),
     ],
     configure: (webpackConfig) => {
       webpackConfig.plugins = webpackConfig.plugins.map((plugin) => {
