@@ -1,8 +1,3 @@
-export const isValidDate = (date: number): boolean => {
-  const d = Date.parse(date.toString())
-  return isNaN(d) ? false : true
-}
-
 export const getTimeDifference = (eventTimestamp: string) => {
   const date = parseFloat(eventTimestamp)
   const diff = new Date().getTime() - date
