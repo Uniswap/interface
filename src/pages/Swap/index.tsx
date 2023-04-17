@@ -33,7 +33,7 @@ import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
 import { ArrowDown, Info } from 'react-feather'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate , useLocation} from 'react-router-dom'
 import { Text } from 'rebass'
 import { InterfaceTrade, LeverageTradeState } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
@@ -263,7 +263,7 @@ export default function Swap({ className }: { className?: string }) {
     inputError,
     allowedSlippage: leverageAllowedSlippage
   } = useDerivedLeverageCreationInfo()
-  console.log('leverageTrade:', leverageTrade)
+  // console.log('leverageTrade:', leverageTrade)
 
   // console.log("loadedUrlParams", loadedUrlParams)
 
@@ -280,7 +280,7 @@ export default function Swap({ className }: { className?: string }) {
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
   }, [])
-
+  console.log('url added tokens', urlLoadedTokens)
   // dismiss warning if all imported tokens are in active lists
   const defaultTokens = useDefaultActiveTokens()
   const importTokensNotInDefault = useMemo(
@@ -323,7 +323,7 @@ export default function Swap({ className }: { className?: string }) {
   // console.log("tradeState", tradeState)
   // console.log("trade", trade)
   // console.log("allowedSlippage", allowedSlippage)
-  // console.log("currencies", currencies)
+  console.log("currenciesswap", currencies)
 
   const {
     wrapType,
@@ -686,6 +686,18 @@ export default function Swap({ className }: { className?: string }) {
   const showPriceImpactWarning = largerPriceImpact && priceImpactSeverity > 3
 
   const [sliderLeverageFactor, setSliderLeverageFactor] = useDebouncedChangeHandler(leverageFactor ?? "1", onLeverageFactorChange)
+
+  const {state} = useLocation() as any;
+  if(state){
+    console.log('state', state)
+    const { currency0, currency1 } = state
+
+      useEffect(() => {
+        handleInputSelect(currency0)
+        handleOutputSelect(currency1)
+        
+      }, [currency0, currency1])
+  } 
 
   // Handle time based logging events and event properties.
   useEffect(() => {
