@@ -89,7 +89,8 @@ function ConfirmationPendingContent({
     </Wrapper>
   )
 }
-function TransactionSubmittedContent({
+
+export function TransactionSubmittedContent({
   onDismiss,
   chainId,
   hash,
@@ -171,6 +172,93 @@ function TransactionSubmittedContent({
     </Wrapper>
   )
 }
+
+
+
+function LeverageTransactionSubmittedContent({
+  onDismiss,
+  chainId,
+  hash,
+  currencyToAdd,
+  inline,
+}: {
+  onDismiss: () => void
+  hash: string | undefined
+  chainId: number
+  currencyToAdd?: Currency | undefined
+  inline?: boolean // not in modal
+}) {
+  const theme = useTheme()
+
+  const { connector } = useWeb3React()
+
+  const token = currencyToAdd?.wrapped
+  const logoURL = useCurrencyLogoURIs(token)[0]
+
+  const [success, setSuccess] = useState<boolean | undefined>()
+
+  const addToken = useCallback(() => {
+    if (!token?.symbol || !connector.watchAsset) return
+    connector
+      .watchAsset({
+        address: token.address,
+        symbol: token.symbol,
+        decimals: token.decimals,
+        image: logoURL,
+      })
+      .then(() => setSuccess(true))
+      .catch(() => setSuccess(false))
+  }, [connector, logoURL, token])
+
+  return (
+    <Wrapper>
+      <Section inline={inline}>
+        {!inline && (
+          <RowBetween>
+            <div />
+            <CloseIcon onClick={onDismiss} />
+          </RowBetween>
+        )}
+        <ConfirmedIcon inline={inline}>
+          <ArrowUpCircle strokeWidth={1} size={inline ? '40px' : '75px'} color={theme.accentActive} />
+        </ConfirmedIcon>
+        <AutoColumn gap="md" justify="center" style={{ paddingBottom: '12px' }}>
+          <ThemedText.MediumHeader textAlign="center">
+            <Trans>Transaction submitted</Trans>
+          </ThemedText.MediumHeader>
+          {currencyToAdd && connector.watchAsset && (
+            <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
+              {!success ? (
+                <RowFixed>
+                  <Trans>Add {currencyToAdd.symbol}</Trans>
+                </RowFixed>
+              ) : (
+                <RowFixed>
+                  <Trans>Added {currencyToAdd.symbol} </Trans>
+                  <CheckCircle size="16px" stroke={theme.accentSuccess} style={{ marginLeft: '6px' }} />
+                </RowFixed>
+              )}
+            </ButtonLight>
+          )}
+          <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
+            <Text fontWeight={600} fontSize={20} color={theme.accentTextLightPrimary}>
+              {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
+            </Text>
+          </ButtonPrimary>
+          {chainId && hash && (
+            <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
+              <Text fontWeight={600} fontSize={14} color={theme.accentAction}>
+                <Trans>View on {chainId === SupportedChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}</Trans>
+              </Text>
+            </ExternalLink>
+          )}
+        </AutoColumn>
+      </Section>
+    </Wrapper>
+  )
+}
+
+
 
 export function ConfirmationModalContent({
   title,

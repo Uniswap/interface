@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import {
   formatPercentInBasisPointsNumber,
@@ -17,7 +17,7 @@ import { InterfaceTrade } from 'state/routing/types'
 import { useClientSideRouter, useUserSlippageTolerance } from 'state/user/hooks'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
-import { ButtonError } from '../Button'
+import { ButtonError, ButtonPrimary } from '../Button'
 import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
 import { ResponsiveTooltipContainer, SwapCallbackError } from './styleds'
 import { getTokenPath, RoutingDiagramEntry } from './SwapRoute'
@@ -39,11 +39,15 @@ import { useSingleCallResult } from 'lib/hooks/multicall'
 import { BigNumber as BN } from "bignumber.js"
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import TradePrice from './TradePrice'
-import { useToken } from 'hooks/Tokens'
+import { useCurrency, useToken } from 'hooks/Tokens'
 import { formatNumber, formatNumberOrString } from '@uniswap/conedison/format'
 import { NumberType } from '@uniswap/conedison/format'
 import { useLeveragePosition } from 'hooks/useV3Positions'
 import { LoadingRows } from 'components/Loader/styled'
+import { Flash_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
+import { truncateSync } from 'fs'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
+import Loader from 'components/Icons/LoadingSpinner'
 
 
 interface AnalyticsEventProps {
@@ -336,7 +340,7 @@ function useDerivedLeverageCloseInfo(
         // const position = await leverageManagerContract.callStatic.getPosition(trader, tokenId)
         const token0 = await leverageManagerContract.callStatic.token0()
         const token1 = await leverageManagerContract.callStatic.token1()
-        console.log('closeresult', closePositionResult, tokenId, formattedSlippage); 
+        console.log('closeresult', closePositionResult, tokenId, formattedSlippage);
         setContractResult({
           closePositionResult,
           token0,
@@ -397,17 +401,80 @@ function TextWithLoadingPlaceholder({
   )
 }
 
+function useDerivedAddPremiumInfo(
+  leverageManager: string | undefined,
+  trader: string | undefined,
+  tokenId: string | undefined,
+  setState: (state: DerivedInfoState) => void,
+): {
+  rate: string | undefined
+} {
+  const leverageManagerContract = useLeverageManagerContract(leverageManager)
+  const [contractResult, setContractResult] = useState<{
+    addPremiumResult: any
+  }>()
+
+  useEffect(() => {
+    const laggedfxn = async () => {
+      if (!leverageManagerContract || !tokenId || !trader) {
+        setState(DerivedInfoState.INVALID)
+        return
+      }
+      setState(DerivedInfoState.LOADING)
+
+      try {
+        const position = await leverageManagerContract.callStatic.getPosition(trader, tokenId)
+
+        const addPremiumResult = await leverageManagerContract.callStatic.payPremium(trader, tokenId)
+        setContractResult({
+          addPremiumResult
+        })
+        console.log("addPosition:", position)
+        setState(DerivedInfoState.VALID)
+
+      } catch (error) {
+        console.error('Failed to get addPremium info', error)
+        setState(DerivedInfoState.INVALID)
+      }
+    }
+
+    laggedfxn()
+  }, [leverageManager, trader, tokenId])
+
+  const info = useMemo(() => {
+    if (contractResult) {
+      return {
+        rate: new BN(contractResult.toString()).shiftedBy(-18).toFixed(12)
+      }
+    } else {
+      return {
+        rate: undefined
+      }
+    }
+  }, [
+    contractResult
+  ])
+
+  return info
+}
+
 export function CloseLeverageModalFooter({
   leverageManagerAddress,
   tokenId,
-  trader
+  trader,
+  slippage,
+  setSlippage,
+  handleClosePosition
 }: {
   leverageManagerAddress: string | undefined
   tokenId: string | undefined
-  trader: string | undefined
+  trader: string | undefined,
+  slippage: string,
+  setSlippage: (slippage: string) => void
+  handleClosePosition: () => void | undefined
 }) {
 
-  const [slippage, setSlippage] = useState("0.01")
+  // const [slippage, setSlippage] = useState("0.01")
   const [derivedState, setDerivedState] = useState<DerivedInfoState>(DerivedInfoState.INVALID)
   const [showDetails, setShowDetails] = useState(false)
   const theme = useTheme()
@@ -431,25 +498,6 @@ export function CloseLeverageModalFooter({
   const valid = derivedState === DerivedInfoState.VALID
 
   const inputIsToken0 = !position?.isToken0
-  const leverageManagerContract = useLeverageManagerContract(leverageManagerAddress, true)
-
-  const handleClosePosition = useMemo(() => {
-    if (leverageManagerContract) {
-      const formattedSlippage = new BN(debouncedSlippage).plus(100).shiftedBy(16).toFixed(0)
-      return () => {
-        leverageManagerContract.closePosition(
-          tokenId,
-          trader,
-          formattedSlippage
-        ).then((hash: any) => {
-
-        }).catch((err: any) => {
-          console.log("error closing position: ", err)
-        })
-      }
-    }
-    return () => {}
-  }, [leverageManagerAddress, slippage, tokenId, trader])
 
   return (
     <AutoRow>
@@ -517,141 +565,141 @@ export function CloseLeverageModalFooter({
                     </ThemedText.DeprecatedMain>
                   ) : (
                     <LoadingOpacityContainer $loading={loading}>
-                    Trade Details
+                      Trade Details
                     </LoadingOpacityContainer>
                   )
                 ) : null}
               </RowFixed>
               <RowFixed>
-              <RotatingArrow
-                stroke={token0Address ? theme.textTertiary : theme.deprecated_bg3}
-                open={Boolean(token0Address && showDetails)}
-              />
-            </RowFixed>
+                <RotatingArrow
+                  stroke={token0Address ? theme.textTertiary : theme.deprecated_bg3}
+                  open={Boolean(token0Address && showDetails)}
+                />
+              </RowFixed>
 
             </StyledHeaderRow>
             <AnimatedDropdown open={showDetails}>
               <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
                 {token0Amount && token1Amount ? (
                   <StyledCard>
-                  <AutoColumn gap="sm">
-                    <RowBetween>
-                      <RowFixed>
-                        <MouseoverTooltip
-                          text={
-                            <Trans>
-                              The amount you expect to receive at the current market price. You may receive less or more if the
-                              market price changes while your transaction is pending.
-                            </Trans>
-                          }
-                        >
-                          <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                            <Trans>Position to close</Trans>
-                          </ThemedText.DeprecatedSubHeader>
-                        </MouseoverTooltip>
-                      </RowFixed>
-                      <TextWithLoadingPlaceholder syncing={loading} width={65}>
-                        <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                        {
-                             `${inputIsToken0 ? new BN(token0Amount).abs().toString() : new BN(token1Amount).abs().toString()}  ${!inputIsToken0 ? token0?.symbol : token1?.symbol}`
-                             }
-                        </ThemedText.DeprecatedBlack>
-                      </TextWithLoadingPlaceholder>
-                    </RowBetween>
-                    <RowBetween>
-                      <RowFixed>
-                        <MouseoverTooltip
-                          text={
-                            <Trans>
-                              The amount you expect to receive at the current market price. You may receive less or more if the
-                              market price changes while your transaction is pending.
-                            </Trans>
-                          }
-                        >
-                          <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                            <Trans>Debt to repay</Trans>
-                          </ThemedText.DeprecatedSubHeader>
-                        </MouseoverTooltip>
-                      </RowFixed>
-                      <TextWithLoadingPlaceholder syncing={loading} width={65}>
-                        <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                        {
-                             `${inputIsToken0 ? new BN(token0Amount).abs().toString() : new BN(token1Amount).abs().toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
-                             }
-                        </ThemedText.DeprecatedBlack>
-                      </TextWithLoadingPlaceholder>
-                    </RowBetween>
-                    <Separator />
-                    <RowBetween>
-                      <RowFixed>
-                        <MouseoverTooltip
-                          text={
-                            <Trans>
-                              The amount you expect to receive at the current market price. You may receive less or more if the
-                              market price changes while your transaction is pending.
-                            </Trans>
-                          }
-                        >
-                          <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                            <Trans>Expected Output</Trans>
-                          </ThemedText.DeprecatedSubHeader>
-                        </MouseoverTooltip>
-                      </RowFixed>
-                      <TextWithLoadingPlaceholder syncing={loading} width={65}>
-                        <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                        {
-                             `${inputIsToken0 ? new BN(token0Amount).abs().toString() : new BN(token1Amount).abs().toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
-                             }
-                        </ThemedText.DeprecatedBlack>
-                      </TextWithLoadingPlaceholder>
-                    </RowBetween>
-                    <RowBetween>
-                      <RowFixed>
-                        <MouseoverTooltip
-                          text={
-                            <Trans>
-                              The amount you expect to receive at the current market price. You may receive less or more if the
-                              market price changes while your transaction is pending.
-                            </Trans>
-                          }
-                        >
-                          <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                            <Trans>Price Impact</Trans>
-                          </ThemedText.DeprecatedSubHeader>
-                        </MouseoverTooltip>
-                      </RowFixed>
-                      <TextWithLoadingPlaceholder syncing={loading} width={65}>
-                        <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                          {
-                             `${inputIsToken0 ? new BN(token1Amount).abs().toString() : new BN(token0Amount).abs().toString()}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
+                    <AutoColumn gap="sm">
+                      <RowBetween>
+                        <RowFixed>
+                          <MouseoverTooltip
+                            text={
+                              <Trans>
+                                The amount you expect to receive at the current market price. You may receive less or more if the
+                                market price changes while your transaction is pending.
+                              </Trans>
                             }
-                        </ThemedText.DeprecatedBlack>
-                      </TextWithLoadingPlaceholder>
-                    </RowBetween>
-                    <RowBetween>
-                      <RowFixed>
-                        <MouseoverTooltip
-                          text={
-                            <Trans>
-                              The amount you expect to receive at the current market price. You may receive less or more if the
-                              market price changes while your transaction is pending.
-                            </Trans>
-                          }
-                        >
-                          <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                            <Trans>Expected Received</Trans>
-                          </ThemedText.DeprecatedSubHeader>
-                        </MouseoverTooltip>
-                      </RowFixed>
-                      <TextWithLoadingPlaceholder syncing={loading} width={65}>
-                        <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                        {
-                             `${inputIsToken0 ? new BN(token0Amount).abs().toString() : new BN(token1Amount).abs().toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
-                             }
-                        </ThemedText.DeprecatedBlack>
-                      </TextWithLoadingPlaceholder>
-                    </RowBetween>
-                  </AutoColumn>
+                          >
+                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                              <Trans>Position to close</Trans>
+                            </ThemedText.DeprecatedSubHeader>
+                          </MouseoverTooltip>
+                        </RowFixed>
+                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
+                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                            {
+                              `${inputIsToken0 ? new BN(token0Amount).abs().toString() : new BN(token1Amount).abs().toString()}  ${!inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                            }
+                          </ThemedText.DeprecatedBlack>
+                        </TextWithLoadingPlaceholder>
+                      </RowBetween>
+                      <RowBetween>
+                        <RowFixed>
+                          <MouseoverTooltip
+                            text={
+                              <Trans>
+                                The amount you expect to receive at the current market price. You may receive less or more if the
+                                market price changes while your transaction is pending.
+                              </Trans>
+                            }
+                          >
+                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                              <Trans>Debt to repay</Trans>
+                            </ThemedText.DeprecatedSubHeader>
+                          </MouseoverTooltip>
+                        </RowFixed>
+                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
+                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                            {
+                              `${inputIsToken0 ? new BN(token0Amount).abs().toString() : new BN(token1Amount).abs().toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                            }
+                          </ThemedText.DeprecatedBlack>
+                        </TextWithLoadingPlaceholder>
+                      </RowBetween>
+                      <Separator />
+                      <RowBetween>
+                        <RowFixed>
+                          <MouseoverTooltip
+                            text={
+                              <Trans>
+                                The amount you expect to receive at the current market price. You may receive less or more if the
+                                market price changes while your transaction is pending.
+                              </Trans>
+                            }
+                          >
+                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                              <Trans>Expected Output</Trans>
+                            </ThemedText.DeprecatedSubHeader>
+                          </MouseoverTooltip>
+                        </RowFixed>
+                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
+                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                            {
+                              `${inputIsToken0 ? new BN(token0Amount).abs().toString() : new BN(token1Amount).abs().toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                            }
+                          </ThemedText.DeprecatedBlack>
+                        </TextWithLoadingPlaceholder>
+                      </RowBetween>
+                      <RowBetween>
+                        <RowFixed>
+                          <MouseoverTooltip
+                            text={
+                              <Trans>
+                                The amount you expect to receive at the current market price. You may receive less or more if the
+                                market price changes while your transaction is pending.
+                              </Trans>
+                            }
+                          >
+                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                              <Trans>Price Impact</Trans>
+                            </ThemedText.DeprecatedSubHeader>
+                          </MouseoverTooltip>
+                        </RowFixed>
+                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
+                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                            {
+                              `${inputIsToken0 ? new BN(token1Amount).abs().toString() : new BN(token0Amount).abs().toString()}  ${inputIsToken0 ? token1?.symbol : token0?.symbol}`
+                            }
+                          </ThemedText.DeprecatedBlack>
+                        </TextWithLoadingPlaceholder>
+                      </RowBetween>
+                      <RowBetween>
+                        <RowFixed>
+                          <MouseoverTooltip
+                            text={
+                              <Trans>
+                                The amount you expect to receive at the current market price. You may receive less or more if the
+                                market price changes while your transaction is pending.
+                              </Trans>
+                            }
+                          >
+                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                              <Trans>Expected Received</Trans>
+                            </ThemedText.DeprecatedSubHeader>
+                          </MouseoverTooltip>
+                        </RowFixed>
+                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
+                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                            {
+                              `${inputIsToken0 ? new BN(token0Amount).abs().toString() : new BN(token1Amount).abs().toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                            }
+                          </ThemedText.DeprecatedBlack>
+                        </TextWithLoadingPlaceholder>
+                      </RowBetween>
+                    </AutoColumn>
                     <RowBetween>
                       <RowFixed>
                         <MouseoverTooltip
@@ -669,13 +717,13 @@ export function CloseLeverageModalFooter({
                       </RowFixed>
                       <TextWithLoadingPlaceholder syncing={loading} width={65}>
                         <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                        {
-                             `${inputIsToken0 ? new BN(token0Amount).abs().toString() : new BN(token1Amount).abs().toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
-                             }
+                          {
+                            `${inputIsToken0 ? new BN(token0Amount).abs().toString() : new BN(token1Amount).abs().toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                          }
                         </ThemedText.DeprecatedBlack>
                       </TextWithLoadingPlaceholder>
                     </RowBetween>
-                </StyledCard>
+                  </StyledCard>
                 )
                   : null}
               </AutoColumn>
@@ -693,6 +741,191 @@ export function CloseLeverageModalFooter({
           <Trans>Close Position</Trans>
         </Text>
       </ButtonError>
+    </AutoRow>
+  )
+}
+
+export function AddPremiumModalFooter({
+  leverageManagerAddress,
+  tokenId,
+  trader,
+  handleAddPremium
+}: {
+  leverageManagerAddress: string | undefined
+  tokenId: string | undefined
+  trader: string | undefined
+  handleAddPremium: () => void
+}) {
+
+
+  const [derivedState, setDerivedState] = useState<DerivedInfoState>(DerivedInfoState.INVALID)
+  const [showDetails, setShowDetails] = useState(false)
+  const theme = useTheme()
+
+  const [state, position] = useLeveragePosition(leverageManagerAddress, trader, tokenId)
+  const { rate } = useDerivedAddPremiumInfo(leverageManagerAddress, trader, tokenId, setDerivedState)
+  const inputIsToken0 = !position?.isToken0
+  console.log("rate: ", rate)
+
+  const payment = position?.totalDebtInput && rate ? new BN(position.totalDebtInput).multipliedBy(new BN(rate)).toString() : "0"
+  const inputCurrency = useCurrency(position?.isToken0 ? position?.token0?.address : position?.token1?.address)
+  const [leverageApprovalState, approveLeverageManager] = useApproveCallback(
+    inputCurrency ?
+    CurrencyAmount.fromRawAmount(inputCurrency, "1000") : undefined, 
+    leverageManagerAddress ?? undefined)
+  console.log("payment", leverageApprovalState)
+
+  const updateLeverageAllowance = useCallback(async () => {
+    try {
+      await approveLeverageManager()
+    } catch (err) {
+      console.log("approveLeverageManager err: ", err)
+    }
+  }, [leverageManagerAddress, approveLeverageManager]) // add input to deps.
+
+  const loading = derivedState === DerivedInfoState.LOADING
+  const valid = derivedState === DerivedInfoState.VALID
+
+
+  return (
+    <AutoRow>
+      <TransactionDetails>
+        <Wrapper style={{ marginTop: '0' }}>
+          <AutoColumn gap="sm" style={{ width: '100%', marginBottom: '-8px' }}>
+            <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={true} open={showDetails}>
+              <RowFixed style={{ position: 'relative' }}>
+                {(loading ? (
+                  <StyledPolling>
+                    <StyledPollingDot>
+                      <Spinner />
+                    </StyledPollingDot>
+                  </StyledPolling>
+                ) : (
+                  <HideSmall>
+
+                    <StyledInfoIcon color={leverageManagerAddress ? theme.textTertiary : theme.deprecated_bg3} />
+
+                  </HideSmall>
+                ))}
+                {leverageManagerAddress ? (
+                  loading ? (
+                    <ThemedText.DeprecatedMain fontSize={14}>
+                      <Trans>Fetching expected payment...</Trans>
+                    </ThemedText.DeprecatedMain>
+                  ) : (
+                    <LoadingOpacityContainer $loading={loading}>
+                      Premium Payment Details
+                    </LoadingOpacityContainer>
+                  )
+                ) : null}
+              </RowFixed>
+              <RowFixed>
+                <RotatingArrow
+                  stroke={true ? theme.textTertiary : theme.deprecated_bg3}
+                  open={Boolean(true && showDetails)}
+                />
+              </RowFixed>
+
+            </StyledHeaderRow>
+            <AnimatedDropdown open={showDetails}>
+              <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
+                {!loading ? (
+                  <StyledCard>
+                    <AutoColumn gap="sm">
+                      <RowBetween>
+                        <RowFixed>
+                          <MouseoverTooltip
+                            text={
+                              <Trans>
+                                Premium Payment Rate
+                              </Trans>
+                            }
+                          >
+                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                              <Trans>Premium Payment Rate</Trans>
+                            </ThemedText.DeprecatedSubHeader>
+                          </MouseoverTooltip>
+                        </RowFixed>
+                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
+                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                            {
+                              `${rate ? new BN(rate).toString() : "-"}%`
+                            }
+                          </ThemedText.DeprecatedBlack>
+                        </TextWithLoadingPlaceholder>
+                      </RowBetween>
+                      <RowBetween>
+                        <RowFixed>
+                          <MouseoverTooltip
+                            text={
+                              <Trans>
+                                Expected Payment
+                              </Trans>
+                            }
+                          >
+                            <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                              <Trans>Expected Payment</Trans>
+                            </ThemedText.DeprecatedSubHeader>
+                          </MouseoverTooltip>
+                        </RowFixed>
+                        <TextWithLoadingPlaceholder syncing={loading} width={65}>
+                          <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+                            {
+                              `${new BN(payment).toString()}`
+                            }
+                          </ThemedText.DeprecatedBlack>
+                        </TextWithLoadingPlaceholder>
+                      </RowBetween>
+                    </AutoColumn>
+                  </StyledCard>
+                )
+                  : null}
+              </AutoColumn>
+            </AnimatedDropdown>
+          </AutoColumn>
+        </Wrapper>
+      </TransactionDetails>
+      { leverageApprovalState !== ApprovalState.APPROVED ? ( 
+              <ButtonPrimary
+              onClick={updateLeverageAllowance}
+              disabled={leverageApprovalState === ApprovalState.PENDING}
+              style={{ gap: 14 }}
+            >
+              {leverageApprovalState === ApprovalState.PENDING ? (
+                <>
+                  <Loader size="20px" />
+                  <Trans>Approve pending</Trans>
+                </>
+              ) : (
+                <>
+                  <div style={{ height: 20 }}>
+                    <MouseoverTooltip
+                      text={
+                        <Trans>
+                          Permission is required.
+                        </Trans>
+                      }
+                    >
+                      <Info size={20} />
+                    </MouseoverTooltip>
+                  </div>
+                  <Trans>Approve use of {inputIsToken0 ? position?.token0?.symbol : position?.token1?.symbol}</Trans>
+                </>
+              )}
+            </ButtonPrimary>
+      ) : (
+        <ButtonError
+        onClick={handleAddPremium}
+        disabled={false}
+        style={{ margin: '10px 0 0 0' }}
+        id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
+      >
+        <Text fontSize={20} fontWeight={500}>
+          <Trans>Add Premium</Trans>
+        </Text>
+      </ButtonError>
+      )
+      }
     </AutoRow>
   )
 }

@@ -202,7 +202,7 @@ export function useDerivedLeverageCreationInfo()
 
   // TODO calculate slippage from the pool
   const allowedSlippage = new BN("103").shiftedBy(16).toFixed(0) // new Percent(JSBI.BigInt(50), JSBI.BigInt(10000))
-  // console.log("simulation: ", leverageManager)
+  console.log("simulation: ", leverageManager)
   if(debouncedAmount && Number(leverageFactor) > 1){
   const _input = Number(debouncedAmount.toFixed()) * (10** Number(inputCurrency?.wrapped.decimals))
   const _borrowAmount = _input * (Number(leverageFactor)-1)
@@ -232,7 +232,7 @@ export function useDerivedLeverageCreationInfo()
           borrowAmount.toFixed(0),
           isLong
         )
-        console.log("contractResult", trade)
+        // console.log("createPositionresult", trade)
         setContractResult(trade)
         setTradeState(LeverageTradeState.VALID)
       } catch (err) {
@@ -261,7 +261,7 @@ export function useDerivedLeverageCreationInfo()
       
       // ? new Percent(String(Number(strikePrice) - Number(initialPrice.toFixed(12))), String(Number(initialPrice.toFixed(12)))) : 
       // new Percent(String(Number(initialPrice.toFixed(12)) - Number(strikePrice)), String(Number(initialPrice.toFixed(12))))
-      console.log("debounced: ", debouncedAmount.toExact(), borrowedAmount)
+      // console.log("debounced: ", debouncedAmount.toExact(), borrowedAmount)
       const effectiveLeverage = new BN( ( Number(borrowedAmount) + Number(debouncedAmount.toExact()) + Number(quotedPremium) ) / (Number(debouncedAmount.toExact()) + Number(quotedPremium))).toFixed(6)
 
       return {

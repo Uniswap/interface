@@ -29,7 +29,7 @@ import { monthYearDayFormatter } from 'utils/formatChartTimes'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import moment from "moment"
 import { BigNumber as BN } from "bignumber.js"
-import ClosePositionModal from 'components/swap/CloseLeveragePositionModal'
+import ClosePositionModal, { AddPremiumModal } from 'components/swap/CloseLeveragePositionModal'
 import { useWeb3React } from '@web3-react/core'
 
 const ResponsiveButtonPrimary = styled(SmallButtonPrimary)`
@@ -253,17 +253,18 @@ export default function LeveragePositionItem({
   const currency0 = inputIsToken0 ? swapInputCurrency : swapOutputCurrency
   const currency1 = inputIsToken0 ? swapOutputCurrency : swapInputCurrency
 
-  const [showConfirm, setshowConfirm] = useState(false); 
-  const [showPremiumConfirm, setshowPremiumConfirm] = useState(false);
+  const [showClose, setShowClose] = useState(false); 
+  const [showAddPremium, setShowAddPremium] = useState(false);
   const locale = useActiveLocale()
   const dateFormatter = monthYearDayFormatter(locale)
   // const collateral = (totalLiquidity - totalDebt)
   const handleConfirmDismiss = ()=>{
-    setshowConfirm(false); 
+    setShowClose(false); 
   } 
   const handlePremiumConfirmDismiss = ()=>{
-    setshowPremiumConfirm(false); 
+    setShowAddPremium(false); 
   }
+
   const [poolState, pool] = usePool(currency0 ?? undefined, currency1?? undefined, FeeAmount.LOW)
 
   // enter token0 price in token1
@@ -279,9 +280,6 @@ export default function LeveragePositionItem({
     return Number(totalLiquidity)*(Number(currentPrice) - Number(enterPrice?.toFixed(10))) * (x) //- Number(totalDebtInput)
   }, [pool, enterPrice])
 
-  const txHash = ""
-  const recipient = ""
-  const attemptingTxn = true;
   // &nbsp;{currency0?.symbol}&nbsp;/&nbsp;{currency1?.symbol}
   return (
     <ItemWrapper>
@@ -343,8 +341,8 @@ export default function LeveragePositionItem({
           </AutoColumn>
           <AutoColumn gap="8px">
           <ItemValueLabel label={"Time of Creation"} value={moment(new Date(Number(openTime) * 1000)).format("M/D/YYYY H:mm")}/>
-          <ItemValueLabel label={"Next Repayment Due "} value={
-            moment(new Date(Number(repayTime + 86400) * 1000)).fromNow()
+          <ItemValueLabel label={"Last Repayment Time "} value={
+            moment(new Date(Number(repayTime) * 1000)).fromNow()
           }/>
           </AutoColumn>
         </AutoRow>
@@ -366,11 +364,11 @@ export default function LeveragePositionItem({
         <AutoRow gap="8px">
           <ResponsiveButtonPrimary 
           //data-cy="join-pool-button" id="join-pool-button"
-           onClick={() => setshowConfirm(!showConfirm)}>
+           onClick={() => setShowClose(!showClose)}>
             <Trans>Close Position</Trans>
           </ResponsiveButtonPrimary>
           <ClosePositionModal
-            isOpen={showConfirm}
+            isOpen={showClose}
             trader={account}
             leverageManagerAddress={leverageManagerAddress ?? undefined}
             tokenId={tokenId}
@@ -378,24 +376,17 @@ export default function LeveragePositionItem({
             onAcceptChanges={() => {}}
             onConfirm={() => {}}
           />
-          {/* <ConfirmAddPremiumModal
-            isOpen={showPremiumConfirm}
-            // trade={trade}
-            // originalTrade={tradeToConfirm}
-            // onAcceptChanges={handleAcceptChanges}
-            attemptingTxn={attemptingTxn}
-            txHash={txHash}
-            recipient={recipient}
-            // allowedSlippage={allowedSlippage}
-            // onConfirm={handleSwap}
-            // swapErrorMessage={swapErrorMessage}
+          <AddPremiumModal
+            trader={account}
+            isOpen={showAddPremium}
+            tokenId={tokenId}
+            leverageManagerAddress={leverageManagerAddress ?? undefined}
             onDismiss={handlePremiumConfirmDismiss}
-            // swapQuoteReceivedDate={swapQuoteReceivedDate}
-            // fiatValueInput={fiatValueTradeInput}
-            // fiatValueOutput={fiatValueTradeOutput}
-          /> */}
+            onAcceptChanges={() => {}}
+            onConfirm={() => {}}
+            />
 
-          <ResponsiveButtonPrimary onClick={() => setshowConfirm(!showPremiumConfirm)} >
+          <ResponsiveButtonPrimary onClick={() => setShowAddPremium(!showAddPremium)} >
             <Trans>Add Premium</Trans>
           </ResponsiveButtonPrimary>
         </AutoRow>

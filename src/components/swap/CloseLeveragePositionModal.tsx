@@ -11,11 +11,15 @@ import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,
 } from '../TransactionConfirmationModal'
-import SwapModalFooter, { CloseLeverageModalFooter, LeverageModalFooter } from './SwapModalFooter'
+import SwapModalFooter, { AddPremiumModalFooter, CloseLeverageModalFooter, LeverageModalFooter } from './SwapModalFooter'
 import SwapModalHeader, { LeverageModalHeader } from './SwapModalHeader'
 import { LeverageTrade } from 'state/swap/hooks'
 import { useLeveragePosition } from 'hooks/useV3Positions'
 import { CloseLeveragePositionDetails } from './AdvancedSwapDetails'
+import useDebounce from 'hooks/useDebounce'
+import { useLeverageManagerAddress } from 'hooks/useGetLeverageManager'
+import { useLeverageManagerContract } from 'hooks/useContract'
+import {BigNumber as BN} from "bignumber.js"
 
 
 export default function ClosePositionModal({
@@ -25,7 +29,7 @@ export default function ClosePositionModal({
   leverageManagerAddress,
   onDismiss,
   onAcceptChanges,
-  onConfirm
+  onConfirm,
 }: {
   trader: string | undefined,
   isOpen: boolean,
@@ -42,6 +46,9 @@ export default function ClosePositionModal({
   // console.log("args: ", trader, isOpen, tokenId, leverageManagerAddress)
 
   const [positionState, position] = useLeveragePosition(leverageManagerAddress, trader, tokenId)
+  const [slippage, setSlippage] = useState("0.1")
+  const [txHash, setTxHash] = useState("")
+  const [attemptingTxn, setAttemptingTxn] = useState(false)
 
 
   const onModalDismiss = useCallback(() => {
@@ -55,9 +62,37 @@ export default function ClosePositionModal({
       <CloseLeveragePositionDetails leverageTrade={position}/>
     )
   }, [onAcceptChanges, shouldLogModalCloseEvent])
+  const debouncedSlippage = useDebounce(slippage, 200)
+  const leverageManagerContract = useLeverageManagerContract(leverageManagerAddress, true)
+
+  const handleClosePosition = useMemo(() => {
+    if (leverageManagerContract) {
+      const formattedSlippage = new BN(debouncedSlippage).plus(100).shiftedBy(16).toFixed(0)
+      return () => {
+        setAttemptingTxn(true)
+        leverageManagerContract.closePosition(
+          tokenId,
+          trader,
+          formattedSlippage
+        ).then((hash: any) => {
+          setTxHash(hash)
+          setAttemptingTxn(false)
+        }).catch((err: any) => {
+          setAttemptingTxn(false)
+          console.log("error closing position: ", err)
+        })
+      }
+    }
+    return () =>{}
+  }, [leverageManagerAddress, slippage, tokenId, trader])
 
   const modalBottom = useCallback(() => {
-    return (<CloseLeverageModalFooter leverageManagerAddress={leverageManagerAddress} tokenId={tokenId} trader={trader}/>)
+    return (<CloseLeverageModalFooter 
+      leverageManagerAddress={leverageManagerAddress} tokenId={tokenId} trader={trader}
+      slippage={slippage}
+      setSlippage={setSlippage}
+      handleClosePosition={handleClosePosition}
+      />)
   }, [
     onConfirm
   ])
@@ -87,11 +122,112 @@ export default function ClosePositionModal({
       <TransactionConfirmationModal
         isOpen={isOpen}
         onDismiss={onModalDismiss}
-        attemptingTxn={false}
-        hash={""}
+        attemptingTxn={attemptingTxn}
+        hash={txHash}
         content={confirmationContent}
         pendingText={pendingText}
-        currencyToAdd={undefined}
+      />
+    </Trace>
+  )
+}
+
+export function AddPremiumModal({
+  trader,
+  isOpen,
+  tokenId,
+  leverageManagerAddress,
+  onDismiss,
+  onAcceptChanges,
+  onConfirm
+
+}: {
+  trader: string | undefined,
+  isOpen: boolean,
+  tokenId: string | undefined,
+  leverageManagerAddress: string | undefined,
+  onDismiss: () => void
+  onAcceptChanges: () => void
+  onConfirm: () => void
+}) {
+  // shouldLogModalCloseEvent lets the child SwapModalHeader component know when modal has been closed
+  // and an event triggered by modal closing should be logged.
+  const [shouldLogModalCloseEvent, setShouldLogModalCloseEvent] = useState(false)
+  const [attemptingTxn, setAttemptingTxn] = useState(false)
+  const [txHash, setTxHash] = useState("")
+
+  // console.log("args: ", trader, isOpen, tokenId, leverageManagerAddress)
+
+  const [positionState, position] = useLeveragePosition(leverageManagerAddress, trader, tokenId)
+  const leverageManager = useLeverageManagerContract(leverageManagerAddress, true)
+
+  const handleAddPremium = useCallback(() => {
+    if (leverageManager) {
+      setAttemptingTxn(true)
+      leverageManager.addPremium(trader, tokenId).then(
+        (hash: any) => {
+          setAttemptingTxn(false)
+          setTxHash(hash)
+          console.log("add premium hash: ", hash)
+        }
+      ).catch((err: any) => {
+        setAttemptingTxn(false)
+        console.log("error adding premium: ", err)
+      }
+      )
+    }
+  }, [])
+
+
+  const onModalDismiss = useCallback(() => {
+    if (isOpen) setShouldLogModalCloseEvent(true)
+    onDismiss()
+  }, [isOpen, onDismiss])
+  // console.log("postionState: ", position)
+
+
+  const modalHeader = useCallback(() => {
+    return (
+      <CloseLeveragePositionDetails leverageTrade={position}/>
+    )
+  }, [onAcceptChanges, shouldLogModalCloseEvent])
+
+  const modalBottom = useCallback(() => {
+    return (<AddPremiumModalFooter leverageManagerAddress={leverageManagerAddress} tokenId={tokenId} trader={trader}
+    handleAddPremium={handleAddPremium}
+    />)
+  }, [
+    onConfirm
+  ])
+
+  // text to show while loading
+  const pendingText = (
+    <Trans>
+      Loading...
+    </Trans>
+  )
+
+  const confirmationContent = useCallback(
+    () =>
+      (
+        <ConfirmationModalContent
+          title={<Trans>Add Premium</Trans>}
+          onDismiss={onModalDismiss}
+          topContent={modalHeader}
+          bottomContent={modalBottom}
+        />
+      ),
+    [onModalDismiss, modalBottom, modalHeader]
+  )
+
+  return (
+    <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
+      <TransactionConfirmationModal
+        isOpen={isOpen}
+        onDismiss={onModalDismiss}
+        attemptingTxn={attemptingTxn}
+        hash={txHash}
+        content={confirmationContent}
+        pendingText={pendingText}
       />
     </Trace>
   )

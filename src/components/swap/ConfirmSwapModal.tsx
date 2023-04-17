@@ -201,7 +201,6 @@ export function LeverageConfirmModal({
       />
     ) : null
   }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade, shouldLogModalCloseEvent])
-  console.log("showAcceptChanges", onConfirm)
 
   const modalBottom = useCallback(() => {
     return trade ? (
@@ -232,8 +231,8 @@ export function LeverageConfirmModal({
   // text to show while loading
   const pendingText = (
     <Trans>
-      Swapping {trade?.inputAmount?.toSignificant(6)} {trade?.inputAmount?.currency?.symbol} for{' '}
-      {trade?.outputAmount?.toSignificant(6)} {trade?.outputAmount?.currency?.symbol}
+      Borrowing {leverageTrade?.borrowedAmount?.toExact()} {leverageTrade?.inputAmount?.currency?.symbol} and{' '}
+      Recieving {leverageTrade?.expectedOutput} {trade?.outputAmount?.currency?.symbol}
     </Trans>
   )
 

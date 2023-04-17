@@ -39,36 +39,25 @@ export function useLeveragePositions(leverageManagerAddress: string | undefined,
   }
   // console.log("contractPositiosn: ", positions)
 
-  // console.log("positionargs", args)
-
   const multiResult= useSingleContractMultipleData(leverageManager, 'userpositions', args)
 
-  if (loading || error || !positions || !inputCurrency?.wrapped || !outputCurrency?.wrapped || multiResult[0].loading || multiResult[0].error || !multiResult[0].result) {
+  // console.log("multiResult1", args, leverageManager, multiResult, loading, error, positions)
+  let multiResultLoading = false
+  multiResult.forEach((data) => {
+    if (data.loading || data.error) {
+      multiResultLoading = true
+    }
+  })
+
+  if (multiResultLoading || args.length === 0 || !leverageManager || loading || error || !positions || !inputCurrency?.wrapped || !outputCurrency?.wrapped || !multiResult && ((multiResult as any).length > 0)) {
     return []
   }
 
-  // console.log("multiResult", multiResult)
+  // console.log("multiResult2", args, leverageManager, multiResult, loading, error, positions)
+
+
 
   const inputCurrencyIsToken0 = inputCurrency?.wrapped.sortsBefore(outputCurrency?.wrapped);
-  // const _formattedPositions = positions[0].map((data: any, i: number)=>{
-
-  //   let outputDecimals = data.isToken0 && inputCurrencyIsToken0 ? inputCurrency?.wrapped.decimals : outputCurrency?.wrapped.decimals
-  //   // input of trade position
-  //   let inputDecimals = data.isToken0 && inputCurrencyIsToken0 ? outputCurrency?.wrapped.decimals : inputCurrency?.wrapped.decimals
-  //   return {
-  //     tokenId: 0,
-  //     totalLiquidity: new BN(data.totalPosition.toString()).shiftedBy(-outputDecimals).toFixed(6),
-  //     totalDebt: new BN(data.totalDebt.toString()).shiftedBy(-outputDecimals).toFixed(6),
-  //     totalDebtInput: new BN(data.totalDebtInput.toString()).shiftedBy(-inputDecimals).toFixed(6),
-  //     borrowedLiquidity: new BN(data.borrowedLiq.toString()).shiftedBy(-inputDecimals).toFixed(6),
-  //     creationTick: new BN(data.creationTick).toFixed(0),
-  //     isToken0: data.isToken0,
-  //     openTime: new BN(data.openTime).toFixed(0),
-  //     repayTime: new BN(data.repayTime).toFixed(0),
-  //     tickStart: new BN(data.borrowStartTick).toFixed(0),
-  //     tickFinish: new BN(data.borrowFinishTick).toFixed(0),
-  //   }
-  // })
 
 
   const formattedPositions = multiResult.map((data: any, i) => {
@@ -88,6 +77,8 @@ export function useLeveragePositions(leverageManagerAddress: string | undefined,
       totalDebtInput: new BN(position.totalDebtInput.toString()).shiftedBy(-inputDecimals).toFixed(6),
       borrowedLiquidity: new BN(position.borrowedLiq.toString()).shiftedBy(-inputDecimals).toFixed(6),
       creationTick: new BN(position.creationTick).toFixed(0),
+      cumulativePremium: new BN(position.cumulativePremium.toString()).shiftedBy(-inputDecimals).toFixed(6),
+      initialCollateral: new BN(position.initCollateral.toString()).shiftedBy(-inputDecimals).toFixed(6),
       isToken0: position.isToken0,
       openTime: new BN(position.openTime).toFixed(0),
       repayTime: new BN(position.repayTime).toFixed(0),
@@ -95,7 +86,9 @@ export function useLeveragePositions(leverageManagerAddress: string | undefined,
       tickFinish: new BN(position.borrowFinishTick).toFixed(0),
     }
   })
-  return formattedPositions.filter(position=> Number(position.totalLiquidity.toString())>0)
+
+  // return formattedPositions.filter(position=> Number(position.totalLiquidity.toString())>0)
+  return formattedPositions
 }
 
 
@@ -152,6 +145,8 @@ export function useLeveragePosition(leverageManagerAddress: string | undefined, 
     repayTime: new BN(position.repayTime).toFixed(0),
     tickStart: new BN(position.borrowStartTick).toFixed(0),
     tickFinish: new BN(position.borrowFinishTick).toFixed(0),
+    cumulativePremium: new BN(position.cumulativePremium.toString()).shiftedBy(-18).toFixed(6),
+    initialCollateral: new BN(position.initCollateral.toString()).shiftedBy(-18).toFixed(6),
   }
   return [PositionState.LOADING, formattedPosition]
 }

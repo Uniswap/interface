@@ -176,10 +176,10 @@ const LeverageGaugeSection = styled(SwapSection) <{ showDetailsDropdown: boolean
   border-bottom: ${({ theme }) => `1px solid ${theme.backgroundSurface}`};
   border-top-right-radius: 0;
   border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  // border-bottom-left-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
-  // border-bottom-right-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
+  // border-bottom-left-radius: 0;
+  // border-bottom-right-radius: 0;
+  border-bottom-left-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
+  border-bottom-right-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
 `
 
 const DetailsSwapSection = styled(SwapSection)`
@@ -268,7 +268,6 @@ export default function Swap({ className }: { className?: string }) {
   // console.log('leverageTrade:', leverageTrade)
 
   // console.log("loadedUrlParams", loadedUrlParams)
-
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
     useCurrency(loadedUrlParams?.[Field.INPUT]?.currencyId),
@@ -322,10 +321,12 @@ export default function Swap({ className }: { className?: string }) {
     inputError: swapInputError,
   } = useDerivedSwapInfo()
 
+
+
   // console.log("tradeState", tradeState)
   // console.log("trade", trade)
   // console.log("allowedSlippage", allowedSlippage)
-  console.log("currenciesswap", currencies)
+  // console.log("currenciesswap", currencies)
 
   const {
     wrapType,
@@ -484,7 +485,7 @@ export default function Swap({ className }: { className?: string }) {
   // console.log("leverageManagerAllowanceAmount", leverageManagerAllowanceAmount)
 
 
-  console.log("leverageManagerAddress", leverageManagerAddress)
+  // console.log("leverageManagerAddress", leverageManagerAddress)
 
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
   const [isAllowancePending, setIsAllowancePending] = useState(false)
@@ -614,7 +615,7 @@ export default function Swap({ className }: { className?: string }) {
     trade?.inputAmount?.currency?.symbol,
     trade?.outputAmount?.currency?.symbol,
   ])
-  console.log("leverageAllowedSlippage: ", leverageAllowedSlippage.toFixed(6))
+  // console.log("leverageAllowedSlippage: ", leverageAllowedSlippage.toFixed(6))
   const leverageCallback = useLeverageBorrowCallback(
     leverageManagerAddress ?? undefined,
     trade,
@@ -630,9 +631,9 @@ export default function Swap({ className }: { className?: string }) {
     if (!leverageCallback) {
       return
     }
-    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined, showLeverageConfirm: true })
+    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined, showLeverageConfirm })
     leverageCallback().then((hash: any) => {
-      setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash, showLeverageConfirm: false })
+      setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash, showLeverageConfirm })
       sendEvent({
         category: 'Swap',
         action: 'transaction hash',
@@ -659,7 +660,7 @@ export default function Swap({ className }: { className?: string }) {
         showConfirm,
         swapErrorMessage: "Failed creation",//error.message,
         txHash: undefined,
-        showLeverageConfirm: false,
+        showLeverageConfirm
       })
     })
   }, [
@@ -667,7 +668,7 @@ export default function Swap({ className }: { className?: string }) {
   ])
   // errors
   const [swapQuoteReceivedDate, setSwapQuoteReceivedDate] = useState<Date | undefined>()
-
+  // console.log("leverageAddress: ", leverageManagerAddress)
   // warnings on the greater of fiat value price impact and execution price impact
   const { priceImpactSeverity, largerPriceImpact } = useMemo(() => {
     const marketPriceImpact = trade?.priceImpact ? computeRealizedPriceImpact(trade) : undefined
@@ -716,7 +717,7 @@ export default function Swap({ className }: { className?: string }) {
 
   const {state} = useLocation() as any;
   if(state){
-    console.log('state', state)
+    // console.log('state', state)
     const { currency0, currency1 } = state
 
       useEffect(() => {
@@ -760,6 +761,7 @@ export default function Swap({ className }: { className?: string }) {
 
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
+
   )
 
 
@@ -791,6 +793,8 @@ export default function Swap({ className }: { className?: string }) {
     errorPolicy: 'all',
   })
 
+  // console.log("poolAddress: ", poolAddress)
+
   const { data: token1PriceQuery } = useTokenPriceQuery({
     variables: {
       address: outputAddress,
@@ -802,6 +806,8 @@ export default function Swap({ className }: { className?: string }) {
 
   const leveragePositions = useLeveragePositions(leverageManagerAddress ?? undefined, account, currencies)
 
+  // console.log("leverageTrade: ", leverageTrade)
+  // console.log("leveragePositions", leveragePositions)
 
   // const leveragePositions: LeveragePositionDetails[] = [
   //   {
@@ -1074,14 +1080,16 @@ export default function Swap({ className }: { className?: string }) {
                           </>
                         ) : null}
                       </OutputSwapSection>
-                      <LeverageGaugeSection showDetailsDropdown={showDetailsDropdown} >
+                      <LeverageGaugeSection showDetailsDropdown={(!inputError && leverage) || (!leverage && showDetailsDropdown)} >
                         <LightCard>
                           <AutoColumn gap="md">
                             <RowBetween>
                               <ThemedText.DeprecatedMain fontWeight={400}>
                                 <Trans>Leverage</Trans>
                               </ThemedText.DeprecatedMain>
-                              <Checkbox hovered={false} checked={leverage} onClick={() => onLeverageChange(!leverage)}>
+                              <Checkbox hovered={false} checked={leverage} onClick={() => {
+                                onLeverageChange(!leverage)
+                              }}>
                               </Checkbox>
                             </RowBetween>
                             {leverage && (
@@ -1118,7 +1126,7 @@ export default function Swap({ className }: { className?: string }) {
                           </AutoColumn>
                         </LightCard>
                       </LeverageGaugeSection>
-                      {
+                      {!inputError ?
                         (
                           <DetailsSwapSection>
                             <SwapDetailsDropdown
@@ -1129,7 +1137,10 @@ export default function Swap({ className }: { className?: string }) {
                               leverageTrade={leverageTrade}
                             />
                           </DetailsSwapSection>
-                        )}
+                        ) : (
+                          null
+                        )
+                      }
                     </div>
                     {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
                     <div>
@@ -1219,8 +1230,7 @@ export default function Swap({ className }: { className?: string }) {
                                   <MouseoverTooltip
                                     text={
                                       <Trans>
-                                        Permission is required for Uniswap to swap each token. This will expire after one
-                                        month for your security.
+                                        Permission is required.
                                       </Trans>
                                     }
                                   >

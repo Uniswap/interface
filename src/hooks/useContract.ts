@@ -33,7 +33,8 @@ import { useMemo } from 'react'
 import { NonfungiblePositionManager, Quoter, QuoterV2, TickLens, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
 import { abi as LeverageManagerAbi} from "../perpspotContracts/LeverageManager.json"
-import {abi as testTokenAbi} from "../perpspotContracts/testERC.json"
+// import {abi as testTokenAbi} from "../perpspotContracts/testERC.json"
+import { abi as testTokenAbi } from "../perpspotContracts/TestToken.json"
 import { getContract } from '../utils'
 
 const { abi: IUniswapV2PairABI } = IUniswapV2PairJson
