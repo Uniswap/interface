@@ -61,7 +61,7 @@ const SearchBarDropdownSection = ({
         {headerIcon ? headerIcon : null}
         <Box>{header}</Box>
       </Row>
-      <Column gap="12">
+      {/*<Column gap="12">
         {suggestions.map((suggestion, index) =>
           isLoading || !suggestion ? (
             <SkeletonRow key={index} />
@@ -97,7 +97,7 @@ const SearchBarDropdownSection = ({
             />
           )
         )}
-      </Column>
+      </Column>*/}
     </Column>
   )
 }
@@ -261,10 +261,10 @@ export const SearchBarDropdown = ({
               suggestion_type: NavBarSearchTypes.COLLECTION_SUGGESTION,
               ...eventProperties,
             }}
-            header={<Trans>NFT Collections</Trans>}
+            header={<Trans>Pairs</Trans>}
           />
         ) : (
-          <Box className={styles.notFoundContainer}>No NFT collections found.</Box>
+          <Box className={styles.notFoundContainer}>No Pairs found.</Box>
         )
 
       const currentState = () =>
@@ -313,12 +313,12 @@ export const SearchBarDropdown = ({
                   suggestion_type: NavBarSearchTypes.TOKEN_TRENDING,
                   ...eventProperties,
                 }}
-                header={<Trans>Popular tokens</Trans>}
+                header={<Trans>Popular pairs</Trans>}
                 headerIcon={<TrendingArrow />}
                 isLoading={!trendingTokenData}
               />
             )}
-            {!isTokenPage && (
+            {/*!isTokenPage && (
               <SearchBarDropdownSection
                 hoveredIndex={hoveredIndex}
                 startingIndex={shortenedHistory.length + (isNFTPage ? 0 : trendingTokens?.length ?? 0)}
@@ -333,7 +333,7 @@ export const SearchBarDropdown = ({
                 headerIcon={<TrendingArrow />}
                 isLoading={trendingCollectionsAreLoading}
               />
-            )}
+            )*/}
           </Column>
         )
 

@@ -275,7 +275,7 @@ export default function LeveragePositionItem({
   
   const PNL = useMemo(() => {
     let x = isToken0 ? Number(currentPrice) : 1/Number(currentPrice)
-    console.log("x", x, totalDebtInput, totalLiquidity, currentPrice, enterPrice)
+    // console.log("x", x, totalDebtInput, totalLiquidity, currentPrice, enterPrice)
     return Number(totalLiquidity)*(Number(currentPrice) - Number(enterPrice?.toFixed(10))) * (x) //- Number(totalDebtInput)
   }, [pool, enterPrice])
 
@@ -330,9 +330,9 @@ export default function LeveragePositionItem({
             )}
           </AutoColumn>
         </PrimaryPositionIdData>
-            <AutoColumn gap="8px" style={{marginRight: "150px"}}>
+        <AutoColumn gap="8px" style={{marginRight: "150px"}}>
             <ItemValueLabel label={"Total Position"} value={totalLiquidity + " " + (isToken0 ? currency0?.symbol : currency1?.symbol)}/>
-          </AutoColumn>
+        </AutoColumn>
         <AutoRow justify="flex-start" width="100%" marginBottom="16px">
 
 

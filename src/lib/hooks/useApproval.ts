@@ -127,6 +127,7 @@ export function useFaucet(
   // check the current approval status
   // const approvalState = useApprovalStateForSpender(amountToApprove, spender, useIsPendingApproval)
   const { chainId } = useWeb3React()
+  console.log('token', token); 
   const tokenContract = useTestTokenContract(token?.address)
 
   const faucet = useCallback(async () => {

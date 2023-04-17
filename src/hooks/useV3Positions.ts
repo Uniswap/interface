@@ -70,7 +70,6 @@ export function useLeveragePositions(leverageManagerAddress: string | undefined,
   //   }
   // })
 
-  // console.log('positionshere', _formattedPositions); 
 
   const formattedPositions = multiResult.map((data: any, i) => {
     let position = positions[0][i]
@@ -96,8 +95,7 @@ export function useLeveragePositions(leverageManagerAddress: string | undefined,
       tickFinish: new BN(position.borrowFinishTick).toFixed(0),
     }
   })
-
-  return formattedPositions
+  return formattedPositions.filter(position=> Number(position.totalLiquidity.toString())>0)
 }
 
 

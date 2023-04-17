@@ -81,6 +81,8 @@ export function useLeverageManagerContract(leverageManagerAddress?: string, with
 }
 
 export function useTestTokenContract(testTokenAd?: string, withSignerIfPossible?: boolean) {
+  console.log('addresshere', testTokenAd)
+  const contract = useContract(testTokenAd, testTokenAbi, withSignerIfPossible); 
 
   return useContract(testTokenAd, testTokenAbi, withSignerIfPossible)
 }

@@ -177,7 +177,7 @@ export default function TokenTable() {
   } else {
     return (
       <GridContainer>
-        {/* <PHeaderRow /> */}
+        <PHeaderRow /> 
         <TokenDataContainer>
           {_tokens.map(
             ({token0, token1}) =>

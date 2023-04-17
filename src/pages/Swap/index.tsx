@@ -282,7 +282,7 @@ export default function Swap({ className }: { className?: string }) {
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
   }, [])
-  console.log('url added tokens', urlLoadedTokens)
+
   // dismiss warning if all imported tokens are in active lists
   const defaultTokens = useDefaultActiveTokens()
   const importTokensNotInDefault = useMemo(
@@ -506,20 +506,30 @@ export default function Swap({ className }: { className?: string }) {
   }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol])
   const [leverageApprovalState, approveLeverageManager] = useApproveCallback(parsedAmounts[Field.INPUT], leverageManagerAddress ?? undefined)
   // const updateLeverageAllowance = () => {}
-  const faucet_ = useFaucetCallback()
+  const tokenin = (currencies?.INPUT?.isToken ? (currencies?.INPUT as Token) : undefined)
+  const tokenout = (currencies?.OUTPUT?.isToken ? (currencies?.OUTPUT as Token) : undefined)
 
-  const faucet = useCallback(async() =>{
+  const faucetin = useFaucetCallback(tokenin, account)
+  const faucetout = useFaucetCallback(tokenout, account)
 
-    const token = (parsedAmounts[Field.INPUT]?.currency.isToken ? (parsedAmounts[Field.INPUT]?.currency as Token) : undefined)
+  const faucetIn = useCallback(async() =>{
     try{
-      faucet_()
-      console.log('wtfff')
+      faucetin()
     }catch (err){
       console.log('err', err)
     }
 
 
-  
+// loadedInputCurrency, loadedOutputCurrency
+  }, [currencies])
+  const faucetOut= useCallback(async() =>{
+    try{
+      faucetout()
+    }catch (err){
+      console.log('err', err)
+    }
+
+
 // loadedInputCurrency, loadedOutputCurrency
   }, [currencies])
   const updateLeverageAllowance = useCallback(async () => {
@@ -872,14 +882,14 @@ export default function Swap({ className }: { className?: string }) {
         <PageWrapper>
         {
           inputCurrency && (
-            <SmallMaxButton onClick={() => faucet()} width="20%">
+            <SmallMaxButton onClick={() => faucetIn()} width="20%">
               <Trans>Faucet {inputCurrency.symbol}</Trans>
             </SmallMaxButton>
             )
         }
         {
           outputCurrency && (
-            <SmallMaxButton onClick={() => onLeverageFactorChange("10")} width="20%">
+            <SmallMaxButton onClick={() => faucetOut()} width="20%">
               <Trans>Faucet {outputCurrency.symbol}</Trans>
             </SmallMaxButton>
             )

@@ -151,7 +151,7 @@ export function CurrencySearch({
     native,
   ])
 
-  console.log('searchCurrencies', searchCurrencies)
+  // console.log('searchCurrencies', searchCurrencies)
 
   const handleCurrencySelect = useCallback(
     (currency: Currency, hasWarning?: boolean) => {
