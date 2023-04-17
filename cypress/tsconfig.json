@@ -1,10 +1,17 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "composite": false,
+    "esModuleInterop": true,
     "incremental": true,
-    "isolatedModules": false,
-    "types": ["cypress"]
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "noEmit": true,
+    "strict": true,
+    "target": "ES5",
+    "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/cypress",
+    "types": ["cypress", "node"]
   },
-  "include": ["**/*.ts"]
+  "exclude": ["node_modules"],
+  "include": ["**/*.ts"],
+  "watchOptions": {
+    "excludeDirectories": ["node_modules"]
+  }
 }

@@ -24,7 +24,7 @@
     "strict": true,
     "strictNullChecks": true,
     "target": "ESNext",
-    "tsBuildInfoFile": "node_modules/.cache/.tsbuildinfo",
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo/build",
     "types": ["jest"],
     "useUnknownInCatchVariables": false
   },
