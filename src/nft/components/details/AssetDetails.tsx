@@ -1,7 +1,6 @@
 import { OpacityHoverState, ScrollBarStyles } from 'components/Common'
 import Resource from 'components/Tokens/TokenDetails/Resource'
 import { MouseoverTooltip } from 'components/Tooltip/index'
-import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
 import { NftActivityType } from 'graphql/data/__generated__/types-and-hooks'
 import { useNftActivity } from 'graphql/data/nft/NftActivity'
 import { Box } from 'nft/components/Box'
@@ -10,17 +9,15 @@ import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { Center } from 'nft/components/Flex'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
-import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
-import { ActivityEventResponse, ActivityEventType, CollectionInfoForAsset, GenieAsset } from 'nft/types'
+import { ActivityEventType, CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
-import { formatEth, formatEthPrice } from 'nft/utils/currency'
+import { formatEth } from 'nft/utils/currency'
 import { isAudio } from 'nft/utils/isAudio'
 import { isVideo } from 'nft/utils/isVideo'
 import { putCommas } from 'nft/utils/putCommas'
 import { fallbackProvider, getRarityProviderLogo } from 'nft/utils/rarity'
 import { useCallback, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { useInfiniteQuery, useQuery } from 'react-query'
 import { Link as RouterLink } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
@@ -247,7 +244,6 @@ interface AssetDetailsProps {
 }
 
 export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
-  const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const [dominantColor] = useState<[number, number, number]>([0, 0, 0])
 
   const { rarityProvider } = useMemo(
@@ -275,34 +271,6 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
 
   const { address: contractAddress, tokenId: token_id } = asset
 
-  const { data: priceData } = useQuery<ActivityEventResponse>(
-    [
-      'collectionActivity',
-      {
-        contractAddress,
-      },
-    ],
-    async ({ pageParam = '' }) => {
-      return await ActivityFetcher(
-        contractAddress,
-        {
-          token_id,
-          eventTypes: [ActivityEventType.Sale],
-        },
-        pageParam,
-        '1'
-      )
-    },
-    {
-      getNextPageParam: (lastPage) => {
-        return lastPage.events?.length === 25 ? lastPage.cursor : undefined
-      },
-      refetchInterval: 15000,
-      refetchIntervalInBackground: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    }
-  )
   const { nftActivity: gqlPriceData } = useNftActivity(
     {
       activityTypes: [NftActivityType.Sale],
@@ -313,14 +281,8 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     'no-cache'
   )
 
-  let formattedPrice
-  if (isNftGraphqlEnabled) {
-    const weiPrice = gqlPriceData?.[0]?.price
-    formattedPrice = weiPrice ? formatEth(parseFloat(weiPrice)) : undefined
-  } else {
-    const ethPrice = priceData?.events[0]?.price
-    formattedPrice = ethPrice ? putCommas(formatEthPrice(priceData?.events[0]?.price)).toString() : undefined
-  }
+  const weiPrice = gqlPriceData?.[0]?.price
+  const formattedPrice = weiPrice ? formatEth(parseFloat(weiPrice)) : undefined
 
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
   const Filter = useCallback(
@@ -345,45 +307,6 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   )
 
   const {
-    data: eventsData,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isSuccess,
-    isLoading: isActivityLoading,
-  } = useInfiniteQuery<ActivityEventResponse>(
-    [
-      'collectionActivity',
-      {
-        contractAddress,
-        activeFilters,
-        token_id,
-      },
-    ],
-    async ({ pageParam = '' }) => {
-      return await ActivityFetcher(
-        contractAddress,
-        {
-          token_id,
-          eventTypes: Object.keys(activeFilters)
-            .map((key) => key as ActivityEventType)
-            .filter((key) => activeFilters[key]),
-        },
-        pageParam
-      )
-    },
-    {
-      getNextPageParam: (lastPage) => {
-        return lastPage.events?.length === 25 ? lastPage.cursor : undefined
-      },
-      refetchInterval: 15000,
-      refetchIntervalInBackground: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    }
-  )
-
-  const {
     nftActivity: gqlEventsData,
     hasNext,
     loadMore,
@@ -399,28 +322,6 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     },
     25
   )
-
-  const { events, gatedHasNext, gatedLoadMore, gatedLoading, gatedSuccess } = useMemo(() => {
-    return {
-      events: isNftGraphqlEnabled ? gqlEventsData : eventsData?.pages.map((page) => page.events).flat(),
-      gatedHasNext: isNftGraphqlEnabled ? hasNext : hasNextPage,
-      gatedLoadMore: isNftGraphqlEnabled ? loadMore : fetchNextPage,
-      gatedLoading: isNftGraphqlEnabled ? loading : isActivityLoading,
-      gatedSuccess: isNftGraphqlEnabled ? !error : isSuccess,
-    }
-  }, [
-    error,
-    eventsData?.pages,
-    fetchNextPage,
-    gqlEventsData,
-    hasNext,
-    hasNextPage,
-    isActivityLoading,
-    isNftGraphqlEnabled,
-    isSuccess,
-    loadMore,
-    loading,
-  ])
 
   const rarity = asset?.rarity?.providers?.[0]
   const [showHolder, setShowHolder] = useState(false)
@@ -486,27 +387,27 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             <Filter eventType={ActivityEventType.Transfer} />
             <Filter eventType={ActivityEventType.CancelListing} />
           </ActivitySelectContainer>
-          {gatedLoading ? (
+          {loading ? (
             <LoadingAssetActivity rowCount={10} />
-          ) : events && events.length > 0 ? (
+          ) : gqlEventsData && gqlEventsData.length > 0 ? (
             <InfiniteScroll
-              next={gatedLoadMore}
-              hasMore={!!gatedHasNext}
+              next={loadMore}
+              hasMore={!!hasNext}
               loader={
-                isFetchingNextPage && (
+                loading && (
                   <Center>
                     <LoadingSparkle />
                   </Center>
                 )
               }
-              dataLength={events?.length ?? 0}
+              dataLength={gqlEventsData?.length ?? 0}
               scrollableTarget="activityContainer"
             >
-              <AssetActivity events={events} />
+              <AssetActivity events={gqlEventsData} />
             </InfiniteScroll>
           ) : (
             <>
-              {gatedSuccess && events && (
+              {!error && gqlEventsData && (
                 <EmptyActivitiesContainer>
                   <div>No activities yet</div>
                   <Link to={`/nfts/collection/${asset.address}`}>View collection items</Link>{' '}

@@ -4,7 +4,6 @@ import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-even
 import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
 import { SupportedChainId } from 'constants/chains'
-import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
 import { HistoryDuration, SafetyLevel } from 'graphql/data/__generated__/types-and-hooks'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { SearchToken } from 'graphql/data/SearchTokens'
@@ -13,11 +12,8 @@ import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { subheadSmall } from 'nft/css/common.css'
-import { fetchTrendingCollections } from 'nft/queries'
-import { GenieCollection, TimePeriod, TrendingCollection } from 'nft/types'
-import { formatEthPrice } from 'nft/utils/currency'
+import { GenieCollection, TrendingCollection } from 'nft/types'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
-import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -149,34 +145,27 @@ export const SearchBarDropdown = ({
   const { pathname } = useLocation()
   const { chainId } = useWeb3React()
   const isNFTPage = useIsNftPage()
-  const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const isTokenPage = pathname.includes('/tokens')
   const [resultsState, setResultsState] = useState<ReactNode>()
-
-  const { data: trendingCollectionResults, isLoading: trendingCollectionsAreLoading } = useQuery(
-    ['trendingCollections', 'eth', 'twenty_four_hours'],
-    () => fetchTrendingCollections({ volumeType: 'eth', timePeriod: 'ONE_DAY' as TimePeriod, size: 3 })
-  )
 
   const { data: gqlData, loading } = useTrendingCollections(3, HistoryDuration.Day)
 
   const trendingCollections = useMemo(() => {
-    const gatedTrendingCollections = isNftGraphqlEnabled ? gqlData : trendingCollectionResults
-    return gatedTrendingCollections && (!isNftGraphqlEnabled || !loading)
-      ? gatedTrendingCollections
-          .map((collection) => ({
+    return !loading
+      ? gqlData
+          ?.map((collection) => ({
             ...collection,
             collectionAddress: collection.address,
-            floorPrice: isNftGraphqlEnabled ? collection.floor : formatEthPrice(collection.floor?.toString()),
+            floorPrice: collection.floor,
             stats: {
               total_supply: collection.totalSupply,
               one_day_change: collection.floorChange,
-              floor_price: isNftGraphqlEnabled ? collection.floor : formatEthPrice(collection.floor?.toString()),
+              floor_price: collection.floor,
             },
           }))
           .slice(0, isNFTPage ? 3 : 2)
       : [...Array<GenieCollection>(isNFTPage ? 3 : 2)]
-  }, [gqlData, isNFTPage, isNftGraphqlEnabled, loading, trendingCollectionResults])
+  }, [gqlData, isNFTPage, loading])
 
   const { data: trendingTokenData } = useTrendingTokens(useWeb3React().chainId)
 
@@ -331,7 +320,7 @@ export const SearchBarDropdown = ({
                 }}
                 header={<Trans>Popular NFT collections</Trans>}
                 headerIcon={<TrendingArrow />}
-                isLoading={trendingCollectionsAreLoading}
+                isLoading={loading}
               />
             )}
           </Column>
@@ -344,7 +333,6 @@ export const SearchBarDropdown = ({
     tokens,
     collections,
     trendingCollections,
-    trendingCollectionsAreLoading,
     trendingTokens,
     trendingTokenData,
     hoveredIndex,
@@ -358,6 +346,7 @@ export const SearchBarDropdown = ({
     totalSuggestions,
     trace,
     searchHistory,
+    loading,
   ])
 
   const showBNBComingSoonBadge = chainId === SupportedChainId.BNB && !isLoading

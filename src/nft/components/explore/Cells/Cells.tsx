@@ -1,5 +1,4 @@
 import { formatEther } from '@ethersproject/units'
-import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
 import { SquareArrowDownIcon, SquareArrowUpIcon, VerifiedIcon } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
 import { Denomination } from 'nft/types'
@@ -8,7 +7,7 @@ import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { ethNumberStandardFormatter, formatWeiToDecimal } from '../../../utils/currency'
+import { ethNumberStandardFormatter } from '../../../utils/currency'
 import * as styles from './Cells.css'
 
 const TruncatedText = styled.div`
@@ -114,13 +113,10 @@ export const EthCell = ({
   denomination: Denomination
   usdPrice?: number
 }) => {
-  const isNftGraphqlEnabled = useNftGraphqlEnabled()
-  const denominatedValue = getDenominatedValue(denomination, !isNftGraphqlEnabled, value, usdPrice)
+  const denominatedValue = getDenominatedValue(denomination, false, value, usdPrice)
   const formattedValue = denominatedValue
     ? denomination === Denomination.ETH
-      ? isNftGraphqlEnabled
-        ? ethNumberStandardFormatter(denominatedValue.toString(), false, true, false) + ' ETH'
-        : formatWeiToDecimal(denominatedValue.toString(), true) + ' ETH'
+      ? ethNumberStandardFormatter(denominatedValue.toString(), false, true, false) + ' ETH'
       : ethNumberStandardFormatter(denominatedValue, true, false, true)
     : '-'
 
