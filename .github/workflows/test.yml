@@ -73,6 +73,7 @@ jobs:
           path: node_modules/.cache
           key: ${{ runner.os }}-build-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-build-${{ hashFiles('**/yarn.lock') }}-
+      - run: rm src/locales/*.po
       - run: yarn prepare
       - run: yarn build
       - uses: actions/upload-artifact@v3
