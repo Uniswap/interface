@@ -90,7 +90,7 @@ export default function TransactionActionsModal({
       // isFiatOnRampTransaction would not provide type narrowing here
       transactionDetails.typeInfo.type === TransactionType.FiatPurchase
         ? transactionDetails.typeInfo.id
-        : transactionDetails.id
+        : transactionDetails.hash
 
     const maybeCopyTransactionIdOption = transactionId
       ? [
@@ -142,7 +142,6 @@ export default function TransactionActionsModal({
   }, [
     transactionDetails.typeInfo,
     transactionDetails.hash,
-    transactionDetails.id,
     onViewMoonpay,
     t,
     onExplore,
