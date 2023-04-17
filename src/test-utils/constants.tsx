@@ -6,7 +6,7 @@ export const noop = () => null
 export const testToken1 = new Token(1, '0x0000000000000000000000000000000000000001', 18)
 export const testToken2 = new Token(1, '0x0000000000000000000000000000000000000002', 18)
 export const testToken3 = new Token(1, '0x0000000000000000000000000000000000000003', 18)
-export const testRecipientAddress = '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2'
+export const testRecipientAddress = '0x0fF2D1eFd7A57B7562b2bf27F3f37899dB27F4a5'
 
 export const testPool12 = new Pool(
   testToken1,
