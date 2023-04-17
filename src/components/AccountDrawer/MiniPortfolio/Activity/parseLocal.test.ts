@@ -10,7 +10,7 @@ import {
   TransactionInfo,
   TransactionType as MockTxType,
 } from 'state/transactions/types'
-import { renderHook } from 'test-utils'
+import { renderHook } from 'test-utils/render'
 
 import { parseLocalActivity, useLocalActivities } from './parseLocal'
 

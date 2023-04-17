@@ -78,6 +78,14 @@ describe('Wallet Dropdown', () => {
     cy.get(getTestSelector('wallet-header')).should('have.css', 'color', 'rgb(119, 128, 160)')
   })
 
+  it('should dismiss the wallet bottom sheet when clicking buy crypto', () => {
+    visit(false)
+    cy.viewport('iphone-6')
+    cy.get(getTestSelector('web3-status-connected')).click()
+    cy.get(getTestSelector('wallet-buy-crypto')).click()
+    cy.contains('Buy crypto').should('not.be.visible')
+  })
+
   it('should use a bottom sheet and dismiss when on a mobile screen size', () => {
     visit(true)
     cy.viewport('iphone-6')
