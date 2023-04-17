@@ -55,6 +55,9 @@ module.exports = {
       // Webpack 4 doesn't support native caching (eg cache: 'filesystem'), so we use a third-party plugin.
       // NB: cacheDirectory defaults to node_modules/.cache/hard-source/[confighash] - configuring it fails to work 🤷
       new HardSourceWebpackPlugin(),
+      // Exclude mini-css-extract-plugin per the hard-source-webpack-plugin docs.
+      // See https://github.com/mzgoddard/hard-source-webpack-plugin#excludemoduleplugin.
+      new HardSourceWebpackPlugin.ExcludeModulePlugin([{ test: /mini-css-extract-plugin[\\/]dist[\\/]loader/ }]),
     ],
     configure: (webpackConfig) => {
       webpackConfig.plugins = webpackConfig.plugins.map((plugin) => {
