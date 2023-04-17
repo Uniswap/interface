@@ -78,7 +78,11 @@ jobs:
           key: ${{ runner.os }}-build-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-build-${{ hashFiles('**/yarn.lock') }}-
       - run: yarn prepare
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
       - run: yarn build
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
       - uses: actions/upload-artifact@v3
         with:
           name: build
