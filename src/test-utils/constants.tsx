@@ -4,7 +4,6 @@ import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 import { InterfaceTrade } from 'state/routing/types'
 
-export const noop = () => null
 export const testToken1 = new Token(1, '0x0000000000000000000000000000000000000001', 18, 'ABC')
 export const testToken2 = new Token(1, '0x0000000000000000000000000000000000000002', 18, 'DEF')
 export const testToken3 = new Token(1, '0x0000000000000000000000000000000000000003', 18, 'GHI')
