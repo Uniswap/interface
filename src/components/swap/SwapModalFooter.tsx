@@ -17,7 +17,7 @@ import { InterfaceTrade } from 'state/routing/types'
 import { useClientSideRouter, useUserSlippageTolerance } from 'state/user/hooks'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
-import { ButtonError, ButtonPrimary } from '../Button'
+import { ButtonError, ButtonPrimary, ButtonSecondary } from '../Button'
 import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
 import { ResponsiveTooltipContainer, SwapCallbackError } from './styleds'
 import { getTokenPath, RoutingDiagramEntry } from './SwapRoute'
@@ -48,6 +48,9 @@ import { Flash_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { truncateSync } from 'fs'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import Loader from 'components/Icons/LoadingSpinner'
+import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
+import Input from 'components/NumericalInput'
+
 
 
 interface AnalyticsEventProps {
@@ -62,6 +65,12 @@ interface AnalyticsEventProps {
   fiatValueInput?: number
   fiatValueOutput?: number
 }
+
+const StyledNumericalInput = styled(Input)`
+  width: 100px;
+  text-align:left;
+  margin-left:10px;
+`
 
 const formatRoutesEventProperties = (routes: RoutingDiagramEntry[]) => {
   const routesEventProperties: Record<string, any[]> = {
@@ -462,19 +471,40 @@ export function CloseLeverageModalFooter({
   leverageManagerAddress,
   tokenId,
   trader,
-  slippage,
-  setSlippage,
-  handleClosePosition
+  setAttemptingTxn,
+  setTxHash
 }: {
   leverageManagerAddress: string | undefined
   tokenId: string | undefined
   trader: string | undefined,
-  slippage: string,
-  setSlippage: (slippage: string) => void
-  handleClosePosition: () => void | undefined
+  setAttemptingTxn: (attemptingTxn: boolean) => void
+  setTxHash: (txHash: string) => void
 }) {
+  // const [nonce, setNonce] = useState(0)
+  const [slippage, setSlippage] = useState("1")
 
-  // const [slippage, setSlippage] = useState("0.01")
+  const leverageManagerContract = useLeverageManagerContract(leverageManagerAddress, true)
+
+  const handleClosePosition = useMemo(() => {
+    if (leverageManagerContract) {
+      const formattedSlippage = new BN(slippage).plus(100).shiftedBy(16).toFixed(0)
+      return () => {
+        setAttemptingTxn(true)
+        leverageManagerContract.closePosition(
+          tokenId,
+          trader,
+          formattedSlippage
+        ).then((hash: any) => {
+          setTxHash(hash)
+          setAttemptingTxn(false)
+        }).catch((err: any) => {
+          setAttemptingTxn(false)
+          console.log("error closing position: ", err)
+        })
+      }
+    }
+    return () =>{}
+  }, [leverageManagerAddress, slippage, tokenId, trader])
   const [derivedState, setDerivedState] = useState<DerivedInfoState>(DerivedInfoState.INVALID)
   const [showDetails, setShowDetails] = useState(false)
   const theme = useTheme()
@@ -482,7 +512,13 @@ export function CloseLeverageModalFooter({
   const [state, position] = useLeveragePosition(leverageManagerAddress, trader, tokenId)
 
   // what do we need for the simulation
-  const debouncedSlippage = useDebounce(slippage, 200)
+
+  const [debouncedSlippage, setDebouncedSlippage] = useDebouncedChangeHandler(slippage, setSlippage)
+  // console.log("nonce: ", nonce, slippage)
+
+  // useEffect(() => {
+  //   setNonce(nonce + 1)
+  // })
 
   const {
     token0Amount,
@@ -494,8 +530,8 @@ export function CloseLeverageModalFooter({
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
 
-  const loading = derivedState === DerivedInfoState.LOADING
-  const valid = derivedState === DerivedInfoState.VALID
+  const loading = useMemo(() => derivedState === DerivedInfoState.LOADING, [derivedState])
+  console.log("slippage: ", slippage)
 
   const inputIsToken0 = !position?.isToken0
 
@@ -515,7 +551,7 @@ export function CloseLeverageModalFooter({
           <>
             <RowBetween>
               <ResponsiveHeaderText>
-                <Trans>{slippage}%</Trans>
+                <Trans>{debouncedSlippage}%</Trans>
               </ResponsiveHeaderText>
               <AutoRow gap="4px" justify="flex-end">
                 <SmallMaxButton onClick={() => setSlippage("0.5")} width="20%">
@@ -533,13 +569,13 @@ export function CloseLeverageModalFooter({
               </AutoRow>
             </RowBetween>
             <Slider
-              value={parseFloat(slippage)}
-              onChange={(val) => setSlippage(val.toString())}
-              min={0.01}
+              value={parseFloat(debouncedSlippage)}
+              onChange={(val) => setDebouncedSlippage(String(val))}
+              min={0.5}
               max={5.0}
-              step={0.01}
-              float={true}
+              step={0.1}
               size={20}
+              float={true}
             />
           </>
         </AutoColumn>
@@ -584,7 +620,7 @@ export function CloseLeverageModalFooter({
             </StyledHeaderRow>
             <AnimatedDropdown open={showDetails}>
               <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
-                {token0Amount && token1Amount ? (
+                {!loading && token0Amount && token1Amount ? (
                   <StyledCard>
                     <AutoColumn gap="sm">
                       <RowBetween>
@@ -772,7 +808,7 @@ export function AddPremiumModalFooter({
   const inputCurrency = useCurrency(position?.isToken0 ? position?.token0?.address : position?.token1?.address)
   const [leverageApprovalState, approveLeverageManager] = useApproveCallback(
     inputCurrency ?
-    CurrencyAmount.fromRawAmount(inputCurrency, "1000") : undefined, 
+      CurrencyAmount.fromRawAmount(inputCurrency, "1000") : undefined,
     leverageManagerAddress ?? undefined)
   console.log("payment", leverageApprovalState)
 
@@ -886,45 +922,45 @@ export function AddPremiumModalFooter({
           </AutoColumn>
         </Wrapper>
       </TransactionDetails>
-      { leverageApprovalState !== ApprovalState.APPROVED ? ( 
-              <ButtonPrimary
-              onClick={updateLeverageAllowance}
-              disabled={leverageApprovalState === ApprovalState.PENDING}
-              style={{ gap: 14 }}
-            >
-              {leverageApprovalState === ApprovalState.PENDING ? (
-                <>
-                  <Loader size="20px" />
-                  <Trans>Approve pending</Trans>
-                </>
-              ) : (
-                <>
-                  <div style={{ height: 20 }}>
-                    <MouseoverTooltip
-                      text={
-                        <Trans>
-                          Permission is required.
-                        </Trans>
-                      }
-                    >
-                      <Info size={20} />
-                    </MouseoverTooltip>
-                  </div>
-                  <Trans>Approve use of {inputIsToken0 ? position?.token0?.symbol : position?.token1?.symbol}</Trans>
-                </>
-              )}
-            </ButtonPrimary>
+      {leverageApprovalState !== ApprovalState.APPROVED ? (
+        <ButtonPrimary
+          onClick={updateLeverageAllowance}
+          disabled={leverageApprovalState === ApprovalState.PENDING}
+          style={{ gap: 14 }}
+        >
+          {leverageApprovalState === ApprovalState.PENDING ? (
+            <>
+              <Loader size="20px" />
+              <Trans>Approve pending</Trans>
+            </>
+          ) : (
+            <>
+              <div style={{ height: 20 }}>
+                <MouseoverTooltip
+                  text={
+                    <Trans>
+                      Permission is required.
+                    </Trans>
+                  }
+                >
+                  <Info size={20} />
+                </MouseoverTooltip>
+              </div>
+              <Trans>Approve use of {inputIsToken0 ? position?.token0?.symbol : position?.token1?.symbol}</Trans>
+            </>
+          )}
+        </ButtonPrimary>
       ) : (
         <ButtonError
-        onClick={handleAddPremium}
-        disabled={false}
-        style={{ margin: '10px 0 0 0' }}
-        id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
-      >
-        <Text fontSize={20} fontWeight={500}>
-          <Trans>Add Premium</Trans>
-        </Text>
-      </ButtonError>
+          onClick={handleAddPremium}
+          disabled={false}
+          style={{ margin: '10px 0 0 0' }}
+          id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
+        >
+          <Text fontSize={20} fontWeight={500}>
+            <Trans>Add Premium</Trans>
+          </Text>
+        </ButtonError>
       )
       }
     </AutoRow>

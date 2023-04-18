@@ -77,7 +77,7 @@ export function useLeveragePositions(leverageManagerAddress: string | undefined,
       totalDebtInput: new BN(position.totalDebtInput.toString()).shiftedBy(-inputDecimals).toFixed(6),
       borrowedLiquidity: new BN(position.borrowedLiq.toString()).shiftedBy(-inputDecimals).toFixed(6),
       creationTick: new BN(position.creationTick).toFixed(0),
-      cumulativePremium: new BN(position.cumulativePremium.toString()).shiftedBy(-inputDecimals).toFixed(6),
+      recentPremium: new BN(position.recentPremium.toString()).shiftedBy(-inputDecimals).toFixed(6),
       initialCollateral: new BN(position.initCollateral.toString()).shiftedBy(-inputDecimals).toFixed(6),
       isToken0: position.isToken0,
       openTime: new BN(position.openTime).toFixed(0),
@@ -107,16 +107,36 @@ export function useLeveragePosition(leverageManagerAddress: string | undefined, 
   const { result: r0, loading: l0, error: e0 } = useSingleCallResult(leverageManager, 'getPosition', [account, tokenId])
   const { result: r1, loading: l1, error: e1 } = useSingleCallResult(leverageManager, 'token0', [])
   const { result: r2, loading: l2, error: e2 } = useSingleCallResult(leverageManager, 'token1', [])
-
   const token0 = useToken(r1?.[0])
   const token1 = useToken(r2?.[0])
 
+  let info: [PositionState, LeveragePositionDetails | undefined] = useMemo(() => {
+    if (l0 || l1 || l2 || e0 || e1 || e2 && !r0 && !r1 && !r2) {
+      return [PositionState.LOADING, undefined]
+    }
+    const position = (r0 as any)[0]
+    const formattedPosition: LeveragePositionDetails =  {
+      leverageManagerAddress,
+      token0: token0 ?? undefined,
+      token1: token1 ?? undefined,
+      tokenId: tokenId,
+      totalLiquidity: new BN(position.totalPosition.toString()).shiftedBy(-18).toFixed(6),
+      totalDebt: new BN(position.totalDebt.toString()).shiftedBy(-18).toFixed(6),
+      totalDebtInput: new BN(position.totalDebtInput.toString()).shiftedBy(-18).toFixed(6),
+      borrowedLiquidity: new BN(position.borrowedLiq.toString()).shiftedBy(-18).toFixed(6),
+      creationTick: new BN(position.creationTick).toFixed(0),
+      isToken0: position.isToken0,
+      openTime: new BN(position.openTime).toFixed(0),
+      repayTime: new BN(position.repayTime).toFixed(0),
+      tickStart: new BN(position.borrowStartTick).toFixed(0),
+      tickFinish: new BN(position.borrowFinishTick).toFixed(0),
+      recentPremium: new BN(position.recentPremium.toString()).shiftedBy(-18).toFixed(6),
+      initialCollateral: new BN(position.initCollateral.toString()).shiftedBy(-18).toFixed(6),
+    }
+    return [PositionState.LOADING, formattedPosition]
+  }, [leverageManagerAddress, account, tokenId])
 
-  if (l0 || l1 || l2 || e0 || e1 || e2 && !r0 && !r1 && !r2) {
-    return [PositionState.LOADING, undefined]
-  }
-  const position = (r0 as any)[0]
-
+  return info
   // export interface LeveragePositionDetails {
   //   tokenId: string
   //   totalLiquidity: string // totalPosition
@@ -130,25 +150,6 @@ export function useLeveragePosition(leverageManagerAddress: string | undefined, 
   //   tickStart: string // borrowStartTick
   //   tickFinish: string // borrowFinishTick
   // }
-  const formattedPosition =  {
-    leverageManagerAddress,
-    token0: token0 ?? undefined,
-    token1: token1 ?? undefined,
-    tokenId: tokenId,
-    totalLiquidity: new BN(position.totalPosition.toString()).shiftedBy(-18).toFixed(6),
-    totalDebt: new BN(position.totalDebt.toString()).shiftedBy(-18).toFixed(6),
-    totalDebtInput: new BN(position.totalDebtInput.toString()).shiftedBy(-18).toFixed(6),
-    borrowedLiquidity: new BN(position.borrowedLiq.toString()).shiftedBy(-18).toFixed(6),
-    creationTick: new BN(position.creationTick).toFixed(0),
-    isToken0: position.isToken0,
-    openTime: new BN(position.openTime).toFixed(0),
-    repayTime: new BN(position.repayTime).toFixed(0),
-    tickStart: new BN(position.borrowStartTick).toFixed(0),
-    tickFinish: new BN(position.borrowFinishTick).toFixed(0),
-    cumulativePremium: new BN(position.cumulativePremium.toString()).shiftedBy(-18).toFixed(6),
-    initialCollateral: new BN(position.initCollateral.toString()).shiftedBy(-18).toFixed(6),
-  }
-  return [PositionState.LOADING, formattedPosition]
 }
 
 function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3PositionsResults {

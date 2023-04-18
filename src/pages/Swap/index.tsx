@@ -816,7 +816,7 @@ export default function Swap({ className }: { className?: string }) {
   const leveragePositions = useLeveragePositions(leverageManagerAddress ?? undefined, account, currencies)
 
   // console.log("leverageTrade: ", leverageTrade)
-  // console.log("leveragePositions", leveragePositions)
+  console.log("leveragePositions", leverageManagerAddress, leveragePositions)
 
   // const leveragePositions: LeveragePositionDetails[] = [
   //   {
@@ -881,7 +881,7 @@ export default function Swap({ className }: { className?: string }) {
       // loadedInputCurrency, 
       // loadedOutputCurrency, TradeType)
   // console.log('fakeTrade', fakeTrade, fakeTrade.routes);
-  const debouncedLeverageFactor = useDebounce(leverageFactor, 200);
+  const [debouncedLeverageFactor, onDebouncedLeverageFactor] = useDebouncedChangeHandler(leverageFactor ?? "1", onLeverageFactorChange);
   
   const [poolState, pool] = usePool(currencies.INPUT ?? undefined, currencies.OUTPUT?? undefined, FeeAmount.LOW)
 
@@ -1017,7 +1017,7 @@ export default function Swap({ className }: { className?: string }) {
                               <Trans>From</Trans>
                             )
                           }
-                          value={Number(formattedAmounts[Field.INPUT]) == 0 ? "" : String(Number(sliderLeverageFactor) * Number(formattedAmounts[Field.INPUT]))}
+                          value={leverageTrade?.expectedOutput ? new BN(leverageTrade.expectedOutput).toString() : "-"}
                           showMaxButton={showMaxButton}
                           currency={currencies[Field.INPUT] ?? null}
                           onUserInput={handleTypeInput}
@@ -1117,8 +1117,19 @@ export default function Swap({ className }: { className?: string }) {
                                   <ResponsiveHeaderText>
                                   <StyledNumericalInput
                                     className="token-amount-input"
-                                    value={debouncedLeverageFactor ?? "1"}
-                                    onUserInput={onLeverageFactorChange}
+                                    value={debouncedLeverageFactor ?? ""}
+                                    placeholder="1"
+                                    onUserInput={(str: string) => {
+                                      if (str === "") {
+                                        onDebouncedLeverageFactor("")
+                                      } else if ( new BN(str).isGreaterThan(new BN("1000")) ) {
+                                        return
+                                      } else if (new BN(str).dp() as number > 1 ) {
+                                        onDebouncedLeverageFactor(String(new BN(str).decimalPlaces(1, BN.ROUND_DOWN)))
+                                      } else {
+                                        onDebouncedLeverageFactor(str)
+                                      }
+                                    }}
                                     disabled={false}
                                   />
                                   </ResponsiveHeaderText>
@@ -1138,11 +1149,11 @@ export default function Swap({ className }: { className?: string }) {
                                   </AutoRow>
                                 </RowBetween>
                                 <Slider
-                                  value={parseFloat(sliderLeverageFactor)}
+                                  value={sliderLeverageFactor === "" ? 1.0 : parseFloat(sliderLeverageFactor)}
                                   onChange={(val) => setSliderLeverageFactor(val.toString())}
                                   min={1.0}
                                   max={1000.0}
-                                  step={0.5}
+                                  step={0.1}
                                   float={true}
                                 />
                               </>
