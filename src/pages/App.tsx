@@ -13,7 +13,7 @@ import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
-import { lazy, ReactNode, Suspense, useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useIsExpertMode } from 'state/user/hooks'
@@ -28,23 +28,8 @@ import { STATSIG_DUMMY_KEY } from 'tracing'
 import { getEnvName } from 'utils/env'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
-// TODO(zzmp): Lazy-load all pages.
-import AddLiquidity from './AddLiquidity'
-import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
-import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
-import Landing from './Landing'
-import MigrateV2 from './MigrateV2'
-import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
-import NotFound from './NotFound'
-import Pool from './Pool'
-import PositionPage from './Pool/PositionPage'
-import PoolV2 from './Pool/v2'
-import PoolFinder from './PoolFinder'
-import RemoveLiquidity from './RemoveLiquidity'
-import RemoveLiquidityV3 from './RemoveLiquidity/V3'
+// All pages (besides Swap) should be lazy-loaded.
 import Swap from './Swap'
-import { RedirectPathToSwapOnly } from './Swap/redirects'
-import Tokens from './Tokens'
 
 const BodyWrapper = styled.div`
   display: flex;
@@ -86,15 +71,6 @@ const HeaderWrapper = styled.div<{ transparent?: boolean }>`
   z-index: ${Z_INDEX.dropdown};
 `
 
-function Lazy({ filename, fallback = null }: { filename: string; fallback?: ReactNode }) {
-  const Component = useMemo(() => lazy(() => import(`${filename}`)), [filename])
-  return (
-    <Suspense fallback={fallback}>
-      <Component />
-    </Suspense>
-  )
-}
-
 function getCurrentPageFromLocation(locationPathname: string): InterfacePageName | undefined {
   switch (true) {
     case locationPathname.startsWith('/swap'):
@@ -132,6 +108,20 @@ const LazyLoadSpinner = () => (
     />
   </SpinnerSVG>
 )
+
+function Lazy({ filename, spinner = true }: { filename: string; spinner?: boolean }) {
+  const Component = useMemo(() => lazy(() => import(`${filename}`)), [filename])
+  return (
+    <Suspense fallback={spinner ? <LazyLoadSpinner /> : null}>
+      <Component />
+    </Suspense>
+  )
+}
+
+function RedirectToSwap() {
+  const location = useLocation()
+  return <Navigate to={{ ...location, pathname: '/swap' }} replace />
+}
 
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
@@ -229,76 +219,79 @@ export default function App() {
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  <Route path="/" element={<Landing />} />
+                  <Route path="/" element={<Lazy filename="./Landing" />} />
 
-                  <Route path="tokens" element={<Tokens />}>
+                  <Route path="tokens" element={<Lazy filename="./Tokens" />}>
                     <Route path=":chainName" />
                   </Route>
                   <Route path="tokens/:chainName/:tokenAddress" element={<Lazy filename="./TokenDetails" />} />
-                  <Route path="vote/*" element={<Lazy filename="./Vote" fallback={<LazyLoadSpinner />} />} />
+                  <Route path="vote/*" element={<Lazy filename="./Vote" />} />
                   <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
-                  <Route path="send" element={<RedirectPathToSwapOnly />} />
+                  <Route path="send" element={<RedirectToSwap />} />
                   <Route path="swap" element={<Swap />} />
 
-                  <Route path="pool/v2/find" element={<PoolFinder />} />
-                  <Route path="pool/v2" element={<PoolV2 />} />
-                  <Route path="pool" element={<Pool />} />
-                  <Route path="pool/:tokenId" element={<PositionPage />} />
+                  <Route path="pool/v2/find" element={<Lazy filename="./PoolFinder" />} />
+                  <Route path="pool/v2" element={<Lazy filename="./Pool/v2" />} />
+                  <Route path="pool" element={<Lazy filename="./Pool" />} />
+                  <Route path="pool/:tokenId" element={<Lazy filename="./Pool/PositionPage" />} />
 
-                  <Route path="pools/v2/find" element={<PoolFinder />} />
-                  <Route path="pools/v2" element={<PoolV2 />} />
-                  <Route path="pools" element={<Pool />} />
-                  <Route path="pools/:tokenId" element={<PositionPage />} />
+                  <Route path="pools/v2/find" element={<Lazy filename="./PoolFinder" />} />
+                  <Route path="pools/v2" element={<Lazy filename="./Pool/v2" />} />
+                  <Route path="pools" element={<Lazy filename="./Pool" />} />
+                  <Route path="pools/:tokenId" element={<Lazy filename="./Pool/PositionPage" />} />
 
-                  <Route path="add/v2" element={<RedirectDuplicateTokenIdsV2 />}>
+                  <Route path="add/v2" element={<Lazy filename="./AddLiquidityV2/redirects" />}>
                     <Route path=":currencyIdA" />
                     <Route path=":currencyIdA/:currencyIdB" />
                   </Route>
-                  <Route path="add" element={<RedirectDuplicateTokenIds />}>
+                  <Route path="add" element={<Lazy filename="./AddLiquidity/redirects" />}>
                     {/* this is workaround since react-router-dom v6 doesn't support optional parameters any more */}
                     <Route path=":currencyIdA" />
                     <Route path=":currencyIdA/:currencyIdB" />
                     <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
                   </Route>
 
-                  <Route path="increase" element={<AddLiquidity />}>
+                  <Route path="increase" element={<Lazy filename="./AddLiquidity" />}>
                     <Route path=":currencyIdA" />
                     <Route path=":currencyIdA/:currencyIdB" />
                     <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
                     <Route path=":currencyIdA/:currencyIdB/:feeAmount/:tokenId" />
                   </Route>
 
-                  <Route path="remove/v2/:currencyIdA/:currencyIdB" element={<RemoveLiquidity />} />
-                  <Route path="remove/:tokenId" element={<RemoveLiquidityV3 />} />
+                  <Route path="remove/v2/:currencyIdA/:currencyIdB" element={<Lazy filename="./RemoveLiquidity" />} />
+                  <Route path="remove/:tokenId" element={<Lazy filename="./RemoveLiquidity/V3" />} />
 
-                  <Route path="migrate/v2" element={<MigrateV2 />} />
-                  <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
+                  <Route path="migrate/v2" element={<Lazy filename="./MigrateV2" />} />
+                  <Route path="migrate/v2/:address" element={<Lazy filename="./MigrateV2/MigrateV2Pair" />} />
 
                   {!shouldDisableNFTRoutes && (
                     <>
-                      <Route path="/nfts" element={<Lazy filename="nft/pages/explore" />} />
+                      <Route path="/nfts" element={<Lazy filename="nft/pages/explore" spinner={false} />} />
 
                       <Route
                         path="/nfts/asset/:contractAddress/:tokenId"
-                        element={<Lazy filename="nft/pages/asset/Asset" />}
+                        element={<Lazy filename="nft/pages/asset/Asset" spinner={false} />}
                       />
 
-                      <Route path="/nfts/profile" element={<Lazy filename="nft/pages/profile/profile" />} />
+                      <Route
+                        path="/nfts/profile"
+                        element={<Lazy filename="nft/pages/profile/profile" spinner={false} />}
+                      />
 
                       <Route
                         path="/nfts/collection/:contractAddress"
-                        element={<Lazy filename="nft/pages/collection" />}
+                        element={<Lazy filename="nft/pages/collection" spinner={false} />}
                       />
 
                       <Route
                         path="/nfts/collection/:contractAddress/activity"
-                        element={<Lazy filename="nft/pages/collection" />}
+                        element={<Lazy filename="nft/pages/collection" spinner={false} />}
                       />
                     </>
                   )}
 
                   <Route path="*" element={<Navigate to="/not-found" replace />} />
-                  <Route path="/not-found" element={<NotFound />} />
+                  <Route path="/not-found" element={<Lazy filename="./NotFound" />} />
                 </Routes>
               ) : (
                 <Loader />

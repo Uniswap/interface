@@ -4,8 +4,13 @@ import { Navigate, useParams } from 'react-router-dom'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import AddLiquidity from './index'
 
-export function RedirectDuplicateTokenIds() {
-  const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string; feeAmount?: string }>()
+// eslint-disable-next-line import/no-unused-modules
+export default function RedirectDuplicateTokenIds() {
+  const { currencyIdA, currencyIdB } = useParams<{
+    currencyIdA: string
+    currencyIdB: string
+    feeAmount?: string
+  }>()
 
   const { chainId } = useWeb3React()
 
