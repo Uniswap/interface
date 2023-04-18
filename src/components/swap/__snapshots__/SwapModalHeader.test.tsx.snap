@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SwapModalHeader.tsx matches base snapshot 1`] = `
+exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] = `
 <DocumentFragment>
   .c1 {
   box-sizing: border-box;
@@ -272,6 +272,7 @@ exports[`SwapModalHeader.tsx matches base snapshot 1`] = `
           >
             <div
               class="c10 css-13xjr5l"
+              data-testid="input-amount"
             >
               0.000000000000001
             </div>
@@ -284,14 +285,17 @@ exports[`SwapModalHeader.tsx matches base snapshot 1`] = `
               style="margin-right: 12px;"
             >
               <img
-                alt="token logo"
+                alt="ABC logo"
                 class="c12"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
               />
             </div>
             <div
               class="css-10ob8xa"
-            />
+              data-testid="input-symbol"
+            >
+              ABC
+            </div>
           </div>
         </div>
         <div
@@ -347,6 +351,7 @@ exports[`SwapModalHeader.tsx matches base snapshot 1`] = `
           >
             <div
               class="c10 css-1kwqs79"
+              data-testid="output-amount"
             >
               0.000000000000001
             </div>
@@ -359,14 +364,17 @@ exports[`SwapModalHeader.tsx matches base snapshot 1`] = `
               style="margin-right: 12px;"
             >
               <img
-                alt="token logo"
+                alt="DEF logo"
                 class="c12"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
               />
             </div>
             <div
               class="css-10ob8xa"
-            />
+              data-testid="output-symbol"
+            >
+              DEF
+            </div>
           </div>
         </div>
         <div
@@ -392,12 +400,12 @@ exports[`SwapModalHeader.tsx matches base snapshot 1`] = `
     >
       <button
         class="c17"
-        title="1 undefined = 1.00 undefined "
+        title="1 DEF = 1.00 ABC "
       >
         <div
           class="c18 css-zhpkf8"
         >
-          1 undefined = 1.00 undefined 
+          1 DEF = 1.00 ABC 
         </div>
          
       </button>
@@ -433,7 +441,7 @@ exports[`SwapModalHeader.tsx matches base snapshot 1`] = `
             <div
               class="c18 css-q4yjm0"
             >
-              0.000000000000001  undefined
+              0.000000000000001  DEF
             </div>
           </div>
           <div
@@ -489,7 +497,7 @@ exports[`SwapModalHeader.tsx matches base snapshot 1`] = `
             <div
               class="css-q4yjm0"
             >
-              0.00000000000000098 undefined
+              0.00000000000000098 DEF
             </div>
           </div>
         </div>
@@ -505,13 +513,14 @@ exports[`SwapModalHeader.tsx matches base snapshot 1`] = `
       >
         Output is estimated. You will receive at least 
         <b>
-          0.00000000000000098 
+          0.00000000000000098 DEF
         </b>
          or the transaction will revert.
       </div>
     </div>
     <div
       class="c25"
+      data-testid="recipient-info"
       style="padding: 12px 0px 0px 0px;"
     >
       <div

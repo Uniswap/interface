@@ -108,13 +108,14 @@ export default function SwapModalHeader({
                 fontSize={24}
                 fontWeight={500}
                 color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.accentAction : ''}
+                data-testid="input-amount"
               >
                 {trade.inputAmount.toSignificant(6)}
               </TruncatedText>
             </RowFixed>
             <RowFixed gap="0px">
               <CurrencyLogo currency={trade.inputAmount.currency} size="20px" style={{ marginRight: '12px' }} />
-              <Text fontSize={20} fontWeight={500}>
+              <Text fontSize={20} fontWeight={500} data-testid="input-symbol">
                 {trade.inputAmount.currency.symbol}
               </Text>
             </RowFixed>
@@ -131,13 +132,13 @@ export default function SwapModalHeader({
         <AutoColumn gap="sm">
           <RowBetween align="flex-end">
             <RowFixed gap="0px">
-              <TruncatedText fontSize={24} fontWeight={500}>
+              <TruncatedText fontSize={24} fontWeight={500} data-testid="output-amount">
                 {trade.outputAmount.toSignificant(6)}
               </TruncatedText>
             </RowFixed>
             <RowFixed gap="0px">
               <CurrencyLogo currency={trade.outputAmount.currency} size="20px" style={{ marginRight: '12px' }} />
-              <Text fontSize={20} fontWeight={500}>
+              <Text fontSize={20} fontWeight={500} data-testid="output-symbol">
                 {trade.outputAmount.currency.symbol}
               </Text>
             </RowFixed>
@@ -201,7 +202,7 @@ export default function SwapModalHeader({
         )}
       </AutoColumn>
       {recipient !== null ? (
-        <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
+        <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }} data-testid="recipient-info">
           <ThemedText.DeprecatedMain>
             <Trans>
               Output will be sent to{' '}
