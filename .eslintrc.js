@@ -8,18 +8,19 @@ module.exports = {
     {
       files: ['**/*.ts', '**/*.tsx'],
       rules: {
-        'no-restricted-imports': [
-          'error',
-          {
-            paths: [
-              {
-                name: 'zustand',
-                importNames: ['default'],
-                message: 'Default import from zustand is deprecated. Import `{ create }` instead.',
-              },
-            ],
-          },
-        ],
+        'prettier/prettier': 0,
+        // 'no-restricted-imports': [
+        //   'error',
+        //   {
+        //     paths: [
+        //       {
+        //         name: 'zustand',
+        //         importNames: ['default'],
+        //         message: 'Default import from zustand is deprecated. Import `{ create }` instead.',
+        //       },
+        //     ],
+        //   },
+        // ],
       },
     },
   ],

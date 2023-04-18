@@ -69,9 +69,9 @@ export const PageTabs = () => {
       <MenuItem href={`/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/tokens')}>
         <Trans>Pairs</Trans>
       </MenuItem>
-      
+
       <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
-        <Trans>Swap</Trans>
+        <Trans>Trade</Trans>
       </MenuItem>
 
       {false && (
