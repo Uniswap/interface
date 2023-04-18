@@ -1,5 +1,5 @@
 import { getConnections } from 'connection'
-import { render } from 'test-utils'
+import { render } from 'test-utils/render'
 
 import StatusIcon from './StatusIcon'
 

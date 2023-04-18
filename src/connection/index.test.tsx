@@ -1,7 +1,7 @@
 import INJECTED_DARK_ICON from 'assets/svg/browser-wallet-dark.svg'
 import INJECTED_LIGHT_ICON from 'assets/svg/browser-wallet-light.svg'
 import { ConnectionType, getConnections, useGetConnection } from 'connection'
-import { renderHook } from 'test-utils'
+import { renderHook } from 'test-utils/render'
 
 beforeEach(() => {
   jest.resetModules()
