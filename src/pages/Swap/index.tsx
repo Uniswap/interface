@@ -109,6 +109,15 @@ import ConfirmLeverageSwapModal from 'components/swap/confirmLeverageSwapModal'
 import { BigNumber as BN } from "bignumber.js";
 import { useLeveragePositions } from 'hooks/useV3Positions'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import {Input as NumericalInput} from 'components/NumericalInput'
+import useDebounce from 'hooks/useDebounce'
+
+
+const StyledNumericalInput = styled(NumericalInput)`
+  width: 100px;
+  text-align:left;
+  margin-left:10px;
+`
 
 const ArrowContainer = styled.div`
   display: inline-block;
@@ -872,7 +881,8 @@ export default function Swap({ className }: { className?: string }) {
   //   )
       // loadedInputCurrency, 
       // loadedOutputCurrency, TradeType)
-  // console.log('fakeTrade', fakeTrade, fakeTrade.routes); 
+  // console.log('fakeTrade', fakeTrade, fakeTrade.routes);
+  const debouncedLeverageFactor = useDebounce(leverageFactor, 200);
   
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
@@ -1096,7 +1106,12 @@ export default function Swap({ className }: { className?: string }) {
                               <>
                                 <RowBetween>
                                   <ResponsiveHeaderText>
-                                    <Trans>{sliderLeverageFactor}x</Trans>
+                                  <StyledNumericalInput
+                                    className="token-amount-input"
+                                    value={debouncedLeverageFactor ?? "1"}
+                                    onUserInput={onLeverageFactorChange}
+                                    disabled={false}
+                                  />
                                   </ResponsiveHeaderText>
                                   <AutoRow gap="4px" justify="flex-end">
                                     <SmallMaxButton onClick={() => onLeverageFactorChange("10")} width="20%">
@@ -1106,10 +1121,10 @@ export default function Swap({ className }: { className?: string }) {
                                       <Trans>100</Trans>
                                     </SmallMaxButton>
                                     <SmallMaxButton onClick={() => onLeverageFactorChange("1000")} width="20%">
-                                      <Trans>200</Trans>
+                                      <Trans>500</Trans>
                                     </SmallMaxButton>
                                     <SmallMaxButton onClick={() => onLeverageFactorChange("1000")} width="20%">
-                                      <Trans>Max</Trans>
+                                      <Trans>1000</Trans>
                                     </SmallMaxButton>
                                   </AutoRow>
                                 </RowBetween>
@@ -1117,8 +1132,8 @@ export default function Swap({ className }: { className?: string }) {
                                   value={parseFloat(sliderLeverageFactor)}
                                   onChange={(val) => setSliderLeverageFactor(val.toString())}
                                   min={1.0}
-                                  max={200.0}
-                                  step={1}
+                                  max={1000.0}
+                                  step={0.5}
                                   float={true}
                                 />
                               </>
