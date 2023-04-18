@@ -53,14 +53,14 @@ export const PS_QUOTER_V2 = '0x2ded45679675Eb49bEd3d657aFA60E58c422b206'
 export const PS_ROUTER = '0x0A027C85148a1FC21C80c7F78c97f210aD2b5EFd'
 export const PS_NONFUNGIBLE_POSITION_MANAGER = '0x750786Ff68B11af9E130d8271BB8581471e7aAe3'
 export const POOL_INIT_CODE_HASH = "0xe01c3dec4a274848acd93fb2e2f445648d723fbaebdd93fb6d2743ffecae893d"
-export const GlOBAL_STORAGE_ADDRESS = "0xDbfF580c1236792914203C02e0812Cf67BacE4b7";
+export const GlOBAL_STORAGE_ADDRESS = "0x31529e345334708423373188c64E05A553439b98";
 // deploying "GlobalStorage" (tx: 0xddaf6329b7b6876a9d664bd7d729a07a658c7c5f401393843c60d62cab56a96e)...: deployed at 0xCDBD98C5Fd36a99Be4a717A681e721FB832be5f6 with 326602 gas
 // deploying "LeverageManagerFactory" (tx: 0x9f2ad2e1f26e1368f1932dba52bfde74c2e814db344ce21de33965c67270f0e2)...: deployed at 0x50861D9DDE9AA9e36F11ce1106396649F4F86F1B with 5251693 gas
 // deploying "LiquidityManagerFactory" (tx: 0x99f4a39240dff7ff347732c7ee44b768003beccf0031a42c6ee31c49349b4fda)...: deployed at 0xB2948ECa7090978eF352c1459a9edCe97B6b393b with 3449934 gas
 
-// deploying "GlobalStorage" (tx: 0x9fea1e8905fdb03f287e99e429c660b30544859207f311288e862bde9d6aa672)...: deployed at 0xDbfF580c1236792914203C02e0812Cf67BacE4b7 with 326602 gas
-// deploying "LeverageManagerFactory" (tx: 0x57f81bfc2d478fadbf6c4d4cf9a9b1f08913e4ec3dc8d90110885a6296a5c0aa)...: deployed at 0x78a1A14A94b2FE24B157CdBe3e5be825De9F2393 with 5251693 gas
-// deploying "LiquidityManagerFactory" (tx: 0x25ae48a82e897fc9dc813ee7bb048d6a69cc33ac9fa1d2e14713c08a869a11c8)...: deployed at 0xFc14F7D34f03Dbb7CA9230031c4c14b1d34DB77F with 3449934 gas
+// deploying "GlobalStorage" (tx: 0x95d4c16f5c099c43401fe1f834d83373c8d6ec4c95ff73753bf0f62de1f1a3e0)...: deployed at 0x31529e345334708423373188c64E05A553439b98 with 326602 gas
+// deploying "LeverageManagerFactory" (tx: 0x1c7542616615a89272c3383ffedd44bacf2f3cb4fd55ad34aa63fec1eecf90d8)...: deployed at 0xDc2cb16b8891c37a3f7FFdB33Bb2B378e599B570 with 5131182 gas
+// deploying "LiquidityManagerFactory" (tx: 0x0fc59abf83db859b50c95747e05ef19e333ae32b208a462221a48e5962cb1d79)...: deployed at 0x8607eb78C8d8Fd6a7A1DA2032d0aF2ba417cd5dF with 3464458 gas
 /* V3 Contract Addresses */
 export const V3_CORE_FACTORY_ADDRESSES: AddressMap = {
   ...constructSameAddressMap(V3_FACTORY_ADDRESS, [
