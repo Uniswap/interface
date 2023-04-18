@@ -1,2 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-export default function noop() {}
+export default function noop() {
+  return null
+}
