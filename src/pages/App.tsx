@@ -28,7 +28,8 @@ import { STATSIG_DUMMY_KEY } from 'tracing'
 import { getEnvName } from 'utils/env'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
-// All pages (besides Swap) should be lazy-loaded.
+// All pages (except for Landing and Swap) should be lazy-loaded.
+import Landing from './Landing'
 import Swap from './Swap'
 
 const BodyWrapper = styled.div`
@@ -216,7 +217,9 @@ export default function App() {
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  <Route path="/" element={<Lazy factory={() => import('./Landing')} />} />
+                  <Route path="/" element={<Landing />} />
+                  <Route path="send" element={<Navigate to={{ ...location, pathname: '/swap' }} replace />} />
+                  <Route path="swap" element={<Swap />} />
 
                   <Route path="tokens" element={<Lazy factory={() => import('./Tokens')} />}>
                     <Route path=":chainName" />
@@ -227,8 +230,6 @@ export default function App() {
                   />
                   <Route path="vote/*" element={<Lazy factory={() => import('./Vote')} />} />
                   <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
-                  <Route path="send" element={<Navigate to={{ ...location, pathname: '/swap' }} replace />} />
-                  <Route path="swap" element={<Swap />} />
 
                   <Route path="pool/v2/find" element={<Lazy factory={() => import('./PoolFinder')} />} />
                   <Route path="pool/v2" element={<Lazy factory={() => import('./Pool/v2')} />} />
