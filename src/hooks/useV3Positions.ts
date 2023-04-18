@@ -87,8 +87,8 @@ export function useLeveragePositions(leverageManagerAddress: string | undefined,
     }
   })
 
-  // return formattedPositions.filter(position=> Number(position.totalLiquidity.toString())>0)
-  return formattedPositions
+  return formattedPositions.filter(position=> Number(position.totalLiquidity.toString())>0)
+  // return formattedPositions
 }
 
 

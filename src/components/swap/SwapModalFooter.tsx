@@ -499,6 +499,10 @@ export function CloseLeverageModalFooter({
 
   const inputIsToken0 = !position?.isToken0
 
+  const debt = position?.totalDebtInput; 
+  const initCollateral = position?.initialCollateral; 
+  const received = inputIsToken0 ? (Math.abs(Number(token0Amount)) - Number(debt)).toFixed(5)
+                                    : (Math.abs(Number(token1Amount)) - Number(debt)).toFixed(5)
   return (
     <AutoRow>
       <LightCard marginTop="10px">
@@ -588,8 +592,7 @@ export function CloseLeverageModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                The amount you expect to receive at the current market price. You may receive less or more if the
-                                market price changes while your transaction is pending.
+                                The amount of position you are closing 
                               </Trans>
                             }
                           >
@@ -611,8 +614,7 @@ export function CloseLeverageModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                The amount you expect to receive at the current market price. You may receive less or more if the
-                                market price changes while your transaction is pending.
+                                The amount of debt automatically repaid when closing
                               </Trans>
                             }
                           >
@@ -624,7 +626,7 @@ export function CloseLeverageModalFooter({
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             {
-                              `${inputIsToken0 ? new BN(token0Amount).abs().toString() : new BN(token1Amount).abs().toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                              debt&&`${debt.toString() }  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                             }
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
@@ -635,7 +637,7 @@ export function CloseLeverageModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                The amount you expect to receive at the current market price. You may receive less or more if the
+                                The amount entire position swaps to at the current market price. May receive less or more if the
                                 market price changes while your transaction is pending.
                               </Trans>
                             }
@@ -653,7 +655,7 @@ export function CloseLeverageModalFooter({
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
                       </RowBetween>
-                      <RowBetween>
+                      {/*<RowBetween>
                         <RowFixed>
                           <MouseoverTooltip
                             text={
@@ -675,26 +677,25 @@ export function CloseLeverageModalFooter({
                             }
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
-                      </RowBetween>
+                      </RowBetween>*/}
                       <RowBetween>
                         <RowFixed>
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                The amount you expect to receive at the current market price. You may receive less or more if the
-                                market price changes while your transaction is pending.
+                                The total amount you get after closing position and repaying debt.  
                               </Trans>
                             }
                           >
                             <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
-                              <Trans>Expected Received</Trans>
+                              <Trans>Expected Received After Repay</Trans>
                             </ThemedText.DeprecatedSubHeader>
                           </MouseoverTooltip>
                         </RowFixed>
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
-                            {
-                              `${inputIsToken0 ? new BN(token0Amount).abs().toString() : new BN(token1Amount).abs().toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                            { 
+                              `${received}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                             }
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
@@ -705,8 +706,7 @@ export function CloseLeverageModalFooter({
                         <MouseoverTooltip
                           text={
                             <Trans>
-                              The amount you expect to receive at the current market price. You may receive less or more if the
-                              market price changes while your transaction is pending.
+                              Expected PnL from what you originally paid
                             </Trans>
                           }
                         >
@@ -718,7 +718,8 @@ export function CloseLeverageModalFooter({
                       <TextWithLoadingPlaceholder syncing={loading} width={65}>
                         <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                           {
-                            `${inputIsToken0 ? new BN(token0Amount).abs().toString() : new BN(token1Amount).abs().toString()}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                            
+                            `${(Number(received)-Number(initCollateral)).toFixed(5)}  ${inputIsToken0 ? token0?.symbol : token1?.symbol}`
                           }
                         </ThemedText.DeprecatedBlack>
                       </TextWithLoadingPlaceholder>
