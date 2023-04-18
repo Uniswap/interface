@@ -1,12 +1,12 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import {
-  noop,
   testAllowedSlippage,
   testRecipientAddress,
   testTradeExactInput,
   testTradeExactOutput,
 } from 'test-utils/constants'
 import { render, screen, within } from 'test-utils/render'
+import noop from 'utils/noop'
 
 import SwapModalHeader from './SwapModalHeader'
 
