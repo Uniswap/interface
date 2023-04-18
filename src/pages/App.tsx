@@ -109,8 +109,9 @@ const LazyLoadSpinner = () => (
   </SpinnerSVG>
 )
 
-function Lazy({ filename, spinner = true }: { filename: string; spinner?: boolean }) {
-  const Component = useMemo(() => lazy(() => import(`${filename}`)), [filename])
+// We must pass the factory and not the filename so that the literal dynamic import can be parsed by eslint.
+function Lazy({ factory, spinner = true }: { factory: Parameters<typeof lazy>[0]; spinner?: boolean }) {
+  const Component = useMemo(() => lazy(factory), [factory])
   return (
     <Suspense fallback={spinner ? <LazyLoadSpinner /> : null}>
       <Component />
@@ -118,16 +119,12 @@ function Lazy({ filename, spinner = true }: { filename: string; spinner?: boolea
   )
 }
 
-function RedirectToSwap() {
-  const location = useLocation()
-  return <Navigate to={{ ...location, pathname: '/swap' }} replace />
-}
-
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
   const [shouldDisableNFTRoutes, setShouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
 
-  const { pathname } = useLocation()
+  const location = useLocation()
+  const { pathname } = location
   const currentPage = getCurrentPageFromLocation(pathname)
   const isDarkMode = useIsDarkMode()
   const isExpertMode = useIsExpertMode()
@@ -219,79 +216,91 @@ export default function App() {
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  <Route path="/" element={<Lazy filename="./Landing" />} />
+                  <Route path="/" element={<Lazy factory={() => import('./Landing')} />} />
 
-                  <Route path="tokens" element={<Lazy filename="./Tokens" />}>
+                  <Route path="tokens" element={<Lazy factory={() => import('./Tokens')} />}>
                     <Route path=":chainName" />
                   </Route>
-                  <Route path="tokens/:chainName/:tokenAddress" element={<Lazy filename="./TokenDetails" />} />
-                  <Route path="vote/*" element={<Lazy filename="./Vote" />} />
+                  <Route
+                    path="tokens/:chainName/:tokenAddress"
+                    element={<Lazy factory={() => import('./TokenDetails')} />}
+                  />
+                  <Route path="vote/*" element={<Lazy factory={() => import('./Vote')} />} />
                   <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
-                  <Route path="send" element={<RedirectToSwap />} />
+                  <Route path="send" element={<Navigate to={{ ...location, pathname: '/swap' }} replace />} />
                   <Route path="swap" element={<Swap />} />
 
-                  <Route path="pool/v2/find" element={<Lazy filename="./PoolFinder" />} />
-                  <Route path="pool/v2" element={<Lazy filename="./Pool/v2" />} />
-                  <Route path="pool" element={<Lazy filename="./Pool" />} />
-                  <Route path="pool/:tokenId" element={<Lazy filename="./Pool/PositionPage" />} />
+                  <Route path="pool/v2/find" element={<Lazy factory={() => import('./PoolFinder')} />} />
+                  <Route path="pool/v2" element={<Lazy factory={() => import('./Pool/v2')} />} />
+                  <Route path="pool" element={<Lazy factory={() => import('./Pool')} />} />
+                  <Route path="pool/:tokenId" element={<Lazy factory={() => import('./Pool/PositionPage')} />} />
 
-                  <Route path="pools/v2/find" element={<Lazy filename="./PoolFinder" />} />
-                  <Route path="pools/v2" element={<Lazy filename="./Pool/v2" />} />
-                  <Route path="pools" element={<Lazy filename="./Pool" />} />
-                  <Route path="pools/:tokenId" element={<Lazy filename="./Pool/PositionPage" />} />
+                  <Route path="pools/v2/find" element={<Lazy factory={() => import('./PoolFinder')} />} />
+                  <Route path="pools/v2" element={<Lazy factory={() => import('./Pool/v2')} />} />
+                  <Route path="pools" element={<Lazy factory={() => import('./Pool')} />} />
+                  <Route path="pools/:tokenId" element={<Lazy factory={() => import('./Pool/PositionPage')} />} />
 
-                  <Route path="add/v2" element={<Lazy filename="./AddLiquidityV2/redirects" />}>
+                  <Route path="add/v2" element={<Lazy factory={() => import('./AddLiquidityV2/redirects')} />}>
                     <Route path=":currencyIdA" />
                     <Route path=":currencyIdA/:currencyIdB" />
                   </Route>
-                  <Route path="add" element={<Lazy filename="./AddLiquidity/redirects" />}>
+                  <Route path="add" element={<Lazy factory={() => import('./AddLiquidity/redirects')} />}>
                     {/* this is workaround since react-router-dom v6 doesn't support optional parameters any more */}
                     <Route path=":currencyIdA" />
                     <Route path=":currencyIdA/:currencyIdB" />
                     <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
                   </Route>
 
-                  <Route path="increase" element={<Lazy filename="./AddLiquidity" />}>
+                  <Route path="increase" element={<Lazy factory={() => import('./AddLiquidity')} />}>
                     <Route path=":currencyIdA" />
                     <Route path=":currencyIdA/:currencyIdB" />
                     <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
                     <Route path=":currencyIdA/:currencyIdB/:feeAmount/:tokenId" />
                   </Route>
 
-                  <Route path="remove/v2/:currencyIdA/:currencyIdB" element={<Lazy filename="./RemoveLiquidity" />} />
-                  <Route path="remove/:tokenId" element={<Lazy filename="./RemoveLiquidity/V3" />} />
+                  <Route
+                    path="remove/v2/:currencyIdA/:currencyIdB"
+                    element={<Lazy factory={() => import('./RemoveLiquidity')} />}
+                  />
+                  <Route path="remove/:tokenId" element={<Lazy factory={() => import('./RemoveLiquidity/V3')} />} />
 
-                  <Route path="migrate/v2" element={<Lazy filename="./MigrateV2" />} />
-                  <Route path="migrate/v2/:address" element={<Lazy filename="./MigrateV2/MigrateV2Pair" />} />
+                  <Route path="migrate/v2" element={<Lazy factory={() => import('./MigrateV2')} />} />
+                  <Route
+                    path="migrate/v2/:address"
+                    element={<Lazy factory={() => import('./MigrateV2/MigrateV2Pair')} />}
+                  />
 
                   {!shouldDisableNFTRoutes && (
                     <>
-                      <Route path="/nfts" element={<Lazy filename="nft/pages/explore" spinner={false} />} />
+                      <Route
+                        path="/nfts"
+                        element={<Lazy factory={() => import('nft/pages/explore')} spinner={false} />}
+                      />
 
                       <Route
                         path="/nfts/asset/:contractAddress/:tokenId"
-                        element={<Lazy filename="nft/pages/asset/Asset" spinner={false} />}
+                        element={<Lazy factory={() => import('nft/pages/asset/Asset')} spinner={false} />}
                       />
 
                       <Route
                         path="/nfts/profile"
-                        element={<Lazy filename="nft/pages/profile/profile" spinner={false} />}
+                        element={<Lazy factory={() => import('nft/pages/profile/profile')} spinner={false} />}
                       />
 
                       <Route
                         path="/nfts/collection/:contractAddress"
-                        element={<Lazy filename="nft/pages/collection" spinner={false} />}
+                        element={<Lazy factory={() => import('nft/pages/collection')} spinner={false} />}
                       />
 
                       <Route
                         path="/nfts/collection/:contractAddress/activity"
-                        element={<Lazy filename="nft/pages/collection" spinner={false} />}
+                        element={<Lazy factory={() => import('nft/pages/collection')} spinner={false} />}
                       />
                     </>
                   )}
 
                   <Route path="*" element={<Navigate to="/not-found" replace />} />
-                  <Route path="/not-found" element={<Lazy filename="./NotFound" />} />
+                  <Route path="/not-found" element={<Lazy factory={() => import('./NotFound')} />} />
                 </Routes>
               ) : (
                 <Loader />
