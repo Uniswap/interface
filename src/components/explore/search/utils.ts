@@ -59,8 +59,8 @@ export function formatTokenSearchResults(
   return Object.values(tokenResultsMap)
     .slice(0, MAX_TOKEN_RESULTS_COUNT)
     .sort((res1: TokenSearchResult, res2: TokenSearchResult) => {
-      const res1Match = isExactTokenMatch(res1, searchQuery)
-      const res2Match = isExactTokenMatch(res2, searchQuery)
+      const res1Match = isExactTokenSearchResultMatch(res1, searchQuery)
+      const res2Match = isExactTokenSearchResultMatch(res2, searchQuery)
 
       if (res1Match && !res2Match) {
         return -1
@@ -72,7 +72,7 @@ export function formatTokenSearchResults(
     })
 }
 
-function isExactTokenMatch(searchResult: TokenSearchResult, query: string): boolean {
+function isExactTokenSearchResultMatch(searchResult: TokenSearchResult, query: string): boolean {
   return (
     searchResult.name.toLowerCase() === query.toLowerCase() ||
     searchResult.symbol.toLowerCase() === query.toLowerCase()

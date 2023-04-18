@@ -14,19 +14,23 @@ import { NetworkFilter } from 'src/components/TokenSelector/NetworkFilter'
 import { TokenOptionItem } from 'src/components/TokenSelector/TokenOptionItem'
 import { TokenSelectorVariation } from 'src/components/TokenSelector/TokenSelector'
 import { TokenOption } from 'src/components/TokenSelector/types'
+import {
+  createEmptyBalanceOption,
+  formatSearchResults,
+  tokenOptionDifference,
+} from 'src/components/TokenSelector/utils'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { sortPortfolioBalances, usePortfolioBalances } from 'src/features/dataApi/balances'
 import { useSearchTokens } from 'src/features/dataApi/searchTokens'
 import { usePopularTokens } from 'src/features/dataApi/topTokens'
-import { CurrencyInfo, GqlResult, PortfolioBalance } from 'src/features/dataApi/types'
+import { GqlResult, PortfolioBalance } from 'src/features/dataApi/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import {
   makeSelectAccountHideSmallBalances,
   makeSelectAccountHideSpamTokens,
 } from 'src/features/wallet/selectors'
-import { differenceWith } from 'src/utils/array'
-import { areCurrencyIdsEqual, CurrencyId } from 'src/utils/currencyId'
+import { CurrencyId } from 'src/utils/currencyId'
 import { useDebounce } from 'src/utils/timing'
 
 interface TokenSearchResultListProps {
@@ -37,31 +41,10 @@ interface TokenSearchResultListProps {
   variation: TokenSelectorVariation
 }
 
-const tokenOptionComparator = (
-  tokenOption: TokenOption,
-  otherTokenOption: TokenOption
-): boolean => {
-  return areCurrencyIdsEqual(
-    tokenOption.currencyInfo.currencyId,
-    otherTokenOption.currencyInfo.currencyId
-  )
-}
-// get items in `currencies` that are not in `without`
-// e.g. difference([B, C, D], [A, B, C]) would return ([D])
-const difference = (currencies: TokenOption[], without: TokenOption[]): TokenOption[] => {
-  return differenceWith(currencies, without, tokenOptionComparator)
-}
-
 type TokenSection = {
   title: string
   data: TokenOption[]
 }
-
-const createEmptyBalanceOption = (currencyInfo: CurrencyInfo): TokenOption => ({
-  currencyInfo,
-  balanceUSD: null,
-  quantity: null,
-})
 
 export function useTokenSectionsByVariation(
   variation: TokenSelectorVariation,
@@ -142,14 +125,8 @@ export function useTokenSectionsByVariation(
     refetch: refetchSearchTokens,
   } = useSearchTokens(searchFilter, chainFilter, skipSearch)
   const searchResults = useMemo(() => {
-    if (!searchResultCurrencies) return
-
-    return searchResultCurrencies.map((currencyInfo) => {
-      return (
-        portfolioBalancesById?.[currencyInfo.currencyId] ?? createEmptyBalanceOption(currencyInfo)
-      )
-    })
-  }, [searchResultCurrencies, portfolioBalancesById])
+    return formatSearchResults(searchResultCurrencies, portfolioBalancesById, searchFilter)
+  }, [searchResultCurrencies, portfolioBalancesById, searchFilter])
 
   const sections = useMemo(() => {
     if (!portfolioBalances) return
@@ -190,7 +167,7 @@ export function useTokenSectionsByVariation(
 
     if (!popularTokenOptions) return
     if (variation === TokenSelectorVariation.BalancesAndPopular) {
-      const popularMinusBalances = difference(popularTokenOptions, portfolioBalances)
+      const popularMinusBalances = tokenOptionDifference(popularTokenOptions, portfolioBalances)
       return [
         {
           title: t('Your tokens'),
@@ -208,9 +185,9 @@ export function useTokenSectionsByVariation(
     // SuggestedAndPopular variation
     const balancesAndCommonBases = [
       ...commonBaseTokenOptions,
-      ...difference(portfolioBalances, commonBaseTokenOptions),
+      ...tokenOptionDifference(portfolioBalances, commonBaseTokenOptions),
     ]
-    const popularMinusBalancesAndCommonBases = difference(
+    const popularMinusBalancesAndCommonBases = tokenOptionDifference(
       popularTokenOptions,
       balancesAndCommonBases
     )
