@@ -73,6 +73,24 @@ module.exports = {
       // See https://github.com/webpack/webpack/issues/9509.
       webpackConfig.resolve.alias['@uniswap/conedison'] = '@uniswap/conedison/dist'
 
+      webpackConfig.optimization.splitChunks.cacheGroups = {
+        uniswap: {
+          name: 'uniswap',
+          test: /[\\/]node_modules[\\/](@uniswap)[\\/]/,
+          enforce: true,
+        },
+        web3: {
+          name: 'web3',
+          test: /[\\/]node_modules[\\/](@coinbase|@ethersproject|@opensea|@openzeppelin|@walletconnect|@web3-react)[\\/]/,
+          enforce: true,
+        },
+        react: {
+          name: 'react',
+          test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom)[\\/]/,
+          enforce: true,
+        },
+      }
+
       return webpackConfig
     },
   },
