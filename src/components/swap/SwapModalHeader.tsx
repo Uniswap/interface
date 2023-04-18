@@ -89,11 +89,12 @@ export default function SwapModalHeader({
   }, [lastExecutionPrice, setLastExecutionPrice, trade.executionPrice])
 
   useEffect(() => {
-    if (shouldLogModalCloseEvent && showAcceptChanges)
+    if (shouldLogModalCloseEvent && showAcceptChanges) {
       sendAnalyticsEvent(
         SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
         formatAnalyticsEventProperties(trade, priceUpdate, SwapPriceUpdateUserResponse.REJECTED)
       )
+    }
     setShouldLogModalCloseEvent(false)
   }, [shouldLogModalCloseEvent, showAcceptChanges, setShouldLogModalCloseEvent, trade, priceUpdate])
 
@@ -158,7 +159,7 @@ export default function SwapModalHeader({
         <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />
       </LightCard>
       {showAcceptChanges ? (
-        <SwapShowAcceptChanges justify="flex-start" gap="0px">
+        <SwapShowAcceptChanges justify="flex-start" gap="0px" data-testid="show-accept-changes">
           <RowBetween>
             <RowFixed>
               <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />
