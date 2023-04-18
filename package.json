@@ -33,11 +33,12 @@
     "collectCoverageFrom": [
       "src/**/*.ts*",
       "!src/**/*.d.ts",
-      "!src/**/types",
-      "!src/constants/**.ts",
+      "!src/abis/types",
+      "!src/constants/**/*.ts",
       "!src/graphql/**/__generated__",
       "!src/locales",
-      "!src/test-utils"
+      "!src/test-utils",
+      "!src/types/v3"
     ],
     "coveragePathIgnorePatterns": [
       ".snap"
