@@ -776,6 +776,7 @@ export default function Swap({ className }: { className?: string }) {
 
   const [inputCurrency, outputCurrency] = [currencies[Field.INPUT] ? currencies[Field.INPUT] : undefined, currencies[Field.OUTPUT] ? currencies[Field.OUTPUT] : undefined]
   const [timePeriod, setTimePeriod] = useAtom(pageTimePeriodAtom)
+
   const [inputAddress, outputAddress] = useMemo(
     () => {
       let input
@@ -939,7 +940,7 @@ export default function Swap({ className }: { className?: string }) {
                     </TokenNameCell>
                   </TokenInfoContainer>
 
-                 {/* <PairChartSection token0PriceQuery={token0PriceQuery} token1PriceQuery={token1PriceQuery} token0symbol={inputCurrency?.symbol} token1symbol={outputCurrency?.symbol} onChangeTimePeriod={setTimePeriod} />*/}
+                  <PairChartSection token0PriceQuery={token0PriceQuery} token1PriceQuery={token1PriceQuery} token0symbol={inputCurrency?.symbol} token1symbol={outputCurrency?.symbol} onChangeTimePeriod={setTimePeriod} />
                 </AutoRow>
                 <SwapWrapper chainId={chainId} className={className} id="swap-page">
                   <SwapHeader allowedSlippage={allowedSlippage} />
@@ -1017,7 +1018,8 @@ export default function Swap({ className }: { className?: string }) {
                               <Trans>From</Trans>
                             )
                           }
-                          value={leverageTrade?.expectedOutput ? new BN(leverageTrade.expectedOutput).toString() : "-"}
+                          value={ (Number(formattedAmounts[Field.INPUT])* Number(leverageFactor)).toFixed(3).toString()
+                          }
                           showMaxButton={showMaxButton}
                           currency={currencies[Field.INPUT] ?? null}
                           onUserInput={handleTypeInput}
@@ -1060,7 +1062,17 @@ export default function Swap({ className }: { className?: string }) {
                       <OutputSwapSection showDetailsDropdown={showDetailsDropdown}>
                         <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
                           <SwapCurrencyInputPanel
-                            value={!leverage ? formattedAmounts[Field.OUTPUT] : (Number(formattedAmounts[Field.OUTPUT]) == 0 ? "" : String(Number(sliderLeverageFactor) * Number(formattedAmounts[Field.OUTPUT])))}
+                            value={
+                              (leverageApprovalState === ApprovalState.NOT_APPROVED)? 
+                              "Not Approved"
+                              :
+                              !leverage ? formattedAmounts[Field.OUTPUT] : 
+                              leverageTrade?.expectedOutput ? 
+                                new BN(leverageTrade.expectedOutput).toString() 
+                                : leverageTrade?.quotedPremium!="0" ? 
+                                "-"
+                                : "searching liquidity"
+                            }
                             onUserInput={handleTypeOutput}
                             label={
                               independentField === Field.INPUT && !showWrap ? (
@@ -1153,7 +1165,7 @@ export default function Swap({ className }: { className?: string }) {
                                   onChange={(val) => setSliderLeverageFactor(val.toString())}
                                   min={1.0}
                                   max={1000.0}
-                                  step={0.1}
+                                  step={1}
                                   float={true}
                                 />
                               </>

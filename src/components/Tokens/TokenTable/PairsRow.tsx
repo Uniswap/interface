@@ -17,6 +17,9 @@ import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { Field } from '../../../state/swap/actions'
+import { usePool } from 'hooks/usePools'
+import { FeeAmount } from '@uniswap/v3-sdk'
+
 import { useCallback, 
   //useEffect, useMemo, useState 
 } from 'react'
@@ -501,7 +504,8 @@ export const PLoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<H
   // } = useDerivedSwapInfo()
   const currency0 = useCurrency(token0.address )
   const currency1 = useCurrency(token1.address )
-
+  const [poolState, pool] = usePool(currency0 ?? undefined, currency1?? undefined, FeeAmount.LOW)
+  const currentPrice = pool?.token0Price.toSignificant(3)
   return (
     <div ref={ref} data-testid={`token-table-row-${token0.symbol}`}>
       <ClickableContent
@@ -529,7 +533,7 @@ export const PLoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<H
           price={
             <ClickableContent>
               <PriceInfoCell>
-                {formatUSDPrice(1.13)}
+                {currentPrice &&(currentPrice+" " + token0.symbol +"/"+token1.symbol)}
                 <PercentChangeInfoCell>
                   <ArrowCell>{smallArrow}</ArrowCell>
                   <DeltaText delta={delta}>{formattedDelta}</DeltaText>

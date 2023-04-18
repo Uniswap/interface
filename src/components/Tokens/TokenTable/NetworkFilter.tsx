@@ -129,7 +129,10 @@ export default function NetworkFilter() {
       >
         <StyledMenuContent>
           <NetworkLabel>
-            <Logo src={chainInfo?.logoUrl} /> {chainInfo?.label}
+            <Logo src={chainInfo?.logoUrl} /> {
+              "Mumbai"
+              //chainInfo?.label
+            }
           </NetworkLabel>
           <Chevron open={open}>
             {open ? (
@@ -140,7 +143,7 @@ export default function NetworkFilter() {
           </Chevron>
         </StyledMenuContent>
       </NetworkFilterOption>
-      {open && (
+      {false && (
         <MenuTimeFlyout>
           {BACKEND_CHAIN_NAMES.map((network) => {
             const chainInfo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[network])

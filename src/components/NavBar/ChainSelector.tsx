@@ -101,8 +101,14 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
           gap="8"
           className={styles.ChainSelector}
           background={isOpen ? 'accentActiveSoft' : 'none'}
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => 
+            //setIsOpen(!isOpen)
+            onSelectChain(80001)
+          }
         >
+
+        {(chainId == 80001 ? "": "Connect to mumbai")}
+
           {!isSupported ? (
             <AlertTriangle size={20} color={theme.textSecondary} />
           ) : (
@@ -111,7 +117,8 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
           {isOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
         </Row>
       </MouseoverTooltip>
-      {isOpen && (isMobile ? <Portal>{dropdown}</Portal> : <>{dropdown}</>)}
+      {//isOpen
+      false && (isMobile ? <Portal>{dropdown}</Portal> : <>{dropdown}</>)}
     </Box>
   )
 }

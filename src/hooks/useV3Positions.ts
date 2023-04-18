@@ -104,11 +104,13 @@ export function useLeveragePosition(leverageManagerAddress: string | undefined, 
     return [PositionState.LOADING, undefined]
   }
   const leverageManager = useLeverageManagerContract(leverageManagerAddress)
-  const { result: r0, loading: l0, error: e0 } = useSingleCallResult(leverageManager, 'getPosition', [account, tokenId])
   const { result: r1, loading: l1, error: e1 } = useSingleCallResult(leverageManager, 'token0', [])
   const { result: r2, loading: l2, error: e2 } = useSingleCallResult(leverageManager, 'token1', [])
+  const { result: r0, loading: l0, error: e0 } = useSingleCallResult(leverageManager, 'getPosition', [account, tokenId])
+
   const token0 = useToken(r1?.[0])
   const token1 = useToken(r2?.[0])
+
 
   let info: [PositionState, LeveragePositionDetails | undefined] = useMemo(() => {
     if (l0 || l1 || l2 || e0 || e1 || e2 && !r0 && !r1 && !r2) {

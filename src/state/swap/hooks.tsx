@@ -227,14 +227,15 @@ export function useDerivedLeverageCreationInfo()
         let input = Number(debouncedAmount.toFixed()) * (10** Number(inputCurrency?.wrapped.decimals))
         let borrowAmount = input * (Number(leverageFactor)-1)
 
+        console.log("createPositionresult", input.toString(), borrowAmount.toString())
 
         const trade = await leverageManager.callStatic.createLevPosition(
-          input.toFixed(0),
+          input.toString(),
           allowedSlippage,
-          borrowAmount.toFixed(0),
+          borrowAmount.toString(),
           isLong
         )
-        // console.log("createPositionresult", trade)
+        console.log("createPositionresult", trade)
         setContractResult(trade)
         setTradeState(LeverageTradeState.VALID)
       } catch (err) {
@@ -254,10 +255,12 @@ export function useDerivedLeverageCreationInfo()
   const trade: LeverageTrade = useMemo(() => {
     if (initialPrice && contractResult && outputCurrency?.wrapped && inputCurrency?.wrapped && debouncedAmount) {
       const position: any = contractResult[0]
-      const expectedOutput = new BN(position.totalPosition.toString()).shiftedBy(-outputCurrency?.wrapped.decimals).toFixed(6);
+      const expectedOutput =  new BN(position.totalPosition.toString()).shiftedBy(-outputCurrency?.wrapped.decimals).toFixed(6)
       const borrowedAmount = new BN(position.totalDebtInput.toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toFixed(6)
       const strikePrice = new BN(expectedOutput).div(new BN(borrowedAmount).plus(debouncedAmount.toExact())).toFixed(6)
-      const quotedPremium = new BN((contractResult[2] as any ).toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toFixed(6)
+      const quotedPremium = new BN((contractResult[2] as any )
+        .div(10) // TODO hack 
+        .toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toFixed(6)
       let t = new BN(strikePrice).minus(initialPrice.toFixed(12)).abs().dividedBy(initialPrice.toFixed(12)).multipliedBy(1000).toFixed(0)
       const priceImpact = new Percent(t, 1000)
       
@@ -265,7 +268,7 @@ export function useDerivedLeverageCreationInfo()
       // new Percent(String(Number(initialPrice.toFixed(12)) - Number(strikePrice)), String(Number(initialPrice.toFixed(12))))
       // console.log("debounced: ", debouncedAmount.toExact(), borrowedAmount)
       const effectiveLeverage = new BN( ( Number(borrowedAmount) + Number(debouncedAmount.toExact()) + Number(quotedPremium) ) / (Number(debouncedAmount.toExact()) + Number(quotedPremium))).toFixed(6)
-
+      if(tradeState === LeverageTradeState.VALID){
       return {
         inputAmount: debouncedAmount,
         borrowedAmount: CurrencyAmount.fromRawAmount(inputCurrency?.wrapped, new BN(borrowedAmount).shiftedBy(inputCurrency?.wrapped.decimals).toFixed(0)),
@@ -275,8 +278,17 @@ export function useDerivedLeverageCreationInfo()
         quotedPremium,
         priceImpact,
         effectiveLeverage
+      } }else {return {
+        inputAmount: undefined,
+        borrowedAmount: undefined,
+        state: tradeState,
+        expectedOutput: undefined,
+        strikePrice: undefined,
+        quotedPremium: "0",
+        priceImpact: undefined,
+        effectiveLeverage: undefined
       }
-
+    }
       // inputAmount: CurrencyAmount<Currency> | undefined
       // borrowedAmount: CurrencyAmount<Currency> | undefined
       // state: LeverageTradeState
@@ -296,7 +308,7 @@ export function useDerivedLeverageCreationInfo()
         effectiveLeverage: undefined
       }
     }
-  }, [initialPrice, tradeState, contractResult, leverageManager, leverage, leverageFactor, debouncedAmount, currencies, inputCurrency, outputCurrency])
+  }, [leverageFactor,initialPrice, tradeState, contractResult, leverageManager, leverage, debouncedAmount, currencies, inputCurrency, outputCurrency])
   
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined

@@ -263,7 +263,16 @@ export default function SwapCurrencyInputPanel({
         <Trans>{isInput ? "What you pay" : (isLevered ? "Total Output Position" : "What you get")}</Trans>
         <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}>
           {!hideInput && (
+            isInput?
             <StyledNumericalInput
+              className="token-amount-input"
+              value={value}
+              onUserInput={onUserInput}
+              disabled={!chainAllowed || disabled}
+              $loading={loading}
+              placeholder = {"Input <= 1"}
+            />
+            : <StyledNumericalInput
               className="token-amount-input"
               value={value}
               onUserInput={onUserInput}

@@ -164,6 +164,7 @@ interface LeveragePositionListItemProps {
   tickStart: string // borrowStartTick
   tickFinish: string // borrowFinishTick
   initialCollateral: string
+  recentPremium: string
 }
 
 
@@ -233,7 +234,8 @@ export default function LeveragePositionItem({
   openTime,
   repayTime,
   creationTick, 
-  initialCollateral
+  initialCollateral,
+  recentPremium
 }: LeveragePositionListItemProps) {
   // const token0 = useToken(token0Address)
   // const token1 = useToken(token1Address)
@@ -282,7 +284,8 @@ export default function LeveragePositionItem({
     return !isToken0?(Number(totalLiquidity))*(1/Number(currentPrice) - 1/Number(enterPrice?.toFixed(10)))
           : (Number(totalLiquidity))*(Number(currentPrice) - Number(enterPrice?.toFixed(10)))
   }, [pool, enterPrice])
-
+  const remainingPremium = ((1- (Date.now() - Number(repayTime)*1000)/86400000)*
+            Number(recentPremium)).toFixed(4)
   // &nbsp;{currency0?.symbol}&nbsp;/&nbsp;{currency1?.symbol}
   return (
     <ItemWrapper>
@@ -345,9 +348,7 @@ export default function LeveragePositionItem({
           <AutoColumn gap="8px">
           <ItemValueLabel label={"Time of Creation"} value={moment(new Date(Number(openTime) * 1000)).format("M/D/YYYY H:mm")}/>
           <ItemValueLabel label={"Remaining Premium "} value={
-            repayTime 
-           // moment(new Date(Number(repayTime) * 1000)).fromNow()
-          }/>
+            Number(remainingPremium)>0?remainingPremium.toString():"0" + " " + (!isToken0 ? currency1?.symbol : currency0?.symbol)}/>
           </AutoColumn>
         </AutoRow>
 

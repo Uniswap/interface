@@ -31,7 +31,7 @@ export function useFaucetCallback(
   token?: Token,
   spender?: string
   ):()=>Promise<void>{
-  console.log('tokenhere', token,spender)
+  // console.log('tokenhere', token,spender)
   const useFaucet_ = useFaucet(token, spender)
   const addTransaction = useTransactionAdder()
 

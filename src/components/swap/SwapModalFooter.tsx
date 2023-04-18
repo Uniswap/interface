@@ -438,8 +438,8 @@ function useDerivedAddPremiumInfo(
         setContractResult({
           addPremiumResult
         })
-        console.log("addPosition:", position)
         setState(DerivedInfoState.VALID)
+    console.log("addPosition:", addPremiumResult)
 
       } catch (error) {
         console.error('Failed to get addPremium info', error)
@@ -451,9 +451,11 @@ function useDerivedAddPremiumInfo(
   }, [leverageManager, trader, tokenId])
 
   const info = useMemo(() => {
+    console.log("addPosition2:", contractResult)
+
     if (contractResult) {
       return {
-        rate: new BN(contractResult.toString()).shiftedBy(-18).toFixed(12)
+        rate: (Number(contractResult.addPremiumResult)/(1e16)).toString()//.shiftedBy(-18).toFixed(12)
       }
     } else {
       return {
@@ -531,7 +533,7 @@ export function CloseLeverageModalFooter({
   const token1 = useToken(token1Address)
 
   const loading = useMemo(() => derivedState === DerivedInfoState.LOADING, [derivedState])
-  console.log("slippage: ", slippage)
+  console.log("here: ", token0Amount, token1Amount)
 
   const inputIsToken0 = !position?.isToken0
 
@@ -539,6 +541,7 @@ export function CloseLeverageModalFooter({
   const initCollateral = position?.initialCollateral; 
   const received = inputIsToken0 ? (Math.abs(Number(token0Amount)) - Number(debt)).toFixed(5)
                                     : (Math.abs(Number(token1Amount)) - Number(debt)).toFixed(5)
+  console.log("here: ", token0Amount, token1Amount,position,  initCollateral, received)
   return (
     <AutoRow>
       <LightCard marginTop="10px">
@@ -640,7 +643,7 @@ export function CloseLeverageModalFooter({
                         <TextWithLoadingPlaceholder syncing={loading} width={65}>
                           <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
                             {
-                              `${inputIsToken0 ? new BN(token0Amount).abs().toString() : new BN(token1Amount).abs().toString()}  ${!inputIsToken0 ? token0?.symbol : token1?.symbol}`
+                              `${inputIsToken0 ? new BN(token1Amount).abs().toString() : new BN(token0Amount).abs().toString()}  ${!inputIsToken0 ? token0?.symbol : token1?.symbol}`
                             }
                           </ThemedText.DeprecatedBlack>
                         </TextWithLoadingPlaceholder>
@@ -800,11 +803,11 @@ export function AddPremiumModalFooter({
   const theme = useTheme()
 
   const [state, position] = useLeveragePosition(leverageManagerAddress, trader, tokenId)
-  const { rate } = useDerivedAddPremiumInfo(leverageManagerAddress, trader, tokenId, setDerivedState)
+  const  {rate}  = useDerivedAddPremiumInfo(leverageManagerAddress, trader, tokenId, setDerivedState)
   const inputIsToken0 = !position?.isToken0
   console.log("rate: ", rate)
 
-  const payment = position?.totalDebtInput && rate ? new BN(position.totalDebtInput).multipliedBy(new BN(rate)).toString() : "0"
+  const payment = position?.totalDebtInput && rate ? new BN(position.totalDebtInput).multipliedBy(new BN(rate)).div(100).toString() : "0"
   const inputCurrency = useCurrency(position?.isToken0 ? position?.token0?.address : position?.token1?.address)
   const [leverageApprovalState, approveLeverageManager] = useApproveCallback(
     inputCurrency ?
@@ -874,7 +877,7 @@ export function AddPremiumModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                Premium Payment Rate
+                                Premium Payment Rate to be multiplied your borrowed amount
                               </Trans>
                             }
                           >
@@ -896,7 +899,7 @@ export function AddPremiumModalFooter({
                           <MouseoverTooltip
                             text={
                               <Trans>
-                                Expected Payment
+                                Rate x Debt 
                               </Trans>
                             }
                           >
