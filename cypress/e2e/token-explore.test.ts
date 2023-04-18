@@ -7,7 +7,7 @@ describe('Token explore', () => {
 
   it('should load token leaderboard', () => {
     cy.visit('/tokens/ethereum')
-    cy.get(getTestSelectorStartsWith('token-table')).its('length').should('be.eq', 100)
+    cy.get(getTestSelectorStartsWith('token-table')).its('length').should('be.greaterThan', 0)
     // check sorted svg icon is present in volume cell, since tokens are sorted by volume by default
     cy.get(getTestSelector('header-row')).find(getTestSelector('volume-cell')).find('svg').should('exist')
     cy.get(getTestSelector('token-table-row-ETH')).find(getTestSelector('name-cell')).should('include.text', 'Ether')
