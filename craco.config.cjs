@@ -3,7 +3,7 @@ const { VanillaExtractPlugin } = require('@vanilla-extract/webpack-plugin')
 const { execSync } = require('child_process')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
-const { DefinePlugin } = require('webpack')
+const { DefinePlugin, IgnorePlugin } = require('webpack')
 
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -73,6 +73,9 @@ module.exports = {
           // Case sensitive paths are enforced by typescript.
           // See https://www.typescriptlang.org/tsconfig#forceConsistentCasingInFileNames.
           if (plugin instanceof CaseSensitivePathsPlugin) return false
+
+          // IgnorePlugin is used to tree-shake moment locales, but we do not use moment in this project.
+          if (plugin instanceof IgnorePlugin) return false
 
           return true
         })

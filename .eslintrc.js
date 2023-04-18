@@ -21,6 +21,11 @@ module.exports = {
           {
             paths: [
               {
+                name: 'moment',
+                // tree-shaking for moment is not configured to improve performance - see craco.config.cjs.
+                message: 'moment is not configured for tree-shaking. Is it necessary?',
+              },
+              {
                 name: 'zustand',
                 importNames: ['default'],
                 message: 'Default import from zustand is deprecated. Import `{ create }` instead.',
