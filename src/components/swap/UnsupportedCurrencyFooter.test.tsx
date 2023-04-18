@@ -23,10 +23,8 @@ jest.mock('@web3-react/core', () => {
 })
 
 jest.mock('../../hooks/Tokens')
-// const mockUseUnsupportedTokens = useUnsupportedTokens as jest.MockedFunction<typeof useUnsupportedTokens>
 
 jest.mock('../../utils/getExplorerLink')
-//const mockGetExplorerLink = getExplorerLink as jest.MockedFunction<typeof getExplorerLink>
 
 describe('UnsupportedCurrencyFooter.tsx', () => {
   it('matches base snapshot', () => {
