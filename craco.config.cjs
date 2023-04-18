@@ -11,6 +11,8 @@ const isProduction = process.env.NODE_ENV === 'production'
 // Omit them from production builds, as they slow down the feedback loop.
 const shouldLintOrTypeCheck = !isProduction
 
+const shouldOmitSourceMaps = process.argv.includes('--no-source-maps')
+
 module.exports = {
   babel: {
     plugins: ['@vanilla-extract/babel-plugin'],
@@ -50,6 +52,8 @@ module.exports = {
   webpack: {
     plugins: [new VanillaExtractPlugin({ identifiers: 'short' })],
     configure: (webpackConfig) => {
+      webpackConfig.devtool = shouldOmitSourceMaps ? false : webpackConfig.devtool
+
       webpackConfig.plugins = webpackConfig.plugins.map((plugin) => {
         // Extend process.env with dynamic values (eg commit hash).
         // This will make dynamic values available to JavaScript only, not to interpolated HTML (ie index.html).
@@ -71,7 +75,38 @@ module.exports = {
       // We're currently on Webpack 4.x which doesn't support the `exports` field in package.json.
       // Instead, we need to manually map the import path to the correct exports path (eg dist or build folder).
       // See https://github.com/webpack/webpack/issues/9509.
-      webpackConfig.resolve.alias['@uniswap/conedison'] = '@uniswap/conedison/dist'
+      Object.assign(webpackConfig.resolve.alias, { ['@uniswap/conedison']: '@uniswap/conedison/dist' })
+
+      // Split out ethers and other large dependencies into a separate vendor bundle.
+      Object.assign(webpackConfig.optimization.splitChunks, {
+        cacheGroups: {
+          // TODO(zzmp): react and ethers do not show up
+          react: {
+            name: 'react',
+            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+            chunks: 'all',
+            enforce: true,
+          },
+          ethers: {
+            name: 'ethers',
+            test: /[\\/]node_modules[\\/](@ethersproject|bn\.js|jsbi|bignumber\.js)[\\/]/,
+            chunks: 'all',
+            enforce: true,
+          },
+          wallet: {
+            name: 'wallet',
+            test: /[\\/]node_modules[\\/](@coinbase|@walletconnect|@web3-react)[\\/]/,
+            chunks: 'all',
+            enforce: true,
+          },
+          uniswap: {
+            name: 'uniswap',
+            test: /[\\/]node_modules[\\/](@uniswap)[\\/]/,
+            chunks: 'all',
+            enforce: true,
+          },
+        },
+      })
 
       return webpackConfig
     },
