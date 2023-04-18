@@ -1,5 +1,5 @@
-import { noop } from 'test-utils/constants'
 import { fireEvent, render, screen } from 'test-utils/render'
+import noop from 'utils/noop'
 
 import { ResizingTextArea, TextInput } from './'
 

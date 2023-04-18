@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/react'
-import { noop } from 'test-utils/constants'
+import noop from 'utils/noop'
 
 import { AppState } from './types'
 
