@@ -304,7 +304,7 @@ export default function LeveragePositionItem({
                     <span>
                       {enterPrice?.toSignificant(3) ?? "-"}{' '}
                     </span>
-                    <HoverInlineText text={currency1?.symbol} /> per <HoverInlineText text={currency0?.symbol ?? ''} />
+                    <HoverInlineText text={currency0?.symbol} /> per <HoverInlineText text={currency1?.symbol ?? ''} />
                   </Trans>
                 </RangeText>{' '}
                 <HideSmall>
@@ -321,8 +321,8 @@ export default function LeveragePositionItem({
                     <span>
                       {pool?.token0Price.toSignificant(3) ?? "-"}{' '}
                     </span>
-                    <HoverInlineText text={currency1?.symbol} /> per{' '}
-                    <HoverInlineText maxCharacters={10} text={currency0?.symbol} />
+                    <HoverInlineText text={currency0?.symbol} /> per{' '}
+                    <HoverInlineText maxCharacters={10} text={currency1?.symbol} />
                   </Trans>
                 </RangeText>
               </RangeLineItem>
@@ -344,8 +344,9 @@ export default function LeveragePositionItem({
           </AutoColumn>
           <AutoColumn gap="8px">
           <ItemValueLabel label={"Time of Creation"} value={moment(new Date(Number(openTime) * 1000)).format("M/D/YYYY H:mm")}/>
-          <ItemValueLabel label={"Last Repayment Time "} value={
-            moment(new Date(Number(repayTime) * 1000)).fromNow()
+          <ItemValueLabel label={"Remaining Premium "} value={
+            repayTime 
+           // moment(new Date(Number(repayTime) * 1000)).fromNow()
           }/>
           </AutoColumn>
         </AutoRow>

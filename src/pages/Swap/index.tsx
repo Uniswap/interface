@@ -101,7 +101,7 @@ import GlobalStorageData from "../../perpspotContracts/GlobalStorage.json"
 import LeverageManagerData from "../../perpspotContracts/LeverageManager.json"
 import { useLeverageManagerAddress } from 'hooks/useGetLeverageManager'
 import { usePoolAddressCache } from 'components/WalletDropdown/MiniPortfolio/Pools/cache'
-import { computePoolAddress } from 'hooks/usePools'
+import { computePoolAddress , usePool} from 'hooks/usePools'
 import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import { ApprovalState, useApproval } from 'lib/hooks/useApproval'
 import { useApproveCallback, useFaucetCallback} from 'hooks/useApproveCallback'
@@ -875,7 +875,6 @@ export default function Swap({ className }: { className?: string }) {
   //   tradeType : null ,
   //   v3Routes: {}
   // }
-  const fakeTrade = {} as InterfaceTrade<Currency, Currency, TradeType> 
   // const fakeTrade: InterfaceTrade<Currency, Currency, TradeType> = new InterfaceTrade<Currency, Currency, TradeType>(
   //  params
   //   )
@@ -884,6 +883,15 @@ export default function Swap({ className }: { className?: string }) {
   // console.log('fakeTrade', fakeTrade, fakeTrade.routes);
   const debouncedLeverageFactor = useDebounce(leverageFactor, 200);
   
+  const [poolState, pool] = usePool(currencies.INPUT ?? undefined, currencies.OUTPUT?? undefined, FeeAmount.LOW)
+
+  // // enter token0 price in token1
+  // const enterPrice = currency0?.wrapped && currency1?.wrapped 
+  // ? tickToPrice(currency0.wrapped, currency1.wrapped, Number(creationTick)) : undefined
+
+  // // token0 price.
+  const currentPrice = pool?.token0 != currencies.INPUT? pool?.token0Price.toSignificant(3)
+      : (1/Number(pool?.token0Price.toSignificant(3))).toFixed(3)
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <>
@@ -925,12 +933,13 @@ export default function Swap({ className }: { className?: string }) {
                   <TokenInfoContainer data-testid="token-info-container">
                     <TokenNameCell>
                       {inputCurrency && outputCurrency && <DoubleCurrencyLogo currency0={inputCurrency as Currency} currency1={outputCurrency as Currency} size={18} margin />}
-                      {inputCurrency && outputCurrency
-                        ? `${(inputCurrency.symbol)}/${(outputCurrency.symbol)}`
+                      {inputCurrency && outputCurrency && currentPrice
+                        ? `${(outputCurrency.symbol)}/${(inputCurrency.symbol) + " Price: "+ currentPrice.toString()}` 
                         : <Trans>Pair not found</Trans>}
                     </TokenNameCell>
                   </TokenInfoContainer>
-                  <PairChartSection token0PriceQuery={token0PriceQuery} token1PriceQuery={token1PriceQuery} token0symbol={inputCurrency?.symbol} token1symbol={outputCurrency?.symbol} onChangeTimePeriod={setTimePeriod} />
+
+                 {/* <PairChartSection token0PriceQuery={token0PriceQuery} token1PriceQuery={token1PriceQuery} token0symbol={inputCurrency?.symbol} token1symbol={outputCurrency?.symbol} onChangeTimePeriod={setTimePeriod} />*/}
                 </AutoRow>
                 <SwapWrapper chainId={chainId} className={className} id="swap-page">
                   <SwapHeader allowedSlippage={allowedSlippage} />
