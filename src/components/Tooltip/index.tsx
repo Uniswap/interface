@@ -1,13 +1,17 @@
 import { transparentize } from 'polished'
-import { ReactNode, useCallback, useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import Popover, { PopoverProps } from '../Popover'
+
+// TODO(WEB-3163): migrate noops throughout web to a shared util file.
+const noop = () => null
 
 export const TooltipContainer = styled.div`
   max-width: 256px;
   cursor: default;
   padding: 0.6rem 1rem;
+  pointer-events: auto;
 
   color: ${({ theme }) => theme.textPrimary};
   font-weight: 400;
@@ -25,7 +29,6 @@ interface TooltipProps extends Omit<PopoverProps, 'content'> {
   text: ReactNode
   open?: () => void
   close?: () => void
-  noOp?: () => void
   disableHover?: boolean // disable the hover and content display
   timeout?: number
 }
@@ -33,17 +36,19 @@ interface TooltipProps extends Omit<PopoverProps, 'content'> {
 interface TooltipContentProps extends Omit<PopoverProps, 'content'> {
   content: ReactNode
   onOpen?: () => void
+  open?: () => void
+  close?: () => void
   // whether to wrap the content in a `TooltipContainer`
   wrap?: boolean
   disableHover?: boolean // disable the hover and content display
 }
 
-export default function Tooltip({ text, open, close, noOp, disableHover, ...rest }: TooltipProps) {
+export default function Tooltip({ text, open, close, disableHover, ...rest }: TooltipProps) {
   return (
     <Popover
       content={
         text && (
-          <TooltipContainer onMouseEnter={disableHover ? noOp : open} onMouseLeave={disableHover ? noOp : close}>
+          <TooltipContainer onMouseEnter={disableHover ? noop : open} onMouseLeave={disableHover ? noop : close}>
             {text}
           </TooltipContainer>
         )
@@ -53,15 +58,28 @@ export default function Tooltip({ text, open, close, noOp, disableHover, ...rest
   )
 }
 
-function TooltipContent({ content, wrap = false, ...rest }: TooltipContentProps) {
-  return <Popover content={wrap ? <TooltipContainer>{content}</TooltipContainer> : content} {...rest} />
+function TooltipContent({ content, wrap = false, open, close, disableHover, ...rest }: TooltipContentProps) {
+  return (
+    <Popover
+      content={
+        wrap ? (
+          <TooltipContainer onMouseEnter={disableHover ? noop : open} onMouseLeave={disableHover ? noop : close}>
+            {content}
+          </TooltipContainer>
+        ) : (
+          content
+        )
+      }
+      {...rest}
+    />
+  )
 }
 
 /** Standard text tooltip. */
 export function MouseoverTooltip({ text, disableHover, children, timeout, ...rest }: Omit<TooltipProps, 'show'>) {
   const [show, setShow] = useState(false)
-  const open = useCallback(() => text && setShow(true), [text, setShow])
-  const close = useCallback(() => setShow(false), [setShow])
+  const open = () => text && setShow(true)
+  const close = () => setShow(false)
 
   useEffect(() => {
     if (show && timeout) {
@@ -76,18 +94,16 @@ export function MouseoverTooltip({ text, disableHover, children, timeout, ...res
     return
   }, [timeout, show])
 
-  const noOp = () => null
   return (
     <Tooltip
       {...rest}
       open={open}
       close={close}
-      noOp={noOp}
       disableHover={disableHover}
       show={show}
       text={disableHover ? null : text}
     >
-      <div onMouseEnter={disableHover ? noOp : open} onMouseLeave={disableHover || timeout ? noOp : close}>
+      <div onMouseEnter={disableHover ? noop : open} onMouseLeave={disableHover || timeout ? noop : close}>
         {children}
       </div>
     </Tooltip>
@@ -103,18 +119,23 @@ export function MouseoverTooltipContent({
   ...rest
 }: Omit<TooltipContentProps, 'show'>) {
   const [show, setShow] = useState(false)
-  const open = useCallback(() => {
+  const open = () => {
     setShow(true)
     openCallback?.()
-  }, [openCallback])
-  const close = useCallback(() => setShow(false), [setShow])
+  }
+  const close = () => {
+    setShow(false)
+  }
+
   return (
-    <TooltipContent {...rest} show={!disableHover && show} content={disableHover ? null : content}>
-      <div
-        style={{ display: 'inline-block', lineHeight: 0, padding: '0.25rem' }}
-        onMouseEnter={open}
-        onMouseLeave={close}
-      >
+    <TooltipContent
+      {...rest}
+      open={open}
+      close={close}
+      show={!disableHover && show}
+      content={disableHover ? null : content}
+    >
+      <div onMouseEnter={open} onMouseLeave={close}>
         {children}
       </div>
     </TooltipContent>

@@ -4,6 +4,7 @@
     "allowSyntheticDefaultImports": true,
     "alwaysStrict": true,
     "baseUrl": "src",
+    "composite": true,
     "downlevelIteration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -23,9 +24,10 @@
     "strict": true,
     "strictNullChecks": true,
     "target": "es5",
+    "tsBuildInfoFile": "node_modules/.cache/.tsbuildinfo",
     "types": ["jest"],
     "useUnknownInCatchVariables": false
   },
   "exclude": ["node_modules", "cypress"],
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "src/**/*.json"]
 }

@@ -96,13 +96,19 @@ export function getNftDisplayComponent(
   }
 }
 
-export function useSelectAsset(
-  selectAsset: () => void,
-  unselectAsset: () => void,
-  isSelected: boolean,
-  isDisabled: boolean,
+export function useSelectAsset({
+  selectAsset,
+  unselectAsset,
+  isSelected,
+  isDisabled,
+  onClick,
+}: {
+  selectAsset?: () => void
+  unselectAsset?: () => void
+  isSelected: boolean
+  isDisabled: boolean
   onClick?: () => void
-) {
+}) {
   return useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation()
@@ -117,7 +123,7 @@ export function useSelectAsset(
         return
       }
 
-      return isSelected ? unselectAsset() : selectAsset()
+      return isSelected ? unselectAsset?.() : selectAsset?.()
     },
     [selectAsset, isDisabled, onClick, unselectAsset, isSelected]
   )
