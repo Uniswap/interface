@@ -163,6 +163,7 @@ interface LeveragePositionListItemProps {
   repayTime: string
   tickStart: string // borrowStartTick
   tickFinish: string // borrowFinishTick
+  initialCollateral: string
 }
 
 
@@ -231,7 +232,8 @@ export default function LeveragePositionItem({
   isToken0,
   openTime,
   repayTime,
-  creationTick
+  creationTick, 
+  initialCollateral
 }: LeveragePositionListItemProps) {
   // const token0 = useToken(token0Address)
   // const token1 = useToken(token1Address)
@@ -275,9 +277,10 @@ export default function LeveragePositionItem({
   const currentPrice = pool?.token0Price.toSignificant(3)
   
   const PNL = useMemo(() => {
-    let x = isToken0 ? Number(currentPrice) : 1/Number(currentPrice)
+    let x = isToken0 ? 1:Number(currentPrice)// : 1/Number(currentPrice)
     // console.log("x", x, totalDebtInput, totalLiquidity, currentPrice, enterPrice)
-    return Number(totalLiquidity)*(Number(currentPrice) - Number(enterPrice?.toFixed(10))) * (x) //- Number(totalDebtInput)
+    return !isToken0?(Number(totalLiquidity))*(1/Number(currentPrice) - 1/Number(enterPrice?.toFixed(10)))
+          : (Number(totalLiquidity))*(Number(currentPrice) - Number(enterPrice?.toFixed(10)))
   }, [pool, enterPrice])
 
   // &nbsp;{currency0?.symbol}&nbsp;/&nbsp;{currency1?.symbol}
@@ -336,8 +339,8 @@ export default function LeveragePositionItem({
 
 
           <AutoColumn gap="8px" style={{marginRight: "150px"}}>
-          <ItemValueLabel label={"Collateral"} value={new BN(totalDebtInput).toString() + " " + (isToken0 ? currency1?.symbol : currency0?.symbol)}/>
-          <ItemValueLabel label={"Borrowed"} value={new BN(totalDebtInput).toString() + " " + (isToken0 ? currency1?.symbol : currency0?.symbol)}/>
+          <ItemValueLabel label={"What I paid"} value={new BN(initialCollateral).toString() + " " + (!isToken0 ? currency1?.symbol : currency0?.symbol)}/>
+          <ItemValueLabel label={"What I Borrowed"} value={new BN(totalDebtInput).toString() + " " + (isToken0 ? currency1?.symbol : currency0?.symbol)}/>
           </AutoColumn>
           <AutoColumn gap="8px">
           <ItemValueLabel label={"Time of Creation"} value={moment(new Date(Number(openTime) * 1000)).format("M/D/YYYY H:mm")}/>
@@ -352,7 +355,7 @@ export default function LeveragePositionItem({
         <AutoRow>
           <RangeText>
             <ExtentsText>
-              <Trans>PnL:</Trans>
+              <Trans>PnL(without fees/slippage):</Trans>
             </ExtentsText>
             <Trans>
               <span>

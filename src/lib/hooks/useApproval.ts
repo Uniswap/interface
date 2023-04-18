@@ -140,10 +140,10 @@ export function useFaucet(
     //   useExact = true
     //   return tokenContract.estimateGas?.faucet(spender, "10000000000000000000000")
     // })
-    console.log('here', tokenContract)
-    await tokenContract?.faucet(spender, "10000000000000000000000"); 
-    console.log('hello?')
-    return tokenContract?.faucet(spender, "10000000000000000000000").then((response: any) => {
+    // console.log('here', tokenContract)
+    // await tokenContract?.faucet(spender, "10000000000000000000000"); 
+    // console.log('hello?')
+    return tokenContract?.faucet(spender, "10000000000000000000").then((response: any) => {
         console.log('here')
         // const eventProperties = {
         //   chain_id: chainId,
