@@ -16,6 +16,17 @@ module.exports = {
     {
       files: ['**/*.ts', '**/*.tsx'],
       rules: {
+        'import/no-restricted-paths': [
+          'error',
+          {
+            zones: [
+              {
+                target: ['src/**/*[!.test].ts', 'src/**/*[!.test].tsx'],
+                from: 'src/test-utils',
+              },
+            ],
+          },
+        ],
         'no-restricted-imports': [
           'error',
           {
