@@ -1,18 +1,26 @@
 import { getDeviceId, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
 import { CustomUserProperties, getBrowser, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { useAnalyticsReporter } from 'components/analytics'
+import ErrorBoundary from 'components/ErrorBoundary'
 import Loader from 'components/Icons/LoadingSpinner'
+import { PageTabs } from 'components/NavBar'
+import NavBar from 'components/NavBar'
+import Polling from 'components/Polling'
+import Popups from 'components/Popups'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
+import { lazy, ReactNode, Suspense, useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
+import { useIsExpertMode } from 'state/user/hooks'
 import { StatsigProvider, StatsigUser } from 'statsig-react'
 import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
+import DarkModeQueryParamReader from 'theme/components/DarkModeQueryParamReader'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
@@ -20,14 +28,7 @@ import { STATSIG_DUMMY_KEY } from 'tracing'
 import { getEnvName } from 'utils/env'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
-import { useAnalyticsReporter } from '../components/analytics'
-import ErrorBoundary from '../components/ErrorBoundary'
-import { PageTabs } from '../components/NavBar'
-import NavBar from '../components/NavBar'
-import Polling from '../components/Polling'
-import Popups from '../components/Popups'
-import { useIsExpertMode } from '../state/user/hooks'
-import DarkModeQueryParamReader from '../theme/components/DarkModeQueryParamReader'
+// TODO(zzmp): Lazy-load all pages.
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
@@ -44,13 +45,6 @@ import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly } from './Swap/redirects'
 import Tokens from './Tokens'
-
-const TokenDetails = lazy(() => import('./TokenDetails'))
-const Vote = lazy(() => import('./Vote'))
-const NftExplore = lazy(() => import('nft/pages/explore'))
-const Collection = lazy(() => import('nft/pages/collection'))
-const Profile = lazy(() => import('nft/pages/profile/profile'))
-const Asset = lazy(() => import('nft/pages/asset/Asset'))
 
 const BodyWrapper = styled.div`
   display: flex;
@@ -91,6 +85,15 @@ const HeaderWrapper = styled.div<{ transparent?: boolean }>`
   top: 0;
   z-index: ${Z_INDEX.dropdown};
 `
+
+function Lazy({ filename, fallback = null }: { filename: string; fallback?: ReactNode }) {
+  const Component = useMemo(() => lazy(() => import(`${filename}`)), [filename])
+  return (
+    <Suspense fallback={fallback}>
+      <Component />
+    </Suspense>
+  )
+}
 
 function getCurrentPageFromLocation(locationPathname: string): InterfacePageName | undefined {
   switch (true) {
@@ -231,15 +234,8 @@ export default function App() {
                   <Route path="tokens" element={<Tokens />}>
                     <Route path=":chainName" />
                   </Route>
-                  <Route path="tokens/:chainName/:tokenAddress" element={<TokenDetails />} />
-                  <Route
-                    path="vote/*"
-                    element={
-                      <Suspense fallback={<LazyLoadSpinner />}>
-                        <Vote />
-                      </Suspense>
-                    }
-                  />
+                  <Route path="tokens/:chainName/:tokenAddress" element={<Lazy filename="./TokenDetails" />} />
+                  <Route path="vote/*" element={<Lazy filename="./Vote" fallback={<LazyLoadSpinner />} />} />
                   <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
                   <Route path="send" element={<RedirectPathToSwapOnly />} />
                   <Route path="swap" element={<Swap />} />
@@ -280,49 +276,23 @@ export default function App() {
 
                   {!shouldDisableNFTRoutes && (
                     <>
-                      <Route
-                        path="/nfts"
-                        element={
-                          <Suspense fallback={null}>
-                            <NftExplore />
-                          </Suspense>
-                        }
-                      />
+                      <Route path="/nfts" element={<Lazy filename="nft/pages/explore" />} />
 
                       <Route
                         path="/nfts/asset/:contractAddress/:tokenId"
-                        element={
-                          <Suspense fallback={null}>
-                            <Asset />
-                          </Suspense>
-                        }
+                        element={<Lazy filename="nft/pages/asset/Asset" />}
                       />
 
-                      <Route
-                        path="/nfts/profile"
-                        element={
-                          <Suspense fallback={null}>
-                            <Profile />
-                          </Suspense>
-                        }
-                      />
+                      <Route path="/nfts/profile" element={<Lazy filename="nft/pages/profile/profile" />} />
 
                       <Route
                         path="/nfts/collection/:contractAddress"
-                        element={
-                          <Suspense fallback={null}>
-                            <Collection />
-                          </Suspense>
-                        }
+                        element={<Lazy filename="nft/pages/collection" />}
                       />
 
                       <Route
                         path="/nfts/collection/:contractAddress/activity"
-                        element={
-                          <Suspense fallback={null}>
-                            <Collection />
-                          </Suspense>
-                        }
+                        element={<Lazy filename="nft/pages/collection" />}
                       />
                     </>
                   )}
