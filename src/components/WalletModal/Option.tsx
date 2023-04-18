@@ -60,9 +60,6 @@ const IconWrapper = styled.div`
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     align-items: flex-end;
   `};
-
-  border-radius: 12px;
-  overflow: hidden;
 `
 
 type OptionProps = {
