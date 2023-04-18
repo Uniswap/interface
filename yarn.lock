@@ -4674,10 +4674,10 @@
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
 
-"@uniswap/smart-order-router@^3.6.0", "@uniswap/smart-order-router@^3.6.1":
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-3.6.1.tgz#658497b907b1033d68fe8b7f613d624d31e33d80"
-  integrity sha512-UKCEeqzryu8kREOGEG2gomXApkGGJ301rp1j1sdDhTeMW2C6EiDo2jkfGjKYMb9CHJnb0YkXB7E6XIT8U4UYXA==
+"@uniswap/smart-order-router@^3.10.0", "@uniswap/smart-order-router@^3.6.1":
+  version "3.11.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-3.11.0.tgz#0171e36c0535c263175f24cfd2ae48241a2eb30e"
+  integrity sha512-di3fp03+rMxz8KlD4hWuH+S3CgFHTlBpy9w6XHVsE87jiRJWUNTrUSxHAhVjEKBW3w0mLRIHc/S9OailjJpzBw==
   dependencies:
     "@uniswap/default-token-list" "^2.0.0"
     "@uniswap/permit2-sdk" "^1.2.0"
@@ -4842,10 +4842,10 @@
     "@uniswap/v3-core" "1.0.0"
     "@uniswap/v3-periphery" "^1.0.1"
 
-"@uniswap/widgets@^2.49.0":
-  version "2.49.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.49.0.tgz#a59ebb0b13b8e4501891c88e6f8dd03dcc8f04d5"
-  integrity sha512-w/UhOmhcmgwyP/iQVFQ4u3naOrykUlfxGBnqN2PbI9BY5fNjE6Y0+mnsNcBF+cVoY2vBfFrwIJH/Ug2Cts5skg==
+"@uniswap/widgets@^2.51.1":
+  version "2.51.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.51.1.tgz#bcc9d7d3ac4190453aa7def9ae5a7bb211a14802"
+  integrity sha512-SyuyHoAzvLDv5VBecKx8TNBNWwCW3I7tMCs/8AosCt127zCyNJYgPMAC2nnAFgX9jOeB30BfxY7kKYfWriylRg==
   dependencies:
     "@babel/runtime" ">=7.17.0"
     "@fontsource/ibm-plex-mono" "^4.5.1"
@@ -4857,7 +4857,7 @@
     "@uniswap/redux-multicall" "^1.1.8"
     "@uniswap/router-sdk" "^1.3.0"
     "@uniswap/sdk-core" "^3.2.0"
-    "@uniswap/smart-order-router" "^3.6.0"
+    "@uniswap/smart-order-router" "^3.10.0"
     "@uniswap/token-lists" "^1.0.0-beta.30"
     "@uniswap/universal-router-sdk" "^1.3.8"
     "@uniswap/v2-sdk" "^3.0.1"
