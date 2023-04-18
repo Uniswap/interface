@@ -165,10 +165,12 @@ export function useDerivedLeverageCreationInfo()
   const [poolState, pool] = usePool(inputCurrency ?? undefined, outputCurrency ?? undefined, FeeAmount.LOW)
 
   // user fund amount
+
   const parsedAmount = useMemo(
     () => tryParseCurrencyAmount(typedValue, (inputCurrency) ?? undefined),
     [inputCurrency, outputCurrency, typedValue, leverage, leverageFactor]
   )
+
 
   const relevantTokenBalances = useCurrencyBalances(
     account ?? undefined,
@@ -202,7 +204,7 @@ export function useDerivedLeverageCreationInfo()
 
   // TODO calculate slippage from the pool
   const allowedSlippage = new BN("103").shiftedBy(16).toFixed(0) // new Percent(JSBI.BigInt(50), JSBI.BigInt(10000))
-  console.log("simulation: ", leverageManager)
+
   if(debouncedAmount && Number(leverageFactor) > 1){
   const _input = Number(debouncedAmount.toFixed()) * (10** Number(inputCurrency?.wrapped.decimals))
   const _borrowAmount = _input * (Number(leverageFactor)-1)
@@ -318,7 +320,8 @@ export function useDerivedLeverageCreationInfo()
     // compare input balance to max input based on version
     const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], parsedAmount?.toExact()]
 
-    if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
+    // TODO add slippage to all the simulations
+    if (balanceIn && amountIn && Number(balanceIn.toExact()) < Number(amountIn)) {
       inputError = <Trans>Insufficient {inputCurrency?.symbol} balance</Trans>
     }
 

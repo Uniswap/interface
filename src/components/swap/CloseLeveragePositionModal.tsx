@@ -3,7 +3,7 @@ import { Trace } from '@uniswap/analytics'
 import { InterfaceModalName } from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { ReactNode, useCallback, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
@@ -20,6 +20,13 @@ import useDebounce from 'hooks/useDebounce'
 import { useLeverageManagerAddress } from 'hooks/useGetLeverageManager'
 import { useLeverageManagerContract } from 'hooks/useContract'
 import {BigNumber as BN} from "bignumber.js"
+import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
+import { LightCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import { AutoRow, RowBetween } from 'components/Row'
+import { ThemedText } from 'theme'
+import { ResponsiveHeaderText, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
+import Slider from 'components/Slider'
 
 
 export default function ClosePositionModal({
@@ -43,10 +50,9 @@ export default function ClosePositionModal({
   // and an event triggered by modal closing should be logged.
   const [shouldLogModalCloseEvent, setShouldLogModalCloseEvent] = useState(false)
 
-  // console.log("args: ", trader, isOpen, tokenId, leverageManagerAddress)
 
   const [positionState, position] = useLeveragePosition(leverageManagerAddress, trader, tokenId)
-  const [slippage, setSlippage] = useState("0.1")
+  const [slippage, setSlippage] = useState(0.1)
   const [txHash, setTxHash] = useState("")
   const [attemptingTxn, setAttemptingTxn] = useState(false)
 
@@ -62,36 +68,13 @@ export default function ClosePositionModal({
       <CloseLeveragePositionDetails leverageTrade={position}/>
     )
   }, [onAcceptChanges, shouldLogModalCloseEvent])
-  const debouncedSlippage = useDebounce(slippage, 200)
-  const leverageManagerContract = useLeverageManagerContract(leverageManagerAddress, true)
 
-  const handleClosePosition = useMemo(() => {
-    if (leverageManagerContract) {
-      const formattedSlippage = new BN(debouncedSlippage).plus(100).shiftedBy(16).toFixed(0)
-      return () => {
-        setAttemptingTxn(true)
-        leverageManagerContract.closePosition(
-          tokenId,
-          trader,
-          formattedSlippage
-        ).then((hash: any) => {
-          setTxHash(hash)
-          setAttemptingTxn(false)
-        }).catch((err: any) => {
-          setAttemptingTxn(false)
-          console.log("error closing position: ", err)
-        })
-      }
-    }
-    return () =>{}
-  }, [leverageManagerAddress, slippage, tokenId, trader])
 
   const modalBottom = useCallback(() => {
     return (<CloseLeverageModalFooter 
       leverageManagerAddress={leverageManagerAddress} tokenId={tokenId} trader={trader}
-      slippage={slippage}
-      setSlippage={setSlippage}
-      handleClosePosition={handleClosePosition}
+      setAttemptingTxn={setAttemptingTxn}
+      setTxHash={setTxHash}
       />)
   }, [
     onConfirm
@@ -116,7 +99,6 @@ export default function ClosePositionModal({
       ),
     [onModalDismiss, modalBottom, modalHeader]
   )
-
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
       <TransactionConfirmationModal

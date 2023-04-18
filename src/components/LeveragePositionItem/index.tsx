@@ -367,16 +367,19 @@ export default function LeveragePositionItem({
            onClick={() => setShowClose(!showClose)}>
             <Trans>Close Position</Trans>
           </ResponsiveButtonPrimary>
-          <ClosePositionModal
-            isOpen={showClose}
-            trader={account}
-            leverageManagerAddress={leverageManagerAddress ?? undefined}
-            tokenId={tokenId}
-            onDismiss={handleConfirmDismiss}
-            onAcceptChanges={() => {}}
-            onConfirm={() => {}}
-          />
-          <AddPremiumModal
+          {showClose && (
+                      <ClosePositionModal
+                      isOpen={showClose}
+                      trader={account}
+                      leverageManagerAddress={leverageManagerAddress ?? undefined}
+                      tokenId={tokenId}
+                      onDismiss={handleConfirmDismiss}
+                      onAcceptChanges={() => {}}
+                      onConfirm={() => {}}
+                    />
+          )}
+          {showAddPremium && (
+            <AddPremiumModal
             trader={account}
             isOpen={showAddPremium}
             tokenId={tokenId}
@@ -385,6 +388,9 @@ export default function LeveragePositionItem({
             onAcceptChanges={() => {}}
             onConfirm={() => {}}
             />
+          )
+          }
+          
 
           <ResponsiveButtonPrimary onClick={() => setShowAddPremium(!showAddPremium)} >
             <Trans>Add Premium</Trans>
