@@ -12,7 +12,7 @@ export interface LeveragePositionDetails {
   borrowedLiquidity: string
   creationTick: string
   initialCollateral: string
-  cumulativePremium: string
+  recentPremium: string
   isToken0: boolean
   openTime: string
   repayTime: string
