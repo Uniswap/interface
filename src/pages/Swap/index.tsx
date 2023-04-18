@@ -110,6 +110,7 @@ import { BigNumber as BN } from "bignumber.js";
 import { useLeveragePositions } from 'hooks/useV3Positions'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import {Input as NumericalInput} from 'components/NumericalInput'
+import useDebounce from 'hooks/useDebounce'
 
 
 const StyledNumericalInput = styled(NumericalInput)`
@@ -880,7 +881,8 @@ export default function Swap({ className }: { className?: string }) {
   //   )
       // loadedInputCurrency, 
       // loadedOutputCurrency, TradeType)
-  // console.log('fakeTrade', fakeTrade, fakeTrade.routes); 
+  // console.log('fakeTrade', fakeTrade, fakeTrade.routes);
+  const debouncedLeverageFactor = useDebounce(leverageFactor, 200);
   
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
@@ -1106,7 +1108,7 @@ export default function Swap({ className }: { className?: string }) {
                                   <ResponsiveHeaderText>
                                   <StyledNumericalInput
                                     className="token-amount-input"
-                                    value={leverageFactor ?? "1"}
+                                    value={debouncedLeverageFactor ?? "1"}
                                     onUserInput={onLeverageFactorChange}
                                     disabled={false}
                                   />
