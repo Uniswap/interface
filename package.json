@@ -32,7 +32,8 @@
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.ts*",
-      "!src/abis/types",
+      "!src/**/*.d.ts",
+      "!src/**/types",
       "!src/constants/**.ts",
       "!src/graphql/**/__generated__",
       "!src/locales",
