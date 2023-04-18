@@ -4,7 +4,6 @@ import { Navigate, useParams } from 'react-router-dom'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import AddLiquidity from './index'
 
-// eslint-disable-next-line import/no-unused-modules
 export default function RedirectDuplicateTokenIds() {
   const { currencyIdA, currencyIdB } = useParams<{
     currencyIdA: string
