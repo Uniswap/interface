@@ -78,7 +78,7 @@ jobs:
           key: ${{ runner.os }}-build-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-build-${{ hashFiles('**/yarn.lock') }}-
       - run: yarn prepare
-      - run: yarn build
+      - run: yarn build --no-source-maps
       - uses: actions/upload-artifact@v3
         with:
           name: build

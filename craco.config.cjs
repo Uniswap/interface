@@ -11,6 +11,8 @@ const isProduction = process.env.NODE_ENV === 'production'
 // Omit them from production builds, as they slow down the feedback loop.
 const shouldLintOrTypeCheck = !isProduction
 
+const shouldOmitSourceMaps = process.argv.includes('--no-source-maps')
+
 module.exports = {
   babel: {
     plugins: ['@vanilla-extract/babel-plugin'],
@@ -50,6 +52,8 @@ module.exports = {
   webpack: {
     plugins: [new VanillaExtractPlugin({ identifiers: 'short' })],
     configure: (webpackConfig) => {
+      webpackConfig.devtool = shouldOmitSourceMaps ? false : webpackConfig.devtool
+
       webpackConfig.plugins = webpackConfig.plugins.map((plugin) => {
         // Extend process.env with dynamic values (eg commit hash).
         // This will make dynamic values available to JavaScript only, not to interpolated HTML (ie index.html).
