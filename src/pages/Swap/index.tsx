@@ -817,7 +817,7 @@ export default function Swap({ className }: { className?: string }) {
   const leveragePositions = useLeveragePositions(leverageManagerAddress ?? undefined, account, currencies)
 
   // console.log("leverageTrade: ", leverageTrade)
-  console.log("leveragePositions", leverageManagerAddress, leveragePositions)
+  // console.log("leveragePositions", leverageManagerAddress, leveragePositions)
 
   // const leveragePositions: LeveragePositionDetails[] = [
   //   {

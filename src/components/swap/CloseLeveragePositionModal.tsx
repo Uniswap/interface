@@ -52,7 +52,6 @@ export default function ClosePositionModal({
 
 
   const [positionState, position] = useLeveragePosition(leverageManagerAddress, trader, tokenId)
-  const [slippage, setSlippage] = useState(0.1)
   const [txHash, setTxHash] = useState("")
   const [attemptingTxn, setAttemptingTxn] = useState(false)
 
@@ -61,7 +60,6 @@ export default function ClosePositionModal({
     if (isOpen) setShouldLogModalCloseEvent(true)
     onDismiss()
   }, [isOpen, onDismiss])
-  // console.log("postionState: ", position)
 
   const modalHeader = useCallback(() => {
     return (

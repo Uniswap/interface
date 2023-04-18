@@ -136,7 +136,7 @@ export function useLeveragePosition(leverageManagerAddress: string | undefined, 
       initialCollateral: new BN(position.initCollateral.toString()).shiftedBy(-18).toFixed(6),
     }
     return [PositionState.LOADING, formattedPosition]
-  }, [leverageManagerAddress, account, tokenId])
+  }, [leverageManagerAddress, account, tokenId, l1, l0, l2])
 
   return info
   // export interface LeveragePositionDetails {
