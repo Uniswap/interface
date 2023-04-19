@@ -2,7 +2,6 @@ import { MockedProvider } from '@apollo/client/testing'
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import { render, renderHook } from '@testing-library/react'
-import assert from 'assert'
 import Web3Provider from 'components/Web3Provider'
 import { DEFAULT_LOCALE } from 'constants/locales'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
@@ -49,12 +48,6 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
 const customRender = (ui: ReactElement) => render(ui, { wrapper: WithProviders })
 const customRenderHook = <Result, Props>(hook: (initialProps: Props) => Result) =>
   renderHook(hook, { wrapper: WithProviders })
-
-export function asMock<T extends (...args: any) => any>(fn: T) {
-  const mock = fn as unknown as jest.Mock<ReturnType<T>, Parameters<T>>
-  assert(mock.mock, 'fn is not a mock')
-  return mock
-}
 
 export * from '@testing-library/react'
 export { customRender as render }

@@ -43,7 +43,6 @@ module.exports = {
         moduleNameMapper: {
           '@uniswap/conedison/format': '@uniswap/conedison/dist/format',
           '@uniswap/conedison/provider': '@uniswap/conedison/dist/provider',
-          'node:events': 'eventemitter3',
         },
       })
     },
