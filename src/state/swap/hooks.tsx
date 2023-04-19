@@ -259,7 +259,6 @@ export function useDerivedLeverageCreationInfo()
       const borrowedAmount = new BN(position.totalDebtInput.toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toFixed(6)
       const strikePrice = new BN(expectedOutput).div(new BN(borrowedAmount).plus(debouncedAmount.toExact())).toFixed(6)
       const quotedPremium = new BN((contractResult[2] as any )
-        .div(10) // TODO hack 
         .toString()).shiftedBy(-inputCurrency?.wrapped.decimals).toFixed(6)
       let t = new BN(strikePrice).minus(initialPrice.toFixed(12)).abs().dividedBy(initialPrice.toFixed(12)).multipliedBy(1000).toFixed(0)
       const priceImpact = new Percent(t, 1000)

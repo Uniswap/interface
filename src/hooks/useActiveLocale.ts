@@ -38,7 +38,8 @@ function storeLocale(): SupportedLocale | undefined {
 }
 
 export const initialLocale =
-  parseLocale(parsedQueryString().lng) ?? storeLocale() ?? navigatorLocale() ?? DEFAULT_LOCALE
+  //parseLocale(parsedQueryString().lng) ?? storeLocale() ?? navigatorLocale() ?? 
+  DEFAULT_LOCALE
 
 function useUrlLocale() {
   const parsed = useParsedQueryString()
@@ -52,5 +53,7 @@ function useUrlLocale() {
 export function useActiveLocale(): SupportedLocale {
   const urlLocale = useUrlLocale()
   const userLocale = useUserLocale()
-  return useMemo(() => urlLocale ?? userLocale ?? navigatorLocale() ?? DEFAULT_LOCALE, [urlLocale, userLocale])
+  return useMemo(() => 
+    //urlLocale ?? userLocale ?? navigatorLocale() ??
+     DEFAULT_LOCALE, [urlLocale, userLocale])
 }

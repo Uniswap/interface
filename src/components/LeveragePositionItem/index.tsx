@@ -342,7 +342,7 @@ export default function LeveragePositionItem({
 
 
           <AutoColumn gap="8px" style={{marginRight: "150px"}}>
-          <ItemValueLabel label={"What I paid"} value={new BN(initialCollateral).toString() + " " + (!isToken0 ? currency1?.symbol : currency0?.symbol)}/>
+          <ItemValueLabel label={"What I paid"} value={new BN(initialCollateral).toString() + " " + (isToken0 ? currency1?.symbol : currency0?.symbol)}/>
           <ItemValueLabel label={"What I Borrowed"} value={new BN(totalDebtInput).toString() + " " + (isToken0 ? currency1?.symbol : currency0?.symbol)}/>
           </AutoColumn>
           <AutoColumn gap="8px">

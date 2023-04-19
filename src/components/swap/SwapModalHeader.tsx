@@ -427,7 +427,7 @@ export function LeverageModalHeader({
                 fontWeight={500}
                 color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.accentAction : ''}
               >
-                {trade.inputAmount.toSignificant(6)} + {leverageTrade?.quotedPremium}
+                {trade.inputAmount.toSignificant(6)} (+ {leverageTrade?.quotedPremium})
               </TruncatedText>
             </RowFixed>
             <RowFixed gap="0px">
@@ -450,7 +450,7 @@ export function LeverageModalHeader({
           <RowBetween align="flex-end">
             <RowFixed gap="0px">
               <TruncatedText fontSize={24} fontWeight={500}>
-                {String(Number(trade.inputAmount.toSignificant(6)) * Number(leverageFactor))}
+                {String( (Number(trade.inputAmount.toSignificant(6)) * Number(leverageFactor)).toFixed(4))}
               </TruncatedText>
             </RowFixed>
             <RowFixed gap="0px">
@@ -476,7 +476,7 @@ export function LeverageModalHeader({
           <RowBetween align="flex-end">
             <RowFixed gap="0px">
               <TruncatedText fontSize={24} fontWeight={500}>
-                {String(Number(trade.outputAmount.toSignificant(6)) * Number(leverageFactor))}
+                {String(Number(Number(trade.outputAmount.toSignificant(6)) * Number(leverageFactor)).toFixed(4) )}
               </TruncatedText>
             </RowFixed>
             <RowFixed gap="0px">

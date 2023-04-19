@@ -567,7 +567,6 @@ export default function Swap({ className }: { className?: string }) {
     allowedSlippage,
     allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined
   )
-
   // const inputIsToken0 = useMemo(() => {
   //   if (currencies && currencies[Field.INPUT] && currencies[Field.OUTPUT]) {
   //     return currencies[Field.INPUT]?.wrapped.sortsBefore(currencies[Field.OUTPUT]?.wrapped)
@@ -1064,7 +1063,7 @@ export default function Swap({ className }: { className?: string }) {
                           <SwapCurrencyInputPanel
                             value={
                               (leverageApprovalState === ApprovalState.NOT_APPROVED)? 
-                              "Not Approved"
+                              "-"
                               :
                               !leverage ? formattedAmounts[Field.OUTPUT] : 
                               leverageTrade?.expectedOutput ? 

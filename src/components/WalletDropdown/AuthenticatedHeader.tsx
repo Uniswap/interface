@@ -287,7 +287,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             <LoadingBubble height="16px" width="100px" margin="4px 0 20px 0" />
           </Column>
         )}
-        <HeaderButton
+       {/* <HeaderButton
           size={ButtonSize.medium}
           emphasis={ButtonEmphasis.medium}
           onClick={handleBuyCryptoClick}
@@ -316,6 +316,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             <Trans>View and sell NFTs</Trans>
           </HeaderButton>
         )}
+      */}
         {Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) && (
           <FiatOnrampNotAvailableText marginTop="8px">
             <Trans>Not available in your region</Trans>

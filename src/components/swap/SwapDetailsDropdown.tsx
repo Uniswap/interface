@@ -155,7 +155,10 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
                       </ResponsiveTooltipContainer>
                     }
                     placement="bottom"
-                    disableHover={showDetails}
+                    disableHover={
+                      //showDetails
+                      true
+                    }
                   >
                     <StyledInfoIcon color={trade ? theme.textTertiary : theme.deprecated_bg3} />
                   </MouseoverTooltipContent>
@@ -185,7 +188,10 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
                       </ResponsiveTooltipContainer>
                     }
                     placement="bottom"
-                    disableHover={showDetails}
+                    disableHover={
+                      //showDetails
+                       true
+                    }
                   >
                     <StyledInfoIcon color={trade ? theme.textTertiary : theme.deprecated_bg3} />
                   </MouseoverTooltipContent>
@@ -235,7 +241,7 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
 
           </StyledHeaderRow>
         </TraceEvent>
-        <AnimatedDropdown open={showDetails}>
+        <AnimatedDropdown open={true}>
           <AutoColumn gap="sm" style={{ padding: '0', paddingBottom: '8px' }}>
             { trade ? (
               !leverage ? (
