@@ -1,6 +1,6 @@
 import codeCoverageTask from '@cypress/code-coverage/task'
-import { setupHardhatEvents } from 'cypress-hardhat'
 import { defineConfig } from 'cypress'
+import { setupHardhatEvents } from 'cypress-hardhat'
 
 export default defineConfig({
   projectId: 'yp82ef',
