@@ -30,6 +30,7 @@ declare global {
        * The mock ethereum provider to inject into the page.
        * @default 'goerli'
        */
+      // TODO(INFRA-175): Migrate all usage of 'goerli' to 'hardhat'.
       ethereum?: 'goerli' | 'hardhat'
       /**
        * Initial user state.
