@@ -19,4 +19,14 @@ describe('filterKnownErrors', () => {
     const originalException = new Error('underlying network changed')
     expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
   })
+
+  it('filters user rejected request errors', () => {
+    const originalException = new Error('user rejected transaction')
+    expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
+  })
+
+  it('filters invalid HTML response errors', () => {
+    const originalException = new SyntaxError("Unexpected token '<'")
+    expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
+  })
 })
