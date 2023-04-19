@@ -1,7 +1,14 @@
 import styled from 'styled-components/macro'
 
-const DescriptionContainer = styled.div``
+import { containerStyles } from './shared'
+
+const DescriptionContainer = styled.div`
+  height: 288px;
+  padding: 16px 20px 20px;
+
+  ${containerStyles}
+`
 
 export const DataPageDescription = () => {
-  return <DescriptionContainer />
+  return <DescriptionContainer>Description</DescriptionContainer>
 }

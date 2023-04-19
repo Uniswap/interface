@@ -1,7 +1,14 @@
 import styled from 'styled-components/macro'
 
-const TraitsContainer = styled.div``
+import { containerStyles } from './shared'
+
+const TraitsContainer = styled.div`
+  height: 528px;
+  padding: 16px 20px;
+
+  ${containerStyles}
+`
 
 export const DataPageTraits = () => {
-  return <TraitsContainer />
+  return <TraitsContainer>Traits</TraitsContainer>
 }
