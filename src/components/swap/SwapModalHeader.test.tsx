@@ -1,9 +1,9 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import {
-  testAllowedSlippage,
-  testRecipientAddress,
-  testTradeExactInput,
-  testTradeExactOutput,
+  TEST_ALLOWED_SLIPPAGE,
+  TEST_RECIPIENT_ADDRESS,
+  TEST_TRADE_EXACT_INPUT,
+  TEST_TRADE_EXACT_OUTPUT,
 } from 'test-utils/constants'
 import { render, screen, within } from 'test-utils/render'
 import noop from 'utils/noop'
@@ -33,13 +33,13 @@ describe('SwapModalHeader.tsx', () => {
   it('matches base snapshot, test trade exact input', () => {
     const { asFragment } = render(
       <SwapModalHeader
-        trade={testTradeExactInput}
-        allowedSlippage={testAllowedSlippage}
+        trade={TEST_TRADE_EXACT_INPUT}
+        allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         shouldLogModalCloseEvent={false}
         showAcceptChanges={false}
         setShouldLogModalCloseEvent={noop}
         onAcceptChanges={noop}
-        recipient={testRecipientAddress}
+        recipient={TEST_RECIPIENT_ADDRESS}
       />
     )
     expect(asFragment()).toMatchSnapshot()
@@ -65,13 +65,13 @@ describe('SwapModalHeader.tsx', () => {
     mockSendAnalyticsEvent.mockImplementation(sendAnalyticsEventMock)
     render(
       <SwapModalHeader
-        trade={testTradeExactInput}
-        allowedSlippage={testAllowedSlippage}
+        trade={TEST_TRADE_EXACT_INPUT}
+        allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         shouldLogModalCloseEvent
         showAcceptChanges
         setShouldLogModalCloseEvent={setShouldLogModalCloseEventFn}
         onAcceptChanges={noop}
-        recipient={testRecipientAddress}
+        recipient={TEST_RECIPIENT_ADDRESS}
       />
     )
     expect(setShouldLogModalCloseEventFn).toHaveBeenCalledWith(false)
@@ -85,8 +85,8 @@ describe('SwapModalHeader.tsx', () => {
   it('test trade exact output, no recipient', () => {
     const rendered = render(
       <SwapModalHeader
-        trade={testTradeExactOutput}
-        allowedSlippage={testAllowedSlippage}
+        trade={TEST_TRADE_EXACT_OUTPUT}
+        allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         shouldLogModalCloseEvent={false}
         showAcceptChanges={false}
         setShouldLogModalCloseEvent={noop}
