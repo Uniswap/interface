@@ -1,0 +1,9 @@
+{
+  "name": "jest-presets",
+  "version": "0.0.0",
+  "dependencies": {
+    "ts-jest": "29.0.5"
+  },
+  "license": "MIT",
+  "private": true
+}

@@ -1,0 +1,49 @@
+name: Storybook
+
+on:
+  workflow_call:
+
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/ui/**'
+
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    paths:
+      - 'packages/ui/**'
+
+jobs:
+  publish-storybook:
+    name: Publish
+    runs-on: ubuntu-latest
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+    defaults:
+      run:
+        working-directory: ./
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Set Node.js 18.14.0
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.14.0
+
+      - name: 📥 Monorepo install
+        uses: ./.github/actions/yarn-install
+
+      - name: Publish to Chromatic
+        uses: chromaui/action@v1
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          workingDir: apps/storybook

@@ -1,0 +1,12 @@
+{
+  "extends": "tsconfig/storybook.json",
+  "include": [".storybook/*", "tamagui.config.ts"],
+  "references": [
+    {
+      "path": "../../packages/ui"
+    },
+    {
+      "path": "../../packages/app"
+    }
+  ]
+}

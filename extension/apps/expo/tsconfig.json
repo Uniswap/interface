@@ -1,0 +1,13 @@
+{
+  "extends": "tsconfig/expo.json",
+  "include": ["*.js", "*.ts", "*.tsx", "*.json"],
+  "exclude": ["node_modules"],
+  "references": [
+    {
+      "path": "../../packages/ui"
+    },
+    {
+      "path": "../../packages/app"
+    }
+  ]
+}

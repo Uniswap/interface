@@ -1,0 +1,72 @@
+name: Publish to Chrome web store
+
+on: 
+  workflow_dispatch:
+    
+jobs:
+  build-chrome-extension:
+    name: Build Chrome extension artifact
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Run install
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install # will run `yarn install` command
+          dir: apps/extension
+
+      - name: Build dev folder
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: webpack # will run `yarn webpack` command
+          dir: apps/extension
+
+      - name: Create zip file
+        run: |
+          cd apps/extension
+          zip -r chrome-extension-${{ github.sha }}.zip dev
+
+      - name: Archive chrome-extension artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: chrome-extension-${{ github.sha }}
+          path: apps/extension/chrome-extension-${{ github.sha }}.zip
+
+  upload-extension:
+    name: Upload extension
+    runs-on: ubuntu-latest
+    needs: build-chrome-extension
+    env:
+      EXTENSION_ID: foeaklbjdmadblekkdafmeopjpikfbjh
+
+    steps:
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: "16.10"
+
+      - name: Download bundle artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: chrome-extension-${{ github.sha }}
+
+      - name: Install webstore cli
+        run: |-
+          npm install -g chrome-webstore-upload-cli
+
+      - name: Upload step
+        run: >
+          chrome-webstore-upload upload 
+            --source chrome-extension-${{ github.sha }}.zip 
+            --extensionId ${{ env.EXTENSION_ID }}
+            --clientId ${{ secrets.CI_GOOGLE_CLIENT_ID }}
+            --clientSecret ${{ secrets.CI_GOOGLE_CLIENT_SECRET }}
+            --refreshToken ${{ secrets.CI_GOOGLE_REFRESH_TOKEN }}
+
+    

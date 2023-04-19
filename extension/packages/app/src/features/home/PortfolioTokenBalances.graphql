@@ -1,0 +1,37 @@
+# note: this query is called (confusingly) PortfolioBalances in mobile codebase
+# renaming to PortfolioTokenBalances here to make it more distinct from PortfolioBalance
+query PortfolioTokenBalances($ownerAddress: String!) {
+  portfolios(ownerAddresses: [$ownerAddress]) {
+    id
+    tokenBalances {
+      id
+      quantity
+      denominatedValue {
+        id
+        currency
+        value
+      }
+      token {
+        id
+        chain
+        address
+        name
+        symbol
+        decimals
+        project {
+          id
+          logoUrl
+          safetyLevel
+          isSpam
+        }
+      }
+      tokenProjectMarket {
+        relativeChange24: pricePercentChange(duration: DAY) {
+          id
+          value
+        }
+      }
+    }
+  }
+}
+

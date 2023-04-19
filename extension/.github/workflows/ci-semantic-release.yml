@@ -1,0 +1,38 @@
+name: CI-Semantic-Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ci-build-test:
+    name: Build and Test
+    uses: ./.github/workflows/ci-build-test.yml
+
+  semantic-release:
+    name: Semantic Release
+    needs: [ci-build-test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+          token: ${{ secrets.EXTENDED_GITHUB_TOKEN }}
+          persist-credentials: false
+
+      - name: Set Node.js 18.14.0
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.14.0
+
+      - name: 📥 Monorepo install
+        uses: ./.github/actions/yarn-install
+
+      - name: Run semantic-release
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: semantic-release:expo-app
+        env:
+          GH_TOKEN: ${{ secrets.EXTENDED_GITHUB_TOKEN }}
