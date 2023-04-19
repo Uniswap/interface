@@ -21,8 +21,13 @@ declare global {
     interface VisitOptions {
       serviceWorker?: true
       featureFlags?: Array<FeatureFlag>
-      selectedWallet?: string
-      noWallet?: boolean
+      /**
+       * The mock ethereum provider to inject into the page.
+       * @default 'goerli'
+       */
+      ethereum?: 'goerli' | 'hardhat'
+      /** Initial user state, eg {@link import('../utils/user-state').CONNECTED_WALLET_USER_STATE} */
+      userState?: object
     }
   }
 }
@@ -34,37 +39,43 @@ Cypress.Commands.overwrite(
   (original, url: string | Partial<Cypress.VisitOptions>, options?: Partial<Cypress.VisitOptions>) => {
     assert(typeof url === 'string')
 
-    cy.intercept('/service-worker.js', options?.serviceWorker ? undefined : { statusCode: 404 }).then(() => {
-      original({
-        ...options,
-        url:
-          (url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url) +
-          `${url.includes('?') ? '&' : '?'}chain=goerli`,
-        onBeforeLoad(win) {
-          options?.onBeforeLoad?.(win)
-          win.localStorage.clear()
+    let hashUrl = url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url
+    if (options?.ethereum === 'goerli') hashUrl += `${url.includes('?') ? '&' : '?'}chain=goerli`
 
-          const userState = {
-            selectedWallet: options?.noWallet !== true ? options?.selectedWallet || 'INJECTED' : undefined,
-            fiatOnrampDismissed: true,
-          }
-          win.localStorage.setItem('redux_localstorage_simple_user', JSON.stringify(userState))
+    return cy
+      .intercept('/service-worker.js', options?.serviceWorker ? undefined : { statusCode: 404 })
+      .task('hardhat')
+      .then((hardhat) =>
+        original({
+          ...options,
+          url: hashUrl,
+          onBeforeLoad(win) {
+            options?.onBeforeLoad?.(win)
 
-          if (options?.featureFlags) {
-            const featureFlags = options.featureFlags.reduce(
-              (flags, flag) => ({
-                ...flags,
-                [flag]: 'enabled',
-              }),
-              {}
-            )
-            win.localStorage.setItem('featureFlags', JSON.stringify(featureFlags))
-          }
+            // We want to test from a clean state, so we clear the local storage (which clears redux).
+            win.localStorage.clear()
 
-          win.ethereum = injected
-        },
-      })
-    })
+            // Set user state, if configured.
+            if (options?.userState) {
+              win.localStorage.setItem('redux_localstorage_simple_user', JSON.stringify(options.userState))
+            }
+
+            // Set feature flags, if configured.
+            if (options?.featureFlags) {
+              const featureFlags = options.featureFlags.reduce((flags, flag) => ({ ...flags, [flag]: 'enabled' }), {})
+              win.localStorage.setItem('featureFlags', JSON.stringify(featureFlags))
+            }
+
+            // Inject the mock ethereum provider.
+            if (options?.ethereum === 'hardhat') {
+              console.log(hardhat)
+              // TODO(zzmp)
+            } else {
+              win.ethereum = injected
+            }
+          },
+        })
+      )
   }
 )
 
