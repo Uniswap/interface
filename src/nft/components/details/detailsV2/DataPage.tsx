@@ -29,8 +29,6 @@ const LeftColumn = styled(Column)`
   width: 100%;
 `
 
-// TODO remove
-// eslint-disable-next-line import/no-unused-modules
 export const DataPage = () => {
   return (
     <DataPageContainer>
