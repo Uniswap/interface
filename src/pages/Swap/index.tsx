@@ -105,7 +105,6 @@ import { computePoolAddress , usePool} from 'hooks/usePools'
 import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import { ApprovalState, useApproval } from 'lib/hooks/useApproval'
 import { useApproveCallback, useFaucetCallback} from 'hooks/useApproveCallback'
-import ConfirmLeverageSwapModal from 'components/swap/confirmLeverageSwapModal'
 import { BigNumber as BN } from "bignumber.js";
 import { useLeveragePositions } from 'hooks/useV3Positions'
 import { FeeAmount } from '@uniswap/v3-sdk'
@@ -116,7 +115,7 @@ import useDebounce from 'hooks/useDebounce'
 const StyledNumericalInput = styled(NumericalInput)`
   width: 100px;
   text-align:left;
-  margin-left:10px;
+  padding: 10px;
 `
 
 const ArrowContainer = styled.div`
@@ -127,6 +126,12 @@ const ArrowContainer = styled.div`
 
   width: 100%;
   height: 100%;
+`
+
+const LeverageInputSection = styled(ResponsiveHeaderText)`
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-radius: 12px;
+  padding-right: 14px;
 `
 
 const SwapSection = styled.div`
@@ -549,7 +554,7 @@ export default function Swap({ className }: { className?: string }) {
       console.log("approveLeverageManager err: ", err)
     }
   }, [leverageManagerAddress, parsedAmounts[Field.INPUT], approveLeverageManager])
-  console.log("leverageApprovalState: ", leverageApprovalState)
+  // console.log("leverageApprovalState: ", leverageApprovalState)
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
     () => maxAmountSpend(currencyBalances[Field.INPUT]),
@@ -769,7 +774,6 @@ export default function Swap({ className }: { className?: string }) {
 
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
-
   )
 
 
@@ -816,7 +820,7 @@ export default function Swap({ className }: { className?: string }) {
   const leveragePositions = useLeveragePositions(leverageManagerAddress ?? undefined, account, currencies)
 
   // console.log("leverageTrade: ", leverageTrade)
-  console.log("leveragePositions", leverageManagerAddress, leveragePositions)
+  // console.log("leveragePositions", leverageManagerAddress, leveragePositions)
 
   // const leveragePositions: LeveragePositionDetails[] = [
   //   {
@@ -1125,7 +1129,8 @@ export default function Swap({ className }: { className?: string }) {
                             {leverage && (
                               <>
                                 <RowBetween>
-                                  <ResponsiveHeaderText>
+
+                                  <LeverageInputSection>
                                   <StyledNumericalInput
                                     className="token-amount-input"
                                     value={debouncedLeverageFactor ?? ""}
@@ -1143,7 +1148,8 @@ export default function Swap({ className }: { className?: string }) {
                                     }}
                                     disabled={false}
                                   />
-                                  </ResponsiveHeaderText>
+                                  </LeverageInputSection>
+                              
                                   <AutoRow gap="4px" justify="flex-end">
                                     <SmallMaxButton onClick={() => onLeverageFactorChange("10")} width="20%">
                                       <Trans>10</Trans>
