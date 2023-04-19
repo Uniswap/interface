@@ -1,6 +1,8 @@
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { V3Route } from '@uniswap/smart-order-router'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
+import { InterfaceTrade } from 'state/routing/types'
 
 export const TEST_TOKEN_1 = new Token(1, '0x0000000000000000000000000000000000000001', 18, 'ABC', 'Abc')
 export const TEST_TOKEN_2 = new Token(1, '0x0000000000000000000000000000000000000002', 18, 'DEF', 'Def')
@@ -27,3 +29,29 @@ export const TEST_POOL_13 = new Pool(
 
 export const toCurrencyAmount = (token: Token, amount: number) =>
   CurrencyAmount.fromRawAmount(token, JSBI.BigInt(amount))
+
+export const TEST_TRADE_EXACT_INPUT = new InterfaceTrade({
+  v3Routes: [
+    {
+      routev3: new V3Route([TEST_POOL_12], TEST_TOKEN_1, TEST_TOKEN_2),
+      inputAmount: toCurrencyAmount(TEST_TOKEN_1, 1000),
+      outputAmount: toCurrencyAmount(TEST_TOKEN_2, 1000),
+    },
+  ],
+  v2Routes: [],
+  tradeType: TradeType.EXACT_INPUT,
+})
+
+export const TEST_TRADE_EXACT_OUTPUT = new InterfaceTrade({
+  v3Routes: [
+    {
+      routev3: new V3Route([TEST_POOL_13], TEST_TOKEN_1, TEST_TOKEN_3),
+      inputAmount: toCurrencyAmount(TEST_TOKEN_1, 1000),
+      outputAmount: toCurrencyAmount(TEST_TOKEN_3, 1000),
+    },
+  ],
+  v2Routes: [],
+  tradeType: TradeType.EXACT_OUTPUT,
+})
+
+export const TEST_ALLOWED_SLIPPAGE = new Percent(2, 100)
