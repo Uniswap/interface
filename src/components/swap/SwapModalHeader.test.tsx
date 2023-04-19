@@ -44,13 +44,17 @@ describe('SwapModalHeader.tsx', () => {
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText(/Output is estimated. You will receive at least /i)).toBeInTheDocument()
-    expect(screen.getByTestId('input-symbol')).toHaveTextContent('ABC')
-    expect(screen.getByTestId('output-symbol')).toHaveTextContent('DEF')
-    expect(screen.getByTestId('input-amount')).toHaveTextContent('0.000000000000001')
-    expect(screen.getByTestId('output-amount')).toHaveTextContent('0.000000000000001')
+    expect(screen.getByTestId('input-symbol')).toHaveTextContent(
+      TEST_TRADE_EXACT_INPUT.inputAmount.currency.symbol ?? ''
+    )
+    expect(screen.getByTestId('output-symbol')).toHaveTextContent(
+      TEST_TRADE_EXACT_INPUT.outputAmount.currency.symbol ?? ''
+    )
+    expect(screen.getByTestId('input-amount')).toHaveTextContent(TEST_TRADE_EXACT_INPUT.inputAmount.toExact())
+    expect(screen.getByTestId('output-amount')).toHaveTextContent(TEST_TRADE_EXACT_INPUT.outputAmount.toExact())
     const recipientInfo = screen.getByTestId('recipient-info')
     expect(recipientInfo).toHaveTextContent(/Output will be sent to/i)
-    expect(within(recipientInfo).getByText('0x0fF2...F4a5')).toBeVisible()
+    expect(within(recipientInfo).getByText('0x0000...0004')).toBeVisible()
     expect(
       screen.getByText(
         'The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.'
@@ -96,9 +100,13 @@ describe('SwapModalHeader.tsx', () => {
     )
     expect(rendered.queryByTestId('recipient-info')).toBeNull()
     expect(screen.getByText(/Input is estimated. You will sell at most/i)).toBeInTheDocument()
-    expect(screen.getByTestId('input-symbol')).toHaveTextContent('ABC')
-    expect(screen.getByTestId('output-symbol')).toHaveTextContent('GHI')
-    expect(screen.getByTestId('input-amount')).toHaveTextContent('0.000000000000001')
-    expect(screen.getByTestId('output-amount')).toHaveTextContent('0.000000000000001')
+    expect(screen.getByTestId('input-symbol')).toHaveTextContent(
+      TEST_TRADE_EXACT_OUTPUT.inputAmount.currency.symbol ?? ''
+    )
+    expect(screen.getByTestId('output-symbol')).toHaveTextContent(
+      TEST_TRADE_EXACT_OUTPUT.outputAmount.currency.symbol ?? ''
+    )
+    expect(screen.getByTestId('input-amount')).toHaveTextContent(TEST_TRADE_EXACT_OUTPUT.inputAmount.toExact())
+    expect(screen.getByTestId('output-amount')).toHaveTextContent(TEST_TRADE_EXACT_OUTPUT.outputAmount.toExact())
   })
 })
