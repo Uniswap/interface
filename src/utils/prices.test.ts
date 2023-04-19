@@ -3,17 +3,24 @@ import { CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
-import { testCurrencyAmount, testPool12, testPool13, testToken1, testToken2, testToken3 } from 'test-utils/constants'
+import {
+  TEST_POOL_12,
+  TEST_POOL_13,
+  TEST_TOKEN_1,
+  TEST_TOKEN_2,
+  TEST_TOKEN_3,
+  toCurrencyAmount,
+} from 'test-utils/constants'
 
 import { computeRealizedLPFeeAmount, warningSeverity } from './prices'
 
 const pair12 = new Pair(
-  CurrencyAmount.fromRawAmount(testToken1, JSBI.BigInt(10000)),
-  CurrencyAmount.fromRawAmount(testToken2, JSBI.BigInt(20000))
+  CurrencyAmount.fromRawAmount(TEST_TOKEN_1, JSBI.BigInt(10000)),
+  CurrencyAmount.fromRawAmount(TEST_TOKEN_2, JSBI.BigInt(20000))
 )
 const pair23 = new Pair(
-  CurrencyAmount.fromRawAmount(testToken2, JSBI.BigInt(20000)),
-  CurrencyAmount.fromRawAmount(testToken3, JSBI.BigInt(30000))
+  CurrencyAmount.fromRawAmount(TEST_TOKEN_2, JSBI.BigInt(20000)),
+  CurrencyAmount.fromRawAmount(TEST_TOKEN_3, JSBI.BigInt(30000))
 )
 
 describe('prices', () => {
@@ -29,16 +36,16 @@ describe('prices', () => {
           new Trade({
             v2Routes: [
               {
-                routev2: new V2Route([pair12], testToken1, testToken2),
-                inputAmount: testCurrencyAmount(testToken1, 1000),
-                outputAmount: testCurrencyAmount(testToken2, 1000),
+                routev2: new V2Route([pair12], TEST_TOKEN_1, TEST_TOKEN_2),
+                inputAmount: toCurrencyAmount(TEST_TOKEN_1, 1000),
+                outputAmount: toCurrencyAmount(TEST_TOKEN_2, 1000),
               },
             ],
             v3Routes: [],
             tradeType: TradeType.EXACT_INPUT,
           })
         )
-      ).toEqual(testCurrencyAmount(testToken1, 3)) // 3% realized fee
+      ).toEqual(toCurrencyAmount(TEST_TOKEN_1, 3)) // 3% realized fee
     })
 
     it('correct realized lp fee for single hop on v3', () => {
@@ -48,16 +55,16 @@ describe('prices', () => {
           new Trade({
             v3Routes: [
               {
-                routev3: new V3Route([testPool12], testToken1, testToken2),
-                inputAmount: testCurrencyAmount(testToken1, 1000),
-                outputAmount: testCurrencyAmount(testToken2, 1000),
+                routev3: new V3Route([TEST_POOL_12], TEST_TOKEN_1, TEST_TOKEN_2),
+                inputAmount: toCurrencyAmount(TEST_TOKEN_1, 1000),
+                outputAmount: toCurrencyAmount(TEST_TOKEN_2, 1000),
               },
             ],
             v2Routes: [],
             tradeType: TradeType.EXACT_INPUT,
           })
         )
-      ).toEqual(testCurrencyAmount(testToken1, 10)) // 3% realized fee
+      ).toEqual(toCurrencyAmount(TEST_TOKEN_1, 10)) // 3% realized fee
     })
 
     it('correct realized lp fee for double hop', () => {
@@ -66,16 +73,16 @@ describe('prices', () => {
           new Trade({
             v2Routes: [
               {
-                routev2: new V2Route([pair12, pair23], testToken1, testToken3),
-                inputAmount: testCurrencyAmount(testToken1, 1000),
-                outputAmount: testCurrencyAmount(testToken3, 1000),
+                routev2: new V2Route([pair12, pair23], TEST_TOKEN_1, TEST_TOKEN_3),
+                inputAmount: toCurrencyAmount(TEST_TOKEN_1, 1000),
+                outputAmount: toCurrencyAmount(TEST_TOKEN_3, 1000),
               },
             ],
             v3Routes: [],
             tradeType: TradeType.EXACT_INPUT,
           })
         )
-      ).toEqual(testCurrencyAmount(testToken1, 5))
+      ).toEqual(toCurrencyAmount(TEST_TOKEN_1, 5))
     })
 
     it('correct realized lp fee for multi route v2+v3', () => {
@@ -84,22 +91,22 @@ describe('prices', () => {
           new Trade({
             v2Routes: [
               {
-                routev2: new V2Route([pair12, pair23], testToken1, testToken3),
-                inputAmount: testCurrencyAmount(testToken1, 1000),
-                outputAmount: testCurrencyAmount(testToken3, 1000),
+                routev2: new V2Route([pair12, pair23], TEST_TOKEN_1, TEST_TOKEN_3),
+                inputAmount: toCurrencyAmount(TEST_TOKEN_1, 1000),
+                outputAmount: toCurrencyAmount(TEST_TOKEN_3, 1000),
               },
             ],
             v3Routes: [
               {
-                routev3: new V3Route([testPool13], testToken1, testToken3),
-                inputAmount: testCurrencyAmount(testToken1, 1000),
-                outputAmount: testCurrencyAmount(testToken3, 1000),
+                routev3: new V3Route([TEST_POOL_13], TEST_TOKEN_1, TEST_TOKEN_3),
+                inputAmount: toCurrencyAmount(TEST_TOKEN_1, 1000),
+                outputAmount: toCurrencyAmount(TEST_TOKEN_3, 1000),
               },
             ],
             tradeType: TradeType.EXACT_INPUT,
           })
         )
-      ).toEqual(testCurrencyAmount(testToken1, 8))
+      ).toEqual(toCurrencyAmount(TEST_TOKEN_1, 8))
     })
   })
 
