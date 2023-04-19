@@ -4,7 +4,6 @@ import { useWeb3React } from '@web3-react/core'
 import Loader from 'components/Icons/LoadingSpinner'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
-import { useMGTMMicrositeEnabled } from 'featureFlags/flags/mgtm'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
@@ -48,7 +47,6 @@ import Tokens from './Tokens'
 
 const TokenDetails = lazy(() => import('./TokenDetails'))
 const Vote = lazy(() => import('./Vote'))
-const Wallet = lazy(() => import('./Wallet'))
 const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile/profile'))
@@ -192,9 +190,7 @@ export default function App() {
   }, [])
 
   const isBagExpanded = useBag((state) => state.bagExpanded)
-  const isOnWalletPage = useLocation().pathname === '/wallet'
-  const micrositeEnabled = useMGTMMicrositeEnabled()
-  const isHeaderTransparent = (!scrolledState && !isBagExpanded) || isOnWalletPage
+  const isHeaderTransparent = !scrolledState && !isBagExpanded
 
   const { account } = useWeb3React()
   const statsigUser: StatsigUser = useMemo(
@@ -245,7 +241,6 @@ export default function App() {
                     }
                   />
                   <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
-                  {micrositeEnabled && <Route path="wallet" element={<Wallet />} />}
                   <Route path="send" element={<RedirectPathToSwapOnly />} />
                   <Route path="swap" element={<Swap />} />
 

@@ -95,7 +95,7 @@ const BadgeText = styled.div`
 // responsive text
 // disable the warning because we don't use the end prop, we just want to filter it out
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Label = styled(({ end, ...props }) => <ThemedText.DeprecatedLabel {...props} />)<{ end?: boolean }>`
+const Label = styled(({ end, ...props }) => <ThemedText.DeprecatedLabel {...props} />) <{ end?: boolean }>`
   display: flex;
   font-size: 16px;
   justify-content: ${({ end }) => (end ? 'flex-end' : 'flex-start')};
@@ -346,32 +346,34 @@ const useInverter = ({
   }
 }
 
-export const INVALID_STATE = (
-  <PageWrapper>
-    <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-      <ThemedText.HeadlineLarge style={{ marginBottom: '8px' }}>
-        <Trans>Position unavailable</Trans>
-      </ThemedText.HeadlineLarge>
-      <ThemedText.BodyPrimary style={{ marginBottom: '32px' }}>
-        <Trans>To view a position, you must be connected to the network it belongs to.</Trans>
-      </ThemedText.BodyPrimary>
-      <PositionPageButtonPrimary as={Link} to="/pools" width="fit-content">
-        <Trans>Back to Pools</Trans>
-      </PositionPageButtonPrimary>
-    </div>
-  </PageWrapper>
-)
+export function PositionPageUnsupportedContent() {
+  return (
+    <PageWrapper>
+      <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+        <ThemedText.HeadlineLarge style={{ marginBottom: '8px' }}>
+          <Trans>Position unavailable</Trans>
+        </ThemedText.HeadlineLarge>
+        <ThemedText.BodyPrimary style={{ marginBottom: '32px' }}>
+          <Trans>To view a position, you must be connected to the network it belongs to.</Trans>
+        </ThemedText.BodyPrimary>
+        <PositionPageButtonPrimary as={Link} to="/pools" width="fit-content">
+          <Trans>Back to Pools</Trans>
+        </PositionPageButtonPrimary>
+      </div>
+    </PageWrapper>
+  )
+}
 
-export default function PositionPageWrapper() {
+export default function PositionPage() {
   const { chainId } = useWeb3React()
   if (isSupportedChain(chainId)) {
-    return <PositionPage />
+    return <PositionPageContent />
   } else {
-    return INVALID_STATE
+    return <PositionPageUnsupportedContent />
   }
 }
 
-function PositionPage() {
+function PositionPageContent() {
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
   const { chainId, account, provider } = useWeb3React()
   const theme = useTheme()
@@ -434,10 +436,10 @@ function PositionPage() {
   const ratio = useMemo(() => {
     return priceLower && pool && priceUpper
       ? getRatio(
-          inverted ? priceUpper.invert() : priceLower,
-          pool.token0Price,
-          inverted ? priceLower.invert() : priceUpper
-        )
+        inverted ? priceUpper.invert() : priceLower,
+        pool.token0Price,
+        inverted ? priceLower.invert() : priceUpper
+      )
       : undefined
   }, [inverted, pool, priceLower, priceUpper])
 
@@ -605,15 +607,15 @@ function PositionPage() {
 
   const showCollectAsWeth = Boolean(
     ownsNFT &&
-      (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
-      currency0 &&
-      currency1 &&
-      (currency0.isNative || currency1.isNative) &&
-      !collectMigrationHash
+    (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
+    currency0 &&
+    currency1 &&
+    (currency0.isNative || currency1.isNative) &&
+    !collectMigrationHash
   )
 
   if (!positionDetails && !loading) {
-    return INVALID_STATE
+    return <PositionPageUnsupportedContent />
   }
 
   return loading || poolState === PoolState.LOADING || !feeAmount ? (
@@ -820,7 +822,7 @@ function PositionPage() {
                           )}
                         </AutoColumn>
                         {ownsNFT &&
-                        (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash) ? (
+                          (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash) ? (
                           <ResponsiveButtonConfirmed
                             disabled={collecting || !!collectMigrationHash}
                             confirmed={!!collectMigrationHash && !isCollectPending}

@@ -3,6 +3,7 @@ import { Unicon } from 'components/Unicon'
 import { Connection, ConnectionType } from 'connection'
 import useENSAvatar from 'hooks/useENSAvatar'
 import styled from 'styled-components/macro'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap } from 'theme/styles'
 
 import sockImg from '../../assets/svg/socks.svg'
@@ -58,9 +59,10 @@ const Socks = () => {
 }
 
 const MiniWalletIcon = ({ connection, side }: { connection: Connection; side: 'left' | 'right' }) => {
+  const isDarkMode = useIsDarkMode()
   return (
     <MiniIconContainer side={side}>
-      <MiniImg src={connection.getIcon?.()} alt={`${connection.getName()} icon`} />
+      <MiniImg src={connection.getIcon?.(isDarkMode)} alt={`${connection.getName()} icon`} />
     </MiniIconContainer>
   )
 }

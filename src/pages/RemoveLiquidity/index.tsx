@@ -10,7 +10,7 @@ import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { sendEvent } from 'components/analytics'
 import { isSupportedChain } from 'constants/chains'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
-import { INVALID_STATE } from 'pages/Pool/PositionPage'
+import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -54,7 +54,7 @@ export default function RemoveLiquidityWrapper() {
   if (isSupportedChain(chainId)) {
     return <RemoveLiquidity />
   } else {
-    return INVALID_STATE
+    return <PositionPageUnsupportedContent />
   }
 }
 
@@ -90,8 +90,8 @@ function RemoveLiquidity() {
     [Field.LIQUIDITY_PERCENT]: parsedAmounts[Field.LIQUIDITY_PERCENT].equalTo('0')
       ? '0'
       : parsedAmounts[Field.LIQUIDITY_PERCENT].lessThan(new Percent('1', '100'))
-      ? '<1'
-      : parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0),
+        ? '<1'
+        : parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0),
     [Field.LIQUIDITY]:
       independentField === Field.LIQUIDITY ? typedValue : parsedAmounts[Field.LIQUIDITY]?.toSignificant(6) ?? '',
     [Field.CURRENCY_A]:
@@ -399,9 +399,9 @@ function RemoveLiquidity() {
 
   const oneCurrencyIsWETH = Boolean(
     chainId &&
-      WRAPPED_NATIVE_CURRENCY[chainId] &&
-      ((currencyA && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyA)) ||
-        (currencyB && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyB)))
+    WRAPPED_NATIVE_CURRENCY[chainId] &&
+    ((currencyA && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyA)) ||
+      (currencyB && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyB)))
   )
 
   const handleSelectCurrencyA = useCallback(
@@ -544,25 +544,21 @@ function RemoveLiquidity() {
                       <RowBetween style={{ justifyContent: 'flex-end' }}>
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
-                            to={`/remove/v2/${
-                              currencyA?.isNative && chainId && WRAPPED_NATIVE_CURRENCY[chainId]
+                            to={`/remove/v2/${currencyA?.isNative && chainId && WRAPPED_NATIVE_CURRENCY[chainId]
                                 ? WRAPPED_NATIVE_CURRENCY[chainId]?.address
                                 : currencyIdA
-                            }/${
-                              currencyB?.isNative && chainId && WRAPPED_NATIVE_CURRENCY[chainId]
+                              }/${currencyB?.isNative && chainId && WRAPPED_NATIVE_CURRENCY[chainId]
                                 ? WRAPPED_NATIVE_CURRENCY[chainId]?.address
                                 : currencyIdB
-                            }`}
+                              }`}
                           >
                             Receive WETH
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
-                            to={`/remove/v2/${
-                              currencyA && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyA) ? 'ETH' : currencyIdA
-                            }/${
-                              currencyB && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyB) ? 'ETH' : currencyIdB
-                            }`}
+                            to={`/remove/v2/${currencyA && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyA) ? 'ETH' : currencyIdA
+                              }/${currencyB && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyB) ? 'ETH' : currencyIdB
+                              }`}
                           >
                             Receive ETH
                           </StyledInternalLink>
