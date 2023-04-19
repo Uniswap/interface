@@ -1,4 +1,6 @@
 name: Setup
+description: checkout repo, setup node, and install node_modules
+
 runs:
   using: composite
   steps:
@@ -10,12 +12,14 @@ runs:
         registry-url: https://registry.npmjs.org
         cache: yarn
 
+    # node_modules/.cache is intentionally omitted, as this is used for build tool caches.
     - uses: actions/cache@v3
       id: install-cache
       with:
-        path: node_modules/
+        path: |
+          node_modules
+          !node_modules/.cache
         key: ${{ runner.os }}-install-${{ hashFiles('**/yarn.lock') }}
-
     - if: steps.install-cache.outputs.cache-hit != 'true'
       run: yarn install --frozen-lockfile --ignore-scripts
       shell: bash
