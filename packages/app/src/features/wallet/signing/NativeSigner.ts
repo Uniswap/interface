@@ -48,7 +48,7 @@ export class NativeSigner extends Signer {
   ): Promise<string> {
     const signature = await Keyring.signHashForAddress(
       this.address,
-      _TypedDataEncoder.hash(domain, types, value).slice(2),
+      _TypedDataEncoder.hash(domain, types, value),
       toSupportedChainId(domain.chainId) || ChainId.Mainnet
     )
     return signature

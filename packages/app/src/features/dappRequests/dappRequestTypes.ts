@@ -24,6 +24,7 @@ export enum DappRequestType {
   SendTransaction = 'SendTransaction',
   SignMessage = 'SignMessage',
   SignTransaction = 'SignTransaction',
+  SignTypedData = 'SignTypedData',
 }
 
 export enum DappResponseType {
@@ -32,6 +33,7 @@ export enum DappResponseType {
   ConnectResponse = 'ConnectResponse',
   SignTransactionResponse = 'SignTransactionResponse',
   SendTransactionResponse = 'SendTransactionResponse',
+  SignTypedDataResponse = 'SignTypedDataResponse',
   SignMessageResponse = 'SignMessageResponse',
   TransactionRejected = 'TransactionRejected',
 }
@@ -41,6 +43,11 @@ export enum DappResponseType {
 export interface SignMessageRequest extends BaseDappRequest {
   type: DappRequestType.SignMessage
   messageHex: string
+}
+
+export interface SignTypedDataRequest extends BaseDappRequest {
+  type: DappRequestType.SignTypedData
+  typedData: string
 }
 
 export interface SignTransactionRequest extends BaseDappRequest {
@@ -70,7 +77,12 @@ export interface GetAccountRequest extends BaseDappRequest {
 
 export interface SignMessageResponse extends BaseDappResponse {
   type: DappResponseType.SignMessageResponse
-  signedMessage?: string
+  signature?: string
+}
+
+export interface SignTypedDataResponse extends BaseDappResponse {
+  type: DappResponseType.SignTypedDataResponse
+  signature: string
 }
 
 export interface SignTransactionResponse extends BaseDappResponse {

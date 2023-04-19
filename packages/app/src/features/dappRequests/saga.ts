@@ -9,6 +9,7 @@ import { getChainIdFromString } from '../chains/chains'
 import { setCurrentChain } from '../chains/slice'
 import { getProvider, getSignerManager } from '../wallet/context'
 import { SignerManager } from '../wallet/signing/SignerManager'
+import { signMessage, signTypedDataMessage } from '../wallet/signing/signing'
 import { Account, AccountType } from '../wallet/types'
 import {
   AccountResponse,
@@ -16,6 +17,8 @@ import {
   ConnectResponse,
   DappResponseType,
   SendTransactionResponse,
+  SignMessageResponse,
+  SignTypedDataResponse,
 } from './dappRequestTypes'
 import { DappRequestStoreItem, dappRequestActions } from './slice'
 import { openRequestsWindowIfNeeded } from './utils'
@@ -272,6 +275,67 @@ export function* changeChain(
     requestId,
     providerUrl: provider.connection.url,
     chainId: newChainId.toString(),
+  }
+
+  yield* call(sendMessageToSpecificTab, response, senderTabId)
+}
+
+export function* handleSignMessage(
+  account: Account,
+  requestId: string,
+  messageHex: string,
+  senderTabId: number
+) {
+  // Get currently selected chain id
+  const chainId = yield* call(getCurrentChainId)
+  const signerManager = yield* call(getSignerManager)
+  const provider = yield* call(getProvider, chainId)
+
+  if (account.type !== AccountType.SignerMnemonic)
+    throw new Error('Account must support signing')
+
+  const signature = yield* call(
+    signMessage,
+    messageHex,
+    account,
+    signerManager,
+    provider
+  )
+
+  const response: SignMessageResponse = {
+    type: DappResponseType.SignMessageResponse,
+    requestId,
+    signature,
+  }
+
+  yield* call(sendMessageToSpecificTab, response, senderTabId)
+}
+
+export function* handleSignTypedData(
+  account: Account,
+  requestId: string,
+  typedData: string,
+  senderTabId: number
+) {
+  // Get currently selected chain id
+  const chainId = yield* call(getCurrentChainId)
+  const signerManager = yield* call(getSignerManager)
+  const provider = yield* call(getProvider, chainId)
+
+  if (account.type !== AccountType.SignerMnemonic)
+    throw new Error('Account must support signing')
+
+  const signature = yield* call(
+    signTypedDataMessage,
+    typedData,
+    account,
+    signerManager,
+    provider
+  )
+  const response: SignTypedDataResponse = {
+    type: DappResponseType.SignTypedDataResponse,
+    requestId,
+    signature,
   }
 
   yield* call(sendMessageToSpecificTab, response, senderTabId)

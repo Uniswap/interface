@@ -19,6 +19,8 @@ import {
   SignMessageResponse,
   SignTransactionRequest,
   SignTransactionResponse,
+  SignTypedDataRequest,
+  SignTypedDataResponse,
   TransactionRejectedResponse,
 } from 'app/src/features/dappRequests/dappRequestTypes'
 import { logger } from 'app/src/features/logger/logger'
@@ -109,6 +111,11 @@ export class UniswapInjectedProvider extends EventEmitter {
   isUniswapWallet: boolean
 
   /**
+   * Boolean to spoof MetaMask
+   */
+  isMetaMask: boolean
+
+  /**
    * Ethereum JSON RPC provider.
    */
   provider?: ethers.providers.JsonRpcProvider
@@ -124,6 +131,7 @@ export class UniswapInjectedProvider extends EventEmitter {
     this.publicKey = null
 
     this.handleConnect(ChainId.Goerli.toString())
+    this.isMetaMask = true
   }
 
   setState = (updatedState: BaseProviderState) => {
@@ -230,6 +238,7 @@ export class UniswapInjectedProvider extends EventEmitter {
       eth_blockNumber: () => this.provider?.getBlockNumber(),
       eth_getBlockByNumber: (block: number) => this.provider?.getBlock(block),
       eth_call: (transaction: any) => this.provider?.call(transaction),
+      eth_gasPrice: () => this.provider?.getGasPrice(),
       eth_estimateGas: (transaction: any) =>
         this.provider?.estimateGas(transaction),
       eth_getTransactionByHash: (hash: string) =>
@@ -253,6 +262,8 @@ export class UniswapInjectedProvider extends EventEmitter {
       wallet_switchEthereumChain: (
         switchRequest: SwitchEthereumChainParameter
       ) => this.handleWalletSwitchEthereumChain(switchRequest),
+      eth_signTypedData_v4: (address: string, typedData: any) =>
+        this.handleEthSignTypedData(address, typedData),
     }
 
     const func = functionMap[method]
@@ -389,7 +400,7 @@ export class UniswapInjectedProvider extends EventEmitter {
       request,
       DappResponseType.SignMessageResponse
     )
-    return response?.signedMessage
+    return response?.signature
   }
 
   /**
@@ -429,7 +440,6 @@ export class UniswapInjectedProvider extends EventEmitter {
       transaction: adaptTransactionForEthers(transaction),
     }
 
-    // filter by some kind of ID on the transaction
     const response = await sendRequestAsync<
       SendTransactionResponse | TransactionRejectedResponse
     >(request, DappResponseType.SendTransactionResponse)
@@ -462,6 +472,33 @@ export class UniswapInjectedProvider extends EventEmitter {
     this.chainId = switchRequest.chainId
     return null
   }
+
+  /**
+   * Signed typed data using eth_signTypedData_v4
+   *
+   * @param address address to sign typed data with
+   * @param typedData typed data to sign
+   * @returns
+   */
+  handleEthSignTypedData = async (address: any, typedData: any) => {
+    if (!this.publicKey) {
+      throw new Error('Wallet not connected')
+    }
+
+    const request: SignTypedDataRequest = {
+      type: DappRequestType.SignTypedData,
+      requestId: uuidv4(),
+      typedData,
+    }
+
+    const response = await sendRequestAsync<SignTypedDataResponse>(
+      request,
+      DappResponseType.SignTypedDataResponse
+    )
+
+    return response.signature
+  }
+
   /**
    * Handle a disconnection notification from Uniswap Extension.
    */

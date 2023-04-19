@@ -86,6 +86,18 @@ export function DappRequestContent(): JSX.Element {
 
 const parseRequest = (request: DappRequestStoreItem): RequestDisplayDetails => {
   switch (request.dappRequest.type) {
+    case DappRequestType.SignMessage:
+      return {
+        message: 'Sign this message?',
+        title: 'Sign Message',
+        request,
+      }
+    case DappRequestType.SignTypedData:
+      return {
+        message: 'Sign this data?',
+        title: 'Sign Data',
+        request,
+      }
     case DappRequestType.SendTransaction:
       return {
         message: 'Confirm this transaction?',

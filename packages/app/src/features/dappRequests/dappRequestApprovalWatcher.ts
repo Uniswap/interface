@@ -6,12 +6,16 @@ import {
   ConnectRequest,
   DappRequestType,
   SendTransactionRequest,
+  SignMessageRequest,
+  SignTypedDataRequest,
 } from './dappRequestTypes'
 import {
   changeChain,
   confirmRequest,
   connect,
   getAccount,
+  handleSignMessage,
+  handleSignTypedData,
   rejectRequest,
   sendTransaction,
 } from './saga'
@@ -66,6 +70,25 @@ export function* dappRequestApprovalWatcher() {
               (request.dappRequest as ConnectRequest).chainId,
               request.senderTabId
             )
+            break
+          case DappRequestType.SignMessage:
+            yield* call(
+              handleSignMessage,
+              request.account,
+              request.dappRequest.requestId,
+              (request.dappRequest as SignMessageRequest).messageHex,
+              request.senderTabId
+            )
+            break
+          case DappRequestType.SignTypedData:
+            yield* call(
+              handleSignTypedData,
+              request.account,
+              request.dappRequest.requestId,
+              (request.dappRequest as SignTypedDataRequest).typedData,
+              request.senderTabId
+            )
+            break
           // Add more request types here
         }
       } else if (type === rejectRequest.type) {

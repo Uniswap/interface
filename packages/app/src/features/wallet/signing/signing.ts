@@ -2,7 +2,7 @@
 
 import { NativeSigner } from 'app/src/features/wallet/signing/NativeSigner'
 import { ensureLeading0x } from 'app/src/utils/addresses'
-import { TypedDataDomain, TypedDataField, Wallet } from 'ethers'
+import { TypedDataDomain, TypedDataField, Wallet, ethers } from 'ethers'
 import { arrayify, isHexString } from 'ethers/lib/utils'
 import { logger } from '../../logger/logger'
 import { Account } from '../types'
@@ -18,9 +18,16 @@ type EthTypedMessage = {
 export async function signMessage(
   message: string,
   account: Account,
-  signerManager: SignerManager
+  signerManager: SignerManager,
+  provider?: ethers.providers.JsonRpcProvider
 ): Promise<string> {
-  const signer = await signerManager.getSignerForAccount(account)
+  // Mobile code does not explicitly connect to provider,
+  // Extension needs to connect to provider to ensure correct chain
+  const unconnectedSigner = await signerManager.getSignerForAccount(account)
+  const signer = provider
+    ? unconnectedSigner?.connect(provider)
+    : unconnectedSigner
+
   if (!signer) {
     logger.error('signers', 'signMessage', `no signer found for ${account}`)
     return ''
@@ -41,9 +48,15 @@ export async function signTypedData(
   types: Record<string, TypedDataField[]>,
   value: Record<string, unknown>,
   account: Account,
-  signerManager: SignerManager
+  signerManager: SignerManager,
+  provider?: ethers.providers.JsonRpcProvider
 ): Promise<string> {
-  const signer = await signerManager.getSignerForAccount(account)
+  // Mobile code does not explicitly connect to provider,
+  // Extension needs to connect to provider to ensure correct chain
+  const unconnectedSigner = await signerManager.getSignerForAccount(account)
+  const signer = provider
+    ? unconnectedSigner?.connect(provider)
+    : unconnectedSigner
 
   // https://github.com/LedgerHQ/ledgerjs/issues/86
   // Ledger does not support signTypedData yet
@@ -60,7 +73,8 @@ export async function signTypedData(
 export async function signTypedDataMessage(
   message: string,
   account: Account,
-  signerManager: SignerManager
+  signerManager: SignerManager,
+  provider: ethers.providers.JsonRpcProvider
 ): Promise<string> {
   const parsedData: EthTypedMessage = JSON.parse(message)
   // ethers computes EIP712Domain type for you, so we should not pass it in directly
@@ -73,6 +87,7 @@ export async function signTypedDataMessage(
     parsedData.types,
     parsedData.message,
     account,
-    signerManager
+    signerManager,
+    provider
   )
 }
