@@ -37,7 +37,7 @@ function TextWithLoadingPlaceholder({
   children: JSX.Element
 }) {
   return syncing ? (
-    <LoadingRows>
+    <LoadingRows data-testid="loading-rows">
       <div style={{ height: '15px', width: `${width}px` }} />
     </LoadingRows>
   ) : (

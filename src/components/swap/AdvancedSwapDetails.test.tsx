@@ -18,8 +18,6 @@ jest.mock('@web3-react/core', () => {
     }),
   }
 })
-// jest.mock('../../state/application/hooks')
-// const mockUseFiatOnrampAvailability = useFiatOnrampAvailability as jest.MockedFunction<typeof useFiatOnrampAvailability>
 
 describe('AdvancedSwapDetails.tsx', () => {
   it('matches base snapshot', () => {
@@ -46,5 +44,12 @@ describe('AdvancedSwapDetails.tsx', () => {
     expect(await screen.findByText(/The minimum amount you are guaranteed to receive./i)).toBeVisible()
     fireEvent.mouseOver(screen.getByText('Network Fee'))
     expect(await screen.findByText(/The fee paid to miners who process your transaction./i)).toBeVisible()
+  })
+
+  it('renders loading rows when syncing', async () => {
+    render(
+      <AdvancedSwapDetails trade={TEST_TRADE_EXACT_OUTPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} syncing={true} />
+    )
+    expect(screen.getAllByTestId('loading-rows').length).toBeGreaterThan(0)
   })
 })
