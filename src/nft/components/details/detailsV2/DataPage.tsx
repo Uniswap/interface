@@ -9,10 +9,20 @@ import { DataPageTable } from './DataPageTable'
 import { DataPageTraits } from './DataPageTraits'
 
 const DataPageContainer = styled(Column)`
-  padding: 24px 120px;
+  padding: 24px 64px;
   height: 100vh;
   width: 100%;
   gap: 36px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    padding: 24px 48px;
+  }
+
+  @media screen and (max-width: ${BREAKPOINTS.xs}px) {
+    padding: 24px 20px;
+  }
 `
 
 const ContentContainer = styled(Row)`
