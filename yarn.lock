@@ -8320,6 +8320,11 @@ cyclist@^1.0.1:
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
 
+cypress-hardhat@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/cypress-hardhat/-/cypress-hardhat-1.0.0.tgz#0ced21363ac045d40b377695ecb6b031e38f475c"
+  integrity sha512-dj8fkqFLsbdZTuN0irezZlD4kDP/yqJzoHdalbv9+pufoXCl2wWCaTfI4EgctM5Vrph6IbxdmO84NGCeCpqqdw==
+
 cypress@*, cypress@^10.3.1:
   version "10.3.1"
   resolved "https://registry.yarnpkg.com/cypress/-/cypress-10.3.1.tgz#7fab4ef43481c05a9a17ebe9a0ec860e15b95a19"
