@@ -1,18 +1,15 @@
 import { act, render } from '@testing-library/react'
 import { sendAnalyticsEvent, user } from '@uniswap/analytics'
 import { InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
-import { initializeConnector } from '@web3-react/core'
+import { initializeConnector, MockEIP1193Provider } from '@web3-react/core'
 import { EIP1193 } from '@web3-react/eip1193'
-// TODO(INFRA-163): Export MockEIP1193Provider from @web3-react/eip1193 to facilitate testing.
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { MockEIP1193Provider } from '@web3-react/eip1193/dist/mock'
 import { Provider as EIP1193Provider } from '@web3-react/types'
 import { Connection, ConnectionType, useGetConnection } from 'connection'
 import useEagerlyConnect from 'hooks/useEagerlyConnect'
 import useOrderedConnections from 'hooks/useOrderedConnections'
 import { Provider } from 'react-redux'
 import store from 'state'
-import { asMock } from 'test-utils'
+import { mocked } from 'test-utils/mocked'
 
 import Web3Provider from '.'
 
@@ -55,7 +52,7 @@ describe('Web3Provider', () => {
       type: 'INJECTED' as ConnectionType,
       shouldDisplay: () => false,
     }
-    asMock(useOrderedConnections).mockReturnValue([connection])
+    mocked(useOrderedConnections).mockReturnValue([connection])
   })
 
   it('renders', async () => {
@@ -69,7 +66,7 @@ describe('Web3Provider', () => {
 
   describe('analytics', () => {
     beforeEach(() => {
-      asMock(useGetConnection).mockReturnValue(jest.fn().mockReturnValue(connection))
+      mocked(useGetConnection).mockReturnValue(jest.fn().mockReturnValue(connection))
     })
 
     it('sends event when the active account changes', async () => {
@@ -94,11 +91,11 @@ describe('Web3Provider', () => {
         is_reconnect: false,
         peer_wallet_agent: '(Injected)',
       })
-      expect(first(asMock(sendAnalyticsEvent).mock.invocationCallOrder)).toBeGreaterThan(
-        last(asMock(user.set).mock.invocationCallOrder)
+      expect(first(mocked(sendAnalyticsEvent).mock.invocationCallOrder)).toBeGreaterThan(
+        last(mocked(user.set).mock.invocationCallOrder)
       )
-      expect(first(asMock(sendAnalyticsEvent).mock.invocationCallOrder)).toBeGreaterThan(
-        last(asMock(user.postInsert).mock.invocationCallOrder)
+      expect(first(mocked(sendAnalyticsEvent).mock.invocationCallOrder)).toBeGreaterThan(
+        last(mocked(user.postInsert).mock.invocationCallOrder)
       )
     })
 

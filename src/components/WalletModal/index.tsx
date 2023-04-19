@@ -1,11 +1,11 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { useAccountDrawer } from 'components/AccountDrawer'
+import IconButton from 'components/AccountDrawer/IconButton'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
-import { useWalletDrawer } from 'components/WalletDropdown'
-import IconButton from 'components/WalletDropdown/IconButton'
 import { Connection, ConnectionType, getConnections, networkConnection } from 'connection'
 import { ErrorCode } from 'connection/utils'
 import { isSupportedChain } from 'constants/chains'
@@ -55,7 +55,7 @@ function didUserReject(connection: Connection, error: any): boolean {
 export default function WalletModal({ openSettings }: { openSettings: () => void }) {
   const dispatch = useAppDispatch()
   const { connector, chainId } = useWeb3React()
-  const [drawerOpen, toggleWalletDrawer] = useWalletDrawer()
+  const [drawerOpen, toggleWalletDrawer] = useAccountDrawer()
 
   const [pendingConnection, setPendingConnection] = useState<Connection | undefined>()
   const [pendingError, setPendingError] = useState<any>()
@@ -102,15 +102,16 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
         setPendingError(undefined)
 
         await connection.connector.activate()
+        console.debug(`connection activated: ${connection.getName()}`)
         dispatch(updateSelectedWallet({ wallet: connection.type }))
         if (drawerOpenRef.current) toggleWalletDrawer()
       } catch (error) {
+        console.debug(`web3-react connection error: ${JSON.stringify(error)}`)
+        // TODO(WEB-3162): re-add special treatment for already-pending injected errors
         if (didUserReject(connection, error)) {
           setPendingConnection(undefined)
-        } // Prevents showing error caused by MetaMask being prompted twice
-        else if (error?.code !== ErrorCode.MM_ALREADY_PENDING) {
-          console.debug(`web3-react connection error: ${error}`)
-          setPendingError(error.message)
+        } else {
+          setPendingError(error)
 
           sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
             result: WalletConnectionResult.FAILED,

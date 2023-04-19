@@ -2,13 +2,13 @@ import { Trans } from '@lingui/macro'
 import { Trace, TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
+import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, Menu } from 'components/Menu'
 import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import { useToggleWalletDrawer } from 'components/WalletDropdown'
 import { isSupportedChain } from 'constants/chains'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useMemo } from 'react'
@@ -196,7 +196,7 @@ function WrongNetworkCard() {
 
 export default function Pool() {
   const { account, chainId } = useWeb3React()
-  const toggleWalletDrawer = useToggleWalletDrawer()
+  const toggleWalletDrawer = useToggleAccountDrawer()
 
   const theme = useTheme()
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { EmptyActivityIcon, EmptyNftsIcon, EmptyTokensIcon } from './icons'
+import { EmptyActivityIcon, EmptyNftsIcon, EmptyPoolsIcon, EmptyTokensIcon } from './icons'
 
 const EmptyWalletContainer = styled.div`
   display: flex;
@@ -74,11 +74,11 @@ const EMPTY_WALLET_CONTENT: { [key in EmptyWalletContentType]: EmptyWalletConten
     icon: <EmptyActivityIcon />,
   },
   pool: {
-    title: <Trans>No positions yet</Trans>,
+    title: <Trans>No pools yet</Trans>,
     subtitle: <Trans>Open a new position or create a pool to get started.</Trans>,
     actionText: <Trans>+ New position</Trans>,
     urlPath: '/pool',
-    icon: <EmptyTokensIcon />,
+    icon: <EmptyPoolsIcon />,
   },
 }
 
