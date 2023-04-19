@@ -90,8 +90,8 @@ function RemoveLiquidity() {
     [Field.LIQUIDITY_PERCENT]: parsedAmounts[Field.LIQUIDITY_PERCENT].equalTo('0')
       ? '0'
       : parsedAmounts[Field.LIQUIDITY_PERCENT].lessThan(new Percent('1', '100'))
-        ? '<1'
-        : parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0),
+      ? '<1'
+      : parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0),
     [Field.LIQUIDITY]:
       independentField === Field.LIQUIDITY ? typedValue : parsedAmounts[Field.LIQUIDITY]?.toSignificant(6) ?? '',
     [Field.CURRENCY_A]:
@@ -399,9 +399,9 @@ function RemoveLiquidity() {
 
   const oneCurrencyIsWETH = Boolean(
     chainId &&
-    WRAPPED_NATIVE_CURRENCY[chainId] &&
-    ((currencyA && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyA)) ||
-      (currencyB && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyB)))
+      WRAPPED_NATIVE_CURRENCY[chainId] &&
+      ((currencyA && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyA)) ||
+        (currencyB && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyB)))
   )
 
   const handleSelectCurrencyA = useCallback(
@@ -544,21 +544,25 @@ function RemoveLiquidity() {
                       <RowBetween style={{ justifyContent: 'flex-end' }}>
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
-                            to={`/remove/v2/${currencyA?.isNative && chainId && WRAPPED_NATIVE_CURRENCY[chainId]
+                            to={`/remove/v2/${
+                              currencyA?.isNative && chainId && WRAPPED_NATIVE_CURRENCY[chainId]
                                 ? WRAPPED_NATIVE_CURRENCY[chainId]?.address
                                 : currencyIdA
-                              }/${currencyB?.isNative && chainId && WRAPPED_NATIVE_CURRENCY[chainId]
+                            }/${
+                              currencyB?.isNative && chainId && WRAPPED_NATIVE_CURRENCY[chainId]
                                 ? WRAPPED_NATIVE_CURRENCY[chainId]?.address
                                 : currencyIdB
-                              }`}
+                            }`}
                           >
                             Receive WETH
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
-                            to={`/remove/v2/${currencyA && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyA) ? 'ETH' : currencyIdA
-                              }/${currencyB && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyB) ? 'ETH' : currencyIdB
-                              }`}
+                            to={`/remove/v2/${
+                              currencyA && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyA) ? 'ETH' : currencyIdA
+                            }/${
+                              currencyB && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyB) ? 'ETH' : currencyIdB
+                            }`}
                           >
                             Receive ETH
                           </StyledInternalLink>
