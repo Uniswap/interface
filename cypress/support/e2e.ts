@@ -11,6 +11,7 @@ import assert = require('assert')
 import '@cypress/code-coverage/support'
 
 import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
+import { CONNECTED_WALLET_USER_STATE } from '../utils/user-state'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -26,7 +27,10 @@ declare global {
        * @default 'goerli'
        */
       ethereum?: 'goerli' | 'hardhat'
-      /** Initial user state, eg {@link import('../utils/user-state').CONNECTED_WALLET_USER_STATE} */
+      /**
+       * Initial user state.
+       * @default {@type import('../utils/user-state').CONNECTED_WALLET_USER_STATE}
+       */
       userState?: object
     }
   }
@@ -55,10 +59,11 @@ Cypress.Commands.overwrite(
             // We want to test from a clean state, so we clear the local storage (which clears redux).
             win.localStorage.clear()
 
-            // Set user state, if configured.
-            if (options?.userState) {
-              win.localStorage.setItem('redux_localstorage_simple_user', JSON.stringify(options.userState))
-            }
+            // Set initial user state.
+            win.localStorage.setItem(
+              'redux_localstorage_simple_user',
+              JSON.stringify(options?.userState ?? CONNECTED_WALLET_USER_STATE)
+            )
 
             // Set feature flags, if configured.
             if (options?.featureFlags) {
