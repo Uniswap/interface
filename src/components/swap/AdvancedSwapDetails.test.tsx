@@ -1,4 +1,4 @@
-import { testAllowedSlippage, testTradeExactInput } from 'test-utils/constants'
+import { TEST_ALLOWED_SLIPPAGE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { fireEvent, render, screen } from 'test-utils/render'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
@@ -18,13 +18,13 @@ jest.mock('@web3-react/core', () => {
 describe('AdvancedSwapDetails.tsx', () => {
   it('matches base snapshot', () => {
     const { asFragment } = render(
-      <AdvancedSwapDetails trade={testTradeExactInput} allowedSlippage={testAllowedSlippage} />
+      <AdvancedSwapDetails trade={TEST_TRADE_EXACT_INPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />
     )
     expect(asFragment()).toMatchSnapshot()
   })
 
-  it('tooltips work as expected', async () => {
-    render(<AdvancedSwapDetails trade={testTradeExactInput} allowedSlippage={testAllowedSlippage} />)
+  it('tooltips work as expected for test trade with exact input', async () => {
+    render(<AdvancedSwapDetails trade={TEST_TRADE_EXACT_INPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />)
     fireEvent.mouseOver(screen.getByText('Price Impact'))
     expect(await screen.findByText(/The impact your trade has on the market price of this pool./i)).toBeVisible()
     fireEvent.mouseOver(screen.getByText('Expected Output'))
