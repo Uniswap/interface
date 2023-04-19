@@ -1,6 +1,6 @@
 import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
 import { Wallet } from '@ethersproject/wallet'
-import { HardhatUtils, Network } from 'cypress-hardhat'
+import { HardhatUtils, Network } from 'cypress-hardhat/lib/browser'
 
 export class HardhatProvider extends Eip1193Bridge {
   utils: HardhatUtils

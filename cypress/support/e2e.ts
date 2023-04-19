@@ -11,7 +11,7 @@ import assert = require('assert')
 import '@cypress/code-coverage/support'
 
 import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
-import { Network } from 'cypress-hardhat'
+import { Network } from 'cypress-hardhat/lib/browser'
 
 import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
 import { CONNECTED_WALLET_USER_STATE } from '../utils/user-state'
