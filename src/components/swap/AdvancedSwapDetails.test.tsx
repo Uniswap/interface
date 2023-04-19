@@ -1,5 +1,5 @@
 import { testAllowedSlippage, testTradeExactInput } from 'test-utils/constants'
-import { render } from 'test-utils/render'
+import { fireEvent, render, screen } from 'test-utils/render'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 
@@ -21,5 +21,15 @@ describe('AdvancedSwapDetails.tsx', () => {
       <AdvancedSwapDetails trade={testTradeExactInput} allowedSlippage={testAllowedSlippage} />
     )
     expect(asFragment()).toMatchSnapshot()
+  })
+
+  it('tooltips work as expected', async () => {
+    render(<AdvancedSwapDetails trade={testTradeExactInput} allowedSlippage={testAllowedSlippage} />)
+    fireEvent.mouseOver(screen.getByText('Price Impact'))
+    expect(await screen.findByText(/The impact your trade has on the market price of this pool./i)).toBeVisible()
+    fireEvent.mouseOver(screen.getByText('Expected Output'))
+    expect(await screen.findByText(/The amount you expect to receive at the current market price./i)).toBeVisible()
+    fireEvent.mouseOver(screen.getByText(/Minimum received/i))
+    expect(await screen.findByText(/The minimum amount you are guaranteed to receive./i)).toBeVisible()
   })
 })

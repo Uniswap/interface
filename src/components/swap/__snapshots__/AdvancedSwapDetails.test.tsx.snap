@@ -100,7 +100,7 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
         <div
           class="c8 css-q4yjm0"
         >
-          0.000000000000001  undefined
+          0.000000000000001  DEF
         </div>
       </div>
       <div
@@ -156,7 +156,7 @@ exports[`AdvancedSwapDetails.tsx matches base snapshot 1`] = `
         <div
           class="css-q4yjm0"
         >
-          0.00000000000000098 undefined
+          0.00000000000000098 DEF
         </div>
       </div>
     </div>
