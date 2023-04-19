@@ -29,4 +29,10 @@ describe('filterKnownErrors', () => {
     const originalException = new SyntaxError("Unexpected token '<'")
     expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
   })
+
+  it('filter errors from OneKey app', () => {
+    const originalException = new Error()
+    originalException.name = 'xd.<anonymous>(/Applications/OneKey.app/Contents/Resources/static/preload.js)'
+    expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
+  })
 })

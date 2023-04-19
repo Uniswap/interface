@@ -46,6 +46,12 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
      * Therefore, this can be ignored.
      */
     if (error.message.match(/Unexpected token '<'/)) return null
+
+    /*
+     * Errors coming from OneKey (a desktop wallet) can be ignored for now.
+     * These errors are either application-specific, or they will be thrown separately outside of OneKey.
+     */
+    if (error.name.match(/(?i)OneKey/)) return null
   }
 
   return event
