@@ -1,4 +1,10 @@
-import { TEST_ALLOWED_SLIPPAGE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
+import {
+  TEST_ALLOWED_SLIPPAGE,
+  TEST_TOKEN_1,
+  TEST_TRADE_EXACT_INPUT,
+  TEST_TRADE_EXACT_OUTPUT,
+  toCurrencyAmount,
+} from 'test-utils/constants'
 import { fireEvent, render, screen } from 'test-utils/render'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
@@ -23,7 +29,7 @@ describe('AdvancedSwapDetails.tsx', () => {
     expect(asFragment()).toMatchSnapshot()
   })
 
-  it('tooltips work as expected for test trade with exact input', async () => {
+  it('test trade with exact input', async () => {
     render(<AdvancedSwapDetails trade={TEST_TRADE_EXACT_INPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />)
     fireEvent.mouseOver(screen.getByText('Price Impact'))
     expect(await screen.findByText(/The impact your trade has on the market price of this pool./i)).toBeVisible()
@@ -31,5 +37,14 @@ describe('AdvancedSwapDetails.tsx', () => {
     expect(await screen.findByText(/The amount you expect to receive at the current market price./i)).toBeVisible()
     fireEvent.mouseOver(screen.getByText(/Minimum received/i))
     expect(await screen.findByText(/The minimum amount you are guaranteed to receive./i)).toBeVisible()
+  })
+
+  it('test trade with exact output, and with gas use estimate USD', async () => {
+    TEST_TRADE_EXACT_OUTPUT.gasUseEstimateUSD = toCurrencyAmount(TEST_TOKEN_1, 1)
+    render(<AdvancedSwapDetails trade={TEST_TRADE_EXACT_OUTPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />)
+    fireEvent.mouseOver(screen.getByText(/Maximum sent/i))
+    expect(await screen.findByText(/The minimum amount you are guaranteed to receive./i)).toBeVisible()
+    fireEvent.mouseOver(screen.getByText('Network Fee'))
+    expect(await screen.findByText(/The fee paid to miners who process your transaction./i)).toBeVisible()
   })
 })
