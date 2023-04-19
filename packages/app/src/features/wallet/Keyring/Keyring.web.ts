@@ -278,7 +278,7 @@ export class WebKeyring implements IKeyring {
   /**
    * @returns the Signature of the signed transaction in string form.
    **/
-  signTransactionHashForAddress(
+  async signTransactionHashForAddress(
     address: string,
     hash: string,
     chainId: number
@@ -287,30 +287,29 @@ export class WebKeyring implements IKeyring {
     return this.signHashForAddress(address, hash, chainId)
   }
 
-  signMessageForAddress(address: string, message: string): Promise<string> {
-    const privateKey = this.retrievePrivateKey(address)
-    return privateKey.then((key) => {
-      if (!key) throw Error('No private key found for address')
-      const wallet = new Wallet(key)
-      return wallet.signMessage(message)
-    })
+  async signMessageForAddress(
+    address: string,
+    message: string
+  ): Promise<string> {
+    const privateKey = await this.retrievePrivateKey(address)
+    if (!privateKey) throw Error('No private key found for address')
+    const wallet = new Wallet(privateKey)
+    return wallet.signMessage(message)
   }
 
   /**
    * @returns the Signature of the signed hash in string form.
    **/
-  signHashForAddress(
+  async signHashForAddress(
     address: string,
     hash: string,
     _chainId: number
   ): Promise<string> {
-    const privateKey = this.retrievePrivateKey(address)
-    return privateKey.then((key) => {
-      if (!key) throw Error('No private key found for address')
-      const signingKey = new SigningKey(key)
-      const signature: Signature = signingKey.signDigest(hash)
-      return joinSignature(signature)
-    })
+    const privateKey = await this.retrievePrivateKey(address)
+    if (!privateKey) throw Error('No private key found for address')
+    const signingKey = new SigningKey(privateKey)
+    const signature: Signature = signingKey.signDigest(hash)
+    return joinSignature(signature)
   }
 
   private get password(): string {
