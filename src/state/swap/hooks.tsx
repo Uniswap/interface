@@ -22,11 +22,13 @@ import { SwapState } from './reducer'
 import {useLeverageManagerContract} from "../../hooks/useContract"
 import { BigNumber as BN } from "bignumber.js";
 import { usePool } from 'hooks/usePools'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { FeeAmount, Pool, computePoolAddress } from '@uniswap/v3-sdk'
 import useDebounce from 'hooks/useDebounce'
 import JSBI from 'jsbi'
 import { BigNumber } from 'ethers'
 import { input } from 'nft/components/layout/Checkbox.css'
+import { useAllV3Routes } from 'hooks/useAllV3Routes'
+import { V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
 
 export function useSwapState(): AppState['swap'] {
   return useAppSelector((state) => state.swap)
@@ -129,6 +131,26 @@ export interface LeverageTrade {
   effectiveLeverage: string | undefined
 }
 
+export function usePoolAddress(
+  inputCurrency: Currency | undefined,
+  outputCurrency: Currency | undefined
+): string | undefined {
+  const { loading, routes} = useAllV3Routes(inputCurrency, outputCurrency)
+  const { chainId } = useWeb3React()
+  if (loading || routes.length === 0 || !chainId || routes[0].pools.length === 0) {
+    return undefined
+  }
+
+  const pool = routes[0].pools[0]
+
+  return computePoolAddress({
+    factoryAddress: V3_CORE_FACTORY_ADDRESSES[chainId],
+    tokenA: pool.token0,
+    tokenB: pool.token1,
+    fee: pool.fee
+  })
+}
+
 export function useDerivedLeverageCreationInfo()
 : {
   currencies: { [field in Field]?: Currency | null }
@@ -154,8 +176,6 @@ export function useDerivedLeverageCreationInfo()
     leverageFactor,
     leverageManagerAddress
   } = useSwapState()
-
-
 
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)

@@ -3,11 +3,13 @@ import { CallStateResult, useSingleCallResult, useSingleContractMultipleData } f
 import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
 
-import { useLeverageManagerContract, useV3NFTPositionManagerContract } from './useContract'
+import { useLeverageManagerContract, usePoolContract, useV3NFTPositionManagerContract } from './useContract'
 import { LeveragePositionDetails } from 'types/leveragePosition'
 import { BigNumber as BN } from "bignumber.js"
 import { Currency, Field } from '@uniswap/widgets'
-import { useToken } from './Tokens'
+import { useCurrency, useToken } from './Tokens'
+import { FeeAmount } from '@uniswap/v3-sdk'
+import { usePool } from './usePools'
 
 
 interface UseV3PositionsResults {
@@ -15,16 +17,26 @@ interface UseV3PositionsResults {
   positions: PositionDetails[] | undefined
 }
 
+// hacked
 export function useLeveragePositions(leverageManagerAddress: string | undefined, account: string | undefined, currencies: { [field in Field]?: Currency | null }): LeveragePositionDetails[] {
   const leverageManager = useLeverageManagerContract(leverageManagerAddress)
   const { result: positions, loading, error } = useSingleCallResult(leverageManager, 'getAllPositions', [account])
-  const { result: r0, loading: l0, error: e0 } = useSingleCallResult(leverageManager, 'token0', []) 
+  const { result: r0, loading: l0, error: e0 } = useSingleCallResult(leverageManager, 'token0', [])
   const { result: r1, loading: l1, error: e1 } = useSingleCallResult(leverageManager, 'token1', [])
+  const { result: r2, loading: l2, error: e2 } = useSingleCallResult(leverageManager, 'pool', [])
+  const poolContract = usePoolContract(r2 ? r2[0] : undefined)
+  const { result: r3, loading: l3, error: e3 } = useSingleCallResult(poolContract, 'fee', [])
   const token0 = useToken(r0?.[0])
   const token1 = useToken(r1?.[0])
 
+  
+
   const inputCurrency = currencies[Field.INPUT]
   const outputCurrency = currencies[Field.OUTPUT]
+
+  const [poolState, pool] = usePool(inputCurrency ?? undefined, outputCurrency ?? undefined, 
+    (!l3 && !e3) ? r3?.[0] : undefined
+    )
 
   let args: any = []
 
@@ -49,7 +61,12 @@ export function useLeveragePositions(leverageManagerAddress: string | undefined,
     }
   })
 
-  if (multiResultLoading || args.length === 0 || !leverageManager || loading || error || !positions || !inputCurrency?.wrapped || !outputCurrency?.wrapped || !multiResult && ((multiResult as any).length > 0)) {
+  if (
+    multiResultLoading || args.length === 0 || !leverageManager || loading || 
+    error || !positions || !inputCurrency?.wrapped || !outputCurrency?.wrapped || 
+    !multiResult && ((multiResult as any).length > 0) ||
+    l2 || e2 || !r2 || l3 || e3 || !r3
+    ) {
     return []
   }
 
@@ -69,6 +86,7 @@ export function useLeveragePositions(leverageManagerAddress: string | undefined,
     let inputDecimals = position.isToken0 && inputCurrencyIsToken0 ? outputCurrency?.wrapped.decimals : inputCurrency?.wrapped.decimals
     return {
       leverageManagerAddress: leverageManagerAddress ?? undefined,
+      pool: pool ?? undefined,
       token0: token0 ?? undefined,
       token1: token1 ?? undefined,
       tokenId: data.result.toString(),
@@ -107,18 +125,31 @@ export function useLeveragePosition(leverageManagerAddress: string | undefined, 
   const { result: r1, loading: l1, error: e1 } = useSingleCallResult(leverageManager, 'token0', [])
   const { result: r2, loading: l2, error: e2 } = useSingleCallResult(leverageManager, 'token1', [])
   const { result: r0, loading: l0, error: e0 } = useSingleCallResult(leverageManager, 'getPosition', [account, tokenId])
+  const { result: r3, loading: l3, error: e3 } = useSingleCallResult(leverageManager, 'pool', [])
+
+  const poolContract = usePoolContract(r3 ? r3[0] : undefined)
+  const { result: r4, loading: l4, error: e4 } = useSingleCallResult(poolContract, 'fee', [])
 
   const token0 = useToken(r1?.[0])
   const token1 = useToken(r2?.[0])
 
+  const inputCurrency = useCurrency(r1?.[0])
+  const outputCurrency = useCurrency(r2?.[0])
+
+  const [poolState, pool] = usePool(inputCurrency ?? undefined, outputCurrency ?? undefined,
+    (!l4 && !e4) ? r4?.[0] : undefined
+  )
+
 
   let info: [PositionState, LeveragePositionDetails | undefined] = useMemo(() => {
-    if (l0 || l1 || l2 || e0 || e1 || e2 && !r0 && !r1 && !r2) {
+    // fix hack.
+    if (l0 || l1 || l2 || l3  || e3|| e0 || e1 || e2 && !r0 && !r1 && !r2 && !r3) {
       return [PositionState.LOADING, undefined]
     }
     const position = (r0 as any)[0]
     const formattedPosition: LeveragePositionDetails =  {
       leverageManagerAddress,
+      pool: pool ?? undefined,
       token0: token0 ?? undefined,
       token1: token1 ?? undefined,
       tokenId: tokenId,

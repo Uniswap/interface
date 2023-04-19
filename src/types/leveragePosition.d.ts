@@ -1,7 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Token } from '@uniswap/sdk-core'
+import { Pool } from '@uniswap/v3-sdk'
 
 export interface LeveragePositionDetails {
+  pool: Pool | undefined
   leverageManagerAddress: string | undefined
   token0: Token | undefined
   token1: Token | undefined

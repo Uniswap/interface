@@ -35,6 +35,7 @@ import { V3Migrator } from 'types/v3/V3Migrator'
 import { abi as LeverageManagerAbi} from "../perpspotContracts/LeverageManager.json"
 // import {abi as testTokenAbi} from "../perpspotContracts/testERC.json"
 import { abi as testTokenAbi } from "../perpspotContracts/TestToken.json"
+import { abi as PoolAbi } from "../perpspotContracts/UniswapV3Pool.json"
 import { getContract } from '../utils'
 
 const { abi: IUniswapV2PairABI } = IUniswapV2PairJson
@@ -79,6 +80,10 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 
 export function useLeverageManagerContract(leverageManagerAddress?: string, withSignerIfPossible?: boolean) {
   return useContract(leverageManagerAddress, LeverageManagerAbi, withSignerIfPossible)
+}
+
+export function usePoolContract(poolAddress?: string, withSignerIfPossible?: boolean) {
+  return useContract(poolAddress, PoolAbi, withSignerIfPossible)
 }
 
 export function useTestTokenContract(testTokenAd?: string, withSignerIfPossible?: boolean) {

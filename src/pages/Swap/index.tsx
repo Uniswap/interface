@@ -62,6 +62,7 @@ import {
   useDefaultsFromURLSearch,
   useDerivedLeverageCreationInfo,
   useDerivedSwapInfo,
+  usePoolAddress,
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
@@ -448,27 +449,7 @@ export default function Swap({ className }: { className?: string }) {
     isSupportedChain(chainId) ? PS_ROUTER : undefined
   )
 
-  const [leverageManagerAllowanceLoading, setLeverageManagerAllowanceLoading] = useState(false)
-
-  let poolAddress = useMemo(() => {
-    if (
-      chainId && 
-      currencies[Field.INPUT] &&
-      currencies[Field.OUTPUT] &&
-      currencies[Field.INPUT]?.wrapped && currencies[Field.OUTPUT]?.wrapped
-    ) {
-      const input = currencies[Field.INPUT]?.wrapped
-      const output = currencies[Field.OUTPUT]?.wrapped
-      // let pool = trade.routes[0]?.pools[0] as any
-      if (input && output && input.wrapped && output.wrapped) {
-        return computePoolAddress({ factoryAddress: V3_CORE_FACTORY_ADDRESSES[chainId], tokenA: input.wrapped, tokenB: output.wrapped, fee: FeeAmount.LOW })
-      }
-    }
-    return undefined
-  }, [account, parsedAmounts, trade, currencies, currencies[Field.OUTPUT], currencies[Field.INPUT], chainId])
-
-  // console.log("poolAddress", poolAddress)
-
+  let poolAddress = usePoolAddress(currencies[Field.INPUT] ?? undefined, currencies[Field.OUTPUT] ?? undefined)
   // const [leverageManagerAddress, setLeverageManagerAddress] = useState<string>()
 
   useEffect(() => {
@@ -820,7 +801,7 @@ export default function Swap({ className }: { className?: string }) {
   const leveragePositions = useLeveragePositions(leverageManagerAddress ?? undefined, account, currencies)
 
   // console.log("leverageTrade: ", leverageTrade)
-  // console.log("leveragePositions", leverageManagerAddress, leveragePositions)
+  console.log("leveragePositions", leverageManagerAddress, leveragePositions)
 
   // const leveragePositions: LeveragePositionDetails[] = [
   //   {
