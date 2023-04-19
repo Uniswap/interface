@@ -1,5 +1,9 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
 version: v1.25.0
+# exclude monorepo while migrating
+exclude:
+  global:
+    - monorepo/packages/app/package.json
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
   'snyk:lic:npm:uniswap:universal-router:GPL-2.0':

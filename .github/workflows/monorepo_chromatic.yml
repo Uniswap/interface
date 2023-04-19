@@ -1,4 +1,4 @@
-name: Storybook
+name: Extension Monorepo - Storybook
 
 on:
   workflow_call:
@@ -26,7 +26,7 @@ jobs:
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
     defaults:
       run:
-        working-directory: ./
+        working-directory: ./monorepo
 
     steps:
       - name: Checkout
@@ -46,4 +46,4 @@ jobs:
         uses: chromaui/action@v1
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          workingDir: apps/storybook
+          workingDir: extension/apps/storybook

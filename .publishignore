@@ -1,5 +1,6 @@
 .github
 .publishignore
+monorepo
 fastlane
 ios/GoogleServiceInfo
 scripts

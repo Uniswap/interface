@@ -20,24 +20,24 @@ jobs:
         uses: borales/actions-yarn@v4
         with:
           cmd: install # will run `yarn install` command
-          dir: apps/extension
+          dir: monorepo/apps/extension
 
       - name: Build dev folder
         uses: borales/actions-yarn@v4
         with:
           cmd: webpack # will run `yarn webpack` command
-          dir: apps/extension
+          dir: monorepo/apps/extension
 
       - name: Create zip file
         run: |
-          cd apps/extension
+          cd monorepo/apps/extension
           zip -r chrome-extension-${{ github.sha }}.zip dev
 
       - name: Archive chrome-extension artifact
         uses: actions/upload-artifact@v2
         with:
           name: chrome-extension-${{ github.sha }}
-          path: apps/extension/chrome-extension-${{ github.sha }}.zip
+          path: monorepo/apps/extension/chrome-extension-${{ github.sha }}.zip
 
   upload-extension:
     name: Upload extension

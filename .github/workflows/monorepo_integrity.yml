@@ -1,4 +1,4 @@
-name: Monorepo
+name: Monorepo Integrity
 
 on:
   pull_request:
@@ -12,6 +12,9 @@ jobs:
   monorepo-integrity:
     name: Check integrity
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./monorepo
     steps:
       - name: Checkout
         uses: actions/checkout@v3

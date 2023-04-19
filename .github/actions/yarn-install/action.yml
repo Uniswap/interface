@@ -35,6 +35,7 @@ runs:
 
     - name: Install dependencies
       shell: bash
+      working-directory: ./monorepo
       run: |
         yarn install --immutable --inline-builds
       env:

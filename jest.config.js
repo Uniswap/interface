@@ -24,6 +24,8 @@ module.exports = {
   moduleNameMapper: {
     '.+\\.(css|style|less|sass|scss|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub',
   },
+  // ignore during transition
+  testPathIgnorePatterns: ['monorepo/'],
   transform: {
     '\\.svg$': 'jest-transformer-svg',
   },
