@@ -1,4 +1,4 @@
-import { testAllowedSlippage, testCurrencyAmount, testToken1, testTradeExactInput } from 'test-utils/constants'
+import { TEST_ALLOWED_SLIPPAGE, TEST_TOKEN_1, TEST_TRADE_EXACT_INPUT, toCurrencyAmount } from 'test-utils/constants'
 import { fireEvent, render, screen } from 'test-utils/render'
 
 import SwapDetailsDropdown from './SwapDetailsDropdown'
@@ -17,10 +17,10 @@ describe('SwapDetailsDropdown.tsx', () => {
   it('matches base snapshot', () => {
     const { asFragment } = render(
       <SwapDetailsDropdown
-        trade={testTradeExactInput}
+        trade={TEST_TRADE_EXACT_INPUT}
         syncing={false}
         loading={false}
-        allowedSlippage={testAllowedSlippage}
+        allowedSlippage={TEST_ALLOWED_SLIPPAGE}
       />
     )
     expect(asFragment()).toMatchSnapshot()
@@ -30,20 +30,20 @@ describe('SwapDetailsDropdown.tsx', () => {
 
   it('loading state contains expected elements', () => {
     render(
-      <SwapDetailsDropdown trade={undefined} syncing={true} loading={true} allowedSlippage={testAllowedSlippage} />
+      <SwapDetailsDropdown trade={undefined} syncing={true} loading={true} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />
     )
     expect(screen.getByTestId('loading-indicator')).toBeInTheDocument()
     expect(screen.getByText('Fetching best price...')).toBeInTheDocument()
   })
 
   it('interactive components work as expected once trade is loaded', () => {
-    testTradeExactInput.gasUseEstimateUSD = testCurrencyAmount(testToken1, 1)
+    TEST_TRADE_EXACT_INPUT.gasUseEstimateUSD = toCurrencyAmount(TEST_TOKEN_1, 1)
     render(
       <SwapDetailsDropdown
-        trade={testTradeExactInput}
+        trade={TEST_TRADE_EXACT_INPUT}
         syncing={false}
         loading={false}
-        allowedSlippage={testAllowedSlippage}
+        allowedSlippage={TEST_ALLOWED_SLIPPAGE}
       />
     )
 
