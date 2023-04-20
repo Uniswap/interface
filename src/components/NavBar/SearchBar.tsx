@@ -55,7 +55,7 @@ export const SearchBar = () => {
     isOpen && toggleOpen()
   })
 
-  const { data: collections, loading } = useCollectionSearch(debouncedSearchValue)
+  const { data: collections, loading: collectionsAreLoading } = useCollectionSearch(debouncedSearchValue)
 
   const { chainId } = useWeb3React()
   const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, chainId ?? 1)
@@ -200,7 +200,7 @@ export const SearchBar = () => {
               collections={reducedCollections}
               queryText={debouncedSearchValue}
               hasInput={debouncedSearchValue.length > 0}
-              isLoading={tokensAreLoading || loading}
+              isLoading={tokensAreLoading || collectionsAreLoading}
             />
           )}
         </Box>

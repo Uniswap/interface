@@ -306,7 +306,13 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     [activeFilters]
   )
 
-  const { nftActivity, hasNext, loadMore, loading, error } = useNftActivity(
+  const {
+    nftActivity,
+    hasNext: hasNextActivity,
+    loadMore: loadMoreActivities,
+    loading: activitiesAreLoading,
+    error: errorLoadingActivities,
+  } = useNftActivity(
     {
       activityTypes: Object.keys(activeFilters)
         .map((key) => key as NftActivityType)
@@ -381,14 +387,14 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             <Filter eventType={ActivityEventType.Transfer} />
             <Filter eventType={ActivityEventType.CancelListing} />
           </ActivitySelectContainer>
-          {loading ? (
+          {activitiesAreLoading ? (
             <LoadingAssetActivity rowCount={10} />
           ) : nftActivity && nftActivity.length > 0 ? (
             <InfiniteScroll
-              next={loadMore}
-              hasMore={!!hasNext}
+              next={loadMoreActivities}
+              hasMore={!!hasNextActivity}
               loader={
-                loading && (
+                activitiesAreLoading && (
                   <Center>
                     <LoadingSparkle />
                   </Center>
@@ -401,7 +407,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             </InfiniteScroll>
           ) : (
             <>
-              {!error && nftActivity && (
+              {!errorLoadingActivities && nftActivity && (
                 <EmptyActivitiesContainer>
                   <div>No activities yet</div>
                   <Link to={`/nfts/collection/${asset.address}`}>View collection items</Link>{' '}

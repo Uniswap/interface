@@ -148,11 +148,14 @@ export const SearchBarDropdown = ({
   const isTokenPage = pathname.includes('/tokens')
   const [resultsState, setResultsState] = useState<ReactNode>()
 
-  const { data, loading } = useTrendingCollections(3, HistoryDuration.Day)
+  const { data: trendingCollections, loading: trendingCollectionsAreLoading } = useTrendingCollections(
+    3,
+    HistoryDuration.Day
+  )
 
-  const trendingCollections = useMemo(() => {
-    return !loading
-      ? data
+  const formattedTrendingCollections = useMemo(() => {
+    return !trendingCollectionsAreLoading
+      ? trendingCollections
           ?.map((collection) => ({
             ...collection,
             collectionAddress: collection.address,
@@ -165,7 +168,7 @@ export const SearchBarDropdown = ({
           }))
           .slice(0, isNFTPage ? 3 : 2)
       : [...Array<GenieCollection>(isNFTPage ? 3 : 2)]
-  }, [data, isNFTPage, loading])
+  }, [trendingCollections, isNFTPage, trendingCollectionsAreLoading])
 
   const { data: trendingTokenData } = useTrendingTokens(useWeb3React().chainId)
 
@@ -178,7 +181,7 @@ export const SearchBarDropdown = ({
   const totalSuggestions = hasInput
     ? tokens.length + collections.length
     : Math.min(shortenedHistory.length, 2) +
-      (isNFTPage || !isTokenPage ? trendingCollections?.length ?? 0 : 0) +
+      (isNFTPage || !isTokenPage ? formattedTrendingCollections?.length ?? 0 : 0) +
       (isTokenPage || !isNFTPage ? trendingTokens?.length ?? 0 : 0)
 
   // Navigate search results via arrow keys
@@ -313,14 +316,14 @@ export const SearchBarDropdown = ({
                 startingIndex={shortenedHistory.length + (isNFTPage ? 0 : trendingTokens?.length ?? 0)}
                 setHoveredIndex={setHoveredIndex}
                 toggleOpen={toggleOpen}
-                suggestions={trendingCollections as unknown as GenieCollection[]}
+                suggestions={formattedTrendingCollections as unknown as GenieCollection[]}
                 eventProperties={{
                   suggestion_type: NavBarSearchTypes.COLLECTION_TRENDING,
                   ...eventProperties,
                 }}
                 header={<Trans>Popular NFT collections</Trans>}
                 headerIcon={<TrendingArrow />}
-                isLoading={loading}
+                isLoading={trendingCollectionsAreLoading}
               />
             )}
           </Column>
@@ -332,7 +335,7 @@ export const SearchBarDropdown = ({
     isLoading,
     tokens,
     collections,
-    trendingCollections,
+    formattedTrendingCollections,
     trendingTokens,
     trendingTokenData,
     hoveredIndex,
@@ -346,7 +349,7 @@ export const SearchBarDropdown = ({
     totalSuggestions,
     trace,
     searchHistory,
-    loading,
+    trendingCollectionsAreLoading,
   ])
 
   const showBNBComingSoonBadge = chainId === SupportedChainId.BNB && !isLoading

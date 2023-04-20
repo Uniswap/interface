@@ -114,13 +114,16 @@ const TRENDING_COLLECTION_SIZE = 5
 const Banner = () => {
   const navigate = useNavigate()
 
-  const { data } = useTrendingCollections(TRENDING_COLLECTION_SIZE + EXCLUDED_COLLECTIONS.length, HistoryDuration.Day)
+  const { data: trendingCollections } = useTrendingCollections(
+    TRENDING_COLLECTION_SIZE + EXCLUDED_COLLECTIONS.length,
+    HistoryDuration.Day
+  )
 
   const collections = useMemo(() => {
-    return data
+    return trendingCollections
       ?.filter((collection) => collection.address && !EXCLUDED_COLLECTIONS.includes(collection.address))
       .slice(0, TRENDING_COLLECTION_SIZE)
-  }, [data])
+  }, [trendingCollections])
 
   const [activeCollectionIdx, setActiveCollectionIdx] = useState(0)
   const onToggleNextSlide = useCallback(

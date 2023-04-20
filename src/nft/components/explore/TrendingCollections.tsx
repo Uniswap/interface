@@ -89,7 +89,10 @@ const TrendingCollections = () => {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.OneDay)
   const [isEthToggled, setEthToggled] = useState(true)
 
-  const { data, loading } = useTrendingCollections(100, convertTimePeriodToHistoryDuration(timePeriod))
+  const { data: collections, loading: collectionsAreLoading } = useTrendingCollections(
+    100,
+    convertTimePeriodToHistoryDuration(timePeriod)
+  )
 
   const { data: usdPrice } = useQuery(['fetchPrice', {}], () => fetchPrice(), {
     refetchOnReconnect: false,
@@ -99,8 +102,8 @@ const TrendingCollections = () => {
   })
 
   const trendingCollections = useMemo(() => {
-    if (!loading && data) {
-      return data.map((d) => ({
+    if (!collectionsAreLoading && collections) {
+      return collections.map((d) => ({
         ...d,
         collection: {
           name: d.name,
@@ -126,7 +129,7 @@ const TrendingCollections = () => {
         usdPrice,
       }))
     } else return [] as CollectionTableColumn[]
-  }, [data, loading, isEthToggled, usdPrice])
+  }, [collections, collectionsAreLoading, isEthToggled, usdPrice])
 
   return (
     <ExploreContainer>
