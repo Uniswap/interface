@@ -58,7 +58,6 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
       const asset = error.message.match(/https?:\/\/.+?\.chunk\.js/)?.[0]
       const entries = [...performance?.getEntriesByType('resource')]
       const resource = entries?.find(({ name }) => name === asset)
-      // `responseStatus` is not on the `ResponseStatus` type, because it's only supported on some browsers at the moment.
       const status = resource?.responseStatus
 
       /*
