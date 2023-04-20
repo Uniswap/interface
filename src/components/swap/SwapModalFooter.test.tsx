@@ -1,4 +1,4 @@
-import { testAllowedSlippage, testTradeExactInput } from 'test-utils/constants'
+import { TEST_ALLOWED_SLIPPAGE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { render, screen } from 'test-utils/render'
 
 import SwapModalFooter from './SwapModalFooter'
@@ -10,8 +10,8 @@ describe('SwapModalFooter.tsx', () => {
   it('matches base snapshot', () => {
     const { asFragment } = render(
       <SwapModalFooter
-        trade={testTradeExactInput}
-        allowedSlippage={testAllowedSlippage}
+        trade={TEST_TRADE_EXACT_INPUT}
+        allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         hash={undefined}
         onConfirm={() => null}
         disabledConfirm
