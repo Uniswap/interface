@@ -60,7 +60,7 @@ export function useRegistryContract(): Contract | null {
   return useContract(RB_REGISTRY_ADDRESSES, RB_REGISTRY_ABI, true)
 }
 
-function useStakingContract(): Contract | null {
+export function useStakingContract(): Contract | null {
   return useContract(STAKING_PROXY_ADDRESSES, STAKING_ABI, true)
 }
 
