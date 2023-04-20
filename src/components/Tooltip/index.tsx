@@ -1,7 +1,7 @@
 import { transparentize } from 'polished'
 import { ReactNode, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
-import { noop } from 'test-utils/constants'
+import noop from 'utils/noop'
 
 import Popover, { PopoverProps } from '../Popover'
 

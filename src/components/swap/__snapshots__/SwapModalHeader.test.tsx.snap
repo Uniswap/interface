@@ -528,9 +528,15 @@ exports[`SwapModalHeader.tsx matches base snapshot, test trade exact input 1`] =
       >
         Output will be sent to 
         <b
+<<<<<<< HEAD
           title="0x0fF2D1eFd7A57B7562b2bf27F3f37899dB27F4a5"
         >
           0x0fF2...F4a5
+=======
+          title="0x0000000000000000000000000000000000000004"
+        >
+          0x0000...0004
+>>>>>>> main
         </b>
       </div>
     </div>

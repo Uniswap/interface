@@ -29,6 +29,7 @@ import styled from 'styled-components/macro'
 import { noop } from 'test-utils/constants'
 import { ThemedText } from 'theme'
 import { TRANSITION_DURATIONS } from 'theme/styles'
+import noop from 'utils/noop'
 
 import { WALLET_COLLECTIONS_PAGINATION_LIMIT } from './ProfilePage'
 import * as styles from './ProfilePage.css'
