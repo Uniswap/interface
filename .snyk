@@ -92,11 +92,6 @@ ignore:
         reason: 'Initial commit, ignoring all packages without known fixes'
         expires: 2099-01-01T00:00:00.000Z
         created: 2022-10-27T00:13:29.506Z
-  SNYK-JS-OPENZEPPELINCONTRACTS-5425827:
-    - '*':
-        reason: 'monorepo migration'
-        expires: 2023-05-31T00:00:00.000Z
-        created: 2023-04-20T00:13:29.506Z
   SNYK-JS-PROMPTS-1729737:
     - '*':
         reason: 'Initial commit, ignoring all packages without known fixes'

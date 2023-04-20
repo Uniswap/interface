@@ -1,4 +1,4 @@
-name: Monorepo Build/Test
+name: '[monorepo] Build/Test'
 
 on:
   workflow_call:

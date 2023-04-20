@@ -1,4 +1,4 @@
-name: Publish to Chrome web store
+name: '[monorepo] Publish to Chrome web store'
 
 on: 
   workflow_dispatch:

@@ -1,4 +1,4 @@
-name: Monorepo Integrity
+name: '[monorepo] Integrity'
 
 on:
   pull_request:

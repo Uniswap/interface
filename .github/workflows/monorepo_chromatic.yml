@@ -1,4 +1,4 @@
-name: Extension Monorepo - Storybook
+name: '[monorepo] - Storybook'
 
 on:
   workflow_call:
