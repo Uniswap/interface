@@ -1,8 +1,12 @@
 import { t } from '@lingui/macro'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import Column from 'components/Column'
+import Row from 'components/Row'
+import Toggle from 'components/Toggle'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
+import { BaseVariant, FeatureFlag, useUpdateFlag } from 'featureFlags'
+import { useAlternateTxSourceFlagEnabled } from 'featureFlags/flags/alternateTxSource'
 import { TransactionStatus, useTransactionListQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { PollingInterval } from 'graphql/data/util'
 import { atom, useAtom } from 'jotai'
@@ -88,9 +92,10 @@ function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = 
   // Merges local and remote activities w/ same hash, preferring remote data
   return txHashes.reduce((acc: Array<Activity>, hash) => {
     const localActivity = localMap?.[hash] ?? {}
-    const remoteActivity = remoteMap?.[hash] ?? {}
+    const remoteActivity = remoteMap?.[hash]
+    if (remoteActivity) acc.push(remoteActivity)
     // TODO(cartcrom): determine best logic for which fields to prefer from which sources, i.e. prefer remote exact swap output instead of local estimated output
-    acc.push({ ...remoteActivity, ...localActivity } as Activity)
+    // acc.push({ ...localActivity, ...remoteActivity } as Activity)
     return acc
   }, [])
 }
@@ -103,8 +108,10 @@ export function ActivityTab({ account }: { account: string }) {
 
   const localMap = useLocalActivities(account)
 
+  const updateFlag = useUpdateFlag()
+  const alternateSourceEnabled = useAlternateTxSourceFlagEnabled()
   const { data, loading, refetch } = useTransactionListQuery({
-    variables: { account },
+    variables: { account, _fs: alternateSourceEnabled ? 'DATASOURCE:ALTERNATE' : undefined },
     errorPolicy: 'all',
     fetchPolicy: 'cache-first',
   })
@@ -138,6 +145,22 @@ export function ActivityTab({ account }: { account: string }) {
   } else {
     return (
       <PortfolioTabWrapper>
+        <Row align="center">
+          <Row width="20%" marginLeft="12px">
+            <Toggle
+              isActive={alternateSourceEnabled}
+              toggle={() => {
+                updateFlag(
+                  FeatureFlag.alternateTxSource,
+                  alternateSourceEnabled ? BaseVariant.Control : BaseVariant.Enabled
+                )
+              }}
+            />
+          </Row>
+          <Row width="50%">
+            <ThemedText.SubHeaderSmall color="primary">Use Alternate Data Source</ThemedText.SubHeaderSmall>
+          </Row>
+        </Row>
         {activityGroups.map((activityGroup) => (
           <ActivityGroupWrapper key={activityGroup.title}>
             <ThemedText.SubHeader color="textSecondary" fontWeight={500} marginLeft="16px">

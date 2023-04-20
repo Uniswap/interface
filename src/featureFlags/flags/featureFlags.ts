@@ -12,4 +12,5 @@ export enum FeatureFlag {
   mgtm = 'web_mobile_go_to_market_enabled',
   miniPortfolio = 'miniPortfolio',
   detailsV2 = 'details_v2',
+  alternateTxSource = 'alternate_tx_source',
 }

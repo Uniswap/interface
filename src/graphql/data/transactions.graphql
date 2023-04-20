@@ -129,10 +129,10 @@ fragment AssetActivityParts on AssetActivity {
   }
 }
 
-query TransactionList($account: String!) {
+query TransactionList($account: String!, $_fs: String) {
   portfolios(ownerAddresses: [$account]) {
     id
-    assetActivities(pageSize: 50, page: 1) {
+    assetActivities(pageSize: 50, page: 1, _fs: $_fs) {
       ...AssetActivityParts
     }
   }

@@ -1,4 +1,5 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
+import { useAlternateTxSourceFlag } from 'featureFlags/flags/alternateTxSource'
 import { MgtmVariant, useMgtmFlag } from 'featureFlags/flags/mgtm'
 import { useMiniPortfolioFlag } from 'featureFlags/flags/miniPortfolio'
 import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
@@ -206,6 +207,12 @@ export default function FeatureFlagModal() {
           <X size={24} />
         </CloseButton>
       </Header>
+      <FeatureFlagOption
+        variant={BaseVariant}
+        value={useAlternateTxSourceFlag()}
+        featureFlag={FeatureFlag.alternateTxSource}
+        label="Use alternate transaction source"
+      />
       <FeatureFlagOption
         variant={MgtmVariant}
         value={useMgtmFlag()}
