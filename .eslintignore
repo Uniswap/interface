@@ -10,3 +10,5 @@ __generated__/
 storybook-static
 
 coverage
+
+monorepo/

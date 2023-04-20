@@ -1,0 +1,62 @@
+{
+  "build": {
+    "development": {
+      "distribution": "internal",
+      "channel": "development",
+      "developmentClient": true,
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "image": "latest",
+        "resourceClass": "m1-medium"
+      },
+      "env": {
+        "TAMAGUI_TARGET": "native",
+        "APP_VARIANT": "development"
+      }
+    },
+    "staging": {
+      "distribution": "internal",
+      "channel": "staging",
+      "developmentClient": false,
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "image": "latest",
+        "resourceClass": "m1-medium"
+      },
+      "env": {
+        "TAMAGUI_TARGET": "native",
+        "APP_VARIANT": "staging"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "channel": "preview",
+      "developmentClient": false,
+      "ios": {
+        "resourceClass": "m1-medium"
+      },
+      "env": {
+        "TAMAGUI_TARGET": "native",
+        "APP_VARIANT": "preview"
+      }
+    },
+    "production": {
+      "distribution": "store",
+      "ios": {
+        "resourceClass": "m1-medium"
+      },
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "env": {
+        "TAMAGUI_TARGET": "native",
+        "APP_VARIANT": "production"
+      },
+      "channel": "production"
+    }
+  }
+}

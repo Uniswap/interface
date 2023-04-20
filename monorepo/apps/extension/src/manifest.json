@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "UL Wallet Extension",
+  "description": "UL Wallet Extension",
+  "version": "0.0.0.3",
+  "icons": {
+    "16": "assets/icon16.png",
+    "32": "assets/icon32.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "32": "assets/icon32.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    },
+    "default_popup": "index.html"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": ["storage", "notifications"], 
+  "content_scripts": [
+    {
+      "matches": [
+        "http://localhost:3000/*",
+        "https://*.vercel.app/*",
+        "https://app.uniswap.org/*"
+      ],
+      "js": [
+        "providerScript.js"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "injected.js"
+      ],
+      "matches": [
+        "http://localhost:3000/*",
+        "https://*.vercel.app/*",
+        "https://app.uniswap.org/*"
+      ]
+    }
+  ]
+}
