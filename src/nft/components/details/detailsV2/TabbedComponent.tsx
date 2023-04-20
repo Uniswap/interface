@@ -9,7 +9,6 @@ import { containerStyles, containerXPadding } from './shared'
 const TabbedContentContainer = styled(Column)<{ noContentPadding?: boolean }>`
   width: 100%;
   align-self: flex-start;
-  padding: 16px 0px;
 
   ${containerStyles}
   ${({ noContentPadding }) => !noContentPadding && containerXPadding}
