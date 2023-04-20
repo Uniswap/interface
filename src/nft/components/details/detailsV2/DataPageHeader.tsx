@@ -7,6 +7,8 @@ const HeaderContainer = styled.div`
   flex-shrink: 0;
 
   ${containerStyles}
+
+  padding-left: 0px;
 `
 
 export const DataPageHeader = () => {

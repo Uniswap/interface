@@ -1,14 +1,19 @@
-import styled from 'styled-components/macro'
+import { Trans } from '@lingui/macro'
 
-import { containerStyles } from './shared'
+import { Tab, TabbedComponent } from './TabbedComponent'
 
-const TraitsContainer = styled.div`
-  height: 528px;
-  padding: 16px 20px;
+const TraitsContent = () => {
+  return <div>Traits Content</div>
+}
 
-  ${containerStyles}
-`
+const TraitTabs: Array<Tab> = [
+  {
+    title: <Trans>Traits</Trans>,
+    key: 'traits',
+    content: <TraitsContent />,
+  },
+]
 
 export const DataPageTraits = () => {
-  return <TraitsContainer>Traits</TraitsContainer>
+  return <TabbedComponent tabs={TraitTabs} defaultTab={TraitTabs[0]} style={{ height: '528px' }} />
 }
