@@ -1,19 +1,18 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceElementName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
 import { WalletConnect } from '@web3-react/walletconnect'
 import Column, { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
-import { uniwalletConnectConnection } from 'connection'
+import { ConnectionType, uniwalletConnectConnection } from 'connection'
+import { useActivateConnection } from 'connection/activate'
 import { UniwalletConnect } from 'connection/WalletConnect'
 import { QRCodeSVG } from 'qrcode.react'
-import { useCallback, useEffect, useState } from 'react'
-import { useModalIsOpen, useToggleUniwalletModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
+import { useEffect, useState } from 'react'
 import styled, { useTheme } from 'styled-components/macro'
 import { CloseIcon, ThemedText } from 'theme'
+import { isIOS } from 'utils/userAgent'
 
 import uniPng from '../../assets/images/uniwallet.svg'
 import { DownloadButton } from './DownloadButton'
@@ -39,44 +38,32 @@ const Divider = styled.div`
 `
 
 export default function UniwalletModal() {
-  const open = useModalIsOpen(ApplicationModal.UNIWALLET_CONNECT)
-  const toggle = useToggleUniwalletModal()
-
+  const { pending, cancelActivation } = useActivateConnection()
   const [uri, setUri] = useState<string>()
+  const open = pending.connection?.type === ConnectionType.UNIWALLET && !isIOS && !!uri
+
   useEffect(() => {
     ;(uniwalletConnectConnection.connector as WalletConnect).events.addListener(
       UniwalletConnect.UNI_URI_AVAILABLE,
       (uri) => {
         uri && setUri(uri)
-        toggle()
       }
     )
-  }, [toggle])
+  }, [])
 
-  const { account } = useWeb3React()
   useEffect(() => {
-    if (open) {
-      sendAnalyticsEvent('Uniswap wallet modal opened', { userConnected: !!account })
-      if (account) {
-        toggle()
-      }
-    }
-  }, [account, open, toggle])
-
-  const onClose = useCallback(() => {
-    uniwalletConnectConnection.connector.deactivate?.()
-    toggle()
-  }, [toggle])
+    if (open) sendAnalyticsEvent('Uniswap wallet modal opened')
+  }, [open])
 
   const theme = useTheme()
   return (
-    <Modal isOpen={open} onDismiss={onClose}>
+    <Modal isOpen={open} onDismiss={cancelActivation}>
       <UniwalletConnectWrapper>
         <HeaderRow>
           <ThemedText.SubHeader>
             <Trans>Scan with Uniswap Wallet</Trans>
           </ThemedText.SubHeader>
-          <CloseIcon onClick={onClose} />
+          <CloseIcon onClick={cancelActivation} />
         </HeaderRow>
         <QRCodeWrapper>
           {uri && (

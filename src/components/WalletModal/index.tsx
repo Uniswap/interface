@@ -4,18 +4,15 @@ import { getWalletMeta } from '@uniswap/conedison/provider/meta'
 import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import IconButton from 'components/AccountDrawer/IconButton'
-import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { Connection, ConnectionType, getConnections, networkConnection } from 'connection'
 import { useGetConnection } from 'connection'
-import { ErrorCode } from 'connection/utils'
+import { useActivateConnection } from 'connection/activate'
 import { isSupportedChain } from 'constants/chains'
 import { useMgtmEnabled } from 'featureFlags/flags/mgtm'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Settings } from 'react-feather'
-import { useAppDispatch } from 'state/hooks'
-import { updateSelectedWallet } from 'state/user/reducer'
 import { useConnectedWallets } from 'state/wallets/hooks'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -73,38 +70,17 @@ const sendAnalyticsEventAndUserInfo = (
   })
 }
 
-function didUserReject(connection: Connection, error: any): boolean {
-  return (
-    error?.code === ErrorCode.USER_REJECTED_REQUEST ||
-    (connection.type === ConnectionType.WALLET_CONNECT && error?.toString?.() === ErrorCode.WC_MODAL_CLOSED) ||
-    (connection.type === ConnectionType.COINBASE_WALLET && error?.toString?.() === ErrorCode.CB_REJECTED_REQUEST)
-  )
-}
-
 export default function WalletModal({ openSettings }: { openSettings: () => void }) {
-  const dispatch = useAppDispatch()
   const { connector, account, chainId, provider } = useWeb3React()
   const [drawerOpen, toggleWalletDrawer] = useAccountDrawer()
 
   const [connectedWallets, addWalletToConnectedWallets] = useConnectedWallets()
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
-  const [pendingConnection, setPendingConnection] = useState<Connection | undefined>()
-  const [pendingError, setPendingError] = useState<any>()
 
   const connections = getConnections()
   const getConnection = useGetConnection()
 
-  useEffect(() => {
-    // Clean up errors when the dropdown closes
-    return () => setPendingError(undefined)
-  }, [setPendingError])
-
-  const openOptions = useCallback(() => {
-    if (pendingConnection) {
-      setPendingError(undefined)
-      setPendingConnection(undefined)
-    }
-  }, [pendingConnection, setPendingError])
+  const { pending, tryActivation, cancelActivation } = useActivateConnection()
 
   // Keep the network connector in sync with any active user connector to prevent chain-switching on wallet disconnection.
   useEffect(() => {
@@ -135,47 +111,20 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
     getConnection,
   ])
 
+  const activate = useCallback(
+    (connection: Connection) => {
+      tryActivation(connection, () => {
+        if (drawerOpenRef.current) {
+          toggleWalletDrawer()
+        }
+      })
+    },
+    [toggleWalletDrawer, tryActivation]
+  )
+
   // Used to track the state of the drawer in async function
   const drawerOpenRef = useRef(drawerOpen)
   drawerOpenRef.current = drawerOpen
-
-  const tryActivation = useCallback(
-    async (connection: Connection) => {
-      // Skips wallet connection if the connection should override the default behavior, i.e. install metamask or launch coinbase app
-      if (connection.overrideActivate?.()) return
-
-      // log selected wallet
-      sendEvent({
-        category: 'Wallet',
-        action: 'Change Wallet',
-        label: connection.type,
-      })
-
-      try {
-        setPendingConnection(connection)
-        setPendingError(undefined)
-
-        await connection.connector.activate()
-        console.debug(`connection activated: ${connection.getName()}`)
-        dispatch(updateSelectedWallet({ wallet: connection.type }))
-        if (drawerOpenRef.current) toggleWalletDrawer()
-      } catch (error) {
-        console.debug(`web3-react connection error: ${error}`)
-        // TODO(WEB-3162): re-add special treatment for already-pending injected errors
-        if (didUserReject(connection, error)) {
-          setPendingConnection(undefined)
-        } else {
-          setPendingError(error)
-
-          sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
-            result: WalletConnectionResult.FAILED,
-            wallet_type: connection.getName(),
-          })
-        }
-      }
-    },
-    [dispatch, setPendingError, toggleWalletDrawer]
-  )
 
   const mgtmEnabled = useMgtmEnabled()
 
@@ -185,9 +134,9 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
         <ThemedText.SubHeader fontWeight={500}>Connect a wallet</ThemedText.SubHeader>
         <IconButton Icon={Settings} onClick={openSettings} data-testid="wallet-settings" />
       </AutoRow>
-      {pendingError ? (
-        pendingConnection && (
-          <ConnectionErrorView openOptions={openOptions} retryActivation={() => tryActivation(pendingConnection)} />
+      {pending.error ? (
+        pending.error && (
+          <ConnectionErrorView openOptions={cancelActivation} retryActivation={() => activate(pending.error)} />
         )
       ) : (
         <AutoColumn gap="16px">
@@ -198,8 +147,8 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
                 <Option
                   key={connection.getName()}
                   connection={connection}
-                  activate={() => tryActivation(connection)}
-                  pendingConnectionType={pendingConnection?.type}
+                  activate={() => activate(connection)}
+                  pendingConnectionType={pending.connection?.type}
                 />
               ) : null
             )}
