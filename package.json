@@ -31,15 +31,14 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "src/components/**/*.ts*",
-      "src/hooks/**/*.ts*",
-      "src/lib/hooks/**/*.ts*",
-      "src/lib/state/**/*.ts*",
-      "src/lib/utils/**/*.ts*",
-      "src/pages/**/*.ts*",
-      "src/state/**/*.ts*",
-      "src/tracing/**/*.ts*",
-      "src/utils/**/*.ts*"
+      "src/**/*.ts*",
+      "!src/**/*.d.ts",
+      "!src/abis/types/**",
+      "!src/constants/**/*.ts",
+      "!src/graphql/**/__generated__/**",
+      "!src/locales/**",
+      "!src/test-utils/**",
+      "!src/types/v3/**"
     ],
     "coveragePathIgnorePatterns": [
       ".snap"
