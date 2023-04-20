@@ -54,7 +54,7 @@ export function useActivateConnection() {
   )
 
   const cancelActivation = useCallback(async () => {
-    pending.connection?.connector.deactivate?.()
+    await pending.connection?.connector.deactivate?.()
     updatePendingConnection(undefined)
   }, [pending, updatePendingConnection])
 
