@@ -1,4 +1,4 @@
-import { noop } from 'test-utils/constants'
+import noop from 'utils/noop'
 
 import { Box } from '../Box'
 import * as styles from './Overlay.css'

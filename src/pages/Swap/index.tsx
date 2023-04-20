@@ -552,6 +552,7 @@ export default function Swap({ className }: { className?: string }) {
                     element={InterfaceElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
                   >
                     <ArrowContainer
+                      data-testid="swap-currency-button"
                       onClick={() => {
                         onSwitchTokens()
                       }}
