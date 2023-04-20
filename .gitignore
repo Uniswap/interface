@@ -17,6 +17,7 @@ schema.graphql
 
 # testing
 /coverage
+/cache
 
 # builds
 /build
