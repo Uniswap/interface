@@ -114,8 +114,8 @@ export const EthCell = ({
   denomination: Denomination
   usdPrice?: number
 }) => {
-  const denominatedValue = getDenominatedValue(denomination, true, value, usdPrice)
   const isNftGraphqlEnabled = useNftGraphqlEnabled()
+  const denominatedValue = getDenominatedValue(denomination, !isNftGraphqlEnabled, value, usdPrice)
   const formattedValue = denominatedValue
     ? denomination === Denomination.ETH
       ? isNftGraphqlEnabled

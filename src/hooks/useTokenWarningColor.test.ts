@@ -1,5 +1,5 @@
 import { WARNING_LEVEL } from 'constants/tokenSafety'
-import { renderHook } from 'test-utils'
+import { renderHook } from 'test-utils/render'
 import { lightTheme } from 'theme/colors'
 
 import { useTokenWarningColor, useTokenWarningTextColor } from './useTokenWarningColor'
