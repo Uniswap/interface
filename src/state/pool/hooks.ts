@@ -9,7 +9,9 @@ import POOL_EXTENDED_ABI from 'abis/pool-extended.json'
 import RB_POOL_FACTORY_ABI from 'abis/rb-pool-factory.json'
 import RB_REGISTRY_ABI from 'abis/rb-registry.json'
 import { RB_FACTORY_ADDRESSES, RB_REGISTRY_ADDRESSES } from 'constants/addresses'
+import { GRG } from 'constants/tokens'
 import { useContract } from 'hooks/useContract'
+import { useTotalSupply } from 'hooks/useTotalSupply'
 import { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useStakingContract } from 'state/governance/hooks'
@@ -298,13 +300,12 @@ export function useSetValueCallback(): (value: string | undefined) => undefined 
   )
 }
 
-// TODO: make all params not optional
 interface StakingPools {
   id: string
-  operatorShare?: number
+  operatorShare: number
   apr: number
-  delegatedStake?: BigNumber
-  poolOwnStake?: BigNumber
+  delegatedStake: BigNumber
+  poolOwnStake: BigNumber
 }
 
 interface UseStakingPools {
@@ -369,7 +370,11 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
 
   const totalDelegatedStake = delegatedStakes?.reduce((prev, curr, index, array) => prev + curr.delegatedStake, 0)
   const totalPoolsOwnStake = delegatedOwnStakes?.reduce((prev, curr, index, array) => prev + curr.poolOwnStake, 0)
-  //const totalPoolsOwnStake = delegatedOwnStakes.poolOwnStake.reduce((result, number) => result + number, 0)
+  // TODO: query exact total supply per chain and check if should pass from parent
+  const { chainId } = useWeb3React()
+  const totalSupply = 10000000e18
+  const supplyAmount = useTotalSupply(GRG[chainId ?? 1])
+  console.log(supplyAmount?.quotient)
 
   const aprs = useMemo(() => {
     if (!delegatedStakes || !delegatedOwnStakes || !totalDelegatedStake || !totalPoolsOwnStake) return undefined
@@ -379,13 +384,11 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
       delegatedStake: delegatedStakes[i].delegatedStake,
       delegatedOwnStakes: delegatedOwnStakes[i].poolOwnStake,
     }))
-    // TODO: return GRG total supply
-    const totalSupply = 200000
     return poolsInfo?.map((p, i) => {
       const apr =
         (((p.delegatedOwnStakes / totalPoolsOwnStake) ^ (2 / 3)) *
           ((p.delegatedStake / totalDelegatedStake) ^ (1 / 3)) *
-          (p.operatorShare / 10000) *
+          (1 - p.operatorShare / 10000) *
           ((2 / 100) * totalSupply)) /
         p.delegatedOwnStakes
 
@@ -394,13 +397,15 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
   }, [delegatedStakes, delegatedOwnStakes, stakingPools, totalDelegatedStake, totalPoolsOwnStake])
   const loading = false
 
-  // TODO: add return fields operatorShare, delegatedStake, poolOwnStake
   return {
     loading,
     stakingPools: stakingPools?.map((pool, i) => ({
       ...pool,
       id: inputs[i][0],
       apr: aprs ? aprs[i] : 0,
+      operatorShare: stakingPools[i].operatorShare,
+      delegatedStake: delegatedStakes ? delegatedStakes[i].delegatedStake : 0,
+      poolOwnStake: delegatedOwnStakes ? delegatedOwnStakes[i].poolOwnStake : 0,
     })),
   }
 }
