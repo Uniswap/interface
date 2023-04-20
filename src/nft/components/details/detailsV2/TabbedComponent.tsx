@@ -4,21 +4,23 @@ import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { containerStyles } from './shared'
+import { containerStyles, containerXPadding } from './shared'
 
 const TabbedContentContainer = styled(Column)<{ noContentPadding?: boolean }>`
   width: 100%;
   align-self: flex-start;
-  padding: ${({ noContentPadding }) => (noContentPadding ? `16px 0px` : `16px 20px`)};
+  padding: 16px 0px;
 
   ${containerStyles}
+  ${({ noContentPadding }) => !noContentPadding && containerXPadding}
 `
 
 const TabsRow = styled(Row)<{ selfPadding?: boolean }>`
-  padding: ${({ selfPadding }) => selfPadding && `0px 20px`};
   gap: 32px;
   margin-bottom: 12px;
   width: 100;
+
+  ${({ selfPadding }) => selfPadding && containerXPadding}
 `
 
 const Tab = styled(ThemedText.SubHeader)<{ isActive: boolean }>`
