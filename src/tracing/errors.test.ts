@@ -123,10 +123,6 @@ describe('filterKnownErrors', () => {
     })
 
     it('filters out error when performance is undefined', () => {
-      const mockGetEntriesByType = jest.fn(() => {
-        return []
-      })
-      window.performance.getEntriesByType = mockGetEntriesByType
       const originalException = new Error(
         'Loading chunk 20 failed. (error: https://app.uniswap.org/static/js/20.d55382e0.chunk.js)'
       )
