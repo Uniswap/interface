@@ -1,6 +1,15 @@
 import { Trans } from '@lingui/macro'
+import styled from 'styled-components/macro'
 
+import { containerStyles } from './shared'
 import { Tab, TabbedComponent } from './TabbedComponent'
+
+const DescriptionContainer = styled.div`
+  height: 288px;
+  padding: 16px 20px 20px;
+
+  ${containerStyles}
+`
 
 const DescriptionContent = () => {
   return <div>Description Content</div>
@@ -24,5 +33,9 @@ const DescriptionTabs: Array<Tab> = [
 ]
 
 export const DataPageDescription = () => {
-  return <TabbedComponent tabs={DescriptionTabs} defaultTab={DescriptionTabs[0]} />
+  return (
+    <DescriptionContainer>
+      <TabbedComponent tabs={DescriptionTabs} defaultTab={DescriptionTabs[0]} />
+    </DescriptionContainer>
+  )
 }
