@@ -67,7 +67,7 @@ describe('filterKnownErrors', () => {
         ] as any
       })
       window.performance.getEntriesByType = mockGetEntriesByType
-      const originalException = new SyntaxError(
+      const originalException = new Error(
         'Loading chunk 20 failed. (error: https://app.uniswap.org/static/js/20.d55382e0.chunk.js)'
       )
       expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
@@ -105,7 +105,7 @@ describe('filterKnownErrors', () => {
         ] as any
       })
       window.performance.getEntriesByType = mockGetEntriesByType
-      const originalException = new SyntaxError(
+      const originalException = new Error(
         'Loading chunk 20 failed. (error: https://app.uniswap.org/static/js/20.d55382e0.chunk.js)'
       )
       expect(filterKnownErrors(ERROR, { originalException })).not.toBeNull()
@@ -116,7 +116,7 @@ describe('filterKnownErrors', () => {
         return []
       })
       window.performance.getEntriesByType = mockGetEntriesByType
-      const originalException = new SyntaxError(
+      const originalException = new Error(
         'Loading chunk 20 failed. (error: https://app.uniswap.org/static/js/20.d55382e0.chunk.js)'
       )
       expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
@@ -127,7 +127,7 @@ describe('filterKnownErrors', () => {
         return []
       })
       window.performance.getEntriesByType = mockGetEntriesByType
-      const originalException = new SyntaxError(
+      const originalException = new Error(
         'Loading chunk 20 failed. (error: https://app.uniswap.org/static/js/20.d55382e0.chunk.js)'
       )
       expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
@@ -164,7 +164,7 @@ describe('filterKnownErrors', () => {
         ] as any
       })
       window.performance.getEntriesByType = mockGetEntriesByType
-      const originalException = new SyntaxError(
+      const originalException = new Error(
         'Loading chunk 20 failed. (error: https://app.uniswap.org/static/js/20.d55382e0.chunk.js)'
       )
       expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
