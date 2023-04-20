@@ -43,6 +43,7 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
     /*
      * This ignores 499 errors, which are caused by Cloudflare when a request is cancelled.
      * CF claims that some number of these is expected, and that they should be ignored.
+     * See https://groups.google.com/a/uniswap.org/g/cloudflare-eng/c/t3xvAiJFujY.
      */
     if (error.message.match(/Loading chunk \d+ failed\. \(error: .+\.chunk\.js\)/)) {
       const asset = error.message.match(/https?:\/\/.+?\.chunk\.js/)?.[0]
