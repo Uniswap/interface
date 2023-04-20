@@ -23,7 +23,7 @@ describe('Swap', () => {
     // open token selector...
     cy.contains('Select token').click()
     // select token...
-    cy.contains(tokenSymbol).click({ force: true })
+    cy.contains(tokenSymbol).click()
 
     cy.get('body')
       .then(($body) => {
@@ -33,9 +33,9 @@ describe('Swap', () => {
 
         return 'no-op' // Don't click on anything, a no-op
       })
-      .then((selector) => {
-        if (selector !== 'no-op') {
-          cy.contains(selector).click()
+      .then((content) => {
+        if (content !== 'no-op') {
+          cy.contains(content).click()
         }
       })
 
