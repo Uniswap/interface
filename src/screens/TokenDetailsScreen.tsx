@@ -334,7 +334,7 @@ function TokenDetails({
       </HeaderScrollScreen>
 
       {!hideSwapButton && !loading && !tokenColorLoading ? (
-        <AnimatedFlex entering={FadeInDown} pb={pb}>
+        <AnimatedFlex backgroundColor="background0" entering={FadeInDown} pb={pb}>
           <TokenDetailsActionButtons
             tokenColor={tokenColor}
             onPressSwap={
