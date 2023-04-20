@@ -1,7 +1,5 @@
+import { UNI_GOERLI, WETH_GOERLI } from '../fixtures/constants'
 import { getTestSelector } from '../utils'
-
-const UNI_GOERLI = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
-const WETH_GOERLI = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6'
 
 describe('Swap', () => {
   const verifyAmount = (field: 'input' | 'output', amountText: string | null) => {
@@ -24,7 +22,7 @@ describe('Swap', () => {
     // open token selector...
     cy.get(`#swap-currency-${field} .open-currency-select-button`).click()
     // select token...
-    cy.contains(tokenSymbol).click({ force: true })
+    cy.contains(tokenSymbol).click()
 
     cy.get('body')
       .then(($body) => {
@@ -34,9 +32,9 @@ describe('Swap', () => {
 
         return 'no-op' // Don't click on anything, a no-op
       })
-      .then((selector) => {
-        if (selector !== 'no-op') {
-          cy.contains(selector).click()
+      .then((content) => {
+        if (content !== 'no-op') {
+          cy.contains(content).click()
         }
       })
 
@@ -198,5 +196,17 @@ describe('Swap', () => {
     it('zero output amount', () => {
       cy.get('#swap-currency-output .token-amount-input').clear().type('0.0').should('have.value', '0.0')
     })
+  })
+
+  it('Opens and closes the settings menu', () => {
+    cy.visit('/swap')
+    cy.contains('Settings').should('not.exist')
+    cy.get(getTestSelector('swap-settings-button')).click()
+    cy.contains('Slippage tolerance').should('exist')
+    cy.contains('Transaction deadline').should('exist')
+    cy.contains('Auto Router API').should('exist')
+    cy.contains('Expert Mode').should('exist')
+    cy.get(getTestSelector('swap-settings-button')).click()
+    cy.contains('Settings').should('not.exist')
   })
 })

@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { InterfaceElementName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { WalletConnect } from '@web3-react/walletconnect'
 import Column, { AutoColumn } from 'components/Column'
@@ -14,7 +15,7 @@ import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
 import { CloseIcon, ThemedText } from 'theme'
 
-import uniPng from '../../assets/images/uniwallet.svg'
+import uniPng from '../../assets/images/uniwallet_modal_icon.png'
 import { DownloadButton } from './DownloadButton'
 
 const UniwalletConnectWrapper = styled(RowBetween)`
@@ -87,15 +88,15 @@ export default function UniwalletModal() {
               fgColor={theme.darkMode ? theme.backgroundSurface : theme.black}
               imageSettings={{
                 src: uniPng,
-                height: 27,
-                width: 27,
+                height: 33,
+                width: 33,
                 excavate: false,
               }}
             />
           )}
         </QRCodeWrapper>
         <Divider />
-        <InfoSection onClose={onClose} />
+        <InfoSection />
       </UniwalletConnectWrapper>
     </Modal>
   )
@@ -108,7 +109,7 @@ const InfoSectionWrapper = styled(RowBetween)`
   gap: 20px;
 `
 
-function InfoSection({ onClose }: { onClose: () => void }) {
+function InfoSection() {
   return (
     <InfoSectionWrapper>
       <AutoColumn gap="4px">
@@ -117,12 +118,12 @@ function InfoSection({ onClose }: { onClose: () => void }) {
         </ThemedText.SubHeaderSmall>
         <ThemedText.Caption color="textSecondary">
           <Trans>
-            Download in the App Store to safely store and send tokens and NFTs, swap tokens, and connect to crypto apps.
+            Download in the App Store to safely store your tokens and NFTs, swap tokens, and connect to crypto apps.
           </Trans>
         </ThemedText.Caption>
       </AutoColumn>
       <Column>
-        <DownloadButton onClick={onClose} />
+        <DownloadButton element={InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON} />
       </Column>
     </InfoSectionWrapper>
   )

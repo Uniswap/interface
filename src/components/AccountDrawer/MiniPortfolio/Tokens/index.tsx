@@ -12,12 +12,12 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { EllipsisStyle, ThemedText } from 'theme'
 
-import { useToggleAccountDrawer } from '..'
-import { PortfolioArrow } from '../AuthenticatedHeader'
-import { hideSmallBalancesAtom } from '../SmallBalanceToggle'
-import { ExpandoRow } from './ExpandoRow'
-import { PortfolioLogo } from './PortfolioLogo'
-import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from './PortfolioRow'
+import { useToggleAccountDrawer } from '../..'
+import { PortfolioArrow } from '../../AuthenticatedHeader'
+import { hideSmallBalancesAtom } from '../../SmallBalanceToggle'
+import { ExpandoRow } from '../ExpandoRow'
+import { PortfolioLogo } from '../PortfolioLogo'
+import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
 
 const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 
