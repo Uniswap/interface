@@ -11,7 +11,7 @@ import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { ActivityTab } from './Activity/ActivityTab'
+import { ActivityTab } from './Activity'
 import NFTs from './NFTs'
 import Pools from './Pools'
 import { PortfolioRowWrapper } from './PortfolioRow'

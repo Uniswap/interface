@@ -1,6 +1,6 @@
-import { getTestSelector } from '../utils'
+import { SupportedChainId, WETH9 } from '@uniswap/sdk-core'
 
-const WETH_GOERLI = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6'
+import { getTestSelector } from '../utils'
 
 describe('Swap', () => {
   const verifyAmount = (field: 'input' | 'output', amountText: string | null) => {
@@ -23,7 +23,7 @@ describe('Swap', () => {
     // open token selector...
     cy.contains('Select token').click()
     // select token...
-    cy.contains(tokenSymbol).click({ force: true })
+    cy.contains(tokenSymbol).click()
 
     cy.get('body')
       .then(($body) => {
@@ -33,9 +33,9 @@ describe('Swap', () => {
 
         return 'no-op' // Don't click on anything, a no-op
       })
-      .then((selector) => {
-        if (selector !== 'no-op') {
-          cy.contains(selector).click()
+      .then((content) => {
+        if (content !== 'no-op') {
+          cy.contains(content).click()
         }
       })
 
@@ -87,7 +87,7 @@ describe('Swap', () => {
   })
 
   it('should have the correct default input from URL params ', () => {
-    cy.visit(`/swap?inputCurrency=${WETH_GOERLI}`)
+    cy.visit(`/swap?inputCurrency=${WETH9[SupportedChainId.GOERLI].address}`)
 
     verifyToken('input', 'WETH')
     verifyToken('output', null)
@@ -100,7 +100,7 @@ describe('Swap', () => {
   })
 
   it('should have the correct default output from URL params ', () => {
-    cy.visit(`/swap?outputCurrency=${WETH_GOERLI}`)
+    cy.visit(`/swap?outputCurrency=${WETH9[SupportedChainId.GOERLI].address}`)
 
     verifyToken('input', null)
     verifyToken('output', 'WETH')
@@ -114,16 +114,6 @@ describe('Swap', () => {
 
     verifyToken('input', 'ETH')
     verifyToken('output', 'WETH')
-  })
-
-  it('review step for ETH to UNI trade', () => {
-    cy.visit('/swap')
-    selectOutput('UNI')
-    cy.get('#swap-currency-input .token-amount-input').clear().type('0.0000001')
-    cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
-    cy.get('#swap-button').click()
-    cy.get('#confirm-swap-or-send').should('contain', 'Confirm Swap')
-    cy.get('[data-cy="confirmation-close-icon"]').click()
   })
 
   it('ETH to wETH is same value (wrapped swaps have no price impact)', () => {

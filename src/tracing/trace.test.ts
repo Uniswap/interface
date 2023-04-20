@@ -2,8 +2,11 @@ import '@sentry/tracing' // required to populate Sentry.startTransaction, which 
 
 import * as Sentry from '@sentry/react'
 import { Transaction } from '@sentry/tracing'
+import { ErrorEvent, EventHint } from '@sentry/types'
 import assert from 'assert'
+import { mocked } from 'test-utils/mocked'
 
+import { beforeSend } from './errors'
 import { trace } from './trace'
 
 jest.mock('@sentry/react', () => {
@@ -11,10 +14,9 @@ jest.mock('@sentry/react', () => {
     startTransaction: jest.fn(),
   }
 })
-const startTransaction = Sentry.startTransaction as jest.Mock
 
 function getTransaction(index = 0): Transaction {
-  const transactions = startTransaction.mock.results.map(({ value }) => value)
+  const transactions = mocked(Sentry.startTransaction).mock.results.map(({ value }) => value)
   expect(transactions).toHaveLength(index + 1)
   const transaction = transactions[index]
   expect(transaction).toBeDefined()
@@ -23,12 +25,13 @@ function getTransaction(index = 0): Transaction {
 
 describe('trace', () => {
   beforeEach(() => {
-    const Sentry = jest.requireActual('@sentry/react')
-    startTransaction.mockReset().mockImplementation((context) => {
-      const transaction: Transaction = Sentry.startTransaction(context)
-      transaction.initSpanRecorder()
-      return transaction
-    })
+    mocked(Sentry.startTransaction)
+      .mockReset()
+      .mockImplementation((context) => {
+        const transaction: Transaction = jest.requireActual('@sentry/react').startTransaction(context)
+        transaction.initSpanRecorder()
+        return transaction
+      })
   })
 
   it('propagates callback', async () => {
@@ -81,6 +84,41 @@ describe('trace', () => {
       })
       const transaction = getTransaction()
       expect(transaction.tags).toEqual({ is_widget: true })
+    })
+  })
+
+  describe('beforeSend', () => {
+    it('handles no path', async () => {
+      const errorEvent: ErrorEvent = {
+        type: undefined,
+        request: {
+          url: 'https://app.uniswap.org',
+        },
+      }
+      const eventHint: EventHint = {}
+      expect((beforeSend(errorEvent, eventHint) as ErrorEvent)?.request?.url).toEqual('https://app.uniswap.org')
+    })
+
+    it('handles hash with path', async () => {
+      const errorEvent: ErrorEvent = {
+        type: undefined,
+        request: {
+          url: 'https://app.uniswap.org/#/pools',
+        },
+      }
+      const eventHint: EventHint = {}
+      expect((beforeSend(errorEvent, eventHint) as ErrorEvent)?.request?.url).toEqual('https://app.uniswap.org/pools')
+    })
+
+    it('handles just hash', async () => {
+      const errorEvent: ErrorEvent = {
+        type: undefined,
+        request: {
+          url: 'https://app.uniswap.org/#',
+        },
+      }
+      const eventHint: EventHint = {}
+      expect((beforeSend(errorEvent, eventHint) as ErrorEvent)?.request?.url).toEqual('https://app.uniswap.org')
     })
   })
 

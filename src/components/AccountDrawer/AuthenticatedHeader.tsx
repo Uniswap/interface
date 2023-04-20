@@ -197,9 +197,10 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
 
   const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const openFoRModalWithAnalytics = useCallback(() => {
+    toggleWalletDrawer()
     sendAnalyticsEvent(InterfaceEventName.FIAT_ONRAMP_WIDGET_OPENED)
     openFiatOnrampModal()
-  }, [openFiatOnrampModal])
+  }, [openFiatOnrampModal, toggleWalletDrawer])
 
   const [shouldCheck, setShouldCheck] = useState(false)
   const {
@@ -302,6 +303,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           emphasis={ButtonEmphasis.medium}
           onClick={handleBuyCryptoClick}
           disabled={disableBuyCryptoButton}
+          data-testid="wallet-buy-crypto"
         >
           {error ? (
             <ThemedText.BodyPrimary>{error}</ThemedText.BodyPrimary>
