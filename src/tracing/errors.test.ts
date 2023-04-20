@@ -96,4 +96,11 @@ describe('filterKnownErrors', () => {
       expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
     })
   })
+
+  it('filters CSP unsafe-eval errors', () => {
+    const originalException = new Error(
+      "Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inlin..."
+    )
+    expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
+  })
 })
