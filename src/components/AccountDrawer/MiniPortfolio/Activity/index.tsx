@@ -92,10 +92,9 @@ function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = 
   // Merges local and remote activities w/ same hash, preferring remote data
   return txHashes.reduce((acc: Array<Activity>, hash) => {
     const localActivity = localMap?.[hash] ?? {}
-    const remoteActivity = remoteMap?.[hash]
-    if (remoteActivity) acc.push(remoteActivity)
+    const remoteActivity = remoteMap?.[hash] ?? {}
     // TODO(cartcrom): determine best logic for which fields to prefer from which sources, i.e. prefer remote exact swap output instead of local estimated output
-    // acc.push({ ...localActivity, ...remoteActivity } as Activity)
+    acc.push({ ...localActivity, ...remoteActivity } as Activity)
     return acc
   }, [])
 }
