@@ -70,7 +70,7 @@ module.exports = {
           return plugin
         })
         .filter((plugin) => {
-          // Case sensitive paths are enforced by typescript.
+          // Case sensitive paths are enforced by TypeScript.
           // See https://www.typescriptlang.org/tsconfig#forceConsistentCasingInFileNames.
           if (plugin instanceof CaseSensitivePathsPlugin) return false
 
