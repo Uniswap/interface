@@ -14,15 +14,30 @@ const shouldLintOrTypeCheck = !isProduction
 
 module.exports = {
   babel: {
-    plugins: ['@vanilla-extract/babel-plugin'],
-    env: {
-      test: {
-        plugins: ['istanbul'],
-      },
-      development: {
-        plugins: ['istanbul'],
-      },
-    },
+    plugins: [
+      '@vanilla-extract/babel-plugin',
+      ...(process.env.REACT_APP_ADD_COVERAGE_INSTRUMENTATION
+        ? [
+            [
+              'istanbul',
+              {
+                all: true,
+                include: ['src/**/*.tsx', 'src/**/*.ts'],
+                exclude: [
+                  'src/**/*.css',
+                  'src/**/*.css.ts',
+                  'src/**/*.test.ts',
+                  'src/**/*.test.tsx',
+                  'src/**/*.spec.ts',
+                  'src/**/*.spec.tsx',
+                  'src/**/graphql/**/*',
+                  'src/**/*.d.ts',
+                ],
+              },
+            ],
+          ]
+        : []),
+    ],
   },
   eslint: {
     enable: shouldLintOrTypeCheck,
