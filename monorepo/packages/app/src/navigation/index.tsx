@@ -1,26 +1,14 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { Flex } from 'ui/src/components/layout/Flex'
 import Locked from '../features/auth/Locked'
 import { authSagaName } from '../features/auth/saga'
 import { DappRequestContent } from '../features/dappRequests/DappRequestContent'
 import { HomeScreen } from '../features/home/HomeScreen'
-import { IntroScreen } from '../features/onboarding/IntroScreen'
 import { isOnboardedSelector } from '../features/wallet/selectors'
 import { useAppSelector } from '../state'
 import { useSagaStatus } from '../state/useSagaStatus'
 import { SagaStatus } from '../utils/saga'
-import { OnboardingScreen, Screen } from './screens'
-import {
-  AppStackParamList,
-  DappRequestsStackParamList,
-  OnboardingStackParamList,
-} from './types'
 
-const AppStack = createNativeStackNavigator<AppStackParamList>()
-const OnboardingStack = createNativeStackNavigator<OnboardingStackParamList>()
-const DappRequestStack =
-  createNativeStackNavigator<DappRequestsStackParamList>()
-
-export function WebNavigation(): JSX.Element {
+function WebNavigationInner(): JSX.Element {
   const pendingDappRequests = useAppSelector(
     (state) => state.dappRequests.pending
   )
@@ -31,45 +19,21 @@ export function WebNavigation(): JSX.Element {
   const isOnboarded = useAppSelector(isOnboardedSelector)
 
   if (!isOnboarded) {
-    return (
-      <OnboardingStack.Navigator>
-        <OnboardingStack.Screen
-          component={IntroScreen}
-          name={OnboardingScreen.Landing}
-        />
-        <OnboardingStack.Screen
-          component={IntroScreen}
-          name={OnboardingScreen.Backup}
-        />
-        <OnboardingStack.Screen
-          component={IntroScreen}
-          name={OnboardingScreen.Outro}
-        />
-        <OnboardingStack.Screen
-          component={IntroScreen}
-          name={OnboardingScreen.Security}
-        />
-      </OnboardingStack.Navigator>
-    )
+        // TODO: add an error state that takes the user to fullscreen onboarding
+        throw new Error('you should have onboarded')
   }
 
   if (isLoggedIn) {
-    if (areRequestsPending) {
-      return (
-        <DappRequestStack.Navigator>
-          <DappRequestStack.Screen
-            component={DappRequestContent}
-            name={Screen.DappRequests}
-          />
-        </DappRequestStack.Navigator>
-      )
-    }
-    return (
-      <AppStack.Navigator>
-        <AppStack.Screen component={HomeScreen} name={Screen.Home} />
-      </AppStack.Navigator>
-    )
+    return <Locked />
   }
 
-  return <Locked />
+  return areRequestsPending ? <DappRequestContent /> : <HomeScreen />
+}
+
+export function WebNavigation(): JSX.Element {
+  return (
+    <Flex flex={1} maxHeight={600} overflow="visible" width={350}>
+      <WebNavigationInner />
+    </Flex>
+  )
 }

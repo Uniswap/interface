@@ -15,6 +15,7 @@
     "react-native-web": "^0.18.12",
     "react-native-web-lite": "^1.9.0",
     "react-redux": "^8.0.5",
+    "react-router-dom": "6.10.0",
     "ui": "workspace:^",
     "uuid": "9.0.0",
     "webext-redux": "^2.1.9"

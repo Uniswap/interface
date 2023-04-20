@@ -3,6 +3,7 @@ import {
   DappRequestType,
 } from 'app/src/features/dappRequests/dappRequestTypes'
 import { addRequest } from 'app/src/features/dappRequests/saga'
+import { isOnboardedSelector } from 'app/src/features/wallet/selectors'
 import { createStore } from 'app/src/state'
 import { wrapStore } from 'webext-redux'
 import { PortName } from '../types/index'
@@ -11,6 +12,12 @@ import { PortName } from '../types/index'
 // and this will be reset to false, as expected, whenever
 // the service worker wakes up from idle.
 let isInitialized = false
+
+// onInstalled is triggered when the extension is installed or updated. We want to 
+// open full screen onboarding when the extension is installed so this listener handles that.
+chrome.runtime.onInstalled.addListener(() => {
+  initializeStore()
+})
 
 // TODO: Look into using web-ext-redux instead for this:
 
@@ -23,18 +30,29 @@ chrome.runtime.onConnect.addListener((port) => {
     return
   }
 
-  onConnect()
+  initializeStore()
 })
 
-function onConnect() {
+function initializeStore() {
   if (isInitialized) {
     notifyStoreInitialized()
     return
   }
 
   const store = createStore({
-    hydrationCallback: notifyStoreInitialized,
+    hydrationCallback: openOnboardingMaybe,
   })
+
+  function openOnboardingMaybe(): void {
+    const state = store.getState()
+    const isOnboarded = isOnboardedSelector(state)
+
+    if (!isOnboarded) {
+      chrome.tabs.create({ url: 'index.html#/onboarding' })
+    }
+
+    notifyStoreInitialized()
+  }
 
   // wraps store in webext-redux
   wrapStore(store, { portName: PortName.Store })

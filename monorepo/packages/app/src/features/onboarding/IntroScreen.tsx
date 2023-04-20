@@ -1,72 +1,86 @@
-import { useState } from 'react'
-import { Card, Form, H2, Input, Label, Stack, XStack, YStack } from 'tamagui'
-import { Button } from 'ui/src/components/button/Button'
-import { useAppDispatch } from '../../state'
-import { usePasswordInput } from '../auth/Locked'
-import { importAccountActions } from '../wallet/import/importAccountSaga'
-import { ImportAccountType } from '../wallet/import/types'
+import { Link } from 'react-router-dom'
+import { Circle, Text, XStack, YStack } from 'ui/src'
+
+function InfoRow({
+  primaryText,
+  secondaryText,
+}: {
+  primaryText: string
+  secondaryText: string
+}): JSX.Element {
+  return (
+    <XStack alignItems="center" gap="$spacing12">
+      <Circle backgroundColor="black" size={40} />
+      <YStack>
+        <Text variant="subheadLarge">{primaryText}</Text>
+        <Text color="$textTertiary" variant="bodySmall">
+          {secondaryText}
+        </Text>
+      </YStack>
+    </XStack>
+  )
+}
 
 export function IntroScreen(): JSX.Element {
-  const dispatch = useAppDispatch()
-
-  const [mnemonic, setMnemonic] = useState('')
-  const passwordInputProps = usePasswordInput()
-
   return (
-    <Card alignItems="center" backgroundColor="$background0">
-      <Stack
-        alignItems="center"
-        backgroundColor="$background3"
-        borderRadius="$rounded16"
-        justifyContent="center"
-        marginVertical="$spacing8"
-        paddingHorizontal="$spacing36"
-        paddingVertical="$spacing24"
-        space="$spacing24">
-        <H2>Import wallet</H2>
-        <Form
-          onSubmit={(): void => {
-            dispatch(
-              importAccountActions.trigger({
-                type: ImportAccountType.Mnemonic,
-                validatedMnemonic: mnemonic,
-                validatedPassword: passwordInputProps.value,
-              })
-            )
-          }}>
-          <YStack alignItems="center" space="$spacing24">
-            <XStack alignItems="center" space="$spacing16">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                secureTextEntry
-                id="password"
-                maxWidth={180}
-                {...passwordInputProps}
-              />
-            </XStack>
-
-            <XStack alignItems="center" space="$spacing16">
-              <Label htmlFor="mnemonic">Mnemonic</Label>
-              <Input
-                secureTextEntry
-                id="mnemonic"
-                maxWidth={180}
-                value={mnemonic}
-                onChangeText={setMnemonic}
-              />
-            </XStack>
-            <Form.Trigger asChild>
-              <Button
-                fontSize={18}
-                fontWeight="400"
-                paddingHorizontal="$spacing24"
-                paddingVertical="$spacing16">
-                Import
-              </Button>
-            </Form.Trigger>
-          </YStack>
-        </Form>
-      </Stack>
-    </Card>
+    <XStack gap={100}>
+      <YStack gap="$spacing12" maxWidth={320}>
+        <Text
+          marginBottom="$spacing48"
+          textAlign="center"
+          variant="headlineMedium">
+          Get started with Uniswap Wallet
+        </Text>
+        {/* TODO: add a styled link that looks like a button. */}
+        <Link
+          style={{
+            display: 'flex',
+            textDecoration: 'none',
+          }}
+          to="import">
+          <Text
+            backgroundColor="$background3"
+            borderRadius="$rounded16"
+            color="$textPrimary"
+            flexGrow={1}
+            padding="$spacing12"
+            textAlign="center"
+            variant="buttonLabelMedium">
+            I already have a wallet
+          </Text>
+        </Link>
+        <Link
+          style={{
+            display: 'flex',
+            textDecoration: 'none',
+          }}
+          to="create">
+          <Text
+            backgroundColor="$magentaVibrant"
+            borderRadius="$rounded16"
+            color="$white"
+            flexGrow={1}
+            padding="$spacing12"
+            textAlign="center"
+            variant="buttonLabelMedium">
+            Create a new wallet
+          </Text>
+        </Link>
+      </YStack>
+      <YStack gap="$spacing24" justifyContent="center">
+        <InfoRow
+          primaryText="Supercharge your swaps"
+          secondaryText="1-click checkout"
+        />
+        <InfoRow
+          primaryText="Multichain experience"
+          secondaryText="Say goodbye to switching chains"
+        />
+        <InfoRow
+          primaryText="Human readable transactions"
+          secondaryText="No more hex codes"
+        />
+      </YStack>
+    </XStack>
   )
 }

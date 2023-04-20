@@ -1,5 +1,4 @@
 import { TamaguiProviderProps } from 'ui/src'
-import { NavigationProvider } from './navigation'
 import { Provider as TamaguiProvider } from './tamagui-provider'
 import { Provider as ReduxProvider } from 'react-redux'
 import { Store } from '@reduxjs/toolkit'
@@ -13,9 +12,7 @@ export function Provider({
   return (
     <ReduxProvider store={store}>
       <TamaguiProvider {...rest}>
-        <GraphqlProvider>
-          <NavigationProvider>{children}</NavigationProvider>
-        </GraphqlProvider>
+        <GraphqlProvider>{children}</GraphqlProvider>
       </TamaguiProvider>
     </ReduxProvider>
   )

@@ -1,4 +1,5 @@
 body {
-  /* TODO: how to apply styles to body */
+  /* TODO: how to apply styles to body. The 100vh is needed so that the window takes up the whole page. 100% didn't work when there is no content. */
+  height: 100vh;
   margin: 0
 }
