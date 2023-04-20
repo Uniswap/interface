@@ -40,6 +40,10 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
     // If the error is based on a user rejecting, it should not be considered an exception.
     if (didUserReject(error)) return null
 
+    /*
+     * This ignores 499 errors, which are caused by Cloudflare when a request is cancelled.
+     * CF claims that some number of these is expected, and that they should be ignored.
+     */
     if (error.message.match(/Loading chunk \d+ failed\. \(error: .+\.chunk\.js\)/)) {
       const asset = error.message.match(/https?:\/\/.+?\.chunk\.js/)?.[0]
       const resource = [...(performance?.getEntriesByType('resource') ?? [])].find(({ name }) => name === asset)
