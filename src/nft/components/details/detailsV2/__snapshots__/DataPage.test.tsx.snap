@@ -25,7 +25,7 @@ exports[`placeholder containers load 1`] = `
   justify-content: flex-start;
 }
 
-.c10 {
+.c9 {
   color: #0D111C;
 }
 
@@ -43,10 +43,27 @@ exports[`placeholder containers load 1`] = `
   justify-content: flex-start;
 }
 
-.c9 {
+.c7 {
+  height: 288px;
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 16px 20px;
+  width: 100%;
+  -webkit-align-self: flex-start;
+  -ms-flex-item-align: start;
+  align-self: flex-start;
+}
+
+.c8 {
   gap: 32px;
   margin-bottom: 12px;
   width: 100;
+}
+
+.c10 {
+  color: #0D111C;
+  line-height: 24px;
+  cursor: default;
 }
 
 .c11 {
@@ -69,13 +86,6 @@ exports[`placeholder containers load 1`] = `
   opacity: 0.6;
 }
 
-.c8 {
-  height: 288px;
-  padding: 16px 20px 20px;
-  background: #FFFFFF;
-  border-radius: 16px;
-}
-
 .c2 {
   height: 96px;
   -webkit-flex-shrink: 0;
@@ -83,24 +93,12 @@ exports[`placeholder containers load 1`] = `
   flex-shrink: 0;
   background: #FFFFFF;
   border-radius: 16px;
-}
-
-.c13 {
+  padding: 16px 20px;
   width: 100%;
-  height: 604px;
   -webkit-align-self: flex-start;
   -ms-flex-item-align: start;
   align-self: flex-start;
-  padding: 20px 0px 16px;
-  background: #FFFFFF;
-  border-radius: 16px;
-}
-
-.c7 {
-  height: 528px;
-  padding: 16px 20px;
-  background: #FFFFFF;
-  border-radius: 16px;
+  padding-left: 0px;
 }
 
 .c1 {
@@ -158,22 +156,35 @@ exports[`placeholder containers load 1`] = `
       >
         <div
           class="c7"
-        >
-          Traits
-        </div>
-        <div
-          class="c8"
+          style="height: 528px;"
         >
           <div
-            class="c3 c4 c9"
+            class="c3 c4 c8"
           >
             <div
-              class="c10 c11 css-6ms77s"
+              class="c9 c10 css-6ms77s"
+            >
+              Traits
+            </div>
+          </div>
+          <div>
+            Traits Content
+          </div>
+        </div>
+        <div
+          class="c7"
+          style="height: 288px;"
+        >
+          <div
+            class="c3 c4 c8"
+          >
+            <div
+              class="c9 c11 css-6ms77s"
             >
               Description
             </div>
             <div
-              class="c10 c12 css-6ms77s"
+              class="c9 c12 css-6ms77s"
             >
               Details
             </div>
@@ -184,23 +195,24 @@ exports[`placeholder containers load 1`] = `
         </div>
       </div>
       <div
-        class="c0 c13"
+        class="c7"
+        style="height: 604px;"
       >
         <div
-          class="c3 c4 c9"
+          class="c3 c4 c8"
         >
           <div
-            class="c10 c11 css-6ms77s"
+            class="c9 c11 css-6ms77s"
           >
             Activity
           </div>
           <div
-            class="c10 c12 css-6ms77s"
+            class="c9 c12 css-6ms77s"
           >
             Offers
           </div>
           <div
-            class="c10 c12 css-6ms77s"
+            class="c9 c12 css-6ms77s"
           >
             Listings
           </div>
