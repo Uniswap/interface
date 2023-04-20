@@ -2,8 +2,6 @@ import { ErrorEvent } from '@sentry/types'
 
 import { filterKnownErrors } from './errors'
 
-jest.mock('./errors')
-
 describe('filterKnownErrors', () => {
   const ERROR = {} as ErrorEvent
   it('propagates an error', () => {
