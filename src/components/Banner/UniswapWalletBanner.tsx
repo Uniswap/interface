@@ -1,5 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { InterfaceElementName } from '@uniswap/analytics-events'
+import walletBannerPhoneImageSrc from 'assets/images/wallet_banner_phone_image.png'
+import { ReactComponent as AppleLogo } from 'assets/svg/apple_logo.svg'
 import { openDownloadApp, openWalletMicrosite } from 'components/AccountDrawer/DownloadButton'
 import { BaseButton } from 'components/Button'
 import { AutoColumn } from 'components/Column'
@@ -15,9 +17,6 @@ import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import { isIOS } from 'utils/userAgent'
 
-import { ReactComponent as AppleLogo } from '../../assets/svg/apple_logo.svg'
-import walletBannerPhoneImageSrc from '../../assets/svg/wallet_banner_phone_image.svg'
-
 const PopupContainer = styled.div<{ show: boolean }>`
   display: flex;
   flex-direction: column;
@@ -27,7 +26,7 @@ const PopupContainer = styled.div<{ show: boolean }>`
 
   background: url(${walletBannerPhoneImageSrc});
   background-repeat: no-repeat;
-  background-position: bottom -1px right 15px;
+  background-position: top 18px right 15px;
   background-size: 166px;
 
   :hover {
