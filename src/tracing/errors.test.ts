@@ -36,13 +36,13 @@ describe('filterKnownErrors', () => {
     })
 
     it('filters 499 error coded chunk error', () => {
-      window.performance.getEntriesByType = jest.fn(() => {
+      ;(window.performance.getEntriesByType as jest.Mock) = jest.fn(() => {
         return [
           {
             name: 'https://app.uniswap.org/static/js/20.d55382e0.chunk.js',
             responseStatus: 499,
           },
-        ] as any
+        ]
       })
       const originalException = new Error(
         'Loading chunk 20 failed. (error: https://app.uniswap.org/static/js/20.d55382e0.chunk.js)'
@@ -51,7 +51,7 @@ describe('filterKnownErrors', () => {
     })
 
     it('keeps error when status is different than 499', () => {
-      window.performance.getEntriesByType = jest.fn(() => {
+      ;(window.performance.getEntriesByType as jest.Mock) = jest.fn(() => {
         return [
           {
             name: 'https://app.uniswap.org/static/js/20.d55382e0.chunk.js',
@@ -66,7 +66,7 @@ describe('filterKnownErrors', () => {
     })
 
     it('filters out error when resource is missing', () => {
-      window.performance.getEntriesByType = jest.fn(() => {
+      ;(window.performance.getEntriesByType as jest.Mock) = jest.fn(() => {
         return []
       })
       const originalException = new Error(
@@ -83,12 +83,12 @@ describe('filterKnownErrors', () => {
     })
 
     it('filters out error when responseStatus is undefined', () => {
-      window.performance.getEntriesByType = jest.fn(() => {
+      ;(window.performance.getEntriesByType as jest.Mock) = jest.fn(() => {
         return [
           {
             name: 'https://app.uniswap.org/static/js/20.d55382e0.chunk.js',
           },
-        ] as any
+        ]
       })
       const originalException = new Error(
         'Loading chunk 20 failed. (error: https://app.uniswap.org/static/js/20.d55382e0.chunk.js)'
