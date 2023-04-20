@@ -7,6 +7,8 @@ export class HardhatProvider extends Eip1193Bridge {
   readonly chainId: string
   readonly wallet: Wallet
 
+  isMetaMask = true
+
   constructor(network: Network) {
     const utils = new HardhatUtils(network)
     const wallet = new Wallet(utils.account.privateKey, utils.provider)
@@ -28,7 +30,7 @@ export class HardhatProvider extends Eip1193Bridge {
     const isCallbackForm = typeof args[0] === 'object' && typeof args[1] === 'function'
     let callback = <T>(error: Error | null, result?: { result: T }) => {
       if (error) throw error
-      return result
+      return result?.result
     }
     let method
     let params
