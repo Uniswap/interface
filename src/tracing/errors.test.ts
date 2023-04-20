@@ -2,6 +2,8 @@ import { ErrorEvent } from '@sentry/types'
 
 import { filterKnownErrors } from './errors'
 
+jest.mock('./errors')
+
 describe('filterKnownErrors', () => {
   const ERROR = {} as ErrorEvent
   it('propagates an error', () => {
@@ -36,14 +38,12 @@ describe('filterKnownErrors', () => {
     })
 
     it('filters 499 error coded chunk error', () => {
-      ;(window.performance.getEntriesByType as jest.Mock) = jest.fn(() => {
-        return [
-          {
-            name: 'https://app.uniswap.org/static/js/20.d55382e0.chunk.js',
-            responseStatus: 499,
-          },
-        ]
-      })
+      jest.spyOn(window.performance, 'getEntriesByType').mockReturnValue([
+        {
+          name: 'https://app.uniswap.org/static/js/20.d55382e0.chunk.js',
+          responseStatus: 499,
+        } as PerformanceEntry,
+      ])
       const originalException = new Error(
         'Loading chunk 20 failed. (error: https://app.uniswap.org/static/js/20.d55382e0.chunk.js)'
       )
@@ -51,14 +51,12 @@ describe('filterKnownErrors', () => {
     })
 
     it('keeps error when status is different than 499', () => {
-      ;(window.performance.getEntriesByType as jest.Mock) = jest.fn(() => {
-        return [
-          {
-            name: 'https://app.uniswap.org/static/js/20.d55382e0.chunk.js',
-            responseStatus: 200,
-          },
-        ] as any
-      })
+      jest.spyOn(window.performance, 'getEntriesByType').mockReturnValue([
+        {
+          name: 'https://app.uniswap.org/static/js/20.d55382e0.chunk.js',
+          responseStatus: 200,
+        } as PerformanceEntry,
+      ])
       const originalException = new Error(
         'Loading chunk 20 failed. (error: https://app.uniswap.org/static/js/20.d55382e0.chunk.js)'
       )
