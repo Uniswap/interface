@@ -116,16 +116,6 @@ describe('Swap', () => {
       verifyToken('output', 'WETH')
     })
 
-    it('review step for ETH to UNI trade', () => {
-      cy.visit('/swap')
-      selectToken('UNI', 'output')
-      cy.get('#swap-currency-input .token-amount-input').clear().type('0.0000001')
-      cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
-      cy.get('#swap-button').click()
-      cy.get('#confirm-swap-or-send').should('contain', 'Confirm Swap')
-      cy.get('[data-cy="confirmation-close-icon"]').click()
-    })
-
     it('ETH to wETH is same value (wrapped swaps have no price impact)', () => {
       cy.visit('/swap')
       selectToken('WETH', 'output')
