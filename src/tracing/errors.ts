@@ -47,9 +47,9 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
      */
     if (error.message.match(/Loading chunk \d+ failed\. \(error: .+\.chunk\.js\)/)) {
       const asset = error.message.match(/https?:\/\/.+?\.chunk\.js/)?.[0]
-      const entries = [...(performance?.getEntriesByType('resource') as any[])]
-      const resource = entries?.find(({ name }) => name === asset)
-      // `responseStatus` is not on the `ResponseStatus` type, because it's only supported on some browsers at the moment.
+      // `responseStatus` is not on the `PerformanceResourceTiming` type, because it's only supported on some browsers at the moment.
+      const entries = [...(performance?.getEntriesByType('resource') ?? [])] as any[]
+      const resource = entries.find(({ name }) => name === asset)
       const status = resource?.responseStatus
       // If the status if 499, then we ignore. If there's no status, for now we'll ignore all chunk loading errors also.
       if (!status || status === 499) {
