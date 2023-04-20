@@ -37,7 +37,7 @@ describe('Web3Provider', () => {
     mocked(useOrderedConnections).mockReturnValue([connection])
   })
 
-  it('renders', async () => {
+  it('renders and eagerly connects', async () => {
     const result = render(UI)
     await act(async () => {
       await result
