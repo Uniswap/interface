@@ -29,7 +29,7 @@ import { buildActivityAsset } from 'nft/utils/buildActivityAsset'
 import { formatEth, formatEthPrice } from 'nft/utils/currency'
 import { getTimeDifference, isValidDate } from 'nft/utils/date'
 import { putCommas } from 'nft/utils/putCommas'
-import { fallbackProvider, getRarityProviderLogo } from 'nft/utils/rarity'
+import { getRarityProviderLogo } from 'nft/utils/rarity'
 import { MouseEvent, useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ExternalLink } from 'theme'
@@ -354,9 +354,7 @@ const Ranking = ({ rarity, collectionName, rarityVerified }: RankingProps) => {
               <img src={rarityProviderLogo} alt="cardLogo" width={16} />
             </Box>
             <Box width="full" fontSize="14">
-              {rarityVerified
-                ? `Verified by ${collectionName}`
-                : `Ranking by ${source === 'Genie' ? fallbackProvider : source}`}
+              {rarityVerified ? `Verified by ${collectionName}` : `Ranking by ${source}`}
             </Box>
           </Row>
         }
