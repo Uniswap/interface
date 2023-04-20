@@ -45,5 +45,4 @@ describe('filterKnownErrors', () => {
       expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
     })
   })
-
 })
