@@ -3,20 +3,18 @@ import { Wallet } from '@ethersproject/wallet'
 import { HardhatUtils, Network } from 'cypress-hardhat/lib/browser'
 
 export class HardhatProvider extends Eip1193Bridge {
-  utils: HardhatUtils
-  chainId: string
-  signer: Wallet
-  provider: typeof this.utils.provider
+  readonly utils: HardhatUtils
+  readonly chainId: string
+  readonly wallet: Wallet
 
   constructor(network: Network) {
     const utils = new HardhatUtils(network)
-    const signer = new Wallet(utils.account.privateKey, utils.provider)
-    super(signer, utils.provider)
+    const wallet = new Wallet(utils.account.privateKey, utils.provider)
+    super(wallet, utils.provider)
 
     this.utils = utils
     this.chainId = `0x${network.chainId.toString(16)}`
-    this.signer = signer
-    this.provider = utils.provider
+    this.wallet = wallet
   }
 
   async sendAsync(...args: any[]) {
@@ -46,7 +44,7 @@ export class HardhatProvider extends Eip1193Bridge {
     switch (method) {
       case 'eth_requestAccounts':
       case 'eth_accounts':
-        return callback(null, { result: [this.signer.address] })
+        return callback(null, { result: [this.wallet.address] })
       case 'eth_chainId':
         return callback(null, { result: this.chainId })
     }
