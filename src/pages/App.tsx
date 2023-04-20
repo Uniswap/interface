@@ -205,7 +205,7 @@ export default function App() {
   return (
     <ErrorBoundary>
       <Helmet>
-        <meta name="apple-itunes-app" content={`app-id=6443944476, app-argument=${pathname}`}>
+        <meta name="apple-itunes-app" content={`app-id=6443944476, app-argument=${pathname}`} />
       </Helmet>
       <DarkModeQueryParamReader />
       <ApeModeQueryParamReader />
