@@ -60,9 +60,8 @@ describe('Swap', () => {
     cy.contains('USDC').click()
     cy.get('#swap-currency-input .token-amount-input').clear().type('0.0000001')
     cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
-    // cy.get('#swap-button').click()
-    // cy.get('#confirm-swap-or-send').should('contain', 'Confirm Swap')
-    // cy.get('[data-cy="confirmation-close-icon"]').click()
+    cy.get('#swap-button').click()
+    cy.get('#confirm-swap-or-send').click()
   })
 
   it('add a recipient does not exist unless in expert mode', () => {
