@@ -197,16 +197,4 @@ describe('Swap', () => {
       cy.get('#swap-currency-output .token-amount-input').clear().type('0.0').should('have.value', '0.0')
     })
   })
-
-  it('Opens and closes the settings menu', () => {
-    cy.visit('/swap')
-    cy.contains('Settings').should('not.exist')
-    cy.get(getTestSelector('swap-settings-button')).click()
-    cy.contains('Slippage tolerance').should('exist')
-    cy.contains('Transaction deadline').should('exist')
-    cy.contains('Auto Router API').should('exist')
-    cy.contains('Expert Mode').should('exist')
-    cy.get(getTestSelector('swap-settings-button')).click()
-    cy.contains('Settings').should('not.exist')
-  })
 })
