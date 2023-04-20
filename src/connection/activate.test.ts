@@ -1,6 +1,6 @@
 import { Web3ReactHooks } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import { act, renderHook } from 'test-utils'
+import { act, renderHook } from '../test-utils/render'
 
 import { useActivateConnection } from './activate'
 import { Connection, ConnectionType } from './types'
