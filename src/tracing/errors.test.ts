@@ -30,10 +30,20 @@ describe('filterKnownErrors', () => {
     expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
   })
 
-  it('filters CSP unsafe-eval errors', () => {
-    const originalException = new Error(
-      "Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inlin..."
-    )
-    expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
+  describe('Content Security Policy', () => {
+    it('filters unsafe-eval evaluate errors', () => {
+      const originalException = new Error(
+        "Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inlin..."
+      )
+      expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
+    })
+
+    it('filters CSP unsafe-eval compile/instatiate errors', () => {
+      const originalException = new Error(
+        "Refused to compile or instantiate WebAssembly module because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self' https://www.google-a..."
+      )
+      expect(filterKnownErrors(ERROR, { originalException })).toBe(null)
+    })
   })
+
 })
