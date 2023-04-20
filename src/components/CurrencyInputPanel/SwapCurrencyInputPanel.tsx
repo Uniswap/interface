@@ -311,6 +311,7 @@ export default function SwapCurrencyInputPanel({
               {account ? (
                 <RowFixed style={{ height: '17px' }}>
                   <ThemedText.DeprecatedBody
+                    data-testid="SwapCurrencyInputPanel"
                     color={theme.textSecondary}
                     fontWeight={400}
                     fontSize={14}

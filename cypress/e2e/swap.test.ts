@@ -48,6 +48,7 @@ describe('Swap', () => {
 8. click swap button
 9. `assert` correct confirmation modal content (input amount, token symbols)
 10. click “confirm swap”
+
 11. `assert` waiting for confirmation modal
 12. mine transaction w/ hardhat
 13. `assert` smart contract balance updated
@@ -58,7 +59,7 @@ describe('Swap', () => {
     cy.get('#swap-currency-output .open-currency-select-button').click()
     cy.get('[data-testid="token-search-input"]').clear().type('USDC')
     cy.contains('USDC').click()
-    cy.get('#swap-currency-input .token-amount-input').clear().type('0.0000001')
+    cy.get('#swap-currency-input .token-amount-input').clear().type('1')
     cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
     cy.get('#swap-button').click()
     cy.get('#confirm-swap-or-send').click()
