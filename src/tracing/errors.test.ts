@@ -73,7 +73,7 @@ describe('filterKnownErrors', () => {
       expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
     })
 
-    it('keeps 200 error coded chunk error', () => {
+    it('keeps error when status is different than 499', () => {
       const mockGetEntriesByType = jest.fn(() => {
         return [
           {
