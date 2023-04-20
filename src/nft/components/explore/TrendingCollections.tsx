@@ -89,7 +89,7 @@ const TrendingCollections = () => {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.OneDay)
   const [isEthToggled, setEthToggled] = useState(true)
 
-  const { data: collections, loading: collectionsAreLoading } = useTrendingCollections(
+  const { data: trendingCollections, loading: trendingCollectionsAreLoading } = useTrendingCollections(
     100,
     convertTimePeriodToHistoryDuration(timePeriod)
   )
@@ -101,9 +101,9 @@ const TrendingCollections = () => {
     refetchInterval: ms`1m`,
   })
 
-  const trendingCollections = useMemo(() => {
-    if (!collectionsAreLoading && collections) {
-      return collections.map((d) => ({
+  const trendingCollectionColumns = useMemo(() => {
+    if (!trendingCollectionsAreLoading && trendingCollections) {
+      return trendingCollections.map((d) => ({
         ...d,
         collection: {
           name: d.name,
@@ -129,7 +129,7 @@ const TrendingCollections = () => {
         usdPrice,
       }))
     } else return [] as CollectionTableColumn[]
-  }, [collections, collectionsAreLoading, isEthToggled, usdPrice])
+  }, [trendingCollections, trendingCollectionsAreLoading, isEthToggled, usdPrice])
 
   return (
     <ExploreContainer>
@@ -163,7 +163,7 @@ const TrendingCollections = () => {
           </Selector>
         </Filter>
       </FiltersRow>
-      <CollectionTable data={trendingCollections} timePeriod={timePeriod} />
+      <CollectionTable data={trendingCollectionColumns} timePeriod={timePeriod} />
     </ExploreContainer>
   )
 }
