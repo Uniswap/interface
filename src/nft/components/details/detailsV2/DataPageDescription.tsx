@@ -1,9 +1,8 @@
-import Row from 'components/Row'
-import { useState } from 'react'
+import { Trans } from '@lingui/macro'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
 
 import { containerStyles } from './shared'
+import { Tab, TabbedComponent } from './TabbedComponent'
 
 const DescriptionContainer = styled.div`
   height: 288px;
@@ -12,48 +11,31 @@ const DescriptionContainer = styled.div`
   ${containerStyles}
 `
 
-const TabsRow = styled(Row)`
-  gap: 24px;
-  margin-bottom: 24px;
-  width: 100;
-`
-
-const Tab = styled(ThemedText.SubHeader)<{ isActive: boolean }>`
-  color: ${({ theme, isActive }) => (isActive ? theme.textPrimary : theme.textTertiary)};
-  line-height: 24px;
-  cursor: pointer;
-
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-`
-
-enum ContainerTabs {
-  Description,
-  Details,
-}
-
-export const DataPageDescription = () => {
-  const [activeTab, setActiveTab] = useState(ContainerTabs.Description)
-  return (
-    <DescriptionContainer>
-      <TabsRow>
-        <Tab isActive={activeTab === ContainerTabs.Description} onClick={() => setActiveTab(ContainerTabs.Description)}>
-          Description
-        </Tab>
-        <Tab isActive={activeTab === ContainerTabs.Details} onClick={() => setActiveTab(ContainerTabs.Details)}>
-          Details
-        </Tab>
-      </TabsRow>
-      {activeTab === ContainerTabs.Description ? <DescriptionContent /> : <DetailsContent />}
-    </DescriptionContainer>
-  )
-}
-
 const DescriptionContent = () => {
   return <div>Description Content</div>
 }
 
 const DetailsContent = () => {
   return <div>Details Content</div>
+}
+
+const DescriptionTabs: Array<Tab> = [
+  {
+    title: <Trans>Description</Trans>,
+    key: 'description',
+    content: <DescriptionContent />,
+  },
+  {
+    title: <Trans>Details</Trans>,
+    key: 'details',
+    content: <DetailsContent />,
+  },
+]
+
+export const DataPageDescription = () => {
+  return (
+    <DescriptionContainer>
+      <TabbedComponent tabs={DescriptionTabs} defaultTab={DescriptionTabs[0]} />
+    </DescriptionContainer>
+  )
 }
