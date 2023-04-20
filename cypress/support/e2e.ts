@@ -113,6 +113,10 @@ beforeEach(() => {
     res.headers['origin'] = 'https://app.uniswap.org'
     res.continue()
   })
+
+  cy.intercept('https://api.uniswap.org/v1/amplitude-proxy', (res) => {
+    res.reply(JSON.stringify({}))
+  })
 })
 
 Cypress.on('uncaught:exception', () => {
