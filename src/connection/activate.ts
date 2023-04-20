@@ -76,7 +76,7 @@ export function useActivateConnection() {
         onSuccess()
       } catch (error) {
         // TODO(WEB-3162): re-add special treatment for already-pending injected errors
-        console.debug(`web3-react connection error: ${error}`)
+        console.debug(`web3-react connection error: ${JSON.stringify(error)}`)
 
         // Gracefully handles errors from the user rejecting a connection attempt
         if (didUserReject(connection, error)) {

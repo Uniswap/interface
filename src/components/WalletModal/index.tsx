@@ -111,20 +111,14 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
     getConnection,
   ])
 
-  const activate = useCallback(
-    (connection: Connection) => {
-      tryActivation(connection, () => {
-        if (drawerOpenRef.current) {
-          toggleWalletDrawer()
-        }
-      })
-    },
-    [toggleWalletDrawer, tryActivation]
-  )
-
-  // Used to track the state of the drawer in async function
+  // Used to provide proper state of drawer to callbacks triggered asynchronously
   const drawerOpenRef = useRef(drawerOpen)
   drawerOpenRef.current = drawerOpen
+
+  const activate = useCallback(
+    (connection: Connection) => tryActivation(connection, () => drawerOpenRef.current && toggleWalletDrawer()),
+    [toggleWalletDrawer, tryActivation]
+  )
 
   const mgtmEnabled = useMgtmEnabled()
 

@@ -15,8 +15,7 @@ export interface Connection {
   connector: Connector
   hooks: Web3ReactHooks
   type: ConnectionType
-  // TODO(WEB-3130): add darkmode check for icons
-  getIcon?(): string
+  getIcon?(isDarkMode: boolean): string
   shouldDisplay(): boolean
   overrideActivate?: () => boolean
   isNew?: boolean

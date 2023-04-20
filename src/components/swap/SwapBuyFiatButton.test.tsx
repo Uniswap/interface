@@ -1,7 +1,7 @@
 import userEvent from '@testing-library/user-event'
 import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer'
-import { fireEvent, render, screen } from 'test-utils'
+import { fireEvent, render, screen } from 'test-utils/render'
 
 import { useFiatOnrampAvailability, useOpenModal } from '../../state/application/hooks'
 import SwapBuyFiatButton, { MOONPAY_REGION_AVAILABILITY_ARTICLE } from './SwapBuyFiatButton'
