@@ -31,8 +31,6 @@ describe('filterKnownErrors', () => {
   })
 
   describe('chunk errors', () => {
-    let getEntriesByTypeSpy: jest.SpyInstance
-
     afterEach(() => {
       jest.restoreAllMocks()
     })
@@ -66,7 +64,7 @@ describe('filterKnownErrors', () => {
             responseStatus: 499,
             serverTiming: [],
           },
-        ]
+        ] as any
       })
       window.performance.getEntriesByType = mockGetEntriesByType
       const originalException = new SyntaxError(
@@ -104,7 +102,7 @@ describe('filterKnownErrors', () => {
             responseStatus: 200,
             serverTiming: [],
           },
-        ]
+        ] as any
       })
       window.performance.getEntriesByType = mockGetEntriesByType
       const originalException = new SyntaxError(
@@ -163,7 +161,7 @@ describe('filterKnownErrors', () => {
             decodedBodySize: 227688,
             serverTiming: [],
           },
-        ]
+        ] as any
       })
       window.performance.getEntriesByType = mockGetEntriesByType
       const originalException = new SyntaxError(
