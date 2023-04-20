@@ -1,6 +1,6 @@
-import { getTestSelector } from '../utils'
+import { SupportedChainId, WETH9 } from '@uniswap/sdk-core'
 
-const WETH_GOERLI = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6'
+import { getTestSelector } from '../utils'
 
 describe('Swap', () => {
   const verifyAmount = (field: 'input' | 'output', amountText: string | null) => {
@@ -87,7 +87,7 @@ describe('Swap', () => {
   })
 
   it('should have the correct default input from URL params ', () => {
-    cy.visit(`/swap?inputCurrency=${WETH_GOERLI}`)
+    cy.visit(`/swap?inputCurrency=${WETH9[SupportedChainId.GOERLI].address}`)
 
     verifyToken('input', 'WETH')
     verifyToken('output', null)
@@ -100,7 +100,7 @@ describe('Swap', () => {
   })
 
   it('should have the correct default output from URL params ', () => {
-    cy.visit(`/swap?outputCurrency=${WETH_GOERLI}`)
+    cy.visit(`/swap?outputCurrency=${WETH9[SupportedChainId.GOERLI].address}`)
 
     verifyToken('input', null)
     verifyToken('output', 'WETH')

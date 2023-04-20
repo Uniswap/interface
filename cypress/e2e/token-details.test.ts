@@ -1,6 +1,6 @@
+import { UNI_ADDRESS } from '../../src/constants/addresses'
+import { SupportedChainId } from '../../src/constants/chains'
 import { getClassContainsSelector, getTestSelector } from '../utils'
-
-const UNI_GOERLI = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
 
 describe('Token details', () => {
   before(() => {
@@ -9,7 +9,7 @@ describe('Token details', () => {
 
   it('Uniswap token should have all information populated', () => {
     // Uniswap token
-    cy.visit('/tokens/ethereum/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
+    cy.visit(`/tokens/ethereum/${UNI_ADDRESS[SupportedChainId.GOERLI]}`)
 
     // Price chart should be filled in
     cy.get('[data-cy="chart-header"]').should('include.text', '$')
@@ -32,16 +32,16 @@ describe('Token details', () => {
     cy.get('[data-cy="resources-container"]').within(() => {
       cy.contains('Etherscan')
         .should('have.attr', 'href')
-        .and('include', 'etherscan.io/address/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
+        .and('include', `etherscan.io/address/${UNI_ADDRESS[SupportedChainId.GOERLI]}`)
       cy.contains('More analytics')
         .should('have.attr', 'href')
-        .and('include', 'info.uniswap.org/#/tokens/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
+        .and('include', `info.uniswap.org/#/tokens/${UNI_ADDRESS[SupportedChainId.GOERLI]}`)
       cy.contains('Website').should('have.attr', 'href').and('include', 'uniswap.org')
       cy.contains('Twitter').should('have.attr', 'href').and('include', 'twitter.com/Uniswap')
     })
 
     // Contract address should be displayed
-    cy.contains('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984').should('exist')
+    cy.contains(UNI_ADDRESS[SupportedChainId.GOERLI]).should('exist')
 
     // Swap widget should have this token pre-selected as the “destination” token
     cy.get(getTestSelector('token-select')).should('include.text', 'UNI')
@@ -100,7 +100,7 @@ describe('Token details', () => {
     beforeEach(() => {
       // On mobile widths, we just link back to /swap instead of rendering the swap component.
       cy.viewport(1200, 800)
-      cy.visit(`/tokens/goerli/${UNI_GOERLI}`).then(() => {
+      cy.visit(`/tokens/goerli/${UNI_ADDRESS[SupportedChainId.GOERLI]}`).then(() => {
         cy.wait('@eth_blockNumber')
       })
     })
