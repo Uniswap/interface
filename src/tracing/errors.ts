@@ -1,7 +1,9 @@
 import { ClientOptions, ErrorEvent, EventHint } from '@sentry/types'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
-// TODO(vm): Add a comment
+/* `responseStatus` is only currently supported on certain browsers.
+ * see: https://caniuse.com/mdn-api_performanceresourcetiming_responsestatus
+ */
 declare global {
   interface PerformanceEntry {
     responseStatus?: number
@@ -58,8 +60,12 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
       const resource = entries?.find(({ name }) => name === asset)
       // `responseStatus` is not on the `ResponseStatus` type, because it's only supported on some browsers at the moment.
       const status = resource?.responseStatus
-      // If the status if 499, then we ignore. If there's no status, for now we'll ignore all chunk loading errors also.
-      // TODO(vm): Add a comment
+
+      /*
+       * If the status if 499, then we ignore.
+       * If there's no status (meaning the browser doesn't support `responseStatus`) then we also ignore.
+       * These errors are likely also 499 errors, and we can catch any spikes in non-499 chunk errors via other browsers.
+       */
       if (!status || status === 499) {
         return null
       }

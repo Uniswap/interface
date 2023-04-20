@@ -64,9 +64,7 @@ describe('filterKnownErrors', () => {
     })
 
     it('filters out error when resource is missing', () => {
-      ;(window.performance.getEntriesByType as jest.Mock) = jest.fn(() => {
-        return []
-      })
+      jest.spyOn(window.performance, 'getEntriesByType').mockReturnValue([])
       const originalException = new Error(
         'Loading chunk 20 failed. (error: https://app.uniswap.org/static/js/20.d55382e0.chunk.js)'
       )
@@ -81,13 +79,11 @@ describe('filterKnownErrors', () => {
     })
 
     it('filters out error when responseStatus is undefined', () => {
-      ;(window.performance.getEntriesByType as jest.Mock) = jest.fn(() => {
-        return [
-          {
-            name: 'https://app.uniswap.org/static/js/20.d55382e0.chunk.js',
-          },
-        ]
-      })
+      jest.spyOn(window.performance, 'getEntriesByType').mockReturnValue([
+        {
+          name: 'https://app.uniswap.org/static/js/20.d55382e0.chunk.js',
+        } as PerformanceEntry,
+      ])
       const originalException = new Error(
         'Loading chunk 20 failed. (error: https://app.uniswap.org/static/js/20.d55382e0.chunk.js)'
       )
