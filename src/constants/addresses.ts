@@ -7,10 +7,7 @@ type AddressMap = { [chainId: number]: string }
 
 const DEFAULT_NETWORKS = [SupportedChainId.MAINNET, SupportedChainId.GOERLI]
 
-function constructSameAddressMap(
-  address: string,
-  additionalNetworks: SupportedChainId[] = []
-): AddressMap {
+function constructSameAddressMap(address: string, additionalNetworks: SupportedChainId[] = []): AddressMap {
   return DEFAULT_NETWORKS.concat(additionalNetworks).reduce<AddressMap>((memo, chainId) => {
     memo[chainId] = address
     return memo
