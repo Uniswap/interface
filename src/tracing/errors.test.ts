@@ -36,7 +36,7 @@ describe('filterKnownErrors', () => {
     })
 
     it('filters 499 error coded chunk error', () => {
-      const mockGetEntriesByType = jest.fn(() => {
+      window.performance.getEntriesByType = jest.fn(() => {
         return [
           {
             name: 'https://app.uniswap.org/static/js/20.d55382e0.chunk.js',
@@ -44,7 +44,6 @@ describe('filterKnownErrors', () => {
           },
         ] as any
       })
-      window.performance.getEntriesByType = mockGetEntriesByType
       const originalException = new Error(
         'Loading chunk 20 failed. (error: https://app.uniswap.org/static/js/20.d55382e0.chunk.js)'
       )
@@ -52,7 +51,7 @@ describe('filterKnownErrors', () => {
     })
 
     it('keeps error when status is different than 499', () => {
-      const mockGetEntriesByType = jest.fn(() => {
+      window.performance.getEntriesByType = jest.fn(() => {
         return [
           {
             name: 'https://app.uniswap.org/static/js/20.d55382e0.chunk.js',
@@ -60,7 +59,6 @@ describe('filterKnownErrors', () => {
           },
         ] as any
       })
-      window.performance.getEntriesByType = mockGetEntriesByType
       const originalException = new Error(
         'Loading chunk 20 failed. (error: https://app.uniswap.org/static/js/20.d55382e0.chunk.js)'
       )
@@ -68,10 +66,9 @@ describe('filterKnownErrors', () => {
     })
 
     it('filters out error when resource is missing', () => {
-      const mockGetEntriesByType = jest.fn(() => {
+      window.performance.getEntriesByType = jest.fn(() => {
         return []
       })
-      window.performance.getEntriesByType = mockGetEntriesByType
       const originalException = new Error(
         'Loading chunk 20 failed. (error: https://app.uniswap.org/static/js/20.d55382e0.chunk.js)'
       )
@@ -86,14 +83,13 @@ describe('filterKnownErrors', () => {
     })
 
     it('filters out error when responseStatus is undefined', () => {
-      const mockGetEntriesByType = jest.fn(() => {
+      window.performance.getEntriesByType = jest.fn(() => {
         return [
           {
             name: 'https://app.uniswap.org/static/js/20.d55382e0.chunk.js',
           },
         ] as any
       })
-      window.performance.getEntriesByType = mockGetEntriesByType
       const originalException = new Error(
         'Loading chunk 20 failed. (error: https://app.uniswap.org/static/js/20.d55382e0.chunk.js)'
       )
