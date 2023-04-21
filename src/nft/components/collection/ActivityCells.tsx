@@ -24,6 +24,7 @@ import {
   TokenMetadata,
   TokenRarity,
 } from 'nft/types'
+import { getMarketplaceIcon } from 'nft/utils'
 import { shortenAddress } from 'nft/utils/address'
 import { buildActivityAsset } from 'nft/utils/buildActivityAsset'
 import { formatEth, formatEthPrice } from 'nft/utils/currency'
@@ -162,17 +163,6 @@ export const AddressCell = ({ address, desktopLBreakpoint, chainId }: AddressCel
   )
 }
 
-export const MarketplaceIcon = ({ marketplace }: { marketplace: Markets | string }) => {
-  return (
-    <Box
-      as="img"
-      alt={marketplace}
-      src={`/nft/svgs/marketplaces/${marketplace.toLowerCase()}.svg`}
-      className={styles.marketplaceIcon}
-    />
-  )
-}
-
 const PriceTooltip = ({ price }: { price: string }) => (
   <MouseoverTooltip
     text={
@@ -200,7 +190,7 @@ export const PriceCell = ({ marketplace, price }: { marketplace?: Markets | stri
 
   return (
     <Row display={{ sm: 'none', md: 'flex' }} gap="8">
-      {marketplace && <MarketplaceIcon marketplace={marketplace} />}
+      {marketplace && getMarketplaceIcon(marketplace, '16', '16')}
       {formattedPrice ? (
         formattedPrice.length > 6 ? (
           <PriceTooltip price={formattedPrice} />

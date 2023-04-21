@@ -2,8 +2,9 @@ import { Trans } from '@lingui/macro'
 import { OpacityHoverState, ScrollBarStyles } from 'components/Common'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
-import { EventCell, MarketplaceIcon } from 'nft/components/collection/ActivityCells'
+import { EventCell } from 'nft/components/collection/ActivityCells'
 import { ActivityEvent } from 'nft/types'
+import { getMarketplaceIcon } from 'nft/utils'
 import { shortenAddress } from 'nft/utils/address'
 import { formatEth, formatEthPrice } from 'nft/utils/currency'
 import { getTimeDifference } from 'nft/utils/date'
@@ -174,7 +175,7 @@ const AssetActivity = ({ events }: { events: ActivityEvent[] | undefined }) => {
               <TD>
                 {formattedPrice && (
                   <PriceContainer>
-                    {marketplace && <MarketplaceIcon marketplace={marketplace} />}
+                    {marketplace && getMarketplaceIcon(marketplace, '16', '16')}
                     {formattedPrice} ETH
                   </PriceContainer>
                 )}

@@ -92,10 +92,7 @@ const PriceRow = styled.div`
   align-items: flex-end;
 `
 
-const MarketplaceIcon = styled.img`
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
+const MarketplaceIcon = styled.div`
   margin-top: auto;
   margin-bottom: auto;
 `
@@ -246,7 +243,7 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
         </ThemedText.SubHeader>
         {listing && (
           <ExternalLink href={listing.marketplaceUrl}>
-            <MarketplaceIcon alt={listing.marketplace} src={getMarketplaceIcon(listing.marketplace)} />
+            <MarketplaceIcon>{getMarketplaceIcon(listing.marketplace, '20', '20')}</MarketplaceIcon>
           </ExternalLink>
         )}
       </HeaderRow>
@@ -380,7 +377,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
               Best Price
             </ThemedText.SubHeader>
             <ExternalLink href={cheapestOrder.marketplaceUrl}>
-              <MarketplaceIcon alt={cheapestOrder.marketplace} src={getMarketplaceIcon(cheapestOrder.marketplace)} />
+              <MarketplaceIcon>{getMarketplaceIcon(cheapestOrder.marketplace, '20', '20')}</MarketplaceIcon>
             </ExternalLink>
           </HeaderRow>
           <PriceRow>

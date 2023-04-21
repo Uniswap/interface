@@ -152,6 +152,11 @@ export enum Markets {
   WETH = 'weth',
   Cryptopunks = 'cryptopunks',
   CryptoPhunks = 'cryptophunks',
+  Gem = 'gem',
+  Foundation = 'foundation',
+  Zora = 'zora',
+  Blur = 'blur',
+  Ensvision = 'ensvision',
 }
 
 export const isPooledMarket = (market?: Markets): boolean => {
