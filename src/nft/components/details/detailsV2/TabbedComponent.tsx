@@ -67,15 +67,14 @@ export interface Tab {
 interface TabbedComponentProps {
   tabs: Tab[]
   defaultTabIndex?: number
-  style?: React.CSSProperties
 }
 
-export const TabbedComponent = ({ tabs, defaultTabIndex = 0, style }: TabbedComponentProps) => {
+export const TabbedComponent = ({ tabs, defaultTabIndex = 0 }: TabbedComponentProps) => {
   const [activeTab, setActiveTab] = useState(tabs[defaultTabIndex].key)
   const [isOpen, toggleIsOpen] = useReducer((s) => !s, true)
   const activeContent = tabs.find((tab) => tab.key === activeTab)?.content
   return (
-    <TabbedComponentContainer style={style}>
+    <TabbedComponentContainer>
       <TabsRow>
         {tabs.map((tab) => (
           <Tab
