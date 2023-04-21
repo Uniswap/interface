@@ -396,6 +396,25 @@ export function AdvancedLeverageSwapDetails({
         <RowBetween>
           <RowFixed>
             <MouseoverTooltip
+              text={<Trans>The impact your trade has on the market price of this pool.</Trans>}
+              disableHover={hideInfoTooltips}
+            >
+              <ThemedText.DeprecatedSubHeader color={theme.textPrimary}>
+                <Trans>Fees</Trans>
+              </ThemedText.DeprecatedSubHeader>
+            </MouseoverTooltip>
+          </RowFixed>
+          <TextWithLoadingPlaceholder syncing={syncing} width={50}>
+            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
+              {
+                leverageTrade?.quotedPremium ? `${leverageTrade?.quotedPremium}  ${trade.inputAmount.currency.symbol}`
+                : '-'}            </ThemedText.DeprecatedBlack>
+          </TextWithLoadingPlaceholder>
+        </RowBetween>
+
+        <RowBetween>
+          <RowFixed>
+            <MouseoverTooltip
               text={
                 <Trans>
                   The real leverage after adding the first premium to your collateral: (borrow amount + collateral + premium)/(collateral+premium)

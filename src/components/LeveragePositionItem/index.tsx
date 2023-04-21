@@ -281,7 +281,8 @@ export default function LeveragePositionItem({
 
   // token0 price.
   const currentPrice = pool?.token0Price.toSignificant(3)
-  
+  const totalValue = isToken0? (Number(totalLiquidity)*Number(currentPrice)).toFixed(3).toString() : 
+     (Number(totalLiquidity)/Number(currentPrice)).toFixed(3).toString();
   const PNL = useMemo(() => {
     let x = isToken0 ? 1:Number(currentPrice)// : 1/Number(currentPrice)
     // console.log("x", x, totalDebtInput, totalLiquidity, currentPrice, enterPrice)
@@ -289,7 +290,7 @@ export default function LeveragePositionItem({
           : (Number(totalLiquidity))*(Number(currentPrice) - Number(enterPrice?.toFixed(10)))
   }, [pool, enterPrice])
   const remainingPremium = ((1- (Date.now() - Number(repayTime)*1000)/86400000)*
-            Number(recentPremium)).toFixed(4)
+            Number(recentPremium)).toFixed(7)
   // &nbsp;{currency0?.symbol}&nbsp;/&nbsp;{currency1?.symbol}
   return (
     <ItemWrapper>
@@ -343,16 +344,18 @@ export default function LeveragePositionItem({
         </AutoColumn>
         <AutoRow justify="flex-start" width="100%" marginBottom="16px">
 
-
+        <AutoColumn gap="8px" style={{marginRight: "150px"}}>
+            <ItemValueLabel label={"Total Position Value"} value={totalValue + " " + (!isToken0 ? currency0?.symbol : currency1?.symbol)}/>
+        </AutoColumn>
 
           <AutoColumn gap="8px" style={{marginRight: "150px"}}>
-          <ItemValueLabel label={"What I paid"} value={new BN(initialCollateral).toString() + " " + (isToken0 ? currency1?.symbol : currency0?.symbol)}/>
+          <ItemValueLabel label={"My collateral"} value={new BN(initialCollateral).toString() + " " + (isToken0 ? currency1?.symbol : currency0?.symbol)}/>
           <ItemValueLabel label={"What I Borrowed"} value={new BN(totalDebtInput).toString() + " " + (isToken0 ? currency1?.symbol : currency0?.symbol)}/>
           </AutoColumn>
           <AutoColumn gap="8px">
-          <ItemValueLabel label={"Time of Creation"} value={moment(new Date(Number(openTime) * 1000)).format("M/D/YYYY H:mm")}/>
+          <ItemValueLabel label={"Open Time"} value={moment(new Date(Number(openTime) * 1000)).format("M/D/YYYY H:mm")}/>
           <ItemValueLabel label={"Remaining Premium "} value={
-            Number(remainingPremium)>0?remainingPremium.toString():"0" + " " + (!isToken0 ? currency1?.symbol : currency0?.symbol)}/>
+            (Number(remainingPremium)>0?remainingPremium.toString():"0" )+ " " + (isToken0 ? currency1?.symbol : currency0?.symbol)}/>
           </AutoColumn>
         </AutoRow>
 
@@ -369,13 +372,11 @@ export default function LeveragePositionItem({
               </span>
             </Trans>
           </RangeText>
+
+
         </AutoRow>
         <AutoRow gap="8px">
-          <ResponsiveButtonPrimary 
-          //data-cy="join-pool-button" id="join-pool-button"
-           onClick={() => setShowClose(!showClose)}>
-            <Trans>Close Position</Trans>
-          </ResponsiveButtonPrimary>
+
           {showClose && (
                       <ClosePositionModal
                       isOpen={showClose}
@@ -399,8 +400,12 @@ export default function LeveragePositionItem({
             />
           )
           }
-          
 
+          <ResponsiveButtonPrimary 
+          //data-cy="join-pool-button" id="join-pool-button"
+           onClick={() => setShowClose(!showClose)}>
+            <Trans>Close Position</Trans>
+          </ResponsiveButtonPrimary>
           <ResponsiveButtonPrimary onClick={() => setShowAddPremium(!showAddPremium)} >
             <Trans>Add Premium</Trans>
           </ResponsiveButtonPrimary>
