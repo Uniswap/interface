@@ -56,7 +56,7 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
      */
     if (error.message.match(/Loading chunk \d+ failed\. \(error: .+\.chunk\.js\)/)) {
       const asset = error.message.match(/https?:\/\/.+?\.chunk\.js/)?.[0]
-      const entries = [...performance?.getEntriesByType('resource')]
+      const entries = [...(performance?.getEntriesByType('resource') ?? [])]
       const resource = entries?.find(({ name }) => name === asset)
       const status = resource?.responseStatus
 

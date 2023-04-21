@@ -2,6 +2,12 @@ import { ErrorEvent } from '@sentry/types'
 
 import { filterKnownErrors } from './errors'
 
+declare global {
+  interface PerformanceEntry {
+    getEntriesByType(type: string): PerformanceEntry[]
+  }
+}
+
 describe('filterKnownErrors', () => {
   const ERROR = {} as ErrorEvent
   it('propagates an error', () => {

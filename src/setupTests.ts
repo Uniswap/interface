@@ -11,11 +11,19 @@ if (typeof global.TextEncoder === 'undefined') {
 }
 
 global.matchMedia =
-  global.matchMedia ||
+  global.matchMedia ??
   function () {
     return {
       matches: false,
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
+    }
+  }
+
+global.performance =
+  global.performance ??
+  function () {
+    return {
+      getEntriesByType: jest.fn(),
     }
   }
