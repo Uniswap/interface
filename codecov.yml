@@ -18,3 +18,10 @@ flag_management:
         if_ci_failed: error
       - type: patch
         target: 80%
+  individual_flags:
+    - name: e2e-tests
+      statuses:
+        - type: project
+          target: 100%
+        - type: patch
+          target: 0%
