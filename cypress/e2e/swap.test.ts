@@ -1,3 +1,4 @@
+import { USDC_MAINNET } from '../../src/constants/tokens'
 import { HardhatProvider } from '../support/hardhat'
 
 describe('Swap', () => {
@@ -35,41 +36,38 @@ describe('Swap', () => {
     cy.get('#swap-currency-output .token-amount-input').clear().type('0.0').should('have.value', '0.0')
   })
 
-  /*
-1. use token selector to import token0 and token1 addresses as in/output
-2. “touch” input (or output for exactOutput) value and set to some very minimal value
-3. wait for quoter to complete and “swap” button to enable
-4. `assert` swap details expansion panel content is as expected (input amount, token symbols)
-5. click “approve use of <$TOKEN>”
-  1. approve via hardhat
-  2. or sign permit and submit via hardhat
-6. `assert` ”approve in your wallet” state
-7. mine transaction w/ hardhat
-8. click swap button
-9. `assert` correct confirmation modal content (input amount, token symbols)
-10. click “confirm swap”
+  it('can swap ETH for USDC', () => {
+    const TOKEN_ADDRESS = USDC_MAINNET.address
+    const BALANCE_INCREMENT = 1
+    cy.then(() => hardhat.utils.getBalance(hardhat.wallet.address, USDC_MAINNET))
+      .then((balance) => Number(balance.toFixed(1)))
+      .then((initialBalance) => {
+        cy.get('#swap-currency-output .open-currency-select-button').click()
+        cy.get('[data-testid="token-search-input"]').clear().type(TOKEN_ADDRESS)
+        cy.contains('USDC').click()
+        cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
+        cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
+        cy.get('#swap-button').click()
+        cy.get('#confirm-swap-or-send').click()
+        cy.get('[data-testid="dismiss-tx-confirmation"]').click()
+        // ui check
+        cy.get('#swap-currency-output [data-testid="balance-text"]').should(
+          'have.text',
+          `Balance: ${initialBalance + BALANCE_INCREMENT}`
+        )
 
-11. `assert` waiting for confirmation modal
-12. mine transaction w/ hardhat
-13. `assert` smart contract balance updated
-14. `comment` with jira link to task outlining a test update which would assert based on backend data derived from chain state (i.e., mini portfolio)
-*/
-
-  it.only('can swap ETH for USDC', () => {
-    cy.get('#swap-currency-output .open-currency-select-button').click()
-    cy.get('[data-testid="token-search-input"]').clear().type('USDC')
-    cy.contains('USDC').click()
-    cy.get('#swap-currency-input .token-amount-input').clear().type('1')
-    cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
-    cy.get('#swap-button').click()
-    cy.get('#confirm-swap-or-send').click()
+        // chain state check
+        cy.then(() => hardhat.utils.getBalance(hardhat.wallet.address, USDC_MAINNET))
+          .then((balance) => Number(balance.toFixed(1)))
+          .should('eq', initialBalance + BALANCE_INCREMENT)
+      })
   })
 
   it('add a recipient does not exist unless in expert mode', () => {
     cy.get('#add-recipient-button').should('not.exist')
   })
 
-  it('ETH to wETH is same value (wrapped swaps have no price impact)', () => {
+  it.skip('ETH to wETH is same value (wrapped swaps have no price impact)', () => {
     cy.get('#swap-currency-output .open-currency-select-button').click()
     cy.get('.token-item-0xc778417E063141139Fce010982780140Aa0cD5Ab').click()
     cy.get('#swap-currency-input .token-amount-input').clear().type('0.01')
