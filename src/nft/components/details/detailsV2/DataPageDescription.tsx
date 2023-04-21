@@ -2,12 +2,14 @@ import { Trans } from '@lingui/macro'
 
 import { Tab, TabbedComponent } from './TabbedComponent'
 
+const DescriptionContentHeight = 252
+
 const DescriptionContent = () => {
-  return <div>Description Content</div>
+  return <div style={{ height: `${DescriptionContentHeight}px` }}>Description Content</div>
 }
 
 const DetailsContent = () => {
-  return <div>Details Content</div>
+  return <div style={{ height: `${DescriptionContentHeight}px` }}>Details Content</div>
 }
 
 const DescriptionTabs: Array<Tab> = [
@@ -24,5 +26,5 @@ const DescriptionTabs: Array<Tab> = [
 ]
 
 export const DataPageDescription = () => {
-  return <TabbedComponent tabs={DescriptionTabs} style={{ height: '288px' }} />
+  return <TabbedComponent tabs={DescriptionTabs} />
 }

@@ -16,3 +16,8 @@ export const TabNumBubble = styled(ThemedText.UtilityBadge)`
   color: ${({ theme }) => theme.textSecondary};
   line-height: 12px;
 `
+
+export function getBubbleText(num: number) {
+  if (num <= 10) return num
+  return '10+'
+}

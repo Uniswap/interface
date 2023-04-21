@@ -1,3 +1,5 @@
+import { TableContentHeight } from './DataPageTable'
+
 export const OffersTableContent = () => {
-  return <div>Offers Content</div>
+  return <div style={{ height: `${TableContentHeight}px` }}>Offers Content</div>
 }

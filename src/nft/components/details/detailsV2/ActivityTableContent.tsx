@@ -1,3 +1,5 @@
+import { TableContentHeight } from './DataPageTable'
+
 export const ActivityTableContent = () => {
-  return <div>Activity Content</div>
+  return <div style={{ height: `${TableContentHeight}px` }}>Activity Content</div>
 }

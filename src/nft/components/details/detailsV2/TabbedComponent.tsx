@@ -1,13 +1,12 @@
 import Row from 'components/Row'
-import { useState } from 'react'
+import { ChevronUpIcon } from 'nft/components/icons'
+import { useReducer, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { containerStyles } from './shared'
 
 const TabbedComponentContainer = styled.div`
-  height: 288px;
-
   ${containerStyles}
 `
 
@@ -27,6 +26,21 @@ const Tab = styled(ThemedText.SubHeader)<{ isActive: boolean; numTabs: number }>
   }
 `
 
+const Chevron = styled(ChevronUpIcon)<{ isOpen: boolean }>`
+  height: 24px;
+  width: 24px;
+  fill: ${({ theme }) => theme.textSecondary};
+  transition: ${({
+    theme: {
+      transition: { duration },
+    },
+  }) => `${duration.fast} transform`};
+  transform: ${({ isOpen }) => `rotate(${isOpen ? 0 : 180}deg)`};
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: 0;
+`
+
 export interface Tab {
   title: React.ReactNode
   key: string
@@ -41,6 +55,7 @@ interface TabbedComponentProps {
 
 export const TabbedComponent = ({ tabs, defaultTabIndex = 0, style }: TabbedComponentProps) => {
   const [activeTab, setActiveTab] = useState(tabs[defaultTabIndex].key)
+  const [isOpen, toggleIsOpen] = useReducer((s) => !s, true)
   const activeContent = tabs.find((tab) => tab.key === activeTab)?.content
   return (
     <TabbedComponentContainer style={style}>
@@ -55,8 +70,9 @@ export const TabbedComponent = ({ tabs, defaultTabIndex = 0, style }: TabbedComp
             {tab.title}
           </Tab>
         ))}
+        <Chevron isOpen={isOpen} onClick={toggleIsOpen} />
       </TabsRow>
-      {activeContent}
+      {isOpen && activeContent}
     </TabbedComponentContainer>
   )
 }

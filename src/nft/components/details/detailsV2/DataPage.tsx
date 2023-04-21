@@ -38,6 +38,7 @@ const ContentContainer = styled(Row)`
 const LeftColumn = styled(Column)`
   gap: 24px;
   width: 100%;
+  align-self: flex-start;
 `
 
 export const DataPage = ({ asset }: { asset: GenieAsset }) => {

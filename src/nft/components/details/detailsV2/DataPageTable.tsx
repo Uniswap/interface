@@ -5,6 +5,8 @@ import { ListingsTableContent } from './ListingsTableContent'
 import { OffersTableContent } from './OffersTableContent'
 import { Tab, TabbedComponent } from './TabbedComponent'
 
+export const TableContentHeight = 568
+
 const TableTabs: Array<Tab> = [
   {
     title: <Trans>Activity</Trans>,
@@ -24,5 +26,5 @@ const TableTabs: Array<Tab> = [
 ]
 
 export const DataPageTable = () => {
-  return <TabbedComponent tabs={TableTabs} style={{ height: '604px' }} />
+  return <TabbedComponent tabs={TableTabs} />
 }
