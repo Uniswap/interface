@@ -1,7 +1,7 @@
 name: 3 | Generate PR for releases/staging to releases/prod
 
-# This CI job is responsible for generating PRs that bring the HEAD of releases/staging into releases/prod.
-# These PRs are meant to be the only (standard) way that code is merged into the releases/prod branch.
+# This CI job is responsible for generating PRs that bring the HEAD of `releases/staging` into `releases/prod`.
+# These PRs are meant to be the only (standard) way that code is merged into the `releases/prod` branch.
 #
 # https://github.com/peter-evans/create-pull-request/blob/main/docs/examples.md#keep-a-branch-up-to-date-with-another
 
@@ -35,19 +35,20 @@ jobs:
         id: create-pull-request
         with:
           token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
+          commit-message: "This PR merges latest commits of `releases/staging` to `releases/prod`. Upon approval and successful merge, a Github action associated with the prod Fastlane setup will deploy to TestFlight, where the app can be submitted to Apple."
           base: 'releases/prod'
-          title: 'ci: Release Staging to Prod'
+          title: 'ci: promotes staging to prod'
           delete-branch: 'true'
           committer: 'UL Service Account <hello-happy-puppy@users.noreply.github.com>'
           author: 'UL Service Account <hello-happy-puppy@users.noreply.github.com>'
-          branch: 'approvals/stagingToProd'
+          branch: 'approvals/staging-to-prod'
       - name: Update PR body
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           echo "### Description" > /tmp/pr_desc
           echo "" >> /tmp/pr_desc
-          echo "This PR promotes the following commits from releases/staging to prod." >> /tmp/pr_desc
+          echo "This PR promotes the following commits from `releases/staging` to `releases/prod`." >> /tmp/pr_desc
           echo "" >> /tmp/pr_desc
           gh pr view ${{ steps.create-pull-request.outputs.pull-request-number }} --json commits | jq '.commits[] | [.oid, .messageHeadline] | @tsv' | sed 's/"//g' | sed 's/\\t/ - /g' >> /tmp/pr_desc
           echo "" >> /tmp/pr_desc
