@@ -76,7 +76,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "${{ env.SLACK_COMMITS || 'New branch created' }}"
+                    "text": "${{ steps.parse-slug.outputs.SLACK_COMMITS || 'New branch created' }}"
                   }
                 },
                 {
