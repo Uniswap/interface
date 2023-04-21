@@ -55,6 +55,8 @@ export class HardhatProvider extends Eip1193Bridge {
           result = this.chainId
           break
         case 'eth_sendTransaction': {
+          // Eip1193Bridge doesn't support .gas and .from directly, so we massage it to satisfy ethers' expectations.
+          // See https://github.com/ethers-io/ethers.js/issues/1683.
           params[0].gasLimit = params[0].gas
           delete params[0].gas
           delete params[0].from
