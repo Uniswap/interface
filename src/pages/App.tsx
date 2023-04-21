@@ -8,7 +8,6 @@ import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
-import { Helmet } from 'react-helmet'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { StatsigProvider, StatsigUser } from 'statsig-react'
@@ -204,9 +203,6 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      <Helmet>
-        <meta name="apple-itunes-app" content={`app-id=6443944476, app-argument=${pathname}`} />
-      </Helmet>
       <DarkModeQueryParamReader />
       <ApeModeQueryParamReader />
       <Trace page={currentPage}>
