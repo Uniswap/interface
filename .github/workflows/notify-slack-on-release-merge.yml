@@ -20,9 +20,6 @@ on:
   push:
     branches:
       - 'releases/*'
-  pull_request:
-    branches:
-      - '**'
 
 jobs:
   notify-slack:
@@ -30,7 +27,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Parse event to slug
-        id: parse-slug
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         # Formats the contents of the GitHub event into slugs: one line per commit, formatted for Slack.
@@ -42,7 +38,7 @@ jobs:
           | awk -F';' '{print "• <"$1"|"$2"> (<https://github.com/"$3"|"$3">, "$4") - "$5}' \
           | sed 's/$/\\n/g' | tr -d '\n' \
           > /tmp/parsed_github_context
-          echo "SLACK_COMMITS=$(cat /tmp/parsed_github_context)" >> $GITHUB_OUTPUT
+          echo "SLACK_COMMITS=$(cat /tmp/parsed_github_context)" >> $GITHUB_ENV
       - name: Send custom JSON data to Slack workflow
         id: slack
         uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
@@ -75,7 +71,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "${{ steps.parse-slug.outputs.SLACK_COMMITS | 'New branch created' }}"
+                    "text": "${{ env.SLACK_COMMITS || 'New branch created' }}"
                   }
                 },
                 {
