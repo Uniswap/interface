@@ -11,14 +11,14 @@ jest.mock('../../hooks/useSocksBalance', () => ({
 
 describe('StatusIcon', () => {
   describe('with no account', () => {
-    it('renders children in correct order, with with socks', () => {
+    it('renders children in correct order', () => {
       const supportedConnections = getConnections()
       const injectedConnection = supportedConnections[1]
       const component = render(<StatusIcon connection={injectedConnection} />)
       expect(component.getByTestId('StatusIconRoot')).toMatchSnapshot()
     })
 
-    it('renders with showMiniIcons=false', () => {
+    it('renders without mini icons', () => {
       const supportedConnections = getConnections()
       const injectedConnection = supportedConnections[1]
       const component = render(<StatusIcon connection={injectedConnection} showMiniIcons={false} />)
@@ -34,14 +34,14 @@ describe('StatusIcon', () => {
       } as ReturnType<typeof useWeb3React>)
     })
 
-    it('renders children in correct order, with with socks', () => {
+    it('renders children in correct order', () => {
       const supportedConnections = getConnections()
       const injectedConnection = supportedConnections[1]
       const component = render(<StatusIcon connection={injectedConnection} />)
       expect(component.getByTestId('StatusIconRoot')).toMatchSnapshot()
     })
 
-    it('renders with showMiniIcons=false', () => {
+    it('renders without mini icons', () => {
       const supportedConnections = getConnections()
       const injectedConnection = supportedConnections[1]
       const component = render(<StatusIcon connection={injectedConnection} showMiniIcons={false} />)
