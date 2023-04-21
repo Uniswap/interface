@@ -49,21 +49,23 @@ export interface Tab {
 }
 
 interface TabbedComponentProps {
-  tabs: Tab[]
-  defaultTabIndex?: number
+  tabs: Map<string, Tab>
+  defaultTabKey?: string
 }
 
-export const TabbedComponent = ({ tabs, defaultTabIndex = 0 }: TabbedComponentProps) => {
-  const [activeTab, setActiveTab] = useState(tabs[defaultTabIndex].key)
-  const activeContent = tabs.find((tab) => tab.key === activeTab)?.content
+export const TabbedComponent = ({ tabs, defaultTabKey }: TabbedComponentProps) => {
+  const firstKey = tabs.keys().next().value
+  const [activeKey, setActiveKey] = useState(defaultTabKey ?? firstKey)
+  const activeContent = tabs.get(activeKey)?.content
+  const tabArray = Array.from(tabs.values())
   return (
     <TabbedComponentContainer>
       <TabsRow>
-        {tabs.map((tab) => (
+        {tabArray.map((tab) => (
           <Tab
-            isActive={activeTab === tab.key}
-            numTabs={tabs.length}
-            onClick={() => setActiveTab(tab.key)}
+            isActive={activeKey === tab.key}
+            numTabs={tabArray.length}
+            onClick={() => setActiveKey(tab.key)}
             key={tab.key}
           >
             {tab.title}

@@ -14,7 +14,7 @@ const DataPageContainer = styled(Column)`
   height: 100vh;
   width: 100%;
   gap: 36px;
-  max-width: 1200px;
+  max-width: ${({ theme }) => theme.maxWidth};
   margin: 0 auto;
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {

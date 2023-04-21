@@ -12,18 +12,29 @@ const DetailsContent = () => {
   return <div style={{ height: `${DescriptionContentHeight}px` }}>Details Content</div>
 }
 
-const DescriptionTabs: Array<Tab> = [
-  {
-    title: <Trans>Description</Trans>,
-    key: 'description',
-    content: <DescriptionContent />,
-  },
-  {
-    title: <Trans>Details</Trans>,
-    key: 'details',
-    content: <DetailsContent />,
-  },
-]
+enum DescriptionTabsKeys {
+  Description = 'description',
+  Details = 'details',
+}
+
+const DescriptionTabs: Map<string, Tab> = new Map([
+  [
+    DescriptionTabsKeys.Description,
+    {
+      title: <Trans>Description</Trans>,
+      key: DescriptionTabsKeys.Description,
+      content: <DescriptionContent />,
+    },
+  ],
+  [
+    DescriptionTabsKeys.Details,
+    {
+      title: <Trans>Details</Trans>,
+      key: DescriptionTabsKeys.Details,
+      content: <DetailsContent />,
+    },
+  ],
+])
 
 export const DataPageDescription = () => {
   return <TabbedComponent tabs={DescriptionTabs} />
