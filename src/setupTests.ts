@@ -26,7 +26,6 @@ global.matchMedia =
 // Prevent popper from making state updates asynchronously.
 // This is necessary to avoid warnings during tests, as popper will asynchronously update state outside of test setup.
 jest.mock('@popperjs/core', () => {
-  const { act } = jest.requireActual('@testing-library/react')
   const core = jest.requireActual('@popperjs/core')
   return {
     ...core,
