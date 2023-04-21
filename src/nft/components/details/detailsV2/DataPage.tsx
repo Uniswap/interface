@@ -1,5 +1,6 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
+import { GenieAsset } from 'nft/types'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
@@ -39,13 +40,13 @@ const LeftColumn = styled(Column)`
   width: 100%;
 `
 
-export const DataPage = () => {
+export const DataPage = ({ asset }: { asset: GenieAsset }) => {
   return (
     <DataPageContainer>
       <DataPageHeader />
       <ContentContainer>
         <LeftColumn>
-          <DataPageTraits />
+          <DataPageTraits asset={asset} />
           <DataPageDescription />
         </LeftColumn>
         <DataPageTable />

@@ -18,7 +18,7 @@ export const NftDetails = ({ asset, collection }: NftDetailsProps) => {
       <LandingPage>
         Details page for {asset.name} from {collection.collectionName}
       </LandingPage>
-      <DataPage />
+      <DataPage asset={asset} />
     </>
   )
 }
