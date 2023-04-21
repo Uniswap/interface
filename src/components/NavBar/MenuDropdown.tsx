@@ -47,7 +47,7 @@ const PrimaryMenuRow = ({
           <Row onClick={close}>{children}</Row>
         </NavLink>
       ) : (
-        <Row as="a" href={href} target="_blank" rel="noopener noreferrer" className={styles.MenuRow}>
+        <Row cursor="pointer" as="a" href={href} target="_blank" rel="noopener noreferrer" className={styles.MenuRow}>
           {children}
         </Row>
       )}
@@ -150,9 +150,7 @@ export const MenuDropdown = () => {
                     </PrimaryMenuRow.Text>
                   </PrimaryMenuRow>
                 </Box>
-                <Box
-                  onClick={() => openDownloadApp(InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON)}
-                >
+                <Box onClick={() => openDownloadApp(InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON)}>
                   <PrimaryMenuRow close={toggleOpen}>
                     <Icon>
                       <AppleLogo width="24px" height="24px" fill={theme.textPrimary} />
