@@ -1,18 +1,11 @@
 import userEvent from '@testing-library/user-event'
 import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer'
+import { mocked } from 'test-utils/mocked'
 import { fireEvent, render, screen } from 'test-utils/render'
 
 import { useFiatOnrampAvailability, useOpenModal } from '../../state/application/hooks'
 import SwapBuyFiatButton, { MOONPAY_REGION_AVAILABILITY_ARTICLE } from './SwapBuyFiatButton'
-
-jest.mock('@web3-react/core', () => {
-  const web3React = jest.requireActual('@web3-react/core')
-  return {
-    ...web3React,
-    useWeb3React: jest.fn(),
-  }
-})
 
 jest.mock('../../state/application/hooks')
 const mockUseFiatOnrampAvailability = useFiatOnrampAvailability as jest.MockedFunction<typeof useFiatOnrampAvailability>
@@ -56,14 +49,6 @@ describe('SwapBuyFiatButton.tsx', () => {
     useOpenModal = jest.fn()
   })
 
-  beforeEach(() => {
-    jest.resetAllMocks()
-    ;(useWeb3React as jest.Mock).mockReturnValue({
-      account: undefined,
-      isActive: false,
-    })
-  })
-
   it('matches base snapshot', () => {
     mockUseFiatOnrampAvailability.mockImplementation(mockUseFiatOnRampsUnavailable)
     mockuseAccountDrawer.mockImplementation(() => [false, toggleWalletDrawer])
@@ -82,10 +67,10 @@ describe('SwapBuyFiatButton.tsx', () => {
   })
 
   it('fiat on ramps available in region, account connected', async () => {
-    ;(useWeb3React as jest.Mock).mockReturnValue({
+    mocked(useWeb3React).mockReturnValue({
       account: '0x52270d8234b864dcAC9947f510CE9275A8a116Db',
       isActive: true,
-    })
+    } as ReturnType<typeof useWeb3React>)
     mockUseFiatOnrampAvailability.mockImplementation(mockUseFiatOnRampsAvailable)
     mockuseAccountDrawer.mockImplementation(() => [false, toggleWalletDrawer])
     mockUseOpenModal.mockImplementation(() => useOpenModal)
