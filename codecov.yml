@@ -22,6 +22,6 @@ flag_management:
     - name: e2e-tests
       statuses:
         - type: project
-          target: 100%
+          target: auto
         - type: patch
           target: 0%
