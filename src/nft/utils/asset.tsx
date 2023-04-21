@@ -41,7 +41,6 @@ export const getAssetHref = (asset: GenieAsset | WalletAsset, origin?: DetailsOr
 }
 
 export const getMarketplaceIcon = (marketplace: string, width: string | number, height: string | number) => {
-  console.log(marketplace)
   switch (marketplace.toLowerCase()) {
     case Markets.Opensea:
       return <SquareOpenSeaMarketplaceIcon width={width} height={height} />
