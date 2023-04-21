@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom' // jest custom assertions
 import 'jest-styled-components' // adds style diffs to snapshot tests
 
-import { initializeConnector, useWeb3React } from '@web3-react/core'
+import { useWeb3React } from '@web3-react/core'
 import { Readable } from 'stream'
 import { mocked } from 'test-utils/mocked'
 import { TextDecoder, TextEncoder } from 'util'
@@ -27,7 +27,10 @@ jest.mock('@web3-react/core', () => {
   const { Empty } = jest.requireActual('@web3-react/empty')
   return {
     ...web3React,
-    initializeConnector: () => web3React.initializeConnector((actions: Parameters<typeof initializeConnector>[0]) => new Empty(actions)),
+    initializeConnector: () =>
+      web3React.initializeConnector(
+        (actions: Parameters<typeof web3React.initializeConnector>[0]) => new Empty(actions)
+      ),
     useWeb3React: jest.fn(),
   }
 })
