@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro'
 import { ActivityTableContent } from './ActivityTableContent'
 import { ListingsTableContent } from './ListingsTableContent'
 import { OffersTableContent } from './OffersTableContent'
-import { Tab, TabbedComponent } from './TabbedComponent'
+import { Tab, TabbedComponent, TabTitleWithBubble } from './TabbedComponent'
 
 export const TableContentHeight = 568
 
@@ -14,12 +14,12 @@ const TableTabs: Array<Tab> = [
     content: <ActivityTableContent />,
   },
   {
-    title: <Trans>Offers</Trans>,
+    title: <TabTitleWithBubble title={<Trans>Offers</Trans>} bubbleNumber={/* placeholder */ 11} />,
     key: 'offers',
     content: <OffersTableContent />,
   },
   {
-    title: <Trans>Listings</Trans>,
+    title: <TabTitleWithBubble title={<Trans>Listings</Trans>} bubbleNumber={/* placeholder */ 11} />,
     key: 'listings',
     content: <ListingsTableContent />,
   },
