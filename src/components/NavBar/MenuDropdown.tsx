@@ -3,7 +3,6 @@ import { InterfaceElementName } from '@uniswap/analytics-events'
 import { openDownloadApp } from 'components/AccountDrawer/DownloadButton'
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
-import { useMgtmEnabled } from 'featureFlags/flags/mgtm'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -130,8 +129,6 @@ export const MenuDropdown = () => {
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, isOpen ? toggleOpen : undefined)
 
-  const mgtmEnabled = useMgtmEnabled()
-
   return (
     <>
       <Box position="relative" ref={ref}>
@@ -154,7 +151,6 @@ export const MenuDropdown = () => {
                   </PrimaryMenuRow>
                 </Box>
                 <Box
-                  display={mgtmEnabled ? 'flex' : 'none'}
                   onClick={() => openDownloadApp(InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON)}
                 >
                   <PrimaryMenuRow close={toggleOpen}>
