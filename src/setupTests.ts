@@ -10,20 +10,18 @@ if (typeof global.TextEncoder === 'undefined') {
   global.TextDecoder = TextDecoder as typeof global.TextDecoder
 }
 
-global.matchMedia =
-  global.matchMedia ??
-  function () {
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation(() => {
     return {
       matches: false,
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
     }
-  }
+  }),
+})
 
-global.performance =
-  global.performance ??
-  function () {
-    return {
-      getEntriesByType: jest.fn(),
-    }
-  }
+Object.defineProperty(window.performance, 'getEntriesByType', {
+  writable: true,
+  value: jest.fn(),
+})
