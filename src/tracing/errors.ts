@@ -1,6 +1,15 @@
 import { ClientOptions, ErrorEvent, EventHint } from '@sentry/types'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
+/* `responseStatus` is only currently supported on certain browsers.
+ * see: https://caniuse.com/mdn-api_performanceresourcetiming_responsestatus
+ */
+declare global {
+  interface PerformanceEntry {
+    responseStatus?: number
+  }
+}
+
 /** Identifies ethers request errors (as thrown by {@type import(@ethersproject/web).fetchJson}). */
 function isEthersRequestError(error: Error): error is Error & { requestBody: string } {
   return 'requestBody' in error && typeof (error as unknown as Record<'requestBody', unknown>).requestBody === 'string'
@@ -39,6 +48,27 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
 
     // If the error is based on a user rejecting, it should not be considered an exception.
     if (didUserReject(error)) return null
+
+    /*
+     * This ignores 499 errors, which are caused by Cloudflare when a request is cancelled.
+     * CF claims that some number of these is expected, and that they should be ignored.
+     * See https://groups.google.com/a/uniswap.org/g/cloudflare-eng/c/t3xvAiJFujY.
+     */
+    if (error.message.match(/Loading chunk \d+ failed\. \(error: .+\.chunk\.js\)/)) {
+      const asset = error.message.match(/https?:\/\/.+?\.chunk\.js/)?.[0]
+      const entries = [...(performance?.getEntriesByType('resource') ?? [])]
+      const resource = entries?.find(({ name }) => name === asset)
+      const status = resource?.responseStatus
+
+      /*
+       * If the status if 499, then we ignore.
+       * If there's no status (meaning the browser doesn't support `responseStatus`) then we also ignore.
+       * These errors are likely also 499 errors, and we can catch any spikes in non-499 chunk errors via other browsers.
+       */
+      if (!status || status === 499) {
+        return null
+      }
+    }
 
     /*
      * This is caused by HTML being returned for a chunk from Cloudflare.
