@@ -25,6 +25,24 @@ exports[`placeholder containers load 1`] = `
   justify-content: flex-start;
 }
 
+.c11 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .c9 {
   color: #0D111C;
 }
@@ -44,7 +62,6 @@ exports[`placeholder containers load 1`] = `
 }
 
 .c7 {
-  height: 288px;
   background: #FFFFFF;
   border-radius: 16px;
   padding: 16px 20px;
@@ -66,24 +83,32 @@ exports[`placeholder containers load 1`] = `
   cursor: default;
 }
 
-.c11 {
-  color: #0D111C;
-  line-height: 24px;
-  cursor: pointer;
-}
-
-.c11:hover {
-  opacity: 0.6;
-}
-
 .c12 {
-  color: #98A1C0;
+  color: #0D111C;
   line-height: 24px;
   cursor: pointer;
 }
 
 .c12:hover {
   opacity: 0.6;
+}
+
+.c13 {
+  color: #98A1C0;
+  line-height: 24px;
+  cursor: pointer;
+}
+
+.c13:hover {
+  opacity: 0.6;
+}
+
+.c14 {
+  background: #D2D9EE;
+  border-radius: 4px;
+  padding: 2px 4px;
+  color: #7780A0;
+  line-height: 12px;
 }
 
 .c2 {
@@ -118,6 +143,9 @@ exports[`placeholder containers load 1`] = `
 .c6 {
   gap: 24px;
   width: 100%;
+  -webkit-align-self: flex-start;
+  -ms-flex-item-align: start;
+  align-self: flex-start;
 }
 
 @media screen and (max-width:640px) {
@@ -156,7 +184,6 @@ exports[`placeholder containers load 1`] = `
       >
         <div
           class="c7"
-          style="height: 528px;"
         >
           <div
             class="c3 c4 c8"
@@ -164,60 +191,86 @@ exports[`placeholder containers load 1`] = `
             <div
               class="c9 c10 css-6ms77s"
             >
-              Traits
+              <div
+                class="c3 c11"
+              >
+                Traits
+              </div>
             </div>
           </div>
-          <div>
+          <div
+            style="height: 492px;"
+          >
             Traits Content
           </div>
         </div>
         <div
           class="c7"
-          style="height: 288px;"
         >
           <div
             class="c3 c4 c8"
           >
             <div
-              class="c9 c11 css-6ms77s"
+              class="c9 c12 css-6ms77s"
             >
               Description
             </div>
             <div
-              class="c9 c12 css-6ms77s"
+              class="c9 c13 css-6ms77s"
             >
               Details
             </div>
           </div>
-          <div>
+          <div
+            style="height: 252px;"
+          >
             Description Content
           </div>
         </div>
       </div>
       <div
         class="c7"
-        style="height: 604px;"
       >
         <div
           class="c3 c4 c8"
         >
           <div
-            class="c9 c11 css-6ms77s"
+            class="c9 c12 css-6ms77s"
           >
             Activity
           </div>
           <div
-            class="c9 c12 css-6ms77s"
+            class="c9 c13 css-6ms77s"
           >
-            Offers
+            <div
+              class="c3 c11"
+            >
+              Offers
+              <div
+                class="c14 css-f8aq60"
+              >
+                10+
+              </div>
+            </div>
           </div>
           <div
-            class="c9 c12 css-6ms77s"
+            class="c9 c13 css-6ms77s"
           >
-            Listings
+            <div
+              class="c3 c11"
+            >
+              Listings
+              <div
+                class="c14 css-f8aq60"
+              >
+                10+
+              </div>
+            </div>
           </div>
         </div>
-        <div>
+        <div
+          style="height: 568px;"
+        >
           Activity Content
         </div>
       </div>
