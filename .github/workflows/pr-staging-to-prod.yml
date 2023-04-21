@@ -1,7 +1,7 @@
 name: 3 | Generate PR for releases/staging to releases/prod
 
 # This CI job is responsible for generating PRs that bring the HEAD of releases/staging into releases/prod.
-# These PRs are meant to be the only (standard) way that code is merged into the releases/prod branch.
+# These PRs are meant to be the only (standard) way that code is merged into the `releases/prod` branch.
 #
 # https://github.com/peter-evans/create-pull-request/blob/main/docs/examples.md#keep-a-branch-up-to-date-with-another
 
