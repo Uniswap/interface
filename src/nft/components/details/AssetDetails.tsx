@@ -15,7 +15,6 @@ import { formatEth } from 'nft/utils/currency'
 import { isAudio } from 'nft/utils/isAudio'
 import { isVideo } from 'nft/utils/isVideo'
 import { putCommas } from 'nft/utils/putCommas'
-import { fallbackProvider, getRarityProviderLogo } from 'nft/utils/rarity'
 import { useCallback, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Link as RouterLink } from 'react-router-dom'
@@ -325,7 +324,6 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
 
   const rarity = asset?.rarity?.providers?.[0]
   const [showHolder, setShowHolder] = useState(false)
-  const rarityProviderLogo = getRarityProviderLogo(rarity?.provider)
 
   return (
     <Column>
@@ -357,11 +355,9 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                 text={
                   <HoverContainer>
                     <HoverImageContainer>
-                      <img src={rarityProviderLogo} alt="cardLogo" width={16} />
+                      <img src="/nft/svgs/gem.svg" alt="cardLogo" width={16} />
                     </HoverImageContainer>
-                    <ContainerText>
-                      {`Ranking by ${rarity.provider === 'Genie' ? fallbackProvider : rarity.provider}`}
-                    </ContainerText>
+                    <ContainerText>Ranking by Rarity Sniper</ContainerText>
                   </HoverContainer>
                 }
                 placement="top"

@@ -1,6 +1,4 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
-import { MgtmVariant, useMgtmFlag } from 'featureFlags/flags/mgtm'
-import { useMiniPortfolioFlag } from 'featureFlags/flags/miniPortfolio'
 import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
 import { SwapWidgetVariant, useSwapWidgetFlag } from 'featureFlags/flags/swapWidget'
@@ -205,18 +203,6 @@ export default function FeatureFlagModal() {
           <X size={24} />
         </CloseButton>
       </Header>
-      <FeatureFlagOption
-        variant={MgtmVariant}
-        value={useMgtmFlag()}
-        featureFlag={FeatureFlag.mgtm}
-        label="Mobile Wallet go-to-market assets"
-      />
-      <FeatureFlagOption
-        variant={BaseVariant}
-        value={useMiniPortfolioFlag()}
-        featureFlag={FeatureFlag.miniPortfolio}
-        label="MiniPortfolio"
-      />
       <FeatureFlagOption
         variant={PayWithAnyTokenVariant}
         value={usePayWithAnyTokenFlag()}
