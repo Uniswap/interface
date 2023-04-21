@@ -2,6 +2,7 @@ import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceEventName } from '@uniswap/analytics-events'
 import { ScrollBarStyles } from 'components/Common'
 import { useWindowSize } from 'hooks/useWindowSize'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useEffect, useRef } from 'react'
@@ -191,6 +192,13 @@ function AccountDrawer() {
       document.removeEventListener('keydown', escapeKeyDownHandler)
     }
   }, [walletDrawerOpen, toggleWalletDrawer])
+
+  // close on click outside
+  useOnClickOutside(scrollRef, () => {
+    if (walletDrawerOpen) {
+      toggleWalletDrawer()
+    }
+  })
 
   return (
     <Container>
