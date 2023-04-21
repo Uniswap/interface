@@ -4,7 +4,7 @@ import { useReducer, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { containerStyles } from './shared'
+import { containerStyles, getBubbleText } from './shared'
 
 const TabbedComponentContainer = styled.div`
   ${containerStyles}
@@ -40,6 +40,23 @@ const Chevron = styled(ChevronUpIcon)<{ isOpen: boolean }>`
   margin-left: auto;
   margin-right: 0;
 `
+
+const TabNumBubble = styled(ThemedText.UtilityBadge)`
+  background: ${({ theme }) => theme.backgroundOutline};
+  border-radius: 4px;
+  padding: 2px 4px;
+  color: ${({ theme }) => theme.textSecondary};
+  line-height: 12px;
+`
+
+export const TabTitleWithBubble = ({ title, bubbleNumber }: { title: React.ReactNode; bubbleNumber?: number }) => {
+  return (
+    <Row gap="8px">
+      {title}
+      {bubbleNumber && <TabNumBubble>{getBubbleText(bubbleNumber)}</TabNumBubble>}
+    </Row>
+  )
+}
 
 export interface Tab {
   title: React.ReactNode
