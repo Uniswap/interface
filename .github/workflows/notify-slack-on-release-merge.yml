@@ -42,7 +42,6 @@ jobs:
           | awk -F';' '{print "• <"$1"|"$2"> (<https://github.com/"$3"|"$3">, "$4") - "$5}' \
           | sed 's/$/\\n/g' | tr -d '\n' \
           > /tmp/parsed_github_context
-          echo "SLACK_COMMITS=$(cat /tmp/parsed_github_context)" >> $GITHUB_ENV
           echo "SLACK_COMMITS=$(cat /tmp/parsed_github_context)" >> "$GITHUB_OUTPUT"
       - name: Send custom JSON data to Slack workflow
         id: slack
