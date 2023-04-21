@@ -2,6 +2,11 @@ import { ErrorEvent } from '@sentry/types'
 
 import { filterKnownErrors } from './errors'
 
+Object.defineProperty(window.performance, 'getEntriesByType', {
+  writable: true,
+  value: jest.fn(),
+})
+
 describe('filterKnownErrors', () => {
   const ERROR = {} as ErrorEvent
   it('propagates an error', () => {
