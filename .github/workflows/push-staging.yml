@@ -8,7 +8,7 @@ on:
 
 # https://stackoverflow.com/questions/57921401/push-to-origin-from-github-action
 jobs:
-  staging-branch-push:
+  push-staging:
     name: 'Push to staging branch'
     runs-on: ubuntu-latest
     environment:
