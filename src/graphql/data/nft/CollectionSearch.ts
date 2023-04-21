@@ -80,7 +80,7 @@ function useCollectionQuerySearch(query: string, skip?: boolean): useCollectionS
 
 export function useCollectionSearch(queryOrAddress: string): useCollectionSearchReturnProps {
   const isName = !isAddress(queryOrAddress.toLowerCase())
-  const queryResult = useCollectionQuerySearch(queryOrAddress, !isName)
-  const addressResult = useCollection(queryOrAddress, isName)
+  const queryResult = useCollectionQuerySearch(queryOrAddress, /* skip= */ !isName)
+  const addressResult = useCollection(queryOrAddress, /* skip= */ isName)
   return isName ? queryResult : { data: [addressResult.data], loading: addressResult.loading }
 }
