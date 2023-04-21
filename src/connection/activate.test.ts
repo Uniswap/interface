@@ -58,8 +58,8 @@ function createMockConnection(
 it('Should initialize with proper empty state', async () => {
   const result = renderHook(useActivateConnection).result
 
-  expect(result.current.pending.connection).toBeUndefined()
-  expect(result.current.pending.error).toBeUndefined()
+  expect(result.current.pendingConnection).toBeUndefined()
+  expect(result.current.error).toBeUndefined()
 })
 
 it('Should call activate function on a connection', async () => {
@@ -74,16 +74,16 @@ it('Should call activate function on a connection', async () => {
     activationCall = result.current.tryActivation(mockConnection, onSuccess)
   })
 
-  expect(result.current.pending.connection).toBe(mockConnection)
-  expect(result.current.pending.error).toBeUndefined()
+  expect(result.current.pendingConnection).toBe(mockConnection)
+  expect(result.current.error).toBeUndefined()
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
   expect(onSuccess).toHaveBeenCalledTimes(0)
 
   activationResponse.resolve()
   await activationCall
 
-  expect(result.current.pending.connection).toBeUndefined()
-  expect(result.current.pending.error).toBeUndefined()
+  expect(result.current.pendingConnection).toBeUndefined()
+  expect(result.current.error).toBeUndefined()
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
   expect(onSuccess).toHaveBeenCalledTimes(1)
 })
@@ -101,14 +101,14 @@ it('Should properly deactivate pending connection attempts', async () => {
     result.current.tryActivation(mockConnection, onSuccess)
   })
 
-  expect(result.current.pending.connection).toBe(mockConnection)
-  expect(result.current.pending.error).toBeUndefined()
+  expect(result.current.pendingConnection).toBe(mockConnection)
+  expect(result.current.error).toBeUndefined()
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
 
   await act(() => result.current.cancelActivation())
 
-  expect(result.current.pending.connection).toBeUndefined()
-  expect(result.current.pending.error).toBeUndefined()
+  expect(result.current.pendingConnection).toBeUndefined()
+  expect(result.current.error).toBeUndefined()
   expect(mockConnection.connector.deactivate).toHaveBeenCalledTimes(1)
   expect(onSuccess).toHaveBeenCalledTimes(0)
 })
@@ -127,16 +127,16 @@ it('Should properly display error state', async () => {
     result.current.tryActivation(mockConnection, onSuccess)
   })
 
-  expect(result.current.pending.connection).toBe(mockConnection)
-  expect(result.current.pending.error).toBeUndefined()
+  expect(result.current.pendingConnection).toBe(mockConnection)
+  expect(result.current.error).toBeUndefined()
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
 
   await act(async () => {
     activationResponse.reject('Failed to connect')
   })
 
-  expect(result.current.pending.connection).toBe(mockConnection)
-  expect(result.current.pending.error).toEqual('Failed to connect')
+  expect(result.current.pendingConnection).toBe(mockConnection)
+  expect(result.current.error).toEqual('Failed to connect')
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
   expect(onSuccess).toHaveBeenCalledTimes(0)
 })
@@ -154,15 +154,15 @@ it('Should successfully retry a failed activation', async () => {
 
   await act(() => result.current.tryActivation(mockConnection, onSuccess))
 
-  expect(result.current.pending.connection).toBe(mockConnection)
-  expect(result.current.pending.error).toEqual('Failed to connect')
+  expect(result.current.pendingConnection).toBe(mockConnection)
+  expect(result.current.error).toEqual('Failed to connect')
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
   expect(onSuccess).toHaveBeenCalledTimes(0)
 
   await act(() => result.current.tryActivation(mockConnection, onSuccess))
 
-  expect(result.current.pending.connection).toBeUndefined()
-  expect(result.current.pending.error).toBeUndefined()
+  expect(result.current.pendingConnection).toBeUndefined()
+  expect(result.current.error).toBeUndefined()
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(2)
   expect(onSuccess).toHaveBeenCalledTimes(1)
 })
@@ -201,15 +201,15 @@ it('Should gracefully handle user connection rejection', async () => {
 
     await act(() => result.current.tryActivation(mockConnection, onSuccess))
 
-    expect(result.current.pending.connection).toBeUndefined()
-    expect(result.current.pending.error).toBeUndefined()
+    expect(result.current.pendingConnection).toBeUndefined()
+    expect(result.current.error).toBeUndefined()
     expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
     expect(onSuccess).toHaveBeenCalledTimes(0)
 
     await act(() => result.current.tryActivation(mockConnection, onSuccess))
 
-    expect(result.current.pending.connection).toBeUndefined()
-    expect(result.current.pending.error).toBeUndefined()
+    expect(result.current.pendingConnection).toBeUndefined()
+    expect(result.current.error).toBeUndefined()
     expect(mockConnection.connector.activate).toHaveBeenCalledTimes(2)
     expect(onSuccess).toHaveBeenCalledTimes(1)
   })
