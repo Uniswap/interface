@@ -10283,6 +10283,53 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@uniswap/extension@workspace:apps/extension":
+  version: 0.0.0-use.local
+  resolution: "@uniswap/extension@workspace:apps/extension"
+  dependencies:
+    "@pmmmwh/react-refresh-webpack-plugin": ^0.5.10
+    "@swc/core": ^1.3.39
+    "@types/chrome": ^0.0.224
+    "@types/react": ^18.0.15
+    "@types/react-dom": ^18.0.0
+    "@types/uuid": 9.0.1
+    clean-webpack-plugin: ^4.0.0
+    copy-webpack-plugin: ^11.0.0
+    crypto-browserify: ^3.12.0
+    dotenv-webpack: 8.0.1
+    eslint-config-custom: "workspace:^"
+    eslint-plugin-prettier: 4.2.1
+    eth-rpc-errors: 4.0.3
+    ethers: 5.7.2
+    fork-ts-checker-webpack-plugin: ^8.0.0
+    fs: ^0.0.1-security
+    image-webpack-loader: 8.1.0
+    mini-css-extract-plugin: ^2.7.3
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    react-native: ^0.71.4
+    react-native-reanimated: ^3.0.2
+    react-native-web: ^0.18.12
+    react-native-web-lite: ^1.9.0
+    react-redux: ^8.0.5
+    react-refresh: ^0.14.0
+    react-router-dom: 6.10.0
+    serve: ^14.2.0
+    stream-browserify: ^3.0.0
+    swc-loader: ^0.2.3
+    tamagui-loader: ^1.7.6
+    typescript: ^4.9.4
+    ui: "workspace:^"
+    uuid: 9.0.0
+    wallet: "workspace:^"
+    webext-redux: ^2.1.9
+    webpack: ^5.76.0
+    webpack-cli: ^5.0.1
+    webpack-dev-server: ^4.11.1
+    webpack-node-externals: 3.0.0
+  languageName: unknown
+  linkType: soft
+
 "@uniswap/sdk-core@npm:3.2.2":
   version: 3.2.2
   resolution: "@uniswap/sdk-core@npm:3.2.2"
@@ -11163,59 +11210,6 @@ __metadata:
   checksum: d4b1653fc60b6465b982bf5a88b12051ed2d807d70609386a809306e1c636496f53522d61fa30f9f98c71aaae34f34e1651889cf17d81a44e3dafd2859d495ad
   languageName: node
   linkType: hard
-
-"app@workspace:^, app@workspace:packages/app":
-  version: 0.0.0-use.local
-  resolution: "app@workspace:packages/app"
-  dependencies:
-    "@apollo/client": 3.7.11
-    "@faker-js/faker": 7.6.0
-    "@graphql-codegen/cli": 3.2.2
-    "@graphql-codegen/typescript-operations": 3.0.2
-    "@graphql-codegen/typescript-react-apollo": 3.3.7
-    "@react-navigation/native": ^6.1.2
-    "@react-navigation/native-stack": ^6.9.8
-    "@reduxjs/toolkit": 1.9.3
-    "@tamagui/animations-react-native": ^1.9.0
-    "@tamagui/colors": ^1.9.0
-    "@tamagui/font-inter": ^1.9.0
-    "@tamagui/lucide-icons": ^1.9.0
-    "@tamagui/shorthands": ^1.9.0
-    "@tamagui/theme-base": ^1.9.0
-    "@types/chrome": 0.0.229
-    "@types/jest": 29.5.0
-    "@types/react": ^18.0.15
-    "@types/redux-logger": 3.0.9
-    "@types/sinon-chrome": 2.2.11
-    "@uniswap/sdk-core": 3.2.2
-    dayjs: 1.11.7
-    eslint: ^8.21.0
-    ethers: 5.7.2
-    expo-linking: ^3.2.3
-    get-graphql-schema: 2.1.2
-    graphql: 16.6.0
-    i18next: ^21.9.1
-    jest: 29.5.0
-    jest-chrome: 0.8.0
-    jest-presets: "workspace:^"
-    mem-storage-area: 1.0.3
-    prettier: latest
-    react: ^18.2.0
-    react-i18next: ^11.18.6
-    react-native: ^0.71.4
-    react-native-safe-area-context: 4.5.0
-    react-redux: ^8.0.5
-    redux-logger: 3.0.6
-    redux-persist: 6.0.0
-    redux-saga: 1.2.2
-    sinon-chrome: 3.0.1
-    solito: ^2.1.3
-    tamagui: ^1.9.0
-    typed-redux-saga: 1.5.0
-    typescript: ^4.9.4
-    ui: "workspace:^"
-  languageName: unknown
-  linkType: soft
 
 "appdirsjs@npm:^1.2.4":
   version: 1.2.7
@@ -16232,9 +16226,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-custom@workspace:^, eslint-config-custom@workspace:packages/eslint-config-custom":
+"eslint-config-custom@workspace:^, eslint-config-custom@workspace:config/eslint-config-custom":
   version: 0.0.0-use.local
-  resolution: "eslint-config-custom@workspace:packages/eslint-config-custom"
+  resolution: "eslint-config-custom@workspace:config/eslint-config-custom"
   dependencies:
     "@react-native-community/eslint-config": 3.0.3
     eslint: ^8.21.0
@@ -17034,7 +17028,6 @@ __metadata:
     "@tamagui/babel-plugin": 1.7.2
     "@tamagui/font-inter": ^1.9.0
     "@types/react": ^18.0.15
-    app: "workspace:^"
     babel-plugin-inline-dotenv: ^1.7.0
     babel-plugin-module-resolver: ^5.0.0
     babel-plugin-transform-inline-environment-variables: ^0.4.4
@@ -17069,6 +17062,7 @@ __metadata:
     standard-version-expo: ^1.0.3
     typescript: ^4.9.4
     ui: "workspace:^"
+    wallet: "workspace:^"
   languageName: unknown
   linkType: soft
 
@@ -17604,53 +17598,6 @@ __metadata:
   checksum: a50a8309ca65ea5d426382ff09f33586527882cf532931cb08ca786ea3146c0553310bda688710ff61d7668eba9f96b923fe1420cdf56a2c3eaf30fcab87b515
   languageName: node
   linkType: hard
-
-"extension-app@workspace:apps/extension":
-  version: 0.0.0-use.local
-  resolution: "extension-app@workspace:apps/extension"
-  dependencies:
-    "@pmmmwh/react-refresh-webpack-plugin": ^0.5.10
-    "@swc/core": ^1.3.39
-    "@types/chrome": ^0.0.224
-    "@types/react": ^18.0.15
-    "@types/react-dom": ^18.0.0
-    "@types/uuid": 9.0.1
-    app: "workspace:^"
-    clean-webpack-plugin: ^4.0.0
-    copy-webpack-plugin: ^11.0.0
-    crypto-browserify: ^3.12.0
-    dotenv-webpack: 8.0.1
-    eslint-config-custom: "workspace:^"
-    eslint-plugin-prettier: 4.2.1
-    eth-rpc-errors: 4.0.3
-    ethers: 5.7.2
-    fork-ts-checker-webpack-plugin: ^8.0.0
-    fs: ^0.0.1-security
-    image-webpack-loader: 8.1.0
-    mini-css-extract-plugin: ^2.7.3
-    react: ^18.2.0
-    react-dom: ^18.2.0
-    react-native: ^0.71.4
-    react-native-reanimated: ^3.0.2
-    react-native-web: ^0.18.12
-    react-native-web-lite: ^1.9.0
-    react-redux: ^8.0.5
-    react-refresh: ^0.14.0
-    react-router-dom: 6.10.0
-    serve: ^14.2.0
-    stream-browserify: ^3.0.0
-    swc-loader: ^0.2.3
-    tamagui-loader: ^1.7.6
-    typescript: ^4.9.4
-    ui: "workspace:^"
-    uuid: 9.0.0
-    webext-redux: ^2.1.9
-    webpack: ^5.76.0
-    webpack-cli: ^5.0.1
-    webpack-dev-server: ^4.11.1
-    webpack-node-externals: 3.0.0
-  languageName: unknown
-  linkType: soft
 
 "external-editor@npm:^3.0.3":
   version: 3.1.0
@@ -20062,15 +20009,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"husky@npm:^8.0.0":
-  version: 8.0.3
-  resolution: "husky@npm:8.0.3"
-  bin:
-    husky: lib/bin.js
-  checksum: 837bc7e4413e58c1f2946d38fb050f5d7324c6f16b0fd66411ffce5703b294bd21429e8ba58711cd331951ee86ed529c5be4f76805959ff668a337dbfa82a1b0
-  languageName: node
-  linkType: hard
-
 "hyphenate-style-name@npm:^1.0.3":
   version: 1.0.4
   resolution: "hyphenate-style-name@npm:1.0.4"
@@ -21925,9 +21863,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-presets@workspace:^, jest-presets@workspace:packages/jest-presets":
+"jest-presets@workspace:^, jest-presets@workspace:config/jest-presets":
   version: 0.0.0-use.local
-  resolution: "jest-presets@workspace:packages/jest-presets"
+  resolution: "jest-presets@workspace:config/jest-presets"
   dependencies:
     ts-jest: 29.0.5
   languageName: unknown
@@ -31040,7 +30978,6 @@ __metadata:
     "@storybook/react": ^6.5.15
     "@types/node": ^18.6.4
     "@types/react": ^18.0.15
-    app: "workspace:^"
     assert: 2.0.0
     babel-loader: ^8.2.3
     babel-plugin-module-resolver: ^5.0.0
@@ -31059,6 +30996,7 @@ __metadata:
     tsconfig-paths-webpack-plugin: ^4.0.0
     typescript: ^4.9.4
     ui: "workspace:^"
+    wallet: "workspace:^"
   languageName: unknown
   linkType: soft
 
@@ -32467,9 +32405,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsconfig@workspace:packages/tsconfig":
+"tsconfig@workspace:config/tsconfig":
   version: 0.0.0-use.local
-  resolution: "tsconfig@workspace:packages/tsconfig"
+  resolution: "tsconfig@workspace:config/tsconfig"
   languageName: unknown
   linkType: soft
 
@@ -33140,7 +33078,6 @@ __metadata:
     concurrently: ^7.6.0
     dotenv-cli: ^7.0.0
     eslint: ^8.21.0
-    husky: ^8.0.0
     is-ci: ^3.0.1
     lint-staged: ^13.1.0
     prettier: latest
@@ -33618,6 +33555,59 @@ __metadata:
   checksum: ad7a257ea1e662e57ef2e018f97b3c02a7240ad5093c392186ce0bcf1f1a60bbadd520d073b9beb921ed99f64f065efb63dfc8eec689a80e569f93c1c5d5e16c
   languageName: node
   linkType: hard
+
+"wallet@workspace:^, wallet@workspace:packages/wallet":
+  version: 0.0.0-use.local
+  resolution: "wallet@workspace:packages/wallet"
+  dependencies:
+    "@apollo/client": 3.7.11
+    "@faker-js/faker": 7.6.0
+    "@graphql-codegen/cli": 3.2.2
+    "@graphql-codegen/typescript-operations": 3.0.2
+    "@graphql-codegen/typescript-react-apollo": 3.3.7
+    "@react-navigation/native": ^6.1.2
+    "@react-navigation/native-stack": ^6.9.8
+    "@reduxjs/toolkit": 1.9.3
+    "@tamagui/animations-react-native": ^1.9.0
+    "@tamagui/colors": ^1.9.0
+    "@tamagui/font-inter": ^1.9.0
+    "@tamagui/lucide-icons": ^1.9.0
+    "@tamagui/shorthands": ^1.9.0
+    "@tamagui/theme-base": ^1.9.0
+    "@types/chrome": 0.0.229
+    "@types/jest": 29.5.0
+    "@types/react": ^18.0.15
+    "@types/redux-logger": 3.0.9
+    "@types/sinon-chrome": 2.2.11
+    "@uniswap/sdk-core": 3.2.2
+    dayjs: 1.11.7
+    eslint: ^8.21.0
+    ethers: 5.7.2
+    expo-linking: ^3.2.3
+    get-graphql-schema: 2.1.2
+    graphql: 16.6.0
+    i18next: ^21.9.1
+    jest: 29.5.0
+    jest-chrome: 0.8.0
+    jest-presets: "workspace:^"
+    mem-storage-area: 1.0.3
+    prettier: latest
+    react: ^18.2.0
+    react-i18next: ^11.18.6
+    react-native: ^0.71.4
+    react-native-safe-area-context: 4.5.0
+    react-redux: ^8.0.5
+    redux-logger: 3.0.6
+    redux-persist: 6.0.0
+    redux-saga: 1.2.2
+    sinon-chrome: 3.0.1
+    solito: ^2.1.3
+    tamagui: ^1.9.0
+    typed-redux-saga: 1.5.0
+    typescript: ^4.9.4
+    ui: "workspace:^"
+  languageName: unknown
+  linkType: soft
 
 "warn-once@npm:^0.1.0":
   version: 0.1.1

@@ -4,7 +4,7 @@ import '@fontsource/inter/700.css'
 // import 'raf/polyfill' // const OriginalNextImage = NextImage.default
 
 // import { RouerContext } from 'next/dist/shared/lib/router-context'
-import { Provider } from 'app/src/provider/tamagui-provider'
+import { Provider } from 'wallet/src/provider/tamagui-provider'
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },

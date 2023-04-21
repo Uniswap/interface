@@ -10,7 +10,6 @@
     "concurrently": "^7.6.0",
     "dotenv-cli": "^7.0.0",
     "eslint": "^8.21.0",
-    "husky": "^8.0.0",
     "is-ci": "^3.0.1",
     "lint-staged": "^13.1.0",
     "prettier": "latest",
@@ -51,19 +50,18 @@
     "g:run-all-checks": "turbo run typecheck lint test build --parallel --since=HEAD^1",
     "g:test": "turbo run test --filter=tests --parallel --since=HEAD^1",
     "g:typecheck": "turbo run typecheck --parallel --since=HEAD^1",
-    "gql:ext": "yarn workspace extension-app graphql:generate",
-    "postinstall": "is-ci || yarn husky install",
-    "semantic-release:expo-app": "yarn workspace expo-app semantic-release",
+    "gql:extension": "yarn workspace @uniswap/extension graphql:generate",
     "staged:lint:fix": "eslint --fix",
     "start:expo": "yarn workspace expo-app start",
-    "start:ext": "yarn workspace extension-app start",
-    "start:sb": "yarn workspace storybook start",
+    "start:extension": "yarn workspace @uniswap/extension start",
+    "start:storybook": "yarn workspace storybook start",
     "upgrade:next": "manypkg upgrade next && manypkg upgrade eslint-config-next",
     "upgrade:rnw": "manypkg upgrade react-native-web",
     "upgrade:tamagui": "manypkg upgrade tamagui && manypkg upgrade @tamagui && manypkg upgrade tamagui-loader && manypkg upgrade react-native-web-lite"
   },
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "config/*"
   ]
 }

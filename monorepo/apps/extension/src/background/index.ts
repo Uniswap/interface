@@ -1,10 +1,10 @@
 import {
   BaseDappResponse,
   DappRequestType,
-} from 'app/src/features/dappRequests/dappRequestTypes'
-import { addRequest } from 'app/src/features/dappRequests/saga'
-import { isOnboardedSelector } from 'app/src/features/wallet/selectors'
-import { createStore } from 'app/src/state'
+} from 'wallet/src/features/dappRequests/dappRequestTypes'
+import { addRequest } from 'wallet/src/features/dappRequests/saga'
+import { isOnboardedSelector } from 'wallet/src/features/wallet/selectors'
+import { createStore } from 'wallet/src/state'
 import { wrapStore } from 'webext-redux'
 import { PortName } from '../types/index'
 
@@ -13,7 +13,7 @@ import { PortName } from '../types/index'
 // the service worker wakes up from idle.
 let isInitialized = false
 
-// onInstalled is triggered when the extension is installed or updated. We want to 
+// onInstalled is triggered when the extension is installed or updated. We want to
 // open full screen onboarding when the extension is installed so this listener handles that.
 chrome.runtime.onInstalled.addListener(() => {
   initializeStore()

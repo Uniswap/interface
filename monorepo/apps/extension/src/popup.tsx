@@ -1,5 +1,5 @@
-import { logger } from 'app/src/features/logger/logger'
-import { RootState } from 'app/src/state'
+import { logger } from 'wallet/src/features/logger/logger'
+import { RootState } from 'wallet/src/state'
 import React, { lazy } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Store } from 'webext-redux'

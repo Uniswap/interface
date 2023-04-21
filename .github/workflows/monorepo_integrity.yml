@@ -27,7 +27,7 @@ jobs:
           node-version: 18.14.0
 
       - name: 📥 Monorepo install
-        uses: ./.github/actions/yarn-install
+        uses: ./.github/actions/monorepo-yarn-install
 
       - name: 👬🏽 Check for duplicate dependencies in lock file
         run: yarn dedupe --check

@@ -19,10 +19,10 @@
       "./apps/expo",
       "./apps/extension",
       "./apps/storybook",
-      "./packages/app",
-      "./packages/eslint-config-custom",
-      "./packages/jest-presets",
-      "./packages/tsconfig",
+      "./config/eslint-config-custom",
+      "./config/jest-presets",
+      "./config/tsconfig",
+      "./packages/wallet",
       "./packages/ui"
     ]
   }

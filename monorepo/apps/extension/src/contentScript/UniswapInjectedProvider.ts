@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ChainId } from 'app/src/features/chains/chains'
+import { ChainId } from 'wallet/src/features/chains/chains'
 import {
   AccountResponse,
   BaseDappRequest,
@@ -22,8 +22,8 @@ import {
   SignTypedDataRequest,
   SignTypedDataResponse,
   TransactionRejectedResponse,
-} from 'app/src/features/dappRequests/dappRequestTypes'
-import { logger } from 'app/src/features/logger/logger'
+} from 'wallet/src/features/dappRequests/dappRequestTypes'
+import { logger } from 'wallet/src/features/logger/logger'
 import { ethErrors } from 'eth-rpc-errors'
 import { ethers } from 'ethers'
 import EventEmitter from 'eventemitter3'

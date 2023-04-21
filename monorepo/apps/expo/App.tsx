@@ -1,5 +1,5 @@
 import 'expo-dev-client'
-import { Provider } from 'app/src/provider/tamagui-provider'
+import { Provider } from 'wallet/src/provider/tamagui-provider'
 import React from 'react'
 import { Stack } from 'tamagui'
 import { Button, ButtonEmphasis } from 'ui/src/components/button/Button'

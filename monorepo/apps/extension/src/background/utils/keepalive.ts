@@ -1,6 +1,6 @@
-import { authActions } from 'app/src/features/auth/saga'
-import { logger } from 'app/src/features/logger/logger'
-import { SagaStatus } from 'app/src/utils/saga'
+import { authActions } from 'wallet/src/features/auth/saga'
+import { logger } from 'wallet/src/features/logger/logger'
+import { SagaStatus } from 'wallet/src/utils/saga'
 import { call, cancel, cancelled, delay, fork, take } from 'typed-redux-saga'
 
 const KEEP_ALIVE_INTERVAL_MS = 5000 // * 60 * 1000 // 5 minutes

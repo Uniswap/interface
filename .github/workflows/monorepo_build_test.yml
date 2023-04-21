@@ -40,7 +40,7 @@ jobs:
           node-version: 18.14.0
 
       - name: 📥 Monorepo install
-        uses: ./.github/actions/yarn-install
+        uses: ./.github/actions/monorepo-yarn-install
 
       - name: 🕵️ Typecheck
         run: yarn g:typecheck

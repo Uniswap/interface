@@ -3,12 +3,12 @@
   "version": "0.0.0",
   "_id": "storybook@1.0.0",
   "dependencies": {
-    "app": "workspace:^",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-native": "^0.71.4",
     "react-native-web": "^0.18.12",
-    "ui": "workspace:^"
+    "ui": "workspace:^",
+    "wallet": "workspace:^"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
