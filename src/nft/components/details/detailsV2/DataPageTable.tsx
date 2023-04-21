@@ -24,5 +24,5 @@ const TableTabs: Array<Tab> = [
 ]
 
 export const DataPageTable = () => {
-  return <TabbedComponent tabs={TableTabs} defaultTab={TableTabs[0]} style={{ height: '604px' }} />
+  return <TabbedComponent tabs={TableTabs} style={{ height: '604px' }} />
 }

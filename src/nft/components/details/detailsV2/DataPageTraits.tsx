@@ -15,5 +15,5 @@ const TraitTabs: Array<Tab> = [
 ]
 
 export const DataPageTraits = () => {
-  return <TabbedComponent tabs={TraitTabs} defaultTab={TraitTabs[0]} style={{ height: '528px' }} />
+  return <TabbedComponent tabs={TraitTabs} style={{ height: '528px' }} />
 }

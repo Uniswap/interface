@@ -24,5 +24,5 @@ const DescriptionTabs: Array<Tab> = [
 ]
 
 export const DataPageDescription = () => {
-  return <TabbedComponent tabs={DescriptionTabs} defaultTab={DescriptionTabs[0]} style={{ height: '288px' }} />
+  return <TabbedComponent tabs={DescriptionTabs} style={{ height: '288px' }} />
 }

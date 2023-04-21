@@ -35,12 +35,12 @@ export interface Tab {
 
 interface TabbedComponentProps {
   tabs: Tab[]
-  defaultTab: Tab
+  defaultTabIndex?: number
   style?: React.CSSProperties
 }
 
-export const TabbedComponent = ({ tabs, defaultTab, style }: TabbedComponentProps) => {
-  const [activeTab, setActiveTab] = useState(defaultTab.key)
+export const TabbedComponent = ({ tabs, defaultTabIndex = 0, style }: TabbedComponentProps) => {
+  const [activeTab, setActiveTab] = useState(tabs[defaultTabIndex].key)
   const activeContent = tabs.find((tab) => tab.key === activeTab)?.content
   return (
     <TabbedComponentContainer style={style}>
