@@ -15,7 +15,7 @@ jobs:
       - name: Parse event to slug
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
-        # This is a bit of shell kung fu that formats the contents of the GitHub event into a multi-line Slack message
+        # Formats the contents of the GitHub event into slugs: one line per commit, formatted for Slack.
         # The steps are as follows:
         # 1. Pull commit data from the Github context and format it as a TSV with jq
         # 2. Clean up the TSV output so that it's more easily parsed by awk
