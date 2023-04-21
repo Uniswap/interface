@@ -41,7 +41,7 @@ jobs:
           delete-branch: 'true'
           committer: 'UL Service Account <hello-happy-puppy@users.noreply.github.com>'
           author: 'UL Service Account <hello-happy-puppy@users.noreply.github.com>'
-          branch: 'approvals/stagingToProd'
+          branch: 'approvals/staging-to-prod'
       - uses: peter-evans/enable-pull-request-automerge@60812ab1c2c6c6a8932b4d6e059becafaf386256
         with:
           token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
