@@ -58,6 +58,32 @@ describe('filterKnownErrors', () => {
       expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
     })
 
+    it('filters 499 error coded chunk timeout', () => {
+      jest.spyOn(window.performance, 'getEntriesByType').mockReturnValue([
+        {
+          name: 'https://app.uniswap.org/static/js/20.d55382e0.chunk.js',
+          responseStatus: 499,
+        } as PerformanceEntry,
+      ])
+      const originalException = new Error(
+        'Loading chunk 20 failed. (timeout: https://app.uniswap.org/static/js/20.d55382e0.chunk.js)'
+      )
+      expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
+    })
+
+    it('filters 499 error coded chunk missing', () => {
+      jest.spyOn(window.performance, 'getEntriesByType').mockReturnValue([
+        {
+          name: 'https://app.uniswap.org/static/js/20.d55382e0.chunk.js',
+          responseStatus: 499,
+        } as PerformanceEntry,
+      ])
+      const originalException = new Error(
+        'Loading chunk 20 failed. (missing: https://app.uniswap.org/static/js/20.d55382e0.chunk.js)'
+      )
+      expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
+    })
+
     it('filters 499 error coded CSS chunk error', () => {
       jest.spyOn(window.performance, 'getEntriesByType').mockReturnValue([
         {
