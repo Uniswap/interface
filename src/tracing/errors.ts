@@ -67,7 +67,7 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
      * CF claims that some number of these is expected, and that they should be ignored.
      * See https://groups.google.com/a/uniswap.org/g/cloudflare-eng/c/t3xvAiJFujY.
      */
-    if (error.message.match(/Loading chunk \d+ failed\. \(error: .+\.chunk\.js\)/)) {
+    if (error.message.match(/Loading chunk \d+ failed\. \(([a-zA-Z]+): .+\.chunk\.js\)/)) {
       const asset = error.message.match(/https?:\/\/.+?\.chunk\.js/)?.[0]
       if (shouldFilterChunkError(asset)) return null
     }
