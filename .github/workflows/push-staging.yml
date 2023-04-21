@@ -1,7 +1,7 @@
 name: 1 | Push main to releases/staging
 
 # This CI job is responsible for pushing the current contents of the `main` branch to the
-# releases/staging branch, which will in turn kick off a deploy to the staging environment.
+# `releases/staging` branch, which will in turn kick off a deploy to the staging environment.
 
 on:
   workflow_dispatch:
