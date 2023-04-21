@@ -61,8 +61,8 @@ module.exports = {
         },
         cacheDirectory: 'node_modules/.cache/jest',
         transformIgnorePatterns: [
-          '@uniswap/conedison/format',
-          '@uniswap/conedison/provider',
+          // Ignore node_modules, except for modules with known issues, to speed up the test builds.
+          '/node_modules/(?!(@uniswap/conedison|d3.*|delaunator|internmap|robust-predicates))/',
         ],
         moduleNameMapper: {
           '@uniswap/conedison/format': '@uniswap/conedison/dist/format',
