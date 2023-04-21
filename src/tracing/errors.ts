@@ -52,11 +52,7 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
      * For example, if a user runs an eval statement in console this error would still get thrown.
      * TODO(INFRA-176): We should extend this to filter out any type of CSP error.
      */
-    if (
-      error.message.match(
-        /Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive/
-      )
-    ) {
+    if (error.message.match(/'unsafe-eval'.*content security policy/i)) {
       return null
     }
   }
