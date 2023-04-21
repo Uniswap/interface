@@ -31,6 +31,11 @@ jobs:
         run: |
           git config user.name "UL Mobile Service Account"
           git config user.email "hello-happy-puppy@users.noreply.github.com"
+      - name: Add CODEOWNERS file
+        run: |
+          echo "@uniswap/web-reviewers" > CODEOWNERS
+          git add CODEOWNERS
+          git commit -m "ci: add CODEOWNERS file"
       - uses: peter-evans/create-pull-request@ea54357f43e3d1cf1125471d0814f4d02cc0d364
         id: create-pull-request
         with:
@@ -55,5 +60,5 @@ jobs:
           gh pr edit ${{ steps.create-pull-request.outputs.pull-request-number }} -b "$(cat /tmp/pr_desc)"
       - name: Enable PR automerge
         env:
-          GH_TOKEN: ${{ secrets.PAT }}
+          GH_TOKEN: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
         run: gh pr merge --delete-branch --merge --auto "${{ steps.create-pull-request.outputs.pull-request-number }}"
