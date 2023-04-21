@@ -30,17 +30,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Parse event to slug
+        id: parse-slug
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         # Formats the contents of the GitHub event into slugs: one line per commit, formatted for Slack.
         # Explanation for each line is in the comments above.
         run: |
-          echo $GITHUB_CONTEXT \
-          | jq '.event.commits[] | [.url, .id[0:7], .author.username, .timestamp, .message] | @tsv' \
-          | sed 's/"//g' | sed 's/\\t/;/g' | sed 's/\\n/;/g' | sed 's/\\//g' \
-          | awk -F';' '{print "• <"$1"|"$2"> (<https://github.com/"$3"|"$3">, "$4") - "$5}' \
-          | sed 's/$/\\n/g' | tr -d '\n' \
-          > /tmp/parsed_github_context
+          echo $GITHUB_CONTEXT | jq '.event.commits[] | [.url, .id[0:7], .author.username, .timestamp, .message] | @tsv' | sed 's/"//g' | sed 's/\\t/;/g' | sed 's/\\n/;/g' | sed 's/\\//g' | awk -F';' '{print "• <"$1"|"$2"> (<https://github.com/"$3"|"$3">, "$4") - "$5}' | sed 's/$/\\n/g' | tr -d '\n' > /tmp/parsed_github_context
           echo "SLACK_COMMITS=$(cat /tmp/parsed_github_context)" >> $GITHUB_ENV
       - name: Send custom JSON data to Slack workflow
         id: slack
