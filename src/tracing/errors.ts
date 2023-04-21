@@ -46,6 +46,19 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
      * Therefore, this can be ignored.
      */
     if (error.message.match(/Unexpected token '<'/)) return null
+
+    /*
+     * Content security policy 'unsafe-eval' errors can be filtered out because there are expected failures.
+     * For example, if a user runs an eval statement in console this error would still get thrown.
+     * TODO(INFRA-176): We should extend this to filter out any type of CSP error.
+     */
+    if (
+      error.message.match(
+        /Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive/
+      )
+    ) {
+      return null
+    }
   }
 
   return event

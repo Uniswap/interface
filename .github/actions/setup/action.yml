@@ -10,7 +10,6 @@ runs:
       with:
         node-version: 14
         registry-url: https://registry.npmjs.org
-        cache: yarn
 
     # node_modules/.cache is intentionally omitted, as this is used for build tool caches.
     - uses: actions/cache@v3

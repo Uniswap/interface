@@ -122,7 +122,7 @@ function parseMigrateCreateV3(
 ): Partial<Activity> {
   const baseCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
   const baseSymbol = baseCurrency?.symbol ?? t`Unknown`
-  const quoteCurrency = getCurrency(lp.baseCurrencyId, chainId, tokens)
+  const quoteCurrency = getCurrency(lp.quoteCurrencyId, chainId, tokens)
   const quoteSymbol = quoteCurrency?.symbol ?? t`Unknown`
   const descriptor = t`${baseSymbol} and ${quoteSymbol}`
 

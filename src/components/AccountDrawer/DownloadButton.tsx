@@ -32,7 +32,7 @@ function BaseButton({ onClick, branded, children }: PropsWithChildren<{ onClick?
   )
 }
 
-const APP_STORE_LINK = 'https://apps.apple.com/us/app/uniswap-wallet/id6443944476'
+const APP_STORE_LINK = 'https://apps.apple.com/app/apple-store/id6443944476?pt=123625782&ct=In-App-Banners&mt=8'
 const MICROSITE_LINK = 'https://wallet.uniswap.org/'
 
 const openAppStore = () => {
