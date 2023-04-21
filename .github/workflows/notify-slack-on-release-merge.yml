@@ -43,7 +43,7 @@ jobs:
           | sed 's/$/\\n/g' | tr -d '\n' \
           > /tmp/parsed_github_context
           echo "SLACK_COMMITS=$(cat /tmp/parsed_github_context)" >> $GITHUB_ENV
-          echo "SLACK_COMMITS=$(cat /tmp/parsed_github_context)" >> $GITHUB_CONTEXT
+          echo "SLACK_COMMITS=$(cat /tmp/parsed_github_context)" >> $env:GITHUB_OUTPUT
       - name: Send custom JSON data to Slack workflow
         id: slack
         uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844
