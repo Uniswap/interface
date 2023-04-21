@@ -1,9 +1,7 @@
 import '@testing-library/jest-dom' // jest custom assertions
-import { useWeb3React } from '@web3-react/core'
 import 'jest-styled-components' // adds style diffs to snapshot tests
 
 import { Readable } from 'stream'
-import { mocked } from 'test-utils/mocked'
 import { TextDecoder, TextEncoder } from 'util'
 
 if (typeof global.TextEncoder === 'undefined') {
@@ -25,11 +23,11 @@ global.matchMedia =
 jest.mock('react-popper', () => {
   const { usePopper } = jest.requireActual('react-popper')
   return {
-    usePopper: function () {
-      const popper = usePopper(arguments)
+    usePopper(...args: Parameters<typeof usePopper>) {
+      const popper = usePopper(...args)
       // Prevent popper from asynchronously debouncing updates during tests.
       popper.update = popper.forceUpdate
       return popper
-    }
+    },
   }
 })
