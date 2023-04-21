@@ -75,7 +75,6 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
     if (error.message.match(/Loading CSS chunk \d+ failed\. \(.+\.chunk\.css\)/)) {
       const relativePath = error.message.match(/\/static\/css\/.*\.chunk\.css/)?.[0]
       const asset = `https://app.uniswap.org${relativePath}`
-      console.log(asset)
       if (shouldFilterChunkError(asset)) return null
     }
 
