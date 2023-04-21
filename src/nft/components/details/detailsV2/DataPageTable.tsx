@@ -5,23 +5,38 @@ import { ListingsTableContent } from './ListingsTableContent'
 import { OffersTableContent } from './OffersTableContent'
 import { Tab, TabbedComponent } from './TabbedComponent'
 
-const TableTabs: Array<Tab> = [
-  {
-    title: <Trans>Activity</Trans>,
-    key: 'activity',
-    content: <ActivityTableContent />,
-  },
-  {
-    title: <Trans>Offers</Trans>,
-    key: 'offers',
-    content: <OffersTableContent />,
-  },
-  {
-    title: <Trans>Listings</Trans>,
-    key: 'listings',
-    content: <ListingsTableContent />,
-  },
-]
+enum TableTabsKeys {
+  Activity = 'activity',
+  Offers = 'offers',
+  Listings = 'listings',
+}
+
+const TableTabs: Map<string, Tab> = new Map([
+  [
+    TableTabsKeys.Activity,
+    {
+      title: <Trans>Activity</Trans>,
+      key: TableTabsKeys.Activity,
+      content: <ActivityTableContent />,
+    },
+  ],
+  [
+    TableTabsKeys.Offers,
+    {
+      title: <Trans>Offers</Trans>,
+      key: TableTabsKeys.Offers,
+      content: <OffersTableContent />,
+    },
+  ],
+  [
+    TableTabsKeys.Listings,
+    {
+      title: <Trans>Listings</Trans>,
+      key: TableTabsKeys.Listings,
+      content: <ListingsTableContent />,
+    },
+  ],
+])
 
 export const DataPageTable = () => {
   return <TabbedComponent tabs={TableTabs} style={{ height: '604px' }} />
