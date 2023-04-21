@@ -8,6 +8,11 @@ describe('filterKnownErrors', () => {
     expect(filterKnownErrors(ERROR, {})).toBe(ERROR)
   })
 
+  it('propagates an error with generic text', () => {
+    const originalException = new Error('generic error copy')
+    expect(filterKnownErrors(ERROR, { originalException })).toBe(ERROR)
+  })
+
   it('filters block number polling errors', () => {
     const originalException = new (class extends Error {
       requestBody = JSON.stringify({ method: 'eth_blockNumber' })
