@@ -35,7 +35,6 @@ jobs:
         id: create-pull-request
         with:
           token: ${{ secrets.RELEASE_SERVICE_ACCESS_TOKEN }}
-          commit-message: "This PR merges latest commits of `releases/staging` to `releases/prod`. Upon approval and successful merge, a Github action associated with the prod Fastlane setup will deploy to TestFlight, where the app can be submitted to Apple."
           base: 'releases/prod'
           title: 'ci: promotes staging to prod'
           delete-branch: 'true'
