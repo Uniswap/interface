@@ -120,13 +120,13 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
         >
           <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!trade} open={showDetails}>
             <RowFixed style={{ position: 'relative' }} align="center">
-              {loading || syncing ? (
+              {Boolean(loading || syncing) && (
                 <StyledPolling>
                   <StyledPollingDot>
                     <Spinner />
                   </StyledPollingDot>
                 </StyledPolling>
-              ) : null}
+              )}
               {trade ? (
                 <LoadingOpacityContainer $loading={syncing}>
                   <TradePrice price={trade.executionPrice} />
