@@ -11,7 +11,7 @@ import { useGetConnection } from 'connection'
 import { useActivateConnection } from 'connection/activate'
 import { isSupportedChain } from 'constants/chains'
 import { useMgtmEnabled } from 'featureFlags/flags/mgtm'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Settings } from 'react-feather'
 import { useConnectedWallets } from 'state/wallets/hooks'
 import styled from 'styled-components/macro'
@@ -80,7 +80,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
   const connections = getConnections()
   const getConnection = useGetConnection()
 
-  const { pending, tryActivation, cancelActivation } = useActivateConnection()
+  const { pendingConnection, error, tryActivation, cancelActivation } = useActivateConnection()
 
   // Keep the network connector in sync with any active user connector to prevent chain-switching on wallet disconnection.
   useEffect(() => {
@@ -115,10 +115,8 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
   const drawerOpenRef = useRef(drawerOpen)
   drawerOpenRef.current = drawerOpen
 
-  const activate = useCallback(
-    (connection: Connection) => tryActivation(connection, () => drawerOpenRef.current && toggleWalletDrawer()),
-    [toggleWalletDrawer, tryActivation]
-  )
+  const activate = (connection: Connection) =>
+    tryActivation(connection, () => drawerOpenRef.current && toggleWalletDrawer())
 
   const mgtmEnabled = useMgtmEnabled()
 
@@ -128,9 +126,9 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
         <ThemedText.SubHeader fontWeight={500}>Connect a wallet</ThemedText.SubHeader>
         <IconButton Icon={Settings} onClick={openSettings} data-testid="wallet-settings" />
       </AutoRow>
-      {pending.error ? (
-        pending.error && (
-          <ConnectionErrorView openOptions={cancelActivation} retryActivation={() => activate(pending.error)} />
+      {error ? (
+        pendingConnection !== undefined && (
+          <ConnectionErrorView close={cancelActivation} retryActivation={() => activate(pendingConnection)} />
         )
       ) : (
         <AutoColumn gap="16px">
@@ -142,7 +140,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
                   key={connection.getName()}
                   connection={connection}
                   activate={() => activate(connection)}
-                  pendingConnectionType={pending.connection?.type}
+                  pendingConnectionType={pendingConnection?.type}
                 />
               ) : null
             )}

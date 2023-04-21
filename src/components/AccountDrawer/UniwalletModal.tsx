@@ -12,7 +12,6 @@ import { QRCodeSVG } from 'qrcode.react'
 import { useEffect, useState } from 'react'
 import styled, { useTheme } from 'styled-components/macro'
 import { CloseIcon, ThemedText } from 'theme'
-import { isIOS } from 'utils/userAgent'
 
 import uniPng from '../../assets/images/uniwallet_modal_icon.png'
 import { DownloadButton } from './DownloadButton'
@@ -38,9 +37,12 @@ const Divider = styled.div`
 `
 
 export default function UniwalletModal() {
-  const { pending, cancelActivation } = useActivateConnection()
+  const { pendingConnection, error, cancelActivation } = useActivateConnection()
   const [uri, setUri] = useState<string>()
-  const open = pending.connection?.type === ConnectionType.UNIWALLET && !isIOS && !!uri
+
+  const isUniwapWallet = pendingConnection?.type === ConnectionType.UNIWALLET
+  // Displays the modal if a Uniswap Wallet Connection is pending without error, & qrcode URI is available
+  const open = isUniwapWallet && error === undefined && uri !== undefined
 
   useEffect(() => {
     ;(uniwalletConnectConnection.connector as WalletConnect).events.addListener(

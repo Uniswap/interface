@@ -14,14 +14,14 @@ type PendingConnectionState = {
   error: any
 }
 
-const pendingConnectionAtom = atom<PendingConnectionState>({ connection: undefined, error: undefined })
+const pendingConnectionStateAtom = atom<PendingConnectionState>({ connection: undefined, error: undefined })
 
 export function useActivateConnection() {
   const dispatch = useAppDispatch()
 
-  const [pending, setPending] = useAtom(pendingConnectionAtom)
+  const [pendingState, setPendingState] = useAtom(pendingConnectionStateAtom)
 
-  const updatePendingConnection = useCallback(
+  const setPendingConnection = useCallback(
     (connection: Connection | undefined) => {
       // log selected wallet
       if (connection !== undefined) {
@@ -32,15 +32,15 @@ export function useActivateConnection() {
         })
       }
       // Setting a new connection clears any pending errors
-      setPending({ connection, error: undefined })
+      setPendingState({ connection, error: undefined })
     },
-    [setPending]
+    [setPendingState]
   )
 
-  const updatePendingError = useCallback(
+  const setPendingError = useCallback(
     (error: any) => {
-      setPending(({ connection }) => {
-        if (error !== undefined && connection !== undefined) {
+      setPendingState(({ connection }) => {
+        if (connection !== undefined) {
           sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
             result: WalletConnectionResult.FAILED,
             wallet_type: connection.getName(),
@@ -50,28 +50,29 @@ export function useActivateConnection() {
         return { connection, error }
       })
     },
-    [setPending]
+    [setPendingState]
   )
 
   const cancelActivation = useCallback(async () => {
-    await pending.connection?.connector.deactivate?.()
-    updatePendingConnection(undefined)
-  }, [pending, updatePendingConnection])
+    await pendingState.connection?.connector.deactivate?.()
+    setPendingConnection(undefined)
+  }, [pendingState, setPendingConnection])
 
   const tryActivation = useCallback(
     async (connection: Connection, onSuccess: () => void) => {
-      // Skips wallet connection if the connection should override the default behavior, i.e. install metamask or launch coinbase app
+      /* Skips wallet connection if the connection should override the default
+        behavior, i.e. install MetaMask or launch Coinbase app */
       if (connection.overrideActivate?.()) return
 
       try {
-        updatePendingConnection(connection)
+        setPendingConnection(connection)
         await connection.connector.activate()
 
         console.debug(`connection activated: ${connection.getName()}`)
         dispatch(updateSelectedWallet({ wallet: connection.type }))
 
         // Clears pending connection state
-        updatePendingConnection(undefined)
+        setPendingConnection(undefined)
 
         onSuccess()
       } catch (error) {
@@ -80,15 +81,15 @@ export function useActivateConnection() {
 
         // Gracefully handles errors from the user rejecting a connection attempt
         if (didUserReject(connection, error)) {
-          updatePendingConnection(undefined)
+          setPendingConnection(undefined)
           return
         }
 
-        updatePendingError(error)
+        setPendingError(error)
       }
     },
-    [dispatch, updatePendingConnection, updatePendingError]
+    [dispatch, setPendingConnection, setPendingError]
   )
 
-  return { pending, tryActivation, cancelActivation }
+  return { pendingConnection: pendingState.connection, error: pendingState.error, tryActivation, cancelActivation }
 }

@@ -22,10 +22,10 @@ const AlertTriangleIcon = styled(AlertTriangle)`
 
 export default function ConnectionErrorView({
   retryActivation,
-  openOptions,
+  close,
 }: {
   retryActivation: () => void
-  openOptions: () => void
+  close: () => void
 }) {
   return (
     <Wrapper>
@@ -42,7 +42,7 @@ export default function ConnectionErrorView({
         <Trans>Try Again</Trans>
       </ButtonPrimary>
       <ButtonEmpty width="fit-content" padding="0" marginTop={20}>
-        <ThemedText.Link onClick={openOptions} marginBottom={12}>
+        <ThemedText.Link onClick={close} marginBottom={12}>
           <Trans>Back to wallet selection</Trans>
         </ThemedText.Link>
       </ButtonEmpty>
