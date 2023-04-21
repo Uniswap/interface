@@ -24,7 +24,12 @@ jobs:
         # 5. Write the output to a file
         # 6. Use Github action syntax to load the contents of the file into an environment variable
         run: |
-          echo $GITHUB_CONTEXT | jq '.event.commits[] | [.url, .id[0:7], .author.username, .timestamp, .message] | @tsv' | sed 's/"//g' | sed 's/\\t/;/g' | sed 's/\\n/;/g' | sed 's/\\//g' | awk -F';' '{print "• <"$1"|"$2"> (<https://github.com/"$3"|"$3">, "$4") - "$5}' | sed 's/$/\\n/g' | tr -d '\n' > /tmp/parsed_github_context
+          echo $GITHUB_CONTEXT \
+          | jq '.event.commits[] | [.url, .id[0:7], .author.username, .timestamp, .message] | @tsv' \
+          | sed 's/"//g' | sed 's/\\t/;/g' | sed 's/\\n/;/g' | sed 's/\\//g' \
+          | awk -F';' '{print "• <"$1"|"$2"> (<https://github.com/"$3"|"$3">, "$4") - "$5}' \
+          | sed 's/$/\\n/g' | tr -d '\n' \
+          > /tmp/parsed_github_context
           echo "SLACK_COMMITS=$(cat /tmp/parsed_github_context)" >> $GITHUB_ENV
       - name: Send custom JSON data to Slack workflow
         id: slack
