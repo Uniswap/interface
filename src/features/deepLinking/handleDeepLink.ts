@@ -1,17 +1,21 @@
 import { createAction } from '@reduxjs/toolkit'
+import { parseUri } from '@walletconnect/utils'
 import { URL } from 'react-native-url-polyfill'
 import { ForkEffect } from 'redux-saga/effects'
 import { appSelect } from 'src/app/hooks'
 import { handleMoonpayReturnLink } from 'src/features/deepLinking/handleMoonpayReturnLink'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLink'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLink'
+import { FEATURE_FLAGS } from 'src/features/experiments/constants'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { selectAccounts, selectActiveAccount } from 'src/features/wallet/selectors'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
 import { setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
+import { wcWeb3Wallet } from 'src/features/walletConnectV2/saga'
 import { logger } from 'src/utils/logger'
+import { Statsig } from 'statsig-react-native'
 import { call, fork, put, takeLatest } from 'typed-redux-saga'
 
 export interface DeepLink {
@@ -52,6 +56,11 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
         const isValidWcUri = yield* call(isValidWCUrl, wcUri)
         if (isValidWcUri) {
           yield* fork(connectToApp, wcUri)
+        }
+
+        const walletConnectV2Enabled = Statsig.checkGate(FEATURE_FLAGS.WalletConnectV2)
+        if (walletConnectV2Enabled && parseUri(wcUri).version === 2) {
+          wcWeb3Wallet.core.pairing.pair({ uri: wcUri })
         }
       }
       // Set didOpenFromDeepLink so that `returnToPreviousApp()` is enabled during WalletConnect flows
