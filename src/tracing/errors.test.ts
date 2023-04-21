@@ -73,7 +73,7 @@ describe('filterKnownErrors', () => {
       jest.spyOn(window.performance, 'getEntriesByType').mockReturnValue([
         {
           name: 'https://app.uniswap.org/static/js/20.d55382e0.chunk.js',
-          responseStatus: 200,
+          responseStatus: 400,
         } as PerformanceEntry,
       ])
       const originalException = new Error(
@@ -86,7 +86,7 @@ describe('filterKnownErrors', () => {
       jest.spyOn(window.performance, 'getEntriesByType').mockReturnValue([
         {
           name: 'https://app.uniswap.org/static/css/12.d5b3cfe3.chunk.css',
-          responseStatus: 200,
+          responseStatus: 400,
         } as PerformanceEntry,
       ])
       const originalException = new Error('Loading CSS chunk 12 failed. (./static/css/12.d5b3cfe3.chunk.css)')
