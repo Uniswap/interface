@@ -53,7 +53,7 @@ jobs:
         run: |
           echo "### Description" > /tmp/pr_desc
           echo "" >> /tmp/pr_desc
-          echo "This PR promotes the following commits from releases/staging to prod." >> /tmp/pr_desc
+          echo "This PR promotes the following commits from `releases/staging` to `releases/prod`." >> /tmp/pr_desc
           echo "" >> /tmp/pr_desc
           gh pr view ${{ steps.cpr.outputs.pull-request-number }} --json commits | jq '.commits[] | [.oid, .messageHeadline] | @tsv' | sed 's/"//g' | sed 's/\\t/ - /g' >> /tmp/pr_desc
           echo "" >> /tmp/pr_desc
