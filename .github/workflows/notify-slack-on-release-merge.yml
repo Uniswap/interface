@@ -12,7 +12,7 @@ jobs:
     name: 'Emit Slack notification(s)'
     runs-on: ubuntu-latest
     steps:
-      - name: Parse event to Slack messages
+      - name: Parse event to slug
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         # This is a bit of shell kung fu that formats the contents of the GitHub event into a multi-line Slack message
