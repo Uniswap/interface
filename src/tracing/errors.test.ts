@@ -58,6 +58,17 @@ describe('filterKnownErrors', () => {
       expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
     })
 
+    it('filters 499 error coded CSS chunk error', () => {
+      jest.spyOn(window.performance, 'getEntriesByType').mockReturnValue([
+        {
+          name: 'https://app.uniswap.org/static/css/12.d5b3cfe3.chunk.css',
+          responseStatus: 499,
+        } as PerformanceEntry,
+      ])
+      const originalException = new Error('Loading CSS chunk 12 failed. (./static/css/12.d5b3cfe3.chunk.css)')
+      expect(filterKnownErrors(ERROR, { originalException })).toBeNull()
+    })
+
     it('keeps error when status is different than 499', () => {
       jest.spyOn(window.performance, 'getEntriesByType').mockReturnValue([
         {
@@ -68,6 +79,17 @@ describe('filterKnownErrors', () => {
       const originalException = new Error(
         'Loading chunk 20 failed. (error: https://app.uniswap.org/static/js/20.d55382e0.chunk.js)'
       )
+      expect(filterKnownErrors(ERROR, { originalException })).not.toBeNull()
+    })
+
+    it('keeps CSS error when status is different than 499', () => {
+      jest.spyOn(window.performance, 'getEntriesByType').mockReturnValue([
+        {
+          name: 'https://app.uniswap.org/static/css/12.d5b3cfe3.chunk.css',
+          responseStatus: 200,
+        } as PerformanceEntry,
+      ])
+      const originalException = new Error('Loading CSS chunk 12 failed. (./static/css/12.d5b3cfe3.chunk.css)')
       expect(filterKnownErrors(ERROR, { originalException })).not.toBeNull()
     })
 
