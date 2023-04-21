@@ -1,6 +1,12 @@
+import { USDC_MAINNET } from '../../src/constants/tokens'
+import { HardhatProvider } from '../support/hardhat'
+
 describe('Swap', () => {
+  let hardhat: HardhatProvider
   before(() => {
-    cy.visit('/swap')
+    cy.visit('/swap', { ethereum: 'hardhat' }).then((window) => {
+      hardhat = window.hardhat
+    })
   })
 
   it('starts with ETH selected by default', () => {
@@ -30,14 +36,31 @@ describe('Swap', () => {
     cy.get('#swap-currency-output .token-amount-input').clear().type('0.0').should('have.value', '0.0')
   })
 
-  it.skip('can swap ETH for DAI', () => {
-    cy.get('#swap-currency-output .open-currency-select-button').click()
-    cy.get('.token-item-0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735').click()
-    cy.get('#swap-currency-input .token-amount-input').clear().type('0.0000001')
-    cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
-    cy.get('#swap-button').click()
-    cy.get('#confirm-swap-or-send').should('contain', 'Confirm Swap')
-    cy.get('[data-cy="confirmation-close-icon"]').click()
+  it('can swap ETH for USDC', () => {
+    const TOKEN_ADDRESS = USDC_MAINNET.address
+    const BALANCE_INCREMENT = 1
+    cy.then(() => hardhat.utils.getBalance(hardhat.wallet.address, USDC_MAINNET))
+      .then((balance) => Number(balance.toFixed(1)))
+      .then((initialBalance) => {
+        cy.get('#swap-currency-output .open-currency-select-button').click()
+        cy.get('[data-testid="token-search-input"]').clear().type(TOKEN_ADDRESS)
+        cy.contains('USDC').click()
+        cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
+        cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
+        cy.get('#swap-button').click()
+        cy.get('#confirm-swap-or-send').click()
+        cy.get('[data-testid="dismiss-tx-confirmation"]').click()
+        // ui check
+        cy.get('#swap-currency-output [data-testid="balance-text"]').should(
+          'have.text',
+          `Balance: ${initialBalance + BALANCE_INCREMENT}`
+        )
+
+        // chain state check
+        cy.then(() => hardhat.utils.getBalance(hardhat.wallet.address, USDC_MAINNET))
+          .then((balance) => Number(balance.toFixed(1)))
+          .should('eq', initialBalance + BALANCE_INCREMENT)
+      })
   })
 
   it('add a recipient does not exist unless in expert mode', () => {
