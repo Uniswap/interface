@@ -785,7 +785,6 @@ export const LarvaLabsMarketplaceIcon = (props: SVGProps) => (
   </svg>
 )
 
-// eslint-disable-next-line import/no-unused-modules
 export const SquareOpenSeaMarketplaceIcon = (props: SVGProps) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...props}>
     <g clipPath="url(#clip0_992_26814)">
