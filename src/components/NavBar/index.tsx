@@ -72,6 +72,11 @@ export const PageTabs = () => {
           <Trans>Liquid Stake</Trans>
         </a>
       )}
+      {!isMobile && (
+        <MenuItem href="/ibc" id="pool-nav-link" isActive={pathname.startsWith('/ibc')}>
+          <Trans>Add Liquidity</Trans>
+        </MenuItem>
+      )}
     </div>
   )
 }
