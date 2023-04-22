@@ -1,5 +1,4 @@
-import { SupportedChainId, WETH9 } from '@uniswap/sdk-core'
-
+import { WETH_GOERLI } from '../fixtures/constants'
 import { getTestSelector } from '../utils'
 
 describe('Swap', () => {
@@ -87,7 +86,7 @@ describe('Swap', () => {
   })
 
   it('should have the correct default input from URL params ', () => {
-    cy.visit(`/swap?inputCurrency=${WETH9[SupportedChainId.GOERLI].address}`)
+    cy.visit(`/swap?inputCurrency=${WETH_GOERLI}`)
 
     verifyToken('input', 'WETH')
     verifyToken('output', null)
@@ -100,7 +99,7 @@ describe('Swap', () => {
   })
 
   it('should have the correct default output from URL params ', () => {
-    cy.visit(`/swap?outputCurrency=${WETH9[SupportedChainId.GOERLI].address}`)
+    cy.visit(`/swap?outputCurrency=${WETH_GOERLI}`)
 
     verifyToken('input', null)
     verifyToken('output', 'WETH')
@@ -133,5 +132,14 @@ describe('Swap', () => {
     cy.contains('Expert Mode').should('exist')
     cy.get(getTestSelector('swap-settings-button')).click()
     cy.contains('Settings').should('not.exist')
+  })
+
+  it('inputs reset when navigating between pages', () => {
+    cy.get('#swap-currency-input .token-amount-input').clear().type('0.01')
+    cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
+    cy.visit('/pool')
+    cy.visit('/swap')
+    cy.get('#swap-currency-input .token-amount-input').should('have.value', '')
+    cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
   })
 })
