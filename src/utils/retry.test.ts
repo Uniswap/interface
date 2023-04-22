@@ -41,28 +41,4 @@ describe('retry', () => {
     setTimeout(cancel, 0)
     await expect(promise).resolves.toEqual('abc')
   })
-
-  async function checkTime(fn: () => Promise<any>, min: number, max: number) {
-    const time = new Date().getTime()
-    await fn()
-    const diff = new Date().getTime() - time
-    expect(diff).toBeGreaterThanOrEqual(min)
-    expect(diff).toBeLessThanOrEqual(max)
-  }
-
-  it('waits random amount of time between min and max', async () => {
-    const promises = []
-    for (let i = 0; i < 10; i++) {
-      promises.push(
-        checkTime(
-          () => expect(retry(makeFn(4, 'abc'), { n: 3, maxWait: 100, minWait: 50 }).promise).rejects.toThrow('failure'),
-          150,
-          // It may wait up to 400ms, but we add 150ms because the event loop may be busy.
-          // This has been observed over 500ms; assuming the event loop is instant will cause flaky tests.
-          550
-        )
-      )
-    }
-    await Promise.all(promises)
-  })
 })
