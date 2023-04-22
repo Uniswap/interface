@@ -42,6 +42,10 @@ export const colors = {
   gray800: '#1A202C',
   gray900: '#171923',
 
+  bgDark: '#000913',
+
+  deep: '#081120',
+  input: '#0B172C',
   // old gray colors uniV3
   gray150: '#D2D9EE',
   gray250: '#A6AFCA',
@@ -152,6 +156,8 @@ export const colors = {
   blue800: '#2A4365',
   blue900: '#1A365D',
 
+  blueButton: '#153D6F',
+
   // old Blue uniV3
   blueVibrant: '#587BFF',
 
@@ -166,6 +172,8 @@ export const colors = {
   cyan700: '#0987A0',
   cyan800: '#086F83',
   cyan900: '#065666',
+
+  cyanText: '#00D9EF',
 
   // purple
   purple50: '#FAF5FF',
@@ -242,36 +250,38 @@ export const darkTheme = {
 
   userThemeColor: colors.magentaVibrant,
 
-  background: colors.gray800,
+  background: colors.bgDark,
+  backgroundImage: 'radial-gradient(ellipse at center, #56BED8, #010101)',
   backgroundBackdrop: colors.gray950,
-  backgroundSurface: colors.gray900,
-  backgroundModule: colors.gray800,
+  backgroundSurface: colors.deep,
+  backgroundModule: colors.input,
   backgroundInteractive: colors.gray700,
   backgroundFloating: opacify(12, colors.black),
   backgroundOutline: opacify(24, colors.gray300),
-  backgroundScrim: opacify(72, colors.gray900),
-  backgroundScrolledSurface: opacify(72, colors.gray900),
+  backgroundScrim: opacify(72, colors.deep),
+  backgroundScrolledSurface: opacify(72, colors.deep),
+  backgroundBorderGradient: 'linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%)',
 
   textPrimary: colors.white,
   textSecondary: colors.gray300,
   textTertiary: colors.gray500,
 
-  accentAction: colors.blue400,
-  accentActive: colors.blue400,
+  accentAction: colors.blueButton,
+  accentActive: colors.cyanText,
   accentSuccess: colors.green200,
   accentWarning: colors.gold200,
   accentFailure: colors.red300,
   accentCritical: colors.red300,
 
-  accentActionSoft: opacify(24, colors.blue400),
-  accentActiveSoft: opacify(24, colors.blue400),
+  accentActionSoft: opacify(24, colors.blueButton),
+  accentActiveSoft: opacify(24, colors.cyanText),
   accentSuccessSoft: opacify(24, colors.green400),
   accentWarningSoft: opacify(24, colors.gold200),
   accentFailureSoft: opacify(12, colors.red300),
 
-  accentTextDarkPrimary: opacify(80, colors.gray900),
-  accentTextDarkSecondary: opacify(60, colors.gray900),
-  accentTextDarkTertiary: opacify(24, colors.gray900),
+  accentTextDarkPrimary: opacify(80, colors.deep),
+  accentTextDarkSecondary: opacify(60, colors.deep),
+  accentTextDarkTertiary: opacify(24, colors.deep),
 
   accentTextLightPrimary: colors.gray50,
   accentTextLightSecondary: opacify(72, colors.gray50),
@@ -294,7 +304,8 @@ export const lightTheme: Theme = {
 
   userThemeColor: colors.magentaVibrant,
 
-  background: '#faf9fa', //INTENTIONALLY OFF THEME TO GIVE WHITE BG A SOFTER VISUAL
+  background: colors.gray100,
+  backgroundImage: 'radial-gradient(ellipse at center, #68e1ffbe, #e6faff)',
   backgroundBackdrop: colors.white,
   backgroundSurface: colors.white,
   backgroundModule: colors.gray50,
@@ -303,19 +314,20 @@ export const lightTheme: Theme = {
   backgroundOutline: colors.gray150,
   backgroundScrim: opacify(60, colors.gray900),
   backgroundScrolledSurface: opacify(72, colors.white),
+  backgroundBorderGradient: 'linear-gradient(312.16deg, rgba(86, 190, 216, 0.3) 30.76%, rgba(86, 190, 216, 0) 97.76%)',
 
   textPrimary: colors.gray900,
   textSecondary: colors.gray400,
   textTertiary: colors.gray300,
 
-  accentAction: colors.pink400,
+  accentAction: colors.purpleMain,
   accentActive: colors.blue400,
   accentSuccess: colors.green300,
   accentWarning: colors.gold400,
   accentFailure: colors.red400,
   accentCritical: colors.red400,
 
-  accentActionSoft: opacify(12, colors.pink400),
+  accentActionSoft: opacify(12, colors.purpleMain),
   accentActiveSoft: opacify(24, colors.blue400),
   accentSuccessSoft: opacify(24, colors.green300),
   accentWarningSoft: opacify(24, colors.gold400),

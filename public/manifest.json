@@ -21,10 +21,10 @@
     }
   ],
   "orientation": "portrait",
-  "name": "Uniswap",
-  "description": "Swap or provide liquidity on the Uniswap Protocol",
+  "name": "Pegasys",
+  "description": "Swap or provide liquidity on the Pegasys Protocol",
   "iconPath": "./images/256x256_App_Icon_Pink.svg",
-  "short_name": "Uniswap",
+  "short_name": "Pegasys",
   "start_url": ".",
   "theme_color": "#FC72FF"
 }

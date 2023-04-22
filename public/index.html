@@ -3,10 +3,14 @@
   <head>
     <meta charset="utf-8" />
 
-    <title>Uniswap Interface</title>
-    <meta name="description" content="Swap or provide liquidity on the Uniswap Protocol" />
+    <title>Pegasys Protocol</title>
+    <meta
+      property="og:description"
+      content="Swap, earn, and build with the leading decentralized crypto trading protocol on Syscoin."
+      key="ogdesc"
+    />
 
-    <!--
+      <!--
       %PUBLIC_URL% will be replaced with the URL of the `public` folder during build.
       Only files inside the `public` folder can be referenced from the HTML.
     -->
@@ -20,6 +24,15 @@
       http-equiv="Content-Security-Policy"
       content="script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inline'"
     />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://pegasys.finance" />
+    <meta property="twitter:title" content="Pegasys Protocol" />
+    <meta
+      property="twitter:description"
+      content="Swap, earn, and build with the leading decentralized crypto trading protocol on Syscoin."
+    />
+    <meta property="twitter:image" content="/meta.png" />
 
     <!--
       manifest.json provides metadata used when the app is installed as a PWA.
@@ -77,7 +90,7 @@
       }
 
       /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
-      #background-radial-gradient {
+      /* #background-radial-gradient {
         position: fixed;
         top: 0;
         left: 0;
@@ -87,7 +100,7 @@
         height: 200vh;
         transform: translate(-50vw, -100vh);
         z-index: -1;
-      }
+      } */
 
       html,
       body,
@@ -95,7 +108,7 @@
         min-height: 100%;
       }
 
-      @media (prefers-color-scheme: dark) {
+      /* @media (prefers-color-scheme: dark) {
         html {
           background: linear-gradient(180deg, #202738 0%, #070816 100%);
         }
@@ -105,7 +118,7 @@
         html {
           background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF
         }
-      }
+      } */
     </style>
   </head>
 
@@ -117,6 +130,6 @@
       <div>&emsp;</div>
     </div>
 
-    <div id="background-radial-gradient"></div>
+    <!-- <div id="background-radial-gradient"></div> -->
   </body>
 </html>
