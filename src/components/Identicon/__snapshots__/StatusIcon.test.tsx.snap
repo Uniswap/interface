@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`StatusIcon with account renders children in correct order, with with socks 1`] = `
+exports[`StatusIcon with account renders children in correct order 1`] = `
 .c1 {
   height: 16px;
   width: 16px;
@@ -177,7 +177,7 @@ exports[`StatusIcon with account renders children in correct order, with with so
 </div>
 `;
 
-exports[`StatusIcon with no account renders children in correct order, with with socks 1`] = `
+exports[`StatusIcon with no account renders children in correct order 1`] = `
 .c0 {
   position: relative;
   display: -webkit-box;
