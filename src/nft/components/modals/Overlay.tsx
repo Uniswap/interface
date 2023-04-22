@@ -1,3 +1,5 @@
+import noop from 'utils/noop'
+
 import { Box } from '../Box'
 import * as styles from './Overlay.css'
 
@@ -10,6 +12,6 @@ export const stopPropagation = (event: React.SyntheticEvent<HTMLElement>) => {
   event.nativeEvent.stopImmediatePropagation()
 }
 
-export const Overlay = ({ onClick = () => null }: OverlayProps) => {
+export const Overlay = ({ onClick = noop }: OverlayProps) => {
   return <Box className={styles.overlay} onClick={onClick} />
 }

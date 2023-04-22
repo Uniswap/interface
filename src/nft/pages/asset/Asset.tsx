@@ -5,7 +5,7 @@ import { useNftAssetDetails } from 'graphql/data/nft/Details'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
-import { NftDetails } from 'nft/components/details/NftDetails'
+import { NftDetails } from 'nft/components/details/detailsV2/NftDetails'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 

@@ -1,11 +1,9 @@
 import { transparentize } from 'polished'
 import { ReactNode, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
+import noop from 'utils/noop'
 
 import Popover, { PopoverProps } from '../Popover'
-
-// TODO(WEB-3163): migrate noops throughout web to a shared util file.
-const noop = () => null
 
 export const TooltipContainer = styled.div`
   max-width: 256px;
