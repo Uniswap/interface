@@ -57,9 +57,9 @@ describe('retry', () => {
         checkTime(
           () => expect(retry(makeFn(4, 'abc'), { n: 3, maxWait: 100, minWait: 50 }).promise).rejects.toThrow('failure'),
           150,
-          // It may wait up to 400ms, but we add 50ms because the event loop may be busy.
-          // This has been observed over 400ms; assuming the event loop is instant will cause flaky tests.
-          450
+          // It may wait up to 400ms, but we add 150ms because the event loop may be busy.
+          // This has been observed over 500ms; assuming the event loop is instant will cause flaky tests.
+          550
         )
       )
     }
