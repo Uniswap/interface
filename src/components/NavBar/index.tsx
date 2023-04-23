@@ -73,9 +73,14 @@ export const PageTabs = () => {
         </a>
       )}
       {!isMobile && (
-        <MenuItem href="/assets" id="pool-nav-link" isActive={pathname.startsWith('/assets')}>
+        <a
+          href="https://forge-beta.netlify.app/assets"
+          rel="noopener noreferrer"
+          id="pool-nav-link"
+          className={styles.menuItem}
+        >
           <Trans>Assets</Trans>
-        </MenuItem>
+        </a>
       )}
     </div>
   )
