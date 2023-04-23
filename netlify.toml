@@ -3,9 +3,3 @@
     to = "https://delightful-tanuki-b3d161.netlify.app/assets/:splat"
     status = 200
     force = true
-
-[[redirects]]
-    from = "/#/assets/*"
-    to = "https://delightful-tanuki-b3d161.netlify.app/assets/:splat"
-    status = 200
-    force = true
