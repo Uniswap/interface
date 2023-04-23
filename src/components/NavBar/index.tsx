@@ -73,7 +73,7 @@ export const PageTabs = () => {
         </a>
       )}
       {!isMobile && (
-        <MenuItem href="/ibc" id="pool-nav-link" isActive={pathname.startsWith('/ibc')}>
+        <MenuItem href="/assets" id="pool-nav-link" isActive={pathname.startsWith('/assets')}>
           <Trans>Assets</Trans>
         </MenuItem>
       )}
