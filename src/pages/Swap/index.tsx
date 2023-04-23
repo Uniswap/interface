@@ -62,7 +62,7 @@ import {
   useDefaultsFromURLSearch,
   useDerivedLeverageCreationInfo,
   useDerivedSwapInfo,
-  usePoolAddress,
+  useBestPoolAddress,
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
@@ -191,10 +191,10 @@ const LeverageGaugeSection = styled(SwapSection) <{ showDetailsDropdown: boolean
   border-bottom: ${({ theme }) => `1px solid ${theme.backgroundSurface}`};
   border-top-right-radius: 0;
   border-top-left-radius: 0;
-  // border-bottom-left-radius: 0;
-  // border-bottom-right-radius: 0;
-  border-bottom-left-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
-  border-bottom-right-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  // border-bottom-left-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
+  // border-bottom-right-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
 `
 
 const DetailsSwapSection = styled(SwapSection)`
@@ -280,7 +280,7 @@ export default function Swap({ className }: { className?: string }) {
     inputError,
     allowedSlippage: leverageAllowedSlippage
   } = useDerivedLeverageCreationInfo()
-  // console.log('leverageTrade:', leverageTrade)
+  console.log('leverageTrade:', leverageTrade)
 
   // console.log("loadedUrlParams", loadedUrlParams)
   // token warning stuff
@@ -449,7 +449,7 @@ export default function Swap({ className }: { className?: string }) {
     isSupportedChain(chainId) ? PS_ROUTER : undefined
   )
 
-  let poolAddress = usePoolAddress(currencies[Field.INPUT] ?? undefined, currencies[Field.OUTPUT] ?? undefined)
+  let poolAddress = useBestPoolAddress(currencies[Field.INPUT] ?? undefined, currencies[Field.OUTPUT] ?? undefined)
   // const [leverageManagerAddress, setLeverageManagerAddress] = useState<string>()
 
   useEffect(() => {
@@ -472,6 +472,7 @@ export default function Swap({ className }: { className?: string }) {
       // make sure to catch any error
       .catch(console.error);
   }, [poolAddress, account, trade, currencies, account, provider])
+  console.log("poolAddress", poolAddress, leverageManagerAddress)
 
   const { tokenAllowance: leverageManagerAllowanceAmount, isSyncing: boolean } = useTokenAllowance(
     (parsedAmounts[Field.INPUT]?.currency.isToken ? (parsedAmounts[Field.INPUT]?.currency as Token) : undefined)
@@ -662,7 +663,7 @@ export default function Swap({ className }: { className?: string }) {
   ])
   // errors
   const [swapQuoteReceivedDate, setSwapQuoteReceivedDate] = useState<Date | undefined>()
-  // console.log("leverageAddress: ", leverageManagerAddress)
+  console.log("leverageAddress: ", leverageManagerAddress)
   // warnings on the greater of fiat value price impact and execution price impact
   const { priceImpactSeverity, largerPriceImpact } = useMemo(() => {
     const marketPriceImpact = trade?.priceImpact ? computeRealizedPriceImpact(trade) : undefined
@@ -801,7 +802,7 @@ export default function Swap({ className }: { className?: string }) {
   const leveragePositions = useLeveragePositions(leverageManagerAddress ?? undefined, account, currencies)
 
   // console.log("leverageTrade: ", leverageTrade)
-  console.log("leveragePositions", leverageManagerAddress, leveragePositions)
+  console.log("leveragePositions", poolAddress, leverageManagerAddress, leveragePositions)
 
   // const leveragePositions: LeveragePositionDetails[] = [
   //   {
@@ -875,6 +876,7 @@ export default function Swap({ className }: { className?: string }) {
   // ? tickToPrice(currency0.wrapped, currency1.wrapped, Number(creationTick)) : undefined
 
   // // token0 price.
+  const enoughAllowance = (!leverage && allowance.state === AllowanceState.REQUIRED) || (leverage && (leverageApprovalState === ApprovalState.NOT_APPROVED))
   const currentPrice = pool?.token0 != currencies.INPUT? pool?.token0Price.toSignificant(3)
       : (1/Number(pool?.token0Price.toSignificant(3))).toFixed(3)
   return (
@@ -1159,8 +1161,7 @@ export default function Swap({ className }: { className?: string }) {
                           </AutoColumn>
                         </LightCard>
                       </LeverageGaugeSection>
-                      {!inputError ?
-                        (
+                      {
                           <DetailsSwapSection>
                             <SwapDetailsDropdown
                               trade={trade}
@@ -1170,9 +1171,6 @@ export default function Swap({ className }: { className?: string }) {
                               leverageTrade={leverageTrade}
                             />
                           </DetailsSwapSection>
-                        ) : (
-                          null
-                        )
                       }
                     </div>
                     {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
@@ -1276,7 +1274,12 @@ export default function Swap({ className }: { className?: string }) {
                           </ButtonPrimary>
                         )
                       ) : (leverage ? (
-                        <ButtonError
+                        leverageTrade.state !== LeverageTradeState.VALID ? (
+                          <ButtonPrimary disabled={true}>
+                            <Trans>Invalid Trade</Trans>
+                          </ButtonPrimary>
+                        ): (
+                          <ButtonError
                           onClick={() => {
                             setSwapState({
                               tradeToConfirm: trade,
@@ -1289,11 +1292,6 @@ export default function Swap({ className }: { className?: string }) {
                           }
                           }
                           id="leverage-button"
-                          disabled={
-                            leverageTrade.state === LeverageTradeState.LOADING||
-                            !!inputError
-                          }
-
                         >
                           <Text fontSize={20} fontWeight={600}>
                             { inputError ? (
@@ -1309,6 +1307,8 @@ export default function Swap({ className }: { className?: string }) {
                             )}
                           </Text>
                         </ButtonError>
+                        )
+                        
                       ) : (
                         <ButtonError
                           onClick={() => {

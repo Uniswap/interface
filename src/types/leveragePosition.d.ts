@@ -21,6 +21,7 @@ export interface LeveragePositionDetails {
   tickStart: string // borrowStartTick
   tickFinish: string // borrowFinishTick
 }
+
 // uint256 totalPosition; //position in output token
 // uint256 totalDebt; // debt in output token
 // uint256 totalDebtInput; //debt in input token

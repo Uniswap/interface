@@ -271,7 +271,7 @@ export default function LeveragePositionItem({
   }
 
   const [positionState, position] = useLeveragePosition(leverageManagerAddress ?? undefined, account, tokenId)
-  console.log("poolPos: ", position)
+
   const pool = position?.pool;
   // const [poolState, pool] = usePool(currency0 ?? undefined, currency1?? undefined, FeeAmount.LOW)
 

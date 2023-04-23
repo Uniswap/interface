@@ -109,7 +109,6 @@ export function useLeveragePositions(leverageManagerAddress: string | undefined,
   // return formattedPositions
 }
 
-
 export enum PositionState {
   LOADING,
   NOT_EXISTS,
