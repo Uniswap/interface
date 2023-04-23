@@ -14,7 +14,7 @@ function formatTokenName(address: string, name: string) {
 }
 
 const fujiClient = new ApolloClient({
-  uri: 'https://api.orbitmarket.io/subgraphs/name/forge-trade/v3-subgraph',
+  uri: 'https://subgraph.satsuma-prod.com/09c9cf3574cc/orbital-apes/v3-subgraph/api',
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
