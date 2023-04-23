@@ -56,7 +56,9 @@ export function AdvancedMarketDetails({
 }: AdvancedMarketDetailsProps) {
   const theme = useContext(ThemeContext)
   const { chainId } = useActiveWeb3React()
-  const isGaslessMode = useIsGaslessMode() && chainId == SupportedChainId.POLYGON
+  const isGaslessMode =
+    useIsGaslessMode() && (chainId == SupportedChainId.POLYGON || chainId == SupportedChainId.ARBITRUM_ONE)
+
   const { realizedLPFee, priceImpact } = useMemo(() => {
     if (!trade) return { realizedLPFee: undefined, priceImpact: undefined }
 

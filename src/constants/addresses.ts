@@ -146,6 +146,7 @@ export const KROMATIKA_METASWAP_ADDRESSES: AddressMap = {
 }
 export const BICONOMY_DAPP_API: AddressMap = {
   [SupportedChainId.POLYGON]: 'lD1x8FLPD.45318b65-8ab0-45c7-b59c-2f73137fb751',
+  [SupportedChainId.ARBITRUM_ONE]: '5pAU9H4iJ.3c55c04e-127e-45c7-94e0-5cd90260ce11',
 }
 export const V3_MIGRATOR_ADDRESSES: AddressMap = constructSameAddressMap('0xA5644E29708357803b5A882D272c41cC0dF92B34', [
   SupportedChainId.ARBITRUM_ONE,

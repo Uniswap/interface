@@ -253,7 +253,8 @@ export default function SwapWidget() {
   const toggleWalletModal = useWalletModalToggle()
 
   // for expert mode
-  const isGaslessMode = useIsGaslessMode() && chainId == SupportedChainId.POLYGON
+  const isGaslessMode =
+    useIsGaslessMode() && (chainId == SupportedChainId.POLYGON || chainId == SupportedChainId.ARBITRUM_ONE)
 
   const obj = sessionStorage.getItem('referral')
 
