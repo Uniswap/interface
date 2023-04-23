@@ -164,7 +164,7 @@ export default function App() {
                 <Route path="swap" element={<Swap />} />
 
                 <Route path="pools" element={<Pools />} />
-                <Route path="ibc" element={<Pools />} />
+                <Route path="assets" element={<Pools />} />
 
                 <Route path="pool" element={<Pool />} />
                 <Route path="pool/:tokenId" element={<PositionPage />} />
