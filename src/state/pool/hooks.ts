@@ -327,10 +327,12 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
   const poolsLoading = useMemo(() => poolsData.some(({ loading }) => loading), [poolsData])
   const stakesLoading = useMemo(() => poolsStakes.some(({ loading }) => loading), [poolsStakes])
   const ownStakesLoading = useMemo(() => poolsOwnStakes.some(({ loading }) => loading), [poolsOwnStakes])
-  const error = useMemo(() => poolsData.some(({ error }) => error), [poolsData])
+  const poolsError = useMemo(() => poolsData.some(({ error }) => error), [poolsData])
+  const stakesError = useMemo(() => poolsStakes.some(({ error }) => error), [poolsStakes])
+  const ownStakesError = useMemo(() => poolsOwnStakes.some(({ error }) => error), [poolsOwnStakes])
 
   const stakingPools = useMemo(() => {
-    if (!poolsLoading && !error && poolIds) {
+    if (!poolsLoading && !poolsError && poolIds) {
       return poolsData.map((call, i) => {
         const id = poolIds[i]
         const result = call.result as CallStateResult
@@ -341,10 +343,10 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
       })
     }
     return undefined
-  }, [error, poolsLoading, poolIds, poolsData])
+  }, [poolsError, poolsLoading, poolIds, poolsData])
 
   const delegatedStakes = useMemo(() => {
-    if (!stakesLoading && addresses && poolIds) {
+    if (!stakesLoading && !stakesError && addresses && poolIds) {
       return poolsStakes.map((call, i) => {
         const id = poolIds[i]
         const result = call.result as CallStateResult
@@ -355,10 +357,10 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
       })
     }
     return undefined
-  }, [stakesLoading, addresses, poolIds, poolsStakes])
+  }, [stakesLoading, stakesError, addresses, poolIds, poolsStakes])
 
   const delegatedOwnStakes = useMemo(() => {
-    if (!ownStakesLoading && addresses && poolIds) {
+    if (!ownStakesLoading && !ownStakesError && addresses && poolIds) {
       return poolsOwnStakes.map((call, i) => {
         const id = poolIds[i]
         const result = call.result as CallStateResult
@@ -369,7 +371,7 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
       })
     }
     return undefined
-  }, [ownStakesLoading, addresses, poolIds, poolsOwnStakes])
+  }, [ownStakesLoading, ownStakesError, addresses, poolIds, poolsOwnStakes])
 
   const totalDelegatedStake = delegatedStakes?.reduce((prev, curr) => prev + Number(curr.delegatedStake), 0)
   const totalPoolsOwnStake = delegatedOwnStakes?.reduce((prev, curr) => prev + Number(curr.poolOwnStake), 0)
