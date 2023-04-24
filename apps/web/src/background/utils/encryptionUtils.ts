@@ -10,7 +10,7 @@ function getKeyMaterial(password: string) {
 
 function getKey(keyMaterial: CryptoKey, salt: Uint8Array) {
   // TODO: This should use Argon2 like ToB recommended for the mobile app
-  // https://github.com/Uniswap/mobile/blob/main/ios/EncryptionHelper.swift
+  // https://github.com/Uniswap/wallet-internal/blob/main/apps/mobile/ios/EncryptionHelper.swift
   return crypto.subtle.deriveKey(
     {
       name: 'PBKDF2',

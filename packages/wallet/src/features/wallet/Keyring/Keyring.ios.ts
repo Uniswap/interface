@@ -1,4 +1,4 @@
-// From on https://github.com/Uniswap/mobile/blob/main/src/lib/RNEthersRs.ts
+// From on https://github.com/Uniswap/wallet-internal/blob/main/apps/mobile/src/lib/RNEthersRs.ts
 import { NativeModules } from 'react-native'
 import { IKeyring } from './Keyring'
 

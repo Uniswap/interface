@@ -1,4 +1,4 @@
-// Based on https://github.com/Uniswap/mobile/blob/main/src/lib/RNEthersRs.ts
+// Based on https://github.com/Uniswap/wallet-internal/blob/main/apps/mobile/src/lib/RNEthersRs.ts
 
 /**
  * Provides the generation, storage, and signing logic for mnemonics and private keys.

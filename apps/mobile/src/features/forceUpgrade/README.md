@@ -25,4 +25,4 @@ force_upgrade: {
 
 ## UI
 
-[ForceUpgradeModal](https://github.com/Uniswap/mobile/blob/main/src/components/forceUpgrade/ForceUpgradeModal.tsx)
+[ForceUpgradeModal](https://github.com/Uniswap/wallet-internal/blob/main/apps/mobile/src/components/forceUpgrade/ForceUpgradeModal.tsx)

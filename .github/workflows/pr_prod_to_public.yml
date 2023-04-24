@@ -16,7 +16,7 @@ jobs:
         with:
           token: ${{ secrets.SERVICE_ACCOUNT_PAT }}
           ref: releases/prod
-          repository: Uniswap/mobile
+          repository: Uniswap/wallet-internal
           path: 'private'
       - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
         name: 'Check out main from public repository'

@@ -1,5 +1,5 @@
 # Uniswap Wallet
-[![codecov](https://codecov.io/gh/Uniswap/mobile/branch/main/graph/badge.svg?token=YVT2Y86O82)](https://codecov.io/gh/Uniswap/mobile)
+[![codecov](https://codecov.io/gh/Uniswap/wallet-internal/branch/main/graph/badge.svg?token=YVT2Y86O82)](https://codecov.io/gh/Uniswap/wallet-internal)
 
 [Uniswap Wallet](https://app.uniswap.org/) is the simplest, safest, and most powerful self-custodial crypto wallet. It is developed by the Uniswap Labs team, inventors of the Uniswap Protocol.
 
