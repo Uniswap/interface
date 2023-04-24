@@ -90,11 +90,7 @@ interface PoolPositionListItemProps {
 }
 
 export default function PoolPositionListItem({ positionDetails, returnPage }: PoolPositionListItemProps) {
-  const { name, symbol } = positionDetails
-
-  // TODO: get some pool data like, all data with 1 call. Only problem this call will be made for each pool
-  // therefore must first restrict pools by owner
-  // const poolData = usePoolData(pool)
+  const { name, symbol, apr } = positionDetails
 
   //const position = useMemo(() => {
   //  return new PoolPosition({ name, symbol, pool, id })
@@ -109,7 +105,7 @@ export default function PoolPositionListItem({ positionDetails, returnPage }: Po
         <PrimaryPositionIdData>
           <DataText>{name}</DataText>
         </PrimaryPositionIdData>
-        <DataText>{symbol}</DataText>
+        {returnPage === 'mint' ? <DataText>{symbol}</DataText> : <DataText>{(Number(apr) * 100).toFixed(1)}%</DataText>}
       </RowBetween>
       <RangeLineItem>
         <RangeText>

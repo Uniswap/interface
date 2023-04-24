@@ -12,6 +12,7 @@ import { RB_FACTORY_ADDRESSES, RB_REGISTRY_ADDRESSES } from 'constants/addresses
 import { GRG } from 'constants/tokens'
 import { useContract } from 'hooks/useContract'
 import { useTotalSupply } from 'hooks/useTotalSupply'
+//import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useStakingContract } from 'state/governance/hooks'
@@ -317,85 +318,91 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
   const stakingContract = useStakingContract()
 
   const inputs = useMemo(() => (poolIds ? poolIds.map((poolId) => [poolId]) : []), [poolIds])
-  const poolAddresses = useMemo(() => (addresses ? addresses.map((address) => [address]) : []), [addresses])
+  const poolAddresses = useMemo(() => (addresses ? addresses.map((address) => [address, 1]) : []), [addresses])
 
   const poolsData = useSingleContractMultipleData(stakingContract, 'getStakingPool', inputs)
   const poolsStakes = useSingleContractMultipleData(stakingContract, 'getTotalStakeDelegatedToPool', inputs)
-  const poolsOwnStakes = useSingleContractMultipleData(stakingContract, 'getTotalStakeDelegatedToPoolByOwner', [
-    ...inputs,
-    poolAddresses,
-  ])
+  // TODO: if we allow pools to stake pools other then self we'll have to use getStakeDelegateToPoolByOwner
+  const poolsOwnStakes = useSingleContractMultipleData(stakingContract, 'getOwnerStakeByStatus', poolAddresses)
+
+  const poolsLoading = useMemo(() => poolsData.some(({ loading }) => loading), [poolsData])
+  const stakesLoading = useMemo(() => poolsStakes.some(({ loading }) => loading), [poolsStakes])
+  const ownStakesLoading = useMemo(() => poolsOwnStakes.some(({ loading }) => loading), [poolsOwnStakes])
+  const error = useMemo(() => poolsData.some(({ error }) => error), [poolsData])
 
   const stakingPools = useMemo(() => {
-    if (poolIds) {
+    if (!poolsLoading && !error && poolIds) {
       return poolsData.map((call, i) => {
         const id = poolIds[i]
         const result = call.result as CallStateResult
         return {
           id,
-          operatorShare: result.operatorShare,
+          operatorShare: result[0].operatorShare,
         }
       })
     }
     return undefined
-  }, [poolIds, poolsData])
+  }, [error, poolsLoading, poolIds, poolsData])
 
   const delegatedStakes = useMemo(() => {
-    if (addresses && poolIds) {
+    if (!stakesLoading && addresses && poolIds) {
       return poolsStakes.map((call, i) => {
         const id = poolIds[i]
         const result = call.result as CallStateResult
         return {
           id,
-          delegatedStake: result.nextEpochBalance,
+          delegatedStake: result[0].nextEpochBalance,
         }
       })
     }
     return undefined
-  }, [addresses, poolIds, poolsStakes])
+  }, [stakesLoading, addresses, poolIds, poolsStakes])
 
   const delegatedOwnStakes = useMemo(() => {
-    if (addresses && poolIds) {
+    if (!ownStakesLoading && addresses && poolIds) {
       return poolsOwnStakes.map((call, i) => {
         const id = poolIds[i]
         const result = call.result as CallStateResult
         return {
           id,
-          poolOwnStake: result.currentEpochBalance,
+          poolOwnStake: result[0].currentEpochBalance,
         }
       })
     }
     return undefined
-  }, [addresses, poolIds, poolsOwnStakes])
+  }, [ownStakesLoading, addresses, poolIds, poolsOwnStakes])
 
-  const totalDelegatedStake = delegatedStakes?.reduce((prev, curr, index, array) => prev + curr.delegatedStake, 0)
-  const totalPoolsOwnStake = delegatedOwnStakes?.reduce((prev, curr, index, array) => prev + curr.poolOwnStake, 0)
-  // TODO: query exact total supply per chain and check if should pass from parent
+  const totalDelegatedStake = delegatedStakes?.reduce((prev, curr) => prev + Number(curr.delegatedStake), 0)
+  const totalPoolsOwnStake = delegatedOwnStakes?.reduce((prev, curr) => prev + Number(curr.poolOwnStake), 0)
+  // TODO: check if should pass supply from parent
   const { chainId } = useWeb3React()
-  const totalSupply = 10000000e18
   const supplyAmount = useTotalSupply(GRG[chainId ?? 1])
-  console.log(supplyAmount?.quotient)
 
   const aprs = useMemo(() => {
-    if (!delegatedStakes || !delegatedOwnStakes || !totalDelegatedStake || !totalPoolsOwnStake) return undefined
+    if (!delegatedStakes || !delegatedOwnStakes || !totalDelegatedStake || !totalPoolsOwnStake || !supplyAmount)
+      return undefined
     const poolsInfo = stakingPools?.map((pool, i) => ({
       ...pool,
       operatorShare: stakingPools[i].operatorShare,
       delegatedStake: delegatedStakes[i].delegatedStake,
-      delegatedOwnStakes: delegatedOwnStakes[i].poolOwnStake,
+      delegatedOwnStake: delegatedOwnStakes[i].poolOwnStake,
     }))
-    return poolsInfo?.map((p, i) => {
-      const apr =
-        (((p.delegatedOwnStakes / totalPoolsOwnStake) ^ (2 / 3)) *
-          ((p.delegatedStake / totalDelegatedStake) ^ (1 / 3)) *
-          (1 - p.operatorShare / 10000) *
-          ((2 / 100) * totalSupply)) /
-        p.delegatedOwnStakes
 
+    return poolsInfo?.map((p, i) => {
+      // if we want to return NaN when pool has no delegated stake, we can remove the following assertion
+      const apr =
+        p.delegatedStake.toString() !== BigNumber.from(0).toString()
+          ? (Math.pow(p.delegatedOwnStake / totalPoolsOwnStake, 2 / 3) *
+              Math.pow(p.delegatedStake / totalDelegatedStake, 1 / 3) *
+              ((1_000_000 - p.operatorShare) / 1_000_000) *
+              ((Number(supplyAmount?.quotient) * 2) / 100)) /
+            p.delegatedStake
+          : 0
       return apr
     })
-  }, [delegatedStakes, delegatedOwnStakes, stakingPools, totalDelegatedStake, totalPoolsOwnStake])
-  const loading = false
+  }, [delegatedStakes, delegatedOwnStakes, stakingPools, supplyAmount, totalDelegatedStake, totalPoolsOwnStake])
+
+  const loading = poolsLoading || stakesLoading || ownStakesLoading
 
   return {
     loading,
