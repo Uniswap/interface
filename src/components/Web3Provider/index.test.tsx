@@ -24,6 +24,8 @@ jest.mock('connection', () => {
 jest.mock('hooks/useEagerlyConnect', () => jest.fn())
 jest.mock('hooks/useOrderedConnections', () => jest.fn())
 
+jest.unmock('@web3-react/core')
+
 function first<T>(array: T[]): T {
   return array[0]
 }
