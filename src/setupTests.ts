@@ -41,7 +41,7 @@ jest.mock('@popperjs/core', () => {
               state.instance.forceUpdate()
               return Promise.resolve(state.instance.state)
             }
-          }
+          },
         })
       }
       return core.createPopper(referenceElement, popperElement, options)
