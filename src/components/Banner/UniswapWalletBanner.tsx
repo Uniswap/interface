@@ -1,11 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { InterfaceElementName } from '@uniswap/analytics-events'
+import walletBannerPhoneImageSrc from 'assets/images/wallet_banner_phone_image.png'
+import { ReactComponent as AppleLogo } from 'assets/svg/apple_logo.svg'
 import { openDownloadApp, openWalletMicrosite } from 'components/AccountDrawer/DownloadButton'
 import { BaseButton } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { OpacityHoverState } from 'components/Common'
 import Row from 'components/Row'
-import { useMgtmEnabled } from 'featureFlags/flags/mgtm'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { X } from 'react-feather'
 import { useLocation } from 'react-router-dom'
@@ -14,9 +15,6 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import { isIOS } from 'utils/userAgent'
-
-import { ReactComponent as AppleLogo } from '../../assets/svg/apple_logo.svg'
-import walletBannerPhoneImageSrc from '../../assets/svg/wallet_banner_phone_image.svg'
 
 const PopupContainer = styled.div<{ show: boolean }>`
   display: flex;
@@ -27,7 +25,7 @@ const PopupContainer = styled.div<{ show: boolean }>`
 
   background: url(${walletBannerPhoneImageSrc});
   background-repeat: no-repeat;
-  background-position: bottom -1px right 15px;
+  background-position: top 18px right 15px;
   background-size: 166px;
 
   :hover {
@@ -88,11 +86,10 @@ const BannerButton = styled(BaseButton)`
 
 export default function UniswapWalletBanner() {
   const [hideUniswapWalletBanner, toggleHideUniswapWalletBanner] = useHideUniswapWalletBanner()
-  const mgtmEnabled = useMgtmEnabled()
   const location = useLocation()
   const isLandingScreen = location.search === '?intro=true' || location.pathname === '/'
 
-  const shouldDisplay = Boolean(mgtmEnabled && !hideUniswapWalletBanner && !isLandingScreen)
+  const shouldDisplay = Boolean(!hideUniswapWalletBanner && !isLandingScreen)
 
   const screenSize = useScreenSize()
 

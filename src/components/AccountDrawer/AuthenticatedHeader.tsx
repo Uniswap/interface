@@ -114,7 +114,7 @@ const AccountNamesWrapper = styled.div`
   width: 100%;
   flex-direction: column;
   justify-content: center;
-  gap: 4px;
+  gap: 2px;
 `
 
 const StyledInfoIcon = styled(Info)`
@@ -240,7 +240,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           <StatusIcon connection={connection} size={40} />
           {account && (
             <AccountNamesWrapper>
-              <ThemedText.SubHeader color="textPrimary" fontWeight={500}>
+              <ThemedText.SubHeader>
                 <CopyText toCopy={ENSName ?? account}>{ENSName ?? shortenAddress(account, 4, 4)}</CopyText>
               </ThemedText.SubHeader>
               {/* Displays smaller view of account if ENS name was rendered above */}

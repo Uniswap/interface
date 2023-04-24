@@ -143,7 +143,7 @@ export const routingApi = createApi({
         } catch (error) {
           // TODO: fall back to client-side quoter when auto router fails.
           // deprecate 'legacy' v2/v3 routers first.
-          return { error: { status: 'CUSTOM_ERROR', error: error.toString(), data: error } }
+          return { error: { status: 'CUSTOM_ERROR', error: error.toString() } }
         }
       },
       keepUnusedDataFor: ms`10s`,
