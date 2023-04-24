@@ -21,7 +21,11 @@ module.exports = {
           {
             zones: [
               {
-                target: ['src/**/*[!.test].ts', 'src/**/*[!.test].tsx'],
+                target: 'src/**/*[!.test].ts',
+                from: 'src/test-utils',
+              },
+              {
+                target: 'src/**/*[!.test].tsx',
                 from: 'src/test-utils',
               },
             ],

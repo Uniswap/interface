@@ -118,7 +118,12 @@ export default function SwapDetailsDropdown({ trade, syncing, loading, allowedSl
           element={InterfaceElementName.SWAP_DETAILS_DROPDOWN}
           shouldLogImpression={!showDetails}
         >
-          <StyledHeaderRow  data-testid="swap-details-header-row" onClick={() => setShowDetails(!showDetails)} disabled={!trade} open={showDetails}>
+          <StyledHeaderRow
+            data-testid="swap-details-header-row"
+            onClick={() => setShowDetails(!showDetails)}
+            disabled={!trade}
+            open={showDetails}
+          >
             <RowFixed style={{ position: 'relative' }} align="center">
               {Boolean(loading || syncing) && (
                 <StyledPolling>
