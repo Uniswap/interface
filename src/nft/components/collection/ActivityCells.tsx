@@ -58,7 +58,7 @@ const AddressLink = styled(ExternalLink)`
   }
 `
 
-const isPurchasableOrder = (orderStatus: OrderStatus | undefined, marketplace: string | undefined): boolean => {
+const isPurchasableOrder = (orderStatus?: OrderStatus, marketplace?: string): boolean => {
   if (!marketplace || !orderStatus) return false
   const purchasableMarkets = Object.keys(NftMarketplace).map((market) => market.toLowerCase())
 
