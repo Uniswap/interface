@@ -166,7 +166,7 @@ export const SearchBarDropdown = ({
               floor_price: collection.floor,
             },
           }))
-          .slice(0, isNFTPage ? 3 : 2)
+          .slice(0, isNFTPage ? 3 : 2) ?? []
       : [...Array<GenieCollection>(isNFTPage ? 3 : 2)]
   }, [trendingCollections, isNFTPage, trendingCollectionsAreLoading])
 

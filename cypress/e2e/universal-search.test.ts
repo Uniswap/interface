@@ -2,7 +2,7 @@ import { getTestSelector } from '../utils'
 
 describe('Universal search bar', () => {
   before(() => {
-    cy.visit('/swap')
+    cy.visit('/')
     cy.get('[data-cy="magnifying-icon"]')
       .parent()
       .then(($navIcon) => {
