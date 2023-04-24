@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import * as Sentry from '@sentry/react'
+import { useWeb3React } from '@web3-react/core'
 import { ButtonLight, SmallButtonPrimary } from 'components/Button'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
@@ -217,11 +218,13 @@ const updateServiceWorkerInBackground = async () => {
 }
 
 export default function ErrorBoundary({ children }: PropsWithChildren): JSX.Element {
+  const { chainId } = useWeb3React()
   return (
     <Sentry.ErrorBoundary
       fallback={({ error, eventId }) => <Fallback error={error} eventId={eventId} />}
       beforeCapture={(scope) => {
         scope.setLevel('fatal')
+        scope.setTag('chain_id', chainId)
       }}
       onError={() => {
         updateServiceWorkerInBackground()

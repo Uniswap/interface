@@ -11,7 +11,6 @@ import { Connection, ConnectionType, getConnections, networkConnection } from 'c
 import { useGetConnection } from 'connection'
 import { ErrorCode } from 'connection/utils'
 import { isSupportedChain } from 'constants/chains'
-import { useMgtmEnabled } from 'featureFlags/flags/mgtm'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Settings } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
@@ -156,15 +155,16 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
         setPendingError(undefined)
 
         await connection.connector.activate()
+        console.debug(`connection activated: ${connection.getName()}`)
         dispatch(updateSelectedWallet({ wallet: connection.type }))
         if (drawerOpenRef.current) toggleWalletDrawer()
       } catch (error) {
+        console.debug(`web3-react connection error: ${JSON.stringify(error)}`)
+        // TODO(WEB-3162): re-add special treatment for already-pending injected errors
         if (didUserReject(connection, error)) {
           setPendingConnection(undefined)
-        } // Prevents showing error caused by MetaMask being prompted twice
-        else if (error?.code !== ErrorCode.MM_ALREADY_PENDING) {
-          console.debug(`web3-react connection error: ${error}`)
-          setPendingError(error.message)
+        } else {
+          setPendingError(error)
 
           sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
             result: WalletConnectionResult.FAILED,
@@ -175,8 +175,6 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
     },
     [dispatch, setPendingError, toggleWalletDrawer]
   )
-
-  const mgtmEnabled = useMgtmEnabled()
 
   return (
     <Wrapper data-testid="wallet-modal">
@@ -192,8 +190,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
         <AutoColumn gap="16px">
           <OptionGrid data-testid="option-grid">
             {connections.map((connection) =>
-              // Hides Uniswap Wallet if mgtm is disabled
-              connection.shouldDisplay() && !(connection.type === ConnectionType.UNIWALLET && !mgtmEnabled) ? (
+              connection.shouldDisplay() ? (
                 <Option
                   key={connection.getName()}
                   connection={connection}

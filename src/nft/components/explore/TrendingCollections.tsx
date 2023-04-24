@@ -24,7 +24,7 @@ const ExploreContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 1200px;
+  max-width: ${({ theme }) => theme.maxWidth};
   padding: 0 16px;
 `
 

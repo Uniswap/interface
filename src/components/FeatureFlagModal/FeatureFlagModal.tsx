@@ -1,6 +1,5 @@
-import { BaseVariant, FeatureFlag, featureFlagSettings, useBaseFlag, useUpdateFlag } from 'featureFlags'
-import { MgtmVariant, useMgtmFlag } from 'featureFlags/flags/mgtm'
-import { useMiniPortfolioFlag } from 'featureFlags/flags/miniPortfolio'
+import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
+import { DetailsV2Variant, useDetailsV2Flag } from 'featureFlags/flags/nftDetails'
 import { NftGraphqlVariant, useNftGraphqlFlag } from 'featureFlags/flags/nftlGraphql'
 import { PayWithAnyTokenVariant, usePayWithAnyTokenFlag } from 'featureFlags/flags/payWithAnyToken'
 import { SwapWidgetVariant, useSwapWidgetFlag } from 'featureFlags/flags/swapWidget'
@@ -206,24 +205,6 @@ export default function FeatureFlagModal() {
         </CloseButton>
       </Header>
       <FeatureFlagOption
-        variant={MgtmVariant}
-        value={useMgtmFlag()}
-        featureFlag={FeatureFlag.mgtm}
-        label="Mobile Wallet go-to-market assets"
-      />
-      <FeatureFlagOption
-        variant={BaseVariant}
-        value={useBaseFlag(FeatureFlag.walletMicrosite)}
-        featureFlag={FeatureFlag.walletMicrosite}
-        label="Mobile Wallet microsite (requires mgtm to also be enabled)"
-      />
-      <FeatureFlagOption
-        variant={BaseVariant}
-        value={useMiniPortfolioFlag()}
-        featureFlag={FeatureFlag.miniPortfolio}
-        label="MiniPortfolio"
-      />
-      <FeatureFlagOption
         variant={PayWithAnyTokenVariant}
         value={usePayWithAnyTokenFlag()}
         featureFlag={FeatureFlag.payWithAnyToken}
@@ -240,6 +221,12 @@ export default function FeatureFlagModal() {
         value={useNftGraphqlFlag()}
         featureFlag={FeatureFlag.nftGraphql}
         label="Migrate NFT read endpoints to GQL"
+      />
+      <FeatureFlagOption
+        variant={DetailsV2Variant}
+        value={useDetailsV2Flag()}
+        featureFlag={FeatureFlag.detailsV2}
+        label="Use the new details page for nfts"
       />
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption

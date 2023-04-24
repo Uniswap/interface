@@ -1,4 +1,6 @@
 import { t, Trans } from '@lingui/macro'
+import { InterfaceElementName } from '@uniswap/analytics-events'
+import { openDownloadApp } from 'components/AccountDrawer/DownloadButton'
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -21,6 +23,7 @@ import { useToggleModal } from 'state/application/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 
+import { ReactComponent as AppleLogo } from '../../assets/svg/apple_logo.svg'
 import { ApplicationModal } from '../../state/application/reducer'
 import * as styles from './MenuDropdown.css'
 import { NavDropdown } from './NavDropdown'
@@ -44,7 +47,7 @@ const PrimaryMenuRow = ({
           <Row onClick={close}>{children}</Row>
         </NavLink>
       ) : (
-        <Row as="a" href={href} target="_blank" rel="noopener noreferrer" className={styles.MenuRow}>
+        <Row cursor="pointer" as="a" href={href} target="_blank" rel="noopener noreferrer" className={styles.MenuRow}>
           {children}
         </Row>
       )}
@@ -140,16 +143,26 @@ export const MenuDropdown = () => {
                 <Box display={{ sm: 'none', lg: 'flex', xxl: 'none' }}>
                   <PrimaryMenuRow to="/pool" close={toggleOpen}>
                     <Icon>
-                      <PoolIcon width={24} height={24} color={theme.textSecondary} />
+                      <PoolIcon width={24} height={24} fill={theme.textPrimary} />
                     </Icon>
                     <PrimaryMenuRow.Text>
                       <Trans>Pool</Trans>
                     </PrimaryMenuRow.Text>
                   </PrimaryMenuRow>
                 </Box>
+                <Box onClick={() => openDownloadApp(InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON)}>
+                  <PrimaryMenuRow close={toggleOpen}>
+                    <Icon>
+                      <AppleLogo width="24px" height="24px" fill={theme.textPrimary} />
+                    </Icon>
+                    <PrimaryMenuRow.Text>
+                      <Trans>Download Uniswap Wallet</Trans>
+                    </PrimaryMenuRow.Text>
+                  </PrimaryMenuRow>
+                </Box>
                 <PrimaryMenuRow to="/vote" close={toggleOpen}>
                   <Icon>
-                    <GovernanceIcon width={24} height={24} color={theme.textSecondary} />
+                    <GovernanceIcon width={24} height={24} color={theme.textPrimary} />
                   </Icon>
                   <PrimaryMenuRow.Text>
                     <Trans>Vote in governance</Trans>
@@ -157,7 +170,7 @@ export const MenuDropdown = () => {
                 </PrimaryMenuRow>
                 <PrimaryMenuRow href="https://info.uniswap.org/#/">
                   <Icon>
-                    <BarChartIcon width={24} height={24} color={theme.textSecondary} />
+                    <BarChartIcon width={24} height={24} color={theme.textPrimary} />
                   </Icon>
                   <PrimaryMenuRow.Text>
                     <Trans>View more analytics</Trans>

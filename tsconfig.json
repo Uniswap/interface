@@ -4,12 +4,14 @@
     "allowSyntheticDefaultImports": true,
     "alwaysStrict": true,
     "baseUrl": "src",
+    "composite": true,
     "downlevelIteration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "incremental": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
@@ -22,10 +24,11 @@
     "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": true,
-    "target": "es5",
+    "target": "ESNext",
+    "tsBuildInfoFile": "node_modules/.cache/.tsbuildinfo",
     "types": ["jest"],
     "useUnknownInCatchVariables": false
   },
   "exclude": ["node_modules", "cypress"],
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "src/**/*.json"]
 }

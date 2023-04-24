@@ -1,5 +1,5 @@
 import { Markets } from 'nft/types'
-import { render } from 'test-utils'
+import { render } from 'test-utils/render'
 
 import { MarketplaceContainer } from './icons'
 

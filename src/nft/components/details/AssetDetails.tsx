@@ -17,7 +17,6 @@ import { formatEth, formatEthPrice } from 'nft/utils/currency'
 import { isAudio } from 'nft/utils/isAudio'
 import { isVideo } from 'nft/utils/isVideo'
 import { putCommas } from 'nft/utils/putCommas'
-import { fallbackProvider, getRarityProviderLogo } from 'nft/utils/rarity'
 import { useCallback, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery, useQuery } from 'react-query'
@@ -313,18 +312,16 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     'no-cache'
   )
 
-  // TODO simplify typecasting when removing graphql flag
-  const lastSalePrice = isNftGraphqlEnabled ? gqlPriceData?.[0]?.price : priceData?.events[0]?.price
-  const formattedEthprice = isNftGraphqlEnabled
-    ? formatEth(parseFloat(lastSalePrice ?? ''))
-    : formatEthPrice(lastSalePrice) || 0
-  const formattedPrice = isNftGraphqlEnabled
-    ? formattedEthprice
-    : lastSalePrice
-    ? putCommas(parseFloat(formattedEthprice.toString())).toString()
-    : null
-  const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
+  let formattedPrice
+  if (isNftGraphqlEnabled) {
+    const weiPrice = gqlPriceData?.[0]?.price
+    formattedPrice = weiPrice ? formatEth(parseFloat(weiPrice)) : undefined
+  } else {
+    const ethPrice = priceData?.events[0]?.price
+    formattedPrice = ethPrice ? putCommas(formatEthPrice(priceData?.events[0]?.price)).toString() : undefined
+  }
 
+  const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
   const Filter = useCallback(
     function ActivityFilter({ eventType }: { eventType: ActivityEventType }) {
       const isActive = activeFilters[eventType]
@@ -426,7 +423,6 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
 
   const rarity = asset?.rarity?.providers?.[0]
   const [showHolder, setShowHolder] = useState(false)
-  const rarityProviderLogo = getRarityProviderLogo(rarity?.provider)
 
   return (
     <Column>
@@ -458,11 +454,9 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                 text={
                   <HoverContainer>
                     <HoverImageContainer>
-                      <img src={rarityProviderLogo} alt="cardLogo" width={16} />
+                      <img src="/nft/svgs/gem.svg" alt="cardLogo" width={16} />
                     </HoverImageContainer>
-                    <ContainerText>
-                      {`Ranking by ${rarity.provider === 'Genie' ? fallbackProvider : rarity.provider}`}
-                    </ContainerText>
+                    <ContainerText>Ranking by Rarity Sniper</ContainerText>
                   </HoverContainer>
                 }
                 placement="top"
