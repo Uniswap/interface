@@ -1,5 +1,5 @@
-import { TableContentHeight } from './DataPageTable'
+import { TableContentContainer } from './DataPageTable'
 
 export const ActivityTableContent = () => {
-  return <div style={{ height: `${TableContentHeight}px` }}>Activity Content</div>
+  return <TableContentContainer>Activity Content</TableContentContainer>
 }
