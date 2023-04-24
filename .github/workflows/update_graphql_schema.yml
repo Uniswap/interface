@@ -35,7 +35,7 @@ jobs:
           restore-keys: ${{ runner.os }}-yarn-v1
 
       - name: Yarn Install
-        run: yarn --frozen-lockfile --no-audit --prefer-offline
+        run: yarn --frozen-lockfile
 
       - name: Update GraphQL Schema
         run: yarn apollo:schema

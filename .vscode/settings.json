@@ -7,7 +7,7 @@
       "source.fixAll": true,
       "source.organizeImports": false
     },
-    "editor.formatOnSave": true
+    "editor.formatOnSave": false
   },
   "[javascriptreact]": {
     "editor.codeActionsOnSave": {
@@ -47,7 +47,7 @@
     "**/node_modules/*/**": true
   },
   "javascript.format.enable": false,
-  "jest.jestCommandLine": "yarn test",
+  "jest.jestCommandLine": "yarn mobile test",
   "search.exclude": {
     "**/node_modules": false
   },

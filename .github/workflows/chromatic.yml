@@ -14,7 +14,7 @@ jobs:
           timeout_minutes: 10
           retry_wait_seconds: 60
           max_attempts: 3
-          command: yarn --frozen-lockfile --no-audit --prefer-offline
+          command: yarn --immutable
       - name: Publish to Chromatic
         uses: chromaui/action@c51a16ad99d38c810865c1e2dcecbd5bff508b3c
         with:

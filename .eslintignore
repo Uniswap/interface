@@ -1,14 +1,8 @@
-metro.config.js
-node_modules
-
-# Generated contract types
-src/abis/types
-
-generated*.ts
-__generated__/
-
-storybook-static
-
-coverage
-
-monorepo/
+**/dist/**
+**/build/**
+**/node_modules/**
+**/types/**
+**/*.test.{js,jsx,ts,tsx}
+**/*.spec.{js,jsx,ts,tsx}
+**/config-overrides.js
+**/.eslintrc.js

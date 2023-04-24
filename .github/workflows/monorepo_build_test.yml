@@ -11,6 +11,7 @@ on:
     paths:
       - 'apps/**'
       - 'packages/**'
+      - 'config/**'
       - 'package.json'
       - '*.lock'
       - '.yarnrc.yml'
@@ -26,7 +27,7 @@ jobs:
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
     defaults:
       run:
-        working-directory: ./monorepo
+        working-directory: ./
 
     steps:
       - name: Checkout

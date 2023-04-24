@@ -1,0 +1,112 @@
+name: '[mobile] Code Quality Checks'
+# https://github.com/invertase/react-native-firebase/blob/master/.github/workflows/linting.yml
+
+on:
+  pull_request:
+    branches:
+      - '**'
+  push:
+    branches:
+      - main
+
+jobs:
+  linting:
+    name: Lint
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - uses: styfle/cancel-workflow-action@860d4c7374d6e4a1c482e80897cb913ae46692ac
+        with:
+          all_but_latest: true
+
+      - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561
+        with:
+          node-version: 16
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed
+        name: Yarn Cache
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-v1-${{ hashFiles('**/package.json') }}
+          restore-keys: ${{ runner.os }}-yarn-v1
+
+      - name: Yarn Install
+        uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
+        with:
+          timeout_minutes: 7
+          retry_wait_seconds: 30
+          max_attempts: 3
+          command: yarn && cd apps/mobile && yarn
+
+      - name: Typechain
+        uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
+        with:
+          timeout_minutes: 3
+          retry_wait_seconds: 20
+          max_attempts: 3
+          command: yarn mobile contracts:compile
+
+      - name: Lint
+        uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
+        with:
+          timeout_minutes: 3
+          retry_wait_seconds: 10
+          max_attempts: 3
+          command: yarn mobile lint
+
+  typescript:
+    name: TypeScript Build Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: styfle/cancel-workflow-action@860d4c7374d6e4a1c482e80897cb913ae46692ac
+        with:
+          all_but_latest: true
+
+      - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561
+        with:
+          node-version: 16
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed
+        name: Yarn Cache
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-v1-${{ hashFiles('**/package.json') }}
+          restore-keys: ${{ runner.os }}-yarn-v1
+
+      - name: Yarn Install
+        uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
+        with:
+          timeout_minutes: 7
+          retry_wait_seconds: 30
+          max_attempts: 3
+          command: yarn --immutable && cd apps/mobile && yarn --immutable
+
+      - name: Typechain
+        uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
+        with:
+          timeout_minutes: 3
+          retry_wait_seconds: 20
+          max_attempts: 3
+          command: yarn mobile contracts:compile
+
+      - name: Typescript Compile
+        run: yarn mobile tsc:compile

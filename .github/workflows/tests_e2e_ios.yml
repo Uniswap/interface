@@ -72,7 +72,7 @@ jobs:
           timeout_minutes: 10
           retry_wait_seconds: 60
           max_attempts: 3
-          command: yarn --frozen-lockfile --no-audit --prefer-offline
+          command: yarn --immutable
 
       - name: Typechain
         uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
@@ -80,7 +80,7 @@ jobs:
           timeout_minutes: 3
           retry_wait_seconds: 20
           max_attempts: 3
-          command: yarn contracts:compile
+          command: yarn mobile contracts:compile
 
       - name: Update Ruby build tools
         uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
@@ -104,7 +104,7 @@ jobs:
           timeout_minutes: 10
           retry_wait_seconds: 30
           max_attempts: 3
-          command: cd ios && pod install && cd ..
+          command: cd apps/mobile/ios && pod install && cd ..
 
       - name: Build iOS App
         run: |
