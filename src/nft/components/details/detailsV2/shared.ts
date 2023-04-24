@@ -7,4 +7,3 @@ export const containerStyles = css`
   width: 100%;
   align-self: flex-start;
 `
-

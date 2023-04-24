@@ -21,7 +21,7 @@ const Tab = styled(ThemedText.SubHeader)<{ isActive: boolean; numTabs: number }>
   cursor: ${({ numTabs }) => (numTabs > 1 ? 'pointer' : 'default')};
 
   &:hover {
-    opacity: ${({ numTabs, theme }) => numTabs > 1 && theme.opacity.hover}};
+    opacity: ${({ numTabs, theme }) => numTabs > 1 && theme.opacity.hover};
   }
 `
 
