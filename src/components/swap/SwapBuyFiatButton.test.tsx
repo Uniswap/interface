@@ -2,7 +2,7 @@ import userEvent from '@testing-library/user-event'
 import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer'
 import { mocked } from 'test-utils/mocked'
-import { fireEvent, render, screen } from 'test-utils/render'
+import { act, fireEvent, render, screen } from 'test-utils/render'
 
 import { useFiatOnrampAvailability, useOpenModal } from '../../state/application/hooks'
 import SwapBuyFiatButton, { MOONPAY_REGION_AVAILABILITY_ARTICLE } from './SwapBuyFiatButton'
@@ -61,7 +61,7 @@ describe('SwapBuyFiatButton.tsx', () => {
     mockuseAccountDrawer.mockImplementation(() => [false, toggleWalletDrawer])
     mockUseOpenModal.mockImplementation(() => useOpenModal)
     render(<SwapBuyFiatButton />)
-    await userEvent.click(screen.getByTestId('buy-fiat-button'))
+    await act(() => userEvent.click(screen.getByTestId('buy-fiat-button')))
     expect(toggleWalletDrawer).toHaveBeenCalledTimes(1)
     expect(screen.queryByTestId('fiat-on-ramp-unavailable-tooltip')).not.toBeInTheDocument()
   })
@@ -76,7 +76,7 @@ describe('SwapBuyFiatButton.tsx', () => {
     mockUseOpenModal.mockImplementation(() => useOpenModal)
     render(<SwapBuyFiatButton />)
     expect(screen.getByTestId('buy-fiat-flow-incomplete-indicator')).toBeInTheDocument()
-    await userEvent.click(screen.getByTestId('buy-fiat-button'))
+    await act(() => userEvent.click(screen.getByTestId('buy-fiat-button')))
     expect(toggleWalletDrawer).toHaveBeenCalledTimes(0)
     expect(useOpenModal).toHaveBeenCalledTimes(1)
     expect(screen.queryByTestId('fiat-on-ramp-unavailable-tooltip')).not.toBeInTheDocument()
@@ -87,7 +87,7 @@ describe('SwapBuyFiatButton.tsx', () => {
     mockUseFiatOnrampAvailability.mockImplementation(mockUseFiatOnRampsUnavailable)
     mockuseAccountDrawer.mockImplementation(() => [false, toggleWalletDrawer])
     render(<SwapBuyFiatButton />)
-    await userEvent.click(screen.getByTestId('buy-fiat-button'))
+    await act(() => userEvent.click(screen.getByTestId('buy-fiat-button')))
     fireEvent.mouseOver(screen.getByTestId('buy-fiat-button'))
     expect(await screen.findByTestId('fiat-on-ramp-unavailable-tooltip')).toBeInTheDocument()
     expect(await screen.findByText(/Learn more/i)).toHaveAttribute('href', MOONPAY_REGION_AVAILABILITY_ARTICLE)
