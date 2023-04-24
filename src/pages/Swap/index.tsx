@@ -226,7 +226,7 @@ export function Swap({
     parsedAmount,
     currencies,
     inputError: swapInputError,
-  } = useDerivedSwapInfo(state)
+  } = useDerivedSwapInfo(state, defaultChainId)
 
   const {
     wrapType,

@@ -14,17 +14,19 @@ import { useUserAddedTokens } from '../state/user/hooks'
 import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks'
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
-function useTokensFromMap(tokenMap: TokenAddressMap): { [address: string]: Token } {
-  const { chainId } = useWeb3React()
+function useTokensFromMap(tokenMap: TokenAddressMap, chainId?: SupportedChainId): { [address: string]: Token } {
+  const { chainId: connectedChainId } = useWeb3React()
   return useMemo(() => {
-    if (!chainId) return {}
+    if (!chainId && !connectedChainId) return {}
+
+    const targetChainId: number = chainId ?? (connectedChainId as number)
 
     // reduce to just tokens
-    return Object.keys(tokenMap[chainId] ?? {}).reduce<{ [address: string]: Token }>((newMap, address) => {
-      newMap[address] = tokenMap[chainId][address].token
+    return Object.keys(tokenMap[targetChainId] ?? {}).reduce<{ [address: string]: Token }>((newMap, address) => {
+      newMap[address] = tokenMap[targetChainId][address].token
       return newMap
     }, {})
-  }, [chainId, tokenMap])
+  }, [chainId, connectedChainId, tokenMap])
 }
 
 export function useAllTokensMultichain(): TokenAddressMap {
@@ -32,9 +34,9 @@ export function useAllTokensMultichain(): TokenAddressMap {
 }
 
 // Returns all tokens from the default list + user added tokens
-export function useDefaultActiveTokens(): { [address: string]: Token } {
+export function useDefaultActiveTokens(chainId?: SupportedChainId): { [address: string]: Token } {
   const defaultListTokens = useCombinedActiveList()
-  const tokensFromMap = useTokensFromMap(defaultListTokens)
+  const tokensFromMap = useTokensFromMap(defaultListTokens, chainId)
   const userAddedTokens = useUserAddedTokens()
   return useMemo(() => {
     return (
@@ -157,7 +159,7 @@ export function useToken(tokenAddress?: string | null): Token | null | undefined
   return useTokenFromMapOrNetwork(tokens, tokenAddress)
 }
 
-export function useCurrency(currencyId?: string | null): Currency | null | undefined {
-  const tokens = useDefaultActiveTokens()
+export function useCurrency(currencyId?: string | null, chainId?: SupportedChainId): Currency | null | undefined {
+  const tokens = useDefaultActiveTokens(chainId)
   return useCurrencyFromMap(tokens, currencyId)
 }
