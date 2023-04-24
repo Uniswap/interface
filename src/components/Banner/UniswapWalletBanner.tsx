@@ -7,7 +7,6 @@ import { BaseButton } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { OpacityHoverState } from 'components/Common'
 import Row from 'components/Row'
-import { useMgtmEnabled } from 'featureFlags/flags/mgtm'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { X } from 'react-feather'
 import { useLocation } from 'react-router-dom'
@@ -87,11 +86,10 @@ const BannerButton = styled(BaseButton)`
 
 export default function UniswapWalletBanner() {
   const [hideUniswapWalletBanner, toggleHideUniswapWalletBanner] = useHideUniswapWalletBanner()
-  const mgtmEnabled = useMgtmEnabled()
   const location = useLocation()
   const isLandingScreen = location.search === '?intro=true' || location.pathname === '/'
 
-  const shouldDisplay = Boolean(mgtmEnabled && !hideUniswapWalletBanner && !isLandingScreen)
+  const shouldDisplay = Boolean(!hideUniswapWalletBanner && !isLandingScreen)
 
   const screenSize = useScreenSize()
 
