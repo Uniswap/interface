@@ -54,23 +54,21 @@ module.exports = {
   },
   jest: {
     configure(jestConfig) {
-      const config = Object.assign(jestConfig, {
+      return Object.assign(jestConfig, {
         transform: {
           '\\.css\\.ts$': './vanilla.transform.cjs',
           ...jestConfig.transform,
         },
         cacheDirectory: 'node_modules/.cache/jest',
         transformIgnorePatterns: [
-          // Ignore node_modules, except for modules with known issues, to speed up the test builds.
-          '/node_modules/(?!(@uniswap/conedison|d3.*|delaunator|internmap|robust-predicates))/',
+          '@uniswap/conedison/format',
+          '@uniswap/conedison/provider',
         ],
         moduleNameMapper: {
           '@uniswap/conedison/format': '@uniswap/conedison/dist/format',
           '@uniswap/conedison/provider': '@uniswap/conedison/dist/provider',
-          ...jestConfig.moduleNameMapper,
         },
       })
-      return config
     },
   },
   webpack: {
