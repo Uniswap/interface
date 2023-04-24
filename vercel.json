@@ -1,13 +1,12 @@
 {
   "redirects": [
     {
-      "source": "/assets/*",
-      "destination": "https://delightful-tanuki-b3d161.netlify.app/assets/"
+      "source": "/assets",
+      "destination": "https://delightful-tanuki-b3d161.netlify.app/assets"
     },
     {
       "source": "/*",
-      "destination": "/index.html",
-      "permanent": false
+      "destination": "/index.html"
     }
   ]
 }
