@@ -38,7 +38,7 @@ Cypress.Commands.overwrite(
       original({
         ...options,
         url:
-          (url.startsWith('/') && !url.startsWith('/#') ? `/#${url}` : url) +
+          (url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url) +
           `${url.includes('?') ? '&' : '?'}chain=goerli`,
         onBeforeLoad(win) {
           options?.onBeforeLoad?.(win)
