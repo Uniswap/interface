@@ -187,4 +187,62 @@ describe('Swap', () => {
       cy.get('#swap-currency-output .token-amount-input').clear().type('0.0').should('have.value', '0.0')
     })
   })
+
+  it('should have the correct default input from URL params ', () => {
+    cy.visit(`/swap?inputCurrency=${WETH_GOERLI}`)
+
+    verifyToken('input', 'WETH')
+    verifyToken('output', null)
+
+    selectToken('Ether', 'output')
+    cy.get(getTestSelector('swap-currency-button')).first().click()
+
+    verifyToken('input', 'ETH')
+    verifyToken('output', 'WETH')
+  })
+
+  it('should have the correct default output from URL params ', () => {
+    cy.visit(`/swap?outputCurrency=${WETH_GOERLI}`)
+
+    verifyToken('input', null)
+    verifyToken('output', 'WETH')
+
+    cy.get(getTestSelector('swap-currency-button')).first().click()
+    verifyToken('input', 'WETH')
+    verifyToken('output', null)
+
+    selectToken('Ether', 'output')
+    cy.get(getTestSelector('swap-currency-button')).first().click()
+
+    verifyToken('input', 'ETH')
+    verifyToken('output', 'WETH')
+  })
+
+  it('ETH to wETH is same value (wrapped swaps have no price impact)', () => {
+    cy.visit('/swap')
+    selectToken('WETH', 'output')
+    cy.get('#swap-currency-input .token-amount-input').clear().type('0.01')
+    cy.get('#swap-currency-output .token-amount-input').should('have.value', '0.01')
+  })
+
+  it('Opens and closes the settings menu', () => {
+    cy.visit('/swap')
+    cy.contains('Settings').should('not.exist')
+    cy.get(getTestSelector('swap-settings-button')).click()
+    cy.contains('Slippage tolerance').should('exist')
+    cy.contains('Transaction deadline').should('exist')
+    cy.contains('Auto Router API').should('exist')
+    cy.contains('Expert Mode').should('exist')
+    cy.get(getTestSelector('swap-settings-button')).click()
+    cy.contains('Settings').should('not.exist')
+  })
+
+  it('inputs reset when navigating between pages', () => {
+    cy.get('#swap-currency-input .token-amount-input').clear().type('0.01')
+    cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
+    cy.visit('/pool')
+    cy.visit('/swap')
+    cy.get('#swap-currency-input .token-amount-input').should('have.value', '')
+    cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
+  })
 })

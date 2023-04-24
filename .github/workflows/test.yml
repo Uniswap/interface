@@ -85,6 +85,27 @@ jobs:
           path: build
           if-no-files-found: error
 
+  build-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - uses: actions/cache@v3
+        id: build-e2e-cache
+        with:
+          path: node_modules/.cache
+          key: ${{ runner.os }}-build-e2e-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-build-e2e-${{ hashFiles('**/yarn.lock') }}-
+      - run: yarn prepare
+      - run: yarn build:e2e
+        env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: build-e2e
+          path: build
+          if-no-files-found: error
+
   size-tests:
     needs: [build]
     runs-on: ubuntu-latest
@@ -99,7 +120,7 @@ jobs:
 
 
   cypress-test-matrix:
-    needs: [build]
+    needs: [build-e2e]
     runs-on: ubuntu-latest
     container: cypress/browsers:node-18.14.1-chrome-111.0.5563.64-1-ff-111.0-edge-111.0.1661.43-1
     strategy:
@@ -109,7 +130,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-
       - uses: actions/cache@v3
         id: cypress-cache
         with:
@@ -121,7 +141,7 @@ jobs:
 
       - uses: actions/download-artifact@v3
         with:
-          name: build
+          name: build-e2e
           path: build
 
       - uses: cypress-io/github-action@v4

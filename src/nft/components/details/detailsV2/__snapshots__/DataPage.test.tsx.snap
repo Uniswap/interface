@@ -1,0 +1,227 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`placeholder containers load 1`] = `
+<DocumentFragment>
+  .c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c9 {
+  color: #0D111C;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c7 {
+  height: 288px;
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 16px 20px;
+  width: 100%;
+  -webkit-align-self: flex-start;
+  -ms-flex-item-align: start;
+  align-self: flex-start;
+}
+
+.c8 {
+  gap: 32px;
+  margin-bottom: 12px;
+  width: 100;
+}
+
+.c10 {
+  color: #0D111C;
+  line-height: 24px;
+  cursor: default;
+}
+
+.c11 {
+  color: #0D111C;
+  line-height: 24px;
+  cursor: pointer;
+}
+
+.c11:hover {
+  opacity: 0.6;
+}
+
+.c12 {
+  color: #98A1C0;
+  line-height: 24px;
+  cursor: pointer;
+}
+
+.c12:hover {
+  opacity: 0.6;
+}
+
+.c2 {
+  height: 96px;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 16px 20px;
+  width: 100%;
+  -webkit-align-self: flex-start;
+  -ms-flex-item-align: start;
+  align-self: flex-start;
+  padding-left: 0px;
+}
+
+.c1 {
+  padding: 24px 64px;
+  height: 100vh;
+  width: 100%;
+  gap: 36px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.c5 {
+  gap: 24px;
+  padding-bottom: 45px;
+}
+
+.c6 {
+  gap: 24px;
+  width: 100%;
+}
+
+@media screen and (max-width:640px) {
+  .c1 {
+    padding: 24px 48px;
+  }
+}
+
+@media screen and (max-width:396px) {
+  .c1 {
+    padding: 24px 20px;
+  }
+}
+
+@media screen and (max-width:1024px) {
+  .c5 {
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
+}
+
+<div
+    class="c0 c1"
+  >
+    <div
+      class="c2"
+    >
+      Header
+    </div>
+    <div
+      class="c3 c4 c5"
+    >
+      <div
+        class="c0 c6"
+      >
+        <div
+          class="c7"
+          style="height: 528px;"
+        >
+          <div
+            class="c3 c4 c8"
+          >
+            <div
+              class="c9 c10 css-6ms77s"
+            >
+              Traits
+            </div>
+          </div>
+          <div>
+            Traits Content
+          </div>
+        </div>
+        <div
+          class="c7"
+          style="height: 288px;"
+        >
+          <div
+            class="c3 c4 c8"
+          >
+            <div
+              class="c9 c11 css-6ms77s"
+            >
+              Description
+            </div>
+            <div
+              class="c9 c12 css-6ms77s"
+            >
+              Details
+            </div>
+          </div>
+          <div>
+            Description Content
+          </div>
+        </div>
+      </div>
+      <div
+        class="c7"
+        style="height: 604px;"
+      >
+        <div
+          class="c3 c4 c8"
+        >
+          <div
+            class="c9 c11 css-6ms77s"
+          >
+            Activity
+          </div>
+          <div
+            class="c9 c12 css-6ms77s"
+          >
+            Offers
+          </div>
+          <div
+            class="c9 c12 css-6ms77s"
+          >
+            Listings
+          </div>
+        </div>
+        <div>
+          Activity Content
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

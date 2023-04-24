@@ -32,6 +32,11 @@ module.exports = {
           {
             paths: [
               {
+                name: 'moment',
+                // tree-shaking for moment is not configured because it degrades performance - see craco.config.cjs.
+                message: 'moment is not configured for tree-shaking. If you use it, update the Webpack configuration.',
+              },
+              {
                 name: 'zustand',
                 importNames: ['default'],
                 message: 'Default import from zustand is deprecated. Import `{ create }` instead.',
