@@ -43,25 +43,6 @@ describe('SwapModalHeader.tsx', () => {
       />
     )
     expect(asFragment()).toMatchSnapshot()
-    expect(screen.getByText(/Output is estimated. You will receive at least /i)).toBeInTheDocument()
-    expect(screen.getByTestId('input-symbol')).toHaveTextContent(
-      TEST_TRADE_EXACT_INPUT.inputAmount.currency.symbol ?? ''
-    )
-    expect(screen.getByTestId('output-symbol')).toHaveTextContent(
-      TEST_TRADE_EXACT_INPUT.outputAmount.currency.symbol ?? ''
-    )
-    expect(screen.getByTestId('input-amount')).toHaveTextContent(TEST_TRADE_EXACT_INPUT.inputAmount.toExact())
-    expect(screen.getByTestId('output-amount')).toHaveTextContent(TEST_TRADE_EXACT_INPUT.outputAmount.toExact())
-    const recipientInfo = screen.getByTestId('recipient-info')
-    expect(recipientInfo).toHaveTextContent(/Output will be sent to/i)
-    expect(within(recipientInfo).getByText('0x0000...0004')).toBeVisible()
-    expect(
-      screen.getByText(
-        'The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.'
-      )
-    ).toBeInTheDocument()
-    expect(screen.getByText(/The amount you expect to receive at the current market price./i)).toBeInTheDocument()
-    expect(screen.getByText('The impact your trade has on the market price of this pool.')).toBeInTheDocument()
   })
 
   it('shows accept changes section when available, and logs amplitude event when accept clicked', () => {

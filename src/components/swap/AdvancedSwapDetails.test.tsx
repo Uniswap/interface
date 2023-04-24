@@ -27,7 +27,7 @@ describe('AdvancedSwapDetails.tsx', () => {
     expect(asFragment()).toMatchSnapshot()
   })
 
-  it('test trade with exact input', async () => {
+  it('renders correct copy on mouseover', async () => {
     render(<AdvancedSwapDetails trade={TEST_TRADE_EXACT_INPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />)
     fireEvent.mouseOver(screen.getByText('Price Impact'))
     expect(await screen.findByText(/The impact your trade has on the market price of this pool./i)).toBeVisible()
@@ -37,7 +37,7 @@ describe('AdvancedSwapDetails.tsx', () => {
     expect(await screen.findByText(/The minimum amount you are guaranteed to receive./i)).toBeVisible()
   })
 
-  it('test trade with exact output, and with gas use estimate USD', async () => {
+  it('renders correct tooltips for test trade with exact output and gas use estimate USD', async () => {
     TEST_TRADE_EXACT_OUTPUT.gasUseEstimateUSD = toCurrencyAmount(TEST_TOKEN_1, 1)
     render(<AdvancedSwapDetails trade={TEST_TRADE_EXACT_OUTPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />)
     fireEvent.mouseOver(screen.getByText(/Maximum sent/i))
