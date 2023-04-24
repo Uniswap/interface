@@ -135,7 +135,7 @@ exports[`placeholder containers load 1`] = `
 }
 
 .c12 {
-  height: 252px;
+  height: 492px;
 }
 
 .c1 {
@@ -223,12 +223,12 @@ exports[`placeholder containers load 1`] = `
             class="c3 c4 c8"
           >
             <div
-              class="c9 c13 css-6ms77s"
+              class="c9 c13 css-rjqmed"
             >
               Description
             </div>
             <div
-              class="c9 c14 css-6ms77s"
+              class="c9 c14 css-rjqmed"
             >
               Details
             </div>
@@ -247,12 +247,12 @@ exports[`placeholder containers load 1`] = `
           class="c3 c4 c8"
         >
           <div
-            class="c9 c13 css-6ms77s"
+            class="c9 c13 css-rjqmed"
           >
             Activity
           </div>
           <div
-            class="c9 c14 css-6ms77s"
+            class="c9 c14 css-rjqmed"
           >
             <div
               class="c3 c11"
@@ -266,7 +266,7 @@ exports[`placeholder containers load 1`] = `
             </div>
           </div>
           <div
-            class="c9 c14 css-6ms77s"
+            class="c9 c14 css-rjqmed"
           >
             <div
               class="c3 c11"
