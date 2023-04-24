@@ -3,7 +3,7 @@ import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/smart-order-router'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
-import { NftActivityType, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { NftActivityType, NftMarketplace, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import {
@@ -58,22 +58,12 @@ const AddressLink = styled(ExternalLink)`
   }
 `
 
-const PurchasableMarkets: string[] = [
-  Markets.Opensea,
-  Markets.LooksRare,
-  Markets.X2Y2,
-  Markets.NFTX,
-  Markets.NFT20,
-  Markets.Cryptopunks,
-  Markets.Foundation,
-  Markets.Sudoswap,
-]
-
 const isPurchasableOrder = (orderStatus: OrderStatus | undefined, marketplace: string | undefined): boolean => {
   if (!marketplace || !orderStatus) return false
+  const purchasableMarkets = Object.keys(NftMarketplace).map((market) => market.toLowerCase())
 
   const validOrder = orderStatus === OrderStatus.Valid
-  const purchasableMarket = PurchasableMarkets.includes(marketplace.toLowerCase())
+  const purchasableMarket = purchasableMarkets.includes(marketplace.toLowerCase())
   return validOrder && purchasableMarket
 }
 
