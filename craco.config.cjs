@@ -56,11 +56,10 @@ module.exports = {
     configure(jestConfig) {
       return Object.assign(jestConfig, {
         cacheDirectory: 'node_modules/.cache/jest',
-        transformIgnorePatterns: ['@uniswap/conedison/format', '@uniswap/conedison/provider'],
-        moduleNameMapper: {
-          '@uniswap/conedison/format': '@uniswap/conedison/dist/format',
-          '@uniswap/conedison/provider': '@uniswap/conedison/dist/provider',
-        },
+        transformIgnorePatterns: [
+          // Ignore node_modules, except for modules with known issues, to speed up the test builds.
+          '/node_modules/(?!(d3.*|delaunator|internmap|robust-predicates))/',
+        ],
       })
     },
   },
@@ -95,11 +94,6 @@ module.exports = {
 
           return true
         })
-
-      // We're currently on Webpack 4.x which doesn't support the `exports` field in package.json.
-      // Instead, we need to manually map the import path to the correct exports path (eg dist or build folder).
-      // See https://github.com/webpack/webpack/issues/9509.
-      webpackConfig.resolve.alias['@uniswap/conedison'] = '@uniswap/conedison/dist'
 
       return webpackConfig
     },
