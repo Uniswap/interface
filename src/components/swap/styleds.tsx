@@ -27,8 +27,8 @@ export const PageWrapper = styled.div`
 export const SwapWrapper = styled.main<{ chainId: number | undefined }>`
   position: relative;
   background: ${({ theme }) => theme.backgroundSurface};
-  border-radius: 16px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-radius: 30px;
+  border: 1px solid ${({ theme }) => theme.backgroundBorderGradient};
   padding: 8px;
   box-shadow: ${({ chainId }) => !!chainId && chainId === SupportedChainId.BNB && '0px 40px 120px 0px #f0b90b29'};
   z-index: ${Z_INDEX.deprecated_content};

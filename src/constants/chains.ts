@@ -23,6 +23,7 @@ export enum SupportedChainId {
   CELO_ALFAJORES = 44787,
 
   BNB = 56,
+  // TODO: add syscoin
 }
 
 export const CHAIN_IDS_TO_NAMES = {

@@ -115,6 +115,15 @@ export const ThemedGlobalStyle = createGlobalStyle`
     background-color: ${({ theme }) => theme.background} !important;
   }
 
+
+  body {
+    min-height: '100vh';
+    background-position: 0 -30vh;
+    background-repeat: no-repeat;
+    background-image: ${({ theme }) => theme.backgroundImage} !important; 
+    opacity: 0.7;
+  }
+
   summary::-webkit-details-marker {
     display:none;
   }

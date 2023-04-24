@@ -165,7 +165,7 @@ export const vars = createGlobalTheme(':root', {
     none: 'none',
     white: '#FFF',
 
-    // new uniswap colors:
+    // // new uniswap colors:
     blue400: '#4C82FB',
     blue200: '#ADBCFF30',
     pink400: '#FB118E',
@@ -265,8 +265,9 @@ export const vars = createGlobalTheme(':root', {
     '500': '500ms',
   },
   fonts: {
-    body: 'Inter, sans-serif',
-    heading: 'Adieu, sans-serif',
+    heading: 'Inter',
+    body: 'Inter',
+    mono: 'Roboto Mono',
   },
 })
 

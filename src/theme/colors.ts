@@ -251,7 +251,7 @@ export const darkTheme = {
   userThemeColor: colors.magentaVibrant,
 
   background: colors.bgDark,
-  backgroundImage: 'radial-gradient(ellipse at center, #56BED8, #010101)',
+  backgroundImage: 'radial-gradient(circle at center , #56BED8, #010101)',
   backgroundBackdrop: colors.gray950,
   backgroundSurface: colors.deep,
   backgroundModule: colors.input,

@@ -83,7 +83,7 @@ const ArrowContainer = styled.div`
 const SwapSection = styled.div`
   position: relative;
   background-color: ${({ theme }) => theme.backgroundModule};
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 16px;
   color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
@@ -520,53 +520,53 @@ export default function Swap({ className }: { className?: string }) {
                 fiatValueOutput={fiatValueTradeOutput}
               />
 
-              <div style={{ display: 'relative' }}>
-                <SwapSection>
-                  <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
-                    <SwapCurrencyInputPanel
-                      label={
-                        independentField === Field.OUTPUT && !showWrap ? (
-                          <Trans>From (at most)</Trans>
-                        ) : (
-                          <Trans>From</Trans>
-                        )
-                      }
-                      value={formattedAmounts[Field.INPUT]}
-                      showMaxButton={showMaxButton}
-                      currency={currencies[Field.INPUT] ?? null}
-                      onUserInput={handleTypeInput}
-                      onMax={handleMaxInput}
-                      fiatValue={fiatValueInput}
-                      onCurrencySelect={handleInputSelect}
-                      otherCurrency={currencies[Field.OUTPUT]}
-                      showCommonBases={true}
-                      id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
-                      loading={independentField === Field.OUTPUT && routeIsSyncing}
-                    />
-                  </Trace>
-                </SwapSection>
-                <ArrowWrapper clickable={isSupportedChain(chainId)}>
-                  <TraceEvent
-                    events={[BrowserEvent.onClick]}
-                    name={SwapEventName.SWAP_TOKENS_REVERSED}
-                    element={InterfaceElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
+              <SwapSection>
+                <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
+                  <SwapCurrencyInputPanel
+                    label={
+                      independentField === Field.OUTPUT && !showWrap ? (
+                        <Trans>From (at most)</Trans>
+                      ) : (
+                        <Trans>From</Trans>
+                      )
+                    }
+                    value={formattedAmounts[Field.INPUT]}
+                    showMaxButton={showMaxButton}
+                    currency={currencies[Field.INPUT] ?? null}
+                    onUserInput={handleTypeInput}
+                    onMax={handleMaxInput}
+                    fiatValue={fiatValueInput}
+                    onCurrencySelect={handleInputSelect}
+                    otherCurrency={currencies[Field.OUTPUT]}
+                    showCommonBases={true}
+                    id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
+                    loading={independentField === Field.OUTPUT && routeIsSyncing}
+                  />
+                </Trace>
+              </SwapSection>
+
+              <ArrowWrapper clickable={isSupportedChain(chainId)}>
+                <TraceEvent
+                  events={[BrowserEvent.onClick]}
+                  name={SwapEventName.SWAP_TOKENS_REVERSED}
+                  element={InterfaceElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
+                >
+                  <ArrowContainer
+                    onClick={() => {
+                      onSwitchTokens()
+                    }}
+                    color={theme.textPrimary}
                   >
-                    <ArrowContainer
-                      onClick={() => {
-                        onSwitchTokens()
-                      }}
-                      color={theme.textPrimary}
-                    >
-                      <ArrowDown
-                        size="16"
-                        color={
-                          currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.textPrimary : theme.textTertiary
-                        }
-                      />
-                    </ArrowContainer>
-                  </TraceEvent>
-                </ArrowWrapper>
-              </div>
+                    <ArrowDown
+                      size="16"
+                      color={
+                        currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.textPrimary : theme.textTertiary
+                      }
+                    />
+                  </ArrowContainer>
+                </TraceEvent>
+              </ArrowWrapper>
+
               <AutoColumn gap="md">
                 <div>
                   <OutputSwapSection showDetailsDropdown={showDetailsDropdown}>

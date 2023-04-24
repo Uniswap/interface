@@ -12,7 +12,7 @@ const Container = styled.button<{ disabled: boolean }>`
   align-items: center;
   background: none;
   border: none;
-  border-radius: 12px;
+  border-radius: 30px;
   color: ${({ theme }) => theme.textPrimary};
   cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
   display: grid;
