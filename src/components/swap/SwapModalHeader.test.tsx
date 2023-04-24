@@ -30,7 +30,7 @@ describe('SwapModalHeader.tsx', () => {
     sendAnalyticsEventMock = jest.fn()
   })
 
-  it('matches base snapshot, test trade exact input', () => {
+  it('matches base snapshot for test trade with exact input', () => {
     const { asFragment } = render(
       <SwapModalHeader
         trade={TEST_TRADE_EXACT_INPUT}
@@ -45,7 +45,7 @@ describe('SwapModalHeader.tsx', () => {
     expect(asFragment()).toMatchSnapshot()
   })
 
-  it('shows accept changes section when available, and logs amplitude event when accept clicked', () => {
+  it('shows accept changes section and logs amplitude event', () => {
     const setShouldLogModalCloseEventFn = jest.fn()
     mockSendAnalyticsEvent.mockImplementation(sendAnalyticsEventMock)
     render(
@@ -67,7 +67,7 @@ describe('SwapModalHeader.tsx', () => {
     expect(sendAnalyticsEventMock).toHaveBeenCalledTimes(1)
   })
 
-  it('test trade exact output, no recipient', () => {
+  it('renders correctly for test trade with exact output and no recipient', () => {
     const rendered = render(
       <SwapModalHeader
         trade={TEST_TRADE_EXACT_OUTPUT}
