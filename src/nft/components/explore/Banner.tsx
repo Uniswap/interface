@@ -54,7 +54,7 @@ const BannerMainArea = styled.div`
   width: 100%;
   height: 100%;
   gap: 36px;
-  max-width: 1200px;
+  max-width: ${({ theme }) => theme.maxWidth};
   justify-content: space-between;
   z-index: 2;
 

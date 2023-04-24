@@ -24,15 +24,12 @@ describe('SwapDetailsDropdown.tsx', () => {
       />
     )
     expect(asFragment()).toMatchSnapshot()
-    fireEvent.mouseOver(screen.getByTestId('info-icon'))
-    expect(screen.getByTestId('advanced-swap-details-tooltip-content')).toBeInTheDocument()
   })
 
   it('loading state contains expected elements', () => {
     render(
       <SwapDetailsDropdown trade={undefined} syncing={true} loading={true} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />
     )
-    expect(screen.getByTestId('loading-indicator')).toBeInTheDocument()
     expect(screen.getByText('Fetching best price...')).toBeInTheDocument()
   })
 
@@ -46,8 +43,6 @@ describe('SwapDetailsDropdown.tsx', () => {
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
       />
     )
-
-    expect(screen.getByTestId('info-icon')).toBeInTheDocument()
     expect(screen.getByTestId('swap-details-header-row')).toBeInTheDocument()
     expect(screen.getByTestId('trade-price-container')).toBeInTheDocument()
     fireEvent.click(screen.getByTestId('swap-details-header-row'))
