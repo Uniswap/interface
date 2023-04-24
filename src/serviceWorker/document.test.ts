@@ -46,7 +46,6 @@ describe('document', () => {
     })
 
     beforeEach(() => {
-      fetch.mockReset()
       getCacheKeyForURL.mockReturnValueOnce(requestUrl)
       options = {
         event: new Event('fetch') as ExtendableEvent,
