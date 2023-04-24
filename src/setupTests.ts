@@ -32,7 +32,17 @@ jest.mock('@popperjs/core', () => {
     createPopper: (...args: Parameters<typeof createPopper>) => {
       const [referenceElement, popperElement, options] = args
       if (options?.modifiers) {
-        options.modifiers = options.modifiers.filter((modifier) => !modifier.fn)
+        options.modifiers.unshift({
+          name: 'synchronousUpdate',
+          enabled: true,
+          phase: 'beforeMain',
+          effect: (state) => {
+            state.instance.update = () => {
+              state.instance.forceUpdate()
+              return Promise.resolve(state.instance.state)
+            }
+          }
+        })
       }
       return core.createPopper(referenceElement, popperElement, options)
     },
