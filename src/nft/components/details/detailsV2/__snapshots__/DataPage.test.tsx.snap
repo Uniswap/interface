@@ -162,7 +162,7 @@ exports[`placeholder containers load 1`] = `
             class="c3 c4 c8"
           >
             <div
-              class="c9 c10 css-6ms77s"
+              class="c9 c10 css-rjqmed"
             >
               Traits
             </div>
@@ -179,12 +179,12 @@ exports[`placeholder containers load 1`] = `
             class="c3 c4 c8"
           >
             <div
-              class="c9 c11 css-6ms77s"
+              class="c9 c11 css-rjqmed"
             >
               Description
             </div>
             <div
-              class="c9 c12 css-6ms77s"
+              class="c9 c12 css-rjqmed"
             >
               Details
             </div>
@@ -202,17 +202,17 @@ exports[`placeholder containers load 1`] = `
           class="c3 c4 c8"
         >
           <div
-            class="c9 c11 css-6ms77s"
+            class="c9 c11 css-rjqmed"
           >
             Activity
           </div>
           <div
-            class="c9 c12 css-6ms77s"
+            class="c9 c12 css-rjqmed"
           >
             Offers
           </div>
           <div
-            class="c9 c12 css-6ms77s"
+            class="c9 c12 css-rjqmed"
           >
             Listings
           </div>
