@@ -3,7 +3,6 @@ import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleto
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useTokenPriceQuery, useTokenQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { TimePeriod, toHistoryDuration, validateUrlChainParam } from 'graphql/data/util'
-import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useEffect, useMemo, useState } from 'react'
@@ -26,12 +25,6 @@ export default function TokenDetailsPage() {
     () => [isNative ? getNativeTokenDBAddress(chain) : tokenAddress ?? '', toHistoryDuration(timePeriod)],
     [chain, isNative, timePeriod, tokenAddress]
   )
-
-  const parsedQs = useParsedQueryString()
-
-  const parsedInputTokenAddress: string | undefined = useMemo(() => {
-    return typeof parsedQs.inputCurrency === 'string' ? (parsedQs.inputCurrency as string) : undefined
-  }, [parsedQs])
 
   const { data: tokenQuery } = useTokenQuery({
     variables: {
@@ -65,7 +58,6 @@ export default function TokenDetailsPage() {
       tokenQuery={tokenQuery}
       tokenPriceQuery={currentPriceQuery}
       onChangeTimePeriod={setTimePeriod}
-      inputTokenAddress={parsedInputTokenAddress}
     />
   )
 }
