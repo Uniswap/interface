@@ -8,6 +8,7 @@ import { mocked } from 'test-utils/mocked'
 import { TextDecoder, TextEncoder } from 'util'
 
 window.open = jest.fn()
+window.getComputedStyle = jest.fn()
 
 if (typeof global.TextEncoder === 'undefined') {
   global.ReadableStream = Readable as unknown as typeof globalThis.ReadableStream
@@ -25,27 +26,27 @@ global.matchMedia =
     }
   }
 
-// Prevent popper from making state updates asynchronously.
-// This is necessary to avoid warnings during tests, as popper will asynchronously update state outside of test setup.
 jest.mock('@popperjs/core', () => {
   const core = jest.requireActual('@popperjs/core')
   return {
     ...core,
     createPopper: (...args: Parameters<typeof createPopper>) => {
-      const [referenceElement, popperElement, options] = args
-      if (options?.modifiers) {
-        options.modifiers.unshift({
-          name: 'synchronousUpdate',
-          enabled: true,
-          phase: 'beforeMain',
-          effect: (state) => {
-            state.instance.update = () => {
-              state.instance.forceUpdate()
-              return Promise.resolve(state.instance.state)
-            }
-          },
-        })
-      }
+      const [referenceElement, popperElement, options = {}] = args
+
+      // Prevent popper from making state updates asynchronously.
+      // This is necessary to avoid warnings during tests, as popper will asynchronously update state outside of test setup.
+      options?.modifiers?.push({
+        name: 'synchronousUpdate',
+        enabled: true,
+        phase: 'beforeMain',
+        effect: (state) => {
+          state.instance.update = () => {
+            state.instance.forceUpdate()
+            return Promise.resolve(state.instance.state)
+          }
+        },
+      })
+
       return core.createPopper(referenceElement, popperElement, options)
     },
   }
@@ -66,5 +67,10 @@ jest.mock('@web3-react/core', () => {
 
 // Mocks are configured to reset between tests (by CRA), so they must be set in a beforeEach.
 beforeEach(() => {
+  // Mock window.getComputedStyle, because it is otherwise too computationally expensive to unit test.
+  // Not mocking this results in multi-second tests when using popper.js.
+  mocked(window.getComputedStyle).mockImplementation(() => new CSSStyleDeclaration())
+
+  // Mock useWeb3React to return a chainId of 1 by default.
   mocked(useWeb3React).mockReturnValue({ chainId: 1 } as ReturnType<typeof useWeb3React>)
 })
