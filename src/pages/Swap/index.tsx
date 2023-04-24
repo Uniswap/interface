@@ -20,7 +20,8 @@ import PriceImpactWarning from 'components/swap/PriceImpactWarning'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { isSupportedChain } from 'constants/chains'
+import { getChainInfo } from 'constants/chainInfo'
+import { isSupportedChain, SupportedChainId } from 'constants/chains'
 import useENSAddress from 'hooks/useENSAddress'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useSwapCallback } from 'hooks/useSwapCallback'
@@ -37,6 +38,7 @@ import { TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components/macro'
 import invariant from 'tiny-invariant'
 import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
+import { switchChain } from 'utils/switchChain'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -158,13 +160,15 @@ export default function SwapPage({ className }: { className?: string }) {
 export function Swap({
   className,
   prefilledState,
+  defaultChainId,
   onCurrencyChange,
 }: {
   className?: string
   prefilledState?: Partial<SwapState>
+  defaultChainId?: SupportedChainId
   onCurrencyChange?: (selected: Partial<SwapState>) => void
 }) {
-  const { account, chainId } = useWeb3React()
+  const { account, chainId, connector } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
   const [fetchingSwapQuoteStartTime, setFetchingSwapQuoteStartTime] = useState<Date | undefined>()
@@ -644,6 +648,14 @@ export function Swap({
                 <Trans>Connect Wallet</Trans>
               </ButtonLight>
             </TraceEvent>
+          ) : defaultChainId && defaultChainId !== chainId ? (
+            <ButtonPrimary
+              onClick={() => {
+                switchChain(connector, defaultChainId)
+              }}
+            >
+              Connect to {getChainInfo(defaultChainId)?.label}
+            </ButtonPrimary>
           ) : showWrap ? (
             <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap} fontWeight={600}>
               {wrapInputError ? (
