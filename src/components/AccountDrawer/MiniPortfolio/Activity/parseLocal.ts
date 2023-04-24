@@ -141,7 +141,7 @@ export function parseLocalActivity(
       ? TransactionStatus.Confirmed
       : TransactionStatus.Failed
 
-    const receipt: TransactionPartsFragment | undefined = details.receipt
+    const receipt = details.receipt
       ? {
           id: details.receipt.transactionHash,
           ...details.receipt,

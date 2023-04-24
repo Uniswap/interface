@@ -205,4 +205,5 @@ export interface TransactionDetails {
   confirmedTime?: number
   from: string
   info: TransactionInfo
+  nonce?: number
 }
