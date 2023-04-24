@@ -60,9 +60,9 @@ export const getMarketplaceIcon = (
     case Markets.NFTX:
       return <SquareNftXMarketplaceIcon width={width} height={height} gradientId={gradientId} />
     case Markets.Gem:
-      return <SquareGemMarketplaceIcon width={width} height={height} />
+      return <SquareGemMarketplaceIcon width={width} height={height} gradientId={gradientId} />
     case Markets.Zora:
-      return <SquareZoraMarketplaceIcon width={width} height={height} />
+      return <SquareZoraMarketplaceIcon width={width} height={height} gradientId={gradientId} />
     case Markets.Ensvision:
       return <SquareEnsVisionMarketplaceIcon width={width} height={height} />
     case Markets.Cryptopunks:
