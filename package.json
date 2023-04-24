@@ -128,7 +128,7 @@
     "@cypress/code-coverage": "^3.10.0",
     "@fontsource/ibm-plex-mono": "^4.5.1",
     "@fontsource/inter": "^4.5.1",
-    "@graphql-codegen/cli": "^2.15.0",
+    "@graphql-codegen/cli": "^2.16.4",
     "@graphql-codegen/client-preset": "^1.2.1",
     "@graphql-codegen/typescript": "^2.8.3",
     "@graphql-codegen/typescript-operations": "^2.5.8",
