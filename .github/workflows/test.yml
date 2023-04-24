@@ -59,7 +59,7 @@ jobs:
           key: ${{ runner.os }}-jest-${{ hashFiles('**/yarn.lock') }}-${{ github.run_id }}
           restore-keys: ${{ runner.os }}-jest-${{ hashFiles('**/yarn.lock') }}-
       - run: yarn prepare
-      - run: yarn test --silent
+      - run: yarn test --silent --maxWorkers=100%
       - uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
