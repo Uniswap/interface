@@ -4,7 +4,12 @@ import styled, { useTheme } from 'styled-components/macro'
 import { themeVars, vars } from '../css/sprinkles.css'
 
 // ESLint reports `fill` is missing, whereas it exists on an SVGProps type
-type SVGProps = React.SVGProps<SVGSVGElement> & { fill?: string; height?: string | number; width?: string | number }
+type SVGProps = React.SVGProps<SVGSVGElement> & {
+  fill?: string
+  height?: string | number
+  width?: string | number
+  gradientId?: string
+}
 
 export const UniIcon = (props: SVGProps) => (
   <svg {...props} fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -996,7 +1001,10 @@ export const SquareNftXMarketplaceIcon = (props: SVGProps) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...props}>
     <rect y="0.5" width="360" height="360" rx="48" fill="white" />
     <g clipPath="url(#clip0_992_26819)">
-      <path d="M180 60L88.0715 151.929L180 240.007L271.929 151.929L180 60Z" fill="url(#paint0_linear_992_26819)" />
+      <path
+        d="M180 60L88.0715 151.929L180 240.007L271.929 151.929L180 60Z"
+        fill={`url(#${props.gradientId}paint0_linear_992_26819)`}
+      />
       <path
         d="M133.737 230.155C135.761 227.445 137.679 224.871 139.977 222.37C112.347 229.029 93.3206 242.973 93.3206 259.111C93.3206 259.713 93.3531 260.311 93.4046 260.904C96.1148 259.875 98.9743 258.645 102.012 257.151C120.262 248.186 127.421 238.606 133.737 230.155Z"
         fill="black"
@@ -1013,11 +1021,15 @@ export const SquareNftXMarketplaceIcon = (props: SVGProps) => (
         d="M209.902 296.571C231.703 291.878 248.621 282.725 255.883 271.462C249.648 272.601 242.554 274.786 234.111 278.937C222.343 284.722 215.194 290.755 209.902 296.571Z"
         fill="black"
       />
-      <path opacity="0.5" d="M180 151.929H88.0715L180 60V151.929Z" fill="url(#paint1_linear_992_26819)" />
+      <path
+        opacity="0.5"
+        d="M180 151.929H88.0715L180 60V151.929Z"
+        fill={`url(#${props.gradientId}paint1_linear_992_26819)`}
+      />
     </g>
     <defs>
       <linearGradient
-        id="paint0_linear_992_26819"
+        id={`${props.gradientId}paint0_linear_992_26819`}
         x1="224.308"
         y1="107.621"
         x2="138.982"
@@ -1029,7 +1041,7 @@ export const SquareNftXMarketplaceIcon = (props: SVGProps) => (
         <stop offset="1" stopColor="#FA297F" />
       </linearGradient>
       <linearGradient
-        id="paint1_linear_992_26819"
+        id={`${props.gradientId}paint1_linear_992_26819`}
         x1="200.673"
         y1="85.2926"
         x2="114.996"

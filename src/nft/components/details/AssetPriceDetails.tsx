@@ -23,6 +23,7 @@ import { useQuery } from 'react-query'
 import { Link, useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
+import { v4 as uuidv4 } from 'uuid'
 
 const TWITTER_WIDTH = 560
 const TWITTER_HEIGHT = 480
@@ -90,11 +91,6 @@ const PriceRow = styled.div`
   display: flex;
   gap: 12px;
   align-items: flex-end;
-`
-
-const MarketplaceIcon = styled.div`
-  margin-top: auto;
-  margin-bottom: auto;
 `
 
 const BuyNowButton = styled.div<{ assetInBag: boolean; margin: boolean; useAccentColor: boolean }>`
@@ -207,6 +203,11 @@ const DefaultLink = styled(Link)`
   text-decoration: none;
 `
 
+const MarketplaceIcon = styled(ExternalLink)`
+  display: flex;
+  align-items: center;
+`
+
 const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
   const navigate = useNavigate()
   const { data: USDValue } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
@@ -242,9 +243,9 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
           {listing ? 'Your Price' : 'List for Sale'}
         </ThemedText.SubHeader>
         {listing && (
-          <ExternalLink href={listing.marketplaceUrl}>
-            <MarketplaceIcon>{getMarketplaceIcon(listing.marketplace, '20', '20')}</MarketplaceIcon>
-          </ExternalLink>
+          <MarketplaceIcon href={listing.marketplaceUrl}>
+            {getMarketplaceIcon(listing.marketplace, '20', '20', uuidv4())}
+          </MarketplaceIcon>
         )}
       </HeaderRow>
       <PriceRow>
@@ -376,9 +377,9 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
             <ThemedText.SubHeader color="accentAction" fontWeight={500} lineHeight="24px">
               Best Price
             </ThemedText.SubHeader>
-            <ExternalLink href={cheapestOrder.marketplaceUrl}>
-              <MarketplaceIcon>{getMarketplaceIcon(cheapestOrder.marketplace, '20', '20')}</MarketplaceIcon>
-            </ExternalLink>
+            <MarketplaceIcon href={cheapestOrder.marketplaceUrl}>
+              {getMarketplaceIcon(cheapestOrder.marketplace, '20', '20', uuidv4())}
+            </MarketplaceIcon>
           </HeaderRow>
           <PriceRow>
             <ThemedText.MediumHeader fontSize="28px" lineHeight="36px">
