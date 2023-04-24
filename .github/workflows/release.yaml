@@ -123,4 +123,5 @@ jobs:
         with:
           environment: production
           sourcemaps: './build/static/js'
+          version: ${{ github.sha }}
           url_prefix: '~/static/js'
