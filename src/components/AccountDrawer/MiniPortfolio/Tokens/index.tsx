@@ -112,7 +112,7 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
     >
       <PortfolioRow
         left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size="40px" />}
-        title={<ThemedText.SubHeader fontWeight={500}>{token?.name}</ThemedText.SubHeader>}
+        title={<ThemedText.SubHeader>{token?.name}</ThemedText.SubHeader>}
         descriptor={
           <TokenBalanceText>
             {formatNumber(quantity, NumberType.TokenNonTx)} {token?.symbol}
@@ -122,7 +122,7 @@ function TokenRow({ token, quantity, denominatedValue, tokenProjectMarket }: Tok
         right={
           denominatedValue && (
             <>
-              <ThemedText.SubHeader fontWeight={500}>
+              <ThemedText.SubHeader>
                 {formatNumber(denominatedValue?.value, NumberType.PortfolioBalance)}
               </ThemedText.SubHeader>
               <Row justify="flex-end">
