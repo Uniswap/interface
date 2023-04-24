@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Trace } from '@uniswap/analytics'
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { Field } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
@@ -34,9 +33,11 @@ import { Swap } from 'pages/Swap'
 import { useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
+import { Field } from 'state/swap/actions'
 import { SwapState } from 'state/swap/reducer'
 import styled from 'styled-components/macro'
 import { isAddress } from 'utils'
+import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
 import { OnChangeTimePeriod } from './ChartSection'
 import InvalidTokenDetails from './InvalidTokenDetails'
@@ -145,22 +146,26 @@ export default function TokenDetails({
   useOnGlobalChainSwitch(navigateToTokenForChain)
 
   const handleCurrencyChange = useCallback(
-    (tokens: Partial<SwapState>) => {
-      if (tokens[Field.INPUT]?.currencyId !== address && tokens[Field.OUTPUT]?.currencyId !== address) {
-        const newDefaultTokenID = tokens[Field.OUTPUT]?.currencyId ?? tokens[Field.INPUT]?.currencyId
-        startTokenTransition(() =>
-          navigate(
-            getTokenDetailsURL({
-              address: newDefaultTokenID === 'ETH' ? 'NATIVE' : newDefaultTokenID,
-              chain,
-              inputAddress:
-                tokens[Field.INPUT] && tokens[Field.INPUT]?.currencyId !== newDefaultTokenID
-                  ? tokens[Field.INPUT]?.currencyId
-                  : null,
-            })
-          )
-        )
+    (tokens: Pick<SwapState, Field.INPUT | Field.OUTPUT>) => {
+      if (
+        addressesAreEquivalent(tokens[Field.INPUT]?.currencyId, address) ||
+        addressesAreEquivalent(tokens[Field.OUTPUT]?.currencyId, address)
+      ) {
+        return
       }
+      const newDefaultTokenID = tokens[Field.OUTPUT]?.currencyId ?? tokens[Field.INPUT]?.currencyId
+      startTokenTransition(() =>
+        navigate(
+          getTokenDetailsURL({
+            address: newDefaultTokenID === 'ETH' ? 'NATIVE' : newDefaultTokenID,
+            chain,
+            inputAddress:
+              tokens[Field.INPUT] && tokens[Field.INPUT]?.currencyId !== newDefaultTokenID
+                ? tokens[Field.INPUT]?.currencyId
+                : null,
+          })
+        )
+      )
     },
     [address, chain, navigate]
   )

@@ -166,7 +166,7 @@ export function Swap({
   className?: string
   prefilledState?: Partial<SwapState>
   defaultChainId?: SupportedChainId
-  onCurrencyChange?: (selected: Partial<SwapState>) => void
+  onCurrencyChange?: (selected: Pick<SwapState, Field.INPUT | Field.OUTPUT>) => void
 }) {
   const { account, chainId, connector } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
