@@ -1,11 +1,11 @@
 import { Interface } from '@ethersproject/abi'
 import { Trans } from '@lingui/macro'
-import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import POOL_EXTENDED_ABI from 'abis/pool-extended.json'
 import PoolPositionListItem from 'components/PoolPositionListItem'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import React, { useMemo } from 'react'
+import { useStakingPools } from 'state/pool/hooks'
 import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
 import { PoolPositionDetails } from 'types/position'
@@ -60,6 +60,10 @@ export default function PoolPositionList({ positions, filterByOperator, filterBy
   const { account, chainId } = useWeb3React()
   // TODO: we should merge this part with same part in swap page and move to a custom hook
   const poolAddresses = positions.map((p) => p.pool)
+  const poolIds = positions.map((p) => p.id)
+  const stakingPools = useStakingPools(poolAddresses, poolIds)
+  // TODO: can define more variables here {aprs, stake, ownStake}
+  const aprs = stakingPools?.stakingPools?.map((p) => p.apr)
   const PoolInterface = new Interface(POOL_EXTENDED_ABI)
   // TODO: check how many times we are making this rpc call
   const results = useMultipleContractSingleData(poolAddresses, PoolInterface, 'getPool')
@@ -69,14 +73,24 @@ export default function PoolPositionList({ positions, filterByOperator, filterBy
     return results
       .map((result, i) => {
         const { result: pools, loading } = result
-        if (!chainId || loading || !pools || !pools?.[0]) return ''
+        if (!chainId || loading || !pools || !pools?.[0] || !aprs) return ''
         const { name, symbol, decimals, owner } = pools?.[0]
         const isPoolOperator = owner === account
         if (filterByOperator && !isPoolOperator) return ''
-        return new Token(chainId, poolAddresses[i], decimals, symbol, name)
+        const address = poolAddresses[i]
+        const apr = aprs[i]
+        return {
+          ...result,
+          apr,
+          address,
+          decimals,
+          symbol,
+          name,
+          chainId,
+        }
       })
       .filter((p) => p !== '')
-  }, [account, chainId, filterByOperator, poolAddresses, results])
+  }, [account, chainId, filterByOperator, poolAddresses, aprs, results])
 
   return (
     <>
@@ -85,8 +99,12 @@ export default function PoolPositionList({ positions, filterByOperator, filterBy
           {filterByOperator ? <Trans>Operated pools</Trans> : <Trans>Loaded pools</Trans>}
           {positions && ' (' + operatedPools.length + ')'}
         </div>
+        <div>{!filterByOperator && <Trans>apr</Trans>}</div>
       </DesktopHeader>
-      <MobileHeader>{filterByOperator ? <Trans>Operated pools</Trans> : <Trans>Loaded pools</Trans>}</MobileHeader>
+      <MobileHeader>
+        <div>{filterByOperator ? <Trans>Operated pools</Trans> : <Trans>Loaded pools</Trans>}</div>
+        <div>{!filterByOperator && <Trans>apr</Trans>}</div>
+      </MobileHeader>
       {operatedPools.length !== 0 ? (
         operatedPools.map((p: any) => {
           return (
