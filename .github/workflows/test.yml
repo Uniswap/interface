@@ -65,6 +65,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
           verbose: true
+          flags: unit-tests
 
   build:
     runs-on: ubuntu-latest
@@ -161,6 +162,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
           verbose: true
+          flags: e2e-tests
 
   # Included as a single job to check for cypress-test-matrix success, as a matrix cannot be checked.
   cypress-tests:
