@@ -195,5 +195,17 @@ describe('Swap', () => {
     it('zero output amount', () => {
       cy.get('#swap-currency-output .token-amount-input').clear().type('0.0').should('have.value', '0.0')
     })
+
+    it('should show a L2 token even if the user is connected to a different network', () => {
+      cy.visit('/tokens').then(() => {
+        cy.wait('@eth_blockNumber')
+      })
+      cy.get(getTestSelector('tokens-network-filter-selected')).click()
+      cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).click()
+      cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Arbitrum')
+      cy.get(getTestSelector('token-table-row-ARB')).click()
+      verifyToken('output', 'ARB')
+      cy.contains('Connect to Arbitrum').should('exist')
+    })
   })
 })
