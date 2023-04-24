@@ -8,7 +8,3 @@ export const containerStyles = css`
   align-self: flex-start;
 `
 
-export function getBubbleText(num: number) {
-  if (num <= 10) return num
-  return '10+'
-}

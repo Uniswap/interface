@@ -3,7 +3,7 @@ import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-import { containerStyles, getBubbleText } from './shared'
+import { containerStyles } from './shared'
 
 const TabbedComponentContainer = styled.div`
   ${containerStyles}
@@ -37,7 +37,7 @@ export const TabTitleWithBubble = ({ title, bubbleNumber }: { title: React.React
   return (
     <Row gap="8px">
       {title}
-      {bubbleNumber && <TabNumBubble>{getBubbleText(bubbleNumber)}</TabNumBubble>}
+      {bubbleNumber && <TabNumBubble>{bubbleNumber > 10 ? '10+' : bubbleNumber}</TabNumBubble>}
     </Row>
   )
 }
