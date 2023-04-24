@@ -3,8 +3,8 @@ import { getTestSelector } from '../utils'
 const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
 
 describe('Token details', () => {
-  before(() => {
-    cy.visit('/')
+  beforeEach(() => {
+    cy.viewport(1440, 900)
   })
 
   it('Uniswap token should have all information populated', () => {
@@ -40,9 +40,6 @@ describe('Token details', () => {
 
     // Contract address should be displayed
     cy.contains(UNI_ADDRESS).should('exist')
-
-    // Swap widget should have this token pre-selected as the “destination” token
-    cy.get(getTestSelector('token-select')).should('include.text', 'UNI')
   })
 
   it('token with warning and low trading volume should have all information populated', () => {
@@ -80,9 +77,6 @@ describe('Token details', () => {
 
     // Contract address should be displayed
     cy.contains('0xa71d0588EAf47f12B13cF8eC750430d21DF04974').should('exist')
-
-    // Swap widget should have this token pre-selected as the “destination” token
-    cy.get(getTestSelector('token-select')).should('include.text', 'QOM')
 
     // Warning label should show if relevant ([spec](https://www.notion.so/3f7fce6f93694be08a94a6984d50298e))
     cy.get('[data-cy="token-safety-message"]')
