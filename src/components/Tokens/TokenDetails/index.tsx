@@ -87,6 +87,7 @@ function useRelevantToken(
 
 type TokenDetailsProps = {
   urlAddress: string | undefined
+  inputTokenAddress?: string
   chain: Chain
   tokenQuery: TokenQuery
   tokenPriceQuery: TokenPriceQuery | undefined
@@ -94,6 +95,7 @@ type TokenDetailsProps = {
 }
 export default function TokenDetails({
   urlAddress,
+  inputTokenAddress,
   chain,
   tokenQuery,
   tokenPriceQuery,
@@ -120,6 +122,7 @@ export default function TokenDetails({
   )
 
   const { token: detailedToken, didFetchFromChain } = useRelevantToken(address, pageChainId, tokenQueryData)
+  const { token: inputToken } = useRelevantToken(inputTokenAddress, pageChainId, undefined)
 
   const tokenWarning = address ? checkWarning(address) : null
   const isBlockedToken = tokenWarning?.canProceed === false
@@ -148,7 +151,7 @@ export default function TokenDetails({
         startTokenTransition(() =>
           navigate(
             getTokenDetailsURL({
-              address: newDefaultTokenID,
+              address: newDefaultTokenID === 'ETH' ? 'NATIVE' : newDefaultTokenID,
               chain,
               inputAddress:
                 tokens[Field.INPUT] && tokens[Field.INPUT]?.currencyId !== newDefaultTokenID
@@ -228,6 +231,7 @@ export default function TokenDetails({
           <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto' }}>
             <Swap
               prefilledState={{
+                [Field.INPUT]: { currencyId: inputToken?.wrapped?.address },
                 [Field.OUTPUT]: { currencyId: address === NATIVE_CHAIN_ID ? 'ETH' : address },
               }}
               onCurrencyChange={handleCurrencyChange}
