@@ -12,7 +12,6 @@ import { RB_FACTORY_ADDRESSES, RB_REGISTRY_ADDRESSES } from 'constants/addresses
 import { GRG } from 'constants/tokens'
 import { useContract } from 'hooks/useContract'
 import { useTotalSupply } from 'hooks/useTotalSupply'
-//import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useStakingContract } from 'state/governance/hooks'
