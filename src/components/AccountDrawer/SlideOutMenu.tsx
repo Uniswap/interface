@@ -49,7 +49,7 @@ export const SlideOutMenu = ({
     <Header>
       <StyledArrow data-testid="wallet-back" onClick={onClose} size={24} />
       <Title>
-        <ThemedText.SubHeader fontWeight={500}>{title}</ThemedText.SubHeader>
+        <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
       </Title>
     </Header>
 
