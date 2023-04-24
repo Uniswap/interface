@@ -58,7 +58,16 @@ const AddressLink = styled(ExternalLink)`
   }
 `
 
-const PurchasableMarkets: string[] = [Markets.Opensea, Markets.LooksRare, Markets.X2Y2]
+const PurchasableMarkets: string[] = [
+  Markets.Opensea,
+  Markets.LooksRare,
+  Markets.X2Y2,
+  Markets.NFTX,
+  Markets.NFT20,
+  Markets.Cryptopunks,
+  Markets.Foundation,
+  Markets.Sudoswap,
+]
 
 const isPurchasableOrder = (orderStatus: OrderStatus | undefined, marketplace: string | undefined): boolean => {
   if (!marketplace || !orderStatus) return false
