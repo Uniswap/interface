@@ -6,7 +6,7 @@ import styled from 'styled-components/macro'
 import { Tab, TabbedComponent, TabTitleWithBubble } from './TabbedComponent'
 
 const TraitsContentContainer = styled.div`
-  height: 252px;
+  height: 492px;
 `
 
 const TraitsContent = () => {
