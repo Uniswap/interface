@@ -179,7 +179,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
   return (
     <Wrapper data-testid="wallet-modal">
       <AutoRow justify="space-between" width="100%" marginBottom="16px">
-        <ThemedText.SubHeader fontWeight={500}>Connect a wallet</ThemedText.SubHeader>
+        <ThemedText.SubHeader>Connect a wallet</ThemedText.SubHeader>
         <IconButton Icon={Settings} onClick={openSettings} data-testid="wallet-settings" />
       </AutoRow>
       {pendingError ? (

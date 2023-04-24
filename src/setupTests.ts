@@ -2,7 +2,9 @@ import '@testing-library/jest-dom' // jest custom assertions
 import 'jest-styled-components' // adds style diffs to snapshot tests
 
 import type { createPopper } from '@popperjs/core'
+import { useWeb3React } from '@web3-react/core'
 import { Readable } from 'stream'
+import { mocked } from 'test-utils/mocked'
 import { TextDecoder, TextEncoder } from 'util'
 
 window.open = jest.fn()
@@ -47,4 +49,22 @@ jest.mock('@popperjs/core', () => {
       return core.createPopper(referenceElement, popperElement, options)
     },
   }
+})
+
+jest.mock('@web3-react/core', () => {
+  const web3React = jest.requireActual('@web3-react/core')
+  const { Empty } = jest.requireActual('@web3-react/empty')
+  return {
+    ...web3React,
+    initializeConnector: () =>
+      web3React.initializeConnector(
+        (actions: Parameters<typeof web3React.initializeConnector>[0]) => new Empty(actions)
+      ),
+    useWeb3React: jest.fn(),
+  }
+})
+
+// Mocks are configured to reset between tests (by CRA), so they must be set in a beforeEach.
+beforeEach(() => {
+  mocked(useWeb3React).mockReturnValue({ chainId: 1 } as ReturnType<typeof useWeb3React>)
 })
