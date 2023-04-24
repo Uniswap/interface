@@ -1,10 +1,18 @@
 import { FACTORY_ADDRESS as V2_FACTORY_ADDRESS } from '@uniswap/v2-sdk'
 import { FACTORY_ADDRESS as V3_FACTORY_ADDRESS } from '@uniswap/v3-sdk'
-import { SupportedChainId } from 'constants/chains'
 
-import { constructSameAddressMap } from '../utils/constructSameAddressMap'
+import { SupportedChainId } from './chains'
 
 type AddressMap = { [chainId: number]: string }
+
+const DEFAULT_NETWORKS = [SupportedChainId.MAINNET, SupportedChainId.GOERLI]
+
+function constructSameAddressMap(address: string, additionalNetworks: SupportedChainId[] = []): AddressMap {
+  return DEFAULT_NETWORKS.concat(additionalNetworks).reduce<AddressMap>((memo, chainId) => {
+    memo[chainId] = address
+    return memo
+  }, {})
+}
 
 export const UNI_ADDRESS: AddressMap = constructSameAddressMap('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
 
