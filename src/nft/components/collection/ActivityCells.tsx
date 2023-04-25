@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/smart-order-router'
@@ -28,7 +29,7 @@ import { buildActivityAsset } from 'nft/utils/buildActivityAsset'
 import { formatEth } from 'nft/utils/currency'
 import { getTimeDifference } from 'nft/utils/date'
 import { putCommas } from 'nft/utils/putCommas'
-import { MouseEvent, useMemo, useState } from 'react'
+import { MouseEvent, ReactNode, useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ExternalLink } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -65,18 +66,22 @@ const isPurchasableOrder = (orderStatus?: OrderStatus, marketplace?: string): bo
   return validOrder && isPurchasableMarket
 }
 
-const formatListingStatus = (status: OrderStatus): string => {
+const formatListingStatus = (status: OrderStatus, orderIsPurchasable: boolean, isSelected: boolean): ReactNode => {
+  if (orderIsPurchasable) {
+    return isSelected ? <Trans>Remove</Trans> : <Trans>Add to bag</Trans>
+  }
+
   switch (status) {
     case OrderStatus.Executed:
-      return 'Sold'
+      return <Trans>Sold</Trans>
     case OrderStatus.Cancelled:
-      return 'Cancelled'
+      return <Trans>Cancelled</Trans>
     case OrderStatus.Expired:
-      return 'Expired'
+      return <Trans>Expired</Trans>
     case OrderStatus.Valid:
-      return 'Unavailable'
+      return <Trans>Unavailable</Trans>
     default:
-      return ''
+      return null
   }
 }
 
@@ -133,13 +138,9 @@ export const BuyCell = ({
             !isSelected && !cartExpanded && !isMobile && toggleCart()
             !isSelected && sendAnalyticsEvent(NFTEventName.NFT_BUY_ADDED, { eventProperties })
           }}
-          disabled={orderIsPurchasable}
+          disabled={!orderIsPurchasable}
         >
-          {orderIsPurchasable ? (
-            <>{`${isSelected ? 'Remove' : 'Add to bag'}`}</>
-          ) : (
-            <>{`${formatListingStatus(event.orderStatus)}`}</>
-          )}
+          {formatListingStatus(event.orderStatus, orderIsPurchasable, isSelected)}
         </Box>
       ) : (
         '-'
