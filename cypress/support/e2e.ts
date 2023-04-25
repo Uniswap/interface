@@ -12,6 +12,7 @@ import assert from 'assert'
 import { Network } from 'cypress-hardhat/lib/browser'
 
 import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
+import { UserState } from '../../src/state/user/reducer'
 import { CONNECTED_WALLET_USER_STATE } from '../utils/user-state'
 import { injected } from './ethereum'
 import { HardhatProvider } from './hardhat'
@@ -34,10 +35,9 @@ declare global {
       ethereum?: 'goerli' | 'hardhat'
       /**
        * Initial user state.
-       * This matches a subset of the {@type import('../../src/state/user/reducer').UserState}.
        * @default {@type import('../utils/user-state').CONNECTED_WALLET_USER_STATE}
        */
-      userState?: { selectedWallet?: 'INJECTED' }
+      userState?: Partial<UserState>
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     interface Chainable<Subject> {
