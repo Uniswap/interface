@@ -82,7 +82,11 @@ export default function FiatOnrampModal() {
 
   const { height: windowHeight } = useWindowSize()
   const modalHeight = useMemo(() => {
-    return windowHeight ? Math.round(((windowHeight - theme.navHeight) / windowHeight) * 100) : 580 // 580 is a reasonable fallback
+    if (!windowHeight) {
+      return 580 // 580 is a reasonable fallback
+    }
+    const modalHeightPx = windowHeight - theme.navHeight
+    return Math.min(Math.round((modalHeightPx / windowHeight) * 100), 80)
   }, [theme.navHeight, windowHeight])
 
   const fetchSignedIframeUrl = useCallback(async () => {
