@@ -81,7 +81,9 @@ it('Should call activate function on a connection', async () => {
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
   expect(onSuccess).toHaveBeenCalledTimes(0)
 
-  activationResponse.resolve()
+  await act(async () => {
+    activationResponse.resolve()
+  })
   await activationCall
 
   expect(result.current.activationState).toEqual({ status: ActivationStatus.EMPTY })

@@ -16,14 +16,14 @@ export enum ActivationStatus {
 }
 
 type ActivationPendingState = { status: ActivationStatus.PENDING; connection: Connection }
-export type ActivationErrorState = { status: ActivationStatus.ERROR; connection: Connection; error: any }
+type ActivationErrorState = { status: ActivationStatus.ERROR; connection: Connection; error: any }
 const EMPTY_ACTIVATION_STATE = { status: ActivationStatus.EMPTY } as const
 
 type ActivationState = ActivationPendingState | ActivationErrorState | typeof EMPTY_ACTIVATION_STATE
 
 const pendingConnectionStateAtom = atom<ActivationState>(EMPTY_ACTIVATION_STATE)
 
-export function useTryActivation() {
+function useTryActivation() {
   const dispatch = useAppDispatch()
   const setActivationState = useUpdateAtom(pendingConnectionStateAtom)
 
