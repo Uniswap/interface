@@ -74,10 +74,18 @@ interface UseTradeArgs {
   tradeType: TradeType
   pollingInterval?: PollingInterval
   slippageTolerance?: number
+  isUSDQuote?: boolean
 }
 
 export function useTrade(args: UseTradeArgs): TradeWithStatus {
-  const { amountSpecified, otherCurrency, tradeType, pollingInterval, slippageTolerance } = args
+  const {
+    amountSpecified,
+    otherCurrency,
+    tradeType,
+    pollingInterval,
+    slippageTolerance,
+    isUSDQuote,
+  } = args
   const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(amountSpecified)
 
   /*
@@ -98,6 +106,7 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
     tradeType,
     pollingInterval,
     slippageTolerance,
+    isUSDQuote,
   })
 
   return useMemo(() => {

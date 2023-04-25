@@ -40,6 +40,7 @@ export function useUSDCPrice(
     otherCurrency: currency,
     tradeType: TradeType.EXACT_OUTPUT,
     pollingInterval,
+    isUSDQuote: true,
   })
 
   return useMemo(() => {

@@ -6,10 +6,12 @@ import { ChainId } from 'src/constants/chains'
 import { PollingInterval } from 'src/constants/misc'
 import { FEATURE_FLAGS } from 'src/features/experiments/constants'
 import { useFeatureFlag } from 'src/features/experiments/hooks'
+import { SAFE_TOKENS_TO_LOG } from 'src/features/routing/logging'
 import { useQuoteQuery } from 'src/features/routing/routingApi'
 import { PermitSignatureInfo } from 'src/features/transactions/swap/usePermit2Signature'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { currencyAddressForSwapQuote } from 'src/utils/currencyId'
+import { logger } from 'src/utils/logger'
 import { useDebounceWithStatus } from 'src/utils/timing'
 
 export interface UseQuoteProps {
@@ -21,6 +23,7 @@ export interface UseQuoteProps {
   fetchSimulatedGasLimit?: boolean
   permitSignatureInfo?: PermitSignatureInfo | null
   slippageTolerance?: number
+  isUSDQuote?: boolean
 }
 
 /**
@@ -40,6 +43,7 @@ export function useRouterQuote(params: UseQuoteProps) {
     fetchSimulatedGasLimit,
     permitSignatureInfo,
     slippageTolerance,
+    isUSDQuote,
   } = params
 
   const currencyIn = tradeType === TradeType.EXACT_INPUT ? amountSpecified?.currency : otherCurrency
@@ -79,6 +83,27 @@ export function useRouterQuote(params: UseQuoteProps) {
       pollingInterval,
     }
   )
+
+  /* ---Custom request logging for failed quote requests--- */
+  if (result.error) {
+    // only log non USD quotes, or USD quotes on widely used tokens
+    const shouldReportError =
+      !isUSDQuote ||
+      (isUSDQuote && SAFE_TOKENS_TO_LOG.some((token) => token.address === tokenInAddress))
+
+    shouldReportError &&
+      logger.error(
+        'routing/hooks',
+        'useRouterQuote',
+        `${result.error} - params:${JSON.stringify({
+          currencyIdIn: `${tokenInChainId}-${tokenInAddress}`,
+          currencyIdOut: `${tokenOutChainId}-${tokenOutAddress}`,
+          currencyNameIn: currencyIn?.name,
+          currencyNameOut: currencyOut?.name, // name makes it much faster to debug in logs
+          amount: amountSpecified?.quotient.toString(),
+        })}`
+      )
+  }
 
   return result
 }
