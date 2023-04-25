@@ -55,6 +55,10 @@ module.exports = {
   jest: {
     configure(jestConfig) {
       return Object.assign(jestConfig, {
+        transform: {
+          '\\.css\\.ts$': './vanilla.transform.cjs',
+          ...jestConfig.transform,
+        },
         cacheDirectory: 'node_modules/.cache/jest',
         transformIgnorePatterns: ['@uniswap/conedison/format', '@uniswap/conedison/provider'],
         moduleNameMapper: {
