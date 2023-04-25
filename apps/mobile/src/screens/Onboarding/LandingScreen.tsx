@@ -1,6 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useResponsiveProp } from '@shopify/restyle'
-import * as SplashScreen from 'expo-splash-screen'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
@@ -20,6 +19,7 @@ import {
 } from 'src/features/wallet/pendingAccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openUri } from 'src/utils/linking'
+import { hideSplashScreen } from 'src/utils/splashScreen'
 import { useTimeout } from 'src/utils/timing'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Landing>
@@ -43,7 +43,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
   const pb = useResponsiveProp({ xs: 'spacing12', sm: 'none' })
 
   // Hides lock screen on next js render cycle, ensuring this component is loaded when the screen is hidden
-  useTimeout(SplashScreen.hideAsync, 1)
+  useTimeout(hideSplashScreen, 1)
 
   return (
     <Screen edges={['bottom']}>

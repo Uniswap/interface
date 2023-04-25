@@ -1,9 +1,9 @@
-import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
 import { useLockScreenContext } from 'src/features/authentication/lockScreenContext'
 import { BiometricAuthenticationStatus } from 'src/features/biometrics'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
+import { hideSplashScreen } from 'src/utils/splashScreen'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 
 // TODO: [MOB-3886] handle scenario where user has biometrics enabled as in-app security but disables it at the OS level
@@ -38,7 +38,7 @@ export function useBiometricCheck(): void {
   })
 
   useAppStateTrigger('inactive', 'active', () => {
-    SplashScreen.hideAsync() // In case of a race condition where splash screen is not hidden, we want to hide when FaceID forces an app state change
+    hideSplashScreen() // In case of a race condition where splash screen is not hidden, we want to hide when FaceID forces an app state change
     if (
       requiredForAppAccess &&
       authenticationStatus !== BiometricAuthenticationStatus.Authenticating &&
@@ -49,7 +49,7 @@ export function useBiometricCheck(): void {
   })
 
   useAppStateTrigger('active', 'inactive', () => {
-    SplashScreen.hideAsync() // In case of a race condition where splash screen is not hidden, we want to hide when FaceID forces an app state change
+    hideSplashScreen() // In case of a race condition where splash screen is not hidden, we want to hide when FaceID forces an app state change
     if (
       requiredForAppAccess &&
       authenticationStatus !== BiometricAuthenticationStatus.Authenticating

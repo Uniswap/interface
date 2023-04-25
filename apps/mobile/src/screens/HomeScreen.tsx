@@ -3,7 +3,6 @@ import { useScrollToTop } from '@react-navigation/native'
 import { FlashList } from '@shopify/flash-list'
 import { useResponsiveProp } from '@shopify/restyle'
 import { impactAsync } from 'expo-haptics'
-import * as SplashScreen from 'expo-splash-screen'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, View, ViewProps, ViewStyle } from 'react-native'
@@ -62,6 +61,7 @@ import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
+import { hideSplashScreen } from 'src/utils/splashScreen'
 import { ONE_SECOND_MS } from 'src/utils/time'
 import { useInterval, useTimeout } from 'src/utils/timing'
 
@@ -406,7 +406,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   )
 
   // Hides lock screen on next js render cycle, ensuring this component is loaded when the screen is hidden
-  useTimeout(SplashScreen.hideAsync, 1)
+  useTimeout(hideSplashScreen, 1)
 
   return (
     <Screen edges={['left', 'right']}>
