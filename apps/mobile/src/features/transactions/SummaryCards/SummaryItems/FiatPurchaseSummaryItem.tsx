@@ -31,11 +31,12 @@ export default function FiatPurchaseSummaryItem({
     inputCurrency?.code
   )
 
+  const symbol = outputCurrencyInfo?.currency.symbol ?? t('unknown token')
+
   return (
     <TransactionSummaryLayout
       caption={t('{{cryptoAmount}} for {{fiatAmount}}', {
-        cryptoAmount:
-          outputCurrencyAmount + ' ' + (outputCurrencyInfo?.currency.symbol ?? t('unknown token')),
+        cryptoAmount: outputCurrencyAmount + ' ' + symbol,
         fiatAmount: fiatPurchaseAmount,
       })}
       icon={
