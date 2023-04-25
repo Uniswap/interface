@@ -4,7 +4,6 @@ import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analyt
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
-import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import { useSearchTokens } from 'graphql/data/SearchTokens'
 import useDebounce from 'hooks/useDebounce'
@@ -16,9 +15,7 @@ import { Row } from 'nft/components/Flex'
 import { magicalGradientOnHover } from 'nft/css/common.css'
 import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { useIsNavSearchInputVisible } from 'nft/hooks/useIsNavSearchInputVisible'
-import { fetchSearchCollections } from 'nft/queries'
 import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
-import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -52,44 +49,20 @@ export const SearchBar = () => {
   const { pathname } = useLocation()
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
-  const isNftGraphqlEnabled = useNftGraphqlEnabled()
   const isNavSearchInputVisible = useIsNavSearchInputVisible()
 
   useOnClickOutside(searchRef, () => {
     isOpen && toggleOpen()
   })
 
-  const { data: queryCollections, isLoading: queryCollectionsAreLoading } = useQuery(
-    ['searchCollections', debouncedSearchValue],
-    () => fetchSearchCollections(debouncedSearchValue),
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      enabled: !!debouncedSearchValue.length,
-    }
-  )
-
-  const { data: gqlCollections, loading: gqlCollectionsAreLoading } = useCollectionSearch(debouncedSearchValue)
-
-  const { gatedCollections, gatedCollectionsAreLoading } = useMemo(() => {
-    return isNftGraphqlEnabled
-      ? {
-          gatedCollections: gqlCollections,
-          gatedCollectionsAreLoading: gqlCollectionsAreLoading,
-        }
-      : {
-          gatedCollections: queryCollections,
-          gatedCollectionsAreLoading: queryCollectionsAreLoading,
-        }
-  }, [gqlCollections, gqlCollectionsAreLoading, isNftGraphqlEnabled, queryCollections, queryCollectionsAreLoading])
+  const { data: collections, loading: collectionsAreLoading } = useCollectionSearch(debouncedSearchValue)
 
   const { chainId } = useWeb3React()
   const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, chainId ?? 1)
 
   const isNFTPage = useIsNftPage()
 
-  const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], gatedCollections ?? [])
+  const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], collections ?? [])
 
   // close dropdown on escape
   useEffect(() => {
@@ -105,7 +78,7 @@ export const SearchBar = () => {
     return () => {
       document.removeEventListener('keydown', escapeKeyDownHandler)
     }
-  }, [isOpen, toggleOpen, gatedCollections])
+  }, [isOpen, toggleOpen, collections])
 
   // clear searchbar when changing pages
   useEffect(() => {
@@ -227,7 +200,7 @@ export const SearchBar = () => {
               collections={reducedCollections}
               queryText={debouncedSearchValue}
               hasInput={debouncedSearchValue.length > 0}
-              isLoading={tokensAreLoading || gatedCollectionsAreLoading}
+              isLoading={tokensAreLoading || collectionsAreLoading}
             />
           )}
         </Box>

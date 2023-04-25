@@ -17,7 +17,6 @@ import styled from 'styled-components/macro'
 import { HideSmall, MEDIA_WIDTHS, SmallOnly, ThemedText } from 'theme'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
-import { hasURL } from 'utils/urlChecks'
 
 import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 
@@ -202,12 +201,6 @@ export default function PositionListItem({
   const positionSummaryLink = '/pools/' + tokenId
 
   const removed = liquidity?.eq(0)
-
-  const shouldHidePosition = hasURL(token0?.symbol) || hasURL(token1?.symbol)
-
-  if (shouldHidePosition) {
-    return null
-  }
 
   return (
     <LinkRow to={positionSummaryLink}>

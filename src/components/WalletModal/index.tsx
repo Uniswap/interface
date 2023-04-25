@@ -5,11 +5,10 @@ import { useWeb3React } from '@web3-react/core'
 import IconButton from 'components/AccountDrawer/IconButton'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
-import { ConnectionType, getConnections, networkConnection } from 'connection'
+import { getConnections, networkConnection } from 'connection'
 import { useGetConnection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { isSupportedChain } from 'constants/chains'
-import { useMgtmEnabled } from 'featureFlags/flags/mgtm'
 import { useEffect, useState } from 'react'
 import { Settings } from 'react-feather'
 import { useConnectedWallets } from 'state/wallets/hooks'
@@ -109,12 +108,10 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
     getConnection,
   ])
 
-  const mgtmEnabled = useMgtmEnabled()
-
   return (
     <Wrapper data-testid="wallet-modal">
       <AutoRow justify="space-between" width="100%" marginBottom="16px">
-        <ThemedText.SubHeader fontWeight={500}>Connect a wallet</ThemedText.SubHeader>
+        <ThemedText.SubHeader>Connect a wallet</ThemedText.SubHeader>
         <IconButton Icon={Settings} onClick={openSettings} data-testid="wallet-settings" />
       </AutoRow>
       {activationState.status === ActivationStatus.ERROR ? (
@@ -122,12 +119,11 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
       ) : (
         <AutoColumn gap="16px">
           <OptionGrid data-testid="option-grid">
-            {connections.map((connection) =>
-              // Hides Uniswap Wallet if mgtm is disabled
-              connection.shouldDisplay() && !(connection.type === ConnectionType.UNIWALLET && !mgtmEnabled) ? (
+            {connections
+              .filter((connection) => connection.shouldDisplay())
+              .map((connection) => (
                 <Option key={connection.getName()} connection={connection} />
-              ) : null
-            )}
+              ))}
           </OptionGrid>
           <PrivacyPolicyWrapper>
             <PrivacyPolicyNotice />

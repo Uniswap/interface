@@ -1,6 +1,15 @@
 import { ClientOptions, ErrorEvent, EventHint } from '@sentry/types'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
+/* `responseStatus` is only currently supported on certain browsers.
+ * see: https://caniuse.com/mdn-api_performanceresourcetiming_responsestatus
+ */
+declare global {
+  interface PerformanceEntry {
+    responseStatus?: number
+  }
+}
+
 /** Identifies ethers request errors (as thrown by {@type import(@ethersproject/web).fetchJson}). */
 function isEthersRequestError(error: Error): error is Error & { requestBody: string } {
   return 'requestBody' in error && typeof (error as unknown as Record<'requestBody', unknown>).requestBody === 'string'
@@ -18,6 +27,19 @@ export function beforeSend(event: ErrorEvent, hint: EventHint) {
   }
 
   return filterKnownErrors(event, hint)
+}
+
+function shouldFilterChunkError(asset?: string) {
+  const entries = [...(performance?.getEntriesByType('resource') ?? [])]
+  const resource = entries?.find(({ name }) => name === asset)
+  const status = resource?.responseStatus
+
+  /*
+   * If the status if 499, then we ignore.
+   * If there's no status (meaning the browser doesn't support `responseStatus`) then we also ignore.
+   * These errors are likely also 499 errors, and we can catch any spikes in non-499 chunk errors via other browsers.
+   */
+  return !status || status === 499
 }
 
 /**
@@ -41,6 +63,22 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
     if (didUserReject(error)) return null
 
     /*
+     * This ignores 499 errors, which are caused by Cloudflare when a request is cancelled.
+     * CF claims that some number of these is expected, and that they should be ignored.
+     * See https://groups.google.com/a/uniswap.org/g/cloudflare-eng/c/t3xvAiJFujY.
+     */
+    if (error.message.match(/Loading chunk \d+ failed\. \(([a-zA-Z]+): .+\.chunk\.js\)/)) {
+      const asset = error.message.match(/https?:\/\/.+?\.chunk\.js/)?.[0]
+      if (shouldFilterChunkError(asset)) return null
+    }
+
+    if (error.message.match(/Loading CSS chunk \d+ failed\. \(.+\.chunk\.css\)/)) {
+      const relativePath = error.message.match(/\/static\/css\/.*\.chunk\.css/)?.[0]
+      const asset = `https://app.uniswap.org${relativePath}`
+      if (shouldFilterChunkError(asset)) return null
+    }
+
+    /*
      * This is caused by HTML being returned for a chunk from Cloudflare.
      * Usually, it's the result of a 499 exception right before it, which should be handled.
      * Therefore, this can be ignored.
@@ -52,11 +90,7 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
      * For example, if a user runs an eval statement in console this error would still get thrown.
      * TODO(INFRA-176): We should extend this to filter out any type of CSP error.
      */
-    if (
-      error.message.match(
-        /Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive/
-      )
-    ) {
+    if (error.message.match(/'unsafe-eval'.*content security policy/i)) {
       return null
     }
   }
