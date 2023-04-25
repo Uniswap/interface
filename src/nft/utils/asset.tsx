@@ -1,4 +1,20 @@
-import { DetailsOrigin, GenieAsset, Listing, UpdatedGenieAsset, WalletAsset } from 'nft/types'
+import {
+  SquareCryptopunksMarketplaceIcon,
+  SquareEnsVisionMarketplaceIcon,
+  SquareFoundationMarketplaceIcon,
+  SquareGemMarketplaceIcon,
+  SquareLooksBlurMarketplaceIcon,
+  SquareLooksRareMarketplaceIcon,
+  SquareLooksX2Y2MarketplaceIcon,
+  SquareNft20MarketplaceIcon,
+  SquareNftXMarketplaceIcon,
+  SquareOpenSeaMarketplaceIcon,
+  SquareRaribleMarketplaceIcon,
+  SquareSudoSwapMarketplaceIcon,
+  SquareZoraMarketplaceIcon,
+} from 'nft/components/icons'
+import { DetailsOrigin, GenieAsset, Listing, Markets, UpdatedGenieAsset, WalletAsset } from 'nft/types'
+import { v4 as uuidv4 } from 'uuid'
 
 export function getRarityStatus(
   rarityStatusCache: Map<string, boolean>,
@@ -25,8 +41,38 @@ export const getAssetHref = (asset: GenieAsset | WalletAsset, origin?: DetailsOr
   return `/nfts/asset/${address}/${asset.tokenId}${origin ? `?origin=${origin}` : ''}`
 }
 
-export const getMarketplaceIcon = (marketplace: string) => {
-  return `/nft/svgs/marketplaces/${marketplace.toLowerCase()}.svg`
+export const getMarketplaceIcon = (marketplace: string, size: string | number = '16') => {
+  switch (marketplace.toLowerCase()) {
+    case Markets.Opensea:
+      return <SquareOpenSeaMarketplaceIcon width={size} height={size} />
+    case Markets.LooksRare:
+      return <SquareLooksRareMarketplaceIcon width={size} height={size} />
+    case Markets.X2Y2:
+      return <SquareLooksX2Y2MarketplaceIcon width={size} height={size} gradientId={uuidv4()} />
+    case Markets.Blur:
+      return <SquareLooksBlurMarketplaceIcon width={size} height={size} />
+    case Markets.Sudoswap:
+      return <SquareSudoSwapMarketplaceIcon width={size} height={size} />
+    case Markets.NFTX:
+      return <SquareNftXMarketplaceIcon width={size} height={size} gradientId={uuidv4()} />
+    case Markets.Gem:
+      return <SquareGemMarketplaceIcon width={size} height={size} gradientId={uuidv4()} />
+    case Markets.Zora:
+      return <SquareZoraMarketplaceIcon width={size} height={size} gradientId={uuidv4()} />
+    case Markets.Ensvision:
+      return <SquareEnsVisionMarketplaceIcon width={size} height={size} />
+    case Markets.Cryptopunks:
+    case 'larvalabs':
+      return <SquareCryptopunksMarketplaceIcon width={size} height={size} />
+    case Markets.Rarible:
+      return <SquareRaribleMarketplaceIcon width={size} height={size} />
+    case Markets.Foundation:
+      return <SquareFoundationMarketplaceIcon width={size} height={size} />
+    case Markets.NFT20:
+      return <SquareNft20MarketplaceIcon width={size} height={size} />
+    default:
+      return null
+  }
 }
 
 export const generateTweetForAsset = (asset: GenieAsset): string => {

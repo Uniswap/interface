@@ -173,15 +173,6 @@ export const filter = style([
   },
 ])
 
-export const marketplaceIcon = style([
-  sprinkles({
-    width: '16',
-    height: '16',
-    borderRadius: '4',
-    flexShrink: '0',
-  }),
-])
-
 export const rarityInfo = style([
   sprinkles({
     display: 'flex',
