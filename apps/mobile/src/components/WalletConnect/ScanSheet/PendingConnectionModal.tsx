@@ -15,6 +15,7 @@ import { Separator } from 'src/components/layout/Separator'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
+import { NetworkLogos } from 'src/components/WalletConnect/NetworkLogos'
 import { PendingConnectionSwitchAccountModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionSwitchAccountModal'
 import { PendingConnectionSwitchNetworkModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionSwitchNetworkModal'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
@@ -126,6 +127,27 @@ const SwitchNetworkRow = ({ selectedChainId, setModalState }: SwitchNetworkProps
         <Chevron color={theme.colors.textSecondary} direction="e" height="20" width="20" />
       </Flex>
     </TouchableArea>
+  )
+}
+
+const NetworksRow = ({ chains }: { chains: ChainId[] }): JSX.Element => {
+  const { t } = useTranslation()
+
+  return (
+    <Flex
+      row
+      shrink
+      alignItems="center"
+      gap="spacing12"
+      justifyContent="space-between"
+      p="spacing12">
+      <Flex grow row gap="spacing8" justifyContent="space-between">
+        <Text color="textPrimary" variant="subheadSmall">
+          {t('Networks')}
+        </Text>
+        <NetworkLogos chains={chains} />
+      </Flex>
+    </Flex>
   )
 }
 
@@ -286,9 +308,14 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
         <Flex bg="background2" borderRadius="rounded16" gap="spacing2">
           <SitePermissions />
           <Separator color="background1" width={1} />
-          {pendingSession.version === '1' && (
+          {pendingSession.version === '1' ? (
             <>
               <SwitchNetworkRow selectedChainId={selectedChainId} setModalState={setModalState} />
+              <Separator color="background1" width={1} />
+            </>
+          ) : (
+            <>
+              <NetworksRow chains={pendingSession.chains} />
               <Separator color="background1" width={1} />
             </>
           )}

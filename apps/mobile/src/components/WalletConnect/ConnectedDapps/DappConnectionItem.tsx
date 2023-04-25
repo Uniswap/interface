@@ -11,7 +11,8 @@ import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
-import { ChainId, CHAIN_INFO } from 'src/constants/chains'
+import { NetworkLogos } from 'src/components/WalletConnect/NetworkLogos'
+import { CHAIN_INFO } from 'src/constants/chains'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -130,7 +131,13 @@ export function DappConnectionItem({
       {session.version === '1' ? (
         <ChangeNetworkButton session={session} onPressChangeNetwork={onPressChangeNetwork} />
       ) : (
-        <NetworkLogos chains={session.chains} />
+        <NetworkLogos
+          showFirstChainLabel
+          backgroundColor="background3"
+          borderRadius="roundedFull"
+          chains={session.chains}
+          p="spacing8"
+        />
       )}
     </Flex>
   )
@@ -187,38 +194,5 @@ function ChangeNetworkButton({
         />
       </Flex>
     </TouchableArea>
-  )
-}
-
-function NetworkLogos({ chains }: { chains: ChainId[] }): JSX.Element {
-  const theme = useAppTheme()
-  const firstChain = chains[0]
-
-  return (
-    <Flex
-      row
-      shrink
-      alignItems="center"
-      backgroundColor="background3"
-      borderRadius="roundedFull"
-      gap="none"
-      justifyContent="space-between"
-      p="spacing8">
-      {chains.length === 1 && firstChain ? (
-        <Flex fill row justifyContent="space-between">
-          <NetworkLogo chainId={firstChain} />
-          <Text color="textSecondary" numberOfLines={1} variant="buttonLabelSmall">
-            {CHAIN_INFO[firstChain].label}
-          </Text>
-          <Box width={theme.iconSizes.icon20} />
-        </Flex>
-      ) : (
-        <Flex centered grow flexDirection="row" gap="spacing4">
-          {chains.map((chainId) => (
-            <NetworkLogo key={chainId} chainId={chainId} size={theme.iconSizes.icon20} />
-          ))}
-        </Flex>
-      )}
-    </Flex>
   )
 }
