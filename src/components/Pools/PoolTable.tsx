@@ -9,6 +9,7 @@ import { Arrow, Break, PageButtons } from 'components/shared'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { SupportedChainId } from 'constants/chains'
 import { USDC_EVMOS, WETH_EVMOS } from 'constants/tokens'
+import { useAllTokens } from 'hooks/Tokens'
 import { useIsMobile } from 'nft/hooks'
 import numbro from 'numbro'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -187,7 +188,15 @@ const GridContainer = styled.div`
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
 `
 
-const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => {
+const DataRow = ({
+  poolData,
+  index,
+  allTokens,
+}: {
+  poolData: PoolData
+  index: number
+  allTokens: { [address: string]: Token }
+}) => {
   const isMobile = useIsMobile()
   let currency0
   let currency1
@@ -233,6 +242,16 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
     )
   }
 
+  let c0s = currency0.symbol
+  let c1s = currency1.symbol
+
+  if (allTokens[currency0.address]?.symbol !== undefined) {
+    c0s = allTokens[currency0.address]?.symbol
+  }
+  if (allTokens[currency1.address]?.symbol !== undefined) {
+    c1s = allTokens[currency1.address]?.symbol
+  }
+
   return (
     <LinkWrapper to={'/add/' + poolData.token0.address + '/' + poolData.token1.address}>
       <ResponsiveGrid>
@@ -241,7 +260,7 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
           <RowFixed>
             <DoubleCurrencyLogo size={20} currency0={currency0} currency1={currency1} />
             <span style={{ marginLeft: '8px' }}>
-              {currency0.symbol}/{currency1.symbol}
+              {c0s}/{c1s}
             </span>
             <GreyBadge ml="10px" fontSize="14px">
               {feeTierPercent(poolData.feeTier)}
@@ -263,6 +282,8 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
   const [sortField, setSortField] = useState(SORT_FIELD.tvlUSD)
   const [sortDirection, setSortDirection] = useState<boolean>(true)
   const isMobile = useIsMobile()
+
+  const allTokens = useAllTokens()
 
   // pagination
   const [page, setPage] = useState(1)
@@ -343,7 +364,7 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
               if (poolData) {
                 return (
                   <React.Fragment key={i}>
-                    <DataRow index={(page - 1) * MAX_ITEMS + i} poolData={poolData} />
+                    <DataRow allTokens={allTokens} index={(page - 1) * MAX_ITEMS + i} poolData={poolData} />
                     <Break />
                   </React.Fragment>
                 )

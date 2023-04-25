@@ -34,7 +34,17 @@ export const STATOM = new Token(
   'Stride Staked Atom'
 )
 
-export const EVMOS_STABLE_COINS = [USDC_EVMOS.address.toLowerCase()]
+export const EVMOS_STABLE_COINS = [
+  USDC_EVMOS.address.toLowerCase(),
+  '0x4A2a90D444DbB7163B5861b772f882BbA394Ca67'.toLowerCase(),
+  '0xe01C6D4987Fc8dCE22988DADa92d56dA701d0Fe0'.toLowerCase(),
+  '0xecEEEfCEE421D8062EF8d6b4D814efe4dc898265'.toLowerCase(),
+  '0x5FD55A1B9FC24967C4dB09C513C3BA0DFa7FF687'.toLowerCase(),
+  '0xd567B3d7B8FE3C79a1AD8dA978812cfC4Fa05e75'.toLowerCase(),
+  '0xe46910336479F254723710D57e7b683F3315b22B'.toLowerCase(),
+  '0xb72A7567847abA28A2819B855D7fE679D4f59846'.toLowerCase(),
+  '0x940dAAbA3F713abFabD79CdD991466fe698CBe54'.toLowerCase(),
+]
 
 export const WETH_EVMOS = new Token(
   SupportedChainId.MAINNET,

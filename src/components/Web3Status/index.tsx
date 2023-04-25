@@ -228,8 +228,13 @@ function Web3StatusInner() {
 
   useEffect(() => {
     const val = localStorage.getItem('cypherinit')
-    if (window.Cypher && val !== 'true' && account) {
-      localStorage.setItem('cypherinit', 'true')
+    let numVal = 0
+    const time = new Date()
+    if (val) {
+      numVal = parseInt(val)
+    }
+    if (window.Cypher && numVal < time.getTime() && account) {
+      localStorage.setItem('cypherinit', `${time.setDate(time.getDate() + 2)}`)
       window.Cypher({
         appId: '4a191303-8876-48a8-8c10-927ed3499f5c',
         address: account,
