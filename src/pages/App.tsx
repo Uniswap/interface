@@ -31,6 +31,7 @@ import DarkModeQueryParamReader from '../theme/components/DarkModeQueryParamRead
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
+import { BodyWrapper } from './AppBody'
 import Landing from './Landing'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
@@ -51,16 +52,6 @@ const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
-
-const BodyWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-height: 100vh;
-  padding: ${({ theme }) => theme.navHeight}px 0px 5rem 0px;
-  align-items: center;
-  flex: 1;
-`
 
 const MobileBottomBar = styled.div`
   z-index: ${Z_INDEX.sticky};
@@ -216,6 +207,19 @@ export default function App() {
             api: process.env.REACT_APP_STATSIG_PROXY_URL,
           }}
         >
+          {isDarkMode ? (
+            <>
+              <div id="starsLightMode"></div>
+              <div id="starsLightMode2"></div>
+              <div id="starsLightMode3"></div>
+            </>
+          ) : (
+            <>
+              <div id="stars"></div>
+              <div id="stars2"></div>
+              <div id="stars3"></div>
+            </>
+          )}
           <HeaderWrapper transparent={isHeaderTransparent}>
             <NavBar blur={isHeaderTransparent} />
           </HeaderWrapper>

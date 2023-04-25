@@ -73,7 +73,7 @@ const GlowContainer = styled.div`
     height: 100vh;
   }
 `
-
+// TODO: landing
 const Glow = styled.div`
   position: absolute;
   top: 68px;

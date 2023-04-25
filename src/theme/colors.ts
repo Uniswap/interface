@@ -42,7 +42,8 @@ export const colors = {
   gray800: '#1A202C',
   gray900: '#171923',
 
-  bgDark: '#000913',
+  bgDark: '#010101',
+  bgLight: '#e6faff',
 
   deep: '#081120',
   input: '#0B172C',
@@ -251,7 +252,7 @@ export const darkTheme = {
   userThemeColor: colors.magentaVibrant,
 
   background: colors.bgDark,
-  backgroundImage: 'radial-gradient(circle at center , #56BED8, #010101)',
+  backgroundImage: `radial-gradient(50% 50% at 50% 50% , #56BED8, ${colors.bgDark})`,
   backgroundBackdrop: colors.gray950,
   backgroundSurface: colors.deep,
   backgroundModule: colors.input,
@@ -304,8 +305,8 @@ export const lightTheme: Theme = {
 
   userThemeColor: colors.magentaVibrant,
 
-  background: colors.gray100,
-  backgroundImage: 'radial-gradient(ellipse at center, #68e1ffbe, #e6faff)',
+  background: colors.bgLight,
+  backgroundImage: 'radial-gradient(50% 50% at 50% 50% , #68e1ffbe, #e6faff)',
   backgroundBackdrop: colors.white,
   backgroundSurface: colors.white,
   backgroundModule: colors.gray50,

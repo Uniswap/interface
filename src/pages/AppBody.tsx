@@ -1,4 +1,4 @@
-import './backgroundStars.css'
+import '../theme/backgroundStars.css'
 
 import React, { PropsWithChildren } from 'react'
 import styled from 'styled-components/macro'
@@ -9,16 +9,19 @@ interface BodyWrapperProps {
 
 export const BodyWrapper = styled.main<BodyWrapperProps>`
   position: relative;
-  margin-top: ${({ $margin }) => $margin ?? '0px'};
-  max-width: ${({ $maxWidth }) => $maxWidth ?? '420px'};
-  width: 100%;
-  background: ${({ theme }) => theme.backgroundSurface};
-  border-radius: 16px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  margin-top: 1rem;
+  margin-top: ${({ $margin }) => $margin || '0px'};
+  max-width: ${({ $maxWidth }) => $maxWidth || '420px'};
+  border-radius: 30px;
   margin-left: auto;
   margin-right: auto;
   font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+  padding: ${({ theme }) => theme.navHeight}px 0px 5rem 0px;
+  align-items: center;
+  flex: 1;
 `
 
 /**
