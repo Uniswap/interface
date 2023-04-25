@@ -61,6 +61,10 @@ exports[`placeholder containers load 1`] = `
   justify-content: flex-start;
 }
 
+.c17 {
+  height: 568px;
+}
+
 .c7 {
   background: #FFFFFF;
   border-radius: 16px;
@@ -128,10 +132,6 @@ exports[`placeholder containers load 1`] = `
   -ms-flex-item-align: start;
   align-self: flex-start;
   padding-left: 0px;
-}
-
-.c17 {
-  height: 568px;
 }
 
 .c12 {
