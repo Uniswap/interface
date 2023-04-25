@@ -41,17 +41,14 @@ export const getAssetHref = (asset: GenieAsset | WalletAsset, origin?: DetailsOr
   return `/nfts/asset/${address}/${asset.tokenId}${origin ? `?origin=${origin}` : ''}`
 }
 
-export const getMarketplaceIcon = (
-  marketplace: string,
-  size: string | number = "16",
-) => {
+export const getMarketplaceIcon = (marketplace: string, size: string | number = '16') => {
   switch (marketplace.toLowerCase()) {
     case Markets.Opensea:
       return <SquareOpenSeaMarketplaceIcon width={size} height={size} />
     case Markets.LooksRare:
       return <SquareLooksRareMarketplaceIcon width={size} height={size} />
     case Markets.X2Y2:
-      return <SquareLooksX2Y2MarketplaceIcon width={size} height={size} gradientId={uuidv4()}/>
+      return <SquareLooksX2Y2MarketplaceIcon width={size} height={size} gradientId={uuidv4()} />
     case Markets.Blur:
       return <SquareLooksBlurMarketplaceIcon width={size} height={size} />
     case Markets.Sudoswap:
