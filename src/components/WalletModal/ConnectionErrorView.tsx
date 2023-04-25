@@ -1,5 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { useCloseAccountDrawer } from 'components/AccountDrawer'
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
+import { ActivationErrorState, useTryActivation } from 'connection/activate'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -20,13 +22,11 @@ const AlertTriangleIcon = styled(AlertTriangle)`
   color: ${({ theme }) => theme.accentCritical};
 `
 
-export default function ConnectionErrorView({
-  retryActivation,
-  close,
-}: {
-  retryActivation: () => void
-  close: () => void
-}) {
+export default function ConnectionErrorView({ state }: { state: ActivationErrorState }) {
+  const tryActivation = useTryActivation()
+  const closeDrawer = useCloseAccountDrawer()
+  const retry = () => tryActivation(state.connection, closeDrawer)
+
   return (
     <Wrapper>
       <AlertTriangleIcon />
@@ -38,7 +38,7 @@ export default function ConnectionErrorView({
           The connection attempt failed. Please click try again and follow the steps to connect in your wallet.
         </Trans>
       </ThemedText.BodyPrimary>
-      <ButtonPrimary $borderRadius="16px" onClick={retryActivation}>
+      <ButtonPrimary $borderRadius="16px" onClick={retry}>
         <Trans>Try Again</Trans>
       </ButtonPrimary>
       <ButtonEmpty width="fit-content" padding="0" marginTop={20}>

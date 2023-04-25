@@ -1,78 +1,47 @@
 import { sendAnalyticsEvent } from '@uniswap/analytics'
 import { InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
-import { sendEvent } from 'components/analytics'
 import { Connection } from 'connection'
-import { atom, useAtom } from 'jotai'
+import { atom } from 'jotai'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback } from 'react'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 
 import { didUserReject } from './utils'
 
-type PendingConnectionState = {
-  connection: Connection | undefined
-  error: any
+export enum ActivationStatus {
+  PENDING,
+  ERROR,
+  EMPTY,
 }
 
-const pendingConnectionStateAtom = atom<PendingConnectionState>({ connection: undefined, error: undefined })
+type ActivationPendingState = { status: ActivationStatus.PENDING; connection: Connection }
+export type ActivationErrorState = { status: ActivationStatus.ERROR; connection: Connection; error: any }
+const EMPTY_ACTIVATION_STATE = { status: ActivationStatus.EMPTY } as const
 
-export function useActivateConnection() {
+type ActivationState = ActivationPendingState | ActivationErrorState | typeof EMPTY_ACTIVATION_STATE
+
+const pendingConnectionStateAtom = atom<ActivationState>(EMPTY_ACTIVATION_STATE)
+
+export function useTryActivation() {
   const dispatch = useAppDispatch()
+  const setActivationState = useUpdateAtom(pendingConnectionStateAtom)
 
-  const [pendingState, setPendingState] = useAtom(pendingConnectionStateAtom)
-
-  const setPendingConnection = useCallback(
-    (connection: Connection | undefined) => {
-      // log selected wallet
-      if (connection !== undefined) {
-        sendEvent({
-          category: 'Wallet',
-          action: 'Change Wallet',
-          label: connection.type,
-        })
-      }
-      // Setting a new connection clears any pending errors
-      setPendingState({ connection, error: undefined })
-    },
-    [setPendingState]
-  )
-
-  const setPendingError = useCallback(
-    (error: any) => {
-      setPendingState(({ connection }) => {
-        if (connection !== undefined) {
-          sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
-            result: WalletConnectionResult.FAILED,
-            wallet_type: connection.getName(),
-          })
-        }
-
-        return { connection, error }
-      })
-    },
-    [setPendingState]
-  )
-
-  const cancelActivation = useCallback(async () => {
-    await pendingState.connection?.connector.deactivate?.()
-    setPendingConnection(undefined)
-  }, [pendingState, setPendingConnection])
-
-  const tryActivation = useCallback(
+  return useCallback(
     async (connection: Connection, onSuccess: () => void) => {
       /* Skips wallet connection if the connection should override the default
         behavior, i.e. install MetaMask or launch Coinbase app */
       if (connection.overrideActivate?.()) return
 
       try {
-        setPendingConnection(connection)
+        setActivationState({ status: ActivationStatus.PENDING, connection })
         await connection.connector.activate()
 
         console.debug(`connection activated: ${connection.getName()}`)
         dispatch(updateSelectedWallet({ wallet: connection.type }))
 
         // Clears pending connection state
-        setPendingConnection(undefined)
+        setActivationState(EMPTY_ACTIVATION_STATE)
 
         onSuccess()
       } catch (error) {
@@ -81,15 +50,37 @@ export function useActivateConnection() {
 
         // Gracefully handles errors from the user rejecting a connection attempt
         if (didUserReject(connection, error)) {
-          setPendingConnection(undefined)
+          setActivationState(EMPTY_ACTIVATION_STATE)
           return
         }
 
-        setPendingError(error)
+        sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECT_TXN_COMPLETED, {
+          result: WalletConnectionResult.FAILED,
+          wallet_type: connection.getName(),
+        })
+        setActivationState({ status: ActivationStatus.ERROR, connection, error })
       }
     },
-    [dispatch, setPendingConnection, setPendingError]
+    [dispatch, setActivationState]
   )
+}
 
-  return { pendingConnection: pendingState.connection, error: pendingState.error, tryActivation, cancelActivation }
+function useCancelActivation() {
+  const setActivationState = useUpdateAtom(pendingConnectionStateAtom)
+  return useCallback(
+    () =>
+      setActivationState((activationState) => {
+        if (activationState.status !== ActivationStatus.EMPTY) activationState.connection.connector.deactivate?.()
+        return EMPTY_ACTIVATION_STATE
+      }),
+    [setActivationState]
+  )
+}
+
+export function useActivationState() {
+  const activationState = useAtomValue(pendingConnectionStateAtom)
+  const tryActivation = useTryActivation()
+  const cancelActivation = useCancelActivation()
+
+  return { activationState, tryActivation, cancelActivation }
 }

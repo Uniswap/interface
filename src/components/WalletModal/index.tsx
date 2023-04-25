@@ -2,16 +2,15 @@ import { sendAnalyticsEvent, user } from '@uniswap/analytics'
 import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { getWalletMeta } from '@uniswap/conedison/provider/meta'
 import { useWeb3React } from '@web3-react/core'
-import { useAccountDrawer } from 'components/AccountDrawer'
 import IconButton from 'components/AccountDrawer/IconButton'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
-import { Connection, ConnectionType, getConnections, networkConnection } from 'connection'
+import { ConnectionType, getConnections, networkConnection } from 'connection'
 import { useGetConnection } from 'connection'
-import { useActivateConnection } from 'connection/activate'
+import { ActivationStatus, useActivationState } from 'connection/activate'
 import { isSupportedChain } from 'constants/chains'
 import { useMgtmEnabled } from 'featureFlags/flags/mgtm'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Settings } from 'react-feather'
 import { useConnectedWallets } from 'state/wallets/hooks'
 import styled from 'styled-components/macro'
@@ -72,7 +71,6 @@ const sendAnalyticsEventAndUserInfo = (
 
 export default function WalletModal({ openSettings }: { openSettings: () => void }) {
   const { connector, account, chainId, provider } = useWeb3React()
-  const [drawerOpen, toggleWalletDrawer] = useAccountDrawer()
 
   const [connectedWallets, addWalletToConnectedWallets] = useConnectedWallets()
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
@@ -80,7 +78,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
   const connections = getConnections()
   const getConnection = useGetConnection()
 
-  const { pendingConnection, error, tryActivation, cancelActivation } = useActivateConnection()
+  const { activationState } = useActivationState()
 
   // Keep the network connector in sync with any active user connector to prevent chain-switching on wallet disconnection.
   useEffect(() => {
@@ -111,13 +109,6 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
     getConnection,
   ])
 
-  // Used to provide proper state of drawer to callbacks triggered asynchronously
-  const drawerOpenRef = useRef(drawerOpen)
-  drawerOpenRef.current = drawerOpen
-
-  const activate = (connection: Connection) =>
-    tryActivation(connection, () => drawerOpenRef.current && toggleWalletDrawer())
-
   const mgtmEnabled = useMgtmEnabled()
 
   return (
@@ -126,22 +117,15 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
         <ThemedText.SubHeader fontWeight={500}>Connect a wallet</ThemedText.SubHeader>
         <IconButton Icon={Settings} onClick={openSettings} data-testid="wallet-settings" />
       </AutoRow>
-      {error ? (
-        pendingConnection !== undefined && (
-          <ConnectionErrorView close={cancelActivation} retryActivation={() => activate(pendingConnection)} />
-        )
+      {activationState.status === ActivationStatus.ERROR ? (
+        <ConnectionErrorView state={activationState} />
       ) : (
         <AutoColumn gap="16px">
           <OptionGrid data-testid="option-grid">
             {connections.map((connection) =>
               // Hides Uniswap Wallet if mgtm is disabled
               connection.shouldDisplay() && !(connection.type === ConnectionType.UNIWALLET && !mgtmEnabled) ? (
-                <Option
-                  key={connection.getName()}
-                  connection={connection}
-                  activate={() => activate(connection)}
-                  pendingConnectionType={pendingConnection?.type}
-                />
+                <Option key={connection.getName()} connection={connection} />
               ) : null
             )}
           </OptionGrid>

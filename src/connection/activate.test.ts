@@ -2,7 +2,7 @@ import { Web3ReactHooks } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 
 import { act, renderHook } from '../test-utils/render'
-import { useActivateConnection } from './activate'
+import { ActivationStatus, useActivationState } from './activate'
 import { Connection, ConnectionType } from './types'
 import { ErrorCode } from './utils'
 
@@ -55,18 +55,21 @@ function createMockConnection(
   }
 }
 
-it('Should initialize with proper empty state', async () => {
-  const result = renderHook(useActivateConnection).result
+beforeEach(() => {
+  console.error = jest.fn()
+})
 
-  expect(result.current.pendingConnection).toBeUndefined()
-  expect(result.current.error).toBeUndefined()
+it('Should initialize with proper empty state', async () => {
+  const result = renderHook(useActivationState).result
+
+  expect(result.current.activationState).toEqual({ status: ActivationStatus.EMPTY })
 })
 
 it('Should call activate function on a connection', async () => {
   const activationResponse = createDeferredPromise()
   const mockConnection = createMockConnection(jest.fn().mockImplementation(() => activationResponse.promise))
 
-  const result = renderHook(useActivateConnection).result
+  const result = renderHook(useActivationState).result
   const onSuccess = jest.fn()
 
   let activationCall: Promise<void> = new Promise(jest.fn())
@@ -74,16 +77,14 @@ it('Should call activate function on a connection', async () => {
     activationCall = result.current.tryActivation(mockConnection, onSuccess)
   })
 
-  expect(result.current.pendingConnection).toBe(mockConnection)
-  expect(result.current.error).toBeUndefined()
+  expect(result.current.activationState).toEqual({ status: ActivationStatus.PENDING, connection: mockConnection })
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
   expect(onSuccess).toHaveBeenCalledTimes(0)
 
   activationResponse.resolve()
   await activationCall
 
-  expect(result.current.pendingConnection).toBeUndefined()
-  expect(result.current.error).toBeUndefined()
+  expect(result.current.activationState).toEqual({ status: ActivationStatus.EMPTY })
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
   expect(onSuccess).toHaveBeenCalledTimes(1)
 })
@@ -94,21 +95,19 @@ it('Should properly deactivate pending connection attempts', async () => {
     jest.fn().mockImplementation(() => Promise.resolve())
   )
 
-  const result = renderHook(useActivateConnection).result
+  const result = renderHook(useActivationState).result
   const onSuccess = jest.fn()
 
   act(() => {
     result.current.tryActivation(mockConnection, onSuccess)
   })
 
-  expect(result.current.pendingConnection).toBe(mockConnection)
-  expect(result.current.error).toBeUndefined()
+  expect(result.current.activationState).toEqual({ status: ActivationStatus.PENDING, connection: mockConnection })
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
 
   await act(() => result.current.cancelActivation())
 
-  expect(result.current.pendingConnection).toBeUndefined()
-  expect(result.current.error).toBeUndefined()
+  expect(result.current.activationState).toEqual({ status: ActivationStatus.EMPTY })
   expect(mockConnection.connector.deactivate).toHaveBeenCalledTimes(1)
   expect(onSuccess).toHaveBeenCalledTimes(0)
 })
@@ -120,23 +119,25 @@ it('Should properly display error state', async () => {
     jest.fn().mockImplementation(() => Promise.resolve())
   )
 
-  const result = renderHook(useActivateConnection).result
+  const result = renderHook(useActivationState).result
   const onSuccess = jest.fn()
 
   act(() => {
     result.current.tryActivation(mockConnection, onSuccess)
   })
 
-  expect(result.current.pendingConnection).toBe(mockConnection)
-  expect(result.current.error).toBeUndefined()
+  expect(result.current.activationState).toEqual({ status: ActivationStatus.PENDING, connection: mockConnection })
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
 
   await act(async () => {
     activationResponse.reject('Failed to connect')
   })
 
-  expect(result.current.pendingConnection).toBe(mockConnection)
-  expect(result.current.error).toEqual('Failed to connect')
+  expect(result.current.activationState).toEqual({
+    status: ActivationStatus.ERROR,
+    connection: mockConnection,
+    error: 'Failed to connect',
+  })
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
   expect(onSuccess).toHaveBeenCalledTimes(0)
 })
@@ -149,68 +150,105 @@ it('Should successfully retry a failed activation', async () => {
       .mockImplementationOnce(() => Promise.resolve())
   )
 
-  const result = renderHook(useActivateConnection).result
+  const result = renderHook(useActivationState).result
   const onSuccess = jest.fn()
 
   await act(() => result.current.tryActivation(mockConnection, onSuccess))
 
-  expect(result.current.pendingConnection).toBe(mockConnection)
-  expect(result.current.error).toEqual('Failed to connect')
+  expect(result.current.activationState).toEqual({
+    status: ActivationStatus.ERROR,
+    connection: mockConnection,
+    error: 'Failed to connect',
+  })
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
   expect(onSuccess).toHaveBeenCalledTimes(0)
 
   await act(() => result.current.tryActivation(mockConnection, onSuccess))
 
-  expect(result.current.pendingConnection).toBeUndefined()
-  expect(result.current.error).toBeUndefined()
+  expect(result.current.activationState).toEqual({ status: ActivationStatus.EMPTY })
   expect(mockConnection.connector.activate).toHaveBeenCalledTimes(2)
   expect(onSuccess).toHaveBeenCalledTimes(1)
 })
 
-it('Should gracefully handle user connection rejection', async () => {
-  const injectedConection = createMockConnection(
-    jest
-      .fn()
-      .mockImplementationOnce(() => Promise.reject({ code: ErrorCode.USER_REJECTED_REQUEST }))
-      .mockImplementationOnce(() => Promise.resolve),
-    jest.fn(),
-    ConnectionType.INJECTED
-  )
+describe('Should gracefully handle intentional user-rejection errors', () => {
+  it('handles Injected user-rejection error', async () => {
+    const result = renderHook(useActivationState).result
 
-  const coinbaseConnection = createMockConnection(
-    jest
-      .fn()
-      .mockImplementationOnce(() => Promise.reject(ErrorCode.CB_REJECTED_REQUEST))
-      .mockImplementationOnce(() => Promise.resolve),
-    jest.fn(),
-    ConnectionType.COINBASE_WALLET
-  )
+    const injectedConection = createMockConnection(
+      jest
+        .fn()
+        .mockImplementationOnce(() => Promise.reject({ code: ErrorCode.USER_REJECTED_REQUEST }))
+        .mockImplementationOnce(() => Promise.resolve),
+      jest.fn(),
+      ConnectionType.INJECTED
+    )
 
-  const wcConnection = createMockConnection(
-    jest
-      .fn()
-      .mockImplementationOnce(() => Promise.reject(ErrorCode.WC_MODAL_CLOSED))
-      .mockImplementationOnce(() => Promise.resolve),
-    jest.fn(),
-    ConnectionType.COINBASE_WALLET
-  )
-
-  ;[injectedConection, coinbaseConnection, wcConnection].forEach(async (mockConnection) => {
-    const result = renderHook(useActivateConnection).result
     const onSuccess = jest.fn()
 
-    await act(() => result.current.tryActivation(mockConnection, onSuccess))
+    await act(() => result.current.tryActivation(injectedConection, onSuccess))
 
-    expect(result.current.pendingConnection).toBeUndefined()
-    expect(result.current.error).toBeUndefined()
-    expect(mockConnection.connector.activate).toHaveBeenCalledTimes(1)
+    expect(result.current.activationState).toEqual({ status: ActivationStatus.EMPTY })
+    expect(injectedConection.connector.activate).toHaveBeenCalledTimes(1)
     expect(onSuccess).toHaveBeenCalledTimes(0)
 
-    await act(() => result.current.tryActivation(mockConnection, onSuccess))
+    await act(() => result.current.tryActivation(injectedConection, onSuccess))
 
-    expect(result.current.pendingConnection).toBeUndefined()
-    expect(result.current.error).toBeUndefined()
-    expect(mockConnection.connector.activate).toHaveBeenCalledTimes(2)
+    expect(result.current.activationState).toEqual({ status: ActivationStatus.EMPTY })
+    expect(injectedConection.connector.activate).toHaveBeenCalledTimes(2)
+    expect(onSuccess).toHaveBeenCalledTimes(1)
+  })
+
+  it('handles Coinbase user-rejection error', async () => {
+    const result = renderHook(useActivationState).result
+
+    const coinbaseConnection = createMockConnection(
+      jest
+        .fn()
+        .mockImplementationOnce(() => Promise.reject(ErrorCode.CB_REJECTED_REQUEST))
+        .mockImplementationOnce(() => Promise.resolve),
+      jest.fn(),
+      ConnectionType.COINBASE_WALLET
+    )
+
+    const onSuccess = jest.fn()
+
+    await act(() => result.current.tryActivation(coinbaseConnection, onSuccess))
+
+    expect(result.current.activationState).toEqual({ status: ActivationStatus.EMPTY })
+    expect(coinbaseConnection.connector.activate).toHaveBeenCalledTimes(1)
+    expect(onSuccess).toHaveBeenCalledTimes(0)
+
+    await act(() => result.current.tryActivation(coinbaseConnection, onSuccess))
+
+    expect(result.current.activationState).toEqual({ status: ActivationStatus.EMPTY })
+    expect(coinbaseConnection.connector.activate).toHaveBeenCalledTimes(2)
+    expect(onSuccess).toHaveBeenCalledTimes(1)
+  })
+
+  it('handles WalletConect Modal close error', async () => {
+    const result = renderHook(useActivationState).result
+
+    const wcConnection = createMockConnection(
+      jest
+        .fn()
+        .mockImplementationOnce(() => Promise.reject(ErrorCode.WC_MODAL_CLOSED))
+        .mockImplementationOnce(() => Promise.resolve),
+      jest.fn(),
+      ConnectionType.WALLET_CONNECT
+    )
+
+    const onSuccess = jest.fn()
+
+    await act(() => result.current.tryActivation(wcConnection, onSuccess))
+
+    expect(result.current.activationState).toEqual({ status: ActivationStatus.EMPTY })
+    expect(wcConnection.connector.activate).toHaveBeenCalledTimes(1)
+    expect(onSuccess).toHaveBeenCalledTimes(0)
+
+    await act(() => result.current.tryActivation(wcConnection, onSuccess))
+
+    expect(result.current.activationState).toEqual({ status: ActivationStatus.EMPTY })
+    expect(wcConnection.connector.activate).toHaveBeenCalledTimes(2)
     expect(onSuccess).toHaveBeenCalledTimes(1)
   })
 })

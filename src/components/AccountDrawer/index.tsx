@@ -2,8 +2,7 @@ import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceEventName } from '@uniswap/analytics-events'
 import { ScrollBarStyles } from 'components/Common'
 import { useWindowSize } from 'hooks/useWindowSize'
-import { atom } from 'jotai'
-import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { atomWithReset, useAtomValue, useResetAtom, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useEffect, useRef } from 'react'
 import { ChevronsRight } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -18,13 +17,17 @@ const DRAWER_MARGIN = '8px'
 const DRAWER_OFFSET = '10px'
 const DRAWER_TOP_MARGIN_MOBILE_WEB = '72px'
 
-const accountDrawerOpenAtom = atom(false)
+const accountDrawerOpenAtom = atomWithReset(false)
 
 export function useToggleAccountDrawer() {
   const updateAccountDrawerOpen = useUpdateAtom(accountDrawerOpenAtom)
   return useCallback(() => {
     updateAccountDrawerOpen((open) => !open)
   }, [updateAccountDrawerOpen])
+}
+
+export function useCloseAccountDrawer() {
+  return useResetAtom(accountDrawerOpenAtom)
 }
 
 export function useAccountDrawer(): [boolean, () => void] {

@@ -6,7 +6,7 @@ import Column, { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
 import { ConnectionType, uniwalletConnectConnection } from 'connection'
-import { useActivateConnection } from 'connection/activate'
+import { ActivationStatus, useActivationState } from 'connection/activate'
 import { UniwalletConnect } from 'connection/WalletConnect'
 import { QRCodeSVG } from 'qrcode.react'
 import { useEffect, useState } from 'react'
@@ -37,12 +37,12 @@ const Divider = styled.div`
 `
 
 export default function UniwalletModal() {
-  const { pendingConnection, error, cancelActivation } = useActivateConnection()
+  const { activationState, cancelActivation } = useActivationState()
   const [uri, setUri] = useState<string>()
 
-  const isUniwapWallet = pendingConnection?.type === ConnectionType.UNIWALLET
-  // Displays the modal if a Uniswap Wallet Connection is pending without error, & qrcode URI is available
-  const open = isUniwapWallet && error === undefined && uri !== undefined
+  // Displays the modal if a Uniswap Wallet Connection is pending & qrcode URI is available
+  const open =
+    activationState.status === ActivationStatus.PENDING && activationState?.connection.type === ConnectionType.UNIWALLET
 
   useEffect(() => {
     ;(uniwalletConnectConnection.connector as WalletConnect).events.addListener(

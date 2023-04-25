@@ -1,7 +1,9 @@
 import { TraceEvent } from '@uniswap/analytics'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { useCloseAccountDrawer } from 'components/AccountDrawer'
 import Loader from 'components/Icons/LoadingSpinner'
-import { Connection, ConnectionType } from 'connection'
+import { Connection } from 'connection'
+import { ActivationStatus, useActivationState } from 'connection/activate'
 import styled from 'styled-components/macro'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
@@ -62,15 +64,16 @@ const IconWrapper = styled.div`
   `};
 `
 
-type OptionProps = {
-  connection: Connection
-  activate: () => void
-  pendingConnectionType?: ConnectionType
-}
-export default function Option({ connection, pendingConnectionType, activate }: OptionProps) {
-  const isPending = pendingConnectionType === connection.type
+export default function Option({ connection }: { connection: Connection }) {
+  const { activationState, tryActivation } = useActivationState()
+  const closeDrawer = useCloseAccountDrawer()
+  const activate = () => tryActivation(connection, closeDrawer)
+
+  const isSomeConnectorPending = activationState.status === ActivationStatus.PENDING
+  const isCurrentOptionPending = isSomeConnectorPending && activationState.connection.type === connection.type
   const isDarkMode = useIsDarkMode()
-  const content = (
+
+  return (
     <TraceEvent
       events={[BrowserEvent.onClick]}
       name={InterfaceEventName.WALLET_SELECTED}
@@ -78,9 +81,9 @@ export default function Option({ connection, pendingConnectionType, activate }: 
       element={InterfaceElementName.WALLET_TYPE_OPTION}
     >
       <OptionCardClickable
-        onClick={!pendingConnectionType ? activate : undefined}
-        clickable={!pendingConnectionType}
-        disabled={Boolean(!isPending && !!pendingConnectionType)}
+        onClick={!isSomeConnectorPending ? activate : undefined}
+        clickable={!isSomeConnectorPending}
+        disabled={Boolean(!isCurrentOptionPending && !!isSomeConnectorPending)}
         data-testid="wallet-modal-option"
       >
         <OptionCardLeft>
@@ -90,10 +93,8 @@ export default function Option({ connection, pendingConnectionType, activate }: 
           <HeaderText>{connection.getName()}</HeaderText>
           {connection.isNew && <NewBadge />}
         </OptionCardLeft>
-        {isPending && <Loader />}
+        {isCurrentOptionPending && <Loader />}
       </OptionCardClickable>
     </TraceEvent>
   )
-
-  return content
 }
