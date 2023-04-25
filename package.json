@@ -21,7 +21,7 @@
     "start": "craco start",
     "build": "craco build",
     "build:e2e": "REACT_APP_CSP_ALLOW_UNSAFE_EVAL=true REACT_APP_ADD_COVERAGE_INSTRUMENTATION=true craco build",
-    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "analyze": "source-map-explorer 'build/static/js/*.js' --only-mapped",
     "serve": "serve build -l 3000",
     "lint": "yarn eslint --ignore-path .gitignore --cache --cache-location node_modules/.cache/eslint/ .",
     "typecheck": "tsc",
