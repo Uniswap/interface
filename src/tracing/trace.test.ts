@@ -25,13 +25,11 @@ function getTransaction(index = 0): Transaction {
 
 describe('trace', () => {
   beforeEach(() => {
-    mocked(Sentry.startTransaction)
-      .mockReset()
-      .mockImplementation((context) => {
-        const transaction: Transaction = jest.requireActual('@sentry/react').startTransaction(context)
-        transaction.initSpanRecorder()
-        return transaction
-      })
+    mocked(Sentry.startTransaction).mockImplementation((context) => {
+      const transaction: Transaction = jest.requireActual('@sentry/react').startTransaction(context)
+      transaction.initSpanRecorder()
+      return transaction
+    })
   })
 
   it('propagates callback', async () => {

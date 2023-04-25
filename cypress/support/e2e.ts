@@ -6,11 +6,12 @@
 // ***********************************************************
 
 // Import commands.ts using ES2015 syntax:
-import { injected } from './ethereum'
-import assert = require('assert')
 import '@cypress/code-coverage/support'
 
+import assert from 'assert'
+
 import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
+import { injected } from './ethereum'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace

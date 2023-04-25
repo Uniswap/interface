@@ -1,7 +1,6 @@
 import { SupportedChainId as SdkSupportedChainId } from '@uniswap/sdk-core'
-import { SupportedChainId } from 'constants/chains'
 
-import { ALL_SUPPORTED_CHAIN_IDS } from './chains'
+import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from './chains'
 
 describe('ChainIds', () => {
   describe('SupportedChainId', () => {
