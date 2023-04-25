@@ -100,7 +100,7 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
       return null
     }
 
-    // This error is expected based on our constent security policy preventing cross-origin frames.
+    // This error is caused by our content security policy preventing cross-origin frames, so it can be ignored.
     if (
       error.message.match(
         /Blocked a frame with origin "https:\/\/app.uniswap.org" from accessing a cross-origin frame./
