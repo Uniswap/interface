@@ -157,18 +157,25 @@ export default function SwapPage({ className }: { className?: string }) {
   )
 }
 
+/**
+ * The swap component displays the swap interface, manages state for the swap, and triggers onchain swaps.
+ *
+ * In most cases, chainId should refer to the connected chain, i.e. `useWeb3React().chainId`.
+ * However if this component is being used in a context that displays information from a different, unconnected
+ * chain (e.g. the TDP), then chainId should refer to the unconnected chain.
+ */
 export function Swap({
   className,
   prefilledState,
-  pageChainId,
+  chainId,
   onCurrencyChange,
 }: {
   className?: string
   prefilledState?: Partial<SwapState>
-  pageChainId?: SupportedChainId
+  chainId?: SupportedChainId
   onCurrencyChange?: (selected: Pick<SwapState, Field.INPUT | Field.OUTPUT>) => void
 }) {
-  const { account, chainId, connector } = useWeb3React()
+  const { account, chainId: connectedChainId, connector } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
   const [fetchingSwapQuoteStartTime, setFetchingSwapQuoteStartTime] = useState<Date | undefined>()
@@ -198,14 +205,14 @@ export function Swap({
         })
         .filter((token: Token) => {
           // Any token addresses that are loaded from the shorthands map do not need to show the import URL
-          const supported = supportedChainId(pageChainId)
+          const supported = supportedChainId(chainId)
           if (!supported) return true
           return !Object.keys(TOKEN_SHORTHANDS).some((shorthand) => {
             const shorthandTokenAddress = TOKEN_SHORTHANDS[shorthand][supported]
             return shorthandTokenAddress && shorthandTokenAddress === token.address
           })
         }),
-    [pageChainId, defaultTokens, urlLoadedTokens]
+    [chainId, defaultTokens, urlLoadedTokens]
   )
 
   const theme = useTheme()
@@ -226,7 +233,7 @@ export function Swap({
     parsedAmount,
     currencies,
     inputError: swapInputError,
-  } = useDerivedSwapInfo(state, pageChainId)
+  } = useDerivedSwapInfo(state, chainId)
 
   const {
     wrapType,
@@ -331,7 +338,7 @@ export function Swap({
       (parsedAmounts[Field.INPUT]?.currency.isToken
         ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
         : undefined),
-    isSupportedChain(pageChainId) ? UNIVERSAL_ROUTER_ADDRESS(pageChainId) : undefined
+    isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
   )
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
   const [isAllowancePending, setIsAllowancePending] = useState(false)
@@ -341,7 +348,7 @@ export function Swap({
     try {
       await allowance.approveAndPermit()
       sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
-        chain_id: pageChainId,
+        chain_id: chainId,
         token_symbol: maximumAmountIn?.currency.symbol,
         token_address: maximumAmountIn?.currency.address,
       })
@@ -350,7 +357,7 @@ export function Swap({
     } finally {
       setIsAllowancePending(false)
     }
-  }, [allowance, pageChainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol])
+  }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol])
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
     () => maxAmountSpend(currencyBalances[Field.INPUT]),
@@ -515,7 +522,7 @@ export function Swap({
   )
 
   return (
-    <SwapWrapper chainId={pageChainId} className={className} id="swap-page">
+    <SwapWrapper chainId={chainId} className={className} id="swap-page">
       <TokenSafetyModal
         isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
         tokenAddress={importTokensNotInDefault[0]?.address}
@@ -563,7 +570,7 @@ export function Swap({
             />
           </Trace>
         </SwapSection>
-        <ArrowWrapper clickable={isSupportedChain(pageChainId)}>
+        <ArrowWrapper clickable={isSupportedChain(chainId)}>
           <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SwapEventName.SWAP_TOKENS_REVERSED}
@@ -648,13 +655,13 @@ export function Swap({
                 <Trans>Connect Wallet</Trans>
               </ButtonLight>
             </TraceEvent>
-          ) : pageChainId && pageChainId !== chainId ? (
+          ) : chainId && chainId !== connectedChainId ? (
             <ButtonPrimary
               onClick={() => {
-                switchChain(connector, pageChainId)
+                switchChain(connector, chainId)
               }}
             >
-              Connect to {getChainInfo(pageChainId)?.label}
+              Connect to {getChainInfo(chainId)?.label}
             </ButtonPrimary>
           ) : showWrap ? (
             <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap} fontWeight={600}>
