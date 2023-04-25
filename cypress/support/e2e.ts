@@ -34,9 +34,10 @@ declare global {
       ethereum?: 'goerli' | 'hardhat'
       /**
        * Initial user state.
+       * This matches a subset of the {@type import('../../src/state/user/reducer').UserState}.
        * @default {@type import('../utils/user-state').CONNECTED_WALLET_USER_STATE}
        */
-      userState?: object
+      userState?: { selectedWallet?: 'INJECTED' }
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     interface Chainable<Subject> {
@@ -52,6 +53,7 @@ Cypress.Commands.overwrite(
   (original, url: string | Partial<Cypress.VisitOptions>, options?: Partial<Cypress.VisitOptions>) => {
     assert(typeof url === 'string')
 
+    // Add a hash in the URL if it is not present (to use hash-based routing correctly with queryParams).
     let hashUrl = url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url
     if (options?.ethereum === 'goerli') hashUrl += `${url.includes('?') ? '&' : '?'}chain=goerli`
 
@@ -70,7 +72,7 @@ Cypress.Commands.overwrite(
 
             // Set initial user state.
             win.localStorage.setItem(
-              'redux_localstorage_simple_user',
+              'redux_localstorage_simple_user', // storage key for the user reducer using 'redux-localstorage-simple'
               JSON.stringify(options?.userState ?? CONNECTED_WALLET_USER_STATE)
             )
 
