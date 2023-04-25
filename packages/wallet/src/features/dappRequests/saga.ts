@@ -15,6 +15,7 @@ import {
   AccountResponse,
   ChangeChainResponse,
   ConnectResponse,
+  DappRequestType,
   DappResponseType,
   SendTransactionResponse,
   SignMessageResponse,
@@ -65,8 +66,13 @@ export function* handleRequest(requestParams: DappRequestSagaParams) {
     account: activeAccount,
   }
 
-  yield* put(dappRequestActions.add(requestForStore))
-  yield* call(openRequestsWindowIfNeeded)
+  // If the request is a connect, we don't need to prompt the user since it just getting the provider url
+  if (requestForStore.dappRequest.type === DappRequestType.Connect) {
+    yield* put(confirmRequest(requestForStore))
+  } else {
+    yield* put(dappRequestActions.add(requestForStore))
+    yield* call(openRequestsWindowIfNeeded)
+  }
 }
 
 export function* sendTransaction(
