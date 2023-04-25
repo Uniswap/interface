@@ -1,3 +1,5 @@
+import { TableContentContainer } from './shared'
+
 export const ListingsTableContent = () => {
-  return <div>Listings Content</div>
+  return <TableContentContainer>Listings Content</TableContentContainer>
 }

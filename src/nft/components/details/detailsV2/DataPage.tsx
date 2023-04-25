@@ -1,5 +1,6 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
+import { GenieAsset } from 'nft/types'
 import styled from 'styled-components/macro'
 import { BREAKPOINTS } from 'theme'
 
@@ -37,15 +38,16 @@ const ContentContainer = styled(Row)`
 const LeftColumn = styled(Column)`
   gap: 24px;
   width: 100%;
+  align-self: flex-start;
 `
 
-export const DataPage = () => {
+export const DataPage = ({ asset }: { asset: GenieAsset }) => {
   return (
     <DataPageContainer>
       <DataPageHeader />
       <ContentContainer>
         <LeftColumn>
-          <DataPageTraits />
+          <DataPageTraits asset={asset} />
           <DataPageDescription />
         </LeftColumn>
         <DataPageTable />

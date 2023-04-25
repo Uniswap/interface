@@ -26,6 +26,7 @@ const TableTabs: Map<string, Tab> = new Map([
       title: <Trans>Offers</Trans>,
       key: TableTabsKeys.Offers,
       content: <OffersTableContent />,
+      count: 11, // TODO Replace Placeholder with real data
     },
   ],
   [
@@ -34,10 +35,11 @@ const TableTabs: Map<string, Tab> = new Map([
       title: <Trans>Listings</Trans>,
       key: TableTabsKeys.Listings,
       content: <ListingsTableContent />,
+      count: 11, // TODO Replace Placeholder with real data
     },
   ],
 ])
 
 export const DataPageTable = () => {
-  return <TabbedComponent tabs={TableTabs} style={{ height: '604px' }} />
+  return <TabbedComponent tabs={TableTabs} />
 }

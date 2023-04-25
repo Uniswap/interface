@@ -6,8 +6,6 @@ import { ThemedText } from 'theme'
 import { containerStyles } from './shared'
 
 const TabbedComponentContainer = styled.div`
-  height: 288px;
-
   ${containerStyles}
 `
 
@@ -23,29 +21,37 @@ const Tab = styled(ThemedText.SubHeader)<{ isActive: boolean; numTabs: number }>
   cursor: ${({ numTabs }) => (numTabs > 1 ? 'pointer' : 'default')};
 
   &:hover {
-    opacity: ${({ numTabs, theme }) => numTabs > 1 && theme.opacity.hover}};
+    opacity: ${({ numTabs, theme }) => numTabs > 1 && theme.opacity.hover};
   }
+`
+
+const TabNumBubble = styled(ThemedText.UtilityBadge)`
+  background: ${({ theme }) => theme.backgroundOutline};
+  border-radius: 4px;
+  padding: 2px 4px;
+  color: ${({ theme }) => theme.textSecondary};
+  line-height: 12px;
 `
 
 export interface Tab {
   title: React.ReactNode
   key: string
   content: JSX.Element
+  count?: number
 }
 
 interface TabbedComponentProps {
   tabs: Map<string, Tab>
   defaultTabKey?: string
-  style?: React.CSSProperties
 }
 
-export const TabbedComponent = ({ tabs, defaultTabKey, style }: TabbedComponentProps) => {
+export const TabbedComponent = ({ tabs, defaultTabKey }: TabbedComponentProps) => {
   const firstKey = tabs.keys().next().value
   const [activeKey, setActiveKey] = useState(defaultTabKey ?? firstKey)
   const activeContent = tabs.get(activeKey)?.content
   const tabArray = Array.from(tabs.values())
   return (
-    <TabbedComponentContainer style={style}>
+    <TabbedComponentContainer>
       <TabsRow>
         {tabArray.map((tab) => (
           <Tab
@@ -54,7 +60,10 @@ export const TabbedComponent = ({ tabs, defaultTabKey, style }: TabbedComponentP
             onClick={() => setActiveKey(tab.key)}
             key={tab.key}
           >
-            {tab.title}
+            <Row gap="8px">
+              {tab.title}
+              {!!tab.count && <TabNumBubble>{tab.count > 10 ? '10+' : tab.count}</TabNumBubble>}
+            </Row>
           </Tab>
         ))}
       </TabsRow>
