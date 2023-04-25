@@ -1,13 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { OpacityHoverState, ScrollBarStyles } from 'components/Common'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { useNftGraphqlEnabled } from 'featureFlags/flags/nftlGraphql'
 import { EventCell, MarketplaceIcon } from 'nft/components/collection/ActivityCells'
 import { ActivityEvent } from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
-import { formatEth, formatEthPrice } from 'nft/utils/currency'
+import { formatEth } from 'nft/utils/currency'
 import { getTimeDifference } from 'nft/utils/date'
-import { putCommas } from 'nft/utils/putCommas'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 
@@ -149,17 +147,12 @@ export const LoadingAssetActivity = ({ rowCount }: { rowCount: number }) => {
 }
 
 const AssetActivity = ({ events }: { events: ActivityEvent[] | undefined }) => {
-  const isNftGraphqlEnabled = useNftGraphqlEnabled()
   return (
     <ActivityTable>
       {events &&
         events.map((event, index) => {
           const { eventTimestamp, eventType, fromAddress, marketplace, price, toAddress, transactionHash } = event
-          const formattedPrice = price
-            ? isNftGraphqlEnabled
-              ? formatEth(parseFloat(price ?? ''))
-              : putCommas(formatEthPrice(price)).toString()
-            : null
+          const formattedPrice = price ? formatEth(parseFloat(price ?? '')) : null
           if (!eventType) return null
           return (
             <TR key={index}>
@@ -195,7 +188,7 @@ const AssetActivity = ({ events }: { events: ActivityEvent[] | undefined }) => {
                   </Link>
                 )}
               </TD>
-              <TD>{eventTimestamp && getTimeDifference(eventTimestamp.toString(), isNftGraphqlEnabled)}</TD>
+              <TD>{eventTimestamp && getTimeDifference(eventTimestamp.toString())}</TD>
             </TR>
           )
         })}

@@ -1,9 +1,17 @@
 {
   "compilerOptions": {
+    "esModuleInterop": true,
+    "incremental": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "noEmit": true,
     "strict": true,
-    "target": "es5",
-    "lib": ["es5", "dom"],
-    "types": ["cypress"]
+    "target": "ES5",
+    "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/cypress", // avoid clobbering the build tsbuildinfo
+    "types": ["cypress", "node"]
   },
-  "include": ["**/*.ts"]
+  "exclude": ["node_modules"],
+  "include": ["**/*.ts"],
+  "watchOptions": {
+    "excludeDirectories": ["node_modules"]
+  }
 }

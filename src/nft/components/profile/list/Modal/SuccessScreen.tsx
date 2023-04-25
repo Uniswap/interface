@@ -101,11 +101,11 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
         ))}
       </SuccessImageWrapper>
       <Row justify="space-between" align="flex-start" marginBottom="16px">
-        <ThemedText.SubHeader lineHeight="24px">
+        <ThemedText.SubHeader>
           <Trans>Proceeds if sold</Trans>
         </ThemedText.SubHeader>
         <ProceedsColumn>
-          <ThemedText.SubHeader lineHeight="24px">{formatEth(totalEthListingValue)} ETH</ThemedText.SubHeader>
+          <ThemedText.SubHeader>{formatEth(totalEthListingValue)} ETH</ThemedText.SubHeader>
           {usdcValue && (
             <ThemedText.BodySmall lineHeight="20px" color="textSecondary">
               {formatCurrencyAmount(usdcValue, NumberType.FiatTokenPrice)}

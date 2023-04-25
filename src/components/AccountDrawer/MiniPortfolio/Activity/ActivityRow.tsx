@@ -48,7 +48,7 @@ export function ActivityRow({
             <PortfolioLogo chainId={chainId} currencies={currencies} images={logos} accountAddress={otherAccount} />
           </Column>
         }
-        title={<ThemedText.SubHeader fontWeight={500}>{title}</ThemedText.SubHeader>}
+        title={<ThemedText.SubHeader>{title}</ThemedText.SubHeader>}
         descriptor={
           <ActivityRowDescriptor color="textSecondary">
             {descriptor}
