@@ -42,7 +42,9 @@ export default function UniwalletModal() {
 
   // Displays the modal if a Uniswap Wallet Connection is pending & qrcode URI is available
   const open =
-    activationState.status === ActivationStatus.PENDING && activationState?.connection.type === ConnectionType.UNIWALLET
+    activationState.status === ActivationStatus.PENDING &&
+    activationState.connection.type === ConnectionType.UNIWALLET &&
+    !!uri
 
   useEffect(() => {
     ;(uniwalletConnectConnection.connector as WalletConnect).events.addListener(
