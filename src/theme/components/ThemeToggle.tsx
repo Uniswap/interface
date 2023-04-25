@@ -43,7 +43,7 @@ export function SystemThemeUpdater() {
     } catch (e) {
       DARKMODE_MEDIA_QUERY.addListener(listener)
     }
-  }, [setSystemTheme])
+  }, [setSystemTheme, listener])
 
   return null
 }
