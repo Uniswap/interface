@@ -1,14 +1,9 @@
 import { Trans } from '@lingui/macro'
-import styled from 'styled-components/macro'
 
 import { ActivityTableContent } from './ActivityTableContent'
 import { ListingsTableContent } from './ListingsTableContent'
 import { OffersTableContent } from './OffersTableContent'
 import { Tab, TabbedComponent } from './TabbedComponent'
-
-export const TableContentContainer = styled.div`
-  height: 568px;
-`
 
 enum TableTabsKeys {
   Activity = 'activity',

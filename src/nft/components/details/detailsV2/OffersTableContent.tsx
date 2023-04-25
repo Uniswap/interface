@@ -1,4 +1,4 @@
-import { TableContentContainer } from './DataPageTable'
+import { TableContentContainer } from './shared'
 
 export const OffersTableContent = () => {
   return <TableContentContainer>Offers Content</TableContentContainer>
