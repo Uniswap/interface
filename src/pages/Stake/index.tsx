@@ -85,6 +85,7 @@ export default function Stake() {
 
   // TODO: return loading
   const allPools = useRegisteredPools()
+  // TODO: order all pools by apr
   const loadingPools = false
 
   //const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)

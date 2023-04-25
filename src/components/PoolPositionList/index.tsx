@@ -50,6 +50,10 @@ const MobileHeader = styled.div`
   }
 `
 
+function highestAprFirst(a: any, b: any) {
+  return b.apr - a.apr
+}
+
 type PoolPositionListProps = React.PropsWithChildren<{
   positions: PoolPositionDetails[]
   filterByOperator?: any
@@ -106,10 +110,10 @@ export default function PoolPositionList({ positions, filterByOperator, filterBy
         <div>{!filterByOperator && <Trans>apr</Trans>}</div>
       </MobileHeader>
       {operatedPools.length !== 0 ? (
-        operatedPools.map((p: any) => {
+        operatedPools.sort(highestAprFirst).map((p: any) => {
           return (
             <PoolPositionListItem
-              key={p?.name.toString()}
+              key={p?.address.toString()}
               positionDetails={p}
               returnPage={filterByOperator ? 'mint' : 'stake'}
             />
