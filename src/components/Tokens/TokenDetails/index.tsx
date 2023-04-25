@@ -235,7 +235,7 @@ export default function TokenDetails({
         <RightPanel onClick={() => isBlockedToken && setOpenTokenSafetyModal(true)}>
           <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto' }}>
             <Swap
-              defaultChainId={pageChainId}
+              chainId={pageChainId}
               prefilledState={{
                 [Field.INPUT]: { currencyId: inputToken?.wrapped?.address },
                 [Field.OUTPUT]: { currencyId: address === NATIVE_CHAIN_ID ? 'ETH' : address },
