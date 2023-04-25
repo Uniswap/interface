@@ -12,16 +12,16 @@ import { didUserReject } from './utils'
 export enum ActivationStatus {
   PENDING,
   ERROR,
-  EMPTY,
+  IDLE,
 }
 
 type ActivationPendingState = { status: ActivationStatus.PENDING; connection: Connection }
 type ActivationErrorState = { status: ActivationStatus.ERROR; connection: Connection; error: any }
-const EMPTY_ACTIVATION_STATE = { status: ActivationStatus.EMPTY } as const
+const IDLE_ACTIVATION_STATE = { status: ActivationStatus.IDLE } as const
 
-type ActivationState = ActivationPendingState | ActivationErrorState | typeof EMPTY_ACTIVATION_STATE
+type ActivationState = ActivationPendingState | ActivationErrorState | typeof IDLE_ACTIVATION_STATE
 
-const pendingConnectionStateAtom = atom<ActivationState>(EMPTY_ACTIVATION_STATE)
+const pendingConnectionStateAtom = atom<ActivationState>(IDLE_ACTIVATION_STATE)
 
 function useTryActivation() {
   const dispatch = useAppDispatch()
@@ -29,19 +29,21 @@ function useTryActivation() {
 
   return useCallback(
     async (connection: Connection, onSuccess: () => void) => {
-      /* Skips wallet connection if the connection should override the default
-        behavior, i.e. install MetaMask or launch Coinbase app */
+      /*
+       * Skips wallet connection if the connection should override the default
+       * behavior, i.e. install MetaMask or launch Coinbase app
+       */
       if (connection.overrideActivate?.()) return
 
       try {
         setActivationState({ status: ActivationStatus.PENDING, connection })
         await connection.connector.activate()
 
-        console.debug(`connection activated: ${connection.getName()}`)
+        console.debug(`Connection activated: ${connection.getName()}`)
         dispatch(updateSelectedWallet({ wallet: connection.type }))
 
         // Clears pending connection state
-        setActivationState(EMPTY_ACTIVATION_STATE)
+        setActivationState(IDLE_ACTIVATION_STATE)
 
         onSuccess()
       } catch (error) {
@@ -50,7 +52,7 @@ function useTryActivation() {
 
         // Gracefully handles errors from the user rejecting a connection attempt
         if (didUserReject(connection, error)) {
-          setActivationState(EMPTY_ACTIVATION_STATE)
+          setActivationState(IDLE_ACTIVATION_STATE)
           return
         }
 
@@ -70,8 +72,8 @@ function useCancelActivation() {
   return useCallback(
     () =>
       setActivationState((activationState) => {
-        if (activationState.status !== ActivationStatus.EMPTY) activationState.connection.connector.deactivate?.()
-        return EMPTY_ACTIVATION_STATE
+        if (activationState.status !== ActivationStatus.IDLE) activationState.connection.connector.deactivate?.()
+        return IDLE_ACTIVATION_STATE
       }),
     [setActivationState]
   )
