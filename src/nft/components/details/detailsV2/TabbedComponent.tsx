@@ -33,19 +33,11 @@ const TabNumBubble = styled(ThemedText.UtilityBadge)`
   line-height: 12px;
 `
 
-export const TabTitleWithBubble = ({ title, bubbleNumber }: { title: React.ReactNode; bubbleNumber?: number }) => {
-  return (
-    <Row gap="8px">
-      {title}
-      {bubbleNumber && <TabNumBubble>{bubbleNumber > 10 ? '10+' : bubbleNumber}</TabNumBubble>}
-    </Row>
-  )
-}
-
 export interface Tab {
   title: React.ReactNode
   key: string
   content: JSX.Element
+  count?: number
 }
 
 interface TabbedComponentProps {
@@ -68,7 +60,10 @@ export const TabbedComponent = ({ tabs, defaultTabKey }: TabbedComponentProps) =
             onClick={() => setActiveKey(tab.key)}
             key={tab.key}
           >
-            {tab.title}
+            <Row gap="8px">
+              {tab.title}
+              {!!tab.count && <TabNumBubble>{tab.count > 10 ? '10+' : tab.count}</TabNumBubble>}
+            </Row>
           </Tab>
         ))}
       </TabsRow>

@@ -4,7 +4,7 @@ import styled from 'styled-components/macro'
 import { ActivityTableContent } from './ActivityTableContent'
 import { ListingsTableContent } from './ListingsTableContent'
 import { OffersTableContent } from './OffersTableContent'
-import { Tab, TabbedComponent, TabTitleWithBubble } from './TabbedComponent'
+import { Tab, TabbedComponent } from './TabbedComponent'
 
 export const TableContentContainer = styled.div`
   height: 568px;
@@ -28,17 +28,19 @@ const TableTabs: Map<string, Tab> = new Map([
   [
     TableTabsKeys.Offers,
     {
-      title: <TabTitleWithBubble title={<Trans>Offers</Trans>} bubbleNumber={/* placeholder */ 11} />,
+      title: <Trans>Offers</Trans>,
       key: TableTabsKeys.Offers,
       content: <OffersTableContent />,
+      count: 11,
     },
   ],
   [
     TableTabsKeys.Listings,
     {
-      title: <TabTitleWithBubble title={<Trans>Listings</Trans>} bubbleNumber={/* placeholder */ 11} />,
+      title: <Trans>Listings</Trans>,
       key: TableTabsKeys.Listings,
       content: <ListingsTableContent />,
+      count: 11,
     },
   ],
 ])

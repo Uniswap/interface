@@ -3,7 +3,7 @@ import { GenieAsset } from 'nft/types'
 import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 
-import { Tab, TabbedComponent, TabTitleWithBubble } from './TabbedComponent'
+import { Tab, TabbedComponent } from './TabbedComponent'
 
 const TraitsContentContainer = styled.div`
   height: 492px;
@@ -24,9 +24,10 @@ export const DataPageTraits = ({ asset }: { asset: GenieAsset }) => {
         [
           TraitTabsKeys.Traits,
           {
-            title: <TabTitleWithBubble title={<Trans>Traits</Trans>} bubbleNumber={asset.traits?.length} />,
+            title: <Trans>Traits</Trans>,
             key: TraitTabsKeys.Traits,
             content: <TraitsContent />,
+            count: asset.traits?.length,
           },
         ],
       ]),
