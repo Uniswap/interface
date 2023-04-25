@@ -29,10 +29,16 @@ const themeModeAtom = atomWithStorage<ThemeMode>('interface_color_theme', ThemeM
 export function SystemThemeUpdater() {
   const setSystemTheme = useUpdateAtom(systemThemeAtom)
 
+  const listener = (event: MediaQueryListEvent) => {
+    setSystemTheme(event.matches ? ThemeMode.DARK : ThemeMode.LIGHT)
+  }
+
   useEffect(() => {
-    DARKMODE_MEDIA_QUERY.addEventListener?.('change', (event: MediaQueryListEvent) => {
-      setSystemTheme(event.matches ? ThemeMode.DARK : ThemeMode.LIGHT)
-    })
+    try {
+      DARKMODE_MEDIA_QUERY.addEventListener('change', listener)
+    } catch (e) {
+      DARKMODE_MEDIA_QUERY.addListener(listener)
+    }
   }, [setSystemTheme])
 
   return null
