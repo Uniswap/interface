@@ -22,7 +22,7 @@ export function NFTTraitCard({
       px="spacing16"
       py="spacing12">
       <Text
-        style={{ color: titleTextColor ?? theme.colors.textOnBrightPrimary }}
+        style={{ color: titleTextColor ?? theme.colors.textSecondary }}
         variant="buttonLabelMicro">
         {trait.name}
       </Text>

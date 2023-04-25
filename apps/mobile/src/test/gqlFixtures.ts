@@ -9,6 +9,7 @@ import {
   AssetChange,
   Chain,
   Currency,
+  NftAssetTrait,
   NftCollection,
   Portfolio,
   SafetyLevel,
@@ -502,3 +503,10 @@ export const TopTokens: [Token, Token, Token] = [
     },
   },
 ]
+
+export const NFTTrait: NftAssetTrait = {
+  __typename: 'NftAssetTrait',
+  id: faker.datatype.uuid(),
+  name: 'traitName',
+  value: 'traitValue',
+}

@@ -120,11 +120,11 @@ export function NFTItemScreen({
   const accentTextColor = useMemo(() => {
     if (
       colorLight &&
-      passesContrast(colorLight, darkTheme.colors.textTertiary, MIN_COLOR_CONTRAST_THRESHOLD)
+      passesContrast(colorLight, darkTheme.colors.textOnDimTertiary, MIN_COLOR_CONTRAST_THRESHOLD)
     ) {
       return colorLight
     }
-    return darkTheme.colors.textTertiary
+    return darkTheme.colors.textSecondary
   }, [colorLight])
 
   const onLongPressNFTImage = async (): Promise<void> => {
@@ -242,7 +242,7 @@ export function NFTItemScreen({
                   </Flex>
                   {nftLoading ? (
                     <Text
-                      color="textOnBrightPrimary"
+                      color="textPrimary"
                       loading={nftLoading}
                       loadingPlaceholderText="#0000 NFT Title"
                       mt="spacing4"
@@ -250,7 +250,7 @@ export function NFTItemScreen({
                     />
                   ) : asset?.name ? (
                     <Text
-                      color="textOnBrightPrimary"
+                      color="textPrimary"
                       mt="spacing4"
                       numberOfLines={2}
                       variant="subheadLarge">
@@ -323,7 +323,7 @@ export function NFTItemScreen({
                           hideAddressInSubtitle={true}
                           horizontalGap="spacing4"
                           size={darkTheme.iconSizes.icon20}
-                          textColor="textOnBrightPrimary"
+                          textColor="textPrimary"
                           variant="buttonLabelSmall"
                         />
                       </TouchableArea>
@@ -334,7 +334,7 @@ export function NFTItemScreen({
                 {/* Traits */}
                 {asset?.traits && asset?.traits?.length > 0 ? (
                   <Flex gap="spacing12">
-                    <Text color="textOnBrightPrimary" ml="spacing24" variant="buttonLabelSmall">
+                    <Text color="textPrimary" ml="spacing24" variant="buttonLabelSmall">
                       {t('Traits')}
                     </Text>
                     <NFTTraitList titleTextColor={accentTextColor} traits={asset.traits} />
@@ -359,7 +359,7 @@ function AssetMetadata({
   return (
     <Flex row alignItems="center" justifyContent="space-between" paddingLeft="spacing2">
       <Flex row alignItems="center" gap="spacing8" justifyContent="flex-start" maxWidth="40%">
-        <Text color="textOnBrightTertiary" variant="bodySmall">
+        <Text color="textSecondary" variant="bodySmall">
           {title}
         </Text>
       </Flex>

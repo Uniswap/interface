@@ -77,17 +77,17 @@ export function CollectionPreviewCard({
             </Flex>
             {collection?.markets?.[0]?.floorPrice?.value && (
               <Flex row gap="spacing4">
-                <Text color="textOnBrightTertiary" numberOfLines={1} variant="subheadSmall">
+                <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
                   {t('Floor')}:
                 </Text>
                 <PriceAmount
-                  iconColor="textOnBrightTertiary"
+                  iconColor="textSecondary"
                   price={{
                     id: collection?.markets?.[0].floorPrice.id,
                     value: collection.markets[0].floorPrice.value,
                     currency: Currency.Eth,
                   }}
-                  textColor="textOnBrightTertiary"
+                  textColor="textSecondary"
                   textVariant="subheadSmall"
                 />
               </Flex>
