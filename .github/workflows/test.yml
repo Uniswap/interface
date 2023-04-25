@@ -122,6 +122,8 @@ jobs:
   # Allows for parallel re-runs of cypress tests without re-building.
   cypress-rerun:
     runs-on: ubuntu-latest
+    steps:
+      - run: exit 0
 
   cypress-test-matrix:
     needs: [build-e2e, cypress-rerun]
