@@ -94,7 +94,8 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
       return null
     }
 
-    // WebAssembly compication requires 'unsafe-eval' in CSP, meaning these errors can be filtered out.
+    // WebAssembly compilation fails because we do not allow 'unsafe-eval' in our CSP.
+    // Any thrown errors are due to 3P extensions/applications, so we do not need to handle them.
     if (error.message.match(/WebAssembly.instantiate\(\): Wasm code generation disallowed by embedder/)) {
       return null
     }
