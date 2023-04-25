@@ -160,12 +160,12 @@ export default function SwapPage({ className }: { className?: string }) {
 export function Swap({
   className,
   prefilledState,
-  defaultChainId,
+  pageChainId,
   onCurrencyChange,
 }: {
   className?: string
   prefilledState?: Partial<SwapState>
-  defaultChainId?: SupportedChainId
+  pageChainId?: SupportedChainId
   onCurrencyChange?: (selected: Pick<SwapState, Field.INPUT | Field.OUTPUT>) => void
 }) {
   const { account, chainId, connector } = useWeb3React()
@@ -198,14 +198,14 @@ export function Swap({
         })
         .filter((token: Token) => {
           // Any token addresses that are loaded from the shorthands map do not need to show the import URL
-          const supported = supportedChainId(chainId)
+          const supported = supportedChainId(pageChainId)
           if (!supported) return true
           return !Object.keys(TOKEN_SHORTHANDS).some((shorthand) => {
             const shorthandTokenAddress = TOKEN_SHORTHANDS[shorthand][supported]
             return shorthandTokenAddress && shorthandTokenAddress === token.address
           })
         }),
-    [chainId, defaultTokens, urlLoadedTokens]
+    [pageChainId, defaultTokens, urlLoadedTokens]
   )
 
   const theme = useTheme()
@@ -226,7 +226,7 @@ export function Swap({
     parsedAmount,
     currencies,
     inputError: swapInputError,
-  } = useDerivedSwapInfo(state, defaultChainId)
+  } = useDerivedSwapInfo(state, pageChainId)
 
   const {
     wrapType,
@@ -331,7 +331,7 @@ export function Swap({
       (parsedAmounts[Field.INPUT]?.currency.isToken
         ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
         : undefined),
-    isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
+    isSupportedChain(pageChainId) ? UNIVERSAL_ROUTER_ADDRESS(pageChainId) : undefined
   )
   const isApprovalLoading = allowance.state === AllowanceState.REQUIRED && allowance.isApprovalLoading
   const [isAllowancePending, setIsAllowancePending] = useState(false)
@@ -341,7 +341,7 @@ export function Swap({
     try {
       await allowance.approveAndPermit()
       sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
-        chain_id: chainId,
+        chain_id: pageChainId,
         token_symbol: maximumAmountIn?.currency.symbol,
         token_address: maximumAmountIn?.currency.address,
       })
@@ -350,7 +350,7 @@ export function Swap({
     } finally {
       setIsAllowancePending(false)
     }
-  }, [allowance, chainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol])
+  }, [allowance, pageChainId, maximumAmountIn?.currency.address, maximumAmountIn?.currency.symbol])
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
     () => maxAmountSpend(currencyBalances[Field.INPUT]),
@@ -515,7 +515,7 @@ export function Swap({
   )
 
   return (
-    <SwapWrapper chainId={chainId} className={className} id="swap-page">
+    <SwapWrapper chainId={pageChainId} className={className} id="swap-page">
       <TokenSafetyModal
         isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
         tokenAddress={importTokensNotInDefault[0]?.address}
@@ -563,7 +563,7 @@ export function Swap({
             />
           </Trace>
         </SwapSection>
-        <ArrowWrapper clickable={isSupportedChain(chainId)}>
+        <ArrowWrapper clickable={isSupportedChain(pageChainId)}>
           <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SwapEventName.SWAP_TOKENS_REVERSED}
@@ -648,13 +648,13 @@ export function Swap({
                 <Trans>Connect Wallet</Trans>
               </ButtonLight>
             </TraceEvent>
-          ) : defaultChainId && defaultChainId !== chainId ? (
+          ) : pageChainId && pageChainId !== chainId ? (
             <ButtonPrimary
               onClick={() => {
-                switchChain(connector, defaultChainId)
+                switchChain(connector, pageChainId)
               }}
             >
-              Connect to {getChainInfo(defaultChainId)?.label}
+              Connect to {getChainInfo(pageChainId)?.label}
             </ButtonPrimary>
           ) : showWrap ? (
             <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap} fontWeight={600}>
