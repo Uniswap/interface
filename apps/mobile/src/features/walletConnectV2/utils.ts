@@ -64,6 +64,10 @@ export const parseProposalNamespaces = (
     }
   })
 
+  if (!optionalNamespaces) {
+    return { proposalNamespaces: namespaces, chains: proposalChainIds }
+  }
+
   // Add any supported chains from optional namespaces
   Object.entries(optionalNamespaces).forEach(([key, namespace]) => {
     const { chains, events, methods } = namespace
