@@ -580,7 +580,6 @@ export function Swap({
         onAcceptChanges={handleAcceptChanges}
         attemptingTxn={attemptingTxn}
         txHash={txHash}
-        recipient={recipient}
         allowedSlippage={allowedSlippage}
         onConfirm={handleSwap}
         swapErrorMessage={swapErrorMessage}

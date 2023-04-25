@@ -13,14 +13,14 @@ import styled, { useTheme } from 'styled-components/macro'
 import { isL2ChainId } from 'utils/chains'
 
 import Circle from '../../assets/images/blue-loader.svg'
-import { ExternalLink, ThemedText } from '../../theme'
+import { BackArrowIcon, ExternalLink, ThemedText } from '../../theme'
 import { CloseIcon, CustomLightSpinner } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { TransactionSummary } from '../AccountDetails/TransactionSummary'
 import { ButtonLight, ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Modal from '../Modal'
-import { RowBetween, RowFixed } from '../Row'
+import Row, { RowBetween, RowFixed } from '../Row'
 import AnimatedConfirmation from './AnimatedConfirmation'
 
 const Wrapper = styled.div`
@@ -184,13 +184,13 @@ export function ConfirmationModalContent({
 }) {
   return (
     <Wrapper>
-      <Section>
-        <RowBetween>
-          <Text fontWeight={500} fontSize={16}>
+      <Section gap="0.5rem">
+        <Row>
+          <BackArrowIcon style={{ position: 'absolute' }} onClick={onDismiss} data-cy="confirmation-close-icon" />
+          <Text fontWeight={500} fontSize={16} marginX="auto">
             {title}
           </Text>
-          <CloseIcon onClick={onDismiss} data-cy="confirmation-close-icon" />
-        </RowBetween>
+        </Row>
         {topContent()}
       </Section>
       {bottomContent && <BottomSection gap="12px">{bottomContent()}</BottomSection>}

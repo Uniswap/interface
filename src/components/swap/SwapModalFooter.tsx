@@ -1,7 +1,14 @@
-import { Trans } from '@lingui/macro'
-import { TraceEvent } from '@uniswap/analytics'
-import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
+import { t, Trans } from '@lingui/macro'
+import { sendAnalyticsEvent, TraceEvent } from '@uniswap/analytics'
+import {
+  BrowserEvent,
+  InterfaceElementName,
+  SwapEventName,
+  SwapPriceUpdateUserResponse,
+} from '@uniswap/analytics-events'
+import { formatCurrencyAmount, formatPriceImpact, NumberType } from '@uniswap/conedison/format'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import Column from 'components/Column'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import {
   formatPercentInBasisPointsNumber,
@@ -9,17 +16,23 @@ import {
   formatToDecimal,
   getDurationFromDateMilliseconds,
   getDurationUntilTimestampSeconds,
+  getPriceUpdateBasisPoints,
   getTokenAddress,
 } from 'lib/utils/analytics'
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useMemo, useState } from 'react'
+import { AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
 import { useClientSideRouter, useUserSlippageTolerance } from 'state/user/hooks'
-import { computeRealizedPriceImpact } from 'utils/prices'
+import { useTheme } from 'styled-components/macro'
+import { ThemedText } from 'theme'
+import { formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
+import { computeRealizedPriceImpact, getPriceImpactWarning } from 'utils/prices'
 
-import { ButtonError } from '../Button'
-import { AutoRow } from '../Row'
-import { SwapCallbackError } from './styleds'
+import { ButtonError, ButtonPrimary } from '../Button'
+import { AutoRow, RowBetween, RowFixed } from '../Row'
+import { SwapCallbackError, SwapShowAcceptChanges } from './styleds'
+import { SwapModalDetailRow } from './SwapModalDetailRow'
 import { getTokenPath, RoutingDiagramEntry } from './SwapRoute'
 
 interface AnalyticsEventProps {
@@ -62,7 +75,22 @@ const formatRoutesEventProperties = (routes: RoutingDiagramEntry[]) => {
   return routesEventProperties
 }
 
-const formatAnalyticsEventProperties = ({
+const formatSwapPriceUpdatedEventProperties = (
+  trade: InterfaceTrade<Currency, Currency, TradeType>,
+  priceUpdate: number | undefined,
+  response: SwapPriceUpdateUserResponse
+) => ({
+  chain_id:
+    trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
+      ? trade.inputAmount.currency.chainId
+      : undefined,
+  response,
+  token_in_symbol: trade.inputAmount.currency.symbol,
+  token_out_symbol: trade.outputAmount.currency.symbol,
+  price_update_basis_points: priceUpdate,
+})
+
+const formatSwapButtonClickEventProperties = ({
   trade,
   hash,
   allowedSlippage,
@@ -110,6 +138,10 @@ export default function SwapModalFooter({
   swapQuoteReceivedDate,
   fiatValueInput,
   fiatValueOutput,
+  shouldLogModalCloseEvent,
+  setShouldLogModalCloseEvent,
+  showAcceptChanges,
+  onAcceptChanges,
 }: {
   trade: InterfaceTrade<Currency, Currency, TradeType>
   hash: string | undefined
@@ -120,20 +152,84 @@ export default function SwapModalFooter({
   swapQuoteReceivedDate: Date | undefined
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
+  shouldLogModalCloseEvent: boolean
+  setShouldLogModalCloseEvent: (shouldLog: boolean) => void
+  showAcceptChanges: boolean
+  onAcceptChanges: () => void
 }) {
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const [clientSideRouter] = useClientSideRouter()
   const routes = getTokenPath(trade)
+  const [lastExecutionPrice, setLastExecutionPrice] = useState(trade.executionPrice)
+  const [priceUpdate, setPriceUpdate] = useState<number | undefined>()
+  const theme = useTheme()
+
+  useEffect(() => {
+    if (!trade.executionPrice.equalTo(lastExecutionPrice)) {
+      setPriceUpdate(getPriceUpdateBasisPoints(lastExecutionPrice, trade.executionPrice))
+      setLastExecutionPrice(trade.executionPrice)
+    }
+  }, [lastExecutionPrice, setLastExecutionPrice, trade.executionPrice])
+
+  useEffect(() => {
+    if (shouldLogModalCloseEvent && showAcceptChanges) {
+      sendAnalyticsEvent(
+        SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
+        formatSwapPriceUpdatedEventProperties(trade, priceUpdate, SwapPriceUpdateUserResponse.REJECTED)
+      )
+    }
+    setShouldLogModalCloseEvent(false)
+  }, [shouldLogModalCloseEvent, showAcceptChanges, setShouldLogModalCloseEvent, trade, priceUpdate])
+
+  const details = useMemo(() => {
+    const details: Array<[ReactNode, string] | [ReactNode, string | ReactNode, string | undefined]> = []
+
+    const label = `${trade.executionPrice.baseCurrency?.symbol} `
+    const labelInverted = `${trade.executionPrice.quoteCurrency?.symbol}`
+    const formattedPrice = formatTransactionAmount(priceToPreciseFloat(trade.executionPrice))
+    details.push([t`Exchange rate`, `${'1 ' + labelInverted + ' = ' + formattedPrice ?? '-'} ${label}`])
+    details.push([t`Network fee`, `~${formatCurrencyAmount(trade.gasUseEstimateUSD, NumberType.FiatGasPrice)}`])
+    details.push([
+      t`Price impact`,
+      trade.priceImpact ? formatPriceImpact(trade.priceImpact) : '-',
+      getPriceImpactWarning(trade.priceImpact),
+    ])
+
+    return details
+  }, [trade])
 
   return (
     <>
+      <Column gap="md">
+        {details.map(([label, detail, color], i) => (
+          <SwapModalDetailRow key={i} label={label} value={detail} color={color} />
+        ))}
+      </Column>
+      {showAcceptChanges && (
+        <SwapShowAcceptChanges justify="flex-start" gap="0px" data-testid="show-accept-changes">
+          <RowBetween>
+            <RowFixed>
+              <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />
+              <ThemedText.DeprecatedMain color={theme.accentAction}>
+                <Trans>Price Updated</Trans>
+              </ThemedText.DeprecatedMain>
+            </RowFixed>
+            <ButtonPrimary
+              style={{ padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}
+              onClick={onAcceptChanges}
+            >
+              <Trans>Accept</Trans>
+            </ButtonPrimary>
+          </RowBetween>
+        </SwapShowAcceptChanges>
+      )}
       <AutoRow>
         <TraceEvent
           events={[BrowserEvent.onClick]}
           element={InterfaceElementName.CONFIRM_SWAP_BUTTON}
           name={SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED}
-          properties={formatAnalyticsEventProperties({
+          properties={formatSwapButtonClickEventProperties({
             trade,
             hash,
             allowedSlippage,
@@ -154,7 +250,7 @@ export default function SwapModalFooter({
             id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
           >
             <Text fontSize={20} fontWeight={500}>
-              <Trans>Confirm Swap</Trans>
+              <Trans>Swap</Trans>
             </Text>
           </ButtonError>
         </TraceEvent>

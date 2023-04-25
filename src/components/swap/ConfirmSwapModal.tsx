@@ -21,7 +21,6 @@ export default function ConfirmSwapModal({
   allowedSlippage,
   onConfirm,
   onDismiss,
-  recipient,
   swapErrorMessage,
   isOpen,
   attemptingTxn,
@@ -35,7 +34,6 @@ export default function ConfirmSwapModal({
   originalTrade: Trade<Currency, Currency, TradeType> | undefined
   attemptingTxn: boolean
   txHash: string | undefined
-  recipient: string | null
   allowedSlippage: Percent
   onAcceptChanges: () => void
   onConfirm: () => void
@@ -59,18 +57,8 @@ export default function ConfirmSwapModal({
   }, [isOpen, onDismiss])
 
   const modalHeader = useCallback(() => {
-    return trade ? (
-      <SwapModalHeader
-        trade={trade}
-        shouldLogModalCloseEvent={shouldLogModalCloseEvent}
-        setShouldLogModalCloseEvent={setShouldLogModalCloseEvent}
-        allowedSlippage={allowedSlippage}
-        recipient={recipient}
-        showAcceptChanges={showAcceptChanges}
-        onAcceptChanges={onAcceptChanges}
-      />
-    ) : null
-  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade, shouldLogModalCloseEvent])
+    return trade ? <SwapModalHeader trade={trade} allowedSlippage={allowedSlippage} /> : null
+  }, [allowedSlippage, trade])
 
   const modalBottom = useCallback(() => {
     return trade ? (
@@ -84,18 +72,24 @@ export default function ConfirmSwapModal({
         swapQuoteReceivedDate={swapQuoteReceivedDate}
         fiatValueInput={fiatValueInput}
         fiatValueOutput={fiatValueOutput}
+        shouldLogModalCloseEvent={shouldLogModalCloseEvent}
+        setShouldLogModalCloseEvent={setShouldLogModalCloseEvent}
+        showAcceptChanges={showAcceptChanges}
+        onAcceptChanges={onAcceptChanges}
       />
     ) : null
   }, [
+    trade,
     onConfirm,
+    txHash,
+    allowedSlippage,
     showAcceptChanges,
     swapErrorMessage,
-    trade,
-    allowedSlippage,
-    txHash,
     swapQuoteReceivedDate,
     fiatValueInput,
     fiatValueOutput,
+    shouldLogModalCloseEvent,
+    onAcceptChanges,
   ])
 
   // text to show while loading
@@ -112,7 +106,7 @@ export default function ConfirmSwapModal({
         <TransactionErrorContent onDismiss={onModalDismiss} message={swapErrorMessage} />
       ) : (
         <ConfirmationModalContent
-          title={<Trans>Confirm Swap</Trans>}
+          title={<Trans>Review Swap</Trans>}
           onDismiss={onModalDismiss}
           topContent={modalHeader}
           bottomContent={modalBottom}

@@ -470,6 +470,11 @@ export function BackArrow({ to }: { to: string }) {
   )
 }
 
+export const BackArrowIcon = styled(ArrowLeft)`
+  color: ${({ theme }) => theme.textPrimary};
+  cursor: pointer;
+`
+
 export const CustomLightSpinner = styled(Spinner)<{ size: string }>`
   height: ${({ size }) => size};
   width: ${({ size }) => size};
