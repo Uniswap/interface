@@ -17,9 +17,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           requireScope: true
-          scopes:
-            - universe
-            - mobile
-            - extension
-            - ui
-            - wallet
