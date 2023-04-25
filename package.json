@@ -46,6 +46,7 @@
     "typescript": "^4.9.4",
     "ua-parser-js": "0.7.33",
     "webpack": "^5.74.0",
+    "yaml": "2.2.2",
     "@xmldom/xmldom": "0.7.7",
     "react-native-fast-image@8.6.3": "patch:react-native-fast-image@npm%3A8.6.3#./.yarn/patches/react-native-fast-image-npm-8.6.3-03ee2d23c0.patch"
   },

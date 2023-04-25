@@ -87,11 +87,6 @@ ignore:
         reason: monorepo migration
         expires: 2023-05-31T00:00:00.000Z
         created: 2023-04-19T21:55:29.637Z
-  SNYK-JS-YAML-5458867:
-    - '*':
-        reason: monorepo migration
-        expires: 2023-05-31T00:00:00.000Z
-        created: 2023-04-19T21:55:29.637Z
   SNYK-JS-JSONWEBTOKEN-3180022:
     - '*':
         reason: monorepo migration
