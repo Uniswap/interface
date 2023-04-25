@@ -366,7 +366,7 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
         const result = call.result as CallStateResult
         return {
           id,
-          poolOwnStake: result[0].currentEpochBalance,
+          poolOwnStake: result[0].nextEpochBalance,
         }
       })
     }
