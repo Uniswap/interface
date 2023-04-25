@@ -9,7 +9,8 @@ import { RPC_PROVIDERS } from 'constants/providers'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import useEagerlyConnect from 'hooks/useEagerlyConnect'
 import useOrderedConnections from 'hooks/useOrderedConnections'
-import { ReactNode, useEffect, useMemo, useRef } from 'react'
+import usePrevious from 'hooks/usePrevious'
+import { ReactNode, useEffect, useMemo } from 'react'
 import { useConnectedWallets } from 'state/wallets/hooks'
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
@@ -48,12 +49,11 @@ function Updater() {
   }, [networkProvider, provider, shouldTrace])
 
   // Send analytics events when the active account changes.
-  const activeAccount = useRef<string | undefined>()
+  const activeAccount = usePrevious(account)
   const getConnection = useGetConnection()
   const [connectedWallets, addConnectedWallet] = useConnectedWallets()
   useEffect(() => {
-    if (account && account !== activeAccount.current) {
-      activeAccount.current = account
+    if (account && account !== activeAccount) {
       const walletType = getConnection(connector).getName()
       const peerWalletAgent = provider ? getWalletMeta(provider)?.agent : undefined
       const isReconnect = connectedWallets.some(
@@ -80,7 +80,7 @@ function Updater() {
 
       addConnectedWallet({ account, walletType })
     }
-  }, [account, addConnectedWallet, chainId, connectedWallets, connector, getConnection, provider])
+  }, [account, activeAccount, addConnectedWallet, chainId, connectedWallets, connector, getConnection, provider])
 
   return null
 }
