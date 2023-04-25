@@ -30,8 +30,6 @@ import {
 } from 'src/data/__generated__/types-and-hooks'
 import { AssetType } from 'src/entities/assets'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
-import { FEATURE_FLAGS } from 'src/features/experiments/constants'
-import { useFeatureFlag } from 'src/features/experiments/hooks'
 import { openModal, selectModalState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
@@ -154,10 +152,7 @@ function TokenDetails({
   loading: boolean
 }): JSX.Element {
   const dispatch = useAppDispatch()
-
   const theme = useAppTheme()
-
-  const hideSwapButton = useFeatureFlag(FEATURE_FLAGS.HideSwap)
 
   const currencyChainId = currencyIdToChain(_currencyId) ?? ChainId.Mainnet
   const currencyAddress = currencyIdToAddress(_currencyId)
@@ -333,7 +328,7 @@ function TokenDetails({
         </Flex>
       </HeaderScrollScreen>
 
-      {!hideSwapButton && !loading && !tokenColorLoading ? (
+      {!loading && !tokenColorLoading ? (
         <AnimatedFlex backgroundColor="background0" entering={FadeInDown} pb={pb}>
           <TokenDetailsActionButtons
             tokenColor={tokenColor}

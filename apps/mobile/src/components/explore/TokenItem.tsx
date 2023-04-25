@@ -16,8 +16,6 @@ import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
-import { FEATURE_FLAGS } from 'src/features/experiments/constants'
-import { useFeatureFlag } from 'src/features/experiments/hooks'
 import { TokenMetadataDisplayType } from 'src/features/explore/types'
 import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { selectHasFavoriteToken } from 'src/features/favorites/selectors'
@@ -68,8 +66,6 @@ export const TokenItem = memo(({ tokenItemData, index, metadataDisplayType }: To
   const dispatch = useAppDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
-  const hideSwapButton = useFeatureFlag(FEATURE_FLAGS.HideSwap)
-
   const {
     name,
     logoUrl,
@@ -111,14 +107,12 @@ export const TokenItem = memo(({ tokenItemData, index, metadataDisplayType }: To
     const removeFavoriteAction = { title: t('Remove favorite'), systemIcon: 'heart.fill' }
     const addFavoriteAction = { title: t('Favorite token'), systemIcon: 'heart' }
     const swapAction = { title: t('Swap'), systemIcon: 'arrow.2.squarepath' }
-    const actions = [isFavorited ? removeFavoriteAction : addFavoriteAction]
-
-    if (!hideSwapButton) {
-      actions.push(swapAction)
-    }
+    const actions = isFavorited
+      ? [removeFavoriteAction, swapAction]
+      : [addFavoriteAction, swapAction]
 
     return actions
-  }, [isFavorited, hideSwapButton, t])
+  }, [isFavorited, t])
 
   const getMetadataSubtitle = (): string | undefined => {
     switch (metadataDisplayType) {
