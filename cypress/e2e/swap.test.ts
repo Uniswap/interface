@@ -1,5 +1,6 @@
 import { USDC_MAINNET } from '../../src/constants/tokens'
 import { HardhatProvider } from '../support/hardhat'
+import { getTestSelector } from '../utils'
 
 describe('Swap', () => {
   let hardhat: HardhatProvider
@@ -60,6 +61,41 @@ describe('Swap', () => {
         cy.then(() => hardhat.utils.getBalance(hardhat.wallet.address, USDC_MAINNET))
           .then((balance) => Number(balance.toFixed(1)))
           .should('eq', initialBalance + BALANCE_INCREMENT)
+      })
+  })
+
+  it('should render an error when a transaction fails due to a passed deadline', () => {
+    const TOKEN_ADDRESS = USDC_MAINNET.address
+    const BALANCE_INCREMENT = 1
+    cy.then(() => hardhat.utils.getBalance(hardhat.wallet.address, USDC_MAINNET))
+      .then((balance) => Number(balance.toFixed(1)))
+      .then((initialBalance) => {
+        // input swap info
+        cy.get('#swap-currency-output .open-currency-select-button').click()
+        cy.get('[data-testid="token-search-input"]').clear().type(TOKEN_ADDRESS)
+        cy.contains('USDC').click()
+        cy.get('#swap-currency-output .token-amount-input').clear().type(BALANCE_INCREMENT.toString())
+        cy.get('#swap-currency-input .token-amount-input').should('not.equal', '')
+
+        // set deadline to minimum (1 minute)
+        cy.get(getTestSelector('open-settings-dialog-button')).click()
+        cy.get(getTestSelector('deadline-input')).clear().type('1')
+        cy.get('body').click('topRight')
+        cy.get(getTestSelector('deadline-input')).should('not.exist')
+
+        cy.get('#swap-button').click()
+        cy.get('#confirm-swap-or-send').click()
+
+        // todo: mine past the deadline before this transaction is confirmed
+
+        cy.get('[data-testid="dismiss-tx-confirmation"]').click()
+        // ui check
+        cy.get('#swap-currency-output [data-testid="balance-text"]').should('have.text', `Balance: ${initialBalance}`)
+
+        // chain state check
+        cy.then(() => hardhat.utils.getBalance(hardhat.wallet.address, USDC_MAINNET))
+          .then((balance) => Number(balance.toFixed(1)))
+          .should('eq', initialBalance)
       })
   })
 
