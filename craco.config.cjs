@@ -60,10 +60,7 @@ module.exports = {
           ...jestConfig.transform,
         },
         cacheDirectory: 'node_modules/.cache/jest',
-        transformIgnorePatterns: [
-          '@uniswap/conedison/format',
-          '@uniswap/conedison/provider',
-        ],
+        transformIgnorePatterns: ['@uniswap/conedison/format', '@uniswap/conedison/provider'],
         moduleNameMapper: {
           '@uniswap/conedison/format': '@uniswap/conedison/dist/format',
           '@uniswap/conedison/provider': '@uniswap/conedison/dist/provider',
