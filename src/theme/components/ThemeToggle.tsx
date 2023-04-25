@@ -30,7 +30,7 @@ export function SystemThemeUpdater() {
   const setSystemTheme = useUpdateAtom(systemThemeAtom)
 
   useEffect(() => {
-    DARKMODE_MEDIA_QUERY.addEventListener('change', (event) => {
+    DARKMODE_MEDIA_QUERY.addEventListener?.('change', (event) => {
       setSystemTheme(event.matches ? ThemeMode.DARK : ThemeMode.LIGHT)
     })
   }, [setSystemTheme])
