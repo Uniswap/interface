@@ -20,7 +20,7 @@ jobs:
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
           APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
           CONFIGURATION: "Dev"
-        run: fastlane ios update_build_numbers
+        run: cd apps/mobile && fastlane ios update_build_numbers
 
       - name: Update Beta configuration build numbers
         env:
@@ -29,7 +29,7 @@ jobs:
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
           APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
           CONFIGURATION: "Beta"
-        run: fastlane ios update_build_numbers
+        run: cd apps/mobile && fastlane ios update_build_numbers
 
       - name: Update Prod configuration build numbers
         env:
@@ -38,7 +38,7 @@ jobs:
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
           APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
           CONFIGURATION: "Release"
-        run: fastlane ios update_build_numbers
+        run: cd apps/mobile && fastlane ios update_build_numbers
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
