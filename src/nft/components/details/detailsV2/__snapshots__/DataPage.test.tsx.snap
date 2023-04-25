@@ -225,12 +225,20 @@ exports[`placeholder containers load 1`] = `
             <div
               class="c9 c13 css-rjqmed"
             >
-              Description
+              <div
+                class="c3 c11"
+              >
+                Description
+              </div>
             </div>
             <div
               class="c9 c14 css-rjqmed"
             >
-              Details
+              <div
+                class="c3 c11"
+              >
+                Details
+              </div>
             </div>
           </div>
           <div
@@ -249,7 +257,11 @@ exports[`placeholder containers load 1`] = `
           <div
             class="c9 c13 css-rjqmed"
           >
-            Activity
+            <div
+              class="c3 c11"
+            >
+              Activity
+            </div>
           </div>
           <div
             class="c9 c14 css-rjqmed"
