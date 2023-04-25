@@ -238,9 +238,7 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
   return (
     <BestPriceContainer>
       <HeaderRow>
-        <ThemedText.SubHeader color="accentAction" fontWeight={500} lineHeight="24px">
-          {listing ? 'Your Price' : 'List for Sale'}
-        </ThemedText.SubHeader>
+        <ThemedText.SubHeader color="accentAction">{listing ? 'Your Price' : 'List for Sale'}</ThemedText.SubHeader>
         {listing && (
           <MarketplaceIcon href={listing.marketplaceUrl}>
             {getMarketplaceIcon(listing.marketplace, '20')}
@@ -297,9 +295,7 @@ const NotForSale = ({ collectionName, collectionUrl }: { collectionName: string;
     <BestPriceContainer>
       <NotForSaleContainer>
         <CancelListingIcon width="79px" height="79px" color={theme.textTertiary} />
-        <ThemedText.SubHeader fontWeight={500} lineHeight="24px">
-          Not for sale
-        </ThemedText.SubHeader>
+        <ThemedText.SubHeader>Not for sale</ThemedText.SubHeader>
         <DiscoveryContainer>
           <ThemedText.BodySecondary fontSize="14px" lineHeight="20px">
             Discover similar NFTs for sale in
@@ -373,9 +369,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
       ) : isForSale ? (
         <BestPriceContainer>
           <HeaderRow>
-            <ThemedText.SubHeader color="accentAction" fontWeight={500} lineHeight="24px">
-              Best Price
-            </ThemedText.SubHeader>
+            <ThemedText.SubHeader color="accentAction">Best Price</ThemedText.SubHeader>
             <MarketplaceIcon href={cheapestOrder.marketplaceUrl}>
               {getMarketplaceIcon(cheapestOrder.marketplace, '20')}
             </MarketplaceIcon>

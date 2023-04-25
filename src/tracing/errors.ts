@@ -29,6 +29,19 @@ export function beforeSend(event: ErrorEvent, hint: EventHint) {
   return filterKnownErrors(event, hint)
 }
 
+function shouldFilterChunkError(asset?: string) {
+  const entries = [...(performance?.getEntriesByType('resource') ?? [])]
+  const resource = entries?.find(({ name }) => name === asset)
+  const status = resource?.responseStatus
+
+  /*
+   * If the status if 499, then we ignore.
+   * If there's no status (meaning the browser doesn't support `responseStatus`) then we also ignore.
+   * These errors are likely also 499 errors, and we can catch any spikes in non-499 chunk errors via other browsers.
+   */
+  return !status || status === 499
+}
+
 /**
  * Filters known (ignorable) errors out before sending them to Sentry.
  * Intended as a {@link ClientOptions.beforeSend} callback. Returning null filters the error from Sentry.
@@ -54,20 +67,15 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
      * CF claims that some number of these is expected, and that they should be ignored.
      * See https://groups.google.com/a/uniswap.org/g/cloudflare-eng/c/t3xvAiJFujY.
      */
-    if (error.message.match(/Loading chunk \d+ failed\. \(error: .+\.chunk\.js\)/)) {
+    if (error.message.match(/Loading chunk \d+ failed\. \(([a-zA-Z]+): .+\.chunk\.js\)/)) {
       const asset = error.message.match(/https?:\/\/.+?\.chunk\.js/)?.[0]
-      const entries = [...(performance?.getEntriesByType('resource') ?? [])]
-      const resource = entries?.find(({ name }) => name === asset)
-      const status = resource?.responseStatus
+      if (shouldFilterChunkError(asset)) return null
+    }
 
-      /*
-       * If the status if 499, then we ignore.
-       * If there's no status (meaning the browser doesn't support `responseStatus`) then we also ignore.
-       * These errors are likely also 499 errors, and we can catch any spikes in non-499 chunk errors via other browsers.
-       */
-      if (!status || status === 499) {
-        return null
-      }
+    if (error.message.match(/Loading CSS chunk \d+ failed\. \(.+\.chunk\.css\)/)) {
+      const relativePath = error.message.match(/\/static\/css\/.*\.chunk\.css/)?.[0]
+      const asset = `https://app.uniswap.org${relativePath}`
+      if (shouldFilterChunkError(asset)) return null
     }
 
     /*

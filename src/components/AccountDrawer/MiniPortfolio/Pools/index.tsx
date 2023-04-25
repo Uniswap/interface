@@ -7,13 +7,13 @@ import { useWeb3React } from '@web3-react/core'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { switchChain } from 'utils/switchChain'
-import { hasURL } from 'utils/urlChecks'
 
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
@@ -22,24 +22,55 @@ import { PositionInfo } from './cache'
 import { useFeeValues } from './hooks'
 import useMultiChainPositions from './useMultiChainPositions'
 
+/*
+  This hook takes an array of PositionInfo objects (format used by the Uniswap Labs gql API).
+  The hook access PositionInfo.details (format used by the NFT position contract),
+  filters the PositionDetails data for malicious content,
+  and then returns the original data in its original format. 
+*/
+function useFilterPossiblyMaliciousPositionInfo(positions: PositionInfo[] | undefined): PositionInfo[] {
+  const tokenIdsToPositionInfo: Record<string, PositionInfo> = useMemo(
+    () =>
+      positions
+        ? positions.reduce((acc, position) => ({ ...acc, [position.details.tokenId.toString()]: position }), {})
+        : {},
+    [positions]
+  )
+  const positionDetails = useMemo(() => positions?.map((position) => position.details) ?? [], [positions])
+  const filteredPositionDetails = useFilterPossiblyMaliciousPositions(positionDetails)
+
+  return useMemo(
+    () => filteredPositionDetails.map((positionDetails) => tokenIdsToPositionInfo[positionDetails.tokenId.toString()]),
+    [filteredPositionDetails, tokenIdsToPositionInfo]
+  )
+}
+
 export default function Pools({ account }: { account: string }) {
   const { positions, loading } = useMultiChainPositions(account)
+  const filteredPositions = useFilterPossiblyMaliciousPositionInfo(positions)
   const [showClosed, toggleShowClosed] = useReducer((showClosed) => !showClosed, false)
 
   const [openPositions, closedPositions] = useMemo(() => {
     const openPositions: PositionInfo[] = []
     const closedPositions: PositionInfo[] = []
-    positions?.forEach((position) => (position.closed ? closedPositions : openPositions).push(position))
+    for (let i = 0; i < filteredPositions.length; i++) {
+      const position = filteredPositions[i]
+      if (position.closed) {
+        closedPositions.push(position)
+      } else {
+        openPositions.push(position)
+      }
+    }
     return [openPositions, closedPositions]
-  }, [positions])
+  }, [filteredPositions])
 
   const toggleWalletDrawer = useToggleAccountDrawer()
 
-  if (!positions || loading) {
+  if (!filteredPositions || loading) {
     return <PortfolioSkeleton />
   }
 
-  if (positions?.length === 0) {
+  if (filteredPositions.length === 0) {
     return <EmptyWalletModule type="pool" onNavigateClick={toggleWalletDrawer} />
   }
 
@@ -111,12 +142,6 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
     [chainId, pool.token0.address, pool.token0.symbol, pool.token1.address, pool.token1.symbol]
   )
 
-  const shouldHidePosition = hasURL(pool.token0.symbol) || hasURL(pool.token1.symbol)
-
-  if (shouldHidePosition) {
-    return null
-  }
-
   return (
     <TraceEvent
       events={[BrowserEvent.onClick]}
@@ -129,7 +154,7 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
         left={<PortfolioLogo chainId={chainId} currencies={[pool.token0, pool.token1]} />}
         title={
           <Row>
-            <ThemedText.SubHeader fontWeight={500}>
+            <ThemedText.SubHeader>
               {pool.token0.symbol} / {pool.token1?.symbol}
             </ThemedText.SubHeader>
           </Row>
@@ -148,7 +173,7 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
                 </div>
               }
             >
-              <ThemedText.SubHeader fontWeight={500}>
+              <ThemedText.SubHeader>
                 {formatNumber((liquidityValue ?? 0) + (feeValue ?? 0), NumberType.PortfolioBalance)}
               </ThemedText.SubHeader>
             </MouseoverTooltip>

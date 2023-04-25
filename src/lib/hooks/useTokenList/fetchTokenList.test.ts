@@ -10,7 +10,6 @@ describe('fetchTokenList', () => {
 
   beforeEach(() => {
     jest.spyOn(console, 'debug').mockReturnValue(undefined)
-    resolver.mockReset()
   })
 
   it('throws on an invalid list url', async () => {

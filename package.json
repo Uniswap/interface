@@ -24,7 +24,7 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "serve": "serve build -l 3000",
     "lint": "yarn eslint --ignore-path .gitignore --cache --cache-location node_modules/.cache/eslint/ .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc",
     "test": "craco test --coverage",
     "test:size": "node scripts/test-size.js",
     "cypress:open": "cypress open --browser chrome --e2e",
