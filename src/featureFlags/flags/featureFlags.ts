@@ -8,6 +8,5 @@ export enum FeatureFlag {
   fiatOnRampButtonOnSwap = 'fiat_on_ramp_button_on_swap_page',
   swapWidget = 'swap_widget_replacement_enabled',
   statsigDummy = 'web_dummy_gate_amplitude_id',
-  nftGraphql = 'nft_graphql_migration',
   detailsV2 = 'details_v2',
 }

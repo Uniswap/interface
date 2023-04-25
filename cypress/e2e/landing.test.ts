@@ -1,21 +1,22 @@
 import { getTestSelector } from '../utils'
+import { CONNECTED_WALLET_USER_STATE } from '../utils/user-state'
 
 describe('Landing Page', () => {
-  it('shows landing page when no selectedWallet', () => {
-    cy.visit('/', { noWallet: true })
+  it('shows landing page when no user state exists', () => {
+    cy.visit('/', { userState: {} })
     cy.get(getTestSelector('landing-page'))
     cy.screenshot()
   })
 
-  it('redirects to swap page when selectedWallet is INJECTED', () => {
-    cy.visit('/', { selectedWallet: 'INJECTED' })
+  it('redirects to swap page when a user has already connected a wallet', () => {
+    cy.visit('/', { userState: CONNECTED_WALLET_USER_STATE })
     cy.get('#swap-page')
     cy.url().should('include', '/swap')
     cy.screenshot()
   })
 
-  it('shows landing page when selectedWallet is INJECTED and ?intro=true is in query', () => {
-    cy.visit('/?intro=true', { selectedWallet: 'INJECTED' })
+  it('shows landing page when a user has already connected a wallet but ?intro=true is in query', () => {
+    cy.visit('/?intro=true', { userState: CONNECTED_WALLET_USER_STATE })
     cy.get(getTestSelector('landing-page'))
   })
 

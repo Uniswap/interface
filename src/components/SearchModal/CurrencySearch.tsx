@@ -227,6 +227,7 @@ export function CurrencySearch({
             <SearchInput
               type="text"
               id="token-search-input"
+              data-testid="token-search-input"
               placeholder={t`Search name or paste address`}
               autoComplete="off"
               value={searchQuery}

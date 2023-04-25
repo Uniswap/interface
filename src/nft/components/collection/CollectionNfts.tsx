@@ -41,6 +41,7 @@ import {
 } from 'nft/types'
 import {
   calcPoolPrice,
+  getMarketplaceIcon,
   getRarityStatus,
   isInSameMarketplaceCollection,
   isInSameSudoSwapPool,
@@ -55,7 +56,7 @@ import styled, { css } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { LoadingAssets } from './CollectionAssetLoading'
-import { MARKETPLACE_ITEMS, MarketplaceLogo } from './MarketplaceSelect'
+import { MARKETPLACE_ITEMS } from './MarketplaceSelect'
 import { ClearAllButton } from './shared'
 import { Sweep } from './Sweep'
 import { TraitChip } from './TraitChip'
@@ -543,7 +544,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                 key={market}
                 value={
                   <MarketNameWrapper>
-                    <MarketplaceLogo src={`/nft/svgs/marketplaces/${market.toLowerCase()}.svg`} />
+                    {getMarketplaceIcon(market, '16')}
                     {MARKETPLACE_ITEMS[market as keyof typeof MARKETPLACE_ITEMS]}
                   </MarketNameWrapper>
                 }

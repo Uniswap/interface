@@ -8,6 +8,7 @@ import { ChevronUpIcon } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { TraitPosition, useTraitsOpen } from 'nft/hooks/useTraitsOpen'
+import { getMarketplaceIcon } from 'nft/utils'
 import { FormEvent, useEffect, useMemo, useReducer, useState } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -24,12 +25,6 @@ const FilterItemWrapper = styled(Row)`
   }
 `
 
-export const MarketplaceLogo = styled.img`
-  height: 16px;
-  width: 16px;
-  border-radius: 4px;
-`
-
 const MarketNameWrapper = styled(Row)`
   gap: 10px;
 `
@@ -43,13 +38,6 @@ export const MARKETPLACE_ITEMS = {
   nftx: 'NFTX',
   nft20: 'NFT20',
   cryptopunks: 'LarvaLabs',
-}
-
-function getMarketLogoSrc(market: string) {
-  const marketplaceItem = Object.keys(MARKETPLACE_ITEMS).find(
-    (key) => MARKETPLACE_ITEMS[key as keyof typeof MARKETPLACE_ITEMS] === market
-  )
-  return `/nft/svgs/marketplaces/${marketplaceItem}.svg`
 }
 
 export const FilterItem = ({
@@ -111,7 +99,7 @@ const MarketplaceItem = ({
 
   const titleWithLogo = (
     <MarketNameWrapper>
-      <MarketplaceLogo src={getMarketLogoSrc(title)} />
+      {getMarketplaceIcon(title, '16')}
       {title}
     </MarketNameWrapper>
   )
