@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { useCallback, useEffect, useState } from 'react'
+import { useWindowSize } from 'hooks/useWindowSize'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
@@ -79,6 +80,11 @@ export default function FiatOnrampModal() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
+  const { height: windowHeight } = useWindowSize()
+  const modalHeight = useMemo(() => {
+    return windowHeight ? Math.round(((windowHeight - theme.navHeight) / windowHeight) * 100) : 580 // 580 is a reasonable fallback
+  }, [theme.navHeight, windowHeight])
+
   const fetchSignedIframeUrl = useCallback(async () => {
     if (!account) {
       setError('Please connect an account before making a purchase.')
@@ -125,7 +131,7 @@ export default function FiatOnrampModal() {
   }, [fetchSignedIframeUrl])
 
   return (
-    <Modal isOpen={fiatOnrampModalOpen} onDismiss={closeModal}>
+    <Modal isOpen={fiatOnrampModalOpen} onDismiss={closeModal} maxHeight={modalHeight} minHeight={modalHeight}>
       <Wrapper data-testid="fiat-onramp-modal" isDarkMode={isDarkMode}>
         {error ? (
           <>
