@@ -453,7 +453,7 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
         borderRadius="round"
         position="absolute"
         className={isCollectionStatsLoading ? styles.collectionImageIsLoading : styles.collectionImage}
-        src={stats.isFoundation && !stats.imageUrl ? '/nft/svgs/marketplaces/foundation.svg' : stats.imageUrl}
+        src={stats.imageUrl}
       />
       <Box className={styles.statsText}>
         <CollectionName
