@@ -49,11 +49,11 @@ function Updater() {
   }, [networkProvider, provider, shouldTrace])
 
   // Send analytics events when the active account changes.
-  const activeAccount = usePrevious(account)
+  const previousAccount = usePrevious(account)
   const getConnection = useGetConnection()
   const [connectedWallets, addConnectedWallet] = useConnectedWallets()
   useEffect(() => {
-    if (account && account !== activeAccount) {
+    if (account && account !== previousAccount) {
       const walletType = getConnection(connector).getName()
       const peerWalletAgent = provider ? getWalletMeta(provider)?.agent : undefined
       const isReconnect = connectedWallets.some(
