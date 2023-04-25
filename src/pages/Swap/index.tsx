@@ -144,11 +144,12 @@ function largerPercentValue(a?: Percent, b?: Percent) {
 const TRADE_STRING = 'SwapRouter'
 
 export default function SwapPage({ className }: { className?: string }) {
+  const { chainId: connectedChainId } = useWeb3React()
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
       <>
         <PageWrapper>
-          <Swap className={className} />
+          <Swap className={className} chainId={connectedChainId} />
           <NetworkAlert />
         </PageWrapper>
         <SwitchLocaleLink />
@@ -172,7 +173,7 @@ export function Swap({
 }: {
   className?: string
   prefilledState?: Partial<SwapState>
-  chainId?: SupportedChainId
+  chainId: SupportedChainId | undefined
   onCurrencyChange?: (selected: Pick<SwapState, Field.INPUT | Field.OUTPUT>) => void
 }) {
   const { account, chainId: connectedChainId, connector } = useWeb3React()
