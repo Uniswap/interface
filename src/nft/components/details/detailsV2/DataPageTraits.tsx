@@ -16,13 +16,32 @@ const SubheaderTiny = styled.div`
   color: ${({ theme }) => theme.textSecondary};
 `
 
+const TraitValue = styled(Column)`
+  gap: 4px;
+  flex: 3;
+`
+
+const TraitRowValue = styled(ThemedText.BodySmall)<{ $flex?: number; alignRight?: boolean }>`
+  display: flex;
+  line-height: 20px;
+  padding-top: 20px;
+  flex: ${({ $flex }) => $flex ?? 1};
+  ${({ alignRight }) => alignRight && 'justify-content: flex-end'};
+`
+
 const TraitRow = ({ trait }: { trait: Trait }) => {
   return (
     <Row padding="12px 0px">
-      <Column gap="xs">
+      <TraitValue>
         <SubheaderTiny>{trait.trait_type}</SubheaderTiny>{' '}
         <ThemedText.BodyPrimary lineHeight="20px">{trait.trait_value}</ThemedText.BodyPrimary>
-      </Column>
+      </TraitValue>
+      {/* TODO: replace with actual data when Trait floor is added to BE */}
+      <TraitRowValue $flex={2}>123.456 ETH</TraitRowValue>
+      <TraitRowValue>123</TraitRowValue>
+      <TraitRowValue $flex={1.5} alignRight={true}>
+        Bars
+      </TraitRowValue>
     </Row>
   )
 }
@@ -46,7 +65,6 @@ const TraitsHeader = styled(ThemedText.SubHeaderSmall)<{ $flex?: number; alignRi
 
 const TraitRowContainer = styled.div`
   overflow-y: auto;
-  padding-right: 12px;
 `
 
 const TraitsContent = ({ traits }: { traits?: Trait[] }) => {
@@ -56,13 +74,13 @@ const TraitsContent = ({ traits }: { traits?: Trait[] }) => {
         <TraitsHeader $flex={3}>
           <Trans>Trait</Trans>
         </TraitsHeader>{' '}
-        <TraitsHeader $flex={1.5}>
+        <TraitsHeader $flex={2}>
           <Trans>Floor price</Trans>
         </TraitsHeader>{' '}
         <TraitsHeader>
           <Trans>Quantity</Trans>
         </TraitsHeader>{' '}
-        <TraitsHeader alignRight={true}>
+        <TraitsHeader $flex={1.5} alignRight={true}>
           <Trans>Rarity</Trans>
         </TraitsHeader>
       </TraitsHeaderContainer>
