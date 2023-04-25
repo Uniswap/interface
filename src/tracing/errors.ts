@@ -93,6 +93,11 @@ export const filterKnownErrors: Required<ClientOptions>['beforeSend'] = (event: 
     if (error.message.match(/'unsafe-eval'.*content security policy/i)) {
       return null
     }
+
+    // WebAssembly compication requires 'unsafe-eval' in CSP, meaning these errors can be filtered out.
+    if (error.message.match(/WebAssembly.instantiate\(\): Wasm code generation disallowed by embedder/)) {
+      return null
+    }
   }
 
   return event
