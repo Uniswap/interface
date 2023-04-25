@@ -82,5 +82,9 @@ export function useCollectionSearch(queryOrAddress: string): useCollectionSearch
   const isName = !isAddress(queryOrAddress.toLowerCase())
   const queryResult = useCollectionQuerySearch(queryOrAddress, /* skip= */ !isName)
   const addressResult = useCollection(queryOrAddress, /* skip= */ isName)
-  return isName ? queryResult : { data: [addressResult.data], loading: addressResult.loading }
+  return isName
+    ? queryResult
+    : blocklistedCollections.includes(queryOrAddress)
+    ? { data: [], loading: false }
+    : { data: [addressResult.data], loading: addressResult.loading }
 }
